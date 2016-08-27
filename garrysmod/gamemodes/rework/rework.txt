@@ -1,0 +1,20 @@
+"rework"
+{
+	"title"			"Rework"
+	"maps"			"^rp_"
+	"settings"
+	{
+		1
+		{
+			"name"		"schema"
+			"text"		"schema"
+			"help"		"Schema to load."
+			"type"		"Text"
+			"default"	"hl2rp"
+		}
+	}
+	"version"		"0.1"
+	"author"		"Mr. Meow and NightAngel"
+	"description"	"A roleplaying framework."
+	"workshopid"	""
+}
