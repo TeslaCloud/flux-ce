@@ -16,7 +16,7 @@ GM.Description 	= "A roleplay framework."
 GM.Prefix		= "RW: "; -- Prefix to display in server browser (*Prefix*: *Schema Name*)
 GM.NameOverride	= false; -- Set to any string to override schema's browser name.
 
--- Aliases
+-- Table aliases.
 Rework = rw;
 RW = rw;
 

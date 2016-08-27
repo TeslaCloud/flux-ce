@@ -7,7 +7,7 @@ rw = rw or {};
 rw.startTime = os.clock();
 
 --[[ 
-	Include pON and UTF-8 library 
+	Include pON, Netstream and UTF-8 library 
 --]]
 if (!string.utf8len or !pon or !netstream) then
 	include("thirdparty/utf8.lua");

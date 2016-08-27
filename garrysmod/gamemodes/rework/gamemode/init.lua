@@ -6,7 +6,7 @@
 rw = rw or {};
 
 do
-`	-- For benchmarking.
+	-- For benchmarking.
 	rw.startTime = os.clock();
 
 	local function SafeRequire(mod)
@@ -76,7 +76,7 @@ do
 	AddCSLuaFile("shared.lua");
 
 	--[[
-		Include pON and UTF-8 library.
+		Include pON, Netstream and UTF-8 library.
 	--]]
 	if (!string.utf8len or !pon or !netstream) then
 		include("thirdparty/utf8.lua");
