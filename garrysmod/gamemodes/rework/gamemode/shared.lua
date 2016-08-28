@@ -13,6 +13,7 @@ GM.Email 		= "support@teslacloud.net";
 GM.Version 		= "0.1";
 GM.Build 		= "1158";
 GM.Description 	= "A roleplay framework."
+GM.Devmode		= true; -- If set to true will print some developer info. Moderate console spam.
 GM.Prefix		= "RW: "; -- Prefix to display in server browser (*Prefix*: *Schema Name*)
 GM.NameOverride	= false; -- Set to any string to override schema's browser name.
 
@@ -23,6 +24,10 @@ RW = rw;
 -- Fix for name conflicts.
 _player, _team, _file = player, team, file;
 
+-- do - end blocks actually let us manage the lifespan
+-- of local variables, because when they go out of scope
+-- they get automatically garbage-collected, freeing up
+-- the memory they have taken.
 do
 	local SchemaConVar = GetConVar("schema");
 
@@ -43,3 +48,15 @@ function GM:GetGameDescription()
 	
 	return name;
 end;
+
+AddCSLuaFile("core/sh_core.lua");
+AddCSLuaFile("core/cl_core.lua");
+include("core/sh_core.lua");
+
+if (SERVER) then
+	include("core/sv_core.lua");
+else
+	include("core/cl_core.lua");
+end;
+
+rw.core:IncludeDirectory("hooks", nil, true);
