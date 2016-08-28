@@ -75,6 +75,7 @@ else
 end;
 
 rw.core:IncludeDirectory("core/libraries", nil, true);
+rw.core:IncludeDirectory("core/libraries/classes", nil, true);
 rw.core:IncludeDirectory("hooks", nil, true);
 
 plugin.IncludeSchema()
