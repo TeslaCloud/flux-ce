@@ -1,0 +1,9 @@
+"reborn"
+{
+	"title"			"Reborn"
+	"author"		"Mr. Meow"
+	"description"	"A test schema for Rework framework."
+	"version"		"1.0"
+	"menusystem"	"1"
+	"workshopid"	""
+}

@@ -3,3 +3,6 @@
 	Do not share, re-distribute or sell.
 --]]
 
+netstream.Hook("SchemaInfo", function(schemaTable)
+	rw.core.SchemaInfo = schemaTable or {};
+end);

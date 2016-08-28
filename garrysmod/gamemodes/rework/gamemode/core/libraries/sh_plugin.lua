@@ -25,6 +25,7 @@ function NewPlugin:NewPlugin(name, data)
 	self.m_Folder = data.folder or name:gsub(" ", "_"):lower();
 	self.m_Description = data.description or "Undescribed plugin or schema.";
 	self.m_uniqueID = data.id or name:gsub(" ", "_"):lower() or "unknown";
+	table.Merge(self, data);
 end;
 
 function NewPlugin:GetName()
@@ -116,8 +117,30 @@ function plugin.Include(folder)
 	PLUGIN = nil;
 end;
 
-function plugin.IncludeSchema(folder)
-	Schema = NewPlugin("Schema", {});
+function plugin.IncludeSchema()
+	local schemaInfo = {};
+
+	if (SERVER) then
+		schemaInfo = rw.core:GetSchemaInfo();
+	else
+		if (rw.core.SchemaInfo) then
+			schemaInfo = rw.core.SchemaInfo;
+		else
+			schemaInfo = {};
+			print("[Rework] Failed to retrieve schema info table!");
+		end;
+	end;
+
+	local schemaFolder = rw.core:GetSchemaFolder().."/schema";
+	schemaInfo.folder = schemaFolder;
+
+	Schema = NewPlugin(schemaInfo.name, schemaInfo);
+
+	if (file.Exists(schemaFolder.."/sh_schema.lua", "LUA")) then
+		rw.core:Include(schemaFolder.."/sh_schema.lua");
+	else
+		ErrorNoHalt("[Rework] Schema has no sh_schema.lua!\n");
+	end;
 
 	Schema:Register();
 end;

@@ -146,3 +146,7 @@ function library.NewClass(name, parent, extends)
 
 	setmetatable((parent or _G)[name], class);
 end;
+
+function rw.core:GetSchemaFolder()
+	return rw.schema;
+end;

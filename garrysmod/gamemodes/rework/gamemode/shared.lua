@@ -29,12 +29,16 @@ _player, _team, _file = player, team, file;
 -- they get automatically garbage-collected, freeing up
 -- the memory they have taken.
 do
-	local SchemaConVar = GetConVar("schema");
-
-	if (SchemaConVar) then
-		rw.schema = rw.schema or SchemaConVar:GetString();
+	if (engine.ActiveGamemode() != "rework") then
+		rw.schema = engine.ActiveGamemode();
 	else
-		rw.schema = rw.schema or "cwhl2rp";
+		local SchemaConVar = GetConVar("schema");
+
+		if (SchemaConVar) then
+			rw.schema = rw.schema or SchemaConVar:GetString();
+		else
+			rw.schema = rw.schema or "cwhl2rp";
+		end;
 	end;
 end;
 
@@ -70,3 +74,5 @@ end;
 
 rw.core:IncludeDirectory("core/libraries", nil, true);
 rw.core:IncludeDirectory("hooks", nil, true);
+
+plugin.IncludeSchema()
