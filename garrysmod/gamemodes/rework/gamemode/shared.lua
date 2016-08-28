@@ -1,5 +1,5 @@
 --[[ 
-	Rework © 2016 Mr. Meow and NightAngel
+	Rework Â© 2016 Mr. Meow and NightAngel
 	Do not share, re-distribute or sell.
 --]]
 
@@ -62,8 +62,10 @@ function GM:GetGameDescription()
 	return name;
 end;
 
+AddCSLuaFile("core/sh_util.lua");
 AddCSLuaFile("core/sh_core.lua");
 AddCSLuaFile("core/cl_core.lua");
+include("core/sh_util.lua");
 include("core/sh_core.lua");
 
 if (SERVER) then
