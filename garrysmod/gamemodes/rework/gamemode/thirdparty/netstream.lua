@@ -35,16 +35,16 @@ function netstream.Split(data)
 
 	for i = 0, string.len(data) do
 		buffer[#buffer + 1] = string.sub(data, i, i);
-				
+
 		if (#buffer == 32768) then
 			result[#result + 1] = table.concat(buffer);
 				index = index + 1;
 			buffer = {};
 		end;
 	end;
-			
+
 	result[#result + 1] = table.concat(buffer);
-	
+
 	return result;
 end;
 
@@ -85,7 +85,7 @@ if (SERVER) then
 	function netstream.Start(player, name, ...)
 		local recipients = {};
 		local bShouldSend = false;
-	
+
 		if (type(player) != "table") then
 			if (!player) then
 				player = _player.GetAll();
@@ -93,18 +93,18 @@ if (SERVER) then
 				player = {player};
 			end;
 		end;
-		
+
 		for k, v in ipairs(player) do
 			if (type(v) == "Player") then
 				recipients[#recipients + 1] = v;
-				
+
 				bShouldSend = true;
 			end;
 		end;
-		
+
 		local dataTable = {...};
 		local encodedData = pon.encode(dataTable);
-			
+
 		if (encodedData and #encodedData > 0 and bShouldSend) then
 			net.Start("NetStreamDS");
 				net.WriteString(name);
@@ -113,7 +113,7 @@ if (SERVER) then
 			net.Send(recipients);
 		end;
 	end;
-	
+
 	if (DBugR) then
 		netstream.Start = DBugR.Util.Func.AddDetour(netstream.Start, function(player, name, ...)
 			local dataTable = {...};
@@ -127,7 +127,7 @@ if (SERVER) then
 	function netstream.Listen(name, Callback)
 		netstream.Hook(name, function(player, data)
 			local bShouldReply, reply = Callback(player, data);
-			
+
 			if (bShouldReply) then
 				netstream.Start(player, name, reply);
 			end;
@@ -148,19 +148,19 @@ if (SERVER) then
 
 				if (stored[player.nsDataStreamName]) then
 					local bStatus, value = pcall(pon.decode, player.nsDataStreamData);
-					
+
 					if (bStatus) then
 						stored[player.nsDataStreamName](player, unpack(value));
 					else
 						ErrorNoHalt("NetStream: '"..NS_DS_NAME.."'\n"..value.."\n");
 					end;
 				end;
-				
+
 				player.nsDataStreamName = nil;
 				player.nsDataStreamData = nil;
 			end;
 		end;
-		
+
 		NS_DS_NAME, NS_DS_DATA, NS_DS_LENGTH = nil, nil, nil;
 	end);
 else
@@ -168,7 +168,7 @@ else
 	function netstream.Start(name, ...)
 		local dataTable = {...};
 		local encodedData = pon.encode(dataTable);
-		
+
 		if (encodedData and #encodedData > 0) then
 			net.Start("NetStreamDS");
 				net.WriteString(name);
@@ -177,7 +177,7 @@ else
 			net.SendToServer();
 		end;
 	end;
-	
+
 	if (DBugR) then
 		netstream.Start = DBugR.Util.Func.AddDetour(netstream.Start, function(name, ...)
 			local dataTable = {...};
@@ -197,11 +197,11 @@ else
 		local NS_DS_NAME = net.ReadString();
 		local NS_DS_LENGTH = net.ReadUInt(32);
 		local NS_DS_DATA = net.ReadData(NS_DS_LENGTH);
-		
+
 		if (NS_DS_NAME and NS_DS_DATA and NS_DS_LENGTH) then
 			if (stored[NS_DS_NAME]) then
 				local bStatus, value = pcall(pon.decode, NS_DS_DATA);
-			
+
 				if (bStatus) then
 					stored[NS_DS_NAME](unpack(value));
 				else
@@ -209,7 +209,7 @@ else
 				end;
 			end;
 		end;
-		
+
 		NS_DS_NAME, NS_DS_DATA, NS_DS_LENGTH = nil, nil, nil;
 	end);
 end;
