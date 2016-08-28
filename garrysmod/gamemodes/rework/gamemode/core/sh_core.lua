@@ -114,4 +114,35 @@ function library.Get(name, parent)
 end;
 
 -- Set library table's Metatable so that we can call it like a function.
-setmetatable(library, {__call = function(tab, name, parent) return tab.Get(name, parent) end})
+setmetatable(library, {__call = function(tab, name, parent) return tab.Get(name, parent) end});
+
+-- A function to create a new class. Supports constructors and inheritance.
+function library.NewClass(name, parent, extends)
+	local class = {
+		__call = function(obj, ...)
+			if (obj.BaseClass) then
+				pcall(obj.BaseClass, obj, ...);
+			end;
+
+			if (obj[name]) then
+				local success, value = pcall(obj[name], obj, ...);
+
+				if (!success) then
+					ErrorNoHalt("["..name.."] Class constructor has failed to run!\n");
+				end;
+			end;
+
+			return obj;
+		end;
+	}
+
+	if (typeof(extends) == "table") then
+		class.__index = extends;
+	end;
+
+	local obj = library.New(name, (parent or _G));
+	obj.name = name;
+	obj.BaseClass = extends or false;
+
+	setmetatable((parent or _G)[name], class);
+end;

@@ -38,11 +38,20 @@ do
 	end;
 end;
 
+-- A function to get schema's name.
+function rw.GetSchemaName()
+	if (Schema) then
+		return Schema:GetName();
+	else
+		return "Unknown";
+	end;
+end;
+
 -- Called when gamemode's server browser name need to be retrieved.
 function GM:GetGameDescription()
-	local name = self.Prefix..(rw.GetSchemaName() or "Unknown");
+	local name = self.Prefix..rw.GetSchemaName();
 	
-	if (type(self.NameOverride == "string")) then
+	if (type(self.NameOverride) == "string") then
 		name = self.Prefix..self.NameOverride;
 	end;
 	
