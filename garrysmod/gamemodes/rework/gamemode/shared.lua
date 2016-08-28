@@ -68,4 +68,5 @@ else
 	include("core/cl_core.lua");
 end;
 
+rw.core:IncludeDirectory("core/libraries", nil, true);
 rw.core:IncludeDirectory("hooks", nil, true);

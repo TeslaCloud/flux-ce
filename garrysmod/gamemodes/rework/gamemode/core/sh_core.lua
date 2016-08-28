@@ -141,7 +141,7 @@ function library.NewClass(name, parent, extends)
 	end;
 
 	local obj = library.New(name, (parent or _G));
-	obj.name = name;
+	obj.ClassName = name;
 	obj.BaseClass = extends or false;
 
 	setmetatable((parent or _G)[name], class);
