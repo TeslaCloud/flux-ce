@@ -8,6 +8,9 @@ if (plugin) then return; end;
 library.New("plugin", _G);
 local stored = {};
 local hooksCache = {};
+local extras = {
+	"libraries/"
+};
 
 function plugin.GetStored()
 	return stored;
@@ -113,6 +116,8 @@ function plugin.Include(folder)
 		return;
 	end;
 
+	plugin.IncludeFolders(data.pluginFolder);
+
 	PLUGIN:Register();
 	PLUGIN = nil;
 end;
@@ -142,7 +147,32 @@ function plugin.IncludeSchema()
 		ErrorNoHalt("[Rework] Schema has no sh_schema.lua!\n");
 	end;
 
+	plugin.IncludeFolders(schemaFolder);
+	plugin.IncludePlugins(rw.core:GetSchemaFolder().."/plugins");
+
 	Schema:Register();
+end;
+
+function plugin.IncludePlugins(folder)
+	local files, folders = file.Find(folder.."/*", "LUA");
+
+	for k, v in ipairs(files) do
+		if (v:GetExtensionFromFilename() == "lua") then
+			plugin.Include(folder.."/"..v);
+		end;
+	end;
+
+	for k, v in ipairs(folders) do
+		plugin.Include(folder.."/"..v);
+	end;
+end;
+
+function plugin.IncludeFolders(folder)
+	for k, v in ipairs(extras) do
+		if (file.Exists(folder.."/"..v, "LUA")) then
+			rw.core:IncludeDirectory(folder.."/"..v);
+		end;
+	end;
 end;
 
 do
@@ -172,5 +202,4 @@ do
 	end;
 end;
 
-plugin.Include("rework/gamemode/plugins/sh_test.lua")
-plugin.Include("rework/gamemode/plugins/test")
+plugin.IncludePlugins("rework/plugins");
