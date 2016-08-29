@@ -1,4 +1,4 @@
---[[
+﻿--[[
 	mysql - 1.0.2
 	A simple MySQL wrapper for Garry's Mod.
 
