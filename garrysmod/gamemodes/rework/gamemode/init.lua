@@ -21,7 +21,7 @@ do
 		return true;
 	end;
 
-	if (rw) then
+	if (rw.core) then
 		MsgC(Color(0, 255, 100, 255), "[Rework] Lua auto-reload in progress...\n");
 	else
 		MsgC(Color(0, 255, 100, 255), "[Rework] Initializing...\n");

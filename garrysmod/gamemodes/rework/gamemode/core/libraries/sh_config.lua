@@ -33,7 +33,7 @@ if (SERVER) then
 else
 	netstream.Hook("config_setvar", function(key, value)
 		stored[key] = value;
-	end;
+	end);
 end;
 
 function rw.config:Get(key, default)
