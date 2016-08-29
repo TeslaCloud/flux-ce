@@ -11,6 +11,8 @@ function GM:PlayerInitialSpawn(player)
 	player:SyncNetVars();
 
 	netstream.Start(player, "SchemaInfo", rw.core:GetSchemaInfo());
+
+	player:SetDTVar(BOOL_INITIALIZED, true);
 end;
 
 function GM:PlayerSpawn(player)
