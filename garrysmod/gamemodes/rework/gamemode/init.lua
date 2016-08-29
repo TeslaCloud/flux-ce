@@ -21,7 +21,7 @@ do
 		return true;
 	end;
 
-	if (rw.core) then
+	if (rw.initialized) then
 		MsgC(Color(0, 255, 100, 255), "[Rework] Lua auto-reload in progress...\n");
 	else
 		MsgC(Color(0, 255, 100, 255), "[Rework] Initializing...\n");
@@ -41,7 +41,7 @@ do
 	if (!rw.WatchDogAvailable and system.IsWindows()) then
 		if (file.Exists("lua/bin/gmsv_watchdog_win32.dll", "GAME")) then
 			print("[Rework] Loading Watch Dog file monitoring tools...");
-			
+
 			local success = SafeRequire("watchdog");
 
 			if (success) then
@@ -53,8 +53,7 @@ do
 					-- fileName is relative to garrysmod/gamemodes/
 					print("[Watchdog] "..fileName);
 				end);
-				
-				-- lmao
+
 				rw.WatchDogAvailable = true;
 			else
 				ErrorNoHalt("[Rework] Failed to load Watchdog!\nYou do not appear to have MS Visual C++ 2015 installed!\n");

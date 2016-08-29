@@ -30,6 +30,27 @@ function rw.core:DevPrint(msg)
 	end;
 end;
 
+rw.oldFileWrite = rw.oldFileWrite or file.Write;
+
+function file.Write(fileName, content)
+	local exploded = string.Explode("/", fileName);
+	local curPath = "";
+
+	for k, v in ipairs(exploded) do
+		if (string.GetExtensionFromFilename(v) != nil) then
+			break;
+		end;
+
+		curPath = curPath..v.."/";
+
+		if (!file.Exists(curPath, "DATA")) then
+			file.CreateDir(curPath);
+		end;
+	end;
+
+	return rw.oldFileWrite(fileName, content);
+end;
+
 -- A function to include a file based on it's prefix.
 function rw.core:Include(file)
 	if (SERVER) then
@@ -149,4 +170,38 @@ end;
 
 function rw.core:GetSchemaFolder()
 	return rw.schema;
+end;
+
+function rw.core:Serialize(table)
+	if (typeof(table) == "table") then
+		local bSuccess, value = pon.encode(table);
+
+		if (!bSuccess) then
+			ErrorNoHalt("[Rework] Failed to serialize a table!\n");
+			ErrorNoHalt(value.."\n");
+			return "";
+		end;
+
+		return value; 
+	else
+		print("[Rework] You must serialize a table, not "..typeof(table).."!");
+		return "";
+	end;
+end;
+
+function rw.core:Deserialize(strData)
+	if (typeof(strData) != "string") then
+		print("[Rework] You must deserialize a string, not "..typeof(strData).."!");
+		return {};
+	end;
+
+	local bSuccess, value = pon.decode(strData)
+
+	if (!bSuccess) then
+		ErrorNoHalt("[Rework] Failed to deserialize a string!\n");
+		ErrorNoHalt(value.."\n");
+		return {};
+	end;
+
+	return value;
 end;

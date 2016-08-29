@@ -11,7 +11,7 @@ GM.Email 		= "support@teslacloud.net";
 
 -- Define RW-Specific fields.
 GM.Version 		= "0.1";
-GM.Build 		= "1158";
+GM.Build 		= "1159";
 GM.Description 	= "A roleplay framework."
 GM.Devmode		= true; -- If set to true will print some developer info. Moderate console spam.
 GM.Prefix		= "RW: "; -- Prefix to display in server browser (*Prefix*: *Schema Name*)
@@ -22,7 +22,7 @@ Rework = rw;
 RW = rw;
 
 -- Fix for name conflicts.
-_player, _team, _file = player, team, file;
+_player, _team, _file, _table, _data = player, team, file, table, data;
 
 -- do - end blocks actually let us manage the lifespan
 -- of local variables, because when they go out of scope

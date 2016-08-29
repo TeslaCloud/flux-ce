@@ -15,7 +15,7 @@ if (!string.utf8len or !pon or !netstream) then
 	include("thirdparty/netstream.lua");
 end;
 
-if (rw.core) then
+if (rw.initialized) then
 	MsgC(Color(0, 255, 100, 255), "[Rework] Lua auto-reload in progress...\n");
 else
 	MsgC(Color(0, 255, 100, 255), "[Rework] Initializing...\n");
