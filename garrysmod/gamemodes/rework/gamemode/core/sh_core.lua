@@ -174,7 +174,7 @@ end;
 
 function rw.core:Serialize(table)
 	if (typeof(table) == "table") then
-		local bSuccess, value = pon.encode(table);
+		local bSuccess, value = pcall(pon.encode, table);
 
 		if (!bSuccess) then
 			ErrorNoHalt("[Rework] Failed to serialize a table!\n");
@@ -195,7 +195,7 @@ function rw.core:Deserialize(strData)
 		return {};
 	end;
 
-	local bSuccess, value = pon.decode(strData)
+	local bSuccess, value = pcall(pon.decode, strData)
 
 	if (!bSuccess) then
 		ErrorNoHalt("[Rework] Failed to deserialize a string!\n");
