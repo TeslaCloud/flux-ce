@@ -10,7 +10,7 @@ if (rw.db) then return; end;
 
 library.New("db", rw);
 local QueueTable = {};
-local Module = "sqlite";
+rw.db.Module = rw.db.Module or "sqlite";
 local Connected = false;
 local type = type;
 local tostring = tostring;
@@ -287,7 +287,7 @@ local function BuildCreateQuery(queryObj)
 		local createList = {};
 
 		for i = 1, #queryObj.createList do
-			if (Module == "sqlite") then
+			if (rw.db.Module == "sqlite") then
 				createList[#createList + 1] = queryObj.createList[i][1].." "..string.gsub(string.gsub(string.gsub(queryObj.createList[i][2], "AUTO_INCREMENT", ""), "AUTOINCREMENT", ""), "INT ", "INTEGER ");
 			else
 				createList[#createList + 1] = queryObj.createList[i][1].." "..queryObj.createList[i][2];
@@ -374,7 +374,7 @@ function rw.db:Connect(host, username, password, database, port, socket, flags)
 		port = 3306;
 	end;
 
-	if (Module == "tmysql4") then
+	if (rw.db.Module == "tmysql4") then
 		if (type(tmysql) != "table") then
 			require("tmysql4");
 		end;
@@ -390,9 +390,9 @@ function rw.db:Connect(host, username, password, database, port, socket, flags)
 				self:OnConnected();
 			end;
 		else
-			ErrorNoHalt(string.format(MODULE_NOT_EXIST, Module));
+			ErrorNoHalt(string.format(MODULE_NOT_EXIST, rw.db.Module));
 		end;
-	elseif (Module == "mysqloo") then
+	elseif (rw.db.Module == "mysqloo") then
 		if (type(mysqloo) != "table") then
 			require("mysqloo");
 		end;
@@ -416,20 +416,20 @@ function rw.db:Connect(host, username, password, database, port, socket, flags)
 
 			self.connection:connect();
 		else
-			ErrorNoHalt(string.format(MODULE_NOT_EXIST, Module));
+			ErrorNoHalt(string.format(MODULE_NOT_EXIST, rw.db.Module));
 		end;
-	elseif (Module == "sqlite") then
+	elseif (rw.db.Module == "sqlite") then
 		rw.db:OnConnected();
 	end;
 end;
 
 -- A function to query the MySQL database.
 function rw.db:RawQuery(query, callback, flags, ...)
-	if (!self.connection and Module != "sqlite") then
+	if (!self.connection and rw.db.Module != "sqlite") then
 		self:Queue(query);
 	end;
 
-	if (Module == "tmysql4") then
+	if (rw.db.Module == "tmysql4") then
 		local queryFlag = flags or QUERY_FLAG_ASSOC;
 
 		self.connection:Query(query, function(result)
@@ -447,7 +447,7 @@ function rw.db:RawQuery(query, callback, flags, ...)
 				ErrorNoHalt(string.format("[Rework:Database] MySQL Query Error!\nQuery: %s\n%s\n", query, result[1]["error"]));
 			end;
 		end, queryFlag, ...);
-	elseif (Module == "mysqloo") then
+	elseif (rw.db.Module == "mysqloo") then
 		local queryObj = self.connection:query(query);
 
 		queryObj:setOption(mysqloo.OPTION_NAMED_FIELDS);
@@ -467,7 +467,7 @@ function rw.db:RawQuery(query, callback, flags, ...)
 		end;
 
 		queryObj:start();
-	elseif (Module == "sqlite") then
+	elseif (rw.db.Module == "sqlite") then
 		local result = sql.Query(query);
 
 		if (result == false) then
@@ -482,7 +482,7 @@ function rw.db:RawQuery(query, callback, flags, ...)
 			end;
 		end;
 	else
-		ErrorNoHalt(string.format("[Rework:Database] Unsupported module \"%s\"!\n", Module));
+		ErrorNoHalt(string.format("[Rework:Database] Unsupported module \"%s\"!\n", rw.db.Module));
 	end;
 end;
 
@@ -496,9 +496,9 @@ end;
 -- A function to escape a string for MySQL.
 function rw.db:Escape(text)
 	if (self.connection) then
-		if (Module == "tmysql4") then
+		if (rw.db.Module == "tmysql4") then
 			return self.connection:Escape(text);
-		elseif (Module == "mysqloo") then
+		elseif (rw.db.Module == "mysqloo") then
 			return self.connection:escape(text);
 		end;
 	else
@@ -509,7 +509,7 @@ end;
 -- A function to disconnect from the MySQL database.
 function rw.db:Disconnect()
 	if (self.connection) then
-		if (Module == "tmysql4") then
+		if (rw.db.Module == "tmysql4") then
 			return self.connection:Disconnect();	
 		end;
 	end;
@@ -535,7 +535,7 @@ end;
 
 -- A function to set the module that should be used.
 function rw.db:SetModule(moduleName)
-	Module = moduleName;
+	rw.db.Module = moduleName;
 end;
 
 -- Called when the database connects sucessfully.
