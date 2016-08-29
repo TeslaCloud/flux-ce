@@ -41,3 +41,7 @@ netstream.Hook("nv_vars", function(entIdx, key, value)
 		stored[entIdx][key] = value;
 	end;
 end);
+
+netstream.Hook("nv_delete", function(entIdx)
+	stored[entIdx] = nil;
+end;

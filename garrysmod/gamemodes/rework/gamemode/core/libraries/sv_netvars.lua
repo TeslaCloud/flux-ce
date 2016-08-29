@@ -49,6 +49,11 @@ function entityMeta:GetNetVar(key, default)
 	return default;
 end;
 
+function entityMeta:ClearNetVars(recv)
+	stored[self] = nil;
+	netstream.Start(recv, "nv_delete", self:EntIndex());
+end;
+
 function entityMeta:SetNetVar(key, value, send)
 	if (IsBadType(key, value)) then return; end;
 	if (self:GetNetVar(key) == value) then return; end;

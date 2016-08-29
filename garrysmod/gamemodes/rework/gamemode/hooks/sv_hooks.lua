@@ -7,6 +7,7 @@ function GM:PlayerInitialSpawn(player)
 	player_manager.SetPlayerClass(player, "rePlayer");
 	player_manager.RunClass(player, "Spawn");
 
+	player:SendConfig();
 	player:SyncNetVars();
 
 	netstream.Start(player, "SchemaInfo", rw.core:GetSchemaInfo());
