@@ -213,6 +213,7 @@ function rw.core:IncludeSchema()
 			if (rw.sharedTable) then
 				timer.Remove("SchemaLoader");
 				plugin.IncludeSchema();
+				netstream.Start("ClientIncludedSchema", true);
 			end;
 		end)
 	end;

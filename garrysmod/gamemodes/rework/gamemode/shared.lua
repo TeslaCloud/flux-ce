@@ -85,6 +85,7 @@ end;
 
 rw.core:IncludeDirectory("core/libraries", nil, true);
 rw.core:IncludeDirectory("core/libraries/classes", nil, true);
+rw.core:IncludeDirectory("core/libraries/meta", nil, true);
 rw.core:IncludeDirectory("hooks", nil, true);
 
 rw.core:IncludePlugins("rework/plugins");

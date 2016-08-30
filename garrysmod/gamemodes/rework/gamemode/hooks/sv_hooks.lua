@@ -3,6 +3,10 @@
 	Do not share, re-distribute or sell.
 --]]
 
+netstream.Hook("ClientIncludedSchema", function(player)
+	player:SetDTBool(BOOL_INITIALIZED, true);
+end);
+
 function GM:PlayerInitialSpawn(player)
 	player_manager.SetPlayerClass(player, "rePlayer");
 	player_manager.RunClass(player, "Spawn");
@@ -11,8 +15,6 @@ function GM:PlayerInitialSpawn(player)
 	player:SyncNetVars();
 
 	netstream.Start(player, "SharedTables", rw.sharedTable);
-
-	player:SetDTBool(BOOL_INITIALIZED, true);
 end;
 
 function GM:PlayerSpawn(player)
