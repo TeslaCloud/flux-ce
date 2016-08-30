@@ -52,6 +52,17 @@ do
 				hook.Add("WatchDogFileChanged", "Printer", function(fileName)
 					-- fileName is relative to garrysmod/gamemodes/
 					print("[Watchdog] "..fileName);
+
+					if (fileName:find("plugins")) then
+						-- Prevent it from passing extra directories to the hook,
+						-- as well as files it doesn't really need.
+						if (fileName:EndsWith("plugins")) then return; end;
+						if (fileName:find("/plugin/")) then return; end;
+						if (fileName:find(".ini")) then return; end;
+
+						print("[Watchdog] Detected plugin change.");
+						plugin.Call("OnPluginFileChange", fileName);
+					end;
 				end);
 
 				rw.WatchDogAvailable = true;

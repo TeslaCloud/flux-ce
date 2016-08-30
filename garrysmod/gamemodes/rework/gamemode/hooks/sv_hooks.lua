@@ -12,10 +12,14 @@ function GM:PlayerInitialSpawn(player)
 
 	netstream.Start(player, "SchemaInfo", rw.core:GetSchemaInfo());
 
-	player:SetDTVar(BOOL_INITIALIZED, true);
+	player:SetDTBool(BOOL_INITIALIZED, true);
 end;
 
 function GM:PlayerSpawn(player)
 	player_manager.SetPlayerClass(player, "rePlayer");
 	player_manager.RunClass(player, "Spawn");
+end;
+
+function GM:OnPluginFileChange(fileName)
+	plugin.OnPluginChanged(fileName);
 end;

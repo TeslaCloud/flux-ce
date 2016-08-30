@@ -9,7 +9,9 @@ library.New("plugin", _G);
 local stored = {};
 local hooksCache = {};
 local extras = {
-	"libraries/"
+	"libraries/",
+	"libraries/classes/",
+	"config/",
 };
 
 function plugin.GetStored()
@@ -70,6 +72,104 @@ function plugin.Register(obj)
 	stored[obj:GetFolder()] = obj;
 end;
 
+function plugin.Find(id)
+	if (stored[id]) then
+		return stored[id], id;
+	else
+		for k, v in pairs(stored) do
+			if (v.m_uniqueID == id or v:GetFolder() == id or v:GetName() == id) then
+				return v, k;
+			end;
+		end;
+	end;
+end;
+
+-- A function to unhook a plugin from cache.
+function plugin.RemoveFromCache(id)
+	local pluginTable = plugin.Find(id);
+
+	-- Awful lot of if's and end's.
+	if (pluginTable) then
+		if (pluginTable.OnUnhook) then
+			Try(pluginTable:GetName(), pluginTable.OnUnhook, pluginTable);
+		end;
+
+		for k, v in pairs(pluginTable) do
+			if (isfunction(v) and hooksCache[k]) then
+				for index, tab in ipairs(hooksCache[k]) do
+					if (tab[2] == pluginTable) then
+						table.remove(hooksCache[k], index);
+						break;
+					end;
+				end;
+			end;
+		end;
+	end;
+end;
+
+-- A function to cache existing plugin's hooks.
+function plugin.ReCache(id)
+	local pluginTable = plugin.Find(id);
+
+	if (pluginTable) then
+		if (pluginTable.OnRecache) then
+			Try(pluginTable:GetName(), pluginTable.OnRecache, pluginTable);
+		end;
+
+		plugin.CacheFunctions(pluginTable);
+	end;
+end;
+
+-- A function to remove the plugin entirely.
+function plugin.Remove(id)
+	local pluginTable, pluginID = plugin.Find(id);
+
+	if (pluginTable) then
+		if (pluginTable.OnRemoved) then
+			Try(pluginTable:GetName(), pluginTable.OnRemoved, pluginTable);
+		end;
+
+		plugin.RemoveFromCache(id);
+
+		stored[pluginID] = nil;
+	end;
+end;
+
+function plugin.SendFilesToClients(basePath, curPath)
+	curPath = curPath or basePath;
+
+	local files, dirs = file.Find(curPath.."/*");
+
+	for k, v in ipairs(files) do
+		netstream.Start(nil, "SendPluginFiles", basePath, curPath.."/"..v, fileio.Read("gamemodes/"..curPath.."/"..v));
+	end;
+
+	for k, v in ipairs(dirs) do
+		plugin.SendFilesToClients(basePath, curPath.."/"..v);
+	end;
+end;
+
+-- todo: make it work on client dammit
+function plugin.OnPluginChanged(fileName)
+	if (stored[fileName] and !file.Exists("gamemodes/"..fileName, "GAME")) then
+		print("Removing plugin "..fileName);
+		plugin.Remove(fileName);
+
+		netstream.Start(nil, "OnPluginRemoved", fileName);
+	elseif (!stored[fileName] and file.Exists("gamemodes/"..fileName, "GAME")) then
+		print("Detected new plugin "..fileName);
+		plugin.Include(fileName);
+
+		if (file.IsDir(fileName)) then
+			plugin.SendFilesToClients(fileName);
+		else
+			netstream.Start(nil, "SendPluginFiles", fileName, fileName, fileio.Read("gamemodes/"..fileName));
+		end;
+
+		netstream.Start(nil, "OnPluginAdded", fileName);
+	end;
+end;
+
 function plugin.Include(folder)
 	local hasMainFile = false;
 	local id = folder:GetFileFromFilename();
@@ -82,7 +182,7 @@ function plugin.Include(folder)
 	if (ext != "lua") then
 		if (file.Exists(folder.."/plugin.ini", "LUA")) then
 			local iniData = util.JSONToTable(file.Read(folder.."/plugin.ini", "LUA"));
-			data.pluginFolder = folder.."/plugin";
+				data.pluginFolder = folder.."/plugin";
 			table.Merge(data, iniData);
 		end;
 	end;
@@ -201,5 +301,3 @@ do
 		return hook.Run(name, ...);
 	end;
 end;
-
-plugin.IncludePlugins("rework/plugins");
