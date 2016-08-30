@@ -10,7 +10,7 @@ function GM:PlayerInitialSpawn(player)
 	player:SendConfig();
 	player:SyncNetVars();
 
-	netstream.Start(player, "SchemaInfo", rw.core:GetSchemaInfo());
+	netstream.Start(player, "SharedTables", rw.sharedTable);
 
 	player:SetDTBool(BOOL_INITIALIZED, true);
 end;

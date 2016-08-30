@@ -3,6 +3,10 @@
 	Do not share, re-distribute or sell.
 --]]
 
-netstream.Hook("SchemaInfo", function(schemaTable)
-	rw.core.SchemaInfo = schemaTable or {};
+function GM:InitPostEntity()
+	rw.client = rw.client or LocalPlayer();
+end;
+
+netstream.Hook("SharedTables", function(sharedTable)
+	rw.sharedTable = sharedTable or {};
 end);

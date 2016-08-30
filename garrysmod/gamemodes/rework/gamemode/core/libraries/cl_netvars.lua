@@ -44,4 +44,4 @@ end);
 
 netstream.Hook("nv_delete", function(entIdx)
 	stored[entIdx] = nil;
-end;
+end);

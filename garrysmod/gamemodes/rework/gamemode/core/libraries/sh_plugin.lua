@@ -138,7 +138,7 @@ end;
 function plugin.SendFilesToClients(basePath, curPath)
 	curPath = curPath or basePath;
 
-	local files, dirs = file.Find(curPath.."/*");
+	local files, dirs = file.Find(curPath.."/*", "LUA", "namedesc");
 
 	for k, v in ipairs(files) do
 		netstream.Start(nil, "SendPluginFiles", basePath, curPath.."/"..v, fileio.Read("gamemodes/"..curPath.."/"..v));
@@ -152,12 +152,12 @@ end;
 -- todo: make it work on client dammit
 function plugin.OnPluginChanged(fileName)
 	if (stored[fileName] and !file.Exists("gamemodes/"..fileName, "GAME")) then
-		print("Removing plugin "..fileName);
+		print("[Rework] Removing plugin "..fileName);
 		plugin.Remove(fileName);
 
 		netstream.Start(nil, "OnPluginRemoved", fileName);
 	elseif (!stored[fileName] and file.Exists("gamemodes/"..fileName, "GAME")) then
-		print("Detected new plugin "..fileName);
+		print("[Rework] Detected new plugin "..fileName);
 		plugin.Include(fileName);
 
 		if (file.IsDir(fileName)) then
@@ -180,10 +180,21 @@ function plugin.Include(folder)
 	data.pluginFolder = folder;
 
 	if (ext != "lua") then
-		if (file.Exists(folder.."/plugin.ini", "LUA")) then
-			local iniData = util.JSONToTable(file.Read(folder.."/plugin.ini", "LUA"));
-				data.pluginFolder = folder.."/plugin";
-			table.Merge(data, iniData);
+		if (SERVER) then
+			if (file.Exists(folder.."/plugin.ini", "LUA")) then
+				local iniData = util.JSONToTable(file.Read(folder.."/plugin.ini", "LUA"));
+					data.pluginFolder = folder.."/plugin";
+					data.pluginMain = "sh_plugin.lua";
+
+					if (file.Exists(data.pluginFolder.."/sh_"..(data.name or id)..".lua", "LUA")) then
+						data.pluginMain = "sh_"..(data.name or id)..".lua";
+					end;
+				table.Merge(data, iniData);
+
+				rw.sharedTable.pluginInfo[folder] = data;
+			end;
+		else
+			table.Merge(data, rw.sharedTable.pluginInfo[folder]);
 		end;
 	end;
 
@@ -194,26 +205,11 @@ function plugin.Include(folder)
 	end;
 
 	if (ext != "lua") then
-		if (file.Exists(data.pluginFolder.."/sh_plugin.lua", "LUA")) then
-			rw.core:Include(data.pluginFolder.."/sh_plugin.lua");
-			hasMainFile = true;
-		end;
-
-		if (file.Exists(data.pluginFolder.."/sh_"..(data.name or id)..".lua", "LUA")) then
-			rw.core:Include(data.pluginFolder.."/sh_"..(data.name or id)..".lua");
-			hasMainFile = true;
-		end;
+		rw.core:Include(data.pluginFolder.."/"..data.pluginMain);
 	else
 		if (file.Exists(folder, "LUA")) then
 			rw.core:Include(folder);
-			hasMainFile = true;
 		end;
-	end;
-
-	if (!hasMainFile) then
-		ErrorNoHalt("[Rework] Plugin "..id.." doesn't have main file!\n");
-		PLUGIN = nil;
-		return;
 	end;
 
 	plugin.IncludeFolders(data.pluginFolder);
@@ -223,29 +219,13 @@ function plugin.Include(folder)
 end;
 
 function plugin.IncludeSchema()
-	local schemaInfo = {};
-
-	if (SERVER) then
-		schemaInfo = rw.core:GetSchemaInfo();
-	else
-		if (rw.core.SchemaInfo) then
-			schemaInfo = rw.core.SchemaInfo;
-		else
-			schemaInfo = {};
-			print("[Rework] Failed to retrieve schema info table!");
-		end;
-	end;
-
+	local schemaInfo = rw.core:GetSchemaInfo();
 	local schemaFolder = rw.core:GetSchemaFolder().."/schema";
 	schemaInfo.folder = schemaFolder;
 
 	Schema = NewPlugin(schemaInfo.name, schemaInfo);
 
-	if (file.Exists(schemaFolder.."/sh_schema.lua", "LUA")) then
-		rw.core:Include(schemaFolder.."/sh_schema.lua");
-	else
-		ErrorNoHalt("[Rework] Schema has no sh_schema.lua!\n");
-	end;
+	rw.core:Include(schemaFolder.."/sh_schema.lua");
 
 	plugin.IncludeFolders(schemaFolder);
 	plugin.IncludePlugins(rw.core:GetSchemaFolder().."/plugins");

@@ -3,3 +3,4 @@
 	Do not share, re-distribute or sell.
 --]]
 
+DeriveGamemode("sandbox");

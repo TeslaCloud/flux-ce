@@ -82,17 +82,12 @@ function rw.core:IncludeDirectory(dir, recursive, base)
 		dir = base..dir;
 	end;
 
-	if (!file.IsDir(dir, "LUA")) then
-		self:DevPrint("'"..dir.."' is not a directory!")
-		return;
-	end;
-
 	if (!dir:EndsWith("/")) then
 		dir = dir.."/";
 	end;
 
 	if (recursive) then
-		local files, folders = _file.Find(dir.."*", "LUA");
+		local files, folders = _file.Find(dir.."*", "LUA", "namedesc");
 
 		-- First include the files.
 		for k, v in ipairs(files) do
@@ -106,7 +101,7 @@ function rw.core:IncludeDirectory(dir, recursive, base)
 			self:IncludeDirectory(dir..v, true);
 		end;
 	else
-		local files, _ = _file.Find(dir.."*.lua", "LUA");
+		local files, _ = _file.Find(dir.."*.lua", "LUA", "namedesc");
 
 		for k, v in ipairs(files) do
 			self:Include(dir..v);
@@ -169,7 +164,11 @@ function library.NewClass(name, parent, extends)
 end;
 
 function rw.core:GetSchemaFolder()
-	return rw.schema;
+	if (SERVER) then
+		return rw.schema;
+	else
+		return rw.sharedTable.schemaFolder or "rework";
+	end;
 end;
 
 function rw.core:Serialize(table)
@@ -204,4 +203,64 @@ function rw.core:Deserialize(strData)
 	end;
 
 	return value;
+end;
+
+function rw.core:IncludeSchema()
+	if (SERVER) then
+		return plugin.IncludeSchema();
+	else
+		timer.Create("SchemaLoader", 0.1, 0, function()
+			if (rw.sharedTable) then
+				timer.Remove("SchemaLoader");
+				plugin.IncludeSchema();
+			end;
+		end)
+	end;
+end;
+
+function rw.core:IncludePlugins(folder)
+	if (SERVER) then
+		return plugin.IncludePlugins(folder);
+	else
+		timer.Create("PluginLoader", 0.1, 0, function()
+			if (rw.sharedTable) then
+				timer.Remove("PluginLoader");
+				plugin.IncludePlugins(folder);
+			end;
+		end)
+	end;
+end;
+
+-- A function to get the schema gamemode info.
+function rw.core:GetSchemaInfo()
+	if (SERVER) then
+		if (self.SchemaInfo) then return self.SchemaInfo; end;
+
+		local schemaFolder = string.lower(self:GetSchemaFolder());
+		local schemaData = util.KeyValuesToTable(
+			fileio.Read("gamemodes/"..schemaFolder.."/"..schemaFolder..".txt")
+		);
+
+		if (!schemaData) then
+			schemaData = {};
+		end;
+
+		if (schemaData["Gamemode"]) then
+			schemaData = schemaData["Gamemode"];
+		end;
+
+		self.SchemaInfo = {};
+			self.SchemaInfo["name"] = schemaData["title"] or "Undefined";
+			self.SchemaInfo["author"] = schemaData["author"] or "Undefined";
+			self.SchemaInfo["description"] = schemaData["description"] or "Undefined";
+			self.SchemaInfo["version"] = schemaData["version"] or "Undefined";
+			self.SchemaInfo["folder"] = schemaFolder:gsub("/schema", "");
+		return self.SchemaInfo;
+	else
+		return rw.sharedTable.schemaInfo;
+	end;
+end;
+
+if (SERVER) then
+	rw.sharedTable.schemaInfo = rw.core:GetSchemaInfo();
 end;

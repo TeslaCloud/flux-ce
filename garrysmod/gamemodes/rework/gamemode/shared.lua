@@ -43,6 +43,12 @@ do
 			rw.schema = rw.schema or "cwhl2rp";
 		end;
 	end;
+
+	rw.sharedTable = rw.sharedTable or {
+		schemaFolder = rw.schema,
+		pluginInfo = {},
+		unloadedPlugins = {}
+	}
 end;
 
 -- A function to get schema's name.
@@ -80,6 +86,6 @@ end;
 rw.core:IncludeDirectory("core/libraries", nil, true);
 rw.core:IncludeDirectory("core/libraries/classes", nil, true);
 rw.core:IncludeDirectory("hooks", nil, true);
-plugin.IncludePlugins("rework/plugins");
 
-plugin.IncludeSchema()
+rw.core:IncludePlugins("rework/plugins");
+rw.core:IncludeSchema();
