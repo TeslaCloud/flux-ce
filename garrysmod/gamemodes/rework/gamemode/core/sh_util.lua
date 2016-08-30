@@ -22,3 +22,13 @@ function Try(id, func, ...)
 		return unpack[result];
 	end;
 end;
+
+do
+	local materialCache = {};
+	
+	function util.GetMaterial(mat)
+		materialCache[mat] = materialCache[mat] or Material(mat);
+		return materialCache[mat];
+	end;
+end;
+

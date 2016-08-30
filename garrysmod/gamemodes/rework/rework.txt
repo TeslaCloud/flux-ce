@@ -2,6 +2,7 @@
 {
 	"title"			"Rework"
 	"maps"			"^rp_"
+	"base"			"sandbox"
 	"settings"
 	{
 		1

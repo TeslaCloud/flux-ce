@@ -12,6 +12,7 @@ local extras = {
 	"libraries/",
 	"libraries/classes/",
 	"config/",
+	"languages/"
 };
 
 function plugin.GetStored()
