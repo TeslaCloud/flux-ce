@@ -209,7 +209,7 @@ function rw.core:IncludeSchema()
 	if (SERVER) then
 		return plugin.IncludeSchema();
 	else
-		timer.Create("SchemaLoader", 0.1, 0, function()
+		timer.Create("SchemaLoader", 0.04, 0, function()
 			if (rw.sharedTable) then
 				timer.Remove("SchemaLoader");
 				plugin.IncludeSchema();
@@ -222,7 +222,7 @@ function rw.core:IncludePlugins(folder)
 	if (SERVER) then
 		return plugin.IncludePlugins(folder);
 	else
-		timer.Create("PluginLoader", 0.1, 0, function()
+		timer.Create("PluginLoader", 0.04, 0, function()
 			if (rw.sharedTable) then
 				timer.Remove("PluginLoader");
 				plugin.IncludePlugins(folder);
