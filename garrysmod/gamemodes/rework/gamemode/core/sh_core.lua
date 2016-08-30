@@ -7,11 +7,6 @@ rw.core = rw.core or {};
 library = library or {};
 library.stored = library.stored or {};
 
--- A function to get lowercase type of an object.
-function typeof(obj)
-	return type(obj):lower();
-end;
-
 -- A function to print a prefixed message.
 function rw.core:Print(msg)
 	if (typeof(msg) != "table") then

@@ -3,6 +3,9 @@
 	Do not share, re-distribute or sell.
 --]]
 
+hook.Remove("PostDrawEffects", "RenderWidgets");
+hook.Remove("PlayerTick", "TickWidgets");
+
 function GM:OnReloaded()
 	if (SERVER) then
 		print("[Rework] OnReloaded hook called serverside.");
