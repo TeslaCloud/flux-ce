@@ -21,6 +21,8 @@ function GM:PlayerSpawn(player)
 	player_manager.SetPlayerClass(player, "rePlayer");
 	player_manager.RunClass(player, "Spawn");
 
+	player:SetModel("models/humans/group01/male_02.mdl");
+
 	local oldHands = player:GetHands();
 
 	if (IsValid(oldHands)) then

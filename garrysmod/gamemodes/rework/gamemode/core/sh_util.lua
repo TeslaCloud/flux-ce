@@ -354,6 +354,22 @@ function player.Random()
 	end;
 end;
 
+function player.Find(name, bCaseInsensitive)
+	if (name == nil) then return; end;
+	if (typeof(name) != "string" and IsValid(name)) then return name; end;
+	if (typeof(name) != "string") then return; end;
+
+	for k, v in ipairs(_player.GetAll()) do
+		if (v:Name():find(name)) then
+			return v;
+		elseif (bCaseInsensitive and v:Name():utf8lower():find(name:utf8lower())) then
+			return v;
+		elseif (v:SteamID() == name) then
+			return v;
+		end;
+	end;
+end;
+
 function string.FindAll(str, pattern)
 	if (!str or !pattern) then return; end;
 	
