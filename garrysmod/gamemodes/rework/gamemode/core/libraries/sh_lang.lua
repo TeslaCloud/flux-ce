@@ -9,6 +9,12 @@ library.New("lang", rw);
 local stored = {};
 local files = {};
 
+function rw.lang:GetTable(name)
+	stored[name] = stored[name] or {};
+	
+	return stored[name];
+end;
+
 function rw.lang:GetAll()
 	return stored;
 end;

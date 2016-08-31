@@ -3,3 +3,6 @@
 	Do not share, re-distribute or sell.
 --]]
 
+local lang = rw.lang:GetTable("en")
+
+lang["#test"] = "test";

@@ -7,7 +7,7 @@
 --]]
 
 if (!rw.fonts) then
-	include("rework/core/libraries/cl_fonts.lua");
+	include("rework/gamemode/core/libraries/cl_fonts.lua");
 end;
 
 library.New("fa", rw);
@@ -650,7 +650,7 @@ local faCodes = {
 }
 local buffer = {};
 
-rw.fonts:Add("reFontAwesome", {
+rw.fonts:CreateFont("reFontAwesome", {
 	font = "FontAwesome",
 	extended = true,
 	size = 16, -- default icon size is 16x16
