@@ -9,15 +9,15 @@ library.New("config", rw);
 local stored = {};
 
 if (SERVER) then
-	function rw.config:Set(key, value)
+	function rw.config:Set(key, value, bIsHidden)
 		if (key != nil) then
-			if (typeof(stored[key]) == "table" and stored[key]._DefaultValue) then
-				stored[key]._Value = value;
-			else
-				stored[key] = value;
-			end;
+			stored[key] = stored[key] or {};
+			stored[key]._Value = value;
+			stored[key].hidden = bIsHidden or false;
 
-			netstream.Start(nil, "config_setvar", key, stored[key]);
+			if (!stored[key].hidden) then
+				netstream.Start(nil, "config_setvar", key, stored[key]);
+			end;
 		end;
 	end;
 
@@ -25,14 +25,18 @@ if (SERVER) then
 
 	function playerMeta:SendConfig()
 		for k, v in pairs(stored) do
-			netstream.Start(self, "config_setvar", key, stored[key]);
+			if (!v.hidden) then
+				netstream.Start(self, "config_setvar", k, stored[key]);
+			end;
 		end;
 
 		player.rwHasSentConfig = true;
 	end;
 else
 	netstream.Hook("config_setvar", function(key, value)
-		stored[key] = value;
+		if (key == nil) then return; end;
+		stored[key] = stored[key] or {};
+		stored[key]._Value = value;
 	end);
 end;
 
@@ -44,8 +48,6 @@ function rw.config:Get(key, default)
 			if (stored[key].DefaultValue != nil) then
 				return stored[key]._DefaultValue;
 			end;
-
-			return stored[key];
 		end;
 	end;
 

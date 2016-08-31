@@ -21,6 +21,14 @@ function GM:HUDDrawScoreBoard()
 	end;
 end;
 
+function GM:HUDPaint()
+	if (!plugin.Call("RWHUDPaint")) then
+		-- if nothing else overrides this, draw HUD that sucks
+		draw.RoundedBox(2, 8, 8, ScrW() / 4, 16, Color(40, 40, 40));
+		draw.RoundedBox(2, 9, 9, (ScrW() / 4 - 2) * (LocalPlayer():Health() / 100), 14, Color(200, 30, 30));
+	end;
+end;
+
 do
 	local hiddenElements = {
 		CHudHealth = true,
