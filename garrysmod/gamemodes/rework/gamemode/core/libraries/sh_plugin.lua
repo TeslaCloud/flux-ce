@@ -23,9 +23,9 @@ function plugin.GetCache()
 	return hooksCache;
 end;
 
-library.NewClass("NewPlugin", _G);
+Class "Plugin";
 
-function NewPlugin:NewPlugin(name, data)
+function Plugin:Plugin(name, data)
 	self.m_Name = name or data.name or "Unknown Plugin";
 	self.m_Author = data.author or "Unknown Author";
 	self.m_Folder = data.folder or name:gsub(" ", "_"):lower();
@@ -34,27 +34,27 @@ function NewPlugin:NewPlugin(name, data)
 	table.Merge(self, data);
 end;
 
-function NewPlugin:GetName()
+function Plugin:GetName()
 	return self.m_Name;
 end;
 
-function NewPlugin:GetFolder()
+function Plugin:GetFolder()
 	return self.m_Folder;
 end;
 
-function NewPlugin:GetAuthor()
+function Plugin:GetAuthor()
 	return self.m_Author;
 end;
 
-function NewPlugin:GetDescription()
+function Plugin:GetDescription()
 	return self.m_Description;
 end;
 
-function NewPlugin:SetData(data)
+function Plugin:SetData(data)
 	table.Merge(self, data);
 end;
 
-function NewPlugin:Register()
+function Plugin:Register()
 	plugin.Register(self);
 end;
 
@@ -199,7 +199,7 @@ function plugin.Include(folder)
 		end;
 	end;
 
-	PLUGIN = NewPlugin(id, data);
+	PLUGIN = Plugin(id, data);
 
 	if (stored[folder]) then
 		PLUGIN = stored[folder];
@@ -224,7 +224,7 @@ function plugin.IncludeSchema()
 	local schemaFolder = rw.core:GetSchemaFolder().."/schema";
 	schemaInfo.folder = schemaFolder;
 
-	Schema = NewPlugin(schemaInfo.name, schemaInfo);
+	Schema = Plugin(schemaInfo.name, schemaInfo);
 
 	rw.core:Include(schemaFolder.."/sh_schema.lua");
 
