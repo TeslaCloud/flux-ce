@@ -131,19 +131,26 @@ setmetatable(library, {__call = function(tab, name, parent) return tab.Get(name,
 function library.NewClass(name, parent, extends)
 	local class = {
 		__call = function(obj, ...)
+			local newObj = {};
+
+			setmetatable(newObj, obj);
+			newObj.__index = obj;
+			obj.__index = obj;
+
 			if (obj.BaseClass) then
-				pcall(obj.BaseClass, obj, ...);
+				pcall(obj.BaseClass, newObj, ...);
 			end;
 
 			if (obj[name]) then
-				local success, value = pcall(obj[name], obj, ...);
+				local success, value = pcall(obj[name], newObj, ...);
 
 				if (!success) then
 					ErrorNoHalt("["..name.."] Class constructor has failed to run!\n");
+					ErrorNoHalt(value.."\n");
 				end;
 			end;
 
-			return obj;
+			return newObj;
 		end;
 	}
 
@@ -155,7 +162,7 @@ function library.NewClass(name, parent, extends)
 	obj.ClassName = name;
 	obj.BaseClass = extends or false;
 
-	setmetatable((parent or _G)[name], class);
+	return setmetatable((parent or _G)[name], class);
 end;
 
 function rw.core:GetSchemaFolder()
