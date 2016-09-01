@@ -3,18 +3,6 @@
 	Do not share, re-distribute or sell.
 --]]
 
--- Enumerations
--- DTVars
-BOOL_INITIALIZED = 0;
-
--- Permissions
-PERM_NO = 0;
-PERM_ALLOW = 1;
-PERM_NEVER = 2;
-PERM_ERROR = 999;
-
--- End enumerations
-
 -- A function to get lowercase type of an object.
 function typeof(obj)
 	return type(obj):lower();

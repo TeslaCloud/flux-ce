@@ -31,6 +31,8 @@ function Plugin:Plugin(name, data)
 	self.m_Folder = data.folder or name:gsub(" ", "_"):lower();
 	self.m_Description = data.description or "Undescribed plugin or schema.";
 	self.m_uniqueID = data.id or name:gsub(" ", "_"):lower() or "unknown";
+//	self.m_data = data;
+
 	table.Merge(self, data);
 end;
 
@@ -87,7 +89,7 @@ end;
 
 -- A function to unhook a plugin from cache.
 function plugin.RemoveFromCache(id)
-	local pluginTable = plugin.Find(id);
+	local pluginTable = plugin.Find(id) or (istable(id) and id);
 
 	-- Awful lot of if's and end's.
 	if (pluginTable) then
@@ -136,37 +138,45 @@ function plugin.Remove(id)
 	end;
 end;
 
-function plugin.SendFilesToClients(basePath, curPath)
-	curPath = curPath or basePath;
+function plugin.GetFilesForClients(basePath, curPath, results)
+	results = results or {};
+	
+	if (file.IsDir(basePath, "GAME") and !curPath) then
+		curPath = curPath or basePath;
 
-	local files, dirs = file.Find(curPath.."/*", "LUA", "namedesc");
+		local files, dirs = file.Find(curPath.."/*", "LUA", "namedesc");
 
-	for k, v in ipairs(files) do
-		netstream.Start(nil, "SendPluginFiles", basePath, curPath.."/"..v, fileio.Read("gamemodes/"..curPath.."/"..v));
+		for k, v in ipairs(files) do
+			if (v:find("cl_") or v:find("sh_") or v:find("shared.lua")) then
+				results[curPath.."/"..v] = fileio.Read("gamemodes/"..curPath.."/"..v);
+			end;
+		end;
+
+		for k, v in ipairs(dirs) do
+			plugin.GetFilesForClients(basePath, curPath.."/"..v, results);
+		end;	
+
+		PrintTable(results);
+	elseif (basePath:find("cl_") or basePath:find("sh_") or basePath:find("shared.lua")) then
+		results[basePath] = fileio.Read("gamemodes/"..basePath);
 	end;
 
-	for k, v in ipairs(dirs) do
-		plugin.SendFilesToClients(basePath, curPath.."/"..v);
-	end;
+	return results;
 end;
 
 -- todo: make it work on client dammit
 function plugin.OnPluginChanged(fileName)
-	if (stored[fileName] and !file.Exists("gamemodes/"..fileName, "GAME")) then
+	print(IsValid(stored[fileName]), !file.Exists("gamemodes/"..fileName, "GAME"));
+	if (plugin.Find(fileName) and !file.Exists("gamemodes/"..fileName, "GAME")) then
 		print("[Rework] Removing plugin "..fileName);
 		plugin.Remove(fileName);
 
 		netstream.Start(nil, "OnPluginRemoved", fileName);
-	elseif (!stored[fileName] and file.Exists("gamemodes/"..fileName, "GAME")) then
+	elseif (!plugin.Find(fileName) and file.Exists("gamemodes/"..fileName, "GAME")) then
 		print("[Rework] Detected new plugin "..fileName);
-		plugin.Include(fileName);
+		local data = plugin.Include(fileName);
 
-		if (file.IsDir(fileName)) then
-			plugin.SendFilesToClients(fileName);
-		else
-			netstream.Start(nil, "SendPluginFiles", fileName, fileName, fileio.Read("gamemodes/"..fileName));
-		end;
-
+		netstream.Start(nil, "SendPluginFiles", data, plugin.GetFilesForClients(fileName));
 		netstream.Start(nil, "OnPluginAdded", fileName);
 	end;
 end;
@@ -217,6 +227,8 @@ function plugin.Include(folder)
 
 	PLUGIN:Register();
 	PLUGIN = nil;
+
+	return data;
 end;
 
 function plugin.IncludeSchema()
@@ -281,4 +293,19 @@ do
 	function plugin.Call(name, ...)
 		return hook.Run(name, ...);
 	end;
+end;
+
+if (CLIENT) then
+	netstream.Hook("SendPluginFiles", function(data, files)
+		print("[Rework] Detected new plugin named "..data.id..".");
+
+		PLUGIN = Plugin(data.id, data);
+
+		for k, v in pairs(files) do
+			RunString(v);
+		end;
+
+		PLUGIN:Register();
+		PLUGIN = nil;
+	end);
 end;
