@@ -76,6 +76,34 @@ function rw.admin:CheckPermission(player, permission)
 	end;
 end;
 
+function rw.admin:GetPermissionsInCategory(category)
+	local perms = {};
+
+	if (category == "all") then
+		for k, v in pairs(permissions) do
+			for k2, v2 in pairs(v) do
+				table.insert(perms, k2);
+			end;
+		end;
+	else
+		if (permissions[category]) then
+			for k, v in pairs(permissions[category]) do
+				table.insert(perms, k);
+			end;
+		end;
+	end;
+
+	return perms;
+end;
+
+function rw.admin:IsCategory(id)
+	if (id == "all" or permissions[id]) then
+		return true;
+	end;
+
+	return false;
+end;
+
 function rw.admin:GetGroupPermissions(id)
 	if (groups[id]) then
 		return groups[id].m_Permissions;
@@ -180,6 +208,18 @@ if (SERVER) then
 		SetPermission(steamID, permID, false);
 	end;
 
+	local function DetermineCategory(steamID, permID, value)
+		if (rw.admin:IsCategory(permID)) then
+			local catPermissions = rw.admin:GetPermissionsInCategory(permID);
+
+			for k, v in ipairs(catPermissions) do
+				DeterminePermission(steamID, v, value);
+			end;
+		else
+			DeterminePermission(steamID, permID, value);
+		end;
+	end;
+
 	function rw.admin:CompilePermissions(player)
 		if (!IsValid(player)) then return; end;
 
@@ -192,19 +232,19 @@ if (SERVER) then
 		compilerCache[steamID] = {};
 
 		for k, v in pairs(groupPermissions) do
-			DeterminePermission(steamID, k, v);
+			DetermineCategory(steamID, k, v);
 		end;
 
 		for _, group in ipairs(secondaryGroups) do
 			local permTable = self:GetGroupPermissions(group);
 
 			for k, v in pairs(permTable) do
-				DeterminePermission(steamID, k, v);
+				DetermineCategory(steamID, k, v);
 			end;
 		end;
 
 		for k, v in pairs(playerPermissions) do
-			DeterminePermission(steamID, k, v);
+			DetermineCategory(steamID, k, v);
 		end;
 
 		local extras = {};
