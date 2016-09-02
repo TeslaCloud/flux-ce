@@ -86,6 +86,29 @@ function rw.admin:HasPermission(player, permission)
 	return false;
 end;
 
+function rw.admin:CheckImmunity(player, target, canBeEqual)
+	if (!IsValid(player) and (IsValid(target) and !target:IsOwner())) then
+		return true;
+	end;
+
+	if (!IsValid(target)) then
+		return true;
+	end;
+
+	local group1 = player:GetUserGroup();
+	local group2 = target:GetUserGroup();
+
+	if (group1.immunity > group2.immunity) then
+		return true;
+	end;
+
+	if (canBeEqual and group1.immunity == group2.immunity) then
+		return true;
+	end;
+
+	return false;
+end;
+
 if (SERVER) then
 	local function SetPermission(steamID, permID, value)
 		players[steamID] = players[steamID] or {};

@@ -88,3 +88,11 @@ function GM:PlayerShouldTakeDamage(player, attacker)
 		return true;
 	end;
 end;
+
+function GM:PlayerSay(player, text, bIsTeam)
+	if (text:IsCommand()) then
+		text = text:utf8sub(2, text:utf8len()); -- one step less for interpreter.
+		rw.command:Interpret(player, text);
+		return "";
+	end;
+end;
