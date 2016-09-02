@@ -4,9 +4,15 @@
 --]]
 
 library.New("admin", rw);
-local groups = {}; -- Usergroups data
-local permissions = {}; -- Permission descriptions and other data
-local players = {}; -- Compiled permissions for each player
+local groups = rw.admin.groups or {}; -- Usergroups data
+local permissions = rw.admin.permissions or {}; -- Permission descriptions and other data
+local players = rw.admin.players or {}; -- Compiled permissions for each player
+
+-- Hacky way to preserve local storage tables.
+rw.admin.groups = groups;
+rw.admin.permissions = permissions;
+rw.admin.players = players;
+
 local compilerCache = {};
 
 function rw.admin:CreateGroup(id, data)
@@ -15,17 +21,27 @@ function rw.admin:CreateGroup(id, data)
 	data.m_uniqueID = id;
 
 	if (data.m_Base) then
-		local parent = stored[data.m_Base];
+		local parent = groups[data.m_Base];
 
 		if (parent) then
 			local parentCopy = table.Copy(parent);
 			table.Merge(parentCopy.m_Permissions, data.m_Permissions);
 			data.m_Permissions = parentCopy.m_Permissions;
+
+			for k, v in pairs(parentCopy) do
+				if (k == "m_Permissions") then
+					continue;
+				end;
+
+				if (!data[k]) then
+					data[k] = v;
+				end;
+			end;
 		end;
 	end;
 
-	if (!stored[id]) then
-		stored[id] = data;
+	if (!groups[id]) then
+		groups[id] = data;
 	end;
 end;
 
@@ -73,17 +89,25 @@ function rw.admin:HasPermission(player, permission)
 
 	local steamID = player:SteamID();
 
-	if (players[steamID] and players[steamID][permID]) then
+	if (players[steamID] and players[steamID][permission]) then
 		return true;
 	end;
 
 	local netPerms = player:GetNetVar("rePermissions", {});
 
-	if (netPerms and netPerms[permID]) then
+	if (netPerms and netPerms[permission]) then
 		return true;
 	end;
 
 	return false;
+end;
+
+function rw.admin:FindGroup(id)
+	if (groups[id]) then
+		return groups[id];
+	end;
+
+	return {};
 end;
 
 function rw.admin:CheckImmunity(player, target, canBeEqual)
@@ -95,8 +119,12 @@ function rw.admin:CheckImmunity(player, target, canBeEqual)
 		return true;
 	end;
 
-	local group1 = player:GetUserGroup();
-	local group2 = target:GetUserGroup();
+	local group1 = self:FindGroup(player:GetUserGroup());
+	local group2 = self:FindGroup(target:GetUserGroup());
+
+	if (typeof(group1.immunity) != "number" or typeof(group2.immunity) != "number") then
+		return true;
+	end;
 
 	if (group1.immunity > group2.immunity) then
 		return true;
@@ -121,6 +149,15 @@ if (SERVER) then
 		permTable[permID] = permTable[permID] or PERM_NO;
 
 		if (value == PERM_NO) then return; end;
+		if (permTable[permID] == PERM_ALLOW_OVERRIDE) then return; end;
+
+		if (value == PERM_ALLOW_OVERRIDE) then
+			permTable[permID] = PERM_ALLOW_OVERRIDE;
+			SetPermission(steamID, permID, true);
+
+			return;
+		end;
+
 		if (permTable[permID] == PERM_NEVER) then return; end;
 		if (permTable[permID] == value) then return; end;
 

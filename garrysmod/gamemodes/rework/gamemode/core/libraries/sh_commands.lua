@@ -9,6 +9,12 @@ rw.command.aliases = rw.command.aliases or {};
 
 function rw.command:Create(id, data)
 	data.uniqueID = id:utf8lower();
+	data.name = data.name or "Unknown";
+	data.description = data.description or "An undescribed command.";
+	data.syntax = data.syntax or "[none]";
+	data.immunity = data.immunity or false;
+	data.playerArg = nil;
+	data.arguments = data.arguments or 0;
 
 	self.stored[id] = data;
 
@@ -113,32 +119,37 @@ if (SERVER) then
 		local cmdTable = self:FindByID(command);
 
 		if (cmdTable) then
-			if ((!IsValid(player) and !cmdTable.noConsole) or player:HasPermission(cmdTable.uniqueID)) then
-				if (cmdTable.immunity) then
-					local target = _player.Find(args[(cmdTable.playerArg or 1)], true);
+			if (cmdTable.arguments == 0 or cmdTable.arguments <= #args) then
+				if ((!IsValid(player) and !cmdTable.noConsole) or player:HasPermission(cmdTable.uniqueID)) then
+					if (cmdTable.immunity or cmdTable.playerArg != nil) then
+						local target = _player.Find(args[(cmdTable.playerArg or 1)], true);
 
-					if (IsValid(target)) then
-						if (!rw.admin:CheckImmunity(player, target, cmdTable.canBeEqual)) then
-							print("immunity check failed");
+						if (IsValid(target)) then
+							if (cmdTable.immunity and !rw.admin:CheckImmunity(player, target, cmdTable.canBeEqual)) then
+								print("immunity check failed");
+								return;
+							end;
+
+							-- one step less for commands.
+							args[(cmdTable.playerArg or 1)] = target;
+						else
+							print("target is invalid");
+							-- target is invalid;
 							return;
 						end;
-
-						-- one step less for commands.
-						args[(cmdTable.playerArg or 1)] = target;
-					else
-						print("target is invalid");
-						-- target is invalid;
-						return;
 					end;
-				end;
 
-				-- Let plugins hook into this and abort command's execution of necessary.
-				if (!plugin.Call("PlayerRunCommand", player, cmdTable, args)) then
-					self:Run(player, cmdTable, args);
+					-- Let plugins hook into this and abort command's execution of necessary.
+					if (!plugin.Call("PlayerRunCommand", player, cmdTable, args)) then
+						self:Run(player, cmdTable, args);
+					end;
+				else
+					print("you don't have permissions");
+					-- user has no permission or command cannot be run from console
 				end;
 			else
-				print("you don't have permissions");
-				-- user has no permission or command cannot be run from console
+				print("too few arguments");
+				-- too few arguments have been entered.
 			end;
 		else
 			print("command doesn't exist");
@@ -162,15 +173,3 @@ if (SERVER) then
 		rw.command:Interpret(player, args);
 	end)
 end;
-
-local COMMAND = {};
-COMMAND.name = "Test";
-COMMAND.immunity = true;
-
-function COMMAND:OnRun(player, target, reason)
-	print("Test command has been run!");
-	
-	target:Kick(reason);
-end;
-
-rw.command:Create("test", COMMAND)

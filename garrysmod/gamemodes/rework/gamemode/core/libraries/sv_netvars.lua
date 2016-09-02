@@ -61,7 +61,7 @@ function entityMeta:SetNetVar(key, value, send)
 	stored[self] = stored[self] or {};
 	stored[self][key] = value;
 
-	self:SendNetVars(key, send);
+	self:SendNetVar(key, send);
 end;
 
 function playerMeta:SyncNetVars()

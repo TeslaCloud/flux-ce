@@ -15,8 +15,12 @@ function GM:PlayerInitialSpawn(player)
 	player_manager.SetPlayerClass(player, "rePlayer");
 	player_manager.RunClass(player, "Spawn");
 
+	player:SetUserGroup("user");
+
 	player:SendConfig();
 	player:SyncNetVars();
+
+	rw.admin:CompilePermissions(player);
 
 	netstream.Start(player, "SharedTables", rw.sharedTable);
 end;
@@ -77,7 +81,7 @@ function GM:GetFallDamage(player, speed)
 	local fallDamage = plugin.Call("RWGetFallDamage", player, speed);
 
 	if (!fallDamage) then
-		fallDamage = (speed / 18);
+		fallDamage = speed / 9;
 	end;
 
 	return fallDamage;

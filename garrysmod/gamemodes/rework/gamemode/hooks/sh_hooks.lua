@@ -5,6 +5,7 @@
 
 hook.Remove("PostDrawEffects", "RenderWidgets");
 hook.Remove("PlayerTick", "TickWidgets");
+hook.Remove("PlayerInitialSpawn", "PlayerAuthSpawn");
 
 function GM:OnReloaded()
 	if (SERVER) then
