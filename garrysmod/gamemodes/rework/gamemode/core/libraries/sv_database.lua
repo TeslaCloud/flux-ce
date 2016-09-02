@@ -558,6 +558,99 @@ function rw.db:IsConnected()
 	return Connected;
 end;
 
+function rw.db:EasyWrite(tableName, where, data)
+	if (!data or typeof(data) != "table") then
+		ErrorNoHalt("[Rework] Easy MySQL error! Data has unexpected value type (table expected, got "..typeof(data)..")\n");
+		return;
+	end;
+	
+	if (!where) then
+		ErrorNoHalt("[Rework] Easy MySQL error! 'where' table is malformed! ([1] = "..typeof(where[1])..", [2] = "..typeof(where[2])..")\n");
+		return;
+	end;
+	
+	local query = self:Select(tableName);
+		if (typeof(where[1]) == "table") then
+			for k, v in pairs(where) do
+				query:Where(v[1], v[2]);
+			end;
+		else
+			query:Where(where[1], where[2]);
+		end;
+	
+		query:Callback(function(result, status, lastID)
+			if (type(result) == "table" and #result > 0) then
+				local updateObj = self:Update(tableName);
+				
+					for k, v in pairs(data) do
+						updateObj:Update(k, v);
+					end;
+					
+					updateObj:Where(where[1], where[2]);
+					updateObj:Callback(function()
+						--teslacode.Spam("Easy MySQL updated data. ('"..tableName.."' WHERE "..where[1].." = "..where[2]..")");
+					end);
+					
+				updateObj:Execute();
+			else
+				local insertObj = self:Insert(tableName);
+				
+					for k, v in pairs(data) do
+						insertObj:Insert(k, v);
+					end;
+					
+					insertObj:Callback(function(result, status, lastID)
+						if (typeof(where[1]) != "table") then
+							--teslacode.Debug("Easy MySQL inserted data into '"..tableName.."' WHERE "..where[1].." = "..where[2]..".");
+						else
+							local msg = "Easy MySQL inserted data into '"..tableName.."' WHERE ";
+							local i = 0;
+							
+							for k, v in pairs(where) do
+								i = i + 1;
+								msg = msg..v[1].." = "..v[2];
+								
+								if (table.Count(where) != i) then
+									msg = msg.." AND ";
+								end;
+							end;
+						end;
+					end);
+					
+				insertObj:Execute();
+			end;
+		end);
+		
+	query:Execute();
+end;
+
+function rw.db:EasyRead(tableName, where, callback)
+	if (!where) then
+		ErrorNoHalt("[Rework] Easy MySQL Read error! 'where' table is malformed! ([1] = "..typeof(where[1])..", [2] = "..typeof(where[2])..")\n");
+		return false;
+	end;
+	
+	local query = self:Select(tableName);
+		if (typeof(where[1]) == "table") then
+			for k, v in pairs(where) do
+				query:Where(v[1], v[2]);
+			end;
+		else
+			query:Where(where[1], where[2]);
+		end;
+	
+		query:Callback(function(result, status, lastID)
+			if (type(result) == "table" and #result > 0) then
+				local success, value = pcall(callback, result);
+				--teslacode.Debug("Easy MySQL has successfully read the data. ("..tableName.." WHERE "..where[1].." = "..where[2]..")");
+			else
+				--teslacode.Debug("Easy MySQL has failed to read the data. ("..tableName.." WHERE "..where[1].." = "..where[2]..")\nData does not exist!");
+			end;
+		end);
+		
+	query:Execute();
+end;
+
 timer.Create("Rework.Database.Think", 1, 0, function()
 	rw.db:Think();
 end);
