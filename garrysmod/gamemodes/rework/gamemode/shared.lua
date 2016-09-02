@@ -88,6 +88,7 @@ rw.core:IncludeDirectory("core/libraries/meta", nil, true);
 rw.core:IncludeDirectory("core/languages", nil, true);
 rw.core:IncludeDirectory("core/groups", nil, true);
 rw.core:IncludeDirectory("core/commands", nil, true);
+rw.core:IncludeDirectory("core/derma", nil, true);
 rw.core:IncludeDirectory("hooks", nil, true);
 
 rw.core:IncludePlugins("rework/plugins");
