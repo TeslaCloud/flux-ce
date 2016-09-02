@@ -17,10 +17,14 @@ function GM:PlayerInitialSpawn(player)
 
 	player:SetUserGroup("user");
 
+	if (player:SteamID() == rw.config:Get("owner_steamid")) then
+		player:SetUserGroup("owner");
+	end;
+
 	player:SendConfig();
 	player:SyncNetVars();
 
-	rw.admin:CompilePermissions(player);
+	ServerLog(player:Name().." ("..player:GetUserGroup()..") has connected to the server.");
 
 	netstream.Start(player, "SharedTables", rw.sharedTable);
 end;
@@ -80,8 +84,12 @@ end;
 function GM:GetFallDamage(player, speed)
 	local fallDamage = plugin.Call("RWGetFallDamage", player, speed);
 
+	if (speed < 660) then
+		speed = speed - 250;
+	end;
+
 	if (!fallDamage) then
-		fallDamage = speed / 9;
+		fallDamage = 100 * ((speed) / 850);
 	end;
 
 	return fallDamage;
