@@ -142,11 +142,7 @@ function rw.admin:FindGroup(id)
 end;
 
 function rw.admin:CheckImmunity(player, target, canBeEqual)
-	if (!IsValid(player) and (IsValid(target) and !target:IsOwner())) then
-		return true;
-	end;
-
-	if (!IsValid(target)) then
+	if (!IsValid(player) or !IsValid(target)) then
 		return true;
 	end;
 

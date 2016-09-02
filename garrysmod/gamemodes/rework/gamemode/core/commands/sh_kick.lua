@@ -20,7 +20,7 @@ function COMMAND:OnRun(player, target, ...)
 		reason = string.Implode(" ", pieces);
 	end;
 
-	rw.player:NotifyAll(L("KickMessage", (player and player:Name()) or "Console", target:Name(), reason));
+	rw.player:NotifyAll(L("KickMessage", (IsValid(player) and player:Name()) or "Console", target:Name(), reason));
 
 	target:Kick(reason);
 end;

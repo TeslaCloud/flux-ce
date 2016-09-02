@@ -138,7 +138,12 @@ if (SERVER) then
 							-- one step less for commands.
 							args[(cmdTable.playerArg or 1)] = target;
 						else
-							rw.player:Notify(player, L("Commands_PlayerInvalid", targetArg));
+							if (IsValid(player)) then
+								rw.player:Notify(player, L("Commands_PlayerInvalid", targetArg));
+							else
+								ErrorNoHalt("'"..targetArg.."' is not a valid player!\n");
+							end;
+
 							return;
 						end;
 					end;
@@ -162,7 +167,11 @@ if (SERVER) then
 				end;
 			end;
 		else
-			rw.player:Notify(player, L("Commands_NotValid", command));
+			if (IsValid(player)) then
+				rw.player:Notify(player, L("Commands_NotValid", command));
+			else
+				ErrorNoHalt("'"..command.."' is not a valid command!\n");
+			end;
 		end;
 	end;
 

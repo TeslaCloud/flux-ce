@@ -33,6 +33,44 @@ function playerMeta:GetCustomPermissions()
 	return self:GetNetVar("rwCustomPermissions", {});
 end;
 
+function playerMeta:IsMemberOf(group)
+	if (self:GetUserGroup() == group) then
+		return true;
+	end;
+
+	for k, v in ipairs(self:GetSecondaryGroups()) do
+		if (v == group) then
+			return true;
+		end;
+	end;
+
+	return false;
+end;
+
+function playerMeta:IsSuperAdmin()
+	if (self:IsOwner() or self:IsCoOwner()) then
+		return true;
+	end;
+
+	return self:IsMemberOf("superadmin");
+end;
+
+function playerMeta:IsAdmin()
+	if (self:IsSuperAdmin()) then
+		return true;
+	end;
+
+	return self:IsMemberOf("admin");
+end;
+
+function playerMeta:IsOperator()
+	if (self:IsAdmin()) then
+		return true;
+	end;
+
+	return self:IsMemberOf("operator");
+end;
+
 if (SERVER) then
 	function playerMeta:SetPermissions(permTable)
 		self:SetNetVar("rePermissions", permTable);
