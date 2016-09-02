@@ -204,5 +204,3 @@ else
 		end;
 	end;
 end;
-
-rw.core:IncludeDirectory("core/languages/", nil, true);

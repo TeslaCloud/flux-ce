@@ -17,6 +17,10 @@ function playerMeta:IsOwner()
 	return (rw.config:Get("owner_steamid") == self:SteamID());
 end;
 
+function playerMeta:IsCoOwner()
+	return (rw.config:Get("owner_steamid") == self:SteamID());
+end;
+
 function playerMeta:GetUserGroup()
 	return self:GetNetVar("rwUserGroup", "user");
 end;

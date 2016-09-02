@@ -87,6 +87,9 @@ end;
 function rw.admin:HasPermission(player, permission)
 	if (!IsValid(player)) then return true; end;
 
+	if (player:IsOwner()) then return true; end;
+	if (player:IsCoOwner()) then return true; end;
+
 	local steamID = player:SteamID();
 
 	if (players[steamID] and players[steamID][permission]) then

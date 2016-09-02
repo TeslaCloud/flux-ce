@@ -76,16 +76,20 @@ function rw.command:ExtractArguments(text)
 
 		local char = text:utf8sub(i, i);
 
-		if (char == "\"" or char == "'") then
+		if ((char == "\"" or char == "'") and word == "") then
 			local endPos = text:find("\"", i + 1);
 
 			if (!endPos) then
 				endPos = text:find("'", i + 1);
 			end;
 
-			table.insert(arguments, text:utf8sub(i + 1, endPos - 1));
+			if (endPos) then
+				table.insert(arguments, text:utf8sub(i + 1, endPos - 1));
 
-			skip = endPos - i;
+				skip = endPos - i;
+			else
+				word = word..char;
+			end;
 		elseif (char == " ") then
 			if (word != "") then
 				table.insert(arguments, word);
@@ -119,22 +123,22 @@ if (SERVER) then
 		local cmdTable = self:FindByID(command);
 
 		if (cmdTable) then
-			if (cmdTable.arguments == 0 or cmdTable.arguments <= #args) then
-				if ((!IsValid(player) and !cmdTable.noConsole) or player:HasPermission(cmdTable.uniqueID)) then
+			if ((!IsValid(player) and !cmdTable.noConsole) or player:HasPermission(cmdTable.uniqueID)) then
+				if (cmdTable.arguments == 0 or cmdTable.arguments <= #args) then
 					if (cmdTable.immunity or cmdTable.playerArg != nil) then
 						local targetArg = args[(cmdTable.playerArg or 1)];
 						local target = _player.Find(targetArg, true);
 
 						if (IsValid(target)) then
 							if (cmdTable.immunity and !rw.admin:CheckImmunity(player, target, cmdTable.canBeEqual)) then
-								rw.player:Notify(player, target:Name().." is higher immunity than you!");
+								rw.player:Notify(player, L("Commands_HigherImmunity", target:Name()));
 								return;
 							end;
 
 							-- one step less for commands.
 							args[(cmdTable.playerArg or 1)] = target;
 						else
-							rw.player:Notify(player, "'"..targetArg.."' is not a valid player!");
+							rw.player:Notify(player, L("Commands_PlayerInvalid", targetArg));
 							return;
 						end;
 					end;
@@ -142,25 +146,23 @@ if (SERVER) then
 					-- Let plugins hook into this and abort command's execution of necessary.
 					if (!plugin.Call("PlayerRunCommand", player, cmdTable, args)) then
 						if (IsValid(player)) then
-							ServerLog(player:Name().." has used /"..cmdTable.name.." "..string.Implode(" ", args));
-						else
-							ServerLog("Console has used /"..cmdTable.name.." "..string.Implode(" ", args));
+							ServerLog(player:Name().." has used /"..cmdTable.name.." "..text:utf8sub(cmdTable.name:utf8len() + 2, text:utf8len()));
 						end;
 
 						self:Run(player, cmdTable, args);
 					end;
 				else
-					if (IsValid(player)) then
-						rw.player:Notify(player, "You do not have access to this command!");
-					else
-						ErrorNoHalt("[Rework] This command cannot be run from console!\n");
-					end;
+					rw.player:Notify(player, "/"..cmdTable.name.." "..cmdTable.syntax);
 				end;
 			else
-				rw.player:Notify(player, "/"..cmdTable.name.." "..cmdTable.syntax);
+				if (IsValid(player)) then
+					rw.player:Notify(player, "#Commands_NoAccess");
+				else
+					ErrorNoHalt("[Rework] This command cannot be run from console!\n");
+				end;
 			end;
 		else
-			rw.player:Notify(player, "'"..command.."' is not a valid command!");
+			rw.player:Notify(player, L("Commands_NotValid", command));
 		end;
 	end;
 

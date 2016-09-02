@@ -85,6 +85,7 @@ rw.core:IncludeDirectory("core/libraries", nil, true);
 rw.core:IncludeDirectory("core/config", nil, true);
 rw.core:IncludeDirectory("core/libraries/classes", nil, true);
 rw.core:IncludeDirectory("core/libraries/meta", nil, true);
+rw.core:IncludeDirectory("core/languages", nil, true);
 rw.core:IncludeDirectory("core/groups", nil, true);
 rw.core:IncludeDirectory("core/commands", nil, true);
 rw.core:IncludeDirectory("hooks", nil, true);
