@@ -7,6 +7,7 @@ local COMMAND = Command("kick");
 COMMAND.name = "Kick";
 COMMAND.description = "Kicks player from the server.";
 COMMAND.syntax = "<target> [reason]";
+COMMAND.category = "administration";
 COMMAND.arguments = 1;
 COMMAND.immunity = true;
 COMMAND.aliases = {"plykick"};
@@ -18,6 +19,8 @@ function COMMAND:OnRun(player, target, ...)
 	if (#pieces > 0) then
 		reason = string.Implode(" ", pieces);
 	end;
+
+	rw.player:NotifyAll(L("KickMessage", (player and player:Name()) or "Console", target:Name(), reason));
 
 	target:Kick(reason);
 end;

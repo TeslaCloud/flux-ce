@@ -10,8 +10,7 @@ local OWNER = Group("owner");
 	OWNER:SetImmunity(1000);
 	OWNER:SetBase("superadmin");
 	OWNER:SetPermissions({
-		all = PERM_ALLOW_OVERRIDE,
-		test = PERM_ALLOW
+		all = PERM_ALLOW_OVERRIDE
 	})
 	
 OWNER:Register();
