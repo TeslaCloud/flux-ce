@@ -25,3 +25,10 @@ function fileio.Write(fileName, content)
 
 	oldFileioWrite(fileName, content);
 end;
+
+oldServerLog = oldServerLog or ServerLog;
+
+function ServerLog(...)
+	oldServerLog(...);
+	print("");
+end;

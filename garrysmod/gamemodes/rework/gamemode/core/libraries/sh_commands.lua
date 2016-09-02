@@ -122,38 +122,45 @@ if (SERVER) then
 			if (cmdTable.arguments == 0 or cmdTable.arguments <= #args) then
 				if ((!IsValid(player) and !cmdTable.noConsole) or player:HasPermission(cmdTable.uniqueID)) then
 					if (cmdTable.immunity or cmdTable.playerArg != nil) then
-						local target = _player.Find(args[(cmdTable.playerArg or 1)], true);
+						local targetArg = args[(cmdTable.playerArg or 1)];
+						local target = _player.Find(targetArg, true);
 
 						if (IsValid(target)) then
 							if (cmdTable.immunity and !rw.admin:CheckImmunity(player, target, cmdTable.canBeEqual)) then
-								print("immunity check failed");
+								rw.player:Notify(player, target:Name().." is higher immunity than you!");
 								return;
 							end;
 
 							-- one step less for commands.
 							args[(cmdTable.playerArg or 1)] = target;
 						else
-							print("target is invalid");
-							-- target is invalid;
+							rw.player:Notify(player, "'"..targetArg.."' is not a valid player!");
 							return;
 						end;
 					end;
 
 					-- Let plugins hook into this and abort command's execution of necessary.
 					if (!plugin.Call("PlayerRunCommand", player, cmdTable, args)) then
+						if (IsValid(player)) then
+							ServerLog(player:Name().." has used /"..cmdTable.name.." "..string.Implode(" ", args));
+						else
+							ServerLog("Console has used /"..cmdTable.name.." "..string.Implode(" ", args));
+						end;
+
 						self:Run(player, cmdTable, args);
 					end;
 				else
-					print("you don't have permissions");
-					-- user has no permission or command cannot be run from console
+					if (IsValid(player)) then
+						rw.player:Notify(player, "You do not have access to this command!");
+					else
+						ErrorNoHalt("[Rework] This command cannot be run from console!\n");
+					end;
 				end;
 			else
-				print("too few arguments");
-				-- too few arguments have been entered.
+				rw.player:Notify(player, "/"..cmdTable.name.." "..cmdTable.syntax);
 			end;
 		else
-			print("command doesn't exist");
-			-- command does not exist
+			rw.player:Notify(player, "'"..command.."' is not a valid command!");
 		end;
 	end;
 

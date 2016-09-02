@@ -12,6 +12,7 @@ Command.syntax = "[none]";
 Command.immunity = false;
 Command.playerArg = nil;
 Command.arguments = 0;
+Command.noConsole = false;
 
 function Command:Command(id)
 	self.uniqueID = id;
