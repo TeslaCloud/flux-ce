@@ -1,5 +1,5 @@
 --[[ 
-	Rework © 2016 Mr. Meow and NightAngel
+	Rework © 2016 TeslaCloud Studios
 	Do not share, re-distribute or sell.
 --]]
 

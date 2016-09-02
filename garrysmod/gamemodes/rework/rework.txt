@@ -15,7 +15,7 @@
 		}
 	}
 	"version"		"0.1"
-	"author"		"Mr. Meow and NightAngel"
+	"author"		"TeslaCloud Studios"
 	"description"	"A roleplaying framework."
 	"workshopid"	""
 }

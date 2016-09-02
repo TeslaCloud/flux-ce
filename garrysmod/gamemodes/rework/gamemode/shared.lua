@@ -1,11 +1,11 @@
 --[[ 
-	Rework © 2016 Mr. Meow and NightAngel
+	Rework © 2016 TeslaCloud Studios
 	Do not share, re-distribute or sell.
 --]]
 
 -- Define basic GM info fields.
 GM.Name 		= "Rework";
-GM.Author 		= "Mr. Meow and NightAngel";
+GM.Author 		= "TeslaCloud Studios";
 GM.Website 		= "http://teslacloud.net/";
 GM.Email 		= "support@teslacloud.net";
 

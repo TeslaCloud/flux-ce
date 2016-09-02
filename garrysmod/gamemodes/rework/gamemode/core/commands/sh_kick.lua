@@ -1,5 +1,5 @@
 --[[ 
-	Rework © 2016 Mr. Meow and NightAngel
+	Rework © 2016 TeslaCloud Studios
 	Do not share, re-distribute or sell.
 --]]
 
@@ -9,6 +9,7 @@ COMMAND.description = "Kicks player from the server.";
 COMMAND.syntax = "<target> [reason]";
 COMMAND.arguments = 1;
 COMMAND.immunity = true;
+COMMAND.aliases = {"plykick"};
 
 function COMMAND:OnRun(player, target, ...)
 	local pieces = {...};
