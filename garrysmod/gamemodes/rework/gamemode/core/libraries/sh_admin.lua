@@ -12,7 +12,17 @@ local compilerCache = {};
 function rw.admin:CreateGroup(id, data)
 	if (type(id) != "string") then return; end;
 
-	data.id = id;
+	data.m_uniqueID = id;
+
+	if (data.m_Base) then
+		local parent = stored[data.m_Base];
+
+		if (parent) then
+			local parentCopy = table.Copy(parent);
+			table.Merge(parentCopy.m_Permissions, data.m_Permissions);
+			data.m_Permissions = parentCopy.m_Permissions;
+		end;
+	end;
 
 	if (!stored[id]) then
 		stored[id] = data;
@@ -52,7 +62,7 @@ end;
 
 function rw.admin:GetGroupPermissions(id)
 	if (groups[id]) then
-		return groups[id].permissions;
+		return groups[id].m_Permissions;
 	else
 		return {};
 	end;
@@ -132,6 +142,18 @@ if (SERVER) then
 
 		for k, v in pairs(playerPermissions) do
 			DeterminePermission(steamID, k, v);
+		end;
+
+		local extras = {};
+
+		plugin.Call("OnPermissionsCompiled", extras);
+
+		if (extras != {}) then
+			for id, extra in pairs(extras) do
+				for k, v in pairs(extra) do
+					DeterminePermissions(steamID, k, v);
+				end;
+			end;
 		end;
 
 		player:SetPermissions(players[steamID]);

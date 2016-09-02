@@ -71,22 +71,15 @@ function GM:GetGameDescription()
 	return name;
 end;
 
+AddCSLuaFile("core/sh_enums.lua");
 AddCSLuaFile("core/sh_util.lua");
 AddCSLuaFile("core/sh_core.lua");
+include("core/sh_enums.lua");
 include("core/sh_util.lua");
 include("core/sh_core.lua");
 
-rw.core:Include("core/sh_enums.lua");
 rw.core:Include("core/cl_core.lua");
 rw.core:Include("core/sv_core.lua");
-
---[[
-if (SERVER) then
-	include("core/sv_core.lua");
-else
-//	include("core/cl_core.lua");
-end;
---]]
 
 rw.core:IncludeDirectory("core/libraries", nil, true);
 rw.core:IncludeDirectory("core/config", nil, true);
