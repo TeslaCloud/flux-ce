@@ -17,3 +17,10 @@ lang["#AddBotsMessage"] = "#1 добавил #2 ботов на сервер.";
 lang["#KickBotsMessage"] = "#1 кикнул всех ботов.";
 lang["#MapRestartMessage"] = "#1 перезапускает карту через #2 секунд!";
 lang["#MapChangeMessage"] = "#1 меняет карту на #2 через #3 секунд!";
+
+lang["#TabMenu_Expand"] = "Развернуть";
+lang["#TabMenu_Characters"] = "Персонажи";
+lang["#TabMenu_Inventory"] = "Инвентарь";
+lang["#TabMenu_Settings"] = "Настройки";
+
+lang["#CMDDesc_Usage"] = "Синтаксис:";

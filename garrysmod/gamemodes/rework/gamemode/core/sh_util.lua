@@ -394,3 +394,9 @@ function string.IsCommand(str)
 
 	return false;
 end;
+
+function util.GetTextSize(font, text)
+	surface.SetFont(font);
+	
+	return surface.GetTextSize(text);
+end;

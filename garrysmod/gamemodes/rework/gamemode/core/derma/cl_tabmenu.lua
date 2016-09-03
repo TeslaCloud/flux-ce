@@ -5,7 +5,7 @@
 
 local PANEL = {};
 
-local lerpDuration = 0.3;
+local lerpDuration = 0.2;
 local closeDuration = 0.1;
 
 local colorBlack = Color(0, 0, 0, 255);

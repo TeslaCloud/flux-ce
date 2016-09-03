@@ -22,3 +22,5 @@ lang["#TabMenu_Expand"] = "Expand";
 lang["#TabMenu_Characters"] = "Characters";
 lang["#TabMenu_Inventory"] = "Inventory";
 lang["#TabMenu_Settings"] = "Settings";
+
+lang["#CMDDesc_Usage"] = "Syntax:";
