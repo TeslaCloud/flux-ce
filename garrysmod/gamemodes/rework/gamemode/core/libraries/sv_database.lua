@@ -553,6 +553,40 @@ function rw.db:OnConnected()
 		queryObj:PrimaryKey("key");
 	queryObj:Execute();
 
+	local queryObj = self:Create("rw_players");
+		queryObj:Create("key", "INT NOT NULL AUTO_INCREMENT");
+		queryObj:Create("steamID", "VARCHAR(25) NOT NULL");
+		queryObj:Create("name", "VARCHAR(255) NOT NULL");
+		queryObj:Create("joinTime", "INT DEFAULT NULL");
+		queryObj:Create("lastPlayTime", "INT DEFAULT NULL");
+		queryObj:Create("userGroup", "TEXT NOT NULL");
+		queryObj:Create("secondaryGroups", "TEXT DEFAULT NULL")
+		queryObj:Create("customPermissions", "TEXT DEFAULT NULL");
+		queryObj:Create("data", "TEXT DEFAULT NULL");
+		queryObj:Create("whitelists", "TEXT DEFAULT NULL");
+		queryObj:PrimaryKey("key");
+	queryObj:Execute();
+
+	local queryObj = self:Create("rw_characters");
+		queryObj:Create("key", "INT NOT NULL AUTO_INCREMENT");
+		queryObj:Create("steamID", "VARCHAR(25) NOT NULL");
+		queryObj:Create("name", "VARCHAR(255) NOT NULL");
+		queryObj:Create("faction", "TEXT NOT NULL");
+		queryObj:Create("class", "TEXT DEFAULT NULL");
+		queryObj:Create("inventory", "TEXT DEFAULT NULL");
+		queryObj:Create("ammo", "TEXT DEFAULT NULL");
+		queryObj:Create("money", "INT DEFAULT NULL");
+		queryObj:Create("charPermissions", "TEXT DEFAULT NULL");
+		queryObj:Create("data", "TEXT DEFAULT NULL");
+		queryObj:PrimaryKey("key");
+	queryObj:Execute();
+
+	local queryObj = self:Create("rw_logs");
+		queryObj:Create("key", "INT NOT NULL AUTO_INCREMENT");
+		queryObj:Create("entry", "TEXT NOT NULL");
+		queryObj:PrimaryKey("key");
+	queryObj:Execute();
+
 	Connected = true;
 	plugin.Call("DatabaseConnected");
 end;
