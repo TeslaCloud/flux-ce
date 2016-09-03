@@ -116,6 +116,16 @@ if (CLIENT) then
 		return sText;
 	end;
 
+	surface.OldGetTextSize = surface.OldGetTextSize or surface.GetTextSize;
+
+	function surface.GetTextSize(sText)
+		if (surface.bTranslating) then
+			sText = rw.lang:TranslateText(sText);
+		end;
+
+		return surface.OldGetTextSize(sText);
+	end;
+
 	surface.OldDrawText = surface.OldDrawText or surface.DrawText;
 
 	--[[

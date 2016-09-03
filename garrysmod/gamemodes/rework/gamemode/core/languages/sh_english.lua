@@ -17,3 +17,8 @@ lang["#AddBotsMessage"] = "#1 has added #2 bots to the server.";
 lang["#KickBotsMessage"] = "#1 has kicked all bots.";
 lang["#MapRestartMessage"] = "#1 is restarting the map in #2 second(s)!";
 lang["#MapChangeMessage"] = "#1 is changing the level to #2 in #3 second(s)!";
+
+lang["#TabMenu_Expand"] = "Expand";
+lang["#TabMenu_Characters"] = "Characters";
+lang["#TabMenu_Inventory"] = "Inventory";
+lang["#TabMenu_Settings"] = "Settings";

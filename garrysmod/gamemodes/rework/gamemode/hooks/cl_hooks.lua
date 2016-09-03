@@ -21,6 +21,41 @@ function GM:HUDDrawScoreBoard()
 	end;
 end;
 
+-- Called when the scoreboard should be shown.
+function GM:ScoreboardShow()
+	if (rw.client:HasInitialized()) then
+		if (rw.tabMenu) then
+			rw.tabMenu:CloseMenu(true);
+		end;
+
+		rw.tabMenu = vgui.Create("rwTabMenu");
+		rw.tabMenu:MakePopup();
+		rw.tabMenu.heldTime = CurTime() + 0.3;
+	end;
+end;
+
+-- Called when the scoreboard should be hidden.
+function GM:ScoreboardHide()
+	if (rw.client:HasInitialized()) then
+		if (rw.tabMenu and CurTime() >= rw.tabMenu.heldTime) then
+			rw.tabMenu:CloseMenu();
+		end;
+	end;
+end;
+
+function GM:AdjustTabDockMenus(menus)
+	menus["Inventory"] = {
+		icon = "fa-suitcase"
+	};
+	menus["Settings"] = {
+		icon = "fa-cog",
+		menu = "rwSettings"
+	};
+	menus["Characters"] = {
+		icon = "fa-users"
+	};
+end;
+
 function GM:HUDPaint()
 	if (!plugin.Call("RWHUDPaint")) then
 		-- if nothing else overrides this, draw HUD that sucks

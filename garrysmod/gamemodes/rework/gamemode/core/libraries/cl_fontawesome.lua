@@ -671,7 +671,7 @@ function rw.fa:GetIcon(id)
 	return id;
 end;
 
-function rw.fa:Draw(id, x, y, size, color)
+function rw.fa:Draw(id, x, y, size, color, xAlign, yAlign)
 	if (id:StartWith("fa ")) then
 		id = id:sub(4, id:len());
 	end;
@@ -685,5 +685,5 @@ function rw.fa:Draw(id, x, y, size, color)
 	size = size or 16;
 	color = color or Color(255, 255, 255);
 	
-	draw.SimpleText(self:GetIcon(id), rw.fonts:GetSize("reFontAwesome", size), x, y, color);
+	draw.SimpleText(self:GetIcon(id), rw.fonts:GetSize("reFontAwesome", size), x, y, color, xAlign, yAlign);
 end;
