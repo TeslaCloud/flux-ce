@@ -24,6 +24,6 @@ else
 	netstream.Hook("reNotification", function(message)
 		message = rw.lang:TranslateText(message);
 		
-		chat.AddText(Color(40, 40, 255), "[Notification] ", Color(255, 255, 255), message);
+		chat.AddText(Color(255, 255, 255), message);
 	end);
 end;

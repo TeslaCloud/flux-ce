@@ -8,6 +8,7 @@ Class "Group";
 Group.m_Name = "Undefined";
 Group.m_Description = "Undefined";
 Group.m_Color = Color(255, 255, 255);
+Group.m_Icon = "icon16/user.png";
 Group.m_Immunity = 0;
 Group.m_IsProtected = false;
 Group.m_Permissions = {};
@@ -57,6 +58,10 @@ function Group:SetPermissions(permissionsTable)
 	self.m_Permissions = permissionsTable;
 end;
 
+function Group:SetIcon(icon)
+	self.m_Icon = icon;
+end;
+
 function Group:SetBase(base)
 	self.m_Base = base;
 end;
@@ -89,6 +94,10 @@ end;
 
 function Group:GetPermissions()
 	return self.m_Permissions or {};
+end;
+
+function Group:GetIcon()
+	return self.m_Icon or "icon16/user.png";
 end;
 
 function Group:GetBase()

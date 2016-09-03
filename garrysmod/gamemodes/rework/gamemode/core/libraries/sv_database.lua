@@ -6,12 +6,11 @@
 	http://www.alexgrist.com
 --]]
 
-if (rw.db) then return; end;
-
 library.New("db", rw);
 local QueueTable = {};
-rw.db.Module = rw.db.Module or "sqlite";
+rw.db.Module = rw.db.Module or rw.config:Get("mysql_module") or "sqlite";
 local Connected = false;
+
 local type = type;
 local tostring = tostring;
 local table = table;
@@ -425,11 +424,11 @@ end;
 
 -- A function to query the MySQL database.
 function rw.db:RawQuery(query, callback, flags, ...)
-	if (!self.connection and rw.db.Module != "sqlite") then
+	if (!self.connection and self.Module != "sqlite") then
 		self:Queue(query);
 	end;
 
-	if (rw.db.Module == "tmysql4") then
+	if (self.Module == "tmysql4") then
 		local queryFlag = flags or QUERY_FLAG_ASSOC;
 
 		self.connection:Query(query, function(result)
@@ -447,14 +446,15 @@ function rw.db:RawQuery(query, callback, flags, ...)
 				ErrorNoHalt(string.format("[Rework:Database] MySQL Query Error!\nQuery: %s\n%s\n", query, result[1]["error"]));
 			end;
 		end, queryFlag, ...);
-	elseif (rw.db.Module == "mysqloo") then
+	elseif (self.Module == "mysqloo") then
 		local queryObj = self.connection:query(query);
 
 		queryObj:setOption(mysqloo.OPTION_NAMED_FIELDS);
 
 		queryObj.onSuccess = function(queryObj, result)
 			if (callback) then
-				local bStatus, value = pcall(callback, result, queryObj:status(), queryObj:lastInsert());
+				-- FFFFFFFUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU
+				local bStatus, value = pcall(callback, result)//, queryObj:status(), queryObj:lastInsert());
 
 				if (!bStatus) then
 					ErrorNoHalt(string.format("[Rework:Database] MySQL Callback Error!\n%s\n", value));
@@ -540,7 +540,18 @@ end;
 
 -- Called when the database connects sucessfully.
 function rw.db:OnConnected()
-	MsgC(Color(25, 235, 25), "[Rework:Database] Connected to the database!\n");
+	MsgC(Color(25, 235, 25), "[Rework:Database] Connected to the database using "..rw.db.Module.."!\n");
+
+	local queryObj = self:Create("rw_bans");
+		queryObj:Create("key", "INT NOT NULL AUTO_INCREMENT");
+		queryObj:Create("steamID", "VARCHAR(25) NOT NULL");
+		queryObj:Create("name", "VARCHAR(255) NOT NULL");
+		queryObj:Create("unbanTime", "INT NOT NULL");
+		queryObj:Create("banTime", "INT DEFAULT NULL");
+		queryObj:Create("reason", "TEXT DEFAULT NULL");
+		queryObj:Create("permaban", "BOOL NOT NULL")
+		queryObj:PrimaryKey("key");
+	queryObj:Execute();
 
 	Connected = true;
 	plugin.Call("DatabaseConnected");
@@ -588,7 +599,7 @@ function rw.db:EasyWrite(tableName, where, data)
 					
 					updateObj:Where(where[1], where[2]);
 					updateObj:Callback(function()
-						--teslacode.Spam("Easy MySQL updated data. ('"..tableName.."' WHERE "..where[1].." = "..where[2]..")");
+						print("[Rework] Easy MySQL updated data. ('"..tableName.."' WHERE "..where[1].." = "..where[2]..")");
 					end);
 					
 				updateObj:Execute();
@@ -601,7 +612,7 @@ function rw.db:EasyWrite(tableName, where, data)
 					
 					insertObj:Callback(function(result, status, lastID)
 						if (typeof(where[1]) != "table") then
-							--teslacode.Debug("Easy MySQL inserted data into '"..tableName.."' WHERE "..where[1].." = "..where[2]..".");
+							print("[Rework] Easy MySQL inserted data into '"..tableName.."' WHERE "..where[1].." = "..where[2]..".");
 						else
 							local msg = "Easy MySQL inserted data into '"..tableName.."' WHERE ";
 							local i = 0;
@@ -642,9 +653,9 @@ function rw.db:EasyRead(tableName, where, callback)
 		query:Callback(function(result, status, lastID)
 			if (type(result) == "table" and #result > 0) then
 				local success, value = pcall(callback, result);
-				--teslacode.Debug("Easy MySQL has successfully read the data. ("..tableName.." WHERE "..where[1].." = "..where[2]..")");
+				print("[Rework] Easy MySQL has successfully read the data. ("..tableName.." WHERE "..where[1].." = "..where[2]..")");
 			else
-				--teslacode.Debug("Easy MySQL has failed to read the data. ("..tableName.." WHERE "..where[1].." = "..where[2]..")\nData does not exist!");
+				print("[Rework] Easy MySQL has failed to read the data. ("..tableName.." WHERE "..where[1].." = "..where[2]..")\nData does not exist!");
 			end;
 		end);
 		

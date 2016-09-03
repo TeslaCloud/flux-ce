@@ -8,7 +8,7 @@ netstream.Hook("ClientIncludedSchema", function(player)
 end);
 
 function GM:PlayerSetModel(player)
-	player:SetModel("models/humans/group01/male_02.mdl");
+	player:SetModel("models/humans/group01/male_0"..math.random(1, 8)..".mdl");
 end;
 
 function GM:PlayerInitialSpawn(player)
@@ -102,10 +102,120 @@ function GM:PlayerShouldTakeDamage(player, attacker)
 end;
 
 function GM:PlayerSay(player, text, bIsTeam)
-	print(text)
 	if (string.IsCommand(text)) then
 		text = text:utf8sub(2, text:utf8len()); -- one step less for interpreter.
 		rw.command:Interpret(player, text);
 		return "";
 	end;
+end;
+
+function GM:PlayerSpawnProp(player, model)
+	if (!player:HasPermission("spawn_props")) then
+		return false;
+	end;
+
+	if (plugin.Call("RWPlayerSpawnProp", player, model) == false) then
+		return false;
+	end;
+
+	return true;
+end;
+
+function GM:PlayerSpawnObject(player, model, skin)
+	if (!player:HasPermission("spawn_objects")) then
+		return false;
+	end;
+
+	if (plugin.Call("RWPlayerSpawnObject", player, model, skin) == false) then
+		return false;
+	end;
+
+	return true;
+end;
+
+function GM:PlayerSpawnNPC(player, npc, weapon)
+	if (!player:HasPermission("spawn_npc")) then
+		return false;
+	end;
+
+	if (plugin.Call("RWPlayerSpawnNPC", player, npc, weapon) == false) then
+		return false;
+	end;
+
+	return true;
+end;
+
+function GM:PlayerSpawnEffect(player, model)
+	if (!player:HasPermission("spawn_effects")) then
+		return false;
+	end;
+
+	if (plugin.Call("RWPlayerSpawnEffect", player, model) == false) then
+		return false;
+	end;
+
+	return true;
+end;
+
+function GM:PlayerSpawnVehicle(player, model, name, tab)
+	if (!player:HasPermission("spawn_vehicles")) then
+		return false;
+	end;
+
+	if (plugin.Call("RWPlayerSpawnVehicle", player, model, name, tab) == false) then
+		return false;
+	end;
+
+	return true;
+end;
+
+function GM:PlayerSpawnSWEP(player, weapon, swep)
+	if (!player:HasPermission("spawn_swep")) then
+		return false;
+	end;
+
+	if (plugin.Call("RWPlayerSpawnSWEP", player, weapon, swep) == false) then
+		return false;
+	end;
+
+	return true;
+end;
+
+function GM:PlayerSpawnSENT(player, class)
+	if (!player:HasPermission("spawn_sent")) then
+		return false;
+	end;
+
+	if (plugin.Call("RWPlayerSpawnSENT", player, class) == false) then
+		return false;
+	end;
+
+	return true;
+end;
+
+function GM:PlayerSpawnRagdoll(player, model)
+	if (!player:HasPermission("spawn_ragdolls")) then
+		return false;
+	end;
+
+	if (plugin.Call("RWPlayerSpawnRagdoll", player, model) == false) then
+		return false;
+	end;
+
+	return true;
+end;
+
+function GM:PlayerGiveSWEP(player, weapon, swep)
+	if (!player:HasPermission("spawn_swep")) then
+		return false;
+	end;
+
+	if (plugin.Call("RWPlayerGiveSWEP", player, weapon, swep) == false) then
+		return false;
+	end;
+
+	return true;
+end;
+
+function GM:DatabaseConnected()
 end;

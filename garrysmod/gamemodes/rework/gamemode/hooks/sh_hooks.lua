@@ -83,7 +83,7 @@ function GM:TranslateActivity(player, act)
 
 				-- todo: weapon raise system
 				if (type(anim) == "table") then
-					anim = anim[2]; -- always raised
+					anim = anim[1]; -- always raised
 				end;
 
 				if (type(anim) == "string") then

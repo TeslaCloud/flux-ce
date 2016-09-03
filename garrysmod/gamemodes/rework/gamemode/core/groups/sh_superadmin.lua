@@ -7,6 +7,7 @@ local SUPERADMIN = Group("superadmin");
 	SUPERADMIN:SetName("Super Admin");
 	SUPERADMIN:SetDescription("A staff member that overwatches server's administration and the server itself.");
 	SUPERADMIN:SetColor(Color(255, 255, 255));
+	SUPERADMIN:SetIcon("icon16/shield.png");
 	SUPERADMIN:SetImmunity(300);
 	SUPERADMIN:SetBase("admin");
 	SUPERADMIN:SetPermissions({

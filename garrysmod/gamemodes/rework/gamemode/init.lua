@@ -27,11 +27,8 @@ do
 		MsgC(Color(0, 255, 100, 255), "[Rework] Initializing...\n");
 	end;
 
-	if (system.IsLinux()) then
-		SafeRequire("mysqloo");
-	else
-		SafeRequire("tmysql4");
-	end;
+	SafeRequire("mysqloo");
+	SafeRequire("tmysql4");
 
 	if (!SafeRequire("fileio")) then
 		ErrorNoHalt("[Rework] fileio module has failed to load!\nAborting startup...\n");

@@ -7,6 +7,7 @@ local USER = Group("user");
 	USER:SetName("User");
 	USER:SetDescription("A regular user.");
 	USER:SetColor(Color(255, 255, 255));
+	USER:SetIcon("icon16/user.png");
 	USER:SetImmunity(0);
 	USER:SetPermissions({
 		test = PERM_ALLOW

@@ -7,6 +7,7 @@ local OWNER = Group("owner");
 	OWNER:SetName("Owner");
 	OWNER:SetDescription("Ultimate staff member who runs this server.");
 	OWNER:SetColor(Color(255, 255, 255));
+	OWNER:SetIcon("icon16/key.png");
 	OWNER:SetImmunity(1000);
 	OWNER:SetBase("superadmin");
 	OWNER:SetPermissions({

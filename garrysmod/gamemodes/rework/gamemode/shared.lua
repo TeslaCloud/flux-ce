@@ -81,8 +81,10 @@ include("core/sh_core.lua");
 rw.core:Include("core/cl_core.lua");
 rw.core:Include("core/sv_core.lua");
 
-rw.core:IncludeDirectory("core/libraries", nil, true);
+rw.core:Include("core/libraries/sh_config.lua");
+
 rw.core:IncludeDirectory("core/config", nil, true);
+rw.core:IncludeDirectory("core/libraries", nil, true);
 rw.core:IncludeDirectory("core/libraries/classes", nil, true);
 rw.core:IncludeDirectory("core/libraries/meta", nil, true);
 rw.core:IncludeDirectory("core/languages", nil, true);
@@ -93,3 +95,13 @@ rw.core:IncludeDirectory("hooks", nil, true);
 
 rw.core:IncludePlugins("rework/plugins");
 rw.core:IncludeSchema();
+
+if (SERVER) then
+	local mysql_host = rw.config:Get("mysql_host");
+	local mysql_username = rw.config:Get("mysql_username");
+	local mysql_password = rw.config:Get("mysql_password");
+	local mysql_database = rw.config:Get("mysql_database");
+	local mysql_port = rw.config:Get("mysql_port");
+
+	rw.db:Connect(mysql_host, mysql_username, mysql_password, mysql_database, mysql_port);
+end;

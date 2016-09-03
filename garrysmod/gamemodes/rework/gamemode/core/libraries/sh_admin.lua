@@ -120,7 +120,7 @@ function rw.admin:HasPermission(player, permission)
 
 	local steamID = player:SteamID();
 
-	if (players[steamID] and players[steamID][permission]) then
+	if (players[steamID] and (players[steamID][permission] or players[steamID]["all"])) then
 		return true;
 	end;
 
