@@ -24,3 +24,4 @@ lang["#TabMenu_Inventory"] = "Инвентарь";
 lang["#TabMenu_Settings"] = "Настройки";
 
 lang["#CMDDesc_Usage"] = "Синтаксис:";
+lang["#CMDDesc_Aliases"] = "Алиасы:";

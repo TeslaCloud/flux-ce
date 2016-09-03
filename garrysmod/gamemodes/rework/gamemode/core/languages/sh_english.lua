@@ -24,3 +24,4 @@ lang["#TabMenu_Inventory"] = "Inventory";
 lang["#TabMenu_Settings"] = "Settings";
 
 lang["#CMDDesc_Usage"] = "Syntax:";
+lang["#CMDDesc_Aliases"] = "Aliases:";

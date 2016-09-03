@@ -801,8 +801,6 @@ function PANEL:Paint(w, h)
 					break;
 				end;
 			end;
-			
-			PrintTable(commands);
 
 			for k, v in ipairs(commands) do
 				cX = 4;
@@ -814,15 +812,15 @@ function PANEL:Paint(w, h)
 				if (#commands == 1) then
 					local offsetX = 24;
 					
-					if (v.alias) then
+					if (v.aliases) then
 						local text = "#CMDDesc_Aliases ";
 						
-						if (#v.alias > 1) then
-							for i, a in ipairs(v.alias) do
+						if (#v.aliases > 1) then
+							for i, a in ipairs(v.aliases) do
 								text = text..a.."; ";
 							end;
 						else
-							text = text..v.alias[1];
+							text = text..v.aliases[1];
 						end;
 						
 						draw.SimpleTextOutlined(text, "reChatFont", 4, cY + offsetX, Color(240, 240, 240), TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP, 1, Color(0, 0, 0))
