@@ -60,7 +60,15 @@ function GM:HUDPaint()
 	if (!plugin.Call("RWHUDPaint")) then
 		-- if nothing else overrides this, draw HUD that sucks
 		draw.RoundedBox(2, 8, 8, ScrW() / 4, 16, Color(40, 40, 40));
-		draw.RoundedBox(2, 9, 9, (ScrW() / 4 - 2) * (LocalPlayer():Health() / 100), 14, Color(200, 30, 30));
+		
+		if (LocalPlayer():Health() > 0) then
+			draw.RoundedBox(2, 9, 9, (ScrW() / 4 - 2) * (LocalPlayer():Health() / 100), 14, Color(200, 30, 30));
+		end;
+
+		if (LocalPlayer():Armor() > 0) then
+			draw.RoundedBox(0, 8, 26, ScrW() / 4, 16, Color(40, 40, 40));
+			draw.RoundedBox(0, 9, 27, (ScrW() / 4 - 2) * (LocalPlayer():Armor() / 100), 14, Color(30, 100, 200));
+		end;
 	end;
 end;
 

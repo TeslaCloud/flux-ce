@@ -633,7 +633,7 @@ function rw.db:EasyWrite(tableName, where, data)
 					
 					updateObj:Where(where[1], where[2]);
 					updateObj:Callback(function()
-						print("[Rework] Easy MySQL updated data. ('"..tableName.."' WHERE "..where[1].." = "..where[2]..")");
+						rw.core:DevPrint("Easy MySQL updated data. ('"..tableName.."' WHERE "..where[1].." = "..where[2]..")");
 					end);
 					
 				updateObj:Execute();
@@ -644,9 +644,9 @@ function rw.db:EasyWrite(tableName, where, data)
 						insertObj:Insert(k, v);
 					end;
 					
-					insertObj:Callback(function(result, status, lastID)
+					insertObj:Callback(function(result)
 						if (typeof(where[1]) != "table") then
-							print("[Rework] Easy MySQL inserted data into '"..tableName.."' WHERE "..where[1].." = "..where[2]..".");
+							rw.core:DevPrint("Easy MySQL inserted data into '"..tableName.."' WHERE "..where[1].." = "..where[2]..".");
 						else
 							local msg = "Easy MySQL inserted data into '"..tableName.."' WHERE ";
 							local i = 0;
@@ -659,6 +659,8 @@ function rw.db:EasyWrite(tableName, where, data)
 									msg = msg.." AND ";
 								end;
 							end;
+
+							rw.core:DevPrint(msg);
 						end;
 					end);
 					
@@ -684,12 +686,13 @@ function rw.db:EasyRead(tableName, where, callback)
 			query:Where(where[1], where[2]);
 		end;
 	
-		query:Callback(function(result, status, lastID)
-			if (type(result) == "table" and #result > 0) then
-				local success, value = pcall(callback, result);
-				print("[Rework] Easy MySQL has successfully read the data. ("..tableName.." WHERE "..where[1].." = "..where[2]..")");
-			else
-				print("[Rework] Easy MySQL has failed to read the data. ("..tableName.." WHERE "..where[1].." = "..where[2]..")\nData does not exist!");
+		query:Callback(function(result)
+			rw.core:DevPrint("Easy MySQL has successfully read the data!");
+
+			local success, value = pcall(callback, result, (type(result) == "table" and #result > 0));
+
+			if (!success) then
+				ErrorNoHalt("[RW:EasyRead Error] "..value.."\n");
 			end;
 		end);
 		

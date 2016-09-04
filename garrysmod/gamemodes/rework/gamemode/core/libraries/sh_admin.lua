@@ -138,7 +138,11 @@ function rw.admin:FindGroup(id)
 		return groups[id];
 	end;
 
-	return {};
+	return nil;
+end;
+
+function rw.admin:GroupExists(id)
+	return self:FindGroup(id);
 end;
 
 function rw.admin:CheckImmunity(player, target, canBeEqual)

@@ -10,7 +10,7 @@ rw.config:Set("jump_power", 150);
 
 rw.config:Set("command_prefixes", {"/", "!"});
 
-rw.config:Set("owner_steamid", "") //"STEAM_0:1:14196407");
+rw.config:Set("owner_steamid", "STEAM_0:1:14196407");
 rw.config:Set("owner_steamid_extra", {"STEAM_0:0:00000000", "STEAM_0:0:00000000"});
 
 rw.config:Set("mysql_module", "tmysql4");

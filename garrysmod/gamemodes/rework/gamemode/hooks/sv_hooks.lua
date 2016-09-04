@@ -17,16 +17,26 @@ function GM:PlayerInitialSpawn(player)
 
 	player:SetUserGroup("user");
 
-	if (player:SteamID() == rw.config:Get("owner_steamid")) then
-		player:SetUserGroup("owner");
-	end;
+	rw.player:Restore(player);
 
 	player:SendConfig();
 	player:SyncNetVars();
 
-	ServerLog(player:Name().." ("..player:GetUserGroup()..") has connected to the server.");
-
 	netstream.Start(player, "SharedTables", rw.sharedTable);
+end;
+
+function GM:OnPlayerRestored(player)
+	if (player:SteamID() == rw.config:Get("owner_steamid")) then
+		player:SetUserGroup("owner");
+	end;
+
+	for k, v in ipairs(rw.config:Get("owner_steamid_extra")) do
+		if (v == player:SteamID()) then
+			player:SetUserGroup("owner");
+		end;
+	end;
+
+	ServerLog(player:Name().." ("..player:GetUserGroup()..") has connected to the server.");
 end;
 
 function GM:PlayerSpawn(player)

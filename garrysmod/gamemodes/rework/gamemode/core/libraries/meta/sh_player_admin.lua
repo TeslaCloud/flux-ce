@@ -18,7 +18,17 @@ function playerMeta:IsOwner()
 end;
 
 function playerMeta:IsCoOwner()
-	return (rw.config:Get("owner_steamid") == self:SteamID());
+	if (self:IsOwner()) then
+		return true;
+	end;
+
+	for k, v in ipairs(rw.config:Get("owner_steamid_extra")) do
+		if (v == self:SteamID()) then
+			return true;
+		end;
+	end;
+
+	return false;
 end;
 
 function playerMeta:GetUserGroup()
@@ -83,6 +93,11 @@ if (SERVER) then
 		rw.admin:CompilePermissions(self);
 	end;
 
+	function playerMeta:SetSecondaryGroups(groups)
+		self:SetNetVar("rwSecondaryGroups", groups);
+		rw.admin:CompilePermissions(self);
+	end;
+
 	function playerMeta:AddSecondaryGroup(group)
 		if (group == "owner" or group == "") then return; end;
 
@@ -105,6 +120,11 @@ if (SERVER) then
 		end;
 
 		self:SetNetVar("rwSecondaryGroups", groups);
+		rw.admin:CompilePermissions(self);
+	end;
+
+	function playerMeta:SetCustomPermissions(data)
+		self:SetNetVar("rwCustomPermissions", data);
 		rw.admin:CompilePermissions(self);
 	end;
 end;
