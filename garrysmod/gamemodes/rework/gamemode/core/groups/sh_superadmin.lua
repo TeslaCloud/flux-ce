@@ -11,7 +11,8 @@ local SUPERADMIN = Group("superadmin");
 	SUPERADMIN:SetImmunity(300);
 	SUPERADMIN:SetBase("admin");
 	SUPERADMIN:SetPermissions({
-		test = PERM_ALLOW
+		server_management = PERM_ALLOW,
+		player_management = PERM_ALLOW
 	})
 	
 SUPERADMIN:Register();

@@ -5,8 +5,8 @@
 
 local COMMAND = Command("kick");
 COMMAND.name = "Kick";
-COMMAND.description = "Kicks player from the server.";
-COMMAND.syntax = "<target> [reason]";
+COMMAND.description = "#KickCMD_Description";
+COMMAND.syntax = "#KickCMD_Syntax";
 COMMAND.category = "administration";
 COMMAND.arguments = 1;
 COMMAND.immunity = true;
