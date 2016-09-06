@@ -20,7 +20,7 @@ end;
 
 -- A function to print developer message.
 function rw.core:DevPrint(msg)
-	if (GAMEMODE.Devmode) then
+	if (rw.Devmode) then
 		print("[Rework:Dev] "..msg);
 	end;
 end;

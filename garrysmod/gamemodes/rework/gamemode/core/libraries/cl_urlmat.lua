@@ -6,6 +6,7 @@
 library.New("urlmat", rw);
 local cache = rw.urlmat.cache or {};
 rw.urlmat.cache = cache;
+local loading = {};
 
 function rw.urlmat:CacheMaterial(url)
 	local urlCRC = util.CRC(url);
@@ -28,7 +29,7 @@ function rw.urlmat:CacheMaterial(url)
 		end;
 	end;
 
-	http.Fetch(data.url, function(body, length, headers, code)
+	http.Fetch(url, function(body, length, headers, code)
 		path = path:gsub(".jpeg", ".jpg");
 		file.Write(path, body);
 		cache[urlCRC] = Material("../data/"..path, "noclamp smooth");
@@ -42,10 +43,10 @@ function URLMaterial(url)
 		return cache[urlCRC];
 	end;
 
-	if (!cache["CACHING_"..urlCRC]) then
+	if (!loading[urlCRC]) then
 		rw.urlmat:CacheMaterial(url);
-		cache["CACHING_"..urlCRC] = true; -- we're in progress!
+		loading[urlCRC] = true; -- we're in progress!
 	end;
 
-	-- return some default material here as placeholder!
+	return Material("vgui/wave.png"); -- return some placeholder material while we download
 end;

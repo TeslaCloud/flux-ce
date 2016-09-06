@@ -11,6 +11,11 @@ local QueueTable = {};
 rw.db.Module = rw.db.Module or rw.config:Get("mysql_module") or "sqlite";
 local Connected = false;
 
+if (rw.db.Module != "sqlite") then
+	rw.core:DevPrint("Using "..rw.db.Module.." as MySQL module...");
+	SafeRequire(rw.db.Module);
+end;
+
 local type = type;
 local tostring = tostring;
 local table = table;

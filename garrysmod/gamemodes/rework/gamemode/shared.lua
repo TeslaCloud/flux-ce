@@ -13,9 +13,10 @@ GM.Email 		= "support@teslacloud.net";
 GM.Version 		= "0.1";
 GM.Build 		= "1159";
 GM.Description 	= "A roleplay framework."
-GM.Devmode		= true; -- If set to true will print some developer info. Moderate console spam.
 GM.Prefix		= "RW: "; -- Prefix to display in server browser (*Prefix*: *Schema Name*)
 GM.NameOverride	= false; -- Set to any string to override schema's browser name.
+
+rw.Devmode		= true; -- If set to true will print some developer info. Moderate console spam.
 
 -- Table aliases.
 Rework = rw;

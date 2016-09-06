@@ -13,7 +13,7 @@ rw.config:Set("command_prefixes", {"/", "!"});
 rw.config:Set("owner_steamid", "STEAM_0:1:14196407");
 rw.config:Set("owner_steamid_extra", {"STEAM_0:0:00000000", "STEAM_0:0:00000000"});
 
-rw.config:Set("mysql_module", "tmysql4");
+rw.config:Set("mysql_module", "sqlite");
 rw.config:Set("mysql_host", "127.0.0.1");
 rw.config:Set("mysql_username", "root");
 rw.config:Set("mysql_password", "");

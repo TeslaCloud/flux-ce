@@ -5,7 +5,6 @@
 
 local PANEL = {};
 
-//local lerpDuration = 0.2;
 local closeDuration = 0.1;
 local expandDuration = 0.15;
 
@@ -94,39 +93,7 @@ function PANEL:Paint(w, h)
 end;
 
 function PANEL:Think(w, h)
-	--[[
-	if (self.lerpStart) then
-		local scrW, scrH = ScrW(), ScrH();
-		local fraction = (CurTime() - self.lerpStart) / lerpDuration;
-		local targetW, targetH = scrW * 0.6, scrH * 0.6;
-		local targetX, targetY = scrW * 0.115, scrH * 0.1;
 
-		self.viewPort:SetSize(Lerp(fraction, scrW, targetW), Lerp(fraction, scrH, targetH));
-		self.viewPort:SetPos(Lerp(fraction, 0, targetX), Lerp(fraction, 0, targetY));
-
-		if (fraction >= 1) then
-			self.lerpStart = nil;
-
-			self.viewPort:SetSize(targetW, targetH);
-			self.viewPort:SetPos(targetX, targetY);
-
-			self:SavePositions();
-		end;
-	elseif (self.reverseStart) then
-		if (!self.startX) then
-			self.startX = self.viewPort.x;
-			self.startY = self.viewPort.y;	
-			self.startW = self.viewPort:GetWide();
-			self.startH = self.viewPort:GetTall();
-		end;
-
-		local scrW, scrH = ScrW(), ScrH();
-		local fraction = (CurTime() - self.reverseStart) / closeDuration;
-
-		self.viewPort:SetSize(Lerp(fraction, self.startW, scrW), Lerp(fraction, self.startH, scrH));
-		self.viewPort:SetPos(Lerp(fraction, self.startX, 0), Lerp(fraction, self.startY, 0));
-	end;
-	--]]
 end;
 
 local function GetClassName(panel)
@@ -255,8 +222,6 @@ function PANEL:ToggleExpand()
 		if (v == parent.playerLabel or v == parent.dateTime) then
 			continue;
 		end;
-
-//		print(GetClassName(v));
 
 		if (self.bExpanded) then
 			v:MoveTo(v.startingPos.x + offset, v.startingPos.y, expandDuration);
