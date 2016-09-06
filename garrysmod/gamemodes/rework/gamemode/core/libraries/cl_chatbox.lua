@@ -695,8 +695,6 @@ local function ToIcon(text)
 end;
 
 function PANEL:Paint(w, h)
-	//if (CW.kernel:IsChoosingCharacter()) then return; end;
-	
 	if (self.isOpen) then
 		draw.RoundedBox(2, 0, 0, w, h, Color(60, 60, 60));
 	end;

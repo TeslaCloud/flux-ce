@@ -33,8 +33,12 @@ function rw.urlmat:CacheMaterial(url)
 		path = path:gsub(".jpeg", ".jpg");
 		file.Write(path, body);
 		cache[urlCRC] = Material("../data/"..path, "noclamp smooth");
+
+		plugin.Call("OnURLMatLoaded", url, cache[urlCRC]);
 	end);
 end;
+
+local placeholder = Material("vgui/wave.png");
 
 function URLMaterial(url)
 	local urlCRC = util.CRC(url);
@@ -48,5 +52,5 @@ function URLMaterial(url)
 		loading[urlCRC] = true; -- we're in progress!
 	end;
 
-	return Material("vgui/wave.png"); -- return some placeholder material while we download
+	return placeholder; -- return some placeholder material while we download
 end;

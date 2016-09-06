@@ -1,5 +1,5 @@
 --[[ 
-	Rework © 2016 Mr. Meow and NightAngel
+	Rework © 2016 TeslaCloud Studios
 	Do not share, re-distribute or sell.
 --]]
 
@@ -11,6 +11,9 @@ local expandDuration = 0.15;
 local colorBlack = Color(0, 0, 0, 255);
 local colorWhite = Color(255, 255, 255, 100);
 
+-- Temp placeholder change as you want.
+local backURL = "http://orig03.deviantart.net/aa16/f/2015/344/9/f/undyne___gyate_gyate___ohayou_by_pierrelucstl-d9jp6zc.png";
+
 function PANEL:Init()
 	RestoreCursorPosition();
 
@@ -20,6 +23,8 @@ function PANEL:Init()
 
 	self:SetSize(scrW, scrH);
 	self:SetPos(0, 0);
+
+	self:SetBackImage(backURL);
 
 	self.playerLabel = vgui.Create("rwTabPlayerLabel", self);
 	self.charPanel = vgui.Create("rwTabCharacter", self);
@@ -88,12 +93,20 @@ function PANEL:CloseMenu(bForce)
 	end);
 end;
 
-function PANEL:Paint(w, h)
-	draw.RoundedBox(0, 0, 0, w, h, colorBlack);
+function PANEL:SetBackImage(url)
+	URLMaterial(url);
+
+	self.backImage = url;
 end;
 
-function PANEL:Think(w, h)
+function PANEL:Paint(w, h)
+	draw.RoundedBox(0, 0, 0, w, h, colorBlack);
 
+	if (self.backImage) then
+		surface.SetMaterial(URLMaterial(self.backImage));
+		surface.SetDrawColor(colorWhite);
+		surface.DrawTexturedRect(0, 0, w, h);
+	end;
 end;
 
 local function GetClassName(panel)
@@ -109,22 +122,15 @@ function PANEL:OpenChildMenu(menu)
 	end;
 	
 	if (!class or (class and class != menu)) then
+		local scrW, scrH = ScrW(), ScrH();
+
 		self.menu = vgui.Create(menu, self);
 		self.menu:SetPos(self:GetWide() * 0.5, self:GetTall() * 0.5);
 		self.menu:SetSize(1, 1);
 		self.menu:SetAlpha(0);
-
-		self.menu.OpenAnim = function(panel)
-			local scrW, scrH = ScrW(), ScrH();
-
-			local x = scrW * 0.115;
-
-			panel:SetSize(scrW * 0.6, scrH * 0.6);
-			panel:SetPos(x + self.offset, scrH * 0.1);
-			panel:AlphaTo(255, expandDuration);
-		end;
-
-		self.menu:OpenAnim();
+		self.menu:SetSize(scrW * 0.6, scrH * 0.6);
+		self.menu:SetPos(scrW * 0.115 + self.offset, scrH * 0.1);
+		self.menu:AlphaTo(255, expandDuration);
 		self.menu.startingPos = {x = self.menu.x - self.offset, y = self.menu.y};
 
 		self.dock:ToggleMenuExpand();
@@ -133,14 +139,17 @@ end;
 
 function PANEL:CloseChildMenu(bForce)
 	if (self.menu) then
-//		if (bForce) then
+		if (bForce) then
 			self.menu:Remove();
 			self.menu = nil;
 
-	//		return;
-//		end;
+			return;
+		end;
 
-
+		--Use screenshot to mat method to shrink the image and fade it out, this is placeholder.
+		self.menu:AlphaTo(0, expandDuration, nil, function()
+			self:CloseChildMenu(true);
+		end);
 	end;
 
 	self.dock:ToggleMenuExpand();
@@ -223,6 +232,8 @@ function PANEL:ToggleExpand()
 			continue;
 		end;
 
+//		print(GetClassName(v));
+
 		if (self.bExpanded) then
 			v:MoveTo(v.startingPos.x + offset, v.startingPos.y, expandDuration);
 
@@ -253,12 +264,24 @@ function PANEL:ToggleMenuExpand()
 		end);
 
 		parent.viewPort:SizeTo(scrW * 0.25, scrH * 0.25, expandDuration);
+
+		parent.charPanel:MoveTo(parent.charPanel.x, scrH * 0.37, expandDuration, nil, nil, function()
+			parent.charPanel.startingPos = {x = parent.charPanel.x - parent.offset, y = parent.charPanel.y};
+		end);
+
+		parent.charPanel:SizeTo(parent.charPanel:GetWide(), scrH * 0.58, expandDuration);
 	else
 		parent.viewPort:MoveTo(scrW * 0.115 + parent.offset, parent.viewPort.y, expandDuration, nil, nil, function()
 			parent.viewPort.startingPos = {x = parent.viewPort.x - parent.offset, y = parent.viewPort.y};
 		end);
 
 		parent.viewPort:SizeTo(scrW * 0.6, scrH * 0.6, expandDuration);
+
+		parent.charPanel:MoveTo(parent.charPanel.x, scrH * 0.1, expandDuration, nil, nil, function()
+			parent.charPanel.startingPos = {x = parent.charPanel.x - parent.offset, y = parent.charPanel.y};
+		end);
+
+		parent.charPanel:SizeTo(parent.charPanel:GetWide(), scrH * 0.85, expandDuration);
 	end;
 
 	self.bMenuExpanded = !self.bMenuExpanded;
@@ -369,7 +392,7 @@ derma.DefineControl("rwTabDate", "", PANEL, "DPanel");
 local PANEL = {};
 
 --[[
-	Credits to Willox on facepunch for the minimap code. BIG thank you!
+	Credits to Willox on facepunch for the code. BIG thank you!
 	https://facepunch.com/member.php?u=257577
 --]]
 local function GenerateCircleVertices( x, y, radius, ang_start, ang_size )
@@ -456,15 +479,19 @@ local PANEL = {};
 function PANEL:Init()
 	local scrW, scrH = ScrW(), ScrH();
 
-	self:SetSize(scrW * 0.25, scrH * 0.6);
+	self:SetSize(scrW * 0.25, scrH * 0.85);
 	self:SetPos(scrW * 0.725, scrH * 0.1);
 
 	self.modelPanel = vgui.Create("DModelPanel", self);
 	self.modelPanel:SetSize(self:GetWide(), self:GetTall());
 	self.modelPanel:SetPos(0, 0);
 	self.modelPanel:SetModel(rw.client:GetModel());
-	self.modelPanel:SetCamPos(Vector(50, 10, 50));
-	self.modelPanel:SetLookAt(Vector(0, 0, 35));
+	self.modelPanel:SetCamPos(Vector(20, 20, 50));
+	self.modelPanel:SetLookAt(Vector(0, 0, 45));
+
+//	function self.modelPanel:Paint(w, h)
+//		draw.RoundedBox(0, 0, 0, w, h, colorBlack);
+//	end;
 
 	function self.modelPanel:LayoutEntity(ent)
 		self:RunAnimation();
