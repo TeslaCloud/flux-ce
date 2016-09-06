@@ -71,3 +71,6 @@ function rwUI:UnloadTheme()
 
 	self.activeTheme = nil;
 end;
+
+
+function rwUI:CapturePanelToMat(panel) end;

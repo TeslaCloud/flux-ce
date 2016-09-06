@@ -27,7 +27,13 @@ do
 		MsgC(Color(0, 255, 100, 255), "[Rework] Initializing...\n");
 	end;
 
-	SafeRequire("mysqloo");
+-- This module isn't in the git, so this gets commented out until it is.
+
+--[[
+	Also it might be better to only require these if the config for them checks out, 
+	so we aren't loading modules we don't need.
+--]]
+--	SafeRequire("mysqloo");
 	SafeRequire("tmysql4");
 
 	if (!SafeRequire("fileio")) then

@@ -5,8 +5,9 @@
 
 local PANEL = {};
 
-local lerpDuration = 0.2;
+//local lerpDuration = 0.2;
 local closeDuration = 0.1;
+local expandDuration = 0.15;
 
 local colorBlack = Color(0, 0, 0, 255);
 local colorWhite = Color(255, 255, 255, 100);
@@ -53,7 +54,16 @@ function PANEL:Init()
 		self:CloseMenu();
 	end;
 
-	self.lerpStart = CurTime();
+	self.viewPort:MoveTo(scrW * 0.115 + self.offset, scrH * 0.1, expandDuration, nil, nil, function()
+		self:SavePositions();
+	end);
+	self.viewPort:SizeTo(scrW * 0.6, scrH * 0.6, expandDuration);
+end;
+
+function PANEL:SavePositions()
+	for k, v in pairs(self:GetChildren()) do
+		v.startingPos = {x = v.x, y = v.y};
+	end;
 end;
 
 function PANEL:CloseMenu(bForce)
@@ -68,9 +78,11 @@ function PANEL:CloseMenu(bForce)
 		return;
 	end;
 
-	self.reverseStart = CurTime();
+	self.viewPort:MoveTo(0, 0, closeDuration);
+	self.viewPort:SizeTo(ScrW(), ScrH(), closeDuration);
+	self.viewPort:MoveToFront();
 
-	timer.Create("rwCloseTabMenu", lerpDuration * 0.25, 1, function()
+	timer.Create("rwCloseTabMenu", closeDuration, 1, function()
 		RememberCursorPosition();
 
 		self:CloseMenu(true);
@@ -82,6 +94,7 @@ function PANEL:Paint(w, h)
 end;
 
 function PANEL:Think(w, h)
+	--[[
 	if (self.lerpStart) then
 		local scrW, scrH = ScrW(), ScrH();
 		local fraction = (CurTime() - self.lerpStart) / lerpDuration;
@@ -96,6 +109,8 @@ function PANEL:Think(w, h)
 
 			self.viewPort:SetSize(targetW, targetH);
 			self.viewPort:SetPos(targetX, targetY);
+
+			self:SavePositions();
 		end;
 	elseif (self.reverseStart) then
 		if (!self.startX) then
@@ -107,12 +122,11 @@ function PANEL:Think(w, h)
 
 		local scrW, scrH = ScrW(), ScrH();
 		local fraction = (CurTime() - self.reverseStart) / closeDuration;
-	//	local oldW, oldH = scrW * 0.6, scrH * 0.6;
-	//	local oldX, oldY = scrW * 0.1, scrH * 0.1;
 
 		self.viewPort:SetSize(Lerp(fraction, self.startW, scrW), Lerp(fraction, self.startH, scrH));
 		self.viewPort:SetPos(Lerp(fraction, self.startX, 0), Lerp(fraction, self.startY, 0));
 	end;
+	--]]
 end;
 
 local function GetClassName(panel)
@@ -131,33 +145,38 @@ function PANEL:OpenChildMenu(menu)
 		self.menu = vgui.Create(menu, self);
 		self.menu:SetPos(self:GetWide() * 0.5, self:GetTall() * 0.5);
 		self.menu:SetSize(1, 1);
+		self.menu:SetAlpha(0);
 
 		self.menu.OpenAnim = function(panel)
 			local scrW, scrH = ScrW(), ScrH();
 
-			local x = scrW * 0.25 + self.offset;
+			local x = scrW * 0.115;
 
-		//	if (self.bExpanded == true) then
-	//			x = x + ScrW() * 0.1;
-		//	end;
-
-			panel:SetSize(scrW * 0.5, scrH * 0.5);
-			panel:SetPos(x, scrH * 0.1);
-		//	panel:SizeTo(scrW * 0.5, scrH * 0.5);
-		//	panel:MoveTo(scrW * 0.5 - panel:GetWide() * 0.5, scrH * 0.5 - panel:GetTall() * 0.5);
+			panel:SetSize(scrW * 0.6, scrH * 0.6);
+			panel:SetPos(x + self.offset, scrH * 0.1);
+			panel:AlphaTo(255, expandDuration);
 		end;
 
 		self.menu:OpenAnim();
+		self.menu.startingPos = {x = self.menu.x - self.offset, y = self.menu.y};
 
 		self.dock:ToggleMenuExpand();
 	end;
 end;
 
-function PANEL:CloseChildMenu()
+function PANEL:CloseChildMenu(bForce)
 	if (self.menu) then
-		self.menu:Remove();
-		self.menu = nil;
+//		if (bForce) then
+			self.menu:Remove();
+			self.menu = nil;
+
+	//		return;
+//		end;
+
+
 	end;
+
+	self.dock:ToggleMenuExpand();
 end;
 
 derma.DefineControl("rwTabMenu", "", PANEL, "DPanel");
@@ -218,10 +237,8 @@ function PANEL:Init()
 	end;
 end;
 
-local expandDuration = 0.3;
-
 function PANEL:ToggleExpand()
-	local offset = ScrW() * 0.1;
+	local offset = ScrW() * 0.03;
 	local parent = self:GetParent();
 
 	if (self.bExpanded == nil) then
@@ -235,18 +252,20 @@ function PANEL:ToggleExpand()
 	end;
 
 	for k, v in pairs(parent:GetChildren()) do
-		if (v == parent.playerLabel or v == parent.dateTime or (self.bMenuExpanded == false and v == parent.viewPort)) then
+		if (v == parent.playerLabel or v == parent.dateTime) then
 			continue;
 		end;
 
+//		print(GetClassName(v));
+
 		if (self.bExpanded) then
-			v:MoveTo(v.x + offset, v.y, expandDuration);
+			v:MoveTo(v.startingPos.x + offset, v.startingPos.y, expandDuration);
 
-			parent.offset = parent.offset + offset;
+			parent.offset = offset;
 		else
-			v:MoveTo(v.x - offset, v.y, expandDuration);
+			v:MoveTo(v.startingPos.x, v.startingPos.y, expandDuration);
 
-			parent.offset = parent.offset - offset;
+			parent.offset = 0;
 		end;
 	end;
 
@@ -256,87 +275,28 @@ function PANEL:ToggleExpand()
 end;
 
 function PANEL:ToggleMenuExpand()
-	local offset = ScrW() * 0.71;
+	local scrW, scrH = ScrW(), ScrH();
 	local parent = self:GetParent();
 
 	if (self.bMenuExpanded == nil) then
 		self.bMenuExpanded = true;
 	end;
 
-	for k, v in pairs(parent:GetChildren()) do
-		if (v == parent.playerLabel or v == parent.dateTime or v == self or v == parent.menu) then
-			continue;
-		end;
+	if (self.bMenuExpanded) then
+		parent.viewPort:MoveTo(scrW * 0.725 + parent.offset, parent.viewPort.y, expandDuration, nil, nil, function()
+			parent.viewPort.startingPos = {x = parent.viewPort.x - parent.offset, y = parent.viewPort.y};
+		end);
 
-		if (v == parent.viewPort and self.bExpanded == false) then
-			offset = offset - ScrW() * 0.1;
-		end;
+		parent.viewPort:SizeTo(scrW * 0.25, scrH * 0.25, expandDuration);
+	else
+		parent.viewPort:MoveTo(scrW * 0.115 + parent.offset, parent.viewPort.y, expandDuration, nil, nil, function()
+			parent.viewPort.startingPos = {x = parent.viewPort.x - parent.offset, y = parent.viewPort.y};
+		end);
 
-		if (self.bMenuExpanded) then
-			v:MoveTo(v.x + offset, v.y, expandDuration);
-
-			self.lerpStart = CurTime();
-
-		//	parent.offset = parent.offset + offset;
-		else
-			v:MoveTo(v.x - offset, v.y, expandDuration);
-
-			self.reverseStart = CurTime();
-
-		//	parent.offset = parent.offset - offset;
-		end;
-
-		if (v == parent.viewPort and self.bExpanded == false) then
-			offset = offset + ScrW() * 0.1;
-		end;
+		parent.viewPort:SizeTo(scrW * 0.6, scrH * 0.6, expandDuration);
 	end;
 
 	self.bMenuExpanded = !self.bMenuExpanded;
-end;
-
-function PANEL:Think()
-	if (self.lerpStart) then
-		local parent = self:GetParent();
-		local scrW, scrH = ScrW(), ScrH();
-		local fraction = (CurTime() - self.lerpStart) / expandDuration;
-		local targetW, targetH = scrW * 0.15, scrH * 0.15;
-
-		if (!self.startW) then
-			self.startW = parent.viewPort:GetWide();
-			self.startH = parent.viewPort:GetTall();	
-		end;
-
-		parent.viewPort:SetSize(Lerp(fraction, self.startW, targetW), Lerp(fraction, self.startH, targetH));
-
-		if (fraction >= 1) then
-			self.lerpStart = nil;
-			self.startW = nil;
-			self.startH = nil;
-
-			parent.viewPort:SetSize(targetW, targetH);
-		end;
-	elseif (self.reverseStart) then
-		local parent = self:GetParent();
-
-		if (!self.startW) then
-			self.startW = parent.viewPort:GetWide();
-			self.startH = parent.viewPort:GetTall();	
-		end;
-
-		local scrW, scrH = ScrW(), ScrH();
-		local fraction = (CurTime() - self.reverseStart) / expandDuration;
-		local targetW, targetH = scrW * 0.6, scrH * 0.6;
-
-		parent.viewPort:SetSize(Lerp(fraction, self.startW, targetW), Lerp(fraction, self.startH, targetH));
-
-		if (fraction >= 1) then
-			self.reverseStart = nil;
-			self.startW = nil;
-			self.startH = nil;
-
-			parent.viewPort:SetSize(targetW, targetH);
-		end;
-	end;
 end;
 
 function PANEL:Paint(w, h)
