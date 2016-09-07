@@ -21,6 +21,9 @@ lang["#TabMenu_Expand"] = "Expand";
 lang["#TabMenu_Characters"] = "Characters";
 lang["#TabMenu_Inventory"] = "Inventory";
 lang["#TabMenu_Settings"] = "Settings";
+lang["#TabMenu_Home"] = "Home";
+lang["#TabMenu_Scoreboard"] = "Scoreboard";
+lang["#TabMenu_Admin"] = "Admin";
 
 lang["#CMDDesc_Usage"] = "Syntax:";
 lang["#CMDDesc_Aliases"] = "Aliases:";

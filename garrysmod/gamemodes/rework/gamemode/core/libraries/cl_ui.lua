@@ -13,6 +13,9 @@ rwUI.activeTheme = rwUI.activeTheme or nil;
 local stored = rwUI.stored or {};
 rwUI.stored = stored;
 
+local cache = rwUI.cache or {};
+rwUI.cache = cache;
+
 Class "Theme";
 
 --[[ Basic Skeleton --]]
@@ -72,5 +75,30 @@ function rwUI:UnloadTheme()
 	self.activeTheme = nil;
 end;
 
+-- This doesn't seem to work.
+--[[
+function rwUI:CapturePanelToMat(panel)
+	if (self.cache[panel]) then
+		return self.cache[panel];
+	end;
 
-function rwUI:CapturePanelToMat(panel) end;
+	local captureData = render.Capture({
+		format = "png",
+		quality = 70,
+		x = panel.x,
+		y = panel.y,
+		w = panel:GetWide(),
+		h = panel:GetWide()
+	});
+
+	local name = os.time();
+	local path = "rework/materials/temp/"..name..".txt";
+
+	file.CreateDir("rework/"); file.CreateDir("rework/materials/"); file.CreateDir("rework/materials/temp/");
+	file.Write(path, captureData);
+
+	self.cache[panel] = Material("../data/"..path, "noclamp smooth");
+
+	return self.cache[panel];
+end;
+--]]
