@@ -56,6 +56,56 @@ function GM:AdjustTabDockMenus(menus)
 	};
 end;
 
+function GM:AdjustSettingCallbacks(callbacks)
+	callbacks["DCheckBox"] = function(panel, parent, setting)
+		panel:SetSize(parent:GetTall() * 0.9, parent:GetWide() * 0.05);
+		panel:SetPos(parent:GetWide() - panel:GetWide() * 1.1, parent:GetTall() * 0.5 - panel:GetTall() * 0.5);
+
+		panel:SetConVar("RW_"..setting.id);
+	end;
+
+	callbacks["DComboBox"] = function(panel, parent, setting)
+		panel:SetSize(parent:GetWide() * 0.98, parent:GetTall() * 0.6);
+		panel:SetPos(parent.label.x, parent.label.y + parent.label:GetTall() * 1.25);
+		parent:SetSize(parent:GetWide(), parent:GetTall() + parent.label:GetTall() * 0.1 + panel:GetTall());
+
+		if (istable(setting.info)) then
+			for k, v in pairs(setting.info) do
+				panel:AddChoice(v, k);
+			end;
+		end;
+
+		function panel:OnSelect(index, value, data)
+			if (data) then
+				value = data;
+			end;
+
+			rw.settings.SetValue(setting.id, value);
+		end;
+
+		panel:SetConVar("RW_"..setting.id);
+	end;
+
+	callbacks["DTextEntry"] = function(panel, parent, setting)
+		panel:SetSize(parent:GetWide() * 0.98, parent:GetTall() * 0.6);
+		panel:SetPos(parent.label.x, parent.label.y + parent.label:GetTall() * 1.25);
+		parent:SetSize(parent:GetWide(), parent:GetTall() + parent.label:GetTall() * 0.1 + panel:GetTall());
+
+		panel:SetConVar("RW_"..setting.id);
+	end;
+
+	callbacks["DColorMixer"] = function(panel, parent, setting)
+		panel:SetSize(parent:GetWide() * 0.98, ScrH() * 0.23);
+		panel:SetPos(parent.label.x, parent.label.y + parent.label:GetTall() * 1.25);
+		parent:SetSize(parent:GetWide(), parent:GetTall() + parent.label:GetTall() * 0.1 + panel:GetTall());
+
+		panel:SetConVarR("RW_"..setting.id.."_R");
+		panel:SetConVarG("RW_"..setting.id.."_G");
+		panel:SetConVarB("RW_"..setting.id.."_B");
+		panel:SetConVarA("RW_"..setting.id.."_A");
+	end;
+end;
+
 function GM:HUDPaint()
 	if (!plugin.Call("RWHUDPaint")) then
 		-- if nothing else overrides this, draw HUD that sucks

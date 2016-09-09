@@ -38,3 +38,19 @@ lang["#SetGroupCMD_Message"] = "#1 has set #2's user group to #3.";
 lang["#DemoteCMD_Description"] = "Demote a player to user.";
 lang["#DemoteCMD_Syntax"] = "<target>";
 lang["#DemoteCMD_Message"] = "#1 has demoted #2 from #3 to user.";
+
+lang["#Settings_Dashboard"] = "Dashboard";
+lang["#Settings_Theme"] = "Theme";
+lang["#Settings_AdminESP"] = "Admin ESP";
+
+lang["#Settings_BackgroundURL"] = "Specify a URL for your background.";
+lang["#Settings_BackgroundColor"] = "Select a color for the dashboard's background.";
+lang["#Settings_MenuBackColor"] = "Select a color for child menu backgrounds.";
+lang["#Settings_TextColor"] = "Select a color for text.";
+lang["#Settings_EnableAdminESP"] = "Enable the Admin ESP.";
+lang["#Settings_FitType"] = "Choose a fit for your background.";
+
+lang["#Settings_Fit_Tiled"] = "Tiled";
+lang["#Settings_Fit_Center"] = "Center";
+lang["#Settings_Fit_Fill"] = "Fill";
+lang["#Settings_Fit_Fit"] = "Fit";

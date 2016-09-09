@@ -3,18 +3,18 @@
 	Do not share, re-distribute or sell.
 --]]
 
-library.New("rwUI", _G);
-rwUI.activeTheme = rwUI.activeTheme or nil;
+library.New("theme", rw);
+rw.theme.activeTheme = rw.theme.activeTheme or nil;
 
 --[[
 	This is to preserve the table through autorefresh,
 	and also as a way to get the stored table instead of a function.
 --]]
-local stored = rwUI.stored or {};
-rwUI.stored = stored;
+local stored = rw.theme.stored or {};
+rw.theme.stored = stored;
 
-local cache = rwUI.cache or {};
-rwUI.cache = cache;
+local cache = rw.theme.cache or {};
+rw.theme.cache = cache;
 
 Class "Theme";
 
@@ -32,32 +32,32 @@ function Theme:OnLoaded() end;
 function Theme:OnUnloaded() end;
 
 function Theme:Remove()
-	return rwUI:RemoveTheme(self.m_uniqueID);
+	return rw.theme:RemoveTheme(self.m_uniqueID);
 end;
 
 function Theme:Register()
-	return rwUI.RegisterTheme(self);
+	return rw.theme.RegisterTheme(self);
 end;
 
-function rwUI.GetStored()
+function rw.theme.GetStored()
 	return stored;
 end;
 
-function rwUI.FindTheme(id)
+function rw.theme.FindTheme(id)
 	return stored[id];
 end;
 
-function rwUI:RemoveTheme(id)
+function rw.theme:RemoveTheme(id)
 	if (self.FindTheme(id)) then
 		stored[id] = nil;
 	end;
 end;
 
-function rwUI.RegisterTheme(themeTable)
+function rw.theme.RegisterTheme(themeTable)
 	stored[themeTable.m_uniqueID] = themeTable;
 end;
 
-function rwUI:LoadTheme(theme)
+function rw.theme:LoadTheme(theme)
 	local themeTable = (isstring(theme) and self.FindTheme(theme)) or (istable(theme) and theme);
 
 	self.activeTheme = themeTable;
@@ -67,7 +67,7 @@ function rwUI:LoadTheme(theme)
 	end;
 end;
 
-function rwUI:UnloadTheme()
+function rw.theme:UnloadTheme()
 	if (self.activeTheme.OnUnloaded) then
 		self.activeTheme:OnUnloaded();
 	end;
@@ -77,7 +77,7 @@ end;
 
 -- This doesn't seem to work.
 --[[
-function rwUI:CapturePanelToMat(panel)
+function rw.theme:CapturePanelToMat(panel)
 	if (self.cache[panel]) then
 		return self.cache[panel];
 	end;

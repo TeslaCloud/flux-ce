@@ -1,7 +1,6 @@
 local PANEL = {};
 
 local colorWhite = Color(255, 255, 255, 255);
-local colorGray = Color(255, 255, 255, 100);
 local colorBlack = Color(0, 0, 0, 100);
 
 function PANEL:Init()
@@ -41,7 +40,7 @@ function PANEL:Rebuild()
 end;
 
 function PANEL:Paint(w, h)
-	draw.RoundedBox(0, 0, 0, w, h, colorGray);
+	draw.RoundedBox(0, 0, 0, w, h, rw.settings.GetColor("MenuBackColor"));
 end;
 
 derma.DefineControl("rwScoreboard", "", PANEL, "DPanel");

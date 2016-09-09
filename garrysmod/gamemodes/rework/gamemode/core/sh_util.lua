@@ -400,3 +400,28 @@ function util.GetTextSize(font, text)
 	
 	return surface.GetTextSize(text);
 end;
+
+-- Adjusts x, y to fit inside x2, y2 while keeping original aspect ratio.
+function util.FitToAspect(x, y, x2, y2)
+	local aspect = x / y;
+
+	if (x > x2) then
+		x = x2;
+		y = x * aspect;
+	end;
+
+	if (y > y2) then
+		y = y2;
+		x = y * aspect;
+	end;
+
+	return x, y;
+end;
+
+function util.ToBool(value)
+	if (tonumber(value) == 1 or value == true or value == "true") then
+		return true;
+	end;
+
+	return false;
+end;

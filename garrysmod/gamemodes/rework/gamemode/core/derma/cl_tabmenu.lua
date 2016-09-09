@@ -7,20 +7,22 @@ local PANEL = {};
 
 local closeDuration = 0.1;
 local expandDuration = 0.15;
+local clickDuration = 0.4;
+local outlineSize = 0.5;
+local backDuration = 1;
 
 local colorBlack = Color(0, 0, 0, 255);
-local colorWhite = Color(255, 255, 255, 100);
-local colorFullWhite = Color(255, 255, 255, 255);
+local colorWhite = Color(255, 255, 255, 255);
 local colorRed = Color(255, 30, 30, 255);
 local colorBlue = Color(30, 30, 255, 255);
 
 -- Temp placeholder, change as you want.
-local backURL = "http://orig03.deviantart.net/aa16/f/2015/344/9/f/undyne___gyate_gyate___ohayou_by_pierrelucstl-d9jp6zc.png";
+//local backURL = "http://orig03.deviantart.net/aa16/f/2015/344/9/f/undyne___gyate_gyate___ohayou_by_pierrelucstl-d9jp6zc.png";
+//local backURL = "http://cdn.wallpapersafari.com/20/31/HpQ8Zy.png";
+//local backURL = "http://i.imgur.com/ZlJmDxp.jpg"; // To test images that have a higher height than screen height.
 //local gifTest = "http://i.imgur.com/sKW05vd.gif";
-local backOption = "tiled";
--- center, fill, zoom, tiled
-
-URLMaterial(backURL);
+//local backOption = "fill";
+-- center, fill, fit, tiled
 
 local function GetClassName(panel)
 	return panel:GetTable().ClassName;
@@ -36,64 +38,12 @@ function PANEL:Init()
 	self:SetSize(scrW, scrH);
 	self:SetPos(0, 0);
 
+	local backURL = rw.settings.GetString("BackgroundURL");
+	local backOption = rw.settings.GetString("FitType");
+
 	self:SetBackImage(backURL, backOption);
 
-	self.backPanel = vgui.Create("DPanel", self);
-
-	self.backPanel:SetPos(0, 0);
-	self.backPanel:SetSize(scrW, scrH);
-
-	self.backPanel.Paint = function(panel, w, h)
-
-		-- We do this so that a transparent panel won't have the background in the screenshot.
-	//	panel:SetRenderInScreenshots(false);
-
-		if (self.backImage) then
-			local backMat = URLMaterial(self.backImage);
-
-			surface.SetMaterial(backMat);
-			surface.SetDrawColor(colorFullWhite);
-
-			if (self.option == "center") then
-				self.backW, self.backH = backMat:Width(), backMat:Height();
-				self.backX, self.backY = w * 0.5 - self.backW * 0.5, h * 0.5 - self.backH * 0.5;
-			elseif (self.option == "zoom") then
-				local matW, matH = backMat:Width(), backMat:Height();
-				local aspect = matW / matH;
-
-				self.backW, self.backH = h * aspect, h;
-				self.backX, self.backY = w * 0.5 - self.backW * 0.5, h * 0.5 - self.backH * 0.5;
-			elseif (self.option == "tiled") then
-				if (!self.tiles) then
-					self.backW, self.backH = backMat:Width(), backMat:Height();
-					self.tiles = {};
-
-					for k = 0, math.ceil(w / self.backW) - 1 do
-						for i = 0, math.ceil(h / self.backH) - 1 do
-							self.tiles[#self.tiles + 1] = {
-								x = k * self.backW,
-								y = i * self.backH
-							};
-						end;
-					end;
-				end;
-
-				for k, v in pairs(self.tiles) do
-					surface.DrawTexturedRect(v.x, v.y, self.backW, self.backH);
-				end;
-
-				return;
-			end;
-
-			surface.DrawTexturedRect(self.backX, self.backY, self.backW, self.backH);
-		end;
-	end;
-
-	self.backPanel.OnMousePressed = function(nKey)
-		if (self.menu) then
-			self:CloseChildMenu();
-		end;
-	end;
+	self:CreateBackPanel();
 
 	self.playerLabel = vgui.Create("rwTabPlayerLabel", self);
 	self.charPanel = vgui.Create("rwTabCharacter", self);
@@ -136,6 +86,83 @@ function PANEL:Init()
 	self.viewPort:SizeTo(scrW * 0.6, scrH * 0.6, expandDuration);
 end;
 
+function PANEL:CreateBackPanel()
+	local scrW, scrH = ScrW(), ScrH();
+
+	self.backPanel = vgui.Create("DPanel", self);
+
+	self.backPanel:MoveToBack();
+
+	self.backPanel:SetPos(0, 0);
+	self.backPanel:SetSize(scrW, scrH);
+
+	self.backPanel.Paint = function(panel, w, h)
+
+		-- We do this so that a transparent panel won't have the background in the screenshot.
+	//	panel:SetRenderInScreenshots(false);
+		local backImage = self.backImage;
+		local option = self.option;
+		local backW, backH = self.backW, self.backH;
+		local backX, backY = self.backX, self.backY;
+		local tiles = self.tiles;
+
+		if (panel == self.oldPanel) then
+			backImage = self.oldImage;
+			option = self.oldOption;
+
+			backW, backH = self.oldW, self.oldH;
+			backX, backY = self.oldX, self.oldY;
+			tiles = self.oldTiles;
+		end;
+
+		if (backImage and backImage != "") then
+			local backMat = URLMaterial(backImage);
+
+			surface.SetMaterial(backMat);
+			surface.SetDrawColor(colorWhite);
+
+			if (option == "center") then
+				backW, backH = backMat:Width(), backMat:Height();
+				backX, backY = w * 0.5 - backW * 0.5, h * 0.5 - backH * 0.5;
+			elseif (option == "fit") then
+				backW, backH = util.FitToAspect(backMat:Width(), backMat:Height(), w, h);
+				backX, backY = w * 0.5 - backW * 0.5, h * 0.5 - backH * 0.5;
+			elseif (option == "tiled") then
+				if (!tiles) then
+					backW, backH = util.FitToAspect(backMat:Width(), backMat:Height(), w, h);
+					tiles = {};
+
+					for k = 0, math.ceil(w / backW) - 1 do
+						for i = 0, math.ceil(h / backH) - 1 do
+							tiles[#tiles + 1] = {
+								x = k * backW,
+								y = i * backH
+							};
+						end;
+					end;
+				end;
+
+				for k, v in pairs(tiles) do
+					surface.DrawTexturedRect(v.x, v.y, backW, backH);
+				end;
+
+				return;
+			end;
+
+			surface.DrawTexturedRect(backX, backY, backW, backH);
+		else
+			surface.SetDrawColor(rw.settings.GetColor("BackgroundColor"));
+			surface.DrawRect(0, 0, w, h);
+		end;
+	end;
+
+	self.backPanel.OnMousePressed = function(nKey)
+		if (self.menu) then
+			self:CloseChildMenu();
+		end;
+	end;
+end;
+
 function PANEL:GetActiveCategory()
 	if (IsValid(self.menu) and GetClassName(self.menu) == "rwScoreboard") then
 		return "#TabMenu_Scoreboard";
@@ -162,20 +189,42 @@ function PANEL:CloseMenu(bForce)
 		return;
 	end;
 
+	self.viewPort:MoveToFront();
 	self.viewPort:MoveTo(0, 0, closeDuration);
 	self.viewPort:SizeTo(ScrW(), ScrH(), closeDuration);
-	self.viewPort:MoveToFront();
 
 	timer.Create("rwCloseTabMenu", closeDuration, 1, function()
 		RememberCursorPosition();
 
-		self:CloseMenu(true);
+		if (IsValid(self)) then
+			self:CloseMenu(true);
+		end;
 	end);
 end;
 
 function PANEL:SetBackImage(url, option)
+	if (self.backPanel) then
+		self.oldPanel = self.backPanel;
+		self.oldImage = self.backImage;
+		self.oldOption = self.option;
+
+		self.oldW, self.oldH = self.backW, self.backH;
+		self.oldX, self.oldY = self.backX, self.backY;
+
+		self.oldPanel:AlphaTo(0, backDuration, nil, function(data, panel)
+			panel:Remove();
+		end);
+
+		self:CreateBackPanel();
+
+		self.backPanel:MoveToBack();
+		self.oldPanel:MoveToAfter(self.backPanel);
+	end;
+
 	self.backImage = url;
 	self.option = option;
+		
+	URLMaterial(url);
 
 	local w, h = self:GetWide(), self:GetTall();
 
@@ -187,7 +236,8 @@ function PANEL:SetBackImage(url, option)
 end;
 
 function PANEL:Paint(w, h)
-	draw.RoundedBox(0, 0, 0, w, h, colorFullWhite);
+	draw.RoundedBox(0, 0, 0, w, h, colorBlack);
+	draw.RoundedBox(0, 0, 0, w, h, rw.settings.GetColor("BackgroundColor"));
 end;
 
 function PANEL:OpenChildMenu(menu)
@@ -197,8 +247,6 @@ function PANEL:OpenChildMenu(menu)
 		class = GetClassName(self.menu);
 		self:CloseChildMenu(nil, true);
 	end;
-
-	print(!class, class and class != menu, class, menu);
 
 	if (!class or (class and class != menu)) then
 		local scrW, scrH = ScrW(), ScrH();
@@ -248,7 +296,7 @@ function PANEL:CloseChildMenu(bForce, noExpand)
 	end;
 end;
 
-derma.DefineControl("rwTabMenu", "", PANEL, "DPanel");
+derma.DefineControl("rwTabMenu", "", PANEL, "EditablePanel");
 
 local PANEL = {};
 
@@ -265,6 +313,9 @@ function PANEL:Init()
 
 	self.home.DoClick = function()
 		self:GetParent():CloseChildMenu();
+
+		self.home.clickStart = CurTime();
+		self.home.clickX, self.home.clickY = self.home:ScreenToLocal(input.GetCursorPos());
 	end;
 
 	self.scoreboard = vgui.Create("rwCategoryButton", self);
@@ -317,19 +368,19 @@ function PANEL:Paint(w, h)
 			local fraction = (curTime - self.lerpTime) / expandDuration;
 
 			if (self.hovered) then
-				self.textAlpha = Lerp(fraction, colorWhite.a, 255);
+				self.textAlpha = Lerp(fraction, colorWhite.a, 170);
 			else
-				self.textAlpha = Lerp(fraction, 255, colorWhite.a);
+				self.textAlpha = Lerp(fraction, 170, colorWhite.a);
 			end;
 		end;
 
 		local alpha = self.textAlpha;
 
 		if (self:GetParent():GetParent():GetActiveCategory() == self.text) then
-			alpha = 255;
+			alpha = 170;
 		end;
 
-		draw.SimpleTextOutlined(self.text, "DermaLarge", w * 0.5, h * 0.5, ColorAlpha(colorWhite, alpha), TEXT_ALIGN_CENTER, nil, 1, colorBlack);
+		draw.SimpleTextOutlined(self.text, "DermaLarge", w * 0.5, h * 0.5, ColorAlpha(colorWhite, alpha), TEXT_ALIGN_CENTER, nil, outlineSize, ColorAlpha(colorBlack, alpha));
 	end;
 end;
 
@@ -375,8 +426,10 @@ function PANEL:Init()
 
 		button.DoClick = function(panel)
 			if (panel.menu) then
-				self:GetParent():OpenChildMenu(panel.menu);
+				self:GetParent():OpenChildMenu(panel.menu);	
 			end;
+
+			panel.clickStart = CurTime();
 		end;
 
 		v.button = button;
@@ -394,7 +447,7 @@ function PANEL:ToggleExpand()
 	end;
 
 	if (self.bExpanded) then
-		self.target = colorFullWhite.a;
+		self.target = colorWhite.a;
 	else
 		self.target = 0;
 	end;
@@ -428,8 +481,10 @@ function PANEL:ToggleMenuExpand()
 		self.bMenuExpanded = true;
 	end;
 
+	parent.viewPort:MoveToFront();
+
 	if (self.bMenuExpanded) then
-		parent.viewPort:MoveTo(scrW * 0.725 + parent.offset, parent.viewPort.y, expandDuration, nil, nil, function()
+		parent.viewPort:MoveTo(scrW * 0.72 + parent.offset, parent.viewPort.y, expandDuration, nil, nil, function()
 			parent.viewPort.startingPos = {x = parent.viewPort.x - parent.offset, y = parent.viewPort.y};
 		end);
 
@@ -458,14 +513,16 @@ function PANEL:ToggleMenuExpand()
 end;
 
 function PANEL:Paint(w, h)
+	local curTime = CurTime();
+
 	if (self.expandStart) then
-		local fraction = (CurTime() - self.expandStart) / expandDuration;
+		local fraction = (curTime - self.expandStart) / expandDuration;
 
 		self.alpha = Lerp(fraction, self.origin, self.target);
 
 		if (fraction >= 1) then
 			if (!self.bExpanded) then
-				self.alpha = colorFullWhite.a;
+				self.alpha = colorWhite.a;
 			else
 				self.alpha = 0;
 			end;
@@ -476,10 +533,10 @@ function PANEL:Paint(w, h)
 	end;
 
 	if (self.alpha > 0) then
-		draw.SimpleTextOutlined("#TabMenu_Expand", "DermaLarge", self.expand.x * 0.97, self.expand.y + self.expand:GetTall() * 0.5, ColorAlpha(colorFullWhite, self.alpha), TEXT_ALIGN_RIGHT, TEXT_ALIGN_CENTER, 1, colorBlack);
+		draw.SimpleTextOutlined("#TabMenu_Expand", "DermaLarge", self.expand.x * 0.97, self.expand.y + self.expand:GetTall() * 0.5, ColorAlpha(colorWhite, self.alpha), TEXT_ALIGN_RIGHT, TEXT_ALIGN_CENTER, outlineSize, ColorAlpha(colorBlack, self.alpha));
 
 		for k, v in pairs(self.menus) do
-			draw.SimpleTextOutlined("#TabMenu_"..k, "DermaLarge", v.button.x * 0.97, v.button.y + v.button:GetTall() * 0.5, ColorAlpha(colorFullWhite, self.alpha), TEXT_ALIGN_RIGHT, TEXT_ALIGN_CENTER, 1, colorBlack);
+			draw.SimpleTextOutlined("#TabMenu_"..k, "DermaLarge", v.button.x * 0.97, v.button.y + v.button:GetTall() * 0.5, ColorAlpha(colorWhite, self.alpha), TEXT_ALIGN_RIGHT, TEXT_ALIGN_CENTER, outlineSize, ColorAlpha(colorBlack, self.alpha));
 		end;
 	end;
 end;
@@ -496,12 +553,12 @@ end;
 function PANEL:SetCallback(callback)
 	function self:DoClick()
 		callback(self);
+		self.clickStart = CurTime();
 	end;
 end;
 
 function PANEL:Paint(w, h)
 	local color = self.color or colorWhite;
-
 	local curTime = CurTime();
 
 	if (self:IsHovered() and !self.hovered) then
@@ -516,9 +573,9 @@ function PANEL:Paint(w, h)
 		local fraction = (curTime - self.lerpTime) / expandDuration;
 
 		if (self.hovered) then
-			self.textAlpha = Lerp(fraction, color.a, 255);
+			self.textAlpha = Lerp(fraction, color.a, 170);
 		else
-			self.textAlpha = Lerp(fraction, 255, color.a);
+			self.textAlpha = Lerp(fraction, 170, color.a);
 		end;
 	end;
 
@@ -526,10 +583,28 @@ function PANEL:Paint(w, h)
 	local currentPanel = self:GetParent():GetParent():GetParent().menu;
 
 	if (IsValid(currentPanel) and self.menu == GetClassName(currentPanel)) then
-		alpha = 255;
+		alpha = 170;
 	end;
 
-	rw.fa:Draw(self.icon or "fa-bars", w * 0.5, h * 0.5, self.size or 16, ColorAlpha(color, alpha), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, colorBlack);
+	rw.fa:Draw(self.icon or "fa-bars", w * 0.5, h * 0.5, self.size or 16, ColorAlpha(color, alpha), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, outlineSize, colorBlack);
+
+
+	if (self.clickStart) then
+		local fraction = (curTime - self.clickStart) / clickDuration;
+		local w2 = w * 0.5;
+		local h2 = h * 0.5;
+
+		surface.DisableClipping(true);
+			surface.SetDrawColor(ColorAlpha(colorWhite, Lerp(fraction, colorWhite.a, 0)));
+
+			surface.DrawCircle(w2, h2, Lerp(fraction, 1, w2 * 1.25));
+			surface.DrawOutlinedCircle(w2, h2, Lerp(fraction, 1, w), w2 * 0.15);
+		surface.DisableClipping(false);
+
+		if (fraction >= 1) then
+			self.clickStart = nil;
+		end;
+	end;
 end;
 
 derma.DefineControl("rwTabDockButton", "", PANEL, "DButton");
@@ -577,29 +652,13 @@ function PANEL:Paint(w, h)
 	local timeText = hour..":"..min.." "..am;
 	local dateText = day.." "..date.day.."/"..month.."/"..year;
 
-	draw.SimpleTextOutlined(timeText, "DermaLarge", w, h * 0.5, colorFullWhite, TEXT_ALIGN_RIGHT, TEXT_ALIGN_TOP, 1, colorBlack);
-	draw.SimpleTextOutlined(dateText, "DermaLarge", 0, h * 0.5, colorFullWhite, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP, 1, colorBlack);
+	draw.SimpleTextOutlined(timeText, "DermaLarge", w, h * 0.5, colorWhite, TEXT_ALIGN_RIGHT, TEXT_ALIGN_TOP, outlineSize, colorBlack);
+	draw.SimpleTextOutlined(dateText, "DermaLarge", 0, h * 0.5, colorWhite, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP, outlineSize, colorBlack);
 end;
 
 derma.DefineControl("rwTabDate", "", PANEL, "DPanel");
 
 local PANEL = {};
-
-local function GetCircleInfo(x, y, radius)
-    local vertices = {};
-
- 	-- Since tables start at index 1.
-    for i = 1, 361 do
-    	local degInRad = i * math.pi / 180;
-
-        vertices[i] = {
-            x = x + math.cos(degInRad) * radius,
-            y = y + math.sin(degInRad) * radius
-        };
-    end;
-
-    return vertices;
-end;
 
 function PANEL:Init()
 	local scrW, scrH = ScrW(), ScrH();
@@ -617,42 +676,29 @@ function PANEL:Init()
 	self.avatar.OnMousePressed = function(self)
 		gui.OpenURL("http://steamcommunity.com/profiles/"..rw.client:SteamID64());
 	end;
-
-	self.avatar.circleInfo = GetCircleInfo(
-		self.avatar.x + (self.avatar:GetWide() * 0.5), 
-		self.avatar.y + (self.avatar:GetTall() * 0.5), 
-		self.avatar:GetWide() * 0.5
-	);
 end;
 
 function PANEL:Paint(w, h)
-	draw.SimpleTextOutlined(rw.client:Name(), "DermaLarge", w * 0.25, h * 0.5, colorFullWhite, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP, 1, colorBlack);
+	draw.SimpleTextOutlined(rw.client:Name(), "DermaLarge", w * 0.25, h * 0.5, colorWhite, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP, outlineSize, colorBlack);
 
 	-- Circle Avatar
-	render.PushFilterMag(TEXFILTER.ANISOTROPIC);
-	render.PushFilterMin(TEXFILTER.ANISOTROPIC);
-
+	render.ClearStencil();
 		render.SetStencilEnable(true);
 			render.SetStencilReferenceValue(1);
 
-			render.SetStencilWriteMask(1);
-			render.SetStencilTestMask(1);
-
 			render.SetStencilPassOperation(STENCIL_REPLACE);
-			render.SetStencilFailOperation(STENCIL_KEEP);
-			render.SetStencilZFailOperation(STENCIL_KEEP);
-
-			render.ClearStencil();
+			
 
 			render.SetStencilCompareFunction(STENCIL_NOTEQUAL);
-				surface.DrawPoly(self.avatar.circleInfo);
+				surface.DrawCircle(
+					self.avatar.x + (self.avatar:GetWide() * 0.5), 
+					self.avatar.y + (self.avatar:GetTall() * 0.5), 
+					self.avatar:GetWide() * 0.5
+				);
 			render.SetStencilCompareFunction(STENCIL_EQUAL);
 				self.avatar:PaintManual();
-			render.ClearStencil();
-	render.SetStencilEnable(false);
-
-	render.PopFilterMag();
-	render.PopFilterMin();
+		render.SetStencilEnable(false);
+	render.ClearStencil();
 end;
 
 derma.DefineControl("rwTabPlayerLabel", "", PANEL, "DPanel");
@@ -777,8 +823,8 @@ function PANEL:SetAnimation(anim)
 end;
 
 function PANEL:Paint(w, h)
-	draw.RoundedBox(0, 0, 0, w, h, colorWhite);
-
+	draw.RoundedBox(0, 0, 0, w, h, rw.settings.GetColor("MenuBackColor"));
+--[[
 	local barW, barH = self.barWidth, h - (self.optionHeight * 1.1);
 	local x, y = w * 0.005, 0;
 
@@ -798,6 +844,7 @@ function PANEL:Paint(w, h)
 	if (armorFraction > 0) then
 		draw.RoundedBox(2, x + 1, barH - armorH, barW - 2, armorH, colorRed);
 	end;
+--]]
 end;
 
 derma.DefineControl("rwTabCharacter", "", PANEL, "DPanel");
