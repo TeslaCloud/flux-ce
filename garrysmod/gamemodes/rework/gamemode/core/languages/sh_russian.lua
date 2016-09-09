@@ -21,6 +21,9 @@ lang["#TabMenu_Expand"] = "Развернуть";
 lang["#TabMenu_Characters"] = "Персонажи";
 lang["#TabMenu_Inventory"] = "Инвентарь";
 lang["#TabMenu_Settings"] = "Настройки";
+lang["#TabMenu_Home"] = "Домашняя страница";
+lang["#TabMenu_Scoreboard"] = "Игроки";
+lang["#TabMenu_Admin"] = "Админка";
 
 lang["#CMDDesc_Usage"] = "Синтаксис:";
 lang["#CMDDesc_Aliases"] = "Алиасы:";
@@ -35,3 +38,19 @@ lang["#SetGroupCMD_Message"] = "#1 выдал группу пользовате�
 lang["#DemoteCMD_Description"] = "Понижает игрока до пользователя.";
 lang["#DemoteCMD_Syntax"] = "<игрок>";
 lang["#DemoteCMD_Message"] = "#1 понизил #2 с #3 до пользователя.";
+
+lang["#Settings_Dashboard"] = "TAB меню";
+lang["#Settings_Theme"] = "Оформление";
+lang["#Settings_AdminESP"] = "ESP администратора";
+
+lang["#Settings_BackgroundURL"] = "Введите ссылку на картинку для фона.";
+lang["#Settings_BackgroundColor"] = "Цвет фона TAB меню:";
+lang["#Settings_MenuBackColor"] = "Цвет панелей:";
+lang["#Settings_TextColor"] = "Цвет текста:";
+lang["#Settings_EnableAdminESP"] = "Включить ESP администратора";
+lang["#Settings_FitType"] = "Выберите как следует масштабировать картинку фона.";
+
+lang["#Settings_Fit_Tiled"] = "Плитки";
+lang["#Settings_Fit_Center"] = "Центрировать";
+lang["#Settings_Fit_Fill"] = "Заполнить";
+lang["#Settings_Fit_Fit"] = "Подогнать размер";
