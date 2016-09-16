@@ -3,6 +3,8 @@ local PANEL = {};
 local colorWhite = Color(255, 255, 255, 255);
 local colorBlack = Color(0, 0, 0, 100);
 
+local menuFont = "menu_thin";
+
 function PANEL:Init()
 	local scrW, scrH = ScrW(), ScrH();
 
@@ -40,7 +42,8 @@ function PANEL:Rebuild()
 end;
 
 function PANEL:Paint(w, h)
-	draw.RoundedBox(0, 0, 0, w, h, rw.settings.GetColor("MenuBackColor"));
+	surface.SetDrawColor(rw.settings.GetColor("MenuBackColor"));
+	surface.DrawRect(0, 0, w, h);
 end;
 
 derma.DefineControl("rwScoreboard", "", PANEL, "DPanel");
@@ -72,10 +75,11 @@ function PANEL:SetPlayer(player)
 end;
 
 function PANEL:Paint(w, h)
-	draw.RoundedBox(0, 0, 0, w, h, colorBlack);
+	surface.SetDrawColor(colorBlack);
+	surface.DrawRect(0, 0, w, h);
 
 	if (self.name) then
-		draw.SimpleText(self.name, "DermaLarge", self.avatar.x + self.avatar:GetWide() * 1.1, h * 0.5, colorWhite, nil, TEXT_ALIGN_CENTER);
+		draw.SimpleText(self.name, menuFont, self.avatar.x + self.avatar:GetWide() * 1.1, h * 0.5, rw.settings.GetColor("TextColor"), nil, TEXT_ALIGN_CENTER);
 	end;
 end;
 

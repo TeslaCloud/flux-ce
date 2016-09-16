@@ -6,6 +6,9 @@ local colorBlack = Color(0, 0, 0, 100);
 local outlineSize = 0.5;
 local expandDuration = 0.15;
 
+local menuFont = "menu_light";
+local thinFont = "menu_thin";
+
 function PANEL:Init()
 	local scrW, scrH = ScrW(), ScrH();
 
@@ -19,7 +22,8 @@ function PANEL:Init()
 	self.categoryList:SetSize(self:GetWide() * 0.2, self:GetTall());
 	self.categoryList:SetPos(0, self:GetTall() * 0.5 - self.categoryList:GetTall() * 0.5);
 	self.categoryList.Paint = function(panel, w, h)
-		draw.RoundedBox(0, 0, 0, w, h, rw.settings.GetColor("MenuBackColor"));
+		surface.SetDrawColor(rw.settings.GetColor("MenuBackColor"));
+		surface.DrawRect(0, 0, w, h);
 	end;
 
 	self.settingList = vgui.Create("DScrollPanel", self);
@@ -30,7 +34,8 @@ function PANEL:Init()
 	);
 
 	self.settingList.Paint = function(panel, w, h)
-		draw.RoundedBox(0, 0, 0, w, h, rw.settings.GetColor("MenuBackColor"));
+		surface.SetDrawColor(rw.settings.GetColor("MenuBackColor"));
+		surface.DrawRect(0, 0, w, h);
 	end;
 
 	self:BuildCategoryList();
@@ -58,22 +63,23 @@ function PANEL:BuildList()
 			setting:SetPos(x, y);
 			setting:SetSize(w, h);
 
-			function setting:Paint(w, h)
-				draw.RoundedBox(0, 0, 0, w, h, colorBlack);
-			end;
-
 			setting.label = vgui.Create("DLabel", setting);
-			setting.label:SetFont("DermaLarge");
+			setting.label:SetFont(thinFont);
 			setting.label:SetText("#Settings_"..v.id);
-			setting.label:SetTextColor(colorWhite);
+			setting.label:SetTextColor(rw.settings.GetColor("TextColor"));			
 			setting.label:SizeToContents();
 			setting.label:SetPos(setting:GetWide() * 0.01, setting:GetTall() * 0.5 - setting.label:GetTall() * 0.5);
+
+			function setting:Paint(w, h)
+				surface.SetDrawColor(colorBlack);
+				surface.DrawRect(0, 0, w, h);
+		
+				self.label:SetTextColor(rw.settings.GetColor("TextColor"));
+			end;
 
 			setting.element = vgui.Create(v.type, setting);
 
 			elementCallback(setting.element, setting, v);
-
-		//	setting.element:SetConVar("RW_"..v.id);
 
 			y = y + setting:GetTall() + setList:GetWide() * 0.01;
 		end;
@@ -82,9 +88,9 @@ end;
 
 function PANEL:BuildCategoryList()
 	local catList = self.categoryList;
-	local x = catList:GetWide() * 0.01
+	local x = 0;
 	local y = x;
-	local w, h = catList:GetWide() * 0.98, catList:GetTall() * 0.09;
+	local w, h = catList:GetWide(), catList:GetTall() * 0.09;
 	local categories = rw.settings.GetIndexedCategories(function(a, b)
 		return L(a.id) < L(b.id);
 	end);
@@ -103,11 +109,30 @@ function PANEL:BuildCategoryList()
 			continue;
 		end;
 
+		surface.SetFont(menuFont);
+
+		local name = "#Settings_"..v.id;
+		local textW = (w * 0.25) + surface.GetTextSize(name);
+
+		if (textW > w) then
+			catList:SetSize(textW, catList:GetTall());
+
+			local setList = self.settingList;
+
+			setList:SetSize(self:GetWide() - catList:GetWide() * 1.05, self:GetTall());
+			setList:SetPos(
+				catList.x + catList:GetWide() * 1.05,
+				self:GetTall() * 0.5 - setList:GetTall() * 0.5
+			);
+
+			w = catList:GetWide();
+		end;
+
 		local button = vgui.Create("DButton", catList);
 
 		button:SetPos(x, y);
 		button:SetSize(w, h);
-		button.text = "#Settings_"..v.id;
+		button.text = name;
 		button.textAlpha = colorWhite.a;
 		button:SetText("");
 		button.id = v.id;
@@ -129,13 +154,15 @@ function PANEL:BuildCategoryList()
 					self.hovered = false;
 				end;
 
+				local textColor = rw.settings.GetColor("TextColor");
+
 				if (self.lerpTime) then
 					local fraction = (curTime - self.lerpTime) / expandDuration;
 
 					if (self.hovered) then
-						self.textAlpha = Lerp(fraction, colorWhite.a, 170);
+						self.textAlpha = Lerp(fraction, textColor.a, 170);
 					else
-						self.textAlpha = Lerp(fraction, 170, colorWhite.a);
+						self.textAlpha = Lerp(fraction, 170, textColor.a);
 					end;
 				end;
 
@@ -145,7 +172,7 @@ function PANEL:BuildCategoryList()
 					alpha = 170;
 				end;
 
-				draw.SimpleTextOutlined(self.text, "DermaLarge", w * 0.1, h * 0.5, ColorAlpha(colorWhite, alpha), TEXT_ALIGN_LEFT, nil, outlineSize, ColorAlpha(colorBlack, alpha));
+				draw.SimpleTextOutlined(self.text, menuFont, w * 0.1, h * 0.5, ColorAlpha(textColor, alpha), TEXT_ALIGN_LEFT, nil, outlineSize, ColorAlpha(colorBlack, alpha));
 			end;
 		end;
 		
@@ -156,8 +183,6 @@ function PANEL:BuildCategoryList()
 	self:BuildList();
 end;
 
-function PANEL:Paint(w, h)
-//	draw.RoundedBox(0, 0, 0, w, h, colorWhite);
-end;
+function PANEL:Paint(w, h) end;
 
 derma.DefineControl("rwSettings", "", PANEL, "EditablePanel");

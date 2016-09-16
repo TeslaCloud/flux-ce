@@ -56,12 +56,63 @@ function GM:AdjustTabDockMenus(menus)
 	};
 end;
 
+local colorWhite = Color(255, 255, 255, 255);
+local colorBlack = Color(0, 0, 0, 170);
+
+local expandDuration = 0.15;
+
 function GM:AdjustSettingCallbacks(callbacks)
 	callbacks["DCheckBox"] = function(panel, parent, setting)
 		panel:SetSize(parent:GetTall() * 0.9, parent:GetWide() * 0.05);
 		panel:SetPos(parent:GetWide() - panel:GetWide() * 1.1, parent:GetTall() * 0.5 - panel:GetTall() * 0.5);
 
 		panel:SetConVar("RW_"..setting.id);
+
+		function panel:Paint(w, h)
+			local curTime = CurTime();
+
+			if (self:IsHovered() and !self.hovered) then
+				self.lerpTime = curTime;
+				self.hovered = true;
+			elseif (!self:IsHovered() and self.hovered) then
+				self.lerpTime = curTime;
+				self.hovered = false;
+			end;
+
+			if (self.lerpTime) then
+				local fraction = (curTime - self.lerpTime) / expandDuration;
+
+				if (self.hovered) then
+					self.textAlpha = Lerp(fraction, colorWhite.a, 170);
+				else
+					self.textAlpha = Lerp(fraction, 170, colorWhite.a);
+				end;
+			end;
+
+			draw.RoundedBox(5, 0, 0, w, h, ColorAlpha(rw.settings.GetColor("TextColor"), self.textAlpha));
+
+			if (self:GetChecked() and !self.checked) then
+				self.checkTime = curTime;
+				self.checked = true;
+			elseif (!self:GetChecked() and self.checked) then
+				self.checkTime = curTime;
+				self.checked = false;
+			end;
+
+			if (self.checkTime) then
+				local fraction = (curTime - self.checkTime) / expandDuration;
+
+				if (self.checked) then
+					self.iconAlpha = Lerp(fraction, colorBlack.a, 0);
+					self.size = Lerp(fraction, h * 0.95, 0);
+				else
+					self.iconAlpha = Lerp(fraction, 0, colorBlack.a);
+					self.size = Lerp(fraction, 0, h * 0.95);
+				end;
+			end;
+
+			rw.fa:Draw("fa-check", w * 0.5, h * 0.5, self.size or h * 0.95, ColorAlpha(colorBlack, self.iconAlpha or colorBlack.a), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER);
+		end;
 	end;
 
 	callbacks["DComboBox"] = function(panel, parent, setting)
@@ -103,6 +154,12 @@ function GM:AdjustSettingCallbacks(callbacks)
 		panel:SetConVarG("RW_"..setting.id.."_G");
 		panel:SetConVarB("RW_"..setting.id.."_B");
 		panel:SetConVarA("RW_"..setting.id.."_A");
+	end;
+end;
+
+function GM:RenderScene()
+	if (rw.tabMenu) then
+		return true;
 	end;
 end;
 

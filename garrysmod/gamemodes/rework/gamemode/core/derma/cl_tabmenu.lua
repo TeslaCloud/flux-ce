@@ -16,13 +16,8 @@ local colorWhite = Color(255, 255, 255, 255);
 local colorRed = Color(255, 30, 30, 255);
 local colorBlue = Color(30, 30, 255, 255);
 
--- Temp placeholder, change as you want.
-//local backURL = "http://orig03.deviantart.net/aa16/f/2015/344/9/f/undyne___gyate_gyate___ohayou_by_pierrelucstl-d9jp6zc.png";
-//local backURL = "http://cdn.wallpapersafari.com/20/31/HpQ8Zy.png";
-//local backURL = "http://i.imgur.com/ZlJmDxp.jpg"; // To test images that have a higher height than screen height.
-//local gifTest = "http://i.imgur.com/sKW05vd.gif";
-//local backOption = "fill";
--- center, fill, fit, tiled
+local menuFont = "menu_light";
+local thinFont = "menu_thin";
 
 local function GetClassName(panel)
 	return panel:GetTable().ClassName;
@@ -50,7 +45,7 @@ function PANEL:Init()
 	self.dock = vgui.Create("rwTabDock", self);
 
 	self.dateTime = vgui.Create("rwTabDate", self);
-	self.dateTime:SetSize(self.charPanel:GetWide(), scrH * 0.075);
+	self.dateTime:SetSize(scrW * 0.25, scrH * 0.075);
 	self.dateTime:SetPos(self.charPanel.x, scrH * 0.01);
 
 	self.category = vgui.Create("rwTabCategory", self)
@@ -69,7 +64,6 @@ function PANEL:Init()
 			y = y,
 			w = w,
 			h = h,
-			drawhud = true,
 			dopostprocess = true
 		});
 
@@ -163,6 +157,12 @@ function PANEL:CreateBackPanel()
 	end;
 end;
 
+function PANEL:OnMousePressed()
+	if (self.menu) then
+		self:CloseChildMenu();
+	end;
+end;
+
 function PANEL:GetActiveCategory()
 	if (IsValid(self.menu) and GetClassName(self.menu) == "rwScoreboard") then
 		return "#TabMenu_Scoreboard";
@@ -236,8 +236,11 @@ function PANEL:SetBackImage(url, option)
 end;
 
 function PANEL:Paint(w, h)
-	draw.RoundedBox(0, 0, 0, w, h, colorBlack);
-	draw.RoundedBox(0, 0, 0, w, h, rw.settings.GetColor("BackgroundColor"));
+	surface.SetDrawColor(colorBlack);
+	surface.DrawRect(0, 0, w, h);
+
+	surface.SetDrawColor(rw.settings.GetColor("BackgroundColor"));
+	surface.DrawRect(0, 0, w, h);
 end;
 
 function PANEL:OpenChildMenu(menu)
@@ -257,6 +260,11 @@ function PANEL:OpenChildMenu(menu)
 			self.menu:SetAlpha(0);
 			self.menu:SetPos(scrW * 0.115 + self.offset, scrH * 0.1);
 			self.menu:AlphaTo(255, expandDuration);
+
+			if (self.backPanel) then
+				self.menu:MoveToAfter(self.backPanel);
+			end;
+
 			self.menu.startingPos = {x = self.menu.x - self.offset, y = self.menu.y};
 		end;
 	end;
@@ -307,9 +315,29 @@ function PANEL:Init()
 
 	self.home = vgui.Create("rwCategoryButton", self);
 
-	self.home.text = "#TabMenu_Home";
+	local homeName = "#TabMenu_Home";
+	local scoreName = "#TabMenu_Scoreboard";
+	local adminName = "#TabMenu_Admin";
+
+	local w = self:GetWide() * 0.3;
+
+	surface.SetFont(menuFont);
+
+	for k, v in ipairs({homeName, scoreName, adminName}) do
+		local textW = surface.GetTextSize(v) + (w * 0.15);
+
+		if (textW > w) then
+			local diff = textW - w;
+
+			w = textW;
+
+			self:SetSize(self:GetWide() + (diff * 3), self:GetTall());
+		end;
+	end;
+
+	self.home.text = homeName;
 	self.home:SetPos(0, 0);
-	self.home:SetSize(self:GetWide() * 0.3, self:GetTall());
+	self.home:SetSize(w, self:GetTall());
 
 	self.home.DoClick = function()
 		self:GetParent():CloseChildMenu();
@@ -320,21 +348,29 @@ function PANEL:Init()
 
 	self.scoreboard = vgui.Create("rwCategoryButton", self);
 
-	self.scoreboard.text = "#TabMenu_Scoreboard";
-	self.scoreboard:SetSize(self:GetWide() * 0.3, self:GetTall());
+	self.scoreboard.text = scoreName;
+	self.scoreboard:SetSize(w, self:GetTall());
 	self.scoreboard:SetPos(self:GetWide() - self.scoreboard:GetWide(), 0);
 	self.scoreboard.menu = "rwScoreboard";
 
 //	if (rw.client:IsAdmin()) then
 		self.admin = vgui.Create("rwCategoryButton", self);
 
-		self.admin.text = "#TabMenu_Admin";
-		self.admin:SetSize(self:GetWide() * 0.3, self:GetTall());
+		self.admin.text = adminName;
+		self.admin:SetSize(w, self:GetTall());
 		self.admin:SetPos(self:GetWide() * 0.5 - self.admin:GetWide() * 0.5, 0);
 //	end;
 end;
 
 function PANEL:Paint(w, h)
+end;
+
+function PANEL:OnMousePressed()
+	local parent = self:GetParent();
+
+	if (parent.menu) then
+		parent:CloseChildMenu();
+	end;
 end;
 
 derma.DefineControl("rwTabCategory", "", PANEL, "DPanel");
@@ -380,7 +416,7 @@ function PANEL:Paint(w, h)
 			alpha = 170;
 		end;
 
-		draw.SimpleTextOutlined(self.text, "DermaLarge", w * 0.5, h * 0.5, ColorAlpha(colorWhite, alpha), TEXT_ALIGN_CENTER, nil, outlineSize, ColorAlpha(colorBlack, alpha));
+		draw.SimpleTextOutlined(self.text, menuFont, w * 0.5, h * 0.5, ColorAlpha(rw.settings.GetColor("TextColor"), alpha), TEXT_ALIGN_CENTER, nil, outlineSize, ColorAlpha(colorBlack, alpha));
 	end;
 end;
 
@@ -532,12 +568,22 @@ function PANEL:Paint(w, h)
 		end;
 	end;
 
+	local textColor = rw.settings.GetColor("TextColor");
+
 	if (self.alpha > 0) then
-		draw.SimpleTextOutlined("#TabMenu_Expand", "DermaLarge", self.expand.x * 0.97, self.expand.y + self.expand:GetTall() * 0.5, ColorAlpha(colorWhite, self.alpha), TEXT_ALIGN_RIGHT, TEXT_ALIGN_CENTER, outlineSize, ColorAlpha(colorBlack, self.alpha));
+		draw.SimpleTextOutlined("#TabMenu_Expand", menuFont, self.expand.x * 0.97, self.expand.y + self.expand:GetTall() * 0.5, ColorAlpha(textColor, self.alpha), TEXT_ALIGN_RIGHT, TEXT_ALIGN_CENTER, outlineSize, ColorAlpha(colorBlack, self.alpha));
 
 		for k, v in pairs(self.menus) do
-			draw.SimpleTextOutlined("#TabMenu_"..k, "DermaLarge", v.button.x * 0.97, v.button.y + v.button:GetTall() * 0.5, ColorAlpha(colorWhite, self.alpha), TEXT_ALIGN_RIGHT, TEXT_ALIGN_CENTER, outlineSize, ColorAlpha(colorBlack, self.alpha));
+			draw.SimpleTextOutlined("#TabMenu_"..k, menuFont, v.button.x * 0.97, v.button.y + v.button:GetTall() * 0.5, ColorAlpha(textColor, self.alpha), TEXT_ALIGN_RIGHT, TEXT_ALIGN_CENTER, outlineSize, ColorAlpha(colorBlack, self.alpha));
 		end;
+	end;
+end;
+
+function PANEL:OnMousePressed()
+	local parent = self:GetParent();
+
+	if (parent.menu) then
+		parent:CloseChildMenu();
 	end;
 end;
 
@@ -586,8 +632,7 @@ function PANEL:Paint(w, h)
 		alpha = 170;
 	end;
 
-	rw.fa:Draw(self.icon or "fa-bars", w * 0.5, h * 0.5, self.size or 16, ColorAlpha(color, alpha), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, outlineSize, colorBlack);
-
+	rw.fa:Draw(self.icon or "fa-bars", w * 0.5, h * 0.5, self.size or 16, ColorAlpha(rw.settings.GetColor("TextColor"), alpha), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, outlineSize, colorBlack);
 
 	if (self.clickStart) then
 		local fraction = (curTime - self.clickStart) / clickDuration;
@@ -652,8 +697,18 @@ function PANEL:Paint(w, h)
 	local timeText = hour..":"..min.." "..am;
 	local dateText = day.." "..date.day.."/"..month.."/"..year;
 
-	draw.SimpleTextOutlined(timeText, "DermaLarge", w, h * 0.5, colorWhite, TEXT_ALIGN_RIGHT, TEXT_ALIGN_TOP, outlineSize, colorBlack);
-	draw.SimpleTextOutlined(dateText, "DermaLarge", 0, h * 0.5, colorWhite, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP, outlineSize, colorBlack);
+	local textColor = rw.settings.GetColor("TextColor");
+
+	draw.SimpleTextOutlined(timeText, thinFont, w, h * 0.5, textColor, TEXT_ALIGN_RIGHT, TEXT_ALIGN_TOP, outlineSize, colorBlack);
+	draw.SimpleTextOutlined(dateText, thinFont, 0, h * 0.5, textColor, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP, outlineSize, colorBlack);
+end;
+
+function PANEL:OnMousePressed()
+	local parent = self:GetParent();
+
+	if (parent.menu) then
+		parent:CloseChildMenu();
+	end;
 end;
 
 derma.DefineControl("rwTabDate", "", PANEL, "DPanel");
@@ -679,7 +734,7 @@ function PANEL:Init()
 end;
 
 function PANEL:Paint(w, h)
-	draw.SimpleTextOutlined(rw.client:Name(), "DermaLarge", w * 0.25, h * 0.5, colorWhite, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP, outlineSize, colorBlack);
+	draw.SimpleTextOutlined(rw.client:Name(), thinFont, w * 0.25, h * 0.5, rw.settings.GetColor("TextColor"), TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP, outlineSize, colorBlack);
 
 	-- Circle Avatar
 	render.ClearStencil();
@@ -699,6 +754,14 @@ function PANEL:Paint(w, h)
 				self.avatar:PaintManual();
 		render.SetStencilEnable(false);
 	render.ClearStencil();
+end;
+
+function PANEL:OnMousePressed()
+	local parent = self:GetParent();
+
+	if (parent.menu) then
+		parent:CloseChildMenu();
+	end;
 end;
 
 derma.DefineControl("rwTabPlayerLabel", "", PANEL, "DPanel");
@@ -823,34 +886,8 @@ function PANEL:SetAnimation(anim)
 end;
 
 function PANEL:Paint(w, h)
-	draw.RoundedBox(0, 0, 0, w, h, rw.settings.GetColor("MenuBackColor"));
---[[
-	local barW, barH = self.barWidth, h - (self.optionHeight * 1.1);
-	local x, y = w * 0.005, 0;
-
-	local healthFraction = rw.client:Health() / rw.client:GetMaxHealth();
-	local healthH = (barH - 2) * healthFraction;
-
-	draw.RoundedBox(2, x, y, barW, barH, colorBlack);
-	draw.RoundedBox(2, x + 1, barH - healthH, barW - 2, healthH, colorRed);
-
-	x = x + (barW * 1.01);
-
-	local armorFraction = rw.client:Armor() / 100;
-	local armorH = (barH - 2) * armorFraction;
-
-	draw.RoundedBox(2, x, y, barW, barH, colorBlack);
-
-	if (armorFraction > 0) then
-		draw.RoundedBox(2, x + 1, barH - armorH, barW - 2, armorH, colorRed);
-	end;
---]]
+	surface.SetDrawColor(rw.settings.GetColor("MenuBackColor"));
+	surface.DrawRect(0, 0, w, h);
 end;
 
 derma.DefineControl("rwTabCharacter", "", PANEL, "DPanel");
-
-hook.Add("RenderScene", "rwTabMenu", function()
-	if (rw.tabMenu) then
-		return true;
-	end;
-end);
