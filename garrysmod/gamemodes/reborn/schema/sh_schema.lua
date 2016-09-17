@@ -3,4 +3,4 @@
 	Do not share, re-distribute or sell.
 --]]
 
-print("Schema has loaded!")
+//print("Schema has loaded!")

@@ -6,8 +6,8 @@ local colorBlack = Color(0, 0, 0, 100);
 local outlineSize = 0.5;
 local expandDuration = 0.15;
 
-local menuFont = "menu_light";
-local thinFont = "menu_thin";
+local menuFont = "menu_thin";
+local menuFontSmall = "menu_thin_small";
 
 function PANEL:Init()
 	local scrW, scrH = ScrW(), ScrH();
@@ -42,6 +42,27 @@ function PANEL:Init()
 end;
 
 function PANEL:BuildList()
+	local oldList = self.settingList;
+
+	if (oldList) then
+		oldList:AlphaTo(0, expandDuration, nil, nil, function(animData, panel)
+			panel:Remove();
+		end);
+	end;
+
+	self.settingList = vgui.Create("DScrollPanel", self);
+	self.settingList:SetSize(self:GetWide() - self.categoryList:GetWide() * 1.05, self:GetTall());
+	self.settingList:SetPos(
+		self.categoryList.x + self.categoryList:GetWide() * 1.05,
+		self:GetTall() * 0.5 - self.settingList:GetTall() * 0.5
+	);
+	self.settingList.Paint = function(panel, w, h)
+		surface.SetDrawColor(rw.settings.GetColor("MenuBackColor"));
+		surface.DrawRect(0, 0, w, h);
+	end;
+	self.settingList:SetAlpha(0);
+	self.settingList:AlphaTo(255, expandDuration);
+
 	local setList = self.settingList;
 	local x = setList:GetWide() * 0.01;
 	local y = x;
@@ -64,7 +85,7 @@ function PANEL:BuildList()
 			setting:SetSize(w, h);
 
 			setting.label = vgui.Create("DLabel", setting);
-			setting.label:SetFont(thinFont);
+			setting.label:SetFont(menuFontSmall);
 			setting.label:SetText("#Settings_"..v.id);
 			setting.label:SetTextColor(rw.settings.GetColor("TextColor"));			
 			setting.label:SizeToContents();
@@ -106,13 +127,17 @@ function PANEL:BuildCategoryList()
 
 		-- If there are no available settings, skip the category.
 		if (sum == 0) then
-			continue;
+			table.remove(categories, k);
 		end;
+	end;
 
+	for k, v in ipairs(categories) do
 		surface.SetFont(menuFont);
 
 		local name = "#Settings_"..v.id;
-		local textW = (w * 0.25) + surface.GetTextSize(name);
+		local textW, textH = surface.GetTextSize(name);
+
+		textW = textW + (w * 0.25);
 
 		if (textW > w) then
 			catList:SetSize(textW, catList:GetTall());
@@ -172,7 +197,10 @@ function PANEL:BuildCategoryList()
 					alpha = 170;
 				end;
 
-				draw.SimpleTextOutlined(self.text, menuFont, w * 0.1, h * 0.5, ColorAlpha(textColor, alpha), TEXT_ALIGN_LEFT, nil, outlineSize, ColorAlpha(colorBlack, alpha));
+				--Otherwise things like 'y' or 'g' get cut off.
+				DisableClipping(true);
+					draw.SimpleTextOutlined(self.text, menuFont, w * 0.1, h * 0.5, ColorAlpha(textColor, alpha), TEXT_ALIGN_LEFT, nil, outlineSize, ColorAlpha(colorBlack, alpha));
+				DisableClipping(false);
 			end;
 		end;
 		

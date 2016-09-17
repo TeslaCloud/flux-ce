@@ -3,7 +3,7 @@
 	Do not share, re-distribute or sell.
 --]]
 
-Class "Command";
+Meta "Command";
 
 Command.uniqueID = "undefined";
 Command.name = "Unknown";

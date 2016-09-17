@@ -3,6 +3,34 @@
 	Do not share, re-distribute or sell.
 --]]
 
+local COMMAND = Command("freezebots");
+COMMAND.name = "FreezeBots";
+COMMAND.description = "Freezes all of the bots.";
+COMMAND.category = "server_management";
+COMMAND.aliases = {"botfreeze", "freezebot", "bot_freeze"};
+
+function COMMAND:OnRun(player)
+	rw.player:NotifyAll(L("FreezeBotsMessage", (IsValid(player) and player:Name()) or "Console"));
+	
+	RunConsoleCommand("bot_zombie", 1);
+end;
+
+COMMAND:Register();
+
+local COMMAND = Command("unfreezebots");
+COMMAND.name = "UnfreezeBots";
+COMMAND.description = "Unfreezes all of the bots.";
+COMMAND.category = "server_management";
+COMMAND.aliases = {"botunfreeze", "unfreezebot", "bot_unfreeze"};
+
+function COMMAND:OnRun(player)
+	rw.player:NotifyAll(L("UnfreezeBotsMessage", (IsValid(player) and player:Name()) or "Console"));
+	
+	RunConsoleCommand("bot_zombie", 0);
+end;
+
+COMMAND:Register();
+
 local COMMAND = Command("addbots");
 COMMAND.name = "AddBots";
 COMMAND.description = "Adds specified amount of bots to the server.";

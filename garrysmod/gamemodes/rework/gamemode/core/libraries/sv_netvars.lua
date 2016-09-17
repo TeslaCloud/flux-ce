@@ -6,8 +6,13 @@
 if (netvars) then return; end;
 
 library.New("netvars", _G);
-local stored = {};
-local globals = {};
+
+local stored = netvars.stored or {};
+netvars.stored = stored;
+
+local globals = netvars.globals or {};
+netvars.globals = globals;
+
 local entityMeta = FindMetaTable("Entity");
 local playerMeta = FindMetaTable("Player");
 

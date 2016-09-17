@@ -82,12 +82,13 @@ include("core/sh_core.lua");
 rw.core:Include("core/cl_core.lua");
 rw.core:Include("core/sv_core.lua");
 
-rw.core:Include("core/libraries/sh_config.lua");
+-- This way we put things we want loaded BEFORE anything else in here, like plugin, config, etc.
+rw.core:IncludeDirectory("core/libraries/required", nil, true);
 
 rw.core:IncludeDirectory("core/config", nil, true);
 rw.core:IncludeDirectory("core/libraries", nil, true);
-rw.core:IncludeDirectory("core/libraries/classes", nil, true);
-rw.core:IncludeDirectory("core/libraries/meta", nil, true);
+rw.core:IncludeDirectory("core/classes", nil, true);
+rw.core:IncludeDirectory("core/meta", nil, true);
 rw.core:IncludeDirectory("core/languages", nil, true);
 rw.core:IncludeDirectory("core/groups", nil, true);
 rw.core:IncludeDirectory("core/commands", nil, true);

@@ -226,7 +226,7 @@ function rw.settings.AddSetting(category, id, default, bShouldSave, bShared, typ
 end;
 
 -- Alias of AddSetting, used to easily add a checkbox item to the settings menu with convar linked to it.
-function rw.settings.AddCheckBox(category, id, default, info, visibleCallback, callbacks, bShouldSave, bShared)
+function rw.settings.AddCheckBox(category, id, default, visibleCallback, callbacks, info, bShouldSave, bShared)
 	return rw.settings.AddSetting(category, id, default, bShouldSave, bShared, "DCheckBox", info, callbacks, visibleCallback);
 end;
 
@@ -352,10 +352,22 @@ function rw.settings.GetCategorySettings(category)
 end;
 
 -- Not going to document these yet as these might as well be placeholders for testing while I build the frontend.
-rw.settings.AddCheckBox("AdminESP", "EnableAdminESP", "");
+rw.settings.AddCheckBox("AdminESP", "EnableAdminESP", "0", function()
+	return !LocalPlayer():IsAdmin();
+end);
 rw.settings.AddColorMixer("Theme", "TextColor", "");
-rw.settings.AddColorMixer("Theme", "BackgroundColor", "");
 rw.settings.AddColorMixer("Theme", "MenuBackColor", "");
+rw.settings.AddNumSlider("Test", "TestNumSlider", "", {
+	min = 5,
+	max = 20,
+	decimals = 5
+});
+rw.settings.AddNumSlider("Test", "TestNumSlider2", "", {
+	min = 0,
+	max = 100,
+	decimals = 0
+});
+rw.settings.AddColorMixer("Dashboard", "BackgroundColor", "");
 rw.settings.AddComboBox("Dashboard", "FitType", "", {
 	["fill"] = "#Settings_Fit_Fill",
 	["fit"] = "#Settings_Fit_Fit",

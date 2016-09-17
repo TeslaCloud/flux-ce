@@ -6,7 +6,7 @@
 rw = rw or {};
 rw.startTime = os.clock();
 
---[[ 
+--[[
 	Include pON, Netstream and UTF-8 library 
 --]]
 if (!string.utf8len or !pon or !netstream) then
@@ -23,6 +23,8 @@ end;
 
 -- Include clientside core file.
 include("shared.lua");
+
+rw.fonts.CreateFonts();
 
 if (rw.initialized) then
 	MsgC(Color(0, 255, 100, 255), "[Rework] Auto-reloaded in "..math.Round(os.clock() - rw.startTime, 3).. " second(s)\n");

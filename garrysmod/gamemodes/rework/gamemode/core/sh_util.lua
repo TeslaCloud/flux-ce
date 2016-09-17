@@ -401,6 +401,10 @@ function util.GetTextSize(font, text)
 	return surface.GetTextSize(text);
 end;
 
+function util.GetPanelClass(panel)
+	return panel:GetTable().ClassName;
+end;
+
 -- Adjusts x, y to fit inside x2, y2 while keeping original aspect ratio.
 function util.FitToAspect(x, y, x2, y2)
 	local aspect = x / y;

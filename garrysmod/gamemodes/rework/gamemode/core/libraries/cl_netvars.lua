@@ -6,8 +6,13 @@
 if (netvars) then return; end;
 
 library.New("netvars", _G);
-local stored = {};
-local globals = {};
+
+local stored = netvars.stored or {};
+netvars.stored = stored;
+
+local globals = netvars.globals or {};
+netvars.globals = globals;
+
 local entityMeta = FindMetaTable("Entity");
 
 function netvars.GetNetVar(key, default)
@@ -22,8 +27,10 @@ end;
 function netvars.SetNetVar() end;
 
 function entityMeta:GetNetVar(key, default)
-	if (stored[self] and stored[self][key] != nil) then
-		return stored[self][key];
+	local index = self:EntIndex();
+	
+	if (stored[index] and stored[index][key] != nil) then
+		return stored[index][key];
 	end;
 
 	return default;

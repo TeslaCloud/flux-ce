@@ -14,7 +14,7 @@ function playerMeta:GetPermissions()
 end;
 
 function playerMeta:IsOwner()
-	return (rw.config:Get("owner_steamid") == self:SteamID());
+	return (self:IsMemberOf("owner"));
 end;
 
 function playerMeta:IsCoOwner()
@@ -22,9 +22,11 @@ function playerMeta:IsCoOwner()
 		return true;
 	end;
 
-	for k, v in ipairs(rw.config:Get("owner_steamid_extra")) do
-		if (v == self:SteamID()) then
-			return true;
+	if (rw.config:Get("owner_steamid_extra")) then
+		for k, v in ipairs(rw.config:Get("owner_steamid_extra")) do
+			if (v == self:SteamID()) then
+				return true;
+			end;
 		end;
 	end;
 

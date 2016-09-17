@@ -16,12 +16,7 @@ local colorWhite = Color(255, 255, 255, 255);
 local colorRed = Color(255, 30, 30, 255);
 local colorBlue = Color(30, 30, 255, 255);
 
-local menuFont = "menu_light";
-local thinFont = "menu_thin";
-
-local function GetClassName(panel)
-	return panel:GetTable().ClassName;
-end;
+local menuFont = "menu_thin";
 
 function PANEL:Init()
 	RestoreCursorPosition();
@@ -39,17 +34,68 @@ function PANEL:Init()
 	self:SetBackImage(backURL, backOption);
 
 	self:CreateBackPanel();
+	
+	self.mainX = scrW * -0.03;
 
 	self.playerLabel = vgui.Create("rwTabPlayerLabel", self);
 	self.charPanel = vgui.Create("rwTabCharacter", self);
-	self.dock = vgui.Create("rwTabDock", self);
-
 	self.dateTime = vgui.Create("rwTabDate", self);
 	self.dateTime:SetSize(scrW * 0.25, scrH * 0.075);
 	self.dateTime:SetPos(self.charPanel.x, scrH * 0.01);
 
+	self.dock = vgui.Create("rwTabDock", self);
+
 	self.category = vgui.Create("rwTabCategory", self)
-	self.category:SetPos(scrW * 0.5 - self.category:GetWide() * 0.5, scrH * 0.01);
+	self.category:SetPos(self.mainX + scrW * 0.5 - self.category:GetWide() * 0.5, scrH * 0.01);
+
+	self.ph1 = vgui.Create("EditablePanel", self);
+	self.ph1:SetSize(self.charPanel:GetWide(), self.charPanel:GetTall());
+	self.ph1:SetPos(self.dateTime.x + self.dateTime:GetWide() - self.ph1:GetWide(), self.charPanel.y);
+
+	self.ph1.Paint = function(panel, w, h)
+		surface.SetDrawColor(rw.settings.GetColor("MenuBackColor"));
+		surface.DrawRect(0, 0, w, h);
+	end;
+
+	chatbox.oldW, chatbox.oldH = chatbox.width, chatbox.height;
+	chatbox.oldX, chatbox.oldY = chatbox.x, chatbox.y;
+
+	chatbox.width = scrW * 0.6;
+	chatbox.height = scrH * 0.25;
+	chatbox.x = self.playerLabel.x;
+	chatbox.y = scrH * 0.71;
+
+	if (chatbox.panel) then
+		chatbox.panel:Remove();
+		chatbox.panel = nil;
+	end;
+
+	chatbox.Show(self);
+
+	-- We do this to make the text wrap properly to the new size of the chatbox.
+	chatbox.UpdateDisplay();
+
+	chatbox.textEntry:RequestFocus();
+
+	self.ph2 = vgui.Create("EditablePanel", self);
+	self.ph2:SetSize(self.dateTime:GetWide(), chatbox.height);
+	self.ph2:SetPos(self.dateTime.x, chatbox.y);
+
+	self.ph2.Paint = function(panel, w, h)
+		surface.SetDrawColor(rw.settings.GetColor("MenuBackColor"));
+		surface.DrawRect(0, 0, w, h);
+	end;
+
+	self.ph3 = vgui.Create("EditablePanel", self);
+	self.ph3:SetSize(self.dateTime:GetWide(), scrH * 0.25);
+	self.ph3:SetPos(self.dateTime.x, scrH * 0.1);
+
+	self.ph3.Paint = function(panel, w, h)
+		surface.SetDrawColor(rw.settings.GetColor("MenuBackColor"));
+		surface.DrawRect(0, 0, w, h);
+
+		draw.SimpleTextOutlined("Message of the day:", menuFont, w * 0.5, h * 0.5, rw.settings.GetColor("TextColor"), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, outlineSize, colorBlack);
+	end;
 
 	self.viewPort = vgui.Create("DButton", self);
 
@@ -74,10 +120,26 @@ function PANEL:Init()
 		self:CloseMenu();
 	end;
 
-	self.viewPort:MoveTo(scrW * 0.115 + self.offset, scrH * 0.1, expandDuration, nil, nil, function()
+	self.viewPort:MoveTo(self.mainX + scrW * 0.115 + self.offset, scrH * 0.1, expandDuration, nil, nil, function()
 		self:SavePositions();
 	end);
 	self.viewPort:SizeTo(scrW * 0.6, scrH * 0.6, expandDuration);
+end;
+
+function PANEL:OnRemove()
+	chatbox.width, chatbox.height = chatbox.oldW, chatbox.oldH;
+	chatbox.x, chatbox.y = chatbox.oldX, chatbox.oldY;
+
+	-- We do this to make the text wrap to the normal size properly again.
+	chatbox.UpdateDisplay()
+
+	if (chatbox.panel) then
+		chatbox.panel:Remove();
+		chatbox.panel = nil;
+	end;
+
+	chatbox.CreateDerma();
+	chatbox.textEntry:SetAlpha(0);
 end;
 
 function PANEL:CreateBackPanel()
@@ -91,9 +153,6 @@ function PANEL:CreateBackPanel()
 	self.backPanel:SetSize(scrW, scrH);
 
 	self.backPanel.Paint = function(panel, w, h)
-
-		-- We do this so that a transparent panel won't have the background in the screenshot.
-	//	panel:SetRenderInScreenshots(false);
 		local backImage = self.backImage;
 		local option = self.option;
 		local backW, backH = self.backW, self.backH;
@@ -164,7 +223,7 @@ function PANEL:OnMousePressed()
 end;
 
 function PANEL:GetActiveCategory()
-	if (IsValid(self.menu) and GetClassName(self.menu) == "rwScoreboard") then
+	if (IsValid(self.menu) and util.GetPanelClass(self.menu) == "rwScoreboard") then
 		return "#TabMenu_Scoreboard";
 	end;
 
@@ -247,7 +306,8 @@ function PANEL:OpenChildMenu(menu)
 	local class = nil;
 
 	if (IsValid(self.menu)) then
-		class = GetClassName(self.menu);
+		class = util.GetPanelClass(self.menu);
+
 		self:CloseChildMenu(nil, true);
 	end;
 
@@ -258,14 +318,14 @@ function PANEL:OpenChildMenu(menu)
 
 		if (self.menu) then
 			self.menu:SetAlpha(0);
-			self.menu:SetPos(scrW * 0.115 + self.offset, scrH * 0.1);
+			self.menu:SetPos(self.mainX + scrW * 0.115 + self.offset, scrH * 0.1);
 			self.menu:AlphaTo(255, expandDuration);
 
 			if (self.backPanel) then
 				self.menu:MoveToAfter(self.backPanel);
 			end;
 
-			self.menu.startingPos = {x = self.menu.x - self.offset, y = self.menu.y};
+			self.menu.startingPos = {x = self.mainX + scrW * 0.115, y = self.menu.y};
 		end;
 	end;
 
@@ -297,6 +357,10 @@ function PANEL:CloseChildMenu(bForce, noExpand)
 
 			panel:Remove();
 		end);
+
+		if (self.oldMenu.OnFade) then
+			self.oldMenu:OnFade();
+		end;
 
 		if (!noExpand) then
 			self.dock:ToggleMenuExpand();
@@ -426,11 +490,13 @@ local PANEL = {};
 
 function PANEL:Init()
 	local scrW, scrH = ScrW(), ScrH();
+	local parent = self:GetParent();
 
-	self:SetPos(scrW * -0.2, scrH * 0.1);
+	self:SetPos(parent.mainX + scrW * -0.2, scrH * 0.1);
 	self:SetSize(scrW * 0.31, scrH * 0.6);
 
 	self.alpha = 0;
+	self.offset = 0;
 	
 	local size = scrW * 0.02;
 	local x = self:GetWide() - size;
@@ -453,6 +519,11 @@ function PANEL:Init()
 
 	for k, v in pairs(self.menus) do
 		local button = vgui.Create("rwTabDockButton", self);
+		local textSize = util.GetTextSize(menuFont, "#TabMenu_"..k) - scrW * 0.04;
+
+		if (textSize > self.offset) then
+			self.offset = textSize;
+		end;
 
 		button:SetSize(size * 1.1, size * 1.1);
 		button:SetPos(x - size * 0.1, y);
@@ -475,7 +546,6 @@ function PANEL:Init()
 end;
 
 function PANEL:ToggleExpand()
-	local offset = ScrW() * 0.03;
 	local parent = self:GetParent();
 
 	if (self.bExpanded == nil) then
@@ -489,14 +559,15 @@ function PANEL:ToggleExpand()
 	end;
 
 	for k, v in pairs(parent:GetChildren()) do
-		if (v == parent.playerLabel or v == parent.dateTime or v == parent.category or v == parent.backPanel) then
+	//	if (v == parent.playerLabel or v == parent.dateTime or v == parent.category or v == parent.backPanel) then
+		if (v == parent.backPanel) then
 			continue;
 		end;
 
 		if (self.bExpanded) then
-			v:MoveTo(v.startingPos.x + offset, v.startingPos.y, expandDuration);
+			v:MoveTo(v.startingPos.x + self.offset, v.startingPos.y, expandDuration);
 
-			parent.offset = offset;
+			parent.offset = self.offset;			
 		else
 			v:MoveTo(v.startingPos.x, v.startingPos.y, expandDuration);
 
@@ -520,29 +591,51 @@ function PANEL:ToggleMenuExpand()
 	parent.viewPort:MoveToFront();
 
 	if (self.bMenuExpanded) then
-		parent.viewPort:MoveTo(scrW * 0.72 + parent.offset, parent.viewPort.y, expandDuration, nil, nil, function()
+		parent.viewPort:MoveTo(parent.charPanel.x, parent.viewPort.y, expandDuration, nil, nil, function()
 			parent.viewPort.startingPos = {x = parent.viewPort.x - parent.offset, y = parent.viewPort.y};
 		end);
 
 		parent.viewPort:SizeTo(scrW * 0.25, scrH * 0.25, expandDuration);
 
-		parent.charPanel:SizeTo(parent.charPanel:GetWide(), scrH * 0.331, expandDuration);
-
-		parent.charPanel:MoveTo(parent.charPanel.x, scrH * 0.37, expandDuration, nil, nil, function()
+	//	parent.charPanel:SizeTo(parent.charPanel:GetWide(), scrH * 0.3385, expandDuration);
+	--[[
+		parent.charPanel:MoveTo(parent.charPanel.x, scrH * 0.3625, expandDuration, nil, nil, function()
 			parent.charPanel.startingPos = {x = parent.charPanel.x - parent.offset, y = parent.charPanel.y};
 		end);
+
+		parent.ph1:MoveTo(parent.ph1.x, scrH * 0.3625, expandDuration, nil, nil, function()
+			parent.ph1.startingPos = {x = parent.ph1.x - parent.offset, y = parent.ph1.y};
+		end);
+
+		parent.ph2:MoveTo(parent.ph2.x, chatbox.y, expandDuration, nil, nil, function()
+			parent.ph2.startingPos = {x = parent.ph2.x - parent.offset, y = parent.ph2.y};
+		end);
+
+		parent.ph2:SizeTo(parent.ph2:GetWide(), chatbox.height, expandDuration);
+	--]]
 	else
-		parent.viewPort:MoveTo(scrW * 0.115 + parent.offset, parent.viewPort.y, expandDuration, nil, nil, function()
+		parent.viewPort:MoveTo(parent.mainX + scrW * 0.115 + parent.offset, parent.viewPort.y, expandDuration, nil, nil, function()
 			parent.viewPort.startingPos = {x = parent.viewPort.x - parent.offset, y = parent.viewPort.y};
 		end);
 
 		parent.viewPort:SizeTo(scrW * 0.6, scrH * 0.6, expandDuration);
 
-		parent.charPanel:SizeTo(parent.charPanel:GetWide(), scrH * 0.6, expandDuration);
-
+	//	parent.charPanel:SizeTo(parent.charPanel:GetWide(), scrH * 0.6, expandDuration);
+	--[[
 		parent.charPanel:MoveTo(parent.charPanel.x, scrH * 0.1, expandDuration, nil, nil, function()
 			parent.charPanel.startingPos = {x = parent.charPanel.x - parent.offset, y = parent.charPanel.y};
 		end);
+
+		parent.ph1:MoveTo(parent.ph1.x, scrH * 0.1, expandDuration, nil, nil, function()
+			parent.ph1.startingPos = {x = parent.ph1.x - parent.offset, y = parent.ph1.y};
+		end);
+
+		parent.ph2:MoveTo(parent.dateTime.x + parent.dateTime:GetWide() - parent.ph2:GetWide(), scrH * 0.4475, expandDuration, nil, nil, function()
+			parent.ph2.startingPos = {x = parent.ph2.x - parent.offset, y = parent.ph2.y};
+		end);
+
+		parent.ph2:SizeTo(parent.dateTime:GetWide(), scrH * 0.2537, expandDuration);
+	--]]
 	end;
 
 	self.bMenuExpanded = !self.bMenuExpanded;
@@ -628,7 +721,7 @@ function PANEL:Paint(w, h)
 	local alpha = self.textAlpha;
 	local currentPanel = self:GetParent():GetParent():GetParent().menu;
 
-	if (IsValid(currentPanel) and self.menu == GetClassName(currentPanel)) then
+	if (IsValid(currentPanel) and self.menu == util.GetPanelClass(currentPanel)) then
 		alpha = 170;
 	end;
 
@@ -699,8 +792,8 @@ function PANEL:Paint(w, h)
 
 	local textColor = rw.settings.GetColor("TextColor");
 
-	draw.SimpleTextOutlined(timeText, thinFont, w, h * 0.5, textColor, TEXT_ALIGN_RIGHT, TEXT_ALIGN_TOP, outlineSize, colorBlack);
-	draw.SimpleTextOutlined(dateText, thinFont, 0, h * 0.5, textColor, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP, outlineSize, colorBlack);
+	draw.SimpleTextOutlined(timeText, menuFont, w, h * 0.5, textColor, TEXT_ALIGN_RIGHT, TEXT_ALIGN_TOP, outlineSize, colorBlack);
+	draw.SimpleTextOutlined(dateText, menuFont, 0, h * 0.5, textColor, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP, outlineSize, colorBlack);
 end;
 
 function PANEL:OnMousePressed()
@@ -717,9 +810,10 @@ local PANEL = {};
 
 function PANEL:Init()
 	local scrW, scrH = ScrW(), ScrH();
+	local parent = self:GetParent();
 
 	self:SetSize(scrW * 0.2, scrH * 0.075);
-	self:SetPos(scrW * 0.115, scrH * 0.01);
+	self:SetPos(parent.mainX + scrW * 0.115, scrH * 0.01);
 
 	self.avatar = vgui.Create("AvatarImage", self);
 	self.avatar:SetSize(self:GetTall() * 0.9, self:GetTall() * 0.9);
@@ -734,16 +828,13 @@ function PANEL:Init()
 end;
 
 function PANEL:Paint(w, h)
-	draw.SimpleTextOutlined(rw.client:Name(), thinFont, w * 0.25, h * 0.5, rw.settings.GetColor("TextColor"), TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP, outlineSize, colorBlack);
+	draw.SimpleTextOutlined(rw.client:Name(), menuFont, w * 0.25, h * 0.5, rw.settings.GetColor("TextColor"), TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP, outlineSize, colorBlack);
 
 	-- Circle Avatar
-	render.ClearStencil();
-		render.SetStencilEnable(true);
+	render.SetStencilEnable(true);
+		render.ClearStencil();
 			render.SetStencilReferenceValue(1);
-
 			render.SetStencilPassOperation(STENCIL_REPLACE);
-			
-
 			render.SetStencilCompareFunction(STENCIL_NOTEQUAL);
 				surface.DrawCircle(
 					self.avatar.x + (self.avatar:GetWide() * 0.5), 
@@ -752,8 +843,8 @@ function PANEL:Paint(w, h)
 				);
 			render.SetStencilCompareFunction(STENCIL_EQUAL);
 				self.avatar:PaintManual();
-		render.SetStencilEnable(false);
-	render.ClearStencil();
+		render.ClearStencil();
+	render.SetStencilEnable(false);
 end;
 
 function PANEL:OnMousePressed()
@@ -770,19 +861,20 @@ local PANEL = {};
 
 function PANEL:Init()
 	local scrW, scrH = ScrW(), ScrH();
+	local parent = self:GetParent();
 
-	self:SetSize(scrW * 0.25, scrH * 0.6);
-	self:SetPos(scrW * 0.72, scrH * 0.1);
+	self:SetSize(scrW * 0.1225, scrH * 0.34);
+	self:SetPos(parent.playerLabel.x + scrW * 0.6 + scrW * 0.0055, scrH * 0.6 + scrH * 0.1 - self:GetTall());
 
 	self.barWidth = scrW * 0.01;
 	self.optionHeight = self.barWidth * 2;
 
 	self.modelPanel = vgui.Create("DModelPanel", self);
-	self.modelPanel:SetSize(self:GetWide() - (self.barWidth * 2), self:GetTall());
-	self.modelPanel:SetPos(self.optionHeight, 0);
+	self.modelPanel:SetSize(self:GetWide(), self:GetTall());
+	self.modelPanel:SetPos(0, 0);
 	self.modelPanel:SetModel(rw.client:GetModel());
-	self.modelPanel:SetCamPos(Vector(20, 20, 60));
-	self.modelPanel:SetLookAt(Vector(0, 0, 50));
+	self.modelPanel:SetCamPos(Vector(25, 25, 60));
+	self.modelPanel:SetLookAt(Vector(0, 0, 45));
 
 	self.optionBar = vgui.Create("DButton", self);
 	self.optionBar:SetSize(self.optionHeight, self.optionHeight);
@@ -853,22 +945,6 @@ end;
 
 function PANEL:Think()
 	self:SetAnimation(rw.client:GetSequence());
-
-	self.modelPanel:SetSize(self:GetWide() - (self.barWidth * 2), self:GetTall());
-
-	local h = self:GetTall();
-	local scrH = ScrH();
-	local max = scrH * 0.6;
-	
-	if (h != max and h >= scrH * 0.331) then
-		local maxDiff = max - scrH * 0.331;
-		local curDiff = max - h;
-		local fraction = curDiff / maxDiff;
-
-		self.modelPanel:SetCamPos(Vector(20, 20, 60 + 10 * fraction));
-		self.modelPanel:SetLookAt(Vector(0, 0, 50 + 10 * fraction));
-	end;
-
 	self.optionBar:SetPos(self:GetWide() * 0.005, self:GetTall() - self.optionHeight);
 end;
 

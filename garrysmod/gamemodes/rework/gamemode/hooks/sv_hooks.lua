@@ -23,6 +23,11 @@ function GM:PlayerInitialSpawn(player)
 	player:SyncNetVars();
 
 	netstream.Start(player, "SharedTables", rw.sharedTable);
+	netstream.Start(nil, "PlayerInitialSpawn", player:EntIndex());
+end;
+
+function GM:PlayerDisconnected(player)
+	netstream.Start(nil, "PlayerDisconnected", player:EntIndex());
 end;
 
 function GM:OnPlayerRestored(player)

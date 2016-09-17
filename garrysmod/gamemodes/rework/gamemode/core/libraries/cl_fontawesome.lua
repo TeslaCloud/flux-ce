@@ -650,13 +650,19 @@ local faCodes = {
 }
 local buffer = {};
 
-rw.fonts:CreateFont("reFontAwesome", {
-	font = "FontAwesome",
-	extended = true,
-	size = 16, -- default icon size is 16x16
-	weight = 500,
-	antialias = true
-});
+rw.fa.hooks = {};
+
+function rw.fa.hooks:CreateFonts(fonts)
+	fonts:CreateFont("reFontAwesome", {
+		font = "FontAwesome",
+		extended = true,
+		size = 16, -- default icon size is 16x16
+		weight = 500,
+		antialias = true
+	});
+end;
+
+plugin.AddHooks("FontAwesome", rw.fa.hooks);
 
 function rw.fa:GetIcon(id)
 	if (faCodes[id]) then

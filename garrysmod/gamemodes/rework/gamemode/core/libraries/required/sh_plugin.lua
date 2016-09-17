@@ -3,17 +3,22 @@
 	Do not share, re-distribute or sell.
 --]]
 
-if (plugin) then return; end;
-
 library.New("plugin", _G);
-local stored = {};
-local hooksCache = {};
-local extras = {
+
+local stored = plugin.stored or {};
+plugin.stored = stored;
+
+local hooksCache = plugin.hooksCache or {};
+plugin.hooksCache = hooksCache;
+
+local extras = plugin.extras or {
 	"libraries/",
-	"libraries/classes/",
+	"classes/",
+	"meta/",
 	"config/",
 	"languages/"
 };
+plugin.extras = extras;
 
 function plugin.GetStored()
 	return stored;
@@ -60,11 +65,25 @@ function Plugin:Register()
 	plugin.Register(self);
 end;
 
-function plugin.CacheFunctions(obj)
+function plugin.CacheFunctions(obj, id)
 	for k, v in pairs(obj) do
 		if (isfunction(v)) then
 			hooksCache[k] = hooksCache[k] or {};
-			table.insert(hooksCache[k], {v, obj});
+			table.insert(hooksCache[k], {v, obj, id = id});
+		end;
+	end;
+end;
+
+function plugin.AddHooks(id, obj)
+	plugin.CacheFunctions(obj, id);
+end;
+
+function plugin.RemoveHooks(id)
+	for k, v in pairs(hooksCache) do
+		for k2, v2 in ipairs(v) do
+			if (v.id and v.id == id) then
+				hooksCache[k][k2] = nil;
+			end;
 		end;
 	end;
 end;
@@ -155,8 +174,6 @@ function plugin.GetFilesForClients(basePath, curPath, results)
 		for k, v in ipairs(dirs) do
 			plugin.GetFilesForClients(basePath, curPath.."/"..v, results);
 		end;	
-
-		PrintTable(results);
 	elseif (basePath:find("cl_") or basePath:find("sh_") or basePath:find("shared.lua")) then
 		results[basePath] = fileio.Read("gamemodes/"..basePath);
 	end;
@@ -166,7 +183,6 @@ end;
 
 -- todo: make it work on client dammit
 function plugin.OnPluginChanged(fileName)
-	print(IsValid(stored[fileName]), !file.Exists("gamemodes/"..fileName, "GAME"));
 	if (plugin.Find(fileName) and !file.Exists("gamemodes/"..fileName, "GAME")) then
 		print("[Rework] Removing plugin "..fileName);
 		plugin.Remove(fileName);
@@ -243,7 +259,11 @@ function plugin.IncludeSchema()
 	plugin.IncludeFolders(schemaFolder);
 	plugin.IncludePlugins(rw.core:GetSchemaFolder().."/plugins");
 
-	Schema:Register();
+	if (schemaInfo.name and schemaInfo.author) then
+		MsgC(Color(0, 255, 100, 255), "[Rework] '"..schemaInfo.name.."' by: '"..schemaInfo.author.."' has been loaded!\n");
+	end;
+
+	Schema:Register();	
 end;
 
 function plugin.IncludePlugins(folder)

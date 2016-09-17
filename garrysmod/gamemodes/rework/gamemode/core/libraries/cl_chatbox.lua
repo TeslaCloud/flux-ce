@@ -3,37 +3,38 @@
 	Do not share, re-distribute or sell.
 --]]
 
-if (!plugin) then
-	include("rework/gamemode/core/libraries/sh_plugin.lua");
-end;
-
 if (!rw.fonts) then
 	include("rework/gamemode/core/libraries/cl_fonts.lua");
 end;
 
-rw.fonts:CreateFont("reChatFont", {
-	font		= "Roboto",
-	size		= 17,
-	weight		= 500,
-	extended 	= true
-//	shadow 		= true
-});
+local chatBoxHooks = {};
 
-rw.fonts:CreateFont("reChatFontBold", {
-	font		= "Roboto",
-	size		= 17,
-	weight		= 1000,
-	extended 	= true
-//	shadow 		= true
-});
+function chatBoxHooks:CreateFonts()
+	rw.fonts:CreateFont("reChatFont", {
+		font		= "Roboto",
+		size		= 17
+	});
 
-rw.fonts:CreateFont("reChatSyntax", {
-	font		= "Roboto",
-	size		= 20,
-	weight		= 500,
-	extended 	= true
-//	shahow		= true
-});
+	rw.fonts:CreateFont("reChatFontBold", {
+		font		= "Roboto",
+		size		= 17,
+		weight		= 1000
+	});
+
+	rw.fonts:CreateFont("reChatSyntax", {
+		font		= "Roboto",
+		size		= 20
+	});
+end;
+
+function chatBoxHooks:OnResolutionChanged(oldW, oldH, newW, newH)
+	chatbox.width = chatbox.width or newW * 0.3;
+	chatbox.height = chatbox.height or newH * 0.3;
+	chatbox.x = chatbox.x or 4;
+	chatbox.y = newW - chatbox.height - 36;
+end;
+
+plugin.AddHooks("ChatBoxHooks", chatBoxHooks);
 
 library.New("chatbox", _G);
 chatbox.history 	= chatbox.history or {}; -- Entire chat history. Last X meesages, configurable.
@@ -42,8 +43,6 @@ chatbox.filters 	= chatbox.filters or {}; -- Table that stores filter data.
 chatbox.types 		= chatbox.types or {}; -- Table that stores message types data.
 chatbox.emotes 		= chatbox.emotes or {} -- Table that stores emotes data.
 chatbox.codes 		= chatbox.codes or {}; -- Table that stores BB-Codes data.
-
-chatbox.playAnimation = chatbox.playAnimation or true; -- Whether or not the chatbox should play animations when opening/closing.
 
 chatbox.oldAddText 	= chatbox.oldAddText or chat.AddText;
 
@@ -67,11 +66,11 @@ end;
 --[[
 	Sizes and Configuration
 --]]
-chatbox.width = chatbox.width or 600;
-chatbox.height = chatbox.height or 410;
+chatbox.width = chatbox.width or ScrW() * 0.3;
+chatbox.height = chatbox.height or ScrH() * 0.3;
 chatbox.x = chatbox.x or 4;
 chatbox.y = ScrH() - chatbox.height - 36;
-chatbox.maxLength = chatbox.maxLength or 512;
+chatbox.maxLength = chatbox.maxLength or 1024;
 chatbox.curAlpha = chatbox.curAlpha or 255;
 
 --[[
@@ -647,7 +646,11 @@ local PANEL = {};
 PANEL.isOpen = false;
 PANEL.scrollOffset = 0;
 
+local fadeDuration = 0.2;
+
 function PANEL:Init()
+	self.alpha = 0;
+
 	self:SetSize(chatbox.width, chatbox.height);
 	self:SetPos(chatbox.x, chatbox.y);
 
@@ -655,7 +658,7 @@ function PANEL:Init()
 	self.scrollBar:SetMouseInputEnabled(true);
 	
 	self.scrollBar.Think = function(sb)
-		sb:SetSize(chatbox.width, chatbox.height);
+		sb:SetSize(self:GetWide(), self:GetTall());
 		sb:SetPos(0, 0);
 	end;
 	
@@ -668,6 +671,7 @@ end;
 
 function PANEL:SetChatOpen(bIsOpen)
 	self.isOpen = bIsOpen;
+	self.startTime = CurTime();
 end;
 
 local function IsIcon(text)
@@ -695,10 +699,20 @@ local function ToIcon(text)
 end;
 
 function PANEL:Paint(w, h)
-	if (self.isOpen) then
-		draw.RoundedBox(2, 0, 0, w, h, Color(60, 60, 60));
+	local backColor = rw.settings.GetColor("MenuBackColor");
+
+	if (self.startTime) then
+		local fraction = (CurTime() - self.startTime) / fadeDuration;
+
+		if (self.isOpen) then
+			self.alpha = Lerp(fraction, 0, backColor.a);
+		else
+			self.alpha = Lerp(fraction, backColor.a, 0);
+		end;
 	end;
-	
+
+	draw.RoundedBox(2, 0, 0, w, h, ColorAlpha(backColor, self.alpha));
+
 	local curFont = "reChatFont";
 	local curColor = Color(255, 255, 255);
 	local offX = 4;
@@ -763,7 +777,7 @@ function PANEL:Paint(w, h)
 		local splitTable = string.Explode(" ", string.utf8sub(chatbox.GetCurrentText(), 2));
 		local commands = {};
 		local command = splitTable[1];
-		local cX, cY = 4, chatbox.y / 4 + 38;
+		local cX, cY = 4, h * 0.6;
 		
 		if (command and command != "") then
 			chatbox.curAlpha = 50;
@@ -845,28 +859,11 @@ local lerpDuration = 0.15;
 
 function PANEL:Think()
 	local curTime = CurTime();
-	local isOpen = self.isOpen;
 
 	if (curTime > self.NextAdjust) then
 		plugin.Call("AdjustChatboxInfo", chatbox);
 		
 		self.NextAdjust = curTime + (1 / 8);
-	end;
-
-	if (isOpen and !chatbox.openedAnim and chatbox.playAnimation) then
-		local fraction = (curTime - chatbox.lerpStart) / lerpDuration;
-
-	//	self:SetSize(chatbox.width, Lerp(fraction, chatbox.height * 0.5, chatbox.height));
-	//	self:SetPos(chatbox.x, Lerp(fraction, chatbox.y + (chatbox.height * 0.5), chatbox.y));
-		self:SetSize(chatbox.width, Lerp(fraction, chatbox.height * 0.25, chatbox.height));
-		self:SetPos(chatbox.x, Lerp(fraction, chatbox.y + (chatbox.height * 0.75), chatbox.y));
-
-		if (fraction >= 1) then
-			self:SetSize(chatbox.width, chatbox.height);
-			self:SetPos(chatbox.x, chatbox.y);
-
-			chatbox.openedAnim = true;
-		end;
 	end;
 
 	if (isOpen and input.IsKeyDown(KEY_ESCAPE)) then
@@ -882,8 +879,10 @@ function PANEL:Init()
 	self:SetText("");
 end;
 
+local entryBack = Color(0, 0, 0, 170);
+
 function PANEL:Paint(w, h)
-	draw.RoundedBox(2, 0, 0, w, h, Color(25, 25, 25));
+	draw.RoundedBox(2, 0, 0, w, h, entryBack);
 	self:DrawTextEntryText(Color(255, 255, 255, 255), Color(255, 250, 200), Color(255, 255, 255, 255));
 end;
 
@@ -895,7 +894,12 @@ function PANEL:OnEnter()
 	plugin.Call("ChatBoxTextTyped", text);
 	
 	self:SetText("");
-	chatbox.Hide();
+
+	if (!rw.tabMenu) then
+		chatbox.Hide();
+	else
+		chatbox.textEntry:RequestFocus();
+	end;
 end;
 
 function PANEL:Think()
@@ -908,7 +912,6 @@ function PANEL:Think()
 	if (text and text != "") then
 		if (string.utf8len(text) > maxChatLength) then
 			self:SetValue(string.utf8sub(text, 0, maxChatLength));
-			//CW.option:PlaySound("tick");
 		elseif (chatbox.IsOpen()) then
 			if (text != self.previousText) then
 				plugin.Call("ChatBoxTextChanged", self.previousText or "", text);
@@ -949,13 +952,11 @@ end;
 vgui.Register("reChatTextEntry", PANEL, "DTextEntry");
 
 function chatbox.CreateChatBox()
-	if (!chatbox.panel) then
-		chatbox.panel = vgui.Create("reChatBox");
+	if (chatbox.panel) then
+		chatbox.panel:Remove();
 	end;
-end;
 
-function chatbox.ShouldPlayAnimation(value)
-	chatbox.playAnimation = value;
+	chatbox.panel = vgui.Create("reChatBox");
 end;
 
 function chatbox.IsOpen()
@@ -996,11 +997,13 @@ function chatbox.IsTypingCommand()
 end;
 
 function chatbox.CreateTextEntry()
-	if (!chatbox.textEntry) then
-		chatbox.textEntry = vgui.Create("reChatTextEntry", chatbox.panel);
-		chatbox.textEntry:SetFont("reChatFont");
-		chatbox.textEntry:SetTextColor(Color(255, 255, 255));
+	if (chatbox.textEntry) then
+		chatbox.textEntry:Remove();
 	end;
+
+	chatbox.textEntry = vgui.Create("reChatTextEntry", chatbox.panel);
+	chatbox.textEntry:SetFont("reChatFont");
+	chatbox.textEntry:SetTextColor(Color(255, 255, 255));
 end;
 
 function chatbox.CreateDerma()
@@ -1008,15 +1011,21 @@ function chatbox.CreateDerma()
 	chatbox.CreateTextEntry();
 end;
 
-function chatbox.Show()
+function chatbox.Show(panel)
 	if (!chatbox.panel) then
 		chatbox.CreateDerma();
 	end;
 
 	chatbox.panel:SetChatOpen(true);
-	chatbox.panel:MakePopup();
-	chatbox.textEntry:Show();
-	chatbox.panel.scrollBar:SetVisible(true);
+
+	if (panel) then
+		chatbox.panel:SetParent(panel);
+	else
+		chatbox.panel:MakePopup();
+	end;
+
+	chatbox.textEntry:AlphaTo(255, fadeDuration);
+	chatbox.panel.scrollBar:AlphaTo(255, fadeDuration);
 	chatbox.textEntry:RequestFocus();
 	chatbox.lerpStart = CurTime();
 end;
@@ -1024,14 +1033,13 @@ end;
 function chatbox.Hide()
 	plugin.Call("ChatBoxClosed", chatbox.GetCurrentText());
 
+	chatbox.textEntry:AlphaTo(0, fadeDuration);
+	chatbox.panel.scrollBar:AlphaTo(0, fadeDuration);
+		
 	chatbox.panel:SetChatOpen(false);
 	chatbox.panel:SetMouseInputEnabled(false);
 	chatbox.panel:SetKeyboardInputEnabled(false);
-	chatbox.textEntry:Hide()
-	chatbox.panel.scrollBar:SetVisible(false);
-	chatbox.openedAnim = nil;
-	chatbox.lerpStart = nil;
-
+	
 	hook.Run("FinishChat");
 	timer.Simple(FrameTime() * 0.5, function() RunConsoleCommand("cancelselect") end)
 end;
@@ -1052,7 +1060,11 @@ concommand.Add("rw_resetchat", chatbox.RecreatePanel)
 
 function chatbox.UpdateDisplay()
 	local i = 1;
-	local maxMessages = 20;
+//	local maxMessages = 20;
+	local textW, textH = util.GetTextSize("reChatFont", "asdf1234");
+	local maxMessages = math.floor(chatbox.height * 0.85 / textH);
+
+	print(maxMessages)
 	
 	g_DisplayY = (maxMessages - 2) * 20;
 	chatbox.display = {};

@@ -11,6 +11,8 @@ lang["#Commands_PlayerInvalid"] = "'#1' is not a valid player!";
 lang["#Commands_HigherImmunity"] = "#1 has higher immunity than you!";
 lang["#Err_GroupNotValid"] = "'#1' is not a valid user group!";
 
+lang["#FreezeBotsMessage"] = "#1 has frozen all bots.";
+lang["#UnfreezeBotsMessage"] = "#1 has unfrozen all bots.";
 lang["#KickMessage"] = "#1 has kicked #2. (#3)";
 lang["#AddBotsMessage"] = "#1 has added #2 bots to the server.";
 lang["#KickBotsMessage"] = "#1 has kicked all bots.";
@@ -22,7 +24,7 @@ lang["#TabMenu_Characters"] = "Characters";
 lang["#TabMenu_Inventory"] = "Inventory";
 lang["#TabMenu_Settings"] = "Settings";
 lang["#TabMenu_Home"] = "Home";
-lang["#TabMenu_Scoreboard"] = "Scoreboard";
+lang["#TabMenu_Scoreboard"] = "Players";
 lang["#TabMenu_Admin"] = "Admin";
 
 lang["#CMDDesc_Usage"] = "Syntax:";

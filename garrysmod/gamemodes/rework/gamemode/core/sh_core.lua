@@ -169,6 +169,9 @@ function Class(name, parent, extends)
 	return library.NewClass(name, parent, extends);
 end;
 
+-- Alias because class could get easily confused with player class.
+Meta = Class;
+
 function rw.core:GetSchemaFolder()
 	if (SERVER) then
 		return rw.schema;

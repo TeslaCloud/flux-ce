@@ -1,1 +1,1 @@
-print("Some crappy schema plugin loaded")
+//print("Some crappy schema plugin loaded")

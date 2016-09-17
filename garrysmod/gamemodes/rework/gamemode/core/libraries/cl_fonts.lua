@@ -4,7 +4,9 @@
 --]]
 
 library.New("fonts", rw);
-rw.fonts.stored = rw.fonts.stored or {};
+
+local stored = rw.fonts.stored or {};
+rw.fonts.stored = stored;
 
 do
 	local aspect = ScrW() / ScrH();
@@ -38,46 +40,74 @@ end;
 
 function rw.fonts:CreateFont(name, fontData)
 	if (name == nil or typeof(fontData) != "table") then return; end;
-	if (self.stored[name]) then return; end;
+	if (stored[name]) then return; end;
 
 	-- Force UTF-8 range by default.
 	fontData.extended = true;
 
 	surface.CreateFont(name, fontData);
-	self.stored[name] = fontData;
+	stored[name] = fontData;
 end;
 
 function rw.fonts:GetSize(name, size)
 	local newName = name.."\\"..size;
 
-	if (!string.find(name, "\\")) then
-		if (!rw.fonts:GetTable(newName)) then
-			local fontData = table.Copy(rw.fonts:GetTable(name));
+	if (!rw.fonts:GetTable(newName)) then
+		local fontData = table.Copy(rw.fonts:GetTable(name));
 
-			if (fontData) then
-				fontData.size = size;
+		if (fontData) then
+			fontData.size = size;
 				
-				self:CreateFont(newName, fontData);
-				self.stored[newName] = fontData;
-			end;
+			self:CreateFont(newName, fontData);
 		end;
-	else
-		newName = name;
 	end;
 
 	return newName;
 end;
 
-function rw.fonts:GetTable(name)
-	return self.stored[name];
+function rw.fonts:ClearTable()
+	stored = {};
 end;
 
-rw.fonts:CreateFont("menu_thin", {
-	font = "Roboto Th",
-	size = rw.fonts.HDFontScreenScale(34)
-});
+function rw.fonts:ClearSizes()
+	for k, v in pairs(stored) do
+		if (k:find("\\")) then
+			stored[k] = nil;
+		end;
+	end;
+end;
 
-rw.fonts:CreateFont("menu_light", {
-	font = "Roboto Lt",
-	size = rw.fonts.HDFontScreenScale(34)
-});
+function rw.fonts:GetTable(name)
+	return stored[name];
+end;
+
+function rw.fonts.CreateFonts()
+	rw.fonts:ClearTable();
+
+	rw.fonts:CreateFont("menu_thin", {
+		font = "Roboto Th",
+		size = rw.fonts.HDFontScreenScale(34)
+	});
+
+	rw.fonts:CreateFont("menu_thin_small", {
+		font = "Roboto Th",
+		size = rw.fonts.HDFontScreenScale(28)
+	});
+
+	rw.fonts:CreateFont("menu_thin_smaller", {
+		font = "Roboto Th",
+		size = rw.fonts.HDFontScreenScale(22)
+	});
+
+	rw.fonts:CreateFont("menu_light", {
+		font = "Roboto Lt",
+		size = rw.fonts.HDFontScreenScale(34)
+	});
+
+	rw.fonts:CreateFont("menu_light_tiny", {
+		font = "Roboto Lt",
+		size = rw.fonts.HDFontScreenScale(16)
+	});
+
+	plugin.Call("CreateFonts", rw.fonts);
+end;
