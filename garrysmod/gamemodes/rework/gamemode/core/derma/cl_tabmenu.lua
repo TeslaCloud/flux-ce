@@ -764,8 +764,8 @@ local days = {
 
 function PANEL:Paint(w, h)
 	local date = os.date("*t", os.time());
-	local day = days[date.wday - 1];
-	local month = date.month;
+	local day = days[date.wday - 1] or "ERROR";
+	local month = date.month ;
 	local year = date.year;
 	local hour = date.hour;
 

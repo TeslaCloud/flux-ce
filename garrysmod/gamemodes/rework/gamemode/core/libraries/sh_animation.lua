@@ -4,8 +4,10 @@
 --]]
 
 library.New("anim", rw);
-local stored = {};
-local models = {};
+local stored = rw.anim.stored or {};
+local models = rw.anim.models or {};
+rw.anim.stored = stored;
+rw.anim.models = models;
 
 stored.player = {
 	normal = {

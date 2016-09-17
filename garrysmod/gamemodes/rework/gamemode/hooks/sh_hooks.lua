@@ -25,7 +25,7 @@ function GM:CalcMainActivity(player, velocity)
 
 	local eyeAngles = player.EyeAngles(player)
 
-	player.SetPoseParameter(player, "move_yaw", normalizeAngle(vectorAngle(velocity)[2] - eyeAngles[2]))
+	player:SetPoseParameter("move_yaw", normalizeAngle(vectorAngle(velocity)[2] - eyeAngles[2]))
 
 	local oldSeqOverride = player.CalcSeqOverride;
 	local seqIdeal, seqOverride = self.BaseClass:CalcMainActivity(player, velocity);
