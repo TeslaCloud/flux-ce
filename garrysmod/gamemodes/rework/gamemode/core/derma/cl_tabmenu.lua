@@ -124,6 +124,11 @@ function PANEL:Init()
 		self:SavePositions();
 	end);
 	self.viewPort:SizeTo(scrW * 0.6, scrH * 0.6, expandDuration);
+
+	if (rw.savedTab) then
+		self:OpenChildMenu(rw.savedTab);
+		rw.savedTab = nil;
+	end;
 end;
 
 function PANEL:OnRemove()
@@ -140,6 +145,10 @@ function PANEL:OnRemove()
 
 	chatbox.CreateDerma();
 	chatbox.textEntry:SetAlpha(0);
+
+	if (self.menu) then
+		rw.savedTab = util.GetPanelClass(self.menu);
+	end;
 end;
 
 function PANEL:CreateBackPanel()
@@ -591,7 +600,7 @@ function PANEL:ToggleMenuExpand()
 	parent.viewPort:MoveToFront();
 
 	if (self.bMenuExpanded) then
-		parent.viewPort:MoveTo(parent.charPanel.x, parent.viewPort.y, expandDuration, nil, nil, function()
+		parent.viewPort:MoveTo(parent.charPanel.x, parent.menu.y, expandDuration, nil, nil, function()
 			parent.viewPort.startingPos = {x = parent.viewPort.x - parent.offset, y = parent.viewPort.y};
 		end);
 
@@ -753,19 +762,19 @@ function PANEL:Init()
 end;
 
 local days = {
+	"Sunday",
 	"Monday",
 	"Tuesday",
 	"Wednesday",
 	"Thursday",
 	"Friday",
-	"Saturday",
-	"Sunday"
+	"Saturday"
 };
 
 function PANEL:Paint(w, h)
 	local date = os.date("*t", os.time());
-	local day = days[date.wday - 1] or "ERROR";
-	local month = date.month ;
+	local day = days[date.wday];
+	local month = date.month;
 	local year = date.year;
 	local hour = date.hour;
 

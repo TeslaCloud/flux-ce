@@ -115,6 +115,7 @@ function PANEL:BuildCategoryList()
 	local categories = rw.settings.GetIndexedCategories(function(a, b)
 		return L(a.id) < L(b.id);
 	end);
+	local saved = rw.settings.lastCat;
 
 	for k, v in ipairs(categories) do
 		local sum = 0;
@@ -127,6 +128,10 @@ function PANEL:BuildCategoryList()
 
 		-- If there are no available settings, skip the category.
 		if (sum == 0) then
+			if (v.id == saved) then
+				saved = nil;
+			end;
+
 			table.remove(categories, k);
 		end;
 	end;
@@ -207,8 +212,18 @@ function PANEL:BuildCategoryList()
 		y = y + h * 1.1;
 	end;
 
-	self.activeCategory = categories[1].id;
+	if (saved) then
+		self.activeCategory = saved;
+		rw.settings.lastCat = nil;
+	else
+		self.activeCategory = categories[1].id;
+	end;
+
 	self:BuildList();
+end;
+
+function PANEL:OnRemove()
+	rw.settings.lastCat = self.activeCategory;
 end;
 
 function PANEL:Paint(w, h) end;

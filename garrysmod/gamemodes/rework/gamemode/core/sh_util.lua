@@ -402,7 +402,13 @@ function util.GetTextSize(font, text)
 end;
 
 function util.GetPanelClass(panel)
-	return panel:GetTable().ClassName;
+	if (panel and panel.GetTable) then
+		local pTable = panel:GetTable();
+
+		if (pTable and pTable.ClassName) then
+			return pTable.ClassName;
+		end;
+	end;
 end;
 
 -- Adjusts x, y to fit inside x2, y2 while keeping original aspect ratio.

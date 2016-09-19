@@ -866,7 +866,7 @@ function PANEL:Think()
 		self.NextAdjust = curTime + (1 / 8);
 	end;
 
-	if (self.isOpen and input.IsKeyDown(KEY_ESCAPE)) then
+	if (self.isOpen and !rw.tabMenu and input.IsKeyDown(KEY_ESCAPE)) then
 		chatbox.Hide();
 	end;
 end;
