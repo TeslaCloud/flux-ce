@@ -109,5 +109,10 @@ function rw.fonts.CreateFonts()
 		size = rw.fonts.HDFontScreenScale(16)
 	});
 
+	rw.fonts:CreateFont("menu_light_small", {
+		font = "Roboto Lt",
+		size = rw.fonts.HDFontScreenScale(20)
+	});
+
 	plugin.Call("CreateFonts", rw.fonts);
 end;

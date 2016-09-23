@@ -3,7 +3,7 @@
 	Do not share, re-distribute or sell.
 --]]
 
-local lang = rw.lang:GetTable("en")
+local lang = rw.lang:GetTable("en");
 
 lang["#Commands_NotValid"] = "'#1' is not a valid command!";
 lang["#Commands_NoAccess"] = "You do not have access to this command!";
@@ -44,6 +44,7 @@ lang["#DemoteCMD_Message"] = "#1 has demoted #2 from #3 to user.";
 lang["#Settings_Dashboard"] = "Dashboard";
 lang["#Settings_Theme"] = "Theme";
 lang["#Settings_AdminESP"] = "Admin ESP";
+lang["#Settings_Binds"] = "Binds";
 
 lang["#Settings_BackgroundURL"] = "Specify a URL for your background.";
 lang["#Settings_BackgroundColor"] = "Select a color for the dashboard's background.";

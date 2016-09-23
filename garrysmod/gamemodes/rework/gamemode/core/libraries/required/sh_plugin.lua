@@ -3,22 +3,19 @@
 	Do not share, re-distribute or sell.
 --]]
 
+if (plugin) then return; end;
+
 library.New("plugin", _G);
 
-local stored = plugin.stored or {};
-plugin.stored = stored;
-
-local hooksCache = plugin.hooksCache or {};
-plugin.hooksCache = hooksCache;
-
-local extras = plugin.extras or {
-	"libraries/",
-	"classes/",
-	"meta/",
-	"config/",
-	"languages/"
+local stored = {};
+local hooksCache = {};
+local extras = {
+	"libraries",
+	"classes",
+	"meta",
+	"config",
+	"languages"
 };
-plugin.extras = extras;
 
 function plugin.GetStored()
 	return stored;
@@ -26,6 +23,10 @@ end;
 
 function plugin.GetCache()
 	return hooksCache;
+end;
+
+function plugin.ClearCache()
+	table.Empty(hooksCache);
 end;
 
 Class "Plugin";
@@ -36,7 +37,6 @@ function Plugin:Plugin(name, data)
 	self.m_Folder = data.folder or name:gsub(" ", "_"):lower();
 	self.m_Description = data.description or "Undescribed plugin or schema.";
 	self.m_uniqueID = data.id or name:gsub(" ", "_"):lower() or "unknown";
-//	self.m_data = data;
 
 	table.Merge(self, data);
 end;
@@ -82,7 +82,7 @@ function plugin.RemoveHooks(id)
 	for k, v in pairs(hooksCache) do
 		for k2, v2 in ipairs(v) do
 			if (v.id and v.id == id) then
-				hooksCache[k][k2] = nil;
+				table.remove(hooksCache[k], k2);
 			end;
 		end;
 	end;
@@ -90,7 +90,6 @@ end;
 
 function plugin.Register(obj)
 	plugin.CacheFunctions(obj);
-
 	stored[obj:GetFolder()] = obj;
 end;
 
@@ -282,9 +281,7 @@ end;
 
 function plugin.IncludeFolders(folder)
 	for k, v in ipairs(extras) do
-		if (file.Exists(folder.."/"..v, "LUA")) then
-			rw.core:IncludeDirectory(folder.."/"..v);
-		end;
+		rw.core:IncludeDirectory(folder.."/"..v);
 	end;
 end;
 

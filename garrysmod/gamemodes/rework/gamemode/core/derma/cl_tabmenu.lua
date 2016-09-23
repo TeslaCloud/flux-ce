@@ -72,7 +72,7 @@ function PANEL:Init()
 
 	chatbox.Show(self);
 
-	-- We do this to make the text wrap properly to the new size of the chatbox.
+	-- We do this to make the text wrap to the new size of the chatbox.
 	chatbox.UpdateDisplay();
 
 	chatbox.textEntry:RequestFocus();
@@ -135,7 +135,7 @@ function PANEL:OnRemove()
 	chatbox.width, chatbox.height = chatbox.oldW, chatbox.oldH;
 	chatbox.x, chatbox.y = chatbox.oldX, chatbox.oldY;
 
-	-- We do this to make the text wrap to the normal size properly again.
+	-- We do this to make the text wrap to the normal size properly.
 	chatbox.UpdateDisplay()
 
 	if (chatbox.panel) then
@@ -568,7 +568,6 @@ function PANEL:ToggleExpand()
 	end;
 
 	for k, v in pairs(parent:GetChildren()) do
-	//	if (v == parent.playerLabel or v == parent.dateTime or v == parent.category or v == parent.backPanel) then
 		if (v == parent.backPanel) then
 			continue;
 		end;
@@ -605,46 +604,12 @@ function PANEL:ToggleMenuExpand()
 		end);
 
 		parent.viewPort:SizeTo(scrW * 0.25, scrH * 0.25, expandDuration);
-
-	//	parent.charPanel:SizeTo(parent.charPanel:GetWide(), scrH * 0.3385, expandDuration);
-	--[[
-		parent.charPanel:MoveTo(parent.charPanel.x, scrH * 0.3625, expandDuration, nil, nil, function()
-			parent.charPanel.startingPos = {x = parent.charPanel.x - parent.offset, y = parent.charPanel.y};
-		end);
-
-		parent.ph1:MoveTo(parent.ph1.x, scrH * 0.3625, expandDuration, nil, nil, function()
-			parent.ph1.startingPos = {x = parent.ph1.x - parent.offset, y = parent.ph1.y};
-		end);
-
-		parent.ph2:MoveTo(parent.ph2.x, chatbox.y, expandDuration, nil, nil, function()
-			parent.ph2.startingPos = {x = parent.ph2.x - parent.offset, y = parent.ph2.y};
-		end);
-
-		parent.ph2:SizeTo(parent.ph2:GetWide(), chatbox.height, expandDuration);
-	--]]
 	else
 		parent.viewPort:MoveTo(parent.mainX + scrW * 0.115 + parent.offset, parent.viewPort.y, expandDuration, nil, nil, function()
 			parent.viewPort.startingPos = {x = parent.viewPort.x - parent.offset, y = parent.viewPort.y};
 		end);
 
 		parent.viewPort:SizeTo(scrW * 0.6, scrH * 0.6, expandDuration);
-
-	//	parent.charPanel:SizeTo(parent.charPanel:GetWide(), scrH * 0.6, expandDuration);
-	--[[
-		parent.charPanel:MoveTo(parent.charPanel.x, scrH * 0.1, expandDuration, nil, nil, function()
-			parent.charPanel.startingPos = {x = parent.charPanel.x - parent.offset, y = parent.charPanel.y};
-		end);
-
-		parent.ph1:MoveTo(parent.ph1.x, scrH * 0.1, expandDuration, nil, nil, function()
-			parent.ph1.startingPos = {x = parent.ph1.x - parent.offset, y = parent.ph1.y};
-		end);
-
-		parent.ph2:MoveTo(parent.dateTime.x + parent.dateTime:GetWide() - parent.ph2:GetWide(), scrH * 0.4475, expandDuration, nil, nil, function()
-			parent.ph2.startingPos = {x = parent.ph2.x - parent.offset, y = parent.ph2.y};
-		end);
-
-		parent.ph2:SizeTo(parent.dateTime:GetWide(), scrH * 0.2537, expandDuration);
-	--]]
 	end;
 
 	self.bMenuExpanded = !self.bMenuExpanded;
@@ -838,22 +803,28 @@ end;
 
 function PANEL:Paint(w, h)
 	draw.SimpleTextOutlined(rw.client:Name(), menuFont, w * 0.25, h * 0.5, rw.settings.GetColor("TextColor"), TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP, outlineSize, colorBlack);
-
+	
+	--[[ -- The avatar doesn't draw when the scoreboard is open, and it flashes and whatnot, I don't know how to fix and I don't think it's worth it to keep.
 	-- Circle Avatar
+	render.ClearStencil();
 	render.SetStencilEnable(true);
-		render.ClearStencil();
-			render.SetStencilReferenceValue(1);
-			render.SetStencilPassOperation(STENCIL_REPLACE);
-			render.SetStencilCompareFunction(STENCIL_NOTEQUAL);
-				surface.DrawCircle(
-					self.avatar.x + (self.avatar:GetWide() * 0.5), 
-					self.avatar.y + (self.avatar:GetTall() * 0.5), 
-					self.avatar:GetWide() * 0.5
-				);
-			render.SetStencilCompareFunction(STENCIL_EQUAL);
-				self.avatar:PaintManual();
-		render.ClearStencil();
-	render.SetStencilEnable(false);
+		render.SetStencilReferenceValue(20);
+		render.SetStencilPassOperation(STENCIL_REPLACE);
+		render.SetStencilFailOperation(STENCIL_KEEP);
+		render.SetStencilZFailOperation(STENCIL_KEEP);
+
+		render.SetStencilCompareFunction(STENCIL_NOTEQUAL);
+			surface.DrawCircle(
+				self.avatar.x + (self.avatar:GetWide() * 0.5), 
+				self.avatar.y + (self.avatar:GetTall() * 0.5), 
+				self.avatar:GetWide() * 0.5
+			);
+		render.SetStencilCompareFunction(STENCIL_EQUAL);
+	--]]
+
+	self.avatar:PaintManual();
+
+--	render.SetStencilEnable(false);
 end;
 
 function PANEL:OnMousePressed()

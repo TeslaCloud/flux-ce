@@ -72,7 +72,7 @@ function PANEL:BuildList()
 	setList:Clear();
 
 	table.sort(settings, function(a, b)
-		return L(a.id) < L(b.id);
+		return L("#Settings_"..a.id) < L("#Settings_"..b.id);
 	end);
 
 	for k, v in ipairs(settings) do
@@ -113,7 +113,7 @@ function PANEL:BuildCategoryList()
 	local y = x;
 	local w, h = catList:GetWide(), catList:GetTall() * 0.09;
 	local categories = rw.settings.GetIndexedCategories(function(a, b)
-		return L(a.id) < L(b.id);
+		return L("#Settings_"..a.id) < L("#Settings_"..b.id);
 	end);
 	local saved = rw.settings.lastCat;
 

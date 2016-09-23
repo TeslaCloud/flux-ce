@@ -1060,11 +1060,8 @@ concommand.Add("rw_resetchat", chatbox.RecreatePanel)
 
 function chatbox.UpdateDisplay()
 	local i = 1;
-//	local maxMessages = 20;
 	local textW, textH = util.GetTextSize("reChatFont", "asdf1234");
 	local maxMessages = math.floor(chatbox.height * 0.85 / textH);
-
-	print(maxMessages)
 	
 	g_DisplayY = (maxMessages - 2) * 20;
 	chatbox.display = {};

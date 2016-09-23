@@ -85,6 +85,9 @@ rw.core:Include("core/sv_core.lua");
 -- This way we put things we want loaded BEFORE anything else in here, like plugin, config, etc.
 rw.core:IncludeDirectory("core/libraries/required", nil, true);
 
+-- So that we don't get duplicates on refresh.
+plugin.ClearCache();
+
 rw.core:IncludeDirectory("core/config", nil, true);
 rw.core:IncludeDirectory("core/libraries", nil, true);
 rw.core:IncludeDirectory("core/classes", nil, true);
@@ -96,7 +99,12 @@ rw.core:IncludeDirectory("core/derma", nil, true);
 rw.core:IncludeDirectory("hooks", nil, true);
 
 rw.core:IncludePlugins("rework/plugins");
+
+plugin.Call("RWPluginsLoaded");
+
 rw.core:IncludeSchema();
+
+plugin.Call("RWSchemaLoaded");
 
 if (SERVER) then
 	local mysql_host = rw.config:Get("mysql_host");
