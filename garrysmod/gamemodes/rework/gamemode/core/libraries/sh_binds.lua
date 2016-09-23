@@ -14,7 +14,9 @@ if (CLIENT) then
 
 	if (#keyEnums == 0) then
 		for k, v in pairs(_G) do
-			if (string.sub(k, 1, 4) == "KEY_") then
+			if (string.sub(k, 1, 6) == "MOUSE_") then
+				keyEnums[v] = k;
+			elseif (string.sub(k, 1, 4) == "KEY_") then
 				keyEnums[v] = k;
 			end;
 		end;

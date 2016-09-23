@@ -401,6 +401,22 @@ function util.GetTextSize(font, text)
 	return surface.GetTextSize(text);
 end;
 
+function util.GetFontSize(font)
+	return util.GetTextSize(font, "abg");
+end;
+
+function util.GetTextHeight(font, text)
+	local textW, textH = util.GetTextSize(font, text);
+
+	return textH;
+end;
+
+function util.GetFontHeight(font)
+	local textW, textH = util.GetFontSize(font, "abg");
+
+	return textH;
+end;
+
 function util.GetPanelClass(panel)
 	if (panel and panel.GetTable) then
 		local pTable = panel:GetTable();

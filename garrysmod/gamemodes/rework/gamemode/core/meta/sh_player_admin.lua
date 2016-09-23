@@ -14,7 +14,7 @@ function playerMeta:GetPermissions()
 end;
 
 function playerMeta:IsOwner()
-	return (self:IsMemberOf("owner"));
+	return self:IsMemberOf("owner");
 end;
 
 function playerMeta:IsCoOwner()

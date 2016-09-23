@@ -71,7 +71,7 @@ if (CLIENT) then
 
 	surface.bTranslating = surface.bTranslating or true;
 
-	--[[ 
+	--[[
 		This is to stop our overrides from parsing translations, we
 		don't want certain things like the chatbox to be translated.
 	--]]
@@ -115,7 +115,7 @@ if (CLIENT) then
 
 		return sText;
 	end;
-
+--[[
 	surface.OldGetTextSize = surface.OldGetTextSize or surface.GetTextSize;
 
 	function surface.GetTextSize(sText)
@@ -126,9 +126,11 @@ if (CLIENT) then
 		return surface.OldGetTextSize(sText);
 	end;
 
-	surface.OldDrawText = surface.OldDrawText or surface.DrawText;
+	local langCache = {};
 
-	--[[
+--	surface.OldDrawText = surface.OldDrawText or surface.DrawText;
+
+	
 		Overwrite the way the surface library draws text, 
 		this way we can put translations into anything that uses this,
 		like draw.SimpleText, etc.
@@ -136,14 +138,22 @@ if (CLIENT) then
 		This will give us control over basically every text drawn 
 		with Lua outside of Derma.
 	--]]
+	--[[
 	function surface.DrawText(sText)
 		if (surface.bTranslating) then
-			sText = rw.lang:TranslateText(sText);
+			local oldText = sText;
+
+			if (!langCache[oldText]) then
+				sText = rw.lang:TranslateText(sText);
+				langCache[oldText] = sText;
+			else
+				sText = langCache[oldText];
+			end;
 		end;
 
 		return surface.OldDrawText(sText);
 	end;
-
+	--]]
 	local PANEL_META = FindMetaTable("Panel");
 
 	PANEL_META.OldSetText = PANEL_META.OldSetText or PANEL_META.SetText;

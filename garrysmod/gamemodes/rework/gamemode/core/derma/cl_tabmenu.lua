@@ -233,10 +233,10 @@ end;
 
 function PANEL:GetActiveCategory()
 	if (IsValid(self.menu) and util.GetPanelClass(self.menu) == "rwScoreboard") then
-		return "#TabMenu_Scoreboard";
+		return "Scoreboard";
 	end;
 
-	return "#TabMenu_Home";
+	return "Home";
 end;
 
 function PANEL:SavePositions()
@@ -388,9 +388,9 @@ function PANEL:Init()
 
 	self.home = vgui.Create("rwCategoryButton", self);
 
-	local homeName = "#TabMenu_Home";
-	local scoreName = "#TabMenu_Scoreboard";
-	local adminName = "#TabMenu_Admin";
+	local homeName = L("#TabMenu_Home");
+	local scoreName = L("#TabMenu_Scoreboard");
+	local adminName = L("#TabMenu_Admin");
 
 	local w = self:GetWide() * 0.3;
 
@@ -411,6 +411,7 @@ function PANEL:Init()
 	self.home.text = homeName;
 	self.home:SetPos(0, 0);
 	self.home:SetSize(w, self:GetTall());
+	self.home.category = "Home";
 
 	self.home.DoClick = function()
 		self:GetParent():CloseChildMenu();
@@ -425,14 +426,19 @@ function PANEL:Init()
 	self.scoreboard:SetSize(w, self:GetTall());
 	self.scoreboard:SetPos(self:GetWide() - self.scoreboard:GetWide(), 0);
 	self.scoreboard.menu = "rwScoreboard";
+	self.scoreboard.category = "Scoreboard";
 
-//	if (rw.client:IsAdmin()) then
+	if (rw.client:IsAdmin()) then
 		self.admin = vgui.Create("rwCategoryButton", self);
 
 		self.admin.text = adminName;
 		self.admin:SetSize(w, self:GetTall());
 		self.admin:SetPos(self:GetWide() * 0.5 - self.admin:GetWide() * 0.5, 0);
-//	end;
+		self.admin.category = "Admin";
+	else
+		self.home:SetPos(self:GetWide() * 0.5 - self.home:GetWide(), self.home.y);
+		self.scoreboard:SetPos(self.home.x + self.home:GetWide(), self.scoreboard.y);
+	end;
 end;
 
 function PANEL:Paint(w, h)
@@ -485,7 +491,7 @@ function PANEL:Paint(w, h)
 
 		local alpha = self.textAlpha;
 
-		if (self:GetParent():GetParent():GetActiveCategory() == self.text) then
+		if (self:GetParent():GetParent():GetActiveCategory() == self.category) then
 			alpha = 170;
 		end;
 
@@ -527,8 +533,10 @@ function PANEL:Init()
 	plugin.Call("AdjustTabDockMenus", self.menus);
 
 	for k, v in pairs(self.menus) do
+		v.text = L("#TabMenu_"..k);
+
 		local button = vgui.Create("rwTabDockButton", self);
-		local textSize = util.GetTextSize(menuFont, "#TabMenu_"..k) - scrW * 0.04;
+		local textSize = util.GetTextSize(menuFont, v.text) - scrW * 0.04;
 
 		if (textSize > self.offset) then
 			self.offset = textSize;
@@ -638,10 +646,10 @@ function PANEL:Paint(w, h)
 	local textColor = rw.settings.GetColor("TextColor");
 
 	if (self.alpha > 0) then
-		draw.SimpleTextOutlined("#TabMenu_Expand", menuFont, self.expand.x * 0.97, self.expand.y + self.expand:GetTall() * 0.5, ColorAlpha(textColor, self.alpha), TEXT_ALIGN_RIGHT, TEXT_ALIGN_CENTER, outlineSize, ColorAlpha(colorBlack, self.alpha));
+	//	draw.SimpleTextOutlined("#TabMenu_Expand", menuFont, self.expand.x * 0.97, self.expand.y + self.expand:GetTall() * 0.5, ColorAlpha(textColor, self.alpha), TEXT_ALIGN_RIGHT, TEXT_ALIGN_CENTER, outlineSize, ColorAlpha(colorBlack, self.alpha));
 
 		for k, v in pairs(self.menus) do
-			draw.SimpleTextOutlined("#TabMenu_"..k, menuFont, v.button.x * 0.97, v.button.y + v.button:GetTall() * 0.5, ColorAlpha(textColor, self.alpha), TEXT_ALIGN_RIGHT, TEXT_ALIGN_CENTER, outlineSize, ColorAlpha(colorBlack, self.alpha));
+			draw.SimpleTextOutlined(v.text, menuFont, v.button.x * 0.97, v.button.y + v.button:GetTall() * 0.5, ColorAlpha(textColor, self.alpha), TEXT_ALIGN_RIGHT, TEXT_ALIGN_CENTER, outlineSize, ColorAlpha(colorBlack, self.alpha));
 		end;
 	end;
 end;

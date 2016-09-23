@@ -44,7 +44,11 @@ function PANEL:Paint(w, h)
 	if (self.waitPress) then
 		text = "Press a key to bind or mouse away to cancel.";
 	elseif (value and value > 0) then
-		text = string.sub(rw.binds.GetEnums()[value], 5);
+		text = string.gsub(string.gsub(rw.binds.GetEnums()[value], "KEY_", ""), "_", " ");
+
+		if (text == "COUNT") then
+			text = "MOUSE LEFT";
+		end;
 	end;
 
 	draw.SimpleText(text, "menu_light_small", w * 0.5, h * 0.5, rw.settings.GetColor("TextColor"), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER);

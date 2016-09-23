@@ -353,20 +353,10 @@ end;
 
 -- Not going to document these yet as these might as well be placeholders for testing while I build the frontend.
 rw.settings.AddCheckBox("AdminESP", "EnableAdminESP", "0", function()
-	return !LocalPlayer():IsAdmin();
+	return LocalPlayer():IsAdmin();
 end);
 rw.settings.AddColorMixer("Theme", "TextColor", "");
 rw.settings.AddColorMixer("Theme", "MenuBackColor", "");
-rw.settings.AddNumSlider("Test", "TestNumSlider", "", {
-	min = 5,
-	max = 20,
-	decimals = 5
-});
-rw.settings.AddNumSlider("Test", "TestNumSlider2", "", {
-	min = 0,
-	max = 100,
-	decimals = 0
-});
 rw.settings.AddColorMixer("Dashboard", "BackgroundColor", "");
 rw.settings.AddComboBox("Dashboard", "FitType", "", {
 	["fill"] = "#Settings_Fit_Fill",
@@ -391,3 +381,16 @@ rw.settings.AddTextEntry("Dashboard", "BackgroundURL", "", nil, {
 		end;
 	end
 });
+
+--[[ -- For example on how to add a number slider.
+rw.settings.AddNumSlider("Test", "TestNumSlider", "", {
+	min = 5,
+	max = 20,
+	decimals = 5
+});
+rw.settings.AddNumSlider("Test", "TestNumSlider2", "", {
+	min = 0,
+	max = 100,
+	decimals = 0
+});
+--]]

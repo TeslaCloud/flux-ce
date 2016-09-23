@@ -835,12 +835,12 @@ function PANEL:Paint(w, h)
 							text = text..v.aliases[1];
 						end;
 						
-						draw.SimpleTextOutlined(text, "reChatFont", 4, cY + offsetX, Color(240, 240, 240), TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP, 1, Color(0, 0, 0))
+						draw.SimpleTextOutlined(rw.lang:TranslateText(text), "reChatFont", 4, cY + offsetX, Color(240, 240, 240), TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP, 1, Color(0, 0, 0))
 						
 						offsetX = offsetX + 20;
 					end;
 
-					draw.SimpleTextOutlined("#CMDDesc_Usage ".."/"..v.name.." "..v.syntax, "reChatFont", 4, cY + offsetX, Color(240, 240, 240), TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP, 1, Color(0, 0, 0));
+					draw.SimpleTextOutlined(rw.lang:TranslateText("#CMDDesc_Usage ".."/"..v.name.." "..v.syntax), "reChatFont", 4, cY + offsetX, Color(240, 240, 240), TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP, 1, Color(0, 0, 0));
 				end;
 
 				cY = cY + 24;
@@ -883,7 +883,8 @@ local entryBack = Color(0, 0, 0, 170);
 
 function PANEL:Paint(w, h)
 	draw.RoundedBox(2, 0, 0, w, h, entryBack);
-	self:DrawTextEntryText(Color(255, 255, 255, 255), Color(255, 250, 200), Color(255, 255, 255, 255));
+
+	self:DrawTextEntryText(rw.settings.GetColor("TextColor"), ColorAlpha(rw.settings.GetColor("TextColor"), 25), rw.settings.GetColor("TextColor"));
 end;
 
 function PANEL:OnEnter()
@@ -1059,6 +1060,10 @@ end;
 concommand.Add("rw_resetchat", chatbox.RecreatePanel)
 
 function chatbox.UpdateDisplay()
+	if (!chatbox.panel) then
+		chatbox.CreateDerma();
+	end;
+
 	local i = 1;
 	local textW, textH = util.GetTextSize("reChatFont", "asdf1234");
 	local maxMessages = math.floor(chatbox.height * 0.85 / textH);

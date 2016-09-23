@@ -1,7 +1,7 @@
 local PANEL = {};
 
 local colorWhite = Color(255, 255, 255, 255);
-local colorBlack = Color(0, 0, 0, 100);
+local colorBlack = Color(0, 0, 0, 200);
 
 local outlineSize = 0.5;
 local expandDuration = 0.15;
@@ -78,7 +78,7 @@ function PANEL:BuildList()
 	for k, v in ipairs(settings) do
 		local elementCallback = self.elementCallbacks[v.type];
 
-		if ((!v.callback or !v.callback()) and isfunction(elementCallback)) then
+		if ((!v.callback or v.callback()) and isfunction(elementCallback)) then
 			local setting = vgui.Create("EditablePanel", setList);
 
 			setting:SetPos(x, y);
@@ -121,7 +121,7 @@ function PANEL:BuildCategoryList()
 		local sum = 0;
 
 		for k, v in pairs(v.settings) do
-			if (!v.callback or !v.callback()) then
+			if (!v.callback or v.callback()) then
 				sum = sum + 1;
 			end;
 		end;
@@ -139,7 +139,7 @@ function PANEL:BuildCategoryList()
 	for k, v in ipairs(categories) do
 		surface.SetFont(menuFont);
 
-		local name = "#Settings_"..v.id;
+		local name = L("#Settings_"..v.id);
 		local textW, textH = surface.GetTextSize(name);
 
 		textW = textW + (w * 0.25);
