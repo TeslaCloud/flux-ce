@@ -790,49 +790,41 @@ derma.DefineControl("rwTabDate", "", PANEL, "DPanel");
 
 local PANEL = {};
 
-function PANEL:Init()
-	local scrW, scrH = ScrW(), ScrH();
-	local parent = self:GetParent();
+do 
+	-- How much larger than the avatarimage is the background for it.
+	local sizeOffset = 0.15;
 
-	self:SetSize(scrW * 0.2, scrH * 0.075);
-	self:SetPos(parent.mainX + scrW * 0.115, scrH * 0.01);
+	-- Don't edit these.
+	local fullOffset = sizeOffset + 1;
+	local halfOffset = sizeOffset * 0.5;
 
-	self.avatar = vgui.Create("AvatarImage", self);
-	self.avatar:SetSize(self:GetTall() * 0.9, self:GetTall() * 0.9);
-	self.avatar:SetPos(self:GetWide() * 0.025, self:GetTall() * 0.05);
-	self.avatar:SetPlayer(rw.client, 64);
-	self.avatar:SetPaintedManually(true);
-	self.avatar:SetCursor("hand");
+	function PANEL:Init()
+		local scrW, scrH = ScrW(), ScrH();
+		local parent = self:GetParent();
 
-	self.avatar.OnMousePressed = function(self)
-		gui.OpenURL("http://steamcommunity.com/profiles/"..rw.client:SteamID64());
+		self:SetSize(scrW * 0.2, scrH * 0.075);
+		self:SetPos(parent.mainX + scrW * 0.115, scrH * 0.01);
+
+		local avatarSize = self:GetTall() * 0.8;
+
+		self.avatar = vgui.Create("AvatarImage", self);
+		self.avatar:SetSize(avatarSize, avatarSize);
+		self.avatar:SetPos(halfOffset * self.avatar:GetWide(), self:GetTall() - self.avatar:GetTall());
+		self.avatar:SetPlayer(rw.client, 64);
+		self.avatar:SetCursor("hand");
+
+		self.avatar.OnMousePressed = function(self)
+			gui.OpenURL("http://steamcommunity.com/profiles/"..rw.client:SteamID64());
+		end;
 	end;
-end;
 
-function PANEL:Paint(w, h)
-	draw.SimpleTextOutlined(rw.client:Name(), menuFont, w * 0.25, h * 0.5, rw.settings.GetColor("TextColor"), TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP, outlineSize, colorBlack);
-	
-	--[[ -- The avatar doesn't draw when the scoreboard is open, and it flashes and whatnot, I don't know how to fix and I don't think it's worth it to keep.
-	-- Circle Avatar
-	render.ClearStencil();
-	render.SetStencilEnable(true);
-		render.SetStencilReferenceValue(20);
-		render.SetStencilPassOperation(STENCIL_REPLACE);
-		render.SetStencilFailOperation(STENCIL_KEEP);
-		render.SetStencilZFailOperation(STENCIL_KEEP);
+	function PANEL:Paint(w, h)
+		DisableClipping(true);
+			draw.RoundedBox(4, self.avatar.x - (self.avatar:GetWide() * halfOffset), self.avatar.y - (self.avatar:GetTall() * halfOffset), self.avatar:GetWide() * fullOffset, self.avatar:GetTall() * fullOffset, rw.settings.GetColor("TextColor"));
+		DisableClipping(false);
 
-		render.SetStencilCompareFunction(STENCIL_NOTEQUAL);
-			surface.DrawCircle(
-				self.avatar.x + (self.avatar:GetWide() * 0.5), 
-				self.avatar.y + (self.avatar:GetTall() * 0.5), 
-				self.avatar:GetWide() * 0.5
-			);
-		render.SetStencilCompareFunction(STENCIL_EQUAL);
-	--]]
-
-	self.avatar:PaintManual();
-
---	render.SetStencilEnable(false);
+		draw.SimpleTextOutlined(rw.client:Name(), menuFont, self.avatar.x + self.avatar:GetWide() + w * 0.04, h * 0.5, rw.settings.GetColor("TextColor"), TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP, outlineSize, colorBlack);
+	end;
 end;
 
 function PANEL:OnMousePressed()
