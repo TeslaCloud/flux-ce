@@ -7,7 +7,6 @@ if (rw.lang) then return; end;
 
 library.New("lang", rw);
 local stored = {};
-local files = {};
 
 function rw.lang:GetTable(name)
 	stored[name] = stored[name] or {};
@@ -18,16 +17,6 @@ end;
 function rw.lang:GetAll()
 	return stored;
 end;
-	
-function rw.lang:Add(language, fileName)
-	if (!files[language]) then
-		files[language] = {};
-	end;
-
-	table.insert(files[language], fileName);
-end;
-	
-function rw.lang:Set(language) end;
 
 function rw.lang:GetString(language, identifier, arguments)
 	local langString = nil;

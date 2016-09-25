@@ -88,6 +88,14 @@ rw.core:IncludeDirectory("core/libraries/required", nil, true);
 -- So that we don't get duplicates on refresh.
 plugin.ClearCache();
 
+--[[
+rw.disabledFiles = {};
+
+rw.disabledFiles["libraries/sh_derp"] = true; -- Don't include this file.
+
+//rw.core:Include(schemaFolder.."sh_disabled.lua"); -- This file would just add entries to the table like above.
+--]]
+
 rw.core:IncludeDirectory("core/config", nil, true);
 rw.core:IncludeDirectory("core/libraries", nil, true);
 rw.core:IncludeDirectory("core/classes", nil, true);

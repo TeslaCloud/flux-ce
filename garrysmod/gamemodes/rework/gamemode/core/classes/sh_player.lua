@@ -13,6 +13,10 @@ for k, v in pairs(player_manager.AllValidModels()) do
 	modelList[v:lower()] = k;
 end;
 
+rePlayer.loadout = {
+	"weapon_fists"
+};
+
 -- Called when the data tables are setup.
 function rePlayer:SetupDataTables()
 	if (!self.Player or !self.Player.DTVar) then
@@ -51,6 +55,16 @@ function rePlayer:PostDrawViewModel(viewmodel, weapon)
 			handsEntity:DrawModel();
 		end;
 	end;
+end;
+
+function rePlayer:Loadout()
+	self.Player:StripWeapons();
+	
+	for k, v in pairs(self.loadout) do
+		self.Player:Give(v);
+	end;
+
+	self.Player:SelectWeapon(self.loadout[1]);
 end;
 
 player_manager.RegisterClass("rePlayer", rePlayer, "player_default");

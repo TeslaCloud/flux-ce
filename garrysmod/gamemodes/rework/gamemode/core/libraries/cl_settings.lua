@@ -93,7 +93,7 @@ rw.settings.GetString = rw.settings.GetValue;
 	returns [bool] The value of the convar as a bool, or false.
 --]]
 function rw.settings.GetBool(id)
-	return util.ToBool(rw.settings.GetValue(id));
+	return !util.ToBool(rw.settings.GetValue(id));
 end;
 
 --[[
@@ -352,7 +352,7 @@ function rw.settings.GetCategorySettings(category)
 end;
 
 -- Not going to document these yet as these might as well be placeholders for testing while I build the frontend.
-rw.settings.AddCheckBox("AdminESP", "EnableAdminESP", "0", function()
+rw.settings.AddCheckBox("AdminESP", "EnableAdminESP", false, function()
 	return LocalPlayer():IsAdmin();
 end);
 rw.settings.AddColorMixer("Theme", "TextColor", "");

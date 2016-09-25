@@ -46,7 +46,6 @@ end;
 
 function GM:PlayerSpawn(player)
 	player_manager.SetPlayerClass(player, "rePlayer");
-	player_manager.RunClass(player, "Spawn");
 
 	self:PlayerSetModel(player);
 
@@ -90,6 +89,12 @@ function GM:PlayerSpawn(player)
 
 		handsEntity:Spawn();
 	end;
+
+	plugin.Call("PostPlayerSpawn", player);
+end;
+
+function GM:PostPlayerSpawn(player)
+	player_manager.RunClass(player, "Loadout");
 end;
 
 function GM:OnPluginFileChange(fileName)

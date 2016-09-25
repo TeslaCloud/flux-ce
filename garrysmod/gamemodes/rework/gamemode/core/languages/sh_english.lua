@@ -45,6 +45,7 @@ lang["#Settings_Dashboard"] = "Dashboard";
 lang["#Settings_Theme"] = "Theme";
 lang["#Settings_AdminESP"] = "Admin ESP";
 lang["#Settings_Binds"] = "Binds";
+lang["#Settings_General"] = "General";
 
 lang["#Settings_BackgroundURL"] = "Specify a URL for your background.";
 lang["#Settings_BackgroundColor"] = "Select a color for the dashboard's background.";
