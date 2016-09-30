@@ -239,3 +239,47 @@ end;
 
 function GM:DatabaseConnected()
 end;
+
+function GM:PreSaveCharacter(player, char, index)
+	local prepared = {};
+
+	prepared.steamID = player:SteamID();
+	prepared.name = char.name;
+	prepared.faction = char.faction;
+	prepared.class = char.class;
+	prepared.inventory = util.TableToJSON(char.inventory);
+	prepared.ammo = util.TableToJSON(char.ammo);
+	prepared.money= char.money;
+	prepared.charPermissions = util.TableToJSON(char.charPermissions);
+	prepared.data = util.TableToJSON(char.data);
+	prepared.uniqueID = char.uniqueID;
+
+	return prepared;
+end;
+
+function GM:PreSaveCharacters(player, chars)
+	local prepared = {};
+
+	for k, v in ipairs(chars) do
+		prepared[k] = plugin.Call("PreSaveCharacter", player, v, k);
+	end;
+
+	return prepared;
+end;
+
+function GM:PreCharacterRestore(player, index, char)
+	local prepared = {};
+
+	prepared.steamID = player:SteamID();
+	prepared.name = char.name;
+	prepared.faction = char.faction;
+	prepared.class = char.class;
+	prepared.inventory = util.JSONToTable(char.inventory);
+	prepared.ammo = util.JSONToTable(char.ammo);
+	prepared.money = tonumber(char.money);
+	prepared.charPermissions = util.JSONToTable(char.charPermissions);
+	prepared.data = util.JSONToTable(char.data);
+	prepared.uniqueID = tonumber(char.uniqueID);
+
+	return prepared;
+end;

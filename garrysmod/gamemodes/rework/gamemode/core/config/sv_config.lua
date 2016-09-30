@@ -13,6 +13,11 @@ rw.config:Set("command_prefixes", {"/", "!"});
 rw.config:Set("owner_steamid", "STEAM_0:1:14196407");
 rw.config:Set("owner_steamid_extra", {"STEAM_0:0:00000000", "STEAM_0:0:00000000"});
 
+rw.config:Set("character_min_name_len", 6);
+rw.config:Set("character_min_desc_len", 32);
+rw.config:Set("character_max_name_len", 32);
+rw.config:Set("character_max_desc_len", 256);
+
 rw.config:Set("mysql_module", "sqlite");
 rw.config:Set("mysql_host", "127.0.0.1");
 rw.config:Set("mysql_username", "root");

@@ -72,6 +72,37 @@ function GM:GetGameDescription()
 	return name;
 end;
 
+do
+	rw.sharedTable.dependencies = rw.sharedTable.dependencies or {};
+	rw.sharedTable.disable = rw.sharedTable.disable or {};
+
+	if (SERVER) then
+		if (file.Find("gamemodes/"..rw.schema.."/dependencies.lua", "GAME")) then
+			rw.sharedTable.dependencies = include(rw.schema.."/dependencies.lua");
+		end;
+
+		if (file.Find("gamemodes/"..rw.schema.."/disable.lua", "GAME")) then
+			rw.sharedTable.disable = include(rw.schema.."/disable.lua");
+		end;
+	end;
+
+	function rw.SchemaDepends(id)
+		if (rw.sharedTable.dependencies[id]) then
+			return true;
+		end;
+
+		return false;
+	end;
+
+	function rw.SchemaDisabled(id)
+		if (rw.sharedTable.disable[id]) then
+			return true;
+		end;
+
+		return false;
+	end;
+end;
+
 AddCSLuaFile("core/sh_enums.lua");
 AddCSLuaFile("core/sh_util.lua");
 AddCSLuaFile("core/sh_core.lua");
@@ -87,14 +118,6 @@ rw.core:IncludeDirectory("core/libraries/required", nil, true);
 
 -- So that we don't get duplicates on refresh.
 plugin.ClearCache();
-
---[[
-rw.disabledFiles = {};
-
-rw.disabledFiles["libraries/sh_derp"] = true; -- Don't include this file.
-
-//rw.core:Include(schemaFolder.."sh_disabled.lua"); -- This file would just add entries to the table like above.
---]]
 
 rw.core:IncludeDirectory("core/config", nil, true);
 rw.core:IncludeDirectory("core/libraries", nil, true);

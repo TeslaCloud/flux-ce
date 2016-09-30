@@ -572,19 +572,22 @@ function rw.db:OnConnected()
 		queryObj:PrimaryKey("key");
 	queryObj:Execute();
 
-	local queryObj = self:Create("rw_characters");
-		queryObj:Create("key", "INT NOT NULL AUTO_INCREMENT");
-		queryObj:Create("steamID", "VARCHAR(25) NOT NULL");
-		queryObj:Create("name", "VARCHAR(255) NOT NULL");
-		queryObj:Create("faction", "TEXT NOT NULL");
-		queryObj:Create("class", "TEXT DEFAULT NULL");
-		queryObj:Create("inventory", "TEXT DEFAULT NULL");
-		queryObj:Create("ammo", "TEXT DEFAULT NULL");
-		queryObj:Create("money", "INT DEFAULT NULL");
-		queryObj:Create("charPermissions", "TEXT DEFAULT NULL");
-		queryObj:Create("data", "TEXT DEFAULT NULL");
-		queryObj:PrimaryKey("key");
-	queryObj:Execute();
+	if (!rw.SchemaDisabled("characters")) then
+		local queryObj = self:Create("rw_characters");
+			queryObj:Create("key", "INT NOT NULL AUTO_INCREMENT");
+			queryObj:Create("steamID", "VARCHAR(25) NOT NULL");
+			queryObj:Create("name", "VARCHAR(255) NOT NULL");
+			queryObj:Create("faction", "TEXT NOT NULL");
+			queryObj:Create("class", "TEXT DEFAULT NULL");
+			queryObj:Create("inventory", "TEXT DEFAULT NULL");
+			queryObj:Create("ammo", "TEXT DEFAULT NULL");
+			queryObj:Create("money", "INT DEFAULT NULL");
+			queryObj:Create("uniqueID", "INT DEFAULT NULL");
+			queryObj:Create("charPermissions", "TEXT DEFAULT NULL");
+			queryObj:Create("data", "TEXT DEFAULT NULL");
+			queryObj:PrimaryKey("key");
+		queryObj:Execute();
+	end;
 
 	local queryObj = self:Create("rw_logs");
 		queryObj:Create("key", "INT NOT NULL AUTO_INCREMENT");

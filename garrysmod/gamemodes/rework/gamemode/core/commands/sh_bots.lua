@@ -7,7 +7,7 @@ local COMMAND = Command("freezebots");
 COMMAND.name = "FreezeBots";
 COMMAND.description = "Freezes all of the bots.";
 COMMAND.category = "server_management";
-COMMAND.aliases = {"botfreeze", "freezebot", "bot_freeze"};
+COMMAND.aliases = {"botfreeze", "freezebot", "bot_freeze", "bot_zombie"};
 
 function COMMAND:OnRun(player)
 	rw.player:NotifyAll(L("FreezeBotsMessage", (IsValid(player) and player:Name()) or "Console"));
@@ -21,7 +21,7 @@ local COMMAND = Command("unfreezebots");
 COMMAND.name = "UnfreezeBots";
 COMMAND.description = "Unfreezes all of the bots.";
 COMMAND.category = "server_management";
-COMMAND.aliases = {"botunfreeze", "unfreezebot", "bot_unfreeze"};
+COMMAND.aliases = {"botunfreeze", "unfreezebot", "bot_unfreeze", "bot_unzombie"};
 
 function COMMAND:OnRun(player)
 	rw.player:NotifyAll(L("UnfreezeBotsMessage", (IsValid(player) and player:Name()) or "Console"));

@@ -190,4 +190,8 @@ if (SERVER) then
 	concommand.Add("reCmd", function(player, cmd, args)
 		rw.command:Interpret(player, args);
 	end)
+
+	concommand.Add("rwc", function(player, cmd, args)
+		rw.command:Interpret(player, args);
+	end)
 end;
