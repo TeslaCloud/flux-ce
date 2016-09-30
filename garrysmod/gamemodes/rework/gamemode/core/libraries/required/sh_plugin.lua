@@ -14,7 +14,12 @@ local extras = {
 	"classes",
 	"meta",
 	"config",
-	"languages"
+	"languages",
+	"factions",
+	"items",
+	"commands",
+	"groups",
+	"derma",
 };
 
 function plugin.GetStored()
@@ -259,7 +264,7 @@ function plugin.IncludeSchema()
 	plugin.IncludePlugins(rw.core:GetSchemaFolder().."/plugins");
 
 	if (schemaInfo.name and schemaInfo.author) then
-		MsgC(Color(0, 255, 100, 255), "[Rework] '"..schemaInfo.name.."' by: '"..schemaInfo.author.."' has been loaded!\n");
+		MsgC(Color(0, 255, 100, 255), "[Rework] "..schemaInfo.name.." by: "..schemaInfo.author.." has been loaded!\n");
 	end;
 
 	Schema:Register();	

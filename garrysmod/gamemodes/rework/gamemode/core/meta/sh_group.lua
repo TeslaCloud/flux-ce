@@ -3,7 +3,7 @@
 	Do not share, re-distribute or sell.
 --]]
 
-Meta "Group";
+Class "Group";
 
 Group.m_Name = "Undefined";
 Group.m_Description = "Undefined";
