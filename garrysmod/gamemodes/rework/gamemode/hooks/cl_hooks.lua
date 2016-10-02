@@ -297,11 +297,16 @@ function GM:HUDPaint()
 		
 		if (LocalPlayer():Health() > 0) then
 			draw.RoundedBox(2, 9, 9, (ScrW() / 4 - 2) * (LocalPlayer():Health() / 100), 14, Color(200, 30, 30));
+			draw.SimpleText(math.Max(0, math.Round(LocalPlayer():Health())), "menu_thin_smaller", ScrW()*0.050, ScrH()*0.010, Color(255, 255, 255), 1);
+			draw.SimpleText("Health: ", "menu_thin_smaller", ScrW()*0.025, ScrH()*0.010, Color(255,255,255), 1);
 		end;
+
 
 		if (LocalPlayer():Armor() > 0) then
 			draw.RoundedBox(0, 8, 26, ScrW() / 4, 16, Color(40, 40, 40));
 			draw.RoundedBox(0, 9, 27, (ScrW() / 4 - 2) * (LocalPlayer():Armor() / 100), 14, Color(30, 100, 200));
+			draw.SimpleText(math.Max(0, math.Round(LocalPlayer():Armor())), "menu_thin_smaller", ScrW()*0.050, ScrH()*0.035, Color(255, 255, 255), 1);
+			draw.SimpleText("Armor: ", "menu_thin_smaller", ScrW()*0.025, ScrH()*0.035, Color(255,255,255), 1);
 		end;
 	end;
 end;
