@@ -27,11 +27,18 @@ function chatBoxHooks:CreateFonts()
 	});
 end;
 
-function chatBoxHooks:OnResolutionChanged(oldW, oldH, newW, newH)
-	chatbox.width = chatbox.width or newW * 0.3;
-	chatbox.height = chatbox.height or newH * 0.3;
-	chatbox.x = chatbox.x or 4;
-	chatbox.y = newW - chatbox.height - 36;
+function chatBoxHooks:OnResolutionChanged(newW, newH)
+	chatbox.width = newW * 0.3;
+	chatbox.height = newH * 0.3;
+	chatbox.x = 4;
+	chatbox.y = newH - chatbox.height - 36;
+
+	chatbox.UpdateDisplay();
+
+	if (chatbox.panel) then
+		chatbox.panel:Remove();
+		chatbox.panel = nil;
+	end;
 end;
 
 plugin.AddHooks("ChatBoxHooks", chatBoxHooks);

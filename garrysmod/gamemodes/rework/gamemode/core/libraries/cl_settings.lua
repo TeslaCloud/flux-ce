@@ -93,7 +93,7 @@ rw.settings.GetString = rw.settings.GetValue;
 	returns [bool] The value of the convar as a bool, or false.
 --]]
 function rw.settings.GetBool(id)
-	return !util.ToBool(rw.settings.GetValue(id));
+	return util.ToBool(rw.settings.GetValue(id));
 end;
 
 --[[
@@ -355,9 +355,9 @@ end;
 rw.settings.AddCheckBox("AdminESP", "EnableAdminESP", false, function()
 	return LocalPlayer():IsAdmin();
 end);
-rw.settings.AddColorMixer("Theme", "TextColor", "");
-rw.settings.AddColorMixer("Theme", "MenuBackColor", "");
-rw.settings.AddColorMixer("Dashboard", "BackgroundColor", "");
+rw.settings.AddColorMixer("Theme", "TextColor", Color(255, 255, 255, 255));
+rw.settings.AddColorMixer("Theme", "MenuBackColor", Color(40, 40, 40, 150));
+rw.settings.AddColorMixer("Dashboard", "BackgroundColor", Color(0, 0, 0, 255));
 rw.settings.AddComboBox("Dashboard", "FitType", "", {
 	["fill"] = "#Settings_Fit_Fill",
 	["fit"] = "#Settings_Fit_Fit",
@@ -381,6 +381,9 @@ rw.settings.AddTextEntry("Dashboard", "BackgroundURL", "", nil, {
 		end;
 	end
 });
+
+rw.settings.AddCheckBox("HUD", "DrawBars", true);
+rw.settings.AddCheckBox("HUD", "DrawBarText", true);
 
 --[[ -- For example on how to add a number slider.
 rw.settings.AddNumSlider("Test", "TestNumSlider", "", {

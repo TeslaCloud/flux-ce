@@ -27,6 +27,8 @@ do
 		local newW, newH = ScrW(), ScrH();
 
 		if (scrW != newW or scrH != newH) then
+			rw.core:Print("Resolution changed from "..scrW.."x"..scrH.." to "..newW.."x"..newH..".");
+
 			plugin.Call("OnResolutionChanged", newW, newH, scrW, scrH);
 
 			scrW, scrH = newW, newH;
@@ -120,12 +122,12 @@ function GM:AdjustSettingCallbacks(callbacks)
 
 			draw.RoundedBox(5, 0, 0, w, h, ColorAlpha(rw.settings.GetColor("TextColor"), self.textAlpha));
 
-			if (self:GetChecked() and !self.checked) then
-				self.checkTime = curTime;
-				self.checked = true;
-			elseif (!self:GetChecked() and self.checked) then
+			if (self:GetChecked() and self.checked) then
 				self.checkTime = curTime;
 				self.checked = false;
+			elseif (!self:GetChecked() and !self.checked) then
+				self.checkTime = curTime;
+				self.checked = true;
 			end;
 
 			if (self.checkTime) then
@@ -290,23 +292,49 @@ do
 	end;
 end;
 
+local colorRed = Color(200, 30, 30);
+local colorDark = Color(40, 40, 40);
+local colorBlue = Color(30, 100, 200);
+
 function GM:HUDPaint()
-	if (!plugin.Call("RWHUDPaint")) then
+	if (!plugin.Call("RWHUDPaint") and rw.settings.GetBool("DrawBars")) then
+		local scrW, scrH = ScrW(), ScrH();
+		local barWidth, barHeight = scrW * 0.25, scrH * 0.02;
+		local drawText = rw.settings.GetBool("DrawBarText");
+		local textX = 20;
+
 		-- if nothing else overrides this, draw HUD that sucks
-		draw.RoundedBox(2, 8, 8, ScrW() / 4, 16, Color(40, 40, 40));
+		draw.RoundedBox(2, 8, 8, barWidth, barHeight, colorDark);
+
+		local health = rw.client:Health();
 		
-		if (LocalPlayer():Health() > 0) then
-			draw.RoundedBox(2, 9, 9, (ScrW() / 4 - 2) * (LocalPlayer():Health() / 100), 14, Color(200, 30, 30));
-			draw.SimpleText(math.Max(0, math.Round(LocalPlayer():Health())), "menu_thin_smaller", ScrW()*0.050, ScrH()*0.010, Color(255, 255, 255), 1);
-			draw.SimpleText("Health: ", "menu_thin_smaller", ScrW()*0.025, ScrH()*0.010, Color(255,255,255), 1);
+		if (health > 0) then
+			local textY = 9 + (barHeight * 0.5);
+
+			draw.RoundedBox(2, 9, 9, (barWidth - 2) * (health / rw.client:GetMaxHealth()), barHeight - 2, colorRed);
+
+			if (drawText) then
+				local offset = util.GetTextSize("hud_small", "Health: ");
+
+				draw.SimpleText(math.Max(0, math.Round(health)), "hud_small", textX + offset, textY, colorWhite, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER);
+				draw.SimpleText("Health: ", "hud_small", textX, textY, colorWhite, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER);
+			end;
 		end;
 
+		local armor = rw.client:Armor();
 
-		if (LocalPlayer():Armor() > 0) then
-			draw.RoundedBox(0, 8, 26, ScrW() / 4, 16, Color(40, 40, 40));
-			draw.RoundedBox(0, 9, 27, (ScrW() / 4 - 2) * (LocalPlayer():Armor() / 100), 14, Color(30, 100, 200));
-			draw.SimpleText(math.Max(0, math.Round(LocalPlayer():Armor())), "menu_thin_smaller", ScrW()*0.050, ScrH()*0.035, Color(255, 255, 255), 1);
-			draw.SimpleText("Armor: ", "menu_thin_smaller", ScrW()*0.025, ScrH()*0.035, Color(255,255,255), 1);
+		if (armor > 0) then
+			local textY = barHeight + 19 + (barHeight * 0.5);
+
+			draw.RoundedBox(2, 8, barHeight + 18, barWidth, barHeight, colorDark);
+			draw.RoundedBox(2, 9, barHeight + 19, (barWidth - 2) * (armor / 100), barHeight - 2, colorBlue);
+
+			if (drawText) then
+				local offset = util.GetTextSize("hud_small", "Armor: ");
+
+				draw.SimpleText(math.Max(0, math.Round(armor)), "hud_small", textX + offset, textY, colorWhite, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER);
+				draw.SimpleText("Armor: ", "hud_small", textX, textY, colorWhite, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER);
+			end;
 		end;
 	end;
 end;

@@ -15,26 +15,16 @@ do
 		return (aspect == w / h);
 	end;
 
-	function rw.fonts.FontScreenScale(size)
-		size = size * 3;
-
+	function rw.fonts.ScaleSize(size)
 		if (ScreenIsRatio(16, 10)) then
-			return size * (ScrH() / 1200);
+			return math.floor(size * (ScrH() / 1200));
 		elseif (ScreenIsRatio(4, 3)) then
-			return size * (ScrH() / 1024)
+			return math.floor(size * (ScrH() / 1024));
 		end;
-				
-		return size * (ScrH() / 1080);
-	end;
 
-function rw.fonts.HDFontScreenScale(size)
-        if (ScreenIsRatio(16, 10)) then
-            return math.floor(size * (ScrH() / 1200));
-        elseif (ScreenIsRatio(4, 3)) then
-            return math.floor(size * (ScrH() / 1024));
-        end;
-        return math.floor(size * (ScrH() / 1080));
-    end;
+		return math.floor(size * (ScrH() / 1080));
+	end;
+end;
 
 function rw.fonts:CreateFont(name, fontData)
 	if (name == nil or typeof(fontData) != "table") then return; end;
@@ -85,36 +75,41 @@ function rw.fonts.CreateFonts()
 	rw.fonts:CreateFont("menu_thin", {
 		font = "Roboto Lt",
 		weight = 400,
-		size = rw.fonts.HDFontScreenScale(34)
+		size = rw.fonts.ScaleSize(34)
 	});
 
 	rw.fonts:CreateFont("menu_thin_small", {
 		font = "Roboto Lt",
 		weight = 300,
-		size = rw.fonts.HDFontScreenScale(28)
+		size = rw.fonts.ScaleSize(28)
 	});
 
 	rw.fonts:CreateFont("menu_thin_smaller", {
 		font = "Roboto Lt",
-		size = rw.fonts.HDFontScreenScale(22),
+		size = rw.fonts.ScaleSize(22),
 		weight = 200
 	});
 
 	rw.fonts:CreateFont("menu_light", {
 		font = "Roboto Lt",
-		size = rw.fonts.HDFontScreenScale(34)
+		size = rw.fonts.ScaleSize(34)
 	});
 
 	rw.fonts:CreateFont("menu_light_tiny", {
 		font = "Roboto Lt",
-		size = rw.fonts.HDFontScreenScale(16)
+		size = rw.fonts.ScaleSize(16)
 	});
 
 	rw.fonts:CreateFont("menu_light_small", {
 		font = "Roboto Lt",
-		size = rw.fonts.HDFontScreenScale(20)
+		size = rw.fonts.ScaleSize(20)
+	});
+
+	rw.fonts:CreateFont("hud_small", {
+		font = "Roboto Lt",
+		size = rw.fonts.ScaleSize(20),
+		weight = 200
 	});
 
 	plugin.Call("CreateFonts", rw.fonts);
-end;
 end;

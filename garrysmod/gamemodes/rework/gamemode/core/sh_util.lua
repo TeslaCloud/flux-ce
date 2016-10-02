@@ -445,9 +445,5 @@ function util.FitToAspect(x, y, x2, y2)
 end;
 
 function util.ToBool(value)
-	if (tonumber(value) == 1 or value == true or value == "true") then
-		return true;
-	end;
-
-	return false;
+	return (tonumber(value) == 1 or value == true or value == "true");
 end;

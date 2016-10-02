@@ -46,6 +46,7 @@ lang["#Settings_Theme"] = "Theme";
 lang["#Settings_AdminESP"] = "Admin ESP";
 lang["#Settings_Binds"] = "Binds";
 lang["#Settings_General"] = "General";
+lang["#Settings_HUD"] = "HUD";
 
 lang["#Settings_BackgroundURL"] = "Specify a URL for your background.";
 lang["#Settings_BackgroundColor"] = "Select a color for the dashboard's background.";
@@ -53,6 +54,8 @@ lang["#Settings_MenuBackColor"] = "Select a color for child menu backgrounds.";
 lang["#Settings_TextColor"] = "Select a color for text.";
 lang["#Settings_EnableAdminESP"] = "Enable the Admin ESP.";
 lang["#Settings_FitType"] = "Choose a fit for your background.";
+lang["#Settings_DrawBars"] = "Draw the HUD bars.";
+lang["#Settings_DrawBarText"] = "Draw text on the bars.";
 
 lang["#Settings_Fit_Tiled"] = "Tiled";
 lang["#Settings_Fit_Center"] = "Center";
