@@ -27,16 +27,14 @@ do
 		return size * (ScrH() / 1080);
 	end;
 
-	function rw.fonts.HDFontScreenScale(size)
-		if (ScreenIsRatio(16, 10)) then
-			return size * (ScrH() / 1200);
-		elseif (ScreenIsRatio(4, 3)) then
-			return size * (ScrH() / 1024)
-		end;
-		
-		return size * (ScrH() / 1080);
-	end;
-end;
+function rw.fonts.HDFontScreenScale(size)
+        if (ScreenIsRatio(16, 10)) then
+            return math.floor(size * (ScrH() / 1200));
+        elseif (ScreenIsRatio(4, 3)) then
+            return math.floor(size * (ScrH() / 1024));
+        end;
+        return math.floor(size * (ScrH() / 1080));
+    end;
 
 function rw.fonts:CreateFont(name, fontData)
 	if (name == nil or typeof(fontData) != "table") then return; end;
@@ -85,18 +83,21 @@ function rw.fonts.CreateFonts()
 	rw.fonts:ClearTable();
 
 	rw.fonts:CreateFont("menu_thin", {
-		font = "Roboto Th",
+		font = "Roboto Lt",
+		weight = 400,
 		size = rw.fonts.HDFontScreenScale(34)
 	});
 
 	rw.fonts:CreateFont("menu_thin_small", {
-		font = "Roboto Th",
+		font = "Roboto Lt",
+		weight = 300,
 		size = rw.fonts.HDFontScreenScale(28)
 	});
 
 	rw.fonts:CreateFont("menu_thin_smaller", {
-		font = "Roboto Th",
-		size = rw.fonts.HDFontScreenScale(22)
+		font = "Roboto Lt",
+		size = rw.fonts.HDFontScreenScale(22),
+		weight = 200
 	});
 
 	rw.fonts:CreateFont("menu_light", {
@@ -115,4 +116,5 @@ function rw.fonts.CreateFonts()
 	});
 
 	plugin.Call("CreateFonts", rw.fonts);
+end;
 end;
