@@ -31,7 +31,14 @@ function character.Create(player, data)
 	end;
 
 	stored[player:SteamID()] = stored[player:SteamID()] or {};
+
+	data.uniqueID = #stored[player:SteamID()] + 1;
+
 	table.insert(stored[player:SteamID()], data);
+
+	if (SERVER) then
+		character.Save(player, #stored[player:SteamID()]);
+	end;
 
 	return CHAR_SUCCESS;
 end;
@@ -43,12 +50,18 @@ if (SERVER) then
 		rw.db:EasyRead("rw_characters", {"steamID", player:SteamID()}, function(result, hasData)
 			if (hasData) then
 				for k, v in ipairs(result) do
-					stored[player:SteamID()][tonumber(v.uniqueID)] = plugin.Call("PreCharacterRestore", player, tonumber(v.uniqueID), stored[player:SteamID()]);
+					stored[player:SteamID()][tonumber(v.uniqueID) or k] = plugin.Call("PreCharacterRestore", player, tonumber(v.uniqueID) or k, v);
 				end;
 			end;
 
+			character.SendToClient(player);
+
 			plugin.Call("PostRestoreCharacters", player);
 		end);
+	end;
+
+	function character.SendToClient(player)
+		netstream.Start(player, "rw_loadcharacters", stored[player:SteamID()]);
 	end;
 
 	function character.SaveAll(player)
@@ -56,7 +69,7 @@ if (SERVER) then
 		local toSave = plugin.Call("PreSaveCharacters", player, stored[player:SteamID()]) or stored[player:SteamID()];
 
 		for k, v in ipairs(toSave) do
-			rw.db:EasyWrite("rw_characters", {"steamID", player:SteamID(), "uniqueID", k}, v);
+			rw.db:EasyWrite("rw_characters", {"uniqueID", k}, v);
 		end;
 
 		plugin.Call("PostSaveCharacters", player);
@@ -66,9 +79,14 @@ if (SERVER) then
 		if (!IsValid(player) or typeof(index) != "number") then return; end;
 
 		local toSave = plugin.Call("PreSaveCharacter", player, stored[player:SteamID()][index], index) or stored[player:SteamID()][index];
-			rw.db:EasyWrite("rw_characters", {"steamID", player:SteamID(), "uniqueID", index}, toSave);
+			rw.db:EasyWrite("rw_characters", {"uniqueID", index}, toSave);
 		plugin.Call("PostSaveCharacter", player, index);
 	end;
+else
+	netstream.Hook("rw_loadcharacters", function(data)
+		stored[rw.client:SteamID()] = stored[rw.client:SteamID()] or {};
+		stored[rw.client:SteamID()] = data;
+	end);
 end;
 
 function playerMeta:GetActiveCharacter()
@@ -79,6 +97,10 @@ function playerMeta:GetActiveCharacterTable()
 	if (self:GetActiveCharacter()) then
 		return stored[self:SteamID()][self:GetActiveCharacter()];
 	end;
+end;
+
+function playerMeta:GetAllCharacters()
+	return stored[self:SteamID()] or {};
 end;
 
 function playerMeta:SetActiveCharacter(id)
@@ -101,4 +123,26 @@ end;
 
 function playerMeta:GetCharacterData(key, default)
 	return self:GetNetVar("CharacterData", {})[key] or default;
+end;
+
+if (SERVER) then
+	netstream.Hook("rw_debug_createchar", function(player, name)
+		local data = {
+			name = name,
+			physDesc = "Default PhysDesc or something just to test it lol",
+			gender = CHAR_GENDER_MALE,
+			faction = "default"
+		}
+
+		local status = character.Create(player, data);
+		print(status)
+		character.SendToClient(player);
+
+		print("Created character: "..name);
+	end);
+
+	netstream.Hook("rw_selectchar", function(player, id)
+		print(player:Name().." has loaded character #"..id);
+		player:SetActiveCharacter(id);
+	end);
 end;

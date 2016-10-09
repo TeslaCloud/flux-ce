@@ -43,12 +43,13 @@ end;
 
 function GM:InitPostEntity()
 	rw.client = rw.client or LocalPlayer();
+
+	rw.client.IntroPanel = vgui.Create("reMainMenu");
+	rw.client.IntroPanel:MakePopup();
 end;
 
 function GM:HUDDrawScoreBoard()
-	if (!rw.client:HasInitialized()) then
-		draw.RoundedBox(0, 0, 0, ScrW(), ScrH(), Color(0, 0, 0));
-	end;
+
 end;
 
 -- Called when the scoreboard should be shown.
@@ -299,25 +300,25 @@ local colorBlue = Color(30, 100, 200);
 function GM:HUDPaint()
 	if (!plugin.Call("RWHUDPaint") and rw.settings.GetBool("DrawBars")) then
 		local scrW, scrH = ScrW(), ScrH();
-		local barWidth, barHeight = scrW * 0.25, scrH * 0.02;
+		local barWidth, barHeight = scrW * 0.25, 16;
 		local drawText = rw.settings.GetBool("DrawBarText");
 		local textX = 20;
 
 		-- if nothing else overrides this, draw HUD that sucks
-		draw.RoundedBox(2, 8, 8, barWidth, barHeight, colorDark);
+		draw.RoundedBox(4, 8, 8, barWidth, barHeight, colorDark);
 
 		local health = rw.client:Health();
 		
 		if (health > 0) then
-			local textY = 9 + (barHeight * 0.5);
+			local textY = 8 + (barHeight * 0.5);
 
-			draw.RoundedBox(2, 9, 9, (barWidth - 2) * (health / rw.client:GetMaxHealth()), barHeight - 2, colorRed);
+			draw.RoundedBox(4, 9, 9, (barWidth - 2) * (health / rw.client:GetMaxHealth()), barHeight - 2, colorRed);
 
 			if (drawText) then
-				local offset = util.GetTextSize("hud_small", "Health: ");
+				local offset = util.GetTextSize("bar_text", "HEALTH: ");
 
-				draw.SimpleText(math.Max(0, math.Round(health)), "hud_small", textX + offset, textY, colorWhite, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER);
-				draw.SimpleText("Health: ", "hud_small", textX, textY, colorWhite, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER);
+				draw.SimpleText(math.Max(0, math.Round(health)), "bar_text", textX + offset, textY, colorWhite, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER);
+				draw.SimpleText("HEALTH: ", "bar_text", textX, textY, colorWhite, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER);
 			end;
 		end;
 
@@ -326,14 +327,14 @@ function GM:HUDPaint()
 		if (armor > 0) then
 			local textY = barHeight + 19 + (barHeight * 0.5);
 
-			draw.RoundedBox(2, 8, barHeight + 18, barWidth, barHeight, colorDark);
-			draw.RoundedBox(2, 9, barHeight + 19, (barWidth - 2) * (armor / 100), barHeight - 2, colorBlue);
+			draw.RoundedBox(4, 8, barHeight + 18, barWidth, barHeight, colorDark);
+			draw.RoundedBox(4, 9, barHeight + 19, (barWidth - 2) * (armor / 100), barHeight - 2, colorBlue);
 
 			if (drawText) then
-				local offset = util.GetTextSize("hud_small", "Armor: ");
+				local offset = util.GetTextSize("bar_text", "ARMOR: ");
 
-				draw.SimpleText(math.Max(0, math.Round(armor)), "hud_small", textX + offset, textY, colorWhite, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER);
-				draw.SimpleText("Armor: ", "hud_small", textX, textY, colorWhite, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER);
+				draw.SimpleText(math.Max(0, math.Round(armor)), "bar_text", textX + offset, textY, colorWhite, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER);
+				draw.SimpleText("ARMOR: ", "bar_text", textX, textY, colorWhite, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER);
 			end;
 		end;
 	end;

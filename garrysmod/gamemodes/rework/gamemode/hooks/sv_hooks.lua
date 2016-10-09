@@ -4,8 +4,12 @@
 --]]
 
 netstream.Hook("ClientIncludedSchema", function(player)
-	player:SetDTBool(BOOL_INITIALIZED, true);
+	character.Load(player);
 end);
+
+function GM:PostRestoreCharacters(player)
+	player:SetDTBool(BOOL_INITIALIZED, true);
+end;
 
 function GM:PlayerSetModel(player)
 	player:SetModel("models/humans/group01/male_0"..math.random(1, 8)..".mdl");
@@ -273,13 +277,13 @@ function GM:PreCharacterRestore(player, index, char)
 	prepared.steamID = player:SteamID();
 	prepared.name = char.name;
 	prepared.faction = char.faction;
-	prepared.class = char.class;
-	prepared.inventory = util.JSONToTable(char.inventory);
-	prepared.ammo = util.JSONToTable(char.ammo);
-	prepared.money = tonumber(char.money);
-	prepared.charPermissions = util.JSONToTable(char.charPermissions);
-	prepared.data = util.JSONToTable(char.data);
-	prepared.uniqueID = tonumber(char.uniqueID);
+	prepared.class = char.class or "";
+	prepared.inventory = util.JSONToTable(char.inventory or "");
+	prepared.ammo = util.JSONToTable(char.ammo or "");
+	prepared.money = tonumber(char.money or "0");
+	prepared.charPermissions = util.JSONToTable(char.charPermissions or "");
+	prepared.data = util.JSONToTable(char.data or "");
+	prepared.uniqueID = tonumber(char.uniqueID or index);
 
 	return prepared;
 end;

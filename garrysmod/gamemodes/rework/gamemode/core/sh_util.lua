@@ -395,6 +395,13 @@ function string.IsCommand(str)
 	return false;
 end;
 
+function string.MakeID(str)
+	str = str:lower();
+	str = str:gsub(" ", "_");
+
+	return str;
+end;
+
 function util.GetTextSize(font, text)
 	surface.SetFont(font);
 	

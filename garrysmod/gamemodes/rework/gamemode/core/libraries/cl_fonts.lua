@@ -106,9 +106,15 @@ function rw.fonts.CreateFonts()
 	});
 
 	rw.fonts:CreateFont("hud_small", {
-		font = "Roboto Lt",
+		font = "Roboto Condensed",
 		size = rw.fonts.ScaleSize(20),
 		weight = 200
+	});
+
+	rw.fonts:CreateFont("bar_text", {
+		font = "Roboto Condensed",
+		size = 18,
+		weight = 500
 	});
 
 	plugin.Call("CreateFonts", rw.fonts);

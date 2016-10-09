@@ -7,8 +7,6 @@ library.New("admin", rw);
 local groups = rw.admin.groups or {}; -- Usergroups data
 local permissions = rw.admin.permissions or {}; -- Permission descriptions and other data
 local players = rw.admin.players or {}; -- Compiled permissions for each player
-
--- Hacky way to preserve local storage tables.
 rw.admin.groups = groups;
 rw.admin.permissions = permissions;
 rw.admin.players = players;

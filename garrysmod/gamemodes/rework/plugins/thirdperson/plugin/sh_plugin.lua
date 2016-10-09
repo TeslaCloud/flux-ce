@@ -1,3 +1,5 @@
+if (rw.initialized) then return; end;
+
 if (SERVER) then
 	concommand.Add("rwThirdPerson", function(player)
 		local oldValue = player:GetNetVar("rwThirdPerson");
@@ -17,14 +19,13 @@ else
 	-- This is very basic and WIP, but it works.
 	function PLUGIN:CalcView(ply, pos, angles, fov)
 		local view = {};
+		local curTime = CurTime();
 
 		view.origin = pos;
 		view.angles = angles;
 		view.fov = fov;
 
 		if (ply:GetNetVar("rwThirdPerson")) then
-			local curTime = CurTime();
-
 			if (!startTime or flippedStart) then
 				startTime = curTime;	
 				flippedStart = false;
@@ -44,8 +45,6 @@ else
 			view.origin = pos - offset;
 			view.drawviewer = true;
 		else
-			local curTime = CurTime();
-
 			if (!flippedStart) then
 				startTime = curTime;
 				flippedStart = true;

@@ -10,9 +10,12 @@ GM.Website 		= "http://teslacloud.net/";
 GM.Email 		= "support@teslacloud.net";
 
 -- Define RW-Specific fields.
-GM.Version 		= "0.1";
-GM.Build 		= "1159";
+GM.Version 		= "0.0.2";
+GM.Build 		= "1201";
 GM.Description 	= "A roleplay framework."
+
+-- It would be very nice of you to leave below values as they are if you're using official schemas.
+-- While we can do nothing to stop you from changing them, we'll very much appreciate it if you don't.
 GM.Prefix		= "RW: "; -- Prefix to display in server browser (*Prefix*: *Schema Name*)
 GM.NameOverride	= false; -- Set to any string to override schema's browser name.
 
