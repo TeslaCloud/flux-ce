@@ -43,11 +43,12 @@ do
 	end;
 end;
 
--- Recreate the fonts so that they can be rescaled to the new resolution.
+-- Called when the resolution has been changed and fonts need to be resized to fit the client's res.
 function GM:OnResolutionChanged(oldW, oldH, newW, newH)
 	rw.fonts.CreateFonts();
 end;
 
+-- Called when the client connects and spawns.
 function GM:InitPostEntity()
 	rw.client = rw.client or LocalPlayer();
 
@@ -81,6 +82,7 @@ function GM:ScoreboardHide()
 	end;
 end;
 
+-- Called when category icons are presented.
 function GM:AdjustTabDockMenus(menus)
 	menus["Inventory"] = {
 		icon = "fa-suitcase"
@@ -304,6 +306,7 @@ local colorRed = Color(200, 30, 30);
 local colorDark = Color(40, 40, 40);
 local colorBlue = Color(30, 100, 200);
 
+-- Called when the player's HUD is drawn.
 function GM:HUDPaint()
 	if (!plugin.Call("RWHUDPaint") and rw.settings.GetBool("DrawBars")) then
 		local scrW, scrH = ScrW(), ScrH();
@@ -311,7 +314,6 @@ function GM:HUDPaint()
 		local drawText = rw.settings.GetBool("DrawBarText");
 		local textX = 20;
 
-		-- if nothing else overrides this, draw HUD that sucks
 		draw.RoundedBox(4, 8, 8, barWidth, barHeight, colorDark);
 
 		local health = rw.client:Health();
@@ -348,7 +350,7 @@ function GM:HUDPaint()
 end;
 
 do
-	local hiddenElements = {
+	local hiddenElements = { -- Hide default HUD elements.
 		CHudHealth = true,
 		CHudBattery = true,
 		CHudAmmo = true,
