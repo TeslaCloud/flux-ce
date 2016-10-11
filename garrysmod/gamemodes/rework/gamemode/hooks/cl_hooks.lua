@@ -7,25 +7,6 @@ timer.Remove("HintSystem_OpeningMenu");
 timer.Remove("HintSystem_Annoy1");
 timer.Remove("HintSystem_Annoy2");
 
-netstream.Hook("SharedTables", function(sharedTable)
-	rw.sharedTable = sharedTable or {};
-end);
-
-netstream.Hook("PlayerInitialSpawn", function(plyIndex)
-	plugin.Call("PlayerInitialSpawn", Entity(plyIndex));
-end);
-
-netstream.Hook("PlayerDisconnected", function(plyIndex)
-	plugin.Call("PlayerDisconnected", Entity(plyIndex));
-end);
-
-netstream.Hook("PostCharacterLoaded", function(charID)
-	if (rw.client.IntroPanel) then
-		rw.client.IntroPanel:SetVisible(false);
-		rw.client.IntroPanel:Remove();
-	end;
-end);
-
 do
 	local scrW, scrH = ScrW(), ScrH();
 

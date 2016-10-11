@@ -3,10 +3,6 @@
 	Do not share, re-distribute or sell.
 --]]
 
-netstream.Hook("ClientIncludedSchema", function(player)
-	character.Load(player);
-end);
-
 function GM:PostRestoreCharacters(player)
 	player:SetDTBool(BOOL_INITIALIZED, true);
 end;
@@ -23,12 +19,23 @@ function GM:PlayerInitialSpawn(player)
 
 	rw.player:Restore(player);
 
+	if (player:IsBot()) then
+		return;
+	end;
+
 	player:SendConfig();
 	player:SyncNetVars();
 
-	if (IsValid(player)) then
-		player:KillSilent();
-	end;
+	player:SetNoDraw(true);
+	player:SetNotSolid(true);
+	player:Lock();
+
+	timer.Simple(1, function()
+		if (IsValid(player)) then
+			player:KillSilent();
+			player:StripAmmo();
+		end;
+	end);
 
 	netstream.Start(player, "SharedTables", rw.sharedTable);
 	netstream.Start(nil, "PlayerInitialSpawn", player:EntIndex());
@@ -102,6 +109,10 @@ function GM:PlayerSpawn(player)
 end;
 
 function GM:PostPlayerSpawn(player)
+	player:SetNoDraw(false)
+	player:UnLock()
+	player:SetNotSolid(false)
+
 	player_manager.RunClass(player, "Loadout");
 end;
 
