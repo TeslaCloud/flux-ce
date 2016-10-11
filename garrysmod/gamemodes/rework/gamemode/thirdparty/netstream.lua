@@ -4,8 +4,6 @@
 	http://github.com/alexgrist/netstream
 --]]
 
-if (netstream) then return; end;
-
 local net = net;
 local ErrorNoHalt = ErrorNoHalt;
 local pairs = pairs;
@@ -14,7 +12,11 @@ local type = type;
 local util = util;
 
 netstream = netstream or {};
-local stored = {};
+local stored = netstream.stored or {};
+netstream.stored = stored;
+
+local cache = netstream.cache or {};
+netstream.cache = cache;
 
 if (DBugR) then
 	DBugR.Profilers.Netstream = table.Copy(DBugR.SP);
@@ -80,6 +82,7 @@ end;
 
 if (SERVER) then
 	util.AddNetworkString("NetStreamDS");
+	util.AddNetworkString("NetStreamHeavy");
 
 	-- A function to start a net stream.
 	function netstream.Start(player, name, ...)
@@ -123,6 +126,44 @@ if (SERVER) then
 		end);
 	end;
 
+	-- A function to start a > 64KB net stream.
+	function netstream.Heavy(player, name, ...)
+		local recipients = {};
+		local bShouldSend = false;
+
+		if (type(player) != "table") then
+			if (!player) then
+				player = _player.GetAll();
+			else
+				player = {player};
+			end;
+		end;
+
+		for k, v in ipairs(player) do
+			if (type(v) == "Player") then
+				recipients[#recipients + 1] = v;
+
+				bShouldSend = true;
+			end;
+		end;
+
+		local dataTable = {...};
+		local encodedData = pon.encode(dataTable);
+		local split = netstream.Split(encodedData);
+
+		if (encodedData and #encodedData > 0 and bShouldSend) then
+			for k, v in ipairs(split) do
+				net.Start("NetStreamHeavy");
+					net.WriteString(name);
+					net.WriteUInt(#v, 32);
+					net.WriteData(v, #v);
+					net.WriteUInt(k, 8);
+					net.WriteUInt(#split, 8);
+				net.Send(recipients);
+			end;
+		end;
+	end;
+
 	-- A function to listen for a request.
 	function netstream.Listen(name, Callback)
 		netstream.Hook(name, function(player, data)
@@ -133,7 +174,7 @@ if (SERVER) then
 			end;
 		end);
 	end;
-	
+
 	net.Receive("NetStreamDS", function(length, player)
 		local NS_DS_NAME = net.ReadString();
 		local NS_DS_LENGTH = net.ReadUInt(32);
@@ -163,6 +204,52 @@ if (SERVER) then
 
 		NS_DS_NAME, NS_DS_DATA, NS_DS_LENGTH = nil, nil, nil;
 	end);
+
+	net.Receive("NetStreamHeavy", function(length, player)
+		local NS_DS_NAME = net.ReadString();
+		local NS_DS_LENGTH = net.ReadUInt(32);
+		local NS_DS_DATA = net.ReadData(NS_DS_LENGTH);
+		local NS_DS_PIECE = net.ReadUInt(8);
+		local NS_DS_TOTAL = net.ReadUInt(8);
+
+		if (NS_DS_NAME and NS_DS_DATA and NS_DS_LENGTH) then
+			player.nsDataStreamName = NS_DS_NAME;
+			player.nsDataStreamData = "";
+
+			if (!cache[player.nsDataStreamName]) then
+				cache[player.nsDataStreamName] = "";
+			end;
+
+			if (player.nsDataStreamName and player.nsDataStreamData) then
+				player.nsDataStreamData = NS_DS_DATA;
+
+				if (NS_DS_PIECE < NS_DS_TOTAL) then
+					if (NS_DS_PIECE == 1) then
+						cache[player.nsDataStreamName] = "";
+					end;
+
+					cache[player.nsDataStreamName] = cache[player.nsDataStreamName]..player.nsDataStreamData;
+				else
+					cache[player.nsDataStreamName] = cache[player.nsDataStreamName]..player.nsDataStreamData;
+
+					if (stored[player.nsDataStreamName]) then
+						local bStatus, value = pcall(pon.decode, cache[player.nsDataStreamName]);
+
+						if (bStatus) then
+							stored[player.nsDataStreamName](player, unpack(value));
+						else
+							ErrorNoHalt("NetStream: '"..NS_DS_NAME.."'\n"..value.."\n");
+						end;
+					end;
+
+					player.nsDataStreamName = nil;
+					player.nsDataStreamData = nil;
+				end;
+			end;
+		end;
+
+		NS_DS_NAME, NS_DS_DATA, NS_DS_LENGTH, NS_DS_PIECE, NS_DS_TOTAL = nil, nil, nil, nil, nil;
+	end);
 else
 	-- A function to start a net stream.
 	function netstream.Start(name, ...)
@@ -185,6 +272,25 @@ else
 
 			DBugR.Profilers.Netstream:AddNetData(name, #encodedData);
 		end);
+	end;
+
+	-- A function to start a net stream.
+	function netstream.Heavy(name, ...)
+		local dataTable = {...};
+		local encodedData = pon.encode(dataTable);
+		local split = netstream.Split(encodedData);
+
+		if (encodedData and #encodedData > 0) then
+			for k, v in ipairs(split) do
+				net.Start("NetStreamHeavy");
+					net.WriteString(name);
+					net.WriteUInt(#v, 32);
+					net.WriteData(v, #v);
+					net.WriteUInt(k, 8);
+					net.WriteUInt(#split, 8);
+				net.SendToServer();
+			end;
+		end;
 	end;
 
 	-- A function to send a request.
@@ -211,5 +317,43 @@ else
 		end;
 
 		NS_DS_NAME, NS_DS_DATA, NS_DS_LENGTH = nil, nil, nil;
+	end);
+
+	net.Receive("NetStreamHeavy", function(length)
+		local NS_DS_NAME = net.ReadString();
+		local NS_DS_LENGTH = net.ReadUInt(32);
+		local NS_DS_DATA = net.ReadData(NS_DS_LENGTH);
+		local NS_DS_PIECE = net.ReadUInt(8);
+		local NS_DS_TOTAL = net.ReadUInt(8);
+
+		if (!cache[NS_DS_NAME]) then
+			cache[NS_DS_NAME] = "";
+		end;
+
+		if (NS_DS_NAME and NS_DS_DATA and NS_DS_LENGTH) then
+			if (NS_DS_PIECE < NS_DS_TOTAL) then
+				if (NS_DS_PIECE == 1) then
+					cache[NS_DS_NAME] = "";
+				end;
+
+				cache[NS_DS_NAME] = cache[NS_DS_NAME]..NS_DS_DATA;
+			else
+				cache[NS_DS_NAME] = cache[NS_DS_NAME]..NS_DS_DATA;
+
+				if (stored[NS_DS_NAME]) then
+					local bStatus, value = pcall(pon.decode, cache[NS_DS_NAME]);
+
+					if (bStatus) then
+						stored[NS_DS_NAME](unpack(value));
+					else
+						ErrorNoHalt("NetStream Heavy: '"..NS_DS_NAME.."'\n"..value.."\n");
+					end;
+
+					cache[NS_DS_NAME] = nil;
+				end;
+			end;
+		end;
+
+		NS_DS_NAME, NS_DS_DATA, NS_DS_LENGTH, NS_DS_PIECE, NS_DS_TOTAL = nil, nil, nil, nil, nil;
 	end);
 end;
