@@ -105,8 +105,7 @@ if (SERVER) then
 			end;
 		end;
 
-		local dataTable = {...};
-		local encodedData = pon.encode(dataTable);
+		local encodedData = pon.encode({...});
 
 		if (encodedData and #encodedData > 0 and bShouldSend) then
 			net.Start("NetStreamDS");
@@ -119,8 +118,7 @@ if (SERVER) then
 
 	if (DBugR) then
 		netstream.Start = DBugR.Util.Func.AddDetour(netstream.Start, function(player, name, ...)
-			local dataTable = {...};
-			local encodedData = pon.encode(dataTable);
+			local encodedData = pon.encode({...});
 
 			DBugR.Profilers.Netstream:AddNetData(name, #encodedData);
 		end);
@@ -147,8 +145,7 @@ if (SERVER) then
 			end;
 		end;
 
-		local dataTable = {...};
-		local encodedData = pon.encode(dataTable);
+		local encodedData = pon.encode({...});
 		local split = netstream.Split(encodedData);
 
 		if (encodedData and #encodedData > 0 and bShouldSend) then
@@ -253,8 +250,7 @@ if (SERVER) then
 else
 	-- A function to start a net stream.
 	function netstream.Start(name, ...)
-		local dataTable = {...};
-		local encodedData = pon.encode(dataTable);
+		local encodedData = pon.encode({...});
 
 		if (encodedData and #encodedData > 0) then
 			net.Start("NetStreamDS");
@@ -267,8 +263,7 @@ else
 
 	if (DBugR) then
 		netstream.Start = DBugR.Util.Func.AddDetour(netstream.Start, function(name, ...)
-			local dataTable = {...};
-			local encodedData = pon.encode(dataTable);
+			local encodedData = pon.encode({...});
 
 			DBugR.Profilers.Netstream:AddNetData(name, #encodedData);
 		end);

@@ -21,7 +21,7 @@ else
 	MsgC(Color(0, 255, 100, 255), "[Rework] Initializing...\n");
 end;
 
--- Include clientside core file.
+-- Initiate shared boot.
 include("shared.lua");
 
 rw.fonts.CreateFonts();

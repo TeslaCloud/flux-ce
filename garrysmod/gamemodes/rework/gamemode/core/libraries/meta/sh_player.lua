@@ -36,3 +36,17 @@ end;
 function playerMeta:GetWhitelists()
 	return self:GetNetVar("whitelists", {});
 end;
+
+playerMeta.rwName = playerMeta.rwName or playerMeta.Name;
+
+function playerMeta:Name()
+	if (character) then
+		return self:GetNetVar("CharacterName", self:rwName());
+	end;
+
+	return self:rwName();
+end;
+
+function playerMeta:SteamName()
+	return self:rwName();
+end;

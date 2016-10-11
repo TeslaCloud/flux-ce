@@ -7,41 +7,43 @@ if (!rw.fonts) then
 	include("rework/gamemode/core/libraries/cl_fonts.lua");
 end;
 
-local chatBoxHooks = {};
+do
+	local rwChatbox = {};
 
-function chatBoxHooks:CreateFonts()
-	rw.fonts:CreateFont("reChatFont", {
-		font		= "Roboto",
-		size		= 17
-	});
+	function rwChatbox:CreateFonts()
+		rw.fonts:CreateFont("reChatFont", {
+			font		= "Roboto",
+			size		= 17
+		});
 
-	rw.fonts:CreateFont("reChatFontBold", {
-		font		= "Roboto",
-		size		= 17,
-		weight		= 1000
-	});
+		rw.fonts:CreateFont("reChatFontBold", {
+			font		= "Roboto",
+			size		= 17,
+			weight		= 1000
+		});
 
-	rw.fonts:CreateFont("reChatSyntax", {
-		font		= "Roboto",
-		size		= 20
-	});
-end;
-
-function chatBoxHooks:OnResolutionChanged(newW, newH)
-	chatbox.width = newW * 0.3;
-	chatbox.height = newH * 0.3;
-	chatbox.x = 4;
-	chatbox.y = newH - chatbox.height - 36;
-
-	chatbox.UpdateDisplay();
-
-	if (chatbox.panel) then
-		chatbox.panel:Remove();
-		chatbox.panel = nil;
+		rw.fonts:CreateFont("reChatSyntax", {
+			font		= "Roboto",
+			size		= 20
+		});
 	end;
-end;
 
-plugin.AddHooks("ChatBoxHooks", chatBoxHooks);
+	function rwChatbox:OnResolutionChanged(newW, newH)
+		chatbox.width = newW * 0.3;
+		chatbox.height = newH * 0.3;
+		chatbox.x = 4;
+		chatbox.y = newH - chatbox.height - 36;
+
+		chatbox.UpdateDisplay();
+
+		if (chatbox.panel) then
+			chatbox.panel:Remove();
+			chatbox.panel = nil;
+		end;
+	end;
+
+	plugin.AddHooks("ChatBoxHooks", rwChatbox);
+end;
 
 library.New("chatbox", _G);
 chatbox.history 	= chatbox.history or {}; -- Entire chat history. Last X meesages, configurable.

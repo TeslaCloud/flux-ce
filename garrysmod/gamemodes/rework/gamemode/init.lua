@@ -88,7 +88,7 @@ do
 		include("thirdparty/netstream.lua");
 	end;
 
-	-- Start serverside boot sequence.
+	-- Initiate shared boot.
 	include("shared.lua");
 
 	if (rw.initialized) then

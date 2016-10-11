@@ -104,7 +104,15 @@ function playerMeta:GetAllCharacters()
 end;
 
 function playerMeta:SetActiveCharacter(id)
-	self:SetNetVar("ActiveCharacter", (id or nil));
+	self:SetNetVar("ActiveCharacter", id);
+
+	local charData = self:GetActiveCharacterTable();
+
+	self:SetNetVar("CharacterName", charData.name or self:SteamName());
+	self:SetNetVar("PhysDesc", charData.physDesc or "");
+	self:SetNetVar("Gender", charData.gender or CHAR_GENDER_MALE);
+	self:SetNetVar("Faction", charData.faction or "player");
+	self:SetNetVar("ModelPath", charData.model or "models/humans/group01/male_02.mdl");
 	plugin.Call("OnActiveCharacterSet", self, self:GetActiveCharacterTable());
 end;
 
@@ -131,7 +139,7 @@ if (SERVER) then
 			name = name,
 			physDesc = "Default PhysDesc or something just to test it lol",
 			gender = CHAR_GENDER_MALE,
-			faction = "default",
+			faction = "player",
 			model = "models/humans/group01/male_02.mdl"
 		}
 
