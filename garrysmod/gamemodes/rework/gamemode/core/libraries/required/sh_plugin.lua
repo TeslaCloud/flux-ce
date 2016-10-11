@@ -9,6 +9,7 @@ library.New("plugin", _G);
 
 local stored = {};
 local hooksCache = {};
+local reloadData = {};
 local extras = {
 	"libraries",
 	"classes",
@@ -62,6 +63,18 @@ function Plugin:GetDescription()
 	return self.m_Description;
 end;
 
+function Plugin:SetName(name)
+	self.m_Name = name or self.m_Name or "Unknown Plugin";
+end;
+
+function Plugin:SetAuthor(author)
+	self.m_Author = author or self.m_Author or "Unknown";
+end;
+
+function Plugin:SetDescription(desc)
+	self.m_Description = desc or self.m_Description or "No description provided!";
+end;
+
 function Plugin:SetData(data)
 	table.Merge(self, data);
 end;
@@ -95,6 +108,13 @@ end;
 
 function plugin.Register(obj)
 	plugin.CacheFunctions(obj);
+
+	if (obj.ShouldRefresh == false) then
+		reloadData[obj:GetFolder()] = false;
+	else
+		reloadData[obj:GetFolder()] = true;
+	end
+
 	stored[obj:GetFolder()] = obj;
 end;
 
@@ -209,6 +229,13 @@ function plugin.Include(folder)
 	data.folder = folder;
 	data.id = id;
 	data.pluginFolder = folder;
+
+	if (reloadData[folder] == false) then
+		rw.core:DevPrint("Not reloading plugin: "..folder);
+		return;
+	end;
+
+	rw.core:DevPrint("Loading plugin: "..folder);
 
 	if (ext != "lua") then
 		if (SERVER) then

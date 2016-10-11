@@ -19,6 +19,13 @@ netstream.Hook("PlayerDisconnected", function(plyIndex)
 	plugin.Call("PlayerDisconnected", Entity(plyIndex));
 end);
 
+netstream.Hook("PostCharacterLoaded", function(charID)
+	if (rw.client.IntroPanel) then
+		rw.client.IntroPanel:SetVisible(false);
+		rw.client.IntroPanel:Remove();
+	end;
+end);
+
 do
 	local scrW, scrH = ScrW(), ScrH();
 

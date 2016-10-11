@@ -1,3 +1,12 @@
+--[[ 
+	Rework © 2016 TeslaCloud Studios
+	Do not share, re-distribute or sell.
+--]]
+
+PLUGIN:SetName("Visible Legs");
+PLUGIN:SetAuthor("NightAngel");
+PLUGIN:SetDescription("Lets clients see their character's legs.");
+
 if (!CLIENT) then return; end;
 
 local hiddenBones = {

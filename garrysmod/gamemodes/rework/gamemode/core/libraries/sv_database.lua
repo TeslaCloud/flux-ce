@@ -578,6 +578,7 @@ function rw.db:OnConnected()
 			queryObj:Create("steamID", "VARCHAR(25) NOT NULL");
 			queryObj:Create("name", "VARCHAR(255) NOT NULL");
 			queryObj:Create("faction", "TEXT NOT NULL");
+			queryObj:Create("model", "TEXT NOT NULL");
 			queryObj:Create("class", "TEXT DEFAULT NULL");
 			queryObj:Create("inventory", "TEXT DEFAULT NULL");
 			queryObj:Create("ammo", "TEXT DEFAULT NULL");

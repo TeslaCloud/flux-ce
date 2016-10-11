@@ -1,3 +1,12 @@
+--[[ 
+	Rework © 2016 TeslaCloud Studios
+	Do not share, re-distribute or sell.
+--]]
+
+PLUGIN:SetName("DBugR Hooks");
+PLUGIN:SetAuthor("NightAngel");
+PLUGIN:SetDescription("Adds all plugin hooks to DBugR performance metrics monitor.");
+
 if (DBugR) then
 	function PLUGIN:Initialize()
 		for hookName, hooks in pairs(plugin.GetCache()) do

@@ -105,7 +105,7 @@ end;
 
 function playerMeta:SetActiveCharacter(id)
 	self:SetNetVar("ActiveCharacter", (id or nil));
-	plugin.Call("OnActiveCharacterSet", self);
+	plugin.Call("OnActiveCharacterSet", self, self:GetActiveCharacterTable());
 end;
 
 if (SERVER) then
@@ -131,7 +131,8 @@ if (SERVER) then
 			name = name,
 			physDesc = "Default PhysDesc or something just to test it lol",
 			gender = CHAR_GENDER_MALE,
-			faction = "default"
+			faction = "default",
+			model = "models/humans/group01/male_02.mdl"
 		}
 
 		local status = character.Create(player, data);
@@ -141,7 +142,7 @@ if (SERVER) then
 		print("Created character: "..name);
 	end);
 
-	netstream.Hook("rw_selectchar", function(player, id)
+	netstream.Hook("PlayerSelectCharacter", function(player, id)
 		print(player:Name().." has loaded character #"..id);
 		player:SetActiveCharacter(id);
 	end);

@@ -26,6 +26,10 @@ function GM:PlayerInitialSpawn(player)
 	player:SendConfig();
 	player:SyncNetVars();
 
+	if (IsValid(player)) then
+		player:KillSilent();
+	end;
+
 	netstream.Start(player, "SharedTables", rw.sharedTable);
 	netstream.Start(nil, "PlayerInitialSpawn", player:EntIndex());
 end;
@@ -286,4 +290,15 @@ function GM:PreCharacterRestore(player, index, char)
 	prepared.uniqueID = tonumber(char.uniqueID or index);
 
 	return prepared;
+end;
+
+function GM:OnActiveCharacterSet(player, character)
+	player:Spawn();
+	player:SetModel(character.model or "models/humans/group01/male_02.mdl");
+
+	plugin.Call("PostCharacterLoaded", player, character);
+end;
+
+function GM:PostCharacterLoaded(player, character)
+	netstream.Start(player, "PostCharacterLoaded", character.uniqueID);
 end;

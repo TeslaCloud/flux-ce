@@ -737,7 +737,7 @@ function PANEL:Paint(w, h)
 				elseif (typeof(v2) == "string") then
 					if (IsTime(v2)) then
 						local time = os.date("%H:%M", SendTime(v2));
-						
+
 						draw.SimpleTextOutlined(time, curFont, offX, offY, curColor, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP, 1, Color(60, 60, 60, chatbox.curAlpha))
 
 						local width = util.GetTextSize("reChatFont", time);
@@ -815,7 +815,7 @@ function PANEL:Paint(w, h)
  						end;
  					end;
 				end;
-				
+
 				if (#commands == 8) then
 					break;
 				end;
@@ -869,7 +869,7 @@ function PANEL:Think()
 
 	if (curTime > self.NextAdjust) then
 		plugin.Call("AdjustChatboxInfo", chatbox);
-		
+
 		self.NextAdjust = curTime + (1 / 8);
 	end;
 
@@ -932,7 +932,7 @@ end;
 
 function PANEL:SetValue(text)
 	self:SetText(text);
-	
+
 	if (text and text != "") then
 		if (limit) then
 			if (self:GetCaretPos() > string.utf8len(text)) then
@@ -976,7 +976,7 @@ end;
 -- A function to get the current text.
 function chatbox.GetCurrentText()
 	local textEntry = chatbox.textEntry;
-	
+
 	if (textEntry:IsVisible() and chatbox.IsOpen()) then
 		return textEntry:GetValue();
 	else
@@ -986,7 +986,7 @@ end;
 
 function chatbox.IsTypingOOC()
 	local text = chatbox.GetCurrentText();
-	
+
 	return (text:StartWith("//") or text:StartWith(".//") or text:StartWith("[["));
 end;
 
@@ -1000,7 +1000,7 @@ function chatbox.IsTypingCommand()
 			return true;
 		end;
 	end;
-	
+
 	return false;
 end;
 
@@ -1043,11 +1043,11 @@ function chatbox.Hide()
 
 	chatbox.textEntry:AlphaTo(0, fadeDuration);
 	chatbox.panel.scrollBar:AlphaTo(0, fadeDuration);
-		
+
 	chatbox.panel:SetChatOpen(false);
 	chatbox.panel:SetMouseInputEnabled(false);
 	chatbox.panel:SetKeyboardInputEnabled(false);
-	
+
 	hook.Run("FinishChat");
 	timer.Simple(FrameTime() * 0.5, function() RunConsoleCommand("cancelselect") end)
 end;
@@ -1090,14 +1090,14 @@ function chatbox.UpdateDisplay()
 					line._METADATA = {};
 					line._METADATA.time = v.time;
 					line._METADATA.index = k;
-					
+
 					if (#parsed > 1) then
 						line._METADATA.multiLine = true;
 					end;
-					
+
 					line._METADATA.lineCount = #parsed;
 					chatbox.history[k].lineCount = #parsed;
-					
+
 					table.insert(chatbox.display, line);
 				end;
 
@@ -1109,26 +1109,26 @@ function chatbox.UpdateDisplay()
 
 		curMsg = curMsg + 1;
 	end;
-	
+
 	local lastIdx = 0;
 	local multiLineOffset = 0;
 	local curLine = 1;
-	
+
 	for k, v in pairs(chatbox.display) do
 		if (v._METADATA.index == lastIdx) then
 			curLine = curLine + 1;
-			
+
 			v[1] = g_DisplayY + (curLine * 20);
 		else
 			multiLineOffset = 0;
 			curLine = 1;
-			
+
 			if (v._METADATA.multiLine) then
 				multiLineOffset = v._METADATA.lineCount * 20 - 20;
-				
+
 				v[1] = g_DisplayY - multiLineOffset;
 				g_DisplayY = g_DisplayY - multiLineOffset - 20;
-				
+
 				lastIdx = v._METADATA.index;
 			else
 				v[1] = g_DisplayY;
@@ -1152,7 +1152,7 @@ hook.Add("PlayerBindPress", "chatbox.PlayerBindPress", function(player, bind, bP
 		if (rw.client:HasInitialized()) then
 			chatbox.Show();
 		end;
-		
+
 		return true;
 	end;
 end);
@@ -1160,18 +1160,18 @@ end);
 netstream.Hook("ChatboxTextEnter", function(player, messageData)
 	if (IsValid(player)) then
 		chat.PlaySound();
-		
+
 		print("["..messageData.filter:upper().."] "..player:Name()..": "..messageData.text);
-		
+
 		table.insert(chatbox.history, messageData);
-		
+
 		chatbox.UpdateDisplay();
 	end;
 end);
 
 netstream.Hook("ChatboxAddText", function(messageData)
 	chat.PlaySound();
-	
+
 	print("["..messageData.filter:upper().."] "..messageData.text);
 
 	table.insert(chatbox.history, messageData);

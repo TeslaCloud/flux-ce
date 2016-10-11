@@ -10,9 +10,9 @@ GM.Website 		= "http://teslacloud.net/";
 GM.Email 		= "support@teslacloud.net";
 
 -- Define RW-Specific fields.
-GM.Version 		= "0.0.2";
-GM.Build 		= "1201";
-GM.Description 	= "A roleplay framework."
+GM.Version 		= "0.0.3";
+GM.Build 		= "1203";
+GM.Description 	= "A free roleplay framework."
 
 -- It would be very nice of you to leave below values as they are if you're using official schemas.
 -- While we can do nothing to stop you from changing them, we'll very much appreciate it if you don't.
@@ -124,8 +124,8 @@ plugin.ClearCache();
 
 rw.core:IncludeDirectory("core/config", nil, true);
 rw.core:IncludeDirectory("core/libraries", nil, true);
-rw.core:IncludeDirectory("core/classes", nil, true);
-rw.core:IncludeDirectory("core/meta", nil, true);
+rw.core:IncludeDirectory("core/libraries/classes", nil, true);
+rw.core:IncludeDirectory("core/libraries/meta", nil, true);
 rw.core:IncludeDirectory("core/languages", nil, true);
 rw.core:IncludeDirectory("core/groups", nil, true);
 rw.core:IncludeDirectory("core/commands", nil, true);

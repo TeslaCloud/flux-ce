@@ -51,9 +51,8 @@ function PANEL:Init()
 			self.LoadPanel.buttons[k]:SetSize(128, 24);
 			self.LoadPanel.buttons[k]:SetText(v.name);
 			self.LoadPanel.buttons[k].DoClick = function()
-				netstream.Start("rw_selectchar", v.uniqueID);
-				self:SetVisible(false);
-				self:Remove();
+				netstream.Start("PlayerSelectCharacter", v.uniqueID);
+				self.LoadPanel:SetVisible(false);
 			end;
 
 			offY = offY + 28
