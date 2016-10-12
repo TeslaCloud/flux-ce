@@ -62,7 +62,11 @@ function rw.bars:SetValue(uniqueID, newValue)
 	local bar = self:Get(uniqueID);
 
 	if (bar) then
-		bar.value = newValue;
+		if (bar.value != newValue) then
+			bar.oldValue = bar.value;
+			bar.interpolated = util.EaseInOutTable(100, bar.oldValue, newValue);
+			bar.value = newValue;
+		end
 	end
 end;
 
@@ -125,7 +129,7 @@ function rw.bars:Draw(uniqueID)
 end;
 
 do
-	local rwBars = {};
+	local rwBars = Plugin("RWBars", {});
 
 	function rwBars:LazyTick()
 		for k, v in pairs(stored) do
@@ -134,7 +138,20 @@ do
 	end;
 
 	function rwBars:PreDrawBar(bar)
-		bar.fillWidth = bar.width * (bar.value / bar.maxValue);
+		bar.curI = bar.curI or 1;
+
+		if (bar.interpolated == nil) then
+			bar.fillWidth = bar.width * (bar.value / bar.maxValue);
+		else
+			if (bar.curI > 100) then
+				bar.interpolated = nil;
+				bar.curI = 1;
+			else
+				bar.fillWidth = bar.width * (bar.interpolated[math.Round(bar.curI)] / bar.maxValue);
+				bar.curI = bar.curI + 1;
+			end;
+		end;
+
 		bar.text = string.utf8upper(rw.lang:TranslateText(bar.text));
 		bar.hinderText = string.utf8upper(rw.lang:TranslateText(bar.hinderText));
 	end;
