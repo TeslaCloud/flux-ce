@@ -133,3 +133,20 @@ function GM:DoAnimationEvent(ply, event, data)
 		return ACT_INVALID
 	end
 end
+
+-- Utility timers to call hooks that should be executed every once in a while.
+timer.Create("OneMinute", 60, 0, function()
+	plugin.Call("OneSecond");
+end);
+
+timer.Create("OneSecond", 1, 0, function()
+	plugin.Call("OneSecond");
+end);
+
+timer.Create("HalfSecond", 1 / 2, 0, function()
+	plugin.Call("HalfSecond");
+end);
+
+timer.Create("LazyTick", 1 / 8, 0, function()
+	plugin.Call("LazyTick");
+end);

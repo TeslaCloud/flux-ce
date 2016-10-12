@@ -15,7 +15,7 @@ do
 		return (aspect == w / h);
 	end;
 
-	function rw.fonts.ScaleSize(size)
+	function rw.fonts:ScaleSize(size)
 		if (ScreenIsRatio(16, 10)) then
 			return math.floor(size * (ScrH() / 1200));
 		elseif (ScreenIsRatio(4, 3)) then
@@ -40,12 +40,12 @@ end;
 function rw.fonts:GetSize(name, size)
 	local newName = name.."\\"..size;
 
-	if (!rw.fonts:GetTable(newName)) then
-		local fontData = table.Copy(rw.fonts:GetTable(name));
+	if (!stored[newName]) then
+		local fontData = table.Copy(stored[name]);
 
 		if (fontData) then
 			fontData.size = size;
-				
+
 			self:CreateFont(newName, fontData);
 		end;
 	end;
@@ -69,53 +69,53 @@ function rw.fonts:GetTable(name)
 	return stored[name];
 end;
 
-function rw.fonts.CreateFonts()
-	rw.fonts:ClearTable();
+function rw.fonts:CreateFonts()
+	self:ClearTable();
 
-	rw.fonts:CreateFont("menu_thin", {
+	self:CreateFont("menu_thin", {
 		font = "Roboto Lt",
 		weight = 400,
-		size = rw.fonts.ScaleSize(34)
+		size = self:ScaleSize(34)
 	});
 
-	rw.fonts:CreateFont("menu_thin_small", {
+	self:CreateFont("menu_thin_small", {
 		font = "Roboto Lt",
 		weight = 300,
-		size = rw.fonts.ScaleSize(28)
+		size = self:ScaleSize(28)
 	});
 
-	rw.fonts:CreateFont("menu_thin_smaller", {
+	self:CreateFont("menu_thin_smaller", {
 		font = "Roboto Lt",
-		size = rw.fonts.ScaleSize(22),
+		size = self:ScaleSize(22),
 		weight = 200
 	});
 
-	rw.fonts:CreateFont("menu_light", {
+	self:CreateFont("menu_light", {
 		font = "Roboto Lt",
-		size = rw.fonts.ScaleSize(34)
+		size = self:ScaleSize(34)
 	});
 
-	rw.fonts:CreateFont("menu_light_tiny", {
+	self:CreateFont("menu_light_tiny", {
 		font = "Roboto Lt",
-		size = rw.fonts.ScaleSize(16)
+		size = self:ScaleSize(16)
 	});
 
-	rw.fonts:CreateFont("menu_light_small", {
+	self:CreateFont("menu_light_small", {
 		font = "Roboto Lt",
-		size = rw.fonts.ScaleSize(20)
+		size = self:ScaleSize(20)
 	});
 
-	rw.fonts:CreateFont("hud_small", {
+	self:CreateFont("hud_small", {
 		font = "Roboto Condensed",
-		size = rw.fonts.ScaleSize(20),
+		size = self:ScaleSize(20),
 		weight = 200
 	});
 
-	rw.fonts:CreateFont("bar_text", {
+	self:CreateFont("bar_text", {
 		font = "Roboto Condensed",
 		size = 18,
 		weight = 500
 	});
 
-	plugin.Call("CreateFonts", rw.fonts);
+	plugin.Call("CreateFonts", self);
 end;

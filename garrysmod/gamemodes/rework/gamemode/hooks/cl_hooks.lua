@@ -26,7 +26,7 @@ end;
 
 -- Called when the resolution has been changed and fonts need to be resized to fit the client's res.
 function GM:OnResolutionChanged(oldW, oldH, newW, newH)
-	rw.fonts.CreateFonts();
+	rw.fonts:CreateFonts();
 end;
 
 -- Called when the client connects and spawns.
@@ -287,46 +287,30 @@ local colorRed = Color(200, 30, 30);
 local colorDark = Color(40, 40, 40);
 local colorBlue = Color(30, 100, 200);
 
+rw.bars:Register("health", {
+	text = "HEALTH",
+	color = Color(200, 40, 40),
+	maxValue = 100,
+	height = 18
+}, true);
+
+rw.bars:Register("armor", {
+	text = "armor",
+	color = Color(80, 80, 220),
+	maxValue = 100,
+	value = 60,
+	height = 18,
+	y = 8 + 18 + 4 -- temporary
+}, true);
+
 -- Called when the player's HUD is drawn.
 function GM:HUDPaint()
 	if (!plugin.Call("RWHUDPaint") and rw.settings.GetBool("DrawBars")) then
-		local scrW, scrH = ScrW(), ScrH();
-		local barWidth, barHeight = scrW * 0.25, 16;
-		local drawText = rw.settings.GetBool("DrawBarText");
-		local textX = 20;
+		rw.bars:SetValue("health", rw.client:Health());
+		rw.bars:Draw("health");
 
-		draw.RoundedBox(4, 8, 8, barWidth, barHeight, colorDark);
-
-		local health = rw.client:Health();
-		
-		if (health > 0) then
-			local textY = 8 + (barHeight * 0.5);
-
-			draw.RoundedBox(4, 9, 9, (barWidth - 2) * (health / rw.client:GetMaxHealth()), barHeight - 2, colorRed);
-
-			if (drawText) then
-				local offset = util.GetTextSize("bar_text", "HEALTH: ");
-
-				draw.SimpleText(math.Max(0, math.Round(health)), "bar_text", textX + offset, textY, colorWhite, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER);
-				draw.SimpleText("HEALTH: ", "bar_text", textX, textY, colorWhite, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER);
-			end;
-		end;
-
-		local armor = rw.client:Armor();
-
-		if (armor > 0) then
-			local textY = barHeight + 19 + (barHeight * 0.5);
-
-			draw.RoundedBox(4, 8, barHeight + 18, barWidth, barHeight, colorDark);
-			draw.RoundedBox(4, 9, barHeight + 19, (barWidth - 2) * (armor / 100), barHeight - 2, colorBlue);
-
-			if (drawText) then
-				local offset = util.GetTextSize("bar_text", "ARMOR: ");
-
-				draw.SimpleText(math.Max(0, math.Round(armor)), "bar_text", textX + offset, textY, colorWhite, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER);
-				draw.SimpleText("ARMOR: ", "bar_text", textX, textY, colorWhite, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER);
-			end;
-		end;
+		rw.bars:SetValue("armor", rw.client:Armor());
+		rw.bars:Draw("armor");
 	end;
 end;
 

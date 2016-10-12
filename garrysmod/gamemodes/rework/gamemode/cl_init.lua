@@ -24,7 +24,7 @@ end;
 -- Initiate shared boot.
 include("shared.lua");
 
-rw.fonts.CreateFonts();
+rw.fonts:CreateFonts();
 
 if (rw.initialized) then
 	MsgC(Color(0, 255, 100, 255), "[Rework] Auto-reloaded in "..math.Round(os.clock() - rw.startTime, 3).. " second(s)\n");
