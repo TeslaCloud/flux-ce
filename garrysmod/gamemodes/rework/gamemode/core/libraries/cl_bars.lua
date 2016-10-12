@@ -16,6 +16,7 @@ rw.bars.defaultX = 8;
 rw.bars.defaultY = 8;
 rw.bars.defaultW = ScrW() / 4;
 rw.bars.defaultH = 18;
+rw.bars.defaultSpacing = 4;
 rw.bars.drawing = rw.bars.drawing or 0; -- Amount of bars currently being drawn.
 
 function rw.bars:Register(uniqueID, data, force)
@@ -44,7 +45,8 @@ function rw.bars:Register(uniqueID, data, force)
 		cornerRadius = data.cornerRadius or 2,
 		priority = data.priority or table.Count(stored),
 		type = data.type or BAR_TOP,
-		font = data.font or "bar_text"
+		font = data.font or "bar_text",
+		spacing = data.spacing or self.defaultSpacing
 	};
 
 	return stored[uniqueID];
@@ -71,15 +73,33 @@ function rw.bars:SetValue(uniqueID, newValue)
 end;
 
 function rw.bars:Prioritize()
+	sorted = {};
+
 	for k, v in pairs(stored) do
 		sorted[v.priority] = sorted[v.priority] or {};
 
 		if (v.type == BAR_TOP) then
-			table.insert(sorted[v.priority], v);
+			table.insert(sorted[v.priority], v.uniqueID);
 		end;
 	end
 
 	return sorted;
+end;
+
+function rw.bars:Position()
+	self:Prioritize();
+
+	local lastY = self.defaultY;
+
+	for priority, ids in pairs(sorted) do
+		for k, v in pairs(ids) do
+			local bar = self:Get(v);
+
+			bar.y = lastY;
+			lastY = lastY + bar.height + bar.spacing;
+		end
+	end;
+
 end;
 
 function rw.bars:Draw(uniqueID)
@@ -128,10 +148,20 @@ function rw.bars:Draw(uniqueID)
 	end;
 end;
 
+function rw.bars:DrawTopBars()
+	for priority, ids in pairs(sorted) do
+		for k, v in ipairs(ids) do
+			self:Draw(v);
+		end;
+	end;
+end;
+
 do
-	local rwBars = Plugin("RWBars", {});
+	local rwBars = {};
 
 	function rwBars:LazyTick()
+		rw.bars:Position();
+
 		for k, v in pairs(stored) do
 			plugin.Call("AdjustBarInfo", k, stored[k]);
 		end;

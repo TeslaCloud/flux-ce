@@ -299,18 +299,15 @@ rw.bars:Register("armor", {
 	color = Color(80, 80, 220),
 	maxValue = 100,
 	value = 60,
-	height = 18,
-	y = 8 + 18 + 4 -- temporary
+	height = 18
 }, true);
 
 -- Called when the player's HUD is drawn.
 function GM:HUDPaint()
 	if (!plugin.Call("RWHUDPaint") and rw.settings.GetBool("DrawBars")) then
 		rw.bars:SetValue("health", rw.client:Health());
-		rw.bars:Draw("health");
-
 		rw.bars:SetValue("armor", rw.client:Armor());
-		rw.bars:Draw("armor");
+		rw.bars:DrawTopBars();
 	end;
 end;
 
