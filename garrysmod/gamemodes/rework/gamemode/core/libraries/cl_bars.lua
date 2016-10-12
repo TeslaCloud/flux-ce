@@ -67,7 +67,7 @@ function rw.bars:SetValue(uniqueID, newValue)
 		if (bar.value != newValue) then
 			bar.oldValue = bar.value;
 			bar.interpolated = util.EaseInOutTable(100, bar.oldValue, newValue);
-			bar.value = newValue;
+			bar.value = math.Clamp(newValue, 0, bar.maxValue);
 		end
 	end
 end;
