@@ -59,7 +59,7 @@ end;
 
 function rePlayer:Loadout()
 	self.Player:StripWeapons();
-	
+
 	for k, v in pairs(self.loadout) do
 		self.Player:Give(v);
 	end;

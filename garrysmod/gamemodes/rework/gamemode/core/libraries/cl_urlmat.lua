@@ -116,7 +116,7 @@ function URLGIF(url, w, h)
 	if (!panel) then
 		panel = OpenHTMLPanel(url);
 	end;
-	
+
 	local mat = panel:GetHTMLMaterial();
 
 	if (panel and mat) then

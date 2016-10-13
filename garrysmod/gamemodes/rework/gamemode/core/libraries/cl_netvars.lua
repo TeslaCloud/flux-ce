@@ -28,7 +28,7 @@ function netvars.SetNetVar() end;
 
 function entityMeta:GetNetVar(key, default)
 	local index = self:EntIndex();
-	
+
 	if (stored[index] and stored[index][key] != nil) then
 		return stored[index][key];
 	end;

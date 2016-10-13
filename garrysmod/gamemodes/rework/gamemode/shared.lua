@@ -10,8 +10,8 @@ GM.Website 		= "http://teslacloud.net/";
 GM.Email 		= "support@teslacloud.net";
 
 -- Define RW-Specific fields.
-GM.Version 		= "0.0.3";
-GM.Build 		= "1203";
+GM.Version 		= "0.0.4";
+GM.Build 		= "1205";
 GM.Description 	= "A free roleplay framework."
 
 -- It would be very nice of you to leave below values as they are if you're using official schemas.
@@ -67,11 +67,11 @@ end;
 -- Called when gamemode's server browser name need to be retrieved.
 function GM:GetGameDescription()
 	local name = self.Prefix..rw.GetSchemaName();
-	
+
 	if (type(self.NameOverride) == "string") then
 		name = self.Prefix..self.NameOverride;
 	end;
-	
+
 	return name;
 end;
 

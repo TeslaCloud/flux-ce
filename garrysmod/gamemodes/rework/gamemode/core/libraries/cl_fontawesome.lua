@@ -673,7 +673,7 @@ function rw.fa:GetIcon(id)
 		
 		return string.utf8char(buffer[id]);
 	end;
-	
+
 	return id;
 end;
 
@@ -681,16 +681,16 @@ function rw.fa:Draw(id, x, y, size, color, xAlign, yAlign, outlineWidth, outline
 	if (id:StartWith("fa ")) then
 		id = id:sub(4, id:len());
 	end;
-	
+
 	if (!id:StartWith("fa-")) then
 		id = "fa-"..id;
 	end;
-	
+
 	if (!faCodes[id]) then return; end;
-	
+
 	size = size or 16;
 	color = color or Color(255, 255, 255);
-	
+
 	if (outlineWidth) then
 		draw.SimpleTextOutlined(self:GetIcon(id), rw.fonts:GetSize("reFontAwesome", size), x, y, color, xAlign, yAlign, outlineWidth, outlineColor);
 	else

@@ -99,7 +99,7 @@ function PANEL:SetPlayer(player)
 	self.mPanel:SetModel(player:GetModel());
 	self.mPanel:SetCamPos(Vector(15, 3, 65));
 	self.mPanel:SetLookAt(Vector(0, 0, 65));
-	
+
 	function self.mPanel:LayoutEntity(ent)
 		self:RunAnimation();
 	end;

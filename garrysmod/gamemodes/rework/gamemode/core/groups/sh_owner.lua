@@ -13,5 +13,5 @@ local OWNER = Group("owner");
 	OWNER:SetPermissions({
 		all = PERM_ALLOW_OVERRIDE
 	})
-	
+
 OWNER:Register();

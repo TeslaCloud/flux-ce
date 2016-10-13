@@ -13,5 +13,5 @@ local OPERATOR = Group("operator");
 	OPERATOR:SetPermissions({
 		test = PERM_ALLOW
 	})
-	
+
 OPERATOR:Register();

@@ -13,5 +13,5 @@ local ADMIN = Group("admin");
 	ADMIN:SetPermissions({
 		test = PERM_ALLOW
 	})
-	
+
 ADMIN:Register();

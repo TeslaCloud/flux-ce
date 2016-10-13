@@ -34,7 +34,7 @@ function PANEL:Init()
 	self:SetBackImage(backURL, backOption);
 
 	self:CreateBackPanel();
-	
+
 	self.mainX = scrW * -0.03;
 
 	self.playerLabel = vgui.Create("rwTabPlayerLabel", self);
@@ -512,7 +512,7 @@ function PANEL:Init()
 
 	self.alpha = 0;
 	self.offset = 0;
-	
+
 	local size = scrW * 0.02;
 	local x = self:GetWide() - size;
 	local y = self:GetTall() * 0.15;

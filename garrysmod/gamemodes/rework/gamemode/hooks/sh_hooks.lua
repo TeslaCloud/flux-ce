@@ -123,9 +123,9 @@ function GM:DoAnimationEvent(ply, event, data)
 		ply.m_bJumping = true
 		ply.m_bFirstJumpFrame = true
 		ply.m_flJumpStartTime = CurTime()
-	
+
 		ply:AnimRestartMainSequence()
-	
+
 		return ACT_INVALID
 	elseif (event == PLAYERANIMEVENT_CANCEL_RELOAD) then
 		ply:AnimResetGestureSlot(GESTURE_SLOT_ATTACK_AND_RELOAD)

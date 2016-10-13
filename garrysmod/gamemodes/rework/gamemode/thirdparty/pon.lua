@@ -8,9 +8,9 @@ Copyright thelastpenguin™
 	-	You don't remove this copyright notice.
 	-	You don't claim this to be your own.
 	-	You properly credit the author, thelastpenguin™, if you publish your work based on (and/or using) this.
-	
+
 	If you modify the code for any purpose, the above still applies to the modified code.
-	
+
 	The author is not held responsible for any d amages incured from the use of pON, you use it at your own risk.
 
 DATA TYPES SUPPORTED:
@@ -48,11 +48,11 @@ local tonumber = tonumber ;
 
 do
 	local encode = {};
-	
+
 	local tryCache ;
-	
+
 	local cacheSize = 0;
-	
+
 	encode['table'] = function( self, tbl, output, cache )
 		
 		if( cache[ tbl ] )then
@@ -175,7 +175,7 @@ do
 	encode['Weapon']	= encode['Entity'];
 	encode['NPC']     = encode['Entity'];
 	encode['NextBot'] = encode['Entity'];
-	
+
 	do
 		local empty, concat = table.Empty, table.concat ;
 		function pon.encode( tbl )
@@ -193,7 +193,7 @@ do
 	local tonumber = tonumber ;
 	local find, sub, gsub, Explode = string.find, string.sub, string.gsub, string.Explode ;
 	local Vector, Angle, Entity = Vector, Angle, Entity ;
-	
+
 	local decode = {};
 	decode['{'] = function( self, index, str, cache )
 		
@@ -268,7 +268,7 @@ do
 		
 		return index, cur;
 	end
-	
+
 	-- STRING
 	decode['"'] = function( self, index, str, cache )
 		local finish = find( str, '";', index, true );
@@ -287,7 +287,7 @@ do
 		cache[ #cache + 1 ] = res;
 		return index, res;
 	end
-	
+
 	decode['!'] = function( self, index, str, cache )
 		return index, nil;
 	end
@@ -311,7 +311,7 @@ do
 	decode['8'] = decode['n'];
 	decode['9'] = decode['n'];
 	decode['-'] = decode['n'];
-	
+
 	-- POINTER
 	decode['('] = function( self, index, str, cache )
 		local finish = find( str, ')', index, true );
@@ -319,7 +319,7 @@ do
 		index = finish + 1;
 		return index, cache[ num ];
 	end
-	
+
 	-- BOOLEAN. ONE DATA TYPE FOR YES, ANOTHER FOR NO.
 	decode[ 't' ] = function( self, index )
 		return index, true;
@@ -327,7 +327,7 @@ do
 	decode[ 'f' ] = function( self, index )
 		return index, false;
 	end
-	
+
 	-- VECTOR
 	decode[ 'v' ] = function( self, index, str, cache )
 		local finish =  find( str, ';', index, true );
@@ -363,7 +363,7 @@ do
 		index = finish + 1;
 		return index, Entity( num ) or NULL;
 	end
-	
+
 	function pon.decode( data )
 		if (type(data) != "string") then
 			ErrorNoHalt("[pON] You must deserialize a string, not "..type(data).."!\n");

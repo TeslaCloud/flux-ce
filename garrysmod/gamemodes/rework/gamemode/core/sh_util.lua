@@ -24,7 +24,7 @@ end;
 
 do
 	local materialCache = {};
-	
+
 	function util.GetMaterial(mat)
 		materialCache[mat] = materialCache[mat] or Material(mat);
 		return materialCache[mat];
@@ -32,7 +32,7 @@ do
 end;
 
 base64 = base64 or {};
-	
+
 local b='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
 -- encoding
 function base64.encode(data)
@@ -86,17 +86,17 @@ end
 -- A function to convert a single hexadecimal digit to decimal.
 function util.HexToDec(hex)
 	if (type(hex) == "number") then return hex; end;
-	
+
 	hex = hex:lower();
-	
+
 	local hexDigits = {"0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "a", "b", "c", "d", "e", "f"};
 	local negative = false;
-	
+
 	if (hex:StartWith("-")) then
 		hex = hex:sub(2, 2);
 		negative = true;
 	end;
-	
+
 	for k, v in ipairs(hexDigits) do
 		if (v == hex) then
 			if (!negative) then
@@ -106,23 +106,23 @@ function util.HexToDec(hex)
 			end;
 		end;
 	end;
-	
+
 	ErrorNoHalt("[Catwork] '"..hex.."' is not a hexadecimal number!");
 	return 0;
 end;
 
 function util.HexToDecimal(hex)
 	if (type(hex) == "number") then return hex; end;
-	
+
 	local sum = 0;
 	local chars = table.Reverse(string.Explode("", hex))
 	local idx = 1;
-	
+
 	for i = 0, hex:len() - 1 do
 		sum = sum + util.HexToDec(chars[idx]) * math.pow(16, i);
 		idx = idx + 1;
 	end;
-	
+
 	return sum;
 end;
 
@@ -131,14 +131,14 @@ function util.HexToColor(hex)
 	if (hex:StartWith("#")) then
 		hex = hex:sub(2, hex:len());
 	end;
-	
+
 	if (hex:len() != 6 and hex:len() != 8) then
 		return Color(255, 255, 255);
 	end;
-	
+
 	local hexColors = {};
 	local initLen = hex:len() / 2;
-	
+
 	for i = 1, hex:len() / 2 do
 		table.insert(hexColors, hex:sub(1, 2))
 		
@@ -146,9 +146,9 @@ function util.HexToColor(hex)
 			hex = hex:sub(3, hex:len());
 		end;
 	end;
-	
+
 	local color = {};
-	
+
 	for k, v in ipairs(hexColors) do
 		local chars = table.Reverse(string.Explode("", v));
 		local sum = 0;
@@ -159,7 +159,7 @@ function util.HexToColor(hex)
 		
 		table.insert(color, sum);
 	end;
-	
+
 	return Color(color[1], color[2], color[3], (color[4] or 255));
 end;
 
@@ -366,10 +366,10 @@ end;
 
 function string.FindAll(str, pattern)
 	if (!str or !pattern) then return; end;
-	
+
 	local hits = {};
 	local lastPos = 1;
-	
+
 	while (true) do
 		local startPos, endPos = string.find(str, pattern, lastPos);
 		
@@ -381,7 +381,7 @@ function string.FindAll(str, pattern)
 		
 		lastPos = endPos + 1;
 	end;
-	
+
 	return hits;
 end;
 
@@ -404,7 +404,7 @@ end;
 
 function util.GetTextSize(font, text)
 	surface.SetFont(font);
-	
+
 	return surface.GetTextSize(text);
 end;
 

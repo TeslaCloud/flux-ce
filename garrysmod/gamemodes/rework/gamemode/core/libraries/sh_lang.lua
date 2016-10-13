@@ -10,7 +10,7 @@ local stored = {};
 
 function rw.lang:GetTable(name)
 	stored[name] = stored[name] or {};
-	
+
 	return stored[name];
 end;
 
@@ -119,7 +119,7 @@ if (CLIENT) then
 
 --	surface.OldDrawText = surface.OldDrawText or surface.DrawText;
 
-	
+
 		Overwrite the way the surface library draws text, 
 		this way we can put translations into anything that uses this,
 		like draw.SimpleText, etc.

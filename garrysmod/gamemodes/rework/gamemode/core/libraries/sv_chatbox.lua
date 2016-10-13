@@ -9,15 +9,15 @@ chatbox.filters = chatbox.filters or {};
 
 function chatbox.AddPrefix(prefix, callback)
 	if (!prefix or prefix == "") then return; end;
-	
+
 	local oldCB = callback;
-	
+
 	function callback(msgData)
 		oldCB(msgData);
 		
 		msgData.text = msgData.text:sub(prefix:len() + 1, msgData.text:len());
 	end;
-	
+
 	chatbox.prefixes[prefix] = {};
 	chatbox.prefixes[prefix].Callback = callback;
 	chatbox.prefixes[prefix].length = prefix:len();
@@ -31,7 +31,7 @@ end;
 
 function chatbox.AddFilter(id, callback)
 	if (!id or id == "") then return; end;
-	
+
 	chatbox.filters[id] = callback;
 end;
 
@@ -51,7 +51,7 @@ function chatbox.CanHear(listener, position, radius)
 			return true;
 		end;
 	end;
-	
+
 	return false;
 end;
 
@@ -59,11 +59,11 @@ do
 	chatbox.AddFilter("ooc", function(listener, msgData)
 		return true; -- todo chat types blocking
 	end);
-	
+
 	chatbox.AddFilter("pm", function(listener, msgData)
 		return true;
 	end);
-	
+
 	-- variables in these 2 filters are locals because we may wanna use them a bit later.
 	chatbox.AddFilter("looc", function(listener, msgData)
 		local pos = msgData.position;
@@ -71,7 +71,7 @@ do
 		
 		return chatbox.CanHear(listener, pos, rad);
 	end);
-	
+
 	chatbox.AddFilter("ic", function(listener, msgData)
 		pos = msgData.position;
 		
@@ -83,35 +83,35 @@ do
 		
 		return chatbox.CanHear(listener, pos, rad);
 	end);
-	
+
 	chatbox.AddFilter("player_events", function(listener, msgData)
 		local pos = msgData.position;
 		local rad = msgData.radius or rw.config:Get("talk_radius") or 356;
 		
 		return chatbox.CanHear(listener, pos, rad);
 	end);
-	
+
 	chatbox.AddFilter("events", function(listener, msgData)
 		return true;
 	end);
-	
+
 	chatbox.AddFilter("admin", function(listener, msgData)
 		return (listener:IsAdmin() or listener:IsUserGroup("operator"));
 	end);
-	
+
 	chatbox.AddFilter("default", function(listener, msgData)
 		return true;
 	end);
-	
+
 	-- prevent commands from appearing in chatbox.
 	chatbox.AddFilter("command", function(listener, msgData)
 		return false;
 	end);
-	
+
 	chatbox.AddFilter("command_no_announcement", function(listener, msgData)
 		return false;
 	end);
-	
+
 	chatbox.AddFilter("player_as_system", function(listener, msgData)
 		return true;
 	end);
@@ -134,7 +134,7 @@ do
 			return true; -- tell the system that we set everything!
 		end;
 	end);
-	
+
 	chatbox.AddPrefix(".//", function(msgData)
 		local text = msgData.text;
 		
@@ -151,7 +151,7 @@ do
 			return true;
 		end;
 	end);
-	
+
 	-- who the fuck even does [[ anyway
 	chatbox.AddPrefix("[[", function(msgData)
 		local text = msgData.text;
@@ -169,7 +169,7 @@ do
 			return true;
 		end;
 	end);
-	
+
 	chatbox.AddPrefix("/", function(msgData)
 		local text = msgData.text;
 		
@@ -181,7 +181,7 @@ do
 			return true;
 		end;
 	end);
-	
+
 	chatbox.AddPrefix("/?", function(msgData)
 		local text = msgData.text;
 		
@@ -194,7 +194,7 @@ do
 			return true;
 		end;
 	end);
-	
+
 	chatbox.AddPrefix("@", function(msgData)
 		local text = msgData.text;
 		
@@ -205,7 +205,7 @@ do
 			return true;
 		end;
 	end);
-	
+
 	chatbox.AddPrefix("<sys>", function(msgData)
 		local text = msgData.text;
 		
@@ -222,7 +222,7 @@ function chatbox.PlayerCanHear(listener, messageData)
 	if (!IsValid(listener)) then
 		return messageData.filter != "ic";
 	end;
-	
+
 	return chatbox.GetFilter(messageData.filter or "default")(listener, messageData);
 end;
 
@@ -241,14 +241,14 @@ function chatbox.AddText(listeners, ...)
 		translate = true,
 		players = {}
 	};
-	
+
 	if (listeners == nil) then
 		listeners = _player.GetAll();
 	end;
-	
+
 	local colored = false;
 	local curColor = Color(255, 255, 255);
-	
+
 	for k, v in pairs(args) do
 		if (typeof(v) == "string") then
 			if (colored) then
@@ -276,11 +276,11 @@ function chatbox.AddText(listeners, ...)
 			table.Merge(message, v);
 		end;
 	end;
-	
+
 	if (colored) then
 		message.text = message.text.."[/color]";
 	end;
-	
+
 	if (IsValid(listeners)) then
 		message.position = message.position or listeners:GetPos();
 	else
@@ -288,11 +288,11 @@ function chatbox.AddText(listeners, ...)
 			message.position = message.position or message.players[1]:GetPos();
 		end;
 	end;
-	
+
 	plugin.Call("ChatAddText", listeners, message);
-	
+
 	print("[Chat::"..message.filter:upper().."] "..message.text);
-	
+
 	if (!IsValid(listeners)) then
 		for k, v in ipairs(listeners) do
 			if (chatbox.GetFilter(message.filter)(v, message)) then
@@ -304,7 +304,7 @@ function chatbox.AddText(listeners, ...)
 			netstream.Start(listeners, "ChatboxAddText", message);
 		end;
 	end;
-	
+
 	return message;
 end;
 
@@ -320,7 +320,7 @@ netstream.Hook("ChatboxTextEntered", function(player, msgText)
 		print("[Catwork Debug] Player is not valid. How the heck did this happen doe?");
 		return;
 	end;
-	
+
 	local message = {
 		text = msgText, -- text of the message
 		playerName = player:Name(), -- name of the player who sent this message
@@ -335,7 +335,7 @@ netstream.Hook("ChatboxTextEntered", function(player, msgText)
 	if (plugin.Call("PlayerSay", player, message.text) == "") then
 		return;
 	end;
-	
+
 	if (msgText:StartWith("//")) then
 		chatbox.GetPrefix("//").Callback(message);
 	else
@@ -347,20 +347,20 @@ netstream.Hook("ChatboxTextEntered", function(player, msgText)
 			end;
 		end;
 	end;
-	
+
 	local prefix = rw.config:Get("command_prefixes")[1];
 	local maxChatLength = rw.config:Get("max_chat_length") or 256;
 	local curTime = CurTime();
-	
+
 	if (string.utf8len(message.text) >= maxChatLength) then
 		message.text = string.utf8sub(message.text, 1, maxChatLength);
 		message.text = message.text.."...";
 	end;
 
 	plugin.Call("ChatboxPlayerSay", player, message);
-	
+
 	local shouldSend = true;
-	
+
 	/*if (message.filter == "ooc") then
 		if (plugin.Call("PlayerCanSayOOC", player, message.text)) then
 			if (!player.cwNextTalkOOC or curTime > player.cwNextTalkOOC or player:IsAdmin()) then
@@ -390,16 +390,16 @@ netstream.Hook("ChatboxTextEntered", function(player, msgText)
 			message.text = "\""..message.text.."\"";
 		end;
 	end;
-	
+
 	if (CW.player:GetDeathCode(player)) then
 		CW.player:TakeDeathCode(player);
 	end;*/
-	
+
 	if (!shouldSend) then return; end;
 	if (message.text == "" or message.text == " ") then return; end;
-	
+
 	print("["..message.filter:upper().."] "..player:Name()..": "..message.text);
-	
+
 	for k, v in ipairs(_player.GetAll()) do
 		if (chatbox.GetFilter(message.filter)(v, message)) then
 			netstream.Start(v, "ChatboxTextEnter", player, message);

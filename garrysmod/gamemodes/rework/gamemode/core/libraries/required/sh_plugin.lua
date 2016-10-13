@@ -183,7 +183,7 @@ end;
 
 function plugin.GetFilesForClients(basePath, curPath, results)
 	results = results or {};
-	
+
 	if (file.IsDir(basePath, "GAME") and !curPath) then
 		curPath = curPath or basePath;
 

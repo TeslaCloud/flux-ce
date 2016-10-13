@@ -400,7 +400,7 @@ function rw.db:Connect(host, username, password, database, port, socket, flags)
 		if (type(mysqloo) != "table") then
 			require("mysqloo");
 		end;
-	
+
 		if (mysqloo) then
 			local clientFlag = flags or 0;
 
@@ -617,12 +617,12 @@ function rw.db:EasyWrite(tableName, where, data)
 		ErrorNoHalt("[Rework] Easy MySQL error! Data has unexpected value type (table expected, got "..typeof(data)..")\n");
 		return;
 	end;
-	
+
 	if (!where) then
 		ErrorNoHalt("[Rework] Easy MySQL error! 'where' table is malformed! ([1] = "..typeof(where[1])..", [2] = "..typeof(where[2])..")\n");
 		return;
 	end;
-	
+
 	local query = self:Select(tableName);
 		if (typeof(where[1]) == "table") then
 			for k, v in pairs(where) do
@@ -631,7 +631,7 @@ function rw.db:EasyWrite(tableName, where, data)
 		else
 			query:Where(where[1], where[2]);
 		end;
-	
+
 		query:Callback(function(result, status, lastID)
 			if (type(result) == "table" and #result > 0) then
 				local updateObj = self:Update(tableName);
@@ -685,7 +685,7 @@ function rw.db:EasyRead(tableName, where, callback)
 		ErrorNoHalt("[Rework] Easy MySQL Read error! 'where' table is malformed! ([1] = "..typeof(where[1])..", [2] = "..typeof(where[2])..")\n");
 		return false;
 	end;
-	
+
 	local query = self:Select(tableName);
 		if (typeof(where[1]) == "table") then
 			for k, v in pairs(where) do
@@ -694,7 +694,7 @@ function rw.db:EasyRead(tableName, where, callback)
 		else
 			query:Where(where[1], where[2]);
 		end;
-	
+
 		query:Callback(function(result)
 			rw.core:DevPrint("Easy MySQL has successfully read the data!");
 

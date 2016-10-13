@@ -58,17 +58,17 @@ chatbox.oldAddText 	= chatbox.oldAddText or chat.AddText;
 -- A function to add text to the chat box.
 function chat.AddText(...)
 	plugin.Call("ChatAddText", ...);
-	
+
 	chatbox.AddText(...);
 end;
 
 function chatbox.GetLineCount()
 	local lines = 0;
-	
+
 	for k, v in ipairs(chatbox.history) do
 		lines = lines + (v.lineCount or 1);
 	end;
-	
+
 	return lines;
 end;
 
@@ -88,19 +88,19 @@ chatbox.curAlpha = chatbox.curAlpha or 255;
 
 function chatbox.AddFilter(id, callback)
 	if (!id or id == "") then return; end;
-	
+
 	chatbox.filters[id] = callback;
 end;
 
 function chatbox.AddType(id, callback)
 	if (!id or id == "") then return; end;
-	
+
 	chatbox.types[id] = callback;
 end;
 
 function chatbox.GetFilter(id)
 	if (!id or id == "") then return; end;
-	
+
 	if (chatbox.filters[id]) then
 		return chatbox.filters[id];
 	else
@@ -110,7 +110,7 @@ end;
 
 function chatbox.GetType(id)
 	if (!id or id == "") then return; end;
-	
+
 	if (chatbox.types[id]) then
 		return chatbox.types[id];
 	end;
@@ -134,7 +134,7 @@ end;
 		rich = bool, -- force the bbcode parser on/off
 		translate = bool -- whether or not to translate the message using #phrases system
 	}
-	
+
 	display table prototype:
 chatbox.display[1] = {
 	[1] = { 0, LocalPlayer(), Color(255, 255, 255), "[SendTime:"..os.time().."]", "[icon:icon16/shield.png]", Color(255, 0, 0), "[SenderAvatar]", "[OOC] ", Color(255, 255, 255), "Mr. Meow: ", "Test message Test Message"},
@@ -152,12 +152,12 @@ do
 		messageData.translate = messageData.translate or true;
 		messageData.type = messageData.type or "default";
 	end);
-	
+
 	chatbox.AddFilter("system", function(messageData)
 		-- system messages define this table themselves
 		messageData.type = messageData.type or "system";
 	end);
-	
+
 	chatbox.AddFilter("ooc", function(messageData)
 		messageData.drawAvatar = true;
 		messageData.drawTime = true;
@@ -168,7 +168,7 @@ do
 		messageData.translate = false;
 		messageData.type = "ooc";
 	end);
-	
+
 	chatbox.AddFilter("admin", function(messageData)
 		messageData.drawAvatar = true;
 		messageData.drawTime = true;
@@ -179,7 +179,7 @@ do
 		messageData.translate = false;
 		messageData.type = "admin";
 	end);
-	
+
 	chatbox.AddFilter("ic", function(messageData)
 		messageData.drawAvatar = false;
 		messageData.drawTime = true;
@@ -190,7 +190,7 @@ do
 		messageData.translate = false;
 		messageData.type = "ic";
 	end);
-	
+
 	chatbox.AddFilter("looc", function(messageData)
 		messageData.drawAvatar = false;
 		messageData.drawTime = true;
@@ -201,7 +201,7 @@ do
 		messageData.translate = false;
 		messageData.type = "looc";
 	end);
-	
+
 	chatbox.AddFilter("player_events", function(messageData)
 		messageData.drawAvatar = false;
 		messageData.drawTime = messageData.drawTime or true;
@@ -222,38 +222,38 @@ do
 	chatbox.AddType("default", function(messageData)
 		messageData.textColor = messageData.textColor or Color(255, 255, 255);
 	end);
-	
+
 	chatbox.AddType("system", function(messageData)
 		messageData.textColor = messageData.textColor or Color(255, 255, 255);
 	end);
-	
+
 	chatbox.AddType("ooc", function(messageData)
 		messageData.textColor = Color(255, 255, 255);
 		messageData.prefix = "[OOC] ";
 		messageData.prefixColor = Color(255, 20, 20);
 	end);
-	
+
 	chatbox.AddType("admin", function(messageData)
 		messageData.textColor = messageData.textColor or Color("#F0AAAA");
 		messageData.prefix = messageData.prefix or "* [Admin Chat] ";
 		messageData.prefixColor = Color(255, 20, 20);
 	end);
-	
+
 	chatbox.AddType("pm", function(messageData)
 		messageData.prefix = "[PM] ";
 		messageData.prefixColor = Color("#65DBAC");
 	end);
-	
+
 	chatbox.AddType("ic", function(messageData)
 		messageData.textColor = messageData.textColor or Color(255, 255, 200);
 	end);
-	
+
 	chatbox.AddType("player_events", function(messageData)
 		messageData.textColor = messageData.textColor or Color("#EE4343");
 		messageData.prefix = messageData.prefix or nil;
 		messageData.prefixColor = messageData.prefixColor or Color(255, 20, 20);
 	end);
-	
+
 	chatbox.AddType("looc", function(messageData)
 		messageData.textColor = Color(255, 255, 255);
 		messageData.prefix = "[LOOC] ";
@@ -267,7 +267,7 @@ end;
 
 function chatbox.AddBBCode(id, callback, requireRich)
 	if (!id or id == "") then return; end;
-	
+
 	chatbox.codes[id] = chatbox.codes[id] or {};
 	chatbox.codes[id].Callback = callback;
 	chatbox.codes[id].requireRich = requireRich or true;
@@ -285,7 +285,7 @@ function chatbox.ParseBBCodes(line, rich)
 	if (chatbox.LastBBCode) then
 		table.insert(line, 1, chatbox.LastBBCode);
 	end;
-	
+
 	for k, v in ipairs(line) do
 		if (typeof(v) == "string") then
 			local whole = v;
@@ -394,7 +394,7 @@ do
 			return Color((tonumber(exploded[1]) or 255), (tonumber(exploded[2]) or 255), (tonumber(exploded[3]) or 255), (tonumber(exploded[4]) or 255));
 		end;
 	end);
-	
+
 	chatbox.AddBBCode("/color", function(code, text)
 		return Color(255, 255, 255);
 	end);
@@ -407,22 +407,22 @@ end;
 function chatbox.WrapText(msgData, maxWidth, initWidth)
 	local text = msgData.text;
 	local wrapped = {};
-	
+
 	if (msgData.translate) then
 		-- Attempt to translate the text before parsing.
 		-- System messages often contain phrases, and line wrapping won't work unless we translate the
 		-- phrases, duh.
 		text = rw.lang:TranslateText(text);
 	end;
-	
+
 	local parsed = {text};
 	chatbox.ParseBBCodes(parsed, msgData.rich)
-	
+
 	local curWidth = initWidth or 0;
 	local curText = "";
 	local spaceWidth = util.GetTextSize("reChatFont", " ");
 	local dashWidth = util.GetTextSize("reChatFont", "-");
-	
+
 	for key, val in ipairs(parsed) do
 		if (typeof(val) == "string") then
 			local exploded = string.Explode(" ", val);
@@ -488,13 +488,13 @@ function chatbox.WrapText(msgData, maxWidth, initWidth)
 			table.insert(wrapped, val);
 		end;
 	end;
-	
+
 	-- insert the leftover text.
 	if (curText != "") then
 		table.insert(wrapped, "std::endl");
 		table.insert(wrapped, curText);
 	end;
-	
+
 	return wrapped;
 end;
 
@@ -503,23 +503,23 @@ g_DisplayY = g_DisplayY or 0;
 function chatbox.ParseText(messageData)
 	local parsed = {};
 	local msgWidth = 0;
-	
+
 	messageData.filter = messageData.filter or "ooc";
-	
+
 	plugin.Call("ChatboxPreProcess", messageData);
-	
+
 	chatbox.GetFilter(messageData.filter)(messageData);
 	chatbox.GetType(messageData.type)(messageData);
-	
+
 	plugin.Call("PreChatboxParse", messageData);
-	
+
 	parsed[1] = parsed[1] or {};
 	table.insert(parsed[1], g_DisplayY);
-	
+
 	if (messageData.isPlayerMessage and IsValid(messageData.sender)) then
 		table.insert(parsed[1], messageData.sender);
 	end;
-	
+
 	if (messageData.drawTime) then
 		-- I know this is STUPID as heck, but for some reason
 		-- if we don't store the value beforehand Lua will throw
@@ -531,12 +531,12 @@ function chatbox.ParseText(messageData)
 		table.insert(parsed[1], " - ");
 		msgWidth = msgWidth + 50;
 	end;
-	
+
 	if (messageData.icon and messageData.icon != "") then
 		table.insert(parsed[1], "[icon:"..messageData.icon.."]");
 		msgWidth = msgWidth + 20;
 	end;
-	
+
 	if (messageData.drawAvatar and IsValid(messageData.sender)) then
 		if (!file.Exists("reavatars/"..messageData.sender:SteamID64()..".jpg", "DATA")) then
 			if (!file.Exists("reavatars", "DATA")) then
@@ -560,7 +560,7 @@ function chatbox.ParseText(messageData)
 		table.insert(parsed[1], "[SenderAvatar]");
 		msgWidth = msgWidth + 20;
 	end;
-	
+
 	if (messageData.prefix) then
 		-- Prefix may contain phrases!
 		messageData.prefix = rw.lang:TranslateText(messageData.prefix);
@@ -571,7 +571,7 @@ function chatbox.ParseText(messageData)
 		local wide = util.GetTextSize("reChatFont", messageData.prefix);
 		msgWidth = msgWidth + wide;
 	end;
-	
+
 	if (messageData.isPlayerMessage) then
 		if (IsValid(messageData.sender)) then
 			messageData.playerTeam = messageData.sender:Team();
@@ -605,7 +605,7 @@ function chatbox.ParseText(messageData)
 		local wide = util.GetTextSize("reChatFont", messageData.playerName..(messageData.suffix or ": "));
 		msgWidth = msgWidth + wide;
 	end;
-	
+
 	if (messageData.text) then
 		local wrapped = chatbox.WrapText(messageData, chatbox.width - 8, msgWidth);
 		local curLine = 1;
@@ -639,11 +639,11 @@ function chatbox.ParseText(messageData)
 			end;
 		end;
 	end;
-	
+
 	chatbox.LastBBCode = nil;
-	
+
 	plugin.Call("PostChatboxParse", parsed);
-	
+
 	return parsed;
 end;
 
@@ -665,12 +665,12 @@ function PANEL:Init()
 
 	self.scrollBar = vgui.Create("Panel", self);
 	self.scrollBar:SetMouseInputEnabled(true);
-	
+
 	self.scrollBar.Think = function(sb)
 		sb:SetSize(self:GetWide(), self:GetTall());
 		sb:SetPos(0, 0);
 	end;
-	
+
 	self.scrollBar.OnMouseWheeled = function(sb, delta)
 		-- prettiest code contest 2k16 lmao
 		self.scrollOffset = math.Clamp(self.scrollOffset + delta, 0, math.Clamp(chatbox.GetLineCount() - 19, 0, chatbox.GetLineCount()));
@@ -727,7 +727,7 @@ function PANEL:Paint(w, h)
 	local offX = 4;
 	local offY = 0;
 	local curSender = nil;
-	
+
 	for k, v in ipairs(chatbox.display) do
 		if ((os.time() - v._METADATA.time) < 8 or self.isOpen) then
 			for k2, v2 in pairs(v) do
@@ -781,7 +781,7 @@ function PANEL:Paint(w, h)
 			end;
 		end;
 	end;
-	
+
 	if (chatbox.IsTypingCommand()) then
 		local splitTable = string.Explode(" ", string.utf8sub(chatbox.GetCurrentText(), 2));
 		local commands = {};
@@ -898,11 +898,11 @@ end;
 
 function PANEL:OnEnter()
 	local text = self:GetValue();
-	
+
 	netstream.Start("ChatboxTextEntered", text);
-	
+
 	plugin.Call("ChatBoxTextTyped", text);
-	
+
 	self:SetText("");
 
 	if (!rw.tabMenu) then
@@ -915,7 +915,7 @@ end;
 function PANEL:Think()
 	self:SetSize(chatbox.width, 24);
 	self:SetPos(0, chatbox.height - 24);
-	
+
 	local maxChatLength = rw.config:Get("max_chat_length") or 256;
 	local text = self:GetValue();
 
@@ -1076,11 +1076,11 @@ function chatbox.UpdateDisplay()
 	local i = 1;
 	local textW, textH = util.GetTextSize("reChatFont", "asdf1234");
 	local maxMessages = math.floor(chatbox.height * 0.85 / textH);
-	
+
 	g_DisplayY = (maxMessages - 2) * 20;
 	chatbox.display = {};
 	local curMsg = 0;
-	
+
 	for k, v in SortedPairs(chatbox.history, true) do
 		if (curMsg < chatbox.panel.scrollOffset) then
 			--nothing

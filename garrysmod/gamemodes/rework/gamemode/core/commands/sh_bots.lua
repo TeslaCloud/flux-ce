@@ -11,7 +11,7 @@ COMMAND.aliases = {"botfreeze", "freezebot", "bot_freeze", "bot_zombie"};
 
 function COMMAND:OnRun(player)
 	rw.player:NotifyAll(L("FreezeBotsMessage", (IsValid(player) and player:Name()) or "Console"));
-	
+
 	RunConsoleCommand("bot_zombie", 1);
 end;
 
@@ -25,7 +25,7 @@ COMMAND.aliases = {"botunfreeze", "unfreezebot", "bot_unfreeze", "bot_unzombie"}
 
 function COMMAND:OnRun(player)
 	rw.player:NotifyAll(L("UnfreezeBotsMessage", (IsValid(player) and player:Name()) or "Console"));
-	
+
 	RunConsoleCommand("bot_zombie", 0);
 end;
 
@@ -43,7 +43,7 @@ function COMMAND:OnRun(player, numBots)
 	numBots = math.Clamp((tonumber(numBots) or 1), 1, 128);
 
 	rw.player:NotifyAll(L("AddBotsMessage", (IsValid(player) and player:Name()) or "Console", numBots));
-	
+
 	timer.Create("ADD_BOTS", 0.2, numBots, function()
 		RunConsoleCommand("bot");
 	end);
@@ -59,7 +59,7 @@ COMMAND.aliases = {"botkick", "kickbot", "bot_kick"};
 
 function COMMAND:OnRun(player)
 	rw.player:NotifyAll(L("KickBotsMessage", (IsValid(player) and player:Name()) or "Console"));
-	
+
 	for k, v in ipairs(_player.GetAll()) do
 		if (v:IsBot()) then
 			v:Kick("Kicking bots");

@@ -14,5 +14,5 @@ local SUPERADMIN = Group("superadmin");
 		server_management = PERM_ALLOW,
 		player_management = PERM_ALLOW
 	})
-	
+
 SUPERADMIN:Register();

@@ -290,16 +290,13 @@ local colorBlue = Color(30, 100, 200);
 rw.bars:Register("health", {
 	text = "HEALTH",
 	color = Color(200, 40, 40),
-	maxValue = 100,
-	height = 18
+	maxValue = 100
 }, true);
 
 rw.bars:Register("armor", {
 	text = "armor",
 	color = Color(80, 80, 220),
-	maxValue = 100,
-	value = 60,
-	height = 18
+	maxValue = 100
 }, true);
 
 -- Called when the player's HUD is drawn.

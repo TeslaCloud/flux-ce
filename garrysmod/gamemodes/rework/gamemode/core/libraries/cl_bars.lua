@@ -42,12 +42,15 @@ function rw.bars:Register(uniqueID, data, force)
 		y = data.y or self.defaultY,
 		width = data.width or self.defaultW,
 		height = data.height or self.defaultH,
-		cornerRadius = data.cornerRadius or 2,
+		cornerRadius = data.cornerRadius or 4,
 		priority = data.priority or table.Count(stored),
 		type = data.type or BAR_TOP,
 		font = data.font or "bar_text",
-		spacing = data.spacing or self.defaultSpacing
+		spacing = data.spacing or self.defaultSpacing,
+		textOffset = data.textOffset or 0
 	};
+
+	plugin.Call("OnBarRegistered", stored[uniqueID], uniqueID, force);
 
 	return stored[uniqueID];
 end;
@@ -64,10 +67,27 @@ function rw.bars:SetValue(uniqueID, newValue)
 	local bar = self:Get(uniqueID);
 
 	if (bar) then
+		plugin.Call("PreBarValueSet", bar, bar.value, newValue);
+
 		if (bar.value != newValue) then
-			bar.oldValue = bar.value;
-			bar.interpolated = util.EaseInOutTable(100, bar.oldValue, newValue);
+			if (bar.hinderDisplay and bar.hinderValue) then
+				bar.value = math.Clamp(newValue, 0, bar.maxValue - bar.hinderValue + 2);
+			end;
+
+			bar.interpolated = util.EaseInOutTable(100, bar.value, newValue);
 			bar.value = math.Clamp(newValue, 0, bar.maxValue);
+		end
+	end
+end;
+
+function rw.bars:HinderValue(uniqueID, newValue)
+	local bar = self:Get(uniqueID);
+
+	if (bar) then
+		plugin.Call("PreBarHinderValueSet", bar, bar.hinderValue, newValue);
+
+		if (bar.value != newValue) then
+			bar.hinderValue = math.Clamp(newValue, 0, bar.maxValue);
 		end
 	end
 end;
@@ -76,6 +96,12 @@ function rw.bars:Prioritize()
 	sorted = {};
 
 	for k, v in pairs(stored) do
+		if (!plugin.Call("ShouldDrawBar", v)) then
+			continue;
+		end;
+
+		plugin.Call("PreBarPrioritized", v);
+
 		sorted[v.priority] = sorted[v.priority] or {};
 
 		if (v.type == BAR_TOP) then
@@ -90,13 +116,21 @@ function rw.bars:Position()
 	self:Prioritize();
 
 	local lastY = self.defaultY;
+	local lastX = self.defaultX;
 
 	for priority, ids in pairs(sorted) do
 		for k, v in pairs(ids) do
 			local bar = self:Get(v);
 
-			bar.y = lastY;
-			lastY = lastY + bar.height + bar.spacing;
+			if (bar) then
+				local offX, offY = plugin.Call("AdjustBarPos", bar);
+				offX = offX or 0;
+				offY = offY or 0;
+
+				bar.y = lastY + offY;
+				bar.x = bar.x + offX;
+				lastY = lastY + bar.height + bar.spacing;
+			end;
 		end
 	end;
 
@@ -108,7 +142,7 @@ function rw.bars:Draw(uniqueID)
 	if (barInfo) then
 		plugin.Call("PreDrawBar", barInfo);
 
-		if (!plugin.Call("ShouldDrawBar", barInfo) and (barInfo.display < barInfo.value or barInfo.minDisplay >= barInfo.value)) then
+		if (!plugin.Call("ShouldDrawBar", barInfo)) then
 			return;
 		end;
 
@@ -126,7 +160,7 @@ function rw.bars:Draw(uniqueID)
 			end;
 		end;
 
-		if (barInfo.hinderDisplay) then
+		if (barInfo.hinderDisplay and barInfo.hinderDisplay <= barInfo.hinderValue) then
 			if (!plugin.Call("DrawBarHindrance", barInfo)) then
 				local length = width * (barInfo.hinderValue / barInfo.maxValue);
 
@@ -135,13 +169,14 @@ function rw.bars:Draw(uniqueID)
 		end;
 
 		if (!plugin.Call("DrawBarTexts", barInfo)) then
-			draw.SimpleText(barInfo.text, barInfo.font, barInfo.x + 4, barInfo.y, Color(255, 255, 255));
+			draw.SimpleText(barInfo.text, barInfo.font, barInfo.x + 8, barInfo.y + barInfo.textOffset, Color(255, 255, 255));
 
-			if (barInfo.hinderDisplay) then
+			if (barInfo.hinderDisplay and barInfo.hinderDisplay <= barInfo.hinderValue) then
 				local textWide = util.GetTextSize(barInfo.font, barInfo.hinderText);
+				local length = width * (barInfo.hinderValue / barInfo.maxValue);
 
 				render.SetScissorRect(barInfo.x + width - length, barInfo.y, barInfo.x + width, barInfo.y + height, true);
-					draw.SimpleText(barInfo.hinderText, barInfo.font, barInfo.x + width - textWide - 8, barInfo.y - 1, Color(255, 255, 255));
+					draw.SimpleText(barInfo.hinderText, barInfo.font, barInfo.x + width - textWide - 8, barInfo.y + barInfo.textOffset, Color(255, 255, 255));
 				render.SetScissorRect(0, 0, 0, 0, false);
 			end
 		end;
@@ -184,6 +219,14 @@ do
 
 		bar.text = string.utf8upper(rw.lang:TranslateText(bar.text));
 		bar.hinderText = string.utf8upper(rw.lang:TranslateText(bar.hinderText));
+	end;
+
+	function rwBars:ShouldDrawBar(bar)
+		if (bar.display < bar.value or bar.minDisplay >= bar.value) then
+			return false;
+		end
+
+		return true;
 	end;
 
 	plugin.AddHooks("RWBarHooks", rwBars);
