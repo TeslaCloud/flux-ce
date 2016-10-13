@@ -15,11 +15,14 @@ local blockedWeapons = {
 	"weapon_physcannon"
 }
 
-function playerMeta:SetWeaponRaised(bIsRaised)
-	print("Weapon raised: "..tostring(bIsRaised));
+local rotationTranslate = {
+	["default"] = Angle(30, -30, -25),
+	["weapon_fists"] = Angle(30, -30, -50)
+}
 
+function playerMeta:SetWeaponRaised(bIsRaised)
 	if (SERVER) then
-		self:SetNetVar("WeaponRaised", bIsRaised);
+		self:SetDTBool(BOOL_WEAPON_RAISED, bIsRaised);
 	end;
 end;
 
@@ -40,7 +43,7 @@ function playerMeta:IsWeaponRaised()
 		return shouldRaise;
 	end;
 
-	return self:GetNetVar("WeaponRaised", false);
+	return self:GetDTBool(BOOL_WEAPON_RAISED);
 end;
 
 function playerMeta:ToggleWeaponRaised()
@@ -79,6 +82,10 @@ function PLUGIN:PlayerSwitchWeapon(player, oldWeapon, newWeapon)
 	player:SetWeaponRaised(false);
 end;
 
+function PLUGIN:PlayerSetupDataTables(player)
+	player:DTVar("Bool", BOOL_WEAPON_RAISED, "WeaponRaised");
+end;
+
 if (CLIENT) then
 	-- Taken from NutScript. Rewriting needed, duh.
 	function PLUGIN:CalcViewModelView(weapon, viewModel, oldEyePos, oldEyeAngles, eyePos, eyeAngles)
@@ -86,37 +93,37 @@ if (CLIENT) then
 			return;
 		end;
 
-		local targetVal = 0
+		local targetVal = 0;
 
 		if (!rw.client:IsWeaponRaised()) then
-			targetVal = 100
-		end
+			targetVal = 100;
+		end;
 
-		local fraction = (rw.client.curRaisedVal or 0) / 100;
-		local rotation = Angle(30, -30, -25);
+		local fraction = (rw.client.curRaisedFrac or 0) / 100;
+		local rotation = rotationTranslate[weapon:GetClass()] or rotationTranslate["default"];
 		
 		eyeAngles:RotateAroundAxis(eyeAngles:Up(), rotation.p * fraction);
 		eyeAngles:RotateAroundAxis(eyeAngles:Forward(), rotation.y * fraction);
 		eyeAngles:RotateAroundAxis(eyeAngles:Right(), rotation.r * fraction);
 
-		rw.client.curRaisedVal = Lerp(FrameTime() * 2, rw.client.curRaisedVal or 0, targetVal)
+		rw.client.curRaisedFrac = Lerp(FrameTime() * 2, rw.client.curRaisedFrac or 0, targetVal);
 
-		viewModel:SetAngles(eyeAngles)
+		viewModel:SetAngles(eyeAngles);
 
 		if (weapon.GetViewModelPosition) then
-			local position, angles = weapon:GetViewModelPosition(eyePos, eyeAngles)
+			local position, angles = weapon:GetViewModelPosition(eyePos, eyeAngles);
 
-			oldEyePos = position or oldEyePos
-			eyeAngles = angles or eyeAngles
+			oldEyePos = position or oldEyePos;
+			eyeAngles = angles or eyeAngles;
 		end
 		
 		if (weapon.CalcViewModelView) then
-			local position, angles = weapon:CalcViewModelView(viewModel, oldEyePos, oldEyeAngles, eyePos, eyeAngles)
+			local position, angles = weapon:CalcViewModelView(viewModel, oldEyePos, oldEyeAngles, eyePos, eyeAngles);
 
-			oldEyePos = position or oldEyePos
-			eyeAngles = angles or eyeAngles
-		end
+			oldEyePos = position or oldEyePos;
+			eyeAngles = angles or eyeAngles;
+		end;
 
-		return oldEyePos, eyeAngles
+		return oldEyePos, eyeAngles;
 	end;
 end;

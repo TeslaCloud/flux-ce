@@ -24,6 +24,8 @@ function rePlayer:SetupDataTables()
 	end;
 
 	self.Player:DTVar("Bool", BOOL_INITIALIZED, "Initialized");
+
+	plugin.Call("PlayerSetupDataTables", self.Player);
 end;
 
 -- Called on player spawn to determine which hand model to use.

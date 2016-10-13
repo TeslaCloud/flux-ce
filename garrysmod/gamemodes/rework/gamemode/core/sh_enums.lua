@@ -1,5 +1,6 @@
 -- DTVars
 BOOL_INITIALIZED = 0;
+BOOL_WEAPON_RAISED = 1;
 
 -- Permissions
 PERM_NO = 0;				-- Not Set (no), means that this user has no permission.
