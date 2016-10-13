@@ -191,6 +191,14 @@ function rw.bars:DrawTopBars()
 	end;
 end;
 
+function rw.bars:Adjust(uniqueID, data)
+	local bar = self:Get(uniqueID);
+
+	if (bar) then
+		table.Merge(bar, data);
+	end;
+end;
+
 do
 	local rwBars = {};
 

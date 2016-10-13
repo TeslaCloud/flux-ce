@@ -41,6 +41,10 @@ lang["#DemoteCMD_Description"] = "Demote a player to user.";
 lang["#DemoteCMD_Syntax"] = "<target>";
 lang["#DemoteCMD_Message"] = "#1 has demoted #2 from #3 to user.";
 
+lang["#CharSetName_Description"] = "Set character's name.";
+lang["#CharSetName_Syntax"] = "<target> <new name>";
+lang["#CharSetName_Message"] = "#1 has set #2's name to #3.";
+
 lang["#Settings_Dashboard"] = "Dashboard";
 lang["#Settings_Theme"] = "Theme";
 lang["#Settings_AdminESP"] = "Admin ESP";

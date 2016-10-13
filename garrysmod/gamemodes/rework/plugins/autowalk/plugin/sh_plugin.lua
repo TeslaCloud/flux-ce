@@ -48,5 +48,5 @@ else
 		moveData:SetForwardSpeed(moveData:GetMaxSpeed());
 	end;
 
-	rw.binds.AddBind("ToggleAutoWalk", "toggleautowalk", KEY_B);
+	rw.binds:AddBind("ToggleAutoWalk", "toggleautowalk", KEY_B);
 end;

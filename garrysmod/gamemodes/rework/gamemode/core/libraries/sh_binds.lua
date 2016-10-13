@@ -22,15 +22,15 @@ if (CLIENT) then
 		end;
 	end;
 
-	function rw.binds.GetEnums()
+	function rw.binds:GetEnums()
 		return keyEnums;
 	end;
 
-	function rw.binds.GetStored()
+	function rw.binds:GetStored()
 		return stored;
 	end;
 
-	function rw.binds.GetBound()
+	function rw.binds:GetBound()
 		local binds = {};
 
 		for k, v in pairs(keyEnums) do
@@ -44,7 +44,7 @@ if (CLIENT) then
 		return binds;
 	end;
 
-	function rw.binds.GetUnbound()
+	function rw.binds:GetUnbound()
 		local binds = {};
 
 		for k, v in pairs(keyEnums) do
@@ -58,11 +58,11 @@ if (CLIENT) then
 		return binds;
 	end;
 
-	function rw.binds.GetBind(nKey)
+	function rw.binds:GetBind(nKey)
 		return stored[nKey];
 	end;
 
-	function rw.binds.SetBind(command, nKey)
+	function rw.binds:SetBind(command, nKey)
 		for k, v in pairs(stored) do
 			if (v == command) then
 				stored[k] = nil;
@@ -72,9 +72,9 @@ if (CLIENT) then
 		stored[nKey] = command;
 	end;
 
-	function rw.binds.AddBind(id, command, default, visibleCallback)
+	function rw.binds:AddBind(id, command, default, visibleCallback)
 		rw.settings.AddSetting("Binds", id, default, nil, true, "rwBindSelect", {command = command}, nil, visibleCallback);
-		rw.binds.SetBind(command, rw.settings.GetNumber(id));
+		self:SetBind(command, rw.settings.GetNumber(id));
 	end;
 end;
 
@@ -97,7 +97,7 @@ else
 	end;
 
 	netstream.Hook("RWBindPressed", function(nKey)
-		local bind = rw.binds.GetBind(nKey);
+		local bind = rw.binds:GetBind(nKey);
 
 		if (bind) then
 			RunConsoleCommand(bind);

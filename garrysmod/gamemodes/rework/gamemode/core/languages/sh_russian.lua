@@ -11,6 +11,8 @@ lang["#Commands_PlayerInvalid"] = "'#1' не является игроком!";
 lang["#Commands_HigherImmunity"] = "#1 имеет более высокий иммунитет, чем вы!";
 lang["#Err_GroupNotValid"] = "'#1' не является группой пользователя!";
 
+lang["#FreezeBotsMessage"] = "#1 заморозил всех ботов.";
+lang["#UnfreezeBotsMessage"] = "#1 разморозил всех ботов.";
 lang["#KickMessage"] = "#1 кикнул #2. (#3)";
 lang["#AddBotsMessage"] = "#1 добавил #2 ботов на сервер.";
 lang["#KickBotsMessage"] = "#1 кикнул всех ботов.";
@@ -39,9 +41,16 @@ lang["#DemoteCMD_Description"] = "Понижает игрока до польз�
 lang["#DemoteCMD_Syntax"] = "<игрок>";
 lang["#DemoteCMD_Message"] = "#1 понизил #2 с #3 до пользователя.";
 
-lang["#Settings_Dashboard"] = "TAB меню";
-lang["#Settings_Theme"] = "Оформление";
-lang["#Settings_AdminESP"] = "ESP администратора";
+lang["#CharSetName_Description"] = "Выставляет имя персонажа.";
+lang["#CharSetName_Syntax"] = "<игрок> <новое имя>";
+lang["#CharSetName_Message"] = "#1 сменил имя #2 на #3.";
+
+lang["#Settings_Dashboard"] = "Меню";
+lang["#Settings_Theme"] = "Тема";
+lang["#Settings_AdminESP"] = "ESP Админа";
+lang["#Settings_Binds"] = "Клавиши";
+lang["#Settings_General"] = "Общее";
+lang["#Settings_HUD"] = "HUD";
 
 lang["#Settings_BackgroundURL"] = "Введите ссылку на картинку для фона.";
 lang["#Settings_BackgroundColor"] = "Цвет фона TAB меню:";

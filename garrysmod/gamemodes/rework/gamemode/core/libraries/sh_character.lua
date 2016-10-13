@@ -82,6 +82,24 @@ if (SERVER) then
 			rw.db:EasyWrite("rw_characters", {"uniqueID", index}, toSave);
 		plugin.Call("PostSaveCharacter", player, index);
 	end;
+
+	function character.Get(player, index)
+		if (stored[player:SteamID()][index]) then
+			return stored[player:SteamID()][index];
+		end
+	end;
+
+	function character.SetName(player, index, newName)
+		local char = character.Get(player, index);
+
+		if (char) then
+			char.name = newName or char.name;
+
+			player:SetNetVar("CharacterName", char.name);
+
+			character.Save(player, index);
+		end;
+	end;
 else
 	netstream.Hook("rw_loadcharacters", function(data)
 		stored[rw.client:SteamID()] = stored[rw.client:SteamID()] or {};
@@ -124,6 +142,8 @@ if (SERVER) then
 
 		charData.data = charData.data or {};
 		charData.data[key] = value;
+
+		character.Save(player, charData.uniqueID);
 
 		self:SetNetVar("CharacterData", charData.data);
 	end;

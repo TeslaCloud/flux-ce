@@ -76,5 +76,5 @@ else
 		return view;
 	end;
 
-	rw.binds.AddBind("ToggleThirdPerson", "rwThirdPerson", KEY_X);
+	rw.binds:AddBind("ToggleThirdPerson", "rwThirdPerson", KEY_X);
 end;

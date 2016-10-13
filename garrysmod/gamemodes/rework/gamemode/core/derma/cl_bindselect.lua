@@ -28,7 +28,7 @@ end;
 function PANEL:SetBind(nKey)
 	if (self.setting) then
 		rw.settings.SetValue(self.setting.id, nKey);
-		rw.binds.SetBind(self.setting.info.command, nKey);
+		rw.binds:SetBind(self.setting.info.command, nKey);
 
 		self.waitPress = false;
 	end;
@@ -44,7 +44,7 @@ function PANEL:Paint(w, h)
 	if (self.waitPress) then
 		text = "Press a key to bind or mouse away to cancel.";
 	elseif (value and value > 0) then
-		text = string.gsub(string.gsub(rw.binds.GetEnums()[value], "KEY_", ""), "_", " ");
+		text = string.gsub(string.gsub(rw.binds:GetEnums()[value], "KEY_", ""), "_", " ");
 
 		if (text == "COUNT") then
 			text = "MOUSE LEFT";

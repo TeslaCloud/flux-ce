@@ -4,8 +4,10 @@
 --]]
 
 library.New("command", rw);
-rw.command.stored = rw.command.stored or {};
-rw.command.aliases = rw.command.aliases or {};
+local stored = rw.command.stored or {};
+local aliases = rw.command.aliases or {};
+rw.command.stored = stored;
+rw.command.aliases = aliases;
 
 function rw.command:Create(id, data)
 	data.uniqueID = id:utf8lower();
@@ -13,17 +15,17 @@ function rw.command:Create(id, data)
 	data.description = data.description or "An undescribed command.";
 	data.syntax = data.syntax or "[none]";
 	data.immunity = data.immunity or false;
-	data.playerArg = nil;
+	data.playerArg = data.playerArg or nil;
 	data.arguments = data.arguments or 0;
 
-	self.stored[id] = data;
+	stored[id] = data;
 
 	-- Add original command name to aliases table.
-	self.aliases[id] = id:utf8lower();
+	aliases[id] = id:utf8lower();
 
 	if (data.aliases) then
 		for k, v in ipairs(data.aliases) do
-			self.aliases[v] = id;
+			aliases[v] = id;
 		end;
 	end;
 
@@ -33,12 +35,12 @@ end;
 function rw.command:Find(id)
 	id = id:utf8lower();
 
-	if (self.stored[id]) then return self.stored[id]; end;
-	if (self.aliases[id]) then return self.stored[self.aliases[id]]; end;
+	if (stored[id]) then return stored[id]; end;
+	if (aliases[id]) then return stored[aliases[id]]; end;
 
-	for k, v in pairs(self.aliases) do
+	for k, v in pairs(aliases) do
 		if (k:find(id)) then
-			return self.stored[v];
+			return stored[v];
 		end;
 	end;
 end;
@@ -46,15 +48,15 @@ end;
 function rw.command:FindByID(id)
 	id = id:utf8lower();
 
-	if (self.stored[id]) then return self.stored[id]; end;
-	if (self.aliases[id]) then return self.stored[self.aliases[id]]; end;
+	if (stored[id]) then return stored[id]; end;
+	if (aliases[id]) then return stored[aliases[id]]; end;
 end;
 
 -- A function to find all commands by given search string.
 function rw.command:FindAll(id)
 	local hits = {};
 
-	for k, v in pairs(self.aliases) do
+	for k, v in pairs(aliases) do
 		if (k:find(id) or v:find(id)) then
 			table.insert(hits, v);
 		end;
