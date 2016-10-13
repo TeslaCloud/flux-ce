@@ -8,7 +8,9 @@ function GM:PostRestoreCharacters(player)
 end;
 
 function GM:PlayerSetModel(player)
-	player:SetModel("models/humans/group01/male_0"..math.random(1, 8)..".mdl");
+	if (player:HasInitialized()) then
+		player:SetModel(player:GetNetVar("ModelPath"));
+	end;
 end;
 
 function GM:PlayerInitialSpawn(player)

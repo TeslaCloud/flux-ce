@@ -83,7 +83,11 @@ function GM:TranslateActivity(player, act)
 
 				-- todo: weapon raise system
 				if (type(anim) == "table") then
-					anim = anim[1]; -- always raised
+					if (plugin.Call("ModelWeaponRaised", player, model)) then
+						anim = anim[2];
+					else
+						anim = anim[1];
+					end;
 				end;
 
 				if (type(anim) == "string") then
