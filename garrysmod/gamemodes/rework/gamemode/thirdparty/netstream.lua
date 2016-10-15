@@ -1,7 +1,11 @@
---[[ 
-	Netstream © Alex Grist
-	Distributed under MIT license.
-	http://github.com/alexgrist/netstream
+--[[
+	NetStream - 2.1.0
+	Alexander Grist-Hucker
+	http://www.revotech.org
+	
+	Credits to:
+		thelastpenguin for pON.
+		https://github.com/thelastpenguin/gLUA-Library/tree/master/pON
 --]]
 
 local net = net;
@@ -12,6 +16,7 @@ local type = type;
 local util = util;
 
 netstream = netstream or {};
+
 local stored = netstream.stored or {};
 netstream.stored = stored;
 

@@ -386,7 +386,7 @@ function string.FindAll(str, pattern)
 end;
 
 function string.IsCommand(str)
-	for k, v in ipairs(rw.config:Get("command_prefixes")) do
+	for k, v in ipairs(config.Get("command_prefixes")) do
 		if (str:StartWith(v)) then
 			return true;
 		end;

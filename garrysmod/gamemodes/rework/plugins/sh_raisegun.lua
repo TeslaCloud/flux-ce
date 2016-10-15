@@ -13,12 +13,12 @@ local blockedWeapons = {
 	"gmod_tool",
 	"gmod_camera",
 	"weapon_physcannon"
-}
+};
 
 local rotationTranslate = {
 	["default"] = Angle(30, -30, -25),
 	["weapon_fists"] = Angle(30, -30, -50)
-}
+};
 
 function playerMeta:SetWeaponRaised(bIsRaised)
 	if (SERVER) then
@@ -68,9 +68,15 @@ function PLUGIN:KeyRelease(player, key)
 	end;
 end;
 
-function PLUGIN:StartCommand(player, cmd)
-	if (!player:IsWeaponRaised()) then
-		cmd:RemoveKey(IN_ATTACK + IN_ATTACK2);
+do
+	local attackKeys = IN_ATTACK + IN_ATTACK2;
+
+	function PLUGIN:StartCommand(player, cmd)
+		if (cmd:KeyDown(attackKeys)) then
+			if (!player:IsWeaponRaised()) then
+				cmd:RemoveKey(attackKeys);
+			end;
+		end;
 	end;
 end;
 
@@ -87,7 +93,6 @@ function PLUGIN:PlayerSetupDataTables(player)
 end;
 
 if (CLIENT) then
-	-- Taken from NutScript. Rewriting needed, duh.
 	function PLUGIN:CalcViewModelView(weapon, viewModel, oldEyePos, oldEyeAngles, eyePos, eyeAngles)
 		if (!IsValid(weapon)) then
 			return;

@@ -3,26 +3,26 @@
 	Do not share, re-distribute or sell.
 --]]
 
-rw.config:Set("walk_speed", 100);
-rw.config:Set("run_speed", 200);
-rw.config:Set("crouched_speed", 55);
-rw.config:Set("jump_power", 150);
+config.Set("walk_speed", 100);
+config.Set("run_speed", 200);
+config.Set("crouched_speed", 55);
+config.Set("jump_power", 150);
 
-rw.config:Set("command_prefixes", {"/", "!"});
+config.Set("command_prefixes", {"/", "!"});
 
-rw.config:Set("owner_steamid", "STEAM_0:1:14196407");
-rw.config:Set("owner_steamid_extra", {"STEAM_0:0:00000000", "STEAM_0:0:00000000"});
+config.Set("owner_steamid", "STEAM_0:1:14196407");
+config.Set("owner_steamid_extra", {"STEAM_0:0:00000000", "STEAM_0:0:00000000"});
 
-rw.config:Set("character_min_name_len", 6);
-rw.config:Set("character_min_desc_len", 32);
-rw.config:Set("character_max_name_len", 32);
-rw.config:Set("character_max_desc_len", 256);
+config.Set("character_min_name_len", 6);
+config.Set("character_min_desc_len", 32);
+config.Set("character_max_name_len", 32);
+config.Set("character_max_desc_len", 256);
 
-rw.config:Set("mysql_module", "sqlite");
-rw.config:Set("mysql_host", "127.0.0.1");
-rw.config:Set("mysql_username", "root");
-rw.config:Set("mysql_password", "");
-rw.config:Set("mysql_database", "rework");
-rw.config:Set("mysql_port", 3306);
-rw.config:Set("mysql_socket", nil);
-rw.config:Set("mysql_flags", nil);
+config.Set("mysql_module", "sqlite");
+config.Set("mysql_host", "127.0.0.1");
+config.Set("mysql_username", "root");
+config.Set("mysql_password", "");
+config.Set("mysql_database", "rework");
+config.Set("mysql_port", 3306);
+config.Set("mysql_socket", nil);
+config.Set("mysql_flags", nil);

@@ -8,7 +8,7 @@
 
 library.New("db", rw);
 local QueueTable = {};
-rw.db.Module = rw.db.Module or rw.config:Get("mysql_module") or "sqlite";
+rw.db.Module = rw.db.Module or config.Get("mysql_module") or "sqlite";
 local Connected = false;
 
 if (rw.db.Module != "sqlite") then

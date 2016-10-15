@@ -16,13 +16,13 @@ character.stored = stored;
 local playerMeta = FindMetaTable("Player");
 
 function character.Create(player, data)
-	if (typeof(data.name) != "string" or (data.name:len() < rw.config:Get("character_min_name_len") 
-		or data.name:len() > rw.config:Get("character_max_name_len"))) then
+	if (typeof(data.name) != "string" or (data.name:len() < config.Get("character_min_name_len") 
+		or data.name:len() > config.Get("character_max_name_len"))) then
 		return CHAR_ERR_NAME;
 	end;
 
-	if (typeof(data.physDesc) != "string" or (data.physDesc:len() < rw.config:Get("character_min_desc_len") 
-		or data.physDesc:len() > rw.config:Get("character_max_desc_len"))) then
+	if (typeof(data.physDesc) != "string" or (data.physDesc:len() < config.Get("character_min_desc_len") 
+		or data.physDesc:len() > config.Get("character_max_desc_len"))) then
 		return CHAR_ERR_DESC;
 	end;
 

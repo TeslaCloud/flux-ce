@@ -67,7 +67,7 @@ do
 	-- variables in these 2 filters are locals because we may wanna use them a bit later.
 	chatbox.AddFilter("looc", function(listener, msgData)
 		local pos = msgData.position;
-		local rad = msgData.radius or rw.config:Get("talk_radius") or 356;
+		local rad = msgData.radius or config.Get("talk_radius") or 356;
 		
 		return chatbox.CanHear(listener, pos, rad);
 	end);
@@ -79,14 +79,14 @@ do
 			pos = msgData.sender:GetPos();
 		end;
 		
-		local rad = msgData.radius or rw.config:Get("talk_radius") or 356;
+		local rad = msgData.radius or config.Get("talk_radius") or 356;
 		
 		return chatbox.CanHear(listener, pos, rad);
 	end);
 
 	chatbox.AddFilter("player_events", function(listener, msgData)
 		local pos = msgData.position;
-		local rad = msgData.radius or rw.config:Get("talk_radius") or 356;
+		local rad = msgData.radius or config.Get("talk_radius") or 356;
 		
 		return chatbox.CanHear(listener, pos, rad);
 	end);
@@ -140,7 +140,7 @@ do
 		
 		if (text:StartWith(".//")) then
 			msgData.filter = "looc";
-			msgData.radius = rw.config:Get("talk_radius") or 356; -- todo
+			msgData.radius = config.Get("talk_radius") or 356; -- todo
 			
 			while (text:StartWith(".// ")) do
 				text = ".//"..text:utf8sub(5, text:utf8len());
@@ -158,7 +158,7 @@ do
 		
 		if (text:StartWith("[[")) then
 			msgData.filter = "looc";
-			msgData.radius = rw.config:Get("talk_radius") or 356; -- todo
+			msgData.radius = config.Get("talk_radius") or 356; -- todo
 			
 			while (text:StartWith("[[ ")) do
 				text = "[["..text:utf8sub(4, text:utf8len());
@@ -348,8 +348,8 @@ netstream.Hook("ChatboxTextEntered", function(player, msgText)
 		end;
 	end;
 
-	local prefix = rw.config:Get("command_prefixes")[1];
-	local maxChatLength = rw.config:Get("max_chat_length") or 256;
+	local prefix = config.Get("command_prefixes")[1];
+	local maxChatLength = config.Get("max_chat_length") or 256;
 	local curTime = CurTime();
 
 	if (string.utf8len(message.text) >= maxChatLength) then

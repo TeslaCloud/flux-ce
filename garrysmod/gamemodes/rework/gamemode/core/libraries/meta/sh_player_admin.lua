@@ -22,8 +22,8 @@ function playerMeta:IsCoOwner()
 		return true;
 	end;
 
-	if (rw.config:Get("owner_steamid_extra")) then
-		for k, v in ipairs(rw.config:Get("owner_steamid_extra")) do
+	if (config.Get("owner_steamid_extra")) then
+		for k, v in ipairs(config.Get("owner_steamid_extra")) do
 			if (v == self:SteamID()) then
 				return true;
 			end;

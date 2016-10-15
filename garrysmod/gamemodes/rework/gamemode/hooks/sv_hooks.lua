@@ -17,6 +17,8 @@ function GM:PlayerInitialSpawn(player)
 	player_manager.SetPlayerClass(player, "rePlayer");
 	player_manager.RunClass(player, "Spawn");
 
+	print("playerinitspawn");
+
 	player:SetUserGroup("user");
 
 	rw.player:Restore(player);
@@ -48,11 +50,11 @@ function GM:PlayerDisconnected(player)
 end;
 
 function GM:OnPlayerRestored(player)
-	if (player:SteamID() == rw.config:Get("owner_steamid")) then
+	if (player:SteamID() == config.Get("owner_steamid")) then
 		player:SetUserGroup("owner");
 	end;
 
-	for k, v in ipairs(rw.config:Get("owner_steamid_extra")) do
+	for k, v in ipairs(config.Get("owner_steamid_extra")) do
 		if (v == player:SteamID()) then
 			player:SetUserGroup("owner");
 		end;
@@ -73,10 +75,10 @@ function GM:PlayerSpawn(player)
 	player:UnSpectate();
 	player:GodDisable();
 
-	player:SetCrouchedWalkSpeed(rw.config:Get("crouched_speed"));
-	player:SetWalkSpeed(rw.config:Get("walk_speed"));
-	player:SetJumpPower(rw.config:Get("jump_power"));
-	player:SetRunSpeed(rw.config:Get("run_speed"));
+	player:SetCrouchedWalkSpeed(config.Get("crouched_speed"));
+	player:SetWalkSpeed(config.Get("walk_speed"));
+	player:SetJumpPower(config.Get("jump_power"));
+	player:SetRunSpeed(config.Get("run_speed"));
 
 	local oldHands = player:GetHands();
 
@@ -266,8 +268,9 @@ function GM:PreSaveCharacter(player, char, index)
 
 	prepared.steamID = player:SteamID();
 	prepared.name = char.name;
-	prepared.faction = char.faction;
+	prepared.faction = char.faction or "player";
 	prepared.class = char.class;
+	prepared.model = char.model or "models/humans/group01/male_02.mdl";
 	prepared.inventory = util.TableToJSON(char.inventory);
 	prepared.ammo = util.TableToJSON(char.ammo);
 	prepared.money= char.money;

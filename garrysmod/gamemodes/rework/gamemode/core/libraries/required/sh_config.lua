@@ -3,13 +3,12 @@
 	Do not share, re-distribute or sell.
 --]]
 
-if (rw.config) then return; end;
-
-library.New("config", rw);
-local stored = {};
+library.New("config", _G);
+local stored = config.stored or {};
+config.stored = stored;
 
 if (SERVER) then
-	function rw.config:Set(key, value, bIsHidden)
+	function config.Set(key, value, bIsHidden)
 		if (key != nil) then
 			stored[key] = stored[key] or {};
 			stored[key]._Value = value;
@@ -40,7 +39,7 @@ else
 	end);
 end;
 
-function rw.config:Get(key, default)
+function config.Get(key, default)
 	if (stored[key] != nil) then
 		if (stored[key]._Value != nil) then
 			return stored[key]._Value;
@@ -54,6 +53,6 @@ function rw.config:Get(key, default)
 	return default;
 end;
 
-function rw.config:Register(key, default, modifyFromMenu)
+function config.Register(key, default, modifyFromMenu)
 	stored[key] = {_DefaultValue = default, _ModifyFromMenu = (modifyFromMenu or true)};
 end;

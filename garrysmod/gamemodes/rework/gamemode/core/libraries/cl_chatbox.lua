@@ -916,7 +916,7 @@ function PANEL:Think()
 	self:SetSize(chatbox.width, 24);
 	self:SetPos(0, chatbox.height - 24);
 
-	local maxChatLength = rw.config:Get("max_chat_length") or 256;
+	local maxChatLength = config.Get("max_chat_length") or 256;
 	local text = self:GetValue();
 
 	if (text and text != "") then

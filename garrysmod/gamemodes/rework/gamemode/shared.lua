@@ -52,7 +52,7 @@ do
 		schemaFolder = rw.schema,
 		pluginInfo = {},
 		unloadedPlugins = {}
-	}
+	};
 end;
 
 -- A function to get schema's name.
@@ -141,11 +141,11 @@ rw.core:IncludeSchema();
 plugin.Call("RWSchemaLoaded");
 
 if (SERVER) then
-	local mysql_host = rw.config:Get("mysql_host");
-	local mysql_username = rw.config:Get("mysql_username");
-	local mysql_password = rw.config:Get("mysql_password");
-	local mysql_database = rw.config:Get("mysql_database");
-	local mysql_port = rw.config:Get("mysql_port");
+	local mysql_host = config.Get("mysql_host");
+	local mysql_username = config.Get("mysql_username");
+	local mysql_password = config.Get("mysql_password");
+	local mysql_database = config.Get("mysql_database");
+	local mysql_port = config.Get("mysql_port");
 
 	rw.db:Connect(mysql_host, mysql_username, mysql_password, mysql_database, mysql_port);
 end;
