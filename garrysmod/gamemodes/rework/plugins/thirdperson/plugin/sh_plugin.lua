@@ -3,9 +3,6 @@
 	Do not share, re-distribute or sell.
 --]]
 
-PLUGIN:SetName("Third Person");
-PLUGIN:SetAuthor("NightAngel");
-PLUGIN:SetDescription("Provides Third Person View setting for clients.");
 PLUGIN.ShouldRefresh = false;
 
 if (SERVER) then

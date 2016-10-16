@@ -66,7 +66,7 @@ function rw.core:Include(file)
 end;
 
 -- A function to include all files in a directory.
-function rw.core:IncludeDirectory(dir, recursive, base)
+function rw.core:IncludeDirectory(dir, base, recursive)
 	if (base) then
 		if (typeof(base) == "boolean") then
 			base = "rework/gamemode/";

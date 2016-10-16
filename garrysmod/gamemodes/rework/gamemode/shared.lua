@@ -10,8 +10,8 @@ GM.Website 		= "http://teslacloud.net/";
 GM.Email 		= "support@teslacloud.net";
 
 -- Define RW-Specific fields.
-GM.Version 		= "0.0.5";
-GM.Build 		= "1205";
+GM.Version 		= "0.0.6";
+GM.Build 		= "1208";
 GM.Description 	= "A free roleplay framework."
 
 -- It would be very nice of you to leave below values as they are if you're using official schemas.
@@ -117,20 +117,20 @@ rw.core:Include("core/cl_core.lua");
 rw.core:Include("core/sv_core.lua");
 
 -- This way we put things we want loaded BEFORE anything else in here, like plugin, config, etc.
-rw.core:IncludeDirectory("core/libraries/required", nil, true);
+rw.core:IncludeDirectory("core/libraries/required", true);
 
 -- So that we don't get duplicates on refresh.
 plugin.ClearCache();
 
-rw.core:IncludeDirectory("core/config", nil, true);
-rw.core:IncludeDirectory("core/libraries", nil, true);
-rw.core:IncludeDirectory("core/libraries/classes", nil, true);
-rw.core:IncludeDirectory("core/libraries/meta", nil, true);
-rw.core:IncludeDirectory("core/languages", nil, true);
-rw.core:IncludeDirectory("core/groups", nil, true);
-rw.core:IncludeDirectory("core/commands", nil, true);
-rw.core:IncludeDirectory("core/derma", nil, true);
-rw.core:IncludeDirectory("hooks", nil, true);
+rw.core:IncludeDirectory("core/config", true);
+rw.core:IncludeDirectory("core/libraries", true);
+rw.core:IncludeDirectory("core/libraries/classes", true);
+rw.core:IncludeDirectory("core/libraries/meta", true);
+rw.core:IncludeDirectory("core/languages", true);
+rw.core:IncludeDirectory("core/groups", true);
+rw.core:IncludeDirectory("core/commands", true);
+rw.core:IncludeDirectory("core/derma",true);
+rw.core:IncludeDirectory("hooks", true);
 
 rw.core:IncludePlugins("rework/plugins");
 

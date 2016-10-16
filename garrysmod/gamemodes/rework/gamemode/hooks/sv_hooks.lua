@@ -260,8 +260,7 @@ function GM:PlayerGiveSWEP(player, weapon, swep)
 	return true;
 end;
 
-function GM:DatabaseConnected()
-end;
+function GM:DatabaseConnected() end;
 
 function GM:PreSaveCharacter(player, char, index)
 	local prepared = {};
@@ -320,7 +319,7 @@ function GM:PostCharacterLoaded(player, character)
 end;
 
 -- Awful awful awful code, but it's kinda necessary in some rare cases.
--- Avoid using PlayerThink as much as possible.
+-- Avoid using PlayerThink whenever possible though.
 do
 	local thinkDelay = 1 * 0.125;
 	local secondDelay = 1;
@@ -337,12 +336,12 @@ do
 		end;
 
 		if (player.rwNextThink <= curTime) then
-			plugin.Call("PlayerThink", player, curTime);
+			hook.Run("PlayerThink", player, curTime);
 			player.rwNextThink = curTime + thinkDelay;
 		end;
 
 		if (player.rwNextSecond <= curTime) then
-			plugin.Call("PlayerOneSecond", player, curTime);
+			hook.Run("PlayerOneSecond", player, curTime);
 			player.rwNextSecond = curTime + secondDelay;
 		end;
 	end;

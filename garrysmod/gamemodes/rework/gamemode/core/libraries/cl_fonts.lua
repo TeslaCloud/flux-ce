@@ -114,7 +114,7 @@ function rw.fonts:CreateFonts()
 	self:CreateFont("bar_text", {
 		font = "Roboto Condensed",
 		size = 18,
-		weight = 500
+		weight = 600
 	});
 
 	plugin.Call("CreateFonts", self);
