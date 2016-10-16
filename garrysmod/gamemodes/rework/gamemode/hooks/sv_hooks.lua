@@ -8,7 +8,9 @@ function GM:PostRestoreCharacters(player)
 end;
 
 function GM:PlayerSetModel(player)
-	if (player:HasInitialized()) then
+	if (player:IsBot()) then
+		player:SetModel("models/humans/group01/male_02.mdl");
+	elseif (player:HasInitialized()) then
 		player:SetModel(player:GetNetVar("ModelPath"));
 	end;
 end;
@@ -16,8 +18,6 @@ end;
 function GM:PlayerInitialSpawn(player)
 	player_manager.SetPlayerClass(player, "rePlayer");
 	player_manager.RunClass(player, "Spawn");
-
-	print("playerinitspawn");
 
 	player:SetUserGroup("user");
 
@@ -317,4 +317,33 @@ end;
 
 function GM:PostCharacterLoaded(player, character)
 	netstream.Start(player, "PostCharacterLoaded", character.uniqueID);
+end;
+
+-- Awful awful awful code, but it's kinda necessary in some rare cases.
+-- Avoid using PlayerThink as much as possible.
+do
+	local thinkDelay = 1 * 0.125;
+	local secondDelay = 1;
+
+	function GM:PlayerPostThink(player)
+		local curTime = CurTime();
+
+		if (!player.rwNextThink) then
+			player.rwNextThink = curTime + thinkDelay;
+		end;
+
+		if (!player.rwNextSecond) then
+			player.rwNextSecond = curTime + secondDelay;
+		end;
+
+		if (player.rwNextThink <= curTime) then
+			plugin.Call("PlayerThink", player, curTime);
+			player.rwNextThink = curTime + thinkDelay;
+		end;
+
+		if (player.rwNextSecond <= curTime) then
+			plugin.Call("PlayerOneSecond", player, curTime);
+			player.rwNextSecond = curTime + secondDelay;
+		end;
+	end;
 end;

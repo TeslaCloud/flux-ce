@@ -23,6 +23,8 @@ local rotationTranslate = {
 function playerMeta:SetWeaponRaised(bIsRaised)
 	if (SERVER) then
 		self:SetDTBool(BOOL_WEAPON_RAISED, bIsRaised);
+
+		plugin.Call("OnWeaponRaised", self, self:GetActiveWeapon(), bIsRaised)
 	end;
 end;
 
@@ -54,6 +56,35 @@ function playerMeta:ToggleWeaponRaised()
 	end
 end;
 
+function PLUGIN:OnWeaponRaised(player, weapon, bIsRaised)
+	if (IsValid(weapon)) then
+		local curTime = CurTime();
+
+		plugin.Call("UpdateWeaponRaised", player, weapon, bIsRaised, curTime);
+	end;
+end;
+
+function PLUGIN:UpdateWeaponRaised(player, weapon, bIsRaised, curTime)
+	if (bIsRaised) then
+		weapon:SetNextPrimaryFire(curTime);
+		weapon:SetNextSecondaryFire(curTime);
+	else
+		weapon:SetNextPrimaryFire(curTime + 60);
+		weapon:SetNextSecondaryFire(curTime + 60);
+	end
+end;
+
+function PLUGIN:PlayerThink(player, curTime)
+	local weapon = player:GetActiveWeapon();
+
+	if (IsValid(weapon)) then
+		if (!player:IsWeaponRaised()) then
+			weapon:SetNextPrimaryFire(curTime + 60);
+			weapon:SetNextSecondaryFire(curTime + 60);
+		end;
+	end;
+end;
+
 function PLUGIN:KeyPress(player, key)
 	if (key == IN_RELOAD) then
 		timer.Create("WeaponRaise"..player:SteamID(), 1, 1, function()
@@ -65,18 +96,6 @@ end;
 function PLUGIN:KeyRelease(player, key)
 	if (key == IN_RELOAD) then
 		timer.Remove("WeaponRaise"..player:SteamID());
-	end;
-end;
-
-do
-	local attackKeys = IN_ATTACK + IN_ATTACK2;
-
-	function PLUGIN:StartCommand(player, cmd)
-		if (cmd:KeyDown(attackKeys)) then
-			if (!player:IsWeaponRaised()) then
-				cmd:RemoveKey(attackKeys);
-			end;
-		end;
 	end;
 end;
 
