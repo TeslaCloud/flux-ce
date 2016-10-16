@@ -81,9 +81,8 @@ function GM:TranslateActivity(player, act)
 			if (animations[holdType] and animations[holdType][act]) then
 				local anim = animations[holdType][act];
 
-				-- todo: weapon raise system
 				if (type(anim) == "table") then
-					if (plugin.Call("ModelWeaponRaised", player, model)) then
+					if (hook.Run("ModelWeaponRaised", player, model)) then
 						anim = anim[2];
 					else
 						anim = anim[1];
@@ -140,17 +139,17 @@ end
 
 -- Utility timers to call hooks that should be executed every once in a while.
 timer.Create("OneMinute", 60, 0, function()
-	plugin.Call("OneSecond");
+	hook.Run("OneSecond");
 end);
 
 timer.Create("OneSecond", 1, 0, function()
-	plugin.Call("OneSecond");
+	hook.Run("OneSecond");
 end);
 
 timer.Create("HalfSecond", 1 / 2, 0, function()
-	plugin.Call("HalfSecond");
+	hook.Run("HalfSecond");
 end);
 
 timer.Create("LazyTick", 1 / 8, 0, function()
-	plugin.Call("LazyTick");
+	hook.Run("LazyTick");
 end);
