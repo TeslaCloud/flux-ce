@@ -1,8 +1,15 @@
+--[[
+	Rework © 2016 TeslaCloud Studios
+	Do not share, re-distribute or sell.
+--]]
+
 -- DTVars
 BOOL_INITIALIZED 	= 0;		-- Whether player has passed all initialization steps.
 BOOL_WEAPON_RAISED 	= 1;		-- Whether player has their active weapon raised.
 
 INT_RAGDOLL_STATE 	= 0;		-- Player's ragdoll state (RAGDOLL_ enums).
+
+ENT_RAGDOLL			= 2;		-- Player's ragdoll (E.G. fallenover, death or anything else).
 
 -- Permissions
 PERM_NO 			= 0;		-- Not Set (no), means that this user has no permission.

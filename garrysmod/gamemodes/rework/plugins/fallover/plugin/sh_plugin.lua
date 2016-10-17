@@ -8,4 +8,5 @@ rw.core:Include("sv_hooks.lua");
 
 function PLUGIN:PlayerSetupDataTables(player)
 	player:DTVar("Int", INT_RAGDOLL_STATE, "RagdollState");
+	player:DTVar("Entity", ENT_RAGDOLL, "RagdollEntity");
 end;

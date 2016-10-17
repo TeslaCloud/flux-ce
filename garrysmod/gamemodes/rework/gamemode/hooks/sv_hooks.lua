@@ -45,6 +45,10 @@ function GM:PlayerInitialSpawn(player)
 	netstream.Start(nil, "PlayerInitialSpawn", player:EntIndex());
 end;
 
+function GM:PlayerDeath(player, inflictor, attacker) end;
+
+function GM:DoPlayerDeath(player, attacker, damageInfo) end;
+
 function GM:PlayerDisconnected(player)
 	netstream.Start(nil, "PlayerDisconnected", player:EntIndex());
 end;

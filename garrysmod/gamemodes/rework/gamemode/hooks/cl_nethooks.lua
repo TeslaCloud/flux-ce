@@ -21,3 +21,9 @@ netstream.Hook("PostCharacterLoaded", function(charID)
 		rw.client.IntroPanel:Remove();
 	end;
 end);
+
+netstream.Hook("reNotification", function(message)
+	message = rw.lang:TranslateText(message);
+
+	chat.AddText(Color(255, 255, 255), message);
+end);
