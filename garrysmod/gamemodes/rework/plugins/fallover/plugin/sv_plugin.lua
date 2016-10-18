@@ -42,7 +42,7 @@ function playerMeta:CreateRagdollEntity(decay)
 		ragdoll:Spawn();
 
 		if (IsValid(ragdoll)) then
-			ragdoll:SetCollisionGroup(COLLISION_GROUP_WEAPON);
+			ragdoll:SetCollisionGroup(COLLISION_GROUP_DEBRIS);
 
 			local head = ragdoll:LookupBone("ValveBiped.Bip01_Head1");
 			local velocity = self:GetVelocity();

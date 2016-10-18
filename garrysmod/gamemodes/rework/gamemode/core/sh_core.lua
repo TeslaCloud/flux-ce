@@ -165,7 +165,7 @@ function library.NewClass(name, parent, extends)
 	return setmetatable((parent or _G)[name], class);
 end;
 
-function Class(name, parent, extends)
+function Class(name, extends, parent)
 	return library.NewClass(name, parent, extends);
 end;
 
