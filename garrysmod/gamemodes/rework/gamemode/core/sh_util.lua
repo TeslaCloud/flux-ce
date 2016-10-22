@@ -500,3 +500,23 @@ function util.CubicEaseInOutTable(steps, from, to)
 
 	return result;
 end;
+
+function util.WaitForEntity(entIndex, callback, delay, waitTime)
+	local entity = Entity(entIndex);
+
+	if (!IsValid(entity)) then
+		local timerName = CurTime().."_EntWait";
+
+		timer.Create(timerName, delay or 0, waitTime or 100, function()
+			local entity = Entity(entIndex);
+
+			if (IsValid(entity)) then
+				callback(entity);
+
+				timer.Remove(timerName);
+			end;
+		end);
+	else
+		callback(entity);
+	end;
+end;

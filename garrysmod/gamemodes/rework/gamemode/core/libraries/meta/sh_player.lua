@@ -50,3 +50,15 @@ end;
 function playerMeta:SteamName()
 	return self:rwName();
 end;
+
+function playerMeta:SetModel(sPath)
+	local oldModel = self:GetModel();
+
+	plugin.Call("PlayerModelChanged", self, sPath, oldModel);
+
+	if (SERVER) then
+		netstream.Start(nil, "PlayerModelChanged", self:EntIndex(), sPath, oldModel);
+	end;
+
+	return self:rwSetModel(sPath);
+end;

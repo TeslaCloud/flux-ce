@@ -3,7 +3,7 @@
 	Do not share, re-distribute or sell.
 --]]
 
-function PLUGIN:PlayerDeath(player, inflictor, attacker)
+function PLUGIN:PlayerDeath(player)
 	player:SetRagdollState(RAGDOLL_DUMMY);
 end;
 

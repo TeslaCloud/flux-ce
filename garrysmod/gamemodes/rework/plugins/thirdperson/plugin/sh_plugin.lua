@@ -3,8 +3,6 @@
 	Do not share, re-distribute or sell.
 --]]
 
-PLUGIN.ShouldRefresh = false;
-
 if (SERVER) then
 	concommand.Add("rwThirdPerson", function(player)
 		local oldValue = player:GetNetVar("rwThirdPerson");

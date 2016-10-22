@@ -8,7 +8,7 @@ PLUGIN:SetAuthor("NightAngel");
 PLUGIN:SetDescription("Adds all plugin hooks to DBugR performance metrics monitor.");
 
 if (DBugR) then
-	function PLUGIN:Initialize()
+	function PLUGIN:RWSchemaLoaded()
 		for hookName, hooks in pairs(plugin.GetCache()) do
 			for k, v in ipairs(hooks) do
 				local name = "N/A";

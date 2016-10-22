@@ -20,91 +20,99 @@ do
 	local normalizeAngle = math.NormalizeAngle;
 
 	function GM:CalcMainActivity(player, velocity)
-		if (CLIENT) then
-			player:SetIK(false);
-		end;
-
 		player:SetPoseParameter("move_yaw", normalizeAngle(vectorAngle(velocity)[2] - player:EyeAngles()[2]))
 
-		local seqIdeal, seqOverride = self.BaseClass:CalcMainActivity(player, velocity);
+		player.CalcIdeal = ACT_MP_STAND_IDLE
+		player.CalcSeqOverride = -1
 
-		return seqIdeal, player.CalcSeqOverride or seqOverride or -1;
+		local baseClass = self.BaseClass;
+
+		if (baseClass:HandlePlayerNoClipping(player, velocity) or
+			baseClass:HandlePlayerDriving(player) or
+			baseClass:HandlePlayerVaulting(player, velocity) or
+			baseClass:HandlePlayerJumping(player, velocity) or
+			baseClass:HandlePlayerSwimming(player, velocity) or
+			baseClass:HandlePlayerDucking(player, velocity)) then
+		else
+			local len2D = velocity:Length2D();
+
+			if (len2D > 150) then 
+				player.CalcIdeal = ACT_MP_RUN; 
+			elseif (len2D > 0.5) then 
+				player.CalcIdeal = ACT_MP_WALK; 
+			end;
+		end;
+
+		player.m_bWasOnGround = player:IsOnGround();
+		player.m_bWasNoclipping = (player:GetMoveType() == MOVETYPE_NOCLIP && !player:InVehicle());
+
+		return player.CalcIdeal, player.CalcSeqOverride;
 	end;
 end;
 
 do
-	local animCache = {};
-
 	-- Called when to translate player activities.
 	function GM:TranslateActivity(player, act)
-		local model = player:GetModel();
+		local animations = player.rwAnimTable;
 
-		if (string.find(model, "/player/")) then
+		if (!animations) then
 			return self.BaseClass:TranslateActivity(player, act);
 		end;
 
-		if (!animCache[model]) then
-			animCache[model] = rw.anim:GetTable(model);
-		end
+		if (player:InVehicle()) then
+			local vehicle = player:GetVehicle();
+			local vehicleClass = vehicle:GetClass();
 
-		local animations = animCache[model];
+			if (animations["vehicle"] and animations["vehicle"][vehicleClass]) then
+				local anim = animations["vehicle"][vehicleClass][1];
+				local position = animations["vehicle"][vehicleClass][2];
 
-		if (animations) then
-			if (player:InVehicle()) then
-				local vehicle = player:GetVehicle();
-				local vehicleClass = vehicle:GetClass();
+				if (position) then
+					player:ManipulateBonePosition(0, position);
+				end;
 
-				if (animations["vehicle"] and animations["vehicle"][vehicleClass]) then
-					local anim = animations["vehicle"][vehicleClass][1];
-					local position = animations["vehicle"][vehicleClass][2];
+				if (type(anim) == "string") then
+					player.CalcSeqOverride = player:LookupSequence(anim);
 
-					if (position) then
-						player:ManipulateBonePosition(0, position);
-					end;
-
-					if (type(anim) == "string") then
-						player.CalcSeqOverride = player:LookupSequence(anim);
-
-						return;
-					else
-						return anim
-					end;
+					return;
 				else
-					local anim = animations["normal"][ACT_MP_CROUCH_IDLE][1];
-
-					if (type(anim) == "string") then
-						player.CalcSeqOverride = player:LookupSequence(anim);
-
-						return;
-					end;
-
 					return anim;
 				end;
-			elseif (player:OnGround()) then
-				local weapon = player:GetActiveWeapon();
-				local holdType = rw.anim:GetWeaponHoldType(player, weapon);
+			else
+				local anim = animations["normal"][ACT_MP_CROUCH_IDLE][1];
 
-				if (animations[holdType] and animations[holdType][act]) then
-					local anim = animations[holdType][act];
+				if (type(anim) == "string") then
+					player.CalcSeqOverride = player:LookupSequence(anim);
 
-					if (type(anim) == "table") then
-						if (hook.Run("ModelWeaponRaised", player, model)) then
-							anim = anim[2];
-						else
-							anim = anim[1];
-						end;
-					end;
-
-					if (type(anim) == "string") then
-						player.CalcSeqOverride = player:LookupSequence(anim);
-						return;
-					end;
-
-					return anim;
+					return;
 				end;
-			elseif (animations["normal"]["glide"]) then
-				return animations["normal"]["glide"];
+
+				return anim;
 			end;
+		elseif (player:OnGround()) then
+			local weapon = player:GetActiveWeapon();
+			local holdType = rw.anim:GetWeaponHoldType(player, weapon);
+
+			if (animations[holdType] and animations[holdType][act]) then
+				local anim = animations[holdType][act];
+
+				if (type(anim) == "table") then
+					if (hook.Run("ModelWeaponRaised", player, model)) then
+						anim = anim[2];
+					else
+						anim = anim[1];
+					end;
+				end;
+
+				if (type(anim) == "string") then
+					player.CalcSeqOverride = player:LookupSequence(anim);
+					return;
+				end;
+
+				return anim;
+			end;
+		elseif (animations["normal"]["glide"]) then
+			return animations["normal"]["glide"];
 		end;
 	end;
 end;
@@ -142,6 +150,20 @@ function GM:DoAnimationEvent(player, event, data)
 
 		return ACT_INVALID;
 	end;
+end;
+
+local animCache = {};
+
+function GM:PlayerModelChanged(player, sNewModel, sOldModel)
+	if (CLIENT) then
+		player:SetIK(false);
+	end;
+
+	if (!animCache[sNewModel]) then
+		animCache[sNewModel] = rw.anim:GetTable(sNewModel);
+	end;
+
+	player.rwAnimTable = animCache[sNewModel];
 end;
 
 -- Utility timers to call hooks that should be executed every once in a while.

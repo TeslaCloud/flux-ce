@@ -5,7 +5,7 @@
 
 local playerMeta = FindMetaTable("Player");
 
-playerMeta.OldGetRagdoll = playerMeta.GetRadgollEntity;
+playerMeta.OldGetRagdoll = playerMeta.OldGetRagdoll or playerMeta.GetRagdollEntity;
 
 function playerMeta:GetRagdollEntity()
 	return self:GetDTEntity(ENT_RAGDOLL);
@@ -43,8 +43,7 @@ function playerMeta:CreateRagdollEntity(decay)
 
 		if (IsValid(ragdoll)) then
 			ragdoll:SetCollisionGroup(COLLISION_GROUP_DEBRIS);
-
-			local head = ragdoll:LookupBone("ValveBiped.Bip01_Head1");
+			
 			local velocity = self:GetVelocity();
 
 			for i = 1, ragdoll:GetPhysicsObjectCount() do
@@ -55,12 +54,7 @@ function playerMeta:CreateRagdollEntity(decay)
 				if (IsValid(physObj)) then
 					physObj:SetPos(position);
 					physObj:SetAngles(angle);
-
-					if (bone == head) then
-						physObj:SetVelocity(velocity * 1.5);
-					else
-						physObj:SetVelocity(velocity);
-					end;
+					physObj:SetVelocity(velocity);
 				end;
 			end;
 		end;
@@ -77,7 +71,9 @@ function playerMeta:ResetRagdollEntity()
 			ragdoll:Remove();
 		else
 			timer.Simple(ragdoll.decay, function()
-				ragdoll:Remove();
+				if (IsValid(ragdoll)) then
+					ragdoll:Remove();
+				end;
 			end);
 		end;
 
