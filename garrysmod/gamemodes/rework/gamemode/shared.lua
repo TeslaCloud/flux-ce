@@ -10,8 +10,8 @@ GM.Website 		= "http://teslacloud.net/";
 GM.Email 		= "support@teslacloud.net";
 
 -- Define RW-Specific fields.
-GM.Version 		= "0.0.6";
-GM.Build 		= "1208";
+GM.Version 		= "0.0.7";
+GM.Build 		= "1214";
 GM.Description 	= "A free roleplay framework."
 
 -- It would be very nice of you to leave below values as they are if you're using official schemas.

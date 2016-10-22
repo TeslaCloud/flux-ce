@@ -207,11 +207,11 @@ do
 		messageData.drawTime = messageData.drawTime or true;
 		messageData.drawModel = false;
 		messageData.isPlayerMessage = false;
-		
+
 		if (messageData.icon == nil) then
 			messageData.icon = "icon16/lightning.png";
 		end;
-		
+
 		messageData.rich = true;
 		messageData.translate = messageData.translate or true;
 		messageData.type = "player_events";
@@ -294,7 +294,7 @@ function chatbox.ParseBBCodes(line, rich)
 			local rm = false;
 			local nextInsert = 0;
 			local prevOffset = 0;
-			
+
 			if (#hits > 0) then
 				for i, hit in ipairs(hits) do
 					local text = hit[1];
@@ -303,17 +303,17 @@ function chatbox.ParseBBCodes(line, rich)
 					local code = "";
 					local eqWhat = "";
 					local textValue = "";
-					
+
 					wS = wS - prevOffset;
 					wE = wE - prevOffset;
-					
+
 					if (eq) then
 						code = text:sub(2, eq - 1);
 						eqWhat = text:sub(eq + 1, text:len() - 1);
 					else
 						code = text:sub(2, text:len() - 1);
 					end;
-					
+
 					if (chatbox.codes[code]) then
 						if (!chatbox.codes[code].requireRich or rich) then
 							if (!rm) then
@@ -321,48 +321,48 @@ function chatbox.ParseBBCodes(line, rich)
 								nextInsert = k;
 								rm = true;
 							end;
-							
+
 							local closure = {whole:find("%[", wE + 1)};
 							local closurePos = closure[1];
 							local oldTextLength = 0;
-							
+
 							if (closurePos) then
 								textValue = whole:sub(wE + 1, closure[1] - 1);
 							else
 								textValue = whole:sub(wE + 1, length);
 								closurePos = length;
 							end;
-							
+
 							oldTextLength = textValue:len();
-							
+
 							local result, newTextValue = chatbox.GetBBCode(code)(eqWhat, textValue);
-							
+
 							if (typeof(newTextValue) == "string") then
 								textValue = newTextValue;
 							end;
-							
+
 							chatbox.LastBBCode = result;
-							
+
 							if (!whole:StartWith("[")) then
 								table.insert(line, nextInsert, whole:sub(1, wS - 1));
 								nextInsert = nextInsert + 1
 							end;
-							
+
 							if (newTextValue) then
 								length = length + (textValue:len() - oldTextLength);
 								wS = wS + (textValue:len() - oldTextLength);
 								wE = wE + (textValue:len() - oldTextLength);
 							end;
-							
+
 							if (closurePos != length) then
 								whole = textValue..whole:sub(closurePos, length);
 							else
 								whole = textValue;
 							end;
-							
+
 							table.insert(line, nextInsert, result);
 							nextInsert = nextInsert + 1;
-							
+
 							if (i == #hits) then
 								table.insert(line, nextInsert, whole);
 								nextInsert = nextInsert + 1;
@@ -370,7 +370,7 @@ function chatbox.ParseBBCodes(line, rich)
 							end;
 						end;
 					end;
-					
+
 					prevOffset = wE;
 				end;
 			end;
@@ -381,14 +381,14 @@ end;
 do
 	chatbox.AddBBCode("color", function(code, text)
 		local exploded = string.Explode(",", code);
-		
+
 		for k, v in ipairs(exploded) do
 			exploded[k] = v:Replace(" ", "");
 		end;
-		
+
 		if (!exploded[2]) then
 			local code = exploded[1];
-			
+
 			return Color(code);
 		else
 			return Color((tonumber(exploded[1]) or 255), (tonumber(exploded[2]) or 255), (tonumber(exploded[3]) or 255), (tonumber(exploded[4]) or 255));
@@ -426,10 +426,10 @@ function chatbox.WrapText(msgData, maxWidth, initWidth)
 	for key, val in ipairs(parsed) do
 		if (typeof(val) == "string") then
 			local exploded = string.Explode(" ", val);
-			
+
 			for k, v in ipairs(exploded) do
 				local w, h = util.GetTextSize("reChatFont", v);
-				
+
 				-- if word's width is less than the remaining width
 				if ((w + spaceWidth) < (maxWidth - curWidth)) then
 					curText = curText..v.." ";
@@ -448,10 +448,10 @@ function chatbox.WrapText(msgData, maxWidth, initWidth)
 						local characters = string.Explode("", v);
 						local curWord = "";
 						local wordWide = 0;
-						
+
 						for k2, v2 in ipairs(characters) do
 							local w, h = util.GetTextSize("reChatFont", v2);
-							
+
 							-- if we don't have enough characters to fill in the entire line
 							if ((wordWide + w + dashWidth) < (maxWidth - curWidth)) then
 								curWord = curWord..v2;
@@ -468,7 +468,7 @@ function chatbox.WrapText(msgData, maxWidth, initWidth)
 								curWord = "";
 							end;
 						end;
-						
+
 						if (curWord != "") then
 							curText = curWord.." ";
 						end;
@@ -481,7 +481,7 @@ function chatbox.WrapText(msgData, maxWidth, initWidth)
 					end;
 				end;
 			end;
-			
+
 			table.insert(wrapped, curText);
 			curText = "";
 		else
@@ -542,21 +542,21 @@ function chatbox.ParseText(messageData)
 			if (!file.Exists("reavatars", "DATA")) then
 				file.CreateDir("reavatars");
 			end;
-			
+
 			http.Fetch("http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=76415A95E2F81DDA1D7CD2378D16C11D&steamids="..messageData.sender:SteamID64(), function(body)
 				local response = util.JSONToTable(body);
 				local avatarURL = response["response"]["players"][1].avatar;
-				
+
 				http.Fetch(avatarURL, function(avatarImage)
 					file.Write("reavatars/"..messageData.sender:SteamID64()..".jpg", avatarImage);
-					
+
 					if (rw.core.MaterialCache[messageData.sender:SteamID64()..".jpg"]) then
 						rw.core:ClearMaterial(messageData.sender:SteamID64()..".jpg");
 					end;
 				end);
 			end);
 		end;
-		
+
 		table.insert(parsed[1], "[SenderAvatar]");
 		msgWidth = msgWidth + 20;
 	end;
@@ -564,10 +564,10 @@ function chatbox.ParseText(messageData)
 	if (messageData.prefix) then
 		-- Prefix may contain phrases!
 		messageData.prefix = rw.lang:TranslateText(messageData.prefix);
-		
+
 		table.insert(parsed[1], messageData.prefixColor);
 		table.insert(parsed[1], messageData.prefix);
-		
+
 		local wide = util.GetTextSize("reChatFont", messageData.prefix);
 		msgWidth = msgWidth + wide;
 	end;
@@ -575,10 +575,10 @@ function chatbox.ParseText(messageData)
 	if (messageData.isPlayerMessage) then
 		if (IsValid(messageData.sender)) then
 			messageData.playerTeam = messageData.sender:Team();
-			
+
 			if (messageData.filter == "ic") then
 				local plyName = messageData.sender:Name(); //CW.player:GetName(messageData.sender);
-				
+
 				if (plyName:utf8len() >= 40) then
 					messageData.playerName = "["..plyName:utf8sub(1, 40).."...]";
 				else
@@ -588,20 +588,20 @@ function chatbox.ParseText(messageData)
 				messageData.playerName = messageData.sender:Name();
 			end;
 		end;
-		
+
 		if (messageData.filter != "ic" and messageData.playerTeam) then
 			table.insert(parsed[1], _team.GetColor(messageData.playerTeam));
 		else
 			table.insert(parsed[1], messageData.textColor);
 		end;
-		
+
 		if (messageData.suffix) then
 			-- Suffix too!
 			messageData.suffix = rw.lang:TranslateText(messageData.suffix);
 		end;
-		
+
 		table.insert(parsed[1], messageData.playerName..(messageData.suffix or ": "));
-		
+
 		local wide = util.GetTextSize("reChatFont", messageData.playerName..(messageData.suffix or ": "));
 		msgWidth = msgWidth + wide;
 	end;
@@ -610,30 +610,30 @@ function chatbox.ParseText(messageData)
 		local wrapped = chatbox.WrapText(messageData, chatbox.width - 8, msgWidth);
 		local curLine = 1;
 		local bIsNew = true;
-		
+
 		for k, v in ipairs(wrapped) do
 			parsed[curLine] = parsed[curLine] or {};
-			
+
 			if (curLine > 1) then
 				table.insert(parsed[curLine], g_DisplayY)
 			end;
-			
+
 			if (bIsNew) then
 				table.insert(parsed[curLine], messageData.textColor);
 				bIsNew = false;
 			end;
-			
+
 			if (typeof(v) == "string") then
 				if (v == "std::endl") then
 					curLine = curLine + 1;
-					
+
 					parsed[curLine] = parsed[curLine] or {};
-					
+
 					bIsNew = true;
 					v = "";
 				end;
 			end;
-			
+
 			if (v != "") then
 				table.insert(parsed[curLine], v);
 			end;
@@ -787,10 +787,10 @@ function PANEL:Paint(w, h)
 		local commands = {};
 		local command = splitTable[1];
 		local cX, cY = 4, h * 0.6;
-		
+
 		if (command and command != "") then
 			chatbox.curAlpha = 50;
-			
+
 			for k, v in pairs(rw.command.aliases) do
 				local commandLen = string.utf8len(command);
 
@@ -829,13 +829,13 @@ function PANEL:Paint(w, h)
 				local w = util.GetTextSize("reChatSyntax", "/"..v.name);
 				cX = cX + w + 8;
 				draw.SimpleTextOutlined((v.tip or ""), "reChatFont", cX, cY + 4, Color(206, 206, 206), TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP, 1, Color(0, 0, 0));
-				
+
 				if (#commands == 1) then
 					local offsetX = 24;
-					
+
 					if (v.aliases) then
 						local text = "#CMDDesc_Aliases ";
-						
+
 						if (#v.aliases > 1) then
 							for i, a in ipairs(v.aliases) do
 								text = text..a.."; ";
@@ -843,9 +843,9 @@ function PANEL:Paint(w, h)
 						else
 							text = text..v.aliases[1];
 						end;
-						
+
 						draw.SimpleTextOutlined(rw.lang:TranslateText(text), "reChatFont", 4, cY + offsetX, Color(240, 240, 240), TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP, 1, Color(0, 0, 0))
-						
+
 						offsetX = offsetX + 20;
 					end;
 

@@ -291,7 +291,7 @@ function PANEL:SetBackImage(url, option)
 
 	self.backImage = url;
 	self.option = option;
-		
+
 	URLMaterial(url);
 
 	local w, h = self:GetWide(), self:GetTall();

@@ -85,7 +85,7 @@ function PLUGIN:SpawnLegs(player)
 	end;
 end;
 
-function PLUGIN:RenderScreenspaceEffects()
+function PLUGIN:PostDrawHUD()
 	local player = rw.client;
 
 	if (!rw.settings:GetBool("DrawLegs") or player:ShouldDrawLocalPlayer() or !player:Alive()) then return; end;
@@ -99,7 +99,7 @@ function PLUGIN:RenderScreenspaceEffects()
 		if (!IsValid(player.legs)) then
 			self:SpawnLegs(player);
 		end;
-		
+
 		local realTime = RealTime();
 		local legs = player.legs;
 
@@ -116,7 +116,7 @@ function PLUGIN:RenderScreenspaceEffects()
 		legs:SetPoseParameter("move_yaw", 360 * player:GetPoseParameter("move_yaw") - 180);
 		legs:SetPoseParameter("move_x", player:GetPoseParameter("move_x") * 2 - 1);
 		legs:SetPoseParameter("move_y", player:GetPoseParameter("move_y") * 2 - 1);
-				
+
 		legs:SetRenderMode(player:GetRenderMode());
 		legs:SetMaterial(player:GetMaterial());
 		legs:SetSequence(player:GetSequence());

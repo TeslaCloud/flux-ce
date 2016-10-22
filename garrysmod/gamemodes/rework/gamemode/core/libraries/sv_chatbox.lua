@@ -14,7 +14,7 @@ function chatbox.AddPrefix(prefix, callback)
 
 	function callback(msgData)
 		oldCB(msgData);
-		
+
 		msgData.text = msgData.text:sub(prefix:len() + 1, msgData.text:len());
 	end;
 
@@ -46,7 +46,7 @@ function chatbox.CanHear(listener, position, radius)
 		if (typeof(radius) != "number") then return false; end;
 		if (radius == 0) then return true; end;
 		if (radius < 0) then return false; end;
-		
+
 		if (true) then //(CW.player:GetRealTrace(listener).HitPos:Distance(position) <= (radius / 2) or position:Distance(listener:GetPos()) <= radius) then
 			return true;
 		end;
@@ -68,26 +68,26 @@ do
 	chatbox.AddFilter("looc", function(listener, msgData)
 		local pos = msgData.position;
 		local rad = msgData.radius or config.Get("talk_radius") or 356;
-		
+
 		return chatbox.CanHear(listener, pos, rad);
 	end);
 
 	chatbox.AddFilter("ic", function(listener, msgData)
 		pos = msgData.position;
-		
+
 		if (!pos and IsValid(msgData.sender)) then
 			pos = msgData.sender:GetPos();
 		end;
-		
+
 		local rad = msgData.radius or config.Get("talk_radius") or 356;
-		
+
 		return chatbox.CanHear(listener, pos, rad);
 	end);
 
 	chatbox.AddFilter("player_events", function(listener, msgData)
 		local pos = msgData.position;
 		local rad = msgData.radius or config.Get("talk_radius") or 356;
-		
+
 		return chatbox.CanHear(listener, pos, rad);
 	end);
 
@@ -120,34 +120,34 @@ end;
 do
 	chatbox.AddPrefix("//", function(msgData)
 		local text = msgData.text;
-		
+
 		if (text:StartWith("//")) then
 			msgData.filter = "ooc";
 			msgData.radius = 0;
-			
+
 			while (text:StartWith("// ")) do
 				text = "//"..text:utf8sub(4, text:utf8len());
 			end;
-			
+
 			msgData.text = text;
-			
+
 			return true; -- tell the system that we set everything!
 		end;
 	end);
 
 	chatbox.AddPrefix(".//", function(msgData)
 		local text = msgData.text;
-		
+
 		if (text:StartWith(".//")) then
 			msgData.filter = "looc";
 			msgData.radius = config.Get("talk_radius") or 356; -- todo
-			
+
 			while (text:StartWith(".// ")) do
 				text = ".//"..text:utf8sub(5, text:utf8len());
 			end;
-			
+
 			msgData.text = text;
-			
+
 			return true;
 		end;
 	end);
@@ -155,64 +155,64 @@ do
 	-- who the fuck even does [[ anyway
 	chatbox.AddPrefix("[[", function(msgData)
 		local text = msgData.text;
-		
+
 		if (text:StartWith("[[")) then
 			msgData.filter = "looc";
 			msgData.radius = config.Get("talk_radius") or 356; -- todo
-			
+
 			while (text:StartWith("[[ ")) do
 				text = "[["..text:utf8sub(4, text:utf8len());
 			end;
-			
+
 			msgData.text = text;
-			
+
 			return true;
 		end;
 	end);
 
 	chatbox.AddPrefix("/", function(msgData)
 		local text = msgData.text;
-		
+
 		if (text:StartWith("/") and !text:StartWith("//")) then
 			msgData.filter = "command";
 			msgData.isCommand = true;
 			msgData.radius = -1;
-			
+
 			return true;
 		end;
 	end);
 
 	chatbox.AddPrefix("/?", function(msgData)
 		local text = msgData.text;
-		
+
 		if (text:StartWith("/?")) then
 			msgData.filter = "command_no_announcement";
 			msgData.isCommand = true;
 			msgData.isCommandSilent = true;
 			msgData.radius = -1;
-			
+
 			return true;
 		end;
 	end);
 
 	chatbox.AddPrefix("@", function(msgData)
 		local text = msgData.text;
-		
+
 		if (text:StartWith("@")) then
 			msgData.filter = "admin";
 			msgData.radius = 0;
-			
+
 			return true;
 		end;
 	end);
 
 	chatbox.AddPrefix("<sys>", function(msgData)
 		local text = msgData.text;
-		
+
 		if (text:StartWith("<sys>")) then
 			msgData.filter = "player_as_system";
 			msgData.radius = 0;
-			
+
 			return true;
 		end;
 	end);
@@ -254,9 +254,9 @@ function chatbox.AddText(listeners, ...)
 			if (colored) then
 				message.text = message.text.."[color="..curColor.r..","..curColor.g..","..curColor.b..","..curColor.a.."]";
 			end;
-			
+
 			message.text = message.text..v;
-			
+
 			if (colored and v:lower():find("[/color]")) then
 				colored = false;
 			end;
@@ -264,9 +264,9 @@ function chatbox.AddText(listeners, ...)
 			if (colored) then
 				message.text = message.text.."[/color]";
 			end;
-			
+
 			message.text = message.text.."[color="..v.r..","..v.g..","..v.b..","..v.a.."]";
-			
+
 			colored = true;
 			curColor = v;
 		elseif (typeof(v) == "player") then
@@ -369,7 +369,7 @@ netstream.Hook("ChatboxTextEntered", function(player, msgText)
 				CW.player:Notify(
 					player, "You cannot cannot talk out-of-character for another "..math.ceil(player.cwNextTalkOOC - CurTime()).." second(s)!"
 				);
-				
+
 				return;
 			end;
 		end;
@@ -386,7 +386,7 @@ netstream.Hook("ChatboxTextEntered", function(player, msgText)
 			if (CW.player:GetDeathCode(player, true)) then
 				CW.player:UseDeathCode(player, nil, {message.text});
 			end;
-			
+
 			message.text = "\""..message.text.."\"";
 		end;
 	end;

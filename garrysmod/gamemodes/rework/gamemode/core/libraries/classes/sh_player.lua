@@ -52,7 +52,7 @@ end;
 function rePlayer:PostDrawViewModel(viewmodel, weapon)
 	if (weapon.UseHands or !weapon:IsScripted()) then
 		local handsEntity = rw.client:GetHands();
-		
+
 		if (IsValid(handsEntity)) then
 			handsEntity:DrawModel();
 		end;

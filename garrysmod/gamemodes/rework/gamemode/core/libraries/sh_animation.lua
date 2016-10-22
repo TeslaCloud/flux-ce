@@ -162,7 +162,7 @@ do
 
 		local class = string.lower(weapon:GetClass());
 		local holdType = "normal";
-		
+
 		if (weaponHoldTypes[class]) then
 			holdType = weaponHoldTypes[class];
 		elseif (weapon and weapon.HoldType) then
@@ -172,7 +172,7 @@ do
 				holdType = weapon.HoldType;
 			end;
 		end;
-		
+
 		return string.lower(holdType);
 	end;
 end;

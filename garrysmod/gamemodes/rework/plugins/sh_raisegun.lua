@@ -125,7 +125,7 @@ if (CLIENT) then
 
 		local fraction = (rw.client.curRaisedFrac or 0) / 100;
 		local rotation = rotationTranslate[weapon:GetClass()] or rotationTranslate["default"];
-		
+
 		eyeAngles:RotateAroundAxis(eyeAngles:Up(), rotation.p * fraction);
 		eyeAngles:RotateAroundAxis(eyeAngles:Forward(), rotation.y * fraction);
 		eyeAngles:RotateAroundAxis(eyeAngles:Right(), rotation.r * fraction);
@@ -140,7 +140,7 @@ if (CLIENT) then
 			oldEyePos = position or oldEyePos;
 			eyeAngles = angles or eyeAngles;
 		end
-		
+
 		if (weapon.CalcViewModelView) then
 			local position, angles = weapon:CalcViewModelView(viewModel, oldEyePos, oldEyeAngles, eyePos, eyeAngles);
 

@@ -1987,7 +1987,7 @@ function utf8.clen (s, i)
 		elseif c2 < 128 or c2 > 191 then
 			error("Invalid UTF-8 character")
 		end
-		
+
 		-- validate byte 3
 		if c3 < 128 or c3 > 191 then
 			error("Invalid UTF-8 character")
@@ -2135,7 +2135,7 @@ function utf8.uchar(unicode)
 		local Byte1= 0x80 + (code % 0x40);
 		code       = math.floor(code / 0x40)  
 		local Byte0= 0xF0 + code;
-		
+
 		return string.char(Byte0, Byte1, Byte2, Byte3);
 	end;
 
@@ -2197,9 +2197,9 @@ function utf8.gensub(str, sub_len)
 			char_count  = char_count + 1
 			local bytes = utf8.clen(str,byte_pos)
 			byte_pos    = byte_pos+bytes
-			
+
 		until char_count == sub_len
-		
+
 		local last  = byte_pos-1
 		local sub   = str:sub(start,last)
 		return sub, start, last

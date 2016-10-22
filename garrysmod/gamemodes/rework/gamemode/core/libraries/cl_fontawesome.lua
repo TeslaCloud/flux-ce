@@ -670,7 +670,7 @@ function rw.fa:GetIcon(id)
 			local rawCode = faCodes[id];
 			buffer[id] = util.HexToDecimal(rawCode);
 		end;
-		
+
 		return string.utf8char(buffer[id]);
 	end;
 

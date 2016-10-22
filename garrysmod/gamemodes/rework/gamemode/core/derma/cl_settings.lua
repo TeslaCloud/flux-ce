@@ -94,7 +94,7 @@ function PANEL:BuildList()
 			function setting:Paint(w, h)
 				surface.SetDrawColor(colorBlack);
 				surface.DrawRect(0, 0, w, h);
-		
+
 				self.label:SetTextColor(rw.settings:GetColor("TextColor"));
 			end;
 
@@ -208,7 +208,7 @@ function PANEL:BuildCategoryList()
 				DisableClipping(false);
 			end;
 		end;
-		
+
 		y = y + h * 1.1;
 	end;
 

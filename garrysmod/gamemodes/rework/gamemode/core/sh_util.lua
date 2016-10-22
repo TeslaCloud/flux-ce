@@ -141,7 +141,7 @@ function util.HexToColor(hex)
 
 	for i = 1, hex:len() / 2 do
 		table.insert(hexColors, hex:sub(1, 2))
-		
+
 		if (i != initLen) then
 			hex = hex:sub(3, hex:len());
 		end;
@@ -152,11 +152,11 @@ function util.HexToColor(hex)
 	for k, v in ipairs(hexColors) do
 		local chars = table.Reverse(string.Explode("", v));
 		local sum = 0;
-		
+
 		for i = 1, 2 do
 			sum = sum + util.HexToDec(chars[i]) * math.pow(16, i - 1);
 		end;
-		
+
 		table.insert(color, sum);
 	end;
 
@@ -372,13 +372,13 @@ function string.FindAll(str, pattern)
 
 	while (true) do
 		local startPos, endPos = string.find(str, pattern, lastPos);
-		
+
 		if (!startPos) then
 			break;
 		end;
-		
+
 		table.insert(hits, {str:sub(startPos, endPos), startPos, endPos})
-		
+
 		lastPos = endPos + 1;
 	end;
 

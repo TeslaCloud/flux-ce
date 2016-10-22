@@ -231,12 +231,12 @@ function GM:AdjustSettingCallbacks(callbacks)
 
 			surface.SetDrawColor(rw.settings:GetColor("TextColor"));
 			surface.DrawRect(8, h / 2 - 1, w - 15, 1);
-				
+
 			if (!num) then return; end;
 
 			local x, y = 8, h / 2 - 1;
 			local space = w / num;
-				
+
 			for i = 0, num do	
 				surface.DrawRect(x + i * space, y + 4, 1, 5);
 			end;

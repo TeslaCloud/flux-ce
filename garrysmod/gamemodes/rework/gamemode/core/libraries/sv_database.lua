@@ -528,7 +528,7 @@ function rw.db:Think()
 			local queueObj = QueueTable[1];
 			local queryString = queueObj[1];
 			local callback = queueObj[2];
-			
+
 			if (type(queryString) == "string") then
 				self:RawQuery(queryString, callback);
 			end;
@@ -635,35 +635,35 @@ function rw.db:EasyWrite(tableName, where, data)
 		query:Callback(function(result, status, lastID)
 			if (type(result) == "table" and #result > 0) then
 				local updateObj = self:Update(tableName);
-				
+
 					for k, v in pairs(data) do
 						updateObj:Update(k, v);
 					end;
-					
+
 					updateObj:Where(where[1], where[2]);
 					updateObj:Callback(function()
 						rw.core:DevPrint("Easy MySQL updated data. ('"..tableName.."' WHERE "..where[1].." = "..where[2]..")");
 					end);
-					
+
 				updateObj:Execute();
 			else
 				local insertObj = self:Insert(tableName);
-				
+
 					for k, v in pairs(data) do
 						insertObj:Insert(k, v);
 					end;
-					
+
 					insertObj:Callback(function(result)
 						if (typeof(where[1]) != "table") then
 							rw.core:DevPrint("Easy MySQL inserted data into '"..tableName.."' WHERE "..where[1].." = "..where[2]..".");
 						else
 							local msg = "Easy MySQL inserted data into '"..tableName.."' WHERE ";
 							local i = 0;
-							
+
 							for k, v in pairs(where) do
 								i = i + 1;
 								msg = msg..v[1].." = "..v[2];
-								
+
 								if (table.Count(where) != i) then
 									msg = msg.." AND ";
 								end;
@@ -672,11 +672,11 @@ function rw.db:EasyWrite(tableName, where, data)
 							rw.core:DevPrint(msg);
 						end;
 					end);
-					
+
 				insertObj:Execute();
 			end;
 		end);
-		
+
 	query:Execute();
 end;
 
@@ -704,7 +704,7 @@ function rw.db:EasyRead(tableName, where, callback)
 				ErrorNoHalt("[RW:EasyRead Error] "..value.."\n");
 			end;
 		end);
-		
+
 	query:Execute();
 end;
 

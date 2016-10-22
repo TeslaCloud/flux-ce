@@ -43,7 +43,7 @@ function playerMeta:CreateRagdollEntity(decay)
 
 		if (IsValid(ragdoll)) then
 			ragdoll:SetCollisionGroup(COLLISION_GROUP_DEBRIS);
-			
+
 			local velocity = self:GetVelocity();
 
 			for i = 1, ragdoll:GetPhysicsObjectCount() do
