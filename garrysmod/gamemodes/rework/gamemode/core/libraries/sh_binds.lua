@@ -73,8 +73,8 @@ if (CLIENT) then
 	end;
 
 	function rw.binds:AddBind(id, command, default, visibleCallback)
-		rw.settings.AddSetting("Binds", id, default, nil, true, "rwBindSelect", {command = command}, nil, visibleCallback);
-		self:SetBind(command, rw.settings.GetNumber(id));
+		rw.settings:AddSetting("Binds", id, default, nil, true, "rwBindSelect", {command = command}, nil, visibleCallback);
+		self:SetBind(command, rw.settings:GetNumber(id));
 	end;
 end;
 

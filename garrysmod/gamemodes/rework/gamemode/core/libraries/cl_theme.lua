@@ -36,7 +36,7 @@ function Theme:Remove()
 end;
 
 function Theme:Register()
-	return rw.theme.RegisterTheme(self);
+	return rw.theme:RegisterTheme(self);
 end;
 
 function rw.theme.GetStored()
@@ -53,7 +53,7 @@ function rw.theme:RemoveTheme(id)
 	end;
 end;
 
-function rw.theme.RegisterTheme(themeTable)
+function rw.theme:RegisterTheme(themeTable)
 	stored[themeTable.m_uniqueID] = themeTable;
 end;
 

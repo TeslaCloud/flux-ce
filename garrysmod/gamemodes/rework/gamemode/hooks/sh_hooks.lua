@@ -26,10 +26,9 @@ do
 
 		player:SetPoseParameter("move_yaw", normalizeAngle(vectorAngle(velocity)[2] - player:EyeAngles()[2]))
 
-		local oldSeqOverride = player.CalcSeqOverride;
 		local seqIdeal, seqOverride = self.BaseClass:CalcMainActivity(player, velocity);
 
-		return seqIdeal, oldSeqOverride or seqOverride or -1;
+		return seqIdeal, player.CalcSeqOverride or seqOverride or -1;
 	end;
 end;
 

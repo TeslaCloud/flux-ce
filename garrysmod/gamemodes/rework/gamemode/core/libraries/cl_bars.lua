@@ -74,7 +74,7 @@ function rw.bars:SetValue(uniqueID, newValue)
 				bar.value = math.Clamp(newValue, 0, bar.maxValue - bar.hinderValue + 2);
 			end;
 
-			bar.interpolated = util.EaseInOutTable(100, bar.value, newValue);
+			bar.interpolated = util.CubicEaseInOutTable(100, bar.value, newValue);
 			bar.value = math.Clamp(newValue, 0, bar.maxValue);
 		end
 	end

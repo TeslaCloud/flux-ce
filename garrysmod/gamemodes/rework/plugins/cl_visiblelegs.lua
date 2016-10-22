@@ -88,7 +88,7 @@ end;
 function PLUGIN:RenderScreenspaceEffects()
 	local player = rw.client;
 
-	if (!rw.settings.GetBool("DrawLegs") or player:ShouldDrawLocalPlayer() or !player:Alive()) then return; end;
+	if (!rw.settings:GetBool("DrawLegs") or player:ShouldDrawLocalPlayer() or !player:Alive()) then return; end;
 
 	local angs = player:EyeAngles();
 
@@ -131,7 +131,7 @@ function PLUGIN:RenderScreenspaceEffects()
 	cam.End3D();
 end;
 
-rw.settings.AddCheckBox("General", "DrawLegs", true);
+rw.settings:AddCheckBox("General", "DrawLegs", true);
 
 -- Languages.
 local lang = rw.lang:GetTable("en");

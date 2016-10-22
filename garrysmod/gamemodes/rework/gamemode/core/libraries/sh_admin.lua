@@ -178,6 +178,7 @@ if (SERVER) then
 		permTable[permID] = permTable[permID] or PERM_NO;
 
 		if (value == PERM_NO) then return; end;
+
 		if (permTable[permID] == PERM_ALLOW_OVERRIDE) then return; end;
 
 		if (value == PERM_ALLOW_OVERRIDE) then

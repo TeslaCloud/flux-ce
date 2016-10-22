@@ -22,7 +22,7 @@ function PANEL:Init()
 	self.categoryList:SetSize(self:GetWide() * 0.2, self:GetTall());
 	self.categoryList:SetPos(0, self:GetTall() * 0.5 - self.categoryList:GetTall() * 0.5);
 	self.categoryList.Paint = function(panel, w, h)
-		surface.SetDrawColor(rw.settings.GetColor("MenuBackColor"));
+		surface.SetDrawColor(rw.settings:GetColor("MenuBackColor"));
 		surface.DrawRect(0, 0, w, h);
 	end;
 
@@ -34,7 +34,7 @@ function PANEL:Init()
 	);
 
 	self.settingList.Paint = function(panel, w, h)
-		surface.SetDrawColor(rw.settings.GetColor("MenuBackColor"));
+		surface.SetDrawColor(rw.settings:GetColor("MenuBackColor"));
 		surface.DrawRect(0, 0, w, h);
 	end;
 
@@ -57,7 +57,7 @@ function PANEL:BuildList()
 		self:GetTall() * 0.5 - self.settingList:GetTall() * 0.5
 	);
 	self.settingList.Paint = function(panel, w, h)
-		surface.SetDrawColor(rw.settings.GetColor("MenuBackColor"));
+		surface.SetDrawColor(rw.settings:GetColor("MenuBackColor"));
 		surface.DrawRect(0, 0, w, h);
 	end;
 	self.settingList:SetAlpha(0);
@@ -67,7 +67,7 @@ function PANEL:BuildList()
 	local x = setList:GetWide() * 0.01;
 	local y = x;
 	local w, h = setList:GetWide() * 0.98, setList:GetTall() * 0.09;
-	local settings = rw.settings.GetCategorySettings(self.activeCategory);
+	local settings = rw.settings:GetCategorySettings(self.activeCategory);
 
 	setList:Clear();
 
@@ -87,7 +87,7 @@ function PANEL:BuildList()
 			setting.label = vgui.Create("DLabel", setting);
 			setting.label:SetFont(menuFontSmall);
 			setting.label:SetText("#Settings_"..v.id);
-			setting.label:SetTextColor(rw.settings.GetColor("TextColor"));			
+			setting.label:SetTextColor(rw.settings:GetColor("TextColor"));			
 			setting.label:SizeToContents();
 			setting.label:SetPos(setting:GetWide() * 0.01, setting:GetTall() * 0.5 - setting.label:GetTall() * 0.5);
 
@@ -95,7 +95,7 @@ function PANEL:BuildList()
 				surface.SetDrawColor(colorBlack);
 				surface.DrawRect(0, 0, w, h);
 		
-				self.label:SetTextColor(rw.settings.GetColor("TextColor"));
+				self.label:SetTextColor(rw.settings:GetColor("TextColor"));
 			end;
 
 			setting.element = vgui.Create(v.type, setting);
@@ -112,10 +112,10 @@ function PANEL:BuildCategoryList()
 	local x = 0;
 	local y = x;
 	local w, h = catList:GetWide(), catList:GetTall() * 0.09;
-	local categories = rw.settings.GetIndexedCategories(function(a, b)
+	local categories = rw.settings:GetIndexedCategories(function(a, b)
 		return L("#Settings_"..a.id) < L("#Settings_"..b.id);
 	end);
-	local saved = rw.settings.lastCat;
+	local saved = rw.settings:lastCat;
 
 	for k, v in ipairs(categories) do
 		local sum = 0;
@@ -184,7 +184,7 @@ function PANEL:BuildCategoryList()
 					self.hovered = false;
 				end;
 
-				local textColor = rw.settings.GetColor("TextColor");
+				local textColor = rw.settings:GetColor("TextColor");
 
 				if (self.lerpTime) then
 					local fraction = (curTime - self.lerpTime) / expandDuration;
@@ -214,7 +214,7 @@ function PANEL:BuildCategoryList()
 
 	if (saved) then
 		self.activeCategory = saved;
-		rw.settings.lastCat = nil;
+		rw.settings:lastCat = nil;
 	else
 		self.activeCategory = categories[1].id;
 	end;
@@ -223,7 +223,7 @@ function PANEL:BuildCategoryList()
 end;
 
 function PANEL:OnRemove()
-	rw.settings.lastCat = self.activeCategory;
+	rw.settings:lastCat = self.activeCategory;
 end;
 
 function PANEL:Paint(w, h) end;

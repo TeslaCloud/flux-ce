@@ -27,7 +27,7 @@ end;
 
 function PANEL:SetBind(nKey)
 	if (self.setting) then
-		rw.settings.SetValue(self.setting.id, nKey);
+		rw.settings:SetValue(self.setting.id, nKey);
 		rw.binds:SetBind(self.setting.info.command, nKey);
 
 		self.waitPress = false;
@@ -39,7 +39,7 @@ function PANEL:Paint(w, h)
 	surface.DrawRect(0, 0, w, h);
 
 	local text = "Unbound";
-	local value = rw.settings.GetNumber(self.setting.id);
+	local value = rw.settings:GetNumber(self.setting.id);
 
 	if (self.waitPress) then
 		text = "Press a key to bind or mouse away to cancel.";
@@ -51,7 +51,7 @@ function PANEL:Paint(w, h)
 		end;
 	end;
 
-	draw.SimpleText(text, "menu_light_small", w * 0.5, h * 0.5, rw.settings.GetColor("TextColor"), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER);
+	draw.SimpleText(text, "menu_light_small", w * 0.5, h * 0.5, rw.settings:GetColor("TextColor"), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER);
 end;
 
 derma.DefineControl("rwBindSelect", "", PANEL, "EditablePanel");

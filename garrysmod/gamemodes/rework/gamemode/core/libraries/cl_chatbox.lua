@@ -708,7 +708,7 @@ local function ToIcon(text)
 end;
 
 function PANEL:Paint(w, h)
-	local backColor = rw.settings.GetColor("MenuBackColor");
+	local backColor = rw.settings:GetColor("MenuBackColor");
 
 	if (self.startTime) then
 		local fraction = (CurTime() - self.startTime) / fadeDuration;
@@ -893,7 +893,7 @@ local entryBack = Color(0, 0, 0, 170);
 function PANEL:Paint(w, h)
 	draw.RoundedBox(2, 0, 0, w, h, entryBack);
 
-	self:DrawTextEntryText(rw.settings.GetColor("TextColor"), ColorAlpha(rw.settings.GetColor("TextColor"), 25), rw.settings.GetColor("TextColor"));
+	self:DrawTextEntryText(rw.settings:GetColor("TextColor"), ColorAlpha(rw.settings:GetColor("TextColor"), 25), rw.settings:GetColor("TextColor"));
 end;
 
 function PANEL:OnEnter()

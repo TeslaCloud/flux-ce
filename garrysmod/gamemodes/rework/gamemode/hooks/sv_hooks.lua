@@ -331,20 +331,12 @@ do
 	function GM:PlayerPostThink(player)
 		local curTime = CurTime();
 
-		if (!player.rwNextThink) then
-			player.rwNextThink = curTime + thinkDelay;
-		end;
-
-		if (!player.rwNextSecond) then
-			player.rwNextSecond = curTime + secondDelay;
-		end;
-
-		if (player.rwNextThink <= curTime) then
+		if ((player.rwNextThink or 0) <= curTime) then
 			hook.Run("PlayerThink", player, curTime);
 			player.rwNextThink = curTime + thinkDelay;
 		end;
 
-		if (player.rwNextSecond <= curTime) then
+		if ((player.rwNextSecond or 0) <= curTime) then
 			hook.Run("PlayerOneSecond", player, curTime);
 			player.rwNextSecond = curTime + secondDelay;
 		end;

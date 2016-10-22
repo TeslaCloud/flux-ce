@@ -111,7 +111,7 @@ function GM:AdjustSettingCallbacks(callbacks)
 				end;
 			end;
 
-			draw.RoundedBox(5, 0, 0, w, h, ColorAlpha(rw.settings.GetColor("TextColor"), self.textAlpha));
+			draw.RoundedBox(5, 0, 0, w, h, ColorAlpha(rw.settings:GetColor("TextColor"), self.textAlpha));
 
 			if (self:GetChecked() and self.checked) then
 				self.checkTime = curTime;
@@ -154,7 +154,7 @@ function GM:AdjustSettingCallbacks(callbacks)
 				value = data;
 			end;
 
-			rw.settings.SetValue(setting.id, value);
+			rw.settings:SetValue(setting.id, value);
 		end;
 
 		panel:SetConVar("RW_"..setting.id);
@@ -165,12 +165,12 @@ function GM:AdjustSettingCallbacks(callbacks)
 		panel:SetPos(parent.label.x, parent.label.y + parent.label:GetTall() * 1.25);
 		panel:SetConVar("RW_"..setting.id);
 		panel:SetFont("menu_light_tiny");
-		panel:SetTextColor(rw.settings.GetColor("TextColor"));
+		panel:SetTextColor(rw.settings:GetColor("TextColor"));
 		panel:SetDrawBackground(false);
 		panel.oldThink = panel.Think;
 
 		panel.Think = function(entry)
-			entry:SetTextColor(rw.settings.GetColor("TextColor"));
+			entry:SetTextColor(rw.settings:GetColor("TextColor"));
 			entry:oldThink();
 		end;
 
@@ -229,7 +229,7 @@ function GM:AdjustSettingCallbacks(callbacks)
 		panel.Slider.Paint = function(slider, w, h)
 			local num = slider:GetNotches();
 
-			surface.SetDrawColor(rw.settings.GetColor("TextColor"));
+			surface.SetDrawColor(rw.settings:GetColor("TextColor"));
 			surface.DrawRect(8, h / 2 - 1, w - 15, 1);
 				
 			if (!num) then return; end;
@@ -248,7 +248,7 @@ function GM:AdjustSettingCallbacks(callbacks)
 		parent.numLabel = vgui.Create("DTextEntry", parent);
 		parent.numLabel:SetFont("menu_thin_smaller");
 		parent.numLabel:SetText(panel:GetValue());
-		parent.numLabel:SetTextColor(rw.settings.GetColor("TextColor"));			
+		parent.numLabel:SetTextColor(rw.settings:GetColor("TextColor"));			
 		parent.numLabel:SizeToContents();
 		parent.numLabel:SetPos(parent:GetWide() * 0.01, panel.y + panel:GetTall() * 1.1);
 		parent.numLabel:SetSize(parent:GetWide(), parent.numLabel:GetTall());
@@ -301,7 +301,7 @@ rw.bars:Register("armor", {
 
 -- Called when the player's HUD is drawn.
 function GM:HUDPaint()
-	if (!plugin.Call("RWHUDPaint") and rw.settings.GetBool("DrawBars")) then
+	if (!plugin.Call("RWHUDPaint") and rw.settings:GetBool("DrawBars")) then
 		rw.bars:SetValue("health", rw.client:Health());
 		rw.bars:SetValue("armor", rw.client:Armor());
 		rw.bars:DrawTopBars();

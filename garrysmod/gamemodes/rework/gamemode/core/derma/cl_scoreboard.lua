@@ -54,7 +54,7 @@ function PANEL:OnFade()
 end;
 
 function PANEL:Paint(w, h)
-	surface.SetDrawColor(rw.settings.GetColor("MenuBackColor"));
+	surface.SetDrawColor(rw.settings:GetColor("MenuBackColor"));
 	surface.DrawRect(0, 0, w, h);
 end;
 
@@ -90,7 +90,7 @@ function PANEL:SetPlayer(player)
 	self.mBack:SetSize(aSize, aSize);
 
 	function self.mBack:Paint(w, h)
-		draw.RoundedBox(4, 0, 0, w, h, ColorAlpha(rw.settings.GetColor("TextColor"), 50))
+		draw.RoundedBox(4, 0, 0, w, h, ColorAlpha(rw.settings:GetColor("TextColor"), 50))
 	end;
 
 	self.mPanel = vgui.Create("DModelPanel", self);
@@ -149,7 +149,7 @@ function PANEL:Paint(w, h)
 	surface.DrawRect(0, 0, w, h);
 
 	if (self.name and self.mPanel) then
-		draw.SimpleText(self.name, menuFont, self.mPanel.x + self.mPanel:GetWide() + w * 0.01, h * 0.5, rw.settings.GetColor("TextColor"), nil, TEXT_ALIGN_CENTER);
+		draw.SimpleText(self.name, menuFont, self.mPanel.x + self.mPanel:GetWide() + w * 0.01, h * 0.5, rw.settings:GetColor("TextColor"), nil, TEXT_ALIGN_CENTER);
 	end;
 end;
 

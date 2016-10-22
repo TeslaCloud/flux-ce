@@ -28,8 +28,8 @@ function PANEL:Init()
 	self:SetSize(scrW, scrH);
 	self:SetPos(0, 0);
 
-	local backURL = rw.settings.GetString("BackgroundURL");
-	local backOption = rw.settings.GetString("FitType");
+	local backURL = rw.settings:GetString("BackgroundURL");
+	local backOption = rw.settings:GetString("FitType");
 
 	self:SetBackImage(backURL, backOption);
 
@@ -53,7 +53,7 @@ function PANEL:Init()
 	self.ph1:SetPos(self.dateTime.x + self.dateTime:GetWide() - self.ph1:GetWide(), self.charPanel.y);
 
 	self.ph1.Paint = function(panel, w, h)
-		surface.SetDrawColor(rw.settings.GetColor("MenuBackColor"));
+		surface.SetDrawColor(rw.settings:GetColor("MenuBackColor"));
 		surface.DrawRect(0, 0, w, h);
 	end;
 
@@ -82,7 +82,7 @@ function PANEL:Init()
 	self.ph2:SetPos(self.dateTime.x, chatbox.y);
 
 	self.ph2.Paint = function(panel, w, h)
-		surface.SetDrawColor(rw.settings.GetColor("MenuBackColor"));
+		surface.SetDrawColor(rw.settings:GetColor("MenuBackColor"));
 		surface.DrawRect(0, 0, w, h);
 	end;
 
@@ -91,10 +91,10 @@ function PANEL:Init()
 	self.ph3:SetPos(self.dateTime.x, scrH * 0.1);
 
 	self.ph3.Paint = function(panel, w, h)
-		surface.SetDrawColor(rw.settings.GetColor("MenuBackColor"));
+		surface.SetDrawColor(rw.settings:GetColor("MenuBackColor"));
 		surface.DrawRect(0, 0, w, h);
 
-		draw.SimpleTextOutlined("Message of the day:", menuFont, w * 0.5, h * 0.5, rw.settings.GetColor("TextColor"), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, outlineSize, colorBlack);
+		draw.SimpleTextOutlined("Message of the day:", menuFont, w * 0.5, h * 0.5, rw.settings:GetColor("TextColor"), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, outlineSize, colorBlack);
 	end;
 
 	self.viewPort = vgui.Create("DButton", self);
@@ -213,7 +213,7 @@ function PANEL:CreateBackPanel()
 
 			surface.DrawTexturedRect(backX, backY, backW, backH);
 		else
-			surface.SetDrawColor(rw.settings.GetColor("BackgroundColor"));
+			surface.SetDrawColor(rw.settings:GetColor("BackgroundColor"));
 			surface.DrawRect(0, 0, w, h);
 		end;
 	end;
@@ -307,7 +307,7 @@ function PANEL:Paint(w, h)
 	surface.SetDrawColor(colorBlack);
 	surface.DrawRect(0, 0, w, h);
 
-	surface.SetDrawColor(rw.settings.GetColor("BackgroundColor"));
+	surface.SetDrawColor(rw.settings:GetColor("BackgroundColor"));
 	surface.DrawRect(0, 0, w, h);
 end;
 
@@ -495,7 +495,7 @@ function PANEL:Paint(w, h)
 			alpha = 170;
 		end;
 
-		draw.SimpleTextOutlined(self.text, menuFont, w * 0.5, h * 0.5, ColorAlpha(rw.settings.GetColor("TextColor"), alpha), TEXT_ALIGN_CENTER, nil, outlineSize, ColorAlpha(colorBlack, alpha));
+		draw.SimpleTextOutlined(self.text, menuFont, w * 0.5, h * 0.5, ColorAlpha(rw.settings:GetColor("TextColor"), alpha), TEXT_ALIGN_CENTER, nil, outlineSize, ColorAlpha(colorBlack, alpha));
 	end;
 end;
 
@@ -643,7 +643,7 @@ function PANEL:Paint(w, h)
 		end;
 	end;
 
-	local textColor = rw.settings.GetColor("TextColor");
+	local textColor = rw.settings:GetColor("TextColor");
 
 	if (self.alpha > 0) then
 	//	draw.SimpleTextOutlined("#TabMenu_Expand", menuFont, self.expand.x * 0.97, self.expand.y + self.expand:GetTall() * 0.5, ColorAlpha(textColor, self.alpha), TEXT_ALIGN_RIGHT, TEXT_ALIGN_CENTER, outlineSize, ColorAlpha(colorBlack, self.alpha));
@@ -707,7 +707,7 @@ function PANEL:Paint(w, h)
 		alpha = 170;
 	end;
 
-	rw.fa:Draw(self.icon or "fa-bars", w * 0.5, h * 0.5, self.size or 16, ColorAlpha(rw.settings.GetColor("TextColor"), alpha), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, outlineSize, colorBlack);
+	rw.fa:Draw(self.icon or "fa-bars", w * 0.5, h * 0.5, self.size or 16, ColorAlpha(rw.settings:GetColor("TextColor"), alpha), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, outlineSize, colorBlack);
 
 	if (self.clickStart) then
 		local fraction = (curTime - self.clickStart) / clickDuration;
@@ -772,7 +772,7 @@ function PANEL:Paint(w, h)
 	local timeText = hour..":"..min.." "..am;
 	local dateText = day.." "..date.day.."/"..month.."/"..year;
 
-	local textColor = rw.settings.GetColor("TextColor");
+	local textColor = rw.settings:GetColor("TextColor");
 
 	draw.SimpleTextOutlined(timeText, menuFont, w, h * 0.5, textColor, TEXT_ALIGN_RIGHT, TEXT_ALIGN_TOP, outlineSize, colorBlack);
 	draw.SimpleTextOutlined(dateText, menuFont, 0, h * 0.5, textColor, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP, outlineSize, colorBlack);
@@ -820,10 +820,10 @@ do
 
 	function PANEL:Paint(w, h)
 		DisableClipping(true);
-			draw.RoundedBox(4, self.avatar.x - (self.avatar:GetWide() * halfOffset), self.avatar.y - (self.avatar:GetTall() * halfOffset), self.avatar:GetWide() * fullOffset, self.avatar:GetTall() * fullOffset, rw.settings.GetColor("TextColor"));
+			draw.RoundedBox(4, self.avatar.x - (self.avatar:GetWide() * halfOffset), self.avatar.y - (self.avatar:GetTall() * halfOffset), self.avatar:GetWide() * fullOffset, self.avatar:GetTall() * fullOffset, rw.settings:GetColor("TextColor"));
 		DisableClipping(false);
 
-		draw.SimpleTextOutlined(rw.client:Name(), menuFont, self.avatar.x + self.avatar:GetWide() + w * 0.04, h * 0.5, rw.settings.GetColor("TextColor"), TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP, outlineSize, colorBlack);
+		draw.SimpleTextOutlined(rw.client:Name(), menuFont, self.avatar.x + self.avatar:GetWide() + w * 0.04, h * 0.5, rw.settings:GetColor("TextColor"), TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP, outlineSize, colorBlack);
 	end;
 end;
 
@@ -942,7 +942,7 @@ function PANEL:SetAnimation(anim)
 end;
 
 function PANEL:Paint(w, h)
-	surface.SetDrawColor(rw.settings.GetColor("MenuBackColor"));
+	surface.SetDrawColor(rw.settings:GetColor("MenuBackColor"));
 	surface.DrawRect(0, 0, w, h);
 end;
 

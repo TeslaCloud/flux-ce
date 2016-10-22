@@ -455,47 +455,47 @@ function util.ToBool(value)
 	return (tonumber(value) == 1 or value == true or value == "true");
 end;
 
-function util.CubicInterp(curStep, steps, from, to)
+function util.CubicEaseIn(curStep, steps, from, to)
 	return (to - from) * math.pow(curStep / steps, 3) + from;
 end;
 
-function util.CubicInterpInverted(curStep, steps, from, to)
+function util.CubicEaseOut(curStep, steps, from, to)
 	return (to - from) * (math.pow(curStep / steps - 1, 3) + 1) + from;
 end;
 
-function util.CubicInterpTable(steps, from, to)
+function util.CubicEaseInTable(steps, from, to)
 	local result = {};
 
 	for i = 1, steps do
-		table.insert(result, util.CubicInterp(i, steps, from, to));
+		table.insert(result, util.CubicEaseIn(i, steps, from, to));
 	end
 
 	return result;
 end;
 
-function util.CubicInterpTableInverted(steps, from, to)
+function util.CubicEaseOutTable(steps, from, to)
 	local result = {};
 
 	for i = 1, steps do
-		table.insert(result, util.CubicInterpInverted(i, steps, from, to));
+		table.insert(result, util.CubicEaseOut(i, steps, from, to));
 	end
 
 	return result;
 end;
 
-function util.EaseInOut(curStep, steps, from, to)
+function util.CubicEaseInOut(curStep, steps, from, to)
 	if (curStep > (steps / 2)) then
-		return util.CubicInterpInverted(curStep - steps / 2, steps / 2, from, to);
+		return util.CubicEaseOut(curStep - steps / 2, steps / 2, from, to);
 	else
-		return util.CubicInterp(curStep, steps, from, to);
+		return util.CubicEaseIn(curStep, steps, from, to);
 	end
 end;
 
-function util.EaseInOutTable(steps, from, to)
+function util.CubicEaseInOutTable(steps, from, to)
 	local result = {};
 
 	for i = 1, steps do
-		table.insert(result, util.EaseInOut(i, steps, from, to));
+		table.insert(result, util.CubicEaseInOut(i, steps, from, to));
 	end
 
 	return result;
