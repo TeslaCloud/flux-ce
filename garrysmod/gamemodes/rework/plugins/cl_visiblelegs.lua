@@ -85,7 +85,7 @@ function PLUGIN:SpawnLegs(player)
 	end;
 end;
 
-function PLUGIN:PostDrawHUD()
+function PLUGIN:RenderScreenspaceEffects()
 	local player = rw.client;
 
 	if (!rw.settings:GetBool("DrawLegs") or player:ShouldDrawLocalPlayer() or !player:Alive()) then return; end;

@@ -35,6 +35,17 @@ function GM:InitPostEntity()
 
 	rw.client.IntroPanel = vgui.Create("reMainMenu");
 	rw.client.IntroPanel:MakePopup();
+
+ 	for k, v in ipairs(player.GetAll()) do
+ 		local model = v:GetModel();
+ 		plugin.Call("PlayerModelChanged", v, model, model);
+ 	end;
+end;
+
+function GM:RenderScreenspaceEffects()
+	if (rw.client.colorModify) then
+		DrawColorModify(rw.client.colorModifyTable);
+	end;
 end;
 
 function GM:HUDDrawScoreBoard()

@@ -79,6 +79,12 @@ function Plugin:SetData(data)
 	table.Merge(self, data);
 end;
 
+function Plugin:GlobalAlias(alias)
+	if (typeof(alias) == "string") then
+		_G[alias] = self;
+	end;
+end;
+
 function Plugin:Register()
 	plugin.Register(self);
 end;

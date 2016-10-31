@@ -152,6 +152,14 @@ function rw.settings:SetValue(id, value)
 	local conVar = self:GetConVar(id);
 
 	if (conVar) then
+		plugin.Call("OnSettingSet", id, value, conVar);
+
+		local oldValue = self:GetValue(id);
+
+		if (oldValue != value) then
+			plugin.Call("OnSettingChanged", id, value, oldValue, conVar);
+		end;
+
 		return conVar:SetString(tostring(value));
 	end;
 end;

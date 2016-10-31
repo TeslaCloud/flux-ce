@@ -3,6 +3,8 @@
 	Do not share, re-distribute or sell.
 --]]
 
+library.New("rwThirdPerson", _G);
+
 if (SERVER) then
 	concommand.Add("rwThirdPerson", function(player)
 		local oldValue = player:GetNetVar("rwThirdPerson");
@@ -14,13 +16,19 @@ if (SERVER) then
 		player:SetNetVar("rwThirdPerson", !oldValue);
 	end);
 else
-	local startTime = nil;
-	local offset = Vector(0, 0, 0);
+	local startTime = rwThirdPerson.startTime or nil;
+	rwThirdPerson.startTime = startTime;
+
+	local offset = rwThirdPerson.offset or Vector(0, 0, 0);
+	rwThirdPerson.offset = offset;
+
 	local duration = 0.15;
-	local flippedStart = false;
+
+	local flippedStart = rwThirdPerson.flippedStart or false;
+	rwThirdPerson.flippedStart = flippedStart;
 
 	-- This is very basic and WIP, but it works.
-	function PLUGIN:CalcView(ply, pos, angles, fov)
+	function rwThirdPerson:CalcView(player, pos, angles, fov)
 		local view = {};
 		local curTime = CurTime();
 
@@ -28,7 +36,7 @@ else
 		view.angles = angles;
 		view.fov = fov;
 
-		if (ply:GetNetVar("rwThirdPerson")) then
+		if (player:GetNetVar("rwThirdPerson")) then
 			if (!startTime or flippedStart) then
 				startTime = curTime;	
 				flippedStart = false;
