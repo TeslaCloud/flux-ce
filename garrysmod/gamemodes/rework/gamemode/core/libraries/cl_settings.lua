@@ -365,33 +365,67 @@ rw.settings:AddCheckBox("AdminESP", "EnableAdminESP", false, function()
 end);
 rw.settings:AddColorMixer("Theme", "TextColor", Color(255, 255, 255, 255));
 rw.settings:AddColorMixer("Theme", "MenuBackColor", Color(40, 40, 40, 150));
-rw.settings:AddColorMixer("Dashboard", "BackgroundColor", Color(0, 0, 0, 255));
+rw.settings:AddCheckBox("Theme", "UseTabDash", false, nil, 
+	{
+		callback = function(name, oldValue, newValue)
+			if (util.ToBool(newValue)) then
+				rw.theme:SetMenu("TabMenu", "rwTabDash");
+			else
+				rw.theme:SetMenu("TabMenu", "rwTabClassic");
+			end;
+
+			local tabMenu = rw.tabMenu;
+
+			if (IsValid(tabMenu)) then
+				tabMenu:CloseMenu();
+
+				rw.tabMenu = rw.theme:OpenMenu("TabMenu", nil, "rwTabDash");
+				rw.tabMenu:MakePopup();
+				rw.tabMenu.heldTime = CurTime() + 0.3;
+			end;
+		end
+	}
+);
+rw.settings:AddColorMixer("Dashboard", "BackgroundColor", Color(0, 0, 0, 255), nil, function()
+	return (rw.theme:GetMenu("TabMenu") == "rwTabDash");
+end);
 rw.settings:AddComboBox("Dashboard", "FitType", "", {
-	["fill"] = "#Settings_Fit_Fill",
-	["fit"] = "#Settings_Fit_Fit",
-	["tiled"] = "#Settings_Fit_Tiled",
-	["center"] = "#Settings_Fit_Center"
-}, nil, {
-	callback = function(name, oldValue, newValue)
-		local tabMenu = rw.tabMenu;
+		["fill"] = "#Settings_Fit_Fill",
+		["fit"] = "#Settings_Fit_Fit",
+		["tiled"] = "#Settings_Fit_Tiled",
+		["center"] = "#Settings_Fit_Center"
+	},
+	function()
+		return (rw.theme:GetMenu("TabMenu") == "rwTabDash");
+	end,
+	{
+		callback = function(name, oldValue, newValue)
+			local tabMenu = rw.tabMenu;
 
-		if (IsValid(tabMenu)) then
-			tabMenu:SetBackImage(rw.settings:GetString("BackgroundURL"), newValue);
-		end;
-	end
-});
-rw.settings:AddTextEntry("Dashboard", "BackgroundURL", "", nil, {
-	callback = function(name, oldValue, newValue)
-		local tabMenu = rw.tabMenu;
+			if (IsValid(tabMenu)) then
+				tabMenu:SetBackImage(rw.settings:GetString("BackgroundURL"), newValue);
+			end;
+		end
+	}
+);
+rw.settings:AddTextEntry("Dashboard", "BackgroundURL", "",
+	function()
+		return (rw.theme:GetMenu("TabMenu") == "rwTabDash");
+	end,
+	{
+		callback = function(name, oldValue, newValue)
+			local tabMenu = rw.tabMenu;
 
-		if (IsValid(tabMenu)) then
-			tabMenu:SetBackImage(newValue, rw.settings:GetString("FitType"));
-		end;
-	end
-});
+			if (IsValid(tabMenu)) then
+				tabMenu:SetBackImage(newValue, rw.settings:GetString("FitType"));
+			end;
+		end
+	}
+);
 
 rw.settings:AddCheckBox("HUD", "DrawBars", true);
 rw.settings:AddCheckBox("HUD", "DrawBarText", true);
+
 
 --[[ -- For example on how to add a number slider.
 rw.settings:AddNumSlider("Test", "TestNumSlider", "", {

@@ -20,12 +20,19 @@ lang["#MapRestartMessage"] = "#1 is restarting the map in #2 second(s)!";
 lang["#MapChangeMessage"] = "#1 is changing the level to #2 in #3 second(s)!";
 
 lang["#TabMenu_Expand"] = "Expand";
-lang["#TabMenu_Characters"] = "Characters";
+lang["#TabMenu_MainMenu"] = "Main Menu";
 lang["#TabMenu_Inventory"] = "Inventory";
 lang["#TabMenu_Settings"] = "Settings";
 lang["#TabMenu_Home"] = "Home";
 lang["#TabMenu_Scoreboard"] = "Players";
 lang["#TabMenu_Admin"] = "Admin";
+lang["#TabMenu_CloseMenu"] = "Close Menu";
+
+lang["#MainMenu_Disconnect"] = "Disconnect";
+lang["#MainMenu_Settings"] = "Settings";
+lang["#MainMenu_Cancel"] = "Cancel";
+lang["#MainMenu_Load"] = "Load";
+lang["#MainMenu_New"] = "New";
 
 lang["#CMDDesc_Usage"] = "Syntax:";
 lang["#CMDDesc_Aliases"] = "Aliases:";
@@ -60,6 +67,7 @@ lang["#Settings_EnableAdminESP"] = "Enable the Admin ESP.";
 lang["#Settings_FitType"] = "Choose a fit for your background.";
 lang["#Settings_DrawBars"] = "Draw the HUD bars.";
 lang["#Settings_DrawBarText"] = "Draw text on the bars.";
+lang["#Settings_UseTabDash"] = "Check to use the tab dashboard, uncheck for classic tab menu.";
 
 lang["#Settings_Fit_Tiled"] = "Tiled";
 lang["#Settings_Fit_Center"] = "Center";

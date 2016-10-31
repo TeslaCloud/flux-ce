@@ -11,6 +11,18 @@ function PANEL:Init()
 	self:SetSize(scrW * 0.6, scrH * 0.6);
 
 	self:Rebuild();
+
+	local sbHooks = {};
+
+	function sbHooks:PlayerInitialSpawn(player)
+		self:Rebuild();
+	end;
+
+	function sbHooks:PlayerDisconnected(player)
+		self:Rebuild();
+	end;
+
+	plugin.AddHooks("ScoreboardHooks", sbHooks);
 end;
 
 function PANEL:Rebuild()
@@ -43,6 +55,10 @@ function PANEL:Rebuild()
 
 		y = y + playerPanel:GetTall() * 1.1;
 	end;
+end;
+
+function PANEL:OnRemove()
+	plugin.RemoveHooks("ScoreboardHooks");
 end;
 
 -- Since the model panels don't fade properly.

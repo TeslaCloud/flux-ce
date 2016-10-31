@@ -16,16 +16,58 @@ rw.theme.stored = stored;
 local cache = rw.theme.cache or {};
 rw.theme.cache = cache;
 
+function rw.theme:SetMenu(sMenu, sValue)
+	cache["menu_"..sMenu] = sValue;
+end;
+
+function rw.theme:GetMenu(sMenu, fallback)
+	return cache["menu_"..sMenu] or fallback;
+end;
+
+function rw.theme:OpenMenu(sMenu, parent, fallback)
+	local menu = self:GetMenu(sMenu, fallback);
+
+	if (menu) then
+		return vgui.Create(menu, parent);
+	end;
+end;
+
+function rw.theme:SetSound(sSound, sValue)
+	cache["sound_"..sSound] = sValue;
+end;
+
+function rw.theme:GetSound(sSound, fallback)
+	return cache["sound_"..sSound] or fallback;
+end;
+
+function rw.theme:SetColor(sColor, cValue)
+	cache["color_"..sColor] = cValue;
+end;
+
+function rw.theme:GetColor(sColor, fallback)
+	return cache["color_"..sColor] or fallback;
+end;
+
+function rw.theme:SetMaterial(sMaterial, mMat)
+	cache["material_"..sMaterial] = mMat;
+end;
+
+function rw.theme:GetMaterial(sMaterial, fallback)
+	return cache["material_"..sMaterial] or fallback;
+end;
+
 Class "Theme";
 
 --[[ Basic Skeleton --]]
 function Theme:Theme(name, data)
-	self.m_name = name or data.name or "Unknown";
-	self.m_uniqueID = data.uniqueID or string.lower(string.gsub(self.m_name, " ", "_")) or "unknown";
-	self.m_author = data.author or "Unknown Author";
-	self.m_hooks = data.hooks or {};
+	self.m_name = name or (data and data.name) or "Unknown";
+	self.m_uniqueID = (data and data.uniqueID) or string.lower(string.gsub(self.m_name, " ", "_")) or "unknown";
+	self.m_author = (data and data.author) or "Unknown Author";
+	self.m_hooks = (data and data.hooks) or {};
 
-	table.Merge(self, data);
+	if (data) then
+		table.Merge(self, data);
+	end;
 end;
 
 function Theme:OnLoaded() end;
@@ -36,7 +78,7 @@ function Theme:Remove()
 end;
 
 function Theme:Register()
-	return rw.theme:RegisterTheme(self);
+	return rw.theme.RegisterTheme(self);
 end;
 
 function rw.theme.GetStored()
@@ -44,7 +86,7 @@ function rw.theme.GetStored()
 end;
 
 function rw.theme.FindTheme(id)
-	return stored[id];
+	return stored[string.lower(string.gsub(id, " ", "_"))];
 end;
 
 function rw.theme:RemoveTheme(id)
@@ -53,17 +95,19 @@ function rw.theme:RemoveTheme(id)
 	end;
 end;
 
-function rw.theme:RegisterTheme(themeTable)
+function rw.theme.RegisterTheme(themeTable)
 	stored[themeTable.m_uniqueID] = themeTable;
 end;
 
 function rw.theme:LoadTheme(theme)
-	local themeTable = (isstring(theme) and self.FindTheme(theme)) or (istable(theme) and theme);
+	local themeTable = self.FindTheme(theme);
 
-	self.activeTheme = themeTable;
+	if (themeTable) then
+		self.activeTheme = themeTable;
 
-	if (themeTable.OnLoaded) then
-		themeTable:OnLoaded();
+		if (themeTable.OnLoaded) then
+			themeTable:OnLoaded();
+		end;
 	end;
 end;
 
@@ -75,30 +119,25 @@ function rw.theme:UnloadTheme()
 	self.activeTheme = nil;
 end;
 
--- This doesn't seem to work.
---[[
-function rw.theme:CapturePanelToMat(panel)
-	if (self.cache[panel]) then
-		return self.cache[panel];
+local themeHooks = {};
+
+function themeHooks:InitPostEntity()
+	rw.theme:LoadTheme("Rework");
+end;
+
+plugin.AddHooks("rwThemeHooks", themeHooks);
+
+-- Create the default theme that other themes will derive from.
+local THEME = Theme("Rework", {author = "TeslaCloud"});
+
+function THEME:OnLoaded()
+	if (rw.settings:GetBool("UseTabDash")) then
+		rw.theme:SetMenu("TabMenu", "rwTabDash");
+	else
+		rw.theme:SetMenu("TabMenu", "rwTabClassic");
 	end;
 
-	local captureData = render.Capture({
-		format = "png",
-		quality = 70,
-		x = panel.x,
-		y = panel.y,
-		w = panel:GetWide(),
-		h = panel:GetWide()
-	});
-
-	local name = os.time();
-	local path = "rework/materials/temp/"..name..".txt";
-
-	file.CreateDir("rework/"); file.CreateDir("rework/materials/"); file.CreateDir("rework/materials/temp/");
-	file.Write(path, captureData);
-
-	self.cache[panel] = Material("../data/"..path, "noclamp smooth");
-
-	return self.cache[panel];
+	rw.theme:SetMenu("MainMenu", "rwMainMenu");
 end;
---]]
+
+THEME:Register();

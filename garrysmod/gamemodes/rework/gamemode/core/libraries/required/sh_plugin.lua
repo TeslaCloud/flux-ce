@@ -105,8 +105,8 @@ end;
 function plugin.RemoveHooks(id)
 	for k, v in pairs(hooksCache) do
 		for k2, v2 in ipairs(v) do
-			if (v.id and v.id == id) then
-				table.remove(hooksCache[k], k2);
+			if (v2.id and v2.id == id) then
+				hooksCache[k][k2] = nil;
 			end;
 		end;
 	end;
@@ -336,7 +336,7 @@ do
 				table.remove(result, 1);
 
 				if (!success) then
-					ErrorNoHalt("[Rework:"..v[2]:GetName().."] The "..name.." hook has failed to run!\n");
+					ErrorNoHalt("[Rework:"..v.id or v[2]:GetName().."] The "..name.." hook has failed to run!\n");
 					ErrorNoHalt(unpack(result), "\n");
 				elseif (result[1] != nil) then
 					return unpack(result);

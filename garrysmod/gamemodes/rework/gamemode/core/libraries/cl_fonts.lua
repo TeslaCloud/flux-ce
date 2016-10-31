@@ -78,6 +78,12 @@ function rw.fonts:CreateFonts()
 		size = self:ScaleSize(34)
 	});
 
+	self:CreateFont("menu_thin_large", {
+		font = "Roboto Lt",
+		weight = 400,
+		size = self:ScaleSize(42)
+	});
+
 	self:CreateFont("menu_thin_small", {
 		font = "Roboto Lt",
 		weight = 300,

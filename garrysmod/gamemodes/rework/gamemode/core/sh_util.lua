@@ -33,7 +33,8 @@ end;
 
 base64 = base64 or {};
 
-local b='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
+local b = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
+
 -- encoding
 function base64.encode(data)
 	return ((data:gsub('.', function(x) 
@@ -55,11 +56,12 @@ function base64.encode(data)
 
 		return b:sub(c + 1, c + 1)
 	end)..({ '', '==', '=' })[#data%3 + 1])
-end
+end;
 
 -- decoding
 function base64.decode(data)
-	data = string.gsub(data, '[^'..b..'=]', '')
+	data = string.gsub(data, '[^'..b..'=]', '');
+
 	return (data:gsub('.', function(x)
 		if (x == '=') then return '' end
 
@@ -81,7 +83,7 @@ function base64.decode(data)
 
 		return string.char(c)
 	end))
-end
+end;
 
 -- A function to convert a single hexadecimal digit to decimal.
 function util.HexToDec(hex)
@@ -107,7 +109,7 @@ function util.HexToDec(hex)
 		end;
 	end;
 
-	ErrorNoHalt("[Catwork] '"..hex.."' is not a hexadecimal number!");
+	ErrorNoHalt("[Rework] '"..hex.."' is not a hexadecimal number!");
 	return 0;
 end;
 

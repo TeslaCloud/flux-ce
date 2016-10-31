@@ -129,6 +129,14 @@ function PANEL:Init()
 		self:OpenChildMenu(rw.savedTab);
 		rw.savedTab = nil;
 	end;
+
+	local tabHooks = {};
+
+	function tabHooks:RenderScene()
+		return true;
+	end;
+
+	plugin.AddHooks("TabDashHooks", tabHooks);
 end;
 
 function PANEL:OnRemove()
@@ -146,9 +154,7 @@ function PANEL:OnRemove()
 	chatbox.CreateDerma();
 	chatbox.textEntry:SetAlpha(0);
 
-	if (self.menu) then
-		rw.savedTab = util.GetPanelClass(self.menu);
-	end;
+	plugin.RemoveHooks("TabDashHooks");
 end;
 
 function PANEL:CreateBackPanel()
@@ -247,8 +253,9 @@ end;
 
 function PANEL:CloseMenu(bForce)
 	if (bForce) then
-		rw.tabMenu:Remove();
-		rw.tabMenu = nil;
+		RememberCursorPosition();
+
+		self:Remove();
 
 		if (timer.Exists("rwCloseTabMenu")) then
 			timer.Remove("rwCloseTabMenu");
@@ -261,9 +268,13 @@ function PANEL:CloseMenu(bForce)
 	self.viewPort:MoveTo(0, 0, closeDuration);
 	self.viewPort:SizeTo(ScrW(), ScrH(), closeDuration);
 
-	timer.Create("rwCloseTabMenu", closeDuration, 1, function()
-		RememberCursorPosition();
+	rw.tabMenu = nil;
 
+	if (self.menu) then
+		rw.savedTab = util.GetPanelClass(self.menu);
+	end;
+
+	timer.Create("rwCloseTabMenu", closeDuration, 1, function()
 		if (IsValid(self)) then
 			self:CloseMenu(true);
 		end;
@@ -377,7 +388,7 @@ function PANEL:CloseChildMenu(bForce, noExpand)
 	end;
 end;
 
-derma.DefineControl("rwTabMenu", "", PANEL, "EditablePanel");
+derma.DefineControl("rwTabDash", "", PANEL, "EditablePanel");
 
 local PANEL = {};
 
@@ -550,7 +561,11 @@ function PANEL:Init()
 
 		button.DoClick = function(panel)
 			if (panel.menu) then
-				self:GetParent():OpenChildMenu(panel.menu);	
+				self:GetParent():OpenChildMenu(panel.menu);
+			end;
+
+			if (v.callback) then
+				v.callback(self:GetParent());
 			end;
 
 			panel.clickStart = CurTime();

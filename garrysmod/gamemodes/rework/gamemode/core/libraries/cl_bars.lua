@@ -168,7 +168,7 @@ function rw.bars:Draw(uniqueID)
 			end;
 		end;
 
-		if (!plugin.Call("DrawBarTexts", barInfo)) then
+		if (!plugin.Call("DrawBarTexts", barInfo) and rw.settings:GetBool("DrawBarText")) then
 			draw.SimpleText(barInfo.text, barInfo.font, barInfo.x + 8, barInfo.y + barInfo.textOffset, Color(255, 255, 255));
 
 			if (barInfo.hinderDisplay and barInfo.hinderDisplay <= barInfo.hinderValue) then

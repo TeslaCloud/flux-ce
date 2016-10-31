@@ -33,11 +33,12 @@ end;
 function GM:InitPostEntity()
 	rw.client = rw.client or LocalPlayer();
 
-	rw.client.IntroPanel = vgui.Create("reMainMenu");
-	rw.client.IntroPanel:MakePopup();
+	rw.IntroPanel = vgui.Create("rwIntro");
+	rw.IntroPanel:MakePopup();
 
  	for k, v in ipairs(player.GetAll()) do
  		local model = v:GetModel();
+
  		plugin.Call("PlayerModelChanged", v, model, model);
  	end;
 end;
@@ -48,18 +49,16 @@ function GM:RenderScreenspaceEffects()
 	end;
 end;
 
-function GM:HUDDrawScoreBoard()
-
-end;
+function GM:HUDDrawScoreBoard() end;
 
 -- Called when the scoreboard should be shown.
 function GM:ScoreboardShow()
 	if (rw.client:HasInitialized()) then
-		if (rw.tabMenu) then
+		if (rw.tabMenu and rw.tabMenu.CloseMenu) then
 			rw.tabMenu:CloseMenu(true);
 		end;
 
-		rw.tabMenu = vgui.Create("rwTabMenu");
+		rw.tabMenu = rw.theme:OpenMenu("TabMenu", nil, "rwTabMenu");
 		rw.tabMenu:MakePopup();
 		rw.tabMenu.heldTime = CurTime() + 0.3;
 	end;
@@ -68,7 +67,7 @@ end;
 -- Called when the scoreboard should be hidden.
 function GM:ScoreboardHide()
 	if (rw.client:HasInitialized()) then
-		if (rw.tabMenu and CurTime() >= rw.tabMenu.heldTime) then
+		if (rw.tabMenu and rw.tabMenu.heldTime and CurTime() >= rw.tabMenu.heldTime) then
 			rw.tabMenu:CloseMenu();
 		end;
 	end;
@@ -83,7 +82,17 @@ function GM:AdjustTabDockMenus(menus)
 		icon = "fa-cog",
 		menu = "rwSettings"
 	};
-	menus["Characters"] = {
+	menus["MainMenu"] = {
+		icon = "fa-home",
+		callback = function(panel)
+			panel:CloseMenu(true);
+
+			rw.IntroPanel = rw.theme:OpenMenu("MainMenu", nil, "rwMainMenu");
+			rw.IntroPanel:MakePopup();
+		end
+	};
+	menus["Scoreboard"] = {
+		menu = "rwScoreboard",
 		icon = "fa-users"
 	};
 end;
@@ -270,30 +279,6 @@ function GM:AdjustSettingCallbacks(callbacks)
 	end;
 end;
 
-function GM:RenderScene()
-	if (rw.tabMenu) then
-		return true;
-	end;
-end;
-
-do
-	local function RefreshScoreboard()
-		if (rw.tabMenu) then
-			if (rw.tabMenu:GetActiveCategory() == "#TabMenu_Scoreboard") then
-				rw.tabMenu.menu:Rebuild();
-			end;
-		end;
-	end;
-
-	function GM:PlayerInitialSpawn(player)
-		RefreshScoreboard();
-	end;
-
-	function GM:PlayerDisconnected(player)
-		RefreshScoreboard();
-	end;
-end;
-
 local colorRed = Color(200, 30, 30);
 local colorDark = Color(40, 40, 40);
 local colorBlue = Color(30, 100, 200);
@@ -312,10 +297,12 @@ rw.bars:Register("armor", {
 
 -- Called when the player's HUD is drawn.
 function GM:HUDPaint()
-	if (!plugin.Call("RWHUDPaint") and rw.settings:GetBool("DrawBars")) then
-		rw.bars:SetValue("health", rw.client:Health());
-		rw.bars:SetValue("armor", rw.client:Armor());
-		rw.bars:DrawTopBars();
+	if (!IsValid(rw.IntroPanel)) then
+		if (!plugin.Call("RWHUDPaint") and rw.settings:GetBool("DrawBars")) then
+			rw.bars:SetValue("health", rw.client:Health());
+			rw.bars:SetValue("armor", rw.client:Armor());
+			rw.bars:DrawTopBars();
+		end;
 	end;
 end;
 
