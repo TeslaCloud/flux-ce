@@ -198,7 +198,7 @@ function PANEL:CloseChildMenu(bForce)
 end;
 
 function PANEL:Paint(w, h)
-//	draw.RoundedBox(0, 0, 0, w, h, colorBlack);
+	draw.RoundedBox(0, 0, 0, w, h, colorBlack);
 
 	if (!rw.client or !rw.client:HasInitialized()) then
 		draw.SimpleText("LOADING...", "DermaLarge", 100, 100);

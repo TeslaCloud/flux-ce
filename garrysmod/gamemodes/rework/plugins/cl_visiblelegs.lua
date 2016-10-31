@@ -58,6 +58,12 @@ if (IsValid(LocalPlayer()) and LocalPlayer().legs) then
 	LocalPlayer().legs:Remove();
 end;
 
+function PLUGIN:PlayerModelChanged(player, sNewModel, sOldModel)
+	if (LocalPlayer().legs) then
+		LocalPlayer().legs:Remove();
+	end;
+end;
+
 local offset = Vector(-50, -50, 0);
 local scale = Vector(1, 1, 1);
 
@@ -81,7 +87,7 @@ function PLUGIN:SpawnLegs(player)
 		end;
 
 		legs:SetNoDraw(true);
-		legs:SetIK(false);
+		legs:SetIK(true);
 	end;
 end;
 

@@ -4,6 +4,7 @@
 --]]
 
 library.New("config", _G);
+
 local stored = config.stored or {};
 config.stored = stored;
 

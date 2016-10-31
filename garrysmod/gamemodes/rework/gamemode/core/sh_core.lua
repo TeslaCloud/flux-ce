@@ -8,27 +8,27 @@ library = library or {};
 library.stored = library.stored or {};
 
 -- A function to print a prefixed message.
-function rw.core:Print(msg)
-	if (typeof(msg) != "table") then
+function rw.core:Print(strMessage)
+	if (typeof(strMessage) != "table") then
 		Msg("[Rework] ");
-		print(msg);
+		print(strMessage);
 	else
 		print("[Rework] Printing table:");
-		PrintTable(msg);
+		PrintTable(strMessage);
 	end;
 end;
 
 -- A function to print developer message.
-function rw.core:DevPrint(msg)
+function rw.core:DevPrint(strMessage)
 	if (rw.Devmode) then
-		print("[Rework:Dev] "..msg);
+		print("[Rework:Dev] "..strMessage);
 	end;
 end;
 
 rw.oldFileWrite = rw.oldFileWrite or file.Write;
 
-function file.Write(fileName, content)
-	local exploded = string.Explode("/", fileName);
+function file.Write(strFileName, strContent)
+	local exploded = string.Explode("/", strFileName);
 	local curPath = "";
 
 	for k, v in ipairs(exploded) do
@@ -43,92 +43,92 @@ function file.Write(fileName, content)
 		end;
 	end;
 
-	return rw.oldFileWrite(fileName, content);
+	return rw.oldFileWrite(strFileName, strContent);
 end;
 
 -- A function to include a file based on it's prefix.
-function rw.core:Include(file)
+function rw.core:Include(strFile)
 	if (SERVER) then
-		if (file:find("sh_") or file:find("shared.lua")) then
-			AddCSLuaFile(file);
-			include(file);
-		elseif (file:find("cl_")) then
-			AddCSLuaFile(file);
-		elseif (file:find("sv_") or file:find("init.lua")) then
-			include(file);
+		if (strFile:find("sh_") or strFile:find("shared.lua")) then
+			AddCSLuaFile(strFile);
+			include(strFile);
+		elseif (strFile:find("cl_")) then
+			AddCSLuaFile(strFile);
+		elseif (strFile:find("sv_") or strFile:find("init.lua")) then
+			include(strFile);
 		end;
 	else
-		if (file:find("sh_") or file:find("shared.lua") 
-		or file:find("cl_")) then
-			include(file);
+		if (strFile:find("sh_") or strFile:find("shared.lua") 
+		or strFile:find("cl_")) then
+			include(strFile);
 		end;
 	end;
 end;
 
 -- A function to include all files in a directory.
-function rw.core:IncludeDirectory(dir, base, recursive)
-	if (base) then
-		if (typeof(base) == "boolean") then
-			base = "rework/gamemode/";
-		elseif (!base:EndsWith("/")) then 
-			base = base.."/";
+function rw.core:IncludeDirectory(strDirectory, strBase, bIsRecursive)
+	if (strBase) then
+		if (typeof(strBase) == "boolean") then
+			strBase = "rework/gamemode/";
+		elseif (!strBase:EndsWith("/")) then 
+			strBase = strBase.."/";
 		end;
 
-		dir = base..dir;
+		strDirectory = strBase..strDirectory;
 	end;
 
-	if (!dir:EndsWith("/")) then
-		dir = dir.."/";
+	if (!strDirectory:EndsWith("/")) then
+		strDirectory = strDirectory.."/";
 	end;
 
-	if (recursive) then
-		local files, folders = _file.Find(dir.."*", "LUA", "namedesc");
+	if (bIsRecursive) then
+		local files, folders = _file.Find(strDirectory.."*", "LUA", "namedesc");
 
 		-- First include the files.
 		for k, v in ipairs(files) do
 			if (v:GetExtensionFromFilename() == "lua") then
-				self:Include(dir..v);
+				self:Include(strDirectory..v);
 			end;
 		end;
 
 		-- Then include all directories.
 		for k, v in ipairs(folders) do
-			self:IncludeDirectory(dir..v, true);
+			self:IncludeDirectory(strDirectory..v, bIsRecursive);
 		end;
 	else
-		local files, _ = _file.Find(dir.."*.lua", "LUA", "namedesc");
+		local files, _ = _file.Find(strDirectory.."*.lua", "LUA", "namedesc");
 
 		for k, v in ipairs(files) do
-			self:Include(dir..v);
+			self:Include(strDirectory..v);
 		end;
 	end;
 end;
 
 -- A function to create a new library.
-function library.New(name, parent)
-	if (typeof(parent) == "table") then
-		parent[name] = parent[name] or {};
-		return parent[name];
+function library.New(strName, tParent)
+	if (typeof(tParent) == "table") then
+		tParent[strName] = tParent[strName] or {};
+		return tParent[strName];
 	end;
 
-	library.stored[name] = library.stored[name] or {};
-	return library.stored[name];
+	library.stored[strName] = library.stored[strName] or {};
+	return library.stored[strName];
 end;
 
 -- A function to get an existing library.
-function library.Get(name, parent)
-	if (parent) then
-		return parent[name] or library.New(name, parent);
+function library.Get(strName, tParent)
+	if (tParent) then
+		return tParent[strName] or library.New(strName, tParent);
 	end;
 
-	return library.stored[name] or library.New(name);
+	return library.stored[strName] or library.New(strName);
 end;
 
 -- Set library table's Metatable so that we can call it like a function.
-setmetatable(library, {__call = function(tab, name, parent) return tab.Get(name, parent) end});
+setmetatable(library, {__call = function(tab, strName, tParent) return tab.Get(strName, tParent) end});
 
 -- A function to create a new class. Supports constructors and inheritance.
-function library.NewClass(name, parent, extends)
+function library.NewClass(strName, tParent, CExtends)
 	local class = {
 		__call = function(obj, ...)
 			local newObj = {};
@@ -141,11 +141,11 @@ function library.NewClass(name, parent, extends)
 				pcall(obj.BaseClass, newObj, ...);
 			end;
 
-			if (obj[name]) then
-				local success, value = pcall(obj[name], newObj, ...);
+			if (obj[strName]) then
+				local success, value = pcall(obj[strName], newObj, ...);
 
 				if (!success) then
-					ErrorNoHalt("["..name.."] Class constructor has failed to run!\n");
+					ErrorNoHalt("["..strName.."] Class constructor has failed to run!\n");
 					ErrorNoHalt(value.."\n");
 				end;
 			end;
@@ -154,19 +154,19 @@ function library.NewClass(name, parent, extends)
 		end;
 	}
 
-	if (typeof(extends) == "table") then
-		class.__index = extends;
+	if (typeof(CExtends) == "table") then
+		class.__index = CExtends;
 	end;
 
-	local obj = library.New(name, (parent or _G));
-	obj.ClassName = name;
-	obj.BaseClass = extends or false;
+	local obj = library.New(strName, (tParent or _G));
+	obj.ClassName = strName;
+	obj.BaseClass = CExtends or false;
 
-	return setmetatable((parent or _G)[name], class);
+	return setmetatable((tParent or _G)[strName], class);
 end;
 
-function Class(name, extends, parent)
-	return library.NewClass(name, parent, extends);
+function Class(strName, CExtends, tParent)
+	return library.NewClass(strName, tParent, CExtends);
 end;
 
 -- Alias because class could get easily confused with player class.
@@ -180,9 +180,9 @@ function rw.core:GetSchemaFolder()
 	end;
 end;
 
-function rw.core:Serialize(table)
-	if (typeof(table) == "table") then
-		local bSuccess, value = pcall(pon.encode, table);
+function rw.core:Serialize(tTable)
+	if (typeof(tTable) == "table") then
+		local bSuccess, value = pcall(pon.encode, tTable);
 
 		if (!bSuccess) then
 			ErrorNoHalt("[Rework] Failed to serialize a table!\n");
@@ -192,7 +192,7 @@ function rw.core:Serialize(table)
 
 		return value; 
 	else
-		print("[Rework] You must serialize a table, not "..typeof(table).."!");
+		print("[Rework] You must serialize a table, not "..typeof(tTable).."!");
 		return "";
 	end;
 end;
@@ -228,14 +228,14 @@ function rw.core:IncludeSchema()
 	end;
 end;
 
-function rw.core:IncludePlugins(folder)
+function rw.core:IncludePlugins(strFolder)
 	if (SERVER) then
-		return plugin.IncludePlugins(folder);
+		return plugin.IncludePlugins(strFolder);
 	else
 		timer.Create("PluginLoader", 0.04, 0, function()
 			if (rw.sharedTable) then
 				timer.Remove("PluginLoader");
-				plugin.IncludePlugins(folder);
+				plugin.IncludePlugins(strFolder);
 			end;
 		end)
 	end;
@@ -279,15 +279,15 @@ do
 	local MaterialCache = rw.core.MaterialCache or {};
 	rw.core.MaterialCache = MaterialCache;
 
-	function rw.core:GetMaterial(matPath, pngParams)
-		if (!MaterialCache[matPath]) then
-			MaterialCache[matPath] = Material(matPath, pngParams);
+	function rw.core:GetMaterial(strMatPath, strPngParams)
+		if (!MaterialCache[strMatPath]) then
+			MaterialCache[strMatPath] = Material(strMatPath, strPngParams);
 		end;
 
-		return MaterialCache[matPath];
+		return MaterialCache[strMatPath];
 	end;
 
-	function rw.core:ClearMaterial(matPath)
-		MaterialCache[matPath] = nil;
+	function rw.core:ClearMaterial(strMatPath)
+		MaterialCache[strMatPath] = nil;
 	end;
 end;

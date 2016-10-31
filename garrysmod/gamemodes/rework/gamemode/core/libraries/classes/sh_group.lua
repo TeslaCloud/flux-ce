@@ -3,105 +3,107 @@
 	Do not share, re-distribute or sell.
 --]]
 
-Class "Group";
+Class "CUserGroup";
 
-Group.m_Name = "Undefined";
-Group.m_Description = "Undefined";
-Group.m_Color = Color(255, 255, 255);
-Group.m_Icon = "icon16/user.png";
-Group.m_Immunity = 0;
-Group.m_IsProtected = false;
-Group.m_Permissions = {};
-Group.m_Base = nil;
+CUserGroup.m_Name = "Undefined";
+CUserGroup.m_Description = "Undefined";
+CUserGroup.m_Color = Color(255, 255, 255);
+CUserGroup.m_Icon = "icon16/user.png";
+CUserGroup.m_Immunity = 0;
+CUserGroup.m_IsProtected = false;
+CUserGroup.m_Permissions = {};
+CUserGroup.m_Base = nil;
 
-function Group:Group(id)
+function CUserGroup:CUserGroup(id)
 	self.m_uniqueID = id;
 end;
 
-function Group:Register()
+function CUserGroup:Register()
 	rw.admin:CreateGroup(self.m_uniqueID, self);
 end;
 
 -- Called when player's primary group is being set to this group.
-function Group:OnGroupSet(player, oldGroup) end;
+function CUserGroup:OnGroupSet(player, oldGroup) end;
 
 -- Called when player's primary group is taken or modified.
-function Group:OnGroupTake(player, newGroup) end;
+function CUserGroup:OnGroupTake(player, newGroup) end;
 
 -- Called when player is being added to this group as secondary group.
-function Group:OnGroupAdd(player, secondaryGroups) end;
+function CUserGroup:OnGroupAdd(player, secondaryGroups) end;
 
 -- Called when player is being removed from this group as secondary group.
-function Group:OnGroupRemove(player) end;
+function CUserGroup:OnGroupRemove(player) end;
 
-function Group:SetName(name)
+function CUserGroup:SetName(name)
 	self.m_Name = name;
 end;
 
-function Group:SetDescription(desc)
+function CUserGroup:SetDescription(desc)
 	self.m_Description = desc;
 end;
 
-function Group:SetColor(col)
+function CUserGroup:SetColor(col)
 	self.m_Color = col;
 end;
 
-function Group:SetImmunity(immunity)
+function CUserGroup:SetImmunity(immunity)
 	self.m_Immunity = immunity;
 end;
 
-function Group:SetIsProtected(bIsProtected)
+function CUserGroup:SetIsProtected(bIsProtected)
 	self.m_IsProtected = bIsProtected;
 end;
 
-function Group:SetPermissions(permissionsTable)
+function CUserGroup:SetPermissions(permissionsTable)
 	self.m_Permissions = permissionsTable;
 end;
 
-function Group:SetIcon(icon)
+function CUserGroup:SetIcon(icon)
 	self.m_Icon = icon;
 end;
 
-function Group:SetBase(base)
+function CUserGroup:SetBase(base)
 	self.m_Base = base;
 end;
 
-Group.SetParent = Group.SetBase;
+CUserGroup.SetParent = CUserGroup.SetBase;
 
-function Group:GetID()
+function CUserGroup:GetID()
 	return self.m_uniqueID;
 end;
 
-function Group:GetName()
+function CUserGroup:GetName()
 	return self.m_Name or "Unknown";
 end;
 
-function Group:GetDescription()
+function CUserGroup:GetDescription()
 	return self.m_Description or "This group has no description";
 end;
 
-function Group:GetColor()
+function CUserGroup:GetColor()
 	return self.m_Color or Color("white");
 end;
 
-function Group:GetImmunity()
+function CUserGroup:GetImmunity()
 	return self.m_Immunity or 0;
 end;
 
-function Group:GetIsProtected()
+function CUserGroup:GetIsProtected()
 	return self.m_IsProtected or false;
 end;
 
-function Group:GetPermissions()
+function CUserGroup:GetPermissions()
 	return self.m_Permissions or {};
 end;
 
-function Group:GetIcon()
+function CUserGroup:GetIcon()
 	return self.m_Icon or "icon16/user.png";
 end;
 
-function Group:GetBase()
+function CUserGroup:GetBase()
 	return self.m_Base or nil;
 end;
 
-Group.GetParent = Group.GetBase;
+CUserGroup.GetParent = CUserGroup.GetBase;
+
+_G["Group"] = CUserGroup;

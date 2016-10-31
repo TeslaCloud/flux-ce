@@ -4,6 +4,7 @@
 --]]
 
 library.New("sound", rw);
+
 local cache = rw.sound.cache or {};
 rw.sound.cache = cache;
 

@@ -397,11 +397,23 @@ function string.IsCommand(str)
 	return false;
 end;
 
-function string.MakeID(str)
-	str = str:lower();
-	str = str:gsub(" ", "_");
+do
+	-- ID's should not have any of those characters.
+	local blockedChars = {
+		"'", "\"", "\\", "/", "^",
+		":", ".", ";", "&", ",", "%"
+	};
 
-	return str;
+	function string.MakeID(str)
+		str = str:lower();
+		str = str:gsub(" ", "_");
+
+		for k, v in ipairs(blockedChars) do
+			str = str:Replace(v, "");
+		end;
+
+		return str;
+	end;
 end;
 
 function util.GetTextSize(font, text)
