@@ -24,6 +24,7 @@ function GM:PlayerInitialSpawn(player)
 	rw.player:Restore(player);
 
 	if (player:IsBot()) then
+		player:SetInitialized(true);
 		return;
 	end;
 
@@ -153,10 +154,9 @@ function GM:PlayerShouldTakeDamage(player, attacker)
 	end;
 end;
 
-function GM:PlayerSay(player, text, bIsTeam)
-	if (string.IsCommand(text)) then
-		text = text:utf8sub(2, text:utf8len()); -- one step less for interpreter.
-		rw.command:Interpret(player, text);
+function GM:ChatboxPlayerSay(player, message)
+	if (message.isCommand) then
+		rw.command:Interpret(player, message.text);
 		return "";
 	end;
 end;

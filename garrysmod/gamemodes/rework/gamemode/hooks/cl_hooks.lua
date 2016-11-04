@@ -311,14 +311,36 @@ end;
 function GM:HUDDrawTargetID()
 	if (IsValid(rw.client) and rw.client:Alive()) then
 		local trace = rw.client:GetEyeTraceNoCursor();
+		local ent = trace.Entity;
 
-		if (IsValid(trace.Entity) and trace.Entity.DrawTargetID) then
+		if (IsValid(ent)) then
 			local screenPos = (trace.HitPos + Vector(0, 0, 16)):ToScreen();
 			local x, y = screenPos.x, screenPos.y;
 			local distance = rw.client:GetPos():Distance(trace.HitPos);
 
-			trace.Entity:DrawTargetID(x, y, distance);
+			if (ent:IsPlayer()) then
+				plugin.Call("DrawPlayerTargetID", ent, x, y, distance);
+			elseif (ent.DrawTargetID) then
+				ent:DrawTargetID(x, y, distance);
+			end;
 		end;
+	end;
+end;
+
+function GM:DrawPlayerTargetID(player, x, y, distance)
+	if (distance < 1020) then
+		local alpha = 255;
+
+		if (distance > 540) then
+			local d = distance - 540;
+			alpha = math.Clamp((255 * (480 - d) / 480), 0, 255);
+		end;
+
+		local width, height = util.GetTextSize("tooltip_large", player:Name());
+		draw.SimpleText(player:Name(), "tooltip_large", x - width * 0.5, y - 40, Color(255, 255, 255, alpha));
+
+		local width, height = util.GetTextSize("tooltip_small", player:GetPhysDesc());
+		draw.SimpleText(player:GetPhysDesc(), "tooltip_small", x - width * 0.5, y - 14, Color(255, 255, 255, alpha));
 	end;
 end;
 

@@ -119,6 +119,11 @@ function playerMeta:GetInventory()
 	return self:GetNetVar("Inventory", {});
 end;
 
+function playerMeta:GetPhysDesc()
+	return self:GetNetVar("PhysDesc", "This character has no description!");
+end;
+
+
 function playerMeta:GetActiveCharacterTable()
 	if (self:GetActiveCharacter()) then
 		return stored[self:SteamID()][self:GetActiveCharacter()];

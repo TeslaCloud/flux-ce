@@ -47,7 +47,7 @@ function chatbox.CanHear(listener, position, radius)
 		if (radius == 0) then return true; end;
 		if (radius < 0) then return false; end;
 
-		if (true) then //(CW.player:GetRealTrace(listener).HitPos:Distance(position) <= (radius / 2) or position:Distance(listener:GetPos()) <= radius) then
+		if (position:Distance(listener:GetPos()) <= radius) then
 			return true;
 		end;
 	end;
@@ -173,7 +173,7 @@ do
 	chatbox.AddPrefix("/", function(msgData)
 		local text = msgData.text;
 
-		if (text:StartWith("/") and !text:StartWith("//")) then
+		if (string.IsCommand(text) and !text:StartWith("//")) then
 			msgData.filter = "command";
 			msgData.isCommand = true;
 			msgData.radius = -1;
@@ -360,40 +360,6 @@ netstream.Hook("ChatboxTextEntered", function(player, msgText)
 	plugin.Call("ChatboxPlayerSay", player, message);
 
 	local shouldSend = true;
-
-	/*if (message.filter == "ooc") then
-		if (plugin.Call("PlayerCanSayOOC", player, message.text)) then
-			if (!player.cwNextTalkOOC or curTime > player.cwNextTalkOOC or player:IsAdmin()) then
-				player.cwNextTalkOOC = curTime + CW.config:Get("ooc_interval"):Get();
-			else
-				CW.player:Notify(
-					player, "You cannot cannot talk out-of-character for another "..math.ceil(player.cwNextTalkOOC - CurTime()).." second(s)!"
-				);
-
-				return;
-			end;
-		end;
-	elseif (message.filter == "looc") then
-		if (message.text != "") then
-			if (plugin.Call("PlayerCanSayLOOC", player, message.text) == false) then
-				shouldSend = false;
-			end;
-		end;
-	elseif (message.filter == "ic") then
-		if (plugin.Call("PlayerCanSayIC", player, message.text) == false) then
-			shouldSend = false;
-		else
-			if (CW.player:GetDeathCode(player, true)) then
-				CW.player:UseDeathCode(player, nil, {message.text});
-			end;
-
-			message.text = "\""..message.text.."\"";
-		end;
-	end;
-
-	if (CW.player:GetDeathCode(player)) then
-		CW.player:TakeDeathCode(player);
-	end;*/
 
 	if (!shouldSend) then return; end;
 	if (message.text == "" or message.text == " ") then return; end;
