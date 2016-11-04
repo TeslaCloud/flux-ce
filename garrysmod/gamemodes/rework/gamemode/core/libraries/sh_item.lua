@@ -13,6 +13,11 @@ item.stored = stored;
 local instances = item.instances or {};
 item.instances = instances;
 
+-- Instances table indexed by instance ID.
+-- For quicker item lookups.
+local sorted = item.sorted or {};
+item.sorted = sorted;
+
 -- Items currently dropped and lying on the ground.
 local entities = item.entities or {};
 item.entities = entities;
@@ -71,6 +76,36 @@ function item.FindByID(uniqueID)
 		if (k == uniqueID or v.uniqueID == uniqueID) then
 			return v;
 		end;
+	end;
+end;
+
+function item.FindAllInstances(uniqueID)
+	if (instances[uniqueID]) then
+		return instances[uniqueID];
+	end;
+end;
+
+function item.FindInstanceByID(instanceID)
+	for k, v in pairs(instances) do
+		if (type(v) == "table") then
+			for k2, v2 in pairs(v) do
+				if (k2 == instanceID) then
+					return v;
+				end;
+			end;
+		end;
+	end;
+end;
+
+function item.FindByInstanceID(instanceID)
+	if (!instanceID) then return; end;
+
+	-- Not the prettiest code, but a bit faster than using a single return.
+	if (sorted[instanceID]) then
+		return sorted[instanceID];
+	else
+		sorted[instanceID] = item.FindInstanceByID(instanceID);
+		return sorted[instanceID];
 	end;
 end;
 

@@ -51,7 +51,7 @@ if (SERVER) then
 	end;
 else
 	function ENT:DrawTargetID(x, y, distance)
-		if (distance > 400) then
+		if (distance > 370) then
 			return;
 		end;
 
@@ -59,8 +59,8 @@ else
 		local desc = "derrrp";
 		local alpha = 255;
 
-		if (distance > 240) then
-			local d = distance - 240;
+		if (distance > 210) then
+			local d = distance - 210;
 			alpha = math.Clamp(255 * (160 - d) / 160, 0, 255);
 		end
 

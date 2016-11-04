@@ -318,6 +318,7 @@ function GM:PreCharacterRestore(player, index, char)
 	prepared.charPermissions = util.JSONToTable(char.charPermissions or "");
 	prepared.data = util.JSONToTable(char.data or "");
 	prepared.uniqueID = tonumber(char.uniqueID or index);
+	prepared.key = char.key;
 
 	return prepared;
 end;

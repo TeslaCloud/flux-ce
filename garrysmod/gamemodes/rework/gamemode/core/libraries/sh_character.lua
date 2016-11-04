@@ -111,6 +111,14 @@ function playerMeta:GetActiveCharacter()
 	return self:GetNetVar("ActiveCharacter", nil);
 end;
 
+function playerMeta:GetCharacterKey()
+	return self:GetNetVar("CharKey", -1);
+end;
+
+function playerMeta:GetInventory()
+	return self:GetNetVar("Inventory", {});
+end;
+
 function playerMeta:GetActiveCharacterTable()
 	if (self:GetActiveCharacter()) then
 		return stored[self:SteamID()][self:GetActiveCharacter()];
@@ -121,20 +129,27 @@ function playerMeta:GetAllCharacters()
 	return stored[self:SteamID()] or {};
 end;
 
-function playerMeta:SetActiveCharacter(id)
-	self:SetNetVar("ActiveCharacter", id);
-
-	local charData = self:GetActiveCharacterTable();
-
-	self:SetNetVar("CharacterName", charData.name or self:SteamName());
-	self:SetNetVar("PhysDesc", charData.physDesc or "");
-	self:SetNetVar("Gender", charData.gender or CHAR_GENDER_MALE);
-	self:SetNetVar("Faction", charData.faction or "player");
-	self:SetNetVar("ModelPath", charData.model or "models/humans/group01/male_02.mdl");
-	plugin.Call("OnActiveCharacterSet", self, self:GetActiveCharacterTable());
-end;
-
 if (SERVER) then
+	function playerMeta:SetActiveCharacter(id)
+		self:SetNetVar("ActiveCharacter", id);
+
+		local charData = self:GetActiveCharacterTable();
+
+		self:SetNetVar("CharacterName", charData.name or self:SteamName());
+		self:SetNetVar("PhysDesc", charData.physDesc or "");
+		self:SetNetVar("Gender", charData.gender or CHAR_GENDER_MALE);
+		self:SetNetVar("Faction", charData.faction or "player");
+		self:SetNetVar("CharKey", charData.key or -1);
+		self:SetNetVar("ModelPath", charData.model or "models/humans/group01/male_02.mdl");
+		self:SetNetVar("Inventory", charData.inventory);
+		plugin.Call("OnActiveCharacterSet", self, self:GetActiveCharacterTable());
+	end;
+
+	function playerMeta:SetInventory(newInv)
+		if (typeof(newInv) != "table") then return; end;
+		self:SetNetVar("Inventory", newInv);
+	end;
+
 	function playerMeta:SetCharacterData(key, value)
 		local charData = self:GetActiveCharacterTable();
 
