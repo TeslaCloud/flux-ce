@@ -26,9 +26,9 @@ do
 	end;
 end;
 
-function rw.fonts:CreateFont(name, fontData)
+function rw.fonts:CreateFont(name, fontData, force)
 	if (name == nil or typeof(fontData) != "table") then return; end;
-	if (stored[name]) then return; end;
+	if (stored[name] and !force) then return; end;
 
 	-- Force UTF-8 range by default.
 	fontData.extended = true;
@@ -122,6 +122,18 @@ function rw.fonts:CreateFonts()
 		size = 18,
 		weight = 600
 	});
+
+	self:CreateFont("tooltip_large", {
+		font = "Roboto Condensed",
+		size = 26,
+		weight = 500
+	}, true);
+
+	self:CreateFont("tooltip_small", {
+		font = "Roboto Condensed",
+		size = 16,
+		weight = 500
+	}, true);
 
 	plugin.Call("CreateFonts", self);
 end;

@@ -187,6 +187,7 @@ function rw.core:Serialize(tTable)
 		if (!bSuccess) then
 			ErrorNoHalt("[Rework] Failed to serialize a table!\n");
 			ErrorNoHalt(value.."\n");
+			debug.Trace();
 			return "";
 		end;
 
@@ -208,6 +209,7 @@ function rw.core:Deserialize(strData)
 	if (!bSuccess) then
 		ErrorNoHalt("[Rework] Failed to deserialize a string!\n");
 		ErrorNoHalt(value.."\n");
+		debug.Trace();
 		return {};
 	end;
 

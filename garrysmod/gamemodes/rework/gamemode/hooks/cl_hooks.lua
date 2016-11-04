@@ -302,6 +302,21 @@ function GM:HUDPaint()
 			rw.bars:SetValue("health", rw.client:Health());
 			rw.bars:SetValue("armor", rw.client:Armor());
 			rw.bars:DrawTopBars();
+
+			self.BaseClass:HUDPaint();
+		end;
+	end;
+end;
+
+function GM:HUDDrawTargetID()
+	if (IsValid(rw.client) and rw.client:Alive()) then
+		local trace = rw.client:GetEyeTraceNoCursor();
+
+		if (IsValid(trace.Entity) and trace.Entity.DrawTargetID) then
+			local screenPos = (trace.HitPos + Vector(0, 0, 16)):ToScreen();
+			local x, y = screenPos.x, screenPos.y;
+
+			trace.Entity:DrawTargetID(x, y);
 		end;
 	end;
 end;

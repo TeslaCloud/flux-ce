@@ -13,7 +13,6 @@ ENT.RenderGroup = RENDERGROUP_BOTH;
 
 if (SERVER) then
 	function ENT:Initialize()
-		self:SetModel("models/props_lab/cactus.mdl");
 		self:SetSolid(SOLID_VPHYSICS);
 		self:PhysicsInit(SOLID_VPHYSICS);
 
@@ -28,6 +27,43 @@ if (SERVER) then
 	function ENT:SetItem(itemTable)
 		if (!itemTable) then return false; end;
 
-		self:SetModel(itemTable.model);
+		print("setting item!")
+
+		self:SetModel(itemTable:GetModel());
+		self:SetColor(itemTable:GetColor())
+
+		self.item = itemTable;
+
+		item.NetworkEntityData(nil, self)
+	end;
+
+	function ENT:Think()
+		if (!self.dataSent) then
+			item.NetworkEntityData(nil, self);
+			self.dataSent = true;
+		end
+	end;
+else
+	function ENT:DrawTargetID(x, y)
+		local text = "derp";
+		local desc = "derrrp";
+		local col = Color(255, 255, 255);
+
+		if (self.item) then
+			text = self.item:GetName();
+			desc = self.item:GetDescription();
+		else
+			text = "This entity doesn't have any item tied to it. This is an error."
+			desc = "ERROR";
+			col = Color(255, 0, 0);
+		end;
+
+		local width, height = util.GetTextSize("tooltip_large", text);
+
+		draw.SimpleText(text, "tooltip_large", x - width * 0.5, y, col);
+
+		local width, height = util.GetTextSize("tooltip_small", desc);
+
+		draw.SimpleText(desc, "tooltip_small", x - width * 0.5, y + 26, col);
 	end;
 end;

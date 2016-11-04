@@ -130,6 +130,7 @@ rw.core:IncludeDirectory("core/languages", true);
 rw.core:IncludeDirectory("core/groups", true);
 rw.core:IncludeDirectory("core/commands", true);
 rw.core:IncludeDirectory("core/derma",true);
+rw.core:IncludeDirectory("core/items", true);
 rw.core:IncludeDirectory("hooks", true);
 
 rw.core:IncludePlugins("rework/plugins");

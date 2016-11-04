@@ -5,9 +5,25 @@
 
 library.New("data", _G);
 
+function data.ToSaveable(table)
+	local newTab = {};
+
+	for k, v in pairs(table) do
+		if (typeof(v) == "table" and v != table) then
+			newTab[k] = data.ToSaveable(v);
+		elseif (typeof(v) != "function" and v != table) then
+			newTab[k] = v;
+		end;
+	end;
+
+	return newTab;
+end;
+
 if (SERVER) then
 	function data.Save(key, value)
 		if (typeof(key) != "string" or typeof(value) != "table") then return; end;
+
+		value = data.ToSaveable(value);
 
 		if (!string.GetExtensionFromFilename(key)) then
 			key = key..".rw";
@@ -36,6 +52,8 @@ if (SERVER) then
 else
 	function data.Save(key, value)
 		if (typeof(key) != "string" or typeof(value) != "table") then return; end;
+
+		value = data.ToSaveable(value);
 
 		if (!string.GetExtensionFromFilename(key)) then
 			key = key..".rw";

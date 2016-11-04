@@ -7,6 +7,7 @@ Class "CItem";
 
 function CItem:CItem(uniqueID)
 	self.uniqueID = uniqueID;
+	self.data = self.data or {};
 end;
 
 function CItem:GetName()
@@ -33,6 +34,18 @@ function CItem:GetMaxStack()
 	return self.MaxStack or 64;
 end;
 
+function CItem:GetModel()
+	return self.Model or "models/props_lab/cactus.mdl";
+end;
+
+function CItem:GetSkin()
+	return self.Skin or 0;
+end;
+
+function CItem:GetColor()
+	return self.Color or Color(255, 255, 255);
+end;
+
 -- Returns:
 -- true = drop normally
 -- false = prevents item appearing and doesn't remove it from inventory.
@@ -47,6 +60,27 @@ function CItem:OnUse(player)
 	return true;
 end;
 
+if (SERVER) then
+	function CItem:SetData(id, value)
+		if (!id) then return; end;
+
+		self.data[id] = value;
+
+		item.NetworkItemData(self);
+	end;
+end;
+
+function CItem:GetData(id, default)
+	if (!id) then return; end;
+
+end;
+
+function CItem:SetEntity(ent)
+	self.entity = ent;
+end;
+
 function CItem:Register()
 	return item.Register(self.uniqueID, self);
 end;
+
+Item = CItem;
