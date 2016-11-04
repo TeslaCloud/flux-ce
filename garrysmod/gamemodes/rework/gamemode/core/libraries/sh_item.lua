@@ -35,7 +35,7 @@ function item.Register(id, data)
 	data.PrintName = data.PrintName or data.Name;
 	data.Description = data.Description or "This item has no description!";
 	data.Weight = data.Weight or 1;
-	data.IsStackable = data.IsStackable or false;
+	data.Stackable = data.Stackable or false;
 	data.MaxStack = data.MaxStack or 64;
 	data.Model = data.Model or "models/props_lab/cactus.mdl";
 	data.Skin = data.Skin or 0;
@@ -45,6 +45,25 @@ function item.Register(id, data)
 
 	stored[id] = data;
 	instances[id] = instances[id] or {};
+end;
+
+function item.ToSave(itemTable)
+	if (!itemTable) then return; end;
+
+	return {
+		uniqueID = itemTable.uniqueID,
+		Name = itemTable.Name,
+		PrintName = itemTable.PrintName,
+		Description = itemTable.Description,
+		Weight = itemTable.Weight,
+		Stackable = itemTable.Stackable,
+		MaxStack = itemTable.MaxStack,
+		Model = itemTable.Model,
+		Skin = itemTable.Skin,
+		Color = itemTable.Color,
+		instanceID = itemTable.instanceID,
+		data = itemTable.data
+	};
 end;
 
 function item.FindByID(uniqueID)
@@ -62,7 +81,7 @@ function item.GenerateID()
 	return instances.count;
 end;
 
-function item.New(uniqueID, data, forcedID)
+function item.New(uniqueID, tData, forcedID)
 	local itemTable = item.FindByID(uniqueID);
 
 	if (itemTable) then
@@ -70,15 +89,15 @@ function item.New(uniqueID, data, forcedID)
 
 		instances[uniqueID][itemID] = table.Copy(itemTable);
 
-		if (typeof(data) == "table") then
-			table.Merge(instances[uniqueID][itemID], data);
+		if (typeof(tData) == "table") then
+			table.Merge(instances[uniqueID][itemID], tData);
 		end;
 
 		instances[uniqueID][itemID].instanceID = itemID;
 
 		if (SERVER) then
 			item.SaveAll();
-			netstream.Start(nil, "ItemNewInstance", uniqueID, data, itemID);
+			netstream.Start(nil, "ItemNewInstance", uniqueID, (tData or 1), itemID);
 		end;
 
 		return instances[uniqueID][itemID];
@@ -93,35 +112,84 @@ end;
 
 if (SERVER) then
 	function item.Load()
-		instances = data.LoadSchemaData("items/instances", {});
+		local loaded = data.LoadSchemaData("items/instances", {});
 
-		-- Returns functions to instances table after loading.
-		for uniqueID, instanceTable in pairs(instances) do
-			local itemTable = item.FindByID(uniqueID);
+		if (loaded and table.Count(loaded) > 0) then
+			-- Returns functions to instances table after loading.
+			for uniqueID, instanceTable in pairs(loaded) do
+				local itemTable = item.FindByID(uniqueID);
 
-			if (itemTable) then
+				if (itemTable) then
+					for k, v in pairs(instanceTable) do
+						local newItem = table.Copy(itemTable);
+
+						table.Merge(newItem, v);
+
+						loaded[uniqueID][k] = newItem;
+					end;
+				end;
+			end;
+
+			instances = loaded;
+			item.instances = loaded;
+		end;
+
+		local loaded = data.LoadSchemaData("items/entities", {});
+
+		if (loaded and table.Count(loaded) > 0) then
+			for uniqueID, instanceTable in pairs(loaded) do
 				for k, v in pairs(instanceTable) do
-					local newItem = table.Copy(itemTable);
+					if (instances[uniqueID] and instances[uniqueID][k]) then
+						item.Spawn(v.position, v.angles, instances[uniqueID][k]);
+					else
+						loaded[uniqueID][k] = nil;
+					end;
+				end
+			end;
 
-					table.Merge(newItem, v);
+			entities = loaded;
+			item.entities = loaded;
+		end;
+	end;
 
-					instances[uniqueID][k] = newItem;
+	function item.SaveInstances()
+		local saveable = {};
+
+		for k, v in pairs(instances) do
+			if (k == "count") then
+				saveable[k] = v;
+			else
+				saveable[k] = {};
+			end;
+
+			if (typeof(v) == "table") then
+				for k2, v2 in pairs(v) do
+					saveable[k][k2] = item.ToSave(v2);
 				end;
 			end;
 		end;
 
-		entities = data.LoadSchemaData("items/entities", {});
+		data.SaveSchemaData("items/instances", saveable);
+	end;
 
-		for uniqueID, instances in pairs(entities) do
-			for k, v in pairs(instances) do
-				item.Spawn(v.position, v.angles, instances[uniqueID][k]);
-			end
+	function item.SaveEntities()
+		local itemEnts = ents.FindByClass("rework_item");
+
+		for k, v in ipairs(itemEnts) do
+			if (v.item) then
+				entities[v.item.uniqueID][v.item.instanceID] = {
+					position = v:GetPos(),
+					angles = v:GetAngles()
+				};
+			end;
 		end;
+
+		data.SaveSchemaData("items/entities", entities);
 	end;
 
 	function item.SaveAll()
-		data.SaveSchemaData("items/instances", instances);
-		data.SaveSchemaData("items/entities", entities);
+		item.SaveInstances();
+		item.SaveEntities();
 	end;
 
 	function item.NetworkItemData(player, itemTable)
@@ -136,20 +204,38 @@ if (SERVER) then
 		end;
 	end;
 
+	-- A function to send info about items in the world.
+	function item.SendToPlayer(player)
+		local itemEnts = ents.FindByClass("rework_item");
+
+		for k, v in ipairs(itemEnts) do
+			if (v.item) then
+				netstream.Start(player, "ItemNewInstance", v.item.uniqueID, (v.item.data or 1), v.item.instanceID);
+			end;
+
+			item.NetworkEntityData(player, v);
+		end;
+	end;
+
 	function item.Spawn(position, angles, itemTable)
 		if (!position or typeof(itemTable) != "table") then 
-			print("No position or item table is not a table");
+			ErrorNoHalt("[Rework:Item] No position or item table is not a table!\n");
 			return;
 		end;
 
 		if (!item.IsInstance(itemTable)) then
-			ErrorNoHalt("Cannot spawn non-instantiated item!");
+			ErrorNoHalt("[Rework:Item] Cannot spawn non-instantiated item!\n");
 			return;
 		end;
 
 		local ent = ents.Create("rework_item");
 		ent:SetItem(itemTable);
 		ent:SetPos(position)
+
+		if (angles) then
+			ent:SetAngles(angles);
+		end;
+
 		ent:Spawn();
 
 		itemTable:SetEntity(ent);
@@ -162,6 +248,8 @@ if (SERVER) then
 			angles = angles
 		};
 
+		item.SaveEntities()
+
 		return ent, itemTable;
 	end;
 
@@ -172,25 +260,28 @@ if (SERVER) then
 
 		item.Spawn(trace.HitPos, Angle(0, 0, 0), item.New("test_item"));
 	end);
+
+	netstream.Hook("RequestItemData", function(player, entIndex)
+		local ent = Entity(entIndex);
+
+		if (IsValid(ent)) then
+			item.NetworkEntityData(player, ent);
+		end
+	end);
 else
-	netstream.Hook("ItemData", function(uniqueID, instanceID, data)
-		print("ItemData", uniqueID, instanceID, data);
-		instances[uniqueID][instanceID].data = data;
+	netstream.Hook("ItemData", function(uniqueID, instanceID, tData)
+		instances[uniqueID][instanceID].data = tData;
 	end);
 
 	netstream.Hook("ItemEntData", function(entIndex, uniqueID, instanceID)
-		print("ItemEntData", entIndex, uniqueID, instanceID);
 		local ent = Entity(entIndex);
 
-		print(ent);
-
 		if (IsValid(Entity(entIndex))) then
-			print("set item clientside")
 			Entity(entIndex).item = instances[uniqueID][instanceID];
 		end;
 	end);
 
-	netstream.Hook("ItemNewInstance", function(uniqueID, data, itemID)
-		item.New(uniqueID, data, itemID);
+	netstream.Hook("ItemNewInstance", function(uniqueID, tData, itemID)
+		item.New(uniqueID, tData, itemID);
 	end);
 end;

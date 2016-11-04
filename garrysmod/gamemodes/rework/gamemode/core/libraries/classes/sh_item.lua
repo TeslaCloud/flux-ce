@@ -27,7 +27,7 @@ function CItem:GetWeight()
 end;
 
 function CItem:IsStackable()
-	return self.IsStackable;
+	return self.Stackable;
 end;
 
 function CItem:GetMaxStack()

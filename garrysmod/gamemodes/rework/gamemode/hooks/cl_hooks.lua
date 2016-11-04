@@ -315,8 +315,9 @@ function GM:HUDDrawTargetID()
 		if (IsValid(trace.Entity) and trace.Entity.DrawTargetID) then
 			local screenPos = (trace.HitPos + Vector(0, 0, 16)):ToScreen();
 			local x, y = screenPos.x, screenPos.y;
+			local distance = rw.client:GetPos():Distance(trace.HitPos);
 
-			trace.Entity:DrawTargetID(x, y);
+			trace.Entity:DrawTargetID(x, y, distance);
 		end;
 	end;
 end;

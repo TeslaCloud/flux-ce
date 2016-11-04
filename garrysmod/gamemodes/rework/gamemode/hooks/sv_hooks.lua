@@ -29,6 +29,7 @@ function GM:PlayerInitialSpawn(player)
 
 	player:SendConfig();
 	player:SyncNetVars();
+	item.SendToPlayer(player)
 
 	player:SetNoDraw(true);
 	player:SetNotSolid(true);
@@ -51,6 +52,10 @@ function GM:DoPlayerDeath(player, attacker, damageInfo) end;
 
 function GM:PlayerDisconnected(player)
 	netstream.Start(nil, "PlayerDisconnected", player:EntIndex());
+end;
+
+function GM:PlayerUseItemEntity(player, entity, itemTable)
+	-- works
 end;
 
 function GM:OnPlayerRestored(player)
@@ -262,6 +267,12 @@ function GM:PlayerGiveSWEP(player, weapon, swep)
 	end;
 
 	return true;
+end;
+
+function GM:InitPostEntity()
+	item.Load();
+
+	plugin.Call("RWInitPostEntity");
 end;
 
 function GM:DatabaseConnected() end;
