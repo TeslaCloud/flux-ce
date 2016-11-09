@@ -46,7 +46,7 @@ function PANEL:Init()
 	for k, v in ipairs(self.menus) do
 		v.text = L("#TabMenu_"..v.name);
 
-		local textW, textH = util.GetTextSize(menuFont, v.text);
+		local textW, textH = util.GetTextSize(v.text, menuFont);
 		local button = vgui.Create("DButton", self);
 		local buttonH = textH * 1.1;
 

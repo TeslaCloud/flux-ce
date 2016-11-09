@@ -172,7 +172,7 @@ function rw.bars:Draw(uniqueID)
 			draw.SimpleText(barInfo.text, barInfo.font, barInfo.x + 8, barInfo.y + barInfo.textOffset, Color(255, 255, 255));
 
 			if (barInfo.hinderDisplay and barInfo.hinderDisplay <= barInfo.hinderValue) then
-				local textWide = util.GetTextSize(barInfo.font, barInfo.hinderText);
+				local textWide = util.GetTextSize(barInfo.hinderText, barInfo.font);
 				local length = width * (barInfo.hinderValue / barInfo.maxValue);
 
 				render.SetScissorRect(barInfo.x + width - length, barInfo.y, barInfo.x + width, barInfo.y + height, true);

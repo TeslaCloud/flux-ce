@@ -129,7 +129,7 @@ if (SERVER) then
 				if (cmdTable.arguments == 0 or cmdTable.arguments <= #args) then
 					if (cmdTable.immunity or cmdTable.playerArg != nil) then
 						local targetArg = args[(cmdTable.playerArg or 1)];
-						local target = _player.Find(targetArg, true);
+						local target = _player.Find(targetArg);
 
 						if (IsValid(target)) then
 							if (cmdTable.immunity and !rw.admin:CheckImmunity(player, target, cmdTable.canBeEqual)) then

@@ -420,15 +420,15 @@ function chatbox.WrapText(msgData, maxWidth, initWidth)
 
 	local curWidth = initWidth or 0;
 	local curText = "";
-	local spaceWidth = util.GetTextSize("reChatFont", " ");
-	local dashWidth = util.GetTextSize("reChatFont", "-");
+	local spaceWidth = util.GetTextSize(" ", "reChatFont");
+	local dashWidth = util.GetTextSize("-", "reChatFont");
 
 	for key, val in ipairs(parsed) do
 		if (typeof(val) == "string") then
 			local exploded = string.Explode(" ", val);
 
 			for k, v in ipairs(exploded) do
-				local w, h = util.GetTextSize("reChatFont", v);
+				local w, h = util.GetTextSize(v, "reChatFont");
 
 				-- if word's width is less than the remaining width
 				if ((w + spaceWidth) < (maxWidth - curWidth)) then
@@ -450,7 +450,7 @@ function chatbox.WrapText(msgData, maxWidth, initWidth)
 						local wordWide = 0;
 
 						for k2, v2 in ipairs(characters) do
-							local w, h = util.GetTextSize("reChatFont", v2);
+							local w, h = util.GetTextSize(v2, "reChatFont");
 
 							-- if we don't have enough characters to fill in the entire line
 							if ((wordWide + w + dashWidth) < (maxWidth - curWidth)) then
@@ -568,7 +568,7 @@ function chatbox.ParseText(messageData)
 		table.insert(parsed[1], messageData.prefixColor);
 		table.insert(parsed[1], messageData.prefix);
 
-		local wide = util.GetTextSize("reChatFont", messageData.prefix);
+		local wide = util.GetTextSize(messageData.prefix, "reChatFont");
 		msgWidth = msgWidth + wide;
 	end;
 
@@ -602,7 +602,7 @@ function chatbox.ParseText(messageData)
 
 		table.insert(parsed[1], messageData.playerName..(messageData.suffix or ": "));
 
-		local wide = util.GetTextSize("reChatFont", messageData.playerName..(messageData.suffix or ": "));
+		local wide = util.GetTextSize(messageData.playerName..(messageData.suffix or ": "), "reChatFont");
 		msgWidth = msgWidth + wide;
 	end;
 
@@ -742,7 +742,7 @@ function PANEL:Paint(w, h)
 
 						draw.SimpleTextOutlined(time, curFont, offX, offY, curColor, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP, 1, Color(60, 60, 60, chatbox.curAlpha))
 
-						local width = util.GetTextSize("reChatFont", time);
+						local width = util.GetTextSize(time, "reChatFont");
 						offX = offX + width + 2;
 					elseif (IsIcon(v2)) then
 						local matPath = ToIcon(v2);
@@ -767,7 +767,7 @@ function PANEL:Paint(w, h)
 					else
 						draw.SimpleTextOutlined(v2, curFont, offX, offY, curColor, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP, 1, Color(60, 60, 60, chatbox.curAlpha))
 
-						local width = util.GetTextSize("reChatFont", v2);
+						local width = util.GetTextSize(v2, "reChatFont");
 						offX = offX + width;
 					end;
 				elseif (typeof(v2) == "number") then
@@ -826,7 +826,7 @@ function PANEL:Paint(w, h)
 			for k, v in ipairs(commands) do
 				cX = 4;
 				draw.SimpleTextOutlined("/"..v.name, "reChatSyntax", cX, cY, Color(240, 240, 240), TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP, 1, Color(0, 0, 0));
-				local w = util.GetTextSize("reChatSyntax", "/"..v.name);
+				local w = util.GetTextSize("/"..v.name, "reChatSyntax");
 				cX = cX + w + 8;
 				draw.SimpleTextOutlined((v.tip or ""), "reChatFont", cX, cY + 4, Color(206, 206, 206), TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP, 1, Color(0, 0, 0));
 
@@ -1074,7 +1074,7 @@ function chatbox.UpdateDisplay()
 	end;
 
 	local i = 1;
-	local textW, textH = util.GetTextSize("reChatFont", "asdf1234");
+	local textW, textH = util.GetTextSize("asdf1234", "reChatFont");
 	local maxMessages = math.floor(chatbox.height * 0.85 / textH);
 
 	g_DisplayY = (maxMessages - 2) * 20;

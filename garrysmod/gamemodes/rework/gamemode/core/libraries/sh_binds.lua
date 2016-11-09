@@ -87,7 +87,7 @@ if (SERVER) then
 else
 	function hooks:AdjustSettingCallbacks(callbacks)
 		callbacks["rwBindSelect"] = function(panel, parent, setting)
-			local textW = util.GetTextSize("menu_light_small", "Press a key to bind or mouse away to cancel.");
+			local textW = util.GetTextSize("Press a key to bind or mouse away to cancel.", "menu_light_small");
 
 			panel:SetSize(textW * 1.2, parent:GetTall() * 0.6);
 			panel:SetPos(parent:GetWide() * 0.99 - panel:GetWide(), parent:GetTall() * 0.5 - panel:GetTall() * 0.5);

@@ -7,6 +7,8 @@ if (rw.lang) then return; end;
 
 library.New("lang", rw);
 local stored = {};
+local cache = {};
+local textCache = {};
 
 function rw.lang:GetTable(name)
 	stored[name] = stored[name] or {};
@@ -19,6 +21,14 @@ function rw.lang:GetAll()
 end;
 
 function rw.lang:GetString(language, identifier, arguments)
+	if (!cache[language]) then
+		cache[language] = {};
+	end;
+
+	if (cache[language][identifier]) then
+		return cache[language][identifier];
+	end;
+
 	local langString = nil;
 	arguments = arguments or {};
 
@@ -36,12 +46,23 @@ function rw.lang:GetString(language, identifier, arguments)
 
 	langString = langString:Replace(";", "");
 
+	cache[language][identifier] = langString;
+
 	return langString;
 end;
 
 if (CLIENT) then
 	function L(identifier)
 		local lang = GetConVar("gmod_language"):GetString();
+
+		if (!cache[lang]) then
+			cache[lang] = {};
+		end;
+
+		if (cache[lang][identifier]) then
+			return cache[lang][identifier];
+		end;
+
 		local args = {};
 
 		-- Get all the arguments.
@@ -70,6 +91,11 @@ if (CLIENT) then
 
 	-- Explicit mode. This will attempt to translate the given text regardless of anything else.
 	function rw.lang:TranslateText(sText)
+		if (textCache[sText]) then
+			return textCache[sText];
+		end;
+
+		local oldText = sText;
 		local phrases = string.FindAll(sText, "#[%w_]+");
 		local translations = {};
 
@@ -102,9 +128,11 @@ if (CLIENT) then
 			sText = sText:Replace(phrases[k], v);
 		end;
 
+		textCache[oldText] = sText;
+
 		return sText;
 	end;
---[[
+
 	surface.OldGetTextSize = surface.OldGetTextSize or surface.GetTextSize;
 
 	function surface.GetTextSize(sText)
@@ -115,11 +143,8 @@ if (CLIENT) then
 		return surface.OldGetTextSize(sText);
 	end;
 
-	local langCache = {};
-
---	surface.OldDrawText = surface.OldDrawText or surface.DrawText;
-
-
+	surface.OldDrawText = surface.OldDrawText or surface.DrawText;
+	--[[
 		Overwrite the way the surface library draws text, 
 		this way we can put translations into anything that uses this,
 		like draw.SimpleText, etc.
@@ -127,22 +152,14 @@ if (CLIENT) then
 		This will give us control over basically every text drawn 
 		with Lua outside of Derma.
 	--]]
-	--[[
 	function surface.DrawText(sText)
 		if (surface.bTranslating) then
-			local oldText = sText;
-
-			if (!langCache[oldText]) then
-				sText = rw.lang:TranslateText(sText);
-				langCache[oldText] = sText;
-			else
-				sText = langCache[oldText];
-			end;
+			sText = rw.lang:TranslateText(sText);
 		end;
 
 		return surface.OldDrawText(sText);
 	end;
-	--]]
+
 	local PANEL_META = FindMetaTable("Panel");
 
 	PANEL_META.OldSetText = PANEL_META.OldSetText or PANEL_META.SetText;

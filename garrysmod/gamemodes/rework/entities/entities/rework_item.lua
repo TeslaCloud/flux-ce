@@ -82,12 +82,12 @@ else
 			return;
 		end;
 
-		local width, height = util.GetTextSize("tooltip_large", text);
+		local width, height = util.GetTextSize(text, "tooltip_large");
 
 		draw.SimpleText(text, "tooltip_large", x - width * 0.5, y, col);
 		y = y + 26;
 
-		local width, height = util.GetTextSize("tooltip_small", desc);
+		local width, height = util.GetTextSize(desc, "tooltip_small");
 
 		draw.SimpleText(desc, "tooltip_small", x - width * 0.5, y, col);
 		y = y + 20;

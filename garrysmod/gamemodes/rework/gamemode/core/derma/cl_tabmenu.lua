@@ -547,7 +547,7 @@ function PANEL:Init()
 		v.text = L("#TabMenu_"..k);
 
 		local button = vgui.Create("rwTabDockButton", self);
-		local textSize = util.GetTextSize(menuFont, v.text) - scrW * 0.04;
+		local textSize = util.GetTextSize(v.text, menuFont) - scrW * 0.04;
 
 		if (textSize > self.offset) then
 			self.offset = textSize;

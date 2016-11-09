@@ -33,7 +33,7 @@ do
 			end;
 		end;
 
-		-- A function to find the first instance of uniqueID in player's inventory.
+		-- A function to find all instances of an item in player's inventory.
 		function playerMeta:FindInstances(uniqueID, amount)
 			amount = amount or 1;
 			local instances = item.FindAllInstances(uniqueID);
@@ -55,6 +55,7 @@ do
 			return toReturn;
 		end;
 
+		-- A function to find the first instance of an item in player's inventory.
 		function playerMeta:FindItem(uniqueID)
 			local invInstances = self:FindInstances(uniqueID);
 

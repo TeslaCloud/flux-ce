@@ -29,7 +29,7 @@ function item.Register(id, data)
 		return;
 	end;
 
-	print("Registering item: "..id, data);
+	rw.core:DevPrint("Registering item: "..id);
 
 	if (!id) then
 		id = data.Name:MakeID();
@@ -45,7 +45,7 @@ function item.Register(id, data)
 	data.Model = data.Model or "models/props_lab/cactus.mdl";
 	data.Skin = data.Skin or 0;
 	data.Color = data.Color or nil;
-	data.instanceID = -1; -- -1 means no instance.
+	data.instanceID = ITEM_TEMPLATE; -- -1 means no instance.
 	data.data = data.data or {};
 
 	stored[id] = data;
@@ -142,7 +142,7 @@ end;
 function item.IsInstance(itemTable)
 	if (typeof(itemTable) != "table") then return; end;
 
-	return (itemTable.instanceID or -1) > 0;
+	return (itemTable.instanceID or ITEM_TEMPLATE) > ITEM_INVALID;
 end;
 
 if (SERVER) then

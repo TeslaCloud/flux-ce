@@ -33,12 +33,24 @@ if (SERVER) then
 			ErrorNoHalt("[Rework] Attempt to load data key that doesn't exist! ("..key..")\n");
 		end;
 	end;
+
+	function data.Delete(key)
+		if (typeof(key) != "string") then return; end;
+
+		if (!string.GetExtensionFromFilename(key)) then
+			key = key..".rw";
+		end;
+
+		if (file.Exists("settings/rework/"..key, "GAME")) then
+			fileio.Delete("settings/rework/"..key);
+		end;
+	end;
 else
 	function data.Save(key, value)
 		if (typeof(key) != "string" or typeof(value) != "table") then return; end;
 
 		if (!string.GetExtensionFromFilename(key)) then
-			key = key..".rw";
+			key = key..".dat";
 		end;
 
 		file.Write("rework/"..key, rw.core:Serialize(value));
@@ -48,7 +60,7 @@ else
 		if (typeof(key) != "string") then return; end;
 
 		if (!string.GetExtensionFromFilename(key)) then
-			key = key..".rw";
+			key = key..".dat";
 		end;
 
 		if (file.Exists("rework/"..key, "DATA")) then
@@ -61,6 +73,18 @@ else
 			ErrorNoHalt("[Rework] Attempt to load data key that doesn't exist! ("..key..")\n");
 		end;
 	end;
+
+	function data.Delete(key)
+		if (typeof(key) != "string") then return; end;
+
+		if (!string.GetExtensionFromFilename(key)) then
+			key = key..".dat";
+		end;
+
+		if (file.Exists("rework/"..key, "DATA")) then
+			file.Delete("rework/"..key);
+		end;
+	end;
 end;
 
 function data.SaveSchemaData(key, value)
@@ -71,10 +95,18 @@ function data.LoadSchemaData(key, failSafe)
 	return data.Load("schemas/"..rw.core:GetSchemaFolder().."/"..key, failSafe);
 end;
 
+function data.DeleteSchemaData(key)
+	return data.Delete("schemas/"..rw.core:GetSchemaFolder().."/"..key);
+end;
+
 function data.SavePluginData(key, value)
 	return data.SaveSchemaData("plugins/"..key, value);
 end;
 
 function data.LoadPluginData(key, failSafe)
 	return data.LoadSchemaData("plugins/"..key, failSafe);
+end;
+
+function data.DeletePluginData(key)
+	return data.DeleteSchemaData("plugins/"..key);
 end;

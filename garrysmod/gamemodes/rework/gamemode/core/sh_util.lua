@@ -26,7 +26,10 @@ do
 	local materialCache = {};
 
 	function util.GetMaterial(mat)
-		materialCache[mat] = materialCache[mat] or Material(mat);
+		if (!materialCache[mat]) then
+			materialCache[mat] = Material(mat);
+		end;
+
 		return materialCache[mat];
 	end;
 end;
@@ -37,25 +40,27 @@ local b = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
 
 -- encoding
 function base64.encode(data)
-	return ((data:gsub('.', function(x) 
+	return ((data:gsub('.', function(x)
 		local r, b = '', x:byte();
 
-		for i = 8, 1, -1 do 
-			r = r..(b%2^i - b%2^(i - 1) > 0 and '1' or '0') 
-		end
+		for i = 8, 1, -1 do
+			r = r..(b%2^i - b%2^(i - 1) > 0 and '1' or '0');
+		end;
 
 		return r;
 	end)..'0000'):gsub('%d%d%d?%d?%d?%d?', function(x)
-		if (#x < 6) then return '' end
+		if (#x < 6) then
+			return '';
+		end;
 
-		local c=0
+		local c = 0;
 
-		for i = 1, 6 do 
-			c = c + (x:sub(i, i) == '1' and 2^(6 - i) or 0) 
-		end
+		for i = 1, 6 do
+			c = c + (x:sub(i, i) == '1' and 2^(6 - i) or 0);
+		end;
 
-		return b:sub(c + 1, c + 1)
-	end)..({ '', '==', '=' })[#data%3 + 1])
+		return b:sub(c + 1, c + 1);
+	end)..({ '', '==', '=' })[#data%3 + 1]);
 end;
 
 -- decoding
@@ -63,54 +68,63 @@ function base64.decode(data)
 	data = string.gsub(data, '[^'..b..'=]', '');
 
 	return (data:gsub('.', function(x)
-		if (x == '=') then return '' end
+		if (x == '=') then
+			return '';
+		end;
 
-		local r, f='',(b:find(x)-1)
+		local r, f = '', (b:find(x)-1);
 
 		for i = 6, 1, -1 do
-			r = r..(f%2^i - f%2^(i - 1) > 0 and '1' or '0')
-		end
+			r = r..(f%2^i - f%2^(i - 1) > 0 and '1' or '0');
+		end;
 
 		return r;
 	end):gsub('%d%d%d?%d?%d?%d?%d?%d?', function(x)
-		if (#x != 8) then return '' end
+		if (#x != 8) then
+			return '';
+		end;
 
-		local c = 0
+		local c = 0;
 
-		for i=1,8 do
-			c = c + (x:sub(i, i) == '1' and 2^(8 - i) or 0)
-		end
+		for i = 1, 8 do
+			c = c + (x:sub(i, i) == '1' and 2^(8 - i) or 0);
+		end;
 
-		return string.char(c)
-	end))
+		return string.char(c);
+	end));
 end;
 
--- A function to convert a single hexadecimal digit to decimal.
-function util.HexToDec(hex)
-	if (type(hex) == "number") then return hex; end;
-
-	hex = hex:lower();
-
+do
 	local hexDigits = {"0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "a", "b", "c", "d", "e", "f"};
-	local negative = false;
 
-	if (hex:StartWith("-")) then
-		hex = hex:sub(2, 2);
-		negative = true;
-	end;
+	-- A function to convert a single hexadecimal digit to decimal.
+	function util.HexToDec(hex)
+		if (type(hex) == "number") then 
+			return hex;
+		end;
 
-	for k, v in ipairs(hexDigits) do
-		if (v == hex) then
-			if (!negative) then
-				return k - 1;
-			else
-				return -(k - 1);
+		hex = hex:lower();
+
+		local negative = false;
+
+		if (hex:StartWith("-")) then
+			hex = hex:sub(2, 2);
+			negative = true;
+		end;
+
+		for k, v in ipairs(hexDigits) do
+			if (v == hex) then
+				if (!negative) then
+					return k - 1;
+				else
+					return -(k - 1);
+				end;
 			end;
 		end;
-	end;
 
-	ErrorNoHalt("[Rework] '"..hex.."' is not a hexadecimal number!");
-	return 0;
+		ErrorNoHalt("[Rework] '"..hex.."' is not a hexadecimal number!");
+		return 0;
+	end;
 end;
 
 function util.HexToDecimal(hex)
@@ -350,7 +364,7 @@ function player.Random()
 	end;
 end;
 
-function player.Find(name, bCaseInsensitive)
+function player.Find(name, bCaseSensitive)
 	if (name == nil) then return; end;
 	if (typeof(name) != "string" and IsValid(name)) then return name; end;
 	if (typeof(name) != "string") then return; end;
@@ -358,7 +372,7 @@ function player.Find(name, bCaseInsensitive)
 	for k, v in ipairs(_player.GetAll()) do
 		if (v:Name():find(name)) then
 			return v;
-		elseif (bCaseInsensitive and v:Name():utf8lower():find(name:utf8lower())) then
+		elseif (!bCaseSensitive and v:Name():utf8lower():find(name:utf8lower())) then
 			return v;
 		elseif (v:SteamID() == name) then
 			return v;
@@ -379,7 +393,7 @@ function string.FindAll(str, pattern)
 			break;
 		end;
 
-		table.insert(hits, {str:sub(startPos, endPos), startPos, endPos})
+		table.insert(hits, {str:utf8sub(startPos, endPos), startPos, endPos})
 
 		lastPos = endPos + 1;
 	end;
@@ -405,7 +419,7 @@ do
 	};
 
 	function string.MakeID(str)
-		str = str:lower();
+		str = str:utf8lower();
 		str = str:gsub(" ", "_");
 
 		for k, v in ipairs(blockedChars) do
@@ -416,24 +430,26 @@ do
 	end;
 end;
 
-function util.GetTextSize(font, text)
+function util.GetTextSize(text, font)
+	font = font or "default";
+
 	surface.SetFont(font);
 
 	return surface.GetTextSize(text);
 end;
 
 function util.GetFontSize(font)
-	return util.GetTextSize(font, "abg");
+	return util.GetTextSize("abg", font);
 end;
 
-function util.GetTextHeight(font, text)
-	local textW, textH = util.GetTextSize(font, text);
+function util.GetTextHeight(text, font)
+	local _, textH = util.GetTextSize(text, font);
 
 	return textH;
 end;
 
 function util.GetFontHeight(font)
-	local textW, textH = util.GetFontSize(font, "abg");
+	local textW, textH = util.GetFontSize("abg", font);
 
 	return textH;
 end;

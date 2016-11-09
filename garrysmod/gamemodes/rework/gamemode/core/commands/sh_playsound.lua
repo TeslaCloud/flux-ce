@@ -12,7 +12,7 @@ COMMAND.arguments = 1;
 
 function COMMAND:OnRun(player, url, volume, target)
 	if (target and target != "") then
-		target = _player.Find(target, true);
+		target = _player.Find(target);
 
 		if (!IsValid(target) or !isentity(target)) then
 			target = nil;

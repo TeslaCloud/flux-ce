@@ -250,7 +250,7 @@ if (SERVER) then
 
 		plugin.Call("OnPermissionsCompiled", extras);
 
-		if (extras != {}) then
+		if (typeof(extras) == "table") then
 			for id, extra in pairs(extras) do
 				for k, v in pairs(extra) do
 					DeterminePermissions(steamID, k, v);

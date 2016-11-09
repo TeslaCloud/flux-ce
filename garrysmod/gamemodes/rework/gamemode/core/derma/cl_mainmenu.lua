@@ -39,7 +39,7 @@ function PANEL:Init()
 	local x, y = scrW * 0.05, scrH * 0.5;
 
 	local newText = L("#MainMenu_New");
-	textW, textH = util.GetTextSize(menuFont, newText);
+	textW, textH = util.GetTextSize(newText, menuFont);
 
 	self.new = vgui.Create("rwMainButton", self);
 	self.new:SetSize(textW * 1.1, textH * 1.1);
@@ -70,7 +70,7 @@ function PANEL:Init()
 	y = y + textH * 1.2;
 
 	local loadText = L("#MainMenu_Load");
-	textW, textH = util.GetTextSize(menuFont, loadText);
+	textW, textH = util.GetTextSize(loadText, menuFont);
 
 	self.load = vgui.Create("rwMainButton", self);
 	self.load:SetSize(textW * 1.1, textH * 1.1);
@@ -114,7 +114,7 @@ function PANEL:Init()
 	y = y + textH * 1.2;
 
 	local settText = L("#MainMenu_Settings");
-	textW, textH = util.GetTextSize(menuFont, settText);
+	textW, textH = util.GetTextSize(settText, menuFont);
 	
 	self.sett = vgui.Create("rwMainButton", self);
 	self.sett:SetSize(textW * 1.1, textH * 1.1);
@@ -129,7 +129,7 @@ function PANEL:Init()
 	y = y + textH * 1.2;
 
 	local discText = L("#MainMenu_Disconnect");
-	textW, textH = util.GetTextSize(menuFont, discText);
+	textW, textH = util.GetTextSize(discText, menuFont);
 	
 	self.disc = vgui.Create("rwMainButton", self);
 	self.disc:SetSize(textW * 1.1, textH * 1.1);
@@ -145,7 +145,7 @@ function PANEL:Init()
 
 	if (rw.client:GetActiveCharacter()) then
 		local cancelText = L("#MainMenu_Cancel");
-		textW, textH = util.GetTextSize(menuFont, cancelText);
+		textW, textH = util.GetTextSize(cancelText, menuFont);
 		
 		self.cancel = vgui.Create("rwMainButton", self);
 		self.cancel:SetSize(textW * 1.1, textH * 1.1);
