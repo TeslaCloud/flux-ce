@@ -14,6 +14,8 @@ function CItem:GetName()
 	return self.PrintName or self.Name;
 end;
 
+CItem.Name = CItem.GetName;
+
 function CItem:GetRealName()
 	return self.Name or "Unknown Item";
 end;
@@ -81,6 +83,11 @@ end;
 
 function CItem:Register()
 	return item.Register(self.uniqueID, self);
+end;
+
+-- Fancy output if you do print(itemTable).
+function CItem:__tostring()
+	return "Item ["..self.instanceID.."]["..self:GetName().."]";
 end;
 
 Item = CItem;

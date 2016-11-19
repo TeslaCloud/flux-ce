@@ -68,9 +68,17 @@ function PLUGIN:UpdateWeaponRaised(player, weapon, bIsRaised, curTime)
 	if (bIsRaised) then
 		weapon:SetNextPrimaryFire(curTime);
 		weapon:SetNextSecondaryFire(curTime);
+
+		if (weapon.OnRaised) then
+			weapon:OnRaised(player, curTime);
+		end;
 	else
 		weapon:SetNextPrimaryFire(curTime + 60);
 		weapon:SetNextSecondaryFire(curTime + 60);
+
+		if (weapon.OnLowered) then
+			weapon:OnLowered(player, curTime);
+		end
 	end
 end;
 

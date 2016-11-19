@@ -3,23 +3,29 @@
 	Do not share, re-distribute or sell.
 --]]
 
-Class "Command";
+Class "CCommand";
 
-Command.uniqueID = "undefined";
-Command.name = "Unknown";
-Command.description = "An undescribed command.";
-Command.syntax = "[none]";
-Command.immunity = false;
-Command.playerArg = nil;
-Command.arguments = 0;
-Command.noConsole = false;
+CCommand.uniqueID = "undefined";
+CCommand.name = "Unknown";
+CCommand.description = "An undescribed command.";
+CCommand.syntax = "[none]";
+CCommand.immunity = false;
+CCommand.playerArg = nil;
+CCommand.arguments = 0;
+CCommand.noConsole = false;
 
-function Command:Command(id)
+function CCommand:CCommand(id)
 	self.uniqueID = id;
 end;
 
-function Command:OnRun() end;
+function CCommand:OnRun() end;
 
-function Command:Register()
+function CCommand:__tostring()
+	return "Command ["..self.uniqueID.."]["..self.name.."]";
+end;
+
+function CCommand:Register()
 	rw.command:Create(self.uniqueID, self);
 end;
+
+Command = CCommand;

@@ -33,3 +33,19 @@ netstream.Hook("reNotification", function(sMessage)
 
 	chat.AddText(Color(255, 255, 255), sMessage);
 end);
+
+netstream.Hook("PlayerUseItemEntity", function(entity) 
+	local itemMenu = DermaMenu();
+
+	local useBtn = itemMenu:AddOption("Use", function() 
+		netstream.Start("PlayerUsedItemEntity", entity);
+	end);
+	useBtn:SetIcon("icon16/wrench.png");
+
+	local closeBtn = itemMenu:AddOption("Cancel", function() end);
+	closeBtn:SetIcon("icon16/cross.png");
+
+	itemMenu:Open()
+
+	itemMenu:SetPos(ScrW() / 2, ScrH() / 2);
+end);

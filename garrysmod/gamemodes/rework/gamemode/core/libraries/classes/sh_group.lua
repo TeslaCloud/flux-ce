@@ -104,6 +104,10 @@ function CUserGroup:GetBase()
 	return self.m_Base or nil;
 end;
 
+function CUserGroup:__tostring()
+	return "User Group ["..self:GetID().."]["..self:GetName().."]";
+end;
+
 CUserGroup.GetParent = CUserGroup.GetBase;
 
 _G["Group"] = CUserGroup;

@@ -55,8 +55,8 @@ else
 			return;
 		end;
 
-		local text = "derp";
-		local desc = "derrrp";
+		local text = "ERROR";
+		local desc = "This item's data has failed to fetch. This is an error.";
 		local alpha = 255;
 
 		if (distance > 210) then
@@ -65,6 +65,7 @@ else
 		end
 
 		local col = Color(255, 255, 255, alpha);
+		local col2 = Color(0, 0, 0, alpha);
 
 		if (self.item) then
 			if (plugin.Call("PreDrawItemTargetID", self, self.item, x, y, alpha, distance) == false) then
@@ -83,13 +84,12 @@ else
 		end;
 
 		local width, height = util.GetTextSize(text, "tooltip_large");
+		local width2, height2 = util.GetTextSize(desc, "tooltip_small");
 
-		draw.SimpleText(text, "tooltip_large", x - width * 0.5, y, col);
+		draw.SimpleTextOutlined(text, "tooltip_large", x - width * 0.5, y, col, nil, nil, 1, col2);
 		y = y + 26;
 
-		local width, height = util.GetTextSize(desc, "tooltip_small");
-
-		draw.SimpleText(desc, "tooltip_small", x - width * 0.5, y, col);
+		draw.SimpleTextOutlined(desc, "tooltip_small", x - width2 * 0.5, y, col, nil, nil, 1, col2);
 		y = y + 20;
 
 		plugin.Call("PostDrawItemTargetID", self, self.item, x, y, alpha, distance);

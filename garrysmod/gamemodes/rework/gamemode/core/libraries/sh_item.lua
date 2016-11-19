@@ -90,7 +90,7 @@ function item.FindInstanceByID(instanceID)
 		if (type(v) == "table") then
 			for k2, v2 in pairs(v) do
 				if (k2 == instanceID) then
-					return v;
+					return v2;
 				end;
 			end;
 		end;

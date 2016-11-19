@@ -56,7 +56,7 @@ function GM:PlayerDisconnected(player)
 end;
 
 function GM:PlayerUseItemEntity(player, entity, itemTable)
-	-- works
+	netstream.Start(player, "PlayerUseItemEntity", entity);
 end;
 
 function GM:OnPlayerRestored(player)
