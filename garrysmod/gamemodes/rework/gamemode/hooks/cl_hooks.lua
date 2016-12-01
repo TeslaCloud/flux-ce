@@ -58,7 +58,7 @@ function GM:ScoreboardShow()
 			rw.tabMenu:CloseMenu(true);
 		end;
 
-		rw.tabMenu = rw.theme:OpenMenu("TabMenu", nil, "rwTabMenu");
+		rw.tabMenu = theme.CreatePanel("TabMenu", nil, "rwTabMenu");
 		rw.tabMenu:MakePopup();
 		rw.tabMenu.heldTime = CurTime() + 0.3;
 	end;
@@ -87,7 +87,7 @@ function GM:AdjustTabDockMenus(menus)
 		callback = function(panel)
 			panel:CloseMenu(true);
 
-			rw.IntroPanel = rw.theme:OpenMenu("MainMenu", nil, "rwMainMenu");
+			rw.IntroPanel = theme.CreatePanel("MainMenu", nil, "rwMainMenu");
 			rw.IntroPanel:MakePopup();
 		end
 	};

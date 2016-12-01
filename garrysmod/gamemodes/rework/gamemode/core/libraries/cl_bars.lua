@@ -67,7 +67,7 @@ function rw.bars:SetValue(uniqueID, newValue)
 	local bar = self:Get(uniqueID);
 
 	if (bar) then
-		plugin.Call("PreBarValueSet", bar, bar.value, newValue);
+		theme.Call("PreBarValueSet", bar, bar.value, newValue);
 
 		if (bar.value != newValue) then
 			if (bar.hinderDisplay and bar.hinderValue) then
@@ -84,7 +84,7 @@ function rw.bars:HinderValue(uniqueID, newValue)
 	local bar = self:Get(uniqueID);
 
 	if (bar) then
-		plugin.Call("PreBarHinderValueSet", bar, bar.hinderValue, newValue);
+		theme.Call("PreBarHinderValueSet", bar, bar.hinderValue, newValue);
 
 		if (bar.value != newValue) then
 			bar.hinderValue = math.Clamp(newValue, 0, bar.maxValue);
@@ -140,7 +140,7 @@ function rw.bars:Draw(uniqueID)
 	local barInfo = self:Get(uniqueID);
 
 	if (barInfo) then
-		plugin.Call("PreDrawBar", barInfo);
+		theme.Call("PreDrawBar", barInfo);
 
 		if (!plugin.Call("ShouldDrawBar", barInfo)) then
 			return;
@@ -150,35 +150,37 @@ function rw.bars:Draw(uniqueID)
 		local width = barInfo.width;
 		local height = barInfo.height;
 
-		if (!plugin.Call("DrawBarBackground", barInfo)) then
+		if (!theme.Call("DrawBarBackground", barInfo)) then
 			draw.RoundedBox(cornerRadius, barInfo.x, barInfo.y, width, height, Color(40, 40, 40));
 		end;
 
 		if (plugin.Call("ShouldFillBar", barInfo) or barInfo.value != 0) then
-			if (!plugin.Call("DrawBarFill", barInfo)) then
+			if (!theme.Call("DrawBarFill", barInfo)) then
 				draw.RoundedBox(cornerRadius, barInfo.x + 1, barInfo.y + 1, (barInfo.fillWidth or width) - 2, height - 2, barInfo.color);
 			end;
 		end;
 
 		if (barInfo.hinderDisplay and barInfo.hinderDisplay <= barInfo.hinderValue) then
-			if (!plugin.Call("DrawBarHindrance", barInfo)) then
+			if (!theme.Call("DrawBarHindrance", barInfo)) then
 				local length = width * (barInfo.hinderValue / barInfo.maxValue);
 
 				draw.RoundedBox(cornerRadius, barInfo.x + width - length - 1, barInfo.y + 1, length, height - 2, barInfo.hinderColor);
 			end;
 		end;
 
-		if (!plugin.Call("DrawBarTexts", barInfo) and rw.settings:GetBool("DrawBarText")) then
-			draw.SimpleText(barInfo.text, barInfo.font, barInfo.x + 8, barInfo.y + barInfo.textOffset, Color(255, 255, 255));
+		if (rw.settings:GetBool("DrawBarText")) then
+			if (!theme.Call("DrawBarTexts", barInfo)) then
+				draw.SimpleText(barInfo.text, barInfo.font, barInfo.x + 8, barInfo.y + barInfo.textOffset, Color(255, 255, 255));
 
-			if (barInfo.hinderDisplay and barInfo.hinderDisplay <= barInfo.hinderValue) then
-				local textWide = util.GetTextSize(barInfo.hinderText, barInfo.font);
-				local length = width * (barInfo.hinderValue / barInfo.maxValue);
+				if (barInfo.hinderDisplay and barInfo.hinderDisplay <= barInfo.hinderValue) then
+					local textWide = util.GetTextSize(barInfo.hinderText, barInfo.font);
+					local length = width * (barInfo.hinderValue / barInfo.maxValue);
 
-				render.SetScissorRect(barInfo.x + width - length, barInfo.y, barInfo.x + width, barInfo.y + height, true);
-					draw.SimpleText(barInfo.hinderText, barInfo.font, barInfo.x + width - textWide - 8, barInfo.y + barInfo.textOffset, Color(255, 255, 255));
-				render.SetScissorRect(0, 0, 0, 0, false);
-			end
+					render.SetScissorRect(barInfo.x + width - length, barInfo.y, barInfo.x + width, barInfo.y + height, true);
+						draw.SimpleText(barInfo.hinderText, barInfo.font, barInfo.x + width - textWide - 8, barInfo.y + barInfo.textOffset, Color(255, 255, 255));
+					render.SetScissorRect(0, 0, 0, 0, false);
+				end
+			end;
 		end;
 	end;
 end;

@@ -369,9 +369,9 @@ rw.settings:AddCheckBox("Theme", "UseTabDash", false, nil,
 	{
 		callback = function(name, oldValue, newValue)
 			if (util.ToBool(newValue)) then
-				rw.theme:SetMenu("TabMenu", "rwTabDash");
+				theme.SetPanel("TabMenu", "rwTabDash");
 			else
-				rw.theme:SetMenu("TabMenu", "rwTabClassic");
+				theme.SetPanel("TabMenu", "rwTabClassic");
 			end;
 
 			local tabMenu = rw.tabMenu;
@@ -379,7 +379,7 @@ rw.settings:AddCheckBox("Theme", "UseTabDash", false, nil,
 			if (IsValid(tabMenu)) then
 				tabMenu:CloseMenu();
 
-				rw.tabMenu = rw.theme:OpenMenu("TabMenu", nil, "rwTabDash");
+				rw.tabMenu = theme.CreatePanel("TabMenu", nil, "rwTabDash");
 				rw.tabMenu:MakePopup();
 				rw.tabMenu.heldTime = CurTime() + 0.3;
 			end;
@@ -387,7 +387,7 @@ rw.settings:AddCheckBox("Theme", "UseTabDash", false, nil,
 	}
 );
 rw.settings:AddColorMixer("Dashboard", "BackgroundColor", Color(0, 0, 0, 255), nil, function()
-	return (rw.theme:GetMenu("TabMenu") == "rwTabDash");
+	return (theme.GetPanel("TabMenu") == "rwTabDash");
 end);
 rw.settings:AddComboBox("Dashboard", "FitType", "", {
 		["fill"] = "#Settings_Fit_Fill",
@@ -396,7 +396,7 @@ rw.settings:AddComboBox("Dashboard", "FitType", "", {
 		["center"] = "#Settings_Fit_Center"
 	},
 	function()
-		return (rw.theme:GetMenu("TabMenu") == "rwTabDash");
+		return (theme.GetPanel("TabMenu") == "rwTabDash");
 	end,
 	{
 		callback = function(name, oldValue, newValue)
@@ -410,7 +410,7 @@ rw.settings:AddComboBox("Dashboard", "FitType", "", {
 );
 rw.settings:AddTextEntry("Dashboard", "BackgroundURL", "",
 	function()
-		return (rw.theme:GetMenu("TabMenu") == "rwTabDash");
+		return (theme.GetPanel("TabMenu") == "rwTabDash");
 	end,
 	{
 		callback = function(name, oldValue, newValue)

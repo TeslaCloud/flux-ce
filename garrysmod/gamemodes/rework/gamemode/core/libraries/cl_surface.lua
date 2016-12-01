@@ -3,28 +3,12 @@
 	Do not share, re-distribute or sell.
 --]]
 
-local function GetCircleInfo(x, y, radius, passes)
-    local vertices = {};
-
- 	-- Since tables start at index 1.
-    for i = 1, passes + 1 do
-    	local degInRad = i * math.pi / (passes / 2);
-
-        vertices[i] = {
-            x = x + math.cos(degInRad) * radius,
-            y = y + math.sin(degInRad) * radius
-        };
-    end;
-
-    return vertices;
-end;
-
 local cache = surface.CircleInfoCache or {};
 surface.CircleInfoCache = cache;
 
 function surface.DrawCircle(x, y, radius, passes)
-	if (!x or !y or !radius) then 
-		return rw.core:Print("ERROR: COULDN'T DRAW CIRCLE, X, Y, AND RADIUS ARE NEEDED!");
+	if (!x or !y or !radius) then
+		error("surface.DrawCircle - Too few arguments to function call (3 expected)")
 	end;
 
 	-- In case no passes variable was passed, in which case we give a normal smooth circle.
@@ -34,7 +18,17 @@ function surface.DrawCircle(x, y, radius, passes)
 	local info = cache[id];
 
 	if (!info) then
-		info = GetCircleInfo(x, y, radius, passes);
+	    info = {};
+
+	 	-- Since tables start at index 1.
+	    for i = 1, passes + 1 do
+	    	local degInRad = i * math.pi / (passes / 2);
+
+	        info[i] = {
+	            x = x + math.cos(degInRad) * radius,
+	            y = y + math.sin(degInRad) * radius
+	        };
+	    end;
 
 		cache[id] = info;
 	end;

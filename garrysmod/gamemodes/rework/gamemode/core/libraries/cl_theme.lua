@@ -3,141 +3,150 @@
 	Do not share, re-distribute or sell.
 --]]
 
-library.New("theme", rw);
-rw.theme.activeTheme = rw.theme.activeTheme or nil;
+library.New("theme", _G);
+theme.activeTheme = theme.activeTheme or nil;
 
---[[
-	This is to preserve the table through autorefresh,
-	and also as a way to get the stored table instead of a function.
---]]
-local stored = rw.theme.stored or {};
-rw.theme.stored = stored;
+local stored = theme.stored or {};
+theme.stored = stored;
 
-local cache = rw.theme.cache or {};
-rw.theme.cache = cache;
+local cache = theme.cache or {};
+theme.cache = cache;
 
-function rw.theme:SetMenu(sMenu, sValue)
-	cache["menu_"..sMenu] = sValue;
+function theme.GetStored()
+	return stored;
 end;
 
-function rw.theme:GetMenu(sMenu, fallback)
-	return cache["menu_"..sMenu] or fallback;
+function theme.SetPanel(key, value)
+	cache["menu_"..key] = value;
 end;
 
-function rw.theme:OpenMenu(sMenu, parent, fallback)
-	local menu = self:GetMenu(sMenu, fallback);
+function theme.GetPanel(key, fallback)
+	return cache["menu_"..key] or fallback;
+end;
 
-	if (menu) then
+function theme.CreatePanel(panelID, parent, fallback)
+	local menu = theme.GetPanel(panelID, fallback);
+
+	if (menu and hook.Run("ShouldThemeCreatePanel", panelID, menu) != false) then
 		return vgui.Create(menu, parent);
 	end;
 end;
 
-function rw.theme:SetSound(sSound, sValue)
-	cache["sound_"..sSound] = sValue;
-end;
+function theme.Hook(id, ...)
+	if (typeof(id) == "string" and theme.activeTheme and theme.activeTheme[id]) then
+		local result = {pcall(theme.activeTheme[id], theme.activeTheme, ...)};
+		local success = result[1];
+		table.remove(result, 1);
 
-function rw.theme:GetSound(sSound, fallback)
-	return cache["sound_"..sSound] or fallback;
-end;
-
-function rw.theme:SetColor(sColor, cValue)
-	cache["color_"..sColor] = cValue;
-end;
-
-function rw.theme:GetColor(sColor, fallback)
-	return cache["color_"..sColor] or fallback;
-end;
-
-function rw.theme:SetMaterial(sMaterial, mMat)
-	cache["material_"..sMaterial] = mMat;
-end;
-
-function rw.theme:GetMaterial(sMaterial, fallback)
-	return cache["material_"..sMaterial] or fallback;
-end;
-
-Class "Theme";
-
---[[ Basic Skeleton --]]
-function Theme:Theme(name, data)
-	self.m_name = name or (data and data.name) or "Unknown";
-	self.m_uniqueID = (data and data.uniqueID) or string.lower(string.gsub(self.m_name, " ", "_")) or "unknown";
-	self.m_author = (data and data.author) or "Unknown Author";
-	self.m_hooks = (data and data.hooks) or {};
-
-	if (data) then
-		table.Merge(self, data);
-	end;
-end;
-
-function Theme:OnLoaded() end;
-function Theme:OnUnloaded() end;
-
-function Theme:Remove()
-	return rw.theme:RemoveTheme(self.m_uniqueID);
-end;
-
-function Theme:Register()
-	return rw.theme.RegisterTheme(self);
-end;
-
-function rw.theme.GetStored()
-	return stored;
-end;
-
-function rw.theme.FindTheme(id)
-	return stored[string.lower(string.gsub(id, " ", "_"))];
-end;
-
-function rw.theme:RemoveTheme(id)
-	if (self.FindTheme(id)) then
-		stored[id] = nil;
-	end;
-end;
-
-function rw.theme.RegisterTheme(themeTable)
-	stored[themeTable.m_uniqueID] = themeTable;
-end;
-
-function rw.theme:LoadTheme(theme)
-	local themeTable = self.FindTheme(theme);
-
-	if (themeTable) then
-		self.activeTheme = themeTable;
-
-		if (themeTable.OnLoaded) then
-			themeTable:OnLoaded();
+		if (!success) then
+			ErrorNoHalt("[Rework] Theme hook '"..id.."' has failed to run!\n"..result[1].."\n");
+		else
+			return unpack(result);
 		end;
 	end;
 end;
 
-function rw.theme:UnloadTheme()
-	if (self.activeTheme.OnUnloaded) then
-		self.activeTheme:OnUnloaded();
+theme.Call = theme.Hook;
+
+// A function to override theme's methods.
+function theme.Override(themeID, id, callback)
+	local themeTable = theme.FindTheme(themeID);
+
+	if (themeTable and hook.Run("ShouldThemeOverride", id, themeTable) != false) then
+		themeTable[id:MakeID()] = callback;
+	end;
+end;
+
+function theme.GetActiveTheme()
+	return (theme.activeTheme and theme.activeTheme.m_UniqueID);
+end;
+
+function theme.OverrideActive(id, callback)
+	if (theme.activeTheme) then
+		theme.Override(theme.GetActiveTheme(), id, callback);
+	end;
+end;
+
+function theme.SetSound(key, value)
+	cache["sound_"..key] = value;
+end;
+
+function theme.GetSound(key, fallback)
+	return cache["sound_"..key] or fallback;
+end;
+
+function theme.SetColor(key, value)
+	cache["color_"..key] = value;
+end;
+
+function theme.GetColor(key, fallback)
+	return cache["color_"..key] or fallback;
+end;
+
+function theme.SetMaterial(key, value)
+	cache["material_"..key] = value;
+end;
+
+function theme.GetMaterial(key, fallback)
+	return cache["material_"..key] or fallback;
+end;
+
+function theme.FindTheme(id)
+	return stored[id:MakeID()];
+end;
+
+function theme.RemoveTheme(id)
+	if (theme.FindTheme(id)) then
+		stored[id] = nil;
+	end;
+end;
+
+function theme.RegisterTheme(obj)
+	if (obj.parent and stored[obj.parent:MakeID()]) then
+		local newObj = table.Copy(stored[obj.parent:MakeID()]);
+		table.Merge(newObj, obj);
+		obj = newObj;
 	end;
 
-	self.activeTheme = nil;
+	stored[obj.m_UniqueID] = obj;
+end;
+
+function theme.LoadTheme(theme)
+	local themeTable = theme.FindTheme(theme);
+
+	if (themeTable) then
+		if (hook.Run("ShouldThemeLoad", themeTable) == false) then
+			return;
+		end;
+
+		theme.activeTheme = themeTable;
+
+		if (theme.activeTheme.OnLoaded) then
+			theme.activeTheme:OnLoaded();
+
+			hook.Run("OnThemeLoaded", theme.activeTheme);
+		end;
+	end;
+end;
+
+function theme.UnloadTheme()
+	if (hook.Run("ShouldThemeUnload", theme.activeTheme) == false) then
+		return;
+	end;
+
+	if (theme.activeTheme.OnUnloaded) then
+		theme.activeTheme:OnUnloaded();
+
+		hook.Run("OnThemeUnloaded", theme.activeTheme);
+	end;
+
+	theme.activeTheme = nil;
 end;
 
 local themeHooks = {};
 
 function themeHooks:InitPostEntity()
-	rw.theme:LoadTheme("Rework");
+	theme.LoadTheme("Factory");
 end;
 
 plugin.AddHooks("rwThemeHooks", themeHooks);
-
--- Create the default theme that other themes will derive from.
-local THEME = Theme("Rework", {author = "TeslaCloud"});
-
-function THEME:OnLoaded()
-	if (rw.settings:GetBool("UseTabDash")) then
-		rw.theme:SetMenu("TabMenu", "rwTabDash");
-	else
-		rw.theme:SetMenu("TabMenu", "rwTabClassic");
-	end;
-
-	rw.theme:SetMenu("MainMenu", "rwMainMenu");
-end;
-
-THEME:Register();

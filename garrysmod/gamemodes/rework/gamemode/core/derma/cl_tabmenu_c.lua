@@ -179,6 +179,6 @@ vgui.Register("rwTabClassic", PANEL, "EditablePanel");
 if (rw.tabMenu) then
 	rw.tabMenu:Remove();
 
-	rw.tabMenu = rw.theme:OpenMenu("TabMenu", nil, "rwTabMenu");
+	rw.tabMenu = theme.CreatePanel("TabMenu", nil, "rwTabMenu");
 	rw.tabMenu:MakePopup();
 end;

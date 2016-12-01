@@ -166,14 +166,7 @@ function util.HexToColor(hex)
 	local color = {};
 
 	for k, v in ipairs(hexColors) do
-		local chars = table.Reverse(string.Explode("", v));
-		local sum = 0;
-
-		for i = 1, 2 do
-			sum = sum + util.HexToDec(chars[i]) * math.pow(16, i - 1);
-		end;
-
-		table.insert(color, sum);
+		table.insert(color, util.HexToDecimal(v));
 	end;
 
 	return Color(color[1], color[2], color[3], (color[4] or 255));
