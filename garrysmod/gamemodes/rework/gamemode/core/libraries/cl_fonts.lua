@@ -135,5 +135,6 @@ function rw.fonts:CreateFonts()
 		weight = 500
 	}, true);
 
+	theme.Call("CreateFonts", self);
 	plugin.Call("CreateFonts", self);
 end;
