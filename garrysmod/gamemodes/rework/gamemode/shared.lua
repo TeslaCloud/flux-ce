@@ -10,7 +10,7 @@ GM.Website 		= "http://teslacloud.net/";
 GM.Email 		= "support@teslacloud.net";
 
 -- Define RW-Specific fields.
-GM.Version 		= "0.0.10";
+GM.Version 		= "0.0.10a";
 GM.Build 		= "1254";
 GM.Description 	= "A free roleplay gamemode framework."
 
@@ -132,7 +132,7 @@ rw.core:IncludeDirectory("core/commands", true);
 rw.core:IncludeDirectory("core/derma", true);
 rw.core:IncludeDirectory("core/items", true);
 
-if (theme) then
+if (theme or SERVER) then
 	-- Theme factory is needed for any other themes that may be in the themes folder.
 	rw.core:Include("core/themes/cl_theme_factory.lua");
 

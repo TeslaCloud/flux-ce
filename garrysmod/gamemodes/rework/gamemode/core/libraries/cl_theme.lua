@@ -114,24 +114,24 @@ function theme.RegisterTheme(obj)
 			local newObj = table.Copy(parentTheme);
 			table.Merge(newObj, obj);
 			obj = newObj;
-			obj.BaseClass = parentTheme;
+			obj.Base = parentTheme;
 		end;
 	end;
 
 	stored[obj.uniqueID] = obj;
 end;
 
-function theme.LoadTheme(theme)
-	local themeTable = theme.FindTheme(theme);
+function theme.LoadTheme(themeID, bIsReloading)
+	local themeTable = theme.FindTheme(themeID);
 
 	if (themeTable) then
-		if (hook.Run("ShouldThemeLoad", themeTable) == false) then
+		if (!bIsReloading and hook.Run("ShouldThemeLoad", themeTable) == false) then
 			return;
 		end;
 
 		theme.activeTheme = themeTable;
 
-		if (theme.activeTheme.OnLoaded) then
+		if (!bIsReloading and theme.activeTheme.OnLoaded) then
 			theme.activeTheme:OnLoaded();
 
 			hook.Run("OnThemeLoaded", theme.activeTheme);
@@ -153,10 +153,27 @@ function theme.UnloadTheme()
 	theme.activeTheme = nil;
 end;
 
+function theme.Reload()
+	if (!theme.activeTheme) then return; end;
+
+	if ((theme.activeTheme.shouldReload == false) or hook.Run("ShouldThemeReload", theme.activeTheme) == false) then
+		return;
+	end;
+
+	theme.LoadTheme(theme.activeTheme.uniqueID);
+
+	theme.Hook("OnReloaded");
+	hook.Run("OnThemeReloaded", theme.activeTheme);
+end;
+
 local themeHooks = {};
 
 function themeHooks:InitPostEntity()
 	theme.LoadTheme("Factory");
+end;
+
+function themeHooks:OnReloaded()
+	theme.Reload();
 end;
 
 plugin.AddHooks("rwThemeHooks", themeHooks);

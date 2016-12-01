@@ -6,6 +6,8 @@
 // Create the default theme that other themes will derive from.
 local THEME = Theme("Factory");
 THEME.author = "TeslaCloud Studios"
+THEME.uniqueID = "factory";
+THEME.shouldReload = true;
 
 function THEME:OnLoaded()
 	if (rw.settings:GetBool("UseTabDash")) then

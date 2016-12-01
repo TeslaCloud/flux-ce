@@ -4,11 +4,12 @@ CTheme.colors = {};
 CTheme.sounds = {};
 CTheme.materials = {};
 CTheme.panels = {};
+CTheme.shouldReload = true;
 
 --[[ Basic Skeleton --]]
 function CTheme:CTheme(name, parent)
 	self.name = name or "Unknown";
-	self.uniqueID = self.name:MakeID()); -- temporary unique ID
+	self.uniqueID = self.name:MakeID(); -- temporary unique ID
 	self.parent = parent;
 
 	if (!self.uniqueID) then
@@ -41,7 +42,7 @@ function CTheme:SetMaterial(id, val)
 	self.materials[id] = val or Material();
 end;
 
-function CTheme::SetSound(id, val)
+function CTheme:SetSound(id, val)
 	self.sounds[id] = val or Sound();
 end;
 
