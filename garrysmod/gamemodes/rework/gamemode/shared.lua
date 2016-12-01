@@ -10,9 +10,9 @@ GM.Website 		= "http://teslacloud.net/";
 GM.Email 		= "support@teslacloud.net";
 
 -- Define RW-Specific fields.
-GM.Version 		= "0.0.9";
-GM.Build 		= "1227";
-GM.Description 	= "A free roleplay framework."
+GM.Version 		= "0.0.10";
+GM.Build 		= "1254";
+GM.Description 	= "A free roleplay gamemode framework."
 
 -- It would be very nice of you to leave below values as they are if you're using official schemas.
 -- While we can do nothing to stop you from changing them, we'll very much appreciate it if you don't.
@@ -129,8 +129,16 @@ rw.core:IncludeDirectory("core/libraries/meta", true);
 rw.core:IncludeDirectory("core/languages", true);
 rw.core:IncludeDirectory("core/groups", true);
 rw.core:IncludeDirectory("core/commands", true);
-rw.core:IncludeDirectory("core/derma",true);
+rw.core:IncludeDirectory("core/derma", true);
 rw.core:IncludeDirectory("core/items", true);
+
+if (theme) then
+	-- Theme factory is needed for any other themes that may be in the themes folder.
+	rw.core:Include("core/themes/cl_theme_factory.lua");
+
+	rw.core:IncludeDirectory("core/themes", true);
+end;
+
 rw.core:IncludeDirectory("hooks", true);
 
 rw.core:IncludePlugins("rework/plugins");
@@ -140,13 +148,3 @@ plugin.Call("RWPluginsLoaded");
 rw.core:IncludeSchema();
 
 plugin.Call("RWSchemaLoaded");
-
-if (SERVER) then
-	local mysql_host = config.Get("mysql_host");
-	local mysql_username = config.Get("mysql_username");
-	local mysql_password = config.Get("mysql_password");
-	local mysql_database = config.Get("mysql_database");
-	local mysql_port = config.Get("mysql_port");
-
-	rw.db:Connect(mysql_host, mysql_username, mysql_password, mysql_database, mysql_port);
-end;

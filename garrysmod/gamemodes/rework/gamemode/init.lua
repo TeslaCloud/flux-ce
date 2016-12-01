@@ -87,6 +87,16 @@ end;
 -- Initiate shared boot.
 include("shared.lua");
 
+do
+	local mysql_host = config.Get("mysql_host");
+	local mysql_username = config.Get("mysql_username");
+	local mysql_password = config.Get("mysql_password");
+	local mysql_database = config.Get("mysql_database");
+	local mysql_port = config.Get("mysql_port");
+
+	rw.db:Connect(mysql_host, mysql_username, mysql_password, mysql_database, mysql_port);
+end;
+
 if (rw.initialized) then
 	MsgC(Color(0, 255, 100, 255), "[Rework] Auto-reloaded in "..math.Round(os.clock() - rw.startTime, 3).. " second(s)\n");
 else

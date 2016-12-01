@@ -31,7 +31,6 @@ end;
 -- Called on player spawn to determine which hand model to use.
 function rePlayer:GetHandsModel()
 	local playerModel = string.lower(self.Player:GetModel());
-	local simpleName = nil;
 
 	if (modelList[playerModel]) then
 		return player_manager.TranslatePlayerHands(modelList[playerModel]);

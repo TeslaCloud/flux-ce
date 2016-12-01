@@ -222,7 +222,7 @@ function plugin.OnPluginChanged(fileName)
 		print("[Rework] Detected new plugin "..fileName);
 		local data = plugin.Include(fileName);
 
-		netstream.Start(nil, "SendPluginFiles", data, plugin.GetFilesForClients(fileName));
+		netstream.Heavy(nil, "SendPluginFiles", data, plugin.GetFilesForClients(fileName));
 		netstream.Start(nil, "OnPluginAdded", fileName);
 	end;
 end;

@@ -14,7 +14,7 @@
 			"default"	"hl2rp"
 		}
 	}
-	"version"		"0.0.9 (1227)"
+	"version"		"0.0.10 (1254)"
 	"author"		"TeslaCloud Studios"
 	"description"	"A framework designed for roleplay gamemodes."
 	"workshopid"	""

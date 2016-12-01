@@ -179,7 +179,7 @@ function rw.bars:Draw(uniqueID)
 					render.SetScissorRect(barInfo.x + width - length, barInfo.y, barInfo.x + width, barInfo.y + height, true);
 						draw.SimpleText(barInfo.hinderText, barInfo.font, barInfo.x + width - textWide - 8, barInfo.y + barInfo.textOffset, Color(255, 255, 255));
 					render.SetScissorRect(0, 0, 0, 0, false);
-				end
+				end;
 			end;
 		end;
 	end;

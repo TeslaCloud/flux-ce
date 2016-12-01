@@ -58,7 +58,7 @@ function theme.Override(themeID, id, callback)
 end;
 
 function theme.GetActiveTheme()
-	return (theme.activeTheme and theme.activeTheme.m_UniqueID);
+	return (theme.activeTheme and theme.activeTheme.uniqueID);
 end;
 
 function theme.OverrideActive(id, callback)
@@ -68,27 +68,45 @@ function theme.OverrideActive(id, callback)
 end;
 
 function theme.SetSound(key, value)
-	cache["sound_"..key] = value;
+	if (theme.activeTheme) then
+		theme.activeTheme:SetSound(key, value);
+	end;
 end;
 
 function theme.GetSound(key, fallback)
-	return cache["sound_"..key] or fallback;
+	if (theme.activeTheme) then
+		return theme.activeTheme:GetSound(key, fallback);
+	end;
+
+	return fallback;
 end;
 
 function theme.SetColor(key, value)
-	cache["color_"..key] = value;
+	if (theme.activeTheme) then
+		theme.activeTheme:SetColor(key, value);
+	end;
 end;
 
 function theme.GetColor(key, fallback)
-	return cache["color_"..key] or fallback;
+	if (theme.activeTheme) then
+		return theme.activeTheme:GetColor(key, fallback);
+	end;
+
+	return fallback;
 end;
 
 function theme.SetMaterial(key, value)
-	cache["material_"..key] = value;
+	if (theme.activeTheme) then
+		theme.activeTheme:SetMaterial(key, value);
+	end;
 end;
 
 function theme.GetMaterial(key, fallback)
-	return cache["material_"..key] or fallback;
+	if (theme.activeTheme) then
+		return theme.activeTheme:GetMaterial(key, fallback);
+	end;
+
+	return fallback;
 end;
 
 function theme.FindTheme(id)
@@ -102,13 +120,18 @@ function theme.RemoveTheme(id)
 end;
 
 function theme.RegisterTheme(obj)
-	if (obj.parent and stored[obj.parent:MakeID()]) then
-		local newObj = table.Copy(stored[obj.parent:MakeID()]);
-		table.Merge(newObj, obj);
-		obj = newObj;
+	if (obj.parent) then
+		local parentTheme = stored[obj.parent:MakeID()];
+
+		if (parentTheme) then
+			local newObj = table.Copy(parentTheme);
+			table.Merge(newObj, obj);
+			obj = newObj;
+			obj.BaseClass = parentTheme;
+		end;
 	end;
 
-	stored[obj.m_UniqueID] = obj;
+	stored[obj.uniqueID] = obj;
 end;
 
 function theme.LoadTheme(theme)
@@ -118,6 +141,10 @@ function theme.LoadTheme(theme)
 		if (hook.Run("ShouldThemeLoad", themeTable) == false) then
 			return;
 		end;
+
+		cache["colors"] = themeTable.colors;
+		cache["materials"] = themeTable.materials;
+		cache["sounds"] = themeTable.sounds;
 
 		theme.activeTheme = themeTable;
 
