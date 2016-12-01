@@ -9,26 +9,13 @@ theme.activeTheme = theme.activeTheme or nil;
 local stored = theme.stored or {};
 theme.stored = stored;
 
-local cache = theme.cache or {};
-theme.cache = cache;
-
 function theme.GetStored()
 	return stored;
 end;
 
-function theme.SetPanel(key, value)
-	cache["menu_"..key] = value;
-end;
-
-function theme.GetPanel(key, fallback)
-	return cache["menu_"..key] or fallback;
-end;
-
-function theme.CreatePanel(panelID, parent, fallback)
-	local menu = theme.GetPanel(panelID, fallback);
-
-	if (menu and hook.Run("ShouldThemeCreatePanel", panelID, menu) != false) then
-		return vgui.Create(menu, parent);
+function theme.CreatePanel(panelID, parent, ...)
+	if (theme.activeTheme and hook.Run("ShouldThemeCreatePanel", panelID, theme.activeTheme) != false) then
+		return theme.activeTheme:CreatePanel(panelID, parent, ...);
 	end;
 end;
 
@@ -141,10 +128,6 @@ function theme.LoadTheme(theme)
 		if (hook.Run("ShouldThemeLoad", themeTable) == false) then
 			return;
 		end;
-
-		cache["colors"] = themeTable.colors;
-		cache["materials"] = themeTable.materials;
-		cache["sounds"] = themeTable.sounds;
 
 		theme.activeTheme = themeTable;
 

@@ -3,6 +3,7 @@ Class "CTheme";
 CTheme.colors = {};
 CTheme.sounds = {};
 CTheme.materials = {};
+CTheme.panels = {};
 
 --[[ Basic Skeleton --]]
 function CTheme:CTheme(name, parent)
@@ -20,6 +21,16 @@ function CTheme:OnUnloaded() end;
 
 function CTheme:Remove()
 	return theme.RemoveTheme(self.uniqueID);
+end;
+
+function CTheme:AddPanel(id, callback)
+	self.panels[id] = callback;
+end;
+
+function CTheme:CreatePanel(id, parent, ...)
+	if (self.panels[id]) then
+		return self.panels[id](id, parent, ...);
+	end;
 end;
 
 function CTheme:SetColor(id, val)

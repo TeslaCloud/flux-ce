@@ -9,12 +9,18 @@ THEME.author = "TeslaCloud Studios"
 
 function THEME:OnLoaded()
 	if (rw.settings:GetBool("UseTabDash")) then
-		theme.SetPanel("TabMenu", "rwTabDash");
+		self:AddPanel("TabMenu", function(id, parent, ...)
+			return vgui.Create("rwTabDash", parent);
+		end);
 	else
-		theme.SetPanel("TabMenu", "rwTabClassic");
+		self:AddPanel("TabMenu", function(id, parent, ...)
+			return vgui.Create("rwTabClassic", parent);
+		end);
 	end;
 
-	theme.SetPanel("MainMenu", "rwMainMenu");
+	self:AddPanel("MainMenu", function(id, parent, ...)
+		return vgui.Create("rwMainMenu", parent);
+	end);
 end;
 
 function THEME:DrawBarBackground(barInfo)
