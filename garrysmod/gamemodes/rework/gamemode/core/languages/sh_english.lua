@@ -73,3 +73,5 @@ lang["#Settings_Fit_Tiled"] = "Tiled";
 lang["#Settings_Fit_Center"] = "Center";
 lang["#Settings_Fit_Fill"] = "Fill";
 lang["#Settings_Fit_Fit"] = "Fit";
+
+lang["#TargetID_Information"] = "Press 'E' for more information."

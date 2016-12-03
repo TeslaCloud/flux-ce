@@ -135,6 +135,12 @@ function rw.fonts:CreateFonts()
 		weight = 500
 	}, true);
 
+	self:CreateFont("tooltip_smaller", {
+		font = "Roboto Condensed",
+		size = 12,
+		weight = 500
+	}, true);
+
 	theme.Call("CreateFonts", self);
 	plugin.Call("CreateFonts", self);
 end;

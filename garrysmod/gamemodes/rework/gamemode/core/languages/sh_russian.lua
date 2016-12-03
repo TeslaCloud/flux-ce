@@ -63,3 +63,5 @@ lang["#Settings_Fit_Tiled"] = "Плитки";
 lang["#Settings_Fit_Center"] = "Центрировать";
 lang["#Settings_Fit_Fill"] = "Заполнить";
 lang["#Settings_Fit_Fit"] = "Подогнать размер";
+
+lang["#TargetID_Information"] = "Press 'E' for more information."
