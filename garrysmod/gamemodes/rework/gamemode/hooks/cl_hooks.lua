@@ -344,8 +344,8 @@ function GM:DrawPlayerTargetID(player, x, y, distance)
 		
 		if (distance < 125) then
 			if (distance > 90) then
-				local d = distance - 125;
-				alpha = math.Clamp((255 * (35 - d) / 35, 0, 255));
+				local d = distance - 90;
+				alpha = math.Clamp((255 * (35 - d) / 35), 0, 255);
 			end;
 
 			local width, height = util.GetTextSize("#TargetID_Information", "tooltip_smaller");

@@ -140,6 +140,7 @@ function rw.bars:Draw(uniqueID)
 	local barInfo = self:Get(uniqueID);
 
 	if (barInfo) then
+		hook.Run("PreDrawBar", barInfo);
 		theme.Call("PreDrawBar", barInfo);
 
 		if (!plugin.Call("ShouldDrawBar", barInfo)) then
