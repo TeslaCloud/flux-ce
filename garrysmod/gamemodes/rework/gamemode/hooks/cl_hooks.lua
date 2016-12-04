@@ -328,12 +328,12 @@ function GM:HUDDrawTargetID()
 end;
 
 function GM:DrawPlayerTargetID(player, x, y, distance)
-	if (distance < 500) then
+	if (distance < 640) then
 		local alpha = 255;
 
 		if (distance > 500) then
-			local d = distance - 540;
-			alpha = math.Clamp((255 * (500 - d) / 500), 0, 255);
+			local d = distance - 500;
+			alpha = math.Clamp((255 * (140 - d) / 140), 0, 255);
 		end;
 
 		local width, height = util.GetTextSize(player:Name(), "tooltip_large");
@@ -343,9 +343,11 @@ function GM:DrawPlayerTargetID(player, x, y, distance)
 		draw.SimpleText(player:GetPhysDesc(), "tooltip_small", x - width * 0.5, y - 14, Color(255, 255, 255, alpha));
 		
 		if (distance < 125) then
-			if (distance > 125) then
-				alpha = math.Clamp((255 * (125 - d) / 125), 0, 255);
+			if (distance > 90) then
+				local d = distance - 125;
+				alpha = math.Clamp((255 * (35 - d) / 35, 0, 255));
 			end;
+
 			local width, height = util.GetTextSize("#TargetID_Information", "tooltip_smaller");
 			draw.SimpleText("#TargetID_Information", "tooltip_smaller", x - width * 0.5, y + 5, Color(50, 255, 50, alpha));
 		end;
