@@ -38,7 +38,7 @@ function rw.fonts:CreateFont(name, fontData, force)
 end;
 
 function rw.fonts:GetSize(name, size)
-	local newName = name.."\\"..size;
+	local newName = name..":"..size;
 
 	if (!stored[newName]) then
 		local fontData = table.Copy(stored[name]);
@@ -135,9 +135,9 @@ function rw.fonts:CreateFonts()
 		weight = 500
 	}, true);
 
-	self:CreateFont("tooltip_smaller", {
-		font = "Roboto Condensed",
-		size = 12,
+	self:CreateFont("rw_frame_title", {
+		font = "Roboto",
+		size = 14,
 		weight = 500
 	}, true);
 
