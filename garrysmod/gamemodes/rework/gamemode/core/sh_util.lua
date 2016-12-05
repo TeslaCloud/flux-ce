@@ -543,3 +543,23 @@ function util.WaitForEntity(entIndex, callback, delay, waitTime)
 		callback(entity);
 	end;
 end;
+
+local colorMeta = FindMetaTable("Color");
+
+function colorMeta:Darken(amt)
+	return Color(
+		math.Clamp(self.r - amt, 0, 255),
+		math.Clamp(self.g - amt, 0, 255),
+		math.Clamp(self.b - amt, 0, 255),
+		self.a
+	);
+end;
+
+function colorMeta:Lighten(amt)
+	return Color(
+		math.Clamp(self.r + amt, 0, 255),
+		math.Clamp(self.g + amt, 0, 255),
+		math.Clamp(self.b + amt, 0, 255),
+		self.a
+	);
+end;

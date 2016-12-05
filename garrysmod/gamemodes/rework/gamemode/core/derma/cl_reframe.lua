@@ -5,8 +5,8 @@
 
 local PANEL = {};
 
-PANEL.mainColor = Color(240, 240, 240);
-PANEL.accentColor = Color(60, 60, 155);
+PANEL.m_MainColor = Color(240, 240, 240);
+PANEL.m_AccentColor = Color(60, 60, 155);
 PANEL.m_Title = "Rework Frame";
 
 function PANEL:Init()
@@ -24,10 +24,10 @@ end;
 
 function PANEL:Paint(w, h)
 	if (!theme.Hook("DrawFrame", self)) then
-		surface.SetDrawColor(self.accentColor);
+		surface.SetDrawColor(self.m_AccentColor);
 		surface.DrawRect(0, 0, w, h);
 
-		surface.SetDrawColor(self.mainColor);
+		surface.SetDrawColor(self.m_MainColor);
 		surface.DrawRect(1, 20, w - 2, h - 21);
 
 		if (self.m_Title and self.m_Title != "") then
@@ -55,13 +55,13 @@ end;
 function PANEL:SetMainColor(newColor)
 	newColor = newColor or Color(240, 240, 240);
 
-	self.mainColor = newColor;
+	self.m_MainColor = newColor;
 end;
 
 function PANEL:SetAccentColor(newColor)
 	newColor = newColor or Color(240, 240, 240);
 
-	self.accentColor = newColor;
+	self.m_AccentColor = newColor;
 end;
 
 vgui.Register("reFrame", PANEL, "EditablePanel");

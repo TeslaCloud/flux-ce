@@ -5,8 +5,9 @@
 
 local PANEL = {};
 
-PANEL.mainColor = Color(45, 45, 45);
-PANEL.accentColor = Color(0, 0, 0);
+PANEL.m_MainColor = Color(45, 45, 45);
+PANEL.m_AccentColor = Color(0, 0, 0);
+PANEL.m_TextColor = Color(255, 255, 255);
 PANEL.m_Text = "Rework Frame";
 PANEL.m_Font = "rw_frame_title";
 PANEL.m_bDrawBackground = true;
@@ -15,24 +16,23 @@ PANEL.m_Icon = false;
 function PANEL:Paint(w, h)
 	if (!theme.Hook("DrawButton", self)) then
 		if (self.m_bDrawBackground) then
-			surface.SetDrawColor(self.accentColor);
+			surface.SetDrawColor(self.m_AccentColor);
 			surface.DrawRect(0, 0, w, h);
 
 			if (!self:IsHovered()) then
-				surface.SetDrawColor(self.mainColor);
+				surface.SetDrawColor(self.m_MainColor);
 			else
-				local c = self.mainColor;
-				surface.SetDrawColor(Color(c.r + 40, c.g + 40, c.b + 40));
+				surface.SetDrawColor(self.m_MainColor:Lighten(40));
 			end;
 
 			surface.DrawRect(1, 1, w - 2, h - 2);
 		end;
 
-		local textColor = Color(255, 255, 255);
+		local textColor = self.m_TextColor;
 		local oX = 0;
 
 		if (self:IsHovered()) then
-			textColor = Color(225, 225, 225);
+			textColor = textColor:Darken(40);
 		end;
 
 		if (self.m_Icon) then
@@ -45,6 +45,14 @@ function PANEL:Paint(w, h)
 			local width, height = util.GetTextSize(self.m_Text, self.m_Font);
 			draw.SimpleText(self.m_Text, self.m_Font, w / 2 - width / 2 - 1 + oX, h / 2 - height / 2, textColor);
 		end;
+	end;
+end;
+
+function PANEL:SetTextColor(newColor, g, b, a)
+	if (typeof(newColor) == "number") then
+		self.m_TextColor = Color(newColor or 255, g or 255, b or 255, a or 255);
+	else
+		self.m_TextColor = newColor or Color(255, 255, 255);
 	end;
 end;
 
@@ -94,13 +102,13 @@ end;
 function PANEL:SetMainColor(newColor)
 	newColor = newColor or Color(40, 40, 40);
 
-	self.mainColor = newColor;
+	self.m_MainColor = newColor;
 end;
 
 function PANEL:SetAccentColor(newColor)
 	newColor = newColor or Color(40, 40, 40);
 
-	self.accentColor = newColor;
+	self.m_AccentColor = newColor;
 end;
 
 vgui.Register("reButton", PANEL, "EditablePanel");
