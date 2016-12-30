@@ -1,3 +1,3 @@
-Rework is a roleplaying framework designed with performance and convenience in mind.
+Rework is a roleplay framework designed with performance and convenience in mind.
 
-You can find more info about it by visiting our forums http://forums.teslacloud.net/
+For more info or technical support, please visit our forums: http://teslacloud.net/

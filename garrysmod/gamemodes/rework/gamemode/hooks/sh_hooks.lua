@@ -152,18 +152,20 @@ function GM:DoAnimationEvent(player, event, data)
 	end;
 end;
 
-local animCache = {};
+do
+	local animCache = {};
 
-function GM:PlayerModelChanged(player, sNewModel, sOldModel)
-	if (CLIENT) then
-		player:SetIK(false);
+	function GM:PlayerModelChanged(player, sNewModel, sOldModel)
+		if (CLIENT) then
+			player:SetIK(false);
+		end;
+
+		if (!animCache[sNewModel]) then
+			animCache[sNewModel] = rw.anim:GetTable(sNewModel);
+		end;
+
+		player.rwAnimTable = animCache[sNewModel];
 	end;
-
-	if (!animCache[sNewModel]) then
-		animCache[sNewModel] = rw.anim:GetTable(sNewModel);
-	end;
-
-	player.rwAnimTable = animCache[sNewModel];
 end;
 
 -- Utility timers to call hooks that should be executed every once in a while.

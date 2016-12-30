@@ -44,6 +44,76 @@ function theme.Override(themeID, id, callback)
 	end;
 end;
 
+function theme.OverrideElement(name, uniqueID)
+	local detourObj = {};
+	local element = vgui.GetControlTable(name);
+
+	if (!element) then return; end;
+
+	-- UniqueID is needed to prevent collisions.
+	uniqueID = uniqueID or "";
+
+	table.Merge(detourObj, element);
+
+	function detourObj:Commit()
+		for k, v in pairs(self) do
+			if (k != "Commit") then
+				if (k:StartWith("__Before")) then
+					local realIdx = k:gsub("__Before", "");
+
+					element["__DetouredBefore"..realIdx..uniqueID] = element["__DetouredBefore"..realIdx..uniqueID] or element[realIdx];
+
+					element[realIdx] = function(obj, ...)
+						v(obj, ...);
+
+						element["__DetouredBefore"..realIdx..uniqueID](obj, ...);
+					end;
+				elseif (k:StartWith("__After")) then
+					local realIdx = k:gsub("__After", "");
+
+					element["__DetouredAfter"..realIdx..uniqueID] = element["__DetouredAfter"..realIdx..uniqueID] or element[realIdx];
+
+					element[realIdx] = function(obj, ...)
+						element["__DetouredAfter"..realIdx..uniqueID](obj, ...);
+
+						v(obj, ...);
+					end;
+				else
+					element[k] = v;
+				end;
+			end;
+		end;
+
+		return element;
+	end;
+
+	return detourObj;
+end;
+
+function theme.HookBefore(name, id, callback, uniqueID)
+	local obj = theme.OverrideElement(name, uniqueID);
+
+	obj["__Before"..id] = callback;
+
+	obj:Commit();
+end;
+
+function theme.HookAfter(name, id, callback, uniqueID)
+	local obj = theme.OverrideElement(name, uniqueID);
+
+	obj["__After"..id] = callback;
+
+	obj:Commit();
+end;
+
+function theme.HookReplace(name, id, callback)
+	local obj = theme.OverrideElement(name, uniqueID);
+
+	obj[id] = callback;
+
+	obj:Commit();
+end;
+
 function theme.GetActiveTheme()
 	return (theme.activeTheme and theme.activeTheme.uniqueID);
 end;

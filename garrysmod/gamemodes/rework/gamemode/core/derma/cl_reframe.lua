@@ -72,7 +72,7 @@ concommand.Add("rwFactoryTest", function()
 	frame:SetPos(100, 100);
 
 	local btn = vgui.Create("reButton", frame);
-	btn:SetPos(0, 24);
+	btn:SetPos(1, 24);
 	btn:SetText("Some Button");
 	btn.DoClick = function(button)
 		print("button click");

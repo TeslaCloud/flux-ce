@@ -87,7 +87,7 @@ function GM:AdjustTabDockMenus(menus)
 		callback = function(panel)
 			panel:CloseMenu(true);
 
-			rw.IntroPanel = theme.CreatePanel("MainMenu", nil, "rwMainMenu");
+			rw.IntroPanel = theme.CreatePanel("MainMenu", nil, "reMainMenu");
 			rw.IntroPanel:MakePopup();
 		end
 	};

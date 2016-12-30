@@ -10,14 +10,14 @@ GM.Website 		= "http://teslacloud.net/";
 GM.Email 		= "support@teslacloud.net";
 
 -- Define RW-Specific fields.
-GM.Version 		= "0.0.10b";
-GM.Build 		= "1258";
+GM.Version 		= "0.0.11";
+GM.Build 		= "1283";
 GM.Description 	= "A free roleplay gamemode framework."
 
 -- It would be very nice of you to leave below values as they are if you're using official schemas.
 -- While we can do nothing to stop you from changing them, we'll very much appreciate it if you don't.
 GM.Prefix		= "RW: "; -- Prefix to display in server browser (*Prefix*: *Schema Name*)
-GM.NameOverride	= false; -- Set to any string to override schema's browser name.
+GM.NameOverride	= false; -- Set to any string to override schema's browser name. This overrides prefix too.
 
 rw.Devmode		= true; -- If set to true will print some developer info. Moderate console spam.
 
@@ -28,8 +28,8 @@ RW = rw;
 -- Fix for name conflicts.
 _player, _team, _file, _table, _data = player, team, file, table, data;
 
--- do - end blocks actually let us manage the lifespan
--- of local variables, because when they go out of scope
+-- do - end blocks let us manage the lifespan of the
+-- local variables, because when they go out of scope
 -- they get automatically garbage-collected, freeing up
 -- the memory they have taken.
 -- In this particular case it's not necessary, because we
@@ -44,10 +44,12 @@ do
 		if (SchemaConVar) then
 			rw.schema = rw.schema or SchemaConVar:GetString();
 		else
-			rw.schema = rw.schema or "cwhl2rp";
+			rw.schema = rw.schema or "reborn";
 		end;
 	end;
 
+	-- Shared table contains the info that will be networked
+	-- to clients automatically when they load.
 	rw.sharedTable = rw.sharedTable or {
 		schemaFolder = rw.schema,
 		pluginInfo = {},
@@ -90,19 +92,11 @@ do
 	end;
 
 	function rw.SchemaDepends(id)
-		if (rw.sharedTable.dependencies[id]) then
-			return true;
-		end;
-
-		return false;
+		return rw.sharedTable.dependencies[id];
 	end;
 
 	function rw.SchemaDisabled(id)
-		if (rw.sharedTable.disable[id]) then
-			return true;
-		end;
-
-		return false;
+		return rw.sharedTable.disable[id];
 	end;
 end;
 
@@ -140,7 +134,6 @@ if (theme or SERVER) then
 end;
 
 rw.core:IncludeDirectory("hooks", true);
-
 rw.core:IncludePlugins("rework/plugins");
 
 plugin.Call("RWPluginsLoaded");

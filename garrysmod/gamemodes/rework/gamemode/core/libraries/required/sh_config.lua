@@ -8,6 +8,8 @@ library.New("config", _G);
 local stored = config.stored or {};
 config.stored = stored;
 
+local cache = {};
+
 if (SERVER) then
 	function config.Set(key, value, bIsHidden)
 		if (key != nil) then
@@ -18,6 +20,8 @@ if (SERVER) then
 			if (!stored[key].hidden) then
 				netstream.Start(nil, "config_setvar", key, stored[key]);
 			end;
+
+			cache[key] = value;
 		end;
 	end;
 
@@ -37,20 +41,26 @@ else
 		if (key == nil) then return; end;
 		stored[key] = stored[key] or {};
 		stored[key]._Value = value;
+		cache[key] = value;
 	end);
 end;
 
 function config.Get(key, default)
+	if (cache[key]) then
+		return cache[key];
+	end;
+
 	if (stored[key] != nil) then
 		if (stored[key]._Value != nil) then
+			cache[key] = stored[key]._Value;
 			return stored[key]._Value;
-		else
-			if (stored[key].DefaultValue != nil) then
-				return stored[key]._DefaultValue;
-			end;
+		elseif (stored[key].DefaultValue != nil) then
+			cache[key] = stored[key]._DefaultValue;
+			return stored[key]._DefaultValue;
 		end;
 	end;
 
+	cache[key] = default;
 	return default;
 end;
 
