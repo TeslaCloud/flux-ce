@@ -143,5 +143,5 @@ if (SERVER) then
 end;
 
 function playerMeta:GetCharacterData(key, default)
-	return self:GetCharacterVar("data", default);
+	return self:GetCharacterVar("data", {})[key] or default;
 end;

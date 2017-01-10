@@ -4,6 +4,8 @@
 	the framework is publicly released.
 --]]
 
+local logoMat = Material("rework/rw_icon.png");
+
 local PANEL = {};
 
 function PANEL:Init()
@@ -15,7 +17,7 @@ function PANEL:Init()
 
 	self.new = vgui.Create("reButton", self);
 	self.new:SetSize(textW * 1.1, textH * 1.1);
-	self.new:SetPos(100, 70);
+	self.new:SetPos(100, 170);
 	self.new:SetText(newText);
 	self.new:SetDrawBackground(false);
 	self.new:SetFont(rw.fonts:GetSize("menu_thin_large", 24));
@@ -46,7 +48,7 @@ function PANEL:Init()
 
 	self.load = vgui.Create("reButton", self);
 	self.load:SetSize(textW * 1.1, textH * 1.1);
-	self.load:SetPos(100, 100);
+	self.load:SetPos(100, 200);
 	self.load:SetText(loadText);
 	self.load:SetDrawBackground(false);
 	self.load:SetFont(rw.fonts:GetSize("menu_thin_large", 24));
@@ -92,7 +94,7 @@ function PANEL:Init()
 		
 		self.cancel = vgui.Create("reButton", self);
 		self.cancel:SetSize(textW * 1.1, textH * 1.1);
-		self.cancel:SetPos(100, 130);
+		self.cancel:SetPos(100, 230);
 		self.cancel:SetText(cancelText);
 		self.cancel:SetDrawBackground(false);
 		self.cancel:SetFont(rw.fonts:GetSize("menu_thin_large", 24));
@@ -112,6 +114,10 @@ function PANEL:Paint(w, h)
 	if (!theme.Hook("DrawMainMenu", self)) then
 		surface.SetDrawColor(Color(0, 0, 0));
 		surface.DrawRect(0, 0, w, h);
+
+		surface.SetDrawColor(Color("white"));
+		surface.SetMaterial(logoMat);
+		surface.DrawTexturedRect(75, 30, 200, 204);
 	end;
 end;
 
