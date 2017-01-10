@@ -170,7 +170,7 @@ end;
 
 -- Utility timers to call hooks that should be executed every once in a while.
 timer.Create("OneMinute", 60, 0, function()
-	hook.Run("OneSecond");
+	hook.Run("OneMinute");
 end);
 
 timer.Create("OneSecond", 1, 0, function()

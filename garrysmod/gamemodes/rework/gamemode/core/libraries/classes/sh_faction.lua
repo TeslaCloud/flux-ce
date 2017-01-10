@@ -1,9 +1,11 @@
-Class "Faction";
+Class "CFaction";
 
-function Faction:Faction(id)
+function CFaction:CFaction(id)
 	self.uniqueID = id:MakeID();
 end;
 
-function Faction:Register()
+function CFaction:Register()
 	faction.Register(self.uniqueID, self);
 end;
+
+Faction = CFaction;

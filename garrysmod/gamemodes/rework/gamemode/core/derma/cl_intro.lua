@@ -45,7 +45,7 @@ end;
 
 derma.DefineControl("rwIntro", "", PANEL, "EditablePanel");
 
-if (rw.IntroPanel) then
+if (IsValid(rw.IntroPanel)) then
 	rw.IntroPanel:Remove();
 
 	rw.IntroPanel = vgui.Create("rwIntro");

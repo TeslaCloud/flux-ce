@@ -5,8 +5,8 @@
 
 local PANEL = {};
 
-PANEL.m_MainColor = Color(240, 240, 240);
-PANEL.m_AccentColor = Color(60, 60, 155);
+PANEL.m_MainColor = Color(60, 60, 60, 220);
+PANEL.m_AccentColor = Color(90, 90, 190);
 PANEL.m_Title = "Rework Frame";
 
 function PANEL:Init()
@@ -25,7 +25,10 @@ end;
 function PANEL:Paint(w, h)
 	if (!theme.Hook("DrawFrame", self)) then
 		surface.SetDrawColor(self.m_AccentColor);
-		surface.DrawRect(0, 0, w, h);
+		surface.DrawOutlinedRect(0, 0, w, h);
+
+		surface.SetDrawColor(ColorAlpha(self.m_AccentColor, 255));
+		surface.DrawRect(1, 1, w - 2, 20);
 
 		surface.SetDrawColor(self.m_MainColor);
 		surface.DrawRect(1, 20, w - 2, h - 21);

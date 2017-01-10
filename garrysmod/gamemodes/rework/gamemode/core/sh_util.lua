@@ -363,9 +363,9 @@ function player.Find(name, bCaseSensitive)
 	if (typeof(name) != "string") then return; end;
 
 	for k, v in ipairs(_player.GetAll()) do
-		if (v:Name():find(name)) then
+		if (v:Name(true):find(name)) then
 			return v;
-		elseif (!bCaseSensitive and v:Name():utf8lower():find(name:utf8lower())) then
+		elseif (!bCaseSensitive and v:Name(true):utf8lower():find(name:utf8lower())) then
 			return v;
 		elseif (v:SteamID() == name) then
 			return v;

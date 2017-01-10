@@ -33,8 +33,10 @@ end;
 function GM:InitPostEntity()
 	rw.client = rw.client or LocalPlayer();
 
-	rw.IntroPanel = vgui.Create("rwIntro");
-	rw.IntroPanel:MakePopup();
+	if (!rw.client:GetActiveCharacter()) then
+		rw.IntroPanel = vgui.Create("rwIntro");
+		rw.IntroPanel:MakePopup();
+	end;
 
  	for k, v in ipairs(player.GetAll()) do
  		local model = v:GetModel();

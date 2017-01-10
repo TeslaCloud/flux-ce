@@ -41,7 +41,7 @@ playerMeta.rwName = playerMeta.rwName or playerMeta.Name;
 
 function playerMeta:Name()
 	if (character) then
-		return self:GetNetVar("CharacterName", self:rwName());
+		return self:GetNetVar("name", self:rwName());
 	end;
 
 	return self:rwName();
@@ -61,4 +61,90 @@ function playerMeta:SetModel(sPath)
 	end;
 
 	return self:rwSetModel(sPath);
+end;
+
+--[[
+
+	Characters System
+
+--]]
+
+function playerMeta:GetActiveCharacterID()
+	return self:GetNetVar("ActiveCharacter", nil);
+end;
+
+function playerMeta:GetCharacterKey()
+	return self:GetNetVar("key", -1);
+end;
+
+function playerMeta:GetInventory()
+	return self:GetNetVar("inventory", {});
+end;
+
+function playerMeta:GetPhysDesc()
+	return self:GetNetVar("physDesc", "This character has no description!");
+end;
+
+function playerMeta:GetCharacterVar(id, default)
+	if (SERVER) then
+		return self:GetActiveCharacter()[id] or default;
+	else
+		return self:GetNetVar(id, default);
+	end;
+end;
+
+function playerMeta:GetActiveCharacter()
+	if (self:GetActiveCharacterID()) then
+		return stored[self:SteamID()][self:GetActiveCharacterID()];
+	end;
+end;
+
+function playerMeta:GetAllCharacters()
+	return stored[self:SteamID()] or {};
+end;
+
+if (SERVER) then
+	function playerMeta:SetActiveCharacter(id)
+		self:SetNetVar("ActiveCharacter", id);
+
+		local charData = self:GetActiveCharacter();
+
+		self:SetNetVar("name", charData.name or self:SteamName());
+		self:SetNetVar("physDesc", charData.physDesc or "");
+		self:SetNetVar("gender", charData.gender or CHAR_GENDER_MALE);
+		self:SetNetVar("faction", charData.faction or "player");
+		self:SetNetVar("key", charData.key or -1);
+		self:SetNetVar("model", charData.model or "models/humans/group01/male_02.mdl");
+		self:SetNetVar("inventory", charData.inventory);
+		plugin.Call("OnActiveCharacterSet", self, self:GetActiveCharacter());
+	end;
+
+	function playerMeta:SetCharacterVar(id, val)
+		if (typeof(id) == "string") then
+			self:SetNetVar(id, val);
+			self:GetActiveCharacter()[id] = val;
+		end;
+	end;
+
+	function playerMeta:SetInventory(newInv)
+		if (typeof(newInv) != "table") then return; end;
+		self:SetCharacterVar("inventory", newInv);
+	end;
+
+	function playerMeta:SetCharacterData(key, value)
+		local charData = self:GetCharacterVar("data", {});
+
+		charData[key] = value;
+
+		self:SetCharacterVar("data", charData);
+	end;
+
+	function playerMeta:SaveCharacter()
+		local charData = self:GetActiveCharacter();
+		character.Save(self, charData.uniqueID);
+	end;
+end;
+
+function playerMeta:GetCharacterData(key, default)
+	return self:GetCharacterVar("data", default);
 end;

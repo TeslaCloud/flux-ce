@@ -282,6 +282,7 @@ function GM:PreSaveCharacter(player, char, index)
 
 	prepared.steamID = player:SteamID();
 	prepared.name = char.name;
+	prepared.physDesc = char.physDesc or "This character has no physical description set!";
 	prepared.faction = char.faction or "player";
 	prepared.class = char.class;
 	prepared.model = char.model or "models/humans/group01/male_02.mdl";
@@ -310,6 +311,7 @@ function GM:PreCharacterRestore(player, index, char)
 
 	prepared.steamID = player:SteamID();
 	prepared.name = char.name;
+	prepared.physDesc = char.physDesc;
 	prepared.faction = char.faction;
 	prepared.class = char.class or "";
 	prepared.inventory = util.JSONToTable(char.inventory or "");
@@ -332,6 +334,28 @@ end;
 
 function GM:PostCharacterLoaded(player, character)
 	netstream.Start(player, "PostCharacterLoaded", character.uniqueID);
+end;
+
+function GM:OneSecond()
+	if (!rw.nextSaveData) then
+		rw.nextSaveData = CurTime() + config.Get("data_save_interval");
+	elseif (rw.nextSaveData >= CurTime()) then
+		hook.Run("RWSaveData");
+		rw.nextSaveData = CurTime() + config.Get("data_save_interval");
+	end;
+end;
+
+function GM:PlayerOneSecond(player, curTime)
+	if (!player.nextSaveData) then
+		player.nextSaveData = curTime + config.Get("player_data_save_interval");
+	elseif (player.nextSaveData >= curTime) then
+		hook.Run("PlayerSaveData", player);
+		player.nextSaveData = curTime + config.Get("player_data_save_interval");
+	end;
+end;
+
+function GM:PlayerSaveData(player)
+	player:SaveCharacter();
 end;
 
 -- Awful awful awful code, but it's kinda necessary in some rare cases.

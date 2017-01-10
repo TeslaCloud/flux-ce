@@ -16,13 +16,13 @@ character.stored = stored;
 local playerMeta = FindMetaTable("Player");
 
 function character.Create(player, data)
-	if (typeof(data.name) != "string" or (data.name:len() < config.Get("character_min_name_len") 
-		or data.name:len() > config.Get("character_max_name_len"))) then
+	if (typeof(data.name) != "string" or (data.name:utf8len() < config.Get("character_min_name_len") 
+		or data.name:utf8len() > config.Get("character_max_name_len"))) then
 		return CHAR_ERR_NAME;
 	end;
 
-	if (typeof(data.physDesc) != "string" or (data.physDesc:len() < config.Get("character_min_desc_len") 
-		or data.physDesc:len() > config.Get("character_max_desc_len"))) then
+	if (typeof(data.physDesc) != "string" or (data.physDesc:utf8len() < config.Get("character_min_desc_len") 
+		or data.physDesc:utf8len() > config.Get("character_max_desc_len"))) then
 		return CHAR_ERR_DESC;
 	end;
 
@@ -105,72 +105,6 @@ else
 		stored[rw.client:SteamID()] = stored[rw.client:SteamID()] or {};
 		stored[rw.client:SteamID()] = data;
 	end);
-end;
-
-function playerMeta:GetActiveCharacter()
-	return self:GetNetVar("ActiveCharacter", nil);
-end;
-
-function playerMeta:GetCharacterKey()
-	return self:GetNetVar("CharKey", -1);
-end;
-
-function playerMeta:GetInventory()
-	return self:GetNetVar("Inventory", {});
-end;
-
-function playerMeta:GetPhysDesc()
-	return self:GetNetVar("PhysDesc", "This character has no description!");
-end;
-
-
-function playerMeta:GetActiveCharacterTable()
-	if (self:GetActiveCharacter()) then
-		return stored[self:SteamID()][self:GetActiveCharacter()];
-	end;
-end;
-
-function playerMeta:GetAllCharacters()
-	return stored[self:SteamID()] or {};
-end;
-
-if (SERVER) then
-	function playerMeta:SetActiveCharacter(id)
-		self:SetNetVar("ActiveCharacter", id);
-
-		local charData = self:GetActiveCharacterTable();
-
-		self:SetNetVar("CharacterName", charData.name or self:SteamName());
-		self:SetNetVar("PhysDesc", charData.physDesc or "");
-		self:SetNetVar("Gender", charData.gender or CHAR_GENDER_MALE);
-		self:SetNetVar("Faction", charData.faction or "player");
-		self:SetNetVar("CharKey", charData.key or -1);
-		self:SetNetVar("ModelPath", charData.model or "models/humans/group01/male_02.mdl");
-		self:SetNetVar("Inventory", charData.inventory);
-		plugin.Call("OnActiveCharacterSet", self, self:GetActiveCharacterTable());
-	end;
-
-	function playerMeta:SetInventory(newInv)
-		if (typeof(newInv) != "table") then return; end;
-		self:SetNetVar("Inventory", newInv);
-	end;
-
-	function playerMeta:SetCharacterData(key, value)
-		local charData = self:GetActiveCharacterTable();
-
-		if (!charData) then return; end;
-
-		charData.data = charData.data or {};
-		charData.data[key] = value;
-
-		character.Save(player, charData.uniqueID);
-
-		self:SetNetVar("CharacterData", charData.data);
-	end;
-end;
-
-function playerMeta:GetCharacterData(key, default)
-	return self:GetNetVar("CharacterData", {})[key] or default;
 end;
 
 if (SERVER) then

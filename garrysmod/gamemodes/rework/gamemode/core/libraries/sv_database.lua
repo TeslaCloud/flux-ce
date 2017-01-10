@@ -580,6 +580,7 @@ function rw.db:OnConnected()
 			queryObj:Create("faction", "TEXT NOT NULL");
 			queryObj:Create("model", "TEXT NOT NULL");
 			queryObj:Create("class", "TEXT DEFAULT NULL");
+			queryObj:Create("physDesc", "TEXT DEFAULT NULL");
 			queryObj:Create("inventory", "TEXT DEFAULT NULL");
 			queryObj:Create("ammo", "TEXT DEFAULT NULL");
 			queryObj:Create("money", "INT DEFAULT NULL");
