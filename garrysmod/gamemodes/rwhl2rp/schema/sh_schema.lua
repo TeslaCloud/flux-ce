@@ -1,6 +1,7 @@
 --[[ 
 	Rework © 2016-2017 TeslaCloud Studios
-	Do not share, re-distribute or sell.
+	Do not share or re-distribute before 
+	the framework is publicly released.
 --]]
 
 //print("Schema has loaded!")

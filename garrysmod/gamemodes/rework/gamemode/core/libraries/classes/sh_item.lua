@@ -1,6 +1,7 @@
 --[[ 
-	Rework © 2016 TeslaCloud Studios
-	Do not share, re-distribute or sell.
+	Rework © 2016-2017 TeslaCloud Studios
+	Do not share or re-distribute before 
+	the framework is publicly released.
 --]]
 
 Class "CItem";
@@ -115,6 +116,7 @@ end;
 function CItem:GetData(id, default)
 	if (!id) then return; end;
 
+	return self.data[id] or default;
 end;
 
 function CItem:SetEntity(ent)
