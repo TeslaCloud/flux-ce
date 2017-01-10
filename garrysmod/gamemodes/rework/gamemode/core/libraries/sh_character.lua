@@ -130,3 +130,15 @@ if (SERVER) then
 		player:SetActiveCharacter(id);
 	end);
 end;
+
+local playerMeta = FindMetaTable("Player");
+
+function playerMeta:GetActiveCharacter()
+	if (self:GetActiveCharacterID()) then
+		return stored[self:SteamID()][self:GetActiveCharacterID()];
+	end;
+end;
+
+function playerMeta:GetAllCharacters()
+	return stored[self:SteamID()] or {};
+end;

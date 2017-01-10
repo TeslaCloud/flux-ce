@@ -94,18 +94,14 @@ function playerMeta:GetCharacterVar(id, default)
 	end;
 end;
 
-function playerMeta:GetActiveCharacter()
-	if (self:GetActiveCharacterID()) then
-		return stored[self:SteamID()][self:GetActiveCharacterID()];
-	end;
-end;
-
-function playerMeta:GetAllCharacters()
-	return stored[self:SteamID()] or {};
-end;
-
 if (SERVER) then
 	function playerMeta:SetActiveCharacter(id)
+		local curChar = self:GetActiveCharacterID();
+
+		if (curChar) then
+			plugin.Call("OnCharacterChange", self, self:GetActiveCharacter(), id);
+		end;
+
 		self:SetNetVar("ActiveCharacter", id);
 
 		local charData = self:GetActiveCharacter();

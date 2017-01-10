@@ -12,7 +12,7 @@ function GM:PlayerSetModel(player)
 	if (player:IsBot()) then
 		player:SetModel("models/humans/group01/male_02.mdl");
 	elseif (player:HasInitialized()) then
-		player:SetModel(player:GetNetVar("ModelPath"));
+		player:SetModel(player:GetNetVar("model", "models/humans/group01/male_02.mdl"));
 	end;
 end;
 
@@ -48,11 +48,14 @@ function GM:PlayerInitialSpawn(player)
 	netstream.Start(nil, "PlayerInitialSpawn", player:EntIndex());
 end;
 
-function GM:PlayerDeath(player, inflictor, attacker) end;
+function GM:PlayerDeath(player, inflictor, attacker)
+	player:SaveCharacter();
+end;
 
 function GM:DoPlayerDeath(player, attacker, damageInfo) end;
 
 function GM:PlayerDisconnected(player)
+	player:SaveCharacter();
 	netstream.Start(nil, "PlayerDisconnected", player:EntIndex());
 end;
 
@@ -333,27 +336,23 @@ end;
 
 function GM:PostCharacterLoaded(player, character)
 	netstream.Start(player, "PostCharacterLoaded", character.uniqueID);
+
+	for k, v in ipairs(player:GetInventory()) do
+		item.NetworkItem(player, v);
+	end;
 end;
 
 function GM:OneSecond()
 	if (!rw.nextSaveData) then
 		rw.nextSaveData = CurTime() + config.Get("data_save_interval");
-	elseif (rw.nextSaveData >= CurTime()) then
+	elseif (rw.nextSaveData <= CurTime()) then
+		rw.core:DevPrint("Saving Rework data...");
 		hook.Run("RWSaveData");
 		rw.nextSaveData = CurTime() + config.Get("data_save_interval");
 	end;
 end;
 
-function GM:PlayerOneSecond(player, curTime)
-	if (!player.nextSaveData) then
-		player.nextSaveData = curTime + config.Get("player_data_save_interval");
-	elseif (player.nextSaveData >= curTime) then
-		hook.Run("PlayerSaveData", player);
-		player.nextSaveData = curTime + config.Get("player_data_save_interval");
-	end;
-end;
-
-function GM:PlayerSaveData(player)
+function GM:OnCharacterChange(player, oldChar, newCharID)
 	player:SaveCharacter();
 end;
 

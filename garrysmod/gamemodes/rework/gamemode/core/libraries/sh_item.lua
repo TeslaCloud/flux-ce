@@ -261,6 +261,10 @@ if (SERVER) then
 		end;
 	end;
 
+	function item.NetworkItem(player, instanceID)
+		netstream.Start(player, "NetworkItem", instanceID, item.ToSave(item.FindInstanceByID(instanceID)));
+	end;
+
 	function item.NetworkEntityData(player, ent)
 		if (IsValid(ent)) then
 			netstream.Start(player, "ItemEntData", ent:EntIndex(), ent.item.uniqueID, ent.item.instanceID);
@@ -334,6 +338,11 @@ if (SERVER) then
 else
 	netstream.Hook("ItemData", function(uniqueID, instanceID, tData)
 		instances[uniqueID][instanceID].data = tData;
+	end);
+
+	netstream.Hook("NetworkItem", function(instanceID, itemTable)
+		instances[itemTable.uniqueID][instanceID] = itemTable;
+		print("Received instance ID "..instanceID);
 	end);
 
 	netstream.Hook("ItemEntData", function(entIndex, uniqueID, instanceID)
