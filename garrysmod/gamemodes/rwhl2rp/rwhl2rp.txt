@@ -1,0 +1,9 @@
+"rwhl2rp"
+{
+	"title"			"HL2 RP"
+	"author"		"Mr. Meow"
+	"description"	"A roleplaying schema set in Half-Life 2 universe."
+	"version"		"1.0"
+	"menusystem"	"1"
+	"workshopid"	""
+}

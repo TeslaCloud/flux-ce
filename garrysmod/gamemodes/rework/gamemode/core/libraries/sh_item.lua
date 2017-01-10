@@ -37,6 +37,7 @@ function item.Register(id, data)
 
 	data.uniqueID = id;
 	data.Name = data.Name or "Unknown Item";
+	data.Base = data.Base or nil;
 	data.PrintName = data.PrintName or data.Name;
 	data.Description = data.Description or "This item has no description!";
 	data.Weight = data.Weight or 1;
@@ -45,8 +46,22 @@ function item.Register(id, data)
 	data.Model = data.Model or "models/props_lab/cactus.mdl";
 	data.Skin = data.Skin or 0;
 	data.Color = data.Color or nil;
-	data.instanceID = ITEM_TEMPLATE; -- -1 means no instance.
+	data.instanceID = ITEM_TEMPLATE; -- -1 (or ITEM_TEMPLATE) means no instance.
 	data.data = data.data or {};
+	data.customButtons = data.customButtons or {};
+	data.actionSounds = data.actionSounds or {};
+	data.useText = data.useText;
+	data.takeText = data.takeText;
+	data.cancelText = data.cancelText;
+	data.useIcon = data.useIcon;
+	data.takeIcon = data.takeIcon;
+	data.cancelIcon = data.cancelIcon;
+
+	if (data.Base and stored[data.Base]) then
+		local newTable = table.Copy(stored[data.Base]);
+		table.Merge(newTable, data);
+		data = newTable;
+	end;
 
 	stored[id] = data;
 	instances[id] = instances[id] or {};
@@ -58,6 +73,7 @@ function item.ToSave(itemTable)
 	return {
 		uniqueID = itemTable.uniqueID,
 		Name = itemTable.Name,
+		Base = itemTable.Base,
 		PrintName = itemTable.PrintName,
 		Description = itemTable.Description,
 		Weight = itemTable.Weight,
@@ -67,10 +83,18 @@ function item.ToSave(itemTable)
 		Skin = itemTable.Skin,
 		Color = itemTable.Color,
 		instanceID = itemTable.instanceID,
-		data = itemTable.data
+		data = itemTable.data,
+		actionSounds = itemTable.actionSounds,
+		useText = itemTable.useText,
+		takeText = itemTable.takeText,
+		cancelText = itemTable.cancelText,
+		useIcon = itemTable.useIcon,
+		takeIcon = itemTable.takeIcon,
+		cancelIcon = itemTable.cancelIcon
 	};
 end;
 
+-- Find item's template by it's ID.
 function item.FindByID(uniqueID)
 	for k, v in pairs(stored) do
 		if (k == uniqueID or v.uniqueID == uniqueID) then
@@ -79,12 +103,14 @@ function item.FindByID(uniqueID)
 	end;
 end;
 
+-- Find all instances of certain template ID.
 function item.FindAllInstances(uniqueID)
 	if (instances[uniqueID]) then
 		return instances[uniqueID];
 	end;
 end;
 
+-- Finds instance by it's ID.
 function item.FindInstanceByID(instanceID)
 	for k, v in pairs(instances) do
 		if (type(v) == "table") then
@@ -97,6 +123,7 @@ function item.FindInstanceByID(instanceID)
 	end;
 end;
 
+-- Finds an item template that belongs to certain instance ID.
 function item.FindByInstanceID(instanceID)
 	if (!instanceID) then return; end;
 

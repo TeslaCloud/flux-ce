@@ -5,9 +5,14 @@
 
 Class "CItem";
 
-function CItem:CItem(uniqueID)
+function CItem:CItem(uniqueID, baseID)
 	self.uniqueID = uniqueID;
+	self.Base = baseID;
 	self.data = self.data or {};
+	self.customButtons = {};
+	self.actionSounds = {
+		["OnUse"] = "items/battery_pickup.wav"
+	};
 end;
 
 function CItem:GetName()
@@ -48,6 +53,14 @@ function CItem:GetColor()
 	return self.Color or Color(255, 255, 255);
 end;
 
+function CItem:AddButton(name, data)
+	self.customButtons[name] = data;
+end;
+
+function CItem:SetActionSound(act, sound)
+	self.actionSounds[act] = sound;
+end;
+
 -- Returns:
 -- true = drop normally
 -- false = prevents item appearing and doesn't remove it from inventory.
@@ -69,6 +82,33 @@ if (SERVER) then
 		self.data[id] = value;
 
 		item.NetworkItemData(self);
+	end;
+
+	function CItem:DoMenuAction(act, player, ...)
+		if (self[act]) then
+			local succ, result = pcall(self[act], self, ...);
+
+			if (succ) then
+				if (self.actionSounds[act]) then
+					player:EmitSound(self.actionSounds[act]);
+				end;
+			end;
+
+			return result;
+		end;
+	end;
+
+	netstream.Hook("ItemMenuAction", function(player, instanceID, action, ...)
+		local itemTable = item.FindInstanceByID(instanceID);
+
+		if (!itemTable) then return; end;
+		if (plugin.Call("PlayerCanUseItem", player, itemTable, action, ...) == false) then return; end;
+
+		itemTable:DoMenuAction(act, player, ...);
+	end);
+else
+	function CItem:DoMenuAction(act, ...)
+		netstream.Start("ItemMenuAction", self.instanceID, act, ...);
 	end;
 end;
 

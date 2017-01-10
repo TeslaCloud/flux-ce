@@ -34,16 +34,38 @@ netstream.Hook("reNotification", function(sMessage)
 	chat.AddText(Color(255, 255, 255), sMessage);
 end);
 
-netstream.Hook("PlayerUseItemEntity", function(entity) 
+netstream.Hook("PlayerUseItemEntity", function(entity)
+	local itemTable = entity.item;
+
+	if (!itemTable) then return; end;
+
 	local itemMenu = DermaMenu();
 
-	local useBtn = itemMenu:AddOption("Use", function() 
-		netstream.Start("PlayerUsedItemEntity", entity);
-	end);
-	useBtn:SetIcon("icon16/wrench.png");
+	if (itemTable.customButtons) then
+		for k, v in pairs(itemTable.customButtons) do
+			local button = itemMenu:AddOption(k, function() 
+				itemTable:DoMenuAction(v.callback);
+			end);
+			button:SetIcon(v.icon);
+		end;
+	end;
 
-	local closeBtn = itemMenu:AddOption("Cancel", function() end);
-	closeBtn:SetIcon("icon16/cross.png");
+	if (itemTable.OnUse) then
+		local useBtn = itemMenu:AddOption(itemTable.useText or "Use", function() 
+			itemTable:DoMenuAction("OnUse");
+		end);
+		useBtn:SetIcon(itemTable.useIcon or "icon16/wrench.png");
+	end;
+
+	if (itemTable.OnTake) then
+		local takeBtn = itemMenu:AddOption(itemTable.takeText or "Take", function() 
+			itemTable:DoMenuAction("OnTake");
+		end);
+		takeBtn:SetIcon(itemTable.takeIcon or "icon16/wrench.png");
+	end;
+
+	local closeBtn = itemMenu:AddOption(itemTable.cancelText or "Cancel", function() end);
+	closeBtn:SetIcon(itemTable.cancelIcon or "icon16/cross.png");
 
 	itemMenu:Open()
 

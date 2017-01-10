@@ -149,9 +149,7 @@ function GM:GetFallDamage(player, speed)
 end;
 
 function GM:PlayerShouldTakeDamage(player, attacker)
-	if (!plugin.Call("RWPlayerShouldTakeDamage")) then
-		return true;
-	end;
+	return plugin.Call("RWPlayerShouldTakeDamage", player, attacker) or true;
 end;
 
 function GM:ChatboxPlayerSay(player, message)
