@@ -341,8 +341,12 @@ else
 	end);
 
 	netstream.Hook("NetworkItem", function(instanceID, itemTable)
-		instances[itemTable.uniqueID][instanceID] = itemTable;
-		print("Received instance ID "..instanceID);
+		if (itemTable) then
+			instances[itemTable.uniqueID][instanceID] = itemTable;
+			print("Received instance ID "..instanceID);
+		else
+			print("FAILED TO RECEIVE INSTANCE ID "..instanceID);
+		end;
 	end);
 
 	netstream.Hook("ItemEntData", function(entIndex, uniqueID, instanceID)

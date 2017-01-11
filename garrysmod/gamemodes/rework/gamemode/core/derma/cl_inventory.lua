@@ -11,15 +11,23 @@ PANEL.instanceIDs = {};
 PANEL.isHovered = false;
 
 function PANEL:SetItem(instanceID)
-	if (typeof(instanceID) == "table" and #instanceID > 1) then
-		self:SetItemMulti(instanceID);
-		return;
+	if (typeof(instanceID) == "table") then
+		if (#instanceID > 1) then
+			self:SetItemMulti(instanceID);
+			return;
+		else
+			return self:SetItem(instanceID[1]);
+		end;
 	end;
 
 	if (typeof(instanceID) == "number") then
 		self.itemData = item.FindInstanceByID(instanceID);
-		self.itemCount = 1;
-		self.instanceIDs = {instanceID}
+
+		if (self.itemData) then
+			self.itemCount = 1;
+			self.instanceIDs = {instanceID};
+		end;
+
 		self:Rebuild();
 	end;
 end;
@@ -27,7 +35,7 @@ end;
 function PANEL:SetItemMulti(ids)
 	local itemData = item.FindInstanceByID(ids[1]);
 
-	if (!itemData.Stackable) then return; end;
+	if (itemData and !itemData.Stackable) then return; end;
 
 	self.itemData = itemData;
 	self.itemCount = #ids;
@@ -36,9 +44,9 @@ function PANEL:SetItemMulti(ids)
 end;
 
 function PANEL:Combine(panel2)
-	for k, v in ipairs(panel2.instanceIDs) do
+	for i = 1, #panel2.instanceIDs do
 		if (#self.instanceIDs < self.itemData.MaxStack) then
-			table.insert(self.instanceIDs, 1);
+			table.insert(self.instanceIDs, panel2.instanceIDs[1]);
 			table.remove(panel2.instanceIDs, 1);
 		end;
 	end;
@@ -59,6 +67,7 @@ function PANEL:Reset()
 	self.itemData = nil;
 	self.itemCount = 0;
 	self:Rebuild();
+	self:UnDraggable();
 end;
 
 function PANEL:Paint(w, h)
@@ -66,14 +75,19 @@ function PANEL:Paint(w, h)
 		self.isHovered = false;
 	end;
 
-	local drawColor = Color(255, 255, 255, 225);
+	local drawColor = Color(200, 200, 200, 160);
 
 	if (!self.isHovered) then
 		if (!self.itemData) then
-			drawColor = Color(190, 190, 190, 225);
+			drawColor = Color(140, 140, 140, 180);
+		else
+			if (self:IsHovered()) then
+				surface.SetDrawColor(Color(255, 255, 255));
+				surface.DrawOutlinedRect(1, 1, w - 2, h - 2)
+			end
 		end;
 	else
-		drawColor = Color(220, 100, 100, 225);
+		drawColor = Color(200, 60, 60, 160);
 	end;
 
 	draw.RoundedBox(0, 0, 0, w, h, drawColor);
@@ -92,7 +106,11 @@ function PANEL:Rebuild()
 			self.spawnIcon:Remove();
 		end;
 
-		return; 
+		self:UnDraggable();
+
+		return;
+	else
+		self:Droppable("rwItem");
 	end;
 
 	if (IsValid(self.spawnIcon)) then
@@ -103,16 +121,28 @@ function PANEL:Rebuild()
 	self.spawnIcon = vgui.Create("SpawnIcon", self);
 	self.spawnIcon:SetPos(2, 2);
 	self.spawnIcon:SetSize(60, 60);
-	self.spawnIcon:SetModel(self.itemData.Model);
+	self.spawnIcon:SetModel(self.itemData.Model, self.itemData.Skin);
 	self.spawnIcon:SetMouseInputEnabled(false);
+end;
+
+function PANEL:OnMousePressed(...)
+	self.mousePressed = CurTime();
+
+	self.BaseClass.OnMousePressed(self, ...)
+end;
+
+function PANEL:OnMouseReleased(...)
+	if (self.mousePressed and self.mousePressed > (CurTime() - 0.15)) then
+		print("click");
+	end;
+
+	self.BaseClass.OnMouseReleased(self, ...)
 end;
 
 vgui.Register("reInventoryItem", PANEL, "DPanel");
 
 local PANEL = {};
-PANEL.inventory = {
-	[5] = {1, 2}
-};
+PANEL.inventory = {};
 PANEL.invSlots = 8;
 
 function PANEL:SetInventory(inv)
@@ -133,6 +163,8 @@ function PANEL:Rebuild()
 	self.list:SetPos(0, 0)
 	self.list:SetSpaceY(4)
 	self.list:SetSpaceX(4)
+
+	PrintTable(self.inventory);
 
 	for i = 1, self.invSlots do
 		local invSlot = self.list:Add("reInventoryItem")
@@ -194,16 +226,21 @@ function PANEL:Rebuild()
 				receiver.isHovered = true;
 			end;
 		end, {"Place"});
-
-		invSlot:Droppable("rwItem");
 	end
 end;
 
 vgui.Register("reInventory", PANEL, "reFrame");
 
+vgui.GetWorldPanel():Receiver("rwItem", function(receiver, dropped, isDropped, menuIndex, mouseX, mouseY)
+	if (isDropped) then
+		plugin.Call("PlayerDropItem", dropped[1].itemData, dropped[1], mouseX, mouseY);
+	end;
+end, {});
+
 concommand.Add("rwInvTest", function()
 	local frame = vgui.Create("reInventory");
 	frame:SetTitle("Inventory");
+	frame:SetInventory(rw.client:GetInventory());
 	frame:SetSize(560, 400);
 	frame:SetPos(100, 100);
 	frame:Rebuild();

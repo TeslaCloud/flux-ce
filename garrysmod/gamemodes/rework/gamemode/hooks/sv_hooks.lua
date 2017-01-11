@@ -337,8 +337,10 @@ end;
 function GM:PostCharacterLoaded(player, character)
 	netstream.Start(player, "PostCharacterLoaded", character.uniqueID);
 
-	for k, v in ipairs(player:GetInventory()) do
-		item.NetworkItem(player, v);
+	for slot, ids in ipairs(player:GetInventory()) do
+		for k, v in ipairs(ids) do
+			item.NetworkItem(player, v);
+		end;
 	end;
 end;
 

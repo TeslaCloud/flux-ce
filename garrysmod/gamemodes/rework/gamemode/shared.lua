@@ -11,7 +11,7 @@ GM.Website 		= "http://teslacloud.net/";
 GM.Email 		= "support@teslacloud.net";
 
 -- Define RW-Specific fields.
-GM.Version 		= "0.0.11";
+GM.Version 		= "0.0.12";
 GM.Build 		= "1283";
 GM.Description 	= "A free roleplay gamemode framework."
 

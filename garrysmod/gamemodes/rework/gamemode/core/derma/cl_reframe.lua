@@ -6,7 +6,7 @@
 
 local PANEL = {};
 
-PANEL.m_MainColor = Color(60, 60, 60, 220);
+PANEL.m_MainColor = Color(55, 55, 55, 235);
 PANEL.m_AccentColor = Color(90, 90, 190);
 PANEL.m_Title = "Rework Frame";
 

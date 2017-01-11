@@ -62,7 +62,7 @@ end;
 
 function entityMeta:SetNetVar(key, value, send)
 	if (IsBadType(key, value)) then return; end;
-	if (self:GetNetVar(key) == value) then return; end;
+	if (typeof(value) != "table" and self:GetNetVar(key) == value) then return; end;
 
 	stored[self] = stored[self] or {};
 	stored[self][key] = value;

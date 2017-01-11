@@ -15,29 +15,30 @@ do
 
 	if (SERVER) then
 		function playerMeta:AddItem(itemTable)
+			if (!itemTable) then return -1; end;
+
 			local playerInv = self:GetInventory();
 			local slots = self:GetCharacterData("invSlots", 8);
 
-			for slot, ids in ipairs(playerInv) do
-				if (slot > slots) then
-					table.remove(playerInv, slots + 1);
-					continue;
-				end;
-
+			for i = 1, slots do
+				playerInv[i] = playerInv[i] or {};
+				local ids = playerInv[i];
 				-- Empty slot
 				if (#ids == 0) then
-					table.insert(playerInv[slot], itemTable.instanceID);
+					table.insert(playerInv[i], itemTable.instanceID);
 					self:SetInventory(playerInv);
-					return slot;
+					item.NetworkItem(self, itemTable.instanceID);
+					return i;
 				end;
 
 				local slotTable = item.FindInstanceByID(ids[1]);
 
 				if (itemTable.Stackable and itemTable.uniqueID == slotTable.uniqueID) then
 					if (#ids < itemTable.MaxStack) then
-						table.insert(playerInv[slot], itemTable.instanceID);
+						table.insert(playerInv[i], itemTable.instanceID);
 						self:SetInventory(playerInv);
-						return slot;
+						item.NetworkItem(self, itemTable.instanceID);
+						return i;
 					end;
 				end;
 			end;
@@ -58,8 +59,10 @@ do
 
 			local slot = self:AddItem(itemTable);
 
-			if (slot) then
+			if (slot and slot != -1) then
 				plugin.Call("OnItemGiven", self, itemTable, slot);
+			elseif (slot == -1) then
+				rw.core:DevPrint("Failed to add item to player's inventory (itemTable is invalid)! "..tostring(itemTable));
 			else
 				rw.core:DevPrint("Failed to add item to player's inventory (inv is full)! "..tostring(itemTable));
 			end;
