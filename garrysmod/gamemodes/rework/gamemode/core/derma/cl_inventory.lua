@@ -147,13 +147,19 @@ PANEL.invSlots = 8;
 
 function PANEL:SetInventory(inv)
 	self.inventory = inv;
+	self:Rebuild();
 end;
 
 function PANEL:SetSlots(num)
 	self.invSlots = num;
+	self:Rebuild();
 end;
 
 function PANEL:Rebuild()
+	local multiplier = self.invSlots / 8;
+	local height = multiplier * 68 + 36;
+	self:SetSize(562, height);
+
 	self.scroll = vgui.Create("DScrollPanel", self) //Create the Scroll panel
 	self.scroll:SetSize(self:GetWide(), self:GetTall())
 	self.scroll:SetPos(10, 30)
@@ -163,8 +169,6 @@ function PANEL:Rebuild()
 	self.list:SetPos(0, 0)
 	self.list:SetSpaceY(4)
 	self.list:SetSpaceX(4)
-
-	PrintTable(self.inventory);
 
 	for i = 1, self.invSlots do
 		local invSlot = self.list:Add("reInventoryItem")
@@ -236,13 +240,3 @@ vgui.GetWorldPanel():Receiver("rwItem", function(receiver, dropped, isDropped, m
 		plugin.Call("PlayerDropItem", dropped[1].itemData, dropped[1], mouseX, mouseY);
 	end;
 end, {});
-
-concommand.Add("rwInvTest", function()
-	local frame = vgui.Create("reInventory");
-	frame:SetTitle("Inventory");
-	frame:SetInventory(rw.client:GetInventory());
-	frame:SetSize(560, 400);
-	frame:SetPos(100, 100);
-	frame:Rebuild();
-	frame:MakePopup();
-end);

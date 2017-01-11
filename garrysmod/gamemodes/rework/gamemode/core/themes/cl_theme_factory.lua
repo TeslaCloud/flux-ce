@@ -11,15 +11,9 @@ THEME.uniqueID = "factory";
 THEME.shouldReload = true;
 
 function THEME:OnLoaded()
-	if (rw.settings:GetBool("UseTabDash")) then
-		self:AddPanel("TabMenu", function(id, parent, ...)
-			return vgui.Create("rwTabDash", parent);
-		end);
-	else
-		self:AddPanel("TabMenu", function(id, parent, ...)
-			return vgui.Create("rwTabClassic", parent);
-		end);
-	end;
+	self:AddPanel("TabMenu", function(id, parent, ...)
+		return vgui.Create("reTabMenu", parent);
+	end);
 
 	self:AddPanel("MainMenu", function(id, parent, ...)
 		return vgui.Create("reMainMenu", parent);

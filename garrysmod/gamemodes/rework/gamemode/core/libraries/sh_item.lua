@@ -137,6 +137,24 @@ function item.FindByInstanceID(instanceID)
 	end;
 end;
 
+function item.Find(name)
+	if (typeof(name) == "number") then
+		return item.FindInstanceByID(name);
+	end;
+
+	if (stored[id]) then
+		return stored[id];
+	end;
+
+	for k, v in pairs(stored) do
+		if (v.Name and v.PrintName) then
+			if (v.Name:find(name) or v.PrintName:find(name) or rw.lang:TranslateText(v.PrintName):find(name)) then
+				return v;
+			end;
+		end;
+	end;
+end;
+
 function item.GenerateID()
 	instances.count = instances.count or 0;
 	instances.count = instances.count + 1;

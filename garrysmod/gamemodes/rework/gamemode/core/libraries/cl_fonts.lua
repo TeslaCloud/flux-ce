@@ -142,6 +142,18 @@ function rw.fonts:CreateFonts()
 		weight = 500
 	}, true);
 
+	self:CreateFont("rw_menuitem", {
+		font = "Roboto Condensed",
+		size = 24,
+		weight = 500
+	}, true);
+
+	self:CreateFont("rw_menuitem_large", {
+		font = "Roboto Condensed",
+		size = 30,
+		weight = 500
+	}, true);
+
 	theme.Call("CreateFonts", self);
 	plugin.Call("CreateFonts", self);
 end;

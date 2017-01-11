@@ -13,6 +13,7 @@ PANEL.m_Text = "Rework Frame";
 PANEL.m_Font = "rw_frame_title";
 PANEL.m_bDrawBackground = true;
 PANEL.m_Icon = false;
+PANEL.m_Autopos = true;
 
 function PANEL:Paint(w, h)
 	if (!theme.Hook("DrawButton", self)) then
@@ -44,7 +45,12 @@ function PANEL:Paint(w, h)
 
 		if (self.m_Text and self.m_Text != "") then
 			local width, height = util.GetTextSize(self.m_Text, self.m_Font);
-			draw.SimpleText(self.m_Text, self.m_Font, w / 2 - width / 2 - 1 + oX, h / 2 - height / 2, textColor);
+
+			if (self.m_Autopos) then
+				draw.SimpleText(self.m_Text, self.m_Font, h + 2, h / 2 - height / 2, textColor);
+			else
+				draw.SimpleText(self.m_Text, self.m_Font, 0, h / 2 - height / 2, textColor);
+			end;
 		end;
 	end;
 end;
@@ -87,6 +93,10 @@ function PANEL:OnMousePressed(key)
 			self:DoRightClick();
 		end
 	end;
+end;
+
+function PANEL:SetTextAutoposition(bAutoposition)
+	self.m_Autopos = bAutoposition;
 end;
 
 function PANEL:SizeToContents()

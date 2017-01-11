@@ -77,27 +77,37 @@ function GM:ScoreboardHide()
 end;
 
 -- Called when category icons are presented.
-function GM:AdjustTabDockMenus(menus)
-	menus["Inventory"] = {
-		icon = "fa-suitcase"
-	};
-	menus["Settings"] = {
-		icon = "fa-cog",
-		menu = "rwSettings"
-	};
-	menus["MainMenu"] = {
-		icon = "fa-home",
-		callback = function(panel)
-			panel:CloseMenu(true);
+function GM:AddTabMenuItems(menu)
+	menu:AddMenuItem("!mainmenu", {
+		title = "Main Menu",
+		icon = "fa-users",
+		override = function(menuPanel, button)
+			menuPanel:SetVisible(false);
+			menuPanel:Remove();
+			rw.IntroPanel = theme.CreatePanel("MainMenu");
+		end;
+	});
 
-			rw.IntroPanel = theme.CreatePanel("MainMenu", nil, "reMainMenu");
-			rw.IntroPanel:MakePopup();
+	menu:AddMenuItem("!inventory", {
+		title = "Inventory",
+		panel = "reInventory",
+		icon = "fa-inbox",
+		callback = function(menuPanel, button)
+			local inv = menuPanel.activePanel;
+			inv:SetInventory(rw.client:GetInventory());
+			inv:SetTitle("Inventory");
 		end
-	};
-	menus["Scoreboard"] = {
-		menu = "rwScoreboard",
-		icon = "fa-users"
-	};
+	});
+
+	menu:AddMenuItem("scoreboard", {
+		title = "Scoreboard",
+		panel = "rwScoreboard",
+		icon = "fa-list-alt"
+	});
+end;
+
+function GM:OnMenuPanelOpen(menuPanel, activePanel)
+	activePanel:SetPos(ScrW() / 2 - activePanel:GetWide() / 2 + 64, 256);
 end;
 
 rw.bars:Register("health", {

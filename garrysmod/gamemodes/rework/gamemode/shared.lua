@@ -27,7 +27,7 @@ Rework = rw;
 RW = rw;
 
 -- Fix for name conflicts.
-_player, _team, _file, _table, _data = player, team, file, table, data;
+_player, _team, _file, _table, _data, _sound = player, team, file, table, data, sound;
 
 -- do - end blocks let us manage the lifespan of the
 -- local variables, because when they go out of scope

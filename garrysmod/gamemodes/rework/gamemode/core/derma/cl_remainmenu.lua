@@ -21,6 +21,7 @@ function PANEL:Init()
 	self.new:SetText(newText);
 	self.new:SetDrawBackground(false);
 	self.new:SetFont(rw.fonts:GetSize("menu_thin_large", 24));
+	self.new:SetTextAutoposition(false);
 	self.new:SizeToContents();
 
 	self.new.DoClick = function(btn)
@@ -51,6 +52,7 @@ function PANEL:Init()
 	self.load:SetPos(100, 200);
 	self.load:SetText(loadText);
 	self.load:SetDrawBackground(false);
+	self.load:SetTextAutoposition(false);
 	self.load:SetFont(rw.fonts:GetSize("menu_thin_large", 24));
 	self.load:SizeToContents();
 
@@ -97,6 +99,7 @@ function PANEL:Init()
 		self.cancel:SetPos(100, 230);
 		self.cancel:SetText(cancelText);
 		self.cancel:SetDrawBackground(false);
+		self.cancel:SetTextAutoposition(false);
 		self.cancel:SetFont(rw.fonts:GetSize("menu_thin_large", 24));
 		self.cancel:SizeToContents();
 
@@ -117,7 +120,7 @@ function PANEL:Paint(w, h)
 
 		surface.SetDrawColor(Color("white"));
 		surface.SetMaterial(logoMat);
-		surface.DrawTexturedRect(75, 30, 200, 204);
+		surface.DrawTexturedRect(75, 30, 200, 196);
 	end;
 end;
 
