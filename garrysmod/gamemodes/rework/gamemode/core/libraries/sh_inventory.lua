@@ -68,34 +68,6 @@ do
 			end;
 		end;
 
-		-- A function to find all instances of an item in player's inventory.
-		function playerMeta:FindInstances(uniqueID, amount)
-			amount = amount or 1;
-			local instances = item.FindAllInstances(uniqueID);
-			local playerInv = self:GetInventory();
-			local toReturn = {};
-
-			for k, v in pairs(instances) do
-				for slot, ids in ipairs(playerInv) do
-					if (table.HasValue(ids, k)) then
-						table.insert(toReturn, v);
-						amount = amount - 1;
-
-						if (amount <= 0) then
-							return toReturn;
-						end;
-					end;
-				end;
-			end;
-
-			return toReturn;
-		end;
-
-		-- A function to find the first instance of an item in player's inventory.
-		function playerMeta:FindItem(uniqueID)
-			return self:FindInstances(uniqueID)[1];
-		end;
-
 		function playerMeta:TakeItemByID(instanceID)
 			if (!instanceID or instanceID < 1) then return; end;
 
@@ -122,5 +94,55 @@ do
 				end;
 			end;
 		end;
+	end;
+
+	-- A function to find an amount of instances of an item in player's inventory.
+	function playerMeta:FindInstances(uniqueID, amount)
+		amount = amount or 1;
+		local instances = item.FindAllInstances(uniqueID);
+		local playerInv = self:GetInventory();
+		local toReturn = {};
+
+		for k, v in pairs(instances) do
+			for slot, ids in ipairs(playerInv) do
+				if (table.HasValue(ids, k)) then
+					table.insert(toReturn, v);
+					amount = amount - 1;
+
+					if (amount <= 0) then
+						return toReturn;
+					end;
+				end;
+			end;
+		end;
+
+		return toReturn;
+	end;
+
+	-- A function to find the first instance of an item in player's inventory.
+	function playerMeta:FindItem(uniqueID)
+		return self:FindInstances(uniqueID)[1];
+	end;
+
+	function playerMeta:HasItemByID(instanceID)
+		local playerInv = self:GetInventory();
+
+		for slot, ids in ipairs(playerInv) do
+			if (table.HasValue(ids, instanceID)) then
+				return true;
+			end;
+		end;
+
+		return false;
+	end;
+
+	function playerMeta:HasItem(uniqueID)
+		local instances = self:FindInstances(uniqueID, 1);
+
+		if (instances[1]) then
+			return true;
+		end;
+
+		return false;
 	end;
 end;

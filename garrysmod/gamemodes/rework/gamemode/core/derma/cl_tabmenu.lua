@@ -83,6 +83,13 @@ function PANEL:CloseMenu()
 	self:Remove();
 end;
 
+function PANEL:OnMousePressed()
+	if (IsValid(self.activePanel)) then
+		self.activePanel:SetVisible(false);
+		self.activePanel:Remove();
+	end;
+end;
+
 function PANEL:Paint(w, h)
 	if (!theme.Hook("PaintTabMenu", self, w, h)) then
 		Derma_DrawBackgroundBlur(self, self.lerpStart);

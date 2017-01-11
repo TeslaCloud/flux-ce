@@ -338,14 +338,6 @@ if (SERVER) then
 		return ent, itemTable;
 	end;
 
-	concommand.Add("rw_debug_spawnitem", function(player)
-		local trace = player:GetEyeTraceNoCursor();
-
-		print("Spawning test item...")
-
-		item.Spawn(trace.HitPos, Angle(0, 0, 0), item.New("test_item"));
-	end);
-
 	netstream.Hook("RequestItemData", function(player, entIndex)
 		local ent = Entity(entIndex);
 
@@ -359,9 +351,12 @@ else
 	end);
 
 	netstream.Hook("NetworkItem", function(instanceID, itemTable)
-		if (itemTable) then
-			instances[itemTable.uniqueID][instanceID] = itemTable;
-			print("Received instance ID "..instanceID);
+		if (itemTable and stored[itemTable.uniqueID]) then
+			local newTable = table.Copy(stored[itemTable.uniqueID]);
+			table.Merge(newTable, itemTable);
+
+			instances[newTable.uniqueID][instanceID] = newTable;
+			print("Received instance ID "..tostring(newTable));
 		else
 			print("FAILED TO RECEIVE INSTANCE ID "..instanceID);
 		end;

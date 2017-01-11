@@ -230,13 +230,13 @@ function PANEL:Rebuild()
 				receiver.isHovered = true;
 			end;
 		end, {"Place"});
-	end
+	end;
+
+	self:GetParent():Receiver("rwItem", function(receiver, dropped, isDropped, menuIndex, mouseX, mouseY)
+		if (isDropped) then
+			plugin.Call("PlayerDropItem", dropped[1].itemData, dropped[1], mouseX, mouseY);
+		end;
+	end, {});
 end;
 
 vgui.Register("reInventory", PANEL, "reFrame");
-
-vgui.GetWorldPanel():Receiver("rwItem", function(receiver, dropped, isDropped, menuIndex, mouseX, mouseY)
-	if (isDropped) then
-		plugin.Call("PlayerDropItem", dropped[1].itemData, dropped[1], mouseX, mouseY);
-	end;
-end, {});

@@ -52,6 +52,10 @@ function GM:RenderScreenspaceEffects()
 	end;
 end;
 
+function GM:PlayerDropItem(itemTable, panel, mouseX, mouseY)
+	netstream.Start("PlayerDropItem", itemTable.instanceID);
+end;
+
 function GM:HUDDrawScoreBoard() end;
 
 -- Called when the scoreboard should be shown.

@@ -32,6 +32,7 @@ if (SERVER) then
 		plugin.Call("PreEntityItemSet", self, itemTable);
 
 		self:SetModel(itemTable:GetModel());
+		self:SetSkin(itemTable.Skin);
 		self:SetColor(itemTable:GetColor())
 
 		self.item = itemTable;
@@ -73,8 +74,8 @@ else
 				return;
 			end;
 
-			text = self.item:GetName();
-			desc = self.item:GetDescription();
+			text = self.item.Name;
+			desc = self.item.Description;
 		else
 			if (!self.dataRequested) then
 				netstream.Start("RequestItemData", self:EntIndex());

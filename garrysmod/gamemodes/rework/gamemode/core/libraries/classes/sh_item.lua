@@ -76,6 +76,13 @@ function CItem:OnUse(player)
 	return true;
 end;
 
+function CItem:OnTake(player)
+	if (IsValid(self.entity)) then
+		self.entity:Remove();
+		player:GiveItemByID(self.uniqueID, self.instanceID, self);
+	end;
+end;
+
 if (SERVER) then
 	function CItem:SetData(id, value)
 		if (!id) then return; end;
@@ -87,7 +94,7 @@ if (SERVER) then
 
 	function CItem:DoMenuAction(act, player, ...)
 		if (self[act]) then
-			local succ, result = pcall(self[act], self, ...);
+			local succ, result = pcall(self[act], self, player, ...);
 
 			if (succ) then
 				if (self.actionSounds[act]) then
@@ -105,10 +112,11 @@ if (SERVER) then
 		if (!itemTable) then return; end;
 		if (plugin.Call("PlayerCanUseItem", player, itemTable, action, ...) == false) then return; end;
 
-		itemTable:DoMenuAction(act, player, ...);
+		itemTable:DoMenuAction(action, player, ...);
 	end);
 else
 	function CItem:DoMenuAction(act, ...)
+		print(act, ...);
 		netstream.Start("ItemMenuAction", self.instanceID, act, ...);
 	end;
 end;

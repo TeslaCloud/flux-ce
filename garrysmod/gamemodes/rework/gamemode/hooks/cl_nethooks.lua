@@ -58,12 +58,10 @@ netstream.Hook("PlayerUseItemEntity", function(entity)
 		useBtn:SetIcon(itemTable.useIcon or "icon16/wrench.png");
 	end;
 
-	if (itemTable.OnTake) then
-		local takeBtn = itemMenu:AddOption(itemTable.takeText or "Take", function() 
-			itemTable:DoMenuAction("OnTake");
-		end);
-		takeBtn:SetIcon(itemTable.takeIcon or "icon16/wrench.png");
-	end;
+	local takeBtn = itemMenu:AddOption(itemTable.takeText or "Take", function() 
+		itemTable:DoMenuAction("OnTake");
+	end);
+	takeBtn:SetIcon(itemTable.takeIcon or "icon16/wrench.png");
 
 	local closeBtn = itemMenu:AddOption(itemTable.cancelText or "Cancel", function() end);
 	closeBtn:SetIcon(itemTable.cancelIcon or "icon16/cross.png");
