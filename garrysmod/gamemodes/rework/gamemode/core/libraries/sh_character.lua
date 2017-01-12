@@ -149,7 +149,6 @@ if (SERVER) then
 		}
 
 		local status = character.Create(player, data);
-		print(status)
 		character.SendToClient(player);
 
 		print("Created character: "..name);

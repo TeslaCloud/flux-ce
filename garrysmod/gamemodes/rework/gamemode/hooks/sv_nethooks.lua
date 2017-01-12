@@ -10,21 +10,7 @@ netstream.Hook("ClientIncludedSchema", function(player)
 end);
 
 netstream.Hook("PlayerDropItem", function(player, instanceID)
-	if (player:HasItemByID(instanceID)) then
-		player:TakeItemByID(instanceID);
-
-		local itemTable = item.FindInstanceByID(instanceID);
-		local trace = player:GetEyeTraceNoCursor();
-		local distance = trace.HitPos:Distance(player:GetPos());
-
-		print("Spawning item...")
-
-		if (distance < 240) then
-			item.Spawn(trace.HitPos + Vector(0, 0, 4), Angle(0, 0, 0), itemTable);
-		else
-			item.Spawn(player:EyePos() + trace.Normal * 20, Angle(0, 0, 0), itemTable);
-		end;
-	end;
+	hook.Run("PlayerDropItem", player, instanceID);
 end);
 
 netstream.Hook("InventorySync", function(player, inventory)

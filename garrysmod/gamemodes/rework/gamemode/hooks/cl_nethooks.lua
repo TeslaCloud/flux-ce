@@ -36,41 +36,15 @@ netstream.Hook("reNotification", function(sMessage)
 end);
 
 netstream.Hook("PlayerUseItemEntity", function(entity)
-	local itemTable = entity.item;
-
-	if (!itemTable) then return; end;
-
-	local itemMenu = DermaMenu();
-
-	if (itemTable.customButtons) then
-		for k, v in pairs(itemTable.customButtons) do
-			local button = itemMenu:AddOption(k, function() 
-				itemTable:DoMenuAction(v.callback);
-			end);
-			button:SetIcon(v.icon);
-		end;
-	end;
-
-	if (itemTable.OnUse) then
-		local useBtn = itemMenu:AddOption(itemTable.useText or "Use", function() 
-			itemTable:DoMenuAction("OnUse");
-		end);
-		useBtn:SetIcon(itemTable.useIcon or "icon16/wrench.png");
-	end;
-
-	local takeBtn = itemMenu:AddOption(itemTable.takeText or "Take", function() 
-		itemTable:DoMenuAction("OnTake");
-	end);
-	takeBtn:SetIcon(itemTable.takeIcon or "icon16/wrench.png");
-
-	local closeBtn = itemMenu:AddOption(itemTable.cancelText or "Cancel", function() end);
-	closeBtn:SetIcon(itemTable.cancelIcon or "icon16/cross.png");
-
-	itemMenu:Open()
-
-	itemMenu:SetPos(ScrW() / 2, ScrH() / 2);
+	plugin.Call("PlayerUseItemMenu", entity.item, true);
 end);
 
 netstream.Hook("PlayerTakeDamage", function()
 	rw.client.lastDamage = CurTime();
+end);
+
+netstream.Hook("RefreshInventory", function()
+	if (rw.tabMenu and rw.tabMenu.activePanel and rw.tabMenu.activePanel.Rebuild) then
+		rw.tabMenu.activePanel:Rebuild();
+	end;
 end);

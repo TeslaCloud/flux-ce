@@ -138,8 +138,12 @@ function PANEL:OnMousePressed(...)
 end;
 
 function PANEL:OnMouseReleased(...)
-	if (self.mousePressed and self.mousePressed > (CurTime() - 0.15)) then
-		print("click");
+	if (self.itemData and self.mousePressed and self.mousePressed > (CurTime() - 0.15)) then
+		if (#self.instanceIDs > 1) then
+			plugin.Call("PlayerUseItemMenu", self.instanceIDs);
+		else
+			plugin.Call("PlayerUseItemMenu", self.itemData);
+		end;
 	end;
 
 	self.BaseClass.OnMouseReleased(self, ...)
@@ -151,9 +155,15 @@ local PANEL = {};
 PANEL.inventory = {};
 PANEL.slots = {};
 PANEL.invSlots = 8;
+PANEL.player = nil;
 
 function PANEL:SetInventory(inv)
 	self.inventory = inv;
+end;
+
+function PANEL:SetPlayer(player)
+	self.player = player;
+	self:SetInventory(player:GetInventory());
 	self:Rebuild();
 end;
 
@@ -175,14 +185,24 @@ function PANEL:SlotsToInventory()
 end;
 
 function PANEL:Rebuild()
+	dragndrop.Clear();
+
 	local multiplier = self.invSlots / 8;
 	self:SetSize(560, multiplier * 68 + 36);
 
-	self.scroll = vgui.Create("DScrollPanel", self) //Create the Scroll panel
+	if (IsValid(self.player)) then
+		self:SetInventory(self.player:GetInventory());
+	end;
+
+	self.scroll = self.scroll or vgui.Create("DScrollPanel", self) //Create the Scroll panel
 	self.scroll:SetSize(self:GetWide(), self:GetTall())
 	self.scroll:SetPos(10, 30)
 
-	self.list = vgui.Create("DIconLayout", self.scroll)
+	if (IsValid(self.list)) then
+		self.list:Clear();
+	end;
+
+	self.list = self.list or vgui.Create("DIconLayout", self.scroll)
 	self.list:SetSize(self:GetWide(), self:GetTall())
 	self.list:SetPos(0, 0)
 	self.list:SetSpaceY(4)

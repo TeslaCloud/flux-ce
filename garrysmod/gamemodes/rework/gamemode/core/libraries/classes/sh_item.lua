@@ -63,18 +63,15 @@ function CItem:SetActionSound(act, sound)
 end;
 
 -- Returns:
--- true = drop normally
+-- nothing/nil = drop like normal
 -- false = prevents item appearing and doesn't remove it from inventory.
-function CItem:OnDrop(player)
-	return true;
-end;
+function CItem:OnDrop(player) end;
 
 -- Returns:
--- true = removes item from the inventory as soon as it's used.
--- false = prevents item from being removed upon use.
-function CItem:OnUse(player)
-	return true;
-end;
+-- nothing/nil = removes item from the inventory as soon as it's used.
+-- false = prevents item from being used at all.
+-- true = prevents item from being removed upon use.
+function CItem:OnUse(player) end;
 
 if (SERVER) then
 	function CItem:SetData(id, value)
@@ -87,19 +84,27 @@ if (SERVER) then
 
 	function CItem:DoMenuAction(act, player, ...)
 		if (act == "OnTake") then
-			plugin.Call("PlayerTakeItem", player, self, ...);
+			if (plugin.Call("PlayerTakeItem", player, self, ...) != nil) then return; end;
+		end;
+
+		if (act == "OnUse") then
+			if (plugin.Call("PlayerUseItem", player, self, ...) != nil) then return; end;
+		end;
+
+		if (act == "OnDrop") then
+			if (plugin.Call("PlayerDropItem", player, self.instanceID, self, ...) != nil) then return; end;
 		end;
 
 		if (self[act]) then
-			local succ, result = pcall(self[act], self, player, ...);
+			if (act != "OnTake" and act != "OnUse" and act != "OnTake") then
+				local succ, result = pcall(self[act], self, player, ...);
 
-			if (succ) then
-				if (self.actionSounds[act]) then
-					player:EmitSound(self.actionSounds[act]);
-				end;
+				return result;
 			end;
 
-			return result;
+			if (self.actionSounds[act]) then
+				player:EmitSound(self.actionSounds[act]);
+			end;
 		end;
 	end;
 

@@ -70,6 +70,63 @@ function GM:PlayerTakeItem(player, itemTable, ...)
 	end;
 end;
 
+function GM:PlayerDropItem(player, instanceID, itemTable, ...)
+	if (player:HasItemByID(instanceID)) then
+		player:TakeItemByID(instanceID);
+
+		local itemTable = item.FindInstanceByID(instanceID);
+		local trace = player:GetEyeTraceNoCursor();
+		local distance = trace.HitPos:Distance(player:GetPos());
+
+		if (distance < 240) then
+			item.Spawn(trace.HitPos + Vector(0, 0, 4), Angle(0, 0, 0), itemTable);
+		else
+			item.Spawn(player:EyePos() + trace.Normal * 20, Angle(0, 0, 0), itemTable);
+		end;
+	end;
+end;
+
+function GM:PlayerUseItem(player, itemTable, ...)
+	local trace;
+
+	if (IsValid(itemTable.entity)) then
+		trace = player:GetEyeTraceNoCursor();
+
+		if (!IsValid(trace.Entity)) then return; end;
+		if (trace.Entity != itemTable.entity) then return; end;
+	end;
+
+	if (player:HasItemByID(itemTable.instanceID) or trace != nil) then
+		if (itemTable.OnUse) then
+			local result = itemTable:OnUse(player);
+
+			if (result == true) then
+				return;
+			elseif (result == false) then
+				return false;
+			end;
+		end;
+
+		if (trace != nil) then
+			itemTable.entity:Remove();
+		else
+			player:TakeItemByID(itemTable.instanceID);
+		end;
+	end;
+end;
+
+function GM:OnItemGiven(player, itemTable, slot)
+	hook.Run("PlayerInventoryUpdated", player);
+end;
+
+function GM:OnItemTaken(player, itemTable, slot)
+	hook.Run("PlayerInventoryUpdated", player);
+end;
+
+function GM:PlayerInventoryUpdated(player)
+	netstream.Start(player, "RefreshInventory");
+end;
+
 function GM:OnPlayerRestored(player)
 	if (player:SteamID() == config.Get("owner_steamid")) then
 		player:SetUserGroup("owner");

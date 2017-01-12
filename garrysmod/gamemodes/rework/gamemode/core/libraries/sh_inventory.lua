@@ -69,11 +69,11 @@ do
 		end;
 
 		function playerMeta:GiveItemByID(instanceID)
-			if (!tonumber(instanceID) or tonumber(instanceID) <= 0) then print("no instanceid") return; end;
+			if (!tonumber(instanceID) or tonumber(instanceID) <= 0) then return; end;
 
 			local itemTable = item.FindInstanceByID(instanceID);
 
-			if (!itemTable) then print("no itemtable") return; end;
+			if (!itemTable) then return; end;
 
 			local slot = self:AddItem(itemTable);
 

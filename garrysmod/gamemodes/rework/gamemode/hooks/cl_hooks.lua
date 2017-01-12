@@ -46,6 +46,56 @@ function GM:InitPostEntity()
  	end;
 end;
 
+function GM:PlayerUseItemMenu(itemTable, bIsEntity)
+	if (!itemTable) then return; end;
+
+	local itemMenu = DermaMenu();
+
+	if (!itemTable.Name) then
+		local closeBtn = itemMenu:AddOption(itemTable.cancelText or "Cancel", function() end);
+		closeBtn:SetIcon("icon16/cross.png");
+	else
+		if (itemTable.customButtons) then
+			for k, v in pairs(itemTable.customButtons) do
+				local button = itemMenu:AddOption(k, function() 
+					itemTable:DoMenuAction(v.callback);
+				end);
+				button:SetIcon(v.icon);
+			end;
+		end;
+
+		if (itemTable.OnUse) then
+			local useBtn = itemMenu:AddOption(itemTable.useText or "Use", function() 
+				itemTable:DoMenuAction("OnUse");
+			end);
+			useBtn:SetIcon(itemTable.useIcon or "icon16/wrench.png");
+		end;
+
+		if (bIsEntity) then
+			local takeBtn = itemMenu:AddOption(itemTable.takeText or "Take", function() 
+				itemTable:DoMenuAction("OnTake");
+			end);
+			takeBtn:SetIcon(itemTable.takeIcon or "icon16/wrench.png");
+		else
+			local dropBtn = itemMenu:AddOption(itemTable.takeText or "Drop", function() 
+				itemTable:DoMenuAction("OnDrop");
+			end);
+			dropBtn:SetIcon(itemTable.takeIcon or "icon16/wrench.png");
+		end;
+
+		local closeBtn = itemMenu:AddOption(itemTable.cancelText or "Cancel", function() end);
+		closeBtn:SetIcon(itemTable.cancelIcon or "icon16/cross.png");
+	end;
+
+	itemMenu:Open()
+
+	if (itemTable.entity) then
+		itemMenu:SetPos(ScrW() / 2, ScrH() / 2);
+	else
+		itemMenu:SetPos(gui.MouseX(), gui.MouseY());
+	end;
+end;
+
 function GM:RenderScreenspaceEffects()
 	if (rw.client.colorModify) then
 		DrawColorModify(rw.client.colorModifyTable);
@@ -98,7 +148,7 @@ function GM:AddTabMenuItems(menu)
 		icon = "fa-inbox",
 		callback = function(menuPanel, button)
 			local inv = menuPanel.activePanel;
-			inv:SetInventory(rw.client:GetInventory());
+			inv:SetPlayer(rw.client);
 			inv:SetTitle("Inventory");
 		end
 	});
