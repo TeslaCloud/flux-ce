@@ -47,6 +47,7 @@ function item.Register(id, data)
 	data.Model = data.Model or "models/props_lab/cactus.mdl";
 	data.Skin = data.Skin or 0;
 	data.Color = data.Color or nil;
+	data.Cost = data.Cost or 0;
 	data.SpecialColor = data.SpecialColor or nil;
 	data.instanceID = ITEM_TEMPLATE; -- -1 (or ITEM_TEMPLATE) means no instance.
 	data.data = data.data or {};
@@ -84,6 +85,7 @@ function item.ToSave(itemTable)
 		Model = itemTable.Model,
 		Skin = itemTable.Skin,
 		Color = itemTable.Color,
+		Cost = itemTable.Cost,
 		SpecialColor = itemTable.SpecialColor,
 		instanceID = itemTable.instanceID,
 		data = itemTable.data,

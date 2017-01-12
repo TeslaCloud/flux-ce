@@ -4,17 +4,17 @@
 	the framework is publicly released.
 --]]
 
-local ITEM = Item("breens_water_limited");
+local ITEM = Item("breens_water_flavored");
 
-	ITEM.Name = "Breen's Water: Limited Edition";
-	ITEM.PrintName = "Breen's Water: Limited Edition";
+	ITEM.Name = "Flavored Breen's Water";
+	ITEM.PrintName = "Flavored Breen's Water";
 	ITEM.Description = "A yellow can filled with limited-tier flavored water."
 	ITEM.Model = "models/props_junk/popcan01a.mdl";
 	ITEM.Skin = 2;
 	ITEM.Weight = 0.35;
 	ITEM.Stackable = true;
 	ITEM.MaxStack = 8;
-	ITEM.SpecialColor = Color(100, 255, 100);
+	ITEM.SpecialColor = Color(50, 255, 50);
 	ITEM.useText = "Drink";
 
 	function ITEM:OnUse(player)
