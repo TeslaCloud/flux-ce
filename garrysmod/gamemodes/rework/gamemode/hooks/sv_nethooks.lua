@@ -15,10 +15,15 @@ netstream.Hook("PlayerDropItem", function(player, instanceID)
 
 		local itemTable = item.FindInstanceByID(instanceID);
 		local trace = player:GetEyeTraceNoCursor();
+		local distance = trace.HitPos:Distance(player:GetPos());
 
 		print("Spawning item...")
 
-		item.Spawn(trace.HitPos, Angle(0, 0, 0), itemTable);
+		if (distance < 240) then
+			item.Spawn(trace.HitPos + Vector(0, 0, 4), Angle(0, 0, 0), itemTable);
+		else
+			item.Spawn(player:EyePos() + trace.Normal * 20, Angle(0, 0, 0), itemTable);
+		end;
 	end;
 end);
 

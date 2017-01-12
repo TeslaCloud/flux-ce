@@ -80,6 +80,8 @@ if (SERVER) then
 	end;
 
 	function character.ToSaveable(player, char)
+		local prepared = {};
+
 		prepared.steamID = player:SteamID();
 		prepared.name = char.name;
 		prepared.physDesc = char.physDesc or "This character has no physical description set!";
@@ -92,6 +94,8 @@ if (SERVER) then
 		prepared.charPermissions = util.TableToJSON(char.charPermissions);
 		prepared.data = util.TableToJSON(char.data);
 		prepared.uniqueID = char.uniqueID;
+
+		return prepared;
 	end;
 
 	function character.Save(player, index)

@@ -176,7 +176,7 @@ end;
 
 function PANEL:Rebuild()
 	local multiplier = self.invSlots / 8;
-	self:SetSize(562, multiplier * 68 + 36);
+	self:SetSize(560, multiplier * 68 + 36);
 
 	self.scroll = vgui.Create("DScrollPanel", self) //Create the Scroll panel
 	self.scroll:SetSize(self:GetWide(), self:GetTall())
