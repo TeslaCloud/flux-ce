@@ -256,8 +256,12 @@ if (SERVER) then
 	function item.SaveEntities()
 		local itemEnts = ents.FindByClass("rework_item");
 
+		entities = {};
+
 		for k, v in ipairs(itemEnts) do
-			if (v.item) then
+			if (IsValid(v) and v.item) then
+				entities[v.item.uniqueID] = entities[v.item.uniqueID] or {};
+
 				entities[v.item.uniqueID][v.item.instanceID] = {
 					position = v:GetPos(),
 					angles = v:GetAngles()
@@ -295,10 +299,8 @@ if (SERVER) then
 
 		for k, v in ipairs(itemEnts) do
 			if (v.item) then
-				netstream.Start(player, "ItemNewInstance", v.item.uniqueID, (v.item.data or 1), v.item.instanceID);
+				item.NetworkItem(player, v.item.instanceID);
 			end;
-
-			item.NetworkEntityData(player, v);
 		end;
 	end;
 
@@ -324,7 +326,7 @@ if (SERVER) then
 		ent:Spawn();
 
 		itemTable:SetEntity(ent);
-		item.NetworkItemData(nil, itemTable)
+		item.NetworkItem(player, itemTable.instanceID)
 
 		entities[itemTable.uniqueID] = entities[itemTable.uniqueID] or {};
 		entities[itemTable.uniqueID][itemTable.instanceID] = entities[itemTable.uniqueID][itemTable.instanceID] or {};

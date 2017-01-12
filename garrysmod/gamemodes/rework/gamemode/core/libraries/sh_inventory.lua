@@ -68,6 +68,24 @@ do
 			end;
 		end;
 
+		function playerMeta:GiveItemByID(instanceID)
+			if (!tonumber(instanceID) or tonumber(instanceID) <= 0) then print("no instanceid") return; end;
+
+			local itemTable = item.FindInstanceByID(instanceID);
+
+			if (!itemTable) then print("no itemtable") return; end;
+
+			local slot = self:AddItem(itemTable);
+
+			if (slot and slot != -1) then
+				plugin.Call("OnItemGiven", self, itemTable, slot);
+			elseif (slot == -1) then
+				rw.core:DevPrint("Failed to add item to player's inventory (itemTable is invalid)! "..tostring(itemTable));
+			else
+				rw.core:DevPrint("Failed to add item to player's inventory (inv is full)! "..tostring(itemTable));
+			end;
+		end;
+
 		function playerMeta:TakeItemByID(instanceID)
 			if (!instanceID or instanceID < 1) then return; end;
 

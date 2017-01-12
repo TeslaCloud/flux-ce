@@ -143,6 +143,7 @@ vgui.Register("reInventoryItem", PANEL, "DPanel");
 
 local PANEL = {};
 PANEL.inventory = {};
+PANEL.slots = {};
 PANEL.invSlots = 8;
 
 function PANEL:SetInventory(inv)
@@ -155,10 +156,21 @@ function PANEL:SetSlots(num)
 	self:Rebuild();
 end;
 
+function PANEL:SlotsToInventory()
+	for k, v in ipairs(self.slots) do
+		if (v.slotNum and v.itemData and #v.instanceIDs > 0) then
+			self.inventory[v.slotNum] = v.instanceIDs;
+		else
+			self.inventory[v.slotNum] = {};
+		end;
+	end;
+
+	netstream.Start("InventorySync", self.inventory);
+end;
+
 function PANEL:Rebuild()
 	local multiplier = self.invSlots / 8;
-	local height = multiplier * 68 + 36;
-	self:SetSize(562, height);
+	self:SetSize(562, multiplier * 68 + 36);
 
 	self.scroll = vgui.Create("DScrollPanel", self) //Create the Scroll panel
 	self.scroll:SetSize(self:GetWide(), self:GetTall())
@@ -175,22 +187,21 @@ function PANEL:Rebuild()
 		invSlot:SetSize(64, 64)
 		invSlot.slotNum = i;
 
-		if (self.inventory[i]) then
-			if (#self.inventory[i] <= 1) then
-				invSlot:SetItem(self.inventory[i][1]);
-			else
+		if (self.inventory[i] and #self.inventory[i] > 0) then
+			if (#self.inventory[i] > 1) then
 				invSlot:SetItemMulti(self.inventory[i]);
+			else
+				invSlot:SetItem(self.inventory[i][1]);
 			end;
 		end;
 
 		invSlot:Receiver("rwItem", function(receiver, dropped, isDropped, menuIndex, mouseX, mouseY) 
-			receiver.paintColor = Color(255, 0, 0)
-
 			if (isDropped) then
 				if (receiver.itemData) then
 					if (receiver.itemData.uniqueID == dropped[1].itemData.uniqueID and
 						receiver.slotNum != dropped[1].slotNum) then
 						receiver:Combine(dropped[1]);
+						self:SlotsToInventory();
 						return;
 					else
 						receiver.isHovered = false;
@@ -226,10 +237,14 @@ function PANEL:Rebuild()
 				else
 					dropped[1]:Rebuild();
 				end;
+
+				self:SlotsToInventory();
 			else
 				receiver.isHovered = true;
 			end;
 		end, {"Place"});
+
+		self.slots[i] = invSlot;
 	end;
 
 	self:GetParent():Receiver("rwItem", function(receiver, dropped, isDropped, menuIndex, mouseX, mouseY)

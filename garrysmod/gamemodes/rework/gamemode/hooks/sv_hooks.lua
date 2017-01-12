@@ -31,7 +31,6 @@ function GM:PlayerInitialSpawn(player)
 
 	player:SendConfig();
 	player:SyncNetVars();
-	item.SendToPlayer(player)
 
 	player:SetNoDraw(true);
 	player:SetNotSolid(true);
@@ -61,6 +60,14 @@ end;
 
 function GM:PlayerUseItemEntity(player, entity, itemTable)
 	netstream.Start(player, "PlayerUseItemEntity", entity);
+end;
+
+function GM:PlayerTakeItem(player, itemTable, ...)
+	if (IsValid(itemTable.entity)) then
+		itemTable.entity:Remove();
+		player:GiveItemByID(itemTable.instanceID);
+		item.SaveEntities();
+	end;
 end;
 
 function GM:OnPlayerRestored(player)
@@ -346,12 +353,16 @@ end;
 
 function GM:OneSecond()
 	if (!rw.nextSaveData) then
-		rw.nextSaveData = CurTime() + config.Get("data_save_interval");
+		rw.nextSaveData = CurTime() + 10;
 	elseif (rw.nextSaveData <= CurTime()) then
 		rw.core:DevPrint("Saving Rework data...");
 		hook.Run("RWSaveData");
 		rw.nextSaveData = CurTime() + config.Get("data_save_interval");
 	end;
+end;
+
+function GM:RWSaveData()
+	item.SaveAll();
 end;
 
 function GM:OnCharacterChange(player, oldChar, newCharID)
