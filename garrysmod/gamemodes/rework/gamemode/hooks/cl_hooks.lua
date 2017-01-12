@@ -129,6 +129,13 @@ rw.bars:Register("armor", {
 -- Called when the player's HUD is drawn.
 function GM:HUDPaint()
 	if (!IsValid(rw.IntroPanel)) then
+		local curTime = CurTime();
+
+		if (rw.client.lastDamage and rw.client.lastDamage > (curTime - 0.3)) then
+			local alpha = 255 - 255 * (curTime - rw.client.lastDamage) * 3.75;
+			draw.RoundedBox(0, 0, 0, ScrW(), ScrH(), Color(255, 255, 255, alpha));
+		end;
+
 		if (!plugin.Call("RWHUDPaint") and rw.settings:GetBool("DrawBars")) then
 			rw.bars:SetValue("health", rw.client:Health());
 			rw.bars:SetValue("armor", rw.client:Armor());

@@ -51,7 +51,21 @@ if (SERVER) then
 		rw.db:EasyRead("rw_characters", {"steamID", player:SteamID()}, function(result, hasData)
 			if (hasData) then
 				for k, v in ipairs(result) do
-					stored[player:SteamID()][tonumber(v.uniqueID) or k] = plugin.Call("PreCharacterRestore", player, tonumber(v.uniqueID) or k, v);
+					local prepared = {};
+					prepared.steamID = player:SteamID();
+					prepared.name = v.name;
+					prepared.physDesc = v.physDesc;
+					prepared.faction = v.faction;
+					prepared.class = v.class or "";
+					prepared.inventory = util.JSONToTable(v.inventory or "");
+					prepared.ammo = util.JSONToTable(v.ammo or "");
+					prepared.money = tonumber(v.money or "0");
+					prepared.charPermissions = util.JSONToTable(v.charPermissions or "");
+					prepared.data = util.JSONToTable(v.data or "");
+					prepared.uniqueID = tonumber(v.uniqueID or k);
+					prepared.key = v.key;
+
+					stored[player:SteamID()][tonumber(v.uniqueID) or k] = prepared;
 				end;
 			end;
 
@@ -65,23 +79,35 @@ if (SERVER) then
 		netstream.Start(player, "rw_loadcharacters", stored[player:SteamID()]);
 	end;
 
-	function character.SaveAll(player)
-		if (!IsValid(player)) then return; end;
-		local toSave = plugin.Call("PreSaveCharacters", player, stored[player:SteamID()]) or stored[player:SteamID()];
-
-		for k, v in ipairs(toSave) do
-			rw.db:EasyWrite("rw_characters", {"uniqueID", k}, v);
-		end;
-
-		plugin.Call("PostSaveCharacters", player);
+	function character.ToSaveable(player, char)
+		prepared.steamID = player:SteamID();
+		prepared.name = char.name;
+		prepared.physDesc = char.physDesc or "This character has no physical description set!";
+		prepared.faction = char.faction or "player";
+		prepared.class = char.class;
+		prepared.model = char.model or "models/humans/group01/male_02.mdl";
+		prepared.inventory = util.TableToJSON(char.inventory);
+		prepared.ammo = util.TableToJSON(char.ammo);
+		prepared.money= char.money;
+		prepared.charPermissions = util.TableToJSON(char.charPermissions);
+		prepared.data = util.TableToJSON(char.data);
+		prepared.uniqueID = char.uniqueID;
 	end;
 
 	function character.Save(player, index)
-		if (!IsValid(player) or typeof(index) != "number") then return; end;
+		if (!IsValid(player) or typeof(index) != "number" or plugin.Call("PreSaveCharacter", player, index) == false) then return; end;
 
-		local toSave = plugin.Call("PreSaveCharacter", player, stored[player:SteamID()][index], index) or stored[player:SteamID()][index];
+		local toSave = character.ToSaveable(player, stored[player:SteamID()][index]);
 			rw.db:EasyWrite("rw_characters", {"uniqueID", index}, toSave);
 		plugin.Call("PostSaveCharacter", player, index);
+	end;
+
+	function character.SaveAll(player)
+		if (!IsValid(player)) then return; end;
+
+		for k, v in ipairs(stored[player:SteamID()]) do
+			character.Save(player, k);
+		end;
 	end;
 
 	function character.Get(player, index)

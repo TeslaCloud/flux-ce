@@ -284,55 +284,17 @@ function GM:InitPostEntity()
 	plugin.Call("RWInitPostEntity");
 end;
 
-function GM:DatabaseConnected() end;
-
-function GM:PreSaveCharacter(player, char, index)
-	local prepared = {};
-
-	prepared.steamID = player:SteamID();
-	prepared.name = char.name;
-	prepared.physDesc = char.physDesc or "This character has no physical description set!";
-	prepared.faction = char.faction or "player";
-	prepared.class = char.class;
-	prepared.model = char.model or "models/humans/group01/male_02.mdl";
-	prepared.inventory = util.TableToJSON(char.inventory);
-	prepared.ammo = util.TableToJSON(char.ammo);
-	prepared.money= char.money;
-	prepared.charPermissions = util.TableToJSON(char.charPermissions);
-	prepared.data = util.TableToJSON(char.data);
-	prepared.uniqueID = char.uniqueID;
-
-	return prepared;
-end;
-
-function GM:PreSaveCharacters(player, chars)
-	local prepared = {};
-
-	for k, v in ipairs(chars) do
-		prepared[k] = plugin.Call("PreSaveCharacter", player, v, k);
+function GM:EntityTakeDamage(ent, damageInfo)
+	if (IsValid(ent) and ent:IsPlayer()) then
+		hook.Run("PlayerTakeDamage", ent, damageInfo);
 	end;
-
-	return prepared;
 end;
 
-function GM:PreCharacterRestore(player, index, char)
-	local prepared = {};
-
-	prepared.steamID = player:SteamID();
-	prepared.name = char.name;
-	prepared.physDesc = char.physDesc;
-	prepared.faction = char.faction;
-	prepared.class = char.class or "";
-	prepared.inventory = util.JSONToTable(char.inventory or "");
-	prepared.ammo = util.JSONToTable(char.ammo or "");
-	prepared.money = tonumber(char.money or "0");
-	prepared.charPermissions = util.JSONToTable(char.charPermissions or "");
-	prepared.data = util.JSONToTable(char.data or "");
-	prepared.uniqueID = tonumber(char.uniqueID or index);
-	prepared.key = char.key;
-
-	return prepared;
+function GM:PlayerTakeDamage(player, damageInfo)
+	netstream.Start(player, "PlayerTakeDamage");
 end;
+
+function GM:DatabaseConnected() end;
 
 function GM:OnActiveCharacterSet(player, character)
 	player:Spawn();

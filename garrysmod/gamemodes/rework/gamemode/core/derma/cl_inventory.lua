@@ -81,6 +81,12 @@ function PANEL:Paint(w, h)
 		if (!self.itemData) then
 			drawColor = Color(140, 140, 140, 180);
 		else
+			if (self.itemData.SpecialColor) then
+				surface.SetDrawColor(self.itemData.SpecialColor);
+				surface.DrawOutlinedRect(0, 0, w, h);
+				surface.DrawOutlinedRect(1, 1, w - 2, h - 2)
+			end;
+
 			if (self:IsHovered()) then
 				surface.SetDrawColor(Color(255, 255, 255));
 				surface.DrawOutlinedRect(1, 1, w - 2, h - 2)

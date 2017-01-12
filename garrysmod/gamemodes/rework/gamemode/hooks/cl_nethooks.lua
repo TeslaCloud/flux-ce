@@ -70,3 +70,7 @@ netstream.Hook("PlayerUseItemEntity", function(entity)
 
 	itemMenu:SetPos(ScrW() / 2, ScrH() / 2);
 end);
+
+netstream.Hook("PlayerTakeDamage", function()
+	rw.client.lastDamage = CurTime();
+end);

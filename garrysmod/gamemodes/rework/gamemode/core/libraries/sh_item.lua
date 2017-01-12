@@ -47,6 +47,7 @@ function item.Register(id, data)
 	data.Model = data.Model or "models/props_lab/cactus.mdl";
 	data.Skin = data.Skin or 0;
 	data.Color = data.Color or nil;
+	data.SpecialColor = data.SpecialColor or nil;
 	data.instanceID = ITEM_TEMPLATE; -- -1 (or ITEM_TEMPLATE) means no instance.
 	data.data = data.data or {};
 	data.customButtons = data.customButtons or {};
@@ -83,6 +84,7 @@ function item.ToSave(itemTable)
 		Model = itemTable.Model,
 		Skin = itemTable.Skin,
 		Color = itemTable.Color,
+		SpecialColor = itemTable.SpecialColor,
 		instanceID = itemTable.instanceID,
 		data = itemTable.data,
 		actionSounds = itemTable.actionSounds,
@@ -168,6 +170,7 @@ function item.New(uniqueID, tData, forcedID)
 	if (itemTable) then
 		local itemID = forcedID or item.GenerateID();
 
+		instances[uniqueID] = instances[uniqueID] or {};
 		instances[uniqueID][itemID] = table.Copy(itemTable);
 
 		if (typeof(tData) == "table") then
