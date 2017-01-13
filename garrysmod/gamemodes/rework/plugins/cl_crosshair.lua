@@ -31,13 +31,16 @@ local prevEnt 		= nil;
 
 function PLUGIN:HUDPaint()
 	if (!plugin.Call("PreDrawCrosshair")) then
-		local scrW, scrH, curTime = ScrW(), ScrH(), CurTime();
 		local trace = rw.client:GetEyeTraceNoCursor();
 		local distance = trace.StartPos:Distance(trace.HitPos);
-		local radius = plugin.Call("AdjustCrosshairRadius", trace, distance) or math.Clamp(4 / distance, 2, 6);
 		local drawColor, showText = plugin.Call("AdjustCrosshairColor", trace, distance);
 
 		if (!drawColor) then return; end;
+
+		local scrW, scrH, curTime = ScrW(), ScrH(), CurTime();
+		local fadein = GetConVar("cl_crosshair_fadein"):GetFloat();
+		local fadeshow = GetConVar("cl_crosshair_fadeshow"):GetFloat();
+		local radius = plugin.Call("AdjustCrosshairRadius", trace, distance) or math.Clamp(4 / distance, 2, 6);
 
 		surface.SetDrawColor(drawColor);
 		surface.DrawOutlinedCircle(scrW / 2, scrH / 2, radius, 1, 32, false);
@@ -48,9 +51,6 @@ function PLUGIN:HUDPaint()
 				textStartTime = curTime;
 			end;
 		end;
-
-		local fadein = GetConVar("cl_crosshair_fadein"):GetFloat();
-		local fadeshow = GetConVar("cl_crosshair_fadeshow"):GetFloat();
 
 		_talpha = Lerp(
 			FrameTime() * (showText and 4 or 6), 
@@ -91,7 +91,7 @@ function PLUGIN:AdjustCrosshairColor(trace, distance)
 		alpha = 0;
 	end;
 
-	if (LocalPlayer():GetVelocity():Length2D() > 150) then
+	if (rw.client:GetVelocity():Length2D() > 150) then
 		alpha = 0;
 	end;
 
@@ -113,7 +113,7 @@ function PLUGIN:AdjustCrosshairRadius(trace, distance)
 		target = 10;
 	end;
 
-	if (LocalPlayer():GetVelocity():Length2D() > 150) then
+	if (rw.client:GetVelocity():Length2D() > 150) then
 		target = 10;
 	end;
 
