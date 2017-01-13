@@ -1,6 +1,6 @@
---[[ 
+--[[
 	Rework © 2016-2017 TeslaCloud Studios
-	Do not share or re-distribute before 
+	Do not share or re-distribute before
 	the framework is publicly released.
 --]]
 
@@ -75,63 +75,74 @@ function rw.fonts:CreateFonts()
 
 	self:CreateFont("menu_thin", {
 		font = "Roboto Lt",
+		extended = true,
 		weight = 400,
 		size = self:ScaleSize(34)
 	});
 
 	self:CreateFont("menu_thin_large", {
 		font = "Roboto Lt",
+		extended = true,
 		weight = 400,
 		size = self:ScaleSize(42)
 	});
 
 	self:CreateFont("menu_thin_small", {
 		font = "Roboto Lt",
+		extended = true,
 		weight = 300,
 		size = self:ScaleSize(28)
 	});
 
 	self:CreateFont("menu_thin_smaller", {
 		font = "Roboto Lt",
+		extended = true,
 		size = self:ScaleSize(22),
 		weight = 200
 	});
 
 	self:CreateFont("menu_light", {
 		font = "Roboto Lt",
+		extended = true,
 		size = self:ScaleSize(34)
 	});
 
 	self:CreateFont("menu_light_tiny", {
 		font = "Roboto Lt",
+		extended = true,
 		size = self:ScaleSize(16)
 	});
 
 	self:CreateFont("menu_light_small", {
 		font = "Roboto Lt",
+		extended = true,
 		size = self:ScaleSize(20)
 	});
 
 	self:CreateFont("hud_small", {
 		font = "Roboto Condensed",
+		extended = true,
 		size = self:ScaleSize(20),
 		weight = 200
 	});
 
 	self:CreateFont("bar_text", {
 		font = "Roboto Condensed",
+		extended = true,
 		size = 14,
 		weight = 600
 	});
 
 	self:CreateFont("tooltip_large", {
 		font = "Roboto Condensed",
+		extended = true,
 		size = 26,
 		weight = 500
 	});
 
 	self:CreateFont("tooltip_small", {
 		font = "Roboto Condensed",
+		extended = true,
 		size = 16,
 		weight = 500
 	});
@@ -144,12 +155,14 @@ function rw.fonts:CreateFonts()
 
 	self:CreateFont("rw_menuitem", {
 		font = "Roboto Condensed",
+		extended = true,
 		size = 24,
 		weight = 500
 	});
 
 	self:CreateFont("rw_menuitem_large", {
 		font = "Roboto Condensed",
+		extended = true,
 		size = 30,
 		weight = 500
 	});

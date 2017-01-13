@@ -1,6 +1,6 @@
---[[ 
+--[[
 	Rework © 2016-2017 TeslaCloud Studios
-	Do not share or re-distribute before 
+	Do not share or re-distribute before
 	the framework is publicly released.
 --]]
 
@@ -204,7 +204,7 @@ function plugin.GetFilesForClients(basePath, curPath, results)
 
 		for k, v in ipairs(dirs) do
 			plugin.GetFilesForClients(basePath, curPath.."/"..v, results);
-		end;	
+		end;
 	elseif (basePath:find("cl_") or basePath:find("sh_") or basePath:find("shared.lua")) then
 		results[basePath] = fileio.Read("gamemodes/"..basePath);
 	end;
@@ -303,7 +303,7 @@ function plugin.IncludeSchema()
 		MsgC(Color(0, 255, 100), " by "..schemaInfo.author.." has been loaded!\n");
 	end;
 
-	Schema:Register();	
+	Schema:Register();
 end;
 
 function plugin.IncludePlugins(folder)
@@ -337,7 +337,7 @@ do
 				table.remove(result, 1);
 
 				if (!success) then
-					ErrorNoHalt("[Rework:"..v.id or v[2]:GetName().."] The "..name.." hook has failed to run!\n");
+					ErrorNoHalt("[Rework:"..(v.id or v[2]:GetName()).."] The "..name.." hook has failed to run!\n");
 					ErrorNoHalt(unpack(result), "\n");
 				elseif (result[1] != nil) then
 					return unpack(result);

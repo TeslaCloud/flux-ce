@@ -1,6 +1,6 @@
---[[ 
+--[[
 	Rework © 2016-2017 TeslaCloud Studios
-	Do not share or re-distribute before 
+	Do not share or re-distribute before
 	the framework is publicly released.
 --]]
 
@@ -747,7 +747,7 @@ function PANEL:Paint(w, h)
 						offX = offX + width + 2;
 					elseif (IsIcon(v2)) then
 						local matPath = ToIcon(v2);
-						local material = rw.core:GetMaterial(matPath);
+						local material = util.GetMaterial(matPath);
 
 						surface.SetDrawColor(255, 255, 255, chatbox.curAlpha);
 						surface.SetMaterial(material);
@@ -801,10 +801,10 @@ function PANEL:Paint(w, h)
 
 				if (string.utf8sub(k, 1, commandLen) == string.lower(command) and (!splitTable[2] or string.lower(command) == k)) then
 					local cmdTable = rw.command:Find(v);
- 					
+
  					if (cmdTable) then
  						local bShouldAdd = true;
- 
+
  						-- It can so happen that multiple alias for the same command begin with the same string.
  						-- We don't want to display the same command multiple times, so we check for that.
  						for k, v in pairs(commands) do
@@ -812,7 +812,7 @@ function PANEL:Paint(w, h)
  								bShouldAdd = false;
  							end;
  						end;
- 
+
  						if (bShouldAdd) then
  							commands[#commands + 1] = cmdTable;
  						end;
