@@ -8,14 +8,6 @@ hook.Remove("PostDrawEffects", "RenderWidgets");
 hook.Remove("PlayerTick", "TickWidgets");
 hook.Remove("PlayerInitialSpawn", "PlayerAuthSpawn");
 
-function GM:OnReloaded()
-	if (SERVER) then
-		print("[Rework] OnReloaded hook called serverside.");
-	else
-		print("[Rework] OnReloaded hook called clientside.");
-	end;
-end;
-
 do
 	local vectorAngle = FindMetaTable("Vector").Angle;
 	local normalizeAngle = math.NormalizeAngle;
@@ -168,6 +160,14 @@ do
 		end;
 
 		player.rwAnimTable = animCache[sNewModel];
+	end;
+end;
+
+function GM:OnReloaded()
+	if (SERVER) then
+		print("[Rework] OnReloaded hook called serverside.");
+	else
+		print("[Rework] OnReloaded hook called clientside.");
 	end;
 end;
 

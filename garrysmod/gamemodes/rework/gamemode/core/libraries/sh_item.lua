@@ -151,9 +151,15 @@ function item.Find(name)
 	end;
 
 	for k, v in pairs(stored) do
-		if (v.Name and v.PrintName) then
-			if (v.Name:find(name) or v.PrintName:find(name) or rw.lang:TranslateText(v.PrintName):find(name)) then
+		if (v.uniqueID and v.Name and v.PrintName) then
+			if (v.uniqueID == name or v.Name:find(name) or v.PrintName:find(name)) then
 				return v;
+			end;
+
+			if (CLIENT) then
+				if (rw.lang:TranslateText(v.PrintName):find(name)) then
+					return v;
+				end;
 			end;
 		end;
 	end;
@@ -187,6 +193,18 @@ function item.New(uniqueID, tData, forcedID)
 		end;
 
 		return instances[uniqueID][itemID];
+	end;
+end;
+
+function item.Remove(instanceID)
+	local itemTable = (typeof(instanceID) == "table" and instanceID) or item.FindInstanceByID(instanceID);
+
+	if (itemTable) then
+		if (IsValid(itemTable.entity)) then
+			itemTable.entity:Remove();
+		end;
+
+		instances[itemTable.uniqueID][itemTable.instanceID] = nil;
 	end;
 end;
 
@@ -239,23 +257,25 @@ if (SERVER) then
 	end;
 
 	function item.SaveInstances()
-		local saveable = {};
+		local toSave = {};
 
 		for k, v in pairs(instances) do
 			if (k == "count") then
-				saveable[k] = v;
+				toSave[k] = v;
 			else
-				saveable[k] = {};
+				toSave[k] = {};
 			end;
 
 			if (typeof(v) == "table") then
 				for k2, v2 in pairs(v) do
-					saveable[k][k2] = item.ToSave(v2);
+					if (typeof(v2) == "table") then
+						toSave[k][k2] = item.ToSave(v2);
+					end;
 				end;
 			end;
 		end;
 
-		data.SaveSchemaData("items/instances", saveable);
+		data.SaveSchemaData("items/instances", toSave);
 	end;
 
 	function item.SaveEntities()

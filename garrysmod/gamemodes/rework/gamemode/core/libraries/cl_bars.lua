@@ -16,7 +16,7 @@ rw.bars.sorted = sorted;
 rw.bars.defaultX = 8;
 rw.bars.defaultY = 8;
 rw.bars.defaultW = ScrW() / 4;
-rw.bars.defaultH = 18;
+rw.bars.defaultH = 14;
 rw.bars.defaultSpacing = 4;
 rw.bars.drawing = rw.bars.drawing or 0; -- Amount of bars currently being drawn.
 
@@ -242,4 +242,16 @@ do
 	end;
 
 	plugin.AddHooks("RWBarHooks", rwBars);
+
+	rw.bars:Register("health", {
+		text = "HEALTH",
+		color = Color(200, 40, 40),
+		maxValue = 100
+	}, true);
+
+	rw.bars:Register("armor", {
+		text = "armor",
+		color = Color(80, 80, 220),
+		maxValue = 100
+	}, true);
 end;

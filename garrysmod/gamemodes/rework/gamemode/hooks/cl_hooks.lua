@@ -8,28 +8,6 @@ timer.Remove("HintSystem_OpeningMenu");
 timer.Remove("HintSystem_Annoy1");
 timer.Remove("HintSystem_Annoy2");
 
-do
-	local scrW, scrH = ScrW(), ScrH();
-
-	-- This will let us detect whether the resolution has been changed, then call a hook if it has.
-	function GM:Tick()
-		local newW, newH = ScrW(), ScrH();
-
-		if (scrW != newW or scrH != newH) then
-			rw.core:Print("Resolution changed from "..scrW.."x"..scrH.." to "..newW.."x"..newH..".");
-
-			plugin.Call("OnResolutionChanged", newW, newH, scrW, scrH);
-
-			scrW, scrH = newW, newH;
-		end;
-	end;
-end;
-
--- Called when the resolution has been changed and fonts need to be resized to fit the client's res.
-function GM:OnResolutionChanged(oldW, oldH, newW, newH)
-	rw.fonts:CreateFonts();
-end;
-
 -- Called when the client connects and spawns.
 function GM:InitPostEntity()
 	rw.client = rw.client or LocalPlayer();
@@ -46,67 +24,34 @@ function GM:InitPostEntity()
  	end;
 end;
 
-function GM:PlayerUseItemMenu(itemTable, bIsEntity)
-	if (!itemTable) then return; end;
+do
+	local scrW, scrH = ScrW(), ScrH();
+	local nextCheck = CurTime();
 
-	local itemMenu = DermaMenu();
+	-- This will let us detect whether the resolution has been changed, then call a hook if it has.
+	function GM:Tick()
+		local curTime = CurTime();
 
-	if (!itemTable.Name) then
-		local closeBtn = itemMenu:AddOption(itemTable.cancelText or "Cancel", function() end);
-		closeBtn:SetIcon("icon16/cross.png");
-	else
-		if (itemTable.customButtons) then
-			for k, v in pairs(itemTable.customButtons) do
-				local button = itemMenu:AddOption(k, function() 
-					itemTable:DoMenuAction(v.callback);
-				end);
-				button:SetIcon(v.icon);
+		if (curTime >= nextCheck) then
+			local newW, newH = ScrW(), ScrH();
+
+			if (scrW != newW or scrH != newH) then
+				rw.core:Print("Resolution changed from "..scrW.."x"..scrH.." to "..newW.."x"..newH..".");
+
+				plugin.Call("OnResolutionChanged", newW, newH, scrW, scrH);
+
+				scrW, scrH = newW, newH;
 			end;
+
+			nextCheck = curTime + 0.5;
 		end;
-
-		if (itemTable.OnUse) then
-			local useBtn = itemMenu:AddOption(itemTable.useText or "Use", function() 
-				itemTable:DoMenuAction("OnUse");
-			end);
-			useBtn:SetIcon(itemTable.useIcon or "icon16/wrench.png");
-		end;
-
-		if (bIsEntity) then
-			local takeBtn = itemMenu:AddOption(itemTable.takeText or "Take", function() 
-				itemTable:DoMenuAction("OnTake");
-			end);
-			takeBtn:SetIcon(itemTable.takeIcon or "icon16/wrench.png");
-		else
-			local dropBtn = itemMenu:AddOption(itemTable.takeText or "Drop", function() 
-				itemTable:DoMenuAction("OnDrop");
-			end);
-			dropBtn:SetIcon(itemTable.takeIcon or "icon16/wrench.png");
-		end;
-
-		local closeBtn = itemMenu:AddOption(itemTable.cancelText or "Cancel", function() end);
-		closeBtn:SetIcon(itemTable.cancelIcon or "icon16/cross.png");
-	end;
-
-	itemMenu:Open()
-
-	if (itemTable.entity) then
-		itemMenu:SetPos(ScrW() / 2, ScrH() / 2);
-	else
-		itemMenu:SetPos(gui.MouseX(), gui.MouseY());
 	end;
 end;
 
-function GM:RenderScreenspaceEffects()
-	if (rw.client.colorModify) then
-		DrawColorModify(rw.client.colorModifyTable);
-	end;
+-- Called when the resolution has been changed and fonts need to be resized to fit the client's res.
+function GM:OnResolutionChanged(oldW, oldH, newW, newH)
+	rw.fonts:CreateFonts();
 end;
-
-function GM:PlayerDropItem(itemTable, panel, mouseX, mouseY)
-	netstream.Start("PlayerDropItem", itemTable.instanceID);
-end;
-
-function GM:HUDDrawScoreBoard() end;
 
 -- Called when the scoreboard should be shown.
 function GM:ScoreboardShow()
@@ -129,52 +74,6 @@ function GM:ScoreboardHide()
 		end;
 	end;
 end;
-
--- Called when category icons are presented.
-function GM:AddTabMenuItems(menu)
-	menu:AddMenuItem("!mainmenu", {
-		title = "Main Menu",
-		icon = "fa-users",
-		override = function(menuPanel, button)
-			menuPanel:SetVisible(false);
-			menuPanel:Remove();
-			rw.IntroPanel = theme.CreatePanel("MainMenu");
-		end;
-	});
-
-	menu:AddMenuItem("!inventory", {
-		title = "Inventory",
-		panel = "reInventory",
-		icon = "fa-inbox",
-		callback = function(menuPanel, button)
-			local inv = menuPanel.activePanel;
-			inv:SetPlayer(rw.client);
-			inv:SetTitle("Inventory");
-		end
-	});
-
-	menu:AddMenuItem("scoreboard", {
-		title = "Scoreboard",
-		panel = "rwScoreboard",
-		icon = "fa-list-alt"
-	});
-end;
-
-function GM:OnMenuPanelOpen(menuPanel, activePanel)
-	activePanel:SetPos(ScrW() / 2 - activePanel:GetWide() / 2 + 64, 256);
-end;
-
-rw.bars:Register("health", {
-	text = "HEALTH",
-	color = Color(200, 40, 40),
-	maxValue = 100
-}, true);
-
-rw.bars:Register("armor", {
-	text = "armor",
-	color = Color(80, 80, 220),
-	maxValue = 100
-}, true);
 
 -- Called when the player's HUD is drawn.
 function GM:HUDPaint()
@@ -229,7 +128,7 @@ function GM:DrawPlayerTargetID(player, x, y, distance)
 
 		local width, height = util.GetTextSize(player:GetPhysDesc(), "tooltip_small");
 		draw.SimpleText(player:GetPhysDesc(), "tooltip_small", x - width * 0.5, y - 14, Color(255, 255, 255, alpha));
-		
+
 		if (distance < 125) then
 			if (distance > 90) then
 				local d = distance - 90;
@@ -241,6 +140,102 @@ function GM:DrawPlayerTargetID(player, x, y, distance)
 			draw.SimpleText("#TargetID_Information", smallerFont, x - width * 0.5, y + 5, Color(50, 255, 50, alpha));
 		end;
 	end;
+end;
+
+function GM:RenderScreenspaceEffects()
+	if (rw.client.colorModify) then
+		DrawColorModify(rw.client.colorModifyTable);
+	end;
+end;
+
+function GM:PlayerUseItemMenu(itemTable, bIsEntity)
+	if (!itemTable) then return; end;
+
+	local itemMenu = DermaMenu();
+
+	if (!itemTable.Name) then
+		local closeBtn = itemMenu:AddOption(itemTable.cancelText or "Cancel", function() end);
+		closeBtn:SetIcon("icon16/cross.png");
+	else
+		if (itemTable.customButtons) then
+			for k, v in pairs(itemTable.customButtons) do
+				local button = itemMenu:AddOption(k, function() 
+					itemTable:DoMenuAction(v.callback);
+				end);
+				button:SetIcon(v.icon);
+			end;
+		end;
+
+		if (itemTable.OnUse) then
+			local useBtn = itemMenu:AddOption(itemTable.useText or "Use", function() 
+				itemTable:DoMenuAction("OnUse");
+			end);
+			useBtn:SetIcon(itemTable.useIcon or "icon16/wrench.png");
+		end;
+
+		if (bIsEntity) then
+			local takeBtn = itemMenu:AddOption(itemTable.takeText or "Take", function() 
+				itemTable:DoMenuAction("OnTake");
+			end);
+			takeBtn:SetIcon(itemTable.takeIcon or "icon16/wrench.png");
+		else
+			local dropBtn = itemMenu:AddOption(itemTable.takeText or "Drop", function() 
+				itemTable:DoMenuAction("OnDrop");
+			end);
+			dropBtn:SetIcon(itemTable.takeIcon or "icon16/wrench.png");
+		end;
+
+		local closeBtn = itemMenu:AddOption(itemTable.cancelText or "Cancel", function() end);
+		closeBtn:SetIcon(itemTable.cancelIcon or "icon16/cross.png");
+	end;
+
+	itemMenu:Open()
+
+	if (itemTable.entity) then
+		itemMenu:SetPos(ScrW() / 2, ScrH() / 2);
+	else
+		itemMenu:SetPos(gui.MouseX(), gui.MouseY());
+	end;
+end;
+
+function GM:PlayerDropItem(itemTable, panel, mouseX, mouseY)
+	netstream.Start("PlayerDropItem", itemTable.instanceID);
+end;
+
+function GM:HUDDrawScoreBoard() end;
+
+-- Called when category icons are presented.
+function GM:AddTabMenuItems(menu)
+	menu:AddMenuItem("!mainmenu", {
+		title = "Main Menu",
+		icon = "fa-users",
+		override = function(menuPanel, button)
+			menuPanel:SetVisible(false);
+			menuPanel:Remove();
+			rw.IntroPanel = theme.CreatePanel("MainMenu");
+		end;
+	});
+
+	menu:AddMenuItem("!inventory", {
+		title = "Inventory",
+		panel = "reInventory",
+		icon = "fa-inbox",
+		callback = function(menuPanel, button)
+			local inv = menuPanel.activePanel;
+			inv:SetPlayer(rw.client);
+			inv:SetTitle("Inventory");
+		end
+	});
+
+	menu:AddMenuItem("scoreboard", {
+		title = "Scoreboard",
+		panel = "rwScoreboard",
+		icon = "fa-list-alt"
+	});
+end;
+
+function GM:OnMenuPanelOpen(menuPanel, activePanel)
+	activePanel:SetPos(ScrW() / 2 - activePanel:GetWide() / 2 + 64, 256);
 end;
 
 do

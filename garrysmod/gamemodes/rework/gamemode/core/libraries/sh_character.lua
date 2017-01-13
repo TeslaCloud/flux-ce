@@ -14,8 +14,6 @@ end;
 local stored = character.stored or {};
 character.stored = stored;
 
-local playerMeta = FindMetaTable("Player");
-
 function character.Create(player, data)
 	if (typeof(data.name) != "string" or (data.name:utf8len() < config.Get("character_min_name_len") 
 		or data.name:utf8len() > config.Get("character_max_name_len"))) then
@@ -146,7 +144,7 @@ if (SERVER) then
 			gender = CHAR_GENDER_MALE,
 			faction = "player",
 			model = "models/humans/group01/male_02.mdl"
-		}
+		};
 
 		local status = character.Create(player, data);
 		character.SendToClient(player);
@@ -160,14 +158,16 @@ if (SERVER) then
 	end);
 end;
 
-local playerMeta = FindMetaTable("Player");
+do
+	local playerMeta = FindMetaTable("Player");
 
-function playerMeta:GetActiveCharacter()
-	if (self:GetActiveCharacterID()) then
-		return stored[self:SteamID()][self:GetActiveCharacterID()];
+	function playerMeta:GetActiveCharacter()
+		if (self:GetActiveCharacterID()) then
+			return stored[self:SteamID()][self:GetActiveCharacterID()];
+		end;
 	end;
-end;
 
-function playerMeta:GetAllCharacters()
-	return stored[self:SteamID()] or {};
+	function playerMeta:GetAllCharacters()
+		return stored[self:SteamID()] or {};
+	end;
 end;

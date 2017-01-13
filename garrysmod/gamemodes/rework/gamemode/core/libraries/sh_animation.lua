@@ -114,7 +114,7 @@ end;
 function rw.anim:GetTable(model)
 	if (!model) then return nil; end;
 
-	if (string.find(model, "/player/")) then
+	if (model:find("/player/")) then
 		return nil;	
 	end;
 
@@ -163,7 +163,7 @@ do
 	function rw.anim:GetWeaponHoldType(player, weapon)
 		if (!IsValid(weapon)) then return "normal"; end;
 
-		local class = string.lower(weapon:GetClass());
+		local class = weapon:GetClass():lower();
 		local holdType = "normal";
 
 		if (weaponHoldTypes[class]) then

@@ -4,16 +4,10 @@
 	the framework is publicly released.
 --]]
 
-function GM:PostRestoreCharacters(player)
-	player:SetDTBool(BOOL_INITIALIZED, true);
-end;
+function GM:InitPostEntity()
+	item.Load();
 
-function GM:PlayerSetModel(player)
-	if (player:IsBot()) then
-		player:SetModel("models/humans/group01/male_02.mdl");
-	elseif (player:HasInitialized()) then
-		player:SetModel(player:GetNetVar("model", "models/humans/group01/male_02.mdl"));
-	end;
+	plugin.Call("RWInitPostEntity");
 end;
 
 function GM:PlayerInitialSpawn(player)
@@ -47,6 +41,75 @@ function GM:PlayerInitialSpawn(player)
 	netstream.Start(nil, "PlayerInitialSpawn", player:EntIndex());
 end;
 
+function GM:PlayerSpawn(player)
+	player_manager.SetPlayerClass(player, "rePlayer");
+
+	self:PlayerSetModel(player);
+
+	player:SetCollisionGroup(COLLISION_GROUP_PLAYER);
+	player:SetMaterial("");
+	player:SetMoveType(MOVETYPE_WALK);
+	player:Extinguish();
+	player:UnSpectate();
+	player:GodDisable();
+
+	player:SetCrouchedWalkSpeed(config.Get("crouched_speed"));
+	player:SetWalkSpeed(config.Get("walk_speed"));
+	player:SetJumpPower(config.Get("jump_power"));
+	player:SetRunSpeed(config.Get("run_speed"));
+
+	local oldHands = player:GetHands();
+
+	if (IsValid(oldHands)) then
+		oldHands:Remove();
+	end;
+
+	local handsEntity = ents.Create("gmod_hands");
+
+	if (IsValid(handsEntity)) then
+		player:SetHands(handsEntity);
+		handsEntity:SetOwner(player);
+
+		local info = player_manager.RunClass(player, "GetHandsModel");
+
+		if (info) then
+			handsEntity:SetModel(info.model);
+			handsEntity:SetSkin(info.skin);
+			handsEntity:SetBodyGroups(info.body);
+		end;
+
+		local viewModel = player:GetViewModel(0);
+		handsEntity:AttachToViewmodel(viewModel);
+
+		viewModel:DeleteOnRemove(handsEntity);
+		player:DeleteOnRemove(handsEntity);
+
+		handsEntity:Spawn();
+	end;
+
+	plugin.Call("PostPlayerSpawn", player);
+end;
+
+function GM:PostPlayerSpawn(player)
+	player:SetNoDraw(false)
+	player:UnLock()
+	player:SetNotSolid(false)
+
+	player_manager.RunClass(player, "Loadout");
+end;
+
+function GM:PlayerSetModel(player)
+	if (player:IsBot()) then
+		player:SetModel("models/humans/group01/male_02.mdl");
+	elseif (player:HasInitialized()) then
+		player:SetModel(player:GetNetVar("model", "models/humans/group01/male_02.mdl"));
+	end;
+end;
+
+function GM:PostRestoreCharacters(player)
+	player:SetDTBool(BOOL_INITIALIZED, true);
+end;
+
 function GM:PlayerDeath(player, inflictor, attacker)
 	player:SaveCharacter();
 end;
@@ -78,7 +141,7 @@ function GM:PlayerDropItem(player, instanceID, itemTable, ...)
 		local trace = player:GetEyeTraceNoCursor();
 		local distance = trace.HitPos:Distance(player:GetPos());
 
-		if (distance < 240) then
+		if (distance < 150) then
 			item.Spawn(trace.HitPos + Vector(0, 0, 4), Angle(0, 0, 0), itemTable);
 		else
 			item.Spawn(player:EyePos() + trace.Normal * 20, Angle(0, 0, 0), itemTable);
@@ -139,63 +202,6 @@ function GM:OnPlayerRestored(player)
 	end;
 
 	ServerLog(player:Name().." ("..player:GetUserGroup()..") has connected to the server.");
-end;
-
-function GM:PlayerSpawn(player)
-	player_manager.SetPlayerClass(player, "rePlayer");
-
-	self:PlayerSetModel(player);
-
-	player:SetCollisionGroup(COLLISION_GROUP_PLAYER);
-	player:SetMaterial("");
-	player:SetMoveType(MOVETYPE_WALK);
-	player:Extinguish();
-	player:UnSpectate();
-	player:GodDisable();
-
-	player:SetCrouchedWalkSpeed(config.Get("crouched_speed"));
-	player:SetWalkSpeed(config.Get("walk_speed"));
-	player:SetJumpPower(config.Get("jump_power"));
-	player:SetRunSpeed(config.Get("run_speed"));
-
-	local oldHands = player:GetHands();
-
-	if (IsValid(oldHands)) then
-		oldHands:Remove();
-	end;
-
-	local handsEntity = ents.Create("gmod_hands");
-
-	if (IsValid(handsEntity)) then
-		player:SetHands(handsEntity);
-		handsEntity:SetOwner(player);
-
-		local info = player_manager.RunClass(player, "GetHandsModel");
-
-		if (info) then
-			handsEntity:SetModel(info.model);
-			handsEntity:SetSkin(info.skin);
-			handsEntity:SetBodyGroups(info.body);
-		end;
-
-		local viewModel = player:GetViewModel(0);
-		handsEntity:AttachToViewmodel(viewModel);
-
-		viewModel:DeleteOnRemove(handsEntity);
-		player:DeleteOnRemove(handsEntity);
-
-		handsEntity:Spawn();
-	end;
-
-	plugin.Call("PostPlayerSpawn", player);
-end;
-
-function GM:PostPlayerSpawn(player)
-	player:SetNoDraw(false)
-	player:UnLock()
-	player:SetNotSolid(false)
-
-	player_manager.RunClass(player, "Loadout");
 end;
 
 function GM:OnPluginFileChange(fileName)
@@ -335,12 +341,6 @@ function GM:PlayerGiveSWEP(player, weapon, swep)
 	return true;
 end;
 
-function GM:InitPostEntity()
-	item.Load();
-
-	plugin.Call("RWInitPostEntity");
-end;
-
 function GM:EntityTakeDamage(ent, damageInfo)
 	if (IsValid(ent) and ent:IsPlayer()) then
 		hook.Run("PlayerTakeDamage", ent, damageInfo);
@@ -351,8 +351,6 @@ function GM:PlayerTakeDamage(player, damageInfo)
 	netstream.Start(player, "PlayerTakeDamage");
 end;
 
-function GM:DatabaseConnected() end;
-
 function GM:OnActiveCharacterSet(player, character)
 	player:Spawn();
 	player:SetModel(character.model or "models/humans/group01/male_02.mdl");
@@ -362,6 +360,8 @@ end;
 
 function GM:PostCharacterLoaded(player, character)
 	netstream.Start(player, "PostCharacterLoaded", character.uniqueID);
+
+	player:CheckInventory();
 
 	for slot, ids in ipairs(player:GetInventory()) do
 		for k, v in ipairs(ids) do

@@ -13,6 +13,23 @@ library.New("inventory", _G);
 do
 	local playerMeta = FindMetaTable("Player");
 
+	-- Checks player inventory for garbage instance IDs and removes them if necessary.
+	function playerMeta:CheckInventory()
+		local playerInv = self:GetInventory();
+
+		for slot, ids in ipairs(playerInv) do
+			for k, v in ipairs(ids) do
+				local itemTable = item.FindInstanceByID(v);
+
+				if (!itemTable) then
+					playerInv[slot][k] = nil;
+				end;
+			end;
+		end;
+
+		self:SetInventory(playerInv);
+	end;
+
 	if (SERVER) then
 		function playerMeta:AddItem(itemTable)
 			if (!itemTable) then return -1; end;

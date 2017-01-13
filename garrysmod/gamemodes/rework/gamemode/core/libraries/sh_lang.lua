@@ -52,6 +52,50 @@ function rw.lang:GetString(language, identifier, arguments)
 	return langString;
 end;
 
+-- Explicit mode. This will attempt to translate the given text regardless of anything else.
+function rw.lang:TranslateText(sText)
+	if (textCache[sText]) then
+		return textCache[sText];
+	end;
+
+	local oldText = sText;
+	local phrases = string.FindAll(sText, "#[%w_]+");
+	local translations = {};
+
+	for k, v in ipairs(phrases) do
+		local phraseEnd = nil;
+		local colonDetected = false;
+
+		if (sText:sub(v[3] + 1, v[3] + 1) == ":") then
+			phraseEnd = sText:find(";", v[2]);
+			colonDetected = true;
+		end;
+
+		if (!phraseEnd and !colonDetected) then
+			phraseEnd = sText:find(" ", v[2]);
+
+			if (!phraseEnd) then
+				phraseEnd = v[3];
+			else
+				phraseEnd = phraseEnd - 1;
+			end;
+		elseif (!phraseEnd and colonDetected) then
+			phraseEnd = v[3];
+		end;
+
+		translations[#translations + 1] = L(sText:sub(v[2], phraseEnd));
+		phrases[k] = sText:sub(v[2], phraseEnd);
+	end;
+
+	for k, v in ipairs(translations) do
+		sText = sText:Replace(phrases[k], v);
+	end;
+
+	textCache[oldText] = sText;
+
+	return sText;
+end;
+
 if (CLIENT) then
 	function L(identifier)
 		local lang = GetConVar("gmod_language"):GetString();
@@ -88,50 +132,6 @@ if (CLIENT) then
 	--]]
 	function surface.NoTranslate(bValue)
 		surface.bTranslating = !bValue;
-	end;
-
-	-- Explicit mode. This will attempt to translate the given text regardless of anything else.
-	function rw.lang:TranslateText(sText)
-		if (textCache[sText]) then
-			return textCache[sText];
-		end;
-
-		local oldText = sText;
-		local phrases = string.FindAll(sText, "#[%w_]+");
-		local translations = {};
-
-		for k, v in ipairs(phrases) do
-			local phraseEnd = nil;
-			local colonDetected = false;
-
-			if (sText:sub(v[3] + 1, v[3] + 1) == ":") then
-				phraseEnd = sText:find(";", v[2]);
-				colonDetected = true;
-			end;
-
-			if (!phraseEnd and !colonDetected) then
-				phraseEnd = sText:find(" ", v[2]);
-
-				if (!phraseEnd) then
-					phraseEnd = v[3];
-				else
-					phraseEnd = phraseEnd - 1;
-				end;
-			elseif (!phraseEnd and colonDetected) then
-				phraseEnd = v[3];
-			end;
-
-			translations[#translations + 1] = L(sText:sub(v[2], phraseEnd));
-			phrases[k] = sText:sub(v[2], phraseEnd);
-		end;
-
-		for k, v in ipairs(translations) do
-			sText = sText:Replace(phrases[k], v);
-		end;
-
-		textCache[oldText] = sText;
-
-		return sText;
 	end;
 
 	surface.OldGetTextSize = surface.OldGetTextSize or surface.GetTextSize;

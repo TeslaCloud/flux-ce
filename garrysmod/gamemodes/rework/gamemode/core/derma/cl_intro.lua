@@ -41,7 +41,7 @@ function PANEL:OnKeyCodeReleased(nKey)
 end;
 
 function PANEL:StartAnimation(scrW, scrH)
-	
+
 end;
 
 derma.DefineControl("rwIntro", "", PANEL, "EditablePanel");

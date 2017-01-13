@@ -44,5 +44,5 @@ RAGDOLL_FALLENOVER 	= 1;		-- Ragdolled and can take damage.
 RAGDOLL_DUMMY 		= 2;		-- Ragdolled and cannot take damage.
 
 -- Items system
-ITEM_TEMPLATE 		= -1;		-- Item is a template and cannot be instantiated.
-ITEM_INVALID 		= 0;		-- Item is either invalid or a template and therefore cannot be instantiated.
+ITEM_TEMPLATE 		= -1;		-- Item is a template and needs to be instantiated before use.
+ITEM_INVALID 		= 0;		-- Item is either invalid or is a template and therefore cannot be instantiated.

@@ -11,7 +11,7 @@ if (SERVER) then
 		if (typeof(key) != "string" or typeof(value) != "table") then return; end;
 
 		if (!string.GetExtensionFromFilename(key)) then
-			key = key..".rw";
+			key = key..".rwdata";
 		end;
 
 		fileio.Write("settings/rework/"..key, rw.core:Serialize(value));
@@ -21,7 +21,7 @@ if (SERVER) then
 		if (typeof(key) != "string") then return; end;
 
 		if (!string.GetExtensionFromFilename(key)) then
-			key = key..".rw";
+			key = key..".rwdata";
 		end;
 
 		if (file.Exists("settings/rework/"..key, "GAME")) then
@@ -39,7 +39,7 @@ if (SERVER) then
 		if (typeof(key) != "string") then return; end;
 
 		if (!string.GetExtensionFromFilename(key)) then
-			key = key..".rw";
+			key = key..".rwdata";
 		end;
 
 		if (file.Exists("settings/rework/"..key, "GAME")) then

@@ -277,20 +277,3 @@ end;
 if (SERVER) then
 	rw.sharedTable.schemaInfo = rw.core:GetSchemaInfo();
 end;
-
-do
-	local MaterialCache = rw.core.MaterialCache or {};
-	rw.core.MaterialCache = MaterialCache;
-
-	function rw.core:GetMaterial(strMatPath, strPngParams)
-		if (!MaterialCache[strMatPath]) then
-			MaterialCache[strMatPath] = Material(strMatPath, strPngParams);
-		end;
-
-		return MaterialCache[strMatPath];
-	end;
-
-	function rw.core:ClearMaterial(strMatPath)
-		MaterialCache[strMatPath] = nil;
-	end;
-end;

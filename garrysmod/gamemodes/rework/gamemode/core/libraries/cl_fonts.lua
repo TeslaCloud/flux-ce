@@ -6,8 +6,8 @@
 
 library.New("fonts", rw);
 
-local stored = rw.fonts.stored or {};
-rw.fonts.stored = stored;
+-- We wants the fonts to recreate on refresh.
+local stored = {};
 
 do
 	local aspect = ScrW() / ScrH();
@@ -27,9 +27,9 @@ do
 	end;
 end;
 
-function rw.fonts:CreateFont(name, fontData, force)
+function rw.fonts:CreateFont(name, fontData)
 	if (name == nil or typeof(fontData) != "table") then return; end;
-	if (stored[name] and !force) then return; end;
+	if (stored[name]) then return; end;
 
 	-- Force UTF-8 range by default.
 	fontData.extended = true;
@@ -120,7 +120,7 @@ function rw.fonts:CreateFonts()
 
 	self:CreateFont("bar_text", {
 		font = "Roboto Condensed",
-		size = 18,
+		size = 14,
 		weight = 600
 	});
 
@@ -128,31 +128,31 @@ function rw.fonts:CreateFonts()
 		font = "Roboto Condensed",
 		size = 26,
 		weight = 500
-	}, true);
+	});
 
 	self:CreateFont("tooltip_small", {
 		font = "Roboto Condensed",
 		size = 16,
 		weight = 500
-	}, true);
+	});
 
 	self:CreateFont("rw_frame_title", {
 		font = "Roboto",
 		size = 14,
 		weight = 500
-	}, true);
+	});
 
 	self:CreateFont("rw_menuitem", {
 		font = "Roboto Condensed",
 		size = 24,
 		weight = 500
-	}, true);
+	});
 
 	self:CreateFont("rw_menuitem_large", {
 		font = "Roboto Condensed",
 		size = 30,
 		weight = 500
-	}, true);
+	});
 
 	theme.Call("CreateFonts", self);
 	plugin.Call("CreateFonts", self);
