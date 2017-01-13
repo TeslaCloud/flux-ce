@@ -101,9 +101,14 @@ function PLUGIN:AdjustCrosshairColor(trace, distance)
 		end;
 		local titem = self.Store[itype] or {color = Color(255,255,255), showText = false};
 		r, g, b = titem.color.r, titem.color.g, titem.color.b;
-		sText = titem.showText;
+		if (distance < 70) then
+			sText = titem.showText;
+		end
 	end;
 	if (distance < 70) then
+		alpha = 0;
+	end
+	if (LocalPlayer():GetVelocity():Length2D() > 150) then
 		alpha = 0;
 	end
 
@@ -121,6 +126,9 @@ function PLUGIN:AdjustCrosshairRadius(trace, distance)
 		curSize = target;
 	end
 	if (distance < 70) then
+		target = 10;
+	end
+	if (LocalPlayer():GetVelocity():Length2D() > 150) then
 		target = 10;
 	end
 
