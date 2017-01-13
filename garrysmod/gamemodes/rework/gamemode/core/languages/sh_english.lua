@@ -1,6 +1,6 @@
---[[ 
+--[[
 	Rework © 2016-2017 TeslaCloud Studios
-	Do not share or re-distribute before 
+	Do not share or re-distribute before
 	the framework is publicly released.
 --]]
 
@@ -75,4 +75,5 @@ lang["#Settings_Fit_Center"] = "Center";
 lang["#Settings_Fit_Fill"] = "Fill";
 lang["#Settings_Fit_Fit"] = "Fit";
 
-lang["#TargetID_Information"] = "Press 'E' for more information."
+lang["#TargetID_Information"] = "Press `E` for more information."
+lang["#TargetID_Action"] = "Press `E` for actions."

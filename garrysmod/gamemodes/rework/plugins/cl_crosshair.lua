@@ -7,7 +7,7 @@
 PLUGIN:SetName("Crosshair");
 PLUGIN:SetAuthor("Mr. Meow");
 PLUGIN:SetDescription("Adds crosshair.");
-PLUGIN.Store = {};
+local Stored = {};
 CreateClientConVar("cl_crosshair_thickness", "1");
 CreateClientConVar("cl_crosshair_size", "4");
 CreateClientConVar("cl_crosshair_gap", "1");
@@ -18,6 +18,8 @@ CreateClientConVar("cl_crosshair_color_r", "255");
 CreateClientConVar("cl_crosshair_color_g", "255");
 CreateClientConVar("cl_crosshair_color_b", "255");
 CreateClientConVar("cl_crosshair_color_a", "255");
+CreateClientConVar("cl_crosshair_fadein", "0.5");
+CreateClientConVar("cl_crosshair_fadeshow", "1.5");
 
 local startTime = CurTime();
 local curSize 	= nil;
@@ -30,29 +32,31 @@ local TYPE_USE 		= 3;
 local UseItems 		= {"prop_door_rotating", "func_door"};
 local ScrW = ScrW;
 local ScrH = ScrH;
+local textStartTime = 0;
+local oldObj 				= nil;
 
-PLUGIN.Store[TYPE_PLAYER] = {
+Stored[TYPE_PLAYER] = {
 	object = function(item)
 		return item:IsPlayer();
 	end,
 	color = Color(152,190,230),
 	showText = false
 };
-PLUGIN.Store[TYPE_ITEM] = {
+Stored[TYPE_ITEM] = {
 	object = function(item)
 		return (item:GetClass() == "rework_item");
 	end,
 	color = Color(212,176,230),
 	showText = true
 };
-PLUGIN.Store[TYPE_USE] = {
+Stored[TYPE_USE] = {
 	object = function(item)
 		return table.HasValue(UseItems, item:GetClass());
 	end,
 	color = Color(240,211,152),
 	showText = true
 };
-PLUGIN.Store[TYPE_WORLD] = {
+Stored[TYPE_WORLD] = {
 	object = function(item)
 		return false;
 	end,
@@ -71,8 +75,17 @@ function PLUGIN:HUDPaint()
 
 		surface.SetDrawColor(drawColor);
 		surface.DrawOutlinedCircle(ScrW() / 2, ScrH() / 2, radius, 1, 32, false);
-		_talpha = Lerp(FrameTime()*(showText and 4 or 6), _talpha or 0, (showText and drawColor.a < 5 and 255 or 0))
-		draw.SimpleText("Press `E` for actions.", "menu_thin_smaller", ScrW()/2, ScrH()/2, Color(255,255,255,_talpha), 1, 1)
+
+		if (distance < 70) then
+			if (oldObj != trace.Entity) then
+				oldObj = trace.Entity;
+				textStartTime = CurTime();
+			end
+		end
+		local fadein = GetConVar("cl_crosshair_fadein"):GetFloat();
+		local fadeshow = GetConVar("cl_crosshair_fadeshow"):GetFloat();
+		_talpha = Lerp(FrameTime()*(showText and 4 or 6), _talpha or 0, (showText and drawColor.a < 5 and (255-255/fadein*math.Clamp(CurTime()-fadeshow-textStartTime, 0, fadein)) or 0));
+		draw.SimpleText(L"#TargetID_Action", "menu_thin_smaller", ScrW()/2, ScrH()/2, Color(255,255,255,_talpha), 1, 1);
 	end;
 end;
 
@@ -87,19 +100,19 @@ function PLUGIN:AdjustCrosshairColor(trace, distance)
 
 	if (distance < 750 and IsValid(trace.Entity) and !trace.Entity:IsWorld()) then
 		local itype = nil;
-		for k,v in pairs(self.Store) do
+		for k,v in pairs(Stored) do
 			local obj = v.object(trace.Entity);
 			if (obj) then
 				itype = k;
 			else
-				if (k == self.Store) then
+				if (k == Stored) then
 					itype = TYPE_WORLD;
 				else
 					continue;
 				end;
 			end;
 		end;
-		local titem = self.Store[itype] or {color = Color(255,255,255), showText = false};
+		local titem = Stored[itype] or {color = Color(255,255,255), showText = false};
 		r, g, b = titem.color.r, titem.color.g, titem.color.b;
 		if (distance < 70) then
 			sText = titem.showText;
@@ -112,7 +125,7 @@ function PLUGIN:AdjustCrosshairColor(trace, distance)
 		alpha = 0;
 	end
 
-	_alpha = Lerp(FrameTime() * 4, (_alpha or alpha), alpha)
+	_alpha = Lerp(FrameTime() * 4, (_alpha or alpha), alpha);
 	return Color(r, g, b, _alpha), sText;
 end;
 
