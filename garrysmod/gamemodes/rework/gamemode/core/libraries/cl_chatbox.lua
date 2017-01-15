@@ -905,10 +905,8 @@ function PANEL:OnEnter()
 	plugin.Call("ChatBoxTextTyped", text);
 
 	self:SetText("");
-
-	if (!rw.tabMenu) then
-		chatbox.Hide();
-	else
+	
+	if (rw.tabMenu) then
 		chatbox.textEntry:RequestFocus();
 	end;
 end;
@@ -1160,6 +1158,12 @@ hook.Add("PlayerBindPress", "chatbox.PlayerBindPress", function(player, bind, bP
 	end;
 end);
 
+hook.Add("GUIMousePressed", "chatbox.GUIMousePressed", function(mouseCode, aimVector)
+	if (IsValid(chatbox.panel)) then
+		chatbox.Hide();
+	end;
+end);
+
 netstream.Hook("ChatboxTextEnter", function(player, messageData)
 	if (IsValid(player)) then
 		chat.PlaySound();
@@ -1169,6 +1173,7 @@ netstream.Hook("ChatboxTextEnter", function(player, messageData)
 		table.insert(chatbox.history, messageData);
 
 		chatbox.UpdateDisplay();
+		chatbox.Hide();
 	end;
 end);
 
