@@ -86,8 +86,6 @@ function GM:HUDPaint()
 		end;
 
 		if (!plugin.Call("RWHUDPaint") and rw.settings:GetBool("DrawBars")) then
-			rw.bars:SetValue("health", rw.client:Health());
-			rw.bars:SetValue("armor", rw.client:Armor());
 			rw.bars:DrawTopBars();
 
 			self.BaseClass:HUDPaint();

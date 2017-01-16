@@ -48,7 +48,8 @@ function rw.bars:Register(uniqueID, data, force)
 		type = data.type or BAR_TOP,
 		font = data.font or "bar_text",
 		spacing = data.spacing or self.defaultSpacing,
-		textOffset = data.textOffset or 0
+		textOffset = data.textOffset or 0,
+		callback = data.callback;
 	};
 
 	plugin.Call("OnBarRegistered", stored[uniqueID], uniqueID, force);
@@ -210,6 +211,10 @@ do
 		rw.bars:Position();
 
 		for k, v in pairs(stored) do
+			if (v.callback) then
+				rw.bars:SetValue(v.uniqueID, v.callback(stored[k]));
+			end;
+
 			plugin.Call("AdjustBarInfo", k, stored[k]);
 		end;
 	end;
@@ -246,12 +251,18 @@ do
 	rw.bars:Register("health", {
 		text = "HEALTH",
 		color = Color(200, 40, 40),
-		maxValue = 100
+		maxValue = 100,
+		callback = function(bar)
+			return rw.client:Health();
+		end
 	}, true);
 
 	rw.bars:Register("armor", {
 		text = "armor",
 		color = Color(80, 80, 220),
-		maxValue = 100
+		maxValue = 100,
+		callback = function(bar)
+			return rw.client:Armor();
+		end
 	}, true);
 end;
