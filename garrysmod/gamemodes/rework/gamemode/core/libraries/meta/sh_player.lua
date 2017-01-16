@@ -42,10 +42,10 @@ playerMeta.rwName = playerMeta.rwName or playerMeta.Name;
 
 function playerMeta:Name()
 	if (character) then
-		return self:GetNetVar("name", self:rwName());
+		return self.nameOverride or self:GetNetVar("name", self:rwName());
 	end;
 
-	return self:rwName();
+	return self.nameOverride or self:rwName();
 end;
 
 function playerMeta:SteamName()

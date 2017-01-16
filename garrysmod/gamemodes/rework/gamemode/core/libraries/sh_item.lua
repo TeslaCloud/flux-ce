@@ -188,7 +188,7 @@ function item.New(uniqueID, tData, forcedID)
 		instances[uniqueID][itemID].instanceID = itemID;
 
 		if (SERVER) then
-			item.SaveAll();
+			item.AsyncSave();
 			netstream.Start(nil, "ItemNewInstance", uniqueID, (tData or 1), itemID);
 		end;
 
@@ -199,12 +199,18 @@ end;
 function item.Remove(instanceID)
 	local itemTable = (typeof(instanceID) == "table" and instanceID) or item.FindInstanceByID(instanceID);
 
-	if (itemTable) then
+	if (itemTable and item.IsInstance(itemTable.instanceID)) then
 		if (IsValid(itemTable.entity)) then
 			itemTable.entity:Remove();
 		end;
 
 		instances[itemTable.uniqueID][itemTable.instanceID] = nil;
+
+		if (SERVER) then
+			item.AsyncSave();
+		end;
+
+		rw.core:DevPrint("Removed item instance ID: "..itemTable.instanceID);
 	end;
 end;
 
@@ -300,6 +306,21 @@ if (SERVER) then
 	function item.SaveAll()
 		item.SaveInstances();
 		item.SaveEntities();
+	end;
+
+	function item.AsyncSave()
+		local handle = coroutine.create(item.SaveAll);
+		coroutine.resume(handle);
+	end;
+
+	function item.AsyncSaveInstances()
+		local handle = coroutine.create(item.SaveInstances);
+		coroutine.resume(handle);
+	end;
+
+	function item.AsyncSaveEntities()
+		local handle = coroutine.create(item.SaveEntities);
+		coroutine.resume(handle);
 	end;
 
 	function item.NetworkItemData(player, itemTable)

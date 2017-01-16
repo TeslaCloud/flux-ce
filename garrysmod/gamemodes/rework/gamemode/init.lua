@@ -11,7 +11,7 @@ function SafeRequire(mod)
 	local success, value = pcall(require, mod);
 
 	if (!success) then
-		ErrorNoHalt("[Rework] Critical Error - Failed to open '"..mod.."' module!\n");
+		ErrorNoHalt("[Rework] Failed to open '"..mod.."' module!\n");
 
 		return false;
 	end;

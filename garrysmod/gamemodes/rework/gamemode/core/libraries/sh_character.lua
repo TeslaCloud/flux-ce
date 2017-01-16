@@ -162,8 +162,16 @@ do
 	local playerMeta = FindMetaTable("Player");
 
 	function playerMeta:GetActiveCharacter()
-		if (self:GetActiveCharacterID()) then
-			return stored[self:SteamID()][self:GetActiveCharacterID()];
+		local charID = self:GetActiveCharacterID();
+
+		if (charID) then
+			return stored[self:SteamID()][charID];
+		end;
+
+		if (self:IsBot()) then
+			self.charData = self.charData or {};
+
+			return self.charData;
 		end;
 	end;
 

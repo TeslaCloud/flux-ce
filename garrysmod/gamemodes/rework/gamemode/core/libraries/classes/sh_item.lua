@@ -99,12 +99,29 @@ if (SERVER) then
 			if (act != "OnTake" and act != "OnUse" and act != "OnTake") then
 				local succ, result = pcall(self[act], self, player, ...);
 
-				return result;
+				if (!succ) then
+					ErrorNoHalt("Item callback has failed to run! "..tostring(result).."\n");
+					return;
+				end;
 			end;
 
 			if (self.actionSounds[act]) then
 				player:EmitSound(self.actionSounds[act]);
 			end;
+		end;
+
+		if (act == "OnTake") then
+			if (plugin.Call("PlayerTakenItem", player, self, ...) != nil) then return; end;
+		end;
+
+		if (act == "OnUse") then
+			if (plugin.Call("PlayerUsedItem", player, self, ...) != nil) then return; end;
+
+			item.Remove(self);
+		end;
+
+		if (act == "OnDrop") then
+			if (plugin.Call("PlayerDroppedItem", player, self.instanceID, self, ...) != nil) then return; end;
 		end;
 	end;
 

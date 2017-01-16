@@ -83,7 +83,3 @@ function playerMeta:SyncNetVars()
 		end;
 	end;
 end;
-
-hook.Add("EntityRemoved", "RemoveEntityVars", function(entity)
-	entity:ClearNetVars();
-end);

@@ -121,6 +121,12 @@ function GM:PlayerDisconnected(player)
 	netstream.Start(nil, "PlayerDisconnected", player:EntIndex());
 end;
 
+function GM:EntityRemoved(entity)
+	entity:ClearNetVars();
+
+	self.BaseClass:EntityRemoved(entity);
+end;
+
 function GM:PlayerUseItemEntity(player, entity, itemTable)
 	netstream.Start(player, "PlayerUseItemEntity", entity);
 end;
@@ -129,7 +135,7 @@ function GM:PlayerTakeItem(player, itemTable, ...)
 	if (IsValid(itemTable.entity)) then
 		itemTable.entity:Remove();
 		player:GiveItemByID(itemTable.instanceID);
-		item.SaveEntities();
+		item.AsyncSaveEntities();
 	end;
 end;
 
@@ -146,6 +152,8 @@ function GM:PlayerDropItem(player, instanceID, itemTable, ...)
 		else
 			item.Spawn(player:EyePos() + trace.Normal * 20, Angle(0, 0, 0), itemTable);
 		end;
+
+		item.AsyncSaveEntities();
 	end;
 end;
 
