@@ -21,10 +21,10 @@ function PANEL:Init()
 end;
 
 function PANEL:Paint(w, h)
+	local alpha = 255 * (math.abs(math.sin(CurTime())));
+
 	surface.SetDrawColor(colorBlack);
 	surface.DrawRect(0, 0, w, h);
-
-	local alpha = 255 * (math.abs(math.sin(CurTime())));
 
 	draw.SimpleText("Press any key to skip intro!", menuThin, w * 0.5, h * 0.95, ColorAlpha(colorWhite, alpha), TEXT_ALIGN_CENTER, TEXT_ALIGN_BOTTOM);
 end;

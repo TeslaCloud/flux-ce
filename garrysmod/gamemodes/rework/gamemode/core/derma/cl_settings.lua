@@ -31,7 +31,6 @@ function PANEL:Init()
 
 		function panel:Paint(w, h)
 			local curTime = CurTime();
-
 			if (self:IsHovered() and !self.hovered) then
 				self.lerpTime = curTime;
 				self.hovered = true;
@@ -358,10 +357,10 @@ function PANEL:BuildCategoryList()
 				local curTime = CurTime();
 
 				if (self:IsHovered() and !self.hovered) then
-					self.lerpTime = CurTime();
+					self.lerpTime = curTime;
 					self.hovered = true;
 				elseif (!self:IsHovered() and self.hovered) then
-					self.lerpTime = CurTime();
+					self.lerpTime = curTime;
 					self.hovered = false;
 				end;
 

@@ -41,11 +41,11 @@ function PANEL:SetBind(nKey)
 end;
 
 function PANEL:Paint(w, h)
-	surface.SetDrawColor(colorBlack);
-	surface.DrawRect(0, 0, w, h);
-
 	local text = "Unbound";
 	local value = rw.settings:GetNumber(self.setting.id);
+
+	surface.SetDrawColor(colorBlack);
+	surface.DrawRect(0, 0, w, h);
 
 	if (self.waitPress) then
 		text = "Press a key to bind or mouse away to cancel.";

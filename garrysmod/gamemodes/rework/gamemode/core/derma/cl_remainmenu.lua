@@ -13,6 +13,7 @@ function PANEL:Init()
 	self:SetSize(ScrW(), ScrH());
 
 	local newText = L("#MainMenu_New");
+
 	textW, textH = util.GetTextSize(newText, menuFont);
 
 	self.new = vgui.Create("reButton", self);
@@ -45,6 +46,7 @@ function PANEL:Init()
 	end;
 
 	local loadText = L("#MainMenu_Load");
+
 	textW, textH = util.GetTextSize(loadText, "menu_thin_large");
 
 	self.load = vgui.Create("reButton", self);
@@ -74,6 +76,7 @@ function PANEL:Init()
 		self.menu:MakePopup();
 
 		self.menu.buttons = {};
+
 		local offY = 0;
 
 		for k, v in ipairs(rw.client:GetAllCharacters()) do
@@ -92,6 +95,7 @@ function PANEL:Init()
 
 	if (rw.client:GetActiveCharacter()) then
 		local cancelText = L("#MainMenu_Cancel");
+
 		textW, textH = util.GetTextSize(cancelText, menuFont);
 
 		self.cancel = vgui.Create("reButton", self);
@@ -141,6 +145,7 @@ concommand.Add("rwFactoryTest", function()
 	btn.DoClick = function(button)
 		print("button click");
 	end;
+
 	local font = rw.fonts:GetSize("rw_frame_title", 16)
 	btn:SetFont(font);
 	btn:SetIcon("fa-cog")

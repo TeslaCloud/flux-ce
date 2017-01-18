@@ -66,16 +66,17 @@ end;
 function PANEL:Reset()
 	self.itemData = nil;
 	self.itemCount = 0;
+
 	self:Rebuild();
 	self:UnDraggable();
 end;
 
 function PANEL:Paint(w, h)
+	local drawColor = Color(200, 200, 200, 160);
+
 	if (self.isHovered and !self:IsHovered()) then
 		self.isHovered = false;
 	end;
-
-	local drawColor = Color(200, 200, 200, 160);
 
 	if (!self.isHovered) then
 		if (!self.itemData) then
@@ -164,11 +165,13 @@ end;
 function PANEL:SetPlayer(player)
 	self.player = player;
 	self:SetInventory(player:GetInventory());
+
 	self:Rebuild();
 end;
 
 function PANEL:SetSlots(num)
 	self.invSlots = num;
+
 	self:Rebuild();
 end;
 
@@ -188,6 +191,7 @@ function PANEL:Rebuild()
 	dragndrop.Clear();
 
 	local multiplier = self.invSlots / 8;
+
 	self:SetSize(560, multiplier * 68 + 36);
 
 	if (IsValid(self.player)) then
@@ -228,9 +232,11 @@ function PANEL:Rebuild()
 						receiver.slotNum != dropped[1].slotNum) then
 						receiver:Combine(dropped[1]);
 						self:SlotsToInventory();
+
 						return;
 					else
 						receiver.isHovered = false;
+
 						return;
 					end;
 				end;

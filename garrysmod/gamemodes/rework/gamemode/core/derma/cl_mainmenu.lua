@@ -40,6 +40,7 @@ function PANEL:Init()
 	local x, y = scrW * 0.05, scrH * 0.5;
 
 	local newText = L("#MainMenu_New");
+	
 	textW, textH = util.GetTextSize(newText, menuFont);
 
 	self.new = vgui.Create("rwMainButton", self);
@@ -71,6 +72,7 @@ function PANEL:Init()
 	y = y + textH * 1.2;
 
 	local loadText = L("#MainMenu_Load");
+
 	textW, textH = util.GetTextSize(loadText, menuFont);
 
 	self.load = vgui.Create("rwMainButton", self);
@@ -96,6 +98,7 @@ function PANEL:Init()
 		self.menu:MakePopup();
 
 		self.menu.buttons = {};
+
 		local offY = 0;
 
 		for k, v in ipairs(rw.client:GetAllCharacters()) do
@@ -105,6 +108,7 @@ function PANEL:Init()
 			self.menu.buttons[k]:SetText(v.name);
 			self.menu.buttons[k].DoClick = function()
 				netstream.Start("PlayerSelectCharacter", v.uniqueID);
+				
 				self:Remove();
 			end;
 
@@ -115,6 +119,7 @@ function PANEL:Init()
 	y = y + textH * 1.2;
 
 	local settText = L("#MainMenu_Settings");
+
 	textW, textH = util.GetTextSize(settText, menuFont);
 
 	self.sett = vgui.Create("rwMainButton", self);
@@ -130,6 +135,7 @@ function PANEL:Init()
 	y = y + textH * 1.2;
 
 	local discText = L("#MainMenu_Disconnect");
+	
 	textW, textH = util.GetTextSize(discText, menuFont);
 
 	self.disc = vgui.Create("rwMainButton", self);
