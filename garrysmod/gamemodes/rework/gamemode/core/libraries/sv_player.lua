@@ -97,7 +97,7 @@ function rw.player:Restore(player)
 			rw.player:Save(player);
 		end;
 
-		plugin.Call("OnPlayerRestored", player);
+		hook.Run("OnPlayerRestored", player);
 	end);
 end;
 

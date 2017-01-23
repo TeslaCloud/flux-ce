@@ -196,7 +196,7 @@ function PANEL:Init()
 		parent:SetSize(w, h + parent.label:GetTall() * 0.1 + panel:GetTall() * 1.1 + parent.numLabel:GetTall());
 	end;
 
-	plugin.Call("AdjustSettingCallbacks", self.elementCallbacks);
+	hook.Run("AdjustSettingCallbacks", self.elementCallbacks);
 
 	self.categoryList = vgui.Create("DScrollPanel", self);
 	self.categoryList:SetSize(self:GetWide() * 0.2, self:GetTall());

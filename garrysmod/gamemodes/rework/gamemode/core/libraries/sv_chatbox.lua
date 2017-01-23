@@ -289,7 +289,7 @@ function chatbox.AddText(listeners, ...)
 		end;
 	end;
 
-	plugin.Call("ChatAddText", listeners, message);
+	hook.Run("ChatAddText", listeners, message);
 
 	print("[Chat::"..message.filter:upper().."] "..message.text);
 
@@ -332,7 +332,7 @@ netstream.Hook("ChatboxTextEntered", function(player, msgText)
 		steamID64 = player:SteamID64()
 	}
 
-	if (plugin.Call("PlayerSay", player, message.text) == "") then
+	if (hook.Run("PlayerSay", player, message.text) == "") then
 		return;
 	end;
 
@@ -357,7 +357,7 @@ netstream.Hook("ChatboxTextEntered", function(player, msgText)
 		message.text = message.text.."...";
 	end;
 
-	plugin.Call("ChatboxPlayerSay", player, message);
+	hook.Run("ChatboxPlayerSay", player, message);
 
 	local shouldSend = true;
 

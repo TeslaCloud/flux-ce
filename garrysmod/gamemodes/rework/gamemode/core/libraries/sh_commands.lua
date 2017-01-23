@@ -152,7 +152,7 @@ if (SERVER) then
 					end;
 
 					-- Let plugins hook into this and abort command's execution of necessary.
-					if (!plugin.Call("PlayerRunCommand", player, cmdTable, args)) then
+					if (!hook.Run("PlayerRunCommand", player, cmdTable, args)) then
 						if (IsValid(player)) then
 							ServerLog(player:Name().." has used /"..cmdTable.name.." "..text:utf8sub(cmdTable.name:utf8len() + 2, text:utf8len()));
 						end;

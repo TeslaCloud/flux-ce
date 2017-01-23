@@ -25,7 +25,7 @@ function playerMeta:SetWeaponRaised(bIsRaised)
 	if (SERVER) then
 		self:SetDTBool(BOOL_WEAPON_RAISED, bIsRaised);
 
-		plugin.Call("OnWeaponRaised", self, self:GetActiveWeapon(), bIsRaised)
+		hook.Run("OnWeaponRaised", self, self:GetActiveWeapon(), bIsRaised)
 	end;
 end;
 
@@ -40,7 +40,7 @@ function playerMeta:IsWeaponRaised()
 		return true;
 	end;
 
-	local shouldRaise = plugin.Call("ShouldWeaponBeRaised", self, weapon);
+	local shouldRaise = hook.Run("ShouldWeaponBeRaised", self, weapon);
 
 	if (shouldRaise) then
 		return shouldRaise;
@@ -61,7 +61,7 @@ function PLUGIN:OnWeaponRaised(player, weapon, bIsRaised)
 	if (IsValid(weapon)) then
 		local curTime = CurTime();
 
-		plugin.Call("UpdateWeaponRaised", player, weapon, bIsRaised, curTime);
+		hook.Run("UpdateWeaponRaised", player, weapon, bIsRaised, curTime);
 	end;
 end;
 

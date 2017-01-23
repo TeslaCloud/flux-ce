@@ -84,15 +84,15 @@ if (SERVER) then
 
 	function CItem:DoMenuAction(act, player, ...)
 		if (act == "OnTake") then
-			if (plugin.Call("PlayerTakeItem", player, self, ...) != nil) then return; end;
+			if (hook.Run("PlayerTakeItem", player, self, ...) != nil) then return; end;
 		end;
 
 		if (act == "OnUse") then
-			if (plugin.Call("PlayerUseItem", player, self, ...) != nil) then return; end;
+			if (hook.Run("PlayerUseItem", player, self, ...) != nil) then return; end;
 		end;
 
 		if (act == "OnDrop") then
-			if (plugin.Call("PlayerDropItem", player, self.instanceID, self, ...) != nil) then return; end;
+			if (hook.Run("PlayerDropItem", player, self.instanceID, self, ...) != nil) then return; end;
 		end;
 
 		if (self[act]) then
@@ -111,17 +111,17 @@ if (SERVER) then
 		end;
 
 		if (act == "OnTake") then
-			if (plugin.Call("PlayerTakenItem", player, self, ...) != nil) then return; end;
+			if (hook.Run("PlayerTakenItem", player, self, ...) != nil) then return; end;
 		end;
 
 		if (act == "OnUse") then
-			if (plugin.Call("PlayerUsedItem", player, self, ...) != nil) then return; end;
+			if (hook.Run("PlayerUsedItem", player, self, ...) != nil) then return; end;
 
 			item.Remove(self);
 		end;
 
 		if (act == "OnDrop") then
-			if (plugin.Call("PlayerDroppedItem", player, self.instanceID, self, ...) != nil) then return; end;
+			if (hook.Run("PlayerDroppedItem", player, self.instanceID, self, ...) != nil) then return; end;
 		end;
 	end;
 
@@ -129,7 +129,7 @@ if (SERVER) then
 		local itemTable = item.FindInstanceByID(instanceID);
 
 		if (!itemTable) then return; end;
-		if (plugin.Call("PlayerCanUseItem", player, itemTable, action, ...) == false) then return; end;
+		if (hook.Run("PlayerCanUseItem", player, itemTable, action, ...) == false) then return; end;
 
 		itemTable:DoMenuAction(action, player, ...);
 	end);

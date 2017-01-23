@@ -52,7 +52,7 @@ function rw.bars:Register(uniqueID, data, force)
 		callback = data.callback;
 	};
 
-	plugin.Call("OnBarRegistered", stored[uniqueID], uniqueID, force);
+	hook.Run("OnBarRegistered", stored[uniqueID], uniqueID, force);
 
 	return stored[uniqueID];
 end;
@@ -98,11 +98,11 @@ function rw.bars:Prioritize()
 	sorted = {};
 
 	for k, v in pairs(stored) do
-		if (!plugin.Call("ShouldDrawBar", v)) then
+		if (!hook.Run("ShouldDrawBar", v)) then
 			continue;
 		end;
 
-		plugin.Call("PreBarPrioritized", v);
+		hook.Run("PreBarPrioritized", v);
 
 		sorted[v.priority] = sorted[v.priority] or {};
 
@@ -125,7 +125,7 @@ function rw.bars:Position()
 			local bar = self:Get(v);
 
 			if (bar) then
-				local offX, offY = plugin.Call("AdjustBarPos", bar);
+				local offX, offY = hook.Run("AdjustBarPos", bar);
 				offX = offX or 0;
 				offY = offY or 0;
 
@@ -145,7 +145,7 @@ function rw.bars:Draw(uniqueID)
 		hook.Run("PreDrawBar", barInfo);
 		theme.Call("PreDrawBar", barInfo);
 
-		if (!plugin.Call("ShouldDrawBar", barInfo)) then
+		if (!hook.Run("ShouldDrawBar", barInfo)) then
 			return;
 		end;
 
@@ -157,7 +157,7 @@ function rw.bars:Draw(uniqueID)
 			draw.RoundedBox(cornerRadius, barInfo.x, barInfo.y, width, height, Color(40, 40, 40));
 		end;
 
-		if (plugin.Call("ShouldFillBar", barInfo) or barInfo.value != 0) then
+		if (hook.Run("ShouldFillBar", barInfo) or barInfo.value != 0) then
 			if (!theme.Call("DrawBarFill", barInfo)) then
 				draw.RoundedBox(cornerRadius, barInfo.x + 1, barInfo.y + 1, (barInfo.fillWidth or width) - 2, height - 2, barInfo.color);
 			end;
@@ -215,7 +215,7 @@ do
 				rw.bars:SetValue(v.uniqueID, v.callback(stored[k]));
 			end;
 
-			plugin.Call("AdjustBarInfo", k, stored[k]);
+			hook.Run("AdjustBarInfo", k, stored[k]);
 		end;
 	end;
 

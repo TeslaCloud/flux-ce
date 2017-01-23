@@ -598,14 +598,14 @@ function rw.db:OnConnected()
 	queryObj:Execute();
 
 	Connected = true;
-	plugin.Call("DatabaseConnected");
+	hook.Run("DatabaseConnected");
 end;
 
 -- Called when the database connection fails.
 function rw.db:OnConnectionFailed(errorText)
 	ErrorNoHalt("[Rework:Database] Unable to connect to the database!\n"..errorText.."\n");
 
-	plugin.Call("DatabaseConnectionFailed", errorText);
+	hook.Run("DatabaseConnectionFailed", errorText);
 end;
 
 -- A function to check whether or not the module is connected to a database.

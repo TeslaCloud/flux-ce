@@ -58,7 +58,7 @@ chatbox.oldAddText 	= chatbox.oldAddText or chat.AddText;
 
 -- A function to add text to the chat box.
 function chat.AddText(...)
-	plugin.Call("ChatAddText", ...);
+	hook.Run("ChatAddText", ...);
 
 	chatbox.AddText(...);
 end;
@@ -507,12 +507,12 @@ function chatbox.ParseText(messageData)
 
 	messageData.filter = messageData.filter or "ooc";
 
-	plugin.Call("ChatboxPreProcess", messageData);
+	hook.Run("ChatboxPreProcess", messageData);
 
 	chatbox.GetFilter(messageData.filter)(messageData);
 	chatbox.GetType(messageData.type)(messageData);
 
-	plugin.Call("PreChatboxParse", messageData);
+	hook.Run("PreChatboxParse", messageData);
 
 	parsed[1] = parsed[1] or {};
 	table.insert(parsed[1], g_DisplayY);
@@ -643,7 +643,7 @@ function chatbox.ParseText(messageData)
 
 	chatbox.LastBBCode = nil;
 
-	plugin.Call("PostChatboxParse", parsed);
+	hook.Run("PostChatboxParse", parsed);
 
 	return parsed;
 end;
@@ -871,7 +871,7 @@ function PANEL:Think()
 	local curTime = CurTime();
 
 	if (curTime > self.NextAdjust) then
-		plugin.Call("AdjustChatboxInfo", chatbox);
+		hook.Run("AdjustChatboxInfo", chatbox);
 
 		self.NextAdjust = curTime + (1 / 8);
 	end;
@@ -902,7 +902,7 @@ function PANEL:OnEnter()
 
 	netstream.Start("ChatboxTextEntered", text);
 
-	plugin.Call("ChatBoxTextTyped", text);
+	hook.Run("ChatBoxTextTyped", text);
 
 	self:SetText("");
 	
@@ -923,7 +923,7 @@ function PANEL:Think()
 			self:SetValue(string.utf8sub(text, 0, maxChatLength));
 		elseif (chatbox.IsOpen()) then
 			if (text != self.previousText) then
-				plugin.Call("ChatBoxTextChanged", self.previousText or "", text);
+				hook.Run("ChatBoxTextChanged", self.previousText or "", text);
 			end;
 		end;
 	end;
@@ -950,7 +950,7 @@ function PANEL:OnKeyCodeTyped(code)
 		self:FocusNext();
 		self:OnEnter();
 	else
-		local text = plugin.Call("ChatBoxKeyCodeTyped", code, self:GetValue());
+		local text = hook.Run("ChatBoxKeyCodeTyped", code, self:GetValue());
 
 		if (text and type(text) == "string") then
 			self:SetValue(text);
@@ -1040,7 +1040,7 @@ function chatbox.Show(panel)
 end;
 
 function chatbox.Hide()
-	plugin.Call("ChatBoxClosed", chatbox.GetCurrentText());
+	hook.Run("ChatBoxClosed", chatbox.GetCurrentText());
 
 	chatbox.textEntry:AlphaTo(0, fadeDuration);
 	chatbox.panel.scrollBar:AlphaTo(0, fadeDuration);

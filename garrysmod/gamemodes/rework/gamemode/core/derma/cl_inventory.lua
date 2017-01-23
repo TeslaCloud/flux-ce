@@ -141,9 +141,9 @@ end;
 function PANEL:OnMouseReleased(...)
 	if (self.itemData and self.mousePressed and self.mousePressed > (CurTime() - 0.15)) then
 		if (#self.instanceIDs > 1) then
-			plugin.Call("PlayerUseItemMenu", self.instanceIDs);
+			hook.Run("PlayerUseItemMenu", self.instanceIDs);
 		else
-			plugin.Call("PlayerUseItemMenu", self.itemData);
+			hook.Run("PlayerUseItemMenu", self.itemData);
 		end;
 	end;
 
@@ -281,7 +281,7 @@ function PANEL:Rebuild()
 
 	self:GetParent():Receiver("rwItem", function(receiver, dropped, isDropped, menuIndex, mouseX, mouseY)
 		if (isDropped) then
-			plugin.Call("PlayerDropItem", dropped[1].itemData, dropped[1], mouseX, mouseY);
+			hook.Run("PlayerDropItem", dropped[1].itemData, dropped[1], mouseX, mouseY);
 		end;
 	end, {});
 end;

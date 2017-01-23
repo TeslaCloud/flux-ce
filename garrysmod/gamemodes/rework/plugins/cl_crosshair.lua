@@ -30,17 +30,17 @@ local textStartTime = 0;
 local prevEnt 		= nil;
 
 function PLUGIN:HUDPaint()
-	if (!plugin.Call("PreDrawCrosshair")) then
+	if (!hook.Run("PreDrawCrosshair")) then
 		local trace = rw.client:GetEyeTraceNoCursor();
 		local distance = trace.StartPos:Distance(trace.HitPos);
-		local drawColor, showText = plugin.Call("AdjustCrosshairColor", trace, distance);
+		local drawColor, showText = hook.Run("AdjustCrosshairColor", trace, distance);
 
 		if (!drawColor) then return; end;
 
 		local scrW, scrH, curTime = ScrW(), ScrH(), CurTime();
 		local fadein = GetConVar("cl_crosshair_fadein"):GetFloat();
 		local fadeshow = GetConVar("cl_crosshair_fadeshow"):GetFloat();
-		local radius = plugin.Call("AdjustCrosshairRadius", trace, distance) or math.Clamp(4 / distance, 2, 6);
+		local radius = hook.Run("AdjustCrosshairRadius", trace, distance) or math.Clamp(4 / distance, 2, 6);
 
 		surface.SetDrawColor(drawColor);
 		surface.DrawOutlinedCircle(scrW / 2, scrH / 2, radius, 1, 32, false);

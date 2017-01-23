@@ -26,7 +26,7 @@ else
 end;
 
 if (!SafeRequire("fileio")) then
-	ErrorNoHalt("[Rework] fileio module has failed to load!\nAborting startup...\n");
+	ErrorNoHalt("[Rework] fileio module has failed to load!\nPlease make sure that you have gmsv_fileio_"..((system.IsWindows() and "win32") or "linux")..".dll in garrysmod/lua/bin folder!\nAborting startup...\n");
 	return;
 end;
 
@@ -53,7 +53,7 @@ if (!rw.WatchDogAvailable and system.IsWindows()) then
 					if (fileName:find(".ini")) then return; end;
 
 					print("[Watchdog] Detected plugin change.");
-					plugin.Call("OnPluginFileChange", fileName);
+					hook.Run("OnPluginFileChange", fileName);
 				end;
 			end);
 

@@ -7,7 +7,7 @@
 function GM:InitPostEntity()
 	item.Load();
 
-	plugin.Call("RWInitPostEntity");
+	hook.Run("RWInitPostEntity");
 end;
 
 function GM:PlayerInitialSpawn(player)
@@ -87,7 +87,7 @@ function GM:PlayerSpawn(player)
 		handsEntity:Spawn();
 	end;
 
-	plugin.Call("PostPlayerSpawn", player);
+	hook.Run("PostPlayerSpawn", player);
 end;
 
 function GM:PostPlayerSpawn(player)
@@ -217,7 +217,7 @@ function GM:OnPluginFileChange(fileName)
 end;
 
 function GM:GetFallDamage(player, speed)
-	local fallDamage = plugin.Call("RWGetFallDamage", player, speed);
+	local fallDamage = hook.Run("RWGetFallDamage", player, speed);
 
 	if (speed < 660) then
 		speed = speed - 250;
@@ -231,7 +231,7 @@ function GM:GetFallDamage(player, speed)
 end;
 
 function GM:PlayerShouldTakeDamage(player, attacker)
-	return plugin.Call("RWPlayerShouldTakeDamage", player, attacker) or true;
+	return hook.Run("RWPlayerShouldTakeDamage", player, attacker) or true;
 end;
 
 function GM:ChatboxPlayerSay(player, message)
@@ -246,7 +246,7 @@ function GM:PlayerSpawnProp(player, model)
 		return false;
 	end;
 
-	if (plugin.Call("RWPlayerSpawnProp", player, model) == false) then
+	if (hook.Run("RWPlayerSpawnProp", player, model) == false) then
 		return false;
 	end;
 
@@ -258,7 +258,7 @@ function GM:PlayerSpawnObject(player, model, skin)
 		return false;
 	end;
 
-	if (plugin.Call("RWPlayerSpawnObject", player, model, skin) == false) then
+	if (hook.Run("RWPlayerSpawnObject", player, model, skin) == false) then
 		return false;
 	end;
 
@@ -270,7 +270,7 @@ function GM:PlayerSpawnNPC(player, npc, weapon)
 		return false;
 	end;
 
-	if (plugin.Call("RWPlayerSpawnNPC", player, npc, weapon) == false) then
+	if (hook.Run("RWPlayerSpawnNPC", player, npc, weapon) == false) then
 		return false;
 	end;
 
@@ -282,7 +282,7 @@ function GM:PlayerSpawnEffect(player, model)
 		return false;
 	end;
 
-	if (plugin.Call("RWPlayerSpawnEffect", player, model) == false) then
+	if (hook.Run("RWPlayerSpawnEffect", player, model) == false) then
 		return false;
 	end;
 
@@ -294,7 +294,7 @@ function GM:PlayerSpawnVehicle(player, model, name, tab)
 		return false;
 	end;
 
-	if (plugin.Call("RWPlayerSpawnVehicle", player, model, name, tab) == false) then
+	if (hook.Run("RWPlayerSpawnVehicle", player, model, name, tab) == false) then
 		return false;
 	end;
 
@@ -306,7 +306,7 @@ function GM:PlayerSpawnSWEP(player, weapon, swep)
 		return false;
 	end;
 
-	if (plugin.Call("RWPlayerSpawnSWEP", player, weapon, swep) == false) then
+	if (hook.Run("RWPlayerSpawnSWEP", player, weapon, swep) == false) then
 		return false;
 	end;
 
@@ -318,7 +318,7 @@ function GM:PlayerSpawnSENT(player, class)
 		return false;
 	end;
 
-	if (plugin.Call("RWPlayerSpawnSENT", player, class) == false) then
+	if (hook.Run("RWPlayerSpawnSENT", player, class) == false) then
 		return false;
 	end;
 
@@ -330,7 +330,7 @@ function GM:PlayerSpawnRagdoll(player, model)
 		return false;
 	end;
 
-	if (plugin.Call("RWPlayerSpawnRagdoll", player, model) == false) then
+	if (hook.Run("RWPlayerSpawnRagdoll", player, model) == false) then
 		return false;
 	end;
 
@@ -342,7 +342,7 @@ function GM:PlayerGiveSWEP(player, weapon, swep)
 		return false;
 	end;
 
-	if (plugin.Call("RWPlayerGiveSWEP", player, weapon, swep) == false) then
+	if (hook.Run("RWPlayerGiveSWEP", player, weapon, swep) == false) then
 		return false;
 	end;
 
@@ -363,7 +363,7 @@ function GM:OnActiveCharacterSet(player, character)
 	player:Spawn();
 	player:SetModel(character.model or "models/humans/group01/male_02.mdl");
 
-	plugin.Call("PostCharacterLoaded", player, character);
+	hook.Run("PostCharacterLoaded", player, character);
 end;
 
 function GM:PostCharacterLoaded(player, character)

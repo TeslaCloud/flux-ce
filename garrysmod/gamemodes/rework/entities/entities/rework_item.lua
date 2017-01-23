@@ -29,7 +29,7 @@ if (SERVER) then
 	function ENT:SetItem(itemTable)
 		if (!itemTable) then return false; end;
 
-		plugin.Call("PreEntityItemSet", self, itemTable);
+		hook.Run("PreEntityItemSet", self, itemTable);
 
 		self:SetModel(itemTable:GetModel());
 		self:SetSkin(itemTable.Skin);
@@ -39,13 +39,13 @@ if (SERVER) then
 
 		item.NetworkEntityData(nil, self)
 
-		plugin.Call("OnEntityItemSet", self, itemTable);
+		hook.Run("OnEntityItemSet", self, itemTable);
 	end;
 
 	function ENT:Use(activator, caller, useType, value)
 		if (IsValid(caller) and caller:IsPlayer()) then
 			if (self.item) then
-				plugin.Call("PlayerUseItemEntity", caller, self, self.item);
+				hook.Run("PlayerUseItemEntity", caller, self, self.item);
 			else
 				rw.core:DevPrint("Player attempted to use an item entity without item object tied to it!")
 			end;
@@ -70,7 +70,7 @@ else
 		local col2 = Color(0, 0, 0, alpha);
 
 		if (self.item) then
-			if (plugin.Call("PreDrawItemTargetID", self, self.item, x, y, alpha, distance) == false) then
+			if (hook.Run("PreDrawItemTargetID", self, self.item, x, y, alpha, distance) == false) then
 				return;
 			end;
 
@@ -94,6 +94,6 @@ else
 		draw.SimpleTextOutlined(desc, "tooltip_small", x - width2 * 0.5, y, col, nil, nil, 1, col2);
 		y = y + 20;
 
-		plugin.Call("PostDrawItemTargetID", self, self.item, x, y, alpha, distance);
+		hook.Run("PostDrawItemTargetID", self, self.item, x, y, alpha, distance);
 	end;
 end;

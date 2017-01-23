@@ -9,16 +9,16 @@ netstream.Hook("SharedTables", function(tSharedTable)
 end);
 
 netstream.Hook("PlayerInitialSpawn", function(nPlyIndex)
-	plugin.Call("PlayerInitialSpawn", Entity(nPlyIndex));
+	hook.Run("PlayerInitialSpawn", Entity(nPlyIndex));
 end);
 
 netstream.Hook("PlayerDisconnected", function(nPlyIndex)
-	plugin.Call("PlayerDisconnected", Entity(nPlyIndex));
+	hook.Run("PlayerDisconnected", Entity(nPlyIndex));
 end);
 
 netstream.Hook("PlayerModelChanged", function(nPlyIndex, sNewModel, sOldModel)
 	util.WaitForEntity(nPlyIndex, function(player)
-		plugin.Call("PlayerModelChanged", player, sNewModel, sOldModel);
+		hook.Run("PlayerModelChanged", player, sNewModel, sOldModel);
 	end);
 end);
 
@@ -36,7 +36,7 @@ netstream.Hook("reNotification", function(sMessage)
 end);
 
 netstream.Hook("PlayerUseItemEntity", function(entity)
-	plugin.Call("PlayerUseItemMenu", entity.item, true);
+	hook.Run("PlayerUseItemMenu", entity.item, true);
 end);
 
 netstream.Hook("PlayerTakeDamage", function()

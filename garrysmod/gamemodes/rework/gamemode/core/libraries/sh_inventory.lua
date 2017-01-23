@@ -77,7 +77,7 @@ do
 			local slot = self:AddItem(itemTable);
 
 			if (slot and slot != -1) then
-				plugin.Call("OnItemGiven", self, itemTable, slot);
+				hook.Run("OnItemGiven", self, itemTable, slot);
 			elseif (slot == -1) then
 				rw.core:DevPrint("Failed to add item to player's inventory (itemTable is invalid)! "..tostring(itemTable));
 			else
@@ -95,7 +95,7 @@ do
 			local slot = self:AddItem(itemTable);
 
 			if (slot and slot != -1) then
-				plugin.Call("OnItemGiven", self, itemTable, slot);
+				hook.Run("OnItemGiven", self, itemTable, slot);
 			elseif (slot == -1) then
 				rw.core:DevPrint("Failed to add item to player's inventory (itemTable is invalid)! "..tostring(itemTable));
 			else
@@ -112,7 +112,7 @@ do
 				if (table.HasValue(ids, instanceID)) then
 					table.RemoveByValue(playerInv[slot], instanceID);
 					self:SetInventory(playerInv);
-					plugin.Call("OnItemTaken", self, instanceID, slot);
+					hook.Run("OnItemTaken", self, instanceID, slot);
 					break;
 				end
 			end;

@@ -24,7 +24,7 @@ local mixerColors = {"r", "g", "b", "a"};
 -- We do this to gain control over this internal hook for use with plugin hooks.
 rw.OldOnConVarChanged = rw.OldOnConVarChanged or cvars.OnConVarChanged;
 function cvars.OnConVarChanged(name, oldVal, newVal)
-	plugin.Call("OnConVarChanged", name, oldVal, newVal);
+	hook.Run("OnConVarChanged", name, oldVal, newVal);
 
 	return rw.OldOnConVarChanged(name, oldVal, newVal);
 end;
@@ -153,12 +153,12 @@ function rw.settings:SetValue(id, value)
 	local conVar = self:GetConVar(id);
 
 	if (conVar) then
-		plugin.Call("OnSettingSet", id, value, conVar);
+		hook.Run("OnSettingSet", id, value, conVar);
 
 		local oldValue = self:GetValue(id);
 
 		if (oldValue != value) then
-			plugin.Call("OnSettingChanged", id, value, oldValue, conVar);
+			hook.Run("OnSettingChanged", id, value, oldValue, conVar);
 		end;
 
 		return conVar:SetString(tostring(value));

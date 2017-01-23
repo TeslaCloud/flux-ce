@@ -67,28 +67,26 @@ function rw.GetSchemaName()
 	end;
 end;
 
--- Called when gamemode's server browser name need to be retrieved.
+-- Called when gamemode's server browser name needs to be retrieved.
 function GM:GetGameDescription()
-	local name = self.Prefix..rw.GetSchemaName();
+	local nameOverride = self.NameOverride;
 
-	if (type(self.NameOverride) == "string") then
-		name = self.Prefix..self.NameOverride;
-	end;
-
-	return name;
+	return (type(nameOverride) == "string" and nameOverride) or self.Prefix..rw.GetSchemaName();
 end;
 
 do
+	local schemaFolder = rw.schema;
+
 	rw.sharedTable.dependencies = rw.sharedTable.dependencies or {};
 	rw.sharedTable.disable = rw.sharedTable.disable or {};
 
 	if (SERVER) then
-		if (file.Find("gamemodes/"..rw.schema.."/dependencies.lua", "GAME")) then
-			rw.sharedTable.dependencies = include(rw.schema.."/dependencies.lua");
+		if (file.Exists("gamemodes/"..schemaFolder.."/dependencies.lua", "GAME")) then
+			rw.sharedTable.dependencies = include(schemaFolder.."/dependencies.lua");
 		end;
 
-		if (file.Find("gamemodes/"..rw.schema.."/disable.lua", "GAME")) then
-			rw.sharedTable.disable = include(rw.schema.."/disable.lua");
+		if (file.Exists("gamemodes/"..schemaFolder.."/disable.lua", "GAME")) then
+			rw.sharedTable.disable = include(schemaFolder.."/disable.lua");
 		end;
 	end;
 
@@ -137,8 +135,8 @@ end;
 rw.core:IncludeDirectory("hooks", true);
 rw.core:IncludePlugins("rework/plugins");
 
-plugin.Call("RWPluginsLoaded");
+hook.Run("RWPluginsLoaded");
 
 rw.core:IncludeSchema();
 
-plugin.Call("RWSchemaLoaded");
+hook.Run("RWSchemaLoaded");

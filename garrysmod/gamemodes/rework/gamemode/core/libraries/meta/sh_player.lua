@@ -55,7 +55,7 @@ end;
 function playerMeta:SetModel(sPath)
 	local oldModel = self:GetModel();
 
-	plugin.Call("PlayerModelChanged", self, sPath, oldModel);
+	hook.Run("PlayerModelChanged", self, sPath, oldModel);
 
 	if (SERVER) then
 		netstream.Start(nil, "PlayerModelChanged", self:EntIndex(), sPath, oldModel);
@@ -99,7 +99,7 @@ if (SERVER) then
 		local curChar = self:GetActiveCharacterID();
 
 		if (curChar) then
-			plugin.Call("OnCharacterChange", self, self:GetActiveCharacter(), id);
+			hook.Run("OnCharacterChange", self, self:GetActiveCharacter(), id);
 		end;
 
 		self:SetNetVar("ActiveCharacter", id);
@@ -113,7 +113,7 @@ if (SERVER) then
 		self:SetNetVar("key", charData.key or -1);
 		self:SetNetVar("model", charData.model or "models/humans/group01/male_02.mdl");
 		self:SetNetVar("inventory", charData.inventory);
-		plugin.Call("OnActiveCharacterSet", self, self:GetActiveCharacter());
+		hook.Run("OnActiveCharacterSet", self, self:GetActiveCharacter());
 	end;
 
 	function playerMeta:SetCharacterVar(id, val)

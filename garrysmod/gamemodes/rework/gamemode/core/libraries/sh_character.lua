@@ -69,7 +69,7 @@ if (SERVER) then
 
 			character.SendToClient(player);
 
-			plugin.Call("PostRestoreCharacters", player);
+			hook.Run("PostRestoreCharacters", player);
 		end);
 	end;
 
@@ -97,11 +97,11 @@ if (SERVER) then
 	end;
 
 	function character.Save(player, index)
-		if (!IsValid(player) or typeof(index) != "number" or plugin.Call("PreSaveCharacter", player, index) == false) then return; end;
+		if (!IsValid(player) or typeof(index) != "number" or hook.Run("PreSaveCharacter", player, index) == false) then return; end;
 
 		local toSave = character.ToSaveable(player, stored[player:SteamID()][index]);
 			rw.db:EasyWrite("rw_characters", {"uniqueID", index}, toSave);
-		plugin.Call("PostSaveCharacter", player, index);
+		hook.Run("PostSaveCharacter", player, index);
 	end;
 
 	function character.SaveAll(player)

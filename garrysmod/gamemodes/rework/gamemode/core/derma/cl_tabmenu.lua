@@ -13,7 +13,7 @@ function PANEL:Init()
 	self:SetPos(0, 0);
 	self:SetSize(ScrW(), ScrH());
 
-	local curX, curY = plugin.Call("AdjustMenuItemPositions");
+	local curX, curY = hook.Run("AdjustMenuItemPositions");
 	curX = curX or 42;
 	curY = curY or 200;
 
@@ -31,7 +31,7 @@ function PANEL:Init()
 
 	curY = curY + 42;
 
-	plugin.Call("AddTabMenuItems", self);
+	hook.Run("AddTabMenuItems", self);
 
 	for k, v in pairs(self.menuItems) do
 		local button = vgui.Create("reButton", self);
@@ -55,7 +55,7 @@ function PANEL:Init()
 				end;
 
 				self.activePanel = vgui.Create(v.panel, self);
-				plugin.Call("OnMenuPanelOpen", self, self.activePanel);
+				hook.Run("OnMenuPanelOpen", self, self.activePanel);
 			end;
 
 			if (v.callback) then

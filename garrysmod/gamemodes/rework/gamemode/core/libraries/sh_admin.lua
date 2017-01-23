@@ -249,7 +249,7 @@ if (SERVER) then
 
 		local extras = {};
 
-		plugin.Call("OnPermissionsCompiled", extras);
+		hook.Run("OnPermissionsCompiled", extras);
 
 		if (typeof(extras) == "table") then
 			for id, extra in pairs(extras) do

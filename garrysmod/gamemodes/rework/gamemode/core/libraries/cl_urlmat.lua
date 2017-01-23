@@ -45,7 +45,7 @@ function rw.urlmat:CacheMaterial(url)
 					file.Write(path, body);
 					cache[urlCRC] = Material("../data/"..path, "noclamp smooth");
 
-					plugin.Call("OnURLMatLoaded", url, cache[urlCRC]);
+					hook.Run("OnURLMatLoaded", url, cache[urlCRC]);
 				end);
 			end;
 		end;

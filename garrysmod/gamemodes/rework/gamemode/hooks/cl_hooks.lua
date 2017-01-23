@@ -20,7 +20,7 @@ function GM:InitPostEntity()
  	for k, v in ipairs(player.GetAll()) do
  		local model = v:GetModel();
 
- 		plugin.Call("PlayerModelChanged", v, model, model);
+ 		hook.Run("PlayerModelChanged", v, model, model);
  	end;
 end;
 
@@ -38,7 +38,7 @@ do
 			if (scrW != newW or scrH != newH) then
 				rw.core:Print("Resolution changed from "..scrW.."x"..scrH.." to "..newW.."x"..newH..".");
 
-				plugin.Call("OnResolutionChanged", newW, newH, scrW, scrH);
+				hook.Run("OnResolutionChanged", newW, newH, scrW, scrH);
 
 				scrW, scrH = newW, newH;
 			end;
@@ -85,7 +85,7 @@ function GM:HUDPaint()
 			draw.RoundedBox(0, 0, 0, ScrW(), ScrH(), Color(255, 255, 255, alpha));
 		end;
 
-		if (!plugin.Call("RWHUDPaint") and rw.settings:GetBool("DrawBars")) then
+		if (!hook.Run("RWHUDPaint") and rw.settings:GetBool("DrawBars")) then
 			rw.bars:DrawTopBars();
 
 			self.BaseClass:HUDPaint();
@@ -104,7 +104,7 @@ function GM:HUDDrawTargetID()
 			local distance = rw.client:GetPos():Distance(trace.HitPos);
 
 			if (ent:IsPlayer()) then
-				plugin.Call("DrawPlayerTargetID", ent, x, y, distance);
+				hook.Run("DrawPlayerTargetID", ent, x, y, distance);
 			elseif (ent.DrawTargetID) then
 				ent:DrawTargetID(x, y, distance);
 			end;

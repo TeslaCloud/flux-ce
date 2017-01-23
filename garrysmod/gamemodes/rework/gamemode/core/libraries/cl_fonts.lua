@@ -168,5 +168,5 @@ function rw.fonts:CreateFonts()
 	});
 
 	theme.Call("CreateFonts", self);
-	plugin.Call("CreateFonts", self);
+	hook.Run("CreateFonts", self);
 end;
