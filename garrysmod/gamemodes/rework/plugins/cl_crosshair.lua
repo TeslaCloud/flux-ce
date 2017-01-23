@@ -21,6 +21,8 @@ CreateClientConVar("cl_crosshair_color_a", "255");
 CreateClientConVar("cl_crosshair_fadein", "0.5");
 CreateClientConVar("cl_crosshair_fadeshow", "1.5");
 
+rw.hint:Add("RunCrosshair", "Crosshair will change it's size depending on your movement speed\nand distance between you and your view target.");
+
 local startTime 	= CurTime();
 local curSize 		= nil;
 local _alpha 		= nil;

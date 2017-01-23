@@ -208,14 +208,16 @@ do
 	local rwBars = {};
 
 	function rwBars:LazyTick()
-		rw.bars:Position();
+		if (IsValid(rw.client)) then
+			rw.bars:Position();
 
-		for k, v in pairs(stored) do
-			if (v.callback) then
-				rw.bars:SetValue(v.uniqueID, v.callback(stored[k]));
+			for k, v in pairs(stored) do
+				if (v.callback) then
+					rw.bars:SetValue(v.uniqueID, v.callback(stored[k]));
+				end;
+
+				hook.Run("AdjustBarInfo", k, stored[k]);
 			end;
-
-			hook.Run("AdjustBarInfo", k, stored[k]);
 		end;
 	end;
 

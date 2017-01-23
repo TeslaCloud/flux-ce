@@ -32,6 +32,8 @@ end);
 netstream.Hook("reNotification", function(sMessage)
 	sMessage = rw.lang:TranslateText(sMessage);
 
+	rw.notification:Add(sMessage, 8, Color(175, 175, 235));
+
 	chat.AddText(Color(255, 255, 255), sMessage);
 end);
 
