@@ -46,7 +46,9 @@ end;
 function rw.notification:Reposition(offset)
 	if (type(offset) != "number") then return; end;
 
-	if (lastReposition + 0.3 < CurTime()) then
+	local curTime = CurTime();
+
+	if (lastReposition + 0.3 < curTime) then
 		for k, v in ipairs(display) do
 			if (v and IsValid(v.panel)) then
 				local x, y = v.panel:GetPos();
@@ -55,9 +57,9 @@ function rw.notification:Reposition(offset)
 			end;
 		end;
 
-		lastReposition = CurTime();
+		lastReposition = curTime;
 	else
-		timer.Simple(0.3 - (CurTime() - lastReposition), function()
+		timer.Simple(0.3 - (curTime - lastReposition), function()
 			self:Reposition();
 		end);
 	end;

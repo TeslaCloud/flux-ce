@@ -406,12 +406,12 @@ do
 		local curTime = CurTime();
 
 		if ((player.rwNextThink or 0) <= curTime) then
-			hook.Run("PlayerThink", player, curTime);
+			hook.Call("PlayerThink", self, player, curTime);
 			player.rwNextThink = curTime + thinkDelay;
 		end;
 
 		if ((player.rwNextSecond or 0) <= curTime) then
-			hook.Run("PlayerOneSecond", player, curTime);
+			hook.Call("PlayerOneSecond", self, player, curTime);
 			player.rwNextSecond = curTime + secondDelay;
 		end;
 	end;

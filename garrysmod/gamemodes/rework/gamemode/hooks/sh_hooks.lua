@@ -15,8 +15,8 @@ do
 	function GM:CalcMainActivity(player, velocity)
 		player:SetPoseParameter("move_yaw", normalizeAngle(vectorAngle(velocity)[2] - player:EyeAngles()[2]))
 
-		player.CalcIdeal = ACT_MP_STAND_IDLE
-		player.CalcSeqOverride = -1
+		player.CalcIdeal = ACT_MP_STAND_IDLE;
+		player.CalcSeqOverride = -1;
 
 		local baseClass = self.BaseClass;
 
@@ -90,7 +90,7 @@ do
 				local anim = animations[holdType][act];
 
 				if (type(anim) == "table") then
-					if (hook.Run("ModelWeaponRaised", player, model)) then
+					if (hook.Call("ModelWeaponRaised", self, player, model)) then
 						anim = anim[2];
 					else
 						anim = anim[1];

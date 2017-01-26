@@ -329,23 +329,25 @@ end;
 do
 	plugin.OldHookCall = plugin.OldHookCall or hook.Call;
 
-	function hook.Call(name, bGM, ...)
+	function hook.Call(name, gm, ...)
 		if (hooksCache[name]) then
 			for k, v in ipairs(hooksCache[name]) do
-				local result = {pcall(v[1], v[2], ...)};
-				local success = result[1];
-				table.remove(result, 1);
+				local success, a, b, c, d, e, f = pcall(v[1], v[2], ...);
 
 				if (!success) then
 					ErrorNoHalt("[Rework:"..(v.id or v[2]:GetName()).."] The "..name.." hook has failed to run!\n");
-					ErrorNoHalt(unpack(result), "\n");
-				elseif (result[1] != nil) then
-					return unpack(result);
+					ErrorNoHalt(tostring(a), "\n");
+
+					if (name != "OnHookError") then
+						hook.Call("OnHookError", gm, name, v);
+					end;
+				elseif (a != nil) then
+					return a, b, c, d, e, f;
 				end;
 			end;
 		end;
 
-		return plugin.OldHookCall(name, bGM, ...);
+		return plugin.OldHookCall(name, gm, ...);
 	end;
 
 	function plugin.Call(name, ...)
