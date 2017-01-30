@@ -28,7 +28,7 @@ do
 end;
 
 function rw.fonts:CreateFont(name, fontData)
-	if (name == nil or typeof(fontData) != "table") then return; end;
+	if (name == nil or !istable(fontData)) then return; end;
 	if (stored[name]) then return; end;
 
 	-- Force UTF-8 range by default.

@@ -4,7 +4,7 @@
 	the framework is publicly released.
 --]]
 
-// Create the default theme that other themes will derive from.
+-- Create the default theme that other themes will derive from.
 local THEME = Theme("Factory");
 THEME.author = "TeslaCloud Studios"
 THEME.uniqueID = "factory";
@@ -21,6 +21,21 @@ function THEME:OnLoaded()
 end;
 
 function THEME:CreateMainMenu(panel)
+end;
+
+function THEME:PaintFrame(panel, width, height)
+	surface.SetDrawColor(panel:GetAccentColor());
+	surface.DrawOutlinedRect(0, 0, width, height);
+	surface.DrawRect(1, 1, width - 2, 20);
+
+	surface.SetDrawColor(panel.m_MainColor);
+	surface.DrawRect(1, 20, width - 2, height - 21);
+
+	local title = panel:GetTitle();
+
+	if (title) then
+		draw.SimpleText(title, "rw_frame_title", 6, 4, panel:GetTextColor());
+	end;
 end;
 
 function THEME:DrawBarBackground(barInfo)

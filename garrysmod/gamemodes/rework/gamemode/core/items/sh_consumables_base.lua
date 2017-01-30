@@ -4,12 +4,6 @@
 	the framework is publicly released.
 --]]
 
-Class("CConsumablesBase", CItem);
-
-function CConsumablesBase:CConsumablesBase(id, base)
-	self.useText = "Consume";
-end;
-
-function item.CreateConsumable(...)
-	return CConsumablesBase(...);
-end;
+ITEM.isBase = true;
+ITEM.Name = "Consumables Base";
+ITEM.Description = "An item that can be consumed.";

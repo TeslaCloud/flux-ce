@@ -21,7 +21,7 @@ function theme.CreatePanel(panelID, parent, ...)
 end;
 
 function theme.Hook(id, ...)
-	if (typeof(id) == "string" and theme.activeTheme and theme.activeTheme[id]) then
+	if (isstring(id) and theme.activeTheme and theme.activeTheme[id]) then
 		local result = {pcall(theme.activeTheme[id], theme.activeTheme, ...)};
 		local success = result[1];
 		table.remove(result, 1);

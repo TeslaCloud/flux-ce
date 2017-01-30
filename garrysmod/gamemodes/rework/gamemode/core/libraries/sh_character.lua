@@ -15,17 +15,17 @@ local stored = character.stored or {};
 character.stored = stored;
 
 function character.Create(player, data)
-	if (typeof(data.name) != "string" or (data.name:utf8len() < config.Get("character_min_name_len") 
+	if (!isstring(data.name) or (data.name:utf8len() < config.Get("character_min_name_len") 
 		or data.name:utf8len() > config.Get("character_max_name_len"))) then
 		return CHAR_ERR_NAME;
 	end;
 
-	if (typeof(data.physDesc) != "string" or (data.physDesc:utf8len() < config.Get("character_min_desc_len") 
+	if (!isstring(data.physDesc) or (data.physDesc:utf8len() < config.Get("character_min_desc_len") 
 		or data.physDesc:utf8len() > config.Get("character_max_desc_len"))) then
 		return CHAR_ERR_DESC;
 	end;
 
-	if (typeof(data.gender) != "number" or (data.gender < CHAR_GENDER_MALE or data.gender > CHAR_GENDER_NONE)) then
+	if (!isnumber(data.gender) or (data.gender < CHAR_GENDER_MALE or data.gender > CHAR_GENDER_NONE)) then
 		return CHAR_ERR_GENDER;
 	end;
 
@@ -97,7 +97,7 @@ if (SERVER) then
 	end;
 
 	function character.Save(player, index)
-		if (!IsValid(player) or typeof(index) != "number" or hook.Run("PreSaveCharacter", player, index) == false) then return; end;
+		if (!IsValid(player) or !isnumber(index) or hook.Run("PreSaveCharacter", player, index) == false) then return; end;
 
 		local toSave = character.ToSaveable(player, stored[player:SteamID()][index]);
 			rw.db:EasyWrite("rw_characters", {"uniqueID", index}, toSave);

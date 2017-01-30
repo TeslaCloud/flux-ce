@@ -5,7 +5,7 @@
 --]]
 
 if (!item) then
-	rw.core:Include("sh_item.lua");
+	util.Include("sh_item.lua");
 end;
 
 library.New("inventory", _G);

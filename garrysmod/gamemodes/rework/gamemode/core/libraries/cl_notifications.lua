@@ -44,7 +44,7 @@ function rw.notification:Add(text, lifetime, textColor, backColor)
 end;
 
 function rw.notification:Reposition(offset)
-	if (type(offset) != "number") then return; end;
+	if (!isnumber(offset)) then return; end;
 
 	local curTime = CurTime();
 

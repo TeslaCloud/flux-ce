@@ -4,17 +4,19 @@
 	the framework is publicly released.
 --]]
 
-Class("CEquipmentBase", CItem)
+ITEM.isBase = true;
+ITEM.Name = "Equipment Base";
+ITEM.Description = "This item can be equipped.";
 
-function CEquipmentBase:OnEquipped(player)
-
-end;
-
-function CEquipmentBase:OnUnEquipped(player)
+function ITEM:OnEquipped(player)
 
 end;
 
-function CEquipmentBase:Equip(player, bShouldEquip)
+function ITEM:OnUnEquipped(player)
+
+end;
+
+function ITEM:Equip(player, bShouldEquip)
 	if (bShouldEquip) then
 		self:OnEquipped(player);
 	else

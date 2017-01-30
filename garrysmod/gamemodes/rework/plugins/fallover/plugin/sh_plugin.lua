@@ -4,8 +4,8 @@
 	the framework is publicly released.
 --]]
 
-rw.core:Include("sv_plugin.lua");
-rw.core:Include("sv_hooks.lua");
+util.Include("sv_plugin.lua");
+util.Include("sv_hooks.lua");
 
 function PLUGIN:PlayerSetupDataTables(player)
 	player:DTVar("Int", INT_RAGDOLL_STATE, "RagdollState");

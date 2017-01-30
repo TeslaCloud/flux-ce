@@ -24,20 +24,7 @@ function PANEL:Init()
 end;
 
 function PANEL:Paint(w, h)
-	if (!theme.Hook("PaintFrame", self, w, h)) then
-		surface.SetDrawColor(self:GetAccentColor());
-		surface.DrawOutlinedRect(0, 0, w, h);
-		surface.DrawRect(1, 1, w - 2, 20);
-
-		surface.SetDrawColor(self.m_MainColor);
-		surface.DrawRect(1, 20, w - 2, h - 21);
-
-		local title = self:GetTitle();
-
-		if (title) then
-			draw.SimpleText(title, "rw_frame_title", 6, 4, self:GetTextColor());
-		end;
-	end;
+	return theme.Hook("PaintFrame", self, w, h);
 end;
 
 function PANEL:Think()
@@ -46,6 +33,8 @@ function PANEL:Think()
 	if (IsValid(self.btnClose)) then
 		self.btnClose:SetPos(w - 20, 0);
 	end;
+
+	theme.Hook("FrameThink");
 end;
 
-vgui.Register("reFrame", PANEL, "rwBasePanel");
+vgui.Register("rwFrame", PANEL, "rwBasePanel");

@@ -379,12 +379,31 @@ function GM:PostCharacterLoaded(player, character)
 end;
 
 function GM:OneSecond()
+	local curTime = CurTime();
+	local sysTime = SysTime();
+
 	if (!rw.nextSaveData) then
-		rw.nextSaveData = CurTime() + 10;
-	elseif (rw.nextSaveData <= CurTime()) then
-		rw.core:DevPrint("Saving Rework data...");
-		hook.Run("RWSaveData");
-		rw.nextSaveData = CurTime() + config.Get("data_save_interval");
+		rw.nextSaveData = curTime + 10;
+	elseif (rw.nextSaveData <= curTime) then
+		if (hook.Run("RWShouldSaveData") != false) then
+			rw.core:DevPrint("Saving Rework data...");
+			hook.Run("RWSaveData");
+		end;
+
+		rw.nextSaveData = curTime + config.Get("data_save_interval");
+	end;
+
+	if (!rw.NextPlayerCountCheck) then
+		rw.NextPlayerCountCheck = sysTime + 1800;
+	elseif (rw.NextPlayerCountCheck <= sysTime) then
+		rw.NextPlayerCountCheck = sysTime + 1800;
+
+		if (#player.GetAll() == 0) then
+			if (hook.Run("ShouldServerAutoRestart") != false) then
+				rw.core:DevPrint("Server is empty, restarting...");
+				RunConsoleCommand("changelevel", game.GetMap());
+			end;
+		end;
 	end;
 end;
 

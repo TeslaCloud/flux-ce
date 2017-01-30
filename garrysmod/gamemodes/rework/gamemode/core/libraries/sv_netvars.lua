@@ -18,7 +18,7 @@ local entityMeta = FindMetaTable("Entity");
 local playerMeta = FindMetaTable("Player");
 
 local function IsBadType(key, val)
-	if (type(val) == "function") then
+	if (isfunction(val)) then
 		ErrorNoHalt("[Rework] Cannot store functions as NetVars! ("..key..")\n");
 		return true;
 	end;
@@ -62,7 +62,7 @@ end;
 
 function entityMeta:SetNetVar(key, value, send)
 	if (IsBadType(key, value)) then return; end;
-	if (typeof(value) != "table" and self:GetNetVar(key) == value) then return; end;
+	if (!istable(value) and self:GetNetVar(key) == value) then return; end;
 
 	stored[self] = stored[self] or {};
 	stored[self][key] = value;

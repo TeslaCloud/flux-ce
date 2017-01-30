@@ -135,7 +135,7 @@ end;
 vgui.Register("reMainMenu", PANEL, "EditablePanel");
 
 concommand.Add("rwFactoryTest", function()
-	local frame = vgui.Create("reFrame");
+	local frame = vgui.Create("rwFrame");
 	frame:SetSize(600, 400);
 	frame:SetPos(100, 100);
 

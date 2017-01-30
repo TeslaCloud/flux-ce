@@ -10,7 +10,7 @@ library.stored = library.stored or {};
 
 -- A function to print a prefixed message.
 function rw.core:Print(strMessage)
-	if (typeof(strMessage) != "table") then
+	if (!istable(strMessage)) then
 		Msg("[Rework] ");
 		print(strMessage);
 	else
@@ -47,67 +47,9 @@ function file.Write(strFileName, strContent)
 	return rw.oldFileWrite(strFileName, strContent);
 end;
 
--- A function to include a file based on it's prefix.
-function rw.core:Include(strFile)
-	if (SERVER) then
-		if (strFile:find("sh_") or strFile:find("shared.lua")) then
-			AddCSLuaFile(strFile);
-			include(strFile);
-		elseif (strFile:find("cl_")) then
-			AddCSLuaFile(strFile);
-		elseif (strFile:find("sv_") or strFile:find("init.lua")) then
-			include(strFile);
-		end;
-	else
-		if (strFile:find("sh_") or strFile:find("shared.lua") 
-		or strFile:find("cl_")) then
-			include(strFile);
-		end;
-	end;
-end;
-
--- A function to include all files in a directory.
-function rw.core:IncludeDirectory(strDirectory, strBase, bIsRecursive)
-	if (strBase) then
-		if (typeof(strBase) == "boolean") then
-			strBase = "rework/gamemode/";
-		elseif (!strBase:EndsWith("/")) then 
-			strBase = strBase.."/";
-		end;
-
-		strDirectory = strBase..strDirectory;
-	end;
-
-	if (!strDirectory:EndsWith("/")) then
-		strDirectory = strDirectory.."/";
-	end;
-
-	if (bIsRecursive) then
-		local files, folders = _file.Find(strDirectory.."*", "LUA", "namedesc");
-
-		-- First include the files.
-		for k, v in ipairs(files) do
-			if (v:GetExtensionFromFilename() == "lua") then
-				self:Include(strDirectory..v);
-			end;
-		end;
-
-		-- Then include all directories.
-		for k, v in ipairs(folders) do
-			self:IncludeDirectory(strDirectory..v, bIsRecursive);
-		end;
-	else
-		local files, _ = _file.Find(strDirectory.."*.lua", "LUA", "namedesc");
-
-		for k, v in ipairs(files) do
-			self:Include(strDirectory..v);
-		end;
-	end;
-end;
-
 -- A function to create a new library.
 function library.New(strName, tParent)
-	if (typeof(tParent) == "table") then
+	if (istable(tParent)) then
 		tParent[strName] = tParent[strName] or {};
 		return tParent[strName];
 	end;
@@ -155,7 +97,7 @@ function library.NewClass(strName, tParent, CExtends)
 		end;
 	}
 
-	if (typeof(CExtends) == "table") then
+	if (istable(CExtends)) then
 		class.__index = CExtends;
 	end;
 
@@ -182,7 +124,7 @@ function rw.core:GetSchemaFolder()
 end;
 
 function rw.core:Serialize(tTable)
-	if (typeof(tTable) == "table") then
+	if (istable(tTable)) then
 		local bSuccess, value = pcall(pon.encode, tTable);
 
 		if (!bSuccess) then
@@ -200,21 +142,21 @@ function rw.core:Serialize(tTable)
 end;
 
 function rw.core:Deserialize(strData)
-	if (typeof(strData) != "string") then
+	if (isstring(strData)) then
+		local bSuccess, value = pcall(pon.decode, strData)
+
+		if (!bSuccess) then
+			ErrorNoHalt("[Rework] Failed to deserialize a string!\n");
+			ErrorNoHalt(value.."\n");
+			debug.Trace();
+			return {};
+		end;
+
+		return value;
+	else
 		print("[Rework] You must deserialize a string, not "..typeof(strData).."!");
 		return {};
 	end;
-
-	local bSuccess, value = pcall(pon.decode, strData)
-
-	if (!bSuccess) then
-		ErrorNoHalt("[Rework] Failed to deserialize a string!\n");
-		ErrorNoHalt(value.."\n");
-		debug.Trace();
-		return {};
-	end;
-
-	return value;
 end;
 
 function rw.core:IncludeSchema()

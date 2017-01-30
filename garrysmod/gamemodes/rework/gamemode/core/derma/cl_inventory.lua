@@ -11,7 +11,7 @@ PANEL.instanceIDs = {};
 PANEL.isHovered = false;
 
 function PANEL:SetItem(instanceID)
-	if (typeof(instanceID) == "table") then
+	if (istable(instanceID)) then
 		if (#instanceID > 1) then
 			self:SetItemMulti(instanceID);
 			return;
@@ -20,7 +20,7 @@ function PANEL:SetItem(instanceID)
 		end;
 	end;
 
-	if (typeof(instanceID) == "number") then
+	if (isnumber(instanceID)) then
 		self.itemData = item.FindInstanceByID(instanceID);
 
 		if (self.itemData) then
@@ -286,4 +286,4 @@ function PANEL:Rebuild()
 	end, {});
 end;
 
-vgui.Register("reInventory", PANEL, "reFrame");
+vgui.Register("reInventory", PANEL, "rwFrame");

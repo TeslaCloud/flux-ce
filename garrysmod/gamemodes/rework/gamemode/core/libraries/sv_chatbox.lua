@@ -43,7 +43,7 @@ end;
 
 function chatbox.CanHear(listener, position, radius)
 	if (listener:HasInitialized()) then
-		if (typeof(radius) != "number") then return false; end;
+		if (!isnumber(radius)) then return false; end;
 		if (radius == 0) then return true; end;
 		if (radius < 0) then return false; end;
 
@@ -250,7 +250,7 @@ function chatbox.AddText(listeners, ...)
 	local curColor = Color(255, 255, 255);
 
 	for k, v in pairs(args) do
-		if (typeof(v) == "string") then
+		if (isstring(v)) then
 			if (colored) then
 				message.text = message.text.."[color="..curColor.r..","..curColor.g..","..curColor.b..","..curColor.a.."]";
 			end;
@@ -269,10 +269,10 @@ function chatbox.AddText(listeners, ...)
 
 			colored = true;
 			curColor = v;
-		elseif (typeof(v) == "player") then
+		elseif (type(v) == "Player") then
 			message.text = message.text..v:Name();
 			table.insert(message.players, v);
-		elseif (typeof(v) == "table") then
+		elseif (istable(v)) then
 			table.Merge(message, v);
 		end;
 	end;

@@ -11,8 +11,8 @@ GM.Website 		= "http://teslacloud.net/";
 GM.Email 		= "support@teslacloud.net";
 
 -- Define RW-Specific fields.
-GM.Version 		= "0.0.13";
-GM.Build 		= "1296";
+GM.Version 		= "0.1.0-indev";
+GM.Build 		= "1314";
 GM.Description 	= "A free roleplay gamemode framework."
 
 -- It would be very nice of you to leave below values as they are if you're using official schemas.
@@ -71,7 +71,7 @@ end;
 function GM:GetGameDescription()
 	local nameOverride = self.NameOverride;
 
-	return (type(nameOverride) == "string" and nameOverride) or self.Prefix..rw.GetSchemaName();
+	return (isstring(nameOverride) and nameOverride) or self.Prefix..rw.GetSchemaName();
 end;
 
 do
@@ -106,33 +106,33 @@ include("core/sh_enums.lua");
 include("core/sh_util.lua");
 include("core/sh_core.lua");
 
-rw.core:Include("core/cl_core.lua");
-rw.core:Include("core/sv_core.lua");
+util.Include("core/cl_core.lua");
+util.Include("core/sv_core.lua");
 
 -- This way we put things we want loaded BEFORE anything else in here, like plugin, config, etc.
-rw.core:IncludeDirectory("core/libraries/required", true);
+util.IncludeDirectory("core/libraries/required", true);
 
 -- So that we don't get duplicates on refresh.
 plugin.ClearCache();
 
-rw.core:IncludeDirectory("core/config", true);
-rw.core:IncludeDirectory("core/libraries", true);
-rw.core:IncludeDirectory("core/libraries/classes", true);
-rw.core:IncludeDirectory("core/libraries/meta", true);
-rw.core:IncludeDirectory("core/languages", true);
-rw.core:IncludeDirectory("core/groups", true);
-rw.core:IncludeDirectory("core/commands", true);
-rw.core:IncludeDirectory("core/derma", true);
-rw.core:IncludeDirectory("core/items", true);
+util.IncludeDirectory("core/config", true);
+util.IncludeDirectory("core/libraries", true);
+util.IncludeDirectory("core/libraries/classes", true);
+util.IncludeDirectory("core/libraries/meta", true);
+util.IncludeDirectory("core/languages", true);
+util.IncludeDirectory("core/groups", true);
+util.IncludeDirectory("core/commands", true);
+util.IncludeDirectory("core/derma", true);
+item.IncludeItems("rework/gamemode/core/items");
 
 if (theme or SERVER) then
 	-- Theme factory is needed for any other themes that may be in the themes folder.
-	rw.core:Include("core/themes/cl_theme_factory.lua");
+	util.Include("core/themes/cl_theme_factory.lua");
 
-	rw.core:IncludeDirectory("core/themes", true);
+	util.IncludeDirectory("core/themes", true);
 end;
 
-rw.core:IncludeDirectory("hooks", true);
+util.IncludeDirectory("hooks", true);
 rw.core:IncludePlugins("rework/plugins");
 
 hook.Run("RWPluginsLoaded");

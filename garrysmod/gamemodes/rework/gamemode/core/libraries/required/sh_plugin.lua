@@ -80,8 +80,8 @@ function Plugin:SetData(data)
 	table.Merge(self, data);
 end;
 
-function Plugin:GlobalAlias(alias)
-	if (typeof(alias) == "string") then
+function Plugin:SetAlias(alias)
+	if (isstring(alias)) then
 		_G[alias] = self;
 	end;
 end;
@@ -270,10 +270,10 @@ function plugin.Include(folder)
 	end;
 
 	if (ext != "lua") then
-		rw.core:Include(data.pluginFolder.."/"..data.pluginMain);
+		util.Include(data.pluginFolder.."/"..data.pluginMain);
 	else
 		if (file.Exists(folder, "LUA")) then
-			rw.core:Include(folder);
+			util.Include(folder);
 		end;
 	end;
 
@@ -292,7 +292,7 @@ function plugin.IncludeSchema()
 
 	Schema = Plugin(schemaInfo.name, schemaInfo);
 
-	rw.core:Include(schemaFolder.."/sh_schema.lua");
+	util.Include(schemaFolder.."/sh_schema.lua");
 
 	plugin.IncludeFolders(schemaFolder);
 	plugin.IncludePlugins(rw.core:GetSchemaFolder().."/plugins");
@@ -322,7 +322,11 @@ end;
 
 function plugin.IncludeFolders(folder)
 	for k, v in ipairs(extras) do
-		rw.core:IncludeDirectory(folder.."/"..v);
+		if (v == "items") then
+			item.IncludeItems(folder.."/items/");
+		else
+			util.IncludeDirectory(folder.."/"..v);
+		end;
 	end;
 end;
 

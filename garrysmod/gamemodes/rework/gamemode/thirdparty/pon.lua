@@ -102,7 +102,7 @@ do
 				output[ #output + 1 ] = '~';
 			end
 			for k,v in next, tbl do
-				if( type( k ) ~= 'number' or k < 1 or k > nSize )then
+				if( !isnumber(k) or k < 1 or k > nSize )then
 					local tk, tv = type( k ), type( v );
 
 					-- THE KEY
@@ -365,7 +365,7 @@ do
 	end
 
 	function pon.decode( data )
-		if (type(data) != "string") then
+		if (!isstring(data)) then
 			ErrorNoHalt("[pON] You must deserialize a string, not "..type(data).."!\n");
 			return {};
 		end;

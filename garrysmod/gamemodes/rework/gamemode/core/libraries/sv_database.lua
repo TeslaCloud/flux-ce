@@ -493,7 +493,7 @@ end;
 
 -- A function to add a query to the queue.
 function rw.db:Queue(queryString, callback)
-	if (type(queryString) == "string") then
+	if (isstring(queryString)) then
 		QueueTable[#QueueTable + 1] = {queryString, callback};
 	end;
 end;
@@ -614,7 +614,7 @@ function rw.db:IsConnected()
 end;
 
 function rw.db:EasyWrite(tableName, where, data)
-	if (!data or typeof(data) != "table") then
+	if (!data or !istable(data)) then
 		ErrorNoHalt("[Rework] Easy MySQL error! Data has unexpected value type (table expected, got "..typeof(data)..")\n");
 		return;
 	end;
@@ -625,7 +625,7 @@ function rw.db:EasyWrite(tableName, where, data)
 	end;
 
 	local query = self:Select(tableName);
-		if (typeof(where[1]) == "table") then
+		if (istable(where[1])) then
 			for k, v in pairs(where) do
 				query:Where(v[1], v[2]);
 			end;
@@ -634,7 +634,7 @@ function rw.db:EasyWrite(tableName, where, data)
 		end;
 
 		query:Callback(function(result, status, lastID)
-			if (type(result) == "table" and #result > 0) then
+			if (istable(result) and #result > 0) then
 				local updateObj = self:Update(tableName);
 
 					for k, v in pairs(data) do
@@ -655,7 +655,7 @@ function rw.db:EasyWrite(tableName, where, data)
 					end;
 
 					insertObj:Callback(function(result)
-						if (typeof(where[1]) != "table") then
+						if (!istable(where[1])) then
 							rw.core:DevPrint("Easy MySQL inserted data into '"..tableName.."' WHERE "..where[1].." = "..where[2]..".");
 						else
 							local msg = "Easy MySQL inserted data into '"..tableName.."' WHERE ";
@@ -688,7 +688,7 @@ function rw.db:EasyRead(tableName, where, callback)
 	end;
 
 	local query = self:Select(tableName);
-		if (typeof(where[1]) == "table") then
+		if (istable(where[1])) then
 			for k, v in pairs(where) do
 				query:Where(v[1], v[2]);
 			end;

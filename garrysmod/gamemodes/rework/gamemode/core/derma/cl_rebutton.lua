@@ -16,7 +16,7 @@ PANEL.m_Icon = false;
 PANEL.m_Autopos = true;
 
 function PANEL:Paint(w, h)
-	if (!theme.Hook("DrawButton", self)) then
+	if (!theme.Hook("PaintButton", self, w, h)) then
 		if (self.m_bDrawBackground) then
 			surface.SetDrawColor(self.m_AccentColor);
 			surface.DrawRect(0, 0, w, h);
@@ -56,7 +56,7 @@ function PANEL:Paint(w, h)
 end;
 
 function PANEL:SetTextColor(newColor, g, b, a)
-	if (typeof(newColor) == "number") then
+	if (isnumber(newColor)) then
 		self.m_TextColor = Color(newColor or 255, g or 255, b or 255, a or 255);
 	else
 		self.m_TextColor = newColor or Color(255, 255, 255);

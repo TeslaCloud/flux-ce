@@ -49,6 +49,7 @@ function item.Register(id, data)
 	data.Color = data.Color or nil;
 	data.Cost = data.Cost or 0;
 	data.SpecialColor = data.SpecialColor or nil;
+	data.isBase = data.isBase or false;
 	data.instanceID = ITEM_TEMPLATE; -- -1 (or ITEM_TEMPLATE) means no instance.
 	data.data = data.data or {};
 	data.customButtons = data.customButtons or {};
@@ -60,10 +61,24 @@ function item.Register(id, data)
 	data.takeIcon = data.takeIcon;
 	data.cancelIcon = data.cancelIcon;
 
-	if (data.Base and stored[data.Base]) then
-		local newTable = table.Copy(stored[data.Base]);
-		table.Merge(newTable, data);
-		data = newTable;
+	if (isstring(data.Base)) then
+		local baseTable = stored[data.Base];
+
+		if (baseTable) then
+			local newTable = table.Copy(baseTable);
+			local dataTable = table.Copy(data);
+
+			-- Prevents table.Merge from stack overflowing.
+			newTable.__index = nil;
+			dataTable.__index = nil;
+
+			newTable.isBase = dataTable.isBase or false;
+			table.Merge(newTable, dataTable);
+
+			-- Restore base class index so that we get CItem's functions.
+			dataTable.__index = data.__index;
+			data = dataTable;
+		end;
 	end;
 
 	stored[id] = data;
@@ -87,6 +102,7 @@ function item.ToSave(itemTable)
 		Color = itemTable.Color,
 		Cost = itemTable.Cost,
 		SpecialColor = itemTable.SpecialColor,
+		isBase = itemTable.isBase,
 		instanceID = itemTable.instanceID,
 		data = itemTable.data,
 		actionSounds = itemTable.actionSounds,
@@ -118,7 +134,7 @@ end;
 -- Finds instance by it's ID.
 function item.FindInstanceByID(instanceID)
 	for k, v in pairs(instances) do
-		if (type(v) == "table") then
+		if (istable(v)) then
 			for k2, v2 in pairs(v) do
 				if (k2 == instanceID) then
 					return v2;
@@ -142,7 +158,7 @@ function item.FindByInstanceID(instanceID)
 end;
 
 function item.Find(name)
-	if (typeof(name) == "number") then
+	if (isnumber(name)) then
 		return item.FindInstanceByID(name);
 	end;
 
@@ -181,7 +197,7 @@ function item.New(uniqueID, tData, forcedID)
 		instances[uniqueID] = instances[uniqueID] or {};
 		instances[uniqueID][itemID] = table.Copy(itemTable);
 
-		if (typeof(tData) == "table") then
+		if (istable(tData)) then
 			table.Merge(instances[uniqueID][itemID], tData);
 		end;
 
@@ -197,7 +213,7 @@ function item.New(uniqueID, tData, forcedID)
 end;
 
 function item.Remove(instanceID)
-	local itemTable = (typeof(instanceID) == "table" and instanceID) or item.FindInstanceByID(instanceID);
+	local itemTable = (istable(instanceID) and instanceID) or item.FindInstanceByID(instanceID);
 
 	if (itemTable and item.IsInstance(itemTable.instanceID)) then
 		if (IsValid(itemTable.entity)) then
@@ -215,9 +231,40 @@ function item.Remove(instanceID)
 end;
 
 function item.IsInstance(itemTable)
-	if (typeof(itemTable) != "table") then return; end;
+	if (!istable(itemTable)) then return; end;
 
 	return (itemTable.instanceID or ITEM_TEMPLATE) > ITEM_INVALID;
+end;
+
+function item.Include(fileName)
+	if (fileName:utf8len() < 7) then return; end;
+
+	local uniqueID = (string.GetFileFromFilename(fileName) or ""):Replace(".lua", "");
+
+	if (uniqueID:StartWith("cl_") or uniqueID:StartWith("sh_") or uniqueID:StartWith("sv_")) then
+		uniqueID = uniqueID:utf8sub(4, uniqueID:utf8len());
+	end;
+
+	if (uniqueID == "") then return; end;
+
+	ITEM = Item(uniqueID);
+
+	util.Include(fileName);
+
+	ITEM:Register();
+	ITEM = nil;
+end;
+
+function item.IncludeItems(directory)
+	if (!directory:EndsWith("/")) then
+		directory = directory.."/";
+	end;
+
+	local files, dirs = _file.Find(directory.."*", "LUA", "namedesc");
+
+	for k, v in ipairs(files) do
+		item.Include(directory..v);
+	end;
 end;
 
 if (SERVER) then
@@ -272,9 +319,9 @@ if (SERVER) then
 				toSave[k] = {};
 			end;
 
-			if (typeof(v) == "table") then
+			if (istable(v)) then
 				for k2, v2 in pairs(v) do
-					if (typeof(v2) == "table") then
+					if (istable(v2)) then
 						toSave[k][k2] = item.ToSave(v2);
 					end;
 				end;
@@ -351,7 +398,7 @@ if (SERVER) then
 	end;
 
 	function item.Spawn(position, angles, itemTable)
-		if (!position or typeof(itemTable) != "table") then 
+		if (!position or !istable(itemTable)) then 
 			ErrorNoHalt("[Rework:Item] No position or item table is not a table!\n");
 			return;
 		end;

@@ -288,7 +288,7 @@ function chatbox.ParseBBCodes(line, rich)
 	end;
 
 	for k, v in ipairs(line) do
-		if (typeof(v) == "string") then
+		if (isstring(v)) then
 			local whole = v;
 			local length = whole:len();
 			local hits = string.FindAll(v, "%b[]");
@@ -338,7 +338,7 @@ function chatbox.ParseBBCodes(line, rich)
 
 							local result, newTextValue = chatbox.GetBBCode(code)(eqWhat, textValue);
 
-							if (typeof(newTextValue) == "string") then
+							if (isstring(newTextValue)) then
 								textValue = newTextValue;
 							end;
 
@@ -425,7 +425,7 @@ function chatbox.WrapText(msgData, maxWidth, initWidth)
 	local dashWidth = util.GetTextSize("-", "reChatFont");
 
 	for key, val in ipairs(parsed) do
-		if (typeof(val) == "string") then
+		if (isstring(val)) then
 			local exploded = string.Explode(" ", val);
 
 			for k, v in ipairs(exploded) do
@@ -624,7 +624,7 @@ function chatbox.ParseText(messageData)
 				bIsNew = false;
 			end;
 
-			if (typeof(v) == "string") then
+			if (isstring(v)) then
 				if (v == "std::endl") then
 					curLine = curLine + 1;
 
@@ -732,12 +732,12 @@ function PANEL:Paint(w, h)
 	for k, v in ipairs(chatbox.display) do
 		if ((os.time() - v._METADATA.time) < 8 or self.isOpen) then
 			for k2, v2 in pairs(v) do
-				if (typeof(v2) == "table") then
+				if (istable(v2)) then
 					if (k2 != "_METADATA") then
 						v2.a = chatbox.curAlpha or v2.a or 255;
 						curColor = v2;
 					end;
-				elseif (typeof(v2) == "string") then
+				elseif (isnumber(v2)) then
 					if (IsTime(v2)) then
 						local time = os.date("%H:%M", SendTime(v2));
 
@@ -771,10 +771,10 @@ function PANEL:Paint(w, h)
 						local width = util.GetTextSize(v2, "reChatFont");
 						offX = offX + width;
 					end;
-				elseif (typeof(v2) == "number") then
+				elseif (isnumber(v2)) then
 					offY = v2;
 					offX = 4;
-				elseif (typeof(v2) == "player") then
+				elseif (type(v2) == "Player") then
 					curSender = v2;
 				else
 					print(v2);
@@ -952,7 +952,7 @@ function PANEL:OnKeyCodeTyped(code)
 	else
 		local text = hook.Run("ChatBoxKeyCodeTyped", code, self:GetValue());
 
-		if (text and type(text) == "string") then
+		if (isstring(text)) then
 			self:SetValue(text);
 		end;
 	end;

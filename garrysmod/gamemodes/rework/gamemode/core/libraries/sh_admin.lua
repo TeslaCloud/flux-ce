@@ -15,7 +15,7 @@ rw.admin.players = players;
 local compilerCache = {};
 
 function rw.admin:CreateGroup(id, data)
-	if (type(id) != "string") then return; end;
+	if (!isstring(id)) then return; end;
 
 	data.m_uniqueID = id;
 
@@ -152,7 +152,7 @@ function rw.admin:CheckImmunity(player, target, canBeEqual)
 	local group1 = self:FindGroup(player:GetUserGroup());
 	local group2 = self:FindGroup(target:GetUserGroup());
 
-	if (typeof(group1.immunity) != "number" or typeof(group2.immunity) != "number") then
+	if (!isnumber(group1.immunity) or !isnumber(group2.immunity)) then
 		return true;
 	end;
 
@@ -251,7 +251,7 @@ if (SERVER) then
 
 		hook.Run("OnPermissionsCompiled", extras);
 
-		if (typeof(extras) == "table") then
+		if (istable(extras)) then
 			for id, extra in pairs(extras) do
 				for k, v in pairs(extra) do
 					DeterminePermissions(steamID, k, v);

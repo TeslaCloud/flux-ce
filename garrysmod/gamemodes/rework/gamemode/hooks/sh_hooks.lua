@@ -64,7 +64,7 @@ do
 					player:ManipulateBonePosition(0, position);
 				end;
 
-				if (type(anim) == "string") then
+				if (isstring(anim)) then
 					player.CalcSeqOverride = player:LookupSequence(anim);
 
 					return;
@@ -74,7 +74,7 @@ do
 			else
 				local anim = animations["normal"][ACT_MP_CROUCH_IDLE][1];
 
-				if (type(anim) == "string") then
+				if (isstring(anim)) then
 					player.CalcSeqOverride = player:LookupSequence(anim);
 
 					return;
@@ -89,15 +89,13 @@ do
 			if (animations[holdType] and animations[holdType][act]) then
 				local anim = animations[holdType][act];
 
-				if (type(anim) == "table") then
+				if (istable(anim)) then
 					if (hook.Call("ModelWeaponRaised", self, player, model)) then
 						anim = anim[2];
 					else
 						anim = anim[1];
 					end;
-				end;
-
-				if (type(anim) == "string") then
+				elseif (isstring(anim)) then
 					player.CalcSeqOverride = player:LookupSequence(anim);
 					return;
 				end;

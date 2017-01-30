@@ -6,7 +6,7 @@
 
 -- A function to get lowercase type of an object.
 function typeof(obj)
-	return type(obj):lower();
+	return type(obj):utf8lower();
 end;
 
 function Try(id, func, ...)
@@ -20,6 +20,64 @@ function Try(id, func, ...)
 		ErrorNoHalt(unpack(result), "\n");
 	elseif (result[1] != nil) then
 		return unpack[result];
+	end;
+end;
+
+-- A function to include a file based on it's prefix.
+function util.Include(strFile)
+	if (SERVER) then
+		if (strFile:find("sh_") or strFile:find("shared.lua")) then
+			AddCSLuaFile(strFile);
+			include(strFile);
+		elseif (strFile:find("cl_")) then
+			AddCSLuaFile(strFile);
+		elseif (strFile:find("sv_") or strFile:find("init.lua")) then
+			include(strFile);
+		end;
+	else
+		if (strFile:find("sh_") or strFile:find("shared.lua") 
+		or strFile:find("cl_")) then
+			include(strFile);
+		end;
+	end;
+end;
+
+-- A function to include all files in a directory.
+function util.IncludeDirectory(strDirectory, strBase, bIsRecursive)
+	if (strBase) then
+		if (isbool(strBase)) then
+			strBase = "rework/gamemode/";
+		elseif (!strBase:EndsWith("/")) then 
+			strBase = strBase.."/";
+		end;
+
+		strDirectory = strBase..strDirectory;
+	end;
+
+	if (!strDirectory:EndsWith("/")) then
+		strDirectory = strDirectory.."/";
+	end;
+
+	if (bIsRecursive) then
+		local files, folders = _file.Find(strDirectory.."*", "LUA", "namedesc");
+
+		-- First include the files.
+		for k, v in ipairs(files) do
+			if (v:GetExtensionFromFilename() == "lua") then
+				util.Include(strDirectory..v);
+			end;
+		end;
+
+		-- Then include all directories.
+		for k, v in ipairs(folders) do
+			util.IncludeDirectory(strDirectory..v, bIsRecursive);
+		end;
+	else
+		local files, _ = _file.Find(strDirectory.."*.lua", "LUA", "namedesc");
+
+		for k, v in ipairs(files) do
+			util.Include(strDirectory..v);
+		end;
 	end;
 end;
 
@@ -40,7 +98,7 @@ do
 
 	-- A function to convert a single hexadecimal digit to decimal.
 	function util.HexToDec(hex)
-		if (type(hex) == "number") then 
+		if (isnumber(hex)) then 
 			return hex;
 		end;
 
@@ -69,7 +127,7 @@ do
 end;
 
 function util.HexToDecimal(hex)
-	if (type(hex) == "number") then return hex; end;
+	if (isnumber(hex)) then return hex; end;
 
 	local sum = 0;
 	local chars = table.Reverse(string.Explode("", hex))
@@ -266,7 +324,7 @@ local colors = {
 rw.oldColor = rw.oldColor or Color;
 
 function Color(r, g, b, a)
-	if (typeof(r) == "string") then
+	if (isstring(r)) then
 		if (r:StartWith("#")) then
 			return util.HexToColor(r);
 		elseif (colors[r:lower()]) then
@@ -300,8 +358,7 @@ end;
 
 function player.Find(name, bCaseSensitive)
 	if (name == nil) then return; end;
-	if (typeof(name) != "string" and IsValid(name)) then return name; end;
-	if (typeof(name) != "string") then return; end;
+	if (!isstring(name)) then return (IsValid(name) and name) or nil; end;
 
 	for k, v in ipairs(_player.GetAll()) do
 		if (v:Name(true):find(name)) then

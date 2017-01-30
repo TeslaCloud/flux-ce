@@ -117,14 +117,14 @@ if (SERVER) then
 	end;
 
 	function playerMeta:SetCharacterVar(id, val)
-		if (typeof(id) == "string") then
+		if (isstring(id)) then
 			self:SetNetVar(id, val);
 			self:GetActiveCharacter()[id] = val;
 		end;
 	end;
 
 	function playerMeta:SetInventory(newInv)
-		if (typeof(newInv) != "table") then return; end;
+		if (!istable(newInv)) then return; end;
 		self:SetCharacterVar("inventory", newInv);
 	end;
 

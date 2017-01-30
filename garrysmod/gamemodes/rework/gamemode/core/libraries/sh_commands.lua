@@ -114,7 +114,7 @@ if (SERVER) then
 	function rw.command:Interpret(player, text)
 		local args;
 
-		if (typeof(text) == "table") then
+		if (istable(text)) then
 			args = text;
 		else
 			args = self:ExtractArguments(text);
