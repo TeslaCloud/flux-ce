@@ -8,6 +8,8 @@ Class "CFaction";
 
 CFaction.Name = "Unknown Faction";
 CFaction.Description = "This faction has no description set!";
+CFaction.PhysDesc = "This faction has no default physical description set!";
+CFaction.DefaultClass = nil;
 CFaction.Color = Color(255, 255, 255);
 CFaction.Classes = {};
 CFaction.Ranks = {};
@@ -56,7 +58,15 @@ function CFaction:AddRank(uniqueID, nameFilter)
 	});
 end;
 
-function CFaction:GenerateName(charName, rank)
+function CFaction:GenerateName(player, charName, rank, defaultData)
+	defaultData = defaultData or {};
+
+	if (hook.Run("ShouldNameGenerate", player, self, charName, rank, defaultData) == false) then return player:Name(); end;
+
+	if (isfunction(self.MakeName)) then
+		return self:MakeName(player, charName, rank, defaultData) or "John Doe";
+	end;
+
 	local finalName = self.NameTemplate;
 
 	if (finalName:find("{name}")) then
@@ -72,12 +82,22 @@ function CFaction:GenerateName(charName, rank)
 		end;
 	end;
 
-	for k, v in pairs(self.Data) do
-		if (isstring(k)) then
-			local key = k:utf8lower();
+	local operators = string.FindAll(finalName, "{[%w]+:[%w]+}");
 
-			if (finalName:find("{data:"..key.."}")) then
-				finalName = finalName:Replace("{data:"..key.."}", v);
+	for k, v in ipairs(operators) do
+		if (v:StartWith("{callback:")) then
+			local funcName = v:utf8sub(11, v:utf8len() - 1);
+			local cb = self[funcName];
+
+			if (isfunction(cb)) then
+				finalName:Replace(v, cb(self, player));
+			end;
+		elseif (v:StartWith("{data:")) then
+			local key = v:utf8sub(7, v:utf8len() - 1);
+			local data = player:GetCharacterData(key, (defaultData[key] or self.Data[key] or ""));
+
+			if (isstring(data)) then
+				finalName:Replace(v, data);
 			end;
 		end;
 	end;
