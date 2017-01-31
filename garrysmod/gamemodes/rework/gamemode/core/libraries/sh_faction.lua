@@ -19,6 +19,10 @@ function faction.Register(id, data)
 	stored[id] = data;
 end;
 
+function faction.Find(id)
+	return stored[id];
+end;
+
 pipeline.Register("faction", function(uniqueID, fileName, pipe)
 	FACTION = Faction(uniqueID);
 

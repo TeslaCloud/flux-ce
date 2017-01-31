@@ -11,6 +11,7 @@ CFaction.Description = "This faction has no description set!";
 CFaction.PhysDesc = "This faction has no default physical description set!";
 CFaction.DefaultClass = nil;
 CFaction.Color = Color(255, 255, 255);
+CFaction.Models = {male = {}, female = {}, universal = {}};
 CFaction.Classes = {};
 CFaction.Ranks = {};
 CFaction.Data = {};
@@ -51,6 +52,8 @@ end;
 
 function CFaction:AddRank(uniqueID, nameFilter)
 	if (!uniqueID) then return; end;
+
+	if (!nameFilter) then nameFilter = uniqueID; end;
 
 	table.insert(self.Ranks, {
 		uniqueID = uniqueID,
