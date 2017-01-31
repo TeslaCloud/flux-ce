@@ -81,4 +81,8 @@ function CFaction:Register()
 	faction.Register(self.uniqueID, self);
 end;
 
+function CFaction:__tostring()
+	return "Faction ["..self.uniqueID.."]["..self.Name.."]";
+end;
+
 Faction = CFaction;

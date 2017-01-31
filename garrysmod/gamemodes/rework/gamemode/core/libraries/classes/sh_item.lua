@@ -7,7 +7,7 @@
 Class "CItem";
 
 function CItem:CItem(uniqueID, baseID)
-	self.uniqueID = uniqueID;
+	self.uniqueID = uniqueID:MakeID();
 	self.Base = baseID;
 	self.data = self.data or {};
 	self.customButtons = {};

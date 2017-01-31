@@ -148,13 +148,11 @@ end;
 function item.FindByInstanceID(instanceID)
 	if (!instanceID) then return; end;
 
-	-- Not the prettiest code, but a bit faster than using a single return.
-	if (sorted[instanceID]) then
-		return sorted[instanceID];
-	else
+	if (!sorted[instanceID]) then
 		sorted[instanceID] = item.FindInstanceByID(instanceID);
-		return sorted[instanceID];
 	end;
+
+	return sorted[instanceID];
 end;
 
 function item.Find(name)
@@ -236,35 +234,16 @@ function item.IsInstance(itemTable)
 	return (itemTable.instanceID or ITEM_TEMPLATE) > ITEM_INVALID;
 end;
 
-function item.Include(fileName)
-	if (fileName:utf8len() < 7) then return; end;
-
-	local uniqueID = (string.GetFileFromFilename(fileName) or ""):Replace(".lua", "");
-
-	if (uniqueID:StartWith("cl_") or uniqueID:StartWith("sh_") or uniqueID:StartWith("sv_")) then
-		uniqueID = uniqueID:utf8sub(4, uniqueID:utf8len());
-	end;
-
-	if (uniqueID == "") then return; end;
-
+pipeline.Register("item", function(uniqueID, fileName, pipe)
 	ITEM = Item(uniqueID);
 
 	util.Include(fileName);
 
-	ITEM:Register();
-	ITEM = nil;
-end;
+	ITEM:Register(); ITEM = nil;
+end);
 
 function item.IncludeItems(directory)
-	if (!directory:EndsWith("/")) then
-		directory = directory.."/";
-	end;
-
-	local files, dirs = _file.Find(directory.."*", "LUA", "namedesc");
-
-	for k, v in ipairs(files) do
-		item.Include(directory..v);
-	end;
+	pipeline.IncludeDirectory("item", directory);
 end;
 
 if (SERVER) then

@@ -167,6 +167,19 @@ function rw.admin:CheckImmunity(player, target, canBeEqual)
 	return false;
 end;
 
+-- New Rework pipeline.
+pipeline.Register("group", function(uniqueID, fileName, pipe)
+	GROUP = Group(uniqueID);
+
+	util.Include(fileName);
+
+	GROUP:Register(); GROUP = nil;
+end);
+
+function rw.admin:IncludeGroups(directory)
+	pipeline.IncludeDirectory("group", directory);
+end;
+
 if (SERVER) then
 	local function SetPermission(steamID, permID, value)
 		players[steamID] = players[steamID] or {};

@@ -4,15 +4,12 @@
 	the framework is publicly released.
 --]]
 
-local ADMIN = Group("admin");
-	ADMIN:SetName("Administrator");
-	ADMIN:SetDescription("A staff member that watches operators and players.");
-	ADMIN:SetColor(Color(255, 255, 255));
-	ADMIN:SetIcon("icon16/star.png");
-	ADMIN:SetImmunity(200);
-	ADMIN:SetBase("operator");
-	ADMIN:SetPermissions({
-		test = PERM_ALLOW
-	})
-
-ADMIN:Register();
+GROUP:SetName("Administrator");
+GROUP:SetDescription("A staff member that watches operators and players.");
+GROUP:SetColor(Color(255, 255, 255));
+GROUP:SetIcon("icon16/star.png");
+GROUP:SetImmunity(200);
+GROUP:SetBase("operator");
+GROUP:SetPermissions({
+	test = PERM_ALLOW
+});

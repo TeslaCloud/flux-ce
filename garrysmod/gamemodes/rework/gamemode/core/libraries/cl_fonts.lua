@@ -6,7 +6,7 @@
 
 library.New("fonts", rw);
 
--- We wants the fonts to recreate on refresh.
+-- We want the fonts to recreate on refresh.
 local stored = {};
 
 do

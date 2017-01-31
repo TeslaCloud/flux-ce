@@ -322,10 +322,14 @@ end;
 
 function plugin.IncludeFolders(folder)
 	for k, v in ipairs(extras) do
-		if (v == "items") then
-			item.IncludeItems(folder.."/items/");
-		else
-			util.IncludeDirectory(folder.."/"..v);
+		if (hook.Run("PluginIncludeFolder", v, folder) == nil) then
+			if (v == "items") then
+				item.IncludeItems(folder.."/items/");
+			elseif (v == "groups") then
+				rw.admin:IncludeGroups(folder.."/groups/");
+			else
+				util.IncludeDirectory(folder.."/"..v);
+			end;
 		end;
 	end;
 end;

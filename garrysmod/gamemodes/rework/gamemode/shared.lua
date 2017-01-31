@@ -11,7 +11,7 @@ GM.Website 		= "http://teslacloud.net/";
 GM.Email 		= "support@teslacloud.net";
 
 -- Define RW-Specific fields.
-GM.Version 		= "0.1.0-indev";
+GM.Version 		= "0.1.1-indev";
 GM.Build 		= "1315";
 GM.Description 	= "A free roleplay gamemode framework."
 
@@ -120,7 +120,7 @@ util.IncludeDirectory("core/libraries", true);
 util.IncludeDirectory("core/libraries/classes", true);
 util.IncludeDirectory("core/libraries/meta", true);
 util.IncludeDirectory("core/languages", true);
-util.IncludeDirectory("core/groups", true);
+rw.admin:IncludeGroups("rework/gamemode/core/groups");
 util.IncludeDirectory("core/commands", true);
 util.IncludeDirectory("core/derma", true);
 item.IncludeItems("rework/gamemode/core/items");

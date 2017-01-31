@@ -4,15 +4,12 @@
 	the framework is publicly released.
 --]]
 
-local OWNER = Group("owner");
-	OWNER:SetName("Owner");
-	OWNER:SetDescription("Ultimate staff member who runs this server.");
-	OWNER:SetColor(Color(255, 255, 255));
-	OWNER:SetIcon("icon16/key.png");
-	OWNER:SetImmunity(1000);
-	OWNER:SetBase("superadmin");
-	OWNER:SetPermissions({
-		all = PERM_ALLOW_OVERRIDE
-	})
-
-OWNER:Register();
+GROUP:SetName("Owner");
+GROUP:SetDescription("Ultimate staff member who runs the server.");
+GROUP:SetColor(Color(255, 255, 255));
+GROUP:SetIcon("icon16/key.png");
+GROUP:SetImmunity(1000);
+GROUP:SetBase("superadmin");
+GROUP:SetPermissions({
+	all = PERM_ALLOW_OVERRIDE
+});

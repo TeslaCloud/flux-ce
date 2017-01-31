@@ -14,8 +14,8 @@
 			"default"	"hl2rp"
 		}
 	}
-	"version"		"0.1.0 (1315) - indev"
+	"version"		"0.1.1 (1315) - indev"
 	"author"		"TeslaCloud Studios"
-	"description"	"A framework designed for roleplay gamemodes."
+	"description"	"A free roleplay gamemode framework."
 	"workshopid"	""
 }

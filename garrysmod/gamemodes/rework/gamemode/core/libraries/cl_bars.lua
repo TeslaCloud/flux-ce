@@ -23,6 +23,8 @@ rw.bars.drawing = rw.bars.drawing or 0; -- Amount of bars currently being drawn.
 function rw.bars:Register(uniqueID, data, force)
 	if (!data) then return; end;
 
+	force = rw.Devmode or force;
+
 	if (stored[uniqueID] and !force) then
 		return stored[uniqueID];
 	end;
@@ -257,7 +259,7 @@ do
 		callback = function(bar)
 			return rw.client:Health();
 		end
-	}, true);
+	});
 
 	rw.bars:Register("armor", {
 		text = "armor",
@@ -266,5 +268,5 @@ do
 		callback = function(bar)
 			return rw.client:Armor();
 		end
-	}, true);
+	});
 end;

@@ -4,34 +4,23 @@
 	the framework is publicly released.
 --]]
 
-local USER = Group("user");
-	USER:SetName("User");
-	USER:SetDescription("A regular user.");
-	USER:SetColor(Color(255, 255, 255));
-	USER:SetIcon("icon16/user.png");
-	USER:SetImmunity(0);
-	USER:SetPermissions({
-		test = PERM_ALLOW
-	})
+GROUP:SetName("User");
+GROUP:SetDescription("A regular player.");
+GROUP:SetColor(Color(255, 255, 255));
+GROUP:SetIcon("icon16/user.png");
+GROUP:SetImmunity(0);
+GROUP:SetPermissions({
+	test = PERM_ALLOW
+});
 
-	-- Called when player's primary group is being set to this group.
-	function USER:OnGroupSet(player, oldGroup) 
+-- Called when player's primary group is being set to this group.
+function GROUP:OnGroupSet(player, oldGroup) end;
 
-	end;
+-- Called when player's primary group is taken or modified.
+function GROUP:OnGroupTake(player, newGroup) end;
 
-	-- Called when player's primary group is taken or modified.
-	function USER:OnGroupTake(player, newGroup) 
+-- Called when player is being added to this group as secondary group.
+function GROUP:OnGroupAdd(player, secondaryGroups) end;
 
-	end;
-
-	-- Called when player is being added to this group as secondary group.
-	function USER:OnGroupAdd(player, secondaryGroups) 
-
-	end;
-
-	-- Called when player is being removed from this group as secondary group.
-	function USER:OnGroupRemove(player) 
-
-	end;
-
-USER:Register();
+-- Called when player is being removed from this group as secondary group.
+function GROUP:OnGroupRemove(player) end;

@@ -16,7 +16,7 @@ CUserGroup.m_Permissions = {};
 CUserGroup.m_Base = nil;
 
 function CUserGroup:CUserGroup(id)
-	self.m_uniqueID = id;
+	self.m_uniqueID = id:MakeID();
 end;
 
 function CUserGroup:Register()

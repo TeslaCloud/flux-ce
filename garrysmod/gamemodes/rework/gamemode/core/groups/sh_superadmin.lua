@@ -4,17 +4,14 @@
 	the framework is publicly released.
 --]]
 
-local SUPERADMIN = Group("superadmin");
-	SUPERADMIN:SetName("Super Admin");
-	SUPERADMIN:SetDescription("A staff member that overwatches server's administration and the server itself.");
-	SUPERADMIN:SetColor(Color(255, 255, 255));
-	SUPERADMIN:SetIcon("icon16/shield.png");
-	SUPERADMIN:SetImmunity(300);
-	SUPERADMIN:SetBase("admin");
-	SUPERADMIN:SetPermissions({
-		server_management = PERM_ALLOW,
-		player_management = PERM_ALLOW,
-		character_management = PERM_ALLOW
-	})
-
-SUPERADMIN:Register();
+GROUP:SetName("Super Admin");
+GROUP:SetDescription("A staff member that overwatches server's administration and the server itself.");
+GROUP:SetColor(Color(255, 255, 255));
+GROUP:SetIcon("icon16/shield.png");
+GROUP:SetImmunity(300);
+GROUP:SetBase("admin");
+GROUP:SetPermissions({
+	server_management = PERM_ALLOW,
+	player_management = PERM_ALLOW,
+	character_management = PERM_ALLOW
+});
