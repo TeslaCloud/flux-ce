@@ -133,30 +133,30 @@ end;
 local function BuildSelectQuery(queryObj)
 	local queryString = {"SELECT"};
 
-	if (type(queryObj.selectList) != "table" or #queryObj.selectList == 0) then
+	if (!istable(queryObj.selectList) or #queryObj.selectList == 0) then
 		queryString[#queryString + 1] = " *";
 	else
 		queryString[#queryString + 1] = " "..table.concat(queryObj.selectList, ", ");
 	end;
 
-	if (type(queryObj.tableName) == "string") then
+	if (isstring(queryObj.tableName)) then
 		queryString[#queryString + 1] = " FROM `"..queryObj.tableName.."` ";
 	else
 		ErrorNoHalt("[Rework:Database] No table name specified!\n");
 		return;
 	end;
 
-	if (type(queryObj.whereList) == "table" and #queryObj.whereList > 0) then
+	if (istable(queryObj.whereList) and #queryObj.whereList > 0) then
 		queryString[#queryString + 1] = " WHERE ";
 		queryString[#queryString + 1] = table.concat(queryObj.whereList, " AND ");
 	end;
 
-	if (type(queryObj.orderByList) == "table" and #queryObj.orderByList > 0) then
+	if (istable(queryObj.orderByList) and #queryObj.orderByList > 0) then
 		queryString[#queryString + 1] = " ORDER BY ";
 		queryString[#queryString + 1] = table.concat(queryObj.orderByList, ", ");
 	end;
 
-	if (type(queryObj.limit) == "number") then
+	if (isnumber(queryObj.limit)) then
 		queryString[#queryString + 1] = " LIMIT ";
 		queryString[#queryString + 1] = queryObj.limit;
 	end;
@@ -169,7 +169,7 @@ local function BuildInsertQuery(queryObj)
 	local keyList = {};
 	local valueList = {};
 
-	if (type(queryObj.tableName) == "string") then
+	if (isstring(queryObj.tableName)) then
 		queryString[#queryString + 1] = " `"..queryObj.tableName.."`";
 	else
 		ErrorNoHalt("[Rework:Database] No table name specified!\n");
@@ -194,14 +194,14 @@ end;
 local function BuildUpdateQuery(queryObj)
 	local queryString = {"UPDATE"};
 
-	if (type(queryObj.tableName) == "string") then
+	if (isstring(queryObj.tableName)) then
 		queryString[#queryString + 1] = " `"..queryObj.tableName.."`";
 	else
 		ErrorNoHalt("[Rework:Database] No table name specified!\n");
 		return;
 	end;
 
-	if (type(queryObj.updateList) == "table" and #queryObj.updateList > 0) then
+	if (istable(queryObj.updateList) and #queryObj.updateList > 0) then
 		local updateList = {};
 
 		queryString[#queryString + 1] = " SET";
@@ -213,12 +213,12 @@ local function BuildUpdateQuery(queryObj)
 		queryString[#queryString + 1] = " "..table.concat(updateList, ", ");
 	end;
 
-	if (type(queryObj.whereList) == "table" and #queryObj.whereList > 0) then
+	if (istable(queryObj.whereList) and #queryObj.whereList > 0) then
 		queryString[#queryString + 1] = " WHERE ";
 		queryString[#queryString + 1] = table.concat(queryObj.whereList, " AND ");
 	end;
 
-	if (type(queryObj.offset) == "number") then
+	if (isnumber(queryObj.offset)) then
 		queryString[#queryString + 1] = " OFFSET ";
 		queryString[#queryString + 1] = queryObj.offset;
 	end;
@@ -229,19 +229,19 @@ end;
 local function BuildDeleteQuery(queryObj)
 	local queryString = {"DELETE FROM"}
 
-	if (type(queryObj.tableName) == "string") then
+	if (isstring(queryObj.tableName)) then
 		queryString[#queryString + 1] = " `"..queryObj.tableName.."`";
 	else
 		ErrorNoHalt("[Rework:Database] No table name specified!\n");
 		return;
 	end;
 
-	if (type(queryObj.whereList) == "table" and #queryObj.whereList > 0) then
+	if (istable(queryObj.whereList) and #queryObj.whereList > 0) then
 		queryString[#queryString + 1] = " WHERE ";
 		queryString[#queryString + 1] = table.concat(queryObj.whereList, " AND ");
 	end;
 
-	if (type(queryObj.limit) == "number") then
+	if (isnumber(queryObj.limit)) then
 		queryString[#queryString + 1] = " LIMIT ";
 		queryString[#queryString + 1] = queryObj.limit;
 	end;
@@ -252,7 +252,7 @@ end;
 local function BuildDropQuery(queryObj)
 	local queryString = {"DROP TABLE"}
 
-	if (type(queryObj.tableName) == "string") then
+	if (isstring(queryObj.tableName)) then
 		queryString[#queryString + 1] = " `"..queryObj.tableName.."`";
 	else
 		ErrorNoHalt("[Rework:Database] No table name specified!\n");
@@ -265,7 +265,7 @@ end;
 local function BuildTruncateQuery(queryObj)
 	local queryString = {"TRUNCATE TABLE"}
 
-	if (type(queryObj.tableName) == "string") then
+	if (isstring(queryObj.tableName)) then
 		queryString[#queryString + 1] = " `"..queryObj.tableName.."`";
 	else
 		ErrorNoHalt("[Rework:Database] No table name specified!\n");
@@ -278,7 +278,7 @@ end;
 local function BuildCreateQuery(queryObj)
 	local queryString = {"CREATE TABLE IF NOT EXISTS"};
 
-	if (type(queryObj.tableName) == "string") then
+	if (isstring(queryObj.tableName)) then
 		queryString[#queryString + 1] = " `"..queryObj.tableName.."`";
 	else
 		ErrorNoHalt("[Rework:Database] No table name specified!\n");
@@ -287,7 +287,7 @@ local function BuildCreateQuery(queryObj)
 
 	queryString[#queryString + 1] = " (";
 
-	if (type(queryObj.createList) == "table" and #queryObj.createList > 0) then
+	if (istable(queryObj.createList) and #queryObj.createList > 0) then
 		local createList = {};
 
 		for i = 1, #queryObj.createList do
@@ -301,7 +301,7 @@ local function BuildCreateQuery(queryObj)
 		queryString[#queryString + 1] = " "..table.concat(createList, ", ");
 	end;
 
-	if (type(queryObj.primaryKey) == "string") then
+	if (isstring(queryObj.primaryKey)) then
 		queryString[#queryString + 1] = ", PRIMARY KEY";
 		queryString[#queryString + 1] = " ("..queryObj.primaryKey..")";
 	end;
@@ -331,7 +331,7 @@ function QUERY_CLASS:Execute(bQueueQuery)
 		queryString = BuildCreateQuery(self);
 	end;
 
-	if (type(queryString) == "string") then
+	if (isstring(queryString)) then
 		if (!bQueueQuery) then
 			return rw.db:RawQuery(queryString, self.callback);
 		else
@@ -379,7 +379,7 @@ function rw.db:Connect(host, username, password, database, port, socket, flags)
 	end;
 
 	if (rw.db.Module == "tmysql4") then
-		if (type(tmysql) != "table") then
+		if (!istable(tmysql)) then
 			require("tmysql4");
 		end;
 
@@ -397,14 +397,14 @@ function rw.db:Connect(host, username, password, database, port, socket, flags)
 			ErrorNoHalt(string.format(MODULE_NOT_EXIST, rw.db.Module));
 		end;
 	elseif (rw.db.Module == "mysqloo") then
-		if (type(mysqloo) != "table") then
+		if (!istable(mysqloo)) then
 			require("mysqloo");
 		end;
 
 		if (mysqloo) then
 			local clientFlag = flags or 0;
 
-			if (type(socket) ~= "string") then
+			if (!isstring(socket)) then
 				self.connection = mysqloo.connect(host, username, password, database, port);
 			else
 				self.connection = mysqloo.connect(host, username, password, database, port, socket, clientFlag);
@@ -440,7 +440,7 @@ function rw.db:RawQuery(query, callback, flags, ...)
 			local queryStatus = result[1]["status"];
 
 			if (queryStatus) then
-				if (type(callback) == "function") then
+				if (isfunction(callback)) then
 					local bStatus, value = pcall(callback, result[1]["data"], queryStatus, result[1]["lastid"]);
 
 					if (!bStatus) then
@@ -524,12 +524,12 @@ end;
 
 function rw.db:Think()
 	if (#QueueTable > 0) then
-		if (type(QueueTable[1]) == "table") then
+		if (istable(QueueTable[1])) then
 			local queueObj = QueueTable[1];
 			local queryString = queueObj[1];
 			local callback = queueObj[2];
 
-			if (type(queryString) == "string") then
+			if (isstring(queryString)) then
 				self:RawQuery(queryString, callback);
 			end;
 
@@ -699,7 +699,7 @@ function rw.db:EasyRead(tableName, where, callback)
 		query:Callback(function(result)
 			rw.core:DevPrint("Easy MySQL has successfully read the data!");
 
-			local success, value = pcall(callback, result, (type(result) == "table" and #result > 0));
+			local success, value = pcall(callback, result, (istable(result) and #result > 0));
 
 			if (!success) then
 				ErrorNoHalt("[RW:EasyRead Error] "..value.."\n");

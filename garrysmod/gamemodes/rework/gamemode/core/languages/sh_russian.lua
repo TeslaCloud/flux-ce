@@ -27,6 +27,13 @@ lang["#TabMenu_Settings"] = "Настройки";
 lang["#TabMenu_Home"] = "Домашняя страница";
 lang["#TabMenu_Scoreboard"] = "Игроки";
 lang["#TabMenu_Admin"] = "Админка";
+lang["#TabMenu_CloseMenu"] = "Close Menu";
+
+lang["#MainMenu_Disconnect"] = "Disconnect";
+lang["#MainMenu_Settings"] = "Settings";
+lang["#MainMenu_Cancel"] = "Cancel";
+lang["#MainMenu_Load"] = "Load";
+lang["#MainMenu_New"] = "New";
 
 lang["#CMDDesc_Usage"] = "Синтаксис:";
 lang["#CMDDesc_Aliases"] = "Алиасы:";
@@ -37,6 +44,12 @@ lang["#KickCMD_Syntax"] = "<игрок> [причина]";
 lang["#SetGroupCMD_Description"] = "Выставляет группу пользователя игрока.";
 lang["#SetGroupCMD_Syntax"] = "<игрок> <группа>";
 lang["#SetGroupCMD_Message"] = "#1 выдал группу пользователя #3 #2.";
+
+lang["#PlayerGroup_User"] = "The base rank that is automatically given to the player.";
+lang["#PlayerGroup_Operator"] = "Low clearance administrative rank given to assistant staff members.";
+lang["#PlayerGroup_Admin"] = "An administrative rank given to trusted staff members.";
+lang["#PlayerGroup_Superadmin"] = "A high level administrative rank given to the most trusted of staff members.";
+lang["#PlayerGroup_Owner"] = "The complete administrative rank given to the owners of the server.";
 
 lang["#DemoteCMD_Description"] = "Понижает игрока до пользователя.";
 lang["#DemoteCMD_Syntax"] = "<игрок>";
