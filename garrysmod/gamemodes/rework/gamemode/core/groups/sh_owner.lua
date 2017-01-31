@@ -5,7 +5,7 @@
 --]]
 
 GROUP:SetName("Owner");
-GROUP:SetDescription("God rank for the server owner.");
+GROUP:SetDescription("#PlayerGroup_Owner");
 GROUP:SetColor(Color(255, 255, 255));
 GROUP:SetIcon("icon16/key.png");
 GROUP:SetImmunity(1000);

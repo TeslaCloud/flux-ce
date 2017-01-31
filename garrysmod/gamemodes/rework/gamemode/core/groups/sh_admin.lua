@@ -5,7 +5,7 @@
 --]]
 
 GROUP:SetName("Administrator");
-GROUP:SetDescription("A staff member that watches operators and players.");
+GROUP:SetDescription("#PlayerGroup_Admin");
 GROUP:SetColor(Color(255, 255, 255));
 GROUP:SetIcon("icon16/star.png");
 GROUP:SetImmunity(200);
