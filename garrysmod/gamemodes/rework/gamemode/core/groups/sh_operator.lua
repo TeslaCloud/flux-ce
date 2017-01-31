@@ -5,7 +5,7 @@
 --]]
 
 GROUP:SetName("Operator");
-GROUP:SetDescription("A staff member that watches the players.");
+GROUP:SetDescription("An administrative rank below superadmin.");
 GROUP:SetColor(Color(255, 255, 255));
 GROUP:SetIcon("icon16/smile.png");
 GROUP:SetImmunity(100);

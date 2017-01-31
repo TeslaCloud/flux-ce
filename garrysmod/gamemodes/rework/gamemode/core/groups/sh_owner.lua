@@ -5,7 +5,7 @@
 --]]
 
 GROUP:SetName("Owner");
-GROUP:SetDescription("Ultimate staff member who runs the server.");
+GROUP:SetDescription("God rank for the server owner.");
 GROUP:SetColor(Color(255, 255, 255));
 GROUP:SetIcon("icon16/key.png");
 GROUP:SetImmunity(1000);

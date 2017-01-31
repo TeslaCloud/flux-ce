@@ -5,7 +5,7 @@
 --]]
 
 GROUP:SetName("Super Admin");
-GROUP:SetDescription("A staff member that overwatches server's administration and the server itself.");
+GROUP:SetDescription("An administrative rank given to trusted admins.");
 GROUP:SetColor(Color(255, 255, 255));
 GROUP:SetIcon("icon16/shield.png");
 GROUP:SetImmunity(300);

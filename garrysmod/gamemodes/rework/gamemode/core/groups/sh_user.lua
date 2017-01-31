@@ -5,7 +5,7 @@
 --]]
 
 GROUP:SetName("User");
-GROUP:SetDescription("A regular player.");
+GROUP:SetDescription("A default auto-given rank to the player.");
 GROUP:SetColor(Color(255, 255, 255));
 GROUP:SetIcon("icon16/user.png");
 GROUP:SetImmunity(0);

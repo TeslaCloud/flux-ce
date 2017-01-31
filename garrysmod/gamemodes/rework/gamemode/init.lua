@@ -46,8 +46,7 @@ if (!rw.WatchDogAvailable and system.IsWindows()) then
 				print("[Watchdog] "..fileName);
 
 				if (fileName:find("plugins")) then
-					-- Prevent it from passing extra directories to the hook,
-					-- as well as files it doesn't really need.
+					-- Prevent it from passing extra directories to the hook, as well as files it doesn't really need.
 					if (fileName:EndsWith("plugins")) then return; end;
 					if (fileName:find("/plugin/")) then return; end;
 					if (fileName:find(".ini")) then return; end;
@@ -69,7 +68,7 @@ function rw.IsWatchdogAvailable()
 	return rw.WatchDogAvailable;
 end;
 
--- No need to include the stuff that doesn't change.
+-- Uninclude stuff that doesn't change.
 if (!string.utf8len or !pon or !netstream) then
 	AddCSLuaFile("thirdparty/utf8.lua");
 	AddCSLuaFile("thirdparty/pon.lua");
