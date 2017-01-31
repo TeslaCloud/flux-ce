@@ -12,7 +12,7 @@ timer.Remove("HintSystem_Annoy2");
 function GM:InitPostEntity()
 	rw.client = rw.client or LocalPlayer();
 
-	if (!rw.client:GetActiveCharacter()) then
+	if (!rw.client:GetCharacter()) then
 		rw.IntroPanel = vgui.Create("rwIntro");
 		rw.IntroPanel:MakePopup();
 	end;
@@ -162,7 +162,7 @@ function GM:PlayerUseItemMenu(itemTable, bIsEntity)
 	local itemMenu = DermaMenu();
 
 	if (!itemTable.Name) then
-		local closeBtn = itemMenu:AddOption(itemTable.cancelText or "Cancel", function() end);
+		local closeBtn = itemMenu:AddOption(itemTable.CancelText or "Cancel", function() end);
 		closeBtn:SetIcon("icon16/cross.png");
 	else
 		if (itemTable.customButtons) then
@@ -175,26 +175,26 @@ function GM:PlayerUseItemMenu(itemTable, bIsEntity)
 		end;
 
 		if (itemTable.OnUse) then
-			local useBtn = itemMenu:AddOption(itemTable.useText or "Use", function() 
+			local useBtn = itemMenu:AddOption(itemTable.UseText or "Use", function() 
 				itemTable:DoMenuAction("OnUse");
 			end);
-			useBtn:SetIcon(itemTable.useIcon or "icon16/wrench.png");
+			useBtn:SetIcon(itemTable.UseIcon or "icon16/wrench.png");
 		end;
 
 		if (bIsEntity) then
-			local takeBtn = itemMenu:AddOption(itemTable.takeText or "Take", function() 
+			local takeBtn = itemMenu:AddOption(itemTable.TakeText or "Take", function() 
 				itemTable:DoMenuAction("OnTake");
 			end);
-			takeBtn:SetIcon(itemTable.takeIcon or "icon16/wrench.png");
+			takeBtn:SetIcon(itemTable.TakeIcon or "icon16/wrench.png");
 		else
-			local dropBtn = itemMenu:AddOption(itemTable.takeText or "Drop", function() 
+			local dropBtn = itemMenu:AddOption(itemTable.TakeText or "Drop", function() 
 				itemTable:DoMenuAction("OnDrop");
 			end);
-			dropBtn:SetIcon(itemTable.takeIcon or "icon16/wrench.png");
+			dropBtn:SetIcon(itemTable.TakeIcon or "icon16/wrench.png");
 		end;
 
-		local closeBtn = itemMenu:AddOption(itemTable.cancelText or "Cancel", function() end);
-		closeBtn:SetIcon(itemTable.cancelIcon or "icon16/cross.png");
+		local closeBtn = itemMenu:AddOption(itemTable.CancelText or "Cancel", function() end);
+		closeBtn:SetIcon(itemTable.CancelIcon or "icon16/cross.png");
 	end;
 
 	itemMenu:Open()

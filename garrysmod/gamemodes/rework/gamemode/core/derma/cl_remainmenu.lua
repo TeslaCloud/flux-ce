@@ -93,15 +93,15 @@ function PANEL:Init()
 		end;
 	end;
 
-	if (rw.client:GetActiveCharacter()) then
-		local cancelText = L("#MainMenu_Cancel");
+	if (rw.client:GetCharacter()) then
+		local CancelText = L("#MainMenu_Cancel");
 
-		textW, textH = util.GetTextSize(cancelText, menuFont);
+		textW, textH = util.GetTextSize(CancelText, menuFont);
 
 		self.cancel = vgui.Create("reButton", self);
 		self.cancel:SetSize(textW * 1.1, textH * 1.1);
 		self.cancel:SetPos(100, 230);
-		self.cancel:SetText(cancelText);
+		self.cancel:SetText(CancelText);
 		self.cancel:SetDrawBackground(false);
 		self.cancel:SetTextAutoposition(false);
 		self.cancel:SetFont(rw.fonts:GetSize("menu_thin_large", 24));

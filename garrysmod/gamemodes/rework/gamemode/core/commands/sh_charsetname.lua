@@ -16,7 +16,7 @@ COMMAND.aliases = {"setname"};
 function COMMAND:OnRun(player, target, newName)
 	rw.player:NotifyAll(L("CharSetName_Message", (IsValid(player) and player:Name()) or "Console", target:Name(), newName));
 
-	character.SetName(target, target:GetActiveCharacter(), newName);
+	character.SetName(target, target:GetCharacter(), newName);
 end;
 
 COMMAND:Register();

@@ -327,6 +327,8 @@ function plugin.IncludeFolders(folder)
 				item.IncludeItems(folder.."/items/");
 			elseif (v == "groups") then
 				rw.admin:IncludeGroups(folder.."/groups/");
+			elseif (v == "factions") then
+				faction.IncludeFactions(folder.."/factions/");
 			else
 				util.IncludeDirectory(folder.."/"..v);
 			end;

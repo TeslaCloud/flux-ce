@@ -18,3 +18,15 @@ function faction.Register(id, data)
 
 	stored[id] = data;
 end;
+
+pipeline.Register("faction", function(uniqueID, fileName, pipe)
+	FACTION = Faction(uniqueID);
+
+	util.Include(fileName);
+
+	FACTION:Register(); FACTION = nil;
+end);
+
+function faction.IncludeFactions(directory)
+	return pipeline.IncludeDirectory("faction", directory);
+end;

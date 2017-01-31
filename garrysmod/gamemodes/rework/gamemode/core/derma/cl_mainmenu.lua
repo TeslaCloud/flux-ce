@@ -150,15 +150,15 @@ function PANEL:Init()
 
 	y = y + textH * 1.2;
 
-	if (rw.client:GetActiveCharacter()) then
-		local cancelText = L("#MainMenu_Cancel");
-		textW, textH = util.GetTextSize(cancelText, menuFont);
+	if (rw.client:GetCharacter()) then
+		local CancelText = L("#MainMenu_Cancel");
+		textW, textH = util.GetTextSize(CancelText, menuFont);
 
 		self.cancel = vgui.Create("rwMainButton", self);
 		self.cancel:SetSize(textW * 1.1, textH * 1.1);
 		self.cancel:SetPos(x, y);
 		self.cancel:SetText("");
-		self.cancel.text = cancelText;
+		self.cancel.text = CancelText;
 
 		self.cancel.DoClick = function(btn)
 			self:CloseMenu();

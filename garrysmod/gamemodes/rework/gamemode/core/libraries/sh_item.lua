@@ -54,12 +54,12 @@ function item.Register(id, data)
 	data.data = data.data or {};
 	data.customButtons = data.customButtons or {};
 	data.actionSounds = data.actionSounds or {};
-	data.useText = data.useText;
-	data.takeText = data.takeText;
-	data.cancelText = data.cancelText;
-	data.useIcon = data.useIcon;
-	data.takeIcon = data.takeIcon;
-	data.cancelIcon = data.cancelIcon;
+	data.UseText = data.UseText;
+	data.TakeText = data.TakeText;
+	data.CancelText = data.CancelText;
+	data.UseIcon = data.UseIcon;
+	data.TakeIcon = data.TakeIcon;
+	data.CancelIcon = data.CancelIcon;
 
 	if (isstring(data.Base)) then
 		local baseTable = stored[data.Base];
@@ -106,12 +106,12 @@ function item.ToSave(itemTable)
 		instanceID = itemTable.instanceID,
 		data = itemTable.data,
 		actionSounds = itemTable.actionSounds,
-		useText = itemTable.useText,
-		takeText = itemTable.takeText,
-		cancelText = itemTable.cancelText,
-		useIcon = itemTable.useIcon,
-		takeIcon = itemTable.takeIcon,
-		cancelIcon = itemTable.cancelIcon
+		UseText = itemTable.UseText,
+		TakeText = itemTable.TakeText,
+		CancelText = itemTable.CancelText,
+		UseIcon = itemTable.UseIcon,
+		TakeIcon = itemTable.TakeIcon,
+		CancelIcon = itemTable.CancelIcon
 	};
 end;
 

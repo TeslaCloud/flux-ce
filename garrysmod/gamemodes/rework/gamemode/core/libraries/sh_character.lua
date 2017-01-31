@@ -161,7 +161,7 @@ end;
 do
 	local playerMeta = FindMetaTable("Player");
 
-	function playerMeta:GetActiveCharacter()
+	function playerMeta:GetCharacter()
 		local charID = self:GetActiveCharacterID();
 
 		if (charID) then

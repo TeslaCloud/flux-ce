@@ -13,8 +13,4 @@ ITEM.Skin = 1;
 ITEM.Weight = 0.35;
 ITEM.Stackable = true;
 ITEM.MaxStack = 8;
-ITEM.useText = "Drink";
-
-function ITEM:OnUse(player)
-	print("Player just drank some sparkling breen's water. #brainwash");
-end;
+ITEM.UseText = "Drink";

@@ -88,7 +88,7 @@ end;
 
 function playerMeta:GetCharacterVar(id, default)
 	if (SERVER) then
-		return self:GetActiveCharacter()[id] or default;
+		return self:GetCharacter()[id] or default;
 	else
 		return self:GetNetVar(id, default);
 	end;
@@ -99,12 +99,12 @@ if (SERVER) then
 		local curChar = self:GetActiveCharacterID();
 
 		if (curChar) then
-			hook.Run("OnCharacterChange", self, self:GetActiveCharacter(), id);
+			hook.Run("OnCharacterChange", self, self:GetCharacter(), id);
 		end;
 
 		self:SetNetVar("ActiveCharacter", id);
 
-		local charData = self:GetActiveCharacter();
+		local charData = self:GetCharacter();
 
 		self:SetNetVar("name", charData.name or self:SteamName());
 		self:SetNetVar("physDesc", charData.physDesc or "");
@@ -113,13 +113,13 @@ if (SERVER) then
 		self:SetNetVar("key", charData.key or -1);
 		self:SetNetVar("model", charData.model or "models/humans/group01/male_02.mdl");
 		self:SetNetVar("inventory", charData.inventory);
-		hook.Run("OnActiveCharacterSet", self, self:GetActiveCharacter());
+		hook.Run("OnActiveCharacterSet", self, self:GetCharacter());
 	end;
 
 	function playerMeta:SetCharacterVar(id, val)
 		if (isstring(id)) then
 			self:SetNetVar(id, val);
-			self:GetActiveCharacter()[id] = val;
+			self:GetCharacter()[id] = val;
 		end;
 	end;
 
@@ -137,7 +137,7 @@ if (SERVER) then
 	end;
 
 	function playerMeta:SaveCharacter()
-		local charData = self:GetActiveCharacter();
+		local charData = self:GetCharacter();
 		character.Save(self, charData.uniqueID);
 	end;
 end;

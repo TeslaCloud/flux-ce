@@ -14,8 +14,4 @@ ITEM.Weight = 0.35;
 ITEM.Stackable = true;
 ITEM.MaxStack = 8;
 ITEM.SpecialColor = Color(50, 255, 50);
-ITEM.useText = "Drink";
-
-function ITEM:OnUse(player)
-	print("Player just drank some limited breen's water. #tastybrainwash");
-end;
+ITEM.UseText = "Drink";

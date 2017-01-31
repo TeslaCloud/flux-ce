@@ -20,6 +20,22 @@ function CFaction:CFaction(id)
 	self.uniqueID = id:MakeID();
 end;
 
+function CFaction:GetColor()
+	return self.Color;
+end;
+
+function CFaction:GetName()
+	return self.Name;
+end;
+
+function CFaction:GetData(key)
+	return self.Data[key];
+end;
+
+function CFaction:GetDescription()
+	return self.Description;
+end;
+
 function CFaction:AddClass(uniqueID, className, description, color, callback)
 	if (!uniqueID) then return; end;
 
@@ -44,7 +60,7 @@ function CFaction:GenerateName(charName, rank)
 	local finalName = self.NameTemplate;
 
 	if (finalName:find("{name}")) then
-		finalName = finalName:Replace("{name}", charName);
+		finalName = finalName:Replace("{name}", (charName or ""));
 	end;
 
 	if (finalName:find("{rank}")) then
