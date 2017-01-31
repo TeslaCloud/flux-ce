@@ -26,17 +26,17 @@ end;
 -- A function to include a file based on it's prefix.
 function util.Include(strFile)
 	if (SERVER) then
-		if (strFile:find("sh_") or strFile:find("shared.lua")) then
+		if (string.find(strFile, "sh_") or string.find(strFile, "shared.lua")) then
 			AddCSLuaFile(strFile);
 			include(strFile);
-		elseif (strFile:find("cl_")) then
+		elseif (string.find(strFile, "cl_")) then
 			AddCSLuaFile(strFile);
-		elseif (strFile:find("sv_") or strFile:find("init.lua")) then
+		elseif (string.find(strFile, "sv_") or string.find(strFile, "init.lua")) then
 			include(strFile);
 		end;
 	else
-		if (strFile:find("sh_") or strFile:find("shared.lua") 
-		or strFile:find("cl_")) then
+		if (string.find(strFile, "sh_") or string.find(strFile, "shared.lua") 
+		or string.find(strFile, "cl_")) then
 			include(strFile);
 		end;
 	end;

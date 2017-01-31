@@ -615,12 +615,12 @@ end;
 
 function rw.db:EasyWrite(tableName, where, data)
 	if (!data or !istable(data)) then
-		ErrorNoHalt("[Rework] Easy MySQL error! Data has unexpected value type (table expected, got "..typeof(data)..")\n");
+		ErrorNoHalt("[Rework] Easy MySQL error! Data has unexpected value type (table expected, got "..type(data)..")\n");
 		return;
 	end;
 
 	if (!where) then
-		ErrorNoHalt("[Rework] Easy MySQL error! 'where' table is malformed! ([1] = "..typeof(where[1])..", [2] = "..typeof(where[2])..")\n");
+		ErrorNoHalt("[Rework] Easy MySQL error! 'where' table is malformed! ([1] = "..type(where[1])..", [2] = "..type(where[2])..")\n");
 		return;
 	end;
 
@@ -683,7 +683,7 @@ end;
 
 function rw.db:EasyRead(tableName, where, callback)
 	if (!where) then
-		ErrorNoHalt("[Rework] Easy MySQL Read error! 'where' table is malformed! ([1] = "..typeof(where[1])..", [2] = "..typeof(where[2])..")\n");
+		ErrorNoHalt("[Rework] Easy MySQL Read error! 'where' table is malformed! ([1] = "..type(where[1])..", [2] = "..type(where[2])..")\n");
 		return false;
 	end;
 

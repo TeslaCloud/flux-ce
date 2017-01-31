@@ -34,10 +34,39 @@ end;
 function CFaction:AddRank(uniqueID, nameFilter)
 	if (!uniqueID) then return; end;
 
-	table.isnert(self.Ranks, {
+	table.insert(self.Ranks, {
 		uniqueID = uniqueID,
 		name = nameFilter
 	});
+end;
+
+function CFaction:GenerateName(charName, rank)
+	local finalName = self.NameTemplate;
+
+	if (finalName:find("{name}")) then
+		finalName = finalName:Replace("{name}", charName);
+	end;
+
+	if (finalName:find("{rank}")) then
+		for k, v in ipairs(self.Ranks) do
+			if (v.uniqueID == rank) then
+				finalName = finalName:Replace("{rank}", v.name);
+				break;
+			end;
+		end;
+	end;
+
+	for k, v in pairs(self.Data) do
+		if (isstring(k)) then
+			local key = k:utf8lower();
+
+			if (finalName:find("{data:"..key.."}")) then
+				finalName = finalName:Replace("{data:"..key.."}", v);
+			end;
+		end;
+	end;
+
+	return finalName;
 end;
 
 function CFaction:SetData(key, value)
@@ -45,7 +74,7 @@ function CFaction:SetData(key, value)
 
 	if (!key) then return; end;
 
-	self.Data[key] = value;
+	self.Data[key] = tostring(value);
 end;
 
 function CFaction:Register()

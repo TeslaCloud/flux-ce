@@ -8,9 +8,6 @@ library.New("urlmat", rw);
 local cache = rw.urlmat.cache or {};
 rw.urlmat.cache = cache;
 
-local gifcache = rw.urlmat.gifcache or {};
-rw.urlmat.gifcache = gifcache;
-
 local loading = {};
 
 function rw.urlmat:CacheMaterial(url)

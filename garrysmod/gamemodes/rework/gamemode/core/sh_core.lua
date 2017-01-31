@@ -136,7 +136,7 @@ function rw.core:Serialize(tTable)
 
 		return value; 
 	else
-		print("[Rework] You must serialize a table, not "..typeof(tTable).."!");
+		print("[Rework] You must serialize a table, not "..type(tTable).."!");
 		return "";
 	end;
 end;
@@ -154,7 +154,7 @@ function rw.core:Deserialize(strData)
 
 		return value;
 	else
-		print("[Rework] You must deserialize a string, not "..typeof(strData).."!");
+		print("[Rework] You must deserialize a string, not "..type(strData).."!");
 		return {};
 	end;
 end;

@@ -55,6 +55,14 @@ function CItem:GetColor()
 end;
 
 function CItem:AddButton(name, data)
+	--[[
+		Example data structure:
+		data = {
+			icon = "path/to/icon.png",
+			callback = "OnUse" -- this will call ITEM:OnUse function when the button is pressed
+		}
+	--]]
+
 	self.customButtons[name] = data;
 end;
 
