@@ -6,77 +6,58 @@
 
 local PANEL = {};
 
-PANEL.m_MainColor = Color(45, 45, 45);
-PANEL.m_AccentColor = Color(0, 0, 0);
-PANEL.m_TextColor = Color(255, 255, 255);
-PANEL.m_Text = "Rework Frame";
-PANEL.m_Font = "rw_frame_title";
-PANEL.m_bDrawBackground = true;
 PANEL.m_Icon = false;
 PANEL.m_Autopos = true;
+PANEL.m_BackgroundColor = Color(50, 50, 50);
+PANEL.m_MainColor = Color(60, 60, 60);
+PANEL.m_CurAmt = 0;
 
 function PANEL:Paint(w, h)
 	if (!theme.Hook("PaintButton", self, w, h)) then
-		if (self.m_bDrawBackground) then
+		local curAmt = self.m_CurAmt;
+
+		if (self.m_DrawBackground) then
 			surface.SetDrawColor(self.m_AccentColor);
 			surface.DrawRect(0, 0, w, h);
 
-			if (!self:IsHovered()) then
-				surface.SetDrawColor(self.m_MainColor);
-			else
-				surface.SetDrawColor(self.m_MainColor:Lighten(40));
-			end;
-
+			surface.SetDrawColor(self.m_MainColor:Lighten(curAmt));
 			surface.DrawRect(1, 1, w - 2, h - 2);
 		end;
 
-		local textColor = self.m_TextColor;
-		local oX = 0;
-
-		if (self:IsHovered()) then
-			textColor = textColor:Darken(40);
-		end;
+		local textColor = self.m_TextColor:Darken(curAmt);
 
 		if (self.m_Icon) then
-			oX = h / 2 - 4;
-
 			rw.fa:Draw(self.m_Icon, 3, 3, h - 6, textColor);
 		end;
 
-		if (self.m_Text and self.m_Text != "") then
-			local width, height = util.GetTextSize(self.m_Text, self.m_Font);
+		if (self.m_Title and self.m_Title != "") then
+			local width, height = util.GetTextSize(self.m_Title, self.m_Font);
 
 			if (self.m_Autopos) then
-				draw.SimpleText(self.m_Text, self.m_Font, h + 2, h / 2 - height / 2, textColor);
+				if (self.m_Icon) then
+					draw.SimpleText(self.m_Title, self.m_Font, h + 2, h / 2 - height / 2, textColor);
+				else
+					draw.SimpleText(self.m_Title, self.m_Font, w / 2 - width / 2, h / 2 - height / 2, textColor);
+				end;
 			else
-				draw.SimpleText(self.m_Text, self.m_Font, 0, h / 2 - height / 2, textColor);
+				draw.SimpleText(self.m_Title, self.m_Font, 0, h / 2 - height / 2, textColor);
 			end;
 		end;
 	end;
 end;
 
-function PANEL:SetTextColor(newColor, g, b, a)
-	if (isnumber(newColor)) then
-		self.m_TextColor = Color(newColor or 255, g or 255, b or 255, a or 255);
+function PANEL:Think()
+	self.BaseClass.Think(self);
+
+	if (self:IsHovered()) then
+		self.m_CurAmt = math.Clamp(self.m_CurAmt + 1, 0, 40);
 	else
-		self.m_TextColor = newColor or Color(255, 255, 255);
+		self.m_CurAmt = math.Clamp(self.m_CurAmt - 1, 0, 40);
 	end;
 end;
 
 function PANEL:SetText(newText)
-	if (newText) then
-		self.m_Text = tostring(newText);
-	else
-		self.m_Text = "Button";
-	end;
-end;
-
-function PANEL:SetDrawBackground(bDrawBackground)
-	self.m_bDrawBackground = bDrawBackground;
-end;
-
-function PANEL:SetFont(newFont)
-	self.m_Font = tostring(newFont) or "rw_frame_title";
+	return self:SetTitle(newText);
 end;
 
 function PANEL:SetIcon(icon)
@@ -100,7 +81,7 @@ function PANEL:SetTextAutoposition(bAutoposition)
 end;
 
 function PANEL:SizeToContents()
-	local w, h = util.GetTextSize(self.m_Text, self.m_Font);
+	local w, h = util.GetTextSize(self.m_Title, self.m_Font);
 	local add = 0;
 
 	if (self.m_Icon) then
@@ -110,16 +91,4 @@ function PANEL:SizeToContents()
 	self:SetSize(w * 1.15 + add, h * 1.5);
 end;
 
-function PANEL:SetMainColor(newColor)
-	newColor = newColor or Color(40, 40, 40);
-
-	self.m_MainColor = newColor;
-end;
-
-function PANEL:SetAccentColor(newColor)
-	newColor = newColor or Color(40, 40, 40);
-
-	self.m_AccentColor = newColor;
-end;
-
-vgui.Register("reButton", PANEL, "EditablePanel");
+vgui.Register("rwButton", PANEL, "rwBasePanel");

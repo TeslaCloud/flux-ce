@@ -54,8 +54,15 @@ end;
 
 -- Explicit mode. This will attempt to translate the given text regardless of anything else.
 function rw.lang:TranslateText(sText)
+	if (!isstring(sText)) then return "nil"; end;
+
 	if (textCache[sText]) then
 		return textCache[sText];
+	end;
+
+	if (!string.find(sText, "#")) then
+		textCache[sText] = sText;
+		return sText;
 	end;
 
 	local oldText = sText;

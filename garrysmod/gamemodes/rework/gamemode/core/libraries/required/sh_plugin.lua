@@ -337,7 +337,8 @@ function plugin.IncludeFolders(folder)
 end;
 
 do
-	plugin.OldHookCall = plugin.OldHookCall or hook.Call;
+	local oldHookCall = plugin.OldHookCall or hook.Call;
+	plugin.OldHookCall = oldHookCall;
 
 	function hook.Call(name, gm, ...)
 		if (hooksCache[name]) then
@@ -357,11 +358,13 @@ do
 			end;
 		end;
 
-		return plugin.OldHookCall(name, gm, ...);
+		return oldHookCall(name, gm, ...);
 	end;
 
+	-- This function DOES NOT call GM: (gamemode) hooks!
+	-- It only calls plugin, schema and hook.Add'ed hooks!
 	function plugin.Call(name, ...)
-		return hook.Run(name, ...);
+		return hook.Call(name, nil, ...);
 	end;
 end;
 

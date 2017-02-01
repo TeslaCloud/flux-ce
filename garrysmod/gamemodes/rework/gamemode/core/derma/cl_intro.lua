@@ -18,6 +18,8 @@ function PANEL:Init()
 	self:SetPos(0, 0);
 
 	self:StartAnimation(scrW, scrH);
+
+	self:CloseMenu();
 end;
 
 function PANEL:Paint(w, h)

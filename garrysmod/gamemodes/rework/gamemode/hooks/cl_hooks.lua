@@ -246,6 +246,60 @@ function GM:OnMenuPanelOpen(menuPanel, activePanel)
 	activePanel:SetPos(ScrW() / 2 - activePanel:GetWide() / 2 + 64, 256);
 end;
 
+function GM:AddMainMenuItems(panel, sidebar)
+	local scrW, scrH = ScrW(), ScrH();
+
+	panel:AddButton("#MainMenu_New", function(btn)
+		panel.menu = theme.CreatePanel("CharacterCreation", panel);
+
+		if (panel.menu.AddSidebarItems) then
+			panel:RecreateSidebar();
+			panel.menu:AddSidebarItems(sidebar, panel);
+		end;
+	end);
+
+	panel:AddButton("#MainMenu_Load", function(btn)
+		panel.menu = vgui.Create("DFrame", panel);
+		panel.menu:SetPos(scrW / 2 - 300, scrH / 4);
+		panel.menu:SetSize(600, 600);
+		panel.menu:SetTitle("LOAD CHARACTER");
+
+		panel.menu.Paint = function(lp, w, h)
+			draw.RoundedBox(0, 0, 0, w, h, Color(40, 40, 40));
+			draw.SimpleText("Which one to load", "DermaLarge", 0, 24);
+
+			if (#rw.client:GetAllCharacters() <= 0) then
+				draw.SimpleText("wow you have none", "DermaLarge", 0, 24);
+			end
+		end;
+
+		panel.menu:MakePopup();
+
+		panel.menu.buttons = {};
+
+		local offY = 0;
+
+		for k, v in ipairs(rw.client:GetAllCharacters()) do
+			panel.menu.buttons[k] = vgui.Create("DButton", panel.menu);
+			panel.menu.buttons[k]:SetPos(8, 100 + offY);
+			panel.menu.buttons[k]:SetSize(128, 24);
+			panel.menu.buttons[k]:SetText(v.name);
+			panel.menu.buttons[k].DoClick = function()
+				netstream.Start("PlayerSelectCharacter", v.uniqueID);
+				panel:Remove();
+			end;
+
+			offY = offY + 28
+		end;
+	end);
+
+	if (rw.client:GetCharacter()) then
+		panel:AddButton("#MainMenu_Cancel", function(btn)
+			panel:Remove();
+		end);
+	end;
+end;
+
 do
 	local hiddenElements = { -- Hide default HUD elements.
 		CHudHealth = true,

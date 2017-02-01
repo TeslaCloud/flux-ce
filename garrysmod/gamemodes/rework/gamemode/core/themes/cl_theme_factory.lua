@@ -18,6 +18,10 @@ function THEME:OnLoaded()
 	self:AddPanel("MainMenu", function(id, parent, ...)
 		return vgui.Create("reMainMenu", parent);
 	end);
+
+	self:AddPanel("CharacterCreation", function(id, parent, ...)
+		return vgui.Create("rwCharacterCreation", parent);
+	end);
 end;
 
 function THEME:CreateMainMenu(panel)

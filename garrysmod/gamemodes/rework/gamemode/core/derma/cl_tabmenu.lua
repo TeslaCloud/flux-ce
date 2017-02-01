@@ -17,7 +17,7 @@ function PANEL:Init()
 	curX = curX or 42;
 	curY = curY or 200;
 
-	self.closeButton = vgui.Create("reButton", self);
+	self.closeButton = vgui.Create("rwButton", self);
 	self.closeButton:SetFont("rw_menuitem_large");
 	self.closeButton:SetText("CLOSE");
 	self.closeButton:SetPos(curX + 16, curY);
@@ -34,7 +34,7 @@ function PANEL:Init()
 	hook.Run("AddTabMenuItems", self);
 
 	for k, v in pairs(self.menuItems) do
-		local button = vgui.Create("reButton", self);
+		local button = vgui.Create("rwButton", self);
 		button:SetDrawBackground(false);
 		button:SetPos(curX - 20, curY);
 		button:SetSize(200, 30);

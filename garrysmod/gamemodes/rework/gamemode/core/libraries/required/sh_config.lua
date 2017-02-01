@@ -100,6 +100,14 @@ function config.Get(key, default)
 	return default;
 end;
 
+function config.GetAll()
+	return stored;
+end;
+
+function config.GetCache()
+	return cache;
+end;
+
 function config.Register(key, default)
 	stored[key] = {_DefaultValue = default};
 end;

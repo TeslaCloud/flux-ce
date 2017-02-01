@@ -16,6 +16,7 @@ PANEL.m_MainColor = Color(255, 100, 100);
 PANEL.m_AccentColor = Color(200, 200, 200);
 PANEL.m_DrawBackground = true;
 PANEL.m_Title = "RW Base Panel";
+PANEL.m_Font = "rw_frame_title";
 
 function PANEL:SetDrawBackground(bDrawBackground)
 	self.m_DrawBackground = bDrawBackground;
@@ -27,6 +28,10 @@ end;
 
 function PANEL:SetTitle(text)
 	self.m_Title = text;
+end;
+
+function PANEL:SetFont(font)
+	self.m_Font = font or "rw_frame_title";
 end;
 
 function PANEL:SetMainColor(color)
@@ -43,6 +48,10 @@ end;
 
 function PANEL:GetTitle()
 	return (self.m_Title and self.m_Title != "" and self.m_Title) or nil;
+end;
+
+function PANEL:GetFont()
+	return self.m_Font or "rw_frame_title";
 end;
 
 function PANEL:GetDrawBackground(bDrawBackground)
@@ -65,7 +74,7 @@ function PANEL:GetAccentColor()
 	return self.m_AccentColor;
 end;
 
-function PANEL:Paint(width, height) end;
-function PANEL:Think() end;
+function PANEL:Paint(width, height) theme.Hook("PaintPanel", self, width, height); end;
+function PANEL:Think() theme.Hook("PanelThink", self); end;
 
 vgui.Register("rwBasePanel", PANEL, "EditablePanel");

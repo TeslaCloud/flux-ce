@@ -11,7 +11,7 @@ function PANEL:Init()
 	self:SetMainColor(Color(55, 55, 55, 235));
 	self:SetAccentColor(Color(90, 90, 190));
 
-	self.btnClose = vgui.Create("reButton", self);
+	self.btnClose = vgui.Create("rwButton", self);
 	self.btnClose:SetSize(20, 20);
 	self.btnClose:SetPos(0, 0);
 	self.btnClose:SetIcon("fa-times");
