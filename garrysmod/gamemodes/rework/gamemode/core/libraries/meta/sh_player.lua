@@ -11,6 +11,32 @@ if (SERVER) then
 		self:SetNetVar("whitelists", data);
 	end;
 
+	function playerMeta:GiveWhitelist(name)
+		local whitelists = self:GetWhitelists();
+
+		if (!table.HasValue(whitelists, name)) then
+			table.insert(whitelists, name);
+			self:SetWhitelists(whitelists);
+		end;
+	end;
+
+	function playerMeta:TakeWhitelist(name)
+		local whitelists = self:GetWhitelists();
+
+		for k, v in ipairs(whitelists) do
+			if (v == name) then
+				table.remove(whitelists, k);
+				break;
+			end;
+		end;
+
+		self:SetWhitelists(whitelists);
+	end;
+
+	function playerMeta:HasWhitelist(name)
+		return table.HasValue(self:GetWhitelists(), name);
+	end;
+
 	function playerMeta:SetData(data)
 		self:SetNetVar("rwData", {});
 	end;
@@ -155,7 +181,7 @@ function playerMeta:GetFactionID()
 end;
 
 function playerMeta:GetFaction()
-	return faction.Find(self:GetFactionID());
+	return faction.FindByID(self:GetFactionID());
 end;
 
 function playerMeta:GetRank()

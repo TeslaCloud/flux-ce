@@ -7,8 +7,10 @@
 Class "CFaction";
 
 CFaction.Name = "Unknown Faction";
+CFaction.PrintName = "Unknown Faction";
 CFaction.Description = "This faction has no description set!";
 CFaction.PhysDesc = "This faction has no default physical description set!";
+CFaction.Whitelisted = false;
 CFaction.DefaultClass = nil;
 CFaction.Color = Color(255, 255, 255);
 CFaction.Models = {male = {}, female = {}, universal = {}};

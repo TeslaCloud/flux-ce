@@ -8,18 +8,22 @@ FACTION.Name = "Combine Civil Authority";
 FACTION.Description = "Combine police forces.";
 FACTION.PhysDesc = "Wearing shiny metropolice unit uniform with brand new stunstick on his belt."
 FACTION.Color = Color(225, 185, 135);
+FACTION.Whitelisted = true;
 FACTION.DefaultClass = "recruit";
-FACTION.NameTemplate = "CCA.{data:Squad}.{rank}.{callback:GenerateID}";
+FACTION.NameTemplate = "CCA.{rank}-{data:Squad}.{callback:GenerateID}";
 FACTION:SetData("Squad", "UNION");
 FACTION.Models.universal = {
 	"models/police.mdl"
 };
 
 FACTION:AddRank("RCT");
-FACTION:AddRank("GU");
-FACTION:AddRank("S-GU");
+FACTION:AddRank("04");
+FACTION:AddRank("03");
+FACTION:AddRank("02");
+FACTION:AddRank("01");
 FACTION:AddRank("OfC");
 FACTION:AddRank("GHOST");
+FACTION:AddRank("EpU");
 FACTION:AddRank("CmD");
 FACTION:AddRank("SeC");
 
@@ -28,7 +32,7 @@ FACTION:AddClass("recruit", "Metropolice Recruit", "Metropolice Unit that is yet
 end);
 
 FACTION:AddClass("unit", "Metropolice Unit", "A regular Metropolice Force unit.", FACTION.Color, function(player)
-	return player:IsRank("GU");
+	return player:IsRank("04");
 end);
 
 FACTION:AddClass("elite_mpf", "Elite Metropolice", "Metropolice high command.", FACTION.Color, function(player)
@@ -36,5 +40,13 @@ FACTION:AddClass("elite_mpf", "Elite Metropolice", "Metropolice high command.", 
 end);
 
 function FACTION:GenerateID(player)
-	return math.random(100, 999);
+	local id = player:GetCharacterData("UnitID", false);
+
+	if (!id) then
+		id = math.random(100, 999);
+
+		player:SetCharacterData("UnitID", id);
+	end;
+
+	return id;
 end;

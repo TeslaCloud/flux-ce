@@ -15,12 +15,33 @@ function faction.Register(id, data)
 	data.uniqueID = id:MakeID() or (data.Name and data.Name:MakeID());
 	data.Name = data.Name or "Unknown Faction";
 	data.Description = data.Description or "This faction has no description!";
+	data.PrintName = data.PrintName or data.Name or "Unknown Faction";
 
 	stored[id] = data;
 end;
 
-function faction.Find(id)
+function faction.FindByID(id)
 	return stored[id];
+end;
+
+function faction.Find(name, bStrict)
+	for k, v in pairs(stored) do
+		if (bStrict) then
+			if (k:utf8lower() == name:utf8lower()) then
+				return v;
+			elseif (v.Name:utf8lower() == name:utf8lower()) then
+				return v;
+			end;
+		else
+			if (k:utf8lower():find(name:utf8lower())) then
+				return v;
+			elseif (v.Name:utf8lower():find(name:utf8lower())) then
+				return v;
+			end;
+		end;
+	end;
+
+	return false;
 end;
 
 pipeline.Register("faction", function(uniqueID, fileName, pipe)
