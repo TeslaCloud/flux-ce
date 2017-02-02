@@ -6,27 +6,38 @@
 
 Class "CFaction";
 
-CFaction.Name = "Unknown Faction";
-CFaction.PrintName = "Unknown Faction";
-CFaction.Description = "This faction has no description set!";
-CFaction.PhysDesc = "This faction has no default physical description set!";
-CFaction.Whitelisted = false;
-CFaction.DefaultClass = nil;
-CFaction.Color = Color(255, 255, 255);
-CFaction.Models = {male = {}, female = {}, universal = {}};
-CFaction.Classes = {};
-CFaction.Ranks = {};
-CFaction.Data = {};
-CFaction.NameTemplate = "{rank} {name}";
--- You can also use {data:key} to insert data
--- set via Faction:SetData.
-
 function CFaction:CFaction(id)
 	self.uniqueID = id:MakeID();
+	self.Name = "Unknown Faction";
+	self.PrintName = nil;
+	self.Description = "This faction has no description set!";
+	self.PhysDesc = "This faction has no default physical description set!";
+	self.Whitelisted = false;
+	self.DefaultClass = nil;
+	self.Color = Color(255, 255, 255);
+	self.Material = nil;
+	self.HasName = true;
+	self.HasDescription = true;
+	self.HasGender = true;
+	self.Models = {male = {}, female = {}, universal = {}};
+	self.Classes = {};
+	self.Ranks = {};
+	self.Data = {};
+	self.NameTemplate = "{rank} {name}";
+	-- You can also use {data:key} to insert data
+	-- set via Faction:SetData.
 end;
 
 function CFaction:GetColor()
 	return self.Color;
+end;
+
+function CFaction:GetMaterial()
+	return self.Material and util.GetMaterial(self.Material);
+end;
+
+function CFaction:GetImage()
+	return self.Material;
 end;
 
 function CFaction:GetName()

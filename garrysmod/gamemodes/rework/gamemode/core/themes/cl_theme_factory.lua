@@ -22,8 +22,9 @@ function THEME:OnLoaded()
 	self:SetOption("MainMenu_LogoWidth", 110);
 
 	self:SetColor("Accent", Color(90, 90, 190));
-	self:SetColor("Main", Color(40, 40, 40));
-	self:SetColor("Outline", Color(60, 60, 60));
+	self:SetColor("Main", Color(50, 50, 50));
+	self:SetColor("MainDark", Color(40, 40, 40));
+	self:SetColor("Outline", Color(65, 65, 65));
 	self:SetColor("Background", Color(20, 20, 20));
 	self:SetColor("Text", Color(255, 255, 255));
 	self:SetColor("SchemaText", Color(255, 255, 255));
@@ -50,6 +51,18 @@ function THEME:OnLoaded()
 
 	self:AddPanel("CharacterCreation", function(id, parent, ...)
 		return vgui.Create("rwCharacterCreation", parent);
+	end);
+
+	self:AddPanel("CharCreation_General", function(id, parent, ...)
+		return vgui.Create("rwCharCreationGeneral", parent);
+	end);
+
+	self:AddPanel("CharCreation_Model", function(id, parent, ...)
+		return vgui.Create("rwCharCreationModel", parent);
+	end);
+
+	self:AddPanel("CharCreation_Faction", function(id, parent, ...)
+		return vgui.Create("rwCharCreationFaction", parent);
 	end);
 end;
 
@@ -81,6 +94,48 @@ function THEME:PaintMainMenu(panel, width, height)
 
 	draw.SimpleText(title, self:GetFont("Text_Largest"), wide + width / 2 - titleW / 2, 150, self:GetColor("SchemaText"));
 	draw.SimpleText(desc, self:GetFont("Text_Normal"), wide + width / 2 - descW / 2, 250, self:GetColor("SchemaText"));
+end;
+
+function THEME:PaintButton(panel, w, h)
+	local curAmt = panel.m_CurAmt;
+	local textColor = self:GetColor("Text"):Darken(curAmt);
+	local title = panel.m_Title;
+	local font = panel.m_Font;
+	local icon = panel.m_Icon;
+
+	if (panel.m_DrawBackground) then
+		if (!panel.m_Active) then
+			surface.SetDrawColor(self:GetColor("Outline"));
+			surface.DrawRect(0, 0, w, h);
+		
+			surface.SetDrawColor(self:GetColor("Main"):Lighten(curAmt));
+			surface.DrawRect(1, 1, w - 2, h - 2);
+		else
+			surface.SetDrawColor(self:GetColor("Outline"));
+			surface.DrawRect(0, 0, w, h);
+		
+			surface.SetDrawColor(self:GetColor("MainDark"));
+			surface.DrawRect(1, 1, w - 1, h - 2);
+		end;
+	end;
+
+	if (icon) then
+		rw.fa:Draw(icon, (panel.m_IconSize and h / 2 - panel.m_IconSize / 2) or 3, (panel.m_IconSize and h / 2 - panel.m_IconSize / 2) or 3, (panel.m_IconSize or h - 6), textColor);
+	end;
+
+	if (title and title != "") then
+		local width, height = util.GetTextSize(title, font);
+	
+		if (panel.m_Autopos) then
+			if (icon) then
+				draw.SimpleText(title, font, h + 2, h / 2 - height / 2, textColor);
+			else
+				draw.SimpleText(title, font, w / 2 - width / 2, h / 2 - height / 2, textColor);
+			end;
+		else
+			draw.SimpleText(title, font, 0, h / 2 - height / 2, textColor);
+		end;
+	end;
 end;
 
 function THEME:DrawBarBackground(barInfo)

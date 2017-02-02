@@ -5,25 +5,30 @@
 --]]
 
 local PANEL = {};
+PANEL.CharData = {};
 
 function PANEL:Init()
 	self:SetPos(200, 0);
 	self:SetSize(ScrW() - 200, ScrH());
-	self:SetTitle("CREATE CHARACTER");
+	self:SetTitle("CREATE A CHARACTER");
 
 	self.btnClose:SafeRemove();
 
-	self.NameEntry = vgui.Create("DTextEntry", self);
-	self.NameEntry:SetPos(8, 100);
-	self.NameEntry:SetSize(400, 32);
-	self.NameEntry:SetText("");
-	self.NameEntry.OnEnter = function(entry)
-		chat.AddText(Color("white"), "Creating character named: "..entry:GetValue());
+	self.finishButton = vgui.Create("rwButton", self);
+	self.finishButton:SetTitle("FINISH");
+	self.finishButton:SetPos(self:GetWide() - 250, self:GetTall() - 120);
+	self.finishButton:SetDrawBackground(false);
+	self.finishButton:SetFont(theme.GetFont("Text_Large"));
+	self.finishButton:SizeToContents();
 
-		self.menu:Remove();
-
-		netstream.Start("rw_debug_createchar", entry:GetValue());
+	self.finishButton.DoClick = function(btn)
+		print("click");
+		netstream.Start("CreateCharacter", self.CharData);
 	end;
+
+	self.finishButton:MoveToFront();
+
+	self:OpenPanel("CharCreation_General");
 end;
 
 function PANEL:Close(callback)
@@ -35,19 +40,52 @@ function PANEL:Close(callback)
 	end;
 end;
 
+function PANEL:CollectData(newData)
+	table.Merge(self.CharData, newData);
+
+	PrintTable(self.CharData);
+end;
+
+function PANEL:OpenPanel(id)
+	if (IsValid(self.panel)) then
+		if (self.panel.OnClose) then
+			self.panel:OnClose(self);
+		end;
+
+		self.panel:SafeRemove();
+	end;
+
+	self.panel = theme.CreatePanel(id, self);
+	self.panel:SetSize(self:GetWide() - 200, self:GetTall() - 90);
+	self.panel:SetPos(0, 90);
+
+	if (self.panel.OnOpen) then
+		self.panel:OnOpen(self);
+	end;
+end;
+
 function PANEL:AddSidebarItems(sidebar, panel)
-	panel:AddButton("General Settings", function (btn) end);
-	panel:AddButton("Model", function (btn) end);
-	panel:AddButton("Faction", function (btn) end);
-	panel:AddButton("Attributes", function (btn) end);
+	local button = panel:AddButton("General Settings", function(btn)
+		self:OpenPanel("CharCreation_General");
+	end);
+
+	button:SetActive(true);
+	panel.prevButton = button;
+
+	panel:AddButton("Faction", function (btn) 
+		self:OpenPanel("CharCreation_Faction");
+	end);
+
+	panel:AddButton("Model", function (btn)
+		self:OpenPanel("CharCreation_Model");
+	end);
 
 	hook.Run("AddCharacterCreationMenuItems", self, panel, sidebar);
 end;
 
 function PANEL:Paint(w, h)
 	draw.RoundedBox(0, 0, 0, w, h, Color(30, 30, 30));
-	draw.SimpleText("CREATE CHARACTER", "rw_menuitem_large", 24, 42);
-	draw.SimpleText("Type in character's name and hit enter to continue. Further options coming in future updates.", "tooltip_small", 10, 82);
+	draw.SimpleText("CREATE A CHARACTER", theme.GetFont("Text_Large"), 24, 42);
 end;
 
 vgui.Register("rwCharacterCreation", PANEL, "rwFrame");

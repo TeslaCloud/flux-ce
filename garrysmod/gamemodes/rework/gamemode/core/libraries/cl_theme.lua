@@ -15,8 +15,6 @@ function theme.GetStored()
 end;
 
 function theme.CreatePanel(panelID, parent, ...)
-	print(theme.activeTheme);
-
 	if (theme.activeTheme and hook.Run("ShouldThemeCreatePanel", panelID, theme.activeTheme) != false) then
 		return theme.activeTheme:CreatePanel(panelID, parent, ...);
 	end;

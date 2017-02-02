@@ -152,6 +152,22 @@ if (SERVER) then
 		print("Created character: "..name);
 	end);
 
+	netstream.Hook("CreateCharacter", function(player, data)
+		data.gender	= (data.gender and data.gender == "Female" and CHAR_GENDER_FEMALE) or CHAR_GENDER_MALE;
+		data.physDesc = data.description;
+
+		local status = character.Create(player, data);
+
+		print("Creating character. Status: "..status);
+
+		if (status == CHAR_SUCCESS) then
+			character.SendToClient(player);
+			print("Success");
+		else
+			print("Error");
+		end;
+	end);
+
 	netstream.Hook("PlayerSelectCharacter", function(player, id)
 		print(player:Name().." has loaded character #"..id);
 		player:SetActiveCharacter(id);

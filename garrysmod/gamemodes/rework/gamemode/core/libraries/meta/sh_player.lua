@@ -33,10 +33,6 @@ if (SERVER) then
 		self:SetWhitelists(whitelists);
 	end;
 
-	function playerMeta:HasWhitelist(name)
-		return table.HasValue(self:GetWhitelists(), name);
-	end;
-
 	function playerMeta:SetData(data)
 		self:SetNetVar("rwData", {});
 	end;
@@ -62,6 +58,10 @@ end;
 
 function playerMeta:GetWhitelists()
 	return self:GetNetVar("whitelists", {});
+end;
+
+function playerMeta:HasWhitelist(name)
+	return table.HasValue(self:GetWhitelists(), name);
 end;
 
 playerMeta.rwName = playerMeta.rwName or playerMeta.Name;

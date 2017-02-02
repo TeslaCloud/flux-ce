@@ -5,7 +5,7 @@
 --]]
 
 local PANEL = {};
-PANEL.buttons = {};
+PANEL.prevButton = nil;
 
 function PANEL:Init()
 	self:SetPos(0, 0);
@@ -37,7 +37,7 @@ function PANEL:RecreateSidebar(bShouldCreateButtons)
 	self.sidebar:SetMargin(theme.GetOption("MainMenu_SidebarMargin"));
 	self.sidebar:AddSpace(8);
 
-	self.logo = vgui.Create("DImage", self)	-- Add image to Frame
+	self.logo = vgui.Create("DImage", self);
 	self.logo:SetSize(theme.GetOption("MainMenu_LogoWidth"), theme.GetOption("MainMenu_LogoHeight"));
 	self.logo:SetImage(theme.GetOption("MainMenu_SidebarLogo"));
 
@@ -53,6 +53,7 @@ function PANEL:RecreateSidebar(bShouldCreateButtons)
 		backButton:SetMainColor(Color(100, 50, 50));
 		backButton:SetAccentColor(Color(75, 75, 75));
 		backButton:SetIcon("fa-chevron-left");
+		backButton:SetIconSize(16);
 		backButton:SetFont(rw.fonts:GetSize("menu_thin_large", 22));
 		backButton:SetTitle("BACK");
 
@@ -100,11 +101,25 @@ function PANEL:AddButton(text, callback)
 	button:SetTextAutoposition(true);
 	button:SetAccentColor(Color(75, 75, 75));
 
-	button.DoClick = (isfunction(callback) and callback) or (isstring(callback) and function(btn)
-		self:OpenMenu(callback);
-	end) or function() end;
+	button.DoClick = function(btn)
+		btn:SetActive(true);
+
+		if (IsValid(self.prevButton) and self.prevButton != btn) then
+			self.prevButton:SetActive(false);
+		end;
+
+		self.prevButton = btn;
+
+		if (isfunction(callback)) then
+			callback(btn);
+		elseif (isstring(callback)) then
+			self:OpenMenu(callback);
+		end;
+	end;
 
 	self.sidebar:AddPanel(button);
+
+	return button;
 end;
 
 vgui.Register("reMainMenu", PANEL, "EditablePanel");

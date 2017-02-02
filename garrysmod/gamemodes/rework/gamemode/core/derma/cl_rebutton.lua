@@ -8,41 +8,12 @@ local PANEL = {};
 
 PANEL.m_Icon = false;
 PANEL.m_Autopos = true;
-PANEL.m_MainColor = Color(60, 60, 60);
 PANEL.m_CurAmt = 0;
+PANEL.m_Active = false;
+PANEL.m_IconSize = nil;
 
 function PANEL:Paint(w, h)
-	if (!theme.Hook("PaintButton", self, w, h)) then
-		local curAmt = self.m_CurAmt;
-
-		if (self.m_DrawBackground) then
-			surface.SetDrawColor(self.m_AccentColor);
-			surface.DrawRect(0, 0, w, h);
-
-			surface.SetDrawColor(self.m_MainColor:Lighten(curAmt));
-			surface.DrawRect(1, 1, w - 2, h - 2);
-		end;
-
-		local textColor = self.m_TextColor:Darken(curAmt);
-
-		if (self.m_Icon) then
-			rw.fa:Draw(self.m_Icon, 3, 3, h - 6, textColor);
-		end;
-
-		if (self.m_Title and self.m_Title != "") then
-			local width, height = util.GetTextSize(self.m_Title, self.m_Font);
-
-			if (self.m_Autopos) then
-				if (self.m_Icon) then
-					draw.SimpleText(self.m_Title, self.m_Font, h + 2, h / 2 - height / 2, textColor);
-				else
-					draw.SimpleText(self.m_Title, self.m_Font, w / 2 - width / 2, h / 2 - height / 2, textColor);
-				end;
-			else
-				draw.SimpleText(self.m_Title, self.m_Font, 0, h / 2 - height / 2, textColor);
-			end;
-		end;
-	end;
+	theme.Hook("PaintButton", self, w, h);
 end;
 
 function PANEL:Think()
@@ -55,12 +26,20 @@ function PANEL:Think()
 	end;
 end;
 
+function PANEL:SetActive(active)
+	self.m_Active = active;
+end;
+
 function PANEL:SetText(newText)
 	return self:SetTitle(newText);
 end;
 
 function PANEL:SetIcon(icon)
 	self.m_Icon = tostring(icon) or false;
+end;
+
+function PANEL:SetIconSize(size)
+	self.m_IconSize = size;
 end;
 
 function PANEL:OnMousePressed(key)

@@ -9,6 +9,9 @@ library.New("faction", _G);
 local stored = faction.stored or {};
 faction.stored = stored;
 
+local count = faction.count or 0;
+faction.count = count;
+
 function faction.Register(id, data)
 	if (!id or !data) then return; end;
 
@@ -18,6 +21,7 @@ function faction.Register(id, data)
 	data.PrintName = data.PrintName or data.Name or "Unknown Faction";
 
 	stored[id] = data;
+	count = count + 1;
 end;
 
 function faction.FindByID(id)
@@ -42,6 +46,14 @@ function faction.Find(name, bStrict)
 	end;
 
 	return false;
+end;
+
+function faction.Count()
+	return count;
+end;
+
+function faction.GetAll()
+	return stored;
 end;
 
 pipeline.Register("faction", function(uniqueID, fileName, pipe)
