@@ -8,7 +8,6 @@ local PANEL = {};
 
 PANEL.m_Icon = false;
 PANEL.m_Autopos = true;
-PANEL.m_BackgroundColor = Color(50, 50, 50);
 PANEL.m_MainColor = Color(60, 60, 60);
 PANEL.m_CurAmt = 0;
 

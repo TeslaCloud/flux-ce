@@ -126,10 +126,22 @@ util.IncludeDirectory("core/derma", true);
 item.IncludeItems("rework/gamemode/core/items");
 
 if (theme or SERVER) then
-	-- Theme factory is needed for any other themes that may be in the themes folder.
-	util.Include("core/themes/cl_theme_factory.lua");
+	pipeline.Register("theme", function(uniqueID, fileName, pipe)
+		if (CLIENT) then
+			THEME = Theme(uniqueID);
 
-	util.IncludeDirectory("core/themes", true);
+			util.Include(fileName);
+
+			THEME:Register(); THEME = nil;
+		else
+			util.Include(fileName);
+		end;
+	end);
+
+	-- Theme factory is needed for any other themes that may be in the themes folder.
+	pipeline.Include("theme", "core/themes/cl_theme_factory.lua");
+
+	pipeline.IncludeDirectory("theme", "rework/gamemode/core/themes");
 end;
 
 util.IncludeDirectory("hooks", true);

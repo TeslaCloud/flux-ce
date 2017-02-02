@@ -9,7 +9,9 @@ Class "CTheme";
 CTheme.colors = {};
 CTheme.sounds = {};
 CTheme.materials = {};
+CTheme.options = {};
 CTheme.panels = {};
+CTheme.fonts = {};
 CTheme.shouldReload = true;
 
 --[[ Basic Skeleton --]]
@@ -40,6 +42,18 @@ function CTheme:CreatePanel(id, parent, ...)
 	end;
 end;
 
+function CTheme:SetOption(key, value)
+	if (key) then
+		self.options[key] = value;
+	end;
+end;
+
+function CTheme:SetFont(key, value, scale)
+	if (key) then
+		self.fonts[key] = rw.fonts:GetSize(value, scale)
+	end;
+end;
+
 function CTheme:SetColor(id, val)
 	self.colors[id] = val or Color(255, 255, 255);
 end;
@@ -50,6 +64,14 @@ end;
 
 function CTheme:SetSound(id, val)
 	self.sounds[id] = val or Sound();
+end;
+
+function CTheme:GetFont(key, default)
+	return self.fonts[key] or default;
+end;
+
+function CTheme:GetOption(key, default)
+	return self.options[key] or default;
 end;
 
 function CTheme:GetColor(id, failsafe)

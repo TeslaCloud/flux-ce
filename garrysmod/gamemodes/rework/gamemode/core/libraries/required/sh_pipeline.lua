@@ -28,6 +28,10 @@ function pipeline.Find(id)
 end;
 
 function pipeline.Include(pipe, fileName)
+	if (isstring(pipe)) then
+		pipe = stored[pipe];
+	end;
+
 	if (!pipe) then return; end;
 	if (!isstring(fileName) or fileName:utf8len() < 7) then return; end;
 

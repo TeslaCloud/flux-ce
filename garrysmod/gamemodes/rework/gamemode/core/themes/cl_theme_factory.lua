@@ -5,12 +5,41 @@
 --]]
 
 -- Create the default theme that other themes will derive from.
-local THEME = Theme("Factory");
 THEME.author = "TeslaCloud Studios"
 THEME.uniqueID = "factory";
 THEME.shouldReload = true;
 
 function THEME:OnLoaded()
+	local scrW, scrH = ScrW(), ScrH();
+
+	self:SetOption("MainMenu_SidebarWidth", 200);
+	self:SetOption("MainMenu_SidebarHeight", scrH);
+	self:SetOption("MainMenu_SidebarX", 0);
+	self:SetOption("MainMenu_SidebarY", 0);
+	self:SetOption("MainMenu_SidebarMargin", -1);
+	self:SetOption("MainMenu_SidebarLogo", "rework/rw_icon.png");
+	self:SetOption("MainMenu_LogoHeight", 100);
+	self:SetOption("MainMenu_LogoWidth", 110);
+
+	self:SetColor("Accent", Color(90, 90, 190));
+	self:SetColor("Main", Color(40, 40, 40));
+	self:SetColor("Outline", Color(60, 60, 60));
+	self:SetColor("Background", Color(20, 20, 20));
+	self:SetColor("Text", Color(255, 255, 255));
+	self:SetColor("SchemaText", Color(255, 255, 255));
+	self:SetColor("MainMenu_Background", Color(0, 0, 0));
+
+	self:SetFont("MenuTitles", "rw_frame_title");
+	self:SetFont("Text_Largest", "rwMainFont", 90);
+	self:SetFont("Text_Larger", "rwMainFont", 60);
+	self:SetFont("Text_Large", "rwMainFont", 48);
+	self:SetFont("Text_NormalLarge", "rwMainFont", 36);
+	self:SetFont("Text_Normal", "rwMainFont", 24);
+	self:SetFont("Text_Small", "rwMainFont", 18);
+	self:SetFont("Text_Smaller", "rwMainFont", 16);
+	self:SetFont("Text_Smallest", "rwMainFont", 14);
+	self:SetFont("Text_Tiny", "rwMainFont", 11);
+
 	self:AddPanel("TabMenu", function(id, parent, ...)
 		return vgui.Create("reTabMenu", parent);
 	end);
@@ -24,8 +53,7 @@ function THEME:OnLoaded()
 	end);
 end;
 
-function THEME:CreateMainMenu(panel)
-end;
+function THEME:CreateMainMenu(panel) end;
 
 function THEME:PaintFrame(panel, width, height)
 	surface.SetDrawColor(panel:GetAccentColor());
@@ -40,6 +68,19 @@ function THEME:PaintFrame(panel, width, height)
 	if (title) then
 		draw.SimpleText(title, "rw_frame_title", 6, 4, panel:GetTextColor());
 	end;
+end;
+
+function THEME:PaintMainMenu(panel, width, height)
+	local wide = self:GetOption("MainMenu_SidebarWidth") / 2;
+	local title, desc = Schema:GetName(), Schema:GetDescription();
+	local titleW, titleH = util.GetTextSize(title, self:GetFont("Text_Largest"));
+	local descW, descH = util.GetTextSize(desc, self:GetFont("Text_Normal"));
+
+	surface.SetDrawColor(self:GetColor("MainMenu_Background"));
+	surface.DrawRect(0, 0, width, width);
+
+	draw.SimpleText(title, self:GetFont("Text_Largest"), wide + width / 2 - titleW / 2, 150, self:GetColor("SchemaText"));
+	draw.SimpleText(desc, self:GetFont("Text_Normal"), wide + width / 2 - descW / 2, 250, self:GetColor("SchemaText"));
 end;
 
 function THEME:DrawBarBackground(barInfo)
@@ -77,5 +118,3 @@ function THEME:DrawBarTexts(barInfo)
 
 	return true;
 end;
-
-THEME:Register();

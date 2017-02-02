@@ -15,6 +15,8 @@ function theme.GetStored()
 end;
 
 function theme.CreatePanel(panelID, parent, ...)
+	print(theme.activeTheme);
+
 	if (theme.activeTheme and hook.Run("ShouldThemeCreatePanel", panelID, theme.activeTheme) != false) then
 		return theme.activeTheme:CreatePanel(panelID, parent, ...);
 	end;
@@ -66,12 +68,32 @@ function theme.SetColor(key, value)
 	end;
 end;
 
+function theme.SetFont(key, value)
+	if (theme.activeTheme) then
+		theme.activeTheme:SetFont(key, value);
+	end;
+end;
+
 function theme.GetColor(key, fallback)
 	if (theme.activeTheme) then
 		return theme.activeTheme:GetColor(key, fallback);
 	end;
 
 	return fallback;
+end;
+
+function theme.GetFont(key, fallback)
+	if (theme.activeTheme) then
+		return theme.activeTheme:GetFont(key, fallback);
+	end;
+
+	return fallback;
+end;
+
+function theme.SetOption(key, value)
+	if (theme.activeTheme) then
+		theme.activeTheme:SetOption(key, value);
+	end;
 end;
 
 function theme.SetMaterial(key, value)
@@ -83,6 +105,14 @@ end;
 function theme.GetMaterial(key, fallback)
 	if (theme.activeTheme) then
 		return theme.activeTheme:GetMaterial(key, fallback);
+	end;
+
+	return fallback;
+end;
+
+function theme.GetOption(key, fallback)
+	if (theme.activeTheme) then
+		return theme.activeTheme:GetOption(key, fallback);
 	end;
 
 	return fallback;
@@ -158,14 +188,16 @@ function theme.Reload()
 	hook.Run("OnThemeReloaded", theme.activeTheme);
 end;
 
-local themeHooks = {};
+do
+	local themeHooks = {};
 
-function themeHooks:InitPostEntity()
-	theme.LoadTheme("Factory");
+	function themeHooks:InitPostEntity()
+		theme.LoadTheme("Factory");
+	end;
+
+	function themeHooks:OnReloaded()
+		theme.Reload();
+	end;
+
+	plugin.AddHooks("rwThemeHooks", themeHooks);
 end;
-
-function themeHooks:OnReloaded()
-	theme.Reload();
-end;
-
-plugin.AddHooks("rwThemeHooks", themeHooks);

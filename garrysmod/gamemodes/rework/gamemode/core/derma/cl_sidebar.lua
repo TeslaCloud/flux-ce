@@ -23,12 +23,20 @@ function PANEL:Paint(width, height)
 	draw.RoundedBox(0, 0, 0, width, height, Color(40, 40, 40));
 end;
 
-function PANEL:AddPanel(panel)
+function PANEL:AddPanel(panel, bCenter)
 	local x, y = panel:GetPos();
+
+	if (bCenter) then
+		x = self:GetWide() / 2 - panel:GetWide() / 2;
+	end;
 
 	panel:SetPos(x, self.lastPos);
 	self:AddItem(panel);
 	self.lastPos = self.lastPos + self.margin + panel:GetTall();
+end;
+
+function PANEL:AddSpace(px)
+	self.lastPos = self.lastPos + px;
 end;
 
 function PANEL:Clear()

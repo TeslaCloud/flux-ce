@@ -89,30 +89,22 @@ function PLUGIN:AdjustCrosshairColor(trace, distance)
 		end;
 	end;
 
-	if (distance < 70) then
-		alpha = 0;
-	end;
-
 	if (rw.client:GetVelocity():Length2D() > 150) then
 		alpha = 0;
 	end;
 
-	_alpha = Lerp(FrameTime() * 4, (_alpha or alpha), alpha);
+	_alpha = Lerp(FrameTime() * 8, (_alpha or alpha), alpha);
 
 	return ColorAlpha(drawColor, _alpha), bShouldDrawText;
 end;
 
 function PLUGIN:AdjustCrosshairRadius(trace, distance)
 	local dist = math.Clamp(distance * 3, 200, 2400) / 1000;
-	local fraction = FrameTime() * 2;
-	local target = math.Clamp(4 / dist, 2, 6);
+	local fraction = FrameTime() * 8;
+	local target = math.Clamp(3 / dist, 2, 8);
 
 	if (!curSize) then
 		curSize = target;
-	end;
-
-	if (distance < 70) then
-		target = 10;
 	end;
 
 	if (rw.client:GetVelocity():Length2D() > 150) then

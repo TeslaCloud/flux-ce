@@ -39,6 +39,8 @@ function rw.fonts:CreateFont(name, fontData)
 end;
 
 function rw.fonts:GetSize(name, size)
+	if (!size) then return name; end;
+
 	local newName = name..":"..size;
 
 	if (!stored[newName]) then
@@ -164,6 +166,13 @@ function rw.fonts:CreateFonts()
 		font = "Roboto Condensed",
 		extended = true,
 		size = 30,
+		weight = 500
+	});
+
+	self:CreateFont("rwMainFont", {
+		font = "Roboto Condensed",
+		extended = true,
+		size = 16,
 		weight = 500
 	});
 

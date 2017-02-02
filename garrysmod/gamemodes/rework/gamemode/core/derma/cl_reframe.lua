@@ -8,8 +8,8 @@ local PANEL = {};
 
 function PANEL:Init()
 	self:SetTitle("Rework Frame");
-	self:SetMainColor(Color(55, 55, 55, 235));
-	self:SetAccentColor(Color(90, 90, 190));
+	self:SetMainColor(theme.GetColor("Main"));
+	self:SetAccentColor(theme.GetColor("Accent"));
 
 	self.btnClose = vgui.Create("rwButton", self);
 	self.btnClose:SetSize(20, 20);

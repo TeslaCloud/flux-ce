@@ -4,8 +4,6 @@
 	the framework is publicly released.
 --]]
 
-local logoMat = Material("rework/rw_icon.png");
-
 local PANEL = {};
 PANEL.buttons = {};
 
@@ -21,10 +19,7 @@ function PANEL:Init()
 end;
 
 function PANEL:Paint(w, h)
-	if (!theme.Hook("DrawMainMenu", self)) then
-		surface.SetDrawColor(Color(0, 0, 0));
-		surface.DrawRect(0, 0, w, h);
-	end;
+	theme.Hook("PaintMainMenu", self, w, h)
 end;
 
 function PANEL:Think()
@@ -37,19 +32,18 @@ function PANEL:RecreateSidebar(bShouldCreateButtons)
 	end;
 
 	self.sidebar = vgui.Create("rwSidebar", self);
-	self.sidebar:SetPos(0, 0);
-	self.sidebar:SetSize(200, ScrH());
-	self.sidebar:SetMargin(-1);
-	self.sidebar.lastPos = 8;
+	self.sidebar:SetPos(theme.GetOption("MainMenu_SidebarX"), theme.GetOption("MainMenu_SidebarY"));
+	self.sidebar:SetSize(theme.GetOption("MainMenu_SidebarWidth"), theme.GetOption("MainMenu_SidebarHeight"));
+	self.sidebar:SetMargin(theme.GetOption("MainMenu_SidebarMargin"));
+	self.sidebar:AddSpace(8);
 
 	self.logo = vgui.Create("DImage", self)	-- Add image to Frame
-	self.logo:SetSize(110, 100);
-	self.logo:SetPos(45, 50);
-	self.logo:SetImage("rework/rw_icon.png")
+	self.logo:SetSize(theme.GetOption("MainMenu_LogoWidth"), theme.GetOption("MainMenu_LogoHeight"));
+	self.logo:SetImage(theme.GetOption("MainMenu_SidebarLogo"));
 
-	self.sidebar:AddPanel(self.logo);
+	self.sidebar:AddPanel(self.logo, true);
 
-	self.sidebar.lastPos = self.sidebar.lastPos + 16;
+	self.sidebar:AddSpace(16);
 
 	if (bShouldCreateButtons) then
 		hook.Run("AddMainMenuItems", self, self.sidebar);
@@ -73,7 +67,7 @@ function PANEL:RecreateSidebar(bShouldCreateButtons)
 		end;
 
 		self.sidebar:AddPanel(backButton);
-		self.sidebar.lastPos = self.sidebar.lastPos + 9;
+		self.sidebar:AddSpace(9);
 	end;
 end;
 
