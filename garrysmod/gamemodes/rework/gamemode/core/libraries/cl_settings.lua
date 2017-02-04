@@ -8,26 +8,26 @@
 	The settings library allows developers to easily add clientside settings/options that can be
 	saved and persist between a client's play sessions (even between different servers).
 --]]
-library.New("settings", rw);
+library.New("settings", rw)
 
 -- The table that will contain all the setting tables.
-local stored = rw.settings.stored or {};
-rw.settings.stored = stored;
+local stored = rw.settings.stored or {}
+rw.settings.stored = stored
 
 -- The table that will contain all the category tables.
-local categories = rw.settings.categories or {};
-rw.settings.categories = categories;
+local categories = rw.settings.categories or {}
+rw.settings.categories = categories
 
 -- For creating a colormixer's RGB conVars.
-local mixerColors = {"r", "g", "b", "a"};
+local mixerColors = {"r", "g", "b", "a"}
 
 -- We do this to gain control over this internal hook for use with plugin hooks.
-rw.OldOnConVarChanged = rw.OldOnConVarChanged or cvars.OnConVarChanged;
+rw.OldOnConVarChanged = rw.OldOnConVarChanged or cvars.OnConVarChanged
 function cvars.OnConVarChanged(name, oldVal, newVal)
-	hook.Run("OnConVarChanged", name, oldVal, newVal);
+	hook.Run("OnConVarChanged", name, oldVal, newVal)
 
-	return rw.OldOnConVarChanged(name, oldVal, newVal);
-end;
+	return rw.OldOnConVarChanged(name, oldVal, newVal)
+end
 
 --[[
 	Used to get all the stored setting tables.
@@ -35,8 +35,8 @@ end;
 	returns [table] The stored table containing all of the created setting tables.
 --]]
 function rw.settings:GetStored()
-	return stored;
-end;
+	return stored
+end
 
 --[[
 	This is used to get the actual setting table to edit anything it contains.
@@ -46,8 +46,8 @@ end;
 	returns [table] The setting table if it exists, this will return nil if it doesn't.
 --]]
 function rw.settings:GetSetting(id)
-	return stored[id];
-end;
+	return stored[id]
+end
 
 --[[
 	This is used to get the actual convar object of a setting to set or get values from it.
@@ -57,12 +57,12 @@ end;
 	returns [conVar] The convar object stored in the setting table, if both exist (returns nil if they don't).
 --]]
 function rw.settings:GetConVar(id)
-	local setting = stored[id];
+	local setting = stored[id]
 
 	if (setting) then
-		return setting.conVar;
-	end;
-end;
+		return setting.conVar
+	end
+end
 
 --[[
 	Used to get the value of a setting's convar as a string (what it was stored as). This
@@ -73,17 +73,17 @@ end;
 	returns [string] The value of the convar as a string, or nil.
 --]]
 function rw.settings:GetValue(id)
-	local conVar = self:GetConVar(id);
+	local conVar = self:GetConVar(id)
 
 	if (conVar) then
-		return conVar:GetString();
-	end;
+		return conVar:GetString()
+	end
 
-	return "";
-end;
+	return ""
+end
 
 -- This is an alias of GetValue.
-rw.settings.GetString = rw.settings.GetValue;
+rw.settings.GetString = rw.settings.GetValue
 
 --[[
 	Used to get the value of a setting's convar as a boolean value (if possible). This will return false 
@@ -94,8 +94,8 @@ rw.settings.GetString = rw.settings.GetValue;
 	returns [bool] The value of the convar as a bool, or false.
 --]]
 function rw.settings:GetBool(id)
-	return util.ToBool(self:GetValue(id));
-end;
+	return util.ToBool(self:GetValue(id))
+end
 
 --[[
 	Used to get the value of a setting's convar as a number (if possible). This will return nil 
@@ -106,18 +106,18 @@ end;
 	returns [number] The value of the convar as a number.
 --]]
 function rw.settings:GetNumber(id)
-	local value = self:GetValue(id);
+	local value = self:GetValue(id)
 
 	if (value) then
-		local nValue = tonumber(value);
+		local nValue = tonumber(value)
 
 		if (nValue) then
-			return nValue;
-		end;
-	end;
+			return nValue
+		end
+	end
 
-	return 0;
-end;
+	return 0
+end
 
 --[[
 	Used to get the value of a color setting's convars as a color object (if possible). This will return a 
@@ -128,19 +128,19 @@ end;
 	returns [color] The value of the setting as a color object.
 --]]
 function rw.settings:GetColor(id)
-	local color = Color(0, 0, 0, 255);
-	local setting = stored[id];
+	local color = Color(0, 0, 0, 255)
+	local setting = stored[id]
 
 	if (istable(setting)) then
 		if (istable(setting.conVar)) then
 			for k, v in pairs(setting.conVar) do	
-				color[k] = v:GetFloat();
-			end;
-		end;
-	end;
+				color[k] = v:GetFloat()
+			end
+		end
+	end
 
-	return color;
-end;
+	return color
+end
 
 --[[
 	Used to set the value of a setting's convar.
@@ -150,20 +150,20 @@ end;
 		will give the correct type of value back (ex. GetNumber for number, GetBool for bool, etc).
 --]]
 function rw.settings:SetValue(id, value)
-	local conVar = self:GetConVar(id);
+	local conVar = self:GetConVar(id)
 
 	if (conVar) then
-		hook.Run("OnSettingSet", id, value, conVar);
+		hook.Run("OnSettingSet", id, value, conVar)
 
-		local oldValue = self:GetValue(id);
+		local oldValue = self:GetValue(id)
 
 		if (oldValue != value) then
-			hook.Run("OnSettingChanged", id, value, oldValue, conVar);
-		end;
+			hook.Run("OnSettingChanged", id, value, oldValue, conVar)
+		end
 
-		return conVar:SetString(tostring(value));
-	end;
-end;
+		return conVar:SetString(tostring(value))
+	end
+end
 
 --[[
 	Used to add a setting item to the settings menu with a convar attached to it, this will create
@@ -188,8 +188,8 @@ end;
 	returns [table] The created setting table.
 --]]
 function rw.settings:AddSetting(category, id, default, bShouldSave, bShared, type, info, callbacks, visibleCallback)
-	local name = "RW_"..string.upper(id);
-	local bExists = istable(stored[id]);
+	local name = "RW_"..string.upper(id)
+	local bExists = istable(stored[id])
 
 	stored[id] = {
 		id = id,
@@ -197,67 +197,67 @@ function rw.settings:AddSetting(category, id, default, bShouldSave, bShared, typ
 		type = type,
 		info = info,
 		callback = visibleCallback
-	};
+	}
 
 	if (type == "DColorMixer") then
-		stored[id].conVar = {};
+		stored[id].conVar = {}
 
 		if (!IsColor(default)) then
-			default = Color(0, 0, 0, 255);
-		end;
+			default = Color(0, 0, 0, 255)
+		end
 
 		for k, v in ipairs(mixerColors) do
-			stored[id].conVar[v] = CreateClientConVar(name.."_"..string.upper(v), tostring(default[v]), bShouldSave, bShared);
-		end;
+			stored[id].conVar[v] = CreateClientConVar(name.."_"..string.upper(v), tostring(default[v]), bShouldSave, bShared)
+		end
 	else
-		stored[id].conVar = CreateClientConVar(name, tostring(default), bShouldSave, bShared);
-	end;
+		stored[id].conVar = CreateClientConVar(name, tostring(default), bShouldSave, bShared)
+	end
 
 	if (istable(callbacks) and !bExists) then
 		for k, v in pairs(callbacks) do
 			if (isfunction(v)) then
-				cvars.AddChangeCallback(name, v);
+				cvars.AddChangeCallback(name, v)
 			else
-				rw.core:Print("ERROR: No callback supplied");
-			end;
-		end;
-	end;
+				rw.core:Print("ERROR: No callback supplied")
+			end
+		end
+	end
 
 	if (isstring(category)) then
 		if (!categories[category]) then
-			self:AddCategory(category, nil, stored[id]);
+			self:AddCategory(category, nil, stored[id])
 		else
-			self:AddToCategory(category, stored[id]);
-		end;
-	end;
+			self:AddToCategory(category, stored[id])
+		end
+	end
 
-	return stored[id];
-end;
+	return stored[id]
+end
 
 -- Alias of AddSetting, used to easily add a checkbox item to the settings menu with convar linked to it.
 function rw.settings:AddCheckBox(category, id, default, visibleCallback, callbacks, info, bShouldSave, bShared)
-	return self:AddSetting(category, id, default, bShouldSave, bShared, "DCheckBox", info, callbacks, visibleCallback);
-end;
+	return self:AddSetting(category, id, default, bShouldSave, bShared, "DCheckBox", info, callbacks, visibleCallback)
+end
 
 -- Alias of AddSetting, used to easily add a number slider item to the settings menu with convar linked to it.
 function rw.settings:AddNumSlider(category, id, default, info, visibleCallback, callbacks, bShouldSave, bShared)
-	return self:AddSetting(category, id, default, bShouldSave, bShared, "DNumSlider", info, callbacks, visibleCallback);
-end;
+	return self:AddSetting(category, id, default, bShouldSave, bShared, "DNumSlider", info, callbacks, visibleCallback)
+end
 
 -- Alias of AddSetting, used to easily add a text entry item to the settings menu with convar linked to it.
 function rw.settings:AddTextEntry(category, id, default, visibleCallback, callbacks, bShouldSave, bShared)
-	return self:AddSetting(category, id, default, bShouldSave, bShared, "DTextEntry", nil, callbacks, visibleCallback);
-end;
+	return self:AddSetting(category, id, default, bShouldSave, bShared, "DTextEntry", nil, callbacks, visibleCallback)
+end
 
 -- Alias of AddSetting, used to easily add a combo box item to the settings menu with convar linked to it.
 function rw.settings:AddComboBox(category, id, default, info, visibleCallback, callbacks, bShouldSave, bShared)
-	return self:AddSetting(category, id, default, bShouldSave, bShared, "DComboBox", info, callbacks, visibleCallback);
-end;
+	return self:AddSetting(category, id, default, bShouldSave, bShared, "DComboBox", info, callbacks, visibleCallback)
+end
 
 -- Alias of AddSetting, used to easily add a color mixer item to the settings menu with convar linked to it.
 function rw.settings:AddColorMixer(category, id, default, info, visibleCallback, callbacks, bShouldSave, bShared)
-	return self:AddSetting(category, id, default, bShouldSave, bShared, "DColorMixer", info, callbacks, visibleCallback);
-end;
+	return self:AddSetting(category, id, default, bShouldSave, bShared, "DColorMixer", info, callbacks, visibleCallback)
+end
 
 --[[
 	This is used to to create a category to be displayed in the settings menu.
@@ -271,14 +271,14 @@ function rw.settings:AddCategory(category, icon, setting)
 		id = category,
 		icon = icon,
 		settings = {}
-	};
+	}
 
 	if (setting) then
-		catTable.settings[setting.id] = setting;
-	end;
+		catTable.settings[setting.id] = setting
+	end
 
-	categories[category] = catTable;
-end;
+	categories[category] = catTable
+end
 
 --[[
 	Adds a setting to a category table so we can easily get all settings in a category.
@@ -287,12 +287,12 @@ end;
 	[string] category The category id for the setting to be added to, will create the category if it doesn't exist.
 --]]
 function rw.settings:AddToCategory(category, setting)
-	local catTable = categories[category];
+	local catTable = categories[category]
 
 	if (catTable) then
-		catTable.settings[setting.id] = setting;
-	end;
-end;
+		catTable.settings[setting.id] = setting
+	end
+end
 
 --[[
 	This is used to get a category table by the id it was created with.
@@ -302,8 +302,8 @@ end;
 	returns [table] The category table if found, will return nil if not found.
 --]]
 function rw.settings:GetCategory(category)
-	return categories[category];
-end;
+	return categories[category]
+end
 
 --[[
 	This is used to get a table containing all the currently created category tables.
@@ -311,8 +311,8 @@ end;
 	returns [table] This contains all of the current categories.
 --]]
 function rw.settings:GetCategories()
-	return categories;
-end;
+	return categories
+end
 
 --[[
 	This is used to get all the currently created category tables in an
@@ -324,18 +324,18 @@ end;
 	returns [table] This contains all of the current categories in a number indexed table.
 --]]
 function rw.settings:GetIndexedCategories(sortFunction)
-	local sorted = {};
+	local sorted = {}
 
 	for k, v in pairs(categories) do
-		sorted[#sorted + 1] = v;
-	end;
+		sorted[#sorted + 1] = v
+	end
 
 	if (isfunction(sortFunction)) then
-		table.sort(sorted, sortFunction);
-	end;
+		table.sort(sorted, sortFunction)
+	end
 
-	return sorted;
-end;
+	return sorted
+end
 
 --[[
 	This is used by the settings menu to quickly and easily get all the settings in
@@ -348,48 +348,48 @@ end;
 		if the category doesn't exist, or an empty table if there are no settings stored in the category table.
 --]]
 function rw.settings:GetCategorySettings(category)
-	local catTable = categories[category];
-	local setList = {};
+	local catTable = categories[category]
+	local setList = {}
 
 	if (catTable) then
 		for k, v in pairs(catTable.settings) do
-			setList[#setList + 1] = v;
-		end;
-	end;
+			setList[#setList + 1] = v
+		end
+	end
 
-	return setList;
-end;
+	return setList
+end
 
 -- Not going to document these yet as these might as well be placeholders for testing while I build the frontend.
 rw.settings:AddCheckBox("AdminESP", "EnableAdminESP", false, function()
-	return LocalPlayer():IsAdmin();
-end);
-rw.settings:AddColorMixer("Theme", "TextColor", Color(255, 255, 255, 255));
-rw.settings:AddColorMixer("Theme", "MenuBackColor", Color(40, 40, 40, 150));
+	return LocalPlayer():IsAdmin()
+end)
+rw.settings:AddColorMixer("Theme", "TextColor", Color(255, 255, 255, 255))
+rw.settings:AddColorMixer("Theme", "MenuBackColor", Color(40, 40, 40, 150))
 rw.settings:AddCheckBox("Theme", "UseTabDash", false, nil, 
 	{
 		callback = function(name, oldValue, newValue)
 			if (util.ToBool(newValue)) then
-//				theme.SetPanel("TabMenu", "rwTabDash");
+//				theme.SetPanel("TabMenu", "rwTabDash")
 			else
-//				theme.SetPanel("TabMenu", "rwTabClassic");
-			end;
+//				theme.SetPanel("TabMenu", "rwTabClassic")
+			end
 
-			local tabMenu = rw.tabMenu;
+			local tabMenu = rw.tabMenu
 
 			if (IsValid(tabMenu)) then
-				tabMenu:CloseMenu();
+				tabMenu:CloseMenu()
 
-				rw.tabMenu = theme.CreatePanel("TabMenu", nil, "rwTabDash");
-				rw.tabMenu:MakePopup();
-				rw.tabMenu.heldTime = CurTime() + 0.3;
-			end;
+				rw.tabMenu = theme.CreatePanel("TabMenu", nil, "rwTabDash")
+				rw.tabMenu:MakePopup()
+				rw.tabMenu.heldTime = CurTime() + 0.3
+			end
 		end
 	}
-);
+)
 rw.settings:AddColorMixer("Dashboard", "BackgroundColor", Color(0, 0, 0, 255), nil, function()
-	return false; //(theme.GetPanel("TabMenu") == "rwTabDash");
-end);
+	return false; //(theme.GetPanel("TabMenu") == "rwTabDash")
+end)
 rw.settings:AddComboBox("Dashboard", "FitType", "", {
 		["fill"] = "#Settings_Fit_Fill",
 		["fit"] = "#Settings_Fit_Fit",
@@ -397,35 +397,35 @@ rw.settings:AddComboBox("Dashboard", "FitType", "", {
 		["center"] = "#Settings_Fit_Center"
 	},
 	function()
-		return false; //(theme.GetPanel("TabMenu") == "rwTabDash");
+		return false; //(theme.GetPanel("TabMenu") == "rwTabDash")
 	end,
 	{
 		callback = function(name, oldValue, newValue)
-			local tabMenu = rw.tabMenu;
+			local tabMenu = rw.tabMenu
 
 			if (IsValid(tabMenu)) then
-				tabMenu:SetBackImage(rw.settings:GetString("BackgroundURL"), newValue);
-			end;
+				tabMenu:SetBackImage(rw.settings:GetString("BackgroundURL"), newValue)
+			end
 		end
 	}
-);
+)
 rw.settings:AddTextEntry("Dashboard", "BackgroundURL", "",
 	function()
-		return false; //(theme.GetPanel("TabMenu") == "rwTabDash");
+		return false; //(theme.GetPanel("TabMenu") == "rwTabDash")
 	end,
 	{
 		callback = function(name, oldValue, newValue)
-			local tabMenu = rw.tabMenu;
+			local tabMenu = rw.tabMenu
 
 			if (IsValid(tabMenu)) then
-				tabMenu:SetBackImage(newValue, rw.settings:GetString("FitType"));
-			end;
+				tabMenu:SetBackImage(newValue, rw.settings:GetString("FitType"))
+			end
 		end
 	}
-);
+)
 
-rw.settings:AddCheckBox("HUD", "DrawBars", true);
-rw.settings:AddCheckBox("HUD", "DrawBarText", true);
+rw.settings:AddCheckBox("HUD", "DrawBars", true)
+rw.settings:AddCheckBox("HUD", "DrawBarText", true)
 
 
 --[[ -- For example on how to add a number slider.
@@ -433,10 +433,10 @@ rw.settings:AddNumSlider("Test", "TestNumSlider", "", {
 	min = 5,
 	max = 20,
 	decimals = 5
-});
+})
 rw.settings:AddNumSlider("Test", "TestNumSlider2", "", {
 	min = 0,
 	max = 100,
 	decimals = 0
-});
+})
 --]]

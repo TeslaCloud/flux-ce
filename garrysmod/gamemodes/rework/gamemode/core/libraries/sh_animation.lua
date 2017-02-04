@@ -4,11 +4,11 @@
 	the framework is publicly released.
 --]]
 
-library.New("anim", rw);
-local stored = rw.anim.stored or {};
-local models = rw.anim.models or {};
-rw.anim.stored = stored;
-rw.anim.models = models;
+library.New("anim", rw)
+local stored = rw.anim.stored or {}
+local models = rw.anim.models or {}
+rw.anim.stored = stored
+rw.anim.models = models
 
 stored.player = {
 	normal = {
@@ -83,43 +83,41 @@ stored.player = {
 		prop_vehicle_jeep = {"sitchair1", Vector(14, 0, -14)},
 		prop_vehicle_airboat = {"sitchair1", Vector(8, 0, -20)}
 	}
-};
+}
 
 function rw.anim:GetStored()
-	return stored;
-end;
+	return stored
+end
 
 function rw.anim:SetModelClass(model, class)
 	if (!stored[class]) then
-		class = "player";
-	end;
+		class = "player"
+	end
 
-	models[model:lower()] = class;
-end;
+	models[string.lower(model)] = class
+end
 
 function rw.anim:GetModelClass(model)
-	if (!model) then return "player"; end;
+	if (!model) then return "player"; end
 
-	local modelClass = models[model:lower()];
+	local modelClass = models[string.lower(model)]
 
 	if (modelClass) then
-		return modelClass;
-	end;
+		return modelClass
+	end
 
-	modelClass = modelClass or "player";
-
-	return "player";
-end;
+	return "player"
+end
 
 function rw.anim:GetTable(model)
-	if (!model) then return nil; end;
+	if (!model) then return nil; end
 
-	if (model:find("/player/")) then
+	if (string.find(model, "/player/")) then
 		return nil;	
-	end;
+	end
 
-	return stored[self:GetModelClass(model)];
-end;
+	return stored[self:GetModelClass(model)]
+end
 
 do
 	local translateHoldTypes = {
@@ -137,7 +135,7 @@ do
 		["duel"] = "pistol",
 		["camera"] = "smg",
 		["revolver"] = "pistol"
-	};
+	}
 
 	local weaponHoldTypes = {
 		["weapon_ar2"] = "smg",
@@ -157,25 +155,25 @@ do
 		["weapon_rpg"] = "shotgun",
 		["weapon_shotgun"] = "shotgun",
 		["weapon_annabelle"] = "shotgun"
-	};
+	}
 
 	-- A function to get a weapon's hold type.
 	function rw.anim:GetWeaponHoldType(player, weapon)
-		if (!IsValid(weapon)) then return "normal"; end;
+		if (!IsValid(weapon)) then return "normal"; end
 
-		local class = weapon:GetClass():lower();
-		local holdType = "normal";
+		local class = string.lower(weapon:GetClass())
+		local holdType = "normal"
 
 		if (weaponHoldTypes[class]) then
-			holdType = weaponHoldTypes[class];
+			holdType = weaponHoldTypes[class]
 		elseif (weapon and weapon.HoldType) then
 			if (translateHoldTypes[weapon.HoldType]) then
-				holdType = translateHoldTypes[weapon.HoldType];
+				holdType = translateHoldTypes[weapon.HoldType]
 			else
-				holdType = weapon.HoldType;
-			end;
-		end;
+				holdType = weapon.HoldType
+			end
+		end
 
-		return string.lower(holdType);
-	end;
-end;
+		return string.lower(holdType)
+	end
+end

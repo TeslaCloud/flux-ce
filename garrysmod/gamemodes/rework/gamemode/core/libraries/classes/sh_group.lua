@@ -4,111 +4,111 @@
 	the framework is publicly released.
 --]]
 
-Class "CUserGroup";
+Class "CUserGroup"
 
-CUserGroup.m_Name = "Undefined";
-CUserGroup.m_Description = "Undefined";
-CUserGroup.m_Color = Color(255, 255, 255);
-CUserGroup.m_Icon = "icon16/user.png";
-CUserGroup.m_Immunity = 0;
-CUserGroup.m_IsProtected = false;
-CUserGroup.m_Permissions = {};
-CUserGroup.m_Base = nil;
+CUserGroup.m_Name = "Undefined"
+CUserGroup.m_Description = "Undefined"
+CUserGroup.m_Color = Color(255, 255, 255)
+CUserGroup.m_Icon = "icon16/user.png"
+CUserGroup.m_Immunity = 0
+CUserGroup.m_IsProtected = false
+CUserGroup.m_Permissions = {}
+CUserGroup.m_Base = nil
 
 function CUserGroup:CUserGroup(id)
-	self.m_uniqueID = id:MakeID();
-end;
+	self.m_uniqueID = id:MakeID()
+end
 
 function CUserGroup:Register()
-	rw.admin:CreateGroup(self.m_uniqueID, self);
-end;
+	rw.admin:CreateGroup(self.m_uniqueID, self)
+end
 
 -- Called when player's primary group is being set to this group.
-function CUserGroup:OnGroupSet(player, oldGroup) end;
+function CUserGroup:OnGroupSet(player, oldGroup) end
 
 -- Called when player's primary group is taken or modified.
-function CUserGroup:OnGroupTake(player, newGroup) end;
+function CUserGroup:OnGroupTake(player, newGroup) end
 
 -- Called when player is being added to this group as secondary group.
-function CUserGroup:OnGroupAdd(player, secondaryGroups) end;
+function CUserGroup:OnGroupAdd(player, secondaryGroups) end
 
 -- Called when player is being removed from this group as secondary group.
-function CUserGroup:OnGroupRemove(player) end;
+function CUserGroup:OnGroupRemove(player) end
 
 function CUserGroup:SetName(name)
-	self.m_Name = name;
-end;
+	self.m_Name = name
+end
 
 function CUserGroup:SetDescription(desc)
-	self.m_Description = desc;
-end;
+	self.m_Description = desc
+end
 
 function CUserGroup:SetColor(col)
-	self.m_Color = col;
-end;
+	self.m_Color = col
+end
 
 function CUserGroup:SetImmunity(immunity)
-	self.m_Immunity = immunity;
-end;
+	self.m_Immunity = immunity
+end
 
 function CUserGroup:SetIsProtected(bIsProtected)
-	self.m_IsProtected = bIsProtected;
-end;
+	self.m_IsProtected = bIsProtected
+end
 
 function CUserGroup:SetPermissions(permissionsTable)
-	self.m_Permissions = permissionsTable;
-end;
+	self.m_Permissions = permissionsTable
+end
 
 function CUserGroup:SetIcon(icon)
-	self.m_Icon = icon;
-end;
+	self.m_Icon = icon
+end
 
 function CUserGroup:SetBase(base)
-	self.m_Base = base;
-end;
+	self.m_Base = base
+end
 
-CUserGroup.SetParent = CUserGroup.SetBase;
+CUserGroup.SetParent = CUserGroup.SetBase
 
 function CUserGroup:GetID()
-	return self.m_uniqueID;
-end;
+	return self.m_uniqueID
+end
 
 function CUserGroup:GetName()
-	return self.m_Name or "Unknown";
-end;
+	return self.m_Name or "Unknown"
+end
 
 function CUserGroup:GetDescription()
-	return self.m_Description or "This group has no description";
-end;
+	return self.m_Description or "This group has no description"
+end
 
 function CUserGroup:GetColor()
-	return self.m_Color or Color("white");
-end;
+	return self.m_Color or Color("white")
+end
 
 function CUserGroup:GetImmunity()
-	return self.m_Immunity or 0;
-end;
+	return self.m_Immunity or 0
+end
 
 function CUserGroup:GetIsProtected()
-	return self.m_IsProtected or false;
-end;
+	return self.m_IsProtected or false
+end
 
 function CUserGroup:GetPermissions()
-	return self.m_Permissions or {};
-end;
+	return self.m_Permissions or {}
+end
 
 function CUserGroup:GetIcon()
-	return self.m_Icon or "icon16/user.png";
-end;
+	return self.m_Icon or "icon16/user.png"
+end
 
 function CUserGroup:GetBase()
-	return self.m_Base or nil;
-end;
+	return self.m_Base or nil
+end
 
 function CUserGroup:__tostring()
-	return "User Group ["..self:GetID().."]["..self:GetName().."]";
-end;
+	return "User Group ["..self:GetID().."]["..self:GetName().."]"
+end
 
-CUserGroup.GetParent = CUserGroup.GetBase;
+CUserGroup.GetParent = CUserGroup.GetBase
 
 _G["Group"] = CUserGroup;

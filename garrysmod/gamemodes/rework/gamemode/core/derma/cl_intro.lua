@@ -4,53 +4,53 @@
 	the framework is publicly released.
 --]]
 
-local colorBlack = Color(0, 0, 0, 255);
-local colorWhite = Color(255, 255, 255, 255);
+local colorBlack = Color(0, 0, 0, 255)
+local colorWhite = Color(255, 255, 255, 255)
 
-local menuThin = "menu_thin_smaller";
+local menuThin = "menu_thin_smaller"
 
-local PANEL = {};
+local PANEL = {}
 
 function PANEL:Init()
-	local scrW, scrH = ScrW(), ScrH();
+	local scrW, scrH = ScrW(), ScrH()
 
-	self:SetSize(scrW, scrH);
-	self:SetPos(0, 0);
+	self:SetSize(scrW, scrH)
+	self:SetPos(0, 0)
 
-	self:StartAnimation(scrW, scrH);
+	self:StartAnimation(scrW, scrH)
 
-	self:CloseMenu();
-end;
+	self:CloseMenu()
+end
 
 function PANEL:Paint(w, h)
-	local alpha = 255 * (math.abs(math.sin(CurTime())));
+	local alpha = 255 * (math.abs(math.sin(CurTime())))
 
-	surface.SetDrawColor(colorBlack);
-	surface.DrawRect(0, 0, w, h);
+	surface.SetDrawColor(colorBlack)
+	surface.DrawRect(0, 0, w, h)
 
-	draw.SimpleText("Press any key to skip intro!", menuThin, w * 0.5, h * 0.95, ColorAlpha(colorWhite, alpha), TEXT_ALIGN_CENTER, TEXT_ALIGN_BOTTOM);
-end;
+	draw.SimpleText("Press any key to skip intro!", menuThin, w * 0.5, h * 0.95, ColorAlpha(colorWhite, alpha), TEXT_ALIGN_CENTER, TEXT_ALIGN_BOTTOM)
+end
 
 function PANEL:CloseMenu(bForce)
-	self:Remove();
+	self:Remove()
 
-	rw.IntroPanel = vgui.Create("reMainMenu");
-	rw.IntroPanel:MakePopup();
-end;
+	rw.IntroPanel = vgui.Create("reMainMenu")
+	rw.IntroPanel:MakePopup()
+end
 
 function PANEL:OnKeyCodeReleased(nKey)
-	self:CloseMenu();
-end;
+	self:CloseMenu()
+end
 
 function PANEL:StartAnimation(scrW, scrH)
 
-end;
+end
 
-derma.DefineControl("rwIntro", "", PANEL, "EditablePanel");
+derma.DefineControl("rwIntro", "", PANEL, "EditablePanel")
 
 if (IsValid(rw.IntroPanel)) then
-	rw.IntroPanel:Remove();
+	rw.IntroPanel:Remove()
 
-	rw.IntroPanel = vgui.Create("rwIntro");
-	rw.IntroPanel:MakePopup();
-end;
+	rw.IntroPanel = vgui.Create("rwIntro")
+	rw.IntroPanel:MakePopup()
+end

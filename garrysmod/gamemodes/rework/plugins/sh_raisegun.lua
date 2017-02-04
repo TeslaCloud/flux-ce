@@ -4,159 +4,159 @@
 	the framework is publicly released.
 --]]
 
-PLUGIN:SetName("Raise Weapon");
-PLUGIN:SetAuthor("Mr. Meow");
-PLUGIN:SetDescription("Allows weapons to be lowered and raised by holding R key.");
+PLUGIN:SetName("Raise Weapon")
+PLUGIN:SetAuthor("Mr. Meow")
+PLUGIN:SetDescription("Allows weapons to be lowered and raised by holding R key.")
 
-local playerMeta = FindMetaTable("Player");
+local playerMeta = FindMetaTable("Player")
 local blockedWeapons = {
 	"weapon_physgun",
 	"gmod_tool",
 	"gmod_camera",
 	"weapon_physcannon"
-};
+}
 
 local rotationTranslate = {
 	["default"] = Angle(30, -30, -25),
 	["weapon_fists"] = Angle(30, -30, -50)
-};
+}
 
 function playerMeta:SetWeaponRaised(bIsRaised)
 	if (SERVER) then
-		self:SetDTBool(BOOL_WEAPON_RAISED, bIsRaised);
+		self:SetDTBool(BOOL_WEAPON_RAISED, bIsRaised)
 
 		hook.Run("OnWeaponRaised", self, self:GetActiveWeapon(), bIsRaised)
-	end;
-end;
+	end
+end
 
 function playerMeta:IsWeaponRaised()
-	local weapon = self:GetActiveWeapon();
+	local weapon = self:GetActiveWeapon()
 
 	if (!IsValid(weapon)) then
-		return false;
-	end;
+		return false
+	end
 
 	if (table.HasValue(blockedWeapons, weapon:GetClass())) then
-		return true;
-	end;
+		return true
+	end
 
-	local shouldRaise = hook.Run("ShouldWeaponBeRaised", self, weapon);
+	local shouldRaise = hook.Run("ShouldWeaponBeRaised", self, weapon)
 
 	if (shouldRaise) then
-		return shouldRaise;
-	end;
+		return shouldRaise
+	end
 
-	return self:GetDTBool(BOOL_WEAPON_RAISED);
-end;
+	return self:GetDTBool(BOOL_WEAPON_RAISED)
+end
 
 function playerMeta:ToggleWeaponRaised()
 	if (self:IsWeaponRaised()) then
-		self:SetWeaponRaised(false);
+		self:SetWeaponRaised(false)
 	else
-		self:SetWeaponRaised(true);
+		self:SetWeaponRaised(true)
 	end
-end;
+end
 
 function PLUGIN:OnWeaponRaised(player, weapon, bIsRaised)
 	if (IsValid(weapon)) then
-		local curTime = CurTime();
+		local curTime = CurTime()
 
-		hook.Run("UpdateWeaponRaised", player, weapon, bIsRaised, curTime);
-	end;
-end;
+		hook.Run("UpdateWeaponRaised", player, weapon, bIsRaised, curTime)
+	end
+end
 
 function PLUGIN:UpdateWeaponRaised(player, weapon, bIsRaised, curTime)
 	if (bIsRaised) then
-		weapon:SetNextPrimaryFire(curTime);
-		weapon:SetNextSecondaryFire(curTime);
+		weapon:SetNextPrimaryFire(curTime)
+		weapon:SetNextSecondaryFire(curTime)
 
 		if (weapon.OnRaised) then
-			weapon:OnRaised(player, curTime);
-		end;
+			weapon:OnRaised(player, curTime)
+		end
 	else
-		weapon:SetNextPrimaryFire(curTime + 60);
-		weapon:SetNextSecondaryFire(curTime + 60);
+		weapon:SetNextPrimaryFire(curTime + 60)
+		weapon:SetNextSecondaryFire(curTime + 60)
 
 		if (weapon.OnLowered) then
-			weapon:OnLowered(player, curTime);
+			weapon:OnLowered(player, curTime)
 		end
 	end
-end;
+end
 
 function PLUGIN:PlayerThink(player, curTime)
-	local weapon = player:GetActiveWeapon();
+	local weapon = player:GetActiveWeapon()
 
 	if (IsValid(weapon)) then
 		if (!player:IsWeaponRaised()) then
-			weapon:SetNextPrimaryFire(curTime + 60);
-			weapon:SetNextSecondaryFire(curTime + 60);
-		end;
-	end;
-end;
+			weapon:SetNextPrimaryFire(curTime + 60)
+			weapon:SetNextSecondaryFire(curTime + 60)
+		end
+	end
+end
 
 function PLUGIN:KeyPress(player, key)
 	if (key == IN_RELOAD) then
 		timer.Create("WeaponRaise"..player:SteamID(), 1, 1, function()
-			player:ToggleWeaponRaised();
-		end);
-	end;
-end;
+			player:ToggleWeaponRaised()
+		end)
+	end
+end
 
 function PLUGIN:KeyRelease(player, key)
 	if (key == IN_RELOAD) then
-		timer.Remove("WeaponRaise"..player:SteamID());
-	end;
-end;
+		timer.Remove("WeaponRaise"..player:SteamID())
+	end
+end
 
 function PLUGIN:ModelWeaponRaised(player, model)
-	return player:IsWeaponRaised();
-end;
+	return player:IsWeaponRaised()
+end
 
 function PLUGIN:PlayerSwitchWeapon(player, oldWeapon, newWeapon)
-	player:SetWeaponRaised(false);
-end;
+	player:SetWeaponRaised(false)
+end
 
 function PLUGIN:PlayerSetupDataTables(player)
-	player:DTVar("Bool", BOOL_WEAPON_RAISED, "WeaponRaised");
-end;
+	player:DTVar("Bool", BOOL_WEAPON_RAISED, "WeaponRaised")
+end
 
 if (CLIENT) then
 	function PLUGIN:CalcViewModelView(weapon, viewModel, oldEyePos, oldEyeAngles, eyePos, eyeAngles)
 		if (!IsValid(weapon)) then
-			return;
-		end;
+			return
+		end
 
-		local targetVal = 0;
+		local targetVal = 0
 
 		if (!rw.client:IsWeaponRaised()) then
-			targetVal = 100;
-		end;
+			targetVal = 100
+		end
 
-		local fraction = (rw.client.curRaisedFrac or 0) / 100;
-		local rotation = rotationTranslate[weapon:GetClass()] or rotationTranslate["default"];
+		local fraction = (rw.client.curRaisedFrac or 0) / 100
+		local rotation = rotationTranslate[weapon:GetClass()] or rotationTranslate["default"]
 
-		eyeAngles:RotateAroundAxis(eyeAngles:Up(), rotation.p * fraction);
-		eyeAngles:RotateAroundAxis(eyeAngles:Forward(), rotation.y * fraction);
-		eyeAngles:RotateAroundAxis(eyeAngles:Right(), rotation.r * fraction);
+		eyeAngles:RotateAroundAxis(eyeAngles:Up(), rotation.p * fraction)
+		eyeAngles:RotateAroundAxis(eyeAngles:Forward(), rotation.y * fraction)
+		eyeAngles:RotateAroundAxis(eyeAngles:Right(), rotation.r * fraction)
 
-		rw.client.curRaisedFrac = Lerp(FrameTime() * 2, rw.client.curRaisedFrac or 0, targetVal);
+		rw.client.curRaisedFrac = Lerp(FrameTime() * 2, rw.client.curRaisedFrac or 0, targetVal)
 
-		viewModel:SetAngles(eyeAngles);
+		viewModel:SetAngles(eyeAngles)
 
 		if (weapon.GetViewModelPosition) then
-			local position, angles = weapon:GetViewModelPosition(eyePos, eyeAngles);
+			local position, angles = weapon:GetViewModelPosition(eyePos, eyeAngles)
 
-			oldEyePos = position or oldEyePos;
-			eyeAngles = angles or eyeAngles;
+			oldEyePos = position or oldEyePos
+			eyeAngles = angles or eyeAngles
 		end
 
 		if (weapon.CalcViewModelView) then
-			local position, angles = weapon:CalcViewModelView(viewModel, oldEyePos, oldEyeAngles, eyePos, eyeAngles);
+			local position, angles = weapon:CalcViewModelView(viewModel, oldEyePos, oldEyeAngles, eyePos, eyeAngles)
 
-			oldEyePos = position or oldEyePos;
-			eyeAngles = angles or eyeAngles;
-		end;
+			oldEyePos = position or oldEyePos
+			eyeAngles = angles or eyeAngles
+		end
 
-		return oldEyePos, eyeAngles;
-	end;
-end;
+		return oldEyePos, eyeAngles
+	end
+end

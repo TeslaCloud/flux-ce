@@ -4,13 +4,13 @@
 	the framework is publicly released.
 --]]
 
-local panelMeta = FindMetaTable("Panel");
+local panelMeta = FindMetaTable("Panel")
 
 function panelMeta:UnDraggable()
-	self.m_DragSlot = nil;
-end;
+	self.m_DragSlot = nil
+end
 
 function panelMeta:SafeRemove()
-	self:SetVisible(false);
-	self:Remove();
-end;
+	self:SetVisible(false)
+	self:Remove()
+end

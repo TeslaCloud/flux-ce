@@ -4,154 +4,154 @@
 	the framework is publicly released.
 --]]
 
-if (rw.lang) then return; end;
+if (rw.lang) then return; end
 
-library.New("lang", rw);
-local stored = {};
-local cache = {};
-local textCache = {};
+library.New("lang", rw)
+local stored = {}
+local cache = {}
+local textCache = {}
 
 function rw.lang:GetTable(name)
-	stored[name] = stored[name] or {};
+	stored[name] = stored[name] or {}
 
-	return stored[name];
-end;
+	return stored[name]
+end
 
 function rw.lang:GetAll()
-	return stored;
-end;
+	return stored
+end
 
 function rw.lang:GetString(language, identifier, arguments)
 	if (!cache[language]) then
-		cache[language] = {};
-	end;
+		cache[language] = {}
+	end
 
 	if (cache[language][identifier]) then
-		return cache[language][identifier];
-	end;
+		return cache[language][identifier]
+	end
 
-	local langString = nil;
-	arguments = arguments or {};
+	local langString = nil
+	arguments = arguments or {}
 
 	if (stored[language]) then
-		langString = stored[language][identifier];
-	end;
+		langString = stored[language][identifier]
+	end
 
 	if (!langString) then
-		langString = stored["en"][identifier] or identifier;
-	end;
+		langString = stored["en"][identifier] or identifier
+	end
 
 	for k, v in pairs(arguments) do
-		langString = string.gsub(langString, "#"..k, tostring(v), 1);
-	end;
+		langString = string.gsub(langString, "#"..k, tostring(v), 1)
+	end
 
-	langString = langString:Replace(";", "");
+	langString = langString:Replace(";", "")
 
-	cache[language][identifier] = langString;
+	cache[language][identifier] = langString
 
-	return langString;
-end;
+	return langString
+end
 
 -- Explicit mode. This will attempt to translate the given text regardless of anything else.
 function rw.lang:TranslateText(sText)
-	if (!isstring(sText)) then return "nil"; end;
+	if (!isstring(sText)) then return "nil"; end
 
 	if (textCache[sText]) then
-		return textCache[sText];
-	end;
+		return textCache[sText]
+	end
 
 	if (!string.find(sText, "#")) then
-		textCache[sText] = sText;
-		return sText;
-	end;
+		textCache[sText] = sText
+		return sText
+	end
 
-	local oldText = sText;
-	local phrases = string.FindAll(sText, "#[%w_]+");
-	local translations = {};
+	local oldText = sText
+	local phrases = string.FindAll(sText, "#[%w_]+")
+	local translations = {}
 
 	for k, v in ipairs(phrases) do
-		local phraseEnd = nil;
-		local colonDetected = false;
+		local phraseEnd = nil
+		local colonDetected = false
 
 		if (sText:sub(v[3] + 1, v[3] + 1) == ":") then
-			phraseEnd = sText:find(";", v[2]);
-			colonDetected = true;
-		end;
+			phraseEnd = sText:find(";", v[2])
+			colonDetected = true
+		end
 
 		if (!phraseEnd and !colonDetected) then
-			phraseEnd = sText:find(" ", v[2]);
+			phraseEnd = sText:find(" ", v[2])
 
 			if (!phraseEnd) then
-				phraseEnd = v[3];
+				phraseEnd = v[3]
 			else
-				phraseEnd = phraseEnd - 1;
-			end;
+				phraseEnd = phraseEnd - 1
+			end
 		elseif (!phraseEnd and colonDetected) then
-			phraseEnd = v[3];
-		end;
+			phraseEnd = v[3]
+		end
 
-		translations[#translations + 1] = L(sText:sub(v[2], phraseEnd));
-		phrases[k] = sText:sub(v[2], phraseEnd);
-	end;
+		translations[#translations + 1] = L(sText:sub(v[2], phraseEnd))
+		phrases[k] = sText:sub(v[2], phraseEnd)
+	end
 
 	for k, v in ipairs(translations) do
-		sText = sText:Replace(phrases[k], v);
-	end;
+		sText = sText:Replace(phrases[k], v)
+	end
 
-	textCache[oldText] = sText;
+	textCache[oldText] = sText
 
-	return sText;
-end;
+	return sText
+end
 
 if (CLIENT) then
 	function L(identifier)
-		local lang = GetConVar("gmod_language"):GetString();
+		local lang = GetConVar("gmod_language"):GetString()
 
 		if (!cache[lang]) then
-			cache[lang] = {};
-		end;
+			cache[lang] = {}
+		end
 
 		if (cache[lang][identifier]) then
-			return cache[lang][identifier];
-		end;
+			return cache[lang][identifier]
+		end
 
-		local args = {};
+		local args = {}
 
 		-- Get all the arguments.
 		if (string.find(identifier, ";")) then
-			args = string.Explode(",", identifier);
+			args = string.Explode(",", identifier)
 
-			local colon = args[1]:find(":");
+			local colon = args[1]:find(":")
 
 			-- The first result will always be the base identifier.
-			identifier = args[1]:sub(1, colon - 1);
-			args[1] = args[1]:sub(colon + 1, args[1]:len());
-		end;
+			identifier = args[1]:sub(1, colon - 1)
+			args[1] = args[1]:sub(colon + 1, args[1]:len())
+		end
 
-		return rw.lang:GetString(lang, identifier, args);
-	end;
+		return rw.lang:GetString(lang, identifier, args)
+	end
 
-	surface.bTranslating = surface.bTranslating or true;
+	surface.bTranslating = surface.bTranslating or true
 
 	--[[
 		This is to stop our overrides from parsing translations, we
 		don't want certain things like the chatbox to be translated.
 	--]]
 	function surface.NoTranslate(bValue)
-		surface.bTranslating = !bValue;
-	end;
+		surface.bTranslating = !bValue
+	end
 
-	surface.OldGetTextSize = surface.OldGetTextSize or surface.GetTextSize;
+	surface.OldGetTextSize = surface.OldGetTextSize or surface.GetTextSize
 
 	function surface.GetTextSize(sText)
 		if (surface.bTranslating) then
-			sText = rw.lang:TranslateText(sText);
-		end;
+			sText = rw.lang:TranslateText(sText)
+		end
 
-		return surface.OldGetTextSize(sText);
-	end;
+		return surface.OldGetTextSize(sText)
+	end
 
-	surface.OldDrawText = surface.OldDrawText or surface.DrawText;
+	surface.OldDrawText = surface.OldDrawText or surface.DrawText
 	--[[
 		Overwrite the way the surface library draws text, 
 		this way we can put translations into anything that uses this,
@@ -162,33 +162,33 @@ if (CLIENT) then
 	--]]
 	function surface.DrawText(sText)
 		if (surface.bTranslating) then
-			sText = rw.lang:TranslateText(sText);
-		end;
+			sText = rw.lang:TranslateText(sText)
+		end
 
-		return surface.OldDrawText(sText);
-	end;
+		return surface.OldDrawText(sText)
+	end
 
-	local PANEL_META = FindMetaTable("Panel");
+	local PANEL_META = FindMetaTable("Panel")
 
-	PANEL_META.OldSetText = PANEL_META.OldSetText or PANEL_META.SetText;
+	PANEL_META.OldSetText = PANEL_META.OldSetText or PANEL_META.SetText
 
 	-- Overwrite the way panels set their text, this way we can stick our translations in.
 	function PANEL_META:SetText(sText)
 		if (string.sub(sText, 1, 1) == "#" and surface.bTranslating) then
-			local phraseName = sText;
-			local translated = L(sText);
+			local phraseName = sText
+			local translated = L(sText)
 
 			if (translated != sText and !self.AllowInput) then
-				sText = translated;
+				sText = translated
 			elseif (translated != text and self.AllowInput) then
-				sText = string.gsub(sText, "#", "");
-			end;
+				sText = string.gsub(sText, "#", "")
+			end
 
-			self.__PhraseName = sText;
-		end;
+			self.__PhraseName = sText
+		end
 
-		return self:OldSetText(sText);
-	end;
+		return self:OldSetText(sText)
+	end
 else
 	--[[
 		Simply get the identifier with any arguments to send to clients.
@@ -197,19 +197,19 @@ else
 		so we network the raw identifier with any arguments and let the client parse it.
 	--]]
 	function L(player, identifier, ...)
-		local arguments = {...};
+		local arguments = {...}
 
 		-- In case the format L(identifier, ...) is used.
 		if (isstring(player)) then
 			if (identifier) then
-				table.insert(arguments, 1, identifier);
-			end;
+				table.insert(arguments, 1, identifier)
+			end
 
-			identifier = player;
-		end;
+			identifier = player
+		end
 
 		if (identifier) then
-			local text = "#"..identifier;
+			local text = "#"..identifier
 
 			--[[
 				We do this to provide backcompat for the
@@ -221,20 +221,20 @@ else
 				Clientside needs to manually concat arguments.
 			--]]
 			if (arguments) then
-				text = text..":";
+				text = text..":"
 
 				for k, v in ipairs(arguments) do
-					text = text..v;
+					text = text..v
 
 					if (k < #arguments) then
-						text = text..",";
-					end;
-				end;
+						text = text..","
+					end
+				end
 
-				text = text..";";
-			end;
+				text = text..";"
+			end
 
-			return text;
-		end;
-	end;
-end;
+			return text
+		end
+	end
+end

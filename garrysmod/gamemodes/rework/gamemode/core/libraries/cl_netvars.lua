@@ -4,52 +4,52 @@
 	the framework is publicly released.
 --]]
 
-if (netvars) then return; end;
+if (netvars) then return; end
 
-library.New("netvars", _G);
+library.New("netvars", _G)
 
-local stored = netvars.stored or {};
-netvars.stored = stored;
+local stored = netvars.stored or {}
+netvars.stored = stored
 
-local globals = netvars.globals or {};
-netvars.globals = globals;
+local globals = netvars.globals or {}
+netvars.globals = globals
 
-local entityMeta = FindMetaTable("Entity");
+local entityMeta = FindMetaTable("Entity")
 
 function netvars.GetNetVar(key, default)
 	if (globals[key] != nil) then
-		return globals[key];
-	end;
+		return globals[key]
+	end
 
-	return default;
-end;
+	return default
+end
 
 -- Cannot set them on client.
-function netvars.SetNetVar() end;
+function netvars.SetNetVar() end
 
 function entityMeta:GetNetVar(key, default)
-	local index = self:EntIndex();
+	local index = self:EntIndex()
 
 	if (stored[index] and stored[index][key] != nil) then
-		return stored[index][key];
-	end;
+		return stored[index][key]
+	end
 
-	return default;
-end;
+	return default
+end
 
 netstream.Hook("nv_globals", function(key, value)
 	if (key and value != nil) then
-		globals[key] = value;
-	end;
-end);
+		globals[key] = value
+	end
+end)
 
 netstream.Hook("nv_vars", function(entIdx, key, value)
 	if (key and value != nil) then
-		stored[entIdx] = stored[entIdx] or {};
-		stored[entIdx][key] = value;
-	end;
-end);
+		stored[entIdx] = stored[entIdx] or {}
+		stored[entIdx][key] = value
+	end
+end)
 
 netstream.Hook("nv_delete", function(entIdx)
-	stored[entIdx] = nil;
+	stored[entIdx] = nil
 end);

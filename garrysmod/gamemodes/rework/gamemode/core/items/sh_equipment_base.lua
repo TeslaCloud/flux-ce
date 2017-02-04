@@ -4,22 +4,22 @@
 	the framework is publicly released.
 --]]
 
-ITEM.isBase = true;
-ITEM.Name = "Equipment Base";
-ITEM.Description = "This item can be equipped.";
+ITEM.isBase = true
+ITEM.Name = "Equipment Base"
+ITEM.Description = "This item can be equipped."
 
 function ITEM:OnEquipped(player)
 
-end;
+end
 
 function ITEM:OnUnEquipped(player)
 
-end;
+end
 
 function ITEM:Equip(player, bShouldEquip)
 	if (bShouldEquip) then
-		self:OnEquipped(player);
+		self:OnEquipped(player)
 	else
-		self:OnUnEquipped(player);
-	end;
-end;
+		self:OnUnEquipped(player)
+	end
+end

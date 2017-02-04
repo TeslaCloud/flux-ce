@@ -40,58 +40,58 @@ THANKS TO...
 ]]
 
 
-local pon = {};
-_G.pon = pon;
+local pon = {}
+_G.pon = pon
 
-local type, count = type, table.Count ;
-local tonumber = tonumber ;
+local type, count = type, table.Count 
+local tonumber = tonumber 
 
 do
-	local encode = {};
+	local encode = {}
 
-	local tryCache ;
+	local tryCache 
 
-	local cacheSize = 0;
+	local cacheSize = 0
 
 	encode['table'] = function( self, tbl, output, cache )
 
 		if( cache[ tbl ] )then
-			output[ #output + 1 ] = '('..cache[tbl]..')';
-			return ;
+			output[ #output + 1 ] = '('..cache[tbl]..')'
+			return 
 		else
-			cacheSize = cacheSize + 1;
-			cache[ tbl ] = cacheSize;
+			cacheSize = cacheSize + 1
+			cache[ tbl ] = cacheSize
 		end
 		-- CALCULATE COMPONENT SIZES
-		local nSize = #tbl;
-		local kvSize = count( tbl ) - nSize;
+		local nSize = #tbl
+		local kvSize = count( tbl ) - nSize
 
 		if( nSize == 0 and kvSize > 0 )then
-			output[ #output + 1 ] = '[';
+			output[ #output + 1 ] = '['
 		else
-			output[ #output + 1 ] = '{';
+			output[ #output + 1 ] = '{'
 
 			if nSize > 0 then
 				for i = 1, nSize do
-					local v = tbl[ i ];
+					local v = tbl[ i ]
 					if v == nil then
-						output[ #output + 1 ] = '!';
+						output[ #output + 1 ] = '!'
 						continue
 					end
-					local tv = type( v );
+					local tv = type( v )
 					-- HANDLE POINTERS
 					if( tv == 'string' )then
-						local pid = cache[ v ];
+						local pid = cache[ v ]
 						if( pid )then
-							output[ #output + 1 ] = '('..pid..')';
+							output[ #output + 1 ] = '('..pid..')'
 						else
-							cacheSize = cacheSize + 1;
-							cache[ v ] = cacheSize;
+							cacheSize = cacheSize + 1
+							cache[ v ] = cacheSize
 
-							self.string( self, v, output, cache );
+							self.string( self, v, output, cache )
 						end
 					else
-						self[ tv ]( self, v, output, cache );
+						self[ tv ]( self, v, output, cache )
 					end
 				end
 			end
@@ -99,61 +99,61 @@ do
 
 		if( kvSize > 0 )then
 			if( nSize > 0 )then
-				output[ #output + 1 ] = '~';
+				output[ #output + 1 ] = '~'
 			end
 			for k,v in next, tbl do
 				if( !isnumber(k) or k < 1 or k > nSize )then
-					local tk, tv = type( k ), type( v );
+					local tk, tv = type( k ), type( v )
 
 					-- THE KEY
 					if( tk == 'string' )then
-						local pid = cache[ k ];
+						local pid = cache[ k ]
 						if( pid )then
-							output[ #output + 1 ] = '('..pid..')';
+							output[ #output + 1 ] = '('..pid..')'
 						else
-							cacheSize = cacheSize + 1;
-							cache[ k ] = cacheSize;
+							cacheSize = cacheSize + 1
+							cache[ k ] = cacheSize
 
-							self.string( self, k, output, cache );
+							self.string( self, k, output, cache )
 						end
 					else
-						self[ tk ]( self, k, output, cache );
+						self[ tk ]( self, k, output, cache )
 					end
 
 					-- THE VALUE
 					if( tv == 'string' )then
-						local pid = cache[ v ];
+						local pid = cache[ v ]
 						if( pid )then
-							output[ #output + 1 ] = '('..pid..')';
+							output[ #output + 1 ] = '('..pid..')'
 						else
-							cacheSize = cacheSize + 1;
-							cache[ v ] = cacheSize;
+							cacheSize = cacheSize + 1
+							cache[ v ] = cacheSize
 
-							self.string( self, v, output, cache );
+							self.string( self, v, output, cache )
 						end
 					else
-						self[ tv ]( self, v, output, cache );
+						self[ tv ]( self, v, output, cache )
 					end
 
 				end
 			end
 		end
-		output[ #output + 1 ] = '}';
+		output[ #output + 1 ] = '}'
 	end
 	--    ENCODE STRING
-	local gsub = string.gsub ;
+	local gsub = string.gsub 
 	encode['string'] = function( self, str, output )
 		--if tryCache( str, output ) then return end
-		local estr, count = gsub( str, ";", "\\;");
+		local estr, count = gsub( str, ";", "\\;")
 		if( count == 0 )then
-			output[ #output + 1 ] = '\''..str..';';
+			output[ #output + 1 ] = '\''..str..';'
 		else
-			output[ #output + 1 ] = '"'..estr..'";';
+			output[ #output + 1 ] = '"'..estr..'";'
 		end
 	end
 	--    ENCODE NUMBER
 	encode['number'] = function( self, num, output )
-		output[ #output + 1 ] = tonumber( num )..';';
+		output[ #output + 1 ] = tonumber( num )..';'
 	end
 	--    ENCODE BOOLEAN
 	encode['boolean'] = function( self, val, output )
@@ -161,216 +161,216 @@ do
 	end
 	--    ENCODE VECTOR
 	encode['Vector'] = function( self, val, output )
-		output[ #output + 1 ] = ('v'..val.x..','..val.y)..(','..val.z..';');
+		output[ #output + 1 ] = ('v'..val.x..','..val.y)..(','..val.z..';')
 	end
 	--    ENCODE ANGLE
 	encode['Angle'] = function( self, val, output )
-		output[ #output + 1 ] = ('a'..val.p..','..val.y)..(','..val.r..';');
+		output[ #output + 1 ] = ('a'..val.p..','..val.y)..(','..val.r..';')
 	end
 	encode['Entity'] = function( self, val, output )
-		output[ #output + 1] = 'E'..(IsValid( val ) and (val:EntIndex( )..';') or '#');
+		output[ #output + 1] = 'E'..(IsValid( val ) and (val:EntIndex( )..';') or '#')
 	end
-	encode['Player']  = encode['Entity'];
-	encode['Vehicle'] = encode['Entity'];
-	encode['Weapon']	= encode['Entity'];
-	encode['NPC']     = encode['Entity'];
-	encode['NextBot'] = encode['Entity'];
+	encode['Player']  = encode['Entity']
+	encode['Vehicle'] = encode['Entity']
+	encode['Weapon']	= encode['Entity']
+	encode['NPC']     = encode['Entity']
+	encode['NextBot'] = encode['Entity']
 
 	do
-		local empty, concat = table.Empty, table.concat ;
+		local empty, concat = table.Empty, table.concat 
 		function pon.encode( tbl )
-			local output = {};
-			cacheSize = 0;
-			encode[ 'table' ]( encode, tbl, output, {} );
-			local res = concat( output );
+			local output = {}
+			cacheSize = 0
+			encode[ 'table' ]( encode, tbl, output, {} )
+			local res = concat( output )
 
-			return res;
+			return res
 		end
 	end
 end
 
 do
-	local tonumber = tonumber ;
-	local find, sub, gsub, Explode = string.find, string.sub, string.gsub, string.Explode ;
-	local Vector, Angle, Entity = Vector, Angle, Entity ;
+	local tonumber = tonumber 
+	local find, sub, gsub, Explode = string.find, string.sub, string.gsub, string.Explode 
+	local Vector, Angle, Entity = Vector, Angle, Entity 
 
-	local decode = {};
+	local decode = {}
 	decode['{'] = function( self, index, str, cache )
 
-		local cur = {};
-		cache[ #cache + 1 ] = cur;
+		local cur = {}
+		cache[ #cache + 1 ] = cur
 
-		local k, v, tk, tv = 1, nil, nil, nil;
+		local k, v, tk, tv = 1, nil, nil, nil
 		while( true )do
-			tv = sub( str, index, index );
+			tv = sub( str, index, index )
 			if( not tv or tv == '~' )then
-				index = index + 1;
-				break ;
+				index = index + 1
+				break 
 			end
 			if( tv == '}' )then
-				return index + 1, cur;
+				return index + 1, cur
 			end
 
 			-- READ THE VALUE
-			index = index + 1;
-			index, v = self[ tv ]( self, index, str, cache );
-			cur[ k ] = v;
+			index = index + 1
+			index, v = self[ tv ]( self, index, str, cache )
+			cur[ k ] = v
 
-			k = k + 1;
+			k = k + 1
 		end
 
 		while( true )do
-			tk = sub( str, index, index );
+			tk = sub( str, index, index )
 			if( not tk or tk == '}' )then
-				index = index + 1;
-				break ;
+				index = index + 1
+				break 
 			end
 
 			-- READ THE KEY
 
-			index = index + 1;
-			index, k = self[ tk ]( self, index, str, cache );
+			index = index + 1
+			index, k = self[ tk ]( self, index, str, cache )
 
 			-- READ THE VALUE
-			tv = sub( str, index, index );
-			index = index + 1;
-			index, v = self[ tv ]( self, index, str, cache );
+			tv = sub( str, index, index )
+			index = index + 1
+			index, v = self[ tv ]( self, index, str, cache )
 
-			cur[ k ] = v;
+			cur[ k ] = v
 		end
 
-		return index, cur;
+		return index, cur
 	end
 	decode['['] = function( self, index, str, cache )
 
-		local cur = {};
-		cache[ #cache + 1 ] = cur;
+		local cur = {}
+		cache[ #cache + 1 ] = cur
 
-		local k, v, tk, tv = 1, nil, nil, nil;
+		local k, v, tk, tv = 1, nil, nil, nil
 		while( true )do
-			tk = sub( str, index, index );
+			tk = sub( str, index, index )
 			if( not tk or tk == '}' )then
-				index = index + 1;
-				break ;
+				index = index + 1
+				break 
 			end
 
 			-- READ THE KEY
 
-			index = index + 1;
-			index, k = self[ tk ]( self, index, str, cache );
+			index = index + 1
+			index, k = self[ tk ]( self, index, str, cache )
 			-- READ THE VALUE
-			tv = sub( str, index, index );
-			index = index + 1;
-			index, v = self[ tv ]( self, index, str, cache );
+			tv = sub( str, index, index )
+			index = index + 1
+			index, v = self[ tv ]( self, index, str, cache )
 
-			cur[ k ] = v;
+			cur[ k ] = v
 		end
 
-		return index, cur;
+		return index, cur
 	end
 
 	-- STRING
 	decode['"'] = function( self, index, str, cache )
-		local finish = find( str, '";', index, true );
-		local res = gsub( sub( str, index, finish - 1 ), '\\;', ';' );
-		index = finish + 2;
+		local finish = find( str, '";', index, true )
+		local res = gsub( sub( str, index, finish - 1 ), '\\;', ';' )
+		index = finish + 2
 
-		cache[ #cache + 1 ] = res;
-		return index, res;
+		cache[ #cache + 1 ] = res
+		return index, res
 	end
 	-- STRING NO ESCAPING NEEDED
 	decode['\''] = function( self, index, str, cache )
-		local finish = find( str, ';', index, true );
+		local finish = find( str, ';', index, true )
 		local res = sub( str, index, finish - 1 )
-		index = finish + 1;
+		index = finish + 1
 
-		cache[ #cache + 1 ] = res;
-		return index, res;
+		cache[ #cache + 1 ] = res
+		return index, res
 	end
 
 	decode['!'] = function( self, index, str, cache )
-		return index, nil;
+		return index, nil
 	end
 
 	-- NUMBER
 	decode['n'] = function( self, index, str, cache )
-		index = index - 1;
-		local finish = find( str, ';', index, true );
-		local num = tonumber( sub( str, index, finish - 1 ) );
-		index = finish + 1;
-		return index, num;
+		index = index - 1
+		local finish = find( str, ';', index, true )
+		local num = tonumber( sub( str, index, finish - 1 ) )
+		index = finish + 1
+		return index, num
 	end
-	decode['0'] = decode['n'];
-	decode['1'] = decode['n'];
-	decode['2'] = decode['n'];
-	decode['3'] = decode['n'];
-	decode['4'] = decode['n'];
-	decode['5'] = decode['n'];
-	decode['6'] = decode['n'];
-	decode['7'] = decode['n'];
-	decode['8'] = decode['n'];
-	decode['9'] = decode['n'];
-	decode['-'] = decode['n'];
+	decode['0'] = decode['n']
+	decode['1'] = decode['n']
+	decode['2'] = decode['n']
+	decode['3'] = decode['n']
+	decode['4'] = decode['n']
+	decode['5'] = decode['n']
+	decode['6'] = decode['n']
+	decode['7'] = decode['n']
+	decode['8'] = decode['n']
+	decode['9'] = decode['n']
+	decode['-'] = decode['n']
 
 	-- POINTER
 	decode['('] = function( self, index, str, cache )
-		local finish = find( str, ')', index, true );
-		local num = tonumber( sub( str, index, finish - 1 ) );
-		index = finish + 1;
-		return index, cache[ num ];
+		local finish = find( str, ')', index, true )
+		local num = tonumber( sub( str, index, finish - 1 ) )
+		index = finish + 1
+		return index, cache[ num ]
 	end
 
 	-- BOOLEAN. ONE DATA TYPE FOR YES, ANOTHER FOR NO.
 	decode[ 't' ] = function( self, index )
-		return index, true;
+		return index, true
 	end
 	decode[ 'f' ] = function( self, index )
-		return index, false;
+		return index, false
 	end
 
 	-- VECTOR
 	decode[ 'v' ] = function( self, index, str, cache )
-		local finish =  find( str, ';', index, true );
-		local vecStr = sub( str, index, finish - 1 );
+		local finish =  find( str, ';', index, true )
+		local vecStr = sub( str, index, finish - 1 )
 		index = finish + 1; -- update the index.
-		local segs = Explode( ',', vecStr, false );
-		return index, Vector( tonumber( segs[1] ), tonumber( segs[2] ), tonumber( segs[3] ) );
+		local segs = Explode( ',', vecStr, false )
+		return index, Vector( tonumber( segs[1] ), tonumber( segs[2] ), tonumber( segs[3] ) )
 	end
 	-- ANGLE
 	decode[ 'a' ] = function( self, index, str, cache )
-		local finish =  find( str, ';', index, true );
-		local angStr = sub( str, index, finish - 1 );
+		local finish =  find( str, ';', index, true )
+		local angStr = sub( str, index, finish - 1 )
 		index = finish + 1; -- update the index.
-		local segs = Explode( ',', angStr, false );
-		return index, Angle( tonumber( segs[1] ), tonumber( segs[2] ), tonumber( segs[3] ) );
+		local segs = Explode( ',', angStr, false )
+		return index, Angle( tonumber( segs[1] ), tonumber( segs[2] ), tonumber( segs[3] ) )
 	end
 	-- ENTITY
 	decode[ 'E' ] = function( self, index, str, cache )
 		if( str[index] == '#' )then
-			index = index + 1;
-			return NULL ;
+			index = index + 1
+			return NULL 
 		else
-			local finish = find( str, ';', index, true );
-			local num = tonumber( sub( str, index, finish - 1 ) );
-			index = finish + 1;
-			return index, Entity( num );
+			local finish = find( str, ';', index, true )
+			local num = tonumber( sub( str, index, finish - 1 ) )
+			index = finish + 1
+			return index, Entity( num )
 		end
 	end
 	-- PLAYER 
 	decode[ 'P' ] = function( self, index, str, cache )
-		local finish = find( str, ';', index, true );
-		local num = tonumber( sub( str, index, finish - 1 ) );
-		index = finish + 1;
-		return index, Entity( num ) or NULL;
+		local finish = find( str, ';', index, true )
+		local num = tonumber( sub( str, index, finish - 1 ) )
+		index = finish + 1
+		return index, Entity( num ) or NULL
 	end
 
 	function pon.decode( data )
 		if (!isstring(data)) then
-			ErrorNoHalt("[pON] You must deserialize a string, not "..type(data).."!\n");
-			return {};
-		end;
+			ErrorNoHalt("[pON] You must deserialize a string, not "..type(data).."!\n")
+			return {}
+		end
 
-		local _, res = decode[sub(data,1,1)]( decode, 2, data, {});
-		return res;
+		local _, res = decode[sub(data,1,1)]( decode, 2, data, {})
+		return res
 	end
 end

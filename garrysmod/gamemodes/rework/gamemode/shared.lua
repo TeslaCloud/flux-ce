@@ -5,14 +5,14 @@
 --]]
 
 -- Define basic GM info fields.
-GM.Name 		= "Rework";
-GM.Author 		= "TeslaCloud Studios";
-GM.Website 		= "http://teslacloud.net/";
-GM.Email 		= "support@teslacloud.net";
+GM.Name 		= "Rework"
+GM.Author 		= "TeslaCloud Studios"
+GM.Website 		= "http://teslacloud.net/"
+GM.Email 		= "support@teslacloud.net"
 
 -- Define RW-Specific fields.
-GM.Version 		= "0.1.3-indev";
-GM.Build 		= "1317";
+GM.Version 		= "0.1.3-indev"
+GM.Build 		= "1317"
 GM.Description 	= "A free roleplay gamemode framework."
 
 -- It would be very nice of you to leave below values as they are if you're using official schemas.
@@ -23,11 +23,11 @@ GM.NameOverride	= false; -- Set to any string to override schema's browser name.
 rw.Devmode		= true; -- If set to true will print some developer info. Moderate console spam.
 
 -- Table aliases.
-Rework = rw;
-RW = rw;
+Rework = rw
+RW = rw
 
 -- Fix for name conflicts.
-_player, _team, _file, _table, _data, _sound = player, team, file, table, data, sound;
+_player, _team, _file, _table, _data, _sound = player, team, file, table, data, sound
 
 -- do - end blocks let us manage the lifespan of the
 -- local variables, because when they go out of scope
@@ -38,16 +38,16 @@ _player, _team, _file, _table, _data, _sound = player, team, file, table, data, 
 -- an example somewhere in the init code would be nice.
 do
 	if (engine.ActiveGamemode() != "rework") then
-		rw.schema = engine.ActiveGamemode();
+		rw.schema = engine.ActiveGamemode()
 	else
-		local SchemaConVar = GetConVar("schema");
+		local SchemaConVar = GetConVar("schema")
 
 		if (SchemaConVar) then
-			rw.schema = rw.schema or SchemaConVar:GetString();
+			rw.schema = rw.schema or SchemaConVar:GetString()
 		else
-			rw.schema = rw.schema or "reborn";
-		end;
-	end;
+			rw.schema = rw.schema or "reborn"
+		end
+	end
 
 	-- Shared table contains the info that will be networked
 	-- to clients automatically when they load.
@@ -55,100 +55,100 @@ do
 		schemaFolder = rw.schema,
 		pluginInfo = {},
 		unloadedPlugins = {}
-	};
-end;
+	}
+end
 
 -- A function to get schema's name.
 function rw.GetSchemaName()
 	if (Schema) then
-		return Schema:GetName();
+		return Schema:GetName()
 	else
-		return "Unknown";
-	end;
-end;
+		return "Unknown"
+	end
+end
 
 -- Called when gamemode's server browser name needs to be retrieved.
 function GM:GetGameDescription()
-	local nameOverride = self.NameOverride;
+	local nameOverride = self.NameOverride
 
-	return (isstring(nameOverride) and nameOverride) or self.Prefix..rw.GetSchemaName();
-end;
+	return (isstring(nameOverride) and nameOverride) or self.Prefix..rw.GetSchemaName()
+end
 
 do
-	local schemaFolder = rw.schema;
+	local schemaFolder = rw.schema
 
-	rw.sharedTable.dependencies = rw.sharedTable.dependencies or {};
-	rw.sharedTable.disable = rw.sharedTable.disable or {};
+	rw.sharedTable.dependencies = rw.sharedTable.dependencies or {}
+	rw.sharedTable.disable = rw.sharedTable.disable or {}
 
 	if (SERVER) then
 		if (file.Exists("gamemodes/"..schemaFolder.."/dependencies.lua", "GAME")) then
-			rw.sharedTable.dependencies = include(schemaFolder.."/dependencies.lua");
-		end;
+			rw.sharedTable.dependencies = include(schemaFolder.."/dependencies.lua")
+		end
 
 		if (file.Exists("gamemodes/"..schemaFolder.."/disable.lua", "GAME")) then
-			rw.sharedTable.disable = include(schemaFolder.."/disable.lua");
-		end;
-	end;
+			rw.sharedTable.disable = include(schemaFolder.."/disable.lua")
+		end
+	end
 
 	function rw.SchemaDepends(id)
-		return rw.sharedTable.dependencies[id];
-	end;
+		return rw.sharedTable.dependencies[id]
+	end
 
 	function rw.SchemaDisabled(id)
-		return rw.sharedTable.disable[id];
-	end;
-end;
+		return rw.sharedTable.disable[id]
+	end
+end
 
-AddCSLuaFile("core/sh_enums.lua");
-AddCSLuaFile("core/sh_util.lua");
-AddCSLuaFile("core/sh_core.lua");
-include("core/sh_enums.lua");
-include("core/sh_util.lua");
-include("core/sh_core.lua");
+AddCSLuaFile("core/sh_enums.lua")
+AddCSLuaFile("core/sh_util.lua")
+AddCSLuaFile("core/sh_core.lua")
+include("core/sh_enums.lua")
+include("core/sh_util.lua")
+include("core/sh_core.lua")
 
-util.Include("core/cl_core.lua");
-util.Include("core/sv_core.lua");
+util.Include("core/cl_core.lua")
+util.Include("core/sv_core.lua")
 
 -- This way we put things we want loaded BEFORE anything else in here, like plugin, config, etc.
-util.IncludeDirectory("core/libraries/required", true);
+util.IncludeDirectory("core/libraries/required", true)
 
 -- So that we don't get duplicates on refresh.
-plugin.ClearCache();
+plugin.ClearCache()
 
-util.IncludeDirectory("core/config", true);
-util.IncludeDirectory("core/libraries", true);
-util.IncludeDirectory("core/libraries/classes", true);
-util.IncludeDirectory("core/libraries/meta", true);
-util.IncludeDirectory("core/languages", true);
-rw.admin:IncludeGroups("rework/gamemode/core/groups");
-util.IncludeDirectory("core/commands", true);
-util.IncludeDirectory("core/derma", true);
-item.IncludeItems("rework/gamemode/core/items");
+util.IncludeDirectory("core/config", true)
+util.IncludeDirectory("core/libraries", true)
+util.IncludeDirectory("core/libraries/classes", true)
+util.IncludeDirectory("core/libraries/meta", true)
+util.IncludeDirectory("core/languages", true)
+rw.admin:IncludeGroups("rework/gamemode/core/groups")
+util.IncludeDirectory("core/commands", true)
+util.IncludeDirectory("core/derma", true)
+item.IncludeItems("rework/gamemode/core/items")
 
 if (theme or SERVER) then
 	pipeline.Register("theme", function(uniqueID, fileName, pipe)
 		if (CLIENT) then
-			THEME = Theme(uniqueID);
+			THEME = Theme(uniqueID)
 
-			util.Include(fileName);
+			util.Include(fileName)
 
 			THEME:Register(); THEME = nil;
 		else
-			util.Include(fileName);
-		end;
-	end);
+			util.Include(fileName)
+		end
+	end)
 
 	-- Theme factory is needed for any other themes that may be in the themes folder.
-	pipeline.Include("theme", "core/themes/cl_theme_factory.lua");
+	pipeline.Include("theme", "core/themes/cl_theme_factory.lua")
 
-	pipeline.IncludeDirectory("theme", "rework/gamemode/core/themes");
-end;
+	pipeline.IncludeDirectory("theme", "rework/gamemode/core/themes")
+end
 
-util.IncludeDirectory("hooks", true);
-rw.core:IncludePlugins("rework/plugins");
+util.IncludeDirectory("hooks", true)
+rw.core:IncludePlugins("rework/plugins")
 
-hook.Run("RWPluginsLoaded");
+hook.Run("RWPluginsLoaded")
 
-rw.core:IncludeSchema();
+rw.core:IncludeSchema()
 
-hook.Run("RWSchemaLoaded");
+hook.Run("RWSchemaLoaded")

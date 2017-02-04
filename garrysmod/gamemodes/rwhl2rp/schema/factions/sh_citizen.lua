@@ -4,12 +4,12 @@
 	the framework is publicly released.
 --]]
 
-FACTION.Name = "Citizen";
-FACTION.Description = "A regular citizen living under combine authority.";
+FACTION.Name = "Citizen"
+FACTION.Description = "A regular citizen living under combine authority."
 FACTION.PhysDesc = "Wearing some dirty citizen clothes."
-FACTION.Color = Color(225, 185, 135);
-FACTION.Material = "rework/hl2rp/factions/citizen.png";
-FACTION.NameTemplate = "{name}";
+FACTION.Color = Color(225, 185, 135)
+FACTION.Material = "rework/hl2rp/factions/citizen.png"
+FACTION.NameTemplate = "{name}"
 FACTION.Models.male = {
 	"models/humans/group01/male_01.mdl",
 	"models/humans/group01/male_02.mdl",
@@ -20,7 +20,7 @@ FACTION.Models.male = {
 	"models/humans/group01/male_07.mdl",
 	"models/humans/group01/male_08.mdl",
 	"models/humans/group01/male_09.mdl",
-};
+}
 
 FACTION.Models.female = {
 	"models/humans/group01/female_01.mdl",

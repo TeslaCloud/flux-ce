@@ -4,30 +4,30 @@
 	the framework is publicly released.
 --]]
 
-rw = rw or {};
-rw.startTime = os.clock();
+rw = rw or {}
+rw.startTime = os.clock()
 
 -- Include pON, Netstream and UTF-8 library 
 if (!string.utf8len or !pon or !netstream) then
-	include("thirdparty/utf8.lua");
-	include("thirdparty/pon.lua");
-	include("thirdparty/netstream.lua");
-end;
+	include("thirdparty/utf8.lua")
+	include("thirdparty/pon.lua")
+	include("thirdparty/netstream.lua")
+end
 
 if (rw.initialized) then
-	MsgC(Color(0, 255, 100, 255), "[Rework] Lua auto-reload in progress...\n");
+	MsgC(Color(0, 255, 100, 255), "[Rework] Lua auto-reload in progress...\n")
 else
-	MsgC(Color(0, 255, 100, 255), "[Rework] Initializing...\n");
-end;
+	MsgC(Color(0, 255, 100, 255), "[Rework] Initializing...\n")
+end
 
 -- Initiate shared boot.
-include("shared.lua");
+include("shared.lua")
 
-rw.fonts:CreateFonts();
+rw.fonts:CreateFonts()
 
 if (rw.initialized) then
-	MsgC(Color(0, 255, 100, 255), "[Rework] Auto-reloaded in "..math.Round(os.clock() - rw.startTime, 3).. " second(s)\n");
+	MsgC(Color(0, 255, 100, 255), "[Rework] Auto-reloaded in "..math.Round(os.clock() - rw.startTime, 3).. " second(s)\n")
 else
-	MsgC(Color(0, 255, 100, 255), "[Rework] RW "..GM.Version.." loaded in "..math.Round(os.clock() - rw.startTime, 3).. " second(s)\n");
-	rw.initialized = true;
-end;
+	MsgC(Color(0, 255, 100, 255), "[Rework] RW "..GM.Version.." loaded in "..math.Round(os.clock() - rw.startTime, 3).. " second(s)\n")
+	rw.initialized = true
+end

@@ -5,26 +5,26 @@
 --]]
 
 netstream.Hook("ClientIncludedSchema", function(player)
-	character.Load(player);
-	item.SendToPlayer(player);
-end);
+	character.Load(player)
+	item.SendToPlayer(player)
+end)
 
 netstream.Hook("PlayerDropItem", function(player, instanceID)
-	hook.Run("PlayerDropItem", player, instanceID);
-end);
+	hook.Run("PlayerDropItem", player, instanceID)
+end)
 
 netstream.Hook("InventorySync", function(player, inventory)
-	local newInventory = {};
+	local newInventory = {}
 
 	for slot, ids in ipairs(inventory) do
-		newInventory[slot] = {};
+		newInventory[slot] = {}
 
 		for k, v in ipairs(ids) do
 			if (player:HasItemByID(v)) then
-				table.insert(newInventory[slot], v);
-			end;
-		end;
-	end;
+				table.insert(newInventory[slot], v)
+			end
+		end
+	end
 
-	player:SetInventory(newInventory);
+	player:SetInventory(newInventory)
 end);

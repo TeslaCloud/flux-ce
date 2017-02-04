@@ -8,10 +8,10 @@
 --]]
 
 if (!rw.fonts) then
-	include("rework/gamemode/core/libraries/cl_fonts.lua");
-end;
+	include("rework/gamemode/core/libraries/cl_fonts.lua")
+end
 
-library.New("fa", rw);
+library.New("fa", rw)
 
 local faCodes = {
 	["fa-glass"] = "f000",
@@ -649,9 +649,9 @@ local faCodes = {
 	["fa-google-plus-official"] = "f2b3",
 	["fa-font-awesome"] = "f2b4"
 }
-local buffer = {};
+local buffer = {}
 
-rw.fa.hooks = {};
+rw.fa.hooks = {}
 
 function rw.fa.hooks:CreateFonts(fonts)
 	fonts:CreateFont("reFontAwesome", {
@@ -660,41 +660,41 @@ function rw.fa.hooks:CreateFonts(fonts)
 		size = 16, -- default icon size is 16x16
 		weight = 500,
 		antialias = true
-	});
-end;
+	})
+end
 
-plugin.AddHooks("FontAwesome", rw.fa.hooks);
+plugin.AddHooks("FontAwesome", rw.fa.hooks)
 
 function rw.fa:GetIcon(id)
 	if (faCodes[id]) then
 		if (!buffer[id]) then
-			local rawCode = faCodes[id];
-			buffer[id] = util.HexToDecimal(rawCode);
-		end;
+			local rawCode = faCodes[id]
+			buffer[id] = util.HexToDecimal(rawCode)
+		end
 
-		return string.utf8char(buffer[id]);
-	end;
+		return string.utf8char(buffer[id])
+	end
 
-	return id;
-end;
+	return id
+end
 
 function rw.fa:Draw(id, x, y, size, color, xAlign, yAlign, outlineWidth, outlineColor)
 	if (id:StartWith("fa ")) then
-		id = id:sub(4, id:len());
-	end;
+		id = id:sub(4, id:len())
+	end
 
 	if (!id:StartWith("fa-")) then
-		id = "fa-"..id;
-	end;
+		id = "fa-"..id
+	end
 
-	if (!faCodes[id]) then return; end;
+	if (!faCodes[id]) then return; end
 
-	size = size or 16;
-	color = color or Color(255, 255, 255);
+	size = size or 16
+	color = color or Color(255, 255, 255)
 
 	if (outlineWidth) then
-		draw.SimpleTextOutlined(self:GetIcon(id), rw.fonts:GetSize("reFontAwesome", size), x, y, color, xAlign, yAlign, outlineWidth, outlineColor);
+		draw.SimpleTextOutlined(self:GetIcon(id), rw.fonts:GetSize("reFontAwesome", size), x, y, color, xAlign, yAlign, outlineWidth, outlineColor)
 	else
-		draw.SimpleText(self:GetIcon(id), rw.fonts:GetSize("reFontAwesome", size), x, y, color, xAlign, yAlign);
-	end;
-end;
+		draw.SimpleText(self:GetIcon(id), rw.fonts:GetSize("reFontAwesome", size), x, y, color, xAlign, yAlign)
+	end
+end

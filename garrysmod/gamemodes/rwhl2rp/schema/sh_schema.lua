@@ -4,4 +4,10 @@
 	the framework is publicly released.
 --]]
 
-//print("Schema has loaded!")
+function Schema:IsCombineFaction(faction)
+	return faction == "cca" or faction == "ota" or faction == "ca"
+end
+
+function Schema:PlayerIsCombine(player)
+	return self:IsCombineFaction(player:GetFactionID())
+end

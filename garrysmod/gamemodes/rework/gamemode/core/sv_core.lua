@@ -4,32 +4,32 @@
 	the framework is publicly released.
 --]]
 
-DeriveGamemode("sandbox");
+DeriveGamemode("sandbox")
 
-oldFileioWrite = oldFileioWrite or fileio.Write;
+oldFileioWrite = oldFileioWrite or fileio.Write
 
 function fileio.Write(fileName, content)
-	local exploded = string.Explode("/", fileName);
-	local curPath = "";
+	local exploded = string.Explode("/", fileName)
+	local curPath = ""
 
 	for k, v in ipairs(exploded) do
 		if (string.GetExtensionFromFilename(v) != nil) then
-			break;
-		end;
+			break
+		end
 
-		curPath = curPath..v.."/";
+		curPath = curPath..v.."/"
 
 		if (!file.Exists(curPath, "GAME")) then
-			fileio.MakeDirectory(curPath);
-		end;
-	end;
+			fileio.MakeDirectory(curPath)
+		end
+	end
 
-	oldFileioWrite(fileName, content);
-end;
+	oldFileioWrite(fileName, content)
+end
 
-oldServerLog = oldServerLog or ServerLog;
+oldServerLog = oldServerLog or ServerLog
 
 function ServerLog(...)
-	oldServerLog(...);
-	print("");
-end;
+	oldServerLog(...)
+	print("")
+end

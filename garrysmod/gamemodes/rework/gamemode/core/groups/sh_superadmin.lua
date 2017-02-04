@@ -4,12 +4,12 @@
 	the framework is publicly released.
 --]]
 
-GROUP:SetName("Super Admin");
-GROUP:SetDescription("#PlayerGroup_Superadmin");
-GROUP:SetColor(Color(255, 255, 255));
-GROUP:SetIcon("icon16/shield.png");
-GROUP:SetImmunity(300);
-GROUP:SetBase("admin");
+GROUP:SetName("Super Admin")
+GROUP:SetDescription("#PlayerGroup_Superadmin")
+GROUP:SetColor(Color(255, 255, 255))
+GROUP:SetIcon("icon16/shield.png")
+GROUP:SetImmunity(300)
+GROUP:SetBase("admin")
 GROUP:SetPermissions({
 	server_management = PERM_ALLOW,
 	player_management = PERM_ALLOW,

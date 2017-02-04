@@ -4,7 +4,7 @@
 	the framework is publicly released.
 --]]
 
-local entMeta = FindMetaTable("Entity");
+local entMeta = FindMetaTable("Entity")
 
 --[[
 	We store the original function here so we can override it from the player metaTable,

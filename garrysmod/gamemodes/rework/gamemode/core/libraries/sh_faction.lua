@@ -4,66 +4,66 @@
 	the framework is publicly released.
 --]]
 
-library.New("faction", _G);
+library.New("faction", _G)
 
-local stored = faction.stored or {};
-faction.stored = stored;
+local stored = faction.stored or {}
+faction.stored = stored
 
-local count = faction.count or 0;
-faction.count = count;
+local count = faction.count or 0
+faction.count = count
 
 function faction.Register(id, data)
-	if (!id or !data) then return; end;
+	if (!id or !data) then return; end
 
-	data.uniqueID = id:MakeID() or (data.Name and data.Name:MakeID());
-	data.Name = data.Name or "Unknown Faction";
-	data.Description = data.Description or "This faction has no description!";
-	data.PrintName = data.PrintName or data.Name or "Unknown Faction";
+	data.uniqueID = id:MakeID() or (data.Name and data.Name:MakeID())
+	data.Name = data.Name or "Unknown Faction"
+	data.Description = data.Description or "This faction has no description!"
+	data.PrintName = data.PrintName or data.Name or "Unknown Faction"
 
-	stored[id] = data;
-	count = count + 1;
-end;
+	stored[id] = data
+	count = count + 1
+end
 
 function faction.FindByID(id)
-	return stored[id];
-end;
+	return stored[id]
+end
 
 function faction.Find(name, bStrict)
 	for k, v in pairs(stored) do
 		if (bStrict) then
 			if (k:utf8lower() == name:utf8lower()) then
-				return v;
+				return v
 			elseif (v.Name:utf8lower() == name:utf8lower()) then
-				return v;
-			end;
+				return v
+			end
 		else
 			if (k:utf8lower():find(name:utf8lower())) then
-				return v;
+				return v
 			elseif (v.Name:utf8lower():find(name:utf8lower())) then
-				return v;
-			end;
-		end;
-	end;
+				return v
+			end
+		end
+	end
 
-	return false;
-end;
+	return false
+end
 
 function faction.Count()
-	return count;
-end;
+	return count
+end
 
 function faction.GetAll()
-	return stored;
-end;
+	return stored
+end
 
 pipeline.Register("faction", function(uniqueID, fileName, pipe)
-	FACTION = Faction(uniqueID);
+	FACTION = Faction(uniqueID)
 
-	util.Include(fileName);
+	util.Include(fileName)
 
-	FACTION:Register(); FACTION = nil;
-end);
+	FACTION:Register(); FACTION = nil
+end)
 
 function faction.IncludeFactions(directory)
-	return pipeline.IncludeDirectory("faction", directory);
-end;
+	return pipeline.IncludeDirectory("faction", directory)
+end

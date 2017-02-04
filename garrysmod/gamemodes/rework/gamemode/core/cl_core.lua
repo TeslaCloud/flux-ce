@@ -4,4 +4,4 @@
 	the framework is publicly released.
 --]]
 
-DeriveGamemode("sandbox");
+DeriveGamemode("sandbox")
