@@ -1,13 +1,13 @@
---[[ 
+--[[
 	Rework © 2016-2017 TeslaCloud Studios
-	Do not share or re-distribute before 
+	Do not share or re-distribute before
 	the framework is publicly released.
 --]]
 
 rw = rw or {}
 rw.startTime = os.clock()
 
--- Include pON, Netstream and UTF-8 library 
+-- Include pON, Netstream and UTF-8 library
 if (!string.utf8len or !pon or !netstream) then
 	include("thirdparty/utf8.lua")
 	include("thirdparty/pon.lua")

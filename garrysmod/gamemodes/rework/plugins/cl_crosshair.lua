@@ -55,10 +55,10 @@ function PLUGIN:HUDPaint()
 		end
 
 		_talpha = Lerp(
-			FrameTime() * (showText and 4 or 6), 
-			_talpha or 0, 
+			FrameTime() * (showText and 4 or 6),
+			_talpha or 0,
 			(
-				showText and drawColor.a < 5 and 
+				showText and drawColor.a < 5 and
 				255 - 255 / fadein * math.Clamp(curTime - fadeshow - textStartTime, 0, fadein)
 				or 0
 			)

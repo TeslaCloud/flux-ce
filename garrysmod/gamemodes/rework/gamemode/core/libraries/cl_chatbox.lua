@@ -905,7 +905,7 @@ function PANEL:OnEnter()
 	hook.Run("ChatBoxTextTyped", text)
 
 	self:SetText("")
-	
+
 	if (rw.tabMenu) then
 		chatbox.textEntry:RequestFocus()
 	end

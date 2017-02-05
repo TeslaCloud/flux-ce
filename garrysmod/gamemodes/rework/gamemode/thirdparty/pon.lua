@@ -2,7 +2,7 @@
 RECOMMENDED VERSION
 
 VERSION 1.2.1
-Copyright thelastpenguin™ 
+Copyright thelastpenguin™
 
 	You may use this for any purpose as long as:
 	-	You don't remove this copyright notice.
@@ -22,7 +22,7 @@ DATA TYPES SUPPORTED:
  - Angles  -		k,v
  - Entities- 		k,v
  - Players - 		k,v
- 
+
 CHANGE LOG
 V 1.1.0
  - Added Vehicle, NPC, NextBot, Player, Weapon
@@ -34,7 +34,7 @@ V 1.3.0
  - added custom handling of strings without any escaped characters.
 V 1.4.0
  - added detection of numbers without requiring 'n' datatype. (10 datatypes one for each num it could start with)
-  
+ 
 THANKS TO...
  - VERCAS for the inspiration.
 ]]
@@ -43,13 +43,13 @@ THANKS TO...
 local pon = {}
 _G.pon = pon
 
-local type, count = type, table.Count 
-local tonumber = tonumber 
+local type, count = type, table.Count
+local tonumber = tonumber
 
 do
 	local encode = {}
 
-	local tryCache 
+	local tryCache
 
 	local cacheSize = 0
 
@@ -57,7 +57,7 @@ do
 
 		if( cache[ tbl ] )then
 			output[ #output + 1 ] = '('..cache[tbl]..')'
-			return 
+			return
 		else
 			cacheSize = cacheSize + 1
 			cache[ tbl ] = cacheSize
@@ -141,7 +141,7 @@ do
 		output[ #output + 1 ] = '}'
 	end
 	--    ENCODE STRING
-	local gsub = string.gsub 
+	local gsub = string.gsub
 	encode['string'] = function( self, str, output )
 		--if tryCache( str, output ) then return end
 		local estr, count = gsub( str, ";", "\\;")
@@ -177,7 +177,7 @@ do
 	encode['NextBot'] = encode['Entity']
 
 	do
-		local empty, concat = table.Empty, table.concat 
+		local empty, concat = table.Empty, table.concat
 		function pon.encode( tbl )
 			local output = {}
 			cacheSize = 0
@@ -190,9 +190,9 @@ do
 end
 
 do
-	local tonumber = tonumber 
-	local find, sub, gsub, Explode = string.find, string.sub, string.gsub, string.Explode 
-	local Vector, Angle, Entity = Vector, Angle, Entity 
+	local tonumber = tonumber
+	local find, sub, gsub, Explode = string.find, string.sub, string.gsub, string.Explode
+	local Vector, Angle, Entity = Vector, Angle, Entity
 
 	local decode = {}
 	decode['{'] = function( self, index, str, cache )
@@ -205,7 +205,7 @@ do
 			tv = sub( str, index, index )
 			if( not tv or tv == '~' )then
 				index = index + 1
-				break 
+				break
 			end
 			if( tv == '}' )then
 				return index + 1, cur
@@ -223,7 +223,7 @@ do
 			tk = sub( str, index, index )
 			if( not tk or tk == '}' )then
 				index = index + 1
-				break 
+				break
 			end
 
 			-- READ THE KEY
@@ -251,7 +251,7 @@ do
 			tk = sub( str, index, index )
 			if( not tk or tk == '}' )then
 				index = index + 1
-				break 
+				break
 			end
 
 			-- READ THE KEY
@@ -348,7 +348,7 @@ do
 	decode[ 'E' ] = function( self, index, str, cache )
 		if( str[index] == '#' )then
 			index = index + 1
-			return NULL 
+			return NULL
 		else
 			local finish = find( str, ';', index, true )
 			local num = tonumber( sub( str, index, finish - 1 ) )
@@ -356,7 +356,7 @@ do
 			return index, Entity( num )
 		end
 	end
-	-- PLAYER 
+	-- PLAYER
 	decode[ 'P' ] = function( self, index, str, cache )
 		local finish = find( str, ';', index, true )
 		local num = tonumber( sub( str, index, finish - 1 ) )

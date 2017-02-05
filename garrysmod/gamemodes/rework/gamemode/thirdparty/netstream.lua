@@ -71,13 +71,13 @@ if (DBugR) then
 	for name, func in pairs(stored) do
 		stored[name] = nil
 
-		oldDS(name, DBugR.Util.Func.AttachProfiler(func, function(time) 
+		oldDS(name, DBugR.Util.Func.AttachProfiler(func, function(time)
 			DBugR.Profilers.NetstreamPerf:AddPerformanceData(tostring(name), time, func)
 		end))
 	end
 
-	netstream.Hook = DBugR.Util.Func.AddDetourM(netstream.Hook, function(name, func, ...) 
-		func = DBugR.Util.Func.AttachProfiler(func, function(time) 
+	netstream.Hook = DBugR.Util.Func.AddDetourM(netstream.Hook, function(name, func, ...)
+		func = DBugR.Util.Func.AttachProfiler(func, function(time)
 			DBugR.Profilers.NetstreamPerf:AddPerformanceData(tostring(name), time, func)
 		end)
 

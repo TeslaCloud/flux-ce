@@ -1,6 +1,6 @@
---[[ 
+--[[
 	Rework © 2016-2017 TeslaCloud Studios
-	Do not share or re-distribute before 
+	Do not share or re-distribute before
 	the framework is publicly released.
 --]]
 
@@ -112,13 +112,13 @@ function THEME:PaintButton(panel, w, h)
 		if (!panel.m_Active) then
 			surface.SetDrawColor(self:GetColor("Outline"))
 			surface.DrawRect(0, 0, w, h)
-		
+
 			surface.SetDrawColor(self:GetColor("Main"):Lighten(curAmt))
 			surface.DrawRect(1, 1, w - 2, h - 2)
 		else
 			surface.SetDrawColor(self:GetColor("Outline"))
 			surface.DrawRect(0, 0, w, h)
-		
+
 			surface.SetDrawColor(self:GetColor("MainDark"))
 			surface.DrawRect(1, 1, w - 1, h - 2)
 		end
@@ -130,7 +130,7 @@ function THEME:PaintButton(panel, w, h)
 
 	if (title and title != "") then
 		local width, height = util.GetTextSize(title, font)
-	
+
 		if (panel.m_Autopos) then
 			if (icon) then
 				draw.SimpleText(title, font, h + 2, h / 2 - height / 2, textColor)

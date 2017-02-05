@@ -1,6 +1,6 @@
---[[ 
+--[[
 	Rework © 2016-2017 TeslaCloud Studios
-	Do not share or re-distribute before 
+	Do not share or re-distribute before
 	the framework is publicly released.
 --]]
 
@@ -76,7 +76,7 @@ function PANEL:AddSidebarItems(sidebar, panel)
 	button:SetActive(true)
 	panel.prevButton = button
 
-	panel:AddButton("Faction", function (btn) 
+	panel:AddButton("Faction", function (btn)
 		self:OpenPanel("CharCreation_Faction")
 	end)
 

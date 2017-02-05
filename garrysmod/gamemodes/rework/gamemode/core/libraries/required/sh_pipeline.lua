@@ -1,11 +1,11 @@
---[[ 
+--[[
 	Rework © 2016-2017 TeslaCloud Studios
-	Do not share or re-distribute before 
+	Do not share or re-distribute before
 	the framework is publicly released.
 --]]
 
 --[[
-	Pipeline library lets you create systems that register their stuff via folders. 
+	Pipeline library lets you create systems that register their stuff via folders.
 	It automatically does the boring stuff like converting filenames for you,
 	requiring you to write the real thing only.
 	Check out sh_item and sh_admin libraries for examples.

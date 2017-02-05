@@ -1,6 +1,6 @@
---[[ 
+--[[
 	Rework © 2016-2017 TeslaCloud Studios
-	Do not share or re-distribute before 
+	Do not share or re-distribute before
 	the framework is publicly released.
 --]]
 
@@ -35,7 +35,7 @@ function util.Include(strFile)
 			include(strFile)
 		end
 	else
-		if (string.find(strFile, "sh_") or string.find(strFile, "shared.lua") 
+		if (string.find(strFile, "sh_") or string.find(strFile, "shared.lua")
 		or string.find(strFile, "cl_")) then
 			include(strFile)
 		end
@@ -47,7 +47,7 @@ function util.IncludeDirectory(strDirectory, strBase, bIsRecursive)
 	if (strBase) then
 		if (isbool(strBase)) then
 			strBase = "rework/gamemode/"
-		elseif (!strBase:EndsWith("/")) then 
+		elseif (!strBase:EndsWith("/")) then
 			strBase = strBase.."/"
 		end
 
@@ -98,7 +98,7 @@ do
 
 	-- A function to convert a single hexadecimal digit to decimal.
 	function util.HexToDec(hex)
-		if (isnumber(hex)) then 
+		if (isnumber(hex)) then
 			return hex
 		end
 
@@ -545,7 +545,7 @@ function util.VectorsIntersect(vFrom, vTo, vFrom2, vTo2)
     a1 = vTo.y - vFrom.y
     b1 = vFrom.x - vTo.x
     c1 = (vTo.x * vFrom.y) - (vFrom.x * vTo.y)
-    
+   
     d1 = (a1 * vFrom2.x) + (b1 * vFrom2.y) + c1
     d2 = (a1 * vTo2.x) + (b1 * vTo2.y) + c1
 
@@ -555,13 +555,13 @@ function util.VectorsIntersect(vFrom, vTo, vFrom2, vTo2)
     a2 = vTo2.y - vFrom2.y
     b2 = vFrom2.x - vTo2.x
     c2 = (vTo2.x * vFrom2.y) - (vFrom2.x * vTo2.y)
-    
+   
     d1 = (a2 * vFrom.x) + (b2 * vFrom.y) + c2
     d2 = (a2 * vTo.x) + (b2 * vTo.y) + c2
-    
+   
     if (d1 > 0 and d2 > 0) then return false; end
     if (d1 < 0 and d2 < 0) then return false; end
-    
+   
     -- Vectors are collinear or intersect.
     -- No need for further checks.
     return true
@@ -589,7 +589,7 @@ function util.PointIsInPoly(point, polyVertices)
 		end
 	end
 
-	-- Check whether number of intersections is even or odd. 
+	-- Check whether number of intersections is even or odd.
 	-- If it's odd then the point is inside the polygon.
 	if (intersections % 2 == 0) then
 	    return false

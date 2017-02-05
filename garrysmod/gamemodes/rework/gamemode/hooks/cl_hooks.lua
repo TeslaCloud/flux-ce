@@ -1,6 +1,6 @@
---[[ 
+--[[
 	Rework © 2016-2017 TeslaCloud Studios
-	Do not share or re-distribute before 
+	Do not share or re-distribute before
 	the framework is publicly released.
 --]]
 
@@ -167,7 +167,7 @@ function GM:PlayerUseItemMenu(itemTable, bIsEntity)
 	else
 		if (itemTable.customButtons) then
 			for k, v in pairs(itemTable.customButtons) do
-				local button = itemMenu:AddOption(k, function() 
+				local button = itemMenu:AddOption(k, function()
 					itemTable:DoMenuAction(v.callback)
 				end)
 				button:SetIcon(v.icon)
@@ -175,19 +175,19 @@ function GM:PlayerUseItemMenu(itemTable, bIsEntity)
 		end
 
 		if (itemTable.OnUse) then
-			local useBtn = itemMenu:AddOption(itemTable.UseText or "Use", function() 
+			local useBtn = itemMenu:AddOption(itemTable.UseText or "Use", function()
 				itemTable:DoMenuAction("OnUse")
 			end)
 			useBtn:SetIcon(itemTable.UseIcon or "icon16/wrench.png")
 		end
 
 		if (bIsEntity) then
-			local takeBtn = itemMenu:AddOption(itemTable.TakeText or "Take", function() 
+			local takeBtn = itemMenu:AddOption(itemTable.TakeText or "Take", function()
 				itemTable:DoMenuAction("OnTake")
 			end)
 			takeBtn:SetIcon(itemTable.TakeIcon or "icon16/wrench.png")
 		else
-			local dropBtn = itemMenu:AddOption(itemTable.TakeText or "Drop", function() 
+			local dropBtn = itemMenu:AddOption(itemTable.TakeText or "Drop", function()
 				itemTable:DoMenuAction("OnDrop")
 			end)
 			dropBtn:SetIcon(itemTable.TakeIcon or "icon16/wrench.png")

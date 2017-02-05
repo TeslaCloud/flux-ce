@@ -1,6 +1,6 @@
---[[ 
+--[[
 	Rework © 2016-2017 TeslaCloud Studios
-	Do not share or re-distribute before 
+	Do not share or re-distribute before
 	the framework is publicly released.
 --]]
 
@@ -107,7 +107,7 @@ function PANEL:Paint(w, h)
 end
 
 function PANEL:Rebuild()
-	if (!self.itemData) then 
+	if (!self.itemData) then
 		if (IsValid(self.spawnIcon)) then
 			self.spawnIcon:SetVisible(false)
 			self.spawnIcon:Remove()
@@ -225,7 +225,7 @@ function PANEL:Rebuild()
 			end
 		end
 
-		invSlot:Receiver("rwItem", function(receiver, dropped, isDropped, menuIndex, mouseX, mouseY) 
+		invSlot:Receiver("rwItem", function(receiver, dropped, isDropped, menuIndex, mouseX, mouseY)
 			if (isDropped) then
 				if (receiver.itemData) then
 					if (receiver.itemData.uniqueID == dropped[1].itemData.uniqueID and

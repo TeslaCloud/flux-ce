@@ -1,6 +1,6 @@
---[[ 
+--[[
 	Rework © 2016-2017 TeslaCloud Studios
-	Do not share or re-distribute before 
+	Do not share or re-distribute before
 	the framework is publicly released.
 --]]
 
@@ -29,10 +29,10 @@ do
 		else
 			local len2D = velocity:Length2D()
 
-			if (len2D > 150) then 
-				player.CalcIdeal = ACT_MP_RUN; 
-			elseif (len2D > 0.5) then 
-				player.CalcIdeal = ACT_MP_WALK; 
+			if (len2D > 150) then
+				player.CalcIdeal = ACT_MP_RUN;
+			elseif (len2D > 0.5) then
+				player.CalcIdeal = ACT_MP_WALK;
 			end
 		end
 

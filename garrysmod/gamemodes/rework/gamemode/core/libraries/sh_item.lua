@@ -1,6 +1,6 @@
---[[ 
+--[[
 	Rework © 2016-2017 TeslaCloud Studios
-	Do not share or re-distribute before 
+	Do not share or re-distribute before
 	the framework is publicly released.
 --]]
 
@@ -377,7 +377,7 @@ if (SERVER) then
 	end
 
 	function item.Spawn(position, angles, itemTable)
-		if (!position or !istable(itemTable)) then 
+		if (!position or !istable(itemTable)) then
 			ErrorNoHalt("[Rework:Item] No position or item table is not a table!\n")
 			return
 		end

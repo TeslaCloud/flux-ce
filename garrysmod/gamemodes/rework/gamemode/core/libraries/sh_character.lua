@@ -1,6 +1,6 @@
---[[ 
+--[[
 	Rework © 2016-2017 TeslaCloud Studios
-	Do not share or re-distribute before 
+	Do not share or re-distribute before
 	the framework is publicly released.
 --]]
 
@@ -15,12 +15,12 @@ local stored = character.stored or {}
 character.stored = stored
 
 function character.Create(player, data)
-	if (!isstring(data.name) or (data.name:utf8len() < config.Get("character_min_name_len") 
+	if (!isstring(data.name) or (data.name:utf8len() < config.Get("character_min_name_len")
 		or data.name:utf8len() > config.Get("character_max_name_len"))) then
 		return CHAR_ERR_NAME
 	end
 
-	if (!isstring(data.physDesc) or (data.physDesc:utf8len() < config.Get("character_min_desc_len") 
+	if (!isstring(data.physDesc) or (data.physDesc:utf8len() < config.Get("character_min_desc_len")
 		or data.physDesc:utf8len() > config.Get("character_max_desc_len"))) then
 		return CHAR_ERR_DESC
 	end

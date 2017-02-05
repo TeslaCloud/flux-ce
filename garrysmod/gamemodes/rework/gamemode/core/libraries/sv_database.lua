@@ -308,7 +308,7 @@ local function BuildCreateQuery(queryObj)
 
 	queryString[#queryString + 1] = " )"
 
-	return table.concat(queryString); 
+	return table.concat(queryString);
 end
 
 function QUERY_CLASS:Execute(bQueueQuery)

@@ -1,6 +1,6 @@
---[[ 
+--[[
 	Rework © 2016-2017 TeslaCloud Studios
-	Do not share or re-distribute before 
+	Do not share or re-distribute before
 	the framework is publicly released.
 --]]
 
@@ -153,11 +153,11 @@ if (CLIENT) then
 
 	surface.OldDrawText = surface.OldDrawText or surface.DrawText
 	--[[
-		Overwrite the way the surface library draws text, 
+		Overwrite the way the surface library draws text,
 		this way we can put translations into anything that uses this,
 		like draw.SimpleText, etc.
 
-		This will give us control over basically every text drawn 
+		This will give us control over basically every text drawn
 		with Lua outside of Derma.
 	--]]
 	function surface.DrawText(sText)

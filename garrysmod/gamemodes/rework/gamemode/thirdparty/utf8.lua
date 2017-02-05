@@ -42,7 +42,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 --]]
 
 -- ABNF from RFC 3629
--- 
+--
 -- UTF8-octets = *( UTF8-char )
 -- UTF8-char   = UTF8-1 / UTF8-2 / UTF8-3 / UTF8-4
 -- UTF8-1      = %x00-7F
@@ -52,7 +52,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 -- UTF8-4      = %xF0 %x90-BF 2( UTF8-tail ) / %xF1-F3 3( UTF8-tail ) /
 --               %xF4 %x80-8F 2( UTF8-tail )
 -- UTF8-tail   = %x80-BF
--- 
+--
 
 utf8 = utf8 or {} -- Module sanity check
 
@@ -2133,7 +2133,7 @@ function utf8.uchar(unicode)
 		local Byte2= 0x80 + (code % 0x40)
 		code       = math.floor(code / 0x40)
 		local Byte1= 0x80 + (code % 0x40)
-		code       = math.floor(code / 0x40)  
+		code       = math.floor(code / 0x40) 
 		local Byte0= 0xF0 + code
 
 		return string.char(Byte0, Byte1, Byte2, Byte3)
@@ -2154,7 +2154,7 @@ function utf8.unicode (str, i, j, byte_pos)
 
 	local char,bytes
 
-	if byte_pos then 
+	if byte_pos then
 		bytes = utf8.clen(str,byte_pos)
 		char  = str:sub(byte_pos,byte_pos-1+bytes)
 	else

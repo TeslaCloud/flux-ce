@@ -1,6 +1,6 @@
---[[ 
+--[[
 	Rework © 2016-2017 TeslaCloud Studios
-	Do not share or re-distribute before 
+	Do not share or re-distribute before
 	the framework is publicly released.
 --]]
 
@@ -86,7 +86,7 @@ end
 rw.settings.GetString = rw.settings.GetValue
 
 --[[
-	Used to get the value of a setting's convar as a boolean value (if possible). This will return false 
+	Used to get the value of a setting's convar as a boolean value (if possible). This will return false
 	if the stored value is a false value, or not a bool at all.
 
 	[string] id Used to find the convar for the setting, this id will be the same as the id used to create the setting.
@@ -98,7 +98,7 @@ function rw.settings:GetBool(id)
 end
 
 --[[
-	Used to get the value of a setting's convar as a number (if possible). This will return nil 
+	Used to get the value of a setting's convar as a number (if possible). This will return nil
 	if the stored value isn't actually a number.
 
 	[string] id Used to find the convar for the setting, this id will be the same as the id used to create the setting.
@@ -120,7 +120,7 @@ function rw.settings:GetNumber(id)
 end
 
 --[[
-	Used to get the value of a color setting's convars as a color object (if possible). This will return a 
+	Used to get the value of a color setting's convars as a color object (if possible). This will return a
 	black color if the stored values can't be found.
 
 	[string] id Used to find the convar for the setting, this id will be the same as the id used to create the setting.
@@ -167,7 +167,7 @@ end
 
 --[[
 	Used to add a setting item to the settings menu with a convar attached to it, this will create
-	the category if it doesn't exist, the convar, and add the element to the settings menu. It is 
+	the category if it doesn't exist, the convar, and add the element to the settings menu. It is
 	recommended you use the	alias for this function instead of the function itself.
 
 	[string] category Used as the id for the category that you want to add. Set the actual display name in language files (ex. #Settings_id).
@@ -366,7 +366,7 @@ rw.settings:AddCheckBox("AdminESP", "EnableAdminESP", false, function()
 end)
 rw.settings:AddColorMixer("Theme", "TextColor", Color(255, 255, 255, 255))
 rw.settings:AddColorMixer("Theme", "MenuBackColor", Color(40, 40, 40, 150))
-rw.settings:AddCheckBox("Theme", "UseTabDash", false, nil, 
+rw.settings:AddCheckBox("Theme", "UseTabDash", false, nil,
 	{
 		callback = function(name, oldValue, newValue)
 			if (util.ToBool(newValue)) then

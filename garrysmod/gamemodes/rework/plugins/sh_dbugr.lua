@@ -1,6 +1,6 @@
---[[ 
+--[[
 	Rework © 2016-2017 TeslaCloud Studios
-	Do not share or re-distribute before 
+	Do not share or re-distribute before
 	the framework is publicly released.
 --]]
 
@@ -21,7 +21,7 @@ if (DBugR) then
 					name = v.id
 				end
 
-				hooks[k][1] = DBugR.Util.Func.AttachProfiler(func, function(time) 
+				hooks[k][1] = DBugR.Util.Func.AttachProfiler(func, function(time)
 					DBugR.Profilers.Hook:AddPerformanceData(name..":"..hookName, time, func)
 				end)
 			end

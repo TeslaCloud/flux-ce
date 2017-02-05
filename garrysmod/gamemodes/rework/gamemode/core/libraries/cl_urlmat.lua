@@ -1,6 +1,6 @@
---[[ 
+--[[
 	Rework © 2016-2017 TeslaCloud Studios
-	Do not share or re-distribute before 
+	Do not share or re-distribute before
 	the framework is publicly released.
 --]]
 
@@ -23,7 +23,7 @@ function rw.urlmat:CacheMaterial(url)
 				local path = "rework/materials/"..urlCRC..extension
 
 				if (_file.Exists(path, "DATA")) then
-					cache[urlCRC] = Material("../data/"..path, "noclamp smooth"); 
+					cache[urlCRC] = Material("../data/"..path, "noclamp smooth");
 					return
 				end
 
