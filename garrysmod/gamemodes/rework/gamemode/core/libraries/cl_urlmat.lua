@@ -24,6 +24,7 @@ function rw.urlmat:CacheMaterial(url)
 
 				if (_file.Exists(path, "DATA")) then
 					cache[urlCRC] = Material("../data/"..path, "noclamp smooth");
+
 					return
 				end
 

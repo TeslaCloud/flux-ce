@@ -51,10 +51,12 @@ end
 function library.New(strName, tParent)
 	if (istable(tParent)) then
 		tParent[strName] = tParent[strName] or {}
+
 		return tParent[strName]
 	end
 
 	library.stored[strName] = library.stored[strName] or {}
+
 	return library.stored[strName]
 end
 
@@ -131,12 +133,14 @@ function rw.core:Serialize(tTable)
 			ErrorNoHalt("[Rework] Failed to serialize a table!\n")
 			ErrorNoHalt(value.."\n")
 			debug.Trace()
+
 			return ""
 		end
 
 		return value
 	else
 		print("[Rework] You must serialize a table, not "..type(tTable).."!")
+
 		return ""
 	end
 end
@@ -148,13 +152,16 @@ function rw.core:Deserialize(strData)
 		if (!bSuccess) then
 			ErrorNoHalt("[Rework] Failed to deserialize a string!\n")
 			ErrorNoHalt(value.."\n")
+
 			debug.Trace()
+
 			return {}
 		end
 
 		return value
 	else
 		print("[Rework] You must deserialize a string, not "..type(strData).."!")
+
 		return {}
 	end
 end

@@ -137,21 +137,6 @@ else
 end
 
 if (SERVER) then
-	netstream.Hook("rw_debug_createchar", function(player, name)
-		local data = {
-			name = name,
-			physDesc = "Default PhysDesc or something just to test it lol",
-			gender = CHAR_GENDER_MALE,
-			faction = "player",
-			model = "models/humans/group01/male_02.mdl"
-		}
-
-		local status = character.Create(player, data)
-		character.SendToClient(player)
-
-		print("Created character: "..name)
-	end)
-
 	netstream.Hook("CreateCharacter", function(player, data)
 		data.gender	= (data.gender and data.gender == "Female" and CHAR_GENDER_FEMALE) or CHAR_GENDER_MALE
 		data.physDesc = data.description
@@ -162,8 +147,10 @@ if (SERVER) then
 
 		if (status == CHAR_SUCCESS) then
 			character.SendToClient(player)
+			netstream.Start(player, "PlayerCreatedCharacter", true, status)
 			print("Success")
 		else
+			netstream.Start(player, "PlayerCreatedCharacter", false, status)
 			print("Error")
 		end
 	end)

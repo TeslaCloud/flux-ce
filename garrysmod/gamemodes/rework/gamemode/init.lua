@@ -4,8 +4,8 @@
 	the framework is publicly released.
 --]]
 
-rw = rw or {}; -- Our namespace.
-rw.startTime = os.clock(); -- For start time benchmarking.
+rw = rw or {}
+rw.startTime = os.clock()
 
 function SafeRequire(mod)
 	local success, value = pcall(require, mod)
