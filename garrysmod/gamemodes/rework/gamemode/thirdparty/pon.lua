@@ -34,7 +34,7 @@ V 1.3.0
  - added custom handling of strings without any escaped characters.
 V 1.4.0
  - added detection of numbers without requiring 'n' datatype. (10 datatypes one for each num it could start with)
- 
+
 THANKS TO...
  - VERCAS for the inspiration.
 ]]

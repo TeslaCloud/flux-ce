@@ -2133,7 +2133,7 @@ function utf8.uchar(unicode)
 		local Byte2= 0x80 + (code % 0x40)
 		code       = math.floor(code / 0x40)
 		local Byte1= 0x80 + (code % 0x40)
-		code       = math.floor(code / 0x40) 
+		code       = math.floor(code / 0x40)
 		local Byte0= 0xF0 + code
 
 		return string.char(Byte0, Byte1, Byte2, Byte3)
