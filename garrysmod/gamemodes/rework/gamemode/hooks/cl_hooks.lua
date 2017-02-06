@@ -22,6 +22,14 @@ function GM:InitPostEntity()
 
  		hook.Run("PlayerModelChanged", v, model, model)
  	end
+
+ 	local toolGun = weapons.GetStored("gmod_tool")
+
+	for k, v in pairs(rw.tool:GetAll()) do
+		toolGun.Tool[v.Mode] = v
+	end
+
+ 	plugin.Call("RWInitPostEntity")
 end
 
 do
@@ -146,6 +154,22 @@ function GM:DrawPlayerTargetID(player, x, y, distance)
 			local smallerFont = rw.fonts:GetSize("tooltip_small", 12)
 			local width, height = util.GetTextSize("#TargetID_Information", smallerFont)
 			draw.SimpleText("#TargetID_Information", smallerFont, x - width * 0.5, y + 5, Color(50, 255, 50, alpha))
+		end
+	end
+end
+
+function GM:PopulateToolMenu()
+	for ToolName, TOOL in pairs(rw.tool:GetAll()) do
+		if (TOOL.AddToMenu != false) then
+			spawnmenu.AddToolMenuOption(
+				TOOL.Tab or "Main",
+				TOOL.Category or "New Category",
+				ToolName,
+				TOOL.Name or "#"..ToolName,
+				TOOL.Command or "gmod_tool "..ToolName,
+				TOOL.ConfigName or ToolName,
+				TOOL.BuildCPanel
+			)
 		end
 	end
 end

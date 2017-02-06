@@ -7,6 +7,12 @@
 function GM:InitPostEntity()
 	item.Load()
 
+	local toolGun = weapons.GetStored("gmod_tool")
+
+	for k, v in pairs(rw.tool:GetAll()) do
+		toolGun.Tool[v.Mode] = v
+	end
+
 	plugin.Call("RWInitPostEntity")
 end
 

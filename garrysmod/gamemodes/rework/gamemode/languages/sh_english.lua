@@ -94,3 +94,5 @@ lang["#Settings_Fit_Fit"] = "Fit"
 
 lang["#TargetID_Information"] = "Press `E` for more information."
 lang["#TargetID_Action"] = "Press `E` for actions."
+
+lang["#tool.test.name"] = "TEST";

@@ -11,8 +11,8 @@ GM.Website 		= "http://teslacloud.net/"
 GM.Email 		= "support@teslacloud.net"
 
 -- Define RW-Specific fields.
-GM.Version 		= "0.1.3-indev"
-GM.Build 		= "1317"
+GM.Version 		= "0.1.3b-indev"
+GM.Build 		= "1321"
 GM.Description 	= "A free roleplay gamemode framework."
 
 -- It would be very nice of you to leave below values as they are if you're using official schemas.
@@ -119,7 +119,7 @@ util.IncludeDirectory("core/config", true)
 util.IncludeDirectory("core/libraries", true)
 util.IncludeDirectory("core/libraries/classes", true)
 util.IncludeDirectory("core/libraries/meta", true)
-util.IncludeDirectory("core/languages", true)
+util.IncludeDirectory("languages", true)
 rw.admin:IncludeGroups("rework/gamemode/core/groups")
 util.IncludeDirectory("core/commands", true)
 util.IncludeDirectory("core/derma", true)
@@ -143,6 +143,8 @@ if (theme or SERVER) then
 
 	pipeline.IncludeDirectory("theme", "rework/gamemode/core/themes")
 end
+
+pipeline.IncludeDirectory("tool", "rework/gamemode/core/tools")
 
 util.IncludeDirectory("hooks", true)
 rw.core:IncludePlugins("rework/plugins")

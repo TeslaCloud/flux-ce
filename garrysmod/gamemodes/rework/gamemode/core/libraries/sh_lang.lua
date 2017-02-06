@@ -4,10 +4,10 @@
 	the framework is publicly released.
 --]]
 
-if (rw.lang) then return; end
-
 library.New("lang", rw)
-local stored = {}
+local stored = rw.lang.stored or {}
+rw.lang.stored = stored;
+
 local cache = {}
 local textCache = {}
 
@@ -66,7 +66,7 @@ function rw.lang:TranslateText(sText)
 	end
 
 	local oldText = sText
-	local phrases = string.FindAll(sText, "#[%w_]+")
+	local phrases = string.FindAll(sText, "#[%w_.]+")
 	local translations = {}
 
 	for k, v in ipairs(phrases) do

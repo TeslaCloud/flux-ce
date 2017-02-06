@@ -34,8 +34,8 @@ if (SERVER) then
 		self:SetWhitelists(whitelists)
 	end
 
-	function playerMeta:Save()
-		rw.player:SavePlayer(self)
+	function playerMeta:SavePlayer()
+		return rw.player:Save(self)
 	end
 
 	function playerMeta:SetData(data)

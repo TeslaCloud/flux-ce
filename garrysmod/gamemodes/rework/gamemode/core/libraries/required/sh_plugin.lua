@@ -22,6 +22,7 @@ local extras = {
 	"commands",
 	"groups",
 	"derma",
+	"tools"
 }
 
 function plugin.GetStored()
@@ -331,6 +332,8 @@ function plugin.IncludeFolders(folder)
 				faction.IncludeFactions(folder.."/factions/")
 			elseif (v == "themes") then
 				pipeline.IncludeDirectory("theme", folder.."/themes/")
+			elseif (v == "tools") then
+				pipeline.IncludeDirectory("tool", folder.."/tools/")
 			else
 				util.IncludeDirectory(folder.."/"..v)
 			end

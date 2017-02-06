@@ -90,3 +90,5 @@ lang["#Settings_Fit_Fill"] = "Заполнить"
 lang["#Settings_Fit_Fit"] = "Подогнать размер"
 
 lang["#TargetID_Information"] = "Press 'E' for more information."
+
+lang["#tool.test.name"] = "TEST";
