@@ -34,7 +34,7 @@ end
 function PANEL:CloseMenu(bForce)
 	self:Remove()
 
-	rw.IntroPanel = vgui.Create("reMainMenu")
+	rw.IntroPanel = vgui.Create("rwMainMenu")
 	rw.IntroPanel:MakePopup()
 end
 

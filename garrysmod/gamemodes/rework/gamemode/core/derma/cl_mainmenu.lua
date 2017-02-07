@@ -119,4 +119,4 @@ function PANEL:AddButton(text, callback)
 	return button
 end
 
-vgui.Register("reMainMenu", PANEL, "EditablePanel");
+vgui.Register("rwMainMenu", PANEL, "EditablePanel");

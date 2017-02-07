@@ -162,6 +162,13 @@ do
 end
 
 function GM:OnReloaded()
+	-- Reload the tools.
+	local toolGun = weapons.GetStored("gmod_tool")
+
+	for k, v in pairs(rw.tool:GetAll()) do
+		toolGun.Tool[v.Mode] = v
+	end
+
 	if (SERVER) then
 		print("[Rework] OnReloaded hook called serverside.")
 	else

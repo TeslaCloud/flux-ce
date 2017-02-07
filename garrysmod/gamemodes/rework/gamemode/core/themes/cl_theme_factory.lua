@@ -51,7 +51,7 @@ function THEME:OnLoaded()
 	end)
 
 	self:AddPanel("MainMenu", function(id, parent, ...)
-		return vgui.Create("reMainMenu", parent)
+		return vgui.Create("rwMainMenu", parent)
 	end)
 
 	self:AddPanel("CharacterCreation", function(id, parent, ...)

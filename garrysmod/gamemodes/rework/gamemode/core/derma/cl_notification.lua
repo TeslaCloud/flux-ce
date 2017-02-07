@@ -69,6 +69,10 @@ function PANEL:Think()
 	elseif (self.curAlpha < 230) then
 		self.curAlpha = self.curAlpha + 4
 	end
+
+	if (self.PostThink) then
+		self:PostThink()
+	end
 end
 
 function PANEL:Paint(width, height)

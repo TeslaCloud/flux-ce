@@ -45,7 +45,7 @@ if (SERVER) then
 	function playerMeta:SendConfig()
 		for k, v in pairs(stored) do
 			if (!v.hidden) then
-				netstream.Start(self, "config_setvar", k, stored[key])
+				netstream.Start(self, "config_setvar", k, v._Value)
 			end
 		end
 
@@ -74,7 +74,10 @@ else
 	end
 
 	netstream.Hook("config_setvar", function(key, value)
-		if (key == nil) then return; end
+		if (key == nil) then return end
+
+		print(key, value)
+
 		stored[key] = stored[key] or {}
 		stored[key]._Value = value
 		cache[key] = value

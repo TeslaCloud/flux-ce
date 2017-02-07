@@ -13,7 +13,7 @@ function GM:InitPostEntity()
 	rw.client = rw.client or LocalPlayer()
 
 	if (!rw.client:GetCharacter()) then
-		rw.IntroPanel = vgui.Create("rwIntro")
+		rw.IntroPanel = theme.CreatePanel("MainMenu")
 		rw.IntroPanel:MakePopup()
 	end
 
@@ -242,8 +242,7 @@ function GM:AddTabMenuItems(menu)
 		title = "Main Menu",
 		icon = "fa-users",
 		override = function(menuPanel, button)
-			menuPanel:SetVisible(false)
-			menuPanel:Remove()
+			menuPanel:SafeRemove()
 			rw.IntroPanel = theme.CreatePanel("MainMenu")
 		end
 	})

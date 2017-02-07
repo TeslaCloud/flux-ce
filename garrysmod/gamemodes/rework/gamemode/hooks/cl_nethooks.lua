@@ -23,9 +23,8 @@ netstream.Hook("PlayerModelChanged", function(nPlyIndex, sNewModel, sOldModel)
 end)
 
 netstream.Hook("PostCharacterLoaded", function(nCharID)
-	if (rw.client.IntroPanel) then
-		rw.client.IntroPanel:SetVisible(false)
-		rw.client.IntroPanel:Remove()
+	if (IsValid(rw.IntroPanel)) then
+		rw.IntroPanel:SafeRemove()
 	end
 end)
 
@@ -49,4 +48,43 @@ netstream.Hook("RefreshInventory", function()
 	if (rw.tabMenu and rw.tabMenu.activePanel and rw.tabMenu.activePanel.Rebuild) then
 		rw.tabMenu.activePanel:Rebuild()
 	end
-end);
+end)
+
+netstream.Hook("PlayerCreatedCharacter", function(success, status)
+	print("PlayerCreatedCharacter", success, rw.IntroPanel, rw.IntroPanel.menu);
+
+	if (IsValid(rw.IntroPanel) and IsValid(rw.IntroPanel.menu)) then
+		if (success) then
+			rw.IntroPanel:RecreateSidebar(true)
+
+			if (rw.IntroPanel.menu.Close) then
+				rw.IntroPanel.menu:Close()
+			else
+				rw.IntroPanel.menu:SafeRemove()
+			end
+		else
+			local text = "We were unable to create a character! (unknown error)"
+
+			if (status == CHAR_ERR_NAME) then
+				text = "Your character's name must be between "..config.Get("character_min_name_len").." and "..config.Get("character_max_name_len").." characters long!"
+			elseif (status == CHAR_ERR_DESC) then
+				text = "Your character's description must be between "..config.Get("character_min_desc_len").." and "..config.Get("character_max_desc_len").." characters long!"
+			elseif (status == CHAR_ERR_GENDER) then
+				text = "You must pick a gender for your character before continuing!"
+			end
+
+			print("popping a panel")
+
+			local panel = vgui.Create("rwNotification", rw.IntroPanel)
+			panel:SetText(text)
+			panel:SetLifetime(6)
+			panel:SetTextColor(Color("red"))
+			panel:SetBackgroundColor(Color(50, 50, 50, 220))
+
+			local w, h = panel:GetSize()
+			panel:SetPos(ScrW() / 2 - w / 2, ScrH() - 128)
+
+			function panel:PostThink() self:MoveToFront() end
+		end
+	end
+end)
