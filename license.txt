@@ -17,7 +17,7 @@ Porting is when the code is being copied and then transformed into another forma
 Simple version:
 You may:
 - Use and modify Rework freely.
-- Share or sell your modifications (including framework edits).
+- Share or sell your modifications (including framework edits, but those are limited to sharing only).
 - Write plugins for Rework and share or sell them.
 
 You may not:
