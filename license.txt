@@ -1,0 +1,28 @@
+Rework license version 1 (1321)
+
+Copyright © 2016-2017 TeslaCloud Studios
+Rework (the framework) is a project of TeslaCloud Studios LLC (us) and is a subject to the following license (terms):
+
+1. General Terms
+You are allowed to use and modify the framework without any limitations. You may also share your custom modifications for free or paid, as long as they are your original work and do not infringe upon any copyrights and/or any other terms listed in this license. You may not copy, reproduce or port the framework's code anywhere outside of the project, this includes, but is not limited to: copying portions of the software or the entire code of the software and including it with other software and/or integrating this in other software's code, even with proper credit given. You may not port any official plugins for, and/or parts of, the software (made by TeslaCloud Studios or it's affiliates) to any other software, including addons, gamemodes, scripts and plugins (other than the plugins written for Rework). You may not remove or modify any copyright notices placed within the code of the software under any circumstances.
+
+2. Sharing
+You may share and sell your original work made for Rework as long as it complies with the rest of the terms of this license and does not infringe upon any other copyrights. You may not sell the framework under any circumstances, even if you modified it. You are free to share your modifications to the framework for free.
+
+3. What counts as copying/reproduction/porting
+Copying is when the code is being copied from one place to another, usually retaining all the variable and function names, as well as the logic of the function's code.
+Reproduction is when the code is being studied and then a different code is being written, usually retaining the logic of the original but having different variable names.
+Porting is when the code is being copied and then transformed into another format to work within a different software.
+
+Simple version:
+You may:
+- Use and modify Rework freely.
+- Share or sell your modifications (including framework edits).
+- Write plugins for Rework and share or sell them.
+
+You may not:
+- Copy, reproduce or port Rework's code into any other framework.
+-- This includes Clockwork, specifically.
+- Remove copyright notices from Rework's code.
+- Modify copyright notices within Rework's code.
+- Sell Rework.
