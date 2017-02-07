@@ -83,8 +83,7 @@ function PANEL:OpenMenu(panel, data)
 				self:OpenMenu(panel, data)
 			end)
 		else
-			self.menu:SetVisible(false)
-			self.menu:Remove()
+			self.menu:SafeRemove()
 			self:OpenMenu(panel, data)
 		end
 	end

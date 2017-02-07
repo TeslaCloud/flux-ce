@@ -42,8 +42,9 @@ end
 
 function PANEL:SetLifetime(time)
 	timer.Simple(time, function()
-		self:SetVisible(false)
-		self:Remove()
+		if (IsValid(self)) then
+			self:SafeRemove()
+		end
 	end)
 
 	self.lifetime = time
