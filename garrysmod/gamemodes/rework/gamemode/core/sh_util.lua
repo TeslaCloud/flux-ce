@@ -23,6 +23,12 @@ function Try(id, func, ...)
 	end
 end
 
+function util.IsVowel(char)
+	char = char:lower()
+
+	return (char == "a" or char == "e" or char == "y" or char == "u" or char == "i" or char == "o")
+end;
+
 -- A function to include a file based on it's prefix.
 function util.Include(strFile)
 	if (SERVER) then

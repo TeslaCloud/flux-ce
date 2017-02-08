@@ -22,34 +22,57 @@ function rw.lang:GetAll()
 end
 
 function rw.lang:GetString(language, identifier, arguments)
-	if (!cache[language]) then
-		cache[language] = {}
-	end
-
-	if (cache[language][identifier]) then
-		return cache[language][identifier]
-	end
+	language = (istable(stored[language]) and language) or "en"
 
 	local langString = nil
 	arguments = arguments or {}
 
-	if (stored[language]) then
-		langString = stored[language][identifier]
-	end
+	langString = stored[language][identifier] or identifier
 
-	if (!langString) then
-		langString = stored["en"][identifier] or identifier
-	end
+	if (!isstring(langString)) then return identifier end
 
 	for k, v in pairs(arguments) do
 		langString = string.gsub(langString, "#"..k, tostring(v), 1)
 	end
 
 	langString = langString:Replace(";", "")
-
-	cache[language][identifier] = langString
+	langString = hook.Run("TranslatePhrase", language, identifier, arguments) or langString
 
 	return langString
+end
+
+function rw.lang:GetPlural(language, phrase, count)
+	local langTable = stored[language]
+	local translated = self:TranslateText(phrase)
+
+	if (!langTable) then return translated end
+	
+	if (langTable.Pluralize) then
+		return langTable:Pluralize(phrase, count, translated)
+	elseif (language == "en") then
+		if (util.IsVowel(translated:sub(translated:len(), translated:len()))) then
+			return translated.."es"
+		else
+			return translated.."s"
+		end
+	end
+
+	return translated
+end
+
+function rw.lang:GetCase(language, phrase, case)
+	if (language == "en") then return self:TranslateText(phrase) end
+
+	local langTable = stored[language]
+	local translated = self:TranslateText(phrase)
+
+	if (!langTable) then return translated end
+	
+	if (langTable.GetCase) then
+		return langTable:GetCase(phrase, count, translated)
+	end
+
+	return translated
 end
 
 -- Explicit mode. This will attempt to translate the given text regardless of anything else.
@@ -63,6 +86,13 @@ function rw.lang:TranslateText(sText)
 	if (!string.find(sText, "#")) then
 		textCache[sText] = sText
 		return sText
+	end
+
+	local hooked = hook.Run("TranslateText", sText)
+
+	if (hooked) then
+		textCache[sText] = hooked
+		return hooked
 	end
 
 	local oldText = sText
@@ -128,7 +158,27 @@ if (CLIENT) then
 			args[1] = args[1]:sub(colon + 1, args[1]:len())
 		end
 
-		return rw.lang:GetString(lang, identifier, args)
+		local text =  rw.lang:GetString(lang, identifier, args)
+
+		cache[lang][identifier] = text
+
+		return text
+	end
+
+	function rw.lang:Pluralize(phrase, count)
+		local lang = GetConVar("gmod_language"):GetString()
+
+		if (lang) then
+			return self:GetPlural(lang, phrase, count)
+		end
+	end
+
+	function rw.lang:Case(phrase, case)
+		local lang = GetConVar("gmod_language"):GetString()
+
+		if (lang) then
+			return self:GetCase(lang, phrase, case)
+		end
 	end
 
 	surface.bTranslating = surface.bTranslating or true
