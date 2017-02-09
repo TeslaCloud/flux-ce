@@ -111,6 +111,85 @@ function GM:HUDPaint()
 	end
 end
 
+do
+	local cache = nil
+	local addedCache = nil
+	local tempCache = nil
+	local renderColor = Color(50, 255, 50)
+	local renderColorRed = Color(255, 50, 50)
+	local lastAmt = nil
+	local render = render
+
+	function GM:PostDrawOpaqueRenderables(bDrawDepth, bDrawSkybox)
+		local weapon = rw.client:GetActiveWeapon()
+
+		if (IsValid(weapon) and weapon:GetClass() == "gmod_tool" and weapon:GetMode() == "area") then
+			local tool = rw.client:GetTool()
+			local verts = (tool and tool.area and tool.area.verts)
+
+			if (istable(verts) and (!tempCache or #tempCache != #verts)) then
+				tempCache = {}
+
+				for k, v in ipairs(verts) do
+					local n
+
+					if (k == #verts) then
+						n = verts[1]
+					else
+						n = verts[k + 1]
+					end
+
+					table.insert(tempCache, {v, n})
+				end
+			end
+
+			if (!lastAmt) then lastAmt = areas.GetCount() end
+	
+			if (!cache or lastAmt != areas.GetCount()) then
+				cache = {}
+				addedCache = {}
+
+				for k, v in pairs(areas.GetAll()) do
+					for k2, v2 in ipairs(v.polys) do
+						for idx, p in ipairs(v2) do
+							local n
+
+							if (idx == #v2) then
+								n = v2[1]
+							else
+								n = v2[idx + 1]
+							end
+
+							local add = Vector(0, 0, v.maxH)
+
+							table.insert(cache, {p, n})
+							table.insert(addedCache, {p + add, n + add})
+						end
+					end
+				end
+			end
+
+			if (cache) then
+				for k, v in ipairs(cache) do
+					local p, n, ap, an = v[1], v[2], addedCache[k][1], addedCache[k][2]
+
+					render.DrawLine(p, n, renderColor)
+					render.DrawLine(ap, an, renderColor)
+					render.DrawLine(ap, p, renderColor)
+				end
+			end
+
+			if (tempCache) then
+				for k, v in ipairs(tempCache) do
+					local p, n = v[1], v[2]
+
+					render.DrawLine(p, n, renderColorRed)
+				end
+			end
+		end
+	end
+end
+
 function GM:HUDDrawTargetID()
 	if (IsValid(rw.client) and rw.client:Alive()) then
 		local trace = rw.client:GetEyeTraceNoCursor()

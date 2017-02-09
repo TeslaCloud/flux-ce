@@ -412,26 +412,31 @@ function GM:OneSecond()
 					if (pos == player.lastPos) then continue end
 
 					local z = pos.z
+					local enteredArea = false
 
 					-- First do height checks
-					if (z > v2.z and z < v.maxH) then
+					if (z > v2[1].z and z < v.maxH) then
 						if (util.VectorIsInPoly(pos, v2)) then
 							-- Player entered the area
 							if (!table.HasValue(player.lastArea, v.uniqueID)) then
 								Try("Areas", areas.GetCallback(v.type), player, v, v2, true, pos, curTime)
 
 								table.insert(player.lastArea, v.uniqueID)
-							end
-						else
-							-- Player left the area
-							if (table.HasValue(player.lastArea, v.uniqueID)) then
-								Try("Areas", areas.GetCallback(v.type), player, v, v2, false, pos, curTime)
 
-								table.RemoveByValue(player.lastArea, v.uniqueID)
+								enteredArea = true
 							end
 						end
 					end
-				end;
+
+					if (!enteredArea) then
+						-- Player left the area
+						if (table.HasValue(player.lastArea, v.uniqueID)) then
+							Try("Areas", areas.GetCallback(v.type), player, v, v2, false, pos, curTime)
+
+							table.RemoveByValue(player.lastArea, v.uniqueID)
+						end
+					end
+				end
 			end
 		end
 	end
