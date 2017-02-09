@@ -71,6 +71,8 @@ function areas.Register(id, data)
 	if (#data.polys < 1) then return end
 
 	stored[id] = data
+
+	return stored[id]
 end
 
 function areas.RegisterType(uniqueID, name, description, defaultCallback)

@@ -19,7 +19,7 @@ function rw.undo:Create(id, name)
 end
 
 function rw.undo:Add(callback, ...)
-	table.insert(buffer.functions, {func = callback, args = {...})
+	table.insert(buffer.functions, {func = callback, args = {...}})
 end
 
 function rw.undo:SetPlayer(player)
@@ -34,6 +34,18 @@ function rw.undo:Finish()
 	end
 
 	buffer = {}
+end
+
+function rw.undo:Remove(player, id)
+	local queueTable = queue[player]
+
+	if (queueTable) then
+		for k, v in ipairs(queueTable) do
+			if (v.uniqueID == id) then
+				queue[player][k] = nil
+			end
+		end
+	end
 end
 
 function rw.undo:Do(obj)
