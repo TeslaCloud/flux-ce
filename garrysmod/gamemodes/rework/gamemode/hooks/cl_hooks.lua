@@ -323,6 +323,20 @@ function GM:AddMainMenuItems(panel, sidebar)
 	end
 end
 
+function GM:PlayerBindPress(player, bind, bPressed)
+	if (bind:find("gmod_undo") and bPressed) then
+		if (hook.Run("SoftUndo", player) != nil) then
+			return true
+		end
+	end
+end
+
+function GM:SoftUndo(player)
+	netstream.Start("SoftUndo")
+
+	if (#rw.undo:GetPlayer(rw.client) > 0) then return true end
+end
+
 do
 	local hiddenElements = { -- Hide default HUD elements.
 		CHudHealth = true,

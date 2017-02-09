@@ -27,4 +27,8 @@ netstream.Hook("InventorySync", function(player, inventory)
 	end
 
 	player:SetInventory(newInventory)
-end);
+end)
+
+netstream.Hook("SoftUndo", function(player)
+	rw.undo:DoPlayer(player)
+end)

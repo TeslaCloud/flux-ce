@@ -12,12 +12,19 @@ areas.stored = stored
 local callbacks = areas.callbacks or {}
 areas.callbacks = callbacks
 
+local types = areas.types or {}
+areas.types = types
+
 function areas.GetAll()
 	return stored
 end
 
 function areas.GetCallbacks()
 	return callbacks
+end
+
+function areas.GetTypes()
+	return types
 end
 
 function areas.Create(uniqueID, height, data)
@@ -51,6 +58,8 @@ function areas.Create(uniqueID, height, data)
 	end
 
 	function area:Register()
+		if (#self.verts > 2) then self:FinishPoly() end
+
 		return areas.Register(uniqueID, self)
 	end
 
@@ -64,11 +73,32 @@ function areas.Register(id, data)
 	stored[id] = data
 end
 
+function areas.RegisterType(uniqueID, name, description, defaultCallback)
+	types[uniqueID] = {
+		name = name,
+		description = description,
+		callback = defaultCallback
+	}
+end
+
 -- callback(player, area, poly, bHasEntered, curPos, curTime)
 function areas.SetCallback(areaType, callback)
 	callbacks[areaType] = callback
 end
 
 function areas.GetCallback(areaType)
-	return callbacks[areaType] or function() rw.core:DevPrint("Callback for area type '"..areaType.."' could not be found!") end
+	return callbacks[areaType] or (type[areaType] and type[areaType].callback) or function() rw.core:DevPrint("Callback for area type '"..areaType.."' could not be found!") end
 end
+
+areas.RegisterType(
+	"area",
+	"Simple Area",
+	"A simple area. Use this type if you have a callback somewhere in the code that looks up uniqueID instead of type ID.",
+	function(player, area, poly, bHasEntered, curPos, curTime)
+		if (bHasEntered) then
+			hook.Run("PlayerEnteredArea", player, area, curTime)
+		else
+			hook.Run("PlayerLeftArea", player, area, curTime)
+		end
+	end
+)
