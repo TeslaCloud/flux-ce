@@ -11,7 +11,9 @@ rw.command.stored = stored
 rw.command.aliases = aliases
 
 function rw.command:Create(id, data)
-	data.uniqueID = id:utf8lower()
+	if (!id or !data) then return end
+
+	data.uniqueID = id:MakeID()
 	data.name = data.name or "Unknown"
 	data.description = data.description or "An undescribed command."
 	data.syntax = data.syntax or "[none]"
@@ -22,7 +24,7 @@ function rw.command:Create(id, data)
 	stored[id] = data
 
 	-- Add original command name to aliases table.
-	aliases[id] = id:utf8lower()
+	aliases[id] = data.uniqueID
 
 	if (data.aliases) then
 		for k, v in ipairs(data.aliases) do
@@ -135,11 +137,12 @@ if (SERVER) then
 						if (IsValid(target)) then
 							if (cmdTable.immunity and !rw.admin:CheckImmunity(player, target, cmdTable.canBeEqual)) then
 								rw.player:Notify(player, L("Commands_HigherImmunity", target:Name()))
+
 								return
 							end
 
-							-- one step less for commands.
-							args[(cmdTable.playerArg or 1)] = target
+							-- One step less for commands.
+							args[cmdTable.playerArg or 1] = target
 						else
 							if (IsValid(player)) then
 								rw.player:Notify(player, L("Commands_PlayerInvalid", targetArg))
@@ -151,7 +154,7 @@ if (SERVER) then
 						end
 					end
 
-					-- Let plugins hook into this and abort command's execution of necessary.
+					-- Let plugins hook into this and abort command's execution if necessary.
 					if (!hook.Run("PlayerRunCommand", player, cmdTable, args)) then
 						if (IsValid(player)) then
 							ServerLog(player:Name().." has used /"..cmdTable.name.." "..text:utf8sub(cmdTable.name:utf8len() + 2, text:utf8len()))

@@ -43,6 +43,19 @@ function rw.notification:Add(text, lifetime, textColor, backColor)
 	self:Reposition(h)
 end
 
+function rw.notification:AddPopup(text, lifetime, x, y, textColor, backColor)
+	local panel = vgui.Create("rwNotification")
+	panel:SetPos(x, y)
+	panel:SetText(text)
+	panel:SetLifetime(lifetime)
+	panel:SetTextColor(textColor)
+	panel:SetBackgroundColor(backColor)
+
+	function panel:PostThink()
+		self:MoveToFront()
+	end
+end
+
 function rw.notification:Reposition(offset)
 	if (!isnumber(offset)) then return end
 

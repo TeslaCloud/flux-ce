@@ -83,6 +83,9 @@ lang["#Settings_MenuBackColor"] = "Цвет панелей:"
 lang["#Settings_TextColor"] = "Цвет текста:"
 lang["#Settings_EnableAdminESP"] = "Включить ESP администратора"
 lang["#Settings_FitType"] = "Выберите как следует масштабировать картинку фона."
+lang["#Settings_DrawBars"] = "Отрисовывать полоски в HUD'е (здоровье, броня, и.т.п)."
+lang["#Settings_DrawBarText"] = "Отрисовывать текст на полосках."
+lang["#Settings_UseTabDash"] = "Выберите, чтобы использовать дэшборд-меню, снимите галочку, чтобы использовать классический вид."
 
 lang["#Settings_Fit_Tiled"] = "Плитки"
 lang["#Settings_Fit_Center"] = "Центрировать"
@@ -92,5 +95,8 @@ lang["#Settings_Fit_Fit"] = "Подогнать размер"
 lang["#TargetID_Information"] = "Нажмите 'E', чтобы посмотреть информацию."
 lang["#TargetID_Action"] = "Нажмите 'E' для выполнения действия."
 
-lang["#tool.test.name"] = "ТЕСТОВЫЙ ИНСТРУМЕНТ";
-lang["#tool.test.desc"] = "ТЕСТ ТЕСТ ТЕСТ ТЕСТ ТЕСТ ТЕСТ ТЕСТ";
+lang["#tool.area.name"] = "Создатель Зон";
+lang["#tool.area.desc"] = "Создавайте зоны в форме многоугольников на изи.";
+lang["#tool.area.text"] = "ID зоны";
+lang["#tool.area.height"] = "Высота";
+lang["#tool.area.mode"] = "Тип";

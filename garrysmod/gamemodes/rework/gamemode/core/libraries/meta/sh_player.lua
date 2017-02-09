@@ -71,12 +71,10 @@ end
 
 playerMeta.rwName = playerMeta.rwName or playerMeta.Name
 
-function playerMeta:Name()
-	if (character) then
-		return self.nameOverride or self:GetNetVar("name", self:rwName())
-	end
+function playerMeta:Name(bForceSteamName)
+	if (bForceSteamName) then return self:rwName() end
 
-	return self.nameOverride or self:rwName()
+	return self.nameOverride or self:GetNetVar("name", self:rwName())
 end
 
 function playerMeta:SteamName()
@@ -100,6 +98,8 @@ end
 	Characters System
 
 --]]
+
+-- See definition of playerMeta:GetCharacter in sh_character.lua library
 
 function playerMeta:GetActiveCharacterID()
 	return self:GetNetVar("ActiveCharacter", nil)
@@ -144,6 +144,7 @@ if (SERVER) then
 		self:SetNetVar("key", charData.key or -1)
 		self:SetNetVar("model", charData.model or "models/humans/group01/male_02.mdl")
 		self:SetNetVar("inventory", charData.inventory)
+
 		hook.Run("OnActiveCharacterSet", self, self:GetCharacter())
 	end
 

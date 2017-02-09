@@ -167,7 +167,6 @@ function rw.admin:CheckImmunity(player, target, canBeEqual)
 	return false
 end
 
--- New Rework pipeline.
 pipeline.Register("group", function(uniqueID, fileName, pipe)
 	GROUP = Group(uniqueID)
 

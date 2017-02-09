@@ -73,8 +73,6 @@ netstream.Hook("PlayerCreatedCharacter", function(success, status)
 				text = "You must pick a gender for your character before continuing!"
 			end
 
-			print("popping a panel")
-
 			local panel = vgui.Create("rwNotification", rw.IntroPanel)
 			panel:SetText(text)
 			panel:SetLifetime(6)

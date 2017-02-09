@@ -291,6 +291,8 @@ function plugin.IncludeSchema()
 	local schemaFolder = rw.core:GetSchemaFolder().."/schema"
 	schemaInfo.folder = schemaFolder
 
+	if (SERVER) then AddCSLuaFile(rw.core:GetSchemaFolder().."/gamemode/cl_init.lua") end
+
 	Schema = Plugin(schemaInfo.name, schemaInfo)
 
 	util.Include(schemaFolder.."/sh_schema.lua")

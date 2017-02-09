@@ -4,5 +4,4 @@
 	the framework is publicly released.
 --]]
 
-AddCSLuaFile("cl_init.lua")
 DeriveGamemode("rework")

@@ -5,7 +5,7 @@
 --]]
 
 TOOL.Category = "Rework"
-TOOL.Name = "Areas Tool"
+TOOL.Name = "Area Tool"
 TOOL.Command = nil
 TOOL.ConfigName = ""
 
