@@ -574,7 +574,7 @@ function util.VectorsIntersect(vFrom, vTo, vFrom2, vTo2)
 end
 
 -- A function to determine whether a 2D point is inside of a 2D polygon.
-function util.PointIsInPoly(point, polyVertices)
+function util.VectorIsInPoly(point, polyVertices)
 	if (!isvector(point) or !istable(polyVertices) or !isvector(polyVertices[1])) then
 		return
 	end

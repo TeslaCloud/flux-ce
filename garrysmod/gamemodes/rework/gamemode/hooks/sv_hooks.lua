@@ -423,6 +423,47 @@ function GM:OnCharacterChange(player, oldChar, newCharID)
 	player:SaveCharacter()
 end
 
+function GM:PlayerOneSecond(player, curTime)
+	local pos = player:GetPos()
+
+	if (player.lastPos != pos) then
+		hook.Run("PlayerPositionChanged", player, player.lastPos, pos, curTime)
+	end
+
+	player.lastPos = pos
+end
+
+function GM:PlayerPositionChanged(player, lastPos, curPos, curTime)
+	local z = pos.z
+
+	player.lastArea = player.lastArea or {}
+
+	for k, v in pairs(areas.GetAll()) do
+		if (istable(v.polys) and isstring(v.type)) then
+			for k2, v2 in ipairs(v.polys) do
+				-- First do height checks
+				if (z > v2.z and z < v.maxH) then
+					if (util.VectorIsInPoly(curPos, v2)) then
+						-- Player entered the area
+						if (!table.HasValue(player.lastArea, v.uniqueID)) then
+							Try("Areas", areas.GetCallback(v.type), player, v, v2, true, curPos, curTime)
+
+							table.insert(player.lastArea, v.uniqueID)
+						end
+					else
+						-- Player left the area
+						if (table.HasValue(player.lastArea, v.uniqueID)) then
+							Try("Areas", areas.GetCallback(v.type), player, v, v2, false, curPos, curTime)
+
+							table.RemoveByValue(player.lastArea, v.uniqueID)
+						end
+					end
+				end
+			end
+		end
+	end
+end
+
 -- Awful awful awful code, but it's kinda necessary in some rare cases.
 -- Avoid using PlayerThink whenever possible though.
 do
