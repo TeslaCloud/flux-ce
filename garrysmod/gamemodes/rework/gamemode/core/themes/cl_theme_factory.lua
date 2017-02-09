@@ -143,6 +143,10 @@ function THEME:PaintButton(panel, w, h)
 	end
 end
 
+function THEME:PaintSidebar(panel, width, height)
+	draw.RoundedBox(0, 0, 0, width, height, Color(40, 40, 40))
+end
+
 function THEME:DrawBarBackground(barInfo)
 	draw.RoundedBox(barInfo.cornerRadius, barInfo.x, barInfo.y, barInfo.width, barInfo.height, Color(40, 40, 40))
 

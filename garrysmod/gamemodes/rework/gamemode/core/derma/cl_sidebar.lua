@@ -20,7 +20,7 @@ function PANEL:Init()
 end
 
 function PANEL:Paint(width, height)
-	draw.RoundedBox(0, 0, 0, width, height, Color(40, 40, 40))
+	theme.Hook("PaintSidebar", self, width, height)
 end
 
 function PANEL:AddPanel(panel, bCenter)

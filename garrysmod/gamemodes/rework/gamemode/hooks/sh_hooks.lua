@@ -147,7 +147,7 @@ do
 	local animCache = {}
 
 	function GM:PlayerModelChanged(player, sNewModel, sOldModel)
-		if (!sNewModel) then return; end
+		if (!sNewModel) then return end
 
 		if (CLIENT) then
 			player:SetIK(false)

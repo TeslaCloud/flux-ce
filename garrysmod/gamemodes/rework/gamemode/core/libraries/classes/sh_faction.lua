@@ -53,7 +53,7 @@ function CFaction:GetDescription()
 end
 
 function CFaction:AddClass(uniqueID, className, description, color, callback)
-	if (!uniqueID) then return; end
+	if (!uniqueID) then return end
 
 	self.Classes[uniqueID] = {
 		name = className,
@@ -64,7 +64,7 @@ function CFaction:AddClass(uniqueID, className, description, color, callback)
 end
 
 function CFaction:AddRank(uniqueID, nameFilter)
-	if (!uniqueID) then return; end
+	if (!uniqueID) then return end
 
 	if (!nameFilter) then nameFilter = uniqueID; end
 
@@ -124,7 +124,7 @@ end
 function CFaction:SetData(key, value)
 	key = tostring(key)
 
-	if (!key) then return; end
+	if (!key) then return end
 
 	self.Data[key] = tostring(value)
 end

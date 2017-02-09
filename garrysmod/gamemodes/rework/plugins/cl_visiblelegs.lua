@@ -8,7 +8,7 @@ PLUGIN:SetName("Visible Legs")
 PLUGIN:SetAuthor("NightAngel")
 PLUGIN:SetDescription("Lets clients see their character's legs.")
 
-if (!CLIENT) then return; end
+if (!CLIENT) then return end
 
 local hiddenBones = {
 	"ValveBiped.Bip01_Head1",
@@ -95,12 +95,12 @@ end
 function PLUGIN:RenderScreenspaceEffects()
 	local player = rw.client
 
-	if (!rw.settings:GetBool("DrawLegs") or player:ShouldDrawLocalPlayer() or !player:Alive()) then return; end
+	if (!rw.settings:GetBool("DrawLegs") or player:ShouldDrawLocalPlayer() or !player:Alive()) then return end
 
 	local angs = player:EyeAngles()
 
 	-- Because we don't need to draw the legs if you wouldn't even be able to see them.
-	if (angs.p < 0) then return; end
+	if (angs.p < 0) then return end
 
 	cam.Start3D(EyePos(), EyeAngles())
 		if (!IsValid(player.legs)) then

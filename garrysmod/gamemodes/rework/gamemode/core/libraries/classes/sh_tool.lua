@@ -235,7 +235,7 @@ end
 if (CLIENT) then
 	-- Tool should return true if freezing the view angles
 	function rwTool:FreezeMovement()
-		return false 
+		return false
 	end
 
 	-- The tool's opportunity to draw to the HUD

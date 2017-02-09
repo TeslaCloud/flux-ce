@@ -170,7 +170,7 @@ function PANEL:Init()
 			surface.SetDrawColor(rw.settings:GetColor("TextColor"))
 			surface.DrawRect(8, h / 2 - 1, w - 15, 1)
 
-			if (!num) then return; end
+			if (!num) then return end
 
 			local x, y = 8, h / 2 - 1
 			local space = w / num

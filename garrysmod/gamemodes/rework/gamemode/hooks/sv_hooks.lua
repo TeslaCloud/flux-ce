@@ -171,8 +171,8 @@ function GM:PlayerUseItem(player, itemTable, ...)
 	if (IsValid(itemTable.entity)) then
 		trace = player:GetEyeTraceNoCursor()
 
-		if (!IsValid(trace.Entity)) then return; end
-		if (trace.Entity != itemTable.entity) then return; end
+		if (!IsValid(trace.Entity)) then return end
+		if (trace.Entity != itemTable.entity) then return end
 	end
 
 	if (player:HasItemByID(itemTable.instanceID) or trace != nil) then

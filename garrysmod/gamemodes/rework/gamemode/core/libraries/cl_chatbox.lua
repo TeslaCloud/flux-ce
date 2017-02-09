@@ -88,19 +88,19 @@ chatbox.curAlpha = chatbox.curAlpha or 255
 --]]
 
 function chatbox.AddFilter(id, callback)
-	if (!id or id == "") then return; end
+	if (!id or id == "") then return end
 
 	chatbox.filters[id] = callback
 end
 
 function chatbox.AddType(id, callback)
-	if (!id or id == "") then return; end
+	if (!id or id == "") then return end
 
 	chatbox.types[id] = callback
 end
 
 function chatbox.GetFilter(id)
-	if (!id or id == "") then return; end
+	if (!id or id == "") then return end
 
 	if (chatbox.filters[id]) then
 		return chatbox.filters[id]
@@ -110,7 +110,7 @@ function chatbox.GetFilter(id)
 end
 
 function chatbox.GetType(id)
-	if (!id or id == "") then return; end
+	if (!id or id == "") then return end
 
 	if (chatbox.types[id]) then
 		return chatbox.types[id]
@@ -267,7 +267,7 @@ end
 --]]
 
 function chatbox.AddBBCode(id, callback, requireRich)
-	if (!id or id == "") then return; end
+	if (!id or id == "") then return end
 
 	chatbox.codes[id] = chatbox.codes[id] or {}
 	chatbox.codes[id].Callback = callback
@@ -578,7 +578,7 @@ function chatbox.ParseText(messageData)
 			messageData.playerTeam = messageData.sender:Team()
 
 			if (messageData.filter == "ic") then
-				local plyName = messageData.sender:Name(); //CW.player:GetName(messageData.sender)
+				local plyName = messageData.sender:Name()
 
 				if (plyName:utf8len() >= 40) then
 					messageData.playerName = "["..plyName:utf8sub(1, 40).."...]"

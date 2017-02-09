@@ -64,7 +64,7 @@ do
 		end
 
 		function playerMeta:GiveItem(uniqueID, instanceID, data)
-			if (!uniqueID) then return; end
+			if (!uniqueID) then return end
 
 			local itemTable
 
@@ -86,11 +86,11 @@ do
 		end
 
 		function playerMeta:GiveItemByID(instanceID)
-			if (!tonumber(instanceID) or tonumber(instanceID) <= 0) then return; end
+			if (!tonumber(instanceID) or tonumber(instanceID) <= 0) then return end
 
 			local itemTable = item.FindInstanceByID(instanceID)
 
-			if (!itemTable) then return; end
+			if (!itemTable) then return end
 
 			local slot = self:AddItem(itemTable)
 
@@ -104,7 +104,7 @@ do
 		end
 
 		function playerMeta:TakeItemByID(instanceID)
-			if (!instanceID or instanceID < 1) then return; end
+			if (!instanceID or instanceID < 1) then return end
 
 			local playerInv = self:GetInventory()
 

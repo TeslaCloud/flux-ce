@@ -13,7 +13,7 @@ if (SERVER) then
 	}
 
 	function PLUGIN:SetupMove(player, moveData, cmdData)
-		if (!player:GetNetVar("rwAutoWalk")) then return; end
+		if (!player:GetNetVar("rwAutoWalk")) then return end
 
 		moveData:SetForwardSpeed(moveData:GetMaxSpeed())
 
@@ -42,7 +42,7 @@ else
 
 	-- We do this so there's no need to do an unnecessary check for if client or server in the hook itself.
 	function PLUGIN:SetupMove(player, moveData, cmdData)
-		if (!player:GetNetVar("rwAutoWalk")) then return; end
+		if (!player:GetNetVar("rwAutoWalk")) then return end
 
 		moveData:SetForwardSpeed(moveData:GetMaxSpeed())
 	end

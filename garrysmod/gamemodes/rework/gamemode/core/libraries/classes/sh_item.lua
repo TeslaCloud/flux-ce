@@ -83,7 +83,7 @@ function CItem:OnUse(player) end
 
 if (SERVER) then
 	function CItem:SetData(id, value)
-		if (!id) then return; end
+		if (!id) then return end
 
 		self.data[id] = value
 
@@ -92,15 +92,15 @@ if (SERVER) then
 
 	function CItem:DoMenuAction(act, player, ...)
 		if (act == "OnTake") then
-			if (hook.Run("PlayerTakeItem", player, self, ...) != nil) then return; end
+			if (hook.Run("PlayerTakeItem", player, self, ...) != nil) then return end
 		end
 
 		if (act == "OnUse") then
-			if (hook.Run("PlayerUseItem", player, self, ...) != nil) then return; end
+			if (hook.Run("PlayerUseItem", player, self, ...) != nil) then return end
 		end
 
 		if (act == "OnDrop") then
-			if (hook.Run("PlayerDropItem", player, self.instanceID, self, ...) != nil) then return; end
+			if (hook.Run("PlayerDropItem", player, self.instanceID, self, ...) != nil) then return end
 		end
 
 		if (self[act]) then
@@ -119,25 +119,25 @@ if (SERVER) then
 		end
 
 		if (act == "OnTake") then
-			if (hook.Run("PlayerTakenItem", player, self, ...) != nil) then return; end
+			if (hook.Run("PlayerTakenItem", player, self, ...) != nil) then return end
 		end
 
 		if (act == "OnUse") then
-			if (hook.Run("PlayerUsedItem", player, self, ...) != nil) then return; end
+			if (hook.Run("PlayerUsedItem", player, self, ...) != nil) then return end
 
 			item.Remove(self)
 		end
 
 		if (act == "OnDrop") then
-			if (hook.Run("PlayerDroppedItem", player, self.instanceID, self, ...) != nil) then return; end
+			if (hook.Run("PlayerDroppedItem", player, self.instanceID, self, ...) != nil) then return end
 		end
 	end
 
 	netstream.Hook("ItemMenuAction", function(player, instanceID, action, ...)
 		local itemTable = item.FindInstanceByID(instanceID)
 
-		if (!itemTable) then return; end
-		if (hook.Run("PlayerCanUseItem", player, itemTable, action, ...) == false) then return; end
+		if (!itemTable) then return end
+		if (hook.Run("PlayerCanUseItem", player, itemTable, action, ...) == false) then return end
 
 		itemTable:DoMenuAction(action, player, ...)
 	end)
@@ -148,7 +148,7 @@ else
 end
 
 function CItem:GetData(id, default)
-	if (!id) then return; end
+	if (!id) then return end
 
 	return self.data[id] or default
 end

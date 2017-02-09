@@ -172,7 +172,7 @@ function theme.UnloadTheme()
 end
 
 function theme.Reload()
-	if (!theme.activeTheme) then return; end
+	if (!theme.activeTheme) then return end
 
 	if ((theme.activeTheme.shouldReload == false) or hook.Run("ShouldThemeReload", theme.activeTheme) == false) then
 		return

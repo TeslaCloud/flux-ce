@@ -13,7 +13,7 @@ local count = faction.count or 0
 faction.count = count
 
 function faction.Register(id, data)
-	if (!id or !data) then return; end
+	if (!id or !data) then return end
 
 	data.uniqueID = id:MakeID() or (data.Name and data.Name:MakeID())
 	data.Name = data.Name or "Unknown Faction"

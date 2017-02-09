@@ -687,7 +687,7 @@ function rw.fa:Draw(id, x, y, size, color, xAlign, yAlign, outlineWidth, outline
 		id = "fa-"..id
 	end
 
-	if (!faCodes[id]) then return; end
+	if (!faCodes[id]) then return end
 
 	size = size or 16
 	color = color or Color(255, 255, 255)

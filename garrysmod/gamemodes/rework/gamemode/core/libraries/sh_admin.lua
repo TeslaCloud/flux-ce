@@ -15,7 +15,7 @@ rw.admin.players = players
 local compilerCache = {}
 
 function rw.admin:CreateGroup(id, data)
-	if (!isstring(id)) then return; end
+	if (!isstring(id)) then return end
 
 	data.m_uniqueID = id
 
@@ -45,7 +45,7 @@ function rw.admin:CreateGroup(id, data)
 end
 
 function rw.admin:AddPermission(id, category, data)
-	if (!id) then return; end
+	if (!id) then return end
 
 	category = category or "general"
 	data.uniqueID = id
@@ -57,7 +57,7 @@ function rw.admin:AddPermission(id, category, data)
 end
 
 function rw.admin:PermissionFromCommand(cmdObj)
-	if (!cmdObj) then return; end
+	if (!cmdObj) then return end
 
 	local data = {}
 		data.uniqueID = cmdObj.uniqueID or cmdObj.name:lower():gsub(" ", "_")
@@ -191,9 +191,9 @@ if (SERVER) then
 
 		permTable[permID] = permTable[permID] or PERM_NO
 
-		if (value == PERM_NO) then return; end
+		if (value == PERM_NO) then return end
 
-		if (permTable[permID] == PERM_ALLOW_OVERRIDE) then return; end
+		if (permTable[permID] == PERM_ALLOW_OVERRIDE) then return end
 
 		if (value == PERM_ALLOW_OVERRIDE) then
 			permTable[permID] = PERM_ALLOW_OVERRIDE
@@ -202,8 +202,8 @@ if (SERVER) then
 			return
 		end
 
-		if (permTable[permID] == PERM_NEVER) then return; end
-		if (permTable[permID] == value) then return; end
+		if (permTable[permID] == PERM_NEVER) then return end
+		if (permTable[permID] == value) then return end
 
 		if (value == PERM_NEVER) then
 			permTable[permID] = PERM_NEVER
@@ -234,7 +234,7 @@ if (SERVER) then
 	end
 
 	function rw.admin:CompilePermissions(player)
-		if (!IsValid(player)) then return; end
+		if (!IsValid(player)) then return end
 
 		local steamID = player:SteamID()
 		local userGroup = player:GetUserGroup()

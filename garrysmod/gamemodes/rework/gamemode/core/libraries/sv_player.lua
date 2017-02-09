@@ -22,7 +22,7 @@ function rw.player:NotifyAll(message)
 end
 
 function rw.player:Save(player)
-	if (!IsValid(player)) then return; end
+	if (!IsValid(player)) then return end
 
 	rw.db:EasyWrite("rw_players", {"steamID", player:SteamID()}, {
 		steamID = player:SteamID(),
@@ -38,7 +38,7 @@ function rw.player:Save(player)
 end
 
 function rw.player:SaveUsergroup(player)
-	if (!IsValid(player)) then return; end
+	if (!IsValid(player)) then return end
 
 	rw.db:EasyWrite("rw_players", {"steamID", player:SteamID()}, {
 		name = player:Name(),
@@ -47,7 +47,7 @@ function rw.player:SaveUsergroup(player)
 end
 
 function rw.player:SaveAllUsergroups(player)
-	if (!IsValid(player)) then return; end
+	if (!IsValid(player)) then return end
 
 	rw.db:EasyWrite("rw_players", {"steamID", player:SteamID()}, {
 		steamID = player:SteamID(),
@@ -59,7 +59,7 @@ function rw.player:SaveAllUsergroups(player)
 end
 
 function rw.player:Restore(player)
-	if (!IsValid(player)) then return; end
+	if (!IsValid(player)) then return end
 
 	rw.db:EasyRead("rw_players", {"steamID", player:SteamID()}, function(result, hasData)
 		if (hasData) then

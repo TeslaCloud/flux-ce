@@ -4,7 +4,7 @@
 	the framework is publicly released.
 --]]
 
-if (netvars) then return; end
+if (netvars) then return end
 
 library.New("netvars", _G)
 

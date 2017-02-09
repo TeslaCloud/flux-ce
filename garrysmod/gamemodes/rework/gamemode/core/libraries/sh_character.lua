@@ -97,7 +97,7 @@ if (SERVER) then
 	end
 
 	function character.Save(player, index)
-		if (!IsValid(player) or !isnumber(index) or hook.Run("PreSaveCharacter", player, index) == false) then return; end
+		if (!IsValid(player) or !isnumber(index) or hook.Run("PreSaveCharacter", player, index) == false) then return end
 
 		local toSave = character.ToSaveable(player, stored[player:SteamID()][index])
 			rw.db:EasyWrite("rw_characters", {"uniqueID", index}, toSave)
@@ -105,7 +105,7 @@ if (SERVER) then
 	end
 
 	function character.SaveAll(player)
-		if (!IsValid(player)) then return; end
+		if (!IsValid(player)) then return end
 
 		for k, v in ipairs(stored[player:SteamID()]) do
 			character.Save(player, k)

@@ -4,7 +4,7 @@
 	the framework is publicly released.
 --]]
 
-if (netvars) then return; end
+if (netvars) then return end
 
 library.New("netvars", _G)
 
@@ -20,6 +20,7 @@ local playerMeta = FindMetaTable("Player")
 local function IsBadType(key, val)
 	if (isfunction(val)) then
 		ErrorNoHalt("[Rework] Cannot store functions as NetVars! ("..key..")\n")
+
 		return true
 	end
 
@@ -35,8 +36,8 @@ function netvars.GetNetVar(key, default)
 end
 
 function netvars.SetNetVar(key, value, send)
-	if (IsBadType(key, value)) then return; end
-	if (netvars.GetNetVar(key) == value) then return; end
+	if (IsBadType(key, value)) then return end
+	if (netvars.GetNetVar(key) == value) then return end
 
 	globals[key] = value
 
@@ -61,8 +62,8 @@ function entityMeta:ClearNetVars(recv)
 end
 
 function entityMeta:SetNetVar(key, value, send)
-	if (IsBadType(key, value)) then return; end
-	if (!istable(value) and self:GetNetVar(key) == value) then return; end
+	if (IsBadType(key, value)) then return end
+	if (!istable(value) and self:GetNetVar(key) == value) then return end
 
 	stored[self] = stored[self] or {}
 	stored[self][key] = value

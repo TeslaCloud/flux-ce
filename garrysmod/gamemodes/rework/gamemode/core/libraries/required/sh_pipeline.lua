@@ -32,8 +32,8 @@ function pipeline.Include(pipe, fileName)
 		pipe = stored[pipe]
 	end
 
-	if (!pipe) then return; end
-	if (!isstring(fileName) or fileName:utf8len() < 7) then return; end
+	if (!pipe) then return end
+	if (!isstring(fileName) or fileName:utf8len() < 7) then return end
 
 	local uniqueID = (string.GetFileFromFilename(fileName) or ""):Replace(".lua", ""):MakeID()
 
@@ -41,7 +41,7 @@ function pipeline.Include(pipe, fileName)
 		uniqueID = uniqueID:utf8sub(4, uniqueID:utf8len())
 	end
 
-	if (uniqueID == "") then return; end
+	if (uniqueID == "") then return end
 
 	if (isfunction(pipe.callback)) then
 		pipe.callback(uniqueID, fileName, pipe)
@@ -51,7 +51,7 @@ end
 function pipeline.IncludeDirectory(uniqueID, directory)
 	local pipe = stored[uniqueID]
 
-	if (!pipe) then return; end
+	if (!pipe) then return end
 
 	if (!directory:EndsWith("/")) then
 		directory = directory.."/"

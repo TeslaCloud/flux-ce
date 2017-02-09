@@ -181,7 +181,7 @@ function GM:RenderScreenspaceEffects()
 end
 
 function GM:PlayerUseItemMenu(itemTable, bIsEntity)
-	if (!itemTable) then return; end
+	if (!itemTable) then return end
 
 	local itemMenu = DermaMenu()
 

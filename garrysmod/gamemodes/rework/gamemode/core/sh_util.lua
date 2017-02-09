@@ -358,7 +358,7 @@ function player.Random()
 end
 
 function player.Find(name, bCaseSensitive)
-	if (name == nil) then return; end
+	if (name == nil) then return end
 	if (!isstring(name)) then return (IsValid(name) and name) or nil; end
 
 	for k, v in ipairs(_player.GetAll()) do
@@ -373,7 +373,7 @@ function player.Find(name, bCaseSensitive)
 end
 
 function string.FindAll(str, pattern)
-	if (!str or !pattern) then return; end
+	if (!str or !pattern) then return end
 
 	local hits = {}
 	local lastPos = 1

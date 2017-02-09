@@ -8,7 +8,7 @@ library.New("data", _G)
 
 if (SERVER) then
 	function data.Save(key, value)
-		if (!isstring(key) or !istable(value)) then return; end
+		if (!isstring(key) or !istable(value)) then return end
 
 		if (!string.GetExtensionFromFilename(key)) then
 			key = key..".rwdata"
@@ -18,7 +18,7 @@ if (SERVER) then
 	end
 
 	function data.Load(key, failSafe)
-		if (!isstring(key)) then return; end
+		if (!isstring(key)) then return end
 
 		if (!string.GetExtensionFromFilename(key)) then
 			key = key..".rwdata"
@@ -36,7 +36,7 @@ if (SERVER) then
 	end
 
 	function data.Delete(key)
-		if (!isstring(key)) then return; end
+		if (!isstring(key)) then return end
 
 		if (!string.GetExtensionFromFilename(key)) then
 			key = key..".rwdata"
@@ -48,7 +48,7 @@ if (SERVER) then
 	end
 else
 	function data.Save(key, value)
-		if (!isstring(key) or !istable(value)) then return; end
+		if (!isstring(key) or !istable(value)) then return end
 
 		if (!string.GetExtensionFromFilename(key)) then
 			key = key..".dat"
@@ -58,7 +58,7 @@ else
 	end
 
 	function data.Load(key, failSafe)
-		if (!isstring(key)) then return; end
+		if (!isstring(key)) then return end
 
 		if (!string.GetExtensionFromFilename(key)) then
 			key = key..".dat"
@@ -76,7 +76,7 @@ else
 	end
 
 	function data.Delete(key)
-		if (!isstring(key)) then return; end
+		if (!isstring(key)) then return end
 
 		if (!string.GetExtensionFromFilename(key)) then
 			key = key..".dat"

@@ -15,7 +15,7 @@ end
 function rw.hint:DisplayRandom()
 	local hint = table.Random(stored)
 
-	if (hint.callback and hint.callback() != true) then return; end
+	if (hint.callback and hint.callback() != true) then return end
 	if (hint.playSound) then surface.PlaySound("hl1/fvox/blip.wav"); end
 
 	rw.notification:Add(hint.text, 15, hint.color)

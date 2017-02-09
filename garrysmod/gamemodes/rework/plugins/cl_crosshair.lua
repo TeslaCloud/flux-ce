@@ -37,7 +37,7 @@ function PLUGIN:HUDPaint()
 		local distance = trace.StartPos:Distance(trace.HitPos)
 		local drawColor, showText = hook.Run("AdjustCrosshairColor", trace, distance)
 
-		if (!drawColor) then return; end
+		if (!drawColor) then return end
 
 		local scrW, scrH, curTime = ScrW(), ScrH(), CurTime()
 		local fadein = GetConVar("cl_crosshair_fadein"):GetFloat()

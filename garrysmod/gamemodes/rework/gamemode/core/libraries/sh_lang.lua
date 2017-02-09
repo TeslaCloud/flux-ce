@@ -46,7 +46,7 @@ function rw.lang:GetPlural(language, phrase, count)
 	local translated = self:TranslateText(phrase)
 
 	if (!langTable) then return translated end
-	
+
 	if (langTable.Pluralize) then
 		return langTable:Pluralize(phrase, count, translated)
 	elseif (language == "en") then
@@ -67,7 +67,7 @@ function rw.lang:GetCase(language, phrase, case)
 	local translated = self:TranslateText(phrase)
 
 	if (!langTable) then return translated end
-	
+
 	if (langTable.GetCase) then
 		return langTable:GetCase(phrase, count, translated)
 	end

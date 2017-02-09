@@ -21,7 +21,7 @@ rw.bars.defaultSpacing = 4
 rw.bars.drawing = rw.bars.drawing or 0; -- Amount of bars currently being drawn.
 
 function rw.bars:Register(uniqueID, data, force)
-	if (!data) then return; end
+	if (!data) then return end
 
 	force = rw.Devmode or force
 

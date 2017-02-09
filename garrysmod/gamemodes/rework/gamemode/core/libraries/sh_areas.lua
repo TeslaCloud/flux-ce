@@ -46,8 +46,8 @@ function areas.Create(uniqueID, height, data)
 end
 
 function areas.Register(id, data)
-	if (!id or !data) then return; end
-	if (#data.polys < 1) then return; end
+	if (!id or !data) then return end
+	if (#data.polys < 1) then return end
 
 	stored[id] = data
 end

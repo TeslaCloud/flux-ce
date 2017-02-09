@@ -4,7 +4,7 @@
 	the framework is publicly released.
 --]]
 
-if (plugin) then return; end
+if (plugin) then return end
 
 library.New("plugin", _G)
 

@@ -86,7 +86,7 @@ function item.Register(id, data)
 end
 
 function item.ToSave(itemTable)
-	if (!itemTable) then return; end
+	if (!itemTable) then return end
 
 	return {
 		uniqueID = itemTable.uniqueID,
@@ -146,7 +146,7 @@ end
 
 -- Finds an item template that belongs to certain instance ID.
 function item.FindByInstanceID(instanceID)
-	if (!instanceID) then return; end
+	if (!instanceID) then return end
 
 	if (!sorted[instanceID]) then
 		sorted[instanceID] = item.FindInstanceByID(instanceID)
@@ -229,7 +229,7 @@ function item.Remove(instanceID)
 end
 
 function item.IsInstance(itemTable)
-	if (!istable(itemTable)) then return; end
+	if (!istable(itemTable)) then return end
 
 	return (itemTable.instanceID or ITEM_TEMPLATE) > ITEM_INVALID
 end

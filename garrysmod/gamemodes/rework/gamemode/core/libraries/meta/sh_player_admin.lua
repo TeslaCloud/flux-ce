@@ -102,7 +102,7 @@ if (SERVER) then
 	end
 
 	function playerMeta:AddSecondaryGroup(group)
-		if (group == "owner" or group == "") then return; end
+		if (group == "owner" or group == "") then return end
 
 		local groups = self:GetSecondaryGroups()
 

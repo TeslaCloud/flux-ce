@@ -148,7 +148,7 @@ function PANEL:SetPlayer(player)
 	end
 
 	function self.mPanel:SetAnimation(anim)
-		if (!anim) then return; end
+		if (!anim) then return end
 
 		local ent = self:GetEntity()
 

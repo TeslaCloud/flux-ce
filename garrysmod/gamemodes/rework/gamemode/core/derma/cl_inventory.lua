@@ -35,7 +35,7 @@ end
 function PANEL:SetItemMulti(ids)
 	local itemData = item.FindInstanceByID(ids[1])
 
-	if (itemData and !itemData.Stackable) then return; end
+	if (itemData and !itemData.Stackable) then return end
 
 	self.itemData = itemData
 	self.itemCount = #ids

@@ -155,7 +155,7 @@ if (SERVER) then
 	end
 
 	function playerMeta:SetInventory(newInv)
-		if (!istable(newInv)) then return; end
+		if (!istable(newInv)) then return end
 		self:SetCharacterVar("inventory", newInv)
 	end
 

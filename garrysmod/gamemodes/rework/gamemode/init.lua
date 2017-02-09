@@ -47,9 +47,9 @@ if (!rw.WatchDogAvailable and system.IsWindows()) then
 
 				if (fileName:find("plugins")) then
 					-- Prevent it from passing extra directories to the hook, as well as files it doesn't really need.
-					if (fileName:EndsWith("plugins")) then return; end
-					if (fileName:find("/plugin/")) then return; end
-					if (fileName:find(".ini")) then return; end
+					if (fileName:EndsWith("plugins")) then return end
+					if (fileName:find("/plugin/")) then return end
+					if (fileName:find(".ini")) then return end
 
 					print("[Watchdog] Detected plugin change.")
 					hook.Run("OnPluginFileChange", fileName)

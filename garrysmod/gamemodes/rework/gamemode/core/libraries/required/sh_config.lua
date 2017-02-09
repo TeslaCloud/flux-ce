@@ -56,7 +56,7 @@ else
 	config.menuItems = menuItems
 
 	function config.AddToMenu(key, name, description, dataType, data)
-		if (!key) then return; end
+		if (!key) then return end
 
 		menuItems[key] = menuItems[key] or {}
 		menuItems[key].name = name or key

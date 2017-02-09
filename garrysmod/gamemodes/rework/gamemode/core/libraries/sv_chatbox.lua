@@ -8,7 +8,7 @@ chatbox.prefixes = chatbox.prefixes or {}; // Chatbox prefixes for serverside pr
 chatbox.filters = chatbox.filters or {}
 
 function chatbox.AddPrefix(prefix, callback)
-	if (!prefix or prefix == "") then return; end
+	if (!prefix or prefix == "") then return end
 
 	local oldCB = callback
 
@@ -30,7 +30,7 @@ function chatbox.GetPrefix(prefix)
 end
 
 function chatbox.AddFilter(id, callback)
-	if (!id or id == "") then return; end
+	if (!id or id == "") then return end
 
 	chatbox.filters[id] = callback
 end
@@ -315,7 +315,7 @@ end
 netstream.Hook("ChatboxAddText", chatbox.AddText)
 
 netstream.Hook("ChatboxTextEntered", function(player, msgText)
-	if (!msgText or msgText == "") then return; end
+	if (!msgText or msgText == "") then return end
 	if (!IsValid(player)) then
 		print("[Catwork Debug] Player is not valid. How the heck did this happen doe?")
 		return
@@ -361,8 +361,8 @@ netstream.Hook("ChatboxTextEntered", function(player, msgText)
 
 	local shouldSend = true
 
-	if (!shouldSend) then return; end
-	if (message.text == "" or message.text == " ") then return; end
+	if (!shouldSend) then return end
+	if (message.text == "" or message.text == " ") then return end
 
 	print("["..message.filter:upper().."] "..player:Name()..": "..message.text)
 
