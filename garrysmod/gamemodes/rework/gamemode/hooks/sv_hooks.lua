@@ -404,36 +404,37 @@ function GM:OneSecond()
 	for k, v in pairs(areas.GetAll()) do
 		if (istable(v.polys) and isstring(v.type)) then
 			for k2, v2 in ipairs(v.polys) do
-				for k, player in ipairs(_player.GetAll()) do
+				for plyID, player in ipairs(_player.GetAll()) do
 					player.lastArea = player.lastArea or {}
+					player.lastArea[v.uniqueID] = player.lastArea[v.uniqueID] or {}
 					local pos = player:GetPos()
 
 					-- Player hasn't moved since our previous check, no need to check again.
 					if (pos == player.lastPos) then continue end
 
-					local z = pos.z
+					local z = pos.z + 16 -- Rise player's position by 16 units to compensate for player's height
 					local enteredArea = false
 
 					-- First do height checks
 					if (z > v2[1].z and z < v.maxH) then
 						if (util.VectorIsInPoly(pos, v2)) then
 							-- Player entered the area
-							if (!table.HasValue(player.lastArea, v.uniqueID)) then
+							if (!table.HasValue(player.lastArea[v.uniqueID], k2)) then
 								Try("Areas", areas.GetCallback(v.type), player, v, v2, true, pos, curTime)
 
-								table.insert(player.lastArea, v.uniqueID)
-
-								enteredArea = true
+								table.insert(player.lastArea[v.uniqueID], k2)
 							end
+
+							enteredArea = true
 						end
 					end
 
 					if (!enteredArea) then
 						-- Player left the area
-						if (table.HasValue(player.lastArea, v.uniqueID)) then
+						if (table.HasValue(player.lastArea[v.uniqueID], k2)) then
 							Try("Areas", areas.GetCallback(v.type), player, v, v2, false, pos, curTime)
 
-							table.RemoveByValue(player.lastArea, v.uniqueID)
+							table.RemoveByValue(player.lastArea[v.uniqueID], k2)
 						end
 					end
 				end
