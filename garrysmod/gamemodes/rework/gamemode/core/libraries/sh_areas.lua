@@ -108,8 +108,6 @@ areas.RegisterType(
 	"Simple Area",
 	"A simple area. Use this type if you have a callback somewhere in the code that looks up uniqueID instead of type ID.",
 	function(player, area, poly, bHasEntered, curPos, curTime)
-		print(player, bHasEntered, curPos)
-
 		if (bHasEntered) then
 			hook.Run("PlayerEnteredArea", player, area, curTime)
 		else

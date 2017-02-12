@@ -56,6 +56,10 @@ do
 	end
 end
 
+-- Remove default death notices.
+function GM:DrawDeathNotice() end
+function GM:AddDeathNotice() end
+
 function GM:OneMinute()
 	local curTime = CurTime()
 
@@ -101,6 +105,12 @@ function GM:HUDPaint()
 		if (rw.client.lastDamage and rw.client.lastDamage > (curTime - 0.3)) then
 			local alpha = 255 - 255 * (curTime - rw.client.lastDamage) * 3.75
 			draw.RoundedBox(0, 0, 0, ScrW(), ScrH(), Color(255, 255, 255, alpha))
+		end
+
+		if (!rw.client:Alive()) then
+			local respawnTime = rw.client:GetNetVar("RespawnTime")
+
+			draw.RoundedBox(0, 0, 0, ScrW(), ScrH(), Color(0, 0, 0, 230))
 		end
 
 		if (!hook.Run("RWHUDPaint") and rw.settings:GetBool("DrawBars")) then

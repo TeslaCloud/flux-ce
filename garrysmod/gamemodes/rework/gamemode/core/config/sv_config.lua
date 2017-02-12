@@ -22,6 +22,8 @@ config.Set("character_min_desc_len", 32)
 config.Set("character_max_name_len", 32)
 config.Set("character_max_desc_len", 256)
 
+config.Set("respawn_delay", 30)
+
 config.Set("mysql_module", "sqlite", true)
 config.Set("mysql_host", "127.0.0.1", true)
 config.Set("mysql_username", "root", true)

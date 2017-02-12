@@ -120,9 +120,21 @@ end
 
 function GM:PlayerDeath(player, inflictor, attacker)
 	player:SaveCharacter()
+
+	player:SetNetVar("RespawnTime", CurTime() + config.Get("respawn_delay"))
 end
 
 function GM:DoPlayerDeath(player, attacker, damageInfo) end
+
+function GM:PlayerDeathThink(player)
+	local respawnTime = player:GetNetVar("RespawnTime", 0)
+
+	if (respawnTime <= CurTime()) then
+		player:Spawn()
+	end
+
+	return false
+end
 
 function GM:PlayerDisconnected(player)
 	player:SaveCharacter()
@@ -422,6 +434,8 @@ function GM:OneSecond()
 							if (!table.HasValue(player.lastArea[v.uniqueID], k2)) then
 								Try("Areas", areas.GetCallback(v.type), player, v, v2, true, pos, curTime)
 
+								netstream.Start(player, "PlayerEnteredArea", k, k2, pos, curTime)
+
 								table.insert(player.lastArea[v.uniqueID], k2)
 							end
 
@@ -433,6 +447,8 @@ function GM:OneSecond()
 						-- Player left the area
 						if (table.HasValue(player.lastArea[v.uniqueID], k2)) then
 							Try("Areas", areas.GetCallback(v.type), player, v, v2, false, pos, curTime)
+
+							netstream.Start(player, "PlayerLeftArea", k, k2, pos, curTime)
 
 							table.RemoveByValue(player.lastArea[v.uniqueID], k2)
 						end
