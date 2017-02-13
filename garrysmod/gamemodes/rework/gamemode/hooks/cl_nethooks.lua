@@ -51,8 +51,6 @@ netstream.Hook("RefreshInventory", function()
 end)
 
 netstream.Hook("PlayerCreatedCharacter", function(success, status)
-	print("PlayerCreatedCharacter", success, rw.IntroPanel, rw.IntroPanel.menu);
-
 	if (IsValid(rw.IntroPanel) and IsValid(rw.IntroPanel.menu)) then
 		if (success) then
 			rw.IntroPanel:RecreateSidebar(true)

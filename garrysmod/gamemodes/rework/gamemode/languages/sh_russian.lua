@@ -29,6 +29,10 @@ lang["#TabMenu_Scoreboard"] = "Игроки"
 lang["#TabMenu_Admin"] = "Админка"
 lang["#TabMenu_CloseMenu"] = "Закрыть"
 
+lang["#BarText_Health"] = "ЗДОРОВЬЕ"
+lang["#BarText_Armor"] = "БРОНЯ"
+lang["#BarText_Respawn"] = "ВОЗРОЖДЕНИЕ..."
+
 lang["#MainMenu_Disconnect"] = "Отключиться"
 lang["#MainMenu_Settings"] = "Настройки"
 lang["#MainMenu_Cancel"] = "Отменить"

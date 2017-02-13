@@ -29,6 +29,10 @@ lang["#TabMenu_Scoreboard"] = "Players"
 lang["#TabMenu_Admin"] = "Admin"
 lang["#TabMenu_CloseMenu"] = "Close Menu"
 
+lang["#BarText_Health"] = "HEALTH"
+lang["#BarText_Armor"] = "ARMOR"
+lang["#BarText_Respawn"] = "YOU WILL BE RESPAWNED SHORTLY"
+
 lang["#MainMenu_Disconnect"] = "Disconnect"
 lang["#MainMenu_Settings"] = "Settings"
 lang["#MainMenu_Cancel"] = "Cancel"

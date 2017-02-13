@@ -26,7 +26,7 @@ function rw.core:DevPrint(strMessage)
 	end
 end
 
-rw.oldFileWrite = rw.oldFileWrite or file.Write
+file.OldWrite = file.OldWrite or file.Write
 
 function file.Write(strFileName, strContent)
 	local exploded = string.Explode("/", strFileName)
@@ -44,7 +44,7 @@ function file.Write(strFileName, strContent)
 		end
 	end
 
-	return rw.oldFileWrite(strFileName, strContent)
+	return file.OldWrite(strFileName, strContent)
 end
 
 -- A function to create a new library.

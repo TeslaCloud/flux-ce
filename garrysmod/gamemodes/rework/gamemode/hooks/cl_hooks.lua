@@ -77,7 +77,7 @@ end
 
 -- Called when the scoreboard should be shown.
 function GM:ScoreboardShow()
-	if (rw.client:HasInitialized()) then
+	if (rw.client:CharacterLoaded()) then
 		if (rw.tabMenu and rw.tabMenu.CloseMenu) then
 			rw.tabMenu:CloseMenu(true)
 		end
@@ -90,7 +90,7 @@ end
 
 -- Called when the scoreboard should be hidden.
 function GM:ScoreboardHide()
-	if (rw.client:HasInitialized()) then
+	if (rw.client:CharacterLoaded()) then
 		if (rw.tabMenu and rw.tabMenu.heldTime and CurTime() >= rw.tabMenu.heldTime) then
 			rw.tabMenu:CloseMenu()
 		end
@@ -99,12 +99,13 @@ end
 
 -- Called when the player's HUD is drawn.
 function GM:HUDPaint()
-	if (!IsValid(rw.IntroPanel)) then
+	if (rw.client:CharacterLoaded()) then
 		local curTime = CurTime()
+		local scrW, scrH = ScrW(), ScrH()
 
 		if (rw.client.lastDamage and rw.client.lastDamage > (curTime - 0.3)) then
 			local alpha = 255 - 255 * (curTime - rw.client.lastDamage) * 3.75
-			draw.RoundedBox(0, 0, 0, ScrW(), ScrH(), Color(255, 255, 255, alpha))
+			draw.RoundedBox(0, 0, 0, scrW, scrH, Color(255, 255, 255, alpha))
 		end
 
 		if (!rw.client:Alive()) then
@@ -112,18 +113,20 @@ function GM:HUDPaint()
 
 			self.respawnAlpha = math.Clamp(self.respawnAlpha + 1, 0, 230)
 
-			draw.RoundedBox(0, 0, 0, ScrW(), ScrH(), Color(0, 0, 0, self.respawnAlpha))
+			draw.RoundedBox(0, 0, 0, scrW, scrH, Color(0, 0, 0, self.respawnAlpha))
 
-			rw.bars:SetValue("respawn", 100 - 100 * ((rw.client:GetNetVar("RespawnTime", 0) - CurTime()) / config.Get("respawn_delay")))
+			local barValue = 100 - 100 * ((rw.client:GetNetVar("RespawnTime", 0) - curTime) / config.Get("respawn_delay"))
+
+			rw.bars:SetValue("respawn", barValue)
 			rw.bars:Draw("respawn")
 		else
 			self.respawnAlpha = 0
-		end
 
-		if (!hook.Run("RWHUDPaint") and rw.settings:GetBool("DrawBars")) then
-			rw.bars:DrawTopBars()
+			if (!hook.Run("RWHUDPaint") and rw.settings:GetBool("DrawBars")) then
+				rw.bars:DrawTopBars()
 
-			self.BaseClass:HUDPaint()
+				self.BaseClass:HUDPaint()
+			end
 		end
 	end
 end
@@ -290,6 +293,7 @@ function GM:PlayerUseItemMenu(itemTable, bIsEntity)
 				local button = itemMenu:AddOption(k, function()
 					itemTable:DoMenuAction(v.callback)
 				end)
+
 				button:SetIcon(v.icon)
 			end
 		end
@@ -298,6 +302,7 @@ function GM:PlayerUseItemMenu(itemTable, bIsEntity)
 			local useBtn = itemMenu:AddOption(itemTable.UseText or "Use", function()
 				itemTable:DoMenuAction("OnUse")
 			end)
+
 			useBtn:SetIcon(itemTable.UseIcon or "icon16/wrench.png")
 		end
 
@@ -305,11 +310,13 @@ function GM:PlayerUseItemMenu(itemTable, bIsEntity)
 			local takeBtn = itemMenu:AddOption(itemTable.TakeText or "Take", function()
 				itemTable:DoMenuAction("OnTake")
 			end)
+
 			takeBtn:SetIcon(itemTable.TakeIcon or "icon16/wrench.png")
 		else
 			local dropBtn = itemMenu:AddOption(itemTable.TakeText or "Drop", function()
 				itemTable:DoMenuAction("OnDrop")
 			end)
+
 			dropBtn:SetIcon(itemTable.TakeIcon or "icon16/wrench.png")
 		end
 

@@ -253,7 +253,7 @@ do
 	plugin.AddHooks("RWBarHooks", rwBars)
 
 	rw.bars:Register("health", {
-		text = "HEALTH",
+		text = "#BarText_Health",
 		color = Color(200, 40, 40),
 		maxValue = 100,
 		callback = function(bar)
@@ -262,7 +262,7 @@ do
 	})
 
 	rw.bars:Register("armor", {
-		text = "armor",
+		text = "#BarText_Armor",
 		color = Color(80, 80, 220),
 		maxValue = 100,
 		callback = function(bar)
@@ -271,7 +271,7 @@ do
 	})
 
 	rw.bars:Register("respawn", {
-		text = "YOU WILL BE RESPAWNED SHORTLY",
+		text = "#BarText_Respawn",
 		color = Color(50, 200, 50),
 		maxValue = 100,
 		x = ScrW() / 2 - rw.bars.defaultW / 2,

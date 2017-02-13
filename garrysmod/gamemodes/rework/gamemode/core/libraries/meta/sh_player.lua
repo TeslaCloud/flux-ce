@@ -109,6 +109,14 @@ function playerMeta:GetCharacterKey()
 	return self:GetNetVar("key", -1)
 end
 
+function playerMeta:CharacterLoaded()
+	if (self:IsBot()) then return true end
+
+	local id = self:GetActiveCharacterID()
+
+	return id and id > 0
+end
+
 function playerMeta:GetInventory()
 	return self:GetNetVar("inventory", {})
 end

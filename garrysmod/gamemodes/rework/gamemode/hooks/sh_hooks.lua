@@ -168,12 +168,6 @@ function GM:OnReloaded()
 	for k, v in pairs(rw.tool:GetAll()) do
 		toolGun.Tool[v.Mode] = v
 	end
-
-	if (SERVER) then
-		print("[Rework] OnReloaded hook called serverside.")
-	else
-		print("[Rework] OnReloaded hook called clientside.")
-	end
 end
 
 -- Utility timers to call hooks that should be executed every once in a while.
