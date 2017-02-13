@@ -126,7 +126,7 @@ function rw.bars:Position()
 		for k, v in pairs(ids) do
 			local bar = self:Get(v)
 
-			if (bar) then
+			if (bar and bar.type == BAR_TOP) then
 				local offX, offY = hook.Run("AdjustBarPos", bar)
 				offX = offX or 0
 				offY = offY or 0
@@ -268,5 +268,16 @@ do
 		callback = function(bar)
 			return rw.client:Armor()
 		end
+	})
+
+	rw.bars:Register("respawn", {
+		text = "YOU WILL BE RESPAWNED SHORTLY",
+		color = Color(50, 200, 50),
+		maxValue = 100,
+		x = ScrW() / 2 - rw.bars.defaultW / 2,
+		y = ScrH() / 2 - 8,
+		textOffset = 1,
+		height = 16,
+		type = BAR_MANUAL
 	})
 end

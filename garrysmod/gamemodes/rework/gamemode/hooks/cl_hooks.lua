@@ -108,9 +108,16 @@ function GM:HUDPaint()
 		end
 
 		if (!rw.client:Alive()) then
-			local respawnTime = rw.client:GetNetVar("RespawnTime")
+			if (!self.respawnAlpha) then self.respawnAlpha = 0 end
 
-			draw.RoundedBox(0, 0, 0, ScrW(), ScrH(), Color(0, 0, 0, 230))
+			self.respawnAlpha = math.Clamp(self.respawnAlpha + 1, 0, 230)
+
+			draw.RoundedBox(0, 0, 0, ScrW(), ScrH(), Color(0, 0, 0, self.respawnAlpha))
+
+			rw.bars:SetValue("respawn", 100 - 100 * ((rw.client:GetNetVar("RespawnTime", 0) - CurTime()) / config.Get("respawn_delay")))
+			rw.bars:Draw("respawn")
+		else
+			self.respawnAlpha = 0
 		end
 
 		if (!hook.Run("RWHUDPaint") and rw.settings:GetBool("DrawBars")) then
@@ -433,7 +440,8 @@ do
 		CHudAmmo = true,
 		CHudSecondaryAmmo = true,
 		CHudCrosshair = true,
-		CHudHistoryResource = true
+		CHudHistoryResource = true,
+		CHudDamageIndicator = true
 	}
 
 	function GM:HUDShouldDraw(element)
