@@ -136,7 +136,26 @@ function PANEL:Rebuild()
 		self.buttons[i]:SetModel(v)
 		self.buttons[i]:SetPos(i * 68 + 4, offset)
 		self.buttons[i].DoClick = function(btn)
+			if (IsValid(self.prevBtn)) then
+				self.prevBtn.isActive = false
+			end
+
 			self.model = v
+			btn.isActive = true
+			self.prevBtn = btn
+		end
+
+		if (self.model == v) then
+			self.buttons[i].isActive = true
+			self.prevBtn = self.buttons[i]
+		end
+
+		self.buttons[i].Paint = function(btn, w, h)
+			btn.OverlayFade = math.Clamp((btn.OverlayFade or 0) - RealFrameTime() * 640 * 2, 0, 255)
+
+			if (dragndrop.IsDragging() or (!btn:IsHovered() and !btn.isActive)) then return end
+
+			btn.OverlayFade = math.Clamp(btn.OverlayFade + RealFrameTime() * 640 * 8, 0, 255)
 		end
 
 		i = i + 1

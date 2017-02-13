@@ -47,7 +47,7 @@ function THEME:OnLoaded()
 	self:SetFont("Text_Tiny", "rwMainFont", 11)
 
 	self:AddPanel("TabMenu", function(id, parent, ...)
-		return vgui.Create("reTabMenu", parent)
+		return vgui.Create("rwTabMenu", parent)
 	end)
 
 	self:AddPanel("MainMenu", function(id, parent, ...)

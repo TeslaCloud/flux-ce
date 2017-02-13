@@ -150,7 +150,7 @@ function PANEL:OnMouseReleased(...)
 	self.BaseClass.OnMouseReleased(self, ...)
 end
 
-vgui.Register("reInventoryItem", PANEL, "DPanel")
+vgui.Register("rwInventoryItem", PANEL, "DPanel")
 
 local PANEL = {}
 PANEL.inventory = {}
@@ -213,7 +213,7 @@ function PANEL:Rebuild()
 	self.list:SetSpaceX(4)
 
 	for i = 1, self.invSlots do
-		local invSlot = self.list:Add("reInventoryItem")
+		local invSlot = self.list:Add("rwInventoryItem")
 		invSlot:SetSize(64, 64)
 		invSlot.slotNum = i
 
@@ -286,4 +286,4 @@ function PANEL:Rebuild()
 	end, {})
 end
 
-vgui.Register("reInventory", PANEL, "rwFrame");
+vgui.Register("rwInventory", PANEL, "rwFrame");

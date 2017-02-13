@@ -98,4 +98,4 @@ function PANEL:Paint(w, h)
 	end
 end
 
-vgui.Register("reTabMenu", PANEL, "EditablePanel");
+vgui.Register("rwTabMenu", PANEL, "EditablePanel");

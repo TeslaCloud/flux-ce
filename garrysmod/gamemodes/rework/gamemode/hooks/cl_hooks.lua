@@ -352,7 +352,7 @@ function GM:AddTabMenuItems(menu)
 
 	menu:AddMenuItem("!inventory", {
 		title = "Inventory",
-		panel = "reInventory",
+		panel = "rwInventory",
 		icon = "fa-inbox",
 		callback = function(menuPanel, button)
 			local inv = menuPanel.activePanel

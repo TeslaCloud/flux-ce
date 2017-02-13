@@ -373,6 +373,14 @@ function player.Find(name, bCaseSensitive)
 	end
 end
 
+function string.IsUppercase(str)
+	return string.utf8upper(str) == str
+end
+
+function string.IsLowercase(str)
+	return string.utf8lower(str) == str
+end
+
 function string.FindAll(str, pattern)
 	if (!str or !pattern) then return end
 
@@ -544,8 +552,8 @@ function util.WaitForEntity(entIndex, callback, delay, waitTime)
 	end
 end
 
--- A function to determine whether vector from a to b intersects with a
--- vector from c to d.
+-- A function to determine whether vector from A to B intersects with a
+-- vector from C to D.
 function util.VectorsIntersect(vFrom, vTo, vFrom2, vTo2)
     local d1, d2, a1, a2, b1, b2, c1, c2
 
@@ -556,8 +564,8 @@ function util.VectorsIntersect(vFrom, vTo, vFrom2, vTo2)
     d1 = (a1 * vFrom2.x) + (b1 * vFrom2.y) + c1
     d2 = (a1 * vTo2.x) + (b1 * vTo2.y) + c1
 
-    if (d1 > 0 and d2 > 0) then return false; end
-    if (d1 < 0 and d2 < 0) then return false; end
+    if (d1 > 0 and d2 > 0) then return false end
+    if (d1 < 0 and d2 < 0) then return false end
 
     a2 = vTo2.y - vFrom2.y
     b2 = vFrom2.x - vTo2.x
@@ -566,8 +574,8 @@ function util.VectorsIntersect(vFrom, vTo, vFrom2, vTo2)
     d1 = (a2 * vFrom.x) + (b2 * vFrom.y) + c2
     d2 = (a2 * vTo.x) + (b2 * vTo.y) + c2
 
-    if (d1 > 0 and d2 > 0) then return false; end
-    if (d1 < 0 and d2 < 0) then return false; end
+    if (d1 > 0 and d2 > 0) then return false end
+    if (d1 < 0 and d2 < 0) then return false end
 
     -- Vectors are collinear or intersect.
     -- No need for further checks.
