@@ -11,7 +11,6 @@ PLUGIN:SetDescription("Adds custom weapon selector for use with Rework.")
 if (SERVER) then
 	concommand.Add("selectweapon", function(player, command, arguments)
 		local weapon = player:GetWeapons()[tonumber(arguments[1]) or 1]
-		PrintTable(arguments)
 
 		if (IsValid(weapon)) then
 			player:SelectWeapon(weapon:GetClass())
@@ -112,6 +111,8 @@ function PLUGIN:Think()
 			if (self.CurAlpha == 0) then
 				self.IsOpen = false
 			end
+		else
+			self.CurAlpha = Lerp(FrameTime() * 16, self.CurAlpha, 255)
 		end
 	end
 end
@@ -145,7 +146,6 @@ end
 function PLUGIN:OnWeaponIndexChange(oldIndex, index)
 	self.IsOpen = true
 	self.OpenTime = CurTime()
-	self.CurAlpha = 255
 
 	if (#self.Display == 0) then
 		self:MakeDisplay(index)
@@ -156,6 +156,7 @@ end
 
 function PLUGIN:OnWeaponSelected(index)
 	self.IsOpen = false
+	self.CurAlpha = 0
 	self.Display = {}
 end
 
