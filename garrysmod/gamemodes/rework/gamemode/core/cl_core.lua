@@ -8,10 +8,11 @@ DeriveGamemode("sandbox")
 
 function rw.core:DrawScaledText(text, font, x, y, scale, color)
 	local matrix = Matrix()
+	local pos = Vector(x, y)
 
-	matrix:Translate(Vector(x, y))
+	matrix:Translate(pos)
 	matrix:Scale(Vector(1, 1, 1) * scale)
-	matrix:Translate(-Vector(x, y))
+	matrix:Translate(-pos)
 
 	cam.PushModelMatrix(matrix)
 		surface.SetFont(font)
@@ -19,4 +20,101 @@ function rw.core:DrawScaledText(text, font, x, y, scale, color)
 		surface.SetTextPos(x, y)
 		surface.DrawText(text)
 	cam.PopModelMatrix()
+end
+
+function rw.core:DrawRotatedText(text, font, x, y, angle, color)
+	local matrix = Matrix()
+	local pos = Vector(x, y)
+
+	matrix:Translate(pos)
+	matrix:Rotate(Angle(0, angle, 0))
+	matrix:Translate(-pos)
+
+	cam.PushModelMatrix(matrix)
+		surface.SetFont(font)
+		surface.SetTextColor(color)
+		surface.SetTextPos(x, y)
+		surface.DrawText(text)
+	cam.PopModelMatrix()
+end
+
+function rw.core:DrawScaled(x, y, scale, callback)
+	local matrix = Matrix()
+	local pos = Vector(x, y)
+
+	matrix:Translate(pos)
+	matrix:Scale(Vector(1, 1, 0) * scale)
+	matrix:Rotate(Angle(0, 0, 0))
+	matrix:Translate(-pos)
+
+	cam.PushModelMatrix(matrix)
+		if (callback) then
+			Try("DrawScaled", callback, x, y, scale)
+		end
+	cam.PopModelMatrix()
+end
+
+function rw.core:DrawRotated(x, y, angle, callback)
+	local matrix = Matrix()
+	local pos = Vector(x, y)
+
+	matrix:Translate(pos)
+	matrix:Rotate(Angle(0, angle, 0))
+	matrix:Translate(-pos)
+
+	cam.PushModelMatrix(matrix)
+		if (callback) then
+			Try("DrawRotated", callback, x, y, angle)
+		end
+	cam.PopModelMatrix()
+end
+
+do
+	local cache = surface.CircleInfoCache or {}
+	surface.CircleInfoCache = cache
+
+	function surface.DrawCircle(x, y, radius, passes)
+		if (!x or !y or !radius) then
+			error("surface.DrawCircle - Too few arguments to function call (3 expected)")
+		end
+
+		-- In case no passes variable was passed, in which case we give a normal smooth circle.
+		passes = passes or 360
+
+		local id = x.."|"..y.."|"..radius.."|"..passes
+		local info = cache[id]
+
+		if (!info) then
+		    info = {}
+
+		 	-- Since tables start at index 1.
+		    for i = 1, passes + 1 do
+		    	local degInRad = i * math.pi / (passes / 2)
+
+		        info[i] = {
+		            x = x + math.cos(degInRad) * radius,
+		            y = y + math.sin(degInRad) * radius
+		        }
+		    end
+
+			cache[id] = info
+		end
+
+		draw.NoTexture(); -- Otherwise we draw a transparent circle.
+		surface.DrawPoly(info)
+	end
+
+	function surface.DrawOutlinedCircle(x, y, radius, thickness, passes, bStencil)
+		render.ClearStencil()
+		render.SetStencilEnable(true)
+			render.SetStencilReferenceValue(1)
+			render.SetStencilFailOperation(STENCIL_REPLACE)
+
+			render.SetStencilCompareFunction(STENCIL_EQUAL)
+				surface.DrawCircle(x, y, radius - (thickness or 1), passes)
+			render.SetStencilCompareFunction(STENCIL_NOTEQUAL)
+				surface.DrawCircle(x, y, radius, passes)
+		render.SetStencilEnable(false)
+		render.ClearStencil()
+	end
 end
