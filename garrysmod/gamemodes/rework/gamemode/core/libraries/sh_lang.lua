@@ -239,6 +239,20 @@ if (CLIENT) then
 
 		return self:OldSetText(sText)
 	end
+
+	do
+		local oldLang = "en"
+
+		hook.Add("LazyTick", "LanguageChecker", function()
+			local newLang = GetConVar("gmod_language"):GetString()
+
+			if (oldLang != newLang) then
+				textCache = {}
+				cache = {}
+				oldLang = newLang
+			end
+		end)
+	end
 else
 	--[[
 		Simply get the identifier with any arguments to send to clients.

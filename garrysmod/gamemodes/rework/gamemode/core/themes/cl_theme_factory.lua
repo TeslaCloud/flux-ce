@@ -35,6 +35,7 @@ function THEME:OnLoaded()
 	self:SetColor("MainMenu_Background", Color(0, 0, 0))
 
 	self:SetFont("MenuTitles", "rw_frame_title")
+	self:SetFont("Text_3D2D", "rwMainFont", 128)
 	self:SetFont("Text_Largest", "rwMainFont", 90)
 	self:SetFont("Text_Larger", "rwMainFont", 60)
 	self:SetFont("Text_Large", "rwMainFont", 48)

@@ -34,6 +34,18 @@ function areas.GetCount()
 	return top
 end
 
+function areas.GetByType(type)
+	local toReturn = {}
+
+	for k, v in pairs(stored) do
+		if (v.type == type) then
+			toReturn[k] = v
+		end
+	end
+
+	return toReturn
+end
+
 function areas.Create(uniqueID, height, data)
 	data = data or {}
 

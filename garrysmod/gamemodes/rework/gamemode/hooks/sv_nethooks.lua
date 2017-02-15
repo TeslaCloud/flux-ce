@@ -7,6 +7,8 @@
 netstream.Hook("ClientIncludedSchema", function(player)
 	character.Load(player)
 	item.SendToPlayer(player)
+	hook.Run("ClientIncludedSchema", player)
+	hook.Run("PlayerInitialized", player)
 end)
 
 netstream.Hook("PlayerDropItem", function(player, instanceID)

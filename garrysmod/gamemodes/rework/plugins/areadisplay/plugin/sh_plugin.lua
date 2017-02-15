@@ -18,3 +18,35 @@ areas.RegisterType(
 )
 
 util.Include("cl_hooks.lua")
+
+if (SERVER) then
+	function PLUGIN:Save()
+		data.SavePluginData("areas", areas.GetByType("text") or {})
+	end
+
+	function PLUGIN:Load()
+		local loaded = data.LoadPluginData("areas", {})
+
+		for k, v in pairs(loaded) do
+			areas.Register(k, v)
+		end
+	end
+
+	function PLUGIN:PlayerInitialized(player)
+		netstream.Start(player, "rwLoadTextAreas", areas.GetByType("text"))
+	end
+
+	function PLUGIN:InitPostEntity()
+		self:Load()
+	end
+
+	function PLUGIN:SaveData()
+		self:Save()
+	end
+else
+	netstream.Hook("rwLoadTextAreas", function(data)
+		for k, v in pairs(data) do
+			areas.Register(k, v)
+		end
+	end)
+end

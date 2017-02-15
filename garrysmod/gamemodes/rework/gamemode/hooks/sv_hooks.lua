@@ -114,7 +114,7 @@ function GM:PlayerSetModel(player)
 	end
 end
 
-function GM:PostRestoreCharacters(player)
+function GM:PlayerInitialized(player)
 	player:SetDTBool(BOOL_INITIALIZED, true)
 end
 
@@ -475,6 +475,8 @@ end
 
 function GM:RWSaveData()
 	item.SaveAll()
+
+	hook.Run("SaveData")
 end
 
 function GM:OnCharacterChange(player, oldChar, newCharID)

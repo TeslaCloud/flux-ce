@@ -30,7 +30,9 @@ if (!SafeRequire("fileio")) then
 	return
 end
 
-if (!rw.WatchDogAvailable and system.IsWindows()) then
+-- Watchdog system is disabled while it is being rewritten!
+
+/*if (!rw.WatchDogAvailable and system.IsWindows()) then
 	if (file.Exists("lua/bin/gmsv_watchdog_win32.dll", "GAME")) then
 		print("[Rework] Loading Watch Dog file monitoring tools...")
 
@@ -61,7 +63,7 @@ if (!rw.WatchDogAvailable and system.IsWindows()) then
 			ErrorNoHalt("[Rework] Failed to load Watchdog!\nYou do not appear to have MS Visual C++ 2015 installed!\n")
 		end
 	end
-end
+end*/
 
 -- A function to get whether watchdog module is available.
 function rw.IsWatchdogAvailable()

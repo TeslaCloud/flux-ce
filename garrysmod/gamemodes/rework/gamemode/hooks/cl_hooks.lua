@@ -29,6 +29,8 @@ function GM:InitPostEntity()
 		toolGun.Tool[v.Mode] = v
 	end
 
+	RunConsoleCommand("spawnmenu_reload")
+
  	plugin.Call("RWInitPostEntity")
 end
 
