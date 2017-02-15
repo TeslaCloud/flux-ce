@@ -151,42 +151,22 @@ function rw.bars:Draw(uniqueID)
 			return
 		end
 
-		local cornerRadius = barInfo.cornerRadius
-		local width = barInfo.width
-		local height = barInfo.height
-
-		if (!theme.Call("DrawBarBackground", barInfo)) then
-			draw.RoundedBox(cornerRadius, barInfo.x, barInfo.y, width, height, Color(40, 40, 40))
-		end
+		theme.Call("DrawBarBackground", barInfo)
 
 		if (hook.Run("ShouldFillBar", barInfo) or barInfo.value != 0) then
-			if (!theme.Call("DrawBarFill", barInfo)) then
-				draw.RoundedBox(cornerRadius, barInfo.x + 1, barInfo.y + 1, (barInfo.fillWidth or width) - 2, height - 2, barInfo.color)
-			end
+			theme.Call("DrawBarFill", barInfo)
 		end
 
 		if (barInfo.hinderDisplay and barInfo.hinderDisplay <= barInfo.hinderValue) then
-			if (!theme.Call("DrawBarHindrance", barInfo)) then
-				local length = width * (barInfo.hinderValue / barInfo.maxValue)
-
-				draw.RoundedBox(cornerRadius, barInfo.x + width - length - 1, barInfo.y + 1, length, height - 2, barInfo.hinderColor)
-			end
+			theme.Call("DrawBarHindrance", barInfo)
 		end
 
 		if (rw.settings:GetBool("DrawBarText")) then
-			if (!theme.Call("DrawBarTexts", barInfo)) then
-				draw.SimpleText(barInfo.text, barInfo.font, barInfo.x + 8, barInfo.y + barInfo.textOffset, Color(255, 255, 255))
-
-				if (barInfo.hinderDisplay and barInfo.hinderDisplay <= barInfo.hinderValue) then
-					local textWide = util.GetTextSize(barInfo.hinderText, barInfo.font)
-					local length = width * (barInfo.hinderValue / barInfo.maxValue)
-
-					render.SetScissorRect(barInfo.x + width - length, barInfo.y, barInfo.x + width, barInfo.y + height, true)
-						draw.SimpleText(barInfo.hinderText, barInfo.font, barInfo.x + width - textWide - 8, barInfo.y + barInfo.textOffset, Color(255, 255, 255))
-					render.SetScissorRect(0, 0, 0, 0, false)
-				end
-			end
+			theme.Call("DrawBarTexts", barInfo)
 		end
+
+		hook.Run("PostDrawBar", barInfo)
+		theme.Call("PostDrawBar", barInfo)
 	end
 end
 

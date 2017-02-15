@@ -20,12 +20,12 @@ if (SERVER) then
 	return
 end
 
-PLUGIN.WeaponIndex = 1
-PLUGIN.IsOpen = false
-PLUGIN.OpenTime = 0
-PLUGIN.CurAlpha = 255
-PLUGIN.Display = {}
-PLUGIN.IndexOffset = nil
+PLUGIN.WeaponIndex = PLUGIN.WeaponIndex or 1
+PLUGIN.IsOpen = PLUGIN.IsOpen or false
+PLUGIN.OpenTime = PLUGIN.OpenTime or 0
+PLUGIN.CurAlpha = PLUGIN.CurAlpha or 255
+PLUGIN.Display = PLUGIN.Display or {}
+PLUGIN.IndexOffset = PLUGIN.IndexOffset or nil
 
 local function relativeClamp(n, min, max)
 	if (n > max) then
@@ -76,15 +76,17 @@ function PLUGIN:HUDPaint()
 					v.weapon = next.weapon
 				end
 
-				if (math.abs(v.y - v.target) < 0.25) then
+				if (math.abs(v.y - v.target) < 1) then
 					self.IndexOffset = (dir and self.IndexOffset - 1) or self.IndexOffset + 1
 					self:MakeDisplay(self.WeaponIndex - self.IndexOffset)
 
-					break;
+					break
 				end
 
-				self.Display[k].y = Lerp(frameTime, v.y, v.target)
-				self.Display[k].scale = Lerp(frameTime, v.scale, v.scaleTarget)
+				local absOffset = math.Clamp(math.abs(self.IndexOffset), 1, 100)
+
+				self.Display[k].y = Lerp(frameTime * absOffset, v.y, v.target)
+				self.Display[k].scale = Lerp(frameTime * absOffset, v.scale, v.scaleTarget)
 			end
 		end
 
