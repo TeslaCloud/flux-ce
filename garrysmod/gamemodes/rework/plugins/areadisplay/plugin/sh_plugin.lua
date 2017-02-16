@@ -21,7 +21,7 @@ util.Include("cl_hooks.lua")
 
 if (SERVER) then
 	function PLUGIN:Save()
-		data.SavePluginData("areas", areas.GetByType("text") or {})
+		--data.SavePluginData("areas", areas.GetByType("text") or {})
 	end
 
 	function PLUGIN:Load()
@@ -33,7 +33,7 @@ if (SERVER) then
 	end
 
 	function PLUGIN:PlayerInitialized(player)
-		netstream.Start(player, "rwLoadTextAreas", areas.GetByType("text"))
+		--netstream.Start(player, "rwLoadTextAreas", areas.GetByType("text"))
 	end
 
 	function PLUGIN:InitPostEntity()
