@@ -66,7 +66,7 @@ function PLUGIN:OnWeaponRaised(player, weapon, bIsRaised)
 end
 
 function PLUGIN:UpdateWeaponRaised(player, weapon, bIsRaised, curTime)
-	if (bIsRaised) then
+	if (bIsRaised or table.HasValue(blockedWeapons, weapon:GetClass())) then
 		weapon:SetNextPrimaryFire(curTime)
 		weapon:SetNextSecondaryFire(curTime)
 

@@ -33,47 +33,76 @@ if (SERVER) then
 		self:Save()
 	end
 
+	function rw3DText:AddText(data)
+		if (!data or !data.text or !data.pos or !data.angle or !data.style or !data.scale) then return end
+
+		self.count = (self.count or 0) + 1
+		
+		self.stored[self.count] = data
+
+		self:Save()
+
+		netstream.Start(nil, "rw3DText_Add", self.count, data)
+	end
+
+	function rw3DText:Remove(player)
+		if (player:HasPermission("textremove")) then
+			netstream.Start(player, "rw3DText_Calculate", true)
+		end
+	end
+
 	netstream.Hook("rw3DText_Remove", function(player, idx)
-		rw3DText.stored[idx] = nil
+		if (player:HasPermission("textremove")) then
+			rw3DText.stored[idx] = nil
+			rw3DText:Save()
+
+			netstream.Start(nil, "rw3DText_Remove", idx)
+
+			rw.player:Notify(player, "You have removed a 3D text.")
+		end
 	end)
 else
 	netstream.Hook("rwLoad3DTexts", function(data)
 		rw3DText.stored = data or {}
 	end)
-end
 
-function rw3DText:AddText(data)
-	if (!data or !data.text or !data.pos or !data.angle) then return end
+	netstream.Hook("rw3DText_Add", function(idx, data)
+		rw3DText.stored[idx] = data
+	end)
 
-	self.count = (self.count or 0) + 1
-	
-	self.stored[self.count] = data
-end
+	netstream.Hook("rw3DText_Remove", function(idx)
+		rw3DText.stored[idx] = nil
+	end)
 
-function rw3DText:RemoveAtTrace(trace)
-	if (!trace or SERVER) then return end
-	
-	local hitPos = trace.HitPos
-	local traceStart = trace.StartPos
+	netstream.Hook("rw3DText_Calculate", function()
+		rw3DText:RemoveAtTrace(rw.client:GetEyeTraceNoCursor())
+	end)
 
-	for k, v in pairs(self.stored) do
-		local pos = v.pos
-		local normal = v.normal
-		local angle = v.angle
-		local w, h = util.GetTextSize(v.text, theme.GetFont("Text_3D2D"))
-		local textV = Vector(normal.x, normal.y, normal.z)
-		textV:Rotate(angle)
+	function rw3DText:RemoveAtTrace(trace)
+		if (!trace) then return false end
+		
+		local hitPos = trace.HitPos
+		local traceStart = trace.StartPos
 
-		local startPos = pos + textV * (w / 20)
-		local endPos = pos + textV * (-w / 20)
+		for k, v in pairs(self.stored) do
+			local pos = v.pos
+			local normal = v.normal
+			local ang = normal:Angle()
+			local w, h = util.GetTextSize(v.text, theme.GetFont("Text_3D2D"))
 
-		if (math.abs(math.abs(hitPos.z) - math.abs(pos.z)) < 3) then
-			if (util.VectorsIntersect(traceStart, hitPos, startPos, endPos)) then
-				netstream.Start("rw3DText_Remove", k)
-				self.stored[k] = nil
+			local startPos = pos - -ang:Right() * (w / 20) * v.scale
+			local endPos = pos + -ang:Right() * (w / 20) * v.scale
 
-				break
+			if (math.abs(math.abs(hitPos.z) - math.abs(pos.z)) < 4 * v.scale) then
+
+				if (util.VectorsIntersect(traceStart, hitPos, startPos, endPos)) then
+					netstream.Start("rw3DText_Remove", k)
+
+					return true
+				end
 			end
 		end
+
+		return false
 	end
 end

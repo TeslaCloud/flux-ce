@@ -60,7 +60,7 @@ function rw.admin:PermissionFromCommand(cmdObj)
 	if (!cmdObj) then return end
 
 	local data = {}
-		data.uniqueID = cmdObj.uniqueID or cmdObj.name:lower():gsub(" ", "_")
+		data.uniqueID = cmdObj.uniqueID or cmdObj.name:MakeID()
 		data.description = cmdObj.description or "No description provided"
 		data.category = cmdObj.category or "general"
 		data.name = cmdObj.name or cmdObj.uniqueID

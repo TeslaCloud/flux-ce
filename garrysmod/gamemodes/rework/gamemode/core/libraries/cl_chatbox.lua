@@ -685,15 +685,15 @@ function PANEL:SetChatOpen(bIsOpen)
 end
 
 local function IsIcon(text)
-	return (text:StartWith("[icon:") and text:EndsWith(".png]"))
+	return (tostring(text):StartWith("[icon:") and tostring(text):EndsWith(".png]"))
 end
 
 local function IsAvatar(text)
-	return (text == "[SenderAvatar]")
+	return (tostring(text) == "[SenderAvatar]")
 end
 
 local function IsTime(text)
-	return (text:StartWith("[SendTime:"))
+	return (tostring(text):StartWith("[SendTime:"))
 end
 
 local function SendTime(text)
@@ -737,7 +737,7 @@ function PANEL:Paint(w, h)
 						v2.a = chatbox.curAlpha or v2.a or 255
 						curColor = v2
 					end
-				elseif (isnumber(v2)) then
+				elseif (!isnumber(v2)) then
 					if (IsTime(v2)) then
 						local time = os.date("%H:%M", SendTime(v2))
 
