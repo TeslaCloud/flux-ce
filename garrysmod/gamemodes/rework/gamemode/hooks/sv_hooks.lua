@@ -108,14 +108,14 @@ end
 
 function GM:PlayerSetModel(player)
 	if (player:IsBot()) then
-		player:SetModel("models/humans/group01/male_02.mdl")
+		player:SetModel("models/humans/group01/male_0"..math.random(1, 9)..".mdl")
 	elseif (player:HasInitialized()) then
 		player:SetModel(player:GetNetVar("model", "models/humans/group01/male_02.mdl"))
 	end
 end
 
 function GM:PlayerInitialized(player)
-	player:SetDTBool(BOOL_INITIALIZED, true)
+	player:SetInitialized(true)
 end
 
 function GM:PlayerDeath(player, inflictor, attacker)

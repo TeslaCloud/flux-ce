@@ -15,6 +15,9 @@ TOOL.ClientConVar["areatype"] = "area"
 
 function TOOL:LeftClick(trace)
 	local player = self:GetOwner()
+
+	if (!player:IsAdmin()) then return end
+
 	local uniqueID = self:GetClientInfo("uniqueid")
 	local height = self:GetClientNumber("height")
 	local areatype = self:GetClientInfo("areatype")
@@ -38,6 +41,8 @@ function TOOL:LeftClick(trace)
 end
 
 function TOOL:RightClick(trace)
+	if (!self:GetOwner():IsAdmin()) then return end
+
 	if (self.area) then
 		local player = self:GetOwner()
 

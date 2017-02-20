@@ -388,7 +388,7 @@ rw.settings:AddCheckBox("Theme", "UseTabDash", false, nil,
 	}
 )
 rw.settings:AddColorMixer("Dashboard", "BackgroundColor", Color(0, 0, 0, 255), nil, function()
-	return false; //(theme.GetPanel("TabMenu") == "rwTabDash")
+	return false //(theme.GetPanel("TabMenu") == "rwTabDash")
 end)
 rw.settings:AddComboBox("Dashboard", "FitType", "", {
 		["fill"] = "#Settings_Fit_Fill",
@@ -397,7 +397,7 @@ rw.settings:AddComboBox("Dashboard", "FitType", "", {
 		["center"] = "#Settings_Fit_Center"
 	},
 	function()
-		return false; //(theme.GetPanel("TabMenu") == "rwTabDash")
+		return false //(theme.GetPanel("TabMenu") == "rwTabDash")
 	end,
 	{
 		callback = function(name, oldValue, newValue)
@@ -411,7 +411,7 @@ rw.settings:AddComboBox("Dashboard", "FitType", "", {
 )
 rw.settings:AddTextEntry("Dashboard", "BackgroundURL", "",
 	function()
-		return false; //(theme.GetPanel("TabMenu") == "rwTabDash")
+		return false //(theme.GetPanel("TabMenu") == "rwTabDash")
 	end,
 	{
 		callback = function(name, oldValue, newValue)

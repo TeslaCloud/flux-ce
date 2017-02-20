@@ -27,7 +27,7 @@ if (SERVER) then
 	end
 
 	function ENT:SetItem(itemTable)
-		if (!itemTable) then return false; end
+		if (!itemTable) then return false end
 
 		hook.Run("PreEntityItemSet", self, itemTable)
 

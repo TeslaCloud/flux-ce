@@ -18,7 +18,7 @@ GM.Description 	= "A free roleplay gamemode framework."
 -- It would be very nice of you to leave below values as they are if you're using official schemas.
 -- While we can do nothing to stop you from changing them, we'll very much appreciate it if you don't.
 GM.Prefix		= "RW: "; -- Prefix to display in server browser (*Prefix*: *Schema Name*)
-GM.NameOverride	= false; -- Set to any string to override schema's browser name. This overrides prefix too.
+GM.NameOverride	= false; -- Set to any string to override schema's browser name. This overrides the prefix too.
 
 rw.Devmode		= true; -- If set to true will print some developer info. Moderate console spam.
 

@@ -37,11 +37,11 @@ if (SERVER) then
 	end
 
 	function PLUGIN:InitPostEntity()
-		self:Load()
+		--self:Load()
 	end
 
 	function PLUGIN:SaveData()
-		self:Save()
+		--self:Save()
 	end
 else
 	netstream.Hook("rwLoadTextAreas", function(data)

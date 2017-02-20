@@ -153,6 +153,12 @@ function PLUGIN:OnWeaponIndexChange(oldIndex, index)
 		self:MakeDisplay(index)
 	else
 		self.IndexOffset = index - oldIndex
+
+		local weaponCount = #rw.client:GetWeapons()
+
+		if (math.abs(self.IndexOffset) == (weaponCount - 1)) then
+			self.IndexOffset = -(self.IndexOffset / (weaponCount - 1))
+		end
 	end
 end
 
@@ -162,42 +168,65 @@ function PLUGIN:OnWeaponSelected(index)
 	self.Display = {}
 end
 
-function PLUGIN:PlayerBindPress(player, bind, bIsPressed)
-	local weapon = player:GetActiveWeapon()
+do
+	local prevIndex = 0
 
-	if (!player:InVehicle() and (!IsValid(weapon) or weapon:GetClass() != "weapon_physgun")) then
-		local weaponCount = table.Count(player:GetWeapons())
-		local oldIndex = self.WeaponIndex
-		bind = bind:lower()
+	function PLUGIN:PlayerBindPress(player, bind, bIsPressed)
+		local weapon = player:GetActiveWeapon()
 
-		if (bind:find("invprev") and bIsPressed) then
-			self.WeaponIndex = relativeClamp(self.WeaponIndex - 1, 1, weaponCount)
+		if (!player:InVehicle()) then
+			local weaponCount = table.Count(player:GetWeapons())
+			local oldIndex = self.WeaponIndex
+			bind = bind:lower()
 
-			plugin.Call("OnWeaponIndexChange", oldIndex, self.WeaponIndex)
+			if (bind:find("invprev") and bIsPressed) then
+				self.WeaponIndex = relativeClamp(self.WeaponIndex - 1, 1, weaponCount)
 
-			return true
-		elseif (bind:find("invnext") and bIsPressed) then
-			self.WeaponIndex = relativeClamp(self.WeaponIndex + 1, 1, weaponCount)
+				plugin.Call("OnWeaponIndexChange", oldIndex, self.WeaponIndex)
 
-			plugin.Call("OnWeaponIndexChange", oldIndex, self.WeaponIndex)
+				return true
+			elseif (bind:find("invnext") and bIsPressed) then
+				self.WeaponIndex = relativeClamp(self.WeaponIndex + 1, 1, weaponCount)
 
-			return true
-		elseif (bind:find("slot") and bIsPressed) then
-			local index = tonumber(bind:sub(5, bind:len())) or 1
+				plugin.Call("OnWeaponIndexChange", oldIndex, self.WeaponIndex)
 
-			index = relativeClamp(index, 1, weaponCount)
+				return true
+			elseif (bind:find("slot") and bIsPressed) then
+				local index = tonumber(bind:sub(5, bind:len())) or 1
+				local classicScroll = false
 
-			self.WeaponIndex = index
+				if (index == prevIndex or (index == 2 and prevIndex == 1) or (index == 1 and prevIndex == 2)) then
+					if (index == 1) then
+						self.WeaponIndex = self.WeaponIndex - 1
+					else
+						self.WeaponIndex = self.WeaponIndex + 1
+					end
 
-			plugin.Call("OnWeaponIndexChange", oldIndex, index)
+					self.WeaponIndex = relativeClamp(self.WeaponIndex, 1, weaponCount)
 
-			return true
-		elseif (bind:find("attack") and self.IsOpen and bIsPressed) then
-			RunConsoleCommand("selectweapon", self.WeaponIndex)
+					classicScroll = true
+				end
 
-			plugin.Call("OnWeaponSelected", self.WeaponIndex)
+				prevIndex = index
 
-			return true
+				if (!classicScroll) then
+					index = relativeClamp(index, 1, weaponCount)
+
+					self.WeaponIndex = index
+				else
+					index = self.WeaponIndex
+				end
+
+				plugin.Call("OnWeaponIndexChange", oldIndex, index)
+
+				return true
+			elseif (bind:find("attack") and self.IsOpen and bIsPressed) then
+				RunConsoleCommand("selectweapon", self.WeaponIndex)
+
+				plugin.Call("OnWeaponSelected", self.WeaponIndex)
+
+				return true
+			end
 		end
 	end
 end

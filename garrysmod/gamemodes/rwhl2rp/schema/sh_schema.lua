@@ -4,6 +4,8 @@
 	the framework is publicly released.
 --]]
 
+util.Include("cl_hooks.lua")
+
 function Schema:IsCombineFaction(faction)
 	return faction == "cca" or faction == "ota" or faction == "ca"
 end

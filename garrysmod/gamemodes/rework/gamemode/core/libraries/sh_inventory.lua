@@ -40,11 +40,13 @@ do
 			for i = 1, slots do
 				playerInv[i] = playerInv[i] or {}
 				local ids = playerInv[i]
+
 				-- Empty slot
 				if (#ids == 0) then
 					table.insert(playerInv[i], itemTable.instanceID)
 					self:SetInventory(playerInv)
 					item.NetworkItem(self, itemTable.instanceID)
+
 					return i
 				end
 
@@ -55,6 +57,7 @@ do
 						table.insert(playerInv[i], itemTable.instanceID)
 						self:SetInventory(playerInv)
 						item.NetworkItem(self, itemTable.instanceID)
+
 						return i
 					end
 				end
@@ -112,7 +115,9 @@ do
 				if (table.HasValue(ids, instanceID)) then
 					table.RemoveByValue(playerInv[slot], instanceID)
 					self:SetInventory(playerInv)
+
 					hook.Run("OnItemTaken", self, instanceID, slot)
+
 					break
 				end
 			end

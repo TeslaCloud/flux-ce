@@ -9,14 +9,14 @@ PANEL.lastPos = 0
 PANEL.margin = 0
 
 function PANEL:Init()
-	self.VBar.Paint = function() return true; end
-	self.VBar.btnUp.Paint = function() return true; end
-	self.VBar.btnDown.Paint = function() return true; end
-	self.VBar.btnGrip.Paint = function() return true; end
+	self.VBar.Paint = function() return true end
+	self.VBar.btnUp.Paint = function() return true end
+	self.VBar.btnDown.Paint = function() return true end
+	self.VBar.btnGrip.Paint = function() return true end
 
 	self:PerformLayout()
 
-	function self:OnScrollbarAppear() return true; end
+	function self:OnScrollbarAppear() return true end
 end
 
 function PANEL:Paint(width, height)

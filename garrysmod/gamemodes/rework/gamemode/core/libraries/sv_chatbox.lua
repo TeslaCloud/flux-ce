@@ -43,9 +43,9 @@ end
 
 function chatbox.CanHear(listener, position, radius)
 	if (listener:HasInitialized()) then
-		if (!isnumber(radius)) then return false; end
-		if (radius == 0) then return true; end
-		if (radius < 0) then return false; end
+		if (!isnumber(radius)) then return false end
+		if (radius == 0) then return true end
+		if (radius < 0) then return false end
 
 		if (position:Distance(listener:GetPos()) <= radius) then
 			return true
@@ -57,7 +57,7 @@ end
 
 do
 	chatbox.AddFilter("ooc", function(listener, msgData)
-		return true; -- todo chat types blocking
+		return true -- todo chat types blocking
 	end)
 
 	chatbox.AddFilter("pm", function(listener, msgData)
@@ -131,7 +131,7 @@ do
 
 			msgData.text = text
 
-			return true; -- tell the system that we set everything!
+			return true -- tell the system that we set everything!
 		end
 	end)
 
