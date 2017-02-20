@@ -6,7 +6,65 @@
 
 DeriveGamemode("sandbox")
 
-function rw.core:DrawScaledText(text, font, x, y, scale, color)
+do
+	local defaultColorModify = {
+		["$pp_colour_addr"] = 0,
+		["$pp_colour_addg"] = 0,
+		["$pp_colour_addb"] = 0,
+		["$pp_colour_brightness"] = 0,
+		["$pp_colour_contrast"] = 1,
+		["$pp_colour_colour"] = 1,
+		["$pp_colour_mulr"] = 0,
+		["$pp_colour_mulg"] = 0,
+		["$pp_colour_mulb"] = 0
+	}
+
+	function rw.core:SetColorModifyEnabled(bEnable)
+		if (!rw.client.colorModifyTable) then
+			rw.client.colorModifyTable = defaultColorModify
+		end
+
+		if (bEnable) then
+			rw.client.colorModify = true
+
+			return true
+		end
+
+		rw.client.colorModify = false
+	end
+
+	function rw.core:EnableColorModify()
+		return self:SetColorModifyEnabled(true)
+	end
+
+	function rw.core:DisableColorModify()
+		return self:SetColorModifyEnabled(false)
+	end
+
+	function rw.core:SetColorModifyVal(index, value)
+		if (!rw.client.colorModifyTable) then
+			rw.client.colorModifyTable = defaultColorModify
+		end
+
+		if (isstring(index)) then
+			if (!index:StartWith("$pp_colour_")) then
+				if (index == "color") then index = "colour" end
+
+				rw.client.colorModifyTable["$pp_colour_"..index] = (isnumber(value) and value) or 0
+			else
+				rw.client.colorModifyTable[index] = (isnumber(value) and value) or 0
+			end
+		end
+	end
+
+	function rw.core:SetColorModifyTable(tab)
+		if (istable(tab)) then
+			rw.client.colorModifyTable = tab
+		end
+	end
+end
+
+function surface.DrawScaledText(text, font, x, y, scale, color)
 	local matrix = Matrix()
 	local pos = Vector(x, y)
 
@@ -22,7 +80,7 @@ function rw.core:DrawScaledText(text, font, x, y, scale, color)
 	cam.PopModelMatrix()
 end
 
-function rw.core:DrawRotatedText(text, font, x, y, angle, color)
+function surface.DrawRotatedText(text, font, x, y, angle, color)
 	local matrix = Matrix()
 	local pos = Vector(x, y)
 
@@ -38,7 +96,7 @@ function rw.core:DrawRotatedText(text, font, x, y, angle, color)
 	cam.PopModelMatrix()
 end
 
-function rw.core:DrawScaled(x, y, scale, callback)
+function surface.DrawScaled(x, y, scale, callback)
 	local matrix = Matrix()
 	local pos = Vector(x, y)
 
@@ -54,7 +112,7 @@ function rw.core:DrawScaled(x, y, scale, callback)
 	cam.PopModelMatrix()
 end
 
-function rw.core:DrawRotated(x, y, angle, callback)
+function surface.DrawRotated(x, y, angle, callback)
 	local matrix = Matrix()
 	local pos = Vector(x, y)
 

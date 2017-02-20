@@ -98,7 +98,7 @@ function PLUGIN:HUDPaint()
 		draw.RoundedBox(0, x, y, w, h, Color(40, 40, 40, 100 * (self.CurAlpha / 255)))
 
 		for k, v in ipairs(self.Display) do
-			rw.core:DrawScaledText(v.weapon:GetPrintName():upper(), theme.GetFont("Text_NormalLarge"), v.x, v.y, v.scale, Color(255, 255, 255, self.CurAlpha * v.scale))
+			surface.DrawScaledText(v.weapon:GetPrintName():upper(), theme.GetFont("Text_NormalLarge"), v.x, v.y, v.scale, Color(255, 255, 255, self.CurAlpha * v.scale))
 		end
 
 		render.SetScissorRect(0, 0, 0, 0, false)

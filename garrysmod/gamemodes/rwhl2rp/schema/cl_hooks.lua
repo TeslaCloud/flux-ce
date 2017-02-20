@@ -5,19 +5,9 @@
 --]]
 
 function Schema:HUDPaint()
-	rw.client.colorModify = true
-
-	rw.client.colorModifyTable = {
-		["$pp_colour_addr"] = 0,
-		["$pp_colour_addg"] = 0,
-		["$pp_colour_addb"] = 0.01,
-		["$pp_colour_brightness"] = 0,
-		["$pp_colour_contrast"] = 1,
-		["$pp_colour_colour"] = 0.85,
-		["$pp_colour_mulr"] = 0,
-		["$pp_colour_mulg"] = 0,
-		["$pp_colour_mulb"] = 0
-	}
+	rw.core:EnableColorModify()
+	rw.core:SetColorModifyVal("color", 0.85)
+	rw.core:SetColorModifyVal("addb", 0.015)
 
 	surface.SetDrawColor(255, 255, 255, 255)
 	surface.SetMaterial(util.GetMaterial("materials/rework/hl2rp/vignette.png"))
