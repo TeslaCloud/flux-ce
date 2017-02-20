@@ -31,6 +31,13 @@ function PANEL:RecreateSidebar(bShouldCreateButtons)
 		self.sidebar:SafeRemove()
 	end
 
+	-- Hot Fix for an error that occurred when auto-reloading while in initial main menu.
+	if (!theme.GetOption("MainMenu_SidebarLogo")) then
+		timer.Simple(0.05, function() self:RecreateSidebar(true) end)
+
+		return
+	end
+
 	self.sidebar = vgui.Create("rwSidebar", self)
 	self.sidebar:SetPos(theme.GetOption("MainMenu_SidebarX"), theme.GetOption("MainMenu_SidebarY"))
 	self.sidebar:SetSize(theme.GetOption("MainMenu_SidebarWidth"), theme.GetOption("MainMenu_SidebarHeight"))
