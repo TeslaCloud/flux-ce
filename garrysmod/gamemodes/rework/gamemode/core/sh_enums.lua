@@ -28,10 +28,11 @@ CHAR_ERR_FACTION 	= 4		-- Character's faction is invalid.
 CHAR_ERR_CLASS 		= 5		-- Character's class is invalid.
 CHAR_ERR_EXISTS 	= 6		-- Character already exists.
 CHAR_ERR_LIMIT 		= 7		-- Player has hit characters limit.
-CHAR_GENDER_MALE 	= 8		-- Guys.
-CHAR_GENDER_FEMALE 	= 9		-- Gals.
-CHAR_GENDER_NONE	= 10		-- Gender-less characters such as vorts.
-CHAR_ERR_UNKNOWN 	= 999		-- Something else went wrong.
+CHAR_ERR_MODEL		= 8		-- Client has not selected a model.
+CHAR_GENDER_MALE 	= 9		-- Guys.
+CHAR_GENDER_FEMALE 	= 10	-- Gals.
+CHAR_GENDER_NONE	= 11	-- Gender-less characters such as vorts.
+CHAR_ERR_UNKNOWN 	= 999	-- Something else went wrong.
 
 -- Bars
 BAR_TOP 			= 0		-- Bars that are drawn on top of the screen (E.G. Health bar).

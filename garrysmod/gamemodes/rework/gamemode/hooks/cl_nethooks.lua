@@ -69,6 +69,8 @@ netstream.Hook("PlayerCreatedCharacter", function(success, status)
 				text = "Your character's description must be between "..config.Get("character_min_desc_len").." and "..config.Get("character_max_desc_len").." characters long!"
 			elseif (status == CHAR_ERR_GENDER) then
 				text = "You must pick a gender for your character before continuing!"
+			elseif (status == CHAR_ERR_MODEL) then
+				text = "You have not chosen a model or the one you have chosen is invalid!"
 			end
 
 			local panel = vgui.Create("rwNotification", rw.IntroPanel)

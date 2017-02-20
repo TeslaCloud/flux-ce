@@ -16,6 +16,7 @@ netvars.globals = globals
 
 local entityMeta = FindMetaTable("Entity")
 
+-- A function to get a networked global.
 function netvars.GetNetVar(key, default)
 	if (globals[key] != nil) then
 		return globals[key]
@@ -27,6 +28,7 @@ end
 -- Cannot set them on client.
 function netvars.SetNetVar() end
 
+-- A function to get entity's networked variable.
 function entityMeta:GetNetVar(key, default)
 	local index = self:EntIndex()
 
@@ -37,19 +39,22 @@ function entityMeta:GetNetVar(key, default)
 	return default
 end
 
-netstream.Hook("nv_globals", function(key, value)
+-- Called from the server to set global networked variables.
+netstream.Hook("net_globals", function(key, value)
 	if (key and value != nil) then
 		globals[key] = value
 	end
 end)
 
-netstream.Hook("nv_vars", function(entIdx, key, value)
+-- Called from the server to set entity's networked variable.
+netstream.Hook("net_var", function(entIdx, key, value)
 	if (key and value != nil) then
 		stored[entIdx] = stored[entIdx] or {}
 		stored[entIdx][key] = value
 	end
 end)
 
-netstream.Hook("nv_delete", function(entIdx)
+-- Called from the server to delete entity from networked table.
+netstream.Hook("net_delete", function(entIdx)
 	stored[entIdx] = nil
-end);
+end)

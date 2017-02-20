@@ -29,14 +29,20 @@ function character.Create(player, data)
 		return CHAR_ERR_GENDER
 	end
 
-	stored[player:SteamID()] = stored[player:SteamID()] or {}
+	if (!isstring(data.model) or data.model == "") then
+		return CHAR_ERR_MODEL
+	end
 
-	data.uniqueID = #stored[player:SteamID()] + 1
+	local steamID = player:SteamID()
 
-	table.insert(stored[player:SteamID()], data)
+	stored[steamID] = stored[steamID] or {}
+
+	data.uniqueID = #stored[steamID] + 1
+
+	table.insert(stored[steamID], data)
 
 	if (SERVER) then
-		character.Save(player, #stored[player:SteamID()])
+		character.Save(player, #stored[steamID])
 	end
 
 	return CHAR_SUCCESS
@@ -44,26 +50,27 @@ end
 
 if (SERVER) then
 	function character.Load(player)
-		stored[player:SteamID()] = stored[player:SteamID()] or {}
+		local steamID = player:SteamID()
 
-		rw.db:EasyRead("rw_characters", {"steamID", player:SteamID()}, function(result, hasData)
+		stored[steamID] = stored[steamID] or {}
+
+		rw.db:EasyRead("rw_characters", {"steamID", steamID}, function(result, hasData)
 			if (hasData) then
 				for k, v in ipairs(result) do
-					local prepared = {}
-					prepared.steamID = player:SteamID()
-					prepared.name = v.name
-					prepared.physDesc = v.physDesc
-					prepared.faction = v.faction
-					prepared.class = v.class or ""
-					prepared.inventory = util.JSONToTable(v.inventory or "")
-					prepared.ammo = util.JSONToTable(v.ammo or "")
-					prepared.money = tonumber(v.money or "0")
-					prepared.charPermissions = util.JSONToTable(v.charPermissions or "")
-					prepared.data = util.JSONToTable(v.data or "")
-					prepared.uniqueID = tonumber(v.uniqueID or k)
-					prepared.key = v.key
-
-					stored[player:SteamID()][tonumber(v.uniqueID) or k] = prepared
+					stored[steamID][tonumber(v.uniqueID) or k] = {
+						steamID = steamID,
+						name = v.name,
+						physDesc = v.physDesc,
+						faction = v.faction,
+						class = v.class or "",
+						inventory = util.JSONToTable(v.inventory or ""),
+						ammo = util.JSONToTable(v.ammo or ""),
+						money = tonumber(v.money or "0"),
+						charPermissions = util.JSONToTable(v.charPermissions or ""),
+						data = util.JSONToTable(v.data or ""),
+						uniqueID = tonumber(v.uniqueID or k),
+						key = v.key
+					}
 				end
 			end
 
@@ -78,22 +85,22 @@ if (SERVER) then
 	end
 
 	function character.ToSaveable(player, char)
-		local prepared = {}
+		if (!IsValid(player) or !char) then return end
 
-		prepared.steamID = player:SteamID()
-		prepared.name = char.name
-		prepared.physDesc = char.physDesc or "This character has no physical description set!"
-		prepared.faction = char.faction or "player"
-		prepared.class = char.class
-		prepared.model = char.model or "models/humans/group01/male_02.mdl"
-		prepared.inventory = util.TableToJSON(char.inventory)
-		prepared.ammo = util.TableToJSON(char.ammo)
-		prepared.money= char.money
-		prepared.charPermissions = util.TableToJSON(char.charPermissions)
-		prepared.data = util.TableToJSON(char.data)
-		prepared.uniqueID = char.uniqueID
-
-		return prepared
+		return {
+			steamID = player:SteamID(),
+			name = char.name,
+			physDesc = char.physDesc or "This character has no physical description set!",
+			faction = char.faction or "player",
+			class = char.class,
+			model = char.model or "models/humans/group01/male_02.mdl",
+			inventory = util.TableToJSON(char.inventory),
+			ammo = util.TableToJSON(char.ammo),
+			money= char.money,
+			charPermissions = util.TableToJSON(char.charPermissions),
+			data = util.TableToJSON(char.data),
+			uniqueID = char.uniqueID
+		}
 	end
 
 	function character.Save(player, index)
@@ -113,8 +120,10 @@ if (SERVER) then
 	end
 
 	function character.Get(player, index)
-		if (stored[player:SteamID()][index]) then
-			return stored[player:SteamID()][index]
+		local steamID = player:SteamID()
+
+		if (stored[steamID][index]) then
+			return stored[steamID][index]
 		end
 	end
 
@@ -143,20 +152,23 @@ if (SERVER) then
 
 		local status = character.Create(player, data)
 
-		print("Creating character. Status: "..status)
+		rw.core:DevPrint("Creating character. Status: "..status)
 
 		if (status == CHAR_SUCCESS) then
 			character.SendToClient(player)
 			netstream.Start(player, "PlayerCreatedCharacter", true, status)
-			print("Success")
+
+			rw.core:DevPrint("Success")
 		else
 			netstream.Start(player, "PlayerCreatedCharacter", false, status)
-			print("Error")
+
+			rw.core:DevPrint("Error")
 		end
 	end)
 
 	netstream.Hook("PlayerSelectCharacter", function(player, id)
-		print(player:Name().." has loaded character #"..id)
+		rw.core:DevPrint(player:Name().." has loaded character #"..id)
+
 		player:SetActiveCharacter(id)
 	end)
 end

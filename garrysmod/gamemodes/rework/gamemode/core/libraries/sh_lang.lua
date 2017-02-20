@@ -36,9 +36,8 @@ function rw.lang:GetString(language, identifier, arguments)
 	end
 
 	langString = langString:Replace(";", "")
-	langString = hook.Run("TranslatePhrase", language, identifier, arguments) or langString
 
-	return langString
+	return hook.Run("TranslatePhrase", language, identifier, arguments) or langString
 end
 
 function rw.lang:GetPlural(language, phrase, count)
@@ -77,7 +76,7 @@ end
 
 -- Explicit mode. This will attempt to translate the given text regardless of anything else.
 function rw.lang:TranslateText(sText)
-	if (!isstring(sText)) then return "nil"; end
+	if (!isstring(sText)) then return "nil" end
 
 	if (textCache[sText]) then
 		return textCache[sText]
@@ -92,6 +91,7 @@ function rw.lang:TranslateText(sText)
 
 	if (hooked) then
 		textCache[sText] = hooked
+
 		return hooked
 	end
 
