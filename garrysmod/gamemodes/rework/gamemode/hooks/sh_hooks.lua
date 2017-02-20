@@ -16,7 +16,7 @@ do
 		player:SetPoseParameter("move_yaw", normalizeAngle(vectorAngle(velocity)[2] - player:EyeAngles()[2]))
 
 		player.CalcIdeal = ACT_MP_STAND_IDLE
-		player.CalcSeqOverride = -1
+		player.CalcSeqOverride = player.CalcSeqOverride or -1
 
 		local baseClass = self.BaseClass
 
@@ -51,6 +51,8 @@ do
 		if (!animations) then
 			return self.BaseClass:TranslateActivity(player, act)
 		end
+
+		player.CalcSeqOverride = -1
 
 		if (player:InVehicle()) then
 			local vehicle = player:GetVehicle()
