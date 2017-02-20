@@ -80,8 +80,8 @@ stored.player = {
 	},
 	vehicle = {
 		prop_vehicle_prisoner_pod = {"podpose", Vector(-3, 0, 0)},
-		prop_vehicle_jeep = {"sitchair1", Vector(14, 0, -14)},
-		prop_vehicle_airboat = {"sitchair1", Vector(8, 0, -20)}
+		prop_vehicle_jeep = {ACT_BUSY_SIT_CHAIR, Vector(27, 0, -12)},
+		prop_vehicle_airboat = {ACT_BUSY_SIT_CHAIR, Vector(24, 0, -15)}
 	}
 }
 

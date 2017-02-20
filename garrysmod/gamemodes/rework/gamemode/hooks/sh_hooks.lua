@@ -62,6 +62,7 @@ do
 
 				if (position) then
 					player:ManipulateBonePosition(0, position)
+					player.shouldUndoBones = true
 				end
 
 				if (isstring(anim)) then
@@ -85,6 +86,11 @@ do
 		elseif (player:OnGround()) then
 			local weapon = player:GetActiveWeapon()
 			local holdType = rw.anim:GetWeaponHoldType(player, weapon)
+
+			if (player.shouldUndoBones) then
+				player:ManipulateBonePosition(0, Vector(0, 0, 0))
+				player.shouldUndoBones = false
+			end
 
 			if (animations[holdType] and animations[holdType][act]) then
 				local anim = animations[holdType][act]
