@@ -16,7 +16,6 @@ do
 		player:SetPoseParameter("move_yaw", normalizeAngle(vectorAngle(velocity)[2] - player:EyeAngles()[2]))
 
 		player.CalcIdeal = ACT_MP_STAND_IDLE
-		player.CalcSeqOverride = player.CalcSeqOverride or -1
 
 		local baseClass = self.BaseClass
 
@@ -37,13 +36,15 @@ do
 		end
 
 		player.m_bWasOnGround = player:IsOnGround()
-		player.m_bWasNoclipping = (player:GetMoveType() == MOVETYPE_NOCLIP && !player:InVehicle())
+		player.m_bWasNoclipping = (player:GetMoveType() == MOVETYPE_NOCLIP and !player:InVehicle())
 
-		return player.CalcIdeal, player.CalcSeqOverride
+		return player.CalcIdeal, (player.CalcSeqOverride or -1)
 	end
 end
 
 do
+	local getWeaponHoldtype = rw.anim.GetWeaponHoldType
+
 	-- Called when to translate player activities.
 	function GM:TranslateActivity(player, act)
 		local animations = player.rwAnimTable
@@ -70,15 +71,20 @@ do
 				if (isstring(anim)) then
 					player.CalcSeqOverride = player:LookupSequence(anim)
 
+					-- Cache the result of LookupSequence for added performance.
+					player.rwAnimTable["vehicle"][vehicleClass][1] = player.CalcSeqOverride
+
 					return
-				else
-					return anim
 				end
+
+				return anim
 			else
 				local anim = animations["normal"][ACT_MP_CROUCH_IDLE][1]
 
 				if (isstring(anim)) then
 					player.CalcSeqOverride = player:LookupSequence(anim)
+
+					player.rwAnimTable["normal"][ACT_MP_CROUCH_IDLE][1] = player.CalcSeqOverride
 
 					return
 				end
@@ -87,7 +93,7 @@ do
 			end
 		elseif (player:OnGround()) then
 			local weapon = player:GetActiveWeapon()
-			local holdType = rw.anim:GetWeaponHoldType(player, weapon)
+			local holdType = getWeaponHoldtype(player, weapon)
 
 			if (player.shouldUndoBones) then
 				player:ManipulateBonePosition(0, Vector(0, 0, 0))
@@ -105,6 +111,9 @@ do
 					end
 				elseif (isstring(anim)) then
 					player.CalcSeqOverride = player:LookupSequence(anim)
+
+					player.rwAnimTable[holdType][act] = player.CalcSeqOverride
+
 					return
 				end
 
@@ -154,18 +163,18 @@ end
 do
 	local animCache = {}
 
-	function GM:PlayerModelChanged(player, sNewModel, sOldModel)
-		if (!sNewModel) then return end
+	function GM:PlayerModelChanged(player, strNewModel, strOldModel)
+		if (!strNewModel) then return end
 
 		if (CLIENT) then
 			player:SetIK(false)
 		end
 
-		if (!animCache[sNewModel]) then
-			animCache[sNewModel] = rw.anim:GetTable(sNewModel)
+		if (!animCache[strNewModel]) then
+			animCache[strNewModel] = rw.anim:GetTable(strNewModel)
 		end
 
-		player.rwAnimTable = animCache[sNewModel]
+		player.rwAnimTable = animCache[strNewModel]
 	end
 end
 

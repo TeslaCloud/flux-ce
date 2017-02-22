@@ -110,10 +110,10 @@ function rw.anim:GetModelClass(model)
 end
 
 function rw.anim:GetTable(model)
-	if (!model) then return nil; end
+	if (!model) then return end
 
 	if (string.find(model, "/player/")) then
-		return nil;	
+		return	
 	end
 
 	return stored[self:GetModelClass(model)]
