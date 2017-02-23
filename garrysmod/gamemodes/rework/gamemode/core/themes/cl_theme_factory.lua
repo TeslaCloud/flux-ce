@@ -47,6 +47,9 @@ function THEME:OnLoaded()
 	self:SetFont("Text_Smallest", "rwMainFont", 14)
 	self:SetFont("Text_Tiny", "rwMainFont", 11)
 
+	-- Set from schema theme.
+	-- self:SetMaterial("Schema_Logo", "materials/rework/hl2rp/logo.png")
+
 	self:AddPanel("TabMenu", function(id, parent, ...)
 		return vgui.Create("rwTabMenu", parent)
 	end)
@@ -92,14 +95,22 @@ end
 function THEME:PaintMainMenu(panel, width, height)
 	local wide = self:GetOption("MainMenu_SidebarWidth") / 2
 	local title, desc = Schema:GetName(), Schema:GetDescription()
+	local logo = self:GetMaterial("Schema_Logo")
 	local titleW, titleH = util.GetTextSize(title, self:GetFont("Text_Largest"))
 	local descW, descH = util.GetTextSize(desc, self:GetFont("Text_Normal"))
 
 	surface.SetDrawColor(self:GetColor("MainMenu_Background"))
 	surface.DrawRect(0, 0, width, width)
 
-	draw.SimpleText(title, self:GetFont("Text_Largest"), wide + width / 2 - titleW / 2, 150, self:GetColor("SchemaText"))
-	draw.SimpleText(desc, self:GetFont("Text_Normal"), wide + width / 2 - descW / 2, 250, self:GetColor("SchemaText"))
+	if (!logo) then
+		draw.SimpleText(title, self:GetFont("Text_Largest"), wide + width / 2 - titleW / 2, 150, self:GetColor("SchemaText"))
+	else
+		surface.SetDrawColor(255, 255, 255, 255)
+		surface.SetMaterial(logo)
+		surface.DrawTexturedRect(wide + width / 2 - 300, 150, 600, 130)
+	end
+	
+	draw.SimpleText(desc, self:GetFont("Text_Normal"), wide + width / 2 - descW / 2, 350, self:GetColor("SchemaText"))
 end
 
 function THEME:PaintButton(panel, w, h)

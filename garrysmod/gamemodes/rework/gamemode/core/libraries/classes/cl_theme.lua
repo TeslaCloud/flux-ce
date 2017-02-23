@@ -59,7 +59,7 @@ function CTheme:SetColor(id, val)
 end
 
 function CTheme:SetMaterial(id, val)
-	self.materials[id] = val or Material()
+	self.materials[id] = (!isstring(val) and val) or util.GetMaterial(val)
 end
 
 function CTheme:SetSound(id, val)
@@ -90,7 +90,7 @@ function CTheme:GetMaterial(id, failsafe)
 	if (mat) then
 		return mat
 	else
-		return failsafe or Material()
+		return failsafe
 	end
 end
 
