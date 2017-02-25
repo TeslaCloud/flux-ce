@@ -78,7 +78,7 @@ function rw.bars:SetValue(uniqueID, newValue)
 				bar.value = math.Clamp(newValue, 0, bar.maxValue - bar.hinderValue + 2)
 			end
 
-			bar.interpolated = util.CubicEaseInOutTable(100, bar.value, newValue)
+			bar.interpolated = util.CubicEaseInOutTable(150, bar.value, newValue)
 			bar.value = math.Clamp(newValue, 0, bar.maxValue)
 		end
 	end
@@ -209,7 +209,7 @@ do
 		if (bar.interpolated == nil) then
 			bar.fillWidth = bar.width * (bar.value / bar.maxValue)
 		else
-			if (bar.curI > 100) then
+			if (bar.curI > 150) then
 				bar.interpolated = nil
 				bar.curI = 1
 			else

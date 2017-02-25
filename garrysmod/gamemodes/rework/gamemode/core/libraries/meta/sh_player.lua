@@ -177,7 +177,11 @@ if (SERVER) then
 	end
 
 	function playerMeta:SaveCharacter()
-		character.Save(self, self:GetCharacter().uniqueID)
+		local char = self:GetCharacter()
+
+		if (char) then
+			character.Save(self, self:GetCharacter().uniqueID)
+		end
 	end
 end
 

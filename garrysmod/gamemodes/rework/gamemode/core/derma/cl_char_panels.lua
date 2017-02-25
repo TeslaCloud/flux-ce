@@ -141,6 +141,8 @@ function PANEL:Rebuild()
 			end
 
 			self.model = v
+			self:GetParent().CharData.model = self.model
+			
 			btn.isActive = true
 			self.prevBtn = btn
 		end

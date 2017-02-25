@@ -425,6 +425,10 @@ function GM:AddMainMenuItems(panel, sidebar)
 		panel:AddButton("#MainMenu_Cancel", function(btn)
 			panel:Remove()
 		end)
+	else
+		panel:AddButton("Disconnect", function(btn)
+			RunConsoleCommand("disconnect")
+		end)
 	end
 end
 

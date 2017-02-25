@@ -11,16 +11,23 @@ function rw3DText:PostDrawOpaqueRenderables()
 		local tool = rw.client:GetTool()
 		local text = tool:GetClientInfo("text")
 		local scale = tool:GetClientNumber("scale")
+		local style = tool:GetClientNumber("style")
+		local color = Color(tool:GetClientInfo("color") or "white")
 		local trace = rw.client:GetEyeTrace()
 		local pos = trace.HitPos
 		local normal = trace.HitNormal
-		local angle = trace.HitNormal:Angle()
+		local angle = normal:Angle()
 		local w, h = util.GetTextSize(text, theme.GetFont("Text_3D2D"))
 		angle:RotateAroundAxis(angle:Forward(), 90)
 		angle:RotateAroundAxis(angle:Right(), 270)
 
 		cam.Start3D2D(pos + (normal * 1.25), angle, 0.1 * scale)
-			draw.SimpleText(text, theme.GetFont("Text_3D2D"), -w / 2, -h / 2, Color(255, 255, 255, 60))
+			if (style >= 5) then
+				local extraColor = Color(tool:GetClientInfo("extraColor") or "#FF000033")
+				draw.RoundedBox(0, -w / 2 - 32, -h / 2 - 16, w + 64, h + 32, ColorAlpha(extraColor, 40))	
+			end
+
+			draw.SimpleText(text, theme.GetFont("Text_3D2D"), -w / 2, -h / 2, ColorAlpha(color, 60))
 		cam.End3D2D()
 	end
 	

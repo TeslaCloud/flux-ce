@@ -28,8 +28,6 @@ end
 
 function PANEL:CollectData(newData)
 	table.Merge(self.CharData, newData)
-
-	PrintTable(self.CharData)
 end
 
 function PANEL:OpenPanel(id)
@@ -61,7 +59,10 @@ function PANEL:OpenPanel(id)
 	self.finishButton:SizeToContents()
 
 	self.finishButton.DoClick = function(btn)
-		print("Sending CreateCharacter via netstream")
+		if (self.panel.OnClose) then
+			self.panel:OnClose(self)
+		end
+
 		netstream.Start("CreateCharacter", self.CharData)
 	end
 
