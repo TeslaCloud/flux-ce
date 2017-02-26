@@ -15,6 +15,18 @@ function PANEL:Init()
 
 	self:MakePopup()
 
+	local menuMusic = theme.GetOption("MenuMusic")
+
+	if (menuMusic and menuMusic != "") then
+		sound.PlayFile(menuMusic, "", function(station)
+			if (IsValid(station)) then
+				station:Play()
+
+				rw.menuMusic = station
+			end
+		end)
+	end
+
 	theme.Hook("CreateMainMenu", self)
 end
 

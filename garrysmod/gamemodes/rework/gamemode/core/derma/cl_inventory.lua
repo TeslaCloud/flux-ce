@@ -14,6 +14,7 @@ function PANEL:SetItem(instanceID)
 	if (istable(instanceID)) then
 		if (#instanceID > 1) then
 			self:SetItemMulti(instanceID)
+
 			return
 		else
 			return self:SetItem(instanceID[1])
@@ -286,4 +287,4 @@ function PANEL:Rebuild()
 	end, {})
 end
 
-vgui.Register("rwInventory", PANEL, "rwFrame");
+vgui.Register("rwInventory", PANEL, "rwFrame")

@@ -185,6 +185,12 @@ function GM:OnReloaded()
 	for k, v in pairs(rw.tool:GetAll()) do
 		toolGun.Tool[v.Mode] = v
 	end
+
+	if (rw.Devmode) then
+		for k, v in ipairs(_player.GetAll()) do
+			self:PlayerModelChanged(v, v:GetModel(), v:GetModel())
+		end
+	end
 end
 
 -- Utility timers to call hooks that should be executed every once in a while.

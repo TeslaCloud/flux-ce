@@ -7,6 +7,7 @@
 netstream.Hook("ClientIncludedSchema", function(player)
 	character.Load(player)
 	item.SendToPlayer(player)
+
 	hook.Run("ClientIncludedSchema", player)
 	hook.Run("PlayerInitialized", player)
 end)
@@ -33,4 +34,13 @@ end)
 
 netstream.Hook("SoftUndo", function(player)
 	rw.undo:DoPlayer(player)
+end)
+
+netstream.Hook("LocalPlayerCreated", function(player)
+	print(player)
+
+	netstream.Start(player, "SharedTables", rw.sharedTable)
+
+	player:SendConfig()
+	player:SyncNetVars()
 end)

@@ -26,11 +26,9 @@ function GM:PlayerInitialSpawn(player)
 
 	if (player:IsBot()) then
 		player:SetInitialized(true)
+
 		return
 	end
-
-	player:SendConfig()
-	player:SyncNetVars()
 
 	player:SetNoDraw(true)
 	player:SetNotSolid(true)
@@ -43,7 +41,6 @@ function GM:PlayerInitialSpawn(player)
 		end
 	end)
 
-	netstream.Start(player, "SharedTables", rw.sharedTable)
 	netstream.Start(nil, "PlayerInitialSpawn", player:EntIndex())
 end
 
@@ -103,7 +100,7 @@ function GM:PostPlayerSpawn(player)
 
 	player_manager.RunClass(player, "Loadout")
 
-	netstream.Start(player, "PostPlayerSpawn", true)
+	hook.RunClient(player, "PostPlayerSpawn")
 end
 
 function GM:PlayerSetModel(player)
@@ -116,6 +113,8 @@ end
 
 function GM:PlayerInitialized(player)
 	player:SetInitialized(true)
+
+	hook.RunClient(player, "PlayerInitialized")
 end
 
 function GM:PlayerDeath(player, inflictor, attacker)

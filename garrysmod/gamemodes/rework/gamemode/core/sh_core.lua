@@ -171,7 +171,7 @@ function rw.core:IncludeSchema()
 		return plugin.IncludeSchema()
 	else
 		timer.Create("SchemaLoader", 0.04, 0, function()
-			if (rw.sharedTable) then
+			if (rw.sharedTable and rw.sharedTableReceived) then
 				timer.Remove("SchemaLoader")
 				plugin.IncludeSchema()
 				netstream.Start("ClientIncludedSchema", true)
@@ -185,7 +185,7 @@ function rw.core:IncludePlugins(strFolder)
 		return plugin.IncludePlugins(strFolder)
 	else
 		timer.Create("PluginLoader", 0.04, 0, function()
-			if (rw.sharedTable) then
+			if (rw.sharedTable and rw.sharedTableReceived) then
 				timer.Remove("PluginLoader")
 				plugin.IncludePlugins(strFolder)
 			end

@@ -12,10 +12,9 @@ timer.Remove("HintSystem_Annoy2")
 function GM:InitPostEntity()
 	rw.client = rw.client or LocalPlayer()
 
-	if (!rw.client:GetCharacter()) then
-		rw.IntroPanel = theme.CreatePanel("MainMenu")
-		rw.IntroPanel:MakePopup()
-	end
+	timer.Simple(0.5, function()
+		netstream.Start("LocalPlayerCreated", true)
+	end)
 
  	for k, v in ipairs(player.GetAll()) do
  		local model = v:GetModel()
@@ -34,9 +33,17 @@ function GM:InitPostEntity()
  	plugin.Call("RWInitPostEntity")
 end
 
+function GM:PlayerInitialized()
+	if (!rw.client:GetCharacter()) then
+		rw.IntroPanel = theme.CreatePanel("MainMenu")
+		rw.IntroPanel:MakePopup()
+	end
+end
+
 do
 	local scrW, scrH = ScrW(), ScrH()
 	local nextCheck = CurTime()
+	local curVolume = 1
 
 	-- This will let us detect whether the resolution has been changed, then call a hook if it has.
 	function GM:Tick()
@@ -54,6 +61,17 @@ do
 			end
 
 			nextCheck = curTime + 1
+		end
+
+		if (rw.menuMusic and !IsValid(rw.IntroPanel)) then
+			if (curVolume > 0.05) then
+				curVolume = Lerp(0.1, curVolume, 0)
+				rw.menuMusic:SetVolume(curVolume)
+			else
+				curVolume = 1
+				rw.menuMusic:Stop()
+				rw.menuMusic = nil
+			end
 		end
 	end
 end
@@ -96,6 +114,24 @@ function GM:ScoreboardHide()
 		if (rw.tabMenu and rw.tabMenu.heldTime and CurTime() >= rw.tabMenu.heldTime) then
 			rw.tabMenu:CloseMenu()
 		end
+	end
+end
+
+function GM:HUDDrawScoreBoard()
+	self.BaseClass:HUDDrawScoreBoard()
+
+	if (!rw.client or !rw.client:HasInitialized() or !rw.IntroPanel) then
+		local text = "Rework is loading schema and plugins, please wait..."
+
+		if (!rw.sharedTableReceived) then
+			text = "Receiving shared data, please wait..."
+		end
+
+		local scrW, scrH = ScrW(), ScrH()
+		local w, h = util.GetTextSize(text, "DermaLarge")
+
+		draw.RoundedBox(0, 0, 0, scrW, scrH, Color(0, 0, 0))
+		draw.SimpleText(text, "DermaLarge", scrW / 2 - w / 2, scrH / 2 + scrH / 4, Color(255, 255, 255))
 	end
 end
 
@@ -338,8 +374,6 @@ end
 function GM:PlayerDropItem(itemTable, panel, mouseX, mouseY)
 	netstream.Start("PlayerDropItem", itemTable.instanceID)
 end
-
-function GM:HUDDrawScoreBoard() end
 
 -- Called when category icons are presented.
 function GM:AddTabMenuItems(menu)

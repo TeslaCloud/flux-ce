@@ -33,3 +33,7 @@ function ServerLog(...)
 	oldServerLog(...)
 	print("")
 end
+
+function hook.RunClient(player, hookName, ...)
+	netstream.Start(player, "Hook_RunCL", hookName, ...)
+end

@@ -20,7 +20,15 @@ function theme.RegisterTheme(obj)
 
 		if (parentTheme) then
 			local newObj = table.Copy(parentTheme)
-			table.Merge(newObj, obj)
+			local oldObj = table.Copy(obj)
+
+			newObj.__index = nil
+			oldObj.__index = nil
+
+			table.Merge(newObj, oldObj)
+
+			newObj.__index = obj.__index
+
 			obj = newObj
 			obj.Base = parentTheme
 		end
@@ -149,6 +157,16 @@ function theme.LoadTheme(themeID, bIsReloading)
 
 		theme.activeTheme = themeTable
 
+		local next = themeTable.Base
+
+		while (next) do
+			if (next.OnLoaded) then
+				next.OnLoaded(theme.activeTheme)
+			end
+
+			next = next.Base
+		end
+
 		if (!bIsReloading and theme.activeTheme.OnLoaded) then
 			theme.activeTheme:OnLoaded()
 
@@ -187,8 +205,12 @@ end
 do
 	local themeHooks = {}
 
-	function themeHooks:InitPostEntity()
-		theme.LoadTheme("Factory")
+	function themeHooks:PlayerInitialized()
+		if (!Schema or !Schema.DefaultTheme) then
+			theme.LoadTheme("factory")
+		else
+			theme.LoadTheme(Schema.DefaultTheme or "factory")
+		end
 	end
 
 	function themeHooks:OnReloaded()

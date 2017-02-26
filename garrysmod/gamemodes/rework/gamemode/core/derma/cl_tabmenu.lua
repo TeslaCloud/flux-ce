@@ -13,7 +13,7 @@ function PANEL:Init()
 	self:SetPos(0, 0)
 	self:SetSize(ScrW(), ScrH())
 
-	local curX, curY = hook.Run("AdjustMenuItemPositions")
+	local curX, curY = hook.Run("AdjustMenuItemPositions", self)
 	curX = curX or 42
 	curY = curY or 200
 
@@ -45,6 +45,7 @@ function PANEL:Init()
 		button.DoClick = function(btn)
 			if (v.override) then
 				v.override(self, btn)
+
 				return
 			end
 
@@ -92,8 +93,9 @@ end
 
 function PANEL:Paint(w, h)
 	if (!theme.Hook("PaintTabMenu", self, w, h)) then
-		Derma_DrawBackgroundBlur(self, self.lerpStart)
 		local fraction = (CurTime() - self.lerpStart) / 0.15
+
+		Derma_DrawBackgroundBlur(self, self.lerpStart)
 		draw.RoundedBox(0, 0, 0, w, h, Color(50, 50, 50, Lerp(fraction, 0, 150)))
 	end
 end

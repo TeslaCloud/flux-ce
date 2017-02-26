@@ -6,6 +6,11 @@
 
 netstream.Hook("SharedTables", function(tSharedTable)
 	rw.sharedTable = tSharedTable or {}
+	rw.sharedTableReceived = true
+end)
+
+netstream.Hook("Hook_RunCL", function(hookName, ...)
+	hook.Run(hookName, ...)
 end)
 
 netstream.Hook("PlayerInitialSpawn", function(nPlyIndex)
@@ -62,8 +67,11 @@ netstream.Hook("PlayerCreatedCharacter", function(success, status)
 			end
 		else
 			local text = "We were unable to create a character! (unknown error)"
+			local hookText = hook.Run("GetCharCreationErrorText", success, status)
 
-			if (status == CHAR_ERR_NAME) then
+			if (hookText) then
+				text = hookText
+			elseif (status == CHAR_ERR_NAME) then
 				text = "Your character's name must be between "..config.Get("character_min_name_len").." and "..config.Get("character_max_name_len").." characters long!"
 			elseif (status == CHAR_ERR_DESC) then
 				text = "Your character's description must be between "..config.Get("character_min_desc_len").." and "..config.Get("character_max_desc_len").." characters long!"

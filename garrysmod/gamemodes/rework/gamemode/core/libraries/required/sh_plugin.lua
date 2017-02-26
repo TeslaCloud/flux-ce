@@ -22,7 +22,8 @@ local extras = {
 	"commands",
 	"groups",
 	"derma",
-	"tools"
+	"tools",
+	"themes"
 }
 
 function plugin.GetStored()
