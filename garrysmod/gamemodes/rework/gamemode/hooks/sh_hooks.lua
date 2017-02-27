@@ -104,7 +104,7 @@ do
 				local anim = animations[holdType][act]
 
 				if (istable(anim)) then
-					if (hook.Call("ModelWeaponRaised", self, player, model)) then
+					if (hook.Call("ModelWeaponRaised", nil, player, model)) then
 						anim = anim[2]
 					else
 						anim = anim[1]

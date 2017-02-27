@@ -61,6 +61,12 @@ function GM:PlayerSpawn(player)
 	player:SetJumpPower(config.Get("jump_power"))
 	player:SetRunSpeed(config.Get("run_speed"))
 
+	local playerFaction = player:GetFaction()
+
+	if (playerFaction) then
+		player:SetTeam(playerFaction.teamID or 1)
+	end
+
 	local oldHands = player:GetHands()
 
 	if (IsValid(oldHands)) then

@@ -20,6 +20,10 @@ function faction.Register(id, data)
 	data.Description = data.Description or "This faction has no description!"
 	data.PrintName = data.PrintName or data.Name or "Unknown Faction"
 
+	team.SetUp(count + 1, data.Name, data.Color or Color(255, 255, 255))
+
+	data.teamID = count + 1
+
 	stored[id] = data
 	count = count + 1
 end

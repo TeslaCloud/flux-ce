@@ -737,6 +737,8 @@ function PANEL:Paint(w, h)
 						v2.a = chatbox.curAlpha or v2.a or 255
 						curColor = v2
 					end
+				elseif (isentity(v2) and v2:IsPlayer()) then
+					curSender = v2
 				elseif (!isnumber(v2)) then
 					if (IsTime(v2)) then
 						local time = os.date("%H:%M", SendTime(v2))
@@ -774,8 +776,6 @@ function PANEL:Paint(w, h)
 				elseif (isnumber(v2)) then
 					offY = v2
 					offX = 4
-				elseif (type(v2) == "Player") then
-					curSender = v2
 				else
 					print(v2)
 				end
