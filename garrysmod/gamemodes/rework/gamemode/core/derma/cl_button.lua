@@ -11,6 +11,7 @@ PANEL.m_Autopos = true
 PANEL.m_CurAmt = 0
 PANEL.m_Active = false
 PANEL.m_IconSize = nil
+PANEL.m_Enabled = true
 
 function PANEL:Paint(w, h)
 	theme.Hook("PaintButton", self, w, h)
@@ -28,6 +29,13 @@ end
 
 function PANEL:SetActive(active)
 	self.m_Active = active
+end
+
+function PANEL:SetEnabled(bEnabled)
+	self.m_Enabled = bEnabled
+	self.m_TextColorOverride = (bEnabled and theme.GetColor("Text"):Darken(50)) or nil
+	
+	self:SetMouseInputEnabled(bEnabled)
 end
 
 function PANEL:SetText(newText)

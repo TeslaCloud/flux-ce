@@ -12,8 +12,9 @@ timer.Remove("HintSystem_Annoy2")
 function GM:InitPostEntity()
 	rw.client = rw.client or LocalPlayer()
 
-	timer.Simple(0.5, function()
+	timer.Simple(0.4, function()
 		netstream.Start("LocalPlayerCreated", true)
+		rw.localPlayerCreated = true
 	end)
 
  	for k, v in ipairs(player.GetAll()) do
@@ -123,8 +124,10 @@ function GM:HUDDrawScoreBoard()
 	if (!rw.client or !rw.client:HasInitialized() or !rw.IntroPanel) then
 		local text = "Rework is loading schema and plugins, please wait..."
 
-		if (!rw.sharedTableReceived) then
-			text = "Receiving shared data, please wait..."
+		if (!rw.localPlayerCreated) then
+			text = "Preparing loading sequence, please wait..."
+		elseif (!rw.sharedTableReceived) then
+			text = "Receiving Rework shared data, please wait..."
 		end
 
 		local scrW, scrH = ScrW(), ScrH()
@@ -420,7 +423,7 @@ function GM:AddMainMenuItems(panel, sidebar)
 		end
 	end)
 
-	panel:AddButton("#MainMenu_Load", function(btn)
+	local loadBtn = panel:AddButton("#MainMenu_Load", function(btn)
 		panel.menu = vgui.Create("DFrame", panel)
 		panel.menu:SetPos(scrW / 2 - 300, scrH / 4)
 		panel.menu:SetSize(600, 600)
@@ -431,7 +434,7 @@ function GM:AddMainMenuItems(panel, sidebar)
 			draw.SimpleText("Which one to load", "DermaLarge", 0, 24)
 
 			if (#rw.client:GetAllCharacters() <= 0) then
-				draw.SimpleText("wow you have none", "DermaLarge", 0, 24)
+				draw.SimpleText("wow you have none", "DermaLarge", 0, 64)
 			end
 		end
 
@@ -454,6 +457,10 @@ function GM:AddMainMenuItems(panel, sidebar)
 			offY = offY + 28
 		end
 	end)
+
+	if (#rw.client:GetAllCharacters() <= 0) then
+		loadBtn:SetEnabled(false)
+	end
 
 	if (rw.client:GetCharacter()) then
 		panel:AddButton("#MainMenu_Cancel", function(btn)

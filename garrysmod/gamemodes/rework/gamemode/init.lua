@@ -30,40 +30,40 @@ if (!SafeRequire("fileio")) then
 	return
 end
 
--- Watchdog system is disabled while it is being rewritten!
+if (system.IsWindows()) then
+	timer.Create("WatchDogUpdater", (1 / 16), 0, function()
+		fileio.CheckForChanges()
+	end)
 
-/*if (!rw.WatchDogAvailable and system.IsWindows()) then
-	if (file.Exists("lua/bin/gmsv_watchdog_win32.dll", "GAME")) then
-		print("[Rework] Loading Watch Dog file monitoring tools...")
+	hook.Add("FileHasChanged", "WatchdogPluginWatcher", function(fileName, action)
+		-- fileName is relative to garrysmod/gamemodes/
+		local text = "not touched."
 
-		local success = SafeRequire("watchdog")
-
-		if (success) then
-			timer.Create("WatchDogUpdater", (1 / 16), 0, function()
-				WatchdogUpdate()
-			end)
-
-			hook.Add("WatchDogFileChanged", "WatchdogPluginWatcher", function(fileName)
-				-- fileName is relative to garrysmod/gamemodes/
-				print("[Watchdog] "..fileName)
-
-				if (fileName:find("plugins")) then
-					-- Prevent it from passing extra directories to the hook, as well as files it doesn't really need.
-					if (fileName:EndsWith("plugins")) then return end
-					if (fileName:find("/plugin/")) then return end
-					if (fileName:find(".ini")) then return end
-
-					print("[Watchdog] Detected plugin change.")
-					hook.Run("OnPluginFileChange", fileName)
-				end
-			end)
-
-			rw.WatchDogAvailable = true
-		else
-			ErrorNoHalt("[Rework] Failed to load Watchdog!\nYou do not appear to have MS Visual C++ 2015 installed!\n")
+		if (action == FILE_ACTION_ADDED) then
+			text = "added."
+		elseif (action == FILE_ACTION_REMOVED) then
+			text = "removed."
+		elseif (action == FILE_ACTION_MODIFIED) then
+			text = "modified."
+		elseif (action == FILE_ACTION_RENAMED_OLD_NAME) then
+			text = "renamed, this is it's old name."
+		elseif (action == FILE_ACTION_RENAMED_NEW_NAME) then
+			text = "renamed, this is it's new name."
 		end
-	end
-end*/
+
+		rw.core:DevPrint("File action: '"..fileName.."' was "..text)
+
+		if (fileName:find("plugins") and action == FILE_ACTION_ADDED) then
+			-- Prevent it from passing extra directories to the hook, as well as files it doesn't really need.
+			if (fileName:EndsWith("plugins")) then return end
+			if (fileName:find("/plugin/")) then return end
+			if (fileName:find(".ini")) then return end
+
+			print("[Watchdog] Detected a new plugin.")
+			hook.Run("OnPluginFileChange", fileName)
+		end
+	end)
+end
 
 -- A function to get whether watchdog module is available.
 function rw.IsWatchdogAvailable()

@@ -47,3 +47,11 @@ RAGDOLL_DUMMY 		= 2		-- Ragdolled and cannot take damage.
 -- Items system
 ITEM_TEMPLATE 		= -1		-- Item is a template and needs to be instantiated before use.
 ITEM_INVALID 		= 0		-- Item is either invalid or is a template and therefore cannot be instantiated.
+
+-- File actions
+FILE_ACTION_UNKNOWN 			= 0
+FILE_ACTION_ADDED 				= 1
+FILE_ACTION_REMOVED				= 2
+FILE_ACTION_MODIFIED			= 3
+FILE_ACTION_RENAMED_OLD_NAME 	= 4
+FILE_ACTION_RENAMED_NEW_NAME 	= 5

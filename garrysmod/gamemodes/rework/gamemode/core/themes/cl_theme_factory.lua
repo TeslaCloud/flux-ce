@@ -116,7 +116,7 @@ end
 
 function THEME:PaintButton(panel, w, h)
 	local curAmt = panel.m_CurAmt
-	local textColor = self:GetColor("Text"):Darken(curAmt)
+	local textColor = panel.m_TextColorOverride or self:GetColor("Text"):Darken(curAmt)
 	local title = panel.m_Title
 	local font = panel.m_Font
 	local icon = panel.m_Icon
