@@ -1,0 +1,20 @@
+"flux"
+{
+	"title"			"Flux"
+	"maps"			"^rp_"
+	"base"			"sandbox"
+	"settings"
+	{
+		1
+		{
+			"name"		"schema"
+			"text"		"schema"
+			"help"		"Schema to load."
+			"type"		"Text"
+			"default"	"hl2rp"
+		}
+	}
+	"version"		"0.1.6 (1341) - indev"
+	"author"		"TeslaCloud Studios"
+	"description"	"A free roleplay gamemode framework."
+}

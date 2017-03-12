@@ -4,4 +4,6 @@
 	the framework is publicly released.
 --]]
 
-//print("Schema has loaded!")
+local lang = fl.lang:GetTable("en")
+
+lang["#Settings_ToggleAutoWalk"] = "Toggle Auto-Walk";

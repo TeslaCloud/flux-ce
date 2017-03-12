@@ -1,8 +1,8 @@
-"reborn"
+"flborn"
 {
 	"title"			"Reborn"
 	"author"		"Mr. Meow"
-	"description"	"A test schema for Rework framework."
+	"description"	"A test schema for Flux framework."
 	"version"		"1.0"
 	"menusystem"	"1"
 	"workshopid"	""
