@@ -296,7 +296,7 @@ else
 
 	-- A function to send a request.
 	function netstream.Request(name, data, Callback)
-		netstream.Hook(name, Callback);		
+		netstream.Hook(name, Callback)		
 		netstream.Start(name, data)
 	end
 

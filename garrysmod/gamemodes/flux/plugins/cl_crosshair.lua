@@ -81,7 +81,7 @@ function PLUGIN:AdjustCrosshairColor(trace, distance)
 	if (distance < 300 and IsValid(ent) and !ent:IsWorld()) then
 		if (ent:IsPlayer()) then
 			drawColor = Color(150, 190, 230)
-		elseif (ent:GetClass() == "flux_item") then
+		elseif (ent:GetClass() == "fl_item") then
 			drawColor = Color(210, 175, 230)
 		elseif (table.HasValue(doors, ent:GetClass())) then
 			drawColor = Color(240, 210, 150)

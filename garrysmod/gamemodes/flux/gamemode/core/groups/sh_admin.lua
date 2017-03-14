@@ -12,4 +12,4 @@ GROUP:SetImmunity(200)
 GROUP:SetBase("operator")
 GROUP:SetPermissions({
 	test = PERM_ALLOW
-});
+})

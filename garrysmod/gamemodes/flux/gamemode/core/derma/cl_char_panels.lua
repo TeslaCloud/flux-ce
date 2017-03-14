@@ -142,7 +142,7 @@ function PANEL:Rebuild()
 
 			self.model = v
 			self:GetParent().CharData.model = self.model
-			
+
 			btn.isActive = true
 			self.prevBtn = btn
 		end
@@ -263,4 +263,4 @@ function PANEL:OnClose(parent)
 	})
 end
 
-vgui.Register("flCharCreationFaction", PANEL, "flCharCreationBase");
+vgui.Register("flCharCreationFaction", PANEL, "flCharCreationBase")

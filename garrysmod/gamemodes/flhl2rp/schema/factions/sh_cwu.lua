@@ -30,4 +30,4 @@ FACTION.Models.female = {
 	"models/humans/group02/female_04.mdl",
 	"models/humans/group02/female_06.mdl",
 	"models/humans/group02/female_07.mdl",
-};
+}

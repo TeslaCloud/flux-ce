@@ -175,4 +175,4 @@ function PANEL:Paint(w, h)
 	end
 end
 
-derma.DefineControl("flScoreboardPlayer", "", PANEL, "DPanel");
+derma.DefineControl("flScoreboardPlayer", "", PANEL, "DPanel")

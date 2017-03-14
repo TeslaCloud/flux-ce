@@ -65,7 +65,7 @@ pipeline.Register("faction", function(uniqueID, fileName, pipe)
 
 	util.Include(fileName)
 
-	FACTION:Register(); FACTION = nil
+	FACTION:Register() FACTION = nil
 end)
 
 function faction.IncludeFactions(directory)

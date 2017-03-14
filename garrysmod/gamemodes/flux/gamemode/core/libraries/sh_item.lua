@@ -239,7 +239,7 @@ pipeline.Register("item", function(uniqueID, fileName, pipe)
 
 	util.Include(fileName)
 
-	ITEM:Register(); ITEM = nil
+	ITEM:Register() ITEM = nil
 end)
 
 function item.IncludeItems(directory)
@@ -311,7 +311,7 @@ if (SERVER) then
 	end
 
 	function item.SaveEntities()
-		local itemEnts = ents.FindByClass("flux_item")
+		local itemEnts = ents.FindByClass("fl_item")
 
 		entities = {}
 
@@ -367,7 +367,7 @@ if (SERVER) then
 
 	-- A function to send info about items in the world.
 	function item.SendToPlayer(player)
-		local itemEnts = ents.FindByClass("flux_item")
+		local itemEnts = ents.FindByClass("fl_item")
 
 		for k, v in ipairs(itemEnts) do
 			if (v.item) then
@@ -387,7 +387,7 @@ if (SERVER) then
 			return
 		end
 
-		local ent = ents.Create("flux_item")
+		local ent = ents.Create("fl_item")
 		ent:SetItem(itemTable)
 		ent:SetPos(position)
 

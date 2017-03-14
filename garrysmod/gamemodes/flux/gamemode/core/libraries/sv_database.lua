@@ -308,7 +308,7 @@ local function BuildCreateQuery(queryObj)
 
 	queryString[#queryString + 1] = " )"
 
-	return table.concat(queryString);
+	return table.concat(queryString)
 end
 
 function QUERY_CLASS:Execute(bQueueQuery)
@@ -515,7 +515,7 @@ end
 function fl.db:Disconnect()
 	if (self.connection) then
 		if (fl.db.Module == "tmysql4") then
-			return self.connection:Disconnect();	
+			return self.connection:Disconnect()	
 		end
 	end
 

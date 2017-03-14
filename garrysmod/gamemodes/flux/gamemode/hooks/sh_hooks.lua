@@ -29,9 +29,9 @@ do
 			local len2D = velocity:Length2D()
 
 			if (len2D > 150) then
-				player.CalcIdeal = ACT_MP_RUN;
+				player.CalcIdeal = ACT_MP_RUN
 			elseif (len2D > 0.5) then
-				player.CalcIdeal = ACT_MP_WALK;
+				player.CalcIdeal = ACT_MP_WALK
 			end
 		end
 
@@ -208,4 +208,4 @@ end)
 
 timer.Create("LazyTick", 1 / 8, 0, function()
 	hook.Run("LazyTick")
-end);
+end)

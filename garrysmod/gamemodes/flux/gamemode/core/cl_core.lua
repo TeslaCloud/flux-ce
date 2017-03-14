@@ -158,7 +158,7 @@ do
 			cache[id] = info
 		end
 
-		draw.NoTexture(); -- Otherwise we draw a transparent circle.
+		draw.NoTexture() -- Otherwise we draw a transparent circle.
 		surface.DrawPoly(info)
 	end
 

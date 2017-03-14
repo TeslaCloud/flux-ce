@@ -11,7 +11,7 @@ GROUP:SetIcon("icon16/user.png")
 GROUP:SetImmunity(0)
 GROUP:SetPermissions({
 	test = PERM_ALLOW
-});
+})
 
 -- Called when player's primary group is being set to this group.
 function GROUP:OnGroupSet(player, oldGroup) end

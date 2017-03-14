@@ -17,7 +17,7 @@ CTheme.shouldReload = true
 --[[ Basic Skeleton --]]
 function CTheme:CTheme(name, parent)
 	self.name = name or "Unknown"
-	self.uniqueID = self.name:MakeID(); -- temporary unique ID
+	self.uniqueID = self.name:MakeID() -- temporary unique ID
 	self.parent = parent
 
 	if (!self.uniqueID) then

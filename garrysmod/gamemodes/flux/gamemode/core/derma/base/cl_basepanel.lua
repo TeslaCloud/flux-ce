@@ -26,7 +26,7 @@ AccessorFunc(PANEL, "m_MainColor", "MainColor")
 AccessorFunc(PANEL, "m_TextColor", "TextColor")
 AccessorFunc(PANEL, "m_AccentColor", "AccentColor")
 
-function PANEL:Paint(width, height) theme.Hook("PaintPanel", self, width, height); end
-function PANEL:Think() theme.Hook("PanelThink", self); end
+function PANEL:Paint(width, height) theme.Hook("PaintPanel", self, width, height) end
+function PANEL:Think() theme.Hook("PanelThink", self) end
 
-vgui.Register("flBasePanel", PANEL, "EditablePanel");
+vgui.Register("flBasePanel", PANEL, "EditablePanel")

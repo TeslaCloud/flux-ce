@@ -11,23 +11,23 @@ GM.Website 		= "http://teslacloud.net/"
 GM.Email 		= "support@teslacloud.net"
 
 -- Define Flux-Specific fields.
-GM.Version 		= "0.1.6-indev"
-GM.Build 		= "1341"
+GM.Version 		= "0.2.0-indev"
+GM.Build 		= "1356"
 GM.Description 	= "A free roleplay gamemode framework."
 
 -- It would be very nice of you to leave below values as they are if you're using official schemas.
 -- While we can do nothing to stop you from changing them, we'll very much appreciate it if you don't.
 GM.Prefix		= "FL: "; -- Prefix to display in server browser (*Prefix*: *Schema Name*)
-GM.NameOverride	= false; -- Set to any string to override schema's browser name. This overrides the prefix too.
+GM.NameOverride	= false -- Set to any string to override schema's browser name. This overrides the prefix too.
 
-fl.Devmode		= true; -- If set to true will print some developer info. Moderate console spam.
+fl.Devmode		= true -- If set to true will print some developer info. Moderate console spam.
 
 -- Table aliases.
 Flux = fl
 flux = fl
 FL = fl
 
--- Fix for name conflicts.
+-- Fix for the name conflicts.
 _player, _team, _file, _table, _data, _sound = player, team, file, table, data, sound
 
 -- do - end blocks let us manage the lifespan of the
@@ -123,6 +123,8 @@ util.IncludeDirectory("core/libraries/meta", true)
 util.IncludeDirectory("languages", true)
 fl.admin:IncludeGroups("flux/gamemode/core/groups")
 util.IncludeDirectory("core/commands", true)
+util.IncludeDirectory("core/derma/base", true)
+util.IncludeDirectory("core/derma/admin", true)
 util.IncludeDirectory("core/derma", true)
 item.IncludeItems("flux/gamemode/core/items")
 
@@ -133,7 +135,7 @@ if (theme or SERVER) then
 
 			util.Include(fileName)
 
-			THEME:Register(); THEME = nil;
+			THEME:Register() THEME = nil
 		else
 			util.Include(fileName)
 		end

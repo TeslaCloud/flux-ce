@@ -10,8 +10,8 @@ local stored = fl.tool.stored or {}
 fl.tool.stored = stored
 
 function fl.tool:GetAll()
-	return stored;
-end;
+	return stored
+end
 
 function fl.tool:New(id)
 	return flTool()

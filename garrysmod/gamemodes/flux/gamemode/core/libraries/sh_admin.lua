@@ -5,9 +5,9 @@
 --]]
 
 library.New("admin", fl)
-local groups = fl.admin.groups or {}; -- Usergroups data
-local permissions = fl.admin.permissions or {}; -- Permission descriptions and other data
-local players = fl.admin.players or {}; -- Compiled permissions for each player
+local groups = fl.admin.groups or {} -- Usergroups data
+local permissions = fl.admin.permissions or {} -- Permission descriptions and other data
+local players = fl.admin.players or {} -- Compiled permissions for each player
 fl.admin.groups = groups
 fl.admin.permissions = permissions
 fl.admin.players = players
@@ -113,7 +113,6 @@ end
 
 function fl.admin:HasPermission(player, permission)
 	if (!IsValid(player)) then return true end
-
 	if (player:IsOwner()) then return true end
 	if (player:IsCoOwner()) then return true end
 
@@ -172,7 +171,7 @@ pipeline.Register("group", function(uniqueID, fileName, pipe)
 
 	util.Include(fileName)
 
-	GROUP:Register(); GROUP = nil;
+	GROUP:Register() GROUP = nil
 end)
 
 function fl.admin:IncludeGroups(directory)

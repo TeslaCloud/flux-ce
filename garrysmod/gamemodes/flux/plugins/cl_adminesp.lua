@@ -14,7 +14,7 @@ function PLUGIN:HUDPaint()
 
 		for k, v in ipairs(_player.GetAll()) do
 			if (v == fl.client) then continue end
-			
+
 			local pos = v:GetPos()
 			local head = Vector(pos.x, pos.y, pos.z + 60)
 			local screenPos = pos:ToScreen()

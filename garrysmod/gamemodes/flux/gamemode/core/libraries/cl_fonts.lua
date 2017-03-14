@@ -39,7 +39,7 @@ function fl.fonts:CreateFont(name, fontData)
 end
 
 function fl.fonts:GetSize(name, size)
-	if (!size) then return name; end
+	if (!size) then return name end
 
 	local newName = name..":"..size
 

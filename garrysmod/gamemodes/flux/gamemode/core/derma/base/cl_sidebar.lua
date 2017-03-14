@@ -35,6 +35,34 @@ function PANEL:AddPanel(panel, bCenter)
 	self.lastPos = self.lastPos + self.margin + panel:GetTall()
 end
 
+function PANEL:AddButton(text, callback)
+	local button = vgui.Create("flButton", self)
+
+	button:SetSize(self:GetWide(), theme.GetOption("MainMenu_SidebarButtonHeight"))
+	button:SetText(text)
+	button:SetDrawBackground(true)
+	button:SetFont(theme.GetFont("Text_NormalSmaller"))
+	button:SetTextAutoposition(true)
+
+	button.DoClick = function(btn)
+		btn:SetActive(true)
+
+		if (IsValid(self.prevButton) and self.prevButton != btn) then
+			self.prevButton:SetActive(false)
+		end
+
+		self.prevButton = btn
+
+		if (isfunction(callback)) then
+			callback(btn)
+		end
+	end
+
+	self.sidebar:AddPanel(button)
+
+	return button
+end
+
 function PANEL:AddSpace(px)
 	self.lastPos = self.lastPos + px
 end
@@ -69,4 +97,4 @@ function PANEL:PerformLayout()
 	end
 end
 
-vgui.Register("flSidebar", PANEL, "DScrollPanel");
+vgui.Register("flSidebar", PANEL, "DScrollPanel")

@@ -45,13 +45,13 @@ RAGDOLL_FALLENOVER 	= 1		-- Ragdolled and can take damage.
 RAGDOLL_DUMMY 		= 2		-- Ragdolled and cannot take damage.
 
 -- Items system
-ITEM_TEMPLATE 		= -1		-- Item is a template and needs to be instantiated before use.
+ITEM_TEMPLATE 		= -1	-- Item is a template and needs to be instantiated before use.
 ITEM_INVALID 		= 0		-- Item is either invalid or is a template and therefore cannot be instantiated.
 
 -- File actions
-FILE_ACTION_UNKNOWN 			= 0
-FILE_ACTION_ADDED 				= 1
-FILE_ACTION_REMOVED				= 2
-FILE_ACTION_MODIFIED			= 3
-FILE_ACTION_RENAMED_OLD_NAME 	= 4
-FILE_ACTION_RENAMED_NEW_NAME 	= 5
+FILE_ACTION_UNKNOWN 			= 0	-- We don't know what happened to the file, but it apparently did.
+FILE_ACTION_ADDED 				= 1	-- The file was created.
+FILE_ACTION_REMOVED				= 2	-- The file was removed.
+FILE_ACTION_MODIFIED			= 3	-- The file was modified.
+FILE_ACTION_RENAMED_OLD_NAME 	= 4	-- The file was renamed, this is it's old name.
+FILE_ACTION_RENAMED_NEW_NAME 	= 5	-- The file was renamed, this is it's new name.

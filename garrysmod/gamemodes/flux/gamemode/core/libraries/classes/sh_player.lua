@@ -69,4 +69,4 @@ function rePlayer:Loadout()
 	self.Player:SelectWeapon(self.loadout[1])
 end
 
-player_manager.RegisterClass("flPlayer", rePlayer, "player_default");
+player_manager.RegisterClass("flPlayer", rePlayer, "player_default")

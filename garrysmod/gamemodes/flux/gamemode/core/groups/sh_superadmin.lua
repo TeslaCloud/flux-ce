@@ -13,5 +13,6 @@ GROUP:SetBase("admin")
 GROUP:SetPermissions({
 	server_management = PERM_ALLOW,
 	player_management = PERM_ALLOW,
-	character_management = PERM_ALLOW
-});
+	character_management = PERM_ALLOW,
+	administration = PERM_ALLOW
+})

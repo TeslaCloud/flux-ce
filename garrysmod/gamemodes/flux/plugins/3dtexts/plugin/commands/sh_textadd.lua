@@ -20,8 +20,8 @@ function COMMAND:OnRun(player, text, scale, style, color, extraColor)
 
 	local trace = player:GetEyeTraceNoCursor()
 	local angle = trace.HitNormal:Angle()
-	angle:RotateAroundAxis(angle:Forward(), 90);
-	angle:RotateAroundAxis(angle:Right(), 270);
+	angle:RotateAroundAxis(angle:Forward(), 90)
+	angle:RotateAroundAxis(angle:Right(), 270)
 
 	local data = {
 		text = text,

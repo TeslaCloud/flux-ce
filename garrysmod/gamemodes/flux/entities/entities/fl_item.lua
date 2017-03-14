@@ -53,9 +53,7 @@ if (SERVER) then
 	end
 else
 	function ENT:DrawTargetID(x, y, distance)
-		if (distance > 370) then
-			return
-		end
+		if (distance > 370) then return end
 
 		local text = "ERROR"
 		local desc = "This item's data has failed to fetch. This is an error."

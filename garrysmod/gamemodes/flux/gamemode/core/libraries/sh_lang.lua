@@ -6,7 +6,7 @@
 
 library.New("lang", fl)
 local stored = fl.lang.stored or {}
-fl.lang.stored = stored;
+fl.lang.stored = stored
 
 local cache = {}
 local textCache = {}

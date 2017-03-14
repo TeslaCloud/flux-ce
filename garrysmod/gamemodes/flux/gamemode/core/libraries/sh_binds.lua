@@ -106,4 +106,4 @@ else
 	end)
 end
 
-plugin.AddHooks("FLBinds", hooks);
+plugin.AddHooks("FLBinds", hooks)

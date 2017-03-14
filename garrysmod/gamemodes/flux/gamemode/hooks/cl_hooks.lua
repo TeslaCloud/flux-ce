@@ -205,7 +205,7 @@ do
 			end
 
 			if (!lastAmt) then lastAmt = areas.GetCount() end
-	
+
 			if (!cache or lastAmt != areas.GetCount()) then
 				cache = {}
 				addedCache = {}

@@ -43,7 +43,7 @@ if (SERVER) then
 	end
 
 	function playerMeta:SetInitialized(bIsInitialized)
-		if (bIsInitialized == nil) then bIsInitialized = true; end
+		if (bIsInitialized == nil) then bIsInitialized = true end
 
 		self:SetDTBool(BOOL_INITIALIZED, bIsInitialized)
 	end

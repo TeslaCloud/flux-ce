@@ -4,7 +4,7 @@
 --]]
 
 library.New("chatbox", _G)
-chatbox.prefixes = chatbox.prefixes or {}; // Chatbox prefixes for serverside processing. Will be networked to clients for message styling.
+chatbox.prefixes = chatbox.prefixes or {} // Chatbox prefixes for serverside processing. Will be networked to clients for message styling.
 chatbox.filters = chatbox.filters or {}
 
 function chatbox.AddPrefix(prefix, callback)
@@ -371,4 +371,4 @@ netstream.Hook("ChatboxTextEntered", function(player, msgText)
 			netstream.Start(v, "ChatboxTextEnter", player, message)
 		end
 	end
-end);
+end)

@@ -49,24 +49,18 @@ end
 
 -- A function to create a new library.
 function library.New(strName, tParent)
-	if (istable(tParent)) then
-		tParent[strName] = tParent[strName] or {}
+	tParent = tParent or _G
 
-		return tParent[strName]
-	end
+	tParent[strName] = tParent[strName] or {}
 
-	library.stored[strName] = library.stored[strName] or {}
-
-	return library.stored[strName]
+	return tParent[strName]
 end
 
 -- A function to get an existing library.
 function library.Get(strName, tParent)
-	if (tParent) then
-		return tParent[strName] or library.New(strName, tParent)
-	end
+	tParent = tParent or _G
 
-	return library.stored[strName] or library.New(strName)
+	return tParent[strName] or library.New(strName, tParent)
 end
 
 -- Set library table's Metatable so that we can call it like a function.
@@ -116,6 +110,9 @@ end
 
 -- Alias because class could get easily confused with player class.
 Meta = Class
+
+-- Also make an alias that looks like other programming languages.
+class = Class
 
 function fl.core:GetSchemaFolder()
 	if (SERVER) then

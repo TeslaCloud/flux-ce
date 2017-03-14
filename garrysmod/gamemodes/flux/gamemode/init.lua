@@ -27,6 +27,7 @@ end
 
 if (!SafeRequire("fileio")) then
 	ErrorNoHalt("[Flux] fileio module has failed to load!\nPlease make sure that you have gmsv_fileio_"..((system.IsWindows() and "win32") or "linux")..".dll in garrysmod/lua/bin folder!\nAborting startup...\n")
+	
 	return
 end
 
@@ -46,9 +47,9 @@ if (system.IsWindows()) then
 		elseif (action == FILE_ACTION_MODIFIED) then
 			text = "modified."
 		elseif (action == FILE_ACTION_RENAMED_OLD_NAME) then
-			text = "flnamed, this is it's old name."
+			text = "renamed, this is it's old name."
 		elseif (action == FILE_ACTION_RENAMED_NEW_NAME) then
-			text = "flnamed, this is it's new name."
+			text = "renamed, this is it's new name."
 		end
 
 		fl.core:DevPrint("File action: '"..fileName.."' was "..text)

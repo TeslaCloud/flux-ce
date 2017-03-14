@@ -47,12 +47,12 @@ do
 end
 
 library.New("chatbox", _G)
-chatbox.history 	= chatbox.history or {}; -- Entire chat history. Last X meesages, configurable.
-chatbox.display		= chatbox.display or {}; -- Pre-parsed lines that are currently being drawn.
-chatbox.filters 	= chatbox.filters or {}; -- Table that stores filter data.
-chatbox.types 		= chatbox.types or {}; -- Table that stores message types data.
+chatbox.history 	= chatbox.history or {} -- Entire chat history. Last X meesages, configurable.
+chatbox.display		= chatbox.display or {} -- Pre-parsed lines that are currently being drawn.
+chatbox.filters 	= chatbox.filters or {} -- Table that stores filter data.
+chatbox.types 		= chatbox.types or {} -- Table that stores message types data.
 chatbox.emotes 		= chatbox.emotes or {} -- Table that stores emotes data.
-chatbox.codes 		= chatbox.codes or {}; -- Table that stores BB-Codes data.
+chatbox.codes 		= chatbox.codes or {} -- Table that stores BB-Codes data.
 
 chatbox.oldAddText 	= chatbox.oldAddText or chat.AddText
 
@@ -527,7 +527,7 @@ function chatbox.ParseText(messageData)
 		-- the following error:
 		-- [ERROR] gamemodes/clockwork/framework/libraries/client/cl_chatbox.lua:474: wrong number of arguments to 'insert'
 		local color = Color(255, 255, 255)
-		table.insert(parsed[1], color); -- this was line 474 from the error btw.
+		table.insert(parsed[1], color) -- this was line 474 from the error btw.
 		table.insert(parsed[1], "[SendTime:"..messageData.time.."]")
 		table.insert(parsed[1], " - ")
 		msgWidth = msgWidth + 50

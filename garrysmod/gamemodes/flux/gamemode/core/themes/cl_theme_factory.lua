@@ -79,12 +79,16 @@ end
 function THEME:CreateMainMenu(panel) end
 
 function THEME:PaintFrame(panel, width, height)
-	surface.SetDrawColor(panel:GetAccentColor())
-	surface.DrawOutlinedRect(0, 0, width, height)
-	surface.DrawRect(1, 1, width - 2, 20)
+	local accentColor = panel:GetAccentColor()
+
+	surface.SetDrawColor(accentColor)
+	surface.DrawRect(0, 0, width, 24)
+
+	surface.SetDrawColor(accentColor:Darken(30))
+	surface.DrawRect(0, 22, width, 2)
 
 	surface.SetDrawColor(panel.m_MainColor)
-	surface.DrawRect(1, 20, width - 2, height - 21)
+	surface.DrawRect(0, 24, width, height - 24)
 
 	local title = panel:GetTitle()
 
@@ -110,7 +114,7 @@ function THEME:PaintMainMenu(panel, width, height)
 		surface.SetMaterial(logo)
 		surface.DrawTexturedRect(wide + width / 2 - 300, 150, 600, 130)
 	end
-	
+
 	draw.SimpleText(desc, self:GetFont("Text_Normal"), wide + width / 2 - descW / 2, 350, self:GetColor("SchemaText"))
 end
 

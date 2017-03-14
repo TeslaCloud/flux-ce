@@ -12,4 +12,4 @@ GROUP:SetImmunity(1000)
 GROUP:SetBase("superadmin")
 GROUP:SetPermissions({
 	all = PERM_ALLOW_OVERRIDE
-});
+})

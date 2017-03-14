@@ -30,7 +30,7 @@ function fl3DText:PostDrawOpaqueRenderables()
 			draw.SimpleText(text, theme.GetFont("Text_3D2D"), -w / 2, -h / 2, ColorAlpha(color, 60))
 		cam.End3D2D()
 	end
-	
+
 	for k, v in pairs(self.stored) do
 		local pos = v.pos
 		local clientPos = fl.client:GetPos()

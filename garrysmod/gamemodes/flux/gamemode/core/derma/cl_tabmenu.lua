@@ -100,4 +100,4 @@ function PANEL:Paint(w, h)
 	end
 end
 
-vgui.Register("flTabMenu", PANEL, "EditablePanel");
+vgui.Register("flTabMenu", PANEL, "EditablePanel")

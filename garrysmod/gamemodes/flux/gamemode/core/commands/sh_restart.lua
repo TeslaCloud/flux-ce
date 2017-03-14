@@ -4,7 +4,7 @@
 	the framework is publicly released.
 --]]
 
-local COMMAND = Command("flstart")
+local COMMAND = Command("restart")
 COMMAND.name = "Restart"
 COMMAND.description = "Restarts the current map."
 COMMAND.syntax = "[number Delay]"

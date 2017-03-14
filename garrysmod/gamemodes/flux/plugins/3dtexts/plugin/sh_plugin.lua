@@ -37,7 +37,7 @@ if (SERVER) then
 		if (!data or !data.text or !data.pos or !data.angle or !data.style or !data.scale) then return end
 
 		self.count = (self.count or 0) + 1
-		
+
 		self.stored[self.count] = data
 
 		self:Save()
@@ -80,7 +80,7 @@ else
 
 	function fl3DText:RemoveAtTrace(trace)
 		if (!trace) then return false end
-		
+
 		local hitPos = trace.HitPos
 		local traceStart = trace.StartPos
 

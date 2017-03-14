@@ -8,6 +8,7 @@ library.New("character", _G)
 
 if (fl.SchemaDisabled("characters")) then
 	fl.core:DevPrint("Not loading characters system, disabled by schema.")
+
 	return
 end
 

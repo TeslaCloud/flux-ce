@@ -59,7 +59,7 @@ function TOOL:RightClick(trace)
 	if (CLIENT) then return true end
 
 	fl3DText:Remove(self:GetOwner())
-	
+
 	return true
 end
 
