@@ -473,6 +473,15 @@ function GM:AddMainMenuItems(panel, sidebar)
 	end
 end
 
+function GM:AddAdminMenuItems(panel, sidebar)
+	sidebar:AddButton("Manage Config")
+	sidebar:AddButton("Manage Players")
+	sidebar:AddButton("Manage Admins")
+	sidebar:AddButton("Group Editor")
+	sidebar:AddButton("Item Editor")
+	sidebar:AddButton("Permissions")
+end
+
 function GM:PlayerBindPress(player, bind, bPressed)
 	if (bind:find("gmod_undo") and bPressed) then
 		if (hook.Run("SoftUndo", player) != nil) then

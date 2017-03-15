@@ -214,7 +214,7 @@ do
 				bar.curI = 1
 			else
 				bar.fillWidth = bar.width * (bar.interpolated[math.Round(bar.curI)] / bar.maxValue)
-				bar.curI = bar.curI + 1
+				bar.curI = bar.curI + math.Clamp(math.Round(1 * (FrameTime() / 0.006)), 1, 10)
 			end
 		end
 

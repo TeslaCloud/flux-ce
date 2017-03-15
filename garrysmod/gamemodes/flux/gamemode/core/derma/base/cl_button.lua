@@ -20,10 +20,12 @@ end
 function PANEL:Think()
 	self.BaseClass.Think(self)
 
+	local frameTime = FrameTime() / 0.006
+
 	if (self:IsHovered()) then
-		self.m_CurAmt = math.Clamp(self.m_CurAmt + 1, 0, 40)
+		self.m_CurAmt = math.Clamp(self.m_CurAmt + 1 * frameTime, 0, 40)
 	else
-		self.m_CurAmt = math.Clamp(self.m_CurAmt - 1, 0, 40)
+		self.m_CurAmt = math.Clamp(self.m_CurAmt - 1 * frameTime, 0, 40)
 	end
 end
 

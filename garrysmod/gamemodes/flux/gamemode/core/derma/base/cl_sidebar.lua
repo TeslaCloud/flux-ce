@@ -58,7 +58,7 @@ function PANEL:AddButton(text, callback)
 		end
 	end
 
-	self.sidebar:AddPanel(button)
+	self:AddPanel(button)
 
 	return button
 end

@@ -12,6 +12,8 @@ THEME.shouldReload = true
 function THEME:OnLoaded()
 	local scrW, scrH = ScrW(), ScrH()
 
+	self:SetOption("Frame_HeaderSize", 24)
+	self:SetOption("Frame_LineWeight", 2)
 	self:SetOption("MainMenu_SidebarWidth", 200)
 	self:SetOption("MainMenu_SidebarHeight", scrH)
 	self:SetOption("MainMenu_SidebarX", 0)
@@ -19,7 +21,7 @@ function THEME:OnLoaded()
 	self:SetOption("MainMenu_SidebarMargin", -1)
 	self:SetOption("MainMenu_SidebarLogo", "flux/flux_icon.png")
 	self:SetOption("MainMenu_SidebarLogoSpace", 16)
-	self:SetOption("MainMenu_SidebarButtonHeight", 42)
+	self:SetOption("MainMenu_SidebarButtonHeight", fl.fonts:ScaleSize(42)) -- We can cheat and scale buttons the same way we scale fonts!
 	self:SetOption("MainMenu_LogoHeight", 100)
 	self:SetOption("MainMenu_LogoWidth", 110)
 	self:SetOption("FinishButtonOffsetX", 0)
@@ -37,16 +39,16 @@ function THEME:OnLoaded()
 
 	self:SetFont("MenuTitles", "fl_frame_title")
 	self:SetFont("Text_3D2D", "flMainFont", 128)
-	self:SetFont("Text_Largest", "flMainFont", 90)
-	self:SetFont("Text_Larger", "flMainFont", 60)
-	self:SetFont("Text_Large", "flMainFont", 48)
-	self:SetFont("Text_NormalLarge", "flMainFont", 36)
-	self:SetFont("Text_Normal", "flMainFont", 24)
-	self:SetFont("Text_NormalSmaller", "flMainFont", 22)
-	self:SetFont("Text_Small", "flMainFont", 18)
-	self:SetFont("Text_Smaller", "flMainFont", 16)
-	self:SetFont("Text_Smallest", "flMainFont", 14)
-	self:SetFont("Text_Tiny", "flMainFont", 11)
+	self:SetFont("Text_Largest", "flMainFont", fl.fonts:ScaleSize(90))
+	self:SetFont("Text_Larger", "flMainFont", fl.fonts:ScaleSize(60))
+	self:SetFont("Text_Large", "flMainFont", fl.fonts:ScaleSize(48))
+	self:SetFont("Text_NormalLarge", "flMainFont", fl.fonts:ScaleSize(36))
+	self:SetFont("Text_Normal", "flMainFont", fl.fonts:ScaleSize(24))
+	self:SetFont("Text_NormalSmaller", "flMainFont", fl.fonts:ScaleSize(22))
+	self:SetFont("Text_Small", "flMainFont", fl.fonts:ScaleSize(18))
+	self:SetFont("Text_Smaller", "flMainFont", fl.fonts:ScaleSize(16))
+	self:SetFont("Text_Smallest", "flMainFont", fl.fonts:ScaleSize(14))
+	self:SetFont("Text_Tiny", "flMainFont", fl.fonts:ScaleSize(11))
 
 	-- Set from schema theme.
 	-- self:SetMaterial("Schema_Logo", "materials/flux/hl2rp/logo.png")
@@ -79,21 +81,25 @@ end
 function THEME:CreateMainMenu(panel) end
 
 function THEME:PaintFrame(panel, width, height)
+	local title = panel:GetTitle()
 	local accentColor = panel:GetAccentColor()
+	local headerSize = self:GetOption("Frame_HeaderSize")
+	local lineWeight = self:GetOption("Frame_LineWeight")
 
 	surface.SetDrawColor(accentColor)
-	surface.DrawRect(0, 0, width, 24)
+	surface.DrawRect(0, 0, width, headerSize)
 
 	surface.SetDrawColor(accentColor:Darken(30))
-	surface.DrawRect(0, 22, width, 2)
+	surface.DrawRect(0, headerSize - lineWeight, width, lineWeight)
 
-	surface.SetDrawColor(panel.m_MainColor)
-	surface.DrawRect(0, 24, width, height - 24)
-
-	local title = panel:GetTitle()
+	surface.SetDrawColor(self:GetColor("MainDark"))
+	surface.DrawRect(0, headerSize, width, height - headerSize)
 
 	if (title) then
-		draw.SimpleText(title, "fl_frame_title", 6, 4, panel:GetTextColor())
+		local font = fl.fonts:GetSize(self:GetFont("Text_Small"), 16)
+		local _, fontSize = util.GetFontSize(font)
+
+		draw.SimpleText(title, font, 6, 3 * (16 / fontSize), panel:GetTextColor())
 	end
 end
 
@@ -161,11 +167,11 @@ function THEME:PaintButton(panel, w, h)
 end
 
 function THEME:PaintSidebar(panel, width, height)
-	draw.RoundedBox(0, 0, 0, width, height, Color(40, 40, 40))
+	draw.RoundedBox(0, 0, 0, width, height, self:GetColor("MainDark"):Lighten(10))
 end
 
 function THEME:DrawBarBackground(barInfo)
-	draw.RoundedBox(barInfo.cornerRadius, barInfo.x, barInfo.y, barInfo.width, barInfo.height, Color(40, 40, 40))
+	draw.RoundedBox(barInfo.cornerRadius, barInfo.x, barInfo.y, barInfo.width, barInfo.height, self:GetColor("MainDark"))
 end
 
 function THEME:DrawBarHindrance(barInfo)
@@ -190,4 +196,20 @@ function THEME:DrawBarTexts(barInfo)
 			draw.SimpleText(barInfo.hinderText, barInfo.font, barInfo.x + width - textWide - 8, barInfo.y + barInfo.textOffset, Color(255, 255, 255))
 		render.SetScissorRect(0, 0, 0, 0, false)
 	end
+end
+
+function THEME:AdminPanelPaintOver(panel, width, height)
+	local smallestFont = fl.fonts:GetSize(self:GetFont("Text_Smallest"), 14)
+	local textColor = self:GetColor("Text")
+	local versionString = "Admin Mod Version: v0.2.0 (indev)"
+
+	DisableClipping(true)
+		draw.RoundedBox(0, 0, height, width, 16, self:GetColor("Background"))
+
+		draw.SimpleText(fl.client:SteamName().." ("..fl.client:GetUserGroup()..")", smallestFont, 6, height + 1, textColor)
+
+		local w, h = util.GetTextSize(versionString, smallestFont)
+
+		draw.SimpleText(versionString, smallestFont, width - w - 6, height + 1, textColor)
+	DisableClipping(false)
 end

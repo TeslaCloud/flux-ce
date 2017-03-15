@@ -64,11 +64,12 @@ end
 
 function PANEL:Think()
 	local curTime = CurTime()
+	local frameTime = FrameTime() / 0.006
 
 	if ((curTime - self.creationTime) > self.lifetime - 1.25) then
-		self.curAlpha = self.curAlpha - 3
+		self.curAlpha = self.curAlpha - 3 * frameTime
 	elseif (self.curAlpha < 230) then
-		self.curAlpha = self.curAlpha + 4
+		self.curAlpha = self.curAlpha + 4 * frameTime
 	end
 
 	if (self.PostThink) then
