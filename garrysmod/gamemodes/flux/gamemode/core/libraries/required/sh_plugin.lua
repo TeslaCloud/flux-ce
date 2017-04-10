@@ -248,8 +248,8 @@ function plugin.Include(folder)
 
 	if (ext != "lua") then
 		if (SERVER) then
-			if (file.Exists(folder.."/plugin.ini", "LUA")) then
-				local iniData = util.JSONToTable(file.Read(folder.."/plugin.ini", "LUA"))
+			if (file.Exists(folder.."/plugin.json", "LUA")) then
+				local iniData = util.JSONToTable(file.Read(folder.."/plugin.json", "LUA"))
 					data.pluginFolder = folder.."/plugin"
 					data.pluginMain = "sh_plugin.lua"
 

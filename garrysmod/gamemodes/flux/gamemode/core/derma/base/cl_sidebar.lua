@@ -31,7 +31,9 @@ function PANEL:AddPanel(panel, bCenter)
 	end
 
 	panel:SetPos(x, self.lastPos)
+
 	self:AddItem(panel)
+
 	self.lastPos = self.lastPos + self.margin + panel:GetTall()
 end
 

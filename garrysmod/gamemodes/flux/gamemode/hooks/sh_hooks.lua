@@ -178,6 +178,26 @@ do
 	end
 end
 
+function GM:PlayerNoClip(player, bState)
+	if (bState == false) then
+		local bShouldExit = plugin.Call("PlayerExitNoclip", player)
+
+		if (bShouldExit != nil) then
+			return bShouldExit
+		end
+
+		return true
+	else
+		local bShouldEnter = plugin.Call("PlayerEnterNoclip", player)
+
+		if (bShouldEnter != nil) then
+			return bShouldEnter
+		end
+
+		return true
+	end
+end
+
 function GM:OnReloaded()
 	-- Reload the tools.
 	local toolGun = weapons.GetStored("gmod_tool")

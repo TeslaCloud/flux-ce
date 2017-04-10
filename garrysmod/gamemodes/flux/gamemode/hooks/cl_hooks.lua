@@ -93,7 +93,7 @@ end
 
 -- Called when the resolution has been changed and fonts need to be resized to fit the client's res.
 function GM:OnResolutionChanged(oldW, oldH, newW, newH)
-	font.Creates()
+	font.CreateFonts()
 end
 
 -- Called when the scoreboard should be shown.
