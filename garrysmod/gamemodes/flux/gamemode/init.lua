@@ -27,7 +27,7 @@ end
 
 if (!SafeRequire("fileio")) then
 	ErrorNoHalt("[Flux] fileio module has failed to load!\nPlease make sure that you have gmsv_fileio_"..((system.IsWindows() and "win32") or "linux")..".dll in garrysmod/lua/bin folder!\nAborting startup...\n")
-	
+
 	return
 end
 
@@ -90,19 +90,10 @@ end
 -- Initiate shared boot.
 include("shared.lua")
 
-do
-	local mysql_host = config.Get("mysql_host")
-	local mysql_username = config.Get("mysql_username")
-	local mysql_password = config.Get("mysql_password")
-	local mysql_database = config.Get("mysql_database")
-	local mysql_port = config.Get("mysql_port")
-
-	fl.db:Connect(mysql_host, mysql_username, mysql_password, mysql_database, mysql_port)
-end
-
 if (fl.initialized) then
 	MsgC(Color(0, 255, 100, 255), "[Flux] Auto-reloaded in "..math.Round(os.clock() - fl.startTime, 3).. " second(s)\n")
 else
 	MsgC(Color(0, 255, 100, 255), "[Flux] Framework v"..GM.Version.." has loaded in "..math.Round(os.clock() - fl.startTime, 3).. " second(s)\n")
+
 	fl.initialized = true
 end

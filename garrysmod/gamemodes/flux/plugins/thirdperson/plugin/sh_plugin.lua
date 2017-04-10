@@ -37,9 +37,9 @@ else
 
 		if (player:GetNetVar("flThirdPerson")) then
 			if (!startTime or flippedStart) then
-				startTime = curTime;	
+				startTime = curTime
 				flippedStart = false
-			end			
+			end
 
 			local forward = angles:Forward() * 75
 			local fraction = (curTime - startTime) / duration

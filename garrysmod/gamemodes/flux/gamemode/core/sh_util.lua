@@ -6,7 +6,7 @@
 
 -- A function to get lowercase type of an object.
 function typeof(obj)
-	return type(obj):utf8lower()
+	return string.lower(type(obj))
 end
 
 function Try(id, func, ...)
@@ -27,6 +27,20 @@ function util.IsVowel(char)
 	char = char:lower()
 
 	return (char == "a" or char == "e" or char == "y" or char == "u" or char == "i" or char == "o")
+end
+
+function util.Validate(...)
+	local validate = {...}
+
+	if (#validate <= 0) then return false end
+
+	for k, v in ipairs(validate) do
+		if (!IsValid(v)) then
+			return false
+		end
+	end
+
+	return true
 end
 
 -- A function to include a file based on it's prefix.
@@ -129,12 +143,13 @@ do
 		end
 
 		ErrorNoHalt("[Flux] '"..hex.."' is not a hexadecimal number!")
+
 		return 0
 	end
 end
 
 function util.HexToDecimal(hex)
-	if (isnumber(hex)) then return hex; end
+	if (isnumber(hex)) then return hex end
 
 	local sum = 0
 	local chars = table.Reverse(string.Explode("", hex))

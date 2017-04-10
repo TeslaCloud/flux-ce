@@ -7,6 +7,7 @@
 --]]
 
 library.New("db", fl)
+
 local QueueTable = {}
 fl.db.Module = fl.db.Module or config.Get("mysql_module") or "sqlite"
 local Connected = false
@@ -416,7 +417,7 @@ function fl.db:Connect(host, username, password, database, port, socket, flags)
 
 			self.connection.onConnectionFailed = function(database, errorText)
 				fl.db:OnConnectionFailed(errorText)
-			end		
+			end
 
 			self.connection:connect()
 		else
@@ -515,7 +516,7 @@ end
 function fl.db:Disconnect()
 	if (self.connection) then
 		if (fl.db.Module == "tmysql4") then
-			return self.connection:Disconnect()	
+			return self.connection:Disconnect()
 		end
 	end
 

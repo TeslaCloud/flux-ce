@@ -93,7 +93,7 @@ end
 
 -- Called when the resolution has been changed and fonts need to be resized to fit the client's res.
 function GM:OnResolutionChanged(oldW, oldH, newW, newH)
-	fl.fonts:CreateFonts()
+	font.Creates()
 end
 
 -- Called when the scoreboard should be shown.
@@ -291,7 +291,7 @@ function GM:DrawPlayerTargetID(player, x, y, distance)
 				alpha = math.Clamp((255 * (35 - d) / 35), 0, 255)
 			end
 
-			local smallerFont = fl.fonts:GetSize("tooltip_small", 12)
+			local smallerFont = font.GetSize("tooltip_small", 12)
 			local width, height = util.GetTextSize("#TargetID_Information", smallerFont)
 			draw.SimpleText("#TargetID_Information", smallerFont, x - width * 0.5, y + 5, Color(50, 255, 50, alpha))
 		end

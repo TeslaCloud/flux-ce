@@ -50,7 +50,7 @@ end
 
 function CTheme:SetFont(key, value, scale)
 	if (key) then
-		self.fonts[key] = fl.fonts:GetSize(value, scale)
+		self.fonts[key] = font.GetSize(value, scale)
 	end
 end
 
@@ -113,4 +113,4 @@ function CTheme:__tostring()
 end
 
 // Create an alias of CTheme class for convenience.
-Theme = CTheme;
+Theme = CTheme

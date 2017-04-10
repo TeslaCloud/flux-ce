@@ -6,4 +6,4 @@
 
 local lang = fl.lang:GetTable("en")
 
-lang["#Settings_ToggleThirdPerson"] = "Toggle Third-Person";
+lang["#Settings_ToggleThirdPerson"] = "Toggle Third-Person"

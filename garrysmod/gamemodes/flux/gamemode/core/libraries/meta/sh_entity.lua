@@ -11,4 +11,4 @@ local entMeta = FindMetaTable("Entity")
 	which derives from the entity metaTable. This way we don't have to check if the entity is
 	player every time the function is called.
 --]]
-entMeta.flSetModel = entMeta.flSetModel or entMeta.SetModel;
+entMeta.flSetModel = entMeta.flSetModel or entMeta.SetModel

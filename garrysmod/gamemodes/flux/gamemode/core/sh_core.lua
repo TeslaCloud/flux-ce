@@ -193,7 +193,7 @@ end
 -- A function to get the schema gamemode info.
 function fl.core:GetSchemaInfo()
 	if (SERVER) then
-		if (self.SchemaInfo) then return self.SchemaInfo; end
+		if (self.SchemaInfo) then return self.SchemaInfo end
 
 		local schemaFolder = string.lower(self:GetSchemaFolder())
 		local schemaData = util.KeyValuesToTable(

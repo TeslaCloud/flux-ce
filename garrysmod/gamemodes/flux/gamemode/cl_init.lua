@@ -23,7 +23,7 @@ end
 -- Initiate shared boot.
 include("shared.lua")
 
-fl.fonts:CreateFonts()
+font.Creates()
 
 if (fl.initialized) then
 	MsgC(Color(0, 255, 100, 255), "[Flux] Auto-reloaded in "..math.Round(os.clock() - fl.startTime, 3).. " second(s)\n")

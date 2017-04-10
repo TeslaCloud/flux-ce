@@ -51,7 +51,7 @@ local hiddenBones = {
 	"ValveBiped.Bip01_R_Finger32",
 	"ValveBiped.Bip01_R_Finger4",
 	"ValveBiped.Bip01_R_Finger41",
-	"ValveBiped.Bip01_R_Finger42"	
+	"ValveBiped.Bip01_R_Finger42"
 }
 
 -- For refresh.
@@ -142,4 +142,4 @@ fl.settings:AddCheckBox("General", "DrawLegs", true)
 
 -- Languages.
 local lang = fl.lang:GetTable("en")
-lang["#Settings_DrawLegs"] = "Draw your legs.";
+lang["#Settings_DrawLegs"] = "Draw your legs."

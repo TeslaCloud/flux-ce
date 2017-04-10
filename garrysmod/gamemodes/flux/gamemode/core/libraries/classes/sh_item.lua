@@ -166,4 +166,4 @@ function CItem:__tostring()
 	return "Item ["..self.instanceID.."]["..self:GetName().."]"
 end
 
-Item = CItem;
+Item = CItem

@@ -4,26 +4,26 @@
 	the framework is publicly released.
 --]]
 
-if (!fl.fonts) then
-	include("flux/gamemode/core/libraries/cl_fonts.lua")
+if (!font) then
+	include("flux/gamemode/core/libraries/cl_font.lua")
 end
 
 do
 	local flChatbox = {}
 
 	function flChatbox:CreateFonts()
-		fl.fonts:CreateFont("flChatFont", {
+		font.Create("flChatFont", {
 			font		= "Roboto",
 			size		= 17
 		})
 
-		fl.fonts:CreateFont("flChatFontBold", {
+		font.Create("flChatFontBold", {
 			font		= "Roboto",
 			size		= 17,
 			weight		= 1000
 		})
 
-		fl.fonts:CreateFont("flChatSyntax", {
+		font.Create("flChatSyntax", {
 			font		= "Roboto",
 			size		= 20
 		})

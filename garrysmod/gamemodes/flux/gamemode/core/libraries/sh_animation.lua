@@ -98,7 +98,7 @@ function fl.anim:SetModelClass(model, class)
 end
 
 function fl.anim:GetModelClass(model)
-	if (!model) then return "player"; end
+	if (!model) then return "player" end
 
 	local modelClass = models[string.lower(model)]
 
@@ -113,7 +113,7 @@ function fl.anim:GetTable(model)
 	if (!model) then return end
 
 	if (string.find(model, "/player/")) then
-		return	
+		return
 	end
 
 	return stored[self:GetModelClass(model)]
@@ -159,7 +159,7 @@ do
 
 	-- A function to get a weapon's hold type.
 	function fl.anim:GetWeaponHoldType(player, weapon)
-		if (!IsValid(weapon)) then return "normal"; end
+		if (!IsValid(weapon)) then return "normal" end
 
 		local class = string.lower(weapon:GetClass())
 		local holdType = "normal"

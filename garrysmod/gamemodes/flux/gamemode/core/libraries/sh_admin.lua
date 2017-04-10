@@ -5,9 +5,9 @@
 --]]
 
 library.New("admin", fl)
-local groups = fl.admin.groups or {} -- Usergroups data
-local permissions = fl.admin.permissions or {} -- Permission descriptions and other data
-local players = fl.admin.players or {} -- Compiled permissions for each player
+local groups = fl.admin.groups or {}			-- Usergroups data
+local permissions = fl.admin.permissions or {}	-- Permission descriptions and other data
+local players = fl.admin.players or {}			-- Compiled permissions for each player
 fl.admin.groups = groups
 fl.admin.permissions = permissions
 fl.admin.players = players
@@ -24,13 +24,13 @@ function fl.admin:CreateGroup(id, data)
 
 		if (parent) then
 			local parentCopy = table.Copy(parent)
+
 			table.Merge(parentCopy.m_Permissions, data.m_Permissions)
+
 			data.m_Permissions = parentCopy.m_Permissions
 
 			for k, v in pairs(parentCopy) do
-				if (k == "m_Permissions") then
-					continue
-				end
+				if (k == "m_Permissions") then continue end
 
 				if (!data[k]) then
 					data[k] = v
@@ -190,7 +190,6 @@ if (SERVER) then
 		permTable[permID] = permTable[permID] or PERM_NO
 
 		if (value == PERM_NO) then return end
-
 		if (permTable[permID] == PERM_ALLOW_OVERRIDE) then return end
 
 		if (value == PERM_ALLOW_OVERRIDE) then

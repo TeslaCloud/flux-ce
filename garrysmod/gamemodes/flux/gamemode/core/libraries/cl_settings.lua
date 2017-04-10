@@ -133,7 +133,7 @@ function fl.settings:GetColor(id)
 
 	if (istable(setting)) then
 		if (istable(setting.conVar)) then
-			for k, v in pairs(setting.conVar) do	
+			for k, v in pairs(setting.conVar) do
 				color[k] = v:GetFloat()
 			end
 		end

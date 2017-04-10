@@ -50,7 +50,7 @@ function item.Register(id, data)
 	data.Cost = data.Cost or 0
 	data.SpecialColor = data.SpecialColor or nil
 	data.isBase = data.isBase or false
-	data.instanceID = ITEM_TEMPLATE; -- -1 (or ITEM_TEMPLATE) means no instance.
+	data.instanceID = ITEM_TEMPLATE
 	data.data = data.data or {}
 	data.customButtons = data.customButtons or {}
 	data.actionSounds = data.actionSounds or {}

@@ -21,7 +21,7 @@ function THEME:OnLoaded()
 	self:SetOption("MainMenu_SidebarMargin", -1)
 	self:SetOption("MainMenu_SidebarLogo", "flux/flux_icon.png")
 	self:SetOption("MainMenu_SidebarLogoSpace", 16)
-	self:SetOption("MainMenu_SidebarButtonHeight", fl.fonts:ScaleSize(42)) -- We can cheat and scale buttons the same way we scale fonts!
+	self:SetOption("MainMenu_SidebarButtonHeight", font.Scale(42)) -- We can cheat and scale buttons the same way we scale fonts!
 	self:SetOption("MainMenu_LogoHeight", 100)
 	self:SetOption("MainMenu_LogoWidth", 110)
 	self:SetOption("FinishButtonOffsetX", 0)
@@ -39,16 +39,16 @@ function THEME:OnLoaded()
 
 	self:SetFont("MenuTitles", "fl_frame_title")
 	self:SetFont("Text_3D2D", "flMainFont", 128)
-	self:SetFont("Text_Largest", "flMainFont", fl.fonts:ScaleSize(90))
-	self:SetFont("Text_Larger", "flMainFont", fl.fonts:ScaleSize(60))
-	self:SetFont("Text_Large", "flMainFont", fl.fonts:ScaleSize(48))
-	self:SetFont("Text_NormalLarge", "flMainFont", fl.fonts:ScaleSize(36))
-	self:SetFont("Text_Normal", "flMainFont", fl.fonts:ScaleSize(24))
-	self:SetFont("Text_NormalSmaller", "flMainFont", fl.fonts:ScaleSize(22))
-	self:SetFont("Text_Small", "flMainFont", fl.fonts:ScaleSize(18))
-	self:SetFont("Text_Smaller", "flMainFont", fl.fonts:ScaleSize(16))
-	self:SetFont("Text_Smallest", "flMainFont", fl.fonts:ScaleSize(14))
-	self:SetFont("Text_Tiny", "flMainFont", fl.fonts:ScaleSize(11))
+	self:SetFont("Text_Largest", "flMainFont", font.Scale(90))
+	self:SetFont("Text_Larger", "flMainFont", font.Scale(60))
+	self:SetFont("Text_Large", "flMainFont", font.Scale(48))
+	self:SetFont("Text_NormalLarge", "flMainFont", font.Scale(36))
+	self:SetFont("Text_Normal", "flMainFont", font.Scale(24))
+	self:SetFont("Text_NormalSmaller", "flMainFont", font.Scale(22))
+	self:SetFont("Text_Small", "flMainFont", font.Scale(18))
+	self:SetFont("Text_Smaller", "flMainFont", font.Scale(16))
+	self:SetFont("Text_Smallest", "flMainFont", font.Scale(14))
+	self:SetFont("Text_Tiny", "flMainFont", font.Scale(11))
 
 	-- Set from schema theme.
 	-- self:SetMaterial("Schema_Logo", "materials/flux/hl2rp/logo.png")
@@ -96,7 +96,7 @@ function THEME:PaintFrame(panel, width, height)
 	surface.DrawRect(0, headerSize, width, height - headerSize)
 
 	if (title) then
-		local font = fl.fonts:GetSize(self:GetFont("Text_Small"), 16)
+		local font = font.GetSize(self:GetFont("Text_Small"), 16)
 		local _, fontSize = util.GetFontSize(font)
 
 		draw.SimpleText(title, font, 6, 3 * (16 / fontSize), panel:GetTextColor())
@@ -199,7 +199,7 @@ function THEME:DrawBarTexts(barInfo)
 end
 
 function THEME:AdminPanelPaintOver(panel, width, height)
-	local smallestFont = fl.fonts:GetSize(self:GetFont("Text_Smallest"), 14)
+	local smallestFont = font.GetSize(self:GetFont("Text_Smallest"), 14)
 	local textColor = self:GetColor("Text")
 	local versionString = "Admin Mod Version: v0.2.0 (indev)"
 

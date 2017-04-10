@@ -6,53 +6,6 @@
 
 local playerMeta = FindMetaTable("Player")
 
-if (SERVER) then
-	function playerMeta:SetWhitelists(data)
-		self:SetNetVar("whitelists", data)
-		self:SavePlayer()
-	end
-
-	function playerMeta:GiveWhitelist(name)
-		local whitelists = self:GetWhitelists()
-
-		if (!table.HasValue(whitelists, name)) then
-			table.insert(whitelists, name)
-			self:SetWhitelists(whitelists)
-		end
-	end
-
-	function playerMeta:TakeWhitelist(name)
-		local whitelists = self:GetWhitelists()
-
-		for k, v in ipairs(whitelists) do
-			if (v == name) then
-				table.remove(whitelists, k)
-				break
-			end
-		end
-
-		self:SetWhitelists(whitelists)
-	end
-
-	function playerMeta:SavePlayer()
-		return fl.player:Save(self)
-	end
-
-	function playerMeta:SetData(data)
-		self:SetNetVar("flData", {})
-	end
-
-	function playerMeta:SetInitialized(bIsInitialized)
-		if (bIsInitialized == nil) then bIsInitialized = true end
-
-		self:SetDTBool(BOOL_INITIALIZED, bIsInitialized)
-	end
-
-	function playerMeta:Notify(message)
-		fl.player:Notify(self, message)
-	end
-end
-
 function playerMeta:HasInitialized()
 	return self:GetDTBool(BOOL_INITIALIZED) or false
 end
@@ -133,58 +86,6 @@ function playerMeta:GetCharacterVar(id, default)
 	end
 end
 
-if (SERVER) then
-	function playerMeta:SetActiveCharacter(id)
-		local curChar = self:GetActiveCharacterID()
-
-		if (curChar) then
-			hook.Run("OnCharacterChange", self, self:GetCharacter(), id)
-		end
-
-		self:SetNetVar("ActiveCharacter", id)
-
-		local charData = self:GetCharacter()
-
-		self:SetNetVar("name", charData.name or self:SteamName())
-		self:SetNetVar("physDesc", charData.physDesc or "")
-		self:SetNetVar("gender", charData.gender or CHAR_GENDER_MALE)
-		self:SetNetVar("faction", charData.faction or "player")
-		self:SetNetVar("key", charData.key or -1)
-		self:SetNetVar("model", charData.model or "models/humans/group01/male_02.mdl")
-		self:SetNetVar("inventory", charData.inventory)
-
-		hook.Run("OnActiveCharacterSet", self, self:GetCharacter())
-	end
-
-	function playerMeta:SetCharacterVar(id, val)
-		if (isstring(id)) then
-			self:SetNetVar(id, val)
-			self:GetCharacter()[id] = val
-		end
-	end
-
-	function playerMeta:SetInventory(newInv)
-		if (!istable(newInv)) then return end
-		self:SetCharacterVar("inventory", newInv)
-	end
-
-	function playerMeta:SetCharacterData(key, value)
-		local charData = self:GetCharacterVar("data", {})
-
-		charData[key] = value
-
-		self:SetCharacterVar("data", charData)
-	end
-
-	function playerMeta:SaveCharacter()
-		local char = self:GetCharacter()
-
-		if (char) then
-			character.Save(self, self:GetCharacter().uniqueID)
-		end
-	end
-end
-
 function playerMeta:GetCharacterData(key, default)
 	return self:GetCharacterVar("data", {})[key] or default
 end
@@ -219,3 +120,86 @@ function playerMeta:IsRank(strRank, bStrict)
 
 	return false
 end
+
+--[[
+	Admin system
+--]]
+
+function playerMeta:HasPermission(perm)
+	return fl.admin:HasPermission(self, perm)
+end
+
+function playerMeta:GetPermissions()
+	return self:GetNetVar("flPermissions", {})
+end
+
+function playerMeta:IsOwner()
+	return self:IsMemberOf("owner")
+end
+
+function playerMeta:IsCoOwner()
+	if (self:IsOwner()) then
+		return true
+	end
+
+	if (config.Get("owner_steamid_extra")) then
+		for k, v in ipairs(config.Get("owner_steamid_extra")) do
+			if (v == self:SteamID()) then
+				return true
+			end
+		end
+	end
+
+	return false
+end
+
+function playerMeta:GetUserGroup()
+	return self:GetNetVar("flUserGroup", "user")
+end
+
+function playerMeta:GetSecondaryGroups()
+	return self:GetNetVar("flSecondaryGroups", {})
+end
+
+function playerMeta:GetCustomPermissions()
+	return self:GetNetVar("flCustomPermissions", {})
+end
+
+function playerMeta:IsMemberOf(group)
+	if (self:GetUserGroup() == group) then
+		return true
+	end
+
+	for k, v in ipairs(self:GetSecondaryGroups()) do
+		if (v == group) then
+			return true
+		end
+	end
+
+	return false
+end
+
+function playerMeta:IsSuperAdmin()
+	if (self:IsOwner() or self:IsCoOwner()) then
+		return true
+	end
+
+	return self:IsMemberOf("superadmin")
+end
+
+function playerMeta:IsAdmin()
+	if (self:IsSuperAdmin()) then
+		return true
+	end
+
+	return self:IsMemberOf("admin")
+end
+
+function playerMeta:IsOperator()
+	if (self:IsAdmin()) then
+		return true
+	end
+
+	return self:IsMemberOf("operator")
+end
+

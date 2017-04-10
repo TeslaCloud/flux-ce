@@ -133,10 +133,10 @@ function PANEL:Init()
 		panel:SetConVarB("FL_"..setting.id.."_B")
 		panel:SetConVarA("FL_"..setting.id.."_A")
 
-		parent:SetSize(parent:GetWide(), parent:GetTall() + parent.label:GetTall() * 0.1 + panel:GetTall())		
+		parent:SetSize(parent:GetWide(), parent:GetTall() + parent.label:GetTall() * 0.1 + panel:GetTall())
 	end
 
-	self.elementCallbacks["DNumSlider"] = function(panel, parent, setting)	
+	self.elementCallbacks["DNumSlider"] = function(panel, parent, setting)
 		local w, h = parent:GetWide(), parent:GetTall()
 		local offset = w * 0.77
 		local decimals = 0
@@ -175,7 +175,7 @@ function PANEL:Init()
 			local x, y = 8, h / 2 - 1
 			local space = w / num
 
-			for i = 0, num do	
+			for i = 0, num do
 				surface.DrawRect(x + i * space, y + 4, 1, 5)
 			end
 		end
@@ -186,7 +186,7 @@ function PANEL:Init()
 		parent.numLabel = vgui.Create("DTextEntry", parent)
 		parent.numLabel:SetFont("menu_thin_smaller")
 		parent.numLabel:SetText(panel:GetValue())
-		parent.numLabel:SetTextColor(fl.settings:GetColor("TextColor"))			
+		parent.numLabel:SetTextColor(fl.settings:GetColor("TextColor"))
 		parent.numLabel:SizeToContents()
 		parent.numLabel:SetPos(parent:GetWide() * 0.01, panel.y + panel:GetTall() * 1.1)
 		parent.numLabel:SetSize(parent:GetWide(), parent.numLabel:GetTall())
@@ -267,7 +267,7 @@ function PANEL:BuildList()
 			setting.label = vgui.Create("DLabel", setting)
 			setting.label:SetFont(menuFontSmall)
 			setting.label:SetText("#Settings_"..v.id)
-			setting.label:SetTextColor(fl.settings:GetColor("TextColor"))			
+			setting.label:SetTextColor(fl.settings:GetColor("TextColor"))
 			setting.label:SizeToContents()
 			setting.label:SetPos(setting:GetWide() * 0.01, setting:GetTall() * 0.5 - setting.label:GetTall() * 0.5)
 

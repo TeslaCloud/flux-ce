@@ -7,8 +7,8 @@
 	http://fontawesome.io/
 --]]
 
-if (!fl.fonts) then
-	include("flux/gamemode/core/libraries/cl_fonts.lua")
+if (!font) then
+	include("flux/gamemode/core/libraries/cl_font.lua")
 end
 
 library.New("fa", fl)
@@ -653,8 +653,8 @@ local buffer = {}
 
 fl.fa.hooks = {}
 
-function fl.fa.hooks:CreateFonts(fonts)
-	fonts:CreateFont("flFontAwesome", {
+function fl.fa.hooks:CreateFonts()
+	font.Create("flFontAwesome", {
 		font = "FontAwesome",
 		extended = true,
 		size = 16, -- default icon size is 16x16
@@ -693,8 +693,8 @@ function fl.fa:Draw(id, x, y, size, color, xAlign, yAlign, outlineWidth, outline
 	color = color or Color(255, 255, 255)
 
 	if (outlineWidth) then
-		draw.SimpleTextOutlined(self:GetIcon(id), fl.fonts:GetSize("flFontAwesome", size), x, y, color, xAlign, yAlign, outlineWidth, outlineColor)
+		draw.SimpleTextOutlined(self:GetIcon(id), font.GetSize("flFontAwesome", size), x, y, color, xAlign, yAlign, outlineWidth, outlineColor)
 	else
-		draw.SimpleText(self:GetIcon(id), fl.fonts:GetSize("flFontAwesome", size), x, y, color, xAlign, yAlign)
+		draw.SimpleText(self:GetIcon(id), font.GetSize("flFontAwesome", size), x, y, color, xAlign, yAlign)
 	end
 end

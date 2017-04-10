@@ -29,4 +29,4 @@ function CCommand:Register()
 	fl.command:Create(self.uniqueID, self)
 end
 
-Command = CCommand;
+Command = CCommand

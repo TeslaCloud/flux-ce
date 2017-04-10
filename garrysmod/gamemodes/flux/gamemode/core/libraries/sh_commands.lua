@@ -38,8 +38,8 @@ end
 function fl.command:Find(id)
 	id = id:utf8lower()
 
-	if (stored[id]) then return stored[id]; end
-	if (aliases[id]) then return stored[aliases[id]]; end
+	if (stored[id]) then return stored[id] end
+	if (aliases[id]) then return stored[aliases[id]] end
 
 	for k, v in pairs(aliases) do
 		if (k:find(id)) then
@@ -51,8 +51,8 @@ end
 function fl.command:FindByID(id)
 	id = id:utf8lower()
 
-	if (stored[id]) then return stored[id]; end
-	if (aliases[id]) then return stored[aliases[id]]; end
+	if (stored[id]) then return stored[id] end
+	if (aliases[id]) then return stored[aliases[id]] end
 end
 
 -- A function to find all commands by given search string.

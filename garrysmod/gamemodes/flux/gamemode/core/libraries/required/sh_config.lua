@@ -61,7 +61,7 @@ else
 		menuItems[key] = menuItems[key] or {}
 		menuItems[key].name = name or key
 		menuItems[key].description = description or "This config has no description set."
-		menuItems[key].type = dataType; -- valid types: table, number, string, bool
+		menuItems[key].type = dataType -- valid types: table, number, string, bool
 		menuItems[key].data = data or {}
 	end
 

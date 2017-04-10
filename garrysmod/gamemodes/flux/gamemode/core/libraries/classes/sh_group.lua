@@ -111,4 +111,4 @@ end
 
 CUserGroup.GetParent = CUserGroup.GetBase
 
-_G["Group"] = CUserGroup;
+_G["Group"] = CUserGroup

@@ -140,7 +140,7 @@ do
 
 		if (text:StartWith(".//")) then
 			msgData.filter = "looc"
-			msgData.radius = config.Get("talk_radius") or 356; -- todo
+			msgData.radius = config.Get("talk_radius") or 356 -- todo
 
 			while (text:StartWith(".// ")) do
 				text = ".//"..text:utf8sub(5, text:utf8len())
@@ -158,7 +158,7 @@ do
 
 		if (text:StartWith("[[")) then
 			msgData.filter = "looc"
-			msgData.radius = config.Get("talk_radius") or 356; -- todo
+			msgData.radius = config.Get("talk_radius") or 356 -- todo
 
 			while (text:StartWith("[[ ")) do
 				text = "[["..text:utf8sub(4, text:utf8len())

@@ -129,7 +129,10 @@ function PANEL:Rebuild()
 	self.scrollpanel:SetPos(30, 50)
 
 	for k, v in ipairs(self.Models) do
-		if (i >= 8) then offset = offset + 68; i = 0; end
+		if (i >= 8) then
+			offset = offset + 68
+			i = 0
+		end
 
 		self.buttons[i] = vgui.Create("SpawnIcon", self.scrollpanel)
 		self.buttons[i]:SetSize(64, 64)

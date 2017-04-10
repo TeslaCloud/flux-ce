@@ -24,7 +24,7 @@ function PANEL:SizeToContents()
 
 		self.fontSize = h
 
-		if (bX < w) then bX = w; end
+		if (bX < w) then bX = w end
 
 		bY = bY + h + 4
 	end

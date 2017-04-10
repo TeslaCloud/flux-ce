@@ -1,13 +1,13 @@
-Rework license version 1 (1321)
+Flux license version 1 (1321)
 
 Copyright © 2016-2017 TeslaCloud Studios
-Rework (the framework) is a project of TeslaCloud Studios LLC (us) and is a subject to the following license (terms):
+Flux (the framework) is a project of TeslaCloud Studios LLC (us) and is a subject to the following license (terms):
 
 1. General Terms
-You are allowed to use and modify the framework without any limitations. You may also share your custom modifications for free or paid, as long as they are your original work and do not infringe upon any copyrights and/or any other terms listed in this license. You may not copy, reproduce or port the framework's code anywhere outside of the project, this includes, but is not limited to: copying portions of the software or the entire code of the software and including it with other software and/or integrating this in other software's code, even with proper credit given. You may not port any official plugins for, and/or parts of, the software (made by TeslaCloud Studios or it's affiliates) to any other software, including addons, gamemodes, scripts and plugins (other than the plugins written for Rework). You may not remove or modify any copyright notices placed within the code of the software under any circumstances.
+You are allowed to use and modify the framework without any limitations. You may also share your custom modifications for free or paid, as long as they are your original work and do not infringe upon any copyrights and/or any other terms listed in this license. You may not copy, reproduce or port the framework's code anywhere outside of the project, this includes, but is not limited to: copying portions of the software or the entire code of the software and including it with other software and/or integrating this in other software's code, even with proper credit given. You may not port any official plugins for, and/or parts of, the software (made by TeslaCloud Studios or it's affiliates) to any other software, including addons, gamemodes, scripts and plugins (other than the plugins written for Flux). You may not remove or modify any copyright notices placed within the code of the software under any circumstances.
 
 2. Sharing
-You may share and sell your original work made for Rework as long as it complies with the rest of the terms of this license and does not infringe upon any other copyrights. You may not sell the framework under any circumstances, even if you modified it. You are free to share your modifications to the framework for free.
+You may share and sell your original work made for Flux as long as it complies with the rest of the terms of this license and does not infringe upon any other copyrights. You may not sell the framework under any circumstances, even if you modified it. You are free to share your modifications to the framework for free.
 
 3. What counts as copying/reproduction/porting
 Copying is when the code is being copied from one place to another, usually retaining all the variable and function names, as well as the logic of the function's code.
@@ -16,13 +16,13 @@ Porting is when the code is being copied and then transformed into another forma
 
 Simple version:
 You may:
-- Use and modify Rework freely.
+- Use and modify Flux freely.
 - Share or sell your modifications (including framework edits, but those are limited to sharing only).
-- Write plugins for Rework and share or sell them.
+- Write plugins for Flux and share or sell them.
 
 You may not:
-- Copy, reproduce or port Rework's code into any other framework.
+- Copy, reproduce or port Flux's code into any other framework.
 -- This includes Clockwork, specifically.
-- Remove copyright notices from Rework's code.
-- Modify copyright notices within Rework's code.
-- Sell Rework.
+- Remove copyright notices from Flux's code.
+- Modify copyright notices within Flux's code.
+- Sell Flux.

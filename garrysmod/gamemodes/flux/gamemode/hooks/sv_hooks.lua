@@ -4,6 +4,22 @@
 	the framework is publicly released.
 --]]
 
+function GM:DoPlayerDeath(player, attacker, damageInfo) end
+
+function GM:Initialize()
+	local mysql_host = config.Get("mysql_host")
+	local mysql_username = config.Get("mysql_username")
+	local mysql_password = config.Get("mysql_password")
+	local mysql_database = config.Get("mysql_database")
+	local mysql_port = config.Get("mysql_port")
+
+	if (mysql_host == "sqlite" or mysql_host == "example.com" or mysql_host == "example" or mysql_host == "") then
+		fl.db.Module = "sqlite"
+	end
+
+	fl.db:Connect(mysql_host, mysql_username, mysql_password, mysql_database, mysql_port)
+end
+
 function GM:InitPostEntity()
 	item.Load()
 
@@ -21,8 +37,7 @@ function GM:PlayerInitialSpawn(player)
 	player_manager.RunClass(player, "Spawn")
 
 	player:SetUserGroup("user")
-
-	fl.player:Restore(player)
+	player:RestorePlayer()
 
 	if (player:IsBot()) then
 		player:SetInitialized(true)
@@ -128,8 +143,6 @@ function GM:PlayerDeath(player, inflictor, attacker)
 
 	player:SetNetVar("RespawnTime", CurTime() + config.Get("flspawn_delay"))
 end
-
-function GM:DoPlayerDeath(player, attacker, damageInfo) end
 
 function GM:PlayerDeathThink(player)
 	local respawnTime = player:GetNetVar("RespawnTime", 0)
@@ -503,18 +516,28 @@ end
 do
 	local thinkDelay = 1 * 0.125
 	local secondDelay = 1
+	local nextThink = 0
+	local nextSecond = 0
 
-	function GM:PlayerPostThink(player)
+	function GM:Tick()
 		local curTime = CurTime()
 
-		if ((player.flNextThink or 0) <= curTime) then
-			hook.Call("PlayerThink", self, player, curTime)
-			player.flNextThink = curTime + thinkDelay
-		end
+		if (curTime >= nextThink) then
+			local oneSecondTick = (curTime >= nextSecond)
 
-		if ((player.flNextSecond or 0) <= curTime) then
-			hook.Call("PlayerOneSecond", self, player, curTime)
-			player.flNextSecond = curTime + secondDelay
+			for k, v in ipairs(player.GetAll()) do
+				hook.Call("PlayerThink", self, v, curTime)
+
+				if (oneSecondTick) then
+					hook.Call("PlayerOneSecond", self, v, curTime)
+				end
+			end
+
+			nextThink = curTime + thinkDelay
+
+			if (oneSecondTick) then
+				nextSecond = curTime + 1
+			end
 		end
 	end
 end

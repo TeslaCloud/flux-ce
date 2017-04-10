@@ -32,7 +32,7 @@ do
 
 	if (SERVER) then
 		function playerMeta:AddItem(itemTable)
-			if (!itemTable) then return -1; end
+			if (!itemTable) then return -1 end
 
 			local playerInv = self:GetInventory()
 			local slots = self:GetCharacterData("invSlots", 8)

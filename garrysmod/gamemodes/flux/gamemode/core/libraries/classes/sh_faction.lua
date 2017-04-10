@@ -66,7 +66,7 @@ end
 function CFaction:AddRank(uniqueID, nameFilter)
 	if (!uniqueID) then return end
 
-	if (!nameFilter) then nameFilter = uniqueID; end
+	if (!nameFilter) then nameFilter = uniqueID end
 
 	table.insert(self.Ranks, {
 		uniqueID = uniqueID,
@@ -137,4 +137,4 @@ function CFaction:__tostring()
 	return "Faction ["..self.uniqueID.."]["..self.Name.."]"
 end
 
-Faction = CFaction;
+Faction = CFaction
