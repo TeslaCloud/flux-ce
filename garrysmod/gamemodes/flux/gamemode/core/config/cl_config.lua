@@ -9,4 +9,4 @@ config.AddToMenu("jump_power", "Jump Power", "How high does the player jump by d
 config.AddToMenu("walk_speed", "Walk Speed", "How fast does the player walk?", "number")
 config.AddToMenu("run_speed", "Run Speed", "How fast does the player run (while holding SHIFT by default)?", "number")
 config.AddToMenu("crouched_speed", "Crouchwalk Speed", "How fast does the player walk while crouched (while holding CTRL by default)?", "number")
-config.AddToMenu("flspawn_delay", "Respawn Time", "How long does it take for a player to respawn after their death?", "number")
+config.AddToMenu("respawn_delay", "Respawn Time", "How long does it take for a player to respawn after their death?", "number")

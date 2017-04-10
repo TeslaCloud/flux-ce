@@ -546,7 +546,7 @@ function chatbox.ParseText(messageData)
 
 			http.Fetch("http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=76415A95E2F81DDA1D7CD2378D16C11D&steamids="..messageData.sender:SteamID64(), function(body)
 				local response = util.JSONToTable(body)
-				local avatarURL = response["flsponse"]["players"][1].avatar
+				local avatarURL = response["response"]["players"][1].avatar
 
 				http.Fetch(avatarURL, function(avatarImage)
 					file.Write("flavatars/"..messageData.sender:SteamID64()..".jpg", avatarImage)

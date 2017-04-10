@@ -22,11 +22,6 @@ GM.NameOverride	= false -- Set to any string to override schema's browser name. 
 
 fl.Devmode		= true -- If set to true will print some developer info. Moderate console spam.
 
--- Table aliases.
-Flux = fl
-flux = fl
-FL = fl
-
 -- Fix for the name conflicts.
 _player, _team, _file, _table, _data, _sound = player, team, file, table, data, sound
 
@@ -46,7 +41,7 @@ do
 		if (SchemaConVar) then
 			fl.schema = fl.schema or SchemaConVar:GetString()
 		else
-			fl.schema = fl.schema or "flborn"
+			fl.schema = fl.schema or "reborn"
 		end
 	end
 

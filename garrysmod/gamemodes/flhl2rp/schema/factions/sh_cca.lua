@@ -11,7 +11,7 @@ FACTION.Color = Color(225, 185, 135)
 FACTION.Material = "flux/hl2rp/factions/cca.png"
 FACTION.HasName = false
 FACTION.Whitelisted = true
-FACTION.DefaultClass = "flcruit"
+FACTION.DefaultClass = "recruit"
 FACTION.NameTemplate = "CCA.{rank}-{data:Squad}.{callback:GenerateID}"
 FACTION:SetData("Squad", "UNION")
 FACTION.Models.universal = {
@@ -29,7 +29,7 @@ FACTION:AddRank("EpU")
 FACTION:AddRank("CmD")
 FACTION:AddRank("SeC")
 
-FACTION:AddClass("flcruit", "Metropolice Recruit", "Metropolice Unit that is yet to pass their basic training.", FACTION.Color, function(player)
+FACTION:AddClass("recruit", "Metropolice Recruit", "Metropolice Unit that is yet to pass their basic training.", FACTION.Color, function(player)
 	return true
 end)
 

@@ -156,10 +156,10 @@ function GM:HUDPaint()
 
 			draw.RoundedBox(0, 0, 0, scrW, scrH, Color(0, 0, 0, self.respawnAlpha))
 
-			local barValue = 100 - 100 * ((fl.client:GetNetVar("RespawnTime", 0) - curTime) / config.Get("flspawn_delay"))
+			local barValue = 100 - 100 * ((fl.client:GetNetVar("RespawnTime", 0) - curTime) / config.Get("respawn_delay"))
 
-			fl.bars:SetValue("flspawn", barValue)
-			fl.bars:Draw("flspawn")
+			fl.bars:SetValue("respawn", barValue)
+			fl.bars:Draw("respawn")
 		else
 			self.respawnAlpha = 0
 

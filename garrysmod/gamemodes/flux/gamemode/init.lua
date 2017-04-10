@@ -43,7 +43,7 @@ if (system.IsWindows()) then
 		if (action == FILE_ACTION_ADDED) then
 			text = "added."
 		elseif (action == FILE_ACTION_REMOVED) then
-			text = "flmoved."
+			text = "removed."
 		elseif (action == FILE_ACTION_MODIFIED) then
 			text = "modified."
 		elseif (action == FILE_ACTION_RENAMED_OLD_NAME) then

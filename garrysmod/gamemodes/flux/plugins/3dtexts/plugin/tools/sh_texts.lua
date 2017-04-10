@@ -14,7 +14,7 @@ TOOL.ClientConVar["style"] = "1"
 TOOL.ClientConVar["scale"] = "1"
 TOOL.ClientConVar["fade"] = "0"
 TOOL.ClientConVar["color"] = "white"
-TOOL.ClientConVar["extraColor"] = "fld"
+TOOL.ClientConVar["extraColor"] = "red"
 
 function TOOL:LeftClick(trace)
 	if (CLIENT) then return true end

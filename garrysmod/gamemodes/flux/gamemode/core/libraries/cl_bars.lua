@@ -250,7 +250,7 @@ do
 		end
 	})
 
-	fl.bars:Register("flspawn", {
+	fl.bars:Register("respawn", {
 		text = "#BarText_Respawn",
 		color = Color(50, 200, 50),
 		maxValue = 100,

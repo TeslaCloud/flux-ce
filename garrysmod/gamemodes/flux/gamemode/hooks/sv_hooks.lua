@@ -71,7 +71,7 @@ function GM:PlayerSpawn(player)
 	player:UnSpectate()
 	player:GodDisable()
 
-	player:SetCrouchedWalkSpeed(config.Get("crouched_speed") / 100)
+	player:SetCrouchedWalkSpeed(config.Get("crouched_speed") / config.Get("walk_speed"))
 	player:SetWalkSpeed(config.Get("walk_speed"))
 	player:SetJumpPower(config.Get("jump_power"))
 	player:SetRunSpeed(config.Get("run_speed"))
@@ -141,7 +141,7 @@ end
 function GM:PlayerDeath(player, inflictor, attacker)
 	player:SaveCharacter()
 
-	player:SetNetVar("RespawnTime", CurTime() + config.Get("flspawn_delay"))
+	player:SetNetVar("RespawnTime", CurTime() + config.Get("respawn_delay"))
 end
 
 function GM:PlayerDeathThink(player)

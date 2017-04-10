@@ -84,7 +84,7 @@ netstream.Hook("PlayerCreatedCharacter", function(success, status)
 			local panel = vgui.Create("flNotification", fl.IntroPanel)
 			panel:SetText(text)
 			panel:SetLifetime(6)
-			panel:SetTextColor(Color("fld"))
+			panel:SetTextColor(Color("red"))
 			panel:SetBackgroundColor(Color(50, 50, 50, 220))
 
 			local w, h = panel:GetSize()
