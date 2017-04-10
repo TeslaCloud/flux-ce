@@ -31,103 +31,100 @@ local MODULE_NOT_EXIST = "[Flux:Database] The %s module does not exist!\n"
 	Begin Query Class.
 --]]
 
-local QUERY_CLASS = {}
-QUERY_CLASS.__index = QUERY_CLASS
+class "CDatabaseQuery"
 
-function QUERY_CLASS:New(tableName, queryType)
-	local newObject = setmetatable({}, QUERY_CLASS)
-		newObject.queryType = queryType
-		newObject.tableName = tableName
-		newObject.selectList = {}
-		newObject.insertList = {}
-		newObject.updateList = {}
-		newObject.createList = {}
-		newObject.whereList = {}
-		newObject.orderByList = {}
-	return newObject
+function CDatabaseQuery:CDatabaseQuery(tableName, queryType)
+	self.queryType = queryType
+	self.tableName = tableName
+	self.selectList = {}
+	self.insertList = {}
+	self.updateList = {}
+	self.createList = {}
+	self.whereList = {}
+	self.orderByList = {}
 end
 
-function QUERY_CLASS:Escape(text)
+function CDatabaseQuery:Escape(text)
 	return fl.db:Escape(tostring(text))
 end
 
-function QUERY_CLASS:ForTable(tableName)
+function CDatabaseQuery:ForTable(tableName)
 	self.tableName = tableName
 end
 
-function QUERY_CLASS:Where(key, value)
+function CDatabaseQuery:Where(key, value)
 	self:WhereEqual(key, value)
 end
 
-function QUERY_CLASS:WhereEqual(key, value)
+function CDatabaseQuery:WhereEqual(key, value)
 	self.whereList[#self.whereList + 1] = "`"..key.."` = \""..self:Escape(value).."\""
 end
 
-function QUERY_CLASS:WhereNotEqual(key, value)
+function CDatabaseQuery:WhereNotEqual(key, value)
 	self.whereList[#self.whereList + 1] = "`"..key.."` != \""..self:Escape(value).."\""
 end
 
-function QUERY_CLASS:WhereLike(key, value)
+function CDatabaseQuery:WhereLike(key, value)
 	self.whereList[#self.whereList + 1] = "`"..key.."` LIKE \""..self:Escape(value).."\""
 end
 
-function QUERY_CLASS:WhereNotLike(key, value)
+function CDatabaseQuery:WhereNotLike(key, value)
 	self.whereList[#self.whereList + 1] = "`"..key.."` NOT LIKE \""..self:Escape(value).."\""
 end
 
-function QUERY_CLASS:WhereGT(key, value)
+function CDatabaseQuery:WhereGT(key, value)
 	self.whereList[#self.whereList + 1] = "`"..key.."` > \""..self:Escape(value).."\""
 end
 
-function QUERY_CLASS:WhereLT(key, value)
+function CDatabaseQuery:WhereLT(key, value)
 	self.whereList[#self.whereList + 1] = "`"..key.."` < \""..self:Escape(value).."\""
 end
 
-function QUERY_CLASS:WhereGTE(key, value)
+function CDatabaseQuery:WhereGTE(key, value)
 	self.whereList[#self.whereList + 1] = "`"..key.."` >= \""..self:Escape(value).."\""
 end
 
-function QUERY_CLASS:WhereLTE(key, value)
+function CDatabaseQuery:WhereLTE(key, value)
 	self.whereList[#self.whereList + 1] = "`"..key.."` <= \""..self:Escape(value).."\""
 end
 
-function QUERY_CLASS:OrderByDesc(key)
+function CDatabaseQuery:OrderByDesc(key)
 	self.orderByList[#self.orderByList + 1] = "`"..key.."` DESC"
 end
 
-function QUERY_CLASS:OrderByAsc(key)
+function CDatabaseQuery:OrderByAsc(key)
 	self.orderByList[#self.orderByList + 1] = "`"..key.."` ASC"
 end
 
-function QUERY_CLASS:Callback(queryCallback)
+function CDatabaseQuery:Callback(queryCallback)
 	self.callback = queryCallback
 end
 
-function QUERY_CLASS:Select(fieldName)
+function CDatabaseQuery:Select(fieldName)
 	self.selectList[#self.selectList + 1] = "`"..fieldName.."`"
 end
 
-function QUERY_CLASS:Insert(key, value)
+function CDatabaseQuery:Insert(key, value)
 	self.insertList[#self.insertList + 1] = {"`"..key.."`", "\""..self:Escape(value).."\""}
 end
 
-function QUERY_CLASS:Update(key, value)
+function CDatabaseQuery:Update(key, value)
 	self.updateList[#self.updateList + 1] = {"`"..key.."`", "\""..self:Escape(value).."\""}
 end
 
-function QUERY_CLASS:Create(key, value)
+function CDatabaseQuery:Create(key, value)
 	self.createList[#self.createList + 1] = {"`"..key.."`", value}
 end
 
-function QUERY_CLASS:PrimaryKey(key)
+function CDatabaseQuery:PrimaryKey(key)
 	self.primaryKey = "`"..key.."`"
 end
 
-function QUERY_CLASS:Limit(value)
+function CDatabaseQuery:Limit(value)
 	self.limit = value
 end
 
-function QUERY_CLASS:Offset(value)
+function CDatabaseQuery:Offset(value)
 	self.offset = value
 end
 
@@ -312,7 +309,7 @@ local function BuildCreateQuery(queryObj)
 	return table.concat(queryString)
 end
 
-function QUERY_CLASS:Execute(bQueueQuery)
+function CDatabaseQuery:Execute(bQueueQuery)
 	local queryString = nil
 	local queryType = string.lower(self.queryType)
 
@@ -346,31 +343,31 @@ end
 --]]
 
 function fl.db:Select(tableName)
-	return QUERY_CLASS:New(tableName, "SELECT")
+	return CDatabaseQuery(tableName, "SELECT")
 end
 
 function fl.db:Insert(tableName)
-	return QUERY_CLASS:New(tableName, "INSERT")
+	return CDatabaseQuery(tableName, "INSERT")
 end
 
 function fl.db:Update(tableName)
-	return QUERY_CLASS:New(tableName, "UPDATE")
+	return CDatabaseQuery(tableName, "UPDATE")
 end
 
 function fl.db:Delete(tableName)
-	return QUERY_CLASS:New(tableName, "DELETE")
+	return CDatabaseQuery(tableName, "DELETE")
 end
 
 function fl.db:Drop(tableName)
-	return QUERY_CLASS:New(tableName, "DROP")
+	return CDatabaseQuery(tableName, "DROP")
 end
 
 function fl.db:Truncate(tableName)
-	return QUERY_CLASS:New(tableName, "TRUNCATE")
+	return CDatabaseQuery(tableName, "TRUNCATE")
 end
 
 function fl.db:Create(tableName)
-	return QUERY_CLASS:New(tableName, "CREATE")
+	return CDatabaseQuery(tableName, "CREATE")
 end
 
 -- A function to connect to the MySQL database.

@@ -4,7 +4,7 @@
 	the framework is publicly released.
 --]]
 
-Class "CCommand"
+class "CCommand"
 
 CCommand.uniqueID = "undefined"
 CCommand.name = "Unknown"

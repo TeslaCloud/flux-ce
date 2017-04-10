@@ -4,7 +4,7 @@
 	the framework is publicly released.
 --]]
 
-Class "CTheme"
+class "CTheme"
 
 CTheme.colors = {}
 CTheme.sounds = {}

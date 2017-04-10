@@ -4,7 +4,7 @@
 	the framework is publicly released.
 --]]
 
-Class "CUserGroup"
+class "CUserGroup"
 
 CUserGroup.m_Name = "Undefined"
 CUserGroup.m_Description = "Undefined"

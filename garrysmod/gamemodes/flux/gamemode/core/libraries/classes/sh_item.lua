@@ -4,7 +4,7 @@
 	the framework is publicly released.
 --]]
 
-Class "CItem"
+class "CItem"
 
 function CItem:CItem(uniqueID, baseID)
 	self.uniqueID = uniqueID:MakeID()

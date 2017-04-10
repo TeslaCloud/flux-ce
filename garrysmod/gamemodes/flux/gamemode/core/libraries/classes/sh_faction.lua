@@ -4,7 +4,7 @@
 	the framework is publicly released.
 --]]
 
-Class "CFaction"
+class "CFaction"
 
 function CFaction:CFaction(id)
 	self.uniqueID = id:MakeID()

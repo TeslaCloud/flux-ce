@@ -11,7 +11,7 @@
 	extras added by Flux.
 --]]
 
-Class "flTool"
+class "flTool"
 
 function flTool:MakeGhostEntity(model, pos, angle)
 	util.PrecacheModel(model)

@@ -38,7 +38,7 @@ function plugin.ClearCache()
 	table.Empty(hooksCache)
 end
 
-Class "Plugin"
+class "Plugin"
 
 function Plugin:Plugin(name, data)
 	self.m_Name = name or data.name or "Unknown Plugin"
