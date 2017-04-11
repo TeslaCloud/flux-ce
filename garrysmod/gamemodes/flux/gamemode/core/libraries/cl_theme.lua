@@ -147,6 +147,18 @@ function theme.RemoveTheme(id)
 	end
 end
 
+function theme.SetDermaSkin()
+	local skinTable = derma.GetNamedSkin("Flux")
+
+	if (theme.activeTheme and skinTable) then
+		for k, v in pairs(theme.activeTheme.skin) do
+			skinTable[k] = v
+		end
+	end
+
+	derma.RefreshSkins()
+end
+
 function theme.LoadTheme(themeID, bIsReloading)
 	local themeTable = theme.FindTheme(themeID)
 
@@ -169,9 +181,11 @@ function theme.LoadTheme(themeID, bIsReloading)
 
 		if (!bIsReloading and theme.activeTheme.OnLoaded) then
 			theme.activeTheme:OnLoaded()
-
-			hook.Run("OnThemeLoaded", theme.activeTheme)
 		end
+
+		theme.SetDermaSkin()
+
+		hook.Run("OnThemeLoaded", theme.activeTheme)
 	end
 end
 

@@ -12,24 +12,7 @@ COMMAND.category = "misc"
 COMMAND.aliases = {"staticpropremove", "staticremove"}
 
 function COMMAND:OnRun(player)
-	local trace = player:GetEyeTraceNoCursor()
-	local entity = trace.Entity
-
-	if (!IsValid(entity)) then
-		fl.player:Notify(player, "This is not a valid entity!")
-
-		return
-	end
-
-	if (!entity:GetPersistent()) then
-		fl.player:Notify(player, "This entity is not static!")
-
-		return
-	end
-
-	entity:SetPersistent(false)
-
-	fl.player:Notify(player, "You have removed this static entity!")
+	plugin.Call("PlayerMakeStatic", player, true)
 end
 
 COMMAND:Register()

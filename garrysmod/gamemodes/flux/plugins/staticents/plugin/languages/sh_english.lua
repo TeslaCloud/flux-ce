@@ -6,6 +6,6 @@
 
 local lang = fl.lang:GetTable("en")
 
-lang["#tool.texts.name"] = "Static Add/Remove"
-lang["#tool.texts.desc"] = "Add and remove static entities."
-lang["#tool.texts.0"] = "Left Click: Add, Right Click: Remove."
+lang["#tool.static.name"] = "Static Add/Remove"
+lang["#tool.static.desc"] = "Add and remove static entities."
+lang["#tool.static.0"] = "Left Click: Add, Right Click: Remove."

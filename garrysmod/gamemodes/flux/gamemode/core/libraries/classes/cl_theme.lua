@@ -12,6 +12,7 @@ CTheme.materials = {}
 CTheme.options = {}
 CTheme.panels = {}
 CTheme.fonts = {}
+CTheme.skin = {}
 CTheme.shouldReload = true
 
 --[[ Basic Skeleton --]]

@@ -65,6 +65,37 @@ function PANEL:OpenPanel(id)
 	end
 end
 
+function PANEL:SetFullscreen(bFullscreen)
+	local headerSize = theme.GetOption("Frame_HeaderSize")
+
+	if (bFullscreen) then
+		self.sidebar:MoveTo(-self.sidebar:GetWide(), headerSize, 0.3)
+		self:SetTitle("")
+
+		self.backBtn = vgui.Create("DButton", self)
+		self.backBtn:SetPos(0, 0)
+		self.backBtn:SetSize(100, headerSize)
+		self.backBtn:SetText("")
+
+		self.backBtn.Paint = function(btn, w, h)
+			local font = fl.fonts:GetSize(theme.GetFont("Text_Small"), 16)
+			local _, fontSize = util.GetFontSize(font)
+
+			fl.fa:Draw("fa-chevron-left", 6, 5, 14, Color(255, 255, 255))
+			draw.SimpleText("Go Back", font, 24, 3 * (16 / fontSize), Color(255, 255, 255))
+		end
+
+		self.backBtn.DoClick = function(btn)
+			self:SetFullscreen(false)
+		end
+	else
+		self.sidebar:MoveTo(0, headerSize, 0.3)
+		self:SetTitle("Admin")
+
+		self.backBtn:SafeRemove()
+	end
+end
+
 vgui.Register("flAdminPanel", PANEL, "flFrame")
 
 

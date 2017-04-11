@@ -76,6 +76,7 @@ function fl.command:ExtractArguments(text)
 	for i = 1, #text do
 		if (skip > 0) then
 			skip = skip - 1
+
 			continue
 		end
 
@@ -123,6 +124,7 @@ if (SERVER) then
 		end
 
 		local command = args[1]:utf8lower()
+
 		table.remove(args, 1)
 
 		local cmdTable = self:FindByID(command)

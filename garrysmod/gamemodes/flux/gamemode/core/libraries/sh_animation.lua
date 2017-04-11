@@ -134,7 +134,8 @@ do
 		["knife"] = "melee",
 		["duel"] = "pistol",
 		["camera"] = "smg",
-		["flvolver"] = "pistol"
+		["magic"] = "normal",
+		["revolver"] = "pistol"
 	}
 
 	local weaponHoldTypes = {
@@ -162,13 +163,16 @@ do
 		if (!IsValid(weapon)) then return "normal" end
 
 		local class = string.lower(weapon:GetClass())
+		local translatedHoldType = weaponHoldTypes[class]
 		local holdType = "normal"
 
-		if (weaponHoldTypes[class]) then
-			holdType = weaponHoldTypes[class]
+		if (translatedHoldType) then
+			holdType = translatedHoldType
 		elseif (weapon and weapon.HoldType) then
-			if (translateHoldTypes[weapon.HoldType]) then
-				holdType = translateHoldTypes[weapon.HoldType]
+			translatedHoldType = translateHoldTypes[weapon.HoldType]
+
+			if (translatedHoldType) then
+				holdType = translatedHoldType
 			else
 				holdType = weapon.HoldType
 			end

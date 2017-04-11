@@ -7,6 +7,7 @@
 -- Create the default theme that other themes will derive from.
 THEME.author = "TeslaCloud Studios"
 THEME.uniqueID = "factory"
+THEME.description = "Factory theme. This is a fail-safety theme that other themes use as a base."
 THEME.shouldReload = true
 
 function THEME:OnLoaded()
@@ -79,6 +80,10 @@ function THEME:OnLoaded()
 
 	self:AddPanel("CharCreation_Faction", function(id, parent, ...)
 		return vgui.Create("flCharCreationFaction", parent)
+	end)
+
+	self:AddPanel("Admin_PermissionsEditor", function(id, parent, ...)
+		return vgui.Create("flPermissionsEditor", parent)
 	end)
 end
 
@@ -216,4 +221,248 @@ function THEME:AdminPanelPaintOver(panel, width, height)
 
 		draw.SimpleText(versionString, smallestFont, width - w - 6, height + 1, textColor)
 	DisableClipping(false)
+end
+
+function THEME:PaintPermissionButton(permPanel, btn, w, h)
+	local color = Color(255, 255, 255)
+	local title = "#Perm_Error"
+	local permType = btn.permValue
+	local font = self:GetFont("Text_Small")
+
+	if (permType == PERM_NO) then
+		color = Color(120, 120, 120)
+		title = "#Perm_NotSet"
+	elseif (permType == PERM_ALLOW) then
+		color = Color(100, 220, 100)
+		title = "#Perm_Allow"
+	elseif (permType == PERM_NEVER) then
+		color = Color(220, 100, 100)
+		title = "#Perm_Never"
+	end
+
+	if (btn:IsHovered()) then
+		color = color:Lighten(30)
+	end
+
+	draw.RoundedBox(0, 0, 0, w, h, color)
+
+	local tW, tH = util.GetTextSize(title, font)
+
+	draw.SimpleText(title, font, w / 2 - tW / 2, 2, color:Darken(75))
+
+	local sqrSize = h / 2
+
+	draw.RoundedBox(0, sqrSize / 2, sqrSize / 2, sqrSize, sqrSize, Color(255, 255, 255))
+
+	if (btn.isSelected) then
+		draw.RoundedBox(0, sqrSize / 2 + 2, sqrSize / 2 + 2, sqrSize - 4, sqrSize - 4, Color(0, 0, 0))
+	end
+end
+
+THEME.skin.frameBorder = Color(255, 255, 255, 255)
+THEME.skin.frameTitle = Color(255, 255, 255, 255)
+
+THEME.skin.bgColorBright = Color(255, 255, 255, 255)
+THEME.skin.bgColorSleep = Color(70, 70, 70, 255)
+THEME.skin.bgColorDark = Color(50, 50, 50, 255)
+THEME.skin.bgColor = Color(40, 40, 40, 240)
+
+THEME.skin.controlColorHighlight = Color(70, 70, 70, 255)
+THEME.skin.controlColorActive = Color(175, 175, 175, 255)
+THEME.skin.controlColorBright = Color(100, 100, 100, 255)
+THEME.skin.controlColorDark = Color(30, 30, 30, 255)
+THEME.skin.controlColor = Color(60, 60, 60, 255)
+
+THEME.skin.colPropertySheet = Color(255, 255, 255, 255)
+THEME.skin.colTabTextInactive = Color(0, 0, 0, 255)
+THEME.skin.colTabInactive = Color(255, 255, 255, 255)
+THEME.skin.colTabShadow = Color(0, 0, 0, 170)
+THEME.skin.colTabText = Color(255, 255, 255, 255)
+THEME.skin.colTab = Color(0, 0, 0, 255)
+
+THEME.skin.fontCategoryHeader = "Exo8"
+THEME.skin.fontMenuOption = "Exo8"
+THEME.skin.fontFormLabel = "Exo8"
+THEME.skin.fontButton = "Exo8"
+THEME.skin.fontFrame = "Exo8"
+THEME.skin.fontTab = "Exo8"
+
+-- A function to draw a generic background.
+function THEME.skin:DrawGenericBackground(x, y, w, h, color)
+	surface.SetDrawColor(color)
+	surface.DrawRect(x, y, w, h)
+end
+
+-- Called when a frame is layed out.
+function THEME.skin:LayoutFrame(panel)
+	panel.lblTitle:SetFont(self.fontFrame)
+	panel.lblTitle:SetText(panel.lblTitle:GetText():upper())
+	panel.lblTitle:SetTextColor(Color(0, 0, 0, 255))
+	panel.lblTitle:SizeToContents()
+	panel.lblTitle:SetExpensiveShadow(nil)
+
+	panel.btnClose:SetDrawBackground(true)
+	panel.btnClose:SetPos(panel:GetWide() - 22, 2)
+	panel.btnClose:SetSize(18, 18)
+	panel.lblTitle:SetPos(8, 2)
+	panel.lblTitle:SetSize(panel:GetWide() - 25, 20)
+end
+
+-- Called when a form is schemed.
+function THEME.skin:SchemeForm(panel)
+	panel.Label:SetFont(self.fontFormLabel)
+	panel.Label:SetText(panel.Label:GetText():upper())
+	panel.Label:SetTextColor(Color(255, 255, 255, 255))
+	panel.Label:SetExpensiveShadow(1, Color(0, 0, 0, 200))
+end
+
+-- Called when a tab is painted.
+function THEME.skin:PaintTab(panel, w, h)
+	if (panel:GetPropertySheet():GetActiveTab() == panel) then
+		self:DrawGenericBackground(0, 0, w - 2, h - 8, self.colTab)
+	else
+		self:DrawGenericBackground(0, 0, w, h, Color(40, 40, 40))
+	end
+end
+
+-- Called when a list view is painted.
+function THEME.skin:PaintListView(panel, w, h)
+	if (panel.m_bBackground) then
+		surface.SetDrawColor(255, 255, 255, 255)
+		panel:DrawFilledRect()
+	end
+end
+
+-- Called when a list view line is painted.
+function THEME.skin:PaintListViewLine(panel)
+	local color = Color(50, 50, 50, 255)
+	local textColor = Color(255, 255, 255, 255)
+
+	if (panel:IsSelected()) then
+		color = Color(255, 255, 255, 255)
+		textColor = Color(0, 0, 0, 255)
+	elseif (panel.Hovered) then
+		color = Color(100, 100, 100, 255)
+	elseif (panel.m_bAlt) then
+		color = Color(75, 75, 75, 255)
+	end
+
+	for k, v in pairs(panel.Columns) do
+		v:SetTextColor(textColor)
+	end
+
+	surface.SetDrawColor(color.r, color.g, color.b, color.a)
+	surface.DrawRect(0, 0, panel:GetWide(), panel:GetTall())
+end
+
+-- Called when a list view label is schemed.
+function THEME.skin:SchemeListViewLabel(panel)
+	panel:SetTextInset(3)
+	panel:SetTextColor(Color(255, 255, 255, 255))
+end
+
+-- Called when a menu is painted.
+function THEME.skin:PaintMenu(panel, w, h)
+	surface.SetDrawColor(Color(15, 15, 15, 255))
+	panel:DrawFilledRect(0, 0, w, h)
+end
+
+-- Called when a menu is painted over.
+function THEME.skin:PaintOverMenu(panel) end
+
+-- Called when a menu option is schemed.
+function THEME.skin:SchemeMenuOption(panel)
+	panel:SetFGColor(255, 255, 255, 255)
+end
+
+-- Called when a menu option is painted.
+function THEME.skin:PaintMenuOption(panel, w, h)
+	local textColor = Color(255, 255, 255, 255)
+
+	if (panel.m_bBackground and panel.Hovered) then
+		local color = nil
+
+		if (panel.Depressed) then
+			color = Color(225, 225, 225, 255)
+		else
+			color = Color(255, 255, 255, 255)
+		end
+
+		surface.SetDrawColor(color.r, color.g, color.b, color.a)
+		surface.DrawRect(0, 0, w, h)
+
+		textColor = Color(0, 0, 0, 255)
+	end
+
+	panel:SetFGColor(textColor)
+end
+
+-- Called when a menu option is layed out.
+function THEME.skin:LayoutMenuOption(panel, w, h)
+	panel:SetFont(self.fontMenuOption)
+	panel:SizeToContents()
+	panel:SetWide(panel:GetWide() + 30)
+	panel:SetSize(math.max(panel:GetParent():GetWide(), panel:GetWide()), 18)
+
+	if (panel.SubMenuArrow) then
+		panel.SubMenuArrow:SetSize(panel:GetTall(), panel:GetTall())
+		panel.SubMenuArrow:CenterVertical()
+		panel.SubMenuArrow:AlignRight()
+	end
+end
+
+-- Called when a button is painted.
+function THEME.skin:PaintButton(panel, w, h)
+	local textColor = Color(255, 255, 255, 255)
+
+	if (panel.m_bBackground) then
+		local color = Color(40, 40, 40, 255)
+		local borderColor = Color(0, 0, 0, 255)
+
+		if (panel:GetDisabled()) then
+			color = self.controlColorDark
+		elseif (panel.Depressed) then
+			color = Color(255, 255, 255, 255)
+			textColor = Color(0, 0, 0, 255)
+		elseif (panel.Hovered) then
+			color = self.controlColorHighlight
+		end
+
+		self:DrawGenericBackground(0, 0, w, h, borderColor)
+		self:DrawGenericBackground(1, 1, w - 2, h - 2, color)
+	end
+
+	panel:SetFGColor(textColor)
+end
+
+-- Called when a scroll bar grip is painted.
+function THEME.skin:PaintScrollBarGrip(panel)
+	local w, h = panel:GetSize()
+	local color = Color(255, 255, 255, 255)
+
+	self:DrawGenericBackground(0, 0, w, h, color)
+	self:DrawGenericBackground(1, 1, w - 2, h - 2, Color(0, 0, 0, 255))
+end
+
+function THEME.skin:PaintFrame(panel, w, h)
+	local color = cw.option:GetColor("information")
+
+	surface.SetDrawColor(Color(10, 10, 10))
+	surface.DrawRect(0, 24, w, h)
+
+	surface.SetDrawColor(Color(40, 40, 40))
+	surface.DrawRect(1, 0, w - 2, h - 1)
+
+	surface.SetDrawColor(color:Darken(20))
+	surface.DrawRect(0, 0, w, 24)
+end
+
+function THEME.skin:PaintCollapsibleCategory(panel, w, h)
+	panel.Header:SetFont(theme.GetFont("Text_Smaller"))
+
+	self:DrawGenericBackground(0, 0, w, 21, Color(0, 0, 0))
+
+	if (h < 21) then return end
+
+	self:DrawGenericBackground(0, 0, w, 21, Color(20, 20, 20))
 end

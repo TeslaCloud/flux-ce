@@ -44,7 +44,7 @@ function Plugin:Plugin(name, data)
 	self.m_Name = name or data.name or "Unknown Plugin"
 	self.m_Author = data.author or "Unknown Author"
 	self.m_Folder = data.folder or name:gsub(" ", "_"):lower()
-	self.m_Description = data.description or "Undescribed plugin or schema."
+	self.m_Description = data.description or "An undescribed plugin or schema."
 	self.m_uniqueID = data.id or name:gsub(" ", "_"):lower() or "unknown"
 
 	table.Merge(self, data)

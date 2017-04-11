@@ -14,6 +14,18 @@ fl.admin.players = players
 
 local compilerCache = {}
 
+function fl.admin:GetPermissions()
+	return permissions
+end
+
+function fl.admin:GetGroups()
+	return groups
+end
+
+function fl.admin:GetPlayers()
+	return players
+end
+
 function fl.admin:CreateGroup(id, data)
 	if (!isstring(id)) then return end
 

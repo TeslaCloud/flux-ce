@@ -6,6 +6,6 @@
 
 local lang = fl.lang:GetTable("ru")
 
-lang["#tool.texts.name"] = "Static Add/Remove"
-lang["#tool.texts.desc"] = "Add and remove static entities."
-lang["#tool.texts.0"] = "Left Click: Add, Right Click: Remove."
+lang["#tool.static.name"] = "Добавление/Удаление Статик Энтити"
+lang["#tool.static.desc"] = "Добавляет и удаляет энтити, которые сохраняются между рестартами сервера."
+lang["#tool.static.0"] = "ЛКМ: Добавить, ПКМ: Удалить."

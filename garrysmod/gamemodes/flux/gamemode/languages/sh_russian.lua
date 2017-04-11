@@ -99,6 +99,12 @@ lang["#Settings_Fit_Fit"] = "Подогнать размер"
 lang["#TargetID_Information"] = "Нажмите 'E', чтобы посмотреть информацию."
 lang["#TargetID_Action"] = "Нажмите 'E' для выполнения действия."
 
+lang["#Perm_NotSet"] = "Не указано (нет)"
+lang["#Perm_Allow"] = "Разрешить"
+lang["#Perm_Never"] = "Никогда"
+lang["#Perm_AllowOverride"] = "Разрешить (Обход)"
+lang["#Perm_Error"] = "Ошибка"
+
 lang["#tool.area.name"] = "Создатель Зон"
 lang["#tool.area.desc"] = "Создавайте зоны в форме многоугольников на изи."
 lang["#tool.area.0"] = "ЛКМ: Добавить точку зоны, ПКМ: Создать зону."

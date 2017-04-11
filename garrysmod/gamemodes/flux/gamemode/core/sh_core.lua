@@ -127,11 +127,15 @@ function fl.core:Serialize(tTable)
 		local bSuccess, value = pcall(pon.encode, tTable)
 
 		if (!bSuccess) then
-			ErrorNoHalt("[Flux] Failed to serialize a table!\n")
-			ErrorNoHalt(value.."\n")
-			debug.Trace()
+			bSuccess, value = pcall(util.TableToJSON, tTable)
 
-			return ""
+			if (!bSuccess) then
+				ErrorNoHalt("[Flux] Failed to serialize a table!\n")
+				ErrorNoHalt(value.."\n")
+				debug.Trace()
+
+				return ""
+			end
 		end
 
 		return value
@@ -147,12 +151,15 @@ function fl.core:Deserialize(strData)
 		local bSuccess, value = pcall(pon.decode, strData)
 
 		if (!bSuccess) then
-			ErrorNoHalt("[Flux] Failed to deserialize a string!\n")
-			ErrorNoHalt(value.."\n")
+			bSuccess, value = pcall(util.JSONToTable, strData)
 
-			debug.Trace()
+			if (!bSuccess) then
+				ErrorNoHalt("[Flux] Failed to deserialize a string!\n")
+				ErrorNoHalt(value.."\n")
+				debug.Trace()
 
-			return {}
+				return {}
+			end
 		end
 
 		return value

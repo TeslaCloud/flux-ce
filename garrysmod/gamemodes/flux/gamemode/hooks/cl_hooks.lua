@@ -89,6 +89,11 @@ function GM:OneMinute()
 	end
 end
 
+-- Called when default GWEN skin is required.
+function GM:ForceDermaSkin()
+	return "Flux"
+end
+
 -- Called when the resolution has been changed and fonts need to be resized to fit the client's res.
 function GM:OnResolutionChanged(oldW, oldH, newW, newH)
 	font.CreateFonts()
@@ -487,7 +492,7 @@ function GM:AddAdminMenuItems(panel, sidebar)
 	sidebar:AddButton("Manage Admins")
 	sidebar:AddButton("Group Editor")
 	sidebar:AddButton("Item Editor")
-	sidebar:AddButton("Permissions")
+	panel:AddPanel("Admin_PermissionsEditor", "Permissions", "manage_permissions")
 end
 
 function GM:PlayerBindPress(player, bind, bPressed)

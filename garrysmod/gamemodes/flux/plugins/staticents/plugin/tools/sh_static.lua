@@ -16,23 +16,7 @@ function TOOL:LeftClick(trace)
 
 	if (!IsValid(player) or !player:HasPermission("static")) then return end
 
-	local entity = trace.Entity
-
-	if (!IsValid(entity)) then
-		fl.player:Notify(player, "This is not a valid entity!")
-
-		return true
-	end
-
-	if (entity:GetPersistent()) then
-		fl.player:Notify(player, "This entity is already static!")
-
-		return true
-	end
-
-	entity:SetPersistent(true)
-
-	fl.player:Notify(player, "You have added a static entity!")
+	plugin.Call("PlayerMakeStatic", player, true)
 
  	return true
 end
@@ -44,23 +28,7 @@ function TOOL:RightClick(trace)
 
 	if (!IsValid(player) or !player:HasPermission("unstatic")) then return end
 
-	local entity = trace.Entity
-
-	if (!IsValid(entity)) then
-		fl.player:Notify(player, "This is not a valid entity!")
-
-		return true
-	end
-
-	if (!entity:GetPersistent()) then
-		fl.player:Notify(player, "This entity is not static!")
-
-		return true
-	end
-
-	entity:SetPersistent(false)
-
-	fl.player:Notify(player, "You have removed this static entity!")
+	plugin.Call("PlayerMakeStatic", player, false)
 
 	return true
 end
