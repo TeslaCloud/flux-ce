@@ -29,7 +29,7 @@ if (SERVER) then
 				end
 			end
 
-			stored[key]._Value = value
+			stored[key].value = value
 			stored[key].hidden = bIsHidden or false
 
 			if (!stored[key].hidden) then
@@ -45,7 +45,7 @@ if (SERVER) then
 	function playerMeta:SendConfig()
 		for k, v in pairs(stored) do
 			if (!v.hidden) then
-				netstream.Start(self, "config_setvar", k, v._Value)
+				netstream.Start(self, "config_setvar", k, v.value)
 			end
 		end
 
@@ -61,7 +61,7 @@ else
 		menuItems[key] = menuItems[key] or {}
 		menuItems[key].name = name or key
 		menuItems[key].description = description or "This config has no description set."
-		menuItems[key].type = dataType -- valid types: table, number, string, bool
+		menuItems[key].type = dataType -- valid types: table, number (or num), string (or text), bool (or boolean)
 		menuItems[key].data = data or {}
 	end
 
@@ -79,7 +79,7 @@ else
 		print(key, value)
 
 		stored[key] = stored[key] or {}
-		stored[key]._Value = value
+		stored[key].value = value
 		cache[key] = value
 	end)
 end
@@ -90,16 +90,15 @@ function config.Get(key, default)
 	end
 
 	if (stored[key] != nil) then
-		if (stored[key]._Value != nil) then
-			cache[key] = stored[key]._Value
-			return stored[key]._Value
-		elseif (stored[key].DefaultValue != nil) then
-			cache[key] = stored[key]._DefaultValue
-			return stored[key]._DefaultValue
+		if (stored[key].value != nil) then
+			cache[key] = stored[key].value
+
+			return stored[key].value
 		end
 	end
 
 	cache[key] = default
+
 	return default
 end
 
@@ -109,8 +108,4 @@ end
 
 function config.GetCache()
 	return cache
-end
-
-function config.Register(key, default)
-	stored[key] = {_DefaultValue = default}
 end

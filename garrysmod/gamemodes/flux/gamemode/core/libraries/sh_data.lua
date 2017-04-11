@@ -11,7 +11,7 @@ if (SERVER) then
 		if (!isstring(key) or !istable(value)) then return end
 
 		if (!string.GetExtensionFromFilename(key)) then
-			key = key..".flux"
+			key = key..".pon"
 		end
 
 		fileio.Write("settings/flux/"..key, fl.core:Serialize(value))
@@ -21,7 +21,7 @@ if (SERVER) then
 		if (!isstring(key)) then return end
 
 		if (!string.GetExtensionFromFilename(key)) then
-			key = key..".flux"
+			key = key..".pon"
 		end
 
 		if (file.Exists("settings/flux/"..key, "GAME")) then
@@ -39,7 +39,7 @@ if (SERVER) then
 		if (!isstring(key)) then return end
 
 		if (!string.GetExtensionFromFilename(key)) then
-			key = key..".flux"
+			key = key..".pon"
 		end
 
 		if (file.Exists("settings/flux/"..key, "GAME")) then
@@ -88,26 +88,26 @@ else
 	end
 end
 
-function data.SaveSchemaData(key, value)
+function data.SaveSchema(key, value)
 	return data.Save("schemas/"..fl.core:GetSchemaFolder().."/"..key, value)
 end
 
-function data.LoadSchemaData(key, failSafe)
+function data.LoadSchema(key, failSafe)
 	return data.Load("schemas/"..fl.core:GetSchemaFolder().."/"..key, failSafe)
 end
 
-function data.DeleteSchemaData(key)
+function data.DeleteSchema(key)
 	return data.Delete("schemas/"..fl.core:GetSchemaFolder().."/"..key)
 end
 
-function data.SavePluginData(key, value)
-	return data.SaveSchemaData("plugins/"..key, value)
+function data.SavePlugin(key, value)
+	return data.SaveSchema("plugins/"..key, value)
 end
 
-function data.LoadPluginData(key, failSafe)
-	return data.LoadSchemaData("plugins/"..key, failSafe)
+function data.LoadPlugin(key, failSafe)
+	return data.LoadSchema("plugins/"..key, failSafe)
 end
 
-function data.DeletePluginData(key)
-	return data.DeleteSchemaData("plugins/"..key)
+function data.DeletePlugin(key)
+	return data.DeleteSchema("plugins/"..key)
 end

@@ -35,7 +35,7 @@ function plugin.GetCache()
 end
 
 function plugin.ClearCache()
-	table.Empty(hooksCache)
+	hooksCache = {}
 end
 
 class "Plugin"
@@ -85,6 +85,7 @@ end
 function Plugin:SetAlias(alias)
 	if (isstring(alias)) then
 		_G[alias] = self
+		self.alias = alias
 	end
 end
 
@@ -116,6 +117,10 @@ function plugin.RemoveHooks(id)
 end
 
 function plugin.Register(obj)
+	if (obj.alias) then
+		obj = _G[obj.alias]	
+	end
+
 	plugin.CacheFunctions(obj)
 
 	if (obj.ShouldRefresh == false) then

@@ -259,7 +259,7 @@ if (SERVER) then
 
 		local extras = {}
 
-		hook.Run("OnPermissionsCompiled", extras)
+		hook.Run("OnPermissionsCompiled", player, extras)
 
 		if (istable(extras)) then
 			for id, extra in pairs(extras) do

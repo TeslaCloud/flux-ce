@@ -131,6 +131,8 @@ do
 	local cache = surface.CircleInfoCache or {}
 	surface.CircleInfoCache = cache
 
+	local blurTexture = Material("pp/blurscreen")
+
 	function surface.DrawCircle(x, y, radius, passes)
 		if (!x or !y or !radius) then
 			error("surface.DrawCircle - Too few arguments to function call (3 expected)")
@@ -165,7 +167,9 @@ do
 	function surface.DrawOutlinedCircle(x, y, radius, thickness, passes, bStencil)
 		render.ClearStencil()
 		render.SetStencilEnable(true)
-			render.SetStencilReferenceValue(1)
+			render.SetStencilWriteMask(255)
+			render.SetStencilTestMask(255)
+			render.SetStencilReferenceValue(28)
 			render.SetStencilFailOperation(STENCIL_REPLACE)
 
 			render.SetStencilCompareFunction(STENCIL_EQUAL)
@@ -174,5 +178,47 @@ do
 				surface.DrawCircle(x, y, radius, passes)
 		render.SetStencilEnable(false)
 		render.ClearStencil()
+	end
+
+	-- Requires to be executed within a panel.
+	function draw.SimpleBlurBox(x, y, w, h, color, blurAmt)
+		blurAmt = blurAmt or 4
+
+		draw.RoundedBox(0, 0, 0, w, h, color)
+
+		surface.SetMaterial(blurTexture)
+		surface.SetDrawColor(255, 255, 255, 255)
+
+		for i = -0.2, 1, 0.2 do
+			blurTexture:SetFloat("$blur", i * blurAmt)
+			blurTexture:Recompute()
+
+			render.UpdateScreenEffectTexture()
+
+			render.SetScissorRect(x, y, x + w, y + h, true)
+				surface.DrawTexturedRect(-x, -y, ScrW(), ScrH())
+			render.SetScissorRect(0, 0, 0, 0, false)
+		end
+	end
+
+	-- More advanced way to do blur boxes.
+	function draw.BlurBox(px, py, x, y, w, h, color, blurAmt)
+		blurAmt = 4
+
+		draw.RoundedBox(0, x, y, w, h, color)
+
+		surface.SetMaterial(blurTexture)
+		surface.SetDrawColor(255, 255, 255, 255)
+
+		for i = -0.2, 1, 0.2 do
+			blurTexture:SetFloat("$blur", i * blurAmt)
+			blurTexture:Recompute()
+
+			render.UpdateScreenEffectTexture()
+
+			render.SetScissorRect(px, py, w, h, true)
+				surface.DrawTexturedRect(-px, -py, ScrW(), ScrH())
+			render.SetScissorRect(0, 0, 0, 0, false)
+		end
 	end
 end

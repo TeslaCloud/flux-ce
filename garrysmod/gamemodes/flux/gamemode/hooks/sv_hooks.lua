@@ -4,6 +4,8 @@
 	the framework is publicly released.
 --]]
 
+DEFINE_BASECLASS("gamemode_base")
+
 function GM:DoPlayerDeath(player, attacker, damageInfo) end
 
 function GM:Initialize()
@@ -120,6 +122,14 @@ function GM:PostPlayerSpawn(player)
 	player:SetNotSolid(false)
 
 	player_manager.RunClass(player, "Loadout")
+
+	if (player:HasPermission("toolgun")) then
+		player:Give("gmod_tool")
+	end
+
+	if (player:HasPermission("physgun")) then
+		player:Give("weapon_physgun")
+	end
 
 	hook.RunClient(player, "PostPlayerSpawn")
 end
@@ -386,6 +396,14 @@ function GM:PlayerGiveSWEP(player, weapon, swep)
 	end
 
 	return true
+end
+
+function GM:OnPhysgunFreeze(weapon, physObj, entity, player)
+	if (player:HasPermission("physgun_freeze")) then
+		BaseClass.OnPhysgunFreeze(self, weapon, physObj, entity, player)
+
+		return false
+	end
 end
 
 function GM:EntityTakeDamage(ent, damageInfo)

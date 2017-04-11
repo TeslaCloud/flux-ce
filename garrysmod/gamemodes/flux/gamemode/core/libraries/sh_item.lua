@@ -27,6 +27,7 @@ function item.Register(id, data)
 	if (!id and !data.Name) then
 		ErrorNoHalt("[Flux] Attempt to register an item without a valid ID!")
 		debug.Trace()
+
 		return
 	end
 
@@ -248,7 +249,7 @@ end
 
 if (SERVER) then
 	function item.Load()
-		local loaded = data.LoadSchemaData("items/instances", {})
+		local loaded = data.LoadSchema("items/instances", {})
 
 		if (loaded and table.Count(loaded) > 0) then
 			-- Returns functions to instances table after loading.
@@ -270,7 +271,7 @@ if (SERVER) then
 			item.instances = loaded
 		end
 
-		local loaded = data.LoadSchemaData("items/entities", {})
+		local loaded = data.LoadSchema("items/entities", {})
 
 		if (loaded and table.Count(loaded) > 0) then
 			for uniqueID, instanceTable in pairs(loaded) do
@@ -307,7 +308,7 @@ if (SERVER) then
 			end
 		end
 
-		data.SaveSchemaData("items/instances", toSave)
+		data.SaveSchema("items/instances", toSave)
 	end
 
 	function item.SaveEntities()
@@ -326,7 +327,7 @@ if (SERVER) then
 			end
 		end
 
-		data.SaveSchemaData("items/entities", entities)
+		data.SaveSchema("items/entities", entities)
 	end
 
 	function item.SaveAll()

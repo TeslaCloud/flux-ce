@@ -69,7 +69,11 @@ local textStyles = {
 	["#tool.texts.opt3"] = 3,
 	["#tool.texts.opt4"] = 4,
 	["#tool.texts.opt5"] = 5,
-	["#tool.texts.opt6"] = 6
+	["#tool.texts.opt6"] = 6,
+	["#tool.texts.opt7"] = 7,
+	["#tool.texts.opt8"] = 8,
+	["#tool.texts.opt9"] = 9,
+	["#tool.texts.opt91"] = 10
 }
 
 function TOOL.BuildCPanel(CPanel)

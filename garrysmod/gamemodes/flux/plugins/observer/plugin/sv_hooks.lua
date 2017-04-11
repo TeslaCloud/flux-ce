@@ -4,7 +4,11 @@
 	the framework is publicly released.
 --]]
 
-function PLUGIN:PlayerEnterNoclip(player)
+function flObserver:ShouldObserverReset(player)
+	return config.Get("observer_reset")
+end
+
+function flObserver:PlayerEnterNoclip(player)
 	if (!player:HasPermission("noclip")) then
 		fl.player:Notify(player, "You do not have permission to do this.")
 
@@ -29,7 +33,7 @@ function PLUGIN:PlayerEnterNoclip(player)
 	return false
 end
 
-function PLUGIN:PlayerExitNoclip(player)
+function flObserver:PlayerExitNoclip(player)
 	local data = player.observerData
 
 	if (data) then

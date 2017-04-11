@@ -21,11 +21,11 @@ util.Include("cl_hooks.lua")
 
 if (SERVER) then
 	function PLUGIN:Save()
-		--data.SavePluginData("areas", areas.GetByType("text") or {})
+		--data.SavePlugin("areas", areas.GetByType("text") or {})
 	end
 
 	function PLUGIN:Load()
-		local loaded = data.LoadPluginData("areas", {})
+		local loaded = data.LoadPlugin("areas", {})
 
 		for k, v in pairs(loaded) do
 			areas.Register(k, v)

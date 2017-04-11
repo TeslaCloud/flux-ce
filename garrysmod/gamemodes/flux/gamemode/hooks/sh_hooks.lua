@@ -198,6 +198,16 @@ function GM:PlayerNoClip(player, bState)
 	end
 end
 
+function GM:PhysgunPickup(player, entity)
+	if (player:HasPermission("physgun_pickup")) then
+		return true
+	end
+end
+
+concommand.Add("fl_save_pers", function()
+	if (SERVER) then hook.Run("PersistenceSave") end
+end)
+
 function GM:OnReloaded()
 	-- Reload the tools.
 	local toolGun = weapons.GetStored("gmod_tool")
@@ -211,6 +221,8 @@ function GM:OnReloaded()
 			self:PlayerModelChanged(v, v:GetModel(), v:GetModel())
 		end
 	end
+
+	print("Auto-Reloaded")
 end
 
 -- Utility timers to call hooks that should be executed every once in a while.

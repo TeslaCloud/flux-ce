@@ -34,6 +34,12 @@ function character.Create(player, data)
 		return CHAR_ERR_MODEL
 	end
 
+	local hooked, result = hook.Run("PlayerCreateCharacter", player, data)
+
+	if (hooked == false) then
+		return result or CHAR_ERR_UNKNOWN
+	end
+
 	local steamID = player:SteamID()
 
 	stored[steamID] = stored[steamID] or {}

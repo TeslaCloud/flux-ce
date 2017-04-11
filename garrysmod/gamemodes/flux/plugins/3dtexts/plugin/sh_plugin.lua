@@ -12,11 +12,11 @@ util.Include("cl_hooks.lua")
 
 if (SERVER) then
 	function fl3DText:Save()
-		data.SavePluginData("3dtexts", fl3DText.stored)
+		data.SavePlugin("3dtexts", fl3DText.stored)
 	end
 
 	function fl3DText:Load()
-		local loaded = data.LoadPluginData("3dtexts", {})
+		local loaded = data.LoadPlugin("3dtexts", {})
 
 		self.stored = loaded
 	end
@@ -36,13 +36,11 @@ if (SERVER) then
 	function fl3DText:AddText(data)
 		if (!data or !data.text or !data.pos or !data.angle or !data.style or !data.scale) then return end
 
-		self.count = (self.count or 0) + 1
-
-		self.stored[self.count] = data
+		table.insert(fl3DText.stored, data)
 
 		self:Save()
 
-		netstream.Start(nil, "fl3DText_Add", self.count, data)
+		netstream.Start(nil, "fl3DText_Add", data)
 	end
 
 	function fl3DText:Remove(player)
@@ -53,7 +51,8 @@ if (SERVER) then
 
 	netstream.Hook("fl3DText_Remove", function(player, idx)
 		if (player:HasPermission("textremove")) then
-			fl3DText.stored[idx] = nil
+			table.remove(fl3DText.stored, idx)
+
 			fl3DText:Save()
 
 			netstream.Start(nil, "fl3DText_Remove", idx)
@@ -66,12 +65,12 @@ else
 		fl3DText.stored = data or {}
 	end)
 
-	netstream.Hook("fl3DText_Add", function(idx, data)
-		fl3DText.stored[idx] = data
+	netstream.Hook("fl3DText_Add", function(data)
+		table.insert(fl3DText.stored, data)
 	end)
 
 	netstream.Hook("fl3DText_Remove", function(idx)
-		fl3DText.stored[idx] = nil
+		table.remove(fl3DText.stored, idx)
 	end)
 
 	netstream.Hook("fl3DText_Calculate", function()
@@ -89,12 +88,10 @@ else
 			local normal = v.normal
 			local ang = normal:Angle()
 			local w, h = util.GetTextSize(v.text, theme.GetFont("Text_3D2D"))
-
 			local startPos = pos - -ang:Right() * (w / 20) * v.scale
 			local endPos = pos + -ang:Right() * (w / 20) * v.scale
 
 			if (math.abs(math.abs(hitPos.z) - math.abs(pos.z)) < 4 * v.scale) then
-
 				if (util.VectorsIntersect(traceStart, hitPos, startPos, endPos)) then
 					netstream.Start("fl3DText_Remove", k)
 

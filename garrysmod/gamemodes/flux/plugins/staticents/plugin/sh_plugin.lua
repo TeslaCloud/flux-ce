@@ -4,7 +4,6 @@
 	the framework is publicly released.
 --]]
 
-PLUGIN:SetAlias("flThirdPerson")
+PLUGIN:SetAlias("flStaticEnts")
 
-util.Include("sv_plugin.lua")
-util.Include("cl_plugin.lua")
+util.Include("sv_hooks.lua")

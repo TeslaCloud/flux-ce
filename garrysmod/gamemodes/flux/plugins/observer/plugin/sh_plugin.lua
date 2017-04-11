@@ -4,5 +4,13 @@
 	the framework is publicly released.
 --]]
 
+PLUGIN:SetAlias("flObserver")
+
 util.Include("cl_hooks.lua")
 util.Include("sv_hooks.lua")
+
+if (SERVER) then
+	config.Set("observer_reset", true)
+else
+	config.AddToMenu("observer_reset", "Observer Reset", "Whether or not should player's position be restored when they leave observer mode?", "boolean")
+end

@@ -4,10 +4,10 @@
 	the framework is publicly released.
 --]]
 
-function PLUGIN:PlayerEnterNoclip(player)
+function flObserver:PlayerEnterNoclip(player)
 	return false
 end
 
-function PLUGIN:PlayerExitNoclip(player)
+function flObserver:PlayerExitNoclip(player)
 	return false
 end

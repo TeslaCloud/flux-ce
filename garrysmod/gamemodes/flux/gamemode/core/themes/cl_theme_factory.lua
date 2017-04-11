@@ -37,6 +37,10 @@ function THEME:OnLoaded()
 	self:SetColor("SchemaText", Color(255, 255, 255))
 	self:SetColor("MainMenu_Background", Color(0, 0, 0))
 
+	self:SetColor("ESP_Red", Color(255, 0, 0))
+	self:SetColor("ESP_Blue", Color(255, 0, 0))
+	self:SetColor("ESP_Grey", Color(100, 100, 100))
+
 	self:SetFont("MenuTitles", "fl_frame_title")
 	self:SetFont("Text_3D2D", "flMainFont", 128)
 	self:SetFont("Text_Largest", "flMainFont", font.Scale(90))

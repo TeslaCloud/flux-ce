@@ -23,13 +23,7 @@ function GM:InitPostEntity()
  		hook.Run("PlayerModelChanged", v, model, model)
  	end
 
- 	local toolGun = weapons.GetStored("gmod_tool")
-
-	for k, v in pairs(fl.tool:GetAll()) do
-		toolGun.Tool[v.Mode] = v
-	end
-
-	RunConsoleCommand("spawnmenu_reload")
+ 	hook.Run("SynchronizeTools")
 
  	plugin.Call("FLInitPostEntity")
 end
@@ -38,7 +32,11 @@ function GM:PlayerInitialized()
 	if (!fl.client:GetCharacter()) then
 		fl.IntroPanel = theme.CreatePanel("MainMenu")
 		fl.IntroPanel:MakePopup()
+
+		RunConsoleCommand("spawnmenu_reload")
 	end
+
+	hook.Run("PopulateToolMenu")
 end
 
 do
@@ -311,6 +309,16 @@ function GM:PopulateToolMenu()
 				TOOL.BuildCPanel
 			)
 		end
+	end
+
+	hook.Run("SynchronizeTools")
+end
+
+function GM:SynchronizeTools()
+ 	local toolGun = weapons.GetStored("gmod_tool")
+
+	for k, v in pairs(fl.tool:GetAll()) do
+		toolGun.Tool[v.Mode] = v
 	end
 end
 

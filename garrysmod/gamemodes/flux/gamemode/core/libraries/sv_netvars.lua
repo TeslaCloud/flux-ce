@@ -17,7 +17,7 @@ netvars.globals = globals
 local entityMeta = FindMetaTable("Entity")
 local playerMeta = FindMetaTable("Player")
 
--- A function to check if value's type cannot be serialized and print an error if it can't.
+-- A function to check if value's type cannot be serialized and print an error if it is so.
 local function IsBadType(key, val)
 	if (isfunction(val)) then
 		ErrorNoHalt("[Flux] Cannot store functions as NetVars! ("..key..")\n")
