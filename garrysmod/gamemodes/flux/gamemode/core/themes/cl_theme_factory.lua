@@ -240,15 +240,18 @@ function THEME:PaintPermissionButton(permPanel, btn, w, h)
 		title = "#Perm_Never"
 	end
 
+	local textColor = color:Darken(75)
+
 	if (btn:IsHovered()) then
 		color = color:Lighten(30)
 	end
 
-	draw.RoundedBox(0, 0, 0, w, h, color)
+	draw.RoundedBox(0, 0, 0, w, h, textColor)
+	draw.RoundedBox(0, 1, 1, w - 2, h - 1, color)
 
 	local tW, tH = util.GetTextSize(title, font)
 
-	draw.SimpleText(title, font, w / 2 - tW / 2, 2, color:Darken(75))
+	draw.SimpleText(title, font, w / 2 - tW / 2, 2, textColor)
 
 	local sqrSize = h / 2
 

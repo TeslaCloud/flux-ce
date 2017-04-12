@@ -8,7 +8,7 @@ if (!item) then
 	util.Include("sh_item.lua")
 end
 
-library.New("inventory", _G)
+library.New "inventory"
 
 do
 	local playerMeta = FindMetaTable("Player")

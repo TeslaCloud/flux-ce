@@ -4,7 +4,7 @@
 	the framework is publicly released.
 --]]
 
-library.New("character", _G)
+library.New "character"
 
 if (fl.SchemaDisabled("characters")) then
 	fl.core:DevPrint("Not loading characters system, disabled by schema.")

@@ -177,7 +177,6 @@ end
 
 do
 	local cache = nil
-	local addedCache = nil
 	local tempCache = nil
 	local renderColor = Color(50, 255, 50)
 	local renderColorRed = Color(255, 50, 50)
@@ -185,11 +184,14 @@ do
 	local render = render
 
 	function GM:PostDrawOpaqueRenderables(bDrawDepth, bDrawSkybox)
+		if (bDrawDepth or bDrawSkybox) then return end
+
 		local weapon = fl.client:GetActiveWeapon()
 
 		if (IsValid(weapon) and weapon:GetClass() == "gmod_tool" and weapon:GetMode() == "area") then
 			local tool = fl.client:GetTool()
 			local verts = (tool and tool.area and tool.area.verts)
+			local areasCount = areas.GetCount()
 
 			if (istable(verts) and (!tempCache or #tempCache != #verts)) then
 				tempCache = {}
@@ -207,11 +209,10 @@ do
 				end
 			end
 
-			if (!lastAmt) then lastAmt = areas.GetCount() end
+			if (!lastAmt) then lastAmt = areasCount end
 
-			if (!cache or lastAmt != areas.GetCount()) then
+			if (!cache or lastAmt != areasCount) then
 				cache = {}
-				addedCache = {}
 
 				for k, v in pairs(areas.GetAll()) do
 					for k2, v2 in ipairs(v.polys) do
@@ -226,8 +227,7 @@ do
 
 							local add = Vector(0, 0, v.maxH)
 
-							table.insert(cache, {p, n})
-							table.insert(addedCache, {p + add, n + add})
+							table.insert(cache, {p, n, p + add, n + add})
 						end
 					end
 				end
@@ -235,19 +235,17 @@ do
 
 			if (cache) then
 				for k, v in ipairs(cache) do
-					local p, n, ap, an = v[1], v[2], addedCache[k][1], addedCache[k][2]
+					local p, ap = v[1], v[3]
 
-					render.DrawLine(p, n, renderColor)
-					render.DrawLine(ap, an, renderColor)
+					render.DrawLine(p, v[2], renderColor)
+					render.DrawLine(ap, v[4], renderColor)
 					render.DrawLine(ap, p, renderColor)
 				end
 			end
 
 			if (tempCache) then
 				for k, v in ipairs(tempCache) do
-					local p, n = v[1], v[2]
-
-					render.DrawLine(p, n, renderColorRed)
+					render.DrawLine(v[1], v[2], renderColorRed)
 				end
 			end
 		end
@@ -501,6 +499,10 @@ function GM:PlayerBindPress(player, bind, bPressed)
 			return true
 		end
 	end
+end
+
+function GM:ContextMenuOpen()
+	return fl.client:HasPermission("context_menu")
 end
 
 function GM:SoftUndo(player)

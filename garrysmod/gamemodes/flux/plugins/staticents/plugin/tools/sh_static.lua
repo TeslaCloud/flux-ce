@@ -14,8 +14,6 @@ function TOOL:LeftClick(trace)
 
 	local player = self:GetOwner()
 
-	if (!IsValid(player) or !player:HasPermission("static")) then return end
-
 	plugin.Call("PlayerMakeStatic", player, true)
 
  	return true
@@ -25,8 +23,6 @@ function TOOL:RightClick(trace)
 	if (CLIENT) then return true end
 
 	local player = self:GetOwner()
-
-	if (!IsValid(player) or !player:HasPermission("unstatic")) then return end
 
 	plugin.Call("PlayerMakeStatic", player, false)
 

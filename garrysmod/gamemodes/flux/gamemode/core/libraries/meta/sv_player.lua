@@ -224,6 +224,7 @@ function playerMeta:SetInventory(newInv)
 	if (!istable(newInv)) then return end
 
 	self:SetCharacterVar("inventory", newInv)
+	self:SaveCharacter()
 end
 
 function playerMeta:SetCharacterData(key, value)

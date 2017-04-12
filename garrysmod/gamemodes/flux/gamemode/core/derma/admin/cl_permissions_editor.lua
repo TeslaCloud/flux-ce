@@ -25,8 +25,8 @@ function PANEL:Rebuild()
 	end
 
 	local width, height = self:GetWide(), self:GetTall()
-	local font = theme.GetFont("Text_NormalSmaller")
-	local _, fontSize = util.GetTextSize("ABC", font)
+	local font = font.GetSize(theme.GetFont("Text_NormalSmaller"), font.Scale(18))
+	local fontSize = draw.GetFontHeight(font)
 	local permission = self:GetPermission()
 	local quarter = width / 4
 

@@ -3,7 +3,7 @@
 	For internal use only.
 --]]
 
-library.New("chatbox", _G)
+library.New "chatbox"
 chatbox.prefixes = chatbox.prefixes or {} // Chatbox prefixes for serverside processing. Will be networked to clients for message styling.
 chatbox.filters = chatbox.filters or {}
 

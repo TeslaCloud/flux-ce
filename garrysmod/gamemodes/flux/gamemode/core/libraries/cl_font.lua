@@ -4,7 +4,7 @@
 	the framework is publicly released.
 --]]
 
-library.New("font", _G)
+library.New "font"
 
 -- We want the fonts to recreate on refresh.
 local stored = {}

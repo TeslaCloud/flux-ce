@@ -4,7 +4,7 @@
 	the framework is publicly released.
 --]]
 
-library.New("data", _G)
+library.New "data"
 
 if (SERVER) then
 	function data.Save(key, value)

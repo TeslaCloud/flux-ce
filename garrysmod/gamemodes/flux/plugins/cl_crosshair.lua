@@ -45,7 +45,7 @@ function PLUGIN:HUDPaint()
 		local radius = hook.Run("AdjustCrosshairRadius", trace, distance) or math.Clamp(4 / distance, 2, 6)
 
 		surface.SetDrawColor(drawColor)
-		surface.DrawOutlinedCircle(scrW / 2, scrH / 2, radius, 1, 32, false)
+		surface.DrawOutlinedCircle(scrW / 2, scrH / 2, radius, 1, 24, false)
 
 		if (distance < 70) then
 			if (prevEnt != trace.Entity) then

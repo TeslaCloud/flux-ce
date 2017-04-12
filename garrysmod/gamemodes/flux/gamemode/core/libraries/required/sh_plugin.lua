@@ -6,7 +6,7 @@
 
 if (plugin) then return end
 
-library.New("plugin", _G)
+library.New "plugin"
 
 local stored = {}
 local hooksCache = {}

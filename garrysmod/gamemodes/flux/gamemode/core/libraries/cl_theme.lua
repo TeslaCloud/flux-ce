@@ -4,7 +4,7 @@
 	the framework is publicly released.
 --]]
 
-library.New("theme", _G)
+library.New "theme"
 theme.activeTheme = theme.activeTheme or nil
 
 local stored = theme.stored or {}

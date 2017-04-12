@@ -4,7 +4,7 @@
 	the framework is publicly released.
 --]]
 
-library.New("areas", _G)
+library.New "areas"
 
 local stored = areas.stored or {}
 areas.stored = stored

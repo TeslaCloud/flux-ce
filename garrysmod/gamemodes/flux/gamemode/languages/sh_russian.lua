@@ -105,6 +105,8 @@ lang["#Perm_Never"] = "Никогда"
 lang["#Perm_AllowOverride"] = "Разрешить (Обход)"
 lang["#Perm_Error"] = "Ошибка"
 
+lang["#Err_No_Permission"] = "У вас недостаточно прав чтобы сделать это, #1."
+
 lang["#tool.area.name"] = "Создатель Зон"
 lang["#tool.area.desc"] = "Создавайте зоны в форме многоугольников на изи."
 lang["#tool.area.0"] = "ЛКМ: Добавить точку зоны, ПКМ: Создать зону."

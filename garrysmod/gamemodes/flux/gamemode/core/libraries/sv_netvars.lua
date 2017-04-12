@@ -6,7 +6,7 @@
 
 if (netvars) then return end
 
-library.New("netvars", _G)
+library.New "netvars"
 
 local stored = netvars.stored or {}
 netvars.stored = stored

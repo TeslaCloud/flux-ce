@@ -4,7 +4,7 @@
 	the framework is publicly released.
 --]]
 
-library.New("faction", _G)
+library.New "faction"
 
 local stored = faction.stored or {}
 faction.stored = stored

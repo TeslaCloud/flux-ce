@@ -69,17 +69,20 @@ setmetatable(library, {__call = function(tab, strName, tParent) return tab.Get(s
 -- A function to create a new class. Supports constructors and inheritance.
 function library.NewClass(strName, tParent, CExtends)
 	local class = {
+		-- Same as "new ClassName" in C++
 		__call = function(obj, ...)
 			local newObj = {}
 
+			-- Set new object's meta table and copy the data from original class to new object.
 			setmetatable(newObj, obj)
-			newObj.__index = obj
-			obj.__index = obj
+			table.SafeMerge(newObj, obj)
 
+			-- If there is a base class, call their constructor.
 			if (obj.BaseClass) then
 				pcall(obj.BaseClass, newObj, ...)
 			end
 
+			-- If there is a constructor - call it.
 			if (obj[strName]) then
 				local success, value = pcall(obj[strName], newObj, ...)
 
@@ -89,14 +92,17 @@ function library.NewClass(strName, tParent, CExtends)
 				end
 			end
 
+			-- Return our newly generated object.
 			return newObj
 		end
 	}
 
+	-- If this class is based off some other class - copy it's parent's data.
 	if (istable(CExtends)) then
-		class.__index = CExtends
+		table.SafeMerge(class, CExtends)
 	end
 
+	-- Create the actual class table.
 	local obj = library.New(strName, (tParent or _G))
 	obj.ClassName = strName
 	obj.BaseClass = CExtends or false

@@ -4,7 +4,7 @@
 	the framework is publicly released.
 --]]
 
-library.New("base64", _G)
+library.New "base64"
 
 do
 	local base64Chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/"

@@ -385,6 +385,8 @@ function player.Find(name, bCaseSensitive)
 			return v
 		elseif (!bCaseSensitive and v:Name(true):utf8lower():find(name:utf8lower())) then
 			return v
+		elseif (v:SteamName():utf8lower():find(name:utf8lower())) then
+			return v
 		elseif (v:SteamID() == name) then
 			return v
 		end
@@ -449,28 +451,41 @@ do
 	end
 end
 
-function util.GetTextSize(text, font)
-	font = font or "default"
+do
+	local cache = {}
 
-	surface.SetFont(font)
+	function util.GetTextSize(text, font)
+		font = font or "default"
 
-	return surface.GetTextSize(text)
+		if (cache[text] and cache[text][font]) then
+			local textSize = cache[text][font]
+
+			return textSize[1], textSize[2]
+		else
+			surface.SetFont(font)
+
+			cache[text] = {}
+			cache[text][font] = {surface.GetTextSize(text)}
+
+			return util.GetTextSize(text, font)
+		end
+	end
+end
+
+function util.GetTextWidth(text, font)
+	return select(1, util.GetTextSize(text, font))
+end
+
+function util.GetTextHeight(text, font)
+	return select(2, util.GetTextSize(text, font))
 end
 
 function util.GetFontSize(font)
 	return util.GetTextSize("abg", font)
 end
 
-function util.GetTextHeight(text, font)
-	local _, textH = util.GetTextSize(text, font)
-
-	return textH
-end
-
 function util.GetFontHeight(font)
-	local textW, textH = util.GetFontSize("abg", font)
-
-	return textH
+	return select(2, util.GetFontSize(font))
 end
 
 function util.GetPanelClass(panel)
@@ -629,6 +644,18 @@ function util.VectorIsInPoly(point, polyVertices)
 	else
 	    return true
 	end
+end
+
+function table.SafeMerge(to, from)
+	local oldIndex, oldIndex2 = to.__index, from.__index
+
+	to.__index = nil
+	from.__index = nil
+
+	table.Merge(to, from)
+
+	to.__index = oldIndex
+	from.__index = oldIndex2
 end
 
 local colorMeta = FindMetaTable("Color")

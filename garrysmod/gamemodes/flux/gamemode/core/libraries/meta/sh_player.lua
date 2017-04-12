@@ -24,10 +24,8 @@ end
 
 playerMeta.flName = playerMeta.flName or playerMeta.Name
 
-function playerMeta:Name(bForceSteamName)
-	if (bForceSteamName) then return self:flName() end
-
-	return self.nameOverride or self:GetNetVar("name", self:flName())
+function playerMeta:Name(bForceTrueName)
+	return (!bForceTrueName and self.nameOverride) or self:GetNetVar("name", self:flName())
 end
 
 function playerMeta:SteamName()

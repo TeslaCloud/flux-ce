@@ -4,7 +4,7 @@
 	the framework is publicly released.
 --]]
 
-library.New("item", _G)
+library.New "item"
 
 -- Item Templates storage.
 local stored = item.stored or {}

@@ -105,6 +105,8 @@ lang["#Perm_Never"] = "Never"
 lang["#Perm_AllowOverride"] = "Allow (Override)"
 lang["#Perm_Error"] = "Invalid Permission"
 
+lang["#Err_No_Permission"] = "You do not have permission to do this, #1."
+
 lang["#tool.area.name"] = "Area Tool"
 lang["#tool.area.desc"] = "Create polygonal areas easy mode."
 lang["#tool.area.0"] = "Left Click: Add Area Point, Right Click: Create Area."

@@ -46,7 +46,7 @@ do
 	plugin.AddHooks("ChatBoxHooks", flChatbox)
 end
 
-library.New("chatbox", _G)
+library.New "chatbox"
 chatbox.history 	= chatbox.history or {} -- Entire chat history. Last X meesages, configurable.
 chatbox.display		= chatbox.display or {} -- Pre-parsed lines that are currently being drawn.
 chatbox.filters 	= chatbox.filters or {} -- Table that stores filter data.
