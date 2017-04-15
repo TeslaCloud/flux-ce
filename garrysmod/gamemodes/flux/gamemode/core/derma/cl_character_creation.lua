@@ -1,4 +1,4 @@
---[[
+﻿--[[
 	Flux © 2016-2017 TeslaCloud Studios
 	Do not share or re-distribute before
 	the framework is publicly released.
@@ -10,7 +10,7 @@ PANEL.CharData = {}
 function PANEL:Init()
 	self:SetPos(200, 0)
 	self:SetSize(ScrW() - 200, ScrH())
-	self:SetTitle("CREATE A CHARACTER")
+	self:SetTitle("#CharCreate")
 
 	self.btnClose:SafeRemove()
 
@@ -52,7 +52,7 @@ function PANEL:OpenPanel(id)
 	end
 
 	self.finishButton = vgui.Create("flButton", self)
-	self.finishButton:SetTitle("FINISH")
+	self.finishButton:SetTitle("#CharCreate_Create")
 	self.finishButton:SetPos(self:GetWide() - 250 + theme.GetOption("FinishButtonOffsetX"), self:GetTall() - 120 + theme.GetOption("FinishButtonOffsetY"))
 	self.finishButton:SetDrawBackground(false)
 	self.finishButton:SetFont(theme.GetFont("Text_Large"))
@@ -68,6 +68,8 @@ function PANEL:OpenPanel(id)
 
 	self.finishButton:MoveToFront()
 end
+
+--[[These have translations issues and are currently not supported for translation.]]
 
 function PANEL:AddSidebarItems(sidebar, panel)
 	local button = panel:AddButton("General Settings", function(btn)
@@ -90,7 +92,7 @@ end
 
 function PANEL:Paint(w, h)
 	draw.RoundedBox(0, 0, 0, w, h, theme.GetColor("MainDark"):Darken(10))
-	draw.SimpleText("CREATE A CHARACTER", theme.GetFont("Text_Large"), 24, 42)
+	draw.SimpleText("Character Creation", theme.GetFont("Text_Large"), 24, 42)
 end
 
 vgui.Register("flCharacterCreation", PANEL, "flFrame")

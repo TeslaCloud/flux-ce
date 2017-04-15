@@ -1,4 +1,4 @@
---[[
+﻿--[[
 	Flux © 2016-2017 TeslaCloud Studios
 	Do not share or re-distribute before
 	the framework is publicly released.
@@ -23,7 +23,7 @@ vgui.Register("flCharCreationBase", PANEL, "flBasePanel")
 
 local PANEL = {}
 PANEL.uniqueID = "general"
-PANEL.text = "General Character Info"
+PANEL.text = "#CharCreate_GenText"
 
 function PANEL:Init()
 	local w, h = self:GetSize()
@@ -37,7 +37,7 @@ function PANEL:Init()
 
 	self.NameLabel = vgui.Create("DLabel", self)
 	self.NameLabel:SetPos(32, 68)
-	self.NameLabel:SetText("Name:")
+	self.NameLabel:SetText("#CharCreate_Name")
 	self.NameLabel:SetFont(theme.GetFont("Text_Small"))
 
 	self.NameEntry = vgui.Create("DTextEntry", self)
@@ -48,28 +48,28 @@ function PANEL:Init()
 
 	self.DescLabel = vgui.Create("DLabel", self)
 	self.DescLabel:SetPos(32, 96)
-	self.DescLabel:SetText("Description:")
+	self.DescLabel:SetText("#CharCreate_Desc")
 	self.DescLabel:SetFont(theme.GetFont("Text_Small"))
 	self.DescLabel:SizeToContents()
 
 	self.DescEntry = vgui.Create("DTextEntry", self)
 	self.DescEntry:SetPos(32, 98 + self.DescLabel:GetTall())
-	self.DescEntry:SetSize(300 + self.NameLabel:GetWide(), 400)
+	self.DescEntry:SetSize(1200 + self.NameLabel:GetWide(), 400)
 	self.DescEntry:SetFont(theme.GetFont("Text_Smaller"))
 	self.DescEntry:SetText("")
 	self.DescEntry:SetMultiline(true)
 
 	self.GenderLabel = vgui.Create("DLabel", self)
-	self.GenderLabel:SetPos(64 + self.DescEntry:GetWide(), 64 - self.NameLabel:GetTall())
-	self.GenderLabel:SetText("Gender:")
+	self.GenderLabel:SetPos(self.DescEntry:GetWide() - 128, 64 - self.NameLabel:GetTall())
+	self.GenderLabel:SetText("#CharCreate_Gender")
 	self.GenderLabel:SetFont(theme.GetFont("Text_Small"))
 
 	self.GenderChooser = vgui.Create("DComboBox", self)
-	self.GenderChooser:SetPos(64 + self.DescEntry:GetWide(), 66)
+	self.GenderChooser:SetPos(self.DescEntry:GetWide() - 128, 66)
 	self.GenderChooser:SetSize(100, 20)
-	self.GenderChooser:SetValue("select gender")
-	self.GenderChooser:AddChoice("Male")
-	self.GenderChooser:AddChoice("Female")
+	self.GenderChooser:SetValue("#CharCreate_Gender_S")
+	self.GenderChooser:AddChoice("#CharCreate_Gender_M")
+	self.GenderChooser:AddChoice("#CharCreate_Gender_F")
 
 	if (factionTable and !factionTable.HasName) then
 		self.NameLabel:SetVisible(false)
@@ -93,7 +93,7 @@ end
 function PANEL:OnOpen(parent)
 	self.NameEntry:SetText(parent.CharData.name or "")
 	self.DescEntry:SetText(parent.CharData.description or "")
-	self.GenderChooser:SetValue(parent.CharData.gender or "select gender")
+	self.GenderChooser:SetValue(parent.CharData.gender or "#CharCreate_Gender_S")
 end
 
 function PANEL:OnClose(parent)
@@ -108,7 +108,7 @@ vgui.Register("flCharCreationGeneral", PANEL, "flCharCreationBase")
 
 local PANEL = {}
 PANEL.uniqueID = "model"
-PANEL.text = "Select a model"
+PANEL.text = "#CharCreate_Model_S"
 PANEL.model = ""
 PANEL.models = {}
 PANEL.buttons = {}
@@ -168,8 +168,8 @@ function PANEL:Rebuild()
 end
 
 function PANEL:OnOpen(parent)
-	if (!parent.CharData.faction or parent.CharData.faction == "" or parent.CharData.gender == "select gender" or parent.CharData.gender == "") then
-		self.Label:SetText("You have to select a faction and a gender first!")
+	if (!parent.CharData.faction or parent.CharData.faction == "" or parent.CharData.gender == "#CharCreate_Gender_S" or parent.CharData.gender == "") then
+		self.Label:SetText("#CharCreate_GenFacWarning")
 		self.Label:SetTextColor(Color(220, 100, 100))
 		self.Label:SizeToContents()
 	else
@@ -204,7 +204,7 @@ vgui.Register("flCharCreationModel", PANEL, "flCharCreationBase")
 
 local PANEL = {}
 PANEL.uniqueID = "faction"
-PANEL.text = "Select a faction"
+PANEL.text = "#CharCreate_Fac_S"
 PANEL.factionID = ""
 
 function PANEL:Init()
@@ -212,7 +212,7 @@ function PANEL:Init()
 
 	self.Label = vgui.Create("DLabel", self)
 	self.Label:SetPos(32, 64)
-	self.Label:SetText("Faction:")
+	self.Label:SetText("#CharCreat_FacTitle")
 	self.Label:SetFont(theme.GetFont("Text_Small"))
 
 	self.Chooser = vgui.Create("flSidebar", self)
