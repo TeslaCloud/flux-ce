@@ -6,6 +6,25 @@
 
 local lang = fl.lang:GetTable("ru")
 
+do
+	local vowels = {
+		["а"] = true,
+		["е"] = true,
+		["ё"] = true,
+		["у"] = true,
+		["и"] = true,
+		["о"] = true,
+		["ы"] = true,
+		["э"] = true,
+		["ю"] = true,
+		["я"] = true
+	}
+
+	function lang:IsVowel(char)
+		return vowels[char]
+	end
+end
+
 lang["#Commands_NotValid"] = "'#1' не является командой!"
 lang["#Commands_NoAccess"] = "У вас нет доступа к этой команде!"
 lang["#Commands_PlayerInvalid"] = "'#1' не является игроком!"

@@ -9,6 +9,12 @@ DEFINE_BASECLASS("gamemode_base")
 function GM:DoPlayerDeath(player, attacker, damageInfo) end
 
 function GM:Initialize()
+	local configFile = fileio.Read("gamemodes/flux/flux.cfg")
+
+	if (configFile) then
+		config.Import(configFile, CONFIG_FLUX)
+	end
+
 	local mysql_host = config.Get("mysql_host")
 	local mysql_username = config.Get("mysql_username")
 	local mysql_password = config.Get("mysql_password")

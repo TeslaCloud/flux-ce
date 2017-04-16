@@ -55,3 +55,8 @@ FILE_ACTION_REMOVED				= 2	-- The file was removed.
 FILE_ACTION_MODIFIED			= 3	-- The file was modified.
 FILE_ACTION_RENAMED_OLD_NAME 	= 4	-- The file was renamed, this is it's old name.
 FILE_ACTION_RENAMED_NEW_NAME 	= 5	-- The file was renamed, this is it's new name.
+
+-- Config enums
+CONFIG_PLUGIN		= 0
+CONFIG_SCHEMA		= 1
+CONFIG_FLUX			= 2

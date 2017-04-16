@@ -23,10 +23,73 @@ function Try(id, func, ...)
 	end
 end
 
-function util.IsVowel(char)
-	char = char:lower()
+do
+	local vowels = {
+		["a"] = true,
+		["e"] = true,
+		["o"] = true,
+		["i"] = true,
+		["u"] = true,
+		["y"] = true,
+	}
 
-	return (char == "a" or char == "e" or char == "y" or char == "u" or char == "i" or char == "o")
+	function util.IsVowel(char)
+		char = char:utf8lower()
+
+		if (CLIENT) then
+			local lang = fl.lang:GetTable(GetConVar("gmod_language"):GetString())
+
+			if (lang and isfunction(lang.IsVowel)) then
+				local override = lang:IsVowel(char)
+
+				if (override != nil) then
+					return override
+				end
+			end
+		end
+
+		return vowels[char]
+	end
+end
+
+function string.RemoveTextFromEnd(str, strNeedle, bAllOccurences)
+	if (!strNeedle or strNeedle == "") then
+		return str
+	end
+
+	if (str:EndsWith(strNeedle)) then
+		if (bAllOccurences) then
+			while (str:EndsWith(strNeedle)) do
+				str = str:RemoveTextFromEnd(strNeedle)
+			end
+
+			return str
+		end
+
+		return str:utf8sub(1, str:utf8len() - strNeedle:utf8len())
+	else
+		return str
+	end
+end
+
+function string.RemoveTextFromStart(str, strNeedle, bAllOccurences)
+	if (!strNeedle or strNeedle == "") then
+		return str
+	end
+
+	if (str:StartWith(strNeedle)) then
+		if (bAllOccurences) then
+			while (str:StartWith(strNeedle)) do
+				str = str:RemoveTextFromStart(strNeedle)
+			end
+
+			return str
+		end
+
+		return str:utf8sub(strNeedle:utf8len() + 1, str:utf8len())
+	else
+		return str
+	end
 end
 
 function util.Validate(...)
@@ -56,8 +119,8 @@ function util.Include(strFile)
 			return include(strFile)
 		end
 	else
-		if (string.find(strFile, "sh_") or string.find(strFile, "shared.lua")
-		or string.find(strFile, "cl_")) then
+		if (string.find(strFile, "sh_") or string.find(strFile, "cl_")
+		or string.find(strFile, "shared.lua")) then
 			return include(strFile)
 		end
 	end

@@ -40,12 +40,12 @@ end
 
 class "Plugin"
 
-function Plugin:Plugin(name, data)
-	self.m_Name = name or data.name or "Unknown Plugin"
+function Plugin:Plugin(id, data)
+	self.m_Name = data.name or "Unknown Plugin"
 	self.m_Author = data.author or "Unknown Author"
 	self.m_Folder = data.folder or name:gsub(" ", "_"):lower()
 	self.m_Description = data.description or "An undescribed plugin or schema."
-	self.m_uniqueID = data.id or name:gsub(" ", "_"):lower() or "unknown"
+	self.m_uniqueID = id or data.id or name:MakeID() or "unknown"
 
 	table.Merge(self, data)
 end
@@ -127,6 +127,24 @@ function plugin.Register(obj)
 		reloadData[obj:GetFolder()] = false
 	else
 		reloadData[obj:GetFolder()] = true
+	end
+
+	if (SERVER) then
+		local filePath = "gamemodes/"..obj.folder.."/plugin.cfg"
+
+		if (Schema == obj) then
+			local folderName = obj.folder:RemoveTextFromEnd("/schema")
+
+			filePath = "gamemodes/"..folderName.."/"..folderName..".cfg"
+		end
+
+		if (file.Exists(filePath, "GAME")) then
+			local fileContents = fileio.Read(filePath)
+
+			print("Importing config: "..filePath)
+
+			config.Import(fileContents, CONFIG_PLUGIN)
+		end
 	end
 
 	stored[obj:GetFolder()] = obj

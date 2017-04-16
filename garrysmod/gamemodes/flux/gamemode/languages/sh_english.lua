@@ -53,7 +53,7 @@ lang["#MainMenu_New"] = "New"
 --[[ Character Creation ]]--
 
 lang["#CharCreate"] = "CREATE A CHARACTER"
-Lang["#CharCreateText"] = "CHARACTER CREATION"
+lang["#CharCreateText"] = "CHARACTER CREATION"
 lang["#CharCreate_Create"] = "CREATE"
 lang["#CharCreate_ModelButton"] = "Model"
 lang["#CharCreate_FactionButton"] = "Faction"

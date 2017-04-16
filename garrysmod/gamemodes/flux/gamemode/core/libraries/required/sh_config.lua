@@ -14,8 +14,16 @@ config.stored = stored
 
 local cache = {}
 
+function config.GetAll()
+	return stored
+end
+
+function config.GetCache()
+	return cache
+end
+
 if (SERVER) then
-	function config.Set(key, value, bIsHidden)
+	function config.Set(key, value, bIsHidden, nFromConfig)
 		if (key != nil) then
 			if (!stored[key]) then
 				stored[key] = {}
@@ -27,10 +35,23 @@ if (SERVER) then
 				else
 					stored[key].addedBy = "Flux"
 				end
+
+				if (isnumber(nFromConfig)) then
+					if (nFromConfig == CONFIG_FLUX) then
+						stored[key].addedBy = "Flux Config"
+					elseif (nFromConfig == CONFIG_SCHEMA) then
+						stored[key].addedBy = "Schema Config"
+					elseif (PLUGIN and nFromConfig == CONFIG_PLUGIN) then
+						stored[key].addedBy = PLUGIN:GetName().." Config"
+					end
+				end
 			end
 
 			stored[key].value = value
-			stored[key].hidden = bIsHidden or false
+
+			if (stored[key].hidden == nil or bIsHidden != nil) then
+				stored[key].hidden = bIsHidden or false
+			end
 
 			if (!stored[key].hidden) then
 				netstream.Start(nil, "config_setvar", key, stored[key])
@@ -102,10 +123,325 @@ function config.Get(key, default)
 	return default
 end
 
-function config.GetAll()
-	return stored
+-- Config interpreter.
+-- Please note that it's really slow and should never be used more than
+-- one in a while.
+do
+	local function isNumber(char)
+		return (tonumber(char) != nil)
+	end
+
+	local function countCharacter(str, char)
+		local exploded = string.Explode("", str)
+		local hits = 0
+
+		for k, v in ipairs(exploded) do
+			if (v == char) then
+				if (char == "\"") then
+					local prevChar = exploded[k - 1] or ""
+
+					if (prevChar == "\\") then
+						continue
+					end
+				end
+
+				hits = hits + 1
+			end
+		end
+
+		return hits
+	end
+
+	local function smartRemoveNewlines(str)
+		local exploded = string.Explode("", str)
+		local toReturn = ""
+		local skip = ""
+
+		for k, v in ipairs(exploded) do
+			if (skip != "") then
+				toReturn = toReturn..v
+
+				if (v == skip) then
+					skip = ""
+				end
+
+				continue
+			end
+
+			if (v == "\"") then
+				skip = "\""
+
+				toReturn = toReturn..v
+
+				continue
+			end
+
+			if (v == "\n" or v == "\t") then
+				continue
+			end
+
+			toReturn = toReturn..v
+		end
+
+		return toReturn
+	end
+
+	local function buildWordFromTable(tab, idx, len)
+		local word = ""
+
+		for i = idx, idx + len - 1 do
+			local char = tab[i] or ""
+
+			word = word..char
+		end
+
+		return word
+	end
+
+	local function buildTableFromString(str)
+		str = smartRemoveNewlines(str)
+
+		local exploded = string.Explode(",", str)
+		local tab = {}
+
+		for k, v in ipairs(exploded) do
+			if (!isstring(v)) then continue end
+
+			if (!string.find(v, "=")) then
+				v = v:RemoveTextFromStart(" ", true)
+
+				if (isNumber(v)) then
+					v = tonumber(v)
+				elseif (string.find(v, "\"")) then
+					v = v:RemoveTextFromStart("\""):RemoveTextFromEnd("\"")
+				elseif (v:find("{")) then
+					v = v:Replace("{", "")
+
+					local lastKey = nil
+					local buff = v
+
+					for k2, v2 in ipairs(exploded) do
+						if (k2 <= k) then continue end
+
+						if (v2:find("}")) then
+							buff = buff..","..v2:Replace("}", "")
+
+							lastKey = k2
+
+							break
+						end
+
+						buff = buff..","..v2
+					end
+
+					if (lastKey) then
+						for i = k, lastKey do
+							exploded[i] = nil
+						end
+
+						v = buildTableFromString(buff)
+					end
+				else
+					v = v:RemoveTextFromEnd("}")
+				end
+
+				table.insert(tab, v)
+			else
+				local parts = string.Explode("=", v)
+				local key = parts[1]:RemoveTextFromEnd(" ", true):RemoveTextFromEnd("\t", true)
+				local value = parts[2]:RemoveTextFromStart(" ", true):RemoveTextFromStart("\t", true)
+
+				if (isNumber(value)) then
+					value = tonumber(value)
+				elseif (value:find("{") and value:find("}")) then
+					value = buildTableFromString(value)
+				else
+					value = value:RemoveTextFromEnd("}")
+				end
+
+				tab[key] = value
+			end
+		end
+
+		return tab
+	end
+
+	local function dataTypeToValue(type, value)
+		if (type == "string") then
+			if (value == "nil") then
+				return nil
+			else
+				return tostring(value)
+			end
+		elseif (type == "number") then
+			return tonumber(value)
+		elseif (type == "table") then
+			return buildTableFromString(value)
+		end
+	end
+
+	function config.ConfigToTable(strConfigFile)
+		local keyValues = {}
+		local characters = string.Explode("", strConfigFile)
+		local lines = string.Explode("\n", strConfigFile)
+		local skip = ""
+		local nSkip = 0
+		local read = ""
+		local buffer = ""
+		local curKey = nil
+		local curVal = nil
+		local curDataType = "string"
+		local curLine = 1
+
+		for k, v in ipairs(characters) do
+			local nextChar = characters[k + 1] or ""
+			local prevChar = characters[k - 1] or ""
+
+			if (v == "\n") then
+				curLine = curLine + 1
+			end
+
+			if (nSkip > 0) then
+				nSkip = nSkip - 1
+
+				continue
+			end
+
+			if (skip != "") then
+				local skipLen = skip:utf8len()
+				local curWord = buildWordFromTable(characters, k, skipLen)
+
+				if (curWord == skip) then
+					skip = ""
+					nSkip = skipLen - 1
+				end
+
+				continue
+			end
+
+			-- Skip the comments.
+			if (read != "\"") then
+				if (v == "/" and nextChar == "/") then
+					skip = "\n"
+
+					continue
+				elseif (v == "/" and nextChar == "*") then
+					skip = "*/"
+
+					continue
+				end
+			end
+
+			if (read == "") then
+				if (v == "{") then
+					if (!string.find(strConfigFile, "}")) then
+						ErrorNoHalt("[Flux:Config] Config file syntax error: '}' expected to close '{' at line "..curLine.."!\n")
+
+						return {}
+					end
+
+					read = "}"
+					curDataType = "table"
+
+					continue
+				elseif (isNumber(v)) then
+					curDataType = "number"
+				elseif (v == "\"") then
+					if (countCharacter(lines[curLine], "\"") % 2 != 0) then
+						ErrorNoHalt("[Flux:Config] Config file syntax error: unfinished string at line "..curLine.."!\n")
+
+						return {}
+					end
+
+					read = "\""
+					curDataType = "string"
+
+					continue
+				end
+			end
+
+			-- Fix for table closures being in the final string.
+			if (v == "}" and read != "}" and read != "\"") then
+				continue
+			end
+
+			-- While we're not hitting the stop mark, continue filling in the buffer.
+			if (read != "") then
+				local readLen = read:utf8len()
+				local curWord = buildWordFromTable(characters, k, readLen)
+				local readHit = false
+
+				if (read == " " or read == "\t") then
+					if (curWord == " " or curWord == "\t") then
+						readHit = true
+					end
+				else
+					if (curWord == read) then
+						if (read == "\"") then
+							if (prevChar != "\\") then
+								readHit = true
+							end
+						else
+							readHit = true
+						end
+					end
+				end
+
+				if (k == #characters) then
+					readHit = true
+				end
+
+				if (!readHit) then
+					buffer = buffer..v
+
+					continue
+				else
+					read = ""
+
+					-- Fix table interpreting.
+					if (v == "}") then
+						buffer = buffer..v
+					end
+
+					local val = dataTypeToValue(curDataType, buffer)
+
+					if (curKey == nil) then
+						curKey = val
+					elseif (curVal == nil) then
+						keyValues[curKey] = val
+
+						curKey = nil
+						curVal = nil
+					end
+
+					buffer = ""
+					curDataType = "string"
+
+					continue
+				end
+			end
+
+			if (v == "\t" or v == "\n") then
+				continue
+			end
+
+			buffer = buffer..v
+
+			if (curKey == nil) then
+				read = " "
+			else
+				read = "\n"
+			end
+		end
+
+		return keyValues
+	end
 end
 
-function config.GetCache()
-	return cache
+function config.Import(strFileContents, nFromConfig)
+	if (!isstring(strFileContents) or strFileContents == "") then return end
+
+	for k, v in pairs(config.ConfigToTable(strFileContents)) do
+		config.Set(k, v, nil, nFromConfig)
+	end
 end
