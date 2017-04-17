@@ -125,7 +125,7 @@ end
 
 -- Config interpreter.
 -- Please note that it's really slow and should never be used more than
--- one in a while.
+-- once in a while.
 do
 	local function isNumber(char)
 		return (tonumber(char) != nil)

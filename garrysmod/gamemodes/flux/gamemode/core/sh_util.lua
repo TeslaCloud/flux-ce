@@ -24,6 +24,64 @@ function Try(id, func, ...)
 end
 
 do
+	local tryCache = {}
+
+	function try(tab)
+		tryCache = {}
+		tryCache.f = tab[1]
+		tryCache.args = tab[2]
+	end
+
+	function catch(handler)
+		local func = tryCache.f
+		local args = tryCache.args or {}
+		local result = {pcall(func, unpack(args))}
+		local success = result[1]
+		table.remove(result, 1)
+		
+		tryCache = {}
+
+		if (!success) then
+			if (isfunction(handler[1])) then
+				handler[1](unpack(result))
+			else
+				ErrorNoHalt("[Flux:Exception] Failed to run the function!\n")
+				ErrorNoHalt(unpack(result), "\n")
+			end
+		elseif (result[1] != nil) then
+			return unpack[result]
+		end
+	end
+
+	--[[
+		Please note that the try-catch block will only
+		run if you put in the catch function.
+
+		Example usage:
+
+		try {
+			function()
+				print("Hello World")
+			end
+		} catch {
+			function(exception)
+				print(exception)
+			end
+		}
+
+		try {
+			function(arg1, arg2)
+				print(arg1, arg2)
+			end, {"arg1", "arg2"}
+		} catch {
+			function(exception)
+				print(exception)
+			end
+		}
+	--]]
+end
+
+do
 	local vowels = {
 		["a"] = true,
 		["e"] = true,

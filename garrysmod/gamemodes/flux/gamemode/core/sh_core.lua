@@ -22,7 +22,11 @@ end
 -- A function to print developer message.
 function fl.core:DevPrint(strMessage)
 	if (fl.Devmode) then
-		print("[Flux:Dev] "..strMessage)
+		Msg("[Flux:")
+		MsgC(Color(175, 0, 0), "Dev")
+		Msg("] ")
+		MsgC(Color(200, 200, 200), strMessage)
+		Msg("\n")
 	end
 end
 
@@ -119,6 +123,18 @@ Meta = Class
 
 -- Also make an alias that looks like other programming languages.
 class = Class
+
+--[[
+	Example usage:
+
+	local obj = new "className"
+	local obj = new("className", 1, 2, 3)
+--]]
+function New(className, ...)
+	return (_G[className] and _G[className](unpack(...)))
+end
+
+new = New
 
 function fl.core:GetSchemaFolder()
 	if (SERVER) then

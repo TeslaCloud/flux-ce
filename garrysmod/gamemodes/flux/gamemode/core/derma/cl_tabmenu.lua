@@ -95,7 +95,7 @@ function PANEL:Paint(w, h)
 	if (!theme.Hook("PaintTabMenu", self, w, h)) then
 		local fraction = (CurTime() - self.lerpStart) / 0.15
 
-		Derma_DrawBackgroundBlur(self, self.lerpStart)
+		Derma_DrawBackgroundBlur(self, self.lerpStart - 10)
 		draw.RoundedBox(0, 0, 0, w, h, Color(50, 50, 50, Lerp(fraction, 0, 150)))
 	end
 end

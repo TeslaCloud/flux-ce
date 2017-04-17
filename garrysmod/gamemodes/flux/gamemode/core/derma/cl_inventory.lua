@@ -73,7 +73,7 @@ function PANEL:Reset()
 end
 
 function PANEL:Paint(w, h)
-	local drawColor = Color(200, 200, 200, 160)
+	local drawColor = theme.GetColor("Background"):Lighten(70)
 
 	if (self.isHovered and !self:IsHovered()) then
 		self.isHovered = false
@@ -81,7 +81,7 @@ function PANEL:Paint(w, h)
 
 	if (!self.isHovered) then
 		if (!self.itemData) then
-			drawColor = Color(140, 140, 140, 180)
+			drawColor = drawColor:Darken(25)
 		else
 			if (self.itemData.SpecialColor) then
 				surface.SetDrawColor(self.itemData.SpecialColor)
@@ -95,14 +95,31 @@ function PANEL:Paint(w, h)
 			end
 		end
 	else
-		drawColor = Color(200, 60, 60, 160)
+		local itemTable = self.itemData
+		local curSlot = fl.inventoryDragSlot
+
+		if (itemTable) then
+			if (IsValid(curSlot) and curSlot.itemData != itemTable) then
+				local slotData = curSlot.itemData
+
+				if (slotData.uniqueID == itemTable.uniqueID and slotData.IsStackable and curSlot.itemCount < slotData.MaxStack) then
+					drawColor = Color(200, 200, 60)
+				else
+					drawColor = Color(200, 60, 60, 160)
+				end
+			else
+				drawColor = drawColor:Lighten(30)
+			end
+		else
+			drawColor = Color(60, 200, 60, 160)
+		end
 	end
 
 	draw.RoundedBox(0, 0, 0, w, h, drawColor)
 
 	if (self.itemCount >= 2) then
 		DisableClipping(true)
-			draw.SimpleText("x"..self.itemCount, "default", 50, 50, Color(255, 0, 0))
+			draw.SimpleText(self.itemCount, theme.GetFont("Text_Smallest"), 52, 50, Color(200, 200, 200))
 		DisableClipping(false)
 	end
 end
@@ -135,12 +152,15 @@ end
 
 function PANEL:OnMousePressed(...)
 	self.mousePressed = CurTime()
+	fl.inventoryDragSlot = self
 
 	self.BaseClass.OnMousePressed(self, ...)
 end
 
 function PANEL:OnMouseReleased(...)
 	if (self.itemData and self.mousePressed and self.mousePressed > (CurTime() - 0.15)) then
+		fl.inventoryDragSlot = nil
+
 		if (#self.instanceIDs > 1) then
 			hook.Run("PlayerUseItemMenu", self.instanceIDs)
 		else
@@ -201,7 +221,7 @@ function PANEL:Rebuild()
 
 	self.scroll = self.scroll or vgui.Create("DScrollPanel", self) //Create the Scroll panel
 	self.scroll:SetSize(self:GetWide(), self:GetTall())
-	self.scroll:SetPos(10, 30)
+	self.scroll:SetPos(10, 32)
 
 	if (IsValid(self.list)) then
 		self.list:Clear()
@@ -228,6 +248,8 @@ function PANEL:Rebuild()
 
 		invSlot:Receiver("flItem", function(receiver, dropped, isDropped, menuIndex, mouseX, mouseY)
 			if (isDropped) then
+				fl.inventoryDragSlot = nil
+
 				if (receiver.itemData) then
 					if (receiver.itemData.uniqueID == dropped[1].itemData.uniqueID and
 						receiver.slotNum != dropped[1].slotNum) then

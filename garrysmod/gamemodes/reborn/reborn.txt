@@ -5,5 +5,4 @@
 	"description"	"A test schema for Flux framework."
 	"version"		"1.0"
 	"menusystem"	"1"
-	"workshopid"	""
 }

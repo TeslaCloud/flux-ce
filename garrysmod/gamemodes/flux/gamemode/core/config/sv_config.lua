@@ -11,7 +11,7 @@ config.Set("jump_power", 150)
 
 config.Set("command_prefixes", {"/", "!"})
 
-config.Set("owner_steamid", "STEAM_0:1:14196407")
+config.Set("owner_steamid", "STEAM_0:0:00000000")
 config.Set("owner_steamid_extra", {"STEAM_0:0:00000000", "STEAM_0:0:00000000"})
 
 config.Set("data_save_interval", 60)

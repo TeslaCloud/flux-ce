@@ -309,7 +309,7 @@ function GM:PlayerSpawnProp(player, model)
 end
 
 function GM:PlayerSpawnObject(player, model, skin)
-	if (!player:HasPermission("spawn_objects")) then
+	if (!player:HasPermission("spawn_entities")) then
 		return false
 	end
 
@@ -321,7 +321,7 @@ function GM:PlayerSpawnObject(player, model, skin)
 end
 
 function GM:PlayerSpawnNPC(player, npc, weapon)
-	if (!player:HasPermission("spawn_npc")) then
+	if (!player:HasPermission("spawn_npcs")) then
 		return false
 	end
 
@@ -333,7 +333,7 @@ function GM:PlayerSpawnNPC(player, npc, weapon)
 end
 
 function GM:PlayerSpawnEffect(player, model)
-	if (!player:HasPermission("spawn_effects")) then
+	if (!player:HasPermission("spawn_entities")) then
 		return false
 	end
 
@@ -357,7 +357,7 @@ function GM:PlayerSpawnVehicle(player, model, name, tab)
 end
 
 function GM:PlayerSpawnSWEP(player, weapon, swep)
-	if (!player:HasPermission("spawn_swep")) then
+	if (!player:HasPermission("spawn_sweps")) then
 		return false
 	end
 
@@ -369,7 +369,7 @@ function GM:PlayerSpawnSWEP(player, weapon, swep)
 end
 
 function GM:PlayerSpawnSENT(player, class)
-	if (!player:HasPermission("spawn_sent")) then
+	if (!player:HasPermission("spawn_entities")) then
 		return false
 	end
 
@@ -393,7 +393,7 @@ function GM:PlayerSpawnRagdoll(player, model)
 end
 
 function GM:PlayerGiveSWEP(player, weapon, swep)
-	if (!player:HasPermission("spawn_swep")) then
+	if (!player:HasPermission("spawn_sweps")) then
 		return false
 	end
 

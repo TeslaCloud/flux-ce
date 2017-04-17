@@ -117,10 +117,6 @@ function plugin.RemoveHooks(id)
 end
 
 function plugin.Register(obj)
-	if (obj.alias) then
-		obj = _G[obj.alias]	
-	end
-
 	plugin.CacheFunctions(obj)
 
 	if (obj.ShouldRefresh == false) then
@@ -141,7 +137,7 @@ function plugin.Register(obj)
 		if (file.Exists(filePath, "GAME")) then
 			local fileContents = fileio.Read(filePath)
 
-			print("Importing config: "..filePath)
+			fl.core:DevPrint("Importing config: "..filePath)
 
 			config.Import(fileContents, CONFIG_PLUGIN)
 		end

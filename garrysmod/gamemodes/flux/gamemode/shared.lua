@@ -70,31 +70,6 @@ function GM:GetGameDescription()
 	return (isstring(nameOverride) and nameOverride) or self.Prefix..fl.GetSchemaName()
 end
 
-do
-	local schemaFolder = fl.schema
-
-	fl.sharedTable.dependencies = fl.sharedTable.dependencies or {}
-	fl.sharedTable.disable = fl.sharedTable.disable or {}
-
-	if (SERVER) then
-		if (file.Exists("gamemodes/"..schemaFolder.."/dependencies.lua", "GAME")) then
-			fl.sharedTable.dependencies = include(schemaFolder.."/dependencies.lua")
-		end
-
-		if (file.Exists("gamemodes/"..schemaFolder.."/disable.lua", "GAME")) then
-			fl.sharedTable.disable = include(schemaFolder.."/disable.lua")
-		end
-	end
-
-	function fl.SchemaDepends(id)
-		return fl.sharedTable.dependencies[id]
-	end
-
-	function fl.SchemaDisabled(id)
-		return fl.sharedTable.disable[id]
-	end
-end
-
 AddCSLuaFile("core/sh_enums.lua")
 AddCSLuaFile("core/sh_util.lua")
 AddCSLuaFile("core/sh_core.lua")

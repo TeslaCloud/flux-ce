@@ -6,12 +6,6 @@
 
 library.New "character"
 
-if (fl.SchemaDisabled("characters")) then
-	fl.core:DevPrint("Not loading characters system, disabled by schema.")
-
-	return
-end
-
 local stored = character.stored or {}
 character.stored = stored
 
