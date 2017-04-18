@@ -5,7 +5,6 @@
 --]]
 
 netstream.Hook("ClientIncludedSchema", function(player)
-	character.Load(player)
 	item.SendToPlayer(player)
 
 	hook.Run("ClientIncludedSchema", player)

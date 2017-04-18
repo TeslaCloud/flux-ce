@@ -4,55 +4,22 @@
 	the framework is publicly released.
 --]]
 
-if (!font) then
-	include("flux/gamemode/core/libraries/cl_font.lua")
-end
-
-do
-	local flChatbox = {}
-
-	function flChatbox:CreateFonts()
-		font.Create("flChatFont", {
-			font		= "Roboto",
-			size		= 17
-		})
-
-		font.Create("flChatFontBold", {
-			font		= "Roboto",
-			size		= 17,
-			weight		= 1000
-		})
-
-		font.Create("flChatSyntax", {
-			font		= "Roboto",
-			size		= 20
-		})
-	end
-
-	function flChatbox:OnResolutionChanged(newW, newH)
-		chatbox.width = newW * 0.3
-		chatbox.height = newH * 0.3
-		chatbox.x = 4
-		chatbox.y = newH - chatbox.height - 36
-
-		chatbox.UpdateDisplay()
-
-		if (chatbox.panel) then
-			chatbox.panel:Remove()
-			chatbox.panel = nil
-		end
-	end
-
-	plugin.AddHooks("ChatBoxHooks", flChatbox)
-end
-
-library.New "chatbox"
 chatbox.history 	= chatbox.history or {} -- Entire chat history. Last X meesages, configurable.
 chatbox.display		= chatbox.display or {} -- Pre-parsed lines that are currently being drawn.
 chatbox.filters 	= chatbox.filters or {} -- Table that stores filter data.
 chatbox.types 		= chatbox.types or {} -- Table that stores message types data.
 chatbox.emotes 		= chatbox.emotes or {} -- Table that stores emotes data.
 chatbox.codes 		= chatbox.codes or {} -- Table that stores BB-Codes data.
+
+--[[
+	Sizes and Configuration
+--]]
+chatbox.width = chatbox.width or ScrW() * 0.3
+chatbox.height = chatbox.height or ScrH() * 0.3
+chatbox.x = chatbox.x or 4
+chatbox.y = ScrH() - chatbox.height - 36
+chatbox.maxLength = chatbox.maxLength or 1024
+chatbox.curAlpha = chatbox.curAlpha or 255
 
 chatbox.oldAddText 	= chatbox.oldAddText or chat.AddText
 
@@ -72,16 +39,6 @@ function chatbox.GetLineCount()
 
 	return lines
 end
-
---[[
-	Sizes and Configuration
---]]
-chatbox.width = chatbox.width or ScrW() * 0.3
-chatbox.height = chatbox.height or ScrH() * 0.3
-chatbox.x = chatbox.x or 4
-chatbox.y = ScrH() - chatbox.height - 36
-chatbox.maxLength = chatbox.maxLength or 1024
-chatbox.curAlpha = chatbox.curAlpha or 255
 
 --[[
 	Filters and Types
@@ -1050,7 +1007,7 @@ function chatbox.Hide()
 	chatbox.panel:SetKeyboardInputEnabled(false)
 
 	hook.Run("FinishChat")
-	timer.Simple(FrameTime() * 0.5, function() RunConsoleCommand("cancelselect") end)
+	timer.Simple(FrameTime() * 0.1, function() RunConsoleCommand("cancelselect") end)
 end
 
 function chatbox.RecreatePanel()
@@ -1143,46 +1100,3 @@ end
 function chatbox.AddText(...)
 	netstream.Start("ChatboxAddText", ...)
 end
-
---[[
-	Hooks
---]]
-
-hook.Add("PlayerBindPress", "chatbox.PlayerBindPress", function(player, bind, bPress)
-	if ((string.find(bind, "messagemode") or string.find(bind, "messagemode2")) and bPress) then
-		if (fl.client:HasInitialized()) then
-			chatbox.Show()
-		end
-
-		return true
-	end
-end)
-
-hook.Add("GUIMousePressed", "chatbox.GUIMousePressed", function(mouseCode, aimVector)
-	if (IsValid(chatbox.panel)) then
-		chatbox.Hide()
-	end
-end)
-
-netstream.Hook("ChatboxTextEnter", function(player, messageData)
-	if (IsValid(player)) then
-		chat.PlaySound()
-
-		print("["..messageData.filter:upper().."] "..player:Name()..": "..messageData.text)
-
-		table.insert(chatbox.history, messageData)
-
-		chatbox.UpdateDisplay()
-		chatbox.Hide()
-	end
-end)
-
-netstream.Hook("ChatboxAddText", function(messageData)
-	chat.PlaySound()
-
-	print("["..messageData.filter:upper().."] "..messageData.text)
-
-	table.insert(chatbox.history, messageData)
-
-	chatbox.UpdateDisplay()
-end)

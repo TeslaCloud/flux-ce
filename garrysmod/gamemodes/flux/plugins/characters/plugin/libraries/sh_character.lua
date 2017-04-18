@@ -1,4 +1,4 @@
---[[
+﻿--[[
 	Flux © 2016-2017 TeslaCloud Studios
 	Do not share or re-distribute before
 	the framework is publicly released.
@@ -176,6 +176,42 @@ end
 
 do
 	local playerMeta = FindMetaTable("Player")
+
+	function playerMeta:GetActiveCharacterID()
+		return self:GetNetVar("ActiveCharacter", nil)
+	end
+
+	function playerMeta:GetCharacterKey()
+		return self:GetNetVar("key", -1)
+	end
+
+	function playerMeta:CharacterLoaded()
+		if (self:IsBot()) then return true end
+
+		local id = self:GetActiveCharacterID()
+
+		return id and id > 0
+	end
+
+	function playerMeta:GetInventory()
+		return self:GetNetVar("inventory", {})
+	end
+
+	function playerMeta:GetPhysDesc()
+		return self:GetNetVar("physDesc", "This character has no description!")
+	end
+
+	function playerMeta:GetCharacterVar(id, default)
+		if (SERVER) then
+			return self:GetCharacter()[id] or default
+		else
+			return self:GetNetVar(id, default)
+		end
+	end
+
+	function playerMeta:GetCharacterData(key, default)
+		return self:GetCharacterVar("data", {})[key] or default
+	end
 
 	function playerMeta:GetCharacter()
 		local charID = self:GetActiveCharacterID()

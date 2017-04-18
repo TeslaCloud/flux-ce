@@ -6,15 +6,8 @@
 
 local PANEL = {}
 
-local colorWhite = Color(255, 255, 255, 255)
-local colorBlack = Color(0, 0, 0, 100)
-
-local menuFont = "menu_thin"
-
 function PANEL:Init()
-	local scrW, scrH = ScrW(), ScrH()
-
-	self:SetSize(scrW * 0.6, scrH * 0.6)
+	self:SetSize(ScrW() * 0.6, ScrH() * 0.6)
 
 	self:Rebuild()
 
@@ -53,8 +46,8 @@ function PANEL:Rebuild()
 	for k, v in pairs(players) do
 		local playerPanel = vgui.Create("flScoreboardPlayer", self.playerList)
 
-		playerPanel:SetSize(w * 0.98, h * 0.1)
-		playerPanel:SetPos(w * 0.005, y)
+		playerPanel:SetSize(w - 16, 40)
+		playerPanel:SetPos(8, y)
 		playerPanel:SetPlayer(v)
 
 		self.players[#self.players + 1] = playerPanel
@@ -76,7 +69,7 @@ function PANEL:OnFade()
 end
 
 function PANEL:Paint(w, h)
-	surface.SetDrawColor(fl.settings:GetColor("MenuBackColor"))
+	surface.SetDrawColor(theme.GetColor("Background"))
 	surface.DrawRect(0, 0, w, h)
 end
 
@@ -89,12 +82,12 @@ end
 
 function PANEL:SetPlayer(player)
 	local w, h = self:GetWide(), self:GetTall()
-	local aSize = h * 0.9
+	local aSize = 36
 
 	self.player = player
 
 	self.avatar = vgui.Create("AvatarImage", self)
-	self.avatar:SetPos(h * 0.05, h * 0.05)
+	self.avatar:SetPos(2, 2)
 	self.avatar:SetSize(aSize, aSize)
 	self.avatar:SetPlayer(player, 64)
 	self.avatar:SetCursor("hand")
@@ -108,15 +101,15 @@ function PANEL:SetPlayer(player)
 	end
 
 	self.mBack = vgui.Create("EditablePanel", self)
-	self.mBack:SetPos(self.avatar.x + self.avatar:GetWide() + w * 0.01, self.avatar.y)
+	self.mBack:SetPos(self.avatar.x + self.avatar:GetWide() + 4, self.avatar.y)
 	self.mBack:SetSize(aSize, aSize)
 
 	function self.mBack:Paint(w, h)
-		draw.RoundedBox(4, 0, 0, w, h, ColorAlpha(fl.settings:GetColor("TextColor"), 50))
+		draw.RoundedBox(4, 0, 0, w, h, ColorAlpha(theme.GetColor("Background"):Lighten(5), 50))
 	end
 
 	self.mPanel = vgui.Create("DModelPanel", self)
-	self.mPanel:SetPos(self.avatar.x + self.avatar:GetWide() + w * 0.01, self.avatar.y)
+	self.mPanel:SetPos(self.avatar.x + self.avatar:GetWide() + 4, self.avatar.y)
 	self.mPanel:SetSize(aSize, aSize)
 	self.mPanel:SetModel(player:GetModel())
 	self.mPanel:SetCamPos(Vector(15, 3, 65))
@@ -167,11 +160,11 @@ function PANEL:SetPlayer(player)
 end
 
 function PANEL:Paint(w, h)
-	surface.SetDrawColor(colorBlack)
+	surface.SetDrawColor(theme.GetColor("Background"):Lighten(20))
 	surface.DrawRect(0, 0, w, h)
 
-	if (self.name and self.mPanel) then
-		draw.SimpleText(self.name, menuFont, self.mPanel.x + self.mPanel:GetWide() + w * 0.01, h * 0.5, fl.settings:GetColor("TextColor"), nil, TEXT_ALIGN_CENTER)
+	if (self.name and self.mPanel and plugin.Call("PaintScoreboardPlayerName", self) == nil) then
+		draw.SimpleText(self.name, theme.GetFont("Text_Smaller"), self.mPanel.x + self.mPanel:GetWide() + w * 0.01, h * 0.5, theme.GetColor("Text"), nil, TEXT_ALIGN_CENTER)
 	end
 end
 

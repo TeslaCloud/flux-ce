@@ -40,6 +40,10 @@ function PANEL:SetEnabled(bEnabled)
 	self:SetMouseInputEnabled(bEnabled)
 end
 
+function PANEL:SetTextColor(color)
+	self.m_TextColorOverride = color
+end
+
 function PANEL:SetText(newText)
 	return self:SetTitle(newText)
 end

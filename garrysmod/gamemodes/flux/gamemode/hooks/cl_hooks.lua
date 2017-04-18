@@ -143,7 +143,7 @@ end
 
 -- Called when the player's HUD is drawn.
 function GM:HUDPaint()
-	if (fl.client:CharacterLoaded()) then
+	if (fl.client:HasInitialized() and fl.client:CharacterLoaded()) then
 		local curTime = CurTime()
 		local scrW, scrH = ScrW(), ScrH()
 

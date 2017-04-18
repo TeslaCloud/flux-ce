@@ -51,11 +51,16 @@ function PANEL:Init()
 
 			if (v.panel) then
 				if (IsValid(self.activePanel)) then
-					self.activePanel:SetVisible(false)
-					self.activePanel:Remove()
+					self.activePanel:SafeRemove()
+
+					self.activeBtn:SetTextColor(nil)
 				end
 
 				self.activePanel = vgui.Create(v.panel, self)
+				self.activeBtn = btn
+
+				self.activeBtn:SetTextColor(theme.GetColor("AccentLight"))
+
 				hook.Run("OnMenuPanelOpen", self, self.activePanel)
 			end
 
@@ -70,6 +75,12 @@ function PANEL:Init()
 	end
 
 	self.lerpStart = CurTime()
+end
+
+function PANEL:Think()
+	if (!IsValid(self.activePanel) and IsValid(self.activeBtn)) then
+		self.activeBtn:SetTextColor(nil)
+	end
 end
 
 function PANEL:AddMenuItem(id, data)
@@ -92,12 +103,7 @@ function PANEL:OnMousePressed()
 end
 
 function PANEL:Paint(w, h)
-	if (!theme.Hook("PaintTabMenu", self, w, h)) then
-		local fraction = (CurTime() - self.lerpStart) / 0.15
-
-		Derma_DrawBackgroundBlur(self, self.lerpStart - 10)
-		draw.RoundedBox(0, 0, 0, w, h, Color(50, 50, 50, Lerp(fraction, 0, 150)))
-	end
+	theme.Hook("PaintTabMenu", self, w, h)
 end
 
 vgui.Register("flTabMenu", PANEL, "EditablePanel")

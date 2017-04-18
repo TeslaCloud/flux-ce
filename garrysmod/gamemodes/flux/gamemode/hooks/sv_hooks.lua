@@ -422,25 +422,6 @@ function GM:PlayerTakeDamage(player, damageInfo)
 	netstream.Start(player, "PlayerTakeDamage")
 end
 
-function GM:OnActiveCharacterSet(player, character)
-	player:Spawn()
-	player:SetModel(character.model or "models/humans/group01/male_02.mdl")
-
-	hook.Run("PostCharacterLoaded", player, character)
-end
-
-function GM:PostCharacterLoaded(player, character)
-	netstream.Start(player, "PostCharacterLoaded", character.uniqueID)
-
-	player:CheckInventory()
-
-	for slot, ids in ipairs(player:GetInventory()) do
-		for k, v in ipairs(ids) do
-			item.NetworkItem(player, v)
-		end
-	end
-end
-
 function GM:OneSecond()
 	local curTime = CurTime()
 	local sysTime = SysTime()

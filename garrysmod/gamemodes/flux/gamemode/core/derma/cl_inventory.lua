@@ -127,8 +127,7 @@ end
 function PANEL:Rebuild()
 	if (!self.itemData) then
 		if (IsValid(self.spawnIcon)) then
-			self.spawnIcon:SetVisible(false)
-			self.spawnIcon:Remove()
+			self.spawnIcon:SafeRemove()
 		end
 
 		self:UnDraggable()

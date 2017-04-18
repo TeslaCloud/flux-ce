@@ -11,7 +11,7 @@ local function PermButtonDoClick(panel, btn)
 	if (IsValid(panel.prevBtn)) then
 		panel.prevBtn.isSelected = false
 	end
-		
+
 	panel.prevBtn = btn
 end
 
@@ -47,7 +47,7 @@ function PANEL:Rebuild()
 	self.btnNo.permValue = PERM_NO
 	self.btnNo.Paint = function(btn, w, h) theme.Call("PaintPermissionButton", self, btn, w, h) end
 	self.btnNo.DoClick = function(btn) PermButtonDoClick(self, btn) end
-	
+
 	self.btnAllow = vgui.Create("DButton", self.container)
 	self.btnAllow:SetPos(quarter * 2, 0)
 	self.btnAllow:SetSize(quarter * 0.8, height)

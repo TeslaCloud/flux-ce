@@ -1,9 +1,9 @@
 --[[
-	(C) TeslaCloud Studios LLC.
-	For internal use only.
+	Flux © 2016-2017 TeslaCloud Studios
+	Do not share or re-distribute before
+	the framework is publicly released.
 --]]
 
-library.New "chatbox"
 chatbox.prefixes = chatbox.prefixes or {} // Chatbox prefixes for serverside processing. Will be networked to clients for message styling.
 chatbox.filters = chatbox.filters or {}
 

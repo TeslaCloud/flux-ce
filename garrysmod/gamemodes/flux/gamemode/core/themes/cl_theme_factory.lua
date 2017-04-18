@@ -31,15 +31,20 @@ function THEME:OnLoaded()
 
 	self:SetColor("Accent", Color(90, 90, 190))
 	self:SetColor("Main", Color(50, 50, 50))
-	self:SetColor("MainDark", Color(40, 40, 40))
 	self:SetColor("Outline", Color(65, 65, 65))
 	self:SetColor("Background", Color(20, 20, 20))
 	self:SetColor("Text", Color(255, 255, 255))
-	self:SetColor("SchemaText", Color(255, 255, 255))
-	self:SetColor("MainMenu_Background", Color(0, 0, 0))
+	self:SetColor("AccentDark", self:GetColor("Accent"):Darken(20))
+	self:SetColor("AccentLight", self:GetColor("Accent"):Lighten(20))
+	self:SetColor("MainDark", self:GetColor("Main"):Darken(15))
+	self:SetColor("MainLight", self:GetColor("Main"):Lighten(15))
+	self:SetColor("BackgroundDark", self:GetColor("Background"):Darken(20))
+	self:SetColor("BackgroundLight", self:GetColor("Background"):Lighten(20))
+	self:SetColor("SchemaText", self:GetColor("Text"))
+	self:SetColor("MainMenu_Background", self:GetColor("BackgroundDark"))
 
 	self:SetColor("ESP_Red", Color(255, 0, 0))
-	self:SetColor("ESP_Blue", Color(255, 0, 0))
+	self:SetColor("ESP_Blue", Color(0, 0, 255))
 	self:SetColor("ESP_Grey", Color(100, 100, 100))
 
 	self:SetFont("MenuTitles", "fl_frame_title")
@@ -259,6 +264,32 @@ function THEME:PaintPermissionButton(permPanel, btn, w, h)
 
 	if (btn.isSelected) then
 		draw.RoundedBox(0, sqrSize / 2 + 2, sqrSize / 2 + 2, sqrSize - 4, sqrSize - 4, Color(0, 0, 0))
+	end
+end
+
+function THEME:PaintTabMenu(panel, width, height)
+	local fraction = FrameTime() * 8
+	local activePanel = panel.activePanel
+
+	Derma_DrawBackgroundBlur(panel, panel.lerpStart - 10)
+	draw.RoundedBox(0, 0, 0, width, height, Color(50, 50, 50, Lerp(fraction, 0, 150)))
+	draw.RoundedBox(0, 0, 0, 6, height, ColorAlpha(self:GetColor("Background"), 200))
+
+	if (IsValid(activePanel)) then
+		local activeButton = panel.activeBtn
+
+		if (!IsValid(activeButton)) then return end
+
+		local x, y = activeButton:GetPos()
+		local targetH = activeButton:GetTall()
+
+		if (!activePanel.indicatorLerp) then
+			activePanel.indicatorLerp = 0
+		end
+
+		activePanel.indicatorLerp = Lerp(fraction, activePanel.indicatorLerp, targetH)
+
+		draw.RoundedBox(0, 0, y - activePanel.indicatorLerp + activePanel.indicatorLerp / 2 + targetH / 2, 6, activePanel.indicatorLerp, self:GetColor("AccentLight"))
 	end
 end
 

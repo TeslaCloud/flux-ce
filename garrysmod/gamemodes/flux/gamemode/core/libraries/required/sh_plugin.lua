@@ -89,6 +89,10 @@ function Plugin:SetAlias(alias)
 	end
 end
 
+function Plugin:__tostring()
+	return "Plugin ["..self.m_Name.."]"
+end
+
 function Plugin:Register()
 	plugin.Register(self)
 end
