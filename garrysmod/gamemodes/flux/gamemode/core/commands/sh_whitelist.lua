@@ -27,17 +27,17 @@ end
 
 COMMAND:Register()
 
-local COMMAND = Command("takewhitelist")
-COMMAND.name = "TakeWhitelist"
+local COMMAND = Command("unwhitelist")
+COMMAND.name = "UnWhitelist"
 COMMAND.description = "#TakeWhitelistCMD_Description"
 COMMAND.syntax = "#TakeWhitelistCMD_Syntax"
 COMMAND.category = "player_management"
 COMMAND.arguments = 2
 COMMAND.playerArg = 1
-COMMAND.aliases = {"unwhitelist", "plytakewhitelist", "plyunwhitelist"}
+COMMAND.aliases = {"takewhitelist", "plytakewhitelist", "plyunwhitelist"}
 
 function COMMAND:OnRun(player, target, name, bStrict)
-	local whitelist = faction.Find(name, (bStrict and true) or false)
+	local whitelist = faction.Find(name, bStrict)
 
 	if (whitelist) then
 		if (target:HasWhitelist(whitelist.uniqueID)) then

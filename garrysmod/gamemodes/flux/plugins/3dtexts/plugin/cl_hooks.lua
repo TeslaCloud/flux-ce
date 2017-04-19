@@ -35,18 +35,19 @@ function fl3DText:PostDrawOpaqueRenderables()
 					local wide = w + 64
 					local barColor = Color(255, 255, 255, 40)
 					local barX, barY = -w / 2 - 32, -h / 2 - 16
+					local rectWidth = (wide / 3 - wide / 6) * 0.75
 
-					-- Draw left long thingies
-					draw.RoundedBox(0, barX, barY, wide / 3, 4, barColor)
-					draw.RoundedBox(0, barX, barY + h + 28, wide / 3, 4, barColor)
+					-- Draw left thick rectangles
+					draw.RoundedBox(0, barX, barY - 6, rectWidth, 10, barColor)
+					draw.RoundedBox(0, barX, barY + h + 22, rectWidth, 10, barColor)
 
-					-- Right long thingies
-					draw.RoundedBox(0, barX + (wide / 3) * 2, barY, wide / 3, 4, barColor)
-					draw.RoundedBox(0, barX + (wide / 3) * 2, barY + h + 28, wide / 3, 4, barColor)
+					-- ...and the right ones
+					draw.RoundedBox(0, barX + wide - rectWidth, barY - 6, rectWidth, 10, barColor)
+					draw.RoundedBox(0, barX + wide - rectWidth, barY + h + 22, rectWidth, 10, barColor)
 
 					-- And the middle thingies
-					draw.RoundedBox(0, barX + (wide / 3) + wide / 12, barY, wide / 3 - wide / 6, 10, barColor)
-					draw.RoundedBox(0, barX + (wide / 3) + wide / 12, barY + h + 22, wide / 3 - wide / 6, 10, barColor)
+					draw.RoundedBox(0, -(wide / 1.75) * 0.5, barY, wide / 1.75, 4, barColor)
+					draw.RoundedBox(0, -(wide / 1.75) * 0.5, barY + h + 22, wide / 1.75, 4, barColor)
 				end
 			end
 
@@ -130,19 +131,20 @@ function fl3DText:PostDrawOpaqueRenderables()
 						draw.RoundedBox(0, boxX, boxY + h + 26, w + 64, 6, barColor)
 					elseif (style == 9) then
 						local tall, wide = 6, w + 64
+						local rectWidth = (wide / 3 - wide / 6) * 0.75
 						local barColor = Color(255, 255, 255, math.Clamp(fadeAlpha, 0, boxAlpha))
 
-						-- Draw left long thingies
-						draw.RoundedBox(0, boxX, boxY, wide / 3, 4, barColor)
-						draw.RoundedBox(0, boxX, boxY + h + 28, wide / 3, 4, barColor)
+						-- Draw left thick rectangles
+						draw.RoundedBox(0, boxX, boxY - 6, rectWidth, 10, barColor)
+						draw.RoundedBox(0, boxX, boxY + h + 22, rectWidth, 10, barColor)
 
-						-- Right long thingies
-						draw.RoundedBox(0, boxX + (wide / 3) * 2, boxY, wide / 3, 4, barColor)
-						draw.RoundedBox(0, boxX + (wide / 3) * 2, boxY + h + 28, wide / 3, 4, barColor)
+						-- ...and the right ones
+						draw.RoundedBox(0, boxX + wide - rectWidth, boxY - 6, rectWidth, 10, barColor)
+						draw.RoundedBox(0, boxX + wide - rectWidth, boxY + h + 22, rectWidth, 10, barColor)
 
 						-- And the middle thingies
-						draw.RoundedBox(0, boxX + (wide / 3) + wide / 12, boxY, wide / 3 - wide / 6, 10, barColor)
-						draw.RoundedBox(0, boxX + (wide / 3) + wide / 12, boxY + h + 22, wide / 3 - wide / 6, 10, barColor)
+						draw.RoundedBox(0, -(wide / 1.75) * 0.5, boxY, wide / 1.75, 4, barColor)
+						draw.RoundedBox(0, -(wide / 1.75) * 0.5, boxY + h + 22, wide / 1.75, 4, barColor)
 					end
 				end
 
@@ -153,12 +155,12 @@ function fl3DText:PostDrawOpaqueRenderables()
 		end
 
 		if (style >= 3) then
-			cam.Start3D2D(pos + (normal * 0.95), angle, 0.1 * scale)
+			cam.Start3D2D(pos + (normal * 0.95 * (scale + 0.5)), angle, 0.1 * scale)
 				draw.SimpleText(text, theme.GetFont("Text_3D2D"), posX, posY, Color(0, 0, 0, math.Clamp(fadeAlpha, 0, 240)))
 			cam.End3D2D()
 		end
 
-		cam.Start3D2D(pos + (normal * 1.25), angle, 0.1 * scale)
+		cam.Start3D2D(pos + (normal * 1.25 * (scale + 0.5)), angle, 0.1 * scale)
 			draw.SimpleText(text, theme.GetFont("Text_3D2D"), posX, posY, ColorAlpha(textColor, fadeAlpha))
 		cam.End3D2D()
 	end

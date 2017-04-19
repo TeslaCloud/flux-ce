@@ -148,10 +148,12 @@ function theme.RemoveTheme(id)
 end
 
 function theme.SetDermaSkin()
-	local skinTable = derma.GetNamedSkin("Flux")
+	local activeTheme = theme.activeTheme
 
-	if (theme.activeTheme and skinTable) then
-		for k, v in pairs(theme.activeTheme.skin) do
+	if (activeTheme) then
+		local skinTable = derma.GetNamedSkin("Flux")
+
+		for k, v in pairs(activeTheme.skin) do
 			skinTable[k] = v
 		end
 	end

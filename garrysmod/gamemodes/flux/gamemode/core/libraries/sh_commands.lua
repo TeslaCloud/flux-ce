@@ -35,24 +35,27 @@ function fl.command:Create(id, data)
 	fl.admin:PermissionFromCommand(data)
 end
 
-function fl.command:Find(id)
+function fl.command:FindByID(id)
 	id = id:utf8lower()
 
 	if (stored[id]) then return stored[id] end
 	if (aliases[id]) then return stored[aliases[id]] end
+end
+
+function fl.command:Find(id)
+	id = id:utf8lower()
+
+	local found = self:FindByID(id)
+
+	if (found) then
+		return found
+	end
 
 	for k, v in pairs(aliases) do
 		if (k:find(id)) then
 			return stored[v]
 		end
 	end
-end
-
-function fl.command:FindByID(id)
-	id = id:utf8lower()
-
-	if (stored[id]) then return stored[id] end
-	if (aliases[id]) then return stored[aliases[id]] end
 end
 
 -- A function to find all commands by given search string.
@@ -194,12 +197,12 @@ if (SERVER) then
 			end
 		end
 	end
-
-	concommand.Add("flCmd", function(player, cmd, args)
-		fl.command:Interpret(player, args)
-	end)
-
-	concommand.Add("flc", function(player, cmd, args)
-		fl.command:Interpret(player, args)
-	end)
 end
+
+concommand.Add("flCmd", function(player, cmd, args)
+	fl.command:Interpret(player, args)
+end)
+
+concommand.Add("flc", function(player, cmd, args)
+	fl.command:Interpret(player, args)
+end)
