@@ -29,7 +29,7 @@ end
 function fl.admin:CreateGroup(id, data)
 	if (!isstring(id)) then return end
 
-	data.m_uniqueID = id
+	data.m_UniqueID = id
 
 	if (data.m_Base) then
 		local parent = groups[data.m_Base]

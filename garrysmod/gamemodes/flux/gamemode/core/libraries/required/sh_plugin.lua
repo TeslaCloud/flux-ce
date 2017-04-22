@@ -11,13 +11,14 @@ library.New "plugin"
 local stored = {}
 local hooksCache = {}
 local reloadData = {}
+local loadCache = {}
 local extras = {
 	"libraries",
+	"libs",
 	"classes",
 	"meta",
 	"config",
 	"languages",
-	"factions",
 	"items",
 	"commands",
 	"groups",
@@ -36,66 +37,73 @@ end
 
 function plugin.ClearCache()
 	hooksCache = {}
+	loadCache = {}
 end
 
-class "Plugin"
+function plugin.ClearLoadCache()
+	loadCache = {}
+end
 
-function Plugin:Plugin(id, data)
+class "CPlugin"
+
+function CPlugin:CPlugin(id, data)
 	self.m_Name = data.name or "Unknown Plugin"
 	self.m_Author = data.author or "Unknown Author"
 	self.m_Folder = data.folder or name:gsub(" ", "_"):lower()
 	self.m_Description = data.description or "An undescribed plugin or schema."
-	self.m_uniqueID = id or data.id or name:MakeID() or "unknown"
+	self.m_UniqueID = id or data.id or name:MakeID() or "unknown"
 
 	table.Merge(self, data)
 end
 
-function Plugin:GetName()
+function CPlugin:GetName()
 	return self.m_Name
 end
 
-function Plugin:GetFolder()
+function CPlugin:GetFolder()
 	return self.m_Folder
 end
 
-function Plugin:GetAuthor()
+function CPlugin:GetAuthor()
 	return self.m_Author
 end
 
-function Plugin:GetDescription()
+function CPlugin:GetDescription()
 	return self.m_Description
 end
 
-function Plugin:SetName(name)
+function CPlugin:SetName(name)
 	self.m_Name = name or self.m_Name or "Unknown Plugin"
 end
 
-function Plugin:SetAuthor(author)
+function CPlugin:SetAuthor(author)
 	self.m_Author = author or self.m_Author or "Unknown"
 end
 
-function Plugin:SetDescription(desc)
+function CPlugin:SetDescription(desc)
 	self.m_Description = desc or self.m_Description or "No description provided!"
 end
 
-function Plugin:SetData(data)
+function CPlugin:SetData(data)
 	table.Merge(self, data)
 end
 
-function Plugin:SetAlias(alias)
+function CPlugin:SetAlias(alias)
 	if (isstring(alias)) then
 		_G[alias] = self
 		self.alias = alias
 	end
 end
 
-function Plugin:__tostring()
+function CPlugin:__tostring()
 	return "Plugin ["..self.m_Name.."]"
 end
 
-function Plugin:Register()
+function CPlugin:Register()
 	plugin.Register(self)
 end
+
+Plugin = CPlugin
 
 function plugin.CacheFunctions(obj, id)
 	for k, v in pairs(obj) do
@@ -148,6 +156,17 @@ function plugin.Register(obj)
 	end
 
 	stored[obj:GetFolder()] = obj
+	loadCache[obj.m_UniqueID] = true
+end
+
+function plugin.HasLoaded(obj)
+	if (istable(obj)) then
+		return loadCache[obj.m_UniqueID]
+	elseif (isstring(obj)) then
+		return loadCache[obj]
+	end
+
+	return false
 end
 
 function plugin.Find(id)
@@ -155,7 +174,7 @@ function plugin.Find(id)
 		return stored[id], id
 	else
 		for k, v in pairs(stored) do
-			if (v.m_uniqueID == id or v:GetFolder() == id or v:GetName() == id) then
+			if (v.m_UniqueID == id or v:GetFolder() == id or v:GetName() == id) then
 				return v, k
 			end
 		end
@@ -288,6 +307,16 @@ function plugin.Include(folder)
 		end
 	end
 
+	if (istable(data.depends)) then
+		for k, v in ipairs(data.depends) do
+			if (!plugin.Require(v)) then
+				ErrorNoHalt("[Flux] Not loading the '"..tostring(folder).."' plugin, because one or more of it's dependencies is missing! ("..tostring(v)..")\n")
+
+				return		
+			end
+		end
+	end
+
 	PLUGIN = Plugin(id, data)
 
 	if (stored[folder]) then
@@ -333,6 +362,30 @@ function plugin.IncludeSchema()
 	Schema:Register()
 end
 
+-- Please specify full file name if requiring a single-file plugin.
+function plugin.Require(pluginName)
+	if (!isstring(pluginName)) then return false end
+
+	if (!plugin.HasLoaded(pluginName)) then
+		local searchPaths = {
+			"flux/plugins/",
+			(fl.core:GetSchemaFolder() or "flux").."/plugins/"
+		}
+
+		for k, v in ipairs(searchPaths) do
+			if (file.Exists(v..pluginName, "LUA")) then
+				plugin.Include(v..pluginName)
+
+				return true
+			end
+		end
+	else
+		return true
+	end
+
+	return false
+end
+
 function plugin.IncludePlugins(folder)
 	local files, folders = file.Find(folder.."/*", "LUA")
 
@@ -347,15 +400,19 @@ function plugin.IncludePlugins(folder)
 	end
 end
 
+function plugin.AddExtra(strExtra)
+	if (!isstring(strExtra)) then return end
+
+	table.insert(extras, strExtra)
+end
+
 function plugin.IncludeFolders(folder)
 	for k, v in ipairs(extras) do
-		if (hook.Run("PluginIncludeFolder", v, folder) == nil) then
+		if (plugin.Call("PluginIncludeFolder", v, folder) == nil) then
 			if (v == "items") then
 				item.IncludeItems(folder.."/items/")
 			elseif (v == "groups") then
 				fl.admin:IncludeGroups(folder.."/groups/")
-			elseif (v == "factions") then
-				faction.IncludeFactions(folder.."/factions/")
 			elseif (v == "themes") then
 				pipeline.IncludeDirectory("theme", folder.."/themes/")
 			elseif (v == "tools") then

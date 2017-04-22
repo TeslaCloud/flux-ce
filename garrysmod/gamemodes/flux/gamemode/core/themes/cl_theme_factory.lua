@@ -67,26 +67,6 @@ function THEME:OnLoaded()
 		return vgui.Create("flTabMenu", parent)
 	end)
 
-	self:AddPanel("MainMenu", function(id, parent, ...)
-		return vgui.Create("flMainMenu", parent)
-	end)
-
-	self:AddPanel("CharacterCreation", function(id, parent, ...)
-		return vgui.Create("flCharacterCreation", parent)
-	end)
-
-	self:AddPanel("CharCreation_General", function(id, parent, ...)
-		return vgui.Create("flCharCreationGeneral", parent)
-	end)
-
-	self:AddPanel("CharCreation_Model", function(id, parent, ...)
-		return vgui.Create("flCharCreationModel", parent)
-	end)
-
-	self:AddPanel("CharCreation_Faction", function(id, parent, ...)
-		return vgui.Create("flCharCreationFaction", parent)
-	end)
-
 	self:AddPanel("Admin_PermissionsEditor", function(id, parent, ...)
 		return vgui.Create("flPermissionsEditor", parent)
 	end)

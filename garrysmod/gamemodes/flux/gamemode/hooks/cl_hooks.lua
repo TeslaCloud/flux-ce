@@ -29,20 +29,13 @@ function GM:InitPostEntity()
 end
 
 function GM:PlayerInitialized()
-	if (!fl.client:GetCharacter()) then
-		fl.IntroPanel = theme.CreatePanel("MainMenu")
-		fl.IntroPanel:MakePopup()
-
-		RunConsoleCommand("spawnmenu_reload")
-	end
-
+	RunConsoleCommand("spawnmenu_reload")
 	hook.Run("PopulateToolMenu")
 end
 
 do
 	local scrW, scrH = ScrW(), ScrH()
 	local nextCheck = CurTime()
-	local curVolume = 1
 
 	-- This will let us detect whether the resolution has been changed, then call a hook if it has.
 	function GM:Tick()
@@ -60,17 +53,6 @@ do
 			end
 
 			nextCheck = curTime + 1
-		end
-
-		if (fl.menuMusic and !IsValid(fl.IntroPanel)) then
-			if (curVolume > 0.05) then
-				curVolume = Lerp(0.1, curVolume, 0)
-				fl.menuMusic:SetVolume(curVolume)
-			else
-				curVolume = 1
-				fl.menuMusic:Stop()
-				fl.menuMusic = nil
-			end
 		end
 	end
 end
@@ -101,7 +83,7 @@ end
 
 -- Called when the scoreboard should be shown.
 function GM:ScoreboardShow()
-	if (fl.client:CharacterLoaded()) then
+	if (hook.Run("ShouldScoreboardShow") != false) then
 		if (fl.tabMenu and fl.tabMenu.CloseMenu) then
 			fl.tabMenu:CloseMenu(true)
 		end
@@ -114,7 +96,7 @@ end
 
 -- Called when the scoreboard should be hidden.
 function GM:ScoreboardHide()
-	if (fl.client:CharacterLoaded()) then
+	if (hook.Run("ShouldScoreboardHide") != false) then
 		if (fl.tabMenu and fl.tabMenu.heldTime and CurTime() >= fl.tabMenu.heldTime) then
 			fl.tabMenu:CloseMenu()
 		end
@@ -124,7 +106,7 @@ end
 function GM:HUDDrawScoreBoard()
 	self.BaseClass:HUDDrawScoreBoard()
 
-	if (!fl.client or !fl.client:HasInitialized() or !fl.IntroPanel) then
+	if (!fl.client or !fl.client:HasInitialized() or hook.Run("ShouldDrawLoadingScreen")) then
 		local text = "Loading schema and plugins, please wait..."
 
 		if (!fl.localPlayerCreated) then
@@ -133,17 +115,25 @@ function GM:HUDDrawScoreBoard()
 			text = "Receiving shared data, please wait..."
 		end
 
+		local hooked = plugin.Call("GetLoadingScreenMessage")
+
+		if (isstring(hooked)) then
+			text = hooked
+		end
+
 		local scrW, scrH = ScrW(), ScrH()
 		local w, h = util.GetTextSize(text, "DermaLarge")
 
 		draw.RoundedBox(0, 0, 0, scrW, scrH, Color(0, 0, 0))
 		draw.SimpleText(text, "DermaLarge", scrW / 2 - w / 2, scrH / 2 + scrH / 4, Color(255, 255, 255))
+
+		plugin.Call("PostDrawLoadingScreen")
 	end
 end
 
 -- Called when the player's HUD is drawn.
 function GM:HUDPaint()
-	if (fl.client:HasInitialized() and fl.client:CharacterLoaded()) then
+	if (fl.client:HasInitialized() and hook.Run("ShouldHUDPaint") != false) then
 		local curTime = CurTime()
 		local scrW, scrH = ScrW(), ScrH()
 
@@ -391,15 +381,6 @@ end
 
 -- Called when category icons are presented.
 function GM:AddTabMenuItems(menu)
-	menu:AddMenuItem("!mainmenu", {
-		title = "Main Menu",
-		icon = "fa-users",
-		override = function(menuPanel, button)
-			menuPanel:SafeRemove()
-			fl.IntroPanel = theme.CreatePanel("MainMenu")
-		end
-	})
-
 	menu:AddMenuItem("!inventory", {
 		title = "Inventory",
 		panel = "flInventory",

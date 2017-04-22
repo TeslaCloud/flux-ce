@@ -12,7 +12,7 @@ COMMAND.category = "misc"
 COMMAND.aliases = {"staticpropremove", "staticremove"}
 
 function COMMAND:OnRun(player)
-	plugin.Call("PlayerMakeStatic", player, true)
+	plugin.Call("PlayerMakeStatic", player, false)
 end
 
 COMMAND:Register()

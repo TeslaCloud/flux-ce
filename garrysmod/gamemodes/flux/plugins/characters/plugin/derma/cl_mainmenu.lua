@@ -34,9 +34,7 @@ function PANEL:Paint(w, h)
 	theme.Hook("PaintMainMenu", self, w, h)
 end
 
-function PANEL:Think()
-	theme.Hook("MainMenuThink", self)
-end
+function PANEL:Think() end
 
 function PANEL:RecreateSidebar(bShouldCreateButtons)
 	if (IsValid(self.sidebar)) then

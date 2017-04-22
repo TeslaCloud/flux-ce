@@ -19,7 +19,7 @@ function PANEL:Init()
 
 	self:StartAnimation(scrW, scrH)
 
-	self:CloseMenu()
+	hook.Run("OnIntroPanelCreated", self)
 end
 
 function PANEL:Paint(w, h)
@@ -34,8 +34,7 @@ end
 function PANEL:CloseMenu(bForce)
 	self:Remove()
 
-	fl.IntroPanel = vgui.Create("flMainMenu")
-	fl.IntroPanel:MakePopup()
+	hook.Run("OnIntroPanelRemoved")
 end
 
 function PANEL:OnKeyCodeReleased(nKey)
@@ -47,10 +46,3 @@ function PANEL:StartAnimation(scrW, scrH)
 end
 
 derma.DefineControl("flIntro", "", PANEL, "EditablePanel")
-
-if (IsValid(fl.IntroPanel)) then
-	fl.IntroPanel:Remove()
-
-	fl.IntroPanel = vgui.Create("flIntro")
-	fl.IntroPanel:MakePopup()
-end

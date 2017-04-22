@@ -71,3 +71,34 @@ end)
 function faction.IncludeFactions(directory)
 	return pipeline.IncludeDirectory("faction", directory)
 end
+
+do
+	local playerMeta = FindMetaTable("Player")
+
+	function playerMeta:GetFactionID()
+		return self:GetNetVar("faction", "player")
+	end
+
+	function playerMeta:GetFaction()
+		return faction.FindByID(self:GetFactionID())
+	end
+
+	function playerMeta:GetRank()
+		return self:GetCharacterData("Rank", -1)
+	end
+
+	function playerMeta:IsRank(strRank, bStrict)
+		local factionTable = self:GetFaction()
+		local rank = self:GetRank()
+
+		if (rank != -1 and factionTable) then
+			for k, v in ipairs(factionTable.Ranks) do
+				if (string.utf8lower(v.uniqueID) == string.utf8lower(strRank)) then
+					return (bStrict and k == rank) or k <= rank
+				end
+			end
+		end
+
+		return false
+	end
+end

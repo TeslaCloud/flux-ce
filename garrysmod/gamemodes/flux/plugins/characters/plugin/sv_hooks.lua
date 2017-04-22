@@ -9,7 +9,7 @@ function flCharacters:ClientIncludedSchema(player)
 end
 
 function flCharacters:PostCharacterLoaded(player, character)
-	netstream.Start(player, "PostCharacterLoaded", character.uniqueID)
+	hook.RunClient(player, "PostCharacterLoaded", character.uniqueID)
 
 	player:CheckInventory()
 

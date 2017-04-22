@@ -79,11 +79,7 @@ function PANEL:AddSidebarItems(sidebar, panel)
 	button:SetActive(true)
 	panel.prevButton = button
 
-	panel:AddButton("Faction", function (btn)
-		self:OpenPanel("CharCreation_Faction")
-	end)
-
-	panel:AddButton("Model", function (btn)
+	panel:AddButton("Model", function(btn)
 		self:OpenPanel("CharCreation_Model")
 	end)
 

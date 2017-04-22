@@ -21,6 +21,10 @@ end
 
 if (fl.initialized) then
 	MsgC(Color(0, 255, 100, 255), "[Flux] Lua auto-reload in progress...\n")
+
+	if (fl.Devmode) then
+		fl.core:DevPrint("Starting loading all over again. ["..math.Round(os.clock() - fl.startTime, 3).."]")
+	end
 else
 	MsgC(Color(0, 255, 100, 255), "[Flux] Initializing...\n")
 end
@@ -61,7 +65,7 @@ if (system.IsWindows()) then
 			if (fileName:find(".ini")) then return end
 
 			print("[Watchdog] Detected a new plugin.")
-			hook.Run("OnPluginFileChange", fileName)
+			--hook.Run("OnPluginFileChange", fileName)
 		end
 	end)
 end
