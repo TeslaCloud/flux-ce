@@ -10,8 +10,12 @@ hook.Remove("PersistenceSave", "PersistenceSave")
 hook.Remove("PersistenceLoad", "PersistenceLoad")
 hook.Remove("InitPostEntity", "PersistenceInit")
 
-local blacklistedEntities = {
-	["fl_item"] = true
+local whitelistedEntities = {
+	["prop_physics"] = true,
+	["prop_physics_multiplayer"] = true,
+	["prop_ragdoll"] = true,
+	["gmod_light"] = true,
+	["gmod_lamp"] = true
 }
 
 function flStaticEnts:PlayerMakeStatic(player, bIsStatic)
@@ -30,7 +34,7 @@ function flStaticEnts:PlayerMakeStatic(player, bIsStatic)
 		return
 	end
 
-	if (blacklistedEntities[entity:GetClass()]) then
+	if (!whitelistedEntities[entity:GetClass()]) then
 		fl.player:Notify(player, "#Err_CannotStaticThis")
 
 		return

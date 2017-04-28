@@ -29,4 +29,18 @@ AccessorFunc(PANEL, "m_AccentColor", "AccentColor")
 function PANEL:Paint(width, height) theme.Hook("PaintPanel", self, width, height) end
 function PANEL:Think() theme.Hook("PanelThink", self) end
 
+-- MVC Functionality for all FL panels.
+function PANEL:Push(strName, ...)
+	mvc.Push(strName, ...)
+end
+
+function PANEL:Pull(strName, handler, bPreventRemove)
+	mvc.Pull(strName, handler, bPreventRemove)
+end
+
+function PANEL:Request(strName, handler, ...)
+	self:Pull(strName, handler)
+	self:Push(strName, ...)
+end
+
 vgui.Register("flBasePanel", PANEL, "EditablePanel")

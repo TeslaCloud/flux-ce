@@ -55,12 +55,7 @@ function netstream.Split(data)
 	return result
 end
 
---[[
-	@codebase Shared
-	@details A function to hook a data stream.
-	@param String A unique identifier.
-	@param Function The datastream callback.
---]]
+-- A function to hook a net stream.
 function netstream.Hook(name, Callback)
 	stored[name] = Callback
 end

@@ -76,22 +76,48 @@ else
 	local menuItems = config.menuItems or {}
 	config.menuItems = menuItems
 
-	function config.AddToMenu(key, name, description, dataType, data)
-		if (!key) then return end
+	function config.CreateCategory(id, name, description)
+		id = id or "other"
 
-		menuItems[key] = menuItems[key] or {}
-		menuItems[key].name = name or key
-		menuItems[key].description = description or "This config has no description set."
-		menuItems[key].type = dataType -- valid types: table, number (or num), string (or text), bool (or boolean)
-		menuItems[key].data = data or {}
+		menuItems[id] = {
+			category = {name = name or "Other", description = description or ""},
+			AddKey = function(key, name, description, dataType, data)
+				config.AddToMenu(id, key, name, description, dataType, data)
+			end,
+			AddSlider = function(key, name, description, data)
+				config.AddToMenu(id, key, name, description, "number", data)
+			end,
+			AddTextBox = function(key, name, description, data)
+				config.AddToMenu(id, key, name, description, "string", data)
+			end,
+			AddCheckbox = function(key, name, description, data)
+				config.AddToMenu(id, key, name, description, "bool", data)
+			end,
+			AddDropdown = function(key, name, description, data)
+				config.AddToMenu(id, key, name, description, "dropdown", data)
+			end,
+			configs = {}
+		}
+
+		return menuItems[id]
+	end
+
+	function config.AddToMenu(category, key, name, description, dataType, data)
+		if (!category or !key) then return end
+
+		menuItems[category] = menuItems[category] or {}
+		menuItems[category].configs = menuItems[category].configs or {}
+
+		table.insert(menuItems[category].configs, {
+			name = name or key,
+			description = description or "This config has no description set.",
+			type = dataType,
+			data = data or {}
+		})
 	end
 
 	function config.GetMenuKeys()
 		return menuItems
-	end
-
-	function config.GetMenuKey(key)
-		return menuItems[key]
 	end
 
 	netstream.Hook("config_setvar", function(key, value)

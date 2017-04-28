@@ -312,7 +312,7 @@ function plugin.Include(folder)
 			if (!plugin.Require(v)) then
 				ErrorNoHalt("[Flux] Not loading the '"..tostring(folder).."' plugin, because one or more of it's dependencies is missing! ("..tostring(v)..")\n")
 
-				return		
+				return
 			end
 		end
 	end
