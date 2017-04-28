@@ -49,43 +49,15 @@ end
 --]]
 
 function playerMeta:HasPermission(perm)
-	return fl.admin:HasPermission(self, perm)
-end
-
-function playerMeta:GetPermissions()
-	return self:GetNetVar("flPermissions", {})
+	return hook.Run("PlayerHasPermission", self, perm)
 end
 
 function playerMeta:IsOwner()
-	return self:IsMemberOf("owner")
+	return hook.Run("PlayerIsOwner", self)
 end
 
 function playerMeta:IsCoOwner()
-	if (self:IsOwner()) then
-		return true
-	end
-
-	if (config.Get("owner_steamid_extra")) then
-		for k, v in ipairs(config.Get("owner_steamid_extra")) do
-			if (v == self:SteamID()) then
-				return true
-			end
-		end
-	end
-
-	return false
-end
-
-function playerMeta:GetUserGroup()
-	return self:GetNetVar("flUserGroup", "user")
-end
-
-function playerMeta:GetSecondaryGroups()
-	return self:GetNetVar("flSecondaryGroups", {})
-end
-
-function playerMeta:GetCustomPermissions()
-	return self:GetNetVar("flCustomPermissions", {})
+	return hook.Run("PlayerIsCoOwner", self)
 end
 
 function playerMeta:IsMemberOf(group)
@@ -93,36 +65,6 @@ function playerMeta:IsMemberOf(group)
 		return true
 	end
 
-	for k, v in ipairs(self:GetSecondaryGroups()) do
-		if (v == group) then
-			return true
-		end
-	end
-
-	return false
-end
-
-function playerMeta:IsSuperAdmin()
-	if (self:IsOwner() or self:IsCoOwner()) then
-		return true
-	end
-
-	return self:IsMemberOf("superadmin")
-end
-
-function playerMeta:IsAdmin()
-	if (self:IsSuperAdmin()) then
-		return true
-	end
-
-	return self:IsMemberOf("admin")
-end
-
-function playerMeta:IsOperator()
-	if (self:IsAdmin()) then
-		return true
-	end
-
-	return self:IsMemberOf("operator")
+	return hook.Run("PlayerIsMemberOfGroup", self, group)
 end
 

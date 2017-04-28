@@ -14,7 +14,7 @@ if (SERVER) then
 			key = key..".pon"
 		end
 
-		fileio.Write("settings/flux/"..key, fl.core:Serialize(value))
+		fileio.Write("settings/flux/"..key, fl.Serialize(value))
 	end
 
 	function data.Load(key, failSafe)
@@ -27,7 +27,7 @@ if (SERVER) then
 		if (file.Exists("settings/flux/"..key, "GAME")) then
 			local strData = fileio.Read("settings/flux/"..key)
 
-			return fl.core:Deserialize(strData)
+			return fl.Deserialize(strData)
 		elseif (failSafe) then
 			return failSafe
 		else
@@ -54,7 +54,7 @@ else
 			key = key..".dat"
 		end
 
-		file.Write("flux/"..key, fl.core:Serialize(value))
+		file.Write("flux/"..key, fl.Serialize(value))
 	end
 
 	function data.Load(key, failSafe)
@@ -67,7 +67,7 @@ else
 		if (file.Exists("flux/"..key, "DATA")) then
 			local strData = file.Read("flux/"..key, "DATA")
 
-			return fl.core:Deserialize(strData)
+			return fl.Deserialize(strData)
 		elseif (failSafe) then
 			return failSafe
 		else
@@ -89,15 +89,15 @@ else
 end
 
 function data.SaveSchema(key, value)
-	return data.Save("schemas/"..fl.core:GetSchemaFolder().."/"..key, value)
+	return data.Save("schemas/"..fl.GetSchemaFolder().."/"..key, value)
 end
 
 function data.LoadSchema(key, failSafe)
-	return data.Load("schemas/"..fl.core:GetSchemaFolder().."/"..key, failSafe)
+	return data.Load("schemas/"..fl.GetSchemaFolder().."/"..key, failSafe)
 end
 
 function data.DeleteSchema(key)
-	return data.Delete("schemas/"..fl.core:GetSchemaFolder().."/"..key)
+	return data.Delete("schemas/"..fl.GetSchemaFolder().."/"..key)
 end
 
 function data.SavePlugin(key, value)

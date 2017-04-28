@@ -424,7 +424,7 @@ function GM:OneSecond()
 		fl.nextSaveData = curTime + 10
 	elseif (fl.nextSaveData <= curTime) then
 		if (hook.Run("FLShouldSaveData") != false) then
-			fl.core:DevPrint("Saving framework's data...")
+			fl.DevPrint("Saving framework's data...")
 			hook.Run("FLSaveData")
 		end
 
@@ -483,7 +483,7 @@ function GM:OneSecond()
 
 		if (#player.GetAll() == 0) then
 			if (hook.Run("ShouldServerAutoRestart") != false) then
-				fl.core:DevPrint("Server is empty, restarting...")
+				fl.DevPrint("Server is empty, restarting...")
 				RunConsoleCommand("changelevel", game.GetMap())
 			end
 		end

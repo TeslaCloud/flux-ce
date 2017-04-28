@@ -153,22 +153,22 @@ if (SERVER) then
 
 		local status = character.Create(player, data)
 
-		fl.core:DevPrint("Creating character. Status: "..status)
+		fl.DevPrint("Creating character. Status: "..status)
 
 		if (status == CHAR_SUCCESS) then
 			character.SendToClient(player)
 			netstream.Start(player, "PlayerCreatedCharacter", true, status)
 
-			fl.core:DevPrint("Success")
+			fl.DevPrint("Success")
 		else
 			netstream.Start(player, "PlayerCreatedCharacter", false, status)
 
-			fl.core:DevPrint("Error")
+			fl.DevPrint("Error")
 		end
 	end)
 
 	netstream.Hook("PlayerSelectCharacter", function(player, id)
-		fl.core:DevPrint(player:Name().." has loaded character #"..id)
+		fl.DevPrint(player:Name().." has loaded character #"..id)
 
 		player:SetActiveCharacter(id)
 	end)

@@ -112,7 +112,7 @@ function areas.SetCallback(areaType, callback)
 end
 
 function areas.GetCallback(areaType)
-	return callbacks[areaType] or (types[areaType] and types[areaType].callback) or function() fl.core:DevPrint("Callback for area type '"..areaType.."' could not be found!") end
+	return callbacks[areaType] or (types[areaType] and types[areaType].callback) or function() fl.DevPrint("Callback for area type '"..areaType.."' could not be found!") end
 end
 
 areas.RegisterType(

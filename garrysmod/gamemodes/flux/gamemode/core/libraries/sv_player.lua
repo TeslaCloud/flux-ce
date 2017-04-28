@@ -17,7 +17,7 @@ function fl.player:Notify(player, message)
 end
 
 function fl.player:NotifyAll(message)
-	ServerLog("NOTIFY - "..message)
+	ServerLog("[Notification] "..message)
 
 	netstream.Start(nil, "flNotification", message)
 end

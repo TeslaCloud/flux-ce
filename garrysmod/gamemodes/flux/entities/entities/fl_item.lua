@@ -47,7 +47,7 @@ if (SERVER) then
 			if (self.item) then
 				hook.Run("PlayerUseItemEntity", caller, self, self.item)
 			else
-				fl.core:DevPrint("Player attempted to use an item entity without item object tied to it!")
+				fl.DevPrint("Player attempted to use an item entity without item object tied to it!")
 			end
 		end
 	end

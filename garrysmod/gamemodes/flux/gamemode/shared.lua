@@ -71,7 +71,7 @@ function GM:GetGameDescription()
 end
 
 if (fl.initialized and fl.Devmode) then
-	fl.core:DevPrint("Starting reloading core files. ["..math.Round(os.clock() - fl.startTime, 3).."]")
+	fl.DevPrint("Starting reloading core files. ["..math.Round(os.clock() - fl.startTime, 3).."]")
 end
 
 AddCSLuaFile("core/sh_enums.lua")
@@ -85,7 +85,7 @@ util.Include("core/cl_core.lua")
 util.Include("core/sv_core.lua")
 
 if (fl.Devmode) then
-	fl.core:DevPrint("Loaded core files. ["..math.Round(os.clock() - fl.startTime, 3).."]")
+	fl.DevPrint("Loaded core files. ["..math.Round(os.clock() - fl.startTime, 3).."]")
 end
 
 -- This way we put things we want loaded BEFORE anything else in here, like plugin, config, etc.
@@ -95,7 +95,7 @@ util.IncludeDirectory("core/libraries/required", true)
 plugin.ClearCache()
 
 if (fl.Devmode) then
-	fl.core:DevPrint("Loaded essential libraries and purged cache. ["..math.Round(os.clock() - fl.startTime, 3).."]")
+	fl.DevPrint("Loaded essential libraries and purged cache. ["..math.Round(os.clock() - fl.startTime, 3).."]")
 end
 
 util.IncludeDirectory("core/config", true)
@@ -103,15 +103,12 @@ util.IncludeDirectory("core/libraries", true)
 util.IncludeDirectory("core/libraries/classes", true)
 util.IncludeDirectory("core/libraries/meta", true)
 util.IncludeDirectory("languages", true)
-fl.admin:IncludeGroups("flux/gamemode/core/groups")
-util.IncludeDirectory("core/commands", true)
 util.IncludeDirectory("core/derma/base", true)
-util.IncludeDirectory("core/derma/admin", true)
 util.IncludeDirectory("core/derma", true)
 item.IncludeItems("flux/gamemode/core/items")
 
 if (fl.Devmode) then
-	fl.core:DevPrint("Loaded all libraries and stock plugin data. ["..math.Round(os.clock() - fl.startTime, 3).."]")
+	fl.DevPrint("Loaded all libraries and stock plugin data. ["..math.Round(os.clock() - fl.startTime, 3).."]")
 end
 
 if (theme or SERVER) then
@@ -136,27 +133,27 @@ end
 pipeline.IncludeDirectory("tool", "flux/gamemode/core/tools")
 
 if (fl.Devmode) then
-	fl.core:DevPrint("Loaded tools. ["..math.Round(os.clock() - fl.startTime, 3).."]")
+	fl.DevPrint("Loaded tools. ["..math.Round(os.clock() - fl.startTime, 3).."]")
 end
 
 util.IncludeDirectory("hooks", true)
 
 if (fl.Devmode) then
-	fl.core:DevPrint("Loaded hooks. ["..math.Round(os.clock() - fl.startTime, 3).."]")
+	fl.DevPrint("Loaded hooks. ["..math.Round(os.clock() - fl.startTime, 3).."]")
 end
 
-fl.core:IncludePlugins("flux/plugins")
+fl.IncludePlugins("flux/plugins")
 
 if (fl.Devmode) then
-	fl.core:DevPrint("Loaded Flux Core plugins. ["..math.Round(os.clock() - fl.startTime, 3).."]")
+	fl.DevPrint("Loaded Flux Core plugins. ["..math.Round(os.clock() - fl.startTime, 3).."]")
 end
 
 hook.Run("FluxPluginsLoaded")
 
-fl.core:IncludeSchema()
+fl.IncludeSchema()
 
 if (fl.Devmode) then
-	fl.core:DevPrint("Loaded schema. ["..math.Round(os.clock() - fl.startTime, 3).."]")
+	fl.DevPrint("Loaded schema. ["..math.Round(os.clock() - fl.startTime, 3).."]")
 end
 
 hook.Run("FluxSchemaLoaded")

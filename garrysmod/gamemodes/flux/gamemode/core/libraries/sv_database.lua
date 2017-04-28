@@ -7,13 +7,14 @@
 --]]
 
 library.New("db", fl)
+fl.db.connections = fl.db.connections or {}
 
 local QueueTable = {}
 fl.db.Module = fl.db.Module or config.Get("mysql_module") or "sqlite"
 local Connected = false
 
 if (fl.db.Module != "sqlite") then
-	fl.core:DevPrint("Using "..fl.db.Module.." as MySQL module...")
+	fl.DevPrint("Using "..fl.db.Module.." as MySQL module...")
 	SafeRequire(fl.db.Module)
 end
 
@@ -40,6 +41,7 @@ function CDatabaseQuery:CDatabaseQuery(tableName, queryType)
 	self.insertList = {}
 	self.updateList = {}
 	self.createList = {}
+	self.addcolumnList = {}
 	self.whereList = {}
 	self.orderByList = {}
 end
@@ -114,6 +116,10 @@ end
 
 function CDatabaseQuery:Create(key, value)
 	self.createList[#self.createList + 1] = {"`"..key.."`", value}
+end
+
+function CDatabaseQuery:AddColumn(key, value)
+	self.addcolumnList[#self.addcolumnList + 1] = {"ADD `"..key.."`", value}
 end
 
 function CDatabaseQuery:PrimaryKey(key)
@@ -309,6 +315,37 @@ local function BuildCreateQuery(queryObj)
 	return table.concat(queryString)
 end
 
+local function BuildAlterQuery(queryObj)
+	local queryString = {"ALTER TABLE"}
+
+	if (isstring(queryObj.tableName)) then
+		queryString[#queryString + 1] = " `"..queryObj.tableName.."`"
+	else
+		ErrorNoHalt("[CW:Database] No table name specified!\n")
+		return
+	end
+
+	queryString[#queryString + 1] = " "
+
+	if (istable(queryObj.addcolumnList) and #queryObj.addcolumnList > 0) then
+		local addcolumnList = {}
+
+		for i = 1, #queryObj.addcolumnList do
+			if (cw.database.Module == "sqlite") then
+				addcolumnList[#addcolumnList + 1] = queryObj.addcolumnList[i][1].." "..string.gsub(string.gsub(string.gsub(queryObj.addcolumnList[i][2], "AUTO_INCREMENT", ""), "AUTOINCREMENT", ""), "INT ", "INTEGER ")
+			else
+				addcolumnList[#addcolumnList + 1] = queryObj.addcolumnList[i][1].." "..queryObj.addcolumnList[i][2]
+			end
+		end
+
+		queryString[#queryString + 1] = " "..table.concat(addcolumnList, ", ")
+	end
+
+	queryString[#queryString + 1] = " "
+
+	return table.concat(queryString)
+end
+
 function CDatabaseQuery:Execute(bQueueQuery)
 	local queryString = nil
 	local queryType = string.lower(self.queryType)
@@ -327,6 +364,8 @@ function CDatabaseQuery:Execute(bQueueQuery)
 		queryString = BuildTruncateQuery(self)
 	elseif (queryType == "create") then
 		queryString = BuildCreateQuery(self)
+	elseif (queryType == "alter") then
+		queryString = BuildAlterQuery(self)
 	end
 
 	if (isstring(queryString)) then
@@ -370,8 +409,36 @@ function fl.db:Create(tableName)
 	return CDatabaseQuery(tableName, "CREATE")
 end
 
+function fl.db:Alter(tableName)
+	return CDatabaseQuery(tableName, "ALTER")
+end
+
+function fl.db:AddColumn(tableName,columnName, columnValue)
+	self:RawQuery("SHOW COLUMNS FROM `"..tableName.."` LIKE '"..columnName.."'", function(value)
+		if #value==0 then
+			local queryObj = self:Alter(tableName)
+				queryObj:AddColumn(columnName, columnValue)
+			queryObj:Execute()
+		end
+	end)
+end
+
+function fl.db:SetCurrentConnection(id)
+	if (self.Module != "mysqloo") then
+		id = "main"
+	end
+
+	if (self.connections[id]) then
+		self.connection = self.connections[id]
+		self.currentConnectionID = id
+	else
+		self.connection = self.connections["main"]
+		self.currentConnectionID = "main"
+	end
+end
+
 -- A function to connect to the MySQL database.
-function fl.db:Connect(host, username, password, database, port, socket, flags)
+function fl.db:Connect(host, username, password, database, port, socket, flags, id)
 	if (!port) then
 		port = 3306
 	end
@@ -384,9 +451,9 @@ function fl.db:Connect(host, username, password, database, port, socket, flags)
 		if (tmysql) then
 			local errorText = nil
 
-			self.connection, errorText = tmysql.initialize(host, username, password, database, port, socket, flags)
+			self.connections[id], errorText = tmysql.initialize(host, username, password, database, port, socket, flags)
 
-			if (!self.connection) then
+			if (!self.connections[id]) then
 				self:OnConnectionFailed(errorText)
 			else
 				self:OnConnected()
@@ -403,26 +470,28 @@ function fl.db:Connect(host, username, password, database, port, socket, flags)
 			local clientFlag = flags or 0
 
 			if (!isstring(socket)) then
-				self.connection = mysqloo.connect(host, username, password, database, port)
+				self.connections[id] = mysqloo.connect(host, username, password, database, port)
 			else
-				self.connection = mysqloo.connect(host, username, password, database, port, socket, clientFlag)
+				self.connections[id] = mysqloo.connect(host, username, password, database, port, socket, clientFlag)
 			end
 
-			self.connection.onConnected = function(database)
-				fl.db:OnConnected()
+			self.connections[id].onConnected = function(database)
+				self:OnConnected()
 			end
 
-			self.connection.onConnectionFailed = function(database, errorText)
-				fl.db:OnConnectionFailed(errorText)
+			self.connections[id].onConnectionFailed = function(database, errorText)
+				self:OnConnectionFailed(errorText)
 			end
 
-			self.connection:connect()
+			self.connections[id]:connect()
 		else
 			ErrorNoHalt(string.format(MODULE_NOT_EXIST, fl.db.Module))
 		end
 	elseif (fl.db.Module == "sqlite") then
 		fl.db:OnConnected()
 	end
+
+	self:SetCurrentConnection(id)
 end
 
 -- A function to query the MySQL database.
@@ -639,7 +708,7 @@ function fl.db:EasyWrite(tableName, where, data)
 
 					updateObj:Where(where[1], where[2])
 					updateObj:Callback(function()
-						fl.core:DevPrint("Easy MySQL updated data. ('"..tableName.."' WHERE "..where[1].." = "..where[2]..")")
+						fl.DevPrint("Easy MySQL updated data. ('"..tableName.."' WHERE "..where[1].." = "..where[2]..")")
 					end)
 
 				updateObj:Execute()
@@ -652,7 +721,7 @@ function fl.db:EasyWrite(tableName, where, data)
 
 					insertObj:Callback(function(result)
 						if (!istable(where[1])) then
-							fl.core:DevPrint("Easy MySQL inserted data into '"..tableName.."' WHERE "..where[1].." = "..where[2]..".")
+							fl.DevPrint("Easy MySQL inserted data into '"..tableName.."' WHERE "..where[1].." = "..where[2]..".")
 						else
 							local msg = "Easy MySQL inserted data into '"..tableName.."' WHERE "
 							local i = 0
@@ -666,7 +735,7 @@ function fl.db:EasyWrite(tableName, where, data)
 								end
 							end
 
-							fl.core:DevPrint(msg)
+							fl.DevPrint(msg)
 						end
 					end)
 
@@ -693,7 +762,7 @@ function fl.db:EasyRead(tableName, where, callback)
 		end
 
 		query:Callback(function(result)
-			fl.core:DevPrint("Easy MySQL has successfully read the data!")
+			fl.DevPrint("Easy MySQL has successfully read the data!")
 
 			local success, value = pcall(callback, result, (istable(result) and #result > 0))
 

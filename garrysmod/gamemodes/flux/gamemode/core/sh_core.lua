@@ -4,12 +4,11 @@
 	the framework is publicly released.
 --]]
 
-fl.core = fl.core or {}
 library = library or {}
 library.stored = library.stored or {}
 
 -- A function to print a prefixed message.
-function fl.core:Print(strMessage)
+function fl.Print(strMessage)
 	if (!istable(strMessage)) then
 		Msg("[Flux] ")
 		print(strMessage)
@@ -20,7 +19,7 @@ function fl.core:Print(strMessage)
 end
 
 -- A function to print developer message.
-function fl.core:DevPrint(strMessage)
+function fl.DevPrint(strMessage)
 	if (fl.Devmode) then
 		Msg("[Flux:")
 		MsgC(Color(175, 0, 0), "Dev")
@@ -136,7 +135,7 @@ end
 
 new = New
 
-function fl.core:GetSchemaFolder()
+function fl.GetSchemaFolder()
 	if (SERVER) then
 		return fl.schema
 	else
@@ -144,7 +143,7 @@ function fl.core:GetSchemaFolder()
 	end
 end
 
-function fl.core:Serialize(tTable)
+function fl.Serialize(tTable)
 	if (istable(tTable)) then
 		local bSuccess, value = pcall(pon.encode, tTable)
 
@@ -168,7 +167,7 @@ function fl.core:Serialize(tTable)
 	end
 end
 
-function fl.core:Deserialize(strData)
+function fl.Deserialize(strData)
 	if (isstring(strData)) then
 		local bSuccess, value = pcall(pon.decode, strData)
 
@@ -192,7 +191,7 @@ function fl.core:Deserialize(strData)
 	end
 end
 
-function fl.core:IncludeSchema()
+function fl.IncludeSchema()
 	if (SERVER) then
 		return plugin.IncludeSchema()
 	else
@@ -206,7 +205,7 @@ function fl.core:IncludeSchema()
 	end
 end
 
-function fl.core:IncludePlugins(strFolder)
+function fl.IncludePlugins(strFolder)
 	if (SERVER) then
 		return plugin.IncludePlugins(strFolder)
 	else
@@ -220,11 +219,11 @@ function fl.core:IncludePlugins(strFolder)
 end
 
 -- A function to get the schema gamemode info.
-function fl.core:GetSchemaInfo()
+function fl.GetSchemaInfo()
 	if (SERVER) then
-		if (self.SchemaInfo) then return self.SchemaInfo end
+		if (fl.SchemaInfo) then return fl.SchemaInfo end
 
-		local schemaFolder = string.lower(self:GetSchemaFolder())
+		local schemaFolder = string.lower(fl:GetSchemaFolder())
 		local schemaData = util.KeyValuesToTable(
 			fileio.Read("gamemodes/"..schemaFolder.."/"..schemaFolder..".txt")
 		)
@@ -237,18 +236,18 @@ function fl.core:GetSchemaInfo()
 			schemaData = schemaData["Gamemode"]
 		end
 
-		self.SchemaInfo = {}
-			self.SchemaInfo["name"] = schemaData["title"] or "Undefined"
-			self.SchemaInfo["author"] = schemaData["author"] or "Undefined"
-			self.SchemaInfo["description"] = schemaData["description"] or "Undefined"
-			self.SchemaInfo["version"] = schemaData["version"] or "Undefined"
-			self.SchemaInfo["folder"] = schemaFolder:gsub("/schema", "")
-		return self.SchemaInfo
+		fl.SchemaInfo = {}
+			fl.SchemaInfo["name"] = schemaData["title"] or "Undefined"
+			fl.SchemaInfo["author"] = schemaData["author"] or "Undefined"
+			fl.SchemaInfo["description"] = schemaData["description"] or "Undefined"
+			fl.SchemaInfo["version"] = schemaData["version"] or "Undefined"
+			fl.SchemaInfo["folder"] = schemaFolder:gsub("/schema", "")
+		return fl.SchemaInfo
 	else
 		return fl.sharedTable.schemaInfo
 	end
 end
 
 if (SERVER) then
-	fl.sharedTable.schemaInfo = fl.core:GetSchemaInfo()
+	fl.sharedTable.schemaInfo = fl.GetSchemaInfo()
 end

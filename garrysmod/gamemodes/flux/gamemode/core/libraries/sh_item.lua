@@ -31,7 +31,7 @@ function item.Register(id, data)
 		return
 	end
 
-	fl.core:DevPrint("Registering item: "..id)
+	fl.DevPrint("Registering item: "..id)
 
 	if (!id) then
 		id = data.Name:MakeID()
@@ -225,7 +225,7 @@ function item.Remove(instanceID)
 			item.AsyncSave()
 		end
 
-		fl.core:DevPrint("Removed item instance ID: "..itemTable.instanceID)
+		fl.DevPrint("Removed item instance ID: "..itemTable.instanceID)
 	end
 end
 

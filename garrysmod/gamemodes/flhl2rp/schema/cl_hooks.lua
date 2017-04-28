@@ -5,9 +5,9 @@
 --]]
 
 function Schema:HUDPaint()
-	fl.core:EnableColorModify()
-	fl.core:SetColorModifyVal("color", 0.85)
-	fl.core:SetColorModifyVal("addb", 0.015)
+	fl.EnableColorModify()
+	fl.SetColorModifyVal("color", 0.85)
+	fl.SetColorModifyVal("addb", 0.015)
 
 	surface.SetDrawColor(255, 255, 255, 255)
 	surface.SetMaterial(util.GetMaterial("materials/flux/hl2rp/vignette.png"))

@@ -19,7 +19,7 @@ do
 		["$pp_colour_mulb"] = 0
 	}
 
-	function fl.core:SetColorModifyEnabled(bEnable)
+	function fl.SetColorModifyEnabled(bEnable)
 		if (!fl.client.colorModifyTable) then
 			fl.client.colorModifyTable = defaultColorModify
 		end
@@ -33,15 +33,15 @@ do
 		fl.client.colorModify = false
 	end
 
-	function fl.core:EnableColorModify()
-		return self:SetColorModifyEnabled(true)
+	function fl.EnableColorModify()
+		return fl.SetColorModifyEnabled(true)
 	end
 
-	function fl.core:DisableColorModify()
-		return self:SetColorModifyEnabled(false)
+	function fl.DisableColorModify()
+		return fl.SetColorModifyEnabled(false)
 	end
 
-	function fl.core:SetColorModifyVal(index, value)
+	function fl.SetColorModifyVal(index, value)
 		if (!fl.client.colorModifyTable) then
 			fl.client.colorModifyTable = defaultColorModify
 		end
@@ -57,7 +57,7 @@ do
 		end
 	end
 
-	function fl.core:SetColorModifyTable(tab)
+	function fl.SetColorModifyTable(tab)
 		if (istable(tab)) then
 			fl.client.colorModifyTable = tab
 		end

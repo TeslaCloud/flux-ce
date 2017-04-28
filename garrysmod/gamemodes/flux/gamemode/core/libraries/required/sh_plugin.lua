@@ -14,14 +14,16 @@ local reloadData = {}
 local loadCache = {}
 local extras = {
 	"libraries",
+	"libraries/meta",
+	"libraries/classes",
 	"libs",
+	"libs/meta",
+	"libs/classes",
 	"classes",
 	"meta",
 	"config",
 	"languages",
 	"items",
-	"commands",
-	"groups",
 	"derma",
 	"tools",
 	"themes"
@@ -149,10 +151,14 @@ function plugin.Register(obj)
 		if (file.Exists(filePath, "GAME")) then
 			local fileContents = fileio.Read(filePath)
 
-			fl.core:DevPrint("Importing config: "..filePath)
+			fl.DevPrint("Importing config: "..filePath)
 
 			config.Import(fileContents, CONFIG_PLUGIN)
 		end
+	end
+
+	if (isfunction(obj.OnPluginLoaded)) then
+		obj.OnPluginLoaded(obj)
 	end
 
 	stored[obj:GetFolder()] = obj
@@ -282,11 +288,11 @@ function plugin.Include(folder)
 	data.pluginFolder = folder
 
 	if (reloadData[folder] == false) then
-		fl.core:DevPrint("Not reloading plugin: "..folder)
+		fl.DevPrint("Not reloading plugin: "..folder)
 		return
 	end
 
-	fl.core:DevPrint("Loading plugin: "..folder)
+	fl.DevPrint("Loading plugin: "..folder)
 
 	if (ext != "lua") then
 		if (SERVER) then
@@ -340,18 +346,18 @@ function plugin.Include(folder)
 end
 
 function plugin.IncludeSchema()
-	local schemaInfo = fl.core:GetSchemaInfo()
-	local schemaFolder = fl.core:GetSchemaFolder().."/schema"
+	local schemaInfo = fl.GetSchemaInfo()
+	local schemaFolder = fl.GetSchemaFolder().."/schema"
 	schemaInfo.folder = schemaFolder
 
-	if (SERVER) then AddCSLuaFile(fl.core:GetSchemaFolder().."/gamemode/cl_init.lua") end
+	if (SERVER) then AddCSLuaFile(fl.GetSchemaFolder().."/gamemode/cl_init.lua") end
 
 	Schema = Plugin(schemaInfo.name, schemaInfo)
 
 	util.Include(schemaFolder.."/sh_schema.lua")
 
 	plugin.IncludeFolders(schemaFolder)
-	plugin.IncludePlugins(fl.core:GetSchemaFolder().."/plugins")
+	plugin.IncludePlugins(fl.GetSchemaFolder().."/plugins")
 
 	if (schemaInfo.name and schemaInfo.author) then
 		MsgC(Color(0, 255, 100, 255), "[Flux] ")
@@ -369,7 +375,7 @@ function plugin.Require(pluginName)
 	if (!plugin.HasLoaded(pluginName)) then
 		local searchPaths = {
 			"flux/plugins/",
-			(fl.core:GetSchemaFolder() or "flux").."/plugins/"
+			(fl.GetSchemaFolder() or "flux").."/plugins/"
 		}
 
 		for k, v in ipairs(searchPaths) do
@@ -411,8 +417,6 @@ function plugin.IncludeFolders(folder)
 		if (plugin.Call("PluginIncludeFolder", v, folder) == nil) then
 			if (v == "items") then
 				item.IncludeItems(folder.."/items/")
-			elseif (v == "groups") then
-				fl.admin:IncludeGroups(folder.."/groups/")
 			elseif (v == "themes") then
 				pipeline.IncludeDirectory("theme", folder.."/themes/")
 			elseif (v == "tools") then

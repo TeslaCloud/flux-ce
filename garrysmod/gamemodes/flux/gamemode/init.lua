@@ -23,7 +23,7 @@ if (fl.initialized) then
 	MsgC(Color(0, 255, 100, 255), "[Flux] Lua auto-reload in progress...\n")
 
 	if (fl.Devmode) then
-		fl.core:DevPrint("Starting loading all over again. ["..math.Round(os.clock() - fl.startTime, 3).."]")
+		fl.DevPrint("Starting loading all over again. ["..math.Round(os.clock() - fl.startTime, 3).."]")
 	end
 else
 	MsgC(Color(0, 255, 100, 255), "[Flux] Initializing...\n")
@@ -56,7 +56,7 @@ if (system.IsWindows()) then
 			text = "renamed, this is it's new name."
 		end
 
-		fl.core:DevPrint("File action: '"..fileName.."' was "..text)
+		fl.DevPrint("File action: '"..fileName.."' was "..text)
 
 		if (fileName:find("plugins") and action == FILE_ACTION_ADDED) then
 			-- Prevent it from passing extra directories to the hook, as well as files it doesn't really need.

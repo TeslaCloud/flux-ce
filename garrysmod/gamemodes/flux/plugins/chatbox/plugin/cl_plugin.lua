@@ -509,7 +509,7 @@ function chatbox.ParseText(messageData)
 					file.Write("flavatars/"..messageData.sender:SteamID64()..".jpg", avatarImage)
 
 					if (fl.core.MaterialCache[messageData.sender:SteamID64()..".jpg"]) then
-						fl.core:ClearMaterial(messageData.sender:SteamID64()..".jpg")
+						fl.ClearMaterial(messageData.sender:SteamID64()..".jpg")
 					end
 				end)
 			end)

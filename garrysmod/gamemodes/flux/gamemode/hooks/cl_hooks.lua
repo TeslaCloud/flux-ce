@@ -45,7 +45,7 @@ do
 			local newW, newH = ScrW(), ScrH()
 
 			if (scrW != newW or scrH != newH) then
-				fl.core:Print("Resolution changed from "..scfl.."x"..scrH.." to "..newW.."x"..newH..".")
+				fl.Print("Resolution changed from "..scfl.."x"..scrH.." to "..newW.."x"..newH..".")
 
 				hook.Run("OnResolutionChanged", newW, newH, scrW, scrH)
 

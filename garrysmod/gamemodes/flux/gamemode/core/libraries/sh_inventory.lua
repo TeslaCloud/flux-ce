@@ -82,9 +82,9 @@ do
 			if (slot and slot != -1) then
 				hook.Run("OnItemGiven", self, itemTable, slot)
 			elseif (slot == -1) then
-				fl.core:DevPrint("Failed to add item to player's inventory (itemTable is invalid)! "..tostring(itemTable))
+				fl.DevPrint("Failed to add item to player's inventory (itemTable is invalid)! "..tostring(itemTable))
 			else
-				fl.core:DevPrint("Failed to add item to player's inventory (inv is full)! "..tostring(itemTable))
+				fl.DevPrint("Failed to add item to player's inventory (inv is full)! "..tostring(itemTable))
 			end
 		end
 
@@ -100,9 +100,9 @@ do
 			if (slot and slot != -1) then
 				hook.Run("OnItemGiven", self, itemTable, slot)
 			elseif (slot == -1) then
-				fl.core:DevPrint("Failed to add item to player's inventory (itemTable is invalid)! "..tostring(itemTable))
+				fl.DevPrint("Failed to add item to player's inventory (itemTable is invalid)! "..tostring(itemTable))
 			else
-				fl.core:DevPrint("Failed to add item to player's inventory (inv is full)! "..tostring(itemTable))
+				fl.DevPrint("Failed to add item to player's inventory (inv is full)! "..tostring(itemTable))
 			end
 		end
 
