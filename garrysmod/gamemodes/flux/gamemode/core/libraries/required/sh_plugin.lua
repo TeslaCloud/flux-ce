@@ -194,7 +194,13 @@ function plugin.RemoveFromCache(id)
 	-- Awful lot of if's and end's.
 	if (pluginTable) then
 		if (pluginTable.OnUnhook) then
-			Try(pluginTable:GetName(), pluginTable.OnUnhook, pluginTable)
+			try {
+				pluginTable.OnUnhook, pluginTable
+			} catch {
+				function(exception)
+					ErrorNoHalt("[Flux:Plugin] OnUnhook method has failed to run! "..tostring(pluginTable).."\n")
+				end
+			}
 		end
 
 		for k, v in pairs(pluginTable) do
@@ -202,6 +208,7 @@ function plugin.RemoveFromCache(id)
 				for index, tab in ipairs(hooksCache[k]) do
 					if (tab[2] == pluginTable) then
 						table.remove(hooksCache[k], index)
+
 						break
 					end
 				end
@@ -216,7 +223,13 @@ function plugin.ReCache(id)
 
 	if (pluginTable) then
 		if (pluginTable.OnRecache) then
-			Try(pluginTable:GetName(), pluginTable.OnRecache, pluginTable)
+			try {
+				pluginTable.OnRecache, pluginTable
+			} catch {
+				function(exception)
+					ErrorNoHalt("[Flux:Plugin] OnRecache method has failed to run! "..tostring(pluginTable).."\n")
+				end
+			}
 		end
 
 		plugin.CacheFunctions(pluginTable)
@@ -229,7 +242,13 @@ function plugin.Remove(id)
 
 	if (pluginTable) then
 		if (pluginTable.OnRemoved) then
-			Try(pluginTable:GetName(), pluginTable.OnRemoved, pluginTable)
+			try {
+				pluginTable.OnRemoved, pluginTable
+			} catch {
+				function(exception)
+					ErrorNoHalt("[Flux:Plugin] OnRemoved method has failed to run! "..tostring(pluginTable).."\n")
+				end
+			}
 		end
 
 		plugin.RemoveFromCache(id)
@@ -266,11 +285,13 @@ end
 function plugin.OnPluginChanged(fileName)
 	if (plugin.Find(fileName) and !file.Exists("gamemodes/"..fileName, "GAME")) then
 		print("[Flux] Removing plugin "..fileName)
+
 		plugin.Remove(fileName)
 
 		netstream.Start(nil, "OnPluginRemoved", fileName)
 	elseif (!plugin.Find(fileName) and file.Exists("gamemodes/"..fileName, "GAME")) then
 		print("[Flux] Detected new plugin "..fileName)
+
 		local data = plugin.Include(fileName)
 
 		netstream.Heavy(nil, "SendPluginFiles", data, plugin.GetFilesForClients(fileName))

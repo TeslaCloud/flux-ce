@@ -8,8 +8,8 @@ DeriveGamemode("sandbox")
 
 fileio.OldWrite = fileio.OldWrite or fileio.Write
 
-function fileio.Write(fileName, content)
-	local exploded = string.Explode("/", fileName)
+function fileio.Write(strFileName, strFileContents)
+	local exploded = string.Explode("/", strFileName)
 	local curPath = ""
 
 	for k, v in ipairs(exploded) do
@@ -24,7 +24,7 @@ function fileio.Write(fileName, content)
 		end
 	end
 
-	fileio.OldWrite(fileName, content)
+	fileio.OldWrite(strFileName, strFileContents)
 end
 
 oldServerLog = oldServerLog or ServerLog
@@ -34,6 +34,6 @@ function ServerLog(...)
 	print("")
 end
 
-function hook.RunClient(player, hookName, ...)
-	netstream.Start(player, "Hook_RunCL", hookName, ...)
+function hook.RunClient(player, strHookName, ...)
+	netstream.Start(player, "Hook_RunCL", strHookName, ...)
 end

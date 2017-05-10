@@ -54,7 +54,7 @@ if (SERVER) then
 			end
 
 			if (!stored[key].hidden) then
-				netstream.Start(nil, "config_setvar", key, stored[key])
+				netstream.Start(nil, "Flux::Config::SetVar", key, stored[key])
 			end
 
 			cache[key] = value
@@ -66,7 +66,7 @@ if (SERVER) then
 	function playerMeta:SendConfig()
 		for k, v in pairs(stored) do
 			if (!v.hidden) then
-				netstream.Start(self, "config_setvar", k, v.value)
+				netstream.Start(self, "Flux::Config::SetVar", k, v.value)
 			end
 		end
 
@@ -75,6 +75,17 @@ if (SERVER) then
 else
 	local menuItems = config.menuItems or {}
 	config.menuItems = menuItems
+
+	function config.Set(key, value)
+		if (key != nil) then
+			if (!stored[key]) then
+				stored[key] = {}
+			end
+
+			stored[key].value = value
+			cache[key] = value
+		end
+	end
 
 	function config.CreateCategory(id, name, description)
 		id = id or "other"
@@ -86,6 +97,9 @@ else
 			end,
 			AddSlider = function(key, name, description, data)
 				config.AddToMenu(id, key, name, description, "number", data)
+			end,
+			AddTableEditor = function(key, name, description, data)
+				config.AddToMenu(id, key, name, description, "table", data)
 			end,
 			AddTextBox = function(key, name, description, data)
 				config.AddToMenu(id, key, name, description, "string", data)
@@ -99,6 +113,10 @@ else
 			configs = {}
 		}
 
+		return menuItems[id]
+	end
+
+	function config.GetCategory(id)
 		return menuItems[id]
 	end
 
@@ -120,7 +138,7 @@ else
 		return menuItems
 	end
 
-	netstream.Hook("config_setvar", function(key, value)
+	netstream.Hook("Flux::Config::SetVar", function(key, value)
 		if (key == nil) then return end
 
 		print(key, value)

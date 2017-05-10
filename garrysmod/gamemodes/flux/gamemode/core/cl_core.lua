@@ -41,80 +41,80 @@ do
 		return fl.SetColorModifyEnabled(false)
 	end
 
-	function fl.SetColorModifyVal(index, value)
+	function fl.SetColorModifyVal(strIndex, nValue)
 		if (!fl.client.colorModifyTable) then
 			fl.client.colorModifyTable = defaultColorModify
 		end
 
-		if (isstring(index)) then
-			if (!index:StartWith("$pp_colour_")) then
-				if (index == "color") then index = "colour" end
+		if (isstring(strIndex)) then
+			if (!strIndex:StartWith("$pp_colour_")) then
+				if (strIndex == "color") then strIndex = "colour" end
 
-				fl.client.colorModifyTable["$pp_colour_"..index] = (isnumber(value) and value) or 0
+				fl.client.colorModifyTable["$pp_colour_"..strIndex] = (isnumber(nValue) and nValue) or 0
 			else
-				fl.client.colorModifyTable[index] = (isnumber(value) and value) or 0
+				fl.client.colorModifyTable[strIndex] = (isnumber(nValue) and nValue) or 0
 			end
 		end
 	end
 
-	function fl.SetColorModifyTable(tab)
-		if (istable(tab)) then
-			fl.client.colorModifyTable = tab
+	function fl.SetColorModifyTable(tTable)
+		if (istable(tTable)) then
+			fl.client.colorModifyTable = tTable
 		end
 	end
 end
 
-function surface.DrawScaledText(text, font, x, y, scale, color)
+function surface.DrawScaledText(strText, strFontName, nPosX, nPosY, nScale, color)
 	local matrix = Matrix()
-	local pos = Vector(x, y)
+	local pos = Vector(nPosX, nPosY)
 
 	matrix:Translate(pos)
-	matrix:Scale(Vector(1, 1, 1) * scale)
+	matrix:Scale(Vector(1, 1, 1) * nScale)
 	matrix:Translate(-pos)
 
 	cam.PushModelMatrix(matrix)
-		surface.SetFont(font)
+		surface.SetFont(strFontName)
 		surface.SetTextColor(color)
-		surface.SetTextPos(x, y)
-		surface.DrawText(text)
+		surface.SetTextPos(nPosX, nPosY)
+		surface.DrawText(strText)
 	cam.PopModelMatrix()
 end
 
-function surface.DrawRotatedText(text, font, x, y, angle, color)
+function surface.DrawRotatedText(strText, strFontName, nPosX, nPosY, angle, color)
 	local matrix = Matrix()
-	local pos = Vector(x, y)
+	local pos = Vector(nPosX, nPosY)
 
 	matrix:Translate(pos)
 	matrix:Rotate(Angle(0, angle, 0))
 	matrix:Translate(-pos)
 
 	cam.PushModelMatrix(matrix)
-		surface.SetFont(font)
+		surface.SetFont(strFontName)
 		surface.SetTextColor(color)
-		surface.SetTextPos(x, y)
-		surface.DrawText(text)
+		surface.SetTextPos(nPosX, nPosY)
+		surface.DrawText(strText)
 	cam.PopModelMatrix()
 end
 
-function surface.DrawScaled(x, y, scale, callback)
+function surface.DrawScaled(nPosX, nPosY, nScale, callback)
 	local matrix = Matrix()
-	local pos = Vector(x, y)
+	local pos = Vector(nPosX, nPosY)
 
 	matrix:Translate(pos)
-	matrix:Scale(Vector(1, 1, 0) * scale)
+	matrix:Scale(Vector(1, 1, 0) * nScale)
 	matrix:Rotate(Angle(0, 0, 0))
 	matrix:Translate(-pos)
 
 	cam.PushModelMatrix(matrix)
 		if (callback) then
-			Try("DrawScaled", callback, x, y, scale)
+			Try("DrawScaled", callback, nPosX, nPosY, nScale)
 		end
 	cam.PopModelMatrix()
 end
 
-function surface.DrawRotated(x, y, angle, callback)
+function surface.DrawRotated(nPosX, nPosY, angle, callback)
 	local matrix = Matrix()
-	local pos = Vector(x, y)
+	local pos = Vector(nPosX, nPosY)
 
 	matrix:Translate(pos)
 	matrix:Rotate(Angle(0, angle, 0))
@@ -122,7 +122,7 @@ function surface.DrawRotated(x, y, angle, callback)
 
 	cam.PushModelMatrix(matrix)
 		if (callback) then
-			Try("DrawRotated", callback, x, y, angle)
+			Try("DrawRotated", callback, nPosX, nPosY, angle)
 		end
 	cam.PopModelMatrix()
 end

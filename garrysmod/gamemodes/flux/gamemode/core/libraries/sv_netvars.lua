@@ -44,12 +44,12 @@ function netvars.SetNetVar(key, value, send)
 
 	globals[key] = value
 
-	netstream.Start(send, "net_globals", key, value)
+	netstream.Start(send, "Flux::NetVars::SetGlobal", key, value)
 end
 
 -- A function to send entity's networked variables to a player (or players).
 function entityMeta:SendNetVar(key, recv)
-	netstream.Start(recv, "net_var", self:EntIndex(), key, (stored[self] and stored[self][key]))
+	netstream.Start(recv, "Flux::NetVars::SetVar", self:EntIndex(), key, (stored[self] and stored[self][key]))
 end
 
 -- A function to get entity's networked variable.
@@ -64,7 +64,7 @@ end
 -- A function to flush all entity's networked variables.
 function entityMeta:ClearNetVars(recv)
 	stored[self] = nil
-	netstream.Start(recv, "net_delete", self:EntIndex())
+	netstream.Start(recv, "Flux::NetVars::Delete", self:EntIndex())
 end
 
 -- A function to set entity's networked variable.
@@ -82,13 +82,13 @@ end
 -- to a player.
 function playerMeta:SyncNetVars()
 	for k, v in pairs(globals) do
-		netstream.Start(self, "net_globals", k, v)
+		netstream.Start(self, "Flux::NetVars::SetGlobal", k, v)
 	end
 
 	for k, v in pairs(stored) do
 		if (IsValid(k)) then
 			for k2, v2 in pairs(v) do
-				netstream.Start(self, "net_var", k:EntIndex(), k2, v2)
+				netstream.Start(self, "Flux::NetVars::SetVar", k:EntIndex(), k2, v2)
 			end
 		end
 	end

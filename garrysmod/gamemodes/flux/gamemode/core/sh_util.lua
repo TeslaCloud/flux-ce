@@ -29,7 +29,16 @@ do
 	function try(tab)
 		tryCache = {}
 		tryCache.f = tab[1]
-		tryCache.args = tab[2]
+
+		local args = {}
+
+		for k, v in ipairs(tab) do
+			if (k != 1) then
+				table.insert(args, v)
+			end
+		end
+
+		tryCache.args = args
 	end
 
 	function catch(handler)
