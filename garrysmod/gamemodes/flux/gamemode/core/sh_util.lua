@@ -16,10 +16,10 @@ function Try(id, func, ...)
 	table.remove(result, 1)
 
 	if (!success) then
-		ErrorNoHalt("[Flux:"..id.."] Failed to run the function!\n")
+		ErrorNoHalt("[Try:"..id.."] Failed to run the function!\n")
 		ErrorNoHalt(unpack(result), "\n")
 	elseif (result[1] != nil) then
-		return unpack[result]
+		return unpack(result)
 	end
 end
 
@@ -54,11 +54,11 @@ do
 			if (isfunction(handler[1])) then
 				handler[1](unpack(result))
 			else
-				ErrorNoHalt("[Flux:Exception] Failed to run the function!\n")
+				ErrorNoHalt("[Try:Exception] Failed to run the function!\n")
 				ErrorNoHalt(unpack(result), "\n")
 			end
 		elseif (result[1] != nil) then
-			return unpack[result]
+			return unpack(result)
 		end
 	end
 
@@ -100,10 +100,11 @@ do
 		["y"] = true,
 	}
 
+	-- A function to check whether character is vowel or not.
 	function util.IsVowel(char)
 		char = char:utf8lower()
 
-		if (CLIENT) then
+		if (fl and CLIENT) then
 			local lang = fl.lang:GetTable(GetConVar("gmod_language"):GetString())
 
 			if (lang and isfunction(lang.IsVowel)) then
@@ -119,6 +120,7 @@ do
 	end
 end
 
+-- A function to remove a substring from the end of the string.
 function string.RemoveTextFromEnd(str, strNeedle, bAllOccurences)
 	if (!strNeedle or strNeedle == "") then
 		return str
@@ -139,6 +141,7 @@ function string.RemoveTextFromEnd(str, strNeedle, bAllOccurences)
 	end
 end
 
+-- A function to remove a substring from the beginning of the string.
 function string.RemoveTextFromStart(str, strNeedle, bAllOccurences)
 	if (!strNeedle or strNeedle == "") then
 		return str
@@ -159,6 +162,7 @@ function string.RemoveTextFromStart(str, strNeedle, bAllOccurences)
 	end
 end
 
+-- A function to check whether all of the arguments in vararg are valid (via IsValid).
 function util.Validate(...)
 	local validate = {...}
 
@@ -235,6 +239,7 @@ end
 do
 	local materialCache = {}
 
+	-- A function to get a material. It caches the material automatically.
 	function util.GetMaterial(mat)
 		if (!materialCache[mat]) then
 			materialCache[mat] = Material(mat)
@@ -272,12 +277,13 @@ do
 			end
 		end
 
-		ErrorNoHalt("[Flux] '"..hex.."' is not a hexadecimal number!")
+		ErrorNoHalt("[util.HexToDec] '"..hex.."' is not a hexadecimal number!")
 
 		return 0
 	end
 end
 
+-- A function to convert hexadecimal number to decimal.
 function util.HexToDecimal(hex)
 	if (isnumber(hex)) then return hex end
 
@@ -506,31 +512,47 @@ function player.Random()
 	end
 end
 
-function player.Find(name, bCaseSensitive)
+-- A function to find player based on their name or steamID.
+function player.Find(name, bCaseSensitive, bReturnFirstHit)
 	if (name == nil) then return end
-	if (!isstring(name)) then return (IsValid(name) and name) or nil; end
+	if (!isstring(name)) then return (IsValid(name) and name) or nil end
+
+	local hits = {}
 
 	for k, v in ipairs(_player.GetAll()) do
-		if (v:Name(true):find(name)) then
-			return v
+		if (v:SteamID() == name) then
+			table.insert(hits, v)
+		elseif (v:Name(true):find(name)) then
+			table.insert(hits, v)
 		elseif (!bCaseSensitive and v:Name(true):utf8lower():find(name:utf8lower())) then
-			return v
+			table.insert(hits, v)
 		elseif (v:SteamName():utf8lower():find(name:utf8lower())) then
-			return v
-		elseif (v:SteamID() == name) then
-			return v
+			table.insert(hits, v)
 		end
+
+		if (bReturnFirstHit and #hits > 0) then
+			return hits[1]
+		end
+	end
+
+	if (#hits > 1) then
+		return hits
+	else
+		return hits[1]
 	end
 end
 
+-- A function to check whether the string is full uppercase or not.
 function string.IsUppercase(str)
 	return string.utf8upper(str) == str
 end
 
+-- A function to check whether the string is full lowercase or not.
 function string.IsLowercase(str)
 	return string.utf8lower(str) == str
 end
 
+-- A function to find all occurences of a substring in a string.
 function string.FindAll(str, pattern)
 	if (!str or !pattern) then return end
 
@@ -552,8 +574,15 @@ function string.FindAll(str, pattern)
 	return hits
 end
 
+-- A function to check if string is command or not.
 function string.IsCommand(str)
-	for k, v in ipairs(config.Get("command_prefixes")) do
+	local prefixes = {"/"}
+
+	if (fl) then
+		prefixes = config.Get("command_prefixes")
+	end
+
+	for k, v in ipairs(prefixes) do
 		if (str:StartWith(v)) then
 			return true
 		end
@@ -594,10 +623,12 @@ do
 		else
 			surface.SetFont(font)
 
-			cache[text] = {}
-			cache[text][font] = {surface.GetTextSize(text)}
+			local result = {surface.GetTextSize(text)}
 
-			return util.GetTextSize(text, font)
+			cache[text] = {}
+			cache[text][font] = result
+
+			return result[1], result[2]
 		end
 	end
 end

@@ -51,7 +51,13 @@ end
 function fl.undo:Do(obj)
 	if (istable(obj) and istable(obj.functions)) then
 		for k, v in ipairs(obj.functions) do
-			Try("Undo", v.func, obj, unpack(v.args))
+			try {
+				v.func, obj, unpack(v.args)
+			} catch {
+				function(exception)
+					ErrorNoHalt("[Flux:Undo] Failed to undo!\n"..tostring(exception).."\n")
+				end
+			}
 		end
 	end
 end

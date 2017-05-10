@@ -198,7 +198,7 @@ function plugin.RemoveFromCache(id)
 				pluginTable.OnUnhook, pluginTable
 			} catch {
 				function(exception)
-					ErrorNoHalt("[Flux:Plugin] OnUnhook method has failed to run! "..tostring(pluginTable).."\n")
+					ErrorNoHalt("[Flux:Plugin] OnUnhook method has failed to run! "..tostring(pluginTable).."\n"..tostring(exception).."\n")
 				end
 			}
 		end
@@ -227,7 +227,7 @@ function plugin.ReCache(id)
 				pluginTable.OnRecache, pluginTable
 			} catch {
 				function(exception)
-					ErrorNoHalt("[Flux:Plugin] OnRecache method has failed to run! "..tostring(pluginTable).."\n")
+					ErrorNoHalt("[Flux:Plugin] OnRecache method has failed to run! "..tostring(pluginTable).."\n"..tostring(exception).."\n")
 				end
 			}
 		end
@@ -246,7 +246,7 @@ function plugin.Remove(id)
 				pluginTable.OnRemoved, pluginTable
 			} catch {
 				function(exception)
-					ErrorNoHalt("[Flux:Plugin] OnRemoved method has failed to run! "..tostring(pluginTable).."\n")
+					ErrorNoHalt("[Flux:Plugin] OnRemoved method has failed to run! "..tostring(pluginTable).."\n"..tostring(exception).."\n")
 				end
 			}
 		end
