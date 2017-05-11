@@ -822,6 +822,133 @@ function table.SafeMerge(to, from)
 	from.__index = oldIndex2
 end
 
+function util.IsNumber(char)
+	return (tonumber(char) != nil)
+end
+
+function string.CountCharacter(str, char)
+	local exploded = string.Explode("", str)
+	local hits = 0
+
+	for k, v in ipairs(exploded) do
+		if (v == char) then
+			if (char == "\"") then
+				local prevChar = exploded[k - 1] or ""
+
+				if (prevChar == "\\") then
+					continue
+				end
+			end
+
+			hits = hits + 1
+		end
+	end
+
+	return hits
+end
+
+function util.SmartRemoveNewlines(str)
+	local exploded = string.Explode("", str)
+	local toReturn = ""
+	local skip = ""
+
+	for k, v in ipairs(exploded) do
+		if (skip != "") then
+			toReturn = toReturn..v
+
+			if (v == skip) then
+				skip = ""
+			end
+
+			continue
+		end
+
+		if (v == "\"") then
+			skip = "\""
+
+			toReturn = toReturn..v
+
+			continue
+		end
+
+		if (v == "\n" or v == "\t") then
+			continue
+		end
+
+		toReturn = toReturn..v
+	end
+
+	return toReturn
+end
+
+function util.BuildTableFromString(str)
+	str = util.SmartRemoveNewlines(str)
+
+	local exploded = string.Explode(",", str)
+	local tab = {}
+
+	for k, v in ipairs(exploded) do
+		if (!isstring(v)) then continue end
+
+		if (!string.find(v, "=")) then
+			v = v:RemoveTextFromStart(" ", true)
+
+			if (util.IsNumber(v)) then
+				v = tonumber(v)
+			elseif (string.find(v, "\"")) then
+				v = v:RemoveTextFromStart("\""):RemoveTextFromEnd("\"")
+			elseif (v:find("{")) then
+				v = v:Replace("{", "")
+
+				local lastKey = nil
+				local buff = v
+
+				for k2, v2 in ipairs(exploded) do
+					if (k2 <= k) then continue end
+
+					if (v2:find("}")) then
+						buff = buff..","..v2:Replace("}", "")
+
+						lastKey = k2
+
+						break
+					end
+
+					buff = buff..","..v2
+				end
+
+				if (lastKey) then
+					for i = k, lastKey do
+						exploded[i] = nil
+					end
+
+					v = buildTableFromString(buff)
+				end
+			else
+				v = v:RemoveTextFromEnd("}")
+			end
+
+			table.insert(tab, v)
+		else
+			local parts = string.Explode("=", v)
+			local key = parts[1]:RemoveTextFromEnd(" ", true):RemoveTextFromEnd("\t", true)
+			local value = parts[2]:RemoveTextFromStart(" ", true):RemoveTextFromStart("\t", true)
+
+			if (util.IsNumber(value)) then
+				value = tonumber(value)
+			elseif (value:find("{") and value:find("}")) then
+				value = buildTableFromString(value)
+			else
+				value = value:RemoveTextFromEnd("}")
+			end
+
+			tab[key] = value
+		end
+	end
+
+	return tab
+end
+
 local colorMeta = FindMetaTable("Color")
 
 function colorMeta:Darken(amt)

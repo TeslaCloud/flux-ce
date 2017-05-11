@@ -110,6 +110,8 @@ function library.NewClass(strName, tParent, CExtends)
 	obj.ClassName = strName
 	obj.BaseClass = CExtends or false
 
+	library.lastClass = {name = strName, parent = (tParent or _G)}
+
 	return setmetatable((tParent or _G)[strName], class)
 end
 
@@ -122,6 +124,37 @@ Meta = Class
 
 -- Also make an alias that looks like other programming languages.
 class = Class
+
+function extends(CBaseClass)
+	if (isstring(CBaseClass)) then
+		CBaseClass = _G[CBaseClass]		
+	end
+
+	if (istable(library.lastClass) and istable(CBaseClass)) then
+		local obj = library.lastClass.parent[library.lastClass.name]
+
+		table.SafeMerge(obj, CBaseClass)
+		obj.BaseClass = CBaseClass
+
+		hook.Run("OnClassExtended", obj, CBaseClass)
+
+		library.lastClass.parent[library.lastClass.name] = obj
+		library.lastClass = nil
+
+		return true
+	end
+
+	return false
+end
+
+--[[
+	class "SomeClass" extends SomeOtherClass
+	class "SomeClass" extends "SomeOtherClass"
+--]]
+
+-- Aliases for people who're hell bent on clarity.
+implements = extends
+inherits = extends
 
 --[[
 	Example usage:

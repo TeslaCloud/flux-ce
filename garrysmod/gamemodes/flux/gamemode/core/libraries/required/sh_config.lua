@@ -171,64 +171,9 @@ end
 -- Please note that it's really slow and should never be used more than
 -- once in a while.
 do
-	local function isNumber(char)
-		return (tonumber(char) != nil)
-	end
-
-	local function countCharacter(str, char)
-		local exploded = string.Explode("", str)
-		local hits = 0
-
-		for k, v in ipairs(exploded) do
-			if (v == char) then
-				if (char == "\"") then
-					local prevChar = exploded[k - 1] or ""
-
-					if (prevChar == "\\") then
-						continue
-					end
-				end
-
-				hits = hits + 1
-			end
-		end
-
-		return hits
-	end
-
-	local function smartRemoveNewlines(str)
-		local exploded = string.Explode("", str)
-		local toReturn = ""
-		local skip = ""
-
-		for k, v in ipairs(exploded) do
-			if (skip != "") then
-				toReturn = toReturn..v
-
-				if (v == skip) then
-					skip = ""
-				end
-
-				continue
-			end
-
-			if (v == "\"") then
-				skip = "\""
-
-				toReturn = toReturn..v
-
-				continue
-			end
-
-			if (v == "\n" or v == "\t") then
-				continue
-			end
-
-			toReturn = toReturn..v
-		end
-
-		return toReturn
-	end
+	local countCharacter = string.CountCharacter
+	local isNumber = util.IsNumber
+	local buildTableFromString = util.BuildTableFromString
 
 	local function buildWordFromTable(tab, idx, len)
 		local word = ""
@@ -240,74 +185,6 @@ do
 		end
 
 		return word
-	end
-
-	local function buildTableFromString(str)
-		str = smartRemoveNewlines(str)
-
-		local exploded = string.Explode(",", str)
-		local tab = {}
-
-		for k, v in ipairs(exploded) do
-			if (!isstring(v)) then continue end
-
-			if (!string.find(v, "=")) then
-				v = v:RemoveTextFromStart(" ", true)
-
-				if (isNumber(v)) then
-					v = tonumber(v)
-				elseif (string.find(v, "\"")) then
-					v = v:RemoveTextFromStart("\""):RemoveTextFromEnd("\"")
-				elseif (v:find("{")) then
-					v = v:Replace("{", "")
-
-					local lastKey = nil
-					local buff = v
-
-					for k2, v2 in ipairs(exploded) do
-						if (k2 <= k) then continue end
-
-						if (v2:find("}")) then
-							buff = buff..","..v2:Replace("}", "")
-
-							lastKey = k2
-
-							break
-						end
-
-						buff = buff..","..v2
-					end
-
-					if (lastKey) then
-						for i = k, lastKey do
-							exploded[i] = nil
-						end
-
-						v = buildTableFromString(buff)
-					end
-				else
-					v = v:RemoveTextFromEnd("}")
-				end
-
-				table.insert(tab, v)
-			else
-				local parts = string.Explode("=", v)
-				local key = parts[1]:RemoveTextFromEnd(" ", true):RemoveTextFromEnd("\t", true)
-				local value = parts[2]:RemoveTextFromStart(" ", true):RemoveTextFromStart("\t", true)
-
-				if (isNumber(value)) then
-					value = tonumber(value)
-				elseif (value:find("{") and value:find("}")) then
-					value = buildTableFromString(value)
-				else
-					value = value:RemoveTextFromEnd("}")
-				end
-
-				tab[key] = value
-			end
-		end
-
-		return tab
 	end
 
 	local function dataTypeToValue(type, value)

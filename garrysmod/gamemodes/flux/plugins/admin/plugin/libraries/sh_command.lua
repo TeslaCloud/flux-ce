@@ -85,15 +85,32 @@ function fl.command:ExtractArguments(text)
 
 		local char = text:utf8sub(i, i)
 
-		if ((char == "\"" or char == "'") and word == "") then
+		if ((char == "\"" or char == "'" or char == "{") and word == "") then
 			local endPos = text:find("\"", i + 1)
+			local isTable = false
 
 			if (!endPos) then
 				endPos = text:find("'", i + 1)
+
+				if (!endPos) then
+					endPos = text:find("}", i + 1)
+					isTable = true
+				end
 			end
 
 			if (endPos) then
-				table.insert(arguments, text:utf8sub(i + 1, endPos - 1))
+				if (!isTable) then
+					table.insert(arguments, text:utf8sub(i + 1, endPos - 1))
+				else
+					local text = text:utf8sub(i, endPos)
+					local tab = util.BuildTableFromString(text)
+
+					if (tab) then
+						table.insert(arguments, tab)
+					else
+						table.insert(arguments, text)
+					end
+				end
 
 				skip = endPos - i
 			else
@@ -117,6 +134,68 @@ function fl.command:ExtractArguments(text)
 end
 
 if (SERVER) then
+	local macros = {
+		-- Target everyone in a user group.
+		["@"] = function(player, str)
+			local groupName = str:utf8sub(2, str:utf8len()):utf8lower()
+			local toReturn = {}
+
+			for k, v in ipairs(_player.GetAll()) do
+				if (v:GetUserGroup() == groupName) then
+					table.insert(toReturn, v)
+				end
+			end
+
+			return toReturn, "@"
+		end,
+		-- Target everyone with str in their name.
+		["("] = function(player, str)
+			local name = str:utf8sub(2, str:utf8len() - 1)
+			local toReturn = _player.Find(name)
+
+			if (IsValid(toReturn)) then
+				toReturn = {toReturn}
+			end
+
+			if (!istable(toReturn)) then
+				toReturn = {}
+			end
+
+			return toReturn, "("
+		end,
+		-- Target the first person whose nick is exactly str.
+		["["] = function(player, str)
+			local name = str:utf8sub(2, str:utf8len() - 1)
+
+			for k, v in ipairs(_player.GetAll()) do
+				if (v:Name() == name) then
+					return {v}, "["
+				end
+			end
+
+			return nil, "["
+		end,
+		-- Target yourself.
+		["^"] = function(player, str)
+			return {player}, "^"
+		end,
+		-- Target everyone.
+		["*"] = function(player, str)
+			return _player.GetAll(), "*"
+		end
+	}
+
+	function fl.command:ParseMacros(player, str)
+		local start = str:utf8sub(1, 1)
+		local parser = macros[start]
+
+		if (isfunction(parser)) then
+			return parser(player, str)
+		end
+
+		return str
+	end
+	
 	function fl.command:Interpret(player, text)
 		local args
 
@@ -127,7 +206,11 @@ if (SERVER) then
 		end
 
 		if (!isstring(args[1])) then
-			ErrorNoHalt("[Flux:Command] You must enter a command!\n")
+			if (!IsValid(player)) then
+				ErrorNoHalt("[Flux:Command] You must enter a command!\n")
+			else
+				fl.player:Notify(player, "You must enter a command!")
+			end
 
 			return
 		end
@@ -143,7 +226,17 @@ if (SERVER) then
 				if (cmdTable.arguments == 0 or cmdTable.arguments <= #args) then
 					if (cmdTable.immunity or cmdTable.playerArg != nil) then
 						local targetArg = args[(cmdTable.playerArg or 1)]
-						local target = _player.Find(targetArg)
+						local targets = {}
+
+						if (istable(targetArg)) then
+							for k, v in pairs(targetArg) do
+								local target = _player.Find(v)
+
+								if (IsValid(target)) then
+									table.insert(targets, v)
+								end
+							end
+						end
 
 						if (IsValid(target)) then
 							if (cmdTable.immunity and !fl.admin:CheckImmunity(player, target, cmdTable.canBeEqual)) then
