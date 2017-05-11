@@ -822,7 +822,34 @@ function table.SafeMerge(to, from)
 	from.__index = oldIndex2
 end
 
-function util.IsNumber(char)
+function util.ListToString(callback, separator, ...)
+	if (!isfunction(callback)) then
+		callback = function(obj) return tostring(obj) end
+	end
+
+	if (!isstring(separator)) then
+		separator = ", "
+	end
+
+	local list = {...}
+	local result = ""
+
+	for k, v in ipairs(list) do
+		local text = callback(v)
+
+		if (isstring(text)) then
+			result = result..text
+		end
+
+		if (k < #list) then
+			result = result..separator
+		end
+	end
+
+	return result
+end
+
+function string.IsNumber(char)
 	return (tonumber(char) != nil)
 end
 
@@ -893,7 +920,7 @@ function util.BuildTableFromString(str)
 		if (!string.find(v, "=")) then
 			v = v:RemoveTextFromStart(" ", true)
 
-			if (util.IsNumber(v)) then
+			if (string.IsNumber(v)) then
 				v = tonumber(v)
 			elseif (string.find(v, "\"")) then
 				v = v:RemoveTextFromStart("\""):RemoveTextFromEnd("\"")
@@ -922,7 +949,7 @@ function util.BuildTableFromString(str)
 						exploded[i] = nil
 					end
 
-					v = buildTableFromString(buff)
+					v = util.BuildTableFromString(buff)
 				end
 			else
 				v = v:RemoveTextFromEnd("}")
@@ -934,10 +961,10 @@ function util.BuildTableFromString(str)
 			local key = parts[1]:RemoveTextFromEnd(" ", true):RemoveTextFromEnd("\t", true)
 			local value = parts[2]:RemoveTextFromStart(" ", true):RemoveTextFromStart("\t", true)
 
-			if (util.IsNumber(value)) then
+			if (string.IsNumber(value)) then
 				value = tonumber(value)
 			elseif (value:find("{") and value:find("}")) then
-				value = buildTableFromString(value)
+				value = util.BuildTableFromString(value)
 			else
 				value = value:RemoveTextFromEnd("}")
 			end

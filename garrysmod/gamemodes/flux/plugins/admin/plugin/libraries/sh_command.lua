@@ -173,11 +173,15 @@ if (SERVER) then
 				end
 			end
 
-			return nil, "["
+			return false, "["
 		end,
 		-- Target yourself.
 		["^"] = function(player, str)
-			return {player}, "^"
+			if (IsValid(player)) then
+				return {player}, "^"
+			else
+				return false, "^"
+			end
 		end,
 		-- Target everyone.
 		["*"] = function(player, str)
@@ -185,15 +189,23 @@ if (SERVER) then
 		end
 	}
 
-	function fl.command:ParseMacros(player, str)
+	function fl.command:PlayerFromString(player, str)
 		local start = str:utf8sub(1, 1)
 		local parser = macros[start]
 
 		if (isfunction(parser)) then
 			return parser(player, str)
+		else
+			local target = _player.Find(str)
+
+			if (IsValid(target)) then
+				return {target}
+			elseif (istable(target) and #target > 0) then
+				return target
+			end
 		end
 
-		return str
+		return false
 	end
 	
 	function fl.command:Interpret(player, text)
@@ -227,31 +239,71 @@ if (SERVER) then
 					if (cmdTable.immunity or cmdTable.playerArg != nil) then
 						local targetArg = args[(cmdTable.playerArg or 1)]
 						local targets = {}
+						local targetEveryone = false
 
 						if (istable(targetArg)) then
-							for k, v in pairs(targetArg) do
-								local target = _player.Find(v)
+							local cache = {}
 
-								if (IsValid(target)) then
-									table.insert(targets, v)
+							for k, v in pairs(targetArg) do
+								local target, kind = fl.command:PlayerFromString(player, v)
+
+								if (kind == "*") then targetEveryone = true end
+
+								if (istable(target)) then
+									for k2, v2 in ipairs(target) do
+										if (IsValid(v2) and !cache[v2]) then
+											cache[v2] = true
+
+											table.insert(targets, v2)
+										end
+									end
 								end
 							end
-						end
+						else
+							local target, kind = fl.command:PlayerFromString(player, targetArg)
+							local cache = {}
 
-						if (IsValid(target)) then
-							if (cmdTable.immunity and !fl.admin:CheckImmunity(player, target, cmdTable.canBeEqual)) then
-								fl.player:Notify(player, L("Commands_HigherImmunity", target:Name()))
+							if (kind == "*") then targetEveryone = true end
+
+							if (istable(target)) then
+								for k, v in ipairs(target) do
+									if (IsValid(v) and !cache[v]) then
+										cache[v] = true
+
+										table.insert(targets, v)
+									end
+								end
+							else
+								if (IsValid(player)) then
+									fl.player:Notify(player, L("Commands_PlayerInvalid", tostring(targetArg)))
+								else
+									if (kind != "^") then
+										ErrorNoHalt("'"..tostring(targetArg).."' is not a valid player!")
+									else
+										ErrorNoHalt("[Flux:Command] You cannot target yourself as console.")
+									end
+								end
 
 								return
 							end
+						end
+
+						if (istable(targets) and #targets > 0) then
+							for k, v in ipairs(targets) do
+								if (cmdTable.immunity and IsValid(player) and !fl.admin:CheckImmunity(player, v, cmdTable.canBeEqual)) then
+									fl.player:Notify(player, L("Commands_HigherImmunity", v:Name()))
+
+									return
+								end
+							end
 
 							-- One step less for commands.
-							args[cmdTable.playerArg or 1] = target
+							args[cmdTable.playerArg or 1] = targets
 						else
 							if (IsValid(player)) then
-								fl.player:Notify(player, L("Commands_PlayerInvalid", targetArg))
+								fl.player:Notify(player, L("Commands_PlayerInvalid", tostring(targetArg)))
 							else
-								ErrorNoHalt("'"..targetArg.."' is not a valid player!\n")
+								ErrorNoHalt("'"..tostring(targetArg).."' is not a valid player!\n")
 							end
 
 							return

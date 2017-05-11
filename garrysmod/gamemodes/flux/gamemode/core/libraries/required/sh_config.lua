@@ -172,7 +172,7 @@ end
 -- once in a while.
 do
 	local countCharacter = string.CountCharacter
-	local isNumber = util.IsNumber
+	local isNumber = string.IsNumber
 	local buildTableFromString = util.BuildTableFromString
 
 	local function buildWordFromTable(tab, idx, len)
