@@ -13,7 +13,7 @@ COMMAND.arguments = 1
 COMMAND.immunity = true
 COMMAND.aliases = {"plykick"}
 
-function COMMAND:OnRun(player, target, ...)
+function COMMAND:OnRun(player, targets, ...)
 	local pieces = {...}
 	local reason = "Kicked for unspecified reason."
 
@@ -21,9 +21,11 @@ function COMMAND:OnRun(player, target, ...)
 		reason = string.Implode(" ", pieces)
 	end
 
-	fl.player:NotifyAll(L("KickMessage", (IsValid(player) and player:Name()) or "Console", target:Name(), reason))
+	for k, v in ipairs(targets) do
+		v:Kick(reason)
+	end
 
-	target:Kick(reason)
+	fl.player:NotifyAll(L("KickMessage", (IsValid(player) and player:Name()) or "Console", util.PlayerListToString(targets), reason))
 end
 
 COMMAND:Register()

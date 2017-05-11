@@ -849,6 +849,16 @@ function util.ListToString(callback, separator, ...)
 	return result
 end
 
+function util.PlayerListToString(...)
+	local list = {...}
+
+	if (#list == _player.GetAll()) then
+		return "Everyone"
+	end
+
+	return util.ListToString(function(obj) return (IsValid(obj) and obj:Name()) or "Unknown Player" end, nil, ...)
+end
+
 function string.IsNumber(char)
 	return (tonumber(char) != nil)
 end

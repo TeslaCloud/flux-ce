@@ -13,10 +13,12 @@ COMMAND.arguments = 1
 COMMAND.immunity = true
 COMMAND.aliases = {"plydemote"}
 
-function COMMAND:OnRun(player, target)
-	fl.player:NotifyAll(L("DemoteCMD_Message", (IsValid(player) and player:Name()) or "Console"), target:Name(), target:GetUserGroup())
+function COMMAND:OnRun(player, targets)
+	for k, target in ipairs(targets) do
+		target:SetUserGroup("user")
 
-	fl.player:SetUserGroup(target, "user")
+		fl.player:NotifyAll(L("DemoteCMD_Message", (IsValid(player) and player:Name()) or "Console"), target:Name(), target:GetUserGroup())
+	end
 end
 
 COMMAND:Register()

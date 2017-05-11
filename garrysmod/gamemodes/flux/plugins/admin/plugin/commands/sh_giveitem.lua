@@ -13,17 +13,21 @@ COMMAND.arguments = 2
 COMMAND.playerArg = 1
 COMMAND.aliases = {"chargiveitem", "plygiveitem"}
 
-function COMMAND:OnRun(player, target, itemName, amount)
+function COMMAND:OnRun(player, targets, itemName, amount)
 	local itemTable = item.Find(itemName)
 
 	if (itemTable) then
 		amount = tonumber(amount) or 1
-		for i = 1, amount do
-			target:GiveItem(itemTable.uniqueID)
+
+		for k, v in ipairs(targets) do
+			for i = 1, amount do
+				v:GiveItem(itemTable.uniqueID)
+			end
+
+			fl.player:Notify(v, player:Name().." has given you "..amount.." "..itemTable.Name.."'s.")
 		end
 
-		fl.player:Notify(player, "You have given "..amount.." "..itemTable.Name.."'s to "..target:Name()..".")
-		fl.player:Notify(target, player:Name().." has given you "..amount.." "..itemTable.Name.."'s.")
+		fl.player:Notify(player, "You have given "..amount.." "..itemTable.Name.."'s to "..util.PlayerListToString(targets)..".")
 	else
 		fl.player:Notify(player, "'"..itemName.."' is not a valid item!")
 	end

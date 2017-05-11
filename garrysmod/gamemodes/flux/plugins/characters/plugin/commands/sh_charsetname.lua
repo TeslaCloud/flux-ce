@@ -13,7 +13,9 @@ COMMAND.arguments = 2
 COMMAND.playerArg = 1
 COMMAND.aliases = {"setname"}
 
-function COMMAND:OnRun(player, target, newName)
+function COMMAND:OnRun(player, targets, newName)
+	local target = targets[1]
+
 	fl.player:NotifyAll(L("CharSetName_Message", (IsValid(player) and player:Name()) or "Console", target:Name(), newName))
 
 	character.SetName(target, target:GetCharacter(), newName)
