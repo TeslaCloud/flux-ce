@@ -74,13 +74,11 @@ if (fl.initialized and fl.Devmode) then
 	fl.DevPrint("Starting reloading core files. ["..math.Round(os.clock() - fl.startTime, 3).."]")
 end
 
-AddCSLuaFile("core/sh_enums.lua")
 AddCSLuaFile("core/sh_util.lua")
-AddCSLuaFile("core/sh_core.lua")
-include("core/sh_enums.lua")
 include("core/sh_util.lua")
-include("core/sh_core.lua")
 
+util.Include("core/sh_enums.lua")
+util.Include("core/sh_core.lua")
 util.Include("core/cl_core.lua")
 util.Include("core/sv_core.lua")
 
@@ -103,8 +101,10 @@ util.IncludeDirectory("core/libraries", true)
 util.IncludeDirectory("core/libraries/classes", true)
 util.IncludeDirectory("core/libraries/meta", true)
 util.IncludeDirectory("languages", true)
-util.IncludeDirectory("core/derma/base", true)
-util.IncludeDirectory("core/derma", true)
+util.IncludeDirectory("core/ui/model", true)
+util.IncludeDirectory("core/ui/view/base", true)
+util.IncludeDirectory("core/ui/view", true)
+util.IncludeDirectory("core/ui/controller", true)
 item.IncludeItems("flux/gamemode/core/items")
 
 if (fl.Devmode) then

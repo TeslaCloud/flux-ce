@@ -12,7 +12,7 @@ local stored = {}
 local hooksCache = {}
 local reloadData = {}
 local loadCache = {}
-local extras = {
+local defaultExtras = {
 	"libraries",
 	"libraries/meta",
 	"libraries/classes",
@@ -24,10 +24,14 @@ local extras = {
 	"config",
 	"languages",
 	"items",
-	"derma",
+	"ui/model",
+	"ui/view",
+	"ui/controller",
 	"tools",
 	"themes"
 }
+
+local extras = table.Copy(defaultExtras)
 
 function plugin.GetStored()
 	return stored
@@ -38,12 +42,18 @@ function plugin.GetCache()
 end
 
 function plugin.ClearCache()
+	plugin.ClearExtras()
+
 	hooksCache = {}
 	loadCache = {}
 end
 
 function plugin.ClearLoadCache()
 	loadCache = {}
+end
+
+function plugin.ClearExtras()
+	extras = table.Copy(defaultExtras)
 end
 
 class "CPlugin"
@@ -140,20 +150,17 @@ function plugin.Register(obj)
 	end
 
 	if (SERVER) then
-		local filePath = "gamemodes/"..obj.folder.."/plugin.cfg"
-
 		if (Schema == obj) then
 			local folderName = obj.folder:RemoveTextFromEnd("/schema")
+			local filePath = "gamemodes/"..folderName.."/"..folderName..".cfg"
 
-			filePath = "gamemodes/"..folderName.."/"..folderName..".cfg"
-		end
+			if (file.Exists(filePath, "GAME")) then
+				local fileContents = fileio.Read(filePath)
 
-		if (file.Exists(filePath, "GAME")) then
-			local fileContents = fileio.Read(filePath)
+				fl.DevPrint("Importing config: "..filePath)
 
-			fl.DevPrint("Importing config: "..filePath)
-
-			config.Import(fileContents, CONFIG_PLUGIN)
+				config.Import(fileContents, CONFIG_PLUGIN)
+			end
 		end
 	end
 
@@ -317,8 +324,9 @@ function plugin.Include(folder)
 
 	if (ext != "lua") then
 		if (SERVER) then
-			if (file.Exists(folder.."/plugin.json", "LUA")) then
-				local iniData = util.JSONToTable(file.Read(folder.."/plugin.json", "LUA"))
+			if (file.Exists(folder.."/plugin.cfg", "LUA")) then
+				local configData = config.ConfigToTable(file.Read(folder.."/plugin.cfg", "LUA"))
+				local iniData = {name = configData.name, description = configData.description, author = configData.author, depends = configData.depends}
 					data.pluginFolder = folder.."/plugin"
 					data.pluginMain = "sh_plugin.lua"
 
@@ -326,6 +334,14 @@ function plugin.Include(folder)
 						data.pluginMain = "sh_"..(data.name or id)..".lua"
 					end
 				table.Merge(data, iniData)
+
+				configData.name, configData.description, configData.author, configData.depends = nil, nil, nil, nil
+
+				for k, v in pairs(configData) do
+					if (v != nil) then
+						config.Set(k, v)
+					end
+				end
 
 				fl.sharedTable.pluginInfo[folder] = data
 			end

@@ -18,7 +18,6 @@ fl.bars.defaultY = 8
 fl.bars.defaultW = ScrW() / 4
 fl.bars.defaultH = 14
 fl.bars.defaultSpacing = 4
-fl.bars.drawing = fl.bars.drawing or 0 -- Amount of bars currently being drawn.
 
 function fl.bars:Register(uniqueID, data, force)
 	if (!data) then return end

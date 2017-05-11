@@ -104,7 +104,7 @@ do
 	function util.IsVowel(char)
 		char = char:utf8lower()
 
-		if (fl and CLIENT) then
+		if (CLIENT) then
 			local lang = fl.lang:GetTable(GetConVar("gmod_language"):GetString())
 
 			if (lang and isfunction(lang.IsVowel)) then
@@ -518,11 +518,18 @@ function player.Find(name, bCaseSensitive, bReturnFirstHit)
 	if (!isstring(name)) then return (IsValid(name) and name) or nil end
 
 	local hits = {}
+	local isSteamID = name:StartWith("STEAM_")
 
 	for k, v in ipairs(_player.GetAll()) do
-		if (v:SteamID() == name) then
-			table.insert(hits, v)
-		elseif (v:Name(true):find(name)) then
+		if (isSteamID) then
+			if (v:SteamID() == name) then
+				return v
+			end
+
+			continue
+		end
+
+		if (v:Name(true):find(name)) then
 			table.insert(hits, v)
 		elseif (!bCaseSensitive and v:Name(true):utf8lower():find(name:utf8lower())) then
 			table.insert(hits, v)
@@ -576,11 +583,7 @@ end
 
 -- A function to check if string is command or not.
 function string.IsCommand(str)
-	local prefixes = {"/"}
-
-	if (fl) then
-		prefixes = config.Get("command_prefixes")
-	end
+	local prefixes = config.Get("command_prefixes") or {}
 
 	for k, v in ipairs(prefixes) do
 		if (str:StartWith(v)) then

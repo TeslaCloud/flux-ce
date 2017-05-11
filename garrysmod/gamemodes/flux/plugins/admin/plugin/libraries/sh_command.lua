@@ -122,8 +122,14 @@ if (SERVER) then
 
 		if (istable(text)) then
 			args = text
-		else
+		elseif (isstring(text)) then
 			args = self:ExtractArguments(text)
+		end
+
+		if (!isstring(args[1])) then
+			ErrorNoHalt("[Flux:Command] You must enter a command!\n")
+
+			return
 		end
 
 		local command = args[1]:utf8lower()

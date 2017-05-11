@@ -15,7 +15,7 @@ function flAdmin:OnPluginLoaded()
 
 	local folder = self:GetFolder().."/plugin"
 
-	util.Include(folder.."/commands/")
+	util.IncludeDirectory(folder.."/commands/")
 	fl.admin:IncludeGroups(folder.."/groups/")
 end
 

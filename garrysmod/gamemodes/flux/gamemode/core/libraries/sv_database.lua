@@ -614,17 +614,6 @@ end
 function fl.db:OnConnected()
 	MsgC(Color(25, 235, 25), "[Flux:Database] Connected to the database using "..fl.db.Module.."!\n")
 
-	local queryObj = self:Create("fl_bans")
-		queryObj:Create("key", "INT NOT NULL AUTO_INCREMENT")
-		queryObj:Create("steamID", "VARCHAR(25) NOT NULL")
-		queryObj:Create("name", "VARCHAR(255) NOT NULL")
-		queryObj:Create("unbanTime", "INT NOT NULL")
-		queryObj:Create("banTime", "INT DEFAULT NULL")
-		queryObj:Create("duration", "INT DEFAULT NULL")
-		queryObj:Create("reason", "TEXT DEFAULT NULL")
-		queryObj:PrimaryKey("key")
-	queryObj:Execute()
-
 	local queryObj = self:Create("fl_players")
 		queryObj:Create("key", "INT NOT NULL AUTO_INCREMENT")
 		queryObj:Create("steamID", "VARCHAR(25) NOT NULL")
@@ -636,23 +625,6 @@ function fl.db:OnConnected()
 		queryObj:Create("customPermissions", "TEXT DEFAULT NULL")
 		queryObj:Create("data", "TEXT DEFAULT NULL")
 		queryObj:Create("whitelists", "TEXT DEFAULT NULL")
-		queryObj:PrimaryKey("key")
-	queryObj:Execute()
-
-	local queryObj = self:Create("fl_characters")
-		queryObj:Create("key", "INT NOT NULL AUTO_INCREMENT")
-		queryObj:Create("steamID", "VARCHAR(25) NOT NULL")
-		queryObj:Create("name", "VARCHAR(255) NOT NULL")
-		queryObj:Create("faction", "TEXT NOT NULL")
-		queryObj:Create("model", "TEXT NOT NULL")
-		queryObj:Create("class", "TEXT DEFAULT NULL")
-		queryObj:Create("physDesc", "TEXT DEFAULT NULL")
-		queryObj:Create("inventory", "TEXT DEFAULT NULL")
-		queryObj:Create("ammo", "TEXT DEFAULT NULL")
-		queryObj:Create("money", "INT DEFAULT NULL")
-		queryObj:Create("uniqueID", "INT DEFAULT NULL")
-		queryObj:Create("charPermissions", "TEXT DEFAULT NULL")
-		queryObj:Create("data", "TEXT DEFAULT NULL")
 		queryObj:PrimaryKey("key")
 	queryObj:Execute()
 
@@ -668,7 +640,7 @@ end
 
 -- Called when the database connection fails.
 function fl.db:OnConnectionFailed(errorText)
-	ErrorNoHalt("[Flux:Database] Unable to connect to the database!\n"..errorText.."\n")
+	ErrorNoHalt("[Flux:Database] Failed to connect to the database!\n"..errorText.."\n")
 
 	hook.Run("DatabaseConnectionFailed", errorText)
 end

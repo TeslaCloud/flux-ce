@@ -21,10 +21,6 @@ end
 
 if (fl.initialized) then
 	MsgC(Color(0, 255, 100, 255), "[Flux] Lua auto-reload in progress...\n")
-
-	if (fl.Devmode) then
-		fl.DevPrint("Starting loading all over again. ["..math.Round(os.clock() - fl.startTime, 3).."]")
-	end
 else
 	MsgC(Color(0, 255, 100, 255), "[Flux] Initializing...\n")
 end
@@ -62,7 +58,7 @@ if (system.IsWindows()) then
 			-- Prevent it from passing extra directories to the hook, as well as files it doesn't really need.
 			if (fileName:EndsWith("plugins")) then return end
 			if (fileName:find("/plugin/")) then return end
-			if (fileName:find(".ini")) then return end
+			if (fileName:find(".json") or fileName:find(".ini")) then return end
 
 			print("[Watchdog] Detected a new plugin.")
 			--hook.Run("OnPluginFileChange", fileName)
