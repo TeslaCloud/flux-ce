@@ -1,7 +1,7 @@
-Flux license version 1 (1321)
+Flux license version 2 (1419)
 
 Copyright © 2016-2017 TeslaCloud Studios
-Flux (the framework) is a project of TeslaCloud Studios LLC (us) and is a subject to the following license (terms):
+Flux (the framework, the software) is a project of TeslaCloud Studios LLC (us) and is a subject to the following license (terms):
 
 1. General Terms
 You are allowed to use and modify the framework without any limitations. You may also share your custom modifications for free or paid, as long as they are your original work and do not infringe upon any copyrights and/or any other terms listed in this license. You may not copy, reproduce or port the framework's code anywhere outside of the project, this includes, but is not limited to: copying portions of the software or the entire code of the software and including it with other software and/or integrating this in other software's code, even with proper credit given. You may not port any official plugins for, and/or parts of, the software (made by TeslaCloud Studios or it's affiliates) to any other software, including addons, gamemodes, scripts and plugins (other than the plugins written for Flux). You may not remove or modify any copyright notices placed within the code of the software under any circumstances.
@@ -14,10 +14,13 @@ Copying is when the code is being copied from one place to another, usually reta
 Reproduction is when the code is being studied and then a different code is being written, usually retaining the logic of the original but having different variable names.
 Porting is when the code is being copied and then transformed into another format to work within a different software.
 
+4. Appendix
+Conna Wiles (aka kurozael) and his affiliates, Cloud Sixteen and it's affiliates, as well as any person working for, or on behalf of Conna Wiles or Cloud Sixteen, are not allowed to use, modify, copy, re-produce, share, sell or work with Flux, or any part of Flux (including plugins, schemas or any other code written to work with Flux).
+
 Simple version:
 You may:
 - Use and modify Flux freely.
-- Share or sell your modifications (including framework edits, but those are limited to sharing only).
+- Share or sell your modifications (including framework edits, but those are limited to sharing only, meaning you cannot sell Flux at all).
 - Write plugins for Flux and share or sell them.
 
 You may not:

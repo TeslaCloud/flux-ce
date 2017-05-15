@@ -988,6 +988,27 @@ end
 
 local colorMeta = FindMetaTable("Color")
 
+do
+	local Pr = 0.299
+	local Pg = 0.587
+	local Pb = 0.114
+
+	-- A function to saturate the color (uses HSP system to do so).
+	-- Ripped directly from C equivalent code that can be found
+	-- here: http://alienryderflex.com/saturation.html
+	function colorMeta:Saturate(amt)
+		local r, g, b = self.r, self.g, self.b
+		local P = math.sqrt((r * r * Pr) + (g * g * Pg) + (b * b + Pb))
+
+		return Color(
+			math.Clamp(P + (r - P) * amt, 0, 255),
+			math.Clamp(P + (g - P) * amt, 0, 255),
+			math.Clamp(P + (b - P) * amt, 0, 255),
+			self.a
+		)
+	end
+end
+
 function colorMeta:Darken(amt)
 	return Color(
 		math.Clamp(self.r - amt, 0, 255),
