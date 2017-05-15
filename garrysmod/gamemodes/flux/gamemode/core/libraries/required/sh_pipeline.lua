@@ -16,6 +16,8 @@ library.New "pipeline"
 local stored = pipeline.stored or {}
 pipeline.stored = stored
 
+local lastPipeAborted = false
+
 function pipeline.Register(uniqueID, callback)
 	stored[uniqueID] = {
 		callback = callback,
@@ -27,10 +29,20 @@ function pipeline.Find(id)
 	return stored[id]
 end
 
+function pipeline.Abort()
+	lastPipeAborted = true
+end
+
+function pipeline.IsAborted()
+	return lastPipeAborted
+end
+
 function pipeline.Include(pipe, fileName)
 	if (isstring(pipe)) then
 		pipe = stored[pipe]
 	end
+
+	lastPipeAborted = false
 
 	if (!pipe) then return end
 	if (!isstring(fileName) or fileName:utf8len() < 7) then return end

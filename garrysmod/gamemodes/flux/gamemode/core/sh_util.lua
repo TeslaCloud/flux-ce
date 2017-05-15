@@ -50,7 +50,11 @@ do
 
 		tryCache = {}
 
+		SUCCEEDED = true
+
 		if (!success) then
+			SUCCEEDED = false
+
 			if (isfunction(handler[1])) then
 				handler[1](unpack(result))
 			else

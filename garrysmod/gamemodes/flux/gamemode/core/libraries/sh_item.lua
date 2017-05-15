@@ -235,10 +235,16 @@ function item.IsInstance(itemTable)
 	return (itemTable.instanceID or ITEM_TEMPLATE) > ITEM_INVALID
 end
 
+function item.CreateBase(strName)
+	class(strName, nil, CItem)
+end
+
 pipeline.Register("item", function(uniqueID, fileName, pipe)
 	ITEM = Item(uniqueID)
 
 	util.Include(fileName)
+
+	if (pipeline.IsAborted()) then ITEM = nil return end
 
 	ITEM:Register() ITEM = nil
 end)

@@ -22,6 +22,17 @@ end
 
 CItem.Name = CItem.GetName
 
+function CItem:SetBase(CBaseClass)
+	if (!istable(CBaseClass)) then return end
+
+	ITEM = nil
+	ITEM = CBaseClass()
+end
+
+function CItem:MakeBase()
+	pipeline.Abort()
+end
+
 function CItem:GetRealName()
 	return self.Name or "Unknown Item"
 end
@@ -105,12 +116,15 @@ if (SERVER) then
 
 		if (self[act]) then
 			if (act != "OnTake" and act != "OnUse" and act != "OnTake") then
-				local succ, result = pcall(self[act], self, player, ...)
+				try {
+					self[act], self, player, ...
+				} catch {
+					function(exception)
+						ErrorNoHalt("Item callback has failed to run! "..tostring(exception).."\n")
+					end
+				}
 
-				if (!succ) then
-					ErrorNoHalt("Item callback has failed to run! "..tostring(result).."\n")
-					return
-				end
+				if (!SUCCEEDED) then return end
 			end
 
 			if (self.actionSounds[act]) then

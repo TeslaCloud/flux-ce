@@ -95,6 +95,8 @@ function library.NewClass(strName, tParent, CExtends)
 				end
 			end
 
+			newObj.IsValid = function() return true end
+
 			-- Return our newly generated object.
 			return newObj
 		end
@@ -163,6 +165,10 @@ inherits = extends
 	local obj = new("className", 1, 2, 3)
 --]]
 function New(className, ...)
+	if (istable(className)) then
+		return className(...)
+	end
+
 	return (_G[className] and _G[className](unpack(...)))
 end
 

@@ -24,6 +24,7 @@ local defaultExtras = {
 	"config",
 	"languages",
 	"items",
+	"items/bases",
 	"ui/model",
 	"ui/view",
 	"ui/controller",

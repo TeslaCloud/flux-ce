@@ -4,7 +4,7 @@
 	the framework is publicly released.
 --]]
 
-ITEM.Base = "consumables_base"
+ITEM:SetBase(CItemConsumable)
 ITEM.Name = "Breen's Water"
 ITEM.PrintName = "Breen's Water"
 ITEM.Description = "A blue can filled with water. It has 'Breen's Private Reserve' printed on it."
