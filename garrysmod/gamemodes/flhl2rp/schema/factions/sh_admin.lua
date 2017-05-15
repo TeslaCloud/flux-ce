@@ -4,12 +4,12 @@
 	the framework is publicly released.
 --]]
 
-FACTION.Name = "Civil Worker's Union"
-FACTION.Description = "A member of Civil Woker's Union."
-FACTION.PhysDesc = "Wearing a clean white CWU uniform."
+FACTION.Name = "City Administrator"
+FACTION.Description = "A person who controls the city."
+FACTION.PhysDesc = "Wearing a strict, fancy looking suit."
 FACTION.Color = Color(225, 185, 135)
 FACTION.Whitelisted = true
-FACTION.Material = "flux/hl2rp/factions/citizen.png"
+FACTION.Material = "flux/hl2rp/factions/admin.png"
 FACTION.NameTemplate = "{name}"
 FACTION.Models.male = {
 	"models/humans/group02/male_01.mdl",

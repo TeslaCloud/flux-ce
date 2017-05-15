@@ -4,15 +4,15 @@
 	the framework is publicly released.
 --]]
 
-FACTION.Name = "Overwatch Transhuman Arm"
+FACTION.Name = "Combine Overwatch"
 FACTION.Description = "Combine military soldiers."
 FACTION.PhysDesc = "Wearing heavy overwatch armor."
 FACTION.Color = Color(225, 185, 135)
-FACTION.Material = "flux/hl2rp/factions/ota.png"
+FACTION.Material = "flux/hl2rp/factions/overwatch.png"
 FACTION.HasName = false
 FACTION.Whitelisted = true
 FACTION.DefaultClass = "soldier"
-FACTION.NameTemplate = "OTA.{data:Squad}-{rank}.{callback:GenerateID}"
+FACTION.NameTemplate = "OW.{data:Squad}-{rank}.{callback:GenerateID}"
 FACTION:SetData("Squad", "ECHO")
 FACTION.Models.universal = {
 	"models/police.mdl"
@@ -30,7 +30,7 @@ FACTION:AddClass("guard", "Overwatch Guard", "Overwatch soldier that specializes
 	return player:IsRank("GUARD")
 end)
 
-FACTION:AddClass("elite_ota", "Elite Overwatch Unit", "Elite Overwatch soldier that serves directly under city administrator.", FACTION.Color, function(player)
+FACTION:AddClass("elite_ow", "Elite Overwatch Unit", "Elite Overwatch soldier that serves directly under city administrator.", FACTION.Color, function(player)
 	return player:IsRank("EOW")
 end)
 
