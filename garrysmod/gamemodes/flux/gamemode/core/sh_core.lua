@@ -82,7 +82,13 @@ function library.NewClass(strName, tParent, CExtends)
 
 			-- If there is a base class, call their constructor.
 			if (obj.BaseClass) then
-				pcall(obj.BaseClass, newObj, ...)
+				try {
+					obj.BaseClass[obj.BaseClass.ClassName], newObj, ...
+				} catch {
+					function(exception)
+						ErrorNoHalt("[Flux] Base class constructor has failed to run!\n"..tostring(exception.."\n"))
+					end
+				}
 			end
 
 			-- If there is a constructor - call it.
@@ -104,7 +110,20 @@ function library.NewClass(strName, tParent, CExtends)
 
 	-- If this class is based off some other class - copy it's parent's data.
 	if (istable(CExtends)) then
-		table.SafeMerge(class, CExtends)
+		local copy = table.Copy(CExtends)
+		local merged = table.SafeMerge(copy, class)
+
+		if (isfunction(CExtends.OnExtended)) then
+			try {
+				CExtends.OnExtended, copy, merged
+			} catch {
+				function(exception)
+					ErrorNoHalt("[Flux] OnExtended class hook has failed to run!\n"..tostring(exception.."\n"))
+				end
+			}
+		end
+
+		class = merged
 	end
 
 	-- Create the actual class table.
@@ -134,8 +153,20 @@ function extends(CBaseClass)
 
 	if (istable(library.lastClass) and istable(CBaseClass)) then
 		local obj = library.lastClass.parent[library.lastClass.name]
+		local copy = table.Copy(CBaseClass)
+		local merged = table.Merge(copy, obj)
 
-		table.SafeMerge(obj, CBaseClass)
+		if (isfunction(CBaseClass.OnExtended)) then
+			try {
+				CBaseClass.OnExtended, copy, merged
+			} catch {
+				function(exception)
+					ErrorNoHalt("[Flux] OnExtended class hook has failed to run!\n"..tostring(exception.."\n"))
+				end
+			}
+		end
+
+		obj = merged
 		obj.BaseClass = CBaseClass
 
 		hook.Run("OnClassExtended", obj, CBaseClass)

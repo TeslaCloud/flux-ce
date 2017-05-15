@@ -106,6 +106,7 @@ util.IncludeDirectory("core/ui/model", true)
 util.IncludeDirectory("core/ui/view/base", true)
 util.IncludeDirectory("core/ui/view", true)
 util.IncludeDirectory("core/ui/controller", true)
+util.IncludeDirectory("core/items/bases", true)
 item.IncludeItems("flux/gamemode/core/items")
 
 if (fl.Devmode) then

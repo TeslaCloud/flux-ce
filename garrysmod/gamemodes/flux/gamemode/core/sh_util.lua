@@ -85,7 +85,7 @@ do
 		try {
 			function(arg1, arg2)
 				print(arg1, arg2)
-			end, {"arg1", "arg2"}
+			end, "arg1", "arg2"
 		} catch {
 			function(exception)
 				print(exception)

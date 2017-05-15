@@ -24,14 +24,14 @@ local entities = item.entities or {}
 item.entities = entities
 
 function item.Register(id, data)
-	if (!id and !data.Name) then
+	if (!isstring(id) and !isstring(data.Name)) then
 		ErrorNoHalt("[Flux] Attempt to register an item without a valid ID!")
 		debug.Trace()
 
 		return
 	end
 
-	fl.DevPrint("Registering item: "..id)
+	fl.DevPrint("Registering item: "..tostring(id))
 
 	if (!id) then
 		id = data.Name:MakeID()
@@ -39,7 +39,6 @@ function item.Register(id, data)
 
 	data.uniqueID = id
 	data.Name = data.Name or "Unknown Item"
-	data.Base = data.Base or nil
 	data.PrintName = data.PrintName or data.Name
 	data.Description = data.Description or "This item has no description!"
 	data.Weight = data.Weight or 1
@@ -62,26 +61,6 @@ function item.Register(id, data)
 	data.TakeIcon = data.TakeIcon
 	data.CancelIcon = data.CancelIcon
 
-	if (isstring(data.Base)) then
-		local baseTable = stored[data.Base]
-
-		if (baseTable) then
-			local newTable = table.Copy(baseTable)
-			local dataTable = table.Copy(data)
-
-			-- Prevents table.Merge from stack overflowing.
-			newTable.__index = nil
-			dataTable.__index = nil
-
-			newTable.isBase = dataTable.isBase or false
-			table.Merge(newTable, dataTable)
-
-			-- Restore base class index so that we get CItem's functions.
-			dataTable.__index = data.__index
-			data = dataTable
-		end
-	end
-
 	stored[id] = data
 	instances[id] = instances[id] or {}
 end
@@ -92,7 +71,6 @@ function item.ToSave(itemTable)
 	return {
 		uniqueID = itemTable.uniqueID,
 		Name = itemTable.Name,
-		Base = itemTable.Base,
 		PrintName = itemTable.PrintName,
 		Description = itemTable.Description,
 		Weight = itemTable.Weight,
@@ -386,11 +364,13 @@ if (SERVER) then
 	function item.Spawn(position, angles, itemTable)
 		if (!position or !istable(itemTable)) then
 			ErrorNoHalt("[Flux:Item] No position or item table is not a table!\n")
+
 			return
 		end
 
 		if (!item.IsInstance(itemTable)) then
 			ErrorNoHalt("[Flux:Item] Cannot spawn non-instantiated item!\n")
+
 			return
 		end
 
@@ -414,7 +394,7 @@ if (SERVER) then
 			angles = angles
 		}
 
-		item.SaveEntities()
+		item.AsyncSaveEntities()
 
 		return ent, itemTable
 	end
@@ -437,6 +417,7 @@ else
 			table.Merge(newTable, itemTable)
 
 			instances[newTable.uniqueID][instanceID] = newTable
+
 			print("Received instance ID "..tostring(newTable))
 		else
 			print("FAILED TO RECEIVE INSTANCE ID "..instanceID)

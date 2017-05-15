@@ -5,24 +5,32 @@
 --]]
 
 -- Alternatively, you can use item.CreateBase("CItemEquippable")
-class "CItemEquippable" extends CItem
+class "CItemEquippable" extends "CItem"
 
 CItemEquippable.Name = "Equipment Base"
 CItemEquippable.Description = "This item can be equipped."
+CItemEquippable.m_IsEquipped = false
 
-function CItemEquippable:OnEquipped(player)
-
+function CItemEquippable:IsEquipped()
+	return self.m_IsEquipped
 end
 
-function CItemEquippable:OnUnEquipped(player)
-
-end
+function CItemEquippable:OnEquipped(player) end
+function CItemEquippable:OnUnEquipped(player) end
+function CItemEquippable:PostEquipped(player) end
+function CItemEquippable:PostUnEquipped(player) end
 
 function CItemEquippable:Equip(player, bShouldEquip)
 	if (bShouldEquip) then
-		self:OnEquipped(player)
+		if (self:OnEquipped(player) != false) then
+			self.m_IsEquipped = true
+			self:PostEquipped(player)
+		end
 	else
-		self:OnUnEquipped(player)
+		if (self:OnUnEquipped(player) != false) then
+			self.m_IsEquipped = false
+			self:PostUnEquipped(player)
+		end
 	end
 end
 

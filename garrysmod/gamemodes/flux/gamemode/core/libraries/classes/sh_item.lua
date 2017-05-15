@@ -6,9 +6,10 @@
 
 class "CItem"
 
-function CItem:CItem(uniqueID, baseID)
-	self.uniqueID = uniqueID:MakeID()
-	self.Base = baseID
+function CItem:CItem(uniqueID)
+	if (!isstring(uniqueID)) then return end
+
+	self.uniqueID = string.MakeID(uniqueID)
 	self.data = self.data or {}
 	self.customButtons = {}
 	self.actionSounds = {
@@ -26,7 +27,7 @@ function CItem:SetBase(CBaseClass)
 	if (!istable(CBaseClass)) then return end
 
 	ITEM = nil
-	ITEM = CBaseClass()
+	ITEM = CBaseClass(self.uniqueID)
 end
 
 function CItem:MakeBase()
@@ -177,7 +178,7 @@ end
 
 -- Fancy output if you do print(itemTable).
 function CItem:__tostring()
-	return "Item ["..self.instanceID.."]["..self:GetName().."]"
+	return "Item ["..tostring(self.instanceID).."]["..self:GetName().."]"
 end
 
 Item = CItem

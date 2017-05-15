@@ -4,7 +4,7 @@
 	the framework is publicly released.
 --]]
 
-ITEM.Base = "consumables_base"
+ITEM:SetBase(CItemConsumable)
 ITEM.Name = "Flavored Breen's Water"
 ITEM.PrintName = "Flavored Breen's Water"
 ITEM.Description = "A yellow can filled with limited-tier flavored water."
