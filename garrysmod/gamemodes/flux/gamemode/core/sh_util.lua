@@ -997,7 +997,7 @@ do
 	local Pg = 0.587
 	local Pb = 0.114
 
-	-- A function to saturate the color (uses HSP system to do so).
+	-- A function to saturate the color.
 	-- Ripped directly from C equivalent code that can be found
 	-- here: http://alienryderflex.com/saturation.html
 	function colorMeta:Saturate(amt)

@@ -24,7 +24,7 @@ do
 	end
 
 	function PLUGIN:HUDPaint()
-		if (IsValid(fl.client) and fl.client:Alive() and fl.client:IsOperator() and fl.client:GetMoveType() == MOVETYPE_NOCLIP) then
+		if (IsValid(fl.client) and fl.client:Alive() and fl.client:GetMoveType() == MOVETYPE_NOCLIP and fl.client:HasPermission("admin_esp")) then
 			local scrW, scrH = ScrW(), ScrH()
 
 			for k, v in ipairs(_player.GetAll()) do
