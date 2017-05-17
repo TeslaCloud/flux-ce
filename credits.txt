@@ -1,3 +1,12 @@
+=========================
+Flux © 2016-2017 TeslaCloud Studios
+=========================
+
 Mr. Meow 	- Developer
 NightAngel 	- Developer
 Zig 		- Design supervisor, Developer
+
+=========================
+Community Contributors
+=========================
+

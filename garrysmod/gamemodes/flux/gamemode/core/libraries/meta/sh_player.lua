@@ -52,12 +52,8 @@ function playerMeta:HasPermission(perm)
 	return hook.Run("PlayerHasPermission", self, perm)
 end
 
-function playerMeta:IsOwner()
-	return hook.Run("PlayerIsOwner", self)
-end
-
-function playerMeta:IsCoOwner()
-	return hook.Run("PlayerIsCoOwner", self)
+function playerMeta:IsRoot()
+	return hook.Run("PlayerIsRoot", self)
 end
 
 function playerMeta:IsMemberOf(group)

@@ -131,8 +131,7 @@ end
 
 function fl.admin:HasPermission(player, permission)
 	if (!IsValid(player)) then return true end
-	if (player:IsOwner()) then return true end
-	if (player:IsCoOwner()) then return true end
+	if (player:IsRoot()) then return true end
 
 	local steamID = player:SteamID()
 

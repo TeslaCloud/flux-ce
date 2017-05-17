@@ -24,6 +24,10 @@ end
 CItem.Name = CItem.GetName
 
 function CItem:SetBase(CBaseClass)
+	if (isstring(CBaseClass)) then
+		CBaseClass = _G[CBaseClass]
+	end
+
 	if (!istable(CBaseClass)) then return end
 
 	ITEM = nil

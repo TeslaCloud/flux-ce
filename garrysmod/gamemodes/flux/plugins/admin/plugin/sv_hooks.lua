@@ -36,3 +36,21 @@ function flAdmin:DatabaseConnected()
 		queryObj:PrimaryKey("key")
 	queryObj:Execute()
 end
+
+function flAdmin:OnPlayerRestored(player)
+	local root_steamid = config.Get("root_steamid")
+
+	if (isstring(root_steamid)) then
+		if (player:SteamID() == root_steamid) then
+			player:SetUserGroup("root")
+		end
+	elseif (istable(root_steamid)) then
+		for k, v in ipairs(root_steamid) do
+			if (v == player:SteamID()) then
+				player:SetUserGroup("root")
+			end
+		end
+	end
+
+	ServerLog(player:Name().." ("..player:GetUserGroup()..") has connected to the server.")
+end

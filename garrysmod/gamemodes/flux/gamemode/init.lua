@@ -31,7 +31,9 @@ if (!SafeRequire("fileio")) then
 	return
 end
 
-if (system.IsWindows()) then
+if (system.IsWindows() and fileio.CheckForChanges) then
+	fl.WatchDogAvailable = true
+
 	timer.Create("WatchDogUpdater", (1 / 16), 0, function()
 		fileio.CheckForChanges()
 	end)

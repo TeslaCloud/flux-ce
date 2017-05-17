@@ -31,26 +31,8 @@ function flAdmin:PlayerHasPermission(player, perm)
 	return fl.admin:HasPermission(player, perm)
 end
 
-function flAdmin:PlayerIsOwner(player)
-	return player:IsMemberOf("owner")
-end
-
-function flAdmin:PlayerIsCoOwner(player)
-	if (player:IsOwner()) then
-		return true
-	end
-
-	local extraIDs = config.Get("owner_steamid_extra")
-
-	if (istable(extraIDs)) then
-		for k, v in ipairs(extraIDs) do
-			if (v == player:SteamID()) then
-				return true
-			end
-		end
-	end
-
-	return false
+function flAdmin:PlayerIsRoot(player)
+	return player:IsMemberOf("root")
 end
 
 function flAdmin:PlayerIsMemberOfGroup(player, group)

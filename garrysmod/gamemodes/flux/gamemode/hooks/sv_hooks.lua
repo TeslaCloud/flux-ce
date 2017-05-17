@@ -70,7 +70,7 @@ end
 function GM:PlayerSpawn(player)
 	player_manager.SetPlayerClass(player, "flPlayer")
 
-	self:PlayerSetModel(player)
+	hook.Run("PlayerSetModel", player)
 
 	player:SetCollisionGroup(COLLISION_GROUP_PLAYER)
 	player:SetMaterial("")
@@ -244,20 +244,6 @@ end
 
 function GM:PlayerInventoryUpdated(player)
 	netstream.Start(player, "RefreshInventory")
-end
-
-function GM:OnPlayerRestored(player)
-	if (player:SteamID() == config.Get("owner_steamid")) then
-		player:SetUserGroup("owner")
-	end
-
-	for k, v in ipairs(config.Get("owner_steamid_extra")) do
-		if (v == player:SteamID()) then
-			player:SetUserGroup("owner")
-		end
-	end
-
-	ServerLog(player:Name().." ("..player:GetUserGroup()..") has connected to the server.")
 end
 
 function GM:OnPluginFileChange(fileName)

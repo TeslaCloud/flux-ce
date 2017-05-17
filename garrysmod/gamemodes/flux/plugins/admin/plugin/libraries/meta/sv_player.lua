@@ -51,7 +51,7 @@ function playerMeta:SetSecondaryGroups(groups)
 end
 
 function playerMeta:AddSecondaryGroup(group)
-	if (group == "owner" or group == "") then return end
+	if (group == "root" or group == "") then return end
 
 	local groups = self:GetSecondaryGroups()
 

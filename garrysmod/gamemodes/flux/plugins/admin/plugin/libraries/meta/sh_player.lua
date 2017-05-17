@@ -23,9 +23,7 @@ function playerMeta:GetCustomPermissions()
 end
 
 function playerMeta:IsSuperAdmin()
-	if (self:IsOwner() or self:IsCoOwner()) then
-		return true
-	end
+	if (self:IsRoot()) then return true end
 
 	return self:IsMemberOf("superadmin")
 end

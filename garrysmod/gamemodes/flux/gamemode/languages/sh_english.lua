@@ -111,7 +111,7 @@ lang["#PlayerGroup_User"] = "The base rank that is automatically given to the pl
 lang["#PlayerGroup_Operator"] = "Low clearance administrative rank given to assistant staff members."
 lang["#PlayerGroup_Admin"] = "An administrative rank given to trusted staff members."
 lang["#PlayerGroup_Superadmin"] = "A high level administrative rank given to the most trusted of staff members."
-lang["#PlayerGroup_Owner"] = "The complete administrative rank given to the owners of the server."
+lang["#PlayerGroup_Root"] = "The complete administrative rank given to the owners of the server."
 
 lang["#DemoteCMD_Description"] = "Demote a player to user."
 lang["#DemoteCMD_Syntax"] = "<target>"
