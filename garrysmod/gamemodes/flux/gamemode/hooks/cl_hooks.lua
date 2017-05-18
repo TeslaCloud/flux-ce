@@ -108,24 +108,41 @@ function GM:HUDDrawScoreBoard()
 
 	if (!fl.client or !fl.client:HasInitialized() or hook.Run("ShouldDrawLoadingScreen")) then
 		local text = "Loading schema and plugins, please wait..."
+		local percentage = 80
 
 		if (!fl.localPlayerCreated) then
 			text = "Preparing loading sequence, please wait..."
+			percentage = 0
 		elseif (!fl.sharedTableReceived) then
 			text = "Receiving shared data, please wait..."
+			percentage = 45
 		end
 
-		local hooked = plugin.Call("GetLoadingScreenMessage")
+		local hooked, hookedPercentage = plugin.Call("GetLoadingScreenMessage")
 
 		if (isstring(hooked)) then
 			text = hooked
+
+			if (isnumber(hookedPercentage)) then
+				percentage = hookedPercentage
+			end
 		end
 
+		percentage = math.Clamp(percentage, 0, 100)
+
+		local font = font.GetSize("flMainFont", font.Scale(24))
 		local scrW, scrH = ScrW(), ScrH()
-		local w, h = util.GetTextSize(text, "DermaLarge")
+		local w, h = util.GetTextSize(text, font)
 
 		draw.RoundedBox(0, 0, 0, scrW, scrH, Color(0, 0, 0))
-		draw.SimpleText(text, "DermaLarge", scrW / 2 - w / 2, scrH / 2 + scrH / 4, Color(255, 255, 255))
+		draw.SimpleText(text, font, scrW / 2 - w / 2, scrH - 128, Color(255, 255, 255))
+
+		local barW, barH = scrW / 3.5, 6
+		local barX, barY = scrW / 2 - barW * 0.5, scrH - 80
+		local fillW = math.Clamp(barW * (percentage / 100), 0, barW - 2)
+
+		draw.RoundedBox(0, barX, barY, barW, barH, Color(22, 22, 22))
+		draw.RoundedBox(0, barX + 1, barY + 1, fillW, barH - 2, Color(245, 245, 245))
 
 		plugin.Call("PostDrawLoadingScreen")
 	end
