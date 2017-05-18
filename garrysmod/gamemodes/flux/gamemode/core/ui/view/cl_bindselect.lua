@@ -57,7 +57,7 @@ function PANEL:Paint(w, h)
 		end
 	end
 
-	draw.SimpleText(text, "menu_light_small", w * 0.5, h * 0.5, fl.settings:GetColor("TextColor"), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+	draw.SimpleText(text, theme.GetFont("Menu_Small"), w * 0.5, h * 0.5, fl.settings:GetColor("TextColor"), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
 end
 
 derma.DefineControl("flBindSelect", "", PANEL, "EditablePanel")

@@ -83,13 +83,13 @@ else
 			return
 		end
 
-		local width, height = util.GetTextSize(text, "tooltip_large")
-		local width2, height2 = util.GetTextSize(desc, "tooltip_small")
+		local width, height = util.GetTextSize(text, theme.GetFont("Tooltip_Large"))
+		local width2, height2 = util.GetTextSize(desc, theme.GetFont("Tooltip_Small"))
 
-		draw.SimpleTextOutlined(text, "tooltip_large", x - width * 0.5, y, col, nil, nil, 1, col2)
+		draw.SimpleTextOutlined(text, theme.GetFont("Tooltip_Large"), x - width * 0.5, y, col, nil, nil, 1, col2)
 		y = y + 26
 
-		draw.SimpleTextOutlined(desc, "tooltip_small", x - width2 * 0.5, y, col, nil, nil, 1, col2)
+		draw.SimpleTextOutlined(desc, theme.GetFont("Tooltip_Small"), x - width2 * 0.5, y, col, nil, nil, 1, col2)
 		y = y + 20
 
 		hook.Run("PostDrawItemTargetID", self, self.item, x, y, alpha, distance)

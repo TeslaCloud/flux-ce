@@ -38,7 +38,7 @@ function font.Create(name, fontData)
 	stored[name] = fontData
 end
 
-function font.GetSize(name, size)
+function font.GetSize(name, size, data)
 	if (!size) then return name end
 
 	local newName = name..":"..size
@@ -47,7 +47,11 @@ function font.GetSize(name, size)
 		local fontData = table.Copy(stored[name])
 
 		if (fontData) then
+			if (!istable(data)) then data = {} end
+
 			fontData.size = size
+
+			table.Merge(fontData, data)
 
 			font.Create(newName, fontData)
 		end
@@ -82,13 +86,6 @@ function font.CreateFonts()
 		size = font.Scale(34)
 	})
 
-	font.Create("menu_thin_large", {
-		font = "Roboto Lt",
-		extended = true,
-		weight = 400,
-		size = font.Scale(42)
-	})
-
 	font.Create("menu_thin_small", {
 		font = "Roboto Lt",
 		extended = true,
@@ -103,69 +100,15 @@ function font.CreateFonts()
 		weight = 200
 	})
 
-	font.Create("menu_light", {
+	font.Create("flRobotoLt", {
 		font = "Roboto Lt",
-		extended = true,
-		size = font.Scale(34)
-	})
-
-	font.Create("menu_light_tiny", {
-		font = "Roboto Lt",
-		extended = true,
-		size = font.Scale(16)
-	})
-
-	font.Create("menu_light_small", {
-		font = "Roboto Lt",
-		extended = true,
-		size = font.Scale(20)
-	})
-
-	font.Create("hud_small", {
-		font = "Roboto Condensed",
-		extended = true,
-		size = font.Scale(20),
-		weight = 200
-	})
-
-	font.Create("bar_text", {
-		font = "Roboto Condensed",
-		extended = true,
-		size = 14,
-		weight = 600
-	})
-
-	font.Create("tooltip_large", {
-		font = "Roboto Condensed",
-		extended = true,
-		size = 26,
-		weight = 500
-	})
-
-	font.Create("tooltip_small", {
-		font = "Roboto Condensed",
-		extended = true,
 		size = 16,
 		weight = 500
 	})
 
-	font.Create("fl_frame_title", {
+	font.Create("flRoboto", {
 		font = "Roboto",
-		size = 14,
-		weight = 500
-	})
-
-	font.Create("fl_menuitem", {
-		font = "Roboto Condensed",
-		extended = true,
-		size = 24,
-		weight = 500
-	})
-
-	font.Create("fl_menuitem_large", {
-		font = "Roboto Condensed",
-		extended = true,
-		size = 30,
+		size = 16,
 		weight = 500
 	})
 

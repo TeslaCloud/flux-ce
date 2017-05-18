@@ -87,9 +87,9 @@ function theme.SetColor(key, value)
 	end
 end
 
-function theme.SetFont(key, value)
+function theme.SetFont(key, value, scale, data)
 	if (theme.activeTheme) then
-		theme.activeTheme:SetFont(key, value)
+		theme.activeTheme:SetFont(key, value, scale, data)
 	end
 end
 

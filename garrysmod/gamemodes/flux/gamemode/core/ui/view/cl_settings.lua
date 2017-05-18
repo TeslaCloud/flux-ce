@@ -102,7 +102,7 @@ function PANEL:Init()
 		panel:SetSize(parent:GetWide() * 0.98, parent:GetTall() * 0.6)
 		panel:SetPos(parent.label.x, parent.label.y + parent.label:GetTall() * 1.25)
 		panel:SetConVar("FL_"..setting.id)
-		panel:SetFont("menu_light_tiny")
+		panel:SetFont(theme.GetFont("Menu_Tiny"))
 		panel:SetTextColor(fl.settings:GetColor("TextColor"))
 		panel:SetDrawBackground(false)
 		panel.oldThink = panel.Think

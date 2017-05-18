@@ -18,7 +18,7 @@ function PANEL:Init()
 	curY = curY or 200
 
 	self.closeButton = vgui.Create("flButton", self)
-	self.closeButton:SetFont("fl_menuitem_large")
+	self.closeButton:SetFont(theme.GetFont("Menu_Large"))
 	self.closeButton:SetText("CLOSE")
 	self.closeButton:SetPos(curX + 16, curY)
 	self.closeButton:SetSize(164, 38)
@@ -40,7 +40,7 @@ function PANEL:Init()
 		button:SetSize(200, 30)
 		button:SetText(v.title)
 		button:SetIcon(v.icon)
-		button:SetFont(v.font or "fl_menuitem")
+		button:SetFont(v.font or theme.GetFont("Menu_Normal"))
 
 		button.DoClick = function(btn)
 			if (v.override) then

@@ -16,7 +16,7 @@ PANEL.m_MainColor = Color(255, 100, 100)
 PANEL.m_AccentColor = Color(200, 200, 200)
 PANEL.m_DrawBackground = true
 PANEL.m_Title = "Flux Base Panel"
-PANEL.m_Font = "fl_frame_title"
+PANEL.m_Font = theme.GetFont("MenuTitles") or "flRoboto"
 
 AccessorFunc(PANEL, "m_DrawBackground", "DrawBackground")
 AccessorFunc(PANEL, "m_BackgroundColor", "BackgroundColor")

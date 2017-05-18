@@ -7,7 +7,20 @@
 function flCharacters:PlayerInitialized()
 	if (!fl.client:GetCharacter()) then
 		fl.IntroPanel = theme.CreatePanel("MainMenu")
-		fl.IntroPanel:MakePopup()
+
+		if (IsValid(fl.IntroPanel)) then
+			fl.IntroPanel:MakePopup()
+		else
+			timer.Create("flCreateMainPanel", 0.1, 0, function()
+				fl.IntroPanel = theme.CreatePanel("MainMenu")
+
+				if (IsValid(fl.IntroPanel)) then
+					fl.IntroPanel:MakePopup()
+
+					timer.Remove("flCreateMainPanel")
+				end
+			end)
+		end
 	end
 end
 

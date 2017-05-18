@@ -47,7 +47,7 @@ function fl.bars:Register(uniqueID, data, force)
 		cornerRadius = data.cornerRadius or 4,
 		priority = data.priority or table.Count(stored),
 		type = data.type or BAR_TOP,
-		font = data.font or "bar_text",
+		font = data.font or theme.GetFont("Text_Bar"),
 		spacing = data.spacing or self.defaultSpacing,
 		textOffset = data.textOffset or 0,
 		callback = data.callback

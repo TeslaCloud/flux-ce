@@ -49,14 +49,18 @@ function CTheme:SetOption(key, value)
 	end
 end
 
-function CTheme:SetFont(key, value, scale)
+function CTheme:SetFont(key, value, scale, data)
 	if (key) then
-		self.fonts[key] = font.GetSize(value, scale)
+		self.fonts[key] = font.GetSize(value, scale, data)
 	end
 end
 
 function CTheme:SetColor(id, val)
-	self.colors[id] = val or Color(255, 255, 255)
+	val = val or Color(255, 255, 255)
+
+	self.colors[id] = val
+
+	return val
 end
 
 function CTheme:SetMaterial(id, val)

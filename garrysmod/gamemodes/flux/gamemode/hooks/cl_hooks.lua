@@ -264,17 +264,19 @@ end
 function GM:DrawPlayerTargetID(player, x, y, distance)
 	if (distance < 640) then
 		local alpha = 255
+		local tooltip_small = theme.GetFont("Tooltip_Small")
+		local tooltip_large = theme.GetFont("Tooltip_Large")
 
 		if (distance > 500) then
 			local d = distance - 500
 			alpha = math.Clamp((255 * (140 - d) / 140), 0, 255)
 		end
 
-		local width, height = util.GetTextSize(player:Name(), "tooltip_large")
-		draw.SimpleText(player:Name(), "tooltip_large", x - width * 0.5, y - 40, Color(255, 255, 255, alpha))
+		local width, height = util.GetTextSize(player:Name(), tooltip_large)
+		draw.SimpleText(player:Name(), tooltip_large, x - width * 0.5, y - 40, Color(255, 255, 255, alpha))
 
-		local width, height = util.GetTextSize(player:GetPhysDesc(), "tooltip_small")
-		draw.SimpleText(player:GetPhysDesc(), "tooltip_small", x - width * 0.5, y - 14, Color(255, 255, 255, alpha))
+		local width, height = util.GetTextSize(player:GetPhysDesc(), tooltip_small)
+		draw.SimpleText(player:GetPhysDesc(), tooltip_small, x - width * 0.5, y - 14, Color(255, 255, 255, alpha))
 
 		if (distance < 125) then
 			if (distance > 90) then
@@ -282,7 +284,7 @@ function GM:DrawPlayerTargetID(player, x, y, distance)
 				alpha = math.Clamp((255 * (35 - d) / 35), 0, 255)
 			end
 
-			local smallerFont = font.GetSize("tooltip_small", 12)
+			local smallerFont = font.GetSize(tooltip_small, 12)
 			local width, height = util.GetTextSize("#TargetID_Information", smallerFont)
 			draw.SimpleText("#TargetID_Information", smallerFont, x - width * 0.5, y + 5, Color(50, 255, 50, alpha))
 		end
