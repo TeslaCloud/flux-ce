@@ -145,17 +145,52 @@ do
 		local info = cache[id]
 
 		if (!info) then
-		    info = {}
+			info = {}
 
 		 	-- Since tables start at index 1.
-		    for i = 1, passes + 1 do
-		    	local degInRad = i * math.pi / (passes / 2)
+			for i = 1, passes + 1 do
+				local degInRad = i * math.pi / (passes / 2)
 
-		        info[i] = {
-		            x = x + math.cos(degInRad) * radius,
-		            y = y + math.sin(degInRad) * radius
-		        }
-		    end
+				info[i] = {
+					x = x + math.cos(degInRad) * radius,
+					y = y + math.sin(degInRad) * radius
+				}
+			end
+
+			cache[id] = info
+		end
+
+		draw.NoTexture() -- Otherwise we draw a transparent circle.
+		surface.DrawPoly(info)
+	end
+
+	function surface.DrawPartialCircle(percentage, x, y, radius, passes)
+		if (!percentage or !x or !y or !radius) then
+			error("surface.DrawPartialCircle - Too few arguments to function call (4 expected)")
+		end
+
+		-- In case no passes variable was passed, in which case we give a normal smooth circle.
+		passes = passes or 360
+
+		local id = percentage.."|"..x.."|"..y.."|"..radius.."|"..passes
+		local info = cache[id]
+
+		if (!info) then
+			info = {}
+
+			local breakAt = math.floor(passes * (percentage / 100))
+
+		 	-- Since tables start at index 1.
+			for i = 1, passes + 1 do
+				if (i == breakAt) then break end
+
+				local degInRad = i * math.pi / (passes / 2)
+
+				info[i] = {
+					x = x + math.cos(degInRad) * radius,
+					y = y + math.sin(degInRad) * radius
+				}
+			end
 
 			cache[id] = info
 		end

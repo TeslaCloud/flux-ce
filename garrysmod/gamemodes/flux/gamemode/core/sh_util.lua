@@ -756,31 +756,31 @@ end
 -- A function to determine whether vector from A to B intersects with a
 -- vector from C to D.
 function util.VectorsIntersect(vFrom, vTo, vFrom2, vTo2)
-    local d1, d2, a1, a2, b1, b2, c1, c2
+	local d1, d2, a1, a2, b1, b2, c1, c2
 
-    a1 = vTo.y - vFrom.y
-    b1 = vFrom.x - vTo.x
-    c1 = (vTo.x * vFrom.y) - (vFrom.x * vTo.y)
+	a1 = vTo.y - vFrom.y
+	b1 = vFrom.x - vTo.x
+	c1 = (vTo.x * vFrom.y) - (vFrom.x * vTo.y)
 
-    d1 = (a1 * vFrom2.x) + (b1 * vFrom2.y) + c1
-    d2 = (a1 * vTo2.x) + (b1 * vTo2.y) + c1
+	d1 = (a1 * vFrom2.x) + (b1 * vFrom2.y) + c1
+	d2 = (a1 * vTo2.x) + (b1 * vTo2.y) + c1
 
-    if (d1 > 0 and d2 > 0) then return false end
-    if (d1 < 0 and d2 < 0) then return false end
+	if (d1 > 0 and d2 > 0) then return false end
+	if (d1 < 0 and d2 < 0) then return false end
 
-    a2 = vTo2.y - vFrom2.y
-    b2 = vFrom2.x - vTo2.x
-    c2 = (vTo2.x * vFrom2.y) - (vFrom2.x * vTo2.y)
+	a2 = vTo2.y - vFrom2.y
+	b2 = vFrom2.x - vTo2.x
+	c2 = (vTo2.x * vFrom2.y) - (vFrom2.x * vTo2.y)
 
-    d1 = (a2 * vFrom.x) + (b2 * vFrom.y) + c2
-    d2 = (a2 * vTo.x) + (b2 * vTo.y) + c2
+	d1 = (a2 * vFrom.x) + (b2 * vFrom.y) + c2
+	d2 = (a2 * vTo.x) + (b2 * vTo.y) + c2
 
-    if (d1 > 0 and d2 > 0) then return false end
-    if (d1 < 0 and d2 < 0) then return false end
+	if (d1 > 0 and d2 > 0) then return false end
+	if (d1 < 0 and d2 < 0) then return false end
 
-    -- Vectors are collinear or intersect.
-    -- No need for further checks.
-    return true
+	-- Vectors are collinear or intersect.
+	-- No need for further checks.
+	return true
 end
 
 -- A function to determine whether a 2D point is inside of a 2D polygon.
@@ -808,9 +808,9 @@ function util.VectorIsInPoly(point, polyVertices)
 	-- Check whether number of intersections is even or odd.
 	-- If it's odd then the point is inside the polygon.
 	if (intersections % 2 == 0) then
-	    return false
+		return false
 	else
-	    return true
+		return true
 	end
 end
 

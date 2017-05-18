@@ -8,7 +8,7 @@
 class "CItemEquippable" extends "CItem"
 
 CItemEquippable.Name = "Equipment Base"
-CItemEquippable.Description = "This item can be equipped."
+CItemEquippable.Description = "An item that can be equipped."
 CItemEquippable.m_IsEquipped = false
 
 function CItemEquippable:IsEquipped()

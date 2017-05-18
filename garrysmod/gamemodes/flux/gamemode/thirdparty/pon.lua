@@ -140,7 +140,7 @@ do
 		end
 		output[ #output + 1 ] = '}';
 	end
-	--    ENCODE STRING
+	--	ENCODE STRING
 	local gsub = string.gsub ;
 	encode['string'] = function( self, str, output )
 		--if tryCache( str, output ) then return end
@@ -151,19 +151,19 @@ do
 			output[ #output + 1 ] = '"'..estr..'";';
 		end
 	end
-	--    ENCODE NUMBER
+	--	ENCODE NUMBER
 	encode['number'] = function( self, num, output )
 		output[ #output + 1 ] = tonumber( num )..';';
 	end
-	--    ENCODE BOOLEAN
+	--	ENCODE BOOLEAN
 	encode['boolean'] = function( self, val, output )
 		output[ #output + 1 ] = val and 't' or 'f'
 	end
-	--    ENCODE VECTOR
+	--	ENCODE VECTOR
 	encode['Vector'] = function( self, val, output )
 		output[ #output + 1 ] = ('v'..val.x..','..val.y)..(','..val.z..';');
 	end
-	--    ENCODE ANGLE
+	--	ENCODE ANGLE
 	encode['Angle'] = function( self, val, output )
 		output[ #output + 1 ] = ('a'..val.p..','..val.y)..(','..val.r..';');
 	end
@@ -173,7 +173,7 @@ do
 	encode['Player']  = encode['Entity'];
 	encode['Vehicle'] = encode['Entity'];
 	encode['Weapon']	= encode['Entity'];
-	encode['NPC']     = encode['Entity'];
+	encode['NPC']	 = encode['Entity'];
 	encode['NextBot'] = encode['Entity'];
 
 	do

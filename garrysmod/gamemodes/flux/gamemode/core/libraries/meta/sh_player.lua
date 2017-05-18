@@ -46,6 +46,9 @@ end
 
 --[[
 	Admin system
+
+	Hook your admin mods to these functions, they're universally used
+	throughout Flux framework.
 --]]
 
 function playerMeta:HasPermission(perm)
@@ -63,4 +66,3 @@ function playerMeta:IsMemberOf(group)
 
 	return hook.Run("PlayerIsMemberOfGroup", self, group)
 end
-

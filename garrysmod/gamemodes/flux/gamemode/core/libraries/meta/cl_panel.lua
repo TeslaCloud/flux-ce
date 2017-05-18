@@ -6,6 +6,7 @@
 
 local panelMeta = FindMetaTable("Panel")
 
+-- Seriously, Newman? I have to write this myself?
 function panelMeta:UnDraggable()
 	self.m_DragSlot = nil
 end

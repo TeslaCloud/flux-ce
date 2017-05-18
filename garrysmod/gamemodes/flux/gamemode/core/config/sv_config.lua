@@ -16,11 +16,6 @@ config.Set("root_steamid", "STEAM_0:0:00000000")
 config.Set("data_save_interval", 60)
 config.Set("player_data_save_interval", 30)
 
-config.Set("character_min_name_len", 4)
-config.Set("character_min_desc_len", 32)
-config.Set("character_max_name_len", 16)
-config.Set("character_max_desc_len", 512)
-
 config.Set("respawn_delay", 30)
 
 config.Set("mysql_module", "sqlite", true)

@@ -148,7 +148,7 @@ class = Class
 
 function extends(CBaseClass)
 	if (isstring(CBaseClass)) then
-		CBaseClass = _G[CBaseClass]		
+		CBaseClass = _G[CBaseClass]
 	end
 
 	if (istable(library.lastClass) and istable(CBaseClass)) then

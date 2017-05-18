@@ -207,7 +207,7 @@ if (SERVER) then
 
 		return false
 	end
-	
+
 	function fl.command:Interpret(player, text)
 		local args
 

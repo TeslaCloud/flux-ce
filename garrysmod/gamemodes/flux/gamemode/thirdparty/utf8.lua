@@ -20,14 +20,14 @@ All rights reserved.
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are met:
 
-    * Redistributions of source code must retain the above copyright notice,
-      this list of conditions and the following disclaimer.
-    * Redistributions in binary form must reproduce the above copyright
-      notice, this list of conditions and the following disclaimer in the
-      documentation and/or other materials provided with the distribution.
-    * Neither the name of the author nor the names of its contributors may be
-      used to endorse or promote products derived from this software without
-      specific prior written permission.
+	* Redistributions of source code must retain the above copyright notice,
+	  this list of conditions and the following disclaimer.
+	* Redistributions in binary form must reproduce the above copyright
+	  notice, this list of conditions and the following disclaimer in the
+	  documentation and/or other materials provided with the distribution.
+	* Neither the name of the author nor the names of its contributors may be
+	  used to endorse or promote products derived from this software without
+	  specific prior written permission.
 
 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -45,12 +45,12 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 --
 -- UTF8-octets = *(UTF8-char)
 -- UTF8-char   = UTF8-1 / UTF8-2 / UTF8-3 / UTF8-4
--- UTF8-1      = %x00-7F
--- UTF8-2      = %xC2-DF UTF8-tail
--- UTF8-3      = %xE0 %xA0-BF UTF8-tail / %xE1-EC 2(UTF8-tail) /
---               %xED %x80-9F UTF8-tail / %xEE-EF 2(UTF8-tail)
--- UTF8-4      = %xF0 %x90-BF 2(UTF8-tail) / %xF1-F3 3(UTF8-tail) /
---               %xF4 %x80-8F 2(UTF8-tail)
+-- UTF8-1	  = %x00-7F
+-- UTF8-2	  = %xC2-DF UTF8-tail
+-- UTF8-3	  = %xE0 %xA0-BF UTF8-tail / %xE1-EC 2(UTF8-tail) /
+--			   %xED %x80-9F UTF8-tail / %xEE-EF 2(UTF8-tail)
+-- UTF8-4	  = %xF0 %x90-BF 2(UTF8-tail) / %xF1-F3 3(UTF8-tail) /
+--			   %xF4 %x80-8F 2(UTF8-tail)
 -- UTF8-tail   = %x80-BF
 --
 
@@ -2044,7 +2044,7 @@ function utf8.sub (s, i, j)
 	end
 
 	if startChar > len then startByte = bytes+1   end
-	if endChar   < 1   then endByte   = 0         end
+	if endChar   < 1   then endByte   = 0		 end
 
 	return s:sub(startByte, endByte)
 end
@@ -2129,11 +2129,11 @@ function utf8.uchar(unicode)
 	if (unicode <= 0x10FFFF) then
 		local code = unicode
 		local Byte3= 0x80 + (code % 0x40)
-		code       = math.floor(code / 0x40)
+		code	   = math.floor(code / 0x40)
 		local Byte2= 0x80 + (code % 0x40)
-		code       = math.floor(code / 0x40)
+		code	   = math.floor(code / 0x40)
 		local Byte1= 0x80 + (code % 0x40)
-		code       = math.floor(code / 0x40)
+		code	   = math.floor(code / 0x40)
 		local Byte0= 0xF0 + code
 
 		return string.char(Byte0, Byte1, Byte2, Byte3)
@@ -2159,7 +2159,7 @@ function utf8.unicode (str, i, j, byte_pos)
 		char  = str:sub(byte_pos,byte_pos-1+bytes)
 	else
 		char,byte_pos = utf8.sub(str,i,i)
-		bytes         = #char
+		bytes		 = #char
 	end
 
 	local unicode
@@ -2186,17 +2186,17 @@ end
 
 -- Returns an iterator which returns the next substring and its byte interval
 function utf8.gensub(str, sub_len)
-	sub_len        = sub_len or 1
+	sub_len		= sub_len or 1
 	local byte_pos = 1
-	local len      = #str
+	local len	  = #str
 	return function()
 		local char_count = 0
-		local start      = byte_pos
+		local start	  = byte_pos
 		repeat
 			if byte_pos > len then return end
 			char_count  = char_count + 1
 			local bytes = utf8.clen(str,byte_pos)
-			byte_pos    = byte_pos+bytes
+			byte_pos	= byte_pos+bytes
 
 		until char_count == sub_len
 
@@ -2206,11 +2206,11 @@ function utf8.gensub(str, sub_len)
 	end
 end
 
-string.utf8len       = utf8.len
-string.utf8sub       = utf8.sub
+string.utf8len	   = utf8.len
+string.utf8sub	   = utf8.sub
 string.utf8reverse   = utf8.reverse
-string.utf8char      = utf8.char
+string.utf8char	  = utf8.char
 string.utf8unicode   = utf8.unicode
-string.utf8gensub    = utf8.gensub
+string.utf8gensub	= utf8.gensub
 string.utf8upper	= utf8.upper
 string.utf8lower	 = utf8.lower
