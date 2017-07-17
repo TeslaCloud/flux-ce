@@ -29,8 +29,6 @@ function GM:Initialize()
 end
 
 function GM:InitPostEntity()
-	item.Load()
-
 	local toolGun = weapons.GetStored("gmod_tool")
 
 	for k, v in pairs(fl.tool:GetAll()) do
@@ -139,6 +137,8 @@ function GM:PlayerSetModel(player)
 		player:SetModel("models/humans/group01/male_0"..math.random(1, 9)..".mdl")
 	elseif (player:HasInitialized()) then
 		player:SetModel(player:GetNetVar("model", "models/humans/group01/male_02.mdl"))
+	elseif (self.BaseClass.PlayerSetModel) then
+		self.BaseClass:PlayerSetModel(player)
 	end
 end
 
@@ -173,77 +173,6 @@ function GM:EntityRemoved(entity)
 	entity:ClearNetVars()
 
 	self.BaseClass:EntityRemoved(entity)
-end
-
-function GM:PlayerUseItemEntity(player, entity, itemTable)
-	netstream.Start(player, "PlayerUseItemEntity", entity)
-end
-
-function GM:PlayerTakeItem(player, itemTable, ...)
-	if (IsValid(itemTable.entity)) then
-		itemTable.entity:Remove()
-		player:GiveItemByID(itemTable.instanceID)
-		item.AsyncSaveEntities()
-	end
-end
-
-function GM:PlayerDropItem(player, instanceID, itemTable, ...)
-	if (player:HasItemByID(instanceID)) then
-		player:TakeItemByID(instanceID)
-
-		local itemTable = item.FindInstanceByID(instanceID)
-		local trace = player:GetEyeTraceNoCursor()
-		local distance = trace.HitPos:Distance(player:GetPos())
-
-		if (distance < 150) then
-			item.Spawn(trace.HitPos + Vector(0, 0, 4), Angle(0, 0, 0), itemTable)
-		else
-			item.Spawn(player:EyePos() + trace.Normal * 20, Angle(0, 0, 0), itemTable)
-		end
-
-		item.AsyncSaveEntities()
-	end
-end
-
-function GM:PlayerUseItem(player, itemTable, ...)
-	local trace
-
-	if (IsValid(itemTable.entity)) then
-		trace = player:GetEyeTraceNoCursor()
-
-		if (!IsValid(trace.Entity)) then return end
-		if (trace.Entity != itemTable.entity) then return end
-	end
-
-	if (player:HasItemByID(itemTable.instanceID) or trace != nil) then
-		if (itemTable.OnUse) then
-			local result = itemTable:OnUse(player)
-
-			if (result == true) then
-				return
-			elseif (result == false) then
-				return false
-			end
-		end
-
-		if (trace != nil) then
-			itemTable.entity:Remove()
-		else
-			player:TakeItemByID(itemTable.instanceID)
-		end
-	end
-end
-
-function GM:OnItemGiven(player, itemTable, slot)
-	hook.Run("PlayerInventoryUpdated", player)
-end
-
-function GM:OnItemTaken(player, itemTable, slot)
-	hook.Run("PlayerInventoryUpdated", player)
-end
-
-function GM:PlayerInventoryUpdated(player)
-	netstream.Start(player, "RefreshInventory")
 end
 
 function GM:OnPluginFileChange(fileName)
@@ -411,6 +340,7 @@ function GM:OneSecond()
 	elseif (fl.nextSaveData <= curTime) then
 		if (hook.Run("FLShouldSaveData") != false) then
 			fl.DevPrint("Saving framework's data...")
+
 			hook.Run("FLSaveData")
 		end
 
@@ -421,9 +351,10 @@ function GM:OneSecond()
 		if (istable(v.polys) and isstring(v.type)) then
 			for k2, v2 in ipairs(v.polys) do
 				for plyID, player in ipairs(_player.GetAll()) do
+					local pos = player:GetPos()
+
 					player.lastArea = player.lastArea or {}
 					player.lastArea[v.uniqueID] = player.lastArea[v.uniqueID] or {}
-					local pos = player:GetPos()
 
 					-- Player hasn't moved since our previous check, no need to check again.
 					if (pos == player.lastPos) then continue end
@@ -476,9 +407,11 @@ function GM:OneSecond()
 	end
 end
 
-function GM:FLSaveData()
-	item.SaveAll()
+function GM:FluxPreLoadPlugins()
+	fl.sharedTable.disabledPlugins = data.Load("disabled_plugins", {})
+end
 
+function GM:FLSaveData()
 	hook.Run("SaveData")
 end
 

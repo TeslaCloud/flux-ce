@@ -201,6 +201,15 @@ function util.Include(strFile)
 	end
 end
 
+-- A function to add a file to clientside downloads list based on it's prefix.
+function util.AddCSLuaFile(strFile)
+	if (SERVER) then
+		if (string.find(strFile, "sh_") or string.find(strFile, "cl_") or string.find(strFile, "shared.lua")) then
+			AddCSLuaFile(strFile)
+		end
+	end
+end
+
 -- A function to include all files in a directory.
 function util.IncludeDirectory(strDirectory, strBase, bIsRecursive)
 	if (strBase) then
@@ -968,6 +977,9 @@ function util.BuildTableFromString(str)
 			else
 				v = v:RemoveTextFromEnd("}")
 			end
+
+			v = v:RemoveTextFromEnd("}")
+			v = v:RemoveTextFromEnd("\"")
 
 			table.insert(tab, v)
 		else

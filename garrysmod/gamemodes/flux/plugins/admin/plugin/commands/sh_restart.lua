@@ -13,7 +13,7 @@ COMMAND.arguments = 0
 COMMAND.aliases = {"maprestart"}
 
 function COMMAND:OnRun(player, delay)
-	delay = tonumber(delay) or 10
+	delay = tonumber(delay) or 0
 
 	fl.player:NotifyAll(L("MapRestartMessage", (IsValid(player) and player:Name()) or "Console", delay))
 

@@ -27,6 +27,8 @@ if (DBugR) then
 			end
 		end
 
-		DBugR.Print("Flux plugin hooks detoured!")
+		if (fl.Devmode) then
+			DBugR.Print("Flux plugin hooks detoured!")
+		end
 	end
 end

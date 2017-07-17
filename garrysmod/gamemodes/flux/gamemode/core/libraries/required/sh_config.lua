@@ -253,6 +253,10 @@ do
 				end
 			end
 
+			if (string.find(buffer, "\n")) then
+				buffer = ""
+			end
+
 			if (read == "") then
 				if (v == "{") then
 					if (!string.find(strConfigFile, "}")) then

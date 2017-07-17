@@ -5,7 +5,7 @@
 --]]
 
 if (!item) then
-	util.Include("sh_item.lua")
+	error("Attempt to use inventory system without Flux's items system.\n")
 end
 
 library.New "inventory"

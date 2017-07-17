@@ -239,15 +239,12 @@ if (SERVER) then
 					if (cmdTable.immunity or cmdTable.playerArg != nil) then
 						local targetArg = args[(cmdTable.playerArg or 1)]
 						local targets = {}
-						local targetEveryone = false
 
 						if (istable(targetArg)) then
 							local cache = {}
 
 							for k, v in pairs(targetArg) do
 								local target, kind = fl.command:PlayerFromString(player, v)
-
-								if (kind == "*") then targetEveryone = true end
 
 								if (istable(target)) then
 									for k2, v2 in ipairs(target) do
@@ -262,8 +259,6 @@ if (SERVER) then
 						else
 							local target, kind = fl.command:PlayerFromString(player, targetArg)
 							local cache = {}
-
-							if (kind == "*") then targetEveryone = true end
 
 							if (istable(target)) then
 								for k, v in ipairs(target) do

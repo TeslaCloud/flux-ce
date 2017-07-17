@@ -14,7 +14,7 @@ function fl.tool:GetAll()
 end
 
 function fl.tool:New(id)
-	return flTool()
+	return CTool()
 end
 
 function fl.tool:Register(obj)
@@ -27,7 +27,7 @@ function fl.tool:Register(obj)
 end
 
 pipeline.Register("tool", function(uniqueID, fileName, pipe)
-	TOOL = flTool()
+	TOOL = CTool()
 	TOOL.Mode = uniqueID
 	TOOL.uniqueID = uniqueID
 

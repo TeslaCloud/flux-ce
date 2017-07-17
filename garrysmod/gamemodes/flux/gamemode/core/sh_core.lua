@@ -59,13 +59,6 @@ function library.New(strName, tParent)
 	return tParent[strName]
 end
 
--- A function to get an existing library.
-function library.Get(strName, tParent)
-	tParent = tParent or _G
-
-	return tParent[strName] or library.New(strName, tParent)
-end
-
 -- Set library table's Metatable so that we can call it like a function.
 setmetatable(library, {__call = function(tab, strName, tParent) return tab.Get(strName, tParent) end})
 
@@ -139,9 +132,6 @@ end
 function Class(strName, CExtends, tParent)
 	return library.NewClass(strName, tParent, CExtends)
 end
-
--- Alias because class could get easily confused with player class.
-Meta = Class
 
 -- Also make an alias that looks like other programming languages.
 class = Class

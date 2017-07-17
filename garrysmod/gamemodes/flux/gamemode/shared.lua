@@ -12,8 +12,8 @@ GM.Email 		= "support@teslacloud.net"
 
 -- Define Flux-Specific fields.
 GM.Version 		= "0.2.5-indev"
-GM.Date			= "5/18/2017"
-GM.Build 		= "1422"
+GM.Date			= "7/17/2017"
+GM.Build 		= "1482"
 GM.Description 	= "A free roleplay gamemode framework."
 
 -- It would be very nice of you to leave below values as they are if you're using official schemas.
@@ -71,10 +71,6 @@ function GM:GetGameDescription()
 	return (isstring(nameOverride) and nameOverride) or self.Prefix..fl.GetSchemaName()
 end
 
-if (fl.initialized and fl.Devmode) then
-	fl.DevPrint("Starting reloading core files. ["..math.Round(os.clock() - fl.startTime, 3).."]")
-end
-
 AddCSLuaFile("core/sh_util.lua")
 include("core/sh_util.lua")
 
@@ -83,19 +79,11 @@ util.Include("core/sh_core.lua")
 util.Include("core/cl_core.lua")
 util.Include("core/sv_core.lua")
 
-if (fl.Devmode) then
-	fl.DevPrint("Loaded core files. ["..math.Round(os.clock() - fl.startTime, 3).."]")
-end
-
 -- This way we put things we want loaded BEFORE anything else in here, like plugin, config, etc.
 util.IncludeDirectory("core/libraries/required", true)
 
 -- So that we don't get duplicates on refresh.
 plugin.ClearCache()
-
-if (fl.Devmode) then
-	fl.DevPrint("Loaded essential libraries and purged cache. ["..math.Round(os.clock() - fl.startTime, 3).."]")
-end
 
 util.IncludeDirectory("core/config", true)
 util.IncludeDirectory("core/libraries", true)
@@ -107,11 +95,6 @@ util.IncludeDirectory("core/ui/view/base", true)
 util.IncludeDirectory("core/ui/view", true)
 util.IncludeDirectory("core/ui/controller", true)
 util.IncludeDirectory("core/items/bases", true)
-item.IncludeItems("flux/gamemode/core/items")
-
-if (fl.Devmode) then
-	fl.DevPrint("Loaded all libraries and stock plugin data. ["..math.Round(os.clock() - fl.startTime, 3).."]")
-end
 
 if (theme or SERVER) then
 	pipeline.Register("theme", function(uniqueID, fileName, pipe)
@@ -128,34 +111,18 @@ if (theme or SERVER) then
 
 	-- Theme factory is needed for any other themes that may be in the themes folder.
 	pipeline.Include("theme", "core/themes/cl_theme_factory.lua")
-
 	pipeline.IncludeDirectory("theme", "flux/gamemode/core/themes")
 end
 
 pipeline.IncludeDirectory("tool", "flux/gamemode/core/tools")
-
-if (fl.Devmode) then
-	fl.DevPrint("Loaded tools. ["..math.Round(os.clock() - fl.startTime, 3).."]")
-end
-
 util.IncludeDirectory("hooks", true)
 
-if (fl.Devmode) then
-	fl.DevPrint("Loaded hooks. ["..math.Round(os.clock() - fl.startTime, 3).."]")
-end
+hook.Run("FluxPreLoadPlugins")
 
 fl.IncludePlugins("flux/plugins")
-
-if (fl.Devmode) then
-	fl.DevPrint("Loaded Flux Core plugins. ["..math.Round(os.clock() - fl.startTime, 3).."]")
-end
 
 hook.Run("FluxPluginsLoaded")
 
 fl.IncludeSchema()
-
-if (fl.Devmode) then
-	fl.DevPrint("Loaded schema. ["..math.Round(os.clock() - fl.startTime, 3).."]")
-end
 
 hook.Run("FluxSchemaLoaded")

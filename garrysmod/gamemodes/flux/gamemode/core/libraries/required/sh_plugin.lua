@@ -9,6 +9,7 @@ if (plugin) then return end
 library.New "plugin"
 
 local stored = {}
+local unloaded = {}
 local hooksCache = {}
 local reloadData = {}
 local loadCache = {}
@@ -23,13 +24,12 @@ local defaultExtras = {
 	"meta",
 	"config",
 	"languages",
-	"items",
-	"items/bases",
 	"ui/model",
 	"ui/view",
 	"ui/controller",
 	"tools",
-	"themes"
+	"themes",
+	"entities"
 }
 
 local extras = table.Copy(defaultExtras)
@@ -307,6 +307,12 @@ function plugin.OnPluginChanged(fileName)
 	end
 end
 
+function plugin.IsDisabled(folder)
+	if (fl.sharedTable.disabledPlugins) then
+		return fl.sharedTable.disabledPlugins[folder]
+	end
+end
+
 function plugin.Include(folder)
 	local hasMainFile = false
 	local id = folder:GetFileFromFilename()
@@ -318,6 +324,9 @@ function plugin.Include(folder)
 
 	if (reloadData[folder] == false) then
 		fl.DevPrint("Not reloading plugin: "..folder)
+
+		return
+	elseif (plugin.HasLoaded(id)) then
 		return
 	end
 
@@ -327,14 +336,14 @@ function plugin.Include(folder)
 		if (SERVER) then
 			if (file.Exists(folder.."/plugin.cfg", "LUA")) then
 				local configData = config.ConfigToTable(file.Read(folder.."/plugin.cfg", "LUA"))
-				local iniData = {name = configData.name, description = configData.description, author = configData.author, depends = configData.depends}
-					data.pluginFolder = folder.."/plugin"
-					data.pluginMain = "sh_plugin.lua"
+				local dataTable = {name = configData.name, description = configData.description, author = configData.author, depends = configData.depends}
+					dataTable.pluginFolder = folder.."/plugin"
+					dataTable.pluginMain = "sh_plugin.lua"
 
-					if (file.Exists(data.pluginFolder.."/sh_"..(data.name or id)..".lua", "LUA")) then
-						data.pluginMain = "sh_"..(data.name or id)..".lua"
+					if (file.Exists(dataTable.pluginFolder.."/sh_"..(dataTable.name or id)..".lua", "LUA")) then
+						dataTable.pluginMain = "sh_"..(dataTable.name or id)..".lua"
 					end
-				table.Merge(data, iniData)
+				table.Merge(data, dataTable)
 
 				configData.name, configData.description, configData.author, configData.depends = nil, nil, nil, nil
 
@@ -354,7 +363,7 @@ function plugin.Include(folder)
 	if (istable(data.depends)) then
 		for k, v in ipairs(data.depends) do
 			if (!plugin.Require(v)) then
-				ErrorNoHalt("[Flux] Not loading the '"..tostring(folder).."' plugin, because one or more of it's dependencies is missing! ("..tostring(v)..")\n")
+				ErrorNoHalt("[Flux] Not loading the '"..tostring(folder).."' plugin! Dependency missing: '"..tostring(v).."'!\n")
 
 				return
 			end
@@ -412,6 +421,7 @@ function plugin.Require(pluginName)
 
 	if (!plugin.HasLoaded(pluginName)) then
 		local searchPaths = {
+			"", -- search current folder
 			"flux/plugins/",
 			(fl.GetSchemaFolder() or "flux").."/plugins/"
 		}
@@ -444,6 +454,99 @@ function plugin.IncludePlugins(folder)
 	end
 end
 
+do
+	local entData = {
+		weapons = {
+			table = "SWEP",
+			func = weapons.Register,
+			defaultData = {
+				Primary = {},
+				Secondary = {},
+				Base = "weapon_base"
+			}
+		},
+		entities = {
+			table = "ENT",
+			func = scripted_ents.Register,
+			defaultData = {
+				Type = "anim",
+				Base = "base_gmodentity",
+				Spawnable = true
+			}
+		},
+		effects = {
+			table = "EFFECT",
+			func = effects and effects.Register,
+			clientside = true
+		}
+	}
+
+	function plugin.IncludeEntities(folder)
+		local _, dirs = file.Find(folder.."/*", "LUA")
+
+		for k, v in ipairs(dirs) do
+			if (!entData[v]) then continue end
+
+			local dir = folder.."/"..v
+			local data = entData[v]
+			local files, folders = file.Find(dir.."/*", "LUA")
+
+			for k, v in ipairs(folders) do
+				local path = dir.."/"..v
+				local uniqueID = (string.GetFileFromFilename(path) or ""):Replace(".lua", ""):MakeID()
+				local register = false
+				local var = data.table
+
+				_G[var] = table.Copy(data.defaultData)
+				_G[var].ClassName = uniqueID
+
+				if (file.Exists(path.."/init.lua", "LUA")) then
+					util.Include(path.."/init.lua")
+
+					register = true
+				end
+
+				if (file.Exists(path.."/cl_init.lua", "LUA")) then
+					util.Include(path.."/cl_init.lua")
+
+					register = true
+				end
+
+				if (file.Exists(path.."/shared.lua", "LUA")) then
+					util.Include(path.."/shared.lua")
+
+					register = true
+				end
+
+				if (register) then
+					if (data.clientside and !CLIENT) then _G[var] = nil continue end
+
+					data.func(_G[var], uniqueID)
+				end
+
+				_G[var] = nil
+			end
+
+			for k, v in ipairs(files) do
+				local path = dir.."/"..v
+				local uniqueID = (string.GetFileFromFilename(path) or ""):Replace(".lua", ""):MakeID()
+				local var = data.table
+
+				_G[var] = table.Copy(data.defaultData)
+				_G[var].ClassName = uniqueID
+
+				util.Include(path)
+
+				if (data.clientside and !CLIENT) then _G[var] = nil continue end
+
+				data.func(_G[var], uniqueID)
+
+				_G[var] = nil
+			end
+		end
+	end
+end
+
 function plugin.AddExtra(strExtra)
 	if (!isstring(strExtra)) then return end
 
@@ -453,8 +556,8 @@ end
 function plugin.IncludeFolders(folder)
 	for k, v in ipairs(extras) do
 		if (plugin.Call("PluginIncludeFolder", v, folder) == nil) then
-			if (v == "items") then
-				item.IncludeItems(folder.."/items/")
+			if (v == "entities") then
+				plugin.IncludeEntities(folder.."/"..v)
 			elseif (v == "themes") then
 				pipeline.IncludeDirectory("theme", folder.."/themes/")
 			elseif (v == "tools") then

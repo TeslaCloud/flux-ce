@@ -10,14 +10,6 @@ end
 
 function flCharacters:PostCharacterLoaded(player, character)
 	hook.RunClient(player, "PostCharacterLoaded", character.uniqueID)
-
-	player:CheckInventory()
-
-	for slot, ids in ipairs(player:GetInventory()) do
-		for k, v in ipairs(ids) do
-			item.NetworkItem(player, v)
-		end
-	end
 end
 
 function flCharacters:OnActiveCharacterSet(player, character)

@@ -51,7 +51,15 @@ function playerMeta:SavePlayer()
 end
 
 function playerMeta:SetData(data)
-	self:SetNetVar("flData", {})
+	self:SetNetVar("flData", data or {})
+end
+
+function playerMeta:SetPlayerData(key, value)
+	local data = self:GetData()
+
+	data[key] = value
+
+	self:SetData(data)
 end
 
 function playerMeta:SetInitialized(bIsInitialized)

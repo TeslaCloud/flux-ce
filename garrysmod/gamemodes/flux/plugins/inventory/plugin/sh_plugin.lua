@@ -4,3 +4,6 @@
 	the framework is publicly released.
 --]]
 
+PLUGIN:SetAlias("flInventory")
+
+util.Include("sv_hooks.lua")
