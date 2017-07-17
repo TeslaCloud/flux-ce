@@ -33,6 +33,10 @@ function GM:PlayerInitialized()
 	hook.Run("PopulateToolMenu")
 end
 
+function GM:FluxClientSchemaLoaded()
+	font.CreateFonts()
+end
+
 do
 	local scrW, scrH = ScrW(), ScrH()
 	local nextCheck = CurTime()

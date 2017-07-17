@@ -421,16 +421,24 @@ function plugin.Require(pluginName)
 
 	if (!plugin.HasLoaded(pluginName)) then
 		local searchPaths = {
-			"", -- search current folder
 			"flux/plugins/",
 			(fl.GetSchemaFolder() or "flux").."/plugins/"
 		}
 
-		for k, v in ipairs(searchPaths) do
-			if (file.Exists(v..pluginName, "LUA")) then
-				plugin.Include(v..pluginName)
+		local tolerance = {
+			"",
+			"/plugin.cfg",
+			".lua",
+			"/plugin/sh_plugin.lua"
+		}
 
-				return true
+		for k, v in ipairs(searchPaths) do
+			for _, ending in ipairs(tolerance) do
+				if (file.Exists(v..pluginName..ending, "LUA")) then
+					plugin.Include(v..pluginName)
+
+					return true
+				end
 			end
 		end
 	else

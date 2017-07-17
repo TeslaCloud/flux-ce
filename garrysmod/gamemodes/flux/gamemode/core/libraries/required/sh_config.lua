@@ -54,7 +54,7 @@ if (SERVER) then
 			end
 
 			if (!stored[key].hidden) then
-				netstream.Start(nil, "Flux::Config::SetVar", key, stored[key])
+				netstream.Start(nil, "Flux::Config::SetVar", key, stored[key].value)
 			end
 
 			cache[key] = value

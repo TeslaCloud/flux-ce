@@ -260,6 +260,8 @@ function fl.IncludeSchema()
 				timer.Remove("SchemaLoader")
 				plugin.IncludeSchema()
 				netstream.Start("ClientIncludedSchema", true)
+
+				hook.Run("FluxClientSchemaLoaded")
 			end
 		end)
 	end
