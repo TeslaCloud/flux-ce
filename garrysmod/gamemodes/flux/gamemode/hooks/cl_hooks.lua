@@ -12,6 +12,8 @@ timer.Remove("HintSystem_Annoy2")
 function GM:InitPostEntity()
 	fl.client = fl.client or LocalPlayer()
 
+	netstream.Start("Flux::Player::Language", GetConVar("gmod_language"):GetString())
+
 	timer.Simple(0.4, function()
 		netstream.Start("LocalPlayerCreated", true)
 		fl.localPlayerCreated = true

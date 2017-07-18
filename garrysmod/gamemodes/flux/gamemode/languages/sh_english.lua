@@ -6,6 +6,68 @@
 
 local lang = fl.lang:GetTable("en")
 
+lang["#second"] = "#1 second"
+lang["#minute"] = "#1 minute"
+lang["#hour"] = "#1 hour"
+lang["#day"] = "#1 day"
+lang["#week"] = "#1 week"
+lang["#month"] = "#1 month"
+lang["#year"] = "#1 year"
+lang["#permanently"] = "permanently"
+lang["#for"] = "for"
+
+function lang:NiceTime(time)
+	if (time == 1) then
+		return "#second:"..time..";", 0
+	elseif (time < 60) then
+		return "#second:"..time..";s", 0
+	elseif (time < (60 * 60)) then
+		local t = math.floor(time / 60)
+
+		return "#minute:"..t..";"..((t != 1 and "s") or ""), time - t * 60
+	elseif (time < (60 * 60 * 24)) then
+		local t = math.floor(time / 60 / 60)
+
+		return "#hour:"..t..";"..((t != 1 and "s") or ""), time - t * 60 * 60
+	elseif (time < (60 * 60 * 24 * 7)) then
+		local t = math.floor(time / 60 / 60 / 24)
+
+		return "#day:"..t..";"..((t != 1 and "s") or ""), time - t * 60 * 60 * 24
+	elseif (time < (60 * 60 * 24 * 30)) then
+		local t = math.floor(time / 60 / 60 / 24 / 7)
+
+		return "#week:"..t..";"..((t != 1 and "s") or ""), time - t * 60 * 60 * 24 * 7
+	elseif (time < (60 * 60 * 24 * 30 * 12)) then
+		local t = math.floor(time / 60 / 60 / 24 / 30)
+
+		return "#month:"..t..";"..((t != 1 and "s") or ""), time - t * 60 * 60 * 24 * 30
+	elseif (time >= (60 * 60 * 24 * 365)) then
+		local t = math.floor(time / 60 / 60 / 24 / 365)
+
+		return "#year:"..t..";"..((t != 1 and "s") or ""), time - t * 60 * 60 * 24 * 365
+	else
+		return "#second:"..time..";s", 0
+	end
+end
+
+function lang:NiceTimeFull(time)
+	local out = ""
+	local i = 0
+
+	while (time > 0) do
+		if (i >= 100) then break end -- fail safety
+
+		local str, remainder = self:NiceTime(time)
+
+		time = remainder
+		out = out..str
+
+		i = i + 1
+	end
+
+	return out
+end
+
 --[[
 NOTICES - Description: Language category for all notices.
 Formatting: Formatting varies based on command.
@@ -20,6 +82,7 @@ lang["#Err_GroupNotValid"] = "'#1' is not a valid user group!"
 lang["#FreezeBotsMessage"] = "#1 has frozen all bots."
 lang["#UnfreezeBotsMessage"] = "#1 has unfrozen all bots."
 lang["#KickMessage"] = "#1 has kicked #2. (#3)"
+lang["#BanMessage"] = "#1 has banned #2 #3. (#4)"
 lang["#AddBotsMessage"] = "#1 has added #2 bots to the server."
 lang["#KickBotsMessage"] = "#1 has kicked all bots."
 lang["#MapRestartMessage"] = "#1 is restarting the map in #2 second(s)!"
@@ -106,6 +169,9 @@ lang["#CMDDesc_Aliases"] = "Aliases:"
 
 lang["#KickCMD_Description"] = "Kicks player from the server."
 lang["#KickCMD_Syntax"] = "<target> [reason]"
+
+lang["#BanCMD_Description"] = "Ban this sucker!"
+lang["#BanCMD_Syntax"] = "<target> <duration> [reason]"
 
 lang["#SetGroupCMD_Description"] = "Sets player's usergroup."
 lang["#SetGroupCMD_Syntax"] = "<target> <usergroup>"

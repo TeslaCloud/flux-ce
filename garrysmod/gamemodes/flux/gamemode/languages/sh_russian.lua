@@ -25,6 +25,95 @@ do
 	end
 end
 
+lang["#second"] = "#1 секунда"
+lang["#second_2"] = "#1 секунды"
+lang["#second_5"] = "#1 секунд"
+lang["#minute"] = "#1 минута"
+lang["#minute_2"] = "#1 минуты"
+lang["#minute_5"] = "#1 минут"
+lang["#hour"] = "#1 час"
+lang["#hour_2"] = "#1 часа"
+lang["#hour_5"] = "#1 часов"
+lang["#day"] = "#1 день"
+lang["#day_2"] = "#1 дня"
+lang["#day_5"] = "#1 дней"
+lang["#week"] = "#1 неделя"
+lang["#week_2"] = "#1 недели"
+lang["#week_5"] = "#1 недель"
+lang["#month"] = "#1 месяц"
+lang["#month_2"] = "#1 месяца"
+lang["#month_5"] = "#1 месяцев"
+lang["#year"] = "#1 год"
+lang["#year_2"] = "#1 года"
+lang["#year_5"] = "#1 лет"
+lang["#permanently"] = "навсегда"
+lang["#for"] = "на"
+
+function lang:PickEnding(n)
+	local ns = tostring(n)
+	local ending = tonumber(ns:sub(ns:len(), ns:len()))
+
+	if (ending) then
+		if (ending > 1 and ending < 5) then
+			return "_2"
+		elseif (ending == 0 or ending >= 5) then
+			return "_5"
+		end
+	end
+
+	return ""
+end
+
+function lang:NiceTime(time)
+	if (time < 60) then
+		return "#second"..self:PickEnding(time)..":"..time..";", 0
+	elseif (time < (60 * 60)) then
+		local t = math.floor(time / 60)
+
+		return "#minute"..self:PickEnding(time)..":"..t..";", time - t * 60
+	elseif (time < (60 * 60 * 24)) then
+		local t = math.floor(time / 60 / 60)
+
+		return "#hour"..self:PickEnding(time)..":"..t..";", time - t * 60 * 60
+	elseif (time < (60 * 60 * 24 * 7)) then
+		local t = math.floor(time / 60 / 60 / 24)
+
+		return "#day"..self:PickEnding(time)..":"..t..";", time - t * 60 * 60 * 24
+	elseif (time < (60 * 60 * 24 * 30)) then
+		local t = math.floor(time / 60 / 60 / 24 / 7)
+
+		return "#week"..self:PickEnding(time)..":"..t..";", time - t * 60 * 60 * 24 * 7
+	elseif (time < (60 * 60 * 24 * 30 * 12)) then
+		local t = math.floor(time / 60 / 60 / 24 / 30)
+
+		return "#month"..self:PickEnding(time)..":"..t..";", time - t * 60 * 60 * 24 * 30
+	elseif (time >= (60 * 60 * 24 * 365)) then
+		local t = math.floor(time / 60 / 60 / 24 / 365)
+
+		return "#year"..self:PickEnding(time)..":"..t..";", time - t * 60 * 60 * 24 * 365
+	else
+		return "#second:"..time..";", 0
+	end
+end
+
+function lang:NiceTimeFull(time)
+	local out = ""
+	local i = 0
+
+	while (time > 0) do
+		if (i >= 100) then break end -- fail safety
+
+		local str, remainder = self:NiceTime(time)
+
+		time = remainder
+		out = out..str
+
+		i = i + 1
+	end
+
+	return out
+end
+
 lang["#Commands_NotValid"] = "'#1' не является командой!"
 lang["#Commands_NoAccess"] = "У вас нет доступа к этой команде!"
 lang["#Commands_PlayerInvalid"] = "'#1' не является игроком!"

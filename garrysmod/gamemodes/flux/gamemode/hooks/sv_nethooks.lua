@@ -41,3 +41,7 @@ netstream.Hook("LocalPlayerCreated", function(player)
 	player:SendConfig()
 	player:SyncNetVars()
 end)
+
+netstream.Hook("Flux::Player::Language", function(player, lang)
+	player:SetNetVar("language", lang)
+end)

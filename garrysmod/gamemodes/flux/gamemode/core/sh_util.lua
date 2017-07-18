@@ -48,6 +48,7 @@ do
 		local success = result[1]
 		table.remove(result, 1)
 
+		handler = handler or {}
 		tryCache = {}
 
 		SUCCEEDED = true

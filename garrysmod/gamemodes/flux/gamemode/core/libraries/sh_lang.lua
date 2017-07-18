@@ -59,6 +59,30 @@ function fl.lang:GetPlural(language, phrase, count)
 	return translated
 end
 
+function fl.lang:NiceTime(language, time)
+	time = tonumber(time) or 0
+
+	local langTable = stored[language]
+
+	if (langTable and langTable.NiceTime) then
+		return langTable:NiceTime(time)
+	end
+
+	return string.NiceTime(time)
+end
+
+function fl.lang:NiceTimeFull(language, time)
+	time = tonumber(time) or 0
+
+	local langTable = stored[language]
+
+	if (langTable and langTable.NiceTimeFull) then
+		return langTable:NiceTimeFull(time)
+	end
+
+	return string.NiceTime(time)
+end
+
 function fl.lang:GetCase(language, phrase, case)
 	if (language == "en") then return self:TranslateText(phrase) end
 
@@ -131,6 +155,12 @@ function fl.lang:TranslateText(sText)
 	textCache[oldText] = sText
 
 	return sText
+end
+
+function fl.lang:GetPlayerLang(player)
+	if (!IsValid(player)) then return "en" end
+
+	return player:GetNetVar("language", "en")
 end
 
 if (CLIENT) then
@@ -250,6 +280,8 @@ if (CLIENT) then
 				textCache = {}
 				cache = {}
 				oldLang = newLang
+
+				netstream.Start("Flux::Player::Language", newLang)
 			end
 		end)
 	end
