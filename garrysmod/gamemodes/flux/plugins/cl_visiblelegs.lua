@@ -139,7 +139,3 @@ function PLUGIN:RenderScreenspaceEffects()
 end
 
 fl.settings:AddCheckBox("General", "DrawLegs", true)
-
--- Languages.
-local lang = fl.lang:GetTable("en")
-lang["#Settings_DrawLegs"] = "Draw your legs."

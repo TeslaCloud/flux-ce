@@ -93,6 +93,13 @@ lang["#CharSetName_Description"] = "Выставляет имя персонаж
 lang["#CharSetName_Syntax"] = "<игрок> <новое имя>"
 lang["#CharSetName_Message"] = "#1 сменил имя #2 на #3."
 
+lang["#Err_NotValidEntity"] = "Вы должны смотреть на энтити!"
+lang["#Err_CannotStaticThis"] = "Вы не можете сохранить этот энтити!"
+lang["#Err_AlreadyStatic"] = "Этот энтити уже сохранен!"
+lang["#Err_NotStatic"] = "Этот энтити не сохранен!"
+lang["#Static_Added"] = "Вы сохранили этот энтити."
+lang["#Static_Removed"] = "Вы убрали этот энтити из сохранения."
+
 lang["#Settings_Dashboard"] = "Меню"
 lang["#Settings_Theme"] = "Тема"
 lang["#Settings_AdminESP"] = "ESP Админа"
@@ -115,6 +122,10 @@ lang["#Settings_Fit_Center"] = "Центрировать"
 lang["#Settings_Fit_Fill"] = "Заполнить"
 lang["#Settings_Fit_Fit"] = "Подогнать размер"
 
+lang["#Settings_DrawLegs"] = "Draw your legs."
+lang["#Settings_ToggleAutoWalk"] = "Toggle Auto-Walk"
+lang["#Settings_ToggleThirdPerson"] = "Переключить вид от третьего лица"
+
 lang["#TargetID_Information"] = "Нажмите 'E', чтобы посмотреть информацию."
 lang["#TargetID_Action"] = "Нажмите 'E' для выполнения действия."
 
@@ -132,3 +143,23 @@ lang["#tool.area.0"] = "ЛКМ: Добавить точку зоны, ПКМ: С
 lang["#tool.area.text"] = "ID зоны"
 lang["#tool.area.height"] = "Высота"
 lang["#tool.area.mode"] = "Тип"
+
+lang["#tool.texts.name"] = "Редактор Текстов"
+lang["#tool.texts.desc"] = "Добавляет 3D тексты на поверхности."
+lang["#tool.texts.0"] = "ЛКМ: Добавить текст. ПКМ: Удалить текст."
+lang["#tool.texts.text"] = "Текст"
+lang["#tool.texts.style"] = "Стиль"
+lang["#tool.texts.color"] = "Цвет"
+lang["#tool.texts.extraColor"] = "Доп. Цвет"
+lang["#tool.texts.scale"] = "Размер Текста"
+lang["#tool.texts.fade"] = "Дистанция Отрисовки"
+lang["#tool.texts.opt1"] = "Обычный Текст"
+lang["#tool.texts.opt2"] = "Текст с Дальней Тенью"
+lang["#tool.texts.opt3"] = "Текст с Черной Тенью"
+lang["#tool.texts.opt4"] = "Текст с Двумя Тенями"
+lang["#tool.texts.opt5"] = "Текст в Табличке"
+lang["#tool.texts.opt6"] = "Текст в Мигающей Табличке"
+
+lang["#tool.static.name"] = "Сохранение/Удаление Энтити"
+lang["#tool.static.desc"] = "Сохраняет энтити между рестартами или удаляет его из сохранения."
+lang["#tool.static.0"] = "ЛКМ: Сохранить, ПКМ: Удалить."

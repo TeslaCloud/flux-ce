@@ -8,9 +8,11 @@ library.New("admin", fl)
 local groups = fl.admin.groups or {}			-- Usergroups data
 local permissions = fl.admin.permissions or {}	-- Permission descriptions and other data
 local players = fl.admin.players or {}			-- Compiled permissions for each player
+local bans = fl.admin.bans or {}
 fl.admin.groups = groups
 fl.admin.permissions = permissions
 fl.admin.players = players
+fl.admin.bans = bans
 
 local compilerCache = {}
 
@@ -24,6 +26,10 @@ end
 
 function fl.admin:GetPlayers()
 	return players
+end
+
+function fl.admin:GetBans()
+	return bans
 end
 
 function fl.admin:CreateGroup(id, data)
@@ -288,6 +294,54 @@ if (SERVER) then
 
 		player:SetPermissions(players[steamID])
 		compilerCache[steamID] = nil
+	end
+
+	-- INTERNAL
+	function fl.admin:AddBan(steamID, name, banTime, unbanTime, duration, reason)
+		bans[steamID] = {
+			steamID = steamID,
+			name = name,
+			unbanTime = unbanTime,
+			banTime = banTime,
+			duration = duration,
+			reason = reason
+		}
+	end
+
+	function fl.admin:Ban(player, duration, reason, bPreventKick)
+		if (!isstring(player) and !IsValid(player)) then return end
+
+		duration = duration or 0
+		reason = reason or "N/A"
+
+		local steamID = player
+		local name = steamID
+
+		if (!isstring(player) and IsValid(player)) then
+			name = player:SteamName()
+			steamID = player:SteamID()
+
+			if (!bPreventKick) then
+				player:Kick("You have been banned: "..tostring(entry.reason))
+			end
+		end
+
+		self:AddBan(steamID, name, os.time(), os.time() + duration, duration, reason)
+		fl.db:EasyWrite("fl_bans", {"steamID", steamID}, bans[steamID])
+	end
+
+	function fl.admin:RemoveBan(steamID)
+		if (bans[steamID]) then
+			bans[steamID] = nil
+
+			local query = fl.db:Delete("fl_bans")
+				query:Where("steamID", steamID)
+			query:Execute()
+
+			return true
+		end
+
+		return false
 	end
 end
 

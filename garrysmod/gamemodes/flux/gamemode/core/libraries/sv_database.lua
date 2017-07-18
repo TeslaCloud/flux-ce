@@ -721,6 +721,7 @@ end
 function fl.db:EasyRead(tableName, where, callback)
 	if (!where) then
 		ErrorNoHalt("[Flux] Easy MySQL Read error! 'where' table is malformed! ([1] = "..type(where[1])..", [2] = "..type(where[2])..")\n")
+
 		return false
 	end
 

@@ -35,6 +35,32 @@ function flAdmin:DatabaseConnected()
 		queryObj:Create("reason", "TEXT DEFAULT NULL")
 		queryObj:PrimaryKey("key")
 	queryObj:Execute()
+
+	-- Restore all bans.
+	local queryObj = fl.db:Select("fl_bans")
+		queryObj:Callback(function(result)
+			if (istable(result) and #result > 0) then
+				for k, v in ipairs(result) do
+					fl.admin:AddBan(v.steamID, v.name, v.banTime, v.unbanTime, v.duration, v.reason)
+				end
+			end
+		end)
+	queryObj:Execute()
+end
+
+function flAdmin:CheckPassword(steamID64, ip, svPass, clPass, name)
+	local steamID = util.SteamIDFrom64(steamID64)
+	local entry = fl.admin:GetBans()[steamID]
+
+	if (entry and plugin.Call("ShouldCheckBan", steamID, ip, name) != false) then
+		if (entry.duration != 0 and entry.unbanTime >= os.time() and plugin.Call("ShouldExpireBan", steamID, ip, name) != false) then
+			self:RemoveBan(steamID)
+
+			return true
+		else
+			return false, "You are still banned: "..tostring(entry.reason)
+		end
+	end
 end
 
 function flAdmin:OnPlayerRestored(player)
