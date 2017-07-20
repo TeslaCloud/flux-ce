@@ -45,6 +45,52 @@ function playerMeta:SetModel(sPath)
 end
 
 --[[
+	Actions system
+--]]
+
+function playerMeta:SetAction(id, bForce)
+	if (bForce or self:GetAction() == "none") then
+		self:SetNetVar("action", id)
+
+		return true
+	end
+end
+
+function playerMeta:GetAction()
+	return self:GetNetVar("action", "none")
+end
+
+function playerMeta:IsDoingAction(id)
+	return (self:GetAction() == id)
+end
+
+function playerMeta:ResetAction()
+	self:SetAction("none", true)
+end
+
+function playerMeta:DoAction(id)
+	local act = self:GetAction()
+
+	if (isstring(id)) then
+		act = id
+	end
+
+	if (act and act != "none") then
+		local actionTable = fl.GetAction(act)
+
+		if (istable(actionTable) and isfunction(actionTable.callback)) then
+			try {
+				actionTable.callback, self, act
+			} catch {
+				function(exception)
+					ErrorNoHalt("[Flux] Player action '"..tostring(act).."' has failed to run!\n"..exception.."\n")
+				end
+			}
+		end
+	end
+end
+
+--[[
 	Admin system
 
 	Hook your admin mods to these functions, they're universally used

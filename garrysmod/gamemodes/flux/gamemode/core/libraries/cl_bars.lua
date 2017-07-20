@@ -16,13 +16,13 @@ fl.bars.sorted = sorted
 fl.bars.defaultX = 8
 fl.bars.defaultY = 8
 fl.bars.defaultW = ScrW() / 4
-fl.bars.defaultH = 14
-fl.bars.defaultSpacing = 4
+fl.bars.defaultH = 18
+fl.bars.defaultSpacing = 6
 
 function fl.bars:Register(uniqueID, data, force)
 	if (!data) then return end
 
-	force = fl.Devmode or force
+	force = force or fl.Devmode
 
 	if (stored[uniqueID] and !force) then
 		return stored[uniqueID]
@@ -47,7 +47,7 @@ function fl.bars:Register(uniqueID, data, force)
 		cornerRadius = data.cornerRadius or 4,
 		priority = data.priority or table.Count(stored),
 		type = data.type or BAR_TOP,
-		font = data.font or (theme and theme.GetFont("Text_Bar")),
+		font = data.font or "Text_Bar",
 		spacing = data.spacing or self.defaultSpacing,
 		textOffset = data.textOffset or 0,
 		callback = data.callback

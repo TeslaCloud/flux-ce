@@ -20,8 +20,6 @@ function flChatbox:CreateFonts()
 		font		= "Roboto",
 		size		= 20
 	})
-
-	print("I AM ALIVE AAAAAAAAAAAA")
 end
 
 function flChatbox:OnResolutionChanged(newW, newH)

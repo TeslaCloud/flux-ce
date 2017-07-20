@@ -343,12 +343,28 @@ if (SERVER) then
 			end
 		end
 	end
+
+	netstream.Hook("Flux::Command::Run", function(player, command)
+		fl.command:Interpret(player, command)
+	end)
+else
+	function fl.command:Send(command)
+		netstream.Start("Flux::Command::Run", command)
+	end
 end
 
 concommand.Add("flCmd", function(player, cmd, args)
-	fl.command:Interpret(player, args)
+	if (SERVER) then
+		fl.command:Interpret(player, args)
+	else
+		fl.command:Send(args)
+	end
 end)
 
 concommand.Add("flc", function(player, cmd, args)
-	fl.command:Interpret(player, args)
+	if (SERVER) then
+		fl.command:Interpret(player, args)
+	else
+		fl.command:Send(args)
+	end
 end)

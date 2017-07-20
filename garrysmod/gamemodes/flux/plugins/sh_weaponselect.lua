@@ -51,7 +51,7 @@ function PLUGIN:HUDPaint()
 	if (self.IsOpen) then
 		if (self.IndexOffset and self.IndexOffset != 0) then
 			local dir = (self.IndexOffset == math.abs(self.IndexOffset)) -- true = down, false = up
-			local frameTime = FrameTime() * 24
+			local frameTime = FrameTime() * 16
 			local targets = {}
 
 			if (!self.Display[1].target) then
@@ -75,6 +75,10 @@ function PLUGIN:HUDPaint()
 					v.target = next.y
 					v.scaleTarget = next.scale
 					v.weapon = next.weapon
+					
+					if (k == 3 + ((dir and 1) or -1)) then
+						v.highlight = true
+					end
 				end
 
 				if (math.abs(v.y - v.target) < 1) then
@@ -88,6 +92,10 @@ function PLUGIN:HUDPaint()
 
 				self.Display[k].y = Lerp(frameTime * absOffset, v.y, v.target)
 				self.Display[k].scale = Lerp(frameTime * absOffset, v.scale, v.scaleTarget)
+				
+				if (self.Display[k + ((dir and 1) or -1)] and self.Display[k + ((dir and 1) or -1)].highlight) then
+					self.Display[k].highlight = false
+				end
 			end
 		end
 
@@ -99,7 +107,13 @@ function PLUGIN:HUDPaint()
 		draw.RoundedBox(0, x, y, w, h, Color(40, 40, 40, 100 * (self.CurAlpha / 255)))
 
 		for k, v in ipairs(self.Display) do
-			surface.DrawScaledText((IsValid(v.weapon) and v.weapon:GetPrintName():utf8upper()) or "UNKNOWN WEAPON", theme.GetFont("Text_NormalLarge"), v.x, v.y, v.scale, Color(255, 255, 255, self.CurAlpha * v.scale))
+			local color = Color(255, 255, 255, self.CurAlpha * v.scale / 1.3)
+
+			if (v.highlight) then
+				color = theme.GetColor("Accent")
+			end
+
+			surface.DrawScaledText((IsValid(v.weapon) and v.weapon:GetPrintName():utf8upper()) or "UNKNOWN WEAPON", theme.GetFont("Text_NormalLarge"), v.x, v.y, v.scale, color)
 		end
 
 		render.SetScissorRect(0, 0, 0, 0, false)
@@ -133,7 +147,8 @@ function PLUGIN:MakeDisplay(index, tab)
 			weapon = safeIndex(clientWeapons, index + i),
 			scale = scale,
 			x = ScrW() - 300,
-			y = ScrH() / 2 - 90 + offsetY - 36 * scale / 2
+			y = ScrH() / 2 - 90 + offsetY - 36 * scale / 2,
+			highlight = (i == 0)
 		})
 
 		offsetY = offsetY + 32

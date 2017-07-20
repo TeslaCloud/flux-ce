@@ -34,8 +34,6 @@ netstream.Hook("SoftUndo", function(player)
 end)
 
 netstream.Hook("LocalPlayerCreated", function(player)
-	print(player)
-
 	netstream.Start(player, "SharedTables", fl.sharedTable)
 
 	player:SendConfig()

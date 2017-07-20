@@ -36,7 +36,7 @@ lang["#Err_NotBanned"]				= "Steam ID '#1' is not banned!"
 lang["#FreezeBotsMessage"]			= "#1 has frozen all bots."
 lang["#UnfreezeBotsMessage"]		= "#1 has unfrozen all bots."
 lang["#KickMessage"]				= "#1 has kicked #2. (#3)"
-lang["#BanMessage"]					= "#1 has banned #2 #3. (#4)"
+lang["#BanMessage"]					= "#1 has banned #2"
 lang["#UnbanMessage"]				= "#1 has unbanned #2."
 lang["#AddBotsMessage"]				= "#1 has added #2 bots to the server."
 lang["#KickBotsMessage"]			= "#1 has kicked all bots."
@@ -58,7 +58,8 @@ lang["#TabMenu_CloseMenu"]			= "Close Menu"
 
 lang["#BarText_Health"]			= "HEALTH"
 lang["#BarText_Armor"]			= "ARMOR"
-lang["#BarText_Respawn"]		= "YOU WILL BE RESPAWNED SHORTLY"
+lang["#BarText_Respawn"]		= "WAITING TO RESPAWN..."
+lang["#BarText_Getup"]			= "GETTING UP..."
 
 lang["#MainMenu_Disconnect"]	= "Disconnect"
 lang["#MainMenu_Settings"]		= "Settings"
@@ -112,7 +113,7 @@ lang["#Settings_ToggleAutoWalk"]	= "Toggle Auto-Walk"
 lang["#Settings_ToggleThirdPerson"]	= "Toggle Third-Person"
 
 --[[
-MISC COMMAND - Description: Language category for all commands.
+	MISC COMMAND - Description: Language category for all commands.
 --]]
 
 lang["#CMDDesc_Usage"]					= "Syntax:"

@@ -13,13 +13,17 @@ COMMAND.aliases = {"chargetup", "unfall", "unfallover"}
 COMMAND.noConsole = true
 
 function COMMAND:OnRun(player, delay)
-	delay = math.Clamp(tonumber(delay) or 0, 2, 60)
+	delay = math.Clamp(tonumber(delay) or 4, 2, 60)
 
 	if (player:Alive() and player:IsRagdolled()) then
-		player:Notify("Getting up...")
+		player:SetNetVar("GetupEnd", CurTime() + delay)
+		player:SetNetVar("GetupTime", delay)
+		player:SetAction("getup", true)
 
 		timer.Simple(delay, function()
 			player:SetRagdollState(RAGDOLL_NONE)
+
+			player:ResetAction()
 		end)
 	else
 		player:Notify("You cannot do this right now!")

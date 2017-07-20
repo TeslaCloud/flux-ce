@@ -195,6 +195,26 @@ end
 
 new = New
 
+do
+	local actionStorage = fl.actionStorage or {}
+	fl.actionStorage = actionStorage
+
+	function fl.RegisterAction(id, callback)
+		actionStorage[id] = callback
+	end
+
+	function fl.GetAction(id)
+		return actionStorage[id]
+	end
+
+	function fl.GetAllActions()
+		return actionStorage
+	end
+
+	fl.RegisterAction("spawning")
+	fl.RegisterAction("idle")
+end
+
 function fl.GetSchemaFolder()
 	if (SERVER) then
 		return fl.schema

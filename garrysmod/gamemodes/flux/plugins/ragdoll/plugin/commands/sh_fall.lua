@@ -21,11 +21,7 @@ function COMMAND:OnRun(player, delay)
 		player:SetRagdollState(RAGDOLL_FALLENOVER)
 
 		if (delay and delay > 0) then
-			player:Notify("Getting up...")
-
-			timer.Simple(delay, function()
-				player:SetRagdollState(RAGDOLL_NONE)
-			end)
+			player:RunCommand("getup "..tostring(delay))
 		end
 	else
 		player:Notify("You cannot do this right now!")

@@ -83,3 +83,7 @@ function playerMeta:SetCustomPermissions(data)
 
 	fl.admin:CompilePermissions(self)
 end
+
+function playerMeta:RunCommand(cmd)
+	return fl.command:Interpret(self, cmd)
+end

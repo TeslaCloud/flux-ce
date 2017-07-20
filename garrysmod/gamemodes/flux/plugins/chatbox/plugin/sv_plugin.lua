@@ -317,7 +317,8 @@ netstream.Hook("ChatboxAddText", chatbox.AddText)
 netstream.Hook("ChatboxTextEntered", function(player, msgText)
 	if (!msgText or msgText == "") then return end
 	if (!IsValid(player)) then
-		print("[Catwork Debug] Player is not valid. How the heck did this happen doe?")
+		print("[Flux Debug] Player is not valid. How the heck did this happen doe?")
+
 		return
 	end
 

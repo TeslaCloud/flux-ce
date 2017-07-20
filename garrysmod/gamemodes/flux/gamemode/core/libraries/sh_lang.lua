@@ -74,7 +74,7 @@ local defaultLangTable = {
 }
 
 function fl.lang:GetTable(name)
-	stored[name] = stored[name] or defaultLangTable or {}
+	stored[name] = stored[name] or table.Copy(defaultLangTable) or {}
 
 	return stored[name]
 end

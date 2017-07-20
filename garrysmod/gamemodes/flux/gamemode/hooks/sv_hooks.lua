@@ -429,6 +429,14 @@ function GM:PlayerOneSecond(player, curTime)
 	player.lastPos = pos
 end
 
+function GM:PlayerThink(player, curTime)
+	local act = player:GetAction()
+
+	if (act != "idle" and act != "spawning") then
+		player:DoAction()
+	end
+end
+
 -- Awful awful awful code, but it's kinda necessary in some rare cases.
 -- Avoid using PlayerThink whenever possible though.
 do

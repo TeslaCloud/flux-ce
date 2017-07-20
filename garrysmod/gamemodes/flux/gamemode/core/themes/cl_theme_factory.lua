@@ -63,7 +63,7 @@ function THEME:OnLoaded()
 	self:SetFont("Text_Small", "flMainFont", font.Scale(18))
 	self:SetFont("Text_Smaller", "flMainFont", font.Scale(16))
 	self:SetFont("Text_Smallest", "flMainFont", font.Scale(14))
-	self:SetFont("Text_Bar", "flMainFont", font.Scale(14), {weight = 600})
+	self:SetFont("Text_Bar", "flMainFont", font.Scale(16), {weight = 600})
 	self:SetFont("Text_Tiny", "flMainFont", font.Scale(11))
 	self:SetFont("Text_3D2D", "flMainFont", 256)
 
@@ -186,15 +186,17 @@ function THEME:DrawBarFill(barInfo)
 end
 
 function THEME:DrawBarTexts(barInfo)
-	draw.SimpleText(barInfo.text, barInfo.font, barInfo.x + 8, barInfo.y + barInfo.textOffset, Color(255, 255, 255))
+	local font = theme.GetFont(barInfo.font)
+
+	draw.SimpleText(barInfo.text, font, barInfo.x + 8, barInfo.y + barInfo.textOffset, Color(255, 255, 255))
 
 	if (barInfo.hinderDisplay and barInfo.hinderDisplay <= barInfo.hinderValue) then
 		local width = barInfo.width
-		local textWide = util.GetTextSize(barInfo.hinderText, barInfo.font)
+		local textWide = util.GetTextSize(barInfo.hinderText, font)
 		local length = width * (barInfo.hinderValue / barInfo.maxValue)
 
 		render.SetScissorRect(barInfo.x + width - length, barInfo.y, barInfo.x + width, barInfo.y + barInfo.height, true)
-			draw.SimpleText(barInfo.hinderText, barInfo.font, barInfo.x + width - textWide - 8, barInfo.y + barInfo.textOffset, Color(255, 255, 255))
+			draw.SimpleText(barInfo.hinderText, font, barInfo.x + width - textWide - 8, barInfo.y + barInfo.textOffset, Color(255, 255, 255))
 		render.SetScissorRect(0, 0, 0, 0, false)
 	end
 end

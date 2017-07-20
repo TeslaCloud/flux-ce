@@ -174,6 +174,7 @@ function playerMeta:SetRagdollState(state)
 	self:SetDTInt(INT_RAGDOLL_STATE, state)
 
 	if (state == RAGDOLL_FALLENOVER) then
+		self:SetAction("fallen", true)
 		self:CreateRagdollEntity(nil, true)
 	elseif (state == RAGDOLL_DUMMY) then
 		self:CreateRagdollEntity(120)
