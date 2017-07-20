@@ -2049,7 +2049,6 @@ function utf8.sub (s, i, j)
 	return s:sub(startByte, endByte)
 end
 
-
 -- replace UTF-8 characters based on a mapping table
 function utf8.replace (s, mapping)
 	-- argument checking
@@ -2070,7 +2069,6 @@ function utf8.replace (s, mapping)
 
 	return newstr
 end
-
 
 -- identical to string.upper except it knows about unicode simple case conversions
 function utf8.upper (s)

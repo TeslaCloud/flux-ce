@@ -427,7 +427,6 @@ fl.settings:AddTextEntry("Dashboard", "BackgroundURL", "",
 fl.settings:AddCheckBox("HUD", "DrawBars", true)
 fl.settings:AddCheckBox("HUD", "DrawBarText", true)
 
-
 --[[ -- For example on how to add a number slider.
 fl.settings:AddNumSlider("Test", "TestNumSlider", "", {
 	min = 5,

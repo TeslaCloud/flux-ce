@@ -322,7 +322,7 @@ if (SERVER) then
 			steamID = player:SteamID()
 
 			if (!bPreventKick) then
-				player:Kick("You have been banned: "..tostring(entry.reason))
+				player:Kick("You have been banned: "..tostring(reason))
 			end
 		end
 
@@ -332,13 +332,14 @@ if (SERVER) then
 
 	function fl.admin:RemoveBan(steamID)
 		if (bans[steamID]) then
+			local copy = table.Copy(bans[steamID])
 			bans[steamID] = nil
 
 			local query = fl.db:Delete("fl_bans")
 				query:Where("steamID", steamID)
 			query:Execute()
 
-			return true
+			return true, copy
 		end
 
 		return false
@@ -363,7 +364,8 @@ do
 		perma = 0,
 		perm = 0,
 		pb = 0,
-		forever = 0
+		forever = 0,
+		moment = 1
 	}
 
 	local numTokens = {
@@ -406,9 +408,9 @@ do
 		local token, num = "", 0
 
 		for k, v in ipairs(exploded) do
-			if (v == "a" or v == "and" or v == "or" or v == "of" or v == "whole") then continue end
-
 			local n = tonumber(v)
+
+			if (!n and !tokens[v] and !numTokens[v]) then continue end
 
 			if (n) then
 				num = n

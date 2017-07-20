@@ -231,7 +231,6 @@ function CTool:GetHelpText()
 	return "#tool." .. GetConVarString("gmod_toolmode") .. "." .. self:GetStage()
 end
 
-
 if (CLIENT) then
 	-- Tool should return true if freezing the view angles
 	function CTool:FreezeMovement()

@@ -48,6 +48,7 @@ lang["#year_2"] = "#1 года"
 lang["#year_5"] = "#1 лет"
 lang["#permanently"] = "навсегда"
 lang["#for"] = "на"
+lang["#and"] = "и"
 
 function lang:PickEnding(n)
 	local ns = tostring(n)
@@ -70,59 +71,45 @@ function lang:NiceTime(time)
 	elseif (time < (60 * 60)) then
 		local t = math.floor(time / 60)
 
-		return "#minute"..self:PickEnding(time)..":"..t..";", time - t * 60
+		return "#minute"..self:PickEnding(t)..":"..t..";", time - t * 60
 	elseif (time < (60 * 60 * 24)) then
 		local t = math.floor(time / 60 / 60)
 
-		return "#hour"..self:PickEnding(time)..":"..t..";", time - t * 60 * 60
+		return "#hour"..self:PickEnding(t)..":"..t..";", time - t * 60 * 60
 	elseif (time < (60 * 60 * 24 * 7)) then
 		local t = math.floor(time / 60 / 60 / 24)
 
-		return "#day"..self:PickEnding(time)..":"..t..";", time - t * 60 * 60 * 24
+		return "#day"..self:PickEnding(t)..":"..t..";", time - t * 60 * 60 * 24
 	elseif (time < (60 * 60 * 24 * 30)) then
 		local t = math.floor(time / 60 / 60 / 24 / 7)
 
-		return "#week"..self:PickEnding(time)..":"..t..";", time - t * 60 * 60 * 24 * 7
+		return "#week"..self:PickEnding(t)..":"..t..";", time - t * 60 * 60 * 24 * 7
 	elseif (time < (60 * 60 * 24 * 30 * 12)) then
 		local t = math.floor(time / 60 / 60 / 24 / 30)
 
-		return "#month"..self:PickEnding(time)..":"..t..";", time - t * 60 * 60 * 24 * 30
+		return "#month"..self:PickEnding(t)..":"..t..";", time - t * 60 * 60 * 24 * 30
 	elseif (time >= (60 * 60 * 24 * 365)) then
 		local t = math.floor(time / 60 / 60 / 24 / 365)
 
-		return "#year"..self:PickEnding(time)..":"..t..";", time - t * 60 * 60 * 24 * 365
+		return "#year"..self:PickEnding(t)..":"..t..";", time - t * 60 * 60 * 24 * 365
 	else
 		return "#second:"..time..";", 0
 	end
 end
 
-function lang:NiceTimeFull(time)
-	local out = ""
-	local i = 0
-
-	while (time > 0) do
-		if (i >= 100) then break end -- fail safety
-
-		local str, remainder = self:NiceTime(time)
-
-		time = remainder
-		out = out..str
-
-		i = i + 1
-	end
-
-	return out
-end
-
 lang["#Commands_NotValid"] = "'#1' не является командой!"
 lang["#Commands_NoAccess"] = "У вас нет доступа к этой команде!"
 lang["#Commands_PlayerInvalid"] = "'#1' не является игроком!"
+lang["#Commands_SteamidInvalid"] = "'#1' не является действительным Steam ID!"
 lang["#Commands_HigherImmunity"] = "#1 имеет более высокий иммунитет, чем вы!"
 lang["#Err_GroupNotValid"] = "'#1' не является группой пользователя!"
+lang["#Err_NotBanned"] = "Steam ID '#1' не находится в блокировке!"
 
 lang["#FreezeBotsMessage"] = "#1 заморозил всех ботов."
 lang["#UnfreezeBotsMessage"] = "#1 разморозил всех ботов."
 lang["#KickMessage"] = "#1 кикнул #2. (#3)"
+lang["#BanMessage"] = "#1 заблокировал #2"
+lang["#UnbanMessage"] = "#1 разблокировал #2."
 lang["#AddBotsMessage"] = "#1 добавил #2 ботов на сервер."
 lang["#KickBotsMessage"] = "#1 кикнул всех ботов."
 lang["#MapRestartMessage"] = "#1 перезапускает карту через #2 секунд!"
@@ -152,6 +139,12 @@ lang["#CMDDesc_Aliases"] = "Алиасы:"
 
 lang["#KickCMD_Description"] = "Выкидывает игрока с сервера."
 lang["#KickCMD_Syntax"] = "<игрок> [причина]"
+
+lang["#BanCMD_Description"] = "Забанить урода!"
+lang["#BanCMD_Syntax"] = "<игрок> <срок блокировки> [причина]"
+
+lang["#UnbanCMD_Description"] = "Разблокировать игрока с таким Steam ID если тот находится в блокировке."
+lang["#UnbanCMD_Syntax"] = "<заблокированный SteamID>"
 
 lang["#SetGroupCMD_Description"] = "Выставляет группу пользователя игрока."
 lang["#SetGroupCMD_Syntax"] = "<игрок> <группа>"
@@ -188,6 +181,23 @@ lang["#Err_AlreadyStatic"] = "Этот энтити уже сохранен!"
 lang["#Err_NotStatic"] = "Этот энтити не сохранен!"
 lang["#Static_Added"] = "Вы сохранили этот энтити."
 lang["#Static_Removed"] = "Вы убрали этот энтити из сохранения."
+
+lang["#CharCreate"] = "CREATE A CHARACTER"
+lang["#CharCreateText"] = "CHARACTER CREATION"
+lang["#CharCreate_Create"] = "CREATE"
+lang["#CharCreate_ModelButton"] = "Model"
+lang["#CharCreate_FactionButton"] = "Faction"
+lang["#CharCreate_GenText"] = "General Character Information"
+lang["#CharCreate_Name"] = "Name:"
+lang["#CharCreate_Desc"] = "Description:"
+lang["#CharCreate_Gender"] = "Gender:"
+lang["#CharCreate_Gender_S"] = "Select Gender"
+lang["#CharCreate_Gender_M"] = "Male"
+lang["#CharCreate_Gender_F"] = "Female"
+lang["#CharCreate_GenFacWarning"] = "You have to select a gender or faction first!"
+lang["#CharCreate_Model_S"] = "Select a model"
+lang["#CharCreate_Fac_S"] = "Select a faction"
+lang["#CharCreat_FacTitle"] = "Faction:"
 
 lang["#Settings_Dashboard"] = "Меню"
 lang["#Settings_Theme"] = "Тема"

@@ -53,7 +53,7 @@ function playerMeta:FindBestPosition(margin, filter)
 			local trace2 = util.TraceLine(data)
 
 			if (trace2.StartSolid or trace2.Hit) then continue end
-			
+
 			table.insert(positions, pick)
 		end
 	end

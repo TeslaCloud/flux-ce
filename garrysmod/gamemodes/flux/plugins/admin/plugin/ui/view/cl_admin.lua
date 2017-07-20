@@ -98,8 +98,6 @@ end
 
 vgui.Register("flAdminPanel", PANEL, "flFrame")
 
-
-
 concommand.Add("fl_admin_test", function()
 	local panel = vgui.Create("flAdminPanel")
 	panel:MakePopup()

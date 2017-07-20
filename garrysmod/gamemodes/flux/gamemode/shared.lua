@@ -90,10 +90,9 @@ util.IncludeDirectory("core/libraries", true)
 util.IncludeDirectory("core/libraries/classes", true)
 util.IncludeDirectory("core/libraries/meta", true)
 util.IncludeDirectory("languages", true)
-util.IncludeDirectory("core/ui/model", true)
+util.IncludeDirectory("core/ui/controllers", true)
 util.IncludeDirectory("core/ui/view/base", true)
 util.IncludeDirectory("core/ui/view", true)
-util.IncludeDirectory("core/ui/controller", true)
 util.IncludeDirectory("core/items/bases", true)
 
 if (theme or SERVER) then

@@ -24,9 +24,8 @@ local defaultExtras = {
 	"meta",
 	"config",
 	"languages",
-	"ui/model",
+	"ui/controllers",
 	"ui/view",
-	"ui/controller",
 	"tools",
 	"themes",
 	"entities"
@@ -63,7 +62,7 @@ function CPlugin:CPlugin(id, data)
 	self.m_Name = data.name or "Unknown Plugin"
 	self.m_Author = data.author or "Unknown Author"
 	self.m_Folder = data.folder or name:gsub(" ", "_"):lower()
-	self.m_Description = data.description or "An undescribed plugin or schema."
+	self.m_Description = data.description or "This plugin has no description."
 	self.m_UniqueID = id or data.id or name:MakeID() or "unknown"
 
 	table.Merge(self, data)

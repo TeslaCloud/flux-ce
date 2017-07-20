@@ -14,7 +14,6 @@ do
 
 	function GM:CalcMainActivity(player, velocity)
 		player:SetPoseParameter("move_yaw", normalizeAngle(vectorAngle(velocity)[2] - player:EyeAngles()[2]))
-
 		player.CalcIdeal = ACT_MP_STAND_IDLE
 
 		local baseClass = self.BaseClass

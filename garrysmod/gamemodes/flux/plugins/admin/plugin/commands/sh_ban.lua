@@ -20,7 +20,7 @@ function COMMAND:OnRun(player, targets, duration, ...)
 	duration = fl.admin:InterpretBanTime(duration)
 
 	if (!isnumber(duration)) then
-		fl.player:Notify("This is not a valid duration!")
+		fl.player:Notify("'"..tostring(duration).."' could not be interpreted as duration!")
 
 		return
 	end
@@ -34,11 +34,13 @@ function COMMAND:OnRun(player, targets, duration, ...)
 	end
 
 	for k, v in ipairs(_player.GetAll()) do
-		local time = "#for:;"..fl.lang:NiceTimeFull(v:GetNetVar("language"), time)
+		local time = "#for "..fl.lang:NiceTimeFull(v:GetNetVar("language"), duration)
 
-		if (duration <= 0) then time = "#permanently" end
+		if (duration <= 0) then time = L"permanently" end
 
-		v:Notify(L("BanMessage", (IsValid(player) and player:Name()) or "Console", time, reason))
+		local phrase = L("BanMessage", (IsValid(player) and player:Name()) or "Console", util.PlayerListToString(targets)).." "..time..". ("..reason..")"
+
+		v:Notify(phrase)
 	end
 end
 

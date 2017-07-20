@@ -73,7 +73,7 @@ function fl.IsWatchdogAvailable()
 	return fl.WatchDogAvailable
 end
 
--- Uninclude stuff that doesn't change.
+-- Put that under an if because it doesn't change.
 if (!string.utf8len or !pon or !netstream) then
 	AddCSLuaFile("thirdparty/utf8.lua")
 	AddCSLuaFile("thirdparty/pon.lua")

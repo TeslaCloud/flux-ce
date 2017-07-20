@@ -26,7 +26,7 @@ function PLUGIN:CalcView(player, origin, angles, fov)
 				view.origin = data.Pos
 				view.angles = data.Ang
 			end
-			
+
 			return view
 		end
 	end

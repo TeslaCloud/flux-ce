@@ -11,8 +11,70 @@ fl.lang.stored = stored
 local cache = {}
 local textCache = {}
 
+local defaultLangTable = {
+	NiceTime = function(self, time)
+		if (time == 1) then
+			return "#second:"..time..";", 0
+		elseif (time < 60) then
+			return "#second:"..time..";s", 0
+		elseif (time < (60 * 60)) then
+			local t = math.floor(time / 60)
+
+			return "#minute:"..t..";"..((t != 1 and "s") or ""), time - t * 60
+		elseif (time < (60 * 60 * 24)) then
+			local t = math.floor(time / 60 / 60)
+
+			return "#hour:"..t..";"..((t != 1 and "s") or ""), time - t * 60 * 60
+		elseif (time < (60 * 60 * 24 * 7)) then
+			local t = math.floor(time / 60 / 60 / 24)
+
+			return "#day:"..t..";"..((t != 1 and "s") or ""), time - t * 60 * 60 * 24
+		elseif (time < (60 * 60 * 24 * 30)) then
+			local t = math.floor(time / 60 / 60 / 24 / 7)
+
+			return "#week:"..t..";"..((t != 1 and "s") or ""), time - t * 60 * 60 * 24 * 7
+		elseif (time < (60 * 60 * 24 * 30 * 12)) then
+			local t = math.floor(time / 60 / 60 / 24 / 30)
+
+			return "#month:"..t..";"..((t != 1 and "s") or ""), time - t * 60 * 60 * 24 * 30
+		elseif (time >= (60 * 60 * 24 * 365)) then
+			local t = math.floor(time / 60 / 60 / 24 / 365)
+
+			return "#year:"..t..";"..((t != 1 and "s") or ""), time - t * 60 * 60 * 24 * 365
+		else
+			return "#second:"..time..";s", 0
+		end
+	end,
+	NiceTimeFull = function(self, time)
+		local out = ""
+		local i = 0
+
+		while (time > 0) do
+			if (i >= 100) then break end -- fail safety
+
+			local str, remainder = self:NiceTime(time)
+
+			time = remainder
+
+			if (time <= 0) then
+				if (i != 0) then
+					out = out.."#and "..str
+				else
+					out = str
+				end
+			else
+				out = out..str.." "
+			end
+
+			i = i + 1
+		end
+
+		return out
+	end
+}
+
 function fl.lang:GetTable(name)
-	stored[name] = stored[name] or {}
+	stored[name] = stored[name] or defaultLangTable or {}
 
 	return stored[name]
 end

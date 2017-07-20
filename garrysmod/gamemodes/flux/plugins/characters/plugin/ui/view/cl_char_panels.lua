@@ -20,7 +20,6 @@ end
 
 vgui.Register("flCharCreationBase", PANEL, "flBasePanel")
 
-
 local PANEL = {}
 PANEL.uniqueID = "general"
 PANEL.text = "#CharCreate_GenText"
