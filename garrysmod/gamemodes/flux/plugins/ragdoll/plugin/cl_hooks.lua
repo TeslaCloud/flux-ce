@@ -11,7 +11,7 @@ fl.bars:Register("getup", {
 	x = ScrW() / 2 - fl.bars.defaultW / 2,
 	y = ScrH() / 2 - 8,
 	textOffset = 1,
-	height = 16,
+	height = 20,
 	type = BAR_MANUAL
 })
 
