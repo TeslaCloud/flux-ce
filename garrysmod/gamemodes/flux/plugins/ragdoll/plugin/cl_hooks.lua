@@ -35,9 +35,9 @@ function PLUGIN:HUDPaint()
 			fl.bars:SetValue("getup", barValue)
 			fl.bars:Draw("getup")
 		elseif (fallen) then
-			local w, h = util.GetTextSize("Press the 'jump' key to get up...", theme.GetFont("Text_Normal"))
+			local w, h = util.GetTextSize("#PressJumpToGetup", theme.GetFont("Text_Normal"))
 
-			draw.SimpleText("Press the 'jump' key to get up...", theme.GetFont("Text_Normal"), scrW / 2 - w / 2, scrH / 2 - h / 2, theme.GetColor("Text"))
+			draw.SimpleText("#PressJumpToGetup", theme.GetFont("Text_Normal"), scrW / 2 - w / 2, scrH / 2 - h / 2, theme.GetColor("Text"))
 		end
 	end
 end

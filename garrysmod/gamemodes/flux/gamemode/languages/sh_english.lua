@@ -221,3 +221,9 @@ lang["#tool.texts.opt91"]		= "Text Wrapped in a Box (Blurry)"
 lang["#tool.static.name"]		= "Static Add/Remove"
 lang["#tool.static.desc"]		= "Add and remove static entities."
 lang["#tool.static.0"]			= "Left Click: Add, Right Click: Remove."
+
+--[[
+	Misc. Things added by plugins
+--]]
+
+lang["#PressJumpToGetup"]		= "Press the 'jump' key to get up..."

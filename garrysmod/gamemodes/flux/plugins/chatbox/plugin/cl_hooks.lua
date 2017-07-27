@@ -7,18 +7,18 @@
 function flChatbox:CreateFonts()
 	font.Create("flChatFont", {
 		font		= "Roboto",
-		size		= 17
+		size		= font.Scale(18)
 	})
 
 	font.Create("flChatFontBold", {
 		font		= "Roboto",
-		size		= 17,
+		size		= font.Scale(18),
 		weight		= 1000
 	})
 
 	font.Create("flChatSyntax", {
 		font		= "Roboto",
-		size		= 20
+		size		= font.Scale(22)
 	})
 end
 
@@ -51,26 +51,3 @@ function flChatbox:GUIMousePressed(mouseCode, aimVector)
 		chatbox.Hide()
 	end
 end
-
-netstream.Hook("ChatboxTextEnter", function(player, messageData)
-	if (IsValid(player)) then
-		chat.PlaySound()
-
-		print("["..messageData.filter:upper().."] "..player:Name()..": "..messageData.text)
-
-		table.insert(chatbox.history, messageData)
-
-		chatbox.UpdateDisplay()
-		chatbox.Hide()
-	end
-end)
-
-netstream.Hook("ChatboxAddText", function(messageData)
-	chat.PlaySound()
-
-	print("["..messageData.filter:upper().."] "..messageData.text)
-
-	table.insert(chatbox.history, messageData)
-
-	chatbox.UpdateDisplay()
-end)

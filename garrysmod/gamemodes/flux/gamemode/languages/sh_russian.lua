@@ -262,3 +262,9 @@ lang["#tool.texts.opt6"] = "Текст в Мигающей Табличке"
 lang["#tool.static.name"] = "Сохранение/Удаление Энтити"
 lang["#tool.static.desc"] = "Сохраняет энтити между рестартами или удаляет его из сохранения."
 lang["#tool.static.0"] = "ЛКМ: Сохранить, ПКМ: Удалить."
+
+--[[
+	Misc. Things added by plugins
+--]]
+
+lang["#PressJumpToGetup"]		= "Нажмите 'прыжок', чтобы встать..."
