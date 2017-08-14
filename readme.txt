@@ -1,5 +1,3 @@
 Flux is a roleplay framework designed with performance and convenience in mind.
 
 For more info or technical support, please visit our forums: http://teslacloud.net/
-
-BY USING FLUX YOU AGREE TO THE TERMS AND CONDITIONS LISTED IN THE LICENSE.TXT FILE (FOUND IN THE SAME FOLDER AS README.TXT IN FLUX'S REPOSITORY). PLEASE READ THE LICENSE BEFORE USE. IF YOU DO NOT AGREE TO THE TERMS AND CONDITIONS, PLEASE REMOVE ANY COPIES OF FLUX FROM YOUR COMPUTER.
