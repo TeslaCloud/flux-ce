@@ -57,7 +57,7 @@ if (SERVER) then
 
 			netstream.Start(nil, "fl3DText_Remove", idx)
 
-			fl.player:Notify(player, "You have removed a 3D text.")
+			fl.player:Notify(player, "#3DText_TextRemoved")
 		end
 	end)
 else

@@ -5,6 +5,7 @@
 --]]
 
 library.New("lang", fl)
+
 local stored = fl.lang.stored or {}
 fl.lang.stored = stored
 

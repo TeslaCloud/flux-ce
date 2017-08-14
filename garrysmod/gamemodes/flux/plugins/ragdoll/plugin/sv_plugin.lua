@@ -78,45 +78,45 @@ function playerMeta:CreateRagdollEntity(decay, fallen)
 			ragdoll.weapons = {}
 		ragdoll:Spawn()
 
-		ragdoll:CallOnRemove("getup", function()
-			if (IsValid(self)) then
-				self:SetPos(ragdoll:GetPos())
+		if (fallen) then
+			ragdoll:CallOnRemove("getup", function()
+				if (IsValid(self)) then
+					self:SetPos(ragdoll:GetPos())
 
-				self:ResetRagdollEntity()
+					self:ResetRagdollEntity()
 
-				if (ragdoll.weapons) then
-					for k, v in ipairs(ragdoll.weapons) do
-						self:Give(v)
+					if (ragdoll.weapons) then
+						for k, v in ipairs(ragdoll.weapons) do
+							self:Give(v)
+						end
 					end
-				end
 
-				self:GodDisable()
-				self:Freeze(false)
-				self:SetNoDraw(false)
-				self:SetNotSolid(false)
+					self:GodDisable()
+					self:Freeze(false)
+					self:SetNoDraw(false)
+					self:SetNotSolid(false)
 
-				if (self:IsStuck()) then
-					self:DropToFloor()
-					self:SetPos(self:GetPos() + Vector(0, 0, 16))
+					if (self:IsStuck()) then
+						self:DropToFloor()
+						self:SetPos(self:GetPos() + Vector(0, 0, 16))
 
-					local positions = self:FindBestPosition(4, {ragdoll, self})
+						local positions = self:FindBestPosition(4, {ragdoll, self})
 
-					for k, v in ipairs(positions) do
-						self:SetPos(v)
+						for k, v in ipairs(positions) do
+							self:SetPos(v)
 
-						if (!self:IsStuck()) then
-							return
-						else
-							self:DropToFloor()
+							if (!self:IsStuck()) then
+								return
+							else
+								self:DropToFloor()
 
-							if (!self:IsStuck()) then return end
+								if (!self:IsStuck()) then return end
+							end
 						end
 					end
 				end
-			end
-		end)
+			end)
 
-		if (fallen) then
 			for k, v in ipairs(self:GetWeapons()) do
 				table.insert(ragdoll.weapons, v:GetClass())
 			end

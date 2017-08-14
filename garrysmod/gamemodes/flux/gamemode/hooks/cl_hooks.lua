@@ -161,31 +161,56 @@ function GM:HUDPaint()
 		local scrW, scrH = ScrW(), ScrH()
 
 		if (fl.client.lastDamage and fl.client.lastDamage > (curTime - 0.3)) then
-			local alpha = 255 - 255 * (curTime - fl.client.lastDamage) * 3.75
-			draw.RoundedBox(0, 0, 0, scrW, scrH, Color(255, 255, 255, alpha))
+			local alpha = math.Clamp(255 - 255 * (curTime - fl.client.lastDamage) * 3.75, 0, 200)
+			draw.TexturedRect(0, 0, scrW, scrH, Material("materials/flux/hl2rp/blood.png"), Color(255, 0, 0, alpha))
+			draw.RoundedBox(0, 0, 0, scrW, scrH, Color(255, 210, 210, alpha))
 		end
 
 		if (!fl.client:Alive()) then
+			hook.Run("HUDPaintDeathBackground", curTime, scrW, scrH)
+
 			if (!self.respawnAlpha) then self.respawnAlpha = 0 end
 
-			self.respawnAlpha = math.Clamp(self.respawnAlpha + 1, 0, 230)
+			self.respawnAlpha = math.Clamp(self.respawnAlpha + 1, 0, 200)
 
 			draw.RoundedBox(0, 0, 0, scrW, scrH, Color(0, 0, 0, self.respawnAlpha))
 
-			local barValue = 100 - 100 * ((fl.client:GetNetVar("RespawnTime", 0) - curTime) / config.Get("respawn_delay"))
+			local respawnTimeRemaining = fl.client:GetNetVar("RespawnTime", 0) - curTime
 
-			fl.bars:SetValue("respawn", barValue)
-			fl.bars:Draw("respawn")
+			draw.SimpleText("YOU DIED", theme.GetFont("Text_NormalLarge"), 16, 16, Color(255, 255, 255))
+			draw.SimpleText("RESPAWN IN: "..math.ceil(respawnTimeRemaining), theme.GetFont("Text_NormalLarge"), 16, 16 + util.GetFontHeight(theme.GetFont("Text_NormalLarge")), Color(255, 255, 255))
+
+			local barValue = 100 - 100 * (respawnTimeRemaining / config.Get("respawn_delay"))
+
+			draw.RoundedBox(0, 0, 0, scrW / 100 * barValue, 2, Color(255, 255, 255))
+
+			if (respawnTimeRemaining <= 3) then
+				self.whiteAlpha = math.Clamp(255 * (1.5 - respawnTimeRemaining / 2), 0, 255)
+			else
+				self.whiteAlpha = 0
+			end
+
+			hook.Run("HUDPaintDeathForeground", curTime, scrW, scrH)
 		else
 			self.respawnAlpha = 0
+			
+			if (isnumber(self.whiteAlpha) and self.whiteAlpha > 0.5) then
+				self.whiteAlpha = Lerp(0.04, self.whiteAlpha, 0)
+			end
 
-			if (!hook.Run("FLHUDPaint") and fl.settings:GetBool("DrawBars")) then
+			if (!hook.Run("FLHUDPaint", curTime, scrW, scrH) and fl.settings:GetBool("DrawBars")) then
 				fl.bars:DrawTopBars()
 
 				self.BaseClass:HUDPaint()
 			end
 		end
+
+		draw.RoundedBox(0, 0, 0, scrW, scrH, Color(255, 255, 255, self.whiteAlpha or 0))
 	end
+end
+
+function GM:HUDPaintDeathBackground(curTime, w, h)
+	draw.TexturedRect(0, 0, w, h, Material("materials/flux/hl2rp/blood.png"), Color(255, 0, 0, 200))
 end
 
 do

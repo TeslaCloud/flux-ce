@@ -16,6 +16,19 @@ function flChatbox:CreateFonts()
 		weight		= 1000
 	})
 
+	font.Create("flChatFontItalic", {
+		font		= "Roboto",
+		size		= font.Scale(18),
+		italic		= true
+	})
+
+	font.Create("flChatFontBoldItalic", {
+		font		= "Roboto",
+		size		= font.Scale(18),
+		italic		= true,
+		weight		= 1000
+	})
+
 	font.Create("flChatSyntax", {
 		font		= "Roboto",
 		size		= font.Scale(22)

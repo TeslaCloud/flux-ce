@@ -6,14 +6,14 @@
 
 local COMMAND = Command("textadd")
 COMMAND.name = "TextAdd"
-COMMAND.description = "Adds a 3D text."
-COMMAND.syntax = "<string Text> [number Scale] [number Style] [string Color] [string ExtraColor]"
+COMMAND.description = "#3DText_TextAddDesc"
+COMMAND.syntax = "#3DText_TextAddSyntax"
 COMMAND.category = "misc"
 COMMAND.arguments = 1
 
 function COMMAND:OnRun(player, text, scale, style, color, extraColor)
 	if (!text or text == "") then
-		fl.player:Notify(player, "You did not specify enough text.")
+		fl.player:Notify(player, "#3DText_NotEnoughText")
 
 		return
 	end
@@ -36,7 +36,7 @@ function COMMAND:OnRun(player, text, scale, style, color, extraColor)
 
 	fl3DText:AddText(data)
 
-	fl.player:Notify(player, "You have added a 3D text.")
+	fl.player:Notify(player, "#3DText_TextAdded")
 end
 
 COMMAND:Register()

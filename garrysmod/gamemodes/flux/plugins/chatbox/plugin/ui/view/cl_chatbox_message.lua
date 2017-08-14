@@ -8,6 +8,8 @@ local PANEL = {}
 PANEL.messageData = {}
 PANEL.compiled = {}
 PANEL.addTime = 0
+PANEL.forceShow = false
+PANEL.shouldPaint = false
 
 function PANEL:Init()
 	--if (fl.client:HasPermission("chat_mod")) then
@@ -15,26 +17,30 @@ function PANEL:Init()
 	--end
 
 	self.addTime = CurTime()
+	self.fadeTime = self.addTime + config.Get("chatbox_message_fade_delay")
+end
+
+function PANEL:Think()
+	self.shouldPaint = false
+
+	if (self.forceShow) then
+		self.shouldPaint = true
+	elseif (self.fadeTime > CurTime()) then
+		self.shouldPaint = true
+	end
 end
 
 function PANEL:SetMessage(msgInfo)
 	self.messageData = msgInfo
-
-	local compiled = chatbox.Compile(msgInfo, self)
-
-	if (compiled) then
-		self.compiled = compiled
-
-		local ncompiled = #compiled
-
-		if (ncompiled > 1) then
-			local wide, tall = self:GetWide(), self:GetTall()
-
-			self:SetSize(wide, tall * ncompiled + (config.Get("chatbox_message_margin") * (ncompiled - 1)))
-			self:GetParent():Rebuild()
-		end
-	end
 end
+
+--[[
+	Example msgdata
+	{ 
+		{ Color(255, 255, 255), "1:55PM", Color(255, 0, 0), CHAT_IMAGE, {16, 16, "icons/123.png"}, "Player Name:", Color(255, 255, 255), "Player Text" },
+		{ Color(255, 255, 255), "Separate table for each line" }
+	}
+--]]
 
 -- Those people want us gone :(
 function PANEL:Eject()
@@ -48,7 +54,31 @@ function PANEL:Eject()
 end
 
 function PANEL:Paint(w, h)
-	
+	if (self.shouldPaint) then
+		local curColor = Color(255, 255, 255)
+		local curSize = 16
+		local italic = false
+		local bold = false
+		local curX = 0
+		local curY = 0
+
+		for _, line in ipairs(self.messageData) do
+			for _, v in ipairs(line) do
+				if (IsColor(v)) then
+					curColor = v
+				elseif (isnumber(v)) then
+					if (v == CHAT_NONE) then
+						italic = false
+						bold = false
+						curSize = 16
+						curColor = Color(255, 255, 255)
+					elseif (v == CHAT_IMAGE) then
+
+					end
+				end
+			end
+		end
+	end
 end
 
 vgui.Register("flChatMessage", PANEL, "flBasePanel")

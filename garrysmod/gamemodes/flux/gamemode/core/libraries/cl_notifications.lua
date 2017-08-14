@@ -12,7 +12,7 @@ local lastReposition = CurTime()
 
 function fl.notification:Add(text, lifetime, textColor, backColor)
 	lifetime = lifetime or 8
-	text = fl.lang:TranslateText(text)
+	text = fl.lang:TranslateText(text) or ""
 
 	display[top] = {text = text, lifetime = lifetime, panel = nil, width = 0, height = 0, isLast = true}
 

@@ -866,7 +866,7 @@ end
 function util.PlayerListToString(...)
 	local list = {...}
 
-	if (#list == _player.GetAll()) then
+	if (#list == #_player.GetAll()) then
 		return "Everyone"
 	end
 

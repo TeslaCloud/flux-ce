@@ -5,6 +5,7 @@
 --]]
 
 config.Set("chatbox_message_margin", 4)
+config.Set("chatbox_message_fade_delay", 12)
 config.Set("chatbox_max_messages", 100)
 
 function chatbox.CanHear(listener, position, radius)

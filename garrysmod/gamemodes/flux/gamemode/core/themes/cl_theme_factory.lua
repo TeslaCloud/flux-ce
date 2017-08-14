@@ -265,6 +265,8 @@ function THEME:PaintTabMenu(panel, width, height)
 	draw.RoundedBox(0, 0, 0, 6, height, ColorAlpha(self:GetColor("Background"), 200))
 
 	if (IsValid(activePanel)) then
+		panel.posY = panel.posY or 0
+
 		local activeButton = panel.activeBtn
 
 		if (!IsValid(activeButton)) then return end
@@ -272,13 +274,19 @@ function THEME:PaintTabMenu(panel, width, height)
 		local x, y = activeButton:GetPos()
 		local targetH = activeButton:GetTall()
 
+		if (panel.prevY != y) then
+			panel.posY = Lerp(fraction, panel.posY, y)
+		end
+
+		panel.prevY = panel.posY
+
 		if (!activePanel.indicatorLerp) then
 			activePanel.indicatorLerp = 0
 		end
 
 		activePanel.indicatorLerp = Lerp(fraction, activePanel.indicatorLerp, targetH)
 
-		draw.RoundedBox(0, 0, y - activePanel.indicatorLerp + activePanel.indicatorLerp / 2 + targetH / 2, 6, activePanel.indicatorLerp, self:GetColor("AccentLight"))
+		draw.RoundedBox(0, 0, panel.posY, 6, targetH, self:GetColor("AccentLight"))
 	end
 end
 

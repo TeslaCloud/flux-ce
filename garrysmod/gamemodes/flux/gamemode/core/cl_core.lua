@@ -255,4 +255,14 @@ do
 			render.SetScissorRect(0, 0, 0, 0, false)
 		end
 	end
+
+	function draw.TexturedRect(x, y, w, h, material, color)
+		if (!material) then return end
+
+		color = (IsColor(color) and color) or Color(255, 255, 255)
+
+		surface.SetDrawColor(color.r, color.g, color.b, color.a)
+		surface.SetMaterial(material)
+		surface.DrawTexturedRect(x, y, w, h)
+	end
 end

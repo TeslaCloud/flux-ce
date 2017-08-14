@@ -50,7 +50,7 @@ function TOOL:LeftClick(trace)
 
 	fl3DText:AddText(data)
 
-	fl.player:Notify(player, "You have added a 3D text.")
+	fl.player:Notify(player, "#3DText_TextAdded")
 
  	return true
 end
