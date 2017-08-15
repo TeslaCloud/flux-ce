@@ -139,5 +139,5 @@ lang["#Hint_BugsText"]			= "Encountered a bug? Have an idea that we should total
 	Formatting: Begin all language references with #PlayerMessage
 --]]
 
-lang["#PlayerMessage_Died"]	= "YOU PARISHED"
+lang["#PlayerMessage_Died"]	= "YOU PERISHED"
 lang["#PlayerMessage_Respawn"]	= "RESPAWNING IN #1"
