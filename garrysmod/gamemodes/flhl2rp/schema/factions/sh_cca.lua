@@ -7,9 +7,10 @@
 FACTION.Name = "Combine Civil Authority"
 FACTION.Description = "Combine police forces."
 FACTION.PhysDesc = "Wearing shiny metropolice unit uniform with brand new stunstick on his belt."
-FACTION.Color = Color(225, 185, 135)
+FACTION.Color = Color(135, 140, 225)
 FACTION.Material = "flux/hl2rp/factions/cca.png"
 FACTION.HasName = false
+FACTION.HasGender = false
 FACTION.Whitelisted = true
 FACTION.DefaultClass = "recruit"
 FACTION.NameTemplate = "CCA.{rank}-{data:Squad}.{callback:GenerateID}"

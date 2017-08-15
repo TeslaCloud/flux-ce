@@ -283,7 +283,7 @@ function THEME:PaintTabMenu(panel, width, height)
 	local fraction = FrameTime() * 8
 	local activePanel = panel.activePanel
 
-	Derma_DrawBackgroundBlur(panel, panel.lerpStart - 10)
+	Derma_DrawBackgroundBlur(panel, panel.lerpStart)
 	draw.RoundedBox(0, 0, 0, width, height, Color(50, 50, 50, Lerp(fraction, 0, 150)))
 	draw.RoundedBox(0, 0, 0, 6, height, ColorAlpha(self:GetColor("Background"), 200))
 
@@ -499,7 +499,7 @@ function THEME.skin:PaintScrollBarGrip(panel)
 end
 
 function THEME.skin:PaintFrame(panel, w, h)
-	local color = cw.option:GetColor("information")
+	local color = theme.GetColor("Accent")
 
 	surface.SetDrawColor(Color(10, 10, 10))
 	surface.DrawRect(0, 24, w, h)

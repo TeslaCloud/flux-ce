@@ -133,8 +133,14 @@ function GM:PostPlayerSpawn(player)
 end
 
 function GM:PlayerSetModel(player)
-	if (player:IsBot()) then
-		player:SetModel("models/humans/group01/male_0"..math.random(1, 9)..".mdl")
+	local override = hook.Run("PrePlayerSetModel", player)
+
+	if (isstring(override)) then
+		player:SetModel(override)
+	elseif (isbool(override) and override == false and self.BaseClass.PlayerSetModel) then
+		self.BaseClass:PlayerSetModel(player)
+	elseif (player:IsBot()) then
+		player:SetModel(player:GetNetVar("model", "models/humans/group01/male_0"..math.random(1, 9)..".mdl"))
 	elseif (player:HasInitialized()) then
 		player:SetModel(player:GetNetVar("model", "models/humans/group01/male_02.mdl"))
 	elseif (self.BaseClass.PlayerSetModel) then
@@ -195,14 +201,6 @@ end
 
 function GM:PlayerShouldTakeDamage(player, attacker)
 	return hook.Run("FLPlayerShouldTakeDamage", player, attacker) or true
-end
-
-function GM:ChatboxPlayerSay(player, message)
-	if (message.isCommand) then
-		fl.command:Interpret(player, message.text)
-
-		return ""
-	end
 end
 
 function GM:PlayerSpawnProp(player, model)

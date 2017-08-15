@@ -7,15 +7,16 @@
 FACTION.Name = "Combine Overwatch"
 FACTION.Description = "Combine military soldiers."
 FACTION.PhysDesc = "Wearing heavy overwatch armor."
-FACTION.Color = Color(225, 185, 135)
+FACTION.Color = Color(225, 115, 100)
 FACTION.Material = "flux/hl2rp/factions/overwatch.png"
 FACTION.HasName = false
+FACTION.HasGender = false
 FACTION.Whitelisted = true
 FACTION.DefaultClass = "soldier"
 FACTION.NameTemplate = "OW.{data:Squad}-{rank}.{callback:GenerateID}"
 FACTION:SetData("Squad", "ECHO")
 FACTION.Models.universal = {
-	"models/police.mdl"
+	"models/combine_soldier.mdl"
 }
 
 FACTION:AddRank("OWS")

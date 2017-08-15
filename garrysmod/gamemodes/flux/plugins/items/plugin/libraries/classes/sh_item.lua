@@ -91,12 +91,6 @@ end
 -- false = prevents item appearing and doesn't remove it from inventory.
 function CItem:OnDrop(player) end
 
--- Returns:
--- nothing/nil = removes item from the inventory as soon as it's used.
--- false = prevents item from being used at all.
--- true = prevents item from being removed upon use.
-function CItem:OnUse(player) end
-
 if (SERVER) then
 	function CItem:SetData(id, value)
 		if (!id) then return end

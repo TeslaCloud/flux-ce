@@ -74,7 +74,7 @@ function PANEL:Init()
 		self.buttons[k] = button
 	end
 
-	self.lerpStart = CurTime()
+	self.lerpStart = SysTime()
 end
 
 function PANEL:Think()

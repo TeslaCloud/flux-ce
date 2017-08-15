@@ -5,7 +5,7 @@
 --]]
 
 -- Alternatively, you can use item.CreateBase("CItemEquippable")
-class "CItemEquippable" extends "CItem"
+class "CItemEquippable" extends "CItemUsable"
 
 CItemEquippable.Name = "Equipment Base"
 CItemEquippable.Description = "An item that can be equipped."

@@ -34,3 +34,11 @@ function chatbox.Compile(messageTable)
 
 	return compiled
 end
+
+function chatbox.Show()
+
+end
+
+function chatbox.Hide()
+
+end

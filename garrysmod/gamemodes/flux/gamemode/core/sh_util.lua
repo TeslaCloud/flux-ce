@@ -185,18 +185,17 @@ end
 -- A function to include a file based on it's prefix.
 function util.Include(strFile)
 	if (SERVER) then
-		if (string.find(strFile, "sh_") or string.find(strFile, "shared.lua")) then
-			AddCSLuaFile(strFile)
-
-			return include(strFile)
-		elseif (string.find(strFile, "cl_")) then
+		if (string.find(strFile, "cl_")) then
 			AddCSLuaFile(strFile)
 		elseif (string.find(strFile, "sv_") or string.find(strFile, "init.lua")) then
 			return include(strFile)
+		else
+			AddCSLuaFile(strFile)
+
+			return include(strFile)
 		end
 	else
-		if (string.find(strFile, "sh_") or string.find(strFile, "cl_")
-		or string.find(strFile, "shared.lua")) then
+		if (!string.find(strFile, "sv_") and !strFile:EndsWith("init.lua")) then
 			return include(strFile)
 		end
 	end
@@ -601,7 +600,7 @@ function string.IsCommand(str)
 
 	for k, v in ipairs(prefixes) do
 		if (str:StartWith(v)) then
-			return true
+			return true, string.utf8len(v)
 		end
 	end
 

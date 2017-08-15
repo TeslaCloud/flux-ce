@@ -7,7 +7,7 @@
 FACTION.Name = "City Administrator"
 FACTION.Description = "A person who controls the city."
 FACTION.PhysDesc = "Wearing a strict, fancy looking suit."
-FACTION.Color = Color(225, 185, 135)
+FACTION.Color = Color(210, 220, 100)
 FACTION.Whitelisted = true
 FACTION.Material = "flux/hl2rp/factions/admin.png"
 FACTION.NameTemplate = "{name}"

@@ -5,7 +5,7 @@
 --]]
 
 -- Alternatively, you can use item.CreateBase("CItemConsumable")
-class "CItemConsumable" extends "CItem"
+class "CItemConsumable" extends "CItemUsable"
 
 CItemConsumable.Name = "Consumables Base"
 CItemConsumable.Description = "An item that can be consumed."
