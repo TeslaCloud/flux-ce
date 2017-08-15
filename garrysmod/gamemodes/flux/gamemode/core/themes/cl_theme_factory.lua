@@ -178,7 +178,7 @@ function THEME:PaintDeathScreen(curTime, scrW, scrH)
 	local respawnTimeRemaining = fl.client:GetNetVar("RespawnTime", 0) - curTime
 
 	draw.SimpleText("#PlayerMessage_Died", self:GetFont("Text_NormalLarge"), 16, 16, Color(255, 255, 255))
-	draw.SimpleText("#PlayerMessage_Respawn "..math.ceil(respawnTimeRemaining), self:GetFont("Text_NormalLarge"), 16, 16 + util.GetFontHeight(self:GetFont("Text_NormalLarge")), Color(255, 255, 255))
+	draw.SimpleText(L("PlayerMessage_Respawn", math.ceil(respawnTimeRemaining)), self:GetFont("Text_NormalLarge"), 16, 16 + util.GetFontHeight(self:GetFont("Text_NormalLarge")), Color(255, 255, 255))
 
 	local barValue = 100 - 100 * (respawnTimeRemaining / config.Get("respawn_delay"))
 

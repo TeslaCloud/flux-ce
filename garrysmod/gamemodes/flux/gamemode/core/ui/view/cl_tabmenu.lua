@@ -51,7 +51,6 @@ function PANEL:Init()
 			end
 
 			if (v.panel) then
-
 				surface.PlaySound("garrysmod/ui_hover.wav")
 
 				if (IsValid(self.activePanel)) then
@@ -61,8 +60,8 @@ function PANEL:Init()
 				end
 
 				self.activePanel = vgui.Create(v.panel, self)
-				self.activeBtn = btn
 
+				self.activeBtn = btn
 				self.activeBtn:SetTextColor(theme.GetColor("AccentLight"))
 
 				hook.Run("OnMenuPanelOpen", self, self.activePanel)
