@@ -172,7 +172,7 @@ function GM:HUDPaint()
 			hook.Run("HUDPaintDeathForeground", curTime, scrW, scrH)
 		else
 			fl.client.respawnAlpha = 0
-			
+
 			if (isnumber(fl.client.whiteAlpha) and fl.client.whiteAlpha > 0.5) then
 				fl.client.whiteAlpha = Lerp(0.04, fl.client.whiteAlpha, 0)
 			end

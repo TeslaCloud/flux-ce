@@ -36,7 +36,7 @@ end
 
 --[[
 	Example msgdata
-	{ 
+	{
 		{ Color(255, 255, 255), "1:55PM", Color(255, 0, 0), CHAT_IMAGE, {16, 16, "icons/123.png"}, "Player Name:", Color(255, 255, 255), "Player Text" },
 		{ Color(255, 255, 255), "Separate table for each line" }
 	}

@@ -60,7 +60,7 @@ function PANEL:Rebuild()
 end
 
 function PANEL:Paint(w, h)
-	
+
 end
 
 vgui.Register("flChatPanel", PANEL, "flBasePanel")

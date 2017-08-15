@@ -75,7 +75,7 @@ function PLUGIN:HUDPaint()
 					v.target = next.y
 					v.scaleTarget = next.scale
 					v.weapon = next.weapon
-					
+
 					if (k == 3 + ((dir and 1) or -1)) then
 						v.highlight = true
 					end
@@ -92,7 +92,7 @@ function PLUGIN:HUDPaint()
 
 				self.Display[k].y = Lerp(frameTime * absOffset, v.y, v.target)
 				self.Display[k].scale = Lerp(frameTime * absOffset, v.scale, v.scaleTarget)
-				
+
 				if (self.Display[k + ((dir and 1) or -1)] and self.Display[k + ((dir and 1) or -1)].highlight) then
 					self.Display[k].highlight = false
 				end
