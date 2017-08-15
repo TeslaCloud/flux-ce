@@ -168,34 +168,13 @@ function GM:HUDPaint()
 
 		if (!fl.client:Alive()) then
 			hook.Run("HUDPaintDeathBackground", curTime, scrW, scrH)
-
-			if (!self.respawnAlpha) then self.respawnAlpha = 0 end
-
-			self.respawnAlpha = math.Clamp(self.respawnAlpha + 1, 0, 200)
-
-			draw.RoundedBox(0, 0, 0, scrW, scrH, Color(0, 0, 0, self.respawnAlpha))
-
-			local respawnTimeRemaining = fl.client:GetNetVar("RespawnTime", 0) - curTime
-
-			draw.SimpleText("YOU DIED", theme.GetFont("Text_NormalLarge"), 16, 16, Color(255, 255, 255))
-			draw.SimpleText("RESPAWN IN: "..math.ceil(respawnTimeRemaining), theme.GetFont("Text_NormalLarge"), 16, 16 + util.GetFontHeight(theme.GetFont("Text_NormalLarge")), Color(255, 255, 255))
-
-			local barValue = 100 - 100 * (respawnTimeRemaining / config.Get("respawn_delay"))
-
-			draw.RoundedBox(0, 0, 0, scrW / 100 * barValue, 2, Color(255, 255, 255))
-
-			if (respawnTimeRemaining <= 3) then
-				self.whiteAlpha = math.Clamp(255 * (1.5 - respawnTimeRemaining / 2), 0, 255)
-			else
-				self.whiteAlpha = 0
-			end
-
+				theme.Call("PaintDeathScreen", curTime, scrW, scrH)
 			hook.Run("HUDPaintDeathForeground", curTime, scrW, scrH)
 		else
-			self.respawnAlpha = 0
+			fl.client.respawnAlpha = 0
 			
-			if (isnumber(self.whiteAlpha) and self.whiteAlpha > 0.5) then
-				self.whiteAlpha = Lerp(0.04, self.whiteAlpha, 0)
+			if (isnumber(fl.client.whiteAlpha) and fl.client.whiteAlpha > 0.5) then
+				fl.client.whiteAlpha = Lerp(0.04, fl.client.whiteAlpha, 0)
 			end
 
 			if (!hook.Run("FLHUDPaint", curTime, scrW, scrH) and fl.settings:GetBool("DrawBars")) then
@@ -205,89 +184,12 @@ function GM:HUDPaint()
 			end
 		end
 
-		draw.RoundedBox(0, 0, 0, scrW, scrH, Color(255, 255, 255, self.whiteAlpha or 0))
+		draw.RoundedBox(0, 0, 0, scrW, scrH, Color(255, 255, 255, fl.client.whiteAlpha or 0))
 	end
 end
 
 function GM:HUDPaintDeathBackground(curTime, w, h)
 	draw.TexturedRect(0, 0, w, h, Material("materials/flux/hl2rp/blood.png"), Color(255, 0, 0, 200))
-end
-
-do
-	local cache = nil
-	local tempCache = nil
-	local renderColor = Color(50, 255, 50)
-	local renderColorRed = Color(255, 50, 50)
-	local lastAmt = nil
-	local render = render
-
-	function GM:PostDrawOpaqueRenderables(bDrawDepth, bDrawSkybox)
-		if (bDrawDepth or bDrawSkybox) then return end
-
-		local weapon = fl.client:GetActiveWeapon()
-
-		if (IsValid(weapon) and weapon:GetClass() == "gmod_tool" and weapon:GetMode() == "area") then
-			local tool = fl.client:GetTool()
-			local verts = (tool and tool.area and tool.area.verts)
-			local areasCount = areas.GetCount()
-
-			if (istable(verts) and (!tempCache or #tempCache != #verts)) then
-				tempCache = {}
-
-				for k, v in ipairs(verts) do
-					local n
-
-					if (k == #verts) then
-						n = verts[1]
-					else
-						n = verts[k + 1]
-					end
-
-					table.insert(tempCache, {v, n})
-				end
-			end
-
-			if (!lastAmt) then lastAmt = areasCount end
-
-			if (!cache or lastAmt != areasCount) then
-				cache = {}
-
-				for k, v in pairs(areas.GetAll()) do
-					for k2, v2 in ipairs(v.polys) do
-						for idx, p in ipairs(v2) do
-							local n
-
-							if (idx == #v2) then
-								n = v2[1]
-							else
-								n = v2[idx + 1]
-							end
-
-							local add = Vector(0, 0, v.maxH)
-
-							table.insert(cache, {p, n, p + add, n + add})
-						end
-					end
-				end
-			end
-
-			if (cache) then
-				for k, v in ipairs(cache) do
-					local p, ap = v[1], v[3]
-
-					render.DrawLine(p, v[2], renderColor)
-					render.DrawLine(ap, v[4], renderColor)
-					render.DrawLine(ap, p, renderColor)
-				end
-			end
-
-			if (tempCache) then
-				for k, v in ipairs(tempCache) do
-					render.DrawLine(v[1], v[2], renderColorRed)
-				end
-			end
-		end
-	end
 end
 
 function GM:HUDDrawTargetID()

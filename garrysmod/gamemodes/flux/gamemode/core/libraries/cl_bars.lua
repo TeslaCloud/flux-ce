@@ -4,6 +4,10 @@
 	the framework is publicly released.
 --]]
 
+if (!font) then
+	util.Include("cl_font.lua")
+end
+
 library.New("bars", fl)
 
 local stored = fl.bars.stored or {}
@@ -15,8 +19,8 @@ fl.bars.sorted = sorted
 -- Some fail-safety variables.
 fl.bars.defaultX = 8
 fl.bars.defaultY = 8
-fl.bars.defaultW = ScrW() / 4
-fl.bars.defaultH = 18
+fl.bars.defaultW = font.Scale(256)
+fl.bars.defaultH = 12
 fl.bars.defaultSpacing = 6
 
 function fl.bars:Register(uniqueID, data, force)

@@ -48,15 +48,3 @@ netstream.Hook("RefreshInventory", function()
 		fl.tabMenu.activePanel:Rebuild()
 	end
 end)
-
-netstream.Hook("PlayerEnteredArea", function(areaIdx, idx, pos, curTime)
-	local area = areas.GetAll()[areaIdx]
-
-	Try("Areas", areas.GetCallback(area.type), fl.client, area, area.polys[idx], true, pos, curTime)
-end)
-
-netstream.Hook("PlayerLeftArea", function(areaIdx, idx, pos, curTime)
-	local area = areas.GetAll()[areaIdx]
-
-	Try("Areas", areas.GetCallback(area.type), fl.client, area, area.polys[idx], false, pos, curTime)
-end)

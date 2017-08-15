@@ -63,7 +63,7 @@ function THEME:OnLoaded()
 	self:SetFont("Text_Small", "flMainFont", font.Scale(18))
 	self:SetFont("Text_Smaller", "flMainFont", font.Scale(16))
 	self:SetFont("Text_Smallest", "flMainFont", font.Scale(14))
-	self:SetFont("Text_Bar", "flMainFont", font.Scale(16), {weight = 600})
+	self:SetFont("Text_Bar", "flMainFont", font.Scale(12), {weight = 600})
 	self:SetFont("Text_Tiny", "flMainFont", font.Scale(11))
 	self:SetFont("Text_3D2D", "flMainFont", 256)
 
@@ -164,6 +164,29 @@ function THEME:PaintButton(panel, w, h)
 		else
 			draw.SimpleText(title, font, 0, h / 2 - height / 2, textColor)
 		end
+	end
+end
+
+function THEME:PaintDeathScreen(curTime, scrW, scrH)
+	if (!fl.client.respawnAlpha) then fl.client.respawnAlpha = 0 end
+
+	fl.client.respawnAlpha = math.Clamp(fl.client.respawnAlpha + 1, 0, 200)
+
+	draw.RoundedBox(0, 0, 0, scrW, scrH, Color(0, 0, 0, fl.client.respawnAlpha))
+
+	local respawnTimeRemaining = fl.client:GetNetVar("RespawnTime", 0) - curTime
+
+	draw.SimpleText("YOU DIED", self:GetFont("Text_NormalLarge"), 16, 16, Color(255, 255, 255))
+	draw.SimpleText("RESPAWN IN: "..math.ceil(respawnTimeRemaining), self:GetFont("Text_NormalLarge"), 16, 16 + util.GetFontHeight(self:GetFont("Text_NormalLarge")), Color(255, 255, 255))
+
+	local barValue = 100 - 100 * (respawnTimeRemaining / config.Get("respawn_delay"))
+
+	draw.RoundedBox(0, 0, 0, scrW / 100 * barValue, 2, Color(255, 255, 255))
+
+	if (respawnTimeRemaining <= 3) then
+		fl.client.whiteAlpha = math.Clamp(255 * (1.5 - respawnTimeRemaining / 2), 0, 255)
+	else
+		fl.client.whiteAlpha = 0
 	end
 end
 

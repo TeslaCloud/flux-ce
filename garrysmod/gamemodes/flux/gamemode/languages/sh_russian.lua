@@ -236,13 +236,6 @@ lang["#Perm_Error"] = "Ошибка"
 
 lang["#Err_No_Permission"] = "У вас недостаточно прав чтобы сделать это, #1."
 
-lang["#tool.area.name"] = "Создатель Зон"
-lang["#tool.area.desc"] = "Создавайте зоны в форме многоугольников на изи."
-lang["#tool.area.0"] = "ЛКМ: Добавить точку зоны, ПКМ: Создать зону."
-lang["#tool.area.text"] = "ID зоны"
-lang["#tool.area.height"] = "Высота"
-lang["#tool.area.mode"] = "Тип"
-
 lang["#tool.static.name"] = "Сохранение/Удаление Энтити"
 lang["#tool.static.desc"] = "Сохраняет энтити между рестартами или удаляет его из сохранения."
 lang["#tool.static.0"] = "ЛКМ: Сохранить, ПКМ: Удалить."
