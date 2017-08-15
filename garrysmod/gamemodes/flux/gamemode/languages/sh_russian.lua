@@ -191,3 +191,11 @@ lang["#Hint_TABText"]			= "Нажмите кнопку показа счёта (
 lang["#Hint_InventoryText"]		= "Перетащите предмет за пределы инвентаря, чтобы его выбросить."
 lang["#Hint_CommandsText"]		= "Начните вводить команду в чат, чтобы увидеть её описание\nи документацию по использованию."
 lang["#Hint_BugsText"]			= "Нашли баг? У вас есть идея, которую мы могли бы воплотить в Flux?\nПосетите наш форум TeslaCloud.net и расскажите нам об этом!"
+
+--[[
+	PLAYER MESSAGES - Description: Language category for all (hint/info) messages sent to the player.
+	Formatting: Begin all language references with #PlayerMessage
+--]]
+
+lang["#PlayerMessage_Died"]	= "YOU PARISHED."
+lang["#PlayerMessage_Respawn"]	= "RESPAWNING:"

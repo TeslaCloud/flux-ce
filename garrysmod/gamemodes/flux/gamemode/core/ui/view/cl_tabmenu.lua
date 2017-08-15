@@ -19,12 +19,13 @@ function PANEL:Init()
 
 	self.closeButton = vgui.Create("flButton", self)
 	self.closeButton:SetFont(theme.GetFont("Menu_Large"))
-	self.closeButton:SetText("CLOSE")
-	self.closeButton:SetPos(curX + 16, curY)
+	self.closeButton:SetText("#TabMenu_CloseMenu")
+	self.closeButton:SetPos(curX, curY)
 	self.closeButton:SetSize(164, 38)
 	self.closeButton:SetDrawBackground(false)
 	self.closeButton:SetTextAutoposition(false)
 	self.closeButton.DoClick = function(btn)
+		surface.PlaySound("garrysmod/ui_click.wav")
 		self:SetVisible(false)
 		self:Remove()
 	end
@@ -50,6 +51,9 @@ function PANEL:Init()
 			end
 
 			if (v.panel) then
+
+				surface.PlaySound("garrysmod/ui_hover.wav")
+
 				if (IsValid(self.activePanel)) then
 					self.activePanel:SafeRemove()
 

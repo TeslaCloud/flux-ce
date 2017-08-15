@@ -119,7 +119,7 @@ lang["#tool.static.0"]			= "Left Click: Add, Right Click: Remove."
 	Misc. Things added by plugins
 --]]
 
-lang["#PressJumpToGetup"]		= "Press the 'jump' key to get up..."
+lang["#PressJumpToGetup"]		= "Press the 'jump' key to get up..." -- This has to be moved to it's own plugin language folder
 
 lang["#Hint_Forums"]			= "Forums"
 lang["#Hint_Hints"]				= "Hints"
@@ -133,3 +133,11 @@ lang["#Hint_TABText"]			= "Press 'Show Scoreboard' key (default: TAB) to open Fl
 lang["#Hint_InventoryText"]		= "Drag'n'Drop an item outside of inventory screen to drop it."
 lang["#Hint_CommandsText"]		= "Start typing a command in chat to see a list of all available commands\nand their syntax help."
 lang["#Hint_BugsText"]			= "Encountered a bug? Have an idea that we should totally add to Flux?\nVisit our forums at TeslaCloud.net and tell us about it!"
+
+--[[
+	PLAYER MESSAGES - Description: Language category for all (hint/info) messages sent to the player.
+	Formatting: Begin all language references with #PlayerMessage
+--]]
+
+lang["#PlayerMessage_Died"]	= "YOU PARISHED."
+lang["#PlayerMessage_Respawn"]	= "RESPAWNING:"

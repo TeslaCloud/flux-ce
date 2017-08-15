@@ -34,6 +34,7 @@ function THEME:OnLoaded()
 	local outlineColor 		= self:SetColor("Outline", Color(65, 65, 65))
 	local backgroundColor 	= self:SetColor("Background", Color(20, 20, 20))
 	local textColor 		= self:SetColor("Text", Color(255, 255, 255))
+
 	self:SetColor("AccentDark", accentColor:Darken(20))
 	self:SetColor("AccentLight", accentColor:Lighten(20))
 	self:SetColor("MainDark", mainColor:Darken(15))
@@ -176,8 +177,8 @@ function THEME:PaintDeathScreen(curTime, scrW, scrH)
 
 	local respawnTimeRemaining = fl.client:GetNetVar("RespawnTime", 0) - curTime
 
-	draw.SimpleText("YOU DIED", self:GetFont("Text_NormalLarge"), 16, 16, Color(255, 255, 255))
-	draw.SimpleText("RESPAWN IN: "..math.ceil(respawnTimeRemaining), self:GetFont("Text_NormalLarge"), 16, 16 + util.GetFontHeight(self:GetFont("Text_NormalLarge")), Color(255, 255, 255))
+	draw.SimpleText("#PlayerMessage_Died", self:GetFont("Text_NormalLarge"), 16, 16, Color(255, 255, 255))
+	draw.SimpleText("#PlayerMessage_Respawn "..math.ceil(respawnTimeRemaining), self:GetFont("Text_NormalLarge"), 16, 16 + util.GetFontHeight(self:GetFont("Text_NormalLarge")), Color(255, 255, 255))
 
 	local barValue = 100 - 100 * (respawnTimeRemaining / config.Get("respawn_delay"))
 
