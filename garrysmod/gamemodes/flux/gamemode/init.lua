@@ -26,7 +26,7 @@ else
 end
 
 if (!SafeRequire("fileio")) then
-	ErrorNoHalt("[Flux] fileio module has failed to load!\nPlease make sure that you have gmsv_fileio_"..((system.IsWindows() and "win32") or "linux")..".dll in garrysmod/lua/bin folder!\nAborting startup...\n")
+	ErrorNoHalt("[Flux] The fileio module has failed to load!\nPlease make sure that you have gmsv_fileio_"..((system.IsWindows() and "win32") or "linux")..".dll in garrysmod/lua/bin folder!\nAborting startup...\n")
 
 	return
 end

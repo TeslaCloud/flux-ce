@@ -42,7 +42,7 @@ if (SERVER) then
 		player:SetNetVar("flAutoWalk", !oldValue)
 	end)
 else
-	fl.hint:Add("Autowalk", "Press 'B' to toggle auto walking.")
+--	fl.hint:Add("Autowalk", "Press 'B' to toggle auto walking.")
 
 	-- We do this so there's no need to do an unnecessary check for if client or server in the hook itself.
 	function PLUGIN:SetupMove(player, moveData, cmdData)

@@ -169,20 +169,21 @@ function THEME:PaintButton(panel, w, h)
 end
 
 function THEME:PaintDeathScreen(curTime, scrW, scrH)
+	local respawnTimeRemaining = fl.client:GetNetVar("RespawnTime", 0) - curTime
+	local barValue = 100 - 100 * (respawnTimeRemaining / config.Get("respawn_delay"))
+	local font = self:GetFont("Text_NormalLarge")
+	local color_white = Color(255, 255, 255)
+
 	if (!fl.client.respawnAlpha) then fl.client.respawnAlpha = 0 end
 
 	fl.client.respawnAlpha = math.Clamp(fl.client.respawnAlpha + 1, 0, 200)
 
 	draw.RoundedBox(0, 0, 0, scrW, scrH, Color(0, 0, 0, fl.client.respawnAlpha))
 
-	local respawnTimeRemaining = fl.client:GetNetVar("RespawnTime", 0) - curTime
+	draw.SimpleText("#PlayerMessage_Died", font, 16, 16, color_white)
+	draw.SimpleText(L("PlayerMessage_Respawn", math.ceil(respawnTimeRemaining)), font, 16, 16 + util.GetFontHeight(font), color_white)
 
-	draw.SimpleText("#PlayerMessage_Died", self:GetFont("Text_NormalLarge"), 16, 16, Color(255, 255, 255))
-	draw.SimpleText(L("PlayerMessage_Respawn", math.ceil(respawnTimeRemaining)), self:GetFont("Text_NormalLarge"), 16, 16 + util.GetFontHeight(self:GetFont("Text_NormalLarge")), Color(255, 255, 255))
-
-	local barValue = 100 - 100 * (respawnTimeRemaining / config.Get("respawn_delay"))
-
-	draw.RoundedBox(0, 0, 0, scrW / 100 * barValue, 2, Color(255, 255, 255))
+	draw.RoundedBox(0, 0, 0, scrW / 100 * barValue, 2, color_white)
 
 	if (respawnTimeRemaining <= 3) then
 		fl.client.whiteAlpha = math.Clamp(255 * (1.5 - respawnTimeRemaining / 2), 0, 255)

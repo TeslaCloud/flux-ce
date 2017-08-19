@@ -11,6 +11,7 @@ local top = 1
 local lastReposition = CurTime()
 
 function fl.notification:Add(text, lifetime, textColor, backColor)
+	local scrW = ScrW()
 	lifetime = lifetime or 8
 	text = fl.lang:TranslateText(text) or ""
 
@@ -27,8 +28,8 @@ function fl.notification:Add(text, lifetime, textColor, backColor)
 	panel:SetBackgroundColor(backColor)
 
 	local w, h = panel:GetSize()
-	panel:SetPos(ScrW() - w - 8, -h)
-	panel:MoveTo(ScrW() - w - 8, 8, 0.26)
+	panel:SetPos(scrW - w - 8, -h)
+	panel:MoveTo(scrW - w - 8, 8, 0.26)
 
 	display[top].panel = panel
 	display[top].width = w

@@ -4,6 +4,6 @@
 	the framework is publicly released.
 --]]
 
-mvc.Handler("ChatboxProcessor", function()
+function flChatbox:PlayerSay(player, text, bTeamChat)
 
-end)
+end

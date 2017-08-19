@@ -67,16 +67,6 @@ end
 function GM:DrawDeathNotice() end
 function GM:AddDeathNotice() end
 
-function GM:OneMinute()
-	local curTime = CurTime()
-
-	if (curTime >= (fl.client.nextHint or 0)) then
-		fl.hint:DisplayRandom()
-
-		fl.client.nextHint = curTime + 300
-	end
-end
-
 -- Called when default GWEN skin is required.
 function GM:ForceDermaSkin()
 	return "Flux"

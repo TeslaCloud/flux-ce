@@ -32,15 +32,16 @@ end
 
 function PANEL:SetMessage(msgInfo)
 	self.messageData = msgInfo
-end
 
---[[
-	Example msgdata
-	{
-		{ Color(255, 255, 255), "1:55PM", Color(255, 0, 0), CHAT_IMAGE, {16, 16, "icons/123.png"}, "Player Name:", Color(255, 255, 255), "Player Text" },
-		{ Color(255, 255, 255), "Separate table for each line" }
-	}
---]]
+	local totalHeight = 0
+	local margin = config.Get("chatbox_message_margin")
+
+	for k, v in ipairs(msgInfo) do
+		totalHeight = totalHeight + v.height + margin
+	end
+
+	self:SetSize(self:GetWide(), totalHeight)
+end
 
 -- Those people want us gone :(
 function PANEL:Eject()
@@ -63,7 +64,7 @@ function PANEL:Paint(w, h)
 		local curY = 0
 
 		for _, line in ipairs(self.messageData) do
-			for _, v in ipairs(line) do
+			for _, v in ipairs(line.data) do
 				if (IsColor(v)) then
 					curColor = v
 				elseif (isnumber(v)) then

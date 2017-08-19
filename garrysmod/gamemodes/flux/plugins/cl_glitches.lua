@@ -1,3 +1,13 @@
+--[[
+	Flux © 2016-2017 TeslaCloud Studios
+	Do not share or re-distribute before
+	the framework is publicly released.
+--]]
+
+PLUGIN:SetName("Glitches")
+PLUGIN:SetAuthor("Mr. Meow")
+PLUGIN:SetDescription("Adds the ability to create pixelized glitch effects on the screen.")
+
 do
 	local nextGlitch = 0
 	local glitches = {}

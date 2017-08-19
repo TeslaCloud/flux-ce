@@ -9,36 +9,51 @@ CATEGORY:AddSlider("chatbox_message_margin", "Chat Message Margin", "How much ve
 CATEGORY:AddSlider("chatbox_message_fade_delay", "Chat Message Fade Delay", "How long do the messages stay on the screen before fading away?", {min = 1, max = 128, default = 12})
 CATEGORY:AddSlider("chatbox_max_messages", "Max Chat Messages", "How much messages should the chat history hold?", {min = 1, max = 256, default = 100})
 
+chatbox.oldAddText = chatbox.oldAddText or chat.AddText
+
+function chat.AddText(...)
+	netstream.Start("Chatbox::AddText", ...)
+end
+
 function chatbox.Compile(messageTable)
+	local text = messageTable.text
+
+	if (!isstring(text)) then return end
+
 	local compiled = {}
-	local skip = 0
-	local curX, curY, curSize, curColor = 0, 0, 0, Color(255, 255, 255)
+	
+	if (messageData.shouldTranslate) then
+		text = fl.lang:TranslateText(text)
 
-	for k, v in ipairs(messageTable) do
-		if (skip > 0) then
-			skip = skip - 1
+		messageTable.text = text
+	end
 
-			continue
-		end
+	local font = font.GetSize(theme.GetFont("Chatbox_Normal"), messageData.size or 16)
+	local wrapped = util.WrapText(text, font, 100)
 
-		local parsed, skipAdd = chatbox.ParseBuffer(v, k, messageTable)
+	for k, v in ipairs(wrapped) do
+		local w, h = util.GetTextSize(v, font)
 
-		if (isnumber(skipAdd)) then
-			skip = skip + skipAdd
-		end
-
-		if (istable(parsed)) then
-			table.insert(compiled, unpack(parsed))
-		end
+		table.insert(compiled, {
+			width = w,
+			height = h,
+			data = {}
+		})
 	end
 
 	return compiled
 end
 
 function chatbox.Show()
+	if (!IsValid(chatbox.panel)) then
+		chatbox.panel = vgui.Create("flChatPanel")
+	end
 
+	chatbox.panel:SetOpen(true)
 end
 
 function chatbox.Hide()
-
+	if (IsValid(chatbox.panel)) then
+		chatbox.panel:SetOpen(false)
+	end
 end

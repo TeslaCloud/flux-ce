@@ -4,6 +4,6 @@
 	the framework is publicly released.
 --]]
 
-mvc.Handler("ChatboxProcessor", function()
+local lang = fl.lang:GetTable("ru")
 
-end)
+lang["#PressJumpToGetup"]		= "Нажмите 'прыжок', чтобы встать..."

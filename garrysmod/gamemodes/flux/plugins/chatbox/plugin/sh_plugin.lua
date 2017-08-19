@@ -18,5 +18,6 @@ CHAT_BOLD = 5
 CHAT_ERROR = 999
 
 util.Include("cl_plugin.lua")
-util.Include("cl_hooks.lua")
 util.Include("sv_plugin.lua")
+util.Include("cl_hooks.lua")
+util.Include("sv_hooks.lua")

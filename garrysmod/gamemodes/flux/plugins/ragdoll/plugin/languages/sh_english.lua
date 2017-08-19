@@ -4,6 +4,6 @@
 	the framework is publicly released.
 --]]
 
-mvc.Handler("ChatboxProcessor", function()
+local lang = fl.lang:GetTable("en")
 
-end)
+lang["#PressJumpToGetup"]		= "Press the 'jump' key to get up..."

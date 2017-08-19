@@ -32,7 +32,7 @@ function fl.command:Create(id, data)
 		end
 	end
 
-	fl.admin:PermissionFromCommand(data)
+	hook.Run("OnCommandCreated", id, data)
 end
 
 function fl.command:FindByID(id)
@@ -191,7 +191,7 @@ if (SERVER) then
 
 	function fl.command:PlayerFromString(player, str)
 		local start = str:utf8sub(1, 1)
-		local parser = macros[start]
+		local parser = macros[start] or hook.Run("TargetFromString", player, str, start)
 
 		if (isfunction(parser)) then
 			return parser(player, str)
@@ -285,7 +285,7 @@ if (SERVER) then
 
 						if (istable(targets) and #targets > 0) then
 							for k, v in ipairs(targets) do
-								if (cmdTable.immunity and IsValid(player) and !fl.admin:CheckImmunity(player, v, cmdTable.canBeEqual)) then
+								if (cmdTable.immunity and IsValid(player) and hook.Run("CommandCheckImmunity", player, v, cmdTable.canBeEqual) == false) then
 									fl.player:Notify(player, L("Commands_HigherImmunity", v:Name()))
 
 									return

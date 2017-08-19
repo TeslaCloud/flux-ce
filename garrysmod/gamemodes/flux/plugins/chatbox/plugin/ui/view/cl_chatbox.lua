@@ -7,27 +7,52 @@
 local PANEL = {}
 PANEL.history = {}
 PANEL.lastPos = 0
+PANEL.isOpen = false
 
 function PANEL:Init()
 	local w, h = self:GetWide(), self:GetTall()
 
 	self.scrollPanel = vgui.Create("DScrollPanel", self)
+
+	self.scrollPanel.Paint = function() return true end
+	self.scrollPanel.VBar.Paint = function() return true end
+	self.scrollPanel.VBar.btnUp.Paint = function() return true end
+	self.scrollPanel.VBar.btnDown.Paint = function() return true end
+	self.scrollPanel.VBar.btnGrip.Paint = function() return true end
+
 	self.scrollPanel:SetPos(0, 0)
 	self.scrollPanel:SetSize(w, h)
-	self.scrollPanel.Paint = function() return true end
+	self.scrollPanel:PerformLayout()
+end
 
-
+function PANEL:SetOpen(bIsOpen)
+	self.isOpen = bIsOpen
 end
 
 function PANEL:CreateMessage(messageData)
+	local parsed = chatbox.Compile(messageData)
+
+	if (!parsed) then return end
+
 	local panel = vgui.Create("flChatMessage", self)
 
-
+	panel:SetSize(self:GetWide(), 32) -- Width is placeholder and is later set by compiled message table.
+	panel:SetMessage(parsed)
 
 	return panel
 end
 
-function PANEL:AddMessage(panel)
+function PANEL:AddMessage(messageData)
+	if (messageData and plugin.Call("ChatboxShouldAddMessage", messageData) != false) then
+		local panel = self:CreateMessage(messageData)
+
+		if (IsValid(panel)) then
+			self:AddPanel(panel)
+		end
+	end
+end
+
+function PANEL:AddPanel(panel)
 	if (#self.history >= config.Get("chatbox_max_messages")) then
 		self.history[1]:Eject()
 	end
@@ -37,7 +62,7 @@ function PANEL:AddMessage(panel)
 	panel:SetPos(0, self.lastPos)
 	panel.messageIndex = idx
 
-	self:AddItem(panel)
+	self.scrollPanel:AddItem(panel)
 
 	self.lastPos = self.lastPos + config.Get("chatbox_message_margin") + panel:GetTall()
 end

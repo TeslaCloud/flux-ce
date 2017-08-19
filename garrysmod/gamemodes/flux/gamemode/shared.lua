@@ -11,9 +11,9 @@ GM.Website 		= "http://teslacloud.net/"
 GM.Email 		= "support@teslacloud.net"
 
 -- Define Flux-Specific fields.
-GM.Version 		= "0.2.5-indev"
-GM.Date			= "7/17/2017"
-GM.Build 		= "1482"
+GM.Version 		= "0.2.6-indev"
+GM.Date			= "8/16/2017"
+GM.Build 		= "1511"
 GM.Description 	= "A free roleplay gamemode framework."
 
 -- It would be very nice of you to leave below values as they are if you're using official schemas.

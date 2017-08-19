@@ -1103,4 +1103,61 @@ if (CLIENT) then
 
 		return placeholder
 	end
+
+	function util.WrapText(text, font, width, initWidth)
+		if (!text or !font or !width) then return end
+
+		local output = {}
+		local spaceWidth = util.GetTextSize(" ", font)
+		local dashWidth = util.GetTextSize("-", font)
+		local exploded = string.Explode(" ", text)
+		local curWidth = initWidth or 0
+		local curWord = ""
+
+		for k, v in ipairs(exploded) do
+			local w, h = util.GetTextSize(v, font)
+			local remain = width - curWidth
+
+			-- The width of the word is LESS OR EQUAL than what we have remaining.
+			if (w <= remain) then
+				curWord = curWord..v.." "
+				curWidth = curWidth + w + spaceWidth
+			else -- The width of the word is MORE than what we have remaining.
+				if (w > width) then -- The width is more than total width we have available.
+					for _, v2 in ipairs(string.Explode("", v)) do
+						local charWide, _ = util.GetTextSize(v2, font)
+
+						remain = width - curWidth
+
+						if ((charWide + dashWidth + spaceWidth) < remain) then
+							curWord = curWord..v2
+							curWidth = curWidth + charWide
+						else
+							curWord = curWord..v2.."-"
+
+							table.insert(output, curWord)
+
+							curWord = ""
+							curWidth = 0
+						end
+					end
+				else -- The width is LESS than the total width
+					table.insert(output, curWord)
+
+					curWord = v.." "
+
+					local wide = util.GetTextSize(curWord, font)
+
+					curWidth = wide
+				end
+			end
+		end
+
+		-- If we have some characters remaining, drop them into the lines table.
+		if (curWord != "") then
+			table.insert(output, curWord)
+		end
+
+		return output
+	end
 end

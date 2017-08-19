@@ -35,13 +35,21 @@ function flChatbox:CreateFonts()
 	})
 end
 
+function flChatbox:OnThemeLoaded(activeTheme)
+	activeTheme:SetFont("Chatbox_Normal", "flChatFont", font.Scale(18))
+	activeTheme:SetFont("Chatbox_Bold", "flChatFontBold", font.Scale(18))
+	activeTheme:SetFont("Chatbox_Italic", "flChatFontItalic", font.Scale(18))
+	activeTheme:SetFont("Chatbox_BoldItalic", "flChatFontBoldItalic", font.Scale(18))
+	activeTheme:SetFont("Chatbox_Syntax", "flChatSyntax", font.Scale(22))
+end
+
 function flChatbox:OnResolutionChanged(newW, newH)
 	chatbox.width = newW * 0.3
 	chatbox.height = newH * 0.3
 	chatbox.x = 4
 	chatbox.y = newH - chatbox.height - 36
 
-	chatbox.UpdateDisplay()
+	--chatbox.UpdateDisplay()
 
 	if (chatbox.panel) then
 		chatbox.panel:Remove()
@@ -50,10 +58,14 @@ function flChatbox:OnResolutionChanged(newW, newH)
 end
 
 function flChatbox:PlayerBindPress(player, bind, bPress)
-	if ((string.find(bind, "messagemode") or string.find(bind, "messagemode2")) and bPress) then
-		if (fl.client:HasInitialized()) then
-			chatbox.Show()
+	if (fl.client:HasInitialized() and (string.find(bind, "messagemode") or string.find(bind, "messagemode2")) and bPress) then
+		if (string.find(bind, "messagemode2")) then
+			fl.client.isTypingTeamChat = true
+		else
+			fl.client.isTypingTeamChat = false
 		end
+
+		chatbox.Show()
 
 		return true
 	end

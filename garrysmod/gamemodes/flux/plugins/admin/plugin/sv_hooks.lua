@@ -90,3 +90,11 @@ function flAdmin:PlayerSay(player, text, bTeamChat)
 		return ""
 	end
 end
+
+function flAdmin:CommandCheckImmunity(player, target, canBeEqual)
+	return fl.admin:CheckImmunity(player, v, cmdTable.canBeEqual)
+end
+
+function flAdmin:OnCommandCreated(id, data)
+	fl.admin:PermissionFromCommand(data)
+end
