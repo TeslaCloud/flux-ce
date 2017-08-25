@@ -23,6 +23,8 @@ function GM:Initialize()
 
 	if (mysql_host == "sqlite" or mysql_host == "example.com" or mysql_host == "example" or mysql_host == "") then
 		fl.db.Module = "sqlite"
+	else
+		fl.db.Module = "mysqloo"
 	end
 
 	fl.db:Connect(mysql_host, mysql_username, mysql_password, mysql_database, mysql_port)
@@ -35,6 +37,7 @@ function GM:InitPostEntity()
 		toolGun.Tool[v.Mode] = v
 	end
 
+	hook.Run("LoadData")
 	plugin.Call("FLInitPostEntity")
 end
 
@@ -359,7 +362,7 @@ function GM:OneSecond()
 	end
 end
 
-function GM:FluxPreLoadPlugins()
+function GM:PreLoadPlugins()
 	fl.sharedTable.disabledPlugins = data.Load("disabled_plugins", {})
 end
 

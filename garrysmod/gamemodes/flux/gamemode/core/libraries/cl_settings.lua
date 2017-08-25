@@ -34,7 +34,7 @@ end
 
 	returns [table] The stored table containing all of the created setting tables.
 --]]
-function fl.settings:GetStored()
+function fl.settings:GetAll()
 	return stored
 end
 

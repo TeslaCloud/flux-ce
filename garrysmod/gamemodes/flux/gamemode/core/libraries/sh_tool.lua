@@ -17,6 +17,10 @@ function fl.tool:New(id)
 	return CTool()
 end
 
+function fl.tool:Get(uniqueID)
+	return stored[uniqueID]
+end
+
 function fl.tool:Register(obj)
 	if (!obj) then return end
 
@@ -31,7 +35,11 @@ pipeline.Register("tool", function(uniqueID, fileName, pipe)
 	TOOL.Mode = uniqueID
 	TOOL.uniqueID = uniqueID
 
+	hook.Run("PreIncludeTool", TOOL)
+
 	util.Include(fileName)
+
+	hook.Run("ToolPreCreateConvars", TOOL)
 
 	TOOL:CreateConVars()
 

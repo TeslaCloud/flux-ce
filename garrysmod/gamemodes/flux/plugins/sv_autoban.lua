@@ -52,10 +52,12 @@ local blacklist = {
 
 local badKeywords = {
 	"[tnf]", "[ tnf ]", "[ tnf]", "[tnf ]",
-	"[tnf", "(tnf", "(tnf)", "tnf)", "the new future", "( tnf", "tnf )"
+	"[tnf", "(tnf", "(tnf)", "tnf)", "the new future", "( tnf", "tnf )",
+	"kurozael", "conna wiles", "connawiles", "kuropixel", "cloudsixteen",
+	"cloud sixteen"
 }
 
-function PLUGIN:FluxPluginsLoaded()
+function PLUGIN:OnPluginsLoaded()
 	local contents = fileio.Read("data/flux_blacklist.txt")
 
 	if (isstring(contents)) then

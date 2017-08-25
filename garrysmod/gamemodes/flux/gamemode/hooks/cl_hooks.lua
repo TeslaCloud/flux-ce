@@ -26,6 +26,7 @@ function GM:InitPostEntity()
  	end
 
  	hook.Run("SynchronizeTools")
+ 	hook.Run("LoadData")
 
  	plugin.Call("FLInitPostEntity")
 end

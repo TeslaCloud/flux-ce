@@ -22,6 +22,10 @@ function areas.GetAll()
 	return stored
 end
 
+function areas.SetStored(storedTable)
+	stored = (istable(storedTable) and storedTable) or {}
+end
+
 function areas.GetCallbacks()
 	return callbacks
 end
@@ -39,7 +43,7 @@ function areas.GetByType(type)
 
 	for k, v in pairs(stored) do
 		if (v.type == type) then
-			toReturn[k] = v
+			table.insert(toReturn, v)
 		end
 	end
 
@@ -50,16 +54,21 @@ function areas.Create(uniqueID, height, data)
 	data = data or {}
 
 	local area = {}
-	area.uniqueID = uniqueID
-	area.minH = 0
-	area.maxH = 0
-	area.height = height or 0
-	area.verts = {}
-	area.polys = {}
-	area.type = data.type or "area"
 
-	if (data) then
-		table.Merge(area, data)
+	if (!stored[uniqueID]) then
+		area.uniqueID = uniqueID
+		area.minH = 0
+		area.maxH = 0
+		area.height = height or 0
+		area.verts = {}
+		area.polys = {}
+		area.type = data.type or "area"
+
+		if (data) then
+			table.Merge(area, data)
+		end
+	else
+		area = stored[uniqueID]
 	end
 
 	function area:AddVertex(vect)
@@ -91,6 +100,8 @@ function areas.Register(id, data)
 	if (!id or !data) then return end
 	if (#data.polys < 1) then return end
 
+	data = util.RemoveFunctions(data)
+
 	stored[id] = data
 
 	top = top + 1
@@ -98,11 +109,24 @@ function areas.Register(id, data)
 	return stored[id]
 end
 
-function areas.RegisterType(uniqueID, name, description, defaultCallback)
+function areas.Remove(uniqueID)
+	stored[uniqueID] = nil
+end
+
+function areas.GetColor(typeID)
+	local typeTable = types[typeID]
+
+	if (istable(typeTable)) then
+		return typeTable.color
+	end
+end
+
+function areas.RegisterType(uniqueID, name, description, color, defaultCallback)
 	types[uniqueID] = {
 		name = name,
 		description = description,
-		callback = defaultCallback
+		callback = defaultCallback,
+		color = color or Color(255, 0, 255)
 	}
 end
 

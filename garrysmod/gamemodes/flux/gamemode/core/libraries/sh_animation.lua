@@ -85,7 +85,7 @@ stored.player = {
 	}
 }
 
-function fl.anim:GetStored()
+function fl.anim:GetAll()
 	return stored
 end
 

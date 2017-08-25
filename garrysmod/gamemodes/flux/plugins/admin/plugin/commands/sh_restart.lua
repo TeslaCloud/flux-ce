@@ -18,6 +18,8 @@ function COMMAND:OnRun(player, delay)
 	fl.player:NotifyAll(L("MapRestartMessage", (IsValid(player) and player:Name()) or "Console", delay))
 
 	timer.Simple(delay, function()
+		hook.Run("FLSaveData")
+
 		RunConsoleCommand("changelevel", game.GetMap())
 	end)
 end

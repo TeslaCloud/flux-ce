@@ -21,10 +21,10 @@ GM.Description 	= "A free roleplay gamemode framework."
 GM.Prefix		= "FL: " -- Prefix to display in server browser (*Prefix*: *Schema Name*)
 GM.NameOverride	= false -- Set to any string to override schema's browser name. This overrides the prefix too.
 
-fl.Devmode		= true -- If set to true will print some developer info. Moderate console spam.
+fl.Devmode		= true -- Always set this to true when developing anything for FL. This enables the safe mode on hooks.
 
 -- Fix for the name conflicts.
-_player, _team, _file, _table, _data, _sound = player, team, file, table, data, sound
+_player, _team, _file, _table, _sound = player, team, file, table, sound
 
 -- do - end blocks let us manage the lifespan of the
 -- local variables, because when they go out of scope
@@ -37,13 +37,14 @@ do
 	if (engine.ActiveGamemode() != "flux") then
 		fl.schema = engine.ActiveGamemode()
 	else
-		local SchemaConVar = GetConVar("schema")
+		ErrorNoHalt("==========================\n")
+		ErrorNoHalt("==========================\n")
+		ErrorNoHalt("You have set your +gamemode to 'flux'!\n")
+		ErrorNoHalt("Please set it to your schema's name instead!\n")
+		ErrorNoHalt("==========================\n")
+		ErrorNoHalt("==========================\n")
 
-		if (SchemaConVar) then
-			fl.schema = fl.schema or SchemaConVar:GetString()
-		else
-			fl.schema = fl.schema or "reborn"
-		end
+		return
 	end
 
 	-- Shared table contains the info that will be networked
@@ -57,11 +58,7 @@ end
 
 -- A function to get schema's name.
 function fl.GetSchemaName()
-	if (Schema) then
-		return Schema:GetName()
-	else
-		return "Unknown"
-	end
+	return (Schema and Schema:GetName()) or "Unknown"
 end
 
 -- Called when gamemode's server browser name needs to be retrieved.
@@ -116,12 +113,10 @@ end
 pipeline.IncludeDirectory("tool", "flux/gamemode/core/tools")
 util.IncludeDirectory("hooks", true)
 
-hook.Run("FluxPreLoadPlugins")
+hook.Run("PreLoadPlugins")
 
 fl.IncludePlugins("flux/plugins")
 
-hook.Run("FluxPluginsLoaded")
+hook.Run("OnPluginsLoaded")
 
 fl.IncludeSchema()
-
-hook.Run("FluxSchemaLoaded")

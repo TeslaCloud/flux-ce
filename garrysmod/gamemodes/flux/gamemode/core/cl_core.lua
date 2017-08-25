@@ -131,8 +131,6 @@ do
 	local cache = surface.CircleInfoCache or {}
 	surface.CircleInfoCache = cache
 
-	local blurTexture = Material("pp/blurscreen")
-
 	function surface.DrawCircle(x, y, radius, passes)
 		if (!x or !y or !radius) then
 			error("surface.DrawCircle - Too few arguments to function call (3 expected)")
@@ -213,56 +211,14 @@ do
 		render.SetStencilEnable(false)
 		render.ClearStencil()
 	end
+end
 
-	-- Requires to be executed within a panel.
-	function draw.SimpleBlurBox(x, y, w, h, color, blurAmt)
-		blurAmt = blurAmt or 4
+function draw.TexturedRect(x, y, w, h, material, color)
+	if (!material) then return end
 
-		draw.RoundedBox(0, 0, 0, w, h, color)
+	color = (IsColor(color) and color) or Color(255, 255, 255)
 
-		surface.SetMaterial(blurTexture)
-		surface.SetDrawColor(255, 255, 255, 255)
-
-		for i = -0.2, 1, 0.2 do
-			blurTexture:SetFloat("$blur", i * blurAmt)
-			blurTexture:Recompute()
-
-			render.UpdateScreenEffectTexture()
-
-			render.SetScissorRect(x, y, x + w, y + h, true)
-				surface.DrawTexturedRect(-x, -y, ScrW(), ScrH())
-			render.SetScissorRect(0, 0, 0, 0, false)
-		end
-	end
-
-	-- More advanced way to do blur boxes.
-	function draw.BlurBox(px, py, x, y, w, h, color, blurAmt)
-		blurAmt = 4
-
-		draw.RoundedBox(0, x, y, w, h, color)
-
-		surface.SetMaterial(blurTexture)
-		surface.SetDrawColor(255, 255, 255, 255)
-
-		for i = -0.2, 1, 0.2 do
-			blurTexture:SetFloat("$blur", i * blurAmt)
-			blurTexture:Recompute()
-
-			render.UpdateScreenEffectTexture()
-
-			render.SetScissorRect(px, py, w, h, true)
-				surface.DrawTexturedRect(-px, -py, ScrW(), ScrH())
-			render.SetScissorRect(0, 0, 0, 0, false)
-		end
-	end
-
-	function draw.TexturedRect(x, y, w, h, material, color)
-		if (!material) then return end
-
-		color = (IsColor(color) and color) or Color(255, 255, 255)
-
-		surface.SetDrawColor(color.r, color.g, color.b, color.a)
-		surface.SetMaterial(material)
-		surface.DrawTexturedRect(x, y, w, h)
-	end
+	surface.SetDrawColor(color.r, color.g, color.b, color.a)
+	surface.SetMaterial(material)
+	surface.DrawTexturedRect(x, y, w, h)
 end

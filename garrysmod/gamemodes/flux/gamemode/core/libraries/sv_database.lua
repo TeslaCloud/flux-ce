@@ -439,6 +439,8 @@ end
 
 -- A function to connect to the MySQL database.
 function fl.db:Connect(host, username, password, database, port, socket, flags, id)
+	id = id or 1
+
 	if (!port) then
 		port = 3306
 	end

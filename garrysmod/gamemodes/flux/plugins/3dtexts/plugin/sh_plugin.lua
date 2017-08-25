@@ -25,7 +25,7 @@ if (SERVER) then
 		netstream.Start(player, "flLoad3DTexts", self.stored)
 	end
 
-	function fl3DText:InitPostEntity()
+	function fl3DText:LoadData()
 		self:Load()
 	end
 

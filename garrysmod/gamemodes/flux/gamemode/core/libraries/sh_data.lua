@@ -111,3 +111,5 @@ end
 function data.DeletePlugin(key)
 	return data.DeleteSchema("plugins/"..key)
 end
+
+_data = data

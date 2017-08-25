@@ -10,7 +10,7 @@ theme.activeTheme = theme.activeTheme or nil
 local stored = theme.stored or {}
 theme.stored = stored
 
-function theme.GetStored()
+function theme.GetAll()
 	return stored
 end
 

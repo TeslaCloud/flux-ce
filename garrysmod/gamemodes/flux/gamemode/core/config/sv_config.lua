@@ -18,7 +18,7 @@ config.Set("player_data_save_interval", 30)
 
 config.Set("respawn_delay", 30)
 
-config.Set("mysql_module", "sqlite", true)
+config.Set("mysql_module", "mysqloo", true)
 config.Set("mysql_host", "127.0.0.1", true)
 config.Set("mysql_username", "root", true)
 config.Set("mysql_password", "", true)

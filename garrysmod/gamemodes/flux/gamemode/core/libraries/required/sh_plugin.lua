@@ -33,7 +33,7 @@ local defaultExtras = {
 
 local extras = table.Copy(defaultExtras)
 
-function plugin.GetStored()
+function plugin.GetAll()
 	return stored
 end
 
@@ -412,6 +412,8 @@ function plugin.IncludeSchema()
 	end
 
 	Schema:Register()
+
+	hook.Run("OnSchemaLoaded")
 end
 
 -- Please specify full file name if requiring a single-file plugin.
@@ -580,25 +582,42 @@ do
 	local oldHookCall = plugin.OldHookCall or hook.Call
 	plugin.OldHookCall = oldHookCall
 
-	function hook.Call(name, gm, ...)
-		if (hooksCache[name]) then
-			for k, v in ipairs(hooksCache[name]) do
-				local success, a, b, c, d, e, f = pcall(v[1], v[2], ...)
+	-- If we're running the developer's mode, we should be using pcall'ed hook.Call rather than unsafe one.
+	if (fl.Devmode) then
+		function hook.Call(name, gm, ...)
+			if (hooksCache[name]) then
+				for k, v in ipairs(hooksCache[name]) do
+					local success, a, b, c, d, e, f = pcall(v[1], v[2], ...)
 
-				if (!success) then
-					ErrorNoHalt("[Flux:"..(v.id or v[2]:GetName()).."] The "..name.." hook has failed to run!\n")
-					ErrorNoHalt(tostring(a), "\n")
+					if (!success) then
+						ErrorNoHalt("[Flux:"..(v.id or v[2]:GetName()).."] The "..name.." hook has failed to run!\n")
+						ErrorNoHalt(tostring(a), "\n")
 
-					if (name != "OnHookError") then
-						hook.Call("OnHookError", gm, name, v)
+						if (name != "OnHookError") then
+							hook.Call("OnHookError", gm, name, v)
+						end
+					elseif (a != nil) then
+						return a, b, c, d, e, f
 					end
-				elseif (a != nil) then
-					return a, b, c, d, e, f
 				end
 			end
-		end
 
-		return oldHookCall(name, gm, ...)
+			return oldHookCall(name, gm, ...)
+		end
+	else
+		function hook.Call(name, gm, ...)
+			if (hooksCache[name]) then
+				for k, v in ipairs(hooksCache[name]) do
+					local a, b, c, d, e, f = v[1](v[2], ...)
+
+					if (a != nil) then
+						return a, b, c, d, e, f
+					end
+				end
+			end
+
+			return oldHookCall(name, gm, ...)
+		end
 	end
 
 	-- This function DOES NOT call GM: (gamemode) hooks!

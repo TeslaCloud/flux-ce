@@ -16,9 +16,9 @@ class "CTool"
 function CTool:MakeGhostEntity(model, pos, angle)
 	util.PrecacheModel(model)
 
-	if (SERVER && !game.SinglePlayer()) then return end
-	if (CLIENT && game.SinglePlayer()) then return end
-	if (self.GhostEntityLastDelete && self.GhostEntityLastDelete + 0.1 > CurTime()) then return end
+	if (SERVER and !game.SinglePlayer()) then return end
+	if (CLIENT and game.SinglePlayer()) then return end
+	if (self.GhostEntityLastDelete and self.GhostEntityLastDelete + 0.1 > CurTime()) then return end
 
 	-- Release the old ghost entity
 	self:ReleaseGhostEntity()
@@ -35,6 +35,7 @@ function CTool:MakeGhostEntity(model, pos, angle)
 	-- If there's too many entities we might not spawn..
 	if (!IsValid(self.GhostEntity)) then
 		self.GhostEntity = nil
+
 		return
 	end
 
@@ -50,8 +51,8 @@ function CTool:MakeGhostEntity(model, pos, angle)
 end
 
 function CTool:StartGhostEntity(ent)
-	if (SERVER && !game.SinglePlayer()) then return end
-	if (CLIENT && game.SinglePlayer()) then return end
+	if (SERVER and !game.SinglePlayer()) then return end
+	if (CLIENT and game.SinglePlayer()) then return end
 
 	self:MakeGhostEntity(ent:GetModel(), ent:GetPos(), ent:GetAngles())
 end
@@ -68,7 +69,7 @@ function CTool:ReleaseGhostEntity()
 	if (self.GhostEntities) then
 		for k,v in pairs(self.GhostEntities) do
 			if (IsValid(v)) then v:Remove() end
-			self.GhostEntities[ k ] = nil
+			self.GhostEntities[k] = nil
 		end
 
 		self.GhostEntities = nil
@@ -78,7 +79,7 @@ function CTool:ReleaseGhostEntity()
 	-- This is unused!
 	if (self.GhostOffset) then
 		for k,v in pairs(self.GhostOffset) do
-			self.GhostOffset[ k ] = nil
+			self.GhostOffset[k] = nil
 		end
 	end
 end
@@ -228,7 +229,7 @@ end
 
 -- Returns the number of objects in the list
 function CTool:GetHelpText()
-	return "#tool." .. GetConVarString("gmod_toolmode") .. "." .. self:GetStage()
+	return "#tool."..GetConVarString("gmod_toolmode").."."..self:GetStage()
 end
 
 if (CLIENT) then
@@ -259,47 +260,43 @@ function CTool:CreateConVars()
 
 	if (CLIENT) then
 		for cvar, default in pairs(self.ClientConVar) do
-
-			CreateClientConVar(mode .. "_" .. cvar, default, true, true)
-
+			CreateClientConVar(mode.."_"..cvar, default, true, true)
 		end
 
 		return
 	end
 
-	-- Note: I changed this from replicated because replicated convars don't work
-	-- when they're created via Lua.
-
 	if (SERVER) then
-		self.AllowedCVar = CreateConVar("toolmode_allow_" .. mode, 1, FCVAR_NOTIFY)
+		self.AllowedCVar = CreateConVar("toolmode_allow_"..mode, 1, FCVAR_NOTIFY)
 	end
 end
 
 function CTool:GetServerInfo(property)
 	local mode = self:GetMode()
 
-	return GetConVarString(mode .. "_" .. property)
+	return GetConVarString(mode.."_"..property)
 end
 
 function CTool:BuildConVarList()
 	local mode = self:GetMode()
 	local convars = {}
 
-	for k, v in pairs(self.ClientConVar) do convars[ mode .. "_" .. k ] = v end
+	for k, v in pairs(self.ClientConVar) do convars[mode.."_"..k] = v end
 
 	return convars
 end
 
 function CTool:GetClientInfo(property)
-	return self:GetOwner():GetInfo(self:GetMode() .. "_" .. property)
+	return self:GetOwner():GetInfo(self:GetMode().."_"..property)
 end
 
 function CTool:GetClientNumber(property, default)
-	return self:GetOwner():GetInfoNum(self:GetMode() .. "_" .. property, tonumber(default) or 0)
+	return self:GetOwner():GetInfoNum(self:GetMode().."_"..property, tonumber(default) or 0)
 end
 
 function CTool:Allowed()
 	if (CLIENT) then return true end
+
 	return self.AllowedCVar:GetBool()
 end
 
@@ -312,7 +309,7 @@ function CTool:GetSWEP() return self.SWEP end
 function CTool:GetOwner() return self:GetSWEP().Owner or self.Owner end
 function CTool:GetWeapon()	return self:GetSWEP().Weapon or self.Weapon end
 
-function CTool:LeftClick()	return false end
+function CTool:LeftClick() return false end
 function CTool:RightClick() return false end
 function CTool:Reload() self:ClearObjects() end
 function CTool:Deploy() self:ReleaseGhostEntity() return end
@@ -325,10 +322,14 @@ function CTool:Think() self:ReleaseGhostEntity() end
 -----------------------------------------------------------]]
 function CTool:CheckObjects()
 	for k, v in pairs(self.Objects) do
-		if (!v.Ent:IsWorld() && !v.Ent:IsValid()) then
+		if (!v.Ent:IsWorld() and !v.Ent:IsValid()) then
 			self:ClearObjects()
 		end
 	end
+end
+
+function CTool:__tostring()
+	return "Tool ["..(self.uniqueID or "Unknown").."]"
 end
 
 Tool = CTool

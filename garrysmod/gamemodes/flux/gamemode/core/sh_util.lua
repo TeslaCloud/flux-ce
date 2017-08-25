@@ -1002,6 +1002,20 @@ function util.BuildTableFromString(str)
 	return tab
 end
 
+function util.RemoveFunctions(obj)
+	if (istable(obj)) then
+		for k, v in pairs(obj) do
+			if (isfunction(v)) then
+				obj[k] = nil
+			elseif (istable(v)) then
+				obj[k] = util.RemoveFunctions(v)
+			end
+		end
+	end
+
+	return obj
+end
+
 local colorMeta = FindMetaTable("Color")
 
 do

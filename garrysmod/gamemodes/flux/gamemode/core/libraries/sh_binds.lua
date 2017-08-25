@@ -27,7 +27,7 @@ if (CLIENT) then
 		return keyEnums
 	end
 
-	function fl.binds:GetStored()
+	function fl.binds:GetAll()
 		return stored
 	end
 

@@ -9,58 +9,116 @@ TOOL.Name = "Area Tool"
 TOOL.Command = nil
 TOOL.ConfigName = ""
 
-TOOL.ClientConVar["height"] = "512"
-TOOL.ClientConVar["uniqueid"] = ""
-TOOL.ClientConVar["areatype"] = "area"
+TOOL.ClientConVar["mode"] = "1"
 
 function TOOL:LeftClick(trace)
 	local player = self:GetOwner()
 
-	if (!player:IsAdmin()) then return end
+	if (!player:HasPermission("area_tool")) then return end
 
-	local uniqueID = self:GetClientInfo("uniqueid")
-	local height = self:GetClientNumber("height")
-	local areatype = self:GetClientInfo("areatype")
+	local mode = self:GetClientNumber("mode")
+	local modeTable = flAreas.toolModes[mode]
 
-	if (!uniqueID or uniqueID == "") then return false end
-
-	if (!self.area) then
-		self.area = areas.Create(uniqueID, height, {type = areatype or "area"})
+	if (istable(modeTable) and isfunction(modeTable.OnLeftClick)) then
+		return modeTable:OnLeftClick(self, trace)
 	end
-
-	self.area:AddVertex(trace.HitPos)
-
-	fl.undo:Create("Vertex")
-		fl.undo:Add(function(obj, area, id)
-			print("Undone area vertex #"..id)
-		end, self.area, #self.area.verts)
-		fl.undo:SetPlayer(player)
-	fl.undo:Finish()
 
  	return true
 end
 
 function TOOL:RightClick(trace)
-	if (!self:GetOwner():IsAdmin()) then return end
+	local player = self:GetOwner()
 
-	if (self.area) then
-		local player = self:GetOwner()
+	if (!player:HasPermission("area_tool")) then return end
 
-		local area = self.area:Register()
+	local mode = self:GetClientNumber("mode")
+	local modeTable = flAreas.toolModes[mode]
 
-		fl.undo:Remove(player, "Vertex")
-
-		fl.undo:Create("Area")
-			fl.undo:Add(function(obj, areaTable)
-				print("Undone area")
-			end, area)
-			fl.undo:SetPlayer(player)
-		fl.undo:Finish()
+	if (istable(modeTable) and isfunction(modeTable.OnRightClick)) then
+		return modeTable:OnRightClick(self, trace)
 	end
 
-	return true
+ 	return true
 end
 
+function TOOL:Reload(trace)
+	local player = self:GetOwner()
+
+	if (!player:HasPermission("area_tool")) then return end
+
+	local mode = self:GetClientNumber("mode")
+	local modeTable = flAreas.toolModes[mode]
+
+	if (istable(modeTable) and isfunction(modeTable.OnReload)) then
+		return modeTable:OnReload(self, trace)
+	end
+
+ 	return true
+end
+
+function TOOL:GetAreaMode()
+	local mode = self:GetClientNumber("mode")
+
+	return flAreas.toolModes[mode]
+end
+
+if (CLIENT) then
+	-- A function to add the controls for the tool in the tool menu.
+	local function BuildCPanel(panel)
+		local modeList = flAreas.toolModes
+
+		panel:ClearControls()
+
+		local mode = fl.client:GetInfoNum("area_mode", 0)
+		local list = vgui.Create("DListView")
+
+		list:SetSize(30, 90)
+		list:AddColumn("Tool Mode")
+		list:SetMultiSelect(false)
+
+		function list:OnRowSelected(id, line)
+			if (mode != id) then
+				RunConsoleCommand("area_setmode", id)
+			end
+		end
+
+		for k, v in ipairs(modeList) do
+			if (mode == k) then
+				list:AddLine(" "..k.." >> "..v.title)
+			else
+				list:AddLine(" "..k.."    "..v.title)
+			end
+		end
+
+		list:SortByColumn(1)
+
+		panel:AddItem(list)
+
+		local modeTable = modeList[mode]
+
+		if (istable(modeTable) and isfunction(modeTable.BuildCPanel)) then
+			modeTable:BuildCPanel(panel)
+		end
+	end
+
+	-- Called to build the controls in the tool menu.
+	function TOOL.BuildCPanel(panel)
+		BuildCPanel(panel)
+	end
+
+	concommand.Add("area_setmode", function(player, command, args)
+		RunConsoleCommand("area_mode", args[1])
+
+		timer.Simple(0.05, function()
+			local panel = controlpanel.Get("area")
+
+			if (!panel) then return end
+
+			BuildCPanel(panel)
+		end)
+	end)
+end
+/*
 function TOOL.BuildCPanel(CPanel)
 	local types = areas.GetTypes()
 	local options = {}
@@ -78,3 +136,4 @@ function TOOL.BuildCPanel(CPanel)
 	CPanel:AddControl("TextBox", { Label = "#tool.area.text", Command = "area_uniqueid", MaxLenth = "20" })
 	CPanel:AddControl("Slider", { Label = "#tool.area.height", Command = "area_height", Type = "Float", Min = -2048, Max = 2048 })
 end
+*/

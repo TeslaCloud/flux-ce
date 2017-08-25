@@ -11,6 +11,7 @@ do
 	local renderColorRed = Color(255, 50, 50)
 	local lastAmt = nil
 	local render = render
+	local areaColors = {}
 
 	function flAreas:PostDrawOpaqueRenderables(bDrawDepth, bDrawSkybox)
 		if (bDrawDepth or bDrawSkybox) then return end
@@ -19,8 +20,10 @@ do
 
 		if (IsValid(weapon) and weapon:GetClass() == "gmod_tool" and weapon:GetMode() == "area") then
 			local tool = fl.client:GetTool()
+			local mode = tool:GetAreaMode()
 			local verts = (tool and tool.area and tool.area.verts)
-			local areasCount = areas.GetCount()
+			local areasTable = areas.GetByType(mode.areaType)
+			local areasCount = #areasTable
 
 			if (istable(verts) and (!tempCache or #tempCache != #verts)) then
 				tempCache = {}
@@ -36,6 +39,8 @@ do
 
 					table.insert(tempCache, {v, n})
 				end
+			elseif (!verts) then
+				tempCache = nil
 			end
 
 			if (!lastAmt) then lastAmt = areasCount end
@@ -43,7 +48,9 @@ do
 			if (!cache or lastAmt != areasCount) then
 				cache = {}
 
-				for k, v in pairs(areas.GetAll()) do
+				areaColors[mode.areaType] = areas.GetColor(mode.areaType)
+
+				for k, v in pairs(areasTable) do
 					for k2, v2 in ipairs(v.polys) do
 						for idx, p in ipairs(v2) do
 							local n
@@ -62,13 +69,15 @@ do
 				end
 			end
 
+			local areaRenderColor = areaColors[mode.areaType]
+
 			if (cache) then
 				for k, v in ipairs(cache) do
 					local p, ap = v[1], v[3]
 
-					render.DrawLine(p, v[2], renderColor)
-					render.DrawLine(ap, v[4], renderColor)
-					render.DrawLine(ap, p, renderColor)
+					render.DrawLine(p, v[2], areaRenderColor)
+					render.DrawLine(ap, v[4], areaRenderColor)
+					render.DrawLine(ap, p, areaRenderColor)
 				end
 			end
 
@@ -81,14 +90,43 @@ do
 	end
 end
 
-netstream.Hook("PlayerEnteredArea", function(areaIdx, idx, pos, curTime)
+function flAreas:HUDPaint()
+	if (istable(fl.client.textAreas)) then
+		local lastY = 400
+		local curTime = CurTime()
+
+		for k, v in pairs(fl.client.textAreas) do
+			if (istable(v) and v.endTime > curTime) then
+				v.alpha = v.alpha or 255
+
+				draw.SimpleText(v.text, theme.GetFont("Text_Large"), 32, lastY, Color(255, 255, 255, v.alpha))
+
+				if (curTime + 2 >= v.endTime) then
+					v.alpha = math.Clamp(v.alpha - 1, 0, 255)
+				end
+
+				lastY = lastY + 50
+			end
+		end
+	end
+end
+
+netstream.Hook("PlayerEnteredArea", function(areaIdx, idx, pos)
 	local area = areas.GetAll()[areaIdx]
 
-	Try("Areas", areas.GetCallback(area.type), fl.client, area, area.polys[idx], true, pos, curTime)
+	Try("Areas", areas.GetCallback(area.type), fl.client, area, true, pos, CurTime())
 end)
 
-netstream.Hook("PlayerLeftArea", function(areaIdx, idx, pos, curTime)
+netstream.Hook("PlayerLeftArea", function(areaIdx, idx, pos)
 	local area = areas.GetAll()[areaIdx]
 
-	Try("Areas", areas.GetCallback(area.type), fl.client, area, area.polys[idx], false, pos, curTime)
+	Try("Areas", areas.GetCallback(area.type), fl.client, area, false, pos, CurTime())
+end)
+
+netstream.Hook("flLoadAreas", function(areaStorage)
+	areas.SetStored(areaStorage)
+end)
+
+netstream.Hook("flAreaRemove", function(uniqueID)
+	areas.Remove(uniqueID)
 end)
