@@ -61,9 +61,6 @@ end
 function flAreas:LoadData()
 	local loaded = data.LoadPlugin("areas", {})
 
-	print("LOADED TABLE")
-	PrintTable(loaded)
-
 	areas.SetStored(loaded)
 end
 

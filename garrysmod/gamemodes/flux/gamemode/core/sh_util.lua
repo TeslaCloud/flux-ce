@@ -195,7 +195,7 @@ function util.Include(strFile)
 			return include(strFile)
 		end
 	else
-		if (!string.find(strFile, "sv_") and !strFile:EndsWith("init.lua")) then
+		if (!string.find(strFile, "sv_") and strFile != "init.lua" and !strFile:EndsWith("/init.lua")) then
 			return include(strFile)
 		end
 	end

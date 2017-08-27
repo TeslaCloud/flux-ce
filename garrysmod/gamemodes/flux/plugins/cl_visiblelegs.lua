@@ -4,6 +4,7 @@
 	the framework is publicly released.
 --]]
 
+PLUGIN:SetAlias("flVisibleLegs")
 PLUGIN:SetName("Visible Legs")
 PLUGIN:SetAuthor("NightAngel")
 PLUGIN:SetDescription("Lets clients see their character's legs.")
@@ -55,20 +56,20 @@ local hiddenBones = {
 }
 
 -- For refresh.
-if (IsValid(LocalPlayer()) and LocalPlayer().legs) then
-	LocalPlayer().legs:Remove()
+if (IsValid(fl.client) and fl.client.legs) then
+	fl.client.legs:Remove()
 end
 
-function PLUGIN:PlayerModelChanged(player, sNewModel, sOldModel)
-	if (LocalPlayer().legs) then
-		LocalPlayer().legs:Remove()
+function flVisibleLegs:PlayerModelChanged(player, sNewModel, sOldModel)
+	if (fl.client.legs) then
+		fl.client.legs:Remove()
 	end
 end
 
 local offset = Vector(-50, -50, 0)
 local scale = Vector(1, 1, 1)
 
-function PLUGIN:SpawnLegs(player)
+function flVisibleLegs:SpawnLegs(player)
 	if (IsValid(player.legs)) then
 		player.legs:Remove()
 	end
@@ -92,7 +93,7 @@ function PLUGIN:SpawnLegs(player)
 	end
 end
 
-function PLUGIN:RenderScreenspaceEffects()
+function flVisibleLegs:RenderScreenspaceEffects()
 	local player = fl.client
 
 	if (!fl.settings:GetBool("DrawLegs") or player:ShouldDrawLocalPlayer() or !player:Alive()) then return end

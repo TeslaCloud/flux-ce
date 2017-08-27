@@ -34,7 +34,7 @@ end
 if (system.IsWindows() and fileio.CheckForChanges) then
 	fl.WatchDogAvailable = true
 
-	timer.Create("WatchDogUpdater", (1 / 16), 0, function()
+	timer.Create("WatchDogUpdater", 0.25, 0, function()
 		fileio.CheckForChanges()
 	end)
 
@@ -55,16 +55,6 @@ if (system.IsWindows() and fileio.CheckForChanges) then
 		end
 
 		fl.DevPrint("File action: '"..fileName.."' was "..text)
-
-		if (fileName:find("plugins") and action == FILE_ACTION_ADDED) then
-			-- Prevent it from passing extra directories to the hook, as well as files it doesn't really need.
-			if (fileName:EndsWith("plugins")) then return end
-			if (fileName:find("/plugin/")) then return end
-			if (fileName:find(".json") or fileName:find(".ini")) then return end
-
-			print("[Watchdog] Detected a new plugin.")
-			--hook.Run("OnPluginFileChange", fileName)
-		end
 	end)
 end
 

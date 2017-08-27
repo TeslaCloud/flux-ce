@@ -264,48 +264,6 @@ function plugin.Remove(id)
 	end
 end
 
-function plugin.GetFilesForClients(basePath, curPath, results)
-	results = results or {}
-
-	if (file.IsDir(basePath, "GAME") and !curPath) then
-		curPath = curPath or basePath
-
-		local files, dirs = file.Find(curPath.."/*", "LUA", "namedesc")
-
-		for k, v in ipairs(files) do
-			if (v:find("cl_") or v:find("sh_") or v:find("shared.lua")) then
-				results[curPath.."/"..v] = fileio.Read("gamemodes/"..curPath.."/"..v)
-			end
-		end
-
-		for k, v in ipairs(dirs) do
-			plugin.GetFilesForClients(basePath, curPath.."/"..v, results)
-		end
-	elseif (basePath:find("cl_") or basePath:find("sh_") or basePath:find("shared.lua")) then
-		results[basePath] = fileio.Read("gamemodes/"..basePath)
-	end
-
-	return results
-end
-
--- todo: make it work on client dammit
-function plugin.OnPluginChanged(fileName)
-	if (plugin.Find(fileName) and !file.Exists("gamemodes/"..fileName, "GAME")) then
-		print("[Flux] Removing plugin "..fileName)
-
-		plugin.Remove(fileName)
-
-		netstream.Start(nil, "OnPluginRemoved", fileName)
-	elseif (!plugin.Find(fileName) and file.Exists("gamemodes/"..fileName, "GAME")) then
-		print("[Flux] Detected new plugin "..fileName)
-
-		local data = plugin.Include(fileName)
-
-		netstream.Heavy(nil, "SendPluginFiles", data, plugin.GetFilesForClients(fileName))
-		netstream.Start(nil, "OnPluginAdded", fileName)
-	end
-end
-
 function plugin.IsDisabled(folder)
 	if (fl.sharedTable.disabledPlugins) then
 		return fl.sharedTable.disabledPlugins[folder]
@@ -509,6 +467,12 @@ do
 				_G[var] = table.Copy(data.defaultData)
 				_G[var].ClassName = uniqueID
 
+				if (file.Exists(path.."/shared.lua", "LUA")) then
+					util.Include(path.."/shared.lua")
+
+					register = true
+				end
+
 				if (file.Exists(path.."/init.lua", "LUA")) then
 					util.Include(path.."/init.lua")
 
@@ -517,12 +481,6 @@ do
 
 				if (file.Exists(path.."/cl_init.lua", "LUA")) then
 					util.Include(path.."/cl_init.lua")
-
-					register = true
-				end
-
-				if (file.Exists(path.."/shared.lua", "LUA")) then
-					util.Include(path.."/shared.lua")
 
 					register = true
 				end
@@ -605,6 +563,8 @@ do
 			return oldHookCall(name, gm, ...)
 		end
 	else
+		-- While generally a bad idea, pcall-less method is faster and if you're not developing
+		-- changes are low that you'll ever run into an error anyway.
 		function hook.Call(name, gm, ...)
 			if (hooksCache[name]) then
 				for k, v in ipairs(hooksCache[name]) do
@@ -625,19 +585,4 @@ do
 	function plugin.Call(name, ...)
 		return hook.Call(name, nil, ...)
 	end
-end
-
-if (CLIENT) then
-	netstream.Hook("SendPluginFiles", function(data, files)
-		print("[Flux] Detected new plugin named "..data.id..".")
-
-		PLUGIN = Plugin(data.id, data)
-
-		for k, v in pairs(files) do
-			RunString(v)
-		end
-
-		PLUGIN:Register()
-		PLUGIN = nil
-	end)
 end
