@@ -12,10 +12,8 @@ library.New("settings", fl)
 
 -- The table that will contain all the setting tables.
 local stored = fl.settings.stored or {}
-fl.settings.stored = stored
-
--- The table that will contain all the category tables.
 local categories = fl.settings.categories or {}
+fl.settings.stored = stored
 fl.settings.categories = categories
 
 -- For creating a colormixer's RGB conVars.

@@ -11,9 +11,8 @@ end
 library.New("bars", fl)
 
 local stored = fl.bars.stored or {}
-fl.bars.stored = stored
-
 local sorted = fl.bars.sorted or {}
+fl.bars.stored = stored
 fl.bars.sorted = sorted
 
 -- Some fail-safety variables.

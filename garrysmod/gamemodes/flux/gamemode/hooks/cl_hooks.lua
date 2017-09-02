@@ -127,7 +127,7 @@ function GM:HUDDrawScoreBoard()
 
 		percentage = math.Clamp(percentage, 0, 100)
 
-		local font = font.GetSize("flMainFont", font.Scale(24))
+		local font = font.GetSize("flRobotoCondensed", font.Scale(24))
 		local scrW, scrH = ScrW(), ScrH()
 		local w, h = util.GetTextSize(text, font)
 

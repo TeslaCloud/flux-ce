@@ -4,7 +4,7 @@
 	the framework is publicly released.
 --]]
 
--- Alternatively, you can use item.CreateBase("CItemConsumable")
+-- Alternatively, you can use item.CreateBase("CItemUsable")
 class "CItemUsable" extends "CItem"
 
 CItemConsumable.Name = "Usable Items Base"

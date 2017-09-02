@@ -79,25 +79,29 @@ end
 function font.CreateFonts()
 	font.ClearTable()
 
-	font.Create("menu_thin", {
-		font = "Roboto Lt",
-		extended = true,
-		weight = 400,
-		size = font.Scale(34)
+	font.Create("flRoboto", {
+		font = "Roboto",
+		size = 16,
+		weight = 500
 	})
 
-	font.Create("menu_thin_small", {
-		font = "Roboto Lt",
-		extended = true,
-		weight = 300,
-		size = font.Scale(28)
+	font.Create("flRobotoBold", {
+		font = "Roboto",
+		size = 16,
+		weight = 1000,
 	})
 
-	font.Create("menu_thin_smaller", {
-		font = "Roboto Lt",
-		extended = true,
-		size = font.Scale(22),
-		weight = 200
+	font.Create("flRobotoItalic", {
+		font = "Roboto",
+		size = 16,
+		italic = true
+	})
+
+	font.Create("flRobotoItalicBold", {
+		font = "Roboto",
+		size = 16,
+		italic = true,
+		weight = 1000
 	})
 
 	font.Create("flRobotoLt", {
@@ -106,17 +110,48 @@ function font.CreateFonts()
 		weight = 500
 	})
 
-	font.Create("flRoboto", {
-		font = "Roboto",
+	font.Create("flRobotoLtBold", {
+		font = "Roboto Lt",
+		size = 16,
+		weight = 1000,
+	})
+
+	font.Create("flRobotoLtItalic", {
+		font = "Roboto Lt",
+		size = 16,
+		italic = true
+	})
+
+	font.Create("flRobotoLtItalicBold", {
+		font = "Roboto Lt",
+		size = 16,
+		italic = true,
+		weight = 1000
+	})
+
+	font.Create("flRobotoCondensed", {
+		font = "Roboto Condensed",
 		size = 16,
 		weight = 500
 	})
 
-	font.Create("flMainFont", {
+	font.Create("flRobotoCondensedBold", {
 		font = "Roboto Condensed",
-		extended = true,
 		size = 16,
-		weight = 500
+		weight = 1000,
+	})
+
+	font.Create("flRobotoCondensedItalic", {
+		font = "Roboto Condensed",
+		size = 16,
+		italic = true
+	})
+
+	font.Create("flRobotoCondensedItalicBold", {
+		font = "Roboto Condensed",
+		size = 16,
+		italic = true,
+		weight = 1000
 	})
 
 	theme.Call("CreateFonts")

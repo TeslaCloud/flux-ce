@@ -6,8 +6,8 @@
 
 ITEM:SetBase(CItemConsumable)
 ITEM.Name = "Flavored Breen's Water"
-ITEM.PrintName = "Flavored Breen's Water"
-ITEM.Description = "A yellow can filled with limited-tier flavored water."
+ITEM.PrintName = "#Item_BreensWaterLimited_PrintName"
+ITEM.Description = "#Item_BreensWaterLimited_Description"
 ITEM.Model = "models/props_junk/popcan01a.mdl"
 ITEM.Skin = 2
 ITEM.Weight = 0.35

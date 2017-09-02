@@ -5,6 +5,7 @@
 --]]
 
 library.New("anim", fl)
+
 local stored = fl.anim.stored or {}
 local models = fl.anim.models or {}
 fl.anim.stored = stored

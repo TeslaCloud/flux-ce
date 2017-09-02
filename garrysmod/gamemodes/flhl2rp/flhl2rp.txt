@@ -2,7 +2,7 @@
 {
 	"title"			"HL2RP"
 	"author"		"Mr. Meow"
-	"description"	"A roleplaying schema set in Half-Life 2 universe."
+	"description"	"A roleplay gamemode based on Half-Life 2."
 	"version"		"1.0"
 	"menusystem"	"1"
 }

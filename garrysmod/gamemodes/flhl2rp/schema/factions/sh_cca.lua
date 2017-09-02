@@ -24,10 +24,9 @@ FACTION:AddRank("04")
 FACTION:AddRank("03")
 FACTION:AddRank("02")
 FACTION:AddRank("01")
-FACTION:AddRank("OfC")
-FACTION:AddRank("EpU")
-FACTION:AddRank("CmD")
-FACTION:AddRank("SeC")
+FACTION:AddRank("SqO") -- Squad Officer
+FACTION:AddRank("DC") -- Division Commander
+FACTION:AddRank("CmD") -- Commander
 
 FACTION:AddClass("recruit", "Metropolice Recruit", "Metropolice Unit that is yet to pass their basic training.", FACTION.Color, function(player)
 	return true

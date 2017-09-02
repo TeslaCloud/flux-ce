@@ -4,43 +4,12 @@
 	the framework is publicly released.
 --]]
 
-function flChatbox:CreateFonts()
-	font.Create("flChatFont", {
-		font		= "Roboto",
-		size		= font.Scale(18)
-	})
-
-	font.Create("flChatFontBold", {
-		font		= "Roboto",
-		size		= font.Scale(18),
-		weight		= 1000
-	})
-
-	font.Create("flChatFontItalic", {
-		font		= "Roboto",
-		size		= font.Scale(18),
-		italic		= true
-	})
-
-	font.Create("flChatFontBoldItalic", {
-		font		= "Roboto",
-		size		= font.Scale(18),
-		italic		= true,
-		weight		= 1000
-	})
-
-	font.Create("flChatSyntax", {
-		font		= "Roboto",
-		size		= font.Scale(22)
-	})
-end
-
 function flChatbox:OnThemeLoaded(activeTheme)
-	activeTheme:SetFont("Chatbox_Normal", "flChatFont", font.Scale(18))
-	activeTheme:SetFont("Chatbox_Bold", "flChatFontBold", font.Scale(18))
-	activeTheme:SetFont("Chatbox_Italic", "flChatFontItalic", font.Scale(18))
-	activeTheme:SetFont("Chatbox_BoldItalic", "flChatFontBoldItalic", font.Scale(18))
-	activeTheme:SetFont("Chatbox_Syntax", "flChatSyntax", font.Scale(22))
+	activeTheme:SetFont("Chatbox_Normal", "flRoboto", font.Scale(18))
+	activeTheme:SetFont("Chatbox_Bold", "flRobotoBold", font.Scale(18))
+	activeTheme:SetFont("Chatbox_Italic", "flRobotoItalic", font.Scale(18))
+	activeTheme:SetFont("Chatbox_ItalicBold", "flRobotoItalicBold", font.Scale(18))
+	activeTheme:SetFont("Chatbox_Syntax", "flRobotoCondensed", font.Scale(22))
 end
 
 function flChatbox:OnResolutionChanged(newW, newH)

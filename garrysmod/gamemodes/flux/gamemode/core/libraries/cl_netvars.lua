@@ -9,9 +9,8 @@ if (netvars) then return end
 library.New "netvars"
 
 local stored = netvars.stored or {}
-netvars.stored = stored
-
 local globals = netvars.globals or {}
+netvars.stored = stored
 netvars.globals = globals
 
 local entityMeta = FindMetaTable("Entity")

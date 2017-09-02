@@ -8,9 +8,8 @@ if (CLIENT) then
 	library.New("binds", fl)
 
 	local keyEnums = fl.binds.keyEnums or {}
-	fl.binds.keyEnums = keyEnums
-
 	local stored = fl.binds.stored or {}
+	fl.binds.keyEnums = keyEnums
 	fl.binds.stored = stored
 
 	if (#keyEnums == 0) then
