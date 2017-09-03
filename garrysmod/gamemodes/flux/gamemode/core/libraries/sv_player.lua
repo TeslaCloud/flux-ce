@@ -8,7 +8,7 @@ library.New("player", fl)
 
 function fl.player:Notify(player, message)
 	if (!IsValid(player)) then
-		ServerLog("[Notification] "..message)
+		ServerLog(message)
 
 		return
 	end

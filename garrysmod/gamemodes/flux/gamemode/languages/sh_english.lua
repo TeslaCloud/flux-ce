@@ -90,6 +90,13 @@ lang["#Settings_DrawLegs"]			= "Draw your legs."
 lang["#Settings_ToggleAutoWalk"]	= "Toggle Auto-Walk"
 lang["#Settings_ToggleThirdPerson"]	= "Toggle Third-Person"
 
+lang["#Commands_YouMustEnterCommand"]	= "You must enter a command!"
+lang["#Commands_NotValid"]				= "'#1' is not a valid command!"
+lang["#Commands_NoAccess"]				= "You do not have access to this command!"
+lang["#Commands_PlayerInvalid"]			= "'#1' is not a valid player!"
+lang["#Commands_SteamidInvalid"]		= "'#1' is not a valid Steam ID!"
+lang["#Commands_HigherImmunity"]		= "#1 has higher immunity than you!"
+
 lang["#Err_NotValidEntity"]			= "This is not a valid entity!"
 lang["#Err_CannotStaticThis"]		= "You cannot static this entity!"
 lang["#Err_AlreadyStatic"]			= "This entity is already static!"

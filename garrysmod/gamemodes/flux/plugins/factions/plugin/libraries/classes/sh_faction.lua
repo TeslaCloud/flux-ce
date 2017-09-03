@@ -86,13 +86,14 @@ function CFaction:GenerateName(player, charName, rank, defaultData)
 	local finalName = self.NameTemplate
 
 	if (finalName:find("{name}")) then
-		finalName = finalName:Replace("{name}", (charName or ""))
+		finalName = finalName:Replace("{name}", charName or "")
 	end
 
 	if (finalName:find("{rank}")) then
 		for k, v in ipairs(self.Ranks) do
 			if (v.uniqueID == rank) then
 				finalName = finalName:Replace("{rank}", v.name)
+
 				break
 			end
 		end
@@ -103,10 +104,10 @@ function CFaction:GenerateName(player, charName, rank, defaultData)
 	for k, v in ipairs(operators) do
 		if (v:StartWith("{callback:")) then
 			local funcName = v:utf8sub(11, v:utf8len() - 1)
-			local cb = self[funcName]
+			local callback = self[funcName]
 
-			if (isfunction(cb)) then
-				finalName:Replace(v, cb(self, player))
+			if (isfunction(callback)) then
+				finalName:Replace(v, callback(self, player))
 			end
 		elseif (v:StartWith("{data:")) then
 			local key = v:utf8sub(7, v:utf8len() - 1)

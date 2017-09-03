@@ -9,20 +9,20 @@ function flFactions:PostPlayerSpawn(player)
 
 	if (playerFaction) then
 		player:SetTeam(playerFaction.teamID or 1)
+
+		player:SetNetVar("name", playerFaction:GenerateName(player, player:GetCharacterVar("name", player:Name()), player:GetRank()))
 	end
 end
 
 function PLUGIN:OnPlayerRestored(player)
 	if (player:IsBot()) then
-		local factions = faction.GetAll()
-
-		if (table.Count(factions) > 0) then
-			local randomFaction = table.Random(factions)
+		if (faction.Count() > 0) then
+			local randomFaction = table.Random(faction.GetAll())
 
 			player:SetNetVar("faction", randomFaction.uniqueID)
 
 			if (randomFaction.HasGender) then
-				player:SetNetVar("gender", (math.random(0, 1) == 0) and CHAR_GENDER_MALE or CHAR_GENDER_FEMALE)
+				player:SetNetVar("gender", math.random(CHAR_GENDER_MALE, CHAR_GENDER_FEMALE))
 			end
 
 			local factionModels = randomFaction.Models

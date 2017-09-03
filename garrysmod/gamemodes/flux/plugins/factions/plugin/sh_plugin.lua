@@ -18,3 +18,9 @@ function flFactions:PluginIncludeFolder(extra, folderName)
 		return true
 	end
 end
+
+function flFactions:ShouldNameGenerate(player)
+	if (player:IsBot()) then
+		return false
+	end
+end

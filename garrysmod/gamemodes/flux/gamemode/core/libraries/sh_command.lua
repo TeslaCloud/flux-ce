@@ -211,17 +211,17 @@ if (SERVER) then
 	function fl.command:Interpret(player, text)
 		local args
 
-		if (istable(text)) then
-			args = text
-		elseif (isstring(text)) then
+		if (isstring(text)) then
 			args = self:ExtractArguments(text)
+		else
+			return
 		end
 
 		if (!isstring(args[1])) then
 			if (!IsValid(player)) then
 				ErrorNoHalt("[Flux:Command] You must enter a command!\n")
 			else
-				fl.player:Notify(player, "You must enter a command!")
+				fl.player:Notify(player, "#Commands_YouMustEnterCommand")
 			end
 
 			return
@@ -308,7 +308,7 @@ if (SERVER) then
 					-- Let plugins hook into this and abort command's execution if necessary.
 					if (!hook.Run("PlayerRunCommand", player, cmdTable, args)) then
 						if (IsValid(player)) then
-							ServerLog(player:Name().." has used /"..cmdTable.name.." "..text:utf8sub(cmdTable.name:utf8len() + 2, text:utf8len()))
+							ServerLog(player:Name().." has used /"..cmdTable.name.." "..text:utf8sub(string.utf8len(cmdTable.name) + 2, string.utf8len(text)))
 						end
 
 						self:Run(player, cmdTable, args)
@@ -335,12 +335,14 @@ if (SERVER) then
 	-- Warning: this function assumes that command is valid and all permission checks have been done.
 	function fl.command:Run(player, cmdTable, arguments)
 		if (cmdTable.OnRun) then
-			local success, result = pcall(cmdTable.OnRun, cmdTable, player, unpack(arguments))
-
-			if (!success) then
-				ErrorNoHalt("[Flux] "..cmdTable.uniqueID.." command has failed to run!\n")
-				ErrorNoHalt(result.."\n")
-			end
+			try {
+				cmdTable.OnRun, cmdTable, player, unpack(arguments)
+			} catch {
+				function(exception)
+					ErrorNoHalt("[Flux] "..cmdTable.uniqueID.." command has failed to run!\n")
+					ErrorNoHalt(exception.."\n")
+				end
+			}
 		end
 	end
 
@@ -353,18 +355,14 @@ else
 	end
 end
 
-concommand.Add("flCmd", function(player, cmd, args)
+-- An internal function that powers the flc and flCmd console commands.
+function fl.command.ConCommand(player, cmd, args, argsText)
 	if (SERVER) then
-		fl.command:Interpret(player, args)
+		fl.command:Interpret(player, argsText)
 	else
-		fl.command:Send(args)
+		fl.command:Send(argsText)
 	end
-end)
+end
 
-concommand.Add("flc", function(player, cmd, args)
-	if (SERVER) then
-		fl.command:Interpret(player, args)
-	else
-		fl.command:Send(args)
-	end
-end)
+concommand.Add("flCmd", fl.command.ConCommand)
+concommand.Add("flc", fl.command.ConCommand)
