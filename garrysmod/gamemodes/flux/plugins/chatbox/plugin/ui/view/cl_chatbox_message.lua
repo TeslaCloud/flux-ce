@@ -33,14 +33,7 @@ end
 function PANEL:SetMessage(msgInfo)
 	self.messageData = msgInfo
 
-	local totalHeight = 0
-	local margin = config.Get("chatbox_message_margin")
-
-	for k, v in ipairs(msgInfo) do
-		totalHeight = totalHeight + v.height + margin
-	end
-
-	self:SetSize(self:GetWide(), totalHeight)
+	self:SetSize(self:GetWide(), msgInfo.totalHeight)
 end
 
 -- Those people want us gone :(
@@ -56,6 +49,7 @@ end
 
 function PANEL:Paint(w, h)
 	if (self.shouldPaint) then
+		local data = self.messageData
 		local curColor = Color(255, 255, 255)
 		local curSize = 16
 		local italic = false
@@ -63,22 +57,7 @@ function PANEL:Paint(w, h)
 		local curX = 0
 		local curY = 0
 
-		for _, line in ipairs(self.messageData) do
-			for _, v in ipairs(line.data) do
-				if (IsColor(v)) then
-					curColor = v
-				elseif (isnumber(v)) then
-					if (v == CHAT_NONE) then
-						italic = false
-						bold = false
-						curSize = 16
-						curColor = Color(255, 255, 255)
-					elseif (v == CHAT_IMAGE) then
-
-					end
-				end
-			end
-		end
+		draw.RoundedBox(0, 0, 0, w, h, Color(255, 0, 0))
 	end
 end
 

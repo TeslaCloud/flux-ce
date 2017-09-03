@@ -32,9 +32,11 @@ function PANEL:Init()
 
 	curY = curY + 42
 
+	self.menuItems = {}
+
 	hook.Run("AddTabMenuItems", self)
 
-	for k, v in pairs(self.menuItems) do
+	for k, v in ipairs(self.menuItems) do
 		local button = vgui.Create("flButton", self)
 		button:SetDrawBackground(false)
 		button:SetPos(curX - 20, curY)
@@ -87,10 +89,11 @@ function PANEL:Think()
 end
 
 function PANEL:AddMenuItem(id, data)
+	data.uniqueID = id
 	data.title = data.title or "error"
 	data.icon = data.icon or false
 
-	self.menuItems[id] = data
+	table.insert(self.menuItems, data)
 end
 
 function PANEL:CloseMenu()

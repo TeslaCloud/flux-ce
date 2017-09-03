@@ -5,18 +5,25 @@
 --]]
 
 function flChatbox:OnThemeLoaded(activeTheme)
+	local scrW, scrH = ScrW(), ScrH()
+
 	activeTheme:SetFont("Chatbox_Normal", "flRoboto", font.Scale(18))
 	activeTheme:SetFont("Chatbox_Bold", "flRobotoBold", font.Scale(18))
 	activeTheme:SetFont("Chatbox_Italic", "flRobotoItalic", font.Scale(18))
 	activeTheme:SetFont("Chatbox_ItalicBold", "flRobotoItalicBold", font.Scale(18))
 	activeTheme:SetFont("Chatbox_Syntax", "flRobotoCondensed", font.Scale(22))
+
+	activeTheme:SetOption("Chatbox_Width", scrW / 3)
+	activeTheme:SetOption("Chatbox_Height", scrH / 3)
+	activeTheme:SetOption("Chatbox_X", 8)
+	activeTheme:SetOption("Chatbox_Y", scrH - activeTheme:GetOption("Chatbox_Height") - 32)
 end
 
 function flChatbox:OnResolutionChanged(newW, newH)
-	chatbox.width = newW * 0.3
-	chatbox.height = newH * 0.3
-	chatbox.x = 4
-	chatbox.y = newH - chatbox.height - 36
+	theme.SetOption("Chatbox_Width", scrW / 3)
+	theme.SetOption("Chatbox_Height", scrH / 3)
+	theme.SetOption("Chatbox_X", 8)
+	theme.SetOption("Chatbox_Y", scrH - theme.GetOption("Chatbox_Height") - 32)
 
 	--chatbox.UpdateDisplay()
 
@@ -45,3 +52,19 @@ function flChatbox:GUIMousePressed(mouseCode, aimVector)
 		chatbox.Hide()
 	end
 end
+
+function flChatbox:ChatboxTextEntered(text)
+	print(text)
+
+	if (text and text != "") then
+		netstream.Start("Chatbox::PlayerSay", text)
+	end
+
+	chatbox.Hide()
+end
+
+netstream.Hook("Chatbox::AddMessage", function(messageData)
+	if (IsValid(chatbox.panel)) then
+		chatbox.panel:AddMessage(messageData)
+	end
+end)

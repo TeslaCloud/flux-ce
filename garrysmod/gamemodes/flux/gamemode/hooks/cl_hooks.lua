@@ -324,17 +324,6 @@ end
 
 -- Called when category icons are presented.
 function GM:AddTabMenuItems(menu)
-	menu:AddMenuItem("!inventory", {
-		title = "Inventory",
-		panel = "flInventory",
-		icon = "fa-inbox",
-		callback = function(menuPanel, button)
-			local inv = menuPanel.activePanel
-			inv:SetPlayer(fl.client)
-			inv:SetTitle("Inventory")
-		end
-	})
-
 	menu:AddMenuItem("scoreboard", {
 		title = "Scoreboard",
 		panel = "flScoreboard",

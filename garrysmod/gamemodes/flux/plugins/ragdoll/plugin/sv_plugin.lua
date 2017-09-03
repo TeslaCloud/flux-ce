@@ -54,6 +54,13 @@ function playerMeta:FindBestPosition(margin, filter)
 
 			if (trace2.StartSolid or trace2.Hit) then continue end
 
+			data.start = pos
+			data.endpos = pick
+
+			local trace3 = util.TraceLine(data)
+
+			if (trace3.Hit) then continue end
+
 			table.insert(positions, pick)
 		end
 	end
@@ -99,6 +106,8 @@ function playerMeta:CreateRagdollEntity(decay, fallen)
 					if (self:IsStuck()) then
 						self:DropToFloor()
 						self:SetPos(self:GetPos() + Vector(0, 0, 16))
+
+						if (!self:IsStuck()) then return end
 
 						local positions = self:FindBestPosition(4, {ragdoll, self})
 

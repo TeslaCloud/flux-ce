@@ -28,14 +28,22 @@ do
 	local curVolume = 1
 
 	function flCharacters:Tick()
-		if (fl.menuMusic and !IsValid(fl.IntroPanel)) then
-			if (curVolume > 0.05) then
-				curVolume = Lerp(0.1, curVolume, 0)
-				fl.menuMusic:SetVolume(curVolume)
+		if (fl.menuMusic) then
+			if (!system.HasFocus()) then
+				fl.menuMusic:SetVolume(0)
 			else
-				curVolume = 1
-				fl.menuMusic:Stop()
-				fl.menuMusic = nil
+				fl.menuMusic:SetVolume(curVolume)
+			end
+
+			if (!IsValid(fl.IntroPanel)) then
+				if (curVolume > 0.05) then
+					curVolume = Lerp(0.1, curVolume, 0)
+					fl.menuMusic:SetVolume(curVolume)
+				else
+					curVolume = 1
+					fl.menuMusic:Stop()
+					fl.menuMusic = nil
+				end
 			end
 		end
 	end

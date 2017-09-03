@@ -23,10 +23,35 @@ function PANEL:Init()
 	self.scrollPanel:SetPos(0, 0)
 	self.scrollPanel:SetSize(w, h)
 	self.scrollPanel:PerformLayout()
+
+	self.textEntry = vgui.Create("flTextEntry", self)
+	self.textEntry:SetText("")
+	self.textEntry:SetSize(1, 1)
+
+	self.textEntry.OnValueChange = function(entry, value)
+		hook.Run("ChatTextChanged", value)
+	end
+
+	self.textEntry.OnEnter = function(entry)
+		hook.Run("ChatboxTextEntered", entry:GetValue())
+	end
+
+	self:Rebuild()
 end
 
 function PANEL:SetOpen(bIsOpen)
 	self.isOpen = bIsOpen
+
+	if (bIsOpen) then
+		self:MakePopup()
+
+		self.textEntry:SetVisible(true)
+		self.textEntry:RequestFocus()
+	else
+		self:KillFocus()
+
+		self.textEntry:SetVisible(false)
+	end
 end
 
 function PANEL:CreateMessage(messageData)
@@ -36,7 +61,7 @@ function PANEL:CreateMessage(messageData)
 
 	local panel = vgui.Create("flChatMessage", self)
 
-	panel:SetSize(self:GetWide(), 32) -- Width is placeholder and is later set by compiled message table.
+	panel:SetSize(self:GetWide(), self:GetWide()) -- Width is placeholder and is later set by compiled message table.
 	panel:SetMessage(parsed)
 
 	return panel
@@ -72,6 +97,17 @@ function PANEL:RemoveMessage(idx)
 end
 
 function PANEL:Rebuild()
+	self:SetSize(chatbox.width, chatbox.height)
+	self:SetPos(chatbox.x, chatbox.y)
+
+	self.textEntry:SetSize(chatbox.width, 20)
+	self.textEntry:SetPos(0, chatbox.height - 20)
+	self.textEntry:SetFont(theme.GetFont("Text_Small"))
+	self.textEntry:SetTextColor(theme.GetColor("Text"))
+
+	self.scrollPanel:SetSize(chatbox.width, chatbox.height)
+	self.scrollPanel:PerformLayout()
+
 	self.lastPos = 0
 
 	-- Reversed ipairs anyone?????
@@ -84,8 +120,12 @@ function PANEL:Rebuild()
 	end
 end
 
-function PANEL:Paint(w, h)
-
+function PANEL:Think()
+	if (self.isOpen and input.IsKeyDown(KEY_ESCAPE)) then
+		chatbox.Hide()
+	end
 end
+
+function PANEL:Paint(w, h) end
 
 vgui.Register("flChatPanel", PANEL, "flBasePanel")

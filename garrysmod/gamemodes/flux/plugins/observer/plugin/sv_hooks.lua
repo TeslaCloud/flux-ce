@@ -30,6 +30,8 @@ function flObserver:PlayerEnterNoclip(player)
 	player:SetNotSolid(true)
 	player:SetColor(Color(0, 0, 0, 0))
 
+	player:SetNetVar("Observer", true)
+
 	return false
 end
 
@@ -55,6 +57,7 @@ function flObserver:PlayerExitNoclip(player)
 	end
 
 	player.observerData = nil
+	player:SetNetVar("Observer", false)
 
 	return false
 end
