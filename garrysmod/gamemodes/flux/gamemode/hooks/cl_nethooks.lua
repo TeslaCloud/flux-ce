@@ -35,10 +35,6 @@ netstream.Hook("flNotification", function(sMessage)
 	chat.AddText(Color(255, 255, 255), sMessage)
 end)
 
-netstream.Hook("PlayerUseItemEntity", function(entity)
-	hook.Run("PlayerUseItemMenu", entity.item, true)
-end)
-
 netstream.Hook("PlayerTakeDamage", function()
 	fl.client.lastDamage = CurTime()
 end)

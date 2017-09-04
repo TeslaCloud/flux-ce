@@ -39,3 +39,19 @@ function PLUGIN:HUDPaint()
 		draw.RoundedBox(0, scrW / 2 - halfSize, scrH / 2 - halfSize + curGap, size, size, drawColor)
 	end
 end
+
+function PLUGIN:AdjustCrosshairColor(trace, distance)
+	local ent = trace.Entity
+
+	if (distance < 600 and IsValid(ent) and (ent:IsPlayer() or ent:GetClass() == "fl_item")) then
+		return theme.GetColor("Accent")
+	end
+end
+
+function PLUGIN:AdjustCrosshairGap(trace, distance)
+	local ent = trace.Entity
+
+	if (distance < 600 and IsValid(ent) and (ent:IsPlayer() or ent:GetClass() == "fl_item")) then
+		return 8
+	end
+end

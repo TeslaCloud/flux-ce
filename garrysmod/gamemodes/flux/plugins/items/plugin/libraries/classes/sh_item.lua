@@ -176,7 +176,7 @@ end
 
 -- Fancy output if you do print(itemTable).
 function CItem:__tostring()
-	return "Item ["..tostring(self.instanceID).."]["..self:GetName().."]"
+	return "Item ["..tostring(self.instanceID).."]["..(self.name or self.uniqueID).."]"
 end
 
 Item = CItem

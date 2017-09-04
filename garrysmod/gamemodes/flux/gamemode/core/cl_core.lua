@@ -128,8 +128,7 @@ function surface.DrawRotated(nPosX, nPosY, angle, callback)
 end
 
 do
-	local cache = surface.CircleInfoCache or {}
-	surface.CircleInfoCache = cache
+	local cache = {}
 
 	function surface.DrawCircle(x, y, radius, passes)
 		if (!x or !y or !radius) then
@@ -161,6 +160,14 @@ do
 		surface.DrawPoly(info)
 	end
 
+
+	local function scaleVertices(tblVertices, iScaleX, iScaleY)
+		for k, v in pairs(tblVertices) do
+			v.x = v.x * iScaleX
+			v.y = v.y * iScaleY
+		end
+	end
+
 	function surface.DrawPartialCircle(percentage, x, y, radius, passes)
 		if (!percentage or !x or !y or !radius) then
 			error("surface.DrawPartialCircle - Too few arguments to function call (4 expected)")
@@ -175,28 +182,34 @@ do
 		if (!info) then
 			info = {}
 
-			local breakAt = math.floor(passes * (percentage / 100))
+			local startAngle, endAngle, step = 0, 360 / 100 * percentage, 360 / passes
 
-		 	-- Since tables start at index 1.
-			for i = 1, passes + 1 do
-				if (i == breakAt) then break end
+			if (math.abs(startAngle - endAngle) != 0) then
+				table.insert(info, {x = 0, y = 0})
+			end
 
-				local degInRad = i * math.pi / (passes / 2)
+			for i = startAngle, endAngle + step, step do
+				i = math.Clamp(i, startAngle, endAngle)
 
-				info[i] = {
-					x = x + math.cos(degInRad) * radius,
-					y = y + math.sin(degInRad) * radius
-				}
+				local rads = math.rad(i)
+				local x = math.cos(rads)
+				local y = math.sin(rads)
+
+				table.insert(info, {x = x, y = y})
+			end
+
+			for k, v in ipairs(info) do
+				v.x = v.x * radius + x
+				v.y = v.y * radius + y
 			end
 
 			cache[id] = info
 		end
 
-		draw.NoTexture() -- Otherwise we draw a transparent circle.
 		surface.DrawPoly(info)
 	end
 
-	function surface.DrawOutlinedCircle(x, y, radius, thickness, passes, bStencil)
+	function surface.DrawOutlinedCircle(x, y, radius, thickness, passes)
 		render.ClearStencil()
 		render.SetStencilEnable(true)
 			render.SetStencilWriteMask(255)
@@ -208,6 +221,22 @@ do
 				surface.DrawCircle(x, y, radius - (thickness or 1), passes)
 			render.SetStencilCompareFunction(STENCIL_NOTEQUAL)
 				surface.DrawCircle(x, y, radius, passes)
+		render.SetStencilEnable(false)
+		render.ClearStencil()
+	end
+
+	function surface.DrawPartialOutlinedCircle(percentage, x, y, radius, thickness, passes)
+		render.ClearStencil()
+		render.SetStencilEnable(true)
+			render.SetStencilWriteMask(255)
+			render.SetStencilTestMask(255)
+			render.SetStencilReferenceValue(28)
+			render.SetStencilFailOperation(STENCIL_REPLACE)
+
+			render.SetStencilCompareFunction(STENCIL_EQUAL)
+				surface.DrawPartialCircle(percentage, x, y, radius - (thickness or 1), passes)
+			render.SetStencilCompareFunction(STENCIL_NOTEQUAL)
+				surface.DrawPartialCircle(percentage, x, y, radius, passes)
 		render.SetStencilEnable(false)
 		render.ClearStencil()
 	end

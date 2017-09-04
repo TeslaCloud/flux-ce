@@ -16,7 +16,7 @@ if (SERVER) then
 	function ENT:Initialize()
 		self:SetSolid(SOLID_VPHYSICS)
 		self:PhysicsInit(SOLID_VPHYSICS)
-		self:SetUseType(SIMPLE_USE)
+		self:SetUseType(ONOFF_USE)
 
 		local physObj = self:GetPhysicsObject()
 
@@ -43,12 +43,50 @@ if (SERVER) then
 	end
 
 	function ENT:Use(activator, caller, useType, value)
-		if (IsValid(caller) and caller:IsPlayer()) then
-			if (self.item) then
-				hook.Run("PlayerUseItemEntity", caller, self, self.item)
-			else
-				fl.DevPrint("Player attempted to use an item entity without item object tied to it!")
+		local lastActivator = self:GetNetVar("LastActivator")
+
+		-- prevent minge-grabbing glitch
+		if (IsValid(lastActivator) and lastActivator != activator) then return end
+
+		local holdStart = activator:GetNetVar("HoldStart")
+
+		if (useType == USE_ON) then
+			if (!holdStart) then
+				activator:SetNetVar("HoldStart", CurTime())
+				self:SetNetVar("LastActivator", activator)
 			end
+		elseif (useType == USE_OFF) then
+			if (!holdStart) then return end
+
+			if (CurTime() - holdStart < 0.5) then
+				if (IsValid(caller) and caller:IsPlayer()) then
+					if (self.item) then
+						hook.Run("PlayerUseItemEntity", caller, self, self.item)
+					else
+						fl.DevPrint("Player attempted to use an item entity without item object tied to it!")
+					end
+				end
+			end
+
+			activator:SetNetVar("HoldStart", false)
+			self:SetNetVar("LastActivator", false)
+		end
+	end
+
+	function ENT:Think()
+		local lastActivator = self:GetNetVar("LastActivator")
+
+		if (!IsValid(lastActivator)) then return end
+
+		local holdStart = lastActivator:GetNetVar("HoldStart")
+
+		if (holdStart and CurTime() - holdStart > 0.5) then
+			if (self.item) then
+				self.item:DoMenuAction("OnTake", lastActivator)
+			end
+
+			lastActivator:SetNetVar("HoldStart", false)
+			self:SetNetVar("LastActivator", false)
 		end
 	end
 else

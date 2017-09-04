@@ -6,6 +6,7 @@
 
 PLUGIN:SetAlias("flItems")
 
+util.Include("cl_hooks.lua")
 util.Include("sv_hooks.lua")
 
 function flItems:OnPluginLoaded()
