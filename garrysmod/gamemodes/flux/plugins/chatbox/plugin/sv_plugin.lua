@@ -4,7 +4,7 @@
 	the framework is publicly released.
 --]]
 
-config.Set("chatbox_message_margin", 4)
+config.Set("chatbox_message_margin", 2)
 config.Set("chatbox_message_fade_delay", 12)
 config.Set("chatbox_max_messages", 100)
 
@@ -112,12 +112,16 @@ function chatbox.SetClientMode(bClientMode)
 end
 
 netstream.Hook("Chatbox::AddText", function(player, ...)
+	if (!IsValid(player)) then return end
+
 	chatbox.SetClientMode(true)
 	chatbox.AddText(player, ...)
 	chatbox.SetClientMode(false)
 end)
 
 netstream.Hook("Chatbox::PlayerSay", function(player, text, bTeamChat)
+	if (!IsValid(player)) then return end
+
 	local playerSayOverride = hook.Run("PlayerSay", player, text, bTeamChat)
 
 	if (isstring(playerSayOverride)) then
@@ -126,5 +130,20 @@ netstream.Hook("Chatbox::PlayerSay", function(player, text, bTeamChat)
 		text = playerSayOverride
 	end
 
-	chatbox.AddText(nil, Color(255, 0, 0), player, Color(255, 255, 255), ": ", text, {sender = player, teamChat = bTeamChat})
+	local message = {
+		hook.Run("ChatboxGetPlayerIcon", player, text, bTeamChat) or {},
+		hook.Run("ChatboxGetPlayerColor", player, text, bTeamChat) or _team.GetColor(player:Team()),
+		player,
+		hook.Run("ChatboxGetMessageColor", player, text, bTeamChat) or Color(255, 255, 255),
+		": ",
+		text,
+		{sender = player}
+	}
+
+	hook.Run("ChatboxAdjustPlayerSay", message)
+
+	PrintTable(message)
+	print(unpack(message))
+
+	chatbox.AddText(nil, unpack(message))
 end)

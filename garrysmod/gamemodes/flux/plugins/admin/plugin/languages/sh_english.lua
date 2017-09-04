@@ -70,5 +70,3 @@ lang["#Perm_Allow"]				= "Allow"
 lang["#Perm_Never"]				= "Never"
 lang["#Perm_AllowOverride"]		= "Allow (Override)"
 lang["#Perm_Error"]				= "Invalid Permission"
-
-lang["#Err_No_Permission"]		= "You do not have permission to do this, #1."

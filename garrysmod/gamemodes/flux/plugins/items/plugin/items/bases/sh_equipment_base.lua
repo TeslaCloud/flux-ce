@@ -4,11 +4,16 @@
 	the framework is publicly released.
 --]]
 
+if (!CItemUsable) then
+	util.Include("sh_usable_base.lua")
+end
+
 -- Alternatively, you can use item.CreateBase("CItemEquippable")
 class "CItemEquippable" extends "CItemUsable"
 
 CItemEquippable.Name = "Equipment Base"
 CItemEquippable.Description = "An item that can be equipped."
+CItemEquippable.Category = "#Item_Category_Equipment"
 CItemEquippable.m_IsEquipped = false
 
 function CItemEquippable:IsEquipped()

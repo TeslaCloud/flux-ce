@@ -8,8 +8,8 @@ ITEM:SetBase(CItemConsumable)
 ITEM.Name = "Combine Branded Canned Food"
 ITEM.PrintName = "#Item_CannedFood_PrintName"
 ITEM.Description = "#Item_CannedFood_Description"
-ITEM.Model = "models/props_junk/popcan01a.mdl"
+ITEM.Model = "models/props_lab/jar01b.mdl"
 ITEM.Weight = 0.5
 ITEM.Stackable = true
 ITEM.MaxStack = 8
-ITEM.UseText = "Eat"
+ITEM.UseText = "#Item_Action_Eat"

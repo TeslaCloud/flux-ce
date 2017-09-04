@@ -74,14 +74,25 @@ function library.NewClass(strName, tParent, CExtends)
 			table.SafeMerge(newObj, obj)
 
 			-- If there is a base class, call their constructor.
-			if (obj.BaseClass) then
-				try {
-					obj.BaseClass[obj.BaseClass.ClassName], newObj, ...
-				} catch {
-					function(exception)
-						ErrorNoHalt("[Flux] Base class constructor has failed to run!\n"..tostring(exception.."\n"))
-					end
-				}
+			local baseClass = obj.BaseClass
+			local hasBaseclass = true
+
+			while (istable(baseClass) and hasBaseclass) do
+				if (isfunction(baseClass[baseClass.ClassName])) then
+					try {
+						baseClass[baseClass.ClassName], newObj, ...
+					} catch {
+						function(exception)
+							ErrorNoHalt("[Flux] Base class constructor has failed to run!\n"..tostring(exception.."\n"))
+						end
+					}
+				end
+
+				if (baseClass.BaseClass and baseClass.ClassName != baseClass.BaseClass.ClassName) then
+					baseClass = baseClass.BaseClass
+				else
+					hasBaseclass = false
+				end
 			end
 
 			-- If there is a constructor - call it.

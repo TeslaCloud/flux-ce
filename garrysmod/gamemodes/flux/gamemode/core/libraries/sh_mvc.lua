@@ -77,7 +77,7 @@ else
 
 		if (handlers) then
 			for k, v in ipairs(handlers) do
-				local success, value = pcall(v, ...)
+				local success, value = pcall(v, player, ...)
 
 				if (!success) then
 					ErrorNoHalt("[Flux:MVC] The '"..strName.." - "..tostring(k).."' MVC handler has failed to run!\n")

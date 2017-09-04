@@ -23,6 +23,22 @@ item.sorted = sorted
 local entities = item.entities or {}
 item.entities = entities
 
+function item.GetAll()
+	return stored
+end
+
+function item.GetInstances()
+	return instances
+end
+
+function item.GetSorted()
+	return sorted
+end
+
+function item.GetEntities()
+	return entities
+end
+
 function item.Register(id, data)
 	if (!isstring(id) and !isstring(data.Name)) then
 		ErrorNoHalt("[Flux] Attempt to register an item without a valid ID!")
@@ -49,6 +65,7 @@ function item.Register(id, data)
 	data.Color = data.Color or nil
 	data.Cost = data.Cost or 0
 	data.SpecialColor = data.SpecialColor or nil
+	data.Category = data.Category or "#Item_Category_Other"
 	data.isBase = data.isBase or false
 	data.instanceID = ITEM_TEMPLATE
 	data.data = data.data or {}

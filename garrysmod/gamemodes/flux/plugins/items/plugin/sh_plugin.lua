@@ -12,6 +12,7 @@ function flItems:OnPluginLoaded()
 	plugin.AddExtra("items")
 	plugin.AddExtra("items/bases")
 
+	util.IncludeDirectory(self:GetFolder().."/plugin/items/bases")
 	item.IncludeItems(self:GetFolder().."/plugin/items/")
 end
 

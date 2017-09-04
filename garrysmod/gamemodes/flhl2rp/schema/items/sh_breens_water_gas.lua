@@ -13,4 +13,4 @@ ITEM.Skin = 1
 ITEM.Weight = 0.35
 ITEM.Stackable = true
 ITEM.MaxStack = 8
-ITEM.UseText = "Drink"
+ITEM.UseText = "#Item_Action_Drink"

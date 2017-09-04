@@ -7,8 +7,8 @@
 -- Alternatively, you can use item.CreateBase("CItemUsable")
 class "CItemUsable" extends "CItem"
 
-CItemConsumable.Name = "Usable Items Base"
-CItemConsumable.Description = "An item that can be used."
+CItemUsable.Name = "Usable Items Base"
+CItemUsable.Description = "An item that can be used."
 
 -- Returns:
 -- nothing/nil = removes item from the inventory as soon as it's used.

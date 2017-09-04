@@ -25,7 +25,7 @@ end
 playerMeta.flName = playerMeta.flName or playerMeta.Name
 
 function playerMeta:Name(bForceTrueName)
-	return (!bForceTrueName and self.nameOverride) or self:GetNetVar("name", self:flName())
+	return (!bForceTrueName and hook.Run("GetPlayerName", self)) or self:GetNetVar("name", self:flName())
 end
 
 function playerMeta:SteamName()
@@ -94,7 +94,7 @@ end
 	Admin system
 
 	Hook your admin mods to these functions, they're universally used
-	throughout Flux framework.
+	throughout the Flux framework.
 --]]
 
 function playerMeta:HasPermission(perm)

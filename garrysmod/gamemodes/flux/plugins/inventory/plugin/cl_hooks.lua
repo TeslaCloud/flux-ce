@@ -10,3 +10,12 @@ function flInventory:AddTabMenuItems(menu)
 		end
 	})
 end
+
+spawnmenu.AddCreationTab("Items", function()
+	local panel = vgui.Create("flItemSpawner")
+
+	panel:Dock(FILL)
+	panel:Rebuild()
+
+	return panel
+end, "icon16/wand.png", 40)

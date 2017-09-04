@@ -14,4 +14,4 @@ ITEM.Weight = 0.35
 ITEM.Stackable = true
 ITEM.MaxStack = 8
 ITEM.SpecialColor = Color(50, 255, 50)
-ITEM.UseText = "Drink"
+ITEM.UseText = "#Item_Action_Drink"

@@ -20,26 +20,7 @@ function PANEL:Init()
 	self.scrollPanel.VBar.btnDown.Paint = function() return true end
 	self.scrollPanel.VBar.btnGrip.Paint = function() return true end
 
-	-- Basically copy-paste this function so that the VBar does not move the content
-	self.scrollPanel.PerformLayout = function(panel)
-		local oldHeight = panel.pnlCanvas:GetTall()
-		local oldWidth = panel:GetWide()
-		local YPos = 0
-
-		panel:Rebuild()
-
-		panel.VBar:SetUp(panel:GetTall(), panel.pnlCanvas:GetTall())
-		YPos = panel.VBar:GetOffset()
-
-		panel.pnlCanvas:SetPos(0, YPos)
-		panel.pnlCanvas:SetWide(oldWidth)
-
-		panel:Rebuild()
-
-		if (oldHeight != panel.pnlCanvas:GetTall()) then
-			panel.VBar:SetScroll(panel.VBar:GetScroll())
-		end
-	end
+	self.scrollPanel.VBar:SetWide(0)
 
 	self.scrollPanel:SetPos(0, 0)
 	self.scrollPanel:SetSize(w, h)
@@ -117,10 +98,6 @@ function PANEL:AddPanel(panel)
 	self.scrollPanel:AddItem(panel)
 
 	self.lastPos = self.lastPos + config.Get("chatbox_message_margin") + panel:GetTall()
-
-	if (!self.isOpen) then
-		self.scrollPanel.VBar:SetScroll(self.scrollPanel.VBar.CanvasSize)
-	end
 end
 
 function PANEL:RemoveMessage(idx)

@@ -142,3 +142,5 @@ lang["#Hint_BugsText"]			= "Encountered a bug? Have an idea that we should total
 
 lang["#PlayerMessage_Died"]	= "YOU PERISHED"
 lang["#PlayerMessage_Respawn"]	= "RESPAWNING IN #1"
+
+lang["#Err_No_Permission"]		= "You do not have permission to do this, #1."
