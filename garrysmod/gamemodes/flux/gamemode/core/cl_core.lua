@@ -213,7 +213,7 @@ do
 	end
 end
 
-function draw.TexturedRect(x, y, w, h, material, color)
+function draw.TexturedRect(material, x, y, w, h, color)
 	if (!material) then return end
 
 	color = (IsColor(color) and color) or Color(255, 255, 255)

@@ -17,7 +17,7 @@ local defaultMessageData = {
 	filter = nil,
 	shouldTranslate = false,
 	rich = false,
-	size = 16,
+	size = 20,
 	text = nil,
 	teamChat = false
 }
@@ -59,9 +59,10 @@ function chatbox.AddText(listeners, ...)
 		filter = nil,
 		shouldTranslate = false,
 		rich = false,
-		size = 16,
+		size = 20,
 		text = nil,
-		teamChat = false
+		teamChat = false,
+		maxHeight = 20
 	}
 
 	if (!istable(listeners)) then
@@ -82,20 +83,20 @@ function chatbox.AddText(listeners, ...)
 			end
 		elseif (isnumber(v)) then
 			table.insert(messageData.data, v)
+
+			if (messageData.maxHeight < v) then
+				messageData.maxHeight = v
+			end
+		elseif (IsColor(v)) then
+			table.insert(messageData.data, v)
 		elseif (istable(v)) then
 			if (!v.isData and !clientMode) then
 				table.Merge(messageData, v)
 			else
 				table.insert(messageData.data, v)
 			end
-		elseif (IsColor(v)) then
-			table.insert(messageData.data, color)
-		end
-	end
-
-	if (IsValid(messageData.sender)) then
-		if (hook.Run("PlayerSay", messageData.sender, messageData.text or "")) then
-			
+		elseif (IsValid(v)) then
+			table.insert(messageData.data, v)
 		end
 	end
 
@@ -117,5 +118,13 @@ netstream.Hook("Chatbox::AddText", function(player, ...)
 end)
 
 netstream.Hook("Chatbox::PlayerSay", function(player, text, bTeamChat)
-	chatbox.AddText(nil, text, {sender = player, teamChat = bTeamChat})
+	local playerSayOverride = hook.Run("PlayerSay", player, text, bTeamChat)
+
+	if (isstring(playerSayOverride)) then
+		if (playerSayOverride == "") then return end
+
+		text = playerSayOverride
+	end
+
+	chatbox.AddText(nil, Color(255, 0, 0), player, Color(255, 255, 255), ": ", text, {sender = player, teamChat = bTeamChat})
 end)

@@ -157,3 +157,5 @@ function font.CreateFonts()
 	theme.Call("CreateFonts")
 	hook.Run("CreateFonts")
 end
+
+_font = font

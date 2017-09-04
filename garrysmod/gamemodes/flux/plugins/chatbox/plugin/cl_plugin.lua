@@ -24,10 +24,16 @@ function chatbox.Compile(messageTable)
 	local compiled = {}
 	local data = messageTable.data
 	local shouldTranslate = messageTable.shouldTranslate
-	local curSize = messageTable.size or 16
+	local curSize = _font.Scale(18)
+
+	if (isnumber(messageTable.size)) then
+		curSize = _font.Scale(messageTable.size)
+	end
+
 	local curX, curY = 0, 0
-	local totalHeight = 32
-	local font = font.GetSize(theme.GetFont("Chatbox_Normal"), curSize)
+	local totalHeight = 0
+	local maxHeight = font.Scale(messageTable.maxHeight)
+	local font = _font.GetSize(theme.GetFont("Chatbox_Normal"), curSize)
 
 	for k, v in ipairs(data) do
 		if (isstring(v)) then
@@ -38,43 +44,68 @@ function chatbox.Compile(messageTable)
 			local wrapped = util.WrapText(v, font, chatbox.width, curX)
 			local nWrapped = #wrapped
 
-			for k, v in ipairs(wrapped) do
-				local w, h = util.GetTextSize(v, font)
+			for k2, v2 in ipairs(wrapped) do
+				local w, h = util.GetTextSize(v2, font)
 
-				table.insert(compiled, {text = v, w = w, h = h, x = curX, y = curY})
+				table.insert(compiled, {text = v2, w = w, h = h, x = curX, y = curY + (maxHeight - h)})
 
 				curX = curX + w
 
-				if (nWrapped > 1) then
+				if (nWrapped > 1 and k2 != nWrapped) then
 					curY = curY + h + config.Get("chatbox_message_margin")
 
 					totalHeight = totalHeight + h + config.Get("chatbox_message_margin")
 
 					curX = 0
+				elseif (totalHeight < h) then
+					totalHeight = h
 				end
 			end
 		elseif (isnumber(v)) then
-			curSize = v
+			curSize = _font.Scale(v)
 
-			font = font.GetSize(theme.GetFont("Chatbox_Normal"), curSize)
+			font = _font.GetSize(theme.GetFont("Chatbox_Normal"), curSize)
 
-			table.insert(compiled, v)
+			table.insert(compiled, curSize)
 		elseif (istable(v)) then
 			if (v.image) then
+				local scaled = _font.Scale(v.height)
 				local imageData = {
 					image = v.image,
 					x = curX + 1,
 					y = curY,
-					w = font.Scale(v.width),
-					h = font.Scale(v.height)
+					w = _font.Scale(v.width),
+					h = scaled
 				}
 
 				curX = curX + imageData.w + 2
 
 				table.insert(compiled, imageData)
+
+				if (totalHeight < scaled) then
+					totalHeight = scaled
+				end
+			elseif (v.r and v.g and v.b and v.a) then
+				table.insert(compiled, Color(v.r, v.g, v.b, v.a))
 			end
-		elseif (IsColor(v)) then
-			table.insert(compiled, v)
+		elseif (IsValid(v)) then
+			local toInsert = ""
+
+			if (v:IsPlayer()) then
+				toInsert = hook.Run("GetPlayerName", v) or v:Name()
+			else
+				toInsert = tostring(v) or v:GetClass()
+			end
+
+			local w, h = util.GetTextSize(toInsert, font)
+
+			table.insert(compiled, {text = toInsert, w = w, h = h, x = curX, y = curY + (maxHeight - h)})
+
+			curX = curX + w
+
+			if (totalHeight < h) then
+				totalHeight = h
+			end
 		end
 	end
 

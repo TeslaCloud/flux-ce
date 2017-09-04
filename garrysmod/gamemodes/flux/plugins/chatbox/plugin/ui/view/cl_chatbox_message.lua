@@ -10,6 +10,7 @@ PANEL.compiled = {}
 PANEL.addTime = 0
 PANEL.forceShow = false
 PANEL.shouldPaint = false
+PANEL.alpha = 255
 
 function PANEL:Init()
 	--if (fl.client:HasPermission("chat_mod")) then
@@ -21,12 +22,24 @@ function PANEL:Init()
 end
 
 function PANEL:Think()
+	local curTime = CurTime()
+
 	self.shouldPaint = false
 
 	if (self.forceShow) then
 		self.shouldPaint = true
-	elseif (self.fadeTime > CurTime()) then
+
+		self.alpha = 255
+	elseif (self.fadeTime > curTime) then
 		self.shouldPaint = true
+
+		local diff = self.fadeTime - curTime
+
+		if (diff < 1) then
+			self.alpha = Lerp(FrameTime() * 6, self.alpha, 0)
+		end
+	else
+		self.alpha = 0
 	end
 end
 
@@ -43,21 +56,29 @@ function PANEL:Eject()
 
 		parent:RemoveMessage(self.messageIndex or 1)
 		parent:Rebuild()
+
 		self:SafeRemove()
 	end
 end
 
 function PANEL:Paint(w, h)
 	if (self.shouldPaint) then
-		local data = self.messageData
-		local curColor = Color(255, 255, 255)
-		local curSize = 16
-		local italic = false
-		local bold = false
-		local curX = 0
-		local curY = 0
+		local curColor = Color(255, 255, 255, self.alpha)
+		local curFont = font.GetSize(theme.GetFont("Chatbox_Normal"), font.Scale(20))
 
-		draw.RoundedBox(0, 0, 0, w, h, Color(255, 0, 0))
+		for k, v in ipairs(self.messageData) do
+			if (istable(v)) then
+				if (v.text) then
+					draw.SimpleText(v.text, curFont, v.x, v.y, curColor)
+				elseif (IsColor(v)) then
+					curColor = ColorAlpha(v, self.alpha)
+				elseif (v.image) then
+					draw.TexturedRect(util.GetMaterial(v.image), v.x, v.y, v.w, v.h, Color(255, 255, 255))
+				end
+			elseif (isnumber(v)) then
+				curFont = font.GetSize(theme.GetFont("Chatbox_Normal"), v)
+			end
+		end
 	end
 end
 
