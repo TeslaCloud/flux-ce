@@ -52,7 +52,9 @@ end
 -- Those people want us gone :(
 function PANEL:Eject()
 	if (plugin.Call("ShouldMessageEject", self) != false) then
-		local parent = self:GetParent()
+		local parent = chatbox.panel
+
+		if (!IsValid(parent)) then return end
 
 		parent:RemoveMessage(self.messageIndex or 1)
 		parent:Rebuild()
@@ -63,6 +65,8 @@ end
 
 function PANEL:Paint(w, h)
 	if (self.shouldPaint) then
+		if (plugin.Call("ChatboxPrePaintMessage", w, h, self) == true) then return end
+
 		local curColor = Color(255, 255, 255, self.alpha)
 		local curFont = font.GetSize(theme.GetFont("Chatbox_Normal"), font.Scale(20))
 

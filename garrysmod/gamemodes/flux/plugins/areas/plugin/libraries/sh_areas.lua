@@ -106,11 +106,19 @@ function areas.Register(id, data)
 
 	top = top + 1
 
+	if (SERVER) then
+		netstream.Start(nil, "flAreaRegister", id, data)
+	end
+
 	return stored[id]
 end
 
 function areas.Remove(uniqueID)
 	stored[uniqueID] = nil
+
+	if (SERVER) then
+		netstream.Start(nil, "flAreaRemove", uniqueID)
+	end
 end
 
 function areas.GetColor(typeID)

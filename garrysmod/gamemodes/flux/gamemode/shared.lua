@@ -11,9 +11,9 @@ GM.Website 		= "http://teslacloud.net/"
 GM.Email 		= "support@teslacloud.net"
 
 -- Define Flux-Specific fields.
-GM.Version 		= "0.2.6-indev"
-GM.Date			= "8/16/2017"
-GM.Build 		= "1511"
+GM.Version 		= "0.2.7-indev"
+GM.Date			= "9/6/2017"
+GM.Build 		= "1533"
 GM.Description 	= "A free roleplay gamemode framework."
 
 -- It would be very nice of you to leave below values as they are if you're using official schemas.
@@ -58,7 +58,7 @@ end
 
 -- A function to get schema's name.
 function fl.GetSchemaName()
-	return (Schema and Schema:GetName()) or "Unknown"
+	return (Schema and Schema:GetName()) or fl.schema or "Unknown"
 end
 
 -- Called when gamemode's server browser name needs to be retrieved.

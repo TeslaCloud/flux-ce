@@ -4,6 +4,19 @@
 	the framework is publicly released.
 --]]
 
+function flCharacters:PlayerInitialSpawn(player)
+	player:SetNoDraw(true)
+	player:SetNotSolid(true)
+	player:Lock()
+
+	timer.Simple(1, function()
+		if (IsValid(player)) then
+			player:KillSilent()
+			player:StripAmmo()
+		end
+	end)
+end
+
 function flCharacters:ClientIncludedSchema(player)
 	character.Load(player)
 end

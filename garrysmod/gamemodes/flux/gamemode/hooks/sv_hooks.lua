@@ -54,17 +54,6 @@ function GM:PlayerInitialSpawn(player)
 		return
 	end
 
-	player:SetNoDraw(true)
-	player:SetNotSolid(true)
-	player:Lock()
-
-	timer.Simple(1, function()
-		if (IsValid(player)) then
-			player:KillSilent()
-			player:StripAmmo()
-		end
-	end)
-
 	netstream.Start(nil, "PlayerInitialSpawn", player:EntIndex())
 end
 

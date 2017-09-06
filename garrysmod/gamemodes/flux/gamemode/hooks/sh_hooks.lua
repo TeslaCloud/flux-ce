@@ -34,7 +34,7 @@ do
 			end
 		end
 
-		player.m_bWasOnGround = player:IsOnGround()
+		player.m_bWasOnGround = player:OnGround()
 		player.m_bWasNoclipping = (player:GetMoveType() == MOVETYPE_NOCLIP and !player:InVehicle())
 
 		return player.CalcIdeal, (player.CalcSeqOverride or -1)
@@ -57,10 +57,11 @@ do
 		if (player:InVehicle()) then
 			local vehicle = player:GetVehicle()
 			local vehicleClass = vehicle:GetClass()
+			local vehicleAnims = animations["vehicle"]
 
-			if (animations["vehicle"] and animations["vehicle"][vehicleClass]) then
-				local anim = animations["vehicle"][vehicleClass][1]
-				local position = animations["vehicle"][vehicleClass][2]
+			if (vehicleAnims and vehicleAnims[vehicleClass]) then
+				local anim = vehicleAnims[vehicleClass][1]
+				local position = vehicleAnims[vehicleClass][2]
 
 				if (position) then
 					player:ManipulateBonePosition(0, position)
@@ -91,16 +92,16 @@ do
 				return anim
 			end
 		elseif (player:OnGround()) then
-			local weapon = player:GetActiveWeapon()
-			local holdType = getWeaponHoldtype(player, weapon)
+			local holdType = getWeaponHoldtype(player, player:GetActiveWeapon())
+			local holdTypeAnims = animations[holdType]
 
 			if (player.shouldUndoBones) then
 				player:ManipulateBonePosition(0, Vector(0, 0, 0))
 				player.shouldUndoBones = false
 			end
 
-			if (animations[holdType] and animations[holdType][act]) then
-				local anim = animations[holdType][act]
+			if (holdTypeAnims and holdTypeAnims[act]) then
+				local anim = holdTypeAnims[act]
 
 				if (istable(anim)) then
 					if (hook.Call("ModelWeaponRaised", nil, player, model)) then
@@ -184,17 +185,15 @@ function GM:PlayerNoClip(player, bState)
 		if (bShouldExit != nil) then
 			return bShouldExit
 		end
-
-		return true
 	else
 		local bShouldEnter = plugin.Call("PlayerEnterNoclip", player)
 
 		if (bShouldEnter != nil) then
 			return bShouldEnter
 		end
-
-		return true
 	end
+
+	return true
 end
 
 function GM:PhysgunPickup(player, entity)
@@ -204,7 +203,9 @@ function GM:PhysgunPickup(player, entity)
 end
 
 concommand.Add("fl_save_pers", function()
-	if (SERVER) then hook.Run("PersistenceSave") end
+	if (fl.Devmode and SERVER) then
+		hook.Run("PersistenceSave")
+	end
 end)
 
 function GM:OnReloaded()
@@ -233,10 +234,10 @@ timer.Create("OneSecond", 1, 0, function()
 	hook.Run("OneSecond")
 end)
 
-timer.Create("HalfSecond", 1 / 2, 0, function()
+timer.Create("HalfSecond", 0.5, 0, function()
 	hook.Run("HalfSecond")
 end)
 
-timer.Create("LazyTick", 1 / 8, 0, function()
+timer.Create("LazyTick", 0.125, 0, function()
 	hook.Run("LazyTick")
 end)

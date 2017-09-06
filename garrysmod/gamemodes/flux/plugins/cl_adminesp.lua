@@ -26,6 +26,7 @@ do
 	function PLUGIN:HUDPaint()
 		if (IsValid(fl.client) and fl.client:Alive() and fl.client:GetMoveType() == MOVETYPE_NOCLIP and fl.client:HasPermission("admin_esp")) then
 			local scrW, scrH = ScrW(), ScrH()
+			local clientPos = fl.client:GetPos()
 
 			for k, v in ipairs(_player.GetAll()) do
 				if (v == fl.client) then continue end
@@ -35,10 +36,8 @@ do
 				local screenPos = pos:ToScreen()
 				local headPos = head:ToScreen()
 				local textPos = Vector(head.x, head.y, head.z + 30):ToScreen()
-				local distance = fl.client:GetPos():Distance(v:GetPos())
 				local x, y = headPos.x, headPos.y
-				local f = math.abs(350 / distance)
-				local size = 52 * f
+				local size = 52 * math.abs(350 / clientPos:Distance(pos))
 				local teamColor = team.GetColor(v:Team()) or Color(255, 255, 255)
 
 				local w, h = util.GetTextSize(v:Name(), theme.GetFont("Text_Small"))

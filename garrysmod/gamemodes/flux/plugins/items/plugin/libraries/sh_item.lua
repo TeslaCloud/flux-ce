@@ -40,6 +40,12 @@ function item.GetEntities()
 end
 
 function item.Register(id, data)
+	if (!data) then return end
+
+	if (!isstring(data.Name) and isstring(data.PrintName)) then
+		data.Name = data.PrintName
+	end
+
 	if (!isstring(id) and !isstring(data.Name)) then
 		ErrorNoHalt("[Flux] Attempt to register an item without a valid ID!")
 		debug.Trace()

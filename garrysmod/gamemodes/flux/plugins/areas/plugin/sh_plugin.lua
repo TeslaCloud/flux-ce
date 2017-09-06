@@ -33,10 +33,6 @@ flAreas.toolModes = {
 
 							if (z > v2[1].z and z < v.maxH) then
 								if (util.VectorIsInPoly(pos, v2)) then
-									if (SERVER) then
-										netstream.Start(nil, "flAreaRemove", v.uniqueID)
-									end
-
 									areas.Remove(v.uniqueID)
 
 									return true

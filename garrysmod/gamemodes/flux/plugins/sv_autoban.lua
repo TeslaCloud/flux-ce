@@ -32,7 +32,7 @@ local blacklist = {
 }
 
 local badKeywords = {
-	"[tnf]", "[ tnf ]", "[ tnf]", "[tnf ]",
+	"[tnf]", "[ tnf ]", "[ tnf]", "[tnf ]", " tnf ",
 	"[tnf", "(tnf", "(tnf)", "tnf)", "the new future", "( tnf", "tnf )",
 	"kurozael", "conna wiles", "connawiles", "kuropixel", "cloudsixteen",
 	"cloud sixteen"

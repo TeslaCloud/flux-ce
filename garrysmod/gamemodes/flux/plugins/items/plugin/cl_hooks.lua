@@ -10,7 +10,7 @@ function flItems:PlayerUseItemMenu(itemTable, bIsEntity)
 	local itemMenu = DermaMenu()
 
 	if (!itemTable.Name) then
-		local closeBtn = itemMenu:AddOption(itemTable.CancelText or "Cancel", function() end)
+		local closeBtn = itemMenu:AddOption(itemTable.CancelText or "#Item_Option_Cancel", function() end)
 		closeBtn:SetIcon("icon16/cross.png")
 	else
 		if (itemTable.customButtons) then
@@ -24,7 +24,7 @@ function flItems:PlayerUseItemMenu(itemTable, bIsEntity)
 		end
 
 		if (itemTable.OnUse) then
-			local useBtn = itemMenu:AddOption(itemTable.UseText or "Use", function()
+			local useBtn = itemMenu:AddOption(itemTable.UseText or "#Item_Option_Use", function()
 				itemTable:DoMenuAction("OnUse")
 			end)
 
@@ -32,20 +32,20 @@ function flItems:PlayerUseItemMenu(itemTable, bIsEntity)
 		end
 
 		if (bIsEntity) then
-			local takeBtn = itemMenu:AddOption(itemTable.TakeText or "Take", function()
+			local takeBtn = itemMenu:AddOption(itemTable.TakeText or "#Item_Option_Take", function()
 				itemTable:DoMenuAction("OnTake")
 			end)
 
 			takeBtn:SetIcon(itemTable.TakeIcon or "icon16/wrench.png")
 		else
-			local dropBtn = itemMenu:AddOption(itemTable.TakeText or "Drop", function()
+			local dropBtn = itemMenu:AddOption(itemTable.TakeText or "#Item_Option_Drop", function()
 				itemTable:DoMenuAction("OnDrop")
 			end)
 
 			dropBtn:SetIcon(itemTable.TakeIcon or "icon16/wrench.png")
 		end
 
-		local closeBtn = itemMenu:AddOption(itemTable.CancelText or "Cancel", function() end)
+		local closeBtn = itemMenu:AddOption(itemTable.CancelText or "#Item_Option_Cancel", function() end)
 		closeBtn:SetIcon(itemTable.CancelIcon or "icon16/cross.png")
 	end
 
