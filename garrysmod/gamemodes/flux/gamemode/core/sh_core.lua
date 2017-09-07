@@ -334,7 +334,7 @@ function fl.GetSchemaInfo()
 			fl.SchemaInfo["author"] = schemaData["author"] or "Undefined"
 			fl.SchemaInfo["description"] = schemaData["description"] or "Undefined"
 			fl.SchemaInfo["version"] = schemaData["version"] or "Undefined"
-			fl.SchemaInfo["folder"] = schemaFolder:gsub("/schema", "")
+			fl.SchemaInfo["folder"] = string.gsub(schemaFolder, "/schema", "")
 		return fl.SchemaInfo
 	else
 		return fl.sharedTable.schemaInfo

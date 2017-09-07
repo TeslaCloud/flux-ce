@@ -13,7 +13,6 @@ function fl3DText:PostDrawOpaqueRenderables()
 	if (IsValid(weapon) and weapon:GetClass() == "gmod_tool" and weapon:GetMode() == "texts") then
 		local tool = fl.client:GetTool()
 		local text = tool:GetClientInfo("text")
-		local scale = tool:GetClientNumber("scale")
 		local style = tool:GetClientNumber("style")
 		local trace = fl.client:GetEyeTrace()
 		local normal = trace.HitNormal
@@ -22,7 +21,7 @@ function fl3DText:PostDrawOpaqueRenderables()
 		angle:RotateAroundAxis(angle:Forward(), 90)
 		angle:RotateAroundAxis(angle:Right(), 270)
 
-		cam.Start3D2D(trace.HitPos + (normal * 1.25), angle, 0.1 * scale)
+		cam.Start3D2D(trace.HitPos + (normal * 1.25), angle, 0.1 * tool:GetClientNumber("scale"))
 			if (style >= 5) then
 				if (style != 8 and style != 9) then
 					draw.RoundedBox(0, -w / 2 - 32, -h / 2 - 16, w + 64, h + 32, ColorAlpha(Color(tool:GetClientInfo("extraColor") or "#FF000033"), 40))

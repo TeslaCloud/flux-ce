@@ -38,9 +38,6 @@ function chatbox.Compile(messageTable)
 	local maxHeight = font.Scale(messageTable.maxHeight)
 	local font = _font.GetSize(theme.GetFont("Chatbox_Normal"), curSize)
 
-	print("Message Data:")
-	PrintTable(messageTable)
-
 	if (plugin.Call("ChatboxCompileMessage", data, compiled) != true) then
 		for k, v in ipairs(data) do
 			if (plugin.Call("ChatboxCompileMessageData", v, compiled) == true) then
@@ -122,9 +119,6 @@ function chatbox.Compile(messageTable)
 	end
 
 	compiled.totalHeight = math.max(totalHeight, compiled.totalHeight)
-
-	print("Compiled Message:")
-	PrintTable(compiled)
 
 	return compiled
 end

@@ -29,15 +29,35 @@ function PANEL:Init()
 	self.textEntry = vgui.Create("flTextEntry", self)
 	self.textEntry:SetText("")
 	self.textEntry:SetSize(1, 1)
+	self.textEntry.history = {""}
+	self.textEntry.lastIndex = 0
 
 	self.textEntry.OnValueChange = function(entry, value)
 		hook.Run("ChatTextChanged", value)
 	end
 
 	self.textEntry.OnEnter = function(entry)
-		hook.Run("ChatboxTextEntered", entry:GetValue())
+		local value = entry:GetValue()
+
+		hook.Run("ChatboxTextEntered", value)
+
+		if (entry.history[#entry.history] != value) then
+			table.insert(entry.history, value)
+		end
 
 		entry:SetText("")
+	end
+
+	self.textEntry.OnKeyCodePressed = function(entry, code)
+		print(code)
+
+		if (code == KEY_UP) then
+			entry.lastIndex = math.Clamp(entry.lastIndex + 1, 1, #entry.history)
+		elseif (code == KEY_DOWN) then
+			entry.lastIndex = math.Clamp(entry.lastIndex - 1, 1, #entry.history)
+		end
+
+		entry:SetValue(entry.history[entry.lastIndex])
 	end
 
 	self:Rebuild()
@@ -51,6 +71,7 @@ function PANEL:SetOpen(bIsOpen)
 
 		self.textEntry:SetVisible(true)
 		self.textEntry:RequestFocus()
+		self.textEntry.lastIndex = 0
 	else
 		self:KillFocus()
 
@@ -112,6 +133,7 @@ function PANEL:Rebuild()
 	self.textEntry:SetPos(0, chatbox.height - 20)
 	self.textEntry:SetFont(theme.GetFont("Text_Small"))
 	self.textEntry:SetTextColor(theme.GetColor("Text"))
+	self.textEntry:RequestFocus()
 
 	self.scrollPanel:SetSize(chatbox.width, chatbox.height - self.textEntry:GetTall() - 16)
 	self.scrollPanel:PerformLayout()
@@ -139,6 +161,12 @@ function PANEL:Think()
 	end
 end
 
-function PANEL:Paint(w, h) end
+function PANEL:Paint(w, h)
+	plugin.Call("ChatboxPaintBackground", w, h, self)
+end
+
+function PANEL:PaintOver(w, h)
+	plugin.Call("ChatboxPaintOver", w, h, self)
+end
 
 vgui.Register("flChatPanel", PANEL, "flBasePanel")

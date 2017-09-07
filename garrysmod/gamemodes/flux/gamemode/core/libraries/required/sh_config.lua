@@ -366,7 +366,13 @@ end
 function config.Import(strFileContents, nFromConfig)
 	if (!isstring(strFileContents) or strFileContents == "") then return end
 
-	for k, v in pairs(config.ConfigToTable(strFileContents)) do
-		config.Set(k, v, nil, nFromConfig)
+	local cfgTable = config.ConfigToTable(strFileContents)
+
+	for k, v in pairs(cfgTable) do
+		if (k != "depends" and plugin.Call("ShouldConfigImport", k, v) == nil) then
+			config.Set(k, v, nil, nFromConfig)
+		end
 	end
+
+	return cfgTable
 end

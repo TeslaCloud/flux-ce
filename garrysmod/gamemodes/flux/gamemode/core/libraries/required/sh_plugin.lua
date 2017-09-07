@@ -140,48 +140,6 @@ function plugin.RemoveHooks(id)
 	end
 end
 
-function plugin.Register(obj)
-	plugin.CacheFunctions(obj)
-
-	if (obj.ShouldRefresh == false) then
-		reloadData[obj:GetFolder()] = false
-	else
-		reloadData[obj:GetFolder()] = true
-	end
-
-	if (SERVER) then
-		if (Schema == obj) then
-			local folderName = obj.folder:RemoveTextFromEnd("/schema")
-			local filePath = "gamemodes/"..folderName.."/"..folderName..".cfg"
-
-			if (file.Exists(filePath, "GAME")) then
-				local fileContents = fileio.Read(filePath)
-
-				fl.DevPrint("Importing config: "..filePath)
-
-				config.Import(fileContents, CONFIG_PLUGIN)
-			end
-		end
-	end
-
-	if (isfunction(obj.OnPluginLoaded)) then
-		obj.OnPluginLoaded(obj)
-	end
-
-	stored[obj:GetFolder()] = obj
-	loadCache[obj.m_UniqueID] = true
-end
-
-function plugin.HasLoaded(obj)
-	if (istable(obj)) then
-		return loadCache[obj.m_UniqueID]
-	elseif (isstring(obj)) then
-		return loadCache[obj]
-	end
-
-	return false
-end
-
 function plugin.Find(id)
 	if (stored[id]) then
 		return stored[id], id
@@ -270,6 +228,46 @@ function plugin.IsDisabled(folder)
 	end
 end
 
+function plugin.HasLoaded(obj)
+	if (istable(obj)) then
+		return loadCache[obj.m_UniqueID]
+	elseif (isstring(obj)) then
+		return loadCache[obj]
+	end
+
+	return false
+end
+
+function plugin.Register(obj)
+	plugin.CacheFunctions(obj)
+
+	if (obj.ShouldRefresh == false) then
+		reloadData[obj:GetFolder()] = false
+	else
+		reloadData[obj:GetFolder()] = true
+	end
+
+	if (SERVER) then
+		if (Schema == obj) then
+			local folderName = obj.folder:RemoveTextFromEnd("/schema")
+			local filePath = "gamemodes/"..folderName.."/"..folderName..".cfg"
+
+			if (file.Exists(filePath, "GAME")) then
+				fl.DevPrint("Importing config: "..filePath)
+
+				config.Import(fileio.Read(filePath), CONFIG_PLUGIN)
+			end
+		end
+	end
+
+	if (isfunction(obj.OnPluginLoaded)) then
+		obj.OnPluginLoaded(obj)
+	end
+
+	stored[obj:GetFolder()] = obj
+	loadCache[obj.m_UniqueID] = true
+end
+
 function plugin.Include(folder)
 	local hasMainFile = false
 	local id = folder:GetFileFromFilename()
@@ -351,17 +349,35 @@ end
 
 function plugin.IncludeSchema()
 	local schemaInfo = fl.GetSchemaInfo()
-	local schemaFolder = fl.GetSchemaFolder().."/schema"
-	schemaInfo.folder = schemaFolder
+	local schemaPath = schemaInfo.folder
+	local schemaFolder = schemaPath.."/schema"
+	local filePath = "gamemodes/"..schemaPath.."/"..schemaPath..".cfg"
 
-	if (SERVER) then AddCSLuaFile(fl.GetSchemaFolder().."/gamemode/cl_init.lua") end
+	if (file.Exists(filePath, "GAME")) then
+		fl.DevPrint("Checking schema dependencies using "..filePath)
+
+		local dependencies = config.ConfigToTable(fileio.Read(filePath)).depends
+
+		if (istable(dependencies)) then
+			for k, v in ipairs(dependencies) do
+				if (!plugin.Require(v)) then
+					ErrorNoHalt("[Flux] Unable to load schema! Dependency missing: '"..tostring(v).."'!\n")
+					ErrorNoHalt("Please install this plugin in your schema's 'plugins' folder!\n")
+
+					return
+				end
+			end
+		end
+	end
+
+	if (SERVER) then AddCSLuaFile(schemaPath.."/gamemode/cl_init.lua") end
 
 	Schema = Plugin(schemaInfo.name, schemaInfo)
 
 	util.Include(schemaFolder.."/sh_schema.lua")
 
 	plugin.IncludeFolders(schemaFolder)
-	plugin.IncludePlugins(fl.GetSchemaFolder().."/plugins")
+	plugin.IncludePlugins(schemaPath.."/plugins")
 
 	if (schemaInfo.name and schemaInfo.author) then
 		MsgC(Color(0, 255, 100, 255), "[Flux] ")
