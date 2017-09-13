@@ -37,7 +37,7 @@ FACTION:AddClass("unit", "Metropolice Unit", "A regular Metropolice Force unit."
 end)
 
 FACTION:AddClass("elite_mpf", "Elite Metropolice", "Metropolice high command.", FACTION.Color, function(player)
-	return player:IsRank("OfC")
+	return player:IsRank("SqO")
 end)
 
 function FACTION:GenerateID(player)

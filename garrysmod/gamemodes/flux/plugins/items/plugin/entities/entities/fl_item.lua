@@ -110,7 +110,7 @@ else
 				return
 			end
 
-			text = self.item.Name
+			text = self.item.PrintName
 			desc = self.item.Description
 		else
 			if (!self.dataRequested) then
