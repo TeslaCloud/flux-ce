@@ -7,10 +7,17 @@
 --]]
 
 config.Set("talk_radius", 400)
-config.Set("ic_color", "gold")
+config.Set("ic_color", "khaki")
 
-function PLUGIN:ChatboxAdjustPlayerSay(messageData)
+function PLUGIN:ChatboxAdjustPlayerSay(player, text, messageData)
+	table.Empty(messageData)
 
+	table.Merge(messageData, {
+		Color(config.Get("ic_color")),
+		player:Name(),
+		L("Chat_Say"),
+		hook.Run("ChatboxAdjustICText", text:Spelling())
+	})
 end
 
 function PLUGIN:PlayerCanHear(player, messageData)
@@ -18,5 +25,15 @@ function PLUGIN:PlayerCanHear(player, messageData)
 		local lookPos = player:GetEyeTraceNoCursor().HitPos
 
 		return messageData.sender:GetPos():Distance(lookPos) <= messageData.radius
+	end
+end
+
+function PLUGIN:ChatboxAdjustICText(text)
+	return "\""..text.."\""
+end
+
+function PLUGIN:PlayerCanUseOOC(player)
+	if (player:GetPlayerData("muteOOC", 0) > CurTime()) then
+		return false
 	end
 end

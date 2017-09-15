@@ -610,7 +610,7 @@ function string.IsCommand(str)
 	local prefixes = config.Get("command_prefixes") or {}
 
 	for k, v in ipairs(prefixes) do
-		if (str:StartWith(v)) then
+		if (str:StartWith(v) and hook.Run("ChatboxAdjustPrefix", str) != false) then
 			return true, string.utf8len(v)
 		end
 	end
@@ -906,6 +906,19 @@ function string.CountCharacter(str, char)
 	end
 
 	return hits
+end
+
+function string.Spelling(str)
+	local len = str:utf8len()
+	local endText = str:utf8sub(-1)
+
+	str = str:utf8sub(1, 1):utf8upper()..str:utf8sub(2, len)
+
+	if ((endText != ".") and (endText != "!") and (endText != "?") and ((endText != '"'))) then
+		str = str.."."
+	end
+
+	return str
 end
 
 function util.SmartRemoveNewlines(str)

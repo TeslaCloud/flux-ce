@@ -92,7 +92,7 @@ function flAdmin:PlayerSay(player, text, bTeamChat)
 end
 
 function flAdmin:CommandCheckImmunity(player, target, canBeEqual)
-	return fl.admin:CheckImmunity(player, v, cmdTable.canBeEqual)
+	return fl.admin:CheckImmunity(player, v, canBeEqual)
 end
 
 function flAdmin:OnCommandCreated(id, data)

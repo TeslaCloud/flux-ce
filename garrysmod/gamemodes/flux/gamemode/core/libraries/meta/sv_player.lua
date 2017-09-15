@@ -62,6 +62,12 @@ function playerMeta:SetPlayerData(key, value)
 	self:SetData(data)
 end
 
+function playerMeta:GetPlayerData(key, default)
+	local data = self:GetData()
+
+	return data[key] or default
+end
+
 function playerMeta:SetInitialized(bIsInitialized)
 	if (bIsInitialized == nil) then bIsInitialized = true end
 

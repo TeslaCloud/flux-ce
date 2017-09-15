@@ -308,7 +308,7 @@ if (SERVER) then
 					-- Let plugins hook into this and abort command's execution if necessary.
 					if (!hook.Run("PlayerRunCommand", player, cmdTable, args)) then
 						if (IsValid(player)) then
-							ServerLog(player:Name().." has used /"..cmdTable.name.." "..text:utf8sub(string.utf8len(cmdTable.name) + 2, string.utf8len(text)))
+							ServerLog(player:Name().." has used /"..cmdTable.name.." "..text:utf8sub(string.utf8len(command) + 2, string.utf8len(text)))
 						end
 
 						self:Run(player, cmdTable, args)

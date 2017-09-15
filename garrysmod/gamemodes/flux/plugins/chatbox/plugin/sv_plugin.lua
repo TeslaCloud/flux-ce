@@ -140,7 +140,7 @@ netstream.Hook("Chatbox::PlayerSay", function(player, text, bTeamChat)
 		{sender = player}
 	}
 
-	hook.Run("ChatboxAdjustPlayerSay", message)
+	hook.Run("ChatboxAdjustPlayerSay", player, text, message)
 
 	PrintTable(message)
 	print(unpack(message))
