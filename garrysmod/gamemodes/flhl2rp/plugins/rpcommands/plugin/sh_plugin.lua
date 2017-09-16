@@ -32,7 +32,7 @@ do
 		chatbox.AddText(nil, unpack(message))
 	end)
 
-	flPrefixes:AddPrefix({".//", "[[", "/looc"}, function(player, text, bTeamChat)
+	flPrefixes:AddPrefix({".//", "[[", "/looc "}, function(player, text, bTeamChat)
 		if (hook.Run("PlayerCanUseOOC", player) == false) then
 			local time = math.Round(player:GetPlayerData("muteOOC") - CurTime())
 
@@ -58,8 +58,9 @@ do
 		chatbox.AddText(nil, unpack(message))
 	end)
 
-	flPrefixes:AddPrefix({"/y", "/s"}, function(player, text, bTeamChat)
+	flPrefixes:AddPrefix({"/y ", "/s "}, function(player, text, bTeamChat)
 		local message = {
+			23,
 			Color(config.Get("ic_color")),
 			player:Name(),
 			L("Chat_Yell"),
@@ -71,8 +72,9 @@ do
 		chatbox.AddText(nil, unpack(message))
 	end)
 
-	flPrefixes:AddPrefix("/w", function(player, text, bTeamChat)
+	flPrefixes:AddPrefix("/w ", function(player, text, bTeamChat)
 		local message = {
+			17,
 			Color(config.Get("ic_color")),
 			player:Name(),
 			L("Chat_Whisper"),

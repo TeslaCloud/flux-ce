@@ -34,13 +34,21 @@ function flPrefixes:PlayerSay(player, text, bTeamChat)
 		if (istable(v.prefix)) then
 			for k1, v1 in pairs(v.prefix) do
 				if (text:utf8lower():StartWith(v1)) then
-					v.callback(player, text:utf8sub(v1:utf8len() + 1), bTeamChat)
+					local message = text:utf8sub(v1:utf8len() + 1)
+
+					if (message != "") then
+						v.callback(player, message, bTeamChat)
+					end
 
 					return ""
 				end
 			end
 		elseif (text:utf8lower():StartWith(v.prefix)) then
-			v.callback(player, text:utf8sub(v.prefix:utf8len() + 1), bTeamChat)
+			local message = text:utf8sub(v.prefix:utf8len() + 1)
+
+			if (message != "") then
+				v.callback(player, message, bTeamChat)
+			end
 
 			return ""
 		end
