@@ -91,7 +91,7 @@ function CFaction:GenerateName(player, charName, rank, defaultData)
 
 	if (finalName:find("{rank}")) then
 		for k, v in ipairs(self.Ranks) do
-			if (v.uniqueID == rank) then
+			if (v.uniqueID == rank or k == rank) then
 				finalName = finalName:Replace("{rank}", v.name)
 
 				break
@@ -102,19 +102,21 @@ function CFaction:GenerateName(player, charName, rank, defaultData)
 	local operators = string.FindAll(finalName, "{[%w]+:[%w]+}")
 
 	for k, v in ipairs(operators) do
+		v = v[1]
+
 		if (v:StartWith("{callback:")) then
 			local funcName = v:utf8sub(11, v:utf8len() - 1)
 			local callback = self[funcName]
 
 			if (isfunction(callback)) then
-				finalName:Replace(v, callback(self, player))
+				finalName = finalName:Replace(v, callback(self, player))
 			end
 		elseif (v:StartWith("{data:")) then
 			local key = v:utf8sub(7, v:utf8len() - 1)
 			local data = player:GetCharacterData(key, (defaultData[key] or self.Data[key] or ""))
 
 			if (isstring(data)) then
-				finalName:Replace(v, data)
+				finalName = finalName:Replace(v, data)
 			end
 		end
 	end
@@ -129,6 +131,9 @@ function CFaction:SetData(key, value)
 
 	self.Data[key] = tostring(value)
 end
+
+function CFaction:OnPlayerEntered(player) end
+function CFaction:OnPlayerExited(player) end
 
 function CFaction:Register()
 	faction.Register(self.uniqueID, self)

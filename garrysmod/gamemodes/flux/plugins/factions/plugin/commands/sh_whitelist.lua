@@ -14,13 +14,15 @@ COMMAND.arguments = 2
 COMMAND.playerArg = 1
 COMMAND.aliases = {"plywhitelist", "givewhitelist", "setwhitelisted"}
 
-function COMMAND:OnRun(player, target, name, bStrict)
+function COMMAND:OnRun(player, targets, name, bStrict)
 	local whitelist = faction.Find(name, (bStrict and true) or false)
 
 	if (whitelist) then
-		target:GiveWhitelist(whitelist.uniqueID)
+		for k, v in ipairs(targets) do
+			v:GiveWhitelist(whitelist.uniqueID)
+		end
 
-		fl.player:NotifyAll(L("WhitelistCMD_Message", (IsValid(player) and player:Name()) or "Console", target:Name(), whitelist.PrintName))
+		fl.player:NotifyAll(L("WhitelistCMD_Message", (IsValid(player) and player:Name()) or "Console", util.PlayerListToString(targets), whitelist.PrintName))
 	else
 		fl.player:Notify(player, L("Err_WhitelistNotValid",  name))
 	end

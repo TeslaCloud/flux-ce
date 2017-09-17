@@ -79,8 +79,78 @@ do
 		return self:GetNetVar("faction", "player")
 	end
 
+	function playerMeta:SetFaction(uniqueID)
+		local oldFaction = self:GetFaction()
+		local factionTable = faction.FindByID(uniqueID)
+
+		self:SetNetVar("name", factionTable:GenerateName(self, self:GetCharacterVar("name", self:Name()), 1))
+		self:SetRank(1)
+		self:SetTeam(factionTable.teamID)
+		self:SetNetVar("faction", factionTable.uniqueID)
+		self:SetDefaultFactionModel()
+
+		oldFaction:OnPlayerExited(self)
+		factionTable:OnPlayerEntered(self)
+	end
+
+	function playerMeta:SetDefaultFactionModel()
+		local factionTable = self:GetFaction()
+		local factionModels = factionTable.Models
+
+		if (istable(factionModels)) then
+			local playerModel = string.GetFileFromFilename(self:GetModel())
+			local universal = factionModels.universal or {}
+			local model
+			local modelTable
+
+			if (factionTable.HasGender) then
+				local male = factionModels.male or {}
+				local female = factionModels.female or {}
+				local gender = self:GetNetVar("gender", -1)
+
+				if (gender == CHAR_GENDER_MALE and #male > 0) then
+					modelTable = male
+				elseif (gender == CHAR_GENDER_FEMALE and #female > 0) then
+					modelTable = female
+				end
+			elseif (#universal > 0) then
+				modelTable = universal
+			end
+
+			if (modelTable) then
+				for k, v in pairs(modelTable) do
+					if (string.find(v, playerModel)) then
+						model = v
+
+						break
+					end
+				end
+
+				if (model) then
+					self:SetModel(model)
+				else
+					self:SetModel(modelTable[math.random(#modelTable)])
+				end
+			end
+		end
+	end
+
 	function playerMeta:GetFaction()
 		return faction.FindByID(self:GetFactionID())
+	end
+
+	function playerMeta:SetRank(rank)
+		if (isnumber(rank)) then
+			self:SetCharacterData("Rank", rank)
+		elseif (isstring(rank)) then
+			local factionTable = self:GetFaction()
+
+			for k, v in ipairs(factionTable.Ranks) do
+				if (string.utf8lower(v.uniqueID) == string.utf8lower(rank)) then
+					self:SetCharacterData("Rank", k)
+				end
+			end
+		end
 	end
 
 	function playerMeta:GetRank()

@@ -528,7 +528,7 @@ function fl.db:RawQuery(query, callback, flags, ...)
 		queryObj.onSuccess = function(queryObj, result)
 			if (callback) then
 				-- FFFFFFFUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU
-				local bStatus, value = pcall(callback, result)//, queryObj:status(), queryObj:lastInsert())
+				local bStatus, value = pcall(callback, result)--, queryObj:status(), queryObj:lastInsert())
 
 				if (!bStatus) then
 					ErrorNoHalt(string.format("[Flux:Database] MySQL Callback Error!\n%s\n", value))
@@ -747,6 +747,22 @@ function fl.db:EasyRead(tableName, where, callback)
 		end)
 
 	query:Execute()
+end
+
+function sql.SQLStr(str_in, bNoQuotes)
+	local str = tostring(str_in)
+
+	local null_chr = string.find(str, "\0")
+
+	if (null_chr) then
+		str = string.utf8sub(str, 1, null_chr - 1)
+	end
+
+	if (bNoQuotes) then
+		return str;
+	end
+
+	return "'"..str.."'"
 end
 
 timer.Create("Flux.Database.Think", 1, 0, function()

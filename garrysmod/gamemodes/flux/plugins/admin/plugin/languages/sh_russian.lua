@@ -50,20 +50,10 @@ lang["#DemoteCMD_Description"] = "Понижает игрока до польз�
 lang["#DemoteCMD_Syntax"] = "<игрок>"
 lang["#DemoteCMD_Message"] = "#1 понизил #2 с #3 до пользователя."
 
-lang["#WhitelistCMD_Description"] = "Дает игроку доступ к фракции."
-lang["#WhitelistCMD_Syntax"] = "<игрок> <фракция> [строгий режим поиска]"
-lang["#WhitelistCMD_Message"] = "#1 дал #2 доступ к фракции #3."
-
-lang["#TakeWhitelistCMD_Description"] = "Убирает у игрока доступ к фракции."
-lang["#TakeWhitelistCMD_Syntax"] = "<игрок> <фракция> [строгий режим поиска]"
-lang["#TakeWhitelistCMD_Message"] = "#1 забрал у #2 доступ к фракции #3."
-
-lang["#Err_WhitelistNotValid"] = "'#1' не является фракцией!"
-lang["#Err_TargetNotWhitelisted"] = "У #1 нет доступа к фракции #2!"
-
-lang["#CharSetName_Description"] = "Выставляет имя персонажа."
-lang["#CharSetName_Syntax"] = "<игрок> <новое имя>"
-lang["#CharSetName_Message"] = "#1 сменил имя #2 на #3."
+--[[
+	PERMISSIONS - Description: Language category for all permission dialogue.
+	Formatting: Begin all language references with #Perm.
+--]]
 
 lang["#Perm_NotSet"] = "Не указано (нет)"
 lang["#Perm_Allow"] = "Разрешить"
