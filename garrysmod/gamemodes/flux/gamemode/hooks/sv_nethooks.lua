@@ -9,8 +9,8 @@ netstream.Hook("ClientIncludedSchema", function(player)
 	hook.Run("PlayerInitialized", player)
 end)
 
-netstream.Hook("PlayerDropItem", function(player, instanceID)
-	hook.Run("PlayerDropItem", player, instanceID)
+netstream.Hook("PlayerDropItem", function(player, instanceID, pos)
+	hook.Run("PlayerDropItem", player, instanceID, pos)
 end)
 
 netstream.Hook("InventorySync", function(player, inventory)

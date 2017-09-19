@@ -110,7 +110,7 @@ if (SERVER) then
 		end
 
 		if (act == "OnDrop") then
-			if (hook.Run("PlayerDropItem", player, self.instanceID, self, ...) != nil) then return end
+			if (hook.Run("PlayerDropItem", player, self.instanceID) != nil) then return end
 		end
 
 		if (self[act]) then
@@ -157,6 +157,22 @@ if (SERVER) then
 else
 	function CItem:DoMenuAction(act, ...)
 		netstream.Start("ItemMenuAction", self.instanceID, act, ...)
+	end
+
+	function CItem:GetUseText()
+		return self.UseText or "#Item_Option_Use"
+	end
+
+	function CItem:GetTakeText()
+		return self.TakeText or "#Item_Option_Take"
+	end
+
+	function CItem:GetDropText()
+		return self.DropText or "#Item_Option_Drop"
+	end
+
+	function CItem:GetCancelText()
+		return self.CancelText or "#Item_Option_Cancel"
 	end
 end
 

@@ -24,7 +24,7 @@ function flItems:PlayerUseItemMenu(itemTable, bIsEntity)
 		end
 
 		if (itemTable.OnUse) then
-			local useBtn = itemMenu:AddOption(itemTable.UseText or "#Item_Option_Use", function()
+			local useBtn = itemMenu:AddOption(itemTable:GetUseText(), function()
 				itemTable:DoMenuAction("OnUse")
 			end)
 
@@ -32,20 +32,20 @@ function flItems:PlayerUseItemMenu(itemTable, bIsEntity)
 		end
 
 		if (bIsEntity) then
-			local takeBtn = itemMenu:AddOption(itemTable.TakeText or "#Item_Option_Take", function()
+			local takeBtn = itemMenu:AddOption(itemTable:GetTakeText(), function()
 				itemTable:DoMenuAction("OnTake")
 			end)
 
 			takeBtn:SetIcon(itemTable.TakeIcon or "icon16/wrench.png")
 		else
-			local dropBtn = itemMenu:AddOption(itemTable.TakeText or "#Item_Option_Drop", function()
+			local dropBtn = itemMenu:AddOption(itemTable:GetDropText(), function()
 				itemTable:DoMenuAction("OnDrop")
 			end)
 
 			dropBtn:SetIcon(itemTable.TakeIcon or "icon16/wrench.png")
 		end
 
-		local closeBtn = itemMenu:AddOption(itemTable.CancelText or "#Item_Option_Cancel", function() end)
+		local closeBtn = itemMenu:AddOption(itemTable:GetCancelText(), function() end)
 		closeBtn:SetIcon(itemTable.CancelIcon or "icon16/cross.png")
 	end
 
@@ -59,7 +59,9 @@ function flItems:PlayerUseItemMenu(itemTable, bIsEntity)
 end
 
 function flItems:PlayerDropItem(itemTable, panel, mouseX, mouseY)
-	netstream.Start("PlayerDropItem", itemTable.instanceID)
+	local position = gui.ScreenToVector(mouseX, mouseY)
+
+	netstream.Start("PlayerDropItem", itemTable.instanceID, position)
 end
 
 function flItems:HUDPaint()

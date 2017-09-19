@@ -9,7 +9,11 @@ local lang = fl.lang:GetTable("en")
 lang["#Item_Category_Consumables"] = "Consumables"
 lang["#Item_Category_Equipment"] = "Equipment"
 lang["#Item_Category_Other"] = "Other"
+lang["#Item_Category_Weapon"] = "Weapon"
+
 lang["#Item_Option_Use"] = "Use"
 lang["#Item_Option_Take"] = "Take"
 lang["#Item_Option_Drop"] = "Drop"
 lang["#Item_Option_Cancel"] = "Cancel"
+lang["#Item_Option_Equip"] = "Equip"
+lang["#Item_Option_Unequip"] = "Unequip"

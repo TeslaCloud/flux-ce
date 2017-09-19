@@ -398,8 +398,12 @@ if (SERVER) then
 		end
 
 		local ent = ents.Create("fl_item")
+
 		ent:SetItem(itemTable)
-		ent:SetPos(position)
+
+		local mins, maxs = ent:GetCollisionBounds()
+
+		ent:SetPos(position + Vector(0, 0, maxs.z))
 
 		if (angles) then
 			ent:SetAngles(angles)

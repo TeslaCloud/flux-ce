@@ -28,50 +28,50 @@ function flItems:PlayerTakeItem(player, itemTable, ...)
 	end
 end
 
-function flItems:PlayerDropItem(player, instanceID, itemTable, ...)
-	if (player:HasItemByID(instanceID)) then
-		player:TakeItemByID(instanceID)
+function flItems:PlayerDropItem(player, instanceID, pos)
+	local itemTable = item.FindInstanceByID(instanceID)
+	local trace = player:GetEyeTraceNoCursor()
 
-		local itemTable = item.FindInstanceByID(instanceID)
-		local trace = player:GetEyeTraceNoCursor()
-		local distance = trace.HitPos:Distance(player:GetPos())
+	if (itemTable.OnDrop) then
+		local result = itemTable:OnDrop(player)
 
-		if (distance < 150) then
-			item.Spawn(trace.HitPos + Vector(0, 0, 4), Angle(0, 0, 0), itemTable)
-		else
-			item.Spawn(player:EyePos() + trace.Normal * 20, Angle(0, 0, 0), itemTable)
+		if (result == false) then
+			return false
 		end
-
-		item.AsyncSaveEntities()
 	end
+
+	player:TakeItemByID(instanceID)
+
+	if (isvector(pos)) then
+		trace = util.QuickTrace(player:GetShootPos(), player:GetShootPos() + pos * 10000, player)
+	end
+
+	local distance = trace.HitPos:Distance(player:GetPos())
+
+	if (distance < 80) then
+		item.Spawn(trace.HitPos, Angle(0, 0, 0), itemTable)
+	else
+		item.Spawn(player:EyePos() + trace.Normal * 15, Angle(0, 0, 0), itemTable)
+	end
+
+	item.AsyncSaveEntities()
 end
 
 function flItems:PlayerUseItem(player, itemTable, ...)
-	local trace
+	if (itemTable.OnUse) then
+		local result = itemTable:OnUse(player)
 
-	if (IsValid(itemTable.entity)) then
-		trace = player:GetEyeTraceNoCursor()
-
-		if (!IsValid(trace.Entity)) then return end
-		if (trace.Entity != itemTable.entity) then return end
+		if (result == true) then
+			return
+		elseif (result == false) then
+			return false
+		end
 	end
 
-	if (player:HasItemByID(itemTable.instanceID) or trace != nil) then
-		if (itemTable.OnUse) then
-			local result = itemTable:OnUse(player)
-
-			if (result == true) then
-				return
-			elseif (result == false) then
-				return false
-			end
-		end
-
-		if (trace != nil) then
-			itemTable.entity:Remove()
-		else
-			player:TakeItemByID(itemTable.instanceID)
-		end
+	if (IsValid(itemTable.entity)) then
+		itemTable.entity:Remove()
+	else
+		player:TakeItemByID(itemTable.instanceID)
 	end
 end
 
@@ -85,4 +85,12 @@ end
 
 function flItems:PlayerInventoryUpdated(player)
 	netstream.Start(player, "RefreshInventory")
+end
+
+function flItems:PlayerCanUseItem(player, itemTable, action, ...)
+	local trace = player:GetEyeTraceNoCursor()
+
+	if ((!player:HasItemByID(itemTable.instanceID) and !IsValid(itemTable.entity)) or (IsValid(itemTable.entity) and trace.Entity and trace.Entity != itemTable.entity)) then
+		return false
+	end
 end

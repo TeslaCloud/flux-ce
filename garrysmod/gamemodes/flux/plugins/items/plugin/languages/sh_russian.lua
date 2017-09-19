@@ -9,7 +9,11 @@ local lang = fl.lang:GetTable("ru")
 lang["#Item_Category_Consumables"] = "Расходные материалы"
 lang["#Item_Category_Equipment"] = "Экипировка"
 lang["#Item_Category_Other"] = "Разное"
+lang["#Item_Category_Weapon"] = "Оружие"
+
 lang["#Item_Option_Use"] = "Использовать"
 lang["#Item_Option_Take"] = "Взять"
 lang["#Item_Option_Drop"] = "Выбросить"
 lang["#Item_Option_Cancel"] = "Отмена"
+lang["#Item_Option_Equip"] = "Экипировать"
+lang["#Item_Option_Unequip"] = "Снять"
