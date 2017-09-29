@@ -610,7 +610,7 @@ function string.IsCommand(str)
 	local prefixes = config.Get("command_prefixes") or {}
 
 	for k, v in ipairs(prefixes) do
-		if (str:StartWith(v) and hook.Run("ChatboxAdjustPrefix", str) != false) then
+		if (str:StartWith(v) and hook.Run("StringIsCommand", str) != false) then
 			return true, string.utf8len(v)
 		end
 	end

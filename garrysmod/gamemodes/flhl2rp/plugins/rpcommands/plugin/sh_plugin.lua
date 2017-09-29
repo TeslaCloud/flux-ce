@@ -10,16 +10,13 @@ util.Include("cl_hooks.lua")
 do
 	flPrefixes:AddPrefix({"//", "/ooc"}, function(player, text, bTeamChat)
 		if (hook.Run("PlayerCanUseOOC", player) == false) then 
-			local time = math.Round(player:GetPlayerData("MuteOOC") - CurTime())
-
-			player:Notify(L("MutedNotify", fl.lang:NiceTimeFull(player:GetNetVar("language"), time)))
+			player:Notify(L("MutedNotify", fl.lang:NiceTimeFull(player:GetNetVar("language"), math.Round(player:GetPlayerData("MuteOOC") - CurTime()))))
 
 			return
 		end
 
-		local message = {
-			Color("red"),
-			"[OOC]",
+		chatbox.AddText(nil,
+			Color("red"), "[OOC]",
 			hook.Run("ChatboxGetPlayerIcon", player, text, bTeamChat) or {},
 			hook.Run("ChatboxGetPlayerColor", player, text, bTeamChat) or _team.GetColor(player:Team()),
 			player,
@@ -27,9 +24,7 @@ do
 			": ",
 			text,
 			{sender = player}
-		}
-
-		chatbox.AddText(nil, unpack(message))
+		)
 	end)
 
 	flPrefixes:AddPrefix({".//", "[[", "/looc "}, function(player, text, bTeamChat)
@@ -39,9 +34,8 @@ do
 			return
 		end
 
-		local message = {
-			Color("crimson"),
-			"[LOOC]",
+		chatbox.AddText(nil,
+			Color("crimson"), "[LOOC]",
 			hook.Run("ChatboxGetPlayerIcon", player, text, bTeamChat) or {},
 			hook.Run("ChatboxGetPlayerColor", player, text, bTeamChat) or _team.GetColor(player:Team()),
 			player,
@@ -51,13 +45,11 @@ do
 			{sender = player},
 			position = player:GetPos(),
 			radius = config.Get("talk_radius")
-		}
-
-		chatbox.AddText(nil, unpack(message))
+		)
 	end)
 
 	flPrefixes:AddPrefix({"/y ", "/s "}, function(player, text, bTeamChat)
-		local message = {
+		chatbox.AddText(nil,
 			23,
 			Color(config.Get("ic_color")),
 			player:Name(),
@@ -65,13 +57,11 @@ do
 			hook.Run("ChatboxAdjustICText", text:Spelling()),
 			position = player:GetPos(),
 			radius = config.Get("talk_radius") * 2
-		}
-
-		chatbox.AddText(nil, unpack(message))
+		)
 	end)
 
 	flPrefixes:AddPrefix("/w ", function(player, text, bTeamChat)
-		local message = {
+		chatbox.AddText(nil,
 			17,
 			Color(config.Get("ic_color")),
 			player:Name(),
@@ -79,8 +69,6 @@ do
 			hook.Run("ChatboxAdjustICText", text:Spelling()),
 			position = player:GetPos(),
 			radius = config.Get("talk_radius") * 0.25
-		}
-
-		chatbox.AddText(nil, unpack(message))
+		)
 	end)
 end

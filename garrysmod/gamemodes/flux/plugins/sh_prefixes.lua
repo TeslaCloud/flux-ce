@@ -15,7 +15,7 @@ function flPrefixes:AddPrefix(prefix, callback)
 	table.insert(stored, {prefix = prefix, callback = callback})
 end
 
-function flPrefixes:ChatboxAdjustPrefix(str)
+function flPrefixes:StringIsCommand(str)
 	for k, v in pairs(stored) do
 		if (istable(v.prefix)) then
 			for k1, v1 in pairs(v.prefix) do
