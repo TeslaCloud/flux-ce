@@ -59,6 +59,12 @@ function flChatbox:GUIMousePressed(mouseCode, aimVector)
 	end
 end
 
+function flChatbox:HUDShouldDraw(element)
+	if (element == "CHudChat") then
+		return false
+	end
+end
+
 function flChatbox:ChatboxTextEntered(text)
 	print(text)
 

@@ -179,6 +179,22 @@ function GM:HUDPaint()
 	end
 end
 
+function GM:FLHUDPaint(curTime, scrW, scrH)
+	local percentage = fl.client.circleActionPercentage
+
+	if (percentage and percentage > -1) then
+		local x, y = ScrC()
+
+		surface.SetDrawColor(0, 0, 0, 200)
+		surface.DrawOutlinedCircle(x, y, 41, 7, 64)
+
+		surface.SetDrawColor(theme.GetColor("Text"))
+		surface.DrawPartialOutlinedCircle(math.Clamp(percentage, 0, 100), x, y, 40, 5, 64)
+
+		fl.client.circleActionPercentage = nil
+	end
+end
+
 function GM:HUDPaintDeathBackground(curTime, w, h)
 	draw.TexturedRect(util.GetMaterial("materials/flux/hl2rp/blood.png"), 0, 0, w, h, Color(255, 0, 0, 200))
 end

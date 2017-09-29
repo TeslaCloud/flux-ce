@@ -25,13 +25,11 @@ function GM:Initialize()
 		fl.db.Module = "sqlite"
 	else
 		fl.db.Module = config.Get("mysql_module") or "mysqloo"
-	end
-
-	if (fl.db.Module != "sqlite") then
-		fl.DevPrint("Using "..fl.db.Module.." as MySQL module...")
 
 		SafeRequire(fl.db.Module)
 	end
+
+	fl.DevPrint("Using "..fl.db.Module.." as MySQL module...")
 
 	fl.db:Connect(mysql_host, mysql_username, mysql_password, mysql_database, mysql_port)
 end

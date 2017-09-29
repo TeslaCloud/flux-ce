@@ -11,3 +11,5 @@ lang["#Item_BreensWaterLimited_PrintName"] = "Ароматизированная
 lang["#Item_BreensWaterLimited_Description"] = "Желтая баночка с приятно пахнущей водой в ней."
 lang["#Item_CannedFood_PrintName"] = "Питательная паста"
 lang["#Item_CannedFood_Description"] = "Пластиковая банка с безвкусной серой пастой."
+lang["#Item_Pistol_PrintName"] = "9мм Пистолет"
+lang["#Item_Pistol_Description"] = "Компактное оружие, использующее 9x19мм патроны."

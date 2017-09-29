@@ -410,6 +410,10 @@ do
 		for k, v in ipairs(exploded) do
 			local n = tonumber(v)
 
+			if (isstring(v)) then
+				v = v:RemoveTextFromEnd("s")
+			end
+
 			if (!n and !tokens[v] and !numTokens[v]) then continue end
 
 			if (n) then

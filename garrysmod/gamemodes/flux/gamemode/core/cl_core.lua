@@ -7,6 +7,14 @@
 DeriveGamemode("sandbox")
 
 do
+	local centerX, centerY = ScrW() / 2, ScrH() / 2
+
+	function ScrC()
+		return centerX, centerY
+	end
+end
+
+do
 	local defaultColorModify = {
 		["$pp_colour_addr"] = 0,
 		["$pp_colour_addg"] = 0,
@@ -62,6 +70,10 @@ do
 			fl.client.colorModifyTable = tTable
 		end
 	end
+end
+
+function fl.SetCirclePercentage(percentage)
+	fl.client.circleActionPercentage = tonumber(percentage) or -1
 end
 
 function surface.DrawScaledText(strText, strFontName, nPosX, nPosY, nScale, color)
@@ -182,7 +194,7 @@ do
 		if (!info) then
 			info = {}
 
-			local startAngle, endAngle, step = 0, 360 / 100 * percentage, 360 / passes
+			local startAngle, endAngle, step = -90, 360 / 100 * percentage - 90, 360 / passes
 
 			if (math.abs(startAngle - endAngle) != 0) then
 				table.insert(info, {x = 0, y = 0})

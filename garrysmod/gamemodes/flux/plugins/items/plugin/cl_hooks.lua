@@ -69,8 +69,7 @@ function flItems:HUDPaint()
 		local diff = math.Clamp(math.Round(CurTime() - holdStart, 3), 0.01, 0.5)
 		local percentage = math.Clamp((diff / 0.5) * 100, 0, 100)
 
-		surface.SetDrawColor(theme.GetColor("Text"))
-		surface.DrawPartialOutlinedCircle(percentage, ScrW() / 2, ScrH() / 2, 32, 3, 64)
+		fl.SetCirclePercentage(percentage)
 	end
 end
 

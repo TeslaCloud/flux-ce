@@ -9,10 +9,10 @@ CATEGORY:AddSlider("chatbox_message_margin", "Chat Message Margin", "How much ve
 CATEGORY:AddSlider("chatbox_message_fade_delay", "Chat Message Fade Delay", "How long do the messages stay on the screen before fading away?", {min = 1, max = 128, default = 12})
 CATEGORY:AddSlider("chatbox_max_messages", "Max Chat Messages", "How much messages should the chat history hold?", {min = 1, max = 256, default = 100})
 
-chatbox.width = 100
-chatbox.height = 100
-chatbox.x = 0
-chatbox.y = 0
+chatbox.width = chatbox.width or 100
+chatbox.height = chatbox.height or 100
+chatbox.x = chatbox.x or 0
+chatbox.y = chatbox.y or 0
 
 chatbox.oldAddText = chatbox.oldAddText or chat.AddText
 
