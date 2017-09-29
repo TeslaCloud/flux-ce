@@ -86,7 +86,7 @@ if (CLIENT) then
 			if (mode == k) then
 				list:AddLine(" "..k.." >> "..v.title)
 			else
-				list:AddLine(" "..k.."    "..v.title)
+				list:AddLine(" "..k.."	"..v.title)
 			end
 		end
 

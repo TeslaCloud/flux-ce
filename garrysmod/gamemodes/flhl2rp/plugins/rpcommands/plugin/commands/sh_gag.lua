@@ -36,7 +36,7 @@ function COMMAND:OnRun(player, targets, duration, ...)
 	end
 
 	for k, v in ipairs(targets) do
-		v:SetPlayerData("muteOOC", CurTime() + duration)
+		v:SetPlayerData("MuteOOC", CurTime() + duration)
 	end
 
 	for k, v in ipairs(_player.GetAll()) do

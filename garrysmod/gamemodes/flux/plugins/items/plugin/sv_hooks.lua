@@ -28,7 +28,7 @@ function flItems:PlayerTakeItem(player, itemTable, ...)
 	end
 end
 
-function flItems:PlayerDropItem(player, instanceID, pos)
+function flItems:PlayerDropItem(player, instanceID)
 	local itemTable = item.FindInstanceByID(instanceID)
 	local trace = player:GetEyeTraceNoCursor()
 
@@ -41,10 +41,6 @@ function flItems:PlayerDropItem(player, instanceID, pos)
 	end
 
 	player:TakeItemByID(instanceID)
-
-	if (isvector(pos)) then
-		trace = util.QuickTrace(player:GetShootPos(), player:GetShootPos() + pos * 10000, player)
-	end
 
 	local distance = trace.HitPos:Distance(player:GetPos())
 

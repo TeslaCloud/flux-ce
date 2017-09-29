@@ -11,7 +11,7 @@ function SafeRequire(mod)
 	local success, value = pcall(require, mod)
 
 	if (!success) then
-		ErrorNoHalt("[Flux] Failed to open '"..mod.."' module!\n")
+		ErrorNoHalt("[Flux] Failed to open the '"..mod.."' module!\n")
 
 		return false
 	end

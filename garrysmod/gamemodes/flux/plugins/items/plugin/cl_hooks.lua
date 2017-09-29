@@ -59,9 +59,7 @@ function flItems:PlayerUseItemMenu(itemTable, bIsEntity)
 end
 
 function flItems:PlayerDropItem(itemTable, panel, mouseX, mouseY)
-	local position = gui.ScreenToVector(mouseX, mouseY)
-
-	netstream.Start("PlayerDropItem", itemTable.instanceID, position)
+	netstream.Start("PlayerDropItem", itemTable.instanceID)
 end
 
 function flItems:HUDPaint()

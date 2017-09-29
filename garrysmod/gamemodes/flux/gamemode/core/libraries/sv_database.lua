@@ -13,11 +13,6 @@ local QueueTable = {}
 fl.db.Module = fl.db.Module or config.Get("mysql_module") or "sqlite"
 local Connected = false
 
-if (fl.db.Module != "sqlite") then
-	fl.DevPrint("Using "..fl.db.Module.." as MySQL module...")
-	SafeRequire(fl.db.Module)
-end
-
 local type = type
 local tostring = tostring
 local table = table
@@ -527,8 +522,7 @@ function fl.db:RawQuery(query, callback, flags, ...)
 
 		queryObj.onSuccess = function(queryObj, result)
 			if (callback) then
-				-- FFFFFFFUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU
-				local bStatus, value = pcall(callback, result)--, queryObj:status(), queryObj:lastInsert())
+				local bStatus, value = pcall(callback, result, true, queryObj:lastInsert())
 
 				if (!bStatus) then
 					ErrorNoHalt(string.format("[Flux:Database] MySQL Callback Error!\n%s\n", value))

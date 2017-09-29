@@ -10,9 +10,9 @@ util.Include("cl_hooks.lua")
 do
 	flPrefixes:AddPrefix({"//", "/ooc"}, function(player, text, bTeamChat)
 		if (hook.Run("PlayerCanUseOOC", player) == false) then 
-			local time = math.Round(player:GetPlayerData("muteOOC") - CurTime())
+			local time = math.Round(player:GetPlayerData("MuteOOC") - CurTime())
 
-			player:Notify(L("MutedNotify")..fl.lang:NiceTimeFull(player:GetNetVar("language"), time)..".")
+			player:Notify(L("MutedNotify", fl.lang:NiceTimeFull(player:GetNetVar("language"), time)))
 
 			return
 		end
@@ -34,9 +34,7 @@ do
 
 	flPrefixes:AddPrefix({".//", "[[", "/looc "}, function(player, text, bTeamChat)
 		if (hook.Run("PlayerCanUseOOC", player) == false) then
-			local time = math.Round(player:GetPlayerData("muteOOC") - CurTime())
-
-			player:Notify(L("MutedNotify")..fl.lang:NiceTimeFull(player:GetNetVar("language"), time)..".")
+			player:Notify(L("MutedNotify", fl.lang:NiceTimeFull(player:GetNetVar("language"), math.Round(player:GetPlayerData("MuteOOC") - CurTime()))))
 
 			return
 		end

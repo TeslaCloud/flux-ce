@@ -11,7 +11,7 @@ lang["#Chat_Yell"] = "кричит:"
 lang["#Chat_Whisper"] = "шепчет:"
 lang["#Chat_Roll"] = "#1 выбрасывает #2 из #3."
 
-lang["#OOCMuteMessage"] = "#1 заблокировал OOC чаты у #2"
+lang["#OOCMuteMessage"] = "#1 заблокировал OOC чаты у #2."
 lang["#OOCUnmuteMessage"] = "#1 разблокировал OOC чаты у #2."
 
-lang["#MutedNotify"] = "Вы не cможете использовать ООС чаты еще "
+lang["#MutedNotify"] = "Вы не можете использовать OOC чат еще #1."

@@ -33,7 +33,7 @@ function PLUGIN:ChatboxAdjustICText(text)
 end
 
 function PLUGIN:PlayerCanUseOOC(player)
-	if (player:GetPlayerData("muteOOC", 0) > CurTime()) then
+	if (player:GetPlayerData("MuteOOC", 0) > CurTime()) then
 		return false
 	end
 end

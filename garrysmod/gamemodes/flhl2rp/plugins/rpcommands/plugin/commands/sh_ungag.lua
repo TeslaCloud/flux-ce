@@ -15,7 +15,7 @@ COMMAND.aliases = {"unmuteooc", "oocunmute", "plyungag"}
 
 function COMMAND:OnRun(player, targets)
 	for k, v in ipairs(targets) do
-		v:SetPlayerData("muteOOC", nil)
+		v:SetPlayerData("MuteOOC", nil)
 	end
 
 	fl.player:NotifyAll(L("OOCUnmuteMessage", (IsValid(player) and player:Name()) or "Console", util.PlayerListToString(targets)))
