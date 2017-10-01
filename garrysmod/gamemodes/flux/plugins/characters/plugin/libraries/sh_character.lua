@@ -97,7 +97,7 @@ if (SERVER) then
 			model = char.model or "models/humans/group01/male_02.mdl",
 			inventory = util.TableToJSON(char.inventory),
 			ammo = util.TableToJSON(char.ammo),
-			money= char.money,
+			money = char.money,
 			charPermissions = util.TableToJSON(char.charPermissions),
 			data = util.TableToJSON(char.data),
 			uniqueID = char.uniqueID
@@ -229,5 +229,22 @@ do
 
 	function playerMeta:GetAllCharacters()
 		return stored[self:SteamID()] or {}
+	end
+
+	function playerMeta:GetAmmoTable()
+		local ammoTable = {}
+		local ammoID = 1
+
+		while (game.GetAmmoName(ammoID) != nil) do
+			local ammoCount = self:GetAmmoCount(ammoID)
+
+			if (ammoCount > 0) then
+				ammoTable[ammoID] = ammoCount
+			end
+
+			ammoID = ammoID + 1
+		end
+
+		return ammoTable
 	end
 end

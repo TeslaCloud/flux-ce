@@ -11,7 +11,6 @@ function CItem:CItem(uniqueID)
 
 	self.uniqueID = string.MakeID(uniqueID)
 	self.data = self.data or {}
-	self.customButtons = {}
 	self.actionSounds = {
 		["OnUse"] = "items/battery_pickup.wav"
 	}
@@ -75,9 +74,16 @@ function CItem:AddButton(name, data)
 		Example data structure:
 		data = {
 			icon = "path/to/icon.png",
-			callback = "OnUse" -- this will call ITEM:OnUse function when the button is pressed
+			callback = "OnUse", -- This will call ITEM:OnUse function when the button is pressed.
+			onShow = function(itemTable) -- Client-Side function. Determines whether the button will be shown.
+				return true
+			end
 		}
 	--]]
+
+	if (!self.customButtons) then
+		self.customButtons = {}
+	end
 
 	self.customButtons[name] = data
 end
@@ -91,13 +97,23 @@ end
 -- false = prevents item appearing and doesn't remove it from inventory.
 function CItem:OnDrop(player) end
 
+function CItem:OnLoadout(player) end
+
 if (SERVER) then
 	function CItem:SetData(id, value)
 		if (!id) then return end
 
 		self.data[id] = value
 
-		item.NetworkItemData(self)
+		item.NetworkItemData(self:GetPlayer(), self)
+	end
+
+	function CItem:GetPlayer()
+		for k, v in pairs(player.GetAll()) do
+			if (v:HasItemByID(self.instanceID)) then
+				return v
+			end
+		end
 	end
 
 	function CItem:DoMenuAction(act, player, ...)

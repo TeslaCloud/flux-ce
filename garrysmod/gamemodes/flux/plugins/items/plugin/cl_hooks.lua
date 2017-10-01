@@ -15,11 +15,13 @@ function flItems:PlayerUseItemMenu(itemTable, bIsEntity)
 	else
 		if (itemTable.customButtons) then
 			for k, v in pairs(itemTable.customButtons) do
-				local button = itemMenu:AddOption(k, function()
-					itemTable:DoMenuAction(v.callback)
-				end)
+				if ((v.onShow and v.onShow(itemTable) == true) or !v.onShow) then
+					local button = itemMenu:AddOption(k, function()
+						itemTable:DoMenuAction(v.callback)
+					end)
 
-				button:SetIcon(v.icon)
+					button:SetIcon(v.icon)
+				end
 			end
 		end
 

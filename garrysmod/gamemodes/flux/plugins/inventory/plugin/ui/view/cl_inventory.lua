@@ -102,7 +102,7 @@ function PANEL:Paint(w, h)
 			if (IsValid(curSlot) and curSlot.itemData != itemTable) then
 				local slotData = curSlot.itemData
 
-				if (slotData.uniqueID == itemTable.uniqueID and slotData.IsStackable and curSlot.itemCount < slotData.MaxStack) then
+				if (slotData.uniqueID == itemTable.uniqueID and slotData.Stackable and curSlot.itemCount < slotData.MaxStack) then
 					drawColor = Color(200, 200, 60)
 				else
 					drawColor = Color(200, 60, 60, 160)
@@ -251,7 +251,7 @@ function PANEL:Rebuild()
 
 				if (receiver.itemData) then
 					if (receiver.itemData.uniqueID == dropped[1].itemData.uniqueID and
-						receiver.slotNum != dropped[1].slotNum) then
+						receiver.slotNum != dropped[1].slotNum and receiver.itemData.Stackable) then
 						receiver:Combine(dropped[1])
 						self:SlotsToInventory()
 

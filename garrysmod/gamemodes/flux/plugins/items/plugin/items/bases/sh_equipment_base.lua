@@ -64,4 +64,10 @@ function CItemEquippable:OnDrop(player)
 	end
 end
 
+function CItemEquippable:OnLoadout(player)
+	if (self:IsEquipped()) then
+		self:Equip(player, true)
+	end
+end
+
 ItemEquippable = CItemEquippable

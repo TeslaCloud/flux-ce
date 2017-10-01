@@ -91,6 +91,8 @@ do
 
 		oldFaction:OnPlayerExited(self)
 		factionTable:OnPlayerEntered(self)
+
+		hook.Run("OnPlayerFactionChanged", self, uniqueID, oldFaction.uniqueID)
 	end
 
 	function playerMeta:SetDefaultFactionModel()

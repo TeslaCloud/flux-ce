@@ -90,3 +90,13 @@ function flItems:PlayerCanUseItem(player, itemTable, action, ...)
 		return false
 	end
 end
+
+function flItems:PostCharacterLoaded(player, character)
+	local playerInv = player:GetInventory()
+
+	for slot, ids in ipairs(playerInv) do
+		for k, v in ipairs(ids) do
+			item.FindInstanceByID(v):OnLoadout(player)
+		end
+	end
+end
