@@ -30,11 +30,11 @@ function flPrefixes:StringIsCommand(str)
 end
 
 function flPrefixes:PlayerSay(player, text, bTeamChat)
-	for k, v in pairs(stored) do
+	for k, v in ipairs(stored) do
 		if (istable(v.prefix)) then
-			for k1, v1 in pairs(v.prefix) do
-				if (text:utf8lower():StartWith(v1)) then
-					local message = text:utf8sub(v1:utf8len() + 1)
+			for k2, v2 in ipairs(v.prefix) do
+				if (text:utf8lower():StartWith(v2)) then
+					local message = text:utf8sub(v2:utf8len() + 1)
 
 					if (message != "") then
 						v.callback(player, message, bTeamChat)

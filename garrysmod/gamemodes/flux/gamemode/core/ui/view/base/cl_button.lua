@@ -48,6 +48,10 @@ function PANEL:SetText(newText)
 	return self:SetTitle(newText)
 end
 
+function PANEL:SetTextOffset(pos)
+	self.m_TextPos = pos or 0
+end
+
 function PANEL:SetIcon(icon)
 	self.m_Icon = tostring(icon) or false
 end

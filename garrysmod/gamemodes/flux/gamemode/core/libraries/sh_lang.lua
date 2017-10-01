@@ -112,7 +112,7 @@ function fl.lang:GetPlural(language, phrase, count)
 	if (langTable.Pluralize) then
 		return langTable:Pluralize(phrase, count, translated)
 	elseif (language == "en") then
-		if (util.IsVowel(translated:sub(translated:len(), translated:len()))) then
+		if (!util.IsVowel(translated:sub(translated:len(), translated:len()))) then
 			return translated.."es"
 		else
 			return translated.."s"

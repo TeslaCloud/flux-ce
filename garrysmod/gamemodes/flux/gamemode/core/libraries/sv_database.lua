@@ -753,7 +753,7 @@ function sql.SQLStr(str_in, bNoQuotes)
 	end
 
 	if (bNoQuotes) then
-		return str;
+		return str
 	end
 
 	return "'"..str.."'"

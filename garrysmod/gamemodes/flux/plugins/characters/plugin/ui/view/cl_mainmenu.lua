@@ -17,7 +17,7 @@ function PANEL:Init()
 
 	local menuMusic = theme.GetOption("MenuMusic")
 
-	if (menuMusic and menuMusic != "") then
+	if (!fl.menuMusic and menuMusic and menuMusic != "") then
 		sound.PlayFile(menuMusic, "", function(station)
 			if (IsValid(station)) then
 				station:Play()
@@ -52,13 +52,9 @@ function PANEL:RecreateSidebar(bShouldCreateButtons)
 	self.sidebar:SetPos(theme.GetOption("MainMenu_SidebarX"), theme.GetOption("MainMenu_SidebarY"))
 	self.sidebar:SetSize(theme.GetOption("MainMenu_SidebarWidth"), theme.GetOption("MainMenu_SidebarHeight"))
 	self.sidebar:SetMargin(theme.GetOption("MainMenu_SidebarMargin"))
-	self.sidebar:AddSpace(8)
+	self.sidebar:AddSpace(16)
 
-	self.logo = vgui.Create("DImage", self)
-	self.logo:SetSize(theme.GetOption("MainMenu_LogoWidth"), theme.GetOption("MainMenu_LogoHeight"))
-	self.logo:SetImage(theme.GetOption("MainMenu_SidebarLogo"))
-
-	self.sidebar:AddPanel(self.logo, true)
+	self.sidebar.Paint = function() end
 
 	self.sidebar:AddSpace(theme.GetOption("MainMenu_SidebarLogoSpace"))
 
@@ -109,10 +105,12 @@ end
 function PANEL:AddButton(text, callback)
 	local button = vgui.Create("flButton", self)
 	button:SetSize(theme.GetOption("MainMenu_SidebarWidth"), theme.GetOption("MainMenu_SidebarButtonHeight"))
-	button:SetText(text)
-	button:SetDrawBackground(true)
-	button:SetFont(theme.GetFont("Text_NormalSmaller"))
-	button:SetTextAutoposition(true)
+	button:SetText(string.utf8upper(L(text)))
+	button:SetDrawBackground(false)
+	button:SetFont(theme.GetFont("Text_NormalBig"))
+	button:SetPos(16, 0)
+	button:SetTextAutoposition(false)
+	button:SetTextOffset(8)
 
 	button.DoClick = function(btn)
 		btn:SetActive(true)
@@ -131,6 +129,7 @@ function PANEL:AddButton(text, callback)
 	end
 
 	self.sidebar:AddPanel(button)
+	self.sidebar:AddSpace(6)
 
 	return button
 end

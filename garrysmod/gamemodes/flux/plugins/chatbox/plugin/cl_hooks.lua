@@ -31,8 +31,6 @@ function flChatbox:OnResolutionChanged(newW, newH)
 	theme.SetOption("Chatbox_X", 8)
 	theme.SetOption("Chatbox_Y", scrH - theme.GetOption("Chatbox_Height") - 32)
 
-	--chatbox.UpdateDisplay()
-
 	if (chatbox.panel) then
 		chatbox.panel:Remove()
 		chatbox.panel = nil

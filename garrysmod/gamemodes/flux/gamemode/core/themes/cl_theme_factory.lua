@@ -21,7 +21,7 @@ function THEME:OnLoaded()
 	self:SetOption("MainMenu_SidebarY", 0)
 	self:SetOption("MainMenu_SidebarMargin", -1)
 	self:SetOption("MainMenu_SidebarLogo", "flux/flux_icon.png")
-	self:SetOption("MainMenu_SidebarLogoSpace", 16)
+	self:SetOption("MainMenu_SidebarLogoSpace", scrH / 3)
 	self:SetOption("MainMenu_SidebarButtonHeight", font.Scale(42)) -- We can cheat and scale buttons the same way we scale fonts!
 	self:SetOption("MainMenu_LogoHeight", 100)
 	self:SetOption("MainMenu_LogoWidth", 110)
@@ -60,6 +60,7 @@ function THEME:OnLoaded()
 	self:SetFont("Text_Larger", self:GetFont("MainFont"), font.Scale(60))
 	self:SetFont("Text_Large", self:GetFont("MainFont"), font.Scale(48))
 	self:SetFont("Text_NormalLarge", self:GetFont("MainFont"), font.Scale(36))
+	self:SetFont("Text_NormalBig", self:GetFont("MainFont"), font.Scale(30))
 	self:SetFont("Text_Normal", self:GetFont("MainFont"), font.Scale(24))
 	self:SetFont("Text_NormalSmaller", self:GetFont("MainFont"), font.Scale(22))
 	self:SetFont("Text_Small", self:GetFont("MainFont"), font.Scale(18))
@@ -108,23 +109,26 @@ end
 
 function THEME:PaintMainMenu(panel, width, height)
 	local wide = self:GetOption("MainMenu_SidebarWidth") / 2
-	local title, desc = Schema:GetName(), Schema:GetDescription()
+	local title, desc, author = Schema:GetName(), Schema:GetDescription(), "#MainMenu_DevelopedBy:"..Schema:GetAuthor()..";"
 	local logo = self:GetMaterial("Schema_Logo")
 	local titleW, titleH = util.GetTextSize(title, self:GetFont("Text_Largest"))
 	local descW, descH = util.GetTextSize(desc, self:GetFont("Text_Normal"))
+	local authorW, authorH = util.GetTextSize(author, self:GetFont("Text_Normal"))
 
 	surface.SetDrawColor(self:GetColor("MainMenu_Background"))
 	surface.DrawRect(0, 0, width, width)
 
+	surface.SetDrawColor(self:GetColor("MainMenu_Background"):Lighten(40))
+	surface.DrawRect(0, 0, width, 128)
+
 	if (!logo) then
 		draw.SimpleText(title, self:GetFont("Text_Largest"), wide + width / 2 - titleW / 2, 150, self:GetColor("SchemaText"))
 	else
-		surface.SetDrawColor(255, 255, 255, 255)
-		surface.SetMaterial(logo)
-		surface.DrawTexturedRect(wide + width / 2 - 300, 150, 600, 130)
+		draw.TexturedRect(logo, wide + width / 2 - 200, 16, 400, 96, Color(255, 255, 255))
 	end
 
-	draw.SimpleText(desc, self:GetFont("Text_Normal"), wide + width / 2 - descW / 2, 350, self:GetColor("SchemaText"))
+	draw.SimpleText(desc, self:GetFont("Text_Normal"), 16, 128 - descH - 8, self:GetColor("SchemaText"))
+	draw.SimpleText(author, self:GetFont("Text_Normal"), width - authorW - 16, 128 - authorH - 8, self:GetColor("SchemaText"))
 end
 
 function THEME:PaintButton(panel, w, h)
@@ -148,6 +152,11 @@ function THEME:PaintButton(panel, w, h)
 			surface.SetDrawColor(self:GetColor("MainDark"))
 			surface.DrawRect(1, 1, w - 1, h - 2)
 		end
+	else
+		if (curAmt > 0) then
+			surface.SetDrawColor(Color(150, 150, 150, curAmt))
+			surface.DrawRect(1, 1, w - 2, h - 2)
+		end
 	end
 
 	if (icon) then
@@ -164,7 +173,7 @@ function THEME:PaintButton(panel, w, h)
 				draw.SimpleText(title, font, w / 2 - width / 2, h / 2 - height / 2, textColor)
 			end
 		else
-			draw.SimpleText(title, font, 0, h / 2 - height / 2, textColor)
+			draw.SimpleText(title, font, panel.m_TextPos or 0, h / 2 - height / 2, textColor)
 		end
 	end
 end
@@ -376,7 +385,7 @@ end
 -- Called when a tab is painted.
 function THEME.skin:PaintTab(panel, w, h)
 	if (panel:GetPropertySheet():GetActiveTab() == panel) then
-		self:DrawGenericBackground(0, 0, w - 2, h - 8, self.colTab)
+		self:DrawGenericBackground(4, 0, w - 8, h - 8, ColorAlpha(self.colTab, 220))
 	else
 		self:DrawGenericBackground(0, 0, w, h, Color(40, 40, 40))
 	end
@@ -517,9 +526,9 @@ end
 function THEME.skin:PaintCollapsibleCategory(panel, w, h)
 	panel.Header:SetFont(theme.GetFont("Text_Smaller"))
 
-	self:DrawGenericBackground(0, 0, w, 21, Color(0, 0, 0))
-
-	if (h < 21) then return end
-
-	self:DrawGenericBackground(0, 0, w, 21, Color(20, 20, 20))
+	if (h < 21) then
+		self:DrawGenericBackground(0, 0, w, 21, Color(0, 0, 0))
+	else
+		self:DrawGenericBackground(0, 0, w, 21, Color(30, 30, 30))
+	end
 end

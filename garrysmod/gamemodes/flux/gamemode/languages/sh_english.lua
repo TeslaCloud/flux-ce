@@ -44,6 +44,7 @@ lang["#MainMenu_Settings"]		= "Settings"
 lang["#MainMenu_Cancel"]		= "Cancel"
 lang["#MainMenu_Load"]			= "Load"
 lang["#MainMenu_New"]			= "New"
+lang["#MainMenu_DevelopedBy"]	= "Developed by #1."
 
 --[[ Character Creation ]]--
 

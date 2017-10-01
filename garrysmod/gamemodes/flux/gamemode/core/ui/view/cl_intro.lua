@@ -7,8 +7,6 @@
 local colorBlack = Color(0, 0, 0, 255)
 local colorWhite = Color(255, 255, 255, 255)
 
-local menuThin = "menu_thin_smaller"
-
 local PANEL = {}
 
 function PANEL:Init()
@@ -28,7 +26,7 @@ function PANEL:Paint(w, h)
 	surface.SetDrawColor(colorBlack)
 	surface.DrawRect(0, 0, w, h)
 
-	draw.SimpleText("Press any key to skip intro!", menuThin, w * 0.5, h * 0.95, ColorAlpha(colorWhite, alpha), TEXT_ALIGN_CENTER, TEXT_ALIGN_BOTTOM)
+	draw.SimpleText("Press any key to skip intro!", "default", w * 0.5, h * 0.95, ColorAlpha(colorWhite, alpha), TEXT_ALIGN_CENTER, TEXT_ALIGN_BOTTOM)
 end
 
 function PANEL:CloseMenu(bForce)

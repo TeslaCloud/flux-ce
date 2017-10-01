@@ -42,9 +42,11 @@ do
 			Color(config.Get("ic_color")),
 			": ",
 			text,
-			{sender = player},
-			position = player:GetPos(),
-			radius = config.Get("talk_radius")
+			{
+				sender = player,
+				position = player:GetPos(),
+				radius = config.Get("talk_radius")
+			}
 		)
 	end)
 
@@ -55,8 +57,10 @@ do
 			player:Name(),
 			L("Chat_Yell"),
 			hook.Run("ChatboxAdjustICText", text:Spelling()),
-			position = player:GetPos(),
-			radius = config.Get("talk_radius") * 2
+			{
+				position = player:GetPos(),
+				radius = config.Get("talk_radius") * 2
+			}
 		)
 	end)
 
@@ -67,8 +71,10 @@ do
 			player:Name(),
 			L("Chat_Whisper"),
 			hook.Run("ChatboxAdjustICText", text:Spelling()),
-			position = player:GetPos(),
-			radius = config.Get("talk_radius") * 0.25
+			{
+				position = player:GetPos(),
+				radius = config.Get("talk_radius") * 0.25
+			}
 		)
 	end)
 end
