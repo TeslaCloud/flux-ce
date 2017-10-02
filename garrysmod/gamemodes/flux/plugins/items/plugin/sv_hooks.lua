@@ -96,7 +96,11 @@ function flItems:PostCharacterLoaded(player, character)
 
 	for slot, ids in ipairs(playerInv) do
 		for k, v in ipairs(ids) do
-			item.FindInstanceByID(v):OnLoadout(player)
+			local itemTable = item.FindInstanceByID(v)
+
+			if (istable(itemTable)) then
+				itemTable:OnLoadout(player)
+			end
 		end
 	end
 end
