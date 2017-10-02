@@ -5,10 +5,10 @@
 --]]
 
 ITEM:SetBase(CItemAmmo)
-ITEM.Name = "4.6x30mm ammo"
+ITEM.Name = "4.6x30mm Ammo"
 ITEM.PrintName = "#Item_Smg_Ammo_PrintName"
 ITEM.Description = "#Item_Smg_Ammo_Description"
-ITEM.Model = "models/Items/BoxMRounds.mdl"
+ITEM.Model = "models/items/boxmrounds.mdl"
 ITEM.Stackable = true
 ITEM.MaxStack = 4
 ITEM.Weight = 1.5

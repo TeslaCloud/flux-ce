@@ -5,10 +5,10 @@
 --]]
 
 ITEM:SetBase(CItemAmmo)
-ITEM.Name = "12 gauge"
+ITEM.Name = "12 Gauge"
 ITEM.PrintName = "#Item_Shotgun_Ammo_PrintName"
 ITEM.Description = "#Item_Shotgun_Ammo_Description"
-ITEM.Model = "models/Items/BoxBuckshot.mdl"
+ITEM.Model = "models/items/boxbuckshot.mdl"
 ITEM.Stackable = true
 ITEM.MaxStack = 4
 ITEM.Weight = 0.75

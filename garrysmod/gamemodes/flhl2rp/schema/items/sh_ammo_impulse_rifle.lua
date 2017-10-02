@@ -5,10 +5,10 @@
 --]]
 
 ITEM:SetBase(CItemAmmo)
-ITEM.Name = "Pulse ammo"
+ITEM.Name = "Pulse Ammo"
 ITEM.PrintName = "#Item_Ar2_Ammo_PrintName"
 ITEM.Description = "#Item_Ar2_Ammo_Description"
-ITEM.Model = "models/Items/combine_rifle_cartridge01.mdl"
+ITEM.Model = "models/items/combine_rifle_cartridge01.mdl"
 ITEM.Stackable = true
 ITEM.MaxStack = 4
 ITEM.Weight = 1

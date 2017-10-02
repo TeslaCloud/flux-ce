@@ -5,10 +5,10 @@
 --]]
 
 ITEM:SetBase(CItemAmmo)
-ITEM.Name = "Ar2 energy core"
+ITEM.Name = "AR2 Energy Core"
 ITEM.PrintName = "#Item_Ar2_Ammo_Core_PrintName"
 ITEM.Description = "#Item_Ar2_Ammo_Core_Description"
-ITEM.Model = "models/Items/combine_rifle_ammo01.mdl"
+ITEM.Model = "models/items/combine_rifle_ammo01.mdl"
 ITEM.Stackable = true
 ITEM.MaxStack = 4
 ITEM.Weight = 0.25

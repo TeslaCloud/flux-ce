@@ -5,10 +5,10 @@
 --]]
 
 ITEM:SetBase(CItemAmmo)
-ITEM.Name = ".357 ammo"
+ITEM.Name = ".357 Ammo"
 ITEM.PrintName = "#Item_Revolver_Ammo_PrintName"
 ITEM.Description = "#Item_Revolver_Ammo_Description"
-ITEM.Model = "models/Items/357ammo.mdl"
+ITEM.Model = "models/items/357ammo.mdl"
 ITEM.Stackable = true
 ITEM.MaxStack = 4
 ITEM.Weight = 0.75

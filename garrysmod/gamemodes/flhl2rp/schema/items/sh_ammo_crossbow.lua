@@ -5,10 +5,10 @@
 --]]
 
 ITEM:SetBase(CItemAmmo)
-ITEM.Name = "Crossbow bolts"
+ITEM.Name = "Crossbow Bolts"
 ITEM.PrintName = "#Item_Crossbow_Ammo_PrintName"
 ITEM.Description = "#Item_Crossbow_Ammo_Description"
-ITEM.Model = "models/Items/CrossbowRounds.mdl"
+ITEM.Model = "models/items/crossbowrounds.mdl"
 ITEM.Stackable = true
 ITEM.MaxStack = 4
 ITEM.Weight = 1

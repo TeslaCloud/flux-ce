@@ -5,10 +5,10 @@
 --]]
 
 ITEM:SetBase(CItemAmmo)
-ITEM.Name = "Smg grenade"
+ITEM.Name = "SMG Grenade"
 ITEM.PrintName = "#Item_Smg_Ammo_Grenade_PrintName"
 ITEM.Description = "#Item_Smg_Ammo_Grenade_Description"
-ITEM.Model = "models/Items/AR2_Grenade.mdl"
+ITEM.Model = "models/items/ar2_grenade.mdl"
 ITEM.Stackable = true
 ITEM.MaxStack = 8
 ITEM.Weight = 0.4
