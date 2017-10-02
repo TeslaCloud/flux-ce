@@ -43,7 +43,7 @@ function PANEL:Rebuild()
 
 	self.players = {}
 
-	for k, v in pairs(players) do
+	for k, v in ipairs(players) do
 		local playerPanel = vgui.Create("flScoreboardPlayer", self.playerList)
 
 		playerPanel:SetSize(w - 16, 40)
