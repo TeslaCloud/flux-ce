@@ -29,14 +29,14 @@ function flCharacters:OnActiveCharacterSet(player, character)
 	player:Spawn()
 	player:SetModel(character.model or "models/humans/group01/male_02.mdl")
 
-	self:StripAmmo()
+	player:StripAmmo()
 
-	if (istable(charData.ammo)) then
-		for k, v in pairs(charData.ammo) do
-			self:SetAmmo(v, k)
+	if (istable(character.ammo)) then
+		for k, v in pairs(character.ammo) do
+			player:SetAmmo(v, k)
 		end
 
-		charData.ammo = nil
+		character.ammo = nil
 	end
 
 	hook.Run("PostCharacterLoaded", player, character)
