@@ -78,6 +78,20 @@ function playerMeta:Notify(message)
 	fl.player:Notify(self, message)
 end
 
+function playerMeta:GetAmmoTable()
+	local ammoTable = {}
+
+	for k, v in pairs(game.GetAmmoList()) do
+		local ammoCount = self:GetAmmoCount(k)
+
+		if (ammoCount > 0) then
+			ammoTable[k] = ammoCount
+		end
+	end
+
+	return ammoTable
+end
+
 function playerMeta:RestorePlayer()
 	fl.db:EasyRead("fl_players", {"steamID", self:SteamID()}, function(result, hasData)
 		if (hasData) then

@@ -167,7 +167,7 @@ function GM:PlayerDeathThink(player)
 end
 
 function GM:PlayerDisconnected(player)
-	player:SaveCharacter()
+	player:SavePlayer()
 	netstream.Start(nil, "PlayerDisconnected", player:EntIndex())
 end
 

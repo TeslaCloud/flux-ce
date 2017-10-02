@@ -100,3 +100,15 @@ function flItems:PostCharacterLoaded(player, character)
 		end
 	end
 end
+
+function flCharacters:PreSaveCharacter(player, index)
+	local playerInv = player:GetInventory()
+
+	for slot, ids in ipairs(playerInv) do
+		for k, v in ipairs(ids) do
+			local itemTable = item.FindInstanceByID(v)
+
+			itemTable:OnSave(player)
+		end
+	end
+end

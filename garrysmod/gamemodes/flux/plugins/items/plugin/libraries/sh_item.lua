@@ -435,7 +435,9 @@ if (SERVER) then
 	end)
 else
 	netstream.Hook("ItemData", function(uniqueID, instanceID, tData)
-		instances[uniqueID][instanceID].data = tData
+		if (istable(instances[uniqueID][instanceID])) then
+			instances[uniqueID][instanceID].data = tData
+		end
 	end)
 
 	netstream.Hook("NetworkItem", function(instanceID, itemTable)

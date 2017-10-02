@@ -46,7 +46,11 @@ function playerMeta:IsWeaponRaised()
 		return shouldRaise
 	end
 
-	return self:GetDTBool(BOOL_WEAPON_RAISED)
+	if (self:GetDTBool(BOOL_WEAPON_RAISED)) then
+		return true
+	end
+
+	return false
 end
 
 function playerMeta:ToggleWeaponRaised()

@@ -84,4 +84,16 @@ function CItemWeapon:OnUnload(player)
 	self:SetData("ammo", {0, 0})
 end
 
+function CItemWeapon:OnSave(player)
+	local weapon = player:GetWeapon(self.WeaponClass)
+
+	if (IsValid(weapon)) then
+		local ammo = {weapon:Clip1(), weapon:Clip2()}
+
+		self:SetData("ammo", ammo)
+	else
+		fl.DevPrint("Invalid weapon class: "..self.WeaponClass)
+	end
+end
+
 ItemWeapon = CItemWeapon

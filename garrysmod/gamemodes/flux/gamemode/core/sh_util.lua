@@ -167,6 +167,19 @@ function string.RemoveTextFromStart(str, strNeedle, bAllOccurences)
 	end
 end
 
+function game.GetAmmoList()
+	local ammoTable = {}
+	local ammoID = 1
+
+	while (game.GetAmmoName(ammoID) != nil) do
+		ammoTable[ammoID] = game.GetAmmoName(ammoID)
+
+		ammoID = ammoID + 1
+	end
+
+	return ammoTable
+end
+
 -- A function to check whether all of the arguments in vararg are valid (via IsValid).
 function util.Validate(...)
 	local validate = {...}

@@ -29,7 +29,26 @@ function flCharacters:OnActiveCharacterSet(player, character)
 	player:Spawn()
 	player:SetModel(character.model or "models/humans/group01/male_02.mdl")
 
+	self:StripAmmo()
+
+	if (istable(charData.ammo)) then
+		for k, v in pairs(charData.ammo) do
+			self:SetAmmo(v, k)
+		end
+
+		charData.ammo = nil
+	end
+
 	hook.Run("PostCharacterLoaded", player, character)
+end
+
+function flCharacters:OnCharacterChange(player, oldChar, newCharID)
+	player:SaveCharacter()
+	character.Load(player)
+end
+
+function flCharacters:PlayerDisconnected(player)
+	player:SaveCharacter()
 end
 
 function flCharacters:DatabaseConnected()

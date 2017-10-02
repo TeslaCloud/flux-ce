@@ -99,6 +99,8 @@ function CItem:OnDrop(player) end
 
 function CItem:OnLoadout(player) end
 
+function CItem:OnSave(player) end
+
 if (SERVER) then
 	function CItem:SetData(id, value)
 		if (!id) then return end
