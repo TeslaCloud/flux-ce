@@ -11,4 +11,4 @@ ITEM.Description = "#Item_Smg_Description"
 ITEM.Model = "models/weapons/w_smg1.mdl"
 ITEM.Weight = 1.8
 ITEM.WeaponClass = "weapon_smg1"
-ITEM.WeaponCategory = "#Weapon_Category_Primary"
+ITEM.EquipSlot = "#Weapon_Category_Primary"

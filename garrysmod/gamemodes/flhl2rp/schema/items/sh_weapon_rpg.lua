@@ -11,4 +11,4 @@ ITEM.Description = "#Item_Rpg_Description"
 ITEM.Model = "models/weapons/w_rocket_launcher.mdl"
 ITEM.Weight = 5
 ITEM.WeaponClass = "weapon_rpg"
-ITEM.WeaponCategory = "#Weapon_Category_Heavy"
+ITEM.EquipSlot = "#Weapon_Category_Heavy"

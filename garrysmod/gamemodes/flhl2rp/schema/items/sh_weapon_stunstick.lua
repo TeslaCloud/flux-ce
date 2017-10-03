@@ -11,4 +11,4 @@ ITEM.Description = "#Item_Stunstick_Description"
 ITEM.Model = "models/weapons/w_stunbaton.mdl"
 ITEM.Weight = 1.25
 ITEM.WeaponClass = "weapon_stunstick"
-ITEM.WeaponCategory = "#Weapon_Category_Melee"
+ITEM.EquipSlot = "#Weapon_Category_Melee"

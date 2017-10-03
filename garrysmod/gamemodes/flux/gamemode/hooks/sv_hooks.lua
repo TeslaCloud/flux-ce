@@ -151,8 +151,6 @@ function GM:PlayerInitialized(player)
 end
 
 function GM:PlayerDeath(player, inflictor, attacker)
-	player:SaveCharacter()
-
 	player:SetNetVar("RespawnTime", CurTime() + config.Get("respawn_delay"))
 end
 
@@ -361,10 +359,6 @@ end
 
 function GM:FLSaveData()
 	hook.Run("SaveData")
-end
-
-function GM:OnCharacterChange(player, oldChar, newCharID)
-	player:SaveCharacter()
 end
 
 function GM:PlayerOneSecond(player, curTime)

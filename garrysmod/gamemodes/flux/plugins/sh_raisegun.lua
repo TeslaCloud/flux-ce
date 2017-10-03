@@ -13,9 +13,7 @@ local blockedWeapons = {
 	"weapon_physgun",
 	"gmod_tool",
 	"gmod_camera",
-	"weapon_physcannon",
-	"weapon_frag",
-	"weapon_slam"
+	"weapon_physcannon"
 }
 
 local rotationTranslate = {

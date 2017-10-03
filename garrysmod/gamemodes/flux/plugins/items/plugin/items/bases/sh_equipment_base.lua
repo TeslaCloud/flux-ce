@@ -14,6 +14,8 @@ class "CItemEquippable" extends "CItemUsable"
 CItemEquippable.Name = "Equipment Base"
 CItemEquippable.Description = "An item that can be equipped."
 CItemEquippable.Category = "#Item_Category_Equipment"
+CItemEquippable.EquipSlot = "#Item_Slot_Accessory"
+CItemEquippable.Stackable = false
 
 if (CLIENT) then
 	function CItemEquippable:GetUseText()
@@ -29,7 +31,20 @@ function CItemEquippable:IsEquipped()
 	return self:GetData("equipped", false)
 end
 
-function CItemEquippable:OnEquipped(player) end
+function CItemEquippable:OnEquipped(player)
+	local playerInv = player:GetInventory()
+
+	for slot, ids in ipairs(playerInv) do
+		for k, v in ipairs(ids) do
+			local itemTable = item.FindInstanceByID(v)
+
+			if (itemTable.EquipSlot and itemTable.EquipSlot == self.EquipSlot and itemTable:IsEquipped() and itemTable.instanceID != self.instanceID) then
+				return false
+			end
+		end
+	end
+end
+
 function CItemEquippable:OnUnEquipped(player) end
 function CItemEquippable:PostEquipped(player) end
 function CItemEquippable:PostUnEquipped(player) end

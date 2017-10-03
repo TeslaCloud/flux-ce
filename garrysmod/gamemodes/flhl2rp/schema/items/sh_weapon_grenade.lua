@@ -10,4 +10,4 @@ ITEM.PrintName = "#Item_Grenade_PrintName"
 ITEM.Description = "#Item_Grenade_Description"
 ITEM.Model = "models/items/grenadeammo.mdl"
 ITEM.Weight = 0.5
-ITEM.WeaponClass = "weapon_frag"
+ITEM.EquipSlot = "weapon_frag"

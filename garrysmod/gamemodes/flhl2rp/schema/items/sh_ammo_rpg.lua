@@ -5,7 +5,7 @@
 --]]
 
 ITEM:SetBase(CItemAmmo)
-ITEM.Name = "Rpg rocket"
+ITEM.Name = "RPG Missile"
 ITEM.PrintName = "#Item_Rpg_Ammo_PrintName"
 ITEM.Description = "#Item_Rpg_Ammo_Description"
 ITEM.Model = "models/weapons/w_missile_closed.mdl"

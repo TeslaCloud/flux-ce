@@ -14,8 +14,8 @@ class "CItemWeapon" extends "CItemEquippable"
 CItemWeapon.Name = "Weapon Base"
 CItemWeapon.Description = "An weapon that can be equipped."
 CItemWeapon.Category = "#Item_Category_Weapon"
+CItemWeapon.EquipSlot = "#Weapon_Category_Secondary"
 CItemWeapon.WeaponClass = "weapon_pistol"
-CItemWeapon.WeaponCategory = "#Weapon_Category_Secondary"
 CItemWeapon:AddButton("#Item_Option_Unload", {
 	icon = "icon16/add.png",
 	callback = "OnUnload",
@@ -29,22 +29,6 @@ CItemWeapon:AddButton("#Item_Option_Unload", {
 		end
 	end
 })
-
-function CItemWeapon:OnEquipped(player)
-	local playerInv = player:GetInventory()
-
-	for slot, ids in ipairs(playerInv) do
-		for k, v in ipairs(ids) do
-			local itemTable = item.FindInstanceByID(v)
-
-			if (itemTable.ClassName == "CItemWeapon" and itemTable.WeaponCategory == self.WeaponCategory and itemTable:IsEquipped() and itemTable.instanceID != self.instanceID) then
-				return false
-			end
-		end
-	end
-end
-
-function CItemWeapon:OnUnEquipped(player) end
 
 function CItemWeapon:PostEquipped(player)
 	local weapon = player:Give(self.WeaponClass, true)

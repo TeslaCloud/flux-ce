@@ -11,4 +11,4 @@ ITEM.Description = "#Item_Crossbow_Description"
 ITEM.Model = "models/weapons/w_crossbow.mdl"
 ITEM.Weight = 3
 ITEM.WeaponClass = "weapon_crossbow"
-ITEM.WeaponCategory = "#Weapon_Category_Heavy"
+ITEM.EquipSlot = "#Weapon_Category_Heavy"

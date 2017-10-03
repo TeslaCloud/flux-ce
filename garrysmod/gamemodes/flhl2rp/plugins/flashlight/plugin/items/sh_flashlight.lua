@@ -4,9 +4,9 @@
 	the framework is publicly released.
 --]]
 
+ITEM:SetBase(CItemEquippable)
 ITEM.Name = "Flashlight"
-ITEM.PrintName = "Flashlight"
-ITEM.Description = "Lets you illuminate the dark areas on the map."
+ITEM.PrintName = "#Item_Flashlight_PrintName"
+ITEM.Description = "#Item_Flashlight_Description"
 ITEM.Model = "models/lamps/torch.mdl"
 ITEM.Weight = 0.5
-ITEM.Stackable = false

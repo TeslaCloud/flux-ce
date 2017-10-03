@@ -185,4 +185,15 @@ do
 
 		return false
 	end
+
+	function playerMeta:HasItemEquipped(uniqueID)
+		local instances = self:FindInstances(uniqueID, 1)
+		local itemTable = instances[1]
+
+		if (itemTable and itemTable:IsEquipped()) then
+			return true
+		end
+
+		return false
+	end
 end

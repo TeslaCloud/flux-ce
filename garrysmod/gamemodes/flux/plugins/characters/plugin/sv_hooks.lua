@@ -51,6 +51,10 @@ function flCharacters:PlayerDisconnected(player)
 	player:SaveCharacter()
 end
 
+function flCharacters:PlayerDeath(player, inflictor, attacker)
+	player:SaveCharacter()
+end
+
 function flCharacters:DatabaseConnected()
 	local queryObj = fl.db:Create("fl_characters")
 		queryObj:Create("key", "INT NOT NULL AUTO_INCREMENT")

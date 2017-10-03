@@ -14,8 +14,8 @@ class "CItemThrown" extends "CItemWeapon"
 CItemThrown.Name = "Thrown Base"
 CItemThrown.Description = "An weapon that can be thrown."
 CItemThrown.Category = "#Item_Category_Thrown"
+CItemThrown.EquipSlot = "#Weapon_Category_Thrown"
 CItemThrown.WeaponClass = "weapon_frag"
-CItemThrown.WeaponCategory = "#Weapon_Category_Thrown"
 CItemThrown.ThrownAmmoClass = "Grenade"
 CItemThrown:AddButton("#Item_Option_Unload", {
 	icon = "icon16/add.png",
@@ -30,7 +30,7 @@ function CItemThrown:PostEquipped(player)
 
 	if (IsValid(weapon)) then
 		player:SetActiveWeapon(weapon)
-		player:SetAmmo(1, weapon:GetPrimaryAmmoType())
+		player:SetAmmo(1, self.ThrownAmmoClass)
 	else
 		fl.DevPrint("Invalid weapon class: "..self.WeaponClass)
 	end
@@ -43,7 +43,7 @@ function CItemThrown:PostUnEquipped(player)
 		player:StripWeapon(self.WeaponClass)
 
 		if (player:GetAmmoCount(self.ThrownAmmoClass) == 0) then
-			self:Remove()
+			player:TakeItemByID(self.instanceID)
 		end
 	else
 		fl.DevPrint("Invalid weapon class: "..self.WeaponClass)

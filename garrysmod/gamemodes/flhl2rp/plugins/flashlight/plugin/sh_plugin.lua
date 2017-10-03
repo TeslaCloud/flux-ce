@@ -6,7 +6,7 @@
 
 if (SERVER) then
 	function PLUGIN:PlayerSwitchFlashlight(player, bIsOn)
-		if (bIsOn and !player:HasItem("flashlight")) then
+		if (bIsOn and !player:HasItemEquipped("flashlight")) then
 			return false
 		end
 
@@ -14,7 +14,7 @@ if (SERVER) then
 	end
 
 	function PLUGIN:OnItemTaken(player, instanceID, slotID)
-		if (player:FlashlightIsOn() and !player:HasItem("flashlight")) then
+		if (player:FlashlightIsOn() and !player:HasItemEquipped("flashlight")) then
 			player:Flashlight(false)
 		end
 	end

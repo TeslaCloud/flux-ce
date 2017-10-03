@@ -38,9 +38,3 @@ end)
 netstream.Hook("PlayerTakeDamage", function()
 	fl.client.lastDamage = CurTime()
 end)
-
-netstream.Hook("RefreshInventory", function()
-	if (fl.tabMenu and fl.tabMenu.activePanel and fl.tabMenu.activePanel.Rebuild) then
-		fl.tabMenu.activePanel:Rebuild()
-	end
-end)

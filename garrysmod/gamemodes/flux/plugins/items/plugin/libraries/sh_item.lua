@@ -215,7 +215,7 @@ end
 function item.Remove(instanceID)
 	local itemTable = (istable(instanceID) and instanceID) or item.FindInstanceByID(instanceID)
 
-	if (itemTable and item.IsInstance(itemTable.instanceID)) then
+	if (itemTable and item.IsInstance(itemTable)) then
 		if (IsValid(itemTable.entity)) then
 			itemTable.entity:Remove()
 		end

@@ -14,7 +14,7 @@ function PANEL:Init()
 
 	self.Label = vgui.Create("DLabel", self)
 	self.Label:SetPos(32, 64)
-	self.Label:SetText("#CharCreat_FacTitle")
+	self.Label:SetText("#CharCreate_FacTitle")
 	self.Label:SetFont(theme.GetFont("Text_Small"))
 
 	self.Chooser = vgui.Create("flSidebar", self)

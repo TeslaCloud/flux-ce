@@ -11,4 +11,4 @@ ITEM.Description = "#Item_Ar2_Description"
 ITEM.Model = "models/weapons/w_irifle.mdl"
 ITEM.Weight = 4.5
 ITEM.WeaponClass = "weapon_ar2"
-ITEM.WeaponCategory = "#Weapon_Category_Primary"
+ITEM.EquipSlot = "#Weapon_Category_Primary"

@@ -13,3 +13,19 @@ function flInventory:PostCharacterLoaded(player, character)
 		end
 	end
 end
+
+netstream.Hook("InventorySync", function(player, inventory)
+	local newInventory = {}
+
+	for slot, ids in ipairs(inventory) do
+		newInventory[slot] = {}
+
+		for k, v in ipairs(ids) do
+			if (player:HasItemByID(v)) then
+				table.insert(newInventory[slot], v)
+			end
+		end
+	end
+
+	player:SetInventory(newInventory)
+end)

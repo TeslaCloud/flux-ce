@@ -11,4 +11,4 @@ ITEM.Description = "#Item_Pistol_Description"
 ITEM.Model = "models/weapons/w_pistol.mdl"
 ITEM.Weight = 1
 ITEM.WeaponClass = "weapon_pistol"
-ITEM.WeaponCategory = "#Weapon_Category_Secondary"
+ITEM.EquipSlot = "#Weapon_Category_Secondary"

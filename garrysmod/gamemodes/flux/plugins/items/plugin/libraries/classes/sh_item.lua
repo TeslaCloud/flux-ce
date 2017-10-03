@@ -101,10 +101,6 @@ function CItem:OnLoadout(player) end
 
 function CItem:OnSave(player) end
 
-function CItem:Remove()
-	item.Remove(self.instanceID)
-end
-
 if (SERVER) then
 	function CItem:SetData(id, value)
 		if (!id) then return end
@@ -159,8 +155,6 @@ if (SERVER) then
 
 		if (act == "OnUse") then
 			if (hook.Run("PlayerUsedItem", player, self, ...) != nil) then return end
-
-			item.Remove(self)
 		end
 
 		if (act == "OnDrop") then
