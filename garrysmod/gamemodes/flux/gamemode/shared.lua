@@ -90,7 +90,6 @@ util.IncludeDirectory("languages", true)
 util.IncludeDirectory("core/ui/controllers", true)
 util.IncludeDirectory("core/ui/view/base", true)
 util.IncludeDirectory("core/ui/view", true)
-util.IncludeDirectory("core/items/bases", true)
 
 if (theme or SERVER) then
 	pipeline.Register("theme", function(uniqueID, fileName, pipe)

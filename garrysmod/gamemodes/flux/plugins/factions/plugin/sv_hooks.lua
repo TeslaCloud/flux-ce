@@ -14,7 +14,21 @@ function flFactions:PostPlayerSpawn(player)
 	end
 end
 
-function PLUGIN:OnPlayerRestored(player)
+function flFactions:SavePlayerData(player, saveData)
+	saveData.whitelists = fl.Serialize(player:GetWhitelists())
+end
+
+function flFactions:RestorePlayer(player, result)
+	if (result.whitelists) then
+		player:SetWhitelists(fl.Deserialize(result.whitelists))
+	end
+end
+
+function flFactions:DatabaseConnected()
+	fl.db:AddColumn("fl_players", "whitelists", "TEXT DEFAULT NULL")
+end
+
+function flFactions:OnPlayerRestored(player)
 	if (player:IsBot()) then
 		if (faction.Count() > 0) then
 			local randomFaction = table.Random(faction.GetAll())

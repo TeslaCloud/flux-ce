@@ -14,14 +14,6 @@ function playerMeta:GetData()
 	return self:GetNetVar("flData", {})
 end
 
-function playerMeta:GetWhitelists()
-	return self:GetNetVar("whitelists", {})
-end
-
-function playerMeta:HasWhitelist(name)
-	return table.HasValue(self:GetWhitelists(), name)
-end
-
 playerMeta.flName = playerMeta.flName or playerMeta.Name
 
 function playerMeta:Name(bForceTrueName)

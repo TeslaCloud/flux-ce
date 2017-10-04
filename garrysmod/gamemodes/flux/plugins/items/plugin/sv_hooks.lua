@@ -116,3 +116,7 @@ function flCharacters:PreSaveCharacter(player, index)
 		end
 	end
 end
+
+netstream.Hook("PlayerDropItem", function(player, instanceID)
+	hook.Run("PlayerDropItem", player, instanceID)
+end)

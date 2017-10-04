@@ -104,14 +104,14 @@ function GM:HUDDrawScoreBoard()
 	self.BaseClass:HUDDrawScoreBoard()
 
 	if (!fl.client or !fl.client:HasInitialized() or hook.Run("ShouldDrawLoadingScreen")) then
-		local text = "Loading schema and plugins, please wait..."
+		local text = "#Loading_Schema"
 		local percentage = 80
 
 		if (!fl.localPlayerCreated) then
-			text = "Preparing loading sequence, please wait..."
+			text = "#Loading_LocalPlayer"
 			percentage = 0
 		elseif (!fl.sharedTableReceived) then
-			text = "Receiving shared data, please wait..."
+			text = "#Loading_Shared"
 			percentage = 45
 		end
 
@@ -283,7 +283,7 @@ end
 -- Called when category icons are presented.
 function GM:AddTabMenuItems(menu)
 	menu:AddMenuItem("scoreboard", {
-		title = "Scoreboard",
+		title = "#TabMenu_Scoreboard",
 		panel = "flScoreboard",
 		icon = "fa-list-alt"
 	})

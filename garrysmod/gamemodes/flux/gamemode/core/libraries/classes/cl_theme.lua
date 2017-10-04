@@ -117,5 +117,5 @@ function CTheme:__tostring()
 	return "Theme ["..self.name.."]"
 end
 
-// Create an alias of CTheme class for convenience.
+-- Create an alias of CTheme class for convenience.
 Theme = CTheme

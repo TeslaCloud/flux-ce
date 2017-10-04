@@ -8,6 +8,7 @@ PLUGIN:SetAlias("flItems")
 
 util.Include("cl_hooks.lua")
 util.Include("sv_hooks.lua")
+util.Include("sh_enums.lua")
 
 function flItems:OnPluginLoaded()
 	plugin.AddExtra("items")

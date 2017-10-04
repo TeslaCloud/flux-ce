@@ -173,4 +173,43 @@ do
 
 		return false
 	end
+
+	function playerMeta:GetWhitelists()
+		return self:GetNetVar("whitelists", {})
+	end
+
+	function playerMeta:HasWhitelist(name)
+		return table.HasValue(self:GetWhitelists(), name)
+	end
+
+	if (SERVER) then
+		function playerMeta:SetWhitelists(data)
+			self:SetNetVar("whitelists", data)
+			self:SavePlayer()
+		end
+
+		function playerMeta:GiveWhitelist(name)
+			local whitelists = self:GetWhitelists()
+
+			if (!table.HasValue(whitelists, name)) then
+				table.insert(whitelists, name)
+
+				self:SetWhitelists(whitelists)
+			end
+		end
+
+		function playerMeta:TakeWhitelist(name)
+			local whitelists = self:GetWhitelists()
+
+			for k, v in ipairs(whitelists) do
+				if (v == name) then
+					table.remove(whitelists, k)
+
+					break
+				end
+			end
+
+			self:SetWhitelists(whitelists)
+		end
+	end
 end

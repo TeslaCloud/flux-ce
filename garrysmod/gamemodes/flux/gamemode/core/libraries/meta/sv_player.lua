@@ -6,43 +6,13 @@
 
 local playerMeta = FindMetaTable("Player")
 
-function playerMeta:SetWhitelists(data)
-	self:SetNetVar("whitelists", data)
-	self:SavePlayer()
-end
-
-function playerMeta:GiveWhitelist(name)
-	local whitelists = self:GetWhitelists()
-
-	if (!table.HasValue(whitelists, name)) then
-		table.insert(whitelists, name)
-
-		self:SetWhitelists(whitelists)
-	end
-end
-
-function playerMeta:TakeWhitelist(name)
-	local whitelists = self:GetWhitelists()
-
-	for k, v in ipairs(whitelists) do
-		if (v == name) then
-			table.remove(whitelists, k)
-
-			break
-		end
-	end
-
-	self:SetWhitelists(whitelists)
-end
-
 function playerMeta:SavePlayer()
 	local saveData = {
 		steamID = self:SteamID(),
 		name = self:Name(),
 		joinTime = self.flJoinTime or os.time(),
 		lastPlayTime = os.time(),
-		data = fl.Serialize(self:GetData()),
-		whitelists = fl.Serialize(self:GetWhitelists())
+		data = fl.Serialize(self:GetData())
 	}
 
 	hook.Run("SavePlayerData", self, saveData)
@@ -96,10 +66,6 @@ function playerMeta:RestorePlayer()
 	fl.db:EasyRead("fl_players", {"steamID", self:SteamID()}, function(result, hasData)
 		if (hasData) then
 			result = result[1]
-
-			if (result.whitelists) then
-				self:SetWhitelists(fl.Deserialize(result.whitelists))
-			end
 
 			if (result.data) then
 				self:SetData(fl.Deserialize(result.data))

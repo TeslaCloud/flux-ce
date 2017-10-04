@@ -326,7 +326,7 @@ local function BuildAlterQuery(queryObj)
 		local addcolumnList = {}
 
 		for i = 1, #queryObj.addcolumnList do
-			if (cw.database.Module == "sqlite") then
+			if (fl.db.Module == "sqlite") then
 				addcolumnList[#addcolumnList + 1] = queryObj.addcolumnList[i][1].." "..string.gsub(string.gsub(string.gsub(queryObj.addcolumnList[i][2], "AUTO_INCREMENT", ""), "AUTOINCREMENT", ""), "INT ", "INTEGER ")
 			else
 				addcolumnList[#addcolumnList + 1] = queryObj.addcolumnList[i][1].." "..queryObj.addcolumnList[i][2]
@@ -408,13 +408,17 @@ function fl.db:Alter(tableName)
 	return CDatabaseQuery(tableName, "ALTER")
 end
 
-function fl.db:AddColumn(tableName,columnName, columnValue)
-	self:RawQuery("SHOW COLUMNS FROM `"..tableName.."` LIKE '"..columnName.."'", function(value)
-		if #value==0 then
-			local queryObj = self:Alter(tableName)
-				queryObj:AddColumn(columnName, columnValue)
-			queryObj:Execute()
+function fl.db:AddColumn(tableName, columnName, columnValue)
+	self:RawQuery("PRAGMA table_info("..tableName..")", function(value)
+		for k, v in pairs(value) do
+			if (v.name == columnName) then
+				return
+			end
 		end
+
+		local queryObj = self:Alter(tableName)
+			queryObj:AddColumn(columnName, columnValue)
+		queryObj:Execute()
 	end)
 end
 
@@ -620,7 +624,6 @@ function fl.db:OnConnected()
 		queryObj:Create("secondaryGroups", "TEXT DEFAULT NULL")
 		queryObj:Create("customPermissions", "TEXT DEFAULT NULL")
 		queryObj:Create("data", "TEXT DEFAULT NULL")
-		queryObj:Create("whitelists", "TEXT DEFAULT NULL")
 		queryObj:PrimaryKey("key")
 	queryObj:Execute()
 

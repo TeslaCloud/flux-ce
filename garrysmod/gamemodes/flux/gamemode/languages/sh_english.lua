@@ -102,5 +102,9 @@ lang["#Hint_TABText"]			= "Press 'Show Scoreboard' key (default: TAB) to open Fl
 lang["#Hint_CommandsText"]		= "Start typing a command in chat to see a list of all available commands\nand their syntax help."
 lang["#Hint_BugsText"]			= "Encountered a bug? Have an idea that we should totally add to Flux?\nVisit our forums at TeslaCloud.net and tell us about it!"
 
-lang["#PlayerMessage_Died"]	= "YOU PERISHED"
+lang["#PlayerMessage_Died"]		= "YOU PERISHED"
 lang["#PlayerMessage_Respawn"]	= "RESPAWNING IN #1"
+
+lang["#Loading_Schema"] 		= "Loading schema and plugins, please wait..."
+lang["#Loading_LocalPlayer"] 	= "Preparing loading sequence, please wait..."
+lang["#Loading_Shared"] 		= "Receiving shared data, please wait..."

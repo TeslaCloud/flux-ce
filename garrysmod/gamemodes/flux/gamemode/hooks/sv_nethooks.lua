@@ -9,10 +9,6 @@ netstream.Hook("ClientIncludedSchema", function(player)
 	hook.Run("PlayerInitialized", player)
 end)
 
-netstream.Hook("PlayerDropItem", function(player, instanceID)
-	hook.Run("PlayerDropItem", player, instanceID)
-end)
-
 netstream.Hook("SoftUndo", function(player)
 	fl.undo:DoPlayer(player)
 end)
