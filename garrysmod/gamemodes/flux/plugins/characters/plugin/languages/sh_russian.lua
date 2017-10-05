@@ -26,5 +26,6 @@ lang["#CharCreate_GenFacWarning"] 		= "Сначала Вы должны выбр
 lang["#CharCreate_Model_S"] 			= "Выберите модель"
 lang["#CharCreate_Fac_S"] 				= "Выберите фракцию"
 lang["#CharCreate_FacTitle"] 			= "Фракция:"
+lang["#CharCreate_Back"]				= "НАЗАД"
 
 lang["#TabMenu_Characters"] 			= "Персонажи"

@@ -113,17 +113,21 @@ lang["#TabMenu_CloseMenu"]			= "Закрыть"
 	UI/HUD ELEMENTS - Description: Language category for all hud elements.
 --]]
 
+lang["#Yes"] = "Да"
+lang["#No"] = "Нет"
+
 lang["#BarText_Health"] 		= "ЗДОРОВЬЕ"
 lang["#BarText_Armor"] 			= "БРОНЯ"
 lang["#BarText_Respawn"] 		= "ВОЗРОЖДЕНИЕ..."
 lang["#BarText_Getup"]			= "ВЫ ПОДНИМАЕТЕСЬ НА НОГИ..."
 
-lang["#MainMenu_Disconnect"] 	= "Отключиться"
-lang["#MainMenu_Settings"] 		= "Настройки"
-lang["#MainMenu_Cancel"] 		= "Отменить"
-lang["#MainMenu_Load"] 			= "Загрузить"
-lang["#MainMenu_New"] 			= "Создать"
-lang["#MainMenu_DevelopedBy"]	= "Под авторством #1."
+lang["#MainMenu_Disconnect"] 		= "Отключиться"
+lang["#MainMenu_Disconnect_Msg"]	= "Вы действительно хотите отключиться от сервера?"
+lang["#MainMenu_Settings"] 			= "Настройки"
+lang["#MainMenu_Cancel"] 			= "Отменить"
+lang["#MainMenu_Load"] 				= "Загрузить"
+lang["#MainMenu_New"] 				= "Создать"
+lang["#MainMenu_DevelopedBy"]		= "Под авторством #1."
 
 lang["#Settings_Dashboard"] 		= "Меню"
 lang["#Settings_Theme"] 			= "Тема"
@@ -188,3 +192,5 @@ lang["#PlayerMessage_Respawn"]	= "ВОЗРОЖДЕНИЕ ЧЕРЕЗ #1"
 lang["#Loading_Schema"] 		= "Загрузка схемы и плагинов..."
 lang["#Loading_LocalPlayer"] 	= "Инициализация..."
 lang["#Loading_Shared"] 		= "Получение данных с сервера..."
+
+lang["#Intro_Skip"]	= "Нажмите любую клавишу..."

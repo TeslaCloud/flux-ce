@@ -162,8 +162,11 @@ function flCharacters:AddMainMenuItems(panel, sidebar)
 			panel:Remove()
 		end)
 	else
-		panel:AddButton("Disconnect", function(btn)
-			RunConsoleCommand("disconnect")
+		panel:AddButton("#MainMenu_Disconnect", function(btn)
+			Derma_Query("#MainMenu_Disconnect_Msg", "#MainMenu_Disconnect", "#Yes", function()
+				RunConsoleCommand("disconnect")
+			end,
+			"#No")
 		end)
 	end
 end

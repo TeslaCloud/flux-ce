@@ -33,17 +33,21 @@ lang["#TabMenu_CloseMenu"]		= "Close Menu"
 	UI/HUD ELEMENTS - Description: Language category for all hud elements.
 --]]
 
+lang["#Yes"] = "Yes"
+lang["#No"] = "No"
+
 lang["#BarText_Health"]			= "HEALTH"
 lang["#BarText_Armor"]			= "ARMOR"
 lang["#BarText_Respawn"]		= "WAITING TO RESPAWN..."
 lang["#BarText_Getup"]			= "GETTING UP..."
 
-lang["#MainMenu_Disconnect"]	= "Disconnect"
-lang["#MainMenu_Settings"]		= "Settings"
-lang["#MainMenu_Cancel"]		= "Cancel"
-lang["#MainMenu_Load"]			= "Load"
-lang["#MainMenu_New"]			= "New"
-lang["#MainMenu_DevelopedBy"]	= "Developed by #1."
+lang["#MainMenu_Disconnect"]		= "Disconnect"
+lang["#MainMenu_Disconnect_Msg"]	= "Do you really want to disconnect from the server?"
+lang["#MainMenu_Settings"]			= "Settings"
+lang["#MainMenu_Cancel"]			= "Cancel"
+lang["#MainMenu_Load"]				= "Load"
+lang["#MainMenu_New"]				= "New"
+lang["#MainMenu_DevelopedBy"]		= "Developed by #1."
 
 lang["#Settings_Dashboard"]			= "Dashboard"
 lang["#Settings_Theme"]				= "Theme"
@@ -108,3 +112,5 @@ lang["#PlayerMessage_Respawn"]	= "RESPAWNING IN #1"
 lang["#Loading_Schema"] 		= "Loading schema and plugins, please wait..."
 lang["#Loading_LocalPlayer"] 	= "Preparing loading sequence, please wait..."
 lang["#Loading_Shared"] 		= "Receiving shared data, please wait..."
+
+lang["#Intro_Skip"]	= "Press any key to skip intro!"

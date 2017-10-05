@@ -72,14 +72,14 @@ end
 --[[These have translations issues and are currently not supported for translation.]]
 
 function PANEL:AddSidebarItems(sidebar, panel)
-	local button = panel:AddButton("General Settings", function(btn)
+	local button = panel:AddButton("#CharCreate_GenText", function(btn)
 		self:OpenPanel("CharCreation_General")
 	end)
 
 	button:SetActive(true)
 	panel.prevButton = button
 
-	panel:AddButton("Model", function(btn)
+	panel:AddButton("#CharCreate_ModelButton", function(btn)
 		self:OpenPanel("CharCreation_Model")
 	end)
 
@@ -88,7 +88,7 @@ end
 
 function PANEL:Paint(w, h)
 	draw.RoundedBox(0, 0, 0, w, h, theme.GetColor("MainDark"):Darken(10))
-	draw.SimpleText("Character Creation", theme.GetFont("Text_Large"), 24, 42)
+	draw.SimpleText("#CharCreateText", theme.GetFont("Text_Large"), 24, 42)
 end
 
 vgui.Register("flCharacterCreation", PANEL, "flFrame")

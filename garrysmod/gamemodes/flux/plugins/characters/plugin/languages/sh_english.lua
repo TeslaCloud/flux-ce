@@ -26,5 +26,6 @@ lang["#CharCreate_GenFacWarning"]		= "You have to select a gender or faction fir
 lang["#CharCreate_Model_S"]				= "Select a model"
 lang["#CharCreate_Fac_S"]				= "Select a faction"
 lang["#CharCreate_FacTitle"]			= "Faction:"
+lang["#CharCreate_Back"]				= "BACK"
 
 lang["#TabMenu_Characters"] 			= "Characters"

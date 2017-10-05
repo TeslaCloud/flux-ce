@@ -43,7 +43,11 @@ function character.Create(player, data)
 	table.insert(stored[steamID], data)
 
 	if (SERVER) then
-		character.Save(player, #stored[steamID])
+		local charID = #stored[steamID]
+
+		hook.Run("PostCreateCharacter", player, charID, data)
+
+		character.Save(player, charID)
 	end
 
 	return CHAR_SUCCESS
@@ -58,7 +62,9 @@ if (SERVER) then
 		fl.db:EasyRead("fl_characters", {"steamID", steamID}, function(result, hasData)
 			if (hasData) then
 				for k, v in ipairs(result) do
-					stored[steamID][tonumber(v.uniqueID) or k] = {
+					local charID = tonumber(v.uniqueID) or k
+
+					stored[steamID][charID] = {
 						steamID = steamID,
 						name = v.name,
 						physDesc = v.physDesc,
@@ -72,6 +78,8 @@ if (SERVER) then
 						uniqueID = tonumber(v.uniqueID or k),
 						key = v.key
 					}
+
+					hook.Run("RestoreCharacter", player, charID, result)
 				end
 			end
 
@@ -107,8 +115,12 @@ if (SERVER) then
 	function character.Save(player, index)
 		if (!IsValid(player) or !isnumber(index) or hook.Run("PreSaveCharacter", player, index) == false) then return end
 
-		local toSave = character.ToSaveable(player, stored[player:SteamID()][index])
-			fl.db:EasyWrite("fl_characters", {"uniqueID", index}, toSave)
+		local saveData = character.ToSaveable(player, stored[player:SteamID()][index])
+
+		hook.Run("SaveCharaterData", player, saveData)
+
+		fl.db:EasyWrite("fl_characters", {"uniqueID", index}, saveData)
+
 		hook.Run("PostSaveCharacter", player, index)
 	end
 
