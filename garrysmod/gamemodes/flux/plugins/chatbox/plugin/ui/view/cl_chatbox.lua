@@ -29,7 +29,7 @@ function PANEL:Init()
 	self.textEntry = vgui.Create("flTextEntry", self)
 	self.textEntry:SetText("")
 	self.textEntry:SetSize(1, 1)
-	self.textEntry.history = {""}
+	self.textEntry.history = {}
 	self.textEntry.lastIndex = 0
 
 	self.textEntry.OnValueChange = function(entry, value)
@@ -41,23 +41,47 @@ function PANEL:Init()
 
 		hook.Run("ChatboxTextEntered", value)
 
-		if (entry.history[#entry.history] != value) then
-			table.insert(entry.history, value)
+		if (entry.history[1] != value) then
+			table.insert(entry.history, 1, value)
+
+			entry.lastIndex = 1
 		end
 
 		entry:SetText("")
 	end
 
-	self.textEntry.OnKeyCodePressed = function(entry, code)
-		print(code)
+	self.textEntry.OnKeyCodeTyped = function(entry, code)
+		local shouldSet = false
 
-		if (code == KEY_UP) then
-			entry.lastIndex = math.Clamp(entry.lastIndex + 1, 1, #entry.history)
+		if (code == KEY_ENTER) then
+			entry:OnEnter()
+
+			return true
 		elseif (code == KEY_DOWN) then
-			entry.lastIndex = math.Clamp(entry.lastIndex - 1, 1, #entry.history)
+			if (entry.lastIndex == 1) then
+				entry.lastIndex = #entry.history
+			else
+				entry.lastIndex = math.Clamp(entry.lastIndex - 1, 1, #entry.history)
+			end
+
+			shouldSet = true
+		elseif (code == KEY_UP) then
+			if (entry.lastIndex == #entry.history) then
+				entry.lastIndex = 1
+			else
+				entry.lastIndex = math.Clamp(entry.lastIndex + 1, 1, #entry.history)
+			end
+
+			shouldSet = true
 		end
 
-		entry:SetValue(entry.history[entry.lastIndex])
+		local historyEntry = entry.history[entry.lastIndex]
+
+		if (historyEntry and historyEntry != "" and shouldSet) then
+			entry:SetText(entry.history[entry.lastIndex])
+
+			return true
+		end
 	end
 
 	self:Rebuild()

@@ -37,7 +37,7 @@ function PLUGIN:HUDPaint()
 		elseif (fallen) then
 			local w, h = util.GetTextSize("#PressJumpToGetup", theme.GetFont("Text_Normal"))
 
-			draw.SimpleText("#PressJumpToGetup", theme.GetFont("Text_Normal"), scrW / 2 - w / 2, scrH / 2 - h / 2, theme.GetColor("Text"))
+			draw.SimpleText("#PressJumpToGetup", theme.GetFont("Text_Normal"), scrW / 2 - w * 0.5, scrH / 2 - h * 0.5, theme.GetColor("Text"))
 		end
 	end
 end

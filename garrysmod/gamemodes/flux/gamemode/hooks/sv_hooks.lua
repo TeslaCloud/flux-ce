@@ -187,7 +187,7 @@ function GM:GetFallDamage(player, speed)
 	end
 
 	if (!fallDamage) then
-		fallDamage = 100 * ((speed) / 850)
+		fallDamage = 100 * ((speed) / 850) * 0.75
 	end
 
 	return fallDamage

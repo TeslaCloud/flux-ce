@@ -15,7 +15,7 @@ function PANEL:Init()
 
 	self:SetTitle("Admin")
 	self:SetSize(width, height)
-	self:SetPos(scrW / 2 - width / 2, scrH / 2 - height / 2)
+	self:SetPos(scrW / 2 - width * 0.5, scrH / 2 - height * 0.5)
 
 	self.sidebar = vgui.Create("flSidebar", self)
 	self.sidebar:SetSize(width / 5, height - headerSize)
@@ -79,7 +79,7 @@ function PANEL:SetFullscreen(bFullscreen)
 
 		self.backBtn.Paint = function(btn, w, h)
 			local font = fl.fonts:GetSize(theme.GetFont("Text_Small"), 16)
-			local _, fontSize = util.GetFontSize(font)
+			local fontSize = util.GetFontSize(font)
 
 			fl.fa:Draw("fa-chevron-left", 6, 5, 14, Color(255, 255, 255))
 			draw.SimpleText("Go Back", font, 24, 3 * (16 / fontSize), Color(255, 255, 255))

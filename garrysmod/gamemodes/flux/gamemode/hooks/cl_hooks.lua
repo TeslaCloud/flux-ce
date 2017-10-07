@@ -52,7 +52,7 @@ do
 			local newW, newH = ScrW(), ScrH()
 
 			if (scrW != newW or scrH != newH) then
-				fl.Print("Resolution changed from "..scfl.."x"..scrH.." to "..newW.."x"..newH..".")
+				fl.Print("Resolution changed from "..scrW.."x"..scrH.." to "..newW.."x"..newH..".")
 
 				hook.Run("OnResolutionChanged", newW, newH, scrW, scrH)
 
@@ -132,7 +132,7 @@ function GM:HUDDrawScoreBoard()
 		local w, h = util.GetTextSize(text, font)
 
 		draw.RoundedBox(0, 0, 0, scrW, scrH, Color(0, 0, 0))
-		draw.SimpleText(text, font, scrW / 2 - w / 2, scrH - 128, Color(255, 255, 255))
+		draw.SimpleText(text, font, scrW / 2 - w * 0.5, scrH - 128, Color(255, 255, 255))
 
 		local barW, barH = scrW / 3.5, 6
 		local barX, barY = scrW / 2 - barW * 0.5, scrH - 80
@@ -186,6 +186,7 @@ function GM:FLHUDPaint(curTime, scrW, scrH)
 		local x, y = ScrC()
 
 		surface.SetDrawColor(0, 0, 0, 200)
+		surface.DrawCircle(x, y, 41, 64)
 		surface.DrawOutlinedCircle(x, y, 41, 7, 64)
 
 		surface.SetDrawColor(theme.GetColor("Text"))
@@ -290,7 +291,7 @@ function GM:AddTabMenuItems(menu)
 end
 
 function GM:OnMenuPanelOpen(menuPanel, activePanel)
-	activePanel:SetPos(ScrW() / 2 - activePanel:GetWide() / 2 + 64, 256)
+	activePanel:SetPos(menuPanel:GetWide() * 0.5 - activePanel:GetWide() * 0.5 + font.Scale(200) + 6, 256)
 end
 
 function GM:AddAdminMenuItems(panel, sidebar)

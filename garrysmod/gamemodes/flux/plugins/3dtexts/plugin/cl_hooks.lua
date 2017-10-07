@@ -24,16 +24,16 @@ function fl3DText:PostDrawOpaqueRenderables()
 		cam.Start3D2D(trace.HitPos + (normal * 1.25), angle, 0.1 * tool:GetClientNumber("scale"))
 			if (style >= 5) then
 				if (style != 8 and style != 9) then
-					draw.RoundedBox(0, -w / 2 - 32, -h / 2 - 16, w + 64, h + 32, ColorAlpha(Color(tool:GetClientInfo("extraColor") or "#FF000033"), 40))
+					draw.RoundedBox(0, -w * 0.5 - 32, -h * 0.5 - 16, w + 64, h + 32, ColorAlpha(Color(tool:GetClientInfo("extraColor") or "#FF000033"), 40))
 				end
 
 				if (style == 7 or style == 8) then
-					draw.RoundedBox(0, -w / 2 - 32, -h / 2 - 16, w + 64, 6, Color(255, 255, 255, 40))
-					draw.RoundedBox(0, -w / 2 - 32, -h / 2 + h + 10, w + 64, 6, Color(255, 255, 255, 40))
+					draw.RoundedBox(0, -w * 0.5 - 32, -h * 0.5 - 16, w + 64, 6, Color(255, 255, 255, 40))
+					draw.RoundedBox(0, -w * 0.5 - 32, -h * 0.5 + h + 10, w + 64, 6, Color(255, 255, 255, 40))
 				elseif (style == 9) then
 					local wide = w + 64
 					local barColor = Color(255, 255, 255, 40)
-					local barX, barY = -w / 2 - 32, -h / 2 - 16
+					local barX, barY = -w * 0.5 - 32, -h * 0.5 - 16
 					local rectWidth = (wide / 3 - wide / 6) * 0.75
 
 					-- Draw left thick rectangles
@@ -50,7 +50,7 @@ function fl3DText:PostDrawOpaqueRenderables()
 				end
 			end
 
-			draw.SimpleText(text, theme.GetFont("Text_3D2D"), -w / 2, -h / 2, ColorAlpha(Color(tool:GetClientInfo("color") or "white"), 60))
+			draw.SimpleText(text, theme.GetFont("Text_3D2D"), -w * 0.5, -h * 0.5, ColorAlpha(Color(tool:GetClientInfo("color") or "white"), 60))
 		cam.End3D2D()
 	end
 
@@ -78,7 +78,7 @@ function fl3DText:PostDrawOpaqueRenderables()
 		local backColor = v.extraColor
 		local style = v.style
 		local w, h = util.GetTextSize(text, theme.GetFont("Text_3D2D"))
-		local posX, posY = -w / 2, -h / 2
+		local posX, posY = -w * 0.5, -h * 0.5
 
 		if (style >= 2) then
 			cam.Start3D2D(pos + (normal * 0.4), angle, 0.1 * scale)

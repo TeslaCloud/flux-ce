@@ -207,6 +207,10 @@ function PANEL:SlotsToInventory()
 	netstream.Start("InventorySync", self.inventory)
 end
 
+function PANEL:GetMenuSize()
+	return font.Scale(560), font.Scale(self.invSlots * 0.125 * 68 + 36)
+end
+
 function PANEL:Rebuild()
 	dragndrop.Clear()
 

@@ -88,8 +88,8 @@ else
 			local normal = v.normal
 			local ang = normal:Angle()
 			local w, h = util.GetTextSize(v.text, theme.GetFont("Text_3D2D"))
-			local startPos = pos - -ang:Right() * (w / 20) * v.scale
-			local endPos = pos + -ang:Right() * (w / 20) * v.scale
+			local startPos = pos - -ang:Right() * (w * 0.50) * v.scale
+			local endPos = pos + -ang:Right() * (w * 0.50) * v.scale
 
 			if (math.abs(math.abs(hitPos.z) - math.abs(pos.z)) < 4 * v.scale) then
 				if (util.VectorsIntersect(traceStart, hitPos, startPos, endPos)) then

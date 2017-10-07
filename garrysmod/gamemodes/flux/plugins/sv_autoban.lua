@@ -27,7 +27,6 @@ local blacklist = {
 	["STEAM_0:0:43712567"] = "You have been blacklisted due to bad affiliations!", -- 🔰[TNF][CUPS]Cup of Tea🔰
 	["STEAM_0:0:59648570"] = "You have been blacklisted due to bad affiliations!", -- Blender 2.78
 	["STEAM_0:0:86748785"] = "You have been blacklisted due to bad affiliations!", -- 🔰[THF][CUPS]Cup of Anime🔰
-	["STEAM_0:1:88616406"] = "You have been blacklisted due to bad affiliations!", -- [TNF]you're fired
 	["STEAM_0:1:10947122"] = "You have been blacklisted due to bad affiliations!" -- [TNF] Vesthamer
 }
 

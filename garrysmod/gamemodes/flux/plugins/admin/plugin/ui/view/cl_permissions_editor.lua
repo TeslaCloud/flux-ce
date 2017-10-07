@@ -28,14 +28,14 @@ function PANEL:Rebuild()
 	local font = font.GetSize(theme.GetFont("Text_NormalSmaller"), font.Scale(18))
 	local fontSize = draw.GetFontHeight(font)
 	local permission = self:GetPermission()
-	local quarter = width / 4
+	local quarter = width * 0.25
 
 	self.container = vgui.Create("flBasePanel", self)
 	self.container:SetSize(width, height)
 	self.container:SetPos(0, 0)
 
 	self.title = vgui.Create("DLabel", self.container)
-	self.title:SetPos(0, height / 2 - fontSize / 2)
+	self.title:SetPos(0, height * 0.5 - fontSize / 2)
 	self.title:SetFont(font)
 	self.title:SetText(permission.name or "No Permission")
 	self.title:SetSize(quarter, height)

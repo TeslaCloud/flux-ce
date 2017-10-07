@@ -12,6 +12,7 @@ PANEL.m_CurAmt = 0
 PANEL.m_Active = false
 PANEL.m_IconSize = nil
 PANEL.m_Enabled = true
+PANEL.m_Centered = false
 
 function PANEL:Paint(w, h)
 	theme.Hook("PaintButton", self, w, h)
@@ -27,6 +28,14 @@ function PANEL:Think()
 	else
 		self.m_CurAmt = math.Clamp(self.m_CurAmt - 1 * frameTime, 0, 40)
 	end
+
+	if (!self.m_IconSizeOverride) then
+		self.m_IconSize = self:GetTall() - 6
+	end
+end
+
+function PANEL:SetCentered(bCentered)
+	self.m_Centered = bCentered
 end
 
 function PANEL:SetActive(active)
@@ -58,6 +67,7 @@ end
 
 function PANEL:SetIconSize(size)
 	self.m_IconSize = size
+	self.m_IconSizeOverride = true
 end
 
 function PANEL:OnMousePressed(key)

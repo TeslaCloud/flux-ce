@@ -204,7 +204,7 @@ netstream.Hook("PlayerCreatedCharacter", function(success, status)
 			panel:SetBackgroundColor(Color(50, 50, 50, 220))
 
 			local w, h = panel:GetSize()
-			panel:SetPos(ScrW() / 2 - w / 2, ScrH() - 128)
+			panel:SetPos(ScrW() / 2 - w * 0.5, ScrH() - 128)
 
 			function panel:PostThink() self:MoveToFront() end
 		end

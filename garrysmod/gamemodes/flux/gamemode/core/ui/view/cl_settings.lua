@@ -168,11 +168,11 @@ function PANEL:Init()
 			local num = slider:GetNotches()
 
 			surface.SetDrawColor(fl.settings:GetColor("TextColor"))
-			surface.DrawRect(8, h / 2 - 1, w - 15, 1)
+			surface.DrawRect(8, h * 0.5 - 1, w - 15, 1)
 
 			if (!num) then return end
 
-			local x, y = 8, h / 2 - 1
+			local x, y = 8, h * 0.5 - 1
 			local space = w / num
 
 			for i = 0, num do

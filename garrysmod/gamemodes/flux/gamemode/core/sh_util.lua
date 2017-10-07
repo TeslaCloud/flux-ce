@@ -682,11 +682,7 @@ function util.GetTextHeight(text, font)
 end
 
 function util.GetFontSize(font)
-	return util.GetTextSize("abg", font)
-end
-
-function util.GetFontHeight(font)
-	return select(2, util.GetFontSize(font))
+	return select(2, util.GetTextSize("Agb", font))
 end
 
 function util.GetPanelClass(panel)

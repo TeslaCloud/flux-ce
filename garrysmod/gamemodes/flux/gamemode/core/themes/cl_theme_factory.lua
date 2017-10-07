@@ -52,21 +52,21 @@ function THEME:OnLoaded()
 	self:SetFont("MenuTitles", "flRoboto", font.Scale(14))
 	self:SetFont("Menu_Tiny", "flRobotoLt", font.Scale(16))
 	self:SetFont("Menu_Small", "flRobotoLt", font.Scale(20))
-	self:SetFont("Menu_Normal", self:GetFont("MainFont"), font.Scale(24))
-	self:SetFont("Menu_Large", self:GetFont("MainFont"), font.Scale(30))
+	self:SetFont("Menu_Normal", self:GetFont("MainFont"), font.Scale(24), {weight = 600})
+	self:SetFont("Menu_Large", self:GetFont("MainFont"), font.Scale(30), {weight = 600})
 	self:SetFont("Tooltip_Small", self:GetFont("MainFont"), font.Scale(16))
 	self:SetFont("Tooltip_Large", self:GetFont("MainFont"), font.Scale(26))
 	self:SetFont("Text_Largest", self:GetFont("MainFont"), font.Scale(90))
 	self:SetFont("Text_Larger", self:GetFont("MainFont"), font.Scale(60))
 	self:SetFont("Text_Large", self:GetFont("MainFont"), font.Scale(48))
 	self:SetFont("Text_NormalLarge", self:GetFont("MainFont"), font.Scale(36))
-	self:SetFont("Text_NormalBig", self:GetFont("MainFont"), font.Scale(30))
-	self:SetFont("Text_Normal", self:GetFont("MainFont"), font.Scale(24))
+	self:SetFont("Text_NormalBig", self:GetFont("MainFont"), font.Scale(29))
+	self:SetFont("Text_Normal", self:GetFont("MainFont"), font.Scale(23))
 	self:SetFont("Text_NormalSmaller", self:GetFont("MainFont"), font.Scale(22))
 	self:SetFont("Text_Small", self:GetFont("MainFont"), font.Scale(18))
 	self:SetFont("Text_Smaller", self:GetFont("MainFont"), font.Scale(16))
 	self:SetFont("Text_Smallest", self:GetFont("MainFont"), font.Scale(14))
-	self:SetFont("Text_Bar", self:GetFont("MainFont"), font.Scale(12), {weight = 600})
+	self:SetFont("Text_Bar", self:GetFont("MainFont"), font.Scale(17), {weight = 600})
 	self:SetFont("Text_Tiny", self:GetFont("MainFont"), font.Scale(11))
 	self:SetFont("Text_3D2D", self:GetFont("MainFont"), 256)
 
@@ -101,7 +101,7 @@ function THEME:PaintFrame(panel, width, height)
 
 	if (title) then
 		local font = font.GetSize(self:GetFont("Text_Small"), 16)
-		local _, fontSize = util.GetFontSize(font)
+		local fontSize = util.GetFontSize(font)
 
 		draw.SimpleText(title, font, 6, 3 * (16 / fontSize), panel:GetTextColor())
 	end
@@ -112,8 +112,8 @@ function THEME:PaintMainMenu(panel, width, height)
 	local title, desc, author = Schema:GetName(), Schema:GetDescription(), "#MainMenu_DevelopedBy:"..Schema:GetAuthor()..";"
 	local logo = self:GetMaterial("Schema_Logo")
 	local titleW, titleH = util.GetTextSize(title, self:GetFont("Text_Largest"))
-	local descW, descH = util.GetTextSize(desc, self:GetFont("Text_Normal"))
-	local authorW, authorH = util.GetTextSize(author, self:GetFont("Text_Normal"))
+	local descW, descH = util.GetTextSize(desc, self:GetFont("Menu_Normal"))
+	local authorW, authorH = util.GetTextSize(author, self:GetFont("Menu_Normal"))
 
 	surface.SetDrawColor(self:GetColor("MainMenu_Background"))
 	surface.DrawRect(0, 0, width, width)
@@ -122,13 +122,13 @@ function THEME:PaintMainMenu(panel, width, height)
 	surface.DrawRect(0, 0, width, 128)
 
 	if (!logo) then
-		draw.SimpleText(title, self:GetFont("Text_Largest"), wide + width / 2 - titleW / 2, 150, self:GetColor("SchemaText"))
+		draw.SimpleText(title, self:GetFont("Text_Largest"), wide + width * 0.5 - titleW / 2, 150, self:GetColor("SchemaText"))
 	else
-		draw.TexturedRect(logo, wide + width / 2 - 200, 16, 400, 96, Color(255, 255, 255))
+		draw.TexturedRect(logo, wide + width * 0.5 - 200, 16, 400, 96, Color(255, 255, 255))
 	end
 
-	draw.SimpleText(desc, self:GetFont("Text_Normal"), 16, 128 - descH - 8, self:GetColor("SchemaText"))
-	draw.SimpleText(author, self:GetFont("Text_Normal"), width - authorW - 16, 128 - authorH - 8, self:GetColor("SchemaText"))
+	draw.SimpleText(desc, self:GetFont("Menu_Normal"), 16, 128 - descH - 8, self:GetColor("SchemaText"))
+	draw.SimpleText(author, self:GetFont("Menu_Normal"), width - authorW - 16, 128 - authorH - 8, self:GetColor("SchemaText"))
 end
 
 function THEME:PaintButton(panel, w, h)
@@ -160,7 +160,9 @@ function THEME:PaintButton(panel, w, h)
 	end
 
 	if (icon) then
-		fl.fa:Draw(icon, (panel.m_IconSize and h / 2 - panel.m_IconSize / 2) or 3, (panel.m_IconSize and h / 2 - panel.m_IconSize / 2) or 3, (panel.m_IconSize or h - 6), textColor)
+		if (!panel.m_Centered) then
+			fl.fa:Draw(icon, (panel.m_IconSize and h * 0.5 - panel.m_IconSize / 2) or 3, (panel.m_IconSize and h * 0.5 - panel.m_IconSize / 2) or 3, (panel.m_IconSize or h - 6), textColor)
+		end
 	end
 
 	if (title and title != "") then
@@ -168,12 +170,20 @@ function THEME:PaintButton(panel, w, h)
 
 		if (panel.m_Autopos) then
 			if (icon) then
-				draw.SimpleText(title, font, h + 2, h / 2 - height / 2, textColor)
+				if (panel.m_Centered) then
+					local textPos = w * 0.27 -- poor man's centering
+
+					fl.fa:Draw(icon, textPos - panel.m_IconSize * 0.5 - 8, (panel.m_IconSize and h * 0.5 - panel.m_IconSize / 2) or 3, (panel.m_IconSize or h - 6), textColor)
+
+					draw.SimpleText(title, font, textPos + panel.m_IconSize * 0.5, h * 0.5 - height * 0.5, textColor)
+				else
+					draw.SimpleText(title, font, h + 8, h * 0.5 - height * 0.5, textColor)
+				end
 			else
-				draw.SimpleText(title, font, w / 2 - width / 2, h / 2 - height / 2, textColor)
+				draw.SimpleText(title, font, w * 0.5 - width * 0.5, h * 0.5 - height * 0.5, textColor)
 			end
 		else
-			draw.SimpleText(title, font, panel.m_TextPos or 0, h / 2 - height / 2, textColor)
+			draw.SimpleText(title, font, panel.m_TextPos or 0, h * 0.5 - height * 0.5, textColor)
 		end
 	end
 end
@@ -191,7 +201,7 @@ function THEME:PaintDeathScreen(curTime, scrW, scrH)
 	draw.RoundedBox(0, 0, 0, scrW, scrH, Color(0, 0, 0, fl.client.respawnAlpha))
 
 	draw.SimpleText("#PlayerMessage_Died", font, 16, 16, color_white)
-	draw.SimpleText(L("PlayerMessage_Respawn", math.ceil(respawnTimeRemaining)), font, 16, 16 + util.GetFontHeight(font), color_white)
+	draw.SimpleText("#PlayerMessage_Respawn:"..math.ceil(respawnTimeRemaining)..";", font, 16, 16 + util.GetFontHeight(font), color_white)
 
 	draw.RoundedBox(0, 0, 0, scrW / 100 * barValue, 2, color_white)
 
@@ -217,13 +227,27 @@ function THEME:DrawBarHindrance(barInfo)
 end
 
 function THEME:DrawBarFill(barInfo)
-	draw.RoundedBox(barInfo.cornerRadius, barInfo.x + 1, barInfo.y + 1, (barInfo.fillWidth or barInfo.width) - 2, barInfo.height - 2, barInfo.color)
+	if (barInfo.realFillWidth < barInfo.fillWidth) then
+		draw.RoundedBox(barInfo.cornerRadius, barInfo.x + 1, barInfo.y + 1, (barInfo.fillWidth or barInfo.width) - 2, barInfo.height - 2, barInfo.color)
+		draw.RoundedBox(barInfo.cornerRadius, barInfo.x + 1, barInfo.y + 1, barInfo.realFillWidth - 2, barInfo.height - 2, Color(230, 230, 230))
+	elseif (barInfo.realFillWidth > barInfo.fillWidth) then
+		draw.RoundedBox(barInfo.cornerRadius, barInfo.x + 1, barInfo.y + 1, barInfo.realFillWidth - 2, barInfo.height - 2, barInfo.color)
+		draw.RoundedBox(barInfo.cornerRadius, barInfo.x + 1, barInfo.y + 1, (barInfo.fillWidth or barInfo.width) - 2, barInfo.height - 2, Color(230, 230, 230))
+	else
+		draw.RoundedBox(barInfo.cornerRadius, barInfo.x + 1, barInfo.y + 1, (barInfo.fillWidth or barInfo.width) - 2, barInfo.height - 2, Color(230, 230, 230))
+	end
 end
 
 function THEME:DrawBarTexts(barInfo)
 	local font = theme.GetFont(barInfo.font)
 
-	draw.SimpleText(barInfo.text, font, barInfo.x + 8, barInfo.y + barInfo.textOffset, Color(255, 255, 255))
+	render.SetScissorRect(barInfo.x + 1, barInfo.y + 1, barInfo.x + barInfo.realFillWidth, barInfo.y + barInfo.height, true)
+		draw.SimpleText(barInfo.text, font, barInfo.x + 8, barInfo.y + barInfo.textOffset, self:GetColor("MainDark"))
+	render.SetScissorRect(0, 0, 0, 0, false)
+
+	render.SetScissorRect(barInfo.x + barInfo.realFillWidth, barInfo.y + 1, barInfo.x + barInfo.width, barInfo.y + barInfo.height, true)
+		draw.SimpleText(barInfo.text, font, barInfo.x + 8, barInfo.y + barInfo.textOffset, self:GetColor("Text"))
+	render.SetScissorRect(0, 0, 0, 0, false)
 
 	if (barInfo.hinderDisplay and barInfo.hinderDisplay <= barInfo.hinderValue) then
 		local width = barInfo.width
@@ -280,9 +304,9 @@ function THEME:PaintPermissionButton(permPanel, btn, w, h)
 
 	local tW, tH = util.GetTextSize(title, font)
 
-	draw.SimpleText(title, font, w / 2 - tW / 2, 2, textColor)
+	draw.SimpleText(title, font, w * 0.5 - tW / 2, 2, textColor)
 
-	local sqrSize = h / 2
+	local sqrSize = h * 0.5
 
 	draw.RoundedBox(0, sqrSize / 2, sqrSize / 2, sqrSize, sqrSize, Color(255, 255, 255))
 
@@ -294,10 +318,13 @@ end
 function THEME:PaintTabMenu(panel, width, height)
 	local fraction = FrameTime() * 8
 	local activePanel = panel.activePanel
+	local sidebarColor = ColorAlpha(self:GetColor("Background"), 125)
 
-	Derma_DrawBackgroundBlur(panel, panel.lerpStart)
-	draw.RoundedBox(0, 0, 0, width, height, Color(50, 50, 50, Lerp(fraction, 0, 150)))
-	draw.RoundedBox(0, 0, 0, 6, height, ColorAlpha(self:GetColor("Background"), 200))
+	panel.curAlpha = Lerp(fraction, panel.curAlpha or 0, 200)
+
+	draw.RoundedBox(0, 0, 0, width, height, Color(0, 0, 0, panel.curAlpha))
+	draw.RoundedBox(0, 0, 0, font.Scale(200) + 6, height, sidebarColor)
+	draw.RoundedBox(0, 0, 0, 6, height, sidebarColor)
 
 	if (IsValid(activePanel)) then
 		panel.posY = panel.posY or 0

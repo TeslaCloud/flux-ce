@@ -9,14 +9,18 @@ function flAttributes:DatabaseConnected()
 end
 
 function flAttributes:SaveCharaterData(player, saveData)
-	saveData.attributes = util.TableToJSON(player:GetAttributeTable())
+	saveData.attributes = util.TableToJSON(player:GetAttributes())
 end
 
 function flAttributes:RestoreCharacter(player, charID, data)
 	local char = character.Get(player, charID)
 
 	if (char) then
-		char.attributes = util.JSONToTable(data.attributes)
+		if (isstring(data.attributes)) then
+			char.attributes = util.JSONToTable(data.attributes)
+		else
+			char.attributes = {}
+		end
 
 		character.Save(player, charID)
 	end

@@ -42,7 +42,7 @@ lang["#BarText_Respawn"]		= "WAITING TO RESPAWN..."
 lang["#BarText_Getup"]			= "GETTING UP..."
 
 lang["#MainMenu_Disconnect"]		= "Disconnect"
-lang["#MainMenu_Disconnect_Msg"]	= "Do you really want to disconnect from the server?"
+lang["#MainMenu_Disconnect_Msg"]	= "Are you sure that you want to disconnect from this server?"
 lang["#MainMenu_Settings"]			= "Settings"
 lang["#MainMenu_Cancel"]			= "Cancel"
 lang["#MainMenu_Load"]				= "Load"
@@ -107,7 +107,7 @@ lang["#Hint_CommandsText"]		= "Start typing a command in chat to see a list of a
 lang["#Hint_BugsText"]			= "Encountered a bug? Have an idea that we should totally add to Flux?\nVisit our forums at TeslaCloud.net and tell us about it!"
 
 lang["#PlayerMessage_Died"]		= "YOU PERISHED"
-lang["#PlayerMessage_Respawn"]	= "RESPAWNING IN #1"
+lang["#PlayerMessage_Respawn"]	= "RESPAWNING IN #1 SECOND(s)."
 
 lang["#Loading_Schema"] 		= "Loading schema and plugins, please wait..."
 lang["#Loading_LocalPlayer"] 	= "Preparing loading sequence, please wait..."

@@ -64,13 +64,15 @@ function flChatbox:HUDShouldDraw(element)
 end
 
 function flChatbox:ChatboxTextEntered(text)
-	print(text)
-
 	if (text and text != "") then
 		netstream.Start("Chatbox::PlayerSay", text)
 	end
 
 	chatbox.Hide()
+end
+
+function flChatbox:ChatboxPaintOver(w, h, panel)
+	
 end
 
 netstream.Hook("Chatbox::AddMessage", function(messageData)

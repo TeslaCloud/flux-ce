@@ -10,8 +10,10 @@ PANEL.buttons = {}
 PANEL.activePanel = nil
 
 function PANEL:Init()
+	local scrW, scrH = ScrW(), ScrH()
+
 	self:SetPos(0, 0)
-	self:SetSize(ScrW(), ScrH())
+	self:SetSize(scrW, scrH)
 
 	local curX, curY = hook.Run("AdjustMenuItemPositions", self)
 	curX = curX or 42
@@ -19,19 +21,18 @@ function PANEL:Init()
 
 	self.closeButton = vgui.Create("flButton", self)
 	self.closeButton:SetFont(theme.GetFont("Menu_Large"))
-	self.closeButton:SetText("#TabMenu_CloseMenu")
-	self.closeButton:SetPos(curX - 20, curY)
-	self.closeButton:SetSize(200, 38)
+	self.closeButton:SetText(string.utf8upper(fl.lang:TranslateText("#TabMenu_CloseMenu")))
+	self.closeButton:SetPos(6, curY)
+	self.closeButton:SetSize(font.Scale(200), font.Scale(38))
 	self.closeButton:SetDrawBackground(false)
-	self.closeButton:SetTextAutoposition(false)
-	self.closeButton:SetTextOffset(8)
+	self.closeButton:SetTextAutoposition(true)
 	self.closeButton.DoClick = function(btn)
 		surface.PlaySound("garrysmod/ui_click.wav")
 		self:SetVisible(false)
 		self:Remove()
 	end
 
-	curY = curY + 42
+	curY = curY + font.Scale(52)
 
 	self.menuItems = {}
 
@@ -40,10 +41,11 @@ function PANEL:Init()
 	for k, v in ipairs(self.menuItems) do
 		local button = vgui.Create("flButton", self)
 		button:SetDrawBackground(false)
-		button:SetPos(curX - 20, curY)
-		button:SetSize(200, 30)
+		button:SetPos(6, curY)
+		button:SetSize(font.Scale(200), font.Scale(30))
 		button:SetText(v.title)
 		button:SetIcon(v.icon)
+		button:SetCentered(true)
 		button:SetFont(v.font or theme.GetFont("Menu_Normal"))
 
 		button.DoClick = function(btn)
@@ -64,6 +66,12 @@ function PANEL:Init()
 
 				self.activePanel = vgui.Create(v.panel, self)
 
+				if (self.activePanel.GetMenuSize) then
+					self.activePanel:SetSize(self.activePanel:GetMenuSize())
+				else
+					self.activePanel:SetSize(scrW * 0.5, scrH * 0.5)
+				end
+
 				self.activeBtn = btn
 				self.activeBtn:SetTextColor(theme.GetColor("AccentLight"))
 
@@ -75,7 +83,7 @@ function PANEL:Init()
 			end
 		end
 
-		curY = curY + 32
+		curY = curY + font.Scale(38)
 
 		self.buttons[k] = button
 	end
@@ -91,7 +99,7 @@ end
 
 function PANEL:AddMenuItem(id, data)
 	data.uniqueID = id
-	data.title = data.title or "error"
+	data.title = string.utf8upper(fl.lang:TranslateText(data.title) or "error")
 	data.icon = data.icon or false
 
 	table.insert(self.menuItems, data)

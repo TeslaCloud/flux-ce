@@ -18,8 +18,8 @@ fl.bars.sorted = sorted
 -- Some fail-safety variables.
 fl.bars.defaultX = 8
 fl.bars.defaultY = 8
-fl.bars.defaultW = font.Scale(256)
-fl.bars.defaultH = 12
+fl.bars.defaultW = font.Scale(312)
+fl.bars.defaultH = 18
 fl.bars.defaultSpacing = 6
 
 function fl.bars:Register(uniqueID, data, force)
@@ -47,12 +47,12 @@ function fl.bars:Register(uniqueID, data, force)
 		y = data.y or self.defaultY,
 		width = data.width or self.defaultW,
 		height = data.height or self.defaultH,
-		cornerRadius = data.cornerRadius or 4,
+		cornerRadius = data.cornerRadius or 0,
 		priority = data.priority or table.Count(stored),
 		type = data.type or BAR_TOP,
 		font = data.font or "Text_Bar",
 		spacing = data.spacing or self.defaultSpacing,
-		textOffset = data.textOffset or 0,
+		textOffset = data.textOffset or 1,
 		callback = data.callback
 	}
 
@@ -208,8 +208,10 @@ do
 	function flBars:PreDrawBar(bar)
 		bar.curI = bar.curI or 1
 
+		bar.realFillWidth = bar.width * (bar.value / bar.maxValue)
+
 		if (bar.interpolated == nil) then
-			bar.fillWidth = bar.width * (bar.value / bar.maxValue)
+			bar.fillWidth = bar.realFillWidth
 		else
 			if (bar.curI > 150) then
 				bar.interpolated = nil

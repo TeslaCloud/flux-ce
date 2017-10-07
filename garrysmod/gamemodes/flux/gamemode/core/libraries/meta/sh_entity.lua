@@ -14,9 +14,15 @@ local entMeta = FindMetaTable("Entity")
 entMeta.flSetModel = entMeta.flSetModel or entMeta.SetModel
 
 function entMeta:IsStuck()
-	return util.TraceEntity({
-		start = self:GetPos(),
-		endpos = self:GetPos(),
-		filter = self
-	}, self).StartSolid
+	local pos = self:GetPos()
+
+	local trace = util.TraceHull({
+		start = pos,
+		endpos = pos,
+		filter = self,
+		mins = self:OBBMins(),
+		maxs = self:OBBMaxs()
+	})
+
+	return trace.Entity and (trace.Entity:IsWorld() or trace.Entity:IsValid())
 end

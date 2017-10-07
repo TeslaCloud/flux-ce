@@ -41,17 +41,17 @@ do
 				local teamColor = team.GetColor(v:Team()) or Color(255, 255, 255)
 
 				local w, h = util.GetTextSize(v:Name(), theme.GetFont("Text_Small"))
-				draw.SimpleText(v:Name(), theme.GetFont("Text_Small"), textPos.x - w / 2, textPos.y, teamColor)
+				draw.SimpleText(v:Name(), theme.GetFont("Text_Small"), textPos.x - w * 0.5, textPos.y, teamColor)
 
 				local w, h = util.GetTextSize(v:SteamName(), theme.GetFont("Text_Smaller"))
-				draw.SimpleText(v:SteamName(), theme.GetFont("Text_Smaller"), textPos.x - w / 2, textPos.y + 14, color_lightblue)
+				draw.SimpleText(v:SteamName(), theme.GetFont("Text_Smaller"), textPos.x - w * 0.5, textPos.y + 14, color_lightblue)
 
 				if (v:Alive()) then
 					surface.SetDrawColor(teamColor)
 					surface.DrawOutlinedRect(x - size / 2, y - size / 2, size, (screenPos.y - y) * 1.25)
 				else
 					local w, h = util.GetTextSize("*DEAD*", theme.GetFont("Text_Smaller"))
-					draw.SimpleText("*DEAD*", theme.GetFont("Text_Smaller"), textPos.x - w / 2, textPos.y + 28, color_lightred)
+					draw.SimpleText("*DEAD*", theme.GetFont("Text_Smaller"), textPos.x - w * 0.5, textPos.y + 28, color_lightred)
 				end
 
 				local bx, by = x - size / 2, y - size / 2 + (screenPos.y - y) * 1.25
