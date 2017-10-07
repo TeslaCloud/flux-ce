@@ -42,10 +42,13 @@ function attributes.Register(uniqueID, data)
 	data.uniqueID = uniqueID
 	data.Name = data.Name or "Unknown Attribute"
 	data.Description = data.Description or "This attribute has no description!"
-	data.Maximum = data.Maximum or 100
-	data.Minimum = data.Minimum or 0
+	data.Max = data.Max or 100
+	data.Min = data.Min or 0
 	data.Category = data.Category or "#Attribute_Category_Other"
 	data.Icon = data.Icon
+	data.Type = data.Type or ATTRIBUTE_SKILL
+	data.Multipliable = data.Multipliable or true
+	data.Boostable = data.Boostable or true
 
 	stored[uniqueID] = data
 end
@@ -76,13 +79,14 @@ do
 	end
 
 	function playerMeta:GetAttribute(uniqueID, bNoBoost)
+		local attribute = attributes.FindByID(uniqueID)
 		local value = self:GetAttributes()[uniqueID].value
 
-		if (!bNoBoost) then
+		if (!bNoBoost and attribute.Boostable) then
 			value = value + self:GetAttributeBoost(uniqueID)
 		end
 
-		return value or attributes.FindByID(uniqueID).Minimum
+		return value
 	end
 
 	function playerMeta:GetAttributeMultiplier(uniqueID)
@@ -108,17 +112,19 @@ do
 	if (SERVER) then
 		function playerMeta:SetAttribute(uniqueID, value)
 			local attsTable = self:GetAttributes()
+			local attribute = attributes.FindByID(uniqueID)
 
 			if (!attsTable[uniqueID]) then
 				attsTable[uniqueID] = {}
 			end
 
-			attsTable[uniqueID].value = value
+			attsTable[uniqueID].value = math.Clamp(value, attribute.Min, attribute.Max)
 
 			self:SetNetVar("attributes", attsTable)
 		end
 
 		function playerMeta:IncreaseAttribute(uniqueID, value, bNoMultiplier)
+			local attribute = attributes.FindByID(uniqueID)
 			local attsTable = self:GetAttributes()
 
 			if (!bNoMultiplier) then
@@ -129,11 +135,7 @@ do
 				end
 			end
 
-			if (!attsTable[uniqueID]) then
-				attsTable[uniqueID] = {}
-			end
-
-			attsTable[uniqueID].value = attsTable[uniqueID].value + value
+			attsTable[uniqueID].value = math.Clamp(attsTable[uniqueID].value + value, attribute.Min, attribute.Max)
 
 			self:SetNetVar("attributes", attsTable)
 		end
@@ -143,16 +145,16 @@ do
 		end
 
 		function playerMeta:AttributeMultiplier(uniqueID, value, duration)
+			local attribute = attributes.FindByID(uniqueID)
+
+			if (!attribute.Multipliable) then return end
+			if (value <= 0) then return end
+
 			local curTime = CurTime()
 			local attsTable = self:GetAttributes()
-
-			if (!attsTable[uniqueID]) then
-				attsTable[uniqueID] = {}
-			end
+			local expires = attsTable[uniqueID].multiplierExpires
 
 			attsTable[uniqueID].multiplier = value
-
-			local expires = attsTable[uniqueID].multiplierExpires
 
 			if (expires and expires >= curTime) then
 				attsTable[uniqueID].multiplierExpires = expires + duration
@@ -164,16 +166,15 @@ do
 		end
 
 		function playerMeta:BoostAttribute(uniqueID, value, duration)
+			local attribute = attributes.FindByID(uniqueID)
+
+			if (!attribute.Multipliable) then return end
+
 			local curTime = CurTime()
 			local attsTable = self:GetAttributes()
-
-			if (!attsTable[uniqueID]) then
-				attsTable[uniqueID] = {}
-			end
+			local expires = attsTable[uniqueID].boostExpires
 
 			attsTable[uniqueID].boost = value
-
-			local expires = attsTable[uniqueID].boostExpires
 
 			if (expires and expires >= curTime) then
 				attsTable[uniqueID].boostExpires = expires + time

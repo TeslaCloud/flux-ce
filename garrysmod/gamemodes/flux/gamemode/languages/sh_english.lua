@@ -33,8 +33,8 @@ lang["#TabMenu_CloseMenu"]		= "Close Menu"
 	UI/HUD ELEMENTS - Description: Language category for all hud elements.
 --]]
 
-lang["#Yes"] = "Yes"
-lang["#No"] = "No"
+lang["#Yes"] 	= "Yes"
+lang["#No"] 	= "No"
 
 lang["#BarText_Health"]			= "HEALTH"
 lang["#BarText_Armor"]			= "ARMOR"
