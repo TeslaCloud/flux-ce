@@ -121,6 +121,38 @@ function flCharacters:ShouldScoreboardShow()
 	return fl.client:CharacterLoaded()
 end
 
+function flCharacters:RebuildScoreboardPlayerCard(card, player)
+	local x, y = card.nameLabel:GetPos()
+	local oldX = x
+
+	x = x + font.Scale(32) + 4
+
+	card.nameLabel:SetPos(x, 2)
+
+	if (IsValid(card.descLabel)) then
+		card.descLabel:SafeRemove()
+		card.spawnIcon:SafeRemove()
+	end
+
+	card.spawnIcon = vgui.Create("SpawnIcon", card)
+	card.spawnIcon:SetPos(oldX - 4, 4)
+	card.spawnIcon:SetSize(32, 32)
+	card.spawnIcon:SetModel(player:GetModel())
+
+	local physDesc = player:GetPhysDesc()
+
+	if (physDesc:utf8len() > 64) then
+		physDesc = physDesc:utf8sub(1, 64).."..."
+	end
+
+	card.descLabel = vgui.Create("DLabel", card)
+	card.descLabel:SetText(physDesc)
+	card.descLabel:SetFont(theme.GetFont("Text_Smaller"))
+	card.descLabel:SetPos(x, card.nameLabel:GetTall())
+	card.descLabel:SetTextColor(theme.GetColor("Text"))
+	card.descLabel:SizeToContents()
+end
+
 function flCharacters:AddMainMenuItems(panel, sidebar)
 	local scrW, scrH = ScrW(), ScrH()
 

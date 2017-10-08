@@ -75,6 +75,10 @@ function PANEL:Init()
 				self.activeBtn = btn
 				self.activeBtn:SetTextColor(theme.GetColor("AccentLight"))
 
+				if (self.activePanel.Rebuild) then
+					self.activePanel:Rebuild()
+				end
+
 				hook.Run("OnMenuPanelOpen", self, self.activePanel)
 			end
 

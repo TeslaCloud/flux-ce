@@ -33,7 +33,7 @@ function THEME:OnLoaded()
 	local mainColor 		= self:SetColor("Main", Color(50, 50, 50))
 	local outlineColor 		= self:SetColor("Outline", Color(65, 65, 65))
 	local backgroundColor 	= self:SetColor("Background", Color(20, 20, 20))
-	local textColor 		= self:SetColor("Text", Color(255, 255, 255))
+	local textColor 		= self:SetColor("Text", util.PickTextColor(backgroundColor))
 
 	self:SetColor("AccentDark", accentColor:Darken(20))
 	self:SetColor("AccentLight", accentColor:Lighten(20))
@@ -314,6 +314,16 @@ function THEME:PaintPermissionButton(permPanel, btn, w, h)
 	if (btn.isSelected) then
 		draw.RoundedBox(0, sqrSize * 0.5 + 2, sqrSize * 0.5 + 2, sqrSize - 4, sqrSize - 4, Color(0, 0, 0))
 	end
+end
+
+function THEME:PaintScoreboard(panel, width, height)
+	draw.RoundedBox(0, 0, 0, width, height, ColorAlpha(self:GetColor("Background"), 150))
+
+	DisableClipping(true)
+		draw.SimpleText("SCOREBOARD", self:GetFont("Menu_Large"), 4, -util.GetTextHeight("SCOREBOARD", self:GetFont("Menu_Large")) * 0.5, self:GetColor("Text"))
+	DisableClipping(false)
+
+	draw.SimpleText("Clicking player's card may bring up some options.", self:GetFont("Text_Small"), 4, 14, self:GetColor("Text"))
 end
 
 function THEME:PaintTabMenu(panel, width, height)

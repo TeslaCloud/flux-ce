@@ -1208,3 +1208,14 @@ if (CLIENT) then
 		return output
 	end
 end
+
+function util.PickTextColor(baseColor)
+	local r, g, b = baseColor.r, baseColor.g, baseColor.b
+	local average = (r + g + b) / 3
+
+	if (average > 125) then
+		return Color(0, 0, 0)
+	else
+		return Color(255, 255, 255)
+	end
+end

@@ -32,6 +32,18 @@ function faction.FindByID(id)
 	return stored[id]
 end
 
+function faction.GetPlayers(id)
+	local players = {}
+
+	for k, v in ipairs(_player.GetAll()) do
+		if (v:GetFactionID() == id) then
+			table.insert(players, v)
+		end
+	end
+
+	return players
+end
+
 function faction.Find(name, bStrict)
 	for k, v in pairs(stored) do
 		if (bStrict) then
