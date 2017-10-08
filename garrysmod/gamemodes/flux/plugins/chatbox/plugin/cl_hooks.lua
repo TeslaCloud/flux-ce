@@ -7,13 +7,13 @@
 function flChatbox:OnThemeLoaded(activeTheme)
 	local scrW, scrH = ScrW(), ScrH()
 
-	font.Create("flSegoeUI", {
-		font = "Segoe UI",
-		size = 20,
-		weight = 400
+	font.Create("flChatFont", {
+		font = "Arial",
+		size = 16,
+		weight = 1000
 	})
 
-	activeTheme:SetFont("Chatbox_Normal", "flSegoeUI", font.Scale(20))
+	activeTheme:SetFont("Chatbox_Normal", "flChatFont", font.Scale(20))
 	activeTheme:SetFont("Chatbox_Bold", "flRobotoCondensedBold", font.Scale(20))
 	activeTheme:SetFont("Chatbox_Italic", "flRobotoCondensedItalic", font.Scale(20))
 	activeTheme:SetFont("Chatbox_ItalicBold", "flRobotoCondensedItalicBold", font.Scale(20))

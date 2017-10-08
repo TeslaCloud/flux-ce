@@ -15,7 +15,7 @@ function THEME:OnLoaded()
 
 	self:SetOption("Frame_HeaderSize", 24)
 	self:SetOption("Frame_LineWeight", 2)
-	self:SetOption("MainMenu_SidebarWidth", 200)
+	self:SetOption("MainMenu_SidebarWidth", 300)
 	self:SetOption("MainMenu_SidebarHeight", scrH)
 	self:SetOption("MainMenu_SidebarX", 0)
 	self:SetOption("MainMenu_SidebarY", 0)
@@ -54,6 +54,7 @@ function THEME:OnLoaded()
 	self:SetFont("Menu_Small", "flRobotoLt", font.Scale(20))
 	self:SetFont("Menu_Normal", self:GetFont("MainFont"), font.Scale(24), {weight = 600})
 	self:SetFont("Menu_Large", self:GetFont("MainFont"), font.Scale(30), {weight = 600})
+	self:SetFont("Menu_Larger", self:GetFont("MainFont"), font.Scale(42), {weight = 600})
 	self:SetFont("Tooltip_Small", self:GetFont("MainFont"), font.Scale(16))
 	self:SetFont("Tooltip_Large", self:GetFont("MainFont"), font.Scale(26))
 	self:SetFont("Text_Largest", self:GetFont("MainFont"), font.Scale(90))
@@ -124,7 +125,7 @@ function THEME:PaintMainMenu(panel, width, height)
 	if (!logo) then
 		draw.SimpleText(title, self:GetFont("Text_Largest"), wide + width * 0.5 - titleW / 2, 150, self:GetColor("SchemaText"))
 	else
-		draw.TexturedRect(logo, wide + width * 0.5 - 200, 16, 400, 96, Color(255, 255, 255))
+		draw.TexturedRect(logo, width * 0.5 - 200, 16, 400, 96, Color(255, 255, 255))
 	end
 
 	draw.SimpleText(desc, self:GetFont("Menu_Normal"), 16, 128 - descH - 8, self:GetColor("SchemaText"))

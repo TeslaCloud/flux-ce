@@ -6,10 +6,12 @@
 
 function flCharacters:PlayerInitialized()
 	if (!fl.client:GetCharacter()) then
-		fl.IntroPanel = vgui.Create("flIntro")
+		if (!IsValid(fl.IntroPanel)) then
+			fl.IntroPanel = vgui.Create("flIntro")
 
-		if (IsValid(fl.IntroPanel)) then
-			fl.IntroPanel:MakePopup()
+			if (IsValid(fl.IntroPanel)) then
+				fl.IntroPanel:MakePopup()
+			end
 		end
 	end
 end
@@ -75,6 +77,13 @@ function flCharacters:OnThemeLoaded(activeTheme)
 	activeTheme:AddPanel("CharCreation_Model", function(id, parent, ...)
 		return vgui.Create("flCharCreationModel", parent)
 	end)
+
+	if (IsValid(fl.IntroPanel)) then
+		fl.IntroPanel:Remove()
+
+		fl.IntroPanel = theme.CreatePanel("MainMenu")
+		fl.IntroPanel:MakePopup()
+	end
 end
 
 function flCharacters:AddTabMenuItems(menu)
