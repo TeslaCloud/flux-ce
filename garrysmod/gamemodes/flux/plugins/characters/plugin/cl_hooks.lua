@@ -6,6 +6,16 @@
 
 function flCharacters:PlayerInitialized()
 	if (!fl.client:GetCharacter()) then
+		fl.IntroPanel = vgui.Create("flIntro")
+
+		if (IsValid(fl.IntroPanel)) then
+			fl.IntroPanel:MakePopup()
+		end
+	end
+end
+
+function flCharacters:OnIntroPanelRemoved()
+	if (!fl.client:GetCharacter()) then
 		fl.IntroPanel = theme.CreatePanel("MainMenu")
 
 		if (IsValid(fl.IntroPanel)) then
@@ -76,10 +86,6 @@ function flCharacters:AddTabMenuItems(menu)
 			fl.IntroPanel = theme.CreatePanel("MainMenu")
 		end
 	})
-end
-
-function flCharacters:OnIntroPanelCreated(panel)
-	panel:CloseMenu()
 end
 
 function flCharacters:PostCharacterLoaded(nCharID)

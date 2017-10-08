@@ -17,26 +17,59 @@ function PANEL:Init()
 
 	self:StartAnimation(scrW, scrH)
 
+	timer.Simple(4, function()
+		self:CloseMenu()
+	end)
+
 	hook.Run("OnIntroPanelCreated", self)
 end
 
+local logoW, logoH = 600, 110
+local curAlpha, curRadius = 0, 0
+local exX, exY = 0, 0
+local randomColor = Color(255, 255, 255)
+local removeAlpha = 255
+
 function PANEL:Paint(w, h)
-	local alpha = 255 * (math.abs(math.sin(CurTime())))
+	draw.RoundedBox(0, 0, 0, w, h, Color(0, 0, 0, removeAlpha))
 
-	surface.SetDrawColor(colorBlack)
-	surface.DrawRect(0, 0, w, h)
+	if (!self.shouldRemove) then
+		surface.SetDrawColor(randomColor.r, randomColor.g, randomColor.b, curAlpha)
+		surface.DrawCircle(exX, exY, curRadius, 180)
+	else
+		self:MoveToFront()
 
-	draw.SimpleText("#Intro_Skip", "default", w * 0.5, h * 0.95, ColorAlpha(colorWhite, alpha), TEXT_ALIGN_CENTER, TEXT_ALIGN_BOTTOM)
+		removeAlpha = math.Clamp(removeAlpha - 3, 0, 255)
+	end
+
+	draw.TexturedRect(util.GetMaterial("materials/flux/tc_logo.png"), w * 0.5 - logoW * 0.5, h * 0.5 - logoH * 0.5, logoW, logoH, Color(255, 255, 255, removeAlpha))
+
+	if (!self.shouldRemove) then
+		curRadius = curRadius + 2
+		curAlpha = math.Clamp(Lerp(FrameTime() * 8, curAlpha, 0), 0, 255)
+
+		if (math.floor(curAlpha) <= 1) then
+			local w, h = self:GetSize()
+
+			curAlpha = 255
+			curRadius = 0
+
+			randomColor = Color(math.random(0, 255), math.random(0, 255), math.random(0, 255))
+
+			exX = math.random(math.Round(w * 0.2), math.Round(w * 0.8))
+			exY = math.random(math.Round(h * 0.2), math.Round(h * 0.8))
+		end
+	end
 end
 
-function PANEL:CloseMenu(bForce)
-	self:Remove()
+function PANEL:CloseMenu()
+	self.shouldRemove = true
+
+	timer.Simple(1, function()
+		self:Remove()
+	end)
 
 	hook.Run("OnIntroPanelRemoved")
-end
-
-function PANEL:OnKeyCodeReleased(nKey)
-	self:CloseMenu()
 end
 
 function PANEL:StartAnimation(scrW, scrH)

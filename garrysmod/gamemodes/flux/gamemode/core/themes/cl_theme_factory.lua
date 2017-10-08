@@ -201,7 +201,7 @@ function THEME:PaintDeathScreen(curTime, scrW, scrH)
 	draw.RoundedBox(0, 0, 0, scrW, scrH, Color(0, 0, 0, fl.client.respawnAlpha))
 
 	draw.SimpleText("#PlayerMessage_Died", font, 16, 16, color_white)
-	draw.SimpleText("#PlayerMessage_Respawn:"..math.ceil(respawnTimeRemaining)..";", font, 16, 16 + util.GetFontHeight(font), color_white)
+	draw.SimpleText("#PlayerMessage_Respawn:"..math.ceil(respawnTimeRemaining)..";", font, 16, 16 + util.GetFontSize(font), color_white)
 
 	draw.RoundedBox(0, 0, 0, scrW / 100 * barValue, 2, color_white)
 
