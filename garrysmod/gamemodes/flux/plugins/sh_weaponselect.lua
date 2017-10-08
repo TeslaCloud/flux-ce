@@ -66,10 +66,10 @@ function PLUGIN:HUDPaint()
 					-- Make first and last weapons look nicer when scrolling.
 					if (dir and k == 1) then
 						v.y = targets[5].y + 50
-						v.scale = v.scale / 2
+						v.scale = v.scale * 0.5
 					elseif (!dir and k == 5) then
 						v.y = targets[1].y - 50
-						v.scale = v.scale / 2
+						v.scale = v.scale * 0.5
 					end
 
 					v.target = next.y
@@ -99,7 +99,7 @@ function PLUGIN:HUDPaint()
 			end
 		end
 
-		local x, y = ScrW() - 306, ScrH() / 2 - 84, 200
+		local x, y = ScrW() - 306, ScrH() * 0.5 - 84, 200
 		local w, h = 200, 186
 
 		render.SetScissorRect(x, y, x + w, y + h, true)
@@ -147,7 +147,7 @@ function PLUGIN:MakeDisplay(index, tab)
 			weapon = safeIndex(clientWeapons, index + i),
 			scale = scale,
 			x = ScrW() - 300,
-			y = ScrH() / 2 - 90 + offsetY - 36 * scale / 2,
+			y = ScrH() * 0.5 - 90 + offsetY - 36 * scale * 0.5,
 			highlight = (i == 0)
 		})
 

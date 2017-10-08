@@ -7,7 +7,7 @@
 DeriveGamemode("sandbox")
 
 do
-	local centerX, centerY = ScrW() / 2, ScrH() / 2
+	local centerX, centerY = ScrW() * 0.5, ScrH() * 0.5
 
 	function ScrC()
 		return centerX, centerY
@@ -157,7 +157,7 @@ do
 			info = {}
 
 			for i = 1, passes + 1 do
-				local degInRad = i * math.pi / (passes / 2)
+				local degInRad = i * math.pi / (passes * 0.5)
 
 				info[i] = {
 					x = x + math.cos(degInRad) * radius,

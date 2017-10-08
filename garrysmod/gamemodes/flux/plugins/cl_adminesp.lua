@@ -48,13 +48,13 @@ do
 
 				if (v:Alive()) then
 					surface.SetDrawColor(teamColor)
-					surface.DrawOutlinedRect(x - size / 2, y - size / 2, size, (screenPos.y - y) * 1.25)
+					surface.DrawOutlinedRect(x - size * 0.5, y - size * 0.5, size, (screenPos.y - y) * 1.25)
 				else
 					local w, h = util.GetTextSize("*DEAD*", theme.GetFont("Text_Smaller"))
 					draw.SimpleText("*DEAD*", theme.GetFont("Text_Smaller"), textPos.x - w * 0.5, textPos.y + 28, color_lightred)
 				end
 
-				local bx, by = x - size / 2, y - size / 2 + (screenPos.y - y) * 1.25
+				local bx, by = x - size * 0.5, y - size * 0.5 + (screenPos.y - y) * 1.25
 				local hpM = math.Clamp((v:Health() or 0) / v:GetMaxHealth(), 0, 1)
 
 				if (hpM > 0) then

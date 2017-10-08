@@ -53,7 +53,7 @@ function PANEL:Init()
 
 	self.DescEntry = vgui.Create("DTextEntry", self)
 	self.DescEntry:SetPos(32, 98 + self.DescLabel:GetTall())
-	self.DescEntry:SetSize(ScrW() / 2 + self.NameLabel:GetWide(), 400)
+	self.DescEntry:SetSize(ScrW() * 0.5 + self.NameLabel:GetWide(), 400)
 	self.DescEntry:SetFont(theme.GetFont("Text_Smaller"))
 	self.DescEntry:SetText("")
 	self.DescEntry:SetMultiline(true)

@@ -53,6 +53,7 @@ if (SERVER) then
 		if (useType == USE_ON) then
 			if (!holdStart) then
 				activator:SetNetVar("HoldStart", CurTime())
+				activator:SetNetVar("HoldEnt", self)
 				self:SetNetVar("LastActivator", activator)
 			end
 		elseif (useType == USE_OFF) then
@@ -69,6 +70,7 @@ if (SERVER) then
 			end
 
 			activator:SetNetVar("HoldStart", false)
+			activator:SetNetVar("HoldEnt", false)
 			self:SetNetVar("LastActivator", false)
 		end
 	end
@@ -86,6 +88,7 @@ if (SERVER) then
 			end
 
 			lastActivator:SetNetVar("HoldStart", false)
+			lastActivator:SetNetVar("HoldEnt", false)
 			self:SetNetVar("LastActivator", false)
 		end
 	end

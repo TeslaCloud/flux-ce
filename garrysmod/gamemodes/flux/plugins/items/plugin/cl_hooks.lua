@@ -54,7 +54,7 @@ function flItems:PlayerUseItemMenu(itemTable, bIsEntity)
 	itemMenu:Open()
 
 	if (itemTable.entity) then
-		itemMenu:SetPos(ScrW() / 2, ScrH() / 2)
+		itemMenu:SetPos(ScrW() * 0.5, ScrH() * 0.5)
 	else
 		itemMenu:SetPos(gui.MouseX(), gui.MouseY())
 	end
@@ -72,6 +72,22 @@ function flItems:HUDPaint()
 		local percentage = math.Clamp((diff / 0.5) * 100, 0, 100)
 
 		fl.SetCirclePercentage(percentage)
+	end
+end
+
+function flItems:Think()
+	if (!fl.client:GetNetVar("HoldStart")) then return end
+
+	local ent = fl.client:GetNetVar("HoldEnt")
+
+	if (IsValid(ent) and fl.client:GetNetVar("HoldStart")) then
+		local scrPos = ent:GetPos():ToScreen()
+		local x, y = scrPos.x, scrPos.y
+		local w, h = ScrW() * 0.5, ScrH() * 0.5
+
+		if (!scrPos.visible or math.abs(w - x) > font.Scale(350) or math.abs(h - y) > font.Scale(350)) then
+			netstream.Start("Flux::Items::AbortHoldStart", true)
+		end
 	end
 end
 

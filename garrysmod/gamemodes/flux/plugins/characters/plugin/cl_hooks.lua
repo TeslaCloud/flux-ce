@@ -135,7 +135,7 @@ function flCharacters:AddMainMenuItems(panel, sidebar)
 
 	local loadBtn = panel:AddButton("#MainMenu_Load", function(btn)
 		panel.menu = vgui.Create("DFrame", panel)
-		panel.menu:SetPos(scrW / 2 - 300, scrH / 4)
+		panel.menu:SetPos(scrW * 0.5 - 300, scrH / 4)
 		panel.menu:SetSize(600, 600)
 		panel.menu:SetTitle("LOAD CHARACTER")
 
@@ -219,7 +219,7 @@ netstream.Hook("PlayerCreatedCharacter", function(success, status)
 			panel:SetBackgroundColor(Color(50, 50, 50, 220))
 
 			local w, h = panel:GetSize()
-			panel:SetPos(ScrW() / 2 - w * 0.5, ScrH() - 128)
+			panel:SetPos(ScrW() * 0.5 - w * 0.5, ScrH() - 128)
 
 			function panel:PostThink() self:MoveToFront() end
 		end

@@ -12,7 +12,7 @@ PLUGIN:SetDescription("Adds a crosshair.")
 
 local curSize = nil
 local size = 2
-local halfSize = size / 2
+local halfSize = size * 0.5
 local gap = 8
 local curGap = gap
 
@@ -30,13 +30,13 @@ function PLUGIN:HUDPaint()
 
 		local scrW, scrH = ScrW(), ScrH()
 
-		draw.RoundedBox(0, scrW / 2 - halfSize, scrH / 2 - halfSize, size, size, drawColor)
+		draw.RoundedBox(0, scrW * 0.5 - halfSize, scrH * 0.5 - halfSize, size, size, drawColor)
 
-		draw.RoundedBox(0, scrW / 2 - halfSize - curGap, scrH / 2 - halfSize, size, size, drawColor)
-		draw.RoundedBox(0, scrW / 2 - halfSize + curGap, scrH / 2 - halfSize, size, size, drawColor)
+		draw.RoundedBox(0, scrW * 0.5 - halfSize - curGap, scrH * 0.5 - halfSize, size, size, drawColor)
+		draw.RoundedBox(0, scrW * 0.5 - halfSize + curGap, scrH * 0.5 - halfSize, size, size, drawColor)
 
-		draw.RoundedBox(0, scrW / 2 - halfSize, scrH / 2 - halfSize - curGap, size, size, drawColor)
-		draw.RoundedBox(0, scrW / 2 - halfSize, scrH / 2 - halfSize + curGap, size, size, drawColor)
+		draw.RoundedBox(0, scrW * 0.5 - halfSize, scrH * 0.5 - halfSize - curGap, size, size, drawColor)
+		draw.RoundedBox(0, scrW * 0.5 - halfSize, scrH * 0.5 - halfSize + curGap, size, size, drawColor)
 	end
 end
 

@@ -109,7 +109,7 @@ function THEME:PaintFrame(panel, width, height)
 end
 
 function THEME:PaintMainMenu(panel, width, height)
-	local wide = self:GetOption("MainMenu_SidebarWidth") / 2
+	local wide = self:GetOption("MainMenu_SidebarWidth") * 0.5
 	local title, desc, author = Schema:GetName(), Schema:GetDescription(), "#MainMenu_DevelopedBy:"..Schema:GetAuthor()..";"
 	local logo = self:GetMaterial("Schema_Logo")
 	local titleW, titleH = util.GetTextSize(title, self:GetFont("Text_Largest"))
@@ -123,7 +123,7 @@ function THEME:PaintMainMenu(panel, width, height)
 	surface.DrawRect(0, 0, width, 128)
 
 	if (!logo) then
-		draw.SimpleText(title, self:GetFont("Text_Largest"), wide + width * 0.5 - titleW / 2, 150, self:GetColor("SchemaText"))
+		draw.SimpleText(title, self:GetFont("Text_Largest"), wide + width * 0.5 - titleW * 0.5, 150, self:GetColor("SchemaText"))
 	else
 		draw.TexturedRect(logo, width * 0.5 - 200, 16, 400, 96, Color(255, 255, 255))
 	end
@@ -162,7 +162,7 @@ function THEME:PaintButton(panel, w, h)
 
 	if (icon) then
 		if (!panel.m_Centered) then
-			fl.fa:Draw(icon, (panel.m_IconSize and h * 0.5 - panel.m_IconSize / 2) or 3, (panel.m_IconSize and h * 0.5 - panel.m_IconSize / 2) or 3, (panel.m_IconSize or h - 6), textColor)
+			fl.fa:Draw(icon, (panel.m_IconSize and h * 0.5 - panel.m_IconSize * 0.5) or 3, (panel.m_IconSize and h * 0.5 - panel.m_IconSize * 0.5) or 3, (panel.m_IconSize or h - 6), textColor)
 		end
 	end
 
@@ -174,7 +174,7 @@ function THEME:PaintButton(panel, w, h)
 				if (panel.m_Centered) then
 					local textPos = w * 0.27 -- poor man's centering
 
-					fl.fa:Draw(icon, textPos - panel.m_IconSize * 0.5 - 8, (panel.m_IconSize and h * 0.5 - panel.m_IconSize / 2) or 3, (panel.m_IconSize or h - 6), textColor)
+					fl.fa:Draw(icon, textPos - panel.m_IconSize * 0.5 - 8, (panel.m_IconSize and h * 0.5 - panel.m_IconSize * 0.5) or 3, (panel.m_IconSize or h - 6), textColor)
 
 					draw.SimpleText(title, font, textPos + panel.m_IconSize * 0.5, h * 0.5 - height * 0.5, textColor)
 				else
@@ -207,7 +207,7 @@ function THEME:PaintDeathScreen(curTime, scrW, scrH)
 	draw.RoundedBox(0, 0, 0, scrW / 100 * barValue, 2, color_white)
 
 	if (respawnTimeRemaining <= 3) then
-		fl.client.whiteAlpha = math.Clamp(255 * (1.5 - respawnTimeRemaining / 2), 0, 255)
+		fl.client.whiteAlpha = math.Clamp(255 * (1.5 - respawnTimeRemaining * 0.5), 0, 255)
 	else
 		fl.client.whiteAlpha = 0
 	end
@@ -305,14 +305,14 @@ function THEME:PaintPermissionButton(permPanel, btn, w, h)
 
 	local tW, tH = util.GetTextSize(title, font)
 
-	draw.SimpleText(title, font, w * 0.5 - tW / 2, 2, textColor)
+	draw.SimpleText(title, font, w * 0.5 - tW * 0.5, 2, textColor)
 
 	local sqrSize = h * 0.5
 
-	draw.RoundedBox(0, sqrSize / 2, sqrSize / 2, sqrSize, sqrSize, Color(255, 255, 255))
+	draw.RoundedBox(0, sqrSize * 0.5, sqrSize * 0.5, sqrSize, sqrSize, Color(255, 255, 255))
 
 	if (btn.isSelected) then
-		draw.RoundedBox(0, sqrSize / 2 + 2, sqrSize / 2 + 2, sqrSize - 4, sqrSize - 4, Color(0, 0, 0))
+		draw.RoundedBox(0, sqrSize * 0.5 + 2, sqrSize * 0.5 + 2, sqrSize - 4, sqrSize - 4, Color(0, 0, 0))
 	end
 end
 

@@ -11,7 +11,7 @@ function PANEL:Init()
 end
 
 function PANEL:GetMenuSize()
-	return font.Scale(800), font.Scale(600)
+	return font.Scale(1280), font.Scale(900)
 end
 
-vgui.Register("flScoreboard", PANEL, "flBasePanel")
+vgui.Register("flScoreboard", PANEL, "flFrame")

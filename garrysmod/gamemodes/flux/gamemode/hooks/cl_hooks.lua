@@ -132,10 +132,10 @@ function GM:HUDDrawScoreBoard()
 		local w, h = util.GetTextSize(text, font)
 
 		draw.RoundedBox(0, 0, 0, scrW, scrH, Color(0, 0, 0))
-		draw.SimpleText(text, font, scrW / 2 - w * 0.5, scrH - 128, Color(255, 255, 255))
+		draw.SimpleText(text, font, scrW * 0.5 - w * 0.5, scrH - 128, Color(255, 255, 255))
 
 		local barW, barH = scrW / 3.5, 6
-		local barX, barY = scrW / 2 - barW * 0.5, scrH - 80
+		local barX, barY = scrW * 0.5 - barW * 0.5, scrH - 80
 		local fillW = math.Clamp(barW * (percentage / 100), 0, barW - 2)
 
 		draw.RoundedBox(0, barX, barY, barW, barH, Color(22, 22, 22))
@@ -291,7 +291,7 @@ function GM:AddTabMenuItems(menu)
 end
 
 function GM:OnMenuPanelOpen(menuPanel, activePanel)
-	activePanel:SetPos(menuPanel:GetWide() * 0.5 - activePanel:GetWide() * 0.5 + font.Scale(200) + 6, 256)
+	activePanel:SetPos(menuPanel:GetWide() * 0.5 - activePanel:GetWide() * 0.5 + font.Scale(200) + 6, menuPanel:GetTall() * 0.5 - activePanel:GetTall() * 0.5)
 end
 
 function GM:AddAdminMenuItems(panel, sidebar)

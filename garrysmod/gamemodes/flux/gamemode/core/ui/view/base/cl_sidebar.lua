@@ -27,7 +27,7 @@ function PANEL:AddPanel(panel, bCenter)
 	local x, y = panel:GetPos()
 
 	if (bCenter) then
-		x = self:GetWide() / 2 - panel:GetWide() / 2
+		x = self:GetWide() * 0.5 - panel:GetWide() * 0.5
 	end
 
 	panel:SetPos(x, self.lastPos)

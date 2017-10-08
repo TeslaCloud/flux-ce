@@ -120,3 +120,14 @@ end
 netstream.Hook("PlayerDropItem", function(player, instanceID)
 	hook.Run("PlayerDropItem", player, instanceID)
 end)
+
+netstream.Hook("Flux::Items::AbortHoldStart", function(player)
+	local ent = player:GetNetVar("HoldEnt")
+
+	if (IsValid(ent)) then
+		ent:SetNetVar("LastActivator", false)
+	end
+
+	player:SetNetVar("HoldStart", false)
+	player:SetNetVar("HoldEnt", false)
+end)

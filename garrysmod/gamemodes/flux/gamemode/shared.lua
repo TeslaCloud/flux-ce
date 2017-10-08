@@ -11,14 +11,14 @@ GM.Website 		= "http://teslacloud.net/"
 GM.Email 		= "support@teslacloud.net"
 
 -- Define Flux-Specific fields.
-GM.Version 		= "0.2.8-indev"
+GM.Version 		= "0.2.9-indev"
+GM.VersionNum	= "0.2.9"
 GM.Date			= "10/1/2017"
 GM.Build 		= "1559"
 GM.Description 	= "A free roleplay gamemode framework."
 
 -- It would be very nice of you to leave below values as they are if you're using official schemas.
 -- While we can do nothing to stop you from changing them, we'll very much appreciate it if you don't.
-GM.Prefix		= "FL: " -- Prefix to display in server browser (*Prefix*: *Schema Name*)
 GM.NameOverride	= false -- Set to any string to override schema's browser name. This overrides the prefix too.
 
 fl.Devmode		= true -- Always set this to true when developing anything for FL. This enables the safe mode on hooks.
@@ -65,7 +65,7 @@ end
 function GM:GetGameDescription()
 	local nameOverride = self.NameOverride
 
-	return (isstring(nameOverride) and nameOverride) or self.Prefix..fl.GetSchemaName()
+	return (isstring(nameOverride) and nameOverride) or "FL "..((fl.Devmode and "Dev ") or "")..self.VersionNum.." - "..fl.GetSchemaName()
 end
 
 AddCSLuaFile("core/sh_util.lua")

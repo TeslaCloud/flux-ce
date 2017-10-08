@@ -10,12 +10,12 @@ PANEL.panels = {}
 
 function PANEL:Init()
 	local scrW, scrH = ScrW(), ScrH()
-	local width, height = scrW / 2, scrH / 2
+	local width, height = scrW * 0.5, scrH * 0.5
 	local headerSize = theme.GetOption("Frame_HeaderSize")
 
 	self:SetTitle("Admin")
 	self:SetSize(width, height)
-	self:SetPos(scrW / 2 - width * 0.5, scrH / 2 - height * 0.5)
+	self:SetPos(scrW * 0.5 - width * 0.5, scrH * 0.5 - height * 0.5)
 
 	self.sidebar = vgui.Create("flSidebar", self)
 	self.sidebar:SetSize(width / 5, height - headerSize)

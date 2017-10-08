@@ -273,7 +273,7 @@ function PANEL:Rebuild()
 					split = {{}, {}}
 
 					for i2 = 1, dropped[1].itemCount do
-						if (i2 <= math.floor(dropped[1].itemCount / 2)) then
+						if (i2 <= math.floor(dropped[1].itemCount * 0.5)) then
 							table.insert(split[1], dropped[1].instanceIDs[i2])
 						else
 							table.insert(split[2], dropped[1].instanceIDs[i2])

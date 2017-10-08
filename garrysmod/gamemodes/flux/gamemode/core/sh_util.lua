@@ -346,9 +346,9 @@ function util.HexToColor(hex)
 			table.insert(hexColors, v..v) -- Duplicate the number.
 		end
 	else
-		local initLen = len / 2
+		local initLen = len * 0.5
 
-		for i = 1, len / 2 do
+		for i = 1, len * 0.5 do
 			table.insert(hexColors, hex:sub(1, 2))
 
 			if (i != initLen) then
@@ -745,8 +745,8 @@ function util.CubicEaseOutTable(steps, from, to)
 end
 
 function util.CubicEaseInOut(curStep, steps, from, to)
-	if (curStep > (steps / 2)) then
-		return util.CubicEaseOut(curStep - steps / 2, steps / 2, from, to)
+	if (curStep > (steps * 0.5)) then
+		return util.CubicEaseOut(curStep - steps * 0.5, steps * 0.5, from, to)
 	else
 		return util.CubicEaseIn(curStep, steps, from, to)
 	end

@@ -35,7 +35,7 @@ function PANEL:Rebuild()
 	self.container:SetPos(0, 0)
 
 	self.title = vgui.Create("DLabel", self.container)
-	self.title:SetPos(0, height * 0.5 - fontSize / 2)
+	self.title:SetPos(0, height * 0.5 - fontSize * 0.5)
 	self.title:SetFont(font)
 	self.title:SetText(permission.name or "No Permission")
 	self.title:SetSize(quarter, height)

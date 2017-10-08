@@ -258,8 +258,8 @@ do
 		text = "#BarText_Respawn",
 		color = Color(50, 200, 50),
 		maxValue = 100,
-		x = ScrW() / 2 - fl.bars.defaultW / 2,
-		y = ScrH() / 2 - 8,
+		x = ScrW() * 0.5 - fl.bars.defaultW * 0.5,
+		y = ScrH() * 0.5 - 8,
 		textOffset = 1,
 		height = 16,
 		type = BAR_MANUAL
