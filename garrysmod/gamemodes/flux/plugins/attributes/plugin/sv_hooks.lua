@@ -29,8 +29,8 @@ end
 function flAttributes:PostCreateCharacter(player, charID, data)
 	local char = character.Get(player, charID)
 
-	if (char) then
-		local attsTable = character.attributes
+	if (char and data.attributes) then
+		local attsTable = character.attributes or {}
 
 		for k, v in pairs(attributes.GetAll()) do
 			local attribute = attributes.FindByID(v)

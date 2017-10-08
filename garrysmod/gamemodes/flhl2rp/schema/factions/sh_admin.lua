@@ -4,7 +4,7 @@
 	the framework is publicly released.
 --]]
 
-FACTION.Name = "City Administrator"
+FACTION.Name = "#Faction_Administrator"
 FACTION.Description = "A person who controls the city."
 FACTION.PhysDesc = "Wearing a strict, fancy looking suit."
 FACTION.Color = Color(210, 220, 100)

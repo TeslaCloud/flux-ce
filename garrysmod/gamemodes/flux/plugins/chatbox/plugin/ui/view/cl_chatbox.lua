@@ -78,7 +78,8 @@ function PANEL:Init()
 		local historyEntry = entry.history[entry.lastIndex]
 
 		if (historyEntry and historyEntry != "" and shouldSet) then
-			entry:SetText(entry.history[entry.lastIndex])
+			entry:SetText(historyEntry)
+			entry:SetCaretPos(string.utf8len(historyEntry))
 
 			return true
 		end

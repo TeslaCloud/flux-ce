@@ -4,7 +4,7 @@
 	the framework is publicly released.
 --]]
 
-FACTION.Name = "Citizen"
+FACTION.Name = "#Faction_Citizen"
 FACTION.Description = "A regular citizen living under combine authority."
 FACTION.PhysDesc = "Wearing some dirty citizen clothes."
 FACTION.Color = Color(225, 185, 135)

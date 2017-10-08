@@ -4,7 +4,7 @@
 	the framework is publicly released.
 --]]
 
-FACTION.Name = "Combine Civil Authority"
+FACTION.Name = "#Faction_Civil_Authority"
 FACTION.Description = "Combine police forces."
 FACTION.PhysDesc = "Wearing shiny metropolice unit uniform with brand new stunstick on his belt."
 FACTION.Color = Color(135, 140, 225)

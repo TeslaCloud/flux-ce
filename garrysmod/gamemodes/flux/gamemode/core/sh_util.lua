@@ -886,7 +886,7 @@ function util.PlayerListToString(...)
 	local list = {...}
 
 	if (#list == #_player.GetAll()) then
-		return "Everyone"
+		return "#Chat_Everyone"
 	end
 
 	return util.ListToString(function(obj) return (IsValid(obj) and obj:Name()) or "Unknown Player" end, nil, ...)

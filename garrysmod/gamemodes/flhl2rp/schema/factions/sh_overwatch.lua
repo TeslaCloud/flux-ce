@@ -4,7 +4,7 @@
 	the framework is publicly released.
 --]]
 
-FACTION.Name = "Combine Overwatch"
+FACTION.Name = "#Faction_Combine_Overwatch"
 FACTION.Description = "Combine military soldiers."
 FACTION.PhysDesc = "Wearing heavy overwatch armor."
 FACTION.Color = Color(225, 115, 100)

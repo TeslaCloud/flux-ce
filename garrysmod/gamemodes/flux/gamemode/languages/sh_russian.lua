@@ -116,6 +116,8 @@ lang["#TabMenu_CloseMenu"]			= "Закрыть"
 lang["#Yes"]	= "Да"
 lang["#No"] 	= "Нет"
 
+lang["#Chat_Everyone"] = "всем"
+
 lang["#BarText_Health"] 		= "ЗДОРОВЬЕ"
 lang["#BarText_Armor"] 			= "БРОНЯ"
 lang["#BarText_Respawn"] 		= "ВОЗРОЖДЕНИЕ..."

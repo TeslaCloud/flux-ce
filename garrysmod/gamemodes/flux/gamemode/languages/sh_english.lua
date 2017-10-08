@@ -36,6 +36,8 @@ lang["#TabMenu_CloseMenu"]		= "Close Menu"
 lang["#Yes"] 	= "Yes"
 lang["#No"] 	= "No"
 
+lang["#Chat_Everyone"] = "everyone"
+
 lang["#BarText_Health"]			= "HEALTH"
 lang["#BarText_Armor"]			= "ARMOR"
 lang["#BarText_Respawn"]		= "WAITING TO RESPAWN..."

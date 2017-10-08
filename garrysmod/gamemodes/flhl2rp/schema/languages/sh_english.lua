@@ -1,5 +1,10 @@
 local lang = fl.lang:GetTable("en")
 
+lang["#Faction_Administrator"] = "City Administrator"
+lang["#Faction_Civil_Authority"] = "Combine Civil Authority"
+lang["#Faction_Citizen"] = "Citizen"
+lang["#Faction_Combine_Overwatch"] = "Combine Overwatch"
+
 lang["#Item_Action_Eat"] = "Eat"
 lang["#Item_Action_Drink"] = "Drink"
 

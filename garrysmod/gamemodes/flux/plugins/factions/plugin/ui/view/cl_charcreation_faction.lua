@@ -35,6 +35,12 @@ function PANEL:Init()
 				self.prevBtn = button
 			end
 
+			local label = vgui.Create("DLabel", button)
+			label:Dock(BOTTOM)
+			label:SetText(v.Name)
+			label:SetFont(theme.GetFont("Text_Large"))
+			label:SizeToContents()
+
 			button.DoClick = function(btn)
 				btn:SetActive(true)
 

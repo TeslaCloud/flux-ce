@@ -1,5 +1,10 @@
 local lang = fl.lang:GetTable("ru")
 
+lang["#Faction_Administrator"] = "Городской Администратор"
+lang["#Faction_Civil_Authority"] = "Гражданская Оборона"
+lang["#Faction_Citizen"] = "Гражданские"
+lang["#Faction_Combine_Overwatch"] = "Надзор Альянса"
+
 lang["#Item_Action_Eat"] = "Съесть"
 lang["#Item_Action_Drink"] = "Выпить"
 
