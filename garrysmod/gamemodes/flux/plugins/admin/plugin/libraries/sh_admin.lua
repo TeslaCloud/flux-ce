@@ -7,13 +7,15 @@
 library.New("admin", fl)
 
 local groups = fl.admin.groups or {}
-local permissions = fl.admin.permissions or {}
-local players = fl.admin.players or {}
-local bans = fl.admin.bans or {}
-
 fl.admin.groups = groups
+
+local permissions = fl.admin.permissions or {}
 fl.admin.permissions = permissions
+
+local players = fl.admin.players or {}
 fl.admin.players = players
+
+local bans = fl.admin.bans or {}
 fl.admin.bans = bans
 
 local compilerCache = {}

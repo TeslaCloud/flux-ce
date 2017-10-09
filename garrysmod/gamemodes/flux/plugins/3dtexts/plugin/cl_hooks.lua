@@ -67,6 +67,7 @@ function fl3DText:PostDrawOpaqueRenderables()
 
 		if (distance > fadeDistance) then
 			local d = distance - fadeDistance
+
 			fadeAlpha = math.Clamp((255 * ((drawDistance - fadeDistance) - d) / (drawDistance - fadeDistance)), 0, 255)
 		end
 

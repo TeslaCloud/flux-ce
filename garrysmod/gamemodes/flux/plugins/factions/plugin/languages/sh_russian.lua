@@ -18,3 +18,8 @@ lang["#SetfactionCMD_Message"]			= "#1 переместил #2 во фракци
 
 lang["#Err_WhitelistNotValid"] 			= "'#1' не является фракцией!"
 lang["#Err_TargetNotWhitelisted"] 		= "У #1 нет доступа к фракции #2!"
+
+lang["#CharCreate_FactionButton"] 		= "Фракция"
+lang["#CharCreate_GenFacWarning"] 		= "Сначала Вы должны выбрать фракцию!"
+lang["#CharCreate_Fac_S"] 				= "Выберите фракцию"
+lang["#CharCreate_FacTitle"] 			= "Фракция:"

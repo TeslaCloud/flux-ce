@@ -81,16 +81,6 @@ function flAdmin:OnPlayerRestored(player)
 	ServerLog(player:Name().." ("..player:GetUserGroup()..") has connected to the server.")
 end
 
-function flAdmin:PlayerSay(player, text, bTeamChat)
-	local isCommand, length = string.IsCommand(tostring(text))
-
-	if (isCommand) then
-		fl.command:Interpret(player, text:utf8sub(1 + length, text:utf8len()))
-
-		return ""
-	end
-end
-
 function flAdmin:CommandCheckImmunity(player, target, canBeEqual)
 	return fl.admin:CheckImmunity(player, v, canBeEqual)
 end

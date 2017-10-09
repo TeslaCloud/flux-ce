@@ -18,3 +18,8 @@ lang["#SetfactionCMD_Message"]			= "#1 has added #2 to the #3 faction."
 
 lang["#Err_WhitelistNotValid"]			= "'#1' is not a valid faction!"
 lang["#Err_TargetNotWhitelisted"]		= "#1 is not on the #2 whitelist!"
+
+lang["#CharCreate_FactionButton"]		= "Faction"
+lang["#CharCreate_GenFacWarning"]		= "You have to select a gender or faction first!"
+lang["#CharCreate_Fac_S"]				= "Select a faction"
+lang["#CharCreate_FacTitle"]			= "Faction:"

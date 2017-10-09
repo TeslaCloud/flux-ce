@@ -68,7 +68,6 @@ if (SERVER) then
 						steamID = steamID,
 						name = v.name,
 						physDesc = v.physDesc,
-						faction = v.faction,
 						class = v.class or "",
 						inventory = util.JSONToTable(v.inventory or ""),
 						ammo = util.JSONToTable(v.ammo or ""),
@@ -100,7 +99,6 @@ if (SERVER) then
 			steamID = player:SteamID(),
 			name = char.name,
 			physDesc = char.physDesc or "This character has no physical description set!",
-			faction = char.faction or "player",
 			class = char.class,
 			model = char.model or "models/humans/group01/male_02.mdl",
 			inventory = util.TableToJSON(char.inventory),
@@ -115,13 +113,14 @@ if (SERVER) then
 	function character.Save(player, index)
 		if (!IsValid(player) or !isnumber(index) or hook.Run("PreSaveCharacter", player, index) == false) then return end
 
-		local saveData = character.ToSaveable(player, stored[player:SteamID()][index])
+		local char = stored[player:SteamID()][index]
+		local saveData = character.ToSaveable(player, char)
 
-		hook.Run("SaveCharaterData", player, saveData)
+		hook.Run("SaveCharaterData", player, char, saveData)
 
 		fl.db:EasyWrite("fl_characters", {"uniqueID", index}, saveData)
 
-		hook.Run("PostSaveCharacter", player, index)
+		hook.Run("PostSaveCharacter", player, char, saveData)
 	end
 
 	function character.SaveAll(player)
@@ -146,7 +145,20 @@ if (SERVER) then
 		if (char) then
 			char.name = newName or char.name
 
-			player:SetNetVar("CharacterName", char.name)
+			player:SetNetVar("name", char.name)
+
+			character.Save(player, index)
+		end
+	end
+
+	function character.SetModel(player, index, model)
+		local char = character.Get(player, index)
+
+		if (char) then
+			char.model = model or char.model
+
+			player:SetNetVar("model", char.model)
+			player:SetModel(char.model)
 
 			character.Save(player, index)
 		end

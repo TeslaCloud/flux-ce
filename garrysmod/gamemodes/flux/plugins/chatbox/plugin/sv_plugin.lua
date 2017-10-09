@@ -142,8 +142,5 @@ netstream.Hook("Chatbox::PlayerSay", function(player, text, bTeamChat)
 
 	hook.Run("ChatboxAdjustPlayerSay", player, text, message)
 
-	PrintTable(message)
-	print(unpack(message))
-
 	chatbox.AddText(nil, unpack(message))
 end)

@@ -4,10 +4,6 @@
 	the framework is publicly released.
 --]]
 
-function flChatbox:PlayerSay(player, text, bTeamChat)
-
-end
-
 function flChatbox:ChatboxGetPlayerIcon(player, text, bTeamChat)
 	return {image = "materials/icon16/shield.png", width = 16, height = 16, isData = true}
 end

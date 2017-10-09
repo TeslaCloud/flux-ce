@@ -4,6 +4,35 @@
 	the framework is publicly released.
 --]]
 
+function flFactions:CharPanelCreated(id, panel)
+	if (id == "CharCreation_General") then
+		local factionTable
+		local charData = panel:GetParent().CharData
+
+		if (charData and charData.faction) then
+			factionTable = faction.FindByID(charData.faction)
+		end
+
+		if (factionTable and !factionTable.HasName) then
+			panel.NameLabel:SetVisible(false)
+			panel.NameEntry:SetVisible(false)
+
+			panel.DescLabel:SetPos(32, 64 - panel.NameLabel:GetTall())
+			panel.DescEntry:SetPos(32, 66)
+		end
+
+		if (factionTable and !factionTable.HasDescription) then
+			panel.DescLabel:SetVisible(false)
+			panel.DescEntry:SetVisible(false)
+		end
+
+		if (factionTable and !factionTable.HasGender) then
+			panel.GenderLabel:SetVisible(false)
+			panel.GenderChooser:SetVisible(false)
+		end
+	end
+end
+
 function flFactions:OnThemeLoaded(activeTheme)
 	activeTheme:AddPanel("CharCreation_Faction", function(id, parent, ...)
 		return vgui.Create("flCharCreationFaction", parent)

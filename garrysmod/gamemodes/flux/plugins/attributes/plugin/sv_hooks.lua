@@ -8,7 +8,7 @@ function flAttributes:DatabaseConnected()
 	fl.db:AddColumn("fl_characters", "attributes", "TEXT DEFAULT NULL")
 end
 
-function flAttributes:SaveCharaterData(player, saveData)
+function flAttributes:SaveCharaterData(player, char, saveData)
 	saveData.attributes = util.TableToJSON(player:GetAttributes())
 end
 

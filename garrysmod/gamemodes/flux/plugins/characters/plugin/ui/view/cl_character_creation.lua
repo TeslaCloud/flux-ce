@@ -47,6 +47,8 @@ function PANEL:OpenPanel(id)
 		self.panel:OnOpen(self)
 	end
 
+	hook.Run("CharPanelCreated", id, self.panel)
+
 	if (IsValid(self.finishButton)) then
 		self.finishButton:SafeRemove()
 	end

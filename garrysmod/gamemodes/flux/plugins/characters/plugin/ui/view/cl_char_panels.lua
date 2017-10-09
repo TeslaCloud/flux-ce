@@ -27,13 +27,6 @@ PANEL.text = "#CharCreate_GenText"
 function PANEL:Init()
 	local w, h = self:GetSize()
 
-	local factionTable
-	local charData = self:GetParent().CharData
-
-	if (charData and charData.faction) then
-		factionTable = faction.FindByID(charData.faction)
-	end
-
 	self.NameLabel = vgui.Create("DLabel", self)
 	self.NameLabel:SetPos(32, 68)
 	self.NameLabel:SetText("#CharCreate_Name")
@@ -69,24 +62,6 @@ function PANEL:Init()
 	self.GenderChooser:SetValue("#CharCreate_Gender_S")
 	self.GenderChooser:AddChoice("#CharCreate_Gender_M")
 	self.GenderChooser:AddChoice("#CharCreate_Gender_F")
-
-	if (factionTable and !factionTable.HasName) then
-		self.NameLabel:SetVisible(false)
-		self.NameEntry:SetVisible(false)
-
-		self.DescLabel:SetPos(32, 64 - self.NameLabel:GetTall())
-		self.DescEntry:SetPos(32, 66)
-	end
-
-	if (factionTable and !factionTable.HasDescription) then
-		self.DescLabel:SetVisible(false)
-		self.DescEntry:SetVisible(false)
-	end
-
-	if (factionTable and !factionTable.HasGender) then
-		self.GenderLabel:SetVisible(false)
-		self.GenderChooser:SetVisible(false)
-	end
 end
 
 function PANEL:OnOpen(parent)

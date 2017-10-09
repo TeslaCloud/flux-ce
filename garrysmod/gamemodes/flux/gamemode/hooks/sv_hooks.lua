@@ -379,6 +379,16 @@ function GM:PlayerThink(player, curTime)
 	end
 end
 
+function GM:PlayerSay(player, text, bTeamChat)
+	local isCommand, length = string.IsCommand(tostring(text))
+
+	if (isCommand) then
+		fl.command:Interpret(player, text:utf8sub(1 + length, text:utf8len()))
+
+		return ""
+	end
+end
+
 -- Awful awful awful code, but it's kinda necessary in some rare cases.
 -- Avoid using PlayerThink whenever possible though.
 do
