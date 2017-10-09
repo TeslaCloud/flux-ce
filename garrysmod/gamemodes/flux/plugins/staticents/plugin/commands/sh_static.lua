@@ -5,11 +5,11 @@
 --]]
 
 local COMMAND = Command("static")
-COMMAND.name = "Static"
-COMMAND.description = "Makes the entity you're looking at static."
-COMMAND.syntax = "[none]"
-COMMAND.category = "misc"
-COMMAND.aliases = {"staticadd", "staticpropadd"}
+COMMAND.Name = "Static"
+COMMAND.Description = "Makes the entity you're looking at static."
+COMMAND.Syntax = "[none]"
+COMMAND.Category = "misc"
+COMMAND.Aliases = {"staticadd", "staticpropadd"}
 
 function COMMAND:OnRun(player)
 	plugin.Call("PlayerMakeStatic", player, true)

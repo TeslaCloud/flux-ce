@@ -5,12 +5,12 @@
 --]]
 
 local COMMAND = Command("me")
-COMMAND.name = "Me"
-COMMAND.description = "Describe your action."
-COMMAND.syntax = "<text>"
-COMMAND.category = "roleplay"
-COMMAND.aliases = {"perform", "e"}
-COMMAND.arguments = 1
+COMMAND.Name = "Me"
+COMMAND.Description = "Describe your action."
+COMMAND.Syntax = "<text>"
+COMMAND.Category = "roleplay"
+COMMAND.Aliases = {"perform", "e"}
+COMMAND.Arguments = 1
 
 function COMMAND:OnRun(player, ...)
 	chatbox.AddText(nil, Color("green"), player:Name().." "..table.concat({...}, " "), {sender = player, position = player:GetPos(), radius = config.Get("talk_radius"), hearWhenLook = true})

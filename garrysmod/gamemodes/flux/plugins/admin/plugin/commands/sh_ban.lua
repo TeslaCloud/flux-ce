@@ -5,13 +5,13 @@
 --]]
 
 local COMMAND = Command("ban")
-COMMAND.name = "Ban"
-COMMAND.description = "#BanCMD_Description"
-COMMAND.syntax = "#BanCMD_Syntax"
-COMMAND.category = "administration"
-COMMAND.arguments = 2
-COMMAND.immunity = true
-COMMAND.aliases = {"plyban"}
+COMMAND.Name = "Ban"
+COMMAND.Description = "#BanCMD_Description"
+COMMAND.Syntax = "#BanCMD_Syntax"
+COMMAND.Category = "administration"
+COMMAND.Arguments = 2
+COMMAND.Immunity = true
+COMMAND.Aliases = {"plyban"}
 
 function COMMAND:OnRun(player, targets, duration, ...)
 	local pieces = {...}

@@ -5,11 +5,11 @@
 --]]
 
 local COMMAND = Command("roll")
-COMMAND.name = "Roll"
-COMMAND.description = "Roll a random number between 1 and 100 or specific number."
-COMMAND.syntax = "[number Range]"
-COMMAND.category = "roleplay"
-COMMAND.arguments = 0
+COMMAND.Name = "Roll"
+COMMAND.Description = "Roll a random number between 1 and 100 or specific number."
+COMMAND.Syntax = "[number Range]"
+COMMAND.Category = "roleplay"
+COMMAND.Arguments = 0
 
 function COMMAND:OnRun(player, range)
 	range = tonumber(range) or 100

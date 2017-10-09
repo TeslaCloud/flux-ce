@@ -5,13 +5,13 @@
 --]]
 
 local COMMAND = Command("kick")
-COMMAND.name = "Kick"
-COMMAND.description = "#KickCMD_Description"
-COMMAND.syntax = "#KickCMD_Syntax"
-COMMAND.category = "administration"
-COMMAND.arguments = 1
-COMMAND.immunity = true
-COMMAND.aliases = {"plykick"}
+COMMAND.Name = "Kick"
+COMMAND.Description = "#KickCMD_Description"
+COMMAND.Syntax = "#KickCMD_Syntax"
+COMMAND.Category = "administration"
+COMMAND.Arguments = 1
+COMMAND.Immunity = true
+COMMAND.Aliases = {"plykick"}
 
 function COMMAND:OnRun(player, targets, ...)
 	local pieces = {...}

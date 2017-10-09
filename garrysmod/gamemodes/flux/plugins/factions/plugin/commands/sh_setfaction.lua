@@ -6,13 +6,13 @@
 
 local COMMAND = Command("setfaction")
 
-COMMAND.name = "Setfaction"
-COMMAND.description = "Change player's faction."
-COMMAND.syntax = "<name> <faction> [data]"
-COMMAND.category = "player_management"
-COMMAND.arguments = 2
-COMMAND.playerArg = 1
-COMMAND.aliases = {"plytransfer", "charsetfaction", "chartransfer"}
+COMMAND.Name = "Setfaction"
+COMMAND.Description = "Change player's faction."
+COMMAND.Syntax = "<name> <faction> [data]"
+COMMAND.Category = "player_management"
+COMMAND.Arguments = 2
+COMMAND.PlayerArg = 1
+COMMAND.Aliases = {"plytransfer", "charsetfaction", "chartransfer"}
 
 function COMMAND:OnRun(player, targets, name, bStrict)
 	local factionTable = faction.Find(name, (bStrict and true) or false)

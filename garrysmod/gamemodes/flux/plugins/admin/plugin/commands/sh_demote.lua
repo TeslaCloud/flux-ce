@@ -5,13 +5,13 @@
 --]]
 
 local COMMAND = Command("demote")
-COMMAND.name = "Demote"
-COMMAND.description = "#DemoteCMD_Description"
-COMMAND.syntax = "#DemoteCMD_Syntax"
-COMMAND.category = "player_management"
-COMMAND.arguments = 1
-COMMAND.immunity = true
-COMMAND.aliases = {"plydemote"}
+COMMAND.Name = "Demote"
+COMMAND.Description = "#DemoteCMD_Description"
+COMMAND.Syntax = "#DemoteCMD_Syntax"
+COMMAND.Category = "player_management"
+COMMAND.Arguments = 1
+COMMAND.Immunity = true
+COMMAND.Aliases = {"plydemote"}
 
 function COMMAND:OnRun(player, targets)
 	for k, target in ipairs(targets) do

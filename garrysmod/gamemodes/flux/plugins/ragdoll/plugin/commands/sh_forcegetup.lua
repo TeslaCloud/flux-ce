@@ -5,13 +5,13 @@
 --]]
 
 local COMMAND = Command("forcegetup")
-COMMAND.name = "ForceGetUp"
-COMMAND.description = "Forces a player to get up."
-COMMAND.syntax = "<target> [number GetUpTime]"
-COMMAND.category = "roleplay"
-COMMAND.arguments = 1
-COMMAND.playerArg = 1
-COMMAND.aliases = {"forcegetup", "plygetup"}
+COMMAND.Name = "ForceGetUp"
+COMMAND.Description = "Forces a player to get up."
+COMMAND.Syntax = "<target> [number GetUpTime]"
+COMMAND.Category = "roleplay"
+COMMAND.Arguments = 1
+COMMAND.PlayerArg = 1
+COMMAND.Aliases = {"forcegetup", "plygetup"}
 
 function COMMAND:OnRun(player, target, delay)
 	delay = math.Clamp(delay or 0, 0, 60)

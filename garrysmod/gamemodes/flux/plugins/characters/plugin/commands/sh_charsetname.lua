@@ -5,13 +5,13 @@
 --]]
 
 local COMMAND = Command("charsetname")
-COMMAND.name = "CharSetName"
-COMMAND.description = "#CharSetName_Description"
-COMMAND.syntax = "#CharSetName_Syntax"
-COMMAND.category = "character_management"
-COMMAND.arguments = 2
-COMMAND.playerArg = 1
-COMMAND.aliases = {"setname"}
+COMMAND.Name = "CharSetName"
+COMMAND.Description = "#CharSetName_Description"
+COMMAND.Syntax = "#CharSetName_Syntax"
+COMMAND.Category = "character_management"
+COMMAND.Arguments = 2
+COMMAND.PlayerArg = 1
+COMMAND.Aliases = {"setname"}
 
 function COMMAND:OnRun(player, targets, newName)
 	local target = targets[1]

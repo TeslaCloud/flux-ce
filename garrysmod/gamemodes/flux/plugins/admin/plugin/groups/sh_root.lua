@@ -4,12 +4,12 @@
 	the framework is publicly released.
 --]]
 
-GROUP:SetName("Root")
-GROUP:SetDescription("#PlayerGroup_Root")
-GROUP:SetColor(Color(255, 255, 255))
-GROUP:SetIcon("icon16/key.png")
-GROUP:SetImmunity(1000)
-GROUP:SetBase("superadmin")
-GROUP:SetPermissions({
+GROUP.Name = "Root"
+GROUP.Description = "#PlayerGroup_Root"
+GROUP.Color = Color(255, 255, 255)
+GROUP.Icon = "icon16/key.png"
+GROUP.Immunity = 1000
+GROUP.Base = "superadmin"
+GROUP.Permissions = {
 	all = PERM_ALLOW_OVERRIDE
-})
+}

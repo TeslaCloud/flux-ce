@@ -5,8 +5,10 @@
 --]]
 
 library.New("command", fl)
+
 local stored = fl.command.stored or {}
 local aliases = fl.command.aliases or {}
+
 fl.command.stored = stored
 fl.command.aliases = aliases
 
@@ -14,20 +16,20 @@ function fl.command:Create(id, data)
 	if (!id or !data) then return end
 
 	data.uniqueID = id:MakeID()
-	data.name = data.name or "Unknown"
-	data.description = data.description or "An undescribed command."
-	data.syntax = data.syntax or "[none]"
-	data.immunity = data.immunity or false
-	data.playerArg = data.playerArg or nil
-	data.arguments = data.arguments or 0
+	data.Name = data.Name or "Unknown"
+	data.Description = data.Description or "An undescribed command."
+	data.Syntax = data.Syntax or "[none]"
+	data.Immunity = data.Immunity or false
+	data.PlayerArg = data.PlayerArg or nil
+	data.Arguments = data.Arguments or 0
 
 	stored[id] = data
 
 	-- Add original command name to aliases table.
 	aliases[id] = data.uniqueID
 
-	if (data.aliases) then
-		for k, v in ipairs(data.aliases) do
+	if (data.Aliases) then
+		for k, v in ipairs(data.Aliases) do
 			aliases[v] = id
 		end
 	end
@@ -235,9 +237,9 @@ if (SERVER) then
 
 		if (cmdTable) then
 			if ((!IsValid(player) and !cmdTable.noConsole) or player:HasPermission(cmdTable.uniqueID)) then
-				if (cmdTable.arguments == 0 or cmdTable.arguments <= #args) then
-					if (cmdTable.immunity or cmdTable.playerArg != nil) then
-						local targetArg = args[(cmdTable.playerArg or 1)]
+				if (cmdTable.Arguments == 0 or cmdTable.Arguments <= #args) then
+					if (cmdTable.Immunity or cmdTable.PlayerArg != nil) then
+						local targetArg = args[(cmdTable.PlayerArg or 1)]
 						local targets = {}
 
 						if (istable(targetArg)) then
@@ -285,7 +287,7 @@ if (SERVER) then
 
 						if (istable(targets) and #targets > 0) then
 							for k, v in ipairs(targets) do
-								if (cmdTable.immunity and IsValid(player) and hook.Run("CommandCheckImmunity", player, v, cmdTable.canBeEqual) == false) then
+								if (cmdTable.Immunity and IsValid(player) and hook.Run("CommandCheckImmunity", player, v, cmdTable.canBeEqual) == false) then
 									fl.player:Notify(player, L("Commands_HigherImmunity", v:Name()))
 
 									return
@@ -293,7 +295,7 @@ if (SERVER) then
 							end
 
 							-- One step less for commands.
-							args[cmdTable.playerArg or 1] = targets
+							args[cmdTable.PlayerArg or 1] = targets
 						else
 							if (IsValid(player)) then
 								fl.player:Notify(player, L("Commands_PlayerInvalid", tostring(targetArg)))
@@ -308,13 +310,13 @@ if (SERVER) then
 					-- Let plugins hook into this and abort command's execution if necessary.
 					if (!hook.Run("PlayerRunCommand", player, cmdTable, args)) then
 						if (IsValid(player)) then
-							ServerLog(player:Name().." has used /"..cmdTable.name.." "..text:utf8sub(string.utf8len(command) + 2, string.utf8len(text)))
+							ServerLog(player:Name().." has used /"..cmdTable.Name.." "..text:utf8sub(string.utf8len(command) + 2, string.utf8len(text)))
 						end
 
 						self:Run(player, cmdTable, args)
 					end
 				else
-					fl.player:Notify(player, "/"..cmdTable.name.." "..cmdTable.syntax)
+					fl.player:Notify(player, "/"..cmdTable.Name.." "..cmdTable.Syntax)
 				end
 			else
 				if (IsValid(player)) then

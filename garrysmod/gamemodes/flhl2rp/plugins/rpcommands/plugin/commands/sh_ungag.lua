@@ -5,13 +5,13 @@
 --]]
 
 local COMMAND = Command("ungag")
-COMMAND.name = "Ungag"
-COMMAND.description = "Unmute player's OOC chats."
-COMMAND.syntax = "<name>"
-COMMAND.category = "administration"
-COMMAND.arguments = 1
-COMMAND.immunity = true
-COMMAND.aliases = {"unmuteooc", "oocunmute", "plyungag"}
+COMMAND.Name = "Ungag"
+COMMAND.Description = "Unmute player's OOC chats."
+COMMAND.Syntax = "<name>"
+COMMAND.Category = "administration"
+COMMAND.Arguments = 1
+COMMAND.Immunity = true
+COMMAND.Aliases = {"unmuteooc", "oocunmute", "plyungag"}
 
 function COMMAND:OnRun(player, targets)
 	for k, v in ipairs(targets) do

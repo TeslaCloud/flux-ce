@@ -5,10 +5,12 @@
 --]]
 
 library.New("admin", fl)
-local groups = fl.admin.groups or {}			-- Usergroups data
-local permissions = fl.admin.permissions or {}	-- Permission descriptions and other data
-local players = fl.admin.players or {}			-- Compiled permissions for each player
+
+local groups = fl.admin.groups or {}
+local permissions = fl.admin.permissions or {}
+local players = fl.admin.players or {}
 local bans = fl.admin.bans or {}
+
 fl.admin.groups = groups
 fl.admin.permissions = permissions
 fl.admin.players = players
@@ -35,20 +37,20 @@ end
 function fl.admin:CreateGroup(id, data)
 	if (!isstring(id)) then return end
 
-	data.m_UniqueID = id
+	data.uniqueID = id
 
-	if (data.m_Base) then
-		local parent = groups[data.m_Base]
+	if (data.Base) then
+		local parent = groups[data.Base]
 
 		if (parent) then
 			local parentCopy = table.Copy(parent)
 
-			table.Merge(parentCopy.m_Permissions, data.m_Permissions)
+			table.Merge(parentCopy.Permissions, data.Permissions)
 
-			data.m_Permissions = parentCopy.m_Permissions
+			data.Permissions = parentCopy.Permissions
 
 			for k, v in pairs(parentCopy) do
-				if (k == "m_Permissions") then continue end
+				if (k == "Permissions") then continue end
 
 				if (!data[k]) then
 					data[k] = v
@@ -79,16 +81,16 @@ function fl.admin:RegisterPermission(id, name, description, category)
 
 	local data = {}
 		data.uniqueID = id:MakeID()
-		data.description = description or "No description provided."
-		data.category = category or "general"
-		data.name = name or id
+		data.Description = description or "No description provided."
+		data.Category = category or "general"
+		data.Name = name or id
 	self:AddPermission(id, category, data, true)
 end
 
 function fl.admin:PermissionFromCommand(cmdObj)
 	if (!cmdObj) then return end
 
-	self:RegisterPermission(cmdObj.uniqueID, cmdObj.name, cmdObj.description, cmdObj.category)
+	self:RegisterPermission(cmdObj.uniqueID, cmdObj.Name, cmdObj.Description, cmdObj.Category)
 end
 
 function fl.admin:CheckPermission(player, permission)
@@ -129,7 +131,7 @@ end
 
 function fl.admin:GetGroupPermissions(id)
 	if (groups[id]) then
-		return groups[id].m_Permissions
+		return groups[id].Permissions
 	else
 		return {}
 	end
@@ -174,15 +176,15 @@ function fl.admin:CheckImmunity(player, target, canBeEqual)
 	local group1 = self:FindGroup(player:GetUserGroup())
 	local group2 = self:FindGroup(target:GetUserGroup())
 
-	if (!isnumber(group1.immunity) or !isnumber(group2.immunity)) then
+	if (!isnumber(group1.Immunity) or !isnumber(group2.Immunity)) then
 		return true
 	end
 
-	if (group1.immunity > group2.immunity) then
+	if (group1.Immunity > group2.Immunity) then
 		return true
 	end
 
-	if (canBeEqual and group1.immunity == group2.immunity) then
+	if (canBeEqual and group1.Immunity == group2.Immunity) then
 		return true
 	end
 

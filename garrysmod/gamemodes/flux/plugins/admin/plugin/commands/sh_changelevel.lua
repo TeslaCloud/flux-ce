@@ -5,12 +5,12 @@
 --]]
 
 local COMMAND = Command("changelevel")
-COMMAND.name = "Changelevel"
-COMMAND.description = "Changes the level to specified map."
-COMMAND.syntax = "<string Map> [number Delay]"
-COMMAND.category = "server_management"
-COMMAND.arguments = 1
-COMMAND.aliases = {"map"}
+COMMAND.Name = "Changelevel"
+COMMAND.Description = "Changes the level to specified map."
+COMMAND.Syntax = "<string Map> [number Delay]"
+COMMAND.Category = "server_management"
+COMMAND.Arguments = 1
+COMMAND.Aliases = {"map"}
 
 function COMMAND:OnRun(player, map, delay)
 	map = tostring(map) or "gm_construct"

@@ -5,13 +5,13 @@
 --]]
 
 local COMMAND = Command("forcefall")
-COMMAND.name = "ForceFall"
-COMMAND.description = "Forces a player to fall down on the ground."
-COMMAND.syntax = "<target> [number GetUpTime]"
-COMMAND.category = "roleplay"
-COMMAND.arguments = 1
-COMMAND.playerArg = 1
-COMMAND.aliases = {"forcefallover", "plyfall"}
+COMMAND.Name = "ForceFall"
+COMMAND.Description = "Forces a player to fall down on the ground."
+COMMAND.Syntax = "<target> [number GetUpTime]"
+COMMAND.Category = "roleplay"
+COMMAND.Arguments = 1
+COMMAND.PlayerArg = 1
+COMMAND.Aliases = {"forcefallover", "plyfall"}
 
 function COMMAND:OnRun(player, target, delay)
 	if (isnumber(delay) and delay > 0) then

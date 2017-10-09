@@ -5,13 +5,13 @@
 --]]
 
 local COMMAND = Command("setgroup")
-COMMAND.name = "SetGroup"
-COMMAND.description = "#SetGroupCMD_Description"
-COMMAND.syntax = "#SetGroupCMD_Syntax"
-COMMAND.category = "player_management"
-COMMAND.arguments = 2
-COMMAND.immunity = true
-COMMAND.aliases = {"plysetgroup", "setusergroup", "plysetusergroup"}
+COMMAND.Name = "SetGroup"
+COMMAND.Description = "#SetGroupCMD_Description"
+COMMAND.Syntax = "#SetGroupCMD_Syntax"
+COMMAND.Category = "player_management"
+COMMAND.Arguments = 2
+COMMAND.Immunity = true
+COMMAND.Aliases = {"plysetgroup", "setusergroup", "plysetusergroup"}
 
 function COMMAND:OnRun(player, targets, userGroup)
 	if (fl.admin:GroupExists(userGroup)) then

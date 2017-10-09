@@ -6,13 +6,13 @@
 
 local COMMAND = Command("unwhitelist")
 
-COMMAND.name = "UnWhitelist"
-COMMAND.description = "#TakeWhitelistCMD_Description"
-COMMAND.syntax = "#TakeWhitelistCMD_Syntax"
-COMMAND.category = "player_management"
-COMMAND.arguments = 2
-COMMAND.playerArg = 1
-COMMAND.aliases = {"takewhitelist", "plytakewhitelist", "plyunwhitelist"}
+COMMAND.Name = "UnWhitelist"
+COMMAND.Description = "#TakeWhitelistCMD_Description"
+COMMAND.Syntax = "#TakeWhitelistCMD_Syntax"
+COMMAND.Category = "player_management"
+COMMAND.Arguments = 2
+COMMAND.PlayerArg = 1
+COMMAND.Aliases = {"takewhitelist", "plytakewhitelist", "plyunwhitelist"}
 
 function COMMAND:OnRun(player, targets, name, bStrict)
 	local whitelist = faction.Find(name, bStrict)

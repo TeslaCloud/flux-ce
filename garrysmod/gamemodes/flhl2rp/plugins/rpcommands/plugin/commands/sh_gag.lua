@@ -5,13 +5,13 @@
 --]]
 
 local COMMAND = Command("gag")
-COMMAND.name = "Gag"
-COMMAND.description = "Mute player's OOC chats."
-COMMAND.syntax = "<name> <duration> [reason]"
-COMMAND.category = "administration"
-COMMAND.arguments = 2
-COMMAND.immunity = true
-COMMAND.aliases = {"muteooc", "oocmute", "plygag"}
+COMMAND.Name = "Gag"
+COMMAND.Description = "Mute player's OOC chats."
+COMMAND.Syntax = "<name> <duration> [reason]"
+COMMAND.Category = "administration"
+COMMAND.Arguments = 2
+COMMAND.Immunity = true
+COMMAND.Aliases = {"muteooc", "oocmute", "plygag"}
 
 function COMMAND:OnRun(player, targets, duration, ...)
 	local pieces = {...}

@@ -5,11 +5,11 @@
 --]]
 
 local COMMAND = Command("unstatic")
-COMMAND.name = "UnStatic"
-COMMAND.description = "Makes the entity you're looking at not static."
-COMMAND.syntax = "[none]"
-COMMAND.category = "misc"
-COMMAND.aliases = {"staticpropremove", "staticremove"}
+COMMAND.Name = "UnStatic"
+COMMAND.Description = "Makes the entity you're looking at not static."
+COMMAND.Syntax = "[none]"
+COMMAND.Category = "misc"
+COMMAND.Aliases = {"staticpropremove", "staticremove"}
 
 function COMMAND:OnRun(player)
 	plugin.Call("PlayerMakeStatic", player, false)

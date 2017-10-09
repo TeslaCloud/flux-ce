@@ -5,12 +5,12 @@
 --]]
 
 local COMMAND = Command("restart")
-COMMAND.name = "Restart"
-COMMAND.description = "Restarts the current map."
-COMMAND.syntax = "[number Delay]"
-COMMAND.category = "server_management"
-COMMAND.arguments = 0
-COMMAND.aliases = {"maprestart"}
+COMMAND.Name = "Restart"
+COMMAND.Description = "Restarts the current map."
+COMMAND.Syntax = "[number Delay]"
+COMMAND.Category = "server_management"
+COMMAND.Arguments = 0
+COMMAND.Aliases = {"maprestart"}
 
 function COMMAND:OnRun(player, delay)
 	delay = tonumber(delay) or 0

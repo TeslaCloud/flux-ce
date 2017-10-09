@@ -5,12 +5,12 @@
 --]]
 
 local COMMAND = Command("unban")
-COMMAND.name = "Unban"
-COMMAND.description = "#UnbanCMD_Description"
-COMMAND.syntax = "#UnbanCMD_Syntax"
-COMMAND.category = "administration"
-COMMAND.arguments = 1
-COMMAND.aliases = {"plyunban"}
+COMMAND.Name = "Unban"
+COMMAND.Description = "#UnbanCMD_Description"
+COMMAND.Syntax = "#UnbanCMD_Syntax"
+COMMAND.Category = "administration"
+COMMAND.Arguments = 1
+COMMAND.Aliases = {"plyunban"}
 
 function COMMAND:OnRun(player, steamID)
 	if (isstring(steamID) and steamID != "") then

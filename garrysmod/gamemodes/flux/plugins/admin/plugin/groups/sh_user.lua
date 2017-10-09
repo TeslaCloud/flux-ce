@@ -4,14 +4,14 @@
 	the framework is publicly released.
 --]]
 
-GROUP:SetName("User")
-GROUP:SetDescription("#PlayerGroup_User")
-GROUP:SetColor(Color(255, 255, 255))
-GROUP:SetIcon("icon16/user.png")
-GROUP:SetImmunity(0)
-GROUP:SetPermissions({
+GROUP.Name = "User"
+GROUP.Description = "#PlayerGroup_User"
+GROUP.Color = Color(255, 255, 255)
+GROUP.Icon = "icon16/user.png"
+GROUP.Immunity = 0
+GROUP.Permissions = {
 	test = PERM_ALLOW
-})
+}
 
 -- Called when player's primary group is being set to this group.
 function GROUP:OnGroupSet(player, oldGroup) end

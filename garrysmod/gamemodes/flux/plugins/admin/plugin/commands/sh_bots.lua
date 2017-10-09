@@ -5,10 +5,10 @@
 --]]
 
 local COMMAND = Command("freezebots")
-COMMAND.name = "FreezeBots"
-COMMAND.description = "Freezes all of the bots."
-COMMAND.category = "server_management"
-COMMAND.aliases = {"botfreeze", "freezebot", "bot_freeze", "bot_zombie"}
+COMMAND.Name = "FreezeBots"
+COMMAND.Description = "Freezes all of the bots."
+COMMAND.Category = "server_management"
+COMMAND.Aliases = {"botfreeze", "freezebot", "bot_freeze", "bot_zombie"}
 
 function COMMAND:OnRun(player)
 	fl.player:NotifyAll(L("FreezeBotsMessage", (IsValid(player) and player:Name()) or "Console"))
@@ -19,10 +19,10 @@ end
 COMMAND:Register()
 
 local COMMAND = Command("unfreezebots")
-COMMAND.name = "UnfreezeBots"
-COMMAND.description = "Unfreezes all of the bots."
-COMMAND.category = "server_management"
-COMMAND.aliases = {"botunfreeze", "unfreezebot", "bot_unfreeze", "bot_unzombie"}
+COMMAND.Name = "UnfreezeBots"
+COMMAND.Description = "Unfreezes all of the bots."
+COMMAND.Category = "server_management"
+COMMAND.Aliases = {"botunfreeze", "unfreezebot", "bot_unfreeze", "bot_unzombie"}
 
 function COMMAND:OnRun(player)
 	fl.player:NotifyAll(L("UnfreezeBotsMessage", (IsValid(player) and player:Name()) or "Console"))
@@ -33,12 +33,12 @@ end
 COMMAND:Register()
 
 local COMMAND = Command("addbots")
-COMMAND.name = "AddBots"
-COMMAND.description = "Adds specified amount of bots to the server."
-COMMAND.syntax = "[number Bots]"
-COMMAND.category = "server_management"
-COMMAND.arguments = 0
-COMMAND.aliases = {"bot", "bots"}
+COMMAND.Name = "AddBots"
+COMMAND.Description = "Adds specified amount of bots to the server."
+COMMAND.Syntax = "[number Bots]"
+COMMAND.Category = "server_management"
+COMMAND.Arguments = 0
+COMMAND.Aliases = {"bot", "bots"}
 
 function COMMAND:OnRun(player, numBots)
 	numBots = math.Clamp((tonumber(numBots) or 1), 1, 128)
@@ -53,10 +53,10 @@ end
 COMMAND:Register()
 
 local COMMAND = Command("kickbots")
-COMMAND.name = "KickBots"
-COMMAND.description = "Kicks all bots."
-COMMAND.category = "server_management"
-COMMAND.aliases = {"botkick", "kickbot", "bot_kick"}
+COMMAND.Name = "KickBots"
+COMMAND.Description = "Kicks all bots."
+COMMAND.Category = "server_management"
+COMMAND.Aliases = {"botkick", "kickbot", "bot_kick"}
 
 function COMMAND:OnRun(player)
 	fl.player:NotifyAll(L("KickBotsMessage", (IsValid(player) and player:Name()) or "Console"))

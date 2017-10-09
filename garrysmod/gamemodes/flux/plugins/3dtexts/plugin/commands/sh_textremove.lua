@@ -5,10 +5,10 @@
 --]]
 
 local COMMAND = Command("textremove")
-COMMAND.name = "TextRemove"
-COMMAND.description = "Removes a 3D text."
-COMMAND.syntax = "[none]"
-COMMAND.category = "misc"
+COMMAND.Name = "TextRemove"
+COMMAND.Description = "Removes a 3D text."
+COMMAND.Syntax = "[none]"
+COMMAND.Category = "misc"
 
 function COMMAND:OnRun(player)
 	fl3DText:Remove(player)

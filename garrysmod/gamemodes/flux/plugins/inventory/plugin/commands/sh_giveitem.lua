@@ -5,13 +5,13 @@
 --]]
 
 local COMMAND = Command("giveitem")
-COMMAND.name = "GiveItem"
-COMMAND.description = "Gives specified item to a player."
-COMMAND.syntax = "<string target> <string item name or unique ID>"
-COMMAND.category = "character_management"
-COMMAND.arguments = 2
-COMMAND.playerArg = 1
-COMMAND.aliases = {"chargiveitem", "plygiveitem"}
+COMMAND.Name = "GiveItem"
+COMMAND.Description = "Gives specified item to a player."
+COMMAND.Syntax = "<string target> <string item name or unique ID>"
+COMMAND.Category = "character_management"
+COMMAND.Arguments = 2
+COMMAND.PlayerArg = 1
+COMMAND.Aliases = {"chargiveitem", "plygiveitem"}
 
 function COMMAND:OnRun(player, targets, itemName, amount)
 	local itemTable = item.Find(itemName)
