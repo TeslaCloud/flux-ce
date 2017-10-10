@@ -94,22 +94,33 @@ do
 	function playerMeta:SetFaction(uniqueID)
 		local oldFaction = self:GetFaction()
 		local factionTable = faction.FindByID(uniqueID)
+		local char = self:GetCharacter()
 
 		self:SetNetVar("name", factionTable:GenerateName(self, self:GetCharacterVar("name", self:Name()), 1))
 		self:SetRank(1)
 		self:SetTeam(factionTable.teamID)
-		self:SetNetVar("faction", factionTable.uniqueID)
+		self:SetNetVar("faction", uniqueID)
 		self:SetDefaultFactionModel()
 
-		oldFaction:OnPlayerExited(self)
+		if (char) then
+			char.faction = uniqueID
+
+			character.Save(self, char.uniqueID)
+		end
+
+		if (oldFaction) then
+			oldFaction:OnPlayerExited(self)
+		end
+
 		factionTable:OnPlayerEntered(self)
 
-		hook.Run("OnPlayerFactionChanged", self, uniqueID, oldFaction.uniqueID)
+		hook.Run("OnPlayerFactionChanged", self, factionTable, oldFaction)
 	end
 
 	function playerMeta:SetDefaultFactionModel()
 		local factionTable = self:GetFaction()
 		local factionModels = factionTable.Models
+		local char = self:GetCharacter()
 
 		if (istable(factionModels)) then
 			local playerModel = string.GetFileFromFilename(self:GetModel())
@@ -140,11 +151,11 @@ do
 					end
 				end
 
-				if (model) then
-					self:SetModel(model)
-				else
-					self:SetModel(modelTable[math.random(#modelTable)])
+				if (!model) then
+					model = modelTable[math.random(#modelTable)]
 				end
+
+				character.SetModel(self, self:GetActiveCharacterID(), model)
 			end
 		end
 	end

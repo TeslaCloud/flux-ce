@@ -8,8 +8,8 @@ local PANEL = {}
 PANEL.CharData = {}
 
 function PANEL:Init()
-	self:SetPos(200, 0)
-	self:SetSize(ScrW() - 200, ScrH())
+	self:SetPos(400, 0)
+	self:SetSize(ScrW() - 400, ScrH())
 	self:SetTitle("#CharCreate")
 
 	self.btnClose:SafeRemove()

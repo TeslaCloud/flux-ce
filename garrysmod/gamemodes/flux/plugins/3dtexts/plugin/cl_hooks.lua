@@ -16,8 +16,8 @@ function fl3DText:PostDrawOpaqueRenderables()
 		local style = tool:GetClientNumber("style")
 		local trace = fl.client:GetEyeTrace()
 		local normal = trace.HitNormal
-		local angle = normal:Angle()
 		local w, h = util.GetTextSize(text, theme.GetFont("Text_3D2D"))
+		local angle = normal:Angle()
 		angle:RotateAroundAxis(angle:Forward(), 90)
 		angle:RotateAroundAxis(angle:Right(), 270)
 

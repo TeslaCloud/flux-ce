@@ -78,7 +78,7 @@ if (SERVER) then
 						key = v.key
 					}
 
-					hook.Run("RestoreCharacter", player, charID, result)
+					hook.Run("RestoreCharacter", player, charID, v)
 				end
 			end
 
