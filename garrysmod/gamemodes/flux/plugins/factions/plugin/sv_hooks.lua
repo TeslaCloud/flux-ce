@@ -27,6 +27,7 @@ end
 function flFactions:DatabaseConnected()
 	fl.db:AddColumn("fl_players", "whitelists", "TEXT DEFAULT NULL")
 	fl.db:AddColumn("fl_characters", "faction", "TEXT NOT NULL")
+	fl.db:AddColumn("fl_characters", "class", "TEXT DEFAULT NULL")
 end
 
 function flFactions:OnActiveCharacterSet(player, charData)
@@ -35,6 +36,7 @@ end
 
 function flFactions:SaveCharaterData(player, char, saveData)
 	saveData.faction = char.faction or "player"
+	saveData.class = char.class
 end
 
 function flFactions:RestoreCharacter(player, charID, data)
@@ -42,6 +44,7 @@ function flFactions:RestoreCharacter(player, charID, data)
 
 	if (char) then
 		char.faction = data.faction
+		char.class = data.class or ""
 
 		character.Save(player, charID)
 	end
