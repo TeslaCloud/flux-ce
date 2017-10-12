@@ -26,10 +26,10 @@ function flChatbox:OnThemeLoaded(activeTheme)
 end
 
 function flChatbox:OnResolutionChanged(newW, newH)
-	theme.SetOption("Chatbox_Width", scrW / 3)
-	theme.SetOption("Chatbox_Height", scrH / 3)
+	theme.SetOption("Chatbox_Width", newW / 3)
+	theme.SetOption("Chatbox_Height", newH / 3)
 	theme.SetOption("Chatbox_X", 8)
-	theme.SetOption("Chatbox_Y", scrH - theme.GetOption("Chatbox_Height") - 32)
+	theme.SetOption("Chatbox_Y", newH - theme.GetOption("Chatbox_Height") - 32)
 
 	if (chatbox.panel) then
 		chatbox.panel:Remove()

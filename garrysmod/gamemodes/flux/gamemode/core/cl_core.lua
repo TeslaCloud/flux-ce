@@ -254,6 +254,24 @@ do
 	end
 end
 
+function draw.RoundedBoxOutlined(rounding, x, y, w, h, thickness, color, rounding2)
+	rounding2 = rounding2 or rounding
+
+	render.ClearStencil()
+	render.SetStencilEnable(true)
+		render.SetStencilWriteMask(255)
+		render.SetStencilTestMask(255)
+		render.SetStencilReferenceValue(29)
+		render.SetStencilFailOperation(STENCIL_REPLACE)
+
+		render.SetStencilCompareFunction(STENCIL_EQUAL)
+			draw.RoundedBox(rounding2, x + thickness, y + thickness, w - thickness * 2, h - thickness * 2, color)
+		render.SetStencilCompareFunction(STENCIL_NOTEQUAL)
+			draw.RoundedBox(rounding, x, y, w, h, color)
+	render.SetStencilEnable(false)
+	render.ClearStencil()
+end
+
 function draw.TexturedRect(material, x, y, w, h, color)
 	if (!material) then return end
 
