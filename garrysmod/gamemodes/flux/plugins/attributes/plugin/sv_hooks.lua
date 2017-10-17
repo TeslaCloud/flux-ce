@@ -16,11 +16,7 @@ function flAttributes:RestoreCharacter(player, charID, data)
 	local char = character.Get(player, charID)
 
 	if (char) then
-		if (isstring(data.attributes)) then
-			char.attributes = util.JSONToTable(data.attributes)
-		else
-			char.attributes = {}
-		end
+		char.attributes = util.JSONToTable(data.attributes or "")
 
 		character.Save(player, charID)
 	end
@@ -30,26 +26,7 @@ function flAttributes:PostCreateCharacter(player, charID, data)
 	local char = character.Get(player, charID)
 
 	if (char and data.attributes) then
-		local attsTable = character.attributes or {}
-
-		for k, v in pairs(attributes.GetAll()) do
-			local attribute = attributes.FindByID(v)
-
-			attsTable[v] = {}
-			attsTable[v].value = data.attributes[v]
-
-			if (attribute.Multipliable) then
-				attsTable[v].multiplier = 1
-				attsTable[v].multiplierExpires = 0
-			end
-
-			if (attribute.Boostable) then
-				attsTable[v].boost = 0
-				attsTable[v].boostExpires = 1
-			end
-		end
-
-		char.attributes = attsTable
+		char.attributes = data.attributes
 
 		character.Save(player, charID)
 	end

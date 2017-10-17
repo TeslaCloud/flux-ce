@@ -9,6 +9,9 @@ library.New "attributes"
 local stored = attributes.stored or {}
 attributes.stored = stored
 
+local types = attributes.types or {}
+attributes.types = types
+
 function attributes.GetStored()
 	return stored
 end
@@ -37,7 +40,7 @@ function attributes.Register(uniqueID, data)
 		uniqueID = data.Name:MakeID()
 	end
 
-	fl.DevPrint("Registering Attribute: "..tostring(uniqueID))
+	fl.DevPrint("Registering "..string.lower(data.Type)..": "..tostring(uniqueID))
 
 	data.uniqueID = uniqueID
 	data.Name = data.Name or "Unknown Attribute"
@@ -46,7 +49,7 @@ function attributes.Register(uniqueID, data)
 	data.Min = data.Min or 0
 	data.Category = data.Category or "#Attribute_Category_Other"
 	data.Icon = data.Icon
-	data.Type = data.Type or ATTRIBUTE_SKILL
+	data.Type = data.Type
 	data.Multipliable = data.Multipliable or true
 	data.Boostable = data.Boostable or true
 
@@ -57,19 +60,31 @@ function attributes.FindByID(uniqueID)
 	return stored[uniqueID]
 end
 
-function attributes.IncludeAttributes(directory)
-	pipeline.IncludeDirectory("attribute", directory)
+function attributes.RegisterType(id, globalVar, folder)
+	types[id] = globalVar
+
+	plugin.AddExtra(id)
+
+	attributes.IncludeType(id, globalVar, folder)
+
+	fl.DevPrint("Registering attribute type: ["..id.."] ["..globalVar.."] ["..folder.."]")
 end
 
-pipeline.Register("attribute", function(uniqueID, fileName, pipe)
-	ATTRIBUTE = Attribute(uniqueID)
+function attributes.IncludeType(id, globalVar, folder)
+	pipeline.Register(id, function(uniqueID, fileName, pipe)
+		_G[globalVar] = Attribute(uniqueID)
 
-	util.Include(fileName)
+		util.Include(fileName)
 
-	if (pipeline.IsAborted()) then ATTRIBUTE = nil return end
+		if (pipeline.IsAborted()) then _G[globalVar] = nil return end
 
-	ATTRIBUTE:Register() ATTRIBUTE = nil
-end)
+		_G[globalVar].Type = globalVar
+		_G[globalVar]:Register()
+		_G[globalVar] = nil
+	end)
+
+	pipeline.IncludeDirectory(id, folder)
+end
 
 do
 	local playerMeta = FindMetaTable("Player")
@@ -80,7 +95,13 @@ do
 
 	function playerMeta:GetAttribute(uniqueID, bNoBoost)
 		local attribute = attributes.FindByID(uniqueID)
-		local value = self:GetAttributes()[uniqueID].value
+		local attsTable = self:GetAttributes()
+
+		if (!attsTable[uniqueID]) then
+			return attribute.Min
+		end
+
+		local value = attsTable[uniqueID].value
 
 		if (!bNoBoost and attribute.Boostable) then
 			value = value + self:GetAttributeBoost(uniqueID)

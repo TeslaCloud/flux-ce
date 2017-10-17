@@ -6,20 +6,22 @@
 
 PLUGIN:SetAlias("flAttributes")
 
-util.Include("cl_hooks.lua")
 util.Include("sv_hooks.lua")
-util.Include("sh_enums.lua")
 
 function flAttributes:OnPluginLoaded()
-	plugin.AddExtra("attributes")
+	local dir = self:GetFolder().."/plugin/"
 
-	attributes.IncludeAttributes(self:GetFolder().."/plugin/attributes/")
+	attributes.RegisterType("skills", "SKILL", dir.."skills/")
+	attributes.RegisterType("stats", "STAT", dir.."stats/")
+	attributes.RegisterType("perks", "PERK", dir.."perks/")
 end
 
 function flAttributes:PluginIncludeFolder(extra, folder)
-	if (extra == "attributes") then
-		attributes.IncludeAttributes(folder.."/attributes/")
+	for k, v in pairs(attributes.types) do
+		if (extra == k) then
+			attributes.IncludeType(k, v, folder.."/"..k.."/")
 
-		return true
+			return true
+		end
 	end
 end
