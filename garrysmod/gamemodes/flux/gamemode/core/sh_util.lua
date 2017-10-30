@@ -4,6 +4,8 @@
 	the framework is publicly released.
 --]]
 
+AddCSLuaFile()
+
 -- A function to get lowercase type of an object.
 function typeof(obj)
 	return string.lower(type(obj))

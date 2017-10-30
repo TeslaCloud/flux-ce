@@ -187,10 +187,10 @@ function GM:FLHUDPaint(curTime, scrW, scrH)
 
 		surface.SetDrawColor(0, 0, 0, 200)
 		surface.DrawCircle(x, y, 41, 64)
-		surface.DrawOutlinedCircle(x, y, 41, 7, 64)
+		surface.DrawOutlinedCircle(x, y, 41, 10, 64)
 
 		surface.SetDrawColor(theme.GetColor("Text"))
-		surface.DrawPartialOutlinedCircle(math.Clamp(percentage, 0, 100), x, y, 40, 5, 64)
+		surface.DrawPartialOutlinedCircle(math.Clamp(percentage, 0, 100), x, y, 40, 8	, 64)
 
 		fl.client.circleActionPercentage = nil
 	end

@@ -7,10 +7,10 @@
 function flItems:PlayerUseItemMenu(itemTable, bIsEntity)
 	if (!itemTable) then return end
 
-	local itemMenu = DermaMenu()
+	local itemMenu = vgui.Create("flMenu")
 
 	if (!itemTable.Name) then
-		local closeBtn = itemMenu:AddOption(itemTable.CancelText or "#Item_Option_Cancel", function() end)
+		local closeBtn = itemMenu:AddOption(itemTable.CancelText or "#Item_Option_Cancel", function() print("Cancel") end)
 		closeBtn:SetIcon("icon16/cross.png")
 	else
 		if (itemTable.customButtons) then
@@ -47,7 +47,7 @@ function flItems:PlayerUseItemMenu(itemTable, bIsEntity)
 			dropBtn:SetIcon(itemTable.TakeIcon or "icon16/wrench.png")
 		end
 
-		local closeBtn = itemMenu:AddOption(itemTable:GetCancelText(), function() end)
+		local closeBtn = itemMenu:AddOption(itemTable:GetCancelText(), function() print("Cancel") end)
 		closeBtn:SetIcon(itemTable.CancelIcon or "icon16/cross.png")
 	end
 

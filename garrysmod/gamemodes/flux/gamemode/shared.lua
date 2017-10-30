@@ -65,10 +65,9 @@ end
 function GM:GetGameDescription()
 	local nameOverride = self.NameOverride
 
-	return (isstring(nameOverride) and nameOverride) or "FL "..((fl.Devmode and "Dev ") or "")..self.VersionNum.." - "..fl.GetSchemaName()
+	return (isstring(nameOverride) and nameOverride) or "FL - "..fl.GetSchemaName()
 end
 
-AddCSLuaFile("core/sh_util.lua")
 include("core/sh_util.lua")
 
 util.Include("core/sh_enums.lua")

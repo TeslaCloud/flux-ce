@@ -87,7 +87,7 @@ function flCharacters:OnThemeLoaded(activeTheme)
 end
 
 function flCharacters:AddTabMenuItems(menu)
-	menu:AddMenuItem("!mainmenu", {
+	menu:AddMenuItem("mainmenu", {
 		title = "Main Menu",
 		icon = "fa-users",
 		override = function(menuPanel, button)
