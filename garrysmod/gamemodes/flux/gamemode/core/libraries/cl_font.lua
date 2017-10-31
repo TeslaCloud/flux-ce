@@ -17,13 +17,13 @@ do
 	end
 
 	function font.Scale(size)
-		if (ScreenIsRatio(16, 10)) then
-			return math.floor(size * (ScrH() / 1200))
+		if (ScreenIsRatio(16, 9)) then
+			return math.floor(size * (ScrH() / 1080))
 		elseif (ScreenIsRatio(4, 3)) then
 			return math.floor(size * (ScrH() / 1024))
 		end
 
-		return math.floor(size * (ScrH() / 1080))
+		return math.floor(size * (ScrH() / 1200))
 	end
 end
 
