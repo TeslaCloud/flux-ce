@@ -4,20 +4,19 @@
 	the framework is publicly released.
 --]]
 
---[[:
+--[[
 	Library: library
 	Description: Provides function for library and class creation, manipulation and instantiation.
 --]]
 library = library or {}
 library.stored = library.stored or {}
 
---[[:
+--[[
 	Function: fl.Print (any message)
 	Description: Prints a message to the console.
 	Argument: any message - Any variable to be printed. If it's table, PrintTable will automatically be used.
 
-	Returns:
-	nil
+	Returns: nil
 --]]
 function fl.Print(message)
 	if (!istable(message)) then
@@ -29,13 +28,12 @@ function fl.Print(message)
 	end
 end
 
---[[:
+--[[
 	Function: fl.DevPrint (string message)
 	Description: Prints a developer message to console. The message is prefixed with a colored [Flux:Dev].
 	Argument: string message - Message to be printed as a developer comment.
 
-	Returns:
-	nil
+	Returns: nil
 --]]
 function fl.DevPrint(strMessage)
 	if (fl.Devmode) then
@@ -47,14 +45,13 @@ function fl.DevPrint(strMessage)
 	end
 end
 
---[[:
+--[[
 	Function: file.Write (string fileName, string fileContents)
 	Description: Writes a file to the data/ folder. This detour adds the ability for it to create all of the folders leading to the file path automatically.
 	Argument: string fileName - The name of the file to write. See http://wiki.garrysmod.com/page/file/Write for futher documentation.
 	Argument: string fileContents - Contents of the file as a NULL-terminated string.
 
-	Returns:
-	nil
+	Returns: nil
 --]]
 file.OldWrite = file.OldWrite or file.Write
 
@@ -77,14 +74,13 @@ function file.Write(strFileName, strContent)
 	return file.OldWrite(strFileName, strContent)
 end
 
---[[:
+--[[
 	Function: library.New (string name, table parent = _G)
 	Description: Creates a library inside the parent table.
 	Argument: string name - The name of the library. Must comply with Lua variable name requirements.
 	Argument: table parent (default: _G) - The parent table to put the library into.
 
-	Returns:
-	table - The created library.
+	Returns: table - The created library.
 --]]
 function library.New(strName, tParent)
 	tParent = tParent or _G
@@ -97,7 +93,7 @@ end
 -- Set library table's Metatable so that we can call it like a function.
 setmetatable(library, {__call = function(tab, strName, tParent) return tab.Get(strName, tParent) end})
 
---[[:
+--[[
 	Function: library.NewClass (string name, table parent = _G, class baseClass = nil)
 	Description: Creates a new class. Supports constructors and inheritance.
 	Argument: string name - The name of the library. Must comply with Lua variable name requirements.
@@ -107,8 +103,7 @@ setmetatable(library, {__call = function(tab, strName, tParent) return tab.Get(s
 	Alias: Class (string name, class baseClass = nil, table parent = _G)
 	Alias: class (string name, class baseClass = nil, table parent = _G)
 
-	Returns:
-	table - The created class.
+	Returns: table - The created class.
 --]]
 function library.NewClass(strName, tParent, CExtends)
 	local class = {
@@ -194,7 +189,7 @@ end
 
 class = Class
 
---[[:
+--[[
 	Function: extends (class baseClass)
 	Description: Sets the base class of the class that is currently being created.
 	Argument: class baseClass - The base class to extend.
@@ -202,8 +197,7 @@ class = Class
 	Alias: implements
 	Alias: inherits
 
-	Returns:
-	bool - Whether or not did the extension succeed.
+	Returns: bool - Whether or not did the extension succeed.
 --]]
 function extends(CBaseClass)
 	if (isstring(CBaseClass)) then
@@ -248,7 +242,7 @@ end
 implements = extends
 inherits = extends
 
---[[:
+--[[
 	Function: New (string className, ...)
 	Description: Creates a new instance of the supplied class
 	Argument: string className - The name of the class to create.
@@ -256,8 +250,7 @@ inherits = extends
 
 	Alias: new
 
-	Returns:
-	object - The instance of the supplied class. nil if class does not exist.
+	Returns: object - The instance of the supplied class. nil if class does not exist.
 --]]
 function New(className, ...)
 	if (istable(className)) then
@@ -280,37 +273,34 @@ do
 	local actionStorage = fl.actionStorage or {}
 	fl.actionStorage = actionStorage
 
-	--[[:
+	--[[
 		Function: fl.RegisterAction (string id, function callback)
 		Description: Registers an action that can be assigned to a player.
 		Argument: string id - Identifier of the action.
 		Argument: function callback - Function to call when the action is executed.
 	
-		Returns:
-		nil
+		Returns: nil
 	--]]
 	function fl.RegisterAction(id, callback)
 		actionStorage[id] = callback
 	end
 
-	--[[:
+	--[[
 		Function: fl.GetAction (string id)
 		Description: Retreives the action callback with the specified identifier.
 		Argument: string id - ID of the action to get the callback of.
 	
-		Returns:
-		function - The callback.
+		Returns: function - The callback.
 	--]]
 	function fl.GetAction(id)
 		return actionStorage[id]
 	end
 
-	--[[:
+	--[[
 		Function: fl.GetAllActions ()
 		Description: Can be used to directly access the table storing all of the actions.
 	
-		Returns:
-		table - The actionStorage table.
+		Returns: table - The actionStorage table.
 	--]]
 	function fl.GetAllActions()
 		return actionStorage
@@ -320,12 +310,11 @@ do
 	fl.RegisterAction("idle")
 end
 
---[[:
+--[[
 	Function: fl.GetSchemaFolder ()
 	Description: Gets the folder of the currently loaded schema.
 
-	Returns:
-	string - The folder of the currently loaded schema.
+	Returns: string - The folder of the currently loaded schema.
 --]]
 function fl.GetSchemaFolder()
 	if (SERVER) then
@@ -335,13 +324,12 @@ function fl.GetSchemaFolder()
 	end
 end
 
---[[:
+--[[
 	Function: fl.Serialize (table toSerialize)
 	Description: Converts a table into the string format.
 	Argument: table toSerialize - Table to convert.
 
-	Returns:
-	string - pON-encoded table. If pON fails then JSON is returned.
+	Returns: string - pON-encoded table. If pON fails then JSON is returned.
 --]]
 function fl.Serialize(tTable)
 	if (istable(tTable)) then
@@ -367,13 +355,12 @@ function fl.Serialize(tTable)
 	end
 end
 
---[[:
+--[[
 	Function: fl.Deserialize (string toDeserialize)
 	Description: Converts a string back into table. Uses pON at first, if it fails it falls back to JSON.
 	Argument: string toDeserialize - String to convert.
 
-	Returns:
-	table - Decoded string.
+	Returns: table - Decoded string.
 --]]
 function fl.Deserialize(strData)
 	if (isstring(strData)) then
@@ -399,12 +386,11 @@ function fl.Deserialize(strData)
 	end
 end
 
---[[:
+--[[
 	Function: fl.IncludeSchema ()
 	Description: Includes the currently loaded schema's files. Performs deferred load on client.
 
-	Returns:
-	nil
+	Returns: nil
 --]]
 function fl.IncludeSchema()
 	if (SERVER) then
@@ -422,13 +408,12 @@ function fl.IncludeSchema()
 	end
 end
 
---[[:
+--[[
 	Function: fl.IncludePlugins (string folder)
 	Description: Includes all of the plugins inside the folder. Includes files first, then folders. Does not handle plugin-inside-of-plugin scenarios.
 	Argument: string folder - Folder relative to Lua's PATH (lua/, gamemodes/).
 
-	Returns:
-	nil
+	Returns: nil
 --]]
 function fl.IncludePlugins(strFolder)
 	if (SERVER) then
@@ -443,12 +428,11 @@ function fl.IncludePlugins(strFolder)
 	end
 end
 
---[[:
+--[[
 	Function: fl.GetSchemaInfo ()
 	Description: Gets the table containing all of the information about the currently loaded schema.
 
-	Returns:
-	table - The schema info table.
+	Returns: table - The schema info table.
 --]]
 function fl.GetSchemaInfo()
 	if (SERVER) then
