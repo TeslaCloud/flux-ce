@@ -25,7 +25,7 @@ function fl.command:Create(id, data)
 
 	stored[id] = data
 
-	-- Add original command name to aliases table.
+	-- Add original command name to the aliases table.
 	aliases[id] = data.uniqueID
 
 	if (data.Aliases) then

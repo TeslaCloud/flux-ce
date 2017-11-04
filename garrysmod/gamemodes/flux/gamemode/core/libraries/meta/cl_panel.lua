@@ -15,3 +15,11 @@ function panelMeta:SafeRemove()
 	self:SetVisible(false)
 	self:Remove()
 end
+
+function panelMeta:SetPosEx(x, y)
+	self:SetPos(font.Scale(x), font.Scale(y))
+end
+
+function panelMeta:SetSizeEx(w, h)
+	self:SetSize(font.Scale(w), font.Scale(h))
+end

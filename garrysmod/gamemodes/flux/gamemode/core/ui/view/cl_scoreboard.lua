@@ -84,7 +84,7 @@ function PANEL:Rebuild()
 	local player = self.player
 
 	self.avatarPanel = vgui.Create("AvatarImage", self)
-	self.avatarPanel:SetSize(font.Scale(32), font.Scale(32))
+	self.avatarPanel:SetSizeEx(32, 32)
 	self.avatarPanel:SetPos(4, 4)
 	self.avatarPanel:SetPlayer(player, 64)
 
