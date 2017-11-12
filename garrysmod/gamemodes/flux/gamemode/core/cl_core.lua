@@ -139,6 +139,14 @@ function surface.DrawRotated(nPosX, nPosY, angle, callback)
 	cam.PopModelMatrix()
 end
 
+function surface.IsMouseInRect(x, y, w, h)
+	local mx, my = gui.MousePos()
+
+	print(x, y, w, h, mx, my)
+
+	return (mx >= x and mx <= x + w and my >= y and my <= y + h)
+end
+
 do
 	local cache = {}
 
@@ -254,7 +262,7 @@ do
 	end
 end
 
-function draw.RoundedBoxOutlined(rounding, x, y, w, h, thickness, color, rounding2)
+function draw.RoundedBoxOutline(rounding, x, y, w, h, thickness, color, rounding2)
 	rounding2 = rounding2 or rounding
 
 	render.ClearStencil()

@@ -29,6 +29,9 @@ lang["#TabMenu_Scoreboard"]		= "Players"
 lang["#TabMenu_Admin"]			= "Admin"
 lang["#TabMenu_CloseMenu"]		= "Close Menu"
 
+lang["#Scoreboard_Title"]		= "PLAYER LIST"
+lang["#Scoreboard_Help"]		= "Clicking player's card may bring up some options."
+
 --[[
 	UI/HUD ELEMENTS - Description: Language category for all hud elements.
 --]]

@@ -101,12 +101,16 @@ function PANEL:Think()
 	end
 end
 
-function PANEL:AddMenuItem(id, data)
+function PANEL:AddMenuItem(id, data, index)
 	data.uniqueID = id
 	data.title = string.utf8upper(fl.lang:TranslateText(data.title) or "error")
 	data.icon = data.icon or false
 
-	table.insert(self.menuItems, data)
+	if (isnumber(index)) then
+		table.insert(self.menuItems, index, data)
+	else
+		table.insert(self.menuItems, data)
+	end
 end
 
 function PANEL:CloseMenu()

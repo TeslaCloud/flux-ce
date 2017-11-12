@@ -157,13 +157,18 @@ function PANEL:OnMousePressed(...)
 end
 
 function PANEL:OnMouseReleased(...)
-	if (self.itemData and self.mousePressed and self.mousePressed > (CurTime() - 0.15)) then
-		fl.inventoryDragSlot = nil
+	local x, y = self:LocalToScreen(0, 0)
+	local w, h = self:GetSize()
 
-		if (#self.instanceIDs > 1) then
-			hook.Run("PlayerUseItemMenu", self.instanceIDs)
-		else
-			hook.Run("PlayerUseItemMenu", self.itemData)
+	if (surface.IsMouseInRect(x, y, w, h)) then
+		if (self.itemData and self.mousePressed and self.mousePressed > (CurTime() - 0.15)) then
+			fl.inventoryDragSlot = nil
+
+			if (#self.instanceIDs > 1) then
+				hook.Run("PlayerUseItemMenu", self.instanceIDs)
+			else
+				hook.Run("PlayerUseItemMenu", self.itemData)
+			end
 		end
 	end
 

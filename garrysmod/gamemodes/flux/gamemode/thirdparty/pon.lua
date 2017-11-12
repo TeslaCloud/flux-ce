@@ -73,10 +73,13 @@ do
 			if nSize > 0 then
 				for i = 1, nSize do
 					local v = tbl[ i ]
+
 					if v == nil then
 						output[ #output + 1 ] = '!'
+
 						continue
 					end
+
 					local tv = type( v )
 					-- HANDLE POINTERS
 					if( tv == 'string' )then

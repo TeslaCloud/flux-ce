@@ -106,12 +106,14 @@ function PANEL:Rebuild()
 
 		collapsibleCategory:SetContents(list)
 
+		local curY = 0
+
 		for k, v in pairs(perms) do
 			local btn = vgui.Create("flPermission")
 			btn:SetSize(width, 20)
 			btn:SetPermission(v)
 
-			list:Add(btn)
+			local pan = list:Add(btn)
 
 			btn:Rebuild()
 		end

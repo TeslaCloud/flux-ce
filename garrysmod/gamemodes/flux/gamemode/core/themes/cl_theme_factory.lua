@@ -318,13 +318,15 @@ function THEME:PaintPermissionButton(permPanel, btn, w, h)
 end
 
 function THEME:PaintScoreboard(panel, width, height)
+	local titleFont = self:GetFont("Menu_Large")
+
 	draw.RoundedBox(0, 0, 0, width, height, ColorAlpha(self:GetColor("Background"), 150))
 
 	DisableClipping(true)
-		draw.SimpleText("SCOREBOARD", self:GetFont("Menu_Large"), 4, -util.GetTextHeight("SCOREBOARD", self:GetFont("Menu_Large")) * 0.5, self:GetColor("Text"))
+		draw.SimpleText("#Scoreboard_Title", titleFont, 4, -util.GetTextHeight("#Scoreboard_Title", titleFont) * 0.5, self:GetColor("Text"))
 	DisableClipping(false)
 
-	draw.SimpleText("Clicking player's card may bring up some options.", self:GetFont("Text_Small"), 4, 14, self:GetColor("Text"))
+	draw.SimpleText("#Scoreboard_Help", self:GetFont("Text_Small"), 4, 14, self:GetColor("Text"))
 end
 
 function THEME:PaintTabMenu(panel, width, height)

@@ -94,7 +94,7 @@ function flCharacters:AddTabMenuItems(menu)
 			menuPanel:SafeRemove()
 			fl.IntroPanel = theme.CreatePanel("MainMenu")
 		end
-	})
+	}, 1)
 end
 
 function flCharacters:PostCharacterLoaded(nCharID)

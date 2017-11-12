@@ -24,7 +24,7 @@ end
 function THEME:DrawBarBackground(barInfo)
 	local height = self:GetOption("Bar_Height")
 
-	draw.RoundedBoxOutlined(4, barInfo.x, barInfo.y + barInfo.height - height, barInfo.width, height, 1, self:GetColor("Accent"), 2)
+	draw.RoundedBoxOutline(4, barInfo.x, barInfo.y + barInfo.height - height, barInfo.width, height, 1, self:GetColor("Accent"), 2)
 end
 
 function THEME:DrawBarHindrance(barInfo)

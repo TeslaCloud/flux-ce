@@ -288,6 +288,12 @@ function GM:AddTabMenuItems(menu)
 		panel = "flScoreboard",
 		icon = "fa-list-alt"
 	})
+
+	menu:AddMenuItem("help", {
+		title = "Help",
+		icon = "fa-book",
+		panel = "flHelp",
+	})
 end
 
 function GM:OnMenuPanelOpen(menuPanel, activePanel)
