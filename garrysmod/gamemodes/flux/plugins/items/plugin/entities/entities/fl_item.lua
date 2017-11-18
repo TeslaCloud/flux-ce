@@ -15,6 +15,7 @@ ENT.RenderGroup = RENDERGROUP_BOTH
 if (SERVER) then
 	function ENT:Initialize()
 		self:SetSolid(SOLID_VPHYSICS)
+		self:SetMoveType(MOVETYPE_VPHYSICS)
 		self:PhysicsInit(SOLID_VPHYSICS)
 		self:SetUseType(ONOFF_USE)
 
@@ -93,6 +94,10 @@ if (SERVER) then
 		end
 	end
 else
+	function ENT:Draw()
+		self:DrawModel()
+	end
+
 	function ENT:DrawTargetID(x, y, distance)
 		if (distance > 370) then return end
 
@@ -120,6 +125,8 @@ else
 				netstream.Start("RequestItemData", self:EntIndex())
 				self.dataRequested = true
 			end
+
+			fl.DrawRotatingCog(x, y - 48, 48, 48, Color(255, 255, 255))
 
 			return
 		end

@@ -886,8 +886,9 @@ end
 
 function util.PlayerListToString(...)
 	local list = {...}
+	local nlist = #list
 
-	if (#list == #_player.GetAll()) then
+	if (nlist > 1 and nlist == #_player.GetAll()) then
 		return "#Chat_Everyone"
 	end
 
@@ -1220,4 +1221,11 @@ function util.PickTextColor(baseColor)
 	else
 		return Color(255, 255, 255)
 	end
+end
+
+-- Add the ability to join strings with + operator.
+local stringMeta = getmetatable("")
+
+function stringMeta:__add(right)
+	return self..tostring(right)
 end

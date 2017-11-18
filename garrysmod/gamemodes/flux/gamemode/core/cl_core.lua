@@ -289,3 +289,21 @@ function draw.TexturedRect(material, x, y, w, h, color)
 	surface.SetMaterial(material)
 	surface.DrawTexturedRect(x, y, w, h)
 end
+
+do
+	local ang = 0
+
+	function fl.DrawRotatingCog(x, y, w, h, color)
+		color = color or Color(255, 255, 255)
+
+		surface.DrawRotated(x, y, ang, function(x, y, ang)
+			draw.TexturedRect(util.GetMaterial("materials/flux/cog.png"), x - w * 0.5, y - h * 0.5, w, h, color)
+		end)
+
+		ang = ang + FrameTime() * 32
+
+		if (ang >= 360) then
+			ang = 0
+		end
+	end
+end

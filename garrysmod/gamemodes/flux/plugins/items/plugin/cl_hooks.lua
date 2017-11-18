@@ -91,6 +91,14 @@ function flItems:Think()
 	end
 end
 
+function flItems:OnItemDataReceived()
+	for k, v in ipairs(ents.GetAll()) do
+		if (IsValid(v) and v:GetClass() == "fl_item") then
+			netstream.Start("RequestItemData", v:EntIndex())
+		end
+	end
+end
+
 netstream.Hook("PlayerUseItemEntity", function(entity)
 	hook.Run("PlayerUseItemMenu", entity.item, true)
 end)

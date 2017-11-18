@@ -246,7 +246,7 @@ if (SERVER) then
 							local cache = {}
 
 							for k, v in pairs(targetArg) do
-								local target, kind = fl.command:PlayerFromString(player, v)
+								local target, kind = self:PlayerFromString(player, v)
 
 								if (istable(target)) then
 									for k2, v2 in ipairs(target) do
@@ -259,7 +259,7 @@ if (SERVER) then
 								end
 							end
 						else
-							local target, kind = fl.command:PlayerFromString(player, targetArg)
+							local target, kind = self:PlayerFromString(player, targetArg)
 							local cache = {}
 
 							if (istable(target)) then

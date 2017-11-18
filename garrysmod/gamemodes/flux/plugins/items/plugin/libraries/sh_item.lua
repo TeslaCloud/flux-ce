@@ -188,7 +188,7 @@ function item.GenerateID()
 	return instances.count
 end
 
-function item.New(uniqueID, tData, forcedID)
+function item.New(uniqueID, data, forcedID)
 	local itemTable = item.FindByID(uniqueID)
 
 	if (itemTable) then
@@ -197,15 +197,15 @@ function item.New(uniqueID, tData, forcedID)
 		instances[uniqueID] = instances[uniqueID] or {}
 		instances[uniqueID][itemID] = table.Copy(itemTable)
 
-		if (istable(tData)) then
-			table.Merge(instances[uniqueID][itemID], tData)
+		if (istable(data)) then
+			table.Merge(instances[uniqueID][itemID], data)
 		end
 
 		instances[uniqueID][itemID].instanceID = itemID
 
 		if (SERVER) then
 			item.AsyncSave()
-			netstream.Start(nil, "ItemNewInstance", uniqueID, (tData or 1), itemID)
+			netstream.Start(nil, "ItemNewInstance", uniqueID, (data or 1), itemID)
 		end
 
 		return instances[uniqueID][itemID]
@@ -382,6 +382,8 @@ if (SERVER) then
 				item.NetworkItem(player, v.item.instanceID)
 			end
 		end
+
+		hook.RunClient(player, "OnItemDataReceived")
 	end
 
 	function item.Spawn(position, angles, itemTable)
@@ -434,9 +436,9 @@ if (SERVER) then
 		end
 	end)
 else
-	netstream.Hook("ItemData", function(uniqueID, instanceID, tData)
+	netstream.Hook("ItemData", function(uniqueID, instanceID, data)
 		if (istable(instances[uniqueID][instanceID])) then
-			instances[uniqueID][instanceID].data = tData
+			instances[uniqueID][instanceID].data = data
 		end
 	end)
 
@@ -456,12 +458,22 @@ else
 	netstream.Hook("ItemEntData", function(entIndex, uniqueID, instanceID)
 		local ent = Entity(entIndex)
 
-		if (IsValid(Entity(entIndex))) then
-			Entity(entIndex).item = instances[uniqueID][instanceID]
+		if (IsValid(ent)) then
+			local itemTable = instances[uniqueID][instanceID]
+
+			-- Client has to know this shit too I guess?
+			ent:SetModel(itemTable:GetModel())
+			ent:SetSkin(itemTable.Skin)
+			ent:SetColor(itemTable:GetColor())
+
+			-- Restore item's functions. For some weird reason they aren't properly initialized.
+			table.Merge(ent, scripted_ents.Get("fl_item"))
+
+			ent.item = itemTable
 		end
 	end)
 
-	netstream.Hook("ItemNewInstance", function(uniqueID, tData, itemID)
-		item.New(uniqueID, tData, itemID)
+	netstream.Hook("ItemNewInstance", function(uniqueID, data, itemID)
+		item.New(uniqueID, data, itemID)
 	end)
 end

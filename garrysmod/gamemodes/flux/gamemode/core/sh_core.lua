@@ -125,7 +125,8 @@ function library.NewClass(strName, tParent, CExtends)
 						baseClass[baseClass.ClassName], newObj, ...
 					} catch {
 						function(exception)
-							ErrorNoHalt("[Flux] Base class constructor has failed to run!\n"..tostring(exception.."\n"))
+							ErrorNoHalt("[Flux] Base class constructor has failed to run!\n" +
+								tostring(exception) + "\n")
 						end
 					}
 				end
@@ -164,7 +165,8 @@ function library.NewClass(strName, tParent, CExtends)
 				CExtends.OnExtended, copy, merged
 			} catch {
 				function(exception)
-					ErrorNoHalt("[Flux] OnExtended class hook has failed to run!\n"..tostring(exception.."\n"))
+					ErrorNoHalt("[Flux] OnExtended class hook has failed to run!\n" +
+						tostring(exception) + "\n")
 				end
 			}
 		end
@@ -214,7 +216,8 @@ function extends(CBaseClass)
 				CBaseClass.OnExtended, copy, merged
 			} catch {
 				function(exception)
-					ErrorNoHalt("[Flux] OnExtended class hook has failed to run!\n"..tostring(exception.."\n"))
+					ErrorNoHalt("[Flux] OnExtended class hook has failed to run!\n" +
+						tostring(exception) + "\n")
 				end
 			}
 		end

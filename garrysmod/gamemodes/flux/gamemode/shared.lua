@@ -26,10 +26,10 @@ fl.Devmode		= true -- Always set this to true when developing anything for FL. T
 -- Fix for the name conflicts.
 _player, _team, _file, _table, _sound = player, team, file, table, sound
 
--- do - end blocks let us manage the lifespan of the
--- local variables, because when they go out of scope
--- they get automatically garbage-collected, freeing up
--- the memory they have taken.
+-- do - end blocks help us manage the scope of the variables,
+-- as well as create a separate Lua Closure for that bit of code.
+-- Locals within the same closure as the function are generally
+-- accessed faster than the ones in the file scope closure.
 -- In this particular case it's not necessary, because we
 -- already have if - then - end structure, but I thought leaving
 -- an example somewhere in the init code would be nice.
