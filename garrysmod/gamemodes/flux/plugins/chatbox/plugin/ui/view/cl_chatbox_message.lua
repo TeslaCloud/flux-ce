@@ -9,6 +9,7 @@ PANEL.messageData = {}
 PANEL.compiled = {}
 PANEL.addTime = 0
 PANEL.forceShow = false
+PANEL.forceAlpha = false
 PANEL.shouldPaint = false
 PANEL.alpha = 255
 
@@ -26,10 +27,20 @@ function PANEL:Think()
 
 	self.shouldPaint = false
 
+	if (chatbox.panel:IsTypingCommand()) then
+		self.forceAlpha = 50
+	else
+		self.forceAlpha = false
+	end
+
 	if (self.forceShow) then
 		self.shouldPaint = true
 
-		self.alpha = 255
+		if (self.forceAlpha) then
+			self.alpha = self.forceAlpha
+		else
+			self.alpha = 255
+		end
 	elseif (self.fadeTime > curTime) then
 		self.shouldPaint = true
 

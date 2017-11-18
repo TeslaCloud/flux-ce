@@ -63,10 +63,19 @@ end
 -- A function to find all commands by given search string.
 function fl.command:FindAll(id)
 	local hits = {}
+	local ids = {}
 
 	for k, v in pairs(aliases) do
-		if (k:find(id) or v:find(id)) then
-			table.insert(hits, v)
+		if (!ids[v] and (k:find(id) or v:find(id))) then
+			if (SERVER) then
+				table.insert(hits, stored[v])
+			else
+				if (fl.client:HasPermission(v)) then
+					table.insert(hits, stored[v])
+				end
+			end
+
+			ids[v] = true
 		end
 	end
 

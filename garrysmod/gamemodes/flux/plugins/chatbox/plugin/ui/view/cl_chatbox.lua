@@ -98,6 +98,10 @@ function PANEL:SetOpen(bIsOpen)
 		self.textEntry:RequestFocus()
 		self.textEntry.lastIndex = 0
 	else
+		if (self.textEntry:GetValue():IsCommand()) then
+			self.textEntry:SetText("")
+		end
+
 		self:KillFocus()
 
 		self.textEntry:SetVisible(false)
@@ -105,6 +109,16 @@ function PANEL:SetOpen(bIsOpen)
 
 	for k, v in ipairs(self.history) do
 		v.forceShow = bIsOpen
+	end
+end
+
+function PANEL:IsTypingCommand()
+	if (IsValid(self.textEntry)) then
+		local cmd = self.textEntry:GetValue()
+
+		if (cmd != "/") then
+			return cmd:IsCommand()
+		end
 	end
 end
 
@@ -180,6 +194,10 @@ function PANEL:Think()
 	if (self.isOpen) then
 		if (input.IsKeyDown(KEY_ESCAPE)) then
 			chatbox.Hide()
+
+			if (gui.IsGameUIVisible()) then
+				gui.HideGameUI()
+			end
 		end
 	else
 		self.scrollPanel.VBar:SetScroll(self.scrollPanel.VBar.CanvasSize)
@@ -191,7 +209,70 @@ function PANEL:Paint(w, h)
 end
 
 function PANEL:PaintOver(w, h)
-	plugin.Call("ChatboxPaintOver", w, h, self)
+	if (plugin.Call("ChatboxPaintOver", w, h, self) == nil) then
+		local entry = self.textEntry
+
+		if (IsValid(entry)) then
+			local val = entry:GetValue()
+			local isCommand, prefixLen = string.IsCommand(val)
+
+			if (isCommand) then
+				local space = string.find(val, " ")
+				local endpos = space
+
+				if (!endpos) then
+					endpos = (string.len(val) + 1)
+				end
+
+				local cmd = string.utf8lower(string.sub(val, prefixLen + 1, endpos - 1))
+				local cmds = {}
+
+				if (cmd == "" or cmd == " ") then return end
+
+				if (!space) then
+					cmds = fl.command:FindAll(cmd)
+				else
+					local found = fl.command:FindByID(cmd)
+
+					if (found) then
+						table.insert(cmds, found)
+					end
+				end
+
+				draw.RoundedBox(0, 0, 0, w, h - entry:GetTall(), Color(0, 0, 0, 150))
+
+				local font, color = theme.GetFont("Text_Normal"), theme.GetColor("Accent")
+
+				if (#cmds > 0) then
+					local lastY = 0
+					local color_white = Color(255, 255, 255)
+
+					for k, v in ipairs(cmds) do
+						local w, h = draw.SimpleText("/" + v.Name, font, 16, 16 + lastY, color)
+						w, h = draw.SimpleText(v.Syntax, font, 16 + w + 8, 16 + lastY, color_white)
+
+						if (#cmds == 1) then
+							local smallFont = theme.GetFont("Text_Small")
+							local w2, h2 = draw.SimpleText(v.Description, smallFont, 16, 16 + h + 4, color_white)
+							local aliases = "[none]"
+
+							if (v.Aliases and #v.Aliases > 0) then
+								aliases = table.concat(v.Aliases or {}, ", ")
+							end
+
+							draw.SimpleText("Aliases: " + aliases, smallFont, 16, 16 + h + h2 + 4, color_white)
+						end
+
+						lastY = lastY + h + 8
+
+						if (k >= 10) then break end
+					end
+				else
+					draw.SimpleText("No commands found!", font, 16, 16, color)
+				end
+			end
+		end
+	end
 end
 
 vgui.Register("flChatPanel", PANEL, "flBasePanel")
