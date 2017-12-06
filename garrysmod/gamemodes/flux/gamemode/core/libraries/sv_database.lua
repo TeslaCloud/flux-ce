@@ -409,17 +409,14 @@ function fl.db:Alter(tableName)
 end
 
 function fl.db:AddColumn(tableName, columnName, columnValue)
-	self:RawQuery("PRAGMA table_info("..tableName..")", function(value)
-		for k, v in pairs(value) do
-			if (v.name == columnName) then
-				return
-			end
+	function callback(value)
+		if #value==0 then
+			local queryObj = self:Alter(tableName)
+				queryObj:AddColumn(columnName, columnValue)
+			queryObj:Execute()
 		end
-
-		local queryObj = self:Alter(tableName)
-			queryObj:AddColumn(columnName, columnValue)
-		queryObj:Execute()
-	end)
+	end
+	fl.db:RawQuery("SHOW COLUMNS FROM `"..tableName.."` LIKE '"..columnName.."'", callback)
 end
 
 function fl.db:SetCurrentConnection(id)
