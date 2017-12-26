@@ -115,12 +115,9 @@ end
 function PANEL:IsTypingCommand()
 	if (IsValid(self.textEntry)) then
 		local cmd = self.textEntry:GetValue()
-		local prefixes = config.Get("command_prefixes") or {}
 
-		for k, v in ipairs(prefixes) do
-			if (cmd != v) then
-				return cmd:IsCommand()
-			end
+		if (cmd != "/") then
+			return cmd:IsCommand()
 		end
 	end
 end

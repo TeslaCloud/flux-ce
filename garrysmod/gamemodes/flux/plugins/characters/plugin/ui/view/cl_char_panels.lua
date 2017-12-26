@@ -86,7 +86,6 @@ PANEL.text = "#CharCreate_Model_S"
 PANEL.model = ""
 PANEL.models = {}
 PANEL.buttons = {}
-local ru, en = fl.lang:GetTable("ru"), fl.lang:GetTable("en")
 
 function PANEL:Init()
 	self.Label = vgui.Create("DLabel", self)
@@ -158,9 +157,9 @@ function PANEL:OnOpen(parent)
 		end
 
 		if (factionTable) then
-            if (charData.gender == (ru["#CharCreate_Gender_M"] or en["#CharCreate_Gender_M"])) then
+			if (charData.gender == "Male") then
 				self.Models = factionTable.Models.male
-			elseif (charData.gender == (ru["#CharCreate_Gender_F"] or en["#CharCreate_Gender_F"])) then
+			elseif (charData.gender == "Female") then
 				self.Models = factionTable.Models.female
 			else
 				self.Models = factionTable.Models.universal
