@@ -8,6 +8,7 @@ Luna is a project that is designed with the following three key goals in mind:
 1. Fix Lua being an ugly language, due to it's syntax, lack of features and people writing code the way they please.
 2. Provide a common framework for package and dependency management. No more stuff like addons bundling the same thing over and over again. Inspired by LuaRocks and RubyGems, as well as Bundler.
 3. Provide the CoC scheme that will make most of the code written for Luna consistent from one programmer to another, to allow for easier and more pleasurable collaboration.
+
 Flux will use Luna as it's main scripting language, but the Lua parts that are already written in Lua will likely remain the same. Luna is different from other pre-processed languages in a way that you don't need to do anything manually, it has it's own autorefresh, installs automatically and is designed around Garry's Mod specifically.
 
 To learn more about Luna's parser and syntax, please visit this repository: https://github.com/MrMe0w/Luna-Parser
