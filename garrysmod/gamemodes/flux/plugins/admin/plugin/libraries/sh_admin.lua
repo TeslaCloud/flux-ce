@@ -193,8 +193,8 @@ function fl.admin:CheckImmunity(player, target, canBeEqual)
   return false
 end
 
-pipeline.Register("group", function(uniqueID, fileName, pipe)
-  GROUP = Group(uniqueID)
+pipeline.Register("group", function(id, fileName, pipe)
+  GROUP = Group(id)
 
   util.Include(fileName)
 

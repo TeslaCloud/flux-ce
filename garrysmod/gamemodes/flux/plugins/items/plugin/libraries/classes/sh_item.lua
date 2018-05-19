@@ -6,10 +6,10 @@
 
 class "CItem"
 
-function CItem:CItem(uniqueID)
-  if (!isstring(uniqueID)) then return end
+function CItem:CItem(id)
+  if (!isstring(id)) then return end
 
-  self.id = string.MakeID(uniqueID)
+  self.id = string.MakeID(id)
   self.data = self.data or {}
   self.actionSounds = {
     ["OnUse"] = "items/battery_pickup.wav"

@@ -73,7 +73,7 @@ if (SERVER) then
             money = tonumber(v.money or "0"),
             charPermissions = util.JSONToTable(v.charPermissions or ""),
             data = util.JSONToTable(v.data or ""),
-            uniqueID = tonumber(v.id or k),
+            id = tonumber(v.id or k),
             key = v.key
           }
 
@@ -104,7 +104,7 @@ if (SERVER) then
       money = char.money,
       charPermissions = util.TableToJSON(char.charPermissions),
       data = util.TableToJSON(char.data),
-      uniqueID = char.id
+      id = char.id
     }
   end
 
@@ -116,7 +116,7 @@ if (SERVER) then
 
     hook.Run("SaveCharaterData", player, char, saveData)
 
-    fl.db:EasyWrite("fl_characters", {"uniqueID", index}, saveData)
+    fl.db:EasyWrite("fl_characters", {"id", index}, saveData)
 
     hook.Run("PostSaveCharacter", player, char, saveData)
   end

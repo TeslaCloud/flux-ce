@@ -22,17 +22,17 @@ fl.bars.defaultW = font.Scale(312)
 fl.bars.defaultH = 18
 fl.bars.defaultSpacing = 6
 
-function fl.bars:Register(uniqueID, data, force)
+function fl.bars:Register(id, data, force)
   if (!data) then return end
 
   force = force or fl.Devmode
 
-  if (stored[uniqueID] and !force) then
-    return stored[uniqueID]
+  if (stored[id] and !force) then
+    return stored[id]
   end
 
-  stored[uniqueID] = {
-    uniqueID = uniqueID,
+  stored[id] = {
+    id = id,
     text = data.text or "",
     color = data.color or Color(200, 90, 90),
     maxValue = data.maxValue or 100,
@@ -56,21 +56,21 @@ function fl.bars:Register(uniqueID, data, force)
     callback = data.callback
   }
 
-  hook.Run("OnBarRegistered", stored[uniqueID], uniqueID, force)
+  hook.Run("OnBarRegistered", stored[id], id, force)
 
-  return stored[uniqueID]
+  return stored[id]
 end
 
-function fl.bars:Get(uniqueID)
-  if (stored[uniqueID]) then
-    return stored[uniqueID]
+function fl.bars:Get(id)
+  if (stored[id]) then
+    return stored[id]
   end
 
   return false
 end
 
-function fl.bars:SetValue(uniqueID, newValue)
-  local bar = self:Get(uniqueID)
+function fl.bars:SetValue(id, newValue)
+  local bar = self:Get(id)
 
   if (bar) then
     theme.Call("PreBarValueSet", bar, bar.value, newValue)
@@ -86,8 +86,8 @@ function fl.bars:SetValue(uniqueID, newValue)
   end
 end
 
-function fl.bars:HinderValue(uniqueID, newValue)
-  local bar = self:Get(uniqueID)
+function fl.bars:HinderValue(id, newValue)
+  local bar = self:Get(id)
 
   if (bar) then
     theme.Call("PreBarHinderValueSet", bar, bar.hinderValue, newValue)
@@ -142,8 +142,8 @@ function fl.bars:Position()
 
 end
 
-function fl.bars:Draw(uniqueID)
-  local barInfo = self:Get(uniqueID)
+function fl.bars:Draw(id)
+  local barInfo = self:Get(id)
 
   if (barInfo) then
     hook.Run("PreDrawBar", barInfo)
@@ -180,8 +180,8 @@ function fl.bars:DrawTopBars()
   end
 end
 
-function fl.bars:Adjust(uniqueID, data)
-  local bar = self:Get(uniqueID)
+function fl.bars:Adjust(id, data)
+  local bar = self:Get(id)
 
   if (bar) then
     table.Merge(bar, data)

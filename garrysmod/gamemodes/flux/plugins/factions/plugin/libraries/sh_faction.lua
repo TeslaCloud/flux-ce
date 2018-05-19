@@ -72,8 +72,8 @@ function faction.GetAll()
   return stored
 end
 
-pipeline.Register("faction", function(uniqueID, fileName, pipe)
-  FACTION = Faction(uniqueID)
+pipeline.Register("faction", function(id, fileName, pipe)
+  FACTION = Faction(id)
 
   util.Include(fileName)
 
@@ -91,19 +91,19 @@ do
     return self:GetNetVar("faction", "player")
   end
 
-  function player_meta:SetFaction(uniqueID)
+  function player_meta:SetFaction(id)
     local oldFaction = self:GetFaction()
-    local factionTable = faction.FindByID(uniqueID)
+    local factionTable = faction.FindByID(id)
     local char = self:GetCharacter()
 
     self:SetNetVar("name", factionTable:GenerateName(self, self:GetCharacterVar("name", self:Name()), 1))
     self:SetRank(1)
     self:SetTeam(factionTable.teamID)
-    self:SetNetVar("faction", uniqueID)
+    self:SetNetVar("faction", id)
     self:SetDefaultFactionModel()
 
     if (char) then
-      char.faction = uniqueID
+      char.faction = id
 
       character.Save(self, char.id)
     end

@@ -476,12 +476,12 @@ do
 
       for k, v in ipairs(folders) do
         local path = dir.."/"..v
-        local uniqueID = (string.GetFileFromFilename(path) or ""):Replace(".lua", ""):MakeID()
+        local id = (string.GetFileFromFilename(path) or ""):Replace(".lua", ""):MakeID()
         local register = false
         local var = data.table
 
         _G[var] = table.Copy(data.defaultData)
-        _G[var].ClassName = uniqueID
+        _G[var].ClassName = id
 
         if (file.Exists(path.."/shared.lua", "LUA")) then
           util.Include(path.."/shared.lua")
@@ -504,7 +504,7 @@ do
         if (register) then
           if (data.clientside and !CLIENT) then _G[var] = nil continue end
 
-          data.func(_G[var], uniqueID)
+          data.func(_G[var], id)
         end
 
         _G[var] = nil
@@ -512,17 +512,17 @@ do
 
       for k, v in ipairs(files) do
         local path = dir.."/"..v
-        local uniqueID = (string.GetFileFromFilename(path) or ""):Replace(".lua", ""):MakeID()
+        local id = (string.GetFileFromFilename(path) or ""):Replace(".lua", ""):MakeID()
         local var = data.table
 
         _G[var] = table.Copy(data.defaultData)
-        _G[var].ClassName = uniqueID
+        _G[var].ClassName = id
 
         util.Include(path)
 
         if (data.clientside and !CLIENT) then _G[var] = nil continue end
 
-        data.func(_G[var], uniqueID)
+        data.func(_G[var], id)
 
         _G[var] = nil
       end

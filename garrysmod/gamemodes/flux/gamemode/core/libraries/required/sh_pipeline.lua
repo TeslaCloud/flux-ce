@@ -18,10 +18,10 @@ pipeline.stored = stored
 
 local lastPipeAborted = false
 
-function pipeline.Register(uniqueID, callback)
-  stored[uniqueID] = {
+function pipeline.Register(id, callback)
+  stored[id] = {
     callback = callback,
-    uniqueID = uniqueID
+    id = id
   }
 end
 
@@ -47,21 +47,21 @@ function pipeline.Include(pipe, fileName)
   if (!pipe) then return end
   if (!isstring(fileName) or fileName:utf8len() < 7) then return end
 
-  local uniqueID = (string.GetFileFromFilename(fileName) or ""):Replace(".lua", ""):MakeID()
+  local id = (string.GetFileFromFilename(fileName) or ""):Replace(".lua", ""):MakeID()
 
-  if (uniqueID:StartWith("cl_") or uniqueID:StartWith("sh_") or uniqueID:StartWith("sv_")) then
-    uniqueID = uniqueID:utf8sub(4, uniqueID:utf8len())
+  if (id:StartWith("cl_") or id:StartWith("sh_") or id:StartWith("sv_")) then
+    id = id:utf8sub(4, id:utf8len())
   end
 
-  if (uniqueID == "") then return end
+  if (id == "") then return end
 
   if (isfunction(pipe.callback)) then
-    pipe.callback(uniqueID, fileName, pipe)
+    pipe.callback(id, fileName, pipe)
   end
 end
 
-function pipeline.IncludeDirectory(uniqueID, directory)
-  local pipe = stored[uniqueID]
+function pipeline.IncludeDirectory(id, directory)
+  local pipe = stored[id]
 
   if (!pipe) then return end
 

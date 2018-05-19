@@ -71,12 +71,12 @@ function flAreas:AddAreaToolModes(modeList)
   function mode:OnLeftClick(tool, trace)
     local text = tostring(tool:GetClientInfo("text"))
     local height = tonumber(tool:GetClientNumber("height"))
-    local uniqueID = text:MakeID()
+    local id = text:MakeID()
 
-    if (!uniqueID or uniqueID == "") then return false end
+    if (!id or id == "") then return false end
 
     if (!tool.area) then
-      tool.area = areas.Create(uniqueID, height, {type = self.areaType})
+      tool.area = areas.Create(id, height, {type = self.areaType})
       tool.area.text = text
     end
 
