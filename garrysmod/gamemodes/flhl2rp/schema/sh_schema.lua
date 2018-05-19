@@ -1,7 +1,7 @@
 --[[
-	Flux © 2016-2017 TeslaCloud Studios
-	Do not share or re-distribute before
-	the framework is publicly released.
+  Flux © 2016-2018 TeslaCloud Studios
+  Do not share or re-distribute before
+  the framework is publicly released.
 --]]
 
 util.Include("cl_hooks.lua")
@@ -9,9 +9,9 @@ util.Include("cl_hooks.lua")
 Schema.DefaultTheme = "hl2rp"
 
 function Schema:IsCombineFaction(faction)
-	return faction == "cca" or faction == "ota" or faction == "ca"
+  return faction == "cca" or faction == "ota" or faction == "ca"
 end
 
 function Schema:PlayerIsCombine(player)
-	return self:IsCombineFaction(player:GetFactionID())
+  return self:IsCombineFaction(player:GetFactionID())
 end

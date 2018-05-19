@@ -1,9 +1,7 @@
 --[[
-	Flux © 2016-2017 TeslaCloud Studios
+	Flux © 2016-2018 TeslaCloud Studios
 	Do not share or re-distribute before
 	the framework is publicly released.
-	
-
 --]]
 
 config.Set("talk_radius", 400)
