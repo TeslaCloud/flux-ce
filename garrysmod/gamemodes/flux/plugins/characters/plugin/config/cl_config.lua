@@ -1,7 +1,7 @@
 --[[
-	Flux © 2016-2018 TeslaCloud Studios
-	Do not share or re-distribute before
-	the framework is publicly released.
+  Flux © 2016-2018 TeslaCloud Studios
+  Do not share or re-distribute before
+  the framework is publicly released.
 --]]
 
 config.AddToMenu("character", "character_min_name_len", "Minimum Character Name Length", "The minimum amount of characters that player's name can be.", "number", {min = 1, max = 256, default = 4})

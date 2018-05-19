@@ -1,7 +1,7 @@
 --[[
-	Flux © 2016-2018 TeslaCloud Studios
-	Do not share or re-distribute before
-	the framework is publicly released.
+  Flux © 2016-2018 TeslaCloud Studios
+  Do not share or re-distribute before
+  the framework is publicly released.
 --]]
 
 GROUP.Name = "Administrator"
@@ -11,5 +11,5 @@ GROUP.Icon = "icon16/star.png"
 GROUP.Immunity = 200
 GROUP.Base = "operator"
 GROUP.Permissions = {
-	test = PERM_ALLOW
+  test = PERM_ALLOW
 }

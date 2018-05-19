@@ -1,7 +1,7 @@
 --[[
-	Flux © 2016-2018 TeslaCloud Studios
-	Do not share or re-distribute before
-	the framework is publicly released.
+  Flux © 2016-2018 TeslaCloud Studios
+  Do not share or re-distribute before
+  the framework is publicly released.
 --]]
 
 local COMMAND = Command("unwhitelist")
@@ -15,23 +15,23 @@ COMMAND.PlayerArg = 1
 COMMAND.Aliases = {"takewhitelist", "plytakewhitelist", "plyunwhitelist"}
 
 function COMMAND:OnRun(player, targets, name, bStrict)
-	local whitelist = faction.Find(name, bStrict)
+  local whitelist = faction.Find(name, bStrict)
 
-	if (whitelist) then
-		for k, v in ipairs(targets) do
-			if (v:HasWhitelist(whitelist.uniqueID)) then
-				v:TakeWhitelist(whitelist.uniqueID)
-			elseif (#targets == 1) then
-				fl.player:Notify(player, L("Err_TargetNotWhitelisted", v:Name(), whitelist.PrintName))
+  if (whitelist) then
+    for k, v in ipairs(targets) do
+      if (v:HasWhitelist(whitelist.uniqueID)) then
+        v:TakeWhitelist(whitelist.uniqueID)
+      elseif (#targets == 1) then
+        fl.player:Notify(player, L("Err_TargetNotWhitelisted", v:Name(), whitelist.PrintName))
 
-				return
-			end
-		end
+        return
+      end
+    end
 
-		fl.player:NotifyAll(L("TakeWhitelistCMD_Message", (IsValid(player) and player:Name()) or "Console", util.PlayerListToString(targets), whitelist.PrintName))
-	else
-		fl.player:Notify(player, L("Err_WhitelistNotValid",  name))
-	end
+    fl.player:NotifyAll(L("TakeWhitelistCMD_Message", (IsValid(player) and player:Name()) or "Console", util.PlayerListToString(targets), whitelist.PrintName))
+  else
+    fl.player:Notify(player, L("Err_WhitelistNotValid",  name))
+  end
 end
 
 COMMAND:Register()

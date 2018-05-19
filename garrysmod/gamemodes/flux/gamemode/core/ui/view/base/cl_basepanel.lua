@@ -1,12 +1,12 @@
 --[[
-	Flux © 2016-2018 TeslaCloud Studios
-	Do not share or re-distribute before
-	the framework is publicly released.
+  Flux © 2016-2018 TeslaCloud Studios
+  Do not share or re-distribute before
+  the framework is publicly released.
 --]]
 
 --[[
-	Simplistic base panel that has basic colors, fields and methods commonly used throughout Flux Framework.
-	Do not use it directly, base your own panels off of it instead.
+  Simplistic base panel that has basic colors, fields and methods commonly used throughout Flux Framework.
+  Do not use it directly, base your own panels off of it instead.
 --]]
 
 local PANEL = {}
@@ -31,16 +31,16 @@ function PANEL:Think() theme.Hook("PanelThink", self) end
 
 -- MVC Functionality for all FL panels.
 function PANEL:Push(strName, ...)
-	mvc.Push(strName, ...)
+  mvc.Push(strName, ...)
 end
 
 function PANEL:Pull(strName, handler, bPreventRemove)
-	mvc.Pull(strName, handler, bPreventRemove)
+  mvc.Pull(strName, handler, bPreventRemove)
 end
 
 function PANEL:Request(strName, handler, ...)
-	self:Pull(strName, handler)
-	self:Push(strName, ...)
+  self:Pull(strName, handler)
+  self:Push(strName, ...)
 end
 
 vgui.Register("flBasePanel", PANEL, "EditablePanel")

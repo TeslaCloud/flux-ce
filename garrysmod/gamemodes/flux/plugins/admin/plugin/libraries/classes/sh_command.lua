@@ -1,7 +1,7 @@
 --[[
-	Flux © 2016-2018 TeslaCloud Studios
-	Do not share or re-distribute before
-	the framework is publicly released.
+  Flux © 2016-2018 TeslaCloud Studios
+  Do not share or re-distribute before
+  the framework is publicly released.
 --]]
 
 class "CCommand"
@@ -16,17 +16,17 @@ CCommand.Arguments = 0
 CCommand.noConsole = false
 
 function CCommand:CCommand(id)
-	self.uniqueID = id
+  self.uniqueID = id
 end
 
 function CCommand:OnRun() end
 
 function CCommand:__tostring()
-	return "Command ["..self.uniqueID.."]["..self.Name.."]"
+  return "Command ["..self.uniqueID.."]["..self.Name.."]"
 end
 
 function CCommand:Register()
-	fl.command:Create(self.uniqueID, self)
+  fl.command:Create(self.uniqueID, self)
 end
 
 Command = CCommand

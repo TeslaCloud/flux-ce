@@ -1,11 +1,11 @@
 --[[
-	Flux © 2016-2018 TeslaCloud Studios
-	Do not share or re-distribute before
-	the framework is publicly released.
+  Flux © 2016-2018 TeslaCloud Studios
+  Do not share or re-distribute before
+  the framework is publicly released.
 --]]
 
 if (!CItemUsable) then
-	util.Include("sh_usable_base.lua")
+  util.Include("sh_usable_base.lua")
 end
 
 -- Alternatively, you can use item.CreateBase("CItemAmmo")
@@ -20,7 +20,7 @@ CItemAmmo.AmmoClass = "Pistol"
 CItemAmmo.AmmoAmount = 20
 
 function CItemAmmo:OnUse(player)
-	player:GiveAmmo(self.AmmoAmount, self.AmmoClass)
+  player:GiveAmmo(self.AmmoAmount, self.AmmoClass)
 end
 
 ItemAmmo = CItemAmmo
