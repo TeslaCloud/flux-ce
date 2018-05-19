@@ -233,5 +233,5 @@ do
 		theme.Reload()
 	end
 
-	plugin.AddHooks("flThemeHooks", themeHooks)
+	plugin.add_hooks("flThemeHooks", themeHooks)
 end

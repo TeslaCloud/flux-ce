@@ -57,7 +57,7 @@ flAreas.toolModes = {
 }
 
 function flAreas:OnSchemaLoaded()
-	plugin.Call("AddAreaToolModes", self.toolModes)
+	plugin.call("AddAreaToolModes", self.toolModes)
 end
 
 function flAreas:AddAreaToolModes(modeList)

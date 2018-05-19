@@ -61,9 +61,9 @@ if (SERVER) then
 		end
 	end
 
-	local playerMeta = FindMetaTable("Player")
+	local player_meta = FindMetaTable("Player")
 
-	function playerMeta:SendConfig()
+	function player_meta:SendConfig()
 		for k, v in pairs(stored) do
 			if (!v.hidden) then
 				netstream.Start(self, "Flux::Config::SetVar", k, v.value)
@@ -369,7 +369,7 @@ function config.Import(strFileContents, nFromConfig)
 	local cfgTable = config.ConfigToTable(strFileContents)
 
 	for k, v in pairs(cfgTable) do
-		if (k != "depends" and plugin.Call("ShouldConfigImport", k, v) == nil) then
+		if (k != "depends" and plugin.call("ShouldConfigImport", k, v) == nil) then
 			config.Set(k, v, nil, nFromConfig)
 		end
 	end

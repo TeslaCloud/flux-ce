@@ -4,27 +4,27 @@
 	the framework is publicly released.
 --]]
 
-local playerMeta = FindMetaTable("Player")
+local player_meta = FindMetaTable("Player")
 
-function playerMeta:HasInitialized()
+function player_meta:HasInitialized()
 	return self:GetDTBool(BOOL_INITIALIZED) or false
 end
 
-function playerMeta:GetData()
+function player_meta:GetData()
 	return self:GetNetVar("flData", {})
 end
 
-playerMeta.flName = playerMeta.flName or playerMeta.Name
+player_meta.flName = player_meta.flName or player_meta.Name
 
-function playerMeta:Name(bForceTrueName)
+function player_meta:Name(bForceTrueName)
 	return (!bForceTrueName and hook.Run("GetPlayerName", self)) or self:GetNetVar("name", self:flName())
 end
 
-function playerMeta:SteamName()
+function player_meta:SteamName()
 	return self:flName()
 end
 
-function playerMeta:SetModel(sPath)
+function player_meta:SetModel(sPath)
 	local oldModel = self:GetModel()
 
 	hook.Run("PlayerModelChanged", self, sPath, oldModel)
@@ -40,7 +40,7 @@ end
 	Actions system
 --]]
 
-function playerMeta:SetAction(id, bForce)
+function player_meta:SetAction(id, bForce)
 	if (bForce or self:GetAction() == "none") then
 		self:SetNetVar("action", id)
 
@@ -48,19 +48,19 @@ function playerMeta:SetAction(id, bForce)
 	end
 end
 
-function playerMeta:GetAction()
+function player_meta:GetAction()
 	return self:GetNetVar("action", "none")
 end
 
-function playerMeta:IsDoingAction(id)
+function player_meta:IsDoingAction(id)
 	return (self:GetAction() == id)
 end
 
-function playerMeta:ResetAction()
+function player_meta:ResetAction()
 	self:SetAction("none", true)
 end
 
-function playerMeta:DoAction(id)
+function player_meta:DoAction(id)
 	local act = self:GetAction()
 
 	if (isstring(id)) then
@@ -89,15 +89,15 @@ end
 	throughout the Flux framework.
 --]]
 
-function playerMeta:HasPermission(perm)
+function player_meta:HasPermission(perm)
 	return hook.Run("PlayerHasPermission", self, perm)
 end
 
-function playerMeta:IsRoot()
+function player_meta:IsRoot()
 	return hook.Run("PlayerIsRoot", self)
 end
 
-function playerMeta:IsMemberOf(group)
+function player_meta:IsMemberOf(group)
 	if (self:GetUserGroup() == group) then
 		return true
 	end

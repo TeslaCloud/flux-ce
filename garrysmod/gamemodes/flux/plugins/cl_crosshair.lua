@@ -17,11 +17,11 @@ local gap = 8
 local curGap = gap
 
 function PLUGIN:HUDPaint()
-  if (!plugin.Call("PreDrawCrosshair")) then
+  if (!plugin.call("PreDrawCrosshair")) then
     local trace = fl.client:GetEyeTraceNoCursor()
     local distance = fl.client:GetPos():Distance(trace.HitPos)
-    local drawColor = plugin.Call("AdjustCrosshairColor", trace, distance) or Color(255, 255, 255)
-    local realGap = plugin.Call("AdjustCrosshairGap", trace, distance) or math.Round(gap * math.Clamp(distance / 400, 0.5, 4))
+    local drawColor = plugin.call("AdjustCrosshairColor", trace, distance) or Color(255, 255, 255)
+    local realGap = plugin.call("AdjustCrosshairGap", trace, distance) or math.Round(gap * math.Clamp(distance / 400, 0.5, 4))
     curGap = Lerp(FrameTime() * 6, curGap, realGap)
 
     if (math.abs(curGap - realGap) < 0.5) then

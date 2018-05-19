@@ -8,7 +8,7 @@ PLUGIN:SetName("Raise Weapon")
 PLUGIN:SetAuthor("Mr. Meow")
 PLUGIN:SetDescription("Allows weapons to be lowered and raised by holding R key.")
 
-local playerMeta = FindMetaTable("Player")
+local player_meta = FindMetaTable("Player")
 local blockedWeapons = {
   "weapon_physgun",
   "gmod_tool",
@@ -21,7 +21,7 @@ local rotationTranslate = {
   ["weapon_fists"] = Angle(30, -30, -50)
 }
 
-function playerMeta:SetWeaponRaised(bIsRaised)
+function player_meta:SetWeaponRaised(bIsRaised)
   if (SERVER) then
     self:SetDTBool(BOOL_WEAPON_RAISED, bIsRaised)
 
@@ -29,7 +29,7 @@ function playerMeta:SetWeaponRaised(bIsRaised)
   end
 end
 
-function playerMeta:IsWeaponRaised()
+function player_meta:IsWeaponRaised()
   local weapon = self:GetActiveWeapon()
 
   if (!IsValid(weapon)) then
@@ -53,7 +53,7 @@ function playerMeta:IsWeaponRaised()
   return false
 end
 
-function playerMeta:ToggleWeaponRaised()
+function player_meta:ToggleWeaponRaised()
   if (self:IsWeaponRaised()) then
     self:SetWeaponRaised(false)
   else

@@ -63,7 +63,7 @@ end
 function attributes.RegisterType(id, globalVar, folder)
 	types[id] = globalVar
 
-	plugin.AddExtra(id)
+	plugin.add_extra(id)
 
 	attributes.IncludeType(id, globalVar, folder)
 
@@ -87,13 +87,13 @@ function attributes.IncludeType(id, globalVar, folder)
 end
 
 do
-	local playerMeta = FindMetaTable("Player")
+	local player_meta = FindMetaTable("Player")
 
-	function playerMeta:GetAttributes()
+	function player_meta:GetAttributes()
 		return self:GetNetVar("attributes", {})
 	end
 
-	function playerMeta:GetAttribute(uniqueID, bNoBoost)
+	function player_meta:GetAttribute(uniqueID, bNoBoost)
 		local attribute = attributes.FindByID(uniqueID)
 		local attsTable = self:GetAttributes()
 
@@ -110,7 +110,7 @@ do
 		return value
 	end
 
-	function playerMeta:GetAttributeMultiplier(uniqueID)
+	function player_meta:GetAttributeMultiplier(uniqueID)
 		local attribute = self:GetAttributes()[uniqueID]
 
 		if (attribute.multiplierExpires >= CurTime()) then
@@ -120,7 +120,7 @@ do
 		end
 	end
 
-	function playerMeta:GetAttributeBoost(uniqueID)
+	function player_meta:GetAttributeBoost(uniqueID)
 		local attribute = self:GetAttributes()[uniqueID]
 
 		if (attribute.boostExpires >= CurTime()) then
@@ -131,7 +131,7 @@ do
 	end
 
 	if (SERVER) then
-		function playerMeta:SetAttribute(uniqueID, value)
+		function player_meta:SetAttribute(uniqueID, value)
 			local attsTable = self:GetAttributes()
 			local attribute = attributes.FindByID(uniqueID)
 
@@ -144,7 +144,7 @@ do
 			self:SetNetVar("attributes", attsTable)
 		end
 
-		function playerMeta:IncreaseAttribute(uniqueID, value, bNoMultiplier)
+		function player_meta:IncreaseAttribute(uniqueID, value, bNoMultiplier)
 			local attribute = attributes.FindByID(uniqueID)
 			local attsTable = self:GetAttributes()
 
@@ -161,11 +161,11 @@ do
 			self:SetNetVar("attributes", attsTable)
 		end
 
-		function playerMeta:DecreaseAttribute(uniqueID, value, bNoMultiplier)
+		function player_meta:DecreaseAttribute(uniqueID, value, bNoMultiplier)
 			self:IncreaseAttribute(uniqueID, -value, bNoMultiplier)
 		end
 
-		function playerMeta:AttributeMultiplier(uniqueID, value, duration)
+		function player_meta:AttributeMultiplier(uniqueID, value, duration)
 			local attribute = attributes.FindByID(uniqueID)
 
 			if (!attribute.Multipliable) then return end
@@ -186,7 +186,7 @@ do
 			self:SetNetVar("attributes", attsTable)
 		end
 
-		function playerMeta:BoostAttribute(uniqueID, value, duration)
+		function player_meta:BoostAttribute(uniqueID, value, duration)
 			local attribute = attributes.FindByID(uniqueID)
 
 			if (!attribute.Multipliable) then return end

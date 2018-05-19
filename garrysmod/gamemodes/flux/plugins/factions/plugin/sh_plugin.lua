@@ -6,7 +6,7 @@
 
 PLUGIN:SetAlias("flFactions")
 
-plugin.AddExtra("factions")
+plugin.add_extra("factions")
 
 util.Include("cl_hooks.lua")
 util.Include("sv_hooks.lua")

@@ -20,7 +20,7 @@ function flObserver:PlayerEnterNoclip(player)
 		angles = player:EyeAngles(),
 		color = player:GetColor(),
 		moveType = player:GetMoveType(),
-		shouldReset = (plugin.Call("ShouldObserverReset", player) != false)
+		shouldReset = (plugin.call("ShouldObserverReset", player) != false)
 	}
 
 	player:SetMoveType(MOVETYPE_NOCLIP)

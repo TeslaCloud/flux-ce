@@ -52,8 +52,8 @@ function flAdmin:CheckPassword(steamID64, ip, svPass, clPass, name)
 	local steamID = util.SteamIDFrom64(steamID64)
 	local entry = fl.admin:GetBans()[steamID]
 
-	if (entry and plugin.Call("ShouldCheckBan", steamID, ip, name) != false) then
-		if (entry.duration != 0 and entry.unbanTime >= os.time() and plugin.Call("ShouldExpireBan", steamID, ip, name) != false) then
+	if (entry and plugin.call("ShouldCheckBan", steamID, ip, name) != false) then
+		if (entry.duration != 0 and entry.unbanTime >= os.time() and plugin.call("ShouldExpireBan", steamID, ip, name) != false) then
 			self:RemoveBan(steamID)
 
 			return true

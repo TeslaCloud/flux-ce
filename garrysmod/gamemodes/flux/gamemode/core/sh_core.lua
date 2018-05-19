@@ -397,12 +397,12 @@ end
 --]]
 function fl.IncludeSchema()
   if (SERVER) then
-    return plugin.IncludeSchema()
+    return plugin.include_schema()
   else
     timer.Create("SchemaLoader", 0.04, 0, function()
       if (fl.sharedTable and fl.sharedTableReceived) then
         timer.Remove("SchemaLoader")
-        plugin.IncludeSchema()
+        plugin.include_schema()
         netstream.Start("ClientIncludedSchema", true)
 
         hook.Run("FluxClientSchemaLoaded")
@@ -420,12 +420,12 @@ end
 --]]
 function fl.IncludePlugins(strFolder)
   if (SERVER) then
-    return plugin.IncludePlugins(strFolder)
+    return plugin.include_plugins(strFolder)
   else
     timer.Create("PluginLoader", 0.04, 0, function()
       if (fl.sharedTable and fl.sharedTableReceived) then
         timer.Remove("PluginLoader")
-        plugin.IncludePlugins(strFolder)
+        plugin.include_plugins(strFolder)
       end
     end)
   end

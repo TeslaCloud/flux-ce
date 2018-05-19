@@ -180,13 +180,13 @@ end
 
 function GM:PlayerNoClip(player, bState)
   if (bState == false) then
-    local bShouldExit = plugin.Call("PlayerExitNoclip", player)
+    local bShouldExit = plugin.call("PlayerExitNoclip", player)
 
     if (bShouldExit != nil) then
       return bShouldExit
     end
   else
-    local bShouldEnter = plugin.Call("PlayerEnterNoclip", player)
+    local bShouldEnter = plugin.call("PlayerEnterNoclip", player)
 
     if (bShouldEnter != nil) then
       return bShouldEnter

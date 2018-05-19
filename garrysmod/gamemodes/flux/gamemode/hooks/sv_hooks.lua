@@ -42,7 +42,7 @@ function GM:InitPostEntity()
   end
 
   hook.Run("LoadData")
-  plugin.Call("FLInitPostEntity")
+  plugin.call("FLInitPostEntity")
 end
 
 function GM:PlayerInitialSpawn(player)

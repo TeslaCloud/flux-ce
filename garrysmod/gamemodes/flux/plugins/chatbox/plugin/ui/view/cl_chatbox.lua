@@ -136,7 +136,7 @@ function PANEL:CreateMessage(messageData)
 end
 
 function PANEL:AddMessage(messageData)
-	if (messageData and plugin.Call("ChatboxShouldAddMessage", messageData) != false) then
+	if (messageData and plugin.call("ChatboxShouldAddMessage", messageData) != false) then
 		local panel = self:CreateMessage(messageData)
 
 		if (IsValid(panel)) then
@@ -205,11 +205,11 @@ function PANEL:Think()
 end
 
 function PANEL:Paint(w, h)
-	plugin.Call("ChatboxPaintBackground", w, h, self)
+	plugin.call("ChatboxPaintBackground", w, h, self)
 end
 
 function PANEL:PaintOver(w, h)
-	if (plugin.Call("ChatboxPaintOver", w, h, self) == nil) then
+	if (plugin.call("ChatboxPaintOver", w, h, self) == nil) then
 		local entry = self.textEntry
 
 		if (IsValid(entry)) then

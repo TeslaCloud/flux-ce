@@ -46,7 +46,7 @@ function chatbox.CanHear(listener, messageData)
 end
 
 function chatbox.PlayerCanHear(listener, messageData)
-	return plugin.Call("PlayerCanHear", listener, messageData) or chatbox.CanHear(listener, messageData)
+	return plugin.call("PlayerCanHear", listener, messageData) or chatbox.CanHear(listener, messageData)
 end
 
 function chatbox.AddText(listeners, ...)

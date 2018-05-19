@@ -198,13 +198,13 @@ do
       if (bind:find("invprev") and bIsPressed) then
         self.WeaponIndex = relativeClamp(self.WeaponIndex - 1, 1, weaponCount)
 
-        plugin.Call("OnWeaponIndexChange", oldIndex, self.WeaponIndex)
+        plugin.call("OnWeaponIndexChange", oldIndex, self.WeaponIndex)
 
         return true
       elseif (bind:find("invnext") and bIsPressed) then
         self.WeaponIndex = relativeClamp(self.WeaponIndex + 1, 1, weaponCount)
 
-        plugin.Call("OnWeaponIndexChange", oldIndex, self.WeaponIndex)
+        plugin.call("OnWeaponIndexChange", oldIndex, self.WeaponIndex)
 
         return true
       elseif (bind:find("slot") and bIsPressed) then
@@ -233,13 +233,13 @@ do
           index = self.WeaponIndex
         end
 
-        plugin.Call("OnWeaponIndexChange", oldIndex, index)
+        plugin.call("OnWeaponIndexChange", oldIndex, index)
 
         return true
       elseif (bind:find("attack") and self.IsOpen and bIsPressed) then
         RunConsoleCommand("selectweapon", self.WeaponIndex)
 
-        plugin.Call("OnWeaponSelected", self.WeaponIndex)
+        plugin.call("OnWeaponSelected", self.WeaponIndex)
 
         return true
       end

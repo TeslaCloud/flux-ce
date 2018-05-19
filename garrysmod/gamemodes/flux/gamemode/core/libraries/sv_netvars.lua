@@ -13,8 +13,8 @@ local globals = netvars.globals or {}
 netvars.stored = stored
 netvars.globals = globals
 
-local entityMeta = FindMetaTable("Entity")
-local playerMeta = FindMetaTable("Player")
+local ent_meta = FindMetaTable("Entity")
+local player_meta = FindMetaTable("Player")
 
 -- A function to check if value's type cannot be serialized and print an error if it is so.
 local function IsBadType(key, val)
@@ -43,16 +43,16 @@ function netvars.SetNetVar(key, value, send)
 
 	globals[key] = value
 
-	netstream.Start(send, "Flux::NetVars::SetGlobal", key, value)
+	netstream.Start(send, "set_global_netvar", key, value)
 end
 
 -- A function to send entity's networked variables to a player (or players).
-function entityMeta:SendNetVar(key, recv)
-	netstream.Start(recv, "Flux::NetVars::SetVar", self:EntIndex(), key, (stored[self] and stored[self][key]))
+function ent_meta:SendNetVar(key, recv)
+	netstream.Start(recv, "set_netvar", self:EntIndex(), key, (stored[self] and stored[self][key]))
 end
 
 -- A function to get entity's networked variable.
-function entityMeta:GetNetVar(key, default)
+function ent_meta:GetNetVar(key, default)
 	if (stored[self] and stored[self][key] != nil) then
 		return stored[self][key]
 	end
@@ -61,13 +61,13 @@ function entityMeta:GetNetVar(key, default)
 end
 
 -- A function to flush all entity's networked variables.
-function entityMeta:ClearNetVars(recv)
+function ent_meta:ClearNetVars(recv)
 	stored[self] = nil
-	netstream.Start(recv, "Flux::NetVars::Delete", self:EntIndex())
+	netstream.Start(recv, "delete_netvar", self:EntIndex())
 end
 
 -- A function to set entity's networked variable.
-function entityMeta:SetNetVar(key, value, send)
+function ent_meta:SetNetVar(key, value, send)
 	if (IsBadType(key, value)) then return end
 	if (!istable(value) and self:GetNetVar(key) == value) then return end
 
@@ -79,15 +79,15 @@ end
 
 -- A function to send all current networked globals and entities' variables
 -- to a player.
-function playerMeta:SyncNetVars()
+function player_meta:SyncNetVars()
 	for k, v in pairs(globals) do
-		netstream.Start(self, "Flux::NetVars::SetGlobal", k, v)
+		netstream.Start(self, "set_global_netvar", k, v)
 	end
 
 	for k, v in pairs(stored) do
 		if (IsValid(k)) then
 			for k2, v2 in pairs(v) do
-				netstream.Start(self, "Flux::NetVars::SetVar", k:EntIndex(), k2, v2)
+				netstream.Start(self, "set_netvar", k:EntIndex(), k2, v2)
 			end
 		end
 	end

@@ -4,9 +4,9 @@
 	the framework is publicly released.
 --]]
 
-local playerMeta = FindMetaTable("Player")
+local player_meta = FindMetaTable("Player")
 
-function playerMeta:SetActiveCharacter(id)
+function player_meta:SetActiveCharacter(id)
 	local curChar = self:GetActiveCharacterID()
 
 	if (curChar) then
@@ -27,21 +27,21 @@ function playerMeta:SetActiveCharacter(id)
 	hook.Run("OnActiveCharacterSet", self, self:GetCharacter())
 end
 
-function playerMeta:SetCharacterVar(id, val)
+function player_meta:SetCharacterVar(id, val)
 	if (isstring(id)) then
 		self:SetNetVar(id, val)
 		self:GetCharacter()[id] = val
 	end
 end
 
-function playerMeta:SetInventory(newInv)
+function player_meta:SetInventory(newInv)
 	if (!istable(newInv)) then return end
 
 	self:SetCharacterVar("inventory", newInv)
 	self:SaveCharacter()
 end
 
-function playerMeta:SetCharacterData(key, value)
+function player_meta:SetCharacterData(key, value)
 	local charData = self:GetCharacterVar("data", {})
 
 	charData[key] = value
@@ -49,7 +49,7 @@ function playerMeta:SetCharacterData(key, value)
 	self:SetCharacterVar("data", charData)
 end
 
-function playerMeta:SaveCharacter()
+function player_meta:SaveCharacter()
 	local char = self:GetCharacter()
 
 	if (char) then

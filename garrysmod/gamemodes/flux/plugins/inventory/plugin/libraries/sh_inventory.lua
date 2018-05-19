@@ -11,10 +11,10 @@ end
 library.New "inventory"
 
 do
-	local playerMeta = FindMetaTable("Player")
+	local player_meta = FindMetaTable("Player")
 
 	-- Checks player inventory for garbage instance IDs and removes them if necessary.
-	function playerMeta:CheckInventory()
+	function player_meta:CheckInventory()
 		local playerInv = self:GetInventory()
 
 		for slot, ids in ipairs(playerInv) do
@@ -31,7 +31,7 @@ do
 	end
 
 	if (SERVER) then
-		function playerMeta:AddItem(itemTable)
+		function player_meta:AddItem(itemTable)
 			if (!itemTable) then return -1 end
 
 			local playerInv = self:GetInventory()
@@ -66,7 +66,7 @@ do
 			return false
 		end
 
-		function playerMeta:GiveItem(uniqueID, instanceID, data)
+		function player_meta:GiveItem(uniqueID, instanceID, data)
 			if (!uniqueID) then return end
 
 			local itemTable
@@ -88,7 +88,7 @@ do
 			end
 		end
 
-		function playerMeta:GiveItemByID(instanceID)
+		function player_meta:GiveItemByID(instanceID)
 			if (!tonumber(instanceID) or tonumber(instanceID) <= 0) then return end
 
 			local itemTable = item.FindInstanceByID(instanceID)
@@ -106,7 +106,7 @@ do
 			end
 		end
 
-		function playerMeta:TakeItemByID(instanceID)
+		function player_meta:TakeItemByID(instanceID)
 			if (!instanceID or instanceID < 1) then return end
 
 			local playerInv = self:GetInventory()
@@ -123,7 +123,7 @@ do
 			end
 		end
 
-		function playerMeta:TakeItem(uniqueID, amount)
+		function player_meta:TakeItem(uniqueID, amount)
 			amount = amount or 1
 			local invInstances = self:FindInstances(uniqueID, amount)
 
@@ -137,7 +137,7 @@ do
 	end
 
 	-- A function to find an amount of instances of an item in player's inventory.
-	function playerMeta:FindInstances(uniqueID, amount)
+	function player_meta:FindInstances(uniqueID, amount)
 		amount = amount or 1
 		local instances = item.FindAllInstances(uniqueID)
 		local playerInv = self:GetInventory()
@@ -160,11 +160,11 @@ do
 	end
 
 	-- A function to find the first instance of an item in player's inventory.
-	function playerMeta:FindItem(uniqueID)
+	function player_meta:FindItem(uniqueID)
 		return self:FindInstances(uniqueID)[1]
 	end
 
-	function playerMeta:HasItemByID(instanceID)
+	function player_meta:HasItemByID(instanceID)
 		local playerInv = self:GetInventory()
 
 		for slot, ids in ipairs(playerInv) do
@@ -176,7 +176,7 @@ do
 		return false
 	end
 
-	function playerMeta:HasItem(uniqueID)
+	function player_meta:HasItem(uniqueID)
 		local instances = self:FindInstances(uniqueID, 1)
 
 		if (instances[1]) then
@@ -186,7 +186,7 @@ do
 		return false
 	end
 
-	function playerMeta:HasItemEquipped(uniqueID)
+	function player_meta:HasItemEquipped(uniqueID)
 		local instances = self:FindInstances(uniqueID, 1)
 		local itemTable = instances[1]
 

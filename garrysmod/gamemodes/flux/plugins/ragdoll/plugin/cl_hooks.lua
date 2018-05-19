@@ -24,7 +24,7 @@ end
 function PLUGIN:HUDPaint()
 	local fallen, getup = fl.client:IsDoingAction("fallen"), fl.client:IsDoingAction("getup")
 
-	if ((fallen or getup) and plugin.Call("ShouldFallenHUDPaint") != false) then
+	if ((fallen or getup) and plugin.call("ShouldFallenHUDPaint") != false) then
 		local scrW, scrH = ScrW(), ScrH()
 
 		draw.RoundedBox(0, 0, 0, scrW, scrH, Color(0, 0, 0, 100))

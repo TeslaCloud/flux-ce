@@ -12,7 +12,7 @@ COMMAND.Category = "misc"
 COMMAND.Aliases = {"staticadd", "staticpropadd"}
 
 function COMMAND:OnRun(player)
-	plugin.Call("PlayerMakeStatic", player, true)
+	plugin.call("PlayerMakeStatic", player, true)
 end
 
 COMMAND:Register()
