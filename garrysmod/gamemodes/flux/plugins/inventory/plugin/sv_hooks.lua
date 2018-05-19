@@ -1,31 +1,31 @@
 --[[
-	Flux © 2016-2018 TeslaCloud Studios
-	Do not share or re-distribute before
-	the framework is publicly released.
+  Flux © 2016-2018 TeslaCloud Studios
+  Do not share or re-distribute before
+  the framework is publicly released.
 --]]
 
 function flInventory:PostCharacterLoaded(player, character)
-	player:CheckInventory()
+  player:CheckInventory()
 
-	for slot, ids in ipairs(player:GetInventory()) do
-		for k, v in ipairs(ids) do
-			item.NetworkItem(player, v)
-		end
-	end
+  for slot, ids in ipairs(player:GetInventory()) do
+    for k, v in ipairs(ids) do
+      item.NetworkItem(player, v)
+    end
+  end
 end
 
 netstream.Hook("InventorySync", function(player, inventory)
-	local newInventory = {}
+  local newInventory = {}
 
-	for slot, ids in ipairs(inventory) do
-		newInventory[slot] = {}
+  for slot, ids in ipairs(inventory) do
+    newInventory[slot] = {}
 
-		for k, v in ipairs(ids) do
-			if (player:HasItemByID(v)) then
-				table.insert(newInventory[slot], v)
-			end
-		end
-	end
+    for k, v in ipairs(ids) do
+      if (player:HasItemByID(v)) then
+        table.insert(newInventory[slot], v)
+      end
+    end
+  end
 
-	player:SetInventory(newInventory)
+  player:SetInventory(newInventory)
 end)

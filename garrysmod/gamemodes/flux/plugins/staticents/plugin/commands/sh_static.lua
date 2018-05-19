@@ -1,7 +1,7 @@
 --[[
-	Flux © 2016-2018 TeslaCloud Studios
-	Do not share or re-distribute before
-	the framework is publicly released.
+  Flux © 2016-2018 TeslaCloud Studios
+  Do not share or re-distribute before
+  the framework is publicly released.
 --]]
 
 local COMMAND = Command("static")
@@ -12,7 +12,7 @@ COMMAND.Category = "misc"
 COMMAND.Aliases = {"staticadd", "staticpropadd"}
 
 function COMMAND:OnRun(player)
-	plugin.call("PlayerMakeStatic", player, true)
+  plugin.call("PlayerMakeStatic", player, true)
 end
 
 COMMAND:Register()

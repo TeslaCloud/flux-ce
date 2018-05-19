@@ -1,7 +1,7 @@
 --[[
-	Flux © 2016-2018 TeslaCloud Studios
-	Do not share or re-distribute before
-	the framework is publicly released.
+  Flux © 2016-2018 TeslaCloud Studios
+  Do not share or re-distribute before
+  the framework is publicly released.
 --]]
 
 library.New("tool", fl)
@@ -10,42 +10,42 @@ local stored = fl.tool.stored or {}
 fl.tool.stored = stored
 
 function fl.tool:GetAll()
-	return stored
+  return stored
 end
 
 function fl.tool:New(id)
-	return CTool()
+  return CTool()
 end
 
 function fl.tool:Get(uniqueID)
-	return stored[uniqueID]
+  return stored[uniqueID]
 end
 
 function fl.tool:Register(obj)
-	if (!obj) then return end
+  if (!obj) then return end
 
-	obj:CreateConVars()
-	stored[obj.Mode] = obj
+  obj:CreateConVars()
+  stored[obj.Mode] = obj
 
-	fl.DevPrint("Registering Tool: "..obj.Mode)
+  fl.DevPrint("Registering Tool: "..obj.Mode)
 end
 
 pipeline.Register("tool", function(uniqueID, fileName, pipe)
-	TOOL = CTool()
-	TOOL.Mode = uniqueID
-	TOOL.uniqueID = uniqueID
+  TOOL = CTool()
+  TOOL.Mode = uniqueID
+  TOOL.uniqueID = uniqueID
 
-	hook.Run("PreIncludeTool", TOOL)
+  hook.Run("PreIncludeTool", TOOL)
 
-	util.Include(fileName)
+  util.Include(fileName)
 
-	hook.Run("ToolPreCreateConvars", TOOL)
+  hook.Run("ToolPreCreateConvars", TOOL)
 
-	TOOL:CreateConVars()
+  TOOL:CreateConVars()
 
-	stored[uniqueID] = TOOL
+  stored[uniqueID] = TOOL
 
-	fl.DevPrint("Registering Tool: "..uniqueID)
+  fl.DevPrint("Registering Tool: "..uniqueID)
 
-	TOOL = nil
+  TOOL = nil
 end)

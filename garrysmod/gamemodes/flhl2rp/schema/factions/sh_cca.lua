@@ -1,7 +1,7 @@
 --[[
-	Flux © 2016-2018 TeslaCloud Studios
-	Do not share or re-distribute before
-	the framework is publicly released.
+  Flux © 2016-2018 TeslaCloud Studios
+  Do not share or re-distribute before
+  the framework is publicly released.
 --]]
 
 FACTION.Name = "#Faction_Civil_Authority"
@@ -16,7 +16,7 @@ FACTION.DefaultClass = "recruit"
 FACTION.NameTemplate = "CCA.{rank}-{data:Squad}.{callback:GenerateID}"
 FACTION:SetData("Squad", "UNION")
 FACTION.Models.universal = {
-	"models/police.mdl"
+  "models/police.mdl"
 }
 
 FACTION:AddRank("RCT")
@@ -29,25 +29,25 @@ FACTION:AddRank("DC") -- Division Commander
 FACTION:AddRank("CmD") -- Commander
 
 FACTION:AddClass("recruit", "Metropolice Recruit", "Metropolice Unit that is yet to pass their basic training.", FACTION.Color, function(player)
-	return true
+  return true
 end)
 
 FACTION:AddClass("unit", "Metropolice Unit", "A regular Metropolice Force unit.", FACTION.Color, function(player)
-	return player:IsRank("04")
+  return player:IsRank("04")
 end)
 
 FACTION:AddClass("elite_mpf", "Elite Metropolice", "Metropolice high command.", FACTION.Color, function(player)
-	return player:IsRank("SqO")
+  return player:IsRank("SqO")
 end)
 
 function FACTION:GenerateID(player)
-	local id = player:GetCharacterData("UnitID", false)
+  local id = player:GetCharacterData("UnitID", false)
 
-	if (!id) then
-		id = math.random(100, 999)
+  if (!id) then
+    id = math.random(100, 999)
 
-		player:SetCharacterData("UnitID", id)
-	end
+    player:SetCharacterData("UnitID", id)
+  end
 
-	return id
+  return id
 end

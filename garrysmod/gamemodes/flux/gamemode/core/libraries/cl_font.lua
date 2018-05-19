@@ -1,7 +1,7 @@
 --[[
-	Flux © 2016-2018 TeslaCloud Studios
-	Do not share or re-distribute before
-	the framework is publicly released.
+  Flux © 2016-2018 TeslaCloud Studios
+  Do not share or re-distribute before
+  the framework is publicly released.
 --]]
 
 library.New "font"
@@ -10,152 +10,152 @@ library.New "font"
 local stored = {}
 
 do
-	local aspect = ScrW() / ScrH()
+  local aspect = ScrW() / ScrH()
 
-	local function ScreenIsRatio(w, h)
-		return (aspect == w / h)
-	end
+  local function ScreenIsRatio(w, h)
+    return (aspect == w / h)
+  end
 
-	function font.Scale(size)
-		if (ScreenIsRatio(16, 9)) then
-			return math.floor(size * (ScrH() / 1080))
-		elseif (ScreenIsRatio(4, 3)) then
-			return math.floor(size * (ScrH() / 1024))
-		end
+  function font.Scale(size)
+    if (ScreenIsRatio(16, 9)) then
+      return math.floor(size * (ScrH() / 1080))
+    elseif (ScreenIsRatio(4, 3)) then
+      return math.floor(size * (ScrH() / 1024))
+    end
 
-		return math.floor(size * (ScrH() / 1200))
-	end
+    return math.floor(size * (ScrH() / 1200))
+  end
 end
 
 function font.Create(name, fontData)
-	if (name == nil or !istable(fontData)) then return end
-	if (stored[name]) then return end
+  if (name == nil or !istable(fontData)) then return end
+  if (stored[name]) then return end
 
-	-- Force UTF-8 range by default.
-	fontData.extended = true
+  -- Force UTF-8 range by default.
+  fontData.extended = true
 
-	surface.CreateFont(name, fontData)
-	stored[name] = fontData
+  surface.CreateFont(name, fontData)
+  stored[name] = fontData
 end
 
 function font.GetSize(name, size, data)
-	if (!size) then return name end
+  if (!size) then return name end
 
-	local newName = name..":"..size
+  local newName = name..":"..size
 
-	if (!stored[newName]) then
-		local fontData = table.Copy(stored[name])
+  if (!stored[newName]) then
+    local fontData = table.Copy(stored[name])
 
-		if (fontData) then
-			if (!istable(data)) then data = {} end
+    if (fontData) then
+      if (!istable(data)) then data = {} end
 
-			fontData.size = size
+      fontData.size = size
 
-			table.Merge(fontData, data)
+      table.Merge(fontData, data)
 
-			font.Create(newName, fontData)
-		end
-	end
+      font.Create(newName, fontData)
+    end
+  end
 
-	return newName
+  return newName
 end
 
 function font.ClearTable()
-	stored = {}
+  stored = {}
 end
 
 function font.ClearSizes()
-	for k, v in pairs(stored) do
-		if (k:find("\\")) then
-			stored[k] = nil
-		end
-	end
+  for k, v in pairs(stored) do
+    if (k:find("\\")) then
+      stored[k] = nil
+    end
+  end
 end
 
 function font.GetTable(name)
-	return stored[name]
+  return stored[name]
 end
 
 function font.CreateFonts()
-	font.ClearTable()
+  font.ClearTable()
 
-	font.Create("flRoboto", {
-		font = "Roboto",
-		size = 16,
-		weight = 500
-	})
+  font.Create("flRoboto", {
+    font = "Roboto",
+    size = 16,
+    weight = 500
+  })
 
-	font.Create("flRobotoBold", {
-		font = "Roboto",
-		size = 16,
-		weight = 1000,
-	})
+  font.Create("flRobotoBold", {
+    font = "Roboto",
+    size = 16,
+    weight = 1000,
+  })
 
-	font.Create("flRobotoItalic", {
-		font = "Roboto",
-		size = 16,
-		italic = true
-	})
+  font.Create("flRobotoItalic", {
+    font = "Roboto",
+    size = 16,
+    italic = true
+  })
 
-	font.Create("flRobotoItalicBold", {
-		font = "Roboto",
-		size = 16,
-		italic = true,
-		weight = 1000
-	})
+  font.Create("flRobotoItalicBold", {
+    font = "Roboto",
+    size = 16,
+    italic = true,
+    weight = 1000
+  })
 
-	font.Create("flRobotoLt", {
-		font = "Roboto Lt",
-		size = 16,
-		weight = 500
-	})
+  font.Create("flRobotoLt", {
+    font = "Roboto Lt",
+    size = 16,
+    weight = 500
+  })
 
-	font.Create("flRobotoLtBold", {
-		font = "Roboto Lt",
-		size = 16,
-		weight = 1000,
-	})
+  font.Create("flRobotoLtBold", {
+    font = "Roboto Lt",
+    size = 16,
+    weight = 1000,
+  })
 
-	font.Create("flRobotoLtItalic", {
-		font = "Roboto Lt",
-		size = 16,
-		italic = true
-	})
+  font.Create("flRobotoLtItalic", {
+    font = "Roboto Lt",
+    size = 16,
+    italic = true
+  })
 
-	font.Create("flRobotoLtItalicBold", {
-		font = "Roboto Lt",
-		size = 16,
-		italic = true,
-		weight = 1000
-	})
+  font.Create("flRobotoLtItalicBold", {
+    font = "Roboto Lt",
+    size = 16,
+    italic = true,
+    weight = 1000
+  })
 
-	font.Create("flRobotoCondensed", {
-		font = "Roboto Condensed",
-		size = 16,
-		weight = 500
-	})
+  font.Create("flRobotoCondensed", {
+    font = "Roboto Condensed",
+    size = 16,
+    weight = 500
+  })
 
-	font.Create("flRobotoCondensedBold", {
-		font = "Roboto Condensed",
-		size = 16,
-		weight = 1000,
-	})
+  font.Create("flRobotoCondensedBold", {
+    font = "Roboto Condensed",
+    size = 16,
+    weight = 1000,
+  })
 
-	font.Create("flRobotoCondensedItalic", {
-		font = "Roboto Condensed",
-		size = 16,
-		italic = true
-	})
+  font.Create("flRobotoCondensedItalic", {
+    font = "Roboto Condensed",
+    size = 16,
+    italic = true
+  })
 
-	font.Create("flRobotoCondensedItalicBold", {
-		font = "Roboto Condensed",
-		size = 16,
-		italic = true,
-		weight = 1000
-	})
+  font.Create("flRobotoCondensedItalicBold", {
+    font = "Roboto Condensed",
+    size = 16,
+    italic = true,
+    weight = 1000
+  })
 
-	theme.Call("CreateFonts")
-	hook.Run("CreateFonts")
+  theme.Call("CreateFonts")
+  hook.Run("CreateFonts")
 end
 
 _font = font
