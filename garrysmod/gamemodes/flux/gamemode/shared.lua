@@ -37,12 +37,14 @@ do
   if (engine.ActiveGamemode() != "flux") then
     fl.schema = engine.ActiveGamemode()
   else
-    ErrorNoHalt("=========================================\n")
-    ErrorNoHalt("=========================================\n")
-    ErrorNoHalt("You have set your +gamemode to 'flux'!\n")
-    ErrorNoHalt("Please set it to your schema's name instead!\n")
-    ErrorNoHalt("=========================================\n")
-    ErrorNoHalt("=========================================\n")
+    ErrorNoHalt([[
+=========================================
+=========================================
+You have set your +gamemode to 'flux'!
+Please set it to your schema's name instead!
+=========================================
+=========================================
+]])
 
     return
   end
