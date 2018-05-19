@@ -10,10 +10,10 @@ library.New "plugin"
 
 local stored = {}
 local unloaded = {}
-local hooksCache = {}
-local reloadData = {}
-local loadCache = {}
-local defaultExtras = {
+local hooks_cache = {}
+local reload_data = {}
+local load_cache = {}
+local default_extras = {
 	"libraries",
 	"libraries/meta",
 	"libraries/classes",
@@ -31,121 +31,121 @@ local defaultExtras = {
 	"entities"
 }
 
-local extras = table.Copy(defaultExtras)
+local extras = table.Copy(default_extras)
 
-function plugin.GetAll()
+function plugin.all()
 	return stored
 end
 
-function plugin.GetCache()
-	return hooksCache
+function plugin.get_cache()
+	return hooks_cache
 end
 
-function plugin.ClearCache()
-	plugin.ClearExtras()
+function plugin.clear_cache()
+	plugin.clear_extras()
 
-	hooksCache = {}
-	loadCache = {}
+	hooks_cache = {}
+	load_cache = {}
 end
 
-function plugin.ClearLoadCache()
-	loadCache = {}
+function plugin.clear_load_cache()
+	load_cache = {}
 end
 
-function plugin.ClearExtras()
-	extras = table.Copy(defaultExtras)
+function plugin.clear_extras()
+	extras = table.Copy(default_extras)
 end
 
-class "CPlugin"
+class "Plugin"
 
-function CPlugin:CPlugin(id, data)
-	self.m_Name = data.name or "Unknown Plugin"
-	self.m_Author = data.author or "Unknown Author"
-	self.m_Folder = data.folder or name:gsub(" ", "_"):lower()
-	self.m_Description = data.description or "This plugin has no description."
-	self.m_UniqueID = id or data.id or name:MakeID() or "unknown"
+function Plugin:Plugin(id, data)
+	self.name = data.name or "Unknown Plugin"
+	self.author = data.author or "Unknown Author"
+	self.folder = data.folder or name:MakeID()
+	self.description = data.description or "This plugin has no description."
+	self.id = id or data.id or name:MakeID() or "unknown"
 
 	table.Merge(self, data)
 end
 
-function CPlugin:GetName()
-	return self.m_Name
+function Plugin:GetName()
+	return self.name
 end
 
-function CPlugin:GetFolder()
-	return self.m_Folder
+function Plugin:GetFolder()
+	return self.folder
 end
 
-function CPlugin:GetAuthor()
-	return self.m_Author
+function Plugin:GetAuthor()
+	return self.author
 end
 
-function CPlugin:GetDescription()
-	return self.m_Description
+function Plugin:GetDescription()
+	return self.description
 end
 
-function CPlugin:SetName(name)
-	self.m_Name = name or self.m_Name or "Unknown Plugin"
+function Plugin:SetName(name)
+	self.name = name or self.name or "Unknown Plugin"
 end
 
-function CPlugin:SetAuthor(author)
-	self.m_Author = author or self.m_Author or "Unknown"
+function Plugin:SetAuthor(author)
+	self.author = author or self.author or "Unknown"
 end
 
-function CPlugin:SetDescription(desc)
-	self.m_Description = desc or self.m_Description or "No description provided!"
+function Plugin:SetDescription(desc)
+	self.description = desc or self.description or "No description provided!"
 end
 
-function CPlugin:SetData(data)
+function Plugin:SetData(data)
 	table.Merge(self, data)
 end
 
-function CPlugin:SetAlias(alias)
+function Plugin:SetAlias(alias)
 	if (isstring(alias)) then
 		_G[alias] = self
 		self.alias = alias
 	end
 end
 
-function CPlugin:__tostring()
-	return "Plugin ["..self.m_Name.."]"
+function Plugin:__tostring()
+	return "Plugin ["..self.name.."]"
 end
 
-function CPlugin:Register()
-	plugin.Register(self)
+function Plugin:Register()
+	plugin.register(self)
 end
 
-Plugin = CPlugin
+Plugin = Plugin
 
-function plugin.CacheFunctions(obj, id)
+function plugin.cache_functions(obj, id)
 	for k, v in pairs(obj) do
 		if (isfunction(v)) then
-			hooksCache[k] = hooksCache[k] or {}
-			table.insert(hooksCache[k], {v, obj, id = id})
+			hooks_cache[k] = hooks_cache[k] or {}
+			table.insert(hooks_cache[k], {v, obj, id = id})
 		end
 	end
 end
 
-function plugin.AddHooks(id, obj)
-	plugin.CacheFunctions(obj, id)
+function plugin.add_hooks(id, obj)
+	plugin.cache_functions(obj, id)
 end
 
-function plugin.RemoveHooks(id)
-	for k, v in pairs(hooksCache) do
+function plugin.remove_hooks(id)
+	for k, v in pairs(hooks_cache) do
 		for k2, v2 in ipairs(v) do
 			if (v2.id and v2.id == id) then
-				hooksCache[k][k2] = nil
+				hooks_cache[k][k2] = nil
 			end
 		end
 	end
 end
 
-function plugin.Find(id)
+function plugin.find(id)
 	if (stored[id]) then
 		return stored[id], id
 	else
 		for k, v in pairs(stored) do
-			if (v.m_UniqueID == id or v:GetFolder() == id or v:GetName() == id) then
+			if (v.id == id or v:GetFolder() == id or v:GetName() == id) then
 				return v, k
 			end
 		end
@@ -153,8 +153,8 @@ function plugin.Find(id)
 end
 
 -- A function to unhook a plugin from cache.
-function plugin.RemoveFromCache(id)
-	local pluginTable = plugin.Find(id) or (istable(id) and id)
+function plugin.remove_from_cache(id)
+	local pluginTable = plugin.find(id) or (istable(id) and id)
 
 	-- Awful lot of if's and end's.
 	if (pluginTable) then
@@ -169,10 +169,10 @@ function plugin.RemoveFromCache(id)
 		end
 
 		for k, v in pairs(pluginTable) do
-			if (isfunction(v) and hooksCache[k]) then
-				for index, tab in ipairs(hooksCache[k]) do
+			if (isfunction(v) and hooks_cache[k]) then
+				for index, tab in ipairs(hooks_cache[k]) do
 					if (tab[2] == pluginTable) then
-						table.remove(hooksCache[k], index)
+						table.remove(hooks_cache[k], index)
 
 						break
 					end
@@ -183,8 +183,8 @@ function plugin.RemoveFromCache(id)
 end
 
 -- A function to cache existing plugin's hooks.
-function plugin.ReCache(id)
-	local pluginTable = plugin.Find(id)
+function plugin.recache(id)
+	local pluginTable = plugin.find(id)
 
 	if (pluginTable) then
 		if (pluginTable.OnRecache) then
@@ -197,13 +197,13 @@ function plugin.ReCache(id)
 			}
 		end
 
-		plugin.CacheFunctions(pluginTable)
+		plugin.cache_functions(pluginTable)
 	end
 end
 
 -- A function to remove the plugin entirely.
-function plugin.Remove(id)
-	local pluginTable, pluginID = plugin.Find(id)
+function plugin.remove(id)
+	local pluginTable, pluginID = plugin.find(id)
 
 	if (pluginTable) then
 		if (pluginTable.OnRemoved) then
@@ -216,35 +216,35 @@ function plugin.Remove(id)
 			}
 		end
 
-		plugin.RemoveFromCache(id)
+		plugin.remove_from_cache(id)
 
 		stored[pluginID] = nil
 	end
 end
 
-function plugin.IsDisabled(folder)
+function plugin.is_disabled(folder)
 	if (fl.sharedTable.disabledPlugins) then
 		return fl.sharedTable.disabledPlugins[folder]
 	end
 end
 
-function plugin.HasLoaded(obj)
+function plugin.loaded(obj)
 	if (istable(obj)) then
-		return loadCache[obj.m_UniqueID]
+		return load_cache[obj.id]
 	elseif (isstring(obj)) then
-		return loadCache[obj]
+		return load_cache[obj]
 	end
 
 	return false
 end
 
-function plugin.Register(obj)
-	plugin.CacheFunctions(obj)
+function plugin.register(obj)
+	plugin.cache_functions(obj)
 
 	if (obj.ShouldRefresh == false) then
-		reloadData[obj:GetFolder()] = false
+		reload_data[obj:GetFolder()] = false
 	else
-		reloadData[obj:GetFolder()] = true
+		reload_data[obj:GetFolder()] = true
 	end
 
 	if (SERVER) then
@@ -265,10 +265,10 @@ function plugin.Register(obj)
 	end
 
 	stored[obj:GetFolder()] = obj
-	loadCache[obj.m_UniqueID] = true
+	load_cache[obj.id] = true
 end
 
-function plugin.Include(folder)
+function plugin.include(folder)
 	local hasMainFile = false
 	local id = folder:GetFileFromFilename()
 	local ext = id:GetExtensionFromFilename()
@@ -277,11 +277,11 @@ function plugin.Include(folder)
 	data.id = id
 	data.pluginFolder = folder
 
-	if (reloadData[folder] == false) then
+	if (reload_data[folder] == false) then
 		fl.DevPrint("Not reloading plugin: "..folder)
 
 		return
-	elseif (plugin.HasLoaded(id)) then
+	elseif (plugin.loaded(id)) then
 		return
 	end
 
@@ -317,7 +317,7 @@ function plugin.Include(folder)
 
 	if (istable(data.depends)) then
 		for k, v in ipairs(data.depends) do
-			if (!plugin.Require(v)) then
+			if (!plugin.require(v)) then
 				ErrorNoHalt("[Flux] Not loading the '"..tostring(folder).."' plugin! Dependency missing: '"..tostring(v).."'!\n")
 
 				return
@@ -339,7 +339,7 @@ function plugin.Include(folder)
 		end
 	end
 
-	plugin.IncludeFolders(data.pluginFolder)
+	plugin.include_folders(data.pluginFolder)
 
 	PLUGIN:Register()
 	PLUGIN = nil
@@ -347,7 +347,7 @@ function plugin.Include(folder)
 	return data
 end
 
-function plugin.IncludeSchema()
+function plugin.include_schema()
 	local schemaInfo = fl.GetSchemaInfo()
 	local schemaPath = schemaInfo.folder
 	local schemaFolder = schemaPath.."/schema"
@@ -360,7 +360,7 @@ function plugin.IncludeSchema()
 
 		if (istable(dependencies)) then
 			for k, v in ipairs(dependencies) do
-				if (!plugin.Require(v)) then
+				if (!plugin.require(v)) then
 					ErrorNoHalt("[Flux] Unable to load schema! Dependency missing: '"..tostring(v).."'!\n")
 					ErrorNoHalt("Please install this plugin in your schema's 'plugins' folder!\n")
 
@@ -376,8 +376,8 @@ function plugin.IncludeSchema()
 
 	util.Include(schemaFolder.."/sh_schema.lua")
 
-	plugin.IncludeFolders(schemaFolder)
-	plugin.IncludePlugins(schemaPath.."/plugins")
+	plugin.include_folders(schemaFolder)
+	plugin.include_plugins(schemaPath.."/plugins")
 
 	if (schemaInfo.name and schemaInfo.author) then
 		MsgC(Color(0, 255, 100, 255), "[Flux] ")
@@ -391,10 +391,10 @@ function plugin.IncludeSchema()
 end
 
 -- Please specify full file name if requiring a single-file plugin.
-function plugin.Require(pluginName)
+function plugin.require(pluginName)
 	if (!isstring(pluginName)) then return false end
 
-	if (!plugin.HasLoaded(pluginName)) then
+	if (!plugin.loaded(pluginName)) then
 		local searchPaths = {
 			"flux/plugins/",
 			(fl.GetSchemaFolder() or "flux").."/plugins/"
@@ -410,7 +410,7 @@ function plugin.Require(pluginName)
 		for k, v in ipairs(searchPaths) do
 			for _, ending in ipairs(tolerance) do
 				if (file.Exists(v..pluginName..ending, "LUA")) then
-					plugin.Include(v..pluginName)
+					plugin.include(v..pluginName)
 
 					return true
 				end
@@ -423,17 +423,17 @@ function plugin.Require(pluginName)
 	return false
 end
 
-function plugin.IncludePlugins(folder)
+function plugin.include_plugins(folder)
 	local files, folders = file.Find(folder.."/*", "LUA")
 
 	for k, v in ipairs(files) do
 		if (v:GetExtensionFromFilename() == "lua") then
-			plugin.Include(folder.."/"..v)
+			plugin.include(folder.."/"..v)
 		end
 	end
 
 	for k, v in ipairs(folders) do
-		plugin.Include(folder.."/"..v)
+		plugin.include(folder.."/"..v)
 	end
 end
 
@@ -464,7 +464,7 @@ do
 		}
 	}
 
-	function plugin.IncludeEntities(folder)
+	function plugin.include_entities(folder)
 		local _, dirs = file.Find(folder.."/*", "LUA")
 
 		for k, v in ipairs(dirs) do
@@ -530,17 +530,17 @@ do
 	end
 end
 
-function plugin.AddExtra(strExtra)
+function plugin.add_extra(strExtra)
 	if (!isstring(strExtra)) then return end
 
 	table.insert(extras, strExtra)
 end
 
-function plugin.IncludeFolders(folder)
+function plugin.include_folders(folder)
 	for k, v in ipairs(extras) do
-		if (plugin.Call("PluginIncludeFolder", v, folder) == nil) then
+		if (plugin.call("PluginIncludeFolder", v, folder) == nil) then
 			if (v == "entities") then
-				plugin.IncludeEntities(folder.."/"..v)
+				plugin.include_entities(folder.."/"..v)
 			elseif (v == "themes") then
 				pipeline.IncludeDirectory("theme", folder.."/themes/")
 			elseif (v == "tools") then
@@ -559,8 +559,8 @@ do
 	-- If we're running the developer's mode, we should be using pcall'ed hook.Call rather than unsafe one.
 	if (fl.Devmode) then
 		function hook.Call(name, gm, ...)
-			if (hooksCache[name]) then
-				for k, v in ipairs(hooksCache[name]) do
+			if (hooks_cache[name]) then
+				for k, v in ipairs(hooks_cache[name]) do
 					local success, a, b, c, d, e, f = pcall(v[1], v[2], ...)
 
 					if (!success) then
@@ -582,8 +582,8 @@ do
 		-- While generally a bad idea, pcall-less method is faster and if you're not developing
 		-- changes are low that you'll ever run into an error anyway.
 		function hook.Call(name, gm, ...)
-			if (hooksCache[name]) then
-				for k, v in ipairs(hooksCache[name]) do
+			if (hooks_cache[name]) then
+				for k, v in ipairs(hooks_cache[name]) do
 					local a, b, c, d, e, f = v[1](v[2], ...)
 
 					if (a != nil) then
@@ -598,7 +598,7 @@ do
 
 	-- This function DOES NOT call GM: (gamemode) hooks!
 	-- It only calls plugin, schema and hook.Add'ed hooks!
-	function plugin.Call(name, ...)
+	function plugin.call(name, ...)
 		return hook.Call(name, nil, ...)
 	end
 end

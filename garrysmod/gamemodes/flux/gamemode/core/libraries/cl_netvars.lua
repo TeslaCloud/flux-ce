@@ -13,7 +13,7 @@ local globals = netvars.globals or {}
 netvars.stored = stored
 netvars.globals = globals
 
-local entityMeta = FindMetaTable("Entity")
+local ent_meta = FindMetaTable("Entity")
 
 -- A function to get a networked global.
 function netvars.GetNetVar(key, default)
@@ -28,7 +28,7 @@ end
 function netvars.SetNetVar() end
 
 -- A function to get entity's networked variable.
-function entityMeta:GetNetVar(key, default)
+function ent_meta:GetNetVar(key, default)
 	local index = self:EntIndex()
 
 	if (stored[index] and stored[index][key] != nil) then
@@ -39,14 +39,14 @@ function entityMeta:GetNetVar(key, default)
 end
 
 -- Called from the server to set global networked variables.
-netstream.Hook("Flux::NetVars::SetGlobal", function(key, value)
+netstream.Hook("set_global_netvar", function(key, value)
 	if (key and value != nil) then
 		globals[key] = value
 	end
 end)
 
 -- Called from the server to set entity's networked variable.
-netstream.Hook("Flux::NetVars::SetVar", function(entIdx, key, value)
+netstream.Hook("set_netvar", function(entIdx, key, value)
 	if (key and value != nil) then
 		stored[entIdx] = stored[entIdx] or {}
 		stored[entIdx][key] = value
@@ -54,6 +54,6 @@ netstream.Hook("Flux::NetVars::SetVar", function(entIdx, key, value)
 end)
 
 -- Called from the server to delete entity from networked table.
-netstream.Hook("Flux::NetVars::Delete", function(entIdx)
+netstream.Hook("delete_netvar", function(entIdx)
 	stored[entIdx] = nil
 end)

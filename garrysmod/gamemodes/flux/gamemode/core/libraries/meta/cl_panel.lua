@@ -4,22 +4,22 @@
 	the framework is publicly released.
 --]]
 
-local panelMeta = FindMetaTable("Panel")
+local panel_meta = FindMetaTable("Panel")
 
 -- Seriously, Newman? I have to write this myself?
-function panelMeta:UnDraggable()
+function panel_meta:UnDraggable()
 	self.m_DragSlot = nil
 end
 
-function panelMeta:SafeRemove()
+function panel_meta:SafeRemove()
 	self:SetVisible(false)
 	self:Remove()
 end
 
-function panelMeta:SetPosEx(x, y)
+function panel_meta:SetPosEx(x, y)
 	self:SetPos(font.Scale(x), font.Scale(y))
 end
 
-function panelMeta:SetSizeEx(w, h)
+function panel_meta:SetSizeEx(w, h)
 	self:SetSize(font.Scale(w), font.Scale(h))
 end

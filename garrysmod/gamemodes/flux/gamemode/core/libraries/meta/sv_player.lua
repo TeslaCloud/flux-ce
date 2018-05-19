@@ -4,9 +4,9 @@
 	the framework is publicly released.
 --]]
 
-local playerMeta = FindMetaTable("Player")
+local player_meta = FindMetaTable("Player")
 
-function playerMeta:SavePlayer()
+function player_meta:SavePlayer()
 	local saveData = {
 		steamID = self:SteamID(),
 		name = self:Name(),
@@ -20,11 +20,11 @@ function playerMeta:SavePlayer()
 	fl.db:EasyWrite("fl_players", {"steamID", self:SteamID()}, saveData)
 end
 
-function playerMeta:SetData(data)
+function player_meta:SetData(data)
 	self:SetNetVar("flData", data or {})
 end
 
-function playerMeta:SetPlayerData(key, value)
+function player_meta:SetPlayerData(key, value)
 	local data = self:GetData()
 
 	data[key] = value
@@ -32,23 +32,23 @@ function playerMeta:SetPlayerData(key, value)
 	self:SetData(data)
 end
 
-function playerMeta:GetPlayerData(key, default)
+function player_meta:GetPlayerData(key, default)
 	local data = self:GetData()
 
 	return data[key] or default
 end
 
-function playerMeta:SetInitialized(bIsInitialized)
+function player_meta:SetInitialized(bIsInitialized)
 	if (bIsInitialized == nil) then bIsInitialized = true end
 
 	self:SetDTBool(BOOL_INITIALIZED, bIsInitialized)
 end
 
-function playerMeta:Notify(message)
+function player_meta:Notify(message)
 	fl.player:Notify(self, message)
 end
 
-function playerMeta:GetAmmoTable()
+function player_meta:GetAmmoTable()
 	local ammoTable = {}
 
 	for k, v in pairs(game.GetAmmoList()) do
@@ -62,7 +62,7 @@ function playerMeta:GetAmmoTable()
 	return ammoTable
 end
 
-function playerMeta:RestorePlayer()
+function player_meta:RestorePlayer()
 	fl.db:EasyRead("fl_players", {"steamID", self:SteamID()}, function(result, hasData)
 		if (hasData) then
 			result = result[1]

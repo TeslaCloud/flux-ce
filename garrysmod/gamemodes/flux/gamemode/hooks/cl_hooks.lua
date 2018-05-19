@@ -28,7 +28,7 @@ function GM:InitPostEntity()
    hook.Run("SynchronizeTools")
    hook.Run("LoadData")
 
-   plugin.Call("FLInitPostEntity")
+   plugin.call("FLInitPostEntity")
 end
 
 function GM:PlayerInitialized()
@@ -115,7 +115,7 @@ function GM:HUDDrawScoreBoard()
       percentage = 45
     end
 
-    local hooked, hookedPercentage = plugin.Call("GetLoadingScreenMessage")
+    local hooked, hookedPercentage = plugin.call("GetLoadingScreenMessage")
 
     if (isstring(hooked)) then
       text = hooked
@@ -141,7 +141,7 @@ function GM:HUDDrawScoreBoard()
     draw.RoundedBox(0, barX, barY, barW, barH, Color(22, 22, 22))
     draw.RoundedBox(0, barX + 1, barY + 1, fillW, barH - 2, Color(245, 245, 245))
 
-    plugin.Call("PostDrawLoadingScreen")
+    plugin.call("PostDrawLoadingScreen")
   end
 end
 

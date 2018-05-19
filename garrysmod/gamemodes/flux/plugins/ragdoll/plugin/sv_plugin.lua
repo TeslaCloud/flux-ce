@@ -4,19 +4,19 @@
 	the framework is publicly released.
 --]]
 
-local playerMeta = FindMetaTable("Player")
+local player_meta = FindMetaTable("Player")
 
-playerMeta.OldGetRagdoll = playerMeta.OldGetRagdoll or playerMeta.GetRagdollEntity
+player_meta.OldGetRagdoll = player_meta.OldGetRagdoll or player_meta.GetRagdollEntity
 
-function playerMeta:GetRagdollEntity()
+function player_meta:GetRagdollEntity()
 	return self:GetDTEntity(ENT_RAGDOLL)
 end
 
-function playerMeta:SetRagdollEntity(ent)
+function player_meta:SetRagdollEntity(ent)
 	self:SetDTEntity(ENT_RAGDOLL, ent)
 end
 
-function playerMeta:IsRagdolled()
+function player_meta:IsRagdolled()
 	local ragState = self:GetDTInt(INT_RAGDOLL_STATE)
 
 	if (ragState and ragState != RAGDOLL_NONE) then
@@ -26,7 +26,7 @@ function playerMeta:IsRagdolled()
 	return false
 end
 
-function playerMeta:FindBestPosition(margin, filter)
+function player_meta:FindBestPosition(margin, filter)
 	margin = margin or 3
 
 	local pos = self:GetPos()
@@ -72,7 +72,7 @@ function playerMeta:FindBestPosition(margin, filter)
 	return positions
 end
 
-function playerMeta:CreateRagdollEntity(decay, fallen)
+function player_meta:CreateRagdollEntity(decay, fallen)
 	if (!IsValid(self:GetDTEntity(ENT_RAGDOLL))) then
 		local ragdoll = ents.Create("prop_ragdoll")
 			ragdoll:SetModel(self:GetModel())
@@ -159,7 +159,7 @@ function playerMeta:CreateRagdollEntity(decay, fallen)
 	end
 end
 
-function playerMeta:ResetRagdollEntity()
+function player_meta:ResetRagdollEntity()
 	local ragdoll = self:GetDTEntity(ENT_RAGDOLL)
 
 	if (IsValid(ragdoll)) then
@@ -177,7 +177,7 @@ function playerMeta:ResetRagdollEntity()
 	end
 end
 
-function playerMeta:SetRagdollState(state)
+function player_meta:SetRagdollState(state)
 	local state = state or RAGDOLL_NONE
 
 	self:SetDTInt(INT_RAGDOLL_STATE, state)

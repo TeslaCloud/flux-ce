@@ -197,17 +197,17 @@ if (SERVER) then
 end
 
 do
-	local playerMeta = FindMetaTable("Player")
+	local player_meta = FindMetaTable("Player")
 
-	function playerMeta:GetActiveCharacterID()
+	function player_meta:GetActiveCharacterID()
 		return self:GetNetVar("ActiveCharacter", nil)
 	end
 
-	function playerMeta:GetCharacterKey()
+	function player_meta:GetCharacterKey()
 		return self:GetNetVar("key", -1)
 	end
 
-	function playerMeta:CharacterLoaded()
+	function player_meta:CharacterLoaded()
 		if (self:IsBot()) then return true end
 
 		local id = self:GetActiveCharacterID()
@@ -215,15 +215,15 @@ do
 		return id and id > 0
 	end
 
-	function playerMeta:GetInventory()
+	function player_meta:GetInventory()
 		return self:GetNetVar("inventory", {})
 	end
 
-	function playerMeta:GetPhysDesc()
+	function player_meta:GetPhysDesc()
 		return self:GetNetVar("physDesc", "This character has no description!")
 	end
 
-	function playerMeta:GetCharacterVar(id, default)
+	function player_meta:GetCharacterVar(id, default)
 		if (SERVER) then
 			return self:GetCharacter()[id] or default
 		else
@@ -231,11 +231,11 @@ do
 		end
 	end
 
-	function playerMeta:GetCharacterData(key, default)
+	function player_meta:GetCharacterData(key, default)
 		return self:GetCharacterVar("data", {})[key] or default
 	end
 
-	function playerMeta:GetCharacter()
+	function player_meta:GetCharacter()
 		local charID = self:GetActiveCharacterID()
 
 		if (charID) then
@@ -249,7 +249,7 @@ do
 		end
 	end
 
-	function playerMeta:GetAllCharacters()
+	function player_meta:GetAllCharacters()
 		return stored[self:SteamID()] or {}
 	end
 end

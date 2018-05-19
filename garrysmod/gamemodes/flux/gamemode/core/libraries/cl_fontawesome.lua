@@ -816,7 +816,7 @@ function fl.fa.hooks:CreateFonts()
 	})
 end
 
-plugin.AddHooks("FontAwesome", fl.fa.hooks)
+plugin.add_hooks("FontAwesome", fl.fa.hooks)
 
 function fl.fa:GetIcon(id)
 	if (faCodes[id]) then

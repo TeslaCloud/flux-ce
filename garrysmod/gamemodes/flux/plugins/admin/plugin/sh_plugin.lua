@@ -10,8 +10,8 @@ util.Include("cl_hooks.lua")
 util.Include("sv_hooks.lua")
 
 function flAdmin:OnPluginLoaded()
-	plugin.AddExtra("commands")
-	plugin.AddExtra("groups")
+	plugin.add_extra("commands")
+	plugin.add_extra("groups")
 
 	local folder = self:GetFolder().."/plugin"
 

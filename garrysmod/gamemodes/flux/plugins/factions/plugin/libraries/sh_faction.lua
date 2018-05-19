@@ -85,13 +85,13 @@ function faction.IncludeFactions(directory)
 end
 
 do
-	local playerMeta = FindMetaTable("Player")
+	local player_meta = FindMetaTable("Player")
 
-	function playerMeta:GetFactionID()
+	function player_meta:GetFactionID()
 		return self:GetNetVar("faction", "player")
 	end
 
-	function playerMeta:SetFaction(uniqueID)
+	function player_meta:SetFaction(uniqueID)
 		local oldFaction = self:GetFaction()
 		local factionTable = faction.FindByID(uniqueID)
 		local char = self:GetCharacter()
@@ -117,7 +117,7 @@ do
 		hook.Run("OnPlayerFactionChanged", self, factionTable, oldFaction)
 	end
 
-	function playerMeta:SetDefaultFactionModel()
+	function player_meta:SetDefaultFactionModel()
 		local factionTable = self:GetFaction()
 		local factionModels = factionTable.Models
 		local char = self:GetCharacter()
@@ -160,11 +160,11 @@ do
 		end
 	end
 
-	function playerMeta:GetFaction()
+	function player_meta:GetFaction()
 		return faction.FindByID(self:GetFactionID())
 	end
 
-	function playerMeta:SetRank(rank)
+	function player_meta:SetRank(rank)
 		if (isnumber(rank)) then
 			self:SetCharacterData("Rank", rank)
 		elseif (isstring(rank)) then
@@ -178,11 +178,11 @@ do
 		end
 	end
 
-	function playerMeta:GetRank()
+	function player_meta:GetRank()
 		return self:GetCharacterData("Rank", -1)
 	end
 
-	function playerMeta:IsRank(strRank, bStrict)
+	function player_meta:IsRank(strRank, bStrict)
 		local factionTable = self:GetFaction()
 		local rank = self:GetRank()
 
@@ -197,21 +197,21 @@ do
 		return false
 	end
 
-	function playerMeta:GetWhitelists()
+	function player_meta:GetWhitelists()
 		return self:GetNetVar("whitelists", {})
 	end
 
-	function playerMeta:HasWhitelist(name)
+	function player_meta:HasWhitelist(name)
 		return table.HasValue(self:GetWhitelists(), name)
 	end
 
 	if (SERVER) then
-		function playerMeta:SetWhitelists(data)
+		function player_meta:SetWhitelists(data)
 			self:SetNetVar("whitelists", data)
 			self:SavePlayer()
 		end
 
-		function playerMeta:GiveWhitelist(name)
+		function player_meta:GiveWhitelist(name)
 			local whitelists = self:GetWhitelists()
 
 			if (!table.HasValue(whitelists, name)) then
@@ -221,7 +221,7 @@ do
 			end
 		end
 
-		function playerMeta:TakeWhitelist(name)
+		function player_meta:TakeWhitelist(name)
 			local whitelists = self:GetWhitelists()
 
 			for k, v in ipairs(whitelists) do

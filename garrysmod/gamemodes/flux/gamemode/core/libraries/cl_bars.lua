@@ -234,7 +234,7 @@ do
 		return true
 	end
 
-	plugin.AddHooks("FLBarHooks", flBars)
+	plugin.add_hooks("FLBarHooks", flBars)
 
 	fl.bars:Register("health", {
 		text = "#BarText_Health",

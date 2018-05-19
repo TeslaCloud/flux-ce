@@ -105,4 +105,4 @@ else
 	end)
 end
 
-plugin.AddHooks("FLBinds", hooks)
+plugin.add_hooks("FLBinds", hooks)

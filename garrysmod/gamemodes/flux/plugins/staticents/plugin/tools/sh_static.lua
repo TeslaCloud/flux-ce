@@ -14,7 +14,7 @@ function TOOL:LeftClick(trace)
 
 	local player = self:GetOwner()
 
-	plugin.Call("PlayerMakeStatic", player, true)
+	plugin.call("PlayerMakeStatic", player, true)
 
  	return true
 end
@@ -24,7 +24,7 @@ function TOOL:RightClick(trace)
 
 	local player = self:GetOwner()
 
-	plugin.Call("PlayerMakeStatic", player, false)
+	plugin.call("PlayerMakeStatic", player, false)
 
 	return true
 end

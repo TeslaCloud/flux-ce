@@ -79,7 +79,7 @@ util.Include("core/sv_core.lua")
 util.IncludeDirectory("core/libraries/required", true)
 
 -- So that we don't get duplicates on refresh.
-plugin.ClearCache()
+plugin.clear_cache()
 
 util.IncludeDirectory("core/config", true)
 util.IncludeDirectory("core/libraries", true)

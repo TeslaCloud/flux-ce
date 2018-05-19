@@ -11,8 +11,8 @@ util.Include("sv_hooks.lua")
 util.Include("sh_enums.lua")
 
 function flItems:OnPluginLoaded()
-	plugin.AddExtra("items")
-	plugin.AddExtra("items/bases")
+	plugin.add_extra("items")
+	plugin.add_extra("items/bases")
 
 	util.IncludeDirectory(self:GetFolder().."/plugin/items/bases")
 	item.IncludeItems(self:GetFolder().."/plugin/items/")

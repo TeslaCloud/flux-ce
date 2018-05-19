@@ -4,16 +4,16 @@
 	the framework is publicly released.
 --]]
 
-local playerMeta = FindMetaTable("Player")
+local player_meta = FindMetaTable("Player")
 
-function playerMeta:SaveUsergroup()
+function player_meta:SaveUsergroup()
 	fl.db:EasyWrite("fl_players", {"steamID", self:SteamID()}, {
 		name = self:Name(),
 		userGroup = self:GetUserGroup()
 	})
 end
 
-function playerMeta:SaveAllUsergroups()
+function player_meta:SaveAllUsergroups()
 	fl.db:EasyWrite("fl_players", {"steamID", self:SteamID()}, {
 		steamID = self:SteamID(),
 		name = self:Name(),
@@ -23,11 +23,11 @@ function playerMeta:SaveAllUsergroups()
 	})
 end
 
-function playerMeta:SetPermissions(permTable)
+function player_meta:SetPermissions(permTable)
 	self:SetNetVar("flPermissions", permTable)
 end
 
-function playerMeta:SetUserGroup(group)
+function player_meta:SetUserGroup(group)
 	group = group or "user"
 
 	local groupObj = fl.admin:FindGroup(group)
@@ -44,13 +44,13 @@ function playerMeta:SetUserGroup(group)
 	fl.admin:CompilePermissions(self)
 end
 
-function playerMeta:SetSecondaryGroups(groups)
+function player_meta:SetSecondaryGroups(groups)
 	self:SetNetVar("flSecondaryGroups", groups)
 
 	fl.admin:CompilePermissions(self)
 end
 
-function playerMeta:AddSecondaryGroup(group)
+function player_meta:AddSecondaryGroup(group)
 	if (group == "root" or group == "") then return end
 
 	local groups = self:GetSecondaryGroups()
@@ -62,7 +62,7 @@ function playerMeta:AddSecondaryGroup(group)
 	fl.admin:CompilePermissions(self)
 end
 
-function playerMeta:RemoveSecondaryGroup(group)
+function player_meta:RemoveSecondaryGroup(group)
 	local groups = self:GetSecondaryGroups()
 
 	for k, v in ipairs(groups) do
@@ -78,12 +78,12 @@ function playerMeta:RemoveSecondaryGroup(group)
 	fl.admin:CompilePermissions(self)
 end
 
-function playerMeta:SetCustomPermissions(data)
+function player_meta:SetCustomPermissions(data)
 	self:SetNetVar("flCustomPermissions", data)
 
 	fl.admin:CompilePermissions(self)
 end
 
-function playerMeta:RunCommand(cmd)
+function player_meta:RunCommand(cmd)
 	return fl.command:Interpret(self, cmd)
 end

@@ -4,31 +4,31 @@
 	the framework is publicly released.
 --]]
 
-local playerMeta = FindMetaTable("Player")
+local player_meta = FindMetaTable("Player")
 
-function playerMeta:GetPermissions()
+function player_meta:GetPermissions()
 	return self:GetNetVar("flPermissions", {})
 end
 
-function playerMeta:GetUserGroup()
+function player_meta:GetUserGroup()
 	return self:GetNetVar("flUserGroup", "user")
 end
 
-function playerMeta:GetSecondaryGroups()
+function player_meta:GetSecondaryGroups()
 	return self:GetNetVar("flSecondaryGroups", {})
 end
 
-function playerMeta:GetCustomPermissions()
+function player_meta:GetCustomPermissions()
 	return self:GetNetVar("flCustomPermissions", {})
 end
 
-function playerMeta:IsSuperAdmin()
+function player_meta:IsSuperAdmin()
 	if (self:IsRoot()) then return true end
 
 	return self:IsMemberOf("superadmin")
 end
 
-function playerMeta:IsAdmin()
+function player_meta:IsAdmin()
 	if (self:IsSuperAdmin()) then
 		return true
 	end
@@ -36,7 +36,7 @@ function playerMeta:IsAdmin()
 	return self:IsMemberOf("admin")
 end
 
-function playerMeta:IsOperator()
+function player_meta:IsOperator()
 	if (self:IsAdmin()) then
 		return true
 	end
