@@ -6,7 +6,7 @@
 
 -- Create the default theme that other themes will derive from.
 THEME.author = "TeslaCloud Studios"
-THEME.uniqueID = "factory"
+THEME.id = "factory"
 THEME.description = "Factory theme. This is a fail-safety theme that other themes use as a base."
 THEME.shouldReload = true
 

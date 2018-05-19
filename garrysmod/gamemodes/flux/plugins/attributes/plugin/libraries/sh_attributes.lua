@@ -42,7 +42,7 @@ function attributes.Register(uniqueID, data)
 
   fl.DevPrint("Registering "..string.lower(data.Type)..": "..tostring(uniqueID))
 
-  data.uniqueID = uniqueID
+  data.id = uniqueID
   data.Name = data.Name or "Unknown Attribute"
   data.Description = data.Description or "This attribute has no description!"
   data.Max = data.Max or 100

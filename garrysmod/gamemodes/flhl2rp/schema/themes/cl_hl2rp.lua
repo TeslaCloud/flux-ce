@@ -5,7 +5,7 @@
 --]]
 
 THEME.author = "TeslaCloud Studios"
-THEME.uniqueID = "hl2rp"
+THEME.id = "hl2rp"
 THEME.parent = "factory"
 
 function THEME:OnLoaded()

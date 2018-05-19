@@ -111,7 +111,7 @@ function fl.bars:Prioritize()
     sorted[v.priority] = sorted[v.priority] or {}
 
     if (v.type == BAR_TOP) then
-      table.insert(sorted[v.priority], v.uniqueID)
+      table.insert(sorted[v.priority], v.id)
     end
   end
 
@@ -197,7 +197,7 @@ do
 
       for k, v in pairs(stored) do
         if (v.callback) then
-          fl.bars:SetValue(v.uniqueID, v.callback(stored[k]))
+          fl.bars:SetValue(v.id, v.callback(stored[k]))
         end
 
         hook.Run("AdjustBarInfo", k, stored[k])

@@ -56,7 +56,7 @@ function areas.Create(uniqueID, height, data)
   local area = {}
 
   if (!stored[uniqueID]) then
-    area.uniqueID = uniqueID
+    area.id = uniqueID
     area.minH = 0
     area.maxH = 0
     area.height = height or 0

@@ -52,7 +52,7 @@ do
 
         local slotTable = item.FindInstanceByID(ids[1])
 
-        if (itemTable.Stackable and itemTable.uniqueID == slotTable.uniqueID) then
+        if (itemTable.Stackable and itemTable.id == slotTable.id) then
           if (#ids < itemTable.MaxStack) then
             table.insert(playerInv[i], itemTable.instanceID)
             self:SetInventory(playerInv)

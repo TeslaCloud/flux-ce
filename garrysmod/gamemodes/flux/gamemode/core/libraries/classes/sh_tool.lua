@@ -329,7 +329,7 @@ function CTool:CheckObjects()
 end
 
 function CTool:__tostring()
-  return "Tool ["..(self.uniqueID or "Unknown").."]"
+  return "Tool ["..(self.id or "Unknown").."]"
 end
 
 Tool = CTool

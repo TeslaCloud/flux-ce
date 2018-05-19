@@ -21,7 +21,7 @@ function COMMAND:OnRun(player, targets, itemName, amount)
 
     for k, v in ipairs(targets) do
       for i = 1, amount do
-        v:GiveItem(itemTable.uniqueID)
+        v:GiveItem(itemTable.id)
       end
 
       fl.player:Notify(v, ((IsValid(player) and player:Name()) or "Console").." has given you "..amount.." "..itemTable.Name.."'s.")

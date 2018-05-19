@@ -19,7 +19,7 @@ function COMMAND:OnRun(player, targets, name, bStrict)
 
   if (factionTable) then
     for k, v in ipairs(targets) do
-      v:SetFaction(factionTable.uniqueID)
+      v:SetFaction(factionTable.id)
     end
 
     fl.player:NotifyAll(L("SetfactionCMD_Message", (IsValid(player) and player:Name()) or "Console", util.PlayerListToString(targets), factionTable.PrintName))

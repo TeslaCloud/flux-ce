@@ -34,7 +34,7 @@ function theme.RegisterTheme(obj)
     end
   end
 
-  stored[obj.uniqueID] = obj
+  stored[obj.id] = obj
 end
 
 function theme.CreatePanel(panelID, parent, ...)
@@ -64,7 +64,7 @@ end
 theme.Call = theme.Hook
 
 function theme.GetActiveTheme()
-  return (theme.activeTheme and theme.activeTheme.uniqueID)
+  return (theme.activeTheme and theme.activeTheme.id)
 end
 
 function theme.SetSound(key, value)
@@ -212,7 +212,7 @@ function theme.Reload()
     return
   end
 
-  theme.LoadTheme(theme.activeTheme.uniqueID)
+  theme.LoadTheme(theme.activeTheme.id)
 
   theme.Hook("OnReloaded")
   hook.Run("OnThemeReloaded", theme.activeTheme)

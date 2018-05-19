@@ -33,7 +33,7 @@ flAreas.toolModes = {
 
               if (z > v2[1].z and z < v.maxH) then
                 if (util.VectorIsInPoly(pos, v2)) then
-                  areas.Remove(v.uniqueID)
+                  areas.Remove(v.id)
 
                   return true
                 end
@@ -107,13 +107,13 @@ areas.RegisterType("textarea", "Text Area", "Displays text whenever player enter
   player.textAreas = player.textAreas or {}
 
   if (bHasEntered) then
-    local textAreaData = player.textAreas[area.uniqueID]
-    local areaData = player.textAreas[area.uniqueID]
+    local textAreaData = player.textAreas[area.id]
+    local areaData = player.textAreas[area.id]
 
     if (istable(areaData) and areaData.resetTime > curTime) then
       return
     end  
 
-    player.textAreas[area.uniqueID] = {text = area.text, endTime = curTime + 10, resetTime = curTime + 20}
+    player.textAreas[area.id] = {text = area.text, endTime = curTime + 10, resetTime = curTime + 20}
   end
 end)

@@ -9,7 +9,7 @@ class "CItem"
 function CItem:CItem(uniqueID)
   if (!isstring(uniqueID)) then return end
 
-  self.uniqueID = string.MakeID(uniqueID)
+  self.id = string.MakeID(uniqueID)
   self.data = self.data or {}
   self.actionSounds = {
     ["OnUse"] = "items/battery_pickup.wav"
@@ -30,7 +30,7 @@ function CItem:SetBase(CBaseClass)
   if (!istable(CBaseClass)) then return end
 
   ITEM = nil
-  ITEM = CBaseClass(self.uniqueID)
+  ITEM = CBaseClass(self.id)
 end
 
 function CItem:MakeBase()
@@ -203,12 +203,12 @@ function CItem:SetEntity(ent)
 end
 
 function CItem:Register()
-  return item.Register(self.uniqueID, self)
+  return item.Register(self.id, self)
 end
 
 -- Fancy output if you do print(itemTable).
 function CItem:__tostring()
-  return "Item ["..tostring(self.instanceID).."]["..(self.name or self.uniqueID).."]"
+  return "Item ["..tostring(self.instanceID).."]["..(self.name or self.id).."]"
 end
 
 Item = CItem

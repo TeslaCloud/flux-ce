@@ -18,10 +18,10 @@ CTheme.shouldReload = true
 --[[ Basic Skeleton --]]
 function CTheme:CTheme(name, parent)
   self.name = name or "Unknown"
-  self.uniqueID = self.name:MakeID() -- temporary unique ID
+  self.id = self.name:MakeID() -- temporary unique ID
   self.parent = parent
 
-  if (!self.uniqueID) then
+  if (!self.id) then
     error("Cannot create a theme without a valid unique ID!")
   end
 end
@@ -30,7 +30,7 @@ function CTheme:OnLoaded() end
 function CTheme:OnUnloaded() end
 
 function CTheme:Remove()
-  return theme.RemoveTheme(self.uniqueID)
+  return theme.RemoveTheme(self.id)
 end
 
 function CTheme:AddPanel(id, callback)

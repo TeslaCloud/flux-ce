@@ -7,7 +7,7 @@
 class "CFaction"
 
 function CFaction:CFaction(id)
-  self.uniqueID = id:MakeID()
+  self.id = id:MakeID()
   self.Name = "Unknown Faction"
   self.PrintName = nil
   self.Description = "This faction has no description set!"
@@ -91,7 +91,7 @@ function CFaction:GenerateName(player, charName, rank, defaultData)
 
   if (finalName:find("{rank}")) then
     for k, v in ipairs(self.Ranks) do
-      if (v.uniqueID == rank or k == rank) then
+      if (v.id == rank or k == rank) then
         finalName = finalName:Replace("{rank}", v.name)
 
         break
@@ -136,11 +136,11 @@ function CFaction:OnPlayerEntered(player) end
 function CFaction:OnPlayerExited(player) end
 
 function CFaction:Register()
-  faction.Register(self.uniqueID, self)
+  faction.Register(self.id, self)
 end
 
 function CFaction:__tostring()
-  return "Faction ["..self.uniqueID.."]["..self.Name.."]"
+  return "Faction ["..self.id.."]["..self.Name.."]"
 end
 
 Faction = CFaction

@@ -9,11 +9,11 @@ class "CAttribute"
 function CAttribute:CAttribute(uniqueID)
   if (!isstring(uniqueID)) then return end
 
-  self.uniqueID = uniqueID
+  self.id = uniqueID
 end
 
 function CAttribute:Register()
-  return attributes.Register(self.uniqueID, self)
+  return attributes.Register(self.id, self)
 end
 
 Attribute = CAttribute

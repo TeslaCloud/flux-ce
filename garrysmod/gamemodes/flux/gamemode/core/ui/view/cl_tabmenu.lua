@@ -102,7 +102,7 @@ function PANEL:Think()
 end
 
 function PANEL:AddMenuItem(id, data, index)
-  data.uniqueID = id
+  data.id = id
   data.title = string.utf8upper(fl.lang:TranslateText(data.title) or "error")
   data.icon = data.icon or false
 

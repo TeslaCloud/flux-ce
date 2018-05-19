@@ -33,7 +33,7 @@ end
 pipeline.Register("tool", function(uniqueID, fileName, pipe)
   TOOL = CTool()
   TOOL.Mode = uniqueID
-  TOOL.uniqueID = uniqueID
+  TOOL.id = uniqueID
 
   hook.Run("PreIncludeTool", TOOL)
 
@@ -45,7 +45,7 @@ pipeline.Register("tool", function(uniqueID, fileName, pipe)
 
   stored[uniqueID] = TOOL
 
-  fl.DevPrint("Registering Tool: "..uniqueID)
+  fl.DevPrint("Registering Tool: "..id)
 
   TOOL = nil
 end)

@@ -5,7 +5,7 @@
 --]]
 
 local PANEL = {}
-PANEL.uniqueID = "base"
+PANEL.id = "base"
 PANEL.text = "Click sidebar buttons to open character creation menus."
 
 function PANEL:Init() end
@@ -21,7 +21,7 @@ end
 vgui.Register("flCharCreationBase", PANEL, "flBasePanel")
 
 local PANEL = {}
-PANEL.uniqueID = "general"
+PANEL.id = "general"
 PANEL.text = "#CharCreate_GenText"
 
 function PANEL:Init()
@@ -81,7 +81,7 @@ end
 vgui.Register("flCharCreationGeneral", PANEL, "flCharCreationBase")
 
 local PANEL = {}
-PANEL.uniqueID = "model"
+PANEL.id = "model"
 PANEL.text = "#CharCreate_Model_S"
 PANEL.model = ""
 PANEL.models = {}

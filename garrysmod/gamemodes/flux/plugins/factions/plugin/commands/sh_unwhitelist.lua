@@ -19,8 +19,8 @@ function COMMAND:OnRun(player, targets, name, bStrict)
 
   if (whitelist) then
     for k, v in ipairs(targets) do
-      if (v:HasWhitelist(whitelist.uniqueID)) then
-        v:TakeWhitelist(whitelist.uniqueID)
+      if (v:HasWhitelist(whitelist.id)) then
+        v:TakeWhitelist(whitelist.id)
       elseif (#targets == 1) then
         fl.player:Notify(player, L("Err_TargetNotWhitelisted", v:Name(), whitelist.PrintName))
 

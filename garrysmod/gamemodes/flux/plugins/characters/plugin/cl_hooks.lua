@@ -192,7 +192,7 @@ function flCharacters:AddMainMenuItems(panel, sidebar)
       panel.menu.buttons[k]:SetSize(128, 24)
       panel.menu.buttons[k]:SetText(v.name)
       panel.menu.buttons[k].DoClick = function()
-        netstream.Start("PlayerSelectCharacter", v.uniqueID)
+        netstream.Start("PlayerSelectCharacter", v.id)
         panel:Remove()
       end
 
