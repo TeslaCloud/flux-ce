@@ -15,7 +15,7 @@ fl.command.aliases = aliases
 function fl.command:Create(id, data)
   if (!id or !data) then return end
 
-  data.uniqueID = id:MakeID()
+  data.id = id:MakeID()
   data.Name = data.Name or "Unknown"
   data.Description = data.Description or "An undescribed command."
   data.Syntax = data.Syntax or "[none]"
@@ -26,7 +26,7 @@ function fl.command:Create(id, data)
   stored[id] = data
 
   -- Add original command name to the aliases table.
-  aliases[id] = data.uniqueID
+  aliases[id] = data.id
 
   if (data.Aliases) then
     for k, v in ipairs(data.Aliases) do
@@ -245,7 +245,7 @@ if (SERVER) then
     local cmdTable = self:FindByID(command)
 
     if (cmdTable) then
-      if ((!IsValid(player) and !cmdTable.noConsole) or player:HasPermission(cmdTable.uniqueID)) then
+      if ((!IsValid(player) and !cmdTable.noConsole) or player:HasPermission(cmdTable.id)) then
         if (cmdTable.Arguments == 0 or cmdTable.Arguments <= #args) then
           if (cmdTable.Immunity or cmdTable.PlayerArg != nil) then
             local targetArg = args[(cmdTable.PlayerArg or 1)]
@@ -350,7 +350,7 @@ if (SERVER) then
         cmdTable.OnRun, cmdTable, player, unpack(arguments)
       } catch {
         function(exception)
-          ErrorNoHalt("[Flux] "..cmdTable.uniqueID.." command has failed to run!\n")
+          ErrorNoHalt("[Flux] "..cmdTable.id.." command has failed to run!\n")
           ErrorNoHalt(exception.."\n")
         end
       }

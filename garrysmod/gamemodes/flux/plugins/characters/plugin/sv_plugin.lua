@@ -53,6 +53,6 @@ function player_meta:SaveCharacter()
   local char = self:GetCharacter()
 
   if (char) then
-    character.Save(self, char.uniqueID)
+    character.Save(self, char.id)
   end
 end

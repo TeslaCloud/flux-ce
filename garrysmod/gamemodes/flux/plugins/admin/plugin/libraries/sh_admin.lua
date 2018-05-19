@@ -39,7 +39,7 @@ end
 function fl.admin:CreateGroup(id, data)
   if (!isstring(id)) then return end
 
-  data.uniqueID = id
+  data.id = id
 
   if (data.Base) then
     local parent = groups[data.Base]
@@ -70,7 +70,7 @@ function fl.admin:AddPermission(id, category, data, bForce)
   if (!id) then return end
 
   category = category or "general"
-  data.uniqueID = id
+  data.id = id
   permissions[category] = permissions[category] or {}
 
   if (!permissions[category][id] or bForce) then
@@ -82,7 +82,7 @@ function fl.admin:RegisterPermission(id, name, description, category)
   if (!isstring(id) or id == "") then return end
 
   local data = {}
-    data.uniqueID = id:MakeID()
+    data.id = id:MakeID()
     data.Description = description or "No description provided."
     data.Category = category or "general"
     data.Name = name or id
@@ -92,7 +92,7 @@ end
 function fl.admin:PermissionFromCommand(cmdObj)
   if (!cmdObj) then return end
 
-  self:RegisterPermission(cmdObj.uniqueID, cmdObj.Name, cmdObj.Description, cmdObj.Category)
+  self:RegisterPermission(cmdObj.id, cmdObj.Name, cmdObj.Description, cmdObj.Category)
 end
 
 function fl.admin:CheckPermission(player, permission)

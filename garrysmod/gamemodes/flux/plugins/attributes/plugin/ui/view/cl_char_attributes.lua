@@ -5,7 +5,7 @@
 --]]
 
 local PANEL = {}
-PANEL.uniqueID = "attributes"
+PANEL.id = "attributes"
 PANEL.text = "#CharCreate_Attributes"
 PANEL.model = ""
 PANEL.models = {}

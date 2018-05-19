@@ -16,11 +16,11 @@ CUserGroup.Permissions = {}
 CUserGroup.Base = nil
 
 function CUserGroup:CUserGroup(id)
-  self.uniqueID = id:MakeID()
+  self.id = id:MakeID()
 end
 
 function CUserGroup:Register()
-  fl.admin:CreateGroup(self.uniqueID, self)
+  fl.admin:CreateGroup(self.id, self)
 end
 
 -- Called when player's primary group is being set to this group.
@@ -38,7 +38,7 @@ function CUserGroup:OnGroupRemove(player) end
 CUserGroup.SetParent = CUserGroup.SetBase
 
 function CUserGroup:GetID()
-  return self.uniqueID
+  return self.id
 end
 
 function CUserGroup:GetName()

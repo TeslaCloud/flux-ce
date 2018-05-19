@@ -67,7 +67,7 @@ function PANEL:OpenPanel(id)
     local scrW, scrH = ScrW(), ScrH()
     local sW, sH = self.sidebar:GetWide(), self.sidebar:GetTall()
 
-    self.curPanel = theme.CreatePanel(panel.uniqueID, self, unpack(panel.arguments))
+    self.curPanel = theme.CreatePanel(panel.id, self, unpack(panel.arguments))
     self.curPanel:SetPos(sW, 0)
     self.curPanel:SetSize(self:GetWide() - sW, self:GetTall())
 

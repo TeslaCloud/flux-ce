@@ -55,7 +55,7 @@ function flFactions:OnPlayerRestored(player)
     if (faction.Count() > 0) then
       local randomFaction = table.Random(faction.GetAll())
 
-      player:SetNetVar("faction", randomFaction.uniqueID)
+      player:SetNetVar("faction", randomFaction.id)
 
       if (randomFaction.HasGender) then
         player:SetNetVar("gender", math.random(CHAR_GENDER_MALE, CHAR_GENDER_FEMALE))

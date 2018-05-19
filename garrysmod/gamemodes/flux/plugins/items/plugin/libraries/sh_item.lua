@@ -59,7 +59,7 @@ function item.Register(id, data)
     id = data.Name:MakeID()
   end
 
-  data.uniqueID = id
+  data.id = id
   data.Name = data.Name or "Unknown Item"
   data.PrintName = data.PrintName or data.Name
   data.Description = data.Description or "This item has no description!"
@@ -92,7 +92,7 @@ function item.ToSave(itemTable)
   if (!itemTable) then return end
 
   return {
-    uniqueID = itemTable.uniqueID,
+    uniqueID = itemTable.id,
     Name = itemTable.Name,
     PrintName = itemTable.PrintName,
     Description = itemTable.Description,
@@ -120,7 +120,7 @@ end
 -- Find item's template by it's ID.
 function item.FindByID(uniqueID)
   for k, v in pairs(stored) do
-    if (k == uniqueID or v.uniqueID == uniqueID) then
+    if (k == uniqueID or v.id == uniqueID) then
       return v
     end
   end
@@ -167,8 +167,8 @@ function item.Find(name)
   end
 
   for k, v in pairs(stored) do
-    if (v.uniqueID and v.Name and v.PrintName) then
-      if (v.uniqueID == name or v.Name:find(name) or v.PrintName:find(name)) then
+    if (v.id and v.Name and v.PrintName) then
+      if (v.id == name or v.Name:find(name) or v.PrintName:find(name)) then
         return v
       end
 
@@ -220,7 +220,7 @@ function item.Remove(instanceID)
       itemTable.entity:Remove()
     end
 
-    instances[itemTable.uniqueID][itemTable.instanceID] = nil
+    instances[itemTable.id][itemTable.instanceID] = nil
 
     if (SERVER) then
       item.AsyncSave()
@@ -325,9 +325,9 @@ if (SERVER) then
 
     for k, v in ipairs(itemEnts) do
       if (IsValid(v) and v.item) then
-        entities[v.item.uniqueID] = entities[v.item.uniqueID] or {}
+        entities[v.item.id] = entities[v.item.id] or {}
 
-        entities[v.item.uniqueID][v.item.instanceID] = {
+        entities[v.item.id][v.item.instanceID] = {
           position = v:GetPos(),
           angles = v:GetAngles()
         }
@@ -359,7 +359,7 @@ if (SERVER) then
 
   function item.NetworkItemData(player, itemTable)
     if (item.IsInstance(itemTable)) then
-      netstream.Start(player, "ItemData", itemTable.uniqueID, itemTable.instanceID, itemTable.data)
+      netstream.Start(player, "ItemData", itemTable.id, itemTable.instanceID, itemTable.data)
     end
   end
 
@@ -369,7 +369,7 @@ if (SERVER) then
 
   function item.NetworkEntityData(player, ent)
     if (IsValid(ent)) then
-      netstream.Start(player, "ItemEntData", ent:EntIndex(), ent.item.uniqueID, ent.item.instanceID)
+      netstream.Start(player, "ItemEntData", ent:EntIndex(), ent.item.id, ent.item.instanceID)
     end
   end
 
@@ -416,9 +416,9 @@ if (SERVER) then
     itemTable:SetEntity(ent)
     item.NetworkItem(player, itemTable.instanceID)
 
-    entities[itemTable.uniqueID] = entities[itemTable.uniqueID] or {}
-    entities[itemTable.uniqueID][itemTable.instanceID] = entities[itemTable.uniqueID][itemTable.instanceID] or {}
-    entities[itemTable.uniqueID][itemTable.instanceID] = {
+    entities[itemTable.id] = entities[itemTable.id] or {}
+    entities[itemTable.id][itemTable.instanceID] = entities[itemTable.id][itemTable.instanceID] or {}
+    entities[itemTable.id][itemTable.instanceID] = {
       position = position,
       angles = angles
     }
@@ -443,11 +443,11 @@ else
   end)
 
   netstream.Hook("NetworkItem", function(instanceID, itemTable)
-    if (itemTable and stored[itemTable.uniqueID]) then
-      local newTable = table.Copy(stored[itemTable.uniqueID])
+    if (itemTable and stored[itemTable.id]) then
+      local newTable = table.Copy(stored[itemTable.id])
       table.Merge(newTable, itemTable)
 
-      instances[newTable.uniqueID][instanceID] = newTable
+      instances[newTable.id][instanceID] = newTable
 
       print("Received instance ID "..tostring(newTable))
     else

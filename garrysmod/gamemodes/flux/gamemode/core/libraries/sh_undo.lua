@@ -41,7 +41,7 @@ function fl.undo:Remove(player, id)
 
   if (queueTable) then
     for k, v in ipairs(queueTable) do
-      if (v.uniqueID == id) then
+      if (v.id == id) then
         queue[player][k] = nil
       end
     end

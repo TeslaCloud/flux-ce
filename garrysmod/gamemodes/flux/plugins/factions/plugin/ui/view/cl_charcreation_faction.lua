@@ -5,7 +5,7 @@
 --]]
 
 local PANEL = {}
-PANEL.uniqueID = "faction"
+PANEL.id = "faction"
 PANEL.text = "#CharCreate_Fac_S"
 PANEL.factionID = ""
 
@@ -23,14 +23,14 @@ function PANEL:Init()
   self.Chooser:AddSpace(2)
 
   for k, v in pairs(faction.GetAll()) do
-    if (!v.Whitelisted or fl.client:HasWhitelist(v.uniqueID)) then
+    if (!v.Whitelisted or fl.client:HasWhitelist(v.id)) then
       local button = vgui.Create("flImageButton", self)
       button:SetSize(496, 142)
       button:SetPos(0, 0)
       button:SetImage(v.Material)
       button.faction = v
 
-      if (v.uniqueID == self.factionID) then
+      if (v.id == self.factionID) then
         button:SetActive(true)
         self.prevBtn = button
       end
@@ -61,7 +61,7 @@ function PANEL:Init()
 end
 
 function PANEL:ButtonClicked(button)
-  self.factionID = button.faction.uniqueID
+  self.factionID = button.faction.id
 end
 
 function PANEL:OnOpen(parent)

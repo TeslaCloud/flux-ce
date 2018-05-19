@@ -22,7 +22,7 @@ function flCharacters:ClientIncludedSchema(player)
 end
 
 function flCharacters:PostCharacterLoaded(player, character)
-  hook.RunClient(player, "PostCharacterLoaded", character.uniqueID)
+  hook.RunClient(player, "PostCharacterLoaded", character.id)
 end
 
 function flCharacters:OnActiveCharacterSet(player, character)

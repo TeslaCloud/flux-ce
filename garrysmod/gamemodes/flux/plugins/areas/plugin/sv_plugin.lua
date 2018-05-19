@@ -14,7 +14,7 @@ function flAreas:OneSecond()
           local pos = player:GetPos()
 
           player.lastArea = player.lastArea or {}
-          player.lastArea[v.uniqueID] = player.lastArea[v.uniqueID] or {}
+          player.lastArea[v.id] = player.lastArea[v.id] or {}
 
           -- Player hasn't moved since our previous check, no need to check again.
           if (pos == player.lastPos) then continue end
@@ -26,12 +26,12 @@ function flAreas:OneSecond()
           if (z > v2[1].z and z < v.maxH) then
             if (util.VectorIsInPoly(pos, v2)) then
               -- Player entered the area
-              if (!table.HasValue(player.lastArea[v.uniqueID], k2)) then
+              if (!table.HasValue(player.lastArea[v.id], k2)) then
                 Try("Areas", areas.GetCallback(v.type), player, v, true, pos, curTime)
 
                 netstream.Start(player, "PlayerEnteredArea", k, pos)
 
-                table.insert(player.lastArea[v.uniqueID], k2)
+                table.insert(player.lastArea[v.id], k2)
               end
 
               enteredArea = true
@@ -40,12 +40,12 @@ function flAreas:OneSecond()
 
           if (!enteredArea) then
             -- Player left the area
-            if (table.HasValue(player.lastArea[v.uniqueID], k2)) then
+            if (table.HasValue(player.lastArea[v.id], k2)) then
               Try("Areas", areas.GetCallback(v.type), player, v, false, pos, curTime)
 
               netstream.Start(player, "PlayerLeftArea", k, pos)
 
-              table.RemoveByValue(player.lastArea[v.uniqueID], k2)
+              table.RemoveByValue(player.lastArea[v.id], k2)
             end
           end
         end

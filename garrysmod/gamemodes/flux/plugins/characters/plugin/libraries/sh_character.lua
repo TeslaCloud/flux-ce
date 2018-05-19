@@ -38,7 +38,7 @@ function character.Create(player, data)
 
   stored[steamID] = stored[steamID] or {}
 
-  data.uniqueID = #stored[steamID] + 1
+  data.id = #stored[steamID] + 1
 
   table.insert(stored[steamID], data)
 
@@ -62,7 +62,7 @@ if (SERVER) then
     fl.db:EasyRead("fl_characters", {"steamID", steamID}, function(result, hasData)
       if (hasData) then
         for k, v in ipairs(result) do
-          local charID = tonumber(v.uniqueID) or k
+          local charID = tonumber(v.id) or k
 
           stored[steamID][charID] = {
             steamID = steamID,
@@ -73,7 +73,7 @@ if (SERVER) then
             money = tonumber(v.money or "0"),
             charPermissions = util.JSONToTable(v.charPermissions or ""),
             data = util.JSONToTable(v.data or ""),
-            uniqueID = tonumber(v.uniqueID or k),
+            uniqueID = tonumber(v.id or k),
             key = v.key
           }
 
@@ -104,7 +104,7 @@ if (SERVER) then
       money = char.money,
       charPermissions = util.TableToJSON(char.charPermissions),
       data = util.TableToJSON(char.data),
-      uniqueID = char.uniqueID
+      uniqueID = char.id
     }
   end
 

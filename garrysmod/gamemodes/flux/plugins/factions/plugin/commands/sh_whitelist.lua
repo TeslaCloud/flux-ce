@@ -19,7 +19,7 @@ function COMMAND:OnRun(player, targets, name, bStrict)
 
   if (whitelist) then
     for k, v in ipairs(targets) do
-      v:GiveWhitelist(whitelist.uniqueID)
+      v:GiveWhitelist(whitelist.id)
     end
 
     fl.player:NotifyAll(L("WhitelistCMD_Message", (IsValid(player) and player:Name()) or "Console", util.PlayerListToString(targets), whitelist.PrintName))

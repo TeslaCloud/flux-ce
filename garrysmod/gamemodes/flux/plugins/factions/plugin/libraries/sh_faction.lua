@@ -15,7 +15,7 @@ faction.count = count
 function faction.Register(id, data)
   if (!id or !data) then return end
 
-  data.uniqueID = id:MakeID() or (data.Name and data.Name:MakeID())
+  data.id = id:MakeID() or (data.Name and data.Name:MakeID())
   data.Name = data.Name or "Unknown Faction"
   data.Description = data.Description or "This faction has no description!"
   data.PrintName = data.PrintName or data.Name or "Unknown Faction"
@@ -105,7 +105,7 @@ do
     if (char) then
       char.faction = uniqueID
 
-      character.Save(self, char.uniqueID)
+      character.Save(self, char.id)
     end
 
     if (oldFaction) then
@@ -171,7 +171,7 @@ do
       local factionTable = self:GetFaction()
 
       for k, v in ipairs(factionTable.Ranks) do
-        if (string.utf8lower(v.uniqueID) == string.utf8lower(rank)) then
+        if (string.utf8lower(v.id) == string.utf8lower(rank)) then
           self:SetCharacterData("Rank", k)
         end
       end
@@ -188,7 +188,7 @@ do
 
     if (rank != -1 and factionTable) then
       for k, v in ipairs(factionTable.Ranks) do
-        if (string.utf8lower(v.uniqueID) == string.utf8lower(strRank)) then
+        if (string.utf8lower(v.id) == string.utf8lower(strRank)) then
           return (bStrict and k == rank) or k <= rank
         end
       end
