@@ -52,10 +52,10 @@ function CFaction:GetDescription()
   return self.Description
 end
 
-function CFaction:AddClass(uniqueID, className, description, color, callback)
-  if (!uniqueID) then return end
+function CFaction:AddClass(id, className, description, color, callback)
+  if (!id) then return end
 
-  self.Classes[uniqueID] = {
+  self.Classes[id] = {
     name = className,
     description = description,
     color = color,
@@ -63,13 +63,13 @@ function CFaction:AddClass(uniqueID, className, description, color, callback)
   }
 end
 
-function CFaction:AddRank(uniqueID, nameFilter)
-  if (!uniqueID) then return end
+function CFaction:AddRank(id, nameFilter)
+  if (!id) then return end
 
-  if (!nameFilter) then nameFilter = uniqueID end
+  if (!nameFilter) then nameFilter = id end
 
   table.insert(self.Ranks, {
-    uniqueID = uniqueID,
+    id = id,
     name = nameFilter
   })
 end

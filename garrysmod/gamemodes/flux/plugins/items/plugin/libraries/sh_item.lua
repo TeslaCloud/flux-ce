@@ -92,7 +92,7 @@ function item.ToSave(itemTable)
   if (!itemTable) then return end
 
   return {
-    uniqueID = itemTable.id,
+    id = itemTable.id,
     Name = itemTable.Name,
     PrintName = itemTable.PrintName,
     Description = itemTable.Description,
@@ -118,18 +118,18 @@ function item.ToSave(itemTable)
 end
 
 -- Find item's template by it's ID.
-function item.FindByID(uniqueID)
+function item.FindByID(id)
   for k, v in pairs(stored) do
-    if (k == uniqueID or v.id == uniqueID) then
+    if (k == id or v.id == id) then
       return v
     end
   end
 end
 
 -- Find all instances of certain template ID.
-function item.FindAllInstances(uniqueID)
-  if (instances[uniqueID]) then
-    return instances[uniqueID]
+function item.FindAllInstances(id)
+  if (instances[id]) then
+    return instances[id]
   end
 end
 
@@ -188,27 +188,27 @@ function item.GenerateID()
   return instances.count
 end
 
-function item.New(uniqueID, data, forcedID)
-  local itemTable = item.FindByID(uniqueID)
+function item.New(id, data, forcedID)
+  local itemTable = item.FindByID(id)
 
   if (itemTable) then
     local itemID = forcedID or item.GenerateID()
 
-    instances[uniqueID] = instances[uniqueID] or {}
-    instances[uniqueID][itemID] = table.Copy(itemTable)
+    instances[id] = instances[id] or {}
+    instances[id][itemID] = table.Copy(itemTable)
 
     if (istable(data)) then
-      table.Merge(instances[uniqueID][itemID], data)
+      table.Merge(instances[id][itemID], data)
     end
 
-    instances[uniqueID][itemID].instanceID = itemID
+    instances[id][itemID].instanceID = itemID
 
     if (SERVER) then
       item.AsyncSave()
-      netstream.Start(nil, "ItemNewInstance", uniqueID, (data or 1), itemID)
+      netstream.Start(nil, "ItemNewInstance", id, (data or 1), itemID)
     end
 
-    return instances[uniqueID][itemID]
+    return instances[id][itemID]
   end
 end
 
@@ -240,8 +240,8 @@ function item.CreateBase(strName)
   class(strName, nil, CItem)
 end
 
-pipeline.Register("item", function(uniqueID, fileName, pipe)
-  ITEM = Item(uniqueID)
+pipeline.Register("item", function(id, fileName, pipe)
+  ITEM = Item(id)
 
   util.Include(fileName)
 
@@ -260,8 +260,8 @@ if (SERVER) then
 
     if (loaded and table.Count(loaded) > 0) then
       -- Returns functions to instances table after loading.
-      for uniqueID, instanceTable in pairs(loaded) do
-        local itemTable = item.FindByID(uniqueID)
+      for id, instanceTable in pairs(loaded) do
+        local itemTable = item.FindByID(id)
 
         if (itemTable) then
           for k, v in pairs(instanceTable) do
@@ -269,7 +269,7 @@ if (SERVER) then
 
             table.Merge(newItem, v)
 
-            loaded[uniqueID][k] = newItem
+            loaded[id][k] = newItem
           end
         end
       end
@@ -281,12 +281,12 @@ if (SERVER) then
     local loaded = data.LoadSchema("items/entities", {})
 
     if (loaded and table.Count(loaded) > 0) then
-      for uniqueID, instanceTable in pairs(loaded) do
+      for id, instanceTable in pairs(loaded) do
         for k, v in pairs(instanceTable) do
-          if (instances[uniqueID] and instances[uniqueID][k]) then
-            item.Spawn(v.position, v.angles, instances[uniqueID][k])
+          if (instances[id] and instances[id][k]) then
+            item.Spawn(v.position, v.angles, instances[id][k])
           else
-            loaded[uniqueID][k] = nil
+            loaded[id][k] = nil
           end
         end
       end
@@ -436,9 +436,9 @@ if (SERVER) then
     end
   end)
 else
-  netstream.Hook("ItemData", function(uniqueID, instanceID, data)
-    if (istable(instances[uniqueID][instanceID])) then
-      instances[uniqueID][instanceID].data = data
+  netstream.Hook("ItemData", function(id, instanceID, data)
+    if (istable(instances[id][instanceID])) then
+      instances[id][instanceID].data = data
     end
   end)
 
@@ -455,11 +455,11 @@ else
     end
   end)
 
-  netstream.Hook("ItemEntData", function(entIndex, uniqueID, instanceID)
+  netstream.Hook("ItemEntData", function(entIndex, id, instanceID)
     local ent = Entity(entIndex)
 
     if (IsValid(ent)) then
-      local itemTable = instances[uniqueID][instanceID]
+      local itemTable = instances[id][instanceID]
 
       -- Client has to know this shit too I guess?
       ent:SetModel(itemTable:GetModel())
@@ -473,7 +473,7 @@ else
     end
   end)
 
-  netstream.Hook("ItemNewInstance", function(uniqueID, data, itemID)
-    item.New(uniqueID, data, itemID)
+  netstream.Hook("ItemNewInstance", function(id, data, itemID)
+    item.New(id, data, itemID)
   end)
 end

@@ -127,8 +127,8 @@ netstream.Hook("flLoadAreas", function(areaStorage)
   areas.SetStored(areaStorage)
 end)
 
-netstream.Hook("flAreaRemove", function(uniqueID)
-  areas.Remove(uniqueID)
+netstream.Hook("flAreaRemove", function(id)
+  areas.Remove(id)
 end)
 
 netstream.Hook("flAreaRegister", function(id, data)

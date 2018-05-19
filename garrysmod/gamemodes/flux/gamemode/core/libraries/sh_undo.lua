@@ -11,7 +11,7 @@ local buffer = {}
 
 function fl.undo:Create(id, name)
   buffer = {
-    uniqueID = id,
+    id = id,
     name = name,
     player = nil,
     functions = {}

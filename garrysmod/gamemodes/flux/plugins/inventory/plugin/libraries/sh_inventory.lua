@@ -66,15 +66,15 @@ do
       return false
     end
 
-    function player_meta:GiveItem(uniqueID, instanceID, data)
-      if (!uniqueID) then return end
+    function player_meta:GiveItem(id, instanceID, data)
+      if (!id) then return end
 
       local itemTable
 
       if (instanceID and instanceID > 0) then
         itemTable = item.FindInstanceByID(instanceID)
       else
-        itemTable = item.New(uniqueID, data)
+        itemTable = item.New(id, data)
       end
 
       local slot = self:AddItem(itemTable)
@@ -123,9 +123,9 @@ do
       end
     end
 
-    function player_meta:TakeItem(uniqueID, amount)
+    function player_meta:TakeItem(id, amount)
       amount = amount or 1
-      local invInstances = self:FindInstances(uniqueID, amount)
+      local invInstances = self:FindInstances(id, amount)
 
       for i = 1, #invInstances do
         if (amount > 0) then
@@ -137,9 +137,9 @@ do
   end
 
   -- A function to find an amount of instances of an item in player's inventory.
-  function player_meta:FindInstances(uniqueID, amount)
+  function player_meta:FindInstances(id, amount)
     amount = amount or 1
-    local instances = item.FindAllInstances(uniqueID)
+    local instances = item.FindAllInstances(id)
     local playerInv = self:GetInventory()
     local toReturn = {}
 
@@ -160,8 +160,8 @@ do
   end
 
   -- A function to find the first instance of an item in player's inventory.
-  function player_meta:FindItem(uniqueID)
-    return self:FindInstances(uniqueID)[1]
+  function player_meta:FindItem(id)
+    return self:FindInstances(id)[1]
   end
 
   function player_meta:HasItemByID(instanceID)
@@ -176,8 +176,8 @@ do
     return false
   end
 
-  function player_meta:HasItem(uniqueID)
-    local instances = self:FindInstances(uniqueID, 1)
+  function player_meta:HasItem(id)
+    local instances = self:FindInstances(id, 1)
 
     if (instances[1]) then
       return true
@@ -186,8 +186,8 @@ do
     return false
   end
 
-  function player_meta:HasItemEquipped(uniqueID)
-    local instances = self:FindInstances(uniqueID, 1)
+  function player_meta:HasItemEquipped(id)
+    local instances = self:FindInstances(id, 1)
     local itemTable = instances[1]
 
     if (itemTable and itemTable:IsEquipped()) then

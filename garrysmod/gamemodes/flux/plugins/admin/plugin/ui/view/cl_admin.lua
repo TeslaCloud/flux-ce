@@ -39,7 +39,7 @@ end
 
 function PANEL:AddPanel(id, title, permission, ...)
   self.panels[id] = {
-    uniqueID = id,
+    id = id,
     title = title,
     permission = permission,
     arguments = {...}

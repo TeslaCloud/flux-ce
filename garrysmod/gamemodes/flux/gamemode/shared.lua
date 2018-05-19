@@ -91,9 +91,9 @@ util.IncludeDirectory("core/ui/view/base", true)
 util.IncludeDirectory("core/ui/view", true)
 
 if (theme or SERVER) then
-  pipeline.Register("theme", function(uniqueID, fileName, pipe)
+  pipeline.Register("theme", function(id, fileName, pipe)
     if (CLIENT) then
-      THEME = Theme(uniqueID)
+      THEME = Theme(id)
 
       util.Include(fileName)
 

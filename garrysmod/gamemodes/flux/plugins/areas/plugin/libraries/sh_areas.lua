@@ -50,13 +50,13 @@ function areas.GetByType(type)
   return toReturn
 end
 
-function areas.Create(uniqueID, height, data)
+function areas.Create(id, height, data)
   data = data or {}
 
   local area = {}
 
-  if (!stored[uniqueID]) then
-    area.id = uniqueID
+  if (!stored[id]) then
+    area.id = id
     area.minH = 0
     area.maxH = 0
     area.height = height or 0
@@ -68,7 +68,7 @@ function areas.Create(uniqueID, height, data)
       table.Merge(area, data)
     end
   else
-    area = stored[uniqueID]
+    area = stored[id]
   end
 
   function area:AddVertex(vect)
@@ -90,7 +90,7 @@ function areas.Create(uniqueID, height, data)
   function area:Register()
     if (#self.verts > 2) then self:FinishPoly() end
 
-    return areas.Register(uniqueID, self)
+    return areas.Register(id, self)
   end
 
   return area
@@ -113,11 +113,11 @@ function areas.Register(id, data)
   return stored[id]
 end
 
-function areas.Remove(uniqueID)
-  stored[uniqueID] = nil
+function areas.Remove(id)
+  stored[id] = nil
 
   if (SERVER) then
-    netstream.Start(nil, "flAreaRemove", uniqueID)
+    netstream.Start(nil, "flAreaRemove", id)
   end
 end
 
@@ -129,8 +129,8 @@ function areas.GetColor(typeID)
   end
 end
 
-function areas.RegisterType(uniqueID, name, description, color, defaultCallback)
-  types[uniqueID] = {
+function areas.RegisterType(id, name, description, color, defaultCallback)
+  types[id] = {
     name = name,
     description = description,
     callback = defaultCallback,
@@ -150,7 +150,7 @@ end
 areas.RegisterType(
   "area",
   "Simple Area",
-  "A simple area. Use this type if you have a callback somewhere in the code that looks up uniqueID instead of type ID.",
+  "A simple area. Use this type if you have a callback somewhere in the code that looks up id instead of type ID.",
   function(player, area, poly, bHasEntered, curPos, curTime)
     if (bHasEntered) then
       hook.Run("PlayerEnteredArea", player, area, curTime)

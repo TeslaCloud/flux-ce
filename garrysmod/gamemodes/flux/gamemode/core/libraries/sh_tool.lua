@@ -17,8 +17,8 @@ function fl.tool:New(id)
   return CTool()
 end
 
-function fl.tool:Get(uniqueID)
-  return stored[uniqueID]
+function fl.tool:Get(id)
+  return stored[id]
 end
 
 function fl.tool:Register(obj)
@@ -30,10 +30,10 @@ function fl.tool:Register(obj)
   fl.DevPrint("Registering Tool: "..obj.Mode)
 end
 
-pipeline.Register("tool", function(uniqueID, fileName, pipe)
+pipeline.Register("tool", function(id, fileName, pipe)
   TOOL = CTool()
-  TOOL.Mode = uniqueID
-  TOOL.id = uniqueID
+  TOOL.Mode = id
+  TOOL.id = id
 
   hook.Run("PreIncludeTool", TOOL)
 
@@ -43,7 +43,7 @@ pipeline.Register("tool", function(uniqueID, fileName, pipe)
 
   TOOL:CreateConVars()
 
-  stored[uniqueID] = TOOL
+  stored[id] = TOOL
 
   fl.DevPrint("Registering Tool: "..id)
 

@@ -24,12 +24,12 @@ function PANEL:Rebuild()
   self.scrollPanel:Dock(FILL)
   self.layout:Dock(FILL)
 
-  for uniqueID, itemTable in pairs(item.GetAll()) do
+  for id, itemTable in pairs(item.GetAll()) do
     if (!categories[itemTable.Category]) then 
       categories[itemTable.Category] = {}
     end
 
-    table.insert(categories[itemTable.Category], {id = uniqueID, itemTable = itemTable})
+    table.insert(categories[itemTable.Category], {id = id, itemTable = itemTable})
   end
 
   self.layout:Clear()

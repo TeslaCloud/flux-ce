@@ -6,10 +6,10 @@
 
 class "CAttribute"
 
-function CAttribute:CAttribute(uniqueID)
-  if (!isstring(uniqueID)) then return end
+function CAttribute:CAttribute(id)
+  if (!isstring(id)) then return end
 
-  self.id = uniqueID
+  self.id = id
 end
 
 function CAttribute:Register()
