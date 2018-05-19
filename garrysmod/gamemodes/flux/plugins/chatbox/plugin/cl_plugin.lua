@@ -1,7 +1,7 @@
 --[[
-	Flux © 2016-2018 TeslaCloud Studios
-	Do not share or re-distribute before
-	the framework is publicly released.
+  Flux © 2016-2018 TeslaCloud Studios
+  Do not share or re-distribute before
+  the framework is publicly released.
 --]]
 
 local CATEGORY = config.CreateCategory("chatbox", "Chatbox Settings", "Customize how the chat box works for your server!")
@@ -17,136 +17,136 @@ chatbox.y = chatbox.y or 0
 chatbox.oldAddText = chatbox.oldAddText or chat.AddText
 
 function chat.AddText(...)
-	netstream.Start("Chatbox::AddText", ...)
+  netstream.Start("Chatbox::AddText", ...)
 end
 
 function chatbox.Compile(messageTable)
-	local compiled = {
-		totalHeight = 0
-	}
+  local compiled = {
+    totalHeight = 0
+  }
 
-	local data = messageTable.data
-	local shouldTranslate = messageTable.shouldTranslate
-	local curSize = _font.Scale(18)
+  local data = messageTable.data
+  local shouldTranslate = messageTable.shouldTranslate
+  local curSize = _font.Scale(18)
 
-	if (isnumber(messageTable.size)) then
-		curSize = _font.Scale(messageTable.size)
-	end
+  if (isnumber(messageTable.size)) then
+    curSize = _font.Scale(messageTable.size)
+  end
 
-	local curX, curY = 0, 0
-	local totalHeight = 0
-	local maxHeight = font.Scale(messageTable.maxHeight)
-	local font = _font.GetSize(theme.GetFont("Chatbox_Normal"), curSize)
+  local curX, curY = 0, 0
+  local totalHeight = 0
+  local maxHeight = font.Scale(messageTable.maxHeight)
+  local font = _font.GetSize(theme.GetFont("Chatbox_Normal"), curSize)
 
-	if (plugin.call("ChatboxCompileMessage", data, compiled) != true) then
-		for k, v in ipairs(data) do
-			if (plugin.call("ChatboxCompileMessageData", v, compiled) == true) then
-				continue
-			end
+  if (plugin.call("ChatboxCompileMessage", data, compiled) != true) then
+    for k, v in ipairs(data) do
+      if (plugin.call("ChatboxCompileMessageData", v, compiled) == true) then
+        continue
+      end
 
-			if (isstring(v)) then
-				if (shouldTranslate) then
-					data[k] = fl.lang:TranslateText(v)
-				end
+      if (isstring(v)) then
+        if (shouldTranslate) then
+          data[k] = fl.lang:TranslateText(v)
+        end
 
-				local wrapped = util.WrapText(v, font, chatbox.width, curX)
-				local nWrapped = #wrapped
+        local wrapped = util.WrapText(v, font, chatbox.width, curX)
+        local nWrapped = #wrapped
 
-				for k2, v2 in ipairs(wrapped) do
-					local w, h = util.GetTextSize(v2, font)
+        for k2, v2 in ipairs(wrapped) do
+          local w, h = util.GetTextSize(v2, font)
 
-					table.insert(compiled, {text = v2, w = w, h = h, x = curX, y = curY + (maxHeight - h)})
+          table.insert(compiled, {text = v2, w = w, h = h, x = curX, y = curY + (maxHeight - h)})
 
-					curX = curX + w
+          curX = curX + w
 
-					if (nWrapped > 1 and k2 != nWrapped) then
-						curY = curY + h + config.Get("chatbox_message_margin")
+          if (nWrapped > 1 and k2 != nWrapped) then
+            curY = curY + h + config.Get("chatbox_message_margin")
 
-						totalHeight = totalHeight + h + config.Get("chatbox_message_margin")
+            totalHeight = totalHeight + h + config.Get("chatbox_message_margin")
 
-						curX = 0
-					elseif (totalHeight < h) then
-						totalHeight = h
-					end
-				end
-			elseif (isnumber(v)) then
-				curSize = _font.Scale(v)
+            curX = 0
+          elseif (totalHeight < h) then
+            totalHeight = h
+          end
+        end
+      elseif (isnumber(v)) then
+        curSize = _font.Scale(v)
 
-				font = _font.GetSize(theme.GetFont("Chatbox_Normal"), curSize)
+        font = _font.GetSize(theme.GetFont("Chatbox_Normal"), curSize)
 
-				table.insert(compiled, curSize)
-			elseif (istable(v)) then
-				if (v.image) then
-					local scaled = _font.Scale(v.height)
-					local imageData = {
-						image = v.image,
-						x = curX + 1,
-						y = curY,
-						w = _font.Scale(v.width),
-						h = scaled
-					}
+        table.insert(compiled, curSize)
+      elseif (istable(v)) then
+        if (v.image) then
+          local scaled = _font.Scale(v.height)
+          local imageData = {
+            image = v.image,
+            x = curX + 1,
+            y = curY,
+            w = _font.Scale(v.width),
+            h = scaled
+          }
 
-					curX = curX + imageData.w + 2
+          curX = curX + imageData.w + 2
 
-					table.insert(compiled, imageData)
+          table.insert(compiled, imageData)
 
-					if (totalHeight < scaled) then
-						totalHeight = scaled
-					end
-				elseif (v.r and v.g and v.b and v.a) then
-					table.insert(compiled, Color(v.r, v.g, v.b, v.a))
-				end
-			elseif (IsValid(v)) then
-				local toInsert = ""
+          if (totalHeight < scaled) then
+            totalHeight = scaled
+          end
+        elseif (v.r and v.g and v.b and v.a) then
+          table.insert(compiled, Color(v.r, v.g, v.b, v.a))
+        end
+      elseif (IsValid(v)) then
+        local toInsert = ""
 
-				if (v:IsPlayer()) then
-					toInsert = hook.Run("GetPlayerName", v) or v:Name()
-				else
-					toInsert = tostring(v) or v:GetClass()
-				end
+        if (v:IsPlayer()) then
+          toInsert = hook.Run("GetPlayerName", v) or v:Name()
+        else
+          toInsert = tostring(v) or v:GetClass()
+        end
 
-				local w, h = util.GetTextSize(toInsert, font)
+        local w, h = util.GetTextSize(toInsert, font)
 
-				table.insert(compiled, {text = toInsert, w = w, h = h, x = curX, y = curY + (maxHeight - h)})
+        table.insert(compiled, {text = toInsert, w = w, h = h, x = curX, y = curY + (maxHeight - h)})
 
-				curX = curX + w
+        curX = curX + w
 
-				if (totalHeight < h) then
-					totalHeight = h
-				end
-			end
-		end
-	end
+        if (totalHeight < h) then
+          totalHeight = h
+        end
+      end
+    end
+  end
 
-	compiled.totalHeight = math.max(totalHeight, compiled.totalHeight)
+  compiled.totalHeight = math.max(totalHeight, compiled.totalHeight)
 
-	return compiled
+  return compiled
 end
 
 function chatbox.Show()
-	if (!IsValid(chatbox.panel)) then
-		chatbox.width = theme.GetOption("Chatbox_Width") or 100
-		chatbox.height = theme.GetOption("Chatbox_Height") or 100
-		chatbox.x = theme.GetOption("Chatbox_X") or 0
-		chatbox.y = theme.GetOption("Chatbox_Y") or 0
+  if (!IsValid(chatbox.panel)) then
+    chatbox.width = theme.GetOption("Chatbox_Width") or 100
+    chatbox.height = theme.GetOption("Chatbox_Height") or 100
+    chatbox.x = theme.GetOption("Chatbox_X") or 0
+    chatbox.y = theme.GetOption("Chatbox_Y") or 0
 
-		chatbox.panel = vgui.Create("flChatPanel")
-	end
+    chatbox.panel = vgui.Create("flChatPanel")
+  end
 
-	chatbox.panel:SetOpen(true)
+  chatbox.panel:SetOpen(true)
 end
 
 function chatbox.Hide()
-	if (IsValid(chatbox.panel)) then
-		chatbox.panel:SetOpen(false)
+  if (IsValid(chatbox.panel)) then
+    chatbox.panel:SetOpen(false)
 
-		chatbox.panel:SetMouseInputEnabled(false)
-		chatbox.panel:SetKeyboardInputEnabled(false)
-	end
+    chatbox.panel:SetMouseInputEnabled(false)
+    chatbox.panel:SetKeyboardInputEnabled(false)
+  end
 end
 
 concommand.Add("fl_reset_chat", function()
-	if (IsValid(chatbox.panel)) then
-		chatbox.panel:SafeRemove()
-	end
+  if (IsValid(chatbox.panel)) then
+    chatbox.panel:SafeRemove()
+  end
 end)

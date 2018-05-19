@@ -1,7 +1,7 @@
 --[[
-	Flux © 2016-2018 TeslaCloud Studios
-	Do not share or re-distribute before
-	the framework is publicly released.
+  Flux © 2016-2018 TeslaCloud Studios
+  Do not share or re-distribute before
+  the framework is publicly released.
 --]]
 
 TOOL.Category = "Flux"
@@ -10,21 +10,21 @@ TOOL.Command = nil
 TOOL.ConfigName = ""
 
 function TOOL:LeftClick(trace)
-	if (CLIENT) then return true end
+  if (CLIENT) then return true end
 
-	local player = self:GetOwner()
+  local player = self:GetOwner()
 
-	plugin.call("PlayerMakeStatic", player, true)
+  plugin.call("PlayerMakeStatic", player, true)
 
- 	return true
+   return true
 end
 
 function TOOL:RightClick(trace)
-	if (CLIENT) then return true end
+  if (CLIENT) then return true end
 
-	local player = self:GetOwner()
+  local player = self:GetOwner()
 
-	plugin.call("PlayerMakeStatic", player, false)
+  plugin.call("PlayerMakeStatic", player, false)
 
-	return true
+  return true
 end

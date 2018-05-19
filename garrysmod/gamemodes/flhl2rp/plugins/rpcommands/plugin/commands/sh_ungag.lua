@@ -1,7 +1,7 @@
 --[[
-	Flux © 2016-2018 TeslaCloud Studios
-	Do not share or re-distribute before
-	the framework is publicly released.
+  Flux © 2016-2018 TeslaCloud Studios
+  Do not share or re-distribute before
+  the framework is publicly released.
 --]]
 
 local COMMAND = Command("ungag")
@@ -14,11 +14,11 @@ COMMAND.Immunity = true
 COMMAND.Aliases = {"unmuteooc", "oocunmute", "plyungag"}
 
 function COMMAND:OnRun(player, targets)
-	for k, v in ipairs(targets) do
-		v:SetPlayerData("MuteOOC", nil)
-	end
+  for k, v in ipairs(targets) do
+    v:SetPlayerData("MuteOOC", nil)
+  end
 
-	fl.player:NotifyAll(L("OOCUnmuteMessage", (IsValid(player) and player:Name()) or "Console", util.PlayerListToString(targets)))
+  fl.player:NotifyAll(L("OOCUnmuteMessage", (IsValid(player) and player:Name()) or "Console", util.PlayerListToString(targets)))
 end
 
 COMMAND:Register()
