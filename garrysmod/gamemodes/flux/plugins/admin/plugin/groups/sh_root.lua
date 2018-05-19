@@ -1,7 +1,7 @@
 --[[
-	Flux © 2016-2018 TeslaCloud Studios
-	Do not share or re-distribute before
-	the framework is publicly released.
+  Flux © 2016-2018 TeslaCloud Studios
+  Do not share or re-distribute before
+  the framework is publicly released.
 --]]
 
 GROUP.Name = "Root"
@@ -11,5 +11,5 @@ GROUP.Icon = "icon16/key.png"
 GROUP.Immunity = 1000
 GROUP.Base = "superadmin"
 GROUP.Permissions = {
-	all = PERM_ALLOW_OVERRIDE
+  all = PERM_ALLOW_OVERRIDE
 }
