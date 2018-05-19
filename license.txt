@@ -1,6 +1,6 @@
 Flux license version 2 (1419)
 
-Copyright © 2016-2017 TeslaCloud Studios
+Copyright © 2016-2018 TeslaCloud Studios
 Flux (the framework, the software) is a project of TeslaCloud Studios LLC (us) and is a subject to the following license (terms):
 
 1. General Terms

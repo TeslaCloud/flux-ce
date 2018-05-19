@@ -1,7 +1,7 @@
 --[[
-	Flux © 2016-2017 TeslaCloud Studios
-	Do not share or re-distribute before
-	the framework is publicly released.
+  Flux © 2016-2018 TeslaCloud Studios
+  Do not share or re-distribute before
+  the framework is publicly released.
 --]]
 
 PLUGIN:SetName("DBugR Hooks")
@@ -9,26 +9,26 @@ PLUGIN:SetAuthor("NightAngel")
 PLUGIN:SetDescription("Adds all plugin hooks to DBugR performance metrics monitor.")
 
 if (DBugR) then
-	function PLUGIN:OnSchemaLoaded()
-		for hookName, hooks in pairs(plugin.GetCache()) do
-			for k, v in ipairs(hooks) do
-				local name = "N/A"
-				local func = v[1]
+  function PLUGIN:OnSchemaLoaded()
+    for hookName, hooks in pairs(plugin.GetCache()) do
+      for k, v in ipairs(hooks) do
+        local name = "N/A"
+        local func = v[1]
 
-				if (v[2] and v[2].GetName) then
-					name = v[2]:GetName()
-				elseif (v.id) then
-					name = v.id
-				end
+        if (v[2] and v[2].GetName) then
+          name = v[2]:GetName()
+        elseif (v.id) then
+          name = v.id
+        end
 
-				hooks[k][1] = DBugR.Util.Func.AttachProfiler(func, function(time)
-					DBugR.Profilers.Hook:AddPerformanceData(name..":"..hookName, time, func)
-				end)
-			end
-		end
+        hooks[k][1] = DBugR.Util.Func.AttachProfiler(func, function(time)
+          DBugR.Profilers.Hook:AddPerformanceData(name..":"..hookName, time, func)
+        end)
+      end
+    end
 
-		if (fl.Devmode) then
-			DBugR.Print("Flux plugin hooks detoured!")
-		end
-	end
+    if (fl.Devmode) then
+      DBugR.Print("Flux plugin hooks detoured!")
+    end
+  end
 end
