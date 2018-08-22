@@ -1,7 +1,4 @@
---[[
-  Derpy © 2018 TeslaCloud Studios
-  Do not use, re-distribute or share unless authorized.
---]]local CATEGORY = config.CreateCategory("general", "General Settings", "General settings related to the framework itself.")
+local CATEGORY = config.CreateCategory("general", "General Settings", "General settings related to the framework itself.")
 CATEGORY:AddTableEditor("command_prefixes", "Command Prefixes", "What chat prefixes to consider as command prefixes (*prefix*someCommand, e.g. /someCommand)")
 CATEGORY:AddSlider("walk_speed", "Walk Speed", "How fast does the player walk?", {min = 0, max = 1024, default = 100})
 CATEGORY:AddSlider("run_speed", "Run Speed", "How fast does the player run (while holding SHIFT by default)?", {min = 0, max = 1024, default = 200})

@@ -1,7 +1,4 @@
---[[
-  Derpy © 2018 TeslaCloud Studios
-  Do not use, re-distribute or share unless authorized.
---]]local startTime = flThirdPerson.startTime or nil
+local startTime = flThirdPerson.startTime or nil
 flThirdPerson.startTime = startTime
 
 local offset = flThirdPerson.offset or Vector(0, 0, 0)

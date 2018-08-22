@@ -1,7 +1,4 @@
---[[
-  Derpy © 2018 TeslaCloud Studios
-  Do not use, re-distribute or share unless authorized.
---]]GROUP.Name = "User"
+GROUP.Name = "User"
 GROUP.Description = "#PlayerGroup_User"
 GROUP.Color = Color(255, 255, 255)
 GROUP.Icon = "icon16/user.png"

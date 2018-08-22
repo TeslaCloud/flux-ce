@@ -1,7 +1,4 @@
---[[
-  Derpy © 2018 TeslaCloud Studios
-  Do not use, re-distribute or share unless authorized.
---]]PLUGIN:SetAlias("flAreas")
+PLUGIN:SetAlias("flAreas")
 
 util.Include("cl_plugin.lua")
 util.Include("sv_plugin.lua")

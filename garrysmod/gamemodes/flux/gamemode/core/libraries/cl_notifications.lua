@@ -1,7 +1,4 @@
---[[
-  Derpy © 2018 TeslaCloud Studios
-  Do not use, re-distribute or share unless authorized.
---]]library.New("notification", fl)
+library.New("notification", fl)
 
 local display = {}
 local top = 1

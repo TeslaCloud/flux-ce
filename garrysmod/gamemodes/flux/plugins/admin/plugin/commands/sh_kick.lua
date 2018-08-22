@@ -1,7 +1,4 @@
---[[
-  Derpy © 2018 TeslaCloud Studios
-  Do not use, re-distribute or share unless authorized.
---]]local COMMAND = Command("kick")
+local COMMAND = Command("kick")
 COMMAND.Name = "Kick"
 COMMAND.Description = "#KickCMD_Description"
 COMMAND.Syntax = "#KickCMD_Syntax"

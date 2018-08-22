@@ -1,7 +1,4 @@
---[[
-  Derpy © 2018 TeslaCloud Studios
-  Do not use, re-distribute or share unless authorized.
---]]local COMMAND = Command("roll")
+local COMMAND = Command("roll")
 COMMAND.Name = "Roll"
 COMMAND.Description = "Roll a random number between 1 and 100 or specific number."
 COMMAND.Syntax = "[number Range]"

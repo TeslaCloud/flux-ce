@@ -1,7 +1,4 @@
---[[
-  Derpy © 2018 TeslaCloud Studios
-  Do not use, re-distribute or share unless authorized.
---]]config.Set("walk_speed", 100)
+config.Set("walk_speed", 100)
 config.Set("run_speed", 200)
 config.Set("crouched_speed", 55)
 config.Set("jump_power", 150)

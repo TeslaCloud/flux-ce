@@ -1,7 +1,4 @@
---[[
-  Derpy © 2018 TeslaCloud Studios
-  Do not use, re-distribute or share unless authorized.
---]]function flChatbox:ChatboxGetPlayerIcon(player, text, bTeamChat)
+function flChatbox:ChatboxGetPlayerIcon(player, text, bTeamChat)
   return {image = "materials/icon16/shield.png", width = 16, height = 16, isData = true}
 end
 

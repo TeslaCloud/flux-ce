@@ -1,7 +1,4 @@
---[[
-  Derpy © 2018 TeslaCloud Studios
-  Do not use, re-distribute or share unless authorized.
---]]-- Sorta model-view-controller implementation, except the model isn't /actually/ used lol.
+-- Sorta model-view-controller implementation, except the model isn't /actually/ used lol.
 
 library.New "mvc"
 

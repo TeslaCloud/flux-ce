@@ -1,7 +1,4 @@
---[[
-  Derpy © 2018 TeslaCloud Studios
-  Do not use, re-distribute or share unless authorized.
---]]PLUGIN:SetName("Glitches")
+PLUGIN:SetName("Glitches")
 PLUGIN:SetAuthor("Mr. Meow")
 PLUGIN:SetDescription("Adds the ability to create pixelized glitch effects on the screen.")
 

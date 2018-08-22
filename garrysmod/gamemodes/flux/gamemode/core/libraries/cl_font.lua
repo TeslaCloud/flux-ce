@@ -1,7 +1,4 @@
---[[
-  Derpy © 2018 TeslaCloud Studios
-  Do not use, re-distribute or share unless authorized.
---]]library.New "font"
+library.New "font"
 
 -- We want the fonts to recreate on refresh.
 local stored = {}

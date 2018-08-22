@@ -1,7 +1,4 @@
---[[
-  Derpy © 2018 TeslaCloud Studios
-  Do not use, re-distribute or share unless authorized.
---]]local COMMAND = Command("forcegetup")
+local COMMAND = Command("forcegetup")
 COMMAND.Name = "ForceGetUp"
 COMMAND.Description = "Forces a player to get up."
 COMMAND.Syntax = "<target> [number GetUpTime]"

@@ -1,7 +1,4 @@
-﻿--[[
-  Derpy © 2018 TeslaCloud Studios
-  Do not use, re-distribute or share unless authorized.
---]]local COMMAND = Command("charsetmodel")
+﻿local COMMAND = Command("charsetmodel")
 COMMAND.Name = "CharSetModel"
 COMMAND.Description = "#CharSetModel_Description"
 COMMAND.Syntax = "#CharSetModel_Syntax"

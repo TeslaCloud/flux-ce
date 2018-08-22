@@ -1,7 +1,4 @@
---[[
-  Derpy © 2018 TeslaCloud Studios
-  Do not use, re-distribute or share unless authorized.
---]]DEFINE_BASECLASS("gamemode_base")
+DEFINE_BASECLASS("gamemode_base")
 
 function GM:DoPlayerDeath(player, attacker, damageInfo) end
 

@@ -1,7 +1,4 @@
---[[
-  Derpy © 2018 TeslaCloud Studios
-  Do not use, re-distribute or share unless authorized.
---]]ENT_RAGDOLL      = 2    -- Player's ragdoll (E.G. fallenover, death or anything else).
+ENT_RAGDOLL      = 2    -- Player's ragdoll (E.G. fallenover, death or anything else).
 
 INT_RAGDOLL_STATE  = 0    -- Player's ragdoll state (RAGDOLL_ enums).
 

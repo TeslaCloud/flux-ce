@@ -1,7 +1,4 @@
---[[
-  Derpy © 2018 TeslaCloud Studios
-  Do not use, re-distribute or share unless authorized.
---]]local flPlayer = {}
+local flPlayer = {}
 flPlayer.DisplayName = "Flux Player"
 DEFINE_BASECLASS("player_default")
 

@@ -1,7 +1,4 @@
---[[
-  Derpy © 2018 TeslaCloud Studios
-  Do not use, re-distribute or share unless authorized.
---]]if (!CItemUsable) then
+if (!CItemUsable) then
   util.Include("sh_usable_base.lua")
 end
 

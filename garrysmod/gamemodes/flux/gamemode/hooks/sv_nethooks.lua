@@ -1,7 +1,4 @@
---[[
-  Derpy © 2018 TeslaCloud Studios
-  Do not use, re-distribute or share unless authorized.
---]]netstream.Hook("ClientIncludedSchema", function(player)
+netstream.Hook("ClientIncludedSchema", function(player)
   hook.Run("ClientIncludedSchema", player)
   hook.Run("PlayerInitialized", player)
 end)

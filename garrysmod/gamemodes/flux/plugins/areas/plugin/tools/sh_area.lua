@@ -1,7 +1,4 @@
---[[
-  Derpy © 2018 TeslaCloud Studios
-  Do not use, re-distribute or share unless authorized.
---]]TOOL.Category = "Flux"
+TOOL.Category = "Flux"
 TOOL.Name = "Area Tool"
 TOOL.Command = nil
 TOOL.ConfigName = ""

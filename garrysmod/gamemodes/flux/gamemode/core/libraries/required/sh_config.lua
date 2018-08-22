@@ -1,7 +1,4 @@
-﻿--[[
-  Derpy © 2018 TeslaCloud Studios
-  Do not use, re-distribute or share unless authorized.
---]]-- This library is for serverside configs only!
+﻿-- This library is for serverside configs only!
 -- For clientside configs, see cl_settings.lua!
 
 library.New "config"

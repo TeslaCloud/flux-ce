@@ -1,7 +1,4 @@
---[[
-  Derpy © 2018 TeslaCloud Studios
-  Do not use, re-distribute or share unless authorized.
---]]class "CItem"
+class "CItem"
 
 function CItem:CItem(id)
   if (!isstring(id)) then return end

@@ -1,7 +1,4 @@
---[[
-  Derpy © 2018 TeslaCloud Studios
-  Do not use, re-distribute or share unless authorized.
---]]PLUGIN:SetAlias("fl3DText")
+PLUGIN:SetAlias("fl3DText")
 
 fl3DText.stored = fl3DText.stored or {}
 

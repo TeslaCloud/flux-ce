@@ -1,7 +1,4 @@
---[[
-  Derpy © 2018 TeslaCloud Studios
-  Do not use, re-distribute or share unless authorized.
---]]AddCSLuaFile()
+AddCSLuaFile()
 
 -- A function to get lowercase type of an object.
 function typeof(obj)

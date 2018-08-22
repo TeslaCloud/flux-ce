@@ -1,7 +1,4 @@
---[[
-  Derpy © 2018 TeslaCloud Studios
-  Do not use, re-distribute or share unless authorized.
---]]-- Character System Codes
+-- Character System Codes
 CHAR_SUCCESS    = 0    -- Character successfully created.
 CHAR_ERR_NAME    = 1    -- Character's name is invalid.
 CHAR_ERR_DESC    = 2    -- Character's description is invalid.

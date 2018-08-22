@@ -1,7 +1,4 @@
---[[
-  Derpy © 2018 TeslaCloud Studios
-  Do not use, re-distribute or share unless authorized.
---]]PLUGIN:SetName("TeslaCloud Blacklist")
+PLUGIN:SetName("TeslaCloud Blacklist")
 PLUGIN:SetAuthor("Mr. Meow")
 PLUGIN:SetDescription("Automatically prevents access to any TeslaCloud-ran servers to certain players.")
 

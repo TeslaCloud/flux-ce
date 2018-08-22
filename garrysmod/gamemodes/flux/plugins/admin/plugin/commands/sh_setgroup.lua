@@ -1,7 +1,4 @@
---[[
-  Derpy © 2018 TeslaCloud Studios
-  Do not use, re-distribute or share unless authorized.
---]]local COMMAND = Command("setgroup")
+local COMMAND = Command("setgroup")
 COMMAND.Name = "SetGroup"
 COMMAND.Description = "#SetGroupCMD_Description"
 COMMAND.Syntax = "#SetGroupCMD_Syntax"

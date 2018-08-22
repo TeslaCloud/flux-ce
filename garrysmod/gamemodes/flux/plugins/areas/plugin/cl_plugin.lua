@@ -1,7 +1,4 @@
---[[
-  Derpy © 2018 TeslaCloud Studios
-  Do not use, re-distribute or share unless authorized.
---]]do
+do
   local cache = nil
   local tempCache = nil
   local renderColor = Color(50, 255, 50)

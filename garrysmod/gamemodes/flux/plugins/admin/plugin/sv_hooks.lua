@@ -1,7 +1,4 @@
---[[
-  Derpy © 2018 TeslaCloud Studios
-  Do not use, re-distribute or share unless authorized.
---]]function flAdmin:SavePlayerData(player, saveTable)
+function flAdmin:SavePlayerData(player, saveTable)
   saveTable.userGroup = player:GetUserGroup()
   saveTable.secondaryGroups = fl.serialize(player:GetSecondaryGroups())
   saveTable.customPermissions = fl.serialize(player:GetCustomPermissions())

@@ -1,7 +1,4 @@
---[[
-  Derpy © 2018 TeslaCloud Studios
-  Do not use, re-distribute or share unless authorized.
---]]local COMMAND = Command("giveitem")
+local COMMAND = Command("giveitem")
 COMMAND.Name = "GiveItem"
 COMMAND.Description = "Gives specified item to a player."
 COMMAND.Syntax = "<string target> <string item name or unique ID>"

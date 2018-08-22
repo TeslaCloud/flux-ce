@@ -1,7 +1,4 @@
---[[
-  Derpy © 2018 TeslaCloud Studios
-  Do not use, re-distribute or share unless authorized.
---]]library.New "areas"
+library.New "areas"
 
 local stored = areas.stored or {}
 areas.stored = stored

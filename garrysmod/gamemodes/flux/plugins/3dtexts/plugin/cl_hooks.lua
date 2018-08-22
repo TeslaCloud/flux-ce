@@ -1,7 +1,4 @@
---[[
-  Derpy © 2018 TeslaCloud Studios
-  Do not use, re-distribute or share unless authorized.
---]]local blurTexture = Material("pp/blurscreen")
+local blurTexture = Material("pp/blurscreen")
 
 function fl3DText:PostDrawOpaqueRenderables()
   local weapon = fl.client:GetActiveWeapon()

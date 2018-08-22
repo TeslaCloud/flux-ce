@@ -1,7 +1,4 @@
---[[
-  Derpy © 2018 TeslaCloud Studios
-  Do not use, re-distribute or share unless authorized.
---]]local COMMAND = Command("gag")
+local COMMAND = Command("gag")
 COMMAND.Name = "Gag"
 COMMAND.Description = "Mute player's OOC chats."
 COMMAND.Syntax = "<name> <duration> [reason]"

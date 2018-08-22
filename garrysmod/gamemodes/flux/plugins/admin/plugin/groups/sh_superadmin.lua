@@ -1,7 +1,4 @@
---[[
-  Derpy © 2018 TeslaCloud Studios
-  Do not use, re-distribute or share unless authorized.
---]]GROUP.Name = "Super Admin"
+GROUP.Name = "Super Admin"
 GROUP.Description = "#PlayerGroup_Superadmin"
 GROUP.Color = Color(255, 255, 255)
 GROUP.Icon = "icon16/shield.png"

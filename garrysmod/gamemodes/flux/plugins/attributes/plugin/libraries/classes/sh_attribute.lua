@@ -1,7 +1,4 @@
---[[
-  Derpy © 2018 TeslaCloud Studios
-  Do not use, re-distribute or share unless authorized.
---]]class "CAttribute"
+class "CAttribute"
 
 function CAttribute:CAttribute(id)
   if (!isstring(id)) then return end

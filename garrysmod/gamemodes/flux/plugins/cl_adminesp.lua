@@ -1,7 +1,4 @@
---[[
-  Derpy © 2018 TeslaCloud Studios
-  Do not use, re-distribute or share unless authorized.
---]]PLUGIN:SetName("Admin ESP")
+PLUGIN:SetName("Admin ESP")
 PLUGIN:SetAuthor("Mr. Meow")
 PLUGIN:SetDescription("Adds an ESP for admins.")
 

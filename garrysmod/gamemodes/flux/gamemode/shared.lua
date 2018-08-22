@@ -1,7 +1,4 @@
---[[
-  Derpy © 2018 TeslaCloud Studios
-  Do not use, re-distribute or share unless authorized.
---]]-- Define basic GM info fields.
+-- Define basic GM info fields.
 GM.Name         = "Flux"
 GM.Author       = "TeslaCloud Studios"
 GM.Website      = "http://teslacloud.net/"

@@ -1,7 +1,4 @@
---[[
-  Derpy © 2018 TeslaCloud Studios
-  Do not use, re-distribute or share unless authorized.
---]]-- Create the default theme that other themes will derive from.
+-- Create the default theme that other themes will derive from.
 THEME.author = "TeslaCloud Studios"
 THEME.id = "factory"
 THEME.description = "Factory theme. This is a fail-safety theme that other themes use as a base."

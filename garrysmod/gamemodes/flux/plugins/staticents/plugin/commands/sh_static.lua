@@ -1,7 +1,4 @@
---[[
-  Derpy © 2018 TeslaCloud Studios
-  Do not use, re-distribute or share unless authorized.
---]]local COMMAND = Command("static")
+local COMMAND = Command("static")
 COMMAND.Name = "Static"
 COMMAND.Description = "Makes the entity you're looking at static."
 COMMAND.Syntax = "[none]"

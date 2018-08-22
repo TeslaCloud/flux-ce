@@ -1,7 +1,4 @@
 --[[
-  Derpy © 2018 TeslaCloud Studios
-  Do not use, re-distribute or share unless authorized.
---]]--[[
   Simplistic base panel that has basic colors, fields and methods commonly used throughout Flux Framework.
   Do not use it directly, base your own panels off of it instead.
 --]]

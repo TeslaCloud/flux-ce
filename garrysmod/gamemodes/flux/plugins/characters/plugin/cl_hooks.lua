@@ -1,7 +1,4 @@
---[[
-  Derpy © 2018 TeslaCloud Studios
-  Do not use, re-distribute or share unless authorized.
---]]function flCharacters:PlayerInitialized()
+function flCharacters:PlayerInitialized()
   if (!fl.client:GetCharacter()) then
     if (!IsValid(fl.IntroPanel)) then
       fl.IntroPanel = vgui.Create("flIntro")

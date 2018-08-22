@@ -1,7 +1,4 @@
---[[
-  Derpy © 2018 TeslaCloud Studios
-  Do not use, re-distribute or share unless authorized.
---]]local COMMAND = Command("freezebots")
+local COMMAND = Command("freezebots")
 COMMAND.Name = "FreezeBots"
 COMMAND.Description = "Freezes all of the bots."
 COMMAND.Category = "server_management"

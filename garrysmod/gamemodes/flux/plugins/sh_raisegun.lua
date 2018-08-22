@@ -1,7 +1,4 @@
---[[
-  Derpy © 2018 TeslaCloud Studios
-  Do not use, re-distribute or share unless authorized.
---]]PLUGIN:SetName("Raise Weapon")
+PLUGIN:SetName("Raise Weapon")
 PLUGIN:SetAuthor("Mr. Meow")
 PLUGIN:SetDescription("Allows weapons to be lowered and raised by holding R key.")
 

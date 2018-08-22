@@ -1,7 +1,4 @@
---[[
-  Derpy © 2018 TeslaCloud Studios
-  Do not use, re-distribute or share unless authorized.
---]]function flFactions:PostPlayerSpawn(player)
+function flFactions:PostPlayerSpawn(player)
   local playerFaction = player:GetFaction()
 
   if (playerFaction) then

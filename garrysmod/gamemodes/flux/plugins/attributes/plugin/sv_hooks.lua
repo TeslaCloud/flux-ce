@@ -1,7 +1,4 @@
---[[
-  Derpy © 2018 TeslaCloud Studios
-  Do not use, re-distribute or share unless authorized.
---]]function flAttributes:DatabaseConnected()
+function flAttributes:DatabaseConnected()
   fl.db:AddColumn("fl_characters", "attributes", "TEXT DEFAULT NULL")
 end
 
