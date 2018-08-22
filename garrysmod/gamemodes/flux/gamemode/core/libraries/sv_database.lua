@@ -651,12 +651,12 @@ end
 
 function fl.db:EasyWrite(tableName, where, data)
   if (!data or !istable(data)) then
-    ErrorNoHalt("[Flux] Easy MySQL error! Data has unexpected value type (table expected, got "..type(data)..")\n")
+    ErrorNoHalt("Easy MySQL error! Data has unexpected value type (table expected, got "..type(data)..")\n")
     return
   end
 
   if (!where) then
-    ErrorNoHalt("[Flux] Easy MySQL error! 'where' table is malformed! ([1] = "..type(where[1])..", [2] = "..type(where[2])..")\n")
+    ErrorNoHalt("Easy MySQL error! 'where' table is malformed! ([1] = "..type(where[1])..", [2] = "..type(where[2])..")\n")
     return
   end
 
@@ -719,7 +719,7 @@ end
 
 function fl.db:EasyRead(tableName, where, callback)
   if (!where) then
-    ErrorNoHalt("[Flux] Easy MySQL Read error! 'where' table is malformed! ([1] = "..type(where[1])..", [2] = "..type(where[2])..")\n")
+    ErrorNoHalt("Easy MySQL Read error! 'where' table is malformed! ([1] = "..type(where[1])..", [2] = "..type(where[2])..")\n")
 
     return false
   end

@@ -17,10 +17,9 @@ library.stored = library.stored or {}
 --]]
 function fl.Print(message)
   if (!istable(message)) then
-    Msg("[Flux] ")
     print(message)
   else
-    print("[Flux] Printing table:")
+    print("Printing table:")
     PrintTable(message)
   end
 end
@@ -122,7 +121,7 @@ function library.NewClass(strName, tParent, CExtends)
             baseClass[baseClass.ClassName], newObj, ...
           } catch {
             function(exception)
-              ErrorNoHalt("[Flux] Base class constructor has failed to run!\n" +
+              ErrorNoHalt("Base class constructor has failed to run!\n" +
                 tostring(exception) + "\n")
             end
           }
@@ -162,7 +161,7 @@ function library.NewClass(strName, tParent, CExtends)
         CExtends.OnExtended, copy, merged
       } catch {
         function(exception)
-          ErrorNoHalt("[Flux] OnExtended class hook has failed to run!\n" +
+          ErrorNoHalt("OnExtended class hook has failed to run!\n" +
             tostring(exception) + "\n")
         end
       }
@@ -213,7 +212,7 @@ function extends(CBaseClass)
         CBaseClass.OnExtended, copy, merged
       } catch {
         function(exception)
-          ErrorNoHalt("[Flux] OnExtended class hook has failed to run!\n" +
+          ErrorNoHalt("OnExtended class hook has failed to run!\n" +
             tostring(exception) + "\n")
         end
       }
@@ -339,7 +338,7 @@ function fl.Serialize(tTable)
       bSuccess, value = pcall(util.TableToJSON, tTable)
 
       if (!bSuccess) then
-        ErrorNoHalt("[Flux] Failed to serialize a table!\n")
+        ErrorNoHalt("Failed to serialize a table!\n")
         ErrorNoHalt(value.."\n")
         debug.Trace()
 
@@ -349,7 +348,7 @@ function fl.Serialize(tTable)
 
     return value
   else
-    print("[Flux] You must serialize a table, not "..type(tTable).."!")
+    print("You must serialize a table, not "..type(tTable).."!")
 
     return ""
   end
@@ -370,7 +369,7 @@ function fl.Deserialize(strData)
       bSuccess, value = pcall(util.JSONToTable, strData)
 
       if (!bSuccess) then
-        ErrorNoHalt("[Flux] Failed to deserialize a string!\n")
+        ErrorNoHalt("Failed to deserialize a string!\n")
         ErrorNoHalt(value.."\n")
         debug.Trace()
 
@@ -380,7 +379,7 @@ function fl.Deserialize(strData)
 
     return value
   else
-    print("[Flux] You must deserialize a string, not "..type(strData).."!")
+    print("You must deserialize a string, not "..type(strData).."!")
 
     return {}
   end

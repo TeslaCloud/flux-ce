@@ -29,7 +29,7 @@ if (SERVER) then
       return failSafe
     else
       if (fl.Devmode) then
-        ErrorNoHalt("[Flux] Attempt to load data key that doesn't exist! ("..key..")\n")
+        ErrorNoHalt("Attempt to load data key that doesn't exist! ("..key..")\n")
       end
     end
   end
@@ -71,7 +71,7 @@ else
       return failSafe
     else
       if (fl.Devmode) then
-        ErrorNoHalt("[Flux] Attempt to load data key that doesn't exist! ("..key..")\n")
+        ErrorNoHalt("Attempt to load data key that doesn't exist! ("..key..")\n")
       end
     end
   end

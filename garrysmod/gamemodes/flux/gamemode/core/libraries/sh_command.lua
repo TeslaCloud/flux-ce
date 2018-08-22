@@ -328,7 +328,7 @@ if (SERVER) then
         if (IsValid(player)) then
           fl.player:Notify(player, "#Commands_NoAccess")
         else
-          ErrorNoHalt("[Flux] This command cannot be run from console!\n")
+          ErrorNoHalt("This command cannot be run from console!\n")
         end
       end
     else
@@ -347,7 +347,7 @@ if (SERVER) then
         cmdTable.OnRun, cmdTable, player, unpack(arguments)
       } catch {
         function(exception)
-          ErrorNoHalt("[Flux] "..cmdTable.id.." command has failed to run!\n")
+          ErrorNoHalt(""..cmdTable.id.." command has failed to run!\n")
           ErrorNoHalt(exception.."\n")
         end
       }

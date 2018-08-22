@@ -16,7 +16,7 @@ local player_meta = FindMetaTable("Player")
 -- A function to check if value's type cannot be serialized and print an error if it is so.
 local function IsBadType(key, val)
   if (isfunction(val)) then
-    ErrorNoHalt("[Flux] Cannot store functions as NetVars! ("..key..")\n")
+    ErrorNoHalt("Cannot store functions as NetVars! ("..key..")\n")
 
     return true
   end

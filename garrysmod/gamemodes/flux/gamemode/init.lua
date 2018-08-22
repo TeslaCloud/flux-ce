@@ -8,7 +8,7 @@ function SafeRequire(mod)
   local success, value = pcall(require, mod)
 
   if (!success) then
-    ErrorNoHalt("[Flux] Failed to open the '"..mod.."' module!\n")
+    ErrorNoHalt("Failed to open the '"..mod.."' module!\n")
 
     return false
   end
@@ -17,13 +17,13 @@ function SafeRequire(mod)
 end
 
 if (fl.initialized) then
-  MsgC(Color(0, 255, 100, 255), "[Flux] Lua auto-reload in progress...\n")
+  MsgC(Color(0, 255, 100, 255), "Lua auto-reload in progress...\n")
 else
-  MsgC(Color(0, 255, 100, 255), "[Flux] Initializing...\n")
+  MsgC(Color(0, 255, 100, 255), "Initializing...\n")
 end
 
 if (!SafeRequire("fileio")) then
-  ErrorNoHalt("[Flux] The fileio module has failed to load!\nPlease make sure that you have gmsv_fileio_"..((system.IsWindows() and "win32") or "linux")..".dll in garrysmod/lua/bin folder!\nAborting startup...\n")
+  ErrorNoHalt("The fileio module has failed to load!\nPlease make sure that you have gmsv_fileio_"..((system.IsWindows() and "win32") or "linux")..".dll in garrysmod/lua/bin folder!\nAborting startup...\n")
 
   return
 end
@@ -80,9 +80,9 @@ end
 include("shared.lua")
 
 if (fl.initialized) then
-  MsgC(Color(0, 255, 100, 255), "[Flux] Auto-reloaded in "..math.Round(os.clock() - fl.startTime, 3).. " second(s)\n")
+  MsgC(Color(0, 255, 100, 255), "Auto-reloaded in "..math.Round(os.clock() - fl.startTime, 3).. " second(s)\n")
 else
-  MsgC(Color(0, 255, 100, 255), "[Flux] Flux v"..GM.Version.." has finished loading in "..math.Round(os.clock() - fl.startTime, 3).. " second(s)\n")
+  MsgC(Color(0, 255, 100, 255), "Flux v"..GM.Version.." has finished loading in "..math.Round(os.clock() - fl.startTime, 3).. " second(s)\n")
 
   fl.initialized = true
 end
