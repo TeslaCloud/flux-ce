@@ -1,7 +1,4 @@
---[[
-  Derpy © 2018 TeslaCloud Studios
-  Do not use, re-distribute or share unless authorized.
---]]local panel_meta = FindMetaTable("Panel")
+local panel_meta = FindMetaTable("Panel")
 
 -- Seriously, Newman? I have to write this myself?
 function panel_meta:UnDraggable()

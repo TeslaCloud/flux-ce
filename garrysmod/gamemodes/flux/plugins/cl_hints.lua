@@ -1,7 +1,4 @@
---[[
-  Derpy © 2018 TeslaCloud Studios
-  Do not use, re-distribute or share unless authorized.
---]]PLUGIN:SetAlias("flHints")
+PLUGIN:SetAlias("flHints")
 PLUGIN:SetName("Hints")
 PLUGIN:SetDescription("Adds hints that are displayed to players.")
 PLUGIN:SetAuthor("Mr. Meow")

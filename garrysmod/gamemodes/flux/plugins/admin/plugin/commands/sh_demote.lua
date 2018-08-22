@@ -1,7 +1,4 @@
---[[
-  Derpy © 2018 TeslaCloud Studios
-  Do not use, re-distribute or share unless authorized.
---]]local COMMAND = Command("demote")
+local COMMAND = Command("demote")
 COMMAND.Name = "Demote"
 COMMAND.Description = "#DemoteCMD_Description"
 COMMAND.Syntax = "#DemoteCMD_Syntax"

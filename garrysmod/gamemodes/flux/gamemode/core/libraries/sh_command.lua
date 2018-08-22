@@ -1,7 +1,4 @@
---[[
-  Derpy © 2018 TeslaCloud Studios
-  Do not use, re-distribute or share unless authorized.
---]]library.New("command", fl)
+library.New("command", fl)
 
 local stored = fl.command.stored or {}
 local aliases = fl.command.aliases or {}

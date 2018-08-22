@@ -1,7 +1,4 @@
---[[
-  Derpy © 2018 TeslaCloud Studios
-  Do not use, re-distribute or share unless authorized.
---]]local lang = fl.lang:GetTable("en")
+local lang = fl.lang:GetTable("en")
 
 lang["#3DText_NotEnoughText"]  = "You did not specify enough text."
 lang["#3DText_TextAddDesc"]    = "Adds a 3D text."

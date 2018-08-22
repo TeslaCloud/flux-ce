@@ -1,7 +1,4 @@
---[[
-  Derpy © 2018 TeslaCloud Studios
-  Do not use, re-distribute or share unless authorized.
---]]local COMMAND = Command("unban")
+local COMMAND = Command("unban")
 COMMAND.Name = "Unban"
 COMMAND.Description = "#UnbanCMD_Description"
 COMMAND.Syntax = "#UnbanCMD_Syntax"

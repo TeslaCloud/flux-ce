@@ -1,7 +1,4 @@
---[[
-  Derpy © 2018 TeslaCloud Studios
-  Do not use, re-distribute or share unless authorized.
---]]PLUGIN:SetName("Flux Dev HUD")
+PLUGIN:SetName("Flux Dev HUD")
 PLUGIN:SetAuthor("Mr. Meow")
 PLUGIN:SetDescription("Adds developer HUD.")
 

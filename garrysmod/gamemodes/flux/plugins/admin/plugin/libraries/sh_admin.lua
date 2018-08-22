@@ -1,7 +1,4 @@
---[[
-  Derpy © 2018 TeslaCloud Studios
-  Do not use, re-distribute or share unless authorized.
---]]library.New("admin", fl)
+library.New("admin", fl)
 
 local groups = fl.admin.groups or {}
 fl.admin.groups = groups

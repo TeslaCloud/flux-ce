@@ -1,7 +1,4 @@
---[[
-  Derpy © 2018 TeslaCloud Studios
-  Do not use, re-distribute or share unless authorized.
---]]local function PermButtonDoClick(panel, btn)
+local function PermButtonDoClick(panel, btn)
   panel.m_PermissionValue = btn.permValue or PERM_NO
   btn.isSelected = true
 

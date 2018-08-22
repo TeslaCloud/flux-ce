@@ -1,7 +1,4 @@
---[[
-  Derpy © 2018 TeslaCloud Studios
-  Do not use, re-distribute or share unless authorized.
---]]config.Set("chatbox_message_margin", 2)
+config.Set("chatbox_message_margin", 2)
 config.Set("chatbox_message_fade_delay", 12)
 config.Set("chatbox_max_messages", 100)
 

@@ -1,7 +1,4 @@
---[[
-  Derpy © 2018 TeslaCloud Studios
-  Do not use, re-distribute or share unless authorized.
---]]local COMMAND = Command("textremove")
+local COMMAND = Command("textremove")
 COMMAND.Name = "TextRemove"
 COMMAND.Description = "Removes a 3D text."
 COMMAND.Syntax = "[none]"

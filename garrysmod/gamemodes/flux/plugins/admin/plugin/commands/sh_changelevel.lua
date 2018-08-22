@@ -1,7 +1,4 @@
---[[
-  Derpy © 2018 TeslaCloud Studios
-  Do not use, re-distribute or share unless authorized.
---]]local COMMAND = Command("changelevel")
+local COMMAND = Command("changelevel")
 COMMAND.Name = "Changelevel"
 COMMAND.Description = "Changes the level to specified map."
 COMMAND.Syntax = "<string Map> [number Delay]"

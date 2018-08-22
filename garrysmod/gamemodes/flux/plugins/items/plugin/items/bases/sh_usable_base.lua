@@ -1,7 +1,4 @@
---[[
-  Derpy © 2018 TeslaCloud Studios
-  Do not use, re-distribute or share unless authorized.
---]]-- Alternatively, you can use item.CreateBase("CItemUsable")
+-- Alternatively, you can use item.CreateBase("CItemUsable")
 class "CItemUsable" extends "CItem"
 
 CItemUsable.Name = "Usable Items Base"

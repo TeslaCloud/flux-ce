@@ -1,7 +1,4 @@
---[[
-  Derpy © 2018 TeslaCloud Studios
-  Do not use, re-distribute or share unless authorized.
---]]local COMMAND = Command("setfaction")
+local COMMAND = Command("setfaction")
 
 COMMAND.Name = "Setfaction"
 COMMAND.Description = "Change player's faction."

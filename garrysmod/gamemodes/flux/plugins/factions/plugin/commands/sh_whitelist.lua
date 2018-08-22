@@ -1,7 +1,4 @@
---[[
-  Derpy © 2018 TeslaCloud Studios
-  Do not use, re-distribute or share unless authorized.
---]]local COMMAND = Command("whitelist")
+local COMMAND = Command("whitelist")
 
 COMMAND.Name = "Whitelist"
 COMMAND.Description = "#WhitelistCMD_Description"

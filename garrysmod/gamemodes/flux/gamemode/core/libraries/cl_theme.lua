@@ -1,7 +1,4 @@
---[[
-  Derpy © 2018 TeslaCloud Studios
-  Do not use, re-distribute or share unless authorized.
---]]library.New "theme"
+library.New "theme"
 theme.activeTheme = theme.activeTheme or nil
 
 local stored = theme.stored or {}

@@ -1,7 +1,4 @@
---[[
-  Derpy © 2018 TeslaCloud Studios
-  Do not use, re-distribute or share unless authorized.
---]]-- Disable default Sandbox persistence.
+-- Disable default Sandbox persistence.
 hook.Remove("ShutDown", "SavePersistenceOnShutdown")
 hook.Remove("PersistenceSave", "PersistenceSave")
 hook.Remove("PersistenceLoad", "PersistenceLoad")

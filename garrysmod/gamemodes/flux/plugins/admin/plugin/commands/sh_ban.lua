@@ -1,7 +1,4 @@
---[[
-  Derpy © 2018 TeslaCloud Studios
-  Do not use, re-distribute or share unless authorized.
---]]local COMMAND = Command("ban")
+local COMMAND = Command("ban")
 COMMAND.Name = "Ban"
 COMMAND.Description = "#BanCMD_Description"
 COMMAND.Syntax = "#BanCMD_Syntax"

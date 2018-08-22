@@ -1,7 +1,4 @@
---[[
-  Derpy © 2018 TeslaCloud Studios
-  Do not use, re-distribute or share unless authorized.
---]]local ent_meta = FindMetaTable("Entity")
+local ent_meta = FindMetaTable("Entity")
 
 --[[
   We store the original function here so we can override it from the player metaTable,

@@ -1,7 +1,4 @@
---[[
-  Derpy © 2018 TeslaCloud Studios
-  Do not use, re-distribute or share unless authorized.
---]]PLUGIN:SetName("Auto Walk")
+PLUGIN:SetName("Auto Walk")
 PLUGIN:SetAuthor("NightAngel")
 PLUGIN:SetDescription("Allows users to press a button to automatically walk forward.")
 

@@ -1,7 +1,4 @@
---[[
-  Derpy © 2018 TeslaCloud Studios
-  Do not use, re-distribute or share unless authorized.
---]]DeriveGamemode("sandbox")
+DeriveGamemode("sandbox")
 
 do
   local centerX, centerY = ScrW() * 0.5, ScrH() * 0.5

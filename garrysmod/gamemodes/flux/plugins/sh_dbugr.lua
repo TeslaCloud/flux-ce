@@ -1,7 +1,4 @@
---[[
-  Derpy © 2018 TeslaCloud Studios
-  Do not use, re-distribute or share unless authorized.
---]]PLUGIN:SetName("DBugR Hooks")
+PLUGIN:SetName("DBugR Hooks")
 PLUGIN:SetAuthor("NightAngel")
 PLUGIN:SetDescription("Adds all plugin hooks to DBugR performance metrics monitor.")
 

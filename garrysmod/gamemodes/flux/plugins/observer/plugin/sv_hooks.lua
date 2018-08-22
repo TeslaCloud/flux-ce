@@ -1,7 +1,4 @@
---[[
-  Derpy © 2018 TeslaCloud Studios
-  Do not use, re-distribute or share unless authorized.
---]]function flObserver:ShouldObserverReset(player)
+function flObserver:ShouldObserverReset(player)
   return config.Get("observer_reset")
 end
 

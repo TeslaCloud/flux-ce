@@ -1,7 +1,4 @@
---[[
-  Derpy © 2018 TeslaCloud Studios
-  Do not use, re-distribute or share unless authorized.
---]]fl.bars:Register("getup", {
+fl.bars:Register("getup", {
   text = "#BarText_Getup",
   color = Color(50, 200, 50),
   maxValue = 100,

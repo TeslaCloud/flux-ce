@@ -1,7 +1,4 @@
---[[
-  Derpy © 2018 TeslaCloud Studios
-  Do not use, re-distribute or share unless authorized.
---]]local COMMAND = Command("getup")
+local COMMAND = Command("getup")
 COMMAND.Name = "GetUp"
 COMMAND.Description = "Get up if you are currently fallen."
 COMMAND.Syntax = "[number GetUpTime]"

@@ -1,7 +1,4 @@
---[[
-  Derpy © 2018 TeslaCloud Studios
-  Do not use, re-distribute or share unless authorized.
---]]local lang = fl.lang:GetTable("en")
+local lang = fl.lang:GetTable("en")
 
 lang["#tool.area.name"]      = "Area Tool"
 lang["#tool.area.desc"]      = "Create polygonal areas easy mode."

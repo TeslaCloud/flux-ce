@@ -1,7 +1,4 @@
---[[
-  Derpy © 2018 TeslaCloud Studios
-  Do not use, re-distribute or share unless authorized.
---]]PLUGIN:SetAlias("flFactions")
+PLUGIN:SetAlias("flFactions")
 
 plugin.add_extra("factions")
 

@@ -1,7 +1,4 @@
---[[
-  Derpy © 2018 TeslaCloud Studios
-  Do not use, re-distribute or share unless authorized.
---]]function flCharacters:PlayerInitialSpawn(player)
+function flCharacters:PlayerInitialSpawn(player)
   player:SetNoDraw(true)
   player:SetNotSolid(true)
   player:Lock()

@@ -1,7 +1,4 @@
---[[
-  Derpy © 2018 TeslaCloud Studios
-  Do not use, re-distribute or share unless authorized.
---]]function flChatbox:OnThemeLoaded(activeTheme)
+function flChatbox:OnThemeLoaded(activeTheme)
   local scrW, scrH = ScrW(), ScrH()
 
   font.Create("flChatFont", {

@@ -1,7 +1,4 @@
---[[
-  Derpy © 2018 TeslaCloud Studios
-  Do not use, re-distribute or share unless authorized.
---]]function flFactions:CharPanelCreated(id, panel)
+function flFactions:CharPanelCreated(id, panel)
   if (id == "CharCreation_General") then
     local factionTable
     local charData = panel:GetParent().CharData

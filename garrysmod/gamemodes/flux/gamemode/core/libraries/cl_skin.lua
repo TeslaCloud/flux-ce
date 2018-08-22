@@ -1,7 +1,4 @@
---[[
-  Derpy © 2018 TeslaCloud Studios
-  Do not use, re-distribute or share unless authorized.
---]]-- Default GWEN skin copy-pasta
+-- Default GWEN skin copy-pasta
 
 local surface = surface
 local draw = draw

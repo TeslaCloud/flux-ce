@@ -1,7 +1,4 @@
---[[
-  Derpy © 2018 TeslaCloud Studios
-  Do not use, re-distribute or share unless authorized.
---]]local PANEL = {}
+local PANEL = {}
 PANEL.lastPos = 0
 PANEL.margin = 0
 

@@ -1,7 +1,4 @@
---[[
-  Derpy © 2018 TeslaCloud Studios
-  Do not use, re-distribute or share unless authorized.
---]]local lang = fl.lang:GetTable("ru")
+local lang = fl.lang:GetTable("ru")
 
 lang["#WhitelistCMD_Description"]     = "Дает игроку доступ к фракции."
 lang["#WhitelistCMD_Syntax"]       = "<игрок> <фракция> [строгий режим поиска]"

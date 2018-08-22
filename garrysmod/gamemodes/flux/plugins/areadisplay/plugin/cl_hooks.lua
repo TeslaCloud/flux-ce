@@ -1,7 +1,4 @@
---[[
-  Derpy © 2018 TeslaCloud Studios
-  Do not use, re-distribute or share unless authorized.
---]]local queue = {}
+local queue = {}
 
 function PLUGIN:PlayerEnteredTextArea(player, area, curTime)
   table.insert(queue, {text = "test test test", expiry = curTime + 8})

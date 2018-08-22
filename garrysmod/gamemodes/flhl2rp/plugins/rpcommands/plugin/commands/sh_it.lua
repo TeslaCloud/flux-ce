@@ -1,7 +1,4 @@
---[[
-  Derpy © 2018 TeslaCloud Studios
-  Do not use, re-distribute or share unless authorized.
---]]local COMMAND = Command("it")
+local COMMAND = Command("it")
 COMMAND.Name = "It"
 COMMAND.Description = "Describe something."
 COMMAND.Syntax = "<text>"

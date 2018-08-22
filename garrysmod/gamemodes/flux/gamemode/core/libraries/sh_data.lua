@@ -1,7 +1,4 @@
---[[
-  Derpy © 2018 TeslaCloud Studios
-  Do not use, re-distribute or share unless authorized.
---]]library.New "data"
+library.New "data"
 
 if SERVER then
   function data.Save(key, value)

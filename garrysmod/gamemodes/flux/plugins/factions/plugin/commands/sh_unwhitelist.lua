@@ -1,7 +1,4 @@
---[[
-  Derpy © 2018 TeslaCloud Studios
-  Do not use, re-distribute or share unless authorized.
---]]local COMMAND = Command("unwhitelist")
+local COMMAND = Command("unwhitelist")
 
 COMMAND.Name = "UnWhitelist"
 COMMAND.Description = "#TakeWhitelistCMD_Description"

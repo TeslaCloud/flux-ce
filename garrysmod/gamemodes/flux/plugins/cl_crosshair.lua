@@ -1,7 +1,4 @@
---[[
-  Derpy © 2018 TeslaCloud Studios
-  Do not use, re-distribute or share unless authorized.
---]]PLUGIN:SetName("Crosshair")
+PLUGIN:SetName("Crosshair")
 PLUGIN:SetAuthor("Mr. Meow")
 PLUGIN:SetDescription("Adds a crosshair.")
 

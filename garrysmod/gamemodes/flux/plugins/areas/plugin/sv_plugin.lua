@@ -1,7 +1,4 @@
---[[
-  Derpy © 2018 TeslaCloud Studios
-  Do not use, re-distribute or share unless authorized.
---]]function flAreas:OneSecond()
+function flAreas:OneSecond()
   local curTime = CurTime()
 
   for k, v in pairs(areas.GetAll()) do

@@ -1,7 +1,4 @@
---[[
-  Derpy © 2018 TeslaCloud Studios
-  Do not use, re-distribute or share unless authorized.
---]]library.New("tool", fl)
+library.New("tool", fl)
 
 local stored = fl.tool.stored or {}
 fl.tool.stored = stored

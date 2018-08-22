@@ -1,7 +1,4 @@
---[[
-  Derpy © 2018 TeslaCloud Studios
-  Do not use, re-distribute or share unless authorized.
---]]local colorBlack = Color(0, 0, 0, 170)
+local colorBlack = Color(0, 0, 0, 170)
 
 local PANEL = {}
 

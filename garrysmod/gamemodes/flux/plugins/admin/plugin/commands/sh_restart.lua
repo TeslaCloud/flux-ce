@@ -1,7 +1,4 @@
---[[
-  Derpy © 2018 TeslaCloud Studios
-  Do not use, re-distribute or share unless authorized.
---]]local COMMAND = Command("restart")
+local COMMAND = Command("restart")
 COMMAND.Name = "Restart"
 COMMAND.Description = "Restarts the current map."
 COMMAND.Syntax = "[number Delay]"

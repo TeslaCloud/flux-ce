@@ -1,7 +1,4 @@
---[[
-  Derpy © 2018 TeslaCloud Studios
-  Do not use, re-distribute or share unless authorized.
---]]function flInventory:PostCharacterLoaded(player, character)
+function flInventory:PostCharacterLoaded(player, character)
   player:CheckInventory()
 
   for slot, ids in ipairs(player:GetInventory()) do

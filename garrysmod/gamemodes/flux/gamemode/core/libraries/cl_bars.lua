@@ -1,7 +1,4 @@
---[[
-  Derpy © 2018 TeslaCloud Studios
-  Do not use, re-distribute or share unless authorized.
---]]if (!font) then
+if (!font) then
   util.Include("cl_font.lua")
 end
 

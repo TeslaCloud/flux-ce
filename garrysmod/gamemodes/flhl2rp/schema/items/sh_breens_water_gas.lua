@@ -1,7 +1,4 @@
---[[
-  Derpy © 2018 TeslaCloud Studios
-  Do not use, re-distribute or share unless authorized.
---]]ITEM:SetBase(CItemConsumable)
+ITEM:SetBase(CItemConsumable)
 ITEM.Name = "Sparkling Breen's Water"
 ITEM.PrintName = "#Item_BreensWaterGas_PrintName"
 ITEM.Description = "#Item_BreensWaterGas_Description"

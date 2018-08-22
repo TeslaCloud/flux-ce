@@ -1,7 +1,4 @@
---[[
-  Derpy © 2018 TeslaCloud Studios
-  Do not use, re-distribute or share unless authorized.
---]]if (!item) then
+if (!item) then
   error("Attempt to use inventory system without Flux's items system.\n")
 end
 

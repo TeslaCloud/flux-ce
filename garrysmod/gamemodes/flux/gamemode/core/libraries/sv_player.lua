@@ -1,7 +1,4 @@
---[[
-  Derpy © 2018 TeslaCloud Studios
-  Do not use, re-distribute or share unless authorized.
---]]library.New("player", fl)
+library.New("player", fl)
 
 function fl.player:Notify(player, message)
   if (!IsValid(player)) then

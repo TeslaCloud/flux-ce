@@ -1,7 +1,4 @@
---[[
-  Derpy © 2018 TeslaCloud Studios
-  Do not use, re-distribute or share unless authorized.
---]]THEME.author = "TeslaCloud Studios"
+THEME.author = "TeslaCloud Studios"
 THEME.id = "hl2rp"
 THEME.parent = "factory"
 

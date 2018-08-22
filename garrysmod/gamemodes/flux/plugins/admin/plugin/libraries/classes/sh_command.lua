@@ -1,7 +1,4 @@
---[[
-  Derpy © 2018 TeslaCloud Studios
-  Do not use, re-distribute or share unless authorized.
---]]class "CCommand"
+class "CCommand"
 
 CCommand.id = "undefined"
 CCommand.Name = "Unknown"
