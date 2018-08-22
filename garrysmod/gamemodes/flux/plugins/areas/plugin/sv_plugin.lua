@@ -1,10 +1,7 @@
 --[[
-  Flux © 2016-2018 TeslaCloud Studios
-  Do not share or re-distribute before
-  the framework is publicly released.
---]]
-
-function flAreas:OneSecond()
+  Derpy © 2018 TeslaCloud Studios
+  Do not use, re-distribute or share unless authorized.
+--]]function flAreas:OneSecond()
   local curTime = CurTime()
 
   for k, v in pairs(areas.GetAll()) do

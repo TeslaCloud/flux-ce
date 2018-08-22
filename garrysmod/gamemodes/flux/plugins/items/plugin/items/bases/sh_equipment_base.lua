@@ -1,10 +1,7 @@
 --[[
-  Flux © 2016-2018 TeslaCloud Studios
-  Do not share or re-distribute before
-  the framework is publicly released.
---]]
-
-if (!CItemUsable) then
+  Derpy © 2018 TeslaCloud Studios
+  Do not use, re-distribute or share unless authorized.
+--]]if (!CItemUsable) then
   util.Include("sh_usable_base.lua")
 end
 

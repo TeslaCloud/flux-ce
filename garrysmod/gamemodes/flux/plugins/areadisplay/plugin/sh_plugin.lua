@@ -1,10 +1,7 @@
 --[[
-  Flux © 2016-2018 TeslaCloud Studios
-  Do not share or re-distribute before
-  the framework is publicly released.
---]]
-
-areas.RegisterType(
+  Derpy © 2018 TeslaCloud Studios
+  Do not use, re-distribute or share unless authorized.
+--]]areas.RegisterType(
   "text",
   "Text Area",
   "An area that displays text when player enters it.",

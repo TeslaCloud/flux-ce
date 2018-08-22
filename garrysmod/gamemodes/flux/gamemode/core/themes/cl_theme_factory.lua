@@ -1,10 +1,7 @@
 --[[
-  Flux © 2016-2018 TeslaCloud Studios
-  Do not share or re-distribute before
-  the framework is publicly released.
---]]
-
--- Create the default theme that other themes will derive from.
+  Derpy © 2018 TeslaCloud Studios
+  Do not use, re-distribute or share unless authorized.
+--]]-- Create the default theme that other themes will derive from.
 THEME.author = "TeslaCloud Studios"
 THEME.id = "factory"
 THEME.description = "Factory theme. This is a fail-safety theme that other themes use as a base."

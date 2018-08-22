@@ -1,10 +1,7 @@
 --[[
-  Flux © 2016-2018 TeslaCloud Studios
-  Do not share or re-distribute before
-  the framework is publicly released.
---]]
-
-local queue = {}
+  Derpy © 2018 TeslaCloud Studios
+  Do not use, re-distribute or share unless authorized.
+--]]local queue = {}
 
 function PLUGIN:PlayerEnteredTextArea(player, area, curTime)
   table.insert(queue, {text = "test test test", expiry = curTime + 8})

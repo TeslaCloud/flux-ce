@@ -1,10 +1,7 @@
 --[[
-  Flux © 2016-2018 TeslaCloud Studios
-  Do not share or re-distribute before
-  the framework is publicly released.
---]]
-
-function Schema:HUDPaint()
+  Derpy © 2018 TeslaCloud Studios
+  Do not use, re-distribute or share unless authorized.
+--]]function Schema:HUDPaint()
   fl.EnableColorModify()
   fl.SetColorModifyVal("color", 0.85)
   fl.SetColorModifyVal("addb", 0.015)

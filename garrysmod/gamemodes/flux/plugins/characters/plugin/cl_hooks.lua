@@ -1,10 +1,7 @@
 --[[
-  Flux © 2016-2018 TeslaCloud Studios
-  Do not share or re-distribute before
-  the framework is publicly released.
---]]
-
-function flCharacters:PlayerInitialized()
+  Derpy © 2018 TeslaCloud Studios
+  Do not use, re-distribute or share unless authorized.
+--]]function flCharacters:PlayerInitialized()
   if (!fl.client:GetCharacter()) then
     if (!IsValid(fl.IntroPanel)) then
       fl.IntroPanel = vgui.Create("flIntro")

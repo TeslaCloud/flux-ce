@@ -1,10 +1,7 @@
 ﻿--[[
-  Flux © 2016-2018 TeslaCloud Studios
-  Do not share or re-distribute before
-  the framework is publicly released.
---]]
-
--- This library is for serverside configs only!
+  Derpy © 2018 TeslaCloud Studios
+  Do not use, re-distribute or share unless authorized.
+--]]-- This library is for serverside configs only!
 -- For clientside configs, see cl_settings.lua!
 
 library.New "config"

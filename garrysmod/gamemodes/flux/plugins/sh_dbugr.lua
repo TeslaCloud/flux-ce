@@ -1,10 +1,7 @@
 --[[
-  Flux © 2016-2018 TeslaCloud Studios
-  Do not share or re-distribute before
-  the framework is publicly released.
---]]
-
-PLUGIN:SetName("DBugR Hooks")
+  Derpy © 2018 TeslaCloud Studios
+  Do not use, re-distribute or share unless authorized.
+--]]PLUGIN:SetName("DBugR Hooks")
 PLUGIN:SetAuthor("NightAngel")
 PLUGIN:SetDescription("Adds all plugin hooks to DBugR performance metrics monitor.")
 

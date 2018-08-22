@@ -1,10 +1,7 @@
 --[[
-  Flux © 2016-2018 TeslaCloud Studios
-  Do not share or re-distribute before
-  the framework is publicly released.
---]]
-
---[[
+  Derpy © 2018 TeslaCloud Studios
+  Do not use, re-distribute or share unless authorized.
+--]]--[[
   The settings library allows developers to easily add clientside settings/options that can be
   saved and persist between a client's play sessions (even between different servers).
 --]]

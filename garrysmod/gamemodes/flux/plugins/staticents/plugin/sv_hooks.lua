@@ -1,10 +1,7 @@
 --[[
-  Flux © 2016-2018 TeslaCloud Studios
-  Do not share or re-distribute before
-  the framework is publicly released.
---]]
-
--- Disable default Sandbox persistence.
+  Derpy © 2018 TeslaCloud Studios
+  Do not use, re-distribute or share unless authorized.
+--]]-- Disable default Sandbox persistence.
 hook.Remove("ShutDown", "SavePersistenceOnShutdown")
 hook.Remove("PersistenceSave", "PersistenceSave")
 hook.Remove("PersistenceLoad", "PersistenceLoad")

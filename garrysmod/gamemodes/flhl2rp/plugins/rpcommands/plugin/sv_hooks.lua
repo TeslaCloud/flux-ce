@@ -1,10 +1,7 @@
 --[[
-  Flux © 2016-2018 TeslaCloud Studios
-  Do not share or re-distribute before
-  the framework is publicly released.
---]]
-
-config.Set("talk_radius", 400)
+  Derpy © 2018 TeslaCloud Studios
+  Do not use, re-distribute or share unless authorized.
+--]]config.Set("talk_radius", 400)
 config.Set("ic_color", "khaki")
 
 function PLUGIN:ChatboxAdjustPlayerSay(player, text, messageData)

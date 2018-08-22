@@ -1,10 +1,7 @@
 --[[
-  Flux © 2016-2018 TeslaCloud Studios
-  Do not share or re-distribute before
-  the framework is publicly released.
---]]
-
-timer.Remove("HintSystem_OpeningMenu")
+  Derpy © 2018 TeslaCloud Studios
+  Do not use, re-distribute or share unless authorized.
+--]]timer.Remove("HintSystem_OpeningMenu")
 timer.Remove("HintSystem_Annoy1")
 timer.Remove("HintSystem_Annoy2")
 

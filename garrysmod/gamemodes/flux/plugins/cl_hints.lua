@@ -1,10 +1,7 @@
 --[[
-  Flux © 2016-2018 TeslaCloud Studios
-  Do not share or re-distribute before
-  the framework is publicly released.
---]]
-
-PLUGIN:SetAlias("flHints")
+  Derpy © 2018 TeslaCloud Studios
+  Do not use, re-distribute or share unless authorized.
+--]]PLUGIN:SetAlias("flHints")
 PLUGIN:SetName("Hints")
 PLUGIN:SetDescription("Adds hints that are displayed to players.")
 PLUGIN:SetAuthor("Mr. Meow")

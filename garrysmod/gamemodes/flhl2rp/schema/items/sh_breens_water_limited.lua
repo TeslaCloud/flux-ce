@@ -1,10 +1,7 @@
 --[[
-  Flux © 2016-2018 TeslaCloud Studios
-  Do not share or re-distribute before
-  the framework is publicly released.
---]]
-
-ITEM:SetBase(CItemConsumable)
+  Derpy © 2018 TeslaCloud Studios
+  Do not use, re-distribute or share unless authorized.
+--]]ITEM:SetBase(CItemConsumable)
 ITEM.Name = "Flavored Breen's Water"
 ITEM.PrintName = "#Item_BreensWaterLimited_PrintName"
 ITEM.Description = "#Item_BreensWaterLimited_Description"

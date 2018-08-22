@@ -1,10 +1,7 @@
 --[[
-  Flux © 2016-2018 TeslaCloud Studios
-  Do not share or re-distribute before
-  the framework is publicly released.
---]]
-
-ITEM:SetBase(CItemEquippable)
+  Derpy © 2018 TeslaCloud Studios
+  Do not use, re-distribute or share unless authorized.
+--]]ITEM:SetBase(CItemEquippable)
 ITEM.Name = "Flashlight"
 ITEM.PrintName = "#Item_Flashlight_PrintName"
 ITEM.Description = "#Item_Flashlight_Description"

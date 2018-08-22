@@ -1,10 +1,7 @@
 --[[
-  Flux © 2016-2018 TeslaCloud Studios
-  Do not share or re-distribute before
-  the framework is publicly released.
---]]
-
-local COMMAND = Command("fall")
+  Derpy © 2018 TeslaCloud Studios
+  Do not use, re-distribute or share unless authorized.
+--]]local COMMAND = Command("fall")
 COMMAND.Name = "Fall"
 COMMAND.Description = "Fall down on the ground."
 COMMAND.Syntax = "[number GetUpTime]"

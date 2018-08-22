@@ -1,10 +1,7 @@
 --[[
-  Flux © 2016-2018 TeslaCloud Studios
-  Do not share or re-distribute before
-  the framework is publicly released.
---]]
-
-local COMMAND = Command("static")
+  Derpy © 2018 TeslaCloud Studios
+  Do not use, re-distribute or share unless authorized.
+--]]local COMMAND = Command("static")
 COMMAND.Name = "Static"
 COMMAND.Description = "Makes the entity you're looking at static."
 COMMAND.Syntax = "[none]"

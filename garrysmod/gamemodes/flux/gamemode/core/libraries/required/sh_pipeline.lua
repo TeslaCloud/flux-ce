@@ -1,10 +1,7 @@
 --[[
-  Flux © 2016-2018 TeslaCloud Studios
-  Do not share or re-distribute before
-  the framework is publicly released.
---]]
-
---[[
+  Derpy © 2018 TeslaCloud Studios
+  Do not use, re-distribute or share unless authorized.
+--]]--[[
   Pipeline library lets you create systems that register their stuff via folders.
   It automatically does the boring stuff like converting filenames for you,
   requiring you to write the real thing only.

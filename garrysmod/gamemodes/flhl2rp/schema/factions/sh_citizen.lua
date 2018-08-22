@@ -1,10 +1,7 @@
 --[[
-  Flux © 2016-2018 TeslaCloud Studios
-  Do not share or re-distribute before
-  the framework is publicly released.
---]]
-
-FACTION.Name = "#Faction_Citizen"
+  Derpy © 2018 TeslaCloud Studios
+  Do not use, re-distribute or share unless authorized.
+--]]FACTION.Name = "#Faction_Citizen"
 FACTION.Description = "A regular citizen living under combine authority."
 FACTION.PhysDesc = "Wearing some dirty citizen clothes."
 FACTION.Color = Color(225, 185, 135)

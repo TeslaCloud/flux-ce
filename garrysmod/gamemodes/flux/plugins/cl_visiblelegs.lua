@@ -1,10 +1,7 @@
 --[[
-  Flux © 2016-2018 TeslaCloud Studios
-  Do not share or re-distribute before
-  the framework is publicly released.
---]]
-
-PLUGIN:SetAlias("flVisibleLegs")
+  Derpy © 2018 TeslaCloud Studios
+  Do not use, re-distribute or share unless authorized.
+--]]PLUGIN:SetAlias("flVisibleLegs")
 PLUGIN:SetName("Visible Legs")
 PLUGIN:SetAuthor("NightAngel")
 PLUGIN:SetDescription("Lets clients see their character's legs.")

@@ -1,10 +1,7 @@
 --[[
-  Flux © 2016-2018 TeslaCloud Studios
-  Do not share or re-distribute before
-  the framework is publicly released.
---]]
-
-PLUGIN:SetAlias("flObserver")
+  Derpy © 2018 TeslaCloud Studios
+  Do not use, re-distribute or share unless authorized.
+--]]PLUGIN:SetAlias("flObserver")
 
 util.Include("cl_hooks.lua")
 util.Include("sv_hooks.lua")

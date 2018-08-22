@@ -1,10 +1,7 @@
 --[[
-  Flux © 2016-2018 TeslaCloud Studios
-  Do not share or re-distribute before
-  the framework is publicly released.
---]]
-
--- DTVars
+  Derpy © 2018 TeslaCloud Studios
+  Do not use, re-distribute or share unless authorized.
+--]]-- DTVars
 BOOL_INITIALIZED              = 0    -- Whether player has passed all initialization steps.
 BOOL_WEAPON_RAISED            = 1    -- Whether player has their active weapon raised.
 

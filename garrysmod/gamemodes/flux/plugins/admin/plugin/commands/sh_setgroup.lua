@@ -1,10 +1,7 @@
 --[[
-  Flux © 2016-2018 TeslaCloud Studios
-  Do not share or re-distribute before
-  the framework is publicly released.
---]]
-
-local COMMAND = Command("setgroup")
+  Derpy © 2018 TeslaCloud Studios
+  Do not use, re-distribute or share unless authorized.
+--]]local COMMAND = Command("setgroup")
 COMMAND.Name = "SetGroup"
 COMMAND.Description = "#SetGroupCMD_Description"
 COMMAND.Syntax = "#SetGroupCMD_Syntax"

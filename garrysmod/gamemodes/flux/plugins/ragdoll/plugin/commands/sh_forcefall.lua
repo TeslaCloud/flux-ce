@@ -1,10 +1,7 @@
 --[[
-  Flux © 2016-2018 TeslaCloud Studios
-  Do not share or re-distribute before
-  the framework is publicly released.
---]]
-
-local COMMAND = Command("forcefall")
+  Derpy © 2018 TeslaCloud Studios
+  Do not use, re-distribute or share unless authorized.
+--]]local COMMAND = Command("forcefall")
 COMMAND.Name = "ForceFall"
 COMMAND.Description = "Forces a player to fall down on the ground."
 COMMAND.Syntax = "<target> [number GetUpTime]"

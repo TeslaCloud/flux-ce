@@ -1,10 +1,7 @@
 --[[
-  Flux © 2016-2018 TeslaCloud Studios
-  Do not share or re-distribute before
-  the framework is publicly released.
---]]
-
-PLUGIN:SetName("Raise Weapon")
+  Derpy © 2018 TeslaCloud Studios
+  Do not use, re-distribute or share unless authorized.
+--]]PLUGIN:SetName("Raise Weapon")
 PLUGIN:SetAuthor("Mr. Meow")
 PLUGIN:SetDescription("Allows weapons to be lowered and raised by holding R key.")
 

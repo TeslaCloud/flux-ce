@@ -1,10 +1,7 @@
 --[[
-  Flux © 2016-2018 TeslaCloud Studios
-  Do not share or re-distribute before
-  the framework is publicly released.
---]]
-
-local lang = fl.lang:GetTable("en")
+  Derpy © 2018 TeslaCloud Studios
+  Do not use, re-distribute or share unless authorized.
+--]]local lang = fl.lang:GetTable("en")
 
 lang["#Err_NotValidEntity"]    = "This is not a valid entity!"
 lang["#Err_CannotStaticThis"]  = "You cannot static this entity!"

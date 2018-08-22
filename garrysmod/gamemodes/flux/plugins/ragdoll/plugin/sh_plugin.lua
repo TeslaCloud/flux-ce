@@ -1,10 +1,7 @@
 --[[
-  Flux © 2016-2018 TeslaCloud Studios
-  Do not share or re-distribute before
-  the framework is publicly released.
---]]
-
-util.Include("cl_hooks.lua")
+  Derpy © 2018 TeslaCloud Studios
+  Do not use, re-distribute or share unless authorized.
+--]]util.Include("cl_hooks.lua")
 util.Include("sv_plugin.lua")
 util.Include("sv_hooks.lua")
 util.Include("sh_enums.lua")

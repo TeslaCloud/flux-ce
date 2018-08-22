@@ -1,10 +1,7 @@
 --[[
-  Flux © 2016-2018 TeslaCloud Studios
-  Do not share or re-distribute before
-  the framework is publicly released.
---]]
-
-netstream.Hook("SharedTables", function(tSharedTable)
+  Derpy © 2018 TeslaCloud Studios
+  Do not use, re-distribute or share unless authorized.
+--]]netstream.Hook("SharedTables", function(tSharedTable)
   fl.sharedTable = tSharedTable or {}
   fl.sharedTableReceived = true
 end)

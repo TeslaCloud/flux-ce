@@ -1,10 +1,7 @@
 --[[
-  Flux © 2016-2018 TeslaCloud Studios
-  Do not share or re-distribute before
-  the framework is publicly released.
---]]
-
-hook.Remove("PostDrawEffects", "RenderWidgets")
+  Derpy © 2018 TeslaCloud Studios
+  Do not use, re-distribute or share unless authorized.
+--]]hook.Remove("PostDrawEffects", "RenderWidgets")
 hook.Remove("PlayerTick", "TickWidgets")
 hook.Remove("PlayerInitialSpawn", "PlayerAuthSpawn")
 

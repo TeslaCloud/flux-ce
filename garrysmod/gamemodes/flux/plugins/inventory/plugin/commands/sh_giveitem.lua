@@ -1,10 +1,7 @@
 --[[
-  Flux © 2016-2018 TeslaCloud Studios
-  Do not share or re-distribute before
-  the framework is publicly released.
---]]
-
-local COMMAND = Command("giveitem")
+  Derpy © 2018 TeslaCloud Studios
+  Do not use, re-distribute or share unless authorized.
+--]]local COMMAND = Command("giveitem")
 COMMAND.Name = "GiveItem"
 COMMAND.Description = "Gives specified item to a player."
 COMMAND.Syntax = "<string target> <string item name or unique ID>"
