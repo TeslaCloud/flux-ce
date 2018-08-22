@@ -1,10 +1,7 @@
 --[[
-  Flux © 2016-2018 TeslaCloud Studios
-  Do not share or re-distribute before
-  the framework is publicly released.
---]]
-
-DEFINE_BASECLASS("gamemode_base")
+  Derpy © 2018 TeslaCloud Studios
+  Do not use, re-distribute or share unless authorized.
+--]]DEFINE_BASECLASS("gamemode_base")
 
 function GM:DoPlayerDeath(player, attacker, damageInfo) end
 

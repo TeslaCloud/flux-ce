@@ -1,10 +1,7 @@
 --[[
-  Flux © 2016-2018 TeslaCloud Studios
-  Do not share or re-distribute before
-  the framework is publicly released.
---]]
-
-function flItems:PlayerUseItemMenu(itemTable, bIsEntity)
+  Derpy © 2018 TeslaCloud Studios
+  Do not use, re-distribute or share unless authorized.
+--]]function flItems:PlayerUseItemMenu(itemTable, bIsEntity)
   if (!itemTable) then return end
 
   local itemMenu = vgui.Create("flMenu")

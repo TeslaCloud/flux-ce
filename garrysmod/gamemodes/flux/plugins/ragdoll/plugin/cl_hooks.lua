@@ -1,10 +1,7 @@
 --[[
-  Flux © 2016-2018 TeslaCloud Studios
-  Do not share or re-distribute before
-  the framework is publicly released.
---]]
-
-fl.bars:Register("getup", {
+  Derpy © 2018 TeslaCloud Studios
+  Do not use, re-distribute or share unless authorized.
+--]]fl.bars:Register("getup", {
   text = "#BarText_Getup",
   color = Color(50, 200, 50),
   maxValue = 100,

@@ -1,10 +1,7 @@
 --[[
-  Flux © 2016-2018 TeslaCloud Studios
-  Do not share or re-distribute before
-  the framework is publicly released.
---]]
-
-PLUGIN:SetAlias("flPrefixes")
+  Derpy © 2018 TeslaCloud Studios
+  Do not use, re-distribute or share unless authorized.
+--]]PLUGIN:SetAlias("flPrefixes")
 PLUGIN:SetName("Prefixes")
 PLUGIN:SetAuthor("AleXXX_007")
 PLUGIN:SetDescription("Adds prefix adjusting to avoid troubles with certain commands.")

@@ -1,10 +1,7 @@
 --[[
-  Flux © 2016-2018 TeslaCloud Studios
-  Do not share or re-distribute before
-  the framework is publicly released.
---]]
-
-function flFactions:CharPanelCreated(id, panel)
+  Derpy © 2018 TeslaCloud Studios
+  Do not use, re-distribute or share unless authorized.
+--]]function flFactions:CharPanelCreated(id, panel)
   if (id == "CharCreation_General") then
     local factionTable
     local charData = panel:GetParent().CharData

@@ -1,10 +1,7 @@
 --[[
-  Flux © 2016-2018 TeslaCloud Studios
-  Do not share or re-distribute before
-  the framework is publicly released.
---]]
-
-GROUP.Name = "Root"
+  Derpy © 2018 TeslaCloud Studios
+  Do not use, re-distribute or share unless authorized.
+--]]GROUP.Name = "Root"
 GROUP.Description = "#PlayerGroup_Root"
 GROUP.Color = Color(255, 255, 255)
 GROUP.Icon = "icon16/key.png"

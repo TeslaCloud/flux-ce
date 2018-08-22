@@ -1,10 +1,7 @@
 --[[
-  Flux © 2016-2018 TeslaCloud Studios
-  Do not share or re-distribute before
-  the framework is publicly released.
---]]
-
-FACTION.Name = "#Faction_Civil_Authority"
+  Derpy © 2018 TeslaCloud Studios
+  Do not use, re-distribute or share unless authorized.
+--]]FACTION.Name = "#Faction_Civil_Authority"
 FACTION.Description = "Combine police forces."
 FACTION.PhysDesc = "Wearing shiny metropolice unit uniform with brand new stunstick on his belt."
 FACTION.Color = Color(135, 140, 225)

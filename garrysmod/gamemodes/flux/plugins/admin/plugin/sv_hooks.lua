@@ -1,10 +1,7 @@
 --[[
-  Flux © 2016-2018 TeslaCloud Studios
-  Do not share or re-distribute before
-  the framework is publicly released.
---]]
-
-function flAdmin:SavePlayerData(player, saveTable)
+  Derpy © 2018 TeslaCloud Studios
+  Do not use, re-distribute or share unless authorized.
+--]]function flAdmin:SavePlayerData(player, saveTable)
   saveTable.userGroup = player:GetUserGroup()
   saveTable.secondaryGroups = fl.Serialize(player:GetSecondaryGroups())
   saveTable.customPermissions = fl.Serialize(player:GetCustomPermissions())

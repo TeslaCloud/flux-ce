@@ -1,10 +1,7 @@
 --[[
-  Flux © 2016-2018 TeslaCloud Studios
-  Do not share or re-distribute before
-  the framework is publicly released.
---]]
-
-FACTION.Name = "#Faction_Combine_Overwatch"
+  Derpy © 2018 TeslaCloud Studios
+  Do not use, re-distribute or share unless authorized.
+--]]FACTION.Name = "#Faction_Combine_Overwatch"
 FACTION.Description = "Combine military soldiers."
 FACTION.PhysDesc = "Wearing heavy overwatch armor."
 FACTION.Color = Color(225, 115, 100)

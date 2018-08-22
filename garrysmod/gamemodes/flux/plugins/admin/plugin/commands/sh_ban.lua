@@ -1,10 +1,7 @@
 --[[
-  Flux © 2016-2018 TeslaCloud Studios
-  Do not share or re-distribute before
-  the framework is publicly released.
---]]
-
-local COMMAND = Command("ban")
+  Derpy © 2018 TeslaCloud Studios
+  Do not use, re-distribute or share unless authorized.
+--]]local COMMAND = Command("ban")
 COMMAND.Name = "Ban"
 COMMAND.Description = "#BanCMD_Description"
 COMMAND.Syntax = "#BanCMD_Syntax"

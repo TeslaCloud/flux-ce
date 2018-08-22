@@ -1,10 +1,7 @@
 --[[
-  Flux © 2016-2018 TeslaCloud Studios
-  Do not share or re-distribute before
-  the framework is publicly released.
---]]
-
-THEME.author = "TeslaCloud Studios"
+  Derpy © 2018 TeslaCloud Studios
+  Do not use, re-distribute or share unless authorized.
+--]]THEME.author = "TeslaCloud Studios"
 THEME.id = "hl2rp"
 THEME.parent = "factory"
 

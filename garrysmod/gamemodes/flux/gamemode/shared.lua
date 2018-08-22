@@ -1,10 +1,7 @@
 --[[
-  Flux © 2016-2018 TeslaCloud Studios
-  Do not share or re-distribute before
-  the framework is publicly released.
---]]
-
--- Define basic GM info fields.
+  Derpy © 2018 TeslaCloud Studios
+  Do not use, re-distribute or share unless authorized.
+--]]-- Define basic GM info fields.
 GM.Name         = "Flux"
 GM.Author       = "TeslaCloud Studios"
 GM.Website      = "http://teslacloud.net/"

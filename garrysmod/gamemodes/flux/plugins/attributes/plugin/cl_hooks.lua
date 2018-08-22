@@ -1,10 +1,7 @@
 --[[
-  Flux © 2016-2018 TeslaCloud Studios
-  Do not share or re-distribute before
-  the framework is publicly released.
---]]
-
-function flAttributes:OnThemeLoaded(activeTheme)
+  Derpy © 2018 TeslaCloud Studios
+  Do not use, re-distribute or share unless authorized.
+--]]function flAttributes:OnThemeLoaded(activeTheme)
   activeTheme:AddPanel("CharCreation_Attributes", function(id, parent, ...)
     return vgui.Create("flCharCreationAttributes", parent)
   end)

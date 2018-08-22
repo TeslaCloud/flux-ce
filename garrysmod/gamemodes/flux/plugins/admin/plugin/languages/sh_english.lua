@@ -1,10 +1,7 @@
 --[[
-  Flux © 2016-2018 TeslaCloud Studios
-  Do not share or re-distribute before
-  the framework is publicly released.
---]]
-
-local lang = fl.lang:GetTable("en")
+  Derpy © 2018 TeslaCloud Studios
+  Do not use, re-distribute or share unless authorized.
+--]]local lang = fl.lang:GetTable("en")
 
 lang["#Err_GroupNotValid"]        = "'#1' is not a valid user group!"
 lang["#Err_NotBanned"]          = "Steam ID '#1' is not banned!"

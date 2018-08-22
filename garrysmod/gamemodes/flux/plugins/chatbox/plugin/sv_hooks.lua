@@ -1,10 +1,7 @@
 --[[
-  Flux © 2016-2018 TeslaCloud Studios
-  Do not share or re-distribute before
-  the framework is publicly released.
---]]
-
-function flChatbox:ChatboxGetPlayerIcon(player, text, bTeamChat)
+  Derpy © 2018 TeslaCloud Studios
+  Do not use, re-distribute or share unless authorized.
+--]]function flChatbox:ChatboxGetPlayerIcon(player, text, bTeamChat)
   return {image = "materials/icon16/shield.png", width = 16, height = 16, isData = true}
 end
 

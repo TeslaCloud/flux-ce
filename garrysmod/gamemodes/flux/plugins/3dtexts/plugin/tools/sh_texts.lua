@@ -1,10 +1,7 @@
 --[[
-  Flux © 2016-2018 TeslaCloud Studios
-  Do not share or re-distribute before
-  the framework is publicly released.
---]]
-
-TOOL.Category = "Flux"
+  Derpy © 2018 TeslaCloud Studios
+  Do not use, re-distribute or share unless authorized.
+--]]TOOL.Category = "Flux"
 TOOL.Name = "Text Tool"
 TOOL.Command = nil
 TOOL.ConfigName = ""

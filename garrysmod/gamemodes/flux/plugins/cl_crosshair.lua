@@ -1,10 +1,7 @@
 --[[
-  Flux © 2016-2018 TeslaCloud Studios
-  Do not share or re-distribute before
-  the framework is publicly released.
---]]
-
-PLUGIN:SetName("Crosshair")
+  Derpy © 2018 TeslaCloud Studios
+  Do not use, re-distribute or share unless authorized.
+--]]PLUGIN:SetName("Crosshair")
 PLUGIN:SetAuthor("Mr. Meow")
 PLUGIN:SetDescription("Adds a crosshair.")
 

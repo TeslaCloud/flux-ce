@@ -1,10 +1,7 @@
 --[[
-  Flux © 2016-2018 TeslaCloud Studios
-  Do not share or re-distribute before
-  the framework is publicly released.
---]]
-
-PLUGIN:SetName("Flux Dev HUD")
+  Derpy © 2018 TeslaCloud Studios
+  Do not use, re-distribute or share unless authorized.
+--]]PLUGIN:SetName("Flux Dev HUD")
 PLUGIN:SetAuthor("Mr. Meow")
 PLUGIN:SetDescription("Adds developer HUD.")
 
