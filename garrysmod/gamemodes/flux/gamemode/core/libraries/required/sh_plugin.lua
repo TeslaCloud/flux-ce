@@ -315,7 +315,7 @@ function plugin.include(folder)
   if (istable(data.depends)) then
     for k, v in ipairs(data.depends) do
       if (!plugin.require(v)) then
-        ErrorNoHalt("[Flux] Not loading the '"..tostring(folder).."' plugin! Dependency missing: '"..tostring(v).."'!\n")
+        ErrorNoHalt("Not loading the '"..tostring(folder).."' plugin! Dependency missing: '"..tostring(v).."'!\n")
 
         return
       end
@@ -358,7 +358,7 @@ function plugin.include_schema()
     if (istable(dependencies)) then
       for k, v in ipairs(dependencies) do
         if (!plugin.require(v)) then
-          ErrorNoHalt("[Flux] Unable to load schema! Dependency missing: '"..tostring(v).."'!\n")
+          ErrorNoHalt("Unable to load schema! Dependency missing: '"..tostring(v).."'!\n")
           ErrorNoHalt("Please install this plugin in your schema's 'plugins' folder!\n")
 
           return
@@ -377,7 +377,6 @@ function plugin.include_schema()
   plugin.include_plugins(schemaPath.."/plugins")
 
   if (schemaInfo.name and schemaInfo.author) then
-    MsgC(Color(0, 255, 100, 255), "[Flux] ")
     MsgC(Color(255, 255, 0), schemaInfo.name)
     MsgC(Color(0, 255, 100), " by "..schemaInfo.author.." has been loaded!\n")
   end

@@ -44,7 +44,7 @@ function item.Register(id, data)
   end
 
   if (!isstring(id) and !isstring(data.Name)) then
-    ErrorNoHalt("[Flux] Attempt to register an item without a valid ID!")
+    ErrorNoHalt("Attempt to register an item without a valid ID!")
     debug.Trace()
 
     return

@@ -27,7 +27,7 @@ function attributes.Register(id, data)
   if (!data) then return end
 
   if (!isstring(id) and !isstring(data.Name)) then
-    ErrorNoHalt("[Flux] Attempt to register an attribute without a valid ID!")
+    ErrorNoHalt("Attempt to register an attribute without a valid ID!")
     debug.Trace()
 
     return

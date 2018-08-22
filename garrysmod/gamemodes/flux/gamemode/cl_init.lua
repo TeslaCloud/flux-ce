@@ -12,9 +12,9 @@ if (!string.utf8len or !pon or !netstream) then
 end
 
 if (fl.initialized) then
-  MsgC(Color(0, 255, 100, 255), "[Flux] Lua auto-reload in progress...\n")
+  MsgC(Color(0, 255, 100, 255), "Lua auto-reload in progress...\n")
 else
-  MsgC(Color(0, 255, 100, 255), "[Flux] Initializing...\n")
+  MsgC(Color(0, 255, 100, 255), "Initializing...\n")
 end
 
 -- Initiate shared boot.
@@ -23,9 +23,9 @@ include("shared.lua")
 font.CreateFonts()
 
 if (fl.initialized) then
-  MsgC(Color(0, 255, 100, 255), "[Flux] Auto-reloaded in "..math.Round(os.clock() - fl.startTime, 3).. " second(s)\n")
+  MsgC(Color(0, 255, 100, 255), "Auto-reloaded in "..math.Round(os.clock() - fl.startTime, 3).. " second(s)\n")
 else
-  MsgC(Color(0, 255, 100, 255), "[Flux] Flux v"..GM.Version.." has finished loading in "..math.Round(os.clock() - fl.startTime, 3).. " second(s)\n")
+  MsgC(Color(0, 255, 100, 255), "Flux v"..GM.Version.." has finished loading in "..math.Round(os.clock() - fl.startTime, 3).. " second(s)\n")
 
   fl.initialized = true
 end

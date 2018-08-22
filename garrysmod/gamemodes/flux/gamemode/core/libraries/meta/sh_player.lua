@@ -72,7 +72,7 @@ function player_meta:DoAction(id)
         actionTable.callback, self, act
       } catch {
         function(exception)
-          ErrorNoHalt("[Flux] Player action '"..tostring(act).."' has failed to run!\n"..exception.."\n")
+          ErrorNoHalt("Player action '"..tostring(act).."' has failed to run!\n"..exception.."\n")
         end
       }
     end
