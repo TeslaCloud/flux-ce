@@ -59,7 +59,7 @@ function TOOL:GetAreaMode()
   return flAreas.toolModes[mode]
 end
 
-if (CLIENT) then
+if CLIENT then
   -- A function to add the controls for the tool in the tool menu.
   local function BuildCPanel(panel)
     local modeList = flAreas.toolModes

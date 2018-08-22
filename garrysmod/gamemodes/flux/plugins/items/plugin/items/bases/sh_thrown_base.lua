@@ -29,7 +29,7 @@ function CItemThrown:PostEquipped(player)
     player:SetActiveWeapon(weapon)
     player:SetAmmo(1, self.ThrownAmmoClass)
   else
-    fl.DevPrint("Invalid weapon class: "..self.WeaponClass)
+    fl.dev_print("Invalid weapon class: "..self.WeaponClass)
   end
 end
 
@@ -43,7 +43,7 @@ function CItemThrown:PostUnEquipped(player)
       player:TakeItemByID(self.instanceID)
     end
   else
-    fl.DevPrint("Invalid weapon class: "..self.WeaponClass)
+    fl.dev_print("Invalid weapon class: "..self.WeaponClass)
   end
 end
 

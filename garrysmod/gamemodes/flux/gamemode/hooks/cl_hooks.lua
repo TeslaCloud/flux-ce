@@ -49,7 +49,7 @@ do
       local newW, newH = ScrW(), ScrH()
 
       if (scrW != newW or scrH != newH) then
-        fl.Print("Resolution changed from "..scrW.."x"..scrH.." to "..newW.."x"..newH..".")
+        fl.print("Resolution changed from "..scrW.."x"..scrH.." to "..newW.."x"..newH..".")
 
         hook.Run("OnResolutionChanged", newW, newH, scrW, scrH)
 
@@ -107,7 +107,7 @@ function GM:HUDDrawScoreBoard()
     if (!fl.localPlayerCreated) then
       text = "#Loading_LocalPlayer"
       percentage = 0
-    elseif (!fl.sharedTableReceived) then
+    elseif (!fl.shared_received) then
       text = "#Loading_Shared"
       percentage = 45
     end

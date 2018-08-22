@@ -49,11 +49,11 @@ function CFaction:GetDescription()
   return self.Description
 end
 
-function CFaction:AddClass(id, className, description, color, callback)
+function CFaction:AddClass(id, class_name, description, color, callback)
   if (!id) then return end
 
   self.Classes[id] = {
-    name = className,
+    name = class_name,
     description = description,
     color = color,
     callback = callback

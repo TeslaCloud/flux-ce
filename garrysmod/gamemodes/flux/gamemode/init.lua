@@ -51,7 +51,7 @@ if (system.IsWindows() and fileio.CheckForChanges) then
       text = "renamed, this is it's new name."
     end
 
-    fl.DevPrint("File action: '"..fileName.."' was "..text)
+    fl.dev_print("File action: '"..fileName.."' was "..text)
   end)
 end
 

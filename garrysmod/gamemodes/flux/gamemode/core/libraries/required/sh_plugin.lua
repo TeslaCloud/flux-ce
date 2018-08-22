@@ -220,8 +220,8 @@ function plugin.remove(id)
 end
 
 function plugin.is_disabled(folder)
-  if (fl.sharedTable.disabledPlugins) then
-    return fl.sharedTable.disabledPlugins[folder]
+  if (fl.shared.disabledPlugins) then
+    return fl.shared.disabledPlugins[folder]
   end
 end
 
@@ -244,13 +244,13 @@ function plugin.register(obj)
     reload_data[obj:GetFolder()] = true
   end
 
-  if (SERVER) then
+  if SERVER then
     if (Schema == obj) then
       local folderName = obj.folder:RemoveTextFromEnd("/schema")
       local filePath = "gamemodes/"..folderName.."/"..folderName..".cfg"
 
       if (file.Exists(filePath, "GAME")) then
-        fl.DevPrint("Importing config: "..filePath)
+        fl.dev_print("Importing config: "..filePath)
 
         config.Import(fileio.Read(filePath), CONFIG_PLUGIN)
       end
@@ -275,17 +275,17 @@ function plugin.include(folder)
   data.pluginFolder = folder
 
   if (reload_data[folder] == false) then
-    fl.DevPrint("Not reloading plugin: "..folder)
+    fl.dev_print("Not reloading plugin: "..folder)
 
     return
   elseif (plugin.loaded(id)) then
     return
   end
 
-  fl.DevPrint("Loading plugin: "..folder)
+  fl.dev_print("Loading plugin: "..folder)
 
   if (ext != "lua") then
-    if (SERVER) then
+    if SERVER then
       if (file.Exists(folder.."/plugin.cfg", "LUA")) then
         local configData = config.ConfigToTable(file.Read(folder.."/plugin.cfg", "LUA"))
         local dataTable = {name = configData.name, description = configData.description, author = configData.author, depends = configData.depends}
@@ -305,10 +305,10 @@ function plugin.include(folder)
           end
         end
 
-        fl.sharedTable.pluginInfo[folder] = data
+        fl.shared.pluginInfo[folder] = data
       end
     else
-      table.Merge(data, fl.sharedTable.pluginInfo[folder])
+      table.Merge(data, fl.shared.pluginInfo[folder])
     end
   end
 
@@ -345,13 +345,13 @@ function plugin.include(folder)
 end
 
 function plugin.include_schema()
-  local schemaInfo = fl.GetSchemaInfo()
-  local schemaPath = schemaInfo.folder
-  local schemaFolder = schemaPath.."/schema"
+  local schema_info = fl.get_schema_info()
+  local schemaPath = schema_info.folder
+  local schema_folder = schemaPath.."/schema"
   local filePath = "gamemodes/"..schemaPath.."/"..schemaPath..".cfg"
 
   if (file.Exists(filePath, "GAME")) then
-    fl.DevPrint("Checking schema dependencies using "..filePath)
+    fl.dev_print("Checking schema dependencies using "..filePath)
 
     local dependencies = config.ConfigToTable(fileio.Read(filePath)).depends
 
@@ -367,18 +367,18 @@ function plugin.include_schema()
     end
   end
 
-  if (SERVER) then AddCSLuaFile(schemaPath.."/gamemode/cl_init.lua") end
+  if SERVER then AddCSLuaFile(schemaPath.."/gamemode/cl_init.lua") end
 
-  Schema = Plugin(schemaInfo.name, schemaInfo)
+  Schema = Plugin(schema_info.name, schema_info)
 
-  util.Include(schemaFolder.."/sh_schema.lua")
+  util.Include(schema_folder.."/sh_schema.lua")
 
-  plugin.include_folders(schemaFolder)
+  plugin.include_folders(schema_folder)
   plugin.include_plugins(schemaPath.."/plugins")
 
-  if (schemaInfo.name and schemaInfo.author) then
-    MsgC(Color(255, 255, 0), schemaInfo.name)
-    MsgC(Color(0, 255, 100), " by "..schemaInfo.author.." has been loaded!\n")
+  if (schema_info.name and schema_info.author) then
+    MsgC(Color(255, 255, 0), schema_info.name)
+    MsgC(Color(0, 255, 100), " by "..schema_info.author.." has been loaded!\n")
   end
 
   Schema:Register()
@@ -393,7 +393,7 @@ function plugin.require(pluginName)
   if (!plugin.loaded(pluginName)) then
     local searchPaths = {
       "flux/plugins/",
-      (fl.GetSchemaFolder() or "flux").."/plugins/"
+      (fl.get_schema_folder() or "flux").."/plugins/"
     }
 
     local tolerance = {

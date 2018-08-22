@@ -50,7 +50,7 @@ function item.Register(id, data)
     return
   end
 
-  fl.DevPrint("Registering item: "..tostring(id))
+  fl.dev_print("Registering item: "..tostring(id))
 
   if (!id) then
     id = data.Name:MakeID()
@@ -169,7 +169,7 @@ function item.Find(name)
         return v
       end
 
-      if (CLIENT) then
+      if CLIENT then
         if (fl.lang:TranslateText(v.PrintName):find(name)) then
           return v
         end
@@ -200,7 +200,7 @@ function item.New(id, data, forcedID)
 
     instances[id][itemID].instanceID = itemID
 
-    if (SERVER) then
+    if SERVER then
       item.AsyncSave()
       netstream.Start(nil, "ItemNewInstance", id, (data or 1), itemID)
     end
@@ -219,11 +219,11 @@ function item.Remove(instanceID)
 
     instances[itemTable.id][itemTable.instanceID] = nil
 
-    if (SERVER) then
+    if SERVER then
       item.AsyncSave()
     end
 
-    fl.DevPrint("Removed item instance ID: "..itemTable.instanceID)
+    fl.dev_print("Removed item instance ID: "..itemTable.instanceID)
   end
 end
 
@@ -233,8 +233,8 @@ function item.IsInstance(itemTable)
   return (itemTable.instanceID or ITEM_TEMPLATE) > ITEM_INVALID
 end
 
-function item.CreateBase(strName)
-  class(strName, nil, CItem)
+function item.CreateBase(name)
+  class(name, nil, CItem)
 end
 
 pipeline.Register("item", function(id, fileName, pipe)
@@ -251,7 +251,7 @@ function item.IncludeItems(directory)
   pipeline.IncludeDirectory("item", directory)
 end
 
-if (SERVER) then
+if SERVER then
   function item.Load()
     local loaded = data.LoadSchema("items/instances", {})
 

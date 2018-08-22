@@ -202,7 +202,7 @@ do
     return table.HasValue(self:GetWhitelists(), name)
   end
 
-  if (SERVER) then
+  if SERVER then
     function player_meta:SetWhitelists(data)
       self:SetNetVar("whitelists", data)
       self:SavePlayer()

@@ -26,7 +26,7 @@ function player_meta:SetModel(sPath)
 
   hook.Run("PlayerModelChanged", self, sPath, oldModel)
 
-  if (SERVER) then
+  if SERVER then
     netstream.Start(nil, "PlayerModelChanged", self:EntIndex(), sPath, oldModel)
   end
 
@@ -65,7 +65,7 @@ function player_meta:DoAction(id)
   end
 
   if (act and act != "none") then
-    local actionTable = fl.GetAction(act)
+    local actionTable = fl.get_action(act)
 
     if (istable(actionTable) and isfunction(actionTable.callback)) then
       try {

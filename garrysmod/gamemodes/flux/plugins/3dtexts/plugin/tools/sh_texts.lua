@@ -14,7 +14,7 @@ TOOL.ClientConVar["color"] = "white"
 TOOL.ClientConVar["extraColor"] = "red"
 
 function TOOL:LeftClick(trace)
-  if (CLIENT) then return true end
+  if CLIENT then return true end
 
   local player = self:GetOwner()
 
@@ -53,7 +53,7 @@ function TOOL:LeftClick(trace)
 end
 
 function TOOL:RightClick(trace)
-  if (CLIENT) then return true end
+  if CLIENT then return true end
 
   fl3DText:Remove(self:GetOwner())
 

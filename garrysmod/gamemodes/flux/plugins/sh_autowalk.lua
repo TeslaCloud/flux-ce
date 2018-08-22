@@ -5,7 +5,7 @@
 PLUGIN:SetAuthor("NightAngel")
 PLUGIN:SetDescription("Allows users to press a button to automatically walk forward.")
 
-if (SERVER) then
+if SERVER then
   local check = {
     [IN_FORWARD] = true,
     [IN_BACK] = true,

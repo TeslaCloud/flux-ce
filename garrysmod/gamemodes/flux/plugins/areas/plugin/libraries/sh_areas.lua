@@ -103,7 +103,7 @@ function areas.Register(id, data)
 
   top = top + 1
 
-  if (SERVER) then
+  if SERVER then
     netstream.Start(nil, "flAreaRegister", id, data)
   end
 
@@ -113,7 +113,7 @@ end
 function areas.Remove(id)
   stored[id] = nil
 
-  if (SERVER) then
+  if SERVER then
     netstream.Start(nil, "flAreaRemove", id)
   end
 end
@@ -141,7 +141,7 @@ function areas.SetCallback(areaType, callback)
 end
 
 function areas.GetCallback(areaType)
-  return callbacks[areaType] or (types[areaType] and types[areaType].callback) or function() fl.DevPrint("Callback for area type '"..areaType.."' could not be found!") end
+  return callbacks[areaType] or (types[areaType] and types[areaType].callback) or function() fl.dev_print("Callback for area type '"..areaType.."' could not be found!") end
 end
 
 areas.RegisterType(

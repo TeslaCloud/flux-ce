@@ -26,7 +26,7 @@ function CTool:MakeGhostEntity(model, pos, angle)
   -- Don't allow ragdolls/effects to be ghosts
   if (!util.IsValidProp(model)) then return end
 
-  if (CLIENT) then
+  if CLIENT then
     self.GhostEntity = ents.CreateClientProp(model)
   else
     self.GhostEntity = ents.Create("prop_physics")
@@ -108,7 +108,7 @@ function CTool:UpdateData()
 end
 
 function CTool:SetStage(i)
-  if (SERVER) then
+  if SERVER then
     self:GetWeapon():SetNWInt("Stage", i, true)
   end
 end
@@ -118,7 +118,7 @@ function CTool:GetStage()
 end
 
 function CTool:SetOperation(i)
-  if (SERVER) then
+  if SERVER then
     self:GetWeapon():SetNWInt("Op", i, true)
   end
 end
@@ -213,14 +213,14 @@ function CTool:SetObject(i, ent, pos, phys, bone, norm)
     end
   end
 
-  if (SERVER) then
+  if SERVER then
     -- Todo: Make sure the client got the same info
   end
 end
 
 -- Returns the number of objects in the list
 function CTool:NumObjects()
-  if (CLIENT) then
+  if CLIENT then
     return self:GetStage()
   end
 
@@ -232,7 +232,7 @@ function CTool:GetHelpText()
   return "#tool."..GetConVarString("gmod_toolmode").."."..self:GetStage()
 end
 
-if (CLIENT) then
+if CLIENT then
   -- Tool should return true if freezing the view angles
   function CTool:FreezeMovement()
     return false
@@ -258,7 +258,7 @@ end
 function CTool:CreateConVars()
   local mode = self:GetMode()
 
-  if (CLIENT) then
+  if CLIENT then
     for cvar, default in pairs(self.ClientConVar) do
       CreateClientConVar(mode.."_"..cvar, default, true, true)
     end
@@ -266,7 +266,7 @@ function CTool:CreateConVars()
     return
   end
 
-  if (SERVER) then
+  if SERVER then
     self.AllowedCVar = CreateConVar("toolmode_allow_"..mode, 1, FCVAR_NOTIFY)
   end
 end
@@ -295,7 +295,7 @@ function CTool:GetClientNumber(property, default)
 end
 
 function CTool:Allowed()
-  if (CLIENT) then return true end
+  if CLIENT then return true end
 
   return self.AllowedCVar:GetBool()
 end

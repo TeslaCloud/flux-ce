@@ -9,7 +9,7 @@ function player_meta:SavePlayer()
     name = self:Name(),
     joinTime = self.flJoinTime or os.time(),
     lastPlayTime = os.time(),
-    data = fl.Serialize(self:GetData())
+    data = fl.serialize(self:GetData())
   }
 
   hook.Run("SavePlayerData", self, saveData)
@@ -65,7 +65,7 @@ function player_meta:RestorePlayer()
       result = result[1]
 
       if (result.data) then
-        self:SetData(fl.Deserialize(result.data))
+        self:SetData(fl.deserialize(result.data))
       end
 
       if (result.joinTime) then

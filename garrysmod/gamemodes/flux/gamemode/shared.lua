@@ -46,8 +46,8 @@ Please set it to your schema's name instead!
 
   -- Shared table contains the info that will be networked
   -- to clients automatically when they load.
-  fl.sharedTable = fl.sharedTable or {
-    schemaFolder = fl.schema,
+  fl.shared = fl.shared or {
+    schema_folder = fl.schema,
     pluginInfo = {},
     unloadedPlugins = {}
   }
@@ -89,7 +89,7 @@ util.IncludeDirectory("core/ui/view", true)
 
 if (theme or SERVER) then
   pipeline.Register("theme", function(id, fileName, pipe)
-    if (CLIENT) then
+    if CLIENT then
       THEME = Theme(id)
 
       util.Include(fileName)
@@ -110,8 +110,8 @@ util.IncludeDirectory("hooks", true)
 
 hook.Run("PreLoadPlugins")
 
-fl.IncludePlugins("flux/plugins")
+fl.include_plugins("flux/plugins")
 
 hook.Run("OnPluginsLoaded")
 
-fl.IncludeSchema()
+fl.include_schema()

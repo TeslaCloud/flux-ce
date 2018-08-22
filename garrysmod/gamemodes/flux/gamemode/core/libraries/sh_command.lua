@@ -64,7 +64,7 @@ function fl.command:FindAll(id)
 
   for k, v in pairs(aliases) do
     if (!ids[v] and (k:find(id) or v:find(id))) then
-      if (SERVER) then
+      if SERVER then
         table.insert(hits, stored[v])
       else
         if (fl.client:HasPermission(v)) then
@@ -141,7 +141,7 @@ function fl.command:ExtractArguments(text)
   return arguments
 end
 
-if (SERVER) then
+if SERVER then
   local macros = {
     -- Target everyone in a user group.
     ["@"] = function(player, str)
@@ -365,7 +365,7 @@ end
 
 -- An internal function that powers the flc and flCmd console commands.
 function fl.command.ConCommand(player, cmd, args, argsText)
-  if (SERVER) then
+  if SERVER then
     fl.command:Interpret(player, argsText)
   else
     fl.command:Send(argsText)

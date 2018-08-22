@@ -39,7 +39,7 @@ function character.Create(player, data)
 
   table.insert(stored[steamID], data)
 
-  if (SERVER) then
+  if SERVER then
     local charID = #stored[steamID]
 
     hook.Run("PostCreateCharacter", player, charID, data)
@@ -50,7 +50,7 @@ function character.Create(player, data)
   return CHAR_SUCCESS
 end
 
-if (SERVER) then
+if SERVER then
   function character.Load(player)
     local steamID = player:SteamID()
 
@@ -165,29 +165,29 @@ else
   end)
 end
 
-if (SERVER) then
+if SERVER then
   netstream.Hook("CreateCharacter", function(player, data)
     data.gender  = (data.gender and data.gender == "Female" and CHAR_GENDER_FEMALE) or CHAR_GENDER_MALE
     data.physDesc = data.description
 
     local status = character.Create(player, data)
 
-    fl.DevPrint("Creating character. Status: "..status)
+    fl.dev_print("Creating character. Status: "..status)
 
     if (status == CHAR_SUCCESS) then
       character.SendToClient(player)
       netstream.Start(player, "PlayerCreatedCharacter", true, status)
 
-      fl.DevPrint("Success")
+      fl.dev_print("Success")
     else
       netstream.Start(player, "PlayerCreatedCharacter", false, status)
 
-      fl.DevPrint("Error")
+      fl.dev_print("Error")
     end
   end)
 
   netstream.Hook("PlayerSelectCharacter", function(player, id)
-    fl.DevPrint(player:Name().." has loaded character #"..id)
+    fl.dev_print(player:Name().." has loaded character #"..id)
 
     player:SetActiveCharacter(id)
   end)
@@ -221,7 +221,7 @@ do
   end
 
   function player_meta:GetCharacterVar(id, default)
-    if (SERVER) then
+    if SERVER then
       return self:GetCharacter()[id] or default
     else
       return self:GetNetVar(id, default)

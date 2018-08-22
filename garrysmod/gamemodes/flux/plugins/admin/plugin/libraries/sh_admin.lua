@@ -202,7 +202,7 @@ function fl.admin:IncludeGroups(directory)
   pipeline.IncludeDirectory("group", directory)
 end
 
-if (SERVER) then
+if SERVER then
   local function SetPermission(steamID, permID, value)
     players[steamID] = players[steamID] or {}
     players[steamID][permID] = value

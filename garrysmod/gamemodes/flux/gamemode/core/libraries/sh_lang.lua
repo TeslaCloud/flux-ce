@@ -223,7 +223,7 @@ function fl.lang:GetPlayerLang(player)
   return player:GetNetVar("language", "en")
 end
 
-if (CLIENT) then
+if CLIENT then
   function L(identifier)
     local lang = GetConVar("gmod_language"):GetString()
 

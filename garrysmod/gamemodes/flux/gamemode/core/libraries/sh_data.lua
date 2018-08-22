@@ -3,7 +3,7 @@
   Do not use, re-distribute or share unless authorized.
 --]]library.New "data"
 
-if (SERVER) then
+if SERVER then
   function data.Save(key, value)
     if (!isstring(key) or !istable(value)) then return end
 
@@ -11,7 +11,7 @@ if (SERVER) then
       key = key..".pon"
     end
 
-    fileio.Write("settings/flux/"..key, fl.Serialize(value))
+    fileio.Write("settings/flux/"..key, fl.serialize(value))
   end
 
   function data.Load(key, failSafe)
@@ -22,9 +22,9 @@ if (SERVER) then
     end
 
     if (file.Exists("settings/flux/"..key, "GAME")) then
-      local strData = fileio.Read("settings/flux/"..key)
+      local data = fileio.Read("settings/flux/"..key)
 
-      return fl.Deserialize(strData)
+      return fl.deserialize(data)
     elseif (failSafe) then
       return failSafe
     else
@@ -53,7 +53,7 @@ else
       key = key..".dat"
     end
 
-    file.Write("flux/"..key, fl.Serialize(value))
+    file.Write("flux/"..key, fl.serialize(value))
   end
 
   function data.Load(key, failSafe)
@@ -64,9 +64,9 @@ else
     end
 
     if (file.Exists("flux/"..key, "DATA")) then
-      local strData = file.Read("flux/"..key, "DATA")
+      local data = file.Read("flux/"..key, "DATA")
 
-      return fl.Deserialize(strData)
+      return fl.deserialize(data)
     elseif (failSafe) then
       return failSafe
     else
@@ -90,15 +90,15 @@ else
 end
 
 function data.SaveSchema(key, value)
-  return data.Save("schemas/"..fl.GetSchemaFolder().."/"..key, value)
+  return data.Save("schemas/"..fl.get_schema_folder().."/"..key, value)
 end
 
 function data.LoadSchema(key, failSafe)
-  return data.Load("schemas/"..fl.GetSchemaFolder().."/"..key, failSafe)
+  return data.Load("schemas/"..fl.get_schema_folder().."/"..key, failSafe)
 end
 
 function data.DeleteSchema(key)
-  return data.Delete("schemas/"..fl.GetSchemaFolder().."/"..key)
+  return data.Delete("schemas/"..fl.get_schema_folder().."/"..key)
 end
 
 function data.SavePlugin(key, value)

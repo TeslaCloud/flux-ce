@@ -19,7 +19,7 @@ local rotationTranslate = {
 }
 
 function player_meta:SetWeaponRaised(bIsRaised)
-  if (SERVER) then
+  if SERVER then
     self:SetDTBool(BOOL_WEAPON_RAISED, bIsRaised)
 
     hook.Run("OnWeaponRaised", self, self:GetActiveWeapon(), bIsRaised)
@@ -121,7 +121,7 @@ function PLUGIN:PlayerSetupDataTables(player)
   player:DTVar("Bool", BOOL_WEAPON_RAISED, "WeaponRaised")
 end
 
-if (CLIENT) then
+if CLIENT then
   function PLUGIN:CalcViewModelView(weapon, viewModel, oldEyePos, oldEyeAngles, eyePos, eyeAngles)
     if (!IsValid(weapon)) then
       return

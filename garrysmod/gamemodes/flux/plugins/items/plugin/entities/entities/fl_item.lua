@@ -9,7 +9,7 @@ ENT.Category = "Flux"
 ENT.Spawnable = false
 ENT.RenderGroup = RENDERGROUP_BOTH
 
-if (SERVER) then
+if SERVER then
   function ENT:Initialize()
     self:SetSolid(SOLID_VPHYSICS)
     self:SetMoveType(MOVETYPE_VPHYSICS)
@@ -62,7 +62,7 @@ if (SERVER) then
           if (self.item) then
             hook.Run("PlayerUseItemEntity", caller, self, self.item)
           else
-            fl.DevPrint("Player attempted to use an item entity without item object tied to it!")
+            fl.dev_print("Player attempted to use an item entity without item object tied to it!")
           end
         end
       end

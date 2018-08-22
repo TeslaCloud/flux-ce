@@ -37,7 +37,7 @@ function CItemWeapon:PostEquipped(player)
     weapon:SetClip1(ammo[1])
     weapon:SetClip2(ammo[2])
   else
-    fl.DevPrint("Invalid weapon class: "..self.WeaponClass)
+    fl.dev_print("Invalid weapon class: "..self.WeaponClass)
   end
 end
 
@@ -50,7 +50,7 @@ function CItemWeapon:PostUnEquipped(player)
     player:StripWeapon(self.WeaponClass)
     self:SetData("ammo", ammo)
   else
-    fl.DevPrint("Invalid weapon class: "..self.WeaponClass)
+    fl.dev_print("Invalid weapon class: "..self.WeaponClass)
   end
 end
 
@@ -73,7 +73,7 @@ function CItemWeapon:OnSave(player)
 
     self:SetData("ammo", ammo)
   else
-    fl.DevPrint("Invalid weapon class: "..self.WeaponClass)
+    fl.dev_print("Invalid weapon class: "..self.WeaponClass)
   end
 end
 

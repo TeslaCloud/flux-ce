@@ -15,8 +15,8 @@ function player_meta:SaveAllUsergroups()
     steamID = self:SteamID(),
     name = self:Name(),
     userGroup = self:GetUserGroup(),
-    secondaryGroups = fl.Serialize(self:GetSecondaryGroups()),
-    customPermissions = fl.Serialize(self:GetCustomPermissions())
+    secondaryGroups = fl.serialize(self:GetSecondaryGroups()),
+    customPermissions = fl.serialize(self:GetCustomPermissions())
   })
 end
 

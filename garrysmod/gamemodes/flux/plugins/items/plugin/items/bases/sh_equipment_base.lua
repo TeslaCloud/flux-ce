@@ -14,7 +14,7 @@ CItemEquippable.Category = "#Item_Category_Equipment"
 CItemEquippable.EquipSlot = "#Item_Slot_Accessory"
 CItemEquippable.Stackable = false
 
-if (CLIENT) then
+if CLIENT then
   function CItemEquippable:GetUseText()
     if (self:IsEquipped()) then
       return "#Item_Option_Unequip"

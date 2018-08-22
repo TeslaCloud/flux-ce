@@ -679,7 +679,7 @@ function fl.db:EasyWrite(tableName, where, data)
 
           updateObj:Where(where[1], where[2])
           updateObj:Callback(function()
-            fl.DevPrint("Easy MySQL updated data. ('"..tableName.."' WHERE "..where[1].." = "..where[2]..")")
+            fl.dev_print("Easy MySQL updated data. ('"..tableName.."' WHERE "..where[1].." = "..where[2]..")")
           end)
 
         updateObj:Execute()
@@ -692,7 +692,7 @@ function fl.db:EasyWrite(tableName, where, data)
 
           insertObj:Callback(function(result)
             if (!istable(where[1])) then
-              fl.DevPrint("Easy MySQL inserted data into '"..tableName.."' WHERE "..where[1].." = "..where[2]..".")
+              fl.dev_print("Easy MySQL inserted data into '"..tableName.."' WHERE "..where[1].." = "..where[2]..".")
             else
               local msg = "Easy MySQL inserted data into '"..tableName.."' WHERE "
               local i = 0
@@ -706,7 +706,7 @@ function fl.db:EasyWrite(tableName, where, data)
                 end
               end
 
-              fl.DevPrint(msg)
+              fl.dev_print(msg)
             end
           end)
 
@@ -734,7 +734,7 @@ function fl.db:EasyRead(tableName, where, callback)
     end
 
     query:Callback(function(result)
-      fl.DevPrint("Easy MySQL has successfully read the data!")
+      fl.dev_print("Easy MySQL has successfully read the data!")
 
       local success, value = pcall(callback, result, (istable(result) and #result > 0))
 

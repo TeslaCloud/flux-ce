@@ -1,7 +1,4 @@
 --[[
-  Derpy © 2018 TeslaCloud Studios
-  Do not use, re-distribute or share unless authorized.
---]]--[[
   Library: library
   Description: Provides function for library and class creation, manipulation and instantiation.
 --]]
@@ -9,13 +6,13 @@ library = library or {}
 library.stored = library.stored or {}
 
 --[[
-  Function: fl.Print (any message)
+  Function: fl.print (any message)
   Description: Prints a message to the console.
   Argument: any message - Any variable to be printed. If it's table, PrintTable will automatically be used.
 
   Returns: nil
 --]]
-function fl.Print(message)
+function fl.print(message)
   if (!istable(message)) then
     print(message)
   else
@@ -25,18 +22,18 @@ function fl.Print(message)
 end
 
 --[[
-  Function: fl.DevPrint (string message)
+  Function: fl.dev_print (string message)
   Description: Prints a developer message to console. The message is prefixed with a colored [Flux:Dev].
   Argument: string message - Message to be printed as a developer comment.
 
   Returns: nil
 --]]
-function fl.DevPrint(strMessage)
+function fl.dev_print(message)
   if (fl.Devmode) then
     Msg("[Flux:")
     MsgC(Color(175, 0, 0), "Dev")
     Msg("] ")
-    MsgC(Color(200, 200, 200), strMessage)
+    MsgC(Color(200, 200, 200), message)
     Msg("\n")
   end
 end
@@ -49,10 +46,10 @@ end
 
   Returns: nil
 --]]
-file.OldWrite = file.OldWrite or file.Write
+file.old_write = file.old_write or file.Write
 
-function file.Write(strFileName, strContent)
-  local exploded = string.Explode("/", strFileName)
+function file.Write(file_name, contents)
+  local exploded = string.Explode("/", file_name)
   local curPath = ""
 
   for k, v in ipairs(exploded) do
@@ -67,7 +64,7 @@ function file.Write(strFileName, strContent)
     end
   end
 
-  return file.OldWrite(strFileName, strContent)
+  return file.old_write(file_name, contents)
 end
 
 --[[
@@ -78,30 +75,30 @@ end
 
   Returns: table - The created library.
 --]]
-function library.New(strName, tParent)
-  tParent = tParent or _G
+function library.New(name, parent)
+  parent = parent or _G
 
-  tParent[strName] = tParent[strName] or {}
+  parent[name] = parent[name] or {}
 
-  return tParent[strName]
+  return parent[name]
 end
 
 -- Set library table's Metatable so that we can call it like a function.
-setmetatable(library, {__call = function(tab, strName, tParent) return tab.Get(strName, tParent) end})
+setmetatable(library, { __call = function(tab, name, parent) return tab.Get(name, parent) end })
 
 --[[
-  Function: library.NewClass (string name, table parent = _G, class baseClass = nil)
+  Function: library.create_class (string name, table parent = _G, class base_class = nil)
   Description: Creates a new class. Supports constructors and inheritance.
   Argument: string name - The name of the library. Must comply with Lua variable name requirements.
   Argument: table parent (default: _G) - The parent table to put the class into.
-  Argument: class baseClass (default: nil) - The base class this new class should extend.
+  Argument: class base_class (default: nil) - The base class this new class should extend.
 
-  Alias: Class (string name, class baseClass = nil, table parent = _G)
-  Alias: class (string name, class baseClass = nil, table parent = _G)
+  Alias: Class (string name, class base_class = nil, table parent = _G)
+  Alias: class (string name, class base_class = nil, table parent = _G)
 
   Returns: table - The created class.
 --]]
-function library.NewClass(strName, tParent, CExtends)
+function library.create_class(name, parent, CExtends)
   local class = {
     -- Same as "new ClassName" in C++
     __call = function(obj, ...)
@@ -112,13 +109,13 @@ function library.NewClass(strName, tParent, CExtends)
       table.SafeMerge(newObj, obj)
 
       -- If there is a base class, call their constructor.
-      local baseClass = obj.BaseClass
-      local hasBaseclass = true
+      local base_class = obj.BaseClass
+      local has_base_class = true
 
-      while (istable(baseClass) and hasBaseclass) do
-        if (isfunction(baseClass[baseClass.ClassName])) then
+      while (istable(base_class) and has_base_class) do
+        if (isfunction(base_class[base_class.ClassName])) then
           try {
-            baseClass[baseClass.ClassName], newObj, ...
+            base_class[base_class.ClassName], newObj, ...
           } catch {
             function(exception)
               ErrorNoHalt("Base class constructor has failed to run!\n" +
@@ -127,19 +124,19 @@ function library.NewClass(strName, tParent, CExtends)
           }
         end
 
-        if (baseClass.BaseClass and baseClass.ClassName != baseClass.BaseClass.ClassName) then
-          baseClass = baseClass.BaseClass
+        if (base_class.BaseClass and base_class.ClassName != base_class.BaseClass.ClassName) then
+          base_class = base_class.BaseClass
         else
-          hasBaseclass = false
+          has_base_class = false
         end
       end
 
       -- If there is a constructor - call it.
-      if (obj[strName]) then
-        local success, value = pcall(obj[strName], newObj, ...)
+      if (obj[name]) then
+        local success, value = pcall(obj[name], newObj, ...)
 
         if (!success) then
-          ErrorNoHalt("["..strName.."] Class constructor has failed to run!\n")
+          ErrorNoHalt("["..name.."] Class constructor has failed to run!\n")
           ErrorNoHalt(value.."\n")
         end
       end
@@ -171,26 +168,26 @@ function library.NewClass(strName, tParent, CExtends)
   end
 
   -- Create the actual class table.
-  local obj = library.New(strName, (tParent or _G))
-  obj.ClassName = strName
+  local obj = library.New(name, (parent or _G))
+  obj.ClassName = name
   obj.BaseClass = CExtends or false
 
-  library.lastClass = {name = strName, parent = (tParent or _G)}
+  library.last_class = { name = name, parent = (parent or _G) }
 
-  return setmetatable((tParent or _G)[strName], class)
+  return setmetatable((parent or _G)[name], class)
 end
 
 -- Aliases
-function Class(strName, CExtends, tParent)
-  return library.NewClass(strName, tParent, CExtends)
+function Class(name, CExtends, parent)
+  return library.create_class(name, parent, CExtends)
 end
 
 class = Class
 
 --[[
-  Function: extends (class baseClass)
+  Function: extends (class base_class)
   Description: Sets the base class of the class that is currently being created.
-  Argument: class baseClass - The base class to extend.
+  Argument: class base_class - The base class to extend.
 
   Alias: implements
   Alias: inherits
@@ -202,8 +199,8 @@ function extends(CBaseClass)
     CBaseClass = _G[CBaseClass]
   end
 
-  if (istable(library.lastClass) and istable(CBaseClass)) then
-    local obj = library.lastClass.parent[library.lastClass.name]
+  if (istable(library.last_class) and istable(CBaseClass)) then
+    local obj = library.last_class.parent[library.last_class.name]
     local copy = table.Copy(CBaseClass)
     local merged = table.Merge(copy, obj)
 
@@ -223,8 +220,8 @@ function extends(CBaseClass)
 
     hook.Run("OnClassExtended", obj, CBaseClass)
 
-    library.lastClass.parent[library.lastClass.name] = obj
-    library.lastClass = nil
+    library.last_class.parent[library.last_class.name] = obj
+    library.last_class = nil
 
     return true
   end
@@ -242,105 +239,104 @@ implements = extends
 inherits = extends
 
 --[[
-  Function: New (string className, ...)
+  Function: New (string class_name, ...)
   Description: Creates a new instance of the supplied class
-  Argument: string className - The name of the class to create.
+  Argument: string class_name - The name of the class to create.
   Argument: vararg - Arguments to pass to the class constructor.
 
   Alias: new
 
   Returns: object - The instance of the supplied class. nil if class does not exist.
 --]]
-function New(className, ...)
-  if (istable(className)) then
-    return className(...)
+function New(class_name, ...)
+  if (istable(class_name)) then
+    return class_name(...)
   end
 
-  return (_G[className] and _G[className](unpack(...)))
+  return (_G[class_name] and _G[class_name](unpack(...)))
 end
 
 --[[
   Example usage:
 
-  local obj = new "className"
-  local obj = new("className", 1, 2, 3)
+  local obj = new "ClassName"
+  local obj = new("ClassName", 1, 2, 3)
 --]]
 
 new = New
 
 do
-  local actionStorage = fl.actionStorage or {}
-  fl.actionStorage = actionStorage
+  local action_storage = fl.action_storage or {}
+  fl.action_storage = action_storage
 
   --[[
-    Function: fl.RegisterAction (string id, function callback)
+    Function: fl.register_action (string id, function callback)
     Description: Registers an action that can be assigned to a player.
     Argument: string id - Identifier of the action.
     Argument: function callback - Function to call when the action is executed.
   
     Returns: nil
   --]]
-  function fl.RegisterAction(id, callback)
-    actionStorage[id] = callback
+  function fl.register_action(id, callback)
+    action_storage[id] = callback
   end
 
   --[[
-    Function: fl.GetAction (string id)
+    Function: fl.get_action (string id)
     Description: Retreives the action callback with the specified identifier.
     Argument: string id - ID of the action to get the callback of.
   
     Returns: function - The callback.
   --]]
-  function fl.GetAction(id)
-    return actionStorage[id]
+  function fl.get_action(id)
+    return action_storage[id]
   end
 
   --[[
-    Function: fl.GetAllActions ()
+    Function: fl.get_all_actions ()
     Description: Can be used to directly access the table storing all of the actions.
   
-    Returns: table - The actionStorage table.
+    Returns: table - The action_storage table.
   --]]
-  function fl.GetAllActions()
-    return actionStorage
+  function fl.get_all_actions()
+    return action_storage
   end
 
-  fl.RegisterAction("spawning")
-  fl.RegisterAction("idle")
+  fl.register_action("spawning")
+  fl.register_action("idle")
 end
 
 --[[
-  Function: fl.GetSchemaFolder ()
+  Function: fl.get_schema_folder ()
   Description: Gets the folder of the currently loaded schema.
 
   Returns: string - The folder of the currently loaded schema.
 --]]
-function fl.GetSchemaFolder()
-  if (SERVER) then
+function fl.get_schema_folder()
+  if SERVER then
     return fl.schema
   else
-    return fl.sharedTable.schemaFolder or "flux"
+    return fl.shared.schema_folder or "flux"
   end
 end
 
 --[[
-  Function: fl.Serialize (table toSerialize)
+  Function: fl.serialize (table toSerialize)
   Description: Converts a table into the string format.
   Argument: table toSerialize - Table to convert.
 
   Returns: string - pON-encoded table. If pON fails then JSON is returned.
 --]]
-function fl.Serialize(tTable)
-  if (istable(tTable)) then
-    local bSuccess, value = pcall(pon.encode, tTable)
+function fl.serialize(tab)
+  if (istable(tab)) then
+    local success, value = pcall(pon.encode, tab)
 
-    if (!bSuccess) then
-      bSuccess, value = pcall(util.TableToJSON, tTable)
+    if (!success) then
+      success, value = pcall(util.TableToJSON, tab)
 
-      if (!bSuccess) then
+      if (!success) then
         ErrorNoHalt("Failed to serialize a table!\n")
         ErrorNoHalt(value.."\n")
-        debug.Trace()
 
         return ""
       end
@@ -348,30 +344,29 @@ function fl.Serialize(tTable)
 
     return value
   else
-    print("You must serialize a table, not "..type(tTable).."!")
+    print("You must serialize a table, not "..type(tab).."!")
 
     return ""
   end
 end
 
 --[[
-  Function: fl.Deserialize (string toDeserialize)
+  Function: fl.deserialize (string toDeserialize)
   Description: Converts a string back into table. Uses pON at first, if it fails it falls back to JSON.
   Argument: string toDeserialize - String to convert.
 
   Returns: table - Decoded string.
 --]]
-function fl.Deserialize(strData)
-  if (isstring(strData)) then
-    local bSuccess, value = pcall(pon.decode, strData)
+function fl.deserialize(data)
+  if (isstring(data)) then
+    local success, value = pcall(pon.decode, data)
 
-    if (!bSuccess) then
-      bSuccess, value = pcall(util.JSONToTable, strData)
+    if (!success) then
+      success, value = pcall(util.JSONToTable, data)
 
-      if (!bSuccess) then
+      if (!success) then
         ErrorNoHalt("Failed to deserialize a string!\n")
         ErrorNoHalt(value.."\n")
-        debug.Trace()
 
         return {}
       end
@@ -379,24 +374,24 @@ function fl.Deserialize(strData)
 
     return value
   else
-    print("You must deserialize a string, not "..type(strData).."!")
+    print("You must deserialize a string, not "..type(data).."!")
 
     return {}
   end
 end
 
 --[[
-  Function: fl.IncludeSchema ()
+  Function: fl.include_schema ()
   Description: Includes the currently loaded schema's files. Performs deferred load on client.
 
   Returns: nil
 --]]
-function fl.IncludeSchema()
-  if (SERVER) then
+function fl.include_schema()
+  if SERVER then
     return plugin.include_schema()
   else
     timer.Create("SchemaLoader", 0.04, 0, function()
-      if (fl.sharedTable and fl.sharedTableReceived) then
+      if (fl.shared and fl.shared_received) then
         timer.Remove("SchemaLoader")
         plugin.include_schema()
         netstream.Start("ClientIncludedSchema", true)
@@ -408,60 +403,60 @@ function fl.IncludeSchema()
 end
 
 --[[
-  Function: fl.IncludePlugins (string folder)
+  Function: fl.include_plugins (string folder)
   Description: Includes all of the plugins inside the folder. Includes files first, then folders. Does not handle plugin-inside-of-plugin scenarios.
   Argument: string folder - Folder relative to Lua's PATH (lua/, gamemodes/).
 
   Returns: nil
 --]]
-function fl.IncludePlugins(strFolder)
-  if (SERVER) then
-    return plugin.include_plugins(strFolder)
+function fl.include_plugins(folder)
+  if SERVER then
+    return plugin.include_plugins(folder)
   else
-    timer.Create("PluginLoader", 0.04, 0, function()
-      if (fl.sharedTable and fl.sharedTableReceived) then
-        timer.Remove("PluginLoader")
-        plugin.include_plugins(strFolder)
+    timer.Create("plugin_loader", 0.04, 0, function()
+      if (fl.shared and fl.shared_received) then
+        timer.Remove("plugin_loader")
+        plugin.include_plugins(folder)
       end
     end)
   end
 end
 
 --[[
-  Function: fl.GetSchemaInfo ()
+  Function: fl.get_schema_info ()
   Description: Gets the table containing all of the information about the currently loaded schema.
 
   Returns: table - The schema info table.
 --]]
-function fl.GetSchemaInfo()
-  if (SERVER) then
-    if (fl.SchemaInfo) then return fl.SchemaInfo end
+function fl.get_schema_info()
+  if SERVER then
+    if (fl.schema_info) then return fl.schema_info end
 
-    local schemaFolder = string.lower(fl:GetSchemaFolder())
-    local schemaData = util.KeyValuesToTable(
-      fileio.Read("gamemodes/"..schemaFolder.."/"..schemaFolder..".txt")
+    local schema_folder = string.lower(fl.get_schema_folder())
+    local schema_data = util.KeyValuesToTable(
+      fileio.Read("gamemodes/"..schema_folder.."/"..schema_folder..".txt")
     )
 
-    if (!schemaData) then
-      schemaData = {}
+    if (!schema_data) then
+      schema_data = {}
     end
 
-    if (schemaData["Gamemode"]) then
-      schemaData = schemaData["Gamemode"]
+    if (schema_data["Gamemode"]) then
+      schema_data = schema_data["Gamemode"]
     end
 
-    fl.SchemaInfo = {}
-      fl.SchemaInfo["name"] = schemaData["title"] or "Undefined"
-      fl.SchemaInfo["author"] = schemaData["author"] or "Undefined"
-      fl.SchemaInfo["description"] = schemaData["description"] or "Undefined"
-      fl.SchemaInfo["version"] = schemaData["version"] or "Undefined"
-      fl.SchemaInfo["folder"] = string.gsub(schemaFolder, "/schema", "")
-    return fl.SchemaInfo
+    fl.schema_info = {}
+      fl.schema_info["name"] = schema_data["title"] or "Undefined"
+      fl.schema_info["author"] = schema_data["author"] or "Undefined"
+      fl.schema_info["description"] = schema_data["description"] or "Undefined"
+      fl.schema_info["version"] = schema_data["version"] or "Undefined"
+      fl.schema_info["folder"] = string.gsub(schema_folder, "/schema", "")
+    return fl.schema_info
   else
-    return fl.sharedTable.schemaInfo
+    return fl.shared.schema_info
   end
 end
 
-if (SERVER) then
-  fl.sharedTable.schemaInfo = fl.GetSchemaInfo()
+if SERVER then
+  fl.shared.schema_info = fl.get_schema_info()
 end
