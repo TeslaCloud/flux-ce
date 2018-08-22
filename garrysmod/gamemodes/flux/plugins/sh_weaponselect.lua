@@ -5,7 +5,7 @@
 PLUGIN:SetAuthor("Mr. Meow")
 PLUGIN:SetDescription("Adds custom weapon selector for use with Flux.")
 
-if (SERVER) then
+if SERVER then
   concommand.Add("selectweapon", function(player, command, arguments)
     local weapon = player:GetWeapons()[tonumber(arguments[1]) or 1]
 

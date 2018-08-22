@@ -27,17 +27,17 @@ function PANEL:Paint(width, height) theme.Hook("PaintPanel", self, width, height
 function PANEL:Think() theme.Hook("PanelThink", self) end
 
 -- MVC Functionality for all FL panels.
-function PANEL:Push(strName, ...)
-  mvc.Push(strName, ...)
+function PANEL:Push(name, ...)
+  mvc.Push(name, ...)
 end
 
-function PANEL:Pull(strName, handler, bPreventRemove)
-  mvc.Pull(strName, handler, bPreventRemove)
+function PANEL:Pull(name, handler, bPreventRemove)
+  mvc.Pull(name, handler, bPreventRemove)
 end
 
-function PANEL:Request(strName, handler, ...)
-  self:Pull(strName, handler)
-  self:Push(strName, ...)
+function PANEL:Request(name, handler, ...)
+  self:Pull(name, handler)
+  self:Push(name, ...)
 end
 
 vgui.Register("flBasePanel", PANEL, "EditablePanel")

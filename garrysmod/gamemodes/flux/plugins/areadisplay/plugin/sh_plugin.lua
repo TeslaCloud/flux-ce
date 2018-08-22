@@ -16,7 +16,7 @@
 
 util.Include("cl_hooks.lua")
 
-if (SERVER) then
+if SERVER then
   function PLUGIN:Save()
     --data.SavePlugin("areas", areas.GetByType("text") or {})
   end

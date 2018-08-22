@@ -1,7 +1,7 @@
 --[[
   Derpy © 2018 TeslaCloud Studios
   Do not use, re-distribute or share unless authorized.
---]]if (CLIENT) then
+--]]if CLIENT then
   library.New("binds", fl)
 
   local keyEnums = fl.binds.keyEnums or {}
@@ -77,7 +77,7 @@ end
 
 local hooks = {}
 
-if (SERVER) then
+if SERVER then
   function hooks:PlayerButtonDown(player, nKey)
     netstream.Start(player, "FLBindPressed", nKey)
   end

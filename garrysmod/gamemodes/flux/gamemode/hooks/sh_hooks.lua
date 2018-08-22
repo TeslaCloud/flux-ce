@@ -13,14 +13,14 @@ do
     player:SetPoseParameter("move_yaw", normalizeAngle(vectorAngle(velocity)[2] - player:EyeAngles()[2]))
     player.CalcIdeal = ACT_MP_STAND_IDLE
 
-    local baseClass = self.BaseClass
+    local base_class = self.BaseClass
 
-    if (baseClass:HandlePlayerNoClipping(player, velocity) or
-      baseClass:HandlePlayerDriving(player) or
-      baseClass:HandlePlayerVaulting(player, velocity) or
-      baseClass:HandlePlayerJumping(player, velocity) or
-      baseClass:HandlePlayerSwimming(player, velocity) or
-      baseClass:HandlePlayerDucking(player, velocity)) then
+    if (base_class:HandlePlayerNoClipping(player, velocity) or
+      base_class:HandlePlayerDriving(player) or
+      base_class:HandlePlayerVaulting(player, velocity) or
+      base_class:HandlePlayerJumping(player, velocity) or
+      base_class:HandlePlayerSwimming(player, velocity) or
+      base_class:HandlePlayerDucking(player, velocity)) then
     else
       local len2D = velocity:Length2D()
 
@@ -163,7 +163,7 @@ do
   function GM:PlayerModelChanged(player, strNewModel, strOldModel)
     if (!strNewModel) then return end
 
-    if (CLIENT) then
+    if CLIENT then
       player:SetIK(false)
     end
 

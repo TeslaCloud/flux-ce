@@ -37,7 +37,7 @@ function attributes.Register(id, data)
     id = data.Name:MakeID()
   end
 
-  fl.DevPrint("Registering "..string.lower(data.Type)..": "..tostring(id))
+  fl.dev_print("Registering "..string.lower(data.Type)..": "..tostring(id))
 
   data.id = id
   data.Name = data.Name or "Unknown Attribute"
@@ -64,7 +64,7 @@ function attributes.RegisterType(id, globalVar, folder)
 
   attributes.IncludeType(id, globalVar, folder)
 
-  fl.DevPrint("Registering attribute type: ["..id.."] ["..globalVar.."] ["..folder.."]")
+  fl.dev_print("Registering attribute type: ["..id.."] ["..globalVar.."] ["..folder.."]")
 end
 
 function attributes.IncludeType(id, globalVar, folder)
@@ -127,7 +127,7 @@ do
     end
   end
 
-  if (SERVER) then
+  if SERVER then
     function player_meta:SetAttribute(id, value)
       local attsTable = self:GetAttributes()
       local attribute = attributes.FindByID(id)

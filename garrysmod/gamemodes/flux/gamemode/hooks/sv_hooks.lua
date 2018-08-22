@@ -26,7 +26,7 @@ function GM:Initialize()
     SafeRequire(fl.db.Module)
   end
 
-  fl.DevPrint("Using "..fl.db.Module.." as MySQL module...")
+  fl.dev_print("Using "..fl.db.Module.." as MySQL module...")
 
   fl.db:Connect(mysql_host, mysql_username, mysql_password, mysql_database, mysql_port)
 end
@@ -328,7 +328,7 @@ function GM:OneSecond()
     fl.nextSaveData = curTime + 10
   elseif (fl.nextSaveData <= curTime) then
     if (hook.Run("FLShouldSaveData") != false) then
-      fl.DevPrint("Saving framework's data...")
+      fl.dev_print("Saving framework's data...")
 
       hook.Run("FLSaveData")
     end
@@ -343,7 +343,7 @@ function GM:OneSecond()
 
     if (#player.GetAll() == 0) then
       if (hook.Run("ShouldServerAutoRestart") != false) then
-        fl.DevPrint("Server is empty, restarting...")
+        fl.dev_print("Server is empty, restarting...")
         RunConsoleCommand("changelevel", game.GetMap())
       end
     end
@@ -351,7 +351,7 @@ function GM:OneSecond()
 end
 
 function GM:PreLoadPlugins()
-  fl.sharedTable.disabledPlugins = data.Load("disabled_plugins", {})
+  fl.shared.disabledPlugins = data.Load("disabled_plugins", {})
 end
 
 function GM:FLSaveData()

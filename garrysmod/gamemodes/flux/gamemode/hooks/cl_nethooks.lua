@@ -2,8 +2,8 @@
   Derpy © 2018 TeslaCloud Studios
   Do not use, re-distribute or share unless authorized.
 --]]netstream.Hook("SharedTables", function(tSharedTable)
-  fl.sharedTable = tSharedTable or {}
-  fl.sharedTableReceived = true
+  fl.shared = tSharedTable or {}
+  fl.shared_received = true
 end)
 
 netstream.Hook("Hook_RunCL", function(hookName, ...)

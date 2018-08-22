@@ -7,7 +7,7 @@ fl3DText.stored = fl3DText.stored or {}
 
 util.Include("cl_hooks.lua")
 
-if (SERVER) then
+if SERVER then
   function fl3DText:Save()
     data.SavePlugin("3dtexts", fl3DText.stored)
   end

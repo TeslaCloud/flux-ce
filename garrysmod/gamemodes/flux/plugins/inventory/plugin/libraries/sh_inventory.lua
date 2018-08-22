@@ -27,7 +27,7 @@ do
     self:SetInventory(playerInv)
   end
 
-  if (SERVER) then
+  if SERVER then
     function player_meta:AddItem(itemTable)
       if (!itemTable) then return -1 end
 
@@ -79,9 +79,9 @@ do
       if (slot and slot != -1) then
         hook.Run("OnItemGiven", self, itemTable, slot)
       elseif (slot == -1) then
-        fl.DevPrint("Failed to add item to player's inventory (itemTable is invalid)! "..tostring(itemTable))
+        fl.dev_print("Failed to add item to player's inventory (itemTable is invalid)! "..tostring(itemTable))
       else
-        fl.DevPrint("Failed to add item to player's inventory (inv is full)! "..tostring(itemTable))
+        fl.dev_print("Failed to add item to player's inventory (inv is full)! "..tostring(itemTable))
       end
     end
 
@@ -97,9 +97,9 @@ do
       if (slot and slot != -1) then
         hook.Run("OnItemGiven", self, itemTable, slot)
       elseif (slot == -1) then
-        fl.DevPrint("Failed to add item to player's inventory (itemTable is invalid)! "..tostring(itemTable))
+        fl.dev_print("Failed to add item to player's inventory (itemTable is invalid)! "..tostring(itemTable))
       else
-        fl.DevPrint("Failed to add item to player's inventory (inv is full)! "..tostring(itemTable))
+        fl.dev_print("Failed to add item to player's inventory (inv is full)! "..tostring(itemTable))
       end
     end
 

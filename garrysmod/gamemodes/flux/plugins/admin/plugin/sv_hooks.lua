@@ -3,17 +3,17 @@
   Do not use, re-distribute or share unless authorized.
 --]]function flAdmin:SavePlayerData(player, saveTable)
   saveTable.userGroup = player:GetUserGroup()
-  saveTable.secondaryGroups = fl.Serialize(player:GetSecondaryGroups())
-  saveTable.customPermissions = fl.Serialize(player:GetCustomPermissions())
+  saveTable.secondaryGroups = fl.serialize(player:GetSecondaryGroups())
+  saveTable.customPermissions = fl.serialize(player:GetCustomPermissions())
 end
 
 function flAdmin:RestorePlayer(player, result)
   if (result.customPermissions) then
-    player:SetCustomPermissions(fl.Deserialize(result.customPermissions))
+    player:SetCustomPermissions(fl.deserialize(result.customPermissions))
   end
 
   if (result.secondaryGroups) then
-    player:SetSecondaryGroups(fl.Deserialize(result.secondaryGroups))
+    player:SetSecondaryGroups(fl.deserialize(result.secondaryGroups))
   end
 
   if (result.userGroup) then

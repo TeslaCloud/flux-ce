@@ -62,9 +62,9 @@ do
     end
   end
 
-  function fl.SetColorModifyTable(tTable)
-    if (istable(tTable)) then
-      fl.client.colorModifyTable = tTable
+  function fl.SetColorModifyTable(tab)
+    if (istable(tab)) then
+      fl.client.colorModifyTable = tab
     end
   end
 end

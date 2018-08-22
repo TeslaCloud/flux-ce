@@ -12,12 +12,12 @@
 end
 
 function flFactions:SavePlayerData(player, saveData)
-  saveData.whitelists = fl.Serialize(player:GetWhitelists())
+  saveData.whitelists = fl.serialize(player:GetWhitelists())
 end
 
 function flFactions:RestorePlayer(player, result)
   if (result.whitelists) then
-    player:SetWhitelists(fl.Deserialize(result.whitelists))
+    player:SetWhitelists(fl.deserialize(result.whitelists))
   end
 end
 

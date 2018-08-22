@@ -213,7 +213,7 @@ function fl.settings:AddSetting(category, id, default, bShouldSave, bShared, typ
       if (isfunction(v)) then
         cvars.AddChangeCallback(name, v)
       else
-        fl.Print("ERROR: No callback supplied")
+        fl.print("ERROR: No callback supplied")
       end
     end
   end

@@ -108,7 +108,7 @@ do
   function util.IsVowel(char)
     char = char:utf8lower()
 
-    if (CLIENT) then
+    if CLIENT then
       local lang = fl.lang:GetTable(GetConVar("gmod_language"):GetString())
 
       if (lang and isfunction(lang.IsVowel)) then
@@ -196,7 +196,7 @@ end
 
 -- A function to include a file based on it's prefix.
 function util.Include(strFile)
-  if (SERVER) then
+  if SERVER then
     if (string.find(strFile, "cl_")) then
       AddCSLuaFile(strFile)
     elseif (string.find(strFile, "sv_") or string.find(strFile, "init.lua")) then
@@ -215,7 +215,7 @@ end
 
 -- A function to add a file to clientside downloads list based on it's prefix.
 function util.AddCSLuaFile(strFile)
-  if (SERVER) then
+  if SERVER then
     if (string.find(strFile, "sh_") or string.find(strFile, "cl_") or string.find(strFile, "shared.lua")) then
       AddCSLuaFile(strFile)
     end
@@ -1090,7 +1090,7 @@ function colorMeta:Lighten(amt)
   )
 end
 
-if (CLIENT) then
+if CLIENT then
   local urlmatCache = {}
   local loadingCache = {}
 

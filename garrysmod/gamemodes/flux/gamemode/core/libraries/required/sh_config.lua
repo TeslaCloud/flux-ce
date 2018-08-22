@@ -19,7 +19,7 @@ function config.GetCache()
   return cache
 end
 
-if (SERVER) then
+if SERVER then
   function config.Set(key, value, bIsHidden, nFromConfig)
     if (key != nil) then
       if (!stored[key]) then

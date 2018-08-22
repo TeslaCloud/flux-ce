@@ -5,8 +5,8 @@
 
 fileio.OldWrite = fileio.OldWrite or fileio.Write
 
-function fileio.Write(strFileName, strFileContents)
-  local exploded = string.Explode("/", strFileName)
+function fileio.Write(file_name, strFileContents)
+  local exploded = string.Explode("/", file_name)
   local curPath = ""
 
   for k, v in ipairs(exploded) do
@@ -21,7 +21,7 @@ function fileio.Write(strFileName, strFileContents)
     end
   end
 
-  fileio.OldWrite(strFileName, strFileContents)
+  fileio.OldWrite(file_name, strFileContents)
 end
 
 oldServerLog = oldServerLog or ServerLog

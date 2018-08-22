@@ -1,7 +1,7 @@
 --[[
   Derpy © 2018 TeslaCloud Studios
   Do not use, re-distribute or share unless authorized.
---]]if (SERVER) then
+--]]if SERVER then
   function PLUGIN:PlayerSwitchFlashlight(player, bIsOn)
     if (bIsOn and !player:HasItemEquipped("flashlight")) then
       return false

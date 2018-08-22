@@ -24,7 +24,7 @@ function fl.tool:Register(obj)
   obj:CreateConVars()
   stored[obj.Mode] = obj
 
-  fl.DevPrint("Registering Tool: "..obj.Mode)
+  fl.dev_print("Registering Tool: "..obj.Mode)
 end
 
 pipeline.Register("tool", function(id, fileName, pipe)
@@ -42,7 +42,7 @@ pipeline.Register("tool", function(id, fileName, pipe)
 
   stored[id] = TOOL
 
-  fl.DevPrint("Registering Tool: "..id)
+  fl.dev_print("Registering Tool: "..id)
 
   TOOL = nil
 end)

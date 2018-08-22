@@ -80,7 +80,7 @@ if (DBugR) then
   end)
 end
 
-if (SERVER) then
+if SERVER then
   util.AddNetworkString("NetStreamDS")
   util.AddNetworkString("NetStreamHeavy")
 
