@@ -1,4 +1,4 @@
-local COMMAND = Command("unwhitelist")
+local COMMAND = Command.new("unwhitelist")
 
 COMMAND.name = "UnWhitelist"
 COMMAND.description = "#TakeWhitelistCMD_Description"

@@ -4,11 +4,11 @@ function flItems:PlayerUseItemMenu(itemTable, bIsEntity)
   local itemMenu = vgui.Create("flMenu")
 
   if (!itemTable.name) then
-    local closeBtn = itemMenu:AddOption(itemTable.CancelText or "#Item_Option_Cancel", function() print("Cancel") end)
+    local closeBtn = itemMenu:AddOption(itemTable.cancel_text or "#Item_Option_Cancel", function() print("Cancel") end)
     closeBtn:SetIcon("icon16/cross.png")
   else
-    if (itemTable.customButtons) then
-      for k, v in pairs(itemTable.customButtons) do
+    if (itemTable.custom_buttons) then
+      for k, v in pairs(itemTable.custom_buttons) do
         if ((v.onShow and v.onShow(itemTable) == true) or !v.onShow) then
           local button = itemMenu:AddOption(k, function()
             itemTable:do_menu_action(v.callback)
@@ -24,7 +24,7 @@ function flItems:PlayerUseItemMenu(itemTable, bIsEntity)
         itemTable:do_menu_action("on_use")
       end)
 
-      useBtn:SetIcon(itemTable.UseIcon or "icon16/wrench.png")
+      useBtn:SetIcon(itemTable.use_icon or "icon16/wrench.png")
     end
 
     if (bIsEntity) then
@@ -32,17 +32,17 @@ function flItems:PlayerUseItemMenu(itemTable, bIsEntity)
         itemTable:do_menu_action("on_take")
       end)
 
-      takeBtn:SetIcon(itemTable.TakeIcon or "icon16/wrench.png")
+      takeBtn:SetIcon(itemTable.take_icon or "icon16/wrench.png")
     else
       local dropBtn = itemMenu:AddOption(itemTable:get_drop_text(), function()
         itemTable:do_menu_action("on_drop")
       end)
 
-      dropBtn:SetIcon(itemTable.TakeIcon or "icon16/wrench.png")
+      dropBtn:SetIcon(itemTable.take_icon or "icon16/wrench.png")
     end
 
     local closeBtn = itemMenu:AddOption(itemTable:get_cancel_text(), function() print("Cancel") end)
-    closeBtn:SetIcon(itemTable.CancelIcon or "icon16/cross.png")
+    closeBtn:SetIcon(itemTable.cancel_icon or "icon16/cross.png")
   end
 
   itemMenu:Open()

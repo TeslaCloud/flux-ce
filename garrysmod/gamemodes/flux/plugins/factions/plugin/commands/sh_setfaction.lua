@@ -1,4 +1,4 @@
-local COMMAND = Command("setfaction")
+local COMMAND = Command.new("setfaction")
 
 COMMAND.name = "Setfaction"
 COMMAND.description = "Change player's faction."

@@ -1,4 +1,4 @@
-local COMMAND = Command("kick")
+local COMMAND = Command.new("kick")
 COMMAND.name = "Kick"
 COMMAND.description = "#KickCMD_Description"
 COMMAND.syntax = "#KickCMD_Syntax"

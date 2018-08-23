@@ -1,4 +1,4 @@
-local COMMAND = Command("forcefall")
+local COMMAND = Command.new("forcefall")
 COMMAND.name = "ForceFall"
 COMMAND.description = "Forces a player to fall down on the ground."
 COMMAND.syntax = "<target> [number GetUpTime]"

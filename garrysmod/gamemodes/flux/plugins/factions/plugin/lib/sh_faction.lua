@@ -67,7 +67,7 @@ function faction.GetAll()
 end
 
 pipeline.register("faction", function(id, file_name, pipe)
-  FACTION = Faction(id)
+  FACTION = Faction.new(id)
 
   util.include(file_name)
 

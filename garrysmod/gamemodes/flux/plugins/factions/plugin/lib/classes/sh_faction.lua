@@ -1,6 +1,6 @@
-class "CFaction"
+class "Faction"
 
-function CFaction:CFaction(id)
+function Faction:init(id)
   self.id = id:to_id()
   self.name = "Unknown Faction"
   self.print_name = nil
@@ -22,31 +22,31 @@ function CFaction:CFaction(id)
   -- set via Faction:set_data.
 end
 
-function CFaction:GetColor()
+function Faction:GetColor()
   return self.color
 end
 
-function CFaction:GetMaterial()
+function Faction:GetMaterial()
   return self.Material and util.GetMaterial(self.Material)
 end
 
-function CFaction:GetImage()
+function Faction:GetImage()
   return self.Material
 end
 
-function CFaction:get_name()
+function Faction:get_name()
   return self.name
 end
 
-function CFaction:get_data(key)
+function Faction:get_data(key)
   return self.Data[key]
 end
 
-function CFaction:get_description()
+function Faction:get_description()
   return self.description
 end
 
-function CFaction:AddClass(id, class_name, description, color, callback)
+function Faction:AddClass(id, class_name, description, color, callback)
   if (!id) then return end
 
   self.Classes[id] = {
@@ -57,7 +57,7 @@ function CFaction:AddClass(id, class_name, description, color, callback)
   }
 end
 
-function CFaction:AddRank(id, nameFilter)
+function Faction:AddRank(id, nameFilter)
   if (!id) then return end
 
   if (!nameFilter) then nameFilter = id end
@@ -68,7 +68,7 @@ function CFaction:AddRank(id, nameFilter)
   })
 end
 
-function CFaction:GenerateName(player, charName, rank, defaultData)
+function Faction:GenerateName(player, charName, rank, defaultData)
   defaultData = defaultData or {}
 
   if (hook.Run("ShouldNameGenerate", player, self, charName, rank, defaultData) == false) then return player:Name() end
@@ -118,7 +118,7 @@ function CFaction:GenerateName(player, charName, rank, defaultData)
   return finalName
 end
 
-function CFaction:set_data(key, value)
+function Faction:set_data(key, value)
   key = tostring(key)
 
   if (!key) then return end
@@ -126,15 +126,13 @@ function CFaction:set_data(key, value)
   self.Data[key] = tostring(value)
 end
 
-function CFaction:OnPlayerEntered(player) end
-function CFaction:OnPlayerExited(player) end
+function Faction:OnPlayerEntered(player) end
+function Faction:OnPlayerExited(player) end
 
-function CFaction:register()
+function Faction:register()
   faction.register(self.id, self)
 end
 
-function CFaction:__tostring()
+function Faction:__tostring()
   return "Faction ["..self.id.."]["..self.name.."]"
 end
-
-Faction = CFaction

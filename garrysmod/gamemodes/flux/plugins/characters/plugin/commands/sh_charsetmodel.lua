@@ -1,4 +1,4 @@
-﻿local COMMAND = Command("charsetmodel")
+﻿local COMMAND = Command.new("charsetmodel")
 COMMAND.name = "CharSetModel"
 COMMAND.description = "#CharSetModel_Description"
 COMMAND.syntax = "#CharSetModel_Syntax"

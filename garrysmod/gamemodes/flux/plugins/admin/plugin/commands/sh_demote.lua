@@ -1,4 +1,4 @@
-local COMMAND = Command("demote")
+local COMMAND = Command.new("demote")
 COMMAND.name = "Demote"
 COMMAND.description = "#DemoteCMD_Description"
 COMMAND.syntax = "#DemoteCMD_Syntax"

@@ -1,11 +1,11 @@
 class "Item"
 
-function Item:Item(id)
+function Item:init(id)
   if (!isstring(id)) then return end
 
   self.id = string.to_id(id)
   self.data = self.data or {}
-  self.actionSounds = {
+  self.action_sounds = {
     ["on_use"] = "items/battery_pickup.wav"
   }
 end
@@ -71,15 +71,15 @@ function Item:add_button(name, data)
     }
   --]]
 
-  if (!self.customButtons) then
-    self.customButtons = {}
+  if (!self.custom_buttons) then
+    self.custom_buttons = {}
   end
 
-  self.customButtons[name] = data
+  self.custom_buttons[name] = data
 end
 
 function Item:set_action_sound(act, sound)
-  self.actionSounds[act] = sound
+  self.action_sounds[act] = sound
 end
 
 -- Returns:
@@ -134,8 +134,8 @@ if SERVER then
         if (!SUCCEEDED) then return end
       end
 
-      if (self.actionSounds[act]) then
-        player:EmitSound(self.actionSounds[act])
+      if (self.action_sounds[act]) then
+        player:EmitSound(self.action_sounds[act])
       end
     end
 
@@ -170,7 +170,7 @@ else
   end
 
   function Item:get_take_text()
-    return self.TakeText or "#Item_Option_Take"
+    return self.take_text or "#Item_Option_Take"
   end
 
   function Item:get_drop_text()
@@ -178,7 +178,7 @@ else
   end
 
   function Item:get_cancel_text()
-    return self.CancelText or "#Item_Option_Cancel"
+    return self.cancel_text or "#Item_Option_Cancel"
   end
 end
 

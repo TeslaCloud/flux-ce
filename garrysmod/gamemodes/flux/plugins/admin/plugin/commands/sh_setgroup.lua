@@ -1,4 +1,4 @@
-local COMMAND = Command("setgroup")
+local COMMAND = Command.new("setgroup")
 COMMAND.name = "SetGroup"
 COMMAND.description = "#SetGroupCMD_Description"
 COMMAND.syntax = "#SetGroupCMD_Syntax"

@@ -77,8 +77,8 @@ function PANEL:Paint(w, h)
     if (!self.itemData) then
       drawColor = drawColor:darken(25)
     else
-      if (self.itemData.SpecialColor) then
-        surface.SetDrawColor(self.itemData.SpecialColor)
+      if (self.itemData.special_color) then
+        surface.SetDrawColor(self.itemData.special_color)
         surface.DrawOutlinedRect(0, 0, w, h)
         surface.DrawOutlinedRect(1, 1, w - 2, h - 2)
       end
