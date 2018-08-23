@@ -18,7 +18,7 @@ function flAdmin:RestorePlayer(player, result)
   end
 end
 
-function flAdmin:DatabaseConnected()
+function flAdmin:database_connected()
   create_table('fl_bans', function(t)
     t:primary_key 'id'
     t:string 'steam_id'
