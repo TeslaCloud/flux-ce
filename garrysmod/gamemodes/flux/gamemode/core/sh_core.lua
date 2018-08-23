@@ -30,9 +30,9 @@ function fl.dev_print(message)
 end
 
 --[[
-  Function: file.Write (string fileName, string fileContents)
+  Function: file.Write (string file_name, string fileContents)
   Description: Writes a file to the data/ folder. This detour adds the ability for it to create all of the folders leading to the file path automatically.
-  Argument: string fileName - The name of the file to write. See http://wiki.garrysmod.com/page/file/Write for futher documentation.
+  Argument: string file_name - The name of the file to write. See http://wiki.garrysmod.com/page/file/Write for futher documentation.
   Argument: string fileContents - Contents of the file as a NULL-terminated string.
 
   Returns: nil
@@ -89,64 +89,17 @@ setmetatable(library, { __call = function(tab, name, parent) return tab.Get(name
 
   Returns: table - The created class.
 --]]
-function library.create_class(name, parent, CExtends)
-  local class = {
-    -- Same as "new ClassName" in C++
-    __call = function(obj, ...)
-      local newObj = {}
-
-      -- Set new object's meta table and copy the data from original class to new object.
-      setmetatable(newObj, obj)
-      table.SafeMerge(newObj, obj)
-
-      -- If there is a base class, call their constructor.
-      local base_class = obj.BaseClass
-      local has_base_class = true
-
-      while (istable(base_class) and has_base_class) do
-        if (isfunction(base_class[base_class.ClassName])) then
-          try {
-            base_class[base_class.ClassName], newObj, ...
-          } catch {
-            function(exception)
-              ErrorNoHalt("Base class constructor has failed to run!\n" +
-                tostring(exception) + "\n")
-            end
-          }
-        end
-
-        if (base_class.BaseClass and base_class.ClassName != base_class.BaseClass.ClassName) then
-          base_class = base_class.BaseClass
-        else
-          has_base_class = false
-        end
-      end
-
-      -- If there is a constructor - call it.
-      if (obj[name]) then
-        local success, value = pcall(obj[name], newObj, ...)
-
-        if (!success) then
-          ErrorNoHalt("["..name.."] Class constructor has failed to run!\n")
-          ErrorNoHalt(value.."\n")
-        end
-      end
-
-      newObj.IsValid = function() return true end
-
-      -- Return our newly generated object.
-      return newObj
-    end
-  }
+function library.create_class(name, parent, base_class)
+  local class = {}
 
   -- If this class is based off some other class - copy it's parent's data.
-  if (istable(CExtends)) then
-    local copy = table.Copy(CExtends)
+  if (istable(base_class)) then
+    local copy = table.Copy(base_class)
     local merged = table.SafeMerge(copy, class)
 
-    if (isfunction(CExtends.OnExtended)) then
+    if (isfunction(base_class.OnExtended)) then
       try {
-        CExtends.OnExtended, copy, merged
+        base_class.OnExtended, copy, merged
       } catch {
         function(exception)
           ErrorNoHalt("OnExtended class hook has failed to run!\n" +
@@ -161,16 +114,62 @@ function library.create_class(name, parent, CExtends)
   -- Create the actual class table.
   local obj = library.New(name, (parent or _G))
   obj.ClassName = name
-  obj.BaseClass = CExtends or false
+  obj.BaseClass = base_class or false
 
   library.last_class = { name = name, parent = (parent or _G) }
+
+  obj.new = function(...)
+    local new_obj = {}
+
+    -- Set new object's meta table and copy the data from original class to new object.
+    setmetatable(new_obj, obj)
+    table.SafeMerge(new_obj, obj)
+
+    -- If there is a base class, call their constructor.
+    local base_class = obj.BaseClass
+    local has_base_class = true
+
+    while (istable(base_class) and has_base_class) do
+      if (isfunction(base_class.init)) then
+        try {
+          base_class.init, new_obj, ...
+        } catch {
+          function(exception)
+            ErrorNoHalt("Base class constructor has failed to run!\n" +
+              tostring(exception) + "\n")
+          end
+        }
+      end
+
+      if (base_class.BaseClass and base_class.ClassName != base_class.BaseClass.ClassName) then
+        base_class = base_class.BaseClass
+      else
+        has_base_class = false
+      end
+    end
+
+    -- If there is a constructor - call it.
+    if (obj.init) then
+      local success, value = pcall(obj.init, new_obj, ...)
+
+      if (!success) then
+        ErrorNoHalt("["..name.."] Class constructor has failed to run!\n")
+        ErrorNoHalt(value.."\n")
+      end
+    end
+
+    new_obj.IsValid = function() return true end
+
+    -- Return our newly generated object.
+    return new_obj
+  end
 
   return setmetatable((parent or _G)[name], class)
 end
 
 -- Aliases
-function Class(name, CExtends, parent)
-  return library.create_class(name, parent, CExtends)
+function Class(name, base_class, parent)
+  return library.create_class(name, parent, base_class)
 end
 
 class = Class

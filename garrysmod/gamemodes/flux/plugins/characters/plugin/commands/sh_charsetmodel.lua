@@ -1,10 +1,10 @@
 ﻿local COMMAND = Command("charsetmodel")
 COMMAND.name = "CharSetModel"
 COMMAND.description = "#CharSetModel_Description"
-COMMAND.Syntax = "#CharSetModel_Syntax"
+COMMAND.syntax = "#CharSetModel_Syntax"
 COMMAND.category = "character_management"
-COMMAND.Arguments = 2
-COMMAND.PlayerArg = 1
+COMMAND.arguments = 2
+COMMAND.player_arg = 1
 COMMAND.Aliases = {"setmodel"}
 
 function COMMAND:OnRun(player, targets, model)

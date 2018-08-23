@@ -30,10 +30,9 @@ lang["#SetGroupCMD_Syntax"]        = "<target> <usergroup>"
 lang["#SetGroupCMD_Message"]      = "#1 has set #2's user group to #3."
 
 lang["#PlayerGroup_User"]        = "The base rank that is automatically given to the player."
-lang["#PlayerGroup_Operator"]      = "Low clearance administrative rank given to assistant staff members."
-lang["#PlayerGroup_Admin"]        = "An administrative rank given to trusted staff members."
-lang["#PlayerGroup_Superadmin"]      = "A high level administrative rank given to the most trusted of staff members."
-lang["#PlayerGroup_Root"]        = "The complete administrative rank given to the owners of the server."
+lang["#PlayerGroup_Assistant"]      = "Low clearance administrative rank given to assistant staff members."
+lang["#PlayerGroup_Moderator"]        = "An administrative rank given to trusted staff members."
+lang["#PlayerGroup_Admin"]      = "A high level administrative rank given to the most trusted of staff members."
 
 lang["#DemoteCMD_Description"]      = "Demote a player to user."
 lang["#DemoteCMD_Syntax"]        = "<target>"

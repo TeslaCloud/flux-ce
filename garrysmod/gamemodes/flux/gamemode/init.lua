@@ -41,6 +41,11 @@ if !string.utf8len or !pon or !netstream or !YAML then
   YAML = include 'thirdparty/yaml.lua'
 
   Settings = Settings or YAML.read('gamemodes/flux/config/settings.yml')
+  Settings.database = YAML.read('gamemodes/flux/config/database.yml')
+
+  fl.db = include 'thirdparty/database.lua'
+  fl.db.config = Settings.database[FLUX_ENV] or Settings.database['development'] or {}
+  fl.db:set_module(fl.db.config.adapter)
 end
 
 -- Initiate shared boot.

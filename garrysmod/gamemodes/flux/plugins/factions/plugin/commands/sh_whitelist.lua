@@ -2,10 +2,10 @@ local COMMAND = Command("whitelist")
 
 COMMAND.name = "Whitelist"
 COMMAND.description = "#WhitelistCMD_Description"
-COMMAND.Syntax = "#WhitelistCMD_Syntax"
+COMMAND.syntax = "#WhitelistCMD_Syntax"
 COMMAND.category = "player_management"
-COMMAND.Arguments = 2
-COMMAND.PlayerArg = 1
+COMMAND.arguments = 2
+COMMAND.player_arg = 1
 COMMAND.Aliases = {"plywhitelist", "givewhitelist", "setwhitelisted"}
 
 function COMMAND:OnRun(player, targets, name, bStrict)

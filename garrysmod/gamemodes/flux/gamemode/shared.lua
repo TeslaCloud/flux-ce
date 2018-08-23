@@ -94,15 +94,15 @@ util.include_folder("core/ui/view/base", true)
 util.include_folder("core/ui/view", true)
 
 if (theme or SERVER) then
-  pipeline.register("theme", function(id, fileName, pipe)
+  pipeline.register("theme", function(id, file_name, pipe)
     if CLIENT then
-      THEME = Theme(id)
+      THEME = Theme.new(id)
 
-      util.include(fileName)
+      util.include(file_name)
 
       THEME:register() THEME = nil
     else
-      util.include(fileName)
+      util.include(file_name)
     end
   end)
 

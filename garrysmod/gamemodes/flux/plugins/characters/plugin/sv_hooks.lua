@@ -50,18 +50,17 @@ function flCharacters:PlayerDeath(player, inflictor, attacker)
 end
 
 function flCharacters:DatabaseConnected()
-  local queryObj = fl.db:Create("fl_characters")
-    queryObj:Create("key", "INT NOT NULL AUTO_INCREMENT")
-    queryObj:Create("steamID", "VARCHAR(25) NOT NULL")
-    queryObj:Create("name", "VARCHAR(255) NOT NULL")
-    queryObj:Create("model", "TEXT NOT NULL")
-    queryObj:Create("physDesc", "TEXT DEFAULT NULL")
-    queryObj:Create("inventory", "TEXT DEFAULT NULL")
-    queryObj:Create("ammo", "TEXT DEFAULT NULL")
-    queryObj:Create("money", "INT DEFAULT NULL")
-    queryObj:Create("id", "INT DEFAULT NULL")
-    queryObj:Create("charPermissions", "TEXT DEFAULT NULL")
-    queryObj:Create("data", "TEXT DEFAULT NULL")
-    queryObj:PrimaryKey("key")
-  queryObj:Execute()
+  create_table('fl_characters', function(t)
+    t:primary_key 'id'
+    t:string { 'steam_id', null = false }
+    t:string { 'name', null = false }
+    t:string 'model'
+    t:string 'phys_desc'
+    t:integer 'money'
+    t:json 'ammo'
+    t:json 'inventory'
+    t:json 'data'
+    t:timestamp 'created_at'
+    t:timestamp 'updated_at'
+  end)
 end

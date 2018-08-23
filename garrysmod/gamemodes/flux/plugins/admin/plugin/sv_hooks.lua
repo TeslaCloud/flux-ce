@@ -19,36 +19,36 @@ function flAdmin:RestorePlayer(player, result)
 end
 
 function flAdmin:DatabaseConnected()
-  local queryObj = fl.db:Create("fl_bans")
-    queryObj:Create("key", "INT NOT NULL AUTO_INCREMENT")
-    queryObj:Create("steamID", "VARCHAR(25) NOT NULL")
-    queryObj:Create("name", "VARCHAR(255) NOT NULL")
-    queryObj:Create("unbanTime", "INT NOT NULL")
-    queryObj:Create("banTime", "INT DEFAULT NULL")
-    queryObj:Create("duration", "INT DEFAULT NULL")
-    queryObj:Create("reason", "TEXT DEFAULT NULL")
-    queryObj:PrimaryKey("key")
-  queryObj:Execute()
+  create_table('fl_bans', function(t)
+    t:primary_key 'id'
+    t:string 'steam_id'
+    t:string 'name'
+    t:text 'reason'
+    t:integer 'duration'
+    t:timestamp 'unban_time'
+    t:timestamp 'created_at'
+    t:timestamp 'updated_at'
+  end)
 
   -- Restore all bans.
-  local queryObj = fl.db:Select("fl_bans")
-    queryObj:Callback(function(result)
+  local query = fl.db:select("fl_bans")
+    query:callback(function(result)
       if (istable(result) and #result > 0) then
         for k, v in ipairs(result) do
-          fl.admin:AddBan(v.steamID, v.name, v.banTime, v.unbanTime, v.duration, v.reason)
+          fl.admin:AddBan(v.steam_id, v.name, v.banTime, v.unbanTime, v.duration, v.reason)
         end
       end
     end)
-  queryObj:Execute()
+  query:execute()
 end
 
-function flAdmin:CheckPassword(steamID64, ip, svPass, clPass, name)
-  local steamID = util.SteamIDFrom64(steamID64)
-  local entry = fl.admin:GetBans()[steamID]
+function flAdmin:CheckPassword(steam_id64, ip, sv_pass, cl_pass, name)
+  local steam_id = util.SteamIDFrom64(steam_id64)
+  local entry = fl.admin:GetBans()[steam_id]
 
-  if (entry and plugin.call("ShouldCheckBan", steamID, ip, name) != false) then
-    if (entry.duration != 0 and entry.unbanTime >= os.time() and plugin.call("ShouldExpireBan", steamID, ip, name) != false) then
-      self:RemoveBan(steamID)
+  if (entry and plugin.call("ShouldCheckBan", steam_id, ip, name) != false) then
+    if (entry.duration != 0 and entry.unbanTime >= os.time() and plugin.call("ShouldExpireBan", steam_id, ip, name) != false) then
+      self:RemoveBan(steam_id)
 
       return true
     else
@@ -62,12 +62,12 @@ function flAdmin:OnPlayerRestored(player)
 
   if (isstring(root_steamid)) then
     if (player:SteamID() == root_steamid) then
-      player:SetUserGroup("root")
+      player:SetUserGroup("admin")
     end
   elseif (istable(root_steamid)) then
     for k, v in ipairs(root_steamid) do
       if (v == player:SteamID()) then
-        player:SetUserGroup("root")
+        player:SetUserGroup("admin")
       end
     end
   end

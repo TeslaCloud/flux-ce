@@ -29,9 +29,9 @@ COMMAND:register()
 local COMMAND = Command("addbots")
 COMMAND.name = "AddBots"
 COMMAND.description = "Adds specified amount of bots to the server."
-COMMAND.Syntax = "[number Bots]"
+COMMAND.syntax = "[number Bots]"
 COMMAND.category = "server_management"
-COMMAND.Arguments = 0
+COMMAND.arguments = 0
 COMMAND.Aliases = {"bot", "bots"}
 
 function COMMAND:OnRun(player, numBots)

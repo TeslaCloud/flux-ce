@@ -2,10 +2,10 @@ local COMMAND = Command("setfaction")
 
 COMMAND.name = "Setfaction"
 COMMAND.description = "Change player's faction."
-COMMAND.Syntax = "<name> <faction> [data]"
+COMMAND.syntax = "<name> <faction> [data]"
 COMMAND.category = "player_management"
-COMMAND.Arguments = 2
-COMMAND.PlayerArg = 1
+COMMAND.arguments = 2
+COMMAND.player_arg = 1
 COMMAND.Aliases = {"plytransfer", "charsetfaction", "chartransfer"}
 
 function COMMAND:OnRun(player, targets, name, bStrict)

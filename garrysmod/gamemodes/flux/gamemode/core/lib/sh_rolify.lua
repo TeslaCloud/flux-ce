@@ -6,32 +6,32 @@ local rolify_table = Settings.rolify and Settings.rolify.table_name or 'player_r
 local rolify_module = {}
 
 local function remove_role(subject, role, object)
-  local query = fl.db:Delete(rolify_table)
-    query:Where('steam_id', subject:SteamID())
-    if role then query:Where('role', role) end
-    if object then query:Where('object', tostring(object)) end
-  query:Execute()
+  local query = fl.db:delete(rolify_table)
+    query:where('steam_id', subject:SteamID())
+    if role then query:where('role', role) end
+    if object then query:where('object', tostring(object)) end
+  query:execute()
 end
 
 local function insert_role(subject, role, object)
   local timestamp = to_timestamp(os.time())
-  local query = fl.db:Insert(rolify_table)
-    query:Insert('steam_id', subject:SteamID())
-    if role then query:Insert('role', role) end
-    if object then query:Insert('object', tostring(object)) end
-    query:Insert('created_at', timestamp)
-    query:Insert('updated_at', timestamp)
-  query:Execute()
+  local query = fl.db:insert(rolify_table)
+    query:insert('steam_id', subject:SteamID())
+    if role then query:insert('role', role) end
+    if object then query:insert('object', tostring(object)) end
+    query:insert('created_at', timestamp)
+    query:insert('updated_at', timestamp)
+  query:execute()
 end
 
 local function update_role(subject, role, object)
   local timestamp = to_timestamp(os.time())
-  local query = fl.db:Update(rolify_table)
-    query:Where('steam_id', subject:SteamID())
-    if role then query:Update('role', role) end
-    if object then query:Update('object', tostring(object)) end
-    query:Update('updated_at', timestamp)
-  query:Execute()
+  local query = fl.db:update(rolify_table)
+    query:where('steam_id', subject:SteamID())
+    if role then query:update('role', role) end
+    if object then query:update('object', tostring(object)) end
+    query:update('updated_at', timestamp)
+  query:execute()
 end
 
 local function check_roles_table(object, table)
@@ -67,16 +67,16 @@ function rolify_module.save_roles(self)
 end
 
 function rolify_module.load_roles(self)
-  local query = fl.db:Select(rolify_table)
-    query:Where('steam_id', self:SteamID())
-    query:Callback(function(result)
-      if fl.db:IsResult(result) then
+  local query = fl.db:select(rolify_table)
+    query:where('steam_id', self:SteamID())
+    query:callback(function(result)
+      if fl.db:is_result(result) then
         for k, v in ipairs(result) do
           self:add_role(v.role, tostring(v.object), true)
         end
       end
     end)
-  query:Execute()
+  query:execute()
 end
 
 function rolify_module.add_role(self, role, object, synced)

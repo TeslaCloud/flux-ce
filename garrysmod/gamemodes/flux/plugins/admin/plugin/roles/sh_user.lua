@@ -1,9 +1,9 @@
 GROUP.name = "User"
 GROUP.description = "#PlayerGroup_User"
 GROUP.color = Color(255, 255, 255)
-GROUP.Icon = "icon16/user.png"
-GROUP.Immunity = 0
-GROUP.Permissions = {
+GROUP.icon = "icon16/user.png"
+GROUP.immunity = 0
+GROUP.permissions = {
   test = PERM_ALLOW
 }
 

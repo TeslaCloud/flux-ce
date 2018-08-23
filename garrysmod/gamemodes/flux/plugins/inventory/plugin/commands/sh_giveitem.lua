@@ -1,10 +1,10 @@
 local COMMAND = Command("giveitem")
 COMMAND.name = "GiveItem"
 COMMAND.description = "Gives specified item to a player."
-COMMAND.Syntax = "<string target> <string item name or unique ID>"
+COMMAND.syntax = "<string target> <string item name or unique ID>"
 COMMAND.category = "character_management"
-COMMAND.Arguments = 2
-COMMAND.PlayerArg = 1
+COMMAND.arguments = 2
+COMMAND.player_arg = 1
 COMMAND.Aliases = {"chargiveitem", "plygiveitem"}
 
 function COMMAND:OnRun(player, targets, itemName, amount)

@@ -1,10 +1,10 @@
 local COMMAND = Command("getup")
 COMMAND.name = "GetUp"
 COMMAND.description = "Get up if you are currently fallen."
-COMMAND.Syntax = "[number GetUpTime]"
+COMMAND.syntax = "[number GetUpTime]"
 COMMAND.category = "roleplay"
 COMMAND.Aliases = {"chargetup", "unfall", "unfallover"}
-COMMAND.noConsole = true
+COMMAND.no_console = true
 
 function COMMAND:OnRun(player, delay)
   delay = math.Clamp(tonumber(delay) or 4, 2, 60)

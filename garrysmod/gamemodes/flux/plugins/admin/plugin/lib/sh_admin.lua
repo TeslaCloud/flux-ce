@@ -35,15 +35,15 @@ function fl.admin:CreateGroup(id, data)
 
   data.id = id
 
-  if (data.Base) then
-    local parent = groups[data.Base]
+  if (data.base) then
+    local parent = groups[data.base]
 
     if (parent) then
       local parentCopy = table.Copy(parent)
 
-      table.Merge(parentCopy.Permissions, data.Permissions)
+      table.Merge(parentCopy.permissions, data.permissions)
 
-      data.Permissions = parentCopy.Permissions
+      data.permissions = parentCopy.permissions
 
       for k, v in pairs(parentCopy) do
         if (k == "Permissions") then continue end
@@ -127,7 +127,7 @@ end
 
 function fl.admin:GetGroupPermissions(id)
   if (groups[id]) then
-    return groups[id].Permissions
+    return groups[id].permissions
   else
     return {}
   end
@@ -137,9 +137,9 @@ function fl.admin:HasPermission(player, permission)
   if (!IsValid(player)) then return true end
   if (player:IsRoot()) then return true end
 
-  local steamID = player:SteamID()
+  local steam_id = player:SteamID()
 
-  if (players[steamID] and (players[steamID][permission] or players[steamID]["all"])) then
+  if (players[steam_id] and (players[steam_id][permission] or players[steam_id]["all"])) then
     return true
   end
 
@@ -172,110 +172,110 @@ function fl.admin:CheckImmunity(player, target, canBeEqual)
   local group1 = self:FindGroup(player:GetUserGroup())
   local group2 = self:FindGroup(target:GetUserGroup())
 
-  if (!isnumber(group1.Immunity) or !isnumber(group2.Immunity)) then
+  if (!isnumber(group1.immunity) or !isnumber(group2.immunity)) then
     return true
   end
 
-  if (group1.Immunity > group2.Immunity) then
+  if (group1.immunity > group2.immunity) then
     return true
   end
 
-  if (canBeEqual and group1.Immunity == group2.Immunity) then
+  if (canBeEqual and group1.immunity == group2.immunity) then
     return true
   end
 
   return false
 end
 
-pipeline.register("group", function(id, fileName, pipe)
-  GROUP = Group(id)
+pipeline.register("role", function(id, file_name, pipe)
+  ROLE = Role(id)
 
-  util.include(fileName)
+  util.include(file_name)
 
-  GROUP:register() GROUP = nil
+  ROLE:register() ROLE = nil
 end)
 
-function fl.admin:IncludeGroups(directory)
-  pipeline.include_folder("group", directory)
+function fl.admin:include_roles(directory)
+  pipeline.include_folder("role", directory)
 end
 
 if SERVER then
-  local function SetPermission(steamID, permID, value)
-    players[steamID] = players[steamID] or {}
-    players[steamID][permID] = value
+  local function SetPermission(steam_id, perm_id, value)
+    players[steam_id] = players[steam_id] or {}
+    players[steam_id][perm_id] = value
   end
 
-  local function DeterminePermission(steamID, permID, value)
-    local permTable = compilerCache[steamID]
+  local function DeterminePermission(steam_id, perm_id, value)
+    local permTable = compilerCache[steam_id]
 
-    permTable[permID] = permTable[permID] or PERM_NO
+    permTable[perm_id] = permTable[perm_id] or PERM_NO
 
     if (value == PERM_NO) then return end
-    if (permTable[permID] == PERM_ALLOW_OVERRIDE) then return end
+    if (permTable[perm_id] == PERM_ALLOW_OVERRIDE) then return end
 
     if (value == PERM_ALLOW_OVERRIDE) then
-      permTable[permID] = PERM_ALLOW_OVERRIDE
-      SetPermission(steamID, permID, true)
+      permTable[perm_id] = PERM_ALLOW_OVERRIDE
+      SetPermission(steam_id, perm_id, true)
 
       return
     end
 
-    if (permTable[permID] == PERM_NEVER) then return end
-    if (permTable[permID] == value) then return end
+    if (permTable[perm_id] == PERM_NEVER) then return end
+    if (permTable[perm_id] == value) then return end
 
     if (value == PERM_NEVER) then
-      permTable[permID] = PERM_NEVER
-      SetPermission(steamID, permID, false)
+      permTable[perm_id] = PERM_NEVER
+      SetPermission(steam_id, perm_id, false)
 
       return
     elseif (value == PERM_ALLOW) then
-      permTable[permID] = PERM_ALLOW
-      SetPermission(steamID, permID, true)
+      permTable[perm_id] = PERM_ALLOW
+      SetPermission(steam_id, perm_id, true)
 
       return
     end
 
-    permTable[permID] = PERM_ERROR
-    SetPermission(steamID, permID, false)
+    permTable[perm_id] = PERM_ERROR
+    SetPermission(steam_id, perm_id, false)
   end
 
-  local function DetermineCategory(steamID, permID, value)
-    if (fl.admin:IsCategory(permID)) then
-      local catPermissions = fl.admin:GetPermissionsInCategory(permID)
+  local function DetermineCategory(steam_id, perm_id, value)
+    if (fl.admin:IsCategory(perm_id)) then
+      local catPermissions = fl.admin:GetPermissionsInCategory(perm_id)
 
       for k, v in ipairs(catPermissions) do
-        DeterminePermission(steamID, v, value)
+        DeterminePermission(steam_id, v, value)
       end
     else
-      DeterminePermission(steamID, permID, value)
+      DeterminePermission(steam_id, perm_id, value)
     end
   end
 
   function fl.admin:CompilePermissions(player)
     if (!IsValid(player)) then return end
 
-    local steamID = player:SteamID()
+    local steam_id = player:SteamID()
     local userGroup = player:GetUserGroup()
     local secondaryGroups = player:GetSecondaryGroups()
     local playerPermissions = player:GetCustomPermissions()
     local groupPermissions = self:GetGroupPermissions(userGroup)
 
-    compilerCache[steamID] = {}
+    compilerCache[steam_id] = {}
 
     for k, v in pairs(groupPermissions) do
-      DetermineCategory(steamID, k, v)
+      DetermineCategory(steam_id, k, v)
     end
 
     for _, group in ipairs(secondaryGroups) do
       local permTable = self:GetGroupPermissions(group)
 
       for k, v in pairs(permTable) do
-        DetermineCategory(steamID, k, v)
+        DetermineCategory(steam_id, k, v)
       end
     end
 
     for k, v in pairs(playerPermissions) do
-      DetermineCategory(steamID, k, v)
+      DetermineCategory(steam_id, k, v)
     end
 
     local extras = {}
@@ -285,19 +285,19 @@ if SERVER then
     if (istable(extras)) then
       for id, extra in pairs(extras) do
         for k, v in pairs(extra) do
-          DeterminePermissions(steamID, k, v)
+          DeterminePermissions(steam_id, k, v)
         end
       end
     end
 
-    player:SetPermissions(players[steamID])
-    compilerCache[steamID] = nil
+    player:SetPermissions(players[steam_id])
+    compilerCache[steam_id] = nil
   end
 
   -- INTERNAL
-  function fl.admin:AddBan(steamID, name, banTime, unbanTime, duration, reason)
-    bans[steamID] = {
-      steamID = steamID,
+  function fl.admin:AddBan(steam_id, name, banTime, unbanTime, duration, reason)
+    bans[steam_id] = {
+      steam_id = steam_id,
       name = name,
       unbanTime = unbanTime,
       banTime = banTime,
@@ -312,30 +312,30 @@ if SERVER then
     duration = duration or 0
     reason = reason or "N/A"
 
-    local steamID = player
-    local name = steamID
+    local steam_id = player
+    local name = steam_id
 
     if (!isstring(player) and IsValid(player)) then
       name = player:SteamName()
-      steamID = player:SteamID()
+      steam_id = player:SteamID()
 
       if (!bPreventKick) then
         player:Kick("You have been banned: "..tostring(reason))
       end
     end
 
-    self:AddBan(steamID, name, os.time(), os.time() + duration, duration, reason)
-    fl.db:EasyWrite("fl_bans", {"steamID", steamID}, bans[steamID])
+    self:AddBan(steam_id, name, os.time(), os.time() + duration, duration, reason)
+    fl.db:easy_write("fl_bans", {"steam_id", steam_id}, bans[steam_id])
   end
 
-  function fl.admin:RemoveBan(steamID)
-    if (bans[steamID]) then
-      local copy = table.Copy(bans[steamID])
-      bans[steamID] = nil
+  function fl.admin:RemoveBan(steam_id)
+    if (bans[steam_id]) then
+      local copy = table.Copy(bans[steam_id])
+      bans[steam_id] = nil
 
-      local query = fl.db:Delete("fl_bans")
-        query:Where("steamID", steamID)
-      query:Execute()
+      local query = fl.db:delete("fl_bans")
+        query:where("steam_id", steam_id)
+      query:execute()
 
       return true, copy
     end

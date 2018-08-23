@@ -1,10 +1,10 @@
 local COMMAND = Command("fall")
 COMMAND.name = "Fall"
 COMMAND.description = "Fall down on the ground."
-COMMAND.Syntax = "[number GetUpTime]"
+COMMAND.syntax = "[number GetUpTime]"
 COMMAND.category = "roleplay"
 COMMAND.Aliases = {"fallover", "charfallover"}
-COMMAND.noConsole = true
+COMMAND.no_console = true
 
 function COMMAND:OnRun(player, delay)
   if (isnumber(delay) and delay > 0) then

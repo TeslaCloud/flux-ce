@@ -1,4 +1,4 @@
-GROUP.name = "Operator"
+GROUP.name = "Assistant"
 GROUP.description = "#PlayerGroup_Assistant"
 GROUP.color = Color(255, 255, 255)
 GROUP.icon = "icon16/smile.png"

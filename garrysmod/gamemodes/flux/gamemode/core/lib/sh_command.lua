@@ -12,10 +12,10 @@ function fl.command:Create(id, data)
   data.id = id:to_id()
   data.name = data.name or "Unknown"
   data.description = data.description or "An undescribed command."
-  data.Syntax = data.Syntax or "[none]"
-  data.Immunity = data.Immunity or false
-  data.PlayerArg = data.PlayerArg or nil
-  data.Arguments = data.Arguments or 0
+  data.syntax = data.syntax or "[none]"
+  data.immunity = data.immunity or false
+  data.player_arg = data.player_arg or nil
+  data.arguments = data.arguments or 0
 
   stored[id] = data
 
@@ -239,10 +239,10 @@ if SERVER then
     local cmdTable = self:FindByID(command)
 
     if (cmdTable) then
-      if ((!IsValid(player) and !cmdTable.noConsole) or player:HasPermission(cmdTable.id)) then
-        if (cmdTable.Arguments == 0 or cmdTable.Arguments <= #args) then
-          if (cmdTable.Immunity or cmdTable.PlayerArg != nil) then
-            local targetArg = args[(cmdTable.PlayerArg or 1)]
+      if ((!IsValid(player) and !cmdTable.no_console) or player:HasPermission(cmdTable.id)) then
+        if (cmdTable.arguments == 0 or cmdTable.arguments <= #args) then
+          if (cmdTable.immunity or cmdTable.player_arg != nil) then
+            local targetArg = args[(cmdTable.player_arg or 1)]
             local targets = {}
 
             if (istable(targetArg)) then
@@ -290,7 +290,7 @@ if SERVER then
 
             if (istable(targets) and #targets > 0) then
               for k, v in ipairs(targets) do
-                if (cmdTable.Immunity and IsValid(player) and hook.Run("CommandCheckImmunity", player, v, cmdTable.canBeEqual) == false) then
+                if (cmdTable.immunity and IsValid(player) and hook.Run("CommandCheckImmunity", player, v, cmdTable.canBeEqual) == false) then
                   fl.player:Notify(player, L("Commands_HigherImmunity", v:Name()))
 
                   return
@@ -298,7 +298,7 @@ if SERVER then
               end
 
               -- One step less for commands.
-              args[cmdTable.PlayerArg or 1] = targets
+              args[cmdTable.player_arg or 1] = targets
             else
               if (IsValid(player)) then
                 fl.player:Notify(player, L("Commands_PlayerInvalid", tostring(targetArg)))
@@ -319,7 +319,7 @@ if SERVER then
             self:Run(player, cmdTable, args)
           end
         else
-          fl.player:Notify(player, "/"..cmdTable.name.." "..cmdTable.Syntax)
+          fl.player:Notify(player, "/"..cmdTable.name.." "..cmdTable.syntax)
         end
       else
         if (IsValid(player)) then

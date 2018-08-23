@@ -1,9 +1,9 @@
 local COMMAND = Command("changelevel")
 COMMAND.name = "Changelevel"
 COMMAND.description = "Changes the level to specified map."
-COMMAND.Syntax = "<string Map> [number Delay]"
+COMMAND.syntax = "<string Map> [number Delay]"
 COMMAND.category = "server_management"
-COMMAND.Arguments = 1
+COMMAND.arguments = 1
 COMMAND.Aliases = {"map"}
 
 function COMMAND:OnRun(player, map, delay)

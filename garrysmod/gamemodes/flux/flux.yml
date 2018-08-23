@@ -2,12 +2,3 @@
 # Make this a table is you want multiple root users
 # like ["STEAM_0:0:1", "STEAM_0:0:2"]
 root_steamid: ["STEAM_0:1:14196407", "STEAM_0:1:44952839"]
-
-mysql_module: "sqlite"
-mysql_host: "example"
-mysql_username: "example"
-mysql_password: "example"
-mysql_database: "example"
-mysql_port: 3306
-mysql_socket: ~
-mysql_flags: ~

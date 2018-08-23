@@ -1,0 +1,20 @@
+development:
+  adapter: "sqlite"
+  encoding: "utf8"
+  host: "example"
+  user: "example"
+  password: "example"
+  database: "example"
+  port: 3306
+  socket: ~
+  flags: ~
+production:
+  adapter: "mysqloo"
+  encoding: "utf8"
+  host: "127.0.0.1"
+  user: "example"
+  password: "example"
+  database: "example"
+  port: 3306
+  socket: ~
+  flags: ~

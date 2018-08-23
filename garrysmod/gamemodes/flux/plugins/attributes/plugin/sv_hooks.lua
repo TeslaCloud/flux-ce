@@ -1,5 +1,7 @@
 function flAttributes:DatabaseConnected()
-  fl.db:AddColumn("fl_characters", "attributes", "TEXT DEFAULT NULL")
+  change_table('fl_characters', function(t)
+    t:json { 'attributes', default = 'NULL' }
+  end)
 end
 
 function flAttributes:SaveCharaterData(player, char, saveData)

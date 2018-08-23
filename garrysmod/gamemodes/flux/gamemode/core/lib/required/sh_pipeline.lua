@@ -31,7 +31,7 @@ function pipeline.IsAborted()
   return lastPipeAborted
 end
 
-function pipeline.Include(pipe, fileName)
+function pipeline.Include(pipe, file_name)
   if (isstring(pipe)) then
     pipe = stored[pipe]
   end
@@ -39,9 +39,9 @@ function pipeline.Include(pipe, fileName)
   lastPipeAborted = false
 
   if (!pipe) then return end
-  if (!isstring(fileName) or fileName:utf8len() < 7) then return end
+  if (!isstring(file_name) or file_name:utf8len() < 7) then return end
 
-  local id = (string.GetFileFromFilename(fileName) or ""):Replace(".lua", ""):to_id()
+  local id = (string.GetFileFromFilename(file_name) or ""):Replace(".lua", ""):to_id()
 
   if (id:StartWith("cl_") or id:StartWith("sh_") or id:StartWith("sv_")) then
     id = id:utf8sub(4, id:utf8len())
@@ -50,7 +50,7 @@ function pipeline.Include(pipe, fileName)
   if (id == "") then return end
 
   if (isfunction(pipe.callback)) then
-    pipe.callback(id, fileName, pipe)
+    pipe.callback(id, file_name, pipe)
   end
 end
 
