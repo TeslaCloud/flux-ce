@@ -1,4 +1,4 @@
-local COMMAND = Command("static")
+local COMMAND = Command.new("static")
 COMMAND.name = "Static"
 COMMAND.description = "Makes the entity you're looking at static."
 COMMAND.syntax = "[none]"

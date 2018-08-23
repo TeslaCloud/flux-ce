@@ -1,4 +1,4 @@
-local COMMAND = Command("giveitem")
+local COMMAND = Command.new("giveitem")
 COMMAND.name = "GiveItem"
 COMMAND.description = "Gives specified item to a player."
 COMMAND.syntax = "<string target> <string item name or unique ID>"

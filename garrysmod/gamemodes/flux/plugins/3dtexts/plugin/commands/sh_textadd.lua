@@ -1,4 +1,4 @@
-local COMMAND = Command("textadd")
+local COMMAND = Command.new("textadd")
 COMMAND.name = "TextAdd"
 COMMAND.description = "#3DText_TextAddDesc"
 COMMAND.syntax = "#3DText_TextAddSyntax"

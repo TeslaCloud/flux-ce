@@ -9,7 +9,7 @@ Role.protected = false
 Role.permissions = {}
 Role.base = nil
 
-function Role:Role(id)
+function Role:init(id)
   self.id = id:to_id()
 end
 

@@ -9,7 +9,7 @@ Command.player_arg = nil
 Command.arguments = 0
 Command.no_console = false
 
-function Command:Command(id)
+function Command:init(id)
   self.id = id
 end
 

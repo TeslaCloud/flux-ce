@@ -1,4 +1,4 @@
-local COMMAND = Command("ban")
+local COMMAND = Command.new("ban")
 COMMAND.name = "Ban"
 COMMAND.description = "#BanCMD_Description"
 COMMAND.syntax = "#BanCMD_Syntax"

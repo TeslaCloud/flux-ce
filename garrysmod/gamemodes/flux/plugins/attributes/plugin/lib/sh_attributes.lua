@@ -66,7 +66,7 @@ end
 
 function attributes.IncludeType(id, globalVar, folder)
   pipeline.register(id, function(id, file_name, pipe)
-    _G[globalVar] = Attribute(id)
+    _G[globalVar] = Attribute.new(id)
 
     util.include(file_name)
 

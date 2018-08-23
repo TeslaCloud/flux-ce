@@ -1,4 +1,4 @@
-local COMMAND = Command("unban")
+local COMMAND = Command.new("unban")
 COMMAND.name = "Unban"
 COMMAND.description = "#UnbanCMD_Description"
 COMMAND.syntax = "#UnbanCMD_Syntax"

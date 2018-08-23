@@ -63,20 +63,20 @@ function item.register(id, data)
   data.model = data.model or "models/props_lab/cactus.mdl"
   data.skin = data.skin or 0
   data.color = data.color or nil
-  data.Cost = data.Cost or 0
-  data.SpecialColor = data.SpecialColor or nil
+  data.cost = data.cost or 0
+  data.special_color = data.special_color or nil
   data.category = data.category or "#Item_Category_Other"
-  data.isBase = data.isBase or false
+  data.is_base = data.is_base or false
   data.instance_id = ITEM_TEMPLATE
   data.data = data.data or {}
-  data.customButtons = data.customButtons or {}
-  data.actionSounds = data.actionSounds or {}
+  data.custom_buttons = data.custom_buttons or {}
+  data.action_sounds = data.action_sounds or {}
   data.use_text = data.use_text
-  data.TakeText = data.TakeText
-  data.CancelText = data.CancelText
-  data.UseIcon = data.UseIcon
-  data.TakeIcon = data.TakeIcon
-  data.CancelIcon = data.CancelIcon
+  data.take_text = data.take_text
+  data.cancel_text = data.cancel_text
+  data.use_icon = data.use_icon
+  data.take_icon = data.take_icon
+  data.cancel_icon = data.cancel_icon
 
   stored[id] = data
   instances[id] = instances[id] or {}
@@ -87,27 +87,27 @@ function item.ToSave(itemTable)
 
   return {
     id = itemTable.id,
-    Name = itemTable.name,
-    PrintName = itemTable.print_name,
-    Description = itemTable.description,
-    Weight = itemTable.weight,
-    Stackable = itemTable.stackable,
-    MaxStack = itemTable.max_stack,
-    Model = itemTable.model,
-    Skin = itemTable.skin,
-    Color = itemTable.color,
-    Cost = itemTable.Cost,
-    SpecialColor = itemTable.SpecialColor,
-    isBase = itemTable.isBase,
+    name = itemTable.name,
+    print_name = itemTable.print_name,
+    description = itemTable.description,
+    weight = itemTable.weight,
+    stackable = itemTable.stackable,
+    max_stack = itemTable.max_stack,
+    model = itemTable.model,
+    skin = itemTable.skin,
+    color = itemTable.color,
+    cost = itemTable.cost,
+    special_color = itemTable.special_color,
+    is_base = itemTable.is_base,
     instance_id = itemTable.instance_id,
     data = itemTable.data,
-    actionSounds = itemTable.actionSounds,
-    UseText = itemTable.use_text,
-    TakeText = itemTable.TakeText,
-    CancelText = itemTable.CancelText,
-    UseIcon = itemTable.UseIcon,
-    TakeIcon = itemTable.TakeIcon,
-    CancelIcon = itemTable.CancelIcon
+    action_sounds = itemTable.action_sounds,
+    use_text = itemTable.use_text,
+    take_text = itemTable.take_text,
+    cancel_text = itemTable.cancel_text,
+    use_icon = itemTable.use_icon,
+    take_icon = itemTable.take_icon,
+    cancel_icon = itemTable.cancel_icon
   }
 end
 
@@ -235,7 +235,7 @@ function item.CreateBase(name)
 end
 
 pipeline.register("item", function(id, file_name, pipe)
-  ITEM = Item(id)
+  ITEM = Item.new(id)
 
   util.include(file_name)
 

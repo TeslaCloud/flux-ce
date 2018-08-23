@@ -1,4 +1,4 @@
-local COMMAND = Command("unstatic")
+local COMMAND = Command.new("unstatic")
 COMMAND.name = "UnStatic"
 COMMAND.description = "Makes the entity you're looking at not static."
 COMMAND.syntax = "[none]"

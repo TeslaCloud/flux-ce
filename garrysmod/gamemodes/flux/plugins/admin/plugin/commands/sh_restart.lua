@@ -1,4 +1,4 @@
-local COMMAND = Command("restart")
+local COMMAND = Command.new("restart")
 COMMAND.name = "Restart"
 COMMAND.description = "Restarts the current map."
 COMMAND.syntax = "[number Delay]"

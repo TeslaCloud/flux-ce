@@ -1,4 +1,4 @@
-local COMMAND = Command("fall")
+local COMMAND = Command.new("fall")
 COMMAND.name = "Fall"
 COMMAND.description = "Fall down on the ground."
 COMMAND.syntax = "[number GetUpTime]"

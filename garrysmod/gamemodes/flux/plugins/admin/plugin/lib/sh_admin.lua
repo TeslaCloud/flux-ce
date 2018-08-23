@@ -188,7 +188,7 @@ function fl.admin:CheckImmunity(player, target, canBeEqual)
 end
 
 pipeline.register("role", function(id, file_name, pipe)
-  ROLE = Role(id)
+  ROLE = Role.new(id)
 
   util.include(file_name)
 

@@ -1,4 +1,4 @@
-local COMMAND = Command("textremove")
+local COMMAND = Command.new("textremove")
 COMMAND.name = "TextRemove"
 COMMAND.description = "Removes a 3D text."
 COMMAND.syntax = "[none]"
