@@ -6,7 +6,7 @@ function Item:Item(id)
   self.id = string.to_id(id)
   self.data = self.data or {}
   self.actionSounds = {
-    ["OnUse"] = "items/battery_pickup.wav"
+    ["on_use"] = "items/battery_pickup.wav"
   }
 end
 
@@ -64,7 +64,7 @@ function Item:add_button(name, data)
     Example data structure:
     data = {
       icon = "path/to/icon.png",
-      callback = "OnUse", -- This will call ITEM:OnUse function when the button is pressed.
+      callback = "on_use", -- This will call ITEM:on_use function when the button is pressed.
       onShow = function(itemTable) -- Client-Side function. Determines whether the button will be shown.
         return true
       end
@@ -102,27 +102,27 @@ if SERVER then
 
   function Item:get_player()
     for k, v in ipairs(player.GetAll()) do
-      if (v:HasItemByID(self.instanceID)) then
+      if (v:HasItemByID(self.instance_id)) then
         return v
       end
     end
   end
 
   function Item:do_menu_action(act, player, ...)
-    if (act == "OnTake") then
+    if (act == "on_take") then
       if (hook.Run("PlayerTakeItem", player, self, ...) != nil) then return end
     end
 
-    if (act == "OnUse") then
+    if (act == "on_use") then
       if (hook.Run("PlayerUseItem", player, self, ...) != nil) then return end
     end
 
-    if (act == "OnDrop") then
-      if (hook.Run("PlayerDropItem", player, self.instanceID) != nil) then return end
+    if (act == "on_drop") then
+      if (hook.Run("PlayerDropItem", player, self.instance_id) != nil) then return end
     end
 
     if (self[act]) then
-      if (act != "OnTake" and act != "OnUse" and act != "OnTake") then
+      if (act != "on_take" and act != "on_use" and act != "on_take") then
         try {
           self[act], self, player, ...
         } catch {
@@ -139,21 +139,21 @@ if SERVER then
       end
     end
 
-    if (act == "OnTake") then
+    if (act == "on_take") then
       if (hook.Run("PlayerTakenItem", player, self, ...) != nil) then return end
     end
 
-    if (act == "OnUse") then
+    if (act == "on_use") then
       if (hook.Run("PlayerUsedItem", player, self, ...) != nil) then return end
     end
 
-    if (act == "OnDrop") then
-      if (hook.Run("PlayerDroppedItem", player, self.instanceID, self, ...) != nil) then return end
+    if (act == "on_drop") then
+      if (hook.Run("PlayerDroppedItem", player, self.instance_id, self, ...) != nil) then return end
     end
   end
 
-  netstream.Hook("ItemMenuAction", function(player, instanceID, action, ...)
-    local itemTable = item.FindInstanceByID(instanceID)
+  netstream.Hook("ItemMenuAction", function(player, instance_id, action, ...)
+    local itemTable = item.FindInstanceByID(instance_id)
 
     if (!itemTable) then return end
     if (hook.Run("PlayerCanUseItem", player, itemTable, action, ...) == false) then return end
@@ -162,7 +162,7 @@ if SERVER then
   end)
 else
   function Item:do_menu_action(act, ...)
-    netstream.Start("ItemMenuAction", self.instanceID, act, ...)
+    netstream.Start("ItemMenuAction", self.instance_id, act, ...)
   end
 
   function Item:get_use_text()
@@ -198,5 +198,5 @@ end
 
 -- Fancy output if you do print(itemTable).
 function Item:__tostring()
-  return "Item ["..tostring(self.instanceID).."]["..(self.name or self.id).."]"
+  return "Item ["..tostring(self.instance_id).."]["..(self.name or self.id).."]"
 end

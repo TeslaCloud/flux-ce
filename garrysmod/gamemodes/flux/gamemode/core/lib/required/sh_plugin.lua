@@ -241,7 +241,7 @@ function plugin.register(obj)
   if SERVER then
     if (Schema == obj) then
       local folderName = obj.folder:RemoveTextFromEnd("/schema")
-      local filePath = "gamemodes/"..folderName.."/"..folderName..".cfg"
+      local filePath = "gamemodes/"..folderName.."/"..folderName..".yml"
 
       if (file.Exists(filePath, "GAME")) then
         fl.dev_print("Importing config: "..filePath)
@@ -279,8 +279,8 @@ function plugin.include(folder)
 
   if (ext != "lua") then
     if SERVER then
-      if (file.Exists(folder.."/plugin.cfg", "LUA")) then
-        local configData = config.ConfigToTable(file.Read(folder.."/plugin.cfg", "LUA"))
+      if (file.Exists(folder.."/plugin.yml", "LUA")) then
+        local configData = config.ConfigToTable(file.Read(folder.."/plugin.yml", "LUA"))
         local dataTable = {name = configData.name, description = configData.description, author = configData.author, depends = configData.depends}
           dataTable.folder = folder.."/plugin"
           dataTable.plugin_main = "sh_plugin.lua"
@@ -341,7 +341,7 @@ function plugin.include_schema()
   local schema_info = fl.get_schema_info()
   local schemaPath = schema_info.folder
   local schema_folder = schemaPath.."/schema"
-  local filePath = "gamemodes/"..schemaPath.."/"..schemaPath..".cfg"
+  local filePath = "gamemodes/"..schemaPath.."/"..schemaPath..".yml"
 
   if (file.Exists(filePath, "GAME")) then
     fl.dev_print("Checking schema dependencies using "..filePath)
@@ -385,15 +385,15 @@ function plugin.require(pluginName)
 
   if (!plugin.loaded(pluginName)) then
     local searchPaths = {
-      "flux/plugins/",
-      (fl.get_schema_folder() or "flux").."/plugins/"
+      'flux/plugins/',
+      (fl.get_schema_folder() or 'flux')..'/plugins/'
     }
 
     local tolerance = {
-      "",
-      "/plugin.cfg",
-      ".lua",
-      "/plugin/sh_plugin.lua"
+      '', '.', '..',
+      '/plugin.yml',
+      '.lua',
+      '/plugin/sh_plugin.lua'
     }
 
     for k, v in ipairs(searchPaths) do

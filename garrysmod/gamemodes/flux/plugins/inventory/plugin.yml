@@ -1,0 +1,4 @@
+name: "Inventory"
+description: "Provides player inventories."
+author: "Mr. Meow"
+depends: ["items"]

@@ -37,9 +37,9 @@ do
 
         -- Empty slot
         if (#ids == 0) then
-          table.insert(playerInv[i], itemTable.instanceID)
+          table.insert(playerInv[i], itemTable.instance_id)
           self:SetInventory(playerInv)
-          item.NetworkItem(self, itemTable.instanceID)
+          item.NetworkItem(self, itemTable.instance_id)
 
           return i
         end
@@ -48,9 +48,9 @@ do
 
         if (itemTable.stackable and itemTable.id == slotTable.id) then
           if (#ids < itemTable.max_stack) then
-            table.insert(playerInv[i], itemTable.instanceID)
+            table.insert(playerInv[i], itemTable.instance_id)
             self:SetInventory(playerInv)
-            item.NetworkItem(self, itemTable.instanceID)
+            item.NetworkItem(self, itemTable.instance_id)
 
             return i
           end
@@ -60,13 +60,13 @@ do
       return false
     end
 
-    function player_meta:GiveItem(id, instanceID, data)
+    function player_meta:GiveItem(id, instance_id, data)
       if (!id) then return end
 
       local itemTable
 
-      if (instanceID and instanceID > 0) then
-        itemTable = item.FindInstanceByID(instanceID)
+      if (instance_id and instance_id > 0) then
+        itemTable = item.FindInstanceByID(instance_id)
       else
         itemTable = item.New(id, data)
       end
@@ -82,10 +82,10 @@ do
       end
     end
 
-    function player_meta:GiveItemByID(instanceID)
-      if (!tonumber(instanceID) or tonumber(instanceID) <= 0) then return end
+    function player_meta:GiveItemByID(instance_id)
+      if (!tonumber(instance_id) or tonumber(instance_id) <= 0) then return end
 
-      local itemTable = item.FindInstanceByID(instanceID)
+      local itemTable = item.FindInstanceByID(instance_id)
 
       if (!itemTable) then return end
 
@@ -100,17 +100,17 @@ do
       end
     end
 
-    function player_meta:TakeItemByID(instanceID)
-      if (!instanceID or instanceID < 1) then return end
+    function player_meta:TakeItemByID(instance_id)
+      if (!instance_id or instance_id < 1) then return end
 
       local playerInv = self:GetInventory()
 
       for slot, ids in ipairs(playerInv) do
-        if (table.HasValue(ids, instanceID)) then
-          table.RemoveByValue(playerInv[slot], instanceID)
+        if (table.HasValue(ids, instance_id)) then
+          table.RemoveByValue(playerInv[slot], instance_id)
           self:SetInventory(playerInv)
 
-          hook.Run("OnItemTaken", self, instanceID, slot)
+          hook.Run("OnItemTaken", self, instance_id, slot)
 
           break
         end
@@ -123,7 +123,7 @@ do
 
       for i = 1, #invInstances do
         if (amount > 0) then
-          self:TakeItemByID(invInstances[i].instanceID)
+          self:TakeItemByID(invInstances[i].instance_id)
           amount = amount - 1
         end
       end
@@ -158,11 +158,11 @@ do
     return self:FindInstances(id)[1]
   end
 
-  function player_meta:HasItemByID(instanceID)
+  function player_meta:HasItemByID(instance_id)
     local playerInv = self:GetInventory()
 
     for slot, ids in ipairs(playerInv) do
-      if (table.HasValue(ids, instanceID)) then
+      if (table.HasValue(ids, instance_id)) then
         return true
       end
     end

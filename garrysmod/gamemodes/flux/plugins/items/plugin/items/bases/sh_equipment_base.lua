@@ -32,7 +32,7 @@ function ItemEquippable:OnEquipped(player)
     for k, v in ipairs(ids) do
       local itemTable = item.FindInstanceByID(v)
 
-      if (itemTable.equip_slot and itemTable.equip_slot == self.equip_slot and itemTable:IsEquipped() and itemTable.instanceID != self.instanceID) then
+      if (itemTable.equip_slot and itemTable.equip_slot == self.equip_slot and itemTable:IsEquipped() and itemTable.instance_id != self.instance_id) then
         return false
       end
     end
@@ -57,9 +57,9 @@ function ItemEquippable:Equip(player, bShouldEquip)
   end
 end
 
-function ItemEquippable:OnUse(player)
+function ItemEquippable:on_use(player)
   if (IsValid(self.entity)) then
-    self:do_menu_action("OnTake", player)
+    self:do_menu_action("on_take", player)
   end
 
   self:Equip(player, !self:IsEquipped())

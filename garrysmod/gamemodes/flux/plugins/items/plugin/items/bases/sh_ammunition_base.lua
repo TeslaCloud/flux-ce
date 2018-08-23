@@ -13,6 +13,6 @@ ItemAmmo.use_text = "#Item_Option_Load"
 ItemAmmo.ammo_class = "Pistol"
 ItemAmmo.ammo_count = 20
 
-function ItemAmmo:OnUse(player)
+function ItemAmmo:on_use(player)
   player:GiveAmmo(self.ammo_count, self.ammo_class)
 end

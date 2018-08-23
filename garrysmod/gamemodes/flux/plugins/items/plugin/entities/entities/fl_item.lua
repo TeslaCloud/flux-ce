@@ -79,7 +79,7 @@ if SERVER then
 
     if (holdStart and CurTime() - holdStart > 0.5) then
       if (self.item) then
-        self.item:do_menu_action("OnTake", lastActivator)
+        self.item:do_menu_action("on_take", lastActivator)
       end
 
       lastActivator:SetNetVar("HoldStart", false)

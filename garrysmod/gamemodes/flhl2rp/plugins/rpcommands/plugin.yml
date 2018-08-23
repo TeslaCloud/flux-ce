@@ -1,0 +1,4 @@
+name: "RolePlay Commands"
+description: "Adds commands designed for roleplay gamemodes."
+author: "AleXXX_007"
+depends: ["sh_prefixes.lua"]

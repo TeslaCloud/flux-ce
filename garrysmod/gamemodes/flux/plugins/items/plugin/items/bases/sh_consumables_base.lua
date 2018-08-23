@@ -15,7 +15,7 @@ ItemConsumable.name = "Consumables Base"
 ItemConsumable.description = "An item that can be consumed."
 ItemConsumable.category = "#Item_Category_Consumables"
 
-function ItemConsumable:OnUse(player)
+function ItemConsumable:on_use(player)
   if (hook.Run("PrePlayerConsumeItem", player, self) != false) then
     hook.Run("PlayerConsumeItem", player, self)
   end
