@@ -67,7 +67,7 @@ function item.register(id, data)
   data.SpecialColor = data.SpecialColor or nil
   data.category = data.category or "#Item_Category_Other"
   data.isBase = data.isBase or false
-  data.instanceID = ITEM_TEMPLATE
+  data.instance_id = ITEM_TEMPLATE
   data.data = data.data or {}
   data.customButtons = data.customButtons or {}
   data.actionSounds = data.actionSounds or {}
@@ -99,7 +99,7 @@ function item.ToSave(itemTable)
     Cost = itemTable.Cost,
     SpecialColor = itemTable.SpecialColor,
     isBase = itemTable.isBase,
-    instanceID = itemTable.instanceID,
+    instance_id = itemTable.instance_id,
     data = itemTable.data,
     actionSounds = itemTable.actionSounds,
     UseText = itemTable.use_text,
@@ -128,11 +128,11 @@ function item.FindAllInstances(id)
 end
 
 -- Finds instance by it's ID.
-function item.FindInstanceByID(instanceID)
+function item.FindInstanceByID(instance_id)
   for k, v in pairs(instances) do
     if (istable(v)) then
       for k2, v2 in pairs(v) do
-        if (k2 == instanceID) then
+        if (k2 == instance_id) then
           return v2
         end
       end
@@ -141,14 +141,14 @@ function item.FindInstanceByID(instanceID)
 end
 
 -- Finds an item template that belongs to certain instance ID.
-function item.FindByInstanceID(instanceID)
-  if (!instanceID) then return end
+function item.FindByInstanceID(instance_id)
+  if (!instance_id) then return end
 
-  if (!sorted[instanceID]) then
-    sorted[instanceID] = item.FindInstanceByID(instanceID)
+  if (!sorted[instance_id]) then
+    sorted[instance_id] = item.FindInstanceByID(instance_id)
   end
 
-  return sorted[instanceID]
+  return sorted[instance_id]
 end
 
 function item.Find(name)
@@ -195,7 +195,7 @@ function item.New(id, data, forcedID)
       table.Merge(instances[id][itemID], data)
     end
 
-    instances[id][itemID].instanceID = itemID
+    instances[id][itemID].instance_id = itemID
 
     if SERVER then
       item.AsyncSave()
@@ -206,28 +206,28 @@ function item.New(id, data, forcedID)
   end
 end
 
-function item.Remove(instanceID)
-  local itemTable = (istable(instanceID) and instanceID) or item.FindInstanceByID(instanceID)
+function item.Remove(instance_id)
+  local itemTable = (istable(instance_id) and instance_id) or item.FindInstanceByID(instance_id)
 
   if (itemTable and item.IsInstance(itemTable)) then
     if (IsValid(itemTable.entity)) then
       itemTable.entity:Remove()
     end
 
-    instances[itemTable.id][itemTable.instanceID] = nil
+    instances[itemTable.id][itemTable.instance_id] = nil
 
     if SERVER then
       item.AsyncSave()
     end
 
-    fl.dev_print("Removed item instance ID: "..itemTable.instanceID)
+    fl.dev_print("Removed item instance ID: "..itemTable.instance_id)
   end
 end
 
 function item.IsInstance(itemTable)
   if (!istable(itemTable)) then return end
 
-  return (itemTable.instanceID or ITEM_TEMPLATE) > ITEM_INVALID
+  return (itemTable.instance_id or ITEM_TEMPLATE) > ITEM_INVALID
 end
 
 function item.CreateBase(name)
@@ -321,7 +321,7 @@ if SERVER then
       if (IsValid(v) and v.item) then
         entities[v.item.id] = entities[v.item.id] or {}
 
-        entities[v.item.id][v.item.instanceID] = {
+        entities[v.item.id][v.item.instance_id] = {
           position = v:GetPos(),
           angles = v:GetAngles()
         }
@@ -353,17 +353,17 @@ if SERVER then
 
   function item.NetworkItemData(player, itemTable)
     if (item.IsInstance(itemTable)) then
-      netstream.Start(player, "ItemData", itemTable.id, itemTable.instanceID, itemTable.data)
+      netstream.Start(player, "ItemData", itemTable.id, itemTable.instance_id, itemTable.data)
     end
   end
 
-  function item.NetworkItem(player, instanceID)
-    netstream.Start(player, "NetworkItem", instanceID, item.ToSave(item.FindInstanceByID(instanceID)))
+  function item.NetworkItem(player, instance_id)
+    netstream.Start(player, "NetworkItem", instance_id, item.ToSave(item.FindInstanceByID(instance_id)))
   end
 
   function item.NetworkEntityData(player, ent)
     if (IsValid(ent)) then
-      netstream.Start(player, "ItemEntData", ent:EntIndex(), ent.item.id, ent.item.instanceID)
+      netstream.Start(player, "ItemEntData", ent:EntIndex(), ent.item.id, ent.item.instance_id)
     end
   end
 
@@ -373,7 +373,7 @@ if SERVER then
 
     for k, v in ipairs(itemEnts) do
       if (v.item) then
-        item.NetworkItem(player, v.item.instanceID)
+        item.NetworkItem(player, v.item.instance_id)
       end
     end
 
@@ -408,11 +408,11 @@ if SERVER then
     ent:Spawn()
 
     itemTable:set_entity(ent)
-    item.NetworkItem(player, itemTable.instanceID)
+    item.NetworkItem(player, itemTable.instance_id)
 
     entities[itemTable.id] = entities[itemTable.id] or {}
-    entities[itemTable.id][itemTable.instanceID] = entities[itemTable.id][itemTable.instanceID] or {}
-    entities[itemTable.id][itemTable.instanceID] = {
+    entities[itemTable.id][itemTable.instance_id] = entities[itemTable.id][itemTable.instance_id] or {}
+    entities[itemTable.id][itemTable.instance_id] = {
       position = position,
       angles = angles
     }
@@ -430,30 +430,30 @@ if SERVER then
     end
   end)
 else
-  netstream.Hook("ItemData", function(id, instanceID, data)
-    if (istable(instances[id][instanceID])) then
-      instances[id][instanceID].data = data
+  netstream.Hook("ItemData", function(id, instance_id, data)
+    if (istable(instances[id][instance_id])) then
+      instances[id][instance_id].data = data
     end
   end)
 
-  netstream.Hook("NetworkItem", function(instanceID, itemTable)
+  netstream.Hook("NetworkItem", function(instance_id, itemTable)
     if (itemTable and stored[itemTable.id]) then
       local newTable = table.Copy(stored[itemTable.id])
       table.Merge(newTable, itemTable)
 
-      instances[newTable.id][instanceID] = newTable
+      instances[newTable.id][instance_id] = newTable
 
       print("Received instance ID "..tostring(newTable))
     else
-      print("FAILED TO RECEIVE INSTANCE ID "..instanceID)
+      print("FAILED TO RECEIVE INSTANCE ID "..instance_id)
     end
   end)
 
-  netstream.Hook("ItemEntData", function(entIndex, id, instanceID)
+  netstream.Hook("ItemEntData", function(entIndex, id, instance_id)
     local ent = Entity(entIndex)
 
     if (IsValid(ent)) then
-      local itemTable = instances[id][instanceID]
+      local itemTable = instances[id][instance_id]
 
       -- Client has to know this shit too I guess?
       ent:SetModel(itemTable:GetModel())

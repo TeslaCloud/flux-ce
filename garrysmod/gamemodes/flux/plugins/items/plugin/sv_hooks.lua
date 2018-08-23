@@ -17,13 +17,13 @@ end
 function flItems:PlayerTakeItem(player, itemTable, ...)
   if (IsValid(itemTable.entity)) then
     itemTable.entity:Remove()
-    player:GiveItemByID(itemTable.instanceID)
+    player:GiveItemByID(itemTable.instance_id)
     item.AsyncSaveEntities()
   end
 end
 
-function flItems:PlayerDropItem(player, instanceID)
-  local itemTable = item.FindInstanceByID(instanceID)
+function flItems:PlayerDropItem(player, instance_id)
+  local itemTable = item.FindInstanceByID(instance_id)
   local trace = player:GetEyeTraceNoCursor()
 
   if (itemTable.on_drop) then
@@ -34,7 +34,7 @@ function flItems:PlayerDropItem(player, instanceID)
     end
   end
 
-  player:TakeItemByID(instanceID)
+  player:TakeItemByID(instance_id)
 
   local distance = trace.HitPos:Distance(player:GetPos())
 
@@ -48,8 +48,8 @@ function flItems:PlayerDropItem(player, instanceID)
 end
 
 function flItems:PlayerUseItem(player, itemTable, ...)
-  if (itemTable.OnUse) then
-    local result = itemTable:OnUse(player)
+  if (itemTable.on_use) then
+    local result = itemTable:on_use(player)
 
     if (result == true) then
       return
@@ -61,7 +61,7 @@ function flItems:PlayerUseItem(player, itemTable, ...)
   if (IsValid(itemTable.entity)) then
     itemTable.entity:Remove()
   else
-    player:TakeItemByID(itemTable.instanceID)
+    player:TakeItemByID(itemTable.instance_id)
   end
 end
 
@@ -80,7 +80,7 @@ end
 function flItems:PlayerCanUseItem(player, itemTable, action, ...)
   local trace = player:GetEyeTraceNoCursor()
 
-  if ((!player:HasItemByID(itemTable.instanceID) and !IsValid(itemTable.entity)) or (IsValid(itemTable.entity) and trace.Entity and trace.Entity != itemTable.entity)) then
+  if ((!player:HasItemByID(itemTable.instance_id) and !IsValid(itemTable.entity)) or (IsValid(itemTable.entity) and trace.Entity and trace.Entity != itemTable.entity)) then
     return false
   end
 end
@@ -111,8 +111,8 @@ function flCharacters:PreSaveCharacter(player, index)
   end
 end
 
-netstream.Hook("PlayerDropItem", function(player, instanceID)
-  hook.Run("PlayerDropItem", player, instanceID)
+netstream.Hook("PlayerDropItem", function(player, instance_id)
+  hook.Run("PlayerDropItem", player, instance_id)
 end)
 
 netstream.Hook("Flux::Items::AbortHoldStart", function(player)

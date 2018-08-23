@@ -3,7 +3,7 @@ DEFINE_BASECLASS("gamemode_base")
 function GM:DoPlayerDeath(player, attacker, damageInfo) end
 
 function GM:Initialize()
-  local configFile = fileio.Read("gamemodes/flux/flux.cfg")
+  local configFile = fileio.Read("gamemodes/flux/flux.yml")
 
   if (configFile) then
     config.Import(configFile, CONFIG_FLUX)

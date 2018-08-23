@@ -19,9 +19,9 @@ function flItems:PlayerUseItemMenu(itemTable, bIsEntity)
       end
     end
 
-    if (itemTable.OnUse) then
+    if (itemTable.on_use) then
       local useBtn = itemMenu:AddOption(itemTable:get_use_text(), function()
-        itemTable:do_menu_action("OnUse")
+        itemTable:do_menu_action("on_use")
       end)
 
       useBtn:SetIcon(itemTable.UseIcon or "icon16/wrench.png")
@@ -29,13 +29,13 @@ function flItems:PlayerUseItemMenu(itemTable, bIsEntity)
 
     if (bIsEntity) then
       local takeBtn = itemMenu:AddOption(itemTable:get_take_text(), function()
-        itemTable:do_menu_action("OnTake")
+        itemTable:do_menu_action("on_take")
       end)
 
       takeBtn:SetIcon(itemTable.TakeIcon or "icon16/wrench.png")
     else
       local dropBtn = itemMenu:AddOption(itemTable:get_drop_text(), function()
-        itemTable:do_menu_action("OnDrop")
+        itemTable:do_menu_action("on_drop")
       end)
 
       dropBtn:SetIcon(itemTable.TakeIcon or "icon16/wrench.png")
@@ -55,7 +55,7 @@ function flItems:PlayerUseItemMenu(itemTable, bIsEntity)
 end
 
 function flItems:PlayerDropItem(itemTable, panel, mouseX, mouseY)
-  netstream.Start("PlayerDropItem", itemTable.instanceID)
+  netstream.Start("PlayerDropItem", itemTable.instance_id)
 end
 
 function flItems:HUDPaint()

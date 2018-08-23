@@ -37,7 +37,7 @@ function ItemThrown:PostUnEquipped(player)
     player:StripWeapon(self.weapon_class)
 
     if (player:GetAmmoCount(self.thrown_ammo_class) == 0) then
-      player:TakeItemByID(self.instanceID)
+      player:TakeItemByID(self.instance_id)
     end
   else
     fl.dev_print("Invalid weapon class: "..self.weapon_class)

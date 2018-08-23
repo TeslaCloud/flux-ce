@@ -34,10 +34,11 @@ end
 AddCSLuaFile("shared.lua")
 
 -- Include pON, Netstream and UTF-8 library.
-if (!string.utf8len or !pon or !netstream) then
-  include("thirdparty/utf8.lua")
-  include("thirdparty/pon.lua")
-  include("thirdparty/netstream.lua")
+if !string.utf8len or !pon or !netstream or !YAML then
+  include 'thirdparty/utf8.lua'
+  include 'thirdparty/pon.lua'
+  include 'thirdparty/netstream.lua'
+  YAML = include 'thirdparty/yaml.lua'
 end
 
 -- Initiate shared boot.

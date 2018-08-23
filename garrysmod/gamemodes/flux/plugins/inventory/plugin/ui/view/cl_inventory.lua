@@ -1,26 +1,26 @@
 local PANEL = {}
 PANEL.itemData = nil
 PANEL.itemCount = 0
-PANEL.instanceIDs = {}
+PANEL.instance_ids = {}
 PANEL.isHovered = false
 
-function PANEL:SetItem(instanceID)
-  if (istable(instanceID)) then
-    if (#instanceID > 1) then
-      self:SetItemMulti(instanceID)
+function PANEL:SetItem(instance_id)
+  if (istable(instance_id)) then
+    if (#instance_id > 1) then
+      self:SetItemMulti(instance_id)
 
       return
     else
-      return self:SetItem(instanceID[1])
+      return self:SetItem(instance_id[1])
     end
   end
 
-  if (isnumber(instanceID)) then
-    self.itemData = item.FindInstanceByID(instanceID)
+  if (isnumber(instance_id)) then
+    self.itemData = item.FindInstanceByID(instance_id)
 
     if (self.itemData) then
       self.itemCount = 1
-      self.instanceIDs = {instanceID}
+      self.instance_ids = {instance_id}
     end
 
     self:Rebuild()
@@ -34,22 +34,22 @@ function PANEL:SetItemMulti(ids)
 
   self.itemData = itemData
   self.itemCount = #ids
-  self.instanceIDs = ids
+  self.instance_ids = ids
   self:Rebuild()
 end
 
 function PANEL:Combine(panel2)
-  for i = 1, #panel2.instanceIDs do
-    if (#self.instanceIDs < self.itemData.max_stack) then
-      table.insert(self.instanceIDs, panel2.instanceIDs[1])
-      table.remove(panel2.instanceIDs, 1)
+  for i = 1, #panel2.instance_ids do
+    if (#self.instance_ids < self.itemData.max_stack) then
+      table.insert(self.instance_ids, panel2.instance_ids[1])
+      table.remove(panel2.instance_ids, 1)
     end
   end
 
-  self.itemCount = #self.instanceIDs
+  self.itemCount = #self.instance_ids
   self:Rebuild()
 
-  panel2.itemCount = #panel2.instanceIDs
+  panel2.itemCount = #panel2.instance_ids
 
   if (panel2.itemCount > 0) then
     panel2:Rebuild()
@@ -158,8 +158,8 @@ function PANEL:OnMouseReleased(...)
     if (self.itemData and self.mousePressed and self.mousePressed > (CurTime() - 0.15)) then
       fl.inventoryDragSlot = nil
 
-      if (#self.instanceIDs > 1) then
-        hook.Run("PlayerUseItemMenu", self.instanceIDs)
+      if (#self.instance_ids > 1) then
+        hook.Run("PlayerUseItemMenu", self.instance_ids)
       else
         hook.Run("PlayerUseItemMenu", self.itemData)
       end
@@ -196,8 +196,8 @@ end
 
 function PANEL:SlotsToInventory()
   for k, v in ipairs(self.slots) do
-    if (v.slotNum and v.itemData and #v.instanceIDs > 0) then
-      self.inventory[v.slotNum] = v.instanceIDs
+    if (v.slotNum and v.itemData and #v.instance_ids > 0) then
+      self.inventory[v.slotNum] = v.instance_ids
     else
       self.inventory[v.slotNum] = {}
     end
@@ -273,15 +273,15 @@ function PANEL:Rebuild()
 
           for i2 = 1, dropped[1].itemCount do
             if (i2 <= math.floor(dropped[1].itemCount * 0.5)) then
-              table.insert(split[1], dropped[1].instanceIDs[i2])
+              table.insert(split[1], dropped[1].instance_ids[i2])
             else
-              table.insert(split[2], dropped[1].instanceIDs[i2])
+              table.insert(split[2], dropped[1].instance_ids[i2])
             end
           end
         end
 
         if (!split) then
-          receiver:SetItem(dropped[1].instanceIDs)
+          receiver:SetItem(dropped[1].instance_ids)
         else
           receiver:SetItemMulti(split[1])
           dropped[1]:SetItemMulti(split[2])

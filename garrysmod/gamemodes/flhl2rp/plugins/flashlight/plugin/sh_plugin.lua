@@ -7,7 +7,7 @@ if SERVER then
     return true
   end
 
-  function PLUGIN:OnItemTaken(player, instanceID, slotID)
+  function PLUGIN:OnItemTaken(player, instance_id, slotID)
     if (player:FlashlightIsOn() and !player:HasItemEquipped("flashlight")) then
       player:Flashlight(false)
     end
