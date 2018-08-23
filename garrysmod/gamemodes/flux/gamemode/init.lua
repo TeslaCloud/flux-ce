@@ -39,6 +39,8 @@ if !string.utf8len or !pon or !netstream or !YAML then
   include 'thirdparty/pon.lua'
   include 'thirdparty/netstream.lua'
   YAML = include 'thirdparty/yaml.lua'
+
+  Settings = Settings or YAML.read('gamemodes/flux/config/settings.yml')
 end
 
 -- Initiate shared boot.
