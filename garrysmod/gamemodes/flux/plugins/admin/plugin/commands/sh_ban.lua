@@ -1,8 +1,8 @@
 local COMMAND = Command("ban")
-COMMAND.Name = "Ban"
-COMMAND.Description = "#BanCMD_Description"
+COMMAND.name = "Ban"
+COMMAND.description = "#BanCMD_Description"
 COMMAND.Syntax = "#BanCMD_Syntax"
-COMMAND.Category = "administration"
+COMMAND.category = "administration"
 COMMAND.Arguments = 2
 COMMAND.Immunity = true
 COMMAND.Aliases = {"plyban"}
@@ -32,10 +32,10 @@ function COMMAND:OnRun(player, targets, duration, ...)
 
     if (duration <= 0) then time = L"permanently" end
 
-    local phrase = L("BanMessage", (IsValid(player) and player:Name()) or "Console", util.PlayerListToString(targets)).." "..time..". ("..reason..")"
+    local phrase = L("BanMessage", (IsValid(player) and player:name()) or "Console", util.PlayerListToString(targets)).." "..time..". ("..reason..")"
 
     v:Notify(phrase)
   end
 end
 
-COMMAND:Register()
+COMMAND:register()

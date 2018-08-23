@@ -1,2 +1,2 @@
-ATTRIBUTE.Name = "#Attribute_Strength"
-ATTRIBUTE.Description = "#Attribute_Strength_Desc"
+ATTRIBUTE.name = "#Attribute_Strength"
+ATTRIBUTE.description = "#Attribute_Strength_Desc"

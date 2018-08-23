@@ -224,8 +224,8 @@ function GM:DrawPlayerTargetID(player, x, y, distance)
       alpha = math.Clamp((255 * (140 - d) / 140), 0, 255)
     end
 
-    local width, height = util.GetTextSize(player:Name(), tooltip_large)
-    draw.SimpleText(player:Name(), tooltip_large, x - width * 0.5, y - 40, Color(255, 255, 255, alpha))
+    local width, height = util.GetTextSize(player:name(), tooltip_large)
+    draw.SimpleText(player:name(), tooltip_large, x - width * 0.5, y - 40, Color(255, 255, 255, alpha))
 
     local width, height = util.GetTextSize(player:GetPhysDesc(), tooltip_small)
     draw.SimpleText(player:GetPhysDesc(), tooltip_small, x - width * 0.5, y - 14, Color(255, 255, 255, alpha))
@@ -248,9 +248,9 @@ function GM:PopulateToolMenu()
     if (TOOL.AddToMenu != false) then
       spawnmenu.AddToolMenuOption(
         TOOL.Tab or "Main",
-        TOOL.Category or "New Category",
+        TOOL.category or "New Category",
         ToolName,
-        TOOL.Name or "#"..ToolName,
+        TOOL.name or "#"..ToolName,
         TOOL.Command or "gmod_tool "..ToolName,
         TOOL.ConfigName or ToolName,
         TOOL.BuildCPanel
@@ -295,11 +295,11 @@ function GM:OnMenuPanelOpen(menuPanel, activePanel)
 end
 
 function GM:AddAdminMenuItems(panel, sidebar)
-  sidebar:AddButton("Manage Config")
-  sidebar:AddButton("Manage Players")
-  sidebar:AddButton("Manage Admins")
-  sidebar:AddButton("Group Editor")
-  sidebar:AddButton("Item Editor")
+  sidebar:add_button("Manage Config")
+  sidebar:add_button("Manage Players")
+  sidebar:add_button("Manage Admins")
+  sidebar:add_button("Group Editor")
+  sidebar:add_button("Item Editor")
   panel:AddPanel("Admin_PermissionsEditor", "Permissions", "manage_permissions")
 end
 
@@ -318,7 +318,7 @@ end
 function GM:SoftUndo(player)
   netstream.Start("SoftUndo")
 
-  if (#fl.undo:GetPlayer(fl.client) > 0) then return true end
+  if (#fl.undo:get_player(fl.client) > 0) then return true end
 end
 
 do

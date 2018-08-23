@@ -28,4 +28,4 @@ function PANEL:Think()
   end
 end
 
-vgui.Register("flTextEntry", PANEL, "DTextEntry")
+vgui.register("flTextEntry", PANEL, "DTextEntry")

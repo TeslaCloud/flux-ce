@@ -1,8 +1,8 @@
 local COMMAND = Command("forcefall")
-COMMAND.Name = "ForceFall"
-COMMAND.Description = "Forces a player to fall down on the ground."
+COMMAND.name = "ForceFall"
+COMMAND.description = "Forces a player to fall down on the ground."
 COMMAND.Syntax = "<target> [number GetUpTime]"
-COMMAND.Category = "roleplay"
+COMMAND.category = "roleplay"
 COMMAND.Arguments = 1
 COMMAND.PlayerArg = 1
 COMMAND.Aliases = {"forcefallover", "plyfall"}
@@ -17,7 +17,7 @@ function COMMAND:OnRun(player, target, delay)
   if (IsValid(target) and target:Alive() and !target:IsRagdolled()) then
     target:SetRagdollState(RAGDOLL_FALLENOVER)
 
-    player:Notify(target:Name().." has been ragdolled!")
+    player:Notify(target:name().." has been ragdolled!")
 
     if (delay and delay > 0) then
       target:Notify("Getting up...")
@@ -31,4 +31,4 @@ function COMMAND:OnRun(player, target, delay)
   end
 end
 
-COMMAND:Register()
+COMMAND:register()

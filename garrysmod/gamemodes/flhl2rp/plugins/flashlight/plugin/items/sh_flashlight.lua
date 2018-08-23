@@ -1,6 +1,6 @@
-ITEM:SetBase(CItemEquippable)
-ITEM.Name = "Flashlight"
-ITEM.PrintName = "#Item_Flashlight_PrintName"
-ITEM.Description = "#Item_Flashlight_Description"
-ITEM.Model = "models/lamps/torch.mdl"
-ITEM.Weight = 0.5
+ITEM:set_base(ItemEquippable)
+ITEM.name = "Flashlight"
+ITEM.print_name = "#Item_Flashlight_PrintName"
+ITEM.description = "#Item_Flashlight_Description"
+ITEM.model = "models/lamps/torch.mdl"
+ITEM.weight = 0.5

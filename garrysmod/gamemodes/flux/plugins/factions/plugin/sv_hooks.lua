@@ -4,7 +4,7 @@ function flFactions:PostPlayerSpawn(player)
   if (playerFaction) then
     player:SetTeam(playerFaction.teamID or 1)
 
-    player:SetNetVar("name", playerFaction:GenerateName(player, player:GetCharacterVar("name", player:Name()), player:GetRank()))
+    player:SetNetVar("name", playerFaction:GenerateName(player, player:GetCharacterVar("name", player:name()), player:GetRank()))
   end
 end
 
@@ -55,7 +55,7 @@ function flFactions:OnPlayerRestored(player)
         player:SetNetVar("gender", math.random(CHAR_GENDER_MALE, CHAR_GENDER_FEMALE))
       end
 
-      local factionModels = randomFaction.Models
+      local factionModels = randomFaction.models
 
       if (istable(factionModels)) then
         local randomModel = "models/humans/group01/male_01.mdl"

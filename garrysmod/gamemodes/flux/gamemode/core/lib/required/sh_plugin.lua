@@ -59,7 +59,7 @@ function Plugin:Plugin(id, data)
   table.Merge(self, data)
 end
 
-function Plugin:GetName()
+function Plugin:get_name()
   return self.name
 end
 
@@ -71,7 +71,7 @@ function Plugin:GetAuthor()
   return self.author
 end
 
-function Plugin:GetDescription()
+function Plugin:get_description()
   return self.description
 end
 
@@ -87,7 +87,7 @@ function Plugin:SetDescription(desc)
   self.description = desc or self.description or "No description provided!"
 end
 
-function Plugin:SetData(data)
+function Plugin:set_data(data)
   table.Merge(self, data)
 end
 
@@ -102,7 +102,7 @@ function Plugin:__tostring()
   return "Plugin ["..self.name.."]"
 end
 
-function Plugin:Register()
+function Plugin:register()
   plugin.register(self)
 end
 
@@ -136,7 +136,7 @@ function plugin.find(id)
     return stored[id], id
   else
     for k, v in pairs(stored) do
-      if (v.id == id or v:GetFolder() == id or v:GetName() == id) then
+      if (v.id == id or v:GetFolder() == id or v:get_name() == id) then
         return v, k
       end
     end
@@ -331,7 +331,7 @@ function plugin.include(folder)
     end
   end
 
-  PLUGIN:Register()
+  PLUGIN:register()
   PLUGIN = nil
 
   return data
@@ -374,7 +374,7 @@ function plugin.include_schema()
     MsgC(Color(0, 255, 100), " by "..schema_info.author.." has been loaded!\n")
   end
 
-  Schema:Register()
+  Schema:register()
 
   hook.Run("OnSchemaLoaded")
 end
@@ -546,14 +546,14 @@ do
   plugin.old_hook_call = old_hook_call
 
   -- If we're running in development, we should be using pcall'ed hook.Call rather than unsafe one.
-  if (fl.Devmode) then
+  if (fl.development) then
     function hook.Call(name, gm, ...)
       if (hooks_cache[name]) then
         for k, v in ipairs(hooks_cache[name]) do
           local success, a, b, c, d, e, f = pcall(v[1], v[2], ...)
 
           if (!success) then
-            ErrorNoHalt("[Flux - "..(v.id or v[2]:GetName()).."] The "..name.." hook has failed to run!\n")
+            ErrorNoHalt("[Flux - "..(v.id or v[2]:get_name()).."] The "..name.." hook has failed to run!\n")
             ErrorNoHalt(tostring(a), "\n")
 
             if (name != "OnHookError") then

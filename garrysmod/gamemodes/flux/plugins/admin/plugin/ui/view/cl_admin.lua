@@ -39,7 +39,7 @@ function PANEL:AddPanel(id, title, permission, ...)
     arguments = {...}
   }
 
-  self.sidebar:AddButton(title, function(btn)
+  self.sidebar:add_button(title, function(btn)
     self:OpenPanel(id)
   end)
 end
@@ -104,7 +104,7 @@ function PANEL:GetMenuSize()
   return font.Scale(1280), font.Scale(900)
 end
 
-vgui.Register("flAdminPanel", PANEL, "flBasePanel")
+vgui.register("flAdminPanel", PANEL, "flBasePanel")
 
 concommand.Add("fl_admin_test", function()
   if (IsValid(AdminPanel)) then

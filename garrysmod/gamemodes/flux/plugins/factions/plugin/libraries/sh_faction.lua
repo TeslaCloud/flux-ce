@@ -6,15 +6,15 @@ faction.stored = stored
 local count = faction.count or 0
 faction.count = count
 
-function faction.Register(id, data)
+function faction.register(id, data)
   if (!id or !data) then return end
 
-  data.id = id:to_id() or (data.Name and data.Name:to_id())
-  data.Name = data.Name or "Unknown Faction"
-  data.Description = data.Description or "This faction has no description!"
-  data.PrintName = data.PrintName or data.Name or "Unknown Faction"
+  data.id = id:to_id() or (data.name and data.name:to_id())
+  data.name = data.name or "Unknown Faction"
+  data.description = data.description or "This faction has no description!"
+  data.print_name = data.print_name or data.name or "Unknown Faction"
 
-  team.SetUp(count + 1, data.Name, data.Color or Color(255, 255, 255))
+  team.SetUp(count + 1, data.name, data.color or Color(255, 255, 255))
 
   data.teamID = count + 1
 
@@ -43,13 +43,13 @@ function faction.Find(name, bStrict)
     if (bStrict) then
       if (k:utf8lower() == name:utf8lower()) then
         return v
-      elseif (v.Name:utf8lower() == name:utf8lower()) then
+      elseif (v.name:utf8lower() == name:utf8lower()) then
         return v
       end
     else
       if (k:utf8lower():find(name:utf8lower())) then
         return v
-      elseif (v.Name:utf8lower():find(name:utf8lower())) then
+      elseif (v.name:utf8lower():find(name:utf8lower())) then
         return v
       end
     end
@@ -66,12 +66,12 @@ function faction.GetAll()
   return stored
 end
 
-pipeline.Register("faction", function(id, fileName, pipe)
+pipeline.register("faction", function(id, fileName, pipe)
   FACTION = Faction(id)
 
   util.include(fileName)
 
-  FACTION:Register() FACTION = nil
+  FACTION:register() FACTION = nil
 end)
 
 function faction.IncludeFactions(directory)
@@ -90,7 +90,7 @@ do
     local factionTable = faction.FindByID(id)
     local char = self:GetCharacter()
 
-    self:SetNetVar("name", factionTable:GenerateName(self, self:GetCharacterVar("name", self:Name()), 1))
+    self:SetNetVar("name", factionTable:GenerateName(self, self:GetCharacterVar("name", self:name()), 1))
     self:SetRank(1)
     self:SetTeam(factionTable.teamID)
     self:SetNetVar("faction", id)
@@ -113,7 +113,7 @@ do
 
   function player_meta:SetDefaultFactionModel()
     local factionTable = self:GetFaction()
-    local factionModels = factionTable.Models
+    local factionModels = factionTable.models
     local char = self:GetCharacter()
 
     if (istable(factionModels)) then

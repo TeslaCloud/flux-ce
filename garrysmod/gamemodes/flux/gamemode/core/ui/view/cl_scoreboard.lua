@@ -52,7 +52,7 @@ function PANEL:GetMenuSize()
   return font.Scale(1280), font.Scale(900)
 end
 
-vgui.Register("flScoreboard", PANEL, "flBasePanel")
+vgui.register("flScoreboard", PANEL, "flBasePanel")
 
 local PANEL = {}
 PANEL.player = false
@@ -83,8 +83,8 @@ function PANEL:Rebuild()
   self.avatarPanel:SetPlayer(player, 64)
 
   self.nameLabel = vgui.Create("DLabel", self)
-  self.nameLabel:SetText(player:Name())
-  self.nameLabel:SetPos(font.Scale(32) + 16, self:GetTall() * 0.5 - util.GetTextHeight(player:Name(), theme.GetFont("Text_Normal")) * 0.5)
+  self.nameLabel:SetText(player:name())
+  self.nameLabel:SetPos(font.Scale(32) + 16, self:GetTall() * 0.5 - util.GetTextHeight(player:name(), theme.GetFont("Text_Normal")) * 0.5)
   self.nameLabel:SetFont(theme.GetFont("Text_Normal"))
   self.nameLabel:SetTextColor(theme.GetColor("Text"))
   self.nameLabel:SizeToContents()
@@ -92,4 +92,4 @@ function PANEL:Rebuild()
   hook.Run("RebuildScoreboardPlayerCard", self, player)
 end
 
-vgui.Register("flScoreboardPlayer", PANEL, "flBasePanel")
+vgui.register("flScoreboardPlayer", PANEL, "flBasePanel")

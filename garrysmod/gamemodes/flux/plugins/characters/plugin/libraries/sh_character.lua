@@ -184,7 +184,7 @@ if SERVER then
   end)
 
   netstream.Hook("PlayerSelectCharacter", function(player, id)
-    fl.dev_print(player:Name().." has loaded character #"..id)
+    fl.dev_print(player:name().." has loaded character #"..id)
 
     player:SetActiveCharacter(id)
   end)

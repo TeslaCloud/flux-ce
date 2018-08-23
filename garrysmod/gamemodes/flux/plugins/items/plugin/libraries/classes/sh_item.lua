@@ -1,6 +1,6 @@
-class "CItem"
+class "Item"
 
-function CItem:CItem(id)
+function Item:Item(id)
   if (!isstring(id)) then return end
 
   self.id = string.to_id(id)
@@ -10,60 +10,56 @@ function CItem:CItem(id)
   }
 end
 
-function CItem:GetName()
-  return self.PrintName or self.Name
+function Item:get_name()
+  return self.print_name or self.name
 end
 
-CItem.Name = CItem.GetName
+Item.name = Item.get_name
 
-function CItem:SetBase(CBaseClass)
-  if (isstring(CBaseClass)) then
-    CBaseClass = _G[CBaseClass]
+function Item:set_base(base_class)
+  if (isstring(base_class)) then
+    base_class = _G[base_class]
   end
 
-  if (!istable(CBaseClass)) then return end
+  if (!istable(base_class)) then return end
 
   ITEM = nil
-  ITEM = CBaseClass(self.id)
+  ITEM = base_class(self.id)
 end
 
-function CItem:MakeBase()
+function Item:make_base()
   pipeline.Abort()
 end
 
-function CItem:GetRealName()
-  return self.Name or "Unknown Item"
+function Item:get_real_name()
+  return self.name or "Unknown Item"
 end
 
-function CItem:GetDescription()
-  return self.Description or "This item has no description!"
+function Item:get_description()
+  return self.description or "This item has no description!"
 end
 
-function CItem:GetWeight()
-  return self.Weight or 1
+function Item:get_weight()
+  return self.weight or 1
 end
 
-function CItem:IsStackable()
-  return self.Stackable
+function Item:get_max_stack()
+  return self.max_stack or 64
 end
 
-function CItem:GetMaxStack()
-  return self.MaxStack or 64
+function Item:GetModel()
+  return self.model or "models/props_lab/cactus.mdl"
 end
 
-function CItem:GetModel()
-  return self.Model or "models/props_lab/cactus.mdl"
+function Item:GetSkin()
+  return self.skin or 0
 end
 
-function CItem:GetSkin()
-  return self.Skin or 0
+function Item:GetColor()
+  return self.color or Color(255, 255, 255)
 end
 
-function CItem:GetColor()
-  return self.Color or Color(255, 255, 255)
-end
-
-function CItem:AddButton(name, data)
+function Item:add_button(name, data)
   --[[
     Example data structure:
     data = {
@@ -82,29 +78,29 @@ function CItem:AddButton(name, data)
   self.customButtons[name] = data
 end
 
-function CItem:SetActionSound(act, sound)
+function Item:set_action_sound(act, sound)
   self.actionSounds[act] = sound
 end
 
 -- Returns:
 -- nothing/nil = drop like normal
 -- false = prevents item appearing and doesn't remove it from inventory.
-function CItem:OnDrop(player) end
+function Item:on_drop(player) end
 
-function CItem:OnLoadout(player) end
+function Item:on_loadout(player) end
 
-function CItem:OnSave(player) end
+function Item:on_save(player) end
 
 if SERVER then
-  function CItem:SetData(id, value)
+  function Item:set_data(id, value)
     if (!id) then return end
 
     self.data[id] = value
 
-    item.NetworkItemData(self:GetPlayer(), self)
+    item.NetworkItemData(self:get_player(), self)
   end
 
-  function CItem:GetPlayer()
+  function Item:get_player()
     for k, v in ipairs(player.GetAll()) do
       if (v:HasItemByID(self.instanceID)) then
         return v
@@ -112,7 +108,7 @@ if SERVER then
     end
   end
 
-  function CItem:DoMenuAction(act, player, ...)
+  function Item:do_menu_action(act, player, ...)
     if (act == "OnTake") then
       if (hook.Run("PlayerTakeItem", player, self, ...) != nil) then return end
     end
@@ -162,47 +158,45 @@ if SERVER then
     if (!itemTable) then return end
     if (hook.Run("PlayerCanUseItem", player, itemTable, action, ...) == false) then return end
 
-    itemTable:DoMenuAction(action, player, ...)
+    itemTable:do_menu_action(action, player, ...)
   end)
 else
-  function CItem:DoMenuAction(act, ...)
+  function Item:do_menu_action(act, ...)
     netstream.Start("ItemMenuAction", self.instanceID, act, ...)
   end
 
-  function CItem:GetUseText()
-    return self.UseText or "#Item_Option_Use"
+  function Item:get_use_text()
+    return self.use_text or "#Item_Option_Use"
   end
 
-  function CItem:GetTakeText()
+  function Item:get_take_text()
     return self.TakeText or "#Item_Option_Take"
   end
 
-  function CItem:GetDropText()
+  function Item:get_drop_text()
     return self.DropText or "#Item_Option_Drop"
   end
 
-  function CItem:GetCancelText()
+  function Item:get_cancel_text()
     return self.CancelText or "#Item_Option_Cancel"
   end
 end
 
-function CItem:GetData(id, default)
+function Item:get_data(id, default)
   if (!id) then return end
 
   return self.data[id] or default
 end
 
-function CItem:SetEntity(ent)
+function Item:set_entity(ent)
   self.entity = ent
 end
 
-function CItem:Register()
-  return item.Register(self.id, self)
+function Item:register()
+  return item.register(self.id, self)
 end
 
 -- Fancy output if you do print(itemTable).
-function CItem:__tostring()
+function Item:__tostring()
   return "Item ["..tostring(self.instanceID).."]["..(self.name or self.id).."]"
 end
-
-Item = CItem

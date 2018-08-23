@@ -19,11 +19,11 @@ function PANEL:Rebuild()
   self.layout:Dock(FILL)
 
   for id, itemTable in pairs(item.GetAll()) do
-    if (!categories[itemTable.Category]) then 
-      categories[itemTable.Category] = {}
+    if (!categories[itemTable.category]) then 
+      categories[itemTable.category] = {}
     end
 
-    table.insert(categories[itemTable.Category], {id = id, itemTable = itemTable})
+    table.insert(categories[itemTable.category], {id = id, itemTable = itemTable})
   end
 
   self.layout:Clear()
@@ -37,7 +37,7 @@ function PANEL:Rebuild()
     for k, v in ipairs(category) do
       local spawnIcon = list:Add("SpawnIcon")
       spawnIcon:SetSize(48, 48)
-      spawnIcon:SetModel(v.itemTable.Model)
+      spawnIcon:SetModel(v.itemTable.model)
 
       spawnIcon.DoClick = function(btn)
         mvc.Push("SpawnMenu::SpawnItem", v.id)
@@ -46,4 +46,4 @@ function PANEL:Rebuild()
   end
 end
 
-vgui.Register("flItemSpawner", PANEL, "flBasePanel")
+vgui.register("flItemSpawner", PANEL, "flBasePanel")

@@ -1,6 +1,6 @@
-GROUP.Name = "Super Admin"
-GROUP.Description = "#PlayerGroup_Superadmin"
-GROUP.Color = Color(255, 255, 255)
+GROUP.name = "Super Admin"
+GROUP.description = "#PlayerGroup_Superadmin"
+GROUP.color = Color(255, 255, 255)
 GROUP.Icon = "icon16/shield.png"
 GROUP.Immunity = 300
 GROUP.Base = "admin"

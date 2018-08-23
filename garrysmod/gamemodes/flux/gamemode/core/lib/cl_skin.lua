@@ -6,7 +6,7 @@ local Color = Color
 
 SKIN = {}
 
-SKIN.PrintName          = "Flux Skin"
+SKIN.print_name          = "Flux Skin"
 SKIN.Author            = "Mr. Meow"
 SKIN.DermaVersion        = 1
 SKIN.GwenTexture        = Material("gwenskin/GModDefault.png")
@@ -230,10 +230,10 @@ SKIN.tex.ProgressBar = {}
 SKIN.tex.ProgressBar.Back    = GWEN.CreateTextureBorder(384,  0, 31, 31, 8, 8, 8, 8)
 SKIN.tex.ProgressBar.Front    = GWEN.CreateTextureBorder(384+32, 0, 31, 31, 8, 8, 8, 8)
 
-SKIN.tex.CategoryList = {}
-SKIN.tex.CategoryList.Outer    = GWEN.CreateTextureBorder(256, 384, 63, 63, 8, 8, 8, 8)
-SKIN.tex.CategoryList.Inner    = GWEN.CreateTextureBorder(320, 384, 63, 63, 8, 21, 8, 8)
-SKIN.tex.CategoryList.Header  = GWEN.CreateTextureBorder(320, 352, 63, 31, 8, 8, 8, 8)
+SKIN.tex.categoryList = {}
+SKIN.tex.categoryList.Outer    = GWEN.CreateTextureBorder(256, 384, 63, 63, 8, 8, 8, 8)
+SKIN.tex.categoryList.Inner    = GWEN.CreateTextureBorder(320, 384, 63, 63, 8, 21, 8, 8)
+SKIN.tex.categoryList.Header  = GWEN.CreateTextureBorder(320, 352, 63, 31, 8, 8, 8, 8)
 
 SKIN.tex.Tooltip = GWEN.CreateTextureBorder(384, 64, 31, 31, 8, 8, 8, 8)
 
@@ -287,23 +287,23 @@ SKIN.Colours.Properties.Label_Normal    = GWEN.TextureColor(4 + 8 * 16, 508)
 SKIN.Colours.Properties.Label_Selected    = GWEN.TextureColor(4 + 8 * 17, 508)
 SKIN.Colours.Properties.Label_Hover      = GWEN.TextureColor(4 + 8 * 16, 500)
 
-SKIN.Colours.Category = {}
-SKIN.Colours.Category.Header        = GWEN.TextureColor(4 + 8 * 18, 500)
-SKIN.Colours.Category.Header_Closed      = GWEN.TextureColor(4 + 8 * 19, 500)
-SKIN.Colours.Category.Line = {}
-SKIN.Colours.Category.Line.Text        = GWEN.TextureColor(4 + 8 * 20, 508)
-SKIN.Colours.Category.Line.Text_Hover    = GWEN.TextureColor(4 + 8 * 21, 508)
-SKIN.Colours.Category.Line.Text_Selected  = GWEN.TextureColor(4 + 8 * 20, 500)
-SKIN.Colours.Category.Line.Button      = GWEN.TextureColor(4 + 8 * 21, 500)
-SKIN.Colours.Category.Line.Button_Hover    = GWEN.TextureColor(4 + 8 * 22, 508)
-SKIN.Colours.Category.Line.Button_Selected  = GWEN.TextureColor(4 + 8 * 23, 508)
-SKIN.Colours.Category.LineAlt = {}
-SKIN.Colours.Category.LineAlt.Text        = GWEN.TextureColor(4 + 8 * 22, 500)
-SKIN.Colours.Category.LineAlt.Text_Hover    = GWEN.TextureColor(4 + 8 * 23, 500)
-SKIN.Colours.Category.LineAlt.Text_Selected    = GWEN.TextureColor(4 + 8 * 24, 508)
-SKIN.Colours.Category.LineAlt.Button      = GWEN.TextureColor(4 + 8 * 25, 508)
-SKIN.Colours.Category.LineAlt.Button_Hover    = GWEN.TextureColor(4 + 8 * 24, 500)
-SKIN.Colours.Category.LineAlt.Button_Selected  = GWEN.TextureColor(4 + 8 * 25, 500)
+SKIN.Colours.category = {}
+SKIN.Colours.category.Header        = GWEN.TextureColor(4 + 8 * 18, 500)
+SKIN.Colours.category.Header_Closed      = GWEN.TextureColor(4 + 8 * 19, 500)
+SKIN.Colours.category.Line = {}
+SKIN.Colours.category.Line.Text        = GWEN.TextureColor(4 + 8 * 20, 508)
+SKIN.Colours.category.Line.Text_Hover    = GWEN.TextureColor(4 + 8 * 21, 508)
+SKIN.Colours.category.Line.Text_Selected  = GWEN.TextureColor(4 + 8 * 20, 500)
+SKIN.Colours.category.Line.Button      = GWEN.TextureColor(4 + 8 * 21, 500)
+SKIN.Colours.category.Line.Button_Hover    = GWEN.TextureColor(4 + 8 * 22, 508)
+SKIN.Colours.category.Line.Button_Selected  = GWEN.TextureColor(4 + 8 * 23, 508)
+SKIN.Colours.category.LineAlt = {}
+SKIN.Colours.category.LineAlt.Text        = GWEN.TextureColor(4 + 8 * 22, 500)
+SKIN.Colours.category.LineAlt.Text_Hover    = GWEN.TextureColor(4 + 8 * 23, 500)
+SKIN.Colours.category.LineAlt.Text_Selected    = GWEN.TextureColor(4 + 8 * 24, 508)
+SKIN.Colours.category.LineAlt.Button      = GWEN.TextureColor(4 + 8 * 25, 508)
+SKIN.Colours.category.LineAlt.Button_Hover    = GWEN.TextureColor(4 + 8 * 24, 500)
+SKIN.Colours.category.LineAlt.Button_Selected  = GWEN.TextureColor(4 + 8 * 25, 500)
 
 SKIN.Colours.TooltipText = GWEN.TextureColor(4 + 8 * 26, 500)
 
@@ -798,25 +798,25 @@ end
 
 function SKIN:PaintCollapsibleCategory(panel, w, h)
   if (h < 21) then
-    return self.tex.CategoryList.Header(0, 0, w, h)
+    return self.tex.categoryList.Header(0, 0, w, h)
   end
 
-  self.tex.CategoryList.Inner(0, 0, w, 63)
+  self.tex.categoryList.Inner(0, 0, w, 63)
 end
 
 function SKIN:PaintCategoryList(panel, w, h)
-  self.tex.CategoryList.Outer(0, 0, w, h)
+  self.tex.categoryList.Outer(0, 0, w, h)
 end
 
 function SKIN:PaintCategoryButton(panel, w, h)
   if (panel.AltLine) then
-    if (panel.Depressed or panel.m_bSelected) then surface.SetDrawColor(self.Colours.Category.LineAlt.Button_Selected)
-    elseif (panel.Hovered) then surface.SetDrawColor(self.Colours.Category.LineAlt.Button_Hover)
-    else surface.SetDrawColor(self.Colours.Category.LineAlt.Button) end
+    if (panel.Depressed or panel.m_bSelected) then surface.SetDrawColor(self.Colours.category.LineAlt.Button_Selected)
+    elseif (panel.Hovered) then surface.SetDrawColor(self.Colours.category.LineAlt.Button_Hover)
+    else surface.SetDrawColor(self.Colours.category.LineAlt.Button) end
   else
-    if (panel.Depressed or panel.m_bSelected) then surface.SetDrawColor(self.Colours.Category.Line.Button_Selected)
-    elseif (panel.Hovered) then surface.SetDrawColor(self.Colours.Category.Line.Button_Hover)
-    else surface.SetDrawColor(self.Colours.Category.Line.Button) end
+    if (panel.Depressed or panel.m_bSelected) then surface.SetDrawColor(self.Colours.category.Line.Button_Selected)
+    elseif (panel.Hovered) then surface.SetDrawColor(self.Colours.category.Line.Button_Hover)
+    else surface.SetDrawColor(self.Colours.category.Line.Button) end
   end
 
   surface.DrawRect(0, 0, w, h)

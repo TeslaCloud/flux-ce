@@ -4,13 +4,13 @@
   the framework is publicly released.
 --]]
 
-ITEM:SetBase(CItemAmmo)
-ITEM.Name = "SMG Grenade"
-ITEM.PrintName = "#Item_Smg_Ammo_Grenade_PrintName"
-ITEM.Description = "#Item_Smg_Ammo_Grenade_Description"
-ITEM.Model = "models/items/ar2_grenade.mdl"
-ITEM.Stackable = true
-ITEM.MaxStack = 8
-ITEM.Weight = 0.4
-ITEM.AmmoClass = "SMG1_Grenade"
-ITEM.AmmoAmount = 1
+ITEM:set_base(ItemAmmo)
+ITEM.name = "SMG Grenade"
+ITEM.print_name = "#Item_Smg_Ammo_Grenade_PrintName"
+ITEM.description = "#Item_Smg_Ammo_Grenade_Description"
+ITEM.model = "models/items/ar2_grenade.mdl"
+ITEM.stackable = true
+ITEM.max_stack = 8
+ITEM.weight = 0.4
+ITEM.ammo_class = "SMG1_Grenade"
+ITEM.ammo_count = 1

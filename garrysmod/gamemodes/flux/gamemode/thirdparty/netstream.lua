@@ -26,11 +26,11 @@ netstream.cache = cache
 if (DBugR) then
   DBugR.Profilers.Netstream = table.Copy(DBugR.SP)
   DBugR.Profilers.Netstream.CChan = ""
-  DBugR.Profilers.Netstream.Name = "Netstream"
+  DBugR.Profilers.Netstream.name = "Netstream"
   DBugR.Profilers.Netstream.Type = SERVICE_PROVIDER_TYPE_NET
 
   DBugR.Profilers.NetstreamPerf = table.Copy(DBugR.SP)
-  DBugR.Profilers.NetstreamPerf.Name = "Netstream"
+  DBugR.Profilers.NetstreamPerf.name = "Netstream"
   DBugR.Profilers.NetstreamPerf.Type = SERVICE_PROVIDER_TYPE_CPU
 end
 

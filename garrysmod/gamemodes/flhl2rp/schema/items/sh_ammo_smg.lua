@@ -4,13 +4,13 @@
   the framework is publicly released.
 --]]
 
-ITEM:SetBase(CItemAmmo)
-ITEM.Name = "4.6x30mm Ammo"
-ITEM.PrintName = "#Item_Smg_Ammo_PrintName"
-ITEM.Description = "#Item_Smg_Ammo_Description"
-ITEM.Model = "models/items/boxmrounds.mdl"
-ITEM.Stackable = true
-ITEM.MaxStack = 4
-ITEM.Weight = 1.5
-ITEM.AmmoClass = "SMG1"
-ITEM.AmmoAmount = 45
+ITEM:set_base(ItemAmmo)
+ITEM.name = "4.6x30mm Ammo"
+ITEM.print_name = "#Item_Smg_Ammo_PrintName"
+ITEM.description = "#Item_Smg_Ammo_Description"
+ITEM.model = "models/items/boxmrounds.mdl"
+ITEM.stackable = true
+ITEM.max_stack = 4
+ITEM.weight = 1.5
+ITEM.ammo_class = "SMG1"
+ITEM.ammo_count = 45

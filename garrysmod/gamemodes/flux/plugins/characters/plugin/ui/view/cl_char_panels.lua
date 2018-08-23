@@ -12,7 +12,7 @@ function PANEL:Paint(w, h)
   end
 end
 
-vgui.Register("flCharCreationBase", PANEL, "flBasePanel")
+vgui.register("flCharCreationBase", PANEL, "flBasePanel")
 
 local PANEL = {}
 PANEL.id = "general"
@@ -21,16 +21,16 @@ PANEL.text = "#CharCreate_GenText"
 function PANEL:Init()
   local w, h = self:GetSize()
 
-  self.NameLabel = vgui.Create("DLabel", self)
-  self.NameLabel:SetPos(32, 68)
-  self.NameLabel:SetText("#CharCreate_Name")
-  self.NameLabel:SetFont(theme.GetFont("Text_Small"))
+  self.nameLabel = vgui.Create("DLabel", self)
+  self.nameLabel:SetPos(32, 68)
+  self.nameLabel:SetText("#CharCreate_Name")
+  self.nameLabel:SetFont(theme.GetFont("Text_Small"))
 
-  self.NameEntry = vgui.Create("DTextEntry", self)
-  self.NameEntry:SetPos(32 + self.NameLabel:GetWide(), 66)
-  self.NameEntry:SetSize(300, 24)
-  self.NameEntry:SetFont(theme.GetFont("Text_Smaller"))
-  self.NameEntry:SetText("")
+  self.nameEntry = vgui.Create("DTextEntry", self)
+  self.nameEntry:SetPos(32 + self.nameLabel:GetWide(), 66)
+  self.nameEntry:SetSize(300, 24)
+  self.nameEntry:SetFont(theme.GetFont("Text_Smaller"))
+  self.nameEntry:SetText("")
 
   self.DescLabel = vgui.Create("DLabel", self)
   self.DescLabel:SetPos(32, 96)
@@ -40,13 +40,13 @@ function PANEL:Init()
 
   self.DescEntry = vgui.Create("DTextEntry", self)
   self.DescEntry:SetPos(32, 98 + self.DescLabel:GetTall())
-  self.DescEntry:SetSize(ScrW() * 0.5 + self.NameLabel:GetWide(), 400)
+  self.DescEntry:SetSize(ScrW() * 0.5 + self.nameLabel:GetWide(), 400)
   self.DescEntry:SetFont(theme.GetFont("Text_Smaller"))
   self.DescEntry:SetText("")
   self.DescEntry:SetMultiline(true)
 
   self.GenderLabel = vgui.Create("DLabel", self)
-  self.GenderLabel:SetPos(self.DescEntry:GetWide() - 128, 64 - self.NameLabel:GetTall())
+  self.GenderLabel:SetPos(self.DescEntry:GetWide() - 128, 64 - self.nameLabel:GetTall())
   self.GenderLabel:SetText("#CharCreate_Gender")
   self.GenderLabel:SetFont(theme.GetFont("Text_Small"))
 
@@ -59,20 +59,20 @@ function PANEL:Init()
 end
 
 function PANEL:OnOpen(parent)
-  self.NameEntry:SetText(parent.CharData.name or "")
+  self.nameEntry:SetText(parent.CharData.name or "")
   self.DescEntry:SetText(parent.CharData.description or "")
   self.GenderChooser:SetValue(parent.CharData.gender or "#CharCreate_Gender_S")
 end
 
 function PANEL:OnClose(parent)
   parent:CollectData({
-    name = self.NameEntry:GetValue(),
+    name = self.nameEntry:GetValue(),
     description = self.DescEntry:GetValue(),
     gender = self.GenderChooser:GetValue()
   })
 end
 
-vgui.Register("flCharCreationGeneral", PANEL, "flCharCreationBase")
+vgui.register("flCharCreationGeneral", PANEL, "flCharCreationBase")
 
 local PANEL = {}
 PANEL.id = "model"
@@ -96,7 +96,7 @@ function PANEL:Rebuild()
   self.scrollpanel:SetSize(8 * 68 + 8, 68 * 5 + 8)
   self.scrollpanel:SetPos(30, 50)
 
-  for k, v in ipairs(self.Models) do
+  for k, v in ipairs(self.models) do
     if (i >= 8) then
       offset = offset + 68
       i = 0
@@ -152,11 +152,11 @@ function PANEL:OnOpen(parent)
 
     if (factionTable) then
       if (charData.gender == "Male") then
-        self.Models = factionTable.Models.male
+        self.models = factionTable.models.male
       elseif (charData.gender == "Female") then
-        self.Models = factionTable.Models.female
+        self.models = factionTable.models.female
       else
-        self.Models = factionTable.Models.universal
+        self.models = factionTable.models.universal
       end
 
       self:Rebuild()
@@ -168,4 +168,4 @@ function PANEL:OnClose(parent)
   parent.CharData.model = self.model
 end
 
-vgui.Register("flCharCreationModel", PANEL, "flCharCreationBase")
+vgui.register("flCharCreationModel", PANEL, "flCharCreationBase")

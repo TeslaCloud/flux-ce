@@ -29,12 +29,12 @@ function THEME:OnLoaded()
   local backgroundColor   = self:SetColor("Background", Color(20, 20, 20))
   local textColor     = self:SetColor("Text", util.PickTextColor(backgroundColor))
 
-  self:SetColor("AccentDark", accentColor:Darken(20))
-  self:SetColor("AccentLight", accentColor:Lighten(20))
-  self:SetColor("MainDark", mainColor:Darken(15))
-  self:SetColor("MainLight", mainColor:Lighten(15))
-  self:SetColor("BackgroundDark", backgroundColor:Darken(20))
-  self:SetColor("BackgroundLight", backgroundColor:Lighten(20))
+  self:SetColor("AccentDark", accentColor:darken(20))
+  self:SetColor("AccentLight", accentColor:lighten(20))
+  self:SetColor("MainDark", mainColor:darken(15))
+  self:SetColor("MainLight", mainColor:lighten(15))
+  self:SetColor("BackgroundDark", backgroundColor:darken(20))
+  self:SetColor("BackgroundLight", backgroundColor:lighten(20))
   self:SetColor("SchemaText", textColor)
   self:SetColor("MainMenu_Background", self:GetColor("BackgroundDark"))
 
@@ -89,7 +89,7 @@ function THEME:PaintFrame(panel, width, height)
   surface.SetDrawColor(accentColor)
   surface.DrawRect(0, 0, width, headerSize)
 
-  surface.SetDrawColor(accentColor:Darken(30))
+  surface.SetDrawColor(accentColor:darken(30))
   surface.DrawRect(0, headerSize - lineWeight, width, lineWeight)
 
   surface.SetDrawColor(self:GetColor("MainDark"))
@@ -105,7 +105,7 @@ end
 
 function THEME:PaintMainMenu(panel, width, height)
   local wide = self:GetOption("MainMenu_SidebarWidth") * 0.5
-  local title, desc, author = Schema:GetName(), Schema:GetDescription(), "#MainMenu_DevelopedBy:"..Schema:GetAuthor()..";"
+  local title, desc, author = Schema:get_name(), Schema:get_description(), "#MainMenu_DevelopedBy:"..Schema:GetAuthor()..";"
   local logo = self:GetMaterial("Schema_Logo")
   local titleW, titleH = util.GetTextSize(title, self:GetFont("Text_Largest"))
   local descW, descH = util.GetTextSize(desc, self:GetFont("Menu_Normal"))
@@ -114,7 +114,7 @@ function THEME:PaintMainMenu(panel, width, height)
   surface.SetDrawColor(self:GetColor("MainMenu_Background"))
   surface.DrawRect(0, 0, width, width)
 
-  surface.SetDrawColor(self:GetColor("MainMenu_Background"):Lighten(40))
+  surface.SetDrawColor(self:GetColor("MainMenu_Background"):lighten(40))
   surface.DrawRect(0, 0, width, 128)
 
   if (!logo) then
@@ -129,7 +129,7 @@ end
 
 function THEME:PaintButton(panel, w, h)
   local curAmt = panel.m_CurAmt
-  local textColor = panel.m_TextColorOverride or self:GetColor("Text"):Darken(curAmt)
+  local textColor = panel.m_TextColorOverride or self:GetColor("Text"):darken(curAmt)
   local title = panel.m_Title
   local font = panel.m_Font
   local icon = panel.m_Icon
@@ -139,7 +139,7 @@ function THEME:PaintButton(panel, w, h)
       surface.SetDrawColor(self:GetColor("Outline"))
       surface.DrawRect(0, 0, w, h)
 
-      surface.SetDrawColor(self:GetColor("Main"):Lighten(curAmt))
+      surface.SetDrawColor(self:GetColor("Main"):lighten(curAmt))
       surface.DrawRect(1, 1, w - 2, h - 2)
     else
       surface.SetDrawColor(self:GetColor("Outline"))
@@ -209,7 +209,7 @@ function THEME:PaintDeathScreen(curTime, scrW, scrH)
 end
 
 function THEME:PaintSidebar(panel, width, height)
-  draw.RoundedBox(0, 0, 0, width, height, self:GetColor("MainDark"):Lighten(10))
+  draw.RoundedBox(0, 0, 0, width, height, self:GetColor("MainDark"):lighten(10))
 end
 
 function THEME:DrawBarBackground(barInfo)
@@ -289,10 +289,10 @@ function THEME:PaintPermissionButton(permPanel, btn, w, h)
     title = "#Perm_Never"
   end
 
-  local textColor = color:Darken(75)
+  local textColor = color:darken(75)
 
   if (btn:IsHovered()) then
-    color = color:Lighten(30)
+    color = color:lighten(30)
   end
 
   draw.RoundedBox(0, 0, 0, w, h, textColor)
@@ -554,7 +554,7 @@ function THEME.skin:PaintFrame(panel, w, h)
   surface.SetDrawColor(Color(40, 40, 40))
   surface.DrawRect(1, 0, w - 2, h - 1)
 
-  surface.SetDrawColor(color:Darken(20))
+  surface.SetDrawColor(color:darken(20))
   surface.DrawRect(0, 0, w, 24)
 end
 

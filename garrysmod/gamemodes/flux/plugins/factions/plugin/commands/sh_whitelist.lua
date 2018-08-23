@@ -1,9 +1,9 @@
 local COMMAND = Command("whitelist")
 
-COMMAND.Name = "Whitelist"
-COMMAND.Description = "#WhitelistCMD_Description"
+COMMAND.name = "Whitelist"
+COMMAND.description = "#WhitelistCMD_Description"
 COMMAND.Syntax = "#WhitelistCMD_Syntax"
-COMMAND.Category = "player_management"
+COMMAND.category = "player_management"
 COMMAND.Arguments = 2
 COMMAND.PlayerArg = 1
 COMMAND.Aliases = {"plywhitelist", "givewhitelist", "setwhitelisted"}
@@ -16,10 +16,10 @@ function COMMAND:OnRun(player, targets, name, bStrict)
       v:GiveWhitelist(whitelist.id)
     end
 
-    fl.player:NotifyAll(L("WhitelistCMD_Message", (IsValid(player) and player:Name()) or "Console", util.PlayerListToString(targets), whitelist.PrintName))
+    fl.player:NotifyAll(L("WhitelistCMD_Message", (IsValid(player) and player:name()) or "Console", util.PlayerListToString(targets), whitelist.print_name))
   else
     fl.player:Notify(player, L("Err_WhitelistNotValid",  name))
   end
 end
 
-COMMAND:Register()
+COMMAND:register()

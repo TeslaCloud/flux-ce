@@ -1,8 +1,8 @@
 class "CUserGroup"
 
-CUserGroup.Name = "Undefined"
-CUserGroup.Description = "Undefined"
-CUserGroup.Color = Color(255, 255, 255)
+CUserGroup.name = "Undefined"
+CUserGroup.description = "Undefined"
+CUserGroup.color = Color(255, 255, 255)
 CUserGroup.Icon = "icon16/user.png"
 CUserGroup.Immunity = 0
 CUserGroup.IsProtected = false
@@ -13,7 +13,7 @@ function CUserGroup:CUserGroup(id)
   self.id = id:to_id()
 end
 
-function CUserGroup:Register()
+function CUserGroup:register()
   fl.admin:CreateGroup(self.id, self)
 end
 
@@ -29,22 +29,22 @@ function CUserGroup:OnGroupAdd(player, secondaryGroups) end
 -- Called when player is being removed from this group as secondary group.
 function CUserGroup:OnGroupRemove(player) end
 
-CUserGroup.SetParent = CUserGroup.SetBase
+CUserGroup.SetParent = CUserGroup.set_base
 
 function CUserGroup:GetID()
   return self.id
 end
 
-function CUserGroup:GetName()
-  return self.Name or "Unknown"
+function CUserGroup:get_name()
+  return self.name or "Unknown"
 end
 
-function CUserGroup:GetDescription()
-  return self.Description or "This group has no description"
+function CUserGroup:get_description()
+  return self.description or "This group has no description"
 end
 
 function CUserGroup:GetColor()
-  return self.Color or Color("white")
+  return self.color or Color("white")
 end
 
 function CUserGroup:GetImmunity()
@@ -68,7 +68,7 @@ function CUserGroup:GetBase()
 end
 
 function CUserGroup:__tostring()
-  return "User Group ["..self:GetID().."]["..self:GetName().."]"
+  return "User Group ["..self:GetID().."]["..self:get_name().."]"
 end
 
 CUserGroup.GetParent = CUserGroup.GetBase

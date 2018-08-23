@@ -1,6 +1,6 @@
-GROUP.Name = "User"
-GROUP.Description = "#PlayerGroup_User"
-GROUP.Color = Color(255, 255, 255)
+GROUP.name = "User"
+GROUP.description = "#PlayerGroup_User"
+GROUP.color = Color(255, 255, 255)
 GROUP.Icon = "icon16/user.png"
 GROUP.Immunity = 0
 GROUP.Permissions = {

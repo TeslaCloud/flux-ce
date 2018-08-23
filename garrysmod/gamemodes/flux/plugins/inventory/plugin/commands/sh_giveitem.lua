@@ -1,8 +1,8 @@
 local COMMAND = Command("giveitem")
-COMMAND.Name = "GiveItem"
-COMMAND.Description = "Gives specified item to a player."
+COMMAND.name = "GiveItem"
+COMMAND.description = "Gives specified item to a player."
 COMMAND.Syntax = "<string target> <string item name or unique ID>"
-COMMAND.Category = "character_management"
+COMMAND.category = "character_management"
 COMMAND.Arguments = 2
 COMMAND.PlayerArg = 1
 COMMAND.Aliases = {"chargiveitem", "plygiveitem"}
@@ -18,13 +18,13 @@ function COMMAND:OnRun(player, targets, itemName, amount)
         v:GiveItem(itemTable.id)
       end
 
-      fl.player:Notify(v, ((IsValid(player) and player:Name()) or "Console").." has given you "..amount.." "..itemTable.Name.."'s.")
+      fl.player:Notify(v, ((IsValid(player) and player:name()) or "Console").." has given you "..amount.." "..itemTable.name.."'s.")
     end
 
-    fl.player:Notify(player, "You have given "..amount.." "..itemTable.Name.."'s to "..util.PlayerListToString(targets)..".")
+    fl.player:Notify(player, "You have given "..amount.." "..itemTable.name.."'s to "..util.PlayerListToString(targets)..".")
   else
     fl.player:Notify(player, "'"..itemName.."' is not a valid item!")
   end
 end
 
-COMMAND:Register()
+COMMAND:register()

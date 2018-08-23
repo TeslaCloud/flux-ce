@@ -2,28 +2,28 @@ class "CFaction"
 
 function CFaction:CFaction(id)
   self.id = id:to_id()
-  self.Name = "Unknown Faction"
-  self.PrintName = nil
-  self.Description = "This faction has no description set!"
+  self.name = "Unknown Faction"
+  self.print_name = nil
+  self.description = "This faction has no description set!"
   self.PhysDesc = "This faction has no default physical description set!"
   self.Whitelisted = false
   self.DefaultClass = nil
-  self.Color = Color(255, 255, 255)
+  self.color = Color(255, 255, 255)
   self.Material = nil
   self.HasName = true
   self.HasDescription = true
   self.HasGender = true
-  self.Models = {male = {}, female = {}, universal = {}}
+  self.models = {male = {}, female = {}, universal = {}}
   self.Classes = {}
   self.Ranks = {}
   self.Data = {}
-  self.NameTemplate = "{rank} {name}"
+  self.nameTemplate = "{rank} {name}"
   -- You can also use {data:key} to insert data
-  -- set via Faction:SetData.
+  -- set via Faction:set_data.
 end
 
 function CFaction:GetColor()
-  return self.Color
+  return self.color
 end
 
 function CFaction:GetMaterial()
@@ -34,16 +34,16 @@ function CFaction:GetImage()
   return self.Material
 end
 
-function CFaction:GetName()
-  return self.Name
+function CFaction:get_name()
+  return self.name
 end
 
-function CFaction:GetData(key)
+function CFaction:get_data(key)
   return self.Data[key]
 end
 
-function CFaction:GetDescription()
-  return self.Description
+function CFaction:get_description()
+  return self.description
 end
 
 function CFaction:AddClass(id, class_name, description, color, callback)
@@ -71,13 +71,13 @@ end
 function CFaction:GenerateName(player, charName, rank, defaultData)
   defaultData = defaultData or {}
 
-  if (hook.Run("ShouldNameGenerate", player, self, charName, rank, defaultData) == false) then return player:Name() end
+  if (hook.Run("ShouldNameGenerate", player, self, charName, rank, defaultData) == false) then return player:name() end
 
   if (isfunction(self.MakeName)) then
     return self:MakeName(player, charName, rank, defaultData) or "John Doe"
   end
 
-  local finalName = self.NameTemplate
+  local finalName = self.nameTemplate
 
   if (finalName:find("{name}")) then
     finalName = finalName:Replace("{name}", charName or "")
@@ -118,7 +118,7 @@ function CFaction:GenerateName(player, charName, rank, defaultData)
   return finalName
 end
 
-function CFaction:SetData(key, value)
+function CFaction:set_data(key, value)
   key = tostring(key)
 
   if (!key) then return end
@@ -129,12 +129,12 @@ end
 function CFaction:OnPlayerEntered(player) end
 function CFaction:OnPlayerExited(player) end
 
-function CFaction:Register()
-  faction.Register(self.id, self)
+function CFaction:register()
+  faction.register(self.id, self)
 end
 
 function CFaction:__tostring()
-  return "Faction ["..self.id.."]["..self.Name.."]"
+  return "Faction ["..self.id.."]["..self.name.."]"
 end
 
 Faction = CFaction

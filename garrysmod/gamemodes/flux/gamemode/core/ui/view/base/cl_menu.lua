@@ -16,7 +16,7 @@ function PANEL:Paint(w, h)
   local col = theme.GetColor("Background")
 
   if (self:IsHovered()) then
-    col = col:Lighten(40)
+    col = col:lighten(40)
   end
 
   draw.RoundedBox(0, 0, 0, w, h, col)
@@ -47,7 +47,7 @@ function PANEL:SetIconSize(w, h)
   self.iconH = h
 end
 
-vgui.Register("flMenuItem", PANEL, "DButton")
+vgui.register("flMenuItem", PANEL, "DButton")
 
 local PANEL = {}
 PANEL.last = 0
@@ -158,4 +158,4 @@ function PANEL:Open(x, y)
   return self
 end
 
-vgui.Register("flMenu", PANEL, "DScrollPanel")
+vgui.register("flMenu", PANEL, "DScrollPanel")

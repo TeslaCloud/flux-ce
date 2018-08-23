@@ -20,10 +20,10 @@ function attributes.GetAll()
   return attsTable
 end
 
-function attributes.Register(id, data)
+function attributes.register(id, data)
   if (!data) then return end
 
-  if (!isstring(id) and !isstring(data.Name)) then
+  if (!isstring(id) and !isstring(data.name)) then
     ErrorNoHalt("Attempt to register an attribute without a valid ID!")
     debug.Trace()
 
@@ -31,17 +31,17 @@ function attributes.Register(id, data)
   end
 
   if (!id) then
-    id = data.Name:to_id()
+    id = data.name:to_id()
   end
 
   fl.dev_print("Registering "..string.lower(data.Type)..": "..tostring(id))
 
   data.id = id
-  data.Name = data.Name or "Unknown Attribute"
-  data.Description = data.Description or "This attribute has no description!"
+  data.name = data.name or "Unknown Attribute"
+  data.description = data.description or "This attribute has no description!"
   data.Max = data.Max or 100
   data.Min = data.Min or 0
-  data.Category = data.Category or "#Attribute_Category_Other"
+  data.category = data.category or "#Attribute_Category_Other"
   data.Icon = data.Icon
   data.Type = data.Type
   data.Multipliable = data.Multipliable or true
@@ -65,7 +65,7 @@ function attributes.RegisterType(id, globalVar, folder)
 end
 
 function attributes.IncludeType(id, globalVar, folder)
-  pipeline.Register(id, function(id, fileName, pipe)
+  pipeline.register(id, function(id, fileName, pipe)
     _G[globalVar] = Attribute(id)
 
     util.include(fileName)
@@ -73,7 +73,7 @@ function attributes.IncludeType(id, globalVar, folder)
     if (pipeline.IsAborted()) then _G[globalVar] = nil return end
 
     _G[globalVar].Type = globalVar
-    _G[globalVar]:Register()
+    _G[globalVar]:register()
     _G[globalVar] = nil
   end)
 

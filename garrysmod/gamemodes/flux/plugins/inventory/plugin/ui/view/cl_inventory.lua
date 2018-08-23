@@ -30,7 +30,7 @@ end
 function PANEL:SetItemMulti(ids)
   local itemData = item.FindInstanceByID(ids[1])
 
-  if (itemData and !itemData.Stackable) then return end
+  if (itemData and !itemData.stackable) then return end
 
   self.itemData = itemData
   self.itemCount = #ids
@@ -40,7 +40,7 @@ end
 
 function PANEL:Combine(panel2)
   for i = 1, #panel2.instanceIDs do
-    if (#self.instanceIDs < self.itemData.MaxStack) then
+    if (#self.instanceIDs < self.itemData.max_stack) then
       table.insert(self.instanceIDs, panel2.instanceIDs[1])
       table.remove(panel2.instanceIDs, 1)
     end
@@ -67,7 +67,7 @@ function PANEL:Reset()
 end
 
 function PANEL:Paint(w, h)
-  local drawColor = theme.GetColor("Background"):Lighten(70)
+  local drawColor = theme.GetColor("Background"):lighten(70)
 
   if (self.isHovered and !self:IsHovered()) then
     self.isHovered = false
@@ -75,7 +75,7 @@ function PANEL:Paint(w, h)
 
   if (!self.isHovered) then
     if (!self.itemData) then
-      drawColor = drawColor:Darken(25)
+      drawColor = drawColor:darken(25)
     else
       if (self.itemData.SpecialColor) then
         surface.SetDrawColor(self.itemData.SpecialColor)
@@ -96,13 +96,13 @@ function PANEL:Paint(w, h)
       if (IsValid(curSlot) and curSlot.itemData != itemTable) then
         local slotData = curSlot.itemData
 
-        if (slotData.id == itemTable.id and slotData.Stackable and curSlot.itemCount < slotData.MaxStack) then
+        if (slotData.id == itemTable.id and slotData.stackable and curSlot.itemCount < slotData.max_stack) then
           drawColor = Color(200, 200, 60)
         else
           drawColor = Color(200, 60, 60, 160)
         end
       else
-        drawColor = drawColor:Lighten(30)
+        drawColor = drawColor:lighten(30)
       end
     else
       drawColor = Color(60, 200, 60, 160)
@@ -139,7 +139,7 @@ function PANEL:Rebuild()
   self.spawnIcon = vgui.Create("SpawnIcon", self)
   self.spawnIcon:SetPos(2, 2)
   self.spawnIcon:SetSize(60, 60)
-  self.spawnIcon:SetModel(self.itemData.Model, self.itemData.Skin)
+  self.spawnIcon:SetModel(self.itemData.model, self.itemData.skin)
   self.spawnIcon:SetMouseInputEnabled(false)
 end
 
@@ -169,7 +169,7 @@ function PANEL:OnMouseReleased(...)
   self.BaseClass.OnMouseReleased(self, ...)
 end
 
-vgui.Register("flInventoryItem", PANEL, "DPanel")
+vgui.register("flInventoryItem", PANEL, "DPanel")
 
 local PANEL = {}
 PANEL.inventory = {}
@@ -254,7 +254,7 @@ function PANEL:Rebuild()
 
         if (receiver.itemData) then
           if (receiver.itemData.id == dropped[1].itemData.id and
-            receiver.slotNum != dropped[1].slotNum and receiver.itemData.Stackable) then
+            receiver.slotNum != dropped[1].slotNum and receiver.itemData.stackable) then
             receiver:Combine(dropped[1])
             self:SlotsToInventory()
 
@@ -311,4 +311,4 @@ function PANEL:Rebuild()
   end, {})
 end
 
-vgui.Register("flInventory", PANEL, "flFrame")
+vgui.register("flInventory", PANEL, "flFrame")

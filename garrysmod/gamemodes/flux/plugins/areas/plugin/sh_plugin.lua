@@ -81,7 +81,7 @@ function flAreas:AddAreaToolModes(modeList)
 
   function mode:OnRightClick(tool, trace)
     if (tool.area) then
-      tool.area:Register()
+      tool.area:register()
       tool.area = nil
 
       return true

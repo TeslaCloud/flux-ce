@@ -4,11 +4,11 @@
   the framework is publicly released.
 --]]
 
-ITEM:SetBase(CItemWeapon)
-ITEM.Name = "Ar2"
-ITEM.PrintName = "#Item_Ar2_PrintName"
-ITEM.Description = "#Item_Ar2_Description"
-ITEM.Model = "models/weapons/w_irifle.mdl"
-ITEM.Weight = 4.5
-ITEM.WeaponClass = "weapon_ar2"
-ITEM.EquipSlot = "#Weapon_Category_Primary"
+ITEM:set_base(ItemWeapon)
+ITEM.name = "Ar2"
+ITEM.print_name = "#Item_Ar2_PrintName"
+ITEM.description = "#Item_Ar2_Description"
+ITEM.model = "models/weapons/w_irifle.mdl"
+ITEM.weight = 4.5
+ITEM.weapon_class = "weapon_ar2"
+ITEM.equip_slot = "#Weapon_Category_Primary"

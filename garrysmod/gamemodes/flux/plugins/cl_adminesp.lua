@@ -13,8 +13,8 @@ do
     color_red = activeTheme:GetColor("ESP_Red")
     color_blue = activeTheme:GetColor("ESP_Blue")
     color_grey = activeTheme:GetColor("ESP_Grey")
-    color_lightred = color_red:Lighten(100)
-    color_lightblue = color_blue:Lighten(200)
+    color_lightred = color_red:lighten(100)
+    color_lightblue = color_blue:lighten(200)
   end
 
   function PLUGIN:HUDPaint()
@@ -34,8 +34,8 @@ do
         local size = 52 * math.abs(350 / clientPos:Distance(pos))
         local teamColor = team.GetColor(v:Team()) or Color(255, 255, 255)
 
-        local w, h = util.GetTextSize(v:Name(), theme.GetFont("Text_Small"))
-        draw.SimpleText(v:Name(), theme.GetFont("Text_Small"), textPos.x - w * 0.5, textPos.y, teamColor)
+        local w, h = util.GetTextSize(v:name(), theme.GetFont("Text_Small"))
+        draw.SimpleText(v:name(), theme.GetFont("Text_Small"), textPos.x - w * 0.5, textPos.y, teamColor)
 
         local w, h = util.GetTextSize(v:SteamName(), theme.GetFont("Text_Smaller"))
         draw.SimpleText(v:SteamName(), theme.GetFont("Text_Smaller"), textPos.x - w * 0.5, textPos.y + 14, color_lightblue)

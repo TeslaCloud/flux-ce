@@ -22,7 +22,7 @@ if SERVER then
     local loaded = data.LoadPlugin("areas", {})
 
     for k, v in pairs(loaded) do
-      areas.Register(k, v)
+      areas.register(k, v)
     end
   end
 
@@ -40,7 +40,7 @@ if SERVER then
 else
   netstream.Hook("flLoadTextAreas", function(data)
     for k, v in pairs(data) do
-      areas.Register(k, v)
+      areas.register(k, v)
     end
   end)
 end

@@ -1,4 +1,4 @@
-fl.bars:Register("getup", {
+fl.bars:register("getup", {
   text = "#BarText_Getup",
   color = Color(50, 200, 50),
   maxValue = 100,

@@ -12,7 +12,7 @@ pipeline.stored = stored
 
 local lastPipeAborted = false
 
-function pipeline.Register(id, callback)
+function pipeline.register(id, callback)
   stored[id] = {
     callback = callback,
     id = id

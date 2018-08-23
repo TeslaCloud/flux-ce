@@ -4,13 +4,13 @@
   the framework is publicly released.
 --]]
 
-ITEM:SetBase(CItemAmmo)
-ITEM.Name = "12 Gauge"
-ITEM.PrintName = "#Item_Shotgun_Ammo_PrintName"
-ITEM.Description = "#Item_Shotgun_Ammo_Description"
-ITEM.Model = "models/items/boxbuckshot.mdl"
-ITEM.Stackable = true
-ITEM.MaxStack = 4
-ITEM.Weight = 0.75
-ITEM.AmmoClass = "Buckshot"
-ITEM.AmmoAmount = 20
+ITEM:set_base(ItemAmmo)
+ITEM.name = "12 Gauge"
+ITEM.print_name = "#Item_Shotgun_Ammo_PrintName"
+ITEM.description = "#Item_Shotgun_Ammo_Description"
+ITEM.model = "models/items/boxbuckshot.mdl"
+ITEM.stackable = true
+ITEM.max_stack = 4
+ITEM.weight = 0.75
+ITEM.ammo_class = "Buckshot"
+ITEM.ammo_count = 20

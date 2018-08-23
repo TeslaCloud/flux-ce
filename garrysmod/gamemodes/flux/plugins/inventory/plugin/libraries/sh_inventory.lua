@@ -46,8 +46,8 @@ do
 
         local slotTable = item.FindInstanceByID(ids[1])
 
-        if (itemTable.Stackable and itemTable.id == slotTable.id) then
-          if (#ids < itemTable.MaxStack) then
+        if (itemTable.stackable and itemTable.id == slotTable.id) then
+          if (#ids < itemTable.max_stack) then
             table.insert(playerInv[i], itemTable.instanceID)
             self:SetInventory(playerInv)
             item.NetworkItem(self, itemTable.instanceID)

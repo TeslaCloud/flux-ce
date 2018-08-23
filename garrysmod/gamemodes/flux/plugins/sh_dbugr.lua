@@ -9,8 +9,8 @@ if (DBugR) then
         local name = "N/A"
         local func = v[1]
 
-        if (v[2] and v[2].GetName) then
-          name = v[2]:GetName()
+        if (v[2] and v[2].get_name) then
+          name = v[2]:get_name()
         elseif (v.id) then
           name = v.id
         end
@@ -21,7 +21,7 @@ if (DBugR) then
       end
     end
 
-    if (fl.Devmode) then
+    if (fl.development) then
       DBugR.Print("Flux plugin hooks detoured!")
     end
   end
