@@ -435,9 +435,7 @@ local function build_change_query(query)
     end
   end
 
-  query_string = query_string:Trim():Trim(',')
-
-  return table.concat(query_string)
+  return table.concat(query_string):Trim():Trim(',')
 end
 
 function DatabaseQuery:execute(queue_query)
