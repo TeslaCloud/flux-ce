@@ -10,7 +10,7 @@ end
 
 function theme.RegisterTheme(obj)
   if (obj.parent) then
-    local parentTheme = stored[obj.parent:MakeID()]
+    local parentTheme = stored[obj.parent:to_id()]
 
     if (parentTheme) then
       local newObj = table.Copy(parentTheme)
@@ -132,7 +132,7 @@ function theme.GetOption(key, fallback)
 end
 
 function theme.FindTheme(id)
-  return stored[id:MakeID()]
+  return stored[id:to_id()]
 end
 
 function theme.RemoveTheme(id)

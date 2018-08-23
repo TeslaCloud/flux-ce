@@ -3,7 +3,7 @@ class "CItem"
 function CItem:CItem(id)
   if (!isstring(id)) then return end
 
-  self.id = string.MakeID(id)
+  self.id = string.to_id(id)
   self.data = self.data or {}
   self.actionSounds = {
     ["OnUse"] = "items/battery_pickup.wav"

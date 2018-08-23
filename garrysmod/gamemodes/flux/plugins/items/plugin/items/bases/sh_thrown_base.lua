@@ -1,5 +1,5 @@
 if (!CItemWeapon) then
-  util.Include("sh_weapon_base.lua")
+  util.include("sh_weapon_base.lua")
 end
 
 -- Alternatively, you can use item.CreateBase("CItemThrown")

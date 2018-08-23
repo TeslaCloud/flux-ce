@@ -1,5 +1,5 @@
 if (!CItemEquippable) then
-  util.Include("sh_equipment_base.lua")
+  util.include("sh_equipment_base.lua")
 end
 
 -- Alternatively, you can use item.CreateBase("CItemWeapon")

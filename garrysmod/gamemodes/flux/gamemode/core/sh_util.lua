@@ -192,7 +192,7 @@ function util.Validate(...)
 end
 
 -- A function to include a file based on it's prefix.
-function util.Include(strFile)
+function util.include(strFile)
   if SERVER then
     if (string.find(strFile, "cl_")) then
       AddCSLuaFile(strFile)
@@ -220,7 +220,7 @@ function util.AddCSLuaFile(strFile)
 end
 
 -- A function to include all files in a directory.
-function util.IncludeDirectory(strDirectory, strBase, bIsRecursive)
+function util.include_folder(strDirectory, strBase, bIsRecursive)
   if (strBase) then
     if (isbool(strBase)) then
       strBase = "flux/gamemode/"
@@ -241,19 +241,19 @@ function util.IncludeDirectory(strDirectory, strBase, bIsRecursive)
     -- First include the files.
     for k, v in ipairs(files) do
       if (v:GetExtensionFromFilename() == "lua") then
-        util.Include(strDirectory..v)
+        util.include(strDirectory..v)
       end
     end
 
     -- Then include all directories.
     for k, v in ipairs(folders) do
-      util.IncludeDirectory(strDirectory..v, bIsRecursive)
+      util.include_folder(strDirectory..v, bIsRecursive)
     end
   else
     local files, _ = _file.Find(strDirectory.."*.lua", "LUA", "namedesc")
 
     for k, v in ipairs(files) do
-      util.Include(strDirectory..v)
+      util.include(strDirectory..v)
     end
   end
 end
@@ -634,7 +634,7 @@ do
     ":", ".", ";", "&", ",", "%"
   }
 
-  function string.MakeID(str)
+  function string.to_id(str)
     str = str:utf8lower()
     str = str:gsub(" ", "_")
 

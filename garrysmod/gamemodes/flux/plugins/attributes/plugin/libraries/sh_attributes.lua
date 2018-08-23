@@ -31,7 +31,7 @@ function attributes.Register(id, data)
   end
 
   if (!id) then
-    id = data.Name:MakeID()
+    id = data.Name:to_id()
   end
 
   fl.dev_print("Registering "..string.lower(data.Type)..": "..tostring(id))
@@ -68,7 +68,7 @@ function attributes.IncludeType(id, globalVar, folder)
   pipeline.Register(id, function(id, fileName, pipe)
     _G[globalVar] = Attribute(id)
 
-    util.Include(fileName)
+    util.include(fileName)
 
     if (pipeline.IsAborted()) then _G[globalVar] = nil return end
 
@@ -77,7 +77,7 @@ function attributes.IncludeType(id, globalVar, folder)
     _G[globalVar] = nil
   end)
 
-  pipeline.IncludeDirectory(id, folder)
+  pipeline.include_folder(id, folder)
 end
 
 do

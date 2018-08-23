@@ -1,4 +1,4 @@
 PLUGIN:SetAlias("flThirdPerson")
 
-util.Include("sv_plugin.lua")
-util.Include("cl_plugin.lua")
+util.include("sv_plugin.lua")
+util.include("cl_plugin.lua")

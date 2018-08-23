@@ -21,18 +21,9 @@ function fl.print(message)
   end
 end
 
---[[
-  Function: fl.dev_print (string message)
-  Description: Prints a developer message to console. The message is prefixed with a colored [Flux:Dev].
-  Argument: string message - Message to be printed as a developer comment.
-
-  Returns: nil
---]]
 function fl.dev_print(message)
   if (fl.Devmode) then
-    Msg("[Flux:")
-    MsgC(Color(175, 0, 0), "Dev")
-    Msg("] ")
+    Msg("Debug: ")
     MsgC(Color(200, 200, 200), message)
     Msg("\n")
   end

@@ -76,7 +76,7 @@ function fl.admin:RegisterPermission(id, name, description, category)
   if (!isstring(id) or id == "") then return end
 
   local data = {}
-    data.id = id:MakeID()
+    data.id = id:to_id()
     data.Description = description or "No description provided."
     data.Category = category or "general"
     data.Name = name or id
@@ -190,13 +190,13 @@ end
 pipeline.Register("group", function(id, fileName, pipe)
   GROUP = Group(id)
 
-  util.Include(fileName)
+  util.include(fileName)
 
   GROUP:Register() GROUP = nil
 end)
 
 function fl.admin:IncludeGroups(directory)
-  pipeline.IncludeDirectory("group", directory)
+  pipeline.include_folder("group", directory)
 end
 
 if SERVER then

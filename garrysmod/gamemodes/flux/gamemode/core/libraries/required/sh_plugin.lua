@@ -55,9 +55,9 @@ class "Plugin"
 function Plugin:Plugin(id, data)
   self.name = data.name or "Unknown Plugin"
   self.author = data.author or "Unknown Author"
-  self.folder = data.folder or name:MakeID()
+  self.folder = data.folder or name:to_id()
   self.description = data.description or "This plugin has no description."
-  self.id = id or data.id or name:MakeID() or "unknown"
+  self.id = id or data.id or name:to_id() or "unknown"
 
   table.Merge(self, data)
 end
@@ -267,9 +267,8 @@ function plugin.include(folder)
   local id = folder:GetFileFromFilename()
   local ext = id:GetExtensionFromFilename()
   local data = {}
-  data.folder = folder
   data.id = id
-  data.pluginFolder = folder
+  data.folder = folder
 
   if (reload_data[folder] == false) then
     fl.dev_print("Not reloading plugin: "..folder)
@@ -286,11 +285,11 @@ function plugin.include(folder)
       if (file.Exists(folder.."/plugin.cfg", "LUA")) then
         local configData = config.ConfigToTable(file.Read(folder.."/plugin.cfg", "LUA"))
         local dataTable = {name = configData.name, description = configData.description, author = configData.author, depends = configData.depends}
-          dataTable.pluginFolder = folder.."/plugin"
-          dataTable.pluginMain = "sh_plugin.lua"
+          dataTable.folder = folder.."/plugin"
+          dataTable.plugin_main = "sh_plugin.lua"
 
-          if (file.Exists(dataTable.pluginFolder.."/sh_"..(dataTable.name or id)..".lua", "LUA")) then
-            dataTable.pluginMain = "sh_"..(dataTable.name or id)..".lua"
+          if (file.Exists(dataTable.folder.."/sh_"..(dataTable.name or id)..".lua", "LUA")) then
+            dataTable.plugin_main = "sh_"..(dataTable.name or id)..".lua"
           end
         table.Merge(data, dataTable)
 
@@ -325,15 +324,15 @@ function plugin.include(folder)
     PLUGIN = stored[folder]
   end
 
+  plugin.include_folders(data.folder)
+
   if (ext != "lua") then
-    util.Include(data.pluginFolder.."/"..data.pluginMain)
+    util.include(data.folder.."/"..data.plugin_main)
   else
     if (file.Exists(folder, "LUA")) then
-      util.Include(folder)
+      util.include(folder)
     end
   end
-
-  plugin.include_folders(data.pluginFolder)
 
   PLUGIN:Register()
   PLUGIN = nil
@@ -368,7 +367,7 @@ function plugin.include_schema()
 
   Schema = Plugin(schema_info.name, schema_info)
 
-  util.Include(schema_folder.."/sh_schema.lua")
+  util.include(schema_folder.."/sh_schema.lua")
 
   plugin.include_folders(schema_folder)
   plugin.include_plugins(schemaPath.."/plugins")
@@ -469,7 +468,7 @@ do
 
       for k, v in ipairs(folders) do
         local path = dir.."/"..v
-        local id = (string.GetFileFromFilename(path) or ""):Replace(".lua", ""):MakeID()
+        local id = (string.GetFileFromFilename(path) or ""):Replace(".lua", ""):to_id()
         local register = false
         local var = data.table
 
@@ -477,19 +476,19 @@ do
         _G[var].ClassName = id
 
         if (file.Exists(path.."/shared.lua", "LUA")) then
-          util.Include(path.."/shared.lua")
+          util.include(path.."/shared.lua")
 
           register = true
         end
 
         if (file.Exists(path.."/init.lua", "LUA")) then
-          util.Include(path.."/init.lua")
+          util.include(path.."/init.lua")
 
           register = true
         end
 
         if (file.Exists(path.."/cl_init.lua", "LUA")) then
-          util.Include(path.."/cl_init.lua")
+          util.include(path.."/cl_init.lua")
 
           register = true
         end
@@ -505,13 +504,13 @@ do
 
       for k, v in ipairs(files) do
         local path = dir.."/"..v
-        local id = (string.GetFileFromFilename(path) or ""):Replace(".lua", ""):MakeID()
+        local id = (string.GetFileFromFilename(path) or ""):Replace(".lua", ""):to_id()
         local var = data.table
 
         _G[var] = table.Copy(data.defaultData)
         _G[var].ClassName = id
 
-        util.Include(path)
+        util.include(path)
 
         if (data.clientside and !CLIENT) then _G[var] = nil continue end
 
@@ -535,21 +534,21 @@ function plugin.include_folders(folder)
       if (v == "entities") then
         plugin.include_entities(folder.."/"..v)
       elseif (v == "themes") then
-        pipeline.IncludeDirectory("theme", folder.."/themes/")
+        pipeline.include_folder("theme", folder.."/themes/")
       elseif (v == "tools") then
-        pipeline.IncludeDirectory("tool", folder.."/tools/")
+        pipeline.include_folder("tool", folder.."/tools/")
       else
-        util.IncludeDirectory(folder.."/"..v)
+        util.include_folder(folder.."/"..v)
       end
     end
   end
 end
 
 do
-  local oldHookCall = plugin.OldHookCall or hook.Call
-  plugin.OldHookCall = oldHookCall
+  local old_hook_call = plugin.old_hook_call or hook.Call
+  plugin.old_hook_call = old_hook_call
 
-  -- If we're running the developer's mode, we should be using pcall'ed hook.Call rather than unsafe one.
+  -- If we're running in development, we should be using pcall'ed hook.Call rather than unsafe one.
   if (fl.Devmode) then
     function hook.Call(name, gm, ...)
       if (hooks_cache[name]) then
@@ -557,7 +556,7 @@ do
           local success, a, b, c, d, e, f = pcall(v[1], v[2], ...)
 
           if (!success) then
-            ErrorNoHalt("[Flux:"..(v.id or v[2]:GetName()).."] The "..name.." hook has failed to run!\n")
+            ErrorNoHalt("[Flux - "..(v.id or v[2]:GetName()).."] The "..name.." hook has failed to run!\n")
             ErrorNoHalt(tostring(a), "\n")
 
             if (name != "OnHookError") then
@@ -569,7 +568,7 @@ do
         end
       end
 
-      return oldHookCall(name, gm, ...)
+      return old_hook_call(name, gm, ...)
     end
   else
     -- While generally a bad idea, pcall-less method is faster and if you're not developing
@@ -585,7 +584,7 @@ do
         end
       end
 
-      return oldHookCall(name, gm, ...)
+      return old_hook_call(name, gm, ...)
     end
   end
 
@@ -594,4 +593,7 @@ do
   function plugin.call(name, ...)
     return hook.Call(name, nil, ...)
   end
+
+  hook.run = hook.Run
+  hook.call = hook.Call
 end

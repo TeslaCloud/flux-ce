@@ -1,4 +1,4 @@
-util.Include("cl_hooks.lua")
+util.include("cl_hooks.lua")
 
 Schema.DefaultTheme = "hl2rp"
 

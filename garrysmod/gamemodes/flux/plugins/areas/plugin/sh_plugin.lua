@@ -1,10 +1,10 @@
 PLUGIN:SetAlias("flAreas")
 
-util.Include("cl_plugin.lua")
-util.Include("sv_plugin.lua")
+util.include("cl_plugin.lua")
+util.include("sv_plugin.lua")
 
 if (!areas) then
-  util.Include("libraries/sh_areas.lua")
+  util.include("libraries/sh_areas.lua")
 end
 
 flAreas.toolModes = {
@@ -65,7 +65,7 @@ function flAreas:AddAreaToolModes(modeList)
   function mode:OnLeftClick(tool, trace)
     local text = tostring(tool:GetClientInfo("text"))
     local height = tonumber(tool:GetClientNumber("height"))
-    local id = text:MakeID()
+    local id = text:to_id()
 
     if (!id or id == "") then return false end
 

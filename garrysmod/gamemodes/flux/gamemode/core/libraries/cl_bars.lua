@@ -1,5 +1,5 @@
 if (!font) then
-  util.Include("cl_font.lua")
+  util.include("cl_font.lua")
 end
 
 library.New("bars", fl)

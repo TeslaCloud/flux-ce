@@ -2,7 +2,7 @@ PLUGIN:SetAlias("fl3DText")
 
 fl3DText.stored = fl3DText.stored or {}
 
-util.Include("cl_hooks.lua")
+util.include("cl_hooks.lua")
 
 if SERVER then
   function fl3DText:Save()

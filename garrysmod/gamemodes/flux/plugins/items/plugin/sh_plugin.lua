@@ -1,14 +1,14 @@
 PLUGIN:SetAlias("flItems")
 
-util.Include("cl_hooks.lua")
-util.Include("sv_hooks.lua")
-util.Include("sh_enums.lua")
+util.include("cl_hooks.lua")
+util.include("sv_hooks.lua")
+util.include("sh_enums.lua")
 
 function flItems:OnPluginLoaded()
   plugin.add_extra("items")
   plugin.add_extra("items/bases")
 
-  util.IncludeDirectory(self:GetFolder().."/plugin/items/bases")
+  util.include_folder(self:GetFolder().."/plugin/items/bases")
   item.IncludeItems(self:GetFolder().."/plugin/items/")
 end
 
