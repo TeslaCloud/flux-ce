@@ -1262,6 +1262,14 @@ function string.snake_to_pascal_case(str)
   return str:gsub('_([a-z])', string.upper)
 end
 
+function string.chomp(str, what)
+  if !what then
+    str = str:RemoveTextFromEnd("\n", true):RemoveTextFromStart("\r", true)
+  else
+    str = str:RemoveTextFromStart(what, true):RemoveTextFromEnd(what, true)
+  end
+end
+
 function table.map(t, c)
   local new_table = {}
 
@@ -1319,11 +1327,12 @@ function s(what)
 end
 
 function txt(text)
-  local lines = string.Explode('\n', (text or ''):trim():trim("\n"))
+  local lines = string.Explode('\n', (text or ''):chomp('\n'))
   local lowest_indent
   local output = ''
   for k, v in ipairs(lines) do
     local indent = v:match('^([%s]+)')
+    if !indent then continue end
     if !lowest_indent then lowest_indent = indent end
     if indent:len() < lowest_indent:len() then
       lowest_indent = indent
