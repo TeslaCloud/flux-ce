@@ -1,7 +1,7 @@
 local COMMAND = Command("textremove")
 COMMAND.name = "TextRemove"
 COMMAND.description = "Removes a 3D text."
-COMMAND.Syntax = "[none]"
+COMMAND.syntax = "[none]"
 COMMAND.category = "misc"
 
 function COMMAND:OnRun(player)

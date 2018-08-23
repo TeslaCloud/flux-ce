@@ -11,9 +11,9 @@
   extras added by Flux.
 --]]
 
-class "CTool"
+class "Tool"
 
-function CTool:MakeGhostEntity(model, pos, angle)
+function Tool:MakeGhostEntity(model, pos, angle)
   util.PrecacheModel(model)
 
   if (SERVER and !game.SinglePlayer()) then return end
@@ -50,14 +50,14 @@ function CTool:MakeGhostEntity(model, pos, angle)
   self.GhostEntity:SetColor(Color(255, 255, 255, 150))
 end
 
-function CTool:StartGhostEntity(ent)
+function Tool:StartGhostEntity(ent)
   if (SERVER and !game.SinglePlayer()) then return end
   if (CLIENT and game.SinglePlayer()) then return end
 
   self:MakeGhostEntity(ent:GetModel(), ent:GetPos(), ent:GetAngles())
 end
 
-function CTool:ReleaseGhostEntity()
+function Tool:ReleaseGhostEntity()
   if (self.GhostEntity) then
     if (!IsValid(self.GhostEntity)) then self.GhostEntity = nil return end
     self.GhostEntity:Remove()
@@ -84,7 +84,7 @@ function CTool:ReleaseGhostEntity()
   end
 end
 
-function CTool:UpdateGhostEntity()
+function Tool:UpdateGhostEntity()
   if (self.GhostEntity == nil) then return end
   if (!IsValid(self.GhostEntity)) then self.GhostEntity = nil return end
 
@@ -103,45 +103,45 @@ function CTool:UpdateGhostEntity()
   self.GhostEntity:SetPos(TargetPos)
 end
 
-function CTool:UpdateData()
+function Tool:UpdateData()
   self:SetStage(self:NumObjects())
 end
 
-function CTool:SetStage(i)
+function Tool:SetStage(i)
   if SERVER then
     self:GetWeapon():SetNWInt("Stage", i, true)
   end
 end
 
-function CTool:GetStage()
+function Tool:GetStage()
   return self:GetWeapon():GetNWInt("Stage", 0)
 end
 
-function CTool:SetOperation(i)
+function Tool:SetOperation(i)
   if SERVER then
     self:GetWeapon():SetNWInt("Op", i, true)
   end
 end
 
-function CTool:GetOperation()
+function Tool:GetOperation()
   return self:GetWeapon():GetNWInt("Op", 0)
 end
 
 -- Clear the selected objects
-function CTool:ClearObjects()
+function Tool:ClearObjects()
   self:ReleaseGhostEntity()
   self.Objects = {}
   self:SetStage(0)
   self:SetOperation(0)
 end
 
-function CTool:GetEnt(i)
+function Tool:GetEnt(i)
   if (!self.Objects[i]) then return NULL end
 
   return self.Objects[i].Ent
 end
 
-function CTool:GetPos(i)
+function Tool:GetPos(i)
   if (self.Objects[i].Ent:EntIndex() == 0) then
     return self.Objects[i].Pos
   else
@@ -154,16 +154,16 @@ function CTool:GetPos(i)
 end
 
 -- Returns the local position of the numbered hit
-function CTool:GetLocalPos(i)
+function Tool:GetLocalPos(i)
   return self.Objects[i].Pos
 end
 
 -- Returns the physics bone number of the hit (ragdolls)
-function CTool:GetBone(i)
+function Tool:GetBone(i)
   return self.Objects[i].Bone
 end
 
-function CTool:GetNormal(i)
+function Tool:GetNormal(i)
   if (self.Objects[i].Ent:EntIndex() == 0) then
     return self.Objects[i].Normal
   else
@@ -180,7 +180,7 @@ function CTool:GetNormal(i)
 end
 
 -- Returns the physics object for the numbered hit
-function CTool:GetPhys(i)
+function Tool:GetPhys(i)
   if (self.Objects[i].Phys == nil) then
     return self:GetEnt(i):GetPhysicsObject()
   end
@@ -189,7 +189,7 @@ function CTool:GetPhys(i)
 end
 
 -- Sets a selected object
-function CTool:SetObject(i, ent, pos, phys, bone, norm)
+function Tool:SetObject(i, ent, pos, phys, bone, norm)
   self.Objects[i] = {}
   self.Objects[i].Ent = ent
   self.Objects[i].Phys = phys
@@ -219,7 +219,7 @@ function CTool:SetObject(i, ent, pos, phys, bone, norm)
 end
 
 -- Returns the number of objects in the list
-function CTool:NumObjects()
+function Tool:NumObjects()
   if CLIENT then
     return self:GetStage()
   end
@@ -228,21 +228,21 @@ function CTool:NumObjects()
 end
 
 -- Returns the number of objects in the list
-function CTool:GetHelpText()
+function Tool:GetHelpText()
   return "#tool."..GetConVarString("gmod_toolmode").."."..self:GetStage()
 end
 
 if CLIENT then
   -- Tool should return true if freezing the view angles
-  function CTool:FreezeMovement()
+  function Tool:FreezeMovement()
     return false
   end
 
   -- The tool's opportunity to draw to the HUD
-  function CTool:DrawHUD() end
+  function Tool:DrawHUD() end
 end
 
-function CTool:CTool()
+function Tool:init()
   self.Mode = nil
   self.SWEP = nil
   self.Owner = nil
@@ -255,7 +255,7 @@ function CTool:CTool()
   self.AllowedCVar = 0
 end
 
-function CTool:CreateConVars()
+function Tool:CreateConVars()
   local mode = self:GetMode()
 
   if CLIENT then
@@ -271,13 +271,13 @@ function CTool:CreateConVars()
   end
 end
 
-function CTool:GetServerInfo(property)
+function Tool:GetServerInfo(property)
   local mode = self:GetMode()
 
   return GetConVarString(mode.."_"..property)
 end
 
-function CTool:BuildConVarList()
+function Tool:BuildConVarList()
   local mode = self:GetMode()
   local convars = {}
 
@@ -286,41 +286,41 @@ function CTool:BuildConVarList()
   return convars
 end
 
-function CTool:GetClientInfo(property)
+function Tool:GetClientInfo(property)
   return self:GetOwner():GetInfo(self:GetMode().."_"..property)
 end
 
-function CTool:GetClientNumber(property, default)
+function Tool:GetClientNumber(property, default)
   return self:GetOwner():GetInfoNum(self:GetMode().."_"..property, tonumber(default) or 0)
 end
 
-function CTool:Allowed()
+function Tool:Allowed()
   if CLIENT then return true end
 
   return self.AllowedCVar:GetBool()
 end
 
--- Now for all the CTool redirects
+-- Now for all the Tool redirects
 
-function CTool:Init() end
+function Tool:Init() end
 
-function CTool:GetMode() return self.Mode end
-function CTool:GetSWEP() return self.SWEP end
-function CTool:GetOwner() return self:GetSWEP().Owner or self.Owner end
-function CTool:GetWeapon()  return self:GetSWEP().Weapon or self.Weapon end
+function Tool:GetMode() return self.Mode end
+function Tool:GetSWEP() return self.SWEP end
+function Tool:GetOwner() return self:GetSWEP().Owner or self.Owner end
+function Tool:GetWeapon()  return self:GetSWEP().Weapon or self.Weapon end
 
-function CTool:LeftClick() return false end
-function CTool:RightClick() return false end
-function CTool:Reload() self:ClearObjects() end
-function CTool:Deploy() self:ReleaseGhostEntity() return end
-function CTool:Holster() self:ReleaseGhostEntity() return end
-function CTool:Think() self:ReleaseGhostEntity() end
+function Tool:LeftClick() return false end
+function Tool:RightClick() return false end
+function Tool:Reload() self:ClearObjects() end
+function Tool:Deploy() self:ReleaseGhostEntity() return end
+function Tool:Holster() self:ReleaseGhostEntity() return end
+function Tool:Think() self:ReleaseGhostEntity() end
 
 --[[---------------------------------------------------------
   Checks the objects before any action is taken
   This is to make sure that the entities haven't been removed
 -----------------------------------------------------------]]
-function CTool:CheckObjects()
+function Tool:CheckObjects()
   for k, v in pairs(self.Objects) do
     if (!v.Ent:IsWorld() and !v.Ent:IsValid()) then
       self:ClearObjects()
@@ -328,8 +328,6 @@ function CTool:CheckObjects()
   end
 end
 
-function CTool:__tostring()
+function Tool:__tostring()
   return "Tool ["..(self.id or "Unknown").."]"
 end
-
-Tool = CTool

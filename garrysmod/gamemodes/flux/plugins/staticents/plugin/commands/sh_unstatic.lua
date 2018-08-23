@@ -1,7 +1,7 @@
 local COMMAND = Command("unstatic")
 COMMAND.name = "UnStatic"
 COMMAND.description = "Makes the entity you're looking at not static."
-COMMAND.Syntax = "[none]"
+COMMAND.syntax = "[none]"
 COMMAND.category = "misc"
 COMMAND.Aliases = {"staticpropremove", "staticremove"}
 

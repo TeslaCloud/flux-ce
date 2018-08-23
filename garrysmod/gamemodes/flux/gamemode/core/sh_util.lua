@@ -545,7 +545,7 @@ function player.Random()
   end
 end
 
--- A function to find player based on their name or steamID.
+-- A function to find player based on their name or steam_id.
 function player.Find(name, bCaseSensitive, bReturnFirstHit)
   if (name == nil) then return end
   if (!isstring(name)) then return (IsValid(name) and name) or nil end

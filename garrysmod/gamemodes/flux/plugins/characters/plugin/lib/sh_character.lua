@@ -28,16 +28,16 @@ function character.Create(player, data)
     return result or CHAR_ERR_UNKNOWN
   end
 
-  local steamID = player:SteamID()
+  local steam_id = player:SteamID()
 
-  stored[steamID] = stored[steamID] or {}
+  stored[steam_id] = stored[steam_id] or {}
 
-  data.id = #stored[steamID] + 1
+  data.id = #stored[steam_id] + 1
 
-  table.insert(stored[steamID], data)
+  table.insert(stored[steam_id], data)
 
   if SERVER then
-    local charID = #stored[steamID]
+    local charID = #stored[steam_id]
 
     hook.Run("PostCreateCharacter", player, charID, data)
 
@@ -49,17 +49,17 @@ end
 
 if SERVER then
   function character.Load(player)
-    local steamID = player:SteamID()
+    local steam_id = player:SteamID()
 
-    stored[steamID] = stored[steamID] or {}
+    stored[steam_id] = stored[steam_id] or {}
 
-    fl.db:EasyRead("fl_characters", {"steamID", steamID}, function(result, hasData)
+    fl.db:easy_read("fl_characters", {"steam_id", steam_id}, function(result, hasData)
       if (hasData) then
         for k, v in ipairs(result) do
           local charID = tonumber(v.id) or k
 
-          stored[steamID][charID] = {
-            steamID = steamID,
+          stored[steam_id][charID] = {
+            steam_id = steam_id,
             name = v.name,
             physDesc = v.physDesc,
             inventory = util.JSONToTable(v.inventory or ""),
@@ -89,7 +89,7 @@ if SERVER then
     if (!IsValid(player) or !char) then return end
 
     return {
-      steamID = player:SteamID(),
+      steam_id = player:SteamID(),
       name = char.name,
       physDesc = char.physDesc or "This character has no physical description set!",
       model = char.model or "models/humans/group01/male_02.mdl",
@@ -110,7 +110,7 @@ if SERVER then
 
     hook.Run("SaveCharaterData", player, char, saveData)
 
-    fl.db:EasyWrite("fl_characters", {"id", index}, saveData)
+    fl.db:easy_write("fl_characters", {"id", index}, saveData)
 
     hook.Run("PostSaveCharacter", player, char, saveData)
   end
@@ -124,10 +124,10 @@ if SERVER then
   end
 
   function character.Get(player, index)
-    local steamID = player:SteamID()
+    local steam_id = player:SteamID()
 
-    if (stored[steamID][index]) then
-      return stored[steamID][index]
+    if (stored[steam_id][index]) then
+      return stored[steam_id][index]
     end
   end
 

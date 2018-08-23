@@ -49,7 +49,7 @@ end
 
 class "Plugin"
 
-function Plugin:Plugin(id, data)
+function Plugin:init(id, data)
   self.name = data.name or "Unknown Plugin"
   self.author = data.author or "Unknown Author"
   self.folder = data.folder or name:to_id()
@@ -315,7 +315,7 @@ function plugin.include(folder)
     end
   end
 
-  PLUGIN = Plugin(id, data)
+  PLUGIN = Plugin.new(id, data)
 
   if (stored[folder]) then
     PLUGIN = stored[folder]
@@ -362,7 +362,7 @@ function plugin.include_schema()
 
   if SERVER then AddCSLuaFile(schemaPath.."/gamemode/cl_init.lua") end
 
-  Schema = Plugin(schema_info.name, schema_info)
+  Schema = Plugin.new(schema_info.name, schema_info)
 
   util.include(schema_folder.."/sh_schema.lua")
 
@@ -519,10 +519,10 @@ do
   end
 end
 
-function plugin.add_extra(strExtra)
-  if (!isstring(strExtra)) then return end
+function plugin.add_extra(extra)
+  if (!isstring(extra)) then return end
 
-  table.insert(extras, strExtra)
+  table.insert(extras, extra)
 end
 
 function plugin.include_folders(folder)

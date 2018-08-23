@@ -1,16 +1,16 @@
-class "CTheme"
+class "Theme"
 
-CTheme.colors = {}
-CTheme.sounds = {}
-CTheme.materials = {}
-CTheme.options = {}
-CTheme.panels = {}
-CTheme.fonts = {}
-CTheme.skin = {}
-CTheme.shouldReload = true
+Theme.colors = {}
+Theme.sounds = {}
+Theme.materials = {}
+Theme.options = {}
+Theme.panels = {}
+Theme.fonts = {}
+Theme.skin = {}
+Theme.shouldReload = true
 
 --[[ Basic Skeleton --]]
-function CTheme:CTheme(name, parent)
+function Theme:init(name, parent)
   self.name = name or "Unknown"
   self.id = self.name:to_id() -- temporary unique ID
   self.parent = parent
@@ -20,36 +20,36 @@ function CTheme:CTheme(name, parent)
   end
 end
 
-function CTheme:OnLoaded() end
-function CTheme:OnUnloaded() end
+function Theme:OnLoaded() end
+function Theme:OnUnloaded() end
 
-function CTheme:Remove()
+function Theme:Remove()
   return theme.RemoveTheme(self.id)
 end
 
-function CTheme:AddPanel(id, callback)
+function Theme:AddPanel(id, callback)
   self.panels[id] = callback
 end
 
-function CTheme:CreatePanel(id, parent, ...)
+function Theme:CreatePanel(id, parent, ...)
   if (self.panels[id]) then
     return self.panels[id](id, parent, ...)
   end
 end
 
-function CTheme:SetOption(key, value)
+function Theme:SetOption(key, value)
   if (key) then
     self.options[key] = value
   end
 end
 
-function CTheme:SetFont(key, value, scale, data)
+function Theme:SetFont(key, value, scale, data)
   if (key) then
     self.fonts[key] = font.GetSize(value, scale, data)
   end
 end
 
-function CTheme:SetColor(id, val)
+function Theme:SetColor(id, val)
   val = val or Color(255, 255, 255)
 
   self.colors[id] = val
@@ -57,23 +57,23 @@ function CTheme:SetColor(id, val)
   return val
 end
 
-function CTheme:SetMaterial(id, val)
+function Theme:SetMaterial(id, val)
   self.materials[id] = (!isstring(val) and val) or util.GetMaterial(val)
 end
 
-function CTheme:SetSound(id, val)
+function Theme:SetSound(id, val)
   self.sounds[id] = val or Sound()
 end
 
-function CTheme:GetFont(key, default)
+function Theme:GetFont(key, default)
   return self.fonts[key] or default
 end
 
-function CTheme:GetOption(key, default)
+function Theme:GetOption(key, default)
   return self.options[key] or default
 end
 
-function CTheme:GetColor(id, failsafe)
+function Theme:GetColor(id, failsafe)
   local col = self.colors[id]
 
   if (col) then
@@ -83,7 +83,7 @@ function CTheme:GetColor(id, failsafe)
   end
 end
 
-function CTheme:GetMaterial(id, failsafe)
+function Theme:GetMaterial(id, failsafe)
   local mat = self.materials[id]
 
   if (mat) then
@@ -93,7 +93,7 @@ function CTheme:GetMaterial(id, failsafe)
   end
 end
 
-function CTheme:GetSound(id, failsafe)
+function Theme:GetSound(id, failsafe)
   local sound = self.sounds[id]
 
   if (sound) then
@@ -103,13 +103,10 @@ function CTheme:GetSound(id, failsafe)
   end
 end
 
-function CTheme:register()
+function Theme:register()
   return theme.RegisterTheme(self)
 end
 
-function CTheme:__tostring()
+function Theme:__tostring()
   return "Theme ["..self.name.."]"
 end
-
--- Create an alias of CTheme class for convenience.
-Theme = CTheme

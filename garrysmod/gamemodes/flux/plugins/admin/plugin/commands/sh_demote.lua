@@ -1,10 +1,10 @@
 local COMMAND = Command("demote")
 COMMAND.name = "Demote"
 COMMAND.description = "#DemoteCMD_Description"
-COMMAND.Syntax = "#DemoteCMD_Syntax"
+COMMAND.syntax = "#DemoteCMD_Syntax"
 COMMAND.category = "player_management"
-COMMAND.Arguments = 1
-COMMAND.Immunity = true
+COMMAND.arguments = 1
+COMMAND.immunity = true
 COMMAND.Aliases = {"plydemote"}
 
 function COMMAND:OnRun(player, targets)

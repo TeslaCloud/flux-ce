@@ -234,10 +234,10 @@ function item.CreateBase(name)
   class(name, nil, Item)
 end
 
-pipeline.register("item", function(id, fileName, pipe)
+pipeline.register("item", function(id, file_name, pipe)
   ITEM = Item(id)
 
-  util.include(fileName)
+  util.include(file_name)
 
   if (pipeline.IsAborted()) then ITEM = nil return end
 

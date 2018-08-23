@@ -1,10 +1,10 @@
 GROUP.name = "Super Admin"
-GROUP.description = "#PlayerGroup_Superadmin"
+GROUP.description = "#PlayerGroup_Admin"
 GROUP.color = Color(255, 255, 255)
-GROUP.Icon = "icon16/shield.png"
-GROUP.Immunity = 300
-GROUP.Base = "admin"
-GROUP.Permissions = {
+GROUP.icon = "icon16/shield.png"
+GROUP.immunity = 300
+GROUP.base = "admin"
+GROUP.permissions = {
   server_management = PERM_ALLOW,
   player_management = PERM_ALLOW,
   character_management = PERM_ALLOW,

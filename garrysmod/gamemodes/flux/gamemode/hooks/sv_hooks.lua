@@ -3,29 +3,15 @@ DEFINE_BASECLASS("gamemode_base")
 function GM:DoPlayerDeath(player, attacker, damageInfo) end
 
 function GM:Initialize()
-  local configFile = fileio.Read("gamemodes/flux/flux.yml")
+  local config_file = fileio.Read("gamemodes/flux/flux.yml")
 
-  if (configFile) then
-    config.Import(configFile, CONFIG_FLUX)
+  if config_file then
+    config.Import(config_file, CONFIG_FLUX)
   end
 
-  local mysql_host = config.Get("mysql_host")
-  local mysql_username = config.Get("mysql_username")
-  local mysql_password = config.Get("mysql_password")
-  local mysql_database = config.Get("mysql_database")
-  local mysql_port = config.Get("mysql_port")
+  local db_config = fl.db.config
 
-  if (mysql_host == "sqlite" or mysql_host == "example.com" or mysql_host == "example" or mysql_host == "") then
-    fl.db.Module = "sqlite"
-  else
-    fl.db.Module = config.Get("mysql_module") or "mysqloo"
-
-    safe_require(fl.db.Module)
-  end
-
-  fl.dev_print("Using "..fl.db.Module.." as MySQL module...")
-
-  fl.db:Connect(mysql_host, mysql_username, mysql_password, mysql_database, mysql_port)
+  fl.db:connect(db_config.host, db_config.user, db_config.password, db_config.database, db_config.port, db_config.socket, db_config.flags)
 end
 
 function GM:InitPostEntity()
@@ -169,8 +155,8 @@ function GM:EntityRemoved(entity)
   self.BaseClass:EntityRemoved(entity)
 end
 
-function GM:OnPluginFileChange(fileName)
-  plugin.OnPluginChanged(fileName)
+function GM:OnPluginFileChange(file_name)
+  plugin.OnPluginChanged(file_name)
 end
 
 function GM:GetFallDamage(player, speed)

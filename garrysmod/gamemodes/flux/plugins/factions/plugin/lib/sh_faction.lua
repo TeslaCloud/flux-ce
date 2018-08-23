@@ -66,10 +66,10 @@ function faction.GetAll()
   return stored
 end
 
-pipeline.register("faction", function(id, fileName, pipe)
+pipeline.register("faction", function(id, file_name, pipe)
   FACTION = Faction(id)
 
-  util.include(fileName)
+  util.include(file_name)
 
   FACTION:register() FACTION = nil
 end)

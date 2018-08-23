@@ -8,7 +8,7 @@ function fl.tool:GetAll()
 end
 
 function fl.tool:New(id)
-  return CTool()
+  return Tool.new()
 end
 
 function fl.tool:Get(id)
@@ -24,14 +24,14 @@ function fl.tool:register(obj)
   fl.dev_print("Registering Tool: "..obj.Mode)
 end
 
-pipeline.register("tool", function(id, fileName, pipe)
-  TOOL = CTool()
+pipeline.register("tool", function(id, file_name, pipe)
+  TOOL = Tool.new()
   TOOL.Mode = id
   TOOL.id = id
 
   hook.Run("PreIncludeTool", TOOL)
 
-  util.include(fileName)
+  util.include(file_name)
 
   hook.Run("ToolPreCreateConvars", TOOL)
 

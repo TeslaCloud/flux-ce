@@ -243,7 +243,7 @@ function PANEL:PaintOver(w, h)
 
           for k, v in ipairs(cmds) do
             local w, h = draw.SimpleText("/" + v.name, font, 16, 16 + lastY, color)
-            w, h = draw.SimpleText(v.Syntax, font, 16 + w + 8, 16 + lastY, color_white)
+            w, h = draw.SimpleText(v.syntax, font, 16 + w + 8, 16 + lastY, color_white)
 
             if (#cmds == 1) then
               local smallFont = theme.GetFont("Text_Small")

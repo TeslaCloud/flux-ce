@@ -1,76 +1,74 @@
-class "CUserGroup"
+class "Role"
 
-CUserGroup.name = "Undefined"
-CUserGroup.description = "Undefined"
-CUserGroup.color = Color(255, 255, 255)
-CUserGroup.Icon = "icon16/user.png"
-CUserGroup.Immunity = 0
-CUserGroup.IsProtected = false
-CUserGroup.Permissions = {}
-CUserGroup.Base = nil
+Role.name = "Undefined"
+Role.description = "Undefined"
+Role.color = Color(255, 255, 255)
+Role.icon = "icon16/user.png"
+Role.immunity = 0
+Role.protected = false
+Role.permissions = {}
+Role.base = nil
 
-function CUserGroup:CUserGroup(id)
+function Role:Role(id)
   self.id = id:to_id()
 end
 
-function CUserGroup:register()
+function Role:register()
   fl.admin:CreateGroup(self.id, self)
 end
 
 -- Called when player's primary group is being set to this group.
-function CUserGroup:OnGroupSet(player, oldGroup) end
+function Role:OnGroupSet(player, oldGroup) end
 
 -- Called when player's primary group is taken or modified.
-function CUserGroup:OnGroupTake(player, newGroup) end
+function Role:OnGroupTake(player, newGroup) end
 
 -- Called when player is being added to this group as secondary group.
-function CUserGroup:OnGroupAdd(player, secondaryGroups) end
+function Role:OnGroupAdd(player, secondaryGroups) end
 
 -- Called when player is being removed from this group as secondary group.
-function CUserGroup:OnGroupRemove(player) end
+function Role:OnGroupRemove(player) end
 
-CUserGroup.SetParent = CUserGroup.set_base
+Role.SetParent = Role.set_base
 
-function CUserGroup:GetID()
+function Role:GetID()
   return self.id
 end
 
-function CUserGroup:get_name()
+function Role:get_name()
   return self.name or "Unknown"
 end
 
-function CUserGroup:get_description()
+function Role:get_description()
   return self.description or "This group has no description"
 end
 
-function CUserGroup:GetColor()
+function Role:GetColor()
   return self.color or Color("white")
 end
 
-function CUserGroup:GetImmunity()
-  return self.Immunity or 0
+function Role:GetImmunity()
+  return self.immunity or 0
 end
 
-function CUserGroup:GetIsProtected()
-  return self.IsProtected or false
+function Role:GetIsProtected()
+  return self.protected or false
 end
 
-function CUserGroup:GetPermissions()
-  return self.Permissions or {}
+function Role:GetPermissions()
+  return self.permissions or {}
 end
 
-function CUserGroup:GetIcon()
-  return self.Icon or "icon16/user.png"
+function Role:GetIcon()
+  return self.icon or "icon16/user.png"
 end
 
-function CUserGroup:GetBase()
-  return self.Base or nil
+function Role:GetBase()
+  return self.base or nil
 end
 
-function CUserGroup:__tostring()
+function Role:__tostring()
   return "User Group ["..self:GetID().."]["..self:get_name().."]"
 end
 
-CUserGroup.GetParent = CUserGroup.GetBase
-
-_G["Group"] = CUserGroup
+Role.GetParent = Role.GetBase

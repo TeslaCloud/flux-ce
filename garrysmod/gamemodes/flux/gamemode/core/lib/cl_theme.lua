@@ -24,7 +24,7 @@ function theme.RegisterTheme(obj)
       newObj.__index = obj.__index
 
       obj = newObj
-      obj.Base = parentTheme
+      obj.base = parentTheme
     end
   end
 
@@ -165,14 +165,14 @@ function theme.LoadTheme(themeID, bIsReloading)
 
     theme.activeTheme = themeTable
 
-    local next = themeTable.Base
+    local next = themeTable.base
 
     while (next) do
       if (next.OnLoaded) then
         next.OnLoaded(theme.activeTheme)
       end
 
-      next = next.Base
+      next = next.base
     end
 
     if (!bIsReloading and theme.activeTheme.OnLoaded) then

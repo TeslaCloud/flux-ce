@@ -42,7 +42,7 @@ function attributes.register(id, data)
   data.Max = data.Max or 100
   data.Min = data.Min or 0
   data.category = data.category or "#Attribute_Category_Other"
-  data.Icon = data.Icon
+  data.icon = data.icon
   data.Type = data.Type
   data.Multipliable = data.Multipliable or true
   data.Boostable = data.Boostable or true
@@ -65,10 +65,10 @@ function attributes.RegisterType(id, globalVar, folder)
 end
 
 function attributes.IncludeType(id, globalVar, folder)
-  pipeline.register(id, function(id, fileName, pipe)
+  pipeline.register(id, function(id, file_name, pipe)
     _G[globalVar] = Attribute(id)
 
-    util.include(fileName)
+    util.include(file_name)
 
     if (pipeline.IsAborted()) then _G[globalVar] = nil return end
 

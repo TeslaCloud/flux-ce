@@ -19,9 +19,14 @@ function flFactions:RestorePlayer(player, result)
 end
 
 function flFactions:DatabaseConnected()
-  fl.db:AddColumn("fl_players", "whitelists", "TEXT DEFAULT NULL")
-  fl.db:AddColumn("fl_characters", "faction", "TEXT NOT NULL")
-  fl.db:AddColumn("fl_characters", "class", "TEXT DEFAULT NULL")
+  change_table('fl_players', function(t)
+    t:text 'whitelists'
+  end)
+
+  change_table('fl_characters', function(t)
+    t:text { 'faction', null = false }
+    t:text 'char_class'
+  end)
 end
 
 function flFactions:OnActiveCharacterSet(player, charData)

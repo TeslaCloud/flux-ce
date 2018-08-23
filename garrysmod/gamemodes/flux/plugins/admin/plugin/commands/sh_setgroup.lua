@@ -1,10 +1,10 @@
 local COMMAND = Command("setgroup")
 COMMAND.name = "SetGroup"
 COMMAND.description = "#SetGroupCMD_Description"
-COMMAND.Syntax = "#SetGroupCMD_Syntax"
+COMMAND.syntax = "#SetGroupCMD_Syntax"
 COMMAND.category = "player_management"
-COMMAND.Arguments = 2
-COMMAND.Immunity = true
+COMMAND.arguments = 2
+COMMAND.immunity = true
 COMMAND.Aliases = {"plysetgroup", "setusergroup", "plysetusergroup"}
 
 function COMMAND:OnRun(player, targets, userGroup)

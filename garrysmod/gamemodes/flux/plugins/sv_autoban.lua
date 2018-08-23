@@ -7,7 +7,7 @@ PLUGIN:SetDescription("Automatically prevents access to any TeslaCloud-ran serve
   This will be removed in release.
 --]]
 
-local defaultReason = "You have been blacklisted from this server!"
+local default_reason = "You have been blacklisted from this server!"
 
 local blacklist = {
   ["STEAM_0:1:26720819"] = "Banned for being a dick.", -- banned me for being me
@@ -24,7 +24,7 @@ local blacklist = {
   ["STEAM_0:1:10947122"] = "You have been blacklisted due to bad affiliations!" -- [TNF] Vesthamer
 }
 
-local badKeywords = {
+local bad_keywords = {
   "[tnf]", "[ tnf ]", "[ tnf]", "[tnf ]", " tnf ",
   "[tnf", "(tnf", "(tnf)", "tnf)", "the new future", "( tnf", "tnf )",
   "kurozael", "conna wiles", "connawiles", "kuropixel", "cloudsixteen",
@@ -39,8 +39,8 @@ function PLUGIN:OnPluginsLoaded()
   end
 end
 
-function PLUGIN:CheckPassword(steamID64, ip, password, clPassword, name)
-  local steamid = util.SteamIDFrom64(steamID64)
+function PLUGIN:CheckPassword(steam_id64, ip, password, cl_pass, name)
+  local steamid = util.SteamIDFrom64(steam_id64)
   local entry = blacklist[steamid]
 
   if (entry) then
@@ -52,15 +52,15 @@ function PLUGIN:CheckPassword(steamID64, ip, password, clPassword, name)
   if (isstring(name)) then
     local lowerName = string.utf8lower(name)
 
-    for k, v in ipairs(badKeywords) do
+    for k, v in ipairs(bad_keywords) do
       if (string.find(name, v, 1, true)) then
-        blacklist[steamid] = defaultReason
+        blacklist[steamid] = default_reason
 
         file.Write("flux_blacklist.txt", pon.encode(blacklist))
 
         print("Dropping "..name.." for having bad keyword '"..v.."' in their name!")
 
-        return false, defaultReason
+        return false, default_reason
       end
     end
   end

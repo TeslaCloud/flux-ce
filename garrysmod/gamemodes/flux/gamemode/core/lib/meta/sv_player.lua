@@ -2,7 +2,7 @@ local player_meta = FindMetaTable("Player")
 
 function player_meta:SavePlayer()
   local saveData = {
-    steamID = self:SteamID(),
+    steam_id = self:SteamID(),
     name = self:Name(),
     joinTime = self.flJoinTime or os.time(),
     lastPlayTime = os.time(),
@@ -11,7 +11,7 @@ function player_meta:SavePlayer()
 
   hook.Run("SavePlayerData", self, saveData)
 
-  fl.db:EasyWrite("fl_players", {"steamID", self:SteamID()}, saveData)
+  fl.db:easy_write("fl_players", { "steam_id", self:SteamID() }, saveData)
 end
 
 function player_meta:set_data(data)
@@ -57,7 +57,7 @@ function player_meta:GetAmmoTable()
 end
 
 function player_meta:RestorePlayer()
-  fl.db:EasyRead("fl_players", {"steamID", self:SteamID()}, function(result, hasData)
+  fl.db:easy_read("fl_players", { "steam_id", self:SteamID() }, function(result, hasData)
     if (hasData) then
       result = result[1]
 

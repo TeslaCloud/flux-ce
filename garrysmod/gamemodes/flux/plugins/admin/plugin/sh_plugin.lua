@@ -5,17 +5,17 @@ util.include("sv_hooks.lua")
 
 function flAdmin:OnPluginLoaded()
   plugin.add_extra("commands")
-  plugin.add_extra("groups")
+  plugin.add_extra("roles")
 
   local folder = self:GetFolder().."/plugin"
 
   util.include_folder(folder.."/commands/")
-  fl.admin:IncludeGroups(folder.."/groups/")
+  fl.admin:include_roles(folder.."/roles/")
 end
 
 function flAdmin:PluginIncludeFolder(extra, folder)
-  if (extra == "groups") then
-    fl.admin:IncludeGroups(folder.."/groups/")
+  if (extra == "roles") then
+    fl.admin:include_roles(folder.."/roles/")
 
     return true
   end
