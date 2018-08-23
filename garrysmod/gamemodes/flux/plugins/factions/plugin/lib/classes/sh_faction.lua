@@ -71,7 +71,7 @@ end
 function CFaction:GenerateName(player, charName, rank, defaultData)
   defaultData = defaultData or {}
 
-  if (hook.Run("ShouldNameGenerate", player, self, charName, rank, defaultData) == false) then return player:name() end
+  if (hook.Run("ShouldNameGenerate", player, self, charName, rank, defaultData) == false) then return player:Name() end
 
   if (isfunction(self.MakeName)) then
     return self:MakeName(player, charName, rank, defaultData) or "John Doe"

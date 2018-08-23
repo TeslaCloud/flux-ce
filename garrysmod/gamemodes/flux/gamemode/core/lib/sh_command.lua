@@ -173,7 +173,7 @@ if SERVER then
       local name = str:utf8sub(2, str:utf8len() - 1)
 
       for k, v in ipairs(_player.GetAll()) do
-        if (v:name() == name) then
+        if (v:Name() == name) then
           return {v}, "["
         end
       end
@@ -291,7 +291,7 @@ if SERVER then
             if (istable(targets) and #targets > 0) then
               for k, v in ipairs(targets) do
                 if (cmdTable.Immunity and IsValid(player) and hook.Run("CommandCheckImmunity", player, v, cmdTable.canBeEqual) == false) then
-                  fl.player:Notify(player, L("Commands_HigherImmunity", v:name()))
+                  fl.player:Notify(player, L("Commands_HigherImmunity", v:Name()))
 
                   return
                 end
@@ -313,7 +313,7 @@ if SERVER then
           -- Let plugins hook into this and abort command's execution if necessary.
           if (!hook.Run("PlayerRunCommand", player, cmdTable, args)) then
             if (IsValid(player)) then
-              ServerLog(player:name().." has used /"..cmdTable.name.." "..text:utf8sub(string.utf8len(command) + 2, string.utf8len(text)))
+              ServerLog(player:Name().." has used /"..cmdTable.name.." "..text:utf8sub(string.utf8len(command) + 2, string.utf8len(text)))
             end
 
             self:Run(player, cmdTable, args)

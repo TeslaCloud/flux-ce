@@ -2,7 +2,7 @@ local player_meta = FindMetaTable("Player")
 
 function player_meta:SaveUsergroup()
   fl.db:EasyWrite("fl_players", {"steamID", self:SteamID()}, {
-    name = self:name(),
+    name = self:Name(),
     userGroup = self:GetUserGroup()
   })
 end
@@ -10,7 +10,7 @@ end
 function player_meta:SaveAllUsergroups()
   fl.db:EasyWrite("fl_players", {"steamID", self:SteamID()}, {
     steamID = self:SteamID(),
-    name = self:name(),
+    name = self:Name(),
     userGroup = self:GetUserGroup(),
     secondaryGroups = fl.serialize(self:GetSecondaryGroups()),
     customPermissions = fl.serialize(self:GetCustomPermissions())

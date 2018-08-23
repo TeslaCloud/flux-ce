@@ -34,8 +34,8 @@ do
         local size = 52 * math.abs(350 / clientPos:Distance(pos))
         local teamColor = team.GetColor(v:Team()) or Color(255, 255, 255)
 
-        local w, h = util.GetTextSize(v:name(), theme.GetFont("Text_Small"))
-        draw.SimpleText(v:name(), theme.GetFont("Text_Small"), textPos.x - w * 0.5, textPos.y, teamColor)
+        local w, h = util.GetTextSize(v:Name(), theme.GetFont("Text_Small"))
+        draw.SimpleText(v:Name(), theme.GetFont("Text_Small"), textPos.x - w * 0.5, textPos.y, teamColor)
 
         local w, h = util.GetTextSize(v:SteamName(), theme.GetFont("Text_Smaller"))
         draw.SimpleText(v:SteamName(), theme.GetFont("Text_Smaller"), textPos.x - w * 0.5, textPos.y + 14, color_lightblue)

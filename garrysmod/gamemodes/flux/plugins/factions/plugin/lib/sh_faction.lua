@@ -90,7 +90,7 @@ do
     local factionTable = faction.FindByID(id)
     local char = self:GetCharacter()
 
-    self:SetNetVar("name", factionTable:GenerateName(self, self:GetCharacterVar("name", self:name()), 1))
+    self:SetNetVar("name", factionTable:GenerateName(self, self:GetCharacterVar("name", self:Name()), 1))
     self:SetRank(1)
     self:SetTeam(factionTable.teamID)
     self:SetNetVar("faction", id)

@@ -72,7 +72,7 @@ function flAdmin:OnPlayerRestored(player)
     end
   end
 
-  ServerLog(player:name().." ("..player:GetUserGroup()..") has connected to the server.")
+  ServerLog(player:Name().." ("..player:GetUserGroup()..") has connected to the server.")
 end
 
 function flAdmin:CommandCheckImmunity(player, target, canBeEqual)

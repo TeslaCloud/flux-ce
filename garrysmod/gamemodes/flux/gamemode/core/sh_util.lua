@@ -562,9 +562,9 @@ function player.Find(name, bCaseSensitive, bReturnFirstHit)
       continue
     end
 
-    if (v:name(true):find(name)) then
+    if (v:Name(true):find(name)) then
       table.insert(hits, v)
-    elseif (!bCaseSensitive and v:name(true):utf8lower():find(name:utf8lower())) then
+    elseif (!bCaseSensitive and v:Name(true):utf8lower():find(name:utf8lower())) then
       table.insert(hits, v)
     elseif (v:SteamName():utf8lower():find(name:utf8lower())) then
       table.insert(hits, v)
@@ -886,7 +886,7 @@ function util.PlayerListToString(...)
     return "#Chat_Everyone"
   end
 
-  return util.ListToString(function(obj) return (IsValid(obj) and obj:name()) or "Unknown Player" end, nil, ...)
+  return util.ListToString(function(obj) return (IsValid(obj) and obj:Name()) or "Unknown Player" end, nil, ...)
 end
 
 function string.IsNumber(char)

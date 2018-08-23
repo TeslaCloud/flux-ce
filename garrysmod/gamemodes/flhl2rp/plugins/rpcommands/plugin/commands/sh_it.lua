@@ -7,7 +7,7 @@ COMMAND.Aliases = {"do"}
 COMMAND.Arguments = 1
 
 function COMMAND:OnRun(player, ...)
-  chatbox.AddText(nil, Color("lightblue"), "("..player:name()..") "..table.concat({...}, " "), {sender = player, position = player:GetPos(), radius = config.Get("talk_radius"), hearWhenLook = true})
+  chatbox.AddText(nil, Color("lightblue"), "("..player:Name()..") "..table.concat({...}, " "), {sender = player, position = player:GetPos(), radius = config.Get("talk_radius"), hearWhenLook = true})
 end
 
 COMMAND:register()

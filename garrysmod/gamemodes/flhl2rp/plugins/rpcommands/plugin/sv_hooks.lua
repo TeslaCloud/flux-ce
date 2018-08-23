@@ -6,7 +6,7 @@ function PLUGIN:ChatboxAdjustPlayerSay(player, text, messageData)
 
   table.Merge(messageData, {
     Color(config.Get("ic_color")),
-    player:name(),
+    player:Name(),
     L("Chat_Say"),
     hook.Run("ChatboxAdjustICText", text:Spelling())
   })

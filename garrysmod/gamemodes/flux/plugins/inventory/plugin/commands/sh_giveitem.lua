@@ -18,7 +18,7 @@ function COMMAND:OnRun(player, targets, itemName, amount)
         v:GiveItem(itemTable.id)
       end
 
-      fl.player:Notify(v, ((IsValid(player) and player:name()) or "Console").." has given you "..amount.." "..itemTable.name.."'s.")
+      fl.player:Notify(v, ((IsValid(player) and player:Name()) or "Console").." has given you "..amount.." "..itemTable.name.."'s.")
     end
 
     fl.player:Notify(player, "You have given "..amount.." "..itemTable.name.."'s to "..util.PlayerListToString(targets)..".")

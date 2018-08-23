@@ -4,7 +4,7 @@ function flFactions:PostPlayerSpawn(player)
   if (playerFaction) then
     player:SetTeam(playerFaction.teamID or 1)
 
-    player:SetNetVar("name", playerFaction:GenerateName(player, player:GetCharacterVar("name", player:name()), player:GetRank()))
+    player:SetNetVar("name", playerFaction:GenerateName(player, player:GetCharacterVar("name", player:Name()), player:GetRank()))
   end
 end
 
