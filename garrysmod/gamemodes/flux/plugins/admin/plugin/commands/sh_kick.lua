@@ -19,7 +19,7 @@ function COMMAND:OnRun(player, targets, ...)
     v:Kick(reason)
   end
 
-  fl.player:NotifyAll(L("KickMessage", (IsValid(player) and player:name()) or "Console", util.PlayerListToString(targets), reason))
+  fl.player:NotifyAll(L("KickMessage", (IsValid(player) and player:Name()) or "Console", util.PlayerListToString(targets), reason))
 end
 
 COMMAND:register()

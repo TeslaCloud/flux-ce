@@ -8,9 +8,9 @@ function player_meta:get_data()
   return self:GetNetVar("flData", {})
 end
 
-player_meta.flName = player_meta.flName or player_meta.name
+player_meta.flName = player_meta.flName or player_meta.Name
 
-function player_meta:name(bForceTrueName)
+function player_meta:Name(bForceTrueName)
   return (!bForceTrueName and hook.Run("GetPlayerName", self)) or self:GetNetVar("name", self:flName())
 end
 

@@ -35,7 +35,7 @@ function COMMAND:OnRun(player, targets, duration, ...)
 
   for k, v in ipairs(_player.GetAll()) do
     local time = "#for "..fl.lang:NiceTimeFull(v:GetNetVar("language"), duration)
-    local phrase = L("OOCMuteMessage", (IsValid(player) and player:name()) or "Console", util.PlayerListToString(targets)).." "..time..". ("..reason..")"
+    local phrase = L("OOCMuteMessage", (IsValid(player) and player:Name()) or "Console", util.PlayerListToString(targets)).." "..time..". ("..reason..")"
 
     v:Notify(phrase)
   end

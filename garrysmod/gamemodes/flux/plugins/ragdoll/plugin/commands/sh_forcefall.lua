@@ -17,7 +17,7 @@ function COMMAND:OnRun(player, target, delay)
   if (IsValid(target) and target:Alive() and !target:IsRagdolled()) then
     target:SetRagdollState(RAGDOLL_FALLENOVER)
 
-    player:Notify(target:name().." has been ragdolled!")
+    player:Notify(target:Name().." has been ragdolled!")
 
     if (delay and delay > 0) then
       target:Notify("Getting up...")

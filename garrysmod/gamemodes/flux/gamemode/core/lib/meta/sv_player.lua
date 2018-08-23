@@ -3,7 +3,7 @@ local player_meta = FindMetaTable("Player")
 function player_meta:SavePlayer()
   local saveData = {
     steamID = self:SteamID(),
-    name = self:name(),
+    name = self:Name(),
     joinTime = self.flJoinTime or os.time(),
     lastPlayTime = os.time(),
     data = fl.serialize(self:get_data())
@@ -75,7 +75,7 @@ function player_meta:RestorePlayer()
 
       hook.Run("RestorePlayer", self, result)
     else
-      ServerLog(self:name().." has joined for the first time!")
+      ServerLog(self:Name().." has joined for the first time!")
 
       self:SavePlayer()
     end

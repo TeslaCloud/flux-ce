@@ -48,7 +48,7 @@ do
     chatbox.AddText(nil,
       23,
       Color(config.Get("ic_color")),
-      player:name(),
+      player:Name(),
       L("Chat_Yell"),
       hook.Run("ChatboxAdjustICText", text:Spelling()),
       {
@@ -62,7 +62,7 @@ do
     chatbox.AddText(nil,
       17,
       Color(config.Get("ic_color")),
-      player:name(),
+      player:Name(),
       L("Chat_Whisper"),
       hook.Run("ChatboxAdjustICText", text:Spelling()),
       {

@@ -12,7 +12,7 @@ function COMMAND:OnRun(player, targets)
     v:SetPlayerData("MuteOOC", nil)
   end
 
-  fl.player:NotifyAll(L("OOCUnmuteMessage", (IsValid(player) and player:name()) or "Console", util.PlayerListToString(targets)))
+  fl.player:NotifyAll(L("OOCUnmuteMessage", (IsValid(player) and player:Name()) or "Console", util.PlayerListToString(targets)))
 end
 
 COMMAND:register()

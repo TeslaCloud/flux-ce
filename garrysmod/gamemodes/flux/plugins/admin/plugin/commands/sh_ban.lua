@@ -32,7 +32,7 @@ function COMMAND:OnRun(player, targets, duration, ...)
 
     if (duration <= 0) then time = L"permanently" end
 
-    local phrase = L("BanMessage", (IsValid(player) and player:name()) or "Console", util.PlayerListToString(targets)).." "..time..". ("..reason..")"
+    local phrase = L("BanMessage", (IsValid(player) and player:Name()) or "Console", util.PlayerListToString(targets)).." "..time..". ("..reason..")"
 
     v:Notify(phrase)
   end

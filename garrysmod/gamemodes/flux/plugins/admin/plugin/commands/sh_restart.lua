@@ -9,7 +9,7 @@ COMMAND.Aliases = {"maprestart"}
 function COMMAND:OnRun(player, delay)
   delay = tonumber(delay) or 0
 
-  fl.player:NotifyAll(L("MapRestartMessage", (IsValid(player) and player:name()) or "Console", delay))
+  fl.player:NotifyAll(L("MapRestartMessage", (IsValid(player) and player:Name()) or "Console", delay))
 
   timer.Simple(delay, function()
     hook.Run("FLSaveData")

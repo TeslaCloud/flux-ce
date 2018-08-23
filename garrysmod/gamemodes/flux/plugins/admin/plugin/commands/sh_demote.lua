@@ -11,7 +11,7 @@ function COMMAND:OnRun(player, targets)
   for k, target in ipairs(targets) do
     target:SetUserGroup("user")
 
-    fl.player:NotifyAll(L("DemoteCMD_Message", (IsValid(player) and player:name()) or "Console"), target:name(), target:GetUserGroup())
+    fl.player:NotifyAll(L("DemoteCMD_Message", (IsValid(player) and player:Name()) or "Console"), target:Name(), target:GetUserGroup())
   end
 end
 
