@@ -1,6 +1,6 @@
 PLUGIN:SetAlias("flAttributes")
 
-util.Include("sv_hooks.lua")
+util.include("sv_hooks.lua")
 
 function flAttributes:OnPluginLoaded()
   local dir = self:GetFolder().."/plugin/"

@@ -1,3 +1,3 @@
 PLUGIN:SetAlias("flStaticEnts")
 
-util.Include("sv_hooks.lua")
+util.include("sv_hooks.lua")

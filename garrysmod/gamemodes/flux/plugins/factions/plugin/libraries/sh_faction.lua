@@ -9,7 +9,7 @@ faction.count = count
 function faction.Register(id, data)
   if (!id or !data) then return end
 
-  data.id = id:MakeID() or (data.Name and data.Name:MakeID())
+  data.id = id:to_id() or (data.Name and data.Name:to_id())
   data.Name = data.Name or "Unknown Faction"
   data.Description = data.Description or "This faction has no description!"
   data.PrintName = data.PrintName or data.Name or "Unknown Faction"
@@ -69,13 +69,13 @@ end
 pipeline.Register("faction", function(id, fileName, pipe)
   FACTION = Faction(id)
 
-  util.Include(fileName)
+  util.include(fileName)
 
   FACTION:Register() FACTION = nil
 end)
 
 function faction.IncludeFactions(directory)
-  return pipeline.IncludeDirectory("faction", directory)
+  return pipeline.include_folder("faction", directory)
 end
 
 do

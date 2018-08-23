@@ -10,7 +10,7 @@ CUserGroup.Permissions = {}
 CUserGroup.Base = nil
 
 function CUserGroup:CUserGroup(id)
-  self.id = id:MakeID()
+  self.id = id:to_id()
 end
 
 function CUserGroup:Register()

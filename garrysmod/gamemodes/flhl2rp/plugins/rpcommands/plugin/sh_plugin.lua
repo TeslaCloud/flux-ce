@@ -1,5 +1,5 @@
-util.Include("sv_hooks.lua")
-util.Include("cl_hooks.lua")
+util.include("sv_hooks.lua")
+util.include("cl_hooks.lua")
 
 do
   flPrefixes:AddPrefix({"//", "/ooc"}, function(player, text, bTeamChat)

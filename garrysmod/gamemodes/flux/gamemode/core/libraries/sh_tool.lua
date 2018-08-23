@@ -31,7 +31,7 @@ pipeline.Register("tool", function(id, fileName, pipe)
 
   hook.Run("PreIncludeTool", TOOL)
 
-  util.Include(fileName)
+  util.include(fileName)
 
   hook.Run("ToolPreCreateConvars", TOOL)
 

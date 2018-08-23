@@ -1,7 +1,7 @@
 PLUGIN:SetAlias("flObserver")
 
-util.Include("cl_hooks.lua")
-util.Include("sv_hooks.lua")
+util.include("cl_hooks.lua")
+util.include("sv_hooks.lua")
 
 if (fl.admin) then
   fl.admin:RegisterPermission("noclip", "Noclip", "Lets the player use observer mode / noclip.", "general")

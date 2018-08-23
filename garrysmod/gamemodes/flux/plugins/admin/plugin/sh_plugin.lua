@@ -1,7 +1,7 @@
 PLUGIN:SetAlias("flAdmin")
 
-util.Include("cl_hooks.lua")
-util.Include("sv_hooks.lua")
+util.include("cl_hooks.lua")
+util.include("sv_hooks.lua")
 
 function flAdmin:OnPluginLoaded()
   plugin.add_extra("commands")
@@ -9,7 +9,7 @@ function flAdmin:OnPluginLoaded()
 
   local folder = self:GetFolder().."/plugin"
 
-  util.IncludeDirectory(folder.."/commands/")
+  util.include_folder(folder.."/commands/")
   fl.admin:IncludeGroups(folder.."/groups/")
 end
 

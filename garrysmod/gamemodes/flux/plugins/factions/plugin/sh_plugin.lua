@@ -2,8 +2,8 @@ PLUGIN:SetAlias("flFactions")
 
 plugin.add_extra("factions")
 
-util.Include("cl_hooks.lua")
-util.Include("sv_hooks.lua")
+util.include("cl_hooks.lua")
+util.include("sv_hooks.lua")
 
 function flFactions:PluginIncludeFolder(extra, folderName)
   if (extra == "factions") then

@@ -41,7 +41,7 @@ function pipeline.Include(pipe, fileName)
   if (!pipe) then return end
   if (!isstring(fileName) or fileName:utf8len() < 7) then return end
 
-  local id = (string.GetFileFromFilename(fileName) or ""):Replace(".lua", ""):MakeID()
+  local id = (string.GetFileFromFilename(fileName) or ""):Replace(".lua", ""):to_id()
 
   if (id:StartWith("cl_") or id:StartWith("sh_") or id:StartWith("sv_")) then
     id = id:utf8sub(4, id:utf8len())
@@ -54,7 +54,7 @@ function pipeline.Include(pipe, fileName)
   end
 end
 
-function pipeline.IncludeDirectory(id, directory)
+function pipeline.include_folder(id, directory)
   local pipe = stored[id]
 
   if (!pipe) then return end

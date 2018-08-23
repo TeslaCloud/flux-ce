@@ -1,7 +1,7 @@
-util.Include("cl_hooks.lua")
-util.Include("sv_plugin.lua")
-util.Include("sv_hooks.lua")
-util.Include("sh_enums.lua")
+util.include("cl_hooks.lua")
+util.include("sv_plugin.lua")
+util.include("sv_hooks.lua")
+util.include("sh_enums.lua")
 
 function PLUGIN:PlayerSetupDataTables(player)
   player:DTVar("Int", INT_RAGDOLL_STATE, "RagdollState")

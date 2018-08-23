@@ -50,7 +50,7 @@ function item.Register(id, data)
   fl.dev_print("Registering item: "..tostring(id))
 
   if (!id) then
-    id = data.Name:MakeID()
+    id = data.Name:to_id()
   end
 
   data.id = id
@@ -237,7 +237,7 @@ end
 pipeline.Register("item", function(id, fileName, pipe)
   ITEM = Item(id)
 
-  util.Include(fileName)
+  util.include(fileName)
 
   if (pipeline.IsAborted()) then ITEM = nil return end
 
@@ -245,7 +245,7 @@ pipeline.Register("item", function(id, fileName, pipe)
 end)
 
 function item.IncludeItems(directory)
-  pipeline.IncludeDirectory("item", directory)
+  pipeline.include_folder("item", directory)
 end
 
 if SERVER then

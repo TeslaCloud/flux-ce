@@ -1,7 +1,7 @@
 class "CFaction"
 
 function CFaction:CFaction(id)
-  self.id = id:MakeID()
+  self.id = id:to_id()
   self.Name = "Unknown Faction"
   self.PrintName = nil
   self.Description = "This faction has no description set!"

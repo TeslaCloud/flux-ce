@@ -1,5 +1,5 @@
 if (!CItemUsable) then
-  util.Include("sh_usable_base.lua")
+  util.include("sh_usable_base.lua")
 end
 
 -- Alternatively, you can use item.CreateBase("CItemEquippable")

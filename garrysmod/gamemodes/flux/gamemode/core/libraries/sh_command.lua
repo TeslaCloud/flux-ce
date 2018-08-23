@@ -9,7 +9,7 @@ fl.command.aliases = aliases
 function fl.command:Create(id, data)
   if (!id or !data) then return end
 
-  data.id = id:MakeID()
+  data.id = id:to_id()
   data.Name = data.Name or "Unknown"
   data.Description = data.Description or "An undescribed command."
   data.Syntax = data.Syntax or "[none]"

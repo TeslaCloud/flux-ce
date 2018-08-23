@@ -64,46 +64,46 @@ end
 
 include("core/sh_util.lua")
 
-util.Include("core/sh_enums.lua")
-util.Include("core/sh_core.lua")
-util.Include("core/cl_core.lua")
-util.Include("core/sv_core.lua")
+util.include("core/sh_enums.lua")
+util.include("core/sh_core.lua")
+util.include("core/cl_core.lua")
+util.include("core/sv_core.lua")
 
 -- This way we put things we want loaded BEFORE anything else in here, like plugin, config, etc.
-util.IncludeDirectory("core/libraries/required", true)
+util.include_folder("core/libraries/required", true)
 
 -- So that we don't get duplicates on refresh.
 plugin.clear_cache()
 
-util.IncludeDirectory("core/config", true)
-util.IncludeDirectory("core/libraries", true)
-util.IncludeDirectory("core/libraries/classes", true)
-util.IncludeDirectory("core/libraries/meta", true)
-util.IncludeDirectory("languages", true)
-util.IncludeDirectory("core/ui/controllers", true)
-util.IncludeDirectory("core/ui/view/base", true)
-util.IncludeDirectory("core/ui/view", true)
+util.include_folder("core/config", true)
+util.include_folder("core/libraries", true)
+util.include_folder("core/libraries/classes", true)
+util.include_folder("core/libraries/meta", true)
+util.include_folder("languages", true)
+util.include_folder("core/ui/controllers", true)
+util.include_folder("core/ui/view/base", true)
+util.include_folder("core/ui/view", true)
 
 if (theme or SERVER) then
   pipeline.Register("theme", function(id, fileName, pipe)
     if CLIENT then
       THEME = Theme(id)
 
-      util.Include(fileName)
+      util.include(fileName)
 
       THEME:Register() THEME = nil
     else
-      util.Include(fileName)
+      util.include(fileName)
     end
   end)
 
   -- Theme factory is needed for any other themes that may be in the themes folder.
   pipeline.Include("theme", "core/themes/cl_theme_factory.lua")
-  pipeline.IncludeDirectory("theme", "flux/gamemode/core/themes")
+  pipeline.include_folder("theme", "flux/gamemode/core/themes")
 end
 
-pipeline.IncludeDirectory("tool", "flux/gamemode/core/tools")
-util.IncludeDirectory("hooks", true)
+pipeline.include_folder("tool", "flux/gamemode/core/tools")
+util.include_folder("hooks", true)
 
 hook.Run("PreLoadPlugins")
 
