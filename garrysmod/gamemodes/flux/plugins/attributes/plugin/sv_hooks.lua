@@ -1,4 +1,4 @@
-function flAttributes:DatabaseConnected()
+function flAttributes:database_connected()
   change_table('fl_characters', function(t)
     t:json { 'attributes', default = 'NULL' }
   end)
