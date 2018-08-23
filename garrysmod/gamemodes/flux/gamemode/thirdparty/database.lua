@@ -187,7 +187,7 @@ function DatabaseQuery:order(key)
 end
 
 function DatabaseQuery:callback(callback)
-  self.callback = callback
+  self._callback = callback
 end
 
 function DatabaseQuery:select(field_name)
@@ -464,9 +464,9 @@ function DatabaseQuery:execute(queue_query)
 
   if (isstring(query_string)) then
     if (!queue_query) then
-      return Database:raw_query(query_string, self.callback)
+      return Database:raw_query(query_string, self._callback)
     else
-      return Database:queue(query_string, self.callback)
+      return Database:queue(query_string, self._callback)
     end
   end
 end
