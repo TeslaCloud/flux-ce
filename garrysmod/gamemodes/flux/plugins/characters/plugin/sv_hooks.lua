@@ -49,7 +49,7 @@ function flCharacters:PlayerDeath(player, inflictor, attacker)
   player:SaveCharacter()
 end
 
-function flCharacters:database_connected()
+function flCharacters:activerecord_ready()
   create_table('fl_characters', function(t)
     t:primary_key 'id'
     t:string { 'steam_id', null = false }

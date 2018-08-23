@@ -115,6 +115,8 @@ function library.create_class(name, parent, base_class)
   local obj = library.New(name, (parent or _G))
   obj.ClassName = name
   obj.BaseClass = base_class or false
+  obj.class_name = obj.ClassName
+  obj.base_class = obj.BaseClass
 
   library.last_class = { name = name, parent = (parent or _G) }
 
@@ -184,19 +186,19 @@ class = Class
 
   Returns: bool - Whether or not did the extension succeed.
 --]]
-function extends(CBaseClass)
-  if (isstring(CBaseClass)) then
-    CBaseClass = _G[CBaseClass]
+function extends(base_class)
+  if (isstring(base_class)) then
+    base_class = _G[base_class]
   end
 
-  if (istable(library.last_class) and istable(CBaseClass)) then
+  if (istable(library.last_class) and istable(base_class)) then
     local obj = library.last_class.parent[library.last_class.name]
-    local copy = table.Copy(CBaseClass)
+    local copy = table.Copy(base_class)
     local merged = table.Merge(copy, obj)
 
-    if (isfunction(CBaseClass.OnExtended)) then
+    if (isfunction(base_class.OnExtended)) then
       try {
-        CBaseClass.OnExtended, copy, merged
+        base_class.OnExtended, copy, merged
       } catch {
         function(exception)
           ErrorNoHalt("OnExtended class hook has failed to run!\n" +
@@ -206,9 +208,9 @@ function extends(CBaseClass)
     end
 
     obj = merged
-    obj.BaseClass = CBaseClass
+    obj.BaseClass = base_class
 
-    hook.Run("OnClassExtended", obj, CBaseClass)
+    hook.Run("OnClassExtended", obj, base_class)
 
     library.last_class.parent[library.last_class.name] = obj
     library.last_class = nil

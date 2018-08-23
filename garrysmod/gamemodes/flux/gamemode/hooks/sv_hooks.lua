@@ -369,6 +369,29 @@ function GM:PlayerSay(player, text, bTeamChat)
   end
 end
 
+function GM:activerecord_ready()
+  create_table('fl_players', function(t)
+    t:primary_key 'id'
+    t:string { 'steam_id', null = false }
+    t:string { 'name', null = false }
+    t:string 'role'
+    t:json 'secondary_roles'
+    t:json 'permissions'
+    t:json 'data'
+    t:timestamp 'created_at'
+    t:timestamp 'updated_at'
+  end)
+
+  create_table('fl_logs', function(t)
+    t:text 'body'
+    t:string 'action'
+    t:string 'object'
+    t:string 'subject'
+    t:timestamp 'created_at'
+    t:timestamp 'updated_at'
+  end)
+end
+
 -- Awful awful awful code, but it's kinda necessary in some rare cases.
 -- Avoid using PlayerThink whenever possible though.
 do
