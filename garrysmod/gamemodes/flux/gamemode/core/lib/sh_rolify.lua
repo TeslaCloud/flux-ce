@@ -6,7 +6,7 @@ local rolify_table = Settings.rolify and Settings.rolify.table_name or 'player_r
 local rolify_module = {}
 
 local function remove_role(subject, role, object)
-  local query = derp.database:Delete(rolify_table)
+  local query = fl.db:Delete(rolify_table)
     query:Where('steam_id', subject:SteamID())
     if role then query:Where('role', role) end
     if object then query:Where('object', tostring(object)) end
@@ -15,7 +15,7 @@ end
 
 local function insert_role(subject, role, object)
   local timestamp = to_timestamp(os.time())
-  local query = derp.database:Insert(rolify_table)
+  local query = fl.db:Insert(rolify_table)
     query:Insert('steam_id', subject:SteamID())
     if role then query:Insert('role', role) end
     if object then query:Insert('object', tostring(object)) end
@@ -26,7 +26,7 @@ end
 
 local function update_role(subject, role, object)
   local timestamp = to_timestamp(os.time())
-  local query = derp.database:Update(rolify_table)
+  local query = fl.db:Update(rolify_table)
     query:Where('steam_id', subject:SteamID())
     if role then query:Update('role', role) end
     if object then query:Update('object', tostring(object)) end
@@ -67,10 +67,10 @@ function rolify_module.save_roles(self)
 end
 
 function rolify_module.load_roles(self)
-  local query = derp.database:Select(rolify_table)
+  local query = fl.db:Select(rolify_table)
     query:Where('steam_id', self:SteamID())
     query:Callback(function(result)
-      if derp.database:IsResult(result) then
+      if fl.db:IsResult(result) then
         for k, v in ipairs(result) do
           self:add_role(v.role, tostring(v.object), true)
         end

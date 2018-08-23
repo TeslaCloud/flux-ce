@@ -15,7 +15,15 @@ GM.description  = "A free roleplay gamemode framework."
 -- While we can do nothing to stop you from changing them, we'll very much appreciate it if you don't.
 GM.nameOverride = false -- Set to any string to override schema's browser name. This overrides the prefix too.
 
-fl.development  = true -- Always set this to true when developing anything for FL. This enables the safe mode on hooks.
+-- Environment stuff
+FLUX_ENV        = Settings.environment or 'development'
+IS_DEVELOPMENT  = FLUX_ENV == 'development'
+IS_STAGING      = FLUX_ENV == 'staging'
+IS_PRODUCTION   = FLUX_ENV == 'production'
+
+fl.development  = !IS_PRODUCTION
+
+print('Flux environment: '..FLUX_ENV)
 
 -- Fix for the name conflicts.
 _player, _team, _file, _table, _sound = player, team, file, table, sound
