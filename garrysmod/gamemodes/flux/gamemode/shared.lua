@@ -70,15 +70,15 @@ util.include("core/cl_core.lua")
 util.include("core/sv_core.lua")
 
 -- This way we put things we want loaded BEFORE anything else in here, like plugin, config, etc.
-util.include_folder("core/libraries/required", true)
+util.include_folder("core/lib/required", true)
 
 -- So that we don't get duplicates on refresh.
 plugin.clear_cache()
 
 util.include_folder("core/config", true)
-util.include_folder("core/libraries", true)
-util.include_folder("core/libraries/classes", true)
-util.include_folder("core/libraries/meta", true)
+util.include_folder("core/lib", true)
+util.include_folder("core/lib/classes", true)
+util.include_folder("core/lib/meta", true)
 util.include_folder("languages", true)
 util.include_folder("core/ui/controllers", true)
 util.include_folder("core/ui/view/base", true)

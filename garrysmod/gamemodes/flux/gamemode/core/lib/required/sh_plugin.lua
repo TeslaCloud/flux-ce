@@ -8,12 +8,9 @@ local hooks_cache = {}
 local reload_data = {}
 local load_cache = {}
 local default_extras = {
-  "libraries",
-  "libraries/meta",
-  "libraries/classes",
-  "libs",
-  "libs/meta",
-  "libs/classes",
+  "lib",
+  "lib/meta",
+  "lib/classes",
   "classes",
   "meta",
   "config",
