@@ -1,8 +1,8 @@
 local COMMAND = Command("kick")
-COMMAND.Name = "Kick"
-COMMAND.Description = "#KickCMD_Description"
+COMMAND.name = "Kick"
+COMMAND.description = "#KickCMD_Description"
 COMMAND.Syntax = "#KickCMD_Syntax"
-COMMAND.Category = "administration"
+COMMAND.category = "administration"
 COMMAND.Arguments = 1
 COMMAND.Immunity = true
 COMMAND.Aliases = {"plykick"}
@@ -19,7 +19,7 @@ function COMMAND:OnRun(player, targets, ...)
     v:Kick(reason)
   end
 
-  fl.player:NotifyAll(L("KickMessage", (IsValid(player) and player:Name()) or "Console", util.PlayerListToString(targets), reason))
+  fl.player:NotifyAll(L("KickMessage", (IsValid(player) and player:name()) or "Console", util.PlayerListToString(targets), reason))
 end
 
-COMMAND:Register()
+COMMAND:register()

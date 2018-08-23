@@ -31,7 +31,7 @@ function PANEL:Rebuild()
   self.title = vgui.Create("DLabel", self.container)
   self.title:SetPos(0, height * 0.5 - fontSize * 0.5)
   self.title:SetFont(font)
-  self.title:SetText(permission.Name or "No Permission")
+  self.title:SetText(permission.name or "No Permission")
   self.title:SetSize(quarter, height)
 
   self.btnNo = vgui.Create("DButton", self.container)
@@ -69,7 +69,7 @@ function PANEL:GetPermission()
   return self.m_Permission
 end
 
-vgui.Register("flPermission", PANEL, "flBasePanel")
+vgui.register("flPermission", PANEL, "flBasePanel")
 
 local PANEL = {}
 
@@ -118,4 +118,4 @@ function PANEL:OnOpened()
   self:Rebuild()
 end
 
-vgui.Register("flPermissionsEditor", PANEL, "flBasePanel")
+vgui.register("flPermissionsEditor", PANEL, "flBasePanel")

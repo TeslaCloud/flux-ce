@@ -126,5 +126,5 @@ netstream.Hook("flAreaRemove", function(id)
 end)
 
 netstream.Hook("flAreaRegister", function(id, data)
-  areas.Register(id, data)
+  areas.register(id, data)
 end)

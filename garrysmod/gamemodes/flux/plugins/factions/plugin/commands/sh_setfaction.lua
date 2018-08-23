@@ -1,9 +1,9 @@
 local COMMAND = Command("setfaction")
 
-COMMAND.Name = "Setfaction"
-COMMAND.Description = "Change player's faction."
+COMMAND.name = "Setfaction"
+COMMAND.description = "Change player's faction."
 COMMAND.Syntax = "<name> <faction> [data]"
-COMMAND.Category = "player_management"
+COMMAND.category = "player_management"
 COMMAND.Arguments = 2
 COMMAND.PlayerArg = 1
 COMMAND.Aliases = {"plytransfer", "charsetfaction", "chartransfer"}
@@ -16,10 +16,10 @@ function COMMAND:OnRun(player, targets, name, bStrict)
       v:SetFaction(factionTable.id)
     end
 
-    fl.player:NotifyAll(L("SetfactionCMD_Message", (IsValid(player) and player:Name()) or "Console", util.PlayerListToString(targets), factionTable.PrintName))
+    fl.player:NotifyAll(L("SetfactionCMD_Message", (IsValid(player) and player:name()) or "Console", util.PlayerListToString(targets), factionTable.print_name))
   else
     fl.player:Notify(player, L("Err_WhitelistNotValid",  name))
   end
 end
 
-COMMAND:Register()
+COMMAND:register()

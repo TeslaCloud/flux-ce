@@ -1,8 +1,8 @@
 AddCSLuaFile()
 
 ENT.Type = "anim"
-ENT.PrintName = "Item"
-ENT.Category = "Flux"
+ENT.print_name = "Item"
+ENT.category = "Flux"
 ENT.Spawnable = false
 ENT.RenderGroup = RENDERGROUP_BOTH
 
@@ -27,7 +27,7 @@ if SERVER then
     hook.Run("PreEntityItemSet", self, itemTable)
 
     self:SetModel(itemTable:GetModel())
-    self:SetSkin(itemTable.Skin)
+    self:SetSkin(itemTable.skin)
     self:SetColor(itemTable:GetColor())
 
     self.item = itemTable
@@ -79,7 +79,7 @@ if SERVER then
 
     if (holdStart and CurTime() - holdStart > 0.5) then
       if (self.item) then
-        self.item:DoMenuAction("OnTake", lastActivator)
+        self.item:do_menu_action("OnTake", lastActivator)
       end
 
       lastActivator:SetNetVar("HoldStart", false)
@@ -112,8 +112,8 @@ else
         return
       end
 
-      text = self.item.PrintName
-      desc = self.item.Description
+      text = self.item.print_name
+      desc = self.item.description
     else
       if (!self.dataRequested) then
         netstream.Start("RequestItemData", self:EntIndex())

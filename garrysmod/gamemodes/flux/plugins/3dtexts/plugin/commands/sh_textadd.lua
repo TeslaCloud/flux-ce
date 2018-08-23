@@ -1,8 +1,8 @@
 local COMMAND = Command("textadd")
-COMMAND.Name = "TextAdd"
-COMMAND.Description = "#3DText_TextAddDesc"
+COMMAND.name = "TextAdd"
+COMMAND.description = "#3DText_TextAddDesc"
 COMMAND.Syntax = "#3DText_TextAddSyntax"
-COMMAND.Category = "misc"
+COMMAND.category = "misc"
 COMMAND.Arguments = 1
 
 function COMMAND:OnRun(player, text, scale, style, color, extraColor)
@@ -33,4 +33,4 @@ function COMMAND:OnRun(player, text, scale, style, color, extraColor)
   fl.player:Notify(player, "#3DText_TextAdded")
 end
 
-COMMAND:Register()
+COMMAND:register()

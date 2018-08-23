@@ -1,8 +1,8 @@
 local COMMAND = Command("getup")
-COMMAND.Name = "GetUp"
-COMMAND.Description = "Get up if you are currently fallen."
+COMMAND.name = "GetUp"
+COMMAND.description = "Get up if you are currently fallen."
 COMMAND.Syntax = "[number GetUpTime]"
-COMMAND.Category = "roleplay"
+COMMAND.category = "roleplay"
 COMMAND.Aliases = {"chargetup", "unfall", "unfallover"}
 COMMAND.noConsole = true
 
@@ -24,4 +24,4 @@ function COMMAND:OnRun(player, delay)
   end
 end
 
-COMMAND:Register()
+COMMAND:register()

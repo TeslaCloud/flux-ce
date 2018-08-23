@@ -20,7 +20,7 @@ function GM:Initialize()
   else
     fl.db.Module = config.Get("mysql_module") or "mysqloo"
 
-    SafeRequire(fl.db.Module)
+    safe_require(fl.db.Module)
   end
 
   fl.dev_print("Using "..fl.db.Module.." as MySQL module...")

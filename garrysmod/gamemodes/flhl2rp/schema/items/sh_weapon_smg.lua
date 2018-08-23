@@ -4,11 +4,11 @@
   the framework is publicly released.
 --]]
 
-ITEM:SetBase(CItemWeapon)
-ITEM.Name = "Smg"
-ITEM.PrintName = "#Item_Smg_PrintName"
-ITEM.Description = "#Item_Smg_Description"
-ITEM.Model = "models/weapons/w_smg1.mdl"
-ITEM.Weight = 1.8
-ITEM.WeaponClass = "weapon_smg1"
-ITEM.EquipSlot = "#Weapon_Category_Primary"
+ITEM:set_base(ItemWeapon)
+ITEM.name = "Smg"
+ITEM.print_name = "#Item_Smg_PrintName"
+ITEM.description = "#Item_Smg_Description"
+ITEM.model = "models/weapons/w_smg1.mdl"
+ITEM.weight = 1.8
+ITEM.weapon_class = "weapon_smg1"
+ITEM.equip_slot = "#Weapon_Category_Primary"

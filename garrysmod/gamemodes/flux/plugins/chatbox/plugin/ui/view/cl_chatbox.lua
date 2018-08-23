@@ -242,12 +242,12 @@ function PANEL:PaintOver(w, h)
           local color_white = Color(255, 255, 255)
 
           for k, v in ipairs(cmds) do
-            local w, h = draw.SimpleText("/" + v.Name, font, 16, 16 + lastY, color)
+            local w, h = draw.SimpleText("/" + v.name, font, 16, 16 + lastY, color)
             w, h = draw.SimpleText(v.Syntax, font, 16 + w + 8, 16 + lastY, color_white)
 
             if (#cmds == 1) then
               local smallFont = theme.GetFont("Text_Small")
-              local w2, h2 = draw.SimpleText(v.Description, smallFont, 16, 16 + h + 4, color_white)
+              local w2, h2 = draw.SimpleText(v.description, smallFont, 16, 16 + h + 4, color_white)
               local aliases = "[none]"
 
               if (v.Aliases and #v.Aliases > 0) then
@@ -269,4 +269,4 @@ function PANEL:PaintOver(w, h)
   end
 end
 
-vgui.Register("flChatPanel", PANEL, "flBasePanel")
+vgui.register("flChatPanel", PANEL, "flBasePanel")

@@ -1,11 +1,11 @@
-ITEM:SetBase(CItemConsumable)
-ITEM.Name = "Flavored Breen's Water"
-ITEM.PrintName = "#Item_BreensWaterLimited_PrintName"
-ITEM.Description = "#Item_BreensWaterLimited_Description"
-ITEM.Model = "models/props_junk/popcan01a.mdl"
-ITEM.Skin = 2
-ITEM.Weight = 0.35
-ITEM.Stackable = true
-ITEM.MaxStack = 8
+ITEM:set_base(ItemConsumable)
+ITEM.name = "Flavored Breen's Water"
+ITEM.print_name = "#Item_BreensWaterLimited_PrintName"
+ITEM.description = "#Item_BreensWaterLimited_Description"
+ITEM.model = "models/props_junk/popcan01a.mdl"
+ITEM.skin = 2
+ITEM.weight = 0.35
+ITEM.stackable = true
+ITEM.max_stack = 8
 ITEM.SpecialColor = Color(50, 255, 50)
-ITEM.UseText = "#Item_Action_Drink"
+ITEM.use_text = "#Item_Action_Drink"

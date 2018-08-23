@@ -1,17 +1,17 @@
-if (!CItemWeapon) then
+if (!ItemWeapon) then
   util.include("sh_weapon_base.lua")
 end
 
--- Alternatively, you can use item.CreateBase("CItemThrown")
-class "CItemThrown" extends "CItemWeapon"
+-- Alternatively, you can use item.CreateBase("ItemThrown")
+class "ItemThrown" extends "ItemWeapon"
 
-CItemThrown.Name = "Thrown Base"
-CItemThrown.Description = "An weapon that can be thrown."
-CItemThrown.Category = "#Item_Category_Thrown"
-CItemThrown.EquipSlot = "#Weapon_Category_Thrown"
-CItemThrown.WeaponClass = "weapon_frag"
-CItemThrown.ThrownAmmoClass = "Grenade"
-CItemThrown:AddButton("#Item_Option_Unload", {
+ItemThrown.name = "Thrown Base"
+ItemThrown.description = "An weapon that can be thrown."
+ItemThrown.category = "#Item_Category_Thrown"
+ItemThrown.equip_slot = "#Weapon_Category_Thrown"
+ItemThrown.weapon_class = "weapon_frag"
+ItemThrown.thrown_ammo_class = "Grenade"
+ItemThrown:add_button("#Item_Option_Unload", {
   icon = "icon16/add.png",
   callback = "OnUnload",
   onShow = function(itemTable)
@@ -19,29 +19,27 @@ CItemThrown:AddButton("#Item_Option_Unload", {
   end
 })
 
-function CItemThrown:PostEquipped(player)
-  local weapon = player:Give(self.WeaponClass, true)
+function ItemThrown:PostEquipped(player)
+  local weapon = player:Give(self.weapon_class, true)
 
   if (IsValid(weapon)) then
     player:SetActiveWeapon(weapon)
-    player:SetAmmo(1, self.ThrownAmmoClass)
+    player:SetAmmo(1, self.thrown_ammo_class)
   else
-    fl.dev_print("Invalid weapon class: "..self.WeaponClass)
+    fl.dev_print("Invalid weapon class: "..self.weapon_class)
   end
 end
 
-function CItemThrown:PostUnEquipped(player)
-  local weapon = player:GetWeapon(self.WeaponClass)
+function ItemThrown:PostUnEquipped(player)
+  local weapon = player:GetWeapon(self.weapon_class)
 
   if (IsValid(weapon)) then
-    player:StripWeapon(self.WeaponClass)
+    player:StripWeapon(self.weapon_class)
 
-    if (player:GetAmmoCount(self.ThrownAmmoClass) == 0) then
+    if (player:GetAmmoCount(self.thrown_ammo_class) == 0) then
       player:TakeItemByID(self.instanceID)
     end
   else
-    fl.dev_print("Invalid weapon class: "..self.WeaponClass)
+    fl.dev_print("Invalid weapon class: "..self.weapon_class)
   end
 end
-
-ItemThrow = CItemThrown

@@ -197,7 +197,7 @@ function GM:PhysgunPickup(player, entity)
 end
 
 concommand.Add("fl_save_pers", function()
-  if (fl.Devmode and SERVER) then
+  if (fl.development and SERVER) then
     hook.Run("PersistenceSave")
   end
 end)
@@ -210,7 +210,7 @@ function GM:OnReloaded()
     toolGun.Tool[v.Mode] = v
   end
 
-  if (fl.Devmode) then
+  if (fl.development) then
     for k, v in ipairs(_player.GetAll()) do
       self:PlayerModelChanged(v, v:GetModel(), v:GetModel())
     end

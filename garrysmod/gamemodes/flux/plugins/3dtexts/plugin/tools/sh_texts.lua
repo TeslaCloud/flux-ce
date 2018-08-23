@@ -1,5 +1,5 @@
-TOOL.Category = "Flux"
-TOOL.Name = "Text Tool"
+TOOL.category = "Flux"
+TOOL.name = "Text Tool"
 TOOL.Command = nil
 TOOL.ConfigName = ""
 

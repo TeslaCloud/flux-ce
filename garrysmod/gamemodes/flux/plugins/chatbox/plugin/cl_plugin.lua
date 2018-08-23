@@ -94,7 +94,7 @@ function chatbox.Compile(messageTable)
         local toInsert = ""
 
         if (v:IsPlayer()) then
-          toInsert = hook.Run("GetPlayerName", v) or v:Name()
+          toInsert = hook.Run("GetPlayerName", v) or v:name()
         else
           toInsert = tostring(v) or v:GetClass()
         end

@@ -33,14 +33,14 @@ function item.GetEntities()
   return entities
 end
 
-function item.Register(id, data)
+function item.register(id, data)
   if (!data) then return end
 
-  if (!isstring(data.Name) and isstring(data.PrintName)) then
-    data.Name = data.PrintName
+  if (!isstring(data.name) and isstring(data.print_name)) then
+    data.name = data.print_name
   end
 
-  if (!isstring(id) and !isstring(data.Name)) then
+  if (!isstring(id) and !isstring(data.name)) then
     ErrorNoHalt("Attempt to register an item without a valid ID!")
     debug.Trace()
 
@@ -50,28 +50,28 @@ function item.Register(id, data)
   fl.dev_print("Registering item: "..tostring(id))
 
   if (!id) then
-    id = data.Name:to_id()
+    id = data.name:to_id()
   end
 
   data.id = id
-  data.Name = data.Name or "Unknown Item"
-  data.PrintName = data.PrintName or data.Name
-  data.Description = data.Description or "This item has no description!"
-  data.Weight = data.Weight or 1
-  data.Stackable = data.Stackable or false
-  data.MaxStack = data.MaxStack or 64
-  data.Model = data.Model or "models/props_lab/cactus.mdl"
-  data.Skin = data.Skin or 0
-  data.Color = data.Color or nil
+  data.name = data.name or "Unknown Item"
+  data.print_name = data.print_name or data.name
+  data.description = data.description or "This item has no description!"
+  data.weight = data.weight or 1
+  data.stackable = data.stackable or false
+  data.max_stack = data.max_stack or 64
+  data.model = data.model or "models/props_lab/cactus.mdl"
+  data.skin = data.skin or 0
+  data.color = data.color or nil
   data.Cost = data.Cost or 0
   data.SpecialColor = data.SpecialColor or nil
-  data.Category = data.Category or "#Item_Category_Other"
+  data.category = data.category or "#Item_Category_Other"
   data.isBase = data.isBase or false
   data.instanceID = ITEM_TEMPLATE
   data.data = data.data or {}
   data.customButtons = data.customButtons or {}
   data.actionSounds = data.actionSounds or {}
-  data.UseText = data.UseText
+  data.use_text = data.use_text
   data.TakeText = data.TakeText
   data.CancelText = data.CancelText
   data.UseIcon = data.UseIcon
@@ -87,22 +87,22 @@ function item.ToSave(itemTable)
 
   return {
     id = itemTable.id,
-    Name = itemTable.Name,
-    PrintName = itemTable.PrintName,
-    Description = itemTable.Description,
-    Weight = itemTable.Weight,
-    Stackable = itemTable.Stackable,
-    MaxStack = itemTable.MaxStack,
-    Model = itemTable.Model,
-    Skin = itemTable.Skin,
-    Color = itemTable.Color,
+    Name = itemTable.name,
+    PrintName = itemTable.print_name,
+    Description = itemTable.description,
+    Weight = itemTable.weight,
+    Stackable = itemTable.stackable,
+    MaxStack = itemTable.max_stack,
+    Model = itemTable.model,
+    Skin = itemTable.skin,
+    Color = itemTable.color,
     Cost = itemTable.Cost,
     SpecialColor = itemTable.SpecialColor,
     isBase = itemTable.isBase,
     instanceID = itemTable.instanceID,
     data = itemTable.data,
     actionSounds = itemTable.actionSounds,
-    UseText = itemTable.UseText,
+    UseText = itemTable.use_text,
     TakeText = itemTable.TakeText,
     CancelText = itemTable.CancelText,
     UseIcon = itemTable.UseIcon,
@@ -161,13 +161,13 @@ function item.Find(name)
   end
 
   for k, v in pairs(stored) do
-    if (v.id and v.Name and v.PrintName) then
-      if (v.id == name or v.Name:find(name) or v.PrintName:find(name)) then
+    if (v.id and v.name and v.print_name) then
+      if (v.id == name or v.name:find(name) or v.print_name:find(name)) then
         return v
       end
 
       if CLIENT then
-        if (fl.lang:TranslateText(v.PrintName):find(name)) then
+        if (fl.lang:TranslateText(v.print_name):find(name)) then
           return v
         end
       end
@@ -231,17 +231,17 @@ function item.IsInstance(itemTable)
 end
 
 function item.CreateBase(name)
-  class(name, nil, CItem)
+  class(name, nil, Item)
 end
 
-pipeline.Register("item", function(id, fileName, pipe)
+pipeline.register("item", function(id, fileName, pipe)
   ITEM = Item(id)
 
   util.include(fileName)
 
   if (pipeline.IsAborted()) then ITEM = nil return end
 
-  ITEM:Register() ITEM = nil
+  ITEM:register() ITEM = nil
 end)
 
 function item.IncludeItems(directory)
@@ -407,7 +407,7 @@ if SERVER then
 
     ent:Spawn()
 
-    itemTable:SetEntity(ent)
+    itemTable:set_entity(ent)
     item.NetworkItem(player, itemTable.instanceID)
 
     entities[itemTable.id] = entities[itemTable.id] or {}
@@ -457,7 +457,7 @@ else
 
       -- Client has to know this shit too I guess?
       ent:SetModel(itemTable:GetModel())
-      ent:SetSkin(itemTable.Skin)
+      ent:SetSkin(itemTable.skin)
       ent:SetColor(itemTable:GetColor())
 
       -- Restore item's functions. For some weird reason they aren't properly initialized.

@@ -3,7 +3,7 @@ function flItems:PlayerUseItemMenu(itemTable, bIsEntity)
 
   local itemMenu = vgui.Create("flMenu")
 
-  if (!itemTable.Name) then
+  if (!itemTable.name) then
     local closeBtn = itemMenu:AddOption(itemTable.CancelText or "#Item_Option_Cancel", function() print("Cancel") end)
     closeBtn:SetIcon("icon16/cross.png")
   else
@@ -11,7 +11,7 @@ function flItems:PlayerUseItemMenu(itemTable, bIsEntity)
       for k, v in pairs(itemTable.customButtons) do
         if ((v.onShow and v.onShow(itemTable) == true) or !v.onShow) then
           local button = itemMenu:AddOption(k, function()
-            itemTable:DoMenuAction(v.callback)
+            itemTable:do_menu_action(v.callback)
           end)
 
           button:SetIcon(v.icon)
@@ -20,28 +20,28 @@ function flItems:PlayerUseItemMenu(itemTable, bIsEntity)
     end
 
     if (itemTable.OnUse) then
-      local useBtn = itemMenu:AddOption(itemTable:GetUseText(), function()
-        itemTable:DoMenuAction("OnUse")
+      local useBtn = itemMenu:AddOption(itemTable:get_use_text(), function()
+        itemTable:do_menu_action("OnUse")
       end)
 
       useBtn:SetIcon(itemTable.UseIcon or "icon16/wrench.png")
     end
 
     if (bIsEntity) then
-      local takeBtn = itemMenu:AddOption(itemTable:GetTakeText(), function()
-        itemTable:DoMenuAction("OnTake")
+      local takeBtn = itemMenu:AddOption(itemTable:get_take_text(), function()
+        itemTable:do_menu_action("OnTake")
       end)
 
       takeBtn:SetIcon(itemTable.TakeIcon or "icon16/wrench.png")
     else
-      local dropBtn = itemMenu:AddOption(itemTable:GetDropText(), function()
-        itemTable:DoMenuAction("OnDrop")
+      local dropBtn = itemMenu:AddOption(itemTable:get_drop_text(), function()
+        itemTable:do_menu_action("OnDrop")
       end)
 
       dropBtn:SetIcon(itemTable.TakeIcon or "icon16/wrench.png")
     end
 
-    local closeBtn = itemMenu:AddOption(itemTable:GetCancelText(), function() print("Cancel") end)
+    local closeBtn = itemMenu:AddOption(itemTable:get_cancel_text(), function() print("Cancel") end)
     closeBtn:SetIcon(itemTable.CancelIcon or "icon16/cross.png")
   end
 

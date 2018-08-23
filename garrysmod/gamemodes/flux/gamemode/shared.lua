@@ -1,21 +1,21 @@
 -- Define basic GM info fields.
-GM.Name         = "Flux"
+GM.name         = "Flux"
 GM.Author       = "TeslaCloud Studios"
 GM.Website      = "http://teslacloud.net/"
 GM.Email        = "support@teslacloud.net"
 
 -- Define Flux-Specific fields.
-GM.Version      = "0.2.9-indev"
-GM.VersionNum   = "0.2.9"
-GM.Date         = "11/4/2017"
-GM.Build        = "1592"
-GM.Description  = "A free roleplay gamemode framework."
+GM.version      = "0.2.9-indev"
+GM.version_num  = "0.2.9"
+GM.date         = "11/4/2017"
+GM.build        = "1592"
+GM.description  = "A free roleplay gamemode framework."
 
 -- It would be very nice of you to leave below values as they are if you're using official schemas.
 -- While we can do nothing to stop you from changing them, we'll very much appreciate it if you don't.
-GM.NameOverride = false -- Set to any string to override schema's browser name. This overrides the prefix too.
+GM.nameOverride = false -- Set to any string to override schema's browser name. This overrides the prefix too.
 
-fl.Devmode      = true -- Always set this to true when developing anything for FL. This enables the safe mode on hooks.
+fl.development  = true -- Always set this to true when developing anything for FL. This enables the safe mode on hooks.
 
 -- Fix for the name conflicts.
 _player, _team, _file, _table, _sound = player, team, file, table, sound
@@ -31,12 +31,12 @@ do
   if (engine.ActiveGamemode() != "flux") then
     fl.schema = engine.ActiveGamemode()
   else
-    ErrorNoHalt [[
-=========================================
-You have set your +gamemode to 'flux'!
-Please set it to your schema's name instead!
-=========================================
-]]
+    ErrorNoHalt(txt[[
+      ============================================
+      +gamemode is set to 'flux'!
+      Set it to your schema's folder name instead!
+      ============================================
+    ]])
 
     return
   end
@@ -52,12 +52,12 @@ end
 
 -- A function to get schema's name.
 function fl.GetSchemaName()
-  return (Schema and Schema:GetName()) or fl.schema or "Unknown"
+  return (Schema and Schema:get_name()) or fl.schema or "Unknown"
 end
 
 -- Called when gamemode's server browser name needs to be retrieved.
 function GM:GetGameDescription()
-  local nameOverride = self.NameOverride
+  local nameOverride = self.nameOverride
 
   return (isstring(nameOverride) and nameOverride) or "FL - "..fl.GetSchemaName()
 end
@@ -85,13 +85,13 @@ util.include_folder("core/ui/view/base", true)
 util.include_folder("core/ui/view", true)
 
 if (theme or SERVER) then
-  pipeline.Register("theme", function(id, fileName, pipe)
+  pipeline.register("theme", function(id, fileName, pipe)
     if CLIENT then
       THEME = Theme(id)
 
       util.include(fileName)
 
-      THEME:Register() THEME = nil
+      THEME:register() THEME = nil
     else
       util.include(fileName)
     end

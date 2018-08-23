@@ -142,7 +142,7 @@ function fl3DText:PostDrawOpaqueRenderables()
         end
 
         if (style != 3) then
-          draw.SimpleText(text, theme.GetFont("Text_3D2D"), posX, posY, ColorAlpha(textColor, math.Clamp(fadeAlpha, 0, 100)):Darken(30))
+          draw.SimpleText(text, theme.GetFont("Text_3D2D"), posX, posY, ColorAlpha(textColor, math.Clamp(fadeAlpha, 0, 100)):darken(30))
         end
       cam.End3D2D()
     end

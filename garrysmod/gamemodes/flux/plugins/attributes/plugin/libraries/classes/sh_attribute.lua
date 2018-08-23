@@ -6,8 +6,8 @@ function CAttribute:CAttribute(id)
   self.id = id
 end
 
-function CAttribute:Register()
-  return attributes.Register(self.id, self)
+function CAttribute:register()
+  return attributes.register(self.id, self)
 end
 
 Attribute = CAttribute

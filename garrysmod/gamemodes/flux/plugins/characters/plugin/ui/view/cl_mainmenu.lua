@@ -81,8 +81,8 @@ function PANEL:OpenMenu(panel, data)
   if (!IsValid(self.menu)) then
     self.menu = theme.CreatePanel(panel, self)
 
-    if (self.menu.SetData) then
-      self.menu:SetData(data)
+    if (self.menu.set_data) then
+      self.menu:set_data(data)
     end
   else
     if (self.menu.Close) then
@@ -96,7 +96,7 @@ function PANEL:OpenMenu(panel, data)
   end
 end
 
-function PANEL:AddButton(text, callback)
+function PANEL:add_button(text, callback)
   local button = vgui.Create("flButton", self)
   button:SetSize(theme.GetOption("MainMenu_SidebarWidth"), theme.GetOption("MainMenu_SidebarButtonHeight"))
   button:SetText(string.utf8upper(L(text)))
@@ -128,4 +128,4 @@ function PANEL:AddButton(text, callback)
   return button
 end
 
-vgui.Register("flMainMenu", PANEL, "EditablePanel")
+vgui.register("flMainMenu", PANEL, "EditablePanel")

@@ -1,4 +1,4 @@
-STAT.Name = "#Attribute_Perception"
-STAT.Description = "#Attribute_Perception_Desc"
+STAT.name = "#Attribute_Perception"
+STAT.description = "#Attribute_Perception_Desc"
 STAT.Min = 1
 STAT.Max = 10

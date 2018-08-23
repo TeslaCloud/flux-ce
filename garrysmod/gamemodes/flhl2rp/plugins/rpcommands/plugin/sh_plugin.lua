@@ -17,7 +17,7 @@ do
       hook.Run("ChatboxGetMessageColor", player, text, bTeamChat) or Color(255, 255, 255),
       ": ",
       text,
-      {sender = player}
+      { sender = player }
     )
   end)
 
@@ -48,7 +48,7 @@ do
     chatbox.AddText(nil,
       23,
       Color(config.Get("ic_color")),
-      player:Name(),
+      player:name(),
       L("Chat_Yell"),
       hook.Run("ChatboxAdjustICText", text:Spelling()),
       {
@@ -62,7 +62,7 @@ do
     chatbox.AddText(nil,
       17,
       Color(config.Get("ic_color")),
-      player:Name(),
+      player:name(),
       L("Chat_Whisper"),
       hook.Run("ChatboxAdjustICText", text:Spelling()),
       {

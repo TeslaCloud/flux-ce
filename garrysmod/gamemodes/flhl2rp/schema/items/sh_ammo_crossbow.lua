@@ -4,13 +4,13 @@
   the framework is publicly released.
 --]]
 
-ITEM:SetBase(CItemAmmo)
-ITEM.Name = "Crossbow Bolts"
-ITEM.PrintName = "#Item_Crossbow_Ammo_PrintName"
-ITEM.Description = "#Item_Crossbow_Ammo_Description"
-ITEM.Model = "models/items/crossbowrounds.mdl"
-ITEM.Stackable = true
-ITEM.MaxStack = 4
-ITEM.Weight = 1
-ITEM.AmmoClass = "XBowBolt"
-ITEM.AmmoAmount = 6
+ITEM:set_base(ItemAmmo)
+ITEM.name = "Crossbow Bolts"
+ITEM.print_name = "#Item_Crossbow_Ammo_PrintName"
+ITEM.description = "#Item_Crossbow_Ammo_Description"
+ITEM.model = "models/items/crossbowrounds.mdl"
+ITEM.stackable = true
+ITEM.max_stack = 4
+ITEM.weight = 1
+ITEM.ammo_class = "XBowBolt"
+ITEM.ammo_count = 6

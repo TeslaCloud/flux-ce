@@ -4,11 +4,11 @@
   the framework is publicly released.
 --]]
 
-ITEM:SetBase(CItemWeapon)
-ITEM.Name = "Stunstick"
-ITEM.PrintName = "#Item_Stunstick_PrintName"
-ITEM.Description = "#Item_Stunstick_Description"
-ITEM.Model = "models/weapons/w_stunbaton.mdl"
-ITEM.Weight = 1.25
-ITEM.WeaponClass = "weapon_stunstick"
-ITEM.EquipSlot = "#Weapon_Category_Melee"
+ITEM:set_base(ItemWeapon)
+ITEM.name = "Stunstick"
+ITEM.print_name = "#Item_Stunstick_PrintName"
+ITEM.description = "#Item_Stunstick_Description"
+ITEM.model = "models/weapons/w_stunbaton.mdl"
+ITEM.weight = 1.25
+ITEM.weapon_class = "weapon_stunstick"
+ITEM.equip_slot = "#Weapon_Category_Melee"

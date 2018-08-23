@@ -66,6 +66,6 @@ function fl.undo:DoPlayer(player)
   end
 end
 
-function fl.undo:GetPlayer(player)
+function fl.undo:get_player(player)
   return queue[player] or {}
 end

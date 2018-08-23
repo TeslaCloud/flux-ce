@@ -26,8 +26,8 @@ function flItems:PlayerDropItem(player, instanceID)
   local itemTable = item.FindInstanceByID(instanceID)
   local trace = player:GetEyeTraceNoCursor()
 
-  if (itemTable.OnDrop) then
-    local result = itemTable:OnDrop(player)
+  if (itemTable.on_drop) then
+    local result = itemTable:on_drop(player)
 
     if (result == false) then
       return false
@@ -93,7 +93,7 @@ function flItems:PostCharacterLoaded(player, character)
       local itemTable = item.FindInstanceByID(v)
 
       if (istable(itemTable)) then
-        itemTable:OnLoadout(player)
+        itemTable:on_loadout(player)
       end
     end
   end
@@ -106,7 +106,7 @@ function flCharacters:PreSaveCharacter(player, index)
     for k, v in ipairs(ids) do
       local itemTable = item.FindInstanceByID(v)
 
-      itemTable:OnSave(player)
+      itemTable:on_save(player)
     end
   end
 end

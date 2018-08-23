@@ -8,4 +8,4 @@ function PANEL:Paint(w, h)
 
 end
 
-vgui.Register("flChatModeration", PANEL, "flBasePanel")
+vgui.register("flChatModeration", PANEL, "flBasePanel")

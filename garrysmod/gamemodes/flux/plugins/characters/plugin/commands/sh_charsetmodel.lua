@@ -1,8 +1,8 @@
 ﻿local COMMAND = Command("charsetmodel")
-COMMAND.Name = "CharSetModel"
-COMMAND.Description = "#CharSetModel_Description"
+COMMAND.name = "CharSetModel"
+COMMAND.description = "#CharSetModel_Description"
 COMMAND.Syntax = "#CharSetModel_Syntax"
-COMMAND.Category = "character_management"
+COMMAND.category = "character_management"
 COMMAND.Arguments = 2
 COMMAND.PlayerArg = 1
 COMMAND.Aliases = {"setmodel"}
@@ -10,9 +10,9 @@ COMMAND.Aliases = {"setmodel"}
 function COMMAND:OnRun(player, targets, model)
   local target = targets[1]
 
-  fl.player:NotifyAll(L("CharSetName_Message", (IsValid(player) and player:Name()) or "Console", target:Name(), model))
+  fl.player:NotifyAll(L("CharSetName_Message", (IsValid(player) and player:name()) or "Console", target:name(), model))
 
   character.SetModel(target, target:GetCharacter(), model)
 end
 
-COMMAND:Register()
+COMMAND:register()

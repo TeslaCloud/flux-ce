@@ -1,10 +1,10 @@
-FACTION.Name = "#Faction_Citizen"
-FACTION.Description = "A regular citizen living under combine authority."
+FACTION.name = "#Faction_Citizen"
+FACTION.description = "A regular citizen living under combine authority."
 FACTION.PhysDesc = "Wearing some dirty citizen clothes."
-FACTION.Color = Color(225, 185, 135)
+FACTION.color = Color(225, 185, 135)
 FACTION.Material = "flux/hl2rp/factions/citizen.png"
-FACTION.NameTemplate = "{name}"
-FACTION.Models.male = {
+FACTION.nameTemplate = "{name}"
+FACTION.models.male = {
   "models/humans/group01/male_01.mdl",
   "models/humans/group01/male_02.mdl",
   "models/humans/group01/male_03.mdl",
@@ -16,7 +16,7 @@ FACTION.Models.male = {
   "models/humans/group01/male_09.mdl",
 }
 
-FACTION.Models.female = {
+FACTION.models.female = {
   "models/humans/group01/female_01.mdl",
   "models/humans/group01/female_02.mdl",
   "models/humans/group01/female_03.mdl",

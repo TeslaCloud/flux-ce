@@ -1,13 +1,11 @@
--- Alternatively, you can use item.CreateBase("CItemUsable")
-class "CItemUsable" extends "CItem"
+-- Alternatively, you can use item.CreateBase("ItemUsable")
+class "ItemUsable" extends "Item"
 
-CItemUsable.Name = "Usable Items Base"
-CItemUsable.Description = "An item that can be used."
+ItemUsable.name = "Usable Items Base"
+ItemUsable.description = "An item that can be used."
 
 -- Returns:
 -- nothing/nil = removes item from the inventory as soon as it's used.
 -- false = prevents item from being used at all.
 -- true = prevents item from being removed upon use.
-function CItem:OnUse(player) end
-
-ItemUsable = CItemUsable
+function Item:OnUse(player) end

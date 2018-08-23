@@ -77,16 +77,16 @@ function fl.admin:RegisterPermission(id, name, description, category)
 
   local data = {}
     data.id = id:to_id()
-    data.Description = description or "No description provided."
-    data.Category = category or "general"
-    data.Name = name or id
+    data.description = description or "No description provided."
+    data.category = category or "general"
+    data.name = name or id
   self:AddPermission(id, category, data, true)
 end
 
 function fl.admin:PermissionFromCommand(cmdObj)
   if (!cmdObj) then return end
 
-  self:RegisterPermission(cmdObj.id, cmdObj.Name, cmdObj.Description, cmdObj.Category)
+  self:RegisterPermission(cmdObj.id, cmdObj.name, cmdObj.description, cmdObj.category)
 end
 
 function fl.admin:CheckPermission(player, permission)
@@ -187,12 +187,12 @@ function fl.admin:CheckImmunity(player, target, canBeEqual)
   return false
 end
 
-pipeline.Register("group", function(id, fileName, pipe)
+pipeline.register("group", function(id, fileName, pipe)
   GROUP = Group(id)
 
   util.include(fileName)
 
-  GROUP:Register() GROUP = nil
+  GROUP:register() GROUP = nil
 end)
 
 function fl.admin:IncludeGroups(directory)

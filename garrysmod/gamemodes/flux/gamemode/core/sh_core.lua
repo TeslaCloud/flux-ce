@@ -22,7 +22,7 @@ function fl.print(message)
 end
 
 function fl.dev_print(message)
-  if (fl.Devmode) then
+  if (fl.development) then
     Msg("Debug: ")
     MsgC(Color(200, 200, 200), message)
     Msg("\n")

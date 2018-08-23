@@ -81,16 +81,16 @@ function areas.Create(id, height, data)
     self.verts = {}
   end
 
-  function area:Register()
+  function area:register()
     if (#self.verts > 2) then self:FinishPoly() end
 
-    return areas.Register(id, self)
+    return areas.register(id, self)
   end
 
   return area
 end
 
-function areas.Register(id, data)
+function areas.register(id, data)
   if (!id or !data) then return end
   if (#data.polys < 1) then return end
 

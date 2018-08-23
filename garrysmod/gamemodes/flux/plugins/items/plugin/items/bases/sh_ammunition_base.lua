@@ -1,20 +1,18 @@
-if (!CItemUsable) then
+if (!ItemUsable) then
   util.include("sh_usable_base.lua")
 end
 
--- Alternatively, you can use item.CreateBase("CItemAmmo")
-class "CItemAmmo" extends "CItemUsable"
+-- Alternatively, you can use item.CreateBase("ItemAmmo")
+class "ItemAmmo" extends "ItemUsable"
 
-CItemAmmo.Name = "Usable Items Base"
-CItemAmmo.Description = "An item that can be used."
-CItemAmmo.Category = "#Item_Category_Ammo"
-CItemAmmo.Model = "models/Items/BoxSRounds.mdl"
-CItemAmmo.UseText = "#Item_Option_Load"
-CItemAmmo.AmmoClass = "Pistol"
-CItemAmmo.AmmoAmount = 20
+ItemAmmo.name = "Usable Items Base"
+ItemAmmo.description = "An item that can be used."
+ItemAmmo.category = "#Item_Category_Ammo"
+ItemAmmo.model = "models/Items/BoxSRounds.mdl"
+ItemAmmo.use_text = "#Item_Option_Load"
+ItemAmmo.ammo_class = "Pistol"
+ItemAmmo.ammo_count = 20
 
-function CItemAmmo:OnUse(player)
-  player:GiveAmmo(self.AmmoAmount, self.AmmoClass)
+function ItemAmmo:OnUse(player)
+  player:GiveAmmo(self.ammo_count, self.ammo_class)
 end
-
-ItemAmmo = CItemAmmo

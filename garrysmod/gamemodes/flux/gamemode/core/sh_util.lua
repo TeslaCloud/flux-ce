@@ -102,7 +102,7 @@ do
   }
 
   -- A function to check whether character is vowel or not.
-  function util.IsVowel(char)
+  function util.vowel(char)
     char = char:utf8lower()
 
     if CLIENT then
@@ -562,9 +562,9 @@ function player.Find(name, bCaseSensitive, bReturnFirstHit)
       continue
     end
 
-    if (v:Name(true):find(name)) then
+    if (v:name(true):find(name)) then
       table.insert(hits, v)
-    elseif (!bCaseSensitive and v:Name(true):utf8lower():find(name:utf8lower())) then
+    elseif (!bCaseSensitive and v:name(true):utf8lower():find(name:utf8lower())) then
       table.insert(hits, v)
     elseif (v:SteamName():utf8lower():find(name:utf8lower())) then
       table.insert(hits, v)
@@ -886,7 +886,7 @@ function util.PlayerListToString(...)
     return "#Chat_Everyone"
   end
 
-  return util.ListToString(function(obj) return (IsValid(obj) and obj:Name()) or "Unknown Player" end, nil, ...)
+  return util.ListToString(function(obj) return (IsValid(obj) and obj:name()) or "Unknown Player" end, nil, ...)
 end
 
 function string.IsNumber(char)
@@ -1046,30 +1046,38 @@ function util.RemoveFunctions(obj)
   return obj
 end
 
-local colorMeta = FindMetaTable("Color")
+local color_meta = FindMetaTable("Color")
 
 do
-  local Pr = 0.299
-  local Pg = 0.587
-  local Pb = 0.114
+  local _r = 0.299
+  local _g = 0.587
+  local _b = 0.114
 
   -- A function to saturate the color.
   -- Ripped directly from C equivalent code that can be found
   -- here: http://alienryderflex.com/saturation.html
-  function colorMeta:Saturate(amt)
+  function color_meta:saturation(amt)
     local r, g, b = self.r, self.g, self.b
-    local P = math.sqrt((r * r * Pr) + (g * g * Pg) + (b * b + Pb))
+    local p = math.sqrt((r * r * _r) + (g * g * _g) + (b * b + _b))
 
     return Color(
-      math.Clamp(P + (r - P) * amt, 0, 255),
-      math.Clamp(P + (g - P) * amt, 0, 255),
-      math.Clamp(P + (b - P) * amt, 0, 255),
+      math.Clamp(p + (r - p) * amt, 0, 255),
+      math.Clamp(p + (g - p) * amt, 0, 255),
+      math.Clamp(p + (b - p) * amt, 0, 255),
       self.a
     )
   end
+
+  function color_meta:saturate(percentage)
+    return self:saturation(1 + percentage / 100)
+  end
+
+  function color_meta:desaturate(percentage)
+    return self:saturation(1 - math.Clamp(percentage, 0, 100) / 100)
+  end
 end
 
-function colorMeta:Darken(amt)
+function color_meta:darken(amt)
   return Color(
     math.Clamp(self.r - amt, 0, 255),
     math.Clamp(self.g - amt, 0, 255),
@@ -1078,7 +1086,7 @@ function colorMeta:Darken(amt)
   )
 end
 
-function colorMeta:Lighten(amt)
+function color_meta:lighten(amt)
   return Color(
     math.Clamp(self.r + amt, 0, 255),
     math.Clamp(self.g + amt, 0, 255),
@@ -1222,4 +1230,107 @@ local stringMeta = getmetatable("")
 
 function stringMeta:__add(right)
   return self..tostring(right)
+end
+
+function string.trim(...)
+  return string.Trim(...)
+end
+
+function string.starts(...)
+  return string.StartWith(...)
+end
+
+function string.ends(...)
+  return string.EndsWith(...)
+end
+
+function string.presence(str)
+  return isstring(str) and (str != '' and str) or nil
+end
+
+function string.to_snake_case(str)
+  str = str[1]:lower()..str:sub(2, str:len())
+
+  return str:gsub('([a-z])([A-Z])', function(lower, upper)
+    return lower..'_'..string.lower(upper)
+  end):lower()
+end
+
+function string.snake_to_pascal_case(str)
+  str = str[1]:upper()..str:sub(2, str:len())
+
+  return str:gsub('_([a-z])', string.upper)
+end
+
+function table.map(t, c)
+  local new_table = {}
+
+  for k, v in pairs(t) do
+    local val = c(v)
+    if val != nil then
+      table.insert(new_table, val)
+    end
+  end
+
+  return new_table
+end
+
+function table.select(t, what)
+  local new_table = {}
+
+  for k, v in pairs(t) do
+    if istable(v) then
+      table.insert(new_table, v[what])
+    end
+  end
+
+  return new_table
+end
+
+function table.slice(t, from, to)
+  local new_table = {}
+  for i = from, to do
+    table.insert(new_table, t[i])
+  end
+  return new_table
+end
+
+do
+  local table_meta = {
+    __index = table
+  }
+
+  -- Special arrays.
+  function a(initializer)
+    return setmetatable(initializer, table_meta)
+  end
+
+  function is_a(obj)
+    return getmetatable(obj) == table_meta
+  end
+end
+
+-- For use with table#map
+-- table.map(t, s'some_field')
+function s(what)
+  return function(tab)
+    return tab[what]
+  end
+end
+
+function txt(text)
+  local lines = string.Explode('\n', (text or ''):trim():trim("\n"))
+  local lowest_indent
+  local output = ''
+  for k, v in ipairs(lines) do
+    local indent = v:match('^([%s]+)')
+    if !lowest_indent then lowest_indent = indent end
+    if indent:len() < lowest_indent:len() then
+      lowest_indent = indent
+    end
+  end
+  for k, v in ipairs(lines) do
+    output = output..v:RemoveTextFromStart(lowest_indent)..'\n'
+  end
+  return output
 end

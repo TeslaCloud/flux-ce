@@ -1,8 +1,8 @@
 class "CCommand"
 
 CCommand.id = "undefined"
-CCommand.Name = "Unknown"
-CCommand.Description = "An undescribed command."
+CCommand.name = "Unknown"
+CCommand.description = "An undescribed command."
 CCommand.Syntax = "[none]"
 CCommand.Immunity = false
 CCommand.PlayerArg = nil
@@ -16,10 +16,10 @@ end
 function CCommand:OnRun() end
 
 function CCommand:__tostring()
-  return "Command ["..self.id.."]["..self.Name.."]"
+  return "Command ["..self.id.."]["..self.name.."]"
 end
 
-function CCommand:Register()
+function CCommand:register()
   fl.command:Create(self.id, self)
 end
 

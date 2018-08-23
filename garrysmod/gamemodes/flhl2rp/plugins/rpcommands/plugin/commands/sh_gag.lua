@@ -1,8 +1,8 @@
 local COMMAND = Command("gag")
-COMMAND.Name = "Gag"
-COMMAND.Description = "Mute player's OOC chats."
+COMMAND.name = "Gag"
+COMMAND.description = "Mute player's OOC chats."
 COMMAND.Syntax = "<name> <duration> [reason]"
-COMMAND.Category = "administration"
+COMMAND.category = "administration"
 COMMAND.Arguments = 2
 COMMAND.Immunity = true
 COMMAND.Aliases = {"muteooc", "oocmute", "plygag"}
@@ -35,10 +35,10 @@ function COMMAND:OnRun(player, targets, duration, ...)
 
   for k, v in ipairs(_player.GetAll()) do
     local time = "#for "..fl.lang:NiceTimeFull(v:GetNetVar("language"), duration)
-    local phrase = L("OOCMuteMessage", (IsValid(player) and player:Name()) or "Console", util.PlayerListToString(targets)).." "..time..". ("..reason..")"
+    local phrase = L("OOCMuteMessage", (IsValid(player) and player:name()) or "Console", util.PlayerListToString(targets)).." "..time..". ("..reason..")"
 
     v:Notify(phrase)
   end
 end
 
-COMMAND:Register()
+COMMAND:register()

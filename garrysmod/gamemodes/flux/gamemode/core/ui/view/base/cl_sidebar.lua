@@ -31,7 +31,7 @@ function PANEL:AddPanel(panel, bCenter)
   self.lastPos = self.lastPos + self.margin + panel:GetTall()
 end
 
-function PANEL:AddButton(text, callback)
+function PANEL:add_button(text, callback)
   local button = vgui.Create("flButton", self)
 
   button:SetSize(self:GetWide(), theme.GetOption("MainMenu_SidebarButtonHeight"))
@@ -93,4 +93,4 @@ function PANEL:PerformLayout()
   end
 end
 
-vgui.Register("flSidebar", PANEL, "DScrollPanel")
+vgui.register("flSidebar", PANEL, "DScrollPanel")

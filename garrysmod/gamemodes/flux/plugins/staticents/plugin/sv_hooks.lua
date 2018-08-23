@@ -14,7 +14,7 @@ local whitelistedEntities = {
 
 function flStaticEnts:PlayerMakeStatic(player, bIsStatic)
   if ((bIsStatic and !player:HasPermission("static")) or (!bIsStatic and !player:HasPermission("unstatic"))) then
-    fl.player:Notify(player, L("Err_No_Permission", player:Name()))
+    fl.player:Notify(player, L("Err_No_Permission", player:name()))
 
     return
   end

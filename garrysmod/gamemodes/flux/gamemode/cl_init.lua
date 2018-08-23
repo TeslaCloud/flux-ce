@@ -1,5 +1,5 @@
 fl = fl or {}
-fl.startTime = os.clock()
+fl.start_time = os.clock()
 
 -- Include pON, Netstream and UTF-8 library
 if (!string.utf8len or !pon or !netstream) then
@@ -20,9 +20,9 @@ include("shared.lua")
 font.CreateFonts()
 
 if (fl.initialized) then
-  MsgC(Color(0, 255, 100, 255), "Auto-reloaded in "..math.Round(os.clock() - fl.startTime, 3).. " second(s)\n")
+  MsgC(Color(0, 255, 100, 255), "Auto-reloaded in "..math.Round(os.clock() - fl.start_time, 3).. " second(s)\n")
 else
-  MsgC(Color(0, 255, 100, 255), "Flux v"..GM.Version.." has finished loading in "..math.Round(os.clock() - fl.startTime, 3).. " second(s)\n")
+  MsgC(Color(0, 255, 100, 255), "Flux v"..GM.version.." has finished loading in "..math.Round(os.clock() - fl.start_time, 3).. " second(s)\n")
 
   fl.initialized = true
 end

@@ -8,10 +8,10 @@ function flFactions:CharPanelCreated(id, panel)
     end
 
     if (factionTable and !factionTable.HasName) then
-      panel.NameLabel:SetVisible(false)
-      panel.NameEntry:SetVisible(false)
+      panel.nameLabel:SetVisible(false)
+      panel.nameEntry:SetVisible(false)
 
-      panel.DescLabel:SetPos(32, 64 - panel.NameLabel:GetTall())
+      panel.DescLabel:SetPos(32, 64 - panel.nameLabel:GetTall())
       panel.DescEntry:SetPos(32, 66)
     end
 
@@ -34,7 +34,7 @@ function flFactions:OnThemeLoaded(activeTheme)
 end
 
 function flFactions:AddCharacterCreationMenuItems(panel, menu, sidebar)
-  menu:AddButton("Faction", function(btn)
+  menu:add_button("Faction", function(btn)
     panel:OpenPanel("CharCreation_Faction")
   end)
 end
@@ -74,7 +74,7 @@ function flFactions:PreRebuildScoreboard(panel, w, h)
     local cat = vgui.Create("DCollapsibleCategory", panel)
     cat:SetSize(w - 8, 32)
     cat:SetPos(4, curY)
-    cat:SetLabel(factionTable.Name or id)
+    cat:SetLabel(factionTable.name or id)
 
     catList:Add(cat)
 

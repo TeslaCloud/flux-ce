@@ -4,11 +4,11 @@
   the framework is publicly released.
 --]]
 
-ITEM:SetBase(CItemWeapon)
-ITEM.Name = "Crossbow"
-ITEM.PrintName = "#Item_Crossbow_PrintName"
-ITEM.Description = "#Item_Crossbow_Description"
-ITEM.Model = "models/weapons/w_crossbow.mdl"
-ITEM.Weight = 3
-ITEM.WeaponClass = "weapon_crossbow"
-ITEM.EquipSlot = "#Weapon_Category_Heavy"
+ITEM:set_base(ItemWeapon)
+ITEM.name = "Crossbow"
+ITEM.print_name = "#Item_Crossbow_PrintName"
+ITEM.description = "#Item_Crossbow_Description"
+ITEM.model = "models/weapons/w_crossbow.mdl"
+ITEM.weight = 3
+ITEM.weapon_class = "weapon_crossbow"
+ITEM.equip_slot = "#Weapon_Category_Heavy"

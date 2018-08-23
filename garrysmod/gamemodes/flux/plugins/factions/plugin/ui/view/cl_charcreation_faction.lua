@@ -31,7 +31,7 @@ function PANEL:Init()
 
       local label = vgui.Create("DLabel", button)
       label:Dock(BOTTOM)
-      label:SetText(v.Name)
+      label:SetText(v.name)
       label:SetFont(theme.GetFont("Text_Large"))
       label:SizeToContents()
 
@@ -68,4 +68,4 @@ function PANEL:OnClose(parent)
   })
 end
 
-vgui.Register("flCharCreationFaction", PANEL, "flCharCreationBase")
+vgui.register("flCharCreationFaction", PANEL, "flCharCreationBase")
