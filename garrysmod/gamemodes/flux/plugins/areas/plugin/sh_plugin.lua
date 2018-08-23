@@ -4,7 +4,7 @@ util.include("cl_plugin.lua")
 util.include("sv_plugin.lua")
 
 if (!areas) then
-  util.include("libraries/sh_areas.lua")
+  util.include("lib/sh_areas.lua")
 end
 
 flAreas.toolModes = {

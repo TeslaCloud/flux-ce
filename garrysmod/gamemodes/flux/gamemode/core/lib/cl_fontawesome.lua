@@ -8,7 +8,7 @@
 --]]
 
 if (!font) then
-  include("flux/gamemode/core/libraries/cl_font.lua")
+  include("flux/gamemode/core/lib/cl_font.lua")
 end
 
 library.New("fa", fl)
