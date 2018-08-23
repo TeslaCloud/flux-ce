@@ -28,6 +28,9 @@ print('Flux environment: '..FLUX_ENV)
 -- Fix for the name conflicts.
 _player, _team, _file, _table, _sound = player, team, file, table, sound
 
+AddCSLuaFile("core/sh_util.lua")
+include("core/sh_util.lua")
+
 -- do - end blocks help us manage the scope of the variables,
 -- as well as create a separate Lua Closure for that bit of code.
 -- Locals within the same closure as the function are generally
@@ -41,7 +44,7 @@ do
   else
     ErrorNoHalt(txt[[
       ============================================
-      +gamemode is set to 'flux'!
+              +gamemode is set to 'flux'!
       Set it to your schema's folder name instead!
       ============================================
     ]])
@@ -69,8 +72,6 @@ function GM:GetGameDescription()
 
   return (isstring(nameOverride) and nameOverride) or "FL - "..fl.GetSchemaName()
 end
-
-include("core/sh_util.lua")
 
 util.include("core/sh_enums.lua")
 util.include("core/sh_core.lua")
