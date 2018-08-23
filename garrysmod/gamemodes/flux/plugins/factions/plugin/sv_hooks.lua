@@ -18,7 +18,7 @@ function flFactions:RestorePlayer(player, result)
   end
 end
 
-function flFactions:database_connected()
+function flFactions:activerecord_ready()
   change_table('fl_players', function(t)
     t:text 'whitelists'
   end)

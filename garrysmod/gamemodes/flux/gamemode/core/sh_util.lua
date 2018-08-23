@@ -1270,6 +1270,11 @@ function string.chomp(str, what)
   end
 end
 
+function string.capitalize(str)
+  local len = string.utf8len(str)
+  return string.utf8upper(str[1])..(len > 1 and string.utf8sub(str, 2, string.utf8len(str)) or '')
+end
+
 function table.map(t, c)
   local new_table = {}
 
