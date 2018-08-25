@@ -30,10 +30,12 @@ end
 function ActiveRecord.restore_schema()
   local query = ActiveRecord.Database:select('activerecord_schema')
     query:callback(function(result)
-      for k, v in ipairs(result) do
-        local t = ActiveRecord.schema[v.table_name] or {}
-        t[v.column_name] = v.abstract_type
-        ActiveRecord.schema[v.table_name] = t
+      if istable(result) then
+        for k, v in ipairs(result) do
+          local t = ActiveRecord.schema[v.table_name] or {}
+          t[v.column_name] = v.abstract_type
+          ActiveRecord.schema[v.table_name] = t
+        end
       end
       ActiveRecord.ready = true
       hook.Run('activerecord_ready')

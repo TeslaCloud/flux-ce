@@ -93,12 +93,15 @@ function library.create_class(name, base_class)
     base_class = base_class:parse_table()
   end
 
-  local parent = name:parse_parent() or _G
+  local parent = nil
+  parent, name = name:parse_parent()
   local obj = library.new(name, parent)
   obj.ClassName = name
   obj.BaseClass = base_class or false
   obj.class_name = obj.ClassName
   obj.base_class = obj.BaseClass
+  obj.static_class = true
+  obj.class = obj
 
   -- If this class is based off some other class - copy it's parent's data.
   if (istable(base_class)) then
@@ -160,6 +163,8 @@ function library.create_class(name, base_class)
       end
     end
 
+    new_obj.class = obj
+    new_obj.static_class = false
     new_obj.IsValid = function() return true end
 
     -- Return our newly generated object.
@@ -171,6 +176,17 @@ end
 
 function class(name, base_class)
   return library.create_class(name, base_class)
+end
+
+function delegate(obj, t)
+  if !istable(obj) or !istable(t) or !t.to then return end
+  local class = isstring(t.to) and t.to:parse_table() or t.to
+  if istable(class) and class.class_name then
+    for k, v in ipairs(t) do
+      obj[k] = class[k]
+    end
+  end
+  return true
 end
 
 --[[

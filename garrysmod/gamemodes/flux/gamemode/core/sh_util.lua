@@ -1279,10 +1279,10 @@ function string.parse_table(str)
   local tables = string.Explode('::', str)
   local ref = _G
   for k, v in ipairs(tables) do
-    if !istable(ref) then return false end
     ref = ref[v]
+    if !istable(ref) then return false, v end
   end
-  return istable(ref) and ref or false
+  return ref
 end
 
 function string.parse_parent(str)
@@ -1290,7 +1290,7 @@ function string.parse_parent(str)
   local ref = _G
   for k, v in ipairs(tables) do
     local new_ref = ref[v]
-    if !istable(new_ref) then return ref end
+    if !istable(new_ref) then return ref, v end
     ref = new_ref
   end
   return istable(ref) and ref or false
@@ -1301,6 +1301,19 @@ function table.map(t, c)
 
   for k, v in pairs(t) do
     local val = c(v)
+    if val != nil then
+      table.insert(new_table, val)
+    end
+  end
+
+  return new_table
+end
+
+function table.map_kv(t, c)
+  local new_table = {}
+
+  for k, v in pairs(t) do
+    local val = c(k, v)
     if val != nil then
       table.insert(new_table, val)
     end

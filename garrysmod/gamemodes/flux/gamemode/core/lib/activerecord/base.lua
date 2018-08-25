@@ -86,8 +86,12 @@ function ActiveRecord.Base:order(column, direction)
   return self
 end
 
-function ActiveRecord.Base:find(condition)
-  return self
+function ActiveRecord.Base:find(id, callback)
+  if !callback then
+    return self:where('id', id):limit(1)
+  else
+    return self:find(id):expect(callback)
+  end
 end
 
 function ActiveRecord.Base:limit(amt)
@@ -96,22 +100,39 @@ function ActiveRecord.Base:limit(amt)
 end
 
 function ActiveRecord.Base:run_query(callback)
+  if self.query_map and #self.query_map > 0 then
+    local query = ActiveRecord.Database:select(self.table_name)
+    for k, v in ipairs(self.query_map) do
+      local t, a, b = v[1], v[2], v[3]
+
+      if t == 'where' then
+        query:where_raw(a)
+      elseif t == 'order' then
+        query:order(a, b)
+      elseif t == 'limit' then
+        query:limit(a)
+      end
+    end
+    query:callback(function(results)
+      if istable(results) and #results > 0 then
+        return callback(ActiveRecord.Relation.new(results, self.class))
+      end
+    end)
+    query:execute()
+  end
   self.query_map = a{}
+  return self
 end
 
 function ActiveRecord.Base:expect(callback)
-  self:run_query(function(results)
-    if istable(results) and #results > 0 then
-      callback(results[1])
-    end
+  return self:run_query(function(results)
+    callback(results:first())
   end)
 end
 
 function ActiveRecord.Base:get(callback)
-  self:run_query(function(results)
-    if istable(results) and #results > 0 then
-      callback(results)
-    end
+  return self:run_query(function(results)
+    callback(results)
   end)
 end
 
@@ -135,4 +156,12 @@ function ActiveRecord.Base:save()
       query:update('updated_at', to_datetime(os.time()))
     query:execute()
   end
+  return self
+end
+
+function ActiveRecord.Base:destroy()
+  local query = ActiveRecord.Database:delete(self.table_name)
+    query:where('id', self.id)
+  query:execute()
+  self = nil
 end
