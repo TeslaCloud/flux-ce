@@ -38,6 +38,7 @@ function ActiveRecord.restore_schema()
         end
       end
       ActiveRecord.ready = true
+      ActiveRecord.Model:populate()
       hook.Run('activerecord_ready')
     end)
   query:execute()
