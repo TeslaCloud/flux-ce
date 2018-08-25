@@ -37,4 +37,4 @@ function PANEL:Request(name, handler, ...)
   self:Push(name, ...)
 end
 
-vgui.register("flBasePanel", PANEL, "EditablePanel")
+vgui.Register("flBasePanel", PANEL, "EditablePanel")

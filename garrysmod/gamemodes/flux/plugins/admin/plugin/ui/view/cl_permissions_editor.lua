@@ -69,7 +69,7 @@ function PANEL:GetPermission()
   return self.m_Permission
 end
 
-vgui.register("flPermission", PANEL, "flBasePanel")
+vgui.Register("flPermission", PANEL, "flBasePanel")
 
 local PANEL = {}
 
@@ -118,4 +118,4 @@ function PANEL:OnOpened()
   self:Rebuild()
 end
 
-vgui.register("flPermissionsEditor", PANEL, "flBasePanel")
+vgui.Register("flPermissionsEditor", PANEL, "flBasePanel")

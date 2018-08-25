@@ -31,4 +31,4 @@ function PANEL:Think()
   theme.Hook("FrameThink")
 end
 
-vgui.register("flFrame", PANEL, "flBasePanel")
+vgui.Register("flFrame", PANEL, "flBasePanel")

@@ -46,4 +46,4 @@ function PANEL:Rebuild()
   end
 end
 
-vgui.register("flItemSpawner", PANEL, "flBasePanel")
+vgui.Register("flItemSpawner", PANEL, "flBasePanel")

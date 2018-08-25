@@ -9,4 +9,4 @@ function PANEL:AddCategory()
 
 end
 
-vgui.register("flHelp", PANEL, "flFrame")
+vgui.Register("flHelp", PANEL, "flFrame")

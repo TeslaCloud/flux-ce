@@ -47,7 +47,7 @@ function PANEL:SetIconSize(w, h)
   self.iconH = h
 end
 
-vgui.register("flMenuItem", PANEL, "DButton")
+vgui.Register("flMenuItem", PANEL, "DButton")
 
 local PANEL = {}
 PANEL.last = 0
@@ -158,4 +158,4 @@ function PANEL:Open(x, y)
   return self
 end
 
-vgui.register("flMenu", PANEL, "DScrollPanel")
+vgui.Register("flMenu", PANEL, "DScrollPanel")
