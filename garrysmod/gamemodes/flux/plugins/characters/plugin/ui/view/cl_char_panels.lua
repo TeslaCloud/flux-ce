@@ -12,7 +12,7 @@ function PANEL:Paint(w, h)
   end
 end
 
-vgui.register("flCharCreationBase", PANEL, "flBasePanel")
+vgui.Register("flCharCreationBase", PANEL, "flBasePanel")
 
 local PANEL = {}
 PANEL.id = "general"
@@ -72,7 +72,7 @@ function PANEL:OnClose(parent)
   })
 end
 
-vgui.register("flCharCreationGeneral", PANEL, "flCharCreationBase")
+vgui.Register("flCharCreationGeneral", PANEL, "flCharCreationBase")
 
 local PANEL = {}
 PANEL.id = "model"
@@ -168,4 +168,4 @@ function PANEL:OnClose(parent)
   parent.CharData.model = self.model
 end
 
-vgui.register("flCharCreationModel", PANEL, "flCharCreationBase")
+vgui.Register("flCharCreationModel", PANEL, "flCharCreationBase")

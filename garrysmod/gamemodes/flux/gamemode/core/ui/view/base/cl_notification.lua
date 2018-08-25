@@ -87,4 +87,4 @@ function PANEL:Paint(width, height)
   end
 end
 
-vgui.register("flNotification", PANEL, "EditablePanel")
+vgui.Register("flNotification", PANEL, "EditablePanel")

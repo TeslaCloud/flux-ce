@@ -104,7 +104,7 @@ function PANEL:GetMenuSize()
   return font.Scale(1280), font.Scale(900)
 end
 
-vgui.register("flAdminPanel", PANEL, "flBasePanel")
+vgui.Register("flAdminPanel", PANEL, "flBasePanel")
 
 concommand.Add("fl_admin_test", function()
   if (IsValid(AdminPanel)) then

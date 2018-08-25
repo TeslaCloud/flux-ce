@@ -123,4 +123,4 @@ function PANEL:Paint(w, h)
   theme.Hook("PaintTabMenu", self, w, h)
 end
 
-vgui.register("flTabMenu", PANEL, "EditablePanel")
+vgui.Register("flTabMenu", PANEL, "EditablePanel")

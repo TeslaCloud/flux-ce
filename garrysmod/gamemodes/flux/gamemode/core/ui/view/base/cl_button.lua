@@ -91,4 +91,4 @@ function PANEL:SizeToContents()
   self:SetSize(w * 1.15 + add, h * 1.5)
 end
 
-vgui.register("flButton", PANEL, "flBasePanel")
+vgui.Register("flButton", PANEL, "flBasePanel")

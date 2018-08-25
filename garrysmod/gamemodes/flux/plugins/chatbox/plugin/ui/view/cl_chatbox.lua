@@ -269,4 +269,4 @@ function PANEL:PaintOver(w, h)
   end
 end
 
-vgui.register("flChatPanel", PANEL, "flBasePanel")
+vgui.Register("flChatPanel", PANEL, "flBasePanel")
