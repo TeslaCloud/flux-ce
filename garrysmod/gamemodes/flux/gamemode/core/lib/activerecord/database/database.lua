@@ -9,7 +9,7 @@
   https://mrmeow.me
 --]]
 
-class('Database', nil, ActiveRecord)
+class 'ActiveRecord::Database'
 
 function ActiveRecord.Database:select(table_name)
   return ActiveRecord.Query.new(table_name, 'select')

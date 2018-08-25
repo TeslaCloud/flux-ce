@@ -1,6 +1,6 @@
 -- Sorta model-view-controller implementation, except the model isn't /actually/ used lol.
 
-library.New "mvc"
+library.new "mvc"
 
 if CLIENT then
   local mvcHooks = {}

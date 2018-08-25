@@ -1,4 +1,4 @@
-class "Theme"
+class 'Theme'
 
 Theme.colors = {}
 Theme.sounds = {}

@@ -1,4 +1,4 @@
-class "Attribute"
+class 'Attribute'
 
 function Attribute:init(id)
   if (!isstring(id)) then return end

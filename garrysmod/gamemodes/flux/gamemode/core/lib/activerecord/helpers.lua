@@ -69,3 +69,7 @@ function add_index(args)
 
   ActiveRecord.Database:raw_query(query)
 end
+
+function to_datetime(unix_time)
+  return os.date('%Y-%m-%d %H:%M:%S', unix_time)
+end

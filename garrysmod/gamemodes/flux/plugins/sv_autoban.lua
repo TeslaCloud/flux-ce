@@ -1,6 +1,6 @@
-PLUGIN:SetName("TeslaCloud Blacklist")
-PLUGIN:SetAuthor("Mr. Meow")
-PLUGIN:SetDescription("Automatically prevents access to any TeslaCloud-ran servers to certain players.")
+PLUGIN:set_name("TeslaCloud Blacklist")
+PLUGIN:set_author("Mr. Meow")
+PLUGIN:set_description("Automatically prevents access to any TeslaCloud-ran servers to certain players.")
 
 --[[
   This code is here for indev and private versions only.

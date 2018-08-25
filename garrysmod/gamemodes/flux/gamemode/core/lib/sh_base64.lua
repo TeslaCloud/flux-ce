@@ -1,4 +1,4 @@
-﻿library.New "base64"
+﻿library.new "base64"
 
 do
   local base64Chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/"

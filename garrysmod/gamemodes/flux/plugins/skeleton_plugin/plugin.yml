@@ -1,3 +1,4 @@
 name: "Demo Plugin"
 description: "Does absolutely nothing useful."
 author: "Mr. Meow"
+environment: "development"

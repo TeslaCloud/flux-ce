@@ -3,7 +3,7 @@ if (!ItemUsable) then
 end
 
 -- Alternatively, you can use item.CreateBase("ItemAmmo")
-class "ItemAmmo" extends "ItemUsable"
+class 'ItemAmmo' extends 'ItemUsable'
 
 ItemAmmo.name = "Usable Items Base"
 ItemAmmo.description = "An item that can be used."

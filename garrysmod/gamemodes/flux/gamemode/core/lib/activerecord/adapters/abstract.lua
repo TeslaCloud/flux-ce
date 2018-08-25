@@ -1,6 +1,6 @@
 ActiveRecord.Adapters = ActiveRecord.Adapters or {}
 
-class('Abstract', nil, ActiveRecord.Adapters)
+class 'ActiveRecord::Adapters::Abstract'
 
 function ActiveRecord.Adapters.Abstract:init()
   self._connected = false

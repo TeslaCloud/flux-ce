@@ -14,7 +14,7 @@ local function remove_role(subject, role, object)
 end
 
 local function insert_role(subject, role, object)
-  local timestamp = to_timestamp(os.time())
+  local timestamp = to_datetime(os.time())
   local query = fl.db:insert(rolify_table)
     query:insert('steam_id', subject:SteamID())
     if role then query:insert('role', role) end
@@ -25,7 +25,7 @@ local function insert_role(subject, role, object)
 end
 
 local function update_role(subject, role, object)
-  local timestamp = to_timestamp(os.time())
+  local timestamp = to_datetime(os.time())
   local query = fl.db:update(rolify_table)
     query:where('steam_id', subject:SteamID())
     if role then query:update('role', role) end

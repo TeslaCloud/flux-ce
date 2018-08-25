@@ -1,4 +1,4 @@
-library.New("admin", fl)
+library.new("admin", fl)
 
 local groups = fl.admin.groups or {}
 fl.admin.groups = groups

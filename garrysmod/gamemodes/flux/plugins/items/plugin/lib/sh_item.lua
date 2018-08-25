@@ -1,4 +1,4 @@
-library.New "item"
+library.new "item"
 
 -- Item Templates storage.
 local stored = item.stored or {}
@@ -231,7 +231,7 @@ function item.IsInstance(itemTable)
 end
 
 function item.CreateBase(name)
-  class(name, nil, Item)
+  class(name, Item)
 end
 
 pipeline.register("item", function(id, file_name, pipe)

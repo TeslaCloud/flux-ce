@@ -1,7 +1,7 @@
-PLUGIN:SetAlias("flVisibleLegs")
-PLUGIN:SetName("Visible Legs")
-PLUGIN:SetAuthor("NightAngel")
-PLUGIN:SetDescription("Lets clients see their character's legs.")
+PLUGIN:set_alias("flVisibleLegs")
+PLUGIN:set_name("Visible Legs")
+PLUGIN:set_author("NightAngel")
+PLUGIN:set_description("Lets clients see their character's legs.")
 
 if (!CLIENT) then return end
 

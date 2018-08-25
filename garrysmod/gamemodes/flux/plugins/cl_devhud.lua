@@ -1,6 +1,6 @@
-PLUGIN:SetName("Flux Dev HUD")
-PLUGIN:SetAuthor("Mr. Meow")
-PLUGIN:SetDescription("Adds developer HUD.")
+PLUGIN:set_name("Flux Dev HUD")
+PLUGIN:set_author("Mr. Meow")
+PLUGIN:set_description("Adds developer HUD.")
 
 function PLUGIN:HUDPaint()
   if (fl.development) then

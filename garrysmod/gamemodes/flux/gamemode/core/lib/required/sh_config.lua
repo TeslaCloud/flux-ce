@@ -1,7 +1,7 @@
 ﻿-- This library is for serverside configs only!
 -- For clientside configs, see cl_settings.lua!
 
-library.New "config"
+library.new "config"
 
 local stored = config.stored or {}
 config.stored = stored

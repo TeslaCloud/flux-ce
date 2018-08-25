@@ -1,6 +1,6 @@
-PLUGIN:SetName("Weapon Selector")
-PLUGIN:SetAuthor("Mr. Meow")
-PLUGIN:SetDescription("Adds custom weapon selector for use with Flux.")
+PLUGIN:set_name("Weapon Selector")
+PLUGIN:set_author("Mr. Meow")
+PLUGIN:set_description("Adds custom weapon selector for use with Flux.")
 
 if SERVER then
   concommand.Add("selectweapon", function(player, command, arguments)

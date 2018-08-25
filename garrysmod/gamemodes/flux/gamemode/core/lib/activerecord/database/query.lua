@@ -9,7 +9,7 @@
   https://mrmeow.me
 --]]
 
-class('Query', nil, ActiveRecord)
+class 'ActiveRecord::Query'
 
 local queries_with_create = {
   create = true, change = true
@@ -54,6 +54,10 @@ end
 
 function ActiveRecord.Query:where(key, value)
   self:where_equal(key, value)
+end
+
+function ActiveRecord.Query:where_raw(condition)
+  table.insert(self.where_list, condition)
 end
 
 function ActiveRecord.Query:where_equal(key, value)

@@ -67,7 +67,8 @@ end
 function ActiveRecord.generate_tables()
   create_table('activerecord_schema', function(t)
     t:primary_key 'id'
-    t:string 'name'
+    t:string 'table_name'
+    t:string 'column_name'
     t:string 'abstract_type'
     t:string 'definition'
   end)

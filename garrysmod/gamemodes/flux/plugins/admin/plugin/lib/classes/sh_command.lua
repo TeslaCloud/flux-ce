@@ -1,4 +1,4 @@
-class "Command"
+class 'Command'
 
 Command.id = "undefined"
 Command.name = "Unknown"

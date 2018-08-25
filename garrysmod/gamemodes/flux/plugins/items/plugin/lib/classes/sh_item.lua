@@ -1,4 +1,4 @@
-class "Item"
+class 'Item'
 
 function Item:init(id)
   if (!isstring(id)) then return end
@@ -24,7 +24,7 @@ function Item:set_base(base_class)
   if (!istable(base_class)) then return end
 
   ITEM = nil
-  ITEM = base_class(self.id)
+  ITEM = base_class.new(self.id)
 end
 
 function Item:make_base()

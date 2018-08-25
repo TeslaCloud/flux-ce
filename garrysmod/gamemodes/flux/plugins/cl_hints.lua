@@ -1,7 +1,7 @@
-PLUGIN:SetAlias("flHints")
-PLUGIN:SetName("Hints")
-PLUGIN:SetDescription("Adds hints that are displayed to players.")
-PLUGIN:SetAuthor("Mr. Meow")
+PLUGIN:set_alias("flHints")
+PLUGIN:set_name("Hints")
+PLUGIN:set_description("Adds hints that are displayed to players.")
+PLUGIN:set_author("Mr. Meow")
 
 local stored = {}
 

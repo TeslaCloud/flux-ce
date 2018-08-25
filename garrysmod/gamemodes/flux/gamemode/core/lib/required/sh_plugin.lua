@@ -1,6 +1,6 @@
 if (plugin) then return end
 
-library.New "plugin"
+library.new "plugin"
 
 local stored = {}
 local unloaded = {}
@@ -47,7 +47,7 @@ function plugin.clear_extras()
   extras = table.Copy(default_extras)
 end
 
-class "Plugin"
+class 'Plugin'
 
 function Plugin:init(id, data)
   self.name = data.name or "Unknown Plugin"
@@ -63,11 +63,11 @@ function Plugin:get_name()
   return self.name
 end
 
-function Plugin:GetFolder()
+function Plugin:get_folder()
   return self.folder
 end
 
-function Plugin:GetAuthor()
+function Plugin:get_author()
   return self.author
 end
 
@@ -75,15 +75,15 @@ function Plugin:get_description()
   return self.description
 end
 
-function Plugin:SetName(name)
+function Plugin:set_name(name)
   self.name = name or self.name or "Unknown Plugin"
 end
 
-function Plugin:SetAuthor(author)
+function Plugin:set_author(author)
   self.author = author or self.author or "Unknown"
 end
 
-function Plugin:SetDescription(desc)
+function Plugin:set_description(desc)
   self.description = desc or self.description or "No description provided!"
 end
 
@@ -91,7 +91,7 @@ function Plugin:set_data(data)
   table.Merge(self, data)
 end
 
-function Plugin:SetAlias(alias)
+function Plugin:set_alias(alias)
   if (isstring(alias)) then
     _G[alias] = self
     self.alias = alias
@@ -136,7 +136,7 @@ function plugin.find(id)
     return stored[id], id
   else
     for k, v in pairs(stored) do
-      if (v.id == id or v:GetFolder() == id or v:get_name() == id) then
+      if (v.id == id or v:get_folder() == id or v:get_name() == id) then
         return v, k
       end
     end
@@ -233,9 +233,9 @@ function plugin.register(obj)
   plugin.cache_functions(obj)
 
   if (obj.ShouldRefresh == false) then
-    reload_data[obj:GetFolder()] = false
+    reload_data[obj:get_folder()] = false
   else
-    reload_data[obj:GetFolder()] = true
+    reload_data[obj:get_folder()] = true
   end
 
   if SERVER then
@@ -255,34 +255,32 @@ function plugin.register(obj)
     obj.OnPluginLoaded(obj)
   end
 
-  stored[obj:GetFolder()] = obj
+  stored[obj:get_folder()] = obj
   load_cache[obj.id] = true
 end
 
-function plugin.include(folder)
+function plugin.include(path)
   local hasMainFile = false
-  local id = folder:GetFileFromFilename()
+  local id = path:GetFileFromFilename()
   local ext = id:GetExtensionFromFilename()
   local data = {}
   data.id = id
-  data.folder = folder
+  data.folder = path
 
   if (reload_data[folder] == false) then
-    fl.dev_print("Not reloading plugin: "..folder)
-
+    fl.dev_print("Not reloading plugin: "..path)
     return
   elseif (plugin.loaded(id)) then
     return
   end
 
-  fl.dev_print("Loading plugin: "..folder)
+  fl.dev_print("Loading plugin: "..path)
 
   if (ext != "lua") then
     if SERVER then
-      if (file.Exists(folder.."/plugin.yml", "LUA")) then
-        local configData = YAML.eval(file.Read(folder.."/plugin.yml", "LUA"))
-        local dataTable = {name = configData.name, description = configData.description, author = configData.author, depends = configData.depends}
-          dataTable.folder = folder.."/plugin"
+      if (file.Exists(path.."/plugin.yml", "LUA")) then
+        local dataTable = YAML.eval(file.Read(path.."/plugin.yml", "LUA"))
+          dataTable.folder = path.."/plugin"
           dataTable.plugin_main = "sh_plugin.lua"
 
           if (file.Exists(dataTable.folder.."/sh_"..(dataTable.name or id)..".lua", "LUA")) then
@@ -290,26 +288,25 @@ function plugin.include(folder)
           end
         table.Merge(data, dataTable)
 
-        configData.name, configData.description, configData.author, configData.depends = nil, nil, nil, nil
-
-        for k, v in pairs(configData) do
-          if (v != nil) then
-            config.Set(k, v)
-          end
-        end
-
-        fl.shared.pluginInfo[folder] = data
+        fl.shared.pluginInfo[path] = data
       end
     else
-      table.Merge(data, fl.shared.pluginInfo[folder])
+      table.Merge(data, fl.shared.pluginInfo[path])
+    end
+  end
+
+  if data.environment then
+    if isstring(data.environment) and FLUX_ENV != data.environment then
+      return
+    elseif istable(data.environment) and !table.HasValue(data.environment, FLUX_ENV) then
+      return
     end
   end
 
   if (istable(data.depends)) then
     for k, v in ipairs(data.depends) do
       if (!plugin.require(v)) then
-        ErrorNoHalt("Not loading the '"..tostring(folder).."' plugin! Dependency missing: '"..tostring(v).."'!\n")
-
+        ErrorNoHalt("Not loading the '"..tostring(path).."' plugin! Dependency missing: '"..tostring(v).."'!\n")
         return
       end
     end
@@ -317,8 +314,8 @@ function plugin.include(folder)
 
   PLUGIN = Plugin.new(id, data)
 
-  if (stored[folder]) then
-    PLUGIN = stored[folder]
+  if (stored[path]) then
+    PLUGIN = stored[path]
   end
 
   plugin.include_folders(data.folder)
@@ -326,8 +323,8 @@ function plugin.include(folder)
   if (ext != "lua") then
     util.include(data.folder.."/"..data.plugin_main)
   else
-    if (file.Exists(folder, "LUA")) then
-      util.include(folder)
+    if (file.Exists(path, "LUA")) then
+      util.include(path)
     end
   end
 

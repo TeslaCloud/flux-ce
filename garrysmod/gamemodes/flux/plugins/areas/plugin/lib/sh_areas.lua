@@ -1,4 +1,4 @@
-library.New "areas"
+library.new "areas"
 
 local stored = areas.stored or {}
 areas.stored = stored
