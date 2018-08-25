@@ -250,8 +250,8 @@ function PANEL:PaintOver(w, h)
               local w2, h2 = draw.SimpleText(v.description, smallFont, 16, 16 + h + 4, color_white)
               local aliases = "[none]"
 
-              if (v.Aliases and #v.Aliases > 0) then
-                aliases = table.concat(v.Aliases or {}, ", ")
+              if (v.aliases and #v.aliases > 0) then
+                aliases = table.concat(v.aliases or {}, ", ")
               end
 
               draw.SimpleText("Aliases: " + aliases, smallFont, 16, 16 + h + h2 + 4, color_white)
@@ -269,4 +269,4 @@ function PANEL:PaintOver(w, h)
   end
 end
 
-vgui.register("flChatPanel", PANEL, "flBasePanel")
+vgui.Register("flChatPanel", PANEL, "flBasePanel")

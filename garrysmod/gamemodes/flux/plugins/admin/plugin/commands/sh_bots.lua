@@ -2,7 +2,7 @@ local COMMAND = Command.new("freezebots")
 COMMAND.name = "FreezeBots"
 COMMAND.description = "Freezes all of the bots."
 COMMAND.category = "server_management"
-COMMAND.Aliases = {"botfreeze", "freezebot", "bot_freeze", "bot_zombie"}
+COMMAND.aliases = {"botfreeze", "freezebot", "bot_freeze", "bot_zombie"}
 
 function COMMAND:OnRun(player)
   fl.player:NotifyAll(L("FreezeBotsMessage", (IsValid(player) and player:Name()) or "Console"))
@@ -16,7 +16,7 @@ local COMMAND = Command.new("unfreezebots")
 COMMAND.name = "UnfreezeBots"
 COMMAND.description = "Unfreezes all of the bots."
 COMMAND.category = "server_management"
-COMMAND.Aliases = {"botunfreeze", "unfreezebot", "bot_unfreeze", "bot_unzombie"}
+COMMAND.aliases = {"botunfreeze", "unfreezebot", "bot_unfreeze", "bot_unzombie"}
 
 function COMMAND:OnRun(player)
   fl.player:NotifyAll(L("UnfreezeBotsMessage", (IsValid(player) and player:Name()) or "Console"))
@@ -32,7 +32,7 @@ COMMAND.description = "Adds specified amount of bots to the server."
 COMMAND.syntax = "[number Bots]"
 COMMAND.category = "server_management"
 COMMAND.arguments = 0
-COMMAND.Aliases = {"bot", "bots"}
+COMMAND.aliases = {"bot", "bots"}
 
 function COMMAND:OnRun(player, numBots)
   numBots = math.Clamp((tonumber(numBots) or 1), 1, 128)
@@ -50,7 +50,7 @@ local COMMAND = Command.new("kickbots")
 COMMAND.name = "KickBots"
 COMMAND.description = "Kicks all bots."
 COMMAND.category = "server_management"
-COMMAND.Aliases = {"botkick", "kickbot", "bot_kick"}
+COMMAND.aliases = {"botkick", "kickbot", "bot_kick"}
 
 function COMMAND:OnRun(player)
   fl.player:NotifyAll(L("KickBotsMessage", (IsValid(player) and player:Name()) or "Console"))

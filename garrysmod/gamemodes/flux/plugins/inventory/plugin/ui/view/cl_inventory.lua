@@ -169,7 +169,7 @@ function PANEL:OnMouseReleased(...)
   self.BaseClass.OnMouseReleased(self, ...)
 end
 
-vgui.register("flInventoryItem", PANEL, "DPanel")
+vgui.Register("flInventoryItem", PANEL, "DPanel")
 
 local PANEL = {}
 PANEL.inventory = {}
@@ -311,4 +311,4 @@ function PANEL:Rebuild()
   end, {})
 end
 
-vgui.register("flInventory", PANEL, "flFrame")
+vgui.Register("flInventory", PANEL, "flFrame")

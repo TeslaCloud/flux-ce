@@ -3,7 +3,7 @@ COMMAND.name = "Fall"
 COMMAND.description = "Fall down on the ground."
 COMMAND.syntax = "[number GetUpTime]"
 COMMAND.category = "roleplay"
-COMMAND.Aliases = {"fallover", "charfallover"}
+COMMAND.aliases = {"fallover", "charfallover"}
 COMMAND.no_console = true
 
 function COMMAND:OnRun(player, delay)

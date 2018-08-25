@@ -6,7 +6,7 @@ COMMAND.syntax = "<name> <faction> [data]"
 COMMAND.category = "player_management"
 COMMAND.arguments = 2
 COMMAND.player_arg = 1
-COMMAND.Aliases = {"plytransfer", "charsetfaction", "chartransfer"}
+COMMAND.aliases = {"plytransfer", "charsetfaction", "chartransfer"}
 
 function COMMAND:OnRun(player, targets, name, bStrict)
   local factionTable = faction.Find(name, (bStrict and true) or false)

@@ -5,7 +5,7 @@ COMMAND.syntax = "#CharSetName_Syntax"
 COMMAND.category = "character_management"
 COMMAND.arguments = 2
 COMMAND.player_arg = 1
-COMMAND.Aliases = {"setname"}
+COMMAND.aliases = {"setname"}
 
 function COMMAND:OnRun(player, targets, newName)
   local target = targets[1]

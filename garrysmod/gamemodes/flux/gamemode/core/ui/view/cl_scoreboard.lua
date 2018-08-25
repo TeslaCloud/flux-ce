@@ -52,7 +52,7 @@ function PANEL:GetMenuSize()
   return font.Scale(1280), font.Scale(900)
 end
 
-vgui.register("flScoreboard", PANEL, "flBasePanel")
+vgui.Register("flScoreboard", PANEL, "flBasePanel")
 
 local PANEL = {}
 PANEL.player = false
@@ -92,4 +92,4 @@ function PANEL:Rebuild()
   hook.Run("RebuildScoreboardPlayerCard", self, player)
 end
 
-vgui.register("flScoreboardPlayer", PANEL, "flBasePanel")
+vgui.Register("flScoreboardPlayer", PANEL, "flBasePanel")

@@ -32,4 +32,4 @@ function PANEL:OnClose(parent)
 
 end
 
-vgui.register("flCharCreationAttributes", PANEL, "flCharCreationBase")
+vgui.Register("flCharCreationAttributes", PANEL, "flCharCreationBase")

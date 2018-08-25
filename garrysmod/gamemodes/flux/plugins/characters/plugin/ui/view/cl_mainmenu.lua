@@ -128,4 +128,4 @@ function PANEL:add_button(text, callback)
   return button
 end
 
-vgui.register("flMainMenu", PANEL, "EditablePanel")
+vgui.Register("flMainMenu", PANEL, "EditablePanel")
