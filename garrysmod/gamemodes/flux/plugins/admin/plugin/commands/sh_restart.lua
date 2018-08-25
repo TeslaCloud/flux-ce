@@ -4,7 +4,7 @@ COMMAND.description = "Restarts the current map."
 COMMAND.syntax = "[number Delay]"
 COMMAND.category = "server_management"
 COMMAND.arguments = 0
-COMMAND.Aliases = {"maprestart"}
+COMMAND.aliases = {"maprestart"}
 
 function COMMAND:OnRun(player, delay)
   delay = tonumber(delay) or 0

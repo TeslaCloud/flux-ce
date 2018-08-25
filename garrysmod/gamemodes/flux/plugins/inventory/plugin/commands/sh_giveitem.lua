@@ -5,7 +5,7 @@ COMMAND.syntax = "<string target> <string item name or unique ID>"
 COMMAND.category = "character_management"
 COMMAND.arguments = 2
 COMMAND.player_arg = 1
-COMMAND.Aliases = {"chargiveitem", "plygiveitem"}
+COMMAND.aliases = {"chargiveitem", "plygiveitem"}
 
 function COMMAND:OnRun(player, targets, itemName, amount)
   local itemTable = item.Find(itemName)

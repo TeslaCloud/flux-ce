@@ -5,7 +5,7 @@ COMMAND.syntax = "#SetGroupCMD_Syntax"
 COMMAND.category = "player_management"
 COMMAND.arguments = 2
 COMMAND.immunity = true
-COMMAND.Aliases = {"plysetgroup", "setusergroup", "plysetusergroup"}
+COMMAND.aliases = {"plysetgroup", "setusergroup", "plysetusergroup"}
 
 function COMMAND:OnRun(player, targets, userGroup)
   if (fl.admin:GroupExists(userGroup)) then

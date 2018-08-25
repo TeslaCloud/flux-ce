@@ -5,7 +5,7 @@ COMMAND.syntax = "<target> [number GetUpTime]"
 COMMAND.category = "roleplay"
 COMMAND.arguments = 1
 COMMAND.player_arg = 1
-COMMAND.Aliases = {"forcefallover", "plyfall"}
+COMMAND.aliases = {"forcefallover", "plyfall"}
 
 function COMMAND:OnRun(player, target, delay)
   if (isnumber(delay) and delay > 0) then

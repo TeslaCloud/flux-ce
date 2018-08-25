@@ -4,7 +4,7 @@ COMMAND.description = "#UnbanCMD_Description"
 COMMAND.syntax = "#UnbanCMD_Syntax"
 COMMAND.category = "administration"
 COMMAND.arguments = 1
-COMMAND.Aliases = {"plyunban"}
+COMMAND.aliases = {"plyunban"}
 
 function COMMAND:OnRun(player, steam_id)
   if (isstring(steam_id) and steam_id != "") then
