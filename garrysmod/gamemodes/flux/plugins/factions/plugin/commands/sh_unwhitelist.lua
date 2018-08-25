@@ -6,7 +6,7 @@ COMMAND.syntax = "#TakeWhitelistCMD_Syntax"
 COMMAND.category = "player_management"
 COMMAND.arguments = 2
 COMMAND.player_arg = 1
-COMMAND.Aliases = {"takewhitelist", "plytakewhitelist", "plyunwhitelist"}
+COMMAND.aliases = {"takewhitelist", "plytakewhitelist", "plyunwhitelist"}
 
 function COMMAND:OnRun(player, targets, name, bStrict)
   local whitelist = faction.Find(name, bStrict)

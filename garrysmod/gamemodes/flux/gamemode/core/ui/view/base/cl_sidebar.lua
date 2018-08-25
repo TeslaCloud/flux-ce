@@ -93,4 +93,4 @@ function PANEL:PerformLayout()
   end
 end
 
-vgui.register("flSidebar", PANEL, "DScrollPanel")
+vgui.Register("flSidebar", PANEL, "DScrollPanel")

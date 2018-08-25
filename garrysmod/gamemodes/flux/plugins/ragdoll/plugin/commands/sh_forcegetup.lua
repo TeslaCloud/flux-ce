@@ -5,7 +5,7 @@ COMMAND.syntax = "<target> [number GetUpTime]"
 COMMAND.category = "roleplay"
 COMMAND.arguments = 1
 COMMAND.player_arg = 1
-COMMAND.Aliases = {"forcegetup", "plygetup"}
+COMMAND.aliases = {"forcegetup", "plygetup"}
 
 function COMMAND:OnRun(player, target, delay)
   delay = math.Clamp(delay or 0, 0, 60)

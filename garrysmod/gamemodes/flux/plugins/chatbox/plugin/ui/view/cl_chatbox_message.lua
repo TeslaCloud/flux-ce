@@ -91,4 +91,4 @@ function PANEL:Paint(w, h)
   end
 end
 
-vgui.register("flChatMessage", PANEL, "flBasePanel")
+vgui.Register("flChatMessage", PANEL, "flBasePanel")

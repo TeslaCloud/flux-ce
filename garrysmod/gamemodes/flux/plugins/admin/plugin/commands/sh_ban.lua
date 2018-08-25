@@ -5,7 +5,7 @@ COMMAND.syntax = "#BanCMD_Syntax"
 COMMAND.category = "administration"
 COMMAND.arguments = 2
 COMMAND.immunity = true
-COMMAND.Aliases = {"plyban"}
+COMMAND.aliases = {"plyban"}
 
 function COMMAND:OnRun(player, targets, duration, ...)
   local pieces = {...}

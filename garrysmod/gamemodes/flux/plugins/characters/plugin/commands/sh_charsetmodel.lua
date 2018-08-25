@@ -5,7 +5,7 @@ COMMAND.syntax = "#CharSetModel_Syntax"
 COMMAND.category = "character_management"
 COMMAND.arguments = 2
 COMMAND.player_arg = 1
-COMMAND.Aliases = {"setmodel"}
+COMMAND.aliases = {"setmodel"}
 
 function COMMAND:OnRun(player, targets, model)
   local target = targets[1]

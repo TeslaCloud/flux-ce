@@ -5,7 +5,7 @@ COMMAND.syntax = "#KickCMD_Syntax"
 COMMAND.category = "administration"
 COMMAND.arguments = 1
 COMMAND.immunity = true
-COMMAND.Aliases = {"plykick"}
+COMMAND.aliases = {"plykick"}
 
 function COMMAND:OnRun(player, targets, ...)
   local pieces = {...}

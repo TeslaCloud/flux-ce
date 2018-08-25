@@ -4,7 +4,7 @@ COMMAND.description = "Changes the level to specified map."
 COMMAND.syntax = "<string Map> [number Delay]"
 COMMAND.category = "server_management"
 COMMAND.arguments = 1
-COMMAND.Aliases = {"map"}
+COMMAND.aliases = {"map"}
 
 function COMMAND:OnRun(player, map, delay)
   map = tostring(map) or "gm_construct"

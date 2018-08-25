@@ -87,4 +87,4 @@ function PANEL:Paint(w, h)
   draw.SimpleText("#CharCreateText", theme.GetFont("Text_Large"), 24, 42)
 end
 
-vgui.register("flCharacterCreation", PANEL, "flFrame")
+vgui.Register("flCharacterCreation", PANEL, "flFrame")
