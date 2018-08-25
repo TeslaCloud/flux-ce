@@ -94,6 +94,14 @@ function ActiveRecord.Base:find(id, callback)
   end
 end
 
+function ActiveRecord.Base:find_by(column, value, callback)
+  if !callback then
+    return self:where(column, value):limit(1)
+  else
+    return self:find_by(column, value):expect(callback)
+  end
+end
+
 function ActiveRecord.Base:limit(amt)
   self.query_map:insert { 'limit', amt }
   return self
