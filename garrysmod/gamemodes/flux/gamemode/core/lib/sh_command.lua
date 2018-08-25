@@ -22,8 +22,8 @@ function fl.command:Create(id, data)
   -- Add original command name to the aliases table.
   aliases[id] = data.id
 
-  if (data.Aliases) then
-    for k, v in ipairs(data.Aliases) do
+  if (data.aliases) then
+    for k, v in ipairs(data.aliases) do
       aliases[v] = id
     end
   end

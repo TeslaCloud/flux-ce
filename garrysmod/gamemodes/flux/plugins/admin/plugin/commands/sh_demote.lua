@@ -5,7 +5,7 @@ COMMAND.syntax = "#DemoteCMD_Syntax"
 COMMAND.category = "player_management"
 COMMAND.arguments = 1
 COMMAND.immunity = true
-COMMAND.Aliases = {"plydemote"}
+COMMAND.aliases = {"plydemote"}
 
 function COMMAND:OnRun(player, targets)
   for k, target in ipairs(targets) do

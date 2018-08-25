@@ -3,7 +3,7 @@ COMMAND.name = "Static"
 COMMAND.description = "Makes the entity you're looking at static."
 COMMAND.syntax = "[none]"
 COMMAND.category = "misc"
-COMMAND.Aliases = {"staticadd", "staticpropadd"}
+COMMAND.aliases = {"staticadd", "staticpropadd"}
 
 function COMMAND:OnRun(player)
   plugin.call("PlayerMakeStatic", player, true)
