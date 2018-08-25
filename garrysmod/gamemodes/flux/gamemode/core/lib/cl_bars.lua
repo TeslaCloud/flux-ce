@@ -2,7 +2,7 @@ if (!font) then
   util.include("cl_font.lua")
 end
 
-library.New("bars", fl)
+library.new("bars", fl)
 
 local stored = fl.bars.stored or {}
 local sorted = fl.bars.sorted or {}

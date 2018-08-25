@@ -1,5 +1,5 @@
 if CLIENT then
-  library.New("binds", fl)
+  library.new("binds", fl)
 
   local keyEnums = fl.binds.keyEnums or {}
   local stored = fl.binds.stored or {}

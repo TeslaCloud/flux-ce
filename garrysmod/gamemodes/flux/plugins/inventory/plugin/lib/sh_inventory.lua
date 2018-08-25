@@ -2,7 +2,7 @@ if (!item) then
   error("Attempt to use inventory system without Flux's items system.\n")
 end
 
-library.New "inventory"
+library.new "inventory"
 
 do
   local player_meta = FindMetaTable("Player")

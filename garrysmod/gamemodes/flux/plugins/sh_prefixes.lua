@@ -1,7 +1,7 @@
-PLUGIN:SetAlias("flPrefixes")
-PLUGIN:SetName("Prefixes")
-PLUGIN:SetAuthor("AleXXX_007")
-PLUGIN:SetDescription("Adds prefix adjusting to avoid troubles with certain commands.")
+PLUGIN:set_alias("flPrefixes")
+PLUGIN:set_name("Prefixes")
+PLUGIN:set_author("AleXXX_007")
+PLUGIN:set_description("Adds prefix adjusting to avoid troubles with certain commands.")
 
 local stored = {}
 

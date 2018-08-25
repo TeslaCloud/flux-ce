@@ -59,14 +59,14 @@ function file.Write(file_name, contents)
 end
 
 --[[
-  Function: library.New (string name, table parent = _G)
+  Function: library.new (string name, table parent = _G)
   Description: Creates a library inside the parent table.
   Argument: string name - The name of the library. Must comply with Lua variable name requirements.
   Argument: table parent (default: _G) - The parent table to put the library into.
 
   Returns: table - The created library.
 --]]
-function library.New(name, parent)
+function library.new(name, parent)
   parent = parent or _G
 
   parent[name] = parent[name] or {}
@@ -84,41 +84,41 @@ setmetatable(library, { __call = function(tab, name, parent) return tab.Get(name
   Argument: table parent (default: _G) - The parent table to put the class into.
   Argument: class base_class (default: nil) - The base class this new class should extend.
 
-  Alias: Class (string name, class base_class = nil, table parent = _G)
   Alias: class (string name, class base_class = nil, table parent = _G)
 
   Returns: table - The created class.
 --]]
-function library.create_class(name, parent, base_class)
-  local class = {}
-
-  -- If this class is based off some other class - copy it's parent's data.
-  if (istable(base_class)) then
-    local copy = table.Copy(base_class)
-    local merged = table.SafeMerge(copy, class)
-
-    if (isfunction(base_class.OnExtended)) then
-      try {
-        base_class.OnExtended, copy, merged
-      } catch {
-        function(exception)
-          ErrorNoHalt("OnExtended class hook has failed to run!\n" +
-            tostring(exception) + "\n")
-        end
-      }
-    end
-
-    class = merged
+function library.create_class(name, base_class)
+  if (isstring(base_class)) then
+    base_class = base_class:parse_table()
   end
 
-  -- Create the actual class table.
-  local obj = library.New(name, (parent or _G))
+  local parent = name:parse_parent() or _G
+  local obj = library.new(name, parent)
   obj.ClassName = name
   obj.BaseClass = base_class or false
   obj.class_name = obj.ClassName
   obj.base_class = obj.BaseClass
 
-  library.last_class = { name = name, parent = (parent or _G) }
+  -- If this class is based off some other class - copy it's parent's data.
+  if (istable(base_class)) then
+    local copy = table.Copy(base_class)
+    local merged = table.SafeMerge(copy, obj)
+
+    if (isfunction(base_class.class_extended)) then
+      try {
+        base_class.class_extended, copy, merged
+      } catch {
+        function(exception)
+          ErrorNoHalt(tostring(exception) + "\n")
+        end
+      }
+    end
+
+    obj = merged
+  end
+
+  library.last_class = { name = name, parent = parent }
 
   obj.new = function(...)
     local new_obj = {}
@@ -166,15 +166,12 @@ function library.create_class(name, parent, base_class)
     return new_obj
   end
 
-  return setmetatable((parent or _G)[name], class)
+  return parent[name]
 end
 
--- Aliases
-function Class(name, base_class, parent)
-  return library.create_class(name, parent, base_class)
+function class(name, base_class)
+  return library.create_class(name, base_class)
 end
-
-class = Class
 
 --[[
   Function: extends (class base_class)
@@ -188,7 +185,7 @@ class = Class
 --]]
 function extends(base_class)
   if (isstring(base_class)) then
-    base_class = _G[base_class]
+    base_class = base_class:parse_table()
   end
 
   if (istable(library.last_class) and istable(base_class)) then
@@ -196,13 +193,12 @@ function extends(base_class)
     local copy = table.Copy(base_class)
     local merged = table.Merge(copy, obj)
 
-    if (isfunction(base_class.OnExtended)) then
+    if (isfunction(base_class.class_extended)) then
       try {
-        base_class.OnExtended, copy, merged
+        base_class.class_extended, copy, merged
       } catch {
         function(exception)
-          ErrorNoHalt("OnExtended class hook has failed to run!\n" +
-            tostring(exception) + "\n")
+          ErrorNoHalt(tostring(exception) + "\n")
         end
       }
     end

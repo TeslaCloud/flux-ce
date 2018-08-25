@@ -1,6 +1,6 @@
-PLUGIN:SetName("Raise Weapon")
-PLUGIN:SetAuthor("Mr. Meow")
-PLUGIN:SetDescription("Allows weapons to be lowered and raised by holding R key.")
+PLUGIN:set_name("Raise Weapon")
+PLUGIN:set_author("Mr. Meow")
+PLUGIN:set_description("Allows weapons to be lowered and raised by holding R key.")
 
 local player_meta = FindMetaTable("Player")
 local blockedWeapons = {

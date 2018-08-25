@@ -1,4 +1,4 @@
-library.New "data"
+library.new "data"
 
 if SERVER then
   function data.Save(key, value)

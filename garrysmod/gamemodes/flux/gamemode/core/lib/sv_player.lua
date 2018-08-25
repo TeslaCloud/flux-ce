@@ -1,4 +1,4 @@
-library.New("player", fl)
+library.new("player", fl)
 
 function fl.player:Notify(player, message)
   if (!IsValid(player)) then

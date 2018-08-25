@@ -1,4 +1,4 @@
-class('Mysqloo', ActireRecord.Adapters.Abstract, ActiveRecord.Adapters)
+class 'ActiveRecord::Adapters::Mysqloo' extends 'ActiveRecord::Adapters::Abstract'
 
 ActiveRecord.Adapters.Mysqloo.types = {
   primary_key = 'bigint auto_increment',

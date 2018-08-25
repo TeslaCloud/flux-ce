@@ -1,4 +1,4 @@
-PLUGIN:SetAlias("fl3DText")
+PLUGIN:set_alias("fl3DText")
 
 fl3DText.stored = fl3DText.stored or {}
 

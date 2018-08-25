@@ -2,7 +2,7 @@
   The settings library allows developers to easily add clientside settings/options that can be
   saved and persist between a client's play sessions (even between different servers).
 --]]
-library.New("settings", fl)
+library.new("settings", fl)
 
 -- The table that will contain all the setting tables.
 local stored = fl.settings.stored or {}

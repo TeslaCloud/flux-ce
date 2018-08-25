@@ -1,5 +1,5 @@
 -- Alternatively, you can use item.CreateBase("ItemUsable")
-class "ItemUsable" extends "Item"
+class 'ItemUsable' extends 'Item'
 
 ItemUsable.name = "Usable Items Base"
 ItemUsable.description = "An item that can be used."

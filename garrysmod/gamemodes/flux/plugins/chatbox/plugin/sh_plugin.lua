@@ -1,6 +1,6 @@
-PLUGIN:SetAlias("flChatbox")
+PLUGIN:set_alias("flChatbox")
 
-library.New "chatbox"
+library.new "chatbox"
 
 -- Enums for message data structures.
 CHAT_NONE = 0

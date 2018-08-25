@@ -1,6 +1,6 @@
-PLUGIN:SetName("Admin ESP")
-PLUGIN:SetAuthor("Mr. Meow")
-PLUGIN:SetDescription("Adds an ESP for admins.")
+PLUGIN:set_name("Admin ESP")
+PLUGIN:set_author("Mr. Meow")
+PLUGIN:set_description("Adds an ESP for admins.")
 
 do
   local color_lightred = Color(255, 100, 100)

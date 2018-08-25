@@ -1,9 +1,9 @@
-PLUGIN:SetAlias("flAttributes")
+PLUGIN:set_alias("flAttributes")
 
 util.include("sv_hooks.lua")
 
 function flAttributes:OnPluginLoaded()
-  local dir = self:GetFolder().."/plugin/"
+  local dir = self:get_folder().."/plugin/"
 
   attributes.RegisterType("skills", "SKILL", dir.."skills/")
   attributes.RegisterType("stats", "STAT", dir.."stats/")

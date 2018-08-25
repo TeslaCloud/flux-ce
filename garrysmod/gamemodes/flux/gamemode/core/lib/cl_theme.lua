@@ -1,4 +1,4 @@
-library.New "theme"
+library.new "theme"
 theme.activeTheme = theme.activeTheme or nil
 
 local stored = theme.stored or {}

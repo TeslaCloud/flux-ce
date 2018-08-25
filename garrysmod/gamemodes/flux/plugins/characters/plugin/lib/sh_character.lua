@@ -1,4 +1,4 @@
-﻿library.New "character"
+﻿library.new "character"
 
 local stored = character.stored or {}
 character.stored = stored
@@ -131,7 +131,7 @@ if SERVER then
     end
   end
 
-  function character.SetName(player, index, newName)
+  function character.set_name(player, index, newName)
     local char = character.Get(player, index)
 
     if (char) then

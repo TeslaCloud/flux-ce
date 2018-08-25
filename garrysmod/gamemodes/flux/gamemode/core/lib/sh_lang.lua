@@ -1,4 +1,4 @@
-library.New("lang", fl)
+library.new("lang", fl)
 
 local stored = fl.lang.stored or {}
 fl.lang.stored = stored

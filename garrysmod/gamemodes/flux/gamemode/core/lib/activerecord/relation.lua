@@ -1,4 +1,4 @@
-class('Relation', nil, ActiveRecord)
+class 'ActiveRecord::Relation'
 
 function ActiveRecord.Relation:init()
 

@@ -12,7 +12,7 @@ function COMMAND:OnRun(player, targets, newName)
 
   fl.player:NotifyAll(L("CharSetName_Message", (IsValid(player) and player:Name()) or "Console", target:Name(), newName))
 
-  character.SetName(target, target:GetCharacter(), newName)
+  character.set_name(target, target:GetCharacter(), newName)
 end
 
 COMMAND:register()

@@ -1,4 +1,4 @@
-class "Role"
+class 'Role'
 
 Role.name = "Undefined"
 Role.description = "Undefined"

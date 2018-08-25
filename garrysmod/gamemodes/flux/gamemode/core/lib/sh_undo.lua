@@ -1,4 +1,4 @@
-library.New("undo", fl)
+library.new("undo", fl)
 
 local queue = {}
 local buffer = {}

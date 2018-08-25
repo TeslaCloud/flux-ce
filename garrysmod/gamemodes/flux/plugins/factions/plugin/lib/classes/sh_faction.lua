@@ -1,4 +1,4 @@
-class "Faction"
+class 'Faction'
 
 function Faction:init(id)
   self.id = id:to_id()

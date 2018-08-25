@@ -1,4 +1,4 @@
-library.New "font"
+library.new "font"
 
 -- We want the fonts to recreate on refresh.
 local stored = {}

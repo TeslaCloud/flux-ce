@@ -1,4 +1,4 @@
-library.New "faction"
+library.new "faction"
 
 local stored = faction.stored or {}
 faction.stored = stored

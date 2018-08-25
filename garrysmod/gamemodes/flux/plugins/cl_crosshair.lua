@@ -1,6 +1,6 @@
-PLUGIN:SetName("Crosshair")
-PLUGIN:SetAuthor("Mr. Meow")
-PLUGIN:SetDescription("Adds a crosshair.")
+PLUGIN:set_name("Crosshair")
+PLUGIN:set_author("Mr. Meow")
+PLUGIN:set_description("Adds a crosshair.")
 
 --fl.hint:Add("RunCrosshair", "Crosshair will change it's size depending on your movement speed\nand distance between you and your view target.")
 

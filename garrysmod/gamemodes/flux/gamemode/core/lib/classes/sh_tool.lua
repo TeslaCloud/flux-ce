@@ -11,7 +11,7 @@
   extras added by Flux.
 --]]
 
-class "Tool"
+class 'Tool'
 
 function Tool:MakeGhostEntity(model, pos, angle)
   util.PrecacheModel(model)

@@ -1,4 +1,4 @@
-library.New("tool", fl)
+library.new("tool", fl)
 
 local stored = fl.tool.stored or {}
 fl.tool.stored = stored

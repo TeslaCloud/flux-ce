@@ -1,4 +1,4 @@
-class('Sqlite', ActireRecord.Adapters.Abstract, ActiveRecord.Adapters)
+class 'ActiveRecord::Adapters::Sqlite' extends 'ActiveRecord::Adapters::Abstract'
 
 ActiveRecord.Adapters.Sqlite.types = {
   primary_key = 'integer AUTOINCREMENT NOT NULL',

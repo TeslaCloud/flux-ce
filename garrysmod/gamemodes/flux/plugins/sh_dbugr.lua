@@ -1,6 +1,6 @@
-PLUGIN:SetName("DBugR Hooks")
-PLUGIN:SetAuthor("NightAngel")
-PLUGIN:SetDescription("Adds all plugin hooks to DBugR performance metrics monitor.")
+PLUGIN:set_name("DBugR Hooks")
+PLUGIN:set_author("NightAngel")
+PLUGIN:set_description("Adds all plugin hooks to DBugR performance metrics monitor.")
 
 if (DBugR) then
   function PLUGIN:OnSchemaLoaded()

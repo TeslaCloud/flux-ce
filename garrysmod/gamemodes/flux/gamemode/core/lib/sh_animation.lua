@@ -1,4 +1,4 @@
-library.New("anim", fl)
+library.new("anim", fl)
 
 local stored = fl.anim.stored or {}
 local models = fl.anim.models or {}

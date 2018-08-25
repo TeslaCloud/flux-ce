@@ -1,6 +1,6 @@
-PLUGIN:SetName("Glitches")
-PLUGIN:SetAuthor("Mr. Meow")
-PLUGIN:SetDescription("Adds the ability to create pixelized glitch effects on the screen.")
+PLUGIN:set_name("Glitches")
+PLUGIN:set_author("Mr. Meow")
+PLUGIN:set_description("Adds the ability to create pixelized glitch effects on the screen.")
 
 do
   local nextGlitch = 0

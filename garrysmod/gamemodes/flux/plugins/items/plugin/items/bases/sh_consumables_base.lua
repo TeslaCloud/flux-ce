@@ -9,7 +9,7 @@ if (!ItemUsable) then
 end
 
 -- Alternatively, you can use item.CreateBase("ItemConsumable")
-class "ItemConsumable" extends "ItemUsable"
+class 'ItemConsumable' extends 'ItemUsable'
 
 ItemConsumable.name = "Consumables Base"
 ItemConsumable.description = "An item that can be consumed."

@@ -1,4 +1,4 @@
-PLUGIN:SetAlias("flCharacters")
+PLUGIN:set_alias("flCharacters")
 
 util.include("cl_hooks.lua")
 util.include("sv_plugin.lua")

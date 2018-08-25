@@ -1,4 +1,4 @@
-library.New "attributes"
+library.new "attributes"
 
 local stored = attributes.stored or {}
 attributes.stored = stored

@@ -1,4 +1,4 @@
-PLUGIN:SetAlias("flAreas")
+PLUGIN:set_alias("flAreas")
 
 util.include("cl_plugin.lua")
 util.include("sv_plugin.lua")

@@ -11,7 +11,7 @@ if (!font) then
   include("flux/gamemode/core/lib/cl_font.lua")
 end
 
-library.New("fa", fl)
+library.new("fa", fl)
 
 local faCodes = {
   ["fa-glass"] = "f000",

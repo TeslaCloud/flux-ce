@@ -1,5 +1,5 @@
 ActiveRecord = ActiveRecord or {}
-ActiveRecord.schema = ActiveRecord.schema or { _restored = false }
+ActiveRecord.schema = ActiveRecord.schema or {}
 ActiveRecord.db_settings = Settings.database[FLUX_ENV] or Settings.database['development'] or {}
 ActiveRecord.adapter_name = ActiveRecord.db_settings.adapter or 'sqlite'
 
@@ -9,7 +9,7 @@ include 'database/query.lua'
 include 'adapters/abstract.lua'
 
 function ActiveRecord.add_to_schema(table_name, column_name, type)
-  if !ActiveRecord.schema._restored then
+  if !ActiveRecord.ready then
     error('Attempt to edit schema too early!')
   end
   local t = ActiveRecord.schema[table_name] or {}
@@ -17,7 +17,8 @@ function ActiveRecord.add_to_schema(table_name, column_name, type)
     t[column_name] = type
   else
     local query = ActiveRecord.Database:insert('activerecord_schema')
-      query:insert('name', column_name)
+      query:insert('table_name', table_name)
+      query:insert('column_name', column_name)
       query:insert('abstract_type', type)
       query:insert('definition', ActiveRecord.adapter.types[type] or '')
     query:execute()
@@ -30,9 +31,11 @@ function ActiveRecord.restore_schema()
   local query = ActiveRecord.Database:select('activerecord_schema')
     query:callback(function(result)
       for k, v in ipairs(result) do
-        ActiveRecord.schema[v.name] = v.abstract_type
+        local t = ActiveRecord.schema[v.table_name] or {}
+        t[v.column_name] = v.abstract_type
+        ActiveRecord.schema[v.table_name] = t
       end
-      ActiveRecord.schema._restored = true
+      ActiveRecord.ready = true
       hook.Run('activerecord_ready')
     end)
   query:execute()
@@ -52,7 +55,7 @@ function ActiveRecord.connect()
   local db_settings = ActiveRecord.db_settings
   local adapter = isstring(db_settings.adapter) and db_settings.adapter:lower() or 'sqlite'
 
-  if file.Exists('flux/gamemode/core/lib/activerecord/adapters/'..adapter..'.lua')
+  if file.Exists('flux/gamemode/core/lib/activerecord/adapters/'..adapter..'.lua') then
     include('adapters/'..adapter..'.lua')
   end
 

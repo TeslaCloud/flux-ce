@@ -1,4 +1,4 @@
-library.New("command", fl)
+library.new("command", fl)
 
 local stored = fl.command.stored or {}
 local aliases = fl.command.aliases or {}

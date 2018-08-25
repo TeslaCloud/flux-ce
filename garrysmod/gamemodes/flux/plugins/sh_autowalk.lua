@@ -1,6 +1,6 @@
-PLUGIN:SetName("Auto Walk")
-PLUGIN:SetAuthor("NightAngel")
-PLUGIN:SetDescription("Allows users to press a button to automatically walk forward.")
+PLUGIN:set_name("Auto Walk")
+PLUGIN:set_author("NightAngel")
+PLUGIN:set_description("Allows users to press a button to automatically walk forward.")
 
 if SERVER then
   local check = {

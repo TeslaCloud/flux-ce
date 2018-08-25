@@ -1275,6 +1275,27 @@ function string.capitalize(str)
   return string.utf8upper(str[1])..(len > 1 and string.utf8sub(str, 2, string.utf8len(str)) or '')
 end
 
+function string.parse_table(str)
+  local tables = string.Explode('::', str)
+  local ref = _G
+  for k, v in ipairs(tables) do
+    if !istable(ref) then return false end
+    ref = ref[v]
+  end
+  return istable(ref) and ref or false
+end
+
+function string.parse_parent(str)
+  local tables = string.Explode('::', str)
+  local ref = _G
+  for k, v in ipairs(tables) do
+    local new_ref = ref[v]
+    if !istable(new_ref) then return ref end
+    ref = new_ref
+  end
+  return istable(ref) and ref or false
+end
+
 function table.map(t, c)
   local new_table = {}
 

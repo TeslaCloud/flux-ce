@@ -1,4 +1,4 @@
-library.New("notification", fl)
+library.new("notification", fl)
 
 local display = {}
 local top = 1
