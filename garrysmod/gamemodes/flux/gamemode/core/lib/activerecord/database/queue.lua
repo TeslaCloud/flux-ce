@@ -12,7 +12,7 @@ function ActiveRecord.Queue:run()
   for k, v in pairs(self.stored) do
     create_table(k, function(t)
       for k2, v2 in ipairs(v) do
-        t[v2[1]](unpack(v2[2]))
+        t[v2[1]](t, unpack(v2[2]))
       end
     end)
   end
