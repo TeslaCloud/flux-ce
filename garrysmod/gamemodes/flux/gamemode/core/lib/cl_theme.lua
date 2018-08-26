@@ -19,7 +19,7 @@ function theme.RegisterTheme(obj)
       newObj.__index = nil
       oldObj.__index = nil
 
-      table.Merge(newObj, oldObj)
+      table.SafeMerge(newObj, oldObj)
 
       newObj.__index = obj.__index
 

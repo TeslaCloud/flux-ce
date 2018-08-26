@@ -41,7 +41,7 @@ function fl.admin:CreateGroup(id, data)
     if (parent) then
       local parentCopy = table.Copy(parent)
 
-      table.Merge(parentCopy.permissions, data.permissions)
+      table.SafeMerge(parentCopy.permissions, data.permissions)
 
       data.permissions = parentCopy.permissions
 

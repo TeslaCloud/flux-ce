@@ -21,7 +21,7 @@ function PANEL:Close(callback)
 end
 
 function PANEL:CollectData(newData)
-  table.Merge(self.CharData, newData)
+  table.SafeMerge(self.CharData, newData)
 end
 
 function PANEL:OpenPanel(id)
