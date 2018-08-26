@@ -23,60 +23,55 @@ IS_PRODUCTION   = FLUX_ENV == 'production'
 
 fl.development  = !IS_PRODUCTION
 
-print('Flux environment: '..FLUX_ENV)
+AddCSLuaFile    'core/sh_util.lua'
+include         'core/sh_util.lua'
 
 -- Fix for the name conflicts.
 _player, _team, _file, _table, _sound = player, team, file, table, sound
 
-AddCSLuaFile("core/sh_util.lua")
-include("core/sh_util.lua")
+if engine.ActiveGamemode() != 'flux' then
+  fl.schema = engine.ActiveGamemode()
+else
+  ErrorNoHalt(txt[[
+    ============================================
+            +gamemode is set to 'flux'!
+    Set it to your schema's folder name instead!
+    ============================================
+  ]])
 
--- do - end blocks help us manage the scope of the variables,
--- as well as create a separate Lua Closure for that bit of code.
--- Locals within the same closure as the function are generally
--- accessed faster than the ones in the file scope closure.
--- In this particular case it's not necessary, because we
--- already have if - then - end structure, but I thought leaving
--- an example somewhere in the init code would be nice.
-do
-  if (engine.ActiveGamemode() != "flux") then
-    fl.schema = engine.ActiveGamemode()
-  else
-    ErrorNoHalt(txt[[
-      ============================================
-              +gamemode is set to 'flux'!
-      Set it to your schema's folder name instead!
-      ============================================
-    ]])
-
-    return
-  end
-
-  -- Shared table contains the info that will be networked
-  -- to clients automatically when they load.
-  fl.shared = fl.shared or {
-    schema_folder = fl.schema,
-    pluginInfo = {},
-    unloadedPlugins = {}
-  }
+  return
 end
+
+-- Shared table contains the info that will be networked
+-- to clients automatically when they load.
+fl.shared = fl.shared or {
+  schema_folder = fl.schema,
+  pluginInfo = {},
+  unloadedPlugins = {}
+}
+
+print('Flux environment: '..FLUX_ENV)
 
 -- A function to get schema's name.
 function fl.GetSchemaName()
-  return (Schema and Schema:get_name()) or fl.schema or "Unknown"
+  return Schema and Schema:get_name() or fl.schema or "Unknown"
 end
 
 -- Called when gamemode's server browser name needs to be retrieved.
 function GM:GetGameDescription()
   local nameOverride = self.nameOverride
 
-  return (isstring(nameOverride) and nameOverride) or "FL - "..fl.GetSchemaName()
+  return isstring(nameOverride) and nameOverride or "FL - "..fl.GetSchemaName()
 end
 
-util.include("core/sh_enums.lua")
-util.include("core/sh_core.lua")
-util.include("core/cl_core.lua")
-util.include("core/sv_core.lua")
+util.include 'core/sh_enums.lua'
+util.include 'core/sh_core.lua'
+util.include 'core/cl_core.lua'
+util.include 'core/sv_core.lua'
+
+if SERVER then
+  include 'core/lib/activerecord/active_record.lua'
+end
 
 -- This way we put things we want loaded BEFORE anything else in here, like plugin, config, etc.
 util.include_folder("core/lib/required", true)

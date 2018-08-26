@@ -42,8 +42,6 @@ if !string.utf8len or !pon or !netstream or !YAML then
 
   Settings = Settings or YAML.read('gamemodes/flux/config/settings.yml')
   Settings.database = YAML.read('gamemodes/flux/config/database.yml')
-
-  include 'core/lib/activerecord/active_record.lua'
 end
 
 -- Initiate shared boot.
