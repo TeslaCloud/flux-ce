@@ -20,3 +20,8 @@ local remove_keys = {
 for k, v in ipairs(remove_keys) do
   ActiveRecord.Base[v] = function(self) return self end
 end
+
+-- Walmart model definition :P
+function ActiveRecord.define_model(name)
+  class(name) extends(ActiveRecord.Base)
+end
