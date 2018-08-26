@@ -192,20 +192,20 @@ function util.Validate(...)
 end
 
 -- A function to include a file based on it's prefix.
-function util.include(strFile)
+function util.include(file_name)
   if SERVER then
-    if (string.find(strFile, "cl_")) then
-      AddCSLuaFile(strFile)
-    elseif (string.find(strFile, "sv_") or string.find(strFile, "init.lua")) then
-      return include(strFile)
+    if (string.find(file_name, "cl_")) then
+      AddCSLuaFile(file_name)
+    elseif (string.find(file_name, "sv_") or string.find(file_name, "init.lua") or string.find(file_name, "/models/")) then
+      return include(file_name)
     else
-      AddCSLuaFile(strFile)
+      AddCSLuaFile(file_name)
 
-      return include(strFile)
+      return include(file_name)
     end
   else
-    if (!string.find(strFile, "sv_") and strFile != "init.lua" and !strFile:EndsWith("/init.lua")) then
-      return include(strFile)
+    if (!string.find(file_name, "sv_") and file_name != "init.lua" and !file_name:EndsWith("/init.lua") and !string.find(file_name, "/models/")) then
+      return include(file_name)
     end
   end
 end
