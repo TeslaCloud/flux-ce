@@ -59,6 +59,7 @@ if SERVER then
     stored[steam_id] = stored[steam_id] or {}
     stored[steam_id][character_id] = obj
   end
+
   function character.Load(player)
     local steam_id = player:SteamID()
 
@@ -69,7 +70,18 @@ if SERVER then
   end
 
   function character.SendToClient(player)
-    netstream.Start(player, "fl_loadcharacters", stored[player:SteamID()])
+    netstream.Start(player, "fl_loadcharacters", character.to_networkable(player))
+  end
+
+  function character.to_networkable(player)
+    local characters = stored[player:SteamID()]
+    local ret = {}
+    if characters then
+      for k, v in pairs(characters) do
+        ret[k] = character.ToSaveable(player, v)
+      end
+    end
+    return ret
   end
 
   function character.ToSaveable(player, char)
