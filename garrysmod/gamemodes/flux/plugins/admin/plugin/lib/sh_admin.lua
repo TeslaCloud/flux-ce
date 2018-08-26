@@ -302,7 +302,11 @@ if SERVER then
       obj.reason = reason
       obj.duration = duration
       obj.unban_time = unban_time
-    bans[steam_id] = obj:save()
+    self:record_ban(steam_id, obj:save())
+  end
+
+  function fl.admin:record_ban(id, obj)
+    bans[id] = obj
   end
 
   function fl.admin:Ban(player, duration, reason, bPreventKick)

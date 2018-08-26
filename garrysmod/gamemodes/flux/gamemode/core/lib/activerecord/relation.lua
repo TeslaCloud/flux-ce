@@ -32,6 +32,14 @@ function ActiveRecord.Relation:first()
   return self.objects[1]
 end
 
+function ActiveRecord.Relation:last()
+  return self.objects[#self.objects]
+end
+
+function ActiveRecord.Relation:all()
+  return self.objects
+end
+
 function ActiveRecord.Relation:destroy(id)
   local id = id or 1
   local obj = self.objects[id]
@@ -46,10 +54,6 @@ function ActiveRecord.Relation:destroy_all()
     self:destroy(k)
   end
   return self
-end
-
-function ActiveRecord.Relation:__index(key)
-  return self.objects[1] and self.objects[1][key]
 end
 
 function ActiveRecord.Relation:__tostring()

@@ -220,7 +220,7 @@ end
 
 function ActiveRecord.Base:get(callback)
   return self:run_query(function(results)
-    callback(results)
+    callback(results:all())
   end)
 end
 
