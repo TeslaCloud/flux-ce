@@ -322,6 +322,6 @@ function ActiveRecord.Base:belongs_to(target, one)
       child = true,
       as = target.class_name:to_snake_case(),
       target_class = target
-    }
+    })
   end
 end
