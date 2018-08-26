@@ -28,7 +28,7 @@ end
 
 function add_column(table, name, type)
   change_table(table, function(t)
-    t[type](name)
+    t[type](t, name)
   end)
 end
 
