@@ -841,14 +841,28 @@ end
 
 function table.SafeMerge(to, from)
   local oldIndex, oldIndex2 = to.__index, from.__index
+  local references = {}
 
   to.__index = nil
   from.__index = nil
 
+  for k, v in pairs(from) do
+    if v == from then
+      table.insert(references, k)
+      from[k] = nil
+    end
+  end
+
   table.Merge(to, from)
+
+  for k, v in ipairs(references) do
+    from[v] = from
+  end
 
   to.__index = oldIndex
   from.__index = oldIndex2
+
+  return to
 end
 
 function util.ListToString(callback, separator, ...)

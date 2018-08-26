@@ -11,7 +11,9 @@ function ActiveRecord.generate_create_func(obj, type, def)
       s:handle_create_args(args)
     end
     s:create(name, s.def)
-    ActiveRecord.add_to_schema(obj.table_name, name, type)
+    if ActiveRecord.ready then
+      ActiveRecord.add_to_schema(obj.table_name, name, type)
+    end
     if k == 'primary_key' then
       s:set_primary_key(name)
     end
@@ -22,7 +24,7 @@ function ActiveRecord.generate_create_funcs(obj)
   local tab = ActiveRecord.Adapters[ActiveRecord.adapter_name:capitalize()].types or {}
 
   for k, v in pairs(tab) do
-    generate_create_func(obj, k, v)
+    ActiveRecord.generate_create_func(obj, k, v)
   end
 end
 

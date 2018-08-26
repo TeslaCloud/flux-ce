@@ -45,7 +45,7 @@ function ActiveRecord.Query:handle_create_args(args)
 end
 
 function ActiveRecord.Query:escape(text)
-  return ActiveRecord.Database:escape(tostring(text))
+  return ActiveRecord.adapter:escape(tostring(text))
 end
 
 function ActiveRecord.Query:for_table(table_name)
@@ -380,9 +380,9 @@ function ActiveRecord.Query:execute(queue_query)
 
   if (isstring(query_string)) then
     if (!queue_query) then
-      return ActiveRecord.Database:raw_query(query_string, self._callback)
+      return ActiveRecord.adapter:raw_query(query_string, self._callback)
     else
-      return ActiveRecord.Database:queue(query_string, self._callback)
+      return ActiveRecord.adapter:queue(query_string, self._callback)
     end
   end
 end

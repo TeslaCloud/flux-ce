@@ -44,5 +44,5 @@ function ActiveRecord.Database:change(table_name)
 end
 
 timer.Create('ActiveRecord::Database#think', 1, 0, function()
-  ActiveRecord.Database:think()
+  ActiveRecord.adapter:think()
 end)
