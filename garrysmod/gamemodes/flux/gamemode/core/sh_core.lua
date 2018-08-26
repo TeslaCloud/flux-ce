@@ -125,13 +125,14 @@ function library.create_class(name, base_class)
 
   obj.new = function(...)
     local new_obj = {}
+    local real_class = parent[name]
 
     -- Set new object's meta table and copy the data from original class to new object.
-    setmetatable(new_obj, obj)
-    table.SafeMerge(new_obj, obj)
+    setmetatable(new_obj, real_class)
+    table.SafeMerge(new_obj, real_class)
 
     -- If there is a base class, call their constructor.
-    local base_class = obj.BaseClass
+    local base_class = real_class.BaseClass
     local has_base_class = true
 
     while (istable(base_class) and has_base_class) do
@@ -154,8 +155,8 @@ function library.create_class(name, base_class)
     end
 
     -- If there is a constructor - call it.
-    if (obj.init) then
-      local success, value = pcall(obj.init, new_obj, ...)
+    if (real_class.init) then
+      local success, value = pcall(real_class.init, new_obj, ...)
 
       if (!success) then
         ErrorNoHalt("["..name.."] Class constructor has failed to run!\n")
@@ -163,7 +164,7 @@ function library.create_class(name, base_class)
       end
     end
 
-    new_obj.class = obj
+    new_obj.class = real_class
     new_obj.static_class = false
     new_obj.IsValid = function() return true end
 
@@ -207,11 +208,11 @@ function extends(base_class)
   if (istable(library.last_class) and istable(base_class)) then
     local obj = library.last_class.parent[library.last_class.name]
     local copy = table.Copy(base_class)
-    local merged = table.Merge(copy, obj)
+    table.SafeMerge(copy, obj)
 
     if (isfunction(base_class.class_extended)) then
       try {
-        base_class.class_extended, copy, merged
+        base_class.class_extended, base_class, copy
       } catch {
         function(exception)
           ErrorNoHalt(tostring(exception) + "\n")
@@ -219,7 +220,7 @@ function extends(base_class)
       }
     end
 
-    obj = merged
+    obj = copy
     obj.BaseClass = base_class
 
     hook.Run("OnClassExtended", obj, base_class)

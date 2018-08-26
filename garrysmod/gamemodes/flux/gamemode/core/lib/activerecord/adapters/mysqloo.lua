@@ -1,7 +1,7 @@
 class 'ActiveRecord::Adapters::Mysqloo' extends 'ActiveRecord::Adapters::Abstract'
 
 ActiveRecord.Adapters.Mysqloo.types = {
-  primary_key = 'bigint auto_increment',
+  primary_key = 'bigint auto_increment PRIMARY KEY',
   string = 'varchar(255)',
   text = 'text(65535)',
   integer = 'int(4)',
