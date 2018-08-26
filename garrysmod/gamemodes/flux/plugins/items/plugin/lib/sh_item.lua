@@ -192,7 +192,7 @@ function item.New(id, data, forcedID)
     instances[id][itemID] = table.Copy(itemTable)
 
     if (istable(data)) then
-      table.Merge(instances[id][itemID], data)
+      table.SafeMerge(instances[id][itemID], data)
     end
 
     instances[id][itemID].instance_id = itemID
@@ -261,7 +261,7 @@ if SERVER then
           for k, v in pairs(instanceTable) do
             local newItem = table.Copy(itemTable)
 
-            table.Merge(newItem, v)
+            table.SafeMerge(newItem, v)
 
             loaded[id][k] = newItem
           end
@@ -439,7 +439,7 @@ else
   netstream.Hook("NetworkItem", function(instance_id, itemTable)
     if (itemTable and stored[itemTable.id]) then
       local newTable = table.Copy(stored[itemTable.id])
-      table.Merge(newTable, itemTable)
+      table.SafeMerge(newTable, itemTable)
 
       instances[newTable.id][instance_id] = newTable
 
@@ -461,7 +461,7 @@ else
       ent:SetColor(itemTable:GetColor())
 
       -- Restore item's functions. For some weird reason they aren't properly initialized.
-      table.Merge(ent, scripted_ents.Get("fl_item"))
+      table.SafeMerge(ent, scripted_ents.Get("fl_item"))
 
       ent.item = itemTable
     end

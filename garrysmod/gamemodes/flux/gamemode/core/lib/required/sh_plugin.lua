@@ -57,7 +57,7 @@ function Plugin:init(id, data)
   self.description = data.description or "This plugin has no description."
   self.id = id or data.id or name:to_id() or "unknown"
 
-  table.Merge(self, data)
+  table.SafeMerge(self, data)
 end
 
 function Plugin:get_name()
@@ -89,7 +89,7 @@ function Plugin:set_description(desc)
 end
 
 function Plugin:set_data(data)
-  table.Merge(self, data)
+  table.SafeMerge(self, data)
 end
 
 function Plugin:set_alias(alias)
@@ -287,12 +287,12 @@ function plugin.include(path)
           if (file.Exists(dataTable.folder.."/sh_"..(dataTable.name or id)..".lua", "LUA")) then
             dataTable.plugin_main = "sh_"..(dataTable.name or id)..".lua"
           end
-        table.Merge(data, dataTable)
+        table.SafeMerge(data, dataTable)
 
         fl.shared.pluginInfo[path] = data
       end
     else
-      table.Merge(data, fl.shared.pluginInfo[path])
+      table.SafeMerge(data, fl.shared.pluginInfo[path])
     end
   end
 

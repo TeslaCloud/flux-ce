@@ -85,7 +85,7 @@ function flStaticEnts:PersistenceLoad()
     local entData = loaded.Entities[k]
 
     if (entData) then
-      table.Merge(v:GetTable(), entData)
+      table.SafeMerge(v:GetTable(), entData)
     end
   end
 
