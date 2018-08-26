@@ -13,6 +13,9 @@ function ActiveRecord.Relation:init(objects, class)
       for k, v in pairs(res) do
         obj[k] = v
       end
+      if isfunction(obj.restored) then
+        obj:restored()
+      end
     table.insert(self.objects, obj)
   end
 end

@@ -56,8 +56,8 @@ function ActiveRecord.define_model(name, callback)
   local definition = function(t)
     t:primary_key 'id'
     callback(t)
-    t:timestamp { 'created_at', null = false }
-    t:timestamp { 'updated_at', null = false }
+    t:datetime { 'created_at', null = false }
+    t:datetime { 'updated_at', null = false }
   end
 
   if ActiveRecord.ready then
@@ -97,5 +97,5 @@ end
 
 function ActiveRecord.recreate_schema()
   ActiveRecord.generate_tables()
-  RunConsoleCommand('changelevel '..game.GetMap())
+  RunConsoleCommand('changelevel', game.GetMap())
 end

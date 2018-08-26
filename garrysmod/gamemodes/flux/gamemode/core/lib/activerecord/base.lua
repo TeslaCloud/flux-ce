@@ -200,6 +200,9 @@ function ActiveRecord.Base:run_query(callback)
         end
       elseif isfunction(self._rescue) then
         self._rescue(self.class.new())
+        if isfunction(obj.created) then
+          obj:created()
+        end
       end
     end)
     query:execute()
@@ -226,6 +229,10 @@ function ActiveRecord.Base:rescue(callback)
   return self
 end
 
+local except = {
+  id = true, created_at = true, updated_at = true
+}
+
 function ActiveRecord.Base:save()
   local schema = self.schema or ActiveRecord.schema[self.table_name]
 
@@ -233,6 +240,7 @@ function ActiveRecord.Base:save()
   if !self.fetched then
     local query = ActiveRecord.Database:insert(self.table_name)
       for k, v in pairs(schema) do
+        if except[k] then continue end
         query:insert(k, self[k])
       end
       query:insert('created_at', to_datetime(os.time()))
@@ -241,6 +249,7 @@ function ActiveRecord.Base:save()
   else
     local query = ActiveRecord.Database:update(self.table_name)
       for k, v in pairs(schema) do
+        if except[k] then continue end
         query:update(k, self[k])
       end
       query:update('updated_at', to_datetime(os.time()))
@@ -252,7 +261,7 @@ function ActiveRecord.Base:save()
         for k, v in ipairs(self[relation.as]) do
           v:save()
         end
-      elseif !relation.many and self[relation.as] then
+      elseif !relation.many and istable(self[relation.as]) then
         self[relation.as]:save()
       end
     end

@@ -1278,10 +1278,11 @@ end
 
 function string.chomp(str, what)
   if !what then
-    str = str:RemoveTextFromEnd("\n", true):RemoveTextFromStart("\r", true)
+    str = str:RemoveTextFromEnd("\n", true):RemoveTextFromEnd("\r", true)
   else
     str = str:RemoveTextFromStart(what, true):RemoveTextFromEnd(what, true)
   end
+  return str
 end
 
 function string.capitalize(str)
@@ -1388,6 +1389,7 @@ function txt(text)
   local lowest_indent
   local output = ''
   for k, v in ipairs(lines) do
+    if v:match('^[%s]+$') then continue end
     local indent = v:match('^([%s]+)')
     if !indent then continue end
     if !lowest_indent then lowest_indent = indent end
@@ -1398,5 +1400,5 @@ function txt(text)
   for k, v in ipairs(lines) do
     output = output..v:RemoveTextFromStart(lowest_indent)..'\n'
   end
-  return output
+  return output:chomp(' '):chomp('\n')
 end

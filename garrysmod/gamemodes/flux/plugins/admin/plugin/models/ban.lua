@@ -3,5 +3,5 @@ ActiveRecord.define_model('Ban', function(t)
   t:string 'steam_id'
   t:text 'reason'
   t:integer 'duration'
-  t:timestamp 'unban_time'
+  t:datetime 'unban_time'
 end)
