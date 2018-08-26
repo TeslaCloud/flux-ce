@@ -69,6 +69,8 @@ end
 function library.new(name, parent)
   parent = parent or _G
 
+  if !name then return end
+
   parent[name] = parent[name] or {}
 
   return parent[name]

@@ -62,10 +62,12 @@ function player_meta:RestorePlayer()
   end
 
   Player:where('steam_id', self:SteamID()):expect(function(obj)
+    obj.player = self
     self.record = obj
     hook.Run('player_restored', self, obj)
   end):rescue(function(obj)
     ServerLog(self:Name()..' has joined for the first time!')
+    obj.player = self
     obj.steam_id = self:SteamID()
     obj.name = self:Name()
     obj.role = 'user'

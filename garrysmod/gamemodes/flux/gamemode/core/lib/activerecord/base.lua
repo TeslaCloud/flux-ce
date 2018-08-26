@@ -122,29 +122,54 @@ function ActiveRecord.Base:limit(amt)
   return self
 end
 
+function ActiveRecord.Base:_process_child(obj, target_class)
+  local should_stop = false
+  if isfunction(self.as_child) then
+    should_stop = self:as_child(obj, target_class)
+  end
+  if isfunction(obj.as_parent) then
+    should_stop = obj:as_parent(self, self.class)
+  end
+  if !should_stop then
+    for k, v in ipairs(self.relations) do
+      if v.child and v.target_class == target_class then
+        self[v.as] = obj
+        break
+      end
+    end
+  end
+  return self
+end
+
 -- internal
 function ActiveRecord.Base:_fetch_relation(callback, results, n)
   n = n or 1
   local relation = self.relations[n]
   if relation then
-    local obj = relation.model:where(relation.column_name, self.id)
-    if relation.many then
-      obj:get(function(res)
-        for _, object in ipairs(results) do
-          object[relation.as] = {}
-          for k, v in ipairs(res) do
-            table.insert(object[relation.as], v)
+    if !relation.child then
+      local obj = relation.model:where(relation.column_name, self.id)
+      if relation.many then
+        obj:get(function(res)
+          for _, object in ipairs(results) do
+            object[relation.as] = {}
+            for k, v in ipairs(res) do
+              v:_process_child(self, self.class)
+              table.insert(object[relation.as], v)
+            end
           end
-        end
-        return self:_fetch_relation(callback, results, n + 1)
-      end)
+          return self:_fetch_relation(callback, results, n + 1)
+        end)
+      else
+        obj:expect(function(result)
+          for _, object in ipairs(results) do
+            result:_process_child(self, self.class)
+            object[relation.as] = result
+          end
+          return self:_fetch_relation(callback, results, n + 1)
+        end)
+      end
     else
-      obj:expect(function(result)
-        for _, object in ipairs(results) do
-          object[relation.as] = result
-        end
-        return self:_fetch_relation(callback, results, n + 1)
-      end)
+      return self:_fetch_relation(callback, results, n + 1)
     end
   else
     callback(ActiveRecord.Relation.new(results, self.class))
@@ -246,13 +271,23 @@ end
 function ActiveRecord.Base:has(what, many)
   local relation = {}
     local table_name = ''
-    relation.many = many
+    local should_add = true
+    relation.child = false
     if istable(what) then
       table_name = what[1]:to_snake_case()
       relation.as = what.as or table_name
     elseif isstring(what) then
       table_name = what
       relation.as = table_name
+    end
+    if self.relations[table_name] then
+      relation = self.relations[self.relations[table_name]]
+      -- has_one has higher priority over has_many
+      if !many then
+        relation.many = false
+      end
+    else
+      relation.many = many
     end
     for k, v in pairs(ActiveRecord.Models:all()) do
       if v.table_name == table_name then
@@ -262,7 +297,10 @@ function ActiveRecord.Base:has(what, many)
     end
     relation.table_name = table_name
     relation.column_name = self.class_name:to_snake_case()..'_id'
-  table.insert(self.relations, relation)
+    if should_add then
+      local index = table.insert(self.relations, relation)
+      self.relations[table_name] = index
+    end
   return self
 end
 
@@ -280,5 +318,10 @@ function ActiveRecord.Base:belongs_to(target, one)
   end
   if istable(target) then
     target:has(self.table_name, !one)
+    table.insert(self.relations, {
+      child = true,
+      as = target.class_name:to_snake_case(),
+      target_class = target
+    }
   end
 end

@@ -1,23 +1,28 @@
-class 'Faction'
+ActiveRecord.define_model('Faction', function(t)
+  t:string 'faction_id'
+  t:integer 'character_id'
+end)
+
+Faction:belongs_to 'Character'
 
 function Faction:init(id)
   self.id = id:to_id()
   self.name = "Unknown Faction"
   self.print_name = nil
   self.description = "This faction has no description set!"
-  self.PhysDesc = "This faction has no default physical description set!"
-  self.Whitelisted = false
-  self.DefaultClass = nil
+  self.phys_desc = "This faction has no default physical description set!"
+  self.whitelisted = false
+  self.default_class = nil
   self.color = Color(255, 255, 255)
-  self.Material = nil
-  self.HasName = true
-  self.HasDescription = true
-  self.HasGender = true
+  self.material = nil
+  self.has_name = true
+  self.has_description = true
+  self.has_gender = true
   self.models = {male = {}, female = {}, universal = {}}
-  self.Classes = {}
-  self.Ranks = {}
-  self.Data = {}
-  self.nameTemplate = "{rank} {name}"
+  self.classes = {}
+  self.rank = {}
+  self.data = {}
+  self.name_template = "{rank} {name}"
   -- You can also use {data:key} to insert data
   -- set via Faction:set_data.
 end
@@ -27,11 +32,11 @@ function Faction:GetColor()
 end
 
 function Faction:GetMaterial()
-  return self.Material and util.GetMaterial(self.Material)
+  return self.material and util.GetMaterial(self.material)
 end
 
 function Faction:GetImage()
-  return self.Material
+  return self.material
 end
 
 function Faction:get_name()
@@ -39,7 +44,7 @@ function Faction:get_name()
 end
 
 function Faction:get_data(key)
-  return self.Data[key]
+  return self.data[key]
 end
 
 function Faction:get_description()
@@ -49,7 +54,7 @@ end
 function Faction:AddClass(id, class_name, description, color, callback)
   if (!id) then return end
 
-  self.Classes[id] = {
+  self.classes[id] = {
     name = class_name,
     description = description,
     color = color,
@@ -62,7 +67,7 @@ function Faction:AddRank(id, nameFilter)
 
   if (!nameFilter) then nameFilter = id end
 
-  table.insert(self.Ranks, {
+  table.insert(self.rank, {
     id = id,
     name = nameFilter
   })
@@ -77,14 +82,14 @@ function Faction:GenerateName(player, charName, rank, defaultData)
     return self:MakeName(player, charName, rank, defaultData) or "John Doe"
   end
 
-  local finalName = self.nameTemplate
+  local finalName = self.name_template
 
   if (finalName:find("{name}")) then
     finalName = finalName:Replace("{name}", charName or "")
   end
 
   if (finalName:find("{rank}")) then
-    for k, v in ipairs(self.Ranks) do
+    for k, v in ipairs(self.rank) do
       if (v.id == rank or k == rank) then
         finalName = finalName:Replace("{rank}", v.name)
 
@@ -107,7 +112,7 @@ function Faction:GenerateName(player, charName, rank, defaultData)
       end
     elseif (v:StartWith("{data:")) then
       local key = v:utf8sub(7, v:utf8len() - 1)
-      local data = player:GetCharacterData(key, (defaultData[key] or self.Data[key] or ""))
+      local data = player:GetCharacterData(key, (defaultData[key] or self.data[key] or ""))
 
       if (isstring(data)) then
         finalName = finalName:Replace(v, data)
@@ -123,7 +128,7 @@ function Faction:set_data(key, value)
 
   if (!key) then return end
 
-  self.Data[key] = tostring(value)
+  self.data[key] = tostring(value)
 end
 
 function Faction:OnPlayerEntered(player) end
@@ -131,8 +136,4 @@ function Faction:OnPlayerExited(player) end
 
 function Faction:register()
   faction.register(self.id, self)
-end
-
-function Faction:__tostring()
-  return "Faction ["..self.id.."]["..self.name.."]"
 end

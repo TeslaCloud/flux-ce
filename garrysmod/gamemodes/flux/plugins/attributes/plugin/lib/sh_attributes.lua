@@ -34,18 +34,18 @@ function attributes.register(id, data)
     id = data.name:to_id()
   end
 
-  fl.dev_print("Registering "..string.lower(data.Type)..": "..tostring(id))
+  fl.dev_print("Registering "..string.lower(data.type)..": "..tostring(id))
 
-  data.id = id
+  data.attr_id = id
   data.name = data.name or "Unknown Attribute"
   data.description = data.description or "This attribute has no description!"
-  data.Max = data.Max or 100
-  data.Min = data.Min or 0
+  data.max = data.max or 100
+  data.min = data.min or 0
   data.category = data.category or "#Attribute_Category_Other"
   data.icon = data.icon
-  data.Type = data.Type
-  data.Multipliable = data.Multipliable or true
-  data.Boostable = data.Boostable or true
+  data.type = data.type
+  if data.multipliable == nil then data.multipliable = true end
+  if data.boostable == nil then data.boostable = true end
 
   stored[id] = data
 end
@@ -72,7 +72,7 @@ function attributes.IncludeType(id, globalVar, folder)
 
     if (pipeline.IsAborted()) then _G[globalVar] = nil return end
 
-    _G[globalVar].Type = globalVar
+    _G[globalVar].type = globalVar
     _G[globalVar]:register()
     _G[globalVar] = nil
   end)
@@ -92,12 +92,12 @@ do
     local attsTable = self:GetAttributes()
 
     if (!attsTable[id]) then
-      return attribute.Min
+      return attribute.min
     end
 
     local value = attsTable[id].value
 
-    if (!bNoBoost and attribute.Boostable) then
+    if (!bNoBoost and attribute.boostable) then
       value = value + self:GetAttributeBoost(id)
     end
 
@@ -133,7 +133,7 @@ do
         attsTable[id] = {}
       end
 
-      attsTable[id].value = math.Clamp(value, attribute.Min, attribute.Max)
+      attsTable[id].value = math.Clamp(value, attribute.min, attribute.max)
 
       self:SetNetVar("attributes", attsTable)
     end
@@ -150,7 +150,7 @@ do
         end
       end
 
-      attsTable[id].value = math.Clamp(attsTable[id].value + value, attribute.Min, attribute.Max)
+      attsTable[id].value = math.Clamp(attsTable[id].value + value, attribute.min, attribute.max)
 
       self:SetNetVar("attributes", attsTable)
     end
@@ -162,7 +162,7 @@ do
     function player_meta:AttributeMultiplier(id, value, duration)
       local attribute = attributes.FindByID(id)
 
-      if (!attribute.Multipliable) then return end
+      if (!attribute.multipliable) then return end
       if (value <= 0) then return end
 
       local curTime = CurTime()
@@ -183,7 +183,7 @@ do
     function player_meta:BoostAttribute(id, value, duration)
       local attribute = attributes.FindByID(id)
 
-      if (!attribute.Multipliable) then return end
+      if (!attribute.multipliable) then return end
 
       local curTime = CurTime()
       local attsTable = self:GetAttributes()
