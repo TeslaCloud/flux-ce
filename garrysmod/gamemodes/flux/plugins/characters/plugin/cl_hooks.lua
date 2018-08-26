@@ -133,14 +133,14 @@ function flCharacters:RebuildScoreboardPlayerCard(card, player)
   card.spawnIcon:SetSize(32, 32)
   card.spawnIcon:SetModel(player:GetModel())
 
-  local physDesc = player:GetPhysDesc()
+  local phys_desc = player:GetPhysDesc()
 
-  if (physDesc:utf8len() > 64) then
-    physDesc = physDesc:utf8sub(1, 64).."..."
+  if (phys_desc:utf8len() > 64) then
+    phys_desc = phys_desc:utf8sub(1, 64).."..."
   end
 
   card.descLabel = vgui.Create("DLabel", card)
-  card.descLabel:SetText(physDesc)
+  card.descLabel:SetText(phys_desc)
   card.descLabel:SetFont(theme.GetFont("Text_Smaller"))
   card.descLabel:SetPos(x, card.nameLabel:GetTall())
   card.descLabel:SetTextColor(theme.GetColor("Text"))

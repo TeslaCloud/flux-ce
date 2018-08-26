@@ -24,7 +24,7 @@ function PANEL:Init()
       button:SetImage(v.material)
       button.faction = v
 
-      if (v.id == self.factionID) then
+      if (v.faction_id == self.factionID) then
         button:SetActive(true)
         self.prevBtn = button
       end
@@ -55,7 +55,7 @@ function PANEL:Init()
 end
 
 function PANEL:ButtonClicked(button)
-  self.factionID = button.faction.id
+  self.factionID = button.faction.faction_id
 end
 
 function PANEL:OnOpen(parent)

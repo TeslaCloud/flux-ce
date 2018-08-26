@@ -112,6 +112,8 @@ hook.Run("PreLoadPlugins")
 
 fl.include_plugins("flux/plugins")
 
-hook.Run("OnPluginsLoaded")
+if SERVER then
+  hook.Run("OnPluginsLoaded")
 
-fl.include_schema()
+  fl.include_schema()
+end

@@ -9,8 +9,8 @@ function character.Create(player, data)
     return CHAR_ERR_NAME
   end
 
-  if (!isstring(data.physDesc) or (data.physDesc:utf8len() < config.Get("character_min_desc_len")
-    or data.physDesc:utf8len() > config.Get("character_max_desc_len"))) then
+  if (!isstring(data.phys_desc) or (data.phys_desc:utf8len() < config.Get("character_min_desc_len")
+    or data.phys_desc:utf8len() > config.Get("character_max_desc_len"))) then
     return CHAR_ERR_DESC
   end
 
@@ -28,18 +28,25 @@ function character.Create(player, data)
     return result or CHAR_ERR_UNKNOWN
   end
 
+  local char = Character.new()
   local steam_id = player:SteamID()
+
+  char.steam_id = steam_id
+  char.name = data.name
+  char.model = data.model or ''
+  char.phys_desc = data.phys_desc or ''
+  char.money = data.money or ''
 
   stored[steam_id] = stored[steam_id] or {}
 
-  data.id = #stored[steam_id] + 1
+  char.character_id = #stored[steam_id] + 1
 
-  table.insert(stored[steam_id], data)
+  table.insert(stored[steam_id], char)
 
   if SERVER then
     local charID = #stored[steam_id]
 
-    hook.Run("PostCreateCharacter", player, charID, data)
+    hook.Run("PostCreateCharacter", player, charID, char)
 
     character.Save(player, charID)
   end
@@ -71,7 +78,7 @@ if SERVER then
     return {
       steam_id = player:SteamID(),
       name = char.name,
-      physDesc = char.physDesc or "This character has no physical description set!",
+      phys_desc = char.phys_desc or "This character has no physical description set!",
       model = char.model or "models/humans/group01/male_02.mdl",
       inventory = util.TableToJSON(char.inventory),
       ammo = util.TableToJSON(player:GetAmmoTable()),
@@ -144,7 +151,7 @@ end
 if SERVER then
   netstream.Hook("CreateCharacter", function(player, data)
     data.gender  = (data.gender and data.gender == "Female" and CHAR_GENDER_FEMALE) or CHAR_GENDER_MALE
-    data.physDesc = data.description
+    data.phys_desc = data.description
 
     local status = character.Create(player, data)
 
@@ -193,7 +200,7 @@ do
   end
 
   function player_meta:GetPhysDesc()
-    return self:GetNetVar("physDesc", "This character has no description!")
+    return self:GetNetVar("phys_desc", "This character has no description!")
   end
 
   function player_meta:GetCharacterVar(id, default)

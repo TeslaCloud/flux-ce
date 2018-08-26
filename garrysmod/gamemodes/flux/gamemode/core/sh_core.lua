@@ -424,6 +424,10 @@ function fl.include_plugins(folder)
       if (fl.shared and fl.shared_received) then
         timer.Remove("plugin_loader")
         plugin.include_plugins(folder)
+
+        hook.Run("OnPluginsLoaded")
+
+        fl.include_schema()
       end
     end)
   end

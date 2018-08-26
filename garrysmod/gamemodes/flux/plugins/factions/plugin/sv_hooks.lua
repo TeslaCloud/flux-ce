@@ -28,9 +28,8 @@ function flFactions:OnActiveCharacterSet(player, charData)
   player:SetNetVar("faction", charData.faction or "player")
 end
 
-function flFactions:SaveCharaterData(player, char, saveData)
-  saveData.faction = char.faction or "player"
-  saveData.class = char.class
+function flFactions:SaveCharaterData(player, char)
+  char.faction = char.faction or "player"
 end
 
 function flFactions:RestoreCharacter(player, charID, data)

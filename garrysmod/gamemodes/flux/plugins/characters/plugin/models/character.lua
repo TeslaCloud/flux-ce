@@ -4,6 +4,7 @@ ActiveRecord.define_model('Character', function(t)
   t:string 'model'
   t:text 'phys_desc'
   t:integer 'money'
+  t:integer 'character_id'
 end)
 
 Character:belongs_to 'User'
