@@ -11,7 +11,7 @@ function player_meta:SavePlayer()
 
   hook.Run("SavePlayerData", self, saveData)
 
-  fl.db:easy_write("fl_players", { "steam_id", self:SteamID() }, saveData)
+  if self.record then self.record:save() end
 end
 
 function player_meta:set_data(data)
@@ -57,29 +57,21 @@ function player_meta:GetAmmoTable()
 end
 
 function player_meta:RestorePlayer()
-  fl.db:easy_read("fl_players", { "steam_id", self:SteamID() }, function(result, hasData)
-    if (hasData) then
-      result = result[1]
+  if self:IsBot() then
+    return hook.Run('player_restored', self, Player.new())
+  end
 
-      if (result.data) then
-        self:set_data(fl.deserialize(result.data))
-      end
-
-      if (result.joinTime) then
-        self.flJoinTime = result.joinTime
-      end
-
-      if (result.lastPlayTime) then
-        self.flLastPlayTime = result.lastPlayTime
-      end
-
-      hook.Run("RestorePlayer", self, result)
-    else
-      ServerLog(self:Name().." has joined for the first time!")
-
-      self:SavePlayer()
-    end
-
-    hook.Run("OnPlayerRestored", self)
+  Player:where('steam_id', self:SteamID()):expect(function(obj)
+    self.record = obj
+    hook.Run('player_restored', self, obj)
+  end):rescue(function(obj)
+    ServerLog(self:Name()..' has joined for the first time!')
+    obj.steam_id = self:SteamID()
+    obj.name = self:Name()
+    obj.role = 'user'
+    self.record = obj
+    hook.Run('player_created', self, obj)
+    obj:save()
+    hook.Run('player_restored', self, obj)
   end)
 end

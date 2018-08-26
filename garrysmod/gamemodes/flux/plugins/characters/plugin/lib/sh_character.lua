@@ -48,37 +48,17 @@ function character.Create(player, data)
 end
 
 if SERVER then
+  function character._add(steam_id, character_id, obj)
+    stored[steam_id] = stored[steam_id] or {}
+    stored[steam_id][character_id] = obj
+  end
   function character.Load(player)
     local steam_id = player:SteamID()
 
     stored[steam_id] = stored[steam_id] or {}
+    character.SendToClient(player)
 
-    fl.db:easy_read("fl_characters", {"steam_id", steam_id}, function(result, hasData)
-      if (hasData) then
-        for k, v in ipairs(result) do
-          local charID = tonumber(v.id) or k
-
-          stored[steam_id][charID] = {
-            steam_id = steam_id,
-            name = v.name,
-            physDesc = v.physDesc,
-            inventory = util.JSONToTable(v.inventory or ""),
-            ammo = util.JSONToTable(v.ammo or ""),
-            money = tonumber(v.money or "0"),
-            charPermissions = util.JSONToTable(v.charPermissions or ""),
-            data = util.JSONToTable(v.data or ""),
-            id = tonumber(v.id or k),
-            key = v.key
-          }
-
-          hook.Run("RestoreCharacter", player, charID, v)
-        end
-      end
-
-      character.SendToClient(player)
-
-      hook.Run("PostRestoreCharacters", player)
-    end)
+    hook.Run("PostRestoreCharacters", player)
   end
 
   function character.SendToClient(player)
@@ -106,13 +86,12 @@ if SERVER then
     if (!IsValid(player) or !isnumber(index) or hook.Run("PreSaveCharacter", player, index) == false) then return end
 
     local char = stored[player:SteamID()][index]
-    local saveData = character.ToSaveable(player, char)
 
-    hook.Run("SaveCharaterData", player, char, saveData)
+    hook.Run("SaveCharaterData", player, char)
 
-    fl.db:easy_write("fl_characters", {"id", index}, saveData)
+    char:save()
 
-    hook.Run("PostSaveCharacter", player, char, saveData)
+    hook.Run("PostSaveCharacter", player, char)
   end
 
   function character.SaveAll(player)

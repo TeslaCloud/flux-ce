@@ -48,19 +48,3 @@ end
 function flCharacters:PlayerDeath(player, inflictor, attacker)
   player:SaveCharacter()
 end
-
-function flCharacters:activerecord_ready()
-  create_table('fl_characters', function(t)
-    t:primary_key 'id'
-    t:string { 'steam_id', null = false }
-    t:string { 'name', null = false }
-    t:string 'model'
-    t:string 'phys_desc'
-    t:integer 'money'
-    t:json 'ammo'
-    t:json 'inventory'
-    t:json 'data'
-    t:timestamp 'created_at'
-    t:timestamp 'updated_at'
-  end)
-end

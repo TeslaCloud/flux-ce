@@ -9,6 +9,7 @@ function ActiveRecord.Relation:init(objects, class)
 
   for _, res in ipairs(objects) do
     local obj = class.new()
+      obj.fetched = true
       for k, v in pairs(res) do
         obj[k] = v
       end

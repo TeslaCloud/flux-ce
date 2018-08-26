@@ -4,6 +4,11 @@ ActiveRecord.Model.models = {}
 
 function ActiveRecord.Model:add(model)
   self.models[model.class_name] = model
+  return self
+end
+
+function ActiveRecord.Model:all()
+  return self.models
 end
 
 function ActiveRecord.Model:generate_helpers(model, column, type)
@@ -21,6 +26,8 @@ function ActiveRecord.Model:populate()
 
         self:generate_helpers(v, column, type)
       end
+      v.schema = schema
     end
   end
+  return self
 end

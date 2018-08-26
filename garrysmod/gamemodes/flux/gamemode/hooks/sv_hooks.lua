@@ -9,9 +9,7 @@ function GM:Initialize()
     config.Import(config_file, CONFIG_FLUX)
   end
 
-  local db_config = fl.db.config
-
-  fl.db:connect(db_config.host, db_config.user, db_config.password, db_config.database, db_config.port, db_config.socket, db_config.flags)
+  ActiveRecord.connect()
 end
 
 function GM:InitPostEntity()
@@ -370,18 +368,6 @@ function GM:PlayerSay(player, text, bTeamChat)
 end
 
 function GM:activerecord_ready()
-  create_table('fl_players', function(t)
-    t:primary_key 'id'
-    t:string { 'steam_id', null = false }
-    t:string { 'name', null = false }
-    t:string 'role'
-    t:json 'secondary_roles'
-    t:json 'permissions'
-    t:json 'data'
-    t:timestamp 'created_at'
-    t:timestamp 'updated_at'
-  end)
-
   create_table('fl_logs', function(t)
     t:text 'body'
     t:string 'action'
