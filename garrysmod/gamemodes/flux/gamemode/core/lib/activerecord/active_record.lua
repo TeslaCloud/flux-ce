@@ -44,18 +44,27 @@ function ActiveRecord.restore_schema()
       ActiveRecord.ready = true
       ActiveRecord.Model:populate()
       fl.dev_print 'ActiveRecord - Ready!'
+      ActiveRecord.Queue:run()
       hook.Run('activerecord_ready')
     end)
   query:execute()
 end
 
 function ActiveRecord.define_model(name, callback)
-  create_table(ActiveRecord.generate_table_name(name), function(t)
+  local table_name = ActiveRecord.generate_table_name(name)
+  local definition = function(t)
     t:primary_key 'id'
     callback(t)
     t:timestamp { 'created_at', null = false }
     t:timestamp { 'updated_at', null = false }
-  end)
+  end
+
+  if ActiveRecord.ready then
+    create_table(table_name, definition)
+  else
+    ActiveRecord.Queue:add(table_name, definition)
+  end
+
   class(name) extends(ActiveRecord.Base)
 end
 
