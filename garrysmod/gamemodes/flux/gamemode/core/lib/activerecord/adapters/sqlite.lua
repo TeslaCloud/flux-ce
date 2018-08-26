@@ -1,7 +1,7 @@
 class 'ActiveRecord::Adapters::Sqlite' extends 'ActiveRecord::Adapters::Abstract'
 
 ActiveRecord.Adapters.Sqlite.types = {
-  primary_key = 'integer PRIMARY KEY AUTOINCREMENT NOT NULL',
+  primary_key = 'INTEGER PRIMARY KEY NOT NULL',
   string = 'varchar',
   text = 'text',
   integer = 'integer',
@@ -29,6 +29,7 @@ function ActiveRecord.Adapters.Sqlite:unescape(str)
 end
 
 function ActiveRecord.Adapters.Sqlite:raw_query(query, callback, flags, ...)
+  local query_start = os.clock()
   local result = sql.Query(query)
 
   if (result == false) then
@@ -37,7 +38,7 @@ function ActiveRecord.Adapters.Sqlite:raw_query(query, callback, flags, ...)
     ErrorNoHalt(sql.LastError()..'\n')
   else
     if (callback) then
-      local status, value = pcall(callback, result)
+      local status, value = pcall(callback, result, query, math.Round(os.clock() - query_start, 2))
 
       if (!status) then
         ErrorNoHalt(string.format('ActiveRecord - SQL callback Error!\n%s\n', value))

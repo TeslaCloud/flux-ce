@@ -34,7 +34,8 @@ end
 
 function ActiveRecord.restore_schema()
   local query = ActiveRecord.Database:select('activerecord_schema')
-    query:callback(function(result)
+    query:callback(function(result, query, time)
+      print_query('Schema Restore ('..time..'ms)', query)
       if istable(result) then
         for k, v in ipairs(result) do
           local t = ActiveRecord.schema[v.table_name] or {}

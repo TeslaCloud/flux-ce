@@ -1,16 +1,26 @@
 function create_table(name, callback)
   local query = ActiveRecord.Database:create(name)
     callback(query)
+    query:callback(function(result, query, time)
+      print_query('Create Table ('..time..'ms)', query)
+    end)
   query:execute()
 end
 
 function drop_table(name)
-  return ActiveRecord.Database:drop(name):execute()
+  local query = ActiveRecord.Database:drop(name)
+    query:callback(function(result, query, time)
+      print_query('Drop Table ('..time..'ms)', query)
+    end)
+  return query:execute()
 end
 
 function change_table(name, callback)
   local query = ActiveRecord.Database:change(name)
     callback(query)
+    query:callback(function(result, query, time)
+      print_query('Change Table ('..time..'ms)', query)
+    end)
   query:execute()
 end
 
@@ -72,4 +82,12 @@ end
 
 function to_datetime(unix_time)
   return os.date('%Y-%m-%d %H:%M:%S', unix_time)
+end
+
+function print_query(prefix, query)
+  if !IS_PRODUCTION then
+    MsgC(Color('cyan'), '  '..prefix..' ')
+    MsgC(Color(255, 0, 255), query)
+    Msg('\n')
+  end
 end

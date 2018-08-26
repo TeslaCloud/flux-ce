@@ -29,12 +29,16 @@ function ActiveRecord.Base:where(condition, ...)
   local query_str = ''
 
   if #args > 0 then
-    local n = 0
+    if condition:find('[=<>]') then
+      local n = 0
 
-    query_str = condition:gsub('%?', function()
-      n = n + 1
-      return "'"..ActiveRecord.adapter:escape(tostring(args[n])).."'"
-    end)
+      query_str = condition:gsub('%?', function()
+        n = n + 1
+        return "'"..ActiveRecord.adapter:escape(tostring(args[n])).."'"
+      end)
+    else
+      query_str = condition..' = \''..ActiveRecord.adapter:escape(tostring(args[1]))..'\''
+    end
   elseif istable(condition) then
     local should_and = false
     for k, v in pairs(condition) do
@@ -186,17 +190,22 @@ function ActiveRecord.Base:run_query(callback)
       if t == 'where' then
         query:where_raw(a)
       elseif t == 'order' then
-        query:order(a, b)
+        if b then
+          query:order({ [b] = a })
+        else
+          query:order(a)
+        end
       elseif t == 'limit' then
         query:limit(a)
       end
     end
-    query:callback(function(results)
+    query:callback(function(results, query, time)
+      print_query(self.class_name..' Load ('..time..'ms)', query)
       if istable(results) and #results > 0 then
         if #self.relations == 0 then
           return callback(ActiveRecord.Relation.new(results, self.class))
         else
-          return self:_process_relations(callback, results)
+          return self:_fetch_relation(callback, results)
         end
       elseif isfunction(self._rescue) then
         self._rescue(self.class.new())
@@ -245,6 +254,9 @@ function ActiveRecord.Base:save()
       end
       query:insert('created_at', to_datetime(os.time()))
       query:insert('updated_at', to_datetime(os.time()))
+      query:callback(function(result, query, time)
+        print_query(self.class_name..' Create ('..time..'ms)', query)
+      end)
     query:execute()
   else
     local query = ActiveRecord.Database:update(self.table_name)
@@ -253,6 +265,9 @@ function ActiveRecord.Base:save()
         query:update(k, self[k])
       end
       query:update('updated_at', to_datetime(os.time()))
+      query:callback(function(result, query, time)
+        print_query(self.class_name..' Update ('..time..'ms)', query)
+      end)
     query:execute()
   end
   if #self.relations > 0 then
@@ -272,6 +287,9 @@ end
 function ActiveRecord.Base:destroy()
   local query = ActiveRecord.Database:delete(self.table_name)
     query:where('id', self.id)
+    query:callback(function(result, query, time)
+      print_query(self.class_name..' Delete ('..time..'ms)', query)
+    end)
   query:execute()
   self = nil
 end
@@ -295,6 +313,7 @@ function ActiveRecord.Base:has(what, many)
       if !many then
         relation.many = false
       end
+      should_add = false
     else
       relation.many = many
     end

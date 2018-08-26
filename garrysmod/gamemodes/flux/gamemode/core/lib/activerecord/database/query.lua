@@ -322,6 +322,10 @@ local function build_create_query(query_obj)
 
   table.insert(query_string, ' )')
 
+  if query_obj.options then
+    table.insert(query_string, ' '..query_obj.options)
+  end
+
   return table.concat(query_string)
 end
 
@@ -360,6 +364,8 @@ function ActiveRecord.Query:execute(queue_query)
   local query_string = nil
   local query_type = string.lower(self.query_type)
 
+  ActiveRecord.adapter:append_query(self, query_type, queue_query)
+
   if (query_type == 'select') then
     query_string = build_select_query(self)
   elseif (query_type == 'insert') then
@@ -376,6 +382,12 @@ function ActiveRecord.Query:execute(queue_query)
     query_string = build_create_query(self)
   elseif (query_type == 'change') then
     query_string = build_change_query(self)
+  end
+
+  local hooked = ActiveRecord.adapter:append_query_string(self, query_string)
+
+  if isstring(hooked) then
+    query_string = hooked
   end
 
   if (isstring(query_string)) then
