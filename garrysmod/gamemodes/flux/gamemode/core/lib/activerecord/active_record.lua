@@ -11,6 +11,7 @@ include 'model.lua'
 include 'base.lua'
 include 'relation.lua'
 include 'helpers.lua'
+include 'commandline.lua'
 
 function ActiveRecord.add_to_schema(table_name, column_name, type)
   if !ActiveRecord.ready then
@@ -85,4 +86,16 @@ function ActiveRecord.on_connected()
 
   ActiveRecord.generate_tables()
   ActiveRecord.restore_schema()
+end
+
+function ActiveRecord.drop_schema()
+  for k, v in pairs(ActiveRecord.schema) do
+    drop_table(k)
+  end
+  drop_table 'activerecord_schema'
+end
+
+function ActiveRecord.recreate_schema()
+  ActiveRecord.generate_tables()
+  RunConsoleCommand('changelevel '..game.GetMap())
 end
