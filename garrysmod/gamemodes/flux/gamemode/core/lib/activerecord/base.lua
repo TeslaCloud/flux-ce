@@ -289,7 +289,7 @@ function ActiveRecord.Base:has(what, many)
     else
       relation.many = many
     end
-    for k, v in pairs(ActiveRecord.Models:all()) do
+    for k, v in pairs(ActiveRecord.Model:all()) do
       if v.table_name == table_name then
         relation.model = v
         break
