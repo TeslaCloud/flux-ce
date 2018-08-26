@@ -108,11 +108,11 @@ function library.create_class(name, base_class)
   -- If this class is based off some other class - copy it's parent's data.
   if (istable(base_class)) then
     local copy = table.Copy(base_class)
-    local merged = table.SafeMerge(copy, obj)
+    table.SafeMerge(copy, obj)
 
     if (isfunction(base_class.class_extended)) then
       try {
-        base_class.class_extended, copy, merged
+        base_class.class_extended, base_class, copy
       } catch {
         function(exception)
           ErrorNoHalt(tostring(exception) + "\n")
@@ -120,7 +120,7 @@ function library.create_class(name, base_class)
       }
     end
 
-    obj = merged
+    obj = copy
   end
 
   library.last_class = { name = name, parent = parent }
