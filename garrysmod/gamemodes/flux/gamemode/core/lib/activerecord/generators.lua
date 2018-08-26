@@ -14,9 +14,7 @@ function ActiveRecord.generate_create_func(obj, type, def)
     if ActiveRecord.ready then
       ActiveRecord.add_to_schema(obj.table_name, name, type)
     end
-    if k == 'primary_key' then
-      s:set_primary_key(name)
-    end
+    ActiveRecord.adapter:create_column(s, name, args, obj, type, def)
   end
 end
 
@@ -32,10 +30,16 @@ do
   local vowels = {
     ['a'] = true, ['e'] = true,
     ['o'] = true, ['i'] = true,
-    ['u'] = true
+    ['u'] = true, ['y'] = true
+  }
+
+  local irregular_words = {
+    data = 'data', ammo = 'ammo'
   }
 
   function ActiveRecord.pluralize(str)
+    if irregular_words[str] then return irregular_words[str] end
+
     local len = str:len()
     local last_char = str[len]:lower()
     local prev_char = str[len - 1]:lower()

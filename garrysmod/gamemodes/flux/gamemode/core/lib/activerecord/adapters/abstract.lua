@@ -32,6 +32,15 @@ function ActiveRecord.Adapters.Abstract:queue(query, callback)
   end
 end
 
+function ActiveRecord.Adapters.Abstract:append_query(query, query_type, queue)
+end
+
+function ActiveRecord.Adapters.Abstract:append_query_string(query, query_string)
+end
+
+function ActiveRecord.Adapters.Abstract:create_column(query, column, args, obj, type, def)
+end
+
 function ActiveRecord.Adapters.Abstract:think()
   if (#self._queue > 0) then
     if (istable(self._queue[1])) then

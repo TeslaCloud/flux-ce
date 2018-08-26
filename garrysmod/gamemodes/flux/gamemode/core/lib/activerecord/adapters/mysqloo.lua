@@ -1,19 +1,19 @@
 class 'ActiveRecord::Adapters::Mysqloo' extends 'ActiveRecord::Adapters::Abstract'
 
 ActiveRecord.Adapters.Mysqloo.types = {
-  primary_key = 'bigint auto_increment PRIMARY KEY',
+  primary_key = 'bigint(20) NOT NULL AUTO_INCREMENT',
   string = 'varchar(255)',
-  text = 'text(65535)',
-  integer = 'int(4)',
-  float = 'float(24)',
+  text = 'text',
+  integer = 'int(11)',
+  float = 'float',
   decimal = 'decimal',
   datetime = 'datetime',
-  timestamp = 'timestamp',
+  timestamp = 'datetime',
   time = 'time',
   date = 'date',
-  binary = 'blob(65535)',
+  binary = 'blob',
   boolean = 'tinyint(1)',
-  json = 'json'
+  json = 'text'
 }
 
 function ActiveRecord.Adapters.Mysqloo:init()
@@ -48,9 +48,13 @@ function ActiveRecord.Adapters.Mysqloo:connect(config)
 
     self.connection.onConnectionFailed = function(database, error_text)
       self:on_connection_failed(error_text)
-    end    
+    end
 
     self.connection:connect()
+
+    timer.Create("Mysqloo#keep_alive", 300, 0, function()
+      self.connection:ping()
+    end)
   else
     ErrorNoHalt(string.format('ActiveRecord - MySQLOO is not found!\nPlease make sure you have gmsv_mysqloo in your lua/bin folder!\n'))
   end
@@ -73,6 +77,7 @@ function ActiveRecord.Adapters.Mysqloo:raw_query(query, callback, flags, ...)
   end
 
   local query_obj = self.connection:query(query)
+  local query_start = os.clock()
 
   query_obj:setOption(mysqloo.OPTION_NAMED_FIELDS)
   query_obj.onSuccess = function(query_obj, result)
@@ -83,7 +88,7 @@ function ActiveRecord.Adapters.Mysqloo:raw_query(query, callback, flags, ...)
         end
       end
 
-      local status, value = pcall(callback, result)
+      local status, value = pcall(callback, result, query, math.Round(os.clock() - query_start, 2))
 
       if (!status) then
         ErrorNoHalt(string.format('ActiveRecord - MySQL Callback Error!\n%s\n', value))
@@ -96,4 +101,14 @@ function ActiveRecord.Adapters.Mysqloo:raw_query(query, callback, flags, ...)
     ErrorNoHalt(error_text..'\n')
   end
   query_obj:start()
+end
+
+function ActiveRecord.Adapters.Mysqloo:append_query(query, query_type, queue)
+  query.options = 'ENGINE=InnoDB DEFAULT CHARSET='..(ActiveRecord.db_settings.encoding or 'utf8')
+end
+
+function ActiveRecord.Adapters.Mysqloo:create_column(query, column, args, obj, type, def)
+  if type == 'primary_key' then
+    query:set_primary_key(column)
+  end
 end
