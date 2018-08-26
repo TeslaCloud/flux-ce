@@ -1,9 +1,3 @@
-function flAttributes:activerecord_ready()
-  change_table('fl_characters', function(t)
-    t:json { 'attributes', default = 'NULL' }
-  end)
-end
-
 function flAttributes:SaveCharaterData(player, char, saveData)
   saveData.attributes = util.TableToJSON(player:GetAttributes())
 end

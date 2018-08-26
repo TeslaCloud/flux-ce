@@ -122,7 +122,7 @@ do
       local model
       local modelTable
 
-      if (factionTable.HasGender) then
+      if (factionTable.has_gender) then
         local male = factionModels.male or {}
         local female = factionModels.female or {}
         local gender = self:GetNetVar("gender", -1)
@@ -164,7 +164,7 @@ do
     elseif (isstring(rank)) then
       local factionTable = self:GetFaction()
 
-      for k, v in ipairs(factionTable.Ranks) do
+      for k, v in ipairs(factionTable.rank) do
         if (string.utf8lower(v.id) == string.utf8lower(rank)) then
           self:SetCharacterData("Rank", k)
         end
@@ -181,7 +181,7 @@ do
     local rank = self:GetRank()
 
     if (rank != -1 and factionTable) then
-      for k, v in ipairs(factionTable.Ranks) do
+      for k, v in ipairs(factionTable.rank) do
         if (string.utf8lower(v.id) == string.utf8lower(strRank)) then
           return (bStrict and k == rank) or k <= rank
         end

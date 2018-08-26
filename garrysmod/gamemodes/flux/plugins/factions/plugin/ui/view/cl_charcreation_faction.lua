@@ -17,11 +17,11 @@ function PANEL:Init()
   self.Chooser:AddSpace(2)
 
   for k, v in pairs(faction.GetAll()) do
-    if (!v.Whitelisted or fl.client:HasWhitelist(v.id)) then
+    if (!v.whitelisted or fl.client:HasWhitelist(v.id)) then
       local button = vgui.Create("flImageButton", self)
       button:SetSize(496, 142)
       button:SetPos(0, 0)
-      button:SetImage(v.Material)
+      button:SetImage(v.material)
       button.faction = v
 
       if (v.id == self.factionID) then

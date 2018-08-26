@@ -19,14 +19,7 @@ function flFactions:RestorePlayer(player, result)
 end
 
 function flFactions:activerecord_ready()
-  change_table('fl_players', function(t)
-    t:text 'whitelists'
-  end)
-
-  change_table('fl_characters', function(t)
-    t:text { 'faction', null = false }
-    t:text 'char_class'
-  end)
+  add_column('characters', 'char_class', 'text')
 end
 
 function flFactions:OnActiveCharacterSet(player, charData)
@@ -56,7 +49,7 @@ function flFactions:player_restored(player, record)
 
       player:SetNetVar("faction", randomFaction.id)
 
-      if (randomFaction.HasGender) then
+      if (randomFaction.has_gender) then
         player:SetNetVar("gender", math.random(CHAR_GENDER_MALE, CHAR_GENDER_FEMALE))
       end
 
@@ -66,7 +59,7 @@ function flFactions:player_restored(player, record)
         local randomModel = "models/humans/group01/male_01.mdl"
         local universal = factionModels.universal or {}
 
-        if (randomFaction.HasGender) then
+        if (randomFaction.has_gender) then
           local male = factionModels.male or {}
           local female = factionModels.female or {}
 

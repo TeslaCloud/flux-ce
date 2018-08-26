@@ -7,7 +7,7 @@ function flFactions:CharPanelCreated(id, panel)
       factionTable = faction.FindByID(charData.faction)
     end
 
-    if (factionTable and !factionTable.HasName) then
+    if (factionTable and !factionTable.has_name) then
       panel.nameLabel:SetVisible(false)
       panel.nameEntry:SetVisible(false)
 
@@ -15,12 +15,12 @@ function flFactions:CharPanelCreated(id, panel)
       panel.DescEntry:SetPos(32, 66)
     end
 
-    if (factionTable and !factionTable.HasDescription) then
+    if (factionTable and !factionTable.has_description) then
       panel.DescLabel:SetVisible(false)
       panel.DescEntry:SetVisible(false)
     end
 
-    if (factionTable and !factionTable.HasGender) then
+    if (factionTable and !factionTable.has_gender) then
       panel.GenderLabel:SetVisible(false)
       panel.GenderChooser:SetVisible(false)
     end

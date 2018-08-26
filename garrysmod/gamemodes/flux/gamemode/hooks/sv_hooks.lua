@@ -367,17 +367,6 @@ function GM:PlayerSay(player, text, bTeamChat)
   end
 end
 
-function GM:activerecord_ready()
-  create_table('fl_logs', function(t)
-    t:text 'body'
-    t:string 'action'
-    t:string 'object'
-    t:string 'subject'
-    t:timestamp 'created_at'
-    t:timestamp 'updated_at'
-  end)
-end
-
 -- Awful awful awful code, but it's kinda necessary in some rare cases.
 -- Avoid using PlayerThink whenever possible though.
 do
