@@ -1,4 +1,3 @@
-ActiveRecord = ActiveRecord or {}
 ActiveRecord.schema = ActiveRecord.schema or {}
 ActiveRecord.db_settings = Settings.database[FLUX_ENV] or Settings.database['development'] or {}
 ActiveRecord.adapter_name = ActiveRecord.db_settings.adapter or 'sqlite'
