@@ -14,14 +14,8 @@ function theme.RegisterTheme(obj)
 
     if (parentTheme) then
       local newObj = table.Copy(parentTheme)
-      local oldObj = table.Copy(obj)
 
-      newObj.__index = nil
-      oldObj.__index = nil
-
-      table.SafeMerge(newObj, oldObj)
-
-      newObj.__index = obj.__index
+      table.SafeMerge(newObj, obj)
 
       obj = newObj
       obj.base = parentTheme

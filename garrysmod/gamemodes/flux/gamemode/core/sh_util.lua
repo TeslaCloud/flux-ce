@@ -847,16 +847,16 @@ function table.SafeMerge(to, from)
   from.__index = nil
 
   for k, v in pairs(from) do
-    if v == from then
-      table.insert(references, k)
+    if v == from or k == 'class' then
+      references[k] = v
       from[k] = nil
     end
   end
 
   table.Merge(to, from)
 
-  for k, v in ipairs(references) do
-    from[v] = from
+  for k, v in pairs(references) do
+    from[k] = v
   end
 
   to.__index = oldIndex
