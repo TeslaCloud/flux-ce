@@ -87,8 +87,8 @@ util.include_folder("core/lib/meta", true)
 util.include_folder("core/models", true)
 util.include_folder("languages", true)
 util.include_folder("core/ui/controllers", true)
-util.include_folder("core/ui/view/base", true)
-util.include_folder("core/ui/view", true)
+util.include_folder("core/ui/views/base", true)
+util.include_folder("core/ui/views", true)
 
 if (theme or SERVER) then
   pipeline.register("theme", function(id, file_name, pipe)
