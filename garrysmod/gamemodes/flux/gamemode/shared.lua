@@ -13,7 +13,7 @@ GM.description  = "A free roleplay gamemode framework."
 
 -- It would be very nice of you to leave below values as they are if you're using official schemas.
 -- While we can do nothing to stop you from changing them, we'll very much appreciate it if you don't.
-GM.nameOverride = false -- Set to any string to override schema's browser name. This overrides the prefix too.
+GM.name_override = false -- Set to any string to override schema's browser name. This overrides the prefix too.
 
 -- Environment stuff
 FLUX_ENV        = Settings.environment or 'development'
@@ -59,9 +59,9 @@ end
 
 -- Called when gamemode's server browser name needs to be retrieved.
 function GM:GetGameDescription()
-  local nameOverride = self.nameOverride
+  local name_override = self.name_override
 
-  return isstring(nameOverride) and nameOverride or "FL - "..fl.GetSchemaName()
+  return isstring(name_override) and name_override or "FL - "..fl.GetSchemaName()
 end
 
 util.include 'core/sh_enums.lua'
