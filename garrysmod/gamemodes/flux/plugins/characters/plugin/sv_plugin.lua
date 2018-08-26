@@ -12,7 +12,7 @@ function player_meta:SetActiveCharacter(id)
   local charData = self:GetCharacter()
 
   self:SetNetVar("name", charData.name or self:SteamName())
-  self:SetNetVar("physDesc", charData.physDesc or "")
+  self:SetNetVar("phys_desc", charData.phys_desc or "")
   self:SetNetVar("gender", charData.gender or CHAR_GENDER_MALE)
   self:SetNetVar("key", charData.key or -1)
   self:SetNetVar("model", charData.model or "models/humans/group01/male_02.mdl")

@@ -135,5 +135,5 @@ function Faction:OnPlayerEntered(player) end
 function Faction:OnPlayerExited(player) end
 
 function Faction:register()
-  faction.register(self.id, self)
+  faction.register(self.faction_id, self)
 end

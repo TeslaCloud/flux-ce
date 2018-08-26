@@ -1,7 +1,3 @@
-function flAttributes:SaveCharaterData(player, char, saveData)
-  saveData.attributes = util.TableToJSON(player:GetAttributes())
-end
-
 function flAttributes:RestoreCharacter(player, charID, data)
   local char = character.Get(player, charID)
 
