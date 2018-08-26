@@ -9,7 +9,7 @@ function ActiveRecord.Base:init()
   self.fetched = false
 end
 
-function ActiveRecord.Base:class_extended(base_class, new_class)
+function ActiveRecord.Base:class_extended(new_class)
   new_class.table_name = ActiveRecord.pluralize(new_class.class_name:to_snake_case())
   ActiveRecord.Model:add(new_class)
 end

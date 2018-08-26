@@ -1307,7 +1307,11 @@ function string.parse_parent(str)
     if !istable(new_ref) then return ref, v end
     ref = new_ref
   end
-  return istable(ref) and ref or false
+  if istable(ref) then
+    return ref, str
+  else
+    return false
+  end
 end
 
 function table.map(t, c)
