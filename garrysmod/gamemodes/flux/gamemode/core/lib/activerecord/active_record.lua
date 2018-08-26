@@ -7,6 +7,10 @@ include 'generators.lua'
 include 'database/database.lua'
 include 'database/query.lua'
 include 'adapters/abstract.lua'
+include 'model.lua'
+include 'base.lua'
+include 'relation.lua'
+include 'helpers.lua'
 
 function ActiveRecord.add_to_schema(table_name, column_name, type)
   if !ActiveRecord.ready then
@@ -70,7 +74,3 @@ function ActiveRecord.on_connected()
   ActiveRecord.create_tables()
   ActiveRecord.restore_schema()
 end
-
-include 'base.lua'
-include 'relation.lua'
-include 'helpers.lua'
