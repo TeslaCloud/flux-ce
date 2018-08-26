@@ -21,7 +21,7 @@ end
 function flAdmin:activerecord_ready()
   Ban:all():get(function(objects)
     for k, v in ipairs(objects) do
-      bans[v.steam_id] = v
+      fl.admin:record_ban(v.steam_id, v)
     end
   end)
 end
