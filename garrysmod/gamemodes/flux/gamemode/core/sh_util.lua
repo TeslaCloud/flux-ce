@@ -196,7 +196,7 @@ function util.include(file_name)
   if SERVER then
     if (string.find(file_name, "cl_")) then
       AddCSLuaFile(file_name)
-    elseif (string.find(file_name, "sv_") or string.find(file_name, "init.lua") or string.find(file_name, "/models/")) then
+    elseif (string.find(file_name, "sv_") or string.find(file_name, "init.lua")) then
       return include(file_name)
     else
       AddCSLuaFile(file_name)
@@ -204,7 +204,7 @@ function util.include(file_name)
       return include(file_name)
     end
   else
-    if (!string.find(file_name, "sv_") and file_name != "init.lua" and !file_name:EndsWith("/init.lua") and !string.find(file_name, "/models/")) then
+    if (!string.find(file_name, "sv_") and file_name != "init.lua" and !file_name:EndsWith("/init.lua")) then
       return include(file_name)
     end
   end

@@ -69,10 +69,7 @@ util.include 'core/sh_enums.lua'
 util.include 'core/sh_core.lua'
 util.include 'core/cl_core.lua'
 util.include 'core/sv_core.lua'
-
-if SERVER then
-  include 'core/lib/activerecord/active_record.lua'
-end
+util.include 'core/lib/activerecord/ar_shared.lua'
 
 -- This way we put things we want loaded BEFORE anything else in here, like plugin, config, etc.
 util.include_folder("core/lib/required", true)
