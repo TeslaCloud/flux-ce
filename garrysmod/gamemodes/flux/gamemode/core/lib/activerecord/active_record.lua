@@ -43,6 +43,7 @@ function ActiveRecord.restore_schema()
       end
       ActiveRecord.ready = true
       ActiveRecord.Model:populate()
+      fl.core:dev_print 'ActiveRecord - Ready!'
       hook.Run('activerecord_ready')
     end)
   query:execute()
@@ -71,6 +72,8 @@ function ActiveRecord.connect()
 end
 
 function ActiveRecord.on_connected()
+  fl.core:dev_print 'ActiveRecord - Connected to the database!'
+
   ActiveRecord.create_tables()
   ActiveRecord.restore_schema()
 end

@@ -49,7 +49,7 @@ function flFactions:RestoreCharacter(player, charID, data)
   end
 end
 
-function flFactions:OnPlayerRestored(player)
+function flFactions:player_restored(player, record)
   if (player:IsBot()) then
     if (faction.Count() > 0) then
       local randomFaction = table.Random(faction.GetAll())

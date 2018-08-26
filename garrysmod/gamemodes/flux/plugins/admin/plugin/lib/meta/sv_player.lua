@@ -1,20 +1,16 @@
 local player_meta = FindMetaTable("Player")
 
 function player_meta:SaveUsergroup()
-  fl.db:easy_write("fl_players", {"steam_id", self:SteamID()}, {
-    name = self:Name(),
-    userGroup = self:GetUserGroup()
-  })
+  self.record.name = self:Name()
+  self.record.role = self:GetUserGroup()
+  self.record:save()
 end
 
 function player_meta:SaveAllUsergroups()
-  fl.db:easy_write("fl_players", {"steam_id", self:SteamID()}, {
-    steam_id = self:SteamID(),
-    name = self:Name(),
-    userGroup = self:GetUserGroup(),
-    secondaryGroups = fl.serialize(self:GetSecondaryGroups()),
-    customPermissions = fl.serialize(self:GetCustomPermissions())
-  })
+  self.record.name = self:Name()
+  self.record.role = self:GetUserGroup()
+  -- implement AR relations!!!
+  self.record:save()
 end
 
 function player_meta:SetPermissions(permTable)

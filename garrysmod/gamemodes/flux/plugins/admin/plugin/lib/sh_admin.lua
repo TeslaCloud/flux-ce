@@ -295,15 +295,14 @@ if SERVER then
   end
 
   -- INTERNAL
-  function fl.admin:AddBan(steam_id, name, banTime, unbanTime, duration, reason)
-    bans[steam_id] = {
-      steam_id = steam_id,
-      name = name,
-      unbanTime = unbanTime,
-      banTime = banTime,
-      duration = duration,
-      reason = reason
-    }
+  function fl.admin:AddBan(steam_id, name, unban_time, duration, reason)
+    local obj = bans[steam_id] or Ban.new()
+      obj.name = name
+      obj.steam_id = steam_id
+      obj.reason = reason
+      obj.duration = duration
+      obj.unban_time = unban_time
+    bans[steam_id] = obj:save()
   end
 
   function fl.admin:Ban(player, duration, reason, bPreventKick)
@@ -324,20 +323,16 @@ if SERVER then
       end
     end
 
-    self:AddBan(steam_id, name, os.time(), os.time() + duration, duration, reason)
-    fl.db:easy_write("fl_bans", {"steam_id", steam_id}, bans[steam_id])
+    self:AddBan(steam_id, name, os.time() + duration, duration, reason)
   end
 
   function fl.admin:RemoveBan(steam_id)
-    if (bans[steam_id]) then
-      local copy = table.Copy(bans[steam_id])
-      bans[steam_id] = nil
+    local obj = bans[steam_id]
+    if obj then
+      local dump = obj:dump()
+      obj:destroy()
 
-      local query = fl.db:delete("fl_bans")
-        query:where("steam_id", steam_id)
-      query:execute()
-
-      return true, copy
+      return true, dump
     end
 
     return false

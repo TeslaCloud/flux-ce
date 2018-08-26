@@ -19,27 +19,11 @@ function flAdmin:RestorePlayer(player, result)
 end
 
 function flAdmin:activerecord_ready()
-  create_table('fl_bans', function(t)
-    t:primary_key 'id'
-    t:string 'steam_id'
-    t:string 'name'
-    t:text 'reason'
-    t:integer 'duration'
-    t:timestamp 'unban_time'
-    t:timestamp 'created_at'
-    t:timestamp 'updated_at'
+  Ban:all():get(function(objects)
+    for k, v in ipairs(objects) do
+      bans[v.steam_id] = v
+    end
   end)
-
-  -- Restore all bans.
-  local query = fl.db:select("fl_bans")
-    query:callback(function(result)
-      if (istable(result) and #result > 0) then
-        for k, v in ipairs(result) do
-          fl.admin:AddBan(v.steam_id, v.name, v.banTime, v.unbanTime, v.duration, v.reason)
-        end
-      end
-    end)
-  query:execute()
 end
 
 function flAdmin:CheckPassword(steam_id64, ip, sv_pass, cl_pass, name)
@@ -57,7 +41,7 @@ function flAdmin:CheckPassword(steam_id64, ip, sv_pass, cl_pass, name)
   end
 end
 
-function flAdmin:OnPlayerRestored(player)
+function flAdmin:player_restored(player, record)
   local root_steamid = config.Get("root_steamid")
 
   if (isstring(root_steamid)) then
