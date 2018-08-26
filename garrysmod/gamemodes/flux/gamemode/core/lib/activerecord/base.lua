@@ -198,14 +198,14 @@ function ActiveRecord.Base:run_query(callback)
         else
           return self:_process_relations(callback, results)
         end
-      elseif isfunction(self.rescue) then
-        self.rescue(self.class.new())
+      elseif isfunction(self._rescue) then
+        self._rescue(self.class.new())
       end
     end)
     query:execute()
   end
   self.query_map = a{}
-  self.rescue = nil
+  self._rescue = nil
   return self
 end
 
@@ -222,7 +222,7 @@ function ActiveRecord.Base:get(callback)
 end
 
 function ActiveRecord.Base:rescue(callback)
-  self.rescue = callback
+  self._rescue = callback
   return self
 end
 
