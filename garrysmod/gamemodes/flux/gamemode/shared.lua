@@ -16,13 +16,14 @@ GM.description  = "A free roleplay gamemode framework."
 GM.name_override = false -- Set to any string to override schema's browser name. This overrides the prefix too.
 
 -- Environment stuff
-FLUX_ENV        = Settings.environment or 'development'
+FLUX_ENV        = include '../config/environment.lua' or 'development'
 IS_DEVELOPMENT  = FLUX_ENV == 'development'
 IS_STAGING      = FLUX_ENV == 'staging'
 IS_PRODUCTION   = FLUX_ENV == 'production'
 
 fl.development  = !IS_PRODUCTION
 
+AddCSLuaFile    '../config/environment.lua'
 AddCSLuaFile    'core/sh_util.lua'
 include         'core/sh_util.lua'
 
