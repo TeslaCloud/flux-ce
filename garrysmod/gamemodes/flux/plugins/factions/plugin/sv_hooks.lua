@@ -2,7 +2,7 @@ function flFactions:PostPlayerSpawn(player)
   local playerFaction = player:GetFaction()
 
   if (playerFaction) then
-    player:SetTeam(playerFaction.teamID or 1)
+    player:SetTeam(playerFaction.team_id or 1)
 
     player:SetNetVar("name", playerFaction:GenerateName(player, player:GetCharacterVar("name", player:Name()), player:GetRank()))
   end
@@ -81,7 +81,7 @@ function flFactions:player_restored(player, record)
         player:SetNetVar("model", randomModel)
       end
 
-      player:SetTeam(randomFaction.teamID or 1)
+      player:SetTeam(randomFaction.team_id or 1)
     end
   end
 end

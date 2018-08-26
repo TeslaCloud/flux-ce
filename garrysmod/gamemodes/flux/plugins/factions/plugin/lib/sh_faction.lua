@@ -9,14 +9,14 @@ faction.count = count
 function faction.register(id, data)
   if (!id or !data) then return end
 
-  data.id = id:to_id() or (data.name and data.name:to_id())
+  data.faction_id = id:to_id() or (data.name and data.name:to_id())
   data.name = data.name or "Unknown Faction"
   data.description = data.description or "This faction has no description!"
   data.print_name = data.print_name or data.name or "Unknown Faction"
 
   team.SetUp(count + 1, data.name, data.color or Color(255, 255, 255))
 
-  data.teamID = count + 1
+  data.team_id = count + 1
 
   stored[id] = data
   count = count + 1
@@ -92,7 +92,7 @@ do
 
     self:SetNetVar("name", factionTable:GenerateName(self, self:GetCharacterVar("name", self:Name()), 1))
     self:SetRank(1)
-    self:SetTeam(factionTable.teamID)
+    self:SetTeam(factionTable.team_id)
     self:SetNetVar("faction", id)
     self:SetDefaultFactionModel()
 

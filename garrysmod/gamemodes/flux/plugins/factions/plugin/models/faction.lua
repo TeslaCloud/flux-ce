@@ -6,7 +6,7 @@ end)
 Faction:belongs_to 'Character'
 
 function Faction:init(id)
-  self.id = id:to_id()
+  self.faction_id = id:to_id()
   self.name = "Unknown Faction"
   self.print_name = nil
   self.description = "This faction has no description set!"
