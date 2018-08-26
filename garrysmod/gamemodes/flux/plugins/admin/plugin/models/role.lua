@@ -1,8 +1,8 @@
 ActiveRecord.define_model('Role', function(t)
   t:string 'name'
   t:text 'description'
-  t:integer 'player_id'
+  t:integer 'user_id'
 end)
 
-Role:belongs_to 'Player'
+Role:belongs_to 'User'
 Role:has_many 'permissions'

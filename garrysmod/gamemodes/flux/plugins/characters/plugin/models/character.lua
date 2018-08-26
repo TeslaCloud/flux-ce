@@ -6,7 +6,7 @@ ActiveRecord.define_model('Character', function(t)
   t:integer 'money'
 end)
 
-Character:belongs_to 'Player'
+Character:belongs_to 'User'
 Character:has_many 'data'
 Character:has_one 'inventory'
 Character:has_one 'ammo'

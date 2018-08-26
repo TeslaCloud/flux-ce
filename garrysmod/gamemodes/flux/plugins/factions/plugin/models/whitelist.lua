@@ -3,4 +3,4 @@ ActiveRecord.define_model('Whitelist', function(t)
   t:integer 'character_id'
 end)
 
-Whitelist:belongs_to 'Player'
+Whitelist:belongs_to 'User'
