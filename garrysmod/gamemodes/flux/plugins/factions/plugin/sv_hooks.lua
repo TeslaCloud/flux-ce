@@ -19,7 +19,9 @@ function flFactions:RestorePlayer(player, result)
 end
 
 function flFactions:activerecord_ready()
-  add_column('characters', 'char_class', 'text')
+  if !ActiveRecord.schema['characters']['char_class'] then
+    add_column('characters', 'char_class', 'text')
+  end
 end
 
 function flFactions:OnActiveCharacterSet(player, charData)
