@@ -74,7 +74,7 @@ function fl.bars:SetValue(id, newValue)
         bar.value = math.Clamp(newValue, 0, bar.maxValue - bar.hinderValue + 2)
       end
 
-      bar.interpolated = util.cubic_ease_inOutTable(150, bar.value, newValue)
+      bar.interpolated = util.cubic_ease_in_out_t(150, bar.value, newValue)
       bar.value = math.Clamp(newValue, 0, bar.maxValue)
     end
   end

@@ -97,7 +97,7 @@ if SERVER then
       money = char.money,
       charPermissions = util.TableToJSON(char.charPermissions),
       data = util.TableToJSON(char.data),
-      id = char.id
+      character_id = char.character_id
     }
   end
 
