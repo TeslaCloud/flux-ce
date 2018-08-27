@@ -24,7 +24,7 @@ function attributes.get_by_type(type)
   local atts_table = {}
 
   for k, v in pairs(attributes.stored) do
-    if (v.type == type) then
+    if v.type == type then
       atts_table[k] = v
     end
   end
@@ -33,7 +33,7 @@ function attributes.get_by_type(type)
 end
 
 function attributes.register(id, data)
-  if (!data) then return end
+  if !data then return end
 
   if !isstring(id) and !isstring(data.name) then
     ErrorNoHalt("Attempt to register an attribute without a valid ID!")
