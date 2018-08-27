@@ -1,7 +1,7 @@
 function flAttributes:RestoreCharacter(player, charID, data)
   local char = character.Get(player, charID)
 
-  if (char) then
+  if char then
     char.attributes = util.JSONToTable(data.attributes or "")
 
     character.Save(player, charID)
@@ -11,7 +11,7 @@ end
 function flAttributes:PostCreateCharacter(player, charID, data)
   local char = character.Get(player, charID)
 
-  if (char and data.attributes) then
+  if char and data.attributes then
     char.attributes = data.attributes
 
     character.Save(player, charID)

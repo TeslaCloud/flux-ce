@@ -6,43 +6,43 @@ attributes.stored = stored
 local types = attributes.types or {}
 attributes.types = types
 
-function attributes.GetStored()
+function attributes.get_stored()
   return stored
 end
 
-function attributes.GetAll()
-  local attsTable = {}
+function attributes.get_all()
+  local atts_table = {}
 
   for k, v in pairs(stored) do
-    attsTable[#attsTable + 1] = k
+    atts_table[#atts_table + 1] = k
   end
 
-  return attsTable
+  return atts_table
 end
 
-function attributes.GetAllByType(type)
-  local attsTable = {}
+function attributes.get_by_type(type)
+  local atts_table = {}
 
   for k, v in pairs(attributes.stored) do
     if (v.type == type) then
-      attsTable[k] = v
+      atts_table[k] = v
     end
   end
 
-  return attsTable
+  return atts_table
 end
 
 function attributes.register(id, data)
   if (!data) then return end
 
-  if (!isstring(id) and !isstring(data.name)) then
+  if !isstring(id) and !isstring(data.name) then
     ErrorNoHalt("Attempt to register an attribute without a valid ID!")
     debug.Trace()
 
     return
   end
 
-  if (!id) then
+  if !id then
     id = data.name:to_id()
   end
 
@@ -68,27 +68,27 @@ function attributes.find_by_id(id)
   return stored[id]
 end
 
-function attributes.RegisterType(id, globalVar, folder)
-  types[id] = globalVar
+function attributes.register_type(id, global_var, folder)
+  types[id] = global_var
 
   plugin.add_extra(id)
 
-  attributes.IncludeType(id, globalVar, folder)
+  attributes.include_type(id, global_var, folder)
 
-  fl.dev_print("Registering attribute type: ["..id.."] ["..globalVar.."] ["..folder.."]")
+  fl.dev_print("Registering attribute type: ["..id.."] ["..global_var.."] ["..folder.."]")
 end
 
-function attributes.IncludeType(id, globalVar, folder)
+function attributes.include_type(id, global_var, folder)
   pipeline.register(id, function(id, file_name, pipe)
-    _G[globalVar] = Attribute.new(id)
+    _G[global_var] = Attribute.new(id)
 
     util.include(file_name)
 
-    if (pipeline.IsAborted()) then _G[globalVar] = nil return end
+    if pipeline.IsAborted() then _G[global_var] = nil return end
 
-    _G[globalVar].type = globalVar
-    _G[globalVar]:register()
-    _G[globalVar] = nil
+    _G[global_var].type = global_var
+    _G[global_var]:register()
+    _G[global_var] = nil
   end)
 
   pipeline.include_folder(id, folder)
@@ -97,41 +97,41 @@ end
 do
   local player_meta = FindMetaTable("Player")
 
-  function player_meta:GetAttributes()
+  function player_meta:get_attributes()
     return self:get_nv("attributes", {})
   end
 
-  function player_meta:GetAttribute(id, bNoBoost)
+  function player_meta:get_attribute(id, no_boost)
     local attribute = attributes.find_by_id(id)
-    local attsTable = self:GetAttributes()
+    local atts_table = self:get_attributes()
 
-    if (!attsTable[id]) then
+    if !atts_table[id] then
       return attribute.min
     end
 
-    local value = attsTable[id].value
+    local value = atts_table[id].value
 
-    if (!bNoBoost and attribute.boostable) then
-      value = value + self:GetAttributeBoost(id)
+    if !no_boost and attribute.boostable then
+      value = value + self:get_attribute_boost(id)
     end
 
     return value
   end
 
-  function player_meta:GetAttributeMultiplier(id)
-    local attribute = self:GetAttributes()[id]
+  function player_meta:get_attribute_multiplier(id)
+    local attribute = self:get_attributes()[id]
 
-    if (attribute.multiplierExpires >= CurTime()) then
+    if attribute.multiplier_expires >= CurTime() then
       return attribute.multiplier or 1
     else
       return 1
     end
   end
 
-  function player_meta:GetAttributeBoost(id)
-    local attribute = self:GetAttributes()[id]
+  function player_meta:get_attribute_boost(id)
+    local attribute = self:get_attributes()[id]
 
-    if (attribute.boostExpires >= CurTime()) then
+    if attribute.boost_expires >= CurTime() then
       return attribute.boost or 0
     else
       return 0
@@ -139,79 +139,79 @@ do
   end
 
   if SERVER then
-    function player_meta:SetAttribute(id, value)
-      local attsTable = self:GetAttributes()
+    function player_meta:set_attribute(id, value)
+      local atts_table = self:get_attributes()
       local attribute = attributes.find_by_id(id)
 
-      if (!attsTable[id]) then
-        attsTable[id] = {}
+      if !atts_table[id] then
+        atts_table[id] = {}
       end
 
-      attsTable[id].value = math.Clamp(value, attribute.min, attribute.max)
+      atts_table[id].value = math.Clamp(value, attribute.min, attribute.max)
 
-      self:set_nv("attributes", attsTable)
+      self:set_nv("attributes", atts_table)
     end
 
-    function player_meta:IncreaseAttribute(id, value, bNoMultiplier)
+    function player_meta:increase_attribute(id, value, no_multiplier)
       local attribute = attributes.find_by_id(id)
-      local attsTable = self:GetAttributes()
+      local atts_table = self:get_attributes()
 
-      if (!bNoMultiplier) then
-        value = value * self:GetAttributeMultiplier(id)
+      if !no_multiplier then
+        value = value * self:get_attribute_multiplier(id)
 
-        if (value < 0) then
-          value = value / self:GetAttributeMultiplier(id)
+        if value < 0 then
+          value = value / self:get_attribute_multiplier(id)
         end
       end
 
-      attsTable[id].value = math.Clamp(attsTable[id].value + value, attribute.min, attribute.max)
+      atts_table[id].value = math.Clamp(atts_table[id].value + value, attribute.min, attribute.max)
 
-      self:set_nv("attributes", attsTable)
+      self:set_nv("attributes", atts_table)
     end
 
-    function player_meta:DecreaseAttribute(id, value, bNoMultiplier)
-      self:IncreaseAttribute(id, -value, bNoMultiplier)
+    function player_meta:decrease_attribute(id, value, no_multiplier)
+      self:increase_attribute(id, -value, no_multiplier)
     end
 
-    function player_meta:AttributeMultiplier(id, value, duration)
+    function player_meta:attribute_multiplier(id, value, duration)
       local attribute = attributes.find_by_id(id)
 
-      if (!attribute.multipliable) then return end
-      if (value <= 0) then return end
+      if !attribute.multipliable then return end
+      if value <= 0 then return end
 
-      local curTime = CurTime()
-      local attsTable = self:GetAttributes()
-      local expires = attsTable[id].multiplierExpires
+      local cur_time = CurTime()
+      local atts_table = self:GetAttributes()
+      local expires = atts_table[id].multiplier_expires
 
-      attsTable[id].multiplier = value
+      atts_table[id].multiplier = value
 
-      if (expires and expires >= curTime) then
-        attsTable[id].multiplierExpires = expires + duration
+      if expires and expires >= cur_time then
+        atts_table[id].multiplier_expires = expires + duration
       else
-        attsTable[id].multiplierExpires = curTime + duration
+        atts_table[id].multiplier_expires = cur_time + duration
       end
 
-      self:set_nv("attributes", attsTable)
+      self:set_nv("attributes", atts_table)
     end
 
     function player_meta:BoostAttribute(id, value, duration)
       local attribute = attributes.find_by_id(id)
 
-      if (!attribute.multipliable) then return end
+      if !attribute.multipliable then return end
 
-      local curTime = CurTime()
-      local attsTable = self:GetAttributes()
-      local expires = attsTable[id].boostExpires
+      local cur_time = CurTime()
+      local atts_table = self:get_attributes()
+      local expires = atts_table[id].boost_expires
 
-      attsTable[id].boost = value
+      atts_table[id].boost = value
 
-      if (expires and expires >= curTime) then
-        attsTable[id].boostExpires = expires + time
+      if expires and expires >= cur_time then
+        atts_table[id].boost_expires = expires + time
       else
-        attsTable[id].boostExpires = curTime + time
+        atts_table[id].boost_expires = cur_time + time
       end
 
-      self:set_nv("attributes", attsTable)
+      self:set_nv("attributes", atts_table)
     end
   end
 end

@@ -6,7 +6,7 @@ end)
 Attribute:belongs_to 'Character'
 
 function Attribute:init(id)
-  if (!isstring(id)) then return end
+  if !isstring(id) then return end
 
   self.attr_id = id
 end
