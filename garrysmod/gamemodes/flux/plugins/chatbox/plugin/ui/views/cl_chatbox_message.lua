@@ -78,7 +78,7 @@ function PANEL:Paint(w, h)
     for k, v in ipairs(self.messageData) do
       if (istable(v)) then
         if (v.text) then
-          draw.SimpleText(v.text, curFont, v.x, v.y, curColor)
+          draw.SimpleTextOutlined(v.text, curFont, v.x, v.y, curColor, nil, nil, 1, Color(30, 30, 30, self.alpha))
         elseif (IsColor(v)) then
           curColor = ColorAlpha(v, self.alpha)
         elseif (v.image) then
