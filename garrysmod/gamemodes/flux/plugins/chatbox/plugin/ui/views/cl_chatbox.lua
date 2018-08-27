@@ -20,20 +20,20 @@ function PANEL:Init()
   self.scrollPanel:SetSize(w, h)
   self.scrollPanel:PerformLayout()
 
-  self.textEntry = vgui.Create("flTextEntry", self)
-  self.textEntry:SetText("")
-  self.textEntry:SetSize(1, 1)
-  self.textEntry.history = {}
-  self.textEntry.lastIndex = 0
+  self.text_entry = vgui.Create("flTextEntry", self)
+  self.text_entry:SetText("")
+  self.text_entry:SetSize(1, 1)
+  self.text_entry.history = {}
+  self.text_entry.lastIndex = 0
 
-  self.textEntry.OnValueChange = function(entry, value)
-    hook.Run("ChatTextChanged", value)
+  self.text_entry.OnValueChange = function(entry, value)
+    hook.run("ChatTextChanged", value)
   end
 
-  self.textEntry.OnEnter = function(entry)
+  self.text_entry.OnEnter = function(entry)
     local value = entry:GetValue()
 
-    hook.Run("ChatboxTextEntered", value)
+    hook.run("ChatboxTextEntered", value)
 
     if (entry.history[1] != value) then
       table.insert(entry.history, 1, value)
@@ -44,7 +44,7 @@ function PANEL:Init()
     entry:SetText("")
   end
 
-  self.textEntry.OnKeyCodeTyped = function(entry, code)
+  self.text_entry.OnKeyCodeTyped = function(entry, code)
     local shouldSet = false
 
     if (code == KEY_ENTER) then
@@ -88,17 +88,17 @@ function PANEL:SetOpen(bIsOpen)
   if (bIsOpen) then
     self:MakePopup()
 
-    self.textEntry:SetVisible(true)
-    self.textEntry:RequestFocus()
-    self.textEntry.lastIndex = 0
+    self.text_entry:SetVisible(true)
+    self.text_entry:RequestFocus()
+    self.text_entry.lastIndex = 0
   else
-    if (self.textEntry:GetValue():IsCommand()) then
-      self.textEntry:SetText("")
+    if (self.text_entry:GetValue():is_command()) then
+      self.text_entry:SetText("")
     end
 
     self:KillFocus()
 
-    self.textEntry:SetVisible(false)
+    self.text_entry:SetVisible(false)
   end
 
   for k, v in ipairs(self.history) do
@@ -107,11 +107,11 @@ function PANEL:SetOpen(bIsOpen)
 end
 
 function PANEL:IsTypingCommand()
-  if (IsValid(self.textEntry)) then
-    local cmd = self.textEntry:GetValue()
+  if (IsValid(self.text_entry)) then
+    local cmd = self.text_entry:GetValue()
 
     if (cmd != "/") then
-      return cmd:IsCommand()
+      return cmd:is_command()
     end
   end
 end
@@ -162,13 +162,13 @@ function PANEL:Rebuild()
   self:SetSize(chatbox.width, chatbox.height)
   self:SetPos(chatbox.x, chatbox.y)
 
-  self.textEntry:SetSize(chatbox.width, 20)
-  self.textEntry:SetPos(0, chatbox.height - 20)
-  self.textEntry:SetFont(theme.GetFont("Text_Small"))
-  self.textEntry:SetTextColor(theme.GetColor("Text"))
-  self.textEntry:RequestFocus()
+  self.text_entry:SetSize(chatbox.width, 20)
+  self.text_entry:SetPos(0, chatbox.height - 20)
+  self.text_entry:SetFont(theme.GetFont("Text_Small"))
+  self.text_entry:SetTextColor(theme.GetColor("Text"))
+  self.text_entry:RequestFocus()
 
-  self.scrollPanel:SetSize(chatbox.width, chatbox.height - self.textEntry:GetTall() - 16)
+  self.scrollPanel:SetSize(chatbox.width, chatbox.height - self.text_entry:GetTall() - 16)
   self.scrollPanel:PerformLayout()
   self.scrollPanel.VBar:SetScroll(self.scrollPanel.VBar.CanvasSize or 0)
 
@@ -204,11 +204,11 @@ end
 
 function PANEL:PaintOver(w, h)
   if (plugin.call("ChatboxPaintOver", w, h, self) == nil) then
-    local entry = self.textEntry
+    local entry = self.text_entry
 
     if (IsValid(entry)) then
       local val = entry:GetValue()
-      local isCommand, prefixLen = string.IsCommand(val)
+      local isCommand, prefixLen = string.is_command(val)
 
       if (isCommand) then
         local space = string.find(val, " ")
@@ -224,9 +224,9 @@ function PANEL:PaintOver(w, h)
         if (cmd == "" or cmd == " ") then return end
 
         if (!space) then
-          cmds = fl.command:FindAll(cmd)
+          cmds = fl.command:find_all(cmd)
         else
-          local found = fl.command:FindByID(cmd)
+          local found = fl.command:find_by_id(cmd)
 
           if (found) then
             table.insert(cmds, found)

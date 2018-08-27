@@ -13,7 +13,7 @@ flThirdPerson.wasThirdPerson = flThirdPerson.wasThirdPerson or false
 
 -- This is very basic and WIP, but it works.
 function flThirdPerson:CalcView(player, pos, angles, fov)
-  local isThirdPerson = player:GetNetVar("flThirdPerson")
+  local isThirdPerson = player:get_nv("flThirdPerson")
 
   -- This also fixes weird view glitch on autorefresh.
   if (!isThirdPerson and !self.wasThirdPerson) then return end

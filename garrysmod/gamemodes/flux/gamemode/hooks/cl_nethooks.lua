@@ -4,20 +4,20 @@ netstream.Hook("SharedTables", function(tSharedTable)
 end)
 
 netstream.Hook("Hook_RunCL", function(hookName, ...)
-  hook.Run(hookName, ...)
+  hook.run(hookName, ...)
 end)
 
 netstream.Hook("PlayerInitialSpawn", function(nPlyIndex)
-  hook.Run("PlayerInitialSpawn", Entity(nPlyIndex))
+  hook.run("PlayerInitialSpawn", Entity(nPlyIndex))
 end)
 
 netstream.Hook("PlayerDisconnected", function(nPlyIndex)
-  hook.Run("PlayerDisconnected", Entity(nPlyIndex))
+  hook.run("PlayerDisconnected", Entity(nPlyIndex))
 end)
 
 netstream.Hook("PlayerModelChanged", function(nPlyIndex, sNewModel, sOldModel)
-  util.WaitForEntity(nPlyIndex, function(player)
-    hook.Run("PlayerModelChanged", player, sNewModel, sOldModel)
+  util.wait_for_ent(nPlyIndex, function(player)
+    hook.run("PlayerModelChanged", player, sNewModel, sOldModel)
   end)
 end)
 

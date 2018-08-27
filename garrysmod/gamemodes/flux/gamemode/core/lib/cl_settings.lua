@@ -16,7 +16,7 @@ local mixerColors = {"r", "g", "b", "a"}
 -- We do this to gain control over this internal hook for use with plugin hooks.
 fl.OldOnConVarChanged = fl.OldOnConVarChanged or cvars.OnConVarChanged
 function cvars.OnConVarChanged(name, oldVal, newVal)
-  hook.Run("OnConVarChanged", name, oldVal, newVal)
+  hook.run("OnConVarChanged", name, oldVal, newVal)
 
   return fl.OldOnConVarChanged(name, oldVal, newVal)
 end
@@ -145,12 +145,12 @@ function fl.settings:SetValue(id, value)
   local conVar = self:GetConVar(id)
 
   if (conVar) then
-    hook.Run("OnSettingSet", id, value, conVar)
+    hook.run("OnSettingSet", id, value, conVar)
 
     local oldValue = self:GetValue(id)
 
     if (oldValue != value) then
-      hook.Run("OnSettingChanged", id, value, oldValue, conVar)
+      hook.run("OnSettingChanged", id, value, oldValue, conVar)
     end
 
     return conVar:SetString(tostring(value))
@@ -170,7 +170,7 @@ end
     who already has the convar created and saved. (If they've had the convar created in a previous play session).
   [bool] bShouldSave This will determine whether or not the convar value will persist through play sessions, lookup CreateClientConVar on gmod wiki for more information.
   [bool] bShared This will determine whether not the client's convar can be accessed by the server, lookup CreateClientConVar on gmod wiki for more information.
-  [string] type This will determine what type of menu element will be added to the settings menu for this setting (ex. checkBox, numSlider, textEntry, comboBox, colorMixer).
+  [string] type This will determine what type of menu element will be added to the settings menu for this setting (ex. checkBox, numSlider, text_entry, comboBox, colorMixer).
   [table] info This contains the info to be used in creating the menu element in the settings menu for this setting.
   [table] callbacks This table contains all the callbacks that you want to be called when the setting's convar value changes. Look up cvars.AddChangeCallback on gmod
     wiki for more information. each table entry should contain a 'callback' entry, and optionally an 'identifier' entry.

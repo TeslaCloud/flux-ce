@@ -7,7 +7,7 @@ do
   local glitches = {}
 
   function PLUGIN:FLHUDPaint(curTime, w, h)
-    if (false and hook.Run("ShouldDrawDeathGlitches") != false) then
+    if (false and hook.run("ShouldDrawDeathGlitches") != false) then
       for k, v in ipairs(glitches) do
         glitches[k].c = ColorAlpha(v.c, Lerp(FrameTime() * 8, v.c.a, 0))
 

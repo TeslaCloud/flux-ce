@@ -118,4 +118,4 @@ function PANEL:OnOpened()
   self:Rebuild()
 end
 
-vgui.Register("flPermissionsEditor", PANEL, "flBasePanel")
+vgui.Register("permissionsEditor", PANEL, "flBasePanel")

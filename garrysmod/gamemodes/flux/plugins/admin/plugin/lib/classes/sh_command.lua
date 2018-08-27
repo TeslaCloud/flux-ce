@@ -13,7 +13,7 @@ function Command:init(id)
   self.id = id
 end
 
-function Command:OnRun() end
+function Command:on_run() end
 
 function Command:__tostring()
   return "Command ["..self.id.."]["..self.name.."]"

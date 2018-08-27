@@ -7,7 +7,7 @@ COMMAND.arguments = 2
 COMMAND.immunity = true
 COMMAND.aliases = {"plyban"}
 
-function COMMAND:OnRun(player, targets, duration, ...)
+function COMMAND:on_run(player, targets, duration, ...)
   local pieces = {...}
   local reason = "You have been banned."
 
@@ -28,7 +28,7 @@ function COMMAND:OnRun(player, targets, duration, ...)
   end
 
   for k, v in ipairs(_player.GetAll()) do
-    local time = "#for "..fl.lang:NiceTimeFull(v:GetNetVar("language"), duration)
+    local time = "#for "..fl.lang:NiceTimeFull(v:get_nv("language"), duration)
 
     if (duration <= 0) then time = L"permanently" end
 

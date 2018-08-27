@@ -4,7 +4,7 @@ function flFactions:CharPanelCreated(id, panel)
     local charData = panel:GetParent().CharData
 
     if (charData and charData.faction) then
-      factionTable = faction.FindByID(charData.faction)
+      factionTable = faction.find_by_id(charData.faction)
     end
 
     if (factionTable and !factionTable.has_name) then
@@ -27,8 +27,8 @@ function flFactions:CharPanelCreated(id, panel)
   end
 end
 
-function flFactions:OnThemeLoaded(activeTheme)
-  activeTheme:AddPanel("CharCreation_Faction", function(id, parent, ...)
+function flFactions:OnThemeLoaded(current_theme)
+  current_theme:AddPanel("CharCreation_Faction", function(id, parent, ...)
     return vgui.Create("flCharCreationFaction", parent)
   end)
 end

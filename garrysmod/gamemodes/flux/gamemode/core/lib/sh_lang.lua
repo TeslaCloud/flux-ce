@@ -94,7 +94,7 @@ function fl.lang:GetString(language, identifier, arguments)
 
   langString = langString:Replace(";", "")
 
-  return hook.Run("TranslatePhrase", language, identifier, arguments) or langString
+  return hook.run("TranslatePhrase", language, identifier, arguments) or langString
 end
 
 function fl.lang:GetPlural(language, phrase, count)
@@ -168,7 +168,7 @@ function fl.lang:TranslateText(sText)
     return sText
   end
 
-  local hooked = hook.Run("TranslateText", sText)
+  local hooked = hook.run("TranslateText", sText)
 
   if (hooked) then
     textCache[sText] = hooked
@@ -177,7 +177,7 @@ function fl.lang:TranslateText(sText)
   end
 
   local oldText = sText
-  local phrases = string.FindAll(sText, "#[%w_.]+")
+  local phrases = string.find_all(sText, "#[%w_.]+")
   local translations = {}
 
   for k, v in ipairs(phrases) do
@@ -217,7 +217,7 @@ end
 function fl.lang:GetPlayerLang(player)
   if (!IsValid(player)) then return "en" end
 
-  return player:GetNetVar("language", "en")
+  return player:get_nv("language", "en")
 end
 
 if CLIENT then
@@ -278,14 +278,14 @@ if CLIENT then
     surface.bTranslating = !bValue
   end
 
-  surface.OldGetTextSize = surface.OldGetTextSize or surface.GetTextSize
+  surface.Oldtext_size = surface.Oldtext_size or surface.text_size
 
-  function surface.GetTextSize(sText)
+  function surface.text_size(sText)
     if (surface.bTranslating) then
       sText = fl.lang:TranslateText(sText)
     end
 
-    return surface.OldGetTextSize(sText)
+    return surface.Oldtext_size(sText)
   end
 
   surface.OldDrawText = surface.OldDrawText or surface.DrawText

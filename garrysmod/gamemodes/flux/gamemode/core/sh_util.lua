@@ -122,7 +122,7 @@ do
 end
 
 -- A function to remove a substring from the end of the string.
-function string.RemoveTextFromEnd(str, strNeedle, bAllOccurences)
+function string.trim_end(str, strNeedle, bAllOccurences)
   if (!strNeedle or strNeedle == "") then
     return str
   end
@@ -130,7 +130,7 @@ function string.RemoveTextFromEnd(str, strNeedle, bAllOccurences)
   if (str:EndsWith(strNeedle)) then
     if (bAllOccurences) then
       while (str:EndsWith(strNeedle)) do
-        str = str:RemoveTextFromEnd(strNeedle)
+        str = str:trim_end(strNeedle)
       end
 
       return str
@@ -143,7 +143,7 @@ function string.RemoveTextFromEnd(str, strNeedle, bAllOccurences)
 end
 
 -- A function to remove a substring from the beginning of the string.
-function string.RemoveTextFromStart(str, strNeedle, bAllOccurences)
+function string.trim_start(str, strNeedle, bAllOccurences)
   if (!strNeedle or strNeedle == "") then
     return str
   end
@@ -151,7 +151,7 @@ function string.RemoveTextFromStart(str, strNeedle, bAllOccurences)
   if (str:StartWith(strNeedle)) then
     if (bAllOccurences) then
       while (str:StartWith(strNeedle)) do
-        str = str:RemoveTextFromStart(strNeedle)
+        str = str:trim_start(strNeedle)
       end
 
       return str
@@ -593,33 +593,33 @@ function string.IsLowercase(str)
 end
 
 -- A function to find all occurences of a substring in a string.
-function string.FindAll(str, pattern)
+function string.find_all(str, pattern)
   if (!str or !pattern) then return end
 
   local hits = {}
   local lastPos = 1
 
   while (true) do
-    local startPos, endPos = string.find(str, pattern, lastPos)
+    local startPos, end_pos = string.find(str, pattern, lastPos)
 
     if (!startPos) then
       break
     end
 
-    table.insert(hits, {string.utf8sub(str, startPos, endPos), startPos, endPos})
+    table.insert(hits, {string.utf8sub(str, startPos, end_pos), startPos, end_pos})
 
-    lastPos = endPos + 1
+    lastPos = end_pos + 1
   end
 
   return hits
 end
 
 -- A function to check if string is command or not.
-function string.IsCommand(str)
+function string.is_command(str)
   local prefixes = config.Get("command_prefixes") or {}
 
   for k, v in ipairs(prefixes) do
-    if (str:StartWith(v) and hook.Run("StringIsCommand", str) != false) then
+    if (str:StartWith(v) and hook.run("StringIsCommand", str) != false) then
       return true, string.utf8len(v)
     end
   end
@@ -629,7 +629,7 @@ end
 
 do
   -- ID's should not have any of those characters.
-  local blockedChars = {
+  local blocked_chars = {
     "'", "\"", "\\", "/", "^",
     ":", ".", ";", "&", ",", "%"
   }
@@ -638,7 +638,7 @@ do
     str = str:utf8lower()
     str = str:gsub(" ", "_")
 
-    for k, v in ipairs(blockedChars) do
+    for k, v in ipairs(blocked_chars) do
       str = str:Replace(v, "")
     end
 
@@ -649,17 +649,17 @@ end
 do
   local cache = {}
 
-  function util.GetTextSize(text, font)
+  function util.text_size(text, font)
     font = font or "default"
 
     if (cache[text] and cache[text][font]) then
-      local textSize = cache[text][font]
+      local text_size = cache[text][font]
 
-      return textSize[1], textSize[2]
+      return text_size[1], text_size[2]
     else
       surface.SetFont(font)
 
-      local result = {surface.GetTextSize(text)}
+      local result = {surface.text_size(text)}
 
       cache[text] = {}
       cache[text][font] = result
@@ -669,19 +669,19 @@ do
   end
 end
 
-function util.GetTextWidth(text, font)
-  return select(1, util.GetTextSize(text, font))
+function util.text_width(text, font)
+  return select(1, util.text_size(text, font))
 end
 
-function util.GetTextHeight(text, font)
-  return select(2, util.GetTextSize(text, font))
+function util.text_height(text, font)
+  return select(2, util.text_size(text, font))
 end
 
-function util.GetFontSize(font)
-  return select(2, util.GetTextSize("Agb", font))
+function util.font_size(font)
+  return select(2, util.text_size("Agw", font))
 end
 
-function util.GetPanelClass(panel)
+function util.get_panel_class(panel)
   if (panel and panel.GetTable) then
     local pTable = panel:GetTable()
 
@@ -692,7 +692,7 @@ function util.GetPanelClass(panel)
 end
 
 -- Adjusts x, y to fit inside x2, y2 while keeping original aspect ratio.
-function util.FitToAspect(x, y, x2, y2)
+function util.fit_to_aspect(x, y, x2, y2)
   local aspect = x / y
 
   if (x > x2) then
@@ -712,53 +712,53 @@ function util.ToBool(value)
   return (tonumber(value) == 1 or value == true or value == "true")
 end
 
-function util.CubicEaseIn(curStep, steps, from, to)
+function util.cubic_ease_in(curStep, steps, from, to)
   return (to - from) * math.pow(curStep / steps, 3) + from
 end
 
-function util.CubicEaseOut(curStep, steps, from, to)
+function util.cubic_ease_out(curStep, steps, from, to)
   return (to - from) * (math.pow(curStep / steps - 1, 3) + 1) + from
 end
 
-function util.CubicEaseInTable(steps, from, to)
+function util.cubic_ease_in_t(steps, from, to)
   local result = {}
 
   for i = 1, steps do
-    table.insert(result, util.CubicEaseIn(i, steps, from, to))
+    table.insert(result, util.cubic_ease_in(i, steps, from, to))
   end
 
   return result
 end
 
-function util.CubicEaseOutTable(steps, from, to)
+function util.cubic_ease_out_t(steps, from, to)
   local result = {}
 
   for i = 1, steps do
-    table.insert(result, util.CubicEaseOut(i, steps, from, to))
+    table.insert(result, util.cubic_ease_out(i, steps, from, to))
   end
 
   return result
 end
 
-function util.CubicEaseInOut(curStep, steps, from, to)
+function util.cubic_ease_in_out(curStep, steps, from, to)
   if (curStep > (steps * 0.5)) then
-    return util.CubicEaseOut(curStep - steps * 0.5, steps * 0.5, from, to)
+    return util.cubic_ease_out(curStep - steps * 0.5, steps * 0.5, from, to)
   else
-    return util.CubicEaseIn(curStep, steps, from, to)
+    return util.cubic_ease_in(curStep, steps, from, to)
   end
 end
 
-function util.CubicEaseInOutTable(steps, from, to)
+function util.cubic_ease_in_out_t(steps, from, to)
   local result = {}
 
   for i = 1, steps do
-    table.insert(result, util.CubicEaseInOut(i, steps, from, to))
+    table.insert(result, util.cubic_ease_in_out(i, steps, from, to))
   end
 
   return result
 end
 
-function util.WaitForEntity(entIndex, callback, delay, waitTime)
+function util.wait_for_ent(entIndex, callback, delay, waitTime)
   local entity = Entity(entIndex)
 
   if (!IsValid(entity)) then
@@ -780,7 +780,7 @@ end
 
 -- A function to determine whether vector from A to B intersects with a
 -- vector from C to D.
-function util.VectorsIntersect(vFrom, vTo, vFrom2, vTo2)
+function util.vectors_intersect(vFrom, vTo, vFrom2, vTo2)
   local d1, d2, a1, a2, b1, b2, c1, c2
 
   a1 = vTo.y - vFrom.y
@@ -809,7 +809,7 @@ function util.VectorsIntersect(vFrom, vTo, vFrom2, vTo2)
 end
 
 -- A function to determine whether a 2D point is inside of a 2D polygon.
-function util.VectorIsInPoly(point, polyVertices)
+function util.vector_in_poly(point, polyVertices)
   if (!isvector(point) or !istable(polyVertices) or !isvector(polyVertices[1])) then
     return
   end
@@ -825,7 +825,7 @@ function util.VectorIsInPoly(point, polyVertices)
       nextVert = polyVertices[1]
     end
 
-    if (nextVert and util.VectorsIntersect(point, Vector(99999, 99999, 0), v, nextVert)) then
+    if (nextVert and util.vectors_intersect(point, Vector(99999, 99999, 0), v, nextVert)) then
       intersections = intersections + 1
     end
   end
@@ -839,7 +839,7 @@ function util.VectorIsInPoly(point, polyVertices)
   end
 end
 
-function table.SafeMerge(to, from)
+function table.safe_merge(to, from)
   local oldIndex, oldIndex2 = to.__index, from.__index
   local references = {}
 
@@ -903,24 +903,15 @@ function util.PlayerListToString(...)
   return util.ListToString(function(obj) return (IsValid(obj) and obj:Name()) or "Unknown Player" end, nil, ...)
 end
 
-function string.IsNumber(char)
-  return (tonumber(char) != nil)
+function string.is_n(char)
+  return tonumber(char) != nil
 end
 
-function string.CountCharacter(str, char)
-  local exploded = string.Explode("", str)
+function string.count(str, char)
   local hits = 0
 
-  for k, v in ipairs(exploded) do
-    if (v == char) then
-      if (char == "\"") then
-        local prevChar = exploded[k - 1] or ""
-
-        if (prevChar == "\\") then
-          continue
-        end
-      end
-
+  for i = 1, str:len() do
+    if str[i] == char then
       hits = hits + 1
     end
   end
@@ -930,25 +921,25 @@ end
 
 function string.Spelling(str)
   local len = str:utf8len()
-  local endText = str:utf8sub(-1)
+  local end_text = str:utf8sub(-1)
 
   str = str:utf8sub(1, 1):utf8upper()..str:utf8sub(2, len)
 
-  if ((endText != ".") and (endText != "!") and (endText != "?") and ((endText != '"'))) then
+  if ((end_text != ".") and (end_text != "!") and (end_text != "?") and ((end_text != '"'))) then
     str = str.."."
   end
 
   return str
 end
 
-function util.SmartRemoveNewlines(str)
+function util.remove_newlines(str)
   local exploded = string.Explode("", str)
-  local toReturn = ""
+  local to_ret = ""
   local skip = ""
 
   for k, v in ipairs(exploded) do
     if (skip != "") then
-      toReturn = toReturn..v
+      to_ret = to_ret..v
 
       if (v == skip) then
         skip = ""
@@ -960,7 +951,7 @@ function util.SmartRemoveNewlines(str)
     if (v == "\"") then
       skip = "\""
 
-      toReturn = toReturn..v
+      to_ret = to_ret..v
 
       continue
     end
@@ -969,14 +960,14 @@ function util.SmartRemoveNewlines(str)
       continue
     end
 
-    toReturn = toReturn..v
+    to_ret = to_ret..v
   end
 
-  return toReturn
+  return to_ret
 end
 
-function util.BuildTableFromString(str)
-  str = util.SmartRemoveNewlines(str)
+function util.table_from_string(str)
+  str = util.remove_newlines(str)
 
   local exploded = string.Explode(",", str)
   local tab = {}
@@ -985,16 +976,16 @@ function util.BuildTableFromString(str)
     if (!isstring(v)) then continue end
 
     if (!string.find(v, "=")) then
-      v = v:RemoveTextFromStart(" ", true)
+      v = v:trim_start(" ", true)
 
-      if (string.IsNumber(v)) then
+      if (string.is_n(v)) then
         v = tonumber(v)
       elseif (string.find(v, "\"")) then
-        v = v:RemoveTextFromStart("\""):RemoveTextFromEnd("\"")
+        v = v:trim_start("\""):trim_end("\"")
       elseif (v:find("{")) then
         v = v:Replace("{", "")
 
-        local lastKey = nil
+        local last_key = nil
         local buff = v
 
         for k2, v2 in ipairs(exploded) do
@@ -1003,7 +994,7 @@ function util.BuildTableFromString(str)
           if (v2:find("}")) then
             buff = buff..","..v2:Replace("}", "")
 
-            lastKey = k2
+            last_key = k2
 
             break
           end
@@ -1011,32 +1002,32 @@ function util.BuildTableFromString(str)
           buff = buff..","..v2
         end
 
-        if (lastKey) then
-          for i = k, lastKey do
+        if (last_key) then
+          for i = k, last_key do
             exploded[i] = nil
           end
 
-          v = util.BuildTableFromString(buff)
+          v = util.table_from_string(buff)
         end
       else
-        v = v:RemoveTextFromEnd("}")
+        v = v:trim_end("}")
       end
 
-      v = v:RemoveTextFromEnd("}")
-      v = v:RemoveTextFromEnd("\"")
+      v = v:trim_end("}")
+      v = v:trim_end("\"")
 
       table.insert(tab, v)
     else
       local parts = string.Explode("=", v)
-      local key = parts[1]:RemoveTextFromEnd(" ", true):RemoveTextFromEnd("\t", true)
-      local value = parts[2]:RemoveTextFromStart(" ", true):RemoveTextFromStart("\t", true)
+      local key = parts[1]:trim_end(" ", true):trim_end("\t", true)
+      local value = parts[2]:trim_start(" ", true):trim_start("\t", true)
 
-      if (string.IsNumber(value)) then
+      if (string.is_n(value)) then
         value = tonumber(value)
       elseif (value:find("{") and value:find("}")) then
-        value = util.BuildTableFromString(value)
+        value = util.table_from_string(value)
       else
-        value = value:RemoveTextFromEnd("}")
+        value = value:trim_end("}")
       end
 
       tab[key] = value
@@ -1110,12 +1101,11 @@ function color_meta:lighten(amt)
 end
 
 if CLIENT then
-  local urlmatCache = {}
-  local loadingCache = {}
+  local loading_cache = {}
 
   function util.CacheURLMaterial(url)
     if (isstring(url) and url != "") then
-      local urlCRC = util.CRC(url)
+      local url_crc = util.CRC(url)
       local exploded = string.Explode("/", url)
 
       if (istable(exploded) and #exploded > 0) then
@@ -1123,10 +1113,10 @@ if CLIENT then
 
         if (extension) then
           local extension = "."..extension
-          local path = "flux/materials/"..urlCRC..extension
+          local path = "flux/materials/"..url_crc..extension
 
           if (_file.Exists(path, "DATA")) then
-            cache[urlCRC] = Material("../data/"..path, "noclamp smooth")
+            cache[url_crc] = Material("../data/"..path, "noclamp smooth")
 
             return
           end
@@ -1144,9 +1134,9 @@ if CLIENT then
           http.Fetch(url, function(body, length, headers, code)
             path = path:gsub(".jpeg", ".jpg")
             file.Write(path, body)
-            cache[urlCRC] = Material("../data/"..path, "noclamp smooth")
+            cache[url_crc] = Material("../data/"..path, "noclamp smooth")
 
-            hook.Run("OnURLMatLoaded", url, cache[urlCRC])
+            hook.run("OnURLMatLoaded", url, cache[url_crc])
           end)
         end
       end
@@ -1156,81 +1146,80 @@ if CLIENT then
   local placeholder = Material("vgui/wave")
 
   function URLMaterial(url)
-    local urlCRC = util.CRC(url)
+    local url_crc = util.CRC(url)
 
-    if (cache[urlCRC]) then
-      return cache[urlCRC]
+    if (cache[url_crc]) then
+      return cache[url_crc]
     end
 
-    if (!loadingCache[urlCRC]) then
+    if (!loading_cache[url_crc]) then
       util.CacheURLMaterial(url)
-      loadingCache[urlCRC] = true
+      loading_cache[url_crc] = true
     end
 
     return placeholder
   end
 
-  function util.WrapText(text, font, width, initWidth)
+  function util.WrapText(text, font, width, initial_width)
     if (!text or !font or !width) then return end
 
     local output = {}
-    local spaceWidth = util.GetTextSize(" ", font)
-    local dashWidth = util.GetTextSize("-", font)
+    local spaceWidth = util.text_size(" ", font)
+    local dashWidth = util.text_size("-", font)
     local exploded = string.Explode(" ", text)
-    local curWidth = initWidth or 0
-    local curWord = ""
+    local cur_width = initial_width or 0
+    local current_word = ""
 
     for k, v in ipairs(exploded) do
-      local w, h = util.GetTextSize(v, font)
-      local remain = width - curWidth
+      local w, h = util.text_size(v, font)
+      local remain = width - cur_width
 
       -- The width of the word is LESS OR EQUAL than what we have remaining.
       if (w <= remain) then
-        curWord = curWord..v.." "
-        curWidth = curWidth + w + spaceWidth
+        current_word = current_word..v.." "
+        cur_width = cur_width + w + spaceWidth
       else -- The width of the word is MORE than what we have remaining.
         if (w > width) then -- The width is more than total width we have available.
           for _, v2 in ipairs(string.Explode("", v)) do
-            local charWide, _ = util.GetTextSize(v2, font)
+            local char_width, _ = util.text_size(v2, font)
 
-            remain = width - curWidth
+            remain = width - cur_width
 
-            if ((charWide + dashWidth + spaceWidth) < remain) then
-              curWord = curWord..v2
-              curWidth = curWidth + charWide
+            if ((char_width + dashWidth + spaceWidth) < remain) then
+              current_word = current_word..v2
+              cur_width = cur_width + char_width
             else
-              curWord = curWord..v2.."-"
+              current_word = current_word..v2.."-"
 
-              table.insert(output, curWord)
+              table.insert(output, current_word)
 
-              curWord = ""
-              curWidth = 0
+              current_word = ""
+              cur_width = 0
             end
           end
         else -- The width is LESS than the total width
-          table.insert(output, curWord)
+          table.insert(output, current_word)
 
-          curWord = v.." "
+          current_word = v.." "
 
-          local wide = util.GetTextSize(curWord, font)
+          local wide = util.text_size(current_word, font)
 
-          curWidth = wide
+          cur_width = wide
         end
       end
     end
 
     -- If we have some characters remaining, drop them into the lines table.
-    if (curWord != "") then
-      table.insert(output, curWord)
+    if (current_word != "") then
+      table.insert(output, current_word)
     end
 
     return output
   end
 end
 
-function util.PickTextColor(baseColor)
-  local r, g, b = baseColor.r, baseColor.g, baseColor.b
-  local average = (r + g + b) / 3
+function util.text_color_from_base(base_color)
+  local average = (base_color.r + base_color.g + base_color.b) / 3
 
   if (average > 125) then
     return Color(0, 0, 0)
@@ -1239,7 +1228,7 @@ function util.PickTextColor(baseColor)
   end
 end
 
--- Add the ability to join strings with + operator.
+-- Add the ability to join strings with + assistant.
 local stringMeta = getmetatable("")
 
 function stringMeta:__add(right)
@@ -1278,9 +1267,9 @@ end
 
 function string.chomp(str, what)
   if !what then
-    str = str:RemoveTextFromEnd("\n", true):RemoveTextFromEnd("\r", true)
+    str = str:trim_end("\n", true):trim_end("\r", true)
   else
-    str = str:RemoveTextFromStart(what, true):RemoveTextFromEnd(what, true)
+    str = str:trim_start(what, true):trim_end(what, true)
   end
   return str
 end
@@ -1398,7 +1387,7 @@ function txt(text)
     end
   end
   for k, v in ipairs(lines) do
-    output = output..v:RemoveTextFromStart(lowest_indent)..'\n'
+    output = output..v:trim_start(lowest_indent)..'\n'
   end
   return output:chomp(' '):chomp('\n')
 end

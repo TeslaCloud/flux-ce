@@ -72,7 +72,7 @@ function ActiveRecord.Adapters.Mysqloo:escape(str)
 end
 
 function ActiveRecord.Adapters.Mysqloo:raw_query(query, callback, flags, ...)
-  if (!self.connection and self.module != 'sqlite') then
+  if !self.connection and self.module != 'sqlite' then
     return self:queue(query)
   end
 

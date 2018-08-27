@@ -15,7 +15,7 @@ function PANEL:Init()
     self:CloseMenu()
   end)
 
-  hook.Run("OnIntroPanelCreated", self)
+  hook.run("OnIntroPanelCreated", self)
 end
 
 local logoW, logoH = 600, 110
@@ -63,7 +63,7 @@ function PANEL:CloseMenu()
     self:Remove()
   end)
 
-  hook.Run("OnIntroPanelRemoved")
+  hook.run("OnIntroPanelRemoved")
 end
 
 function PANEL:StartAnimation(scrW, scrH)

@@ -26,7 +26,7 @@ flAreas.toolModes = {
               local z = pos.z + 16
 
               if (z > v2[1].z and z < v.maxH) then
-                if (util.VectorIsInPoly(pos, v2)) then
+                if (util.vector_in_poly(pos, v2)) then
                   areas.Remove(v.id)
 
                   return true

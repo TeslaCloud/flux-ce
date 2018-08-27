@@ -47,7 +47,7 @@ function chatbox.Compile(messageTable)
         local nWrapped = #wrapped
 
         for k2, v2 in ipairs(wrapped) do
-          local w, h = util.GetTextSize(v2, font)
+          local w, h = util.text_size(v2, font)
 
           table.insert(compiled, {text = v2, w = w, h = h, x = curX, y = curY + (maxHeight - h)})
 
@@ -94,12 +94,12 @@ function chatbox.Compile(messageTable)
         local toInsert = ""
 
         if (v:IsPlayer()) then
-          toInsert = hook.Run("GetPlayerName", v) or v:Name()
+          toInsert = hook.run("GetPlayerName", v) or v:Name()
         else
           toInsert = tostring(v) or v:GetClass()
         end
 
-        local w, h = util.GetTextSize(toInsert, font)
+        local w, h = util.text_size(toInsert, font)
 
         table.insert(compiled, {text = toInsert, w = w, h = h, x = curX, y = curY + (maxHeight - h)})
 

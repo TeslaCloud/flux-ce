@@ -74,7 +74,7 @@ do
       local slot = self:AddItem(itemTable)
 
       if (slot and slot != -1) then
-        hook.Run("OnItemGiven", self, itemTable, slot)
+        hook.run("OnItemGiven", self, itemTable, slot)
       elseif (slot == -1) then
         fl.dev_print("Failed to add item to player's inventory (itemTable is invalid)! "..tostring(itemTable))
       else
@@ -92,7 +92,7 @@ do
       local slot = self:AddItem(itemTable)
 
       if (slot and slot != -1) then
-        hook.Run("OnItemGiven", self, itemTable, slot)
+        hook.run("OnItemGiven", self, itemTable, slot)
       elseif (slot == -1) then
         fl.dev_print("Failed to add item to player's inventory (itemTable is invalid)! "..tostring(itemTable))
       else
@@ -110,7 +110,7 @@ do
           table.RemoveByValue(playerInv[slot], instance_id)
           self:SetInventory(playerInv)
 
-          hook.Run("OnItemTaken", self, instance_id, slot)
+          hook.run("OnItemTaken", self, instance_id, slot)
 
           break
         end
@@ -135,22 +135,22 @@ do
     amount = amount or 1
     local instances = item.FindAllInstances(id)
     local playerInv = self:GetInventory()
-    local toReturn = {}
+    local to_ret = {}
 
     for k, v in pairs(instances) do
       for slot, ids in ipairs(playerInv) do
         if (table.HasValue(ids, k)) then
-          table.insert(toReturn, v)
+          table.insert(to_ret, v)
           amount = amount - 1
 
           if (amount <= 0) then
-            return toReturn
+            return to_ret
           end
         end
       end
     end
 
-    return toReturn
+    return to_ret
   end
 
   -- A function to find the first instance of an item in player's inventory.

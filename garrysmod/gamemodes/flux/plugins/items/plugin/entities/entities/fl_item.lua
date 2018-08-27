@@ -24,7 +24,7 @@ if SERVER then
   function ENT:SetItem(itemTable)
     if (!itemTable) then return false end
 
-    hook.Run("PreEntityItemSet", self, itemTable)
+    hook.run("PreEntityItemSet", self, itemTable)
 
     self:SetModel(itemTable:GetModel())
     self:SetSkin(itemTable.skin)
@@ -34,22 +34,22 @@ if SERVER then
 
     item.NetworkEntityData(nil, self)
 
-    hook.Run("OnEntityItemSet", self, itemTable)
+    hook.run("OnEntityItemSet", self, itemTable)
   end
 
   function ENT:Use(activator, caller, useType, value)
-    local lastActivator = self:GetNetVar("LastActivator")
+    local lastActivator = self:get_nv("LastActivator")
 
     -- prevent minge-grabbing glitch
     if (IsValid(lastActivator) and lastActivator != activator) then return end
 
-    local holdStart = activator:GetNetVar("HoldStart")
+    local holdStart = activator:get_nv("HoldStart")
 
     if (useType == USE_ON) then
       if (!holdStart) then
-        activator:SetNetVar("HoldStart", CurTime())
-        activator:SetNetVar("HoldEnt", self)
-        self:SetNetVar("LastActivator", activator)
+        activator:set_nv("HoldStart", CurTime())
+        activator:set_nv("HoldEnt", self)
+        self:set_nv("LastActivator", activator)
       end
     elseif (useType == USE_OFF) then
       if (!holdStart) then return end
@@ -57,34 +57,34 @@ if SERVER then
       if (CurTime() - holdStart < 0.5) then
         if (IsValid(caller) and caller:IsPlayer()) then
           if (self.item) then
-            hook.Run("PlayerUseItemEntity", caller, self, self.item)
+            hook.run("PlayerUseItemEntity", caller, self, self.item)
           else
             fl.dev_print("Player attempted to use an item entity without item object tied to it!")
           end
         end
       end
 
-      activator:SetNetVar("HoldStart", false)
-      activator:SetNetVar("HoldEnt", false)
-      self:SetNetVar("LastActivator", false)
+      activator:set_nv("HoldStart", false)
+      activator:set_nv("HoldEnt", false)
+      self:set_nv("LastActivator", false)
     end
   end
 
   function ENT:Think()
-    local lastActivator = self:GetNetVar("LastActivator")
+    local lastActivator = self:get_nv("LastActivator")
 
     if (!IsValid(lastActivator)) then return end
 
-    local holdStart = lastActivator:GetNetVar("HoldStart")
+    local holdStart = lastActivator:get_nv("HoldStart")
 
     if (holdStart and CurTime() - holdStart > 0.5) then
       if (self.item) then
         self.item:do_menu_action("on_take", lastActivator)
       end
 
-      lastActivator:SetNetVar("HoldStart", false)
-      lastActivator:SetNetVar("HoldEnt", false)
-      self:SetNetVar("LastActivator", false)
+      lastActivator:set_nv("HoldStart", false)
+      lastActivator:set_nv("HoldEnt", false)
+      self:set_nv("LastActivator", false)
     end
   end
 else
@@ -108,7 +108,7 @@ else
     local col2 = Color(0, 0, 0, alpha)
 
     if (self.item) then
-      if (hook.Run("PreDrawItemTargetID", self, self.item, x, y, alpha, distance) == false) then
+      if (hook.run("PreDrawItemTargetID", self, self.item, x, y, alpha, distance) == false) then
         return
       end
 
@@ -125,8 +125,8 @@ else
       return
     end
 
-    local width, height = util.GetTextSize(text, theme.GetFont("Tooltip_Large"))
-    local width2, height2 = util.GetTextSize(desc, theme.GetFont("Tooltip_Small"))
+    local width, height = util.text_size(text, theme.GetFont("Tooltip_Large"))
+    local width2, height2 = util.text_size(desc, theme.GetFont("Tooltip_Small"))
 
     draw.SimpleTextOutlined(text, theme.GetFont("Tooltip_Large"), x - width * 0.5, y, col, nil, nil, 1, col2)
     y = y + 26
@@ -134,6 +134,6 @@ else
     draw.SimpleTextOutlined(desc, theme.GetFont("Tooltip_Small"), x - width2 * 0.5, y, col, nil, nil, 1, col2)
     y = y + 20
 
-    hook.Run("PostDrawItemTargetID", self, self.item, x, y, alpha, distance)
+    hook.run("PostDrawItemTargetID", self, self.item, x, y, alpha, distance)
   end
 end

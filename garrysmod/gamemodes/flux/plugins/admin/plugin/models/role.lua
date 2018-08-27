@@ -31,7 +31,7 @@ function Role:OnGroupSet(player, oldGroup) end
 function Role:OnGroupTake(player, newGroup) end
 
 -- Called when player is being added to this group as secondary group.
-function Role:OnGroupAdd(player, secondaryGroups) end
+function Role:OnGroupAdd(player, roles) end
 
 -- Called when player is being removed from this group as secondary group.
 function Role:OnGroupRemove(player) end

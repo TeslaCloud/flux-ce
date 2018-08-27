@@ -50,7 +50,7 @@ function fl.bars:register(id, data, force)
     callback = data.callback
   }
 
-  hook.Run("OnBarRegistered", stored[id], id, force)
+  hook.run("OnBarRegistered", stored[id], id, force)
 
   return stored[id]
 end
@@ -74,7 +74,7 @@ function fl.bars:SetValue(id, newValue)
         bar.value = math.Clamp(newValue, 0, bar.maxValue - bar.hinderValue + 2)
       end
 
-      bar.interpolated = util.CubicEaseInOutTable(150, bar.value, newValue)
+      bar.interpolated = util.cubic_ease_inOutTable(150, bar.value, newValue)
       bar.value = math.Clamp(newValue, 0, bar.maxValue)
     end
   end
@@ -96,11 +96,11 @@ function fl.bars:Prioritize()
   sorted = {}
 
   for k, v in pairs(stored) do
-    if (!hook.Run("ShouldDrawBar", v)) then
+    if (!hook.run("ShouldDrawBar", v)) then
       continue
     end
 
-    hook.Run("PreBarPrioritized", v)
+    hook.run("PreBarPrioritized", v)
 
     sorted[v.priority] = sorted[v.priority] or {}
 
@@ -123,7 +123,7 @@ function fl.bars:Position()
       local bar = self:Get(v)
 
       if (bar and bar.type == BAR_TOP) then
-        local offX, offY = hook.Run("AdjustBarPos", bar)
+        local offX, offY = hook.run("AdjustBarPos", bar)
         offX = offX or 0
         offY = offY or 0
 
@@ -140,16 +140,16 @@ function fl.bars:Draw(id)
   local barInfo = self:Get(id)
 
   if (barInfo) then
-    hook.Run("PreDrawBar", barInfo)
+    hook.run("PreDrawBar", barInfo)
     theme.Call("PreDrawBar", barInfo)
 
-    if (!hook.Run("ShouldDrawBar", barInfo)) then
+    if (!hook.run("ShouldDrawBar", barInfo)) then
       return
     end
 
     theme.Call("DrawBarBackground", barInfo)
 
-    if (hook.Run("ShouldFillBar", barInfo) or barInfo.value != 0) then
+    if (hook.run("ShouldFillBar", barInfo) or barInfo.value != 0) then
       theme.Call("DrawBarFill", barInfo)
     end
 
@@ -161,7 +161,7 @@ function fl.bars:Draw(id)
       theme.Call("DrawBarTexts", barInfo)
     end
 
-    hook.Run("PostDrawBar", barInfo)
+    hook.run("PostDrawBar", barInfo)
     theme.Call("PostDrawBar", barInfo)
   end
 end
@@ -194,7 +194,7 @@ do
           fl.bars:SetValue(v.id, v.callback(stored[k]))
         end
 
-        hook.Run("AdjustBarInfo", k, stored[k])
+        hook.run("AdjustBarInfo", k, stored[k])
       end
     end
   end

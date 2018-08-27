@@ -8,7 +8,7 @@ COMMAND.arguments = 2
 COMMAND.player_arg = 1
 COMMAND.aliases = {"plytransfer", "charsetfaction", "chartransfer"}
 
-function COMMAND:OnRun(player, targets, name, bStrict)
+function COMMAND:on_run(player, targets, name, bStrict)
   local factionTable = faction.Find(name, (bStrict and true) or false)
 
   if (factionTable) then

@@ -5,13 +5,13 @@ function player_meta:HasInitialized()
 end
 
 function player_meta:get_data()
-  return self:GetNetVar("flData", {})
+  return self:get_nv("flData", {})
 end
 
 player_meta.flName = player_meta.flName or player_meta.Name
 
 function player_meta:Name(bForceTrueName)
-  return (!bForceTrueName and hook.Run("GetPlayerName", self)) or self:GetNetVar("name", self:flName())
+  return (!bForceTrueName and hook.run("GetPlayerName", self)) or self:get_nv("name", self:flName())
 end
 
 function player_meta:SteamName()
@@ -21,7 +21,7 @@ end
 function player_meta:SetModel(sPath)
   local oldModel = self:GetModel()
 
-  hook.Run("PlayerModelChanged", self, sPath, oldModel)
+  hook.run("PlayerModelChanged", self, sPath, oldModel)
 
   if SERVER then
     netstream.Start(nil, "PlayerModelChanged", self:EntIndex(), sPath, oldModel)
@@ -36,14 +36,14 @@ end
 
 function player_meta:SetAction(id, bForce)
   if (bForce or self:GetAction() == "none") then
-    self:SetNetVar("action", id)
+    self:set_nv("action", id)
 
     return true
   end
 end
 
 function player_meta:GetAction()
-  return self:GetNetVar("action", "none")
+  return self:get_nv("action", "none")
 end
 
 function player_meta:IsDoingAction(id)
@@ -84,11 +84,11 @@ end
 --]]
 
 function player_meta:HasPermission(perm)
-  return hook.Run("PlayerHasPermission", self, perm)
+  return hook.run("PlayerHasPermission", self, perm)
 end
 
-function player_meta:IsRoot()
-  return hook.Run("PlayerIsRoot", self)
+function player_meta:is_root()
+  return hook.run("PlayerIsRoot", self)
 end
 
 function player_meta:IsMemberOf(group)
@@ -96,5 +96,5 @@ function player_meta:IsMemberOf(group)
     return true
   end
 
-  return hook.Run("PlayerIsMemberOfGroup", self, group)
+  return hook.run("PlayerIsMemberOfGroup", self, group)
 end

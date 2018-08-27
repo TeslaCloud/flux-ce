@@ -112,7 +112,7 @@ function item.ToSave(itemTable)
 end
 
 -- Find item's template by it's ID.
-function item.FindByID(id)
+function item.find_by_id(id)
   for k, v in pairs(stored) do
     if (k == id or v.id == id) then
       return v
@@ -183,7 +183,7 @@ function item.GenerateID()
 end
 
 function item.New(id, data, forcedID)
-  local itemTable = item.FindByID(id)
+  local itemTable = item.find_by_id(id)
 
   if (itemTable) then
     local itemID = forcedID or item.GenerateID()
@@ -192,7 +192,7 @@ function item.New(id, data, forcedID)
     instances[id][itemID] = table.Copy(itemTable)
 
     if (istable(data)) then
-      table.SafeMerge(instances[id][itemID], data)
+      table.safe_merge(instances[id][itemID], data)
     end
 
     instances[id][itemID].instance_id = itemID
@@ -255,13 +255,13 @@ if SERVER then
     if (loaded and table.Count(loaded) > 0) then
       -- Returns functions to instances table after loading.
       for id, instanceTable in pairs(loaded) do
-        local itemTable = item.FindByID(id)
+        local itemTable = item.find_by_id(id)
 
         if (itemTable) then
           for k, v in pairs(instanceTable) do
             local newItem = table.Copy(itemTable)
 
-            table.SafeMerge(newItem, v)
+            table.safe_merge(newItem, v)
 
             loaded[id][k] = newItem
           end
@@ -377,7 +377,7 @@ if SERVER then
       end
     end
 
-    hook.RunClient(player, "OnItemDataReceived")
+    hook.runClient(player, "OnItemDataReceived")
   end
 
   function item.Spawn(position, angles, itemTable)
@@ -439,7 +439,7 @@ else
   netstream.Hook("NetworkItem", function(instance_id, itemTable)
     if (itemTable and stored[itemTable.id]) then
       local newTable = table.Copy(stored[itemTable.id])
-      table.SafeMerge(newTable, itemTable)
+      table.safe_merge(newTable, itemTable)
 
       instances[newTable.id][instance_id] = newTable
 
@@ -461,7 +461,7 @@ else
       ent:SetColor(itemTable:GetColor())
 
       -- Restore item's functions. For some weird reason they aren't properly initialized.
-      table.SafeMerge(ent, scripted_ents.Get("fl_item"))
+      table.safe_merge(ent, scripted_ents.Get("fl_item"))
 
       ent.item = itemTable
     end

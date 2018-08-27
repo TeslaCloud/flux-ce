@@ -33,15 +33,15 @@ function areas.GetCount()
 end
 
 function areas.GetByType(type)
-  local toReturn = {}
+  local to_ret = {}
 
   for k, v in pairs(stored) do
     if (v.type == type) then
-      table.insert(toReturn, v)
+      table.insert(to_ret, v)
     end
   end
 
-  return toReturn
+  return to_ret
 end
 
 function areas.Create(id, height, data)
@@ -147,9 +147,9 @@ areas.RegisterType(
   "A simple area. Use this type if you have a callback somewhere in the code that looks up id instead of type ID.",
   function(player, area, poly, bHasEntered, curPos, curTime)
     if (bHasEntered) then
-      hook.Run("PlayerEnteredArea", player, area, curTime)
+      hook.run("PlayerEnteredArea", player, area, curTime)
     else
-      hook.Run("PlayerLeftArea", player, area, curTime)
+      hook.run("PlayerLeftArea", player, area, curTime)
     end
   end
 )

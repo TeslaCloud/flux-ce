@@ -14,7 +14,7 @@ function PANEL:SizeToContents()
   local bX, bY = 0, -4
 
   for k, v in ipairs(self.notificationText) do
-    local w, h = util.GetTextSize(v, theme.GetFont("Menu_Normal"))
+    local w, h = util.text_size(v, theme.GetFont("Menu_Normal"))
 
     self.fontSize = h
 

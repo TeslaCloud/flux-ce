@@ -149,7 +149,7 @@ function font.CreateFonts()
   })
 
   theme.Call("CreateFonts")
-  hook.Run("CreateFonts")
+  hook.run("CreateFonts")
 end
 
 _font = font

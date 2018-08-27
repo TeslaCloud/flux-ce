@@ -9,7 +9,7 @@ function PANEL:Init()
   self:SetPos(0, 0)
   self:SetSize(scrW, scrH)
 
-  local curX, curY = hook.Run("AdjustMenuItemPositions", self)
+  local curX, curY = hook.run("AdjustMenuItemPositions", self)
   curX = curX or 42
   curY = curY or 200
 
@@ -30,7 +30,7 @@ function PANEL:Init()
 
   self.menuItems = {}
 
-  hook.Run("AddTabMenuItems", self)
+  hook.run("AddTabMenuItems", self)
 
   for k, v in ipairs(self.menuItems) do
     local button = vgui.Create("flButton", self)
@@ -73,7 +73,7 @@ function PANEL:Init()
           self.activePanel:Rebuild()
         end
 
-        hook.Run("OnMenuPanelOpen", self, self.activePanel)
+        hook.run("OnMenuPanelOpen", self, self.activePanel)
       end
 
       if (v.callback) then

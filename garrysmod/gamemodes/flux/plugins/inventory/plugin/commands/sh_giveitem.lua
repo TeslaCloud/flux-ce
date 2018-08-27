@@ -7,7 +7,7 @@ COMMAND.arguments = 2
 COMMAND.player_arg = 1
 COMMAND.aliases = {"chargiveitem", "plygiveitem"}
 
-function COMMAND:OnRun(player, targets, itemName, amount)
+function COMMAND:on_run(player, targets, itemName, amount)
   local itemTable = item.Find(itemName)
 
   if (itemTable) then

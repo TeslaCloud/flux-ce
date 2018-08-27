@@ -7,15 +7,15 @@ COMMAND.arguments = 2
 COMMAND.immunity = true
 COMMAND.aliases = {"plysetgroup", "setusergroup", "plysetusergroup"}
 
-function COMMAND:OnRun(player, targets, userGroup)
-  if (fl.admin:GroupExists(userGroup)) then
+function COMMAND:on_run(player, targets, role)
+  if (fl.admin:GroupExists(role)) then
     for k, v in ipairs(targets) do
-      v:SetUserGroup(userGroup)
+      v:SetUserGroup(role)
     end
 
-    fl.player:NotifyAll(L("SetGroupCMD_Message", (IsValid(player) and player:Name()) or "Console", util.PlayerListToString(targets), userGroup))
+    fl.player:NotifyAll(L("SetGroupCMD_Message", (IsValid(player) and player:Name()) or "Console", util.PlayerListToString(targets), role))
   else
-    fl.player:Notify(player, L("Err_GroupNotValid", userGroup))
+    fl.player:Notify(player, L("Err_GroupNotValid", role))
   end
 end
 

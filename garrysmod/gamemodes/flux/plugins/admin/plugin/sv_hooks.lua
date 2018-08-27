@@ -1,24 +1,24 @@
-function flAdmin:SavePlayerData(player, saveTable)
-  saveTable.userGroup = player:GetUserGroup()
-  saveTable.secondaryGroups = fl.serialize(player:GetSecondaryGroups())
-  saveTable.customPermissions = fl.serialize(player:GetCustomPermissions())
+function flAdmin:SavePlayerData(player, save_table)
+  save_table.role = player:GetUserGroup()
+  save_table.roles = fl.serialize(player:get_roles())
+  save_table.permissions = fl.serialize(player:GetCustomPermissions())
 end
 
 function flAdmin:RestorePlayer(player, result)
-  if (result.customPermissions) then
-    player:SetCustomPermissions(fl.deserialize(result.customPermissions))
+  if (result.permissions) then
+    player:SetCustomPermissions(result.permissions)
   end
 
-  if (result.secondaryGroups) then
-    player:SetSecondaryGroups(fl.deserialize(result.secondaryGroups))
+  if (result.roles) then
+    player:SetSecondaryGroups(result.roles)
   end
 
-  if (result.userGroup) then
-    player:SetUserGroup(result.userGroup)
+  if (result.role) then
+    player:SetUserGroup(result.role)
   end
 end
 
-function flAdmin:activerecord_ready()
+function flAdmin:ActiveRecordReady()
   Ban:all():get(function(objects)
     for k, v in ipairs(objects) do
       fl.admin:record_ban(v.steam_id, v)
@@ -28,11 +28,11 @@ end
 
 function flAdmin:CheckPassword(steam_id64, ip, sv_pass, cl_pass, name)
   local steam_id = util.SteamIDFrom64(steam_id64)
-  local entry = fl.admin:GetBans()[steam_id]
+  local entry = fl.admin:get_bans()[steam_id]
 
   if (entry and plugin.call("ShouldCheckBan", steam_id, ip, name) != false) then
     if (entry.duration != 0 and entry.unbanTime >= os.time() and plugin.call("ShouldExpireBan", steam_id, ip, name) != false) then
-      self:RemoveBan(steam_id)
+      self:remove_ban(steam_id)
 
       return true
     else
@@ -41,17 +41,17 @@ function flAdmin:CheckPassword(steam_id64, ip, sv_pass, cl_pass, name)
   end
 end
 
-function flAdmin:player_restored(player, record)
+function flAdmin:PlayerRestored(player, record)
   local root_steamid = config.Get("root_steamid")
 
   if (isstring(root_steamid)) then
     if (player:SteamID() == root_steamid) then
-      player:SetUserGroup("admin")
+      player:SetUserGroup('moderator')
     end
   elseif (istable(root_steamid)) then
     for k, v in ipairs(root_steamid) do
       if (v == player:SteamID()) then
-        player:SetUserGroup("admin")
+        player:SetUserGroup('moderator')
       end
     end
   end
@@ -59,8 +59,8 @@ function flAdmin:player_restored(player, record)
   ServerLog(player:Name().." ("..player:GetUserGroup()..") has connected to the server.")
 end
 
-function flAdmin:CommandCheckImmunity(player, target, canBeEqual)
-  return fl.admin:CheckImmunity(player, v, canBeEqual)
+function flAdmin:CommandCheckImmunity(player, target, can_equal)
+  return fl.admin:CheckImmunity(player, v, can_equal)
 end
 
 function flAdmin:OnCommandCreated(id, data)

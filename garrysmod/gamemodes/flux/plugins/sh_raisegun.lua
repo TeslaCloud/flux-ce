@@ -19,7 +19,7 @@ function player_meta:SetWeaponRaised(bIsRaised)
   if SERVER then
     self:SetDTBool(BOOL_WEAPON_RAISED, bIsRaised)
 
-    hook.Run("OnWeaponRaised", self, self:GetActiveWeapon(), bIsRaised)
+    hook.run("OnWeaponRaised", self, self:GetActiveWeapon(), bIsRaised)
   end
 end
 
@@ -34,7 +34,7 @@ function player_meta:IsWeaponRaised()
     return true
   end
 
-  local shouldRaise = hook.Run("ShouldWeaponBeRaised", self, weapon)
+  local shouldRaise = hook.run("ShouldWeaponBeRaised", self, weapon)
 
   if (shouldRaise) then
     return shouldRaise
@@ -59,7 +59,7 @@ function PLUGIN:OnWeaponRaised(player, weapon, bIsRaised)
   if (IsValid(weapon)) then
     local curTime = CurTime()
 
-    hook.Run("UpdateWeaponRaised", player, weapon, bIsRaised, curTime)
+    hook.run("UpdateWeaponRaised", player, weapon, bIsRaised, curTime)
   end
 end
 

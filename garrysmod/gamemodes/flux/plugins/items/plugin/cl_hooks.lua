@@ -59,7 +59,7 @@ function flItems:PlayerDropItem(itemTable, panel, mouseX, mouseY)
 end
 
 function flItems:HUDPaint()
-  local holdStart = fl.client:GetNetVar("HoldStart")
+  local holdStart = fl.client:get_nv("HoldStart")
 
   if (holdStart) then
     local diff = math.Clamp(math.Round(CurTime() - holdStart, 3), 0.01, 0.5)
@@ -70,11 +70,11 @@ function flItems:HUDPaint()
 end
 
 function flItems:Think()
-  if (!fl.client:GetNetVar("HoldStart")) then return end
+  if (!fl.client:get_nv("HoldStart")) then return end
 
-  local ent = fl.client:GetNetVar("HoldEnt")
+  local ent = fl.client:get_nv("HoldEnt")
 
-  if (IsValid(ent) and fl.client:GetNetVar("HoldStart")) then
+  if (IsValid(ent) and fl.client:get_nv("HoldStart")) then
     local scrPos = ent:GetPos():ToScreen()
     local x, y = scrPos.x, scrPos.y
     local w, h = ScrW() * 0.5, ScrH() * 0.5
@@ -94,5 +94,5 @@ function flItems:OnItemDataReceived()
 end
 
 netstream.Hook("PlayerUseItemEntity", function(entity)
-  hook.Run("PlayerUseItemMenu", entity.item, true)
+  hook.run("PlayerUseItemMenu", entity.item, true)
 end)

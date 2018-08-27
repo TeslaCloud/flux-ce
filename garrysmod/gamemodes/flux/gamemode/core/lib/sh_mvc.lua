@@ -3,78 +3,78 @@
 library.new "mvc"
 
 if CLIENT then
-  local mvcHooks = {}
+  local mvc_hooks = {}
 
-  function mvc.Push(name, ...)
+  function mvc.push(name, ...)
     if (!isstring(name)) then return end
 
-    netstream.Start("Flux::MVC::Push", name, ...)
+    netstream.Start("mvc_push", name, ...)
   end
 
-  function mvc.Pull(name, handler, bPreventRemove)
+  function mvc.pull(name, handler, prevent_remove)
     if (!isstring(name) or !isfunction(handler)) then return end
 
-    mvcHooks[name] = mvcHooks[name] or {}
+    mvc_hooks[name] = mvc_hooks[name] or {}
 
-    table.insert(mvcHooks[name], {
+    table.insert(mvc_hooks[name], {
       handler = handler,
-      bPreventRemove = bPreventRemove
+      prevent_remove = prevent_remove
     })
   end
 
-  function mvc.Request(name, handler, ...)
-    mvc.Pull(name, handler)
-    mvc.Push(name, ...)
+  function mvc.request(name, handler, ...)
+    mvc.pull(name, handler)
+    mvc.push(name, ...)
   end
 
-  function mvc.Listen(name, handler)
-    mvc.Pull(name, handler, true)
+  function mvc.listen(name, handler)
+    mvc.pull(name, handler, true)
   end
 
-  netstream.Hook("Flux::MVC::Pull", function(name, ...)
-    local hooks = mvcHooks[name]
+  netstream.Hook("mvc_pull", function(name, ...)
+    local hooks = mvc_hooks[name]
 
     if (hooks) then
       for k, v in ipairs(hooks) do
         local success, value = pcall(v.handler, ...)
 
         if (!success) then
-          ErrorNoHalt("[Flux:MVC] The '"..name.." - "..tostring(k).."' MVC callback has failed to run!\n")
+          ErrorNoHalt("The '"..name.." - "..tostring(k).."' MVC callback has failed to run!\n")
           ErrorNoHalt(tostring(value).."\n")
         end
 
-        if (!v.bPreventRemove) then
-          table.remove(mvcHooks[name], k)
+        if (!v.prevent_remove) then
+          table.remove(mvc_hooks[name], k)
         end
       end
     end
   end)
 else
-  local mvcHandlers = {}
+  local mvc_handlers = {}
 
-  function mvc.Handler(name, handler)
+  function mvc.handler(name, handler)
     if (!isstring(name)) then return end
 
-    mvcHandlers[name] = mvcHandlers[name] or {}
+    mvc_handlers[name] = mvc_handlers[name] or {}
 
-    table.insert(mvcHandlers[name], handler)
+    table.insert(mvc_handlers[name], handler)
   end
 
-  function mvc.Push(player, name, ...)
+  function mvc.push(player, name, ...)
     if (!isstring(name)) then return end
 
-    netstream.Start(player, "Flux::MVC::Pull", name, ...)
+    netstream.Start(player, "mvc_pull", name, ...)
   end
 
-  netstream.Hook("Flux::MVC::Push", function(player, name, ...)
-    local handlers = mvcHandlers[name]
+  netstream.Hook("mvc_push", function(player, name, ...)
+    local handlers = mvc_handlers[name]
 
     if (handlers) then
       for k, v in ipairs(handlers) do
         local success, value = pcall(v, player, ...)
 
         if (!success) then
-          ErrorNoHalt("[Flux:MVC] The '"..name.." - "..tostring(k).."' MVC handler has failed to run!\n")
+          ErrorNoHalt("The '"..name.." - "..tostring(k).."' MVC handler has failed to run!\n")
           ErrorNoHalt(tostring(value).."\n")
         end
       end

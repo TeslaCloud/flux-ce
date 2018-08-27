@@ -7,7 +7,7 @@ COMMAND.arguments = 1
 COMMAND.immunity = true
 COMMAND.aliases = {"plydemote"}
 
-function COMMAND:OnRun(player, targets)
+function COMMAND:on_run(player, targets)
   for k, target in ipairs(targets) do
     target:SetUserGroup("user")
 

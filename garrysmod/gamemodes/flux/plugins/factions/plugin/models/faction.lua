@@ -76,7 +76,7 @@ end
 function Faction:GenerateName(player, charName, rank, defaultData)
   defaultData = defaultData or {}
 
-  if (hook.Run("ShouldNameGenerate", player, self, charName, rank, defaultData) == false) then return player:Name() end
+  if (hook.run("ShouldNameGenerate", player, self, charName, rank, defaultData) == false) then return player:Name() end
 
   if (isfunction(self.MakeName)) then
     return self:MakeName(player, charName, rank, defaultData) or "John Doe"
@@ -98,9 +98,9 @@ function Faction:GenerateName(player, charName, rank, defaultData)
     end
   end
 
-  local operators = string.FindAll(finalName, "{[%w]+:[%w]+}")
+  local assistants = string.find_all(finalName, "{[%w]+:[%w]+}")
 
-  for k, v in ipairs(operators) do
+  for k, v in ipairs(assistants) do
     v = v[1]
 
     if (v:StartWith("{callback:")) then

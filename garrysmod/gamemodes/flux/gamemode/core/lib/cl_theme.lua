@@ -1,5 +1,5 @@
 library.new "theme"
-theme.activeTheme = theme.activeTheme or nil
+theme.current_theme = theme.current_theme or nil
 
 local stored = theme.stored or {}
 theme.stored = stored
@@ -15,7 +15,7 @@ function theme.RegisterTheme(obj)
     if (parentTheme) then
       local newObj = table.Copy(parentTheme)
 
-      table.SafeMerge(newObj, obj)
+      table.safe_merge(newObj, obj)
 
       obj = newObj
       obj.base = parentTheme
@@ -26,18 +26,18 @@ function theme.RegisterTheme(obj)
 end
 
 function theme.CreatePanel(panelID, parent, ...)
-  local activeTheme = theme.activeTheme
+  local current_theme = theme.current_theme
 
-  if (activeTheme and hook.Run("ShouldThemeCreatePanel", panelID, activeTheme) != false) then
-    return activeTheme:CreatePanel(panelID, parent, ...)
+  if (current_theme and hook.run("ShouldThemeCreatePanel", panelID, current_theme) != false) then
+    return current_theme:CreatePanel(panelID, parent, ...)
   end
 end
 
 function theme.Hook(id, ...)
-  local activeTheme = theme.activeTheme
+  local current_theme = theme.current_theme
 
-  if (isstring(id) and activeTheme and activeTheme[id]) then
-    local result = {pcall(activeTheme[id], activeTheme, ...)}
+  if (isstring(id) and current_theme and current_theme[id]) then
+    local result = {pcall(current_theme[id], current_theme, ...)}
     local success = result[1]
     table.remove(result, 1)
 
@@ -52,74 +52,74 @@ end
 theme.Call = theme.Hook
 
 function theme.GetActiveTheme()
-  return (theme.activeTheme and theme.activeTheme.id)
+  return (theme.current_theme and theme.current_theme.id)
 end
 
 function theme.SetSound(key, value)
-  if (theme.activeTheme) then
-    theme.activeTheme:SetSound(key, value)
+  if (theme.current_theme) then
+    theme.current_theme:SetSound(key, value)
   end
 end
 
 function theme.GetSound(key, fallback)
-  if (theme.activeTheme) then
-    return theme.activeTheme:GetSound(key, fallback)
+  if (theme.current_theme) then
+    return theme.current_theme:GetSound(key, fallback)
   end
 
   return fallback
 end
 
 function theme.SetColor(key, value)
-  if (theme.activeTheme) then
-    theme.activeTheme:SetColor(key, value)
+  if (theme.current_theme) then
+    theme.current_theme:SetColor(key, value)
   end
 end
 
 function theme.SetFont(key, value, scale, data)
-  if (theme.activeTheme) then
-    theme.activeTheme:SetFont(key, value, scale, data)
+  if (theme.current_theme) then
+    theme.current_theme:SetFont(key, value, scale, data)
   end
 end
 
 function theme.GetColor(key, fallback)
-  if (theme.activeTheme) then
-    return theme.activeTheme:GetColor(key, fallback)
+  if (theme.current_theme) then
+    return theme.current_theme:GetColor(key, fallback)
   end
 
   return fallback
 end
 
 function theme.GetFont(key, fallback)
-  if (theme.activeTheme) then
-    return theme.activeTheme:GetFont(key, fallback)
+  if (theme.current_theme) then
+    return theme.current_theme:GetFont(key, fallback)
   end
 
   return fallback
 end
 
 function theme.SetOption(key, value)
-  if (theme.activeTheme) then
-    theme.activeTheme:SetOption(key, value)
+  if (theme.current_theme) then
+    theme.current_theme:SetOption(key, value)
   end
 end
 
 function theme.SetMaterial(key, value)
-  if (theme.activeTheme) then
-    theme.activeTheme:SetMaterial(key, value)
+  if (theme.current_theme) then
+    theme.current_theme:SetMaterial(key, value)
   end
 end
 
 function theme.GetMaterial(key, fallback)
-  if (theme.activeTheme) then
-    return theme.activeTheme:GetMaterial(key, fallback)
+  if (theme.current_theme) then
+    return theme.current_theme:GetMaterial(key, fallback)
   end
 
   return fallback
 end
 
 function theme.GetOption(key, fallback)
-  if (theme.activeTheme) then
-    return theme.activeTheme:GetOption(key, fallback)
+  if (theme.current_theme) then
+    return theme.current_theme:GetOption(key, fallback)
   end
 
   return fallback
@@ -136,12 +136,12 @@ function theme.RemoveTheme(id)
 end
 
 function theme.SetDermaSkin()
-  local activeTheme = theme.activeTheme
+  local current_theme = theme.current_theme
 
-  if (activeTheme) then
+  if (current_theme) then
     local skinTable = derma.GetNamedSkin("Flux")
 
-    for k, v in pairs(activeTheme.skin) do
+    for k, v in pairs(current_theme.skin) do
       skinTable[k] = v
     end
   end
@@ -153,57 +153,57 @@ function theme.LoadTheme(themeID, bIsReloading)
   local themeTable = theme.FindTheme(themeID)
 
   if (themeTable) then
-    if (!bIsReloading and hook.Run("ShouldThemeLoad", themeTable) == false) then
+    if (!bIsReloading and hook.run("ShouldThemeLoad", themeTable) == false) then
       return
     end
 
-    theme.activeTheme = themeTable
+    theme.current_theme = themeTable
 
     local next = themeTable.base
 
     while (next) do
       if (next.OnLoaded) then
-        next.OnLoaded(theme.activeTheme)
+        next.OnLoaded(theme.current_theme)
       end
 
       next = next.base
     end
 
-    if (!bIsReloading and theme.activeTheme.OnLoaded) then
-      theme.activeTheme:OnLoaded()
+    if (!bIsReloading and theme.current_theme.OnLoaded) then
+      theme.current_theme:OnLoaded()
     end
 
     theme.SetDermaSkin()
 
-    hook.Run("OnThemeLoaded", theme.activeTheme)
+    hook.run("OnThemeLoaded", theme.current_theme)
   end
 end
 
 function theme.UnloadTheme()
-  if (hook.Run("ShouldThemeUnload", theme.activeTheme) == false) then
+  if (hook.run("ShouldThemeUnload", theme.current_theme) == false) then
     return
   end
 
-  if (theme.activeTheme.OnUnloaded) then
-    theme.activeTheme:OnUnloaded()
+  if (theme.current_theme.OnUnloaded) then
+    theme.current_theme:OnUnloaded()
 
-    hook.Run("OnThemeUnloaded", theme.activeTheme)
+    hook.run("OnThemeUnloaded", theme.current_theme)
   end
 
-  theme.activeTheme = nil
+  theme.current_theme = nil
 end
 
 function theme.Reload()
-  if (!theme.activeTheme) then return end
+  if (!theme.current_theme) then return end
 
-  if ((theme.activeTheme.shouldReload == false) or hook.Run("ShouldThemeReload", theme.activeTheme) == false) then
+  if ((theme.current_theme.should_reload == false) or hook.run("ShouldThemeReload", theme.current_theme) == false) then
     return
   end
 
-  theme.LoadTheme(theme.activeTheme.id)
+  theme.LoadTheme(theme.current_theme.id)
 
   theme.Hook("OnReloaded")
-  hook.Run("OnThemeReloaded", theme.activeTheme)
+  hook.run("OnThemeReloaded", theme.current_theme)
 end
 
 do

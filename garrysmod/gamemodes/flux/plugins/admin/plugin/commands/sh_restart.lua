@@ -6,13 +6,13 @@ COMMAND.category = "server_management"
 COMMAND.arguments = 0
 COMMAND.aliases = {"maprestart"}
 
-function COMMAND:OnRun(player, delay)
+function COMMAND:on_run(player, delay)
   delay = tonumber(delay) or 0
 
   fl.player:NotifyAll(L("MapRestartMessage", (IsValid(player) and player:Name()) or "Console", delay))
 
   timer.Simple(delay, function()
-    hook.Run("FLSaveData")
+    hook.run("FLSaveData")
 
     RunConsoleCommand("changelevel", game.GetMap())
   end)

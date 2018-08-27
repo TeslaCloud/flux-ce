@@ -7,7 +7,7 @@ Theme.options = {}
 Theme.panels = {}
 Theme.fonts = {}
 Theme.skin = {}
-Theme.shouldReload = true
+Theme.should_reload = true
 
 --[[ Basic Skeleton --]]
 function Theme:init(name, parent)

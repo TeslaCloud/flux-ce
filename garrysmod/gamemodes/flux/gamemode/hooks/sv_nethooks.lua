@@ -1,6 +1,6 @@
 netstream.Hook("ClientIncludedSchema", function(player)
-  hook.Run("ClientIncludedSchema", player)
-  hook.Run("PlayerInitialized", player)
+  hook.run("ClientIncludedSchema", player)
+  hook.run("PlayerInitialized", player)
 end)
 
 netstream.Hook("SoftUndo", function(player)
@@ -15,5 +15,5 @@ netstream.Hook("LocalPlayerCreated", function(player)
 end)
 
 netstream.Hook("Flux::Player::Language", function(player, lang)
-  player:SetNetVar("language", lang)
+  player:set_nv("language", lang)
 end)

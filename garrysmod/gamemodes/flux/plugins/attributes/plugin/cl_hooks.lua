@@ -1,5 +1,5 @@
-function flAttributes:OnThemeLoaded(activeTheme)
-  activeTheme:AddPanel("CharCreation_Attributes", function(id, parent, ...)
+function flAttributes:OnThemeLoaded(current_theme)
+  current_theme:AddPanel("CharCreation_Attributes", function(id, parent, ...)
     return vgui.Create("flCharCreationAttributes", parent)
   end)
 end

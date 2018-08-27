@@ -1,6 +1,6 @@
 local player_meta = FindMetaTable("Player")
 
-function player_meta:SavePlayer()
+function player_meta:save_player()
   local saveData = {
     steam_id = self:SteamID(),
     name = self:Name(),
@@ -9,13 +9,13 @@ function player_meta:SavePlayer()
     data = fl.serialize(self:get_data())
   }
 
-  hook.Run("SavePlayerData", self, saveData)
+  hook.run("SavePlayerData", self, saveData)
 
   if self.record then self.record:save() end
 end
 
 function player_meta:set_data(data)
-  self:SetNetVar("flData", data or {})
+  self:set_nv("flData", data or {})
 end
 
 function player_meta:SetPlayerData(key, value)
@@ -58,13 +58,13 @@ end
 
 function player_meta:RestorePlayer()
   if self:IsBot() then
-    return hook.Run('player_restored', self, User.new())
+    return hook.run('PlayerRestored', self, User.new())
   end
 
   User:where('steam_id', self:SteamID()):expect(function(obj)
     obj.player = self
     self.record = obj
-    hook.Run('player_restored', self, obj)
+    hook.run('PlayerRestored', self, obj)
   end):rescue(function(obj)
     ServerLog(self:Name()..' has joined for the first time!')
     obj.player = self
@@ -72,8 +72,8 @@ function player_meta:RestorePlayer()
     obj.name = self:Name()
     obj.role = 'user'
     self.record = obj
-    hook.Run('player_created', self, obj)
+    hook.run('PlayerCreated', self, obj)
     obj:save()
-    hook.Run('player_restored', self, obj)
+    hook.run('PlayerRestored', self, obj)
   end)
 end

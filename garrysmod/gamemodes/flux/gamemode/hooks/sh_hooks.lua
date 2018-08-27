@@ -198,7 +198,7 @@ end
 
 concommand.Add("fl_save_pers", function()
   if (fl.development and SERVER) then
-    hook.Run("PersistenceSave")
+    hook.run("PersistenceSave")
   end
 end)
 
@@ -221,17 +221,17 @@ end
 
 -- Utility timers to call hooks that should be executed every once in a while.
 timer.Create("OneMinute", 60, 0, function()
-  hook.Run("OneMinute")
+  hook.run("OneMinute")
 end)
 
 timer.Create("OneSecond", 1, 0, function()
-  hook.Run("OneSecond")
+  hook.run("OneSecond")
 end)
 
 timer.Create("HalfSecond", 0.5, 0, function()
-  hook.Run("HalfSecond")
+  hook.run("HalfSecond")
 end)
 
 timer.Create("LazyTick", 0.125, 0, function()
-  hook.Run("LazyTick")
+  hook.run("LazyTick")
 end)
