@@ -20,6 +20,18 @@ function attributes.GetAll()
   return attsTable
 end
 
+function attributes.GetAllByType(type)
+  local attsTable = {}
+
+  for k, v in pairs(attributes.stored) do
+    if (v.type == type) then
+      attsTable[k] = v
+    end
+  end
+
+  return attsTable
+end
+
 function attributes.register(id, data)
   if (!data) then return end
 
@@ -41,7 +53,7 @@ function attributes.register(id, data)
   data.description = data.description or "This attribute has no description!"
   data.max = data.max or 100
   data.min = data.min or 0
-  data.category = data.category or "#Attribute_Category_Other"
+  data.category = data.category or "Attribute_Category_Other"
   data.icon = data.icon
   data.type = data.type
   if data.multipliable == nil then data.multipliable = true end
@@ -51,6 +63,8 @@ function attributes.register(id, data)
 end
 
 function attributes.find_by_id(id)
+  id = id:to_id()
+
   return stored[id]
 end
 
