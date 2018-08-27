@@ -1,3 +1,3 @@
-mvc.Handler("ChatboxProcessor", function()
+mvc.handler("ChatboxProcessor", function()
 
 end)

@@ -10,7 +10,7 @@ netvars.globals = globals
 local ent_meta = FindMetaTable("Entity")
 
 -- A function to get a networked global.
-function netvars.GetNetVar(key, default)
+function netvars.get_nv(key, default)
   if (globals[key] != nil) then
     return globals[key]
   end
@@ -19,10 +19,10 @@ function netvars.GetNetVar(key, default)
 end
 
 -- Cannot set them on client.
-function netvars.SetNetVar() end
+function netvars.set_nv() end
 
 -- A function to get entity's networked variable.
-function ent_meta:GetNetVar(key, default)
+function ent_meta:get_nv(key, default)
   local index = self:EntIndex()
 
   if (stored[index] and stored[index][key] != nil) then

@@ -7,7 +7,7 @@ COMMAND.arguments = 1
 COMMAND.player_arg = 1
 COMMAND.aliases = {"forcefallover", "plyfall"}
 
-function COMMAND:OnRun(player, target, delay)
+function COMMAND:on_run(player, target, delay)
   if (isnumber(delay) and delay > 0) then
     delay = math.Clamp(delay or 0, 2, 60)
   end

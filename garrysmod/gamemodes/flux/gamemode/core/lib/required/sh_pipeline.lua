@@ -39,12 +39,12 @@ function pipeline.Include(pipe, file_name)
   lastPipeAborted = false
 
   if (!pipe) then return end
-  if (!isstring(file_name) or file_name:utf8len() < 7) then return end
+  if (!isstring(file_name) or file_name:len() < 7) then return end
 
-  local id = (string.GetFileFromFilename(file_name) or ""):Replace(".lua", ""):to_id()
+  local id = (string.GetFileFromFilename(file_name) or ""):gsub('%.lua', ''):to_id()
 
   if (id:StartWith("cl_") or id:StartWith("sh_") or id:StartWith("sv_")) then
-    id = id:utf8sub(4, id:utf8len())
+    id = id:sub(4, id:len())
   end
 
   if (id == "") then return end

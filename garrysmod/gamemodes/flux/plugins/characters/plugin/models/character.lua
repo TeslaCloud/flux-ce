@@ -14,6 +14,6 @@ Character:has_one 'ammo'
 
 function Character:restored()
   if self.user then
-    hook.Run("RestoreCharacter", self.user.player, self.id, self)
+    hook.run("RestoreCharacter", self.user.player, self.id, self)
   end
 end

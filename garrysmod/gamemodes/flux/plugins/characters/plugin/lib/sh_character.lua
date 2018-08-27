@@ -22,7 +22,7 @@ function character.Create(player, data)
     return CHAR_ERR_MODEL
   end
 
-  local hooked, result = hook.Run("PlayerCreateCharacter", player, data)
+  local hooked, result = hook.run("PlayerCreateCharacter", player, data)
 
   if (hooked == false) then
     return result or CHAR_ERR_UNKNOWN
@@ -46,7 +46,7 @@ function character.Create(player, data)
   if SERVER then
     local charID = #stored[steam_id]
 
-    hook.Run("PostCreateCharacter", player, charID, char)
+    hook.run("PostCreateCharacter", player, charID, char)
 
     character.Save(player, charID)
   end
@@ -66,7 +66,7 @@ if SERVER then
     stored[steam_id] = stored[steam_id] or {}
     character.SendToClient(player)
 
-    hook.Run("PostRestoreCharacters", player)
+    hook.run("PostRestoreCharacters", player)
   end
 
   function character.SendToClient(player)
@@ -102,15 +102,15 @@ if SERVER then
   end
 
   function character.Save(player, index)
-    if (!IsValid(player) or !isnumber(index) or hook.Run("PreSaveCharacter", player, index) == false) then return end
+    if (!IsValid(player) or !isnumber(index) or hook.run("PreSaveCharacter", player, index) == false) then return end
 
     local char = stored[player:SteamID()][index]
 
-    hook.Run("SaveCharaterData", player, char)
+    hook.run("SaveCharaterData", player, char)
 
     char:save()
 
-    hook.Run("PostSaveCharacter", player, char)
+    hook.run("PostSaveCharacter", player, char)
   end
 
   function character.SaveAll(player)
@@ -135,7 +135,7 @@ if SERVER then
     if (char) then
       char.name = newName or char.name
 
-      player:SetNetVar("name", char.name)
+      player:set_nv("name", char.name)
 
       character.Save(player, index)
     end
@@ -147,7 +147,7 @@ if SERVER then
     if (char) then
       char.model = model or char.model
 
-      player:SetNetVar("model", char.model)
+      player:set_nv("model", char.model)
       player:SetModel(char.model)
 
       character.Save(player, index)
@@ -192,11 +192,11 @@ do
   local player_meta = FindMetaTable("Player")
 
   function player_meta:GetActiveCharacterID()
-    return self:GetNetVar("ActiveCharacter", nil)
+    return self:get_nv("ActiveCharacter", nil)
   end
 
   function player_meta:GetCharacterKey()
-    return self:GetNetVar("key", -1)
+    return self:get_nv("key", -1)
   end
 
   function player_meta:CharacterLoaded()
@@ -208,18 +208,18 @@ do
   end
 
   function player_meta:GetInventory()
-    return self:GetNetVar("inventory", {})
+    return self:get_nv("inventory", {})
   end
 
   function player_meta:GetPhysDesc()
-    return self:GetNetVar("phys_desc", "This character has no description!")
+    return self:get_nv("phys_desc", "This character has no description!")
   end
 
   function player_meta:GetCharacterVar(id, default)
     if SERVER then
       return self:GetCharacter()[id] or default
     else
-      return self:GetNetVar(id, default)
+      return self:get_nv(id, default)
     end
   end
 

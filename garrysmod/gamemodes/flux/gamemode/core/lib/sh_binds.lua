@@ -81,7 +81,7 @@ if SERVER then
 else
   function hooks:AdjustSettingCallbacks(callbacks)
     callbacks["flBindSelect"] = function(panel, parent, setting)
-      local textW = util.GetTextSize("Press a key to bind or mouse away to cancel.", theme.GetFont("Menu_Small"))
+      local textW = util.text_size("Press a key to bind or mouse away to cancel.", theme.GetFont("Menu_Small"))
 
       panel:SetSize(textW * 1.2, parent:GetTall() * 0.6)
       panel:SetPos(parent:GetWide() * 0.99 - panel:GetWide(), parent:GetTall() * 0.5 - panel:GetTall() * 0.5)

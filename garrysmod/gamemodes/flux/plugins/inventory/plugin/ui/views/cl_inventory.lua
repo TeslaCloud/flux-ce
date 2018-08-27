@@ -159,9 +159,9 @@ function PANEL:OnMouseReleased(...)
       fl.inventoryDragSlot = nil
 
       if (#self.instance_ids > 1) then
-        hook.Run("PlayerUseItemMenu", self.instance_ids)
+        hook.run("PlayerUseItemMenu", self.instance_ids)
       else
-        hook.Run("PlayerUseItemMenu", self.itemData)
+        hook.run("PlayerUseItemMenu", self.itemData)
       end
     end
   end
@@ -306,7 +306,7 @@ function PANEL:Rebuild()
 
   self:GetParent():Receiver("flItem", function(receiver, dropped, isDropped, menuIndex, mouseX, mouseY)
     if (isDropped) then
-      hook.Run("PlayerDropItem", dropped[1].itemData, dropped[1], mouseX, mouseY)
+      hook.run("PlayerDropItem", dropped[1].itemData, dropped[1], mouseX, mouseY)
     end
   end, {})
 end

@@ -10,7 +10,7 @@ function fl3DText:PostDrawOpaqueRenderables()
     local style = tool:GetClientNumber("style")
     local trace = fl.client:GetEyeTrace()
     local normal = trace.HitNormal
-    local w, h = util.GetTextSize(text, theme.GetFont("Text_3D2D"))
+    local w, h = util.text_size(text, theme.GetFont("Text_3D2D"))
     local angle = normal:Angle()
     angle:RotateAroundAxis(angle:Forward(), 90)
     angle:RotateAroundAxis(angle:Right(), 270)
@@ -71,7 +71,7 @@ function fl3DText:PostDrawOpaqueRenderables()
     local textColor = v.color
     local backColor = v.extraColor
     local style = v.style
-    local w, h = util.GetTextSize(text, theme.GetFont("Text_3D2D"))
+    local w, h = util.text_size(text, theme.GetFont("Text_3D2D"))
     local posX, posY = -w * 0.5, -h * 0.5
 
     if (style >= 2) then

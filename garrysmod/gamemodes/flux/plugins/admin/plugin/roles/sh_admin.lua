@@ -1,9 +1,9 @@
-GROUP.name = "Administrator"
-GROUP.description = "#PlayerGroup_Admin"
-GROUP.color = Color(255, 255, 255)
-GROUP.icon = "icon16/shield.png"
-GROUP.immunity = 300
-GROUP.base = "moderator"
-GROUP.permissions = {
+ROLE.name = "Administrator"
+ROLE.description = "#PlayerGroup_Admin"
+ROLE.color = Color(255, 255, 255)
+ROLE.icon = "icon16/shield.png"
+ROLE.immunity = 300
+ROLE.base = "moderator"
+ROLE.permissions = {
   all = PERM_ALLOW_OVERRIDE
 }

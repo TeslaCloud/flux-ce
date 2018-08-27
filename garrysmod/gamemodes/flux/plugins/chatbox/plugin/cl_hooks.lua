@@ -1,4 +1,4 @@
-function flChatbox:OnThemeLoaded(activeTheme)
+function flChatbox:OnThemeLoaded(current_theme)
   local scrW, scrH = ScrW(), ScrH()
 
   font.Create("flChatFont", {
@@ -7,16 +7,16 @@ function flChatbox:OnThemeLoaded(activeTheme)
     weight = 1000
   })
 
-  activeTheme:SetFont("Chatbox_Normal", "flChatFont", font.Scale(20))
-  activeTheme:SetFont("Chatbox_Bold", "flRobotoCondensedBold", font.Scale(20))
-  activeTheme:SetFont("Chatbox_Italic", "flRobotoCondensedItalic", font.Scale(20))
-  activeTheme:SetFont("Chatbox_ItalicBold", "flRobotoCondensedItalicBold", font.Scale(20))
-  activeTheme:SetFont("Chatbox_Syntax", "flRobotoCondensed", font.Scale(24))
+  current_theme:SetFont("Chatbox_Normal", "flChatFont", font.Scale(20))
+  current_theme:SetFont("Chatbox_Bold", "flRobotoCondensedBold", font.Scale(20))
+  current_theme:SetFont("Chatbox_Italic", "flRobotoCondensedItalic", font.Scale(20))
+  current_theme:SetFont("Chatbox_ItalicBold", "flRobotoCondensedItalicBold", font.Scale(20))
+  current_theme:SetFont("Chatbox_Syntax", "flRobotoCondensed", font.Scale(24))
 
-  activeTheme:SetOption("Chatbox_Width", scrW / 3)
-  activeTheme:SetOption("Chatbox_Height", scrH / 3)
-  activeTheme:SetOption("Chatbox_X", 8)
-  activeTheme:SetOption("Chatbox_Y", scrH - activeTheme:GetOption("Chatbox_Height") - 32)
+  current_theme:SetOption("Chatbox_Width", scrW / 3)
+  current_theme:SetOption("Chatbox_Height", scrH / 3)
+  current_theme:SetOption("Chatbox_X", 8)
+  current_theme:SetOption("Chatbox_Y", scrH - current_theme:GetOption("Chatbox_Height") - 32)
 end
 
 function flChatbox:OnResolutionChanged(newW, newH)
@@ -34,9 +34,9 @@ end
 function flChatbox:PlayerBindPress(player, bind, bPress)
   if (fl.client:HasInitialized() and (string.find(bind, "messagemode") or string.find(bind, "messagemode2")) and bPress) then
     if (string.find(bind, "messagemode2")) then
-      fl.client.isTypingTeamChat = true
+      fl.client.typing_team_chat = true
     else
-      fl.client.isTypingTeamChat = false
+      fl.client.typing_team_chat = false
     end
 
     chatbox.Show()

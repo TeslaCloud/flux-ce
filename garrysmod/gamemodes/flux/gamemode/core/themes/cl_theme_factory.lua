@@ -2,7 +2,7 @@
 THEME.author = "TeslaCloud Studios"
 THEME.id = "factory"
 THEME.description = "Factory theme. This is a fail-safety theme that other themes use as a base."
-THEME.shouldReload = true
+THEME.should_reload = true
 
 function THEME:OnLoaded()
   local scrW, scrH = ScrW(), ScrH()
@@ -27,7 +27,7 @@ function THEME:OnLoaded()
   local mainColor     = self:SetColor("Main", Color(50, 50, 50))
   local outlineColor     = self:SetColor("Outline", Color(65, 65, 65))
   local backgroundColor   = self:SetColor("Background", Color(20, 20, 20))
-  local textColor     = self:SetColor("Text", util.PickTextColor(backgroundColor))
+  local textColor     = self:SetColor("Text", util.text_color_from_base(backgroundColor))
 
   self:SetColor("AccentDark", accentColor:darken(20))
   self:SetColor("AccentLight", accentColor:lighten(20))
@@ -74,7 +74,7 @@ function THEME:OnLoaded()
   end)
 
   self:AddPanel("Admin_PermissionsEditor", function(id, parent, ...)
-    return vgui.Create("flPermissionsEditor", parent)
+    return vgui.Create("permissionsEditor", parent)
   end)
 end
 
@@ -97,7 +97,7 @@ function THEME:PaintFrame(panel, width, height)
 
   if (title) then
     local font = font.GetSize(self:GetFont("Text_Small"), 16)
-    local fontSize = util.GetFontSize(font)
+    local fontSize = util.font_size(font)
 
     draw.SimpleText(title, font, 6, 3 * (16 / fontSize), panel:GetTextColor())
   end
@@ -107,9 +107,9 @@ function THEME:PaintMainMenu(panel, width, height)
   local wide = self:GetOption("MainMenu_SidebarWidth") * 0.5
   local title, desc, author = Schema:get_name(), Schema:get_description(), "#MainMenu_DevelopedBy:"..Schema:get_author()..";"
   local logo = self:GetMaterial("Schema_Logo")
-  local titleW, titleH = util.GetTextSize(title, self:GetFont("Text_Largest"))
-  local descW, descH = util.GetTextSize(desc, self:GetFont("Menu_Normal"))
-  local authorW, authorH = util.GetTextSize(author, self:GetFont("Menu_Normal"))
+  local titleW, titleH = util.text_size(title, self:GetFont("Text_Largest"))
+  local descW, descH = util.text_size(desc, self:GetFont("Menu_Normal"))
+  local authorW, authorH = util.text_size(author, self:GetFont("Menu_Normal"))
 
   surface.SetDrawColor(self:GetColor("MainMenu_Background"))
   surface.DrawRect(0, 0, width, width)
@@ -162,7 +162,7 @@ function THEME:PaintButton(panel, w, h)
   end
 
   if (title and title != "") then
-    local width, height = util.GetTextSize(title, font)
+    local width, height = util.text_size(title, font)
 
     if (panel.m_Autopos) then
       if (icon) then
@@ -185,7 +185,7 @@ function THEME:PaintButton(panel, w, h)
 end
 
 function THEME:PaintDeathScreen(curTime, scrW, scrH)
-  local respawnTimeRemaining = fl.client:GetNetVar("RespawnTime", 0) - curTime
+  local respawnTimeRemaining = fl.client:get_nv("RespawnTime", 0) - curTime
   local barValue = 100 - 100 * (respawnTimeRemaining / config.Get("respawn_delay"))
   local font = self:GetFont("Text_NormalLarge")
   local color_white = Color(255, 255, 255)
@@ -197,7 +197,7 @@ function THEME:PaintDeathScreen(curTime, scrW, scrH)
   draw.RoundedBox(0, 0, 0, scrW, scrH, Color(0, 0, 0, fl.client.respawnAlpha))
 
   draw.SimpleText("#PlayerMessage_Died", font, 16, 16, color_white)
-  draw.SimpleText("#PlayerMessage_Respawn:"..math.ceil(respawnTimeRemaining)..";", font, 16, 16 + util.GetFontSize(font), color_white)
+  draw.SimpleText("#PlayerMessage_Respawn:"..math.ceil(respawnTimeRemaining)..";", font, 16, 16 + util.font_size(font), color_white)
 
   draw.RoundedBox(0, 0, 0, scrW / 100 * barValue, 2, color_white)
 
@@ -247,7 +247,7 @@ function THEME:DrawBarTexts(barInfo)
 
   if (barInfo.hinderDisplay and barInfo.hinderDisplay <= barInfo.hinderValue) then
     local width = barInfo.width
-    local textWide = util.GetTextSize(barInfo.hinderText, font)
+    local textWide = util.text_size(barInfo.hinderText, font)
     local length = width * (barInfo.hinderValue / barInfo.maxValue)
 
     render.SetScissorRect(barInfo.x + width - length, barInfo.y, barInfo.x + width, barInfo.y + barInfo.height, true)
@@ -266,7 +266,7 @@ function THEME:AdminPanelPaintOver(panel, width, height)
 
     draw.SimpleText(fl.client:SteamName().." ("..fl.client:GetUserGroup()..")", smallestFont, 6, height + 1, textColor)
 
-    local w, h = util.GetTextSize(versionString, smallestFont)
+    local w, h = util.text_size(versionString, smallestFont)
 
     draw.SimpleText(versionString, smallestFont, width - w - 6, height + 1, textColor)
   DisableClipping(false)
@@ -298,7 +298,7 @@ function THEME:PaintPermissionButton(permPanel, btn, w, h)
   draw.RoundedBox(0, 0, 0, w, h, textColor)
   draw.RoundedBox(0, 1, 1, w - 2, h - 1, color)
 
-  local tW, tH = util.GetTextSize(title, font)
+  local tW, tH = util.text_size(title, font)
 
   draw.SimpleText(title, font, w * 0.5 - tW * 0.5, 2, textColor)
 
@@ -317,7 +317,7 @@ function THEME:PaintScoreboard(panel, width, height)
   draw.RoundedBox(0, 0, 0, width, height, ColorAlpha(self:GetColor("Background"), 150))
 
   DisableClipping(true)
-    draw.SimpleText("#Scoreboard_Title", titleFont, 4, -util.GetTextHeight("#Scoreboard_Title", titleFont) * 0.5, self:GetColor("Text"))
+    draw.SimpleText("#Scoreboard_Title", titleFont, 4, -util.text_height("#Scoreboard_Title", titleFont) * 0.5, self:GetColor("Text"))
   DisableClipping(false)
 
   draw.SimpleText("#Scoreboard_Help", self:GetFont("Text_Small"), 4, 14, self:GetColor("Text"))

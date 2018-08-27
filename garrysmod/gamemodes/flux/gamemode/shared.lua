@@ -108,12 +108,12 @@ end
 pipeline.include_folder("tool", "flux/gamemode/core/tools")
 util.include_folder("hooks", true)
 
-hook.Run("PreLoadPlugins")
+hook.run("PreLoadPlugins")
 
 fl.include_plugins("flux/plugins")
 
 if SERVER then
-  hook.Run("OnPluginsLoaded")
+  hook.run("OnPluginsLoaded")
 
   fl.include_schema()
 end

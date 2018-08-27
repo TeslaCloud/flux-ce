@@ -751,7 +751,7 @@ function SKIN:PaintTreeNodeButton(panel, w, h)
 
   -- Don't worry this isn't working out the size every render
   -- it just gets the cached value from inside the Label
-  local w, _ = panel:GetTextSize()
+  local w, _ = panel:text_size()
 
   self.tex.Selection(38, 0, w + 6, h)
 end

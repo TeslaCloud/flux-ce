@@ -5,7 +5,7 @@ COMMAND.syntax = "[none]"
 COMMAND.category = "misc"
 COMMAND.aliases = {"staticadd", "staticpropadd"}
 
-function COMMAND:OnRun(player)
+function COMMAND:on_run(player)
   plugin.call("PlayerMakeStatic", player, true)
 end
 

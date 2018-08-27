@@ -4,7 +4,7 @@ COMMAND.description = "Freezes all of the bots."
 COMMAND.category = "server_management"
 COMMAND.aliases = {"botfreeze", "freezebot", "bot_freeze", "bot_zombie"}
 
-function COMMAND:OnRun(player)
+function COMMAND:on_run(player)
   fl.player:NotifyAll(L("FreezeBotsMessage", (IsValid(player) and player:Name()) or "Console"))
 
   RunConsoleCommand("bot_zombie", 1)
@@ -18,7 +18,7 @@ COMMAND.description = "Unfreezes all of the bots."
 COMMAND.category = "server_management"
 COMMAND.aliases = {"botunfreeze", "unfreezebot", "bot_unfreeze", "bot_unzombie"}
 
-function COMMAND:OnRun(player)
+function COMMAND:on_run(player)
   fl.player:NotifyAll(L("UnfreezeBotsMessage", (IsValid(player) and player:Name()) or "Console"))
 
   RunConsoleCommand("bot_zombie", 0)
@@ -34,7 +34,7 @@ COMMAND.category = "server_management"
 COMMAND.arguments = 0
 COMMAND.aliases = {"bot", "bots"}
 
-function COMMAND:OnRun(player, numBots)
+function COMMAND:on_run(player, numBots)
   numBots = math.Clamp((tonumber(numBots) or 1), 1, 128)
 
   fl.player:NotifyAll(L("AddBotsMessage", (IsValid(player) and player:Name()) or "Console", numBots))
@@ -52,7 +52,7 @@ COMMAND.description = "Kicks all bots."
 COMMAND.category = "server_management"
 COMMAND.aliases = {"botkick", "kickbot", "bot_kick"}
 
-function COMMAND:OnRun(player)
+function COMMAND:on_run(player)
   fl.player:NotifyAll(L("KickBotsMessage", (IsValid(player) and player:Name()) or "Console"))
 
   for k, v in ipairs(_player.GetAll()) do

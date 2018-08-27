@@ -16,7 +16,7 @@ function flCharacters:ClientIncludedSchema(player)
 end
 
 function flCharacters:PostCharacterLoaded(player, character)
-  hook.RunClient(player, "PostCharacterLoaded", character.id)
+  hook.runClient(player, "PostCharacterLoaded", character.id)
 end
 
 function flCharacters:OnActiveCharacterSet(player, character)
@@ -33,7 +33,7 @@ function flCharacters:OnActiveCharacterSet(player, character)
     character.ammo = nil
   end
 
-  hook.Run("PostCharacterLoaded", player, character)
+  hook.run("PostCharacterLoaded", player, character)
 end
 
 function flCharacters:OnCharacterChange(player, oldChar, newCharID)

@@ -63,15 +63,14 @@ end
 -- Called when the Database connects sucessfully.
 function ActiveRecord.Adapters.Abstract:on_connected()
   self._connected = true
-  MsgC(Color(25, 235, 25), 'ActiveRecord - Connected to the database using '..ActiveRecord.adapter_name..'!\n')
   ActiveRecord.on_connected()
-  hook.Run('database_connected')
+  hook.run('DatabaseConnected')
 end
 
 -- Called when the Database connection fails.
 function ActiveRecord.Adapters.Abstract:on_connection_failed(error_text)
   ErrorNoHalt('ActiveRecord - Unable to connect to the database!\n'..error_text..'\n')
-  hook.Run('database_connection_failed', error_text)
+  hook.run('DatabaseConnectionFailed', error_text)
 end
 
 -- A function to check whether or not the module is connected to a Database.

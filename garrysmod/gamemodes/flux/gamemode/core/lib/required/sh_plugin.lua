@@ -57,7 +57,7 @@ function Plugin:init(id, data)
   self.description = data.description or "This plugin has no description."
   self.id = id or data.id or name:to_id() or "unknown"
 
-  table.SafeMerge(self, data)
+  table.safe_merge(self, data)
 end
 
 function Plugin:get_name()
@@ -89,7 +89,7 @@ function Plugin:set_description(desc)
 end
 
 function Plugin:set_data(data)
-  table.SafeMerge(self, data)
+  table.safe_merge(self, data)
 end
 
 function Plugin:set_alias(alias)
@@ -241,7 +241,7 @@ function plugin.register(obj)
 
   if SERVER then
     if (Schema == obj) then
-      local folderName = obj.folder:RemoveTextFromEnd("/schema")
+      local folderName = obj.folder:trim_end("/schema")
       local filePath = "gamemodes/"..folderName.."/"..folderName..".yml"
 
       if (file.Exists(filePath, "GAME")) then
@@ -287,12 +287,12 @@ function plugin.include(path)
           if (file.Exists(dataTable.folder.."/sh_"..(dataTable.name or id)..".lua", "LUA")) then
             dataTable.plugin_main = "sh_"..(dataTable.name or id)..".lua"
           end
-        table.SafeMerge(data, dataTable)
+        table.safe_merge(data, dataTable)
 
         fl.shared.pluginInfo[path] = data
       end
     else
-      table.SafeMerge(data, fl.shared.pluginInfo[path])
+      table.safe_merge(data, fl.shared.pluginInfo[path])
     end
   end
 
@@ -374,7 +374,7 @@ function plugin.include_schema()
 
   Schema:register()
 
-  hook.Run("OnSchemaLoaded")
+  hook.run("OnSchemaLoaded")
 end
 
 -- Please specify full file name if requiring a single-file plugin.

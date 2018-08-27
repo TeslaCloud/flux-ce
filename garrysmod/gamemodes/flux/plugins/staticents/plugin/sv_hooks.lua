@@ -52,7 +52,7 @@ function flStaticEnts:PlayerMakeStatic(player, bIsStatic)
 end
 
 function flStaticEnts:ShutDown()
-  hook.Run("PersistenceSave")
+  hook.run("PersistenceSave")
 end
 
 function flStaticEnts:PersistenceSave()
@@ -85,7 +85,7 @@ function flStaticEnts:PersistenceLoad()
     local entData = loaded.Entities[k]
 
     if (entData) then
-      table.SafeMerge(v:GetTable(), entData)
+      table.safe_merge(v:GetTable(), entData)
     end
   end
 
@@ -95,5 +95,5 @@ function flStaticEnts:PersistenceLoad()
 end
 
 function flStaticEnts:InitPostEntity()
-  hook.Run("PersistenceLoad")
+  hook.run("PersistenceLoad")
 end

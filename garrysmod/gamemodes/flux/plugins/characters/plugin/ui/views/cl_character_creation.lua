@@ -21,7 +21,7 @@ function PANEL:Close(callback)
 end
 
 function PANEL:CollectData(newData)
-  table.SafeMerge(self.CharData, newData)
+  table.safe_merge(self.CharData, newData)
 end
 
 function PANEL:OpenPanel(id)
@@ -41,7 +41,7 @@ function PANEL:OpenPanel(id)
     self.panel:OnOpen(self)
   end
 
-  hook.Run("CharPanelCreated", id, self.panel)
+  hook.run("CharPanelCreated", id, self.panel)
 
   if (IsValid(self.finishButton)) then
     self.finishButton:SafeRemove()
@@ -79,7 +79,7 @@ function PANEL:AddSidebarItems(sidebar, panel)
     self:OpenPanel("CharCreation_Model")
   end)
 
-  hook.Run("AddCharacterCreationMenuItems", self, panel, sidebar)
+  hook.run("AddCharacterCreationMenuItems", self, panel, sidebar)
 end
 
 function PANEL:Paint(w, h)

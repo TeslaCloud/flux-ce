@@ -24,12 +24,12 @@ function PLUGIN:HUDPaint()
     draw.RoundedBox(0, 0, 0, scrW, scrH, Color(0, 0, 0, 100))
 
     if (getup) then
-      local barValue = 100 - 100 * ((fl.client:GetNetVar("GetupEnd", 0) - CurTime()) / fl.client:GetNetVar("GetupTime"))
+      local barValue = 100 - 100 * ((fl.client:get_nv("GetupEnd", 0) - CurTime()) / fl.client:get_nv("GetupTime"))
 
       fl.bars:SetValue("getup", barValue)
       fl.bars:Draw("getup")
     elseif (fallen) then
-      local w, h = util.GetTextSize("#PressJumpToGetup", theme.GetFont("Text_Normal"))
+      local w, h = util.text_size("#PressJumpToGetup", theme.GetFont("Text_Normal"))
 
       draw.SimpleText("#PressJumpToGetup", theme.GetFont("Text_Normal"), scrW * 0.5 - w * 0.5, scrH * 0.5 - h * 0.5, theme.GetColor("Text"))
     end

@@ -47,7 +47,7 @@ function ActiveRecord.restore_schema()
       ActiveRecord.Model:populate()
       fl.dev_print 'ActiveRecord - Ready!'
       ActiveRecord.Queue:run()
-      hook.Run('activerecord_ready')
+      hook.run('ActiveRecordReady')
     end)
   query:execute()
 end

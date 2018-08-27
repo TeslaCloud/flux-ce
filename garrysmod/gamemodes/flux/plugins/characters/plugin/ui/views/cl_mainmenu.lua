@@ -53,7 +53,7 @@ function PANEL:RecreateSidebar(bShouldCreateButtons)
   self.sidebar:AddSpace(theme.GetOption("MainMenu_SidebarLogoSpace"))
 
   if (bShouldCreateButtons) then
-    hook.Run("AddMainMenuItems", self, self.sidebar)
+    hook.run("AddMainMenuItems", self, self.sidebar)
   else
     local backButton = vgui.Create("flButton")
     backButton:SetSize(theme.GetOption("MainMenu_SidebarWidth"), theme.GetOption("MainMenu_SidebarButtonHeight"))

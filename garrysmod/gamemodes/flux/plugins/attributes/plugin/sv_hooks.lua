@@ -19,5 +19,5 @@ function flAttributes:PostCreateCharacter(player, charID, data)
 end
 
 function flAttributes:OnActiveCharacterSet(player, character)
-  player:SetNetVar("Attributes", character.attributes)
+  player:set_nv("Attributes", character.attributes)
 end

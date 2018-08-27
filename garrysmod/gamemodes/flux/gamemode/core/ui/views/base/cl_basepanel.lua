@@ -25,11 +25,11 @@ function PANEL:Think() theme.Hook("PanelThink", self) end
 
 -- MVC Functionality for all FL panels.
 function PANEL:Push(name, ...)
-  mvc.Push(name, ...)
+  mvc.push(name, ...)
 end
 
-function PANEL:Pull(name, handler, bPreventRemove)
-  mvc.Pull(name, handler, bPreventRemove)
+function PANEL:Pull(name, handler, prevent_remove)
+  mvc.pull(name, handler, prevent_remove)
 end
 
 function PANEL:Request(name, handler, ...)

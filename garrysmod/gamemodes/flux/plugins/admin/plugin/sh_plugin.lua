@@ -30,7 +30,7 @@ function flAdmin:PlayerIsRoot(player)
 end
 
 function flAdmin:PlayerIsMemberOfGroup(player, group)
-  for k, v in ipairs(player:GetSecondaryGroups()) do
+  for k, v in ipairs(player:get_roles()) do
     if (v == group) then
       return true
     end

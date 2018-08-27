@@ -16,7 +16,7 @@ function PANEL:Init()
 
   self:SetKeyboardInputEnabled(true)
 
-  hook.Run("AddAdminMenuItems", self, self.sidebar)
+  hook.run("AddAdminMenuItems", self, self.sidebar)
 end
 
 function PANEL:Paint(w, h)
@@ -83,7 +83,7 @@ function PANEL:SetFullscreen(bFullscreen)
 
     self.backBtn.Paint = function(btn, w, h)
       local font = fl.fonts:GetSize(theme.GetFont("Text_Small"), 16)
-      local fontSize = util.GetFontSize(font)
+      local fontSize = util.font_size(font)
 
       fl.fa:Draw("fa-chevron-left", 6, 5, 14, Color(255, 255, 255))
       draw.SimpleText("Go Back", font, 24, 3 * (16 / fontSize), Color(255, 255, 255))

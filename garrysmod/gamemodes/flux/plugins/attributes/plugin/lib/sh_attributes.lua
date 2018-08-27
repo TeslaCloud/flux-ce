@@ -50,7 +50,7 @@ function attributes.register(id, data)
   stored[id] = data
 end
 
-function attributes.FindByID(id)
+function attributes.find_by_id(id)
   return stored[id]
 end
 
@@ -84,11 +84,11 @@ do
   local player_meta = FindMetaTable("Player")
 
   function player_meta:GetAttributes()
-    return self:GetNetVar("attributes", {})
+    return self:get_nv("attributes", {})
   end
 
   function player_meta:GetAttribute(id, bNoBoost)
-    local attribute = attributes.FindByID(id)
+    local attribute = attributes.find_by_id(id)
     local attsTable = self:GetAttributes()
 
     if (!attsTable[id]) then
@@ -127,7 +127,7 @@ do
   if SERVER then
     function player_meta:SetAttribute(id, value)
       local attsTable = self:GetAttributes()
-      local attribute = attributes.FindByID(id)
+      local attribute = attributes.find_by_id(id)
 
       if (!attsTable[id]) then
         attsTable[id] = {}
@@ -135,11 +135,11 @@ do
 
       attsTable[id].value = math.Clamp(value, attribute.min, attribute.max)
 
-      self:SetNetVar("attributes", attsTable)
+      self:set_nv("attributes", attsTable)
     end
 
     function player_meta:IncreaseAttribute(id, value, bNoMultiplier)
-      local attribute = attributes.FindByID(id)
+      local attribute = attributes.find_by_id(id)
       local attsTable = self:GetAttributes()
 
       if (!bNoMultiplier) then
@@ -152,7 +152,7 @@ do
 
       attsTable[id].value = math.Clamp(attsTable[id].value + value, attribute.min, attribute.max)
 
-      self:SetNetVar("attributes", attsTable)
+      self:set_nv("attributes", attsTable)
     end
 
     function player_meta:DecreaseAttribute(id, value, bNoMultiplier)
@@ -160,7 +160,7 @@ do
     end
 
     function player_meta:AttributeMultiplier(id, value, duration)
-      local attribute = attributes.FindByID(id)
+      local attribute = attributes.find_by_id(id)
 
       if (!attribute.multipliable) then return end
       if (value <= 0) then return end
@@ -177,11 +177,11 @@ do
         attsTable[id].multiplierExpires = curTime + duration
       end
 
-      self:SetNetVar("attributes", attsTable)
+      self:set_nv("attributes", attsTable)
     end
 
     function player_meta:BoostAttribute(id, value, duration)
-      local attribute = attributes.FindByID(id)
+      local attribute = attributes.find_by_id(id)
 
       if (!attribute.multipliable) then return end
 
@@ -197,7 +197,7 @@ do
         attsTable[id].boostExpires = curTime + time
       end
 
-      self:SetNetVar("attributes", attsTable)
+      self:set_nv("attributes", attsTable)
     end
   end
 end

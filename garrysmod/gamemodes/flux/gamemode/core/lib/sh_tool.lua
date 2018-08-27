@@ -29,11 +29,11 @@ pipeline.register("tool", function(id, file_name, pipe)
   TOOL.Mode = id
   TOOL.id = id
 
-  hook.Run("PreIncludeTool", TOOL)
+  hook.run("PreIncludeTool", TOOL)
 
   util.include(file_name)
 
-  hook.Run("ToolPreCreateConvars", TOOL)
+  hook.run("ToolPreCreateConvars", TOOL)
 
   TOOL:CreateConVars()
 

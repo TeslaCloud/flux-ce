@@ -110,15 +110,15 @@ if SERVER then
 
   function Item:do_menu_action(act, player, ...)
     if (act == "on_take") then
-      if (hook.Run("PlayerTakeItem", player, self, ...) != nil) then return end
+      if (hook.run("PlayerTakeItem", player, self, ...) != nil) then return end
     end
 
     if (act == "on_use") then
-      if (hook.Run("PlayerUseItem", player, self, ...) != nil) then return end
+      if (hook.run("PlayerUseItem", player, self, ...) != nil) then return end
     end
 
     if (act == "on_drop") then
-      if (hook.Run("PlayerDropItem", player, self.instance_id) != nil) then return end
+      if (hook.run("PlayerDropItem", player, self.instance_id) != nil) then return end
     end
 
     if (self[act]) then
@@ -140,15 +140,15 @@ if SERVER then
     end
 
     if (act == "on_take") then
-      if (hook.Run("PlayerTakenItem", player, self, ...) != nil) then return end
+      if (hook.run("PlayerTakenItem", player, self, ...) != nil) then return end
     end
 
     if (act == "on_use") then
-      if (hook.Run("PlayerUsedItem", player, self, ...) != nil) then return end
+      if (hook.run("PlayerUsedItem", player, self, ...) != nil) then return end
     end
 
     if (act == "on_drop") then
-      if (hook.Run("PlayerDroppedItem", player, self.instance_id, self, ...) != nil) then return end
+      if (hook.run("PlayerDroppedItem", player, self.instance_id, self, ...) != nil) then return end
     end
   end
 
@@ -156,7 +156,7 @@ if SERVER then
     local itemTable = item.FindInstanceByID(instance_id)
 
     if (!itemTable) then return end
-    if (hook.Run("PlayerCanUseItem", player, itemTable, action, ...) == false) then return end
+    if (hook.run("PlayerCanUseItem", player, itemTable, action, ...) == false) then return end
 
     itemTable:do_menu_action(action, player, ...)
   end)

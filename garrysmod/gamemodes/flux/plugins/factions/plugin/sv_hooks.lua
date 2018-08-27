@@ -4,7 +4,7 @@ function flFactions:PostPlayerSpawn(player)
   if (playerFaction) then
     player:SetTeam(playerFaction.team_id or 1)
 
-    player:SetNetVar("name", playerFaction:GenerateName(player, player:GetCharacterVar("name", player:Name()), player:GetRank()))
+    player:set_nv("name", playerFaction:GenerateName(player, player:GetCharacterVar("name", player:Name()), player:GetRank()))
   end
 end
 
@@ -18,14 +18,14 @@ function flFactions:RestorePlayer(player, result)
   end
 end
 
-function flFactions:activerecord_ready()
+function flFactions:ActiveRecordReady()
   if !ActiveRecord.schema['characters']['char_class'] then
     add_column('characters', 'char_class', 'text')
   end
 end
 
 function flFactions:OnActiveCharacterSet(player, charData)
-  player:SetNetVar("faction", charData.faction or "player")
+  player:set_nv("faction", charData.faction or "player")
 end
 
 function flFactions:SaveCharaterData(player, char)
@@ -43,15 +43,15 @@ function flFactions:RestoreCharacter(player, charID, data)
   end
 end
 
-function flFactions:player_restored(player, record)
+function flFactions:PlayerRestored(player, record)
   if (player:IsBot()) then
     if (faction.Count() > 0) then
       local randomFaction = table.Random(faction.GetAll())
 
-      player:SetNetVar("faction", randomFaction.id)
+      player:set_nv("faction", randomFaction.id)
 
       if (randomFaction.has_gender) then
-        player:SetNetVar("gender", math.random(CHAR_GENDER_MALE, CHAR_GENDER_FEMALE))
+        player:set_nv("gender", math.random(CHAR_GENDER_MALE, CHAR_GENDER_FEMALE))
       end
 
       local factionModels = randomFaction.models
@@ -64,7 +64,7 @@ function flFactions:player_restored(player, record)
           local male = factionModels.male or {}
           local female = factionModels.female or {}
 
-          local gender = player:GetNetVar("gender", -1)
+          local gender = player:get_nv("gender", -1)
 
           if (gender == -1 and #universal > 0) then
             randomModel = universal[math.random(#universal)]
@@ -77,7 +77,7 @@ function flFactions:player_restored(player, record)
           randomModel = universal[math.random(#universal)]
         end
 
-        player:SetNetVar("model", randomModel)
+        player:set_nv("model", randomModel)
       end
 
       player:SetTeam(randomFaction.team_id or 1)

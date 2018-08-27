@@ -4,26 +4,26 @@ function player_meta:SetActiveCharacter(id)
   local curChar = self:GetActiveCharacterID()
 
   if (curChar) then
-    hook.Run("OnCharacterChange", self, self:GetCharacter(), id)
+    hook.run("OnCharacterChange", self, self:GetCharacter(), id)
   end
 
-  self:SetNetVar("ActiveCharacter", id)
+  self:set_nv("ActiveCharacter", id)
 
   local charData = self:GetCharacter()
 
-  self:SetNetVar("name", charData.name or self:SteamName())
-  self:SetNetVar("phys_desc", charData.phys_desc or "")
-  self:SetNetVar("gender", charData.gender or CHAR_GENDER_MALE)
-  self:SetNetVar("key", charData.key or -1)
-  self:SetNetVar("model", charData.model or "models/humans/group01/male_02.mdl")
-  self:SetNetVar("inventory", charData.inventory)
+  self:set_nv("name", charData.name or self:SteamName())
+  self:set_nv("phys_desc", charData.phys_desc or "")
+  self:set_nv("gender", charData.gender or CHAR_GENDER_MALE)
+  self:set_nv("key", charData.key or -1)
+  self:set_nv("model", charData.model or "models/humans/group01/male_02.mdl")
+  self:set_nv("inventory", charData.inventory)
 
-  hook.Run("OnActiveCharacterSet", self, self:GetCharacter())
+  hook.run("OnActiveCharacterSet", self, self:GetCharacter())
 end
 
 function player_meta:SetCharacterVar(id, val)
   if (isstring(id)) then
-    self:SetNetVar(id, val)
+    self:set_nv(id, val)
     self:GetCharacter()[id] = val
   end
 end

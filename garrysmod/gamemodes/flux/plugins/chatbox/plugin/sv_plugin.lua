@@ -116,7 +116,7 @@ end)
 netstream.Hook("Chatbox::PlayerSay", function(player, text, bTeamChat)
   if (!IsValid(player)) then return end
 
-  local playerSayOverride = hook.Run("PlayerSay", player, text, bTeamChat)
+  local playerSayOverride = hook.run("PlayerSay", player, text, bTeamChat)
 
   if (isstring(playerSayOverride)) then
     if (playerSayOverride == "") then return end
@@ -125,16 +125,16 @@ netstream.Hook("Chatbox::PlayerSay", function(player, text, bTeamChat)
   end
 
   local message = {
-    hook.Run("ChatboxGetPlayerIcon", player, text, bTeamChat) or {},
-    hook.Run("ChatboxGetPlayerColor", player, text, bTeamChat) or _team.GetColor(player:Team()),
+    hook.run("ChatboxGetPlayerIcon", player, text, bTeamChat) or {},
+    hook.run("ChatboxGetPlayerColor", player, text, bTeamChat) or _team.GetColor(player:Team()),
     player,
-    hook.Run("ChatboxGetMessageColor", player, text, bTeamChat) or Color(255, 255, 255),
+    hook.run("ChatboxGetMessageColor", player, text, bTeamChat) or Color(255, 255, 255),
     ": ",
     text,
     {sender = player}
   }
 
-  hook.Run("ChatboxAdjustPlayerSay", player, text, message)
+  hook.run("ChatboxAdjustPlayerSay", player, text, message)
 
   chatbox.AddText(nil, unpack(message))
 end)

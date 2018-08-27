@@ -81,12 +81,12 @@ else
       local pos = v.pos
       local normal = v.normal
       local ang = normal:Angle()
-      local w, h = util.GetTextSize(v.text, theme.GetFont("Text_3D2D"))
+      local w, h = util.text_size(v.text, theme.GetFont("Text_3D2D"))
       local startPos = pos - -ang:Right() * (w * 0.50) * v.scale
-      local endPos = pos + -ang:Right() * (w * 0.50) * v.scale
+      local end_pos = pos + -ang:Right() * (w * 0.50) * v.scale
 
       if (math.abs(math.abs(hitPos.z) - math.abs(pos.z)) < 4 * v.scale) then
-        if (util.VectorsIntersect(traceStart, hitPos, startPos, endPos)) then
+        if (util.vectors_intersect(traceStart, hitPos, startPos, end_pos)) then
           netstream.Start("fl3DText_Remove", k)
 
           return true

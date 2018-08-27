@@ -55,20 +55,20 @@ do
   end
 end
 
-function flCharacters:OnThemeLoaded(activeTheme)
-  activeTheme:AddPanel("MainMenu", function(id, parent, ...)
+function flCharacters:OnThemeLoaded(current_theme)
+  current_theme:AddPanel("MainMenu", function(id, parent, ...)
     return vgui.Create("flMainMenu", parent)
   end)
 
-  activeTheme:AddPanel("CharacterCreation", function(id, parent, ...)
+  current_theme:AddPanel("CharacterCreation", function(id, parent, ...)
     return vgui.Create("flCharacterCreation", parent)
   end)
 
-  activeTheme:AddPanel("CharCreation_General", function(id, parent, ...)
+  current_theme:AddPanel("CharCreation_General", function(id, parent, ...)
     return vgui.Create("flCharCreationGeneral", parent)
   end)
 
-  activeTheme:AddPanel("CharCreation_Model", function(id, parent, ...)
+  current_theme:AddPanel("CharCreation_Model", function(id, parent, ...)
     return vgui.Create("flCharCreationModel", parent)
   end)
 
@@ -224,7 +224,7 @@ netstream.Hook("PlayerCreatedCharacter", function(success, status)
       end
     else
       local text = "We were unable to create a character! (unknown error)"
-      local hookText = hook.Run("GetCharCreationErrorText", success, status)
+      local hookText = hook.run("GetCharCreationErrorText", success, status)
 
       if (hookText) then
         text = hookText

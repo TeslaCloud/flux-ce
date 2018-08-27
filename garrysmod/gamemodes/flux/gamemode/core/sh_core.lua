@@ -108,7 +108,7 @@ function library.create_class(name, base_class)
   -- If this class is based off some other class - copy it's parent's data.
   if (istable(base_class)) then
     local copy = table.Copy(base_class)
-    table.SafeMerge(copy, obj)
+    table.safe_merge(copy, obj)
 
     if (isfunction(base_class.class_extended)) then
       try {
@@ -131,7 +131,7 @@ function library.create_class(name, base_class)
 
     -- Set new object's meta table and copy the data from original class to new object.
     setmetatable(new_obj, real_class)
-    table.SafeMerge(new_obj, real_class)
+    table.safe_merge(new_obj, real_class)
 
     -- If there is a base class, call their constructor.
     local base_class = real_class.BaseClass
@@ -210,7 +210,7 @@ function extends(base_class)
   if (istable(library.last_class) and istable(base_class)) then
     local obj = library.last_class.parent[library.last_class.name]
     local copy = table.Copy(base_class)
-    table.SafeMerge(copy, obj)
+    table.safe_merge(copy, obj)
 
     if (isfunction(base_class.class_extended)) then
       try {
@@ -225,7 +225,7 @@ function extends(base_class)
     obj = copy
     obj.BaseClass = base_class
 
-    hook.Run("OnClassExtended", obj, base_class)
+    hook.run("OnClassExtended", obj, base_class)
 
     library.last_class.parent[library.last_class.name] = obj
     library.last_class = nil
@@ -403,7 +403,7 @@ function fl.include_schema()
         plugin.include_schema()
         netstream.Start("ClientIncludedSchema", true)
 
-        hook.Run("FluxClientSchemaLoaded")
+        hook.run("FluxClientSchemaLoaded")
       end
     end)
   end
@@ -425,7 +425,7 @@ function fl.include_plugins(folder)
         timer.Remove("plugin_loader")
         plugin.include_plugins(folder)
 
-        hook.Run("OnPluginsLoaded")
+        hook.run("OnPluginsLoaded")
 
         fl.include_schema()
       end

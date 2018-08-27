@@ -16,18 +16,18 @@ function GM:InitPostEntity()
    for k, v in ipairs(player.GetAll()) do
      local model = v:GetModel()
 
-     hook.Run("PlayerModelChanged", v, model, model)
+     hook.run("PlayerModelChanged", v, model, model)
    end
 
-   hook.Run("SynchronizeTools")
-   hook.Run("LoadData")
+   hook.run("SynchronizeTools")
+   hook.run("LoadData")
 
    plugin.call("FLInitPostEntity")
 end
 
 function GM:PlayerInitialized()
   RunConsoleCommand("spawnmenu_reload")
-  hook.Run("PopulateToolMenu")
+  hook.run("PopulateToolMenu")
 end
 
 function GM:FluxClientSchemaLoaded()
@@ -48,7 +48,7 @@ do
       if (scrW != newW or scrH != newH) then
         fl.print("Resolution changed from "..scrW.."x"..scrH.." to "..newW.."x"..newH..".")
 
-        hook.Run("OnResolutionChanged", newW, newH, scrW, scrH)
+        hook.run("OnResolutionChanged", newW, newH, scrW, scrH)
 
         scrW, scrH = newW, newH
       end
@@ -74,7 +74,7 @@ end
 
 -- Called when the scoreboard should be shown.
 function GM:ScoreboardShow()
-  if (hook.Run("ShouldScoreboardShow") != false) then
+  if (hook.run("ShouldScoreboardShow") != false) then
     if (fl.tabMenu and fl.tabMenu.CloseMenu) then
       fl.tabMenu:CloseMenu(true)
     end
@@ -87,7 +87,7 @@ end
 
 -- Called when the scoreboard should be hidden.
 function GM:ScoreboardHide()
-  if (hook.Run("ShouldScoreboardHide") != false) then
+  if (hook.run("ShouldScoreboardHide") != false) then
     if (fl.tabMenu and fl.tabMenu.heldTime and CurTime() >= fl.tabMenu.heldTime) then
       fl.tabMenu:CloseMenu()
     end
@@ -97,7 +97,7 @@ end
 function GM:HUDDrawScoreBoard()
   self.BaseClass:HUDDrawScoreBoard()
 
-  if (!fl.client or !fl.client:HasInitialized() or hook.Run("ShouldDrawLoadingScreen")) then
+  if (!fl.client or !fl.client:HasInitialized() or hook.run("ShouldDrawLoadingScreen")) then
     local text = "#Loading_Schema"
     local percentage = 80
 
@@ -123,7 +123,7 @@ function GM:HUDDrawScoreBoard()
 
     local font = font.GetSize("flRobotoCondensed", font.Scale(24))
     local scrW, scrH = ScrW(), ScrH()
-    local w, h = util.GetTextSize(text, font)
+    local w, h = util.text_size(text, font)
 
     draw.RoundedBox(0, 0, 0, scrW, scrH, Color(0, 0, 0))
     draw.SimpleText(text, font, scrW * 0.5 - w * 0.5, scrH - 128, Color(255, 255, 255))
@@ -141,7 +141,7 @@ end
 
 -- Called when the player's HUD is drawn.
 function GM:HUDPaint()
-  if (fl.client:HasInitialized() and hook.Run("ShouldHUDPaint") != false) then
+  if (fl.client:HasInitialized() and hook.run("ShouldHUDPaint") != false) then
     local curTime = CurTime()
     local scrW, scrH = ScrW(), ScrH()
 
@@ -152,9 +152,9 @@ function GM:HUDPaint()
     end
 
     if (!fl.client:Alive()) then
-      hook.Run("HUDPaintDeathBackground", curTime, scrW, scrH)
+      hook.run("HUDPaintDeathBackground", curTime, scrW, scrH)
         theme.Call("PaintDeathScreen", curTime, scrW, scrH)
-      hook.Run("HUDPaintDeathForeground", curTime, scrW, scrH)
+      hook.run("HUDPaintDeathForeground", curTime, scrW, scrH)
     else
       fl.client.respawnAlpha = 0
 
@@ -162,7 +162,7 @@ function GM:HUDPaint()
         fl.client.whiteAlpha = Lerp(0.04, fl.client.whiteAlpha, 0)
       end
 
-      if (!hook.Run("FLHUDPaint", curTime, scrW, scrH) and fl.settings:GetBool("DrawBars")) then
+      if (!hook.run("FLHUDPaint", curTime, scrW, scrH) and fl.settings:GetBool("DrawBars")) then
         fl.bars:DrawTopBars()
 
         self.BaseClass:HUDPaint()
@@ -205,7 +205,7 @@ function GM:HUDDrawTargetID()
       local distance = fl.client:GetPos():Distance(trace.HitPos)
 
       if (ent:IsPlayer()) then
-        hook.Run("DrawPlayerTargetID", ent, x, y, distance)
+        hook.run("DrawPlayerTargetID", ent, x, y, distance)
       elseif (ent.DrawTargetID) then
         ent:DrawTargetID(x, y, distance)
       end
@@ -224,10 +224,10 @@ function GM:DrawPlayerTargetID(player, x, y, distance)
       alpha = math.Clamp((255 * (140 - d) / 140), 0, 255)
     end
 
-    local width, height = util.GetTextSize(player:Name(), tooltip_large)
+    local width, height = util.text_size(player:Name(), tooltip_large)
     draw.SimpleText(player:Name(), tooltip_large, x - width * 0.5, y - 40, Color(255, 255, 255, alpha))
 
-    local width, height = util.GetTextSize(player:GetPhysDesc(), tooltip_small)
+    local width, height = util.text_size(player:GetPhysDesc(), tooltip_small)
     draw.SimpleText(player:GetPhysDesc(), tooltip_small, x - width * 0.5, y - 14, Color(255, 255, 255, alpha))
 
     if (distance < 125) then
@@ -237,7 +237,7 @@ function GM:DrawPlayerTargetID(player, x, y, distance)
       end
 
       local smallerFont = font.GetSize(tooltip_small, 12)
-      local width, height = util.GetTextSize("#TargetID_Information", smallerFont)
+      local width, height = util.text_size("#TargetID_Information", smallerFont)
       draw.SimpleText("#TargetID_Information", smallerFont, x - width * 0.5, y + 5, Color(50, 255, 50, alpha))
     end
   end
@@ -258,7 +258,7 @@ function GM:PopulateToolMenu()
     end
   end
 
-  hook.Run("SynchronizeTools")
+  hook.run("SynchronizeTools")
 end
 
 function GM:SynchronizeTools()
@@ -305,7 +305,7 @@ end
 
 function GM:PlayerBindPress(player, bind, bPressed)
   if (bind:find("gmod_undo") and bPressed) then
-    if (hook.Run("SoftUndo", player) != nil) then
+    if (hook.run("SoftUndo", player) != nil) then
       return true
     end
   end

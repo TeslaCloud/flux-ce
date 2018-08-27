@@ -6,7 +6,7 @@ COMMAND.category = "server_management"
 COMMAND.arguments = 1
 COMMAND.aliases = {"map"}
 
-function COMMAND:OnRun(player, map, delay)
+function COMMAND:on_run(player, map, delay)
   map = tostring(map) or "gm_construct"
   delay = tonumber(delay) or 10
 

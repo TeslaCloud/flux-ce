@@ -11,7 +11,7 @@ function PANEL:SetLimit(nLimit)
 end
 
 function PANEL:Paint(w, h)
-  if (!hook.Run("ChatboxEntryPaint", self, 0, 0, w, h)) then
+  if (!hook.run("ChatboxEntryPaint", self, 0, 0, w, h)) then
     draw.RoundedBox(2, 0, 0, w, h, theme.GetColor("Background"))
 
     self:DrawTextEntryText(theme.GetColor("Text"), theme.GetColor("Accent"), theme.GetColor("Text"))

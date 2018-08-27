@@ -22,7 +22,7 @@ function faction.register(id, data)
   count = count + 1
 end
 
-function faction.FindByID(id)
+function faction.find_by_id(id)
   return stored[id]
 end
 
@@ -82,18 +82,18 @@ do
   local player_meta = FindMetaTable("Player")
 
   function player_meta:GetFactionID()
-    return self:GetNetVar("faction", "player")
+    return self:get_nv("faction", "player")
   end
 
   function player_meta:SetFaction(id)
     local oldFaction = self:GetFaction()
-    local factionTable = faction.FindByID(id)
+    local factionTable = faction.find_by_id(id)
     local char = self:GetCharacter()
 
-    self:SetNetVar("name", factionTable:GenerateName(self, self:GetCharacterVar("name", self:Name()), 1))
+    self:set_nv("name", factionTable:GenerateName(self, self:GetCharacterVar("name", self:Name()), 1))
     self:SetRank(1)
     self:SetTeam(factionTable.team_id)
-    self:SetNetVar("faction", id)
+    self:set_nv("faction", id)
     self:SetDefaultFactionModel()
 
     if (char) then
@@ -108,7 +108,7 @@ do
 
     factionTable:OnPlayerEntered(self)
 
-    hook.Run("OnPlayerFactionChanged", self, factionTable, oldFaction)
+    hook.run("OnPlayerFactionChanged", self, factionTable, oldFaction)
   end
 
   function player_meta:SetDefaultFactionModel()
@@ -125,7 +125,7 @@ do
       if (factionTable.has_gender) then
         local male = factionModels.male or {}
         local female = factionModels.female or {}
-        local gender = self:GetNetVar("gender", -1)
+        local gender = self:get_nv("gender", -1)
 
         if (gender == CHAR_GENDER_MALE and #male > 0) then
           modelTable = male
@@ -155,7 +155,7 @@ do
   end
 
   function player_meta:GetFaction()
-    return faction.FindByID(self:GetFactionID())
+    return faction.find_by_id(self:GetFactionID())
   end
 
   function player_meta:SetRank(rank)
@@ -192,7 +192,7 @@ do
   end
 
   function player_meta:GetWhitelists()
-    return self:GetNetVar("whitelists", {})
+    return self:get_nv("whitelists", {})
   end
 
   function player_meta:HasWhitelist(name)
@@ -201,8 +201,8 @@ do
 
   if SERVER then
     function player_meta:SetWhitelists(data)
-      self:SetNetVar("whitelists", data)
-      self:SavePlayer()
+      self:set_nv("whitelists", data)
+      self:save_player()
     end
 
     function player_meta:GiveWhitelist(name)

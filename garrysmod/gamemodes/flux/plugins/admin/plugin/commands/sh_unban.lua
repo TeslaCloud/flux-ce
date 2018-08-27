@@ -6,9 +6,9 @@ COMMAND.category = "administration"
 COMMAND.arguments = 1
 COMMAND.aliases = {"plyunban"}
 
-function COMMAND:OnRun(player, steam_id)
+function COMMAND:on_run(player, steam_id)
   if (isstring(steam_id) and steam_id != "") then
-    local success, copy = fl.admin:RemoveBan(steam_id)
+    local success, copy = fl.admin:remove_ban(steam_id)
 
     if (success) then
       fl.player:NotifyAll(L("UnbanMessage", (IsValid(player) and player:Name()) or "Console", copy.name))

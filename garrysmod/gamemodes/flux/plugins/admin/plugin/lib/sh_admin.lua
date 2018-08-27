@@ -26,7 +26,7 @@ function fl.admin:GetPlayers()
   return players
 end
 
-function fl.admin:GetBans()
+function fl.admin:get_bans()
   return bans
 end
 
@@ -41,7 +41,7 @@ function fl.admin:CreateGroup(id, data)
     if (parent) then
       local parentCopy = table.Copy(parent)
 
-      table.SafeMerge(parentCopy.permissions, data.permissions)
+      table.safe_merge(parentCopy.permissions, data.permissions)
 
       data.permissions = parentCopy.permissions
 
@@ -135,7 +135,7 @@ end
 
 function fl.admin:HasPermission(player, permission)
   if (!IsValid(player)) then return true end
-  if (player:IsRoot()) then return true end
+  if (player:is_root()) then return true end
 
   local steam_id = player:SteamID()
 
@@ -143,7 +143,7 @@ function fl.admin:HasPermission(player, permission)
     return true
   end
 
-  local netPerms = player:GetNetVar("flPermissions", {})
+  local netPerms = player:get_nv("permissions", {})
 
   if (netPerms and netPerms[permission]) then
     return true
@@ -164,7 +164,7 @@ function fl.admin:GroupExists(id)
   return self:FindGroup(id)
 end
 
-function fl.admin:CheckImmunity(player, target, canBeEqual)
+function fl.admin:CheckImmunity(player, target, can_equal)
   if (!IsValid(player) or !IsValid(target)) then
     return true
   end
@@ -180,7 +180,7 @@ function fl.admin:CheckImmunity(player, target, canBeEqual)
     return true
   end
 
-  if (canBeEqual and group1.immunity == group2.immunity) then
+  if (can_equal and group1.immunity == group2.immunity) then
     return true
   end
 
@@ -255,10 +255,10 @@ if SERVER then
     if (!IsValid(player)) then return end
 
     local steam_id = player:SteamID()
-    local userGroup = player:GetUserGroup()
-    local secondaryGroups = player:GetSecondaryGroups()
+    local role = player:GetUserGroup()
+    local roles = player:get_roles()
     local playerPermissions = player:GetCustomPermissions()
-    local groupPermissions = self:GetGroupPermissions(userGroup)
+    local groupPermissions = self:GetGroupPermissions(role)
 
     compilerCache[steam_id] = {}
 
@@ -266,7 +266,7 @@ if SERVER then
       DetermineCategory(steam_id, k, v)
     end
 
-    for _, group in ipairs(secondaryGroups) do
+    for _, group in ipairs(roles) do
       local permTable = self:GetGroupPermissions(group)
 
       for k, v in pairs(permTable) do
@@ -280,7 +280,7 @@ if SERVER then
 
     local extras = {}
 
-    hook.Run("OnPermissionsCompiled", player, extras)
+    hook.run("OnPermissionsCompiled", player, extras)
 
     if (istable(extras)) then
       for id, extra in pairs(extras) do
@@ -330,7 +330,7 @@ if SERVER then
     self:AddBan(steam_id, name, os.time() + duration, duration, reason)
   end
 
-  function fl.admin:RemoveBan(steam_id)
+  function fl.admin:remove_ban(steam_id)
     local obj = bans[steam_id]
     if obj then
       local dump = obj:dump()
@@ -388,8 +388,8 @@ do
     if (isnumber(str)) then return str * 60 end
     if (!isstring(str)) then return false end
 
-    str = str:RemoveTextFromEnd(" ")
-    str = str:RemoveTextFromStart(" ")
+    str = str:trim_end(" ")
+    str = str:trim_start(" ")
     str = str:Replace("'", "")
     str = str:lower()
 
@@ -408,7 +408,7 @@ do
       local n = tonumber(v)
 
       if (isstring(v)) then
-        v = v:RemoveTextFromEnd("s")
+        v = v:trim_end("s")
       end
 
       if (!n and !tokens[v] and !numTokens[v]) then continue end
@@ -416,7 +416,7 @@ do
       if (n) then
         num = n
       elseif (isstring(v)) then
-        v = v:RemoveTextFromEnd("s")
+        v = v:trim_end("s")
 
         local ntok = numTokens[v]
 

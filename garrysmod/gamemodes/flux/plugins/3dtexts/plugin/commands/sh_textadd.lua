@@ -5,7 +5,7 @@ COMMAND.syntax = "#3DText_TextAddSyntax"
 COMMAND.category = "misc"
 COMMAND.arguments = 1
 
-function COMMAND:OnRun(player, text, scale, style, color, extraColor)
+function COMMAND:on_run(player, text, scale, style, color, extraColor)
   if (!text or text == "") then
     fl.player:Notify(player, "#3DText_NotEnoughText")
 

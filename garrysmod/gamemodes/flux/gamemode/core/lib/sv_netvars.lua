@@ -22,7 +22,7 @@ local function IsBadType(key, val)
 end
 
 -- A function to get a networked global.
-function netvars.GetNetVar(key, default)
+function netvars.get_nv(key, default)
   if (globals[key] != nil) then
     return globals[key]
   end
@@ -31,9 +31,9 @@ function netvars.GetNetVar(key, default)
 end
 
 -- A function to set a networked global.
-function netvars.SetNetVar(key, value, send)
+function netvars.set_nv(key, value, send)
   if (IsBadType(key, value)) then return end
-  if (netvars.GetNetVar(key) == value) then return end
+  if (netvars.get_nv(key) == value) then return end
 
   globals[key] = value
 
@@ -46,7 +46,7 @@ function ent_meta:SendNetVar(key, recv)
 end
 
 -- A function to get entity's networked variable.
-function ent_meta:GetNetVar(key, default)
+function ent_meta:get_nv(key, default)
   if (stored[self] and stored[self][key] != nil) then
     return stored[self][key]
   end
@@ -61,9 +61,9 @@ function ent_meta:ClearNetVars(recv)
 end
 
 -- A function to set entity's networked variable.
-function ent_meta:SetNetVar(key, value, send)
+function ent_meta:set_nv(key, value, send)
   if (IsBadType(key, value)) then return end
-  if (!istable(value) and self:GetNetVar(key) == value) then return end
+  if (!istable(value) and self:get_nv(key) == value) then return end
 
   stored[self] = stored[self] or {}
   stored[self][key] = value

@@ -18,7 +18,7 @@ function flAreas:OneSecond()
 
           -- First do height checks
           if (z > v2[1].z and z < v.maxH) then
-            if (util.VectorIsInPoly(pos, v2)) then
+            if (util.vector_in_poly(pos, v2)) then
               -- Player entered the area
               if (!table.HasValue(player.lastArea[v.id], k2)) then
                 Try("Areas", areas.GetCallback(v.type), player, v, true, pos, curTime)

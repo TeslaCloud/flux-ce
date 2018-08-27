@@ -40,7 +40,7 @@ function PANEL:Rebuild()
       spawnIcon:SetModel(v.itemTable.model)
 
       spawnIcon.DoClick = function(btn)
-        mvc.Push("SpawnMenu::SpawnItem", v.id)
+        mvc.push("SpawnMenu::SpawnItem", v.id)
       end
     end
   end

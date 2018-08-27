@@ -66,11 +66,11 @@ function flItems:PlayerUseItem(player, itemTable, ...)
 end
 
 function flItems:OnItemGiven(player, itemTable, slot)
-  hook.Run("PlayerInventoryUpdated", player)
+  hook.run("PlayerInventoryUpdated", player)
 end
 
 function flItems:OnItemTaken(player, itemTable, slot)
-  hook.Run("PlayerInventoryUpdated", player)
+  hook.run("PlayerInventoryUpdated", player)
 end
 
 function flItems:PlayerInventoryUpdated(player)
@@ -112,16 +112,16 @@ function flCharacters:PreSaveCharacter(player, index)
 end
 
 netstream.Hook("PlayerDropItem", function(player, instance_id)
-  hook.Run("PlayerDropItem", player, instance_id)
+  hook.run("PlayerDropItem", player, instance_id)
 end)
 
 netstream.Hook("Flux::Items::AbortHoldStart", function(player)
-  local ent = player:GetNetVar("HoldEnt")
+  local ent = player:get_nv("HoldEnt")
 
   if (IsValid(ent)) then
-    ent:SetNetVar("LastActivator", false)
+    ent:set_nv("LastActivator", false)
   end
 
-  player:SetNetVar("HoldStart", false)
-  player:SetNetVar("HoldEnt", false)
+  player:set_nv("HoldStart", false)
+  player:set_nv("HoldEnt", false)
 end)

@@ -81,7 +81,7 @@ function PANEL:SetTextAutoposition(bAutoposition)
 end
 
 function PANEL:SizeToContents()
-  local w, h = util.GetTextSize(self.m_Title, self.m_Font)
+  local w, h = util.text_size(self.m_Title, self.m_Font)
   local add = 0
 
   if (self.m_Icon) then

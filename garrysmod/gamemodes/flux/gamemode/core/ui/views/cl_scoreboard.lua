@@ -14,7 +14,7 @@ end
 function PANEL:Rebuild()
   local w, h = self:GetSize()
 
-  if (hook.Run("PreRebuildScoreboard", self, w, h) != nil) then
+  if (hook.run("PreRebuildScoreboard", self, w, h) != nil) then
     return
   end
 
@@ -45,7 +45,7 @@ function PANEL:Rebuild()
     table.insert(self.playerCards, playerCard)
   end
 
-  hook.Run("RebuildScoreboard", self, w, h)
+  hook.run("RebuildScoreboard", self, w, h)
 end
 
 function PANEL:GetMenuSize()
@@ -84,12 +84,12 @@ function PANEL:Rebuild()
 
   self.nameLabel = vgui.Create("DLabel", self)
   self.nameLabel:SetText(player:Name())
-  self.nameLabel:SetPos(font.Scale(32) + 16, self:GetTall() * 0.5 - util.GetTextHeight(player:Name(), theme.GetFont("Text_Normal")) * 0.5)
+  self.nameLabel:SetPos(font.Scale(32) + 16, self:GetTall() * 0.5 - util.text_height(player:Name(), theme.GetFont("Text_Normal")) * 0.5)
   self.nameLabel:SetFont(theme.GetFont("Text_Normal"))
   self.nameLabel:SetTextColor(theme.GetColor("Text"))
   self.nameLabel:SizeToContents()
 
-  hook.Run("RebuildScoreboardPlayerCard", self, player)
+  hook.run("RebuildScoreboardPlayerCard", self, player)
 end
 
 vgui.Register("flScoreboardPlayer", PANEL, "flBasePanel")

@@ -147,7 +147,7 @@ function PANEL:OnOpen(parent)
     self.model = charData.model or ""
 
     if (charData and charData.faction) then
-      factionTable = faction.FindByID(charData.faction)
+      factionTable = faction.find_by_id(charData.faction)
     end
 
     if (factionTable) then

@@ -7,7 +7,7 @@ COMMAND.arguments = 1
 COMMAND.immunity = true
 COMMAND.aliases = {"plykick"}
 
-function COMMAND:OnRun(player, targets, ...)
+function COMMAND:on_run(player, targets, ...)
   local pieces = {...}
   local reason = "Kicked for unspecified reason."
 

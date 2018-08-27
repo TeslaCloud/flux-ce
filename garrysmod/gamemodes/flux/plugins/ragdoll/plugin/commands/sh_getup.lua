@@ -6,12 +6,12 @@ COMMAND.category = "roleplay"
 COMMAND.aliases = {"chargetup", "unfall", "unfallover"}
 COMMAND.no_console = true
 
-function COMMAND:OnRun(player, delay)
+function COMMAND:on_run(player, delay)
   delay = math.Clamp(tonumber(delay) or 4, 2, 60)
 
   if (player:Alive() and player:IsRagdolled()) then
-    player:SetNetVar("GetupEnd", CurTime() + delay)
-    player:SetNetVar("GetupTime", delay)
+    player:set_nv("GetupEnd", CurTime() + delay)
+    player:set_nv("GetupTime", delay)
     player:SetAction("getup", true)
 
     timer.Simple(delay, function()
