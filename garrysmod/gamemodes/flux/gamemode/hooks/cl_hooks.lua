@@ -312,7 +312,7 @@ function GM:PlayerBindPress(player, bind, bPressed)
 end
 
 function GM:ContextMenuOpen()
-  return fl.client:HasPermission("context_menu")
+  return true --fl.client:HasPermission("context_menu")
 end
 
 function GM:SoftUndo(player)
