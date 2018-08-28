@@ -314,7 +314,7 @@ function PANEL:BuildCategoryList()
     surface.SetFont(menuFont)
 
     local name = L("#Settings_"..v.id)
-    local textW, textH = surface.text_size(name)
+    local textW, textH = surface.GetTextSize(name)
 
     textW = textW + (w * 0.25)
 

@@ -659,7 +659,7 @@ do
     else
       surface.SetFont(font)
 
-      local result = {surface.text_size(text)}
+      local result = {surface.GetTextSize(text)}
 
       cache[text] = {}
       cache[text][font] = result

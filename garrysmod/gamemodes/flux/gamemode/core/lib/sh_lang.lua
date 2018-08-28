@@ -278,14 +278,14 @@ if CLIENT then
     surface.bTranslating = !bValue
   end
 
-  surface.Oldtext_size = surface.Oldtext_size or surface.text_size
+  surface.OldTextSize = surface.OldTextSize or surface.GetTextSize
 
-  function surface.text_size(sText)
+  function surface.GetTextSize(sText)
     if (surface.bTranslating) then
       sText = fl.lang:TranslateText(sText)
     end
 
-    return surface.Oldtext_size(sText)
+    return surface.OldTextSize(sText)
   end
 
   surface.OldDrawText = surface.OldDrawText or surface.DrawText
