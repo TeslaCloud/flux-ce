@@ -157,9 +157,7 @@ function fl.bars:Draw(id)
       theme.Call("DrawBarHindrance", barInfo)
     end
 
-    if (fl.settings:GetBool("DrawBarText")) then
-      theme.Call("DrawBarTexts", barInfo)
-    end
+    theme.Call("DrawBarTexts", barInfo)
 
     hook.run("PostDrawBar", barInfo)
     theme.Call("PostDrawBar", barInfo)

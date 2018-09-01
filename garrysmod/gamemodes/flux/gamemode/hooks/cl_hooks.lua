@@ -162,7 +162,7 @@ function GM:HUDPaint()
         fl.client.whiteAlpha = Lerp(0.04, fl.client.whiteAlpha, 0)
       end
 
-      if (!hook.run("FLHUDPaint", curTime, scrW, scrH) and fl.settings:GetBool("DrawBars")) then
+      if (!hook.run("FLHUDPaint", curTime, scrW, scrH)) then
         fl.bars:DrawTopBars()
 
         self.BaseClass:HUDPaint()
