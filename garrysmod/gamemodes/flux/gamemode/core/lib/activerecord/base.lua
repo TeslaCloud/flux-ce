@@ -298,7 +298,10 @@ function ActiveRecord.Base:save()
             v:save()
           end
         elseif !relation.many and istable(self[relation.as]) then
-          self[relation.as]:save()
+          local rel = self[relation.as]
+          if IsValid(rel) and isfunction(rel.save) then
+            self[relation.as]:save()
+          end
         end
       end
     end
