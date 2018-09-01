@@ -168,7 +168,7 @@ function ActiveRecord.Base:_fetch_relation(callback, objects, n, obj_id)
           return self:_fetch_relation(callback, objects, n + 1, obj_id)
         end)
       else
-        obj:rescue(function()
+        obj:first():rescue(function()
           return self:_fetch_relation(callback, objects, n + 1, obj_id)
         end):expect(function(res)
           res:_process_child(current_object, current_object.class)
