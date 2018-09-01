@@ -12,6 +12,7 @@ include 'base.lua'
 include 'relation.lua'
 include 'helpers.lua'
 include 'commandline.lua'
+include 'dumper.lua'
 
 function ActiveRecord.add_to_schema(table_name, column_name, type)
   if !ActiveRecord.ready then
