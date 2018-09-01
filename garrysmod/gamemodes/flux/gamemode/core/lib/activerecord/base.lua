@@ -292,12 +292,14 @@ function ActiveRecord.Base:save()
   end
   if #self.relations > 0 then
     for _, relation in ipairs(self.relations) do
-      if relation.many and istable(self[relation.as]) then
-        for k, v in ipairs(self[relation.as]) do
-          v:save()
+      if !relation.child then
+        if relation.many and istable(self[relation.as]) then
+          for k, v in ipairs(self[relation.as]) do
+            v:save()
+          end
+        elseif !relation.many and istable(self[relation.as]) then
+          self[relation.as]:save()
         end
-      elseif !relation.many and istable(self[relation.as]) then
-        self[relation.as]:save()
       end
     end
   end
