@@ -207,6 +207,7 @@ function ActiveRecord.Base:run_query(callback)
         query:limit(a)
       end
     end
+    self.query_map = a{}
     query:callback(function(results, query, time)
       print_query(self.class_name..' Load ('..time..'ms)', query)
       if istable(results) and #results > 0 then
@@ -223,6 +224,7 @@ function ActiveRecord.Base:run_query(callback)
         end
       elseif isfunction(self._rescue) then
         self._rescue(self.class.new())
+        self._rescue = nil
         if isfunction(self.created) then
           self:created()
         end
@@ -230,8 +232,6 @@ function ActiveRecord.Base:run_query(callback)
     end)
     query:execute()
   end
-  self.query_map = a{}
-  self._rescue = nil
   return self
 end
 
