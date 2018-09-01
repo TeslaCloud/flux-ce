@@ -146,37 +146,45 @@ function ActiveRecord.Base:_process_child(obj, target_class)
 end
 
 -- internal
-function ActiveRecord.Base:_fetch_relation(callback, results, n)
+function ActiveRecord.Base:_fetch_relation(callback, objects, n, obj_id)
   n = n or 1
+  obj_id = obj_id or 1
+
+  local current_object = objects[obj_id].object
   local relation = self.relations[n]
+  
   if relation then
     if !relation.child then
-      local obj = relation.model:where(relation.column_name, self.id)
+      local obj = relation.model:where(relation.column_name, current_object.id)
       if relation.many then
-        obj:get(function(res)
-          for _, object in ipairs(results) do
-            object[relation.as] = {}
-            for k, v in ipairs(res) do
-              v:_process_child(self, self.class)
-              table.insert(object[relation.as], v)
-            end
+        obj:rescue(function()
+          return self:_fetch_relation(callback, objects, n + 1, obj_id)
+        end):get(function(res)
+          current_object[relation.as] = {}
+          for k, v in ipairs(res) do
+            v:_process_child(current_object, current_object.class)
+            table.insert(current_object[relation.as], v)
           end
-          return self:_fetch_relation(callback, results, n + 1)
+          return self:_fetch_relation(callback, objects, n + 1, obj_id)
         end)
       else
-        obj:expect(function(result)
-          for _, object in ipairs(results) do
-            result:_process_child(self, self.class)
-            object[relation.as] = result
-          end
-          return self:_fetch_relation(callback, results, n + 1)
+        obj:rescue(function()
+          return self:_fetch_relation(callback, objects, n + 1, obj_id)
+        end):expect(function(res)
+          res:_process_child(current_object, current_object.class)
+          current_object[relation.as] = res
+          return self:_fetch_relation(callback, objects, n + 1, obj_id)
         end)
       end
     else
-      return self:_fetch_relation(callback, results, n + 1)
+      return self:_fetch_relation(callback, objects, n + 1, obj_id)
     end
   else
-    callback(ActiveRecord.Relation.new(results, self.class))
+    if #objects > obj_id then
+      self:_fetch_relation(callback, objects, 1, obj_id + 1) -- reset relation counter
+    else
+      callback(objects) -- finally able to callback
+    end
   end
   return self
 end
@@ -202,15 +210,21 @@ function ActiveRecord.Base:run_query(callback)
     query:callback(function(results, query, time)
       print_query(self.class_name..' Load ('..time..'ms)', query)
       if istable(results) and #results > 0 then
+        local objects = {}
+
+        for k, v in ipairs(results) do
+          table.insert(objects, ActiveRecord.Relation.new(v, self.class))
+        end
+
         if #self.relations == 0 then
-          return callback(ActiveRecord.Relation.new(results, self.class))
+          return callback(objects)
         else
-          return self:_fetch_relation(callback, results)
+          return self:_fetch_relation(callback, objects)
         end
       elseif isfunction(self._rescue) then
         self._rescue(self.class.new())
-        if isfunction(obj.created) then
-          obj:created()
+        if isfunction(self.created) then
+          self:created()
         end
       end
     end)
@@ -223,13 +237,19 @@ end
 
 function ActiveRecord.Base:expect(callback)
   return self:run_query(function(results)
-    callback(results:first())
+    callback(results[1].object)
   end)
 end
 
 function ActiveRecord.Base:get(callback)
   return self:run_query(function(results)
-    callback(results:all())
+    local all_objects = {}
+
+    for k, v in ipairs(results) do
+      table.insert(all_objects, v.object)
+    end
+
+    callback(all_objects)
   end)
 end
 

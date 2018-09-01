@@ -87,7 +87,7 @@ end
 function print_query(prefix, query)
   if !IS_PRODUCTION then
     MsgC(Color('cyan'), '  '..prefix..' ')
-    MsgC(Color(255, 0, 255), query)
+    MsgC(Color(0, 55, 218), query)
     Msg('\n')
   end
 end

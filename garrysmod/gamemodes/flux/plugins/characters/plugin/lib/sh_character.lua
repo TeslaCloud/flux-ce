@@ -33,6 +33,7 @@ function character.Create(player, data)
 
   char.steam_id = steam_id
   char.name = data.name
+  char.user_id = player.record.id
   char.model = data.model or ''
   char.phys_desc = data.phys_desc or ''
   char.money = data.money or ''
@@ -61,10 +62,11 @@ if SERVER then
   end
 
   function character.Load(player)
-    local steam_id = player:SteamID()
-
-    stored[steam_id] = stored[steam_id] or {}
-    character.SendToClient(player)
+    local characters = player.record.characters or {}
+  
+    for k, v in pairs(characters) do
+      character._add(player:SteamID(), v.character_id, v)
+    end
 
     hook.run("PostRestoreCharacters", player)
   end
@@ -74,12 +76,10 @@ if SERVER then
   end
 
   function character.to_networkable(player)
-    local characters = stored[player:SteamID()]
+    local characters = player.record.characters or {}
     local ret = {}
-    if characters then
-      for k, v in pairs(characters) do
-        ret[k] = character.ToSaveable(player, v)
-      end
+    for k, v in pairs(characters) do
+      ret[k] = character.ToSaveable(player, v)
     end
     return ret
   end
@@ -95,9 +95,9 @@ if SERVER then
       inventory = util.TableToJSON(char.inventory),
       ammo = util.TableToJSON(player:GetAmmoTable()),
       money = char.money,
-      charPermissions = util.TableToJSON(char.charPermissions),
       data = util.TableToJSON(char.data),
-      character_id = char.character_id
+      character_id = char.character_id,
+      user_id = char.user_id
     }
   end
 
@@ -202,7 +202,7 @@ do
   function player_meta:CharacterLoaded()
     if (self:IsBot()) then return true end
 
-    local id = self:GetActiveCharacterID()
+    local id = tonumber(self:GetActiveCharacterID())
 
     return id and id > 0
   end

@@ -151,9 +151,9 @@ function PANEL:OnOpen(parent)
     end
 
     if (factionTable) then
-      if (charData.gender == L(t('char_create.gender.m'))) then
+      if (charData.gender == t('char_create.gender.m')) then
         self.models = factionTable.models.male
-      elseif (charData.gender == L(t('char_create.gender.f'))) then
+      elseif (charData.gender == t('char_create.gender.f')) then
         self.models = factionTable.models.female
       else
         self.models = factionTable.models.universal
