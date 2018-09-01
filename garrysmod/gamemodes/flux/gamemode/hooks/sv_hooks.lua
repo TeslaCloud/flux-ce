@@ -337,7 +337,7 @@ end
 
 function GM:OnSchemaLoaded()
   local success = fileio.Write('lua/flux_lang.lua', 'return fl.deserialize([['..fl.serialize(fl.lang.stored)..']])\n')
-  AddCSLuaFile('lua/flux_lang.lua')
+  AddCSLuaFile('flux_lang.lua')
 end
 
 function GM:FLSaveData()

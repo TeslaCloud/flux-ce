@@ -105,7 +105,7 @@ end
 
 function THEME:PaintMainMenu(panel, width, height)
   local wide = self:GetOption("MainMenu_SidebarWidth") * 0.5
-  local title, desc, author = Schema:get_name(), Schema:get_description(), t('main_menu.developed_by' Schema:get_author())
+  local title, desc, author = Schema:get_name(), Schema:get_description(), t('main_menu.developed_by', Schema:get_author())
   local logo = self:GetMaterial("Schema_Logo")
   local titleW, titleH = util.text_size(title, self:GetFont("Text_Largest"))
   local descW, descH = util.text_size(desc, self:GetFont("Menu_Normal"))
