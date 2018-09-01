@@ -18,7 +18,7 @@ function COMMAND:on_run(player, delay)
       player:RunCommand("getup "..tostring(delay))
     end
   else
-    player:Notify("You cannot do this right now!")
+    player:notify("You cannot do this right now!")
   end
 end
 

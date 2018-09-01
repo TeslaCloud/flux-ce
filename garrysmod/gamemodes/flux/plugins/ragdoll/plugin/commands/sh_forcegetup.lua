@@ -14,13 +14,13 @@ function COMMAND:on_run(player, target, delay)
   if (IsValid(target) and target:Alive() and target:IsRagdolled()) then
     target:SetRagdollState(RAGDOLL_FALLENOVER)
 
-    player:Notify(target:Name().." has been unragdolled!")
+    player:notify(target:Name().." has been unragdolled!")
 
     timer.Simple(delay, function()
       target:SetRagdollState(RAGDOLL_NONE)
     end)
   else
-    player:Notify("This player cannot be unragdolled right now!")
+    player:notify("This player cannot be unragdolled right now!")
   end
 end
 
