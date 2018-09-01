@@ -6,10 +6,10 @@ timer.Remove("HintSystem_Annoy2")
 function GM:InitPostEntity()
   fl.client = fl.client or LocalPlayer()
 
-  netstream.Start("Flux::Player::Language", GetConVar("gmod_language"):GetString())
+  netstream.Start("player_set_lang", GetConVar("gmod_language"):GetString())
 
   timer.Simple(0.4, function()
-    netstream.Start("LocalPlayerCreated", true)
+    netstream.Start("player_created", true)
     fl.localPlayerCreated = true
   end)
 
@@ -317,7 +317,7 @@ function GM:ContextMenuOpen()
 end
 
 function GM:SoftUndo(player)
-  netstream.Start("SoftUndo")
+  netstream.Start("soft_undo")
 
   if (#fl.undo:get_player(fl.client) > 0) then return true end
 end

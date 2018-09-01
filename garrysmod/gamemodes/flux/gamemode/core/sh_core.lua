@@ -327,6 +327,11 @@ function fl.get_schema_folder()
   end
 end
 
+-- A function to get schema's name.
+function fl.get_schema_name()
+  return Schema and Schema:get_name() or fl.schema or "Unknown"
+end
+
 --[[
   Function: fl.serialize (table toSerialize)
   Description: Converts a table into the string format.

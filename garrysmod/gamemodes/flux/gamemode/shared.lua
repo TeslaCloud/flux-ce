@@ -1,7 +1,7 @@
 -- Define basic GM info fields.
 GM.Name         = "Flux"
 GM.Author       = "TeslaCloud Studios"
-GM.Website      = "http://teslacloud.net/"
+GM.Website      = "https://teslacloud.net/"
 GM.Email        = "support@teslacloud.net"
 
 -- Define Flux-Specific fields.
@@ -39,7 +39,7 @@ if engine.ActiveGamemode() != 'flux' then
 else
   ErrorNoHalt(txt[[
     ============================================
-            +gamemode is set to 'flux'!
+             +gamemode is set to 'flux'
     Set it to your schema's folder name instead!
     ============================================
   ]])
@@ -56,18 +56,6 @@ fl.shared = fl.shared or {
 }
 
 print('Flux environment: '..FLUX_ENV)
-
--- A function to get schema's name.
-function fl.GetSchemaName()
-  return Schema and Schema:get_name() or fl.schema or "Unknown"
-end
-
--- Called when gamemode's server browser name needs to be retrieved.
-function GM:GetGameDescription()
-  local name_override = self.name_override
-
-  return isstring(name_override) and name_override or "FL - "..fl.GetSchemaName()
-end
 
 util.include 'core/sh_enums.lua'
 util.include 'core/sh_core.lua'

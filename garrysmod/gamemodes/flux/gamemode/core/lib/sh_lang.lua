@@ -201,7 +201,7 @@ if CLIENT then
     if current_language != new_lang then
       current_language = new_lang
 
-      netstream.Start("Flux::Player::Language", new_lang)
+      netstream.Start("player_set_lang", new_lang)
     end
   end)
 else

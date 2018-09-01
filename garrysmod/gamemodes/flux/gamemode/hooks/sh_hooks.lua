@@ -2,6 +2,12 @@ hook.Remove("PostDrawEffects", "RenderWidgets")
 hook.Remove("PlayerTick", "TickWidgets")
 hook.Remove("PlayerInitialSpawn", "PlayerAuthSpawn")
 
+-- Called when gamemode's server browser name needs to be retrieved.
+function GM:GetGameDescription()
+  local name_override = self.name_override
+  return isstring(name_override) and name_override or "FL - "..fl.get_schema_name()
+end
+
 do
   local vectorAngle = FindMetaTable("Vector").Angle
   local normalizeAngle = math.NormalizeAngle
