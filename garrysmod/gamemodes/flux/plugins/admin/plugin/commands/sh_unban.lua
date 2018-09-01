@@ -11,12 +11,12 @@ function COMMAND:on_run(player, steam_id)
     local success, copy = fl.admin:remove_ban(steam_id)
 
     if (success) then
-      fl.player:NotifyAll('unban_message', {
+      fl.player:broadcast('unban_message', {
         admin = (IsValid(player) and player:Name()) or "Console",
         target = copy.name
       })
     else
-      fl.player:Notify(player, L("Err_NotBanned", steam_id))
+      fl.player:notify(player, L("Err_NotBanned", steam_id))
     end
   end
 end

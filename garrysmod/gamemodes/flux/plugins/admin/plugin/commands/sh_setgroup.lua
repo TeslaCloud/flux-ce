@@ -13,9 +13,9 @@ function COMMAND:on_run(player, targets, role)
       v:SetUserGroup(role)
     end
 
-    fl.player:NotifyAll(L("SetGroupCMD_Message", (IsValid(player) and player:Name()) or "Console", util.PlayerListToString(targets), role))
+    fl.player:broadcast(L("SetGroupCMD_Message", (IsValid(player) and player:Name()) or "Console", util.PlayerListToString(targets), role))
   else
-    fl.player:Notify(player, L("Err_GroupNotValid", role))
+    fl.player:notify(player, L("Err_GroupNotValid", role))
   end
 end
 

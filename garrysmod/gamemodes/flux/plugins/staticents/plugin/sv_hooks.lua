@@ -14,7 +14,7 @@ local whitelistedEntities = {
 
 function flStaticEnts:PlayerMakeStatic(player, bIsStatic)
   if ((bIsStatic and !player:HasPermission("static")) or (!bIsStatic and !player:HasPermission("unstatic"))) then
-    fl.player:Notify(player, L("Err_No_Permission", player:Name()))
+    fl.player:notify(player, L("Err_No_Permission", player:Name()))
 
     return
   end
@@ -23,13 +23,13 @@ function flStaticEnts:PlayerMakeStatic(player, bIsStatic)
   local entity = trace.Entity
 
   if (!IsValid(entity)) then
-    fl.player:Notify(player, t('err.not_valid_entity'))
+    fl.player:notify(player, t('err.not_valid_entity'))
 
     return
   end
 
   if (!whitelistedEntities[entity:GetClass()]) then
-    fl.player:Notify(player, t('err.cannot_static_this'))
+    fl.player:notify(player, t('err.cannot_static_this'))
 
     return
   end
@@ -37,18 +37,18 @@ function flStaticEnts:PlayerMakeStatic(player, bIsStatic)
   local isStatic = entity:GetPersistent()
 
   if (bIsStatic and isStatic) then
-    fl.player:Notify(player, t('err.already_static'))
+    fl.player:notify(player, t('err.already_static'))
 
     return
   elseif (!bIsStatic and !isStatic) then
-    fl.player:Notify(player, t('err.not_static'))
+    fl.player:notify(player, t('err.not_static'))
 
     return
   end
 
   entity:SetPersistent(bIsStatic)
 
-  fl.player:Notify(player, (bIsStatic and "static.added") or "static.removed")
+  fl.player:notify(player, (bIsStatic and "static.added") or "static.removed")
 end
 
 function flStaticEnts:ShutDown()

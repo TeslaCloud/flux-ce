@@ -4,7 +4,7 @@ end
 
 function flObserver:PlayerEnterNoclip(player)
   if (!player:HasPermission("noclip")) then
-    fl.player:Notify(player, "You do not have permission to do this.")
+    fl.player:notify(player, "You do not have permission to do this.")
 
     return false
   end

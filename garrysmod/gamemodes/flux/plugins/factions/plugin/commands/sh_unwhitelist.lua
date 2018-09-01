@@ -16,15 +16,15 @@ function COMMAND:on_run(player, targets, name, bStrict)
       if (v:HasWhitelist(whitelist.id)) then
         v:TakeWhitelist(whitelist.id)
       elseif (#targets == 1) then
-        fl.player:Notify(player, L("Err_TargetNotWhitelisted", v:Name(), whitelist.print_name))
+        fl.player:notify(player, L("Err_TargetNotWhitelisted", v:Name(), whitelist.print_name))
 
         return
       end
     end
 
-    fl.player:NotifyAll(L("TakeWhitelistCMD_Message", (IsValid(player) and player:Name()) or "Console", util.PlayerListToString(targets), whitelist.print_name))
+    fl.player:broadcast(L("TakeWhitelistCMD_Message", (IsValid(player) and player:Name()) or "Console", util.PlayerListToString(targets), whitelist.print_name))
   else
-    fl.player:Notify(player, L("Err_WhitelistNotValid",  name))
+    fl.player:notify(player, L("Err_WhitelistNotValid",  name))
   end
 end
 

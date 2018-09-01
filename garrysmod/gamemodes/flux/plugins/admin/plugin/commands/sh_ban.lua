@@ -14,7 +14,7 @@ function COMMAND:on_run(player, targets, duration, ...)
   duration = fl.admin:InterpretBanTime(duration)
 
   if (!isnumber(duration)) then
-    fl.player:Notify(player, "'"..tostring(duration).."' could not be interpreted as duration!")
+    fl.player:notify(player, "'"..tostring(duration).."' could not be interpreted as duration!")
 
     return
   end
