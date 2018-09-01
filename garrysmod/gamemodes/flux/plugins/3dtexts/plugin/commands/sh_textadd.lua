@@ -7,7 +7,7 @@ COMMAND.arguments = 1
 
 function COMMAND:on_run(player, text, scale, style, color, extraColor)
   if (!text or text == "") then
-    fl.player:Notify(player, t('3d_text.not_enough_text'))
+    fl.player:notify(player, t('3d_text.not_enough_text'))
 
     return
   end
@@ -30,7 +30,7 @@ function COMMAND:on_run(player, text, scale, style, color, extraColor)
 
   fl3DText:AddText(data)
 
-  fl.player:Notify(player, t('3d_text.text_added'))
+  fl.player:notify(player, t('3d_text.text_added'))
 end
 
 COMMAND:register()

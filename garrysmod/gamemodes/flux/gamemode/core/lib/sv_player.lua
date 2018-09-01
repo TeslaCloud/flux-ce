@@ -1,6 +1,6 @@
 library.new('player', fl)
 
-function fl.player:Notify(player, message, arguments)
+function fl.player:notify(player, message, arguments)
   if (!IsValid(player)) then
     ServerLog(t(message, arguments))
     return
@@ -9,7 +9,7 @@ function fl.player:Notify(player, message, arguments)
   netstream.Start(player, 'flNotification', message, arguments)
 end
 
-function fl.player:NotifyAll(message, arguments)
+function fl.player:broadcast(message, arguments)
   ServerLog('Notification: '..t(message, arguments))
 
   netstream.Start(nil, 'flNotification', message, arguments)

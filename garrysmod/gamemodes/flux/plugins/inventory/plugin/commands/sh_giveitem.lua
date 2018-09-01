@@ -18,12 +18,12 @@ function COMMAND:on_run(player, targets, itemName, amount)
         v:GiveItem(itemTable.id)
       end
 
-      fl.player:Notify(v, ((IsValid(player) and player:Name()) or "Console").." has given you "..amount.." "..itemTable.name.."'s.")
+      fl.player:notify(v, ((IsValid(player) and player:Name()) or "Console").." has given you "..amount.." "..itemTable.name.."'s.")
     end
 
-    fl.player:Notify(player, "You have given "..amount.." "..itemTable.name.."'s to "..util.PlayerListToString(targets)..".")
+    fl.player:notify(player, "You have given "..amount.." "..itemTable.name.."'s to "..util.PlayerListToString(targets)..".")
   else
-    fl.player:Notify(player, "'"..itemName.."' is not a valid item!")
+    fl.player:notify(player, "'"..itemName.."' is not a valid item!")
   end
 end
 

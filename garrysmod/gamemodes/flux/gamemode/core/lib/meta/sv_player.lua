@@ -39,7 +39,7 @@ function player_meta:SetInitialized(bIsInitialized)
 end
 
 function player_meta:Notify(message)
-  fl.player:Notify(self, message)
+  fl.player:notify(self, message)
 end
 
 function player_meta:GetAmmoTable()

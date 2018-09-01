@@ -16,9 +16,9 @@ function COMMAND:on_run(player, targets, name, bStrict)
       v:SetFaction(factionTable.id)
     end
 
-    fl.player:NotifyAll(L("SetfactionCMD_Message", (IsValid(player) and player:Name()) or "Console", util.PlayerListToString(targets), factionTable.print_name))
+    fl.player:broadcast(L("SetfactionCMD_Message", (IsValid(player) and player:Name()) or "Console", util.PlayerListToString(targets), factionTable.print_name))
   else
-    fl.player:Notify(player, L("Err_WhitelistNotValid",  name))
+    fl.player:notify(player, L("Err_WhitelistNotValid",  name))
   end
 end
 

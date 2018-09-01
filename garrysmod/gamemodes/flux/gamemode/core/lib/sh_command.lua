@@ -226,7 +226,7 @@ if SERVER then
       if (!IsValid(player)) then
         ErrorNoHalt("[Flux:Command] You must enter a command!\n")
       else
-        fl.player:Notify(player, "commands.you_must_enter_command")
+        fl.player:notify(player, "commands.you_must_enter_command")
       end
 
       return
@@ -275,7 +275,7 @@ if SERVER then
                 end
               else
                 if (IsValid(player)) then
-                  fl.player:Notify(player, t("commands.player_invalid", tostring(target_arg)))
+                  fl.player:notify(player, t("commands.player_invalid", tostring(target_arg)))
                 else
                   if (kind != "^") then
                     ErrorNoHalt("'"..tostring(target_arg).."' is not a valid player!")
@@ -291,7 +291,7 @@ if SERVER then
             if (istable(targets) and #targets > 0) then
               for k, v in ipairs(targets) do
                 if (cmd_table.immunity and IsValid(player) and hook.run("CommandCheckImmunity", player, v, cmd_table.can_equal) == false) then
-                  fl.player:Notify(player, t("commands.higher_immunity", v:Name()))
+                  fl.player:notify(player, t("commands.higher_immunity", v:Name()))
 
                   return
                 end
@@ -301,7 +301,7 @@ if SERVER then
               args[cmd_table.player_arg or 1] = targets
             else
               if (IsValid(player)) then
-                fl.player:Notify(player, t("commands.player_invalid", tostring(target_arg)))
+                fl.player:notify(player, t("commands.player_invalid", tostring(target_arg)))
               else
                 ErrorNoHalt("'"..tostring(target_arg).."' is not a valid player!\n")
               end
@@ -319,18 +319,18 @@ if SERVER then
             self:Run(player, cmd_table, args)
           end
         else
-          fl.player:Notify(player, "/"..cmd_table.name.." "..cmd_table.syntax)
+          fl.player:notify(player, "/"..cmd_table.name.." "..cmd_table.syntax)
         end
       else
         if (IsValid(player)) then
-          fl.player:Notify(player, "commands.no_access")
+          fl.player:notify(player, "commands.no_access")
         else
           ErrorNoHalt("This command cannot be run from console!\n")
         end
       end
     else
       if (IsValid(player)) then
-        fl.player:Notify(player, t("commands.not_valid", command))
+        fl.player:notify(player, t("commands.not_valid", command))
       else
         ErrorNoHalt("'"..command.."' is not a valid command!\n")
       end
