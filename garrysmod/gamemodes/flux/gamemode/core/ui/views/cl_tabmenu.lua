@@ -97,7 +97,7 @@ end
 
 function PANEL:AddMenuItem(id, data, index)
   data.id = id
-  data.title = string.utf8upper(fl.lang:TranslateText(data.title) or "error")
+  data.title = string.utf8upper(data.title or "error")
   data.icon = data.icon or false
 
   if (isnumber(index)) then

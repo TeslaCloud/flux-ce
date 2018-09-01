@@ -214,8 +214,8 @@ do
       end
     end
 
-    bar.text = string.utf8upper(fl.lang:TranslateText(bar.text))
-    bar.hinderText = string.utf8upper(fl.lang:TranslateText(bar.hinderText))
+    bar.text = string.utf8upper(bar.text)
+    bar.hinderText = string.utf8upper(bar.hinderText)
   end
 
   function flBars:ShouldDrawBar(bar)

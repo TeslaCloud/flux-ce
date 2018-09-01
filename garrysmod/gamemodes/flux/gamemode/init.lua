@@ -15,8 +15,6 @@ end
 
 if (fl.initialized) then
   MsgC(Color(0, 255, 100, 255), "Lua auto-reload in progress...\n")
-else
-  MsgC(Color(0, 255, 100, 255), "Initializing...\n")
 end
 
 if (!safe_require("fileio")) then

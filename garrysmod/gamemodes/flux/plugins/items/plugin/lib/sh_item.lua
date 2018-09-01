@@ -167,7 +167,7 @@ function item.Find(name)
       end
 
       if CLIENT then
-        if (fl.lang:TranslateText(v.print_name):find(name)) then
+        if (v.print_name:find(name)) then
           return v
         end
       end
