@@ -1,5 +1,9 @@
 DeriveGamemode("sandbox")
 
+if !fl.lang then
+  include 'lib/sh_lang.lua'
+end
+
 do
   local centerX, centerY = ScrW() * 0.5, ScrH() * 0.5
 
