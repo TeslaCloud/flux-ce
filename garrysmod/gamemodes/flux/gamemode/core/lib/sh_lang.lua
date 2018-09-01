@@ -114,7 +114,7 @@ end
 
 function fl.lang:get_plural(language, phrase, count)
   local langTable = stored[language]
-  local translated = self:TranslateText(phrase)
+  local translated = t(phrase)
 
   if (!langTable) then return translated end
 
@@ -156,10 +156,10 @@ function fl.lang:nice_time_full(language, time)
 end
 
 function fl.lang:get_case(language, phrase, case)
-  if (language == "en") then return self:TranslateText(phrase) end
+  if (language == "en") then return t(phrase) end
 
   local langTable = stored[language]
-  local translated = self:TranslateText(phrase)
+  local translated = t(phrase)
 
   if (!langTable) then return translated end
 

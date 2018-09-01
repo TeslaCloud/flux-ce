@@ -40,7 +40,7 @@ function chatbox.Compile(messageTable)
 
       if (isstring(v)) then
         if (shouldTranslate) then
-          data[k] = fl.lang:TranslateText(v)
+          data[k] = t(v)
         end
 
         local wrapped = util.WrapText(v, font, chatbox.width, curX)
