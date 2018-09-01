@@ -137,7 +137,7 @@ function ActiveRecord.Query:set_primary_key(key)
 end
 
 function ActiveRecord.Query:limit(value)
-  self.limit = value
+  self._limit = value
 end
 
 function ActiveRecord.Query:offset(value)
@@ -170,9 +170,9 @@ local function build_select_query(query_obj)
     table.insert(query_string, table.concat(query_obj.order_list, ', '))
   end
 
-  if (isnumber(query_obj.limit)) then
+  if (isnumber(query_obj._limit)) then
     table.insert(query_string, ' LIMIT ')
-    table.insert(query_string, query_obj.limit)
+    table.insert(query_string, query_obj._limit)
   end
 
   return table.concat(query_string)
@@ -255,9 +255,9 @@ local function build_delete_query(query_obj)
     table.insert(query_string, table.concat(query_obj.where_list, ' AND '))
   end
 
-  if (isnumber(query_obj.limit)) then
+  if (isnumber(query_obj._limit)) then
     table.insert(query_string, ' LIMIT ')
-    table.insert(query_string, query_obj.limit)
+    table.insert(query_string, query_obj._limit)
   end
 
   return table.concat(query_string)
