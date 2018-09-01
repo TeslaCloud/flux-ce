@@ -1,0 +1,112 @@
+en:
+  time:
+    seconds:
+      '1': "{1} second"
+      '2': "{1} seconds"
+    minutes:
+      '1': "{1} minute"
+      '2': "{1} minutes"
+    hours:
+      '1': "{1} hour"
+      '2': "{1} hours"
+    days:
+      '1': "{1} day"
+      '2': "{1} days"
+    weeks:
+      '1': "{1} week"
+      '2': "{1} weeks"
+    months:
+      '1': "{1} month"
+      '2': "{1} months"
+    years:
+      '1': "{1} year"
+      '2': "{1} years"
+    permanently: permanently
+    for: for
+    and: and
+  tab_menu:
+    expand: Expand
+    main_menu: Main Menu
+    settings: Settings
+    home: Home
+    scoreboard: Players
+    admin: Admin
+    close_menu: Close Menu
+  scoreboard:
+    title: PLAYER LIST
+    help: Clicking player's card may bring up some options.
+  'yes': 'Yes'
+  'no': 'No'
+  chat:
+    everyone: everyone
+  bar_text:
+    health: HEALTH
+    armor: ARMOR
+    respawn: WAITING TO RESPAWN...
+    getup: GETTING UP...
+  main_menu:
+    disconnect: Disconnect
+    disconnect_msg: Are you sure that you want to disconnect from this server?
+    settings: Settings
+    cancel: Cancel
+    load: Load
+    new: New
+    developed_by: Developed by {1}.
+  settings:
+    dashboard: Dashboard
+    theme: Theme
+    adminesp: Admin ESP
+    binds: Binds
+    general: General
+    hud: HUD
+    backgroundurl: Specify a URL for your background.
+    background_color: Select a color for the dashboard's background.
+    menu_back_color: Select a color for child menu backgrounds.
+    text_color: Select a color for text.
+    enable_adminesp: Enable the Admin ESP.
+    fit_type: Choose a fit for your background.
+    draw_bars: Draw the HUD bars.
+    draw_bar_text: Draw text on the bars.
+    use_tab_dash: Check to use the tab dashboard, uncheck for classic tab menu.
+    fit:
+      tiled: Tiled
+      center: Center
+      fill: Fill
+      fit: Fit
+    draw_legs: Draw your legs.
+    toggle_auto_walk: Toggle Auto-Walk
+    toggle_third_person: Toggle Third-Person
+  commands:
+    you_must_enter_command: You must enter a command!
+    not_valid: "'{1}' is not a valid command!"
+    no_access: You do not have access to this command!
+    player_invalid: "'{1}' is not a valid player!"
+    steamid_invalid: "'{1}' is not a valid Steam ID!"
+    higher_immunity: "{1} has higher immunity than you!"
+  target_id:
+    information: Press `E` for more information.
+    action: Press `E` for actions.
+  hint:
+    forums: Forums
+    hints: Hints
+    tab: TAB
+    commands: Commands
+    bugs: Bugs
+    forums_text: You can visit TeslaCloud forums to get support, download schemas\nand
+      chat with fellow Flux users!
+    hints_text: These hints can be disabled from clientside settings menu.\nNot in
+      this build though.
+    tab_text: "Press 'Show Scoreboard' key (default: TAB) to open Flux's menu."
+    commands_text: Start typing a command in chat to see a list of all available commands\nand
+      their syntax help.
+    bugs_text: Encountered a bug? Have an idea that we should totally add to Flux?\nVisit
+      our forums at TeslaCloud.net and tell us about it!
+  player_message:
+    died: YOU PERISHED
+    respawn: RESPAWNING IN {1} SECOND(s).
+  loading:
+    schema: Loading schema and plugins, please wait...
+    local_player: Preparing loading sequence, please wait...
+    shared: Receiving shared data, please wait...
+  intro:
+    skip: Press any key to skip intro!

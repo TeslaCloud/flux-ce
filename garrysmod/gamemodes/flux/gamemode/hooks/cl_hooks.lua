@@ -98,14 +98,14 @@ function GM:HUDDrawScoreBoard()
   self.BaseClass:HUDDrawScoreBoard()
 
   if (!fl.client or !fl.client:HasInitialized() or hook.run("ShouldDrawLoadingScreen")) then
-    local text = "#Loading_Schema"
+    local text = t"loading.schema"
     local percentage = 80
 
     if (!fl.localPlayerCreated) then
-      text = "#Loading_LocalPlayer"
+      text = t"loading.local_player"
       percentage = 0
     elseif (!fl.shared_received) then
-      text = "#Loading_Shared"
+      text = t"loading.shared"
       percentage = 45
     end
 
@@ -237,8 +237,9 @@ function GM:DrawPlayerTargetID(player, x, y, distance)
       end
 
       local smallerFont = font.GetSize(tooltip_small, 12)
-      local width, height = util.text_size("#TargetID_Information", smallerFont)
-      draw.SimpleText("#TargetID_Information", smallerFont, x - width * 0.5, y + 5, Color(50, 255, 50, alpha))
+      local text = t'target_id.information'
+      local width, height = util.text_size(text, smallerFont)
+      draw.SimpleText(text, smallerFont, x - width * 0.5, y + 5, Color(50, 255, 50, alpha))
     end
   end
 end
@@ -250,7 +251,7 @@ function GM:PopulateToolMenu()
         TOOL.Tab or "Main",
         TOOL.category or "New Category",
         ToolName,
-        TOOL.name or "#"..ToolName,
+        TOOL.name or t(ToolName),
         TOOL.Command or "gmod_tool "..ToolName,
         TOOL.ConfigName or ToolName,
         TOOL.BuildCPanel
@@ -278,7 +279,7 @@ end
 -- Called when category icons are presented.
 function GM:AddTabMenuItems(menu)
   menu:AddMenuItem("scoreboard", {
-    title = "#TabMenu_Scoreboard",
+    title = t"tab_menu.scoreboard",
     panel = "flScoreboard",
     icon = "fa-list-alt"
   })

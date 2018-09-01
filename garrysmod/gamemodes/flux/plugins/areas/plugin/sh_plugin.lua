@@ -89,9 +89,9 @@ function flAreas:AddAreaToolModes(modeList)
   end
 
   function mode:BuildCPanel(panel)
-    panel:AddControl("Header", { Description = "#tool.area.desc" })
-    panel:AddControl("TextBox", { Label = "#tool.area.text", Command = "area_text", MaxLenth = "256" })
-    panel:AddControl("Slider", { Label = "#tool.area.height", Command = "area_height", Type = "Float", Min = -2048, Max = 2048 })
+    panel:AddControl("Header", { Description = "tool.area.desc" })
+    panel:AddControl("TextBox", { Label = "tool.area.text", Command = "area_text", MaxLenth = "256" })
+    panel:AddControl("Slider", { Label = "tool.area.height", Command = "area_height", Type = "Float", Min = -2048, Max = 2048 })
   end
 
   modeList:Add(mode)

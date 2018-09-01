@@ -1,7 +1,7 @@
 local COMMAND = Command.new("unban")
 COMMAND.name = "Unban"
-COMMAND.description = "#UnbanCMD_Description"
-COMMAND.syntax = "#UnbanCMD_Syntax"
+COMMAND.description = t"unbancmd.description"
+COMMAND.syntax = t"unbancmd.syntax"
 COMMAND.category = "administration"
 COMMAND.arguments = 1
 COMMAND.aliases = {"plyunban"}
@@ -11,7 +11,10 @@ function COMMAND:on_run(player, steam_id)
     local success, copy = fl.admin:remove_ban(steam_id)
 
     if (success) then
-      fl.player:NotifyAll(L("UnbanMessage", (IsValid(player) and player:Name()) or "Console", copy.name))
+      fl.player:NotifyAll('unban_message', {
+        admin = (IsValid(player) and player:Name()) or "Console",
+        target = copy.name
+      })
     else
       fl.player:Notify(player, L("Err_NotBanned", steam_id))
     end

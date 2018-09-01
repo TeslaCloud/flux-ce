@@ -1,7 +1,7 @@
 local COMMAND = Command.new("ban")
 COMMAND.name = "Ban"
-COMMAND.description = "#BanCMD_Description"
-COMMAND.syntax = "#BanCMD_Syntax"
+COMMAND.description = t"bancmd.description"
+COMMAND.syntax = t"bancmd.syntax"
 COMMAND.category = "administration"
 COMMAND.arguments = 2
 COMMAND.immunity = true
@@ -28,13 +28,16 @@ function COMMAND:on_run(player, targets, duration, ...)
   end
 
   for k, v in ipairs(_player.GetAll()) do
-    local time = "#for "..fl.lang:NiceTimeFull(v:get_nv("language"), duration)
+    local time = t("time.for", fl.lang:nice_time_full(v:get_nv("language"), duration))
 
-    if (duration <= 0) then time = L"permanently" end
+    if (duration <= 0) then time = t"time.permanently" end
 
-    local phrase = L("BanMessage", (IsValid(player) and player:Name()) or "Console", util.PlayerListToString(targets)).." "..time..". ("..reason..")"
-
-    v:Notify(phrase)
+    v:Notify('ban_message', {
+      admin = (IsValid(player) and player:Name()) or "Console",
+      target = util.PlayerListToString(targets),
+      time = time,
+      reason = reason
+    })
   end
 end
 

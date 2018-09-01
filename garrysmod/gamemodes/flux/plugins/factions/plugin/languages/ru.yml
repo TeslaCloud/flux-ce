@@ -1,0 +1,20 @@
+ru:
+  whitelist:
+    description: Дает игроку доступ к фракции.
+    syntax: "<игрок> <фракция> [строгий режим поиска]"
+    message: "{1} дал {2} доступ к фракции {3}."
+  take_whitelist:
+    description: Убирает у игрока доступ к фракции.
+    syntax: "<игрок> <фракция> [строгий режим поиска]"
+    message: "{1} забрал у {2} доступ к фракции {3}."
+  setfactioncmd:
+    message: "{1} переместил {2} во фракцию {3}."
+  err:
+    whitelist_not_valid: "'{1}' не является фракцией!"
+    target_not_whitelisted: У {1} нет доступа к фракции {2}!
+  char_create:
+    faction_button: Фракция
+    gen_fac_warning: Сначала Вы должны выбрать фракцию!
+    fac:
+      s: Выберите фракцию
+    fac_title: 'Фракция:'

@@ -1,0 +1,27 @@
+ru:
+  char_set_name:
+    description: Выставляет имя персонажа.
+    syntax: "<игрок> <новое имя>"
+    message: "{1} сменил имя {2} на {3}."
+  char_set_model:
+    description: Выставляет модель персонажа.
+    syntax: "<игрок> <новая модель>"
+    message: "{1} сменил модель {2} на {3}."
+  char_create:
+    title: СОЗДАТЬ ПЕРСОНАЖА
+    text: СОЗДАНИЕ ПЕРСОНАЖА
+    create: СОЗДАТЬ
+    model_button: Модель
+    gen_text: Основная информация
+    name: 'Имя:'
+    desc: 'Описание:'
+    gender:
+      title: 'Пол:'
+      s: Выберите пол
+      m: Мужской
+      f: Женский
+    model:
+      s: Выберите модель
+    back: НАЗАД
+  tab_menu:
+    characters: Персонажи

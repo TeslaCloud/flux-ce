@@ -4,7 +4,7 @@ PANEL.CharData = {}
 function PANEL:Init()
   self:SetPos(400, 0)
   self:SetSize(ScrW() - 400, ScrH())
-  self:SetTitle("#CharCreate")
+  self:SetTitle(t"char_create.title")
 
   self.btnClose:SafeRemove()
 
@@ -48,7 +48,7 @@ function PANEL:OpenPanel(id)
   end
 
   self.finishButton = vgui.Create("flButton", self)
-  self.finishButton:SetTitle("#CharCreate_Create")
+  self.finishButton:SetTitle(t('char_create.create'))
   self.finishButton:SetPos(self:GetWide() - 250 + theme.GetOption("FinishButtonOffsetX"), self:GetTall() - 120 + theme.GetOption("FinishButtonOffsetY"))
   self.finishButton:SetDrawBackground(false)
   self.finishButton:SetFont(theme.GetFont("Text_Large"))
@@ -68,14 +68,14 @@ end
 --[[These have translations issues and are currently not supported for translation.]]
 
 function PANEL:AddSidebarItems(sidebar, panel)
-  local button = panel:add_button("#CharCreate_GenText", function(btn)
+  local button = panel:add_button(t('char_create.gen_text'), function(btn)
     self:OpenPanel("CharCreation_General")
   end)
 
   button:SetActive(true)
   panel.prevButton = button
 
-  panel:add_button("#CharCreate_ModelButton", function(btn)
+  panel:add_button(t('char_create.model_button'), function(btn)
     self:OpenPanel("CharCreation_Model")
   end)
 
@@ -84,7 +84,7 @@ end
 
 function PANEL:Paint(w, h)
   draw.RoundedBox(0, 0, 0, w, h, theme.GetColor("MainDark"):darken(10))
-  draw.SimpleText("#CharCreateText", theme.GetFont("Text_Large"), 24, 42)
+  draw.SimpleText(t"char_create.text", theme.GetFont("Text_Large"), 24, 42)
 end
 
 vgui.Register("flCharacterCreation", PANEL, "flFrame")

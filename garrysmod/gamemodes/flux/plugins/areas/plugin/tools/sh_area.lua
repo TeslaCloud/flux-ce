@@ -121,13 +121,13 @@ function TOOL.BuildCPanel(CPanel)
     options[v.name] = {["area_areatype"] = k}
   end
 
-  CPanel:AddControl("Header", { Description = "#tool.area.desc" })
+  CPanel:AddControl("Header", { Description = "tool.area.desc" })
 
   local controlPresets = CPanel:AddControl("ComboBox", { MenuButton = 1, Folder = "areatype", Options = options, CVars = {"area_areatype"} })
   controlPresets.Button:SetVisible(false)
   controlPresets.DropDown:SetValue("Simple Area")
 
-  CPanel:AddControl("TextBox", { Label = "#tool.area.text", Command = "area_uniqueid", MaxLenth = "20" })
-  CPanel:AddControl("Slider", { Label = "#tool.area.height", Command = "area_height", Type = "Float", Min = -2048, Max = 2048 })
+  CPanel:AddControl("TextBox", { Label = "tool.area.text", Command = "area_uniqueid", MaxLenth = "20" })
+  CPanel:AddControl("Slider", { Label = "tool.area.height", Command = "area_height", Type = "Float", Min = -2048, Max = 2048 })
 end
 */

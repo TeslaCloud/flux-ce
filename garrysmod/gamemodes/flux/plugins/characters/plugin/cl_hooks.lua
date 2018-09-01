@@ -150,7 +150,7 @@ end
 function flCharacters:AddMainMenuItems(panel, sidebar)
   local scrW, scrH = ScrW(), ScrH()
 
-  panel:add_button("#MainMenu_New", function(btn)
+  panel:add_button(t('main_menu.new'), function(btn)
     panel.menu = theme.CreatePanel("CharacterCreation", panel)
 
     if (panel.menu.AddSidebarItems) then
@@ -159,7 +159,7 @@ function flCharacters:AddMainMenuItems(panel, sidebar)
     end
   end)
 
-  local loadBtn = panel:add_button("#MainMenu_Load", function(btn)
+  local loadBtn = panel:add_button(t('main_menu.load'), function(btn)
     panel.menu = vgui.Create("DFrame", panel)
     panel.menu:SetPos(scrW * 0.5 - 300, scrH / 4)
     panel.menu:SetSize(600, 600)
@@ -199,15 +199,15 @@ function flCharacters:AddMainMenuItems(panel, sidebar)
   end
 
   if (fl.client:GetCharacter()) then
-    panel:add_button("#MainMenu_Cancel", function(btn)
+    panel:add_button(t('main_menu.cancel'), function(btn)
       panel:Remove()
     end)
   else
-    panel:add_button("#MainMenu_Disconnect", function(btn)
-      Derma_Query("#MainMenu_Disconnect_Msg", "#MainMenu_Disconnect", "#Yes", function()
+    panel:add_button(t('main_menu.disconnect'), function(btn)
+      Derma_Query(t('main_menu.disconnect_msg'), t('main_menu.disconnect_msg'), t"yes", function()
         RunConsoleCommand("disconnect")
       end,
-      "#No")
+      t"no")
     end)
   end
 end

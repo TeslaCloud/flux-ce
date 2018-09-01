@@ -1,7 +1,7 @@
 local COMMAND = Command.new("setgroup")
 COMMAND.name = "SetGroup"
-COMMAND.description = "#SetGroupCMD_Description"
-COMMAND.syntax = "#SetGroupCMD_Syntax"
+COMMAND.description = t"set_group.description"
+COMMAND.syntax = t"set_group.syntax"
 COMMAND.category = "player_management"
 COMMAND.arguments = 2
 COMMAND.immunity = true

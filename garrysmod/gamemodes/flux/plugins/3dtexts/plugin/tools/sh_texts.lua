@@ -44,7 +44,7 @@ function TOOL:LeftClick(trace)
 
   fl3DText:AddText(data)
 
-  fl.player:Notify(player, "#3DText_TextAdded")
+  fl.player:Notify(player, t('3d_text.text_added'))
 
    return true
 end
@@ -58,16 +58,16 @@ function TOOL:RightClick(trace)
 end
 
 local textStyles = {
-  ["#tool.texts.opt1"] = 1,
-  ["#tool.texts.opt2"] = 2,
-  ["#tool.texts.opt3"] = 3,
-  ["#tool.texts.opt4"] = 4,
-  ["#tool.texts.opt5"] = 5,
-  ["#tool.texts.opt6"] = 6,
-  ["#tool.texts.opt7"] = 7,
-  ["#tool.texts.opt8"] = 8,
-  ["#tool.texts.opt9"] = 9,
-  ["#tool.texts.opt91"] = 10
+  ["tool.texts.opt1"] = 1,
+  ["tool.texts.opt2"] = 2,
+  ["tool.texts.opt3"] = 3,
+  ["tool.texts.opt4"] = 4,
+  ["tool.texts.opt5"] = 5,
+  ["tool.texts.opt6"] = 6,
+  ["tool.texts.opt7"] = 7,
+  ["tool.texts.opt8"] = 8,
+  ["tool.texts.opt9"] = 9,
+  ["tool.texts.opt91"] = 10
 }
 
 function TOOL.BuildCPanel(CPanel)
@@ -77,15 +77,15 @@ function TOOL.BuildCPanel(CPanel)
     options[k] = {["texts_style"] = v}
   end
 
-  CPanel:AddControl("Header", { Description = "#tool.texts.desc" })
+  CPanel:AddControl("Header", { Description = "tool.texts.desc" })
 
   local controlPresets = CPanel:AddControl("ComboBox", { MenuButton = 1, Folder = "textstyle", Options = options, CVars = {"texts_style"} })
   controlPresets.Button:SetVisible(false)
   controlPresets.DropDown:SetValue("Please Choose")
 
-  CPanel:AddControl("TextBox", { Label = "#tool.texts.text", Command = "texts_text", MaxLenth = "128" })
-  CPanel:AddControl("TextBox", { Label = "#tool.texts.color", Command = "texts_color", MaxLenth = "16" })
-  CPanel:AddControl("TextBox", { Label = "#tool.texts.extraColor", Command = "texts_extraColor", MaxLenth = "16" })
-  CPanel:AddControl("Slider", { Label = "#tool.texts.scale", Command = "texts_scale", Type = "Float", Min = 0.01, Max = 10 })
-  CPanel:AddControl("Slider", { Label = "#tool.texts.fade", Command = "texts_fade", Type = "Integer", Min = -1024, Max = 10000 })
+  CPanel:AddControl("TextBox", { Label = "tool.texts.text", Command = "texts_text", MaxLenth = "128" })
+  CPanel:AddControl("TextBox", { Label = "tool.texts.color", Command = "texts_color", MaxLenth = "16" })
+  CPanel:AddControl("TextBox", { Label = "tool.texts.extraColor", Command = "texts_extraColor", MaxLenth = "16" })
+  CPanel:AddControl("Slider", { Label = "tool.texts.scale", Command = "texts_scale", Type = "Float", Min = 0.01, Max = 10 })
+  CPanel:AddControl("Slider", { Label = "tool.texts.fade", Command = "texts_fade", Type = "Integer", Min = -1024, Max = 10000 })
 end

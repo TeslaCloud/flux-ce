@@ -1,0 +1,46 @@
+en:
+  err:
+    group_not_valid: "'{1}' is not a valid user group!"
+    not_banned: Steam ID '{1}' is not banned!
+    'no':
+      permission: You have no permissions to do that, {1}.
+  freeze_bots_message: "{1} has frozen all bots."
+  unfreeze_bots_message: "{1} has unfrozen all bots."
+  kick_message: "{1} has kicked {2}. ({3})"
+  ban_message: "{admin} has banned {target} {time}. ({reason})"
+  unban_message: "{admin} has unbanned {target}."
+  add_bots_message: "{1} has added {2} bots to the server."
+  kick_bots_message: "{1} has kicked all bots."
+  map_restart_message: "{1} is restarting the map in {2} second(s)!"
+  map_change_message: "{1} is changing the level to {2} in {3} second(s)!"
+  cmd_desc:
+    usage: 'Syntax:'
+    aliases: 'Aliases:'
+  kickcmd:
+    description: Kicks player from the server.
+    syntax: "<target> [reason]"
+  bancmd:
+    description: Ban this sucker!
+    syntax: "<target> <duration> [reason]"
+  unbancmd:
+    description: Unban the specified Steam ID if it is banned.
+    syntax: "<target SteamID>"
+  set_group:
+    description: Sets player's usergroup.
+    syntax: "<target> <usergroup>"
+    message: "{1} has set {2}'s user group to {3}."
+  role:
+    user: The base rank that is automatically given to the player.
+    assistant: Low clearance administrative rank given to assistant staff members.
+    moderator: An administrative rank given to trusted staff members.
+    admin: A high level administrative rank given to the most trusted of staff members.
+  demotecmd:
+    description: Demote a player to user.
+    syntax: "<target>"
+    message: "{1} has demoted {2} from {3} to user."
+  perm:
+    not_set: Not Set (No)
+    allow: Allow
+    never: Never
+    allow_override: Allow (Override)
+    error: Invalid Permission

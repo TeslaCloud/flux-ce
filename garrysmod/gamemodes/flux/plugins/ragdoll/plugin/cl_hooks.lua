@@ -1,5 +1,5 @@
 fl.bars:register("getup", {
-  text = "#BarText_Getup",
+  text = t"bar_text.getup",
   color = Color(50, 200, 50),
   maxValue = 100,
   x = ScrW() * 0.5 - fl.bars.defaultW * 0.5,
@@ -29,9 +29,10 @@ function PLUGIN:HUDPaint()
       fl.bars:SetValue("getup", barValue)
       fl.bars:Draw("getup")
     elseif (fallen) then
-      local w, h = util.text_size("#PressJumpToGetup", theme.GetFont("Text_Normal"))
+      local text = t'press_jump_to_getup'
+      local w, h = util.text_size(text, theme.GetFont("Text_Normal"))
 
-      draw.SimpleText("#PressJumpToGetup", theme.GetFont("Text_Normal"), scrW * 0.5 - w * 0.5, scrH * 0.5 - h * 0.5, theme.GetColor("Text"))
+      draw.SimpleText(text, theme.GetFont("Text_Normal"), scrW * 0.5 - w * 0.5, scrH * 0.5 - h * 0.5, theme.GetColor("Text"))
     end
   end
 end

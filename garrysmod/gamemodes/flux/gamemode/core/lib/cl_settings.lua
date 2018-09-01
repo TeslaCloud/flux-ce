@@ -383,10 +383,10 @@ fl.settings:AddColorMixer("Dashboard", "BackgroundColor", Color(0, 0, 0, 255), n
   return false //(theme.GetPanel("TabMenu") == "flTabDash")
 end)
 fl.settings:AddComboBox("Dashboard", "FitType", "", {
-    ["fill"] = "#Settings_Fit_Fill",
-    ["fit"] = "#Settings_Fit_Fit",
-    ["tiled"] = "#Settings_Fit_Tiled",
-    ["center"] = "#Settings_Fit_Center"
+    ["fill"] = t"settings.fit.fill",
+    ["fit"] = t"settings.fit.fit",
+    ["tiled"] = t"settings.fit.tiled",
+    ["center"] = t"settings.fit.center"
   },
   function()
     return false //(theme.GetPanel("TabMenu") == "flTabDash")

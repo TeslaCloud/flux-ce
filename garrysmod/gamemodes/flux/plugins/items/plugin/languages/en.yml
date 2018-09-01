@@ -1,0 +1,18 @@
+en:
+  item:
+    category:
+      consumables: Consumables
+      equipment: Equipment
+      other: Other
+      weapon: Weapon
+      ammo: Ammunition
+      thrown: Throwing weapon
+    option:
+      use: Use
+      take: Take
+      drop: Drop
+      cancel: Cancel
+      equip: Equip
+      unequip: Unequip
+      unload: Unload
+      load: Load

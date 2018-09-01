@@ -374,7 +374,7 @@ function plugin.include_schema()
 
   Schema:register()
 
-  hook.run("OnSchemaLoaded")
+  hook.Call("OnSchemaLoaded", GM)
 end
 
 -- Please specify full file name if requiring a single-file plugin.
@@ -532,6 +532,8 @@ function plugin.include_folders(folder)
         pipeline.include_folder("theme", folder.."/themes/")
       elseif (v == "tools") then
         pipeline.include_folder("tool", folder.."/tools/")
+      elseif v == 'languages' then
+        if SERVER then pipeline.include_folder('language', folder..'/languages/') end
       else
         util.include_folder(folder.."/"..v)
       end
