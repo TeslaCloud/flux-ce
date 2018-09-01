@@ -66,9 +66,8 @@ if CLIENT then
     stored[nKey] = command
   end
 
-  function fl.binds:AddBind(id, command, default, visibleCallback)
-    fl.settings:AddSetting("Binds", id, default, nil, true, "flBindSelect", {command = command}, nil, visibleCallback)
-    self:SetBind(command, fl.settings:GetNumber(id))
+  function fl.binds:AddBind(id, command, key)
+    self:SetBind(command, key)
   end
 end
 
@@ -79,17 +78,6 @@ if SERVER then
     netstream.Start(player, "FLBindPressed", nKey)
   end
 else
-  function hooks:AdjustSettingCallbacks(callbacks)
-    callbacks["flBindSelect"] = function(panel, parent, setting)
-      local textW = util.text_size("Press a key to bind or mouse away to cancel.", theme.GetFont("Menu_Small"))
-
-      panel:SetSize(textW * 1.2, parent:GetTall() * 0.6)
-      panel:SetPos(parent:GetWide() * 0.99 - panel:GetWide(), parent:GetTall() * 0.5 - panel:GetTall() * 0.5)
-
-      panel.setting = setting
-    end
-  end
-
   netstream.Hook("FLBindPressed", function(nKey)
     local bind = fl.binds:GetBind(nKey)
 

@@ -90,7 +90,7 @@ end
 function flVisibleLegs:RenderScreenspaceEffects()
   local player = fl.client
 
-  if (!fl.settings:GetBool("DrawLegs") or player:get_nv("Observer") or player:ShouldDrawLocalPlayer() or !player:Alive()) then return end
+  if (player:get_nv("Observer") or player:ShouldDrawLocalPlayer() or !player:Alive()) then return end
 
   local angs = player:EyeAngles()
 
@@ -132,5 +132,3 @@ function flVisibleLegs:RenderScreenspaceEffects()
     legs.lastDraw = realTime
   cam.End3D()
 end
-
-fl.settings:AddCheckBox("General", "DrawLegs", true)
