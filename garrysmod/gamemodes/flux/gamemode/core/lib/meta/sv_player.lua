@@ -58,7 +58,8 @@ end
 
 function player_meta:RestorePlayer()
   if self:IsBot() then
-    return hook.run('PlayerRestored', self, User.new())
+    self.record = User.new()
+    return hook.run('PlayerRestored', self, self.record)
   end
 
   User:where('steam_id', self:SteamID()):rescue(function(obj)
