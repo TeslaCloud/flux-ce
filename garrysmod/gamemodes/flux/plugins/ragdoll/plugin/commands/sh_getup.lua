@@ -20,7 +20,7 @@ function COMMAND:on_run(player, delay)
       player:ResetAction()
     end)
   else
-    player:Notify("You cannot do this right now!")
+    player:notify("You cannot do this right now!")
   end
 end
 
