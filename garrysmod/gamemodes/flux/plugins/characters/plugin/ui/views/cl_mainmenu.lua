@@ -99,7 +99,7 @@ end
 function PANEL:add_button(text, callback)
   local button = vgui.Create("flButton", self)
   button:SetSize(theme.GetOption("MainMenu_SidebarWidth"), theme.GetOption("MainMenu_SidebarButtonHeight"))
-  button:SetText(string.utf8upper(L(text)))
+  button:SetText(string.utf8upper(text))
   button:SetDrawBackground(false)
   button:SetFont(theme.GetFont("Menu_Larger"))
   button:SetPos(16, 0)

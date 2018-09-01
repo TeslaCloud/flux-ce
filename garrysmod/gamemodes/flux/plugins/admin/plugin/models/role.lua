@@ -17,6 +17,8 @@ Role.protected = false
 Role.base = nil
 
 function Role:init(id)
+  if !id then return end
+
   self.role_id = id:to_id()
 end
 

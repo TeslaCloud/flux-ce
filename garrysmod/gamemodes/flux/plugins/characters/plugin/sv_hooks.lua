@@ -11,8 +11,12 @@ function flCharacters:PlayerInitialSpawn(player)
   end)
 end
 
-function flCharacters:ClientIncludedSchema(player)
+function flCharacters:PlayerRestored(player)
   character.Load(player)
+end
+
+function flCharacters:PlayerInitialized(player)
+  character.SendToClient(player)
 end
 
 function flCharacters:PostCharacterLoaded(player, character)

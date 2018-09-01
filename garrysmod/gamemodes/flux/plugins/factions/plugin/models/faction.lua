@@ -6,6 +6,8 @@ end)
 Faction:belongs_to 'Character'
 
 function Faction:init(id)
+  if !id then return end
+
   self.faction_id = id:to_id()
   self.name = "Unknown Faction"
   self.print_name = nil
