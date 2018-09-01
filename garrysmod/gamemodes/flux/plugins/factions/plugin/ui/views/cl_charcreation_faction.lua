@@ -1,6 +1,6 @@
 local PANEL = {}
 PANEL.id = "faction"
-PANEL.text = "#CharCreate_Fac_S"
+PANEL.text = t('char_create.fac.s')
 PANEL.factionID = ""
 
 function PANEL:Init()
@@ -8,7 +8,7 @@ function PANEL:Init()
 
   self.Label = vgui.Create("DLabel", self)
   self.Label:SetPos(32, 64)
-  self.Label:SetText("#CharCreate_FacTitle")
+  self.Label:SetText(t('char_create.fac_title'))
   self.Label:SetFont(theme.GetFont("Text_Small"))
 
   self.Chooser = vgui.Create("flSidebar", self)

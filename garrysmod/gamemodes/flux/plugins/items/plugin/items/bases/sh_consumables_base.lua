@@ -13,7 +13,7 @@ class 'ItemConsumable' extends 'ItemUsable'
 
 ItemConsumable.name = "Consumables Base"
 ItemConsumable.description = "An item that can be consumed."
-ItemConsumable.category = "#Item_Category_Consumables"
+ItemConsumable.category = t('item.category.consumables')
 
 function ItemConsumable:on_use(player)
   if (hook.run("PrePlayerConsumeItem", player, self) != false) then

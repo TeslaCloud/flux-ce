@@ -1,7 +1,7 @@
 ﻿local COMMAND = Command.new("charsetmodel")
 COMMAND.name = "CharSetModel"
-COMMAND.description = "#CharSetModel_Description"
-COMMAND.syntax = "#CharSetModel_Syntax"
+COMMAND.description = t"char_set_model.description"
+COMMAND.syntax = t"char_set_model.syntax"
 COMMAND.category = "character_management"
 COMMAND.arguments = 2
 COMMAND.player_arg = 1

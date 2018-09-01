@@ -1,6 +1,6 @@
 ﻿local PANEL = {}
 PANEL.id = "attributes"
-PANEL.text = "#CharCreate_Attributes"
+PANEL.text = t('char_create.attributes')
 PANEL.model = ""
 PANEL.models = {}
 PANEL.buttons = {}

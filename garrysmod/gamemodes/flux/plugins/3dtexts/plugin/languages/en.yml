@@ -1,0 +1,29 @@
+en:
+  3d_text:
+    not_enough_text: You did not specify enough text.
+    text_add_desc: Adds a 3D text.
+    text_add_syntax: "<string Text> [number Scale] [number Style] [string Color] [string
+      ExtraColor]"
+    text_added: You have added a 3D text.
+    text_removed: You have removed a 3D text.
+  tool:
+    texts:
+      name: Text Tool
+      desc: Add 3D texts to the surfaces.
+      '0': 'Left Click: Add Text, Right Click: Remove Text.'
+      text: Text
+      style: Style
+      color: Color
+      extra_color: Secondary Color
+      scale: Text Scale
+      fade: Fade Distance Offset
+      opt1: Regular Text
+      opt2: Text with Far Shadow Only
+      opt3: Text with Black Shadow Only
+      opt4: Text with Both Shadows
+      opt5: Text Wrapped in a Box
+      opt6: Text Wrapped in a Blinking Box
+      opt7: Text Wrapped in a Box (Style 2)
+      opt8: Text Wrapped in a Box (Style 3)
+      opt9: Text Wrapped in a Box (Style 4)
+      opt91: Text Wrapped in a Box (Blurry)

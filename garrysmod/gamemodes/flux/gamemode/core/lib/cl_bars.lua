@@ -231,7 +231,7 @@ do
   plugin.add_hooks("FLBarHooks", flBars)
 
   fl.bars:register("health", {
-    text = "#BarText_Health",
+    text = t"bar_text.health",
     color = Color(200, 40, 40),
     maxValue = 100,
     callback = function(bar)
@@ -240,7 +240,7 @@ do
   })
 
   fl.bars:register("armor", {
-    text = "#BarText_Armor",
+    text = t"bar_text.armor",
     color = Color(80, 80, 220),
     maxValue = 100,
     callback = function(bar)
@@ -249,7 +249,7 @@ do
   })
 
   fl.bars:register("respawn", {
-    text = "#BarText_Respawn",
+    text = t"bar_text.respawn",
     color = Color(50, 200, 50),
     maxValue = 100,
     x = ScrW() * 0.5 - fl.bars.defaultW * 0.5,

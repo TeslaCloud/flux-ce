@@ -1,0 +1,20 @@
+en:
+  whitelist:
+    description: Add a player to a faction whitelist.
+    syntax: "<target> <faction> [is faction search strict]"
+    message: "{1} has added {2} to the {3} whitelist."
+  take_whitelist:
+    description: Remove a player from a faction whitelist.
+    syntax: "<target> <faction> [is faction search strict]"
+    message: "{1} has removed {2} from the {3} whitelist."
+  setfactioncmd:
+    message: "{1} has added {2} to the {3} faction."
+  err:
+    whitelist_not_valid: "'{1}' is not a valid faction!"
+    target_not_whitelisted: "{1} is not on the {2} whitelist!"
+  char_create:
+    faction_button: Faction
+    gen_fac_warning: You have to select a gender or faction first!
+    fac:
+      s: Select a faction
+    fac_title: 'Faction:'

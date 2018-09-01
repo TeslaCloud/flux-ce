@@ -60,7 +60,7 @@ function PANEL:RecreateSidebar(bShouldCreateButtons)
     backButton:SetIcon("fa-chevron-left")
     backButton:SetIconSize(16)
     backButton:SetFont(theme.GetFont("Text_NormalSmaller"))
-    backButton:SetTitle("#CharCreate_Back")
+    backButton:SetTitle(t('char_create.back'))
 
     backButton.DoClick = function(btn)
       self:RecreateSidebar(true)

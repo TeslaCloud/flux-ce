@@ -15,7 +15,7 @@ function PANEL:Init()
 
   self.closeButton = vgui.Create("flButton", self)
   self.closeButton:SetFont(theme.GetFont("Menu_Large"))
-  self.closeButton:SetText(string.utf8upper(fl.lang:TranslateText("#TabMenu_CloseMenu")))
+  self.closeButton:SetText(string.utf8upper(t"tab_menu.close_menu"))
   self.closeButton:SetPos(6, curY)
   self.closeButton:SetSizeEx(200, 38)
   self.closeButton:SetDrawBackground(false)

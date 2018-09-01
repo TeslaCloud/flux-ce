@@ -246,7 +246,7 @@ function PANEL:BuildList()
   setList:Clear()
 
   table.sort(settings, function(a, b)
-    return L("#Settings_"..a.id) < L("#Settings_"..b.id)
+    return t("settings."..a.id) < t("settings."..b.id)
   end)
 
   for k, v in ipairs(settings) do
@@ -260,7 +260,7 @@ function PANEL:BuildList()
 
       setting.label = vgui.Create("DLabel", setting)
       setting.label:SetFont(menuFontSmall)
-      setting.label:SetText("#Settings_"..v.id)
+      setting.label:SetText(t("settings."..v.id))
       setting.label:SetTextColor(fl.settings:GetColor("TextColor"))
       setting.label:SizeToContents()
       setting.label:SetPos(setting:GetWide() * 0.01, setting:GetTall() * 0.5 - setting.label:GetTall() * 0.5)
@@ -287,7 +287,7 @@ function PANEL:BuildCategoryList()
   local y = x
   local w, h = catList:GetWide(), catList:GetTall() * 0.09
   local categories = fl.settings:GetIndexedCategories(function(a, b)
-    return L("#Settings_"..a.id) < L("#Settings_"..b.id)
+    return t("settings."..a.id) < t("settings."..b.id)
   end)
   local saved = fl.settings.lastCat
 
@@ -313,7 +313,7 @@ function PANEL:BuildCategoryList()
   for k, v in ipairs(categories) do
     surface.SetFont(menuFont)
 
-    local name = L("#Settings_"..v.id)
+    local name = t("settings."..v.id)
     local textW, textH = surface.GetTextSize(name)
 
     textW = textW + (w * 0.25)
@@ -338,7 +338,7 @@ function PANEL:BuildCategoryList()
     button:SetSize(w, h)
     button.text = name
     button.textAlpha = colorWhite.a
-    button:SetText("")
+    button:SetText('')
     button.id = v.id
 
     button.DoClick = function(panel)

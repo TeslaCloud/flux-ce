@@ -29,10 +29,10 @@ function flHints:OneMinute()
 end
 
 do
-  flHints:Add("#Hint_Forums", "#Hint_ForumsText")
-  flHints:Add("#Hint_Hints", "#Hint_HintsText")
-  flHints:Add("#Hint_TAB", "#Hint_TABText")
-  flHints:Add("#Hint_Inventory", "#Hint_InventoryText")
-  flHints:Add("#Hint_Commands", "#Hint_CommandsText")
-  flHints:Add("#Hint_Bugs", "#Hint_BugsText")
+  flHints:Add(t('hint.forums'), t('hint.forums'))
+  flHints:Add(t('hint.hints'), t('hint.hints'))
+  flHints:Add(t('hint.tab'), t('hint.tab'))
+  flHints:Add(t('hint.inventory'), t('hint.inventory'))
+  flHints:Add(t('hint.commands'), t('hint.commands'))
+  flHints:Add(t('hint.bugs'), t('hint.bugs'))
 end

@@ -1,0 +1,6 @@
+ru:
+  tab_menu:
+    inventory: Инвентарь
+  hint:
+    inventory: Инвентарь
+    inventory_text: Перетащите предмет за пределы инвентаря, чтобы выбросить его.

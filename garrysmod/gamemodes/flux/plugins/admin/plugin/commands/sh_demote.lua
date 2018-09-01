@@ -1,7 +1,7 @@
 local COMMAND = Command.new("demote")
 COMMAND.name = "Demote"
-COMMAND.description = "#DemoteCMD_Description"
-COMMAND.syntax = "#DemoteCMD_Syntax"
+COMMAND.description = t"demotecmd.description"
+COMMAND.syntax = t"demotecmd.syntax"
 COMMAND.category = "player_management"
 COMMAND.arguments = 1
 COMMAND.immunity = true

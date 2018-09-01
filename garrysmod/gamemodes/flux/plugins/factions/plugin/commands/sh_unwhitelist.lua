@@ -1,8 +1,8 @@
 local COMMAND = Command.new("unwhitelist")
 
 COMMAND.name = "UnWhitelist"
-COMMAND.description = "#TakeWhitelistCMD_Description"
-COMMAND.syntax = "#TakeWhitelistCMD_Syntax"
+COMMAND.description = t"take_whitelist.description"
+COMMAND.syntax = t"take_whitelist.syntax"
 COMMAND.category = "player_management"
 COMMAND.arguments = 2
 COMMAND.player_arg = 1

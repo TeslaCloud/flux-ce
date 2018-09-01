@@ -23,13 +23,13 @@ function flStaticEnts:PlayerMakeStatic(player, bIsStatic)
   local entity = trace.Entity
 
   if (!IsValid(entity)) then
-    fl.player:Notify(player, "#Err_NotValidEntity")
+    fl.player:Notify(player, t('err.not_valid_entity'))
 
     return
   end
 
   if (!whitelistedEntities[entity:GetClass()]) then
-    fl.player:Notify(player, "#Err_CannotStaticThis")
+    fl.player:Notify(player, t('err.cannot_static_this'))
 
     return
   end
@@ -37,18 +37,18 @@ function flStaticEnts:PlayerMakeStatic(player, bIsStatic)
   local isStatic = entity:GetPersistent()
 
   if (bIsStatic and isStatic) then
-    fl.player:Notify(player, "#Err_AlreadyStatic")
+    fl.player:Notify(player, t('err.already_static'))
 
     return
   elseif (!bIsStatic and !isStatic) then
-    fl.player:Notify(player, "#Err_NotStatic")
+    fl.player:Notify(player, t('err.not_static'))
 
     return
   end
 
   entity:SetPersistent(bIsStatic)
 
-  fl.player:Notify(player, (bIsStatic and "#Static_Added") or "#Static_Removed")
+  fl.player:Notify(player, (bIsStatic and "static.added") or "static.removed")
 end
 
 function flStaticEnts:ShutDown()

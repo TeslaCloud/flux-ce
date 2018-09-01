@@ -21,12 +21,12 @@ netstream.Hook("PlayerModelChanged", function(nPlyIndex, sNewModel, sOldModel)
   end)
 end)
 
-netstream.Hook("flNotification", function(sMessage)
-  sMessage = fl.lang:TranslateText(sMessage)
+netstream.Hook("flNotification", function(message, arguments)
+  message = t(message, arguments)
 
-  fl.notification:Add(sMessage, 8, Color(175, 175, 235))
+  fl.notification:Add(message, 8, Color(175, 175, 235))
 
-  chat.AddText(Color(255, 255, 255), sMessage)
+  chat.AddText(Color(255, 255, 255), message)
 end)
 
 netstream.Hook("PlayerTakeDamage", function()

@@ -897,7 +897,7 @@ function util.PlayerListToString(...)
   local nlist = #list
 
   if (nlist > 1 and nlist == #_player.GetAll()) then
-    return "#Chat_Everyone"
+    return t"chat.everyone"
   end
 
   return util.ListToString(function(obj) return (IsValid(obj) and obj:Name()) or "Unknown Player" end, nil, ...)
@@ -1254,8 +1254,8 @@ end
 function string.to_snake_case(str)
   str = str[1]:lower()..str:sub(2, str:len())
 
-  return str:gsub('([a-z])([A-Z])', function(lower, upper)
-    return lower..'_'..string.lower(upper)
+  return str:gsub('([%w])([A-Z])([a-z])', function(a, b, c)
+    return string.lower(a)..'_'..string.lower(b)..string.lower(c)
   end):lower()
 end
 
@@ -1279,9 +1279,9 @@ function string.capitalize(str)
   return string.utf8upper(str[1])..(len > 1 and string.utf8sub(str, 2, string.utf8len(str)) or '')
 end
 
-function string.parse_table(str)
+function string.parse_table(str, ref)
+  ref = istable(ref) and ref or _G
   local tables = string.Explode('::', str)
-  local ref = _G
   for k, v in ipairs(tables) do
     ref = ref[v]
     if !istable(ref) then return false, v end
@@ -1289,9 +1289,9 @@ function string.parse_table(str)
   return ref
 end
 
-function string.parse_parent(str)
+function string.parse_parent(str, ref)
+  ref = istable(ref) and ref or _G
   local tables = string.Explode('::', str)
-  local ref = _G
   for k, v in ipairs(tables) do
     local new_ref = ref[v]
     if !istable(new_ref) then return ref, v end

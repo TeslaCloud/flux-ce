@@ -1,7 +1,7 @@
 local COMMAND = Command.new("kick")
 COMMAND.name = "Kick"
-COMMAND.description = "#KickCMD_Description"
-COMMAND.syntax = "#KickCMD_Syntax"
+COMMAND.description = t"kickcmd.description"
+COMMAND.syntax = t"kickcmd.syntax"
 COMMAND.category = "administration"
 COMMAND.arguments = 1
 COMMAND.immunity = true

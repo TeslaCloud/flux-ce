@@ -105,7 +105,7 @@ end
 
 function THEME:PaintMainMenu(panel, width, height)
   local wide = self:GetOption("MainMenu_SidebarWidth") * 0.5
-  local title, desc, author = Schema:get_name(), Schema:get_description(), "#MainMenu_DevelopedBy:"..Schema:get_author()..";"
+  local title, desc, author = Schema:get_name(), Schema:get_description(), t('main_menu.developed_by' Schema:get_author())
   local logo = self:GetMaterial("Schema_Logo")
   local titleW, titleH = util.text_size(title, self:GetFont("Text_Largest"))
   local descW, descH = util.text_size(desc, self:GetFont("Menu_Normal"))
@@ -196,8 +196,8 @@ function THEME:PaintDeathScreen(curTime, scrW, scrH)
 
   draw.RoundedBox(0, 0, 0, scrW, scrH, Color(0, 0, 0, fl.client.respawnAlpha))
 
-  draw.SimpleText("#PlayerMessage_Died", font, 16, 16, color_white)
-  draw.SimpleText("#PlayerMessage_Respawn:"..math.ceil(respawnTimeRemaining)..";", font, 16, 16 + util.font_size(font), color_white)
+  draw.SimpleText(t"player_message.died", font, 16, 16, color_white)
+  draw.SimpleText(t("player_message.respawn", math.ceil(respawnTimeRemaining)), font, 16, 16 + util.font_size(font), color_white)
 
   draw.RoundedBox(0, 0, 0, scrW / 100 * barValue, 2, color_white)
 
@@ -274,19 +274,21 @@ end
 
 function THEME:PaintPermissionButton(permPanel, btn, w, h)
   local color = Color(255, 255, 255)
-  local title = "#Perm_Error"
+  local title = ''
   local permType = btn.permValue
   local font = self:GetFont("Text_Small")
 
   if (permType == PERM_NO) then
     color = Color(120, 120, 120)
-    title = "#Perm_NotSet"
+    title = t"perm.not_set"
   elseif (permType == PERM_ALLOW) then
     color = Color(100, 220, 100)
-    title = "#Perm_Allow"
+    title = t"perm.allow"
   elseif (permType == PERM_NEVER) then
     color = Color(220, 100, 100)
-    title = "#Perm_Never"
+    title = t"perm.never"
+  else
+    title = t"perm.error"
   end
 
   local textColor = color:darken(75)
@@ -316,11 +318,13 @@ function THEME:PaintScoreboard(panel, width, height)
 
   draw.RoundedBox(0, 0, 0, width, height, ColorAlpha(self:GetColor("Background"), 150))
 
+  local title = t"scoreboard.title"
+
   DisableClipping(true)
-    draw.SimpleText("#Scoreboard_Title", titleFont, 4, -util.text_height("#Scoreboard_Title", titleFont) * 0.5, self:GetColor("Text"))
+    draw.SimpleText(title, titleFont, 4, -util.text_height(title, titleFont) * 0.5, self:GetColor("Text"))
   DisableClipping(false)
 
-  draw.SimpleText("#Scoreboard_Help", self:GetFont("Text_Small"), 4, 14, self:GetColor("Text"))
+  draw.SimpleText(t"scoreboard.help", self:GetFont("Text_Small"), 4, 14, self:GetColor("Text"))
 end
 
 function THEME:PaintTabMenu(panel, width, height)

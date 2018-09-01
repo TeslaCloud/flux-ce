@@ -1,0 +1,18 @@
+ru:
+  item:
+    category:
+      consumables: Расходные материалы
+      equipment: Экипировка
+      other: Разное
+      weapon: Оружие
+      ammo: Боеприпасы
+      thrown: Метательное
+    option:
+      use: Использовать
+      take: Взять
+      drop: Выбросить
+      cancel: Отмена
+      equip: Экипировать
+      unequip: Снять
+      unload: Разрядить
+      load: Зарядить

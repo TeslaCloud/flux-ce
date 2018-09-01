@@ -1,5 +1,5 @@
 ROLE.name = "Administrator"
-ROLE.description = "#PlayerGroup_Admin"
+ROLE.description = t('role.admin')
 ROLE.color = Color(255, 255, 255)
 ROLE.icon = "icon16/shield.png"
 ROLE.immunity = 300

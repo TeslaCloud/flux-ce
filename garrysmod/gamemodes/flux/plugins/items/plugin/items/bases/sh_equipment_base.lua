@@ -7,16 +7,16 @@ class 'ItemEquippable' extends 'ItemUsable'
 
 ItemEquippable.name = "Equipment Base"
 ItemEquippable.description = "An item that can be equipped."
-ItemEquippable.category = "#Item_Category_Equipment"
-ItemEquippable.equip_slot = "#Item_Slot_Accessory"
+ItemEquippable.category = t('item.category.equipment')
+ItemEquippable.equip_slot = t('item.slot.accessory')
 ItemEquippable.stackable = false
 
 if CLIENT then
   function ItemEquippable:get_use_text()
     if (self:IsEquipped()) then
-      return "#Item_Option_Unequip"
+      return t('item.option.unequip')
     else
-      return "#Item_Option_Equip"
+      return t('item.option.equip')
     end
   end
 end

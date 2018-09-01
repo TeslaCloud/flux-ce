@@ -166,19 +166,19 @@ else
   end
 
   function Item:get_use_text()
-    return self.use_text or "#Item_Option_Use"
+    return self.use_text or t('item.option.use')
   end
 
   function Item:get_take_text()
-    return self.take_text or "#Item_Option_Take"
+    return self.take_text or t('item.option.take')
   end
 
   function Item:get_drop_text()
-    return self.DropText or "#Item_Option_Drop"
+    return self.DropText or t('item.option.drop')
   end
 
   function Item:get_cancel_text()
-    return self.cancel_text or "#Item_Option_Cancel"
+    return self.cancel_text or t('item.option.cancel')
   end
 end
 

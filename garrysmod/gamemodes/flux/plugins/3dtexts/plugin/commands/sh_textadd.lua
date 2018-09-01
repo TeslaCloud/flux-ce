@@ -1,13 +1,13 @@
 local COMMAND = Command.new("textadd")
 COMMAND.name = "TextAdd"
-COMMAND.description = "#3DText_TextAddDesc"
-COMMAND.syntax = "#3DText_TextAddSyntax"
+COMMAND.description = t('3d_text.text_add_desc')
+COMMAND.syntax = t('3d_text.text_add_syntax')
 COMMAND.category = "misc"
 COMMAND.arguments = 1
 
 function COMMAND:on_run(player, text, scale, style, color, extraColor)
   if (!text or text == "") then
-    fl.player:Notify(player, "#3DText_NotEnoughText")
+    fl.player:Notify(player, t('3d_text.not_enough_text'))
 
     return
   end
@@ -30,7 +30,7 @@ function COMMAND:on_run(player, text, scale, style, color, extraColor)
 
   fl3DText:AddText(data)
 
-  fl.player:Notify(player, "#3DText_TextAdded")
+  fl.player:Notify(player, t('3d_text.text_added'))
 end
 
 COMMAND:register()

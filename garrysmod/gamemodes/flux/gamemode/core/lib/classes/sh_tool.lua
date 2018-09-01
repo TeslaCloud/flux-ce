@@ -229,7 +229,7 @@ end
 
 -- Returns the number of objects in the list
 function Tool:GetHelpText()
-  return "#tool."..GetConVarString("gmod_toolmode").."."..self:GetStage()
+  return t("tool."..GetConVarString("gmod_toolmode").."."..self:GetStage())
 end
 
 if CLIENT then

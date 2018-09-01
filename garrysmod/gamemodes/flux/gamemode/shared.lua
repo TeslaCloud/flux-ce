@@ -1,5 +1,5 @@
 -- Define basic GM info fields.
-GM.name         = "Flux"
+GM.Name         = "Flux"
 GM.Author       = "TeslaCloud Studios"
 GM.Website      = "http://teslacloud.net/"
 GM.Email        = "support@teslacloud.net"
@@ -26,6 +26,10 @@ fl.development  = !IS_PRODUCTION
 AddCSLuaFile    'flux/config/environment.lua'
 AddCSLuaFile    'core/sh_util.lua'
 include         'core/sh_util.lua'
+
+-- Aliases for serverside and clientside constants.
+sv              = SERVER
+cl              = CLIENT
 
 -- Fix for the name conflicts.
 _player, _team, _file, _table, _sound = player, team, file, table, sound
@@ -82,7 +86,7 @@ util.include_folder("core/lib", true)
 util.include_folder("core/lib/classes", true)
 util.include_folder("core/lib/meta", true)
 util.include_folder("core/models", true)
-util.include_folder("languages", true)
+if SERVER then pipeline.include_folder('language', 'flux/gamemode/languages') end
 util.include_folder("core/ui/controllers", true)
 util.include_folder("core/ui/views/base", true)
 util.include_folder("core/ui/views", true)

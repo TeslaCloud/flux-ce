@@ -7,11 +7,11 @@ class "ItemThrown" extends "ItemWeapon"
 
 ItemThrown.name = "Thrown Base"
 ItemThrown.description = "An weapon that can be thrown."
-ItemThrown.category = "#Item_Category_Thrown"
-ItemThrown.equip_slot = "#Weapon_Category_Thrown"
+ItemThrown.category = t('item.category.thrown')
+ItemThrown.equip_slot = t('weapon.category.thrown')
 ItemThrown.weapon_class = "weapon_frag"
 ItemThrown.thrown_ammo_class = "Grenade"
-ItemThrown:add_button("#Item_Option_Unload", {
+ItemThrown:add_button(t('item.option.unload'), {
   icon = "icon16/add.png",
   callback = "OnUnload",
   onShow = function(itemTable)

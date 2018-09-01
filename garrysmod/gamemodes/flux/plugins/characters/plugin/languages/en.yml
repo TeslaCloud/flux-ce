@@ -1,0 +1,27 @@
+en:
+  char_set_name:
+    description: Set character's name.
+    syntax: "<target> <new name>"
+    message: "{1} has set {2}'s name to {3}."
+  char_set_model:
+    description: Set character's model.
+    syntax: "<target> <new model>"
+    message: "{1} has set {2}'s model to {3}."
+  char_create:
+    title: CREATE A CHARACTER
+    text: CHARACTER CREATION
+    create: CREATE
+    model_button: Model
+    gen_text: General Character Information
+    name: 'Name:'
+    desc: 'Description:'
+    gender:
+      title: 'Gender:'
+      s: Select Gender
+      m: Male
+      f: Female
+    model:
+      s: Select a model
+    back: BACK
+  tab_menu:
+    characters: Characters

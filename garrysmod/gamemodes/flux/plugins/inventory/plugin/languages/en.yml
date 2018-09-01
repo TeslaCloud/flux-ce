@@ -1,0 +1,6 @@
+en:
+  tab_menu:
+    inventory: Inventory
+  hint:
+    inventory: Inventory
+    inventory_text: Drag'n'Drop an item outside of inventory screen to drop it.
