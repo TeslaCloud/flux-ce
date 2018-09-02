@@ -8,8 +8,8 @@ function flItems:OnPluginLoaded()
   plugin.add_extra("items")
   plugin.add_extra("items/bases")
 
-  util.include_folder(self:get_folder().."/plugin/items/bases")
-  item.IncludeItems(self:get_folder().."/plugin/items/")
+  util.include_folder(self:get_folder().."/items/bases")
+  item.IncludeItems(self:get_folder().."/items/")
 end
 
 function flItems:PluginIncludeFolder(extra, folder)
