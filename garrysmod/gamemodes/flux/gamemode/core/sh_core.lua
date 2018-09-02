@@ -97,7 +97,8 @@ function library.create_class(name, base_class)
 
   local parent = nil
   parent, name = name:parse_parent()
-  local obj = library.new(name, parent)
+  parent[name] = {}
+  local obj = parent[name]
   obj.ClassName = name
   obj.BaseClass = base_class or false
   obj.class_name = obj.ClassName
