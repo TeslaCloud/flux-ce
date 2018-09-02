@@ -25,48 +25,10 @@ function player_meta:SetUserGroup(group)
       self:SaveUsergroup()
     end
   end
-
-  fl.admin:CompilePermissions(self)
-end
-
-function player_meta:SetSecondaryGroups(groups)
-  self:set_nv("roles", groups)
-
-  fl.admin:CompilePermissions(self)
-end
-
-function player_meta:AddSecondaryGroup(group)
-  if (group == "root" or group == "") then return end
-
-  local groups = self:get_roles()
-
-  table.insert(groups, group)
-
-  self:set_nv("roles", groups)
-
-  fl.admin:CompilePermissions(self)
-end
-
-function player_meta:RemoveSecondaryGroup(group)
-  local groups = self:get_roles()
-
-  for k, v in ipairs(groups) do
-    if (v == group) then
-      table.remove(groups, k)
-
-      break
-    end
-  end
-
-  self:set_nv("roles", groups)
-
-  fl.admin:CompilePermissions(self)
 end
 
 function player_meta:SetCustomPermissions(data)
   self:set_nv("permissions", data)
-
-  fl.admin:CompilePermissions(self)
 end
 
 function player_meta:RunCommand(cmd)

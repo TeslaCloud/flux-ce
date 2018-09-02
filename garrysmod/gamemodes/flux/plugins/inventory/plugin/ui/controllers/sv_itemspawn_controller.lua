@@ -1,5 +1,5 @@
 mvc.handler("SpawnMenu::SpawnItem", function(player, itemID)
-  if (!player:HasPermission("spawn_items")) then
+  if (!player:can("spawn_items")) then
     player:notify(L("Err_No_Permission", player:Name()))
 
     return

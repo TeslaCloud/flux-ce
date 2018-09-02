@@ -83,18 +83,18 @@ end
   throughout the Flux framework.
 --]]
 
-function player_meta:HasPermission(perm)
-  return hook.run("PlayerHasPermission", self, perm)
+function player_meta:can(action, object)
+  return hook.run("PlayerHasPermission", self, action, object)
 end
 
 function player_meta:is_root()
   return hook.run("PlayerIsRoot", self)
 end
 
-function player_meta:IsMemberOf(group)
+function player_meta:has_group(group)
   if (self:GetUserGroup() == group) then
     return true
   end
 
-  return hook.run("PlayerIsMemberOfGroup", self, group)
+  return hook.run("PlayerHasGroup", self, group)
 end

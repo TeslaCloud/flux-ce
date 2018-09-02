@@ -8,7 +8,7 @@ TOOL.ClientConVar["mode"] = "1"
 function TOOL:LeftClick(trace)
   local player = self:GetOwner()
 
-  if (!player:HasPermission("area_tool")) then return end
+  if (!player:can("area_tool")) then return end
 
   local mode = self:GetClientNumber("mode")
   local modeTable = flAreas.toolModes[mode]
@@ -23,7 +23,7 @@ end
 function TOOL:RightClick(trace)
   local player = self:GetOwner()
 
-  if (!player:HasPermission("area_tool")) then return end
+  if (!player:can("area_tool")) then return end
 
   local mode = self:GetClientNumber("mode")
   local modeTable = flAreas.toolModes[mode]
@@ -38,7 +38,7 @@ end
 function TOOL:Reload(trace)
   local player = self:GetOwner()
 
-  if (!player:HasPermission("area_tool")) then return end
+  if (!player:can("area_tool")) then return end
 
   local mode = self:GetClientNumber("mode")
   local modeTable = flAreas.toolModes[mode]

@@ -24,7 +24,7 @@ function COMMAND:on_run(player, targets, duration, ...)
   end
 
   for k, v in ipairs(targets) do
-    fl.admin:Ban(v, duration, reason)
+    fl.admin:ban(v, duration, reason)
   end
 
   for k, v in ipairs(_player.GetAll()) do

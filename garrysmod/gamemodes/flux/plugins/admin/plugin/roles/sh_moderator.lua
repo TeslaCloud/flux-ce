@@ -4,6 +4,10 @@ ROLE.color = Color(255, 255, 255)
 ROLE.icon = "icon16/star.png"
 ROLE.immunity = 200
 ROLE.base = "assistant"
-ROLE.permissions = {
-  test = PERM_ALLOW
-}
+
+function ROLE:define_permissions()
+  can 'noclip'
+  can('manage', User)
+  can('manage', Ban)
+  can('manage', Character)
+end

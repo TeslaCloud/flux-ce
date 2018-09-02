@@ -3,7 +3,7 @@ function flObserver:ShouldObserverReset(player)
 end
 
 function flObserver:PlayerEnterNoclip(player)
-  if (!player:HasPermission("noclip")) then
+  if (!player:can("noclip")) then
     fl.player:notify(player, "You do not have permission to do this.")
 
     return false

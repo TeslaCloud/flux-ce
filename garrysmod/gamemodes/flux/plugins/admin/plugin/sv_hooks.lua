@@ -1,19 +1,14 @@
 function flAdmin:SavePlayerData(player, save_table)
   save_table.role = player:GetUserGroup()
-  save_table.roles = fl.serialize(player:get_roles())
   save_table.permissions = fl.serialize(player:GetCustomPermissions())
 end
 
-function flAdmin:RestorePlayer(player, result)
-  if (result.permissions) then
+function flAdmin:PlayerRestored(player, record)
+  if record.permissions then
     player:SetCustomPermissions(result.permissions)
   end
 
-  if (result.roles) then
-    player:SetSecondaryGroups(result.roles)
-  end
-
-  if (result.role) then
+  if record.role then
     player:SetUserGroup(result.role)
   end
 end
@@ -46,12 +41,14 @@ function flAdmin:PlayerRestored(player, record)
 
   if (isstring(root_steamid)) then
     if (player:SteamID() == root_steamid) then
-      player:SetUserGroup('moderator')
+      player:SetUserGroup('admin')
+      player.can_anything = true
     end
   elseif (istable(root_steamid)) then
     for k, v in ipairs(root_steamid) do
       if (v == player:SteamID()) then
-        player:SetUserGroup('moderator')
+        player:SetUserGroup('admin')
+        player.can_anything = true
       end
     end
   end

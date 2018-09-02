@@ -8,7 +8,7 @@ PANEL.shouldPaint = false
 PANEL.alpha = 255
 
 function PANEL:Init()
-  --if (fl.client:HasPermission("chat_mod")) then
+  --if (fl.client:can("chat_mod")) then
   --  self.moderation = vgui.Create("flChatModeration", self)
   --end
 

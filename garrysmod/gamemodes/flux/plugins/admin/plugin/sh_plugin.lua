@@ -21,20 +21,10 @@ function flAdmin:PluginIncludeFolder(extra, folder)
   end
 end
 
-function flAdmin:PlayerHasPermission(player, perm)
-  return fl.admin:HasPermission(player, perm)
+function flAdmin:PlayerHasPermission(player, action, object)
+  return fl.admin:can(player, action, object)
 end
 
 function flAdmin:PlayerIsRoot(player)
-  return player:IsMemberOf("root")
-end
-
-function flAdmin:PlayerIsMemberOfGroup(player, group)
-  for k, v in ipairs(player:get_roles()) do
-    if (v == group) then
-      return true
-    end
-  end
-
-  return false
+  return player.can_anything
 end

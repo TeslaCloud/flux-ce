@@ -38,13 +38,13 @@ if SERVER then
   end
 
   function fl3DText:Remove(player)
-    if (player:HasPermission("textremove")) then
+    if (player:can("textremove")) then
       netstream.Start(player, "fl3DText_Calculate", true)
     end
   end
 
   netstream.Hook("fl3DText_Remove", function(player, idx)
-    if (player:HasPermission("textremove")) then
+    if (player:can("textremove")) then
       table.remove(fl3DText.stored, idx)
 
       fl3DText:Save()
