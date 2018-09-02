@@ -56,7 +56,7 @@ function PANEL:OpenPanel(id)
   end
 
   if (istable(panel)) then
-    if (panel.permission and !fl.client:HasPermission(panel.permission)) then return end
+    if (panel.permission and !fl.client:can(panel.permission)) then return end
 
     local scrW, scrH = ScrW(), ScrH()
     local sW, sH = self.sidebar:GetWide(), self.sidebar:GetTall()

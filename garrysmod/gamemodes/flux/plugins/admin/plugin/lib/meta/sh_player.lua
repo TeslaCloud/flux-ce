@@ -8,10 +8,6 @@ function player_meta:GetPermissions()
   return self:get_nv("permissions", {})
 end
 
-function player_meta:get_roles()
-  return self:get_nv("roles", {})
-end
-
 function player_meta:GetCustomPermissions()
   return self:get_nv("permissions", {})
 end
@@ -21,7 +17,7 @@ function player_meta:is_assistant()
     return true
   end
 
-  return self:IsMemberOf("assistant")
+  return self:has_group("assistant")
 end
 
 -- Implement common admin interfaces.
@@ -32,7 +28,7 @@ end
 function player_meta:IsSuperAdmin()
   if (self:is_root()) then return true end
 
-  return self:IsMemberOf("superadmin")
+  return self:has_group("superadmin")
 end
 
 function player_meta:IsAdmin()
@@ -40,5 +36,5 @@ function player_meta:IsAdmin()
     return true
   end
 
-  return self:IsMemberOf('moderator')
+  return self:has_group('moderator')
 end

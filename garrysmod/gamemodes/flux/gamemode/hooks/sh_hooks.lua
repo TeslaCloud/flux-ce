@@ -197,7 +197,7 @@ function GM:PlayerNoClip(player, bState)
 end
 
 function GM:PhysgunPickup(player, entity)
-  if (player:HasPermission("physgun_pickup")) then
+  if (player:can("physgun_pickup")) then
     return true
   end
 end

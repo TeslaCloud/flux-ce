@@ -15,7 +15,7 @@ function TOOL:LeftClick(trace)
 
   local player = self:GetOwner()
 
-  if (!IsValid(player) or !player:HasPermission("textadd")) then return end
+  if (!IsValid(player) or !player:can("textadd")) then return end
 
   local text = self:GetClientInfo("text")
   local style = self:GetClientNumber("style")

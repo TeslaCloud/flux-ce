@@ -1,7 +1,7 @@
 library.new("admin", fl)
 
-local groups = fl.admin.groups or {}
-fl.admin.groups = groups
+local roles = fl.admin.roles or {}
+fl.admin.roles = roles
 
 local permissions = fl.admin.permissions or {}
 fl.admin.permissions = permissions
@@ -18,8 +18,8 @@ function fl.admin:GetPermissions()
   return permissions
 end
 
-function fl.admin:GetGroups()
-  return groups
+function fl.admin:GetRoles()
+  return roles
 end
 
 function fl.admin:GetPlayers()
@@ -30,13 +30,13 @@ function fl.admin:get_bans()
   return bans
 end
 
-function fl.admin:CreateGroup(id, data)
+function fl.admin:create_group(id, data)
   if (!isstring(id)) then return end
 
   data.id = id
 
   if (data.base) then
-    local parent = groups[data.base]
+    local parent = roles[data.base]
 
     if (parent) then
       local parentCopy = table.Copy(parent)
@@ -46,7 +46,7 @@ function fl.admin:CreateGroup(id, data)
       data.permissions = parentCopy.permissions
 
       for k, v in pairs(parentCopy) do
-        if (k == "Permissions") then continue end
+        if (k == "permissions") then continue end
 
         if (!data[k]) then
           data[k] = v
@@ -55,8 +55,8 @@ function fl.admin:CreateGroup(id, data)
     end
   end
 
-  if (!groups[id]) then
-    groups[id] = data
+  if (!roles[id]) then
+    roles[id] = data
   end
 end
 
@@ -83,78 +83,28 @@ function fl.admin:RegisterPermission(id, name, description, category)
   self:AddPermission(id, category, data, true)
 end
 
-function fl.admin:PermissionFromCommand(cmdObj)
-  if (!cmdObj) then return end
+function fl.admin:PermissionFromCommand(cmd)
+  if (!cmd) then return end
 
-  self:RegisterPermission(cmdObj.id, cmdObj.name, cmdObj.description, cmdObj.category)
+  self:RegisterPermission(cmd.id, cmd.name, cmd.description, cmd.category)
 end
 
-function fl.admin:CheckPermission(player, permission)
-  local playerPermissions = players[player:SteamID()]
-
-  if (playerPermissions) then
-    return playerPermissions[permission]
-  end
-end
-
-function fl.admin:GetPermissionsInCategory(category)
-  local perms = {}
-
-  if (category == "all") then
-    for k, v in pairs(permissions) do
-      for k2, v2 in pairs(v) do
-        table.insert(perms, k2)
-      end
-    end
-  else
-    if (permissions[category]) then
-      for k, v in pairs(permissions[category]) do
-        table.insert(perms, k)
-      end
-    end
-  end
-
-  return perms
-end
-
-function fl.admin:IsCategory(id)
-  if (id == "all" or permissions[id]) then
-    return true
-  end
-
-  return false
-end
-
-function fl.admin:GetGroupPermissions(id)
-  if (groups[id]) then
-    return groups[id].permissions
-  else
-    return {}
-  end
-end
-
-function fl.admin:HasPermission(player, permission)
+function fl.admin:can(player, action, object)
   if (!IsValid(player)) then return true end
   if (player:is_root()) then return true end
 
-  local steam_id = player:SteamID()
+  local role = player.record and roles[player.record.role]
 
-  if (players[steam_id] and (players[steam_id][permission] or players[steam_id]["all"])) then
-    return true
-  end
-
-  local netPerms = player:get_nv("permissions", {})
-
-  if (netPerms and netPerms[permission]) then
-    return true
+  if istable(role) and isfunction(role.can) then
+    return role:can(player, action, object)
   end
 
   return false
 end
 
 function fl.admin:FindGroup(id)
-  if (groups[id]) then
-    return groups[id]
+  if (roles[id]) then
+    return roles[id]
   end
 
   return nil
@@ -200,98 +150,12 @@ function fl.admin:include_roles(directory)
 end
 
 if SERVER then
-  local function SetPermission(steam_id, perm_id, value)
-    players[steam_id] = players[steam_id] or {}
-    players[steam_id][perm_id] = value
-  end
-
-  local function DeterminePermission(steam_id, perm_id, value)
-    local permTable = compilerCache[steam_id]
-
-    permTable[perm_id] = permTable[perm_id] or PERM_NO
-
-    if (value == PERM_NO) then return end
-    if (permTable[perm_id] == PERM_ALLOW_OVERRIDE) then return end
-
-    if (value == PERM_ALLOW_OVERRIDE) then
-      permTable[perm_id] = PERM_ALLOW_OVERRIDE
-      SetPermission(steam_id, perm_id, true)
-
-      return
+  function can(action, object)
+    if IsValid(current_player) then
+      return current_player:can(action, object)
     end
 
-    if (permTable[perm_id] == PERM_NEVER) then return end
-    if (permTable[perm_id] == value) then return end
-
-    if (value == PERM_NEVER) then
-      permTable[perm_id] = PERM_NEVER
-      SetPermission(steam_id, perm_id, false)
-
-      return
-    elseif (value == PERM_ALLOW) then
-      permTable[perm_id] = PERM_ALLOW
-      SetPermission(steam_id, perm_id, true)
-
-      return
-    end
-
-    permTable[perm_id] = PERM_ERROR
-    SetPermission(steam_id, perm_id, false)
-  end
-
-  local function DetermineCategory(steam_id, perm_id, value)
-    if (fl.admin:IsCategory(perm_id)) then
-      local catPermissions = fl.admin:GetPermissionsInCategory(perm_id)
-
-      for k, v in ipairs(catPermissions) do
-        DeterminePermission(steam_id, v, value)
-      end
-    else
-      DeterminePermission(steam_id, perm_id, value)
-    end
-  end
-
-  function fl.admin:CompilePermissions(player)
-    if (!IsValid(player)) then return end
-
-    local steam_id = player:SteamID()
-    local role = player:GetUserGroup()
-    local roles = player:get_roles()
-    local playerPermissions = player:GetCustomPermissions()
-    local groupPermissions = self:GetGroupPermissions(role)
-
-    compilerCache[steam_id] = {}
-
-    for k, v in pairs(groupPermissions) do
-      DetermineCategory(steam_id, k, v)
-    end
-
-    for _, group in ipairs(roles) do
-      local permTable = self:GetGroupPermissions(group)
-
-      for k, v in pairs(permTable) do
-        DetermineCategory(steam_id, k, v)
-      end
-    end
-
-    for k, v in pairs(playerPermissions) do
-      DetermineCategory(steam_id, k, v)
-    end
-
-    local extras = {}
-
-    hook.run("OnPermissionsCompiled", player, extras)
-
-    if (istable(extras)) then
-      for id, extra in pairs(extras) do
-        for k, v in pairs(extra) do
-          DeterminePermissions(steam_id, k, v)
-        end
-      end
-    end
-
-    player:SetPermissions(players[steam_id])
-    compilerCache[steam_id] = nil
+    return false
   end
 
   -- INTERNAL
@@ -309,7 +173,7 @@ if SERVER then
     bans[id] = obj
   end
 
-  function fl.admin:Ban(player, duration, reason, bPreventKick)
+  function fl.admin:ban(player, duration, reason, bPreventKick)
     if (!isstring(player) and !IsValid(player)) then return end
 
     duration = duration or 0
@@ -340,6 +204,10 @@ if SERVER then
     end
 
     return false
+  end
+else
+  function can(action, object)
+    return fl.client:can(action, object)
   end
 end
 

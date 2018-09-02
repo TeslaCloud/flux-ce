@@ -18,7 +18,7 @@ do
   end
 
   function PLUGIN:HUDPaint()
-    if (IsValid(fl.client) and fl.client:Alive() and fl.client:GetMoveType() == MOVETYPE_NOCLIP and fl.client:HasPermission("admin_esp")) then
+    if (IsValid(fl.client) and fl.client:Alive() and fl.client:GetMoveType() == MOVETYPE_NOCLIP and can("admin_esp")) then
       local scrW, scrH = ScrW(), ScrH()
       local clientPos = fl.client:GetPos()
 

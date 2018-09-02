@@ -64,7 +64,7 @@ function fl.command:find_all(id)
       if SERVER then
         table.insert(hits, stored[v])
       else
-        if (fl.client:HasPermission(v)) then
+        if (fl.client:can(v)) then
           table.insert(hits, stored[v])
         end
       end
@@ -239,7 +239,7 @@ if SERVER then
     local cmd_table = self:find_by_id(command)
 
     if (cmd_table) then
-      if ((!IsValid(player) and !cmd_table.no_console) or player:HasPermission(cmd_table.id)) then
+      if ((!IsValid(player) and !cmd_table.no_console) or player:can(cmd_table.id)) then
         if (cmd_table.arguments == 0 or cmd_table.arguments <= #args) then
           if (cmd_table.immunity or cmd_table.player_arg != nil) then
             local target_arg = args[(cmd_table.player_arg or 1)]
