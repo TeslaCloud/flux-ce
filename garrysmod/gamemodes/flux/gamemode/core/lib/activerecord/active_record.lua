@@ -98,6 +98,15 @@ function ActiveRecord.drop_schema()
 end
 
 function ActiveRecord.recreate_schema()
-  ActiveRecord.generate_tables()
-  RunConsoleCommand('changelevel', game.GetMap())
+  ActiveRecord.drop_schema()
+
+  timer.Simple(0.25, function()
+    ActiveRecord.generate_tables()
+    
+    print 'Done! Restarting...'
+
+    timer.Simple(0.5, function()
+      RunConsoleCommand('changelevel', game.GetMap())
+    end)
+  end)
 end
