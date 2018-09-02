@@ -4,12 +4,10 @@ local colorWhite = Color(255, 255, 255, 255)
 local PANEL = {}
 
 function PANEL:Init()
-  local scrW, scrH = ScrW(), ScrH()
-
-  self:SetSize(scrW, scrH)
+  self:SetSize(ScrW(), ScrH())
   self:SetPos(0, 0)
 
-  self:StartAnimation(scrW, scrH)
+  self:StartAnimation()
 
   timer.Simple(4, function()
     self:CloseMenu()
@@ -19,39 +17,61 @@ function PANEL:Init()
 end
 
 local logoW, logoH = 600, 110
-local curAlpha, curRadius = 0, 0
+local w_mod, h_mod = 6, 1.1
+local cur_radius, cur_alpha = 0, 0
 local exX, exY = 0, 0
-local randomColor = Color(255, 255, 255)
-local removeAlpha = 255
+local color = Color(140, 0, 220)
+local remove_alpha = 255
+local logo_delta = 1
+local delta_modifier = 80
 
 function PANEL:Paint(w, h)
-  draw.RoundedBox(0, 0, 0, w, h, Color(0, 0, 0, removeAlpha))
+  local frame_time = FrameTime()
 
-  if (!self.shouldRemove) then
-    surface.SetDrawColor(randomColor.r, randomColor.g, randomColor.b, curAlpha)
-    surface.DrawCircle(exX, exY, curRadius, 180)
-  else
-    self:MoveToFront()
+  draw.RoundedBox(0, 0, 0, w, h, Color(0, 0, 0, remove_alpha))
 
-    removeAlpha = math.Clamp(removeAlpha - 3, 0, 255)
-  end
+  draw.TexturedRect(
+    util.GetMaterial("materials/flux/tc_logo.png"),
+    w * 0.5 - logoW * 0.5 - delta_modifier * logo_delta * 0.5 * w_mod,
+    h * 0.5 - logoH * 0.5 - delta_modifier * logo_delta * 0.5 * h_mod,
+    logoW + delta_modifier * logo_delta * w_mod,
+    logoH + delta_modifier * logo_delta * h_mod,
+    Color(255, 255, 255, remove_alpha)
+  )
 
-  draw.TexturedRect(util.GetMaterial("materials/flux/tc_logo.png"), w * 0.5 - logoW * 0.5, h * 0.5 - logoH * 0.5, logoW, logoH, Color(255, 255, 255, removeAlpha))
+  if self.started then
+    if self.shouldRemove then
+      self:MoveToFront()
 
-  if (!self.shouldRemove) then
-    curRadius = curRadius + 2
-    curAlpha = math.Clamp(Lerp(FrameTime() * 8, curAlpha, 0), 0, 255)
+      remove_alpha = math.Clamp(remove_alpha - 3, 0, 255)
+    end
 
-    if (math.floor(curAlpha) <= 1) then
-      local w, h = self:GetSize()
+    logo_delta = math.max(Lerp(frame_time * 6, logo_delta, 0), 0)
 
-      curAlpha = 255
-      curRadius = 0
+    if (!self.shouldRemove) then
+      if logo_delta < 0.05 then
+        local cx, cy = ScrC()
+        exX, exY = cx, cy
 
-      randomColor = Color(math.random(0, 255), math.random(0, 255), math.random(0, 255))
+        if cur_alpha == 0 then
+          cur_alpha = 255
 
-      exX = math.random(math.Round(w * 0.2), math.Round(w * 0.8))
-      exY = math.random(math.Round(h * 0.2), math.Round(h * 0.8))
+          sound.PlayFile('sound/ambient/machines/thumper_hit.wav', 'noplay noblock', function(channel, error, err_string)
+            if channel then
+              channel:SetVolume(0.5)
+              channel:Play()
+            end
+
+            print(error, err_string)
+          end)
+        end
+
+        surface.SetDrawColor(color.r, color.g, color.b, cur_alpha)
+        surface.DrawCircle(exX, exY, cur_radius, 180)
+
+        cur_radius = cur_radius + 3
+        cur_alpha = math.Clamp(Lerp(frame_time * 8, cur_alpha, 1), 0, 255)
+      end
     end
   end
 end
@@ -66,8 +86,10 @@ function PANEL:CloseMenu()
   hook.run("OnIntroPanelRemoved")
 end
 
-function PANEL:StartAnimation(scrW, scrH)
-
+function PANEL:StartAnimation()
+  timer.Simple(0.6, function()
+    self.started = true
+  end)
 end
 
 derma.DefineControl("flIntro", "", PANEL, "EditablePanel")
