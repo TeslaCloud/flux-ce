@@ -252,8 +252,8 @@ function plugin.register(obj)
     end
   end
 
-  if (isfunction(obj.OnPluginLoaded)) then
-    obj.OnPluginLoaded(obj)
+  if isfunction(obj.OnPluginLoaded) then
+    obj:OnPluginLoaded()
   end
 
   stored[obj:get_folder()] = obj

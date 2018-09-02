@@ -7,7 +7,7 @@ function flAdmin:OnPluginLoaded()
   plugin.add_extra("commands")
   plugin.add_extra("roles")
 
-  local folder = self:get_folder().."/plugin"
+  local folder = self:get_folder()
 
   util.include_folder(folder.."/commands/")
   fl.admin:include_roles(folder.."/roles/")
