@@ -1,15 +1,11 @@
 local player_meta = FindMetaTable("Player")
 
 function player_meta:SaveUsergroup()
-  self.record.name = self:Name()
-  self.record.role = self:GetUserGroup()
-  self.record:save()
-end
-
-function player_meta:SaveAllUsergroups()
-  self.record.name = self:Name()
-  self.record.role = self:GetUserGroup()
-  self.record:save()
+  if self.record then
+    self.record.name = self:Name()
+    self.record.role = self:GetUserGroup()
+    self.record:save()
+  end
 end
 
 function player_meta:SetPermissions(permTable)
