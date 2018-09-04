@@ -309,8 +309,6 @@ function GM:OneSecond()
     fl.nextSaveData = curTime + 10
   elseif (fl.nextSaveData <= curTime) then
     if (hook.run("FLShouldSaveData") != false) then
-      fl.dev_print("Saving framework's data...")
-
       hook.run("FLSaveData")
     end
 

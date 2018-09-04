@@ -1,11 +1,9 @@
 function flCharacters:PlayerInitialized()
-  if (!fl.client:GetCharacter()) then
-    if (!IsValid(fl.IntroPanel)) then
-      fl.IntroPanel = vgui.Create("flIntro")
+  if (!fl.client:GetCharacter() and !IsValid(fl.IntroPanel)) then
+    fl.IntroPanel = vgui.Create('flIntro')
 
-      if (IsValid(fl.IntroPanel)) then
-        fl.IntroPanel:MakePopup()
-      end
+    if (IsValid(fl.IntroPanel)) then
+      fl.IntroPanel:MakePopup()
     end
   end
 end

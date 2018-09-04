@@ -225,6 +225,7 @@ function extends(base_class)
 
     obj = copy
     obj.BaseClass = base_class
+    obj.base_class = obj.BaseClass
 
     hook.run("OnClassExtended", obj, base_class)
 

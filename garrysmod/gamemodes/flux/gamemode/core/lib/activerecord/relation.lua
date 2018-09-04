@@ -6,11 +6,14 @@ ActiveRecord.Relation.class = nil
 function ActiveRecord.Relation:init(object, class)
   self.object = class.new()
   self.object_class = class
-
   self.object.fetched = true
+
+  local schema = ActiveRecord.schema[class.table_name]
+
   for k, v in pairs(object) do
-    self.object[k] = v
+    self.object[k] = ActiveRecord.str_to_type(v, schema[k] or 'string')
   end
+
   if isfunction(self.object.restored) then
     self.object:restored()
   end

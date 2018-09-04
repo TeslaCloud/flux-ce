@@ -839,8 +839,20 @@ function util.vector_in_poly(point, polyVertices)
   end
 end
 
+function table.Merge(dest, source)
+	for k, v in pairs(source) do
+		if istable(v) and istable(dest[k]) then
+			table.Merge(dest[k], v)
+		else
+			dest[k] = v
+		end
+	end
+
+	return dest
+end
+
 function table.safe_merge(to, from)
-  local oldIndex, oldIndex2 = to.__index, from.__index
+  local old_idx_to, old_idx = to.__index, from.__index
   local references = {}
 
   to.__index = nil
@@ -859,8 +871,8 @@ function table.safe_merge(to, from)
     from[k] = v
   end
 
-  to.__index = oldIndex
-  from.__index = oldIndex2
+  to.__index = old_idx_to
+  from.__index = old_idx
 
   return to
 end
