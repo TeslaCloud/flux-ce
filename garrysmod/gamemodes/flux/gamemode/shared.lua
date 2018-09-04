@@ -24,8 +24,7 @@ IS_PRODUCTION   = FLUX_ENV == 'production'
 fl.development  = !IS_PRODUCTION
 
 AddCSLuaFile    'flux/config/environment.lua'
-AddCSLuaFile    'core/sh_util.lua'
-include         'core/sh_util.lua'
+include         'lib/sh_util.lua'
 
 -- Aliases for serverside and clientside constants.
 sv              = SERVER
@@ -61,23 +60,23 @@ util.include 'core/sh_enums.lua'
 util.include 'core/sh_core.lua'
 util.include 'core/cl_core.lua'
 util.include 'core/sv_core.lua'
-util.include 'core/lib/activerecord/ar_shared.lua'
+util.include 'lib/activerecord/ar_shared.lua'
 
 -- This way we put things we want loaded BEFORE anything else in here, like plugin, config, etc.
-util.include_folder("core/lib/required", true)
+util.include_folder("lib/required", true)
 
 -- So that we don't get duplicates on refresh.
 plugin.clear_cache()
 
-util.include_folder("core/config", true)
-util.include_folder("core/lib", true)
-util.include_folder("core/lib/classes", true)
-util.include_folder("core/lib/meta", true)
-util.include_folder("core/models", true)
+util.include_folder("config", true)
+util.include_folder("lib", true)
+util.include_folder("lib/classes", true)
+util.include_folder("lib/meta", true)
+util.include_folder("models", true)
 if SERVER then pipeline.include_folder('language', 'flux/gamemode/languages') end
-util.include_folder("core/ui/controllers", true)
-util.include_folder("core/ui/views/base", true)
-util.include_folder("core/ui/views", true)
+util.include_folder("controllers", true)
+util.include_folder("views/base", true)
+util.include_folder("views", true)
 
 if (theme or SERVER) then
   pipeline.register("theme", function(id, file_name, pipe)
@@ -93,11 +92,11 @@ if (theme or SERVER) then
   end)
 
   -- Theme factory is needed for any other themes that may be in the themes folder.
-  pipeline.Include("theme", "core/themes/cl_theme_factory.lua")
-  pipeline.include_folder("theme", "flux/gamemode/core/themes")
+  pipeline.Include("theme", "themes/cl_theme_factory.lua")
+  pipeline.include_folder("theme", "flux/gamemode/themes")
 end
 
-pipeline.include_folder("tool", "flux/gamemode/core/tools")
+pipeline.include_folder("tool", "flux/gamemode/tools")
 util.include_folder("hooks", true)
 
 hook.run("PreLoadPlugins")

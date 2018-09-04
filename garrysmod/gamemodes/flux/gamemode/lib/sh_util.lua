@@ -220,40 +220,40 @@ function util.AddCSLuaFile(strFile)
 end
 
 -- A function to include all files in a directory.
-function util.include_folder(strDirectory, strBase, bIsRecursive)
-  if (strBase) then
-    if (isbool(strBase)) then
-      strBase = "flux/gamemode/"
-    elseif (!strBase:EndsWith("/")) then
-      strBase = strBase.."/"
+function util.include_folder(dir, base, recursive)
+  if (base) then
+    if (isbool(base)) then
+      base = "flux/gamemode/"
+    elseif (!base:ends("/")) then
+      base = base.."/"
     end
 
-    strDirectory = strBase..strDirectory
+    dir = base..dir
   end
 
-  if (!strDirectory:EndsWith("/")) then
-    strDirectory = strDirectory.."/"
+  if (!dir:ends("/")) then
+    dir = dir.."/"
   end
 
-  if (bIsRecursive) then
-    local files, folders = _file.Find(strDirectory.."*", "LUA", "namedesc")
+  if (recursive) then
+    local files, folders = _file.Find(dir.."*", "LUA", "namedesc")
 
     -- First include the files.
     for k, v in ipairs(files) do
       if (v:GetExtensionFromFilename() == "lua") then
-        util.include(strDirectory..v)
+        util.include(dir..v)
       end
     end
 
     -- Then include all directories.
     for k, v in ipairs(folders) do
-      util.include_folder(strDirectory..v, bIsRecursive)
+      util.include_folder(dir..v, recursive)
     end
   else
-    local files, _ = _file.Find(strDirectory.."*.lua", "LUA", "namedesc")
+    local files, _ = _file.Find(dir.."*.lua", "LUA", "namedesc")
 
     for k, v in ipairs(files) do
-      util.include(strDirectory..v)
+      util.include(dir..v)
     end
   end
 end
