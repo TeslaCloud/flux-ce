@@ -2,8 +2,7 @@ en:
   err:
     group_not_valid: "'{1}' is not a valid user group!"
     not_banned: Steam ID '{1}' is not banned!
-    'no':
-      permission: You have no permissions to do that, {1}.
+    no_permission: You have no permissions to do that, {1}.
   freeze_bots_message: "{1} has frozen all bots."
   unfreeze_bots_message: "{1} has unfrozen all bots."
   kick_message: "{1} has kicked {2}. ({3})"
