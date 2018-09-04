@@ -58,6 +58,11 @@ print('Flux environment: '..FLUX_ENV)
 
 util.include 'core/sh_enums.lua'
 util.include 'core/sh_core.lua'
+
+if CLIENT and !fl.lang then
+  include 'lib/sh_lang.lua'
+end
+
 util.include 'core/cl_core.lua'
 util.include 'core/sv_core.lua'
 
