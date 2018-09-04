@@ -61,18 +61,17 @@ end
 
 -- Make sure to run this while the adapter is in "sync mode"
 function ActiveRecord.get_meta_key(key, default)
-  local ret = default
-
   local query = ActiveRecord.Database:select('ar_metadata')
     query:where('key', key)
-    query:callback(function(res)
+    query:limit(1)
+    query:callback(function(res, query_str, time)
+      print_query('Meta Get ('..time..'ms)', query_str)
       if istable(res) and #res > 0 then
-        ret = res[1]
+        return res[1] and res[1].value or default
       end
+      return default
     end)
-  query:execute()
-
-  return ret
+  return query:execute()
 end
 
 function ActiveRecord.set_meta_key(key, value)
@@ -83,11 +82,17 @@ function ActiveRecord.set_meta_key(key, value)
         local q = ActiveRecord.Database:update('ar_metadata')
           q:where('key', key)
           q:update('value', value)
+          q:callback(function(r, query_str, time)
+            print_query('Meta Update ('..time..'ms)', query_str)
+          end)
         q:execute()
       else
         local q = ActiveRecord.Database:insert('ar_metadata')
           q:insert('key', key)
           q:insert('value', value)
+          q:callback(function(r, query_str, time)
+            print_query('Meta Insert ('..time..'ms)', query_str)
+          end)
         q:execute()
       end
     end)
@@ -127,14 +132,17 @@ function ActiveRecord.on_connected()
   ActiveRecord.generate_tables()
   ActiveRecord.restore_schema()
 
+  local class_name = ActiveRecord.adapter.class_name:lower()
   local db_version = ActiveRecord.get_meta_key('version', 0)
-  local adapter = ActiveRecord.get_meta_key('adapter', ActiveRecord.adapter.class_name)
+  local adapter = ActiveRecord.get_meta_key('adapter', class_name)
 
-  if adapter != ActiveRecord.adapter.class_name then
+  print(db_version, adapter)
+
+  if adapter != class_name then
     ActiveRecord.drop_schema(true)
     ActiveRecord.generate_tables()
 
-    adapter = ActiveRecord.adapter.class_name
+    adapter = class_name
   end
 
   ActiveRecord.migrator = ActiveRecord.Migrator.new(db_version)

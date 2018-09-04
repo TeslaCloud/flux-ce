@@ -82,9 +82,7 @@ function ActiveRecord.Adapters.Mysqloo:raw_query(query, callback, flags, ...)
 
   local query_obj = self.connection:query(query)
   local query_start = os.clock()
-
-  query_obj:setOption(mysqloo.OPTION_NAMED_FIELDS)
-  query_obj.onSuccess = function(query_obj, result)
+  local success_func = function(query_obj, result)
     if (callback) then
       for k, v in pairs(result) do
         if isstring(v) then
@@ -92,21 +90,35 @@ function ActiveRecord.Adapters.Mysqloo:raw_query(query, callback, flags, ...)
         end
       end
 
-      local status, value = pcall(callback, result, query, math.Round(os.clock() - query_start, 3))
+      local status, a, b, c, d = pcall(callback, result, query, math.Round(os.clock() - query_start, 3))
 
       if (!status) then
         ErrorNoHalt(string.format('ActiveRecord - MySQL Callback Error!\n%s\n', value))
       end
+
+      return a, b, c, d
     end
   end
+
+  query_obj:setOption(mysqloo.OPTION_NAMED_FIELDS)
+  query_obj.onSuccess = success_func
   query_obj.onError = function(query_obj, error_text)
     ErrorNoHalt('ActiveRecord - MySQL Query Error!\n')
     ErrorNoHalt('Query: '..query..'\n')
     ErrorNoHalt(error_text..'\n')
   end
-  query_obj:start()
   if self._sync then
+    query_obj.onSuccess = nil
+    query_obj:start()
     query_obj:wait(true)
+
+    local data = query_obj:getData()
+
+    if data then
+      return success_func(query_obj, data)
+    end
+  else
+    query_obj:start()
   end
 end
 

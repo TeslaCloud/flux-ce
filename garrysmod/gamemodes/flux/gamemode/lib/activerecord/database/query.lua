@@ -144,6 +144,10 @@ function ActiveRecord.Query:offset(value)
   self.offset = value
 end
 
+function ActiveRecord.Query:overwrite(overwrite)
+  self._overwrite = overwrite
+end
+
 local function build_select_query(query_obj)
   local query_string = {'SELECT'}
 
@@ -292,6 +296,10 @@ end
 local function build_create_query(query_obj)
   local query_string = { 'DROP TABLE IF EXISTS' }
 
+  if !query_obj._overwrite then
+    query_string = { 'CREATE TABLE IF NOT EXISTS' }
+  end
+
   if (isstring(query_obj.table_name)) then
     table.insert(query_string, ' `'..query_obj.table_name..'`')
   else
@@ -299,7 +307,9 @@ local function build_create_query(query_obj)
     return
   end
 
-  table.insert(query_string, ';\nCREATE TABLE `'..query_obj.table_name..'`')
+  if query_obj._overwrite then
+    table.insert(query_string, ';\nCREATE TABLE `'..query_obj.table_name..'`')
+  end
 
   table.insert(query_string, ' (')
 

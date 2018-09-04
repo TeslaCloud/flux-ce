@@ -55,6 +55,8 @@ end
 
 function ActiveRecord.generate_tables()
   create_table('ar_schema', function(t)
+    t:overwrite(false)
+
     t:primary_key 'id'
     t:string 'table_name'
     t:string 'column_name'
@@ -63,6 +65,8 @@ function ActiveRecord.generate_tables()
   end)
 
   create_table('ar_metadata', function(t)
+    t:overwrite(false)
+
     t:primary_key 'id'
     t:string 'key'
     t:string 'value'

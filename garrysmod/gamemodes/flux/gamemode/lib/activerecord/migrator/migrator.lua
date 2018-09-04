@@ -80,13 +80,15 @@ function ActiveRecord.Migrator:run_migrations(folder, force)
     end
   end
 
-  if initial_version != self.schema.version then
+  if tonumber(initial_version) != tonumber(self.schema.version) then
     if initial_version == 0 and ActiveRecord.adapter.class_name:lower() != 'sqlite' then
       self.schema:setup_references()
     end
 
-    print('Ran '..migration_count..' migration'..(migration_count > 1 and 's' or '')..' in '..math.Round(os.clock() - migration_start, 4)..'ms.')
-    self:generate_schema()
+    if migration_count > 0 then
+      print('Ran '..migration_count..' migration'..(migration_count > 1 and 's' or '')..' in '..math.Round(os.clock() - migration_start, 4)..'ms.')
+      self:generate_schema()
+    end
   end
 
   return self
