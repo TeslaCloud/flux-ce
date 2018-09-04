@@ -1,7 +1,3 @@
-ActiveRecord.define_model('Data', function(t)
-  t:string 'key'
-  t:text 'value'
-  t:integer 'character_id'
-end)
+class 'Data' extends 'ActiveRecord::Base'
 
 Data:belongs_to 'Character'

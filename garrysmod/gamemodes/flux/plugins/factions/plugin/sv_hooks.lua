@@ -18,12 +18,6 @@ function flFactions:RestorePlayer(player, result)
   end
 end
 
-function flFactions:ActiveRecordReady()
-  if !ActiveRecord.schema['characters']['char_class'] then
-    add_column('characters', 'char_class', 'text')
-  end
-end
-
 function flFactions:OnActiveCharacterSet(player, charData)
   player:set_nv("faction", charData.faction or "player")
 end

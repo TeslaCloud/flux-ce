@@ -1,7 +1,4 @@
-ActiveRecord.define_model('Attribute', function(t)
-  t:string 'attr_id'
-  t:integer 'character_id'
-end)
+class 'Attribute' extends 'ActiveRecord::Base'
 
 Attribute:belongs_to 'Character'
 

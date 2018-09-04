@@ -3,14 +3,16 @@ include 'schema.lua'
 
 class 'ActiveRecord::Migrator'
 
-function ActiveRecord.Migrator:init()
+local migration_files = {}
+
+function ActiveRecord.Migrator:init(version)
   self.db_path = 'gamemodes/'..fl.get_schema_folder()..'/db'
   self.schema_path = self.db_path..'/schema.lua'
 
   if !file.Exists(self.schema_path, 'GAME') then
     if !file.Exists('gamemodes/flux/db/schema.lua', 'GAME') then
       ErrorNoHalt "Warning - Unable to find the 'db/schema.lua' file. Attempting to generate schema...\n"
-      return self:generate_schema()
+      return self:generate_schema(version)
     else
       ErrorNoHalt 'Warning - The database structure file is defined in framework, not schema!\n'
       ErrorNoHalt("You should move it to: "..self.schema_path..'\n')
@@ -21,13 +23,14 @@ function ActiveRecord.Migrator:init()
   end
 
   self.schema = include(self.schema_path:gsub('gamemodes/', ''))
+  self.schema.version = version or self.schema.version
 
   return self
 end
 
-function ActiveRecord.Migrator:generate_schema()
+function ActiveRecord.Migrator:generate_schema(version)
   fileio.Delete(self.db_path..'/.keep')
-  fileio.Write(self.schema_path, ActiveRecord.dump_schema())
+  fileio.Write(self.schema_path, ActiveRecord.dump_schema(version or (self.schema and self.schema.version) or 0))
   self.schema = include(self.schema_path:gsub('gamemodes/', ''))
 
   return self
@@ -36,13 +39,17 @@ end
 function ActiveRecord.Migrator:run_migrations(folder, force)
   if !self.schema then error "Can't run migrations without a schema!" end
 
-  folder = folder or self.db_path..'/migrate'
+  if #migration_files > 0 then
+    for k, v in ipairs(migration_files) do
+      self:migration_from_file(v)
+    end
+  end
 
-  ActiveRecord.adapter:sync(true)
+  folder = (folder or self.db_path..'/migrate/'):gsub('gamemodes/', '')
 
   local migration_start = os.clock()
   local migration_count = 0
-  local initial_version = self.schema.version or 0
+  local initial_version = tonumber(self.schema.version) or 0
 
   folder = folder:ensure_ending('/')
 
@@ -51,7 +58,7 @@ function ActiveRecord.Migrator:run_migrations(folder, force)
   for k, v in ipairs(files) do
     local version, migration_name = v:match('^(%d+)_([^%.]+)%.lua')
 
-    if (tonumber(version) or 0) > self.schema.version or force then
+    if (tonumber(version) or 0) > tonumber(self.schema.version) or force then
       if migration_count == 0 then
         print('Running migrations...')
       end
@@ -74,29 +81,31 @@ function ActiveRecord.Migrator:run_migrations(folder, force)
   end
 
   if initial_version != self.schema.version then
-    print('Ran '..migration_count..' migration'..(migration_count > 1 and 's' or '')..' in '..math.Round(os.clock() - migration_start, 4)..'ms.')
-  end
+    if initial_version == 0 and ActiveRecord.adapter.class_name:lower() != 'sqlite' then
+      self.schema:setup_references()
+    end
 
-  ActiveRecord.adapter:sync(false)
+    print('Ran '..migration_count..' migration'..(migration_count > 1 and 's' or '')..' in '..math.Round(os.clock() - migration_start, 4)..'ms.')
+    self:generate_schema()
+  end
 
   return self
 end
 
 function ActiveRecord.Migrator:setup_database()
-  ActiveRecord.adapter:sync(true)
   self.schema:create_tables()
-  ActiveRecord.adapter:sync(false)
+  self.schema:setup_references()
   return self
 end
 
 function ActiveRecord.Migrator:generate_version()
   local version = to_timestamp(os.time())
-  local files, folders = file.Find(self.db_path..'/*.lua', 'GAME')
+  local files, folders = file.Find(self.db_path..'/migrate/*.lua', 'GAME')
 
   for k, v in ipairs(files) do
     local ver = v:match('^(%d+)_')
 
-    if version == ver then
+    if tonumber(version) == tonumber(ver) then
       version = tonumber(version) + 1
     end
   end
@@ -108,7 +117,7 @@ function ActiveRecord.Migrator:migration_exists(version, name)
   version = version or 0
   name = (name or ''):to_snake_case()
 
-  local files, folders = file.Find(self.db_path..'/*.lua', 'GAME')
+  local files, folders = file.Find(self.db_path..'/migrate/*.lua', 'GAME')
 
   for k, v in ipairs(files) do
     local ver, migration_name = v:match('^(%d+)_([^%.]+)%.lua')
@@ -125,11 +134,11 @@ function ActiveRecord.Migrator:generate_migration(name, body, verbose, file_path
   fileio.Delete(self.db_path..'/migrate/.keep')
 
   local version = self:generate_version()
-  file_path = (file_path:ensure_ending('/') or (self.db_path..'/migrate/'))..version..'_'..name:to_snake_case()..'.lua'
+  file_path = (file_path and file_path:ensure_ending('/') or (self.db_path..'/migrate/'))..version..'_'..name:to_snake_case()..'.lua'
 
   fileio.Write(file_path, [[local Migration = ActiveRecord.Migration.new(]]..version..[[)
   function Migration:change()
-]]..string.set_indent(body or '', '    ')..[[
+]]..string.set_indent(body or '', '    '):trim_end('    ')..[[
   end
 return Migration
 ]])
@@ -142,6 +151,7 @@ return Migration
 end
 
 function ActiveRecord.Migrator:migration_from_file(file)
+  file = file:ensure_start('gamemodes/')
   local file_name = file:GetFileFromFilename()
   local version, name = file_name:match('^(%d+)_([^%.]+)%.lua')
 
@@ -157,5 +167,10 @@ function ActiveRecord.Migrator:migration_from_file(file)
     self:generate_migration(name, contents, fl.development)
   end
 
+  return self
+end
+
+function ActiveRecord.Migrator:add_file(path)
+  table.insert(migration_files, 'gamemodes/'..path)
   return self
 end

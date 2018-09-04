@@ -38,11 +38,13 @@ function ActiveRecord.Adapters.Sqlite:raw_query(query, callback, flags, ...)
     ErrorNoHalt(sql.LastError()..'\n')
   else
     if (callback) then
-      local status, value = pcall(callback, result, query, math.Round(os.clock() - query_start, 2))
+      local status, a, b, c, d = pcall(callback, result, query, math.Round(os.clock() - query_start, 3))
 
       if (!status) then
         ErrorNoHalt(string.format('ActiveRecord - SQL callback Error!\n%s\n', value))
       end
+
+      return a, b, c, d
     end
   end
 end

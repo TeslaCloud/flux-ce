@@ -1,9 +1,4 @@
-ActiveRecord.define_model('Faction', function(t)
-  t:string 'faction_id'
-  t:integer 'character_id'
-end)
-
-Faction:belongs_to 'Character'
+class 'Faction'
 
 function Faction:init(id)
   if !id then return end
