@@ -404,6 +404,7 @@ function ActiveRecord.Query:execute(queue_query)
 
   if (isstring(query_string)) then
     query_string = query_string:ensure_ending(';')
+    query_string = query_string:gsub(' ;', ';'):gsub('`  ', '` ')
 
     if (!queue_query) then
       return ActiveRecord.adapter:raw_query(query_string, self._callback)
