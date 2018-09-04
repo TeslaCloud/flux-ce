@@ -60,10 +60,12 @@ util.include 'core/sh_enums.lua'
 util.include 'core/sh_core.lua'
 util.include 'core/cl_core.lua'
 util.include 'core/sv_core.lua'
-util.include 'lib/activerecord/ar_shared.lua'
 
 -- This way we put things we want loaded BEFORE anything else in here, like plugin, config, etc.
 util.include_folder("lib/required", true)
+
+-- Include ActiveRecord for database management
+util.include 'lib/activerecord/ar_shared.lua'
 
 -- So that we don't get duplicates on refresh.
 plugin.clear_cache()
@@ -72,8 +74,11 @@ util.include_folder("config", true)
 util.include_folder("lib", true)
 util.include_folder("lib/classes", true)
 util.include_folder("lib/meta", true)
+if SERVER then
+  pipeline.include_folder('language', 'flux/gamemode/languages')
+  pipeline.include_folder('migrations', 'flux/gamemode/migrations')
+end
 util.include_folder("models", true)
-if SERVER then pipeline.include_folder('language', 'flux/gamemode/languages') end
 util.include_folder("controllers", true)
 util.include_folder("views/base", true)
 util.include_folder("views", true)
@@ -92,7 +97,7 @@ if (theme or SERVER) then
   end)
 
   -- Theme factory is needed for any other themes that may be in the themes folder.
-  pipeline.Include("theme", "themes/cl_theme_factory.lua")
+  pipeline.include("theme", "themes/cl_theme_factory.lua")
   pipeline.include_folder("theme", "flux/gamemode/themes")
 end
 

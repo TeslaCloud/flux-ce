@@ -646,6 +646,20 @@ do
   end
 end
 
+function string.ensure_ending(str, ending)
+  if str:ends(ending) then return str end
+  return str..ending
+end
+
+function string.ensure_start(str, start)
+  if str:starts(start) then return str end
+  return start..str
+end
+
+function string.set_indent(str, indent)
+  return indent..str:gsub('\n', '\n'..indent):gsub('\n%s+\n', '\n\n')
+end
+
 do
   local cache = {}
 

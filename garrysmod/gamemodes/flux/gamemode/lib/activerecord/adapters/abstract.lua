@@ -4,7 +4,13 @@ class 'ActiveRecord::Adapters::Abstract'
 
 function ActiveRecord.Adapters.Abstract:init()
   self._connected = false
+  self._sync = false
   self._queue = {}
+end
+
+function ActiveRecord.Adapters.Abstract:sync(sync)
+  self._sync = sync
+  return self
 end
 
 function ActiveRecord.Adapters.Abstract:connect(config)
@@ -63,8 +69,12 @@ end
 -- Called when the Database connects sucessfully.
 function ActiveRecord.Adapters.Abstract:on_connected()
   self._connected = true
+  self:sync(true)
+
   ActiveRecord.on_connected()
   hook.run('DatabaseConnected')
+
+  self:sync(false)
 end
 
 -- Called when the Database connection fails.
