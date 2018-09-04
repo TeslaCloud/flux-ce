@@ -1,5 +1,6 @@
 function create_table(name, callback)
   local query = ActiveRecord.Database:create(name)
+    query:overwrite(true)
     callback(query)
     query:callback(function(result, query_str, time)
       print_query('Create Table ('..time..'ms)', query_str)
