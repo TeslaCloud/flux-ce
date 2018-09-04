@@ -2,11 +2,12 @@ ActiveRecord.schema = ActiveRecord.schema or {}
 ActiveRecord.db_settings = Settings.database[FLUX_ENV] or Settings.database['development'] or {}
 ActiveRecord.adapter_name = ActiveRecord.db_settings.adapter or 'sqlite'
 
-include 'generators.lua'
+include 'generators/generator.lua'
 include 'database/database.lua'
 include 'database/query.lua'
 include 'adapters/abstract.lua'
 include 'database/queue.lua'
+include 'migrator/migrator.lua'
 include 'model.lua'
 include 'base.lua'
 include 'relation.lua'
@@ -88,6 +89,9 @@ function ActiveRecord.on_connected()
 
   ActiveRecord.generate_tables()
   ActiveRecord.restore_schema()
+
+  ActiveRecord.migrator = ActiveRecord.Migrator.new()
+  ActiveRecord.migrator:run_migrations()
 end
 
 function ActiveRecord.drop_schema()
@@ -110,3 +114,7 @@ function ActiveRecord.recreate_schema()
     end)
   end)
 end
+
+pipeline.register('migrations', function(id, file_name, pipe)
+  ActiveRecord.migrator:migration_from_file('gamemodes/'..file_name)
+end)

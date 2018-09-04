@@ -39,14 +39,14 @@ function fl.admin:create_group(id, data)
     local parent = roles[data.base]
 
     if (parent) then
-      local parentCopy = table.Copy(parent)
+      local copy = table.Copy(parent)
 
-      table.safe_merge(parentCopy.permissions, data.permissions)
+      table.safe_merge(copy.permissions, data.permissions)
 
-      data.permissions = parentCopy.permissions
+      data.permissions = copy.permissions
 
-      for k, v in pairs(parentCopy) do
-        if (k == "permissions") then continue end
+      for k, v in pairs(copy) do
+        if k == 'permissions' then continue end
 
         if (!data[k]) then
           data[k] = v

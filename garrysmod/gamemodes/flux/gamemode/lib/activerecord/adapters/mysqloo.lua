@@ -100,6 +100,9 @@ function ActiveRecord.Adapters.Mysqloo:raw_query(query, callback, flags, ...)
     ErrorNoHalt('Query: '..query..'\n')
     ErrorNoHalt(error_text..'\n')
   end
+  if self._sync then
+    query_obj:wait(true)
+  end
   query_obj:start()
 end
 

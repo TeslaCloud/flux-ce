@@ -84,10 +84,37 @@ function to_datetime(unix_time)
   return os.date('%Y-%m-%d %H:%M:%S', unix_time)
 end
 
-function print_query(prefix, query)
-  if !IS_PRODUCTION then
-    MsgC(Color('cyan'), '  '..prefix..' ')
-    MsgC(Color(0, 55, 218), query)
-    Msg('\n')
+function to_timestamp(unix_time)
+  return os.date('%Y%m%d%H%M%S', unix_time)
+end
+
+do
+  local indent_level = 1
+
+  function ar_get_indent()
+    return indent_level
+  end
+
+  function ar_set_indent(lvl)
+    indent_level = lvl or 1
+    return indent_level
+  end
+
+  function ar_add_indent()
+    indent_level = indent_level + 1
+    return indent_level
+  end
+
+  function ar_sub_indent()
+    indent_level = indent_level - 1
+    return indent_level
+  end
+
+  function print_query(prefix, query)
+    if !IS_PRODUCTION then
+      MsgC(Color('cyan'), string.rep('  ', indent_level)..prefix..' ')
+      MsgC(Color(100, 220, 100), query)
+      Msg('\n')
+    end
   end
 end

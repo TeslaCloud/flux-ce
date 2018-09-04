@@ -20,7 +20,8 @@ local default_extras = {
   "views",
   "tools",
   "themes",
-  "entities"
+  "entities",
+  "migrations"
 }
 
 local extras = table.Copy(default_extras)
@@ -532,8 +533,10 @@ function plugin.include_folders(folder)
         pipeline.include_folder("theme", folder.."/themes/")
       elseif (v == "tools") then
         pipeline.include_folder("tool", folder.."/tools/")
-      elseif v == 'languages' then
-        if SERVER then pipeline.include_folder('language', folder..'/languages/') end
+      elseif SERVER and v == 'languages' then
+        pipeline.include_folder('language', folder..'/languages/')
+      elseif SERVER and v == 'migrations' then
+        pipeline.include_folder('migrations', folder..'/migrations/')
       else
         util.include_folder(folder.."/"..v)
       end

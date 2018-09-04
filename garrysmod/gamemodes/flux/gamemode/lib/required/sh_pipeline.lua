@@ -31,7 +31,7 @@ function pipeline.IsAborted()
   return lastPipeAborted
 end
 
-function pipeline.Include(pipe, file_name)
+function pipeline.include(pipe, file_name)
   if (isstring(pipe)) then
     pipe = stored[pipe]
   end
@@ -67,6 +67,6 @@ function pipeline.include_folder(id, directory)
   local files, dirs = _file.Find(directory.."*", "LUA", "namedesc")
 
   for k, v in ipairs(files) do
-    pipeline.Include(pipe, directory..v)
+    pipeline.include(pipe, directory..v)
   end
 end
