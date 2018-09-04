@@ -7,7 +7,7 @@ function player_meta:SetActiveCharacter(id)
     hook.run("OnCharacterChange", self, self:GetCharacter(), id)
   end
 
-  self:set_nv("ActiveCharacter", id)
+  self:set_nv("ActiveCharacter", tonumber(id))
 
   local charData = self:GetCharacter()
 
@@ -47,6 +47,6 @@ function player_meta:SaveCharacter()
   local char = self:GetCharacter()
 
   if (char) then
-    character.Save(self, char.id)
+    character.Save(self, char.character_id)
   end
 end

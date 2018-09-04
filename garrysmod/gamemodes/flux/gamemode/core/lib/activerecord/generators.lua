@@ -66,6 +66,26 @@ do
   end
 end
 
+do
+  local converters = {
+    integer = tonumber,
+    float = tonumber,
+    boolean = tobool,
+    decimal = tonumber,
+    primary_key = tonumber
+  }
+
+  function ActiveRecord.str_to_type(str, type)
+    local conv = converters[type]
+  
+    if conv then
+      return conv(str)
+    end
+
+    return str
+  end
+end
+
 function ActiveRecord.generate_table_name(class_name)
   return ActiveRecord.pluralize(class_name:to_snake_case())
 end

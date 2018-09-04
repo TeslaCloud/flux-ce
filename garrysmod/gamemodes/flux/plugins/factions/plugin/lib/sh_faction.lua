@@ -99,7 +99,7 @@ do
     if (char) then
       char.faction = id
 
-      character.Save(self, char.id)
+      character.Save(self, char.character_id)
     end
 
     if (oldFaction) then
