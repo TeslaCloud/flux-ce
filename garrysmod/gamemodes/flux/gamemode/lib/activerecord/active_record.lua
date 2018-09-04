@@ -1,4 +1,10 @@
 ActiveRecord.schema = ActiveRecord.schema or {}
+ActiveRecord.metadata = ActiveRecord.metadata or {
+  indexes = {},
+  references = {},
+  prim_keys = {},
+  adapter = '', db_name = ''
+}
 ActiveRecord.db_settings = Settings.database[FLUX_ENV] or Settings.database['development'] or {}
 ActiveRecord.adapter_name = ActiveRecord.db_settings.adapter or 'sqlite'
 
@@ -23,7 +29,7 @@ function ActiveRecord.add_to_schema(table_name, column_name, type)
   if t[column_name] then
     t[column_name] = type
   else
-    local query = ActiveRecord.Database:insert('activerecord_schema')
+    local query = ActiveRecord.Database:insert('ar_schema')
       query:insert('table_name', table_name)
       query:insert('column_name', column_name)
       query:insert('abstract_type', type)
@@ -35,7 +41,7 @@ function ActiveRecord.add_to_schema(table_name, column_name, type)
 end
 
 function ActiveRecord.restore_schema()
-  local query = ActiveRecord.Database:select('activerecord_schema')
+  local query = ActiveRecord.Database:select('ar_schema')
     query:callback(function(result, query, time)
       print_query('Schema Restore ('..time..'ms)', query)
       if istable(result) then
@@ -49,13 +55,46 @@ function ActiveRecord.restore_schema()
       ActiveRecord.Model:populate()
       fl.dev_print 'ActiveRecord - Ready!'
       ActiveRecord.Queue:run()
-      hook.run('ActiveRecordReady')
+    end)
+  query:execute()
+end
+
+-- Make sure to run this while the adapter is in "sync mode"
+function ActiveRecord.get_meta_key(key, default)
+  local ret = default
+
+  local query = ActiveRecord.Database:select('ar_metadata')
+    query:where('key', key)
+    query:callback(function(res)
+      if istable(res) and #res > 0 then
+        ret = res[1]
+      end
+    end)
+  query:execute()
+
+  return ret
+end
+
+function ActiveRecord.set_meta_key(key, value)
+  local query = ActiveRecord.Database:select('ar_metadata')
+    query:where('key', key)
+    query:callback(function(res)
+      if istable(res) and #res > 0 then
+        local q = ActiveRecord.Database:update('ar_metadata')
+          q:where('key', key)
+          q:update('value', value)
+        q:execute()
+      else
+        local q = ActiveRecord.Database:insert('ar_metadata')
+          q:insert('key', key)
+          q:insert('value', value)
+        q:execute()
+      end
     end)
   query:execute()
 end
 
 function ActiveRecord.define_model(name, callback)
-  local table_name = ActiveRecord.generate_table_name(name)
   local definition = function(t)
     t:primary_key 'id'
     callback(t)
@@ -64,12 +103,10 @@ function ActiveRecord.define_model(name, callback)
   end
 
   if ActiveRecord.ready then
-    create_table(table_name, definition)
+    create_table(name, definition)
   else
-    ActiveRecord.Queue:add(table_name, definition)
+    ActiveRecord.Queue:add(name, definition)
   end
-
-  class(name) extends(ActiveRecord.Base)
 end
 
 function ActiveRecord.connect()
@@ -90,15 +127,33 @@ function ActiveRecord.on_connected()
   ActiveRecord.generate_tables()
   ActiveRecord.restore_schema()
 
-  ActiveRecord.migrator = ActiveRecord.Migrator.new()
+  local db_version = ActiveRecord.get_meta_key('version', 0)
+  local adapter = ActiveRecord.get_meta_key('adapter', ActiveRecord.adapter.class_name)
+
+  if adapter != ActiveRecord.adapter.class_name then
+    ActiveRecord.drop_schema(true)
+    ActiveRecord.generate_tables()
+
+    adapter = ActiveRecord.adapter.class_name
+  end
+
+  ActiveRecord.migrator = ActiveRecord.Migrator.new(db_version)
   ActiveRecord.migrator:run_migrations()
+
+  ActiveRecord.set_meta_key('version', ActiveRecord.migrator.schema.version)
+  ActiveRecord.set_meta_key('adapter', adapter)
+
+  hook.run('ActiveRecordReady')
 end
 
-function ActiveRecord.drop_schema()
-  for k, v in pairs(ActiveRecord.schema) do
-    drop_table(k)
+function ActiveRecord.drop_schema(meta_only)
+  if !meta_only then
+    for k, v in pairs(ActiveRecord.schema) do
+      drop_table(k)
+    end
   end
-  drop_table 'activerecord_schema'
+  drop_table 'ar_schema'
+  drop_table 'ar_metadata'
 end
 
 function ActiveRecord.recreate_schema()
@@ -116,5 +171,7 @@ function ActiveRecord.recreate_schema()
 end
 
 pipeline.register('migrations', function(id, file_name, pipe)
-  ActiveRecord.migrator:migration_from_file('gamemodes/'..file_name)
+  if file_name:ends('.lua') then
+    ActiveRecord.Migrator:add_file(file_name)
+  end
 end)

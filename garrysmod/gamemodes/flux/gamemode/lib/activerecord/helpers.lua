@@ -1,8 +1,8 @@
 function create_table(name, callback)
   local query = ActiveRecord.Database:create(name)
     callback(query)
-    query:callback(function(result, query, time)
-      print_query('Create Table ('..time..'ms)', query)
+    query:callback(function(result, query_str, time)
+      print_query('Create Table ('..time..'ms)', query_str)
     end)
   query:execute()
 end
@@ -18,8 +18,8 @@ end
 function change_table(name, callback)
   local query = ActiveRecord.Database:change(name)
     callback(query)
-    query:callback(function(result, query, time)
-      print_query('Change Table ('..time..'ms)', query)
+    query:callback(function(result, query_str, time)
+      print_query('Change Table ('..time..'ms)', query_str)
     end)
   query:execute()
 end
@@ -47,18 +47,20 @@ function add_index(args)
 
   local cols = istable(args[2]) and args[2] or {args[2]}
   local len = args['length']
+  local index_name = args['name'] or args[1]..'_'..table.concat(cols, '_')..'_index'
 
-  local query = 'CREATE '..(args['unique'] == true and 'UNIQUE' or '')..'INDEX '..
-  (args['name'] or args[1]..'_'..table.concat(cols, '_')..'_index')
+  if ActiveRecord.metadata.indexes[index_name] then return end
+
+  local query = 'CREATE '..(args['unique'] == true and 'UNIQUE' or '')..'INDEX '..ActiveRecord.adapter:quote(index_name)
 
   if args['using'] then
     query = query..' USING '..args['using']
   end
 
-  query = query..' ON '..args[1]..'('
+  query = query..' ON '..ActiveRecord.adapter:quote(args[1])..'('
 
   for k, v in ipairs(cols) do
-    query = query..'`'..v..'`'
+    query = query..ActiveRecord.adapter:quote(v)
 
     if len and ActiveRecord.adapter_name != 'sqlite' then
       query = query..'('..(istable(len) and len[v] or len)..')'
@@ -77,7 +79,52 @@ function add_index(args)
 
   query = query..';'
 
-  ActiveRecord.Database:raw_query(query)
+  ActiveRecord.metadata.indexes[index_name] = args
+
+  ActiveRecord.adapter:raw_query(query, function(results, query_str, time)
+    print_query('Add Index ('..time..'ms)', query_str)
+  end)
+end
+
+function drop_index(index_name, table_name)
+  ActiveRecord.metadata.indexes[index_name] = nil 
+
+  ActiveRecord.adapter:raw_query('DROP INDEX IF EXISTS '..ActiveRecord.adapter:quote(index_name)..' ON '..ActiveRecord.adapter:quote(table_name)..';', function(results, query_str, time)
+    print_query('Drop Index ('..time..'ms)', query_str)
+  end)
+end
+
+function create_reference(table_name, key, foreign_table, foreign_key, cascade)
+  add_index { table_name, key }
+
+  local constraint_name = 'ar_'..util.CRC(key..foreign_key..table_name..foreign_table)
+
+  if ActiveRecord.metadata.references[constraint_name] then return end
+
+  local query = 'ALTER TABLE '..ActiveRecord.adapter:quote(table_name)
+    ..' ADD CONSTRAINT '..ActiveRecord.adapter:quote(constraint_name)
+    ..' FOREIGN KEY ('..ActiveRecord.adapter:quote(key)..') REFERENCES '
+    ..ActiveRecord.adapter:quote(foreign_table)..'('..ActiveRecord.adapter:quote(foreign_key)..')'
+  query = query..(cascade and ' ON DELETE CASCADE;' or ';')
+
+  ActiveRecord.metadata.references[constraint_name] = { table = table_name, key = key, foreign_table = foreign_table, foreign_key = foreign_key, cascade = cascade }
+
+  ActiveRecord.adapter:raw_query(query, function(result, query_str, time)
+    print_query('Create Reference ('..time..'ms)', query_str)
+  end)
+end
+
+function create_primary_key(table_name, key)
+  local pkey_name = table_name..'_pkey'
+
+  if ActiveRecord.metadata.prim_keys[pkey_name] then return end
+
+  ActiveRecord.metadata.prim_keys[pkey_name] = { table_name, key }
+  ActiveRecord.adapter:raw_query('ALTER TABLE '..ActiveRecord.adapter:quote(table_name)
+    ..' ADD CONSTRAINT '..ActiveRecord.adapter:quote(pkey_name)
+    ..' PRIMARY KEY ('..ActiveRecord.adapter:quote(key)..');', function(result, query_str, time)
+      print_query('Create Primary Key ('..time..'ms)', query_str)
+  end)
 end
 
 function to_datetime(unix_time)

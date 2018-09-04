@@ -290,7 +290,7 @@ local function build_truncate_query(query_obj)
 end
 
 local function build_create_query(query_obj)
-  local query_string = {'CREATE TABLE IF NOT EXISTS'}
+  local query_string = { 'DROP TABLE IF EXISTS' }
 
   if (isstring(query_obj.table_name)) then
     table.insert(query_string, ' `'..query_obj.table_name..'`')
@@ -299,13 +299,15 @@ local function build_create_query(query_obj)
     return
   end
 
+  table.insert(query_string, ';\nCREATE TABLE `'..query_obj.table_name..'`')
+
   table.insert(query_string, ' (')
 
   if (istable(query_obj.create_list) and #query_obj.create_list > 0) then
     local create_list = {}
 
     for k, v in ipairs(query_obj.create_list) do
-      if (ActiveRecord.adapter == 'sqlite') then
+      if (ActiveRecord.adapter.class_name:lower() == 'sqlite') then
         table.insert(create_list, v[1]..' '..string.gsub(string.gsub(string.gsub(v[2], 'AUTO_INCREMENT', ''), 'AUTOINCREMENT', ''), 'INT ', 'INTEGER '))
       else
         table.insert(create_list, v[1]..' '..v[2])
@@ -391,6 +393,8 @@ function ActiveRecord.Query:execute(queue_query)
   end
 
   if (isstring(query_string)) then
+    query_string = query_string:ensure_ending(';')
+
     if (!queue_query) then
       return ActiveRecord.adapter:raw_query(query_string, self._callback)
     else

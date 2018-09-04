@@ -1,7 +1,3 @@
-ActiveRecord.define_model('Whitelist', function(t)
-  t:string 'faction_id'
-  t:integer 'character_id'
-  t:integer 'user_id'
-end)
+class 'Whitelist' extends 'ActiveRecord::Base'
 
 Whitelist:belongs_to 'User'
