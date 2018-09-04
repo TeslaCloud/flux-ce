@@ -2,6 +2,7 @@
 ._*
 ThirdPartyLegalNotices.txt
 bin/
+garrysmod/addons/
 garrysmod/bin/
 garrysmod/cfg/
 garrysmod/clientside_errors.txt
@@ -46,3 +47,4 @@ steamapps/
 *.cache
 *.vpk
 *.rad
+*.bat
