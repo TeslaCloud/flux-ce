@@ -16,8 +16,8 @@ local default_extras = {
   "meta",
   "config",
   "languages",
-  "ui/controllers",
-  "ui/views",
+  "controllers",
+  "views",
   "tools",
   "themes",
   "entities"

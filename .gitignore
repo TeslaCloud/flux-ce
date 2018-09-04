@@ -1,7 +1,5 @@
 ._*.*
 ._*
-garrysmod/gamemodes/hl2rp
-garrysmod/gamemodes/hl2rp/*
 ThirdPartyLegalNotices.txt
 bin/
 garrysmod/bin/
@@ -14,6 +12,7 @@ garrysmod/gameinfo.txt
 garrysmod/gamemodes/base/
 garrysmod/gamemodes/sandbox/
 garrysmod/gamemodes/terrortown/
+garrysmod/gamemodes/hl2rp/
 garrysmod/garrysmod.ver
 garrysmod/html/
 garrysmod/lua/autorun/
