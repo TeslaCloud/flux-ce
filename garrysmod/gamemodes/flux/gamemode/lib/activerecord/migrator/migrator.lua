@@ -24,6 +24,7 @@ function ActiveRecord.Migrator:init(version)
 
   self.schema = include(self.schema_path:gsub('gamemodes/', ''))
   self.schema.version = version or self.schema.version
+  ActiveRecord.metadata = self.schema.metadata or ActiveRecord.metadata or {}
 
   return self
 end
@@ -32,6 +33,7 @@ function ActiveRecord.Migrator:generate_schema(version)
   fileio.Delete(self.db_path..'/.keep')
   fileio.Write(self.schema_path, ActiveRecord.dump_schema(version or (self.schema and self.schema.version) or 0))
   self.schema = include(self.schema_path:gsub('gamemodes/', ''))
+  ActiveRecord.metadata = self.schema.metadata or ActiveRecord.metadata or {}
 
   return self
 end
