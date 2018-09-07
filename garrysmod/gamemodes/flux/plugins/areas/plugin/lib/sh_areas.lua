@@ -94,7 +94,7 @@ function areas.register(id, data)
   if !id or !data then return end
   if #data.polys < 1 then return end
 
-  data = util.remove_functions(data)
+  data = table.remove_functions(data)
 
   stored[id] = data
 

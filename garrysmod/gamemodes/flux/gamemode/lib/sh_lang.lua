@@ -121,7 +121,7 @@ function fl.lang:get_plural(language, phrase, count)
   if langTable.pluralize then
     return langTable:pluralize(phrase, count, translated)
   elseif language == "en" then
-    if !util.vowel(translated:sub(translated:len(), translated:len())) then
+    if !string.vowel(translated:sub(translated:len(), translated:len())) then
       return translated.."es"
     else
       return translated.."s"
