@@ -1,0 +1,18 @@
+#
+# This is the locale file for your schema.
+# Put any phrases you would like translated here.
+#
+# While not necessary, it's strongly advised to use
+# the languages system rather than hardcoding your strings.
+#
+# The basic format looks like this:
+# *ISO 639-1 Code of the language*:
+#   category_name:
+#     phrase_name: "Phrase contents"
+#
+# Please note that YAML categories act JUST like Lua tables,
+# which means that a category CANNOT have a string assigned to it.
+#
+en:
+  reborn:
+    welcome_text: "Yay, Flux is working properly!"

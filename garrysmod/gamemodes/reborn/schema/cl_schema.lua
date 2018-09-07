@@ -1,0 +1,1 @@
+-- Clientside helpers would go here (e.g. net receivers, drawing functions, etc.)
