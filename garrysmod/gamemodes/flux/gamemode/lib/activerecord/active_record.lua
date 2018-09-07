@@ -136,8 +136,6 @@ function ActiveRecord.on_connected()
   local db_version = ActiveRecord.get_meta_key('version', 0)
   local adapter = ActiveRecord.get_meta_key('adapter', class_name)
 
-  print(db_version, adapter)
-
   if adapter != class_name then
     ActiveRecord.drop_schema(true)
     ActiveRecord.generate_tables()
