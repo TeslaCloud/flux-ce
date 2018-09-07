@@ -18,7 +18,7 @@ function fl3DText:PostDrawOpaqueRenderables()
     cam.Start3D2D(trace.HitPos + (normal * 1.25), angle, 0.1 * tool:GetClientNumber("scale"))
       if style >= 5 then
         if style != 8 and style != 9 then
-          draw.RoundedBox(0, -w * 0.5 - 32, -h * 0.5 - 16, w + 64, h + 32, ColorAlpha(Color(tool:GetClientInfo("extraColor") or "#FF000033"), 40))
+          draw.RoundedBox(0, -w * 0.5 - 32, -h * 0.5 - 16, w + 64, h + 32, Color(tool:GetClientNumber("r2", 0), tool:GetClientNumber("g2", 0), tool:GetClientNumber("b2", 0), 40))
         end
 
         if style == 7 or style == 8 then
@@ -44,7 +44,7 @@ function fl3DText:PostDrawOpaqueRenderables()
         end
       end
 
-      draw.SimpleText(text, theme.GetFont("Text_3D2D"), -w * 0.5, -h * 0.5, ColorAlpha(Color(tool:GetClientInfo("color") or "white"), 60))
+      draw.SimpleText(text, theme.GetFont("Text_3D2D"), -w * 0.5, -h * 0.5, Color(tool:GetClientNumber("r", 0), tool:GetClientNumber("g", 0), tool:GetClientNumber("b", 0), 60))
     cam.End3D2D()
   end
 
