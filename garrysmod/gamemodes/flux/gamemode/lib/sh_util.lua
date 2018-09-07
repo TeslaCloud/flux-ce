@@ -1422,7 +1422,7 @@ end
 local class_keys = {
   BaseClass = true, base_class = true,
   class = true, ThisClass = true,
-  model = true
+  model = true, target_class = true
 }
 
 -- A better implementation of PrintTable
