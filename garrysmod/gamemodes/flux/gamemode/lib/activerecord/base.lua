@@ -244,7 +244,7 @@ function ActiveRecord.Base:run_query(callback)
 end
 
 function ActiveRecord.Base:expect(callback)
-  return self:run_query(function(results)
+  return self:limit(1):run_query(function(results)
     callback(results[1].object)
   end)
 end
