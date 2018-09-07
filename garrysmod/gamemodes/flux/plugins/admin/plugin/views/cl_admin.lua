@@ -51,12 +51,12 @@ end
 function PANEL:OpenPanel(id)
   local panel = self.panels[id]
 
-  if (IsValid(self.curPanel)) then
+  if IsValid(self.curPanel) then
     self.curPanel:SafeRemove()
   end
 
-  if (istable(panel)) then
-    if (panel.permission and !fl.client:can(panel.permission)) then return end
+  if istable(panel) then
+    if panel.permission and !fl.client:can(panel.permission) then return end
 
     local scrW, scrH = ScrW(), ScrH()
     local sW, sH = self.sidebar:GetWide(), self.sidebar:GetTall()
@@ -65,14 +65,14 @@ function PANEL:OpenPanel(id)
     self.curPanel:SetPos(sW, 0)
     self.curPanel:SetSize(self:GetWide() - sW, self:GetTall())
 
-    if (self.curPanel.OnOpened) then
+    if self.curPanel.OnOpened then
       self.curPanel:OnOpened(self, panel)
     end
   end
 end
 
 function PANEL:SetFullscreen(bFullscreen)
-  if (bFullscreen) then
+  if bFullscreen then
     self.sidebar:MoveTo(-self.sidebar:GetWide(), 0, 0.3)
     self:SetTitle("")
 
@@ -107,7 +107,7 @@ end
 vgui.Register("flAdminPanel", PANEL, "flBasePanel")
 
 concommand.Add("fl_admin_test", function()
-  if (IsValid(AdminPanel)) then
+  if IsValid(AdminPanel) then
     AdminPanel:SafeRemove()
   else
     AdminPanel = vgui.Create("flAdminPanel")

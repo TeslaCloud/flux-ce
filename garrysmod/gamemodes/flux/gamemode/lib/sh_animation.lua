@@ -85,7 +85,7 @@ function fl.anim:GetAll()
 end
 
 function fl.anim:SetModelClass(model, class)
-  if (!stored[class]) then
+  if !stored[class] then
     class = "player"
   end
 
@@ -93,11 +93,11 @@ function fl.anim:SetModelClass(model, class)
 end
 
 function fl.anim:GetModelClass(model)
-  if (!model) then return "player" end
+  if !model then return "player" end
 
   local modelClass = models[string.lower(model)]
 
-  if (modelClass) then
+  if modelClass then
     return modelClass
   end
 
@@ -105,9 +105,9 @@ function fl.anim:GetModelClass(model)
 end
 
 function fl.anim:GetTable(model)
-  if (!model) then return end
+  if !model then return end
 
-  if (string.find(model, "/player/")) then
+  if string.find(model, "/player/") then
     return
   end
 
@@ -155,18 +155,18 @@ do
 
   -- A function to get a weapon's hold type.
   function fl.anim:GetWeaponHoldType(player, weapon)
-    if (!IsValid(weapon)) then return "normal" end
+    if !IsValid(weapon) then return "normal" end
 
     local class = string.lower(weapon:GetClass())
     local translatedHoldType = weaponHoldTypes[class]
     local holdType = "normal"
 
-    if (translatedHoldType) then
+    if translatedHoldType then
       holdType = translatedHoldType
-    elseif (weapon and weapon.HoldType) then
+    elseif weapon and weapon.HoldType then
       translatedHoldType = translateHoldTypes[weapon.HoldType]
 
-      if (translatedHoldType) then
+      if translatedHoldType then
         holdType = translatedHoldType
       else
         holdType = weapon.HoldType

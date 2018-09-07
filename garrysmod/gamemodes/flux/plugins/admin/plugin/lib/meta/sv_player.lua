@@ -20,8 +20,8 @@ function player_meta:SetUserGroup(group)
 
   self:set_nv("role", group)
 
-  if (oldGroupObj and groupObj and oldGroupObj:OnGroupTake(self, groupObj) == nil) then
-    if (groupObj:OnGroupSet(self, oldGroupObj) == nil) then
+  if oldGroupObj and groupObj and oldGroupObj:OnGroupTake(self, groupObj) == nil then
+    if groupObj:OnGroupSet(self, oldGroupObj) == nil then
       self:SaveUsergroup()
     end
   end

@@ -2,7 +2,7 @@ local function PermButtonDoClick(panel, btn)
   panel.m_PermissionValue = btn.permValue or PERM_NO
   btn.isSelected = true
 
-  if (IsValid(panel.prevBtn)) then
+  if IsValid(panel.prevBtn) then
     panel.prevBtn.isSelected = false
   end
 
@@ -14,7 +14,7 @@ PANEL.m_PermissionValue = PERM_NO
 PANEL.m_Permission = {}
 
 function PANEL:Rebuild()
-  if (IsValid(self.container)) then
+  if IsValid(self.container) then
     self.container:SafeRemove()
   end
 
@@ -78,7 +78,7 @@ function PANEL:Init()
 end
 
 function PANEL:Rebuild()
-  if (IsValid(self.listLayout)) then
+  if IsValid(self.listLayout) then
     self.listLayout:SafeRemove()
   end
 

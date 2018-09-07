@@ -35,7 +35,7 @@ end
 --]]
 
 function player_meta:SetAction(id, bForce)
-  if (bForce or self:GetAction() == "none") then
+  if bForce or self:GetAction() == "none" then
     self:set_nv("action", id)
 
     return true
@@ -57,14 +57,14 @@ end
 function player_meta:DoAction(id)
   local act = self:GetAction()
 
-  if (isstring(id)) then
+  if isstring(id) then
     act = id
   end
 
-  if (act and act != "none") then
+  if act and act != "none" then
     local actionTable = fl.get_action(act)
 
-    if (istable(actionTable) and isfunction(actionTable.callback)) then
+    if istable(actionTable) and isfunction(actionTable.callback) then
       try {
         actionTable.callback, self, act
       } catch {
@@ -92,7 +92,7 @@ function player_meta:is_root()
 end
 
 function player_meta:has_group(group)
-  if (self:GetUserGroup() == group) then
+  if self:GetUserGroup() == group then
     return true
   end
 

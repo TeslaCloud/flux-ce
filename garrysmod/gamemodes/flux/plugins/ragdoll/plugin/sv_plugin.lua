@@ -13,7 +13,7 @@ end
 function player_meta:IsRagdolled()
   local ragState = self:GetDTInt(INT_RAGDOLL_STATE)
 
-  if (ragState and ragState != RAGDOLL_NONE) then
+  if ragState and ragState != RAGDOLL_NONE then
     return true
   end
 
@@ -31,7 +31,7 @@ function player_meta:FindBestPosition(margin, filter)
     for y = -margin, margin do
       local pick = pos + Vector(x * margin * 10, y * margin * 10, 0)
 
-      if (!util.IsInWorld(pick)) then continue end
+      if !util.IsInWorld(pick) then continue end
 
       local data = {}
         data.start = pick + min + Vector(0, 0, margin * 1.25)
@@ -39,21 +39,21 @@ function player_meta:FindBestPosition(margin, filter)
         data.filter = filter or self
       local trace = util.TraceLine(data)
 
-      if (trace.StartSolid or trace.Hit) then continue end
+      if trace.StartSolid or trace.Hit then continue end
 
       data.start = pick + Vector(-max.x, -max.y, margin * 1.25)
       data.endpos = pick + Vector(min.x, min.y, 32)
 
       local trace2 = util.TraceLine(data)
 
-      if (trace2.StartSolid or trace2.Hit) then continue end
+      if trace2.StartSolid or trace2.Hit then continue end
 
       data.start = pos
       data.endpos = pick
 
       local trace3 = util.TraceLine(data)
 
-      if (trace3.Hit) then continue end
+      if trace3.Hit then continue end
 
       table.insert(positions, pick)
     end
@@ -67,7 +67,7 @@ function player_meta:FindBestPosition(margin, filter)
 end
 
 function player_meta:CreateRagdollEntity(decay, fallen)
-  if (!IsValid(self:GetDTEntity(ENT_RAGDOLL))) then
+  if !IsValid(self:GetDTEntity(ENT_RAGDOLL)) then
     local ragdoll = ents.Create("prop_ragdoll")
       ragdoll:SetModel(self:GetModel())
       ragdoll:SetPos(self:GetPos())
@@ -79,14 +79,14 @@ function player_meta:CreateRagdollEntity(decay, fallen)
       ragdoll.weapons = {}
     ragdoll:Spawn()
 
-    if (fallen) then
+    if fallen then
       ragdoll:CallOnRemove("getup", function()
-        if (IsValid(self)) then
+        if IsValid(self) then
           self:SetPos(ragdoll:GetPos())
 
           self:ResetRagdollEntity()
 
-          if (ragdoll.weapons) then
+          if ragdoll.weapons then
             for k, v in ipairs(ragdoll.weapons) do
               self:Give(v)
             end
@@ -97,23 +97,23 @@ function player_meta:CreateRagdollEntity(decay, fallen)
           self:SetNoDraw(false)
           self:SetNotSolid(false)
 
-          if (self:IsStuck()) then
+          if self:IsStuck() then
             self:DropToFloor()
             self:SetPos(self:GetPos() + Vector(0, 0, 16))
 
-            if (!self:IsStuck()) then return end
+            if !self:IsStuck() then return end
 
             local positions = self:FindBestPosition(4, {ragdoll, self})
 
             for k, v in ipairs(positions) do
               self:SetPos(v)
 
-              if (!self:IsStuck()) then
+              if !self:IsStuck() then
                 return
               else
                 self:DropToFloor()
 
-                if (!self:IsStuck()) then return end
+                if !self:IsStuck() then return end
               end
             end
           end
@@ -131,7 +131,7 @@ function player_meta:CreateRagdollEntity(decay, fallen)
       self:SetNotSolid(true)
     end
 
-    if (IsValid(ragdoll)) then
+    if IsValid(ragdoll) then
       ragdoll:SetCollisionGroup(COLLISION_GROUP_WEAPON)
 
       local velocity = self:GetVelocity()
@@ -141,7 +141,7 @@ function player_meta:CreateRagdollEntity(decay, fallen)
         local bone = ragdoll:TranslatePhysBoneToBone(i)
         local position, angle = self:GetBonePosition(bone)
 
-        if (IsValid(physObj)) then
+        if IsValid(physObj) then
           physObj:SetPos(position)
           physObj:SetAngles(angle)
           physObj:SetVelocity(velocity)
@@ -156,12 +156,12 @@ end
 function player_meta:ResetRagdollEntity()
   local ragdoll = self:GetDTEntity(ENT_RAGDOLL)
 
-  if (IsValid(ragdoll)) then
-    if (!ragdoll.decay) then
+  if IsValid(ragdoll) then
+    if !ragdoll.decay then
       ragdoll:Remove()
     else
       timer.Simple(ragdoll.decay, function()
-        if (IsValid(ragdoll)) then
+        if IsValid(ragdoll) then
           ragdoll:Remove()
         end
       end)
@@ -176,12 +176,12 @@ function player_meta:SetRagdollState(state)
 
   self:SetDTInt(INT_RAGDOLL_STATE, state)
 
-  if (state == RAGDOLL_FALLENOVER) then
+  if state == RAGDOLL_FALLENOVER then
     self:SetAction("fallen", true)
     self:CreateRagdollEntity(nil, true)
-  elseif (state == RAGDOLL_DUMMY) then
+  elseif state == RAGDOLL_DUMMY then
     self:CreateRagdollEntity(120)
-  elseif (state == RAGDOLL_NONE) then
+  elseif state == RAGDOLL_NONE then
     self:ResetRagdollEntity()
   end
 end

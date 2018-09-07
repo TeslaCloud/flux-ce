@@ -36,7 +36,7 @@ function areas.GetByType(type)
   local to_ret = {}
 
   for k, v in pairs(stored) do
-    if (v.type == type) then
+    if v.type == type then
       table.insert(to_ret, v)
     end
   end
@@ -49,7 +49,7 @@ function areas.Create(id, height, data)
 
   local area = {}
 
-  if (!stored[id]) then
+  if !stored[id] then
     area.id = id
     area.minH = 0
     area.maxH = 0
@@ -58,7 +58,7 @@ function areas.Create(id, height, data)
     area.polys = {}
     area.type = data.type or "area"
 
-    if (data) then
+    if data then
       table.merge(area, data)
     end
   else
@@ -66,7 +66,7 @@ function areas.Create(id, height, data)
   end
 
   function area:AddVertex(vect)
-    if (#self.verts == 0) then
+    if #self.verts == 0 then
       self.minH = vect.z
       self.maxH = self.minH + self.height
     else
@@ -82,7 +82,7 @@ function areas.Create(id, height, data)
   end
 
   function area:register()
-    if (#self.verts > 2) then self:FinishPoly() end
+    if #self.verts > 2 then self:FinishPoly() end
 
     return areas.register(id, self)
   end
@@ -91,8 +91,8 @@ function areas.Create(id, height, data)
 end
 
 function areas.register(id, data)
-  if (!id or !data) then return end
-  if (#data.polys < 1) then return end
+  if !id or !data then return end
+  if #data.polys < 1 then return end
 
   data = util.remove_functions(data)
 
@@ -118,7 +118,7 @@ end
 function areas.GetColor(typeID)
   local typeTable = types[typeID]
 
-  if (istable(typeTable)) then
+  if istable(typeTable) then
     return typeTable.color
   end
 end
@@ -146,7 +146,7 @@ areas.RegisterType(
   "Simple Area",
   "A simple area. Use this type if you have a callback somewhere in the code that looks up id instead of type ID.",
   function(player, area, poly, bHasEntered, curPos, curTime)
-    if (bHasEntered) then
+    if bHasEntered then
       hook.run("PlayerEnteredArea", player, area, curTime)
     else
       hook.run("PlayerLeftArea", player, area, curTime)

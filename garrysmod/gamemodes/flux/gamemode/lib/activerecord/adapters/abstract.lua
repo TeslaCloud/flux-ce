@@ -37,7 +37,7 @@ function ActiveRecord.Adapters.Abstract:raw_query(query, callback)
 end
 
 function ActiveRecord.Adapters.Abstract:queue(query, callback)
-  if (isstring(query)) then
+  if isstring(query) then
     table.insert(self._queue, { query, callback })
   end
 end
@@ -52,12 +52,12 @@ function ActiveRecord.Adapters.Abstract:create_column(query, column, args, obj, 
 end
 
 function ActiveRecord.Adapters.Abstract:think()
-  if (#self._queue > 0) then
-    if (istable(self._queue[1])) then
+  if #self._queue > 0 then
+    if istable(self._queue[1]) then
       local queue_obj = self._queue[1]
       local query_string = queue_obj[1]
 
-      if (isstring(query_string)) then
+      if isstring(query_string) then
         self:raw_query(query_string, queue_obj[2])
       end
 

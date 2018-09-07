@@ -2,16 +2,16 @@ PLUGIN:set_name("DBugR Hooks")
 PLUGIN:set_author("NightAngel")
 PLUGIN:set_description("Adds all plugin hooks to DBugR performance metrics monitor.")
 
-if (DBugR) then
+if DBugR then
   function PLUGIN:OnSchemaLoaded()
     for hookName, hooks in pairs(plugin.get_cache()) do
       for k, v in ipairs(hooks) do
         local name = "N/A"
         local func = v[1]
 
-        if (v[2] and v[2].get_name) then
+        if v[2] and v[2].get_name then
           name = v[2]:get_name()
-        elseif (v.id) then
+        elseif v.id then
           name = v.id
         end
 
@@ -21,7 +21,7 @@ if (DBugR) then
       end
     end
 
-    if (fl.development) then
+    if fl.development then
       DBugR.Print("Flux plugin hooks detoured!")
     end
   end

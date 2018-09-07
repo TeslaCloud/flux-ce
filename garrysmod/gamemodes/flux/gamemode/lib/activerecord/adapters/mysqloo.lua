@@ -23,14 +23,14 @@ end
 function ActiveRecord.Adapters.Mysqloo:connect(config)
   local host, user, password, port, database, socket, flags = config.host, config.user, config.password, config.port, config.database, config.socket, config.flags
 
-  if (!port) then
+  if !port then
     port = 3306
   end
 
-  if (mysqloo) then
+  if mysqloo then
     local client_flag = flags or 0
 
-    if (!isstring(socket)) then
+    if !isstring(socket) then
       self.connection = mysqloo.connect(host, user, password, database, port)
     else
       self.connection = mysqloo.connect(host, user, password, database, port, socket, client_flag)
@@ -83,7 +83,7 @@ function ActiveRecord.Adapters.Mysqloo:raw_query(query, callback, flags, ...)
   local query_obj = self.connection:query(query)
   local query_start = os.clock()
   local success_func = function(query_obj, result)
-    if (callback) then
+    if callback then
       for k, v in pairs(result) do
         if isstring(v) then
           result[k] = self:unescape(v)
@@ -92,7 +92,7 @@ function ActiveRecord.Adapters.Mysqloo:raw_query(query, callback, flags, ...)
 
       local status, a, b, c, d = pcall(callback, result, query, math.Round(os.clock() - query_start, 3))
 
-      if (!status) then
+      if !status then
         ErrorNoHalt(string.format('ActiveRecord - MySQL Callback Error!\n%s\n', value))
       end
 

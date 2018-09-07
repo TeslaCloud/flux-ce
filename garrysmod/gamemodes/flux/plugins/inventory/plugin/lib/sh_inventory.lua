@@ -1,4 +1,4 @@
-if (!item) then
+if !item then
   error("Attempt to use inventory system without Flux's items system.\n")
 end
 
@@ -15,7 +15,7 @@ do
       for k, v in ipairs(ids) do
         local itemTable = item.FindInstanceByID(v)
 
-        if (!itemTable) then
+        if !itemTable then
           playerInv[slot][k] = nil
         end
       end
@@ -26,7 +26,7 @@ do
 
   if SERVER then
     function player_meta:AddItem(itemTable)
-      if (!itemTable) then return -1 end
+      if !itemTable then return -1 end
 
       local playerInv = self:GetInventory()
       local slots = self:GetCharacterData("invSlots", 8)
@@ -36,7 +36,7 @@ do
         local ids = playerInv[i]
 
         -- Empty slot
-        if (#ids == 0) then
+        if #ids == 0 then
           table.insert(playerInv[i], itemTable.instance_id)
           self:SetInventory(playerInv)
           item.NetworkItem(self, itemTable.instance_id)
@@ -46,8 +46,8 @@ do
 
         local slotTable = item.FindInstanceByID(ids[1])
 
-        if (itemTable.stackable and itemTable.id == slotTable.id) then
-          if (#ids < itemTable.max_stack) then
+        if itemTable.stackable and itemTable.id == slotTable.id then
+          if #ids < itemTable.max_stack then
             table.insert(playerInv[i], itemTable.instance_id)
             self:SetInventory(playerInv)
             item.NetworkItem(self, itemTable.instance_id)
@@ -61,11 +61,11 @@ do
     end
 
     function player_meta:GiveItem(id, instance_id, data)
-      if (!id) then return end
+      if !id then return end
 
       local itemTable
 
-      if (instance_id and instance_id > 0) then
+      if instance_id and instance_id > 0 then
         itemTable = item.FindInstanceByID(instance_id)
       else
         itemTable = item.New(id, data)
@@ -73,9 +73,9 @@ do
 
       local slot = self:AddItem(itemTable)
 
-      if (slot and slot != -1) then
+      if slot and slot != -1 then
         hook.run("OnItemGiven", self, itemTable, slot)
-      elseif (slot == -1) then
+      elseif slot == -1 then
         fl.dev_print("Failed to add item to player's inventory (itemTable is invalid)! "..tostring(itemTable))
       else
         fl.dev_print("Failed to add item to player's inventory (inv is full)! "..tostring(itemTable))
@@ -83,17 +83,17 @@ do
     end
 
     function player_meta:GiveItemByID(instance_id)
-      if (!tonumber(instance_id) or tonumber(instance_id) <= 0) then return end
+      if !tonumber(instance_id) or tonumber(instance_id) <= 0 then return end
 
       local itemTable = item.FindInstanceByID(instance_id)
 
-      if (!itemTable) then return end
+      if !itemTable then return end
 
       local slot = self:AddItem(itemTable)
 
-      if (slot and slot != -1) then
+      if slot and slot != -1 then
         hook.run("OnItemGiven", self, itemTable, slot)
-      elseif (slot == -1) then
+      elseif slot == -1 then
         fl.dev_print("Failed to add item to player's inventory (itemTable is invalid)! "..tostring(itemTable))
       else
         fl.dev_print("Failed to add item to player's inventory (inv is full)! "..tostring(itemTable))
@@ -101,12 +101,12 @@ do
     end
 
     function player_meta:TakeItemByID(instance_id)
-      if (!instance_id or instance_id < 1) then return end
+      if !instance_id or instance_id < 1 then return end
 
       local playerInv = self:GetInventory()
 
       for slot, ids in ipairs(playerInv) do
-        if (table.HasValue(ids, instance_id)) then
+        if table.HasValue(ids, instance_id) then
           table.RemoveByValue(playerInv[slot], instance_id)
           self:SetInventory(playerInv)
 
@@ -122,7 +122,7 @@ do
       local invInstances = self:FindInstances(id, amount)
 
       for i = 1, #invInstances do
-        if (amount > 0) then
+        if amount > 0 then
           self:TakeItemByID(invInstances[i].instance_id)
           amount = amount - 1
         end
@@ -139,11 +139,11 @@ do
 
     for k, v in pairs(instances) do
       for slot, ids in ipairs(playerInv) do
-        if (table.HasValue(ids, k)) then
+        if table.HasValue(ids, k) then
           table.insert(to_ret, v)
           amount = amount - 1
 
-          if (amount <= 0) then
+          if amount <= 0 then
             return to_ret
           end
         end
@@ -162,7 +162,7 @@ do
     local playerInv = self:GetInventory()
 
     for slot, ids in ipairs(playerInv) do
-      if (table.HasValue(ids, instance_id)) then
+      if table.HasValue(ids, instance_id) then
         return true
       end
     end
@@ -173,7 +173,7 @@ do
   function player_meta:HasItem(id)
     local instances = self:FindInstances(id, 1)
 
-    if (instances[1]) then
+    if instances[1] then
       return true
     end
 
@@ -184,7 +184,7 @@ do
     local instances = self:FindInstances(id, 1)
     local itemTable = instances[1]
 
-    if (itemTable and itemTable:IsEquipped()) then
+    if itemTable and itemTable:IsEquipped() then
       return true
     end
 

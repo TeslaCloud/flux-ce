@@ -11,11 +11,11 @@ COMMAND.aliases = {"takewhitelist", "plytakewhitelist", "plyunwhitelist"}
 function COMMAND:on_run(player, targets, name, bStrict)
   local whitelist = faction.Find(name, bStrict)
 
-  if (whitelist) then
+  if whitelist then
     for k, v in ipairs(targets) do
-      if (v:HasWhitelist(whitelist.id)) then
+      if v:HasWhitelist(whitelist.id) then
         v:TakeWhitelist(whitelist.id)
-      elseif (#targets == 1) then
+      elseif #targets == 1 then
         fl.player:notify(player, L("Err_TargetNotWhitelisted", v:Name(), whitelist.print_name))
 
         return

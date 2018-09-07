@@ -21,7 +21,7 @@ spawnmenu.AddCreationTab("Items", function()
 end, "icon16/wand.png", 40)
 
 netstream.Hook("RefreshInventory", function()
-  if (fl.tabMenu and fl.tabMenu.activePanel and fl.tabMenu.activePanel.Rebuild) then
+  if fl.tabMenu and fl.tabMenu.activePanel and fl.tabMenu.activePanel.Rebuild then
     fl.tabMenu.activePanel:Rebuild()
   end
 end)

@@ -32,25 +32,25 @@ function pipeline.IsAborted()
 end
 
 function pipeline.include(pipe, file_name)
-  if (isstring(pipe)) then
+  if isstring(pipe) then
     pipe = stored[pipe]
   end
 
   lastPipeAborted = false
 
-  if (!pipe) then return end
-  if (!isstring(file_name)) then return end
+  if !pipe then return end
+  if !isstring(file_name) then return end
   
   local extension = string.GetExtensionFromFilename(file_name) or ''
   local id = (string.GetFileFromFilename(file_name) or ""):gsub('%.'..extension, ''):to_id()
 
-  if (id:starts("cl_") or id:starts("sh_") or id:starts("sv_")) then
+  if id:starts("cl_") or id:starts("sh_") or id:starts("sv_") then
     id = id:sub(4, id:len())
   end
 
-  if (id == "") then return end
+  if id == "" then return end
 
-  if (isfunction(pipe.callback)) then
+  if isfunction(pipe.callback) then
     pipe.callback(id, file_name, pipe)
   end
 end
@@ -58,9 +58,9 @@ end
 function pipeline.include_folder(id, directory)
   local pipe = stored[id]
 
-  if (!pipe) then return end
+  if !pipe then return end
 
-  if (!directory:ends("/")) then
+  if !directory:ends("/") then
     directory = directory.."/"
   end
 

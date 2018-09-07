@@ -10,7 +10,7 @@ COMMAND.aliases = {"chargiveitem", "plygiveitem"}
 function COMMAND:on_run(player, targets, itemName, amount)
   local itemTable = item.Find(itemName)
 
-  if (itemTable) then
+  if itemTable then
     amount = tonumber(amount) or 1
 
     for k, v in ipairs(targets) do

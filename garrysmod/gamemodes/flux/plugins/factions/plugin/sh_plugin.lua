@@ -6,7 +6,7 @@ util.include("cl_hooks.lua")
 util.include("sv_hooks.lua")
 
 function flFactions:PluginIncludeFolder(extra, folderName)
-  if (extra == "factions") then
+  if extra == "factions" then
     faction.IncludeFactions(folderName.."/factions/")
 
     return true
@@ -14,7 +14,7 @@ function flFactions:PluginIncludeFolder(extra, folderName)
 end
 
 function flFactions:ShouldNameGenerate(player)
-  if (player:IsBot()) then
+  if player:IsBot() then
     return false
   end
 end

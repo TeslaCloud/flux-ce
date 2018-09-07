@@ -3,7 +3,7 @@ PLUGIN:set_alias("flObserver")
 util.include("cl_hooks.lua")
 util.include("sv_hooks.lua")
 
-if (fl.admin) then
+if fl.admin then
   fl.admin:RegisterPermission("noclip", "Noclip", "Lets the player use observer mode / noclip.", "general")
 end
 

@@ -1,4 +1,4 @@
-if (netvars) then return end
+if netvars then return end
 
 library.new "netvars"
 
@@ -11,7 +11,7 @@ local ent_meta = FindMetaTable("Entity")
 
 -- A function to get a networked global.
 function netvars.get_nv(key, default)
-  if (globals[key] != nil) then
+  if globals[key] != nil then
     return globals[key]
   end
 
@@ -25,7 +25,7 @@ function netvars.set_nv() end
 function ent_meta:get_nv(key, default)
   local index = self:EntIndex()
 
-  if (stored[index] and stored[index][key] != nil) then
+  if stored[index] and stored[index][key] != nil then
     return stored[index][key]
   end
 
@@ -34,14 +34,14 @@ end
 
 -- Called from the server to set global networked variables.
 netstream.Hook("set_global_netvar", function(key, value)
-  if (key and value != nil) then
+  if key and value != nil then
     globals[key] = value
   end
 end)
 
 -- Called from the server to set entity's networked variable.
 netstream.Hook("set_netvar", function(entIdx, key, value)
-  if (key and value != nil) then
+  if key and value != nil then
     stored[entIdx] = stored[entIdx] or {}
     stored[entIdx][key] = value
   end

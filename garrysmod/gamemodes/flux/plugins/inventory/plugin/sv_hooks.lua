@@ -15,7 +15,7 @@ netstream.Hook("InventorySync", function(player, inventory)
     newInventory[slot] = {}
 
     for k, v in ipairs(ids) do
-      if (player:HasItemByID(v)) then
+      if player:HasItemByID(v) then
         table.insert(newInventory[slot], v)
       end
     end

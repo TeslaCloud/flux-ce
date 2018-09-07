@@ -35,7 +35,7 @@ function PANEL:Init()
 
     hook.run("ChatboxTextEntered", value)
 
-    if (entry.history[1] != value) then
+    if entry.history[1] != value then
       table.insert(entry.history, 1, value)
 
       entry.lastIndex = 1
@@ -47,20 +47,20 @@ function PANEL:Init()
   self.text_entry.OnKeyCodeTyped = function(entry, code)
     local shouldSet = false
 
-    if (code == KEY_ENTER) then
+    if code == KEY_ENTER then
       entry:OnEnter()
 
       return true
-    elseif (code == KEY_DOWN) then
-      if (entry.lastIndex == 1) then
+    elseif code == KEY_DOWN then
+      if entry.lastIndex == 1 then
         entry.lastIndex = #entry.history
       else
         entry.lastIndex = math.Clamp(entry.lastIndex - 1, 1, #entry.history)
       end
 
       shouldSet = true
-    elseif (code == KEY_UP) then
-      if (entry.lastIndex == #entry.history) then
+    elseif code == KEY_UP then
+      if entry.lastIndex == #entry.history then
         entry.lastIndex = 1
       else
         entry.lastIndex = math.Clamp(entry.lastIndex + 1, 1, #entry.history)
@@ -71,7 +71,7 @@ function PANEL:Init()
 
     local historyEntry = entry.history[entry.lastIndex]
 
-    if (historyEntry and historyEntry != "" and shouldSet) then
+    if historyEntry and historyEntry != "" and shouldSet then
       entry:SetText(historyEntry)
       entry:SetCaretPos(string.utf8len(historyEntry))
 
@@ -85,14 +85,14 @@ end
 function PANEL:SetOpen(bIsOpen)
   self.isOpen = bIsOpen
 
-  if (bIsOpen) then
+  if bIsOpen then
     self:MakePopup()
 
     self.text_entry:SetVisible(true)
     self.text_entry:RequestFocus()
     self.text_entry.lastIndex = 0
   else
-    if (self.text_entry:GetValue():is_command()) then
+    if self.text_entry:GetValue():is_command() then
       self.text_entry:SetText("")
     end
 
@@ -107,10 +107,10 @@ function PANEL:SetOpen(bIsOpen)
 end
 
 function PANEL:IsTypingCommand()
-  if (IsValid(self.text_entry)) then
+  if IsValid(self.text_entry) then
     local cmd = self.text_entry:GetValue()
 
-    if (cmd != "/") then
+    if cmd != "/" then
       return cmd:is_command()
     end
   end
@@ -119,7 +119,7 @@ end
 function PANEL:CreateMessage(messageData)
   local parsed = chatbox.Compile(messageData)
 
-  if (!parsed) then return end
+  if !parsed then return end
 
   local panel = vgui.Create("flChatMessage", self)
 
@@ -130,17 +130,17 @@ function PANEL:CreateMessage(messageData)
 end
 
 function PANEL:AddMessage(messageData)
-  if (messageData and plugin.call("ChatboxShouldAddMessage", messageData) != false) then
+  if messageData and plugin.call("ChatboxShouldAddMessage", messageData) != false then
     local panel = self:CreateMessage(messageData)
 
-    if (IsValid(panel)) then
+    if IsValid(panel) then
       self:AddPanel(panel)
     end
   end
 end
 
 function PANEL:AddPanel(panel)
-  if (#self.history >= config.Get("chatbox_max_messages")) then
+  if #self.history >= config.Get("chatbox_max_messages") then
     self.history[1]:Eject()
   end
 
@@ -185,11 +185,11 @@ function PANEL:Rebuild()
 end
 
 function PANEL:Think()
-  if (self.isOpen) then
-    if (input.IsKeyDown(KEY_ESCAPE)) then
+  if self.isOpen then
+    if input.IsKeyDown(KEY_ESCAPE) then
       chatbox.Hide()
 
-      if (gui.IsGameUIVisible()) then
+      if gui.IsGameUIVisible() then
         gui.HideGameUI()
       end
     end
@@ -203,32 +203,32 @@ function PANEL:Paint(w, h)
 end
 
 function PANEL:PaintOver(w, h)
-  if (plugin.call("ChatboxPaintOver", w, h, self) == nil) then
+  if plugin.call("ChatboxPaintOver", w, h, self) == nil then
     local entry = self.text_entry
 
-    if (IsValid(entry)) then
+    if IsValid(entry) then
       local val = entry:GetValue()
       local isCommand, prefixLen = string.is_command(val)
 
-      if (isCommand) then
+      if isCommand then
         local space = string.find(val, " ")
         local endpos = space
 
-        if (!endpos) then
+        if !endpos then
           endpos = (string.len(val) + 1)
         end
 
         local cmd = string.utf8lower(string.sub(val, prefixLen + 1, endpos - 1))
         local cmds = {}
 
-        if (cmd == "" or cmd == " ") then return end
+        if cmd == "" or cmd == " " then return end
 
-        if (!space) then
+        if !space then
           cmds = fl.command:find_all(cmd)
         else
           local found = fl.command:find_by_id(cmd)
 
-          if (found) then
+          if found then
             table.insert(cmds, found)
           end
         end
@@ -237,7 +237,7 @@ function PANEL:PaintOver(w, h)
 
         local font, color = theme.GetFont("Text_Normal"), theme.GetColor("Accent")
 
-        if (#cmds > 0) then
+        if #cmds > 0 then
           local lastY = 0
           local color_white = Color(255, 255, 255)
 
@@ -245,12 +245,12 @@ function PANEL:PaintOver(w, h)
             local w, h = draw.SimpleText("/" + v.name, font, 16, 16 + lastY, color)
             w, h = draw.SimpleText(v.syntax, font, 16 + w + 8, 16 + lastY, color_white)
 
-            if (#cmds == 1) then
+            if #cmds == 1 then
               local smallFont = theme.GetFont("Text_Small")
               local w2, h2 = draw.SimpleText(v.description, smallFont, 16, 16 + h + 4, color_white)
               local aliases = "[none]"
 
-              if (v.aliases and #v.aliases > 0) then
+              if v.aliases and #v.aliases > 0 then
                 aliases = table.concat(v.aliases or {}, ", ")
               end
 
@@ -259,7 +259,7 @@ function PANEL:PaintOver(w, h)
 
             lastY = lastY + h + 8
 
-            if (k >= 10) then break end
+            if k >= 10 then break end
           end
         else
           draw.SimpleText("No commands found!", font, 16, 16, color)

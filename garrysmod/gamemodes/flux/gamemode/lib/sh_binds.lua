@@ -6,11 +6,11 @@ if CLIENT then
   fl.binds.keyEnums = keyEnums
   fl.binds.stored = stored
 
-  if (#keyEnums == 0) then
+  if #keyEnums == 0 then
     for k, v in pairs(_G) do
-      if (string.sub(k, 1, 6) == "MOUSE_") then
+      if string.sub(k, 1, 6) == "MOUSE_" then
         keyEnums[v] = k
-      elseif (string.sub(k, 1, 4) == "KEY_") then
+      elseif string.sub(k, 1, 4) == "KEY_" then
         keyEnums[v] = k
       end
     end
@@ -30,7 +30,7 @@ if CLIENT then
     for k, v in pairs(keyEnums) do
       local bind = input.LookupKeyBinding(k)
 
-      if (!tonumber(bind)) then
+      if !tonumber(bind) then
         binds[k] = bind
       end
     end
@@ -44,7 +44,7 @@ if CLIENT then
     for k, v in pairs(keyEnums) do
       local bind = input.LookupKeyBinding(k)
 
-      if (tonumber(bind)) then
+      if tonumber(bind) then
         binds[k] = bind
       end
     end
@@ -58,7 +58,7 @@ if CLIENT then
 
   function fl.binds:SetBind(command, nKey)
     for k, v in pairs(stored) do
-      if (v == command) then
+      if v == command then
         stored[k] = nil
       end
     end
@@ -81,7 +81,7 @@ else
   netstream.Hook("FLBindPressed", function(nKey)
     local bind = fl.binds:GetBind(nKey)
 
-    if (bind) then
+    if bind then
       RunConsoleCommand(bind)
     end
   end)

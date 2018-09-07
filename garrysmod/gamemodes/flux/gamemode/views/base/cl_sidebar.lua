@@ -20,7 +20,7 @@ end
 function PANEL:AddPanel(panel, bCenter)
   local x, y = panel:GetPos()
 
-  if (bCenter) then
+  if bCenter then
     x = self:GetWide() * 0.5 - panel:GetWide() * 0.5
   end
 
@@ -43,13 +43,13 @@ function PANEL:add_button(text, callback)
   button.DoClick = function(btn)
     btn:SetActive(true)
 
-    if (IsValid(self.prevButton) and self.prevButton != btn) then
+    if IsValid(self.prevButton) and self.prevButton != btn then
       self.prevButton:SetActive(false)
     end
 
     self.prevButton = btn
 
-    if (isfunction(callback)) then
+    if isfunction(callback) then
       callback(btn)
     end
   end
@@ -88,7 +88,7 @@ function PANEL:PerformLayout()
 
   self:Rebuild()
 
-  if (oldHeight != self.pnlCanvas:GetTall()) then
+  if oldHeight != self.pnlCanvas:GetTall() then
     self.VBar:SetScroll(self.VBar:GetScroll())
   end
 end

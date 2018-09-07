@@ -5,8 +5,8 @@ PANEL.instance_ids = {}
 PANEL.isHovered = false
 
 function PANEL:SetItem(instance_id)
-  if (istable(instance_id)) then
-    if (#instance_id > 1) then
+  if istable(instance_id) then
+    if #instance_id > 1 then
       self:SetItemMulti(instance_id)
 
       return
@@ -15,10 +15,10 @@ function PANEL:SetItem(instance_id)
     end
   end
 
-  if (isnumber(instance_id)) then
+  if isnumber(instance_id) then
     self.itemData = item.FindInstanceByID(instance_id)
 
-    if (self.itemData) then
+    if self.itemData then
       self.itemCount = 1
       self.instance_ids = {instance_id}
     end
@@ -30,7 +30,7 @@ end
 function PANEL:SetItemMulti(ids)
   local itemData = item.FindInstanceByID(ids[1])
 
-  if (itemData and !itemData.stackable) then return end
+  if itemData and !itemData.stackable then return end
 
   self.itemData = itemData
   self.itemCount = #ids
@@ -40,7 +40,7 @@ end
 
 function PANEL:Combine(panel2)
   for i = 1, #panel2.instance_ids do
-    if (#self.instance_ids < self.itemData.max_stack) then
+    if #self.instance_ids < self.itemData.max_stack then
       table.insert(self.instance_ids, panel2.instance_ids[1])
       table.remove(panel2.instance_ids, 1)
     end
@@ -51,7 +51,7 @@ function PANEL:Combine(panel2)
 
   panel2.itemCount = #panel2.instance_ids
 
-  if (panel2.itemCount > 0) then
+  if panel2.itemCount > 0 then
     panel2:Rebuild()
   else
     panel2:Reset()
@@ -69,21 +69,21 @@ end
 function PANEL:Paint(w, h)
   local drawColor = theme.GetColor("Background"):lighten(70)
 
-  if (self.isHovered and !self:IsHovered()) then
+  if self.isHovered and !self:IsHovered() then
     self.isHovered = false
   end
 
-  if (!self.isHovered) then
-    if (!self.itemData) then
+  if !self.isHovered then
+    if !self.itemData then
       drawColor = drawColor:darken(25)
     else
-      if (self.itemData.special_color) then
+      if self.itemData.special_color then
         surface.SetDrawColor(self.itemData.special_color)
         surface.DrawOutlinedRect(0, 0, w, h)
         surface.DrawOutlinedRect(1, 1, w - 2, h - 2)
       end
 
-      if (self:IsHovered()) then
+      if self:IsHovered() then
         surface.SetDrawColor(Color(255, 255, 255))
         surface.DrawOutlinedRect(1, 1, w - 2, h - 2)
       end
@@ -92,11 +92,11 @@ function PANEL:Paint(w, h)
     local itemTable = self.itemData
     local curSlot = fl.inventoryDragSlot
 
-    if (itemTable) then
-      if (IsValid(curSlot) and curSlot.itemData != itemTable) then
+    if itemTable then
+      if IsValid(curSlot) and curSlot.itemData != itemTable then
         local slotData = curSlot.itemData
 
-        if (slotData.id == itemTable.id and slotData.stackable and curSlot.itemCount < slotData.max_stack) then
+        if slotData.id == itemTable.id and slotData.stackable and curSlot.itemCount < slotData.max_stack then
           drawColor = Color(200, 200, 60)
         else
           drawColor = Color(200, 60, 60, 160)
@@ -111,7 +111,7 @@ function PANEL:Paint(w, h)
 
   draw.RoundedBox(0, 0, 0, w, h, drawColor)
 
-  if (self.itemCount >= 2) then
+  if self.itemCount >= 2 then
     DisableClipping(true)
       draw.SimpleText(self.itemCount, theme.GetFont("Text_Smallest"), 52, 50, Color(200, 200, 200))
     DisableClipping(false)
@@ -119,8 +119,8 @@ function PANEL:Paint(w, h)
 end
 
 function PANEL:Rebuild()
-  if (!self.itemData) then
-    if (IsValid(self.spawnIcon)) then
+  if !self.itemData then
+    if IsValid(self.spawnIcon) then
       self.spawnIcon:SafeRemove()
     end
 
@@ -131,7 +131,7 @@ function PANEL:Rebuild()
     self:Droppable("flItem")
   end
 
-  if (IsValid(self.spawnIcon)) then
+  if IsValid(self.spawnIcon) then
     self.spawnIcon:SetVisible(false)
     self.spawnIcon:Remove()
   end
@@ -154,11 +154,11 @@ function PANEL:OnMouseReleased(...)
   local x, y = self:LocalToScreen(0, 0)
   local w, h = self:GetSize()
 
-  if (surface.IsMouseInRect(x, y, w, h)) then
-    if (self.itemData and self.mousePressed and self.mousePressed > (CurTime() - 0.15)) then
+  if surface.IsMouseInRect(x, y, w, h) then
+    if self.itemData and self.mousePressed and self.mousePressed > (CurTime() - 0.15) then
       fl.inventoryDragSlot = nil
 
-      if (#self.instance_ids > 1) then
+      if #self.instance_ids > 1 then
         hook.run("PlayerUseItemMenu", self.instance_ids)
       else
         hook.run("PlayerUseItemMenu", self.itemData)
@@ -196,7 +196,7 @@ end
 
 function PANEL:SlotsToInventory()
   for k, v in ipairs(self.slots) do
-    if (v.slotNum and v.itemData and #v.instance_ids > 0) then
+    if v.slotNum and v.itemData and #v.instance_ids > 0 then
       self.inventory[v.slotNum] = v.instance_ids
     else
       self.inventory[v.slotNum] = {}
@@ -217,7 +217,7 @@ function PANEL:Rebuild()
 
   self:SetSize(560, multiplier * 68 + 36)
 
-  if (IsValid(self.player)) then
+  if IsValid(self.player) then
     self:SetInventory(self.player:GetInventory())
   end
 
@@ -225,7 +225,7 @@ function PANEL:Rebuild()
   self.scroll:SetSize(self:GetWide(), self:GetTall())
   self.scroll:SetPos(10, 32)
 
-  if (IsValid(self.list)) then
+  if IsValid(self.list) then
     self.list:Clear()
   end
 
@@ -240,8 +240,8 @@ function PANEL:Rebuild()
     invSlot:SetSize(64, 64)
     invSlot.slotNum = i
 
-    if (self.inventory[i] and #self.inventory[i] > 0) then
-      if (#self.inventory[i] > 1) then
+    if self.inventory[i] and #self.inventory[i] > 0 then
+      if #self.inventory[i] > 1 then
         invSlot:SetItemMulti(self.inventory[i])
       else
         invSlot:SetItem(self.inventory[i][1])
@@ -249,10 +249,10 @@ function PANEL:Rebuild()
     end
 
     invSlot:Receiver("flItem", function(receiver, dropped, isDropped, menuIndex, mouseX, mouseY)
-      if (isDropped) then
+      if isDropped then
         fl.inventoryDragSlot = nil
 
-        if (receiver.itemData) then
+        if receiver.itemData then
           if (receiver.itemData.id == dropped[1].itemData.id and
             receiver.slotNum != dropped[1].slotNum and receiver.itemData.stackable) then
             receiver:Combine(dropped[1])
@@ -268,11 +268,11 @@ function PANEL:Rebuild()
 
         local split = false
 
-        if (input.IsKeyDown(KEY_LCONTROL) and dropped[1].itemCount > 1) then
+        if input.IsKeyDown(KEY_LCONTROL) and dropped[1].itemCount > 1 then
           split = {{}, {}}
 
           for i2 = 1, dropped[1].itemCount do
-            if (i2 <= math.floor(dropped[1].itemCount * 0.5)) then
+            if i2 <= math.floor(dropped[1].itemCount * 0.5) then
               table.insert(split[1], dropped[1].instance_ids[i2])
             else
               table.insert(split[2], dropped[1].instance_ids[i2])
@@ -280,7 +280,7 @@ function PANEL:Rebuild()
           end
         end
 
-        if (!split) then
+        if !split then
           receiver:SetItem(dropped[1].instance_ids)
         else
           receiver:SetItemMulti(split[1])
@@ -289,7 +289,7 @@ function PANEL:Rebuild()
 
         receiver.isHovered = false
 
-        if (!split) then
+        if !split then
           dropped[1]:Reset()
         else
           dropped[1]:Rebuild()
@@ -305,7 +305,7 @@ function PANEL:Rebuild()
   end
 
   self:GetParent():Receiver("flItem", function(receiver, dropped, isDropped, menuIndex, mouseX, mouseY)
-    if (isDropped) then
+    if isDropped then
       hook.run("PlayerDropItem", dropped[1].itemData, dropped[1], mouseX, mouseY)
     end
   end, {})

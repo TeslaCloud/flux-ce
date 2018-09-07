@@ -27,9 +27,9 @@ do
     else
       local len2D = velocity:Length2D()
 
-      if (len2D > 150) then
+      if len2D > 150 then
         player.CalcIdeal = ACT_MP_RUN
-      elseif (len2D > 0.5) then
+      elseif len2D > 0.5 then
         player.CalcIdeal = ACT_MP_WALK
       end
     end
@@ -48,27 +48,27 @@ do
   function GM:TranslateActivity(player, act)
     local animations = player.flAnimTable
 
-    if (!animations) then
+    if !animations then
       return self.BaseClass:TranslateActivity(player, act)
     end
 
     player.CalcSeqOverride = -1
 
-    if (player:InVehicle()) then
+    if player:InVehicle() then
       local vehicle = player:GetVehicle()
       local vehicleClass = vehicle:GetClass()
       local vehicleAnims = animations["vehicle"]
 
-      if (vehicleAnims and vehicleAnims[vehicleClass]) then
+      if vehicleAnims and vehicleAnims[vehicleClass] then
         local anim = vehicleAnims[vehicleClass][1]
         local position = vehicleAnims[vehicleClass][2]
 
-        if (position) then
+        if position then
           player:ManipulateBonePosition(0, position)
           player.shouldUndoBones = true
         end
 
-        if (isstring(anim)) then
+        if isstring(anim) then
           player.CalcSeqOverride = player:LookupSequence(anim)
 
           -- Cache the result of LookupSequence for added performance.
@@ -81,7 +81,7 @@ do
       else
         local anim = animations["normal"][ACT_MP_CROUCH_IDLE][1]
 
-        if (isstring(anim)) then
+        if isstring(anim) then
           player.CalcSeqOverride = player:LookupSequence(anim)
 
           player.flAnimTable["normal"][ACT_MP_CROUCH_IDLE][1] = player.CalcSeqOverride
@@ -91,25 +91,25 @@ do
 
         return anim
       end
-    elseif (player:OnGround()) then
+    elseif player:OnGround() then
       local holdType = getWeaponHoldtype(player, player:GetActiveWeapon())
       local holdTypeAnims = animations[holdType]
 
-      if (player.shouldUndoBones) then
+      if player.shouldUndoBones then
         player:ManipulateBonePosition(0, Vector(0, 0, 0))
         player.shouldUndoBones = false
       end
 
-      if (holdTypeAnims and holdTypeAnims[act]) then
+      if holdTypeAnims and holdTypeAnims[act] then
         local anim = holdTypeAnims[act]
 
-        if (istable(anim)) then
-          if (hook.Call("ModelWeaponRaised", nil, player, model)) then
+        if istable(anim) then
+          if hook.Call("ModelWeaponRaised", nil, player, model) then
             anim = anim[2]
           else
             anim = anim[1]
           end
-        elseif (isstring(anim)) then
+        elseif isstring(anim) then
           player.CalcSeqOverride = player:LookupSequence(anim)
 
           player.flAnimTable[holdType][act] = player.CalcSeqOverride
@@ -119,7 +119,7 @@ do
 
         return anim
       end
-    elseif (animations["normal"]["glide"]) then
+    elseif animations["normal"]["glide"] then
       return animations["normal"]["glide"]
     end
   end
@@ -127,25 +127,25 @@ end
 
 -- todo: proper weapon anims
 function GM:DoAnimationEvent(player, event, data)
-  if (event == PLAYERANIMEVENT_ATTACK_PRIMARY) then
-    if (player:Crouching()) then
+  if event == PLAYERANIMEVENT_ATTACK_PRIMARY then
+    if player:Crouching() then
       player:AnimRestartGesture(GESTURE_SLOT_ATTACK_AND_RELOAD, ACT_MP_ATTACK_CROUCH_PRIMARYFIRE, true)
     else
       player:AnimRestartGesture(GESTURE_SLOT_ATTACK_AND_RELOAD, ACT_MP_ATTACK_STAND_PRIMARYFIRE, true)
     end
 
     return ACT_VM_PRIMARYATTACK
-  elseif (event == PLAYERANIMEVENT_ATTACK_SECONDARY) then
+  elseif event == PLAYERANIMEVENT_ATTACK_SECONDARY then
     return ACT_VM_SECONDARYATTACK
-  elseif (event == PLAYERANIMEVENT_RELOAD) then
-    if (player:Crouching()) then
+  elseif event == PLAYERANIMEVENT_RELOAD then
+    if player:Crouching() then
       player:AnimRestartGesture(GESTURE_SLOT_ATTACK_AND_RELOAD, ACT_MP_RELOAD_CROUCH, true)
     else
       player:AnimRestartGesture(GESTURE_SLOT_ATTACK_AND_RELOAD, ACT_MP_RELOAD_STAND, true)
     end
 
     return ACT_INVALID
-  elseif (event == PLAYERANIMEVENT_JUMP) then
+  elseif event == PLAYERANIMEVENT_JUMP then
     player.m_bJumping = true
     player.m_bFirstJumpFrame = true
     player.m_flJumpStartTime = CurTime()
@@ -153,7 +153,7 @@ function GM:DoAnimationEvent(player, event, data)
     player:AnimRestartMainSequence()
 
     return ACT_INVALID
-  elseif (event == PLAYERANIMEVENT_CANCEL_RELOAD) then
+  elseif event == PLAYERANIMEVENT_CANCEL_RELOAD then
     player:AnimResetGestureSlot(GESTURE_SLOT_ATTACK_AND_RELOAD)
 
     return ACT_INVALID
@@ -164,13 +164,13 @@ do
   local animCache = {}
 
   function GM:PlayerModelChanged(player, strNewModel, strOldModel)
-    if (!strNewModel) then return end
+    if !strNewModel then return end
 
     if CLIENT then
       player:SetIK(false)
     end
 
-    if (!animCache[strNewModel]) then
+    if !animCache[strNewModel] then
       animCache[strNewModel] = fl.anim:GetTable(strNewModel)
     end
 
@@ -179,16 +179,16 @@ do
 end
 
 function GM:PlayerNoClip(player, bState)
-  if (bState == false) then
+  if bState == false then
     local bShouldExit = plugin.call("PlayerExitNoclip", player)
 
-    if (bShouldExit != nil) then
+    if bShouldExit != nil then
       return bShouldExit
     end
   else
     local bShouldEnter = plugin.call("PlayerEnterNoclip", player)
 
-    if (bShouldEnter != nil) then
+    if bShouldEnter != nil then
       return bShouldEnter
     end
   end
@@ -197,13 +197,13 @@ function GM:PlayerNoClip(player, bState)
 end
 
 function GM:PhysgunPickup(player, entity)
-  if (player:can("physgun_pickup")) then
+  if player:can("physgun_pickup") then
     return true
   end
 end
 
 concommand.Add("fl_save_pers", function()
-  if (fl.development and SERVER) then
+  if fl.development and SERVER then
     hook.run("PersistenceSave")
   end
 end)
@@ -216,7 +216,7 @@ function GM:OnReloaded()
     toolGun.Tool[v.Mode] = v
   end
 
-  if (fl.development) then
+  if fl.development then
     for k, v in ipairs(_player.GetAll()) do
       self:PlayerModelChanged(v, v:GetModel(), v:GetModel())
     end

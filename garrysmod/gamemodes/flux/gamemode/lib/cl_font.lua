@@ -11,9 +11,9 @@ do
   end
 
   function font.Scale(size)
-    if (ScreenIsRatio(16, 9)) then
+    if ScreenIsRatio(16, 9) then
       return math.floor(size * (ScrH() / 1080))
-    elseif (ScreenIsRatio(4, 3)) then
+    elseif ScreenIsRatio(4, 3) then
       return math.floor(size * (ScrH() / 1024))
     end
 
@@ -22,8 +22,8 @@ do
 end
 
 function font.Create(name, fontData)
-  if (name == nil or !istable(fontData)) then return end
-  if (stored[name]) then return end
+  if name == nil or !istable(fontData) then return end
+  if stored[name] then return end
 
   -- Force UTF-8 range by default.
   fontData.extended = true
@@ -33,15 +33,15 @@ function font.Create(name, fontData)
 end
 
 function font.GetSize(name, size, data)
-  if (!size) then return name end
+  if !size then return name end
 
   local newName = name..":"..size
 
-  if (!stored[newName]) then
+  if !stored[newName] then
     local fontData = table.Copy(stored[name])
 
-    if (fontData) then
-      if (!istable(data)) then data = {} end
+    if fontData then
+      if !istable(data) then data = {} end
 
       fontData.size = size
 
@@ -60,7 +60,7 @@ end
 
 function font.ClearSizes()
   for k, v in pairs(stored) do
-    if (k:find("\\")) then
+    if k:find("\\") then
       stored[k] = nil
     end
   end

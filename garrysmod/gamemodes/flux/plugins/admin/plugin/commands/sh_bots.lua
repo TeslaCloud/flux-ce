@@ -56,7 +56,7 @@ function COMMAND:on_run(player)
   fl.player:broadcast(L("KickBotsMessage", (IsValid(player) and player:Name()) or "Console"))
 
   for k, v in ipairs(_player.GetAll()) do
-    if (v:IsBot()) then
+    if v:IsBot() then
       v:Kick("Kicking bots")
     end
   end

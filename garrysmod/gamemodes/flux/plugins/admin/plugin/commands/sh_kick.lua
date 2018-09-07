@@ -11,7 +11,7 @@ function COMMAND:on_run(player, targets, ...)
   local pieces = {...}
   local reason = "Kicked for unspecified reason."
 
-  if (#pieces > 0) then
+  if #pieces > 0 then
     reason = string.Implode(" ", pieces)
   end
 

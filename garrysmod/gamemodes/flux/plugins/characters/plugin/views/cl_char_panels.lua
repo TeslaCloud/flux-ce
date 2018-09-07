@@ -7,7 +7,7 @@ function PANEL:Init() end
 function PANEL:Paint(w, h)
   theme.Hook("PaintCharCreationPanel", self, w, h)
 
-  if (isstring(self.text)) then
+  if isstring(self.text) then
     draw.SimpleText(self.text, theme.GetFont("Text_Normal"), 28, 16, theme.GetColor("Text"))
   end
 end
@@ -97,7 +97,7 @@ function PANEL:Rebuild()
   self.scrollpanel:SetPos(30, 50)
 
   for k, v in ipairs(self.models) do
-    if (i >= 8) then
+    if i >= 8 then
       offset = offset + 68
       i = 0
     end
@@ -107,7 +107,7 @@ function PANEL:Rebuild()
     self.buttons[i]:SetModel(v)
     self.buttons[i]:SetPos(i * 68 + 4, offset)
     self.buttons[i].DoClick = function(btn)
-      if (IsValid(self.prevBtn)) then
+      if IsValid(self.prevBtn) then
         self.prevBtn.isActive = false
       end
 
@@ -118,7 +118,7 @@ function PANEL:Rebuild()
       self.prevBtn = btn
     end
 
-    if (self.model == v) then
+    if self.model == v then
       self.buttons[i].isActive = true
       self.prevBtn = self.buttons[i]
     end
@@ -126,7 +126,7 @@ function PANEL:Rebuild()
     self.buttons[i].Paint = function(btn, w, h)
       btn.OverlayFade = math.Clamp((btn.OverlayFade or 0) - RealFrameTime() * 640 * 2, 0, 255)
 
-      if (dragndrop.IsDragging() or (!btn:IsHovered() and !btn.isActive)) then return end
+      if dragndrop.IsDragging() or (!btn:IsHovered() and !btn.isActive) then return end
 
       btn.OverlayFade = math.Clamp(btn.OverlayFade + RealFrameTime() * 640 * 8, 0, 255)
     end
@@ -136,7 +136,7 @@ function PANEL:Rebuild()
 end
 
 function PANEL:OnOpen(parent)
-  if (!parent.CharData.faction or parent.CharData.faction == "" or parent.CharData.gender == t('char_create.gender.s') or parent.CharData.gender == "") then
+  if !parent.CharData.faction or parent.CharData.faction == "" or parent.CharData.gender == t('char_create.gender.s') or parent.CharData.gender == "" then
     self.Label:SetText(t('char_create.gen_fac_warning'))
     self.Label:SetTextColor(Color(220, 100, 100))
     self.Label:SizeToContents()
@@ -146,14 +146,14 @@ function PANEL:OnOpen(parent)
 
     self.model = charData.model or ""
 
-    if (charData and charData.faction) then
+    if charData and charData.faction then
       factionTable = faction.find_by_id(charData.faction)
     end
 
-    if (factionTable) then
-      if (charData.gender == t('char_create.gender.m')) then
+    if factionTable then
+      if charData.gender == t('char_create.gender.m') then
         self.models = factionTable.models.male
-      elseif (charData.gender == t('char_create.gender.f')) then
+      elseif charData.gender == t('char_create.gender.f') then
         self.models = factionTable.models.female
       else
         self.models = factionTable.models.universal

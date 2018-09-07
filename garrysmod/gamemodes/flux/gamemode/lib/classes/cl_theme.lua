@@ -15,7 +15,7 @@ function Theme:init(name, parent)
   self.id = self.name:to_id() -- temporary unique ID
   self.parent = parent
 
-  if (!self.id) then
+  if !self.id then
     error("Cannot create a theme without a valid unique ID!")
   end
 end
@@ -32,19 +32,19 @@ function Theme:AddPanel(id, callback)
 end
 
 function Theme:CreatePanel(id, parent, ...)
-  if (self.panels[id]) then
+  if self.panels[id] then
     return self.panels[id](id, parent, ...)
   end
 end
 
 function Theme:SetOption(key, value)
-  if (key) then
+  if key then
     self.options[key] = value
   end
 end
 
 function Theme:SetFont(key, value, scale, data)
-  if (key) then
+  if key then
     self.fonts[key] = font.GetSize(value, scale, data)
   end
 end
@@ -76,7 +76,7 @@ end
 function Theme:GetColor(id, failsafe)
   local col = self.colors[id]
 
-  if (col) then
+  if col then
     return col
   else
     return failsafe or Color(255, 255, 255)
@@ -86,7 +86,7 @@ end
 function Theme:GetMaterial(id, failsafe)
   local mat = self.materials[id]
 
-  if (mat) then
+  if mat then
     return mat
   else
     return failsafe
@@ -96,7 +96,7 @@ end
 function Theme:GetSound(id, failsafe)
   local sound = self.sounds[id]
 
-  if (sound) then
+  if sound then
     return sound
   else
     return failsafe or Sound()

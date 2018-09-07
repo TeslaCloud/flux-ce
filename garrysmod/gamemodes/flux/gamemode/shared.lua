@@ -88,7 +88,7 @@ util.include_folder("controllers", true)
 util.include_folder("views/base", true)
 util.include_folder("views", true)
 
-if (theme or SERVER) then
+if theme or SERVER then
   pipeline.register("theme", function(id, file_name, pipe)
     if CLIENT then
       THEME = Theme.new(id)

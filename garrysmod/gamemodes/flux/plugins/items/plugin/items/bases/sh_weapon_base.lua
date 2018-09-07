@@ -1,4 +1,4 @@
-if (!ItemEquippable) then
+if !ItemEquippable then
   util.include("sh_equipment_base.lua")
 end
 
@@ -27,7 +27,7 @@ ItemWeapon:add_button(t('item.option.unload'), {
 function ItemWeapon:PostEquipped(player)
   local weapon = player:Give(self.weapon_class, true)
 
-  if (IsValid(weapon)) then
+  if IsValid(weapon) then
     local ammo = self:get_data("ammo", {0, 0})
 
     player:SetActiveWeapon(weapon)
@@ -41,7 +41,7 @@ end
 function ItemWeapon:PostUnEquipped(player)
   local weapon = player:GetWeapon(self.weapon_class)
 
-  if (IsValid(weapon)) then
+  if IsValid(weapon) then
     local ammo = {weapon:Clip1(), weapon:Clip2()}
 
     player:StripWeapon(self.weapon_class)
@@ -65,7 +65,7 @@ end
 function ItemWeapon:on_save(player)
   local weapon = player:GetWeapon(self.weapon_class)
 
-  if (IsValid(weapon)) then
+  if IsValid(weapon) then
     local ammo = {weapon:Clip1(), weapon:Clip2()}
 
     self:set_data("ammo", ammo)

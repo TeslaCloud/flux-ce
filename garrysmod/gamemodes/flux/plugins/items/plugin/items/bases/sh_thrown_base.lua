@@ -1,4 +1,4 @@
-if (!ItemWeapon) then
+if !ItemWeapon then
   util.include("sh_weapon_base.lua")
 end
 
@@ -22,7 +22,7 @@ ItemThrown:add_button(t('item.option.unload'), {
 function ItemThrown:PostEquipped(player)
   local weapon = player:Give(self.weapon_class, true)
 
-  if (IsValid(weapon)) then
+  if IsValid(weapon) then
     player:SetActiveWeapon(weapon)
     player:SetAmmo(1, self.thrown_ammo_class)
   else
@@ -33,10 +33,10 @@ end
 function ItemThrown:PostUnEquipped(player)
   local weapon = player:GetWeapon(self.weapon_class)
 
-  if (IsValid(weapon)) then
+  if IsValid(weapon) then
     player:StripWeapon(self.weapon_class)
 
-    if (player:GetAmmoCount(self.thrown_ammo_class) == 0) then
+    if player:GetAmmoCount(self.thrown_ammo_class) == 0 then
       player:TakeItemByID(self.instance_id)
     end
   else

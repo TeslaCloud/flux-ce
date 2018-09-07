@@ -31,14 +31,14 @@ function fl.admin:get_bans()
 end
 
 function fl.admin:create_group(id, data)
-  if (!isstring(id)) then return end
+  if !isstring(id) then return end
 
   data.id = id
 
-  if (data.base) then
+  if data.base then
     local parent = roles[data.base]
 
-    if (parent) then
+    if parent then
       local copy = table.Copy(parent)
 
       table.safe_merge(copy.permissions, data.permissions)
@@ -48,32 +48,32 @@ function fl.admin:create_group(id, data)
       for k, v in pairs(copy) do
         if k == 'permissions' then continue end
 
-        if (!data[k]) then
+        if !data[k] then
           data[k] = v
         end
       end
     end
   end
 
-  if (!roles[id]) then
+  if !roles[id] then
     roles[id] = data
   end
 end
 
 function fl.admin:AddPermission(id, category, data, bForce)
-  if (!id) then return end
+  if !id then return end
 
   category = category or "general"
   data.id = id
   permissions[category] = permissions[category] or {}
 
-  if (!permissions[category][id] or bForce) then
+  if !permissions[category][id] or bForce then
     permissions[category][id] = data
   end
 end
 
 function fl.admin:RegisterPermission(id, name, description, category)
-  if (!isstring(id) or id == "") then return end
+  if !isstring(id) or id == "" then return end
 
   local data = {}
     data.id = id:to_id()
@@ -84,14 +84,14 @@ function fl.admin:RegisterPermission(id, name, description, category)
 end
 
 function fl.admin:PermissionFromCommand(cmd)
-  if (!cmd) then return end
+  if !cmd then return end
 
   self:RegisterPermission(cmd.id, cmd.name, cmd.description, cmd.category)
 end
 
 function fl.admin:can(player, action, object)
-  if (!IsValid(player)) then return true end
-  if (player:is_root()) then return true end
+  if !IsValid(player) then return true end
+  if player:is_root() then return true end
 
   local role = player.record and roles[player.record.role]
 
@@ -103,7 +103,7 @@ function fl.admin:can(player, action, object)
 end
 
 function fl.admin:FindGroup(id)
-  if (roles[id]) then
+  if roles[id] then
     return roles[id]
   end
 
@@ -115,22 +115,22 @@ function fl.admin:GroupExists(id)
 end
 
 function fl.admin:CheckImmunity(player, target, can_equal)
-  if (!IsValid(player) or !IsValid(target)) then
+  if !IsValid(player) or !IsValid(target) then
     return true
   end
 
   local group1 = self:FindGroup(player:GetUserGroup())
   local group2 = self:FindGroup(target:GetUserGroup())
 
-  if (!isnumber(group1.immunity) or !isnumber(group2.immunity)) then
+  if !isnumber(group1.immunity) or !isnumber(group2.immunity) then
     return true
   end
 
-  if (group1.immunity > group2.immunity) then
+  if group1.immunity > group2.immunity then
     return true
   end
 
-  if (can_equal and group1.immunity == group2.immunity) then
+  if can_equal and group1.immunity == group2.immunity then
     return true
   end
 
@@ -174,7 +174,7 @@ if SERVER then
   end
 
   function fl.admin:ban(player, duration, reason, bPreventKick)
-    if (!isstring(player) and !IsValid(player)) then return end
+    if !isstring(player) and !IsValid(player) then return end
 
     duration = duration or 0
     reason = reason or "N/A"
@@ -182,11 +182,11 @@ if SERVER then
     local steam_id = player
     local name = steam_id
 
-    if (!isstring(player) and IsValid(player)) then
+    if !isstring(player) and IsValid(player) then
       name = player:SteamName()
       steam_id = player:SteamID()
 
-      if (!bPreventKick) then
+      if !bPreventKick then
         player:Kick("You have been banned: "..tostring(reason))
       end
     end
@@ -253,8 +253,8 @@ do
   }
 
   function fl.admin:InterpretBanTime(str)
-    if (isnumber(str)) then return str * 60 end
-    if (!isstring(str)) then return false end
+    if isnumber(str) then return str * 60 end
+    if !isstring(str) then return false end
 
     str = str:trim_end(" ")
     str = str:trim_start(" ")
@@ -262,7 +262,7 @@ do
     str = str:lower()
 
     -- A regular number was entered?
-    if (tonumber(str)) then
+    if tonumber(str) then
       return tonumber(str) * 60
     end
 
@@ -275,20 +275,20 @@ do
     for k, v in ipairs(exploded) do
       local n = tonumber(v)
 
-      if (isstring(v)) then
+      if isstring(v) then
         v = v:trim_end("s")
       end
 
-      if (!n and !tokens[v] and !numTokens[v]) then continue end
+      if !n and !tokens[v] and !numTokens[v] then continue end
 
-      if (n) then
+      if n then
         num = n
-      elseif (isstring(v)) then
+      elseif isstring(v) then
         v = v:trim_end("s")
 
         local ntok = numTokens[v]
 
-        if (ntok) then
+        if ntok then
           num = ntok
 
           continue
@@ -296,8 +296,8 @@ do
 
         local tok = tokens[v]
 
-        if (tok) then
-          if (tok == 0) then
+        if tok then
+          if tok == 0 then
             return 0
           else
             result = result + (tok * num)

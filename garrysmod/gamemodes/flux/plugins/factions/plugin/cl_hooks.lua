@@ -1,13 +1,13 @@
 function flFactions:CharPanelCreated(id, panel)
-  if (id == "CharCreation_General") then
+  if id == "CharCreation_General" then
     local factionTable
     local charData = panel:GetParent().CharData
 
-    if (charData and charData.faction) then
+    if charData and charData.faction then
       factionTable = faction.find_by_id(charData.faction)
     end
 
-    if (factionTable and !factionTable.has_name) then
+    if factionTable and !factionTable.has_name then
       panel.nameLabel:SetVisible(false)
       panel.nameEntry:SetVisible(false)
 
@@ -15,12 +15,12 @@ function flFactions:CharPanelCreated(id, panel)
       panel.DescEntry:SetPos(32, 66)
     end
 
-    if (factionTable and !factionTable.has_description) then
+    if factionTable and !factionTable.has_description then
       panel.DescLabel:SetVisible(false)
       panel.DescEntry:SetVisible(false)
     end
 
-    if (factionTable and !factionTable.has_gender) then
+    if factionTable and !factionTable.has_gender then
       panel.GenderLabel:SetVisible(false)
       panel.GenderChooser:SetVisible(false)
     end
@@ -41,7 +41,7 @@ end
 
 function flFactions:PreRebuildScoreboard(panel, w, h)
   for k, v in ipairs(panel.playerCards) do
-    if (IsValid(v)) then
+    if IsValid(v) then
       v:SafeRemove()
     end
 
@@ -51,7 +51,7 @@ function flFactions:PreRebuildScoreboard(panel, w, h)
   panel.factionCategories = panel.factionCategories or {}
 
   for k, v in ipairs(panel.factionCategories) do
-    if (IsValid(v)) then
+    if IsValid(v) then
       v:SafeRemove()
     end
 
@@ -69,7 +69,7 @@ function flFactions:PreRebuildScoreboard(panel, w, h)
   for id, factionTable in pairs(faction.GetAll()) do
     local players = faction.GetPlayers(id)
 
-    if (#players == 0) then continue end
+    if #players == 0 then continue end
 
     local cat = vgui.Create("DCollapsibleCategory", panel)
     cat:SetSize(w - 8, 32)

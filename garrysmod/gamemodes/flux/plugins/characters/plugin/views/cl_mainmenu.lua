@@ -11,9 +11,9 @@ function PANEL:Init()
 
   local menuMusic = theme.GetOption("MenuMusic")
 
-  if (!fl.menuMusic and menuMusic and menuMusic != "") then
+  if !fl.menuMusic and menuMusic and menuMusic != "" then
     sound.PlayFile(menuMusic, "", function(station)
-      if (IsValid(station)) then
+      if IsValid(station) then
         station:Play()
 
         fl.menuMusic = station
@@ -31,12 +31,12 @@ end
 function PANEL:Think() end
 
 function PANEL:RecreateSidebar(bShouldCreateButtons)
-  if (IsValid(self.sidebar)) then
+  if IsValid(self.sidebar) then
     self.sidebar:SafeRemove()
   end
 
   -- Hot Fix for an error that occurred when auto-reloading while in initial main menu.
-  if (!theme.GetOption("MainMenu_SidebarLogo")) then
+  if !theme.GetOption("MainMenu_SidebarLogo") then
     timer.Simple(0.05, function() self:RecreateSidebar(true) end)
 
     return
@@ -52,7 +52,7 @@ function PANEL:RecreateSidebar(bShouldCreateButtons)
 
   self.sidebar:AddSpace(theme.GetOption("MainMenu_SidebarLogoSpace"))
 
-  if (bShouldCreateButtons) then
+  if bShouldCreateButtons then
     hook.run("AddMainMenuItems", self, self.sidebar)
   else
     local backButton = vgui.Create("flButton")
@@ -65,7 +65,7 @@ function PANEL:RecreateSidebar(bShouldCreateButtons)
     backButton.DoClick = function(btn)
       self:RecreateSidebar(true)
 
-      if (self.menu.Close) then
+      if self.menu.Close then
         self.menu:Close()
       else
         self.menu:SafeRemove()
@@ -78,14 +78,14 @@ function PANEL:RecreateSidebar(bShouldCreateButtons)
 end
 
 function PANEL:OpenMenu(panel, data)
-  if (!IsValid(self.menu)) then
+  if !IsValid(self.menu) then
     self.menu = theme.CreatePanel(panel, self)
 
-    if (self.menu.set_data) then
+    if self.menu.set_data then
       self.menu:set_data(data)
     end
   else
-    if (self.menu.Close) then
+    if self.menu.Close then
       self.menu:Close(function()
         self:OpenMenu(panel, data)
       end)
@@ -109,15 +109,15 @@ function PANEL:add_button(text, callback)
   button.DoClick = function(btn)
     btn:SetActive(true)
 
-    if (IsValid(self.prevButton) and self.prevButton != btn) then
+    if IsValid(self.prevButton) and self.prevButton != btn then
       self.prevButton:SetActive(false)
     end
 
     self.prevButton = btn
 
-    if (isfunction(callback)) then
+    if isfunction(callback) then
       callback(btn)
-    elseif (isstring(callback)) then
+    elseif isstring(callback) then
       self:OpenMenu(callback)
     end
   end

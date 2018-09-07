@@ -14,17 +14,17 @@ function character.Create(player, data)
     return CHAR_ERR_DESC
   end
 
-  if (!isnumber(data.gender) or (data.gender < CHAR_GENDER_MALE or data.gender > CHAR_GENDER_NONE)) then
+  if !isnumber(data.gender) or (data.gender < CHAR_GENDER_MALE or data.gender > CHAR_GENDER_NONE) then
     return CHAR_ERR_GENDER
   end
 
-  if (!isstring(data.model) or data.model == "") then
+  if !isstring(data.model) or data.model == "" then
     return CHAR_ERR_MODEL
   end
 
   local hooked, result = hook.run("PlayerCreateCharacter", player, data)
 
-  if (hooked == false) then
+  if hooked == false then
     return result or CHAR_ERR_UNKNOWN
   end
 
@@ -85,7 +85,7 @@ if SERVER then
   end
 
   function character.ToSaveable(player, char)
-    if (!IsValid(player) or !char) then return end
+    if !IsValid(player) or !char then return end
 
     return {
       steam_id = player:SteamID(),
@@ -102,7 +102,7 @@ if SERVER then
   end
 
   function character.Save(player, index)
-    if (!IsValid(player) or !isnumber(index) or hook.run("PreSaveCharacter", player, index) == false) then return end
+    if !IsValid(player) or !isnumber(index) or hook.run("PreSaveCharacter", player, index) == false then return end
 
     local char = stored[player:SteamID()][index]
 
@@ -114,7 +114,7 @@ if SERVER then
   end
 
   function character.SaveAll(player)
-    if (!IsValid(player)) then return end
+    if !IsValid(player) then return end
 
     for k, v in ipairs(stored[player:SteamID()]) do
       character.Save(player, k)
@@ -124,7 +124,7 @@ if SERVER then
   function character.Get(player, index)
     local steam_id = player:SteamID()
 
-    if (stored[steam_id][index]) then
+    if stored[steam_id][index] then
       return stored[steam_id][index]
     end
   end
@@ -132,7 +132,7 @@ if SERVER then
   function character.set_name(player, index, newName)
     local char = character.Get(player, index)
 
-    if (char) then
+    if char then
       char.name = newName or char.name
 
       player:set_nv("name", char.name)
@@ -144,7 +144,7 @@ if SERVER then
   function character.SetModel(player, index, model)
     local char = character.Get(player, index)
 
-    if (char) then
+    if char then
       char.model = model or char.model
 
       player:set_nv("model", char.model)
@@ -169,7 +169,7 @@ if SERVER then
 
     fl.dev_print("Creating character. Status: "..status)
 
-    if (status == CHAR_SUCCESS) then
+    if status == CHAR_SUCCESS then
       character.SendToClient(player)
       netstream.Start(player, "PlayerCreatedCharacter", true, status)
 
@@ -200,7 +200,7 @@ do
   end
 
   function player_meta:CharacterLoaded()
-    if (self:IsBot()) then return true end
+    if self:IsBot() then return true end
 
     local id = tonumber(self:GetActiveCharacterID())
 
@@ -230,11 +230,11 @@ do
   function player_meta:GetCharacter()
     local charID = self:GetActiveCharacterID()
 
-    if (charID) then
+    if charID then
       return stored[self:SteamID()][charID]
     end
 
-    if (self:IsBot()) then
+    if self:IsBot() then
       self.charData = self.charData or {}
 
       return self.charData

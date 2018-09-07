@@ -48,7 +48,7 @@ function PANEL:Paint(w, h)
 
     logo_delta = math.max(Lerp(frame_time * 6, logo_delta, 0), 0)
 
-    if (!self.shouldRemove) then
+    if !self.shouldRemove then
       if logo_delta < 0.05 then
         local cx, cy = ScrC()
         exX, exY = cx, cy

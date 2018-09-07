@@ -4,7 +4,7 @@ function flCharacters:PlayerInitialSpawn(player)
   player:Lock()
 
   timer.Simple(1, function()
-    if (IsValid(player)) then
+    if IsValid(player) then
       player:KillSilent()
       player:StripAmmo()
     end
@@ -29,7 +29,7 @@ function flCharacters:OnActiveCharacterSet(player, character)
 
   player:StripAmmo()
 
-  if (istable(character.ammo)) then
+  if istable(character.ammo) then
     for k, v in pairs(character.ammo) do
       player:SetAmmo(v, k)
     end

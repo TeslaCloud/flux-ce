@@ -8,12 +8,12 @@ TOOL.ClientConVar["mode"] = "1"
 function TOOL:LeftClick(trace)
   local player = self:GetOwner()
 
-  if (!player:can("area_tool")) then return end
+  if !player:can("area_tool") then return end
 
   local mode = self:GetClientNumber("mode")
   local modeTable = flAreas.toolModes[mode]
 
-  if (istable(modeTable) and isfunction(modeTable.OnLeftClick)) then
+  if istable(modeTable) and isfunction(modeTable.OnLeftClick) then
     return modeTable:OnLeftClick(self, trace)
   end
 
@@ -23,12 +23,12 @@ end
 function TOOL:RightClick(trace)
   local player = self:GetOwner()
 
-  if (!player:can("area_tool")) then return end
+  if !player:can("area_tool") then return end
 
   local mode = self:GetClientNumber("mode")
   local modeTable = flAreas.toolModes[mode]
 
-  if (istable(modeTable) and isfunction(modeTable.OnRightClick)) then
+  if istable(modeTable) and isfunction(modeTable.OnRightClick) then
     return modeTable:OnRightClick(self, trace)
   end
 
@@ -38,12 +38,12 @@ end
 function TOOL:Reload(trace)
   local player = self:GetOwner()
 
-  if (!player:can("area_tool")) then return end
+  if !player:can("area_tool") then return end
 
   local mode = self:GetClientNumber("mode")
   local modeTable = flAreas.toolModes[mode]
 
-  if (istable(modeTable) and isfunction(modeTable.OnReload)) then
+  if istable(modeTable) and isfunction(modeTable.OnReload) then
     return modeTable:OnReload(self, trace)
   end
 
@@ -71,13 +71,13 @@ if CLIENT then
     list:SetMultiSelect(false)
 
     function list:OnRowSelected(id, line)
-      if (mode != id) then
+      if mode != id then
         RunConsoleCommand("area_setmode", id)
       end
     end
 
     for k, v in ipairs(modeList) do
-      if (mode == k) then
+      if mode == k then
         list:AddLine(" "..k.." >> "..v.title)
       else
         list:AddLine(" "..k.."  "..v.title)
@@ -90,7 +90,7 @@ if CLIENT then
 
     local modeTable = modeList[mode]
 
-    if (istable(modeTable) and isfunction(modeTable.BuildCPanel)) then
+    if istable(modeTable) and isfunction(modeTable.BuildCPanel) then
       modeTable:BuildCPanel(panel)
     end
   end
@@ -106,7 +106,7 @@ if CLIENT then
     timer.Simple(0.05, function()
       local panel = controlpanel.Get("area")
 
-      if (!panel) then return end
+      if !panel then return end
 
       BuildCPanel(panel)
     end)

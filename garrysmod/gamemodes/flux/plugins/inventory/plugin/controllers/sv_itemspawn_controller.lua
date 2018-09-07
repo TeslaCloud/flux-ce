@@ -1,5 +1,5 @@
 mvc.handler("SpawnMenu::SpawnItem", function(player, itemID)
-  if (!player:can("spawn_items")) then
+  if !player:can("spawn_items") then
     player:notify(L("Err_No_Permission", player:Name()))
 
     return
@@ -7,7 +7,7 @@ mvc.handler("SpawnMenu::SpawnItem", function(player, itemID)
 
   local itemTable = item.New(itemID)
 
-  if (itemTable) then
+  if itemTable then
     local trace = player:GetEyeTraceNoCursor()
 
     item.Spawn(trace.HitPos, nil, itemTable)

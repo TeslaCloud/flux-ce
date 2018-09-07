@@ -33,7 +33,7 @@ function player_meta:GetPlayerData(key, default)
 end
 
 function player_meta:SetInitialized(bIsInitialized)
-  if (bIsInitialized == nil) then bIsInitialized = true end
+  if bIsInitialized == nil then bIsInitialized = true end
 
   self:SetDTBool(BOOL_INITIALIZED, bIsInitialized)
 end
@@ -48,7 +48,7 @@ function player_meta:GetAmmoTable()
   for k, v in pairs(game.get_ammo_list()) do
     local ammoCount = self:GetAmmoCount(k)
 
-    if (ammoCount > 0) then
+    if ammoCount > 0 then
       ammoTable[k] = ammoCount
     end
   end

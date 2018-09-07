@@ -1,4 +1,4 @@
-if (netvars) then return end
+if netvars then return end
 
 library.new "netvars"
 
@@ -12,7 +12,7 @@ local player_meta = FindMetaTable("Player")
 
 -- A function to check if value's type cannot be serialized and print an error if it is so.
 local function IsBadType(key, val)
-  if (isfunction(val)) then
+  if isfunction(val) then
     ErrorNoHalt("Cannot store functions as NetVars! ("..key..")\n")
 
     return true
@@ -23,7 +23,7 @@ end
 
 -- A function to get a networked global.
 function netvars.get_nv(key, default)
-  if (globals[key] != nil) then
+  if globals[key] != nil then
     return globals[key]
   end
 
@@ -32,8 +32,8 @@ end
 
 -- A function to set a networked global.
 function netvars.set_nv(key, value, send)
-  if (IsBadType(key, value)) then return end
-  if (netvars.get_nv(key) == value) then return end
+  if IsBadType(key, value) then return end
+  if netvars.get_nv(key) == value then return end
 
   globals[key] = value
 
@@ -47,7 +47,7 @@ end
 
 -- A function to get entity's networked variable.
 function ent_meta:get_nv(key, default)
-  if (stored[self] and stored[self][key] != nil) then
+  if stored[self] and stored[self][key] != nil then
     return stored[self][key]
   end
 
@@ -62,8 +62,8 @@ end
 
 -- A function to set entity's networked variable.
 function ent_meta:set_nv(key, value, send)
-  if (IsBadType(key, value)) then return end
-  if (!istable(value) and self:get_nv(key) == value) then return end
+  if IsBadType(key, value) then return end
+  if !istable(value) and self:get_nv(key) == value then return end
 
   stored[self] = stored[self] or {}
   stored[self][key] = value
@@ -79,7 +79,7 @@ function player_meta:SyncNetVars()
   end
 
   for k, v in pairs(stored) do
-    if (IsValid(k)) then
+    if IsValid(k) then
       for k2, v2 in pairs(v) do
         netstream.Start(self, "set_netvar", k:EntIndex(), k2, v2)
       end

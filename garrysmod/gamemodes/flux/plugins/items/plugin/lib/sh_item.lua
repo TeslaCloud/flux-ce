@@ -34,20 +34,20 @@ function item.GetEntities()
 end
 
 function item.register(id, data)
-  if (!data) then return end
+  if !data then return end
 
-  if (!isstring(data.name) and isstring(data.print_name)) then
+  if !isstring(data.name) and isstring(data.print_name) then
     data.name = data.print_name
   end
 
-  if (!isstring(id) and !isstring(data.name)) then
+  if !isstring(id) and !isstring(data.name) then
     ErrorNoHalt("Attempt to register an item without a valid ID!")
     debug.Trace()
 
     return
   end
 
-  if (!id) then
+  if !id then
     id = data.name:to_id()
   end
 
@@ -83,7 +83,7 @@ function item.register(id, data)
 end
 
 function item.ToSave(itemTable)
-  if (!itemTable) then return end
+  if !itemTable then return end
 
   return {
     id = itemTable.id,
@@ -114,7 +114,7 @@ end
 -- Find item's template by it's ID.
 function item.find_by_id(id)
   for k, v in pairs(stored) do
-    if (k == id or v.id == id) then
+    if k == id or v.id == id then
       return v
     end
   end
@@ -122,7 +122,7 @@ end
 
 -- Find all instances of certain template ID.
 function item.FindAllInstances(id)
-  if (instances[id]) then
+  if instances[id] then
     return instances[id]
   end
 end
@@ -130,9 +130,9 @@ end
 -- Finds instance by it's ID.
 function item.FindInstanceByID(instance_id)
   for k, v in pairs(instances) do
-    if (istable(v)) then
+    if istable(v) then
       for k2, v2 in pairs(v) do
-        if (k2 == instance_id) then
+        if k2 == instance_id then
           return v2
         end
       end
@@ -142,9 +142,9 @@ end
 
 -- Finds an item template that belongs to certain instance ID.
 function item.FindByInstanceID(instance_id)
-  if (!instance_id) then return end
+  if !instance_id then return end
 
-  if (!sorted[instance_id]) then
+  if !sorted[instance_id] then
     sorted[instance_id] = item.FindInstanceByID(instance_id)
   end
 
@@ -152,22 +152,22 @@ function item.FindByInstanceID(instance_id)
 end
 
 function item.Find(name)
-  if (isnumber(name)) then
+  if isnumber(name) then
     return item.FindInstanceByID(name)
   end
 
-  if (stored[id]) then
+  if stored[id] then
     return stored[id]
   end
 
   for k, v in pairs(stored) do
-    if (v.id and v.name and v.print_name) then
-      if (v.id == name or v.name:find(name) or v.print_name:find(name)) then
+    if v.id and v.name and v.print_name then
+      if v.id == name or v.name:find(name) or v.print_name:find(name) then
         return v
       end
 
       if CLIENT then
-        if (v.print_name:find(name)) then
+        if v.print_name:find(name) then
           return v
         end
       end
@@ -185,13 +185,13 @@ end
 function item.New(id, data, forcedID)
   local itemTable = item.find_by_id(id)
 
-  if (itemTable) then
+  if itemTable then
     local itemID = forcedID or item.GenerateID()
 
     instances[id] = instances[id] or {}
     instances[id][itemID] = table.Copy(itemTable)
 
-    if (istable(data)) then
+    if istable(data) then
       table.safe_merge(instances[id][itemID], data)
     end
 
@@ -209,8 +209,8 @@ end
 function item.Remove(instance_id)
   local itemTable = (istable(instance_id) and instance_id) or item.FindInstanceByID(instance_id)
 
-  if (itemTable and item.IsInstance(itemTable)) then
-    if (IsValid(itemTable.entity)) then
+  if itemTable and item.IsInstance(itemTable) then
+    if IsValid(itemTable.entity) then
       itemTable.entity:Remove()
     end
 
@@ -225,7 +225,7 @@ function item.Remove(instance_id)
 end
 
 function item.IsInstance(itemTable)
-  if (!istable(itemTable)) then return end
+  if !istable(itemTable) then return end
 
   return (itemTable.instance_id or ITEM_TEMPLATE) > ITEM_INVALID
 end
@@ -239,7 +239,7 @@ pipeline.register("item", function(id, file_name, pipe)
 
   util.include(file_name)
 
-  if (pipeline.IsAborted()) then ITEM = nil return end
+  if pipeline.IsAborted() then ITEM = nil return end
 
   ITEM:register() ITEM = nil
 end)
@@ -252,12 +252,12 @@ if SERVER then
   function item.Load()
     local loaded = data.LoadSchema("items/instances", {})
 
-    if (loaded and table.Count(loaded) > 0) then
+    if loaded and table.Count(loaded) > 0 then
       -- Returns functions to instances table after loading.
       for id, instanceTable in pairs(loaded) do
         local itemTable = item.find_by_id(id)
 
-        if (itemTable) then
+        if itemTable then
           for k, v in pairs(instanceTable) do
             local newItem = table.Copy(itemTable)
 
@@ -274,10 +274,10 @@ if SERVER then
 
     local loaded = data.LoadSchema("items/entities", {})
 
-    if (loaded and table.Count(loaded) > 0) then
+    if loaded and table.Count(loaded) > 0 then
       for id, instanceTable in pairs(loaded) do
         for k, v in pairs(instanceTable) do
-          if (instances[id] and instances[id][k]) then
+          if instances[id] and instances[id][k] then
             item.Spawn(v.position, v.angles, instances[id][k])
           else
             loaded[id][k] = nil
@@ -294,15 +294,15 @@ if SERVER then
     local toSave = {}
 
     for k, v in pairs(instances) do
-      if (k == "count") then
+      if k == "count" then
         toSave[k] = v
       else
         toSave[k] = {}
       end
 
-      if (istable(v)) then
+      if istable(v) then
         for k2, v2 in pairs(v) do
-          if (istable(v2)) then
+          if istable(v2) then
             toSave[k][k2] = item.ToSave(v2)
           end
         end
@@ -318,7 +318,7 @@ if SERVER then
     entities = {}
 
     for k, v in ipairs(itemEnts) do
-      if (IsValid(v) and v.item) then
+      if IsValid(v) and v.item then
         entities[v.item.id] = entities[v.item.id] or {}
 
         entities[v.item.id][v.item.instance_id] = {
@@ -352,7 +352,7 @@ if SERVER then
   end
 
   function item.NetworkItemData(player, itemTable)
-    if (item.IsInstance(itemTable)) then
+    if item.IsInstance(itemTable) then
       netstream.Start(player, "ItemData", itemTable.id, itemTable.instance_id, itemTable.data)
     end
   end
@@ -362,7 +362,7 @@ if SERVER then
   end
 
   function item.NetworkEntityData(player, ent)
-    if (IsValid(ent)) then
+    if IsValid(ent) then
       netstream.Start(player, "ItemEntData", ent:EntIndex(), ent.item.id, ent.item.instance_id)
     end
   end
@@ -372,7 +372,7 @@ if SERVER then
     local itemEnts = ents.FindByClass("fl_item")
 
     for k, v in ipairs(itemEnts) do
-      if (v.item) then
+      if v.item then
         item.NetworkItem(player, v.item.instance_id)
       end
     end
@@ -381,13 +381,13 @@ if SERVER then
   end
 
   function item.Spawn(position, angles, itemTable)
-    if (!position or !istable(itemTable)) then
+    if !position or !istable(itemTable) then
       ErrorNoHalt("[Flux:Item] No position or item table is not a table!\n")
 
       return
     end
 
-    if (!item.IsInstance(itemTable)) then
+    if !item.IsInstance(itemTable) then
       ErrorNoHalt("[Flux:Item] Cannot spawn non-instantiated item!\n")
 
       return
@@ -401,7 +401,7 @@ if SERVER then
 
     ent:SetPos(position + Vector(0, 0, maxs.z))
 
-    if (angles) then
+    if angles then
       ent:SetAngles(angles)
     end
 
@@ -425,19 +425,19 @@ if SERVER then
   netstream.Hook("RequestItemData", function(player, entIndex)
     local ent = Entity(entIndex)
 
-    if (IsValid(ent)) then
+    if IsValid(ent) then
       item.NetworkEntityData(player, ent)
     end
   end)
 else
   netstream.Hook("ItemData", function(id, instance_id, data)
-    if (istable(instances[id][instance_id])) then
+    if istable(instances[id][instance_id]) then
       instances[id][instance_id].data = data
     end
   end)
 
   netstream.Hook("NetworkItem", function(instance_id, itemTable)
-    if (itemTable and stored[itemTable.id]) then
+    if itemTable and stored[itemTable.id] then
       local newTable = table.Copy(stored[itemTable.id])
       table.safe_merge(newTable, itemTable)
 
@@ -452,7 +452,7 @@ else
   netstream.Hook("ItemEntData", function(entIndex, id, instance_id)
     local ent = Entity(entIndex)
 
-    if (IsValid(ent)) then
+    if IsValid(ent) then
       local itemTable = instances[id][instance_id]
 
       -- Client has to know this shit too I guess?

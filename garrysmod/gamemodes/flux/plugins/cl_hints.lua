@@ -12,8 +12,8 @@ end
 function flHints:DisplayRandom()
   local hint = table.Random(stored)
 
-  if (hint.callback and hint.callback() != true) then return end
-  if (hint.playSound) then surface.PlaySound("hl1/fvox/blip.wav") end
+  if hint.callback and hint.callback() != true then return end
+  if hint.playSound then surface.PlaySound("hl1/fvox/blip.wav") end
 
   fl.notification:Add(hint.text, 15, hint.color)
 end
@@ -21,7 +21,7 @@ end
 function flHints:OneMinute()
   local curTime = CurTime()
 
-  if (curTime >= (fl.client.nextHint or 0)) then
+  if curTime >= (fl.client.nextHint or 0) then
     flHints:DisplayRandom()
 
     fl.client.nextHint = curTime + 300

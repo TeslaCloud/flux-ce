@@ -32,15 +32,15 @@ function ActiveRecord.Adapters.Sqlite:raw_query(query, callback, flags, ...)
   local query_start = os.clock()
   local result = sql.Query(query)
 
-  if (result == false) then
+  if result == false then
     ErrorNoHalt('ActiveRecord - SQLite Query Error!\n')
     ErrorNoHalt('Query: '..query..'\n')
     ErrorNoHalt(sql.LastError()..'\n')
   else
-    if (callback) then
+    if callback then
       local status, a, b, c, d = pcall(callback, result, query, math.Round(os.clock() - query_start, 3))
 
-      if (!status) then
+      if !status then
         ErrorNoHalt(string.format('ActiveRecord - SQL callback Error!\n%s\n', value))
       end
 

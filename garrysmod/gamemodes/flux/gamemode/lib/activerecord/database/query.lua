@@ -151,30 +151,30 @@ end
 local function build_select_query(query_obj)
   local query_string = {'SELECT'}
 
-  if (!istable(query_obj.select_list) or #query_obj.select_list == 0) then
+  if !istable(query_obj.select_list) or #query_obj.select_list == 0 then
     table.insert(query_string, ' *')
   else
     table.insert(query_string, ' '..table.concat(query_obj.select_list, ', '))
   end
 
-  if (isstring(query_obj.table_name)) then
+  if isstring(query_obj.table_name) then
     table.insert(query_string, ' FROM `'..query_obj.table_name..'` ')
   else
     ErrorNoHalt('ActiveRecord - No table name specified!\n')
     return
   end
 
-  if (istable(query_obj.where_list) and #query_obj.where_list > 0) then
+  if istable(query_obj.where_list) and #query_obj.where_list > 0 then
     table.insert(query_string, ' WHERE ')
     table.insert(query_string, table.concat(query_obj.where_list, ' AND '))
   end
 
-  if (istable(query_obj.order_list) and #query_obj.order_list > 0) then
+  if istable(query_obj.order_list) and #query_obj.order_list > 0 then
     table.insert(query_string, ' ORDER BY ')
     table.insert(query_string, table.concat(query_obj.order_list, ', '))
   end
 
-  if (isnumber(query_obj._limit)) then
+  if isnumber(query_obj._limit) then
     table.insert(query_string, ' LIMIT ')
     table.insert(query_string, query_obj._limit)
   end
@@ -187,7 +187,7 @@ local function build_insert_query(query_obj)
   local key_list = {}
   local value_list = {}
 
-  if (isstring(query_obj.table_name)) then
+  if isstring(query_obj.table_name) then
     table.insert(query_string, ' `'..query_obj.table_name..'`')
   else
     ErrorNoHalt('ActiveRecord - No table name specified!\n')
@@ -199,7 +199,7 @@ local function build_insert_query(query_obj)
     table.insert(value_list, v[2])
   end
 
-  if (#key_list == 0) then
+  if #key_list == 0 then
     return
   end
 
@@ -212,14 +212,14 @@ end
 local function build_update_query(query_obj)
   local query_string = {'UPDATE'}
 
-  if (isstring(query_obj.table_name)) then
+  if isstring(query_obj.table_name) then
     table.insert(query_string, ' `'..query_obj.table_name..'`')
   else
     ErrorNoHalt('ActiveRecord - No table name specified!\n')
     return
   end
 
-  if (istable(query_obj.update_list) and #query_obj.update_list > 0) then
+  if istable(query_obj.update_list) and #query_obj.update_list > 0 then
     local update_list = {}
 
     table.insert(query_string, ' SET')
@@ -231,12 +231,12 @@ local function build_update_query(query_obj)
     table.insert(query_string, ' '..table.concat(update_list, ', '))
   end
 
-  if (istable(query_obj.where_list) and #query_obj.where_list > 0) then
+  if istable(query_obj.where_list) and #query_obj.where_list > 0 then
     table.insert(query_string, ' WHERE ')
     table.insert(query_string, table.concat(query_obj.where_list, ' AND '))
   end
 
-  if (isnumber(query_obj.offset)) then
+  if isnumber(query_obj.offset) then
     table.insert(query_string, ' OFFSET ')
     table.insert(query_string, query_obj.offset)
   end
@@ -247,19 +247,19 @@ end
 local function build_delete_query(query_obj)
   local query_string = {'DELETE FROM'}
 
-  if (isstring(query_obj.table_name)) then
+  if isstring(query_obj.table_name) then
     table.insert(query_string, ' `'..query_obj.table_name..'`')
   else
     ErrorNoHalt('ActiveRecord - No table name specified!\n')
     return
   end
 
-  if (istable(query_obj.where_list) and #query_obj.where_list > 0) then
+  if istable(query_obj.where_list) and #query_obj.where_list > 0 then
     table.insert(query_string, ' WHERE ')
     table.insert(query_string, table.concat(query_obj.where_list, ' AND '))
   end
 
-  if (isnumber(query_obj._limit)) then
+  if isnumber(query_obj._limit) then
     table.insert(query_string, ' LIMIT ')
     table.insert(query_string, query_obj._limit)
   end
@@ -270,7 +270,7 @@ end
 local function build_drop_query(query_obj)
   local query_string = {'DROP TABLE'}
 
-  if (isstring(query_obj.table_name)) then
+  if isstring(query_obj.table_name) then
     table.insert(query_string, ' `'..query_obj.table_name..'`')
   else
     ErrorNoHalt('ActiveRecord - No table name specified!\n')
@@ -283,7 +283,7 @@ end
 local function build_truncate_query(query_obj)
   local query_string = {'TRUNCATE TABLE'}
 
-  if (isstring(query_obj.table_name)) then
+  if isstring(query_obj.table_name) then
     table.insert(query_string, ' `'..query_obj.table_name..'`')
   else
     ErrorNoHalt('ActiveRecord - No table name specified!\n')
@@ -300,7 +300,7 @@ local function build_create_query(query_obj)
     query_string = { 'CREATE TABLE IF NOT EXISTS' }
   end
 
-  if (isstring(query_obj.table_name)) then
+  if isstring(query_obj.table_name) then
     table.insert(query_string, ' `'..query_obj.table_name..'`')
   else
     ErrorNoHalt('ActiveRecord - No table name specified!\n')
@@ -313,11 +313,11 @@ local function build_create_query(query_obj)
 
   table.insert(query_string, ' (')
 
-  if (istable(query_obj.create_list) and #query_obj.create_list > 0) then
+  if istable(query_obj.create_list) and #query_obj.create_list > 0 then
     local create_list = {}
 
     for k, v in ipairs(query_obj.create_list) do
-      if (ActiveRecord.adapter.class_name:lower() == 'sqlite') then
+      if ActiveRecord.adapter.class_name:lower() == 'sqlite' then
         table.insert(create_list, v[1]..' '..string.gsub(string.gsub(string.gsub(v[2], 'AUTO_INCREMENT', ''), 'AUTOINCREMENT', ''), 'INT ', 'INTEGER '))
       else
         table.insert(create_list, v[1]..' '..v[2])
@@ -327,7 +327,7 @@ local function build_create_query(query_obj)
     table.insert(query_string, ' '..table.concat(create_list, ', '))
   end
 
-  if (isstring(query_obj.prim_key)) then
+  if isstring(query_obj.prim_key) then
     table.insert(query_string, ', PRIMARY KEY')
     table.insert(query_string, ' ('..query_obj.prim_key..')')
   end
@@ -344,7 +344,7 @@ end
 local function build_change_query(query)
   local query_string = {'ALTER TABLE'}
 
-  if (isstring(query.table_name)) then
+  if isstring(query.table_name) then
     table.insert(query_string, ' `'..query.table_name..'`')
   else
     ErrorNoHalt('ActiveRecord - No table name specified!\n')
@@ -378,21 +378,21 @@ function ActiveRecord.Query:execute(queue_query)
 
   ActiveRecord.adapter:append_query(self, query_type, queue_query)
 
-  if (query_type == 'select') then
+  if query_type == 'select' then
     query_string = build_select_query(self)
-  elseif (query_type == 'insert') then
+  elseif query_type == 'insert' then
     query_string = build_insert_query(self)
-  elseif (query_type == 'update') then
+  elseif query_type == 'update' then
     query_string = build_update_query(self)
-  elseif (query_type == 'delete') then
+  elseif query_type == 'delete' then
     query_string = build_delete_query(self)
-  elseif (query_type == 'drop') then
+  elseif query_type == 'drop' then
     query_string = build_drop_query(self)
-  elseif (query_type == 'truncate') then
+  elseif query_type == 'truncate' then
     query_string = build_truncate_query(self)
-  elseif (query_type == 'create') then
+  elseif query_type == 'create' then
     query_string = build_create_query(self)
-  elseif (query_type == 'change') then
+  elseif query_type == 'change' then
     query_string = build_change_query(self)
   end
 
@@ -402,11 +402,11 @@ function ActiveRecord.Query:execute(queue_query)
     query_string = hooked
   end
 
-  if (isstring(query_string)) then
+  if isstring(query_string) then
     query_string = query_string:ensure_ending(';')
     query_string = query_string:gsub(' ;', ';'):gsub('`  ', '` ')
 
-    if (!queue_query) then
+    if !queue_query then
       return ActiveRecord.adapter:raw_query(query_string, self._callback)
     else
       return ActiveRecord.adapter:queue(query_string, self._callback)

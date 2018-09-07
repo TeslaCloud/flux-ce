@@ -9,10 +9,10 @@ function theme.GetAll()
 end
 
 function theme.RegisterTheme(obj)
-  if (obj.parent) then
+  if obj.parent then
     local parentTheme = stored[obj.parent:to_id()]
 
-    if (parentTheme) then
+    if parentTheme then
       local newObj = table.Copy(parentTheme)
 
       obj.Theme = nil
@@ -28,18 +28,18 @@ function theme.RegisterTheme(obj)
 end
 
 function theme.CreatePanel(panelID, parent, ...)
-  if (current_theme and hook.run("ShouldThemeCreatePanel", panelID, current_theme) != false) then
+  if current_theme and hook.run("ShouldThemeCreatePanel", panelID, current_theme) != false then
     return current_theme:CreatePanel(panelID, parent, ...)
   end
 end
 
 function theme.Hook(id, ...)
-  if (isstring(id) and current_theme and current_theme[id]) then
+  if isstring(id) and current_theme and current_theme[id] then
     local result = {pcall(current_theme[id], current_theme, ...)}
     local success = result[1]
     table.remove(result, 1)
 
-    if (!success) then
+    if !success then
       ErrorNoHalt("Theme hook '"..id.."' has failed to run!\n"..result[1].."\n")
     else
       return unpack(result)
@@ -54,13 +54,13 @@ function theme.GetActiveTheme()
 end
 
 function theme.SetSound(key, value)
-  if (current_theme) then
+  if current_theme then
     current_theme:SetSound(key, value)
   end
 end
 
 function theme.GetSound(key, fallback)
-  if (current_theme) then
+  if current_theme then
     return current_theme:GetSound(key, fallback)
   end
 
@@ -68,19 +68,19 @@ function theme.GetSound(key, fallback)
 end
 
 function theme.SetColor(key, value)
-  if (current_theme) then
+  if current_theme then
     current_theme:SetColor(key, value)
   end
 end
 
 function theme.SetFont(key, value, scale, data)
-  if (current_theme) then
+  if current_theme then
     current_theme:SetFont(key, value, scale, data)
   end
 end
 
 function theme.GetColor(key, fallback)
-  if (current_theme) then
+  if current_theme then
     return current_theme:GetColor(key, fallback)
   end
 
@@ -88,7 +88,7 @@ function theme.GetColor(key, fallback)
 end
 
 function theme.GetFont(key, fallback)
-  if (current_theme) then
+  if current_theme then
     return current_theme:GetFont(key, fallback)
   end
 
@@ -96,19 +96,19 @@ function theme.GetFont(key, fallback)
 end
 
 function theme.SetOption(key, value)
-  if (current_theme) then
+  if current_theme then
     current_theme:SetOption(key, value)
   end
 end
 
 function theme.SetMaterial(key, value)
-  if (current_theme) then
+  if current_theme then
     current_theme:SetMaterial(key, value)
   end
 end
 
 function theme.GetMaterial(key, fallback)
-  if (current_theme) then
+  if current_theme then
     return current_theme:GetMaterial(key, fallback)
   end
 
@@ -116,7 +116,7 @@ function theme.GetMaterial(key, fallback)
 end
 
 function theme.GetOption(key, fallback)
-  if (current_theme) then
+  if current_theme then
     return current_theme:GetOption(key, fallback)
   end
 
@@ -128,13 +128,13 @@ function theme.FindTheme(id)
 end
 
 function theme.RemoveTheme(id)
-  if (theme.FindTheme(id)) then
+  if theme.FindTheme(id) then
     stored[id] = nil
   end
 end
 
 function theme.SetDermaSkin()
-  if (current_theme) then
+  if current_theme then
     local skinTable = derma.GetNamedSkin("Flux")
 
     for k, v in pairs(current_theme.skin) do
@@ -148,8 +148,8 @@ end
 function theme.LoadTheme(themeID, bIsReloading)
   local themeTable = theme.FindTheme(themeID)
 
-  if (themeTable) then
-    if (!bIsReloading and hook.run("ShouldThemeLoad", themeTable) == false) then
+  if themeTable then
+    if !bIsReloading and hook.run("ShouldThemeLoad", themeTable) == false then
       return
     end
 
@@ -157,15 +157,15 @@ function theme.LoadTheme(themeID, bIsReloading)
 
     local next = themeTable.base
 
-    while (next) do
-      if (next.OnLoaded) then
+    while next do
+      if next.OnLoaded then
         next.OnLoaded(current_theme)
       end
 
       next = next.base
     end
 
-    if (!bIsReloading and current_theme.OnLoaded) then
+    if !bIsReloading and current_theme.OnLoaded then
       current_theme:OnLoaded()
     end
 
@@ -176,11 +176,11 @@ function theme.LoadTheme(themeID, bIsReloading)
 end
 
 function theme.UnloadTheme()
-  if (hook.run("ShouldThemeUnload", current_theme) == false) then
+  if hook.run("ShouldThemeUnload", current_theme) == false then
     return
   end
 
-  if (current_theme.OnUnloaded) then
+  if current_theme.OnUnloaded then
     current_theme:OnUnloaded()
 
     hook.run("OnThemeUnloaded", current_theme)
@@ -190,9 +190,9 @@ function theme.UnloadTheme()
 end
 
 function theme.Reload()
-  if (!current_theme) then return end
+  if !current_theme then return end
 
-  if ((current_theme.should_reload == false) or hook.run("ShouldThemeReload", current_theme) == false) then
+  if (current_theme.should_reload == false) or hook.run("ShouldThemeReload", current_theme) == false then
     return
   end
 
@@ -206,7 +206,7 @@ do
   local themeHooks = {}
 
   function themeHooks:PlayerInitialized()
-    if (!Schema or !Schema.DefaultTheme) then
+    if !Schema or !Schema.DefaultTheme then
       theme.LoadTheme("factory")
     else
       theme.LoadTheme(Schema.DefaultTheme or "factory")

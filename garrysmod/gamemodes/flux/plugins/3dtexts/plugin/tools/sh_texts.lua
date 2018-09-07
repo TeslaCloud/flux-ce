@@ -15,7 +15,7 @@ function TOOL:LeftClick(trace)
 
   local player = self:GetOwner()
 
-  if (!IsValid(player) or !player:can("textadd")) then return end
+  if !IsValid(player) or !player:can("textadd") then return end
 
   local text = self:GetClientInfo("text")
   local style = self:GetClientNumber("style")
@@ -24,7 +24,7 @@ function TOOL:LeftClick(trace)
   local extraColor = Color(self:GetClientInfo("extraColor") or "#FF0000AA")
   local fadeOffset = self:GetClientNumber("fade")
 
-  if (!text or text == "") then return false end
+  if !text or text == "" then return false end
 
   local angle = trace.HitNormal:Angle()
   angle:RotateAroundAxis(angle:Forward(), 90)

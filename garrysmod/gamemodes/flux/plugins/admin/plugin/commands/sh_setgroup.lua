@@ -8,7 +8,7 @@ COMMAND.immunity = true
 COMMAND.aliases = {"plysetgroup", "setusergroup", "plysetusergroup"}
 
 function COMMAND:on_run(player, targets, role)
-  if (fl.admin:GroupExists(role)) then
+  if fl.admin:GroupExists(role) then
     for k, v in ipairs(targets) do
       v:SetUserGroup(role)
     end

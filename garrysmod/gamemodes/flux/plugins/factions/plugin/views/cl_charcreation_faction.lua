@@ -17,14 +17,14 @@ function PANEL:Init()
   self.Chooser:AddSpace(2)
 
   for k, v in pairs(faction.GetAll()) do
-    if (!v.whitelisted or fl.client:HasWhitelist(v.id)) then
+    if !v.whitelisted or fl.client:HasWhitelist(v.id) then
       local button = vgui.Create("flImageButton", self)
       button:SetSize(496, 142)
       button:SetPos(0, 0)
       button:SetImage(v.material)
       button.faction = v
 
-      if (v.faction_id == self.factionID) then
+      if v.faction_id == self.factionID then
         button:SetActive(true)
         self.prevBtn = button
       end
@@ -38,7 +38,7 @@ function PANEL:Init()
       button.DoClick = function(btn)
         btn:SetActive(true)
 
-        if (IsValid(self.prevBtn) and self.prevBtn != btn) then
+        if IsValid(self.prevBtn) and self.prevBtn != btn then
           self.prevBtn:SetActive(false)
         end
 

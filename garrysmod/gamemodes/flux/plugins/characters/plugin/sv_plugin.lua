@@ -3,7 +3,7 @@
 function player_meta:SetActiveCharacter(id)
   local curChar = self:GetActiveCharacterID()
 
-  if (curChar) then
+  if curChar then
     hook.run("OnCharacterChange", self, self:GetCharacter(), id)
   end
 
@@ -22,14 +22,14 @@ function player_meta:SetActiveCharacter(id)
 end
 
 function player_meta:SetCharacterVar(id, val)
-  if (isstring(id)) then
+  if isstring(id) then
     self:set_nv(id, val)
     self:GetCharacter()[id] = val
   end
 end
 
 function player_meta:SetInventory(newInv)
-  if (!istable(newInv)) then return end
+  if !istable(newInv) then return end
 
   self:SetCharacterVar("inventory", newInv)
   self:SaveCharacter()
@@ -46,7 +46,7 @@ end
 function player_meta:SaveCharacter()
   local char = self:GetCharacter()
 
-  if (char) then
+  if char then
     character.Save(self, char.character_id)
   end
 end

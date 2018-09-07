@@ -1,24 +1,24 @@
 function flCharacters:PlayerInitialized()
-  if (!fl.client:GetCharacter() and !IsValid(fl.IntroPanel)) then
+  if !fl.client:GetCharacter() and !IsValid(fl.IntroPanel) then
     fl.IntroPanel = vgui.Create('flIntro')
 
-    if (IsValid(fl.IntroPanel)) then
+    if IsValid(fl.IntroPanel) then
       fl.IntroPanel:MakePopup()
     end
   end
 end
 
 function flCharacters:OnIntroPanelRemoved()
-  if (!fl.client:GetCharacter()) then
+  if !fl.client:GetCharacter() then
     fl.IntroPanel = theme.CreatePanel("MainMenu")
 
-    if (IsValid(fl.IntroPanel)) then
+    if IsValid(fl.IntroPanel) then
       fl.IntroPanel:MakePopup()
     else
       timer.Create("flCreateMainPanel", 0.1, 0, function()
         fl.IntroPanel = theme.CreatePanel("MainMenu")
 
-        if (IsValid(fl.IntroPanel)) then
+        if IsValid(fl.IntroPanel) then
           fl.IntroPanel:MakePopup()
 
           timer.Remove("flCreateMainPanel")
@@ -32,15 +32,15 @@ do
   local curVolume = 1
 
   function flCharacters:Tick()
-    if (fl.menuMusic) then
-      if (!system.HasFocus()) then
+    if fl.menuMusic then
+      if !system.HasFocus() then
         fl.menuMusic:SetVolume(0)
       else
         fl.menuMusic:SetVolume(curVolume)
       end
 
-      if (!IsValid(fl.IntroPanel)) then
-        if (curVolume > 0.05) then
+      if !IsValid(fl.IntroPanel) then
+        if curVolume > 0.05 then
           curVolume = Lerp(0.1, curVolume, 0)
           fl.menuMusic:SetVolume(curVolume)
         else
@@ -70,7 +70,7 @@ function flCharacters:OnThemeLoaded(current_theme)
     return vgui.Create("flCharCreationModel", parent)
   end)
 
-  if (IsValid(fl.IntroPanel)) then
+  if IsValid(fl.IntroPanel) then
     fl.IntroPanel:Remove()
 
     fl.IntroPanel = theme.CreatePanel("MainMenu")
@@ -90,13 +90,13 @@ function flCharacters:AddTabMenuItems(menu)
 end
 
 function flCharacters:PostCharacterLoaded(nCharID)
-  if (IsValid(fl.IntroPanel)) then
+  if IsValid(fl.IntroPanel) then
     fl.IntroPanel:SafeRemove()
   end
 end
 
 function flCharacters:ShouldDrawLoadingScreen()
-  if (!fl.IntroPanel) then
+  if !fl.IntroPanel then
     return true
   end
 end
@@ -121,7 +121,7 @@ function flCharacters:RebuildScoreboardPlayerCard(card, player)
 
   card.nameLabel:SetPos(x, 2)
 
-  if (IsValid(card.descLabel)) then
+  if IsValid(card.descLabel) then
     card.descLabel:SafeRemove()
     card.spawnIcon:SafeRemove()
   end
@@ -133,7 +133,7 @@ function flCharacters:RebuildScoreboardPlayerCard(card, player)
 
   local phys_desc = player:GetPhysDesc()
 
-  if (phys_desc:utf8len() > 64) then
+  if phys_desc:utf8len() > 64 then
     phys_desc = phys_desc:utf8sub(1, 64).."..."
   end
 
@@ -151,7 +151,7 @@ function flCharacters:AddMainMenuItems(panel, sidebar)
   panel:add_button(t('main_menu.new'), function(btn)
     panel.menu = theme.CreatePanel("CharacterCreation", panel)
 
-    if (panel.menu.AddSidebarItems) then
+    if panel.menu.AddSidebarItems then
       panel:RecreateSidebar()
       panel.menu:AddSidebarItems(sidebar, panel)
     end
@@ -167,7 +167,7 @@ function flCharacters:AddMainMenuItems(panel, sidebar)
       draw.RoundedBox(0, 0, 0, w, h, Color(40, 40, 40))
       draw.SimpleText("Which one to load", "DermaLarge", 0, 24)
 
-      if (#fl.client:GetAllCharacters() <= 0) then
+      if #fl.client:GetAllCharacters() <= 0 then
         draw.SimpleText("wow you have none", "DermaLarge", 0, 64)
       end
     end
@@ -192,11 +192,11 @@ function flCharacters:AddMainMenuItems(panel, sidebar)
     end
   end)
 
-  if (#fl.client:GetAllCharacters() <= 0) then
+  if #fl.client:GetAllCharacters() <= 0 then
     loadBtn:SetEnabled(false)
   end
 
-  if (fl.client:GetCharacter()) then
+  if fl.client:GetCharacter() then
     panel:add_button(t('main_menu.cancel'), function(btn)
       panel:Remove()
     end)
@@ -211,11 +211,11 @@ function flCharacters:AddMainMenuItems(panel, sidebar)
 end
 
 netstream.Hook("PlayerCreatedCharacter", function(success, status)
-  if (IsValid(fl.IntroPanel) and IsValid(fl.IntroPanel.menu)) then
-    if (success) then
+  if IsValid(fl.IntroPanel) and IsValid(fl.IntroPanel.menu) then
+    if success then
       fl.IntroPanel:RecreateSidebar(true)
 
-      if (fl.IntroPanel.menu.Close) then
+      if fl.IntroPanel.menu.Close then
         fl.IntroPanel.menu:Close()
       else
         fl.IntroPanel.menu:SafeRemove()
@@ -224,15 +224,15 @@ netstream.Hook("PlayerCreatedCharacter", function(success, status)
       local text = "We were unable to create a character! (unknown error)"
       local hookText = hook.run("GetCharCreationErrorText", success, status)
 
-      if (hookText) then
+      if hookText then
         text = hookText
-      elseif (status == CHAR_ERR_NAME) then
+      elseif status == CHAR_ERR_NAME then
         text = "Your character's name must be between "..config.Get("character_min_name_len").." and "..config.Get("character_max_name_len").." characters long!"
-      elseif (status == CHAR_ERR_DESC) then
+      elseif status == CHAR_ERR_DESC then
         text = "Your character's description must be between "..config.Get("character_min_desc_len").." and "..config.Get("character_max_desc_len").." characters long!"
-      elseif (status == CHAR_ERR_GENDER) then
+      elseif status == CHAR_ERR_GENDER then
         text = "You must pick a gender for your character before continuing!"
-      elseif (status == CHAR_ERR_MODEL) then
+      elseif status == CHAR_ERR_MODEL then
         text = "You have not chosen a model or the one you have chosen is invalid!"
       end
 

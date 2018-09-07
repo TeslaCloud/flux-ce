@@ -1,4 +1,4 @@
-if (!ItemUsable) then
+if !ItemUsable then
   util.include("sh_usable_base.lua")
 end
 

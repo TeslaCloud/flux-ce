@@ -7,14 +7,14 @@ COMMAND.aliases = {"fallover", "charfallover"}
 COMMAND.no_console = true
 
 function COMMAND:on_run(player, delay)
-  if (isnumber(delay) and delay > 0) then
+  if isnumber(delay) and delay > 0 then
     delay = math.Clamp(delay or 0, 2, 60)
   end
 
-  if (player:Alive() and !player:IsRagdolled()) then
+  if player:Alive() and !player:IsRagdolled() then
     player:SetRagdollState(RAGDOLL_FALLENOVER)
 
-    if (delay and delay > 0) then
+    if delay and delay > 0 then
       player:RunCommand("getup "..tostring(delay))
     end
   else

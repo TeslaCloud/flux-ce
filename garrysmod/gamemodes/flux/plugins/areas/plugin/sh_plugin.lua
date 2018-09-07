@@ -3,7 +3,7 @@ PLUGIN:set_alias("flAreas")
 util.include("cl_plugin.lua")
 util.include("sv_plugin.lua")
 
-if (!areas) then
+if !areas then
   util.include("lib/sh_areas.lua")
 end
 
@@ -20,13 +20,13 @@ flAreas.toolModes = {
         local curTime = CurTime()
 
         for k, v in pairs(areas.GetAll()) do
-          if (istable(v.polys) and isstring(v.type) and v.type == data.areaType) then
+          if istable(v.polys) and isstring(v.type) and v.type == data.areaType then
             for k2, v2 in ipairs(v.polys) do
               local pos = trace.HitPos
               local z = pos.z + 16
 
-              if (z > v2[1].z and z < v.maxH) then
-                if (util.vector_in_poly(pos, v2)) then
+              if z > v2[1].z and z < v.maxH then
+                if util.vector_in_poly(pos, v2) then
                   areas.Remove(v.id)
 
                   return true
@@ -42,7 +42,7 @@ flAreas.toolModes = {
 
     local tool = fl.tool:Get("area")
 
-    if (IsValid(tool) and istable(vars)) then
+    if IsValid(tool) and istable(vars) then
       table.merge(tool.ClientConVar, vars)
 
       tool:CreateConVars()
@@ -67,9 +67,9 @@ function flAreas:AddAreaToolModes(modeList)
     local height = tonumber(tool:GetClientNumber("height"))
     local id = text:to_id()
 
-    if (!id or id == "") then return false end
+    if !id or id == "" then return false end
 
-    if (!tool.area) then
+    if !tool.area then
       tool.area = areas.Create(id, height, {type = self.areaType})
       tool.area.text = text
     end
@@ -80,7 +80,7 @@ function flAreas:AddAreaToolModes(modeList)
   end
 
   function mode:OnRightClick(tool, trace)
-    if (tool.area) then
+    if tool.area then
       tool.area:register()
       tool.area = nil
 
@@ -100,11 +100,11 @@ end
 areas.RegisterType("textarea", "Text Area", "Displays text whenever player enters the area.", Color(255, 0, 255), function(player, area, bHasEntered, pos, curTime)
   player.textAreas = player.textAreas or {}
 
-  if (bHasEntered) then
+  if bHasEntered then
     local textAreaData = player.textAreas[area.id]
     local areaData = player.textAreas[area.id]
 
-    if (istable(areaData) and areaData.resetTime > curTime) then
+    if istable(areaData) and areaData.resetTime > curTime then
       return
     end  
 

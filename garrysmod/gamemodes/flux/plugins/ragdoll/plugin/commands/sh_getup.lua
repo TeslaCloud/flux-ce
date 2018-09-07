@@ -9,7 +9,7 @@ COMMAND.no_console = true
 function COMMAND:on_run(player, delay)
   delay = math.Clamp(tonumber(delay) or 4, 2, 60)
 
-  if (player:Alive() and player:IsRagdolled()) then
+  if player:Alive() and player:IsRagdolled() then
     player:set_nv("GetupEnd", CurTime() + delay)
     player:set_nv("GetupTime", delay)
     player:SetAction("getup", true)

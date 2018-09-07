@@ -7,7 +7,7 @@ local count = faction.count or 0
 faction.count = count
 
 function faction.register(id, data)
-  if (!id or !data) then return end
+  if !id or !data then return end
 
   data.faction_id = id:to_id() or (data.name and data.name:to_id())
   data.name = data.name or "Unknown Faction"
@@ -30,7 +30,7 @@ function faction.GetPlayers(id)
   local players = {}
 
   for k, v in ipairs(_player.GetAll()) do
-    if (v:GetFactionID() == id) then
+    if v:GetFactionID() == id then
       table.insert(players, v)
     end
   end
@@ -40,16 +40,16 @@ end
 
 function faction.Find(name, bStrict)
   for k, v in pairs(stored) do
-    if (bStrict) then
-      if (k:utf8lower() == name:utf8lower()) then
+    if bStrict then
+      if k:utf8lower() == name:utf8lower() then
         return v
-      elseif (v.name:utf8lower() == name:utf8lower()) then
+      elseif v.name:utf8lower() == name:utf8lower() then
         return v
       end
     else
-      if (k:utf8lower():find(name:utf8lower())) then
+      if k:utf8lower():find(name:utf8lower()) then
         return v
-      elseif (v.name:utf8lower():find(name:utf8lower())) then
+      elseif v.name:utf8lower():find(name:utf8lower()) then
         return v
       end
     end
@@ -96,13 +96,13 @@ do
     self:set_nv("faction", id)
     self:SetDefaultFactionModel()
 
-    if (char) then
+    if char then
       char.faction = id
 
       character.Save(self, char.character_id)
     end
 
-    if (oldFaction) then
+    if oldFaction then
       oldFaction:OnPlayerExited(self)
     end
 
@@ -116,36 +116,36 @@ do
     local factionModels = factionTable.models
     local char = self:GetCharacter()
 
-    if (istable(factionModels)) then
+    if istable(factionModels) then
       local playerModel = string.GetFileFromFilename(self:GetModel())
       local universal = factionModels.universal or {}
       local model
       local modelTable
 
-      if (factionTable.has_gender) then
+      if factionTable.has_gender then
         local male = factionModels.male or {}
         local female = factionModels.female or {}
         local gender = self:get_nv("gender", -1)
 
-        if (gender == CHAR_GENDER_MALE and #male > 0) then
+        if gender == CHAR_GENDER_MALE and #male > 0 then
           modelTable = male
-        elseif (gender == CHAR_GENDER_FEMALE and #female > 0) then
+        elseif gender == CHAR_GENDER_FEMALE and #female > 0 then
           modelTable = female
         end
-      elseif (#universal > 0) then
+      elseif #universal > 0 then
         modelTable = universal
       end
 
-      if (modelTable) then
+      if modelTable then
         for k, v in pairs(modelTable) do
-          if (string.find(v, playerModel)) then
+          if string.find(v, playerModel) then
             model = v
 
             break
           end
         end
 
-        if (!model) then
+        if !model then
           model = modelTable[math.random(#modelTable)]
         end
 
@@ -159,13 +159,13 @@ do
   end
 
   function player_meta:SetRank(rank)
-    if (isnumber(rank)) then
+    if isnumber(rank) then
       self:SetCharacterData("Rank", rank)
-    elseif (isstring(rank)) then
+    elseif isstring(rank) then
       local factionTable = self:GetFaction()
 
       for k, v in ipairs(factionTable.rank) do
-        if (string.utf8lower(v.id) == string.utf8lower(rank)) then
+        if string.utf8lower(v.id) == string.utf8lower(rank) then
           self:SetCharacterData("Rank", k)
         end
       end
@@ -180,9 +180,9 @@ do
     local factionTable = self:GetFaction()
     local rank = self:GetRank()
 
-    if (rank != -1 and factionTable) then
+    if rank != -1 and factionTable then
       for k, v in ipairs(factionTable.rank) do
-        if (string.utf8lower(v.id) == string.utf8lower(strRank)) then
+        if string.utf8lower(v.id) == string.utf8lower(strRank) then
           return (bStrict and k == rank) or k <= rank
         end
       end
@@ -208,7 +208,7 @@ do
     function player_meta:GiveWhitelist(name)
       local whitelists = self:GetWhitelists()
 
-      if (!table.HasValue(whitelists, name)) then
+      if !table.HasValue(whitelists, name) then
         table.insert(whitelists, name)
 
         self:SetWhitelists(whitelists)
@@ -219,7 +219,7 @@ do
       local whitelists = self:GetWhitelists()
 
       for k, v in ipairs(whitelists) do
-        if (v == name) then
+        if v == name then
           table.remove(whitelists, k)
 
           break

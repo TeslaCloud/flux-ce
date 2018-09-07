@@ -24,7 +24,7 @@ end
 function PANEL:Think()
   local w, h = self:GetSize()
 
-  if (IsValid(self.btnClose)) then
+  if IsValid(self.btnClose) then
     self.btnClose:SetPos(w - 20, 0)
   end
 

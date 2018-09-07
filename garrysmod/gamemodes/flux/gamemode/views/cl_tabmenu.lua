@@ -43,16 +43,16 @@ function PANEL:Init()
     button:SetFont(v.font or theme.GetFont("Menu_Normal"))
 
     button.DoClick = function(btn)
-      if (v.override) then
+      if v.override then
         v.override(self, btn)
 
         return
       end
 
-      if (v.panel) then
+      if v.panel then
         surface.PlaySound("garrysmod/ui_hover.wav")
 
-        if (IsValid(self.activePanel)) then
+        if IsValid(self.activePanel) then
           self.activePanel:SafeRemove()
 
           self.activeBtn:SetTextColor(nil)
@@ -60,7 +60,7 @@ function PANEL:Init()
 
         self.activePanel = vgui.Create(v.panel, self)
 
-        if (self.activePanel.GetMenuSize) then
+        if self.activePanel.GetMenuSize then
           self.activePanel:SetSize(self.activePanel:GetMenuSize())
         else
           self.activePanel:SetSize(scrW * 0.5, scrH * 0.5)
@@ -69,14 +69,14 @@ function PANEL:Init()
         self.activeBtn = btn
         self.activeBtn:SetTextColor(theme.GetColor("AccentLight"))
 
-        if (self.activePanel.Rebuild) then
+        if self.activePanel.Rebuild then
           self.activePanel:Rebuild()
         end
 
         hook.run("OnMenuPanelOpen", self, self.activePanel)
       end
 
-      if (v.callback) then
+      if v.callback then
         v.callback(self, button)
       end
     end
@@ -90,7 +90,7 @@ function PANEL:Init()
 end
 
 function PANEL:Think()
-  if (!IsValid(self.activePanel) and IsValid(self.activeBtn)) then
+  if !IsValid(self.activePanel) and IsValid(self.activeBtn) then
     self.activeBtn:SetTextColor(nil)
   end
 end
@@ -100,7 +100,7 @@ function PANEL:AddMenuItem(id, data, index)
   data.title = string.utf8upper(data.title or "error")
   data.icon = data.icon or false
 
-  if (isnumber(index)) then
+  if isnumber(index) then
     table.insert(self.menuItems, index, data)
   else
     table.insert(self.menuItems, data)
@@ -113,7 +113,7 @@ function PANEL:CloseMenu()
 end
 
 function PANEL:OnMousePressed()
-  if (IsValid(self.activePanel)) then
+  if IsValid(self.activePanel) then
     self.activePanel:SetVisible(false)
     self.activePanel:Remove()
   end

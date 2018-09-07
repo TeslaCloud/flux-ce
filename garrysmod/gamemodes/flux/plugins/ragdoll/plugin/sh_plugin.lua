@@ -12,13 +12,13 @@ function PLUGIN:CalcView(player, origin, angles, fov)
   local view = GAMEMODE.BaseClass:CalcView(player, origin, angles, fov) or {}
   local entity = player:GetDTEntity(ENT_RAGDOLL)
 
-  if (!player:ShouldDrawLocalPlayer() and IsValid(entity) and entity:IsRagdoll()) then
+  if !player:ShouldDrawLocalPlayer() and IsValid(entity) and entity:IsRagdoll() then
     local index = entity:LookupAttachment("eyes")
 
-    if (index) then
+    if index then
       local data = entity:GetAttachment(index)
 
-      if (data) then
+      if data then
         view.origin = data.Pos
         view.angles = data.Ang
       end
