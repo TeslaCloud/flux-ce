@@ -1,5 +1,5 @@
 TOOL.category = "Flux"
-TOOL.name = "Text Tool"
+TOOL.Name = "Text Tool"
 TOOL.Command = nil
 TOOL.ConfigName = ""
 
@@ -7,8 +7,14 @@ TOOL.ClientConVar["text"] = "Sample Text"
 TOOL.ClientConVar["style"] = "1"
 TOOL.ClientConVar["scale"] = "1"
 TOOL.ClientConVar["fade"] = "0"
-TOOL.ClientConVar["color"] = "white"
-TOOL.ClientConVar["extraColor"] = "red"
+TOOL.ClientConVar["r"] = 255
+TOOL.ClientConVar["g"] = 255
+TOOL.ClientConVar["b"] = 255
+TOOL.ClientConVar["a"] = 255
+TOOL.ClientConVar["r2"] = 255
+TOOL.ClientConVar["g2"] = 0
+TOOL.ClientConVar["b2"] = 0
+TOOL.ClientConVar["a2"] = 100
 
 function TOOL:LeftClick(trace)
   if CLIENT then return true end
@@ -20,8 +26,8 @@ function TOOL:LeftClick(trace)
   local text = self:GetClientInfo("text")
   local style = self:GetClientNumber("style")
   local scale = self:GetClientNumber("scale")
-  local color = Color(self:GetClientInfo("color") or "white")
-  local extraColor = Color(self:GetClientInfo("extraColor") or "#FF0000AA")
+  local color = Color(self:GetClientNumber("r", 0), self:GetClientNumber("g", 0), self:GetClientNumber("b", 0), self:GetClientNumber("a", 0))
+  local extraColor = Color(self:GetClientNumber("r2", 0), self:GetClientNumber("g2", 0), self:GetClientNumber("b2", 0), self:GetClientNumber("a2", 0))
   local fadeOffset = self:GetClientNumber("fade")
 
   if !text or text == "" then return false end
@@ -44,7 +50,7 @@ function TOOL:LeftClick(trace)
 
   fl3DText:AddText(data)
 
-  fl.player:notify(player, t('3d_text.text_added'))
+  fl.player:notify(player, '3d_text.text_added')
 
    return true
 end
@@ -74,18 +80,18 @@ function TOOL.BuildCPanel(CPanel)
   local options = {}
 
   for k, v in pairs(textStyles) do
-    options[k] = {["texts_style"] = v}
+    options[t(k)] = {["texts_style"] = v}
   end
 
-  CPanel:AddControl("Header", { Description = "tool.texts.desc" })
+  CPanel:AddControl("Header", { Description = t"tool.texts.desc" })
 
   local controlPresets = CPanel:AddControl("ComboBox", { MenuButton = 1, Folder = "textstyle", Options = options, CVars = {"texts_style"} })
   controlPresets.Button:SetVisible(false)
   controlPresets.DropDown:SetValue("Please Choose")
 
-  CPanel:AddControl("TextBox", { Label = "tool.texts.text", Command = "texts_text", MaxLenth = "128" })
-  CPanel:AddControl("TextBox", { Label = "tool.texts.color", Command = "texts_color", MaxLenth = "16" })
-  CPanel:AddControl("TextBox", { Label = "tool.texts.extraColor", Command = "texts_extraColor", MaxLenth = "16" })
-  CPanel:AddControl("Slider", { Label = "tool.texts.scale", Command = "texts_scale", Type = "Float", Min = 0.01, Max = 10 })
-  CPanel:AddControl("Slider", { Label = "tool.texts.fade", Command = "texts_fade", Type = "Integer", Min = -1024, Max = 10000 })
+  CPanel:AddControl("TextBox", { Label = t"tool.texts.text", Command = "texts_text", MaxLenth = "128" })
+  CPanel:AddControl("Color", { Label = t"tool.texts.color", Red = "texts_r", Green = "texts_g", Blue = "texts_b", Alpha = "texts_a" })
+  CPanel:AddControl("Color", { Label = t"tool.texts.extra_color", Red = "texts_r2", Green = "texts_g2", Blue = "texts_b2", Alpha = "texts_a2" })
+  CPanel:AddControl("Slider", { Label = t"tool.texts.scale", Command = "texts_scale", Type = "Float", Min = 0.01, Max = 10 })
+  CPanel:AddControl("Slider", { Label = t"tool.texts.fade", Command = "texts_fade", Type = "Integer", Min = -1024, Max = 10000 })
 end
