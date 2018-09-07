@@ -12,7 +12,7 @@ function PANEL:Paint(w, h)
   end
 end
 
-vgui.Register("flCharCreationBase", PANEL, "flBasePanel")
+vgui.Register("flCharCreationBase", PANEL, "fl_base_panel")
 
 local PANEL = {}
 PANEL.id = "general"
@@ -92,7 +92,7 @@ function PANEL:Rebuild()
   local i = 0
   local offset = 4
 
-  self.scrollpanel = vgui.Create("flSidebar", self)
+  self.scrollpanel = vgui.Create("fl_sidebar", self)
   self.scrollpanel:SetSize(8 * 68 + 8, 68 * 5 + 8)
   self.scrollpanel:SetPos(30, 50)
 

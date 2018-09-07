@@ -11,14 +11,14 @@ function PANEL:Init()
   self.Label:SetText(t('char_create.fac_title'))
   self.Label:SetFont(theme.GetFont("Text_Small"))
 
-  self.Chooser = vgui.Create("flSidebar", self)
+  self.Chooser = vgui.Create("fl_sidebar", self)
   self.Chooser:SetPos(32, 90)
   self.Chooser:SetSize(500, ScrH() - 290)
   self.Chooser:AddSpace(2)
 
   for k, v in pairs(faction.GetAll()) do
     if !v.whitelisted or fl.client:HasWhitelist(v.id) then
-      local button = vgui.Create("flImageButton", self)
+      local button = vgui.Create("fl_image_button", self)
       button:SetSize(496, 142)
       button:SetPos(0, 0)
       button:SetImage(v.material)

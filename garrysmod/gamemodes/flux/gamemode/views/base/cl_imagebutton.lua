@@ -34,4 +34,4 @@ function PANEL:Think()
   self.Image:SetSize(self:GetWide(), self:GetTall())
 end
 
-vgui.Register("flImageButton", PANEL, "flButton")
+vgui.Register("fl_image_button", PANEL, "fl_button")

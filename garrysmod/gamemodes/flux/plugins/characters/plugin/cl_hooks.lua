@@ -236,7 +236,7 @@ netstream.Hook("PlayerCreatedCharacter", function(success, status)
         text = "You have not chosen a model or the one you have chosen is invalid!"
       end
 
-      local panel = vgui.Create("flNotification", fl.IntroPanel)
+      local panel = vgui.Create("fl_notification", fl.IntroPanel)
       panel:SetText(text)
       panel:SetLifetime(6)
       panel:SetTextColor(Color("red"))

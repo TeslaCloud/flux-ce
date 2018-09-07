@@ -36,11 +36,11 @@ function PANEL:SetActive(active)
   self.m_Active = active
 end
 
-function PANEL:SetEnabled(bEnabled)
-  self.m_Enabled = bEnabled
-  self.m_TextColorOverride = (bEnabled and theme.GetColor("Text"):darken(50)) or nil
+function PANEL:SetEnabled(enabled)
+  self.m_Enabled = enabled
+  self.m_TextColorOverride = (enabled and theme.GetColor("Text"):darken(50)) or nil
 
-  self:SetMouseInputEnabled(bEnabled)
+  self:SetMouseInputEnabled(enabled)
 end
 
 function PANEL:SetTextColor(color)
@@ -91,4 +91,4 @@ function PANEL:SizeToContents()
   self:SetSize(w * 1.15 + add, h * 1.5)
 end
 
-vgui.Register("flButton", PANEL, "flBasePanel")
+vgui.Register("fl_button", PANEL, "fl_base_panel")

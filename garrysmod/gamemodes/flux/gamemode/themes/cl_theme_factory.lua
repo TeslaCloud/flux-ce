@@ -70,7 +70,7 @@ function THEME:OnLoaded()
   -- self:SetMaterial("Schema_Logo", "materials/flux/hl2rp/logo.png")
 
   self:AddPanel("TabMenu", function(id, parent, ...)
-    return vgui.Create("flTabMenu", parent)
+    return vgui.Create("fl_tab_menu", parent)
   end)
 
   self:AddPanel("Admin_PermissionsEditor", function(id, parent, ...)
@@ -120,7 +120,7 @@ function THEME:PaintMainMenu(panel, width, height)
   if !logo then
     draw.SimpleText(title, self:GetFont("Text_Largest"), wide + width * 0.5 - titleW * 0.5, 150, self:GetColor("SchemaText"))
   else
-    draw.TexturedRect(logo, width * 0.5 - 200, 16, 400, 96, Color(255, 255, 255))
+    draw.textured_rect(logo, width * 0.5 - 200, 16, 400, 96, Color(255, 255, 255))
   end
 
   draw.SimpleText(desc, self:GetFont("Menu_Normal"), 16, 128 - descH - 8, self:GetColor("SchemaText"))

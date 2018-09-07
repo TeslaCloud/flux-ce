@@ -14,7 +14,7 @@ function PANEL:Init()
   self.Label:SetText("Points: "..self.points)
   self.Label:SetFont(theme.GetFont("Text_Normal"))
 
-  self.List = vgui.Create("flSidebar", self)
+  self.List = vgui.Create("fl_sidebar", self)
   self.List:SetPos(32, 100)
   self.List:SetSize(ScrW() / 3, ScrH() - 290)
   self.List:AddSpace(2)

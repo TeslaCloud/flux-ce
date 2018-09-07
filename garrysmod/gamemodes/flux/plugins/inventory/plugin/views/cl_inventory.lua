@@ -154,7 +154,7 @@ function PANEL:OnMouseReleased(...)
   local x, y = self:LocalToScreen(0, 0)
   local w, h = self:GetSize()
 
-  if surface.IsMouseInRect(x, y, w, h) then
+  if surface.mouse_in_rect(x, y, w, h) then
     if self.itemData and self.mousePressed and self.mousePressed > (CurTime() - 0.15) then
       fl.inventoryDragSlot = nil
 
@@ -311,4 +311,4 @@ function PANEL:Rebuild()
   end, {})
 end
 
-vgui.Register("flInventory", PANEL, "flFrame")
+vgui.Register("flInventory", PANEL, "fl_frame")

@@ -290,10 +290,10 @@ function plugin.include(path)
           end
         table.safe_merge(data, dataTable)
 
-        fl.shared.pluginInfo[path] = data
+        fl.shared.plugin_info[path] = data
       end
     else
-      table.safe_merge(data, fl.shared.pluginInfo[path])
+      table.safe_merge(data, fl.shared.plugin_info[path])
     end
   end
 

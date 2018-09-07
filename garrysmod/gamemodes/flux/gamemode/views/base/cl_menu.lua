@@ -22,7 +22,7 @@ function PANEL:Paint(w, h)
   draw.RoundedBox(0, 0, 0, w, h, col)
 
   if self.icon then
-    draw.TexturedRect(self.icon, 8, h * 0.5 - self.iconH * 0.5, self.iconW, self.iconH, Color(255, 255, 255))
+    draw.textured_rect(self.icon, 8, h * 0.5 - self.iconH * 0.5, self.iconW, self.iconH, Color(255, 255, 255))
   end
 end
 
@@ -47,7 +47,7 @@ function PANEL:SetIconSize(w, h)
   self.iconH = h
 end
 
-vgui.Register("flMenuItem", PANEL, "DButton")
+vgui.Register("fl_menu_item", PANEL, "DButton")
 
 local PANEL = {}
 PANEL.last = 0
@@ -61,7 +61,7 @@ end
 function PANEL:AddOption(name, callback)
   local w, h = self:GetSize()
 
-  local panel = vgui.Create("flMenuItem", self)
+  local panel = vgui.Create("fl_menu_item", self)
   panel:SetPos(0, 0)
   panel:MoveTo(0, self.last, 0.15 * self.count)
   panel:SetSize(self:GetWide(), self.optionHeight)
@@ -158,4 +158,4 @@ function PANEL:Open(x, y)
   return self
 end
 
-vgui.Register("flMenu", PANEL, "DScrollPanel")
+vgui.Register("fl_menu", PANEL, "DScrollPanel")

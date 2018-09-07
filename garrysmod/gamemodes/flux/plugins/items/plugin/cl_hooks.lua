@@ -1,7 +1,7 @@
 function flItems:PlayerUseItemMenu(itemTable, bIsEntity)
   if !itemTable then return end
 
-  local itemMenu = vgui.Create("flMenu")
+  local itemMenu = vgui.Create("fl_menu")
 
   if !itemTable.name then
     local closeBtn = itemMenu:AddOption(itemTable.cancel_text or t('item.option.cancel'), function() print("Cancel") end)
@@ -65,7 +65,7 @@ function flItems:HUDPaint()
     local diff = math.Clamp(math.Round(CurTime() - holdStart, 3), 0.01, 0.5)
     local percentage = math.Clamp((diff / 0.5) * 100, 0, 100)
 
-    fl.SetCirclePercentage(percentage)
+    fl.set_circle_percent(percentage)
   end
 end
 

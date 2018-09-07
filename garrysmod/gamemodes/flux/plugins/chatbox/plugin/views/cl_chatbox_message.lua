@@ -82,7 +82,7 @@ function PANEL:Paint(w, h)
         elseif IsColor(v) then
           curColor = ColorAlpha(v, self.alpha)
         elseif v.image then
-          draw.TexturedRect(util.get_material(v.image), v.x, v.y, v.w, v.h, Color(255, 255, 255, self.alpha))
+          draw.textured_rect(util.get_material(v.image), v.x, v.y, v.w, v.h, Color(255, 255, 255, self.alpha))
         end
       elseif isnumber(v) then
         curFont = font.GetSize(theme.GetFont("Chatbox_Normal"), v)
@@ -91,4 +91,4 @@ function PANEL:Paint(w, h)
   end
 end
 
-vgui.Register("flChatMessage", PANEL, "flBasePanel")
+vgui.Register("flChatMessage", PANEL, "fl_base_panel")
