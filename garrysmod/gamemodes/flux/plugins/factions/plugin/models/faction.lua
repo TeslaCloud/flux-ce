@@ -100,14 +100,14 @@ function Faction:GenerateName(player, charName, rank, defaultData)
   for k, v in ipairs(assistants) do
     v = v[1]
 
-    if (v:StartWith("{callback:")) then
+    if (v:starts("{callback:")) then
       local funcName = v:utf8sub(11, v:utf8len() - 1)
       local callback = self[funcName]
 
       if (isfunction(callback)) then
         finalName = finalName:Replace(v, callback(self, player))
       end
-    elseif (v:StartWith("{data:")) then
+    elseif (v:starts("{data:")) then
       local key = v:utf8sub(7, v:utf8len() - 1)
       local data = player:GetCharacterData(key, (defaultData[key] or self.data[key] or ""))
 
