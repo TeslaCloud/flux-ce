@@ -3,7 +3,7 @@ function flObserver:ShouldObserverReset(player)
 end
 
 function flObserver:PlayerEnterNoclip(player)
-  if (!player:can("noclip")) then
+  if !player:can("noclip") then
     fl.player:notify(player, "You do not have permission to do this.")
 
     return false
@@ -32,7 +32,7 @@ end
 function flObserver:PlayerExitNoclip(player)
   local data = player.observerData
 
-  if (data) then
+  if data then
     player:SetMoveType(data.moveType or MOVETYPE_WALK)
     player:DrawWorldModel(true)
     player:DrawShadow(true)
@@ -40,9 +40,9 @@ function flObserver:PlayerExitNoclip(player)
     player:SetNotSolid(false)
     player:SetColor(data.color)
 
-    if (data.shouldReset) then
+    if data.shouldReset then
       timer.Simple(FrameTime(), function()
-        if (IsValid(player)) then
+        if IsValid(player) then
           player:SetPos(data.position)
           player:SetEyeAngles(data.angles)
         end

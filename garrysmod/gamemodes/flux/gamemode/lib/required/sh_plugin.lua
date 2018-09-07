@@ -1,4 +1,4 @@
-if (plugin) then return end
+if plugin then return end
 
 library.new "plugin"
 
@@ -94,7 +94,7 @@ function Plugin:set_data(data)
 end
 
 function Plugin:set_alias(alias)
-  if (isstring(alias)) then
+  if isstring(alias) then
     _G[alias] = self
     self.alias = alias
   end
@@ -112,7 +112,7 @@ Plugin = Plugin
 
 function plugin.cache_functions(obj, id)
   for k, v in pairs(obj) do
-    if (isfunction(v)) then
+    if isfunction(v) then
       hooks_cache[k] = hooks_cache[k] or {}
       table.insert(hooks_cache[k], {v, obj, id = id})
     end
@@ -126,7 +126,7 @@ end
 function plugin.remove_hooks(id)
   for k, v in pairs(hooks_cache) do
     for k2, v2 in ipairs(v) do
-      if (v2.id and v2.id == id) then
+      if v2.id and v2.id == id then
         hooks_cache[k][k2] = nil
       end
     end
@@ -134,11 +134,11 @@ function plugin.remove_hooks(id)
 end
 
 function plugin.find(id)
-  if (stored[id]) then
+  if stored[id] then
     return stored[id], id
   else
     for k, v in pairs(stored) do
-      if (v.id == id or v:get_folder() == id or v:get_name() == id) then
+      if v.id == id or v:get_folder() == id or v:get_name() == id then
         return v, k
       end
     end
@@ -150,8 +150,8 @@ function plugin.remove_from_cache(id)
   local pluginTable = plugin.find(id) or (istable(id) and id)
 
   -- Awful lot of if's and end's.
-  if (pluginTable) then
-    if (pluginTable.OnUnhook) then
+  if pluginTable then
+    if pluginTable.OnUnhook then
       try {
         pluginTable.OnUnhook, pluginTable
       } catch {
@@ -162,9 +162,9 @@ function plugin.remove_from_cache(id)
     end
 
     for k, v in pairs(pluginTable) do
-      if (isfunction(v) and hooks_cache[k]) then
+      if isfunction(v) and hooks_cache[k] then
         for index, tab in ipairs(hooks_cache[k]) do
-          if (tab[2] == pluginTable) then
+          if tab[2] == pluginTable then
             table.remove(hooks_cache[k], index)
 
             break
@@ -179,8 +179,8 @@ end
 function plugin.recache(id)
   local pluginTable = plugin.find(id)
 
-  if (pluginTable) then
-    if (pluginTable.OnRecache) then
+  if pluginTable then
+    if pluginTable.OnRecache then
       try {
         pluginTable.OnRecache, pluginTable
       } catch {
@@ -198,8 +198,8 @@ end
 function plugin.remove(id)
   local pluginTable, pluginID = plugin.find(id)
 
-  if (pluginTable) then
-    if (pluginTable.OnRemoved) then
+  if pluginTable then
+    if pluginTable.OnRemoved then
       try {
         pluginTable.OnRemoved, pluginTable
       } catch {
@@ -216,15 +216,15 @@ function plugin.remove(id)
 end
 
 function plugin.is_disabled(folder)
-  if (fl.shared.disabledPlugins) then
+  if fl.shared.disabledPlugins then
     return fl.shared.disabledPlugins[folder]
   end
 end
 
 function plugin.loaded(obj)
-  if (istable(obj)) then
+  if istable(obj) then
     return load_cache[obj.id]
-  elseif (isstring(obj)) then
+  elseif isstring(obj) then
     return load_cache[obj]
   end
 
@@ -234,18 +234,18 @@ end
 function plugin.register(obj)
   plugin.cache_functions(obj)
 
-  if (obj.ShouldRefresh == false) then
+  if obj.ShouldRefresh == false then
     reload_data[obj:get_folder()] = false
   else
     reload_data[obj:get_folder()] = true
   end
 
   if SERVER then
-    if (Schema == obj) then
+    if Schema == obj then
       local folderName = obj.folder:trim_end("/schema")
       local filePath = "gamemodes/"..folderName.."/"..folderName..".yml"
 
-      if (file.Exists(filePath, "GAME")) then
+      if file.Exists(filePath, "GAME") then
         fl.dev_print("Importing config: "..filePath)
 
         config.Import(fileio.Read(filePath), CONFIG_PLUGIN)
@@ -269,23 +269,23 @@ function plugin.include(path)
   data.id = id
   data.folder = path
 
-  if (reload_data[folder] == false) then
+  if reload_data[folder] == false then
     fl.dev_print("Not reloading plugin: "..path)
     return
-  elseif (plugin.loaded(id)) then
+  elseif plugin.loaded(id) then
     return
   end
 
   fl.dev_print("Loading plugin: "..path)
 
-  if (ext != "lua") then
+  if ext != "lua" then
     if SERVER then
-      if (file.Exists(path.."/plugin.yml", "LUA")) then
+      if file.Exists(path.."/plugin.yml", "LUA") then
         local dataTable = YAML.eval(file.Read(path.."/plugin.yml", "LUA"))
           dataTable.folder = path.."/plugin"
           dataTable.plugin_main = "sh_plugin.lua"
 
-          if (file.Exists(dataTable.folder.."/sh_"..(dataTable.name or id)..".lua", "LUA")) then
+          if file.Exists(dataTable.folder.."/sh_"..(dataTable.name or id)..".lua", "LUA") then
             dataTable.plugin_main = "sh_"..(dataTable.name or id)..".lua"
           end
         table.safe_merge(data, dataTable)
@@ -305,9 +305,9 @@ function plugin.include(path)
     end
   end
 
-  if (istable(data.depends)) then
+  if istable(data.depends) then
     for k, v in ipairs(data.depends) do
-      if (!plugin.require(v)) then
+      if !plugin.require(v) then
         ErrorNoHalt("Not loading the '"..tostring(path).."' plugin! Dependency missing: '"..tostring(v).."'!\n")
         return
       end
@@ -316,16 +316,16 @@ function plugin.include(path)
 
   PLUGIN = Plugin.new(id, data)
 
-  if (stored[path]) then
+  if stored[path] then
     PLUGIN = stored[path]
   end
 
   plugin.include_folders(data.folder)
 
-  if (ext != "lua") then
+  if ext != "lua" then
     util.include(data.folder.."/"..data.plugin_main)
   else
-    if (file.Exists(path, "LUA")) then
+    if file.Exists(path, "LUA") then
       util.include(path)
     end
   end
@@ -342,14 +342,14 @@ function plugin.include_schema()
   local schema_folder = schemaPath.."/schema"
   local filePath = "gamemodes/"..schemaPath.."/"..schemaPath..".yml"
 
-  if (file.Exists(filePath, "GAME")) then
+  if file.Exists(filePath, "GAME") then
     fl.dev_print("Checking schema dependencies using "..filePath)
 
     local dependencies = YAML.eval(fileio.Read(filePath)).depends
 
-    if (istable(dependencies)) then
+    if istable(dependencies) then
       for k, v in ipairs(dependencies) do
-        if (!plugin.require(v)) then
+        if !plugin.require(v) then
           ErrorNoHalt("Unable to load schema! Dependency missing: '"..tostring(v).."'!\n")
           ErrorNoHalt("Please install this plugin in your schema's 'plugins' folder!\n")
 
@@ -368,7 +368,7 @@ function plugin.include_schema()
   plugin.include_folders(schema_folder)
   plugin.include_plugins(schemaPath.."/plugins")
 
-  if (schema_info.name and schema_info.author) then
+  if schema_info.name and schema_info.author then
     MsgC(Color(255, 255, 0), schema_info.name)
     MsgC(Color(0, 255, 100), " by "..schema_info.author.." has been loaded!\n")
   end
@@ -380,9 +380,9 @@ end
 
 -- Please specify full file name if requiring a single-file plugin.
 function plugin.require(pluginName)
-  if (!isstring(pluginName)) then return false end
+  if !isstring(pluginName) then return false end
 
-  if (!plugin.loaded(pluginName)) then
+  if !plugin.loaded(pluginName) then
     local searchPaths = {
       'flux/plugins/',
       (fl.get_schema_folder() or 'flux')..'/plugins/'
@@ -397,7 +397,7 @@ function plugin.require(pluginName)
 
     for k, v in ipairs(searchPaths) do
       for _, ending in ipairs(tolerance) do
-        if (file.Exists(v..pluginName..ending, "LUA")) then
+        if file.Exists(v..pluginName..ending, "LUA") then
           plugin.include(v..pluginName)
 
           return true
@@ -415,7 +415,7 @@ function plugin.include_plugins(folder)
   local files, folders = file.Find(folder.."/*", "LUA")
 
   for k, v in ipairs(files) do
-    if (v:GetExtensionFromFilename() == "lua") then
+    if v:GetExtensionFromFilename() == "lua" then
       plugin.include(folder.."/"..v)
     end
   end
@@ -456,7 +456,7 @@ do
     local _, dirs = file.Find(folder.."/*", "LUA")
 
     for k, v in ipairs(dirs) do
-      if (!entData[v]) then continue end
+      if !entData[v] then continue end
 
       local dir = folder.."/"..v
       local data = entData[v]
@@ -471,26 +471,26 @@ do
         _G[var] = table.Copy(data.defaultData)
         _G[var].ClassName = id
 
-        if (file.Exists(path.."/shared.lua", "LUA")) then
+        if file.Exists(path.."/shared.lua", "LUA") then
           util.include(path.."/shared.lua")
 
           register = true
         end
 
-        if (file.Exists(path.."/init.lua", "LUA")) then
+        if file.Exists(path.."/init.lua", "LUA") then
           util.include(path.."/init.lua")
 
           register = true
         end
 
-        if (file.Exists(path.."/cl_init.lua", "LUA")) then
+        if file.Exists(path.."/cl_init.lua", "LUA") then
           util.include(path.."/cl_init.lua")
 
           register = true
         end
 
-        if (register) then
-          if (data.clientside and !CLIENT) then _G[var] = nil continue end
+        if register then
+          if data.clientside and !CLIENT then _G[var] = nil continue end
 
           data.func(_G[var], id)
         end
@@ -508,7 +508,7 @@ do
 
         util.include(path)
 
-        if (data.clientside and !CLIENT) then _G[var] = nil continue end
+        if data.clientside and !CLIENT then _G[var] = nil continue end
 
         data.func(_G[var], id)
 
@@ -519,19 +519,19 @@ do
 end
 
 function plugin.add_extra(extra)
-  if (!isstring(extra)) then return end
+  if !isstring(extra) then return end
 
   table.insert(extras, extra)
 end
 
 function plugin.include_folders(folder)
   for k, v in ipairs(extras) do
-    if (plugin.call("PluginIncludeFolder", v, folder) == nil) then
-      if (v == "entities") then
+    if plugin.call("PluginIncludeFolder", v, folder) == nil then
+      if v == "entities" then
         plugin.include_entities(folder.."/"..v)
-      elseif (v == "themes") then
+      elseif v == "themes" then
         pipeline.include_folder("theme", folder.."/themes/")
-      elseif (v == "tools") then
+      elseif v == "tools" then
         pipeline.include_folder("tool", folder.."/tools/")
       elseif SERVER and v == 'languages' then
         pipeline.include_folder('language', folder..'/languages/')
@@ -549,20 +549,20 @@ do
   plugin.old_hook_call = old_hook_call
 
   -- If we're running in development, we should be using pcall'ed hook.Call rather than unsafe one.
-  if (fl.development) then
+  if fl.development then
     function hook.Call(name, gm, ...)
-      if (hooks_cache[name]) then
+      if hooks_cache[name] then
         for k, v in ipairs(hooks_cache[name]) do
           local success, a, b, c, d, e, f = pcall(v[1], v[2], ...)
 
-          if (!success) then
+          if !success then
             ErrorNoHalt("[Flux - "..(v.id or v[2]:get_name()).."] The "..name.." hook has failed to run!\n")
             ErrorNoHalt(tostring(a), "\n")
 
-            if (name != "OnHookError") then
+            if name != "OnHookError" then
               hook.Call("OnHookError", gm, name, v)
             end
-          elseif (a != nil) then
+          elseif a != nil then
             return a, b, c, d, e, f
           end
         end
@@ -574,11 +574,11 @@ do
     -- While generally a bad idea, pcall-less method is faster and if you're not developing
     -- changes are low that you'll ever run into an error anyway.
     function hook.Call(name, gm, ...)
-      if (hooks_cache[name]) then
+      if hooks_cache[name] then
         for k, v in ipairs(hooks_cache[name]) do
           local a, b, c, d, e, f = v[1](v[2], ...)
 
-          if (a != nil) then
+          if a != nil then
             return a, b, c, d, e, f
           end
         end

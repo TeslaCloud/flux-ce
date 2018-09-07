@@ -28,7 +28,7 @@ if SERVER then
   end
 
   function fl3DText:AddText(data)
-    if (!data or !data.text or !data.pos or !data.angle or !data.style or !data.scale) then return end
+    if !data or !data.text or !data.pos or !data.angle or !data.style or !data.scale then return end
 
     table.insert(fl3DText.stored, data)
 
@@ -38,13 +38,13 @@ if SERVER then
   end
 
   function fl3DText:Remove(player)
-    if (player:can("textremove")) then
+    if player:can("textremove") then
       netstream.Start(player, "fl3DText_Calculate", true)
     end
   end
 
   netstream.Hook("fl3DText_Remove", function(player, idx)
-    if (player:can("textremove")) then
+    if player:can("textremove") then
       table.remove(fl3DText.stored, idx)
 
       fl3DText:Save()
@@ -72,7 +72,7 @@ else
   end)
 
   function fl3DText:RemoveAtTrace(trace)
-    if (!trace) then return false end
+    if !trace then return false end
 
     local hitPos = trace.HitPos
     local traceStart = trace.StartPos
@@ -85,8 +85,8 @@ else
       local startPos = pos - -ang:Right() * (w * 0.50) * v.scale
       local end_pos = pos + -ang:Right() * (w * 0.50) * v.scale
 
-      if (math.abs(math.abs(hitPos.z) - math.abs(pos.z)) < 4 * v.scale) then
-        if (util.vectors_intersect(traceStart, hitPos, startPos, end_pos)) then
+      if math.abs(math.abs(hitPos.z) - math.abs(pos.z)) < 4 * v.scale then
+        if util.vectors_intersect(traceStart, hitPos, startPos, end_pos) then
           netstream.Start("fl3DText_Remove", k)
 
           return true

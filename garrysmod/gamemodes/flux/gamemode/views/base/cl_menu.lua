@@ -15,20 +15,20 @@ end
 function PANEL:Paint(w, h)
   local col = theme.GetColor("Background")
 
-  if (self:IsHovered()) then
+  if self:IsHovered() then
     col = col:lighten(40)
   end
 
   draw.RoundedBox(0, 0, 0, w, h, col)
 
-  if (self.icon) then
+  if self.icon then
     draw.TexturedRect(self.icon, 8, h * 0.5 - self.iconH * 0.5, self.iconW, self.iconH, Color(255, 255, 255))
   end
 end
 
 function PANEL:OnMousePressed(mouse)
-  if (mouse == MOUSE_RIGHT or mouse == MOUSE_LEFT) then
-    if (self.DoClick) then
+  if mouse == MOUSE_RIGHT or mouse == MOUSE_LEFT then
+    if self.DoClick then
       self:DoClick()
     end
   end
@@ -69,7 +69,7 @@ function PANEL:AddOption(name, callback)
   panel:SetText(name)
   panel:MoveToBack()
 
-  if (callback) then
+  if callback then
     panel.DoClick = callback
   end
 
@@ -114,7 +114,7 @@ function PANEL:PerformLayout()
 
   -- Find the widest one
   for k, pnl in pairs(self:GetCanvas():GetChildren()) do
-    if (pnl.PerformLayout) then
+    if pnl.PerformLayout then
       pnl:PerformLayout()
     end
 

@@ -2,9 +2,9 @@ library.new "data"
 
 if SERVER then
   function data.Save(key, value)
-    if (!isstring(key) or !istable(value)) then return end
+    if !isstring(key) or !istable(value) then return end
 
-    if (!string.GetExtensionFromFilename(key)) then
+    if !string.GetExtensionFromFilename(key) then
       key = key..".pon"
     end
 
@@ -12,41 +12,41 @@ if SERVER then
   end
 
   function data.Load(key, failSafe)
-    if (!isstring(key)) then return end
+    if !isstring(key) then return end
 
-    if (!string.GetExtensionFromFilename(key)) then
+    if !string.GetExtensionFromFilename(key) then
       key = key..".pon"
     end
 
-    if (file.Exists("settings/flux/"..key, "GAME")) then
+    if file.Exists("settings/flux/"..key, "GAME") then
       local data = fileio.Read("settings/flux/"..key)
 
       return fl.deserialize(data)
-    elseif (failSafe) then
+    elseif failSafe then
       return failSafe
     else
-      if (fl.development) then
+      if fl.development then
         ErrorNoHalt("Attempt to load data key that doesn't exist! ("..key..")\n")
       end
     end
   end
 
   function data.Delete(key)
-    if (!isstring(key)) then return end
+    if !isstring(key) then return end
 
-    if (!string.GetExtensionFromFilename(key)) then
+    if !string.GetExtensionFromFilename(key) then
       key = key..".pon"
     end
 
-    if (file.Exists("settings/flux/"..key, "GAME")) then
+    if file.Exists("settings/flux/"..key, "GAME") then
       fileio.Delete("settings/flux/"..key)
     end
   end
 else
   function data.Save(key, value)
-    if (!isstring(key) or !istable(value)) then return end
+    if !isstring(key) or !istable(value) then return end
 
-    if (!string.GetExtensionFromFilename(key)) then
+    if !string.GetExtensionFromFilename(key) then
       key = key..".dat"
     end
 
@@ -54,33 +54,33 @@ else
   end
 
   function data.Load(key, failSafe)
-    if (!isstring(key)) then return end
+    if !isstring(key) then return end
 
-    if (!string.GetExtensionFromFilename(key)) then
+    if !string.GetExtensionFromFilename(key) then
       key = key..".dat"
     end
 
-    if (file.Exists("flux/"..key, "DATA")) then
+    if file.Exists("flux/"..key, "DATA") then
       local data = file.Read("flux/"..key, "DATA")
 
       return fl.deserialize(data)
-    elseif (failSafe) then
+    elseif failSafe then
       return failSafe
     else
-      if (fl.development) then
+      if fl.development then
         ErrorNoHalt("Attempt to load data key that doesn't exist! ("..key..")\n")
       end
     end
   end
 
   function data.Delete(key)
-    if (!isstring(key)) then return end
+    if !isstring(key) then return end
 
-    if (!string.GetExtensionFromFilename(key)) then
+    if !string.GetExtensionFromFilename(key) then
       key = key..".dat"
     end
 
-    if (file.Exists("flux/"..key, "DATA")) then
+    if file.Exists("flux/"..key, "DATA") then
       file.Delete("flux/"..key)
     end
   end

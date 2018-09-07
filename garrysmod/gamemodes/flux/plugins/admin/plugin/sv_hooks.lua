@@ -25,8 +25,8 @@ function flAdmin:CheckPassword(steam_id64, ip, sv_pass, cl_pass, name)
   local steam_id = util.SteamIDFrom64(steam_id64)
   local entry = fl.admin:get_bans()[steam_id]
 
-  if (entry and plugin.call("ShouldCheckBan", steam_id, ip, name) != false) then
-    if (entry.duration != 0 and entry.unbanTime >= os.time() and plugin.call("ShouldExpireBan", steam_id, ip, name) != false) then
+  if entry and plugin.call("ShouldCheckBan", steam_id, ip, name) != false then
+    if entry.duration != 0 and entry.unbanTime >= os.time() and plugin.call("ShouldExpireBan", steam_id, ip, name) != false then
       self:remove_ban(steam_id)
 
       return true
@@ -39,14 +39,14 @@ end
 function flAdmin:PlayerRestored(player, record)
   local root_steamid = config.Get("root_steamid")
 
-  if (isstring(root_steamid)) then
-    if (player:SteamID() == root_steamid) then
+  if isstring(root_steamid) then
+    if player:SteamID() == root_steamid then
       player:SetUserGroup('admin')
       player.can_anything = true
     end
-  elseif (istable(root_steamid)) then
+  elseif istable(root_steamid) then
     for k, v in ipairs(root_steamid) do
-      if (v == player:SteamID()) then
+      if v == player:SteamID() then
         player:SetUserGroup('admin')
         player.can_anything = true
       end

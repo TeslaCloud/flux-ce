@@ -25,15 +25,15 @@ function flChatbox:OnResolutionChanged(newW, newH)
   theme.SetOption("Chatbox_X", 8)
   theme.SetOption("Chatbox_Y", newH - theme.GetOption("Chatbox_Height") - 32)
 
-  if (chatbox.panel) then
+  if chatbox.panel then
     chatbox.panel:Remove()
     chatbox.panel = nil
   end
 end
 
 function flChatbox:PlayerBindPress(player, bind, bPress)
-  if (fl.client:HasInitialized() and (string.find(bind, "messagemode") or string.find(bind, "messagemode2")) and bPress) then
-    if (string.find(bind, "messagemode2")) then
+  if fl.client:HasInitialized() and (string.find(bind, "messagemode") or string.find(bind, "messagemode2")) and bPress then
+    if string.find(bind, "messagemode2") then
       fl.client.typing_team_chat = true
     else
       fl.client.typing_team_chat = false
@@ -46,19 +46,19 @@ function flChatbox:PlayerBindPress(player, bind, bPress)
 end
 
 function flChatbox:GUIMousePressed(mouseCode, aimVector)
-  if (IsValid(chatbox.panel)) then
+  if IsValid(chatbox.panel) then
     chatbox.Hide()
   end
 end
 
 function flChatbox:HUDShouldDraw(element)
-  if (element == "CHudChat") then
+  if element == "CHudChat" then
     return false
   end
 end
 
 function flChatbox:ChatboxTextEntered(text)
-  if (text and text != "") then
+  if text and text != "" then
     netstream.Start("Chatbox::PlayerSay", text)
   end
 
@@ -70,7 +70,7 @@ function flChatbox:ChatboxPaintOver(w, h, panel)
 end
 
 netstream.Hook("Chatbox::AddMessage", function(messageData)
-  if (IsValid(chatbox.panel)) then
+  if IsValid(chatbox.panel) then
     chatbox.panel:AddMessage(messageData)
   end
 end)

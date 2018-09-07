@@ -16,15 +16,15 @@ class 'Tool'
 function Tool:MakeGhostEntity(model, pos, angle)
   util.PrecacheModel(model)
 
-  if (SERVER and !game.SinglePlayer()) then return end
-  if (CLIENT and game.SinglePlayer()) then return end
-  if (self.GhostEntityLastDelete and self.GhostEntityLastDelete + 0.1 > CurTime()) then return end
+  if SERVER and !game.SinglePlayer() then return end
+  if CLIENT and game.SinglePlayer() then return end
+  if self.GhostEntityLastDelete and self.GhostEntityLastDelete + 0.1 > CurTime() then return end
 
   -- Release the old ghost entity
   self:ReleaseGhostEntity()
 
   -- Don't allow ragdolls/effects to be ghosts
-  if (!util.IsValidProp(model)) then return end
+  if !util.IsValidProp(model) then return end
 
   if CLIENT then
     self.GhostEntity = ents.CreateClientProp(model)
@@ -33,7 +33,7 @@ function Tool:MakeGhostEntity(model, pos, angle)
   end
 
   -- If there's too many entities we might not spawn..
-  if (!IsValid(self.GhostEntity)) then
+  if !IsValid(self.GhostEntity) then
     self.GhostEntity = nil
 
     return
@@ -51,24 +51,24 @@ function Tool:MakeGhostEntity(model, pos, angle)
 end
 
 function Tool:StartGhostEntity(ent)
-  if (SERVER and !game.SinglePlayer()) then return end
-  if (CLIENT and game.SinglePlayer()) then return end
+  if SERVER and !game.SinglePlayer() then return end
+  if CLIENT and game.SinglePlayer() then return end
 
   self:MakeGhostEntity(ent:GetModel(), ent:GetPos(), ent:GetAngles())
 end
 
 function Tool:ReleaseGhostEntity()
-  if (self.GhostEntity) then
-    if (!IsValid(self.GhostEntity)) then self.GhostEntity = nil return end
+  if self.GhostEntity then
+    if !IsValid(self.GhostEntity) then self.GhostEntity = nil return end
     self.GhostEntity:Remove()
     self.GhostEntity = nil
     self.GhostEntityLastDelete = CurTime()
   end
 
   -- This is unused!
-  if (self.GhostEntities) then
+  if self.GhostEntities then
     for k,v in pairs(self.GhostEntities) do
-      if (IsValid(v)) then v:Remove() end
+      if IsValid(v) then v:Remove() end
       self.GhostEntities[k] = nil
     end
 
@@ -77,7 +77,7 @@ function Tool:ReleaseGhostEntity()
   end
 
   -- This is unused!
-  if (self.GhostOffset) then
+  if self.GhostOffset then
     for k,v in pairs(self.GhostOffset) do
       self.GhostOffset[k] = nil
     end
@@ -85,11 +85,11 @@ function Tool:ReleaseGhostEntity()
 end
 
 function Tool:UpdateGhostEntity()
-  if (self.GhostEntity == nil) then return end
-  if (!IsValid(self.GhostEntity)) then self.GhostEntity = nil return end
+  if self.GhostEntity == nil then return end
+  if !IsValid(self.GhostEntity) then self.GhostEntity = nil return end
 
   local trace = self:GetOwner():GetEyeTrace()
-  if (!trace.Hit) then return end
+  if !trace.Hit then return end
 
   local Ang1, Ang2 = self:GetNormal(1):Angle(), (trace.HitNormal * -1):Angle()
   local TargetAngle = self:GetEnt(1):AlignAngles(Ang1, Ang2)
@@ -136,16 +136,16 @@ function Tool:ClearObjects()
 end
 
 function Tool:GetEnt(i)
-  if (!self.Objects[i]) then return NULL end
+  if !self.Objects[i] then return NULL end
 
   return self.Objects[i].Ent
 end
 
 function Tool:GetPos(i)
-  if (self.Objects[i].Ent:EntIndex() == 0) then
+  if self.Objects[i].Ent:EntIndex() == 0 then
     return self.Objects[i].Pos
   else
-    if (IsValid(self.Objects[i].Phys)) then
+    if IsValid(self.Objects[i].Phys) then
       return self.Objects[i].Phys:LocalToWorld(self.Objects[i].Pos)
     else
       return self.Objects[i].Ent:LocalToWorld(self.Objects[i].Pos)
@@ -164,12 +164,12 @@ function Tool:GetBone(i)
 end
 
 function Tool:GetNormal(i)
-  if (self.Objects[i].Ent:EntIndex() == 0) then
+  if self.Objects[i].Ent:EntIndex() == 0 then
     return self.Objects[i].Normal
   else
     local norm
 
-    if (IsValid(self.Objects[i].Phys)) then
+    if IsValid(self.Objects[i].Phys) then
       norm = self.Objects[i].Phys:LocalToWorld(self.Objects[i].Normal)
     else
       norm = self.Objects[i].Ent:LocalToWorld(self.Objects[i].Normal)
@@ -181,7 +181,7 @@ end
 
 -- Returns the physics object for the numbered hit
 function Tool:GetPhys(i)
-  if (self.Objects[i].Phys == nil) then
+  if self.Objects[i].Phys == nil then
     return self:GetEnt(i):GetPhysicsObject()
   end
 
@@ -197,14 +197,14 @@ function Tool:SetObject(i, ent, pos, phys, bone, norm)
   self.Objects[i].Normal = norm
 
   -- Worldspawn is a special case
-  if (ent:EntIndex() == 0) then
+  if ent:EntIndex() == 0 then
     self.Objects[i].Phys = nil
     self.Objects[i].Pos = pos
   else
     norm = norm + pos
 
     -- Convert the position to a local position - so it's still valid when the object moves
-    if (IsValid(phys)) then
+    if IsValid(phys) then
       self.Objects[i].Normal = self.Objects[i].Phys:WorldToLocal(norm)
       self.Objects[i].Pos = self.Objects[i].Phys:WorldToLocal(pos)
     else
@@ -322,7 +322,7 @@ function Tool:Think() self:ReleaseGhostEntity() end
 -----------------------------------------------------------]]
 function Tool:CheckObjects()
   for k, v in pairs(self.Objects) do
-    if (!v.Ent:IsWorld() and !v.Ent:IsValid()) then
+    if !v.Ent:IsWorld() and !v.Ent:IsValid() then
       self:ClearObjects()
     end
   end

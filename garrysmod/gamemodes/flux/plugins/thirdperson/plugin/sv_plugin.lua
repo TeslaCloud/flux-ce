@@ -1,7 +1,7 @@
 concommand.Add("flThirdPerson", function(player)
   local oldValue = player:get_nv("flThirdPerson")
 
-  if (oldValue == nil) then
+  if oldValue == nil then
     oldValue = false
   end
 

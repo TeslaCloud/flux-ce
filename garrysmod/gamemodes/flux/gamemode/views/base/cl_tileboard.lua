@@ -4,8 +4,8 @@ PANEL.m_Docked = {}
 PANEL.m_NextThink = 0
 
 function PANEL:SetGridSize(x, y)
-  if (!isnumber(x)) then return end
-  if (!isnumber(y)) then
+  if !isnumber(x) then return end
+  if !isnumber(y) then
     y = x
   end
 
@@ -14,8 +14,8 @@ function PANEL:SetGridSize(x, y)
 end
 
 function PANEL:GetGridSize(bDimension)
-  if (isbool(bDimension)) then
-    if (bDimension) then
+  if isbool(bDimension) then
+    if bDimension then
       return self.m_GridSize.x
     else
       return self.m_GridSize.y
@@ -28,11 +28,11 @@ end
 function PANEL:PositionPanel(obj)
   local panel = obj.panel
 
-  if (!IsValid(panel)) then return end
+  if !IsValid(panel) then return end
 
   local size = self:GetGridSize()
 
-  if (!size.x or !size.y or size.x <= 0 or size.y <= 0) then return end
+  if !size.x or !size.y or size.x <= 0 or size.y <= 0 then return end
 
   local w, h = self:GetWide(), self:GetTall()
   local unitX, unitY = w / size.x, h / size.y
@@ -53,10 +53,10 @@ function PANEL:SetDockedPos(panel, x, y, w, h)
 end
 
 function PANEL:AttachPanel(panel, x, y, w, h)
-  if (!isnumber(x)) then x = 1 end
-  if (!isnumber(y)) then y = 1 end
-  if (!isnumber(w)) then w = 1 end
-  if (!isnumber(h)) then h = 1 end
+  if !isnumber(x) then x = 1 end
+  if !isnumber(y) then y = 1 end
+  if !isnumber(w) then w = 1 end
+  if !isnumber(h) then h = 1 end
 
   panel:SetParent(self)
 
@@ -71,9 +71,9 @@ end
 function PANEL:Think()
   local curTime = CurTime()
 
-  if (curTime > self.m_NextThink) then
+  if curTime > self.m_NextThink then
     for k, v in ipairs(self.m_Docked) do
-      if (!IsValid(v.panel)) then
+      if !IsValid(v.panel) then
         table.remove(self.m_Docked, k)
       end
     end

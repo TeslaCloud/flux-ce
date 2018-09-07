@@ -3,7 +3,7 @@ PLUGIN:set_name("Visible Legs")
 PLUGIN:set_author("NightAngel")
 PLUGIN:set_description("Lets clients see their character's legs.")
 
-if (!CLIENT) then return end
+if !CLIENT then return end
 
 local hiddenBones = {
   "ValveBiped.Bip01_Head1",
@@ -50,12 +50,12 @@ local hiddenBones = {
 }
 
 -- For refresh.
-if (IsValid(fl.client) and fl.client.legs) then
+if IsValid(fl.client) and fl.client.legs then
   fl.client.legs:Remove()
 end
 
 function flVisibleLegs:PlayerModelChanged(player, sNewModel, sOldModel)
-  if (fl.client.legs) then
+  if fl.client.legs then
     fl.client.legs:Remove()
   end
 end
@@ -64,7 +64,7 @@ local offset = Vector(-50, -50, 0)
 local scale = Vector(1, 1, 1)
 
 function flVisibleLegs:SpawnLegs(player)
-  if (IsValid(player.legs)) then
+  if IsValid(player.legs) then
     player.legs:Remove()
   end
 
@@ -72,11 +72,11 @@ function flVisibleLegs:SpawnLegs(player)
 
   local legs = player.legs
 
-  if (IsValid(legs)) then
+  if IsValid(legs) then
     for k, v in pairs(hiddenBones) do
       local bone = legs:LookupBone(v)
 
-      if (bone) then
+      if bone then
         legs:ManipulateBonePosition(bone, offset)
         legs:ManipulateBoneScale(bone, scale)
       end
@@ -90,15 +90,15 @@ end
 function flVisibleLegs:RenderScreenspaceEffects()
   local player = fl.client
 
-  if (player:get_nv("Observer") or player:ShouldDrawLocalPlayer() or !player:Alive()) then return end
+  if player:get_nv("Observer") or player:ShouldDrawLocalPlayer() or !player:Alive() then return end
 
   local angs = player:EyeAngles()
 
   -- Because we don't need to draw the legs if you wouldn't even be able to see them.
-  if (angs.p < 0) then return end
+  if angs.p < 0 then return end
 
   cam.Start3D(EyePos(), EyeAngles())
-    if (!IsValid(player.legs)) then
+    if !IsValid(player.legs) then
       self:SpawnLegs(player)
     end
 

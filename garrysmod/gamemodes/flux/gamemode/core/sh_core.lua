@@ -13,7 +13,7 @@ library.stored = library.stored or {}
   Returns: nil
 --]]
 function fl.print(message)
-  if (!istable(message)) then
+  if !istable(message) then
     print(message)
   else
     print("Printing table:")
@@ -22,7 +22,7 @@ function fl.print(message)
 end
 
 function fl.dev_print(message)
-  if (fl.development) then
+  if fl.development then
     Msg("Debug: ")
     MsgC(Color(200, 200, 200), message)
     Msg("\n")
@@ -44,13 +44,13 @@ function file.Write(file_name, contents)
   local curPath = ""
 
   for k, v in ipairs(exploded) do
-    if (string.GetExtensionFromFilename(v) != nil) then
+    if string.GetExtensionFromFilename(v) != nil then
       break
     end
 
     curPath = curPath..v.."/"
 
-    if (!file.Exists(curPath, "DATA")) then
+    if !file.Exists(curPath, "DATA") then
       file.CreateDir(curPath)
     end
   end
@@ -91,7 +91,7 @@ setmetatable(library, { __call = function(tab, name, parent) return tab.Get(name
   Returns: table - The created class.
 --]]
 function library.create_class(name, base_class)
-  if (isstring(base_class)) then
+  if isstring(base_class) then
     base_class = base_class:parse_table()
   end
 
@@ -107,11 +107,11 @@ function library.create_class(name, base_class)
   obj.class = obj
 
   -- If this class is based off some other class - copy it's parent's data.
-  if (istable(base_class)) then
+  if istable(base_class) then
     local copy = table.Copy(base_class)
     table.safe_merge(copy, obj)
 
-    if (isfunction(base_class.class_extended)) then
+    if isfunction(base_class.class_extended) then
       try {
         base_class.class_extended, base_class, copy
       } catch {
@@ -138,8 +138,8 @@ function library.create_class(name, base_class)
     local base_class = real_class.BaseClass
     local has_base_class = true
 
-    while (istable(base_class) and has_base_class) do
-      if (isfunction(base_class.init)) then
+    while istable(base_class) and has_base_class do
+      if isfunction(base_class.init) then
         try {
           base_class.init, new_obj, ...
         } catch {
@@ -150,7 +150,7 @@ function library.create_class(name, base_class)
         }
       end
 
-      if (base_class.BaseClass and base_class.ClassName != base_class.BaseClass.ClassName) then
+      if base_class.BaseClass and base_class.ClassName != base_class.BaseClass.ClassName then
         base_class = base_class.BaseClass
       else
         has_base_class = false
@@ -158,10 +158,10 @@ function library.create_class(name, base_class)
     end
 
     -- If there is a constructor - call it.
-    if (real_class.init) then
+    if real_class.init then
       local success, value = pcall(real_class.init, new_obj, ...)
 
-      if (!success) then
+      if !success then
         ErrorNoHalt("["..name.."] Class constructor has failed to run!\n")
         ErrorNoHalt(value.."\n")
       end
@@ -204,16 +204,16 @@ end
   Returns: bool - Whether or not did the extension succeed.
 --]]
 function extends(base_class)
-  if (isstring(base_class)) then
+  if isstring(base_class) then
     base_class = base_class:parse_table()
   end
 
-  if (istable(library.last_class) and istable(base_class)) then
+  if istable(library.last_class) and istable(base_class) then
     local obj = library.last_class.parent[library.last_class.name]
     local copy = table.Copy(base_class)
     table.safe_merge(copy, obj)
 
-    if (isfunction(base_class.class_extended)) then
+    if isfunction(base_class.class_extended) then
       try {
         base_class.class_extended, base_class, copy
       } catch {
@@ -258,7 +258,7 @@ inherits = extends
   Returns: object - The instance of the supplied class. nil if class does not exist.
 --]]
 function New(class_name, ...)
-  if (istable(class_name)) then
+  if istable(class_name) then
     return class_name(...)
   end
 
@@ -342,13 +342,13 @@ end
   Returns: string - pON-encoded table. If pON fails then JSON is returned.
 --]]
 function fl.serialize(tab)
-  if (istable(tab)) then
+  if istable(tab) then
     local success, value = pcall(pon.encode, tab)
 
-    if (!success) then
+    if !success then
       success, value = pcall(util.TableToJSON, tab)
 
-      if (!success) then
+      if !success then
         ErrorNoHalt("Failed to serialize a table!\n")
         ErrorNoHalt(value.."\n")
 
@@ -372,13 +372,13 @@ end
   Returns: table - Decoded string.
 --]]
 function fl.deserialize(data)
-  if (isstring(data)) then
+  if isstring(data) then
     local success, value = pcall(pon.decode, data)
 
-    if (!success) then
+    if !success then
       success, value = pcall(util.JSONToTable, data)
 
-      if (!success) then
+      if !success then
         ErrorNoHalt("Failed to deserialize a string!\n")
         ErrorNoHalt(value.."\n")
 
@@ -405,7 +405,7 @@ function fl.include_schema()
     return plugin.include_schema()
   else
     timer.Create("SchemaLoader", 0.04, 0, function()
-      if (fl.shared and fl.shared_received) then
+      if fl.shared and fl.shared_received then
         timer.Remove("SchemaLoader")
         plugin.include_schema()
         netstream.Start("ClientIncludedSchema", true)
@@ -428,7 +428,7 @@ function fl.include_plugins(folder)
     return plugin.include_plugins(folder)
   else
     timer.Create("plugin_loader", 0.04, 0, function()
-      if (fl.shared and fl.shared_received) then
+      if fl.shared and fl.shared_received then
         timer.Remove("plugin_loader")
         plugin.include_plugins(folder)
 
@@ -448,18 +448,18 @@ end
 --]]
 function fl.get_schema_info()
   if SERVER then
-    if (fl.schema_info) then return fl.schema_info end
+    if fl.schema_info then return fl.schema_info end
 
     local schema_folder = string.lower(fl.get_schema_folder())
     local schema_data = util.KeyValuesToTable(
       fileio.Read("gamemodes/"..schema_folder.."/"..schema_folder..".txt")
     )
 
-    if (!schema_data) then
+    if !schema_data then
       schema_data = {}
     end
 
-    if (schema_data["Gamemode"]) then
+    if schema_data["Gamemode"] then
       schema_data = schema_data["Gamemode"]
     end
 

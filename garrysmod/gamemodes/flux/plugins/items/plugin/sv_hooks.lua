@@ -15,7 +15,7 @@ function flItems:PlayerUseItemEntity(player, entity, itemTable)
 end
 
 function flItems:PlayerTakeItem(player, itemTable, ...)
-  if (IsValid(itemTable.entity)) then
+  if IsValid(itemTable.entity) then
     itemTable.entity:Remove()
     player:GiveItemByID(itemTable.instance_id)
     item.AsyncSaveEntities()
@@ -26,10 +26,10 @@ function flItems:PlayerDropItem(player, instance_id)
   local itemTable = item.FindInstanceByID(instance_id)
   local trace = player:GetEyeTraceNoCursor()
 
-  if (itemTable.on_drop) then
+  if itemTable.on_drop then
     local result = itemTable:on_drop(player)
 
-    if (result == false) then
+    if result == false then
       return false
     end
   end
@@ -38,7 +38,7 @@ function flItems:PlayerDropItem(player, instance_id)
 
   local distance = trace.HitPos:Distance(player:GetPos())
 
-  if (distance < 80) then
+  if distance < 80 then
     item.Spawn(trace.HitPos, Angle(0, 0, 0), itemTable)
   else
     item.Spawn(player:EyePos() + trace.Normal * 15, Angle(0, 0, 0), itemTable)
@@ -48,17 +48,17 @@ function flItems:PlayerDropItem(player, instance_id)
 end
 
 function flItems:PlayerUseItem(player, itemTable, ...)
-  if (itemTable.on_use) then
+  if itemTable.on_use then
     local result = itemTable:on_use(player)
 
-    if (result == true) then
+    if result == true then
       return
-    elseif (result == false) then
+    elseif result == false then
       return false
     end
   end
 
-  if (IsValid(itemTable.entity)) then
+  if IsValid(itemTable.entity) then
     itemTable.entity:Remove()
   else
     player:TakeItemByID(itemTable.instance_id)
@@ -80,7 +80,7 @@ end
 function flItems:PlayerCanUseItem(player, itemTable, action, ...)
   local trace = player:GetEyeTraceNoCursor()
 
-  if ((!player:HasItemByID(itemTable.instance_id) and !IsValid(itemTable.entity)) or (IsValid(itemTable.entity) and trace.Entity and trace.Entity != itemTable.entity)) then
+  if (!player:HasItemByID(itemTable.instance_id) and !IsValid(itemTable.entity)) or (IsValid(itemTable.entity) and trace.Entity and trace.Entity != itemTable.entity) then
     return false
   end
 end
@@ -92,7 +92,7 @@ function flItems:PostCharacterLoaded(player, character)
     for k, v in ipairs(ids) do
       local itemTable = item.FindInstanceByID(v)
 
-      if (istable(itemTable)) then
+      if istable(itemTable) then
         itemTable:on_loadout(player)
       end
     end
@@ -118,7 +118,7 @@ end)
 netstream.Hook("Flux::Items::AbortHoldStart", function(player)
   local ent = player:get_nv("HoldEnt")
 
-  if (IsValid(ent)) then
+  if IsValid(ent) then
     ent:set_nv("LastActivator", false)
   end
 

@@ -18,24 +18,24 @@ end
 
 if SERVER then
   function config.Set(key, value, bIsHidden, nFromConfig)
-    if (key != nil) then
-      if (!stored[key]) then
+    if key != nil then
+      if !stored[key] then
         stored[key] = {}
 
-        if (PLUGIN) then
+        if PLUGIN then
           stored[key].addedBy = PLUGIN:get_name()
-        elseif (Schema) then
+        elseif Schema then
           stored[key].addedBy = "Schema"
         else
           stored[key].addedBy = "Flux"
         end
 
-        if (isnumber(nFromConfig)) then
-          if (nFromConfig == CONFIG_FLUX) then
+        if isnumber(nFromConfig) then
+          if nFromConfig == CONFIG_FLUX then
             stored[key].addedBy = "Flux Config"
-          elseif (nFromConfig == CONFIG_SCHEMA) then
+          elseif nFromConfig == CONFIG_SCHEMA then
             stored[key].addedBy = "Schema Config"
-          elseif (PLUGIN and nFromConfig == CONFIG_PLUGIN) then
+          elseif PLUGIN and nFromConfig == CONFIG_PLUGIN then
             stored[key].addedBy = PLUGIN:get_name().." Config"
           end
         end
@@ -43,11 +43,11 @@ if SERVER then
 
       stored[key].value = value
 
-      if (stored[key].hidden == nil or bIsHidden != nil) then
+      if stored[key].hidden == nil or bIsHidden != nil then
         stored[key].hidden = bIsHidden or false
       end
 
-      if (!stored[key].hidden) then
+      if !stored[key].hidden then
         netstream.Start(nil, "Flux::Config::SetVar", key, stored[key].value)
       end
 
@@ -59,7 +59,7 @@ if SERVER then
 
   function player_meta:SendConfig()
     for k, v in pairs(stored) do
-      if (!v.hidden) then
+      if !v.hidden then
         netstream.Start(self, "Flux::Config::SetVar", k, v.value)
       end
     end
@@ -71,8 +71,8 @@ else
   config.menuItems = menuItems
 
   function config.Set(key, value)
-    if (key != nil) then
-      if (!stored[key]) then
+    if key != nil then
+      if !stored[key] then
         stored[key] = {}
       end
 
@@ -115,7 +115,7 @@ else
   end
 
   function config.AddToMenu(category, key, name, description, dataType, data)
-    if (!category or !key) then return end
+    if !category or !key then return end
 
     menuItems[category] = menuItems[category] or {}
     menuItems[category].configs = menuItems[category].configs or {}
@@ -133,7 +133,7 @@ else
   end
 
   netstream.Hook("Flux::Config::SetVar", function(key, value)
-    if (key == nil) then return end
+    if key == nil then return end
 
     print(key, value)
 
@@ -144,12 +144,12 @@ else
 end
 
 function config.Get(key, default)
-  if (cache[key]) then
+  if cache[key] then
     return cache[key]
   end
 
-  if (stored[key] != nil) then
-    if (stored[key].value != nil) then
+  if stored[key] != nil then
+    if stored[key].value != nil then
       cache[key] = stored[key].value
 
       return stored[key].value
@@ -163,12 +163,12 @@ end
 
 if SERVER then
   function config.Import(contents, from_config)
-    if (!isstring(contents) or contents == "") then return end
+    if !isstring(contents) or contents == "" then return end
 
     local config_table = YAML.eval(contents)
 
     for k, v in pairs(config_table) do
-      if (k != "depends" and plugin.call("ShouldConfigImport", k, v) == nil) then
+      if k != "depends" and plugin.call("ShouldConfigImport", k, v) == nil then
         config.Set(k, v, nil, from_config)
       end
     end

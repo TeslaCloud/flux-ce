@@ -14,7 +14,7 @@ flPlayer.loadout = {
 
 -- Called when the data tables are setup.
 function flPlayer:SetupDataTables()
-  if (!self.Player or !self.Player.DTVar) then
+  if !self.Player or !self.Player.DTVar then
     return
   end
 
@@ -27,12 +27,12 @@ end
 function flPlayer:GetHandsModel()
   local playerModel = string.lower(self.Player:GetModel())
 
-  if (modelList[playerModel]) then
+  if modelList[playerModel] then
     return player_manager.TranslatePlayerHands(modelList[playerModel])
   end
 
   for k, v in pairs(modelList) do
-    if (string.find(string.gsub(playerModel, "_", ""), v)) then
+    if string.find(string.gsub(playerModel, "_", ""), v) then
       modelList[playerModel] = v
 
       break
@@ -44,10 +44,10 @@ end
 
 -- Called after view model is drawn.
 function flPlayer:PostDrawViewModel(viewmodel, weapon)
-  if (weapon.UseHands or !weapon:IsScripted()) then
+  if weapon.UseHands or !weapon:IsScripted() then
     local handsEntity = fl.client:GetHands()
 
-    if (IsValid(handsEntity)) then
+    if IsValid(handsEntity) then
       handsEntity:DrawModel()
     end
   end

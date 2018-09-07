@@ -7,26 +7,26 @@ local current_language = 'en'
 
 local default_lang_table = {
   nice_time = function(self, time)
-    if (time == 1) then
+    if time == 1 then
       return t('time.seconds.1', time), 0
-    elseif (time < 60) then
+    elseif time < 60 then
       return t('time.seconds.2', time), 0
-    elseif (time < (60 * 60)) then
+    elseif time < (60 * 60) then
       local _t = math.floor(time / 60)
       return t('time.minutes.'..(_t != 1 and '2') or '1', _t), time - _t * 60
-    elseif (time < (60 * 60 * 24)) then
+    elseif time < (60 * 60 * 24) then
       local _t = math.floor(time / 60 / 60)
       return t('time.hours.'..(_t != 1 and '2') or '1', _t), time - _t * 60 * 60
-    elseif (time < (60 * 60 * 24 * 7)) then
+    elseif time < (60 * 60 * 24 * 7) then
       local _t = math.floor(time / 60 / 60 / 24)
       return t('time.days.'..(_t != 1 and '2') or '1', _t), time - _t * 60 * 60 * 24
-    elseif (time < (60 * 60 * 24 * 30)) then
+    elseif time < (60 * 60 * 24 * 30) then
       local _t = math.floor(time / 60 / 60 / 24 / 7)
       return t('time.weeks.'..(_t != 1 and '2') or '1', _t), time - _t * 60 * 60 * 24 * 7
-    elseif (time < (60 * 60 * 24 * 30 * 12)) then
+    elseif time < (60 * 60 * 24 * 30 * 12) then
       local _t = math.floor(time / 60 / 60 / 24 / 30)
       return t('time.months.'..(_t != 1 and '2') or '1', _t), time - _t * 60 * 60 * 24 * 30
-    elseif (time >= (60 * 60 * 24 * 365)) then
+    elseif time >= (60 * 60 * 24 * 365) then
       local _t = math.floor(time / 60 / 60 / 24 / 365)
       return t('time.years.'..(_t != 1 and '2') or '1', _t), time - _t * 60 * 60 * 24 * 365
     else
@@ -37,15 +37,15 @@ local default_lang_table = {
     local out = ''
     local i = 0
 
-    while (time > 0) do
-      if (i >= 100) then break end -- fail safety
+    while time > 0 do
+      if i >= 100 then break end -- fail safety
 
       local str, remainder = self:nice_time(time)
 
       time = remainder
 
-      if (time <= 0) then
-        if (i != 0) then
+      if time <= 0 then
+        if i != 0 then
           out = out..t('time.and')..str
         else
           out = str
@@ -116,12 +116,12 @@ function fl.lang:get_plural(language, phrase, count)
   local langTable = stored[language]
   local translated = t(phrase)
 
-  if (!langTable) then return translated end
+  if !langTable then return translated end
 
-  if (langTable.pluralize) then
+  if langTable.pluralize then
     return langTable:pluralize(phrase, count, translated)
-  elseif (language == "en") then
-    if (!util.vowel(translated:sub(translated:len(), translated:len()))) then
+  elseif language == "en" then
+    if !util.vowel(translated:sub(translated:len(), translated:len())) then
       return translated.."es"
     else
       return translated.."s"
@@ -136,7 +136,7 @@ function fl.lang:nice_time(language, time)
 
   local langTable = stored[language]
 
-  if (langTable and langTable.nice_time) then
+  if langTable and langTable.nice_time then
     return langTable:nice_time(time)
   end
 
@@ -148,7 +148,7 @@ function fl.lang:nice_time_full(language, time)
 
   local langTable = stored[language]
 
-  if (langTable and langTable.nice_time_full) then
+  if langTable and langTable.nice_time_full then
     return langTable:nice_time_full(time)
   end
 
@@ -156,14 +156,14 @@ function fl.lang:nice_time_full(language, time)
 end
 
 function fl.lang:get_case(language, phrase, case)
-  if (language == "en") then return t(phrase) end
+  if language == "en" then return t(phrase) end
 
   local langTable = stored[language]
   local translated = t(phrase)
 
-  if (!langTable) then return translated end
+  if !langTable then return translated end
 
-  if (langTable.get_case) then
+  if langTable.get_case then
     return langTable:get_case(phrase, count, translated)
   end
 
@@ -171,7 +171,7 @@ function fl.lang:get_case(language, phrase, case)
 end
 
 function fl.lang:get_player_lang(player)
-  if (!IsValid(player)) then return "en" end
+  if !IsValid(player) then return "en" end
 
   return player:get_nv("language", "en")
 end
@@ -182,7 +182,7 @@ if CLIENT then
   function fl.lang:pluralize(phrase, count)
     local lang = GetConVar("gmod_language"):GetString()
 
-    if (lang) then
+    if lang then
       return self:get_plural(lang, phrase, count)
     end
   end
@@ -190,7 +190,7 @@ if CLIENT then
   function fl.lang:case(phrase, case)
     local lang = GetConVar("gmod_language"):GetString()
 
-    if (lang) then
+    if lang then
       return self:get_case(lang, phrase, case)
     end
   end

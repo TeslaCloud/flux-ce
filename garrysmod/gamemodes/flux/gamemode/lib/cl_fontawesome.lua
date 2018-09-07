@@ -7,7 +7,7 @@
   http://fontawesome.io/
 --]]
 
-if (!font) then
+if !font then
   include("flux/gamemode/lib/cl_font.lua")
 end
 
@@ -819,8 +819,8 @@ end
 plugin.add_hooks("FontAwesome", fl.fa.hooks)
 
 function fl.fa:GetIcon(id)
-  if (faCodes[id]) then
-    if (!buffer[id]) then
+  if faCodes[id] then
+    if !buffer[id] then
       local rawCode = faCodes[id]
       buffer[id] = util.hex_to_decimalimal(rawCode)
     end
@@ -832,20 +832,20 @@ function fl.fa:GetIcon(id)
 end
 
 function fl.fa:Draw(id, x, y, size, color, xAlign, yAlign, outlineWidth, outlineColor)
-  if (id:starts("fa ")) then
+  if id:starts("fa ") then
     id = id:sub(4, id:len())
   end
 
-  if (!id:starts("fa-")) then
+  if !id:starts("fa-") then
     id = "fa-"..id
   end
 
-  if (!faCodes[id]) then return end
+  if !faCodes[id] then return end
 
   size = size or 16
   color = color or Color(255, 255, 255)
 
-  if (outlineWidth) then
+  if outlineWidth then
     draw.SimpleTextOutlined(self:GetIcon(id), font.GetSize("flFontAwesome", size), x, y, color, xAlign, yAlign, outlineWidth, outlineColor)
   else
     draw.SimpleText(self:GetIcon(id), font.GetSize("flFontAwesome", size), x, y, color, xAlign, yAlign)

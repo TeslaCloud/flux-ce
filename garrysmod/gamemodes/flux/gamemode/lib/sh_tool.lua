@@ -16,7 +16,7 @@ function fl.tool:Get(id)
 end
 
 function fl.tool:register(obj)
-  if (!obj) then return end
+  if !obj then return end
 
   obj:CreateConVars()
   stored[obj.Mode] = obj

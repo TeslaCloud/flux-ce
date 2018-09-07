@@ -11,7 +11,7 @@ COMMAND.aliases = {"plytransfer", "charsetfaction", "chartransfer"}
 function COMMAND:on_run(player, targets, name, bStrict)
   local factionTable = faction.Find(name, (bStrict and true) or false)
 
-  if (factionTable) then
+  if factionTable then
     for k, v in ipairs(targets) do
       v:SetFaction(factionTable.id)
     end

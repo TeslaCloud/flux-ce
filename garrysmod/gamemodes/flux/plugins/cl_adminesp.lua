@@ -18,12 +18,12 @@ do
   end
 
   function PLUGIN:HUDPaint()
-    if (IsValid(fl.client) and fl.client:Alive() and fl.client:GetMoveType() == MOVETYPE_NOCLIP and can("admin_esp")) then
+    if IsValid(fl.client) and fl.client:Alive() and fl.client:GetMoveType() == MOVETYPE_NOCLIP and can("admin_esp") then
       local scrW, scrH = ScrW(), ScrH()
       local clientPos = fl.client:GetPos()
 
       for k, v in ipairs(_player.GetAll()) do
-        if (v == fl.client) then continue end
+        if v == fl.client then continue end
 
         local pos = v:GetPos()
         local head = Vector(pos.x, pos.y, pos.z + 60)
@@ -40,7 +40,7 @@ do
         local w, h = util.text_size(v:SteamName(), theme.GetFont("Text_Smaller"))
         draw.SimpleText(v:SteamName(), theme.GetFont("Text_Smaller"), textPos.x - w * 0.5, textPos.y + 14, color_lightblue)
 
-        if (v:Alive()) then
+        if v:Alive() then
           surface.SetDrawColor(teamColor)
           surface.DrawOutlinedRect(x - size * 0.5, y - size * 0.5, size, (screenPos.y - y) * 1.25)
         else
@@ -51,14 +51,14 @@ do
         local bx, by = x - size * 0.5, y - size * 0.5 + (screenPos.y - y) * 1.25
         local hpM = math.Clamp((v:Health() or 0) / v:GetMaxHealth(), 0, 1)
 
-        if (hpM > 0) then
+        if hpM > 0 then
           draw.RoundedBox(0, bx, by, size, 2, color_grey)
           draw.RoundedBox(0, bx, by, size * hpM, 2, color_red)
         end
 
         local arM = math.Clamp((v:Armor() or 0) / 100, 0, 1)
 
-        if (arM > 0) then
+        if arM > 0 then
           draw.RoundedBox(0, bx, by + 3, size, 2, color_grey)
           draw.RoundedBox(0, bx, by + 3, size * arM, 2, color_blue)
         end

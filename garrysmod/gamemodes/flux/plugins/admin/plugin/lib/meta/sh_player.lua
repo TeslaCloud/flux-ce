@@ -13,7 +13,7 @@ function player_meta:GetCustomPermissions()
 end
 
 function player_meta:is_assistant()
-  if (self:IsAdmin()) then
+  if self:IsAdmin() then
     return true
   end
 
@@ -26,13 +26,13 @@ function player_meta:GetUserGroup()
 end
 
 function player_meta:IsSuperAdmin()
-  if (self:is_root()) then return true end
+  if self:is_root() then return true end
 
   return self:has_group("superadmin")
 end
 
 function player_meta:IsAdmin()
-  if (self:IsSuperAdmin()) then
+  if self:IsSuperAdmin() then
     return true
   end
 

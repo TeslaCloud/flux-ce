@@ -13,7 +13,7 @@ function flItems:OnPluginLoaded()
 end
 
 function flItems:PluginIncludeFolder(extra, folder)
-  if (extra == "items") then
+  if extra == "items" then
     item.IncludeItems(folder.."/items/")
 
     return true

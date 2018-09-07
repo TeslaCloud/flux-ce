@@ -1,4 +1,4 @@
-if (!font) then
+if !font then
   util.include("cl_font.lua")
 end
 
@@ -17,11 +17,11 @@ fl.bars.defaultH = 18
 fl.bars.defaultSpacing = 6
 
 function fl.bars:register(id, data, force)
-  if (!data) then return end
+  if !data then return end
 
   force = force or fl.development
 
-  if (stored[id] and !force) then
+  if stored[id] and !force then
     return stored[id]
   end
 
@@ -56,7 +56,7 @@ function fl.bars:register(id, data, force)
 end
 
 function fl.bars:Get(id)
-  if (stored[id]) then
+  if stored[id] then
     return stored[id]
   end
 
@@ -66,11 +66,11 @@ end
 function fl.bars:SetValue(id, newValue)
   local bar = self:Get(id)
 
-  if (bar) then
+  if bar then
     theme.Call("PreBarValueSet", bar, bar.value, newValue)
 
-    if (bar.value != newValue) then
-      if (bar.hinderDisplay and bar.hinderValue) then
+    if bar.value != newValue then
+      if bar.hinderDisplay and bar.hinderValue then
         bar.value = math.Clamp(newValue, 0, bar.maxValue - bar.hinderValue + 2)
       end
 
@@ -83,10 +83,10 @@ end
 function fl.bars:HinderValue(id, newValue)
   local bar = self:Get(id)
 
-  if (bar) then
+  if bar then
     theme.Call("PreBarHinderValueSet", bar, bar.hinderValue, newValue)
 
-    if (bar.value != newValue) then
+    if bar.value != newValue then
       bar.hinderValue = math.Clamp(newValue, 0, bar.maxValue)
     end
   end
@@ -96,7 +96,7 @@ function fl.bars:Prioritize()
   sorted = {}
 
   for k, v in pairs(stored) do
-    if (!hook.run("ShouldDrawBar", v)) then
+    if !hook.run("ShouldDrawBar", v) then
       continue
     end
 
@@ -104,7 +104,7 @@ function fl.bars:Prioritize()
 
     sorted[v.priority] = sorted[v.priority] or {}
 
-    if (v.type == BAR_TOP) then
+    if v.type == BAR_TOP then
       table.insert(sorted[v.priority], v.id)
     end
   end
@@ -122,7 +122,7 @@ function fl.bars:Position()
     for k, v in pairs(ids) do
       local bar = self:Get(v)
 
-      if (bar and bar.type == BAR_TOP) then
+      if bar and bar.type == BAR_TOP then
         local offX, offY = hook.run("AdjustBarPos", bar)
         offX = offX or 0
         offY = offY or 0
@@ -139,21 +139,21 @@ end
 function fl.bars:Draw(id)
   local barInfo = self:Get(id)
 
-  if (barInfo) then
+  if barInfo then
     hook.run("PreDrawBar", barInfo)
     theme.Call("PreDrawBar", barInfo)
 
-    if (!hook.run("ShouldDrawBar", barInfo)) then
+    if !hook.run("ShouldDrawBar", barInfo) then
       return
     end
 
     theme.Call("DrawBarBackground", barInfo)
 
-    if (hook.run("ShouldFillBar", barInfo) or barInfo.value != 0) then
+    if hook.run("ShouldFillBar", barInfo) or barInfo.value != 0 then
       theme.Call("DrawBarFill", barInfo)
     end
 
-    if (barInfo.hinderDisplay and barInfo.hinderDisplay <= barInfo.hinderValue) then
+    if barInfo.hinderDisplay and barInfo.hinderDisplay <= barInfo.hinderValue then
       theme.Call("DrawBarHindrance", barInfo)
     end
 
@@ -175,7 +175,7 @@ end
 function fl.bars:Adjust(id, data)
   local bar = self:Get(id)
 
-  if (bar) then
+  if bar then
     table.merge(bar, data)
   end
 end
@@ -184,11 +184,11 @@ do
   local flBars = {}
 
   function flBars:LazyTick()
-    if (IsValid(fl.client)) then
+    if IsValid(fl.client) then
       fl.bars:Position()
 
       for k, v in pairs(stored) do
-        if (v.callback) then
+        if v.callback then
           fl.bars:SetValue(v.id, v.callback(stored[k]))
         end
 
@@ -202,10 +202,10 @@ do
 
     bar.realFillWidth = bar.width * (bar.value / bar.maxValue)
 
-    if (bar.interpolated == nil) then
+    if bar.interpolated == nil then
       bar.fillWidth = bar.realFillWidth
     else
-      if (bar.curI > 150) then
+      if bar.curI > 150 then
         bar.interpolated = nil
         bar.curI = 1
       else
@@ -219,7 +219,7 @@ do
   end
 
   function flBars:ShouldDrawBar(bar)
-    if (bar.display < bar.value or bar.minDisplay >= bar.value) then
+    if bar.display < bar.value or bar.minDisplay >= bar.value then
       return false
     end
 

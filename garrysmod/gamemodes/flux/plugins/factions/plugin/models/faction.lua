@@ -49,7 +49,7 @@ function Faction:get_description()
 end
 
 function Faction:AddClass(id, class_name, description, color, callback)
-  if (!id) then return end
+  if !id then return end
 
   self.classes[id] = {
     name = class_name,
@@ -60,9 +60,9 @@ function Faction:AddClass(id, class_name, description, color, callback)
 end
 
 function Faction:AddRank(id, nameFilter)
-  if (!id) then return end
+  if !id then return end
 
-  if (!nameFilter) then nameFilter = id end
+  if !nameFilter then nameFilter = id end
 
   table.insert(self.rank, {
     id = id,
@@ -73,21 +73,21 @@ end
 function Faction:GenerateName(player, charName, rank, defaultData)
   defaultData = defaultData or {}
 
-  if (hook.run("ShouldNameGenerate", player, self, charName, rank, defaultData) == false) then return player:Name() end
+  if hook.run("ShouldNameGenerate", player, self, charName, rank, defaultData) == false then return player:Name() end
 
-  if (isfunction(self.MakeName)) then
+  if isfunction(self.MakeName) then
     return self:MakeName(player, charName, rank, defaultData) or "John Doe"
   end
 
   local finalName = self.name_template
 
-  if (finalName:find("{name}")) then
+  if finalName:find("{name}") then
     finalName = finalName:Replace("{name}", charName or "")
   end
 
-  if (finalName:find("{rank}")) then
+  if finalName:find("{rank}") then
     for k, v in ipairs(self.rank) do
-      if (v.id == rank or k == rank) then
+      if v.id == rank or k == rank then
         finalName = finalName:Replace("{rank}", v.name)
 
         break
@@ -100,18 +100,18 @@ function Faction:GenerateName(player, charName, rank, defaultData)
   for k, v in ipairs(assistants) do
     v = v[1]
 
-    if (v:starts("{callback:")) then
+    if v:starts("{callback:") then
       local funcName = v:utf8sub(11, v:utf8len() - 1)
       local callback = self[funcName]
 
-      if (isfunction(callback)) then
+      if isfunction(callback) then
         finalName = finalName:Replace(v, callback(self, player))
       end
-    elseif (v:starts("{data:")) then
+    elseif v:starts("{data:") then
       local key = v:utf8sub(7, v:utf8len() - 1)
       local data = player:GetCharacterData(key, (defaultData[key] or self.data[key] or ""))
 
-      if (isstring(data)) then
+      if isstring(data) then
         finalName = finalName:Replace(v, data)
       end
     end
@@ -123,7 +123,7 @@ end
 function Faction:set_data(key, value)
   key = tostring(key)
 
-  if (!key) then return end
+  if !key then return end
 
   self.data[key] = tostring(value)
 end

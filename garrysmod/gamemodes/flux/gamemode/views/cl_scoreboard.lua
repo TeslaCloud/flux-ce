@@ -14,12 +14,12 @@ end
 function PANEL:Rebuild()
   local w, h = self:GetSize()
 
-  if (hook.run("PreRebuildScoreboard", self, w, h) != nil) then
+  if hook.run("PreRebuildScoreboard", self, w, h) != nil then
     return
   end
 
   for k, v in ipairs(self.playerCards) do
-    if (IsValid(v)) then
+    if IsValid(v) then
       v:SafeRemove()
     end
 
@@ -31,7 +31,7 @@ function PANEL:Rebuild()
   local margin = font.Scale(4)
 
   for k, v in ipairs(_player.GetAll()) do
-    if (!v:HasInitialized()) then continue end
+    if !v:HasInitialized() then continue end
 
     local playerCard = vgui.Create("flScoreboardPlayer", self)
     playerCard:SetSize(w - 8, cardTall)
@@ -68,9 +68,9 @@ function PANEL:Paint(w, h)
 end
 
 function PANEL:Rebuild()
-  if (!self.player) then return end
+  if !self.player then return end
 
-  if (IsValid(self.avatarPanel)) then
+  if IsValid(self.avatarPanel) then
     self.avatarPanel:SafeRemove()
     self.nameLabel:SafeRemove()
   end

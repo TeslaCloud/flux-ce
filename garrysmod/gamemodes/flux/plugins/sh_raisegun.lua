@@ -26,21 +26,21 @@ end
 function player_meta:IsWeaponRaised()
   local weapon = self:GetActiveWeapon()
 
-  if (!IsValid(weapon)) then
+  if !IsValid(weapon) then
     return false
   end
 
-  if (table.HasValue(blockedWeapons, weapon:GetClass())) then
+  if table.HasValue(blockedWeapons, weapon:GetClass()) then
     return true
   end
 
   local shouldRaise = hook.run("ShouldWeaponBeRaised", self, weapon)
 
-  if (shouldRaise) then
+  if shouldRaise then
     return shouldRaise
   end
 
-  if (self:GetDTBool(BOOL_WEAPON_RAISED)) then
+  if self:GetDTBool(BOOL_WEAPON_RAISED) then
     return true
   end
 
@@ -48,7 +48,7 @@ function player_meta:IsWeaponRaised()
 end
 
 function player_meta:ToggleWeaponRaised()
-  if (self:IsWeaponRaised()) then
+  if self:IsWeaponRaised() then
     self:SetWeaponRaised(false)
   else
     self:SetWeaponRaised(true)
@@ -56,7 +56,7 @@ function player_meta:ToggleWeaponRaised()
 end
 
 function PLUGIN:OnWeaponRaised(player, weapon, bIsRaised)
-  if (IsValid(weapon)) then
+  if IsValid(weapon) then
     local curTime = CurTime()
 
     hook.run("UpdateWeaponRaised", player, weapon, bIsRaised, curTime)
@@ -64,18 +64,18 @@ function PLUGIN:OnWeaponRaised(player, weapon, bIsRaised)
 end
 
 function PLUGIN:UpdateWeaponRaised(player, weapon, bIsRaised, curTime)
-  if (bIsRaised or table.HasValue(blockedWeapons, weapon:GetClass())) then
+  if bIsRaised or table.HasValue(blockedWeapons, weapon:GetClass()) then
     weapon:SetNextPrimaryFire(curTime)
     weapon:SetNextSecondaryFire(curTime)
 
-    if (weapon.OnRaised) then
+    if weapon.OnRaised then
       weapon:OnRaised(player, curTime)
     end
   else
     weapon:SetNextPrimaryFire(curTime + 60)
     weapon:SetNextSecondaryFire(curTime + 60)
 
-    if (weapon.OnLowered) then
+    if weapon.OnLowered then
       weapon:OnLowered(player, curTime)
     end
   end
@@ -84,8 +84,8 @@ end
 function PLUGIN:PlayerThink(player, curTime)
   local weapon = player:GetActiveWeapon()
 
-  if (IsValid(weapon)) then
-    if (!player:IsWeaponRaised()) then
+  if IsValid(weapon) then
+    if !player:IsWeaponRaised() then
       weapon:SetNextPrimaryFire(curTime + 60)
       weapon:SetNextSecondaryFire(curTime + 60)
     end
@@ -93,7 +93,7 @@ function PLUGIN:PlayerThink(player, curTime)
 end
 
 function PLUGIN:KeyPress(player, key)
-  if (key == IN_RELOAD) then
+  if key == IN_RELOAD then
     timer.Create("WeaponRaise"..player:SteamID(), 1, 1, function()
       player:ToggleWeaponRaised()
     end)
@@ -101,7 +101,7 @@ function PLUGIN:KeyPress(player, key)
 end
 
 function PLUGIN:KeyRelease(player, key)
-  if (key == IN_RELOAD) then
+  if key == IN_RELOAD then
     timer.Remove("WeaponRaise"..player:SteamID())
   end
 end
@@ -120,13 +120,13 @@ end
 
 if CLIENT then
   function PLUGIN:CalcViewModelView(weapon, viewModel, oldEyePos, oldEyeAngles, eyePos, eyeAngles)
-    if (!IsValid(weapon)) then
+    if !IsValid(weapon) then
       return
     end
 
     local targetVal = 0
 
-    if (!fl.client:IsWeaponRaised()) then
+    if !fl.client:IsWeaponRaised() then
       targetVal = 100
     end
 
@@ -141,14 +141,14 @@ if CLIENT then
 
     viewModel:SetAngles(eyeAngles)
 
-    if (weapon.GetViewModelPosition) then
+    if weapon.GetViewModelPosition then
       local position, angles = weapon:GetViewModelPosition(eyePos, eyeAngles)
 
       oldEyePos = position or oldEyePos
       eyeAngles = angles or eyeAngles
     end
 
-    if (weapon.CalcViewModelView) then
+    if weapon.CalcViewModelView then
       local position, angles = weapon:CalcViewModelView(viewModel, oldEyePos, oldEyeAngles, eyePos, eyeAngles)
 
       oldEyePos = position or oldEyePos

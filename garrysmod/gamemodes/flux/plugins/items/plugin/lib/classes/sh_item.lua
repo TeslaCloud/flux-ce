@@ -1,7 +1,7 @@
 class 'Item'
 
 function Item:init(id)
-  if (!isstring(id)) then return end
+  if !isstring(id) then return end
 
   self.id = string.to_id(id)
   self.data = self.data or {}
@@ -17,11 +17,11 @@ end
 Item.name = Item.get_name
 
 function Item:set_base(base_class)
-  if (isstring(base_class)) then
+  if isstring(base_class) then
     base_class = _G[base_class]
   end
 
-  if (!istable(base_class)) then return end
+  if !istable(base_class) then return end
 
   ITEM = nil
   ITEM = base_class.new(self.id)
@@ -71,7 +71,7 @@ function Item:add_button(name, data)
     }
   --]]
 
-  if (!self.custom_buttons) then
+  if !self.custom_buttons then
     self.custom_buttons = {}
   end
 
@@ -93,7 +93,7 @@ function Item:on_save(player) end
 
 if SERVER then
   function Item:set_data(id, value)
-    if (!id) then return end
+    if !id then return end
 
     self.data[id] = value
 
@@ -102,27 +102,27 @@ if SERVER then
 
   function Item:get_player()
     for k, v in ipairs(player.GetAll()) do
-      if (v:HasItemByID(self.instance_id)) then
+      if v:HasItemByID(self.instance_id) then
         return v
       end
     end
   end
 
   function Item:do_menu_action(act, player, ...)
-    if (act == "on_take") then
-      if (hook.run("PlayerTakeItem", player, self, ...) != nil) then return end
+    if act == "on_take" then
+      if hook.run("PlayerTakeItem", player, self, ...) != nil then return end
     end
 
-    if (act == "on_use") then
-      if (hook.run("PlayerUseItem", player, self, ...) != nil) then return end
+    if act == "on_use" then
+      if hook.run("PlayerUseItem", player, self, ...) != nil then return end
     end
 
-    if (act == "on_drop") then
-      if (hook.run("PlayerDropItem", player, self.instance_id) != nil) then return end
+    if act == "on_drop" then
+      if hook.run("PlayerDropItem", player, self.instance_id) != nil then return end
     end
 
-    if (self[act]) then
-      if (act != "on_take" and act != "on_use" and act != "on_take") then
+    if self[act] then
+      if act != "on_take" and act != "on_use" and act != "on_take" then
         try {
           self[act], self, player, ...
         } catch {
@@ -131,32 +131,32 @@ if SERVER then
           end
         }
 
-        if (!SUCCEEDED) then return end
+        if !SUCCEEDED then return end
       end
 
-      if (self.action_sounds[act]) then
+      if self.action_sounds[act] then
         player:EmitSound(self.action_sounds[act])
       end
     end
 
-    if (act == "on_take") then
-      if (hook.run("PlayerTakenItem", player, self, ...) != nil) then return end
+    if act == "on_take" then
+      if hook.run("PlayerTakenItem", player, self, ...) != nil then return end
     end
 
-    if (act == "on_use") then
-      if (hook.run("PlayerUsedItem", player, self, ...) != nil) then return end
+    if act == "on_use" then
+      if hook.run("PlayerUsedItem", player, self, ...) != nil then return end
     end
 
-    if (act == "on_drop") then
-      if (hook.run("PlayerDroppedItem", player, self.instance_id, self, ...) != nil) then return end
+    if act == "on_drop" then
+      if hook.run("PlayerDroppedItem", player, self.instance_id, self, ...) != nil then return end
     end
   end
 
   netstream.Hook("ItemMenuAction", function(player, instance_id, action, ...)
     local itemTable = item.FindInstanceByID(instance_id)
 
-    if (!itemTable) then return end
-    if (hook.run("PlayerCanUseItem", player, itemTable, action, ...) == false) then return end
+    if !itemTable then return end
+    if hook.run("PlayerCanUseItem", player, itemTable, action, ...) == false then return end
 
     itemTable:do_menu_action(action, player, ...)
   end)
@@ -183,7 +183,7 @@ else
 end
 
 function Item:get_data(id, default)
-  if (!id) then return end
+  if !id then return end
 
   return self.data[id] or default
 end

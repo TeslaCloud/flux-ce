@@ -15,7 +15,7 @@ function PANEL:Close(callback)
   self:SetVisible(false)
   self:Remove()
 
-  if (callback) then
+  if callback then
     callback()
   end
 end
@@ -25,8 +25,8 @@ function PANEL:CollectData(newData)
 end
 
 function PANEL:OpenPanel(id)
-  if (IsValid(self.panel)) then
-    if (self.panel.OnClose) then
+  if IsValid(self.panel) then
+    if self.panel.OnClose then
       self.panel:OnClose(self)
     end
 
@@ -37,13 +37,13 @@ function PANEL:OpenPanel(id)
   self.panel:SetSize(self:GetWide(), self:GetTall() - 90)
   self.panel:SetPos(0, 90)
 
-  if (self.panel.OnOpen) then
+  if self.panel.OnOpen then
     self.panel:OnOpen(self)
   end
 
   hook.run("CharPanelCreated", id, self.panel)
 
-  if (IsValid(self.finishButton)) then
+  if IsValid(self.finishButton) then
     self.finishButton:SafeRemove()
   end
 
@@ -55,7 +55,7 @@ function PANEL:OpenPanel(id)
   self.finishButton:SizeToContents()
 
   self.finishButton.DoClick = function(btn)
-    if (self.panel.OnClose) then
+    if self.panel.OnClose then
       self.panel:OnClose(self)
     end
 

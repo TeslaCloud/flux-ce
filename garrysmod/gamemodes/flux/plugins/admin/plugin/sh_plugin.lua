@@ -14,7 +14,7 @@ function flAdmin:OnPluginLoaded()
 end
 
 function flAdmin:PluginIncludeFolder(extra, folder)
-  if (extra == "roles") then
+  if extra == "roles" then
     fl.admin:include_roles(folder.."/roles/")
 
     return true

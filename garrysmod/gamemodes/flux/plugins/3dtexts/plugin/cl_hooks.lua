@@ -4,7 +4,7 @@ function fl3DText:PostDrawOpaqueRenderables()
   local weapon = fl.client:GetActiveWeapon()
   local clientPos = fl.client:GetPos()
 
-  if (IsValid(weapon) and weapon:GetClass() == "gmod_tool" and weapon:GetMode() == "texts") then
+  if IsValid(weapon) and weapon:GetClass() == "gmod_tool" and weapon:GetMode() == "texts" then
     local tool = fl.client:GetTool()
     local text = tool:GetClientInfo("text")
     local style = tool:GetClientNumber("style")
@@ -16,15 +16,15 @@ function fl3DText:PostDrawOpaqueRenderables()
     angle:RotateAroundAxis(angle:Right(), 270)
 
     cam.Start3D2D(trace.HitPos + (normal * 1.25), angle, 0.1 * tool:GetClientNumber("scale"))
-      if (style >= 5) then
-        if (style != 8 and style != 9) then
+      if style >= 5 then
+        if style != 8 and style != 9 then
           draw.RoundedBox(0, -w * 0.5 - 32, -h * 0.5 - 16, w + 64, h + 32, ColorAlpha(Color(tool:GetClientInfo("extraColor") or "#FF000033"), 40))
         end
 
-        if (style == 7 or style == 8) then
+        if style == 7 or style == 8 then
           draw.RoundedBox(0, -w * 0.5 - 32, -h * 0.5 - 16, w + 64, 6, Color(255, 255, 255, 40))
           draw.RoundedBox(0, -w * 0.5 - 32, -h * 0.5 + h + 10, w + 64, 6, Color(255, 255, 255, 40))
-        elseif (style == 9) then
+        elseif style == 9 then
           local wide = w + 64
           local barColor = Color(255, 255, 255, 40)
           local barX, barY = -w * 0.5 - 32, -h * 0.5 - 16
@@ -54,12 +54,12 @@ function fl3DText:PostDrawOpaqueRenderables()
     local fadeOffset = v.fadeOffset or 1000
     local drawDistance = (1024 + fadeOffset)
 
-    if (distance > drawDistance) then continue end
+    if distance > drawDistance then continue end
 
     local fadeAlpha = 255
     local fadeDistance = (768 + fadeOffset)
 
-    if (distance > fadeDistance) then
+    if distance > fadeDistance then
       local d = distance - fadeDistance
       fadeAlpha = math.Clamp((255 * ((drawDistance - fadeDistance) - d) / (drawDistance - fadeDistance)), 0, 255)
     end
@@ -74,17 +74,17 @@ function fl3DText:PostDrawOpaqueRenderables()
     local w, h = util.text_size(text, theme.GetFont("Text_3D2D"))
     local posX, posY = -w * 0.5, -h * 0.5
 
-    if (style >= 2) then
+    if style >= 2 then
       cam.Start3D2D(pos + (normal * 0.4), angle, 0.1 * scale)
-        if (style >= 5) then
+        if style >= 5 then
           local boxAlpha = backColor.a
           local boxX, boxY = posX - 32, posY - 16
 
-          if (style == 6) then
+          if style == 6 then
             boxAlpha = boxAlpha * math.abs(math.sin(CurTime() * 3))
           end
 
-          if (style == 10) then
+          if style == 10 then
             render.ClearStencil()
             render.SetStencilEnable(true)
             render.SetStencilCompareFunction(STENCIL_ALWAYS)
@@ -113,16 +113,16 @@ function fl3DText:PostDrawOpaqueRenderables()
 
             surface.SetDrawColor(ColorAlpha(backColor, 10))
             surface.DrawRect(boxX, boxY, w + 64, h + 32)
-          elseif (style != 8 and style != 9) then
+          elseif style != 8 and style != 9 then
             draw.RoundedBox(0, boxX, posY - 16, w + 64, h + 32, ColorAlpha(v.extraColor, math.Clamp(fadeAlpha, 0, boxAlpha)))
           end
 
-          if (style == 7 or style == 8) then
+          if style == 7 or style == 8 then
             local barColor = Color(255, 255, 255, math.Clamp(fadeAlpha, 0, boxAlpha))
 
             draw.RoundedBox(0, boxX, boxY, w + 64, 6, barColor)
             draw.RoundedBox(0, boxX, boxY + h + 26, w + 64, 6, barColor)
-          elseif (style == 9) then
+          elseif style == 9 then
             local tall, wide = 6, w + 64
             local rectWidth = (wide / 3 - wide / 6) * 0.75
             local barColor = Color(255, 255, 255, math.Clamp(fadeAlpha, 0, boxAlpha))
@@ -141,13 +141,13 @@ function fl3DText:PostDrawOpaqueRenderables()
           end
         end
 
-        if (style != 3) then
+        if style != 3 then
           draw.SimpleText(text, theme.GetFont("Text_3D2D"), posX, posY, ColorAlpha(textColor, math.Clamp(fadeAlpha, 0, 100)):darken(30))
         end
       cam.End3D2D()
     end
 
-    if (style >= 3) then
+    if style >= 3 then
       cam.Start3D2D(pos + (normal * 0.95 * (scale + 0.5)), angle, 0.1 * scale)
         draw.SimpleText(text, theme.GetFont("Text_3D2D"), posX, posY, Color(0, 0, 0, math.Clamp(fadeAlpha, 0, 240)))
       cam.End3D2D()

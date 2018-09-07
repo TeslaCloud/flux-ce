@@ -22,11 +22,11 @@ do
   }
 
   function fl.SetColorModifyEnabled(bEnable)
-    if (!fl.client.colorModifyTable) then
+    if !fl.client.colorModifyTable then
       fl.client.colorModifyTable = defaultColorModify
     end
 
-    if (bEnable) then
+    if bEnable then
       fl.client.colorModify = true
 
       return true
@@ -44,13 +44,13 @@ do
   end
 
   function fl.SetColorModifyVal(strIndex, nValue)
-    if (!fl.client.colorModifyTable) then
+    if !fl.client.colorModifyTable then
       fl.client.colorModifyTable = defaultColorModify
     end
 
-    if (isstring(strIndex)) then
-      if (!strIndex:starts("$pp_colour_")) then
-        if (strIndex == "color") then strIndex = "colour" end
+    if isstring(strIndex) then
+      if !strIndex:starts("$pp_colour_") then
+        if strIndex == "color" then strIndex = "colour" end
 
         fl.client.colorModifyTable["$pp_colour_"..strIndex] = (isnumber(nValue) and nValue) or 0
       else
@@ -60,7 +60,7 @@ do
   end
 
   function fl.SetColorModifyTable(tab)
-    if (istable(tab)) then
+    if istable(tab) then
       fl.client.colorModifyTable = tab
     end
   end
@@ -112,7 +112,7 @@ function surface.DrawScaled(nPosX, nPosY, nScale, callback)
   matrix:Translate(-pos)
 
   cam.PushModelMatrix(matrix)
-    if (callback) then
+    if callback then
       Try("DrawScaled", callback, nPosX, nPosY, nScale)
     end
   cam.PopModelMatrix()
@@ -127,7 +127,7 @@ function surface.DrawRotated(nPosX, nPosY, angle, callback)
   matrix:Translate(-pos)
 
   cam.PushModelMatrix(matrix)
-    if (callback) then
+    if callback then
       Try("DrawRotated", callback, nPosX, nPosY, angle)
     end
   cam.PopModelMatrix()
@@ -145,7 +145,7 @@ do
   local cache = {}
 
   function surface.DrawCircle(x, y, radius, passes)
-    if (!x or !y or !radius) then
+    if !x or !y or !radius then
       error("surface.DrawCircle - Too few arguments to function call (3 expected)")
     end
 
@@ -155,7 +155,7 @@ do
     local id = x.."|"..y.."|"..radius.."|"..passes
     local info = cache[id]
 
-    if (!info) then
+    if !info then
       info = {}
 
       for i = 1, passes + 1 do
@@ -183,7 +183,7 @@ do
   end
 
   function surface.DrawPartialCircle(percentage, x, y, radius, passes)
-    if (!percentage or !x or !y or !radius) then
+    if !percentage or !x or !y or !radius then
       error("surface.DrawPartialCircle - Too few arguments to function call (4 expected)")
     end
 
@@ -193,12 +193,12 @@ do
     local id = percentage.."|"..x.."|"..y.."|"..radius.."|"..passes
     local info = cache[id]
 
-    if (!info) then
+    if !info then
       info = {}
 
       local startAngle, endAngle, step = -90, 360 / 100 * percentage - 90, 360 / passes
 
-      if (math.abs(startAngle - endAngle) != 0) then
+      if math.abs(startAngle - endAngle) != 0 then
         table.insert(info, {x = 0, y = 0})
       end
 
@@ -275,7 +275,7 @@ function draw.RoundedBoxOutline(rounding, x, y, w, h, thickness, color, rounding
 end
 
 function draw.TexturedRect(material, x, y, w, h, color)
-  if (!material) then return end
+  if !material then return end
 
   color = (IsColor(color) and color) or Color(255, 255, 255)
 
@@ -296,7 +296,7 @@ do
 
     ang = ang + FrameTime() * 32
 
-    if (ang >= 360) then
+    if ang >= 360 then
       ang = 0
     end
   end

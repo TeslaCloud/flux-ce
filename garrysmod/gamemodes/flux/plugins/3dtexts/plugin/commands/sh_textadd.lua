@@ -6,7 +6,7 @@ COMMAND.category = "misc"
 COMMAND.arguments = 1
 
 function COMMAND:on_run(player, text, scale, style, color, extraColor)
-  if (!text or text == "") then
+  if !text or text == "" then
     fl.player:notify(player, t('3d_text.not_enough_text'))
 
     return

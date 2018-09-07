@@ -42,10 +42,10 @@ do
   function GM:Tick()
     local curTime = CurTime()
 
-    if (curTime >= nextCheck) then
+    if curTime >= nextCheck then
       local newW, newH = ScrW(), ScrH()
 
-      if (scrW != newW or scrH != newH) then
+      if scrW != newW or scrH != newH then
         fl.print("Resolution changed from "..scrW.."x"..scrH.." to "..newW.."x"..newH..".")
 
         hook.run("OnResolutionChanged", newW, newH, scrW, scrH)
@@ -74,8 +74,8 @@ end
 
 -- Called when the scoreboard should be shown.
 function GM:ScoreboardShow()
-  if (hook.run("ShouldScoreboardShow") != false) then
-    if (fl.tabMenu and fl.tabMenu.CloseMenu) then
+  if hook.run("ShouldScoreboardShow") != false then
+    if fl.tabMenu and fl.tabMenu.CloseMenu then
       fl.tabMenu:CloseMenu(true)
     end
 
@@ -87,8 +87,8 @@ end
 
 -- Called when the scoreboard should be hidden.
 function GM:ScoreboardHide()
-  if (hook.run("ShouldScoreboardHide") != false) then
-    if (fl.tabMenu and fl.tabMenu.heldTime and CurTime() >= fl.tabMenu.heldTime) then
+  if hook.run("ShouldScoreboardHide") != false then
+    if fl.tabMenu and fl.tabMenu.heldTime and CurTime() >= fl.tabMenu.heldTime then
       fl.tabMenu:CloseMenu()
     end
   end
@@ -97,24 +97,24 @@ end
 function GM:HUDDrawScoreBoard()
   self.BaseClass:HUDDrawScoreBoard()
 
-  if (!fl.client or !fl.client:HasInitialized() or hook.run("ShouldDrawLoadingScreen")) then
+  if !fl.client or !fl.client:HasInitialized() or hook.run("ShouldDrawLoadingScreen") then
     local text = t"loading.schema"
     local percentage = 80
 
-    if (!fl.localPlayerCreated) then
+    if !fl.localPlayerCreated then
       text = t"loading.local_player"
       percentage = 0
-    elseif (!fl.shared_received) then
+    elseif !fl.shared_received then
       text = t"loading.shared"
       percentage = 45
     end
 
     local hooked, hookedPercentage = plugin.call("GetLoadingScreenMessage")
 
-    if (isstring(hooked)) then
+    if isstring(hooked) then
       text = hooked
 
-      if (isnumber(hookedPercentage)) then
+      if isnumber(hookedPercentage) then
         percentage = hookedPercentage
       end
     end
@@ -141,28 +141,28 @@ end
 
 -- Called when the player's HUD is drawn.
 function GM:HUDPaint()
-  if (fl.client:HasInitialized() and hook.run("ShouldHUDPaint") != false) then
+  if fl.client:HasInitialized() and hook.run("ShouldHUDPaint") != false then
     local curTime = CurTime()
     local scrW, scrH = ScrW(), ScrH()
 
-    if (fl.client.lastDamage and fl.client.lastDamage > (curTime - 0.3)) then
+    if fl.client.lastDamage and fl.client.lastDamage > (curTime - 0.3) then
       local alpha = math.Clamp(255 - 255 * (curTime - fl.client.lastDamage) * 3.75, 0, 200)
       draw.TexturedRect(util.get_material("materials/flux/hl2rp/blood.png"), 0, 0, scrW, scrH, Color(255, 0, 0, alpha))
       draw.RoundedBox(0, 0, 0, scrW, scrH, Color(255, 210, 210, alpha))
     end
 
-    if (!fl.client:Alive()) then
+    if !fl.client:Alive() then
       hook.run("HUDPaintDeathBackground", curTime, scrW, scrH)
         theme.Call("PaintDeathScreen", curTime, scrW, scrH)
       hook.run("HUDPaintDeathForeground", curTime, scrW, scrH)
     else
       fl.client.respawnAlpha = 0
 
-      if (isnumber(fl.client.whiteAlpha) and fl.client.whiteAlpha > 0.5) then
+      if isnumber(fl.client.whiteAlpha) and fl.client.whiteAlpha > 0.5 then
         fl.client.whiteAlpha = Lerp(0.04, fl.client.whiteAlpha, 0)
       end
 
-      if (!hook.run("FLHUDPaint", curTime, scrW, scrH)) then
+      if !hook.run("FLHUDPaint", curTime, scrW, scrH) then
         fl.bars:DrawTopBars()
 
         self.BaseClass:HUDPaint()
@@ -176,7 +176,7 @@ end
 function GM:FLHUDPaint(curTime, scrW, scrH)
   local percentage = fl.client.circleActionPercentage
 
-  if (percentage and percentage > -1) then
+  if percentage and percentage > -1 then
     local x, y = ScrC()
 
     surface.SetDrawColor(0, 0, 0, 200)
@@ -195,18 +195,18 @@ function GM:HUDPaintDeathBackground(curTime, w, h)
 end
 
 function GM:HUDDrawTargetID()
-  if (IsValid(fl.client) and fl.client:Alive()) then
+  if IsValid(fl.client) and fl.client:Alive() then
     local trace = fl.client:GetEyeTraceNoCursor()
     local ent = trace.Entity
 
-    if (IsValid(ent)) then
+    if IsValid(ent) then
       local screenPos = (trace.HitPos + Vector(0, 0, 16)):ToScreen()
       local x, y = screenPos.x, screenPos.y
       local distance = fl.client:GetPos():Distance(trace.HitPos)
 
-      if (ent:IsPlayer()) then
+      if ent:IsPlayer() then
         hook.run("DrawPlayerTargetID", ent, x, y, distance)
-      elseif (ent.DrawTargetID) then
+      elseif ent.DrawTargetID then
         ent:DrawTargetID(x, y, distance)
       end
     end
@@ -214,12 +214,12 @@ function GM:HUDDrawTargetID()
 end
 
 function GM:DrawPlayerTargetID(player, x, y, distance)
-  if (distance < 640) then
+  if distance < 640 then
     local alpha = 255
     local tooltip_small = theme.GetFont("Tooltip_Small")
     local tooltip_large = theme.GetFont("Tooltip_Large")
 
-    if (distance > 500) then
+    if distance > 500 then
       local d = distance - 500
       alpha = math.Clamp((255 * (140 - d) / 140), 0, 255)
     end
@@ -230,8 +230,8 @@ function GM:DrawPlayerTargetID(player, x, y, distance)
     local width, height = util.text_size(player:GetPhysDesc(), tooltip_small)
     draw.SimpleText(player:GetPhysDesc(), tooltip_small, x - width * 0.5, y - 14, Color(255, 255, 255, alpha))
 
-    if (distance < 125) then
-      if (distance > 90) then
+    if distance < 125 then
+      if distance > 90 then
         local d = distance - 90
         alpha = math.Clamp((255 * (35 - d) / 35), 0, 255)
       end
@@ -246,7 +246,7 @@ end
 
 function GM:PopulateToolMenu()
   for ToolName, TOOL in pairs(fl.tool:GetAll()) do
-    if (TOOL.AddToMenu != false) then
+    if TOOL.AddToMenu != false then
       spawnmenu.AddToolMenuOption(
         TOOL.Tab or "Main",
         TOOL.category or "New Category",
@@ -271,7 +271,7 @@ function GM:SynchronizeTools()
 end
 
 function GM:RenderScreenspaceEffects()
-  if (fl.client.colorModify) then
+  if fl.client.colorModify then
     DrawColorModify(fl.client.colorModifyTable)
   end
 end
@@ -305,8 +305,8 @@ function GM:AddAdminMenuItems(panel, sidebar)
 end
 
 function GM:PlayerBindPress(player, bind, bPressed)
-  if (bind:find("gmod_undo") and bPressed) then
-    if (hook.run("SoftUndo", player) != nil) then
+  if bind:find("gmod_undo") and bPressed then
+    if hook.run("SoftUndo", player) != nil then
       return true
     end
   end
@@ -319,7 +319,7 @@ end
 function GM:SoftUndo(player)
   netstream.Start("soft_undo")
 
-  if (#fl.undo:get_player(fl.client) > 0) then return true end
+  if #fl.undo:get_player(fl.client) > 0 then return true end
 end
 
 do
@@ -334,7 +334,7 @@ do
   }
 
   function GM:HUDShouldDraw(element)
-    if (hiddenElements[element]) then
+    if hiddenElements[element] then
       return false
     end
 

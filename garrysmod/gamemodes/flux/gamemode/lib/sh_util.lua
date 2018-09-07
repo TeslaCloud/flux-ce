@@ -11,10 +11,10 @@ function Try(id, func, ...)
   local success = result[1]
   table.remove(result, 1)
 
-  if (!success) then
+  if !success then
     ErrorNoHalt("[Try:"..id.."] Failed to run the function!\n")
     ErrorNoHalt(unpack(result), "\n")
-  elseif (result[1] != nil) then
+  elseif result[1] != nil then
     return unpack(result)
   end
 end
@@ -29,7 +29,7 @@ do
     local args = {}
 
     for k, v in ipairs(tab) do
-      if (k != 1) then
+      if k != 1 then
         table.insert(args, v)
       end
     end
@@ -49,16 +49,16 @@ do
 
     SUCCEEDED = true
 
-    if (!success) then
+    if !success then
       SUCCEEDED = false
 
-      if (isfunction(handler[1])) then
+      if isfunction(handler[1]) then
         handler[1](unpack(result))
       else
         ErrorNoHalt("[Try:Exception] Failed to run the function!\n")
         ErrorNoHalt(unpack(result), "\n")
       end
-    elseif (result[1] != nil) then
+    elseif result[1] != nil then
       return unpack(result)
     end
   end
@@ -108,10 +108,10 @@ do
     if CLIENT then
       local lang = fl.lang:GetTable(GetConVar("gmod_language"):GetString())
 
-      if (lang and isfunction(lang.IsVowel)) then
+      if lang and isfunction(lang.IsVowel) then
         local override = lang:IsVowel(char)
 
-        if (override != nil) then
+        if override != nil then
           return override
         end
       end
@@ -123,13 +123,13 @@ end
 
 -- A function to remove a substring from the end of the string.
 function string.trim_end(str, needle, all_occurences)
-  if (!needle or needle == "") then
+  if !needle or needle == "" then
     return str
   end
 
-  if (str:ends(needle)) then
-    if (all_occurences) then
-      while (str:ends(needle)) do
+  if str:ends(needle) then
+    if all_occurences then
+      while str:ends(needle) do
         str = str:trim_end(needle)
       end
 
@@ -144,13 +144,13 @@ end
 
 -- A function to remove a substring from the beginning of the string.
 function string.trim_start(str, needle, all_occurences)
-  if (!needle or needle == "") then
+  if !needle or needle == "" then
     return str
   end
 
-  if (str:starts(needle)) then
-    if (all_occurences) then
-      while (str:starts(needle)) do
+  if str:starts(needle) then
+    if all_occurences then
+      while str:starts(needle) do
         str = str:trim_start(needle)
       end
 
@@ -179,10 +179,10 @@ end
 function util.validate(...)
   local validate = {...}
 
-  if (#validate <= 0) then return false end
+  if #validate <= 0 then return false end
 
   for k, v in ipairs(validate) do
-    if (!IsValid(v)) then
+    if !IsValid(v) then
       return false
     end
   end
@@ -193,9 +193,9 @@ end
 -- A function to include a file based on it's prefix.
 function util.include(file_name)
   if SERVER then
-    if (string.find(file_name, "cl_")) then
+    if string.find(file_name, "cl_") then
       AddCSLuaFile(file_name)
-    elseif (string.find(file_name, "sv_") or string.find(file_name, "init.lua")) then
+    elseif string.find(file_name, "sv_") or string.find(file_name, "init.lua") then
       return include(file_name)
     else
       AddCSLuaFile(file_name)
@@ -203,7 +203,7 @@ function util.include(file_name)
       return include(file_name)
     end
   else
-    if (!string.find(file_name, "sv_") and file_name != "init.lua" and !file_name:ends("/init.lua")) then
+    if !string.find(file_name, "sv_") and file_name != "init.lua" and !file_name:ends("/init.lua") then
       return include(file_name)
     end
   end
@@ -212,7 +212,7 @@ end
 -- A function to add a file to clientside downloads list based on it's prefix.
 function util.add_cs_lua(file_name)
   if SERVER then
-    if (string.find(file_name, "sh_") or string.find(file_name, "cl_") or string.find(file_name, "shared.lua")) then
+    if string.find(file_name, "sh_") or string.find(file_name, "cl_") or string.find(file_name, "shared.lua") then
       AddCSLuaFile(file_name)
     end
   end
@@ -220,26 +220,26 @@ end
 
 -- A function to include all files in a directory.
 function util.include_folder(dir, base, recursive)
-  if (base) then
-    if (isbool(base)) then
+  if base then
+    if isbool(base) then
       base = "flux/gamemode/"
-    elseif (!base:ends("/")) then
+    elseif !base:ends("/") then
       base = base.."/"
     end
 
     dir = base..dir
   end
 
-  if (!dir:ends("/")) then
+  if !dir:ends("/") then
     dir = dir.."/"
   end
 
-  if (recursive) then
+  if recursive then
     local files, folders = _file.Find(dir.."*", "LUA", "namedesc")
 
     -- First include the files.
     for k, v in ipairs(files) do
-      if (v:GetExtensionFromFilename() == "lua") then
+      if v:GetExtensionFromFilename() == "lua" then
         util.include(dir..v)
       end
     end
@@ -262,7 +262,7 @@ do
 
   -- A function to get a material. It caches the material automatically.
   function util.get_material(mat)
-    if (!materialCache[mat]) then
+    if !materialCache[mat] then
       materialCache[mat] = Material(mat)
     end
 
@@ -275,7 +275,7 @@ do
 
   -- A function to convert a single hexadecimal digit to decimal.
   function util.hex_to_decimal(hex)
-    if (isnumber(hex)) then
+    if isnumber(hex) then
       return hex
     end
 
@@ -283,14 +283,14 @@ do
 
     local negative = false
 
-    if (hex:starts("-")) then
+    if hex:starts("-") then
       hex = hex:sub(2, 2)
       negative = true
     end
 
     for k, v in ipairs(hex_digits) do
-      if (v == hex) then
-        if (!negative) then
+      if v == hex then
+        if !negative then
           return k - 1
         else
           return -(k - 1)
@@ -322,19 +322,19 @@ end
 
 -- A function to convert hexadecimal color to a color structure.
 function util.hex_to_color(hex)
-  if (hex:starts("#")) then
+  if hex:starts("#") then
     hex = hex:sub(2, hex:len())
   end
 
   local len = hex:len()
 
-  if (len != 3 and len != 6 and len != 8) then
+  if len != 3 and len != 6 and len != 8 then
     return Color(255, 255, 255)
   end
 
   local hex_colors = {}
 
-  if (len == 3) then
+  if len == 3 then
     for i = 1, 3 do
       local v = hex[i]
 
@@ -346,7 +346,7 @@ function util.hex_to_color(hex)
     for i = 1, len * 0.5 do
       table.insert(hex_colors, hex:sub(1, 2))
 
-      if (i != initial_length) then
+      if i != initial_length then
         hex = hex:sub(3, hex:len())
       end
     end
@@ -539,42 +539,42 @@ end
 function player.random()
   local allPly = player.GetAll()
 
-  if (#allPly > 0) then
+  if #allPly > 0 then
     return allPly[math.random(1, #allPly)]
   end
 end
 
 -- A function to find player based on their name or steam_id.
 function player.find(name, case_sensitive, return_first)
-  if (name == nil) then return end
-  if (!isstring(name)) then return (IsValid(name) and name) or nil end
+  if name == nil then return end
+  if !isstring(name) then return (IsValid(name) and name) or nil end
 
   local hits = {}
   local isSteamID = name:starts("STEAM_")
 
   for k, v in ipairs(_player.GetAll()) do
-    if (isSteamID) then
-      if (v:SteamID() == name) then
+    if isSteamID then
+      if v:SteamID() == name then
         return v
       end
 
       continue
     end
 
-    if (v:Name(true):find(name)) then
+    if v:Name(true):find(name) then
       table.insert(hits, v)
-    elseif (!case_sensitive and v:Name(true):utf8lower():find(name:utf8lower())) then
+    elseif !case_sensitive and v:Name(true):utf8lower():find(name:utf8lower()) then
       table.insert(hits, v)
-    elseif (v:SteamName():utf8lower():find(name:utf8lower())) then
+    elseif v:SteamName():utf8lower():find(name:utf8lower()) then
       table.insert(hits, v)
     end
 
-    if (return_first and #hits > 0) then
+    if return_first and #hits > 0 then
       return hits[1]
     end
   end
 
-  if (#hits > 1) then
+  if #hits > 1 then
     return hits
   else
     return hits[1]
@@ -593,15 +593,15 @@ end
 
 -- A function to find all occurences of a substring in a string.
 function string.find_all(str, pattern)
-  if (!str or !pattern) then return end
+  if !str or !pattern then return end
 
   local hits = {}
   local lastPos = 1
 
-  while (true) do
+  while true do
     local startPos, end_pos = string.find(str, pattern, lastPos)
 
-    if (!startPos) then
+    if !startPos then
       break
     end
 
@@ -618,7 +618,7 @@ function string.is_command(str)
   local prefixes = config.Get("command_prefixes") or {}
 
   for k, v in ipairs(prefixes) do
-    if (str:starts(v) and hook.run("StringIsCommand", str) != false) then
+    if str:starts(v) and hook.run("StringIsCommand", str) != false then
       return true, string.utf8len(v)
     end
   end
@@ -665,7 +665,7 @@ do
   function util.text_size(text, font)
     font = font or "default"
 
-    if (cache[text] and cache[text][font]) then
+    if cache[text] and cache[text][font] then
       local text_size = cache[text][font]
 
       return text_size[1], text_size[2]
@@ -695,10 +695,10 @@ function util.font_size(font)
 end
 
 function util.get_panel_class(panel)
-  if (panel and panel.GetTable) then
+  if panel and panel.GetTable then
     local pTable = panel:GetTable()
 
-    if (pTable and pTable.ClassName) then
+    if pTable and pTable.ClassName then
       return pTable.ClassName
     end
   end
@@ -708,12 +708,12 @@ end
 function util.fit_to_aspect(x, y, x2, y2)
   local aspect = x / y
 
-  if (x > x2) then
+  if x > x2 then
     x = x2
     y = x * aspect
   end
 
-  if (y > y2) then
+  if y > y2 then
     y = y2
     x = y * aspect
   end
@@ -754,7 +754,7 @@ function util.cubic_ease_out_t(steps, from, to)
 end
 
 function util.cubic_ease_in_out(curStep, steps, from, to)
-  if (curStep > (steps * 0.5)) then
+  if curStep > (steps * 0.5) then
     return util.cubic_ease_out(curStep - steps * 0.5, steps * 0.5, from, to)
   else
     return util.cubic_ease_in(curStep, steps, from, to)
@@ -774,13 +774,13 @@ end
 function util.wait_for_ent(entIndex, callback, delay, waitTime)
   local entity = Entity(entIndex)
 
-  if (!IsValid(entity)) then
+  if !IsValid(entity) then
     local timerName = CurTime().."_EntWait"
 
     timer.Create(timerName, delay or 0, waitTime or 100, function()
       local entity = Entity(entIndex)
 
-      if (IsValid(entity)) then
+      if IsValid(entity) then
         callback(entity)
 
         timer.Remove(timerName)
@@ -803,8 +803,8 @@ function util.vectors_intersect(vFrom, vTo, vFrom2, vTo2)
   d1 = (a1 * vFrom2.x) + (b1 * vFrom2.y) + c1
   d2 = (a1 * vTo2.x) + (b1 * vTo2.y) + c1
 
-  if (d1 > 0 and d2 > 0) then return false end
-  if (d1 < 0 and d2 < 0) then return false end
+  if d1 > 0 and d2 > 0 then return false end
+  if d1 < 0 and d2 < 0 then return false end
 
   a2 = vTo2.y - vFrom2.y
   b2 = vFrom2.x - vTo2.x
@@ -813,8 +813,8 @@ function util.vectors_intersect(vFrom, vTo, vFrom2, vTo2)
   d1 = (a2 * vFrom.x) + (b2 * vFrom.y) + c2
   d2 = (a2 * vTo.x) + (b2 * vTo.y) + c2
 
-  if (d1 > 0 and d2 > 0) then return false end
-  if (d1 < 0 and d2 < 0) then return false end
+  if d1 > 0 and d2 > 0 then return false end
+  if d1 < 0 and d2 < 0 then return false end
 
   -- Vectors are collinear or intersect.
   -- No need for further checks.
@@ -823,7 +823,7 @@ end
 
 -- A function to determine whether a 2D point is inside of a 2D polygon.
 function util.vector_in_poly(point, polyVertices)
-  if (!isvector(point) or !istable(polyVertices) or !isvector(polyVertices[1])) then
+  if !isvector(point) or !istable(polyVertices) or !isvector(polyVertices[1]) then
     return
   end
 
@@ -832,20 +832,20 @@ function util.vector_in_poly(point, polyVertices)
   for k, v in ipairs(polyVertices) do
     local nextVert
 
-    if (k < #polyVertices) then
+    if k < #polyVertices then
       nextVert = polyVertices[k + 1]
-    elseif (k == #polyVertices) then
+    elseif k == #polyVertices then
       nextVert = polyVertices[1]
     end
 
-    if (nextVert and util.vectors_intersect(point, Vector(99999, 99999, 0), v, nextVert)) then
+    if nextVert and util.vectors_intersect(point, Vector(99999, 99999, 0), v, nextVert) then
       intersections = intersections + 1
     end
   end
 
   -- Check whether number of intersections is even or odd.
   -- If it's odd then the point is inside the polygon.
-  if (intersections % 2 == 0) then
+  if intersections % 2 == 0 then
     return false
   else
     return true
@@ -893,11 +893,11 @@ function table.safe_merge(to, from)
 end
 
 function util.list_to_string(callback, separator, ...)
-  if (!isfunction(callback)) then
+  if !isfunction(callback) then
     callback = function(obj) return tostring(obj) end
   end
 
-  if (!isstring(separator)) then
+  if !isstring(separator) then
     separator = ", "
   end
 
@@ -907,11 +907,11 @@ function util.list_to_string(callback, separator, ...)
   for k, v in ipairs(list) do
     local text = callback(v)
 
-    if (isstring(text)) then
+    if isstring(text) then
       result = result..text
     end
 
-    if (k < #list) then
+    if k < #list then
       result = result..separator
     end
   end
@@ -923,7 +923,7 @@ function util.player_list_to_string(...)
   local list = {...}
   local nlist = #list
 
-  if (nlist > 1 and nlist == #_player.GetAll()) then
+  if nlist > 1 and nlist == #_player.GetAll() then
     return t"chat.everyone"
   end
 
@@ -952,7 +952,7 @@ function string.spelling(str)
 
   str = str:utf8sub(1, 1):utf8upper()..str:utf8sub(2, len)
 
-  if ((end_text != ".") and (end_text != "!") and (end_text != "?") and ((end_text != '"'))) then
+  if (end_text != ".") and (end_text != "!") and (end_text != "?") and ((end_text != '"')) then
     str = str.."."
   end
 
@@ -965,17 +965,17 @@ function util.remove_newlines(str)
   local skip = ""
 
   for k, v in ipairs(exploded) do
-    if (skip != "") then
+    if skip != "" then
       to_ret = to_ret..v
 
-      if (v == skip) then
+      if v == skip then
         skip = ""
       end
 
       continue
     end
 
-    if (v == "\"") then
+    if v == "\"" then
       skip = "\""
 
       to_ret = to_ret..v
@@ -983,7 +983,7 @@ function util.remove_newlines(str)
       continue
     end
 
-    if (v == "\n" or v == "\t") then
+    if v == "\n" or v == "\t" then
       continue
     end
 
@@ -1000,25 +1000,25 @@ function util.table_from_string(str)
   local tab = {}
 
   for k, v in ipairs(exploded) do
-    if (!isstring(v)) then continue end
+    if !isstring(v) then continue end
 
-    if (!string.find(v, "=")) then
+    if !string.find(v, "=") then
       v = v:trim_start(" ", true)
 
-      if (string.is_n(v)) then
+      if string.is_n(v) then
         v = tonumber(v)
-      elseif (string.find(v, "\"")) then
+      elseif string.find(v, "\"") then
         v = v:trim_start("\""):trim_end("\"")
-      elseif (v:find("{")) then
+      elseif v:find("{") then
         v = v:Replace("{", "")
 
         local last_key = nil
         local buff = v
 
         for k2, v2 in ipairs(exploded) do
-          if (k2 <= k) then continue end
+          if k2 <= k then continue end
 
-          if (v2:find("}")) then
+          if v2:find("}") then
             buff = buff..","..v2:Replace("}", "")
 
             last_key = k2
@@ -1029,7 +1029,7 @@ function util.table_from_string(str)
           buff = buff..","..v2
         end
 
-        if (last_key) then
+        if last_key then
           for i = k, last_key do
             exploded[i] = nil
           end
@@ -1049,9 +1049,9 @@ function util.table_from_string(str)
       local key = parts[1]:trim_end(" ", true):trim_end("\t", true)
       local value = parts[2]:trim_start(" ", true):trim_start("\t", true)
 
-      if (string.is_n(value)) then
+      if string.is_n(value) then
         value = tonumber(value)
-      elseif (value:find("{") and value:find("}")) then
+      elseif value:find("{") and value:find("}") then
         value = util.table_from_string(value)
       else
         value = value:trim_end("}")
@@ -1065,11 +1065,11 @@ function util.table_from_string(str)
 end
 
 function util.remove_functions(obj)
-  if (istable(obj)) then
+  if istable(obj) then
     for k, v in pairs(obj) do
-      if (isfunction(v)) then
+      if isfunction(v) then
         obj[k] = nil
-      elseif (istable(v)) then
+      elseif istable(v) then
         obj[k] = util.remove_functions(v)
       end
     end
@@ -1131,18 +1131,18 @@ if CLIENT then
   local loading_cache = {}
 
   function util.cache_url_material(url)
-    if (isstring(url) and url != "") then
+    if isstring(url) and url != "" then
       local url_crc = util.CRC(url)
       local exploded = string.Explode("/", url)
 
-      if (istable(exploded) and #exploded > 0) then
+      if istable(exploded) and #exploded > 0 then
         local extension = string.GetExtensionFromFilename(exploded[#exploded])
 
-        if (extension) then
+        if extension then
           local extension = "."..extension
           local path = "flux/materials/"..url_crc..extension
 
-          if (_file.Exists(path, "DATA")) then
+          if _file.Exists(path, "DATA") then
             cache[url_crc] = Material("../data/"..path, "noclamp smooth")
 
             return
@@ -1152,7 +1152,7 @@ if CLIENT then
           local currentPath = ""
 
           for k, v in pairs(directories) do
-            if (k < #directories) then
+            if k < #directories then
               currentPath = currentPath..v.."/"
               file.CreateDir(currentPath)
             end
@@ -1175,11 +1175,11 @@ if CLIENT then
   function URLMaterial(url)
     local url_crc = util.CRC(url)
 
-    if (cache[url_crc]) then
+    if cache[url_crc] then
       return cache[url_crc]
     end
 
-    if (!loading_cache[url_crc]) then
+    if !loading_cache[url_crc] then
       util.cache_url_material(url)
       loading_cache[url_crc] = true
     end
@@ -1188,7 +1188,7 @@ if CLIENT then
   end
 
   function util.wrap_text(text, font, width, initial_width)
-    if (!text or !font or !width) then return end
+    if !text or !font or !width then return end
 
     local output = {}
     local spaceWidth = util.text_size(" ", font)
@@ -1202,17 +1202,17 @@ if CLIENT then
       local remain = width - cur_width
 
       -- The width of the word is LESS OR EQUAL than what we have remaining.
-      if (w <= remain) then
+      if w <= remain then
         current_word = current_word..v.." "
         cur_width = cur_width + w + spaceWidth
       else -- The width of the word is MORE than what we have remaining.
-        if (w > width) then -- The width is more than total width we have available.
+        if w > width then -- The width is more than total width we have available.
           for _, v2 in ipairs(string.Explode("", v)) do
             local char_width, _ = util.text_size(v2, font)
 
             remain = width - cur_width
 
-            if ((char_width + dashWidth + spaceWidth) < remain) then
+            if (char_width + dashWidth + spaceWidth) < remain then
               current_word = current_word..v2
               cur_width = cur_width + char_width
             else
@@ -1237,7 +1237,7 @@ if CLIENT then
     end
 
     -- If we have some characters remaining, drop them into the lines table.
-    if (current_word != "") then
+    if current_word != "" then
       table.insert(output, current_word)
     end
 
@@ -1248,7 +1248,7 @@ end
 function util.text_color_from_base(base_color)
   local average = (base_color.r + base_color.g + base_color.b) / 3
 
-  if (average > 125) then
+  if average > 125 then
     return Color(0, 0, 0)
   else
     return Color(255, 255, 255)

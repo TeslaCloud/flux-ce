@@ -13,13 +13,13 @@ function COMMAND:on_run(player, targets, duration, ...)
 
   duration = fl.admin:InterpretBanTime(duration)
 
-  if (!isnumber(duration)) then
+  if !isnumber(duration) then
     fl.player:notify(player, "'"..tostring(duration).."' could not be interpreted as duration!")
 
     return
   end
 
-  if (#pieces > 0) then
+  if #pieces > 0 then
     reason = string.Implode(" ", pieces)
   end
 
@@ -30,7 +30,7 @@ function COMMAND:on_run(player, targets, duration, ...)
   for k, v in ipairs(_player.GetAll()) do
     local time = t("time.for", fl.lang:nice_time_full(v:get_nv("language"), duration))
 
-    if (duration <= 0) then time = t"time.permanently" end
+    if duration <= 0 then time = t"time.permanently" end
 
     v:Notify('ban_message', {
       admin = (IsValid(player) and player:Name()) or "Console",

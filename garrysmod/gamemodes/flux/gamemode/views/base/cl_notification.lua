@@ -18,7 +18,7 @@ function PANEL:SizeToContents()
 
     self.fontSize = h
 
-    if (bX < w) then bX = w end
+    if bX < w then bX = w end
 
     bY = bY + h + 4
   end
@@ -36,7 +36,7 @@ end
 
 function PANEL:SetLifetime(time)
   timer.Simple(time, function()
-    if (IsValid(self)) then
+    if IsValid(self) then
       self:SafeRemove()
     end
   end)
@@ -45,7 +45,7 @@ function PANEL:SetLifetime(time)
 end
 
 function PANEL:SetText(text)
-  if (text:find("\n")) then
+  if text:find("\n") then
     text = string.Explode("\n", text)
   else
     text = {text}
@@ -60,23 +60,23 @@ function PANEL:Think()
   local curTime = CurTime()
   local frameTime = FrameTime() / 0.006
 
-  if ((curTime - self.creationTime) > self.lifetime - 1.25) then
+  if (curTime - self.creationTime) > self.lifetime - 1.25 then
     self.curAlpha = self.curAlpha - 3 * frameTime
-  elseif (self.curAlpha < 230) then
+  elseif self.curAlpha < 230 then
     self.curAlpha = self.curAlpha + 4 * frameTime
   end
 
-  if (self.PostThink) then
+  if self.PostThink then
     self:PostThink()
   end
 end
 
 function PANEL:Paint(width, height)
-  if (!theme.Hook("PaintNotificationContainer", self, width, height)) then
+  if !theme.Hook("PaintNotificationContainer", self, width, height) then
     draw.RoundedBox(0, 0, 0, width, height, ColorAlpha(self.backgroundColor, self.curAlpha))
   end
 
-  if (!theme.Hook("PaintNotificationText", self, width, height)) then
+  if !theme.Hook("PaintNotificationText", self, width, height) then
     local curY = 4
 
     for k, v in ipairs(self.notificationText) do

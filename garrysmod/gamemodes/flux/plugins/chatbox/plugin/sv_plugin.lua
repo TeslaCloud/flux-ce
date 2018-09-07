@@ -24,14 +24,14 @@ function chatbox.AddFilter(id, data)
 end
 
 function chatbox.CanHear(listener, messageData)
-  if (listener:HasInitialized()) then
+  if listener:HasInitialized() then
     local position, radius = messageData.position, messageData.radius
 
-    if (!isnumber(radius)) then return false end
-    if (radius == 0) then return true end
-    if (radius < 0) then return false end
+    if !isnumber(radius) then return false end
+    if radius == 0 then return true end
+    if radius < 0 then return false end
 
-    if (position:Distance(listener:GetPos()) <= radius) then
+    if position:Distance(listener:GetPos()) <= radius then
       return true
     end
   end
@@ -59,8 +59,8 @@ function chatbox.AddText(listeners, ...)
     maxHeight = 20
   }
 
-  if (!istable(listeners)) then
-    if (IsValid(listeners)) then
+  if !istable(listeners) then
+    if IsValid(listeners) then
       listeners = {listeners}
     else
       listeners = _player.GetAll()
@@ -69,33 +69,33 @@ function chatbox.AddText(listeners, ...)
 
   -- Compile the initial message data table.
   for k, v in ipairs({...}) do
-    if (isstring(v)) then
+    if isstring(v) then
       table.insert(messageData.data, v)
 
-      if (k == 1) then
+      if k == 1 then
         messageData.text = v
       end
-    elseif (isnumber(v)) then
+    elseif isnumber(v) then
       table.insert(messageData.data, v)
 
-      if (messageData.maxHeight < v) then
+      if messageData.maxHeight < v then
         messageData.maxHeight = v
       end
-    elseif (IsColor(v)) then
+    elseif IsColor(v) then
       table.insert(messageData.data, v)
-    elseif (istable(v)) then
-      if (!v.isData and !clientMode) then
+    elseif istable(v) then
+      if !v.isData and !clientMode then
         table.merge(messageData, v)
       else
         table.insert(messageData.data, v)
       end
-    elseif (IsValid(v)) then
+    elseif IsValid(v) then
       table.insert(messageData.data, v)
     end
   end
 
   for k, v in ipairs(listeners) do
-    if (chatbox.PlayerCanHear(v, messageData)) then
+    if chatbox.PlayerCanHear(v, messageData) then
       netstream.Start(v, "Chatbox::AddMessage", messageData)
     end
   end
@@ -106,7 +106,7 @@ function chatbox.SetClientMode(bClientMode)
 end
 
 netstream.Hook("Chatbox::AddText", function(player, ...)
-  if (!IsValid(player)) then return end
+  if !IsValid(player) then return end
 
   chatbox.SetClientMode(true)
   chatbox.AddText(player, ...)
@@ -114,12 +114,12 @@ netstream.Hook("Chatbox::AddText", function(player, ...)
 end)
 
 netstream.Hook("Chatbox::PlayerSay", function(player, text, bTeamChat)
-  if (!IsValid(player)) then return end
+  if !IsValid(player) then return end
 
   local playerSayOverride = hook.run("PlayerSay", player, text, bTeamChat)
 
-  if (isstring(playerSayOverride)) then
-    if (playerSayOverride == "") then return end
+  if isstring(playerSayOverride) then
+    if playerSayOverride == "" then return end
 
     text = playerSayOverride
   end

@@ -2,7 +2,7 @@ function flAreas:OneSecond()
   local curTime = CurTime()
 
   for k, v in pairs(areas.GetAll()) do
-    if (istable(v.polys) and isstring(v.type)) then
+    if istable(v.polys) and isstring(v.type) then
       for k2, v2 in ipairs(v.polys) do
         for plyID, player in ipairs(_player.GetAll()) do
           local pos = player:GetPos()
@@ -11,16 +11,16 @@ function flAreas:OneSecond()
           player.lastArea[v.id] = player.lastArea[v.id] or {}
 
           -- Player hasn't moved since our previous check, no need to check again.
-          if (pos == player.lastPos) then continue end
+          if pos == player.lastPos then continue end
 
           local z = pos.z + 16 -- Raise player's position by 16 units to compensate for player's height
           local enteredArea = false
 
           -- First do height checks
-          if (z > v2[1].z and z < v.maxH) then
-            if (util.vector_in_poly(pos, v2)) then
+          if z > v2[1].z and z < v.maxH then
+            if util.vector_in_poly(pos, v2) then
               -- Player entered the area
-              if (!table.HasValue(player.lastArea[v.id], k2)) then
+              if !table.HasValue(player.lastArea[v.id], k2) then
                 Try("Areas", areas.GetCallback(v.type), player, v, true, pos, curTime)
 
                 netstream.Start(player, "PlayerEnteredArea", k, pos)
@@ -32,9 +32,9 @@ function flAreas:OneSecond()
             end
           end
 
-          if (!enteredArea) then
+          if !enteredArea then
             -- Player left the area
-            if (table.HasValue(player.lastArea[v.id], k2)) then
+            if table.HasValue(player.lastArea[v.id], k2) then
               Try("Areas", areas.GetCallback(v.type), player, v, false, pos, curTime)
 
               netstream.Start(player, "PlayerLeftArea", k, pos)

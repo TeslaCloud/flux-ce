@@ -8,24 +8,24 @@ do
   local areaColors = {}
 
   function flAreas:PostDrawOpaqueRenderables(bDrawDepth, bDrawSkybox)
-    if (bDrawDepth or bDrawSkybox) then return end
+    if bDrawDepth or bDrawSkybox then return end
 
     local weapon = fl.client:GetActiveWeapon()
 
-    if (IsValid(weapon) and weapon:GetClass() == "gmod_tool" and weapon:GetMode() == "area") then
+    if IsValid(weapon) and weapon:GetClass() == "gmod_tool" and weapon:GetMode() == "area" then
       local tool = fl.client:GetTool()
       local mode = tool:GetAreaMode()
       local verts = (tool and tool.area and tool.area.verts)
       local areasTable = areas.GetByType(mode.areaType)
       local areasCount = #areasTable
 
-      if (istable(verts) and (!tempCache or #tempCache != #verts)) then
+      if istable(verts) and (!tempCache or #tempCache != #verts) then
         tempCache = {}
 
         for k, v in ipairs(verts) do
           local n
 
-          if (k == #verts) then
+          if k == #verts then
             n = verts[1]
           else
             n = verts[k + 1]
@@ -33,13 +33,13 @@ do
 
           table.insert(tempCache, {v, n})
         end
-      elseif (!verts) then
+      elseif !verts then
         tempCache = nil
       end
 
-      if (!lastAmt) then lastAmt = areasCount end
+      if !lastAmt then lastAmt = areasCount end
 
-      if (!cache or lastAmt != areasCount) then
+      if !cache or lastAmt != areasCount then
         cache = {}
 
         areaColors[mode.areaType] = areas.GetColor(mode.areaType)
@@ -49,7 +49,7 @@ do
             for idx, p in ipairs(v2) do
               local n
 
-              if (idx == #v2) then
+              if idx == #v2 then
                 n = v2[1]
               else
                 n = v2[idx + 1]
@@ -65,7 +65,7 @@ do
 
       local areaRenderColor = areaColors[mode.areaType]
 
-      if (cache) then
+      if cache then
         for k, v in ipairs(cache) do
           local p, ap = v[1], v[3]
 
@@ -75,7 +75,7 @@ do
         end
       end
 
-      if (tempCache) then
+      if tempCache then
         for k, v in ipairs(tempCache) do
           render.DrawLine(v[1], v[2], renderColorRed)
         end
@@ -85,17 +85,17 @@ do
 end
 
 function flAreas:HUDPaint()
-  if (istable(fl.client.textAreas)) then
+  if istable(fl.client.textAreas) then
     local lastY = 400
     local curTime = CurTime()
 
     for k, v in pairs(fl.client.textAreas) do
-      if (istable(v) and v.endTime > curTime) then
+      if istable(v) and v.endTime > curTime then
         v.alpha = v.alpha or 255
 
         draw.SimpleText(v.text, theme.GetFont("Text_Large"), 32, lastY, Color(255, 255, 255, v.alpha))
 
-        if (curTime + 2 >= v.endTime) then
+        if curTime + 2 >= v.endTime then
           v.alpha = math.Clamp(v.alpha - 1, 0, 255)
         end
 

@@ -13,7 +13,7 @@ do
 
       return r
     end).."0000"):gsub("%d%d%d?%d?%d?%d?", function(x)
-      if (#x < 6) then
+      if #x < 6 then
         return ""
       end
 
@@ -31,7 +31,7 @@ do
     data = string.gsub(data, "[^"..base64Chars.."=]", "")
 
     return (data:gsub(".", function(x)
-      if (x == "=") then
+      if x == "=" then
         return ""
       end
 
@@ -43,7 +43,7 @@ do
 
       return r
     end):gsub("%d%d%d?%d?%d?%d?%d?%d?", function(x)
-      if (#x != 8) then
+      if #x != 8 then
         return ""
       end
 

@@ -17,13 +17,13 @@ function PANEL:Think()
 
   local frameTime = FrameTime() / 0.006
 
-  if (self:IsHovered()) then
+  if self:IsHovered() then
     self.m_CurAmt = math.Clamp(self.m_CurAmt + 1 * frameTime, 0, 40)
   else
     self.m_CurAmt = math.Clamp(self.m_CurAmt - 1 * frameTime, 0, 40)
   end
 
-  if (!self.m_IconSizeOverride) then
+  if !self.m_IconSizeOverride then
     self.m_IconSize = self:GetTall() - 6
   end
 end
@@ -65,12 +65,12 @@ function PANEL:SetIconSize(size)
 end
 
 function PANEL:OnMousePressed(key)
-  if (key == MOUSE_LEFT) then
-    if (self.DoClick) then
+  if key == MOUSE_LEFT then
+    if self.DoClick then
       self:DoClick()
     end
-  elseif (key == MOUSE_RIGHT) then
-    if (self.DoRightClick) then
+  elseif key == MOUSE_RIGHT then
+    if self.DoRightClick then
       self:DoRightClick()
     end
   end
@@ -84,7 +84,7 @@ function PANEL:SizeToContents()
   local w, h = util.text_size(self.m_Title, self.m_Font)
   local add = 0
 
-  if (self.m_Icon) then
+  if self.m_Icon then
     add = h * 1.5 - 2
   end
 

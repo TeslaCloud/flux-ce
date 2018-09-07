@@ -95,7 +95,7 @@ function THEME:PaintFrame(panel, width, height)
   surface.SetDrawColor(self:GetColor("MainDark"))
   surface.DrawRect(0, headerSize, width, height - headerSize)
 
-  if (title) then
+  if title then
     local font = font.GetSize(self:GetFont("Text_Small"), 16)
     local fontSize = util.font_size(font)
 
@@ -117,7 +117,7 @@ function THEME:PaintMainMenu(panel, width, height)
   surface.SetDrawColor(self:GetColor("MainMenu_Background"):lighten(40))
   surface.DrawRect(0, 0, width, 128)
 
-  if (!logo) then
+  if !logo then
     draw.SimpleText(title, self:GetFont("Text_Largest"), wide + width * 0.5 - titleW * 0.5, 150, self:GetColor("SchemaText"))
   else
     draw.TexturedRect(logo, width * 0.5 - 200, 16, 400, 96, Color(255, 255, 255))
@@ -134,8 +134,8 @@ function THEME:PaintButton(panel, w, h)
   local font = panel.m_Font
   local icon = panel.m_Icon
 
-  if (panel.m_DrawBackground) then
-    if (!panel.m_Active) then
+  if panel.m_DrawBackground then
+    if !panel.m_Active then
       surface.SetDrawColor(self:GetColor("Outline"))
       surface.DrawRect(0, 0, w, h)
 
@@ -149,24 +149,24 @@ function THEME:PaintButton(panel, w, h)
       surface.DrawRect(1, 1, w - 1, h - 2)
     end
   else
-    if (curAmt > 0) then
+    if curAmt > 0 then
       surface.SetDrawColor(Color(150, 150, 150, curAmt))
       surface.DrawRect(1, 1, w - 2, h - 2)
     end
   end
 
-  if (icon) then
-    if (!panel.m_Centered) then
+  if icon then
+    if !panel.m_Centered then
       fl.fa:Draw(icon, (panel.m_IconSize and h * 0.5 - panel.m_IconSize * 0.5) or 3, (panel.m_IconSize and h * 0.5 - panel.m_IconSize * 0.5) or 3, (panel.m_IconSize or h - 6), textColor)
     end
   end
 
-  if (title and title != "") then
+  if title and title != "" then
     local width, height = util.text_size(title, font)
 
-    if (panel.m_Autopos) then
-      if (icon) then
-        if (panel.m_Centered) then
+    if panel.m_Autopos then
+      if icon then
+        if panel.m_Centered then
           local textPos = w * 0.27 -- poor man's centering
 
           fl.fa:Draw(icon, textPos - panel.m_IconSize * 0.5 - 8, (panel.m_IconSize and h * 0.5 - panel.m_IconSize * 0.5) or 3, (panel.m_IconSize or h - 6), textColor)
@@ -190,7 +190,7 @@ function THEME:PaintDeathScreen(curTime, scrW, scrH)
   local font = self:GetFont("Text_NormalLarge")
   local color_white = Color(255, 255, 255)
 
-  if (!fl.client.respawnAlpha) then fl.client.respawnAlpha = 0 end
+  if !fl.client.respawnAlpha then fl.client.respawnAlpha = 0 end
 
   fl.client.respawnAlpha = math.Clamp(fl.client.respawnAlpha + 1, 0, 200)
 
@@ -201,7 +201,7 @@ function THEME:PaintDeathScreen(curTime, scrW, scrH)
 
   draw.RoundedBox(0, 0, 0, scrW / 100 * barValue, 2, color_white)
 
-  if (respawnTimeRemaining <= 3) then
+  if respawnTimeRemaining <= 3 then
     fl.client.whiteAlpha = math.Clamp(255 * (1.5 - respawnTimeRemaining * 0.5), 0, 255)
   else
     fl.client.whiteAlpha = 0
@@ -223,10 +223,10 @@ function THEME:DrawBarHindrance(barInfo)
 end
 
 function THEME:DrawBarFill(barInfo)
-  if (barInfo.realFillWidth < barInfo.fillWidth) then
+  if barInfo.realFillWidth < barInfo.fillWidth then
     draw.RoundedBox(barInfo.cornerRadius, barInfo.x + 1, barInfo.y + 1, (barInfo.fillWidth or barInfo.width) - 2, barInfo.height - 2, barInfo.color)
     draw.RoundedBox(barInfo.cornerRadius, barInfo.x + 1, barInfo.y + 1, barInfo.realFillWidth - 2, barInfo.height - 2, Color(230, 230, 230))
-  elseif (barInfo.realFillWidth > barInfo.fillWidth) then
+  elseif barInfo.realFillWidth > barInfo.fillWidth then
     draw.RoundedBox(barInfo.cornerRadius, barInfo.x + 1, barInfo.y + 1, barInfo.realFillWidth - 2, barInfo.height - 2, barInfo.color)
     draw.RoundedBox(barInfo.cornerRadius, barInfo.x + 1, barInfo.y + 1, (barInfo.fillWidth or barInfo.width) - 2, barInfo.height - 2, Color(230, 230, 230))
   else
@@ -245,7 +245,7 @@ function THEME:DrawBarTexts(barInfo)
     draw.SimpleText(barInfo.text, font, barInfo.x + 8, barInfo.y + barInfo.textOffset, self:GetColor("Text"))
   render.SetScissorRect(0, 0, 0, 0, false)
 
-  if (barInfo.hinderDisplay and barInfo.hinderDisplay <= barInfo.hinderValue) then
+  if barInfo.hinderDisplay and barInfo.hinderDisplay <= barInfo.hinderValue then
     local width = barInfo.width
     local textWide = util.text_size(barInfo.hinderText, font)
     local length = width * (barInfo.hinderValue / barInfo.maxValue)
@@ -278,13 +278,13 @@ function THEME:PaintPermissionButton(permPanel, btn, w, h)
   local permType = btn.permValue
   local font = self:GetFont("Text_Small")
 
-  if (permType == PERM_NO) then
+  if permType == PERM_NO then
     color = Color(120, 120, 120)
     title = t"perm.not_set"
-  elseif (permType == PERM_ALLOW) then
+  elseif permType == PERM_ALLOW then
     color = Color(100, 220, 100)
     title = t"perm.allow"
-  elseif (permType == PERM_NEVER) then
+  elseif permType == PERM_NEVER then
     color = Color(220, 100, 100)
     title = t"perm.never"
   else
@@ -293,7 +293,7 @@ function THEME:PaintPermissionButton(permPanel, btn, w, h)
 
   local textColor = color:darken(75)
 
-  if (btn:IsHovered()) then
+  if btn:IsHovered() then
     color = color:lighten(30)
   end
 
@@ -308,7 +308,7 @@ function THEME:PaintPermissionButton(permPanel, btn, w, h)
 
   draw.RoundedBox(0, sqrSize * 0.5, sqrSize * 0.5, sqrSize, sqrSize, Color(255, 255, 255))
 
-  if (btn.isSelected) then
+  if btn.isSelected then
     draw.RoundedBox(0, sqrSize * 0.5 + 2, sqrSize * 0.5 + 2, sqrSize - 4, sqrSize - 4, Color(0, 0, 0))
   end
 end
@@ -338,23 +338,23 @@ function THEME:PaintTabMenu(panel, width, height)
   draw.RoundedBox(0, 0, 0, font.Scale(200) + 6, height, sidebarColor)
   draw.RoundedBox(0, 0, 0, 6, height, sidebarColor)
 
-  if (IsValid(activePanel)) then
+  if IsValid(activePanel) then
     panel.posY = panel.posY or 0
 
     local activeButton = panel.activeBtn
 
-    if (!IsValid(activeButton)) then return end
+    if !IsValid(activeButton) then return end
 
     local x, y = activeButton:GetPos()
     local targetH = activeButton:GetTall()
 
-    if (panel.prevY != y) then
+    if panel.prevY != y then
       panel.posY = Lerp(fraction, panel.posY, y)
     end
 
     panel.prevY = panel.posY
 
-    if (!activePanel.indicatorLerp) then
+    if !activePanel.indicatorLerp then
       activePanel.indicatorLerp = 0
     end
 
@@ -423,7 +423,7 @@ end
 
 -- Called when a tab is painted.
 function THEME.skin:PaintTab(panel, w, h)
-  if (panel:GetPropertySheet():GetActiveTab() == panel) then
+  if panel:GetPropertySheet():GetActiveTab() == panel then
     self:DrawGenericBackground(4, 0, w - 8, h - 8, ColorAlpha(self.colTab, 220))
   else
     self:DrawGenericBackground(0, 0, w, h, Color(40, 40, 40))
@@ -432,7 +432,7 @@ end
 
 -- Called when a list view is painted.
 function THEME.skin:PaintListView(panel, w, h)
-  if (panel.m_bBackground) then
+  if panel.m_bBackground then
     surface.SetDrawColor(255, 255, 255, 255)
     panel:DrawFilledRect()
   end
@@ -443,12 +443,12 @@ function THEME.skin:PaintListViewLine(panel)
   local color = Color(50, 50, 50, 255)
   local textColor = Color(255, 255, 255, 255)
 
-  if (panel:IsSelected()) then
+  if panel:IsSelected() then
     color = Color(255, 255, 255, 255)
     textColor = Color(0, 0, 0, 255)
-  elseif (panel.Hovered) then
+  elseif panel.Hovered then
     color = Color(100, 100, 100, 255)
-  elseif (panel.m_bAlt) then
+  elseif panel.m_bAlt then
     color = Color(75, 75, 75, 255)
   end
 
@@ -484,10 +484,10 @@ end
 function THEME.skin:PaintMenuOption(panel, w, h)
   local textColor = Color(255, 255, 255, 255)
 
-  if (panel.m_bBackground and panel.Hovered) then
+  if panel.m_bBackground and panel.Hovered then
     local color = nil
 
-    if (panel.Depressed) then
+    if panel.Depressed then
       color = Color(225, 225, 225, 255)
     else
       color = Color(255, 255, 255, 255)
@@ -509,7 +509,7 @@ function THEME.skin:LayoutMenuOption(panel, w, h)
   panel:SetWide(panel:GetWide() + 30)
   panel:SetSize(math.max(panel:GetParent():GetWide(), panel:GetWide()), 18)
 
-  if (panel.SubMenuArrow) then
+  if panel.SubMenuArrow then
     panel.SubMenuArrow:SetSize(panel:GetTall(), panel:GetTall())
     panel.SubMenuArrow:CenterVertical()
     panel.SubMenuArrow:AlignRight()
@@ -520,16 +520,16 @@ end
 function THEME.skin:PaintButton(panel, w, h)
   local textColor = Color(255, 255, 255, 255)
 
-  if (panel.m_bBackground) then
+  if panel.m_bBackground then
     local color = Color(40, 40, 40, 255)
     local borderColor = Color(0, 0, 0, 255)
 
-    if (panel:GetDisabled()) then
+    if panel:GetDisabled() then
       color = self.controlColorDark
-    elseif (panel.Depressed) then
+    elseif panel.Depressed then
       color = Color(255, 255, 255, 255)
       textColor = Color(0, 0, 0, 255)
-    elseif (panel.Hovered) then
+    elseif panel.Hovered then
       color = self.controlColorHighlight
     end
 
@@ -565,7 +565,7 @@ end
 function THEME.skin:PaintCollapsibleCategory(panel, w, h)
   panel.Header:SetFont(theme.GetFont("Text_Smaller"))
 
-  if (h < 21) then
+  if h < 21 then
     self:DrawGenericBackground(0, 0, w, 21, Color(0, 0, 0))
   else
     self:DrawGenericBackground(0, 0, w, 21, Color(30, 30, 30))

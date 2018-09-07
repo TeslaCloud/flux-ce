@@ -13,7 +13,7 @@ local whitelistedEntities = {
 }
 
 function flStaticEnts:PlayerMakeStatic(player, bIsStatic)
-  if ((bIsStatic and !player:can("static")) or (!bIsStatic and !player:can("unstatic"))) then
+  if (bIsStatic and !player:can("static")) or (!bIsStatic and !player:can("unstatic")) then
     fl.player:notify(player, 'err.no_permission', player:Name())
 
     return
@@ -22,13 +22,13 @@ function flStaticEnts:PlayerMakeStatic(player, bIsStatic)
   local trace = player:GetEyeTraceNoCursor()
   local entity = trace.Entity
 
-  if (!IsValid(entity)) then
+  if !IsValid(entity) then
     fl.player:notify(player, t('err.not_valid_entity'))
 
     return
   end
 
-  if (!whitelistedEntities[entity:GetClass()]) then
+  if !whitelistedEntities[entity:GetClass()] then
     fl.player:notify(player, t('err.cannot_static_this'))
 
     return
@@ -36,11 +36,11 @@ function flStaticEnts:PlayerMakeStatic(player, bIsStatic)
 
   local isStatic = entity:GetPersistent()
 
-  if (bIsStatic and isStatic) then
+  if bIsStatic and isStatic then
     fl.player:notify(player, t('err.already_static'))
 
     return
-  elseif (!bIsStatic and !isStatic) then
+  elseif !bIsStatic and !isStatic then
     fl.player:notify(player, t('err.not_static'))
 
     return
@@ -59,14 +59,14 @@ function flStaticEnts:PersistenceSave()
   local entities = {}
 
   for k, v in ipairs(ents.GetAll()) do
-    if (v:GetPersistent()) then
+    if v:GetPersistent() then
       table.insert(entities, v)
     end
   end
 
   local toSave = duplicator.CopyEnts(entities)
 
-  if (!istable(toSave)) then return end
+  if !istable(toSave) then return end
 
   data.SavePlugin("static", toSave)
 end
@@ -74,9 +74,9 @@ end
 function flStaticEnts:PersistenceLoad()
   local loaded = data.LoadPlugin("static")
 
-  if (!istable(loaded)) then return end
-  if (!loaded.Entities) then return end
-  if (!loaded.Constraints) then return end
+  if !istable(loaded) then return end
+  if !loaded.Entities then return end
+  if !loaded.Constraints then return end
 
   local entities, constraints = duplicator.Paste(nil, loaded.Entities, loaded.Constraints)
 
@@ -84,7 +84,7 @@ function flStaticEnts:PersistenceLoad()
   for k, v in pairs(entities) do
     local entData = loaded.Entities[k]
 
-    if (entData) then
+    if entData then
       table.safe_merge(v:GetTable(), entData)
     end
   end

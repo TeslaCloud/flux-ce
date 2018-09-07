@@ -15,14 +15,14 @@ if SERVER then
 
     local physObj = self:GetPhysicsObject()
 
-    if (IsValid(physObj)) then
+    if IsValid(physObj) then
       physObj:EnableMotion(true)
       physObj:Wake()
     end
   end
 
   function ENT:SetItem(itemTable)
-    if (!itemTable) then return false end
+    if !itemTable then return false end
 
     hook.run("PreEntityItemSet", self, itemTable)
 
@@ -41,22 +41,22 @@ if SERVER then
     local lastActivator = self:get_nv("LastActivator")
 
     -- prevent minge-grabbing glitch
-    if (IsValid(lastActivator) and lastActivator != activator) then return end
+    if IsValid(lastActivator) and lastActivator != activator then return end
 
     local holdStart = activator:get_nv("HoldStart")
 
-    if (useType == USE_ON) then
-      if (!holdStart) then
+    if useType == USE_ON then
+      if !holdStart then
         activator:set_nv("HoldStart", CurTime())
         activator:set_nv("HoldEnt", self)
         self:set_nv("LastActivator", activator)
       end
-    elseif (useType == USE_OFF) then
-      if (!holdStart) then return end
+    elseif useType == USE_OFF then
+      if !holdStart then return end
 
-      if (CurTime() - holdStart < 0.5) then
-        if (IsValid(caller) and caller:IsPlayer()) then
-          if (self.item) then
+      if CurTime() - holdStart < 0.5 then
+        if IsValid(caller) and caller:IsPlayer() then
+          if self.item then
             hook.run("PlayerUseItemEntity", caller, self, self.item)
           else
             fl.dev_print("Player attempted to use an item entity without item object tied to it!")
@@ -73,12 +73,12 @@ if SERVER then
   function ENT:Think()
     local lastActivator = self:get_nv("LastActivator")
 
-    if (!IsValid(lastActivator)) then return end
+    if !IsValid(lastActivator) then return end
 
     local holdStart = lastActivator:get_nv("HoldStart")
 
-    if (holdStart and CurTime() - holdStart > 0.5) then
-      if (self.item) then
+    if holdStart and CurTime() - holdStart > 0.5 then
+      if self.item then
         self.item:do_menu_action("on_take", lastActivator)
       end
 
@@ -93,13 +93,13 @@ else
   end
 
   function ENT:DrawTargetID(x, y, distance)
-    if (distance > 370) then return end
+    if distance > 370 then return end
 
     local text = "ERROR"
     local desc = "This item's data has failed to fetch. This is an error."
     local alpha = 255
 
-    if (distance > 210) then
+    if distance > 210 then
       local d = distance - 210
       alpha = math.Clamp(255 * (160 - d) / 160, 0, 255)
     end
@@ -107,15 +107,15 @@ else
     local col = Color(255, 255, 255, alpha)
     local col2 = Color(0, 0, 0, alpha)
 
-    if (self.item) then
-      if (hook.run("PreDrawItemTargetID", self, self.item, x, y, alpha, distance) == false) then
+    if self.item then
+      if hook.run("PreDrawItemTargetID", self, self.item, x, y, alpha, distance) == false then
         return
       end
 
       text = self.item.print_name
       desc = self.item.description
     else
-      if (!self.dataRequested) then
+      if !self.dataRequested then
         netstream.Start("RequestItemData", self:EntIndex())
         self.dataRequested = true
       end

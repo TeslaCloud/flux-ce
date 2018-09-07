@@ -11,7 +11,7 @@ function fl.notification:Add(text, lifetime, textColor, backColor)
 
   display[top] = {text = text, lifetime = lifetime, panel = nil, width = 0, height = 0, isLast = true}
 
-  if (display[top - 1]) then
+  if display[top - 1] then
     display[top - 1].isLast = false
   end
 
@@ -52,13 +52,13 @@ function fl.notification:AddPopup(text, lifetime, x, y, textColor, backColor)
 end
 
 function fl.notification:Reposition(offset)
-  if (!isnumber(offset)) then return end
+  if !isnumber(offset) then return end
 
   local curTime = CurTime()
 
-  if (lastReposition + 0.3 < curTime) then
+  if lastReposition + 0.3 < curTime then
     for k, v in ipairs(display) do
-      if (v and IsValid(v.panel)) then
+      if v and IsValid(v.panel) then
         local x, y = v.panel:GetPos()
 
         v.panel:MoveTo(x, y + offset + 4, 0.13)

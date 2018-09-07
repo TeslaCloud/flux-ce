@@ -18,14 +18,14 @@ function PANEL:PaintOver(w, h)
 
   draw.RoundedBox(0, 0, 0, w, h, Color(0, 0, 0, (!active and self.m_CurAmt * 4) or 0))
 
-  if (active) then
+  if active then
     surface.SetDrawColor(theme.GetColor("Accent"))
     surface.DrawOutlinedRect(0, 0, w, h)
   end
 end
 
 function PANEL:Think()
-  if (self:IsHovered()) then
+  if self:IsHovered() then
     self.m_CurAmt = math.Clamp(self.m_CurAmt - 1, 0, 40)
   else
     self.m_CurAmt = math.Clamp(self.m_CurAmt + 1, 0, 40)
