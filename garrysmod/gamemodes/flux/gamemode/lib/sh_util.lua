@@ -1419,12 +1419,6 @@ function txt(text)
   return output:chomp(' '):chomp('\n')
 end
 
-local class_keys = {
-  BaseClass = true, base_class = true,
-  class = true, ThisClass = true,
-  model = true, target_class = true
-}
-
 -- A better implementation of PrintTable
 function PrintTable(t, indent, done, indent_length)
   done = done or {}
@@ -1458,10 +1452,10 @@ function PrintTable(t, indent, done, indent_length)
     if istable(value) and !done[value] then
       local str_key = tostring(key)
 
-      if class_keys[key] then
-        Msg(str_key..':'..string.rep(' ', indent_length - str_key:len())..' #<'..tostring(value.class_name or key)..':'..tostring(value):gsub('table: ', '')..'>\n')
-      elseif value == {} then
-        Msg(str_key..':'..string.rep(' ', indent_length - str_key:len())..'[]\n')
+      if value.class or value.class_name then
+        Msg(str_key..':'..string.rep(' ', indent_length - str_key:len())..' #<'..tostring(value.class_name or key)..': '..tostring(value):gsub('table: ', '')..'>\n')
+      elseif table.Count(value) == 0 then
+        Msg(str_key..':'..string.rep(' ', indent_length - str_key:len())..' []\n')
       else
         done[value] = true
         Msg(str_key..':\n')
@@ -1471,7 +1465,16 @@ function PrintTable(t, indent, done, indent_length)
     else
       local str_key = tostring(key)
       Msg(str_key..string.rep(' ', indent_length - str_key:len()).."= " )
-      Msg(tostring(value)..'\n')
+
+      if isstring(value) then
+        Msg('"'..value..'"\n')
+      elseif isfunction(value) then
+        Msg('function ('..tostring(value):gsub('function: ', '')..')\n')
+      elseif istable(value) and (value.class or value.class_name) then
+        Msg('#<'..tostring(value.class_name or key)..': '..tostring(value):gsub('table: ', '')..'>\n')
+      else
+        Msg(tostring(value)..'\n')
+      end
     end
   end
 end
