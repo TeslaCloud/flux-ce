@@ -12,6 +12,8 @@ end
 
 function ActiveRecord.Base:class_extended(new_class)
   new_class.table_name = ActiveRecord.Infector:pluralize(new_class.class_name:to_snake_case())
+  new_class.last_id = 0
+
   ActiveRecord.Model:add(new_class)
 end
 
@@ -273,10 +275,17 @@ function ActiveRecord.Base:save()
 
   if !schema or self.saving then return self end
 
+  if !self.id then
+    self.class.last_id = self.class.last_id + 1
+    self.id = self.class.last_id
+  end
+
   self.saving = true
 
   if !self.fetched then
     self.fetched = true
+
+    self.class.last_id = self.id
 
     local query = ActiveRecord.Database:insert(self.table_name)
       for k, v in pairs(schema) do
@@ -304,7 +313,7 @@ function ActiveRecord.Base:save()
       end)
     query:execute()
   end
-  if #self.relations > 0 then
+  if self.id and #self.relations > 0 then
     for _, relation in ipairs(self.relations) do
       if !relation.child then
         if relation.many and istable(self[relation.as]) then

@@ -164,12 +164,11 @@ function string.trim_start(str, needle, all_occurences)
 end
 
 function game.get_ammo_list()
-  local ammo_table = {}
-  local last_ammo_name = ''
+  local last_ammo_name = game.GetAmmoName(1)
+  local ammo_table = {last_ammo_name}
 
   while last_ammo_name != nil do
-    last_ammo_name = game.GetAmmoName(current_ammo_id)
-    table.insert(ammo_table, last_ammo_name)
+    last_ammo_name = game.GetAmmoName(table.insert(ammo_table, last_ammo_name))
   end
 
   return ammo_table
