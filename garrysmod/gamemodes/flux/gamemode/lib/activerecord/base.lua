@@ -7,6 +7,7 @@ ActiveRecord.Base.relations = {}
 
 function ActiveRecord.Base:init()
   self.fetched = false
+  self.saving = false
 end
 
 function ActiveRecord.Base:class_extended(new_class)
@@ -270,8 +271,13 @@ local except = {
 function ActiveRecord.Base:save()
   local schema = self:get_schema()
 
-  if !schema then return end
+  if !schema or self.saving then return self end
+
+  self.saving = true
+
   if !self.fetched then
+    self.fetched = true
+
     local query = ActiveRecord.Database:insert(self.table_name)
       for k, v in pairs(schema) do
         if except[k] then continue end
@@ -281,10 +287,12 @@ function ActiveRecord.Base:save()
       query:insert('updated_at', to_datetime(os.time()))
       query:callback(function(result, query, time)
         print_query(self.class_name..' Create ('..time..'ms)', query)
+        self.saving = false
       end)
     query:execute()
   else
     local query = ActiveRecord.Database:update(self.table_name)
+      query:where('id', self.id)
       for k, v in pairs(schema) do
         if except[k] then continue end
         query:update(k, self[k])
@@ -292,6 +300,7 @@ function ActiveRecord.Base:save()
       query:update('updated_at', to_datetime(os.time()))
       query:callback(function(result, query, time)
         print_query(self.class_name..' Update ('..time..'ms)', query)
+        self.saving = false
       end)
     query:execute()
   end

@@ -139,17 +139,6 @@ function library.create_class(name, base_class)
     local has_base_class = true
 
     while istable(base_class) and has_base_class do
-      if isfunction(base_class.init) then
-        try {
-          base_class.init, new_obj, ...
-        } catch {
-          function(exception)
-            ErrorNoHalt("Base class constructor has failed to run!\n" +
-              tostring(exception) + "\n")
-          end
-        }
-      end
-
       if base_class.BaseClass and base_class.ClassName != base_class.BaseClass.ClassName then
         base_class = base_class.BaseClass
       else

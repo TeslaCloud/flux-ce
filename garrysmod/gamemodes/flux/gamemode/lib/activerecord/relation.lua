@@ -5,6 +5,7 @@ ActiveRecord.Relation.class = nil
 
 function ActiveRecord.Relation:init(object, class)
   self.object = class.new()
+  self.object.id = object.id
   self.object_class = class
   self.object.fetched = true
 
