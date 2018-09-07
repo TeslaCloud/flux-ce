@@ -20,13 +20,25 @@ end
 function ActiveRecord.Model:populate()
   for k, v in pairs(self.models) do
     local schema = ActiveRecord.schema[v.table_name]
+
     if schema then
       for column, type in pairs(schema) do
         if !isstring(column) then continue end
 
         self:generate_helpers(v, column, type)
       end
+  
       v.schema = schema
+
+      local query = ActiveRecord.Database:select(v.table_name)
+        query:order('id')
+        query:limit(1)
+        query:callback(function(result, time, query)
+          if istable(result) and #result > 0 then
+            v.last_id = result[1].id
+          end
+        end)
+      query:execute()
     end
   end
   return self
