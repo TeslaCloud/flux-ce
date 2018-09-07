@@ -822,7 +822,7 @@ function fl.fa:GetIcon(id)
   if (faCodes[id]) then
     if (!buffer[id]) then
       local rawCode = faCodes[id]
-      buffer[id] = util.HexToDecimal(rawCode)
+      buffer[id] = util.hex_to_decimalimal(rawCode)
     end
 
     return string.utf8char(buffer[id])

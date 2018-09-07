@@ -85,7 +85,7 @@ function chatbox.AddText(listeners, ...)
       table.insert(messageData.data, v)
     elseif (istable(v)) then
       if (!v.isData and !clientMode) then
-        table.Merge(messageData, v)
+        table.merge(messageData, v)
       else
         table.insert(messageData.data, v)
       end

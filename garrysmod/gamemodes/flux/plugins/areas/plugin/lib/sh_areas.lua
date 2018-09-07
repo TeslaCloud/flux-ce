@@ -59,7 +59,7 @@ function areas.Create(id, height, data)
     area.type = data.type or "area"
 
     if (data) then
-      table.Merge(area, data)
+      table.merge(area, data)
     end
   else
     area = stored[id]
@@ -94,7 +94,7 @@ function areas.register(id, data)
   if (!id or !data) then return end
   if (#data.polys < 1) then return end
 
-  data = util.RemoveFunctions(data)
+  data = util.remove_functions(data)
 
   stored[id] = data
 

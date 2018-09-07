@@ -31,7 +31,7 @@ function PANEL:Paint(w, h)
   draw.RoundedBox(0, 0, 0, w, h, Color(0, 0, 0, remove_alpha))
 
   draw.TexturedRect(
-    util.GetMaterial("materials/flux/tc_logo.png"),
+    util.get_material("materials/flux/tc_logo.png"),
     w * 0.5 - logoW * 0.5 - delta_modifier * logo_delta * 0.5 * w_mod,
     h * 0.5 - logoH * 0.5 - delta_modifier * logo_delta * 0.5 * h_mod,
     logoW + delta_modifier * logo_delta * w_mod,

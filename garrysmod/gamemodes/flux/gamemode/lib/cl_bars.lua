@@ -176,7 +176,7 @@ function fl.bars:Adjust(id, data)
   local bar = self:Get(id)
 
   if (bar) then
-    table.Merge(bar, data)
+    table.merge(bar, data)
   end
 end
 

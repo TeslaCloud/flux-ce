@@ -156,7 +156,7 @@ if SERVER then
     -- Target everyone with str in their name.
     ["("] = function(player, str)
       local name = str:utf8sub(2, str:utf8len() - 1)
-      local to_ret = _player.Find(name)
+      local to_ret = _player.find(name)
 
       if (IsValid(to_ret)) then
         to_ret = { to_ret }
@@ -201,7 +201,7 @@ if SERVER then
     if (isfunction(parser)) then
       return parser(player, str)
     else
-      local target = _player.Find(str)
+      local target = _player.find(str)
 
       if (IsValid(target)) then
         return {target}

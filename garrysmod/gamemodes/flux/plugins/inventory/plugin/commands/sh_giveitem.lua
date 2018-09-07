@@ -21,7 +21,7 @@ function COMMAND:on_run(player, targets, itemName, amount)
       fl.player:notify(v, ((IsValid(player) and player:Name()) or "Console").." has given you "..amount.." "..itemTable.name.."'s.")
     end
 
-    fl.player:notify(player, "You have given "..amount.." "..itemTable.name.."'s to "..util.PlayerListToString(targets)..".")
+    fl.player:notify(player, "You have given "..amount.." "..itemTable.name.."'s to "..util.player_list_to_string(targets)..".")
   else
     fl.player:notify(player, "'"..itemName.."' is not a valid item!")
   end

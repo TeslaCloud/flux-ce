@@ -45,7 +45,7 @@ end
 function player_meta:GetAmmoTable()
   local ammoTable = {}
 
-  for k, v in pairs(game.GetAmmoList()) do
+  for k, v in pairs(game.get_ammo_list()) do
     local ammoCount = self:GetAmmoCount(k)
 
     if (ammoCount > 0) then

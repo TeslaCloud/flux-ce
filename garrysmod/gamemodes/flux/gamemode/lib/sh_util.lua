@@ -163,21 +163,20 @@ function string.trim_start(str, strNeedle, bAllOccurences)
   end
 end
 
-function game.GetAmmoList()
-  local ammoTable = {}
-  local ammoID = 1
+function game.get_ammo_list()
+  local ammo_table = {}
+  local last_ammo_name = ''
 
-  while (game.GetAmmoName(ammoID) != nil) do
-    ammoTable[ammoID] = game.GetAmmoName(ammoID)
-
-    ammoID = ammoID + 1
+  while last_ammo_name != nil do
+    last_ammo_name = game.GetAmmoName(current_ammo_id)
+    table.insert(ammo_table, last_ammo_name)
   end
 
-  return ammoTable
+  return ammo_table
 end
 
 -- A function to check whether all of the arguments in vararg are valid (via IsValid).
-function util.Validate(...)
+function util.validate(...)
   local validate = {...}
 
   if (#validate <= 0) then return false end
@@ -211,10 +210,10 @@ function util.include(file_name)
 end
 
 -- A function to add a file to clientside downloads list based on it's prefix.
-function util.AddCSLuaFile(strFile)
+function util.add_cs_lua(file_name)
   if SERVER then
-    if (string.find(strFile, "sh_") or string.find(strFile, "cl_") or string.find(strFile, "shared.lua")) then
-      AddCSLuaFile(strFile)
+    if (string.find(file_name, "sh_") or string.find(file_name, "cl_") or string.find(file_name, "shared.lua")) then
+      AddCSLuaFile(file_name)
     end
   end
 end
@@ -262,7 +261,7 @@ do
   local materialCache = {}
 
   -- A function to get a material. It caches the material automatically.
-  function util.GetMaterial(mat)
+  function util.get_material(mat)
     if (!materialCache[mat]) then
       materialCache[mat] = Material(mat)
     end
@@ -272,10 +271,10 @@ do
 end
 
 do
-  local hexDigits = {"0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "a", "b", "c", "d", "e", "f"}
+  local hex_digits = {"0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "a", "b", "c", "d", "e", "f"}
 
   -- A function to convert a single hexadecimal digit to decimal.
-  function util.HexToDec(hex)
+  function util.hex_to_decimal(hex)
     if (isnumber(hex)) then
       return hex
     end
@@ -289,7 +288,7 @@ do
       negative = true
     end
 
-    for k, v in ipairs(hexDigits) do
+    for k, v in ipairs(hex_digits) do
       if (v == hex) then
         if (!negative) then
           return k - 1
@@ -299,22 +298,22 @@ do
       end
     end
 
-    ErrorNoHalt("[util.HexToDec] '"..hex.."' is not a hexadecimal number!")
+    ErrorNoHalt("hex_to_dec - '"..hex.."' is not a hexadecimal number!")
 
     return 0
   end
 end
 
 -- A function to convert hexadecimal number to decimal.
-function util.HexToDecimal(hex)
-  if (isnumber(hex)) then return hex end
+function util.hex_to_decimalimal(hex)
+  if isnumber(hex) then return hex end
 
   local sum = 0
   local chars = table.Reverse(string.Explode("", hex))
   local idx = 1
 
   for i = 0, hex:len() - 1 do
-    sum = sum + util.HexToDec(chars[idx]) * math.pow(16, i)
+    sum = sum + util.hex_to_decimal(chars[idx]) * math.pow(16, i)
     idx = idx + 1
   end
 
@@ -322,7 +321,7 @@ function util.HexToDecimal(hex)
 end
 
 -- A function to convert hexadecimal color to a color structure.
-function util.HexToColor(hex)
+function util.hex_to_color(hex)
   if (hex:StartWith("#")) then
     hex = hex:sub(2, hex:len())
   end
@@ -333,21 +332,21 @@ function util.HexToColor(hex)
     return Color(255, 255, 255)
   end
 
-  local hexColors = {}
+  local hex_colors = {}
 
   if (len == 3) then
     for i = 1, 3 do
       local v = hex[i]
 
-      table.insert(hexColors, v..v) -- Duplicate the number.
+      table.insert(hex_colors, v..v) -- Duplicate the number.
     end
   else
-    local initLen = len * 0.5
+    local initial_length = len * 0.5
 
     for i = 1, len * 0.5 do
-      table.insert(hexColors, hex:sub(1, 2))
+      table.insert(hex_colors, hex:sub(1, 2))
 
-      if (i != initLen) then
+      if (i != initial_length) then
         hex = hex:sub(3, hex:len())
       end
     end
@@ -355,8 +354,8 @@ function util.HexToColor(hex)
 
   local color = {}
 
-  for k, v in ipairs(hexColors) do
-    table.insert(color, util.HexToDecimal(v))
+  for k, v in ipairs(hex_colors) do
+    table.insert(color, util.hex_to_decimalimal(v))
   end
 
   return Color(color[1], color[2], color[3], (color[4] or 255))
@@ -513,20 +512,20 @@ do
     yellowgreen      = Color(154, 205, 50)
   }
 
-  local oldColor = fl.oldColor or Color
-  fl.oldColor = oldColor
+  local old_color = fl.old_color or Color
+  fl.old_color = old_color
 
   function Color(r, g, b, a)
-    if (isstring(r)) then
-      if (r:StartWith("#")) then
-        return util.HexToColor(r)
-      elseif (colors[r:lower()]) then
+    if isstring(r) then
+      if r:StartWith("#") then
+        return util.hex_to_color(r)
+      elseif colors[r:lower()] then
         return colors[r:lower()]
       else
         return Color(255, 255, 255)
       end
     else
-      return oldColor(r, g, b, a)
+      return old_color(r, g, b, a)
     end
   end
 end
@@ -537,7 +536,7 @@ function printf(str, ...)
 end
 
 -- A function to select a random player.
-function player.Random()
+function player.random()
   local allPly = player.GetAll()
 
   if (#allPly > 0) then
@@ -546,7 +545,7 @@ function player.Random()
 end
 
 -- A function to find player based on their name or steam_id.
-function player.Find(name, bCaseSensitive, bReturnFirstHit)
+function player.find(name, case_sensitive, return_first)
   if (name == nil) then return end
   if (!isstring(name)) then return (IsValid(name) and name) or nil end
 
@@ -564,13 +563,13 @@ function player.Find(name, bCaseSensitive, bReturnFirstHit)
 
     if (v:Name(true):find(name)) then
       table.insert(hits, v)
-    elseif (!bCaseSensitive and v:Name(true):utf8lower():find(name:utf8lower())) then
+    elseif (!case_sensitive and v:Name(true):utf8lower():find(name:utf8lower())) then
       table.insert(hits, v)
     elseif (v:SteamName():utf8lower():find(name:utf8lower())) then
       table.insert(hits, v)
     end
 
-    if (bReturnFirstHit and #hits > 0) then
+    if (return_first and #hits > 0) then
       return hits[1]
     end
   end
@@ -583,12 +582,12 @@ function player.Find(name, bCaseSensitive, bReturnFirstHit)
 end
 
 -- A function to check whether the string is full uppercase or not.
-function string.IsUppercase(str)
+function string.is_upper(str)
   return string.utf8upper(str) == str
 end
 
 -- A function to check whether the string is full lowercase or not.
-function string.IsLowercase(str)
+function string.is_lower(str)
   return string.utf8lower(str) == str
 end
 
@@ -722,7 +721,7 @@ function util.fit_to_aspect(x, y, x2, y2)
   return x, y
 end
 
-function util.ToBool(value)
+function util.to_b(value)
   return (tonumber(value) == 1 or value == true or value == "true")
 end
 
@@ -865,6 +864,8 @@ function table.Merge(dest, source)
 	return dest
 end
 
+table.merge = table.Merge
+
 function table.safe_merge(to, from)
   local old_idx_to, old_idx = to.__index, from.__index
   local references = {}
@@ -891,7 +892,7 @@ function table.safe_merge(to, from)
   return to
 end
 
-function util.ListToString(callback, separator, ...)
+function util.list_to_string(callback, separator, ...)
   if (!isfunction(callback)) then
     callback = function(obj) return tostring(obj) end
   end
@@ -918,7 +919,7 @@ function util.ListToString(callback, separator, ...)
   return result
 end
 
-function util.PlayerListToString(...)
+function util.player_list_to_string(...)
   local list = {...}
   local nlist = #list
 
@@ -926,7 +927,7 @@ function util.PlayerListToString(...)
     return t"chat.everyone"
   end
 
-  return util.ListToString(function(obj) return (IsValid(obj) and obj:Name()) or "Unknown Player" end, nil, ...)
+  return util.list_to_string(function(obj) return (IsValid(obj) and obj:Name()) or "Unknown Player" end, nil, ...)
 end
 
 function string.is_n(char)
@@ -945,7 +946,7 @@ function string.count(str, char)
   return hits
 end
 
-function string.Spelling(str)
+function string.spelling(str)
   local len = str:utf8len()
   local end_text = str:utf8sub(-1)
 
@@ -1063,13 +1064,13 @@ function util.table_from_string(str)
   return tab
 end
 
-function util.RemoveFunctions(obj)
+function util.remove_functions(obj)
   if (istable(obj)) then
     for k, v in pairs(obj) do
       if (isfunction(v)) then
         obj[k] = nil
       elseif (istable(v)) then
-        obj[k] = util.RemoveFunctions(v)
+        obj[k] = util.remove_functions(v)
       end
     end
   end
@@ -1129,7 +1130,7 @@ end
 if CLIENT then
   local loading_cache = {}
 
-  function util.CacheURLMaterial(url)
+  function util.cache_url_material(url)
     if (isstring(url) and url != "") then
       local url_crc = util.CRC(url)
       local exploded = string.Explode("/", url)
@@ -1179,14 +1180,14 @@ if CLIENT then
     end
 
     if (!loading_cache[url_crc]) then
-      util.CacheURLMaterial(url)
+      util.cache_url_material(url)
       loading_cache[url_crc] = true
     end
 
     return placeholder
   end
 
-  function util.WrapText(text, font, width, initial_width)
+  function util.wrap_text(text, font, width, initial_width)
     if (!text or !font or !width) then return end
 
     local output = {}

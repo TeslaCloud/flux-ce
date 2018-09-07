@@ -43,7 +43,7 @@ function chatbox.Compile(messageTable)
           data[k] = t(v)
         end
 
-        local wrapped = util.WrapText(v, font, chatbox.width, curX)
+        local wrapped = util.wrap_text(v, font, chatbox.width, curX)
         local nWrapped = #wrapped
 
         for k2, v2 in ipairs(wrapped) do

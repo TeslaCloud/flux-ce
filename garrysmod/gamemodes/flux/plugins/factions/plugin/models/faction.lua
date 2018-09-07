@@ -29,7 +29,7 @@ function Faction:GetColor()
 end
 
 function Faction:GetMaterial()
-  return self.material and util.GetMaterial(self.material)
+  return self.material and util.get_material(self.material)
 end
 
 function Faction:GetImage()
