@@ -21,7 +21,7 @@ netstream.Hook("PlayerModelChanged", function(nPlyIndex, sNewModel, sOldModel)
   end)
 end)
 
-netstream.Hook("flNotification", function(message, arguments)
+netstream.Hook("fl_notification", function(message, arguments)
   message = t(message, arguments)
 
   fl.notification:Add(message, 8, Color(175, 175, 235))

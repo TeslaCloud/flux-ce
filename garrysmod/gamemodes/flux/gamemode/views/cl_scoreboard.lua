@@ -33,7 +33,7 @@ function PANEL:Rebuild()
   for k, v in ipairs(_player.GetAll()) do
     if !v:HasInitialized() then continue end
 
-    local playerCard = vgui.Create("flScoreboardPlayer", self)
+    local playerCard = vgui.Create("fl_scoreboard_player", self)
     playerCard:SetSize(w - 8, cardTall)
     playerCard:SetPos(4, curY)
     playerCard:SetPlayer(v)
@@ -52,7 +52,7 @@ function PANEL:GetMenuSize()
   return font.Scale(1280), font.Scale(900)
 end
 
-vgui.Register("flScoreboard", PANEL, "flBasePanel")
+vgui.Register("fl_scoreboard", PANEL, "fl_base_panel")
 
 local PANEL = {}
 PANEL.player = false
@@ -92,4 +92,4 @@ function PANEL:Rebuild()
   hook.run("RebuildScoreboardPlayerCard", self, player)
 end
 
-vgui.Register("flScoreboardPlayer", PANEL, "flBasePanel")
+vgui.Register("fl_scoreboard_player", PANEL, "fl_base_panel")

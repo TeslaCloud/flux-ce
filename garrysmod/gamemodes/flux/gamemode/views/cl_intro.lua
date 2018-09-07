@@ -30,7 +30,7 @@ function PANEL:Paint(w, h)
 
   draw.RoundedBox(0, 0, 0, w, h, Color(0, 0, 0, remove_alpha))
 
-  draw.TexturedRect(
+  draw.textured_rect(
     util.get_material("materials/flux/tc_logo.png"),
     w * 0.5 - logoW * 0.5 - delta_modifier * logo_delta * 0.5 * w_mod,
     h * 0.5 - logoH * 0.5 - delta_modifier * logo_delta * 0.5 * h_mod,
@@ -67,7 +67,7 @@ function PANEL:Paint(w, h)
         end
 
         surface.SetDrawColor(color.r, color.g, color.b, cur_alpha)
-        surface.DrawCircle(exX, exY, cur_radius, 180)
+        surface.draw_circle(exX, exY, cur_radius, 180)
 
         cur_radius = cur_radius + 3
         cur_alpha = math.Clamp(Lerp(frame_time * 8, cur_alpha, 1), 0, 255)

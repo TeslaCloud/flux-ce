@@ -24,7 +24,7 @@ function PANEL:Rebuild()
   local permission = self:GetPermission()
   local quarter = width * 0.25
 
-  self.container = vgui.Create("flBasePanel", self)
+  self.container = vgui.Create("fl_base_panel", self)
   self.container:SetSize(width, height)
   self.container:SetPos(0, 0)
 
@@ -69,7 +69,7 @@ function PANEL:GetPermission()
   return self.m_Permission
 end
 
-vgui.Register("flPermission", PANEL, "flBasePanel")
+vgui.Register("flPermission", PANEL, "fl_base_panel")
 
 local PANEL = {}
 
@@ -118,4 +118,4 @@ function PANEL:OnOpened()
   self:Rebuild()
 end
 
-vgui.Register("permissionsEditor", PANEL, "flBasePanel")
+vgui.Register("permissionsEditor", PANEL, "fl_base_panel")

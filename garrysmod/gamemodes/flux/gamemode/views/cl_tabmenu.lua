@@ -13,7 +13,7 @@ function PANEL:Init()
   curX = curX or 42
   curY = curY or 200
 
-  self.closeButton = vgui.Create("flButton", self)
+  self.closeButton = vgui.Create("fl_button", self)
   self.closeButton:SetFont(theme.GetFont("Menu_Large"))
   self.closeButton:SetText(string.utf8upper(t"tab_menu.close_menu"))
   self.closeButton:SetPos(6, curY)
@@ -33,7 +33,7 @@ function PANEL:Init()
   hook.run("AddTabMenuItems", self)
 
   for k, v in ipairs(self.menuItems) do
-    local button = vgui.Create("flButton", self)
+    local button = vgui.Create("fl_button", self)
     button:SetDrawBackground(false)
     button:SetPos(6, curY)
     button:SetSizeEx(200, 30)
@@ -123,4 +123,4 @@ function PANEL:Paint(w, h)
   theme.Hook("PaintTabMenu", self, w, h)
 end
 
-vgui.Register("flTabMenu", PANEL, "EditablePanel")
+vgui.Register("fl_tab_menu", PANEL, "EditablePanel")

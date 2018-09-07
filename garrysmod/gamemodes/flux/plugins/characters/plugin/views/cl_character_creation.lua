@@ -47,7 +47,7 @@ function PANEL:OpenPanel(id)
     self.finishButton:SafeRemove()
   end
 
-  self.finishButton = vgui.Create("flButton", self)
+  self.finishButton = vgui.Create("fl_button", self)
   self.finishButton:SetTitle(t('char_create.create'))
   self.finishButton:SetPos(self:GetWide() - 250 + theme.GetOption("FinishButtonOffsetX"), self:GetTall() - 120 + theme.GetOption("FinishButtonOffsetY"))
   self.finishButton:SetDrawBackground(false)
@@ -87,4 +87,4 @@ function PANEL:Paint(w, h)
   draw.SimpleText(t"char_create.text", theme.GetFont("Text_Large"), 24, 42)
 end
 
-vgui.Register("flCharacterCreation", PANEL, "flFrame")
+vgui.Register("flCharacterCreation", PANEL, "fl_frame")

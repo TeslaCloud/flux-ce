@@ -42,7 +42,7 @@ function PANEL:RecreateSidebar(bShouldCreateButtons)
     return
   end
 
-  self.sidebar = vgui.Create("flSidebar", self)
+  self.sidebar = vgui.Create("fl_sidebar", self)
   self.sidebar:SetPos(theme.GetOption("MainMenu_SidebarX"), theme.GetOption("MainMenu_SidebarY"))
   self.sidebar:SetSize(theme.GetOption("MainMenu_SidebarWidth"), theme.GetOption("MainMenu_SidebarHeight"))
   self.sidebar:SetMargin(theme.GetOption("MainMenu_SidebarMargin"))
@@ -55,7 +55,7 @@ function PANEL:RecreateSidebar(bShouldCreateButtons)
   if bShouldCreateButtons then
     hook.run("AddMainMenuItems", self, self.sidebar)
   else
-    local backButton = vgui.Create("flButton")
+    local backButton = vgui.Create("fl_button")
     backButton:SetSize(theme.GetOption("MainMenu_SidebarWidth"), theme.GetOption("MainMenu_SidebarButtonHeight"))
     backButton:SetIcon("fa-chevron-left")
     backButton:SetIconSize(16)
@@ -97,7 +97,7 @@ function PANEL:OpenMenu(panel, data)
 end
 
 function PANEL:add_button(text, callback)
-  local button = vgui.Create("flButton", self)
+  local button = vgui.Create("fl_button", self)
   button:SetSize(theme.GetOption("MainMenu_SidebarWidth"), theme.GetOption("MainMenu_SidebarButtonHeight"))
   button:SetText(string.utf8upper(text))
   button:SetDrawBackground(false)

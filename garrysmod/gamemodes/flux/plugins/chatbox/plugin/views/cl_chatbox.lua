@@ -20,7 +20,7 @@ function PANEL:Init()
   self.scrollPanel:SetSize(w, h)
   self.scrollPanel:PerformLayout()
 
-  self.text_entry = vgui.Create("flTextEntry", self)
+  self.text_entry = vgui.Create("fl_text_entry", self)
   self.text_entry:SetText("")
   self.text_entry:SetSize(1, 1)
   self.text_entry.history = {}
@@ -269,4 +269,4 @@ function PANEL:PaintOver(w, h)
   end
 end
 
-vgui.Register("flChatPanel", PANEL, "flBasePanel")
+vgui.Register("flChatPanel", PANEL, "fl_base_panel")

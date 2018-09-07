@@ -79,7 +79,7 @@ function GM:ScoreboardShow()
       fl.tabMenu:CloseMenu(true)
     end
 
-    fl.tabMenu = theme.CreatePanel("TabMenu", nil, "flTabMenu")
+    fl.tabMenu = theme.CreatePanel("TabMenu", nil, "fl_tab_menu")
     fl.tabMenu:MakePopup()
     fl.tabMenu.heldTime = CurTime() + 0.3
   end
@@ -147,7 +147,7 @@ function GM:HUDPaint()
 
     if fl.client.lastDamage and fl.client.lastDamage > (curTime - 0.3) then
       local alpha = math.Clamp(255 - 255 * (curTime - fl.client.lastDamage) * 3.75, 0, 200)
-      draw.TexturedRect(util.get_material("materials/flux/hl2rp/blood.png"), 0, 0, scrW, scrH, Color(255, 0, 0, alpha))
+      draw.textured_rect(util.get_material("materials/flux/hl2rp/blood.png"), 0, 0, scrW, scrH, Color(255, 0, 0, alpha))
       draw.RoundedBox(0, 0, 0, scrW, scrH, Color(255, 210, 210, alpha))
     end
 
@@ -180,18 +180,18 @@ function GM:FLHUDPaint(curTime, scrW, scrH)
     local x, y = ScrC()
 
     surface.SetDrawColor(0, 0, 0, 200)
-    surface.DrawCircle(x, y, 41, 64)
-    surface.DrawOutlinedCircle(x, y, 41, 10, 64)
+    surface.draw_circle(x, y, 41, 64)
+    surface.draw_circle_outlined(x, y, 41, 10, 64)
 
     surface.SetDrawColor(theme.GetColor("Text"))
-    surface.DrawPartialOutlinedCircle(math.Clamp(percentage, 0, 100), x, y, 40, 8  , 64)
+    surface.draw_circle_outlined_partial(math.Clamp(percentage, 0, 100), x, y, 40, 8  , 64)
 
     fl.client.circleActionPercentage = nil
   end
 end
 
 function GM:HUDPaintDeathBackground(curTime, w, h)
-  draw.TexturedRect(util.get_material("materials/flux/hl2rp/blood.png"), 0, 0, w, h, Color(255, 0, 0, 200))
+  draw.textured_rect(util.get_material("materials/flux/hl2rp/blood.png"), 0, 0, w, h, Color(255, 0, 0, 200))
 end
 
 function GM:HUDDrawTargetID()
@@ -271,8 +271,8 @@ function GM:SynchronizeTools()
 end
 
 function GM:RenderScreenspaceEffects()
-  if fl.client.colorModify then
-    DrawColorModify(fl.client.colorModifyTable)
+  if fl.client.color_mod then
+    DrawColorModify(fl.client.color_mod_table)
   end
 end
 
@@ -280,14 +280,14 @@ end
 function GM:AddTabMenuItems(menu)
   menu:AddMenuItem("scoreboard", {
     title = t"tab_menu.scoreboard",
-    panel = "flScoreboard",
+    panel = "fl_scoreboard",
     icon = "fa-list-alt"
   })
 
   menu:AddMenuItem("help", {
     title = "Help",
     icon = "fa-book",
-    panel = "flHelp",
+    panel = "fl_help",
   })
 end
 

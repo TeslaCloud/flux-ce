@@ -15,7 +15,7 @@ function fl.notification:Add(text, lifetime, textColor, backColor)
     display[top - 1].isLast = false
   end
 
-  local panel = vgui.Create("flNotification")
+  local panel = vgui.Create("fl_notification")
   panel:SetText(text)
   panel:SetLifetime(lifetime)
   panel:SetTextColor(textColor)
@@ -39,7 +39,7 @@ function fl.notification:Add(text, lifetime, textColor, backColor)
 end
 
 function fl.notification:AddPopup(text, lifetime, x, y, textColor, backColor)
-  local panel = vgui.Create("flNotification")
+  local panel = vgui.Create("fl_notification")
   panel:SetPos(x, y)
   panel:SetText(text)
   panel:SetLifetime(lifetime)

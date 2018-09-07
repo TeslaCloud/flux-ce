@@ -85,7 +85,7 @@ function flFactions:PreRebuildScoreboard(panel, w, h)
     cat:SetContents(list)
 
     for k, v in ipairs(players) do
-      local playerCard = vgui.Create("flScoreboardPlayer", self)
+      local playerCard = vgui.Create("fl_scoreboard_player", self)
       playerCard:SetSize(w - 8, cardTall)
       playerCard:SetPlayer(v)
       playerCard:SetPos(0, 5)

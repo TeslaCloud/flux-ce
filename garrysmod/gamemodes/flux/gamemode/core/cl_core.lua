@@ -9,7 +9,7 @@ do
 end
 
 do
-  local defaultColorModify = {
+  local default_color_mod = {
     ["$pp_colour_addr"] = 0,
     ["$pp_colour_addg"] = 0,
     ["$pp_colour_addb"] = 0,
@@ -21,106 +21,106 @@ do
     ["$pp_colour_mulb"] = 0
   }
 
-  function fl.SetColorModifyEnabled(bEnable)
-    if !fl.client.colorModifyTable then
-      fl.client.colorModifyTable = defaultColorModify
+  function fl.color_mod_enabled(enable)
+    if !fl.client.color_mod_table then
+      fl.client.color_mod_table = default_color_mod
     end
 
-    if bEnable then
-      fl.client.colorModify = true
+    if enable then
+      fl.client.color_mod = true
 
       return true
     end
 
-    fl.client.colorModify = false
+    fl.client.color_mod = false
   end
 
-  function fl.EnableColorModify()
-    return fl.SetColorModifyEnabled(true)
+  function enable_color_mod()
+    return fl.color_mod_enabled(true)
   end
 
-  function fl.DisableColorModify()
-    return fl.SetColorModifyEnabled(false)
+  function fl.disable_color_mod()
+    return fl.color_mod_enabled(false)
   end
 
-  function fl.SetColorModifyVal(strIndex, nValue)
-    if !fl.client.colorModifyTable then
-      fl.client.colorModifyTable = defaultColorModify
+  function fl.set_color_mod(index, value)
+    if !fl.client.color_mod_table then
+      fl.client.color_mod_table = default_color_mod
     end
 
-    if isstring(strIndex) then
-      if !strIndex:starts("$pp_colour_") then
-        if strIndex == "color" then strIndex = "colour" end
+    if isstring(index) then
+      if !index:starts("$pp_colour_") then
+        if index == "color" then index = "colour" end
 
-        fl.client.colorModifyTable["$pp_colour_"..strIndex] = (isnumber(nValue) and nValue) or 0
+        fl.client.color_mod_table["$pp_colour_"..index] = (isnumber(value) and value) or 0
       else
-        fl.client.colorModifyTable[strIndex] = (isnumber(nValue) and nValue) or 0
+        fl.client.color_mod_table[index] = (isnumber(value) and value) or 0
       end
     end
   end
 
-  function fl.SetColorModifyTable(tab)
+  function fl.set_color_mod_table(tab)
     if istable(tab) then
-      fl.client.colorModifyTable = tab
+      fl.client.color_mod_table = tab
     end
   end
 end
 
-function fl.SetCirclePercentage(percentage)
+function fl.set_circle_percent(percentage)
   fl.client.circleActionPercentage = tonumber(percentage) or -1
 end
 
-function surface.DrawScaledText(strText, strFontName, nPosX, nPosY, nScale, color)
+function surface.draw_text_scaled(text, font_name, pos_x, pos_y, scale, color)
   local matrix = Matrix()
-  local pos = Vector(nPosX, nPosY)
+  local pos = Vector(pos_x, pos_y)
 
   matrix:Translate(pos)
-  matrix:Scale(Vector(1, 1, 1) * nScale)
+  matrix:Scale(Vector(1, 1, 1) * scale)
   matrix:Translate(-pos)
 
   cam.PushModelMatrix(matrix)
-    surface.SetFont(strFontName)
+    surface.SetFont(font_name)
     surface.SetTextColor(color)
-    surface.SetTextPos(nPosX, nPosY)
-    surface.DrawText(strText)
+    surface.SetTextPos(pos_x, pos_y)
+    surface.DrawText(text)
   cam.PopModelMatrix()
 end
 
-function surface.DrawRotatedText(strText, strFontName, nPosX, nPosY, angle, color)
+function surface.draw_text_rotated(text, font_name, pos_x, pos_y, angle, color)
   local matrix = Matrix()
-  local pos = Vector(nPosX, nPosY)
+  local pos = Vector(pos_x, pos_y)
 
   matrix:Translate(pos)
   matrix:Rotate(Angle(0, angle, 0))
   matrix:Translate(-pos)
 
   cam.PushModelMatrix(matrix)
-    surface.SetFont(strFontName)
+    surface.SetFont(font_name)
     surface.SetTextColor(color)
-    surface.SetTextPos(nPosX, nPosY)
-    surface.DrawText(strText)
+    surface.SetTextPos(pos_x, pos_y)
+    surface.DrawText(text)
   cam.PopModelMatrix()
 end
 
-function surface.DrawScaled(nPosX, nPosY, nScale, callback)
+function surface.draw_scaled(pos_x, pos_y, scale, callback)
   local matrix = Matrix()
-  local pos = Vector(nPosX, nPosY)
+  local pos = Vector(pos_x, pos_y)
 
   matrix:Translate(pos)
-  matrix:Scale(Vector(1, 1, 0) * nScale)
+  matrix:Scale(Vector(1, 1, 0) * scale)
   matrix:Rotate(Angle(0, 0, 0))
   matrix:Translate(-pos)
 
   cam.PushModelMatrix(matrix)
     if callback then
-      Try("DrawScaled", callback, nPosX, nPosY, nScale)
+      Try("draw_scaled", callback, pos_x, pos_y, scale)
     end
   cam.PopModelMatrix()
 end
 
-function surface.DrawRotated(nPosX, nPosY, angle, callback)
+function surface.draw_rotated(pos_x, pos_y, angle, callback)
   local matrix = Matrix()
-  local pos = Vector(nPosX, nPosY)
+  local pos = Vector(pos_x, pos_y)
 
   matrix:Translate(pos)
   matrix:Rotate(Angle(0, angle, 0))
@@ -128,12 +128,12 @@ function surface.DrawRotated(nPosX, nPosY, angle, callback)
 
   cam.PushModelMatrix(matrix)
     if callback then
-      Try("DrawRotated", callback, nPosX, nPosY, angle)
+      Try("draw_rotated", callback, pos_x, pos_y, angle)
     end
   cam.PopModelMatrix()
 end
 
-function surface.IsMouseInRect(x, y, w, h)
+function surface.mouse_in_rect(x, y, w, h)
   local mx, my = gui.MousePos()
   return (mx >= x and mx <= x + w and my >= y and my <= y + h)
 end
@@ -141,9 +141,9 @@ end
 do
   local cache = {}
 
-  function surface.DrawCircle(x, y, radius, passes)
+  function surface.draw_circle(x, y, radius, passes)
     if !x or !y or !radius then
-      error("surface.DrawCircle - Too few arguments to function call (3 expected)")
+      error("surface.draw_circle - Too few arguments to function call (3 expected)")
     end
 
     -- In case no passes variable was passed, in which case we give a normal smooth circle.
@@ -156,11 +156,11 @@ do
       info = {}
 
       for i = 1, passes + 1 do
-        local degInRad = i * math.pi / (passes * 0.5)
+        local deg_in_rad = i * math.pi / (passes * 0.5)
 
         info[i] = {
-          x = x + math.cos(degInRad) * radius,
-          y = y + math.sin(degInRad) * radius
+          x = x + math.cos(deg_in_rad) * radius,
+          y = y + math.sin(deg_in_rad) * radius
         }
       end
 
@@ -172,16 +172,16 @@ do
   end
 
 
-  local function scaleVertices(tblVertices, iScaleX, iScaleY)
-    for k, v in pairs(tblVertices) do
-      v.x = v.x * iScaleX
-      v.y = v.y * iScaleY
+  local function scale_vertices(vertices, scale_x, scale_y)
+    for k, v in pairs(vertices) do
+      v.x = v.x * scale_x
+      v.y = v.y * scale_y
     end
   end
 
-  function surface.DrawPartialCircle(percentage, x, y, radius, passes)
+  function surface.draw_circle_partial(percentage, x, y, radius, passes)
     if !percentage or !x or !y or !radius then
-      error("surface.DrawPartialCircle - Too few arguments to function call (4 expected)")
+      error("surface.draw_circle_partial - Too few arguments to function call (4 expected)")
     end
 
     -- In case no passes variable was passed, in which case we give a normal smooth circle.
@@ -193,14 +193,14 @@ do
     if !info then
       info = {}
 
-      local startAngle, endAngle, step = -90, 360 / 100 * percentage - 90, 360 / passes
+      local start_angle, end_angle, step = -90, 360 / 100 * percentage - 90, 360 / passes
 
-      if math.abs(startAngle - endAngle) != 0 then
+      if math.abs(start_angle - end_angle) != 0 then
         table.insert(info, {x = 0, y = 0})
       end
 
-      for i = startAngle, endAngle + step, step do
-        i = math.Clamp(i, startAngle, endAngle)
+      for i = start_angle, end_angle + step, step do
+        i = math.Clamp(i, start_angle, end_angle)
 
         local rads = math.rad(i)
         local x = math.cos(rads)
@@ -220,7 +220,7 @@ do
     surface.DrawPoly(info)
   end
 
-  function surface.DrawOutlinedCircle(x, y, radius, thickness, passes)
+  function surface.draw_circle_outlined(x, y, radius, thickness, passes)
     render.ClearStencil()
     render.SetStencilEnable(true)
       render.SetStencilWriteMask(255)
@@ -229,14 +229,14 @@ do
       render.SetStencilFailOperation(STENCIL_REPLACE)
 
       render.SetStencilCompareFunction(STENCIL_EQUAL)
-        surface.DrawCircle(x, y, radius - (thickness or 1), passes)
+        surface.draw_circle(x, y, radius - (thickness or 1), passes)
       render.SetStencilCompareFunction(STENCIL_NOTEQUAL)
-        surface.DrawCircle(x, y, radius, passes)
+        surface.draw_circle(x, y, radius, passes)
     render.SetStencilEnable(false)
     render.ClearStencil()
   end
 
-  function surface.DrawPartialOutlinedCircle(percentage, x, y, radius, thickness, passes)
+  function surface.draw_circle_outlined_partial(percentage, x, y, radius, thickness, passes)
     render.ClearStencil()
     render.SetStencilEnable(true)
       render.SetStencilWriteMask(255)
@@ -245,15 +245,15 @@ do
       render.SetStencilFailOperation(STENCIL_REPLACE)
 
       render.SetStencilCompareFunction(STENCIL_EQUAL)
-        surface.DrawPartialCircle(percentage, x, y, radius - (thickness or 1), passes)
+        surface.draw_circle_partial(percentage, x, y, radius - (thickness or 1), passes)
       render.SetStencilCompareFunction(STENCIL_NOTEQUAL)
-        surface.DrawPartialCircle(percentage, x, y, radius, passes)
+        surface.draw_circle_partial(percentage, x, y, radius, passes)
     render.SetStencilEnable(false)
     render.ClearStencil()
   end
 end
 
-function draw.RoundedBoxOutline(rounding, x, y, w, h, thickness, color, rounding2)
+function draw.box_outlined(rounding, x, y, w, h, thickness, color, rounding2)
   rounding2 = rounding2 or rounding
 
   render.ClearStencil()
@@ -271,7 +271,7 @@ function draw.RoundedBoxOutline(rounding, x, y, w, h, thickness, color, rounding
   render.ClearStencil()
 end
 
-function draw.TexturedRect(material, x, y, w, h, color)
+function draw.textured_rect(material, x, y, w, h, color)
   if !material then return end
 
   color = (IsColor(color) and color) or Color(255, 255, 255)
@@ -284,11 +284,11 @@ end
 do
   local ang = 0
 
-  function fl.DrawRotatingCog(x, y, w, h, color)
+  function fl.draw_rotating_cog(x, y, w, h, color)
     color = color or Color(255, 255, 255)
 
-    surface.DrawRotated(x, y, ang, function(x, y, ang)
-      draw.TexturedRect(util.get_material("materials/flux/cog.png"), x - w * 0.5, y - h * 0.5, w, h, color)
+    surface.draw_rotated(x, y, ang, function(x, y, ang)
+      draw.textured_rect(util.get_material("materials/flux/cog.png"), x - w * 0.5, y - h * 0.5, w, h, color)
     end)
 
     ang = ang + FrameTime() * 32

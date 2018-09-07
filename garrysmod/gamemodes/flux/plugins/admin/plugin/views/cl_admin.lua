@@ -10,7 +10,7 @@ function PANEL:Init()
   self:SetSize(width, height)
   self:SetPos(scrW * 0.5 - width * 0.5, scrH * 0.5 - height * 0.5)
 
-  self.sidebar = vgui.Create("flSidebar", self)
+  self.sidebar = vgui.Create("fl_sidebar", self)
   self.sidebar:SetSize(width / 5, height)
   self.sidebar:SetPos(0, 0)
 
@@ -22,7 +22,7 @@ end
 function PANEL:Paint(w, h)
   DisableClipping(true)
 
-  draw.RoundedBoxOutline(0, -4, -4, w + 8, h + 24, 2, theme.GetColor("Background"))
+  draw.box_outlined(0, -4, -4, w + 8, h + 24, 2, theme.GetColor("Background"))
 
   DisableClipping(false)
 end
@@ -104,7 +104,7 @@ function PANEL:GetMenuSize()
   return font.Scale(1280), font.Scale(900)
 end
 
-vgui.Register("flAdminPanel", PANEL, "flBasePanel")
+vgui.Register("flAdminPanel", PANEL, "fl_base_panel")
 
 concommand.Add("fl_admin_test", function()
   if IsValid(AdminPanel) then

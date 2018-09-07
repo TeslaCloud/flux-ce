@@ -120,7 +120,7 @@ else
         self.dataRequested = true
       end
 
-      fl.DrawRotatingCog(x, y - 48, 48, 48, Color(255, 255, 255))
+      fl.draw_rotating_cog(x, y - 48, 48, 48, Color(255, 255, 255))
 
       return
     end

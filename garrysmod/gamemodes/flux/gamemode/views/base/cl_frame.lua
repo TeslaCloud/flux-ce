@@ -5,7 +5,7 @@ function PANEL:Init()
   self:SetMainColor(theme.GetColor("Main"))
   self:SetAccentColor(theme.GetColor("Accent"))
 
-  self.btnClose = vgui.Create("flButton", self)
+  self.btnClose = vgui.Create("fl_button", self)
   self.btnClose:SetSize(20, 20)
   self.btnClose:SetPos(0, 0)
   self.btnClose:SetIcon("fa-times")
@@ -31,4 +31,4 @@ function PANEL:Think()
   theme.Hook("FrameThink")
 end
 
-vgui.Register("flFrame", PANEL, "flBasePanel")
+vgui.Register("fl_frame", PANEL, "fl_base_panel")
