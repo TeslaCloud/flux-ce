@@ -28,6 +28,7 @@ function ActiveRecord.add_to_schema(table_name, column_name, type)
   local t = ActiveRecord.schema[table_name] or {}
   if t[column_name] then
     t[column_name] = type
+    print(column_name, '=', type)
   else
     local query = ActiveRecord.Database:insert('ar_schema')
       query:insert('table_name', table_name)
@@ -36,6 +37,7 @@ function ActiveRecord.add_to_schema(table_name, column_name, type)
       query:insert('definition', ActiveRecord.adapter.types[type] or '')
     query:execute()
     t[column_name] = type
+    print(column_name, '=>', type)
   end
   ActiveRecord.schema[table_name] = t
 end
