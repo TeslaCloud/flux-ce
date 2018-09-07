@@ -853,15 +853,15 @@ function util.vector_in_poly(point, polyVertices)
 end
 
 function table.Merge(dest, source)
-	for k, v in pairs(source) do
-		if istable(v) and istable(dest[k]) then
-			table.Merge(dest[k], v)
-		else
-			dest[k] = v
-		end
-	end
+  for k, v in pairs(source) do
+    if istable(v) and istable(dest[k]) then
+      table.Merge(dest[k], v)
+    else
+      dest[k] = v
+    end
+  end
 
-	return dest
+  return dest
 end
 
 table.merge = table.Merge
@@ -1418,3 +1418,62 @@ function txt(text)
   end
   return output:chomp(' '):chomp('\n')
 end
+
+local class_keys = {
+  BaseClass = true, base_class = true,
+  class = true, ThisClass = true,
+  model = true
+}
+
+-- A better implementation of PrintTable
+function PrintTable(t, indent, done, indent_length)
+  done = done or {}
+  indent = indent or 0
+  indent_length = indent_length or 1
+
+  local keys = table.GetKeys(t)
+
+  for k, v in pairs(keys) do
+    local l = tostring(v):len()
+
+    if l > indent_length then
+      indent_length = l
+    end
+  end
+
+  indent_length = indent_length + 1
+
+  table.sort(keys, function(a, b)
+    if isnumber(a) and isnumber(b) then return a < b end
+    return tostring(a) < tostring(b)
+  end)
+
+  done[t] = true
+
+  for i = 1, #keys do
+    local key = keys[i]
+    local value = t[key]
+    Msg(string.rep('  ', indent))
+
+    if istable(value) and !done[value] then
+      local str_key = tostring(key)
+
+      if class_keys[key] then
+        Msg(str_key..':'..string.rep(' ', indent_length - str_key:len())..' #<'..tostring(value.class_name or key)..':'..tostring(value):gsub('table: ', '')..'>\n')
+      elseif value == {} then
+        Msg(str_key..':'..string.rep(' ', indent_length - str_key:len())..'[]\n')
+      else
+        done[value] = true
+        Msg(str_key..':\n')
+        PrintTable(value, indent + 1, done, indent_length - 3)
+        done[value] = nil
+      end
+    else
+      local str_key = tostring(key)
+      Msg(str_key..string.rep(' ', indent_length - str_key:len()).."= " )
+      Msg(tostring(value)..'\n')
+    end
+  end
+end
+
+print_table = PrintTable

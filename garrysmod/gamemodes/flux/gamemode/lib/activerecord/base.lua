@@ -2,7 +2,7 @@ class 'ActiveRecord::Base'
 
 ActiveRecord.Base.query_map = a{}
 ActiveRecord.Base.table_name = ''
-ActiveRecord.Base.schema = {}
+ActiveRecord.Base.schema = nil
 ActiveRecord.Base.relations = {}
 
 function ActiveRecord.Base:init()
@@ -14,10 +14,15 @@ function ActiveRecord.Base:class_extended(new_class)
   ActiveRecord.Model:add(new_class)
 end
 
+function ActiveRecord.Base:get_schema()
+  self.schema = self.schema or ActiveRecord.schema[self.table_name] or {}
+  return self.schema
+end
+
 -- Dump object as a simple data table.
 function ActiveRecord.Base:dump()
   local ret = {}
-    for k, v in pairs(self.schema) do
+    for k, v in pairs(self:get_schema()) do
       ret[k] = self[k]
     end
   return ret, self
@@ -263,7 +268,7 @@ local except = {
 }
 
 function ActiveRecord.Base:save()
-  local schema = self.schema or ActiveRecord.schema[self.table_name]
+  local schema = self:get_schema()
 
   if !schema then return end
   if !self.fetched then
