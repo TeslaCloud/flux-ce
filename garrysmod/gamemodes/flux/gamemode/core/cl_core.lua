@@ -49,7 +49,7 @@ do
     end
 
     if (isstring(strIndex)) then
-      if (!strIndex:StartWith("$pp_colour_")) then
+      if (!strIndex:starts("$pp_colour_")) then
         if (strIndex == "color") then strIndex = "colour" end
 
         fl.client.colorModifyTable["$pp_colour_"..strIndex] = (isnumber(nValue) and nValue) or 0

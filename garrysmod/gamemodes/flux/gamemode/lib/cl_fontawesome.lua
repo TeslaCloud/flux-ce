@@ -832,11 +832,11 @@ function fl.fa:GetIcon(id)
 end
 
 function fl.fa:Draw(id, x, y, size, color, xAlign, yAlign, outlineWidth, outlineColor)
-  if (id:StartWith("fa ")) then
+  if (id:starts("fa ")) then
     id = id:sub(4, id:len())
   end
 
-  if (!id:StartWith("fa-")) then
+  if (!id:starts("fa-")) then
     id = "fa-"..id
   end
 

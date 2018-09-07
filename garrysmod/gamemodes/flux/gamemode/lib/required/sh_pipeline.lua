@@ -60,7 +60,7 @@ function pipeline.include_folder(id, directory)
 
   if (!pipe) then return end
 
-  if (!directory:EndsWith("/")) then
+  if (!directory:ends("/")) then
     directory = directory.."/"
   end
 

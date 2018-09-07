@@ -20,11 +20,11 @@ function Try(id, func, ...)
 end
 
 do
-  local tryCache = {}
+  local try_cache = {}
 
   function try(tab)
-    tryCache = {}
-    tryCache.f = tab[1]
+    try_cache = {}
+    try_cache.f = tab[1]
 
     local args = {}
 
@@ -34,18 +34,18 @@ do
       end
     end
 
-    tryCache.args = args
+    try_cache.args = args
   end
 
   function catch(handler)
-    local func = tryCache.f
-    local args = tryCache.args or {}
+    local func = try_cache.f
+    local args = try_cache.args or {}
     local result = {pcall(func, unpack(args))}
     local success = result[1]
     table.remove(result, 1)
 
     handler = handler or {}
-    tryCache = {}
+    try_cache = {}
 
     SUCCEEDED = true
 
@@ -122,42 +122,42 @@ do
 end
 
 -- A function to remove a substring from the end of the string.
-function string.trim_end(str, strNeedle, bAllOccurences)
-  if (!strNeedle or strNeedle == "") then
+function string.trim_end(str, needle, all_occurences)
+  if (!needle or needle == "") then
     return str
   end
 
-  if (str:EndsWith(strNeedle)) then
-    if (bAllOccurences) then
-      while (str:EndsWith(strNeedle)) do
-        str = str:trim_end(strNeedle)
+  if (str:ends(needle)) then
+    if (all_occurences) then
+      while (str:ends(needle)) do
+        str = str:trim_end(needle)
       end
 
       return str
     end
 
-    return str:utf8sub(1, str:utf8len() - strNeedle:utf8len())
+    return str:utf8sub(1, str:utf8len() - needle:utf8len())
   else
     return str
   end
 end
 
 -- A function to remove a substring from the beginning of the string.
-function string.trim_start(str, strNeedle, bAllOccurences)
-  if (!strNeedle or strNeedle == "") then
+function string.trim_start(str, needle, all_occurences)
+  if (!needle or needle == "") then
     return str
   end
 
-  if (str:StartWith(strNeedle)) then
-    if (bAllOccurences) then
-      while (str:StartWith(strNeedle)) do
-        str = str:trim_start(strNeedle)
+  if (str:starts(needle)) then
+    if (all_occurences) then
+      while (str:starts(needle)) do
+        str = str:trim_start(needle)
       end
 
       return str
     end
 
-    return str:utf8sub(strNeedle:utf8len() + 1, str:utf8len())
+    return str:utf8sub(needle:utf8len() + 1, str:utf8len())
   else
     return str
   end
@@ -203,7 +203,7 @@ function util.include(file_name)
       return include(file_name)
     end
   else
-    if (!string.find(file_name, "sv_") and file_name != "init.lua" and !file_name:EndsWith("/init.lua")) then
+    if (!string.find(file_name, "sv_") and file_name != "init.lua" and !file_name:ends("/init.lua")) then
       return include(file_name)
     end
   end
@@ -283,7 +283,7 @@ do
 
     local negative = false
 
-    if (hex:StartWith("-")) then
+    if (hex:starts("-")) then
       hex = hex:sub(2, 2)
       negative = true
     end
@@ -322,7 +322,7 @@ end
 
 -- A function to convert hexadecimal color to a color structure.
 function util.hex_to_color(hex)
-  if (hex:StartWith("#")) then
+  if (hex:starts("#")) then
     hex = hex:sub(2, hex:len())
   end
 
@@ -517,7 +517,7 @@ do
 
   function Color(r, g, b, a)
     if isstring(r) then
-      if r:StartWith("#") then
+      if r:starts("#") then
         return util.hex_to_color(r)
       elseif colors[r:lower()] then
         return colors[r:lower()]
@@ -550,7 +550,7 @@ function player.find(name, case_sensitive, return_first)
   if (!isstring(name)) then return (IsValid(name) and name) or nil end
 
   local hits = {}
-  local isSteamID = name:StartWith("STEAM_")
+  local isSteamID = name:starts("STEAM_")
 
   for k, v in ipairs(_player.GetAll()) do
     if (isSteamID) then
@@ -618,7 +618,7 @@ function string.is_command(str)
   local prefixes = config.Get("command_prefixes") or {}
 
   for k, v in ipairs(prefixes) do
-    if (str:StartWith(v) and hook.run("StringIsCommand", str) != false) then
+    if (str:starts(v) and hook.run("StringIsCommand", str) != false) then
       return true, string.utf8len(v)
     end
   end

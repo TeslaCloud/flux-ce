@@ -48,7 +48,7 @@ local tonumber = tonumber
 do
   local encode = {}
 
-  local tryCache
+  local try_cache
 
   local cacheSize = 0
 
@@ -145,7 +145,7 @@ do
   --  ENCODE STRING
   local gsub = string.gsub
   encode['string'] = function( self, str, output )
-    --if tryCache( str, output ) then return end
+    --if try_cache( str, output ) then return end
     local estr, count = gsub( str, ";", "\\;")
     if( count == 0 )then
       output[ #output + 1 ] = '\''..str..';'
