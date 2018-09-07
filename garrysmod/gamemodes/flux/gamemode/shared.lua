@@ -24,15 +24,17 @@ IS_PRODUCTION    = FLUX_ENV == 'production'
 
 fl.development   = !IS_PRODUCTION
 
-AddCSLuaFile     'flux/config/environment.lua'
-include          'lib/sh_util.lua'
-
 -- Aliases for serverside and clientside constants.
 sv               = SERVER
 cl               = CLIENT
 
 -- Fix for the name conflicts.
 _player, _team, _file, _table, _sound = player, team, file, table, sound
+
+AddCSLuaFile     'flux/config/environment.lua'
+include          'lib/util/base.lua'
+
+util.include_folder('lib/util', true)
 
 if engine.ActiveGamemode() != 'flux' then
   fl.schema = engine.ActiveGamemode()

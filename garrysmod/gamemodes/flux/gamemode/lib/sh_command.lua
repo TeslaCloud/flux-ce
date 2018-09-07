@@ -108,7 +108,7 @@ function fl.command:extract_arguments(text)
           table.insert(arguments, text:utf8sub(i + 1, end_pos - 1))
         else
           local text = text:utf8sub(i, end_pos)
-          local tab = util.table_from_string(text)
+          local tab = table.from_string(text)
 
           if tab then
             table.insert(arguments, tab)
