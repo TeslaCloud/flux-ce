@@ -291,7 +291,7 @@ do
     color = color or Color(255, 255, 255)
 
     surface.DrawRotated(x, y, ang, function(x, y, ang)
-      draw.TexturedRect(util.GetMaterial("materials/flux/cog.png"), x - w * 0.5, y - h * 0.5, w, h, color)
+      draw.TexturedRect(util.get_material("materials/flux/cog.png"), x - w * 0.5, y - h * 0.5, w, h, color)
     end)
 
     ang = ang + FrameTime() * 32

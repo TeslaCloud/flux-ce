@@ -45,7 +45,7 @@ function font.GetSize(name, size, data)
 
       fontData.size = size
 
-      table.Merge(fontData, data)
+      table.merge(fontData, data)
 
       font.Create(newName, fontData)
     end

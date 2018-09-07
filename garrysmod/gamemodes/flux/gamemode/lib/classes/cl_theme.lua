@@ -58,7 +58,7 @@ function Theme:SetColor(id, val)
 end
 
 function Theme:SetMaterial(id, val)
-  self.materials[id] = (!isstring(val) and val) or util.GetMaterial(val)
+  self.materials[id] = (!isstring(val) and val) or util.get_material(val)
 end
 
 function Theme:SetSound(id, val)

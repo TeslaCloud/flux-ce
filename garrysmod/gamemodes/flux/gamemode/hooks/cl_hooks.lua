@@ -147,7 +147,7 @@ function GM:HUDPaint()
 
     if (fl.client.lastDamage and fl.client.lastDamage > (curTime - 0.3)) then
       local alpha = math.Clamp(255 - 255 * (curTime - fl.client.lastDamage) * 3.75, 0, 200)
-      draw.TexturedRect(util.GetMaterial("materials/flux/hl2rp/blood.png"), 0, 0, scrW, scrH, Color(255, 0, 0, alpha))
+      draw.TexturedRect(util.get_material("materials/flux/hl2rp/blood.png"), 0, 0, scrW, scrH, Color(255, 0, 0, alpha))
       draw.RoundedBox(0, 0, 0, scrW, scrH, Color(255, 210, 210, alpha))
     end
 
@@ -191,7 +191,7 @@ function GM:FLHUDPaint(curTime, scrW, scrH)
 end
 
 function GM:HUDPaintDeathBackground(curTime, w, h)
-  draw.TexturedRect(util.GetMaterial("materials/flux/hl2rp/blood.png"), 0, 0, w, h, Color(255, 0, 0, 200))
+  draw.TexturedRect(util.get_material("materials/flux/hl2rp/blood.png"), 0, 0, w, h, Color(255, 0, 0, 200))
 end
 
 function GM:HUDDrawTargetID()

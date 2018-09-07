@@ -19,7 +19,7 @@ function COMMAND:on_run(player, targets, ...)
     v:Kick(reason)
   end
 
-  fl.player:broadcast(L("KickMessage", (IsValid(player) and player:Name()) or "Console", util.PlayerListToString(targets), reason))
+  fl.player:broadcast(L("KickMessage", (IsValid(player) and player:Name()) or "Console", util.player_list_to_string(targets), reason))
 end
 
 COMMAND:register()

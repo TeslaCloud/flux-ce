@@ -37,7 +37,7 @@ function PANEL:OnMousePressed(mouse)
 end
 
 function PANEL:SetIcon(icon)
-  self.icon = util.GetMaterial(icon)
+  self.icon = util.get_material(icon)
 end
 
 function PANEL:SetIconSize(w, h)

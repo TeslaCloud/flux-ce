@@ -34,7 +34,7 @@ function COMMAND:on_run(player, targets, duration, ...)
 
     v:Notify('ban_message', {
       admin = (IsValid(player) and player:Name()) or "Console",
-      target = util.PlayerListToString(targets),
+      target = util.player_list_to_string(targets),
       time = time,
       reason = reason
     })

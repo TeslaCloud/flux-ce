@@ -2,7 +2,7 @@ DeriveGamemode("sandbox")
 
 fileio.OldWrite = fileio.OldWrite or fileio.Write
 
-function fileio.Write(file_name, strFileContents)
+function fileio.Write(file_name, file_nameContents)
   local exploded = string.Explode("/", file_name)
   local curPath = ""
 
@@ -18,7 +18,7 @@ function fileio.Write(file_name, strFileContents)
     end
   end
 
-  fileio.OldWrite(file_name, strFileContents)
+  fileio.OldWrite(file_name, file_nameContents)
 end
 
 oldServerLog = oldServerLog or ServerLog
