@@ -163,7 +163,7 @@ function GM:HUDPaint()
       end
 
       if !hook.run("FLHUDPaint", curTime, scrW, scrH) then
-        fl.bars:DrawTopBars()
+        InfoDisplay:draw_all()
 
         self.BaseClass:HUDPaint()
       end
@@ -181,10 +181,10 @@ function GM:FLHUDPaint(curTime, scrW, scrH)
 
     surface.SetDrawColor(0, 0, 0, 200)
     surface.draw_circle(x, y, 41, 64)
-    surface.draw_circle_outlined(x, y, 41, 10, 64)
+    surface.draw_circle_outline(x, y, 41, 10, 64)
 
     surface.SetDrawColor(theme.GetColor("Text"))
-    surface.draw_circle_outlined_partial(math.Clamp(percentage, 0, 100), x, y, 40, 8  , 64)
+    surface.draw_circle_outline_partial(math.Clamp(percentage, 0, 100), x, y, 40, 8  , 64)
 
     fl.client.circleActionPercentage = nil
   end

@@ -220,7 +220,7 @@ do
     surface.DrawPoly(info)
   end
 
-  function surface.draw_circle_outlined(x, y, radius, thickness, passes)
+  function surface.draw_circle_outline(x, y, radius, thickness, passes)
     render.ClearStencil()
     render.SetStencilEnable(true)
       render.SetStencilWriteMask(255)
@@ -236,7 +236,7 @@ do
     render.ClearStencil()
   end
 
-  function surface.draw_circle_outlined_partial(percentage, x, y, radius, thickness, passes)
+  function surface.draw_circle_outline_partial(percentage, x, y, radius, thickness, passes)
     render.ClearStencil()
     render.SetStencilEnable(true)
       render.SetStencilWriteMask(255)
