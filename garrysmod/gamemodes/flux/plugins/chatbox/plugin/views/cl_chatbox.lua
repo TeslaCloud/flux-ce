@@ -140,7 +140,7 @@ function PANEL:AddMessage(messageData)
 end
 
 function PANEL:AddPanel(panel)
-  if #self.history >= config.Get("chatbox_max_messages") then
+  if #self.history >= config.get("chatbox_max_messages") then
     self.history[1]:Eject()
   end
 
@@ -151,7 +151,7 @@ function PANEL:AddPanel(panel)
 
   self.scrollPanel:AddItem(panel)
 
-  self.lastPos = self.lastPos + config.Get("chatbox_message_margin") + panel:GetTall()
+  self.lastPos = self.lastPos + config.get("chatbox_message_margin") + panel:GetTall()
 end
 
 function PANEL:RemoveMessage(idx)
@@ -180,7 +180,7 @@ function PANEL:Rebuild()
 
     v:SetPos(0, self.lastPos)
 
-    self.lastPos = self.lastPos + config.Get("chatbox_message_margin") + v:GetTall()
+    self.lastPos = self.lastPos + config.get("chatbox_message_margin") + v:GetTall()
   end
 end
 

@@ -8,47 +8,62 @@ config.stored = stored
 
 local cache = {}
 
-function config.GetAll()
+function config.all()
   return stored
 end
 
-function config.GetCache()
+function config.cache()
   return cache
 end
 
 if SERVER then
-  function config.Set(key, value, bIsHidden, nFromConfig)
+  function config.load()
+    local loaded = data.LoadSchema('config', {})
+    for k, v in pairs(loaded) do
+      plugin.call('OnConfigSet', key, stored[k].value, value)
+      stored[k] = v
+    end
+    return stored
+  end
+
+  function config.save()
+    data.SaveSchema('config', stored)
+  end
+
+  function config.set(key, value, hidden, from_config)
     if key != nil then
       if !stored[key] then
         stored[key] = {}
 
         if PLUGIN then
-          stored[key].addedBy = PLUGIN:get_name()
+          stored[key].added_by = PLUGIN:get_name()
         elseif Schema then
-          stored[key].addedBy = "Schema"
+          stored[key].added_by = "Schema"
         else
-          stored[key].addedBy = "Flux"
+          stored[key].added_by = "Flux"
         end
 
-        if isnumber(nFromConfig) then
-          if nFromConfig == CONFIG_FLUX then
-            stored[key].addedBy = "Flux Config"
-          elseif nFromConfig == CONFIG_SCHEMA then
-            stored[key].addedBy = "Schema Config"
-          elseif PLUGIN and nFromConfig == CONFIG_PLUGIN then
-            stored[key].addedBy = PLUGIN:get_name().." Config"
+        if isnumber(from_config) then
+          if from_config == CONFIG_FLUX then
+            stored[key].added_by = "Flux Config"
+          elseif from_config == CONFIG_SCHEMA then
+            stored[key].added_by = "Schema Config"
+          elseif PLUGIN and from_config == CONFIG_PLUGIN then
+            stored[key].added_by = PLUGIN:get_name().." Config"
           end
         end
       end
 
+      plugin.call('OnConfigSet', key, stored[key].value, value)
+
       stored[key].value = value
 
-      if stored[key].hidden == nil or bIsHidden != nil then
-        stored[key].hidden = bIsHidden or false
+      if stored[key].hidden == nil or hidden != nil then
+        stored[key].hidden = hidden or false
       end
 
       if !stored[key].hidden then
-        netstream.Start(nil, "Flux::Config::SetVar", key, stored[key].value)
+        netstream.Start(nil, "config_set_var", key, stored[key].value)
       end
 
       cache[key] = value
@@ -57,70 +72,70 @@ if SERVER then
 
   local player_meta = FindMetaTable("Player")
 
-  function player_meta:SendConfig()
+  function player_meta:send_config()
     for k, v in pairs(stored) do
       if !v.hidden then
-        netstream.Start(self, "Flux::Config::SetVar", k, v.value)
+        netstream.Start(self, "config_set_var", k, v.value)
       end
     end
 
     player.flHasSentConfig = true
   end
 else
-  local menuItems = config.menuItems or {}
-  config.menuItems = menuItems
+  local menu_items = config.menu_items or {}
+  config.menu_items = menu_items
 
-  function config.Set(key, value)
+  function config.set(key, value)
     if key != nil then
-      if !stored[key] then
-        stored[key] = {}
-      end
+      stored[key] = stored[key] or {}
+
+      plugin.call('OnConfigSet', key, stored[key].value, value)
 
       stored[key].value = value
       cache[key] = value
     end
   end
 
-  function config.CreateCategory(id, name, description)
+  function config.create_category(id, name, description)
     id = id or "other"
 
-    menuItems[id] = {
+    menu_items[id] = {
       category = {name = name or "Other", description = description or ""},
       AddKey = function(key, name, description, dataType, data)
-        config.AddToMenu(id, key, name, description, dataType, data)
+        config.add_to_menu(id, key, name, description, dataType, data)
       end,
-      AddSlider = function(key, name, description, data)
-        config.AddToMenu(id, key, name, description, "number", data)
+      add_slider = function(key, name, description, data)
+        config.add_to_menu(id, key, name, description, "number", data)
       end,
-      AddTableEditor = function(key, name, description, data)
-        config.AddToMenu(id, key, name, description, "table", data)
+      add_table_editor = function(key, name, description, data)
+        config.add_to_menu(id, key, name, description, "table", data)
       end,
-      AddTextBox = function(key, name, description, data)
-        config.AddToMenu(id, key, name, description, "string", data)
+      add_textbox = function(key, name, description, data)
+        config.add_to_menu(id, key, name, description, "string", data)
       end,
-      AddCheckbox = function(key, name, description, data)
-        config.AddToMenu(id, key, name, description, "bool", data)
+      add_checkbox = function(key, name, description, data)
+        config.add_to_menu(id, key, name, description, "bool", data)
       end,
-      AddDropdown = function(key, name, description, data)
-        config.AddToMenu(id, key, name, description, "dropdown", data)
+      add_dropdown = function(key, name, description, data)
+        config.add_to_menu(id, key, name, description, "dropdown", data)
       end,
       configs = {}
     }
 
-    return menuItems[id]
+    return menu_items[id]
   end
 
-  function config.GetCategory(id)
-    return menuItems[id]
+  function config.get_category(id)
+    return menu_items[id]
   end
 
-  function config.AddToMenu(category, key, name, description, dataType, data)
+  function config.add_to_menu(category, key, name, description, dataType, data)
     if !category or !key then return end
 
-    menuItems[category] = menuItems[category] or {}
-    menuItems[category].configs = menuItems[category].configs or {}
+    menu_items[category] = menu_items[category] or {}
+    menu_items[category].configs = menu_items[category].configs or {}
 
-    table.insert(menuItems[category].configs, {
+    table.insert(menu_items[category].configs, {
       name = name or key,
       description = description or "This config has no description set.",
       type = dataType,
@@ -128,14 +143,12 @@ else
     })
   end
 
-  function config.GetMenuKeys()
-    return menuItems
+  function config.get_menu_keys()
+    return menu_items
   end
 
-  netstream.Hook("Flux::Config::SetVar", function(key, value)
+  netstream.Hook("config_set_var", function(key, value)
     if key == nil then return end
-
-    print(key, value)
 
     stored[key] = stored[key] or {}
     stored[key].value = value
@@ -143,7 +156,7 @@ else
   end)
 end
 
-function config.Get(key, default)
+function config.get(key, default)
   if cache[key] then
     return cache[key]
   end
@@ -162,14 +175,14 @@ function config.Get(key, default)
 end
 
 if SERVER then
-  function config.Import(contents, from_config)
+  function config.import(contents, from_config)
     if !isstring(contents) or contents == "" then return end
 
     local config_table = YAML.eval(contents)
 
     for k, v in pairs(config_table) do
       if k != "depends" and plugin.call("ShouldConfigImport", k, v) == nil then
-        config.Set(k, v, nil, from_config)
+        config.set(k, v, nil, from_config)
       end
     end
 

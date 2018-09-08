@@ -1,5 +1,5 @@
 function flObserver:ShouldObserverReset(player)
-  return config.Get("observer_reset")
+  return config.get("observer_reset")
 end
 
 function flObserver:PlayerEnterNoclip(player)

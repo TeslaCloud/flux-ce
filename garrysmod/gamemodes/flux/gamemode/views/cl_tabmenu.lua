@@ -1,5 +1,5 @@
 local PANEL = {}
-PANEL.menuItems = {}
+PANEL.menu_items = {}
 PANEL.buttons = {}
 PANEL.activePanel = nil
 
@@ -28,11 +28,11 @@ function PANEL:Init()
 
   curY = curY + font.Scale(52)
 
-  self.menuItems = {}
+  self.menu_items = {}
 
   hook.run("AddTabMenuItems", self)
 
-  for k, v in ipairs(self.menuItems) do
+  for k, v in ipairs(self.menu_items) do
     local button = vgui.Create("fl_button", self)
     button:SetDrawBackground(false)
     button:SetPos(6, curY)
@@ -101,9 +101,9 @@ function PANEL:AddMenuItem(id, data, index)
   data.icon = data.icon or false
 
   if isnumber(index) then
-    table.insert(self.menuItems, index, data)
+    table.insert(self.menu_items, index, data)
   else
-    table.insert(self.menuItems, data)
+    table.insert(self.menu_items, data)
   end
 end
 

@@ -248,7 +248,7 @@ function plugin.register(obj)
       if file.Exists(filePath, "GAME") then
         fl.dev_print("Importing config: "..filePath)
 
-        config.Import(fileio.Read(filePath), CONFIG_PLUGIN)
+        config.import(fileio.Read(filePath), CONFIG_PLUGIN)
       end
     end
   end

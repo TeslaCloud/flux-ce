@@ -106,7 +106,7 @@ end
 
 -- A function to check if string is command or not.
 function string.is_command(str)
-  local prefixes = config.Get("command_prefixes") or {}
+  local prefixes = config.get("command_prefixes") or {}
 
   for k, v in ipairs(prefixes) do
     if str:starts(v) and hook.run("StringIsCommand", str) != false then
