@@ -1,6 +1,5 @@
-if !font then
-  util.include("cl_font.lua")
-end
+if !font then util.include 'cl_font.lua' end
+if !fl.lang then util.include 'sh_lang.lua' end
 
 library.new("bars", fl)
 
@@ -181,9 +180,9 @@ function fl.bars:Adjust(id, data)
 end
 
 do
-  local flBars = {}
+  local Bars = {}
 
-  function flBars:LazyTick()
+  function Bars:LazyTick()
     if IsValid(fl.client) then
       fl.bars:Position()
 
@@ -197,7 +196,7 @@ do
     end
   end
 
-  function flBars:PreDrawBar(bar)
+  function Bars:PreDrawBar(bar)
     bar.curI = bar.curI or 1
 
     bar.realFillWidth = bar.width * (bar.value / bar.maxValue)
@@ -218,7 +217,7 @@ do
     bar.hinderText = string.utf8upper(bar.hinderText)
   end
 
-  function flBars:ShouldDrawBar(bar)
+  function Bars:ShouldDrawBar(bar)
     if bar.display < bar.value or bar.minDisplay >= bar.value then
       return false
     end
@@ -226,25 +225,7 @@ do
     return true
   end
 
-  plugin.add_hooks("FLBarHooks", flBars)
-
-  fl.bars:register("health", {
-    text = t"bar_text.health",
-    color = Color(200, 40, 40),
-    maxValue = 100,
-    callback = function(bar)
-      return fl.client:Health()
-    end
-  })
-
-  fl.bars:register("armor", {
-    text = t"bar_text.armor",
-    color = Color(80, 80, 220),
-    maxValue = 100,
-    callback = function(bar)
-      return fl.client:Armor()
-    end
-  })
+  plugin.add_hooks("FLBarHooks", Bars)
 
   fl.bars:register("respawn", {
     text = t"bar_text.respawn",

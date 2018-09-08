@@ -846,8 +846,8 @@ function fl.fa:Draw(id, x, y, size, color, xAlign, yAlign, outlineWidth, outline
   color = color or Color(255, 255, 255)
 
   if outlineWidth then
-    draw.SimpleTextOutlined(self:GetIcon(id), font.GetSize("flFontAwesome", size), x, y, color, xAlign, yAlign, outlineWidth, outlineColor)
+    return draw.SimpleTextOutlined(self:GetIcon(id), font.GetSize("flFontAwesome", size), x, y, color, xAlign, yAlign, outlineWidth, outlineColor)
   else
-    draw.SimpleText(self:GetIcon(id), font.GetSize("flFontAwesome", size), x, y, color, xAlign, yAlign)
+    return draw.SimpleText(self:GetIcon(id), font.GetSize("flFontAwesome", size), x, y, color, xAlign, yAlign)
   end
 end
