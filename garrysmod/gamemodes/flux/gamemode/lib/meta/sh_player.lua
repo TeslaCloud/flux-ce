@@ -76,6 +76,14 @@ function player_meta:DoAction(id)
   end
 end
 
+function player_meta:running()
+  if self:Alive() and !self:Crouching() and self:KeyDown(IN_SPEED) then
+    return true
+  end
+
+  return false
+end
+
 --[[
   Admin system
 
