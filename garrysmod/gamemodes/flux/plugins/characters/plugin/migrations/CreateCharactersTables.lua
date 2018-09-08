@@ -21,6 +21,7 @@ ActiveRecord.define_model('data', function(t)
 end)
 
 ActiveRecord.define_model('inventories', function(t)
+  t:string 'inventory_type'
   t:integer 'character_id'
 end)
 

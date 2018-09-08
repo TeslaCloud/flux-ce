@@ -106,11 +106,13 @@ end
 function Stamina:PlayerThink(player, cur_time)
   if player:running() then
     if !player.was_running then
+      player:SetFOV(105, 0.5)
       self:start_running(player)
       player.was_running = true
     end
   else
     if player.was_running then
+      player:SetFOV(0, 0.5)
       self:stop_running(player, true)
 
       timer.Simple(1, function()
@@ -123,21 +125,23 @@ function Stamina:PlayerThink(player, cur_time)
     end
   end
 
-  if !player:OnGround() then
-    if player.was_on_ground then
-      self:set_stamina(player, player:get_nv('stamina', 100) - jump_penalty)
-      self:start_running(player, true)
-    end
-
-    player.was_on_ground = false
-  elseif !player.was_on_ground then
-    player.was_on_ground = true
-    self:stop_running(player, true)
-    timer.Simple(1, function()
-      if IsValid(player) and !player.was_running and player.was_on_ground then
-        self:stop_running(player)
+  if player:GetMoveType() == MOVETYPE_WALK then
+    if !player:OnGround() then
+      if player.was_on_ground then
+        self:set_stamina(player, player:get_nv('stamina', 100) - jump_penalty)
+        self:start_running(player, true)
       end
-    end)
+
+      player.was_on_ground = false
+    elseif !player.was_on_ground then
+      player.was_on_ground = true
+      self:stop_running(player, true)
+      timer.Simple(1, function()
+        if IsValid(player) and !player.was_running and player.was_on_ground then
+          self:stop_running(player)
+        end
+      end)
+    end
   end
 
   if player:get_nv('stamina', 100) <= 1 then

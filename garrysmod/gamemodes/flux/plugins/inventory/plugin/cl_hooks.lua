@@ -1,7 +1,7 @@
-function flInventory:AddTabMenuItems(menu)
+function fl_inventory:AddTabMenuItems(menu)
   menu:AddMenuItem("inventory", {
     title = "Inventory",
-    panel = "flInventory",
+    panel = "fl_inventory",
     icon = "fa-inbox",
     callback = function(menuPanel, button)
       local inv = menuPanel.activePanel
@@ -9,6 +9,30 @@ function flInventory:AddTabMenuItems(menu)
       inv:SetTitle("Inventory")
     end
   })
+end
+
+function fl_inventory:create_hotbar()
+  fl.client.hotbar = vgui.Create('fl_hotbar')
+  return fl.client.hotbar
+end
+
+function fl_inventory:Initialize()
+  self:create_hotbar()
+end
+
+function fl_inventory:PostCharacterLoaded()
+  if !IsValid(fl.client.hotbar) then
+    self:create_hotbar()
+  end
+
+  if fl.client:Alive() and fl.client:HasInitialized() then
+    local hotbar = fl.client.hotbar
+    local w, h = hotbar:GetSize()
+    local cx, cy = ScrC()
+    hotbar:SetVisible(true)
+    hotbar:Rebuild()
+    hotbar:SetPos(cx - w * 0.5, ScrH() - h - font.Scale(32))
+  end
 end
 
 spawnmenu.AddCreationTab("Items", function()

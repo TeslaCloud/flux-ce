@@ -1,4 +1,4 @@
-function flInventory:PostCharacterLoaded(player, character)
+function fl_inventory:PostCharacterLoaded(player, character)
   player:CheckInventory()
 
   for slot, ids in ipairs(player:GetInventory()) do
