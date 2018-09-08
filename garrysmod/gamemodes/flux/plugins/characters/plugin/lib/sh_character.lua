@@ -4,13 +4,13 @@ local stored = character.stored or {}
 character.stored = stored
 
 function character.Create(player, data)
-  if (!isstring(data.name) or (data.name:utf8len() < config.Get("character_min_name_len")
-    or data.name:utf8len() > config.Get("character_max_name_len"))) then
+  if (!isstring(data.name) or (data.name:utf8len() < config.get("character_min_name_len")
+    or data.name:utf8len() > config.get("character_max_name_len"))) then
     return CHAR_ERR_NAME
   end
 
-  if (!isstring(data.phys_desc) or (data.phys_desc:utf8len() < config.Get("character_min_desc_len")
-    or data.phys_desc:utf8len() > config.Get("character_max_desc_len"))) then
+  if (!isstring(data.phys_desc) or (data.phys_desc:utf8len() < config.get("character_min_desc_len")
+    or data.phys_desc:utf8len() > config.get("character_max_desc_len"))) then
     return CHAR_ERR_DESC
   end
 

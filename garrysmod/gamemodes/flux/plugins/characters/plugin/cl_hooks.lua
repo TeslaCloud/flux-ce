@@ -227,9 +227,9 @@ netstream.Hook("PlayerCreatedCharacter", function(success, status)
       if hookText then
         text = hookText
       elseif status == CHAR_ERR_NAME then
-        text = "Your character's name must be between "..config.Get("character_min_name_len").." and "..config.Get("character_max_name_len").." characters long!"
+        text = "Your character's name must be between "..config.get("character_min_name_len").." and "..config.get("character_max_name_len").." characters long!"
       elseif status == CHAR_ERR_DESC then
-        text = "Your character's description must be between "..config.Get("character_min_desc_len").." and "..config.Get("character_max_desc_len").." characters long!"
+        text = "Your character's description must be between "..config.get("character_min_desc_len").." and "..config.get("character_max_desc_len").." characters long!"
       elseif status == CHAR_ERR_GENDER then
         text = "You must pick a gender for your character before continuing!"
       elseif status == CHAR_ERR_MODEL then

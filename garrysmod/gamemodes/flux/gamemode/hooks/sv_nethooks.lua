@@ -10,7 +10,7 @@ end)
 netstream.Hook("player_created", function(player)
   netstream.Heavy(player, "SharedTables", fl.shared)
 
-  player:SendConfig()
+  player:send_config()
   player:SyncNetVars()
 end)
 

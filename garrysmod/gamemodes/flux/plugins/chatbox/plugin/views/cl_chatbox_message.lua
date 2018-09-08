@@ -13,7 +13,7 @@ function PANEL:Init()
   --end
 
   self.addTime = CurTime()
-  self.fadeTime = self.addTime + config.Get("chatbox_message_fade_delay")
+  self.fadeTime = self.addTime + config.get("chatbox_message_fade_delay")
 end
 
 function PANEL:Think()

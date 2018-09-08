@@ -6,8 +6,10 @@ function GM:Initialize()
   local config_file = fileio.Read("gamemodes/flux/flux.yml")
 
   if config_file then
-    config.Import(config_file, CONFIG_FLUX)
+    config.import(config_file, CONFIG_FLUX)
   end
+
+  config.load()
 
   ActiveRecord.connect()
 end
@@ -51,10 +53,10 @@ function GM:PlayerSpawn(player)
   player:UnSpectate()
   player:GodDisable()
 
-  player:SetCrouchedWalkSpeed(config.Get("crouched_speed") / config.Get("walk_speed"))
-  player:SetWalkSpeed(config.Get("walk_speed"))
-  player:SetJumpPower(config.Get("jump_power"))
-  player:SetRunSpeed(config.Get("run_speed"))
+  player:SetCrouchedWalkSpeed(config.get("crouched_speed") / config.get("walk_speed"))
+  player:SetWalkSpeed(config.get("walk_speed"))
+  player:SetJumpPower(config.get("jump_power"))
+  player:SetRunSpeed(config.get("run_speed"))
 
   hook.run("PostPlayerSpawn", player)
 
@@ -129,7 +131,7 @@ function GM:PlayerInitialized(player)
 end
 
 function GM:PlayerDeath(player, inflictor, attacker)
-  player:set_nv("RespawnTime", CurTime() + config.Get("respawn_delay"))
+  player:set_nv("RespawnTime", CurTime() + config.get("respawn_delay"))
 end
 
 function GM:PlayerDeathThink(player)
@@ -312,7 +314,7 @@ function GM:OneSecond()
       hook.run("FLSaveData")
     end
 
-    fl.nextSaveData = curTime + config.Get("data_save_interval")
+    fl.nextSaveData = curTime + config.get("data_save_interval")
   end
 
   if !fl.NextPlayerCountCheck then
@@ -339,6 +341,7 @@ function GM:OnSchemaLoaded()
 end
 
 function GM:FLSaveData()
+  config.save()
   hook.run("SaveData")
 end
 

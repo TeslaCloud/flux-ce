@@ -37,7 +37,7 @@ function flAdmin:CheckPassword(steam_id64, ip, sv_pass, cl_pass, name)
 end
 
 function flAdmin:PlayerRestored(player, record)
-  local root_steamid = config.Get("root_steamid")
+  local root_steamid = config.get("root_steamid")
 
   if isstring(root_steamid) then
     if player:SteamID() == root_steamid then
