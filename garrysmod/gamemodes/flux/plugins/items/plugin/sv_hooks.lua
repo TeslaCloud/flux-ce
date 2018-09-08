@@ -41,7 +41,11 @@ function flItems:PlayerDropItem(player, instance_id)
   if distance < 80 then
     item.Spawn(trace.HitPos, Angle(0, 0, 0), itemTable)
   else
-    item.Spawn(player:EyePos() + trace.Normal * 15, Angle(0, 0, 0), itemTable)
+    local ent, item_table = item.Spawn(player:EyePos() + trace.Normal * 20, Angle(0, 0, 0), itemTable)
+    local phys_obj = ent:GetPhysicsObject()
+    if IsValid(phys_obj) then
+      phys_obj:ApplyForceCenter(trace.Normal * 200)
+    end
   end
 
   item.AsyncSaveEntities()

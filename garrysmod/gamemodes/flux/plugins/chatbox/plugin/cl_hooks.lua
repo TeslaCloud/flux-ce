@@ -13,17 +13,17 @@ function flChatbox:OnThemeLoaded(current_theme)
   current_theme:SetFont("Chatbox_ItalicBold", "flRobotoCondensedItalicBold", font.Scale(20))
   current_theme:SetFont("Chatbox_Syntax", "flRobotoCondensed", font.Scale(24))
 
-  current_theme:SetOption("Chatbox_Width", scrW / 3)
-  current_theme:SetOption("Chatbox_Height", scrH / 3)
-  current_theme:SetOption("Chatbox_X", 8)
-  current_theme:SetOption("Chatbox_Y", scrH - current_theme:GetOption("Chatbox_Height") - 32)
+  current_theme:SetOption("Chatbox_Width", scrW / 2.25)
+  current_theme:SetOption("Chatbox_Height", scrH / 2.25)
+  current_theme:SetOption("Chatbox_X", font.Scale(8))
+  current_theme:SetOption("Chatbox_Y", scrH - current_theme:GetOption("Chatbox_Height") - font.Scale(32))
 end
 
 function flChatbox:OnResolutionChanged(newW, newH)
-  theme.SetOption("Chatbox_Width", newW / 3)
-  theme.SetOption("Chatbox_Height", newH / 3)
-  theme.SetOption("Chatbox_X", 8)
-  theme.SetOption("Chatbox_Y", newH - theme.GetOption("Chatbox_Height") - 32)
+  theme.SetOption("Chatbox_Width", newW / 2.25)
+  theme.SetOption("Chatbox_Height", newH / 2.25)
+  theme.SetOption("Chatbox_X", font.Scale(8))
+  theme.SetOption("Chatbox_Y", newH - theme.GetOption("Chatbox_Height") - font.Scale(32))
 
   if chatbox.panel then
     chatbox.panel:Remove()

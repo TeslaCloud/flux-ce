@@ -3,6 +3,7 @@ PANEL.itemData = nil
 PANEL.itemCount = 0
 PANEL.instance_ids = {}
 PANEL.isHovered = false
+PANEL.slot_number = nil
 
 function PANEL:SetItem(instance_id)
   if istable(instance_id) then
@@ -67,7 +68,7 @@ function PANEL:Reset()
 end
 
 function PANEL:Paint(w, h)
-  local drawColor = theme.GetColor("Background"):lighten(70)
+  local drawColor = Color(0, 0, 0, 150)
 
   if self.isHovered and !self:IsHovered() then
     self.isHovered = false
@@ -114,6 +115,12 @@ function PANEL:Paint(w, h)
   if self.itemCount >= 2 then
     DisableClipping(true)
       draw.SimpleText(self.itemCount, theme.GetFont("Text_Smallest"), 52, 50, Color(200, 200, 200))
+    DisableClipping(false)
+  end
+
+  if isnumber(self.slot_number) then
+    DisableClipping(true)
+      draw.SimpleText(self.slot_number, theme.GetFont("Text_Smallest"), 4, 50, Color(200, 200, 200))
     DisableClipping(false)
   end
 end
@@ -240,6 +247,10 @@ function PANEL:Rebuild()
     invSlot:SetSize(64, 64)
     invSlot.slotNum = i
 
+    if self.draw_inventory_slots then
+      invSlot.slot_number = i
+    end
+
     if self.inventory[i] and #self.inventory[i] > 0 then
       if #self.inventory[i] > 1 then
         invSlot:SetItemMulti(self.inventory[i])
@@ -311,4 +322,4 @@ function PANEL:Rebuild()
   end, {})
 end
 
-vgui.Register("flInventory", PANEL, "fl_frame")
+vgui.Register("fl_inventory", PANEL, "fl_base_panel")

@@ -1,6 +1,7 @@
 hook.Remove("PostDrawEffects", "RenderWidgets")
 hook.Remove("PlayerTick", "TickWidgets")
 hook.Remove("PlayerInitialSpawn", "PlayerAuthSpawn")
+hook.Remove("RenderScene", "RenderStereoscopy")
 
 -- Called when gamemode's server browser name needs to be retrieved.
 function GM:GetGameDescription()

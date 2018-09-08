@@ -93,7 +93,7 @@ function fl.admin:can(player, action, object)
   if !IsValid(player) then return true end
   if player:is_root() then return true end
 
-  local role = player.record and roles[player.record.role]
+  local role = roles[player:GetUserGroup()]
 
   if istable(role) and isfunction(role.can) then
     return role:can(player, action, object)

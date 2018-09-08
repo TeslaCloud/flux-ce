@@ -56,7 +56,7 @@ function chatbox.AddText(listeners, ...)
     size = 20,
     text = nil,
     teamChat = false,
-    maxHeight = 20
+    max_height = 20
   }
 
   if !istable(listeners) then
@@ -78,8 +78,8 @@ function chatbox.AddText(listeners, ...)
     elseif isnumber(v) then
       table.insert(messageData.data, v)
 
-      if messageData.maxHeight < v then
-        messageData.maxHeight = v
+      if messageData.max_height < v then
+        messageData.max_height = v
       end
     elseif IsColor(v) then
       table.insert(messageData.data, v)

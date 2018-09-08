@@ -1,4 +1,4 @@
-PLUGIN:set_alias("flInventory")
+PLUGIN:set_alias("fl_inventory")
 
 util.include("cl_hooks.lua")
 util.include("sv_hooks.lua")

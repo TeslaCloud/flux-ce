@@ -16,21 +16,21 @@ end
 
 function chatbox.Compile(messageTable)
   local compiled = {
-    totalHeight = 0
+    total_height = 0
   }
 
   local data = messageTable.data
-  local shouldTranslate = messageTable.shouldTranslate
-  local curSize = _font.Scale(18)
+  local should_translate = messageTable.should_translate
+  local cur_size = _font.Scale(18)
 
   if isnumber(messageTable.size) then
-    curSize = _font.Scale(messageTable.size)
+    cur_size = _font.Scale(messageTable.size)
   end
 
   local curX, curY = 0, 0
-  local totalHeight = 0
-  local maxHeight = font.Scale(messageTable.maxHeight)
-  local font = _font.GetSize(theme.GetFont("Chatbox_Normal"), curSize)
+  local total_height = 0
+  local max_height = font.Scale(messageTable.max_height)
+  local font = _font.GetSize(theme.GetFont("Chatbox_Normal"), cur_size)
 
   if plugin.call("ChatboxCompileMessage", data, compiled) != true then
     for k, v in ipairs(data) do
@@ -39,36 +39,36 @@ function chatbox.Compile(messageTable)
       end
 
       if isstring(v) then
-        if shouldTranslate then
+        if should_translate then
           data[k] = t(v)
         end
 
         local wrapped = util.wrap_text(v, font, chatbox.width, curX)
-        local nWrapped = #wrapped
+        local line_count = #wrapped
 
         for k2, v2 in ipairs(wrapped) do
           local w, h = util.text_size(v2, font)
 
-          table.insert(compiled, {text = v2, w = w, h = h, x = curX, y = curY + (maxHeight - h)})
+          table.insert(compiled, {text = v2, w = w, h = h, x = curX, y = curY + (max_height - h)})
 
           curX = curX + w
 
-          if nWrapped > 1 and k2 != nWrapped then
+          if line_count > 1 and k2 != line_count then
             curY = curY + h + config.get("chatbox_message_margin")
 
-            totalHeight = totalHeight + h + config.get("chatbox_message_margin")
+            total_height = total_height + h + config.get("chatbox_message_margin")
 
             curX = 0
-          elseif totalHeight < h then
-            totalHeight = h
+          elseif total_height < h then
+            total_height = h + config.get("chatbox_message_margin")
           end
         end
       elseif isnumber(v) then
-        curSize = _font.Scale(v)
+        cur_size = _font.Scale(v)
 
-        font = _font.GetSize(theme.GetFont("Chatbox_Normal"), curSize)
+        font = _font.GetSize(theme.GetFont("Chatbox_Normal"), cur_size)
 
-        table.insert(compiled, curSize)
+        table.insert(compiled, cur_size)
       elseif istable(v) then
         if v.image then
           local scaled = _font.Scale(v.height)
@@ -84,8 +84,8 @@ function chatbox.Compile(messageTable)
 
           table.insert(compiled, imageData)
 
-          if totalHeight < scaled then
-            totalHeight = scaled
+          if total_height < scaled then
+            total_height = scaled + config.get("chatbox_message_margin")
           end
         elseif v.r and v.g and v.b and v.a then
           table.insert(compiled, Color(v.r, v.g, v.b, v.a))
@@ -101,18 +101,18 @@ function chatbox.Compile(messageTable)
 
         local w, h = util.text_size(toInsert, font)
 
-        table.insert(compiled, {text = toInsert, w = w, h = h, x = curX, y = curY + (maxHeight - h)})
+        table.insert(compiled, {text = toInsert, w = w, h = h, x = curX, y = curY + (max_height - h)})
 
         curX = curX + w
 
-        if totalHeight < h then
-          totalHeight = h
+        if total_height < h then
+          total_height = h + config.get("chatbox_message_margin")
         end
       end
     end
   end
 
-  compiled.totalHeight = math.max(totalHeight, compiled.totalHeight)
+  compiled.total_height = math.max(total_height, compiled.total_height)
 
   return compiled
 end
