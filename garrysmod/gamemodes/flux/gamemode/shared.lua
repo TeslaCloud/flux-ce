@@ -32,9 +32,6 @@ cl               = CLIENT
 _player, _team, _file, _table, _sound = player, team, file, table, sound
 
 AddCSLuaFile     'flux/config/environment.lua'
-include          'lib/util/base.lua'
-
-util.include_folder('lib/util', true)
 
 if engine.ActiveGamemode() != 'flux' then
   fl.schema = engine.ActiveGamemode()
@@ -59,8 +56,10 @@ fl.shared = fl.shared or {
 
 print('Flux environment: '..FLUX_ENV)
 
+include 'core/sh_core.lua'
 util.include 'core/sh_enums.lua'
-util.include 'core/sh_core.lua'
+
+util.include_folder('lib/util', true)
 
 if CLIENT and !fl.lang then
   include 'lib/sh_lang.lua'
