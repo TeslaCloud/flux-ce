@@ -35,11 +35,13 @@ function Stamina:start_running(player, prevent_drain)
 
       timer.Create(id, 0.2, 0, function()
         if IsValid(player) and player:GetActiveCharacterID() == char.id then
-          Stamina:set_stamina(player, char, math.Clamp(char.stamina - 1 * drain_scale, 0, max_stamina))
+          self:set_stamina(player, char, math.Clamp(char.stamina - 1 * drain_scale, 0, max_stamina))
 
           if char.stamina == 0 then
             timer.Pause(id)
           end
+
+          self.running[steam_id] = true
         else
           timer.Destroy(id)
           self.running[steam_id] = false
@@ -49,8 +51,6 @@ function Stamina:start_running(player, prevent_drain)
       timer.UnPause(id)
     end
   end
-
-  self.running[steam_id] = true
 end
 
 function Stamina:stop_running(player, prevent_regen)
@@ -69,11 +69,13 @@ function Stamina:stop_running(player, prevent_regen)
   
       timer.Create(id, 0.2, 0, function()
         if IsValid(player) and player:GetActiveCharacterID() == char.id then
-          Stamina:set_stamina(player, char, math.Clamp(char.stamina + 1 * regen_scale, 0, max_stamina))
+          self:set_stamina(player, char, math.Clamp(char.stamina + 1 * regen_scale, 0, max_stamina))
 
           if char.stamina == max_stamina then
             timer.Pause(id)
           end
+
+          self.running[steam_id] = false
         else
           timer.Destroy(id)
           self.running[steam_id] = false
@@ -83,8 +85,6 @@ function Stamina:stop_running(player, prevent_regen)
       timer.UnPause(id)
     end
   end
-
-  self.running[steam_id] = false
 end
 
 function Stamina:PlayerThink(player, cur_time)
