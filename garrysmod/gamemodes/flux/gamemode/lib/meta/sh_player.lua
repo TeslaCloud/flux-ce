@@ -77,7 +77,8 @@ function player_meta:DoAction(id)
 end
 
 function player_meta:running()
-  if self:Alive() and !self:Crouching() and self:KeyDown(IN_SPEED) then
+  if self:Alive() and !self:Crouching() and self:KeyDown(IN_SPEED) and self:GetMoveType() == MOVETYPE_WALK
+  and (self:OnGround() or self:WaterLevel() > 0) then
     return true
   end
 
