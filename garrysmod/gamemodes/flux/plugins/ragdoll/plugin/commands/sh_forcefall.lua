@@ -20,7 +20,7 @@ function COMMAND:on_run(player, target, delay)
     player:notify(target:Name().." has been ragdolled!")
 
     if delay and delay > 0 then
-      target:Notify("Getting up...")
+      target:notify("Getting up...")
 
       timer.Simple(delay, function()
         target:SetRagdollState(RAGDOLL_NONE)
