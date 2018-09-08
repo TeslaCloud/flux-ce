@@ -48,9 +48,9 @@ function Stamina:start_running(player, prevent_drain)
     else
       timer.UnPause(id)
     end
-
-    self.running[steam_id] = true
   end
+
+  self.running[steam_id] = true
 end
 
 function Stamina:stop_running(player, prevent_regen)
@@ -82,9 +82,9 @@ function Stamina:stop_running(player, prevent_regen)
     else
       timer.UnPause(id)
     end
-
-    self.running[steam_id] = false
   end
+
+  self.running[steam_id] = false
 end
 
 function Stamina:PlayerThink(player, cur_time)
