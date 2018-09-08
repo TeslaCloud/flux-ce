@@ -14,7 +14,7 @@ function InfoDisplay:add(id, data)
   data.id = id
   data.min_percentage = data.min_percentage or nil
   data.max_percentage = data.max_percentage or 100
-  data.size = data.size or 64
+  data.size = data.size or 80
   data.icon = data.icon or 'fa-plus'
   data.color = data.color or white
   data.back_color = data.back_color or back_color
