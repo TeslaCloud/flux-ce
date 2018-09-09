@@ -1,5 +1,5 @@
 local PANEL = {}
-PANEL.invSlots = 8
+PANEL.inventory_slots = 8
 PANEL.draw_inventory_slots = true
 
 vgui.Register('fl_hotbar', PANEL, 'fl_inventory')

@@ -1,10 +1,10 @@
 function flFactions:CharPanelCreated(id, panel)
   if id == "CharCreation_General" then
     local factionTable
-    local charData = panel:GetParent().CharData
+    local char_data = panel:GetParent().CharData
 
-    if charData and charData.faction then
-      factionTable = faction.find_by_id(charData.faction)
+    if char_data and char_data.faction then
+      factionTable = faction.find_by_id(char_data.faction)
     end
 
     if factionTable and !factionTable.has_name then

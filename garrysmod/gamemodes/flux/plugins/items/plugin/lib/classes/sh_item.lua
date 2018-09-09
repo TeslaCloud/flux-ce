@@ -65,7 +65,7 @@ function Item:add_button(name, data)
     data = {
       icon = "path/to/icon.png",
       callback = "on_use", -- This will call ITEM:on_use function when the button is pressed.
-      onShow = function(itemTable) -- Client-Side function. Determines whether the button will be shown.
+      onShow = function(item_table) -- Client-Side function. Determines whether the button will be shown.
         return true
       end
     }
@@ -153,12 +153,12 @@ if SERVER then
   end
 
   netstream.Hook("ItemMenuAction", function(player, instance_id, action, ...)
-    local itemTable = item.FindInstanceByID(instance_id)
+    local item_table = item.FindInstanceByID(instance_id)
 
-    if !itemTable then return end
-    if hook.run("PlayerCanUseItem", player, itemTable, action, ...) == false then return end
+    if !item_table then return end
+    if hook.run("PlayerCanUseItem", player, item_table, action, ...) == false then return end
 
-    itemTable:do_menu_action(action, player, ...)
+    item_table:do_menu_action(action, player, ...)
   end)
 else
   function Item:do_menu_action(act, ...)
@@ -196,7 +196,7 @@ function Item:register()
   return item.register(self.id, self)
 end
 
--- Fancy output if you do print(itemTable).
+-- Fancy output if you do print(item_table).
 function Item:__tostring()
   return "Item ["..tostring(self.instance_id).."]["..(self.name or self.id).."]"
 end

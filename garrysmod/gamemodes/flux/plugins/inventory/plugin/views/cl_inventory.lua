@@ -90,14 +90,14 @@ function PANEL:Paint(w, h)
       end
     end
   else
-    local itemTable = self.itemData
+    local item_table = self.itemData
     local curSlot = fl.inventoryDragSlot
 
-    if itemTable then
-      if IsValid(curSlot) and curSlot.itemData != itemTable then
+    if item_table then
+      if IsValid(curSlot) and curSlot.itemData != item_table then
         local slotData = curSlot.itemData
 
-        if slotData.id == itemTable.id and slotData.stackable and curSlot.itemCount < slotData.max_stack then
+        if slotData.id == item_table.id and slotData.stackable and curSlot.itemCount < slotData.max_stack then
           drawColor = Color(200, 200, 60)
         else
           drawColor = Color(200, 60, 60, 160)
@@ -181,7 +181,7 @@ vgui.Register("flInventoryItem", PANEL, "DPanel")
 local PANEL = {}
 PANEL.inventory = {}
 PANEL.slots = {}
-PANEL.invSlots = 8
+PANEL.inventory_slots = 8
 PANEL.player = nil
 
 function PANEL:SetInventory(inv)
@@ -196,7 +196,7 @@ function PANEL:SetPlayer(player)
 end
 
 function PANEL:SetSlots(num)
-  self.invSlots = num
+  self.inventory_slots = num
 
   self:Rebuild()
 end
@@ -214,13 +214,13 @@ function PANEL:SlotsToInventory()
 end
 
 function PANEL:GetMenuSize()
-  return font.Scale(560), font.Scale(self.invSlots * 0.125 * 68 + 36)
+  return font.Scale(560), font.Scale(self.inventory_slots * 0.125 * 68 + 36)
 end
 
 function PANEL:Rebuild()
   dragndrop.Clear()
 
-  local multiplier = self.invSlots / 8
+  local multiplier = self.inventory_slots / 8
 
   self:SetSize(560, multiplier * 68 + 36)
 
@@ -242,7 +242,7 @@ function PANEL:Rebuild()
   self.list:SetSpaceY(4)
   self.list:SetSpaceX(4)
 
-  for i = 1, self.invSlots do
+  for i = 1, self.inventory_slots do
     local invSlot = self.list:Add("flInventoryItem")
     invSlot:SetSize(64, 64)
     invSlot.slotNum = i

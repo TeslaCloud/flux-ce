@@ -5,3 +5,4 @@ ActiveRecord.define_model('whitelists', function(t)
 end)
 
 add_column('characters', 'faction', 'string')
+add_column('characters', 'char_class', 'string')

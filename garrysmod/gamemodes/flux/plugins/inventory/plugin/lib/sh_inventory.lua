@@ -7,50 +7,49 @@ library.new "inventory"
 do
   local player_meta = FindMetaTable("Player")
 
-  -- Checks player inventory for garbage instance IDs and removes them if necessary.
-  function player_meta:CheckInventory()
-    local playerInv = self:GetInventory()
+  function player_meta:GetInventory()
+    return self:get_nv('inventory', {})
+  end
 
-    for slot, ids in ipairs(playerInv) do
-      for k, v in ipairs(ids) do
-        local itemTable = item.FindInstanceByID(v)
-
-        if !itemTable then
-          playerInv[slot][k] = nil
-        end
-      end
+  function player_meta:SetInventory(new_inv)
+    if SERVER then
+      local char = self:GetCharacter()
+      char.real_inventory = new_inv
+      character.Save(self, char)
     end
 
-    self:SetInventory(playerInv)
+    return self:set_nv('inventory', new_inv)
   end
 
   if SERVER then
-    function player_meta:AddItem(itemTable)
-      if !itemTable then return -1 end
+    function player_meta:AddItem(item_table)
+      if !item_table then return -1 end
 
-      local playerInv = self:GetInventory()
-      local slots = self:GetCharacterData("invSlots", 8)
+      local ply_inv = self:GetInventory()
+      local slots = self:GetCharacterData("inventory_slots", 8)
 
       for i = 1, slots do
-        playerInv[i] = playerInv[i] or {}
-        local ids = playerInv[i]
+        ply_inv[i] = ply_inv[i] or {}
+        local ids = ply_inv[i]
 
         -- Empty slot
         if #ids == 0 then
-          table.insert(playerInv[i], itemTable.instance_id)
-          self:SetInventory(playerInv)
-          item.NetworkItem(self, itemTable.instance_id)
+          table.insert(ply_inv[i], item_table.instance_id)
+          item_table.slot_id = i
+          self:SetInventory(ply_inv)
+          item.NetworkItem(self, item_table.instance_id)
 
           return i
         end
 
-        local slotTable = item.FindInstanceByID(ids[1])
+        local slot_table = item.FindInstanceByID(ids[1])
 
-        if itemTable.stackable and itemTable.id == slotTable.id then
-          if #ids < itemTable.max_stack then
-            table.insert(playerInv[i], itemTable.instance_id)
-            self:SetInventory(playerInv)
-            item.NetworkItem(self, itemTable.instance_id)
+        if item_table.stackable and item_table.id == slot_table.id then
+          if #ids < item_table.max_stack and plugin.call('ShouldItemStack', item_table, slot_table) != false then
+            table.insert(ply_inv[i], item_table.instance_id)
+            item_table.slot_id = i
+            self:SetInventory(ply_inv)
+            item.NetworkItem(self, item_table.instance_id)
 
             return i
           end
@@ -63,52 +62,58 @@ do
     function player_meta:GiveItem(id, instance_id, data)
       if !id then return end
 
-      local itemTable
+      local item_table
 
       if instance_id and instance_id > 0 then
-        itemTable = item.FindInstanceByID(instance_id)
+        item_table = item.FindInstanceByID(instance_id)
       else
-        itemTable = item.New(id, data)
+        item_table = item.New(id, data)
       end
 
-      local slot = self:AddItem(itemTable)
+      local slot = self:AddItem(item_table)
 
       if slot and slot != -1 then
-        hook.run("OnItemGiven", self, itemTable, slot)
+        hook.run("OnItemGiven", self, item_table, slot)
+        return true
       elseif slot == -1 then
-        fl.dev_print("Failed to add item to player's inventory (itemTable is invalid)! "..tostring(itemTable))
+        fl.dev_print("Failed to add item to player's inventory (item_table is invalid)! "..tostring(item_table))
       else
-        fl.dev_print("Failed to add item to player's inventory (inv is full)! "..tostring(itemTable))
+        fl.dev_print("Failed to add item to player's inventory (inv is full)! "..tostring(item_table))
       end
+
+      return false
     end
 
     function player_meta:GiveItemByID(instance_id)
       if !tonumber(instance_id) or tonumber(instance_id) <= 0 then return end
 
-      local itemTable = item.FindInstanceByID(instance_id)
+      local item_table = item.FindInstanceByID(instance_id)
 
-      if !itemTable then return end
+      if !item_table then return end
 
-      local slot = self:AddItem(itemTable)
+      local slot = self:AddItem(item_table)
 
       if slot and slot != -1 then
-        hook.run("OnItemGiven", self, itemTable, slot)
+        hook.run("OnItemGiven", self, item_table, slot)
+        return true
       elseif slot == -1 then
-        fl.dev_print("Failed to add item to player's inventory (itemTable is invalid)! "..tostring(itemTable))
+        fl.dev_print("Failed to add item to player's inventory (item_table is invalid)! "..tostring(item_table))
       else
-        fl.dev_print("Failed to add item to player's inventory (inv is full)! "..tostring(itemTable))
+        fl.dev_print("Failed to add item to player's inventory (inv is full)! "..tostring(item_table))
       end
+
+      return false
     end
 
     function player_meta:TakeItemByID(instance_id)
       if !instance_id or instance_id < 1 then return end
 
-      local playerInv = self:GetInventory()
+      local ply_inv = self:GetInventory()
 
-      for slot, ids in ipairs(playerInv) do
+      for slot, ids in ipairs(ply_inv) do
         if table.HasValue(ids, instance_id) then
-          table.RemoveByValue(playerInv[slot], instance_id)
-          self:SetInventory(playerInv)
+          table.RemoveByValue(ply_inv[slot], instance_id)
+          self:SetInventory(ply_inv)
 
           hook.run("OnItemTaken", self, instance_id, slot)
 
@@ -134,11 +139,11 @@ do
   function player_meta:FindInstances(id, amount)
     amount = amount or 1
     local instances = item.FindAllInstances(id)
-    local playerInv = self:GetInventory()
+    local ply_inv = self:GetInventory()
     local to_ret = {}
 
     for k, v in pairs(instances) do
-      for slot, ids in ipairs(playerInv) do
+      for slot, ids in ipairs(ply_inv) do
         if table.HasValue(ids, k) then
           table.insert(to_ret, v)
           amount = amount - 1
@@ -159,9 +164,9 @@ do
   end
 
   function player_meta:HasItemByID(instance_id)
-    local playerInv = self:GetInventory()
+    local ply_inv = self:GetInventory()
 
-    for slot, ids in ipairs(playerInv) do
+    for slot, ids in ipairs(ply_inv) do
       if table.HasValue(ids, instance_id) then
         return true
       end
@@ -182,9 +187,9 @@ do
 
   function player_meta:HasItemEquipped(id)
     local instances = self:FindInstances(id, 1)
-    local itemTable = instances[1]
+    local item_table = instances[1]
 
-    if itemTable and itemTable:IsEquipped() then
+    if item_table and item_table:IsEquipped() then
       return true
     end
 

@@ -19,14 +19,3 @@ ActiveRecord.define_model('data', function(t)
   t:text 'value'
   t:integer 'character_id'
 end)
-
-ActiveRecord.define_model('inventories', function(t)
-  t:string 'inventory_type'
-  t:integer 'character_id'
-end)
-
-ActiveRecord.define_model('character_items', function(t)
-  t:integer 'item_id'
-  t:integer 'inventory_id'
-  t:integer 'character_id'
-end)

@@ -12,7 +12,7 @@ function flCharacters:PlayerInitialSpawn(player)
 end
 
 function flCharacters:PlayerRestored(player)
-  character.Load(player)
+  hook.run("PostRestoreCharacters", player)
 end
 
 function flCharacters:PlayerInitialized(player)
@@ -42,7 +42,6 @@ end
 
 function flCharacters:OnCharacterChange(player, oldChar, newCharID)
   player:SaveCharacter()
-  character.Load(player)
 end
 
 function flCharacters:PlayerDisconnected(player)
