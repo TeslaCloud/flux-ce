@@ -4,7 +4,7 @@ function flItems:PlayerUseItemMenu(item_table, bIsEntity)
   local itemMenu = vgui.Create("fl_menu")
 
   if !item_table.name then
-    local closeBtn = itemMenu:AddOption(item_table.cancel_text or t('item.option.cancel'), function() print("Cancel") end)
+    local closeBtn = itemMenu:AddOption(item_table.cancel_text or t('item.option.cancel'), function() end)
     closeBtn:SetIcon("icon16/cross.png")
   else
     if item_table.custom_buttons then
@@ -41,7 +41,7 @@ function flItems:PlayerUseItemMenu(item_table, bIsEntity)
       dropBtn:SetIcon(item_table.take_icon or "icon16/wrench.png")
     end
 
-    local closeBtn = itemMenu:AddOption(item_table:get_cancel_text(), function() print("Cancel") end)
+    local closeBtn = itemMenu:AddOption(item_table:get_cancel_text(), function() end)
     closeBtn:SetIcon(item_table.cancel_icon or "icon16/cross.png")
   end
 

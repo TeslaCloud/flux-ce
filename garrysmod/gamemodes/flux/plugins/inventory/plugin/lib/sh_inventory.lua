@@ -7,18 +7,28 @@ library.new "inventory"
 do
   local player_meta = FindMetaTable("Player")
 
-  function player_meta:GetInventory()
-    return self:get_nv('inventory', {})
+  function player_meta:GetInventory(type)
+    return self:get_nv('inventory', {})[type or 'hotbar'] or {}
   end
 
-  function player_meta:SetInventory(new_inv)
+  function player_meta:SetInventory(new_inv, type)
     if SERVER then
-      local char = self:GetCharacter()
-      char.real_inventory = new_inv
-      character.Save(self, char)
-    end
+      type = type or 'hotbar'
 
-    return self:set_nv('inventory', new_inv)
+      local char = self:GetCharacter()
+      char.real_inventory[type] = new_inv
+      character.Save(self, char)
+
+      return self:set_nv('inventory', char.real_inventory)
+    end
+  end
+
+  function player_meta:get_slot(id, type)
+    return self:GetInventory(type)[id] or {}
+  end
+
+  function player_meta:get_first_in_slot(id, type)
+    return self:get_slot(id, type)[1]
   end
 
   if SERVER then
@@ -36,6 +46,7 @@ do
         if #ids == 0 then
           table.insert(ply_inv[i], item_table.instance_id)
           item_table.slot_id = i
+          item_table.inventory_type = ply_inv.type or 'hotbar'
           self:SetInventory(ply_inv)
           item.NetworkItem(self, item_table.instance_id)
 
@@ -48,6 +59,7 @@ do
           if #ids < item_table.max_stack and plugin.call('ShouldItemStack', item_table, slot_table) != false then
             table.insert(ply_inv[i], item_table.instance_id)
             item_table.slot_id = i
+            item_table.inventory_type = ply_inv.type or 'hotbar'
             self:SetInventory(ply_inv)
             item.NetworkItem(self, item_table.instance_id)
 

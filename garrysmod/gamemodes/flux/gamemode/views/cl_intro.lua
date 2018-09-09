@@ -61,8 +61,6 @@ function PANEL:Paint(w, h)
               channel:SetVolume(0.5)
               channel:Play()
             end
-
-            print(error, err_string)
           end)
         end
 
