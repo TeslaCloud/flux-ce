@@ -3,7 +3,7 @@
   "title"         "Flux"
   "maps"          "^rp_"
   "base"          "sandbox"
-  "version"       "0.3.1 (20180908) - indev"
+  "version"       "0.4.0 (20180909) - alpha"
   "author"        "TeslaCloud Studios"
   "description"   "A free roleplay gamemode framework."
 }
