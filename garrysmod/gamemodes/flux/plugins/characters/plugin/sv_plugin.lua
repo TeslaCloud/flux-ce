@@ -9,14 +9,13 @@ function player_meta:SetActiveCharacter(id)
 
   self:set_nv("ActiveCharacter", tonumber(id))
 
-  local charData = self:GetCharacter()
+  local char_data = self:GetCharacter()
 
-  self:set_nv("name", charData.name or self:SteamName())
-  self:set_nv("phys_desc", charData.phys_desc or "")
-  self:set_nv("gender", charData.gender or CHAR_GENDER_MALE)
-  self:set_nv("key", charData.key or -1)
-  self:set_nv("model", charData.model or "models/humans/group01/male_02.mdl")
-  self:set_nv("inventory", charData.inventory)
+  self:set_nv("name", char_data.name or self:SteamName())
+  self:set_nv("phys_desc", char_data.phys_desc or "")
+  self:set_nv("gender", char_data.gender or CHAR_GENDER_MALE)
+  self:set_nv("key", char_data.key or -1)
+  self:set_nv("model", char_data.model or "models/humans/group01/male_02.mdl")
 
   hook.run("OnActiveCharacterSet", self, self:GetCharacter())
 end
@@ -28,25 +27,18 @@ function player_meta:SetCharacterVar(id, val)
   end
 end
 
-function player_meta:SetInventory(newInv)
-  if !istable(newInv) then return end
-
-  self:SetCharacterVar("inventory", newInv)
-  self:SaveCharacter()
-end
-
 function player_meta:SetCharacterData(key, value)
-  local charData = self:GetCharacterVar("data", {})
+  local char_data = self:GetCharacterVar("data", {})
 
-  charData[key] = value
+  char_data[key] = value
 
-  self:SetCharacterVar("data", charData)
+  self:SetCharacterVar("data", char_data)
 end
 
 function player_meta:SaveCharacter()
   local char = self:GetCharacter()
 
   if char then
-    character.Save(self, char.character_id)
+    character.Save(self, char)
   end
 end

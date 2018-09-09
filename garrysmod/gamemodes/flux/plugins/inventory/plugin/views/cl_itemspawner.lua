@@ -18,12 +18,12 @@ function PANEL:Rebuild()
   self.scrollPanel:Dock(FILL)
   self.layout:Dock(FILL)
 
-  for id, itemTable in pairs(item.GetAll()) do
-    if !categories[itemTable.category] then 
-      categories[itemTable.category] = {}
+  for id, item_table in pairs(item.GetAll()) do
+    if !categories[item_table.category] then 
+      categories[item_table.category] = {}
     end
 
-    table.insert(categories[itemTable.category], {id = id, itemTable = itemTable})
+    table.insert(categories[item_table.category], {id = id, item_table = item_table})
   end
 
   self.layout:Clear()
@@ -37,7 +37,7 @@ function PANEL:Rebuild()
     for k, v in ipairs(category) do
       local spawnIcon = list:Add("SpawnIcon")
       spawnIcon:SetSize(48, 48)
-      spawnIcon:SetModel(v.itemTable.model)
+      spawnIcon:SetModel(v.item_table.model)
 
       spawnIcon.DoClick = function(btn)
         mvc.push("SpawnMenu::SpawnItem", v.id)

@@ -72,7 +72,7 @@ function flStaticEnts:PersistenceSave()
 end
 
 function flStaticEnts:PersistenceLoad()
-  local loaded = data.LoadPlugin("static")
+  local loaded = data.LoadPlugin("static", false)
 
   if !istable(loaded) then return end
   if !loaded.Entities then return end

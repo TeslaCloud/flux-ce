@@ -18,23 +18,17 @@ function flFactions:RestorePlayer(player, result)
   end
 end
 
-function flFactions:OnActiveCharacterSet(player, charData)
-  player:set_nv("faction", charData.faction or "player")
+function flFactions:OnActiveCharacterSet(player, char_data)
+  player:set_nv("faction", char_data.faction or "player")
 end
 
-function flFactions:SaveCharaterData(player, char)
+function flFactions:SaveCharacterData(player, char)
   char.faction = char.faction or "player"
 end
 
-function flFactions:RestoreCharacter(player, charID, data)
-  local char = character.Get(player, charID)
-
-  if char then
-    char.faction = data.faction
-    char.class = data.class or ""
-
-    character.Save(player, charID)
-  end
+function flFactions:RestoreCharacter(player, char_id, char)
+  char.faction = char.faction or 'player'
+  char.char_class = data.char_class or ''
 end
 
 function flFactions:PlayerRestored(player, record)

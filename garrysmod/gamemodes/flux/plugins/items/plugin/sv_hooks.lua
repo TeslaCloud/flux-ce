@@ -10,24 +10,27 @@ function flItems:ClientIncludedSchema(player)
   item.SendToPlayer(player)
 end
 
-function flItems:PlayerUseItemEntity(player, entity, itemTable)
+function flItems:PlayerUseItemEntity(player, entity, item_table)
   netstream.Start(player, "PlayerUseItemEntity", entity)
 end
 
-function flItems:PlayerTakeItem(player, itemTable, ...)
-  if IsValid(itemTable.entity) then
-    itemTable.entity:Remove()
-    player:GiveItemByID(itemTable.instance_id)
-    item.AsyncSaveEntities()
+function flItems:PlayerTakeItem(player, item_table, ...)
+  if IsValid(item_table.entity) then
+    local success = player:GiveItemByID(item_table.instance_id)
+
+    if success then
+      item_table.entity:Remove()
+      item.AsyncSaveEntities()
+    end
   end
 end
 
 function flItems:PlayerDropItem(player, instance_id)
-  local itemTable = item.FindInstanceByID(instance_id)
+  local item_table = item.FindInstanceByID(instance_id)
   local trace = player:GetEyeTraceNoCursor()
 
-  if itemTable.on_drop then
-    local result = itemTable:on_drop(player)
+  if item_table.on_drop then
+    local result = item_table:on_drop(player)
 
     if result == false then
       return false
@@ -39,9 +42,9 @@ function flItems:PlayerDropItem(player, instance_id)
   local distance = trace.HitPos:Distance(player:GetPos())
 
   if distance < 80 then
-    item.Spawn(trace.HitPos, Angle(0, 0, 0), itemTable)
+    item.Spawn(trace.HitPos, Angle(0, 0, 0), item_table)
   else
-    local ent, item_table = item.Spawn(player:EyePos() + trace.Normal * 20, Angle(0, 0, 0), itemTable)
+    local ent, item_table = item.Spawn(player:EyePos() + trace.Normal * 20, Angle(0, 0, 0), item_table)
     local phys_obj = ent:GetPhysicsObject()
     if IsValid(phys_obj) then
       phys_obj:ApplyForceCenter(trace.Normal * 200)
@@ -51,9 +54,9 @@ function flItems:PlayerDropItem(player, instance_id)
   item.AsyncSaveEntities()
 end
 
-function flItems:PlayerUseItem(player, itemTable, ...)
-  if itemTable.on_use then
-    local result = itemTable:on_use(player)
+function flItems:PlayerUseItem(player, item_table, ...)
+  if item_table.on_use then
+    local result = item_table:on_use(player)
 
     if result == true then
       return
@@ -62,18 +65,18 @@ function flItems:PlayerUseItem(player, itemTable, ...)
     end
   end
 
-  if IsValid(itemTable.entity) then
-    itemTable.entity:Remove()
+  if IsValid(item_table.entity) then
+    item_table.entity:Remove()
   else
-    player:TakeItemByID(itemTable.instance_id)
+    player:TakeItemByID(item_table.instance_id)
   end
 end
 
-function flItems:OnItemGiven(player, itemTable, slot)
+function flItems:OnItemGiven(player, item_table, slot)
   hook.run("PlayerInventoryUpdated", player)
 end
 
-function flItems:OnItemTaken(player, itemTable, slot)
+function flItems:OnItemTaken(player, item_table, slot)
   hook.run("PlayerInventoryUpdated", player)
 end
 
@@ -81,36 +84,36 @@ function flItems:PlayerInventoryUpdated(player)
   netstream.Start(player, "RefreshInventory")
 end
 
-function flItems:PlayerCanUseItem(player, itemTable, action, ...)
+function flItems:PlayerCanUseItem(player, item_table, action, ...)
   local trace = player:GetEyeTraceNoCursor()
 
-  if (!player:HasItemByID(itemTable.instance_id) and !IsValid(itemTable.entity)) or (IsValid(itemTable.entity) and trace.Entity and trace.Entity != itemTable.entity) then
+  if (!player:HasItemByID(item_table.instance_id) and !IsValid(item_table.entity)) or (IsValid(item_table.entity) and trace.Entity and trace.Entity != item_table.entity) then
     return false
   end
 end
 
 function flItems:PostCharacterLoaded(player, character)
-  local playerInv = player:GetInventory()
+  local ply_inv = player:GetInventory()
 
-  for slot, ids in ipairs(playerInv) do
+  for slot, ids in ipairs(ply_inv) do
     for k, v in ipairs(ids) do
-      local itemTable = item.FindInstanceByID(v)
+      local item_table = item.FindInstanceByID(v)
 
-      if istable(itemTable) then
-        itemTable:on_loadout(player)
+      if istable(item_table) then
+        item_table:on_loadout(player)
       end
     end
   end
 end
 
 function flCharacters:PreSaveCharacter(player, index)
-  local playerInv = player:GetInventory()
+  local ply_inv = player:GetInventory()
 
-  for slot, ids in ipairs(playerInv) do
+  for slot, ids in ipairs(ply_inv) do
     for k, v in ipairs(ids) do
-      local itemTable = item.FindInstanceByID(v)
+      local item_table = item.FindInstanceByID(v)
 
-      itemTable:on_save(player)
+      item_table:on_save(player)
     end
   end
 end

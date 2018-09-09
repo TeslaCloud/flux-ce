@@ -26,13 +26,13 @@ function ItemEquippable:IsEquipped()
 end
 
 function ItemEquippable:OnEquipped(player)
-  local playerInv = player:GetInventory()
+  local ply_inv = player:GetInventory()
 
-  for slot, ids in ipairs(playerInv) do
+  for slot, ids in ipairs(ply_inv) do
     for k, v in ipairs(ids) do
-      local itemTable = item.FindInstanceByID(v)
+      local item_table = item.FindInstanceByID(v)
 
-      if itemTable.equip_slot and itemTable.equip_slot == self.equip_slot and itemTable:IsEquipped() and itemTable.instance_id != self.instance_id then
+      if item_table.equip_slot and item_table.equip_slot == self.equip_slot and item_table:IsEquipped() and item_table.instance_id != self.instance_id then
         return false
       end
     end

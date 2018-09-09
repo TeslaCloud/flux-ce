@@ -77,37 +77,40 @@ function item.register(id, data)
   data.use_icon = data.use_icon
   data.take_icon = data.take_icon
   data.cancel_icon = data.cancel_icon
+  data.slot_id = data.slot_id
 
   stored[id] = data
   instances[id] = instances[id] or {}
 end
 
-function item.ToSave(itemTable)
-  if !itemTable then return end
+function item.ToSave(item_table)
+  if !item_table then return end
 
   return {
-    id = itemTable.id,
-    name = itemTable.name,
-    print_name = itemTable.print_name,
-    description = itemTable.description,
-    weight = itemTable.weight,
-    stackable = itemTable.stackable,
-    max_stack = itemTable.max_stack,
-    model = itemTable.model,
-    skin = itemTable.skin,
-    color = itemTable.color,
-    cost = itemTable.cost,
-    special_color = itemTable.special_color,
-    is_base = itemTable.is_base,
-    instance_id = itemTable.instance_id,
-    data = itemTable.data,
-    action_sounds = itemTable.action_sounds,
-    use_text = itemTable.use_text,
-    take_text = itemTable.take_text,
-    cancel_text = itemTable.cancel_text,
-    use_icon = itemTable.use_icon,
-    take_icon = itemTable.take_icon,
-    cancel_icon = itemTable.cancel_icon
+    id = item_table.id,
+    name = item_table.name,
+    print_name = item_table.print_name,
+    description = item_table.description,
+    weight = item_table.weight,
+    stackable = item_table.stackable,
+    max_stack = item_table.max_stack,
+    model = item_table.model,
+    skin = item_table.skin,
+    color = item_table.color,
+    cost = item_table.cost,
+    special_color = item_table.special_color,
+    is_base = item_table.is_base,
+    instance_id = item_table.instance_id,
+    data = item_table.data,
+    action_sounds = item_table.action_sounds,
+    use_text = item_table.use_text,
+    take_text = item_table.take_text,
+    cancel_text = item_table.cancel_text,
+    use_icon = item_table.use_icon,
+    take_icon = item_table.take_icon,
+    cancel_icon = item_table.cancel_icon,
+    slot_id = item_table.slot_id,
+    inventory_type = item_table.inventory_type
   }
 end
 
@@ -129,11 +132,11 @@ end
 
 -- Finds instance by it's ID.
 function item.FindInstanceByID(instance_id)
-  for k, v in pairs(instances) do
-    if istable(v) then
-      for k2, v2 in pairs(v) do
-        if k2 == instance_id then
-          return v2
+  for item_id, item_instances in pairs(instances) do
+    if istable(item_instances) then
+      for k, item_table in pairs(item_instances) do
+        if item_table.instance_id == instance_id then
+          return item_table
         end
       end
     end
@@ -183,13 +186,13 @@ function item.GenerateID()
 end
 
 function item.New(id, data, forcedID)
-  local itemTable = item.find_by_id(id)
+  local item_table = item.find_by_id(id)
 
-  if itemTable then
+  if item_table then
     local itemID = forcedID or item.GenerateID()
 
     instances[id] = instances[id] or {}
-    instances[id][itemID] = table.Copy(itemTable)
+    instances[id][itemID] = table.Copy(item_table)
 
     if istable(data) then
       table.safe_merge(instances[id][itemID], data)
@@ -207,27 +210,27 @@ function item.New(id, data, forcedID)
 end
 
 function item.Remove(instance_id)
-  local itemTable = (istable(instance_id) and instance_id) or item.FindInstanceByID(instance_id)
+  local item_table = (istable(instance_id) and instance_id) or item.FindInstanceByID(instance_id)
 
-  if itemTable and item.IsInstance(itemTable) then
-    if IsValid(itemTable.entity) then
-      itemTable.entity:Remove()
+  if item_table and item.IsInstance(item_table) then
+    if IsValid(item_table.entity) then
+      item_table.entity:Remove()
     end
 
-    instances[itemTable.id][itemTable.instance_id] = nil
+    instances[item_table.id][item_table.instance_id] = nil
 
     if SERVER then
       item.AsyncSave()
     end
 
-    fl.dev_print("Removed item instance ID: "..itemTable.instance_id)
+    fl.dev_print("Removed item instance ID: "..item_table.instance_id)
   end
 end
 
-function item.IsInstance(itemTable)
-  if !istable(itemTable) then return end
+function item.IsInstance(item_table)
+  if !istable(item_table) then return end
 
-  return (itemTable.instance_id or ITEM_TEMPLATE) > ITEM_INVALID
+  return (item_table.instance_id or ITEM_TEMPLATE) > ITEM_INVALID
 end
 
 function item.CreateBase(name)
@@ -255,11 +258,11 @@ if SERVER then
     if loaded and table.Count(loaded) > 0 then
       -- Returns functions to instances table after loading.
       for id, instanceTable in pairs(loaded) do
-        local itemTable = item.find_by_id(id)
+        local item_table = item.find_by_id(id)
 
-        if itemTable then
+        if item_table then
           for k, v in pairs(instanceTable) do
-            local newItem = table.Copy(itemTable)
+            local newItem = table.Copy(item_table)
 
             table.safe_merge(newItem, v)
 
@@ -351,9 +354,9 @@ if SERVER then
     coroutine.resume(handle)
   end
 
-  function item.NetworkItemData(player, itemTable)
-    if item.IsInstance(itemTable) then
-      netstream.Start(player, "ItemData", itemTable.id, itemTable.instance_id, itemTable.data)
+  function item.NetworkItemData(player, item_table)
+    if item.IsInstance(item_table) then
+      netstream.Start(player, "ItemData", item_table.id, item_table.instance_id, item_table.data)
     end
   end
 
@@ -380,14 +383,14 @@ if SERVER then
     hook.runClient(player, "OnItemDataReceived")
   end
 
-  function item.Spawn(position, angles, itemTable)
-    if !position or !istable(itemTable) then
+  function item.Spawn(position, angles, item_table)
+    if !position or !istable(item_table) then
       ErrorNoHalt("[Flux:Item] No position or item table is not a table!\n")
 
       return
     end
 
-    if !item.IsInstance(itemTable) then
+    if !item.IsInstance(item_table) then
       ErrorNoHalt("[Flux:Item] Cannot spawn non-instantiated item!\n")
 
       return
@@ -395,7 +398,7 @@ if SERVER then
 
     local ent = ents.Create("fl_item")
 
-    ent:SetItem(itemTable)
+    ent:SetItem(item_table)
 
     local mins, maxs = ent:GetCollisionBounds()
 
@@ -407,19 +410,19 @@ if SERVER then
 
     ent:Spawn()
 
-    itemTable:set_entity(ent)
-    item.NetworkItem(player, itemTable.instance_id)
+    item_table:set_entity(ent)
+    item.NetworkItem(player, item_table.instance_id)
 
-    entities[itemTable.id] = entities[itemTable.id] or {}
-    entities[itemTable.id][itemTable.instance_id] = entities[itemTable.id][itemTable.instance_id] or {}
-    entities[itemTable.id][itemTable.instance_id] = {
+    entities[item_table.id] = entities[item_table.id] or {}
+    entities[item_table.id][item_table.instance_id] = entities[item_table.id][item_table.instance_id] or {}
+    entities[item_table.id][item_table.instance_id] = {
       position = position,
       angles = angles
     }
 
     item.AsyncSaveEntities()
 
-    return ent, itemTable
+    return ent, item_table
   end
 
   netstream.Hook("RequestItemData", function(player, entIndex)
@@ -436,10 +439,10 @@ else
     end
   end)
 
-  netstream.Hook("NetworkItem", function(instance_id, itemTable)
-    if itemTable and stored[itemTable.id] then
-      local newTable = table.Copy(stored[itemTable.id])
-      table.safe_merge(newTable, itemTable)
+  netstream.Hook("NetworkItem", function(instance_id, item_table)
+    if item_table and stored[item_table.id] then
+      local newTable = table.Copy(stored[item_table.id])
+      table.safe_merge(newTable, item_table)
 
       instances[newTable.id][instance_id] = newTable
 
@@ -453,17 +456,17 @@ else
     local ent = Entity(entIndex)
 
     if IsValid(ent) then
-      local itemTable = instances[id][instance_id]
+      local item_table = instances[id][instance_id]
 
       -- Client has to know this shit too I guess?
-      ent:SetModel(itemTable:GetModel())
-      ent:SetSkin(itemTable.skin)
-      ent:SetColor(itemTable:GetColor())
+      ent:SetModel(item_table:GetModel())
+      ent:SetSkin(item_table.skin)
+      ent:SetColor(item_table:GetColor())
 
       -- Restore item's functions. For some weird reason they aren't properly initialized.
       table.safe_merge(ent, scripted_ents.Get("fl_item"))
 
-      ent.item = itemTable
+      ent.item = item_table
     end
   end)
 

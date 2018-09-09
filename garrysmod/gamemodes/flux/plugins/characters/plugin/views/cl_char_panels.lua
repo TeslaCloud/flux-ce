@@ -142,18 +142,18 @@ function PANEL:OnOpen(parent)
     self.Label:SizeToContents()
   else
     local factionTable
-    local charData = parent.CharData
+    local char_data = parent.CharData
 
-    self.model = charData.model or ""
+    self.model = char_data.model or ""
 
-    if charData and charData.faction then
-      factionTable = faction.find_by_id(charData.faction)
+    if char_data and char_data.faction then
+      factionTable = faction.find_by_id(char_data.faction)
     end
 
     if factionTable then
-      if charData.gender == t('char_create.gender.m') then
+      if char_data.gender == t('char_create.gender.m') then
         self.models = factionTable.models.male
-      elseif charData.gender == t('char_create.gender.f') then
+      elseif char_data.gender == t('char_create.gender.f') then
         self.models = factionTable.models.female
       else
         self.models = factionTable.models.universal

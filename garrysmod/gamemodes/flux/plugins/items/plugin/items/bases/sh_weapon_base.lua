@@ -13,12 +13,12 @@ ItemWeapon.weapon_class = "weapon_pistol"
 ItemWeapon:add_button(t('item.option.unload'), {
   icon = "icon16/add.png",
   callback = "OnUnload",
-  onShow = function(itemTable)
-    local ammo = itemTable:get_data("ammo", {0, 0})
-    local weapon = fl.client:GetWeapon(itemTable.weapon_class)
+  onShow = function(item_table)
+    local ammo = item_table:get_data("ammo", {0, 0})
+    local weapon = fl.client:GetWeapon(item_table.weapon_class)
 
     if ((ammo[1] > 0 or ammo[2] > 0 or IsValid(weapon) and (weapon:Clip1() != 0 or weapon:Clip2() != 0)) 
-      and !IsValid(itemTable.Entity) and itemTable:IsEquipped()) then
+      and !IsValid(item_table.Entity) and item_table:IsEquipped()) then
       return true
     end
   end

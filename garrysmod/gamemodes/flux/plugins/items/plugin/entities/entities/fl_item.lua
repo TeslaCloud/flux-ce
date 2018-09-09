@@ -21,20 +21,20 @@ if SERVER then
     end
   end
 
-  function ENT:SetItem(itemTable)
-    if !itemTable then return false end
+  function ENT:SetItem(item_table)
+    if !item_table then return false end
 
-    hook.run("PreEntityItemSet", self, itemTable)
+    hook.run("PreEntityItemSet", self, item_table)
 
-    self:SetModel(itemTable:GetModel())
-    self:SetSkin(itemTable.skin)
-    self:SetColor(itemTable:GetColor())
+    self:SetModel(item_table:GetModel())
+    self:SetSkin(item_table.skin)
+    self:SetColor(item_table:GetColor())
 
-    self.item = itemTable
+    self.item = item_table
 
     item.NetworkEntityData(nil, self)
 
-    hook.run("OnEntityItemSet", self, itemTable)
+    hook.run("OnEntityItemSet", self, item_table)
   end
 
   function ENT:Use(activator, caller, useType, value)
