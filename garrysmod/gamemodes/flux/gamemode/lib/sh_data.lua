@@ -11,7 +11,7 @@ if SERVER then
     fileio.Write("settings/flux/"..key, fl.serialize(value))
   end
 
-  function data.Load(key, failSafe)
+  function data.Load(key, default)
     if !isstring(key) then return end
 
     if !string.GetExtensionFromFilename(key) then
@@ -22,8 +22,8 @@ if SERVER then
       local data = fileio.Read("settings/flux/"..key)
 
       return fl.deserialize(data)
-    elseif failSafe then
-      return failSafe
+    elseif default != nil then
+      return default
     else
       if fl.development then
         ErrorNoHalt("Attempt to load data key that doesn't exist! ("..key..")\n")
@@ -53,7 +53,7 @@ else
     file.Write("flux/"..key, fl.serialize(value))
   end
 
-  function data.Load(key, failSafe)
+  function data.Load(key, default)
     if !isstring(key) then return end
 
     if !string.GetExtensionFromFilename(key) then
@@ -64,8 +64,8 @@ else
       local data = file.Read("flux/"..key, "DATA")
 
       return fl.deserialize(data)
-    elseif failSafe then
-      return failSafe
+    elseif default != nil then
+      return default
     else
       if fl.development then
         ErrorNoHalt("Attempt to load data key that doesn't exist! ("..key..")\n")
