@@ -31,6 +31,14 @@ function chatbox.CanHear(listener, messageData)
     if radius == 0 then return true end
     if radius < 0 then return false end
 
+    if istable(position) then
+      for k, v in pairs(position) do
+        if v:Distance(listener:GetPos()) <= radius then
+          return true
+        end
+      end
+    end
+
     if position:Distance(listener:GetPos()) <= radius then
       return true
     end
