@@ -166,6 +166,7 @@ function ActiveRecord.Base:_fetch_relation(callback, objects, n, obj_id)
       local obj = relation.model:where(relation.column_name, current_object.id)
       if relation.many then
         obj:rescue(function()
+          current_object[relation.as] = {}
           return self:_fetch_relation(callback, objects, n + 1, obj_id)
         end):get(function(res)
           current_object[relation.as] = {}
