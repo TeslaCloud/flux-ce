@@ -11,8 +11,27 @@ function fl_inventory:AddTabMenuItems(menu)
   })
 end
 
+function PLUGIN:OnContextMenuOpen()
+  if IsValid(fl.client.hotbar) then
+    fl.client.hotbar:MakePopup()
+    fl.client.hotbar:Rebuild()
+    fl.client.hotbar:MoveToFront()
+    fl.client.hotbar:SetMouseInputEnabled(true)
+  end
+end
+
+function PLUGIN:OnContextMenuClose()
+  if IsValid(fl.client.hotbar) then
+    fl.client.hotbar:Rebuild()
+    fl.client.hotbar:MoveToBack()
+    fl.client.hotbar:SetMouseInputEnabled(false)
+    fl.client.hotbar:SetKeyboardInputEnabled(false)
+  end
+end
+
 function fl_inventory:create_hotbar()
   fl.client.hotbar = vgui.Create('fl_hotbar')
+  fl.client.hotbar:SetPlayer(fl.client)
   return fl.client.hotbar
 end
 
@@ -47,5 +66,9 @@ end, "icon16/wand.png", 40)
 netstream.Hook("RefreshInventory", function()
   if fl.tabMenu and fl.tabMenu.activePanel and fl.tabMenu.activePanel.Rebuild then
     fl.tabMenu.activePanel:Rebuild()
+  end
+
+  if IsValid(fl.client.hotbar) then
+    fl.client.hotbar:Rebuild()
   end
 end)

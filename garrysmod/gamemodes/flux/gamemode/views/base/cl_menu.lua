@@ -73,8 +73,6 @@ function PANEL:AddOption(name, callback)
     panel.DoClick = callback
   end
 
-  print(panel.DoClick, callback)
-
   self.last = self.last + self.optionHeight
   self.count = self.count + 1
 

@@ -182,6 +182,7 @@ local PANEL = {}
 PANEL.inventory = {}
 PANEL.slots = {}
 PANEL.inventory_slots = 8
+PANEL.inventory_type = 'inventory'
 PANEL.player = nil
 
 function PANEL:SetInventory(inv)
@@ -190,7 +191,7 @@ end
 
 function PANEL:SetPlayer(player)
   self.player = player
-  self:SetInventory(player:GetInventory())
+  self:SetInventory(player:GetInventory(self.inventory_type))
 
   self:Rebuild()
 end
@@ -225,7 +226,7 @@ function PANEL:Rebuild()
   self:SetSize(560, multiplier * 68 + 36)
 
   if IsValid(self.player) then
-    self:SetInventory(self.player:GetInventory())
+    self:SetInventory(self.player:GetInventory(self.inventory_type))
   end
 
   self.scroll = self.scroll or vgui.Create("DScrollPanel", self) //Create the Scroll panel

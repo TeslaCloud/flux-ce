@@ -85,7 +85,6 @@ function fl.print(message)
   if !istable(message) then
     print(message)
   else
-    print("Printing table:")
     PrintTable(message)
   end
 end
