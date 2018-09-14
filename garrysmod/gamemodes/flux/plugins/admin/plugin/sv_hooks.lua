@@ -51,7 +51,7 @@ function flAdmin:PlayerRestored(player, record)
     player:SetCustomPermissions(record.permissions)
   end
 
-  ServerLog(player:Name().." ("..player:GetUserGroup()..") has connected to the server.")
+  Log:notify(player:Name()..' ('..player:GetUserGroup()..') has connected to the server.', { action = 'player_events' })
 end
 
 function flAdmin:CommandCheckImmunity(player, target, can_equal)

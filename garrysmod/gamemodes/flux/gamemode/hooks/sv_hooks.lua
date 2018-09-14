@@ -147,6 +147,8 @@ end
 function GM:PlayerDisconnected(player)
   player:save_player()
   netstream.Start(nil, "PlayerDisconnected", player:EntIndex())
+
+  Log:notify(player:Name()..' ('..player:GetUserGroup()..') has disconnected from the server.', { action = 'player_events' })
 end
 
 function GM:EntityRemoved(entity)
