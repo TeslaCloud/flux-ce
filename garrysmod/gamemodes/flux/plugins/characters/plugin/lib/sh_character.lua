@@ -118,7 +118,7 @@ if SERVER then
     end
   end
 else
-  netstream.Hook("fl_loadcharacters", function(data)
+  netstream.Hook('fl_loadcharacters', function(data)
     fl.client.characters = data
   end)
 
@@ -160,7 +160,7 @@ do
   local player_meta = FindMetaTable("Player")
 
   function player_meta:GetActiveCharacterID()
-    return self:get_nv('active_character', nil)
+    return tonumber(self:get_nv('active_character', nil))
   end
 
   function player_meta:GetCharacterKey()
@@ -170,8 +170,8 @@ do
   function player_meta:CharacterLoaded()
     if self:IsBot() then return true end
 
-    local id = tonumber(self:GetActiveCharacterID())
-
+    local id = self:GetActiveCharacterID()
+  
     return id and id > 0
   end
 
@@ -192,16 +192,16 @@ do
   end
 
   function player_meta:GetCharacter()
+    if SERVER and self.current_character then
+      return self.current_character
+    elseif self:IsBot() then
+      self.char_data = self.char_data or {}
+      return self.char_data
+    end
+  
     local char_id = self:GetActiveCharacterID()
-
     if char_id then
       return self:GetAllCharacters()[char_id]
-    end
-
-    if self:IsBot() then
-      self.char_data = self.char_data or {}
-
-      return self.char_data
     end
   end
 

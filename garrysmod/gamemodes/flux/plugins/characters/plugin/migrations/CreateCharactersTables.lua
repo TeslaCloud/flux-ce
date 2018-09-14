@@ -12,6 +12,7 @@ ActiveRecord.define_model('characters', function(t)
   t:integer 'money'
   t:integer 'character_id'
   t:integer 'user_id'
+  t:integer 'health'
 end)
 
 ActiveRecord.define_model('data', function(t)

@@ -26,15 +26,13 @@ end
 function flCharacters:OnActiveCharacterSet(player, character)
   player:Spawn()
   player:SetModel(character.model or 'models/humans/group01/male_02.mdl')
-
+  player:SetHealth(character.health or player:GetMaxHealth())
   player:StripAmmo()
 
   if istable(character.ammo) then
     for k, v in pairs(character.ammo) do
       player:SetAmmo(v, k)
     end
-
-    character.ammo = nil
   end
 
   hook.run("PostCharacterLoaded", player, character)
