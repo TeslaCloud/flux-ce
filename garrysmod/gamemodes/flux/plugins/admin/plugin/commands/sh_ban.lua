@@ -20,7 +20,7 @@ function COMMAND:on_run(player, targets, duration, ...)
   end
 
   if #pieces > 0 then
-    reason = string.Implode(" ", pieces)
+    reason = table.concat(pieces, ' ')
   end
 
   for k, v in ipairs(targets) do
@@ -32,8 +32,8 @@ function COMMAND:on_run(player, targets, duration, ...)
 
     if duration <= 0 then time = t"time.permanently" end
 
-    v:Notify('ban_message', {
-      admin = (IsValid(player) and player:Name()) or "Console",
+    v:notify('ban_message', {
+      admin = get_player_name(player),
       target = util.player_list_to_string(targets),
       time = time,
       reason = reason

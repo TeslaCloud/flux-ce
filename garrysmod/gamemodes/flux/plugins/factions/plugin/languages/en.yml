@@ -7,7 +7,7 @@ en:
     description: Remove a player from a faction whitelist.
     syntax: "<target> <faction> [is faction search strict]"
     message: "{1} has removed {2} from the {3} whitelist."
-  setfactioncmd:
+  set_faction:
     message: "{1} has added {2} to the {3} faction."
   err:
     whitelist_not_valid: "'{1}' is not a valid faction!"

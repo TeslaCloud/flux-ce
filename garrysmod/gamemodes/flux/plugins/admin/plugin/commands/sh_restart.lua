@@ -9,7 +9,7 @@ COMMAND.aliases = {"maprestart"}
 function COMMAND:on_run(player, delay)
   delay = tonumber(delay) or 0
 
-  fl.player:broadcast(t("MapRestartMessage", { IsValid(player) and player:Name() or "Console", delay }))
+  fl.player:broadcast('map_restart_message', { get_player_name(player), delay })
 
   timer.Simple(delay, function()
     hook.run("FLSaveData")

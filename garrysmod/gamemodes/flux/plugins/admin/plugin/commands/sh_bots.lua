@@ -5,7 +5,7 @@ COMMAND.category = "server_management"
 COMMAND.aliases = {"botfreeze", "freezebot", "bot_freeze", "bot_zombie"}
 
 function COMMAND:on_run(player)
-  fl.player:broadcast(L("FreezeBotsMessage", (IsValid(player) and player:Name()) or "Console"))
+  fl.player:broadcast("freeze_bots_message", get_player_name(player))
 
   RunConsoleCommand("bot_zombie", 1)
 end
@@ -19,7 +19,7 @@ COMMAND.category = "server_management"
 COMMAND.aliases = {"botunfreeze", "unfreezebot", "bot_unfreeze", "bot_unzombie"}
 
 function COMMAND:on_run(player)
-  fl.player:broadcast(L("UnfreezeBotsMessage", (IsValid(player) and player:Name()) or "Console"))
+  fl.player:broadcast("unfreeze_bots_message", get_player_name(player))
 
   RunConsoleCommand("bot_zombie", 0)
 end
@@ -37,7 +37,7 @@ COMMAND.aliases = {"bot", "bots"}
 function COMMAND:on_run(player, numBots)
   numBots = math.Clamp((tonumber(numBots) or 1), 1, 128)
 
-  fl.player:broadcast(L("AddBotsMessage", (IsValid(player) and player:Name()) or "Console", numBots))
+  fl.player:broadcast("add_bots_message", { get_player_name(player), numBots })
 
   timer.Create("ADD_BOTS", 0.2, numBots, function()
     RunConsoleCommand("bot")
@@ -53,7 +53,7 @@ COMMAND.category = "server_management"
 COMMAND.aliases = {"botkick", "kickbot", "bot_kick"}
 
 function COMMAND:on_run(player)
-  fl.player:broadcast(L("KickBotsMessage", (IsValid(player) and player:Name()) or "Console"))
+  fl.player:broadcast("kick_bots_message", get_player_name(player))
 
   for k, v in ipairs(_player.GetAll()) do
     if v:IsBot() then

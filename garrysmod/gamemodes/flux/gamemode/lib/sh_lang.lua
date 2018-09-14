@@ -78,9 +78,9 @@ function fl.lang:get_phrase(id, ref)
   return false
 end
 
-function t(phrase, args)
-  args = istable(args) and args or {args}
-  local phrase = fl.lang:get_phrase(phrase, stored[current_language]) or phrase
+function t(phrase, args, force_lang)
+  args = istable(args) and args or { args }
+  local phrase = fl.lang:get_phrase(phrase, stored[force_lang or current_language]) or phrase
 
   for k, v in pairs(args) do
     phrase = string.gsub(phrase, '{'..k..'}', v)
@@ -91,8 +91,8 @@ end
 
 -- Pack the language string into a format that is sendable to clients.
 function L(phrase, args)
-  args = istable(args) and args or {args}
-  return '#'..phrase..'{{'..table.concat(args, '||')..'}}'
+  ErrorNoHalt('"L" is deprecated and will be removed in 0.5! Do not use it!')
+  return phrase, args
 end
 
 function fl.lang:all()
