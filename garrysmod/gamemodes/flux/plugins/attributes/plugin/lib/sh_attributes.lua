@@ -98,7 +98,7 @@ do
   local player_meta = FindMetaTable("Player")
 
   function player_meta:get_attributes()
-    return self:get_nv("attributes", {})
+    return self:get_nv('attributes', {})
   end
 
   function player_meta:get_attribute(id, no_boost)
@@ -149,7 +149,7 @@ do
 
       atts_table[id].value = math.Clamp(value, attribute.min, attribute.max)
 
-      self:set_nv("attributes", atts_table)
+      self:set_nv('attributes', atts_table)
     end
 
     function player_meta:increase_attribute(id, value, no_multiplier)
@@ -166,7 +166,7 @@ do
 
       atts_table[id].value = math.Clamp(atts_table[id].value + value, attribute.min, attribute.max)
 
-      self:set_nv("attributes", atts_table)
+      self:set_nv('attributes', atts_table)
     end
 
     function player_meta:decrease_attribute(id, value, no_multiplier)
@@ -191,7 +191,7 @@ do
         atts_table[id].multiplier_expires = cur_time + duration
       end
 
-      self:set_nv("attributes", atts_table)
+      self:set_nv('attributes', atts_table)
     end
 
     function player_meta:BoostAttribute(id, value, duration)
@@ -211,7 +211,7 @@ do
         atts_table[id].boost_expires = cur_time + time
       end
 
-      self:set_nv("attributes", atts_table)
+      self:set_nv('attributes', atts_table)
     end
   end
 end

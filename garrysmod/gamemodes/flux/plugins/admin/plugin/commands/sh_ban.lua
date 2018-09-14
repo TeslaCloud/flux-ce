@@ -28,7 +28,7 @@ function COMMAND:on_run(player, targets, duration, ...)
   end
 
   for k, v in ipairs(_player.GetAll()) do
-    local time = t("time.for", fl.lang:nice_time_full(v:get_nv("language"), duration))
+    local time = t("time.for", fl.lang:nice_time_full(v:get_nv('language'), duration))
 
     if duration <= 0 then time = t"time.permanently" end
 

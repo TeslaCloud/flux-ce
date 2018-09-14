@@ -1,4 +1,4 @@
-name: "Attributes"
+name: 'attributes'
 description: "Adds character attributes."
 author: "AleXXX_007"
 depends: ["characters"]

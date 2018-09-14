@@ -29,6 +29,10 @@ end
 function flAdmin:PlayerRestored(player, record)
   local root_steamid = config.get("root_steamid")
 
+  if record.role then
+    player:SetUserGroup(record.role)
+  end
+
   if isstring(root_steamid) then
     if player:SteamID() == root_steamid then
       player:SetUserGroup('admin')
@@ -45,10 +49,6 @@ function flAdmin:PlayerRestored(player, record)
 
   if record.permissions then
     player:SetCustomPermissions(record.permissions)
-  end
-
-  if record.role then
-    player:SetUserGroup(record.role)
   end
 
   ServerLog(player:Name().." ("..player:GetUserGroup()..") has connected to the server.")

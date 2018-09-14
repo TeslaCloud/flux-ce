@@ -71,7 +71,7 @@ if SERVER then
       steam_id = player:SteamID(),
       name = char.name,
       phys_desc = char.phys_desc or "This character has no physical description set!",
-      model = char.model or "models/humans/group01/male_02.mdl",
+      model = char.model or 'models/humans/group01/male_02.mdl',
       inventory = char.inventory,
       ammo = char.ammo,
       money = char.money,
@@ -101,7 +101,7 @@ if SERVER then
     if char then
       char.name = new_name or char.name
 
-      player:set_nv("name", char.name)
+      player:set_nv('name', char.name)
 
       character.Save(player, char)
     end
@@ -111,7 +111,7 @@ if SERVER then
     if char then
       char.model = model or char.model
 
-      player:set_nv("model", char.model)
+      player:set_nv('model', char.model)
       player:SetModel(char.model)
 
       character.Save(player, char)
@@ -160,11 +160,11 @@ do
   local player_meta = FindMetaTable("Player")
 
   function player_meta:GetActiveCharacterID()
-    return self:get_nv("ActiveCharacter", nil)
+    return self:get_nv('active_character', nil)
   end
 
   function player_meta:GetCharacterKey()
-    return self:get_nv("key", -1)
+    return self:get_nv('key', -1)
   end
 
   function player_meta:CharacterLoaded()
@@ -176,7 +176,7 @@ do
   end
 
   function player_meta:GetPhysDesc()
-    return self:get_nv("phys_desc", 'This character has no description!')
+    return self:get_nv('phys_desc', 'This character has no description!')
   end
 
   function player_meta:GetCharacterVar(id, default)

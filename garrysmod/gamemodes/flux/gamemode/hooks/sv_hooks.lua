@@ -116,9 +116,9 @@ function GM:PlayerSetModel(player)
   elseif isbool(override) and override == false and self.BaseClass.PlayerSetModel then
     self.BaseClass:PlayerSetModel(player)
   elseif player:IsBot() then
-    player:SetModel(player:get_nv("model", "models/humans/group01/male_0"..math.random(1, 9)..".mdl"))
+    player:SetModel(player:get_nv('model', 'models/humans/group01/male_0'..math.random(1, 9)..'.mdl'))
   elseif player:HasInitialized() then
-    player:SetModel(player:get_nv("model", "models/humans/group01/male_02.mdl"))
+    player:SetModel(player:get_nv('model', 'models/humans/group01/male_02.mdl'))
   elseif self.BaseClass.PlayerSetModel then
     self.BaseClass:PlayerSetModel(player)
   end
@@ -131,11 +131,11 @@ function GM:PlayerInitialized(player)
 end
 
 function GM:PlayerDeath(player, inflictor, attacker)
-  player:set_nv("RespawnTime", CurTime() + config.get("respawn_delay"))
+  player:set_nv('respawn_time', CurTime() + config.get("respawn_delay"))
 end
 
 function GM:PlayerDeathThink(player)
-  local respawnTime = player:get_nv("RespawnTime", 0)
+  local respawnTime = player:get_nv('respawn_time', 0)
 
   if respawnTime <= CurTime() then
     player:Spawn()

@@ -90,7 +90,7 @@ end
 function flVisibleLegs:RenderScreenspaceEffects()
   local player = fl.client
 
-  if player:get_nv("Observer") or player:ShouldDrawLocalPlayer() or !player:Alive() then return end
+  if player:get_nv('observer') or player:ShouldDrawLocalPlayer() or !player:Alive() then return end
 
   local angs = player:EyeAngles()
 

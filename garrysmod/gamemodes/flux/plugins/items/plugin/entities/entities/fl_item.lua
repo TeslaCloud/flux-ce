@@ -38,18 +38,18 @@ if SERVER then
   end
 
   function ENT:Use(activator, caller, useType, value)
-    local lastActivator = self:get_nv("LastActivator")
+    local lastActivator = self:get_nv('last_activator')
 
     -- prevent minge-grabbing glitch
     if IsValid(lastActivator) and lastActivator != activator then return end
 
-    local holdStart = activator:get_nv("HoldStart")
+    local holdStart = activator:get_nv('hold_start')
 
     if useType == USE_ON then
       if !holdStart then
-        activator:set_nv("HoldStart", CurTime())
-        activator:set_nv("HoldEnt", self)
-        self:set_nv("LastActivator", activator)
+        activator:set_nv('hold_start', CurTime())
+        activator:set_nv('hold_entity', self)
+        self:set_nv('last_activator', activator)
       end
     elseif useType == USE_OFF then
       if !holdStart then return end
@@ -64,27 +64,27 @@ if SERVER then
         end
       end
 
-      activator:set_nv("HoldStart", false)
-      activator:set_nv("HoldEnt", false)
-      self:set_nv("LastActivator", false)
+      activator:set_nv('hold_start', false)
+      activator:set_nv('hold_entity', false)
+      self:set_nv('last_activator', false)
     end
   end
 
   function ENT:Think()
-    local lastActivator = self:get_nv("LastActivator")
+    local lastActivator = self:get_nv('last_activator')
 
     if !IsValid(lastActivator) then return end
 
-    local holdStart = lastActivator:get_nv("HoldStart")
+    local holdStart = lastActivator:get_nv('hold_start')
 
     if holdStart and CurTime() - holdStart > 0.5 then
       if self.item then
         self.item:do_menu_action("on_take", lastActivator)
       end
 
-      lastActivator:set_nv("HoldStart", false)
-      lastActivator:set_nv("HoldEnt", false)
-      self:set_nv("LastActivator", false)
+      lastActivator:set_nv('hold_start', false)
+      lastActivator:set_nv('hold_entity', false)
+      self:set_nv('last_activator', false)
     end
   end
 else

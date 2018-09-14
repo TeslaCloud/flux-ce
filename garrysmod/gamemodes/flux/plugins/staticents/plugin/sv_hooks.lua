@@ -4,18 +4,21 @@ hook.Remove("PersistenceSave", "PersistenceSave")
 hook.Remove("PersistenceLoad", "PersistenceLoad")
 hook.Remove("InitPostEntity", "PersistenceInit")
 
-local whitelistedEntities = {
-  ["prop_physics"] = true,
-  ["prop_physics_multiplayer"] = true,
-  ["prop_ragdoll"] = true,
-  ["gmod_light"] = true,
-  ["gmod_lamp"] = true
+local whitelisted_ents = {
+  gmod_light                = true,
+  gmod_lamp                 = true,
+  prop_physics              = true,
+  prop_physics_multiplayer  = true,
+  prop_ragdoll              = true
 }
 
-function flStaticEnts:PlayerMakeStatic(player, bIsStatic)
-  if (bIsStatic and !player:can("static")) or (!bIsStatic and !player:can("unstatic")) then
-    fl.player:notify(player, 'err.no_permission', player:Name())
+function flStaticEnts:whitelist_ent(ent_class)
+  whitelisted_ents[ent_class] = true
+end
 
+function flStaticEnts:PlayerMakeStatic(player, is_static)
+  if (is_static and !player:can("static")) or (!is_static and !player:can("unstatic")) then
+    fl.player:notify(player, 'err.no_permission', player:Name())
     return
   end
 
@@ -23,32 +26,32 @@ function flStaticEnts:PlayerMakeStatic(player, bIsStatic)
   local entity = trace.Entity
 
   if !IsValid(entity) then
-    fl.player:notify(player, t('err.not_valid_entity'))
-
+    fl.player:notify(player, 'err.not_valid_entity')
     return
   end
 
-  if !whitelistedEntities[entity:GetClass()] then
-    fl.player:notify(player, t('err.cannot_static_this'))
-
+  if !whitelisted_ents[entity:GetClass()] then
+    fl.player:notify(player, 'err.cannot_static_this')
     return
   end
 
-  local isStatic = entity:GetPersistent()
+  local ent_static = entity:GetPersistent()
 
-  if bIsStatic and isStatic then
-    fl.player:notify(player, t('err.already_static'))
-
+  if is_static and ent_static then
+    fl.player:notify(player, 'err.already_static')
     return
-  elseif !bIsStatic and !isStatic then
-    fl.player:notify(player, t('err.not_static'))
-
+  elseif !is_static and !ent_static then
+    fl.player:notify(player, 'err.not_static')
     return
   end
 
-  entity:SetPersistent(bIsStatic)
+  entity:SetPersistent(is_static)
 
-  fl.player:notify(player, (bIsStatic and "static.added") or "static.removed")
+  fl.player:notify(player, (is_static and 'static.added') or 'static.removed')
+end
+
+function flStaticEnts:ServerRestart()
+  hook.run("PersistenceSave")
 end
 
 function flStaticEnts:ShutDown()
@@ -60,19 +63,26 @@ function flStaticEnts:PersistenceSave()
 
   for k, v in ipairs(ents.GetAll()) do
     if v:GetPersistent() then
-      table.insert(entities, v)
+      local ent_class = v:GetClass()
+      entities[ent_class] = entities[ent_class] or {}
+      table.insert(entities[ent_class], v)
     end
   end
 
-  local toSave = duplicator.CopyEnts(entities)
+  local to_save = {}
 
-  if !istable(toSave) then return end
+  for ent_class, entities in pairs(entities) do
+    to_save[ent_class] = duplicator.CopyEnts(entities)
+  end
 
-  data.SavePlugin("static", toSave)
+  for ent_class, v in pairs(to_save) do
+    if !istable(v) then continue end
+    data.SavePlugin('static/'..ent_class, v)
+  end
 end
 
-function flStaticEnts:PersistenceLoad()
-  local loaded = data.LoadPlugin("static", false)
+function flStaticEnts:load_class(ent_class)
+  local loaded = data.LoadPlugin('static/'..ent_class, false)
 
   if !istable(loaded) then return end
   if !loaded.Entities then return end
@@ -82,10 +92,10 @@ function flStaticEnts:PersistenceLoad()
 
   -- Restore any custom data the static entities might have had.
   for k, v in pairs(entities) do
-    local entData = loaded.Entities[k]
+    local ent_data = loaded.Entities[k]
 
-    if entData then
-      table.safe_merge(v:GetTable(), entData)
+    if ent_data then
+      table.safe_merge(v:GetTable(), ent_data)
     end
   end
 
@@ -94,6 +104,12 @@ function flStaticEnts:PersistenceLoad()
   end
 end
 
+function flStaticEnts:PersistenceLoad()
+  for ent_class, v in pairs(whitelisted_ents) do
+    self:load_class(ent_class)
+  end
+end
+
 function flStaticEnts:InitPostEntity()
-  hook.run("PersistenceLoad")
+  hook.run('PersistenceLoad')
 end

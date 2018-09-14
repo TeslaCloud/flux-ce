@@ -25,7 +25,7 @@ end
 
 function flCharacters:OnActiveCharacterSet(player, character)
   player:Spawn()
-  player:SetModel(character.model or "models/humans/group01/male_02.mdl")
+  player:SetModel(character.model or 'models/humans/group01/male_02.mdl')
 
   player:StripAmmo()
 

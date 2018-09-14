@@ -185,7 +185,7 @@ function THEME:PaintButton(panel, w, h)
 end
 
 function THEME:PaintDeathScreen(curTime, scrW, scrH)
-  local respawnTimeRemaining = fl.client:get_nv("RespawnTime", 0) - curTime
+  local respawnTimeRemaining = fl.client:get_nv('respawn_time', 0) - curTime
   local barValue = 100 - 100 * (respawnTimeRemaining / config.get("respawn_delay"))
   local font = self:GetFont("Text_NormalLarge")
   local color_white = Color(255, 255, 255)

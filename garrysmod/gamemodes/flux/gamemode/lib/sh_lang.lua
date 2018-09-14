@@ -173,7 +173,7 @@ end
 function fl.lang:get_player_lang(player)
   if !IsValid(player) then return "en" end
 
-  return player:get_nv("language", "en")
+  return player:get_nv('language', 'en')
 end
 
 if CLIENT then

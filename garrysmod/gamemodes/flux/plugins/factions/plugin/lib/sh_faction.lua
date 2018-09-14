@@ -82,7 +82,7 @@ do
   local player_meta = FindMetaTable("Player")
 
   function player_meta:GetFactionID()
-    return self:get_nv("faction", "player")
+    return self:get_nv('faction', 'player')
   end
 
   function player_meta:SetFaction(id)
@@ -90,10 +90,10 @@ do
     local factionTable = faction.find_by_id(id)
     local char = self:GetCharacter()
 
-    self:set_nv("name", factionTable:GenerateName(self, self:GetCharacterVar("name", self:Name()), 1))
+    self:set_nv('name', factionTable:GenerateName(self, self:GetCharacterVar("name", self:Name()), 1))
     self:SetRank(1)
     self:SetTeam(factionTable.team_id)
-    self:set_nv("faction", id)
+    self:set_nv('faction', id)
     self:SetDefaultFactionModel()
 
     if char then
@@ -125,7 +125,7 @@ do
       if factionTable.has_gender then
         local male = factionModels.male or {}
         local female = factionModels.female or {}
-        local gender = self:get_nv("gender", -1)
+        local gender = self:get_nv('gender', -1)
 
         if gender == CHAR_GENDER_MALE and #male > 0 then
           modelTable = male
@@ -192,7 +192,7 @@ do
   end
 
   function player_meta:GetWhitelists()
-    return self:get_nv("whitelists", {})
+    return self:get_nv('whitelists', {})
   end
 
   function player_meta:HasWhitelist(name)
@@ -201,7 +201,7 @@ do
 
   if SERVER then
     function player_meta:SetWhitelists(data)
-      self:set_nv("whitelists", data)
+      self:set_nv('whitelists', data)
       self:save_player()
     end
 

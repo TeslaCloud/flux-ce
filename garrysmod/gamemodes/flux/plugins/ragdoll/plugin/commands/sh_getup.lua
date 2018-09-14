@@ -10,8 +10,8 @@ function COMMAND:on_run(player, delay)
   delay = math.Clamp(tonumber(delay) or 4, 2, 60)
 
   if player:Alive() and player:IsRagdolled() then
-    player:set_nv("GetupEnd", CurTime() + delay)
-    player:set_nv("GetupTime", delay)
+    player:set_nv('getup_end', CurTime() + delay)
+    player:set_nv('getup_time', delay)
     player:SetAction("getup", true)
 
     timer.Simple(delay, function()

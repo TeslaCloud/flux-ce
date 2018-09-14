@@ -249,9 +249,9 @@ function GM:PopulateToolMenu()
     if TOOL.AddToMenu != false then
       spawnmenu.AddToolMenuOption(
         TOOL.Tab or "Main",
-        TOOL.category or "New Category",
+        TOOL.Category or "New Category",
         ToolName,
-        TOOL.name or t(ToolName),
+        TOOL.Name or t(ToolName),
         TOOL.Command or "gmod_tool "..ToolName,
         TOOL.ConfigName or ToolName,
         TOOL.BuildCPanel
