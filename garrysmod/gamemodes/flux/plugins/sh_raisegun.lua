@@ -106,7 +106,7 @@ function PLUGIN:KeyRelease(player, key)
   end
 end
 
-function PLUGIN:modelWeaponRaised(player, model)
+function PLUGIN:ModelWeaponRaised(player, model)
   return player:IsWeaponRaised()
 end
 
