@@ -1,13 +1,14 @@
 ﻿local player_meta = FindMetaTable("Player")
 
 function player_meta:SetActiveCharacter(id)
-  local curChar = self:GetActiveCharacterID()
+  local cur_char_id = self:GetActiveCharacterID()
 
-  if curChar then
+  if cur_char_id then
     hook.run("OnCharacterChange", self, self:GetCharacter(), id)
   end
 
   self:set_nv('active_character', tonumber(id))
+  self.current_character = player.record.characters[tonumber(id)]
 
   local char_data = self:GetCharacter()
 

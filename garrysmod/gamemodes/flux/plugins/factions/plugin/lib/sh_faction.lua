@@ -149,7 +149,7 @@ do
           model = modelTable[math.random(#modelTable)]
         end
 
-        character.SetModel(self, self:GetActiveCharacterID(), model)
+        character.SetModel(self, self:GetCharacter(), model)
       end
     end
   end
