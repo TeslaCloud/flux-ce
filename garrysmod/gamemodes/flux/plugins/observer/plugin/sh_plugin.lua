@@ -8,7 +8,7 @@ if fl.admin then
 end
 
 if SERVER then
-  config.set("observer_reset", true)
+  config.set("observer_reset", false)
 else
   config.add_to_menu("observer_reset", "Observer Reset", "Whether or not should player's position be restored when they leave observer mode?", "boolean")
 end
