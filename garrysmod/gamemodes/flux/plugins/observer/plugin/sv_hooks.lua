@@ -24,7 +24,7 @@ function flObserver:PlayerEnterNoclip(player)
   player:SetNotSolid(true)
   player:SetColor(Color(0, 0, 0, 0))
 
-  player:set_nv("Observer", true)
+  player:set_nv('observer', true)
 
   return false
 end
@@ -51,7 +51,7 @@ function flObserver:PlayerExitNoclip(player)
   end
 
   player.observerData = nil
-  player:set_nv("Observer", false)
+  player:set_nv('observer', false)
 
   return false
 end

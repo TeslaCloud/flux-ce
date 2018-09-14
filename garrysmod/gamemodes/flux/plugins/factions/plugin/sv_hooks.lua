@@ -4,7 +4,7 @@ function flFactions:PostPlayerSpawn(player)
   if playerFaction then
     player:SetTeam(playerFaction.team_id or 1)
 
-    player:set_nv("name", playerFaction:GenerateName(player, player:GetCharacterVar("name", player:Name()), player:GetRank()))
+    player:set_nv('name', playerFaction:GenerateName(player, player:GetCharacterVar("name", player:Name()), player:GetRank()))
   end
 end
 
@@ -13,7 +13,7 @@ function flFactions:SavePlayerData(player, saveData)
 end
 
 function flFactions:OnActiveCharacterSet(player, char_data)
-  player:set_nv("faction", char_data.faction or "player")
+  player:set_nv('faction', char_data.faction or "player")
 end
 
 function flFactions:SaveCharacterData(player, char)
@@ -30,23 +30,23 @@ function flFactions:PlayerRestored(player, record)
     if faction.Count() > 0 then
       local randomFaction = table.Random(faction.GetAll())
 
-      player:set_nv("faction", randomFaction.id)
+      player:set_nv('faction', randomFaction.id)
 
       if randomFaction.has_gender then
-        player:set_nv("gender", math.random(CHAR_GENDER_MALE, CHAR_GENDER_FEMALE))
+        player:set_nv('gender', math.random(CHAR_GENDER_MALE, CHAR_GENDER_FEMALE))
       end
 
       local factionModels = randomFaction.models
 
       if istable(factionModels) then
-        local randomModel = "models/humans/group01/male_01.mdl"
+        local randomModel = 'models/humans/group01/male_01.mdl'
         local universal = factionModels.universal or {}
 
         if randomFaction.has_gender then
           local male = factionModels.male or {}
           local female = factionModels.female or {}
 
-          local gender = player:get_nv("gender", -1)
+          local gender = player:get_nv('gender', -1)
 
           if gender == -1 and #universal > 0 then
             randomModel = universal[math.random(#universal)]
@@ -59,7 +59,7 @@ function flFactions:PlayerRestored(player, record)
           randomModel = universal[math.random(#universal)]
         end
 
-        player:set_nv("model", randomModel)
+        player:set_nv('model', randomModel)
       end
 
       player:SetTeam(randomFaction.team_id or 1)

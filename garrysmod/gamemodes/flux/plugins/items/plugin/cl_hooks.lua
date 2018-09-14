@@ -59,7 +59,7 @@ function flItems:PlayerDropItem(item_table, panel, mouseX, mouseY)
 end
 
 function flItems:HUDPaint()
-  local holdStart = fl.client:get_nv("HoldStart")
+  local holdStart = fl.client:get_nv('hold_start')
 
   if holdStart then
     local diff = math.Clamp(math.Round(CurTime() - holdStart, 3), 0.01, 0.5)
@@ -70,11 +70,11 @@ function flItems:HUDPaint()
 end
 
 function flItems:Think()
-  if !fl.client:get_nv("HoldStart") then return end
+  if !fl.client:get_nv('hold_start') then return end
 
-  local ent = fl.client:get_nv("HoldEnt")
+  local ent = fl.client:get_nv('hold_entity')
 
-  if IsValid(ent) and fl.client:get_nv("HoldStart") then
+  if IsValid(ent) and fl.client:get_nv('hold_start') then
     local scrPos = ent:GetPos():ToScreen()
     local x, y = scrPos.x, scrPos.y
     local w, h = ScrW() * 0.5, ScrH() * 0.5

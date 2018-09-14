@@ -1,15 +1,15 @@
 local player_meta = FindMetaTable("Player")
 
 function player_meta:get_role()
-  return self:get_nv("role", "user")
+  return self:get_nv('role', 'user')
 end
 
 function player_meta:GetPermissions()
-  return self:get_nv("permissions", {})
+  return self:get_nv('permissions', {})
 end
 
 function player_meta:GetCustomPermissions()
-  return self:get_nv("permissions", {})
+  return self:get_nv('permissions', {})
 end
 
 function player_meta:is_assistant()

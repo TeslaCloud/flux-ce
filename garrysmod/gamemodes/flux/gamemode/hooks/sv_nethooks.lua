@@ -15,5 +15,5 @@ netstream.Hook("player_created", function(player)
 end)
 
 netstream.Hook("player_set_lang", function(player, lang)
-  player:set_nv("language", lang)
+  player:set_nv('language', lang)
 end)

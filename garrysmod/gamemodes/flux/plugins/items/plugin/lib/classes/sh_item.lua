@@ -48,7 +48,7 @@ function Item:get_max_stack()
 end
 
 function Item:GetModel()
-  return self.model or "models/props_lab/cactus.mdl"
+  return self.model or 'models/props_lab/cactus.mdl'
 end
 
 function Item:GetSkin()

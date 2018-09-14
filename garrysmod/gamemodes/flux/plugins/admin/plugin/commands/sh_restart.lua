@@ -13,6 +13,7 @@ function COMMAND:on_run(player, delay)
 
   timer.Simple(delay, function()
     hook.run("FLSaveData")
+    hook.run('ServerRestart')
 
     RunConsoleCommand("changelevel", game.GetMap())
   end)

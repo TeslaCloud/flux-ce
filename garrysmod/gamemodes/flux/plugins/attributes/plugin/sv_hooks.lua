@@ -3,5 +3,5 @@ function flAttributes:PostCreateCharacter(player, charID, char)
 end
 
 function flAttributes:OnActiveCharacterSet(player, character)
-  player:set_nv("Attributes", character.attributes)
+  player:set_nv('attributes', character.attributes)
 end

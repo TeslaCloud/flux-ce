@@ -5,13 +5,13 @@ function player_meta:HasInitialized()
 end
 
 function player_meta:get_data()
-  return self:get_nv("flData", {})
+  return self:get_nv('fl_data', {})
 end
 
 player_meta.flName = player_meta.flName or player_meta.Name
 
 function player_meta:Name(bForceTrueName)
-  return (!bForceTrueName and hook.run("GetPlayerName", self)) or self:get_nv("name", self:flName())
+  return (!bForceTrueName and hook.run("GetPlayerName", self)) or self:get_nv('name', self:flName())
 end
 
 function player_meta:SteamName()
@@ -36,14 +36,14 @@ end
 
 function player_meta:SetAction(id, bForce)
   if bForce or self:GetAction() == "none" then
-    self:set_nv("action", id)
+    self:set_nv('action', id)
 
     return true
   end
 end
 
 function player_meta:GetAction()
-  return self:get_nv("action", "none")
+  return self:get_nv('action', 'none')
 end
 
 function player_meta:IsDoingAction(id)

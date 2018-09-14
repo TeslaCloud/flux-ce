@@ -15,7 +15,7 @@ function player_meta:save_player()
 end
 
 function player_meta:set_data(data)
-  self:set_nv("flData", data or {})
+  self:set_nv('fl_data', data or {})
 end
 
 function player_meta:SetPlayerData(key, value)

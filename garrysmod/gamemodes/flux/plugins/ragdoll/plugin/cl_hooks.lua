@@ -24,7 +24,7 @@ function PLUGIN:HUDPaint()
     draw.RoundedBox(0, 0, 0, scrW, scrH, Color(0, 0, 0, 100))
 
     if getup then
-      local barValue = 100 - 100 * ((fl.client:get_nv("GetupEnd", 0) - CurTime()) / fl.client:get_nv("GetupTime"))
+      local barValue = 100 - 100 * ((fl.client:get_nv('getup_end', 0) - CurTime()) / fl.client:get_nv('getup_time'))
 
       fl.bars:SetValue("getup", barValue)
       fl.bars:Draw("getup")

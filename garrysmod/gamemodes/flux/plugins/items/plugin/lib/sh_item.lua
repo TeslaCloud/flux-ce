@@ -60,7 +60,7 @@ function item.register(id, data)
   data.weight = data.weight or 1
   data.stackable = data.stackable or false
   data.max_stack = data.max_stack or 64
-  data.model = data.model or "models/props_lab/cactus.mdl"
+  data.model = data.model or 'models/props_lab/cactus.mdl'
   data.skin = data.skin or 0
   data.color = data.color or nil
   data.cost = data.cost or 0

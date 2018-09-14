@@ -123,12 +123,12 @@ netstream.Hook("PlayerDropItem", function(player, instance_id)
 end)
 
 netstream.Hook("Flux::Items::AbortHoldStart", function(player)
-  local ent = player:get_nv("HoldEnt")
+  local ent = player:get_nv('hold_entity')
 
   if IsValid(ent) then
-    ent:set_nv("LastActivator", false)
+    ent:set_nv('last_activator', false)
   end
 
-  player:set_nv("HoldStart", false)
-  player:set_nv("HoldEnt", false)
+  player:set_nv('hold_start', false)
+  player:set_nv('hold_entity', false)
 end)

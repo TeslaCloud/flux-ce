@@ -1,5 +1,5 @@
-TOOL.category = "Flux"
-TOOL.name = "Static Add/Remove"
+TOOL.Category = "Flux"
+TOOL.Name = "Static Add/Remove"
 TOOL.Command = nil
 TOOL.ConfigName = ""
 
