@@ -3,16 +3,6 @@ function flAdmin:SavePlayerData(player, save_table)
   save_table.permissions = fl.serialize(player:GetCustomPermissions())
 end
 
-function flAdmin:PlayerRestored(player, record)
-  if record.permissions then
-    player:SetCustomPermissions(record.permissions)
-  end
-
-  if record.role then
-    player:SetUserGroup(record.role)
-  end
-end
-
 function flAdmin:ActiveRecordReady()
   Ban:all():get(function(objects)
     for k, v in ipairs(objects) do
@@ -51,6 +41,14 @@ function flAdmin:PlayerRestored(player, record)
         player.can_anything = true
       end
     end
+  end
+
+  if record.permissions then
+    player:SetCustomPermissions(record.permissions)
+  end
+
+  if record.role then
+    player:SetUserGroup(record.role)
   end
 
   ServerLog(player:Name().." ("..player:GetUserGroup()..") has connected to the server.")
