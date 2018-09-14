@@ -38,6 +38,8 @@ end
 function Stamina:start_running(player, prevent_drain)
   if !IsValid(player) then return end
 
+  player.stamina_regenerating = false
+
   local steam_id = player:SteamID()
   local id = 'stam_run_'..steam_id
 
@@ -78,6 +80,8 @@ function Stamina:stop_running(player, prevent_regen)
   timer.Pause('stam_run_'..steam_id)
 
   if !prevent_regen and self.running[steam_id] != false then
+    player.stamina_regenerating = true
+
     if !timer.Exists(id) then
       table.insert(self.timer_ids, id)
   
@@ -106,27 +110,25 @@ end
 function Stamina:PlayerThink(player, cur_time)
   if player:running() then
     if !player.was_running then
-      player:SetFOV(105, 0.5)
+      player:SetFOV(100, 0.5)
       self:start_running(player)
-      player.was_running = true
+      player.was_running = cur_time
     end
   else
     if player.was_running then
       player:SetFOV(0, 0.5)
       self:stop_running(player, true)
-
-      timer.Simple(1, function()
-        -- Delay stamina regen by 1 second.
-        if IsValid(player) and !player.was_running then
-          self:stop_running(player)
-        end
-      end)
       player.was_running = false
+      player.standing_since = cur_time
+    elseif !player.stamina_regenerating and (cur_time - player.standing_since) > 1 then
+      self:stop_running(player)
     end
   end
 
   if player:GetMoveType() == MOVETYPE_WALK then
     if !player:OnGround() then
+      player.standing_since = cur_time
+
       if player.was_on_ground then
         self:set_stamina(player, player:get_nv('stamina', 100) - jump_penalty)
         self:start_running(player, true)
@@ -134,13 +136,8 @@ function Stamina:PlayerThink(player, cur_time)
 
       player.was_on_ground = false
     elseif !player.was_on_ground then
+      player.standing_since = cur_time
       player.was_on_ground = true
-      self:stop_running(player, true)
-      timer.Simple(1, function()
-        if IsValid(player) and !player.was_running and player.was_on_ground then
-          self:stop_running(player)
-        end
-      end)
     end
   end
 
