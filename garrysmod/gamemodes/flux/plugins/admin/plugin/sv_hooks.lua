@@ -5,11 +5,11 @@ end
 
 function flAdmin:PlayerRestored(player, record)
   if record.permissions then
-    player:SetCustomPermissions(result.permissions)
+    player:SetCustomPermissions(record.permissions)
   end
 
   if record.role then
-    player:SetUserGroup(result.role)
+    player:SetUserGroup(record.role)
   end
 end
 

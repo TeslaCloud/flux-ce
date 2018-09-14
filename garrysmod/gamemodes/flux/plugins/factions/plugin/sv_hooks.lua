@@ -12,12 +12,6 @@ function flFactions:SavePlayerData(player, saveData)
   saveData.whitelists = fl.serialize(player:GetWhitelists())
 end
 
-function flFactions:RestorePlayer(player, result)
-  if result.whitelists then
-    player:SetWhitelists(fl.deserialize(result.whitelists))
-  end
-end
-
 function flFactions:OnActiveCharacterSet(player, char_data)
   player:set_nv("faction", char_data.faction or "player")
 end
