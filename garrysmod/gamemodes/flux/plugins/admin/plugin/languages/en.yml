@@ -33,7 +33,7 @@ en:
     assistant: Low clearance administrative rank given to assistant staff members.
     moderator: An administrative rank given to trusted staff members.
     admin: A high level administrative rank given to the most trusted of staff members.
-  demotecmd:
+  demote:
     description: Demote a player to user.
     syntax: "<target>"
     message: "{1} has demoted {2} from {3} to user."

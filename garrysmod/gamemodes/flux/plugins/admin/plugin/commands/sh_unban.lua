@@ -12,11 +12,11 @@ function COMMAND:on_run(player, steam_id)
 
     if success then
       fl.player:broadcast('unban_message', {
-        admin = (IsValid(player) and player:Name()) or "Console",
+        admin = get_player_name(player),
         target = copy.name
       })
     else
-      fl.player:notify(player, L("Err_NotBanned", steam_id))
+      player:notify("err.not_banned", steam_id)
     end
   end
 end

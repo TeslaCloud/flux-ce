@@ -120,7 +120,7 @@ function Stamina:PlayerThink(player, cur_time)
       self:stop_running(player, true)
       player.was_running = false
       player.standing_since = cur_time
-    elseif !player.stamina_regenerating and (cur_time - player.standing_since) > 1 then
+    elseif !player.stamina_regenerating and (cur_time - (player.standing_since or 0)) > 1 then
       self:stop_running(player)
     end
   end

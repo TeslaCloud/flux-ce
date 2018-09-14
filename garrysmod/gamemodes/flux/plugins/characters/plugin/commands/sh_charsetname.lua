@@ -10,7 +10,7 @@ COMMAND.aliases = {"setname"}
 function COMMAND:on_run(player, targets, newName)
   local target = targets[1]
 
-  fl.player:broadcast(L("CharSetName_Message", (IsValid(player) and player:Name()) or "Console", target:Name(), newName))
+  fl.player:broadcast("char_set_name.message", { get_player_name(player), target:Name(), newName })
 
   character.set_name(target, target:GetCharacter(), newName)
 end

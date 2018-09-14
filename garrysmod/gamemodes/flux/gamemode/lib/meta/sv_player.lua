@@ -38,8 +38,8 @@ function player_meta:SetInitialized(bIsInitialized)
   self:SetDTBool(BOOL_INITIALIZED, bIsInitialized)
 end
 
-function player_meta:notify(message)
-  fl.player:notify(self, message)
+function player_meta:notify(message, arguments)
+  fl.player:notify(self, message, arguments)
 end
 
 function player_meta:GetAmmoTable()

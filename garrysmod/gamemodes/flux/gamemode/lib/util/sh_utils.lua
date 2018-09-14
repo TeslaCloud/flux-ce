@@ -143,3 +143,7 @@ function txt(text)
   end
   return output:chomp(' '):chomp('\n')
 end
+
+function get_player_name(player)
+  return IsValid(player) and player:Name() or 'Console'
+end
