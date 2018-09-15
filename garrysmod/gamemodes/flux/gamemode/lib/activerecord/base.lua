@@ -25,7 +25,7 @@ end
 -- Dump object as a simple data table.
 function ActiveRecord.Base:dump()
   local ret = {}
-    for k, v in pairs(self:get_schema()) do
+    for k, data in pairs(self:get_schema()) do
       ret[k] = self[k]
     end
   return ret, self
@@ -289,7 +289,7 @@ function ActiveRecord.Base:save()
     self.class.last_id = self.id
 
     local query = ActiveRecord.Database:insert(self.table_name)
-      for k, v in pairs(schema) do
+      for k, data in pairs(schema) do
         if except[k] then continue end
         query:insert(k, self[k])
       end

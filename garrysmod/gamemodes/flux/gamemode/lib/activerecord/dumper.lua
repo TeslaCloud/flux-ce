@@ -41,25 +41,40 @@ local Structure = ActiveRecord.Schema:define(]]..version..[[)
   local ind = '  '
 
   for table_name, structure in pairs(ActiveRecord.schema or {}) do
-    result = result + string.rep(ind, level) + 'create_table(\'' + table_name + '\', function(t)\n'
+    if !istable(structure) then continue end
+
+    result = result + string.rep(ind, level) + 'create_table("' + table_name + '", function(t)\n'
     level = level + 1
-    for column_name, abstract_type in SortedPairsByValue(structure) do
-      result = result + string.rep(ind, level) + 't:' + abstract_type + ' \'' + column_name + '\'\n'
+
+    local columns_table = table.map_kv(structure, function(k, v)
+      if istable(v) then
+        return { column = k, id = v.id, type = v.type }
+      end
+    end)
+
+    for k, data in SortedPairsByMemberValue(columns_table, 'id') do
+      result = result + string.rep(ind, level) + 't:' + data.type + ' "' + data.column + '"\n'
     end
     level = level - 1
     result = result + string.rep(ind, level) + 'end)\n\n'
   end
 
   for k, v in pairs(ActiveRecord.metadata.indexes) do
-    result = result + string.rep(ind, level) + '-- ' + k + '\n'
-    result = result + string.rep(ind, level) + 'add_index { ' + table_to_inline(v) + ' }\n'
+    result = result + string.rep(ind, level) + 'add_index { ' + table_to_inline(v) + ', name = "'..k..'" }\n'
   end
 
   for k, v in pairs(ActiveRecord.metadata.references) do
-    result = result + string.rep(ind, level) + '-- ' + k + '\n'
-    result = result + string.rep(ind, level) + 'create_reference('
-      + quote(v.table) + ', ' + quote(v.key) + ', ' + quote(v.foreign_table) + ', '
-      + quote(v.foreign_key) + ', ' + tostring(v.cascade) + ')\n'
+    local base_indent = string.rep(ind, level)
+    local inner_indent = string.rep(ind, level + 1)
+
+    result = result + base_indent + 'create_reference {\n'
+      + inner_indent + 'table_name    = ' + quote(v.table) + ',\n'
+      + inner_indent + 'key           = ' + quote(v.key) + ',\n'
+      + inner_indent + 'foreign_table = ' + quote(v.foreign_table) + ',\n'
+      + inner_indent + 'foreign_key   = ' + quote(v.foreign_key) + ',\n'
+      + inner_indent + 'cascade       = ' + tostring(v.cascade) + ',\n'
+      + inner_indent + 'name          = ' + quote(k)
+      + '\n'..base_indent..'}\n'
   end
 
   for k, v in pairs(ActiveRecord.metadata.prim_keys) do

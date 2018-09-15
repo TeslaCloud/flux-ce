@@ -12,7 +12,7 @@ function ActiveRecord.Relation:init(object, class)
   local schema = ActiveRecord.schema[class.table_name]
 
   for k, v in pairs(object) do
-    self.object[k] = ActiveRecord.str_to_type(v, schema[k] or 'string')
+    self.object[k] = ActiveRecord.str_to_type(v, schema[k] and schema[k].type or 'string')
   end
 
   if isfunction(self.object.restored) then
