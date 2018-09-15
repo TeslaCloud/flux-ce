@@ -13,6 +13,7 @@ end
 
 function PLUGIN:OnContextMenuOpen()
   if IsValid(fl.client.hotbar) then
+    fl.client.hotbar:SetVisible(true)
     fl.client.hotbar:MakePopup()
     fl.client.hotbar:Rebuild()
     fl.client.hotbar:MoveToFront()
@@ -26,17 +27,21 @@ function PLUGIN:OnContextMenuClose()
     fl.client.hotbar:MoveToBack()
     fl.client.hotbar:SetMouseInputEnabled(false)
     fl.client.hotbar:SetKeyboardInputEnabled(false)
+    fl.client.hotbar:SetVisible(false)
   end
 end
 
 function fl_inventory:create_hotbar()
   fl.client.hotbar = vgui.Create('fl_hotbar')
   fl.client.hotbar:SetPlayer(fl.client)
+  fl.client.hotbar:SetVisible(false)
   return fl.client.hotbar
 end
 
-function fl_inventory:Initialize()
-  self:create_hotbar()
+function fl_inventory:FLInitPostEntity()
+  if IsValid(fl.client) then
+    self:create_hotbar()
+  end
 end
 
 function fl_inventory:PostCharacterLoaded()
