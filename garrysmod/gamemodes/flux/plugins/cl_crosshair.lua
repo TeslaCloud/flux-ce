@@ -4,7 +4,6 @@ PLUGIN:set_description("Adds a crosshair.")
 
 --fl.hint:Add("RunCrosshair", "Crosshair will change it's size depending on your movement speed\nand distance between you and your view target.")
 
-local curSize = nil
 local size = 2
 local halfSize = size * 0.5
 local gap = 8
