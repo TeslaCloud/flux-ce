@@ -13,5 +13,5 @@ ActiveRecord.define_model('bans', function(t)
   t:datetime 'unban_time'
 end)
 
-add_column('users', 'role', 'string')
-add_column('users', 'banned', 'boolean')
+add_column('users', { 'role', type = 'string', default = '\'user\'' })
+add_column('users', { 'banned', type = 'boolean', default = false })

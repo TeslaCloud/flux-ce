@@ -292,7 +292,7 @@ function ActiveRecord.Base:save()
     local query = ActiveRecord.Database:insert(self.table_name)
       for k, data in pairs(schema) do
         if except[k] then continue end
-        query:insert(k, self[k])
+        query:insert(k, ActiveRecord.type_to_db(self[k], data.type))
       end
       query:insert('created_at', to_datetime(os.time()))
       query:insert('updated_at', to_datetime(os.time()))
@@ -304,9 +304,9 @@ function ActiveRecord.Base:save()
   else
     local query = ActiveRecord.Database:update(self.table_name)
       query:where('id', self.id)
-      for k, v in pairs(schema) do
+      for k, data in pairs(schema) do
         if except[k] then continue end
-        query:update(k, self[k])
+        query:update(k, ActiveRecord.type_to_db(self[k], data.type))
       end
       query:update('updated_at', to_datetime(os.time()))
       query:callback(function(result, query, time)

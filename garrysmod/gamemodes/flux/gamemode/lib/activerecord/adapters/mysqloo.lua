@@ -93,7 +93,7 @@ function ActiveRecord.Adapters.Mysqloo:raw_query(query, callback, flags, ...)
       local status, a, b, c, d = pcall(callback, result, query, math.Round(os.clock() - query_start, 3))
 
       if !status then
-        ErrorNoHalt(string.format('ActiveRecord - MySQL Callback Error!\n%s\n', value))
+        ErrorNoHalt(string.format('ActiveRecord - MySQL Callback Error!\n%s\n', a))
       end
 
       return a, b, c, d

@@ -4,5 +4,5 @@ ActiveRecord.define_model('whitelists', function(t)
   t:integer 'user_id'
 end)
 
-add_column('characters', 'faction', 'string')
-add_column('characters', 'char_class', 'string')
+add_column('characters', { 'faction', type = 'string', default = '\'player\'' })
+add_column('characters', { 'char_class', type = 'string', null = true })
