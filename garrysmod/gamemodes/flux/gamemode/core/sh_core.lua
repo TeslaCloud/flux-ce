@@ -461,14 +461,12 @@ function fl.include_schema()
   if SERVER then
     return plugin.include_schema()
   else
-    timer.Create("SchemaLoader", 0.04, 0, function()
-      if fl.shared and fl.shared_received then
-        timer.Remove("SchemaLoader")
-        plugin.include_schema()
-        netstream.Start("ClientIncludedSchema", true)
+    plugin.include_schema()
 
-        hook.run("FluxClientSchemaLoaded")
-      end
+    -- Wait just a tiny bit for stuff to catch up
+    timer.Simple(0.2, function()
+      netstream.Start("ClientIncludedSchema", true)
+      hook.run("FluxClientSchemaLoaded")
     end)
   end
 end
@@ -481,20 +479,7 @@ end
   Returns: nil
 --]]
 function fl.include_plugins(folder)
-  if SERVER then
-    return plugin.include_plugins(folder)
-  else
-    timer.Create("plugin_loader", 0.04, 0, function()
-      if fl.shared and fl.shared_received then
-        timer.Remove("plugin_loader")
-        plugin.include_plugins(folder)
-
-        hook.run("OnPluginsLoaded")
-
-        fl.include_schema()
-      end
-    end)
-  end
+  return plugin.include_plugins(folder)
 end
 
 --[[

@@ -8,8 +8,6 @@ netstream.Hook("soft_undo", function(player)
 end)
 
 netstream.Hook("player_created", function(player)
-  netstream.Heavy(player, "SharedTables", fl.shared)
-
   player:send_config()
   player:SyncNetVars()
 end)

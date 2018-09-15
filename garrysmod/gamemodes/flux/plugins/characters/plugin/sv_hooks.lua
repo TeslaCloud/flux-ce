@@ -28,7 +28,7 @@ function flCharacters:PlayerInitialized(player)
 end
 
 function flCharacters:PostCharacterLoaded(player, character)
-  hook.runClient(player, "PostCharacterLoaded", character.id)
+  hook.run_client(player, "PostCharacterLoaded", character.id)
 end
 
 function flCharacters:OnActiveCharacterSet(player, character)

@@ -61,7 +61,13 @@ util.include 'core/sh_enums.lua'
 
 util.include_folder('lib/util', true)
 
-if CLIENT and !fl.lang then
+if CLIENT then
+  local files, folders = file.Find('flux/client/*.lua', 'LUA')
+
+  for k, v in ipairs(files) do
+    include('flux/client/'..v)
+  end
+
   include 'lib/sh_lang.lua'
 end
 
@@ -115,8 +121,6 @@ hook.run('PreLoadPlugins')
 
 fl.include_plugins('flux/plugins')
 
-if SERVER then
-  hook.run('OnPluginsLoaded')
+hook.run('OnPluginsLoaded')
 
-  fl.include_schema()
-end
+fl.include_schema()

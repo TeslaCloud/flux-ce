@@ -177,8 +177,6 @@ function fl.lang:get_player_lang(player)
 end
 
 if CLIENT then
-  fl.lang.stored = include 'flux_lang.lua'
-
   function fl.lang:pluralize(phrase, count)
     local lang = GetConVar("gmod_language"):GetString()
 

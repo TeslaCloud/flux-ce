@@ -1,8 +1,3 @@
-netstream.Hook("SharedTables", function(tSharedTable)
-  fl.shared = tSharedTable or {}
-  fl.shared_received = true
-end)
-
 netstream.Hook("Hook_RunCL", function(hookName, ...)
   hook.run(hookName, ...)
 end)

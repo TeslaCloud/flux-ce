@@ -28,6 +28,6 @@ function ServerLog(...)
   print("")
 end
 
-function hook.runClient(player, strHookName, ...)
+function hook.run_client(player, strHookName, ...)
   netstream.Start(player, "Hook_RunCL", strHookName, ...)
 end

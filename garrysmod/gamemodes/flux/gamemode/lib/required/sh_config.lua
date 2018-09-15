@@ -19,10 +19,12 @@ end
 if SERVER then
   function config.load()
     local loaded = data.LoadSchema('config', {})
+
     for k, v in pairs(loaded) do
       plugin.call('OnConfigSet', key, stored[k] and stored[k].value, value)
       stored[k] = v
     end
+
     return stored
   end
 

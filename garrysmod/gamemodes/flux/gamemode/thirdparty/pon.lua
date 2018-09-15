@@ -34,6 +34,8 @@ V 1.3.0
  - added custom handling of strings without any escaped characters.
 V 1.4.0
  - added detection of numbers without requiring 'n' datatype. (10 datatypes one for each num it could start with)
+V 1.4.1
+ - Various fixes and optimizarions, as well as merging stuff from the pON repo.
 
 THANKS TO...
  - VERCAS for the inspiration.
