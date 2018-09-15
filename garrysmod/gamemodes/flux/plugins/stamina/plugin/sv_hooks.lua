@@ -61,7 +61,7 @@ function Stamina:start_running(player, prevent_drain)
 
           self.running[steam_id] = true
         else
-          timer.Destroy(id)
+          timer.Remove(id)
           self.running[steam_id] = false
         end
       end)
@@ -84,7 +84,7 @@ function Stamina:stop_running(player, prevent_regen)
 
     if !timer.Exists(id) then
       table.insert(self.timer_ids, id)
-  
+
       timer.Create(id, 0.2, 0, function()
         if IsValid(player) then
           local new_stam = player:get_nv('stamina', 100) + 1 * regen_scale * (plugin.call('StaminaAdjustRegenScale', player) or 1)
@@ -97,7 +97,7 @@ function Stamina:stop_running(player, prevent_regen)
 
           self.running[steam_id] = false
         else
-          timer.Destroy(id)
+          timer.Remove(id)
           self.running[steam_id] = false
         end
       end)
@@ -153,7 +153,7 @@ end
 function Stamina:OnReloaded()
   for k, v in ipairs(self.timer_ids) do
     if timer.Exists(v) then
-      timer.Destroy(v)
+      timer.Remove(v)
     end
   end
 end

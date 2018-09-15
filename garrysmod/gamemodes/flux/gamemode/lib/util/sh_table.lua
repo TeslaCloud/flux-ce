@@ -190,6 +190,18 @@ function s(what)
   end
 end
 
+function w(str)
+  return string.Split(str, ' ')
+end
+
+function wk(str)
+  local ret = {}
+  for k, v in ipairs(string.Split(str, ' ')) do
+    ret[v] = true
+  end
+  return ret
+end
+
 -- A better implementation of PrintTable
 function PrintTable(t, indent, done, indent_length)
   done = done or {}
