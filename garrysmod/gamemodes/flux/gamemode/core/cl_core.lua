@@ -1,5 +1,7 @@
 DeriveGamemode("sandbox")
 
+fl.blur_material = Material('pp/blurscreen')
+
 do
   local centerX, centerY = ScrW() * 0.5, ScrH() * 0.5
 
@@ -279,6 +281,60 @@ function draw.textured_rect(material, x, y, w, h, color)
   surface.SetDrawColor(color.r, color.g, color.b, color.a)
   surface.SetMaterial(material)
   surface.DrawTexturedRect(x, y, w, h)
+end
+
+function draw.box(x, y, w, h, color)
+	surface.SetDrawColor(color or Color(255, 255, 255))
+	surface.DrawRect(x, y, w, h)
+end
+
+do
+  local last_frame = -1
+
+  -- To be called outside of a panel
+  function draw.blur_box(x, y, w, h, color, blur_amt)
+    blur_amt = blur_amt or 6
+    local scrw, scrh = ScrW(), ScrH()
+
+    surface.SetMaterial(fl.blur_material)
+    surface.SetDrawColor(255, 255, 255, 255)
+
+    for i = 0, 1, 0.3 do
+      fl.blur_material:SetFloat("$blur", i * blur_amt)
+      fl.blur_material:Recompute()
+      render.UpdateScreenEffectTexture()
+      render.SetScissorRect(x, y, x + w, y + h, true)
+        surface.DrawTexturedRect(0, 0, scrw, scrh)
+      render.SetScissorRect(0, 0, 0, 0, false)
+    end
+
+    if color then
+      draw.box(x, y, w, h, color)
+    end
+  end
+
+  function draw.blur_panel(panel, color, blur_amt)
+    blur_amt = blur_amt or 6
+    local x, y = panel:GetPos()
+    local w, h = panel:GetSize()
+    local scrw, scrh = ScrW(), ScrH()
+
+    surface.SetMaterial(fl.blur_material)
+    surface.SetDrawColor(255, 255, 255, 255)
+
+    for i = 0, 1, 0.3 do
+      fl.blur_material:SetFloat("$blur", i * blur_amt)
+      fl.blur_material:Recompute()
+      render.UpdateScreenEffectTexture()
+      render.SetScissorRect(x, y, x + w, y + h, true)
+        surface.DrawTexturedRect(-x, -y, scrw, scrh)
+      render.SetScissorRect(0, 0, 0, 0, false)
+    end
+
+    if color then
+      draw.box(0, 0, w, h, color)
+    end
+  end
 end
 
 do
