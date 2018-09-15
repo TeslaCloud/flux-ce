@@ -9,3 +9,5 @@ ActiveRecord.define_model('logs', function(t)
   t:string 'object'
   t:string 'subject'
 end)
+
+add_index { 'users', 'steam_id' }

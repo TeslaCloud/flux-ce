@@ -22,10 +22,10 @@ function ActiveRecord.Model:populate()
     local schema = ActiveRecord.schema[v.table_name]
 
     if schema then
-      for column, type in pairs(schema) do
+      for column, data in pairs(schema) do
         if !isstring(column) then continue end
 
-        self:generate_helpers(v, column, type)
+        self:generate_helpers(v, column, data.type)
       end
   
       v.schema = schema

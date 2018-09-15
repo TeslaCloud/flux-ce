@@ -46,24 +46,34 @@ end
 function add_index(args)
   if !isstring(args[1]) or !args[2] then return end
 
-  local cols = istable(args[2]) and args[2] or {args[2]}
+  local cols = istable(args[2]) and args[2] or { args[2] }
   local len = args['length']
   local index_name = args['name'] or args[1]..'_'..table.concat(cols, '_')..'_index'
+  local adapter_name = ActiveRecord.adapter_name
 
   if ActiveRecord.metadata.indexes[index_name] then return end
 
-  local query = 'CREATE '..(args['unique'] == true and 'UNIQUE' or '')..'INDEX '..ActiveRecord.adapter:quote(index_name)
+  local query = 'CREATE '..(args['unique'] == true and 'UNIQUE ' or '')..'INDEX '
 
-  if args['using'] then
-    query = query..' USING '..args['using']
+  if args['if_not_exists'] then
+    query = query..' IF NOT EXISTS '
   end
 
-  query = query..' ON '..ActiveRecord.adapter:quote(args[1])..'('
+  query = query..ActiveRecord.adapter:quote(index_name)
+
+
+  query = query..' ON '..ActiveRecord.adapter:quote(args[1])
+
+  if adapter_name != 'sqlite' then
+    query = query..' USING '..(args['using'] or 'btree')
+  end
+
+  query = query..' ('
 
   for k, v in ipairs(cols) do
     query = query..ActiveRecord.adapter:quote(v)
 
-    if len and ActiveRecord.adapter_name != 'sqlite' then
+    if len and adapter_name != 'sqlite' then
       query = query..'('..(istable(len) and len[v] or len)..')'
     end
 
@@ -95,10 +105,12 @@ function drop_index(index_name, table_name)
   end)
 end
 
-function create_reference(table_name, key, foreign_table, foreign_key, cascade)
+function create_reference(args)
+  local table_name, key, foreign_table, foreign_key, cascade = args.table_name, args.key, args.foreign_table, args.foreign_key, args.cascade
+
   add_index { table_name, key }
 
-  local constraint_name = 'ar_'..util.CRC(key..foreign_key..table_name..foreign_table)
+  local constraint_name = args.name or 'ar_'..util.CRC(key..foreign_key..table_name..foreign_table)
 
   if ActiveRecord.metadata.references[constraint_name] then return end
 
@@ -108,7 +120,7 @@ function create_reference(table_name, key, foreign_table, foreign_key, cascade)
     ..ActiveRecord.adapter:quote(foreign_table)..'('..ActiveRecord.adapter:quote(foreign_key)..')'
   query = query..(cascade and ' ON DELETE CASCADE;' or ';')
 
-  ActiveRecord.metadata.references[constraint_name] = { table = table_name, key = key, foreign_table = foreign_table, foreign_key = foreign_key, cascade = cascade }
+  ActiveRecord.metadata.references[constraint_name] = args
 
   ActiveRecord.adapter:raw_query(query, function(result, query_str, time)
     print_query('Create Reference ('..time..'ms)', query_str)

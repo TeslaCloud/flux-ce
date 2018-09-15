@@ -25,9 +25,9 @@ function ActiveRecord.add_to_schema(table_name, column_name, type)
   if !ActiveRecord.ready then
     error('Attempt to edit schema too early!')
   end
-  local t = ActiveRecord.schema[table_name] or {}
+  local t = ActiveRecord.schema[table_name] or { last_id = 0 }
   if t[column_name] then
-    t[column_name] = type
+    t[column_name] = { id = t[column_name].id, type = type }
   else
     local query = ActiveRecord.Database:insert('ar_schema')
       query:insert('table_name', table_name)
@@ -35,7 +35,8 @@ function ActiveRecord.add_to_schema(table_name, column_name, type)
       query:insert('abstract_type', type)
       query:insert('definition', ActiveRecord.adapter.types[type] or '')
     query:execute()
-    t[column_name] = type
+    t.last_id = t.last_id + 1
+    t[column_name] = { id = t.last_id, type = type }
   end
   ActiveRecord.schema[table_name] = t
 end
@@ -44,13 +45,19 @@ function ActiveRecord.restore_schema()
   local query = ActiveRecord.Database:select('ar_schema')
     query:callback(function(result, query, time)
       print_query('Schema Restore ('..time..'ms)', query)
+
       if istable(result) then
         for k, v in ipairs(result) do
-          local t = ActiveRecord.schema[v.table_name] or {}
-          t[v.column_name] = v.abstract_type
+          local t = ActiveRecord.schema[v.table_name] or { last_id = 0 }
+          v.id = tonumber(v.id) or 0
+          t[v.column_name] = { id = v.id, type = v.abstract_type }
+          if t.last_id < v.id then
+            t.last_id = v.id
+          end
           ActiveRecord.schema[v.table_name] = t
         end
       end
+
       ActiveRecord.ready = true
       ActiveRecord.Model:populate()
       fl.dev_print 'ActiveRecord - Ready!'
