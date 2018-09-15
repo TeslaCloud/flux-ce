@@ -25,7 +25,9 @@ function PANEL:Init()
 end
 
 function PANEL:Paint(w, h)
-  theme.Hook("PaintMainMenu", self, w, h)
+  if self:IsVisible() then
+    theme.Hook("PaintMainMenu", self, w, h)
+  end
 end
 
 function PANEL:Think() end
