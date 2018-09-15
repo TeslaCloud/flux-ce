@@ -113,6 +113,28 @@ function chatbox.SetClientMode(bClientMode)
   clientMode = bClientMode
 end
 
+function chatbox.message_to_string(message_data, concatenator)
+  local to_string = {}
+
+  for k, v in pairs(message_data) do
+    if isstring(v) then
+      to_string[#to_string + 1] = v
+    elseif IsValid(v) then
+      local name = ''
+
+      if v:IsPlayer() then
+        name = hook.run("GetPlayerName", v) or v:Name()
+      else
+        name = tostring(v) or v:GetClass()
+      end
+
+      to_string[#to_string + 1] = name
+    end
+  end
+
+  return table.concat(to_string, concatenator)
+end
+
 netstream.Hook("Chatbox::AddText", function(player, ...)
   if !IsValid(player) then return end
 
