@@ -52,21 +52,23 @@ local Structure = ActiveRecord.Schema:define(]]..version..[[)
 
   for k, v in pairs(ActiveRecord.metadata.indexes) do
     result = result + string.rep(ind, level) + '-- ' + k + '\n'
-    result = result + string.rep(ind, level) + 'add_index { ' + table_to_inline(v) + ' }\n\n'
+    result = result + string.rep(ind, level) + 'add_index { ' + table_to_inline(v) + ' }\n'
   end
 
   for k, v in pairs(ActiveRecord.metadata.references) do
     result = result + string.rep(ind, level) + '-- ' + k + '\n'
     result = result + string.rep(ind, level) + 'create_reference('
       + quote(v.table) + ', ' + quote(v.key) + ', ' + quote(v.foreign_table) + ', '
-      + quote(v.foreign_key) + ', ' + tostring(v.cascade) + ')\n\n'
+      + quote(v.foreign_key) + ', ' + tostring(v.cascade) + ')\n'
   end
 
   for k, v in pairs(ActiveRecord.metadata.prim_keys) do
     result = result + string.rep(ind, level) + '-- ' + k + '\n'
     result = result + string.rep(ind, level) + 'create_primary_key('
-      + quote(v[1]) + ', ' + quote(v[2]) + ')\n\n'
+      + quote(v[1]) + ', ' + quote(v[2]) + ')\n'
   end
+
+  result = result + '\n'
 
   result = result + [[
   end
