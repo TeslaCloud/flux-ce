@@ -104,6 +104,7 @@ function PANEL:add_button(text, callback)
   button:SetFont(theme.GetFont("Menu_Larger"))
   button:SetPos(16, 0)
   button:SetTextAutoposition(false)
+  button:SetCentered(theme.GetOption('MainMenu_SidebarButtonCentered'))
   button:SetTextOffset(8)
 
   button.DoClick = function(btn)
