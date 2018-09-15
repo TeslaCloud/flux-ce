@@ -17,6 +17,7 @@ function THEME:OnLoaded()
   self:SetOption("MainMenu_SidebarLogo", "flux/flux_icon.png")
   self:SetOption("MainMenu_SidebarLogoSpace", scrH / 3)
   self:SetOption("MainMenu_SidebarButtonHeight", font.Scale(42)) -- We can cheat and scale buttons the same way we scale fonts!
+  self:SetOption('MainMenu_SidebarButtonOffsetX', 16)
   self:SetOption('MainMenu_SidebarButtonCentered', false)
   self:SetOption("MainMenu_LogoHeight", 100)
   self:SetOption("MainMenu_LogoWidth", 110)
