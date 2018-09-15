@@ -38,6 +38,16 @@ do
     primary_key = tonumber
   }
 
+  local reverse_converters = {
+    boolean = function(val)
+      if tobool(val) == false then
+        return 0
+      end
+
+      return 1
+    end
+  }
+
   function ActiveRecord.str_to_type(str, type)
     local conv = converters[type]
   
@@ -46,6 +56,16 @@ do
     end
 
     return str
+  end
+
+  function ActiveRecord.type_to_db(val, type)
+    local conv = reverse_converters[type]
+
+    if conv then
+      return conv(val)
+    end
+
+    return tostring(val)
   end
 end
 

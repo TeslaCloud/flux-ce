@@ -34,8 +34,9 @@ function character.Create(player, data)
   char.user_id = player.record.id
   char.model = data.model or ''
   char.phys_desc = data.phys_desc or ''
-  char.money = data.money or ''
+  char.money = data.money or 0
   char.character_id = #player.record.characters + 1
+  char.health = player:Health() or 100
 
   if SERVER then
     local char_id = player.record.character_id

@@ -39,8 +39,8 @@ function ActiveRecord.Query:handle_create_args(args)
     self.def = self.def..' DEFAULT NULL'
   end
 
-  if args['default'] and args['null'] != true then
-    self.def = self.def..' DEFAULT '..args['default']
+  if args['default'] != nil and args['null'] != true then
+    self.def = self.def..' DEFAULT '..tostring(args['default'])
   end
 end
 

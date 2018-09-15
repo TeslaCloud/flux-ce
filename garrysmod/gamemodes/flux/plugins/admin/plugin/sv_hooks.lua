@@ -1,6 +1,5 @@
-function flAdmin:SavePlayerData(player, save_table)
-  save_table.role = player:GetUserGroup()
-  save_table.permissions = fl.serialize(player:GetCustomPermissions())
+function flAdmin:PlayerCreated(player, record)
+  record.banned = record.banned or false
 end
 
 function flAdmin:ActiveRecordReady()

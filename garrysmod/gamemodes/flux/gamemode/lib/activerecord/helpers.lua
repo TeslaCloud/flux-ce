@@ -37,9 +37,9 @@ function remove_column(table, name)
   end)
 end
 
-function add_column(table, name, type)
+function add_column(table, args)
   change_table(table, function(t)
-    t[type](t, name)
+    t[args.type](t, args)
   end)
 end
 
@@ -64,10 +64,6 @@ function add_index(args)
 
   query = query..' ON '..ActiveRecord.adapter:quote(args[1])
 
-  if adapter_name != 'sqlite' then
-    query = query..' USING '..(args['using'] or 'btree')
-  end
-
   query = query..' ('
 
   for k, v in ipairs(cols) do
@@ -83,6 +79,10 @@ function add_index(args)
   end
 
   query = query..')'
+
+  if adapter_name != 'sqlite' then
+    query = query..' USING '..(args['using'] or 'BTREE')
+  end
 
   if args['where'] then
     query = query..' WHERE '..args['where']

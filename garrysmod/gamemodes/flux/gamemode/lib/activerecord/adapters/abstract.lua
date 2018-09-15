@@ -2,6 +2,10 @@ ActiveRecord.Adapters = ActiveRecord.Adapters or {}
 
 class 'ActiveRecord::Adapters::Abstract'
 
+ActiveRecord.Adapters.Abstract._queue = {}
+ActiveRecord.Adapters.Abstract._connected = false
+ActiveRecord.Adapters.Abstract._sync = false
+
 function ActiveRecord.Adapters.Abstract:init()
   self._connected = false
   self._sync = false
