@@ -14,20 +14,20 @@ Copyright thelastpenguin™
   The author is not held responsible for any damages incured from the use of pON, you use it at your own risk.
 
 DATA TYPES SUPPORTED:
- - tables  -     k,v - pointers
- - strings -     k,v - pointers
- - numbers -    k,v
- - booleans-     k,v
- - Vectors -     k,v
- - Angles  -    k,v
- - Entities-     k,v
- - Players -     k,v
+ - tables  -     k, v - pointers
+ - strings -     k, v - pointers
+ - numbers -    k, v
+ - booleans-     k, v
+ - Vectors -     k, v
+ - Angles  -    k, v
+ - Entities-     k, v
+ - Players -     k, v
 
 CHANGE LOG
 V 1.1.0
  - Added Vehicle, NPC, NextBot, Player, Weapon
 V 1.2.0
- - Added custom handling for k,v tables without any array component.
+ - Added custom handling for k, v tables without any array component.
 V 1.2.1
  - fixed deserialization bug.
 V 1.3.0
@@ -57,7 +57,7 @@ do
   encode['table'] = function(self, tbl, output, cache)
 
     if (cache[tbl]) then
-      output[#output + 1] = '('..cache[tbl]..')'
+      table.insert(output, '('..cache[tbl]..')')
       return
     else
       cache_size = cache_size + 1
@@ -68,17 +68,16 @@ do
     local kvSize = count(tbl) - nSize
 
     if (nSize == 0 and kvSize > 0) then
-      output[#output + 1] = '['
+      table.insert(output, '[')
     else
-      output[#output + 1] = '{'
+      table.insert(output, '{')
 
       if nSize > 0 then
         for i = 1, nSize do
           local v = tbl[i]
 
           if v == nil then
-            output[#output + 1] = '!'
-
+            table.insert(output, '!')
             continue
           end
 
@@ -87,7 +86,7 @@ do
           if (tv == 'string') then
             local pid = cache[v]
             if (pid) then
-              output[#output + 1] = '('..pid..')'
+              table.insert(output, '('..pid..')')
             else
               cache_size = cache_size + 1
               cache[v] = cache_size
@@ -103,17 +102,18 @@ do
 
     if (kvSize > 0) then
       if (nSize > 0) then
-        output[#output + 1] = '~'
+        table.insert(output, '~')
       end
-      for k,v in next, tbl do
-        if (type(k) ~= 'number' or k < 1 or k > nSize) then
-          local tk, tv = type(k), type(v)
+      for k, v in next, tbl do
+        local key_type = type(k)
+        if key_type != 'number' or k < 1 or k > nSize then
+          local tk, tv = key_type, type(v)
 
           -- THE KEY
           if (tk == 'string') then
             local pid = cache[k]
             if (pid) then
-              output[#output + 1] = '('..pid..')'
+              table.insert(output, '('..pid..')')
             else
               cache_size = cache_size + 1
               cache[k] = cache_size
@@ -128,7 +128,7 @@ do
           if (tv == 'string') then
             local pid = cache[v]
             if (pid) then
-              output[#output + 1] = '('..pid..')'
+              table.insert(output, '('..pid..')')
             else
               cache_size = cache_size + 1
               cache[v] = cache_size
@@ -142,7 +142,7 @@ do
         end
       end
     end
-    output[#output + 1] = '}'
+    table.insert(output, '}')
   end
 
   --  ENCODE STRING
@@ -151,34 +151,34 @@ do
     --if try_cache(str, output) then return end
     local estr, count = gsub(str, ";", "\\;")
     if (count == 0) then
-      output[#output + 1] = '\''..str..';'
+      table.insert(output, '\''..str..';')
     else
-      output[#output + 1] = '"'..estr..'";'
+      table.insert(output, '"'..estr..'";')
     end
   end
 
   --  ENCODE NUMBER
   encode['number'] = function(self, num, output)
-    output[#output + 1] = tonumber(num)..';'
+    table.insert(output, tonumber(num)..';')
   end
 
   --  ENCODE BOOLEAN
   encode['boolean'] = function(self, val, output)
-    output[#output + 1] = val and 't' or 'f'
+    table.insert(output, val and 't' or 'f')
   end
 
   --  ENCODE VECTOR
   encode['Vector'] = function(self, val, output)
-    output[#output + 1] = ('v'..val.x..','..val.y)..(','..val.z..';')
+    table.insert(output, ('v'..val.x..','..val.y)..(','..val.z..';'))
   end
 
   --  ENCODE ANGLE
   encode['Angle'] = function(self, val, output)
-    output[#output + 1] = ('a'..val.p..','..val.y)..(','..val.r..';')
+    table.insert(output, ('a'..val.p..','..val.y)..(','..val.r..';'))
   end
 
   encode['Entity'] = function(self, val, output)
-    output[#output + 1] = 'E'..(IsValid(val) and (val:EntIndex()..';') or '#')
+    table.insert(output, 'E'..(IsValid(val) and val:EntIndex()..';' or '#'))
   end
 
   encode['Player']  = encode['Entity']
@@ -219,12 +219,12 @@ do
   decode['{'] = function(self, index, str, cache)
 
     local cur = {}
-    cache[#cache + 1] = cur
+    table.insert(cache, cur)
 
     local k, v, tk, tv = 1, nil, nil, nil
     while (true) do
       tv = sub(str, index, index)
-      if (not tv or tv == '~') then
+      if (!tv or tv == '~') then
         index = index + 1
         break
       end
@@ -242,7 +242,7 @@ do
 
     while (true) do
       tk = sub(str, index, index)
-      if (not tk or tk == '}') then
+      if (!tk or tk == '}') then
         index = index + 1
         break
       end
@@ -265,12 +265,12 @@ do
   decode['['] = function(self, index, str, cache)
 
     local cur = {}
-    cache[#cache + 1] = cur
+    table.insert(cache, cur)
 
     local k, v, tk, tv = 1, nil, nil, nil
     while (true) do
       tk = sub(str, index, index)
-      if (not tk or tk == '}') then
+      if (!tk or tk == '}') then
         index = index + 1
         break
       end
@@ -301,7 +301,7 @@ do
     local res = gsub(sub(str, index, finish - 1), '\\;', ';')
     index = finish + 2
 
-    cache[#cache + 1] = res
+    table.insert(cache, res)
     return index, res
   end
   -- STRING NO ESCAPING NEEDED
@@ -310,7 +310,7 @@ do
     local res = sub(str, index, finish - 1)
     index = finish + 1
 
-    cache[#cache + 1] = res
+    table.insert(cache, res)
     return index, res
   end
 
@@ -400,7 +400,7 @@ do
   end
 
   function pon.decode(data)
-    local _, res = decode[sub(data,1,1)](decode, 2, data, {})
+    local _, res = decode[sub(data, 1, 1)](decode, 2, data, {})
     return res
   end
 end
