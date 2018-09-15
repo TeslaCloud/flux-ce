@@ -105,7 +105,7 @@ function GM:PostPlayerSpawn(player)
     player:Give("weapon_physgun")
   end
 
-  hook.runClient(player, "PostPlayerSpawn")
+  hook.run_client(player, "PostPlayerSpawn")
 end
 
 function GM:PlayerSetModel(player)
@@ -127,7 +127,7 @@ end
 function GM:PlayerInitialized(player)
   player:SetInitialized(true)
 
-  hook.runClient(player, "PlayerInitialized")
+  hook.run_client(player, "PlayerInitialized")
 end
 
 function GM:PlayerDeath(player, inflictor, attacker)
@@ -338,8 +338,12 @@ function GM:PreLoadPlugins()
 end
 
 function GM:OnSchemaLoaded()
-  local success = fileio.Write('lua/flux_lang.lua', 'return fl.deserialize([['..fl.serialize(fl.lang.stored)..']])\n')
-  AddCSLuaFile('flux_lang.lua')
+  fileio.MakeDirectory('lua/flux')
+  fileio.MakeDirectory('lua/flux/client')
+  fileio.Write('lua/flux/client/lang.lua', "library.new('lang', fl)\nfl.lang.stored = fl.deserialize([["..fl.serialize(fl.lang.stored).."]])\n")
+  fileio.Write('lua/flux/client/shared.lua', 'fl.shared = fl.deserialize([['..fl.serialize(fl.shared)..']])\n')
+  AddCSLuaFile('flux/client/lang.lua')
+  AddCSLuaFile('flux/client/shared.lua')
 end
 
 function GM:FLSaveData()

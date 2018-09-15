@@ -99,14 +99,11 @@ function GM:HUDDrawScoreBoard()
 
   if !fl.client or !fl.client:HasInitialized() or hook.run("ShouldDrawLoadingScreen") then
     local text = t"loading.schema"
-    local percentage = 80
+    local percentage = 50
 
     if !fl.localPlayerCreated then
       text = t"loading.local_player"
       percentage = 0
-    elseif !fl.shared_received then
-      text = t"loading.shared"
-      percentage = 45
     end
 
     local hooked, hookedPercentage = plugin.call("GetLoadingScreenMessage")

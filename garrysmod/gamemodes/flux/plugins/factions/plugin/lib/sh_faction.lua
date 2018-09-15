@@ -30,7 +30,7 @@ function faction.GetPlayers(id)
   local players = {}
 
   for k, v in ipairs(_player.GetAll()) do
-    if v:GetFactionID() == id then
+    if v:get_faction_id() == id then
       table.insert(players, v)
     end
   end
@@ -81,7 +81,7 @@ end
 do
   local player_meta = FindMetaTable("Player")
 
-  function player_meta:GetFactionID()
+  function player_meta:get_faction_id()
     return self:get_nv('faction', 'player')
   end
 
@@ -155,7 +155,7 @@ do
   end
 
   function player_meta:GetFaction()
-    return faction.find_by_id(self:GetFactionID())
+    return faction.find_by_id(self:get_faction_id())
   end
 
   function player_meta:SetRank(rank)

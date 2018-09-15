@@ -380,7 +380,7 @@ if SERVER then
       end
     end
 
-    hook.runClient(player, "OnItemDataReceived")
+    hook.run_client(player, "OnItemDataReceived")
   end
 
   function item.Spawn(position, angles, item_table)
