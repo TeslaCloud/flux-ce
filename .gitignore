@@ -49,3 +49,4 @@ steamapps/
 *.vpk
 *.rad
 *.bat
+*.local.yml
