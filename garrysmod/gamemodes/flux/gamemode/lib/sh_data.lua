@@ -5,23 +5,23 @@ if SERVER then
     if !isstring(key) or !istable(value) then return end
 
     if !string.GetExtensionFromFilename(key) then
-      key = key..".pon"
+      key = key..".json"
     end
 
-    fileio.Write("settings/flux/"..key, fl.serialize(value))
+    fileio.Write("settings/flux/"..key, util.TableToJSON(value))
   end
 
   function data.Load(key, default)
     if !isstring(key) then return end
 
     if !string.GetExtensionFromFilename(key) then
-      key = key..".pon"
+      key = key..".json"
     end
 
     if file.Exists("settings/flux/"..key, "GAME") then
       local data = fileio.Read("settings/flux/"..key)
 
-      return fl.deserialize(data)
+      return util.JSONToTable(data)
     elseif default != nil then
       return default
     else
@@ -35,7 +35,7 @@ if SERVER then
     if !isstring(key) then return end
 
     if !string.GetExtensionFromFilename(key) then
-      key = key..".pon"
+      key = key..".json"
     end
 
     if file.Exists("settings/flux/"..key, "GAME") then
@@ -50,7 +50,7 @@ else
       key = key..".dat"
     end
 
-    file.Write("flux/"..key, fl.serialize(value))
+    file.Write("flux/"..key, util.TableToJSON(value))
   end
 
   function data.Load(key, default)
@@ -63,7 +63,7 @@ else
     if file.Exists("flux/"..key, "DATA") then
       local data = file.Read("flux/"..key, "DATA")
 
-      return fl.deserialize(data)
+      return util.JSONToTable(data)
     elseif default != nil then
       return default
     else
