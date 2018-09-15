@@ -50,7 +50,7 @@ function flStaticEnts:PlayerMakeStatic(player, is_static)
   fl.player:notify(player, (is_static and 'static.added') or 'static.removed')
 end
 
-function flStaticEnts:ServerRestart()
+function flStaticEnts:SaveData()
   hook.run("PersistenceSave")
 end
 
