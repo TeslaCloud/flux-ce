@@ -268,7 +268,8 @@ function ActiveRecord.Base:rescue(callback)
 end
 
 local except = {
-  id = true, created_at = true, updated_at = true
+  id = true, created_at = true, updated_at = true,
+  last_id = true
 }
 
 function ActiveRecord.Base:save()
