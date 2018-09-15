@@ -17,6 +17,7 @@ function THEME:OnLoaded()
   self:SetOption("MainMenu_SidebarLogo", "flux/flux_icon.png")
   self:SetOption("MainMenu_SidebarLogoSpace", scrH / 3)
   self:SetOption("MainMenu_SidebarButtonHeight", font.Scale(42)) -- We can cheat and scale buttons the same way we scale fonts!
+  self:SetOption('MainMenu_SidebarButtonCentered', false)
   self:SetOption("MainMenu_LogoHeight", 100)
   self:SetOption("MainMenu_LogoWidth", 110)
   self:SetOption("FinishButtonOffsetX", 0)
@@ -179,7 +180,11 @@ function THEME:PaintButton(panel, w, h)
         draw.SimpleText(title, font, w * 0.5 - width * 0.5, h * 0.5 - height * 0.5, textColor)
       end
     else
-      draw.SimpleText(title, font, panel.m_TextPos or 0, h * 0.5 - height * 0.5, textColor)
+      if panel.m_Centered then
+        draw.SimpleText(title, font, (w - width) / 2, h * 0.5 - height * 0.5, textColor)
+      else
+        draw.SimpleText(title, font, panel.m_TextPos or 0, h * 0.5 - height * 0.5, textColor)
+      end
     end
   end
 end
