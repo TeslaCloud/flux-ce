@@ -23,7 +23,7 @@ function ActiveRecord.Model:populate()
 
     if schema then
       for column, data in pairs(schema) do
-        if !isstring(column) then continue end
+        if !isstring(column) or !istable(data) then continue end
 
         self:generate_helpers(v, column, data.type)
       end
