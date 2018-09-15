@@ -83,7 +83,7 @@ function ActiveRecord.Migrator:run_migrations(folder, force)
   end
 
   if tonumber(initial_version) != tonumber(self.schema.version) then
-    if initial_version == 0 and ActiveRecord.adapter.class_name:lower() != 'sqlite' then
+    if initial_version == 0 then
       self.schema:setup_references()
     end
 
