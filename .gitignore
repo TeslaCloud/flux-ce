@@ -21,8 +21,7 @@ garrysmod/lua/autorun/
 garrysmod/lua/derma/
 garrysmod/lua/drive/
 garrysmod/lua/entities/
-garrysmod/lua/flux_lang.lua
-garrysmod/lua/.flux/
+garrysmod/lua/flux/
 garrysmod/lua/includes/
 garrysmod/lua/matproxy/
 garrysmod/lua/menu/
