@@ -5,6 +5,7 @@ PANEL.m_Autopos = true
 PANEL.m_CurAmt = 0
 PANEL.m_Active = false
 PANEL.m_IconSize = nil
+PANEL.m_IconLeft = true
 PANEL.m_Enabled = true
 PANEL.m_Centered = false
 
@@ -36,6 +37,10 @@ function PANEL:SetActive(active)
   self.m_Active = active
 end
 
+function PANEL:IsActive()
+  return self.m_Active
+end
+
 function PANEL:SetEnabled(enabled)
   self.m_Enabled = enabled
   self.m_TextColorOverride = (enabled and theme.GetColor("Text"):darken(50)) or nil
@@ -55,8 +60,12 @@ function PANEL:SetTextOffset(pos)
   self.m_TextPos = pos or 0
 end
 
-function PANEL:SetIcon(icon)
+function PANEL:SetIcon(icon, bRight)
   self.m_Icon = tostring(icon) or false
+
+  if bRight then
+    self.m_IconLeft = false
+  end
 end
 
 function PANEL:SetIconSize(size)

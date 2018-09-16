@@ -10,18 +10,18 @@ end
 
 function flCharacters:OnIntroPanelRemoved()
   if !fl.client:GetCharacter() then
-    fl.IntroPanel = theme.CreatePanel("MainMenu")
+    fl.IntroPanel = theme.CreatePanel('MainMenu')
 
     if IsValid(fl.IntroPanel) then
       fl.IntroPanel:MakePopup()
     else
-      timer.Create("flCreateMainPanel", 0.1, 0, function()
-        fl.IntroPanel = theme.CreatePanel("MainMenu")
+      timer.Create('flCreateMainPanel', 0.1, 0, function()
+        fl.IntroPanel = theme.CreatePanel('MainMenu')
 
         if IsValid(fl.IntroPanel) then
           fl.IntroPanel:MakePopup()
 
-          timer.Remove("flCreateMainPanel")
+          timer.Remove('flCreateMainPanel')
         end
       end)
     end
@@ -54,37 +54,37 @@ do
 end
 
 function flCharacters:OnThemeLoaded(current_theme)
-  current_theme:AddPanel("MainMenu", function(id, parent, ...)
-    return vgui.Create("flMainMenu", parent)
+  current_theme:AddPanel('MainMenu', function(id, parent, ...)
+    return vgui.Create('flMainMenu', parent)
   end)
 
-  current_theme:AddPanel("CharacterCreation", function(id, parent, ...)
-    return vgui.Create("flCharacterCreation", parent)
+  current_theme:AddPanel('CharacterCreation', function(id, parent, ...)
+    return vgui.Create('flCharacterCreation', parent)
   end)
 
-  current_theme:AddPanel("CharCreation_General", function(id, parent, ...)
-    return vgui.Create("flCharCreationGeneral", parent)
+  current_theme:AddPanel('CharCreation_General', function(id, parent, ...)
+    return vgui.Create('flCharCreationGeneral', parent)
   end)
 
-  current_theme:AddPanel("CharCreation_Model", function(id, parent, ...)
-    return vgui.Create("flCharCreationModel", parent)
+  current_theme:AddPanel('CharCreation_Model', function(id, parent, ...)
+    return vgui.Create('flCharCreationModel', parent)
   end)
 
   if IsValid(fl.IntroPanel) then
     fl.IntroPanel:Remove()
 
-    fl.IntroPanel = theme.CreatePanel("MainMenu")
+    fl.IntroPanel = theme.CreatePanel('MainMenu')
     fl.IntroPanel:MakePopup()
   end
 end
 
 function flCharacters:AddTabMenuItems(menu)
-  menu:AddMenuItem("mainmenu", {
-    title = "Main Menu",
-    icon = "fa-users",
+  menu:AddMenuItem('mainmenu', {
+    title = 'Main Menu',
+    icon = 'fa-users',
     override = function(menuPanel, button)
       menuPanel:SafeRemove()
-      fl.IntroPanel = theme.CreatePanel("MainMenu")
+      fl.IntroPanel = theme.CreatePanel('MainMenu')
     end
   }, 1)
 end
@@ -126,7 +126,7 @@ function flCharacters:RebuildScoreboardPlayerCard(card, player)
     card.spawnIcon:SafeRemove()
   end
 
-  card.spawnIcon = vgui.Create("SpawnIcon", card)
+  card.spawnIcon = vgui.Create('SpawnIcon', card)
   card.spawnIcon:SetPos(oldX - 4, 4)
   card.spawnIcon:SetSize(32, 32)
   card.spawnIcon:SetModel(player:GetModel())
@@ -134,41 +134,42 @@ function flCharacters:RebuildScoreboardPlayerCard(card, player)
   local phys_desc = player:GetPhysDesc()
 
   if phys_desc:utf8len() > 64 then
-    phys_desc = phys_desc:utf8sub(1, 64).."..."
+    phys_desc = phys_desc:utf8sub(1, 64)..'...'
   end
 
-  card.descLabel = vgui.Create("DLabel", card)
+  card.descLabel = vgui.Create('DLabel', card)
   card.descLabel:SetText(phys_desc)
-  card.descLabel:SetFont(theme.GetFont("Text_Smaller"))
+  card.descLabel:SetFont(theme.GetFont('Text_Smaller'))
   card.descLabel:SetPos(x, card.nameLabel:GetTall())
-  card.descLabel:SetTextColor(theme.GetColor("Text"))
+  card.descLabel:SetTextColor(theme.GetColor('Text'))
   card.descLabel:SizeToContents()
+end
+
+function flCharacters:AddCharacterCreationMenuStages(panel)
+  panel:add_stage('CharCreation_General')
 end
 
 function flCharacters:AddMainMenuItems(panel, sidebar)
   local scrW, scrH = ScrW(), ScrH()
 
   panel:add_button(t('main_menu.new'), function(btn)
-    panel.menu = theme.CreatePanel("CharacterCreation", panel)
+    panel.menu = theme.CreatePanel('CharacterCreation', panel)
 
-    if panel.menu.AddSidebarItems then
-      panel:RecreateSidebar()
-      panel.menu:AddSidebarItems(sidebar, panel)
-    end
+    panel.sidebar:SetVisible(false)
   end)
 
   local loadBtn = panel:add_button(t('main_menu.load'), function(btn)
-    panel.menu = vgui.Create("DFrame", panel)
+    panel.menu = vgui.Create('DFrame', panel)
     panel.menu:SetPos(scrW * 0.5 - 300, scrH / 4)
     panel.menu:SetSize(600, 600)
-    panel.menu:SetTitle("LOAD CHARACTER")
+    panel.menu:SetTitle('LOAD CHARACTER')
 
     panel.menu.Paint = function(lp, w, h)
       draw.RoundedBox(0, 0, 0, w, h, Color(40, 40, 40))
-      draw.SimpleText("Which one to load", "DermaLarge", 0, 24)
+      draw.SimpleText('Which one to load', 'DermaLarge', 0, 24)
 
       if #fl.client:GetAllCharacters() <= 0 then
-        draw.SimpleText("wow you have none", "DermaLarge", 0, 64)
+        draw.SimpleText('wow you have none', 'DermaLarge', 0, 64)
       end
     end
 
@@ -179,12 +180,12 @@ function flCharacters:AddMainMenuItems(panel, sidebar)
     local offY = 0
 
     for k, v in ipairs(fl.client:GetAllCharacters()) do
-      panel.menu.buttons[k] = vgui.Create("DButton", panel.menu)
+      panel.menu.buttons[k] = vgui.Create('DButton', panel.menu)
       panel.menu.buttons[k]:SetPos(8, 100 + offY)
       panel.menu.buttons[k]:SetSize(128, 24)
       panel.menu.buttons[k]:SetText(v.name)
       panel.menu.buttons[k].DoClick = function()
-        netstream.Start("PlayerSelectCharacter", v.character_id)
+        netstream.Start('PlayerSelectCharacter', v.character_id)
         panel:Remove()
       end
 
@@ -202,15 +203,15 @@ function flCharacters:AddMainMenuItems(panel, sidebar)
     end)
   else
     panel:add_button(t('main_menu.disconnect'), function(btn)
-      Derma_Query(t('main_menu.disconnect_msg'), t('main_menu.disconnect_msg'), t"yes", function()
-        RunConsoleCommand("disconnect")
+      Derma_Query(t('main_menu.disconnect_msg'), t('main_menu.disconnect_msg'), t'yes', function()
+        RunConsoleCommand('disconnect')
       end,
-      t"no")
+      t'no')
     end)
   end
 end
 
-netstream.Hook("PlayerCreatedCharacter", function(success, status)
+netstream.Hook('PlayerCreatedCharacter', function(success, status)
   if IsValid(fl.IntroPanel) and IsValid(fl.IntroPanel.menu) then
     if success then
       fl.IntroPanel:RecreateSidebar(true)
@@ -221,31 +222,22 @@ netstream.Hook("PlayerCreatedCharacter", function(success, status)
         fl.IntroPanel.menu:SafeRemove()
       end
     else
-      local text = "We were unable to create a character! (unknown error)"
-      local hookText = hook.run("GetCharCreationErrorText", success, status)
+      local text = 'We were unable to create a character! (unknown error)'
+      local hookText = hook.run('GetCharCreationErrorText', success, status)
 
       if hookText then
         text = hookText
       elseif status == CHAR_ERR_NAME then
-        text = "Your character's name must be between "..config.get("character_min_name_len").." and "..config.get("character_max_name_len").." characters long!"
+        text = "Your character's name must be between "..config.get('character_min_name_len')..' and '..config.get('character_max_name_len')..' characters long!'
       elseif status == CHAR_ERR_DESC then
-        text = "Your character's description must be between "..config.get("character_min_desc_len").." and "..config.get("character_max_desc_len").." characters long!"
+        text = "Your character's description must be between "..config.get('character_min_desc_len')..' and '..config.get('character_max_desc_len')..' characters long!'
       elseif status == CHAR_ERR_GENDER then
-        text = "You must pick a gender for your character before continuing!"
+        text = 'You must pick a gender for your character before continuing!'
       elseif status == CHAR_ERR_MODEL then
-        text = "You have not chosen a model or the one you have chosen is invalid!"
+        text = 'You have not chosen a model or the one you have chosen is invalid!'
       end
 
-      local panel = vgui.Create("fl_notification", fl.IntroPanel)
-      panel:SetText(text)
-      panel:SetLifetime(6)
-      panel:SetTextColor(Color("red"))
-      panel:SetBackgroundColor(Color(50, 50, 50, 220))
-
-      local w, h = panel:GetSize()
-      panel:SetPos(ScrW() * 0.5 - w * 0.5, ScrH() - 128)
-
-      function panel:PostThink() self:MoveToFront() end
+      fl.IntroPanel:notify(text)
     end
   end
 end)

@@ -18,7 +18,7 @@ function faction.register(id, data)
 
   data.team_id = count + 1
 
-  stored[id] = data
+  stored[data.faction_id] = data
   count = count + 1
 end
 

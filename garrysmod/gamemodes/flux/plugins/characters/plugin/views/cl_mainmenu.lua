@@ -9,10 +9,10 @@ function PANEL:Init()
 
   self:MakePopup()
 
-  local menuMusic = theme.GetOption("MenuMusic")
+  local menuMusic = theme.GetOption('MenuMusic')
 
-  if !fl.menuMusic and menuMusic and menuMusic != "" then
-    sound.PlayFile(menuMusic, "", function(station)
+  if !fl.menuMusic and menuMusic and menuMusic != '' then
+    sound.PlayFile(menuMusic, '', function(station)
       if IsValid(station) then
         station:Play()
 
@@ -21,12 +21,12 @@ function PANEL:Init()
     end)
   end
 
-  theme.Hook("CreateMainMenu", self)
+  theme.Hook('CreateMainMenu', self)
 end
 
 function PANEL:Paint(w, h)
   if self:IsVisible() then
-    theme.Hook("PaintMainMenu", self, w, h)
+    theme.Hook('PaintMainMenu', self, w, h)
   end
 end
 
@@ -38,44 +38,24 @@ function PANEL:RecreateSidebar(bShouldCreateButtons)
   end
 
   -- Hot Fix for an error that occurred when auto-reloading while in initial main menu.
-  if !theme.GetOption("MainMenu_SidebarLogo") then
+  if !theme.GetOption('MainMenu_SidebarLogo') then
     timer.Simple(0.05, function() self:RecreateSidebar(true) end)
 
     return
   end
 
-  self.sidebar = vgui.Create("fl_sidebar", self)
-  self.sidebar:SetPos(theme.GetOption("MainMenu_SidebarX"), theme.GetOption("MainMenu_SidebarY"))
-  self.sidebar:SetSize(theme.GetOption("MainMenu_SidebarWidth"), theme.GetOption("MainMenu_SidebarHeight"))
-  self.sidebar:SetMargin(theme.GetOption("MainMenu_SidebarMargin"))
+  self.sidebar = vgui.Create('fl_sidebar', self)
+  self.sidebar:SetPos(theme.GetOption('MainMenu_SidebarX'), theme.GetOption('MainMenu_SidebarY'))
+  self.sidebar:SetSize(theme.GetOption('MainMenu_SidebarWidth'), theme.GetOption('MainMenu_SidebarHeight'))
+  self.sidebar:SetMargin(theme.GetOption('MainMenu_SidebarMargin'))
   self.sidebar:AddSpace(16)
 
   self.sidebar.Paint = function() end
 
-  self.sidebar:AddSpace(theme.GetOption("MainMenu_SidebarLogoSpace"))
+  self.sidebar:AddSpace(theme.GetOption('MainMenu_SidebarLogoSpace'))
 
   if bShouldCreateButtons then
-    hook.run("AddMainMenuItems", self, self.sidebar)
-  else
-    local backButton = vgui.Create("fl_button")
-    backButton:SetSize(theme.GetOption("MainMenu_SidebarWidth"), theme.GetOption("MainMenu_SidebarButtonHeight"))
-    backButton:SetIcon("fa-chevron-left")
-    backButton:SetIconSize(16)
-    backButton:SetFont(theme.GetFont("Text_NormalSmaller"))
-    backButton:SetTitle(t('char_create.back'))
-
-    backButton.DoClick = function(btn)
-      self:RecreateSidebar(true)
-
-      if self.menu.Close then
-        self.menu:Close()
-      else
-        self.menu:SafeRemove()
-      end
-    end
-
-    self.sidebar:AddPanel(backButton)
-    self.sidebar:AddSpace(9)
+    hook.run('AddMainMenuItems', self, self.sidebar)
   end
 end
 
@@ -98,18 +78,33 @@ function PANEL:OpenMenu(panel, data)
   end
 end
 
+function PANEL:notify(text)
+  local panel = vgui.Create('fl_notification', self)
+  panel:SetText(text)
+  panel:SetLifetime(6)
+  panel:SetTextColor(Color('pink'))
+  panel:SetBackgroundColor(Color(50, 50, 50, 220))
+
+  local w, h = panel:GetSize()
+  panel:SetPos(ScrW() * 0.5 - w * 0.5, ScrH() - 128)
+
+  function panel:PostThink() self:MoveToFront() end
+end
+
 function PANEL:add_button(text, callback)
-  local button = vgui.Create("fl_button", self)
-  button:SetSize(theme.GetOption("MainMenu_SidebarWidth"), theme.GetOption("MainMenu_SidebarButtonHeight"))
+  local button = vgui.Create('fl_button', self)
+  button:SetSize(theme.GetOption('MainMenu_SidebarWidth'), theme.GetOption('MainMenu_SidebarButtonHeight'))
   button:SetText(string.utf8upper(text))
   button:SetDrawBackground(false)
-  button:SetFont(theme.GetFont("Menu_Larger"))
+  button:SetFont(theme.GetFont('Menu_Larger'))
   button:SetPos(theme.GetOption('MainMenu_SidebarButtonOffsetX'), 0)
   button:SetTextAutoposition(false)
   button:SetCentered(theme.GetOption('MainMenu_SidebarButtonCentered'))
   button:SetTextOffset(8)
 
   button.DoClick = function(btn)
+    surface.PlaySound(theme.GetOption('Button_Click_Success'))
+  
     btn:SetActive(true)
 
     if IsValid(self.prevButton) and self.prevButton != btn then
@@ -131,4 +126,4 @@ function PANEL:add_button(text, callback)
   return button
 end
 
-vgui.Register("flMainMenu", PANEL, "EditablePanel")
+vgui.Register('flMainMenu', PANEL, 'EditablePanel')

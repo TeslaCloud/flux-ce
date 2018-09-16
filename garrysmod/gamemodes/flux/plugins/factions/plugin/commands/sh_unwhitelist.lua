@@ -13,8 +13,8 @@ function COMMAND:on_run(player, targets, name, bStrict)
 
   if whitelist then
     for k, v in ipairs(targets) do
-      if v:HasWhitelist(whitelist.id) then
-        v:TakeWhitelist(whitelist.id)
+      if v:HasWhitelist(whitelist.faction_id) then
+        v:TakeWhitelist(whitelist.faction_id)
       elseif #targets == 1 then
         player:notify("err.target_not_whitelisted", { v:Name(), whitelist.print_name })
         return

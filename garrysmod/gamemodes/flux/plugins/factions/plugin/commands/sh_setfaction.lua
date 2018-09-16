@@ -13,7 +13,7 @@ function COMMAND:on_run(player, targets, name, bStrict)
 
   if factionTable then
     for k, v in ipairs(targets) do
-      v:SetFaction(factionTable.id)
+      v:SetFaction(factionTable.faction_id)
     end
 
     fl.player:broadcast('set_faction.message', { get_player_name(player), util.player_list_to_string(targets), factionTable.print_name })
