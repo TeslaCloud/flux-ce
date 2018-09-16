@@ -1,129 +1,184 @@
 ﻿local PANEL = {}
-PANEL.id = "base"
-PANEL.text = "Click sidebar buttons to open character creation menus."
+PANEL.id = 'base'
+PANEL.text = 'Click sidebar buttons to open character creation menus.'
 
 function PANEL:Init() end
 
 function PANEL:Paint(w, h)
-  theme.Hook("PaintCharCreationPanel", self, w, h)
-
-  if isstring(self.text) then
-    draw.SimpleText(self.text, theme.GetFont("Text_Normal"), 28, 16, theme.GetColor("Text"))
+  if self:IsVisible() then
+    theme.Hook('PaintCharCreationBasePanel', self, w, h)
   end
 end
 
-vgui.Register("flCharCreationBase", PANEL, "fl_base_panel")
+vgui.Register('flCharCreationBase', PANEL, 'fl_base_panel')
 
 local PANEL = {}
-PANEL.id = "general"
-PANEL.text = t('char_create.gen_text')
+PANEL.id = 'general'
+PANEL.text = 'char_create.gen_text'
 
 function PANEL:Init()
-  local w, h = self:GetSize()
+  local scrW, scrH = ScrW(), ScrH()
 
-  self.nameLabel = vgui.Create("DLabel", self)
-  self.nameLabel:SetPos(32, 68)
-  self.nameLabel:SetText(t('char_create.name'))
-  self.nameLabel:SetFont(theme.GetFont("Text_Small"))
+  self.gender_label = vgui.Create('DLabel', self)
+  self.gender_label:SetPos(4, font.Scale(36) + 6)
+  self.gender_label:SetText(t('char_create.gender'))
+  self.gender_label:SetFont(theme.GetFont('Text_Small'))
+  self.gender_label:SetTextColor(Color('white'))
+  self.gender_label:SizeToContents()
 
-  self.nameEntry = vgui.Create("DTextEntry", self)
-  self.nameEntry:SetPos(32 + self.nameLabel:GetWide(), 66)
-  self.nameEntry:SetSize(300, 24)
-  self.nameEntry:SetFont(theme.GetFont("Text_Smaller"))
-  self.nameEntry:SetText("")
+  self.gender_male = vgui.Create('fl_image_button', self)
+  self.gender_male:SetPos(self.gender_label:GetWide() + 8, font.Scale(36) + 4)
+  self.gender_male:SetSize(24, 24)
+  self.gender_male:SetDrawBackground(false)
+  self.gender_male:SetImage('icon16/user.png')
+  self.gender_male.DoClick = function(btn)
+    if !btn:IsActive() then
+      surface.PlaySound('buttons/blip1.wav')
 
-  self.DescLabel = vgui.Create("DLabel", self)
-  self.DescLabel:SetPos(32, 96)
-  self.DescLabel:SetText(t('char_create.desc'))
-  self.DescLabel:SetFont(theme.GetFont("Text_Small"))
-  self.DescLabel:SizeToContents()
+      if self.gender_female:IsActive() then
+        self.gender_female:SetActive(false)
+      end
 
-  self.DescEntry = vgui.Create("DTextEntry", self)
-  self.DescEntry:SetPos(32, 98 + self.DescLabel:GetTall())
-  self.DescEntry:SetSize(ScrW() * 0.5 + self.nameLabel:GetWide(), 400)
-  self.DescEntry:SetFont(theme.GetFont("Text_Smaller"))
-  self.DescEntry:SetText("")
-  self.DescEntry:SetMultiline(true)
+      self:GetParent().char_data.gender = 'Male'
+      self:RebuildModels()
+      btn:SetActive(true)
+    end
+  end
 
-  self.GenderLabel = vgui.Create("DLabel", self)
-  self.GenderLabel:SetPos(self.DescEntry:GetWide() - 128, 64 - self.nameLabel:GetTall())
-  self.GenderLabel:SetText(t('char_create.gender'))
-  self.GenderLabel:SetFont(theme.GetFont("Text_Small"))
+  self.gender_female = vgui.Create('fl_image_button', self)
+  self.gender_female:SetPos(self.gender_label:GetWide() + self.gender_male:GetWide() + 12, font.Scale(36) + 4)
+  self.gender_female:SetSize(24, 24)
+  self.gender_female:SetDrawBackground(false)
+  self.gender_female:SetImage('icon16/user_female.png')
+  self.gender_female.DoClick = function(btn)
+    if !btn:IsActive() then
+      surface.PlaySound('buttons/blip1.wav')
 
-  self.GenderChooser = vgui.Create("DComboBox", self)
-  self.GenderChooser:SetPos(self.DescEntry:GetWide() - 128, 66)
-  self.GenderChooser:SetSize(100, 20)
-  self.GenderChooser:SetValue(t('char_create.gender.s'))
-  self.GenderChooser:AddChoice(t('char_create.gender.m'))
-  self.GenderChooser:AddChoice(t('char_create.gender.f'))
+      if self.gender_male:IsActive() then
+        self.gender_male:SetActive(false)
+      end
+
+      self:GetParent().char_data.gender = 'Female'
+      self:RebuildModels()
+      btn:SetActive(true)
+    end
+  end
+
+  self.name_label = vgui.Create('DLabel', self)
+  self.name_label:SetPos(4, font.Scale(72) + 2)
+  self.name_label:SetText(t('char_create.name'))
+  self.name_label:SetFont(theme.GetFont('Text_Small'))
+  self.name_label:SetTextColor(Color('white'))
+  self.name_label:SizeToContents()
+
+  self.name_entry = vgui.Create('DTextEntry', self)
+  self.name_entry:SetPos(self.name_label:GetWide() + 8, font.Scale(72))
+  self.name_entry:SetSize(scrW / 8, 24)
+  self.name_entry:SetFont(theme.GetFont('Text_Smaller'))
+  self.name_entry:SetText('')
+
+  self.name_random = vgui.Create('DImageButton', self)
+  self.name_random:SetPos(self.name_label:GetWide() + self.name_entry:GetWide() + 16, font.Scale(72) + 2)
+  self.name_random:SetSize(16, 16)
+  self.name_random:SetImage('icon16/wand.png')
+  self.name_random:SetTooltip('char_create.random_name')
+  self.name_random.DoClick = function(btn)
+    surface.PlaySound('buttons/blip1.wav')
+
+    self.name_entry:SetText(Schema:get_random_name(self:GetParent().char_data))
+  end
+
+  self.desc_label = vgui.Create('DLabel', self)
+  self.desc_label:SetPos(4, font.Scale(108) + 2)
+  self.desc_label:SetText(t('char_create.desc'))
+  self.desc_label:SetFont(theme.GetFont('Text_Small'))
+  self.desc_label:SetTextColor(Color('white'))
+  self.desc_label:SizeToContents()
+
+  self.desc_entry = vgui.Create('DTextEntry', self)
+  self.desc_entry:SetPos(self.desc_label:GetWide() + 8, font.Scale(108))
+  self.desc_entry:SetSize(scrW / 4 - self.desc_label:GetWide() - 4, font.Scale(72))
+  self.desc_entry:SetFont(theme.GetFont('Text_Smaller'))
+  self.desc_entry:SetText('')
+  self.desc_entry:SetMultiline(true)
+  self.desc_entry:SetVerticalScrollbarEnabled(true)
+
+  self.models_list = vgui.Create('fl_sidebar', self)
+  self.models_list:SetPos(4, font.Scale(180) + 4)
+  self.models_list:SetSize(scrW / 4, 136)
+  self.models_list:SetVisible(false)
+  self.models_list.Paint = function() end
+
+  self.model = vgui.Create('DModelPanel', self)
+  self.model:SetPos(scrW / 4 + 32, 32)
+  self.model:SetSize(scrW / 4, scrH / 2 - 36)
+  self.model:SetFOV(65)
+  self.model:SetCamPos(Vector(65, 0, 40))
+  self.model:SetLookAt(Vector(0, 0, 40))
+  self.model:SetAnimated(true)
+  self.model.LayoutEntity = function(entity) end
 end
 
-function PANEL:OnOpen(parent)
-  self.nameEntry:SetText(parent.CharData.name or "")
-  self.DescEntry:SetText(parent.CharData.description or "")
-  self.GenderChooser:SetValue(parent.CharData.gender or t('char_create.gender.s'))
-end
+function PANEL:RebuildModels()
+  local char_data = self:GetParent().char_data
+  local factionTable = faction.find_by_id(char_data.faction)
+  local models
 
-function PANEL:OnClose(parent)
-  parent:CollectData({
-    name = self.nameEntry:GetValue(),
-    description = self.DescEntry:GetValue(),
-    gender = self.GenderChooser:GetValue()
-  })
-end
+  if char_data.gender == 'Male' then
+    models = factionTable.models.male
+  elseif char_data.gender == 'Female' then
+    models = factionTable.models.female
+  else
+    models = factionTable.models.universal
+  end
 
-vgui.Register("flCharCreationGeneral", PANEL, "flCharCreationBase")
-
-local PANEL = {}
-PANEL.id = "model"
-PANEL.text = t('char_create.model.s')
-PANEL.model = ""
-PANEL.models = {}
-PANEL.buttons = {}
-
-function PANEL:Init()
-  self.Label = vgui.Create("DLabel", self)
-  self.Label:SetPos(32, 64)
-  self.Label:SetText("")
-  self.Label:SetFont(theme.GetFont("Text_Normal"))
-end
-
-function PANEL:Rebuild()
   local i = 0
   local offset = 4
 
-  self.scrollpanel = vgui.Create("fl_sidebar", self)
-  self.scrollpanel:SetSize(8 * 68 + 8, 68 * 5 + 8)
-  self.scrollpanel:SetPos(30, 50)
+  if self.models_list.buttons then
+    for k, v in ipairs(self.models_list.buttons) do
+      v:Remove()
+    end
+  end
 
-  for k, v in ipairs(self.models) do
-    if i >= 8 then
+  self.models_list:SetVisible(true)
+  self.models_list.buttons = {}
+
+  if !table.HasValue(models, self.models_list.model) then
+    self.models_list.model = nil
+    self:GetParent().char_data.model = nil
+  end
+
+  for k, v in ipairs(models) do
+    if i >= 7 then
       offset = offset + 68
       i = 0
     end
 
-    self.buttons[i] = vgui.Create("SpawnIcon", self.scrollpanel)
-    self.buttons[i]:SetSize(64, 64)
-    self.buttons[i]:SetModel(v)
-    self.buttons[i]:SetPos(i * 68 + 4, offset)
-    self.buttons[i].DoClick = function(btn)
-      if IsValid(self.prevBtn) then
-        self.prevBtn.isActive = false
+    local button = vgui.Create('SpawnIcon', self.models_list)
+    button:SetSize(64, 64)
+    button:SetModel(v)
+    button:SetPos(i * 68 + 4, offset)
+    button.DoClick = function(btn)
+      if IsValid(self.models_list.prevBtn) then
+        self.models_list.prevBtn.isActive = false
       end
 
-      self.model = v
-      self:GetParent().CharData.model = self.model
+      self.models_list.model = v
+      self:GetParent().char_data.model = v
+      self.model:SetModel(v)
+      --self.model:entity:SetSequence('idle')
 
       btn.isActive = true
-      self.prevBtn = btn
+      self.models_list.prevBtn = btn
     end
 
-    if self.model == v then
-      self.buttons[i].isActive = true
-      self.prevBtn = self.buttons[i]
+    if self.models_list.model == v then
+      button.isActive = true
+      self.models_list.prevBtn = button
     end
 
-    self.buttons[i].Paint = function(btn, w, h)
+    button.Paint = function(btn, w, h)
       btn.OverlayFade = math.Clamp((btn.OverlayFade or 0) - RealFrameTime() * 640 * 2, 0, 255)
 
       if dragndrop.IsDragging() or (!btn:IsHovered() and !btn.isActive) then return end
@@ -131,41 +186,58 @@ function PANEL:Rebuild()
       btn.OverlayFade = math.Clamp(btn.OverlayFade + RealFrameTime() * 640 * 8, 0, 255)
     end
 
+    self.models_list.buttons[#self.models_list.buttons + 1] = button
+
     i = i + 1
   end
 end
 
 function PANEL:OnOpen(parent)
-  if !parent.CharData.faction or parent.CharData.faction == "" or parent.CharData.gender == t('char_create.gender.s') or parent.CharData.gender == "" then
-    self.Label:SetText(t('char_create.gen_fac_warning'))
-    self.Label:SetTextColor(Color(220, 100, 100))
-    self.Label:SizeToContents()
-  else
-    local factionTable
-    local char_data = parent.CharData
+  self.name_entry:SetText(parent.char_data.name or '')
+  self.desc_entry:SetText(parent.char_data.description or '')
+  self.models_list.model = parent.char_data.model
 
-    self.model = char_data.model or ""
-
-    if char_data and char_data.faction then
-      factionTable = faction.find_by_id(char_data.faction)
-    end
-
-    if factionTable then
-      if char_data.gender == t('char_create.gender.m') then
-        self.models = factionTable.models.male
-      elseif char_data.gender == t('char_create.gender.f') then
-        self.models = factionTable.models.female
-      else
-        self.models = factionTable.models.universal
-      end
-
-      self:Rebuild()
-    end
+  if parent.char_data.gender == 'Female' then
+    self.gender_female:SetActive(true)
+    self:RebuildModels()
+  elseif parent.char_data.gender == 'Male' then
+    self.gender_male:SetActive(true)
+    self:RebuildModels()
   end
 end
 
 function PANEL:OnClose(parent)
-  parent.CharData.model = self.model
+  local gender = (self.gender_female:IsActive() and 'Female') or (self.gender_male:IsActive() and 'Male') or 'Universal'
+
+  parent:CollectData({
+    name = self.name_entry:GetValue(),
+    description = self.desc_entry:GetValue(),
+    gender = gender,
+    model = self.models_list.model
+  })
 end
 
-vgui.Register("flCharCreationModel", PANEL, "flCharCreationBase")
+function PANEL:OnValidate()
+  local name = self.name_entry:GetValue()
+  local desc = self.desc_entry:GetValue()
+
+  if !isstring(name) then
+    return false, t('char_create.name_invalid')
+  end
+
+  if name:utf8len() < config.get("character_min_name_len")
+  or name:utf8len() > config.get("character_max_name_len") then
+    return false, t('char_create.name_len', {config.get("character_min_name_len"), config.get("character_max_name_len")})
+  end
+
+  if !isstring(desc) then
+    return false, t('char_create.desc_invalid')
+  end
+
+  if desc:utf8len() < config.get("character_min_desc_len")
+    or desc:utf8len() > config.get("character_max_desc_len") then
+    return false, t('char_create.desc_len', {config.get("character_min_desc_len"), config.get("character_max_desc_len")})
+  end
+end
+
+vgui.Register('flCharCreationGeneral', PANEL, 'flCharCreationBase')

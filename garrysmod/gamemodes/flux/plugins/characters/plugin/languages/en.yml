@@ -1,11 +1,11 @@
 en:
   char_set_name:
-    description: Set character's name.
-    syntax: "<target> <new name>"
+    description: "Set character's name."
+    syntax: '<target> <new name>'
     message: "{1} has set {2}'s name to {3}."
   char_set_model:
-    description: Set character's model.
-    syntax: "<target> <new model>"
+    description: "Set character's model."
+    syntax: '<target> <new model>'
     message: "{1} has set {2}'s model to {3}."
   char_create:
     title: CREATE A CHARACTER
@@ -13,15 +13,20 @@ en:
     create: CREATE
     model_button: Model
     gen_text: General Character Information
-    name: 'Name:'
+    name: 'Full name:'
+    random_name: 'Choose random name.'
     desc: 'Description:'
-    gender:
-      title: 'Gender:'
-      s: Select Gender
-      m: Male
-      f: Female
+    gender: 'Gender:'
     model:
       s: Select a model
     back: BACK
+    next: NEXT
+    main_menu: MAIN MENU
+    name_invalid: Invalid name.
+    name_len: "Your character's name must be between {1} and {2} characters long."
+    desc_invalid: Invalid physical description.
+    desc_len: "Your character's physical description must be between {1} and {2} characters long."
+    unknown_error: Unknown error.
+    no_gender: You provided no gender.
   tab_menu:
     characters: Characters

@@ -13,7 +13,7 @@ function COMMAND:on_run(player, targets, name, bStrict)
 
   if whitelist then
     for k, v in ipairs(targets) do
-      v:GiveWhitelist(whitelist.id)
+      v:GiveWhitelist(whitelist.faction_id)
     end
 
     fl.player:broadcast('whitelist.message', { get_player_name(player), util.player_list_to_string(targets), whitelist.print_name })

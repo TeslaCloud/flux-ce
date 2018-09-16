@@ -6,7 +6,7 @@ PANEL.textColor = Color(255, 255, 255)
 function PANEL:Init()
   self.curAlpha = 0
   self.creationTime = CurTime()
-  self.notificationText = {"NOTIFICATION"}
+  self.notificationText = {'NOTIFICATION'}
   self.fontSize = 0
 end
 
@@ -14,7 +14,7 @@ function PANEL:SizeToContents()
   local bX, bY = 0, -4
 
   for k, v in ipairs(self.notificationText) do
-    local w, h = util.text_size(v, theme.GetFont("Menu_Normal"))
+    local w, h = util.text_size(v, theme.GetFont('Menu_Normal'))
 
     self.fontSize = h
 
@@ -45,8 +45,8 @@ function PANEL:SetLifetime(time)
 end
 
 function PANEL:SetText(text)
-  if text:find("\n") then
-    text = string.Explode("\n", text)
+  if text:find('\n') then
+    text = string.Explode('\n', text)
   else
     text = {text}
   end
@@ -72,19 +72,19 @@ function PANEL:Think()
 end
 
 function PANEL:Paint(width, height)
-  if !theme.Hook("PaintNotificationContainer", self, width, height) then
+  if !theme.Hook('PaintNotificationContainer', self, width, height) then
     draw.RoundedBox(0, 0, 0, width, height, ColorAlpha(self.backgroundColor, self.curAlpha))
   end
 
-  if !theme.Hook("PaintNotificationText", self, width, height) then
+  if !theme.Hook('PaintNotificationText', self, width, height) then
     local curY = 4
 
     for k, v in ipairs(self.notificationText) do
-      draw.SimpleText(v, theme.GetFont("Menu_Normal"), 4, curY, ColorAlpha(self.textColor, self.curAlpha + 40))
+      draw.SimpleText(v, theme.GetFont('Menu_Normal'), 4, curY, ColorAlpha(self.textColor, self.curAlpha + 40))
 
       curY = curY + self.fontSize + 4
     end
   end
 end
 
-vgui.Register("fl_notification", PANEL, "EditablePanel")
+vgui.Register('fl_notification', PANEL, 'EditablePanel')

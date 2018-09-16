@@ -30,7 +30,7 @@ function flFactions:PlayerRestored(player, record)
     if faction.Count() > 0 then
       local randomFaction = table.Random(faction.GetAll())
 
-      player:set_nv('faction', randomFaction.id)
+      player:set_nv('faction', randomFaction.faction_id)
 
       if randomFaction.has_gender then
         player:set_nv('gender', math.random(CHAR_GENDER_MALE, CHAR_GENDER_FEMALE))

@@ -4,8 +4,6 @@ function flAttributes:OnThemeLoaded(current_theme)
   end)
 end
 
-function flAttributes:AddCharacterCreationMenuItems(panel, menu, sidebar)
-  menu:add_button('attributes', function(btn)
-    panel:OpenPanel("CharCreation_Attributes")
-  end)
+function flAttributes:AddCharacterCreationMenuStages(panel)
+  panel:add_stage('CharCreation_Attributes')
 end

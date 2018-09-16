@@ -39,7 +39,7 @@ function PANEL:Init()
     button:SetSizeEx(200, 30)
     button:SetText(v.title)
     button:SetIcon(v.icon)
-    button:SetCentered(true)
+    button:SetCentered(false)
     button:SetFont(v.font or theme.GetFont("Menu_Normal"))
 
     button.DoClick = function(btn)
