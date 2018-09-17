@@ -1,53 +1,61 @@
 local PANEL = {}
-PANEL.margin = 0
+PANEL.centered = false
 
 function PANEL:Init()
-	self.btnLeft:SetVisible(false)
-	self.btnRight:SetVisible(false)
+  self.btnLeft:SetVisible(false)
+  self.btnRight:SetVisible(false)
+end
+
+function PANEL:SetCentered(bCentered)
+  self.centered = bCentered
 end
 
 function PANEL:Paint(width, height)
   theme.Hook("PaintHorizontalbar", self, width, height)
 end
 
-function PANEL:AddPanel( pnl )
-	table.insert( self.Panels, pnl )
+function PANEL:AddPanel(pnl)
+  table.insert(self.Panels, pnl)
 
-	pnl:SetParent( self.pnlCanvas )
-	self:InvalidateLayout( true )
-end
-
-function PANEL:SetMargin(margin)
-  self.margin = tonumber(margin) or 0
+  pnl:SetParent(self.pnlCanvas)
+  self:InvalidateLayout(true)
 end
 
 function PANEL:PerformLayout()
+  local w, h = self:GetSize()
 
-	local w, h = self:GetSize()
+  self.pnlCanvas:SetTall(h)
 
-	self.pnlCanvas:SetTall( h )
+  local x = 0
 
-	local x = 0
+  if self.centered then
+    local wide = 0
 
-	for k, v in pairs( self.Panels ) do
-		if ( !IsValid( v ) ) then continue end
+    for k, v in pairs(self.Panels) do
+      wide = wide + v:GetWide() + self.m_iOverlap
+    end
 
-		v:SetPos( x, 0 )
-		v:SetTall( h )
+   x = w / 2 - wide / 2
+  end
 
-		x = x + v:GetWide() + self.m_iOverlap
+  for k, v in pairs(self.Panels) do
+    if (!IsValid(v)) then continue end
 
-	end
+    v:SetPos(x, 0)
+    v:SetTall(h)
 
-	self.pnlCanvas:SetWide( x + self.m_iOverlap )
+    x = x + v:GetWide() + self.m_iOverlap
+  end
 
-	if ( w < self.pnlCanvas:GetWide() ) then
-		self.OffsetX = math.Clamp( self.OffsetX, 0, self.pnlCanvas:GetWide() - self:GetWide() )
-	else
-		self.OffsetX = 0
-	end
+  self.pnlCanvas:SetWide(x + self.m_iOverlap)
 
-	self.pnlCanvas.x = self.OffsetX * -1
+  if (w < self.pnlCanvas:GetWide()) then
+    self.OffsetX = math.Clamp(self.OffsetX, 0, self.pnlCanvas:GetWide() - self:GetWide())
+  else
+    self.OffsetX = 0
+  end
+
+  self.pnlCanvas.x = self.OffsetX * -1
 end
 
 vgui.Register("fl_horizontalbar", PANEL, "DHorizontalScroller")
