@@ -12,21 +12,22 @@ en:
     text: CHARACTER CREATION
     create: CREATE
     model_button: Model
-    gen_text: General Character Information
     name: 'Full name:'
     random_name: 'Choose random name.'
     desc: 'Description:'
     gender: 'Gender:'
-    model:
-      s: Select a model
     back: BACK
     next: NEXT
     main_menu: MAIN MENU
+    confirm: Character cration confirmation
+    confirm_msg: Are you sure that you want to create this character?
     name_invalid: Invalid name.
     name_len: "Your character's name must be between {1} and {2} characters long."
     desc_invalid: Invalid physical description.
     desc_len: "Your character's physical description must be between {1} and {2} characters long."
     unknown_error: Unknown error.
-    no_gender: You provided no gender.
+    no_gender: You must select a gender.
+    no_model: You must select a model.
   tab_menu:
     characters: Characters
+  CharCreation_General: General Character Information

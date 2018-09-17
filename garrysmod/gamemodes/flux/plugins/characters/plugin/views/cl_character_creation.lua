@@ -48,12 +48,59 @@ function PANEL:Init()
 
     self:NextStage()
   end
+
+  self.stage_list = vgui.Create('fl_horizontalbar', self)
+  self.stage_list:SetSize(self.panel:GetWide(), theme.GetOption('MainMenu_SidebarButtonHeight'))
+  self.stage_list:SetPos(x, y + self.panel:GetTall() + self.next:GetTall() * 2)
+  self.stage_list:SetOverlap(4)
+  self.stage_list:SetCentered(true)
+
+  self:RebuildStageList()
+end
+
+function PANEL:RebuildStageList()
+  self.stage_list:Clear()
+
+  for k, v in ipairs(self.stages) do
+    local button = vgui.Create('fl_button', self.stage_list)
+    button:SetSize(self.panel:GetWide() / 5, theme.GetOption('MainMenu_SidebarButtonHeight'))
+    button:SetIcon('fa-chevron-right', true)
+    button:SetIconSize(16)
+    button:SetFont(theme.GetFont('Text_NormalSmaller'))
+    button:SetTitle(t(v))
+    button:SetDrawBackground(false)
+    button:SizeToContents()
+    button:SetCentered(true)
+
+    if k > self.stage then
+      button:SetEnabled(false)
+    elseif k == self.stage then
+      button:SetEnabled(true)
+      button:SetTextColor(theme.GetColor('Accent'))
+    end
+
+    button.DoClick = function(btn)
+      local cur_time = CurTime()
+
+      if !self.stage_list.next_click or self.stage_list.next_click <= cur_time then
+        if self.stage > k then
+          timer.Create('flux_char_panel_change', .1, self.stage - k, function()
+            self:PrevStage()
+          end)
+  
+          self.stage_list.next_click = cur_time + 1
+        end
+      end
+    end
+
+    self.stage_list:AddPanel(button)
+  end
 end
 
 function PANEL:SetStage(stage)
-  self.stage = stage
-
   self:OpenPanel(self.stages[stage])
+  self.stage = stage
+  self:RebuildStageList()
 
   if self.stage == 1 then
     self.back:SetTitle(t('char_create.main_menu'))
@@ -75,7 +122,7 @@ function PANEL:NextStage()
     if success == false then
       self:GetParent():notify(error or t('char_create.unknown_error'))
 
-      return
+      return false
     end
   end
 
@@ -84,7 +131,7 @@ function PANEL:NextStage()
   if success == false then
     self:GetParent():notify(error or t('char_create.unknown_error'))
 
-    return
+    return false
   end
 
   if self.stage != #self.stages then
@@ -102,13 +149,23 @@ function PANEL:PrevStage()
   if self.stage != 1 then
     self:SetStage(self.stage - 1)
   else
-    self:GetParent():RecreateSidebar(true)
+    local parent = self:GetParent()
+    parent:RecreateSidebar(true)
 
-    if self:GetParent().menu.Close then
-      self:GetParent().menu:Close()
-    else
-      self:GetParent().menu:SafeRemove()
-    end
+    local sidebar = parent.sidebar
+    sidebar:SetPos(-parent.sidebar:GetWide(), theme.GetOption('MainMenu_SidebarY'))
+    sidebar:SetDisabled(true)
+    sidebar:MoveTo(theme.GetOption('MainMenu_SidebarX'), theme.GetOption('MainMenu_SidebarY'), .5, 0, .5, function()
+      sidebar:SetDisabled(false)
+    end)
+
+    parent.menu:MoveTo(ScrW(), 0, .5, 0, .5, function()
+      if parent.menu.Close then
+        parent.menu:Close()
+      else
+        parent.menu:SafeRemove()
+      end
+    end)
   end
 end
 
@@ -125,18 +182,42 @@ function PANEL:CollectData(newData)
   table.safe_merge(self.char_data, newData)
 end
 
+function PANEL:ClearData()
+  table.Empty(self.char_data)
+end
+
 function PANEL:OpenPanel(id)
+  local x, y = self:GetWide() / 4, self:GetTall() / 6 + 8
+
   if IsValid(self.panel) then
     if self.panel.OnClose then
       self.panel:OnClose(self)
     end
 
-    self.panel:SafeRemove()
+    local to = self:GetWide()
+
+    if self.stage < table.KeyFromValue(self.stages, id) then
+      to = -self.panel:GetWide()
+    end
+
+    self.panel:MoveTo(to, y, .5, 0, .5)
   end
 
   self.panel = theme.CreatePanel(id, self)
   self.panel:SetSize(self:GetWide() / 2, self:GetTall() / 2)
-  self.panel:SetPos(self:GetWide() / 4, self:GetTall() / 6 + 8)
+
+  local from
+
+  if !self.stages then
+    from = x
+  elseif self.stage < table.KeyFromValue(self.stages, id) then
+    from = self:GetWide()
+  else
+    from = -self.panel:GetWide()
+  end
+
+  self.panel:SetPos(from, y)
+  self.panel:MoveTo(x, y, .5, 0, .5)
 
   if self.panel.OnOpen then
     self.panel:OnOpen(self)

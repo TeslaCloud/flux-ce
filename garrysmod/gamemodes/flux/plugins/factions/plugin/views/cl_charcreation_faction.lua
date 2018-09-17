@@ -1,6 +1,6 @@
 local PANEL = {}
 PANEL.id = 'faction'
-PANEL.text = 'char_create.faction'
+PANEL.text = 'CharCreation_Faction'
 PANEL.faction_id = ''
 
 function PANEL:ButtonClicked(button)
