@@ -14,7 +14,7 @@ vgui.Register('flCharCreationBase', PANEL, 'fl_base_panel')
 
 local PANEL = {}
 PANEL.id = 'general'
-PANEL.text = 'char_create.gen_text'
+PANEL.text = 'CharCreation_General'
 
 function PANEL:Init()
   local scrW, scrH = ScrW(), ScrH()
@@ -112,9 +112,9 @@ function PANEL:Init()
   self.model = vgui.Create('DModelPanel', self)
   self.model:SetPos(scrW / 4 + 32, 32)
   self.model:SetSize(scrW / 4, scrH / 2 - 36)
-  self.model:SetFOV(65)
-  self.model:SetCamPos(Vector(65, 0, 40))
-  self.model:SetLookAt(Vector(0, 0, 40))
+  self.model:SetFOV(50)
+  self.model:SetCamPos(Vector(80, 0, 50))
+  self.model:SetLookAt(Vector(0, 0, 37))
   self.model:SetAnimated(true)
   self.model.LayoutEntity = function(entity) end
 end
@@ -149,6 +149,8 @@ function PANEL:RebuildModels()
     self:GetParent().char_data.model = nil
   end
 
+  self.model:SetModel(self.models_list.model or '')
+
   for k, v in ipairs(models) do
     if i >= 7 then
       offset = offset + 68
@@ -167,7 +169,7 @@ function PANEL:RebuildModels()
       self.models_list.model = v
       self:GetParent().char_data.model = v
       self.model:SetModel(v)
-      --self.model:entity:SetSequence('idle')
+      self.model.Entity:SetSequence(ACT_IDLE)
 
       btn.isActive = true
       self.models_list.prevBtn = btn
@@ -237,6 +239,10 @@ function PANEL:OnValidate()
   if desc:utf8len() < config.get("character_min_desc_len")
     or desc:utf8len() > config.get("character_max_desc_len") then
     return false, t('char_create.desc_len', {config.get("character_min_desc_len"), config.get("character_max_desc_len")})
+  end
+
+  if !self.models_list.model then
+    return false, t('char_create.no_model')
   end
 end
 

@@ -1,25 +1,25 @@
 function flCharacters:PlayerInitialized()
-  if !fl.client:GetCharacter() and !IsValid(fl.IntroPanel) then
-    fl.IntroPanel = vgui.Create('flIntro')
+  if !fl.client:GetCharacter() and !IsValid(fl.intro_panel) then
+    fl.intro_panel = vgui.Create('flIntro')
 
-    if IsValid(fl.IntroPanel) then
-      fl.IntroPanel:MakePopup()
+    if IsValid(fl.intro_panel) then
+      fl.intro_panel:MakePopup()
     end
   end
 end
 
 function flCharacters:OnIntroPanelRemoved()
   if !fl.client:GetCharacter() then
-    fl.IntroPanel = theme.CreatePanel('MainMenu')
+    fl.intro_panel = theme.CreatePanel('MainMenu')
 
-    if IsValid(fl.IntroPanel) then
-      fl.IntroPanel:MakePopup()
+    if IsValid(fl.intro_panel) then
+      fl.intro_panel:MakePopup()
     else
       timer.Create('flCreateMainPanel', 0.1, 0, function()
-        fl.IntroPanel = theme.CreatePanel('MainMenu')
+        fl.intro_panel = theme.CreatePanel('MainMenu')
 
-        if IsValid(fl.IntroPanel) then
-          fl.IntroPanel:MakePopup()
+        if IsValid(fl.intro_panel) then
+          fl.intro_panel:MakePopup()
 
           timer.Remove('flCreateMainPanel')
         end
@@ -39,7 +39,7 @@ do
         fl.menuMusic:SetVolume(curVolume)
       end
 
-      if !IsValid(fl.IntroPanel) then
+      if !IsValid(fl.intro_panel) then
         if curVolume > 0.05 then
           curVolume = Lerp(0.1, curVolume, 0)
           fl.menuMusic:SetVolume(curVolume)
@@ -66,15 +66,11 @@ function flCharacters:OnThemeLoaded(current_theme)
     return vgui.Create('flCharCreationGeneral', parent)
   end)
 
-  current_theme:AddPanel('CharCreation_Model', function(id, parent, ...)
-    return vgui.Create('flCharCreationModel', parent)
-  end)
+  if IsValid(fl.intro_panel) then
+    fl.intro_panel:Remove()
 
-  if IsValid(fl.IntroPanel) then
-    fl.IntroPanel:Remove()
-
-    fl.IntroPanel = theme.CreatePanel('MainMenu')
-    fl.IntroPanel:MakePopup()
+    fl.intro_panel = theme.CreatePanel('MainMenu')
+    fl.intro_panel:MakePopup()
   end
 end
 
@@ -84,19 +80,19 @@ function flCharacters:AddTabMenuItems(menu)
     icon = 'fa-users',
     override = function(menuPanel, button)
       menuPanel:SafeRemove()
-      fl.IntroPanel = theme.CreatePanel('MainMenu')
+      fl.intro_panel = theme.CreatePanel('MainMenu')
     end
   }, 1)
 end
 
 function flCharacters:PostCharacterLoaded(nCharID)
-  if IsValid(fl.IntroPanel) then
-    fl.IntroPanel:SafeRemove()
+  if IsValid(fl.intro_panel) then
+    fl.intro_panel:SafeRemove()
   end
 end
 
 function flCharacters:ShouldDrawLoadingScreen()
-  if !fl.IntroPanel then
+  if !fl.intro_panel then
     return true
   end
 end
@@ -154,8 +150,10 @@ function flCharacters:AddMainMenuItems(panel, sidebar)
 
   panel:add_button(t('main_menu.new'), function(btn)
     panel.menu = theme.CreatePanel('CharacterCreation', panel)
+    panel.menu:SetPos(ScrW(), 0)
+    panel.menu:MoveTo(0, 0, .5, 0, .5)
 
-    panel.sidebar:SetVisible(false)
+    panel.sidebar:MoveTo(-panel.sidebar:GetWide(), theme.GetOption('MainMenu_SidebarY'), .5, 0, .5)
   end)
 
   local loadBtn = panel:add_button(t('main_menu.load'), function(btn)
@@ -212,15 +210,19 @@ function flCharacters:AddMainMenuItems(panel, sidebar)
 end
 
 netstream.Hook('PlayerCreatedCharacter', function(success, status)
-  if IsValid(fl.IntroPanel) and IsValid(fl.IntroPanel.menu) then
+  if IsValid(fl.intro_panel) and IsValid(fl.intro_panel.menu) then
     if success then
-      fl.IntroPanel:RecreateSidebar(true)
+      surface.PlaySound('vo/npc/male01/answer37.wav')
+      Derma_Query(t('char_create.confirm_msg'), t('char_create.confirm'), t'yes', function()
+        fl.intro_panel.menu:PrevStage()
 
-      if fl.IntroPanel.menu.Close then
-        fl.IntroPanel.menu:Close()
-      else
-        fl.IntroPanel.menu:SafeRemove()
-      end
+        timer.Create('flux_char_created', .1, #fl.intro_panel.menu.stages - 1, function()
+          fl.intro_panel.menu:PrevStage()
+        end)
+
+        fl.intro_panel.menu:ClearData()
+      end,
+      t'no')
     else
       local text = 'We were unable to create a character! (unknown error)'
       local hookText = hook.run('GetCharCreationErrorText', success, status)
@@ -237,7 +239,7 @@ netstream.Hook('PlayerCreatedCharacter', function(success, status)
         text = 'You have not chosen a model or the one you have chosen is invalid!'
       end
 
-      fl.IntroPanel:notify(text)
+      fl.intro_panel:notify(text)
     end
   end
 end)
