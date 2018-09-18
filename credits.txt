@@ -2,10 +2,11 @@
 Flux © 2016-2018 TeslaCloud Studios
 =========================
 
-Johnny      - Lead Developer
-Mr. Meow    - Project Manager
-NightAngel  - Past Developer
-zigbomb     - Past Developer and Design Supervisor
+Mr. Meow (Alex D.) - Lead Developer and Project Manager
+AleXXX_007         - Developer (framework + hl2rp)
+Johnny             - Developer
+NightAngel         - Former Developer (2016-2017)
+zigbomb            - Former Developer and Design Supervisor (2016-2018)
 
 =========================
 Community Contributors
