@@ -11,7 +11,10 @@ en:
     title: CREATE A CHARACTER
     text: CHARACTER CREATION
     create: CREATE
-    model_button: Model
+    load: LOAD CHARACTER
+    select: Select
+    delete: Delete
+    general: General Character Information
     name: 'Full name:'
     random_name: 'Choose random name.'
     desc: 'Description:'
@@ -21,6 +24,8 @@ en:
     main_menu: MAIN MENU
     confirm: Character cration confirmation
     confirm_msg: Are you sure that you want to create this character?
+    delete_confirm: Character delete confirmation
+    delete_confirm_msg: 'Are you sure that you want to delete this character? Write his name if so: {1}'
     name_invalid: Invalid name.
     name_len: "Your character's name must be between {1} and {2} characters long."
     desc_invalid: Invalid physical description.
@@ -30,4 +35,3 @@ en:
     no_model: You must select a model.
   tab_menu:
     characters: Characters
-  CharCreation_General: General Character Information

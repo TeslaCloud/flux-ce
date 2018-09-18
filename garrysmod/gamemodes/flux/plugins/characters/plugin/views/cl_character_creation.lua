@@ -4,7 +4,6 @@ PANEL.char_data = {}
 function PANEL:Init()
   self:SetPos(0, 0)
   self:SetSize(ScrW(), ScrH())
-  self:SetTitle(t'char_create.title')
 
   self.btnClose:SafeRemove()
 
