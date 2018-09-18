@@ -14,7 +14,7 @@ vgui.Register('flCharCreationBase', PANEL, 'fl_base_panel')
 
 local PANEL = {}
 PANEL.id = 'general'
-PANEL.text = 'CharCreation_General'
+PANEL.text = 'char_create.general'
 
 function PANEL:Init()
   local scrW, scrH = ScrW(), ScrH()

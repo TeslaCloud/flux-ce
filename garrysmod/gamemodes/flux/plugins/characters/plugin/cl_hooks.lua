@@ -62,7 +62,11 @@ function flCharacters:OnThemeLoaded(current_theme)
     return vgui.Create('flCharacterCreation', parent)
   end)
 
-  current_theme:AddPanel('CharCreation_General', function(id, parent, ...)
+  current_theme:AddPanel('char_create.load', function(id, parent, ...)
+    return vgui.Create('fl_character_load', parent)
+  end)
+
+  current_theme:AddPanel('char_create.general', function(id, parent, ...)
     return vgui.Create('flCharCreationGeneral', parent)
   end)
 
@@ -142,7 +146,7 @@ function flCharacters:RebuildScoreboardPlayerCard(card, player)
 end
 
 function flCharacters:AddCharacterCreationMenuStages(panel)
-  panel:add_stage('CharCreation_General')
+  panel:add_stage('char_create.general')
 end
 
 function flCharacters:AddMainMenuItems(panel, sidebar)
@@ -156,43 +160,47 @@ function flCharacters:AddMainMenuItems(panel, sidebar)
     panel.sidebar:MoveTo(-panel.sidebar:GetWide(), theme.GetOption('MainMenu_SidebarY'), .5, 0, .5)
   end)
 
-  local loadBtn = panel:add_button(t('main_menu.load'), function(btn)
-    panel.menu = vgui.Create('DFrame', panel)
-    panel.menu:SetPos(scrW * 0.5 - 300, scrH / 4)
-    panel.menu:SetSize(600, 600)
-    panel.menu:SetTitle('LOAD CHARACTER')
+  if #fl.client:GetAllCharacters() > 0 then
+    panel:add_button(t('main_menu.load'), function(btn)
+      panel.menu = theme.CreatePanel('char_create.load', panel)
+      panel.menu:SetPos(-panel.menu:GetWide(), 0)
+      panel.menu:MoveTo(0, 0, .5, 0, .5)
+  
+      panel.sidebar:MoveTo(ScrW(), theme.GetOption('MainMenu_SidebarY'), .5, 0, .5)
 
-    panel.menu.Paint = function(lp, w, h)
-      draw.RoundedBox(0, 0, 0, w, h, Color(40, 40, 40))
-      draw.SimpleText('Which one to load', 'DermaLarge', 0, 24)
+      --[[panel.menu = vgui.Create('DFrame', panel)
+      panel.menu:SetPos(scrW * 0.5 - 300, scrH / 4)
+      panel.menu:SetSize(600, 600)
+      panel.menu:SetTitle('LOAD CHARACTER')
 
-      if #fl.client:GetAllCharacters() <= 0 then
-        draw.SimpleText('wow you have none', 'DermaLarge', 0, 64)
-      end
-    end
+      panel.menu.Paint = function(lp, w, h)
+        draw.RoundedBox(0, 0, 0, w, h, Color(40, 40, 40))
+        draw.SimpleText('Which one to load', 'DermaLarge', 0, 24)
 
-    panel.menu:MakePopup()
-
-    panel.menu.buttons = {}
-
-    local offY = 0
-
-    for k, v in ipairs(fl.client:GetAllCharacters()) do
-      panel.menu.buttons[k] = vgui.Create('DButton', panel.menu)
-      panel.menu.buttons[k]:SetPos(8, 100 + offY)
-      panel.menu.buttons[k]:SetSize(128, 24)
-      panel.menu.buttons[k]:SetText(v.name)
-      panel.menu.buttons[k].DoClick = function()
-        netstream.Start('PlayerSelectCharacter', v.character_id)
-        panel:Remove()
+        if #fl.client:GetAllCharacters() <= 0 then
+          draw.SimpleText('wow you have none', 'DermaLarge', 0, 64)
+        end
       end
 
-      offY = offY + 28
-    end
-  end)
+      panel.menu:MakePopup()
 
-  if #fl.client:GetAllCharacters() <= 0 then
-    loadBtn:SetEnabled(false)
+      panel.menu.buttons = {}
+
+      local offY = 0
+
+      for k, v in ipairs(fl.client:GetAllCharacters()) do
+        panel.menu.buttons[k] = vgui.Create('DButton', panel.menu)
+        panel.menu.buttons[k]:SetPos(8, 100 + offY)
+        panel.menu.buttons[k]:SetSize(128, 24)
+        panel.menu.buttons[k]:SetText(v.name)
+        panel.menu.buttons[k].DoClick = function()
+          netstream.Start('PlayerSelectCharacter', v.character_id)
+          panel:Remove()
+        end
+
+        offY = offY + 28
+      end]]
+    end)
   end
 
   if fl.client:GetCharacter() then
@@ -221,6 +229,12 @@ netstream.Hook('PlayerCreatedCharacter', function(success, status)
         end)
 
         fl.intro_panel.menu:ClearData()
+
+        local chars = fl.client:GetAllCharacters()
+
+        if #chars == 1 then
+          netstream.Start('PlayerSelectCharacter', chars[1].character_id)
+        end
       end,
       t'no')
     else

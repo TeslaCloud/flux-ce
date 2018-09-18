@@ -1,5 +1,5 @@
 function flFactions:CharPanelCreated(id, panel)
-  if id == 'CharCreation_General' then
+  if id == 'char_create.general' then
     local faction_table
     local char_data = panel:GetParent().char_data
 
@@ -27,7 +27,7 @@ function flFactions:CharPanelCreated(id, panel)
 end
 
 function flFactions:PreStageChange(id, panel)
-  if id == 'CharCreation_General' then
+  if id == 'char_create.general' then
     local gender = (panel.gender_female:IsActive() and 'Female') or (panel.gender_male:IsActive() and 'Male') or 'Universal'
     local faction_id = panel:GetParent().char_data.faction
     local faction_table = faction.find_by_id(faction_id)
