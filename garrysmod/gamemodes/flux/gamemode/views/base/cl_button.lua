@@ -1,5 +1,6 @@
 local PANEL = {}
 
+PANEL.m_Title = ''
 PANEL.m_Icon = false
 PANEL.m_Autopos = true
 PANEL.m_CurAmt = 0

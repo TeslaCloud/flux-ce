@@ -23,10 +23,9 @@ end
 
 function PANEL:PerformLayout()
   local w, h = self:GetSize()
+  local x = 0
 
   self.pnlCanvas:SetTall(h)
-
-  local x = 0
 
   if self.centered then
     local wide = 0

@@ -179,7 +179,7 @@ function THEME:PaintButton(panel, w, h)
           if panel.m_IconLeft then
             fl.fa:Draw(icon, textPos - panel.m_IconSize - 8, (panel.m_IconSize and h * 0.5 - panel.m_IconSize * 0.5) or 3, (panel.m_IconSize or h - 6), textColor)
           else
-            fl.fa:Draw(icon, textPos + width + panel.m_IconSize * 0.5 + 8, (panel.m_IconSize and h * 0.5 - panel.m_IconSize * 0.5) or 3, (panel.m_IconSize or h - 6), textColor)
+            fl.fa:Draw(icon, textPos + width + panel.m_IconSize * 0.5, (panel.m_IconSize and h * 0.5 - panel.m_IconSize * 0.5) or 3, (panel.m_IconSize or h - 6), textColor)
           end
 
           draw.SimpleText(title, font, textPos, h * 0.5 - height * 0.5, textColor)
@@ -195,6 +195,10 @@ function THEME:PaintButton(panel, w, h)
       else
         draw.SimpleText(title, font, panel.m_TextPos or 0, h * 0.5 - height * 0.5, textColor)
       end
+    end
+  else
+    if panel.m_Centered then
+      fl.fa:Draw(icon, w / 2 - panel.m_IconSize / 2, (panel.m_IconSize and h * 0.5 - panel.m_IconSize * 0.5) or 3, (panel.m_IconSize or h - 6), textColor)
     end
   end
 end
