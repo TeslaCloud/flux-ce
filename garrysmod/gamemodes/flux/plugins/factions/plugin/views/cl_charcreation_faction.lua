@@ -29,11 +29,14 @@ function PANEL:OnOpen(parent)
 
       local label = vgui.Create('DLabel', button)
       label:Dock(BOTTOM)
+      label:DockMargin(4, 0, 0, 0)
       label:SetText(v.name)
       label:SetFont(theme.GetFont('Text_NormalLarge'))
       label:SizeToContents()
 
       button.DoClick = function(btn)
+        if button:IsActive() then return end
+
         local cur_time = CurTime()
 
         if !self.chooser.next_click or self.chooser.next_click <= cur_time then

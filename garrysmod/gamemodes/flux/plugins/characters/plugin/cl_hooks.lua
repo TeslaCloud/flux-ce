@@ -220,23 +220,19 @@ end
 netstream.Hook('PlayerCreatedCharacter', function(success, status)
   if IsValid(fl.intro_panel) and IsValid(fl.intro_panel.menu) then
     if success then
-      surface.PlaySound('vo/npc/male01/answer37.wav')
-      Derma_Query(t('char_create.confirm_msg'), t('char_create.confirm'), t'yes', function()
+      fl.intro_panel.menu:PrevStage()
+
+      timer.Create('flux_char_created', .1, #fl.intro_panel.menu.stages - 1, function()
         fl.intro_panel.menu:PrevStage()
+      end)
 
-        timer.Create('flux_char_created', .1, #fl.intro_panel.menu.stages - 1, function()
-          fl.intro_panel.menu:PrevStage()
-        end)
+      fl.intro_panel.menu:ClearData()
 
-        fl.intro_panel.menu:ClearData()
+      local chars = fl.client:GetAllCharacters()
 
-        local chars = fl.client:GetAllCharacters()
-
-        if #chars == 1 then
-          netstream.Start('PlayerSelectCharacter', chars[1].character_id)
-        end
-      end,
-      t'no')
+      if #chars == 1 then
+        netstream.Start('PlayerSelectCharacter', chars[1].character_id)
+      end
     else
       local text = 'We were unable to create a character! (unknown error)'
       local hookText = hook.run('GetCharCreationErrorText', success, status)
