@@ -14,6 +14,8 @@ function PANEL:Init()
   self.list:SetPos(scrW / 2 - self.list:GetWide() / 2, scrH / 2 - self.list:GetTall() / 2)
   self.list:SetCentered(true)
 
+  self:RebuildCharacterList()
+
   self.back = vgui.Create('fl_button', self)
   self.back:SetSize(self.list:GetWide() / 4, theme.GetOption('MainMenu_SidebarButtonHeight'))
   self.back:SetPos(scrW / 2 + self.list:GetWide() / 2 - self.back:GetWide(), scrH / 2 + self.list:GetTall() / 2 + self.back:GetTall())
@@ -45,11 +47,16 @@ function PANEL:Init()
       end
     end)
   end
+end
+
+function PANEL:RebuildCharacterList()
+  self.list:Clear()
 
   for k, v in ipairs(fl.client:GetAllCharacters()) do
     self.chars[k] = vgui.Create('fl_character_panel', self)
     self.chars[k]:SetSize(self.list:GetWide() / 4, self.list:GetTall())
     self.chars[k]:SetCharacter(v)
+    self.chars[k]:SetParent(self)
 
     self.list:AddPanel(self.chars[k])
   end
@@ -98,7 +105,7 @@ function PANEL:Init()
 
   self.delete = vgui.Create('fl_button', self)
   self.delete:SetIcon('fa-trash')
-  self.delete:SetIconSize(16)
+  self.delete:SetIconSize(32)
   self.delete:SetFont(theme.GetFont('Text_NormalSmaller'))
   self.delete:SetTextColor(Color('red'))
   self.delete:SetDrawBackground(false)
@@ -106,8 +113,18 @@ function PANEL:Init()
   self.delete.DoClick = function(btn)
     surface.PlaySound('vo/npc/male01/answer37.wav')
     Derma_StringRequest(t('char_create.delete_confirm'), t('char_create.delete_confirm_msg', { self.char_data.name }), '',
-    function()
-    
+    function(text)
+      if text == self.char_data.name then
+        local char_id = self.char_data.character_id
+
+        print(char_id)
+        PrintTable(fl.client.characters)
+        table.remove(fl.client.characters, char_id)
+        netstream.Start('PlayerDeleteCharacter', char_id)
+        PrintTable(fl.client.characters)
+
+        fl.intro_panel.menu:RebuildCharacterList()
+      end
     end,
     nil, t('char_create.delete'))
   end
@@ -118,6 +135,10 @@ function PANEL:SetCharacter(char_data)
 
   self.model:SetModel(char_data.model)
   self.model.Entity:SetSequence(ACT_IDLE)
+
+  if fl.client:GetActiveCharacterID() == char_data.character_id then
+    self.delete:SetVisible(false)
+  end
 
   hook.run('PanelCharacterSet', self, char_data)
 end

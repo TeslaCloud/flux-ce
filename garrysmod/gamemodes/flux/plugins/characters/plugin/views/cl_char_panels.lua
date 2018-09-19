@@ -223,26 +223,32 @@ function PANEL:OnValidate()
   local name = self.name_entry:GetValue()
   local desc = self.desc_entry:GetValue()
 
-  if !isstring(name) then
-    return false, t('char_create.name_invalid')
+  if self.name_entry:IsVisible() then
+    if !isstring(name) then
+      return false, t('char_create.name_invalid')
+    end
+
+    if name:utf8len() < config.get("character_min_name_len")
+    or name:utf8len() > config.get("character_max_name_len") then
+      return false, t('char_create.name_len', {config.get("character_min_name_len"), config.get("character_max_name_len")})
+    end
   end
 
-  if name:utf8len() < config.get("character_min_name_len")
-  or name:utf8len() > config.get("character_max_name_len") then
-    return false, t('char_create.name_len', {config.get("character_min_name_len"), config.get("character_max_name_len")})
+  if self.desc_entry:IsVisible() then
+    if !isstring(desc) then
+      return false, t('char_create.desc_invalid')
+    end
+
+    if desc:utf8len() < config.get("character_min_desc_len")
+      or desc:utf8len() > config.get("character_max_desc_len") then
+      return false, t('char_create.desc_len', {config.get("character_min_desc_len"), config.get("character_max_desc_len")})
+    end
   end
 
-  if !isstring(desc) then
-    return false, t('char_create.desc_invalid')
-  end
-
-  if desc:utf8len() < config.get("character_min_desc_len")
-    or desc:utf8len() > config.get("character_max_desc_len") then
-    return false, t('char_create.desc_len', {config.get("character_min_desc_len"), config.get("character_max_desc_len")})
-  end
-
-  if !self.models_list.model then
-    return false, t('char_create.no_model')
+  if self.models_list:IsVisible() then
+    if !self.models_list.model then
+      return false, t('char_create.no_model')
+    end
   end
 end
 

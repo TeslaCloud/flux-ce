@@ -136,11 +136,15 @@ function PANEL:NextStage()
   if self.stage != #self.stages then
     self:SetStage(self.stage + 1)
   else
-    if self.panel.OnClose then
-      self.panel:OnClose(self)
-    end
-
-    netstream.Start('CreateCharacter', self.char_data)
+    surface.PlaySound('vo/npc/male01/answer37.wav')
+    Derma_Query(t('char_create.confirm_msg'), t('char_create.confirm'), t'yes', function()
+      if self.panel.OnClose then
+        self.panel:OnClose(self)
+      end
+  
+      netstream.Start('CreateCharacter', self.char_data)
+    end,
+    t'no')
   end
 end
 
