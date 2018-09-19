@@ -10,6 +10,7 @@ garrysmod/console.log
 garrysmod/detail.vbsp
 garrysmod/download/
 garrysmod/downloadlists/
+garrysmod/GameState.txt
 garrysmod/gameinfo.txt
 garrysmod/gamemodes/base/
 garrysmod/gamemodes/sandbox/
@@ -36,6 +37,7 @@ garrysmod/resource/
 garrysmod/scenes/
 garrysmod/schema.lua
 garrysmod/settings/
+garrysmod/stats.txt
 garrysmod/steam.inf
 platform/
 sourceengine/
