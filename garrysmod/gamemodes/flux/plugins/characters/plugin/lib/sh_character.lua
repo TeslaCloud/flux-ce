@@ -1,13 +1,13 @@
-﻿library.new "character"
+﻿library.new 'character'
 
 function character.Create(player, data)
-  if (!isstring(data.name) or (data.name:utf8len() < config.get("character_min_name_len")
-    or data.name:utf8len() > config.get("character_max_name_len"))) then
+  if (!isstring(data.name) or (data.name:utf8len() < config.get('character_min_name_len')
+    or data.name:utf8len() > config.get('character_max_name_len'))) then
     return CHAR_ERR_NAME
   end
 
-  if (!isstring(data.phys_desc) or (data.phys_desc:utf8len() < config.get("character_min_desc_len")
-    or data.phys_desc:utf8len() > config.get("character_max_desc_len"))) then
+  if (!isstring(data.phys_desc) or (data.phys_desc:utf8len() < config.get('character_min_desc_len')
+    or data.phys_desc:utf8len() > config.get('character_max_desc_len'))) then
     return CHAR_ERR_DESC
   end
 
@@ -15,11 +15,11 @@ function character.Create(player, data)
     return CHAR_ERR_GENDER
   end
 
-  if !isstring(data.model) or data.model == "" then
+  if !isstring(data.model) or data.model == '' then
     return CHAR_ERR_MODEL
   end
 
-  local hooked, result = hook.run("PlayerCreateCharacter", player, data)
+  local hooked, result = hook.run('PlayerCreateCharacter', player, data)
 
   if hooked == false then
     return result or CHAR_ERR_UNKNOWN
@@ -41,7 +41,7 @@ function character.Create(player, data)
   if SERVER then
     local char_id = player.record.character_id
 
-    hook.run("PostCreateCharacter", player, char_id, char)
+    hook.run('PostCreateCharacter', player, char_id, char)
 
     character.Save(player, char)
 
@@ -53,7 +53,7 @@ end
 
 if SERVER then
   function character.SendToClient(player)
-    netstream.Start(player, "fl_loadcharacters", character.all_to_networkable(player))
+    netstream.Start(player, 'fl_loadcharacters', character.all_to_networkable(player))
   end
 
   function character.all_to_networkable(player)
@@ -71,7 +71,7 @@ if SERVER then
     return {
       steam_id = player:SteamID(),
       name = char.name,
-      phys_desc = char.phys_desc or "This character has no physical description set!",
+      phys_desc = char.phys_desc or 'This character has no physical description set!',
       model = char.model or 'models/humans/group01/male_02.mdl',
       inventory = char.inventory,
       ammo = char.ammo,
@@ -83,11 +83,11 @@ if SERVER then
   end
 
   function character.Save(player, character)
-    if !IsValid(player) or !istable(character) or hook.run("PreSaveCharacter", player, character) == false then return end
+    if !IsValid(player) or !istable(character) or hook.run('PreSaveCharacter', player, character) == false then return end
 
-    hook.run("SaveCharacterData", player, character)
+    hook.run('SaveCharacterData', player, character)
       character:save()
-    hook.run("PostSaveCharacter", player, character)
+    hook.run('PostSaveCharacter', player, character)
   end
 
   function character.SaveAll(player)
@@ -130,35 +130,35 @@ else
 end
 
 if SERVER then
-  netstream.Hook("CreateCharacter", function(player, data)
-    data.gender  = (data.gender and data.gender == "Female" and CHAR_GENDER_FEMALE) or CHAR_GENDER_MALE
+  netstream.Hook('CreateCharacter', function(player, data)
+    data.gender  = (data.gender and data.gender == 'Female' and CHAR_GENDER_FEMALE) or CHAR_GENDER_MALE
     data.phys_desc = data.description
 
     local status = character.Create(player, data)
 
-    fl.dev_print("Creating character. Status: "..status)
+    fl.dev_print('Creating character. Status: '..status)
 
     if status == CHAR_SUCCESS then
       character.SendToClient(player)
-      netstream.Start(player, "PlayerCreatedCharacter", true, status)
+      netstream.Start(player, 'PlayerCreatedCharacter', true, status)
 
-      fl.dev_print("Success")
+      fl.dev_print('Success')
     else
-      netstream.Start(player, "PlayerCreatedCharacter", false, status)
+      netstream.Start(player, 'PlayerCreatedCharacter', false, status)
 
-      fl.dev_print("Error")
+      fl.dev_print('Error')
     end
   end)
 
-  netstream.Hook("PlayerSelectCharacter", function(player, id)
-    fl.dev_print(player:Name().." has loaded character #"..id)
+  netstream.Hook('PlayerSelectCharacter', function(player, id)
+    fl.dev_print(player:Name()..' has loaded character #'..id)
 
     player:SetActiveCharacter(id)
   end)
 end
 
 do
-  local player_meta = FindMetaTable("Player")
+  local player_meta = FindMetaTable('Player')
 
   function player_meta:GetActiveCharacterID()
     return tonumber(self:get_nv('active_character', nil))
@@ -189,7 +189,7 @@ do
   end
 
   function player_meta:GetCharacterData(key, default)
-    return self:GetCharacterVar("data", {})[key] or default
+    return self:GetCharacterVar('data', {})[key] or default
   end
 
   function player_meta:GetCharacter()
