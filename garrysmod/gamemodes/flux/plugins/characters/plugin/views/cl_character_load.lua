@@ -100,7 +100,15 @@ function PANEL:Init()
   self.select:SetDrawBackground(false)
   self.select:SetCentered(true)
   self.select.DoClick = function(btn)
-    netstream.Start('PlayerSelectCharacter', self.char_data.character_id)
+    local cur_time = CurTime()
+
+    if !self.next_click or self.next_click <= cur_time then
+      fl.client.whiteAlpha = 255
+
+      netstream.Start('PlayerSelectCharacter', self.char_data.character_id)
+
+      self.next_click = cur_time + 1
+    end
   end
 
   self.delete = vgui.Create('fl_button', self)
@@ -137,6 +145,7 @@ function PANEL:SetCharacter(char_data)
   self.model.Entity:SetSequence(ACT_IDLE)
 
   if fl.client:GetActiveCharacterID() == char_data.character_id then
+    self.select:SetVisible(false)
     self.delete:SetVisible(false)
   end
 
