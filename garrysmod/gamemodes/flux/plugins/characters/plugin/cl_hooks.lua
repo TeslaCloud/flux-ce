@@ -10,13 +10,13 @@ end
 
 function flCharacters:OnIntroPanelRemoved()
   if !fl.client:GetCharacter() then
-    fl.intro_panel = theme.CreatePanel('MainMenu')
+    fl.intro_panel = theme.CreatePanel('main_menu')
 
     if IsValid(fl.intro_panel) then
       fl.intro_panel:MakePopup()
     else
       timer.Create('flCreateMainPanel', 0.1, 0, function()
-        fl.intro_panel = theme.CreatePanel('MainMenu')
+        fl.intro_panel = theme.CreatePanel('main_menu')
 
         if IsValid(fl.intro_panel) then
           fl.intro_panel:MakePopup()
@@ -54,12 +54,12 @@ do
 end
 
 function flCharacters:OnThemeLoaded(current_theme)
-  current_theme:AddPanel('MainMenu', function(id, parent, ...)
-    return vgui.Create('flMainMenu', parent)
+  current_theme:AddPanel('main_menu', function(id, parent, ...)
+    return vgui.Create('fl_main_menu', parent)
   end)
 
-  current_theme:AddPanel('CharacterCreation', function(id, parent, ...)
-    return vgui.Create('flCharacterCreation', parent)
+  current_theme:AddPanel('character_creation', function(id, parent, ...)
+    return vgui.Create('fl_character_creation', parent)
   end)
 
   current_theme:AddPanel('char_create.load', function(id, parent, ...)
@@ -67,24 +67,24 @@ function flCharacters:OnThemeLoaded(current_theme)
   end)
 
   current_theme:AddPanel('char_create.general', function(id, parent, ...)
-    return vgui.Create('flCharCreationGeneral', parent)
+    return vgui.Create('fl_character_general', parent)
   end)
 
   if IsValid(fl.intro_panel) then
     fl.intro_panel:Remove()
 
-    fl.intro_panel = theme.CreatePanel('MainMenu')
+    fl.intro_panel = theme.CreatePanel('main_menu')
     fl.intro_panel:MakePopup()
   end
 end
 
 function flCharacters:AddTabMenuItems(menu)
   menu:AddMenuItem('mainmenu', {
-    title = 'Main Menu',
+    title = t'tab_menu.main_menu',
     icon = 'fa-users',
     override = function(menuPanel, button)
       menuPanel:SafeRemove()
-      fl.intro_panel = theme.CreatePanel('MainMenu')
+      fl.intro_panel = theme.CreatePanel('main_menu')
     end
   }, 1)
 end
@@ -152,80 +152,42 @@ end
 function flCharacters:AddMainMenuItems(panel, sidebar)
   local scrW, scrH = ScrW(), ScrH()
 
-  panel:add_button(t('main_menu.new'), function(btn)
-    panel.menu = theme.CreatePanel('CharacterCreation', panel)
-    panel.menu:SetPos(ScrW(), 0)
-    panel.menu:MoveTo(0, 0, .5, 0, .5)
+  if fl.client:GetCharacter() then
+    panel:add_button(t'main_menu.continue', function(btn)
+      panel:Remove()
+    end)
+  end
 
-    panel.sidebar:MoveTo(-panel.sidebar:GetWide(), theme.GetOption('MainMenu_SidebarY'), .5, 0, .5)
+  panel:add_button(t'char_create.title', function(btn)
+    panel.menu = theme.CreatePanel('character_creation', panel)
+    panel.menu:SetPos(ScrW(), 0)
+    panel.menu:MoveTo(0, 0, 0.5, 0, 0.5)
+
+    panel.sidebar:MoveTo(-panel.sidebar:GetWide(), theme.GetOption('MainMenu_SidebarY'), 0.5, 0, 0.5)
   end)
 
   if #fl.client:GetAllCharacters() > 0 then
-    panel:add_button(t('main_menu.load'), function(btn)
+    panel:add_button(t'char_create.load', function(btn)
       panel.menu = theme.CreatePanel('char_create.load', panel)
       panel.menu:SetPos(-panel.menu:GetWide(), 0)
-      panel.menu:MoveTo(0, 0, .5, 0, .5)
+      panel.menu:MoveTo(0, 0, 0.5, 0, 0.5)
   
-      panel.sidebar:MoveTo(ScrW(), theme.GetOption('MainMenu_SidebarY'), .5, 0, .5)
-
-      --[[panel.menu = vgui.Create('DFrame', panel)
-      panel.menu:SetPos(scrW * 0.5 - 300, scrH / 4)
-      panel.menu:SetSize(600, 600)
-      panel.menu:SetTitle('LOAD CHARACTER')
-
-      panel.menu.Paint = function(lp, w, h)
-        draw.RoundedBox(0, 0, 0, w, h, Color(40, 40, 40))
-        draw.SimpleText('Which one to load', 'DermaLarge', 0, 24)
-
-        if #fl.client:GetAllCharacters() <= 0 then
-          draw.SimpleText('wow you have none', 'DermaLarge', 0, 64)
-        end
-      end
-
-      panel.menu:MakePopup()
-
-      panel.menu.buttons = {}
-
-      local offY = 0
-
-      for k, v in ipairs(fl.client:GetAllCharacters()) do
-        panel.menu.buttons[k] = vgui.Create('DButton', panel.menu)
-        panel.menu.buttons[k]:SetPos(8, 100 + offY)
-        panel.menu.buttons[k]:SetSize(128, 24)
-        panel.menu.buttons[k]:SetText(v.name)
-        panel.menu.buttons[k].DoClick = function()
-          netstream.Start('PlayerSelectCharacter', v.character_id)
-          panel:Remove()
-        end
-
-        offY = offY + 28
-      end]]
+      panel.sidebar:MoveTo(ScrW(), theme.GetOption('MainMenu_SidebarY'), 0.5, 0, 0.5)
     end)
   end
 
-  if fl.client:GetCharacter() then
-    panel:add_button(t('main_menu.cancel'), function(btn)
-      panel:Remove()
-    end)
-  else
-    panel:add_button(t('main_menu.disconnect'), function(btn)
-      Derma_Query(t('main_menu.disconnect_msg'), t('main_menu.disconnect_msg'), t'yes', function()
-        RunConsoleCommand('disconnect')
-      end,
-      t'no')
-    end)
-  end
+  panel:add_button(t'main_menu.disconnect', function(btn)
+    Derma_Query(t'main_menu.disconnect_msg', t'main_menu.disconnect_msg', t'yes', function()
+      RunConsoleCommand('disconnect')
+    end,
+    t'no')
+  end)
 end
 
 netstream.Hook('PlayerCreatedCharacter', function(success, status)
   if IsValid(fl.intro_panel) and IsValid(fl.intro_panel.menu) then
     if success then
-      fl.intro_panel.menu:PrevStage()
-
-      timer.Create('flux_char_created', .1, #fl.intro_panel.menu.stages - 1, function()
-        fl.intro_panel.menu:PrevStage()
-      end)
-
+      fl.intro_panel.menu:goto_stage(-1)
       fl.intro_panel.menu:ClearData()
 
       local chars = fl.client:GetAllCharacters()

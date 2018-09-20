@@ -1,11 +1,11 @@
 en:
   char_set_name:
     description: "Set character's name."
-    syntax: '<target> <new name>'
+    syntax: <target> <new name>
     message: "{1} has set {2}'s name to {3}."
   char_set_model:
     description: "Set character's model."
-    syntax: '<target> <new model>'
+    syntax: <target> <new model>
     message: "{1} has set {2}'s model to {3}."
   char_config:
     min_name_len: Minimum Character Name Length
@@ -31,7 +31,7 @@ en:
     delete: Delete
     general: General Character Information
     name: 'Full name:'
-    random_name: 'Choose random name.'
+    random_name: Choose random name.
     desc: 'Description:'
     gender: 'Gender:'
     back: BACK

@@ -1,6 +1,6 @@
-PLUGIN:set_alias("flCharacters")
+PLUGIN:set_alias('flCharacters')
 
-util.include("cl_hooks.lua")
-util.include("sv_plugin.lua")
-util.include("sv_hooks.lua")
-util.include("sh_enums.lua")
+util.include('cl_hooks.lua')
+util.include('sv_plugin.lua')
+util.include('sv_hooks.lua')
+util.include('sh_enums.lua')

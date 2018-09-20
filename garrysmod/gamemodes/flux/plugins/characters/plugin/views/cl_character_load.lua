@@ -22,30 +22,14 @@ function PANEL:Init()
   self.back:SetIcon('fa-chevron-right', true)
   self.back:SetIconSize(16)
   self.back:SetFont(theme.GetFont('Text_NormalSmaller'))
-  self.back:SetTitle(t('char_create.main_menu'))
+  self.back:SetTitle(t'char_create.main_menu')
   self.back:SetDrawBackground(false)
   self.back:SetCentered(true)
 
   self.back.DoClick = function(btn)
     surface.PlaySound(theme.GetOption('Button_Click_Success'))
 
-    local parent = self:GetParent()
-    parent:RecreateSidebar(true)
-
-    local sidebar = parent.sidebar
-    sidebar:SetPos(scrW, theme.GetOption('MainMenu_SidebarY'))
-    sidebar:SetDisabled(true)
-    sidebar:MoveTo(theme.GetOption('MainMenu_SidebarX'), theme.GetOption('MainMenu_SidebarY'), .5, 0, .5, function()
-      sidebar:SetDisabled(false)
-    end)
-
-    parent.menu:MoveTo(-parent.menu:GetWide(), 0, .5, 0, .5, function()
-      if parent.menu.Close then
-        parent.menu:Close()
-      else
-        parent.menu:SafeRemove()
-      end
-    end)
+    self:GetParent():to_main_menu(true)
   end
 end
 
@@ -95,7 +79,7 @@ function PANEL:Init()
   self.select:SetIcon('fa-check')
   self.select:SetIconSize(16)
   self.select:SetFont(theme.GetFont('Text_NormalSmaller'))
-  self.select:SetTitle(t('char_create.select'))
+  self.select:SetTitle(t'char_create.select')
   self.select:SetTextColor(Color('lightgreen'))
   self.select:SetDrawBackground(false)
   self.select:SetCentered(true)
@@ -120,21 +104,19 @@ function PANEL:Init()
   self.delete:SetCentered(true)
   self.delete.DoClick = function(btn)
     surface.PlaySound('vo/npc/male01/answer37.wav')
-    Derma_StringRequest(t('char_create.delete_confirm'), t('char_create.delete_confirm_msg', { self.char_data.name }), '',
+
+    Derma_StringRequest(t'char_create.delete_confirm', t('char_create.delete_confirm_msg', { self.char_data.name }), '',
     function(text)
       if text == self.char_data.name then
         local char_id = self.char_data.character_id
 
-        print(char_id)
-        PrintTable(fl.client.characters)
         table.remove(fl.client.characters, char_id)
         netstream.Start('PlayerDeleteCharacter', char_id)
-        PrintTable(fl.client.characters)
 
         fl.intro_panel.menu:RebuildCharacterList()
       end
     end,
-    nil, t('char_create.delete'))
+    nil, t'char_create.delete')
   end
 end
 

@@ -37,13 +37,6 @@ function PANEL:RecreateSidebar(bShouldCreateButtons)
     self.sidebar:SafeRemove()
   end
 
-  -- Hot Fix for an error that occurred when auto-reloading while in initial main menu.
-  if !theme.GetOption('MainMenu_SidebarLogo') then
-    timer.Simple(0.05, function() self:RecreateSidebar(true) end)
-
-    return
-  end
-
   self.sidebar = vgui.Create('fl_sidebar', self)
   self.sidebar:SetPos(theme.GetOption('MainMenu_SidebarX'), theme.GetOption('MainMenu_SidebarY'))
   self.sidebar:SetSize(theme.GetOption('MainMenu_SidebarWidth'), theme.GetOption('MainMenu_SidebarHeight'))
@@ -76,6 +69,24 @@ function PANEL:OpenMenu(panel, data)
       self:OpenMenu(panel, data)
     end
   end
+end
+
+function PANEL:to_main_menu(bFromRight)
+  self:RecreateSidebar(true)
+
+  self.sidebar:SetPos(bFromRight and ScrW() or -self.sidebar:GetWide(), theme.GetOption('MainMenu_SidebarY'))
+  self.sidebar:SetDisabled(true)
+  self.sidebar:MoveTo(theme.GetOption('MainMenu_SidebarX'), theme.GetOption('MainMenu_SidebarY'), 0.5, 0, 0.5, function()
+    self.sidebar:SetDisabled(false)
+  end)
+
+  self.menu:MoveTo(bFromRight and -self.menu:GetWide() or ScrW(), 0, 0.5, 0, 0.5, function()
+    if self.menu.Close then
+      self.menu:Close()
+    else
+      self.menu:SafeRemove()
+    end
+  end)
 end
 
 function PANEL:notify(text)
@@ -126,4 +137,4 @@ function PANEL:add_button(text, callback)
   return button
 end
 
-vgui.Register('flMainMenu', PANEL, 'EditablePanel')
+vgui.Register('fl_main_menu', PANEL, 'EditablePanel')

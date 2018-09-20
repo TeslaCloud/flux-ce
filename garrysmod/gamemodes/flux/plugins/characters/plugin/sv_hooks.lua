@@ -20,7 +20,7 @@ function flCharacters:PostPlayerSpawn(player)
 end
 
 function flCharacters:PlayerRestored(player)
-  hook.run("PostRestoreCharacters", player)
+  hook.run('PostRestoreCharacters', player)
 end
 
 function flCharacters:PlayerInitialized(player)
@@ -28,7 +28,7 @@ function flCharacters:PlayerInitialized(player)
 end
 
 function flCharacters:PostCharacterLoaded(player, character)
-  hook.run_client(player, "PostCharacterLoaded", character.id)
+  hook.run_client(player, 'PostCharacterLoaded', character.id)
 end
 
 function flCharacters:OnActiveCharacterSet(player, character)
@@ -43,7 +43,7 @@ function flCharacters:OnActiveCharacterSet(player, character)
     end
   end
 
-  hook.run("PostCharacterLoaded", player, character)
+  hook.run('PostCharacterLoaded', player, character)
 end
 
 function flCharacters:OnCharacterChange(player, oldChar, newCharID)
