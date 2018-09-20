@@ -319,6 +319,10 @@ function GM:SoftUndo(player)
   if #fl.undo:get_player(fl.client) > 0 then return true end
 end
 
+function GM:OnIntroPanelCreated()
+  system.FlashWindow()
+end
+
 do
   local hiddenElements = { -- Hide default HUD elements.
     CHudHealth = true,
