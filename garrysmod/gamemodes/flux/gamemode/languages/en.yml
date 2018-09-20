@@ -26,7 +26,6 @@ en:
     and: and
   tab_menu:
     expand: Expand
-    main_menu: Main Menu
     settings: Settings
     home: Home
     scoreboard: Players
@@ -44,14 +43,6 @@ en:
     armor: ARMOR
     respawn: WAITING TO RESPAWN...
     getup: GETTING UP...
-  main_menu:
-    disconnect: Disconnect
-    disconnect_msg: Are you sure that you want to disconnect from this server?
-    settings: Settings
-    cancel: Cancel
-    load: Load
-    new: New
-    developed_by: Developed by {1}.
   settings:
     dashboard: Dashboard
     theme: Theme
