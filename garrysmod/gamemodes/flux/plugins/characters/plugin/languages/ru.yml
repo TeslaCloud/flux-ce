@@ -7,6 +7,12 @@ ru:
     description: Выставляет модель персонажа.
     syntax: '<игрок> <новая модель>'
     message: '{1} сменил модель {2} на {3}.'
+  main_menu:
+    disconnect: Отключиться
+    disconnect_msg: Вы действительно хотите отключиться от сервера?
+    settings: Настройки
+    continue: Продолжить
+    developed_by: Под авторством {1}.
   char_create:
     title: СОЗДАТЬ ПЕРСОНАЖА
     text: СОЗДАНИЕ ПЕРСОНАЖА
@@ -34,4 +40,4 @@ ru:
     no_gender: Вы не выбрали пол.
     no_model: Вы не выбрали модель.
   tab_menu:
-    characters: Персонажи
+    main_menu: Главное меню

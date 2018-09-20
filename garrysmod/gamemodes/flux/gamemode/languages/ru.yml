@@ -33,7 +33,6 @@ ru:
     and: и
   tab_menu:
     expand: Развернуть
-    main_menu: Главное меню
     settings: Настройки
     home: Домашняя страница
     scoreboard: Игроки
@@ -41,6 +40,9 @@ ru:
     close_menu: Закрыть
   'yes': Да
   'no': Нет
+  scoreboard:
+    title: СПИСОК ИГРОКОВ
+    help: Нажмите на иконку персонажа, чтобы вызвать дополнительные опции.
   chat:
     everyone: всем
   bar_text:
@@ -48,14 +50,6 @@ ru:
     armor: БРОНЯ
     respawn: ВОЗРОЖДЕНИЕ...
     getup: ВЫ ПОДНИМАЕТЕСЬ НА НОГИ...
-  main_menu:
-    disconnect: Отключиться
-    disconnect_msg: Вы действительно хотите отключиться от сервера?
-    settings: Настройки
-    cancel: Отменить
-    load: Загрузить
-    new: Создать
-    developed_by: Под авторством {1}.
   settings:
     dashboard: Меню
     theme: Тема

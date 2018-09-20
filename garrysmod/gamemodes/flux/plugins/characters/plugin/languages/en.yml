@@ -7,6 +7,12 @@ en:
     description: "Set character's model."
     syntax: '<target> <new model>'
     message: "{1} has set {2}'s model to {3}."
+  main_menu:
+    disconnect: Disconnect
+    disconnect_msg: Are you sure that you want to disconnect from this server?
+    settings: Settings
+    continue: Continue
+    developed_by: Developed by {1}.
   char_create:
     title: CREATE A CHARACTER
     text: CHARACTER CREATION
@@ -34,4 +40,4 @@ en:
     no_gender: You must select a gender.
     no_model: You must select a model.
   tab_menu:
-    characters: Characters
+    main_menu: Main Menu
