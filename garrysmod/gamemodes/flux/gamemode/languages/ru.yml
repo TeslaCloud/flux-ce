@@ -38,11 +38,11 @@ ru:
     scoreboard: Игроки
     admin: Админка
     close_menu: Закрыть
-  'yes': Да
-  'no': Нет
   scoreboard:
     title: СПИСОК ИГРОКОВ
     help: Нажмите на иконку персонажа, чтобы вызвать дополнительные опции.
+  yes: Да
+  no: Нет
   chat:
     everyone: всем
   bar_text:

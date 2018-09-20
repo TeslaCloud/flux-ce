@@ -21,7 +21,7 @@ function PANEL:Init()
 
   self.gender_label = vgui.Create('DLabel', self)
   self.gender_label:SetPos(4, font.Scale(36) + 6)
-  self.gender_label:SetText(t('char_create.gender'))
+  self.gender_label:SetText(t'char_create.gender')
   self.gender_label:SetFont(theme.GetFont('Text_Small'))
   self.gender_label:SetTextColor(Color('white'))
   self.gender_label:SizeToContents()
@@ -41,6 +41,7 @@ function PANEL:Init()
 
       self:GetParent().char_data.gender = 'Male'
       self:RebuildModels()
+
       btn:SetActive(true)
     end
   end
@@ -60,13 +61,14 @@ function PANEL:Init()
 
       self:GetParent().char_data.gender = 'Female'
       self:RebuildModels()
+
       btn:SetActive(true)
     end
   end
 
   self.name_label = vgui.Create('DLabel', self)
   self.name_label:SetPos(4, font.Scale(72) + 2)
-  self.name_label:SetText(t('char_create.name'))
+  self.name_label:SetText(t'char_create.name')
   self.name_label:SetFont(theme.GetFont('Text_Small'))
   self.name_label:SetTextColor(Color('white'))
   self.name_label:SizeToContents()
@@ -90,7 +92,7 @@ function PANEL:Init()
 
   self.desc_label = vgui.Create('DLabel', self)
   self.desc_label:SetPos(4, font.Scale(108) + 2)
-  self.desc_label:SetText(t('char_create.desc'))
+  self.desc_label:SetText(t'char_create.desc')
   self.desc_label:SetFont(theme.GetFont('Text_Small'))
   self.desc_label:SetTextColor(Color('white'))
   self.desc_label:SizeToContents()
@@ -172,11 +174,13 @@ function PANEL:RebuildModels()
       self.model.Entity:SetSequence(ACT_IDLE)
 
       btn.isActive = true
+
       self.models_list.prevBtn = btn
     end
 
     if self.models_list.model == v then
       button.isActive = true
+
       self.models_list.prevBtn = button
     end
 
@@ -201,9 +205,11 @@ function PANEL:OnOpen(parent)
 
   if parent.char_data.gender == 'Female' then
     self.gender_female:SetActive(true)
+
     self:RebuildModels()
   elseif parent.char_data.gender == 'Male' then
     self.gender_male:SetActive(true)
+
     self:RebuildModels()
   end
 end
@@ -225,31 +231,31 @@ function PANEL:OnValidate()
 
   if self.name_entry:IsVisible() then
     if !isstring(name) then
-      return false, t('char_create.name_invalid')
+      return false, t'char_create.name_invalid'
     end
 
-    if name:utf8len() < config.get("character_min_name_len")
-    or name:utf8len() > config.get("character_max_name_len") then
-      return false, t('char_create.name_len', {config.get("character_min_name_len"), config.get("character_max_name_len")})
+    if name:utf8len() < config.get('character_min_name_len')
+    or name:utf8len() > config.get('character_max_name_len') then
+      return false, t('char_create.name_len', {config.get('character_min_name_len'), config.get('character_max_name_len')})
     end
   end
 
   if self.desc_entry:IsVisible() then
     if !isstring(desc) then
-      return false, t('char_create.desc_invalid')
+      return false, t'char_create.desc_invalid'
     end
 
-    if desc:utf8len() < config.get("character_min_desc_len")
-      or desc:utf8len() > config.get("character_max_desc_len") then
-      return false, t('char_create.desc_len', {config.get("character_min_desc_len"), config.get("character_max_desc_len")})
+    if desc:utf8len() < config.get('character_min_desc_len')
+      or desc:utf8len() > config.get('character_max_desc_len') then
+      return false, t('char_create.desc_len', {config.get('character_min_desc_len'), config.get('character_max_desc_len')})
     end
   end
 
   if self.models_list:IsVisible() then
     if !self.models_list.model then
-      return false, t('char_create.no_model')
+      return false, t'char_create.no_model'
     end
   end
 end
 
-vgui.Register('flCharCreationGeneral', PANEL, 'flCharCreationBase')
+vgui.Register('fl_character_general', PANEL, 'flCharCreationBase')

@@ -14,7 +14,7 @@ function PANEL:Init()
 end
 
 function PANEL:Paint(width, height)
-  theme.Hook("PaintSidebar", self, width, height)
+  theme.Hook('PaintSidebar', self, width, height)
 end
 
 function PANEL:AddPanel(panel, bCenter)
@@ -29,34 +29,6 @@ function PANEL:AddPanel(panel, bCenter)
   self:AddItem(panel)
 
   self.lastPos = self.lastPos + self.margin + panel:GetTall()
-end
-
-function PANEL:add_button(text, callback)
-  local button = vgui.Create("fl_button", self)
-
-  button:SetSize(self:GetWide(), theme.GetOption("MainMenu_SidebarButtonHeight"))
-  button:SetText(text)
-  button:SetDrawBackground(true)
-  button:SetFont(theme.GetFont("Text_NormalSmaller"))
-  button:SetTextAutoposition(true)
-
-  button.DoClick = function(btn)
-    btn:SetActive(true)
-
-    if IsValid(self.prevButton) and self.prevButton != btn then
-      self.prevButton:SetActive(false)
-    end
-
-    self.prevButton = btn
-
-    if isfunction(callback) then
-      callback(btn)
-    end
-  end
-
-  self:AddPanel(button)
-
-  return button
 end
 
 function PANEL:AddSpace(px)
@@ -93,4 +65,4 @@ function PANEL:PerformLayout()
   end
 end
 
-vgui.Register("fl_sidebar", PANEL, "DScrollPanel")
+vgui.Register('fl_sidebar', PANEL, 'DScrollPanel')

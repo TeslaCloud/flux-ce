@@ -34,8 +34,8 @@ en:
   scoreboard:
     title: PLAYER LIST
     help: Clicking player's card may bring up some options.
-  'yes': 'Yes'
-  'no': 'No'
+  yes: Yes
+  no: No
   chat:
     everyone: everyone
   bar_text:

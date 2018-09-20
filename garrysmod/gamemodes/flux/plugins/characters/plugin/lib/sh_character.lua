@@ -59,9 +59,11 @@ if SERVER then
   function character.all_to_networkable(player)
     local characters = player.record.characters or {}
     local ret = {}
+
     for k, v in pairs(characters) do
       ret[k] = character.to_networkable(player, v)
     end
+
     return ret
   end
 
@@ -203,10 +205,12 @@ do
       return self.current_character
     elseif self:IsBot() then
       self.char_data = self.char_data or {}
+
       return self.char_data
     end
   
     local char_id = self:GetActiveCharacterID()
+
     if char_id then
       return self:GetAllCharacters()[char_id]
     end
