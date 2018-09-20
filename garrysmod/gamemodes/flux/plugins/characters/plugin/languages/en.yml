@@ -7,6 +7,15 @@ en:
     description: "Set character's model."
     syntax: '<target> <new model>'
     message: "{1} has set {2}'s model to {3}."
+  char_config:
+    min_name_len: Minimum Character Name Length
+    min_name_len_desc: "The minimum amount of characters that player's name can be."
+    max_name_len: Maximum Character Name Length
+    max_name_len_desc: "The maximum amount of characters that player's name can be."
+    min_desc_len: Minimum Character Description Length
+    min_desc_len_desc: "The maximum amount of characters that character's description can be."
+    max_desc_len: Maximum Character Description Length
+    max_desc_len_desc: "The maximum amount of characters that character's description can be."
   main_menu:
     disconnect: Disconnect
     disconnect_msg: Are you sure that you want to disconnect from this server?
