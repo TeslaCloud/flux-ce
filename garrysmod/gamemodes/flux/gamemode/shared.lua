@@ -21,6 +21,7 @@ FLUX_ENV         = include 'flux/config/environment.lua' or 'development'
 IS_DEVELOPMENT   = FLUX_ENV == 'development'
 IS_STAGING       = FLUX_ENV == 'staging'
 IS_PRODUCTION    = FLUX_ENV == 'production'
+LITE_REFRESH     = fl.initialized and Settings.lite_refresh or false
 
 fl.development   = !IS_PRODUCTION
 
@@ -46,80 +47,85 @@ else
   return
 end
 
--- Shared table contains the info that will be networked
--- to clients automatically when they load.
-fl.shared = fl.shared or {
-  schema_folder = fl.schema,
-  plugin_info = {},
-  unloaded_plugins = {}
-}
+if !LITE_REFRESH then
+  -- Shared table contains the info that will be networked
+  -- to clients automatically when they load.
+  fl.shared = fl.shared or {
+    schema_folder = fl.schema,
+    plugin_info = {},
+    unloaded_plugins = {}
+  }
 
-print('Flux environment: '..FLUX_ENV)
+  print('Flux environment: '..FLUX_ENV)
 
-include 'core/sh_core.lua'
-util.include 'core/sh_enums.lua'
+  include 'core/sh_core.lua'
+  util.include 'core/sh_enums.lua'
 
-util.include_folder('lib/util', true)
+  util.include_folder('lib/util', true)
 
-if CLIENT then
-  local files, folders = file.Find('flux/client/*.lua', 'LUA')
+  if CLIENT then
+    local files, folders = file.Find('flux/client/*.lua', 'LUA')
 
-  for k, v in ipairs(files) do
-    include('flux/client/'..v)
+    for k, v in ipairs(files) do
+      include('flux/client/'..v)
+    end
+
+    include 'lib/sh_lang.lua'
   end
 
-  include 'lib/sh_lang.lua'
+  util.include 'core/cl_core.lua'
+  util.include 'core/sv_core.lua'
+
+  -- This way we put things we want loaded BEFORE anything else in here, like plugin, config, etc.
+  util.include_folder('lib/required', true)
+
+  -- Include ActiveRecord for database management
+  util.include 'lib/activerecord/ar_shared.lua'
+
+  -- So that we don't get duplicates on refresh.
+  plugin.clear_cache()
+
+  util.include_folder('config', true)
+  util.include_folder('lib', true)
+  util.include_folder('lib/classes', true)
+  util.include_folder('lib/meta', true)
+  if SERVER then
+    pipeline.include_folder('language', 'flux/gamemode/languages')
+    pipeline.include_folder('migrations', 'flux/gamemode/migrations')
+  end
+  util.include_folder('models', true)
+  util.include_folder('controllers', true)
+  util.include_folder('views/base', true)
+  util.include_folder('views', true)
+
+  if theme or SERVER then
+    pipeline.register('theme', function(id, file_name, pipe)
+      if CLIENT then
+        THEME = Theme.new(id)
+
+        util.include(file_name)
+
+        THEME:register() THEME = nil
+      else
+        util.include(file_name)
+      end
+    end)
+
+    -- Theme factory is needed for any other themes that may be in the themes folder.
+    pipeline.include('theme', 'themes/cl_theme_factory.lua')
+    pipeline.include_folder('theme', 'flux/gamemode/themes')
+  end
+
+  pipeline.include_folder('tool', 'flux/gamemode/tools')
 end
 
-util.include 'core/cl_core.lua'
-util.include 'core/sv_core.lua'
-
--- This way we put things we want loaded BEFORE anything else in here, like plugin, config, etc.
-util.include_folder('lib/required', true)
-
--- Include ActiveRecord for database management
-util.include 'lib/activerecord/ar_shared.lua'
-
--- So that we don't get duplicates on refresh.
-plugin.clear_cache()
-
-util.include_folder('config', true)
-util.include_folder('lib', true)
-util.include_folder('lib/classes', true)
-util.include_folder('lib/meta', true)
-if SERVER then
-  pipeline.include_folder('language', 'flux/gamemode/languages')
-  pipeline.include_folder('migrations', 'flux/gamemode/migrations')
-end
-util.include_folder('models', true)
-util.include_folder('controllers', true)
-util.include_folder('views/base', true)
-util.include_folder('views', true)
-
-if theme or SERVER then
-  pipeline.register('theme', function(id, file_name, pipe)
-    if CLIENT then
-      THEME = Theme.new(id)
-
-      util.include(file_name)
-
-      THEME:register() THEME = nil
-    else
-      util.include(file_name)
-    end
-  end)
-
-  -- Theme factory is needed for any other themes that may be in the themes folder.
-  pipeline.include('theme', 'themes/cl_theme_factory.lua')
-  pipeline.include_folder('theme', 'flux/gamemode/themes')
-end
-
-pipeline.include_folder('tool', 'flux/gamemode/tools')
 util.include_folder('hooks', true)
 
-hook.run('PreLoadPlugins')
+if !LITE_REFRESH then
+  hook.run('PreLoadPlugins')
 
-fl.include_plugins('flux/plugins')
+  fl.include_plugins('flux/plugins')
+end
 
 hook.run('OnPluginsLoaded')
 
