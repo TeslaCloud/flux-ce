@@ -26,11 +26,11 @@ function THEME:OnLoaded()
   self:SetOption('button_click_success_sound', 'garrysmod/ui_click.wav')
   self:SetOption('button_click_danger_sound', 'buttons/button8.wav')
 
-  local accent_color        = self:SetColor('Accent', Color(90, 90, 190))
-  local main_color          = self:SetColor('Main', Color(50, 50, 50))
-  local outline_color       = self:SetColor('Outline', Color(65, 65, 65))
-  local background_color    = self:SetColor('Background', Color(20, 20, 20))
-  local text_color          = self:SetColor('Text', util.text_color_from_base(background_color))
+  local accent_color        = self:SetColor('accent', Color(90, 90, 190))
+  local main_color          = self:SetColor('main', Color(50, 50, 50))
+  local outline_color       = self:SetColor('outline', Color(65, 65, 65))
+  local background_color    = self:SetColor('background', Color(20, 20, 20))
+  local text_color          = self:SetColor('text', util.text_color_from_base(background_color))
 
   self:SetColor('accent_dark', accent_color:darken(20))
   self:SetColor('accent_light', accent_color:lighten(20))
@@ -132,7 +132,7 @@ end
 
 function THEME:PaintButton(panel, w, h)
   local curAmt = panel.m_CurAmt
-  local text_color = panel.m_TextColorOverride or self:GetColor('Text'):darken(curAmt)
+  local text_color = panel.m_TextColorOverride or self:GetColor('text'):darken(curAmt)
   local title = panel.m_Title
   local font = panel.m_Font
   local icon = panel.m_Icon
@@ -140,13 +140,13 @@ function THEME:PaintButton(panel, w, h)
 
   if panel.m_DrawBackground then
     if !panel.m_Active then
-      surface.SetDrawColor(self:GetColor('Outline'))
+      surface.SetDrawColor(self:GetColor('outline'))
       surface.DrawRect(0, 0, w, h)
 
-      surface.SetDrawColor(self:GetColor('Main'):lighten(curAmt))
+      surface.SetDrawColor(self:GetColor('main'):lighten(curAmt))
       surface.DrawRect(1, 1, w - 2, h - 2)
     else
-      surface.SetDrawColor(self:GetColor('Outline'))
+      surface.SetDrawColor(self:GetColor('outline'))
       surface.DrawRect(0, 0, w, h)
 
       surface.SetDrawColor(self:GetColor('main_dark'))
@@ -262,7 +262,7 @@ function THEME:DrawBarTexts(barInfo)
   render.SetScissorRect(0, 0, 0, 0, false)
 
   render.SetScissorRect(barInfo.x + barInfo.realFillWidth, barInfo.y + 1, barInfo.x + barInfo.width, barInfo.y + barInfo.height, true)
-    draw.SimpleText(barInfo.text, font, barInfo.x + 8, barInfo.y + barInfo.textOffset, self:GetColor('Text'))
+    draw.SimpleText(barInfo.text, font, barInfo.x + 8, barInfo.y + barInfo.textOffset, self:GetColor('text'))
   render.SetScissorRect(0, 0, 0, 0, false)
 
   if barInfo.hinderDisplay and barInfo.hinderDisplay <= barInfo.hinderValue then
@@ -278,11 +278,11 @@ end
 
 function THEME:AdminPanelPaintOver(panel, width, height)
   local smallestFont = font.GetSize(self:GetFont('text_smallest'), 14)
-  local text_color = self:GetColor('Text')
+  local text_color = self:GetColor('text')
   local versionString = 'Admin Mod Version: v0.2.0 (indev)'
 
   DisableClipping(true)
-    draw.RoundedBox(0, 0, height, width, 16, self:GetColor('Background'))
+    draw.RoundedBox(0, 0, height, width, 16, self:GetColor('background'))
 
     draw.SimpleText(fl.client:SteamName()..' ('..fl.client:GetUserGroup()..')', smallestFont, 6, height + 1, text_color)
 
@@ -336,21 +336,21 @@ end
 function THEME:PaintScoreboard(panel, width, height)
   local titleFont = self:GetFont('menu_large')
 
-  draw.RoundedBox(0, 0, 0, width, height, ColorAlpha(self:GetColor('Background'), 150))
+  draw.RoundedBox(0, 0, 0, width, height, ColorAlpha(self:GetColor('background'), 150))
 
   local title = t'scoreboard.title'
 
   DisableClipping(true)
-    draw.SimpleText(title, titleFont, 4, -util.text_height(title, titleFont) * 0.5, self:GetColor('Text'))
+    draw.SimpleText(title, titleFont, 4, -util.text_height(title, titleFont) * 0.5, self:GetColor('text'))
   DisableClipping(false)
 
-  draw.SimpleText(t'scoreboard.help', self:GetFont('text_small'), 4, 14, self:GetColor('Text'))
+  draw.SimpleText(t'scoreboard.help', self:GetFont('text_small'), 4, 14, self:GetColor('text'))
 end
 
 function THEME:PaintTabMenu(panel, width, height)
   local fraction = FrameTime() * 8
   local activePanel = panel.activePanel
-  local sidebarColor = ColorAlpha(self:GetColor('Background'), 125)
+  local sidebarColor = ColorAlpha(self:GetColor('background'), 125)
 
   panel.curAlpha = Lerp(fraction, panel.curAlpha or 0, 200)
 
@@ -570,7 +570,7 @@ function THEME.skin:PaintScrollBarGrip(panel)
 end
 
 function THEME.skin:PaintFrame(panel, w, h)
-  local color = theme.GetColor('Accent')
+  local color = theme.GetColor('accent')
 
   surface.SetDrawColor(Color(10, 10, 10))
   surface.DrawRect(0, 24, w, h)

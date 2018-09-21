@@ -37,7 +37,7 @@ function PLUGIN:AdjustCrosshairColor(trace, distance)
   local ent = trace.Entity
 
   if distance < 600 and IsValid(ent) and (ent:IsPlayer() or ent:GetClass() == 'fl_item') then
-    return theme.GetColor('Accent')
+    return theme.GetColor('accent')
   end
 end
 

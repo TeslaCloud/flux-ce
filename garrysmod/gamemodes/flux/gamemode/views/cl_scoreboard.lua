@@ -86,7 +86,7 @@ function PANEL:Rebuild()
   self.nameLabel:SetText(player:Name())
   self.nameLabel:SetPos(font.Scale(32) + 16, self:GetTall() * 0.5 - util.text_height(player:Name(), theme.GetFont('text_normal')) * 0.5)
   self.nameLabel:SetFont(theme.GetFont('text_normal'))
-  self.nameLabel:SetTextColor(theme.GetColor('Text'))
+  self.nameLabel:SetTextColor(theme.GetColor('text'))
   self.nameLabel:SizeToContents()
 
   hook.run('RebuildScoreboardPlayerCard', self, player)

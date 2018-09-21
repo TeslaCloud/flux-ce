@@ -75,7 +75,7 @@ function PANEL:RebuildStageList()
       button:SetEnabled(false)
     elseif k == self.stage then
       button:SetEnabled(true)
-      button:SetTextColor(theme.GetColor('Accent'))
+      button:SetTextColor(theme.GetColor('accent'))
     end
 
     button.DoClick = function(btn)
