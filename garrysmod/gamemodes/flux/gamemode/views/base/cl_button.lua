@@ -44,7 +44,7 @@ end
 
 function PANEL:SetEnabled(enabled)
   self.m_Enabled = enabled
-  self.m_TextColorOverride = (!enabled and theme.GetColor('Text'):darken(50)) or nil
+  self.m_TextColorOverride = (!enabled and theme.GetColor('text'):darken(50)) or nil
 
   self:SetMouseInputEnabled(enabled)
 end

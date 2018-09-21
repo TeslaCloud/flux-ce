@@ -141,7 +141,7 @@ function flCharacters:RebuildScoreboardPlayerCard(card, player)
   card.descLabel:SetText(phys_desc)
   card.descLabel:SetFont(theme.GetFont('text_smaller'))
   card.descLabel:SetPos(x, card.nameLabel:GetTall())
-  card.descLabel:SetTextColor(theme.GetColor('Text'))
+  card.descLabel:SetTextColor(theme.GetColor('text'))
   card.descLabel:SizeToContents()
 end
 

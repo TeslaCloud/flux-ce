@@ -22,7 +22,7 @@ end
 function PANEL:Paint(w, h)
   DisableClipping(true)
 
-  draw.box_outlined(0, -4, -4, w + 8, h + 24, 2, theme.GetColor('Background'))
+  draw.box_outlined(0, -4, -4, w + 8, h + 24, 2, theme.GetColor('background'))
 
   DisableClipping(false)
 end

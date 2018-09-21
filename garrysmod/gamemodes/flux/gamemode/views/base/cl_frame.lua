@@ -2,8 +2,8 @@ local PANEL = {}
 
 function PANEL:Init()
   self:SetTitle('Flux Frame')
-  self:SetMainColor(theme.GetColor('Main'))
-  self:SetAccentColor(theme.GetColor('Accent'))
+  self:SetMainColor(theme.GetColor('main'))
+  self:SetAccentColor(theme.GetColor('accent'))
 
   self.btnClose = vgui.Create('fl_button', self)
   self.btnClose:SetSize(20, 20)

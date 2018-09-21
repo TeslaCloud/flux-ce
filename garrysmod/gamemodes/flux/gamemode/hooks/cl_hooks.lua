@@ -180,7 +180,7 @@ function GM:FLHUDPaint(curTime, scrW, scrH)
     surface.draw_circle(x, y, 41, 64)
     surface.draw_circle_outline(x, y, 41, 10, 64)
 
-    surface.SetDrawColor(theme.GetColor('Text'))
+    surface.SetDrawColor(theme.GetColor('text'))
     surface.draw_circle_outline_partial(math.Clamp(percentage, 0, 100), x, y, 40, 8  , 64)
 
     fl.client.circleActionPercentage = nil
@@ -245,7 +245,7 @@ function GM:PopulateToolMenu()
   for ToolName, TOOL in pairs(fl.tool:GetAll()) do
     if TOOL.AddToMenu != false then
       spawnmenu.AddToolMenuOption(
-        TOOL.Tab or 'Main',
+        TOOL.Tab or 'main',
         TOOL.Category or 'New Category',
         ToolName,
         TOOL.Name or t(ToolName),
