@@ -1,7 +1,7 @@
 if !font then util.include 'cl_font.lua' end
 if !fl.lang then util.include 'sh_lang.lua' end
 
-library.new("bars", fl)
+library.new('bars', fl)
 
 local stored = fl.bars.stored or {}
 local sorted = fl.bars.sorted or {}
@@ -26,11 +26,11 @@ function fl.bars:register(id, data, force)
 
   stored[id] = {
     id = id,
-    text = data.text or "",
+    text = data.text or '',
     color = data.color or Color(200, 90, 90),
     maxValue = data.maxValue or 100,
     hinderColor = data.hinderColor or Color(255, 0, 0),
-    hinderText = data.hinderText or "",
+    hinderText = data.hinderText or '',
     display = data.display or 100,
     minDisplay = data.minDisplay or 0,
     hinderDisplay = data.hinderDisplay or false,
@@ -43,13 +43,13 @@ function fl.bars:register(id, data, force)
     cornerRadius = data.cornerRadius or 0,
     priority = data.priority or table.Count(stored),
     type = data.type or BAR_TOP,
-    font = data.font or "Text_Bar",
+    font = data.font or 'Text_Bar',
     spacing = data.spacing or self.defaultSpacing,
     textOffset = data.textOffset or 1,
     callback = data.callback
   }
 
-  hook.run("OnBarRegistered", stored[id], id, force)
+  hook.run('OnBarRegistered', stored[id], id, force)
 
   return stored[id]
 end
@@ -66,7 +66,7 @@ function fl.bars:SetValue(id, newValue)
   local bar = self:Get(id)
 
   if bar then
-    theme.Call("PreBarValueSet", bar, bar.value, newValue)
+    theme.Call('PreBarValueSet', bar, bar.value, newValue)
 
     if bar.value != newValue then
       if bar.hinderDisplay and bar.hinderValue then
@@ -83,7 +83,7 @@ function fl.bars:HinderValue(id, newValue)
   local bar = self:Get(id)
 
   if bar then
-    theme.Call("PreBarHinderValueSet", bar, bar.hinderValue, newValue)
+    theme.Call('PreBarHinderValueSet', bar, bar.hinderValue, newValue)
 
     if bar.value != newValue then
       bar.hinderValue = math.Clamp(newValue, 0, bar.maxValue)
@@ -95,11 +95,11 @@ function fl.bars:Prioritize()
   sorted = {}
 
   for k, v in pairs(stored) do
-    if !hook.run("ShouldDrawBar", v) then
+    if !hook.run('ShouldDrawBar', v) then
       continue
     end
 
-    hook.run("PreBarPrioritized", v)
+    hook.run('PreBarPrioritized', v)
 
     sorted[v.priority] = sorted[v.priority] or {}
 
@@ -122,7 +122,7 @@ function fl.bars:Position()
       local bar = self:Get(v)
 
       if bar and bar.type == BAR_TOP then
-        local offX, offY = hook.run("AdjustBarPos", bar)
+        local offX, offY = hook.run('AdjustBarPos', bar)
         offX = offX or 0
         offY = offY or 0
 
@@ -139,27 +139,27 @@ function fl.bars:Draw(id)
   local barInfo = self:Get(id)
 
   if barInfo then
-    hook.run("PreDrawBar", barInfo)
-    theme.Call("PreDrawBar", barInfo)
+    hook.run('PreDrawBar', barInfo)
+    theme.Call('PreDrawBar', barInfo)
 
-    if !hook.run("ShouldDrawBar", barInfo) then
+    if !hook.run('ShouldDrawBar', barInfo) then
       return
     end
 
-    theme.Call("DrawBarBackground", barInfo)
+    theme.Call('DrawBarBackground', barInfo)
 
-    if hook.run("ShouldFillBar", barInfo) or barInfo.value != 0 then
-      theme.Call("DrawBarFill", barInfo)
+    if hook.run('ShouldFillBar', barInfo) or barInfo.value != 0 then
+      theme.Call('DrawBarFill', barInfo)
     end
 
     if barInfo.hinderDisplay and barInfo.hinderDisplay <= barInfo.hinderValue then
-      theme.Call("DrawBarHindrance", barInfo)
+      theme.Call('DrawBarHindrance', barInfo)
     end
 
-    theme.Call("DrawBarTexts", barInfo)
+    theme.Call('DrawBarTexts', barInfo)
 
-    hook.run("PostDrawBar", barInfo)
-    theme.Call("PostDrawBar", barInfo)
+    hook.run('PostDrawBar', barInfo)
+    theme.Call('PostDrawBar', barInfo)
   end
 end
 
@@ -191,7 +191,7 @@ do
           fl.bars:SetValue(v.id, v.callback(stored[k]))
         end
 
-        hook.run("AdjustBarInfo", k, stored[k])
+        hook.run('AdjustBarInfo', k, stored[k])
       end
     end
   end
@@ -225,10 +225,10 @@ do
     return true
   end
 
-  plugin.add_hooks("FLBarHooks", Bars)
+  plugin.add_hooks('FLBarHooks', Bars)
 
-  fl.bars:register("respawn", {
-    text = t"bar_text.respawn",
+  fl.bars:register('respawn', {
+    text = t'bar_text.respawn',
     color = Color(50, 200, 50),
     maxValue = 100,
     x = ScrW() * 0.5 - fl.bars.defaultW * 0.5,

@@ -1,4 +1,4 @@
-local player_meta = FindMetaTable("Player")
+local player_meta = FindMetaTable('Player')
 
 function player_meta:get_role()
   return self:get_nv('role', 'user')
@@ -17,7 +17,7 @@ function player_meta:is_assistant()
     return true
   end
 
-  return self:has_group("assistant")
+  return self:has_group('assistant')
 end
 
 -- Implement common admin interfaces.
@@ -28,7 +28,7 @@ end
 function player_meta:IsSuperAdmin()
   if self:is_root() then return true end
 
-  return self:has_group("superadmin")
+  return self:has_group('superadmin')
 end
 
 function player_meta:IsAdmin()

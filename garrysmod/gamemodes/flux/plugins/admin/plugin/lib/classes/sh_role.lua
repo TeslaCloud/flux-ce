@@ -1,9 +1,9 @@
 class 'Role'
 
-Role.name = "Undefined"
-Role.description = "Undefined"
+Role.name = 'Undefined'
+Role.description = 'Undefined'
 Role.color = Color(255, 255, 255)
-Role.icon = "icon16/user.png"
+Role.icon = 'icon16/user.png'
 Role.immunity = 0
 Role.protected = false
 Role.base = nil
@@ -94,15 +94,15 @@ function Role:GetID()
 end
 
 function Role:get_name()
-  return self.name or "Unknown"
+  return self.name or 'Unknown'
 end
 
 function Role:get_description()
-  return self.description or "This group has no description"
+  return self.description or 'This group has no description'
 end
 
 function Role:GetColor()
-  return self.color or Color("white")
+  return self.color or Color('white')
 end
 
 function Role:GetImmunity()
@@ -118,7 +118,7 @@ function Role:GetPermissions()
 end
 
 function Role:GetIcon()
-  return self.icon or "icon16/user.png"
+  return self.icon or 'icon16/user.png'
 end
 
 function Role:GetBase()

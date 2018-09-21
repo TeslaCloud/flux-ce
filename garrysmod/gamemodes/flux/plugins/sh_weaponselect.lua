@@ -1,9 +1,9 @@
-PLUGIN:set_name("Weapon Selector")
-PLUGIN:set_author("Mr. Meow")
-PLUGIN:set_description("Adds custom weapon selector for use with Flux.")
+PLUGIN:set_name('Weapon Selector')
+PLUGIN:set_author('Mr. Meow')
+PLUGIN:set_description('Adds custom weapon selector for use with Flux.')
 
 if SERVER then
-  concommand.Add("selectweapon", function(player, command, arguments)
+  concommand.Add('selectweapon', function(player, command, arguments)
     local weapon = player:GetWeapons()[tonumber(arguments[1]) or 1]
 
     if IsValid(weapon) then
@@ -36,7 +36,7 @@ local function safeIndex(tab, idx)
 end
 
 function PLUGIN:HUDShouldDraw(element)
-  if element == "CHudWeaponSelection" then
+  if element == 'CHudWeaponSelection' then
     return false
   end
 end
@@ -104,10 +104,10 @@ function PLUGIN:HUDPaint()
       local color = Color(255, 255, 255, self.CurAlpha * v.scale / 1.3)
 
       if v.highlight then
-        color = theme.GetColor("Accent")
+        color = theme.GetColor('Accent')
       end
 
-      surface.draw_text_scaled((IsValid(v.weapon) and v.weapon:GetPrintName():utf8upper()) or "UNKNOWN WEAPON", theme.GetFont("Text_NormalLarge"), v.x, v.y, v.scale, color)
+      surface.draw_text_scaled((IsValid(v.weapon) and v.weapon:GetPrintName():utf8upper()) or 'UNKNOWN WEAPON', theme.GetFont('Text_NormalLarge'), v.x, v.y, v.scale, color)
     end
 
     render.SetScissorRect(0, 0, 0, 0, false)
@@ -190,19 +190,19 @@ do
         local oldIndex = self.WeaponIndex
         bind = bind:lower()
 
-        if bind:find("invprev") and bIsPressed then
+        if bind:find('invprev') and bIsPressed then
           self.WeaponIndex = relativeClamp(self.WeaponIndex - 1, 1, weaponCount)
 
-          plugin.call("OnWeaponIndexChange", oldIndex, self.WeaponIndex)
+          plugin.call('OnWeaponIndexChange', oldIndex, self.WeaponIndex)
 
           return true
-        elseif bind:find("invnext") and bIsPressed then
+        elseif bind:find('invnext') and bIsPressed then
           self.WeaponIndex = relativeClamp(self.WeaponIndex + 1, 1, weaponCount)
 
-          plugin.call("OnWeaponIndexChange", oldIndex, self.WeaponIndex)
+          plugin.call('OnWeaponIndexChange', oldIndex, self.WeaponIndex)
 
           return true
-        elseif bind:find("slot") and bIsPressed then
+        elseif bind:find('slot') and bIsPressed then
           local index = tonumber(bind:sub(5, bind:len())) or 1
           local classicScroll = false
 
@@ -228,13 +228,13 @@ do
             index = self.WeaponIndex
           end
 
-          plugin.call("OnWeaponIndexChange", oldIndex, index)
+          plugin.call('OnWeaponIndexChange', oldIndex, index)
 
           return true
-        elseif bind:find("attack") and self.IsOpen and bIsPressed then
-          RunConsoleCommand("selectweapon", self.WeaponIndex)
+        elseif bind:find('attack') and self.IsOpen and bIsPressed then
+          RunConsoleCommand('selectweapon', self.WeaponIndex)
 
-          plugin.call("OnWeaponSelected", self.WeaponIndex)
+          plugin.call('OnWeaponSelected', self.WeaponIndex)
 
           return true
         end

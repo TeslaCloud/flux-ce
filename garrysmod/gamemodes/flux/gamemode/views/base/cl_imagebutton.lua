@@ -2,7 +2,7 @@ local PANEL = {}
 PANEL.m_CurAmt = 160
 
 function PANEL:Init()
-  self.Image = vgui.Create("DImage", self)
+  self.Image = vgui.Create('DImage', self)
   self.Image:SetSize(100, 100)
   self.Image:SetPos(0, 0)
 end
@@ -19,7 +19,7 @@ function PANEL:PaintOver(w, h)
   draw.RoundedBox(0, 0, 0, w, h, Color(0, 0, 0, (!active and self.m_CurAmt * 4) or 0))
 
   if active then
-    surface.SetDrawColor(theme.GetColor("Accent"))
+    surface.SetDrawColor(theme.GetColor('Accent'))
     surface.DrawOutlinedRect(0, 0, w, h)
   end
 end
@@ -34,4 +34,4 @@ function PANEL:Think()
   self.Image:SetSize(self:GetWide(), self:GetTall())
 end
 
-vgui.Register("fl_image_button", PANEL, "fl_button")
+vgui.Register('fl_image_button', PANEL, 'fl_button')

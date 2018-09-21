@@ -13,7 +13,7 @@ function player.find(name, case_sensitive, return_first)
   if !isstring(name) then return (IsValid(name) and name) or nil end
 
   local hits = {}
-  local isSteamID = name:starts("STEAM_")
+  local isSteamID = name:starts('STEAM_')
 
   for k, v in ipairs(_player.GetAll()) do
     if isSteamID then

@@ -1,4 +1,4 @@
-local ent_meta = FindMetaTable("Entity")
+local ent_meta = FindMetaTable('Entity')
 
 --[[
   We store the original function here so we can override it from the player metaTable,

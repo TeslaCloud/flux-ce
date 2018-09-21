@@ -1,28 +1,28 @@
 if !ItemUsable then
-  util.include("sh_usable_base.lua")
+  util.include('sh_usable_base.lua')
 end
 
--- Alternatively, you can use item.CreateBase("ItemEquippable")
+-- Alternatively, you can use item.CreateBase('ItemEquippable')
 class 'ItemEquippable' extends 'ItemUsable'
 
-ItemEquippable.name = "Equipment Base"
-ItemEquippable.description = "An item that can be equipped."
-ItemEquippable.category = t('item.category.equipment')
-ItemEquippable.equip_slot = t('item.slot.accessory')
+ItemEquippable.name = 'Equipment Base'
+ItemEquippable.description = 'An item that can be equipped.'
+ItemEquippable.category = t'item.category.equipment'
+ItemEquippable.equip_slot = t'item.slot.accessory'
 ItemEquippable.stackable = false
 
 if CLIENT then
   function ItemEquippable:get_use_text()
     if self:IsEquipped() then
-      return t('item.option.unequip')
+      return t'item.option.unequip'
     else
-      return t('item.option.equip')
+      return t'item.option.equip'
     end
   end
 end
 
 function ItemEquippable:IsEquipped()
-  return self:get_data("equipped", false)
+  return self:get_data('equipped', false)
 end
 
 function ItemEquippable:OnEquipped(player)
@@ -46,12 +46,12 @@ function ItemEquippable:PostUnEquipped(player) end
 function ItemEquippable:Equip(player, bShouldEquip)
   if bShouldEquip then
     if self:OnEquipped(player) != false then
-      self:set_data("equipped", true)
+      self:set_data('equipped', true)
       self:PostEquipped(player)
     end
   else
     if self:OnUnEquipped(player) != false then
-      self:set_data("equipped", false)
+      self:set_data('equipped', false)
       self:PostUnEquipped(player)
     end
   end
@@ -59,7 +59,7 @@ end
 
 function ItemEquippable:on_use(player)
   if IsValid(self.entity) then
-    self:do_menu_action("on_take", player)
+    self:do_menu_action('on_take', player)
   end
 
   self:Equip(player, !self:IsEquipped())

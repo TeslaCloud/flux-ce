@@ -1,4 +1,4 @@
-library.new("anim", fl)
+library.new('anim', fl)
 
 local stored = fl.anim.stored or {}
 local models = fl.anim.models or {}
@@ -74,9 +74,9 @@ stored.player = {
     reload = ACT_GESTURE_RELOAD_SMG1
   },
   vehicle = {
-    prop_vehicle_prisoner_pod = {"podpose", Vector(-3, 0, 0)},
-    prop_vehicle_jeep = {"sitchair1", Vector(13, 0, -16.5)},
-    prop_vehicle_airboat = {"sitchair1", Vector(8, 0, -20)}
+    prop_vehicle_prisoner_pod = {'podpose', Vector(-3, 0, 0)},
+    prop_vehicle_jeep = {'sitchair1', Vector(13, 0, -16.5)},
+    prop_vehicle_airboat = {'sitchair1', Vector(8, 0, -20)}
   }
 }
 
@@ -86,14 +86,14 @@ end
 
 function fl.anim:SetModelClass(model, class)
   if !stored[class] then
-    class = "player"
+    class = 'player'
   end
 
   models[string.lower(model)] = class
 end
 
 function fl.anim:GetModelClass(model)
-  if !model then return "player" end
+  if !model then return 'player' end
 
   local modelClass = models[string.lower(model)]
 
@@ -101,13 +101,13 @@ function fl.anim:GetModelClass(model)
     return modelClass
   end
 
-  return "player"
+  return 'player'
 end
 
 function fl.anim:GetTable(model)
   if !model then return end
 
-  if string.find(model, "/player/") then
+  if string.find(model, '/player/') then
     return
   end
 
@@ -116,50 +116,50 @@ end
 
 do
   local translateHoldTypes = {
-    [""] = "normal",
-    ["physgun"] = "smg",
-    ["ar2"] = "smg",
-    ["crossbow"] = "shotgun",
-    ["rpg"] = "shotgun",
-    ["slam"] = "normal",
-    ["grenade"] = "normal",
-    ["fist"] = "normal",
-    ["melee2"] = "melee",
-    ["passive"] = "normal",
-    ["knife"] = "melee",
-    ["duel"] = "pistol",
-    ["camera"] = "smg",
-    ["magic"] = "normal",
-    ["revolver"] = "pistol"
+    [''] = 'normal',
+    ['physgun'] = 'smg',
+    ['ar2'] = 'smg',
+    ['crossbow'] = 'shotgun',
+    ['rpg'] = 'shotgun',
+    ['slam'] = 'normal',
+    ['grenade'] = 'normal',
+    ['fist'] = 'normal',
+    ['melee2'] = 'melee',
+    ['passive'] = 'normal',
+    ['knife'] = 'melee',
+    ['duel'] = 'pistol',
+    ['camera'] = 'smg',
+    ['magic'] = 'normal',
+    ['revolver'] = 'pistol'
   }
 
   local weaponHoldTypes = {
-    ["weapon_ar2"] = "smg",
-    ["weapon_smg1"] = "smg",
-    ["weapon_physgun"] = "smg",
-    ["weapon_crossbow"] = "smg",
-    ["weapon_physcannon"] = "smg",
-    ["weapon_crowbar"] = "melee",
-    ["weapon_bugbait"] = "melee",
-    ["weapon_stunstick"] = "melee",
-    ["weapon_stunstick"] = "melee",
-    ["gmod_tool"] = "pistol",
-    ["weapon_357"] = "pistol",
-    ["weapon_pistol"] = "pistol",
-    ["weapon_frag"] = "grenade",
-    ["weapon_slam"] = "grenade",
-    ["weapon_rpg"] = "shotgun",
-    ["weapon_shotgun"] = "shotgun",
-    ["weapon_annabelle"] = "shotgun"
+    ['weapon_ar2'] = 'smg',
+    ['weapon_smg1'] = 'smg',
+    ['weapon_physgun'] = 'smg',
+    ['weapon_crossbow'] = 'smg',
+    ['weapon_physcannon'] = 'smg',
+    ['weapon_crowbar'] = 'melee',
+    ['weapon_bugbait'] = 'melee',
+    ['weapon_stunstick'] = 'melee',
+    ['weapon_stunstick'] = 'melee',
+    ['gmod_tool'] = 'pistol',
+    ['weapon_357'] = 'pistol',
+    ['weapon_pistol'] = 'pistol',
+    ['weapon_frag'] = 'grenade',
+    ['weapon_slam'] = 'grenade',
+    ['weapon_rpg'] = 'shotgun',
+    ['weapon_shotgun'] = 'shotgun',
+    ['weapon_annabelle'] = 'shotgun'
   }
 
   -- A function to get a weapon's hold type.
   function fl.anim:GetWeaponHoldType(player, weapon)
-    if !IsValid(weapon) then return "normal" end
+    if !IsValid(weapon) then return 'normal' end
 
     local class = string.lower(weapon:GetClass())
     local translatedHoldType = weaponHoldTypes[class]
-    local holdType = "normal"
+    local holdType = 'normal'
 
     if translatedHoldType then
       holdType = translatedHoldType

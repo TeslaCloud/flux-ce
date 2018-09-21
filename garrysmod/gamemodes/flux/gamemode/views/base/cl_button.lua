@@ -11,7 +11,7 @@ PANEL.m_Enabled = true
 PANEL.m_Centered = false
 
 function PANEL:Paint(w, h)
-  theme.Hook("PaintButton", self, w, h)
+  theme.Hook('PaintButton', self, w, h)
 end
 
 function PANEL:Think()
@@ -44,7 +44,7 @@ end
 
 function PANEL:SetEnabled(enabled)
   self.m_Enabled = enabled
-  self.m_TextColorOverride = (!enabled and theme.GetColor("Text"):darken(50)) or nil
+  self.m_TextColorOverride = (!enabled and theme.GetColor('Text'):darken(50)) or nil
 
   self:SetMouseInputEnabled(enabled)
 end
@@ -101,4 +101,4 @@ function PANEL:SizeToContents()
   self:SetSize(w * 1.15 + add, h * 1.5)
 end
 
-vgui.Register("fl_button", PANEL, "fl_base_panel")
+vgui.Register('fl_button', PANEL, 'fl_base_panel')

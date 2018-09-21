@@ -1,6 +1,6 @@
-config.set("chatbox_message_margin", 2)
-config.set("chatbox_message_fade_delay", 12)
-config.set("chatbox_max_messages", 100)
+config.set('chatbox_message_margin', 2)
+config.set('chatbox_message_fade_delay', 12)
+config.set('chatbox_max_messages', 100)
 
 local defaultMessageData = {
   sender = nil,
@@ -48,7 +48,7 @@ function chatbox.CanHear(listener, messageData)
 end
 
 function chatbox.PlayerCanHear(listener, messageData)
-  return plugin.call("PlayerCanHear", listener, messageData) or chatbox.CanHear(listener, messageData)
+  return plugin.call('PlayerCanHear', listener, messageData) or chatbox.CanHear(listener, messageData)
 end
 
 function chatbox.AddText(listeners, ...)
@@ -104,7 +104,7 @@ function chatbox.AddText(listeners, ...)
 
   for k, v in ipairs(listeners) do
     if chatbox.PlayerCanHear(v, messageData) then
-      netstream.Start(v, "Chatbox::AddMessage", messageData)
+      netstream.Start(v, 'Chatbox::AddMessage', messageData)
     end
   end
 end
@@ -123,7 +123,7 @@ function chatbox.message_to_string(message_data, concatenator)
       local name = ''
 
       if v:IsPlayer() then
-        name = hook.run("GetPlayerName", v) or v:Name()
+        name = hook.run('GetPlayerName', v) or v:Name()
       else
         name = tostring(v) or v:GetClass()
       end
@@ -135,7 +135,7 @@ function chatbox.message_to_string(message_data, concatenator)
   return table.concat(to_string, concatenator)
 end
 
-netstream.Hook("Chatbox::AddText", function(player, ...)
+netstream.Hook('Chatbox::AddText', function(player, ...)
   if !IsValid(player) then return end
 
   chatbox.SetClientMode(true)
@@ -143,28 +143,28 @@ netstream.Hook("Chatbox::AddText", function(player, ...)
   chatbox.SetClientMode(false)
 end)
 
-netstream.Hook("Chatbox::PlayerSay", function(player, text, bTeamChat)
+netstream.Hook('Chatbox::PlayerSay', function(player, text, bTeamChat)
   if !IsValid(player) then return end
 
-  local playerSayOverride = hook.run("PlayerSay", player, text, bTeamChat)
+  local playerSayOverride = hook.run('PlayerSay', player, text, bTeamChat)
 
   if isstring(playerSayOverride) then
-    if playerSayOverride == "" then return end
+    if playerSayOverride == '' then return end
 
     text = playerSayOverride
   end
 
   local message = {
-    hook.run("ChatboxGetPlayerIcon", player, text, bTeamChat) or {},
-    hook.run("ChatboxGetPlayerColor", player, text, bTeamChat) or _team.GetColor(player:Team()),
+    hook.run('ChatboxGetPlayerIcon', player, text, bTeamChat) or {},
+    hook.run('ChatboxGetPlayerColor', player, text, bTeamChat) or _team.GetColor(player:Team()),
     player,
-    hook.run("ChatboxGetMessageColor", player, text, bTeamChat) or Color(255, 255, 255),
-    ": ",
+    hook.run('ChatboxGetMessageColor', player, text, bTeamChat) or Color(255, 255, 255),
+    ': ',
     text,
     {sender = player}
   }
 
-  hook.run("ChatboxAdjustPlayerSay", player, text, message)
+  hook.run('ChatboxAdjustPlayerSay', player, text, message)
 
   chatbox.AddText(nil, unpack(message))
 end)

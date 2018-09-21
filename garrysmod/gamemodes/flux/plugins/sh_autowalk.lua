@@ -1,6 +1,6 @@
-PLUGIN:set_name("Auto Walk")
-PLUGIN:set_author("NightAngel")
-PLUGIN:set_description("Allows users to press a button to automatically walk forward.")
+PLUGIN:set_name('Auto Walk')
+PLUGIN:set_author('NightAngel')
+PLUGIN:set_description('Allows users to press a button to automatically walk forward.')
 
 if SERVER then
   local check = {
@@ -26,7 +26,7 @@ if SERVER then
   end
 
   -- So clients can bind this as they want.
-  concommand.Add("toggleautowalk", function(player)
+  concommand.Add('toggleautowalk', function(player)
     local old_val = player:get_nv('auto_walk')
 
     if !old_val then
@@ -36,7 +36,7 @@ if SERVER then
     player:set_nv('auto_walk', !old_val)
   end)
 else
---  fl.hint:Add("Autowalk", "Press 'B' to toggle auto walking.")
+--  fl.hint:Add('Autowalk', 'Press 'B' to toggle auto walking.')
 
   -- We do this so there's no need to do an unnecessary check for if client or server in the hook itself.
   function PLUGIN:SetupMove(player, moveData, cmdData)
@@ -45,5 +45,5 @@ else
     moveData:SetForwardSpeed(moveData:GetMaxSpeed())
   end
 
-  fl.binds:AddBind("ToggleAutoWalk", "toggleautowalk", KEY_B)
+  fl.binds:AddBind('ToggleAutoWalk', 'toggleautowalk', KEY_B)
 end

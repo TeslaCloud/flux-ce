@@ -30,14 +30,14 @@ function printf(str, ...)
 end
 
 function util.to_b(value)
-  return (tonumber(value) == 1 or value == true or value == "true")
+  return (tonumber(value) == 1 or value == true or value == 'true')
 end
 
 function util.wait_for_ent(entIndex, callback, delay, waitTime)
   local entity = Entity(entIndex)
 
   if !IsValid(entity) then
-    local timerName = CurTime().."_EntWait"
+    local timerName = CurTime()..'_EntWait'
 
     timer.Create(timerName, delay or 0, waitTime or 100, function()
       local entity = Entity(entIndex)
@@ -59,11 +59,11 @@ function util.list_to_string(callback, separator, ...)
   end
 
   if !isstring(separator) then
-    separator = ", "
+    separator = ', '
   end
 
   local list = {...}
-  local result = ""
+  local result = ''
 
   for k, v in ipairs(list) do
     local text = callback(v)
@@ -85,37 +85,37 @@ function util.player_list_to_string(...)
   local nlist = #list
 
   if nlist > 1 and nlist == #_player.GetAll() then
-    return t"chat.everyone"
+    return t'chat.everyone'
   end
 
-  return util.list_to_string(function(obj) return (IsValid(obj) and obj:Name()) or "Unknown Player" end, nil, ...)
+  return util.list_to_string(function(obj) return (IsValid(obj) and obj:Name()) or 'Unknown Player' end, nil, ...)
 end
 
 function util.remove_newlines(str)
-  local exploded = string.Explode("", str)
-  local to_ret = ""
-  local skip = ""
+  local exploded = string.Explode('', str)
+  local to_ret = ''
+  local skip = ''
 
   for k, v in ipairs(exploded) do
-    if skip != "" then
+    if skip != '' then
       to_ret = to_ret..v
 
       if v == skip then
-        skip = ""
+        skip = ''
       end
 
       continue
     end
 
-    if v == "\"" then
-      skip = "\""
+    if v == '"' then
+      skip = '"'
 
       to_ret = to_ret..v
 
       continue
     end
 
-    if v == "\n" or v == "\t" then
+    if v == '\n' or v == '\t' then
       continue
     end
 

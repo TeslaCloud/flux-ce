@@ -1,12 +1,12 @@
-local COMMAND = Command.new("setfaction")
+local COMMAND = Command.new('setfaction')
 
-COMMAND.name = "Setfaction"
+COMMAND.name = 'Setfaction'
 COMMAND.description = "Change player's faction."
-COMMAND.syntax = "<name> <faction> [data]"
-COMMAND.category = "player_management"
+COMMAND.syntax = '<name> <faction> [data]'
+COMMAND.category = 'player_management'
 COMMAND.arguments = 2
 COMMAND.player_arg = 1
-COMMAND.aliases = {"plytransfer", "charsetfaction", "chartransfer"}
+COMMAND.aliases = { 'plytransfer', 'charsetfaction', 'chartransfer' }
 
 function COMMAND:on_run(player, targets, name, bStrict)
   local factionTable = faction.Find(name, (bStrict and true) or false)

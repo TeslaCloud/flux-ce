@@ -1,5 +1,5 @@
 function flChatbox:ChatboxGetPlayerIcon(player, text, bTeamChat)
-  return {image = "materials/icon16/shield.png", width = 16, height = 16, isData = true}
+  return { image = 'materials/icon16/shield.png', width = 16, height = 16, isData = true }
 end
 
 function flChatbox:ChatboxGetPlayerColor(player, text, bTeamChat)

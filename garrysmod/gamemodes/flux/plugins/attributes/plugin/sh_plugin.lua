@@ -1,11 +1,11 @@
-PLUGIN:set_alias("flAttributes")
+PLUGIN:set_alias('flAttributes')
 
-util.include("sv_hooks.lua")
+util.include('sv_hooks.lua')
 
 function flAttributes:PluginIncludeFolder(extra, folder)
   for k, v in pairs(attributes.types) do
     if extra == k then
-      attributes.include_type(k, v, folder.."/"..k.."/")
+      attributes.include_type(k, v, folder..'/'..k..'/')
 
       return true
     end

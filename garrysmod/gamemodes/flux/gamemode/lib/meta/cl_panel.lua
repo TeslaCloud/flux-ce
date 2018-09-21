@@ -1,4 +1,4 @@
-local panel_meta = FindMetaTable("Panel")
+local panel_meta = FindMetaTable('Panel')
 
 -- Seriously, Newman? I have to write this myself?
 function panel_meta:UnDraggable()

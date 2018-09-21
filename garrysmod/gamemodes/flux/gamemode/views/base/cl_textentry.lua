@@ -11,21 +11,21 @@ function PANEL:SetLimit(nLimit)
 end
 
 function PANEL:Paint(w, h)
-  if !hook.run("ChatboxEntryPaint", self, 0, 0, w, h) then
-    draw.RoundedBox(2, 0, 0, w, h, theme.GetColor("Background"))
+  if !hook.run('ChatboxEntryPaint', self, 0, 0, w, h) then
+    draw.RoundedBox(2, 0, 0, w, h, theme.GetColor('Background'))
 
-    self:DrawTextEntryText(theme.GetColor("Text"), theme.GetColor("Accent"), theme.GetColor("Text"))
+    self:DrawTextEntryText(theme.GetColor('Text'), theme.GetColor('Accent'), theme.GetColor('Text'))
   end
 end
 
 function PANEL:Think()
   local text = self:GetValue()
 
-  if text and text != "" then
+  if text and text != '' then
     if string.utf8len(text) > self.limit then
       self:SetValue(string.utf8sub(text, 0, self.limit))
     end
   end
 end
 
-vgui.Register("fl_text_entry", PANEL, "DTextEntry")
+vgui.Register('fl_text_entry', PANEL, 'DTextEntry')

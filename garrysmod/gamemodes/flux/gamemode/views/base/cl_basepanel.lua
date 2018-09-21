@@ -9,19 +9,19 @@ PANEL.m_TextColor = Color(255, 255, 255)
 PANEL.m_MainColor = Color(255, 100, 100)
 PANEL.m_AccentColor = Color(200, 200, 200)
 PANEL.m_DrawBackground = true
-PANEL.m_Title = "Flux Base Panel"
-PANEL.m_Font = theme.GetFont("MenuTitles") or "flRoboto"
+PANEL.m_Title = 'Flux Base Panel'
+PANEL.m_Font = theme.GetFont('MenuTitles') or 'flRoboto'
 
-AccessorFunc(PANEL, "m_DrawBackground", "DrawBackground")
-AccessorFunc(PANEL, "m_BackgroundColor", "BackgroundColor")
-AccessorFunc(PANEL, "m_Title", "Title")
-AccessorFunc(PANEL, "m_Font", "Font")
-AccessorFunc(PANEL, "m_MainColor", "MainColor")
-AccessorFunc(PANEL, "m_TextColor", "TextColor")
-AccessorFunc(PANEL, "m_AccentColor", "AccentColor")
+AccessorFunc(PANEL, 'm_DrawBackground', 'DrawBackground')
+AccessorFunc(PANEL, 'm_BackgroundColor', 'BackgroundColor')
+AccessorFunc(PANEL, 'm_Title', 'Title')
+AccessorFunc(PANEL, 'm_Font', 'Font')
+AccessorFunc(PANEL, 'm_MainColor', 'MainColor')
+AccessorFunc(PANEL, 'm_TextColor', 'TextColor')
+AccessorFunc(PANEL, 'm_AccentColor', 'AccentColor')
 
-function PANEL:Paint(width, height) theme.Hook("PaintPanel", self, width, height) end
-function PANEL:Think() theme.Hook("PanelThink", self) end
+function PANEL:Paint(width, height) theme.Hook('PaintPanel', self, width, height) end
+function PANEL:Think() theme.Hook('PanelThink', self) end
 
 -- MVC Functionality for all FL panels.
 function PANEL:Push(name, ...)
@@ -37,4 +37,4 @@ function PANEL:Request(name, handler, ...)
   self:Push(name, ...)
 end
 
-vgui.Register("fl_base_panel", PANEL, "EditablePanel")
+vgui.Register('fl_base_panel', PANEL, 'EditablePanel')

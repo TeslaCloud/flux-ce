@@ -2,8 +2,8 @@ en:
   3d_text:
     not_enough_text: You did not specify enough text.
     text_add_desc: Adds a 3D text.
-    text_add_syntax: "<string Text> [number Scale] [number Style] [string Color] [string
-      ExtraColor]"
+    text_add_syntax: '<string Text> [number Scale] [number Style] [string Color] [string
+      ExtraColor]'
     text_added: You have added a 3D text.
     text_removed: You have removed a 3D text.
   tool:

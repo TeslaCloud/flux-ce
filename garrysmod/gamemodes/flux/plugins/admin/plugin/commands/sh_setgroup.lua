@@ -1,11 +1,11 @@
-local COMMAND = Command.new("setgroup")
-COMMAND.name = "SetGroup"
-COMMAND.description = t"set_group.description"
-COMMAND.syntax = t"set_group.syntax"
-COMMAND.category = "player_management"
+local COMMAND = Command.new('setgroup')
+COMMAND.name = 'SetGroup'
+COMMAND.description = t'set_group.description'
+COMMAND.syntax = t'set_group.syntax'
+COMMAND.category = 'player_management'
 COMMAND.arguments = 2
 COMMAND.immunity = true
-COMMAND.aliases = {"plysetgroup", "setusergroup", "plysetusergroup"}
+COMMAND.aliases = { 'plysetgroup', 'setusergroup', 'plysetusergroup' }
 
 function COMMAND:on_run(player, targets, role)
   if fl.admin:GroupExists(role) then

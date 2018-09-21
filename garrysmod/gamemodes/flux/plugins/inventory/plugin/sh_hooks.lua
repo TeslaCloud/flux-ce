@@ -13,6 +13,6 @@ function fl_inventory:PlayerSelectSlot(player, slot)
   local item_table = item.FindByInstanceID(instance_id)
 
   if item_table then
-    item_table:do_menu_action("on_use")
+    item_table:do_menu_action('on_use')
   end
 end

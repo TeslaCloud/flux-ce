@@ -1,4 +1,4 @@
-library.new("undo", fl)
+library.new('undo', fl)
 
 local queue = {}
 local buffer = {}
@@ -49,7 +49,7 @@ function fl.undo:Do(obj)
         v.func, obj, unpack(v.args)
       } catch {
         function(exception)
-          ErrorNoHalt("[Flux:Undo] Failed to undo!\n"..tostring(exception).."\n")
+          ErrorNoHalt('[Flux:Undo] Failed to undo!\n'..tostring(exception)..'\n')
         end
       }
     end

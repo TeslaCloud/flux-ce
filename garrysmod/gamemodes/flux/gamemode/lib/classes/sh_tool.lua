@@ -29,7 +29,7 @@ function Tool:MakeGhostEntity(model, pos, angle)
   if CLIENT then
     self.GhostEntity = ents.CreateClientProp(model)
   else
-    self.GhostEntity = ents.Create("prop_physics")
+    self.GhostEntity = ents.Create('prop_physics')
   end
 
   -- If there's too many entities we might not spawn..
@@ -109,22 +109,22 @@ end
 
 function Tool:SetStage(i)
   if SERVER then
-    self:GetWeapon():SetNWInt("Stage", i, true)
+    self:GetWeapon():SetNWInt('Stage', i, true)
   end
 end
 
 function Tool:GetStage()
-  return self:GetWeapon():GetNWInt("Stage", 0)
+  return self:GetWeapon():GetNWInt('Stage', 0)
 end
 
 function Tool:SetOperation(i)
   if SERVER then
-    self:GetWeapon():SetNWInt("Op", i, true)
+    self:GetWeapon():SetNWInt('Op', i, true)
   end
 end
 
 function Tool:GetOperation()
-  return self:GetWeapon():GetNWInt("Op", 0)
+  return self:GetWeapon():GetNWInt('Op', 0)
 end
 
 -- Clear the selected objects
@@ -229,7 +229,7 @@ end
 
 -- Returns the number of objects in the list
 function Tool:GetHelpText()
-  return t("tool."..GetConVarString("gmod_toolmode").."."..self:GetStage())
+  return t('tool.'..GetConVarString('gmod_toolmode')..'.'..self:GetStage())
 end
 
 if CLIENT then
@@ -250,7 +250,7 @@ function Tool:init()
   self.ServerConVar = {}
   self.Objects = {}
   self.Stage = 0
-  self.Message = "start"
+  self.Message = 'start'
   self.LastMessage = 0
   self.AllowedCVar = 0
 end
@@ -260,38 +260,38 @@ function Tool:CreateConVars()
 
   if CLIENT then
     for cvar, default in pairs(self.ClientConVar) do
-      CreateClientConVar(mode.."_"..cvar, default, true, true)
+      CreateClientConVar(mode..'_'..cvar, default, true, true)
     end
 
     return
   end
 
   if SERVER then
-    self.AllowedCVar = CreateConVar("toolmode_allow_"..mode, 1, FCVAR_NOTIFY)
+    self.AllowedCVar = CreateConVar('toolmode_allow_'..mode, 1, FCVAR_NOTIFY)
   end
 end
 
 function Tool:GetServerInfo(property)
   local mode = self:GetMode()
 
-  return GetConVarString(mode.."_"..property)
+  return GetConVarString(mode..'_'..property)
 end
 
 function Tool:BuildConVarList()
   local mode = self:GetMode()
   local convars = {}
 
-  for k, v in pairs(self.ClientConVar) do convars[mode.."_"..k] = v end
+  for k, v in pairs(self.ClientConVar) do convars[mode..'_'..k] = v end
 
   return convars
 end
 
 function Tool:GetClientInfo(property)
-  return self:GetOwner():GetInfo(self:GetMode().."_"..property)
+  return self:GetOwner():GetInfo(self:GetMode()..'_'..property)
 end
 
 function Tool:GetClientNumber(property, default)
-  return self:GetOwner():GetInfoNum(self:GetMode().."_"..property, tonumber(default) or 0)
+  return self:GetOwner():GetInfoNum(self:GetMode()..'_'..property, tonumber(default) or 0)
 end
 
 function Tool:Allowed()
@@ -329,5 +329,5 @@ function Tool:CheckObjects()
 end
 
 function Tool:__tostring()
-  return "Tool ["..(self.id or "Unknown").."]"
+  return 'Tool ['..(self.id or 'Unknown')..']'
 end

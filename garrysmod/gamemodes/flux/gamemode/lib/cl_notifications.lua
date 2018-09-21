@@ -1,4 +1,4 @@
-library.new("notification", fl)
+library.new('notification', fl)
 
 local display = {}
 local top = 1
@@ -14,7 +14,7 @@ function fl.notification:process_queue()
     local text, lifetime = notification.text, notification.lifetime
     local scrW = ScrW()
     lifetime = lifetime or 8
-    text = t(text) or ""
+    text = t(text) or ''
 
     display[top] = {text = text, lifetime = lifetime, panel = nil, width = 0, height = 0, isLast = true}
 
@@ -22,7 +22,7 @@ function fl.notification:process_queue()
       display[top - 1].isLast = false
     end
 
-    local panel = vgui.Create("fl_notification")
+    local panel = vgui.Create('fl_notification')
     panel:SetText(text)
     panel:SetLifetime(lifetime)
     panel:SetTextColor(notification.text_color)
@@ -56,7 +56,7 @@ function fl.notification:Add(text, lifetime, text_color, back_color)
 end
 
 function fl.notification:AddPopup(text, lifetime, x, y, text_color, back_color)
-  local panel = vgui.Create("fl_notification")
+  local panel = vgui.Create('fl_notification')
   panel:SetPos(x, y)
   panel:SetText(text)
   panel:SetLifetime(lifetime)

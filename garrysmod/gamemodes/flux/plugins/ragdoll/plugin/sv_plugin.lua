@@ -1,4 +1,4 @@
-local player_meta = FindMetaTable("Player")
+local player_meta = FindMetaTable('Player')
 
 player_meta.OldGetRagdoll = player_meta.OldGetRagdoll or player_meta.GetRagdollEntity
 
@@ -68,7 +68,7 @@ end
 
 function player_meta:CreateRagdollEntity(decay, fallen)
   if !IsValid(self:GetDTEntity(ENT_RAGDOLL)) then
-    local ragdoll = ents.Create("prop_ragdoll")
+    local ragdoll = ents.Create('prop_ragdoll')
       ragdoll:SetModel(self:GetModel())
       ragdoll:SetPos(self:GetPos())
       ragdoll:SetAngles(self:GetAngles())
@@ -80,7 +80,7 @@ function player_meta:CreateRagdollEntity(decay, fallen)
     ragdoll:Spawn()
 
     if fallen then
-      ragdoll:CallOnRemove("getup", function()
+      ragdoll:CallOnRemove('getup', function()
         if IsValid(self) then
           self:SetPos(ragdoll:GetPos())
 
@@ -177,7 +177,7 @@ function player_meta:SetRagdollState(state)
   self:SetDTInt(INT_RAGDOLL_STATE, state)
 
   if state == RAGDOLL_FALLENOVER then
-    self:SetAction("fallen", true)
+    self:SetAction('fallen', true)
     self:CreateRagdollEntity(nil, true)
   elseif state == RAGDOLL_DUMMY then
     self:CreateRagdollEntity(120)

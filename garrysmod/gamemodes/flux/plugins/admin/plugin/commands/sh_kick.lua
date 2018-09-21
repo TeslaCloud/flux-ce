@@ -1,15 +1,15 @@
-local COMMAND = Command.new("kick")
-COMMAND.name = "Kick"
-COMMAND.description = t"kickcmd.description"
-COMMAND.syntax = t"kickcmd.syntax"
-COMMAND.category = "administration"
+local COMMAND = Command.new('kick')
+COMMAND.name = 'Kick'
+COMMAND.description = t'kickcmd.description'
+COMMAND.syntax = t'kickcmd.syntax'
+COMMAND.category = 'administration'
 COMMAND.arguments = 1
 COMMAND.immunity = true
-COMMAND.aliases = {"plykick"}
+COMMAND.aliases = { 'plykick' }
 
 function COMMAND:on_run(player, targets, ...)
   local pieces = {...}
-  local reason = "Kicked for unspecified reason."
+  local reason = 'Kicked for unspecified reason.'
 
   if #pieces > 0 then
     reason = table.concat(pieces, ' ')
@@ -19,7 +19,7 @@ function COMMAND:on_run(player, targets, ...)
     v:Kick(reason)
   end
 
-  fl.player:broadcast("kick_message", { get_player_name(player), util.player_list_to_string(targets), reason })
+  fl.player:broadcast('kick_message', { get_player_name(player), util.player_list_to_string(targets), reason })
 end
 
 COMMAND:register()

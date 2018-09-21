@@ -1,7 +1,7 @@
-PLUGIN:set_alias("flPrefixes")
-PLUGIN:set_name("Prefixes")
-PLUGIN:set_author("AleXXX_007")
-PLUGIN:set_description("Adds prefix adjusting to avoid troubles with certain commands.")
+PLUGIN:set_alias('flPrefixes')
+PLUGIN:set_name('Prefixes')
+PLUGIN:set_author('AleXXX_007')
+PLUGIN:set_description('Adds prefix adjusting to avoid troubles with certain commands.')
 
 local stored = {}
 
@@ -30,21 +30,21 @@ function flPrefixes:PlayerSay(player, text, bTeamChat)
         if text:utf8lower():starts(v2) then
           local message = text:utf8sub(v2:utf8len() + 1)
 
-          if message != "" then
+          if message != '' then
             v.callback(player, message, bTeamChat)
           end
 
-          return ""
+          return ''
         end
       end
     elseif text:utf8lower():starts(v.prefix) then
       local message = text:utf8sub(v.prefix:utf8len() + 1)
 
-      if message != "" then
+      if message != '' then
         v.callback(player, message, bTeamChat)
       end
 
-      return ""
+      return ''
     end
   end
 end

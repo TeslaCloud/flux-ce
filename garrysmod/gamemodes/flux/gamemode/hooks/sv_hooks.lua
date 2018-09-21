@@ -1,9 +1,9 @@
-DEFINE_BASECLASS("gamemode_base")
+DEFINE_BASECLASS('gamemode_base')
 
 function GM:DoPlayerDeath(player, attacker, damageInfo) end
 
 function GM:Initialize()
-  local config_file = fileio.Read("gamemodes/flux/flux.yml")
+  local config_file = fileio.Read('gamemodes/flux/flux.yml')
 
   if config_file then
     config.import(config_file, CONFIG_FLUX)
@@ -15,21 +15,21 @@ function GM:Initialize()
 end
 
 function GM:InitPostEntity()
-  local toolGun = weapons.GetStored("gmod_tool")
+  local toolGun = weapons.GetStored('gmod_tool')
 
   for k, v in pairs(fl.tool:GetAll()) do
     toolGun.Tool[v.Mode] = v
   end
 
-  hook.run("LoadData")
-  plugin.call("FLInitPostEntity")
+  hook.run('LoadData')
+  plugin.call('FLInitPostEntity')
 end
 
 function GM:PlayerInitialSpawn(player)
-  player_manager.SetPlayerClass(player, "flPlayer")
-  player_manager.RunClass(player, "Spawn")
+  player_manager.SetPlayerClass(player, 'flPlayer')
+  player_manager.RunClass(player, 'Spawn')
 
-  player:SetUserGroup("user")
+  player:SetUserGroup('user')
   player:RestorePlayer()
 
   if player:IsBot() then
@@ -38,27 +38,27 @@ function GM:PlayerInitialSpawn(player)
     return
   end
 
-  netstream.Start(nil, "PlayerInitialSpawn", player:EntIndex())
+  netstream.Start(nil, 'PlayerInitialSpawn', player:EntIndex())
 end
 
 function GM:PlayerSpawn(player)
-  player_manager.SetPlayerClass(player, "flPlayer")
+  player_manager.SetPlayerClass(player, 'flPlayer')
 
-  hook.run("PlayerSetModel", player)
+  hook.run('PlayerSetModel', player)
 
   player:SetCollisionGroup(COLLISION_GROUP_PLAYER)
-  player:SetMaterial("")
+  player:SetMaterial('')
   player:SetMoveType(MOVETYPE_WALK)
   player:Extinguish()
   player:UnSpectate()
   player:GodDisable()
 
-  player:SetCrouchedWalkSpeed(config.get("crouched_speed") / config.get("walk_speed"))
-  player:SetWalkSpeed(config.get("walk_speed"))
-  player:SetJumpPower(config.get("jump_power"))
-  player:SetRunSpeed(config.get("run_speed"))
+  player:SetCrouchedWalkSpeed(config.get('crouched_speed') / config.get('walk_speed'))
+  player:SetWalkSpeed(config.get('walk_speed'))
+  player:SetJumpPower(config.get('jump_power'))
+  player:SetRunSpeed(config.get('run_speed'))
 
-  hook.run("PostPlayerSpawn", player)
+  hook.run('PostPlayerSpawn', player)
 
   local oldHands = player:GetHands()
 
@@ -66,13 +66,13 @@ function GM:PlayerSpawn(player)
     oldHands:Remove()
   end
 
-  local handsEntity = ents.Create("gmod_hands")
+  local handsEntity = ents.Create('gmod_hands')
 
   if IsValid(handsEntity) then
     player:SetHands(handsEntity)
     handsEntity:SetOwner(player)
 
-    local info = player_manager.RunClass(player, "GetHandsModel")
+    local info = player_manager.RunClass(player, 'GetHandsModel')
 
     if info then
       handsEntity:SetModel(info.model)
@@ -95,21 +95,21 @@ function GM:PostPlayerSpawn(player)
   player:UnLock()
   player:SetNotSolid(false)
 
-  player_manager.RunClass(player, "Loadout")
+  player_manager.RunClass(player, 'Loadout')
 
-  if player:can("toolgun") then
-    player:Give("gmod_tool")
+  if player:can('toolgun') then
+    player:Give('gmod_tool')
   end
 
-  if player:can("physgun") then
-    player:Give("weapon_physgun")
+  if player:can('physgun') then
+    player:Give('weapon_physgun')
   end
 
-  hook.run_client(player, "PostPlayerSpawn")
+  hook.run_client(player, 'PostPlayerSpawn')
 end
 
 function GM:PlayerSetModel(player)
-  local override = hook.run("PrePlayerSetModel", player)
+  local override = hook.run('PrePlayerSetModel', player)
 
   if isstring(override) then
     player:SetModel(override)
@@ -127,11 +127,11 @@ end
 function GM:PlayerInitialized(player)
   player:SetInitialized(true)
 
-  hook.run_client(player, "PlayerInitialized")
+  hook.run_client(player, 'PlayerInitialized')
 end
 
 function GM:PlayerDeath(player, inflictor, attacker)
-  player:set_nv('respawn_time', CurTime() + config.get("respawn_delay"))
+  player:set_nv('respawn_time', CurTime() + config.get('respawn_delay'))
 end
 
 function GM:PlayerDeathThink(player)
@@ -146,7 +146,7 @@ end
 
 function GM:PlayerDisconnected(player)
   player:save_player()
-  netstream.Start(nil, "PlayerDisconnected", player:EntIndex())
+  netstream.Start(nil, 'PlayerDisconnected', player:EntIndex())
 
   Log:notify(player:Name()..' ('..player:GetUserGroup()..') has disconnected from the server.', { action = 'player_events' })
 end
@@ -162,7 +162,7 @@ function GM:OnPluginFileChange(file_name)
 end
 
 function GM:GetFallDamage(player, speed)
-  local fallDamage = hook.run("FLGetFallDamage", player, speed)
+  local fallDamage = hook.run('FLGetFallDamage', player, speed)
 
   if speed < 660 then
     speed = speed - 250
@@ -176,15 +176,15 @@ function GM:GetFallDamage(player, speed)
 end
 
 function GM:PlayerShouldTakeDamage(player, attacker)
-  return hook.run("FLPlayerShouldTakeDamage", player, attacker) or true
+  return hook.run('FLPlayerShouldTakeDamage', player, attacker) or true
 end
 
 function GM:PlayerSpawnProp(player, model)
-  if !player:can("spawn_props") then
+  if !player:can('spawn_props') then
     return false
   end
 
-  if hook.run("FLPlayerSpawnProp", player, model) == false then
+  if hook.run('FLPlayerSpawnProp', player, model) == false then
     return false
   end
 
@@ -192,11 +192,11 @@ function GM:PlayerSpawnProp(player, model)
 end
 
 function GM:PlayerSpawnObject(player, model, skin)
-  if !player:can("spawn_entities") then
+  if !player:can('spawn_entities') then
     return false
   end
 
-  if hook.run("FLPlayerSpawnObject", player, model, skin) == false then
+  if hook.run('FLPlayerSpawnObject', player, model, skin) == false then
     return false
   end
 
@@ -204,11 +204,11 @@ function GM:PlayerSpawnObject(player, model, skin)
 end
 
 function GM:PlayerSpawnNPC(player, npc, weapon)
-  if !player:can("spawn_npcs") then
+  if !player:can('spawn_npcs') then
     return false
   end
 
-  if hook.run("FLPlayerSpawnNPC", player, npc, weapon) == false then
+  if hook.run('FLPlayerSpawnNPC', player, npc, weapon) == false then
     return false
   end
 
@@ -216,11 +216,11 @@ function GM:PlayerSpawnNPC(player, npc, weapon)
 end
 
 function GM:PlayerSpawnEffect(player, model)
-  if !player:can("spawn_entities") then
+  if !player:can('spawn_entities') then
     return false
   end
 
-  if hook.run("FLPlayerSpawnEffect", player, model) == false then
+  if hook.run('FLPlayerSpawnEffect', player, model) == false then
     return false
   end
 
@@ -228,11 +228,11 @@ function GM:PlayerSpawnEffect(player, model)
 end
 
 function GM:PlayerSpawnVehicle(player, model, name, tab)
-  if !player:can("spawn_vehicles") then
+  if !player:can('spawn_vehicles') then
     return false
   end
 
-  if hook.run("FLPlayerSpawnVehicle", player, model, name, tab) == false then
+  if hook.run('FLPlayerSpawnVehicle', player, model, name, tab) == false then
     return false
   end
 
@@ -240,11 +240,11 @@ function GM:PlayerSpawnVehicle(player, model, name, tab)
 end
 
 function GM:PlayerSpawnSWEP(player, weapon, swep)
-  if !player:can("spawn_sweps") then
+  if !player:can('spawn_sweps') then
     return false
   end
 
-  if hook.run("FLPlayerSpawnSWEP", player, weapon, swep) == false then
+  if hook.run('FLPlayerSpawnSWEP', player, weapon, swep) == false then
     return false
   end
 
@@ -252,11 +252,11 @@ function GM:PlayerSpawnSWEP(player, weapon, swep)
 end
 
 function GM:PlayerSpawnSENT(player, class)
-  if !player:can("spawn_entities") then
+  if !player:can('spawn_entities') then
     return false
   end
 
-  if hook.run("FLPlayerSpawnSENT", player, class) == false then
+  if hook.run('FLPlayerSpawnSENT', player, class) == false then
     return false
   end
 
@@ -264,11 +264,11 @@ function GM:PlayerSpawnSENT(player, class)
 end
 
 function GM:PlayerSpawnRagdoll(player, model)
-  if !player:can("spawn_ragdolls") then
+  if !player:can('spawn_ragdolls') then
     return false
   end
 
-  if hook.run("FLPlayerSpawnRagdoll", player, model) == false then
+  if hook.run('FLPlayerSpawnRagdoll', player, model) == false then
     return false
   end
 
@@ -276,11 +276,11 @@ function GM:PlayerSpawnRagdoll(player, model)
 end
 
 function GM:PlayerGiveSWEP(player, weapon, swep)
-  if !player:can("spawn_sweps") then
+  if !player:can('spawn_sweps') then
     return false
   end
 
-  if hook.run("FLPlayerGiveSWEP", player, weapon, swep) == false then
+  if hook.run('FLPlayerGiveSWEP', player, weapon, swep) == false then
     return false
   end
 
@@ -288,7 +288,7 @@ function GM:PlayerGiveSWEP(player, weapon, swep)
 end
 
 function GM:OnPhysgunFreeze(weapon, physObj, entity, player)
-  if player:can("physgun_freeze") then
+  if player:can('physgun_freeze') then
     BaseClass.OnPhysgunFreeze(self, weapon, physObj, entity, player)
 
     return false
@@ -297,12 +297,12 @@ end
 
 function GM:EntityTakeDamage(ent, damageInfo)
   if IsValid(ent) and ent:IsPlayer() then
-    hook.run("PlayerTakeDamage", ent, damageInfo)
+    hook.run('PlayerTakeDamage', ent, damageInfo)
   end
 end
 
 function GM:PlayerTakeDamage(player, damageInfo)
-  netstream.Start(player, "PlayerTakeDamage")
+  netstream.Start(player, 'PlayerTakeDamage')
 end
 
 function GM:OneSecond()
@@ -312,11 +312,11 @@ function GM:OneSecond()
   if !fl.nextSaveData then
     fl.nextSaveData = curTime + 10
   elseif fl.nextSaveData <= curTime then
-    if hook.run("FLShouldSaveData") != false then
-      hook.run("FLSaveData")
+    if hook.run('FLShouldSaveData') != false then
+      hook.run('FLSaveData')
     end
 
-    fl.nextSaveData = curTime + config.get("data_save_interval")
+    fl.nextSaveData = curTime + config.get('data_save_interval')
   end
 
   if !fl.NextPlayerCountCheck then
@@ -325,22 +325,22 @@ function GM:OneSecond()
     fl.NextPlayerCountCheck = sysTime + 1800
 
     if #player.GetAll() == 0 then
-      if hook.run("ShouldServerAutoRestart") != false then
-        fl.dev_print("Server is empty, restarting...")
-        RunConsoleCommand("changelevel", game.GetMap())
+      if hook.run('ShouldServerAutoRestart') != false then
+        fl.dev_print('Server is empty, restarting...')
+        RunConsoleCommand('changelevel', game.GetMap())
       end
     end
   end
 end
 
 function GM:PreLoadPlugins()
-  fl.shared.disabledPlugins = data.Load("disabled_plugins", {})
+  fl.shared.disabledPlugins = data.Load('disabled_plugins', {})
 end
 
 function GM:OnSchemaLoaded()
   fileio.MakeDirectory('lua/flux')
   fileio.MakeDirectory('lua/flux/client')
-  fileio.Write('lua/flux/client/lang.lua', "library.new('lang', fl)\nfl.lang.stored = fl.deserialize([["..fl.serialize(fl.lang.stored).."]])\n")
+  fileio.Write('lua/flux/client/lang.lua', "library.new('lang', fl)\nfl.lang.stored = fl.deserialize([["..fl.serialize(fl.lang.stored)..']])\n')
   fileio.Write('lua/flux/client/shared.lua', 'fl.shared = fl.deserialize([['..fl.serialize(fl.shared)..']])\n')
   AddCSLuaFile('flux/client/lang.lua')
   AddCSLuaFile('flux/client/shared.lua')
@@ -348,14 +348,14 @@ end
 
 function GM:FLSaveData()
   config.save()
-  hook.run("SaveData")
+  hook.run('SaveData')
 end
 
 function GM:PlayerOneSecond(player, curTime)
   local pos = player:GetPos()
 
   if player.lastPos != pos then
-    hook.run("PlayerPositionChanged", player, player.lastPos, pos, curTime)
+    hook.run('PlayerPositionChanged', player, player.lastPos, pos, curTime)
   end
 
   player.lastPos = pos
@@ -364,7 +364,7 @@ end
 function GM:PlayerThink(player, curTime)
   local act = player:GetAction()
 
-  if act != "idle" and act != "spawning" then
+  if act != 'idle' and act != 'spawning' then
     player:DoAction()
   end
 end
@@ -375,7 +375,7 @@ function GM:PlayerSay(player, text, bTeamChat)
   if isCommand then
     fl.command:Interpret(player, text:utf8sub(1 + length, text:utf8len()))
 
-    return ""
+    return ''
   end
 end
 
@@ -394,10 +394,10 @@ do
       local oneSecondTick = (curTime >= nextSecond)
 
       for k, v in ipairs(player.GetAll()) do
-        hook.Call("PlayerThink", self, v, curTime)
+        hook.Call('PlayerThink', self, v, curTime)
 
         if oneSecondTick then
-          hook.Call("PlayerOneSecond", self, v, curTime)
+          hook.Call('PlayerOneSecond', self, v, curTime)
         end
       end
 

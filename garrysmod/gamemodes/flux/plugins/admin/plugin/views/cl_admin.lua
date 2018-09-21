@@ -6,29 +6,29 @@ function PANEL:Init()
   local scrW, scrH = ScrW(), ScrH()
   local width, height = self:GetMenuSize()
 
-  self:SetTitle("Admin")
+  self:SetTitle('Admin')
   self:SetSize(width, height)
   self:SetPos(scrW * 0.5 - width * 0.5, scrH * 0.5 - height * 0.5)
 
-  self.sidebar = vgui.Create("fl_sidebar", self)
+  self.sidebar = vgui.Create('fl_sidebar', self)
   self.sidebar:SetSize(width / 5, height)
   self.sidebar:SetPos(0, 0)
 
   self:SetKeyboardInputEnabled(true)
 
-  hook.run("AddAdminMenuItems", self, self.sidebar)
+  hook.run('AddAdminMenuItems', self, self.sidebar)
 end
 
 function PANEL:Paint(w, h)
   DisableClipping(true)
 
-  draw.box_outlined(0, -4, -4, w + 8, h + 24, 2, theme.GetColor("Background"))
+  draw.box_outlined(0, -4, -4, w + 8, h + 24, 2, theme.GetColor('Background'))
 
   DisableClipping(false)
 end
 
 function PANEL:PaintOver(w, h)
-  theme.Call("AdminPanelPaintOver", self, w, h)
+  theme.Call('AdminPanelPaintOver', self, w, h)
 end
 
 function PANEL:AddPanel(id, title, permission, ...)
@@ -74,19 +74,19 @@ end
 function PANEL:SetFullscreen(bFullscreen)
   if bFullscreen then
     self.sidebar:MoveTo(-self.sidebar:GetWide(), 0, 0.3)
-    self:SetTitle("")
+    self:SetTitle('')
 
-    self.backBtn = vgui.Create("DButton", self)
+    self.backBtn = vgui.Create('DButton', self)
     self.backBtn:SetPos(0, 0)
     self.backBtn:SetSize(100, 0)
-    self.backBtn:SetText("")
+    self.backBtn:SetText('')
 
     self.backBtn.Paint = function(btn, w, h)
-      local font = fl.fonts:GetSize(theme.GetFont("Text_Small"), 16)
+      local font = fl.fonts:GetSize(theme.GetFont('Text_Small'), 16)
       local fontSize = util.font_size(font)
 
-      fl.fa:Draw("fa-chevron-left", 6, 5, 14, Color(255, 255, 255))
-      draw.SimpleText("Go Back", font, 24, 3 * (16 / fontSize), Color(255, 255, 255))
+      fl.fa:Draw('fa-chevron-left', 6, 5, 14, Color(255, 255, 255))
+      draw.SimpleText('Go Back', font, 24, 3 * (16 / fontSize), Color(255, 255, 255))
     end
 
     self.backBtn.DoClick = function(btn)
@@ -94,7 +94,7 @@ function PANEL:SetFullscreen(bFullscreen)
     end
   else
     self.sidebar:MoveTo(0, 0, 0.3)
-    self:SetTitle("Admin")
+    self:SetTitle('Admin')
 
     self.backBtn:SafeRemove()
   end
@@ -104,13 +104,13 @@ function PANEL:GetMenuSize()
   return font.Scale(1280), font.Scale(900)
 end
 
-vgui.Register("flAdminPanel", PANEL, "fl_base_panel")
+vgui.Register('flAdminPanel', PANEL, 'fl_base_panel')
 
-concommand.Add("fl_admin_test", function()
+concommand.Add('fl_admin_test', function()
   if IsValid(AdminPanel) then
     AdminPanel:SafeRemove()
   else
-    AdminPanel = vgui.Create("flAdminPanel")
+    AdminPanel = vgui.Create('flAdminPanel')
     AdminPanel:MakePopup()
   end
 end)

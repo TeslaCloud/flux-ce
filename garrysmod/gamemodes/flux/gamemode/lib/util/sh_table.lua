@@ -99,21 +99,21 @@ end
 function table.from_string(str)
   str = util.remove_newlines(str)
 
-  local exploded = string.Explode(",", str)
+  local exploded = string.Explode(',', str)
   local tab = {}
 
   for k, v in ipairs(exploded) do
     if !isstring(v) then continue end
 
-    if !string.find(v, "=") then
-      v = v:trim_start(" ", true)
+    if !string.find(v, '=') then
+      v = v:trim_start(' ', true)
 
       if string.is_n(v) then
         v = tonumber(v)
-      elseif string.find(v, "\"") then
-        v = v:trim_start("\""):trim_end("\"")
-      elseif v:find("{") then
-        v = v:Replace("{", "")
+      elseif string.find(v, '"') then
+        v = v:trim_start('"'):trim_end('"')
+      elseif v:find('{') then
+        v = v:Replace('{', '')
 
         local last_key = nil
         local buff = v
@@ -121,15 +121,15 @@ function table.from_string(str)
         for k2, v2 in ipairs(exploded) do
           if k2 <= k then continue end
 
-          if v2:find("}") then
-            buff = buff..","..v2:Replace("}", "")
+          if v2:find('}') then
+            buff = buff..','..v2:Replace('}', '')
 
             last_key = k2
 
             break
           end
 
-          buff = buff..","..v2
+          buff = buff..','..v2
         end
 
         if last_key then
@@ -140,24 +140,24 @@ function table.from_string(str)
           v = table.from_string(buff)
         end
       else
-        v = v:trim_end("}")
+        v = v:trim_end('}')
       end
 
-      v = v:trim_end("}")
-      v = v:trim_end("\"")
+      v = v:trim_end('}')
+      v = v:trim_end('\'')
 
       table.insert(tab, v)
     else
-      local parts = string.Explode("=", v)
-      local key = parts[1]:trim_end(" ", true):trim_end("\t", true)
-      local value = parts[2]:trim_start(" ", true):trim_start("\t", true)
+      local parts = string.Explode('=', v)
+      local key = parts[1]:trim_end(' ', true):trim_end('\t', true)
+      local value = parts[2]:trim_start(' ', true):trim_start('\t', true)
 
       if string.is_n(value) then
         value = tonumber(value)
-      elseif value:find("{") and value:find("}") then
+      elseif value:find('{') and value:find('}') then
         value = table.from_string(value)
       else
-        value = value:trim_end("}")
+        value = value:trim_end('}')
       end
 
       tab[key] = value
@@ -247,7 +247,7 @@ function PrintTable(t, indent, done, indent_length)
       end
     else
       local str_key = tostring(key)
-      Msg(str_key..string.rep(' ', indent_length - str_key:len()).."= " )
+      Msg(str_key..string.rep(' ', indent_length - str_key:len())..'= ' )
 
       if isstring(value) then
         Msg('"'..value..'"\n')

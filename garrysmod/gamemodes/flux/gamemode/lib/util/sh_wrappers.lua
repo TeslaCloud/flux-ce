@@ -4,14 +4,14 @@ function typeof(obj)
 end
 
 function Try(id, func, ...)
-  id = id or "Try"
+  id = id or 'Try'
   local result = {pcall(func, ...)}
   local success = result[1]
   table.remove(result, 1)
 
   if !success then
-    ErrorNoHalt("[Try:"..id.."] Failed to run the function!\n")
-    ErrorNoHalt(unpack(result), "\n")
+    ErrorNoHalt('[Try:'..id..'] Failed to run the function!\n')
+    ErrorNoHalt(unpack(result), '\n')
   elseif result[1] != nil then
     return unpack(result)
   end
@@ -53,8 +53,8 @@ do
       if isfunction(handler[1]) then
         handler[1](unpack(result))
       else
-        ErrorNoHalt("[Try:Exception] Failed to run the function!\n")
-        ErrorNoHalt(unpack(result), "\n")
+        ErrorNoHalt('[Try:Exception] Failed to run the function!\n')
+        ErrorNoHalt(unpack(result), '\n')
       end
     elseif result[1] != nil then
       return unpack(result)
@@ -69,7 +69,7 @@ do
 
     try {
       function()
-        print("Hello World")
+        print('Hello World')
       end
     } catch {
       function(exception)
@@ -80,7 +80,7 @@ do
     try {
       function(arg1, arg2)
         print(arg1, arg2)
-      end, "arg1", "arg2"
+      end, 'arg1', 'arg2'
     } catch {
       function(exception)
         print(exception)

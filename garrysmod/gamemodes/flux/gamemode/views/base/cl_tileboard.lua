@@ -82,4 +82,4 @@ function PANEL:Think()
   end
 end
 
-vgui.Register("fl_tile_board", PANEL, "fl_base_panel")
+vgui.Register('fl_tile_board', PANEL, 'fl_base_panel')

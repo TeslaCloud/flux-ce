@@ -1,25 +1,25 @@
-PLUGIN:set_name("Raise Weapon")
-PLUGIN:set_author("Mr. Meow")
-PLUGIN:set_description("Allows weapons to be lowered and raised by holding R key.")
+PLUGIN:set_name('Raise Weapon')
+PLUGIN:set_author('Mr. Meow')
+PLUGIN:set_description('Allows weapons to be lowered and raised by holding R key.')
 
-local player_meta = FindMetaTable("Player")
+local player_meta = FindMetaTable('Player')
 local blockedWeapons = {
-  "weapon_physgun",
-  "gmod_tool",
-  "gmod_camera",
-  "weapon_physcannon"
+  'weapon_physgun',
+  'gmod_tool',
+  'gmod_camera',
+  'weapon_physcannon'
 }
 
 local rotationTranslate = {
-  ["default"] = Angle(30, -30, -25),
-  ["weapon_fists"] = Angle(30, -30, -50)
+  ['default'] = Angle(30, -30, -25),
+  ['weapon_fists'] = Angle(30, -30, -50)
 }
 
 function player_meta:SetWeaponRaised(bIsRaised)
   if SERVER then
     self:SetDTBool(BOOL_WEAPON_RAISED, bIsRaised)
 
-    hook.run("OnWeaponRaised", self, self:GetActiveWeapon(), bIsRaised)
+    hook.run('OnWeaponRaised', self, self:GetActiveWeapon(), bIsRaised)
   end
 end
 
@@ -34,7 +34,7 @@ function player_meta:IsWeaponRaised()
     return true
   end
 
-  local shouldRaise = hook.run("ShouldWeaponBeRaised", self, weapon)
+  local shouldRaise = hook.run('ShouldWeaponBeRaised', self, weapon)
 
   if shouldRaise then
     return shouldRaise
@@ -59,7 +59,7 @@ function PLUGIN:OnWeaponRaised(player, weapon, bIsRaised)
   if IsValid(weapon) then
     local curTime = CurTime()
 
-    hook.run("UpdateWeaponRaised", player, weapon, bIsRaised, curTime)
+    hook.run('UpdateWeaponRaised', player, weapon, bIsRaised, curTime)
   end
 end
 
@@ -94,7 +94,7 @@ end
 
 function PLUGIN:KeyPress(player, key)
   if key == IN_RELOAD then
-    timer.Create("WeaponRaise"..player:SteamID(), 1, 1, function()
+    timer.Create('WeaponRaise'..player:SteamID(), 1, 1, function()
       player:ToggleWeaponRaised()
     end)
   end
@@ -102,7 +102,7 @@ end
 
 function PLUGIN:KeyRelease(player, key)
   if key == IN_RELOAD then
-    timer.Remove("WeaponRaise"..player:SteamID())
+    timer.Remove('WeaponRaise'..player:SteamID())
   end
 end
 
@@ -115,7 +115,7 @@ function PLUGIN:PlayerSwitchWeapon(player, oldWeapon, newWeapon)
 end
 
 function PLUGIN:PlayerSetupDataTables(player)
-  player:DTVar("Bool", BOOL_WEAPON_RAISED, "WeaponRaised")
+  player:DTVar('Bool', BOOL_WEAPON_RAISED, 'WeaponRaised')
 end
 
 if CLIENT then
@@ -131,7 +131,7 @@ if CLIENT then
     end
 
     local fraction = (fl.client.curRaisedFrac or 0) / 100
-    local rotation = rotationTranslate[weapon:GetClass()] or rotationTranslate["default"]
+    local rotation = rotationTranslate[weapon:GetClass()] or rotationTranslate['default']
 
     eyeAngles:RotateAroundAxis(eyeAngles:Up(), rotation.p * fraction)
     eyeAngles:RotateAroundAxis(eyeAngles:Forward(), rotation.y * fraction)

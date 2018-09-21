@@ -11,12 +11,12 @@ Theme.should_reload = true
 
 --[[ Basic Skeleton --]]
 function Theme:init(name, parent)
-  self.name = name or "Unknown"
+  self.name = name or 'Unknown'
   self.id = self.name:to_id() -- temporary unique ID
   self.parent = parent
 
   if !self.id then
-    error("Cannot create a theme without a valid unique ID!")
+    error('Cannot create a theme without a valid unique ID!')
   end
 end
 
@@ -108,5 +108,5 @@ function Theme:register()
 end
 
 function Theme:__tostring()
-  return "Theme ["..self.name.."]"
+  return 'Theme ['..self.name..']'
 end

@@ -6,7 +6,7 @@ PANEL.isOpen = false
 function PANEL:Init()
   local w, h = self:GetWide(), self:GetTall()
 
-  self.scrollPanel = vgui.Create("DScrollPanel", self)
+  self.scrollPanel = vgui.Create('DScrollPanel', self)
 
   self.scrollPanel.Paint = function() return true end
   self.scrollPanel.VBar.Paint = function() return true end
@@ -20,20 +20,20 @@ function PANEL:Init()
   self.scrollPanel:SetSize(w, h)
   self.scrollPanel:PerformLayout()
 
-  self.text_entry = vgui.Create("fl_text_entry", self)
-  self.text_entry:SetText("")
+  self.text_entry = vgui.Create('fl_text_entry', self)
+  self.text_entry:SetText('')
   self.text_entry:SetSize(1, 1)
   self.text_entry.history = {}
   self.text_entry.lastIndex = 0
 
   self.text_entry.OnValueChange = function(entry, value)
-    hook.run("ChatTextChanged", value)
+    hook.run('ChatTextChanged', value)
   end
 
   self.text_entry.OnEnter = function(entry)
     local value = entry:GetValue()
 
-    hook.run("ChatboxTextEntered", value)
+    hook.run('ChatboxTextEntered', value)
 
     if entry.history[1] != value then
       table.insert(entry.history, 1, value)
@@ -41,7 +41,7 @@ function PANEL:Init()
       entry.lastIndex = 1
     end
 
-    entry:SetText("")
+    entry:SetText('')
   end
 
   self.text_entry.OnKeyCodeTyped = function(entry, code)
@@ -71,7 +71,7 @@ function PANEL:Init()
 
     local historyEntry = entry.history[entry.lastIndex]
 
-    if historyEntry and historyEntry != "" and shouldSet then
+    if historyEntry and historyEntry != '' and shouldSet then
       entry:SetText(historyEntry)
       entry:SetCaretPos(string.utf8len(historyEntry))
 
@@ -93,7 +93,7 @@ function PANEL:SetOpen(bIsOpen)
     self.text_entry.lastIndex = 0
   else
     if self.text_entry:GetValue():is_command() then
-      self.text_entry:SetText("")
+      self.text_entry:SetText('')
     end
 
     self:KillFocus()
@@ -110,7 +110,7 @@ function PANEL:IsTypingCommand()
   if IsValid(self.text_entry) then
     local cmd = self.text_entry:GetValue()
 
-    if cmd != "/" then
+    if cmd != '/' then
       return cmd:is_command()
     end
   end
@@ -121,7 +121,7 @@ function PANEL:CreateMessage(messageData)
 
   if !parsed then return end
 
-  local panel = vgui.Create("flChatMessage", self)
+  local panel = vgui.Create('flChatMessage', self)
 
   panel:SetSize(self:GetWide(), self:GetWide()) -- Width is placeholder and is later set by compiled message table.
   panel:SetMessage(parsed)
@@ -130,7 +130,7 @@ function PANEL:CreateMessage(messageData)
 end
 
 function PANEL:AddMessage(messageData)
-  if messageData and plugin.call("ChatboxShouldAddMessage", messageData) != false then
+  if messageData and plugin.call('ChatboxShouldAddMessage', messageData) != false then
     local panel = self:CreateMessage(messageData)
 
     if IsValid(panel) then
@@ -140,7 +140,7 @@ function PANEL:AddMessage(messageData)
 end
 
 function PANEL:AddPanel(panel)
-  if #self.history >= config.get("chatbox_max_messages") then
+  if #self.history >= config.get('chatbox_max_messages') then
     self.history[1]:Eject()
   end
 
@@ -151,7 +151,7 @@ function PANEL:AddPanel(panel)
 
   self.scrollPanel:AddItem(panel)
 
-  self.lastPos = self.lastPos + config.get("chatbox_message_margin") + panel:GetTall()
+  self.lastPos = self.lastPos + config.get('chatbox_message_margin') + panel:GetTall()
 end
 
 function PANEL:RemoveMessage(idx)
@@ -164,8 +164,8 @@ function PANEL:Rebuild()
 
   self.text_entry:SetSize(chatbox.width, 20)
   self.text_entry:SetPos(0, chatbox.height - 20)
-  self.text_entry:SetFont(theme.GetFont("Text_Small"))
-  self.text_entry:SetTextColor(theme.GetColor("Text"))
+  self.text_entry:SetFont(theme.GetFont('Text_Small'))
+  self.text_entry:SetTextColor(theme.GetColor('Text'))
   self.text_entry:RequestFocus()
 
   self.scrollPanel:SetSize(chatbox.width, chatbox.height - self.text_entry:GetTall() - 16)
@@ -180,7 +180,7 @@ function PANEL:Rebuild()
 
     v:SetPos(0, self.lastPos)
 
-    self.lastPos = self.lastPos + config.get("chatbox_message_margin") + v:GetTall()
+    self.lastPos = self.lastPos + config.get('chatbox_message_margin') + v:GetTall()
   end
 end
 
@@ -199,11 +199,11 @@ function PANEL:Think()
 end
 
 function PANEL:Paint(w, h)
-  plugin.call("ChatboxPaintBackground", w, h, self)
+  plugin.call('ChatboxPaintBackground', w, h, self)
 end
 
 function PANEL:PaintOver(w, h)
-  if plugin.call("ChatboxPaintOver", w, h, self) == nil then
+  if plugin.call('ChatboxPaintOver', w, h, self) == nil then
     local entry = self.text_entry
 
     if IsValid(entry) then
@@ -211,7 +211,7 @@ function PANEL:PaintOver(w, h)
       local isCommand, prefixLen = string.is_command(val)
 
       if isCommand then
-        local space = string.find(val, " ")
+        local space = string.find(val, ' ')
         local endpos = space
 
         if !endpos then
@@ -221,7 +221,7 @@ function PANEL:PaintOver(w, h)
         local cmd = string.utf8lower(string.sub(val, prefixLen + 1, endpos - 1))
         local cmds = {}
 
-        if cmd == "" or cmd == " " then return end
+        if cmd == '' or cmd == ' ' then return end
 
         if !space then
           cmds = fl.command:find_all(cmd)
@@ -235,26 +235,26 @@ function PANEL:PaintOver(w, h)
 
         draw.RoundedBox(0, 0, 0, w, h - entry:GetTall(), Color(0, 0, 0, 150))
 
-        local font, color = theme.GetFont("Text_Normal"), theme.GetColor("Accent")
+        local font, color = theme.GetFont('Text_Normal'), theme.GetColor('Accent')
 
         if #cmds > 0 then
           local lastY = 0
           local color_white = Color(255, 255, 255)
 
           for k, v in ipairs(cmds) do
-            local w, h = draw.SimpleText("/" + v.name, font, 16, 16 + lastY, color)
+            local w, h = draw.SimpleText('/' + v.name, font, 16, 16 + lastY, color)
             w, h = draw.SimpleText(v.syntax, font, 16 + w + 8, 16 + lastY, color_white)
 
             if #cmds == 1 then
-              local smallFont = theme.GetFont("Text_Small")
+              local smallFont = theme.GetFont('Text_Small')
               local w2, h2 = draw.SimpleText(v.description, smallFont, 16, 16 + h + 4, color_white)
-              local aliases = "[none]"
+              local aliases = '[none]'
 
               if v.aliases and #v.aliases > 0 then
-                aliases = table.concat(v.aliases or {}, ", ")
+                aliases = table.concat(v.aliases or {}, ', ')
               end
 
-              draw.SimpleText("Aliases: " + aliases, smallFont, 16, 16 + h + h2 + 4, color_white)
+              draw.SimpleText('Aliases: ' + aliases, smallFont, 16, 16 + h + h2 + 4, color_white)
             end
 
             lastY = lastY + h + 8
@@ -262,11 +262,11 @@ function PANEL:PaintOver(w, h)
             if k >= 10 then break end
           end
         else
-          draw.SimpleText("No commands found!", font, 16, 16, color)
+          draw.SimpleText('No commands found!', font, 16, 16, color)
         end
       end
     end
   end
 end
 
-vgui.Register("flChatPanel", PANEL, "fl_base_panel")
+vgui.Register('flChatPanel', PANEL, 'fl_base_panel')

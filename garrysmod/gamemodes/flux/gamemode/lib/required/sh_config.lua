@@ -1,7 +1,7 @@
 ﻿-- This library is for serverside configs only!
 -- For clientside configs, see cl_settings.lua!
 
-library.new "config"
+library.new 'config'
 
 local stored = config.stored or {}
 config.stored = stored
@@ -40,18 +40,18 @@ if SERVER then
         if PLUGIN then
           stored[key].added_by = PLUGIN:get_name()
         elseif Schema then
-          stored[key].added_by = "Schema"
+          stored[key].added_by = 'Schema'
         else
-          stored[key].added_by = "Flux"
+          stored[key].added_by = 'Flux'
         end
 
         if isnumber(from_config) then
           if from_config == CONFIG_FLUX then
-            stored[key].added_by = "Flux Config"
+            stored[key].added_by = 'Flux Config'
           elseif from_config == CONFIG_SCHEMA then
-            stored[key].added_by = "Schema Config"
+            stored[key].added_by = 'Schema Config'
           elseif PLUGIN and from_config == CONFIG_PLUGIN then
-            stored[key].added_by = PLUGIN:get_name().." Config"
+            stored[key].added_by = PLUGIN:get_name()..' Config'
           end
         end
       end
@@ -65,19 +65,19 @@ if SERVER then
       end
 
       if !stored[key].hidden then
-        netstream.Start(nil, "config_set_var", key, stored[key].value)
+        netstream.Start(nil, 'config_set_var', key, stored[key].value)
       end
 
       cache[key] = value
     end
   end
 
-  local player_meta = FindMetaTable("Player")
+  local player_meta = FindMetaTable('Player')
 
   function player_meta:send_config()
     for k, v in pairs(stored) do
       if !v.hidden then
-        netstream.Start(self, "config_set_var", k, v.value)
+        netstream.Start(self, 'config_set_var', k, v.value)
       end
     end
 
@@ -99,27 +99,27 @@ else
   end
 
   function config.create_category(id, name, description)
-    id = id or "other"
+    id = id or 'other'
 
     menu_items[id] = {
-      category = {name = name or "Other", description = description or ""},
+      category = {name = name or 'Other', description = description or ''},
       AddKey = function(key, name, description, dataType, data)
         config.add_to_menu(id, key, name, description, dataType, data)
       end,
       add_slider = function(key, name, description, data)
-        config.add_to_menu(id, key, name, description, "number", data)
+        config.add_to_menu(id, key, name, description, 'number', data)
       end,
       add_table_editor = function(key, name, description, data)
-        config.add_to_menu(id, key, name, description, "table", data)
+        config.add_to_menu(id, key, name, description, 'table', data)
       end,
       add_textbox = function(key, name, description, data)
-        config.add_to_menu(id, key, name, description, "string", data)
+        config.add_to_menu(id, key, name, description, 'string', data)
       end,
       add_checkbox = function(key, name, description, data)
-        config.add_to_menu(id, key, name, description, "bool", data)
+        config.add_to_menu(id, key, name, description, 'bool', data)
       end,
       add_dropdown = function(key, name, description, data)
-        config.add_to_menu(id, key, name, description, "dropdown", data)
+        config.add_to_menu(id, key, name, description, 'dropdown', data)
       end,
       configs = {}
     }
@@ -139,7 +139,7 @@ else
 
     table.insert(menu_items[category].configs, {
       name = name or key,
-      description = description or "This config has no description set.",
+      description = description or 'This config has no description set.',
       type = dataType,
       data = data or {}
     })
@@ -149,7 +149,7 @@ else
     return menu_items
   end
 
-  netstream.Hook("config_set_var", function(key, value)
+  netstream.Hook('config_set_var', function(key, value)
     if key == nil then return end
 
     stored[key] = stored[key] or {}
@@ -178,12 +178,12 @@ end
 
 if SERVER then
   function config.import(contents, from_config)
-    if !isstring(contents) or contents == "" then return end
+    if !isstring(contents) or contents == '' then return end
 
     local config_table = YAML.eval(contents)
 
     for k, v in pairs(config_table) do
-      if k != "depends" and plugin.call("ShouldConfigImport", k, v) == nil then
+      if k != 'depends' and plugin.call('ShouldConfigImport', k, v) == nil then
         config.set(k, v, nil, from_config)
       end
     end

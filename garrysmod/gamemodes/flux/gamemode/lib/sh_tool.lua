@@ -1,4 +1,4 @@
-library.new("tool", fl)
+library.new('tool', fl)
 
 local stored = fl.tool.stored or {}
 fl.tool.stored = stored
@@ -21,25 +21,25 @@ function fl.tool:register(obj)
   obj:CreateConVars()
   stored[obj.Mode] = obj
 
-  fl.dev_print("Registering Tool: "..obj.Mode)
+  fl.dev_print('Registering Tool: '..obj.Mode)
 end
 
-pipeline.register("tool", function(id, file_name, pipe)
+pipeline.register('tool', function(id, file_name, pipe)
   TOOL = Tool.new()
   TOOL.Mode = id
   TOOL.id = id
 
-  hook.run("PreIncludeTool", TOOL)
+  hook.run('PreIncludeTool', TOOL)
 
   util.include(file_name)
 
-  hook.run("ToolPreCreateConvars", TOOL)
+  hook.run('ToolPreCreateConvars', TOOL)
 
   TOOL:CreateConVars()
 
   stored[id] = TOOL
 
-  fl.dev_print("Registering Tool: "..id)
+  fl.dev_print('Registering Tool: '..id)
 
   TOOL = nil
 end)

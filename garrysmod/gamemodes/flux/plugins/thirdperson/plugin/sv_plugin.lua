@@ -1,4 +1,4 @@
-concommand.Add("flThirdPerson", function(player)
+concommand.Add('flThirdPerson', function(player)
   local old_val = player:get_nv('third_person')
 
   if old_val == nil then

@@ -1,4 +1,4 @@
-library.new "item"
+library.new 'item'
 
 -- Item Templates storage.
 local stored = item.stored or {}
@@ -41,7 +41,7 @@ function item.register(id, data)
   end
 
   if !isstring(id) and !isstring(data.name) then
-    ErrorNoHalt("Attempt to register an item without a valid ID!")
+    ErrorNoHalt('Attempt to register an item without a valid ID!')
     debug.Trace()
 
     return
@@ -51,12 +51,12 @@ function item.register(id, data)
     id = data.name:to_id()
   end
 
-  fl.dev_print("Registering item: " .. tostring(id))
+  fl.dev_print('Registering item: ' .. tostring(id))
 
   data.id = id
-  data.name = data.name or "Unknown Item"
+  data.name = data.name or 'Unknown Item'
   data.print_name = data.print_name or data.name
-  data.description = data.description or "This item has no description!"
+  data.description = data.description or 'This item has no description!'
   data.weight = data.weight or 1
   data.stackable = data.stackable or false
   data.max_stack = data.max_stack or 64
@@ -202,7 +202,7 @@ function item.New(id, data, forcedID)
 
     if SERVER then
       item.AsyncSave()
-      netstream.Start(nil, "ItemNewInstance", id, (data or 1), itemID)
+      netstream.Start(nil, 'ItemNewInstance', id, (data or 1), itemID)
     end
 
     return instances[id][itemID]
@@ -223,7 +223,7 @@ function item.Remove(instance_id)
       item.AsyncSave()
     end
 
-    fl.dev_print("Removed item instance ID: "..item_table.instance_id)
+    fl.dev_print('Removed item instance ID: '..item_table.instance_id)
   end
 end
 
@@ -237,7 +237,7 @@ function item.CreateBase(name)
   class(name, Item)
 end
 
-pipeline.register("item", function(id, file_name, pipe)
+pipeline.register('item', function(id, file_name, pipe)
   ITEM = Item.new(id)
 
   util.include(file_name)
@@ -248,12 +248,12 @@ pipeline.register("item", function(id, file_name, pipe)
 end)
 
 function item.IncludeItems(directory)
-  pipeline.include_folder("item", directory)
+  pipeline.include_folder('item', directory)
 end
 
 if SERVER then
   function item.Load()
-    local loaded = data.LoadSchema("items/instances", {})
+    local loaded = data.LoadSchema('items/instances', {})
 
     if loaded and table.Count(loaded) > 0 then
       -- Returns functions to instances table after loading.
@@ -275,7 +275,7 @@ if SERVER then
       item.instances = loaded
     end
 
-    local loaded = data.LoadSchema("items/entities", {})
+    local loaded = data.LoadSchema('items/entities', {})
 
     if loaded and table.Count(loaded) > 0 then
       for id, instanceTable in pairs(loaded) do
@@ -297,7 +297,7 @@ if SERVER then
     local toSave = {}
 
     for k, v in pairs(instances) do
-      if k == "count" then
+      if k == 'count' then
         toSave[k] = v
       else
         toSave[k] = {}
@@ -312,11 +312,11 @@ if SERVER then
       end
     end
 
-    data.SaveSchema("items/instances", toSave)
+    data.SaveSchema('items/instances', toSave)
   end
 
   function item.SaveEntities()
-    local itemEnts = ents.FindByClass("fl_item")
+    local itemEnts = ents.FindByClass('fl_item')
 
     entities = {}
 
@@ -331,7 +331,7 @@ if SERVER then
       end
     end
 
-    data.SaveSchema("items/entities", entities)
+    data.SaveSchema('items/entities', entities)
   end
 
   function item.SaveAll()
@@ -356,23 +356,23 @@ if SERVER then
 
   function item.NetworkItemData(player, item_table)
     if item.IsInstance(item_table) then
-      netstream.Start(player, "ItemData", item_table.id, item_table.instance_id, item_table.data)
+      netstream.Start(player, 'ItemData', item_table.id, item_table.instance_id, item_table.data)
     end
   end
 
   function item.NetworkItem(player, instance_id)
-    netstream.Start(player, "NetworkItem", instance_id, item.ToSave(item.FindInstanceByID(instance_id)))
+    netstream.Start(player, 'NetworkItem', instance_id, item.ToSave(item.FindInstanceByID(instance_id)))
   end
 
   function item.NetworkEntityData(player, ent)
     if IsValid(ent) then
-      netstream.Start(player, "ItemEntData", ent:EntIndex(), ent.item.id, ent.item.instance_id)
+      netstream.Start(player, 'ItemEntData', ent:EntIndex(), ent.item.id, ent.item.instance_id)
     end
   end
 
   -- A function to send info about items in the world.
   function item.SendToPlayer(player)
-    local itemEnts = ents.FindByClass("fl_item")
+    local itemEnts = ents.FindByClass('fl_item')
 
     for k, v in ipairs(itemEnts) do
       if v.item then
@@ -380,23 +380,23 @@ if SERVER then
       end
     end
 
-    hook.run_client(player, "OnItemDataReceived")
+    hook.run_client(player, 'OnItemDataReceived')
   end
 
   function item.Spawn(position, angles, item_table)
     if !position or !istable(item_table) then
-      ErrorNoHalt("[Flux:Item] No position or item table is not a table!\n")
+      ErrorNoHalt('No position or item table is not a table!\n')
 
       return
     end
 
     if !item.IsInstance(item_table) then
-      ErrorNoHalt("[Flux:Item] Cannot spawn non-instantiated item!\n")
+      ErrorNoHalt('Cannot spawn non-instantiated item!\n')
 
       return
     end
 
-    local ent = ents.Create("fl_item")
+    local ent = ents.Create('fl_item')
 
     ent:SetItem(item_table)
 
@@ -425,7 +425,7 @@ if SERVER then
     return ent, item_table
   end
 
-  netstream.Hook("RequestItemData", function(player, entIndex)
+  netstream.Hook('RequestItemData', function(player, entIndex)
     local ent = Entity(entIndex)
 
     if IsValid(ent) then
@@ -433,26 +433,26 @@ if SERVER then
     end
   end)
 else
-  netstream.Hook("ItemData", function(id, instance_id, data)
+  netstream.Hook('ItemData', function(id, instance_id, data)
     if istable(instances[id][instance_id]) then
       instances[id][instance_id].data = data
     end
   end)
 
-  netstream.Hook("NetworkItem", function(instance_id, item_table)
+  netstream.Hook('NetworkItem', function(instance_id, item_table)
     if item_table and stored[item_table.id] then
       local newTable = table.Copy(stored[item_table.id])
       table.safe_merge(newTable, item_table)
 
       instances[newTable.id][instance_id] = newTable
 
-      print("Received instance ID "..tostring(newTable))
+      print('Received instance ID '..tostring(newTable))
     else
-      print("FAILED TO RECEIVE INSTANCE ID "..instance_id)
+      print('FAILED TO RECEIVE INSTANCE ID '..instance_id)
     end
   end)
 
-  netstream.Hook("ItemEntData", function(entIndex, id, instance_id)
+  netstream.Hook('ItemEntData', function(entIndex, id, instance_id)
     local ent = Entity(entIndex)
 
     if IsValid(ent) then
@@ -464,13 +464,13 @@ else
       ent:SetColor(item_table:GetColor())
 
       -- Restore item's functions. For some weird reason they aren't properly initialized.
-      table.safe_merge(ent, scripted_ents.Get("fl_item"))
+      table.safe_merge(ent, scripted_ents.Get('fl_item'))
 
       ent.item = item_table
     end
   end)
 
-  netstream.Hook("ItemNewInstance", function(id, data, itemID)
+  netstream.Hook('ItemNewInstance', function(id, data, itemID)
     item.New(id, data, itemID)
   end)
 end

@@ -1,4 +1,4 @@
-library.new "theme"
+library.new 'theme'
 local current_theme = theme.current_theme or nil
 theme.current_theme = current_theme
 local stored = theme.stored or {}
@@ -28,7 +28,7 @@ function theme.RegisterTheme(obj)
 end
 
 function theme.CreatePanel(panelID, parent, ...)
-  if current_theme and hook.run("ShouldThemeCreatePanel", panelID, current_theme) != false then
+  if current_theme and hook.run('ShouldThemeCreatePanel', panelID, current_theme) != false then
     return current_theme:CreatePanel(panelID, parent, ...)
   end
 end
@@ -40,7 +40,7 @@ function theme.Hook(id, ...)
     table.remove(result, 1)
 
     if !success then
-      ErrorNoHalt("Theme hook '"..id.."' has failed to run!\n"..result[1].."\n")
+      ErrorNoHalt('Theme hook ''..id..'' has failed to run!\n'..result[1]..'\n')
     else
       return unpack(result)
     end
@@ -135,7 +135,7 @@ end
 
 function theme.SetDermaSkin()
   if current_theme then
-    local skinTable = derma.GetNamedSkin("Flux")
+    local skinTable = derma.GetNamedSkin('Flux')
 
     for k, v in pairs(current_theme.skin) do
       skinTable[k] = v
@@ -149,7 +149,7 @@ function theme.LoadTheme(themeID, bIsReloading)
   local themeTable = theme.FindTheme(themeID)
 
   if themeTable then
-    if !bIsReloading and hook.run("ShouldThemeLoad", themeTable) == false then
+    if !bIsReloading and hook.run('ShouldThemeLoad', themeTable) == false then
       return
     end
 
@@ -171,19 +171,19 @@ function theme.LoadTheme(themeID, bIsReloading)
 
     theme.SetDermaSkin()
 
-    hook.run("OnThemeLoaded", current_theme)
+    hook.run('OnThemeLoaded', current_theme)
   end
 end
 
 function theme.UnloadTheme()
-  if hook.run("ShouldThemeUnload", current_theme) == false then
+  if hook.run('ShouldThemeUnload', current_theme) == false then
     return
   end
 
   if current_theme.OnUnloaded then
     current_theme:OnUnloaded()
 
-    hook.run("OnThemeUnloaded", current_theme)
+    hook.run('OnThemeUnloaded', current_theme)
   end
 
   current_theme = nil
@@ -192,14 +192,14 @@ end
 function theme.Reload()
   if !current_theme then return end
 
-  if (current_theme.should_reload == false) or hook.run("ShouldThemeReload", current_theme) == false then
+  if (current_theme.should_reload == false) or hook.run('ShouldThemeReload', current_theme) == false then
     return
   end
 
   theme.LoadTheme(current_theme.id)
 
-  theme.Hook("OnReloaded")
-  hook.run("OnThemeReloaded", current_theme)
+  theme.Hook('OnReloaded')
+  hook.run('OnThemeReloaded', current_theme)
 end
 
 do
@@ -207,9 +207,9 @@ do
 
   function themeHooks:PlayerInitialized()
     if !Schema or !Schema.DefaultTheme then
-      theme.LoadTheme("factory")
+      theme.LoadTheme('factory')
     else
-      theme.LoadTheme(Schema.DefaultTheme or "factory")
+      theme.LoadTheme(Schema.DefaultTheme or 'factory')
     end
   end
 
@@ -217,5 +217,5 @@ do
     theme.Reload()
   end
 
-  plugin.add_hooks("flThemeHooks", themeHooks)
+  plugin.add_hooks('flThemeHooks', themeHooks)
 end

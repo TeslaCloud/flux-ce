@@ -1,9 +1,9 @@
 class 'Command'
 
-Command.id = "undefined"
-Command.name = "Unknown"
-Command.description = "An undescribed command."
-Command.syntax = "[none]"
+Command.id = 'undefined'
+Command.name = 'Unknown'
+Command.description = 'An undescribed command.'
+Command.syntax = '[none]'
 Command.immunity = false
 Command.player_arg = nil
 Command.arguments = 0
@@ -16,7 +16,7 @@ end
 function Command:on_run() end
 
 function Command:__tostring()
-  return "Command ["..self.id.."]["..self.name.."]"
+  return 'Command ['..self.id..']['..self.name..']'
 end
 
 function Command:register()

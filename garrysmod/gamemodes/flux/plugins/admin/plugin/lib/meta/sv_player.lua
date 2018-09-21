@@ -1,4 +1,4 @@
-local player_meta = FindMetaTable("Player")
+local player_meta = FindMetaTable('Player')
 
 function player_meta:SaveUsergroup()
   if self.record then
@@ -13,7 +13,7 @@ function player_meta:SetPermissions(permTable)
 end
 
 function player_meta:SetUserGroup(group)
-  group = group or "user"
+  group = group or 'user'
 
   local groupObj = fl.admin:FindGroup(group)
   local oldGroupObj = fl.admin:FindGroup(self:GetUserGroup())

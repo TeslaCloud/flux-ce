@@ -1,17 +1,17 @@
-local COMMAND = Command.new("demote")
-COMMAND.name = "Demote"
-COMMAND.description = t"demote.description"
-COMMAND.syntax = t"demote.syntax"
-COMMAND.category = "player_management"
+local COMMAND = Command.new('demote')
+COMMAND.name = 'Demote'
+COMMAND.description = t'demote.description'
+COMMAND.syntax = t'demote.syntax'
+COMMAND.category = 'player_management'
 COMMAND.arguments = 1
 COMMAND.immunity = true
-COMMAND.aliases = {"plydemote"}
+COMMAND.aliases = { 'plydemote' }
 
 function COMMAND:on_run(player, targets)
   for k, target in ipairs(targets) do
-    target:SetUserGroup("user")
+    target:SetUserGroup('user')
 
-    fl.player:broadcast("demote.message", { get_player_name(player), target:Name(), target:GetUserGroup() })
+    fl.player:broadcast('demote.message', { get_player_name(player), target:Name(), target:GetUserGroup() })
   end
 end
 

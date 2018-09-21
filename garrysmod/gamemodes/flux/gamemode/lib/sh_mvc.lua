@@ -1,6 +1,6 @@
 -- Sorta model-view-controller implementation, except the model isn't /actually/ used lol.
 
-library.new "mvc"
+library.new 'mvc'
 
 if CLIENT then
   local mvc_hooks = {}
@@ -8,7 +8,7 @@ if CLIENT then
   function mvc.push(name, ...)
     if !isstring(name) then return end
 
-    netstream.Start("mvc_push", name, ...)
+    netstream.Start('mvc_push', name, ...)
   end
 
   function mvc.pull(name, handler, prevent_remove)
@@ -31,7 +31,7 @@ if CLIENT then
     mvc.pull(name, handler, true)
   end
 
-  netstream.Hook("mvc_pull", function(name, ...)
+  netstream.Hook('mvc_pull', function(name, ...)
     local hooks = mvc_hooks[name]
 
     if hooks then
@@ -40,7 +40,7 @@ if CLIENT then
 
         if !success then
           ErrorNoHalt("The '"..name.." - "..tostring(k).."' MVC callback has failed to run!\n")
-          ErrorNoHalt(tostring(value).."\n")
+          ErrorNoHalt(tostring(value)..'\n')
         end
 
         if !v.prevent_remove then
@@ -63,10 +63,10 @@ else
   function mvc.push(player, name, ...)
     if !isstring(name) then return end
 
-    netstream.Start(player, "mvc_pull", name, ...)
+    netstream.Start(player, 'mvc_pull', name, ...)
   end
 
-  netstream.Hook("mvc_push", function(player, name, ...)
+  netstream.Hook('mvc_push', function(player, name, ...)
     local handlers = mvc_handlers[name]
 
     if handlers then
@@ -75,7 +75,7 @@ else
 
         if !success then
           ErrorNoHalt("The '"..name.." - "..tostring(k).."' MVC handler has failed to run!\n")
-          ErrorNoHalt(tostring(value).."\n")
+          ErrorNoHalt(tostring(value)..'\n')
         end
       end
     end

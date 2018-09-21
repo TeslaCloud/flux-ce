@@ -1,13 +1,13 @@
-local COMMAND = Command.new("textadd")
-COMMAND.name = "TextAdd"
-COMMAND.description = t('3d_text.text_add_desc')
-COMMAND.syntax = t('3d_text.text_add_syntax')
-COMMAND.category = "misc"
+local COMMAND = Command.new('textadd')
+COMMAND.name = 'TextAdd'
+COMMAND.description = t'3d_text.text_add_desc'
+COMMAND.syntax = t'3d_text.text_add_syntax'
+COMMAND.category = 'misc'
 COMMAND.arguments = 1
 
 function COMMAND:on_run(player, text, scale, style, color, extraColor)
-  if !text or text == "" then
-    fl.player:notify(player, t('3d_text.not_enough_text'))
+  if !text or text == '' then
+    fl.player:notify(player, t'3d_text.not_enough_text')
 
     return
   end
@@ -20,8 +20,8 @@ function COMMAND:on_run(player, text, scale, style, color, extraColor)
   local data = {
     text = text,
     style = style or 0,
-    color = (color and Color(color)) or Color("#FFFFFF"),
-    extraColor = (extraColor and Color(extraColor)) or Color("#FF0000"),
+    color = (color and Color(color)) or Color('#FFFFFF'),
+    extraColor = (extraColor and Color(extraColor)) or Color('#FF0000'),
     angle = angle,
     pos = trace.HitPos,
     normal = trace.HitNormal,
@@ -30,7 +30,7 @@ function COMMAND:on_run(player, text, scale, style, color, extraColor)
 
   fl3DText:AddText(data)
 
-  fl.player:notify(player, t('3d_text.text_added'))
+  fl.player:notify(player, t'3d_text.text_added')
 end
 
 COMMAND:register()

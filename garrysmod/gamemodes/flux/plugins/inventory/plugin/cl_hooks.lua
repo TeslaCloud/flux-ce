@@ -1,12 +1,12 @@
 function fl_inventory:AddTabMenuItems(menu)
-  menu:AddMenuItem("inventory", {
-    title = "Inventory",
-    panel = "fl_inventory",
-    icon = "fa-inbox",
+  menu:AddMenuItem('inventory', {
+    title = 'Inventory',
+    panel = 'fl_inventory',
+    icon = 'fa-inbox',
     callback = function(menuPanel, button)
       local inv = menuPanel.activePanel
       inv:SetPlayer(fl.client)
-      inv:SetTitle("Inventory")
+      inv:SetTitle('Inventory')
     end
   })
 end
@@ -59,16 +59,16 @@ function fl_inventory:PostCharacterLoaded()
   end
 end
 
-spawnmenu.AddCreationTab("Items", function()
-  local panel = vgui.Create("flItemSpawner")
+spawnmenu.AddCreationTab('Items', function()
+  local panel = vgui.Create('flItemSpawner')
 
   panel:Dock(FILL)
   panel:Rebuild()
 
   return panel
-end, "icon16/wand.png", 40)
+end, 'icon16/wand.png', 40)
 
-netstream.Hook("RefreshInventory", function()
+netstream.Hook('RefreshInventory', function()
   if fl.tabMenu and fl.tabMenu.activePanel and fl.tabMenu.activePanel.Rebuild then
     fl.tabMenu.activePanel:Rebuild()
   end

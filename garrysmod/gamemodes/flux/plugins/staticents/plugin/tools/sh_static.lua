@@ -1,14 +1,14 @@
-TOOL.Category = "Flux"
-TOOL.Name = "Static Add/Remove"
+TOOL.Category = 'Flux'
+TOOL.Name = 'Static Add/Remove'
 TOOL.Command = nil
-TOOL.ConfigName = ""
+TOOL.ConfigName = ''
 
 function TOOL:LeftClick(trace)
   if CLIENT then return true end
 
   local player = self:GetOwner()
 
-  plugin.call("PlayerMakeStatic", player, true)
+  plugin.call('PlayerMakeStatic', player, true)
 
    return true
 end
@@ -18,7 +18,7 @@ function TOOL:RightClick(trace)
 
   local player = self:GetOwner()
 
-  plugin.call("PlayerMakeStatic", player, false)
+  plugin.call('PlayerMakeStatic', player, false)
 
   return true
 end

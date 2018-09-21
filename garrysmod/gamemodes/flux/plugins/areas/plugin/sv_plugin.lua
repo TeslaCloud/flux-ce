@@ -21,9 +21,9 @@ function flAreas:OneSecond()
             if util.vector_in_poly(pos, v2) then
               -- Player entered the area
               if !table.HasValue(player.lastArea[v.id], k2) then
-                Try("Areas", areas.GetCallback(v.type), player, v, true, pos, curTime)
+                Try('Areas', areas.GetCallback(v.type), player, v, true, pos, curTime)
 
-                netstream.Start(player, "PlayerEnteredArea", k, pos)
+                netstream.Start(player, 'PlayerEnteredArea', k, pos)
 
                 table.insert(player.lastArea[v.id], k2)
               end
@@ -35,9 +35,9 @@ function flAreas:OneSecond()
           if !enteredArea then
             -- Player left the area
             if table.HasValue(player.lastArea[v.id], k2) then
-              Try("Areas", areas.GetCallback(v.type), player, v, false, pos, curTime)
+              Try('Areas', areas.GetCallback(v.type), player, v, false, pos, curTime)
 
-              netstream.Start(player, "PlayerLeftArea", k, pos)
+              netstream.Start(player, 'PlayerLeftArea', k, pos)
 
               table.RemoveByValue(player.lastArea[v.id], k2)
             end
@@ -49,15 +49,15 @@ function flAreas:OneSecond()
 end
 
 function flAreas:PlayerInitialized(player)
-  netstream.Start(player, "flLoadAreas", areas.GetAll())
+  netstream.Start(player, 'flLoadAreas', areas.GetAll())
 end
 
 function flAreas:LoadData()
-  local loaded = data.LoadPlugin("areas", {})
+  local loaded = data.LoadPlugin('areas', {})
 
   areas.SetStored(loaded)
 end
 
 function flAreas:SaveData()
-  data.SavePlugin("areas", areas.GetAll())
+  data.SavePlugin('areas', areas.GetAll())
 end

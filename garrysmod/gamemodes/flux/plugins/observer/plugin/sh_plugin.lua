@@ -1,14 +1,14 @@
-PLUGIN:set_alias("flObserver")
+PLUGIN:set_alias('flObserver')
 
-util.include("cl_hooks.lua")
-util.include("sv_hooks.lua")
+util.include('cl_hooks.lua')
+util.include('sv_hooks.lua')
 
 if fl.admin then
-  fl.admin:RegisterPermission("noclip", "Noclip", "Lets the player use observer mode / noclip.", "general")
+  fl.admin:RegisterPermission('noclip', 'Noclip', 'Lets the player use observer mode / noclip.', 'general')
 end
 
 if SERVER then
-  config.set("observer_reset", false)
+  config.set('observer_reset', false)
 else
-  config.add_to_menu("observer_reset", "Observer Reset", "Whether or not should player's position be restored when they leave observer mode?", "boolean")
+  config.add_to_menu('observer_reset', 'Observer Reset', "Whether or not should player's position be restored when they leave observer mode?", 'boolean')
 end

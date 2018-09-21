@@ -114,13 +114,13 @@ function PANEL:Paint(w, h)
 
   if self.itemCount >= 2 then
     DisableClipping(true)
-      draw.SimpleText(self.itemCount, theme.GetFont("Text_Smallest"), 52, 50, Color(200, 200, 200))
+      draw.SimpleText(self.itemCount, theme.GetFont('Text_Smallest'), 52, 50, Color(200, 200, 200))
     DisableClipping(false)
   end
 
   if isnumber(self.slot_number) then
     DisableClipping(true)
-      draw.SimpleText(self.slot_number, theme.GetFont("Text_Smallest"), 4, 50, Color(200, 200, 200))
+      draw.SimpleText(self.slot_number, theme.GetFont('Text_Smallest'), 4, 50, Color(200, 200, 200))
     DisableClipping(false)
   end
 end
@@ -135,7 +135,7 @@ function PANEL:Rebuild()
 
     return
   else
-    self:Droppable("flItem")
+    self:Droppable('flItem')
   end
 
   if IsValid(self.spawnIcon) then
@@ -143,7 +143,7 @@ function PANEL:Rebuild()
     self.spawnIcon:Remove()
   end
 
-  self.spawnIcon = vgui.Create("SpawnIcon", self)
+  self.spawnIcon = vgui.Create('SpawnIcon', self)
   self.spawnIcon:SetPos(2, 2)
   self.spawnIcon:SetSize(60, 60)
   self.spawnIcon:SetModel(self.itemData.model, self.itemData.skin)
@@ -166,9 +166,9 @@ function PANEL:OnMouseReleased(...)
       fl.inventoryDragSlot = nil
 
       if #self.instance_ids > 1 then
-        hook.run("PlayerUseItemMenu", self.instance_ids)
+        hook.run('PlayerUseItemMenu', self.instance_ids)
       else
-        hook.run("PlayerUseItemMenu", self.itemData)
+        hook.run('PlayerUseItemMenu', self.itemData)
       end
     end
   end
@@ -176,7 +176,7 @@ function PANEL:OnMouseReleased(...)
   self.BaseClass.OnMouseReleased(self, ...)
 end
 
-vgui.Register("flInventoryItem", PANEL, "DPanel")
+vgui.Register('flInventoryItem', PANEL, 'DPanel')
 
 local PANEL = {}
 PANEL.inventory = {}
@@ -211,7 +211,7 @@ function PANEL:SlotsToInventory()
     end
   end
 
-  netstream.Start("InventorySync", self.inventory)
+  netstream.Start('InventorySync', self.inventory)
 end
 
 function PANEL:GetMenuSize()
@@ -229,7 +229,7 @@ function PANEL:Rebuild()
     self:SetInventory(self.player:GetInventory(self.inventory_type))
   end
 
-  self.scroll = self.scroll or vgui.Create("DScrollPanel", self) //Create the Scroll panel
+  self.scroll = self.scroll or vgui.Create('DScrollPanel', self) //Create the Scroll panel
   self.scroll:SetSize(self:GetWide(), self:GetTall())
   self.scroll:SetPos(10, 32)
 
@@ -237,14 +237,14 @@ function PANEL:Rebuild()
     self.list:Clear()
   end
 
-  self.list = self.list or vgui.Create("DIconLayout", self.scroll)
+  self.list = self.list or vgui.Create('DIconLayout', self.scroll)
   self.list:SetSize(self:GetWide(), self:GetTall())
   self.list:SetPos(0, 0)
   self.list:SetSpaceY(4)
   self.list:SetSpaceX(4)
 
   for i = 1, self.inventory_slots do
-    local invSlot = self.list:Add("flInventoryItem")
+    local invSlot = self.list:Add('flInventoryItem')
     invSlot:SetSize(64, 64)
     invSlot.slotNum = i
 
@@ -260,7 +260,7 @@ function PANEL:Rebuild()
       end
     end
 
-    invSlot:Receiver("flItem", function(receiver, dropped, isDropped, menuIndex, mouseX, mouseY)
+    invSlot:Receiver('flItem', function(receiver, dropped, isDropped, menuIndex, mouseX, mouseY)
       if isDropped then
         fl.inventoryDragSlot = nil
 
@@ -311,16 +311,16 @@ function PANEL:Rebuild()
       else
         receiver.isHovered = true
       end
-    end, {"Place"})
+    end, {'Place'})
 
     self.slots[i] = invSlot
   end
 
-  self:GetParent():Receiver("flItem", function(receiver, dropped, isDropped, menuIndex, mouseX, mouseY)
+  self:GetParent():Receiver('flItem', function(receiver, dropped, isDropped, menuIndex, mouseX, mouseY)
     if isDropped then
-      hook.run("PlayerDropItem", dropped[1].itemData, dropped[1], mouseX, mouseY)
+      hook.run('PlayerDropItem', dropped[1].itemData, dropped[1], mouseX, mouseY)
     end
   end, {})
 end
 
-vgui.Register("fl_inventory", PANEL, "fl_base_panel")
+vgui.Register('fl_inventory', PANEL, 'fl_base_panel')

@@ -1,6 +1,6 @@
-PLUGIN:set_name("Admin ESP")
-PLUGIN:set_author("Mr. Meow")
-PLUGIN:set_description("Adds an ESP for admins.")
+PLUGIN:set_name('Admin ESP')
+PLUGIN:set_author('Mr. Meow')
+PLUGIN:set_description('Adds an ESP for admins.')
 
 do
   local color_lightred = Color(255, 100, 100)
@@ -10,15 +10,15 @@ do
   local color_blue = Color(0, 0, 255)
 
   function PLUGIN:OnThemeLoaded(current_theme)
-    color_red = current_theme:GetColor("ESP_Red")
-    color_blue = current_theme:GetColor("ESP_Blue")
-    color_grey = current_theme:GetColor("ESP_Grey")
+    color_red = current_theme:GetColor('ESP_Red')
+    color_blue = current_theme:GetColor('ESP_Blue')
+    color_grey = current_theme:GetColor('ESP_Grey')
     color_lightred = color_red:lighten(100)
     color_lightblue = color_blue:lighten(200)
   end
 
   function PLUGIN:HUDPaint()
-    if IsValid(fl.client) and fl.client:Alive() and fl.client:GetMoveType() == MOVETYPE_NOCLIP and can("admin_esp") then
+    if IsValid(fl.client) and fl.client:Alive() and fl.client:GetMoveType() == MOVETYPE_NOCLIP and can('admin_esp') then
       local clientPos = fl.client:GetPos()
 
       for k, v in ipairs(_player.GetAll()) do
@@ -33,18 +33,18 @@ do
         local size = 52 * math.abs(350 / clientPos:Distance(pos))
         local teamColor = team.GetColor(v:Team()) or Color(255, 255, 255)
 
-        local w, h = util.text_size(v:Name(), theme.GetFont("Text_Small"))
-        draw.SimpleText(v:Name(), theme.GetFont("Text_Small"), textPos.x - w * 0.5, textPos.y, teamColor)
+        local w, h = util.text_size(v:Name(), theme.GetFont('Text_Small'))
+        draw.SimpleText(v:Name(), theme.GetFont('Text_Small'), textPos.x - w * 0.5, textPos.y, teamColor)
 
-        w, h = util.text_size(v:SteamName(), theme.GetFont("Text_Smaller"))
-        draw.SimpleText(v:SteamName(), theme.GetFont("Text_Smaller"), textPos.x - w * 0.5, textPos.y + 14, color_lightblue)
+        w, h = util.text_size(v:SteamName(), theme.GetFont('Text_Smaller'))
+        draw.SimpleText(v:SteamName(), theme.GetFont('Text_Smaller'), textPos.x - w * 0.5, textPos.y + 14, color_lightblue)
 
         if v:Alive() then
           surface.SetDrawColor(teamColor)
           surface.DrawOutlinedRect(x - size * 0.5, y - size * 0.5, size, (screenPos.y - y) * 1.25)
         else
-          w, h = util.text_size("*DEAD*", theme.GetFont("Text_Smaller"))
-          draw.SimpleText("*DEAD*", theme.GetFont("Text_Smaller"), textPos.x - w * 0.5, textPos.y + 28, color_lightred)
+          w, h = util.text_size('*DEAD*', theme.GetFont('Text_Smaller'))
+          draw.SimpleText('*DEAD*', theme.GetFont('Text_Smaller'), textPos.x - w * 0.5, textPos.y + 28, color_lightred)
         end
 
         local bx, by = x - size * 0.5, y - size * 0.5 + (screenPos.y - y) * 1.25

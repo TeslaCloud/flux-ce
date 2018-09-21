@@ -1,6 +1,6 @@
 local flPlayer = {}
-flPlayer.DisplayName = "Flux Player"
-DEFINE_BASECLASS("player_default")
+flPlayer.DisplayName = 'Flux Player'
+DEFINE_BASECLASS('player_default')
 
 local modelList = {}
 
@@ -9,7 +9,7 @@ for k, v in pairs(player_manager.AllValidModels()) do
 end
 
 flPlayer.loadout = {
-  "weapon_fists"
+  'weapon_fists'
 }
 
 -- Called when the data tables are setup.
@@ -18,9 +18,9 @@ function flPlayer:SetupDataTables()
     return
   end
 
-  self.Player:DTVar("Bool", BOOL_INITIALIZED, "Initialized")
+  self.Player:DTVar('Bool', BOOL_INITIALIZED, 'Initialized')
 
-  hook.run("PlayerSetupDataTables", self.Player)
+  hook.run('PlayerSetupDataTables', self.Player)
 end
 
 -- Called on player spawn to determine which hand model to use.
@@ -32,7 +32,7 @@ function flPlayer:GetHandsModel()
   end
 
   for k, v in pairs(modelList) do
-    if string.find(string.gsub(playerModel, "_", ""), v) then
+    if string.find(string.gsub(playerModel, '_', ''), v) then
       modelList[playerModel] = v
 
       break
@@ -63,4 +63,4 @@ function flPlayer:Loadout()
   self.Player:SelectWeapon(self.loadout[1])
 end
 
-player_manager.RegisterClass("flPlayer", flPlayer, "player_default")
+player_manager.RegisterClass('flPlayer', flPlayer, 'player_default')

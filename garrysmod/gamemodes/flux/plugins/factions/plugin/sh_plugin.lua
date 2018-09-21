@@ -1,13 +1,13 @@
-PLUGIN:set_alias("flFactions")
+PLUGIN:set_alias('flFactions')
 
-plugin.add_extra("factions")
+plugin.add_extra('factions')
 
-util.include("cl_hooks.lua")
-util.include("sv_hooks.lua")
+util.include('cl_hooks.lua')
+util.include('sv_hooks.lua')
 
 function flFactions:PluginIncludeFolder(extra, folderName)
-  if extra == "factions" then
-    faction.IncludeFactions(folderName.."/factions/")
+  if extra == 'factions' then
+    faction.IncludeFactions(folderName..'/factions/')
 
     return true
   end

@@ -13,7 +13,7 @@ function PANEL:Init()
     self:CloseMenu()
   end)
 
-  hook.run("OnIntroPanelCreated", self)
+  hook.run('OnIntroPanelCreated', self)
 end
 
 local logoW, logoH = 600, 110
@@ -31,7 +31,7 @@ function PANEL:Paint(w, h)
   draw.RoundedBox(0, 0, 0, w, h, Color(0, 0, 0, remove_alpha))
 
   draw.textured_rect(
-    util.get_material("materials/flux/tc_logo.png"),
+    util.get_material('materials/flux/tc_logo.png'),
     w * 0.5 - logoW * 0.5 - delta_modifier * logo_delta * 0.5 * w_mod,
     h * 0.5 - logoH * 0.5 - delta_modifier * logo_delta * 0.5 * h_mod,
     logoW + delta_modifier * logo_delta * w_mod,
@@ -81,7 +81,7 @@ function PANEL:CloseMenu()
     self:Remove()
   end)
 
-  hook.run("OnIntroPanelRemoved")
+  hook.run('OnIntroPanelRemoved')
 end
 
 function PANEL:StartAnimation()
@@ -90,4 +90,4 @@ function PANEL:StartAnimation()
   end)
 end
 
-derma.DefineControl("flIntro", "", PANEL, "EditablePanel")
+derma.DefineControl('flIntro', '', PANEL, 'EditablePanel')

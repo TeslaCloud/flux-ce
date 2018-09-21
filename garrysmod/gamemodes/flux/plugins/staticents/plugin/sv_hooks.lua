@@ -1,8 +1,8 @@
 -- Disable default Sandbox persistence.
-hook.Remove("ShutDown", "SavePersistenceOnShutdown")
-hook.Remove("PersistenceSave", "PersistenceSave")
-hook.Remove("PersistenceLoad", "PersistenceLoad")
-hook.Remove("InitPostEntity", "PersistenceInit")
+hook.Remove('ShutDown', 'SavePersistenceOnShutdown')
+hook.Remove('PersistenceSave', 'PersistenceSave')
+hook.Remove('PersistenceLoad', 'PersistenceLoad')
+hook.Remove('InitPostEntity', 'PersistenceInit')
 
 local whitelisted_ents = {
   gmod_light                = true,
@@ -17,7 +17,7 @@ function flStaticEnts:whitelist_ent(ent_class)
 end
 
 function flStaticEnts:PlayerMakeStatic(player, is_static)
-  if (is_static and !player:can("static")) or (!is_static and !player:can("unstatic")) then
+  if (is_static and !player:can('static')) or (!is_static and !player:can('unstatic')) then
     fl.player:notify(player, 'err.no_permission', player:Name())
     return
   end
@@ -51,11 +51,11 @@ function flStaticEnts:PlayerMakeStatic(player, is_static)
 end
 
 function flStaticEnts:SaveData()
-  hook.run("PersistenceSave")
+  hook.run('PersistenceSave')
 end
 
 function flStaticEnts:ShutDown()
-  hook.run("PersistenceSave")
+  hook.run('PersistenceSave')
 end
 
 function flStaticEnts:PersistenceSave()
