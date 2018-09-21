@@ -107,7 +107,7 @@ function PLUGIN:HUDPaint()
         color = theme.GetColor('Accent')
       end
 
-      surface.draw_text_scaled((IsValid(v.weapon) and v.weapon:GetPrintName():utf8upper()) or 'UNKNOWN WEAPON', theme.GetFont('Text_NormalLarge'), v.x, v.y, v.scale, color)
+      surface.draw_text_scaled((IsValid(v.weapon) and v.weapon:GetPrintName():utf8upper()) or 'UNKNOWN WEAPON', theme.GetFont('text_normal_large'), v.x, v.y, v.scale, color)
     end
 
     render.SetScissorRect(0, 0, 0, 0, false)

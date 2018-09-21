@@ -31,7 +31,7 @@ function PANEL:OnOpen(parent)
       label:Dock(BOTTOM)
       label:DockMargin(4, 0, 0, 0)
       label:SetText(v.name)
-      label:SetFont(theme.GetFont('Text_NormalLarge'))
+      label:SetFont(theme.GetFont('text_normal_large'))
       label:SizeToContents()
 
       button.DoClick = function(btn)

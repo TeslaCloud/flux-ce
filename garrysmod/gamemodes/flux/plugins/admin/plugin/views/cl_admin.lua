@@ -82,7 +82,7 @@ function PANEL:SetFullscreen(bFullscreen)
     self.backBtn:SetText('')
 
     self.backBtn.Paint = function(btn, w, h)
-      local font = fl.fonts:GetSize(theme.GetFont('Text_Small'), 16)
+      local font = fl.fonts:GetSize(theme.GetFont('text_small'), 16)
       local fontSize = util.font_size(font)
 
       fl.fa:Draw('fa-chevron-left', 6, 5, 14, Color(255, 255, 255))

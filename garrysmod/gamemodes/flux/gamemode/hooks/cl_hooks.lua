@@ -79,7 +79,7 @@ function GM:ScoreboardShow()
       fl.tabMenu:CloseMenu(true)
     end
 
-    fl.tabMenu = theme.CreatePanel('TabMenu', nil, 'fl_tab_menu')
+    fl.tabMenu = theme.CreatePanel('tab_menu', nil, 'fl_tab_menu')
     fl.tabMenu:MakePopup()
     fl.tabMenu.heldTime = CurTime() + 0.3
   end
@@ -213,8 +213,8 @@ end
 function GM:DrawPlayerTargetID(player, x, y, distance)
   if distance < 640 then
     local alpha = 255
-    local tooltip_small = theme.GetFont('Tooltip_Small')
-    local tooltip_large = theme.GetFont('Tooltip_Large')
+    local tooltip_small = theme.GetFont('tooltip_small')
+    local tooltip_large = theme.GetFont('tooltip_large')
 
     if distance > 500 then
       local d = distance - 500
@@ -298,7 +298,7 @@ function GM:AddAdminMenuItems(panel, sidebar)
   sidebar:add_button('Manage Admins')
   sidebar:add_button('Group Editor')
   sidebar:add_button('Item Editor')
-  panel:AddPanel('Admin_PermissionsEditor', 'Permissions', 'manage_permissions')
+  panel:AddPanel('admin_permissions_editor', 'Permissions', 'manage_permissions')
 end
 
 function GM:PlayerBindPress(player, bind, bPressed)

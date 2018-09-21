@@ -64,7 +64,7 @@ function PANEL:SetPlayer(player)
 end
 
 function PANEL:Paint(w, h)
-  draw.RoundedBox(0, 0, 0, w, h, theme.GetColor('BackgroundLight'))
+  draw.RoundedBox(0, 0, 0, w, h, theme.GetColor('background_light'))
 end
 
 function PANEL:Rebuild()
@@ -84,8 +84,8 @@ function PANEL:Rebuild()
 
   self.nameLabel = vgui.Create('DLabel', self)
   self.nameLabel:SetText(player:Name())
-  self.nameLabel:SetPos(font.Scale(32) + 16, self:GetTall() * 0.5 - util.text_height(player:Name(), theme.GetFont('Text_Normal')) * 0.5)
-  self.nameLabel:SetFont(theme.GetFont('Text_Normal'))
+  self.nameLabel:SetPos(font.Scale(32) + 16, self:GetTall() * 0.5 - util.text_height(player:Name(), theme.GetFont('text_normal')) * 0.5)
+  self.nameLabel:SetFont(theme.GetFont('text_normal'))
   self.nameLabel:SetTextColor(theme.GetColor('Text'))
   self.nameLabel:SizeToContents()
 

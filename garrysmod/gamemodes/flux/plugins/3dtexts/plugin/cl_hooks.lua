@@ -10,7 +10,7 @@ function fl3DText:PostDrawOpaqueRenderables()
     local style = tool:GetClientNumber('style')
     local trace = fl.client:GetEyeTrace()
     local normal = trace.HitNormal
-    local w, h = util.text_size(text, theme.GetFont('Text_3D2D'))
+    local w, h = util.text_size(text, theme.GetFont('text_3d2d'))
     local angle = normal:Angle()
     angle:RotateAroundAxis(angle:Forward(), 90)
     angle:RotateAroundAxis(angle:Right(), 270)
@@ -44,7 +44,7 @@ function fl3DText:PostDrawOpaqueRenderables()
         end
       end
 
-      draw.SimpleText(text, theme.GetFont('Text_3D2D'), -w * 0.5, -h * 0.5, Color(tool:GetClientNumber('r', 0), tool:GetClientNumber('g', 0), tool:GetClientNumber('b', 0), 60))
+      draw.SimpleText(text, theme.GetFont('text_3d2d'), -w * 0.5, -h * 0.5, Color(tool:GetClientNumber('r', 0), tool:GetClientNumber('g', 0), tool:GetClientNumber('b', 0), 60))
     cam.End3D2D()
   end
 
@@ -71,7 +71,7 @@ function fl3DText:PostDrawOpaqueRenderables()
     local textColor = v.color
     local backColor = v.extraColor
     local style = v.style
-    local w, h = util.text_size(text, theme.GetFont('Text_3D2D'))
+    local w, h = util.text_size(text, theme.GetFont('text_3d2d'))
     local posX, posY = -w * 0.5, -h * 0.5
 
     if style >= 2 then
@@ -142,19 +142,19 @@ function fl3DText:PostDrawOpaqueRenderables()
         end
 
         if style != 3 then
-          draw.SimpleText(text, theme.GetFont('Text_3D2D'), posX, posY, ColorAlpha(textColor, math.Clamp(fadeAlpha, 0, 100)):darken(30))
+          draw.SimpleText(text, theme.GetFont('text_3d2d'), posX, posY, ColorAlpha(textColor, math.Clamp(fadeAlpha, 0, 100)):darken(30))
         end
       cam.End3D2D()
     end
 
     if style >= 3 then
       cam.Start3D2D(pos + (normal * 0.95 * (scale + 0.5)), angle, 0.1 * scale)
-        draw.SimpleText(text, theme.GetFont('Text_3D2D'), posX, posY, Color(0, 0, 0, math.Clamp(fadeAlpha, 0, 240)))
+        draw.SimpleText(text, theme.GetFont('text_3d2d'), posX, posY, Color(0, 0, 0, math.Clamp(fadeAlpha, 0, 240)))
       cam.End3D2D()
     end
 
     cam.Start3D2D(pos + (normal * 1.25 * (scale + 0.5)), angle, 0.1 * scale)
-      draw.SimpleText(text, theme.GetFont('Text_3D2D'), posX, posY, ColorAlpha(textColor, fadeAlpha))
+      draw.SimpleText(text, theme.GetFont('text_3d2d'), posX, posY, ColorAlpha(textColor, fadeAlpha))
     cam.End3D2D()
   end
 end

@@ -14,7 +14,7 @@ function PANEL:SizeToContents()
   local bX, bY = 0, -4
 
   for k, v in ipairs(self.notificationText) do
-    local w, h = util.text_size(v, theme.GetFont('Menu_Normal'))
+    local w, h = util.text_size(v, theme.GetFont('menu_normal'))
 
     self.fontSize = h
 
@@ -80,7 +80,7 @@ function PANEL:Paint(width, height)
     local curY = 4
 
     for k, v in ipairs(self.notificationText) do
-      draw.SimpleText(v, theme.GetFont('Menu_Normal'), 4, curY, ColorAlpha(self.textColor, self.curAlpha + 40))
+      draw.SimpleText(v, theme.GetFont('menu_normal'), 4, curY, ColorAlpha(self.textColor, self.curAlpha + 40))
 
       curY = curY + self.fontSize + 4
     end
