@@ -1,5 +1,5 @@
-fl.bars:register("getup", {
-  text = t"bar_text.getup",
+fl.bars:register('getup', {
+  text = t'bar_text.getup',
   color = Color(50, 200, 50),
   maxValue = 100,
   x = ScrW() * 0.5 - fl.bars.defaultW * 0.5,
@@ -10,15 +10,15 @@ fl.bars:register("getup", {
 })
 
 function PLUGIN:PlayerBindPress(player, bind, bIsPressed)
-  if bIsPressed and bind:find("jump") and player:IsDoingAction("fallen") then
-    fl.command:Send("getup")
+  if bIsPressed and bind:find('jump') and player:IsDoingAction('fallen') then
+    fl.command:Send('getup')
   end
 end
 
 function PLUGIN:HUDPaint()
-  local fallen, getup = fl.client:IsDoingAction("fallen"), fl.client:IsDoingAction("getup")
+  local fallen, getup = fl.client:IsDoingAction('fallen'), fl.client:IsDoingAction('getup')
 
-  if (fallen or getup) and plugin.call("ShouldFallenHUDPaint") != false then
+  if (fallen or getup) and plugin.call('ShouldFallenHUDPaint') != false then
     local scrW, scrH = ScrW(), ScrH()
 
     draw.RoundedBox(0, 0, 0, scrW, scrH, Color(0, 0, 0, 100))
@@ -26,13 +26,13 @@ function PLUGIN:HUDPaint()
     if getup then
       local barValue = 100 - 100 * ((fl.client:get_nv('getup_end', 0) - CurTime()) / fl.client:get_nv('getup_time'))
 
-      fl.bars:SetValue("getup", barValue)
-      fl.bars:Draw("getup")
+      fl.bars:SetValue('getup', barValue)
+      fl.bars:Draw('getup')
     elseif fallen then
       local text = t'press_jump_to_getup'
-      local w, h = util.text_size(text, theme.GetFont("Text_Normal"))
+      local w, h = util.text_size(text, theme.GetFont('Text_Normal'))
 
-      draw.SimpleText(text, theme.GetFont("Text_Normal"), scrW * 0.5 - w * 0.5, scrH * 0.5 - h * 0.5, theme.GetColor("Text"))
+      draw.SimpleText(text, theme.GetFont('Text_Normal'), scrW * 0.5 - w * 0.5, scrH * 0.5 - h * 0.5, theme.GetColor('Text'))
     end
   end
 end

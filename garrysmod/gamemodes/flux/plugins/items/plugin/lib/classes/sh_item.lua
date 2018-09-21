@@ -6,7 +6,7 @@ function Item:init(id)
   self.id = string.to_id(id)
   self.data = self.data or {}
   self.action_sounds = {
-    ["on_use"] = "items/battery_pickup.wav"
+    ['on_use'] = 'items/battery_pickup.wav'
   }
 end
 
@@ -32,11 +32,11 @@ function Item:make_base()
 end
 
 function Item:get_real_name()
-  return self.name or "Unknown Item"
+  return self.name or 'Unknown Item'
 end
 
 function Item:get_description()
-  return self.description or "This item has no description!"
+  return self.description or 'This item has no description!'
 end
 
 function Item:get_weight()
@@ -63,8 +63,8 @@ function Item:add_button(name, data)
   --[[
     Example data structure:
     data = {
-      icon = "path/to/icon.png",
-      callback = "on_use", -- This will call ITEM:on_use function when the button is pressed.
+      icon = 'path/to/icon.png',
+      callback = 'on_use', -- This will call ITEM:on_use function when the button is pressed.
       onShow = function(item_table) -- Client-Side function. Determines whether the button will be shown.
         return true
       end
@@ -109,25 +109,25 @@ if SERVER then
   end
 
   function Item:do_menu_action(act, player, ...)
-    if act == "on_take" then
-      if hook.run("PlayerTakeItem", player, self, ...) != nil then return end
+    if act == 'on_take' then
+      if hook.run('PlayerTakeItem', player, self, ...) != nil then return end
     end
 
-    if act == "on_use" then
-      if hook.run("PlayerUseItem", player, self, ...) != nil then return end
+    if act == 'on_use' then
+      if hook.run('PlayerUseItem', player, self, ...) != nil then return end
     end
 
-    if act == "on_drop" then
-      if hook.run("PlayerDropItem", player, self.instance_id) != nil then return end
+    if act == 'on_drop' then
+      if hook.run('PlayerDropItem', player, self.instance_id) != nil then return end
     end
 
     if self[act] then
-      if act != "on_take" and act != "on_use" and act != "on_take" then
+      if act != 'on_take' and act != 'on_use' and act != 'on_take' then
         try {
           self[act], self, player, ...
         } catch {
           function(exception)
-            ErrorNoHalt("Item callback has failed to run! "..tostring(exception).."\n")
+            ErrorNoHalt('Item callback has failed to run! '..tostring(exception)..'\n')
           end
         }
 
@@ -139,46 +139,46 @@ if SERVER then
       end
     end
 
-    if act == "on_take" then
-      if hook.run("PlayerTakenItem", player, self, ...) != nil then return end
+    if act == 'on_take' then
+      if hook.run('PlayerTakenItem', player, self, ...) != nil then return end
     end
 
-    if act == "on_use" then
-      if hook.run("PlayerUsedItem", player, self, ...) != nil then return end
+    if act == 'on_use' then
+      if hook.run('PlayerUsedItem', player, self, ...) != nil then return end
     end
 
-    if act == "on_drop" then
-      if hook.run("PlayerDroppedItem", player, self.instance_id, self, ...) != nil then return end
+    if act == 'on_drop' then
+      if hook.run('PlayerDroppedItem', player, self.instance_id, self, ...) != nil then return end
     end
   end
 
-  netstream.Hook("ItemMenuAction", function(player, instance_id, action, ...)
+  netstream.Hook('ItemMenuAction', function(player, instance_id, action, ...)
     local item_table = item.FindInstanceByID(instance_id)
 
     if !item_table then return end
-    if hook.run("PlayerCanUseItem", player, item_table, action, ...) == false then return end
+    if hook.run('PlayerCanUseItem', player, item_table, action, ...) == false then return end
 
     item_table:do_menu_action(action, player, ...)
   end)
 else
   function Item:do_menu_action(act, ...)
-    netstream.Start("ItemMenuAction", self.instance_id, act, ...)
+    netstream.Start('ItemMenuAction', self.instance_id, act, ...)
   end
 
   function Item:get_use_text()
-    return self.use_text or t('item.option.use')
+    return self.use_text or t'item.option.use'
   end
 
   function Item:get_take_text()
-    return self.take_text or t('item.option.take')
+    return self.take_text or t'item.option.take'
   end
 
   function Item:get_drop_text()
-    return self.DropText or t('item.option.drop')
+    return self.DropText or t'item.option.drop'
   end
 
   function Item:get_cancel_text()
-    return self.cancel_text or t('item.option.cancel')
+    return self.cancel_text or t'item.option.cancel'
   end
 end
 
@@ -198,5 +198,5 @@ end
 
 -- Fancy output if you do print(item_table).
 function Item:__tostring()
-  return "Item ["..tostring(self.instance_id).."]["..(self.name or self.id).."]"
+  return 'Item ['..tostring(self.instance_id)..']['..(self.name or self.id)..']'
 end

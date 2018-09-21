@@ -1,7 +1,7 @@
-ROLE.name = "User"
-ROLE.description = t('role.user')
+ROLE.name = 'User'
+ROLE.description = t'role.user'
 ROLE.color = Color(255, 255, 255)
-ROLE.icon = "icon16/user.png"
+ROLE.icon = 'icon16/user.png'
 ROLE.immunity = 0
 
 function ROLE:define_permissions()

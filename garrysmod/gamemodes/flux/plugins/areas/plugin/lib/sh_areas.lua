@@ -1,4 +1,4 @@
-library.new "areas"
+library.new 'areas'
 
 local stored = areas.stored or {}
 areas.stored = stored
@@ -56,7 +56,7 @@ function areas.Create(id, height, data)
     area.height = height or 0
     area.verts = {}
     area.polys = {}
-    area.type = data.type or "area"
+    area.type = data.type or 'area'
 
     if data then
       table.merge(area, data)
@@ -101,7 +101,7 @@ function areas.register(id, data)
   top = top + 1
 
   if SERVER then
-    netstream.Start(nil, "flAreaRegister", id, data)
+    netstream.Start(nil, 'flAreaRegister', id, data)
   end
 
   return stored[id]
@@ -111,7 +111,7 @@ function areas.Remove(id)
   stored[id] = nil
 
   if SERVER then
-    netstream.Start(nil, "flAreaRemove", id)
+    netstream.Start(nil, 'flAreaRemove', id)
   end
 end
 
@@ -142,14 +142,14 @@ function areas.GetCallback(areaType)
 end
 
 areas.RegisterType(
-  "area",
-  "Simple Area",
-  "A simple area. Use this type if you have a callback somewhere in the code that looks up id instead of type ID.",
+  'area',
+  'Simple Area',
+  'A simple area. Use this type if you have a callback somewhere in the code that looks up id instead of type ID.',
   function(player, area, poly, bHasEntered, curPos, curTime)
     if bHasEntered then
-      hook.run("PlayerEnteredArea", player, area, curTime)
+      hook.run('PlayerEnteredArea', player, area, curTime)
     else
-      hook.run("PlayerLeftArea", player, area, curTime)
+      hook.run('PlayerLeftArea', player, area, curTime)
     end
   end
 )

@@ -3,10 +3,10 @@ local PANEL = {}
 function PANEL:Init()
   local w, h = self:GetWide(), self:GetTall()
 
-  self.scrollPanel = vgui.Create("DScrollPanel", self)
+  self.scrollPanel = vgui.Create('DScrollPanel', self)
   self.scrollPanel:Dock(FILL)
 
-  self.layout = vgui.Create("DListLayout", self.scrollPanel)
+  self.layout = vgui.Create('DListLayout', self.scrollPanel)
   self.layout:Dock(FILL)
 
   self:Rebuild()
@@ -29,21 +29,21 @@ function PANEL:Rebuild()
   self.layout:Clear()
 
   for id, category in pairs(categories) do
-    local collapsible = self.layout:Add("DCollapsibleCategory")
-    local list = vgui.Create("DIconLayout", self)
+    local collapsible = self.layout:Add('DCollapsibleCategory')
+    local list = vgui.Create('DIconLayout', self)
     collapsible:SetLabel(id)
     collapsible:SetContents(list)
 
     for k, v in ipairs(category) do
-      local spawnIcon = list:Add("SpawnIcon")
+      local spawnIcon = list:Add('SpawnIcon')
       spawnIcon:SetSize(48, 48)
       spawnIcon:SetModel(v.item_table.model)
 
       spawnIcon.DoClick = function(btn)
-        mvc.push("SpawnMenu::SpawnItem", v.id)
+        mvc.push('SpawnMenu::SpawnItem', v.id)
       end
     end
   end
 end
 
-vgui.Register("flItemSpawner", PANEL, "fl_base_panel")
+vgui.Register('flItemSpawner', PANEL, 'fl_base_panel')

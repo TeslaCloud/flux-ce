@@ -44,7 +44,7 @@ function fl_inventory:SaveCharacterData(player, character)
   character.item_ids = table.concat(item_ids, ',')
 end
 
-netstream.Hook("InventorySync", function(player, inventory)
+netstream.Hook('InventorySync', function(player, inventory)
   local newInventory = {}
 
   for slot, ids in ipairs(inventory) do

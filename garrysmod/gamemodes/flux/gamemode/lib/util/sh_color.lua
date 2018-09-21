@@ -1,8 +1,8 @@
-local color_meta = FindMetaTable("Color")
+local color_meta = FindMetaTable('Color')
 
 -- A function to convert hexadecimal color to a color structure.
 function util.hex_to_color(hex)
-  if hex:starts("#") then
+  if hex:starts('#') then
     hex = hex:sub(2, hex:len())
   end
 
@@ -197,7 +197,7 @@ do
 
   function Color(r, g, b, a)
     if isstring(r) then
-      if r:starts("#") then
+      if r:starts('#') then
         return util.hex_to_color(r)
       elseif colors[r:lower()] then
         return colors[r:lower()]

@@ -1,19 +1,19 @@
 if netvars then return end
 
-library.new "netvars"
+library.new 'netvars'
 
 local stored = netvars.stored or {}
 local globals = netvars.globals or {}
 netvars.stored = stored
 netvars.globals = globals
 
-local ent_meta = FindMetaTable("Entity")
-local player_meta = FindMetaTable("Player")
+local ent_meta = FindMetaTable('Entity')
+local player_meta = FindMetaTable('Player')
 
 -- A function to check if value's type cannot be serialized and print an error if it is so.
 local function IsBadType(key, val)
   if isfunction(val) then
-    ErrorNoHalt("Cannot store functions as NetVars! ("..key..")\n")
+    ErrorNoHalt('Cannot store functions as NetVars! ('..key..')\n')
 
     return true
   end
@@ -37,12 +37,12 @@ function netvars.set_nv(key, value, send)
 
   globals[key] = value
 
-  netstream.Start(send, "set_global_netvar", key, value)
+  netstream.Start(send, 'set_global_netvar', key, value)
 end
 
 -- A function to send entity's networked variables to a player (or players).
 function ent_meta:SendNetVar(key, recv)
-  netstream.Start(recv, "set_netvar", self:EntIndex(), key, (stored[self] and stored[self][key]))
+  netstream.Start(recv, 'set_netvar', self:EntIndex(), key, (stored[self] and stored[self][key]))
 end
 
 -- A function to get entity's networked variable.
@@ -57,7 +57,7 @@ end
 -- A function to flush all entity's networked variables.
 function ent_meta:ClearNetVars(recv)
   stored[self] = nil
-  netstream.Start(recv, "delete_netvar", self:EntIndex())
+  netstream.Start(recv, 'delete_netvar', self:EntIndex())
 end
 
 -- A function to set entity's networked variable.
@@ -75,13 +75,13 @@ end
 -- to a player.
 function player_meta:SyncNetVars()
   for k, v in pairs(globals) do
-    netstream.Start(self, "set_global_netvar", k, v)
+    netstream.Start(self, 'set_global_netvar', k, v)
   end
 
   for k, v in pairs(stored) do
     if IsValid(k) then
       for k2, v2 in pairs(v) do
-        netstream.Start(self, "set_netvar", k:EntIndex(), k2, v2)
+        netstream.Start(self, 'set_netvar', k:EntIndex(), k2, v2)
       end
     end
   end

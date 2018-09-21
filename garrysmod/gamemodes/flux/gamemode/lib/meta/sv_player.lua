@@ -1,4 +1,4 @@
-local player_meta = FindMetaTable("Player")
+local player_meta = FindMetaTable('Player')
 
 function player_meta:save_player()
   local saveData = {
@@ -9,7 +9,7 @@ function player_meta:save_player()
     data = fl.serialize(self:get_data())
   }
 
-  hook.run("SavePlayerData", self, saveData)
+  hook.run('SavePlayerData', self, saveData)
 
   if self.record then self.record:save() end
 end

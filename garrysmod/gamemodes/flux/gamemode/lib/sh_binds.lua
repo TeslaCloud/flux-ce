@@ -1,5 +1,5 @@
 if CLIENT then
-  library.new("binds", fl)
+  library.new('binds', fl)
 
   local keyEnums = fl.binds.keyEnums or {}
   local stored = fl.binds.stored or {}
@@ -8,9 +8,9 @@ if CLIENT then
 
   if #keyEnums == 0 then
     for k, v in pairs(_G) do
-      if string.sub(k, 1, 6) == "MOUSE_" then
+      if string.sub(k, 1, 6) == 'MOUSE_' then
         keyEnums[v] = k
-      elseif string.sub(k, 1, 4) == "KEY_" then
+      elseif string.sub(k, 1, 4) == 'KEY_' then
         keyEnums[v] = k
       end
     end
@@ -75,10 +75,10 @@ local hooks = {}
 
 if SERVER then
   function hooks:PlayerButtonDown(player, nKey)
-    netstream.Start(player, "FLBindPressed", nKey)
+    netstream.Start(player, 'FLBindPressed', nKey)
   end
 else
-  netstream.Hook("FLBindPressed", function(nKey)
+  netstream.Hook('FLBindPressed', function(nKey)
     local bind = fl.binds:GetBind(nKey)
 
     if bind then
@@ -87,4 +87,4 @@ else
   end)
 end
 
-plugin.add_hooks("FLBinds", hooks)
+plugin.add_hooks('FLBinds', hooks)

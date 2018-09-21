@@ -1,4 +1,4 @@
-library.new("command", fl)
+library.new('command', fl)
 
 local stored = fl.command.stored or {}
 local aliases = fl.command.aliases or {}
@@ -10,9 +10,9 @@ function fl.command:Create(id, data)
   if !id or !data then return end
 
   data.id = id:to_id()
-  data.name = data.name or "Unknown"
-  data.description = data.description or "An undescribed command."
-  data.syntax = data.syntax or "[none]"
+  data.name = data.name or 'Unknown'
+  data.description = data.description or 'An undescribed command.'
+  data.syntax = data.syntax or '[none]'
   data.immunity = data.immunity or false
   data.player_arg = data.player_arg or nil
   data.arguments = data.arguments or 0
@@ -28,7 +28,7 @@ function fl.command:Create(id, data)
     end
   end
 
-  hook.run("OnCommandCreated", id, data)
+  hook.run('OnCommandCreated', id, data)
 end
 
 function fl.command:find_by_id(id)
@@ -78,7 +78,7 @@ end
 
 function fl.command:extract_arguments(text)
   local arguments = {}
-  local word = ""
+  local word = ''
   local skip = 0
 
   for i = 1, #text do
@@ -90,15 +90,15 @@ function fl.command:extract_arguments(text)
 
     local char = text:utf8sub(i, i)
 
-    if (char == "\"" or char == "'" or char == "{") and word == "" then
-      local end_pos = text:find("\"", i + 1)
+    if (char == '"' or char == "'" or char == '{') and word == '' then
+      local end_pos = text:find('"', i + 1)
       local is_table = false
 
       if !end_pos then
         end_pos = text:find("'", i + 1)
 
         if !end_pos then
-          end_pos = text:find("}", i + 1)
+          end_pos = text:find('}', i + 1)
           is_table = true
         end
       end
@@ -121,17 +121,17 @@ function fl.command:extract_arguments(text)
       else
         word = word..char
       end
-    elseif char == " " then
-      if word != "" then
+    elseif char == ' ' then
+      if word != '' then
         table.insert(arguments, word)
-        word = ""
+        word = ''
       end
     else
       word = word..char
     end
   end
 
-  if word != "" then
+  if word != '' then
     table.insert(arguments, word)
   end
 
@@ -141,7 +141,7 @@ end
 if SERVER then
   local macros = {
     -- Target everyone in a user group.
-    ["@"] = function(player, str)
+    ['@'] = function(player, str)
       local groupName = str:utf8sub(2, str:utf8len()):utf8lower()
       local to_ret = {}
 
@@ -151,10 +151,10 @@ if SERVER then
         end
       end
 
-      return to_ret, "@"
+      return to_ret, '@'
     end,
     -- Target everyone with str in their name.
-    ["("] = function(player, str)
+    ['('] = function(player, str)
       local name = str:utf8sub(2, str:utf8len() - 1)
       local to_ret = _player.find(name)
 
@@ -166,37 +166,37 @@ if SERVER then
         to_ret = {}
       end
 
-      return to_ret, "("
+      return to_ret, '('
     end,
     -- Target the first person whose nick is exactly str.
-    ["["] = function(player, str)
+    ['['] = function(player, str)
       local name = str:utf8sub(2, str:utf8len() - 1)
 
       for k, v in ipairs(_player.GetAll()) do
         if v:Name() == name then
-          return { v }, "["
+          return { v }, '['
         end
       end
 
-      return false, "["
+      return false, '['
     end,
     -- Target yourself.
-    ["^"] = function(player, str)
+    ['^'] = function(player, str)
       if IsValid(player) then
-        return { player }, "^"
+        return { player }, '^'
       else
-        return false, "^"
+        return false, '^'
       end
     end,
     -- Target everyone.
-    ["*"] = function(player, str)
-      return _player.GetAll(), "*"
+    ['*'] = function(player, str)
+      return _player.GetAll(), '*'
     end
   }
 
   function fl.command:str_to_player(player, str)
     local start = str:utf8sub(1, 1)
-    local parser = macros[start] or hook.run("TargetFromString", player, str, start)
+    local parser = macros[start] or hook.run('TargetFromString', player, str, start)
 
     if isfunction(parser) then
       return parser(player, str)
@@ -224,9 +224,9 @@ if SERVER then
 
     if !isstring(args[1]) then
       if !IsValid(player) then
-        ErrorNoHalt("[Flux:Command] You must enter a command!\n")
+        ErrorNoHalt('[Flux:Command] You must enter a command!\n')
       else
-        fl.player:notify(player, "commands.you_must_enter_command")
+        fl.player:notify(player, 'commands.you_must_enter_command')
       end
 
       return
@@ -275,12 +275,12 @@ if SERVER then
                 end
               else
                 if IsValid(player) then
-                  fl.player:notify(player, t("commands.player_invalid", tostring(target_arg)))
+                  fl.player:notify(player, t('commands.player_invalid', tostring(target_arg)))
                 else
-                  if kind != "^" then
+                  if kind != '^' then
                     ErrorNoHalt("'"..tostring(target_arg).."' is not a valid player!")
                   else
-                    ErrorNoHalt("[Flux:Command] You cannot target yourself as console.")
+                    ErrorNoHalt('[Flux:Command] You cannot target yourself as console.')
                   end
                 end
 
@@ -290,8 +290,8 @@ if SERVER then
 
             if istable(targets) and #targets > 0 then
               for k, v in ipairs(targets) do
-                if cmd_table.immunity and IsValid(player) and hook.run("CommandCheckImmunity", player, v, cmd_table.can_equal) == false then
-                  fl.player:notify(player, t("commands.higher_immunity", v:Name()))
+                if cmd_table.immunity and IsValid(player) and hook.run('CommandCheckImmunity', player, v, cmd_table.can_equal) == false then
+                  fl.player:notify(player, t('commands.higher_immunity', v:Name()))
 
                   return
                 end
@@ -301,7 +301,7 @@ if SERVER then
               args[cmd_table.player_arg or 1] = targets
             else
               if IsValid(player) then
-                fl.player:notify(player, t("commands.player_invalid", tostring(target_arg)))
+                fl.player:notify(player, t('commands.player_invalid', tostring(target_arg)))
               else
                 ErrorNoHalt("'"..tostring(target_arg).."' is not a valid player!\n")
               end
@@ -311,26 +311,26 @@ if SERVER then
           end
 
           -- Let plugins hook into this and abort command's execution if necessary.
-          if !hook.run("PlayerRunCommand", player, cmd_table, args) then
+          if !hook.run('PlayerRunCommand', player, cmd_table, args) then
             if IsValid(player) then
-              ServerLog(player:Name().." has used /"..cmd_table.name.." "..text:utf8sub(string.utf8len(command) + 2, string.utf8len(text)))
+              ServerLog(player:Name()..' has used /'..cmd_table.name..' '..text:utf8sub(string.utf8len(command) + 2, string.utf8len(text)))
             end
 
             self:Run(player, cmd_table, args)
           end
         else
-          fl.player:notify(player, "/"..cmd_table.name.." "..cmd_table.syntax)
+          fl.player:notify(player, '/'..cmd_table.name..' '..cmd_table.syntax)
         end
       else
         if IsValid(player) then
-          fl.player:notify(player, "commands.no_access")
+          fl.player:notify(player, 'commands.no_access')
         else
-          ErrorNoHalt("This command cannot be run from console!\n")
+          ErrorNoHalt('This command cannot be run from console!\n')
         end
       end
     else
       if IsValid(player) then
-        fl.player:notify(player, t("commands.not_valid", command))
+        fl.player:notify(player, t('commands.not_valid', command))
       else
         ErrorNoHalt("'"..command.."' is not a valid command!\n")
       end
@@ -344,19 +344,19 @@ if SERVER then
         cmd_table.on_run, cmd_table, player, unpack(arguments)
       } catch {
         function(exception)
-          ErrorNoHalt(""..cmd_table.id.." command has failed to run!\n")
-          ErrorNoHalt(exception.."\n")
+          ErrorNoHalt("'"..cmd_table.id.."' command has failed to run!\n")
+          ErrorNoHalt(exception..'\n')
         end
       }
     end
   end
 
-  netstream.Hook("Flux::Command::Run", function(player, command)
+  netstream.Hook('Flux::Command::Run', function(player, command)
     fl.command:Interpret(player, command)
   end)
 else
   function fl.command:Send(command)
-    netstream.Start("Flux::Command::Run", command)
+    netstream.Start('Flux::Command::Run', command)
   end
 end
 
@@ -369,5 +369,5 @@ function fl.command.ConCommand(player, cmd, args, argsText)
   end
 end
 
-concommand.Add("flCmd", fl.command.ConCommand)
-concommand.Add("flc", fl.command.ConCommand)
+concommand.Add('flCmd', fl.command.ConCommand)
+concommand.Add('flc', fl.command.ConCommand)

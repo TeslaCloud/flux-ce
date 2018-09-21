@@ -4,7 +4,7 @@ function flFactions:PostPlayerSpawn(player)
   if playerFaction then
     player:SetTeam(playerFaction.team_id or 1)
 
-    player:set_nv('name', playerFaction:GenerateName(player, player:GetCharacterVar("name", player:Name()), player:GetRank()))
+    player:set_nv('name', playerFaction:GenerateName(player, player:GetCharacterVar('name', player:Name()), player:GetRank()))
   end
 end
 
@@ -13,11 +13,11 @@ function flFactions:SavePlayerData(player, saveData)
 end
 
 function flFactions:OnActiveCharacterSet(player, char_data)
-  player:set_nv('faction', char_data.faction or "player")
+  player:set_nv('faction', char_data.faction or 'player')
 end
 
 function flFactions:SaveCharacterData(player, char)
-  char.faction = char.faction or "player"
+  char.faction = char.faction or 'player'
 end
 
 function flFactions:RestoreCharacter(player, char_id, char)

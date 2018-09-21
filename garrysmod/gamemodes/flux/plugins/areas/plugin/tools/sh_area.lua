@@ -1,16 +1,16 @@
-TOOL.Category = "Flux"
-TOOL.Name = "Area Tool"
+TOOL.Category = 'Flux'
+TOOL.Name = 'Area Tool'
 TOOL.Command = nil
-TOOL.ConfigName = ""
+TOOL.ConfigName = ''
 
-TOOL.ClientConVar["mode"] = "1"
+TOOL.ClientConVar['mode'] = '1'
 
 function TOOL:LeftClick(trace)
   local player = self:GetOwner()
 
-  if !player:can("area_tool") then return end
+  if !player:can('area_tool') then return end
 
-  local mode = self:GetClientNumber("mode")
+  local mode = self:GetClientNumber('mode')
   local modeTable = flAreas.toolModes[mode]
 
   if istable(modeTable) and isfunction(modeTable.OnLeftClick) then
@@ -23,9 +23,9 @@ end
 function TOOL:RightClick(trace)
   local player = self:GetOwner()
 
-  if !player:can("area_tool") then return end
+  if !player:can('area_tool') then return end
 
-  local mode = self:GetClientNumber("mode")
+  local mode = self:GetClientNumber('mode')
   local modeTable = flAreas.toolModes[mode]
 
   if istable(modeTable) and isfunction(modeTable.OnRightClick) then
@@ -38,9 +38,9 @@ end
 function TOOL:Reload(trace)
   local player = self:GetOwner()
 
-  if !player:can("area_tool") then return end
+  if !player:can('area_tool') then return end
 
-  local mode = self:GetClientNumber("mode")
+  local mode = self:GetClientNumber('mode')
   local modeTable = flAreas.toolModes[mode]
 
   if istable(modeTable) and isfunction(modeTable.OnReload) then
@@ -51,7 +51,7 @@ function TOOL:Reload(trace)
 end
 
 function TOOL:GetAreaMode()
-  local mode = self:GetClientNumber("mode")
+  local mode = self:GetClientNumber('mode')
 
   return flAreas.toolModes[mode]
 end
@@ -63,24 +63,24 @@ if CLIENT then
 
     panel:ClearControls()
 
-    local mode = fl.client:GetInfoNum("area_mode", 0)
-    local list = vgui.Create("DListView")
+    local mode = fl.client:GetInfoNum('area_mode', 0)
+    local list = vgui.Create('DListView')
 
     list:SetSize(30, 90)
-    list:AddColumn("Tool Mode")
+    list:AddColumn('Tool Mode')
     list:SetMultiSelect(false)
 
     function list:OnRowSelected(id, line)
       if mode != id then
-        RunConsoleCommand("area_setmode", id)
+        RunConsoleCommand('area_setmode', id)
       end
     end
 
     for k, v in ipairs(modeList) do
       if mode == k then
-        list:AddLine(" "..k.." >> "..v.title)
+        list:AddLine(' '..k..' >> '..v.title)
       else
-        list:AddLine(" "..k.."  "..v.title)
+        list:AddLine(' '..k..'  '..v.title)
       end
     end
 
@@ -100,11 +100,11 @@ if CLIENT then
     BuildCPanel(panel)
   end
 
-  concommand.Add("area_setmode", function(player, command, args)
-    RunConsoleCommand("area_mode", args[1])
+  concommand.Add('area_setmode', function(player, command, args)
+    RunConsoleCommand('area_mode', args[1])
 
     timer.Simple(0.05, function()
-      local panel = controlpanel.Get("area")
+      local panel = controlpanel.Get('area')
 
       if !panel then return end
 
@@ -118,16 +118,16 @@ function TOOL.BuildCPanel(CPanel)
   local options = {}
 
   for k, v in pairs(types) do
-    options[v.name] = {["area_areatype"] = k}
+    options[v.name] = {['area_areatype'] = k}
   end
 
-  CPanel:AddControl("Header", { Description = "tool.area.desc" })
+  CPanel:AddControl('Header', { Description = 'tool.area.desc' })
 
-  local controlPresets = CPanel:AddControl("ComboBox", { MenuButton = 1, Folder = "areatype", Options = options, CVars = {"area_areatype"} })
+  local controlPresets = CPanel:AddControl('ComboBox', { MenuButton = 1, Folder = 'areatype', Options = options, CVars = {'area_areatype'} })
   controlPresets.Button:SetVisible(false)
-  controlPresets.DropDown:SetValue("Simple Area")
+  controlPresets.DropDown:SetValue('Simple Area')
 
-  CPanel:AddControl("TextBox", { Label = "tool.area.text", Command = "area_uniqueid", MaxLenth = "20" })
-  CPanel:AddControl("Slider", { Label = "tool.area.height", Command = "area_height", Type = "Float", Min = -2048, Max = 2048 })
+  CPanel:AddControl('TextBox', { Label = 'tool.area.text', Command = 'area_uniqueid', MaxLenth = '20' })
+  CPanel:AddControl('Slider', { Label = 'tool.area.height', Command = 'area_height', Type = 'Float', Min = -2048, Max = 2048 })
 end
 */

@@ -1,20 +1,20 @@
-hook.Remove("PostDrawEffects", "RenderWidgets")
-hook.Remove("PlayerTick", "TickWidgets")
-hook.Remove("PlayerInitialSpawn", "PlayerAuthSpawn")
-hook.Remove("RenderScene", "RenderStereoscopy")
+hook.Remove('PostDrawEffects', 'RenderWidgets')
+hook.Remove('PlayerTick', 'TickWidgets')
+hook.Remove('PlayerInitialSpawn', 'PlayerAuthSpawn')
+hook.Remove('RenderScene', 'RenderStereoscopy')
 
 -- Called when gamemode's server browser name needs to be retrieved.
 function GM:GetGameDescription()
   local name_override = self.name_override
-  return isstring(name_override) and name_override or "FL - "..fl.get_schema_name()
+  return isstring(name_override) and name_override or 'FL - '..fl.get_schema_name()
 end
 
 do
-  local vectorAngle = FindMetaTable("Vector").Angle
+  local vectorAngle = FindMetaTable('Vector').Angle
   local normalizeAngle = math.NormalizeAngle
 
   function GM:CalcMainActivity(player, velocity)
-    player:SetPoseParameter("move_yaw", normalizeAngle(vectorAngle(velocity)[2] - player:EyeAngles()[2]))
+    player:SetPoseParameter('move_yaw', normalizeAngle(vectorAngle(velocity)[2] - player:EyeAngles()[2]))
     player.CalcIdeal = ACT_MP_STAND_IDLE
 
     local base_class = self.BaseClass
@@ -58,7 +58,7 @@ do
     if player:InVehicle() then
       local vehicle = player:GetVehicle()
       local vehicleClass = vehicle:GetClass()
-      local vehicleAnims = animations["vehicle"]
+      local vehicleAnims = animations['vehicle']
 
       if vehicleAnims and vehicleAnims[vehicleClass] then
         local anim = vehicleAnims[vehicleClass][1]
@@ -73,19 +73,19 @@ do
           player.CalcSeqOverride = player:LookupSequence(anim)
 
           -- Cache the result of LookupSequence for added performance.
-          player.flAnimTable["vehicle"][vehicleClass][1] = player.CalcSeqOverride
+          player.flAnimTable['vehicle'][vehicleClass][1] = player.CalcSeqOverride
 
           return
         end
 
         return anim
       else
-        local anim = animations["normal"][ACT_MP_CROUCH_IDLE][1]
+        local anim = animations['normal'][ACT_MP_CROUCH_IDLE][1]
 
         if isstring(anim) then
           player.CalcSeqOverride = player:LookupSequence(anim)
 
-          player.flAnimTable["normal"][ACT_MP_CROUCH_IDLE][1] = player.CalcSeqOverride
+          player.flAnimTable['normal'][ACT_MP_CROUCH_IDLE][1] = player.CalcSeqOverride
 
           return
         end
@@ -105,7 +105,7 @@ do
         local anim = holdTypeAnims[act]
 
         if istable(anim) then
-          if hook.Call("ModelWeaponRaised", nil, player, model) then
+          if hook.Call('ModelWeaponRaised', nil, player, model) then
             anim = anim[2]
           else
             anim = anim[1]
@@ -120,8 +120,8 @@ do
 
         return anim
       end
-    elseif animations["normal"]["glide"] then
-      return animations["normal"]["glide"]
+    elseif animations['normal']['glide'] then
+      return animations['normal']['glide']
     end
   end
 end
@@ -181,13 +181,13 @@ end
 
 function GM:PlayerNoClip(player, bState)
   if bState == false then
-    local bShouldExit = plugin.call("PlayerExitNoclip", player)
+    local bShouldExit = plugin.call('PlayerExitNoclip', player)
 
     if bShouldExit != nil then
       return bShouldExit
     end
   else
-    local bShouldEnter = plugin.call("PlayerEnterNoclip", player)
+    local bShouldEnter = plugin.call('PlayerEnterNoclip', player)
 
     if bShouldEnter != nil then
       return bShouldEnter
@@ -198,20 +198,20 @@ function GM:PlayerNoClip(player, bState)
 end
 
 function GM:PhysgunPickup(player, entity)
-  if player:can("physgun_pickup") then
+  if player:can('physgun_pickup') then
     return true
   end
 end
 
-concommand.Add("fl_save_pers", function()
+concommand.Add('fl_save_pers', function()
   if fl.development and SERVER then
-    hook.run("PersistenceSave")
+    hook.run('PersistenceSave')
   end
 end)
 
 function GM:OnReloaded()
   -- Reload the tools.
-  local toolGun = weapons.GetStored("gmod_tool")
+  local toolGun = weapons.GetStored('gmod_tool')
 
   for k, v in pairs(fl.tool:GetAll()) do
     toolGun.Tool[v.Mode] = v
@@ -223,22 +223,22 @@ function GM:OnReloaded()
     end
   end
 
-  print("Auto-Reloaded")
+  print('Auto-Reloaded')
 end
 
 -- Utility timers to call hooks that should be executed every once in a while.
-timer.Create("OneMinute", 60, 0, function()
-  hook.run("OneMinute")
+timer.Create('OneMinute', 60, 0, function()
+  hook.run('OneMinute')
 end)
 
-timer.Create("OneSecond", 1, 0, function()
-  hook.run("OneSecond")
+timer.Create('OneSecond', 1, 0, function()
+  hook.run('OneSecond')
 end)
 
-timer.Create("HalfSecond", 0.5, 0, function()
-  hook.run("HalfSecond")
+timer.Create('HalfSecond', 0.5, 0, function()
+  hook.run('HalfSecond')
 end)
 
-timer.Create("LazyTick", 0.125, 0, function()
-  hook.run("LazyTick")
+timer.Create('LazyTick', 0.125, 0, function()
+  hook.run('LazyTick')
 end)

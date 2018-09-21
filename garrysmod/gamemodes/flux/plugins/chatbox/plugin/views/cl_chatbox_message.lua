@@ -8,12 +8,12 @@ PANEL.shouldPaint = false
 PANEL.alpha = 255
 
 function PANEL:Init()
-  --if fl.client:can("chat_mod") then
-  --  self.moderation = vgui.Create("flChatModeration", self)
+  --if fl.client:can('chat_mod') then
+  --  self.moderation = vgui.Create('flChatModeration', self)
   --end
 
   self.addTime = CurTime()
-  self.fadeTime = self.addTime + config.get("chatbox_message_fade_delay")
+  self.fadeTime = self.addTime + config.get('chatbox_message_fade_delay')
 end
 
 function PANEL:Think()
@@ -56,7 +56,7 @@ end
 
 -- Those people want us gone :(
 function PANEL:Eject()
-  if plugin.call("ShouldMessageEject", self) != false then
+  if plugin.call('ShouldMessageEject', self) != false then
     local parent = chatbox.panel
 
     if !IsValid(parent) then return end
@@ -70,10 +70,10 @@ end
 
 function PANEL:Paint(w, h)
   if self.shouldPaint then
-    if plugin.call("ChatboxPrePaintMessage", w, h, self) == true then return end
+    if plugin.call('ChatboxPrePaintMessage', w, h, self) == true then return end
 
     local curColor = Color(255, 255, 255, self.alpha)
-    local curFont = font.GetSize(theme.GetFont("Chatbox_Normal"), font.Scale(20))
+    local curFont = font.GetSize(theme.GetFont('Chatbox_Normal'), font.Scale(20))
 
     for k, v in ipairs(self.messageData) do
       if istable(v) then
@@ -85,10 +85,10 @@ function PANEL:Paint(w, h)
           draw.textured_rect(util.get_material(v.image), v.x, v.y, v.w, v.h, Color(255, 255, 255, self.alpha))
         end
       elseif isnumber(v) then
-        curFont = font.GetSize(theme.GetFont("Chatbox_Normal"), v)
+        curFont = font.GetSize(theme.GetFont('Chatbox_Normal'), v)
       end
     end
   end
 end
 
-vgui.Register("flChatMessage", PANEL, "fl_base_panel")
+vgui.Register('flChatMessage', PANEL, 'fl_base_panel')

@@ -1,9 +1,9 @@
-local COMMAND = Command.new("fall")
-COMMAND.name = "Fall"
-COMMAND.description = "Fall down on the ground."
-COMMAND.syntax = "[number GetUpTime]"
-COMMAND.category = "roleplay"
-COMMAND.aliases = {"fallover", "charfallover"}
+local COMMAND = Command.new('fall')
+COMMAND.name = 'Fall'
+COMMAND.description = 'Fall down on the ground.'
+COMMAND.syntax = '[number GetUpTime]'
+COMMAND.category = 'roleplay'
+COMMAND.aliases = { 'fallover', 'charfallover' }
 COMMAND.no_console = true
 
 function COMMAND:on_run(player, delay)
@@ -15,10 +15,10 @@ function COMMAND:on_run(player, delay)
     player:SetRagdollState(RAGDOLL_FALLENOVER)
 
     if delay and delay > 0 then
-      player:RunCommand("getup "..tostring(delay))
+      player:RunCommand('getup '..tostring(delay))
     end
   else
-    player:notify("You cannot do this right now!")
+    player:notify('You cannot do this right now!')
   end
 end
 

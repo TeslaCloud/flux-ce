@@ -1,13 +1,13 @@
-local COMMAND = Command.new("unban")
-COMMAND.name = "Unban"
-COMMAND.description = t"unbancmd.description"
-COMMAND.syntax = t"unbancmd.syntax"
-COMMAND.category = "administration"
+local COMMAND = Command.new('unban')
+COMMAND.name = 'Unban'
+COMMAND.description = t'unbancmd.description'
+COMMAND.syntax = t'unbancmd.syntax'
+COMMAND.category = 'administration'
 COMMAND.arguments = 1
-COMMAND.aliases = {"plyunban"}
+COMMAND.aliases = { 'plyunban' }
 
 function COMMAND:on_run(player, steam_id)
-  if isstring(steam_id) and steam_id != "" then
+  if isstring(steam_id) and steam_id != '' then
     local success, copy = fl.admin:remove_ban(steam_id)
 
     if success then
@@ -16,7 +16,7 @@ function COMMAND:on_run(player, steam_id)
         target = copy.name
       })
     else
-      player:notify("err.not_banned", steam_id)
+      player:notify('err.not_banned', steam_id)
     end
   end
 end

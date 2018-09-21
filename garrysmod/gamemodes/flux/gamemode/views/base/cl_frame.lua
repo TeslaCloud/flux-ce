@@ -1,15 +1,15 @@
 local PANEL = {}
 
 function PANEL:Init()
-  self:SetTitle("Flux Frame")
-  self:SetMainColor(theme.GetColor("Main"))
-  self:SetAccentColor(theme.GetColor("Accent"))
+  self:SetTitle('Flux Frame')
+  self:SetMainColor(theme.GetColor('Main'))
+  self:SetAccentColor(theme.GetColor('Accent'))
 
-  self.btnClose = vgui.Create("fl_button", self)
+  self.btnClose = vgui.Create('fl_button', self)
   self.btnClose:SetSize(20, 20)
   self.btnClose:SetPos(0, 0)
-  self.btnClose:SetIcon("fa-times")
-  self.btnClose:SetText("")
+  self.btnClose:SetIcon('fa-times')
+  self.btnClose:SetText('')
   self.btnClose:SetDrawBackground(false)
   self.btnClose.DoClick = function(button)
     self:SetVisible(false)
@@ -18,7 +18,7 @@ function PANEL:Init()
 end
 
 function PANEL:Paint(w, h)
-  return theme.Hook("PaintFrame", self, w, h)
+  return theme.Hook('PaintFrame', self, w, h)
 end
 
 function PANEL:Think()
@@ -28,7 +28,7 @@ function PANEL:Think()
     self.btnClose:SetPos(w - 20, 0)
   end
 
-  theme.Hook("FrameThink")
+  theme.Hook('FrameThink')
 end
 
-vgui.Register("fl_frame", PANEL, "fl_base_panel")
+vgui.Register('fl_frame', PANEL, 'fl_base_panel')

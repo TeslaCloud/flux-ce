@@ -1,8 +1,8 @@
 AddCSLuaFile()
 
-ENT.Type = "anim"
-ENT.print_name = "Item"
-ENT.category = "Flux"
+ENT.Type = 'anim'
+ENT.print_name = 'Item'
+ENT.category = 'Flux'
 ENT.Spawnable = false
 ENT.RenderGroup = RENDERGROUP_BOTH
 
@@ -24,7 +24,7 @@ if SERVER then
   function ENT:SetItem(item_table)
     if !item_table then return false end
 
-    hook.run("PreEntityItemSet", self, item_table)
+    hook.run('PreEntityItemSet', self, item_table)
 
     self:SetModel(item_table:GetModel())
     self:SetSkin(item_table.skin)
@@ -34,7 +34,7 @@ if SERVER then
 
     item.NetworkEntityData(nil, self)
 
-    hook.run("OnEntityItemSet", self, item_table)
+    hook.run('OnEntityItemSet', self, item_table)
   end
 
   function ENT:Use(activator, caller, useType, value)
@@ -57,9 +57,9 @@ if SERVER then
       if CurTime() - holdStart < 0.5 then
         if IsValid(caller) and caller:IsPlayer() then
           if self.item then
-            hook.run("PlayerUseItemEntity", caller, self, self.item)
+            hook.run('PlayerUseItemEntity', caller, self, self.item)
           else
-            fl.dev_print("Player attempted to use an item entity without item object tied to it!")
+            fl.dev_print('Player attempted to use an item entity without item object tied to it!')
           end
         end
       end
@@ -79,7 +79,7 @@ if SERVER then
 
     if holdStart and CurTime() - holdStart > 0.5 then
       if self.item then
-        self.item:do_menu_action("on_take", lastActivator)
+        self.item:do_menu_action('on_take', lastActivator)
       end
 
       lastActivator:set_nv('hold_start', false)
@@ -95,7 +95,7 @@ else
   function ENT:DrawTargetID(x, y, distance)
     if distance > 370 then return end
 
-    local text = "ERROR"
+    local text = 'ERROR'
     local desc = "This item's data has failed to fetch. This is an error."
     local alpha = 255
 
@@ -108,7 +108,7 @@ else
     local col2 = Color(0, 0, 0, alpha)
 
     if self.item then
-      if hook.run("PreDrawItemTargetID", self, self.item, x, y, alpha, distance) == false then
+      if hook.run('PreDrawItemTargetID', self, self.item, x, y, alpha, distance) == false then
         return
       end
 
@@ -116,7 +116,7 @@ else
       desc = self.item.description
     else
       if !self.dataRequested then
-        netstream.Start("RequestItemData", self:EntIndex())
+        netstream.Start('RequestItemData', self:EntIndex())
         self.dataRequested = true
       end
 
@@ -125,15 +125,15 @@ else
       return
     end
 
-    local width, height = util.text_size(text, theme.GetFont("Tooltip_Large"))
-    local width2, height2 = util.text_size(desc, theme.GetFont("Tooltip_Small"))
+    local width, height = util.text_size(text, theme.GetFont('Tooltip_Large'))
+    local width2, height2 = util.text_size(desc, theme.GetFont('Tooltip_Small'))
 
-    draw.SimpleTextOutlined(text, theme.GetFont("Tooltip_Large"), x - width * 0.5, y, col, nil, nil, 1, col2)
+    draw.SimpleTextOutlined(text, theme.GetFont('Tooltip_Large'), x - width * 0.5, y, col, nil, nil, 1, col2)
     y = y + 26
 
-    draw.SimpleTextOutlined(desc, theme.GetFont("Tooltip_Small"), x - width2 * 0.5, y, col, nil, nil, 1, col2)
+    draw.SimpleTextOutlined(desc, theme.GetFont('Tooltip_Small'), x - width2 * 0.5, y, col, nil, nil, 1, col2)
     y = y + 20
 
-    hook.run("PostDrawItemTargetID", self, self.item, x, y, alpha, distance)
+    hook.run('PostDrawItemTargetID', self, self.item, x, y, alpha, distance)
   end
 end

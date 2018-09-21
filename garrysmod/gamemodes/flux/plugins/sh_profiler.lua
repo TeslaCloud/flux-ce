@@ -1,6 +1,6 @@
-PLUGIN:set_name("Hook Profiler")
-PLUGIN:set_author("Mr. Meow")
-PLUGIN:set_description("Profile any hooks.")
+PLUGIN:set_name('Hook Profiler')
+PLUGIN:set_author('Mr. Meow')
+PLUGIN:set_description('Profile any hooks.')
 
 if !fl.development then return end
 
@@ -59,10 +59,10 @@ if CLIENT then
   function PLUGIN:HUDPaint()
     local pos = ScrH() - 30
 
-    draw.SimpleText('SV: '..tostring(math.Round(total_sv * 1000, 2))..'ms', "default", 8, pos - 36, Color(200, 100, 100, 200))
-    draw.SimpleText(largest_sv..' ('..tostring(math.Round(largest_sv_n * 1000, 2))..'ms)', "default", 8, pos - 24, Color(200, 100, 100, 200))
-    draw.SimpleText('CL: '..tostring(math.Round(total_cl * 1000, 2))..'ms', "default", 8, pos - 12, Color(200, 100, 100, 200))
-    draw.SimpleText(largest_cl..' ('..tostring(math.Round(largest_cl_n * 1000, 2))..'ms)', "default", 8, pos, Color(200, 100, 100, 200))
+    draw.SimpleText('SV: '..tostring(math.Round(total_sv * 1000, 2))..'ms', 'default', 8, pos - 36, Color(200, 100, 100, 200))
+    draw.SimpleText(largest_sv..' ('..tostring(math.Round(largest_sv_n * 1000, 2))..'ms)', 'default', 8, pos - 24, Color(200, 100, 100, 200))
+    draw.SimpleText('CL: '..tostring(math.Round(total_cl * 1000, 2))..'ms', 'default', 8, pos - 12, Color(200, 100, 100, 200))
+    draw.SimpleText(largest_cl..' ('..tostring(math.Round(largest_cl_n * 1000, 2))..'ms)', 'default', 8, pos, Color(200, 100, 100, 200))
   end
 else
   timer.Create('profiler_update', 1, 0, function()

@@ -2,7 +2,7 @@ do
   local cache = {}
 
   function util.text_size(text, font)
-    font = font or "default"
+    font = font or 'default'
 
     if cache[text] and cache[text][font] then
       local text_size = cache[text][font]
@@ -30,7 +30,7 @@ function util.text_height(text, font)
 end
 
 function util.font_size(font)
-  return select(2, util.text_size("Agw", font))
+  return select(2, util.text_size('Agw', font))
 end
 
 function util.get_panel_class(panel)
@@ -122,46 +122,46 @@ end
 local loading_cache = {}
 
 function util.cache_url_material(url)
-  if isstring(url) and url != "" then
+  if isstring(url) and url != '' then
     local url_crc = util.CRC(url)
-    local exploded = string.Explode("/", url)
+    local exploded = string.Explode('/', url)
 
     if istable(exploded) and #exploded > 0 then
       local extension = string.GetExtensionFromFilename(exploded[#exploded])
 
       if extension then
-        local extension = "."..extension
-        local path = "flux/materials/"..url_crc..extension
+        local extension = '.'..extension
+        local path = 'flux/materials/'..url_crc..extension
 
-        if _file.Exists(path, "DATA") then
-          cache[url_crc] = Material("../data/"..path, "noclamp smooth")
+        if _file.Exists(path, 'DATA') then
+          cache[url_crc] = Material('../data/'..path, 'noclamp smooth')
 
           return
         end
 
-        local directories = string.Explode("/", path)
-        local currentPath = ""
+        local directories = string.Explode('/', path)
+        local currentPath = ''
 
         for k, v in pairs(directories) do
           if k < #directories then
-            currentPath = currentPath..v.."/"
+            currentPath = currentPath..v..'/'
             file.CreateDir(currentPath)
           end
         end
 
         http.Fetch(url, function(body, length, headers, code)
-          path = path:gsub(".jpeg", ".jpg")
+          path = path:gsub('.jpeg', '.jpg')
           file.Write(path, body)
-          cache[url_crc] = Material("../data/"..path, "noclamp smooth")
+          cache[url_crc] = Material('../data/'..path, 'noclamp smooth')
 
-          hook.run("OnURLMatLoaded", url, cache[url_crc])
+          hook.run('OnURLMatLoaded', url, cache[url_crc])
         end)
       end
     end
   end
 end
 
-local placeholder = Material("vgui/wave")
+local placeholder = Material('vgui/wave')
 
 function URLMaterial(url)
   local url_crc = util.CRC(url)
@@ -182,11 +182,11 @@ function util.wrap_text(text, font, width, initial_width)
   if !text or !font or !width then return end
 
   local output = {}
-  local spaceWidth = util.text_size(" ", font)
-  local dashWidth = util.text_size("-", font)
-  local exploded = string.Explode(" ", text)
+  local spaceWidth = util.text_size(' ', font)
+  local dashWidth = util.text_size('-', font)
+  local exploded = string.Explode(' ', text)
   local cur_width = initial_width or 0
-  local current_word = ""
+  local current_word = ''
 
   for k, v in ipairs(exploded) do
     local w, h = util.text_size(v, font)
@@ -194,11 +194,11 @@ function util.wrap_text(text, font, width, initial_width)
 
     -- The width of the word is LESS OR EQUAL than what we have remaining.
     if w <= remain then
-      current_word = current_word..v.." "
+      current_word = current_word..v..' '
       cur_width = cur_width + w + spaceWidth
     else -- The width of the word is MORE than what we have remaining.
       if w > width then -- The width is more than total width we have available.
-        for _, v2 in ipairs(string.Explode("", v)) do
+        for _, v2 in ipairs(string.Explode('', v)) do
           local char_width, _ = util.text_size(v2, font)
 
           remain = width - cur_width
@@ -207,18 +207,18 @@ function util.wrap_text(text, font, width, initial_width)
             current_word = current_word..v2
             cur_width = cur_width + char_width
           else
-            current_word = current_word..v2.."-"
+            current_word = current_word..v2..'-'
 
             table.insert(output, current_word)
 
-            current_word = ""
+            current_word = ''
             cur_width = 0
           end
         end
       else -- The width is LESS than the total width
         table.insert(output, current_word)
 
-        current_word = v.." "
+        current_word = v..' '
 
         local wide = util.text_size(current_word, font)
 
@@ -228,7 +228,7 @@ function util.wrap_text(text, font, width, initial_width)
   end
 
   -- If we have some characters remaining, drop them into the lines table.
-  if current_word != "" then
+  if current_word != '' then
     table.insert(output, current_word)
   end
 

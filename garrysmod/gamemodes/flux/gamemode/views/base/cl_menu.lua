@@ -8,12 +8,12 @@ function PANEL:GetDeleteSelf()
 end
 
 function PANEL:Init()
-  self:SetFont(theme.GetFont("Text_Small"))
-  self:SetTextColor(theme.GetColor("Text"))
+  self:SetFont(theme.GetFont('Text_Small'))
+  self:SetTextColor(theme.GetColor('Text'))
 end
 
 function PANEL:Paint(w, h)
-  local col = theme.GetColor("Background")
+  local col = theme.GetColor('Background')
 
   if self:IsHovered() then
     col = col:lighten(40)
@@ -47,7 +47,7 @@ function PANEL:SetIconSize(w, h)
   self.iconH = h
 end
 
-vgui.Register("fl_menu_item", PANEL, "DButton")
+vgui.Register('fl_menu_item', PANEL, 'DButton')
 
 local PANEL = {}
 PANEL.last = 0
@@ -61,11 +61,11 @@ end
 function PANEL:AddOption(name, callback)
   local w, h = self:GetSize()
 
-  local panel = vgui.Create("fl_menu_item", self)
+  local panel = vgui.Create('fl_menu_item', self)
   panel:SetPos(0, 0)
   panel:MoveTo(0, self.last, 0.15 * self.count)
   panel:SetSize(self:GetWide(), self.optionHeight)
-  panel:SetTextColor(theme.GetColor("Text"))
+  panel:SetTextColor(theme.GetColor('Text'))
   panel:SetText(name)
   panel:MoveToBack()
 
@@ -85,7 +85,7 @@ end
 function PANEL:AddSpacer(px)
   px = px or 1
 
-  local panel = vgui.Create("DPanel", self)
+  local panel = vgui.Create('DPanel', self)
   panel:SetSize(self:GetWide(), px)
   panel:SetPos(0, 0)
   panel:MoveToBack()
@@ -93,9 +93,9 @@ function PANEL:AddSpacer(px)
   panel.Paint = function(pan, w, h)
     local wide = math.ceil(w * 0.1)
 
-    draw.RoundedBox(0, 0, 0, w, h, theme.GetColor("Text"))
-    draw.RoundedBox(0, 0, 0, wide, h, theme.GetColor("Background"))
-    draw.RoundedBox(0, w - wide, 0, wide, h, theme.GetColor("Background"))
+    draw.RoundedBox(0, 0, 0, w, h, theme.GetColor('Text'))
+    draw.RoundedBox(0, 0, 0, wide, h, theme.GetColor('Background'))
+    draw.RoundedBox(0, w - wide, 0, wide, h, theme.GetColor('Background'))
   end
 
   panel:MoveTo(0, self.last, 0.15 * self.count)
@@ -156,4 +156,4 @@ function PANEL:Open(x, y)
   return self
 end
 
-vgui.Register("fl_menu", PANEL, "DScrollPanel")
+vgui.Register('fl_menu', PANEL, 'DScrollPanel')

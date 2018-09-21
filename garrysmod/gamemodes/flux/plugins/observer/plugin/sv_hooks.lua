@@ -1,10 +1,10 @@
 function flObserver:ShouldObserverReset(player)
-  return config.get("observer_reset")
+  return config.get('observer_reset')
 end
 
 function flObserver:PlayerEnterNoclip(player)
-  if !player:can("noclip") then
-    fl.player:notify(player, "You do not have permission to do this.")
+  if !player:can('noclip') then
+    fl.player:notify(player, 'You do not have permission to do this.')
 
     return false
   end
@@ -14,7 +14,7 @@ function flObserver:PlayerEnterNoclip(player)
     angles = player:EyeAngles(),
     color = player:GetColor(),
     moveType = player:GetMoveType(),
-    shouldReset = (plugin.call("ShouldObserverReset", player) != false)
+    shouldReset = (plugin.call('ShouldObserverReset', player) != false)
   }
 
   player:SetMoveType(MOVETYPE_NOCLIP)

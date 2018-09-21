@@ -9,19 +9,19 @@ function PANEL:Init()
   self:SetPos(0, 0)
   self:SetSize(scrW, scrH)
 
-  local curX, curY = hook.run("AdjustMenuItemPositions", self)
+  local curX, curY = hook.run('AdjustMenuItemPositions', self)
   curX = curX or 42
   curY = curY or 200
 
-  self.closeButton = vgui.Create("fl_button", self)
-  self.closeButton:SetFont(theme.GetFont("Menu_Large"))
-  self.closeButton:SetText(string.utf8upper(t"tab_menu.close_menu"))
+  self.closeButton = vgui.Create('fl_button', self)
+  self.closeButton:SetFont(theme.GetFont('Menu_Large'))
+  self.closeButton:SetText(string.utf8upper(t'tab_menu.close_menu'))
   self.closeButton:SetPos(6, curY)
   self.closeButton:SetSizeEx(200, 38)
   self.closeButton:SetDrawBackground(false)
   self.closeButton:SetTextAutoposition(true)
   self.closeButton.DoClick = function(btn)
-    surface.PlaySound("garrysmod/ui_click.wav")
+    surface.PlaySound('garrysmod/ui_click.wav')
     self:SetVisible(false)
     self:Remove()
   end
@@ -30,17 +30,17 @@ function PANEL:Init()
 
   self.menu_items = {}
 
-  hook.run("AddTabMenuItems", self)
+  hook.run('AddTabMenuItems', self)
 
   for k, v in ipairs(self.menu_items) do
-    local button = vgui.Create("fl_button", self)
+    local button = vgui.Create('fl_button', self)
     button:SetDrawBackground(false)
     button:SetPos(6, curY)
     button:SetSizeEx(200, 30)
     button:SetText(v.title)
     button:SetIcon(v.icon)
     button:SetCentered(false)
-    button:SetFont(v.font or theme.GetFont("Menu_Normal"))
+    button:SetFont(v.font or theme.GetFont('Menu_Normal'))
 
     button.DoClick = function(btn)
       if v.override then
@@ -50,7 +50,7 @@ function PANEL:Init()
       end
 
       if v.panel then
-        surface.PlaySound("garrysmod/ui_hover.wav")
+        surface.PlaySound('garrysmod/ui_hover.wav')
 
         if IsValid(self.activePanel) then
           self.activePanel:SafeRemove()
@@ -67,13 +67,13 @@ function PANEL:Init()
         end
 
         self.activeBtn = btn
-        self.activeBtn:SetTextColor(theme.GetColor("AccentLight"))
+        self.activeBtn:SetTextColor(theme.GetColor('AccentLight'))
 
         if self.activePanel.Rebuild then
           self.activePanel:Rebuild()
         end
 
-        hook.run("OnMenuPanelOpen", self, self.activePanel)
+        hook.run('OnMenuPanelOpen', self, self.activePanel)
       end
 
       if v.callback then
@@ -97,7 +97,7 @@ end
 
 function PANEL:AddMenuItem(id, data, index)
   data.id = id
-  data.title = string.utf8upper(data.title or "error")
+  data.title = string.utf8upper(data.title or 'error')
   data.icon = data.icon or false
 
   if isnumber(index) then
@@ -120,7 +120,7 @@ function PANEL:OnMousePressed()
 end
 
 function PANEL:Paint(w, h)
-  theme.Hook("PaintTabMenu", self, w, h)
+  theme.Hook('PaintTabMenu', self, w, h)
 end
 
-vgui.Register("fl_tab_menu", PANEL, "EditablePanel")
+vgui.Register('fl_tab_menu', PANEL, 'EditablePanel')

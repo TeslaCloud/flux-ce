@@ -1,4 +1,4 @@
-local player_meta = FindMetaTable("Player")
+local player_meta = FindMetaTable('Player')
 
 function player_meta:HasInitialized()
   return self:GetDTBool(BOOL_INITIALIZED) or false
@@ -11,7 +11,7 @@ end
 player_meta.flName = player_meta.flName or player_meta.Name
 
 function player_meta:Name(bForceTrueName)
-  return (!bForceTrueName and hook.run("GetPlayerName", self)) or self:get_nv('name', self:flName())
+  return (!bForceTrueName and hook.run('GetPlayerName', self)) or self:get_nv('name', self:flName())
 end
 
 function player_meta:SteamName()
@@ -21,10 +21,10 @@ end
 function player_meta:SetModel(sPath)
   local oldModel = self:GetModel()
 
-  hook.run("PlayerModelChanged", self, sPath, oldModel)
+  hook.run('PlayerModelChanged', self, sPath, oldModel)
 
   if SERVER then
-    netstream.Start(nil, "PlayerModelChanged", self:EntIndex(), sPath, oldModel)
+    netstream.Start(nil, 'PlayerModelChanged', self:EntIndex(), sPath, oldModel)
   end
 
   return self:flSetModel(sPath)
@@ -35,7 +35,7 @@ end
 --]]
 
 function player_meta:SetAction(id, bForce)
-  if bForce or self:GetAction() == "none" then
+  if bForce or self:GetAction() == 'none' then
     self:set_nv('action', id)
 
     return true
@@ -51,7 +51,7 @@ function player_meta:IsDoingAction(id)
 end
 
 function player_meta:ResetAction()
-  self:SetAction("none", true)
+  self:SetAction('none', true)
 end
 
 function player_meta:DoAction(id)
@@ -61,7 +61,7 @@ function player_meta:DoAction(id)
     act = id
   end
 
-  if act and act != "none" then
+  if act and act != 'none' then
     local actionTable = fl.get_action(act)
 
     if istable(actionTable) and isfunction(actionTable.callback) then
@@ -69,7 +69,7 @@ function player_meta:DoAction(id)
         actionTable.callback, self, act
       } catch {
         function(exception)
-          ErrorNoHalt("Player action '"..tostring(act).."' has failed to run!\n"..exception.."\n")
+          ErrorNoHalt("Player action '"..tostring(act).."' has failed to run!\n"..exception..'\n')
         end
       }
     end
@@ -93,11 +93,11 @@ end
 --]]
 
 function player_meta:can(action, object)
-  return hook.run("PlayerHasPermission", self, action, object)
+  return hook.run('PlayerHasPermission', self, action, object)
 end
 
 function player_meta:is_root()
-  return hook.run("PlayerIsRoot", self)
+  return hook.run('PlayerIsRoot', self)
 end
 
 function player_meta:has_group(group)
@@ -105,5 +105,5 @@ function player_meta:has_group(group)
     return true
   end
 
-  return hook.run("PlayerHasGroup", self, group)
+  return hook.run('PlayerHasGroup', self, group)
 end

@@ -1,13 +1,13 @@
 if netvars then return end
 
-library.new "netvars"
+library.new 'netvars'
 
 local stored = netvars.stored or {}
 local globals = netvars.globals or {}
 netvars.stored = stored
 netvars.globals = globals
 
-local ent_meta = FindMetaTable("Entity")
+local ent_meta = FindMetaTable('Entity')
 
 -- A function to get a networked global.
 function netvars.get_nv(key, default)
@@ -33,14 +33,14 @@ function ent_meta:get_nv(key, default)
 end
 
 -- Called from the server to set global networked variables.
-netstream.Hook("set_global_netvar", function(key, value)
+netstream.Hook('set_global_netvar', function(key, value)
   if key and value != nil then
     globals[key] = value
   end
 end)
 
 -- Called from the server to set entity's networked variable.
-netstream.Hook("set_netvar", function(entIdx, key, value)
+netstream.Hook('set_netvar', function(entIdx, key, value)
   if key and value != nil then
     stored[entIdx] = stored[entIdx] or {}
     stored[entIdx][key] = value
@@ -48,6 +48,6 @@ netstream.Hook("set_netvar", function(entIdx, key, value)
 end)
 
 -- Called from the server to delete entity from networked table.
-netstream.Hook("delete_netvar", function(entIdx)
+netstream.Hook('delete_netvar', function(entIdx)
   stored[entIdx] = nil
 end)

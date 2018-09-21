@@ -1,4 +1,4 @@
-library.new("admin", fl)
+library.new('admin', fl)
 
 local roles = fl.admin.roles or {}
 fl.admin.roles = roles
@@ -63,7 +63,7 @@ end
 function fl.admin:AddPermission(id, category, data, bForce)
   if !id then return end
 
-  category = category or "general"
+  category = category or 'general'
   data.id = id
   permissions[category] = permissions[category] or {}
 
@@ -73,12 +73,12 @@ function fl.admin:AddPermission(id, category, data, bForce)
 end
 
 function fl.admin:RegisterPermission(id, name, description, category)
-  if !isstring(id) or id == "" then return end
+  if !isstring(id) or id == '' then return end
 
   local data = {}
     data.id = id:to_id()
-    data.description = description or "No description provided."
-    data.category = category or "general"
+    data.description = description or 'No description provided.'
+    data.category = category or 'general'
     data.name = name or id
   self:AddPermission(id, category, data, true)
 end
@@ -137,7 +137,7 @@ function fl.admin:CheckImmunity(player, target, can_equal)
   return false
 end
 
-pipeline.register("role", function(id, file_name, pipe)
+pipeline.register('role', function(id, file_name, pipe)
   ROLE = Role.new(id)
 
   util.include(file_name)
@@ -146,7 +146,7 @@ pipeline.register("role", function(id, file_name, pipe)
 end)
 
 function fl.admin:include_roles(directory)
-  pipeline.include_folder("role", directory)
+  pipeline.include_folder('role', directory)
 end
 
 if SERVER then
@@ -177,7 +177,7 @@ if SERVER then
     if !isstring(player) and !IsValid(player) then return end
 
     duration = duration or 0
-    reason = reason or "N/A"
+    reason = reason or 'N/A'
 
     local steam_id = player
     local name = steam_id
@@ -187,7 +187,7 @@ if SERVER then
       steam_id = player:SteamID()
 
       if !bPreventKick then
-        player:Kick("You have been banned: "..tostring(reason))
+        player:Kick('You have been banned: '..tostring(reason))
       end
     end
 
@@ -256,9 +256,9 @@ do
     if isnumber(str) then return str * 60 end
     if !isstring(str) then return false end
 
-    str = str:trim_end(" ")
-    str = str:trim_start(" ")
-    str = str:Replace("'", "")
+    str = str:trim_end(' ')
+    str = str:trim_start(' ')
+    str = str:Replace("'", '')
     str = str:lower()
 
     -- A regular number was entered?
@@ -266,17 +266,17 @@ do
       return tonumber(str) * 60
     end
 
-    str = str:Replace("-", "")
+    str = str:Replace('-', '')
 
-    local exploded = string.Explode(" ", str)
+    local exploded = string.Explode(' ', str)
     local result = 0
-    local token, num = "", 0
+    local token, num = '', 0
 
     for k, v in ipairs(exploded) do
       local n = tonumber(v)
 
       if isstring(v) then
-        v = v:trim_end("s")
+        v = v:trim_end('s')
       end
 
       if !n and !tokens[v] and !numTokens[v] then continue end
@@ -284,7 +284,7 @@ do
       if n then
         num = n
       elseif isstring(v) then
-        v = v:trim_end("s")
+        v = v:trim_end('s')
 
         local ntok = numTokens[v]
 
@@ -304,9 +304,9 @@ do
           end
         end
 
-        token, num = "", 0
+        token, num = '', 0
       else
-        token, num = "", 0
+        token, num = '', 0
       end
     end
 
@@ -316,18 +316,18 @@ end
 
 do
   -- Flags
-  fl.admin:RegisterPermission("physgun", "Access Physgun", "Grants access to the physics gun.", "flags")
-  fl.admin:RegisterPermission("toolgun", "Access Tool Gun", "Grants access to the tool gun.", "flags")
-  fl.admin:RegisterPermission("spawn_props", "Spawn Props", "Grants access to spawn props.", "flags")
-  fl.admin:RegisterPermission("spawn_chairs", "Spawn Chairs", "Grants access to spawn chairs.", "flags")
-  fl.admin:RegisterPermission("spawn_vehicles", "Spawn Vehicles", "Grants access to spawn vehicles.", "flags")
-  fl.admin:RegisterPermission("spawn_entities", "Spawn All Entities", "Grants access to spawn any entity.", "flags")
-  fl.admin:RegisterPermission("spawn_npcs", "Spawn NPCs", "Grants access to spawn NPCs.", "flags")
-  fl.admin:RegisterPermission("spawn_ragdolls", "Spawn Ragdolls", "Grants access to spawn ragdolls.", "flags")
-  fl.admin:RegisterPermission("spawn_sweps", "Spawn SWEPs", "Grants access to spawn scripted weapons.", "flags")
-  fl.admin:RegisterPermission("physgun_freeze", "Freeze Protected Entities", "Grants access to freeze protected entities.", "flags")
-  fl.admin:RegisterPermission("physgun_pickup", "Unlimited Physgun", "Grants access to pick up any entity with the physics gun.", "flags")
+  fl.admin:RegisterPermission('physgun', 'Access Physgun', 'Grants access to the physics gun.', 'flags')
+  fl.admin:RegisterPermission('toolgun', 'Access Tool Gun', 'Grants access to the tool gun.', 'flags')
+  fl.admin:RegisterPermission('spawn_props', 'Spawn Props', 'Grants access to spawn props.', 'flags')
+  fl.admin:RegisterPermission('spawn_chairs', 'Spawn Chairs', 'Grants access to spawn chairs.', 'flags')
+  fl.admin:RegisterPermission('spawn_vehicles', 'Spawn Vehicles', 'Grants access to spawn vehicles.', 'flags')
+  fl.admin:RegisterPermission('spawn_entities', 'Spawn All Entities', 'Grants access to spawn any entity.', 'flags')
+  fl.admin:RegisterPermission('spawn_npcs', 'Spawn NPCs', 'Grants access to spawn NPCs.', 'flags')
+  fl.admin:RegisterPermission('spawn_ragdolls', 'Spawn Ragdolls', 'Grants access to spawn ragdolls.', 'flags')
+  fl.admin:RegisterPermission('spawn_sweps', 'Spawn SWEPs', 'Grants access to spawn scripted weapons.', 'flags')
+  fl.admin:RegisterPermission('physgun_freeze', 'Freeze Protected Entities', 'Grants access to freeze protected entities.', 'flags')
+  fl.admin:RegisterPermission('physgun_pickup', 'Unlimited Physgun', 'Grants access to pick up any entity with the physics gun.', 'flags')
 
   -- General permissions
-  fl.admin:RegisterPermission("context_menu", "Access Context Menu", "Grants access to the context menu.", "general")
+  fl.admin:RegisterPermission('context_menu', 'Access Context Menu', 'Grants access to the context menu.', 'general')
 end

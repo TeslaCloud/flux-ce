@@ -1,4 +1,4 @@
-library.new "attributes"
+library.new 'attributes'
 
 local stored = attributes.stored or {}
 attributes.stored = stored
@@ -36,7 +36,7 @@ function attributes.register(id, data)
   if !data then return end
 
   if !isstring(id) and !isstring(data.name) then
-    ErrorNoHalt("Attempt to register an attribute without a valid ID!")
+    ErrorNoHalt('Attempt to register an attribute without a valid ID!')
     debug.Trace()
 
     return
@@ -46,14 +46,14 @@ function attributes.register(id, data)
     id = data.name:to_id()
   end
 
-  fl.dev_print("Registering "..string.lower(data.type)..": "..tostring(id))
+  fl.dev_print('Registering '..string.lower(data.type)..': '..tostring(id))
 
   data.attr_id = id
-  data.name = data.name or "Unknown Attribute"
-  data.description = data.description or "This attribute has no description!"
+  data.name = data.name or 'Unknown Attribute'
+  data.description = data.description or 'This attribute has no description!'
   data.max = data.max or 100
   data.min = data.min or 0
-  data.category = data.category or "Attribute_Category_Other"
+  data.category = data.category or 'Attribute_Category_Other'
   data.icon = data.icon
   data.type = data.type
   if data.multipliable == nil then data.multipliable = true end
@@ -75,7 +75,7 @@ function attributes.register_type(id, global_var, folder)
 
   attributes.include_type(id, global_var, folder)
 
-  fl.dev_print("Registering attribute type: ["..id.."] ["..global_var.."] ["..folder.."]")
+  fl.dev_print('Registering attribute type: ['..id..'] ['..global_var..'] ['..folder..']')
 end
 
 function attributes.include_type(id, global_var, folder)
@@ -95,7 +95,7 @@ function attributes.include_type(id, global_var, folder)
 end
 
 do
-  local player_meta = FindMetaTable("Player")
+  local player_meta = FindMetaTable('Player')
 
   function player_meta:get_attributes()
     return self:get_nv('attributes', {})

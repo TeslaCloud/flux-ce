@@ -12,7 +12,7 @@ do
 
     local weapon = fl.client:GetActiveWeapon()
 
-    if IsValid(weapon) and weapon:GetClass() == "gmod_tool" and weapon:GetMode() == "area" then
+    if IsValid(weapon) and weapon:GetClass() == 'gmod_tool' and weapon:GetMode() == 'area' then
       local tool = fl.client:GetTool()
       local mode = tool:GetAreaMode()
       local verts = (tool and tool.area and tool.area.verts)
@@ -93,7 +93,7 @@ function flAreas:HUDPaint()
       if istable(v) and v.endTime > curTime then
         v.alpha = v.alpha or 255
 
-        draw.SimpleText(v.text, theme.GetFont("Text_Large"), 32, lastY, Color(255, 255, 255, v.alpha))
+        draw.SimpleText(v.text, theme.GetFont('Text_Large'), 32, lastY, Color(255, 255, 255, v.alpha))
 
         if curTime + 2 >= v.endTime then
           v.alpha = math.Clamp(v.alpha - 1, 0, 255)
@@ -105,26 +105,26 @@ function flAreas:HUDPaint()
   end
 end
 
-netstream.Hook("PlayerEnteredArea", function(areaIdx, idx, pos)
+netstream.Hook('PlayerEnteredArea', function(areaIdx, idx, pos)
   local area = areas.GetAll()[areaIdx]
 
-  Try("Areas", areas.GetCallback(area.type), fl.client, area, true, pos, CurTime())
+  Try('Areas', areas.GetCallback(area.type), fl.client, area, true, pos, CurTime())
 end)
 
-netstream.Hook("PlayerLeftArea", function(areaIdx, idx, pos)
+netstream.Hook('PlayerLeftArea', function(areaIdx, idx, pos)
   local area = areas.GetAll()[areaIdx]
 
-  Try("Areas", areas.GetCallback(area.type), fl.client, area, false, pos, CurTime())
+  Try('Areas', areas.GetCallback(area.type), fl.client, area, false, pos, CurTime())
 end)
 
-netstream.Hook("flLoadAreas", function(areaStorage)
+netstream.Hook('flLoadAreas', function(areaStorage)
   areas.SetStored(areaStorage)
 end)
 
-netstream.Hook("flAreaRemove", function(id)
+netstream.Hook('flAreaRemove', function(id)
   areas.Remove(id)
 end)
 
-netstream.Hook("flAreaRegister", function(id, data)
+netstream.Hook('flAreaRegister', function(id, data)
   areas.register(id, data)
 end)

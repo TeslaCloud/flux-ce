@@ -1,4 +1,4 @@
-library.new "font"
+library.new 'font'
 
 -- We want the fonts to recreate on refresh.
 local stored = {}
@@ -35,7 +35,7 @@ end
 function font.GetSize(name, size, data)
   if !size then return name end
 
-  local newName = name..":"..size
+  local newName = name..':'..size
 
   if !stored[newName] then
     local fontData = table.Copy(stored[name])
@@ -60,7 +60,7 @@ end
 
 function font.ClearSizes()
   for k, v in pairs(stored) do
-    if k:find("\\") then
+    if k:find('\\') then
       stored[k] = nil
     end
   end
@@ -73,83 +73,83 @@ end
 function font.CreateFonts()
   font.ClearTable()
 
-  font.Create("flRoboto", {
-    font = "Roboto",
+  font.Create('flRoboto', {
+    font = 'Roboto',
     size = 16,
     weight = 500
   })
 
-  font.Create("flRobotoBold", {
-    font = "Roboto",
+  font.Create('flRobotoBold', {
+    font = 'Roboto',
     size = 16,
     weight = 1000,
   })
 
-  font.Create("flRobotoItalic", {
-    font = "Roboto",
+  font.Create('flRobotoItalic', {
+    font = 'Roboto',
     size = 16,
     italic = true
   })
 
-  font.Create("flRobotoItalicBold", {
-    font = "Roboto",
+  font.Create('flRobotoItalicBold', {
+    font = 'Roboto',
     size = 16,
     italic = true,
     weight = 1000
   })
 
-  font.Create("flRobotoLt", {
-    font = "Roboto Lt",
+  font.Create('flRobotoLt', {
+    font = 'Roboto Lt',
     size = 16,
     weight = 500
   })
 
-  font.Create("flRobotoLtBold", {
-    font = "Roboto Lt",
+  font.Create('flRobotoLtBold', {
+    font = 'Roboto Lt',
     size = 16,
     weight = 1000,
   })
 
-  font.Create("flRobotoLtItalic", {
-    font = "Roboto Lt",
+  font.Create('flRobotoLtItalic', {
+    font = 'Roboto Lt',
     size = 16,
     italic = true
   })
 
-  font.Create("flRobotoLtItalicBold", {
-    font = "Roboto Lt",
+  font.Create('flRobotoLtItalicBold', {
+    font = 'Roboto Lt',
     size = 16,
     italic = true,
     weight = 1000
   })
 
-  font.Create("flRobotoCondensed", {
-    font = "Roboto Condensed",
+  font.Create('flRobotoCondensed', {
+    font = 'Roboto Condensed',
     size = 16,
     weight = 500
   })
 
-  font.Create("flRobotoCondensedBold", {
-    font = "Roboto Condensed",
+  font.Create('flRobotoCondensedBold', {
+    font = 'Roboto Condensed',
     size = 16,
     weight = 1000,
   })
 
-  font.Create("flRobotoCondensedItalic", {
-    font = "Roboto Condensed",
+  font.Create('flRobotoCondensedItalic', {
+    font = 'Roboto Condensed',
     size = 16,
     italic = true
   })
 
-  font.Create("flRobotoCondensedItalicBold", {
-    font = "Roboto Condensed",
+  font.Create('flRobotoCondensedItalicBold', {
+    font = 'Roboto Condensed',
     size = 16,
     italic = true,
     weight = 1000
   })
 
-  theme.Call("CreateFonts")
-  hook.run("CreateFonts")
+  theme.Call('CreateFonts')
+  hook.run('CreateFonts')
 end
 
 _font = font

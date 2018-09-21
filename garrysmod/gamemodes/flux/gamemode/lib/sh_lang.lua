@@ -120,11 +120,11 @@ function fl.lang:get_plural(language, phrase, count)
 
   if langTable.pluralize then
     return langTable:pluralize(phrase, count, translated)
-  elseif language == "en" then
+  elseif language == 'en' then
     if !string.vowel(translated:sub(translated:len(), translated:len())) then
-      return translated.."es"
+      return translated..'es'
     else
-      return translated.."s"
+      return translated..'s'
     end
   end
 
@@ -156,7 +156,7 @@ function fl.lang:nice_time_full(language, time)
 end
 
 function fl.lang:get_case(language, phrase, case)
-  if language == "en" then return t(phrase) end
+  if language == 'en' then return t(phrase) end
 
   local langTable = stored[language]
   local translated = t(phrase)
@@ -171,14 +171,14 @@ function fl.lang:get_case(language, phrase, case)
 end
 
 function fl.lang:get_player_lang(player)
-  if !IsValid(player) then return "en" end
+  if !IsValid(player) then return 'en' end
 
   return player:get_nv('language', 'en')
 end
 
 if CLIENT then
   function fl.lang:pluralize(phrase, count)
-    local lang = GetConVar("gmod_language"):GetString()
+    local lang = GetConVar('gmod_language'):GetString()
 
     if lang then
       return self:get_plural(lang, phrase, count)
@@ -186,20 +186,20 @@ if CLIENT then
   end
 
   function fl.lang:case(phrase, case)
-    local lang = GetConVar("gmod_language"):GetString()
+    local lang = GetConVar('gmod_language'):GetString()
 
     if lang then
       return self:get_case(lang, phrase, case)
     end
   end
 
-  hook.Add("LazyTick", "LanguageChecker", function()
-    local new_lang = GetConVar("gmod_language"):GetString()
+  hook.Add('LazyTick', 'LanguageChecker', function()
+    local new_lang = GetConVar('gmod_language'):GetString()
 
     if current_language != new_lang then
       current_language = new_lang
 
-      netstream.Start("player_set_lang", new_lang)
+      netstream.Start('player_set_lang', new_lang)
     end
   end)
 else

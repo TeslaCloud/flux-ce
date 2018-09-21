@@ -1,4 +1,4 @@
-DeriveGamemode("sandbox")
+DeriveGamemode('sandbox')
 
 fl.blur_material = Material('pp/blurscreen')
 
@@ -12,15 +12,15 @@ end
 
 do
   local default_color_mod = {
-    ["$pp_colour_addr"] = 0,
-    ["$pp_colour_addg"] = 0,
-    ["$pp_colour_addb"] = 0,
-    ["$pp_colour_brightness"] = 0,
-    ["$pp_colour_contrast"] = 1,
-    ["$pp_colour_colour"] = 1,
-    ["$pp_colour_mulr"] = 0,
-    ["$pp_colour_mulg"] = 0,
-    ["$pp_colour_mulb"] = 0
+    ['$pp_colour_addr'] = 0,
+    ['$pp_colour_addg'] = 0,
+    ['$pp_colour_addb'] = 0,
+    ['$pp_colour_brightness'] = 0,
+    ['$pp_colour_contrast'] = 1,
+    ['$pp_colour_colour'] = 1,
+    ['$pp_colour_mulr'] = 0,
+    ['$pp_colour_mulg'] = 0,
+    ['$pp_colour_mulb'] = 0
   }
 
   function fl.color_mod_enabled(enable)
@@ -51,10 +51,10 @@ do
     end
 
     if isstring(index) then
-      if !index:starts("$pp_colour_") then
-        if index == "color" then index = "colour" end
+      if !index:starts('$pp_colour_') then
+        if index == 'color' then index = 'colour' end
 
-        fl.client.color_mod_table["$pp_colour_"..index] = (isnumber(value) and value) or 0
+        fl.client.color_mod_table['$pp_colour_'..index] = (isnumber(value) and value) or 0
       else
         fl.client.color_mod_table[index] = (isnumber(value) and value) or 0
       end
@@ -115,7 +115,7 @@ function surface.draw_scaled(pos_x, pos_y, scale, callback)
 
   cam.PushModelMatrix(matrix)
     if callback then
-      Try("draw_scaled", callback, pos_x, pos_y, scale)
+      Try('draw_scaled', callback, pos_x, pos_y, scale)
     end
   cam.PopModelMatrix()
 end
@@ -130,7 +130,7 @@ function surface.draw_rotated(pos_x, pos_y, angle, callback)
 
   cam.PushModelMatrix(matrix)
     if callback then
-      Try("draw_rotated", callback, pos_x, pos_y, angle)
+      Try('draw_rotated', callback, pos_x, pos_y, angle)
     end
   cam.PopModelMatrix()
 end
@@ -145,13 +145,13 @@ do
 
   function surface.draw_circle(x, y, radius, passes)
     if !x or !y or !radius then
-      error("surface.draw_circle - Too few arguments to function call (3 expected)")
+      error('surface.draw_circle - Too few arguments to function call (3 expected)')
     end
 
     -- In case no passes variable was passed, in which case we give a normal smooth circle.
     passes = passes or 100
 
-    local id = x.."|"..y.."|"..radius.."|"..passes
+    local id = x..'|'..y..'|'..radius..'|'..passes
     local info = cache[id]
 
     if !info then
@@ -183,13 +183,13 @@ do
 
   function surface.draw_circle_partial(percentage, x, y, radius, passes)
     if !percentage or !x or !y or !radius then
-      error("surface.draw_circle_partial - Too few arguments to function call (4 expected)")
+      error('surface.draw_circle_partial - Too few arguments to function call (4 expected)')
     end
 
     -- In case no passes variable was passed, in which case we give a normal smooth circle.
     passes = passes or 360
 
-    local id = percentage.."|"..x.."|"..y.."|"..radius.."|"..passes
+    local id = percentage..'|'..x..'|'..y..'|'..radius..'|'..passes
     local info = cache[id]
 
     if !info then
@@ -300,7 +300,7 @@ do
     surface.SetDrawColor(255, 255, 255, 255)
 
     for i = 0, 1, 0.3 do
-      fl.blur_material:SetFloat("$blur", i * blur_amt)
+      fl.blur_material:SetFloat('$blur', i * blur_amt)
       fl.blur_material:Recompute()
       render.UpdateScreenEffectTexture()
       render.SetScissorRect(x, y, x + w, y + h, true)
@@ -323,7 +323,7 @@ do
     surface.SetDrawColor(255, 255, 255, 255)
 
     for i = 0, 1, 0.3 do
-      fl.blur_material:SetFloat("$blur", i * blur_amt)
+      fl.blur_material:SetFloat('$blur', i * blur_amt)
       fl.blur_material:Recompute()
       render.UpdateScreenEffectTexture()
       render.SetScissorRect(x, y, x + w, y + h, true)
@@ -344,7 +344,7 @@ do
     color = color or Color(255, 255, 255)
 
     surface.draw_rotated(x, y, ang, function(x, y, ang)
-      draw.textured_rect(util.get_material("materials/flux/cog.png"), x - w * 0.5, y - h * 0.5, w, h, color)
+      draw.textured_rect(util.get_material('materials/flux/cog.png'), x - w * 0.5, y - h * 0.5, w, h, color)
     end)
 
     ang = ang + FrameTime() * 32

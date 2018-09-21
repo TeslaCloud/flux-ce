@@ -1,9 +1,9 @@
-local COMMAND = Command.new("getup")
-COMMAND.name = "GetUp"
-COMMAND.description = "Get up if you are currently fallen."
-COMMAND.syntax = "[number GetUpTime]"
-COMMAND.category = "roleplay"
-COMMAND.aliases = {"chargetup", "unfall", "unfallover"}
+local COMMAND = Command.new('getup')
+COMMAND.name = 'GetUp'
+COMMAND.description = 'Get up if you are currently fallen.'
+COMMAND.syntax = '[number GetUpTime]'
+COMMAND.category = 'roleplay'
+COMMAND.aliases = { 'chargetup', 'unfall', 'unfallover' }
 COMMAND.no_console = true
 
 function COMMAND:on_run(player, delay)
@@ -12,7 +12,7 @@ function COMMAND:on_run(player, delay)
   if player:Alive() and player:IsRagdolled() then
     player:set_nv('getup_end', CurTime() + delay)
     player:set_nv('getup_time', delay)
-    player:SetAction("getup", true)
+    player:SetAction('getup', true)
 
     timer.Simple(delay, function()
       player:SetRagdollState(RAGDOLL_NONE)
@@ -20,7 +20,7 @@ function COMMAND:on_run(player, delay)
       player:ResetAction()
     end)
   else
-    player:notify("You cannot do this right now!")
+    player:notify('You cannot do this right now!')
   end
 end
 

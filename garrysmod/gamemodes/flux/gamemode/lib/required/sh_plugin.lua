@@ -1,6 +1,6 @@
 if plugin then return end
 
-library.new "plugin"
+library.new 'plugin'
 
 local stored = {}
 local unloaded = {}
@@ -8,20 +8,20 @@ local hooks_cache = {}
 local reload_data = {}
 local load_cache = {}
 local default_extras = {
-  "lib",
-  "lib/meta",
-  "lib/classes",
-  "models",
-  "classes",
-  "meta",
-  "config",
-  "languages",
-  "controllers",
-  "views",
-  "tools",
-  "themes",
-  "entities",
-  "migrations"
+  'lib',
+  'lib/meta',
+  'lib/classes',
+  'models',
+  'classes',
+  'meta',
+  'config',
+  'languages',
+  'controllers',
+  'views',
+  'tools',
+  'themes',
+  'entities',
+  'migrations'
 }
 
 local extras = table.Copy(default_extras)
@@ -52,11 +52,11 @@ end
 class 'Plugin'
 
 function Plugin:init(id, data)
-  self.name = data.name or "Unknown Plugin"
-  self.author = data.author or "Unknown Author"
+  self.name = data.name or 'Unknown Plugin'
+  self.author = data.author or 'Unknown Author'
   self.folder = data.folder or name:to_id()
-  self.description = data.description or "This plugin has no description."
-  self.id = id or data.id or name:to_id() or "unknown"
+  self.description = data.description or 'This plugin has no description.'
+  self.id = id or data.id or name:to_id() or 'unknown'
 
   table.safe_merge(self, data)
 end
@@ -78,15 +78,15 @@ function Plugin:get_description()
 end
 
 function Plugin:set_name(name)
-  self.name = name or self.name or "Unknown Plugin"
+  self.name = name or self.name or 'Unknown Plugin'
 end
 
 function Plugin:set_author(author)
-  self.author = author or self.author or "Unknown"
+  self.author = author or self.author or 'Unknown'
 end
 
 function Plugin:set_description(desc)
-  self.description = desc or self.description or "No description provided!"
+  self.description = desc or self.description or 'No description provided!'
 end
 
 function Plugin:set_data(data)
@@ -101,7 +101,7 @@ function Plugin:set_alias(alias)
 end
 
 function Plugin:__tostring()
-  return "Plugin ["..self.name.."]"
+  return 'Plugin ['..self.name..']'
 end
 
 function Plugin:register()
@@ -156,7 +156,7 @@ function plugin.remove_from_cache(id)
         pluginTable.OnUnhook, pluginTable
       } catch {
         function(exception)
-          ErrorNoHalt("[Flux:Plugin] OnUnhook method has failed to run! "..tostring(pluginTable).."\n"..tostring(exception).."\n")
+          ErrorNoHalt('OnUnhook method has failed to run! '..tostring(pluginTable)..'\n'..tostring(exception)..'\n')
         end
       }
     end
@@ -185,7 +185,7 @@ function plugin.recache(id)
         pluginTable.OnRecache, pluginTable
       } catch {
         function(exception)
-          ErrorNoHalt("[Flux:Plugin] OnRecache method has failed to run! "..tostring(pluginTable).."\n"..tostring(exception).."\n")
+          ErrorNoHalt('OnRecache method has failed to run! '..tostring(pluginTable)..'\n'..tostring(exception)..'\n')
         end
       }
     end
@@ -204,7 +204,7 @@ function plugin.remove(id)
         pluginTable.OnRemoved, pluginTable
       } catch {
         function(exception)
-          ErrorNoHalt("[Flux:Plugin] OnRemoved method has failed to run! "..tostring(pluginTable).."\n"..tostring(exception).."\n")
+          ErrorNoHalt('OnRemoved method has failed to run! '..tostring(pluginTable)..'\n'..tostring(exception)..'\n')
         end
       }
     end
@@ -242,11 +242,11 @@ function plugin.register(obj)
 
   if SERVER then
     if Schema == obj then
-      local folderName = obj.folder:trim_end("/schema")
-      local filePath = "gamemodes/"..folderName.."/"..folderName..".yml"
+      local folderName = obj.folder:trim_end('/schema')
+      local filePath = 'gamemodes/'..folderName..'/'..folderName..'.yml'
 
-      if file.Exists(filePath, "GAME") then
-        fl.dev_print("Importing config: "..filePath)
+      if file.Exists(filePath, 'GAME') then
+        fl.dev_print('Importing config: '..filePath)
 
         config.import(fileio.Read(filePath), CONFIG_PLUGIN)
       end
@@ -270,23 +270,23 @@ function plugin.include(path)
   data.folder = path
 
   if reload_data[folder] == false then
-    fl.dev_print("Not reloading plugin: "..path)
+    fl.dev_print('Not reloading plugin: '..path)
     return
   elseif plugin.loaded(id) then
     return
   end
 
-  fl.dev_print("Loading plugin: "..path)
+  fl.dev_print('Loading plugin: '..path)
 
-  if ext != "lua" then
+  if ext != 'lua' then
     if SERVER then
-      if file.Exists(path.."/plugin.yml", "LUA") then
-        local dataTable = YAML.eval(file.Read(path.."/plugin.yml", "LUA"))
-          dataTable.folder = path.."/plugin"
-          dataTable.plugin_main = "sh_plugin.lua"
+      if file.Exists(path..'/plugin.yml', 'LUA') then
+        local dataTable = YAML.eval(file.Read(path..'/plugin.yml', 'LUA'))
+          dataTable.folder = path..'/plugin'
+          dataTable.plugin_main = 'sh_plugin.lua'
 
-          if file.Exists(dataTable.folder.."/sh_"..(dataTable.name or id)..".lua", "LUA") then
-            dataTable.plugin_main = "sh_"..(dataTable.name or id)..".lua"
+          if file.Exists(dataTable.folder..'/sh_'..(dataTable.name or id)..'.lua', 'LUA') then
+            dataTable.plugin_main = 'sh_'..(dataTable.name or id)..'.lua'
           end
         table.safe_merge(data, dataTable)
 
@@ -322,10 +322,10 @@ function plugin.include(path)
 
   plugin.include_folders(data.folder)
 
-  if ext != "lua" then
-    util.include(data.folder.."/"..data.plugin_main)
+  if ext != 'lua' then
+    util.include(data.folder..'/'..data.plugin_main)
   else
-    if file.Exists(path, "LUA") then
+    if file.Exists(path, 'LUA') then
       util.include(path)
     end
   end
@@ -339,11 +339,11 @@ end
 function plugin.include_schema()
   local schema_info = fl.get_schema_info()
   local schemaPath = schema_info.folder
-  local schema_folder = schemaPath.."/schema"
-  local filePath = "gamemodes/"..schemaPath.."/"..schemaPath..".yml"
+  local schema_folder = schemaPath..'/schema'
+  local filePath = 'gamemodes/'..schemaPath..'/'..schemaPath..'.yml'
 
-  if file.Exists(filePath, "GAME") then
-    fl.dev_print("Checking schema dependencies using "..filePath)
+  if file.Exists(filePath, 'GAME') then
+    fl.dev_print('Checking schema dependencies using '..filePath)
 
     local dependencies = YAML.eval(fileio.Read(filePath)).depends
 
@@ -359,23 +359,23 @@ function plugin.include_schema()
     end
   end
 
-  if SERVER then AddCSLuaFile(schemaPath.."/gamemode/cl_init.lua") end
+  if SERVER then AddCSLuaFile(schemaPath..'/gamemode/cl_init.lua') end
 
   Schema = Plugin.new(schema_info.name, schema_info)
 
-  util.include(schema_folder.."/sh_schema.lua")
+  util.include(schema_folder..'/sh_schema.lua')
 
   plugin.include_folders(schema_folder)
-  plugin.include_plugins(schemaPath.."/plugins")
+  plugin.include_plugins(schemaPath..'/plugins')
 
   if schema_info.name and schema_info.author then
     MsgC(Color(255, 255, 0), schema_info.name)
-    MsgC(Color(0, 255, 100), " by "..schema_info.author.." has been loaded!\n")
+    MsgC(Color(0, 255, 100), ' by '..schema_info.author..' has been loaded!\n')
   end
 
   Schema:register()
 
-  hook.Call("OnSchemaLoaded", GM)
+  hook.Call('OnSchemaLoaded', GM)
 end
 
 -- Please specify full file name if requiring a single-file plugin.
@@ -397,7 +397,7 @@ function plugin.require(pluginName)
 
     for k, v in ipairs(searchPaths) do
       for _, ending in ipairs(tolerance) do
-        if file.Exists(v..pluginName..ending, "LUA") then
+        if file.Exists(v..pluginName..ending, 'LUA') then
           plugin.include(v..pluginName)
 
           return true
@@ -412,79 +412,79 @@ function plugin.require(pluginName)
 end
 
 function plugin.include_plugins(folder)
-  local files, folders = file.Find(folder.."/*", "LUA")
+  local files, folders = file.Find(folder..'/*', 'LUA')
 
   for k, v in ipairs(files) do
-    if v:GetExtensionFromFilename() == "lua" then
-      plugin.include(folder.."/"..v)
+    if v:GetExtensionFromFilename() == 'lua' then
+      plugin.include(folder..'/'..v)
     end
   end
 
   for k, v in ipairs(folders) do
-    plugin.include(folder.."/"..v)
+    plugin.include(folder..'/'..v)
   end
 end
 
 do
   local entData = {
     weapons = {
-      table = "SWEP",
+      table = 'SWEP',
       func = weapons.Register,
       defaultData = {
         Primary = {},
         Secondary = {},
-        Base = "weapon_base"
+        Base = 'weapon_base'
       }
     },
     entities = {
-      table = "ENT",
+      table = 'ENT',
       func = scripted_ents.Register,
       defaultData = {
-        Type = "anim",
-        Base = "base_gmodentity",
+        Type = 'anim',
+        Base = 'base_gmodentity',
         Spawnable = true
       }
     },
     effects = {
-      table = "EFFECT",
+      table = 'EFFECT',
       func = effects and effects.Register,
       clientside = true
     }
   }
 
   function plugin.include_entities(folder)
-    local _, dirs = file.Find(folder.."/*", "LUA")
+    local _, dirs = file.Find(folder..'/*', 'LUA')
 
     for k, v in ipairs(dirs) do
       if !entData[v] then continue end
 
-      local dir = folder.."/"..v
+      local dir = folder..'/'..v
       local data = entData[v]
-      local files, folders = file.Find(dir.."/*", "LUA")
+      local files, folders = file.Find(dir..'/*', 'LUA')
 
       for k, v in ipairs(folders) do
-        local path = dir.."/"..v
-        local id = (string.GetFileFromFilename(path) or ""):Replace(".lua", ""):to_id()
+        local path = dir..'/'..v
+        local id = (string.GetFileFromFilename(path) or ''):Replace('.lua', ''):to_id()
         local register = false
         local var = data.table
 
         _G[var] = table.Copy(data.defaultData)
         _G[var].ClassName = id
 
-        if file.Exists(path.."/shared.lua", "LUA") then
-          util.include(path.."/shared.lua")
+        if file.Exists(path..'/shared.lua', 'LUA') then
+          util.include(path..'/shared.lua')
 
           register = true
         end
 
-        if file.Exists(path.."/init.lua", "LUA") then
-          util.include(path.."/init.lua")
+        if file.Exists(path..'/init.lua', 'LUA') then
+          util.include(path..'/init.lua')
 
           register = true
         end
 
-        if file.Exists(path.."/cl_init.lua", "LUA") then
-          util.include(path.."/cl_init.lua")
+        if file.Exists(path..'/cl_init.lua', 'LUA') then
+          util.include(path..'/cl_init.lua')
 
           register = true
         end
@@ -499,8 +499,8 @@ do
       end
 
       for k, v in ipairs(files) do
-        local path = dir.."/"..v
-        local id = (string.GetFileFromFilename(path) or ""):Replace(".lua", ""):to_id()
+        local path = dir..'/'..v
+        local id = (string.GetFileFromFilename(path) or ''):Replace('.lua', ''):to_id()
         local var = data.table
 
         _G[var] = table.Copy(data.defaultData)
@@ -526,19 +526,19 @@ end
 
 function plugin.include_folders(folder)
   for k, v in ipairs(extras) do
-    if plugin.call("PluginIncludeFolder", v, folder) == nil then
-      if v == "entities" then
-        plugin.include_entities(folder.."/"..v)
-      elseif v == "themes" then
-        pipeline.include_folder("theme", folder.."/themes/")
-      elseif v == "tools" then
-        pipeline.include_folder("tool", folder.."/tools/")
+    if plugin.call('PluginIncludeFolder', v, folder) == nil then
+      if v == 'entities' then
+        plugin.include_entities(folder..'/'..v)
+      elseif v == 'themes' then
+        pipeline.include_folder('theme', folder..'/themes/')
+      elseif v == 'tools' then
+        pipeline.include_folder('tool', folder..'/tools/')
       elseif SERVER and v == 'languages' then
         pipeline.include_folder('language', folder..'/languages/')
       elseif SERVER and v == 'migrations' then
         pipeline.include_folder('migrations', folder..'/migrations/')
       else
-        util.include_folder(folder.."/"..v)
+        util.include_folder(folder..'/'..v)
       end
     end
   end
@@ -556,11 +556,11 @@ do
           local success, a, b, c, d, e, f = pcall(v[1], v[2], ...)
 
           if !success then
-            ErrorNoHalt("[Flux - "..(v.id or v[2]:get_name()).."] The "..name.." hook has failed to run!\n")
-            ErrorNoHalt(tostring(a), "\n")
+            ErrorNoHalt('[Flux - '..(v.id or v[2]:get_name())..'] The '..name..' hook has failed to run!\n')
+            ErrorNoHalt(tostring(a), '\n')
 
-            if name != "OnHookError" then
-              hook.Call("OnHookError", gm, name, v)
+            if name != 'OnHookError' then
+              hook.Call('OnHookError', gm, name, v)
             end
           elseif a != nil then
             return a, b, c, d, e, f

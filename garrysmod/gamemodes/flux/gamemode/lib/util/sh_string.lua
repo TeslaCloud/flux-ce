@@ -1,13 +1,13 @@
-local string_meta = getmetatable("")
+local string_meta = getmetatable('')
 
 do
   local vowels = {
-    ["a"] = true,
-    ["e"] = true,
-    ["o"] = true,
-    ["i"] = true,
-    ["u"] = true,
-    ["y"] = true
+    ['a'] = true,
+    ['e'] = true,
+    ['o'] = true,
+    ['i'] = true,
+    ['u'] = true,
+    ['y'] = true
   }
 
   -- A function to check whether character is vowel or not.
@@ -15,7 +15,7 @@ do
     char = char:utf8lower()
 
     if CLIENT then
-      local lang = fl.lang:GetTable(GetConVar("gmod_language"):GetString())
+      local lang = fl.lang:GetTable(GetConVar('gmod_language'):GetString())
 
       if lang and isfunction(lang.is_vowel) then
         local override = lang:is_vowel(char)
@@ -32,7 +32,7 @@ end
 
 -- A function to remove a substring from the end of the string.
 function string.trim_end(str, needle, all_occurences)
-  if !needle or needle == "" then
+  if !needle or needle == '' then
     return str
   end
 
@@ -53,7 +53,7 @@ end
 
 -- A function to remove a substring from the beginning of the string.
 function string.trim_start(str, needle, all_occurences)
-  if !needle or needle == "" then
+  if !needle or needle == '' then
     return str
   end
 
@@ -106,10 +106,10 @@ end
 
 -- A function to check if string is command or not.
 function string.is_command(str)
-  local prefixes = config.get("command_prefixes") or {}
+  local prefixes = config.get('command_prefixes') or {}
 
   for k, v in ipairs(prefixes) do
-    if str:starts(v) and hook.run("StringIsCommand", str) != false then
+    if str:starts(v) and hook.run('StringIsCommand', str) != false then
       return true, string.utf8len(v)
     end
   end
@@ -120,16 +120,16 @@ end
 do
   -- ID's should not have any of those characters.
   local blocked_chars = {
-    "'", "\"", "\\", "/", "^",
-    ":", ".", ";", "&", ",", "%"
+    "'", '"', '\\', '/', '^',
+    ':', '.', ';', '&', ',', '%'
   }
 
   function string.to_id(str)
     str = str:utf8lower()
-    str = str:gsub(" ", "_")
+    str = str:gsub(' ', '_')
 
     for k, v in ipairs(blocked_chars) do
-      str = str:Replace(v, "")
+      str = str:Replace(v, '')
     end
 
     return str
@@ -176,8 +176,8 @@ function string.spelling(str)
 
   str = str:utf8sub(1, 1):utf8upper()..str:utf8sub(2, len)
 
-  if (end_text != ".") and (end_text != "!") and (end_text != "?") and ((end_text != '"')) then
-    str = str.."."
+  if (end_text != '.') and (end_text != '!') and (end_text != '?') and ((end_text != '"')) then
+    str = str..'.'
   end
 
   return str
@@ -215,7 +215,7 @@ end
 
 function string.chomp(str, what)
   if !what then
-    str = str:trim_end("\n", true):trim_end("\r", true)
+    str = str:trim_end('\n', true):trim_end('\r', true)
   else
     str = str:trim_start(what, true):trim_end(what, true)
   end

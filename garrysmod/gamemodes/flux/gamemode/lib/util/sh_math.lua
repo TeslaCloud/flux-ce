@@ -1,5 +1,5 @@
 do
-  local hex_digits = {"0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "a", "b", "c", "d", "e", "f"}
+  local hex_digits = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'}
 
   -- A function to convert a single hexadecimal digit to decimal.
   function util.hex_to_decimal(hex)
@@ -11,7 +11,7 @@ do
 
     local negative = false
 
-    if hex:starts("-") then
+    if hex:starts('-') then
       hex = hex:sub(2, 2)
       negative = true
     end
@@ -37,7 +37,7 @@ function util.hex_to_decimalimal(hex)
   if isnumber(hex) then return hex end
 
   local sum = 0
-  local chars = table.Reverse(string.Explode("", hex))
+  local chars = table.Reverse(string.Explode('', hex))
   local idx = 1
 
   for i = 0, hex:len() - 1 do

@@ -2,10 +2,10 @@ if !item then
   error("Attempt to use inventory system without Flux's items system.\n")
 end
 
-library.new "inventory"
+library.new 'inventory'
 
 do
-  local player_meta = FindMetaTable("Player")
+  local player_meta = FindMetaTable('Player')
 
   function player_meta:GetInventory(type)
     return self:get_nv('inventory', {})[type or 'hotbar'] or {}
@@ -36,7 +36,7 @@ do
       if !item_table then return -1 end
 
       local ply_inv = self:GetInventory()
-      local slots = self:GetCharacterData("inventory_slots", 8)
+      local slots = self:GetCharacterData('inventory_slots', 8)
 
       for i = 1, slots do
         ply_inv[i] = ply_inv[i] or {}
@@ -85,7 +85,7 @@ do
       local slot = self:AddItem(item_table)
 
       if slot and slot != -1 then
-        hook.run("OnItemGiven", self, item_table, slot)
+        hook.run('OnItemGiven', self, item_table, slot)
         return true
       elseif slot == -1 then
         fl.dev_print("Failed to add item to player's inventory (item_table is invalid)! "..tostring(item_table))
@@ -106,7 +106,7 @@ do
       local slot = self:AddItem(item_table)
 
       if slot and slot != -1 then
-        hook.run("OnItemGiven", self, item_table, slot)
+        hook.run('OnItemGiven', self, item_table, slot)
         return true
       elseif slot == -1 then
         fl.dev_print("Failed to add item to player's inventory (item_table is invalid)! "..tostring(item_table))
@@ -127,7 +127,7 @@ do
           table.RemoveByValue(ply_inv[slot], instance_id)
           self:SetInventory(ply_inv)
 
-          hook.run("OnItemTaken", self, instance_id, slot)
+          hook.run('OnItemTaken', self, instance_id, slot)
 
           break
         end

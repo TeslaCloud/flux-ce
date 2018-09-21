@@ -10,9 +10,9 @@ library.stored = library.stored or {}
 -- A function to include a file based on it's prefix.
 function util.include(file_name)
   if SERVER then
-    if string.find(file_name, "cl_") then
+    if string.find(file_name, 'cl_') then
       AddCSLuaFile(file_name)
-    elseif string.find(file_name, "sv_") or string.find(file_name, "init.lua") then
+    elseif string.find(file_name, 'sv_') or string.find(file_name, 'init.lua') then
       return include(file_name)
     else
       AddCSLuaFile(file_name)
@@ -20,7 +20,7 @@ function util.include(file_name)
       return include(file_name)
     end
   else
-    if !string.find(file_name, "sv_") and file_name != "init.lua" and !file_name:EndsWith("/init.lua") then
+    if !string.find(file_name, 'sv_') and file_name != 'init.lua' and !file_name:EndsWith('/init.lua') then
       return include(file_name)
     end
   end
@@ -29,7 +29,7 @@ end
 -- A function to add a file to clientside downloads list based on it's prefix.
 function util.add_cs_lua(file_name)
   if SERVER then
-    if string.find(file_name, "sh_") or string.find(file_name, "cl_") or string.find(file_name, "shared.lua") then
+    if string.find(file_name, 'sh_') or string.find(file_name, 'cl_') or string.find(file_name, 'shared.lua') then
       AddCSLuaFile(file_name)
     end
   end
@@ -39,24 +39,24 @@ end
 function util.include_folder(dir, base, recursive)
   if base then
     if isbool(base) then
-      base = "flux/gamemode/"
-    elseif !base:EndsWith("/") then
-      base = base.."/"
+      base = 'flux/gamemode/'
+    elseif !base:EndsWith('/') then
+      base = base..'/'
     end
 
     dir = base..dir
   end
 
-  if !dir:EndsWith("/") then
-    dir = dir.."/"
+  if !dir:EndsWith('/') then
+    dir = dir..'/'
   end
 
   if recursive then
-    local files, folders = _file.Find(dir.."*", "LUA", "namedesc")
+    local files, folders = _file.Find(dir..'*', 'LUA', 'namedesc')
 
     -- First include the files.
     for k, v in ipairs(files) do
-      if v:GetExtensionFromFilename() == "lua" then
+      if v:GetExtensionFromFilename() == 'lua' then
         util.include(dir..v)
       end
     end
@@ -66,7 +66,7 @@ function util.include_folder(dir, base, recursive)
       util.include_folder(dir..v, recursive)
     end
   else
-    local files, _ = _file.Find(dir.."*.lua", "LUA", "namedesc")
+    local files, _ = _file.Find(dir..'*.lua', 'LUA', 'namedesc')
 
     for k, v in ipairs(files) do
       util.include(dir..v)
@@ -91,9 +91,9 @@ end
 
 function fl.dev_print(message)
   if fl.development then
-    Msg("Debug: ")
+    Msg('Debug: ')
     MsgC(Color(200, 200, 200), message)
-    Msg("\n")
+    Msg('\n')
   end
 end
 
@@ -108,17 +108,17 @@ end
 file.old_write = file.old_write or file.Write
 
 function file.Write(file_name, contents)
-  local exploded = string.Explode("/", file_name)
-  local curPath = ""
+  local exploded = string.Explode('/', file_name)
+  local curPath = ''
 
   for k, v in ipairs(exploded) do
     if string.GetExtensionFromFilename(v) != nil then
       break
     end
 
-    curPath = curPath..v.."/"
+    curPath = curPath..v..'/'
 
-    if !file.Exists(curPath, "DATA") then
+    if !file.Exists(curPath, 'DATA') then
       file.CreateDir(curPath)
     end
   end
@@ -184,7 +184,7 @@ function library.create_class(name, base_class)
         base_class.class_extended, base_class, copy
       } catch {
         function(exception)
-          ErrorNoHalt(tostring(exception) + "\n")
+          ErrorNoHalt(tostring(exception) + '\n')
         end
       }
     end
@@ -219,8 +219,8 @@ function library.create_class(name, base_class)
       local success, value = pcall(real_class.init, new_obj, ...)
 
       if !success then
-        ErrorNoHalt("["..name.."] Class constructor has failed to run!\n")
-        ErrorNoHalt(value.."\n")
+        ErrorNoHalt('['..name..'] Class constructor has failed to run!\n')
+        ErrorNoHalt(value..'\n')
       end
     end
 
@@ -275,7 +275,7 @@ function extends(base_class)
         base_class.class_extended, base_class, copy
       } catch {
         function(exception)
-          ErrorNoHalt(tostring(exception) + "\n")
+          ErrorNoHalt(tostring(exception) + '\n')
         end
       }
     end
@@ -284,7 +284,7 @@ function extends(base_class)
     obj.BaseClass = base_class
     obj.base_class = obj.BaseClass
 
-    hook.run("OnClassExtended", obj, base_class)
+    hook.run('OnClassExtended', obj, base_class)
 
     library.last_class.parent[library.last_class.name] = obj
     library.last_class = nil
@@ -296,8 +296,8 @@ function extends(base_class)
 end
 
 --[[
-  class "SomeClass" extends SomeOtherClass
-  class "SomeClass" extends "SomeOtherClass"
+  class 'SomeClass' extends SomeOtherClass
+  class 'SomeClass' extends 'SomeOtherClass'
 --]]
 
 -- Aliases for people who're hell bent on clarity.
@@ -325,8 +325,8 @@ end
 --[[
   Example usage:
 
-  local obj = new "ClassName"
-  local obj = new("ClassName", 1, 2, 3)
+  local obj = new 'ClassName'
+  local obj = new('ClassName', 1, 2, 3)
 --]]
 
 new = New
@@ -368,8 +368,8 @@ do
     return action_storage
   end
 
-  fl.register_action("spawning")
-  fl.register_action("idle")
+  fl.register_action('spawning')
+  fl.register_action('idle')
 end
 
 --[[
@@ -382,13 +382,13 @@ function fl.get_schema_folder()
   if SERVER then
     return fl.schema
   else
-    return fl.shared.schema_folder or "flux"
+    return fl.shared.schema_folder or 'flux'
   end
 end
 
 -- A function to get schema's name.
 function fl.get_schema_name()
-  return Schema and Schema:get_name() or fl.schema or "Unknown"
+  return Schema and Schema:get_name() or fl.schema or 'Unknown'
 end
 
 --[[
@@ -406,18 +406,18 @@ function fl.serialize(tab)
       success, value = pcall(util.TableToJSON, tab)
 
       if !success then
-        ErrorNoHalt("Failed to serialize a table!\n")
-        ErrorNoHalt(value.."\n")
+        ErrorNoHalt('Failed to serialize a table!\n')
+        ErrorNoHalt(value..'\n')
 
-        return ""
+        return ''
       end
     end
 
     return value
   else
-    print("You must serialize a table, not "..type(tab).."!")
+    print('You must serialize a table, not '..type(tab)..'!')
 
-    return ""
+    return ''
   end
 end
 
@@ -436,8 +436,8 @@ function fl.deserialize(data)
       success, value = pcall(util.JSONToTable, data)
 
       if !success then
-        ErrorNoHalt("Failed to deserialize a string!\n")
-        ErrorNoHalt(value.."\n")
+        ErrorNoHalt('Failed to deserialize a string!\n')
+        ErrorNoHalt(value..'\n')
 
         return {}
       end
@@ -445,7 +445,7 @@ function fl.deserialize(data)
 
     return value
   else
-    print("You must deserialize a string, not "..type(data).."!")
+    print('You must deserialize a string, not '..type(data)..'!')
 
     return {}
   end
@@ -465,8 +465,8 @@ function fl.include_schema()
 
     -- Wait just a tiny bit for stuff to catch up
     timer.Simple(0.2, function()
-      netstream.Start("ClientIncludedSchema", true)
-      hook.run("FluxClientSchemaLoaded")
+      netstream.Start('ClientIncludedSchema', true)
+      hook.run('FluxClientSchemaLoaded')
     end)
   end
 end
@@ -494,23 +494,23 @@ function fl.get_schema_info()
 
     local schema_folder = string.lower(fl.get_schema_folder())
     local schema_data = util.KeyValuesToTable(
-      fileio.Read("gamemodes/"..schema_folder.."/"..schema_folder..".txt")
+      fileio.Read('gamemodes/'..schema_folder..'/'..schema_folder..'.txt')
     )
 
     if !schema_data then
       schema_data = {}
     end
 
-    if schema_data["Gamemode"] then
-      schema_data = schema_data["Gamemode"]
+    if schema_data['Gamemode'] then
+      schema_data = schema_data['Gamemode']
     end
 
     fl.schema_info = {}
-      fl.schema_info["name"] = schema_data["title"] or "Undefined"
-      fl.schema_info["author"] = schema_data["author"] or "Undefined"
-      fl.schema_info["description"] = schema_data["description"] or "Undefined"
-      fl.schema_info["version"] = schema_data["version"] or "Undefined"
-      fl.schema_info["folder"] = string.gsub(schema_folder, "/schema", "")
+      fl.schema_info['name'] = schema_data['title'] or 'Undefined'
+      fl.schema_info['author'] = schema_data['author'] or 'Undefined'
+      fl.schema_info['description'] = schema_data['description'] or 'Undefined'
+      fl.schema_info['version'] = schema_data['version'] or 'Undefined'
+      fl.schema_info['folder'] = string.gsub(schema_folder, '/schema', '')
     return fl.schema_info
   else
     return fl.shared.schema_info

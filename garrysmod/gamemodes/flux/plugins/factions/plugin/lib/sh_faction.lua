@@ -1,4 +1,4 @@
-library.new "faction"
+library.new 'faction'
 
 local stored = faction.stored or {}
 faction.stored = stored
@@ -10,9 +10,9 @@ function faction.register(id, data)
   if !id or !data then return end
 
   data.faction_id = id:to_id() or (data.name and data.name:to_id())
-  data.name = data.name or "Unknown Faction"
-  data.description = data.description or "This faction has no description!"
-  data.print_name = data.print_name or data.name or "Unknown Faction"
+  data.name = data.name or 'Unknown Faction'
+  data.description = data.description or 'This faction has no description!'
+  data.print_name = data.print_name or data.name or 'Unknown Faction'
 
   team.SetUp(count + 1, data.name, data.color or Color(255, 255, 255))
 
@@ -66,7 +66,7 @@ function faction.GetAll()
   return stored
 end
 
-pipeline.register("faction", function(id, file_name, pipe)
+pipeline.register('faction', function(id, file_name, pipe)
   FACTION = Faction.new(id)
 
   util.include(file_name)
@@ -75,11 +75,11 @@ pipeline.register("faction", function(id, file_name, pipe)
 end)
 
 function faction.IncludeFactions(directory)
-  return pipeline.include_folder("faction", directory)
+  return pipeline.include_folder('faction', directory)
 end
 
 do
-  local player_meta = FindMetaTable("Player")
+  local player_meta = FindMetaTable('Player')
 
   function player_meta:get_faction_id()
     return self:get_nv('faction', 'player')
@@ -90,7 +90,7 @@ do
     local factionTable = faction.find_by_id(id)
     local char = self:GetCharacter()
 
-    self:set_nv('name', factionTable:GenerateName(self, self:GetCharacterVar("name", self:Name()), 1))
+    self:set_nv('name', factionTable:GenerateName(self, self:GetCharacterVar('name', self:Name()), 1))
     self:SetRank(1)
     self:SetTeam(factionTable.team_id)
     self:set_nv('faction', id)
@@ -108,7 +108,7 @@ do
 
     factionTable:OnPlayerEntered(self)
 
-    hook.run("OnPlayerFactionChanged", self, factionTable, oldFaction)
+    hook.run('OnPlayerFactionChanged', self, factionTable, oldFaction)
   end
 
   function player_meta:SetDefaultFactionModel()
@@ -160,20 +160,20 @@ do
 
   function player_meta:SetRank(rank)
     if isnumber(rank) then
-      self:SetCharacterData("Rank", rank)
+      self:SetCharacterData('Rank', rank)
     elseif isstring(rank) then
       local factionTable = self:GetFaction()
 
       for k, v in ipairs(factionTable.rank) do
         if string.utf8lower(v.id) == string.utf8lower(rank) then
-          self:SetCharacterData("Rank", k)
+          self:SetCharacterData('Rank', k)
         end
       end
     end
   end
 
   function player_meta:GetRank()
-    return self:GetCharacterData("Rank", -1)
+    return self:GetCharacterData('Rank', -1)
   end
 
   function player_meta:IsRank(strRank, bStrict)

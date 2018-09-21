@@ -1,4 +1,4 @@
-name: "Factions System"
-description: "Adds factions that player's character can be a member of."
-author: "Mr. Meow"
-depends: ["characters"]
+name: 'Factions System'
+description: 'Adds factions that player's character can be a member of.'
+author: 'Mr. Meow'
+depends: ['characters']

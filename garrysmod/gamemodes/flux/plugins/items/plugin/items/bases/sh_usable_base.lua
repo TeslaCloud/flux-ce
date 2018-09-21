@@ -1,8 +1,8 @@
--- Alternatively, you can use item.CreateBase("ItemUsable")
+-- Alternatively, you can use item.CreateBase('ItemUsable')
 class 'ItemUsable' extends 'Item'
 
-ItemUsable.name = "Usable Items Base"
-ItemUsable.description = "An item that can be used."
+ItemUsable.name = 'Usable Items Base'
+ItemUsable.description = 'An item that can be used.'
 
 -- Returns:
 -- nothing/nil = removes item from the inventory as soon as it's used.

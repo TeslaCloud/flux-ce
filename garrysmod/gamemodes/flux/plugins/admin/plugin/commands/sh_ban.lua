@@ -1,15 +1,15 @@
-local COMMAND = Command.new("ban")
-COMMAND.name = "Ban"
-COMMAND.description = t"bancmd.description"
-COMMAND.syntax = t"bancmd.syntax"
-COMMAND.category = "administration"
+local COMMAND = Command.new('ban')
+COMMAND.name = 'Ban'
+COMMAND.description = t'bancmd.description'
+COMMAND.syntax = t'bancmd.syntax'
+COMMAND.category = 'administration'
 COMMAND.arguments = 2
 COMMAND.immunity = true
-COMMAND.aliases = {"plyban"}
+COMMAND.aliases = { 'plyban' }
 
 function COMMAND:on_run(player, targets, duration, ...)
   local pieces = {...}
-  local reason = "You have been banned."
+  local reason = 'You have been banned.'
 
   duration = fl.admin:InterpretBanTime(duration)
 
@@ -28,9 +28,9 @@ function COMMAND:on_run(player, targets, duration, ...)
   end
 
   for k, v in ipairs(_player.GetAll()) do
-    local time = t("time.for", fl.lang:nice_time_full(v:get_nv('language'), duration))
+    local time = t('time.for', fl.lang:nice_time_full(v:get_nv('language'), duration))
 
-    if duration <= 0 then time = t"time.permanently" end
+    if duration <= 0 then time = t'time.permanently' end
 
     v:notify('ban_message', {
       admin = get_player_name(player),

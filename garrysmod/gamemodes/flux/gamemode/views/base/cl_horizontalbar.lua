@@ -11,7 +11,7 @@ function PANEL:SetCentered(bCentered)
 end
 
 function PANEL:Paint(width, height)
-  theme.Hook("PaintHorizontalbar", self, width, height)
+  theme.Hook('PaintHorizontalbar', self, width, height)
 end
 
 function PANEL:AddPanel(pnl)
@@ -57,4 +57,4 @@ function PANEL:PerformLayout()
   self.pnlCanvas.x = self.OffsetX * -1
 end
 
-vgui.Register("fl_horizontalbar", PANEL, "DHorizontalScroller")
+vgui.Register('fl_horizontalbar', PANEL, 'DHorizontalScroller')
