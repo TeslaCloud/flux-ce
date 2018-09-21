@@ -208,7 +208,7 @@ function PANEL:OpenPanel(id)
       to = -self.panel:GetWide()
     end
 
-    self.panel:MoveTo(to, y, 0.5, 0, 0.5)
+    self.panel:MoveTo(to, y, theme.GetOption('menu_anim_duration'), 0, 0.5)
   end
 
   self.panel = theme.CreatePanel(id, self)
@@ -225,7 +225,7 @@ function PANEL:OpenPanel(id)
   end
 
   self.panel:SetPos(from, y)
-  self.panel:MoveTo(x, y, 0.5, 0, 0.5)
+  self.panel:MoveTo(x, y, theme.GetOption('menu_anim_duration'), 0, 0.5)
 
   if self.panel.OnOpen then
     self.panel:OnOpen(self)

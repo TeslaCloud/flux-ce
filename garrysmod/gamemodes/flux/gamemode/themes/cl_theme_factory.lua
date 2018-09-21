@@ -24,6 +24,7 @@ function THEME:OnLoaded()
   self:SetOption('Button_Click_Success', 'garrysmod/ui_click.wav')
   self:SetOption('Button_Click_Fail', 'buttons/button8.wav')
   self:SetOption('MenuMusic', '')
+  self:SetOption('menu_anim_duration', 0.2)
 
   local accentColor     = self:SetColor('Accent', Color(90, 90, 190))
   local mainColor     = self:SetColor('Main', Color(50, 50, 50))

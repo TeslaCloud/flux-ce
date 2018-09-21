@@ -161,18 +161,18 @@ function flCharacters:AddMainMenuItems(panel, sidebar)
   panel:add_button(t'char_create.title', function(btn)
     panel.menu = theme.CreatePanel('character_creation', panel)
     panel.menu:SetPos(ScrW(), 0)
-    panel.menu:MoveTo(0, 0, 0.5, 0, 0.5)
+    panel.menu:MoveTo(0, 0, theme.GetOption('menu_anim_duration'), 0, 0.5)
 
-    panel.sidebar:MoveTo(-panel.sidebar:GetWide(), theme.GetOption('MainMenu_SidebarY'), 0.5, 0, 0.5)
+    panel.sidebar:MoveTo(-panel.sidebar:GetWide(), theme.GetOption('MainMenu_SidebarY'), theme.GetOption('menu_anim_duration'), 0, 0.5)
   end)
 
   if #fl.client:GetAllCharacters() > 0 then
     panel:add_button(t'char_create.load', function(btn)
       panel.menu = theme.CreatePanel('char_create.load', panel)
       panel.menu:SetPos(-panel.menu:GetWide(), 0)
-      panel.menu:MoveTo(0, 0, 0.5, 0, 0.5)
+      panel.menu:MoveTo(0, 0, theme.GetOption('menu_anim_duration'), 0, 0.5)
   
-      panel.sidebar:MoveTo(ScrW(), theme.GetOption('MainMenu_SidebarY'), 0.5, 0, 0.5)
+      panel.sidebar:MoveTo(ScrW(), theme.GetOption('MainMenu_SidebarY'), theme.GetOption('menu_anim_duration'), 0, 0.5)
     end)
   end
 
