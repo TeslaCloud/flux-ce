@@ -81,7 +81,7 @@ else
       local pos = v.pos
       local normal = v.normal
       local ang = normal:Angle()
-      local w, h = util.text_size(v.text, theme.GetFont('Text_3D2D'))
+      local w, h = util.text_size(v.text, theme.GetFont('text_3d2d'))
       local startPos = pos - -ang:Right() * (w * 0.50) * v.scale
       local end_pos = pos + -ang:Right() * (w * 0.50) * v.scale
 

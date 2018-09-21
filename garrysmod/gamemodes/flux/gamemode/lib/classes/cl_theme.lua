@@ -41,12 +41,16 @@ function Theme:SetOption(key, value)
   if key then
     self.options[key] = value
   end
+
+  return self.options[key]
 end
 
 function Theme:SetFont(key, value, scale, data)
   if key then
     self.fonts[key] = font.GetSize(value, scale, data)
   end
+
+  return self.fonts[key]
 end
 
 function Theme:SetColor(id, val)
@@ -59,10 +63,12 @@ end
 
 function Theme:SetMaterial(id, val)
   self.materials[id] = (!isstring(val) and val) or util.get_material(val)
+  return self.materials[id]
 end
 
 function Theme:SetSound(id, val)
   self.sounds[id] = val or Sound()
+  return self.sounds[id]
 end
 
 function Theme:GetFont(key, default)

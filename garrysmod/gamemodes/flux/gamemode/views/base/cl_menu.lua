@@ -8,7 +8,7 @@ function PANEL:GetDeleteSelf()
 end
 
 function PANEL:Init()
-  self:SetFont(theme.GetFont('Text_Small'))
+  self:SetFont(theme.GetFont('text_small'))
   self:SetTextColor(theme.GetColor('Text'))
 end
 

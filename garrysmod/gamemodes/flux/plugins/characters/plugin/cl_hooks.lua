@@ -139,7 +139,7 @@ function flCharacters:RebuildScoreboardPlayerCard(card, player)
 
   card.descLabel = vgui.Create('DLabel', card)
   card.descLabel:SetText(phys_desc)
-  card.descLabel:SetFont(theme.GetFont('Text_Smaller'))
+  card.descLabel:SetFont(theme.GetFont('text_smaller'))
   card.descLabel:SetPos(x, card.nameLabel:GetTall())
   card.descLabel:SetTextColor(theme.GetColor('Text'))
   card.descLabel:SizeToContents()
@@ -163,7 +163,7 @@ function flCharacters:AddMainMenuItems(panel, sidebar)
     panel.menu:SetPos(ScrW(), 0)
     panel.menu:MoveTo(0, 0, theme.GetOption('menu_anim_duration'), 0, 0.5)
 
-    panel.sidebar:MoveTo(-panel.sidebar:GetWide(), theme.GetOption('MainMenu_SidebarY'), theme.GetOption('menu_anim_duration'), 0, 0.5)
+    panel.sidebar:MoveTo(-panel.sidebar:GetWide(), theme.GetOption('menu_sidebar_y'), theme.GetOption('menu_anim_duration'), 0, 0.5)
   end)
 
   if #fl.client:GetAllCharacters() > 0 then
@@ -172,7 +172,7 @@ function flCharacters:AddMainMenuItems(panel, sidebar)
       panel.menu:SetPos(-panel.menu:GetWide(), 0)
       panel.menu:MoveTo(0, 0, theme.GetOption('menu_anim_duration'), 0, 0.5)
   
-      panel.sidebar:MoveTo(ScrW(), theme.GetOption('MainMenu_SidebarY'), theme.GetOption('menu_anim_duration'), 0, 0.5)
+      panel.sidebar:MoveTo(ScrW(), theme.GetOption('menu_sidebar_y'), theme.GetOption('menu_anim_duration'), 0, 0.5)
     end)
   end
 

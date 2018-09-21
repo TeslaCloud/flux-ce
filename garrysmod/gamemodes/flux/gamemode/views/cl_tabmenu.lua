@@ -14,7 +14,7 @@ function PANEL:Init()
   curY = curY or 200
 
   self.closeButton = vgui.Create('fl_button', self)
-  self.closeButton:SetFont(theme.GetFont('Menu_Large'))
+  self.closeButton:SetFont(theme.GetFont('menu_large'))
   self.closeButton:SetText(string.utf8upper(t'tab_menu.close_menu'))
   self.closeButton:SetPos(6, curY)
   self.closeButton:SetSizeEx(200, 38)
@@ -40,7 +40,7 @@ function PANEL:Init()
     button:SetText(v.title)
     button:SetIcon(v.icon)
     button:SetCentered(false)
-    button:SetFont(v.font or theme.GetFont('Menu_Normal'))
+    button:SetFont(v.font or theme.GetFont('menu_normal'))
 
     button.DoClick = function(btn)
       if v.override then
@@ -67,7 +67,7 @@ function PANEL:Init()
         end
 
         self.activeBtn = btn
-        self.activeBtn:SetTextColor(theme.GetColor('AccentLight'))
+        self.activeBtn:SetTextColor(theme.GetColor('accent_light'))
 
         if self.activePanel.Rebuild then
           self.activePanel:Rebuild()

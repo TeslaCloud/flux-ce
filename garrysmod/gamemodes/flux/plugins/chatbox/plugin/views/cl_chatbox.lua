@@ -164,7 +164,7 @@ function PANEL:Rebuild()
 
   self.text_entry:SetSize(chatbox.width, 20)
   self.text_entry:SetPos(0, chatbox.height - 20)
-  self.text_entry:SetFont(theme.GetFont('Text_Small'))
+  self.text_entry:SetFont(theme.GetFont('text_small'))
   self.text_entry:SetTextColor(theme.GetColor('Text'))
   self.text_entry:RequestFocus()
 
@@ -235,7 +235,7 @@ function PANEL:PaintOver(w, h)
 
         draw.RoundedBox(0, 0, 0, w, h - entry:GetTall(), Color(0, 0, 0, 150))
 
-        local font, color = theme.GetFont('Text_Normal'), theme.GetColor('Accent')
+        local font, color = theme.GetFont('text_normal'), theme.GetColor('Accent')
 
         if #cmds > 0 then
           local lastY = 0
@@ -246,7 +246,7 @@ function PANEL:PaintOver(w, h)
             w, h = draw.SimpleText(v.syntax, font, 16 + w + 8, 16 + lastY, color_white)
 
             if #cmds == 1 then
-              local smallFont = theme.GetFont('Text_Small')
+              local smallFont = theme.GetFont('text_small')
               local w2, h2 = draw.SimpleText(v.description, smallFont, 16, 16 + h + 4, color_white)
               local aliases = '[none]'
 

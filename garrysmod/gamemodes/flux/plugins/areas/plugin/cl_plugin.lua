@@ -93,7 +93,7 @@ function flAreas:HUDPaint()
       if istable(v) and v.endTime > curTime then
         v.alpha = v.alpha or 255
 
-        draw.SimpleText(v.text, theme.GetFont('Text_Large'), 32, lastY, Color(255, 255, 255, v.alpha))
+        draw.SimpleText(v.text, theme.GetFont('text_large'), 32, lastY, Color(255, 255, 255, v.alpha))
 
         if curTime + 2 >= v.endTime then
           v.alpha = math.Clamp(v.alpha - 1, 0, 255)

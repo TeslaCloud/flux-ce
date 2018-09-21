@@ -30,9 +30,9 @@ function PLUGIN:HUDPaint()
       fl.bars:Draw('getup')
     elseif fallen then
       local text = t'press_jump_to_getup'
-      local w, h = util.text_size(text, theme.GetFont('Text_Normal'))
+      local w, h = util.text_size(text, theme.GetFont('text_normal'))
 
-      draw.SimpleText(text, theme.GetFont('Text_Normal'), scrW * 0.5 - w * 0.5, scrH * 0.5 - h * 0.5, theme.GetColor('Text'))
+      draw.SimpleText(text, theme.GetFont('text_normal'), scrW * 0.5 - w * 0.5, scrH * 0.5 - h * 0.5, theme.GetColor('Text'))
     end
   end
 end

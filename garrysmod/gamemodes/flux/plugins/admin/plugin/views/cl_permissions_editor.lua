@@ -19,7 +19,7 @@ function PANEL:Rebuild()
   end
 
   local width, height = self:GetWide(), self:GetTall()
-  local font = font.GetSize(theme.GetFont('Text_NormalSmaller'), font.Scale(18))
+  local font = font.GetSize(theme.GetFont('text_normal_smaller'), font.Scale(18))
   local fontSize = draw.GetFontHeight(font)
   local permission = self:GetPermission()
   local quarter = width * 0.25
@@ -118,4 +118,4 @@ function PANEL:OnOpened()
   self:Rebuild()
 end
 
-vgui.Register('permissionsEditor', PANEL, 'fl_base_panel')
+vgui.Register('permissions_editor', PANEL, 'fl_base_panel')

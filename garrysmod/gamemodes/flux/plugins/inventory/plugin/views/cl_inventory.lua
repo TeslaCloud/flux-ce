@@ -114,13 +114,13 @@ function PANEL:Paint(w, h)
 
   if self.itemCount >= 2 then
     DisableClipping(true)
-      draw.SimpleText(self.itemCount, theme.GetFont('Text_Smallest'), 52, 50, Color(200, 200, 200))
+      draw.SimpleText(self.itemCount, theme.GetFont('text_smallest'), 52, 50, Color(200, 200, 200))
     DisableClipping(false)
   end
 
   if isnumber(self.slot_number) then
     DisableClipping(true)
-      draw.SimpleText(self.slot_number, theme.GetFont('Text_Smallest'), 4, 50, Color(200, 200, 200))
+      draw.SimpleText(self.slot_number, theme.GetFont('text_smallest'), 4, 50, Color(200, 200, 200))
     DisableClipping(false)
   end
 end

@@ -43,7 +43,7 @@ function fl.bars:register(id, data, force)
     cornerRadius = data.cornerRadius or 0,
     priority = data.priority or table.Count(stored),
     type = data.type or BAR_TOP,
-    font = data.font or 'Text_Bar',
+    font = data.font or 'text_bar',
     spacing = data.spacing or self.defaultSpacing,
     textOffset = data.textOffset or 1,
     callback = data.callback

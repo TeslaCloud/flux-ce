@@ -9,7 +9,7 @@ function PANEL:Init()
 
   self:MakePopup()
 
-  local menuMusic = theme.GetOption('MenuMusic')
+  local menuMusic = theme.GetOption('menu_music')
 
   if !fl.menuMusic and menuMusic and menuMusic != '' then
     sound.PlayFile(menuMusic, '', function(station)
@@ -38,14 +38,14 @@ function PANEL:RecreateSidebar(bShouldCreateButtons)
   end
 
   self.sidebar = vgui.Create('fl_sidebar', self)
-  self.sidebar:SetPos(theme.GetOption('MainMenu_SidebarX'), theme.GetOption('MainMenu_SidebarY'))
-  self.sidebar:SetSize(theme.GetOption('MainMenu_SidebarWidth'), theme.GetOption('MainMenu_SidebarHeight'))
-  self.sidebar:SetMargin(theme.GetOption('MainMenu_SidebarMargin'))
+  self.sidebar:SetPos(theme.GetOption('menu_sidebar_x'), theme.GetOption('menu_sidebar_y'))
+  self.sidebar:SetSize(theme.GetOption('menu_sidebar_width'), theme.GetOption('menu_sidebar_height'))
+  self.sidebar:SetMargin(theme.GetOption('menu_sidebar_margin'))
   self.sidebar:AddSpace(16)
 
   self.sidebar.Paint = function() end
 
-  self.sidebar:AddSpace(theme.GetOption('MainMenu_SidebarLogoSpace'))
+  self.sidebar:AddSpace(theme.GetOption('menu_sidebar_logo_space'))
 
   if bShouldCreateButtons then
     hook.run('AddMainMenuItems', self, self.sidebar)
@@ -74,9 +74,9 @@ end
 function PANEL:to_main_menu(bFromRight)
   self:RecreateSidebar(true)
 
-  self.sidebar:SetPos(bFromRight and ScrW() or -self.sidebar:GetWide(), theme.GetOption('MainMenu_SidebarY'))
+  self.sidebar:SetPos(bFromRight and ScrW() or -self.sidebar:GetWide(), theme.GetOption('menu_sidebar_y'))
   self.sidebar:SetDisabled(true)
-  self.sidebar:MoveTo(theme.GetOption('MainMenu_SidebarX'), theme.GetOption('MainMenu_SidebarY'), theme.GetOption('menu_anim_duration'), 0, 0.5, function()
+  self.sidebar:MoveTo(theme.GetOption('menu_sidebar_x'), theme.GetOption('menu_sidebar_y'), theme.GetOption('menu_anim_duration'), 0, 0.5, function()
     self.sidebar:SetDisabled(false)
   end)
 
@@ -104,17 +104,17 @@ end
 
 function PANEL:add_button(text, callback)
   local button = vgui.Create('fl_button', self)
-  button:SetSize(theme.GetOption('MainMenu_SidebarWidth'), theme.GetOption('MainMenu_SidebarButtonHeight'))
+  button:SetSize(theme.GetOption('menu_sidebar_width'), theme.GetOption('menu_sidebar_button_height'))
   button:SetText(string.utf8upper(text))
   button:SetDrawBackground(false)
-  button:SetFont(theme.GetFont('Menu_Larger'))
-  button:SetPos(theme.GetOption('MainMenu_SidebarButtonOffsetX'), 0)
+  button:SetFont(theme.GetFont('menu_larger'))
+  button:SetPos(theme.GetOption('menu_sidebar_button_offset_x'), 0)
   button:SetTextAutoposition(false)
-  button:SetCentered(theme.GetOption('MainMenu_SidebarButtonCentered'))
+  button:SetCentered(theme.GetOption('menu_sidebar_button_centered'))
   button:SetTextOffset(8)
 
   button.DoClick = function(btn)
-    surface.PlaySound(theme.GetOption('Button_Click_Success'))
+    surface.PlaySound(theme.GetOption('button_click_success_sound'))
   
     btn:SetActive(true)
 
