@@ -337,13 +337,20 @@ function GM:PreLoadPlugins()
   fl.shared.disabledPlugins = data.Load('disabled_plugins', {})
 end
 
-function GM:OnSchemaLoaded()
-  fileio.MakeDirectory('lua/flux')
-  fileio.MakeDirectory('lua/flux/client')
-  fileio.Write('lua/flux/client/lang.lua', "library.new('lang', fl)\nfl.lang.stored = fl.deserialize([["..fl.serialize(fl.lang.stored)..']])\n')
-  fileio.Write('lua/flux/client/shared.lua', 'fl.shared = fl.deserialize([['..fl.serialize(fl.shared)..']])\n')
-  AddCSLuaFile('flux/client/lang.lua')
-  AddCSLuaFile('flux/client/shared.lua')
+do
+  local function add_client_file(path, contents)
+    fileio.MakeDirectory 'lua/flux'
+    fileio.MakeDirectory 'lua/flux/client'
+
+    fileio.Write('lua/flux/client/'..path, contents)
+    AddCSLuaFile('flux/client/'..path)
+  end
+
+  function GM:OnSchemaLoaded()
+    add_client_file('lang.lua', "library.new('lang', fl)\nfl.lang.stored = fl.deserialize([["..fl.serialize(fl.lang.stored).."]])\n")
+    add_client_file('shared.lua', 'fl.shared = fl.deserialize([['..fl.serialize(fl.shared)..']])\n')
+    add_client_file('settings.lua', 'Settings = fl.deserialize([['..fl.serialize(Settings)..']])\n')
+  end
 end
 
 function GM:FLSaveData()

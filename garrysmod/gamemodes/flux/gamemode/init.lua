@@ -13,7 +13,11 @@ function safe_require(mod)
 end
 
 if fl.initialized then
-  MsgC(Color(0, 255, 100, 255), 'Lua auto-reload in progress...\n')
+  if LITE_REFRESH then
+    MsgC(Color(0, 255, 100, 255), 'Schema auto-reload in progress...\n')
+  else
+    MsgC(Color(0, 255, 100, 255), 'Lua auto-reload in progress...\n')
+  end
 end
 
 if !safe_require 'fileio' then
