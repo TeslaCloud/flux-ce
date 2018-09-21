@@ -76,11 +76,11 @@ function PANEL:to_main_menu(bFromRight)
 
   self.sidebar:SetPos(bFromRight and ScrW() or -self.sidebar:GetWide(), theme.GetOption('MainMenu_SidebarY'))
   self.sidebar:SetDisabled(true)
-  self.sidebar:MoveTo(theme.GetOption('MainMenu_SidebarX'), theme.GetOption('MainMenu_SidebarY'), 0.5, 0, 0.5, function()
+  self.sidebar:MoveTo(theme.GetOption('MainMenu_SidebarX'), theme.GetOption('MainMenu_SidebarY'), theme.GetOption('menu_anim_duration'), 0, 0.5, function()
     self.sidebar:SetDisabled(false)
   end)
 
-  self.menu:MoveTo(bFromRight and -self.menu:GetWide() or ScrW(), 0, 0.5, 0, 0.5, function()
+  self.menu:MoveTo(bFromRight and -self.menu:GetWide() or ScrW(), 0, theme.GetOption('menu_anim_duration'), 0, 0.5, function()
     if self.menu.Close then
       self.menu:Close()
     else
