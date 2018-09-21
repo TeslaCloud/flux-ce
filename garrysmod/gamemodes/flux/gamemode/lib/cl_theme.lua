@@ -40,7 +40,7 @@ function theme.Hook(id, ...)
     table.remove(result, 1)
 
     if !success then
-      ErrorNoHalt('Theme hook ''..id..'' has failed to run!\n'..result[1]..'\n')
+      ErrorNoHalt('Theme hook "'..id..'" has failed to run!\n'..result[1]..'\n')
     else
       return unpack(result)
     end
