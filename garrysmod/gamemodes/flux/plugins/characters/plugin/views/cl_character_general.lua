@@ -10,7 +10,7 @@ function PANEL:Paint(w, h)
   end
 end
 
-vgui.Register('flCharCreationBase', PANEL, 'fl_base_panel')
+vgui.Register('fl_character_creation_base', PANEL, 'fl_base_panel')
 
 local PANEL = {}
 PANEL.id = 'general'
@@ -258,4 +258,4 @@ function PANEL:OnValidate()
   end
 end
 
-vgui.Register('fl_character_general', PANEL, 'flCharCreationBase')
+vgui.Register('fl_character_general', PANEL, 'fl_character_creation_base')
