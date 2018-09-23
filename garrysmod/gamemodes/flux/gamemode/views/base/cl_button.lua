@@ -42,6 +42,10 @@ function PANEL:IsActive()
   return self.m_Active
 end
 
+function PANEL:Toggle()
+  self.m_Active = !self.m_Active
+end
+
 function PANEL:SetEnabled(enabled)
   self.m_Enabled = enabled
   self.m_TextColorOverride = (!enabled and theme.GetColor('text'):darken(50)) or nil
