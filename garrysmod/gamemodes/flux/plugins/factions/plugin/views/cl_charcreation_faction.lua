@@ -84,4 +84,4 @@ function PANEL:OnValidate()
   end
 end
 
-vgui.Register('flCharCreationFaction', PANEL, 'flCharCreationBase')
+vgui.Register('flCharCreationFaction', PANEL, 'fl_character_creation_base')
