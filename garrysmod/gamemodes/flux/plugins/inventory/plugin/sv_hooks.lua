@@ -1,8 +1,8 @@
-function fl_inventory:PostCreateCharacter(player, char_id, character)
-  character.items = ''
-  character.inventory = {}
+function fl_inventory:PostCreateCharacter(player, char_id, char, char_data)
+  char.items = ''
+  char.inventory = {}
 
-  plugin.call('AddDefaultItems', player, character, character.inventory)
+  plugin.call('AddDefaultItems', player, char, char.inventory)
 end
 
 function fl_inventory:OnActiveCharacterSet(player, character)

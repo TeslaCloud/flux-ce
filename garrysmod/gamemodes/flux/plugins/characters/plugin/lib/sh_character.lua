@@ -41,7 +41,7 @@ function character.Create(player, data)
   if SERVER then
     local char_id = player.record.character_id
 
-    hook.run('PostCreateCharacter', player, char_id, char)
+    hook.run('PostCreateCharacter', player, char_id, char, data)
 
     character.Save(player, char)
 

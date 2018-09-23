@@ -10,7 +10,7 @@ function attributes.get_stored()
   return stored
 end
 
-function attributes.get_all()
+function attributes.get_id_list()
   local atts_table = {}
 
   for k, v in pairs(stored) do
@@ -56,8 +56,8 @@ function attributes.register(id, data)
   data.category = data.category or 'Attribute_Category_Other'
   data.icon = data.icon
   data.type = data.type
-  if data.multipliable == nil then data.multipliable = true end
-  if data.boostable == nil then data.boostable = true end
+  data.multipliable = data.multipliable or true
+  data.boostable = data.boostable or true
 
   stored[id] = data
 end
@@ -112,7 +112,17 @@ do
     local value = atts_table[id].value
 
     if !no_boost and attribute.boostable then
+      local custom_boosts = {}
+
+      hook.run('GetAttributeBoosts', player, id, custom_boosts)
+
       value = value + self:get_attribute_boost(id)
+
+      if custom_boosts then
+        for k, v in pairs(custom_boosts) do
+          value = value + v
+        end
+      end
     end
 
     return value
@@ -142,10 +152,6 @@ do
     function player_meta:set_attribute(id, value)
       local atts_table = self:get_attributes()
       local attribute = attributes.find_by_id(id)
-
-      if !atts_table[id] then
-        atts_table[id] = {}
-      end
 
       atts_table[id].value = math.Clamp(value, attribute.min, attribute.max)
 
