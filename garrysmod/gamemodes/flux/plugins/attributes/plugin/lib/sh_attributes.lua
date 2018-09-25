@@ -94,6 +94,12 @@ function attributes.include_type(id, global_var, folder)
   pipeline.include_folder(id, folder)
 end
 
+function attribute.id_from_attr_id(atts_table, attr_id)
+  for k, v in pairs(atts_table) do
+    if v.attr_id == attr_id then return v.id end
+  end
+end
+
 do
   local player_meta = FindMetaTable('Player')
 
@@ -168,12 +174,32 @@ do
       self:increase_attribute(id, -value, no_multiplier)
     end
 
-    function player_meta:attribute_multiplier(id, value, duration)
+    function player_meta:attribute_multiplier(attr_id, value, duration)
+      local attribute = attributes.find_by_id(id)
 
+      if !attribute.multipliable then return end
+
+      local atts_table = self:get_attributes()
+
+      local multiplier = AttributeMultiplier.new()
+      multiplier.value = value
+      multiplier.duration = duration
+      multiplier.attribute_id = attribute.id_from_attr_id(atts_table, attr_id)
+      multiplier:save()
     end
 
-    function player_meta:attribute_boost(id, value, duration)
+    function player_meta:attribute_boost(attr_id, value, duration)
+      local attribute = attributes.find_by_id(id)
 
+      if !attribute.boostable then return end
+
+      local atts_table = self:get_attributes()
+
+      local boost = AttributeBoost.new()
+      boost.value = value
+      boost.duration = duration
+      boost.attribute_id = attribute.id_from_attr_id(atts_table, attr_id)
+      boost:save()
     end
   end
 end
