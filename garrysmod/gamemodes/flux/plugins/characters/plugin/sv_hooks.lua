@@ -36,6 +36,7 @@ function flCharacters:OnActiveCharacterSet(player, character)
   player:SetModel(character.model or 'models/humans/group01/male_02.mdl')
   player:SetHealth(character.health or player:GetMaxHealth())
   player:StripAmmo()
+  player:ScreenFade(SCREENFADE.IN, Color('white'), .5, .5)
 
   if istable(character.ammo) then
     for k, v in pairs(character.ammo) do
