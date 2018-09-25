@@ -161,7 +161,11 @@ if SERVER then
   netstream.Hook('PlayerDeleteCharacter', function(player, id)
     fl.dev_print(player:Name()..' has deleted character #'..id)
 
+    hook.run('OnCharacterDelete', player, id)
+
     player.record.characters[id]:destroy()
+
+    character.SendToClient(player)
   end)
 end
 
