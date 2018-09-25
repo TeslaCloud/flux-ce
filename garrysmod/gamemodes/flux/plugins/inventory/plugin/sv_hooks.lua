@@ -30,9 +30,9 @@ function fl_inventory:OnActiveCharacterSet(player, character)
   player:set_nv('inventory', character.real_inventory)
 end
 
-function fl_inventory:SaveCharacterData(player, character)
+function fl_inventory:SaveCharacterData(player, char)
   local item_ids = {}
-  for inv_type, inv in pairs(character.real_inventory or {}) do
+  for inv_type, inv in pairs(char.real_inventory or {}) do
     if !istable(inv) then continue end
     for slot_id, slot in pairs(inv) do
       if !istable(slot) then continue end
@@ -41,7 +41,7 @@ function fl_inventory:SaveCharacterData(player, character)
       end
     end
   end
-  character.item_ids = table.concat(item_ids, ',')
+  char.item_ids = table.concat(item_ids, ',')
 end
 
 netstream.Hook('InventorySync', function(player, inventory)

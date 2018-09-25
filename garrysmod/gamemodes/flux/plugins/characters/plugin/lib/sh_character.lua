@@ -45,7 +45,7 @@ function character.Create(player, data)
 
     character.Save(player, char)
 
-    netstream.Start('fl_create_character', char.character_id, character.to_networkable(character))
+    netstream.Start('fl_create_character', char.character_id, character.to_networkable(player, char))
   end
 
   return CHAR_SUCCESS
