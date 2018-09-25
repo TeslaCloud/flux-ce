@@ -1,13 +1,21 @@
 function flAttributes:PostCreateCharacter(player, char_id, char, char_data)
+  char.attributes = {}
+
   for k, v in pairs(attributes.get_stored()) do
-    local atts_table = {}
+    local attribute = attributes.find_by_id(k)
 
-    atts_table[k] = {}
+    char.attributes[k] = {}
+
+    att = Attribute.new()
+    att.character_id = char.character_id
+    att.attr_id = k
+    att.value = char_data.attributes[k] or attribute.min
+    att:save()
   end
-
-  char.attributes = atts_table
 end
 
-function flAttributes:OnActiveCharacterSet(player, character)
-  player:set_nv('attributes', character.attributes)
+function flAttributes:SaveCharacterData(player, char)
+  for k, v in pairs(char.attributes) do
+    att:save()
+  end
 end
