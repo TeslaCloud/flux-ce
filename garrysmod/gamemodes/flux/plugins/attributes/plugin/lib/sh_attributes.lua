@@ -98,7 +98,13 @@ do
   local player_meta = FindMetaTable('Player')
 
   function player_meta:get_attributes()
-    return self:get_nv('attributes', {})
+    local att_table = {}
+
+    for k, v in pairs(self:GetCharacter().attributes) do
+      att_table[v.attr_id] = v
+    end
+
+    return att_table
   end
 
   function player_meta:get_attribute(id, no_boost)
@@ -129,33 +135,18 @@ do
   end
 
   function player_meta:get_attribute_multiplier(id)
-    local attribute = self:get_attributes()[id]
-
-    if attribute.multiplier_expires >= CurTime() then
-      return attribute.multiplier or 1
-    else
-      return 1
-    end
+    return 1
   end
 
   function player_meta:get_attribute_boost(id)
-    local attribute = self:get_attributes()[id]
-
-    if attribute.boost_expires >= CurTime() then
-      return attribute.boost or 0
-    else
-      return 0
-    end
+    return 0
   end
 
   if SERVER then
     function player_meta:set_attribute(id, value)
-      local atts_table = self:get_attributes()
       local attribute = attributes.find_by_id(id)
 
-      atts_table[id].value = math.Clamp(value, attribute.min, attribute.max)
-
-      self:set_nv('attributes', atts_table)
+      self:GetCharacter().attributes.value = math.Clamp(value, attribute.min, attribute.max)
     end
 
     function player_meta:increase_attribute(id, value, no_multiplier)
@@ -171,8 +162,6 @@ do
       end
 
       atts_table[id].value = math.Clamp(atts_table[id].value + value, attribute.min, attribute.max)
-
-      self:set_nv('attributes', atts_table)
     end
 
     function player_meta:decrease_attribute(id, value, no_multiplier)
@@ -180,44 +169,11 @@ do
     end
 
     function player_meta:attribute_multiplier(id, value, duration)
-      local attribute = attributes.find_by_id(id)
 
-      if !attribute.multipliable then return end
-      if value <= 0 then return end
-
-      local cur_time = CurTime()
-      local atts_table = self:GetAttributes()
-      local expires = atts_table[id].multiplier_expires
-
-      atts_table[id].multiplier = value
-
-      if expires and expires >= cur_time then
-        atts_table[id].multiplier_expires = expires + duration
-      else
-        atts_table[id].multiplier_expires = cur_time + duration
-      end
-
-      self:set_nv('attributes', atts_table)
     end
 
-    function player_meta:BoostAttribute(id, value, duration)
-      local attribute = attributes.find_by_id(id)
+    function player_meta:attribute_boost(id, value, duration)
 
-      if !attribute.multipliable then return end
-
-      local cur_time = CurTime()
-      local atts_table = self:get_attributes()
-      local expires = atts_table[id].boost_expires
-
-      atts_table[id].boost = value
-
-      if expires and expires >= cur_time then
-        atts_table[id].boost_expires = expires + time
-      else
-        atts_table[id].boost_expires = cur_time + time
-      end
-
-      self:set_nv('attributes', atts_table)
     end
   end
 end
