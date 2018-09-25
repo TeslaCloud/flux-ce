@@ -190,11 +190,13 @@ netstream.Hook('PlayerCreatedCharacter', function(success, status)
       fl.intro_panel.menu:goto_stage(-1)
       fl.intro_panel.menu:ClearData()
 
-      local chars = fl.client:GetAllCharacters()
+      timer.Simple(theme.GetOption('menu_anim_duration') * #fl.intro_panel.menu.stages, function()
+        local chars = fl.client:GetAllCharacters()
 
-      if #chars == 1 then
-        netstream.Start('PlayerSelectCharacter', chars[1].character_id)
-      end
+        if #chars == 1 then
+          netstream.Start('PlayerSelectCharacter', chars[1].character_id)
+        end
+      end)
     else
       local text = 'We were unable to create a character! (unknown error)'
       local hookText = hook.run('GetCharCreationErrorText', success, status)

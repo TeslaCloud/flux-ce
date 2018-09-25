@@ -87,8 +87,6 @@ function PANEL:Init()
     local cur_time = CurTime()
 
     if !self.next_click or self.next_click <= cur_time then
-      fl.client.whiteAlpha = 255
-
       netstream.Start('PlayerSelectCharacter', self.char_data.character_id)
 
       self.next_click = cur_time + 1
