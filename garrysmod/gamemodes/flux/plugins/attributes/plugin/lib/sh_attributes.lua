@@ -104,13 +104,13 @@ do
   local player_meta = FindMetaTable('Player')
 
   function player_meta:get_attributes()
-    local att_table = {}
+    local atts_table = {}
 
     for k, v in pairs(self:GetCharacter().attributes) do
-      att_table[v.attr_id] = v
+      atts_table[v.attr_id] = v
     end
 
-    return att_table
+    return atts_table
   end
 
   function player_meta:get_attribute(id, no_boost)
@@ -149,29 +149,29 @@ do
   end
 
   if SERVER then
-    function player_meta:set_attribute(id, value)
-      local attribute = attributes.find_by_id(id)
+    function player_meta:set_attribute(attr_id, value)
+      local attribute = attributes.find_by_id(attr_id)
 
       self:GetCharacter().attributes.value = math.Clamp(value, attribute.min, attribute.max)
     end
 
-    function player_meta:increase_attribute(id, value, no_multiplier)
-      local attribute = attributes.find_by_id(id)
+    function player_meta:increase_attribute(attr_id, value, no_multiplier)
+      local attribute = attributes.find_by_id(attr_id)
       local atts_table = self:get_attributes()
 
       if !no_multiplier then
-        value = value * self:get_attribute_multiplier(id)
+        value = value * self:get_attribute_multiplier(attr_id)
 
         if value < 0 then
-          value = value / self:get_attribute_multiplier(id)
+          value = value / self:get_attribute_multiplier(attr_id)
         end
       end
 
-      atts_table[id].value = math.Clamp(atts_table[id].value + value, attribute.min, attribute.max)
+      atts_table[attr_id].value = math.Clamp(atts_table[id].value + value, attribute.min, attribute.max)
     end
 
-    function player_meta:decrease_attribute(id, value, no_multiplier)
-      self:increase_attribute(id, -value, no_multiplier)
+    function player_meta:decrease_attribute(attr_id, value, no_multiplier)
+      self:increase_attribute(attr_id, -value, no_multiplier)
     end
 
     function player_meta:attribute_multiplier(attr_id, value, duration)

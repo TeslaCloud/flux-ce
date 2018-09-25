@@ -4,9 +4,7 @@ function flAttributes:PostCreateCharacter(player, char_id, char, char_data)
   for k, v in pairs(attributes.get_stored()) do
     local attribute = attributes.find_by_id(k)
 
-    char.attributes[k] = {}
-
-    att = Attribute.new()
+    local att = Attribute.new()
     att.character_id = char.character_id
     att.attr_id = k
     att.value = char_data.attributes[k] or attribute.min
@@ -14,8 +12,16 @@ function flAttributes:PostCreateCharacter(player, char_id, char, char_data)
   end
 end
 
+function flAttributes:OnCharacterDelete(player, char_id)
+  local char = player.record.characters[char_id]
+
+  for k, v in pairs(char.attributes) do
+    v:destroy()
+  end
+end
+
 function flAttributes:SaveCharacterData(player, char)
   for k, v in pairs(char.attributes) do
-    att:save()
+    v:save()
   end
 end
