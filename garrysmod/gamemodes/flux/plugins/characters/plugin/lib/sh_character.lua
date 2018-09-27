@@ -33,6 +33,7 @@ function character.Create(player, data)
   char.name = data.name
   char.user_id = player.record.id
   char.model = data.model or ''
+  char.gender = data.gender
   char.phys_desc = data.phys_desc or ''
   char.money = data.money or 0
   char.character_id = #player.record.characters + 1
@@ -75,6 +76,7 @@ if SERVER then
       name = char.name,
       phys_desc = char.phys_desc or 'This character has no physical description set!',
       model = char.model or 'models/humans/group01/male_02.mdl',
+      gender = char.gender,
       inventory = char.inventory,
       ammo = char.ammo,
       money = char.money,
@@ -190,6 +192,20 @@ do
 
   function player_meta:GetPhysDesc()
     return self:get_nv('phys_desc', 'This character has no description!')
+  end
+
+  function player_meta:get_gender()
+    local char = self:GetCharacter()
+
+    if char then
+      if char.gender == CHAR_GENDER_MALE then
+        return 'male'
+      else
+        return 'female'
+      end
+    end
+
+    return 'no_gender'
   end
 
   function player_meta:GetCharacterVar(id, default)
