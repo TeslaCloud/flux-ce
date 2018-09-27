@@ -12,16 +12,20 @@ function flFactions:SavePlayerData(player, saveData)
   saveData.whitelists = fl.serialize(player:GetWhitelists())
 end
 
-function flFactions:OnActiveCharacterSet(player, char_data)
-  player:set_nv('faction', char_data.faction or 'player')
+function flFactions:OnActiveCharacterSet(player, char)
+  player:set_nv('faction', char.faction)
+end
+
+function flFactions:PostCreateCharacter(player, char_id, char, char_data)
+  char.faction = char_data.faction or 'player'
 end
 
 function flFactions:SaveCharacterData(player, char)
-  char.faction = char.faction or 'player'
+  char.faction = char.faction
 end
 
 function flFactions:RestoreCharacter(player, char_id, char)
-  char.faction = char.faction or 'player'
+  char.faction = char.faction
   char.char_class = data.char_class or ''
 end
 
