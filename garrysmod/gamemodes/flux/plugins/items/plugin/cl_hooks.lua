@@ -50,7 +50,17 @@ function flItems:PlayerUseItemMenu(item_table, bIsEntity)
   if item_table.entity then
     itemMenu:SetPos(ScrW() * 0.5, ScrH() * 0.5)
   else
-    itemMenu:SetPos(gui.MouseX(), gui.MouseY())
+    local x, y = gui.MouseX(), gui.MouseY()
+
+    if x + itemMenu:GetWide() > ScrW() then
+      x = x - itemMenu:GetWide()
+    end
+
+    if y + itemMenu:GetTall() > ScrH() then
+      y = y - itemMenu:GetTall()
+    end
+
+    itemMenu:SetPos(x, y)
   end
 end
 
