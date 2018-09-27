@@ -11,7 +11,7 @@ function flAreas:OneSecond()
           player.lastArea[v.id] = player.lastArea[v.id] or {}
 
           -- Player hasn't moved since our previous check, no need to check again.
-          if pos == player.lastPos then continue end
+          if pos == player.last_pos then continue end
 
           local z = pos.z + 16 -- Raise player's position by 16 units to compensate for player's height
           local enteredArea = false

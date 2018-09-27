@@ -1,5 +1,5 @@
 function flChatbox:OnThemeLoaded(current_theme)
-  local scrW, scrH = ScrW(), ScrH()
+  local scr_w, scr_h = ScrW(), ScrH()
 
   font.Create('flChatFont', {
     font = 'Arial',
@@ -7,23 +7,23 @@ function flChatbox:OnThemeLoaded(current_theme)
     weight = 1000
   })
 
-  current_theme:SetFont('Chatbox_Normal', 'flChatFont', font.Scale(20))
-  current_theme:SetFont('Chatbox_Bold', 'flRobotoCondensedBold', font.Scale(20))
-  current_theme:SetFont('Chatbox_Italic', 'flRobotoCondensedItalic', font.Scale(20))
-  current_theme:SetFont('Chatbox_ItalicBold', 'flRobotoCondensedItalicBold', font.Scale(20))
-  current_theme:SetFont('Chatbox_Syntax', 'flRobotoCondensed', font.Scale(24))
+  current_theme:set_font('Chatbox_Normal', 'flChatFont', font.Scale(20))
+  current_theme:set_font('Chatbox_Bold', 'flRobotoCondensedBold', font.Scale(20))
+  current_theme:set_font('Chatbox_Italic', 'flRobotoCondensedItalic', font.Scale(20))
+  current_theme:set_font('Chatbox_ItalicBold', 'flRobotoCondensedItalicBold', font.Scale(20))
+  current_theme:set_font('Chatbox_Syntax', 'flRobotoCondensed', font.Scale(24))
 
-  current_theme:SetOption('Chatbox_Width', scrW / 2.25)
-  current_theme:SetOption('Chatbox_Height', scrH / 2.25)
-  current_theme:SetOption('Chatbox_X', font.Scale(8))
-  current_theme:SetOption('Chatbox_Y', scrH - current_theme:GetOption('Chatbox_Height') - font.Scale(32))
+  current_theme:set_option('Chatbox_Width', scr_w / 2.25)
+  current_theme:set_option('Chatbox_Height', scr_h / 2.25)
+  current_theme:set_option('Chatbox_X', font.Scale(8))
+  current_theme:set_option('Chatbox_Y', scr_h - current_theme:get_option('Chatbox_Height') - font.Scale(32))
 end
 
 function flChatbox:OnResolutionChanged(newW, newH)
-  theme.SetOption('Chatbox_Width', newW / 2.25)
-  theme.SetOption('Chatbox_Height', newH / 2.25)
-  theme.SetOption('Chatbox_X', font.Scale(8))
-  theme.SetOption('Chatbox_Y', newH - theme.GetOption('Chatbox_Height') - font.Scale(32))
+  theme.set_option('Chatbox_Width', newW / 2.25)
+  theme.set_option('Chatbox_Height', newH / 2.25)
+  theme.set_option('Chatbox_X', font.Scale(8))
+  theme.set_option('Chatbox_Y', newH - theme.get_option('Chatbox_Height') - font.Scale(32))
 
   if chatbox.panel then
     chatbox.panel:Remove()

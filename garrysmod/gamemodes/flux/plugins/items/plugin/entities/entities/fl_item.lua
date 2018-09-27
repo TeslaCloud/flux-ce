@@ -125,13 +125,13 @@ else
       return
     end
 
-    local width, height = util.text_size(text, theme.GetFont('tooltip_large'))
-    local width2, height2 = util.text_size(desc, theme.GetFont('tooltip_small'))
+    local width, height = util.text_size(text, theme.get_font('tooltip_large'))
+    local width2, height2 = util.text_size(desc, theme.get_font('tooltip_small'))
 
-    draw.SimpleTextOutlined(text, theme.GetFont('tooltip_large'), x - width * 0.5, y, col, nil, nil, 1, col2)
+    draw.SimpleTextOutlined(text, theme.get_font('tooltip_large'), x - width * 0.5, y, col, nil, nil, 1, col2)
     y = y + 26
 
-    draw.SimpleTextOutlined(desc, theme.GetFont('tooltip_small'), x - width2 * 0.5, y, col, nil, nil, 1, col2)
+    draw.SimpleTextOutlined(desc, theme.get_font('tooltip_small'), x - width2 * 0.5, y, col, nil, nil, 1, col2)
     y = y + 20
 
     hook.run('PostDrawItemTargetID', self, self.item, x, y, alpha, distance)

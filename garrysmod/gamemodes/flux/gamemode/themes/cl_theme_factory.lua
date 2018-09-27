@@ -4,79 +4,80 @@ THEME.id = 'factory'
 THEME.description = 'Factory theme. This is a fail-safety theme that other themes use as a base.'
 THEME.should_reload = true
 
-function THEME:OnLoaded()
-  local scrW, scrH = ScrW(), ScrH()
+function THEME:on_loaded()
+  local scr_w, scr_h = ScrW(), ScrH()
 
-  self:SetOption('frame_header_size', 24)
-  self:SetOption('frame_line_weight', 2)
-  self:SetOption('menu_sidebar_width', 300)
-  self:SetOption('menu_sidebar_height', scrH)
-  self:SetOption('menu_sidebar_x', 0)
-  self:SetOption('menu_sidebar_y', 0)
-  self:SetOption('menu_sidebar_margin', -1)
-  self:SetOption('menu_sidebar_logo', 'flux/flux_icon.png')
-  self:SetOption('menu_sidebar_logo_space', scrH / 3)
-  self:SetOption('menu_sidebar_button_height', font.Scale(42)) -- We can cheat and scale buttons the same way we scale fonts!
-  self:SetOption('menu_sidebar_button_offset_x', 16)
-  self:SetOption('menu_sidebar_button_centered', false)
-  self:SetOption('menu_logo_height', 100)
-  self:SetOption('menu_logo_width', 110)
-  self:SetOption('menu_music', '')
-  self:SetOption('menu_anim_duration', 0.2)
-  self:SetOption('button_click_success_sound', 'garrysmod/ui_click.wav')
-  self:SetOption('button_click_danger_sound', 'buttons/button8.wav')
+  self:set_option('frame_header_size', 24)
+  self:set_option('frame_line_weight', 2)
+  self:set_option('menu_sidebar_width', 300)
+  self:set_option('menu_sidebar_height', scr_h)
+  self:set_option('menu_sidebar_x', 0)
+  self:set_option('menu_sidebar_y', 0)
+  self:set_option('menu_sidebar_margin', -1)
+  self:set_option('menu_sidebar_logo', 'flux/flux_icon.png')
+  self:set_option('menu_sidebar_logo_space', scr_h / 3)
+  self:set_option('menu_sidebar_button_height', font.Scale(42)) -- We can cheat and scale buttons the same way we scale fonts!
+  self:set_option('menu_sidebar_button_offset_x', 16)
+  self:set_option('menu_sidebar_button_centered', false)
+  self:set_option('menu_logo_height', 100)
+  self:set_option('menu_logo_width', 110)
+  self:set_option('menu_anim_duration', 0.2)
 
-  local accent_color        = self:SetColor('accent', Color(90, 90, 190))
-  local main_color          = self:SetColor('main', Color(50, 50, 50))
-  local outline_color       = self:SetColor('outline', Color(65, 65, 65))
-  local background_color    = self:SetColor('background', Color(20, 20, 20))
-  local text_color          = self:SetColor('text', util.text_color_from_base(background_color))
+  self:set_sound('button_click_success_sound', 'garrysmod/ui_click.wav')
+  self:set_sound('button_click_danger_sound', 'buttons/button8.wav')
+  self:set_sound('menu_music', '')
 
-  self:SetColor('accent_dark', accent_color:darken(20))
-  self:SetColor('accent_light', accent_color:lighten(20))
-  self:SetColor('main_dark', main_color:darken(15))
-  self:SetColor('main_light', main_color:lighten(15))
-  self:SetColor('background_dark', background_color:darken(20))
-  self:SetColor('background_light', background_color:lighten(20))
-  self:SetColor('schema_text', text_color)
-  self:SetColor('menu_background', self:GetColor('background_dark'))
+  local accent_color        = self:set_color('accent', Color(90, 90, 190))
+  local main_color          = self:set_color('main', Color(50, 50, 50))
+  local outline_color       = self:set_color('outline', Color(65, 65, 65))
+  local background_color    = self:set_color('background', Color(20, 20, 20))
+  local text_color          = self:set_color('text', util.text_color_from_base(background_color))
 
-  self:SetColor('esp_red', Color(255, 0, 0))
-  self:SetColor('esp_blue', Color(0, 0, 255))
-  self:SetColor('esp_grey', Color(100, 100, 100))
+  self:set_color('accent_dark', accent_color:darken(20))
+  self:set_color('accent_light', accent_color:lighten(20))
+  self:set_color('main_dark', main_color:darken(15))
+  self:set_color('main_light', main_color:lighten(15))
+  self:set_color('background_dark', background_color:darken(20))
+  self:set_color('background_light', background_color:lighten(20))
+  self:set_color('schema_text', text_color)
+  self:set_color('menu_background', self:get_color('background_dark'))
 
-  local main_font           = self:SetFont('main_font', 'flRoboto', font.Scale(16))
-  local main_font_condensed = self:SetFont('main_font_condensed', 'flRobotoCondensed', font.Scale(16))
-  self:SetFont('menu_titles', 'flRoboto', font.Scale(14))
-  self:SetFont('menu_tiny', 'flRobotoLt', font.Scale(16))
-  self:SetFont('menu_small', 'flRobotoLt', font.Scale(20))
-  self:SetFont('menu_normal', main_font_condensed, font.Scale(24), { weight = 500 })
-  self:SetFont('menu_large', main_font_condensed, font.Scale(30), { weight = 500 })
-  self:SetFont('menu_larger', main_font_condensed, font.Scale(42), { weight = 500 })
-  self:SetFont('tooltip_small', main_font_condensed, font.Scale(16))
-  self:SetFont('tooltip_large', main_font_condensed, font.Scale(26))
-  self:SetFont('text_largest', main_font, font.Scale(90))
-  self:SetFont('text_larger', main_font, font.Scale(60))
-  self:SetFont('text_large', main_font, font.Scale(48))
-  self:SetFont('text_normal_large', main_font, font.Scale(36))
-  self:SetFont('text_normal_big', main_font, font.Scale(29))
-  self:SetFont('text_normal', main_font, font.Scale(23))
-  self:SetFont('text_normal_smaller', main_font, font.Scale(20))
-  self:SetFont('text_small', main_font, font.Scale(18))
-  self:SetFont('text_smaller', main_font, font.Scale(16))
-  self:SetFont('text_smallest', main_font, font.Scale(14))
-  self:SetFont('text_bar', main_font, font.Scale(17), {weight = 600})
-  self:SetFont('text_tiny', main_font, font.Scale(11))
-  self:SetFont('text_3d2d', main_font, 256)
+  self:set_color('esp_red', Color(255, 0, 0))
+  self:set_color('esp_blue', Color(0, 0, 255))
+  self:set_color('esp_grey', Color(100, 100, 100))
+
+  local main_font           = self:set_font('main_font', 'flRoboto', font.Scale(16))
+  local main_font_condensed = self:set_font('main_font_condensed', 'flRobotoCondensed', font.Scale(16))
+  self:set_font('menu_titles', 'flRoboto', font.Scale(14))
+  self:set_font('menu_tiny', 'flRobotoLt', font.Scale(16))
+  self:set_font('menu_small', 'flRobotoLt', font.Scale(20))
+  self:set_font('menu_normal', main_font_condensed, font.Scale(24), { weight = 500 })
+  self:set_font('menu_large', main_font_condensed, font.Scale(30), { weight = 500 })
+  self:set_font('menu_larger', main_font_condensed, font.Scale(42), { weight = 500 })
+  self:set_font('tooltip_small', main_font_condensed, font.Scale(16))
+  self:set_font('tooltip_large', main_font_condensed, font.Scale(26))
+  self:set_font('text_largest', main_font, font.Scale(90))
+  self:set_font('text_larger', main_font, font.Scale(60))
+  self:set_font('text_large', main_font, font.Scale(48))
+  self:set_font('text_normal_large', main_font, font.Scale(36))
+  self:set_font('text_normal_big', main_font, font.Scale(29))
+  self:set_font('text_normal', main_font, font.Scale(23))
+  self:set_font('text_normal_smaller', main_font, font.Scale(20))
+  self:set_font('text_small', main_font, font.Scale(18))
+  self:set_font('text_smaller', main_font, font.Scale(16))
+  self:set_font('text_smallest', main_font, font.Scale(14))
+  self:set_font('text_bar', main_font, font.Scale(17), {weight = 600})
+  self:set_font('text_tiny', main_font, font.Scale(11))
+  self:set_font('text_3d2d', main_font, 256)
 
   -- Set from schema theme.
-  -- self:SetMaterial('schema_logo', 'materials/flux/hl2rp/logo.png')
+  -- self:set_material('schema_logo', 'materials/flux/hl2rp/logo.png')
 
-  self:AddPanel('tab_menu', function(id, parent, ...)
+  self:add_panel('tab_menu', function(id, parent, ...)
     return vgui.Create('fl_tab_menu', parent)
   end)
 
-  self:AddPanel('admin_permissions_editor', function(id, parent, ...)
+  self:add_panel('admin_permissions_editor', function(id, parent, ...)
     return vgui.Create('permissions_editor', parent)
   end)
 end
@@ -86,8 +87,8 @@ function THEME:CreateMainMenu(panel) end
 function THEME:PaintFrame(panel, width, height)
   local title = panel:GetTitle()
   local accent_color = panel:GetAccentColor()
-  local headerSize = self:GetOption('frame_header_size')
-  local lineWeight = self:GetOption('frame_line_weight')
+  local headerSize = self:get_option('frame_header_size')
+  local lineWeight = self:get_option('frame_line_weight')
 
   surface.SetDrawColor(accent_color)
   surface.DrawRect(0, 0, width, headerSize)
@@ -95,11 +96,11 @@ function THEME:PaintFrame(panel, width, height)
   surface.SetDrawColor(accent_color:darken(30))
   surface.DrawRect(0, headerSize - lineWeight, width, lineWeight)
 
-  surface.SetDrawColor(self:GetColor('main_dark'))
+  surface.SetDrawColor(self:get_color('main_dark'))
   surface.DrawRect(0, headerSize, width, height - headerSize)
 
   if title then
-    local font = font.GetSize(self:GetFont('text_small'), 16)
+    local font = font.GetSize(self:get_font('text_small'), 16)
     local fontSize = util.font_size(font)
 
     draw.SimpleText(title, font, 6, 3 * (16 / fontSize), panel:GetTextColor())
@@ -107,32 +108,32 @@ function THEME:PaintFrame(panel, width, height)
 end
 
 function THEME:PaintMainMenu(panel, width, height)
-  local wide = self:GetOption('menu_sidebar_width') * 0.5
+  local wide = self:get_option('menu_sidebar_width') * 0.5
   local title, desc, author = Schema:get_name(), Schema:get_description(), t('main_menu.developed_by', Schema:get_author())
-  local logo = self:GetMaterial('schema_logo')
-  local titleW, titleH = util.text_size(title, self:GetFont('text_largest'))
-  local descW, descH = util.text_size(desc, self:GetFont('menu_normal'))
-  local authorW, authorH = util.text_size(author, self:GetFont('menu_normal'))
+  local logo = self:get_material('schema_logo')
+  local titleW, titleH = util.text_size(title, self:get_font('text_largest'))
+  local descW, descH = util.text_size(desc, self:get_font('menu_normal'))
+  local authorW, authorH = util.text_size(author, self:get_font('menu_normal'))
 
-  surface.SetDrawColor(self:GetColor('menu_background'))
+  surface.SetDrawColor(self:get_color('menu_background'))
   surface.DrawRect(0, 0, width, width)
 
-  surface.SetDrawColor(self:GetColor('menu_background'):lighten(40))
+  surface.SetDrawColor(self:get_color('menu_background'):lighten(40))
   surface.DrawRect(0, 0, width, 128)
 
   if !logo then
-    draw.SimpleText(title, self:GetFont('text_largest'), wide + width * 0.5 - titleW * 0.5, 150, self:GetColor('schema_text'))
+    draw.SimpleText(title, self:get_font('text_largest'), wide + width * 0.5 - titleW * 0.5, 150, self:get_color('schema_text'))
   else
     draw.textured_rect(logo, width * 0.5 - 200, 16, 400, 96, Color(255, 255, 255))
   end
 
-  draw.SimpleText(desc, self:GetFont('menu_normal'), 16, 128 - descH - 8, self:GetColor('schema_text'))
-  draw.SimpleText(author, self:GetFont('menu_normal'), width - authorW - 16, 128 - authorH - 8, self:GetColor('schema_text'))
+  draw.SimpleText(desc, self:get_font('menu_normal'), 16, 128 - descH - 8, self:get_color('schema_text'))
+  draw.SimpleText(author, self:get_font('menu_normal'), width - authorW - 16, 128 - authorH - 8, self:get_color('schema_text'))
 end
 
 function THEME:PaintButton(panel, w, h)
   local curAmt = panel.m_CurAmt
-  local text_color = panel.m_TextColorOverride or self:GetColor('text'):darken(curAmt)
+  local text_color = panel.m_TextColorOverride or self:get_color('text'):darken(curAmt)
   local title = panel.m_Title
   local font = panel.m_Font
   local icon = panel.m_Icon
@@ -140,16 +141,16 @@ function THEME:PaintButton(panel, w, h)
 
   if panel.m_DrawBackground then
     if !panel.m_Active then
-      surface.SetDrawColor(self:GetColor('outline'))
+      surface.SetDrawColor(self:get_color('outline'))
       surface.DrawRect(0, 0, w, h)
 
-      surface.SetDrawColor(self:GetColor('main'):lighten(curAmt))
+      surface.SetDrawColor(self:get_color('main'):lighten(curAmt))
       surface.DrawRect(1, 1, w - 2, h - 2)
     else
-      surface.SetDrawColor(self:GetColor('outline'))
+      surface.SetDrawColor(self:get_color('outline'))
       surface.DrawRect(0, 0, w, h)
 
-      surface.SetDrawColor(self:GetColor('main_dark'))
+      surface.SetDrawColor(self:get_color('main_dark'))
       surface.DrawRect(1, 1, w - 1, h - 2)
     end
   else
@@ -204,36 +205,36 @@ function THEME:PaintButton(panel, w, h)
   end
 end
 
-function THEME:PaintDeathScreen(curTime, scrW, scrH)
+function THEME:PaintDeathScreen(curTime, scr_w, scr_h)
   local respawnTimeRemaining = fl.client:get_nv('respawn_time', 0) - curTime
   local barValue = 100 - 100 * (respawnTimeRemaining / config.get('respawn_delay'))
-  local font = self:GetFont('text_normal_large')
+  local font = self:get_font('text_normal_large')
   local color_white = Color(255, 255, 255)
 
   if !fl.client.respawnAlpha then fl.client.respawnAlpha = 0 end
 
   fl.client.respawnAlpha = math.Clamp(fl.client.respawnAlpha + 1, 0, 200)
 
-  draw.RoundedBox(0, 0, 0, scrW, scrH, Color(0, 0, 0, fl.client.respawnAlpha))
+  draw.RoundedBox(0, 0, 0, scr_w, scr_h, Color(0, 0, 0, fl.client.respawnAlpha))
 
   draw.SimpleText(t'player_message.died', font, 16, 16, color_white)
   draw.SimpleText(t('player_message.respawn', math.ceil(respawnTimeRemaining)), font, 16, 16 + util.font_size(font), color_white)
 
-  draw.RoundedBox(0, 0, 0, scrW / 100 * barValue, 2, color_white)
+  draw.RoundedBox(0, 0, 0, scr_w / 100 * barValue, 2, color_white)
 
   if respawnTimeRemaining <= 3 then
-    fl.client.whiteAlpha = math.Clamp(255 * (1.5 - respawnTimeRemaining * 0.5), 0, 255)
+    fl.client.white_alpha = math.Clamp(255 * (1.5 - respawnTimeRemaining * 0.5), 0, 255)
   else
-    fl.client.whiteAlpha = 0
+    fl.client.white_alpha = 0
   end
 end
 
 function THEME:PaintSidebar(panel, width, height)
-  draw.RoundedBox(0, 0, 0, width, height, self:GetColor('main_dark'):lighten(10))
+  draw.RoundedBox(0, 0, 0, width, height, self:get_color('main_dark'):lighten(10))
 end
 
 function THEME:DrawBarBackground(barInfo)
-  draw.RoundedBox(barInfo.cornerRadius, barInfo.x, barInfo.y, barInfo.width, barInfo.height, self:GetColor('main_dark'))
+  draw.RoundedBox(barInfo.cornerRadius, barInfo.x, barInfo.y, barInfo.width, barInfo.height, self:get_color('main_dark'))
 end
 
 function THEME:DrawBarHindrance(barInfo)
@@ -255,14 +256,14 @@ function THEME:DrawBarFill(barInfo)
 end
 
 function THEME:DrawBarTexts(barInfo)
-  local font = theme.GetFont(barInfo.font)
+  local font = theme.get_font(barInfo.font)
 
   render.SetScissorRect(barInfo.x + 1, barInfo.y + 1, barInfo.x + barInfo.realFillWidth, barInfo.y + barInfo.height, true)
-    draw.SimpleText(barInfo.text, font, barInfo.x + 8, barInfo.y + barInfo.textOffset, self:GetColor('main_dark'))
+    draw.SimpleText(barInfo.text, font, barInfo.x + 8, barInfo.y + barInfo.textOffset, self:get_color('main_dark'))
   render.SetScissorRect(0, 0, 0, 0, false)
 
   render.SetScissorRect(barInfo.x + barInfo.realFillWidth, barInfo.y + 1, barInfo.x + barInfo.width, barInfo.y + barInfo.height, true)
-    draw.SimpleText(barInfo.text, font, barInfo.x + 8, barInfo.y + barInfo.textOffset, self:GetColor('text'))
+    draw.SimpleText(barInfo.text, font, barInfo.x + 8, barInfo.y + barInfo.textOffset, self:get_color('text'))
   render.SetScissorRect(0, 0, 0, 0, false)
 
   if barInfo.hinderDisplay and barInfo.hinderDisplay <= barInfo.hinderValue then
@@ -277,12 +278,12 @@ function THEME:DrawBarTexts(barInfo)
 end
 
 function THEME:AdminPanelPaintOver(panel, width, height)
-  local smallestFont = font.GetSize(self:GetFont('text_smallest'), 14)
-  local text_color = self:GetColor('text')
+  local smallestFont = font.GetSize(self:get_font('text_smallest'), 14)
+  local text_color = self:get_color('text')
   local versionString = 'Admin Mod Version: v0.2.0 (indev)'
 
   DisableClipping(true)
-    draw.RoundedBox(0, 0, height, width, 16, self:GetColor('background'))
+    draw.RoundedBox(0, 0, height, width, 16, self:get_color('background'))
 
     draw.SimpleText(fl.client:SteamName()..' ('..fl.client:GetUserGroup()..')', smallestFont, 6, height + 1, text_color)
 
@@ -296,7 +297,7 @@ function THEME:PaintPermissionButton(permPanel, btn, w, h)
   local color = Color(255, 255, 255)
   local title = ''
   local permType = btn.permValue
-  local font = self:GetFont('text_small')
+  local font = self:get_font('text_small')
 
   if permType == PERM_NO then
     color = Color(120, 120, 120)
@@ -334,23 +335,23 @@ function THEME:PaintPermissionButton(permPanel, btn, w, h)
 end
 
 function THEME:PaintScoreboard(panel, width, height)
-  local titleFont = self:GetFont('menu_large')
+  local titleFont = self:get_font('menu_large')
 
-  draw.RoundedBox(0, 0, 0, width, height, ColorAlpha(self:GetColor('background'), 150))
+  draw.RoundedBox(0, 0, 0, width, height, ColorAlpha(self:get_color('background'), 150))
 
   local title = t'scoreboard.title'
 
   DisableClipping(true)
-    draw.SimpleText(title, titleFont, 4, -util.text_height(title, titleFont) * 0.5, self:GetColor('text'))
+    draw.SimpleText(title, titleFont, 4, -util.text_height(title, titleFont) * 0.5, self:get_color('text'))
   DisableClipping(false)
 
-  draw.SimpleText(t'scoreboard.help', self:GetFont('text_small'), 4, 14, self:GetColor('text'))
+  draw.SimpleText(t'scoreboard.help', self:get_font('text_small'), 4, 14, self:get_color('text'))
 end
 
 function THEME:PaintTabMenu(panel, width, height)
   local fraction = FrameTime() * 8
   local activePanel = panel.activePanel
-  local sidebarColor = ColorAlpha(self:GetColor('background'), 125)
+  local sidebarColor = ColorAlpha(self:get_color('background'), 125)
 
   panel.curAlpha = Lerp(fraction, panel.curAlpha or 0, 200)
 
@@ -380,7 +381,7 @@ function THEME:PaintTabMenu(panel, width, height)
 
     activePanel.indicatorLerp = Lerp(fraction, activePanel.indicatorLerp, targetH)
 
-    draw.RoundedBox(0, 0, panel.posY, 6, targetH, self:GetColor('accent_light'))
+    draw.RoundedBox(0, 0, panel.posY, 6, targetH, self:get_color('accent_light'))
   end
 end
 
@@ -570,7 +571,7 @@ function THEME.skin:PaintScrollBarGrip(panel)
 end
 
 function THEME.skin:PaintFrame(panel, w, h)
-  local color = theme.GetColor('accent')
+  local color = theme.get_color('accent')
 
   surface.SetDrawColor(Color(10, 10, 10))
   surface.DrawRect(0, 24, w, h)
@@ -583,7 +584,7 @@ function THEME.skin:PaintFrame(panel, w, h)
 end
 
 function THEME.skin:PaintCollapsibleCategory(panel, w, h)
-  panel.Header:SetFont(theme.GetFont('text_smaller'))
+  panel.Header:SetFont(theme.get_font('text_smaller'))
 
   if h < 21 then
     self:DrawGenericBackground(0, 0, w, 21, Color(0, 0, 0))

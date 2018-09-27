@@ -216,8 +216,8 @@ function plugin.remove(id)
 end
 
 function plugin.is_disabled(folder)
-  if fl.shared.disabledPlugins then
-    return fl.shared.disabledPlugins[folder]
+  if fl.shared.disabled_plugins then
+    return fl.shared.disabled_plugins[folder]
   end
 end
 

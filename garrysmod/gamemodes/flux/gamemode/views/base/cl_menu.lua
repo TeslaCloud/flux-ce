@@ -8,12 +8,12 @@ function PANEL:GetDeleteSelf()
 end
 
 function PANEL:Init()
-  self:SetFont(theme.GetFont('text_small'))
-  self:SetTextColor(theme.GetColor('text'))
+  self:SetFont(theme.get_font('text_small'))
+  self:SetTextColor(theme.get_color('text'))
 end
 
 function PANEL:Paint(w, h)
-  local col = theme.GetColor('background')
+  local col = theme.get_color('background')
 
   if self:IsHovered() then
     col = col:lighten(40)
@@ -65,7 +65,7 @@ function PANEL:AddOption(name, callback)
   panel:SetPos(0, 0)
   panel:MoveTo(0, self.last, 0.15 * self.count)
   panel:SetSize(self:GetWide(), self.optionHeight)
-  panel:SetTextColor(theme.GetColor('text'))
+  panel:SetTextColor(theme.get_color('text'))
   panel:SetText(name)
   panel:MoveToBack()
 
@@ -93,9 +93,9 @@ function PANEL:AddSpacer(px)
   panel.Paint = function(pan, w, h)
     local wide = math.ceil(w * 0.1)
 
-    draw.RoundedBox(0, 0, 0, w, h, theme.GetColor('text'))
-    draw.RoundedBox(0, 0, 0, wide, h, theme.GetColor('background'))
-    draw.RoundedBox(0, w - wide, 0, wide, h, theme.GetColor('background'))
+    draw.RoundedBox(0, 0, 0, w, h, theme.get_color('text'))
+    draw.RoundedBox(0, 0, 0, wide, h, theme.get_color('background'))
+    draw.RoundedBox(0, w - wide, 0, wide, h, theme.get_color('background'))
   end
 
   panel:MoveTo(0, self.last, 0.15 * self.count)

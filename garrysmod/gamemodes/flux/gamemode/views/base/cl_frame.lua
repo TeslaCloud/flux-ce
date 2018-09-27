@@ -2,8 +2,8 @@ local PANEL = {}
 
 function PANEL:Init()
   self:SetTitle('Flux Frame')
-  self:SetMainColor(theme.GetColor('main'))
-  self:SetAccentColor(theme.GetColor('accent'))
+  self:SetMainColor(theme.get_color('main'))
+  self:SetAccentColor(theme.get_color('accent'))
 
   self.btnClose = vgui.Create('fl_button', self)
   self.btnClose:SetSize(20, 20)
@@ -18,7 +18,7 @@ function PANEL:Init()
 end
 
 function PANEL:Paint(w, h)
-  return theme.Hook('PaintFrame', self, w, h)
+  return theme.hook('PaintFrame', self, w, h)
 end
 
 function PANEL:Think()
@@ -28,7 +28,7 @@ function PANEL:Think()
     self.btnClose:SetPos(w - 20, 0)
   end
 
-  theme.Hook('FrameThink')
+  theme.hook('FrameThink')
 end
 
 vgui.Register('fl_frame', PANEL, 'fl_base_panel')

@@ -56,7 +56,7 @@ function fl.undo:Do(obj)
   end
 end
 
-function fl.undo:DoPlayer(player)
+function fl.undo:do_player(player)
   local count = (queue[player] and #queue[player]) or 0
 
   if count > 0 then

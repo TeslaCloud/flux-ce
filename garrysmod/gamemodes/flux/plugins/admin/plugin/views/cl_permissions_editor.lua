@@ -19,7 +19,7 @@ function PANEL:Rebuild()
   end
 
   local width, height = self:GetWide(), self:GetTall()
-  local font = font.GetSize(theme.GetFont('text_normal_smaller'), font.Scale(18))
+  local font = font.GetSize(theme.get_font('text_normal_smaller'), font.Scale(18))
   local fontSize = draw.GetFontHeight(font)
   local permission = self:GetPermission()
   local quarter = width * 0.25
@@ -39,7 +39,7 @@ function PANEL:Rebuild()
   self.btnNo:SetSize(quarter * 0.8, height)
   self.btnNo:SetText('')
   self.btnNo.permValue = PERM_NO
-  self.btnNo.Paint = function(btn, w, h) theme.Call('PaintPermissionButton', self, btn, w, h) end
+  self.btnNo.Paint = function(btn, w, h) theme.call('PaintPermissionButton', self, btn, w, h) end
   self.btnNo.DoClick = function(btn) PermButtonDoClick(self, btn) end
 
   self.btnAllow = vgui.Create('DButton', self.container)
@@ -47,7 +47,7 @@ function PANEL:Rebuild()
   self.btnAllow:SetSize(quarter * 0.8, height)
   self.btnAllow:SetText('')
   self.btnAllow.permValue = PERM_ALLOW
-  self.btnAllow.Paint = function(btn, w, h) theme.Call('PaintPermissionButton', self, btn, w, h) end
+  self.btnAllow.Paint = function(btn, w, h) theme.call('PaintPermissionButton', self, btn, w, h) end
   self.btnAllow.DoClick = function(btn) PermButtonDoClick(self, btn) end
 
   self.btnNever = vgui.Create('DButton', self.container)
@@ -55,7 +55,7 @@ function PANEL:Rebuild()
   self.btnNever:SetSize(quarter * 0.8, height)
   self.btnNever:SetText('')
   self.btnNever.permValue = PERM_NEVER
-  self.btnNever.Paint = function(btn, w, h) theme.Call('PaintPermissionButton', self, btn, w, h) end
+  self.btnNever.Paint = function(btn, w, h) theme.call('PaintPermissionButton', self, btn, w, h) end
   self.btnNever.DoClick = function(btn) PermButtonDoClick(self, btn) end
 end
 

@@ -148,7 +148,7 @@ function font.CreateFonts()
     weight = 1000
   })
 
-  theme.Call('CreateFonts')
+  theme.call('CreateFonts')
   hook.run('CreateFonts')
 end
 

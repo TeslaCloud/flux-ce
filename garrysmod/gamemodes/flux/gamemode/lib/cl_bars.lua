@@ -66,7 +66,7 @@ function fl.bars:SetValue(id, newValue)
   local bar = self:Get(id)
 
   if bar then
-    theme.Call('PreBarValueSet', bar, bar.value, newValue)
+    theme.call('PreBarValueSet', bar, bar.value, newValue)
 
     if bar.value != newValue then
       if bar.hinderDisplay and bar.hinderValue then
@@ -83,7 +83,7 @@ function fl.bars:HinderValue(id, newValue)
   local bar = self:Get(id)
 
   if bar then
-    theme.Call('PreBarHinderValueSet', bar, bar.hinderValue, newValue)
+    theme.call('PreBarHinderValueSet', bar, bar.hinderValue, newValue)
 
     if bar.value != newValue then
       bar.hinderValue = math.Clamp(newValue, 0, bar.maxValue)
@@ -140,26 +140,26 @@ function fl.bars:Draw(id)
 
   if barInfo then
     hook.run('PreDrawBar', barInfo)
-    theme.Call('PreDrawBar', barInfo)
+    theme.call('PreDrawBar', barInfo)
 
     if !hook.run('ShouldDrawBar', barInfo) then
       return
     end
 
-    theme.Call('DrawBarBackground', barInfo)
+    theme.call('DrawBarBackground', barInfo)
 
     if hook.run('ShouldFillBar', barInfo) or barInfo.value != 0 then
-      theme.Call('DrawBarFill', barInfo)
+      theme.call('DrawBarFill', barInfo)
     end
 
     if barInfo.hinderDisplay and barInfo.hinderDisplay <= barInfo.hinderValue then
-      theme.Call('DrawBarHindrance', barInfo)
+      theme.call('DrawBarHindrance', barInfo)
     end
 
-    theme.Call('DrawBarTexts', barInfo)
+    theme.call('DrawBarTexts', barInfo)
 
     hook.run('PostDrawBar', barInfo)
-    theme.Call('PostDrawBar', barInfo)
+    theme.call('PostDrawBar', barInfo)
   end
 end
 

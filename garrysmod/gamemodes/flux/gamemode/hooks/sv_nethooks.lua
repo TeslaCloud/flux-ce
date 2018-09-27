@@ -4,12 +4,12 @@ netstream.Hook('ClientIncludedSchema', function(player)
 end)
 
 netstream.Hook('soft_undo', function(player)
-  fl.undo:DoPlayer(player)
+  fl.undo:do_player(player)
 end)
 
 netstream.Hook('player_created', function(player)
   player:send_config()
-  player:SyncNetVars()
+  player:sync_net_vars()
 end)
 
 netstream.Hook('player_set_lang', function(player, lang)

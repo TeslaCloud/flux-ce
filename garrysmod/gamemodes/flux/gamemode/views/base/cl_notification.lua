@@ -14,7 +14,7 @@ function PANEL:SizeToContents()
   local bX, bY = 0, -4
 
   for k, v in ipairs(self.notificationText) do
-    local w, h = util.text_size(v, theme.GetFont('menu_normal'))
+    local w, h = util.text_size(v, theme.get_font('menu_normal'))
 
     self.fontSize = h
 
@@ -72,15 +72,15 @@ function PANEL:Think()
 end
 
 function PANEL:Paint(width, height)
-  if !theme.Hook('PaintNotificationContainer', self, width, height) then
+  if !theme.hook('PaintNotificationContainer', self, width, height) then
     draw.RoundedBox(0, 0, 0, width, height, ColorAlpha(self.backgroundColor, self.curAlpha))
   end
 
-  if !theme.Hook('PaintNotificationText', self, width, height) then
+  if !theme.hook('PaintNotificationText', self, width, height) then
     local curY = 4
 
     for k, v in ipairs(self.notificationText) do
-      draw.SimpleText(v, theme.GetFont('menu_normal'), 4, curY, ColorAlpha(self.textColor, self.curAlpha + 40))
+      draw.SimpleText(v, theme.get_font('menu_normal'), 4, curY, ColorAlpha(self.textColor, self.curAlpha + 40))
 
       curY = curY + self.fontSize + 4
     end

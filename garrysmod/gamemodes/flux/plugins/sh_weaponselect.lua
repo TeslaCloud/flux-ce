@@ -104,10 +104,10 @@ function PLUGIN:HUDPaint()
       local color = Color(255, 255, 255, self.CurAlpha * v.scale / 1.3)
 
       if v.highlight then
-        color = theme.GetColor('accent')
+        color = theme.get_color('accent')
       end
 
-      surface.draw_text_scaled((IsValid(v.weapon) and v.weapon:GetPrintName():utf8upper()) or 'UNKNOWN WEAPON', theme.GetFont('text_normal_large'), v.x, v.y, v.scale, color)
+      surface.draw_text_scaled((IsValid(v.weapon) and v.weapon:GetPrintName():utf8upper()) or 'UNKNOWN WEAPON', theme.get_font('text_normal_large'), v.x, v.y, v.scale, color)
     end
 
     render.SetScissorRect(0, 0, 0, 0, false)

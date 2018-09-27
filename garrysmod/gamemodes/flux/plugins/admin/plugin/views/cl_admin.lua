@@ -3,12 +3,12 @@ PANEL.curPanel = nil
 PANEL.panels = {}
 
 function PANEL:Init()
-  local scrW, scrH = ScrW(), ScrH()
+  local scr_w, scr_h = ScrW(), ScrH()
   local width, height = self:GetMenuSize()
 
   self:SetTitle('Admin')
   self:SetSize(width, height)
-  self:SetPos(scrW * 0.5 - width * 0.5, scrH * 0.5 - height * 0.5)
+  self:SetPos(scr_w * 0.5 - width * 0.5, scr_h * 0.5 - height * 0.5)
 
   self.sidebar = vgui.Create('fl_sidebar', self)
   self.sidebar:SetSize(width / 5, height)
@@ -22,13 +22,13 @@ end
 function PANEL:Paint(w, h)
   DisableClipping(true)
 
-  draw.box_outlined(0, -4, -4, w + 8, h + 24, 2, theme.GetColor('background'))
+  draw.box_outlined(0, -4, -4, w + 8, h + 24, 2, theme.get_color('background'))
 
   DisableClipping(false)
 end
 
 function PANEL:PaintOver(w, h)
-  theme.Call('AdminPanelPaintOver', self, w, h)
+  theme.call('AdminPanelPaintOver', self, w, h)
 end
 
 function PANEL:AddPanel(id, title, permission, ...)
@@ -58,10 +58,10 @@ function PANEL:OpenPanel(id)
   if istable(panel) then
     if panel.permission and !fl.client:can(panel.permission) then return end
 
-    local scrW, scrH = ScrW(), ScrH()
+    local scr_w, scr_h = ScrW(), ScrH()
     local sW, sH = self.sidebar:GetWide(), self.sidebar:GetTall()
 
-    self.curPanel = theme.CreatePanel(panel.id, self, unpack(panel.arguments))
+    self.curPanel = theme.create_panel(panel.id, self, unpack(panel.arguments))
     self.curPanel:SetPos(sW, 0)
     self.curPanel:SetSize(self:GetWide() - sW, self:GetTall())
 
@@ -82,7 +82,7 @@ function PANEL:SetFullscreen(bFullscreen)
     self.backBtn:SetText('')
 
     self.backBtn.Paint = function(btn, w, h)
-      local font = fl.fonts:GetSize(theme.GetFont('text_small'), 16)
+      local font = fl.fonts:GetSize(theme.get_font('text_small'), 16)
       local fontSize = util.font_size(font)
 
       fl.fa:Draw('fa-chevron-left', 6, 5, 14, Color(255, 255, 255))
