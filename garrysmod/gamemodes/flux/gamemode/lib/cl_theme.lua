@@ -4,38 +4,38 @@ theme.current_theme = current_theme
 local stored = theme.stored or {}
 theme.stored = stored
 
-function theme.GetAll()
+function theme.get_all()
   return stored
 end
 
-function theme.RegisterTheme(obj)
+function theme.register_theme(obj)
   if obj.parent then
-    local parentTheme = stored[obj.parent:to_id()]
+    local parent_theme = stored[obj.parent:to_id()]
 
-    if parentTheme then
-      local newObj = table.Copy(parentTheme)
+    if parent_theme then
+      local new_obj = table.Copy(parent_theme)
 
-      obj.Theme = nil
+      obj.theme = nil
 
-      table.safe_merge(newObj, obj)
+      table.safe_merge(new_obj, obj)
 
-      obj = newObj
-      obj.base = parentTheme
+      obj = new_obj
+      obj.base = parent_theme
     end
   end
 
   stored[obj.id] = obj
 end
 
-function theme.CreatePanel(panelID, parent, ...)
+function theme.create_panel(panelID, parent, ...)
   if current_theme and hook.run('ShouldThemeCreatePanel', panelID, current_theme) != false then
-    return current_theme:CreatePanel(panelID, parent, ...)
+    return current_theme:create_panel(panelID, parent, ...)
   end
 end
 
-function theme.Hook(id, ...)
+function theme.hook(id, ...)
   if isstring(id) and current_theme and current_theme[id] then
-    local result = {pcall(current_theme[id], current_theme, ...)}
+    local result = { pcall(current_theme[id], current_theme, ...) }
     local success = result[1]
     table.remove(result, 1)
 
@@ -47,141 +47,141 @@ function theme.Hook(id, ...)
   end
 end
 
-theme.Call = theme.Hook
+theme.call = theme.hook
 
-function theme.GetActiveTheme()
+function theme.get_active_theme()
   return (current_theme and current_theme.id)
 end
 
-function theme.SetSound(key, value)
+function theme.set_sound(key, value)
   if current_theme then
-    current_theme:SetSound(key, value)
+    current_theme:set_sound(key, value)
   end
 end
 
-function theme.GetSound(key, fallback)
+function theme.get_sound(key, fallback)
   if current_theme then
-    return current_theme:GetSound(key, fallback)
-  end
-
-  return fallback
-end
-
-function theme.SetColor(key, value)
-  if current_theme then
-    current_theme:SetColor(key, value)
-  end
-end
-
-function theme.SetFont(key, value, scale, data)
-  if current_theme then
-    current_theme:SetFont(key, value, scale, data)
-  end
-end
-
-function theme.GetColor(key, fallback)
-  if current_theme then
-    return current_theme:GetColor(key, fallback)
+    return current_theme:get_sound(key, fallback)
   end
 
   return fallback
 end
 
-function theme.GetFont(key, fallback)
+function theme.set_color(key, value)
   if current_theme then
-    return current_theme:GetFont(key, fallback)
+    current_theme:set_color(key, value)
+  end
+end
+
+function theme.set_font(key, value, scale, data)
+  if current_theme then
+    current_theme:set_font(key, value, scale, data)
+  end
+end
+
+function theme.get_color(key, fallback)
+  if current_theme then
+    return current_theme:get_color(key, fallback)
   end
 
   return fallback
 end
 
-function theme.SetOption(key, value)
+function theme.get_font(key, fallback)
   if current_theme then
-    current_theme:SetOption(key, value)
-  end
-end
-
-function theme.SetMaterial(key, value)
-  if current_theme then
-    current_theme:SetMaterial(key, value)
-  end
-end
-
-function theme.GetMaterial(key, fallback)
-  if current_theme then
-    return current_theme:GetMaterial(key, fallback)
+    return current_theme:get_font(key, fallback)
   end
 
   return fallback
 end
 
-function theme.GetOption(key, fallback)
+function theme.set_option(key, value)
   if current_theme then
-    return current_theme:GetOption(key, fallback)
+    current_theme:set_option(key, value)
+  end
+end
+
+function theme.set_material(key, value)
+  if current_theme then
+    current_theme:set_material(key, value)
+  end
+end
+
+function theme.get_material(key, fallback)
+  if current_theme then
+    return current_theme:get_material(key, fallback)
   end
 
   return fallback
 end
 
-function theme.FindTheme(id)
+function theme.get_option(key, fallback)
+  if current_theme then
+    return current_theme:get_option(key, fallback)
+  end
+
+  return fallback
+end
+
+function theme.find_theme(id)
   return stored[id:to_id()]
 end
 
-function theme.RemoveTheme(id)
-  if theme.FindTheme(id) then
+function theme.remove_theme(id)
+  if theme.find_theme(id) then
     stored[id] = nil
   end
 end
 
-function theme.SetDermaSkin()
+function theme.set_derma_skin()
   if current_theme then
-    local skinTable = derma.GetNamedSkin('Flux')
+    local skin_table = derma.GetNamedSkin('Flux')
 
     for k, v in pairs(current_theme.skin) do
-      skinTable[k] = v
+      skin_table[k] = v
     end
   end
 
   derma.RefreshSkins()
 end
 
-function theme.LoadTheme(themeID, bIsReloading)
-  local themeTable = theme.FindTheme(themeID)
+function theme.load_theme(themeID, b_is_reloading)
+  local theme_table = theme.find_theme(themeID)
 
-  if themeTable then
-    if !bIsReloading and hook.run('ShouldThemeLoad', themeTable) == false then
+  if theme_table then
+    if !b_is_reloading and hook.run('ShouldThemeLoad', theme_table) == false then
       return
     end
 
-    current_theme = themeTable
+    current_theme = theme_table
 
-    local next = themeTable.base
+    local next = theme_table.base
 
     while next do
-      if next.OnLoaded then
-        next.OnLoaded(current_theme)
+      if next.on_loaded then
+        next.on_loaded(current_theme)
       end
 
       next = next.base
     end
 
-    if !bIsReloading and current_theme.OnLoaded then
-      current_theme:OnLoaded()
+    if !b_is_reloading and current_theme.on_loaded then
+      current_theme:on_loaded()
     end
 
-    theme.SetDermaSkin()
+    theme.set_derma_skin()
 
     hook.run('OnThemeLoaded', current_theme)
   end
 end
 
-function theme.UnloadTheme()
+function theme.unload_theme()
   if hook.run('ShouldThemeUnload', current_theme) == false then
     return
   end
 
-  if current_theme.OnUnloaded then
-    current_theme:OnUnloaded()
+  if current_theme.on_unloaded then
+    current_theme:on_unloaded()
 
     hook.run('OnThemeUnloaded', current_theme)
   end
@@ -189,33 +189,33 @@ function theme.UnloadTheme()
   current_theme = nil
 end
 
-function theme.Reload()
+function theme.reload()
   if !current_theme then return end
 
   if (current_theme.should_reload == false) or hook.run('ShouldThemeReload', current_theme) == false then
     return
   end
 
-  theme.LoadTheme(current_theme.id)
+  theme.load_theme(current_theme.id)
 
-  theme.Hook('OnReloaded')
+  theme.hook('OnReloaded')
   hook.run('OnThemeReloaded', current_theme)
 end
 
 do
-  local themeHooks = {}
+  local theme_hooks = {}
 
-  function themeHooks:PlayerInitialized()
+  function theme_hooks:PlayerInitialized()
     if !Schema or !Schema.DefaultTheme then
-      theme.LoadTheme('factory')
+      theme.load_theme('factory')
     else
-      theme.LoadTheme(Schema.DefaultTheme or 'factory')
+      theme.load_theme(Schema.DefaultTheme or 'factory')
     end
   end
 
-  function themeHooks:OnReloaded()
-    theme.Reload()
+  function theme_hooks:OnReloaded()
+    theme.reload()
   end
 
-  plugin.add_hooks('flThemeHooks', themeHooks)
+  plugin.add_hooks('flThemeHooks', theme_hooks)
 end

@@ -8,7 +8,7 @@ function PANEL:Init()
 end
 
 function PANEL:Paint(w, h)
-  theme.Hook('PaintScoreboard', self, w, h)
+  theme.hook('PaintScoreboard', self, w, h)
 end
 
 function PANEL:Rebuild()
@@ -64,7 +64,7 @@ function PANEL:SetPlayer(player)
 end
 
 function PANEL:Paint(w, h)
-  draw.RoundedBox(0, 0, 0, w, h, theme.GetColor('background_light'))
+  draw.RoundedBox(0, 0, 0, w, h, theme.get_color('background_light'))
 end
 
 function PANEL:Rebuild()
@@ -84,9 +84,9 @@ function PANEL:Rebuild()
 
   self.nameLabel = vgui.Create('DLabel', self)
   self.nameLabel:SetText(player:Name())
-  self.nameLabel:SetPos(font.Scale(32) + 16, self:GetTall() * 0.5 - util.text_height(player:Name(), theme.GetFont('text_normal')) * 0.5)
-  self.nameLabel:SetFont(theme.GetFont('text_normal'))
-  self.nameLabel:SetTextColor(theme.GetColor('text'))
+  self.nameLabel:SetPos(font.Scale(32) + 16, self:GetTall() * 0.5 - util.text_height(player:Name(), theme.get_font('text_normal')) * 0.5)
+  self.nameLabel:SetFont(theme.get_font('text_normal'))
+  self.nameLabel:SetTextColor(theme.get_color('text'))
   self.nameLabel:SizeToContents()
 
   hook.run('RebuildScoreboardPlayerCard', self, player)

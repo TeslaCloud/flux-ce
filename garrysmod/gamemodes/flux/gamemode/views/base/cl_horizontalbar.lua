@@ -11,7 +11,7 @@ function PANEL:SetCentered(bCentered)
 end
 
 function PANEL:Paint(width, height)
-  theme.Hook('PaintHorizontalbar', self, width, height)
+  theme.hook('PaintHorizontalbar', self, width, height)
 end
 
 function PANEL:AddPanel(pnl)

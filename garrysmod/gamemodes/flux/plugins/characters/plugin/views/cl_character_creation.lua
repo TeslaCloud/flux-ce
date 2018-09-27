@@ -17,39 +17,39 @@ function PANEL:Init()
   local x, y = self:GetWide() / 4, self:GetTall() / 6 + 8
 
   self.back = vgui.Create('fl_button', self)
-  self.back:SetSize(self.panel:GetWide() / 4, theme.GetOption('menu_sidebar_button_height'))
+  self.back:SetSize(self.panel:GetWide() / 4, theme.get_option('menu_sidebar_button_height'))
   self.back:SetPos(x, y + self.panel:GetTall() + self.back:GetTall())
   self.back:SetIcon('fa-chevron-left')
   self.back:SetIconSize(16)
-  self.back:SetFont(theme.GetFont('text_normal_smaller'))
+  self.back:SetFont(theme.get_font('text_normal_smaller'))
   self.back:SetTitle(t'char_create.main_menu')
   self.back:SetDrawBackground(false)
   self.back:SetCentered(true)
 
   self.back.DoClick = function(btn)
-    surface.PlaySound(theme.GetOption('button_click_success_sound'))
+    surface.PlaySound(theme.get_sound('button_click_success_sound'))
 
     self:PrevStage()
   end
 
   self.next = vgui.Create('fl_button', self)
-  self.next:SetSize(self.panel:GetWide() / 4, theme.GetOption('menu_sidebar_button_height'))
+  self.next:SetSize(self.panel:GetWide() / 4, theme.get_option('menu_sidebar_button_height'))
   self.next:SetPos(x + self.panel:GetWide() - self.next:GetWide(), y + self.panel:GetTall() + self.next:GetTall())
   self.next:SetIcon('fa-chevron-right', true)
   self.next:SetIconSize(16)
-  self.next:SetFont(theme.GetFont('text_normal_smaller'))
+  self.next:SetFont(theme.get_font('text_normal_smaller'))
   self.next:SetTitle(t'char_create.next')
   self.next:SetDrawBackground(false)
   self.next:SetCentered(true)
 
   self.next.DoClick = function(btn)
-    surface.PlaySound(theme.GetOption('button_click_success_sound'))
+    surface.PlaySound(theme.get_sound('button_click_success_sound'))
 
     self:NextStage()
   end
 
   self.stage_list = vgui.Create('fl_horizontalbar', self)
-  self.stage_list:SetSize(self.panel:GetWide(), theme.GetOption('menu_sidebar_button_height'))
+  self.stage_list:SetSize(self.panel:GetWide(), theme.get_option('menu_sidebar_button_height'))
   self.stage_list:SetPos(x, y + self.panel:GetTall() + self.next:GetTall() * 2)
   self.stage_list:SetOverlap(4)
   self.stage_list:SetCentered(true)
@@ -62,10 +62,10 @@ function PANEL:RebuildStageList()
 
   for k, v in ipairs(self.stages) do
     local button = vgui.Create('fl_button', self.stage_list)
-    button:SetSize(self.panel:GetWide() / 5, theme.GetOption('menu_sidebar_button_height'))
+    button:SetSize(self.panel:GetWide() / 5, theme.get_option('menu_sidebar_button_height'))
     button:SetIcon('fa-chevron-right', true)
     button:SetIconSize(16)
-    button:SetFont(theme.GetFont('text_normal_smaller'))
+    button:SetFont(theme.get_font('text_normal_smaller'))
     button:SetTitle(t(v))
     button:SetDrawBackground(false)
     button:SizeToContents()
@@ -75,7 +75,7 @@ function PANEL:RebuildStageList()
       button:SetEnabled(false)
     elseif k == self.stage then
       button:SetEnabled(true)
-      button:SetTextColor(theme.GetColor('accent'))
+      button:SetTextColor(theme.get_color('accent'))
     end
 
     button.DoClick = function(btn)
@@ -208,10 +208,10 @@ function PANEL:OpenPanel(id)
       to = -self.panel:GetWide()
     end
 
-    self.panel:MoveTo(to, y, theme.GetOption('menu_anim_duration'), 0, 0.5)
+    self.panel:MoveTo(to, y, theme.get_option('menu_anim_duration'), 0, 0.5)
   end
 
-  self.panel = theme.CreatePanel(id, self)
+  self.panel = theme.create_panel(id, self)
   self.panel:SetSize(self:GetWide() / 2, self:GetTall() / 2)
 
   local from
@@ -225,7 +225,7 @@ function PANEL:OpenPanel(id)
   end
 
   self.panel:SetPos(from, y)
-  self.panel:MoveTo(x, y, theme.GetOption('menu_anim_duration'), 0, 0.5)
+  self.panel:MoveTo(x, y, theme.get_option('menu_anim_duration'), 0, 0.5)
 
   if self.panel.OnOpen then
     self.panel:OnOpen(self)
@@ -244,7 +244,7 @@ end
 
 function PANEL:Paint(w, h)
   if self:IsVisible() then
-    theme.Hook('PaintCharCreationMainPanel', self, w, h)
+    theme.hook('PaintCharCreationMainPanel', self, w, h)
   end
 end
 

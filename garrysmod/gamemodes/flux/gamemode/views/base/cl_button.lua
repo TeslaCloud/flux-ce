@@ -11,7 +11,7 @@ PANEL.m_Enabled = true
 PANEL.m_Centered = false
 
 function PANEL:Paint(w, h)
-  theme.Hook('PaintButton', self, w, h)
+  theme.hook('PaintButton', self, w, h)
 end
 
 function PANEL:Think()
@@ -48,7 +48,7 @@ end
 
 function PANEL:SetEnabled(enabled)
   self.m_Enabled = enabled
-  self.m_TextColorOverride = (!enabled and theme.GetColor('text'):darken(50)) or nil
+  self.m_TextColorOverride = (!enabled and theme.get_color('text'):darken(50)) or nil
 
   self:SetMouseInputEnabled(enabled)
 end

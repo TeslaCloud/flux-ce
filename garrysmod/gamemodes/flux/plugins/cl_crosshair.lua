@@ -21,15 +21,15 @@ function PLUGIN:HUDPaint()
       curGap = realGap
     end
 
-    local scrW, scrH = ScrW(), ScrH()
+    local scr_w, scr_h = ScrW(), ScrH()
 
-    draw.RoundedBox(0, scrW * 0.5 - halfSize, scrH * 0.5 - halfSize, size, size, drawColor)
+    draw.RoundedBox(0, scr_w * 0.5 - halfSize, scr_h * 0.5 - halfSize, size, size, drawColor)
 
-    draw.RoundedBox(0, scrW * 0.5 - halfSize - curGap, scrH * 0.5 - halfSize, size, size, drawColor)
-    draw.RoundedBox(0, scrW * 0.5 - halfSize + curGap, scrH * 0.5 - halfSize, size, size, drawColor)
+    draw.RoundedBox(0, scr_w * 0.5 - halfSize - curGap, scr_h * 0.5 - halfSize, size, size, drawColor)
+    draw.RoundedBox(0, scr_w * 0.5 - halfSize + curGap, scr_h * 0.5 - halfSize, size, size, drawColor)
 
-    draw.RoundedBox(0, scrW * 0.5 - halfSize, scrH * 0.5 - halfSize - curGap, size, size, drawColor)
-    draw.RoundedBox(0, scrW * 0.5 - halfSize, scrH * 0.5 - halfSize + curGap, size, size, drawColor)
+    draw.RoundedBox(0, scr_w * 0.5 - halfSize, scr_h * 0.5 - halfSize - curGap, size, size, drawColor)
+    draw.RoundedBox(0, scr_w * 0.5 - halfSize, scr_h * 0.5 - halfSize + curGap, size, size, drawColor)
   end
 end
 
@@ -37,7 +37,7 @@ function PLUGIN:AdjustCrosshairColor(trace, distance)
   local ent = trace.Entity
 
   if distance < 600 and IsValid(ent) and (ent:IsPlayer() or ent:GetClass() == 'fl_item') then
-    return theme.GetColor('accent')
+    return theme.get_color('accent')
   end
 end
 

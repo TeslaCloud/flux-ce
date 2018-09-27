@@ -6,7 +6,7 @@ function PANEL:Init() end
 
 function PANEL:Paint(w, h)
   if self:IsVisible() then
-    theme.Hook('PaintCharCreationBasePanel', self, w, h)
+    theme.hook('PaintCharCreationBasePanel', self, w, h)
   end
 end
 
@@ -17,12 +17,12 @@ PANEL.id = 'general'
 PANEL.text = 'char_create.general'
 
 function PANEL:Init()
-  local scrW, scrH = ScrW(), ScrH()
+  local scr_w, scr_h = ScrW(), ScrH()
 
   self.gender_label = vgui.Create('DLabel', self)
   self.gender_label:SetPos(4, font.Scale(36) + 6)
   self.gender_label:SetText(t'char_create.gender')
-  self.gender_label:SetFont(theme.GetFont('text_small'))
+  self.gender_label:SetFont(theme.get_font('text_small'))
   self.gender_label:SetTextColor(Color('white'))
   self.gender_label:SizeToContents()
 
@@ -69,14 +69,14 @@ function PANEL:Init()
   self.name_label = vgui.Create('DLabel', self)
   self.name_label:SetPos(4, font.Scale(72) + 2)
   self.name_label:SetText(t'char_create.name')
-  self.name_label:SetFont(theme.GetFont('text_small'))
+  self.name_label:SetFont(theme.get_font('text_small'))
   self.name_label:SetTextColor(Color('white'))
   self.name_label:SizeToContents()
 
   self.name_entry = vgui.Create('DTextEntry', self)
   self.name_entry:SetPos(self.name_label:GetWide() + 8, font.Scale(72))
-  self.name_entry:SetSize(scrW / 8, 24)
-  self.name_entry:SetFont(theme.GetFont('text_smaller'))
+  self.name_entry:SetSize(scr_w / 8, 24)
+  self.name_entry:SetFont(theme.get_font('text_smaller'))
   self.name_entry:SetText('')
 
   self.name_random = vgui.Create('DImageButton', self)
@@ -93,27 +93,27 @@ function PANEL:Init()
   self.desc_label = vgui.Create('DLabel', self)
   self.desc_label:SetPos(4, font.Scale(108) + 2)
   self.desc_label:SetText(t'char_create.desc')
-  self.desc_label:SetFont(theme.GetFont('text_small'))
+  self.desc_label:SetFont(theme.get_font('text_small'))
   self.desc_label:SetTextColor(Color('white'))
   self.desc_label:SizeToContents()
 
   self.desc_entry = vgui.Create('DTextEntry', self)
   self.desc_entry:SetPos(self.desc_label:GetWide() + 8, font.Scale(108))
-  self.desc_entry:SetSize(scrW / 4 - self.desc_label:GetWide() - 4, font.Scale(72))
-  self.desc_entry:SetFont(theme.GetFont('text_smaller'))
+  self.desc_entry:SetSize(scr_w / 4 - self.desc_label:GetWide() - 4, font.Scale(72))
+  self.desc_entry:SetFont(theme.get_font('text_smaller'))
   self.desc_entry:SetText('')
   self.desc_entry:SetMultiline(true)
   self.desc_entry:SetVerticalScrollbarEnabled(true)
 
   self.models_list = vgui.Create('fl_sidebar', self)
   self.models_list:SetPos(4, font.Scale(180) + 4)
-  self.models_list:SetSize(scrW / 4, 136)
+  self.models_list:SetSize(scr_w / 4, 136)
   self.models_list:SetVisible(false)
   self.models_list.Paint = function() end
 
   self.model = vgui.Create('DModelPanel', self)
-  self.model:SetPos(scrW / 4 + 32, 32)
-  self.model:SetSize(scrW / 4, scrH / 2 - 36)
+  self.model:SetPos(scr_w / 4 + 32, 32)
+  self.model:SetSize(scr_w / 4, scr_h / 2 - 36)
   self.model:SetFOV(50)
   self.model:SetCamPos(Vector(80, 0, 50))
   self.model:SetLookAt(Vector(0, 0, 37))

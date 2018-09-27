@@ -43,11 +43,11 @@ do
 end
 
 do
-  local getWeaponHoldtype = fl.anim.GetWeaponHoldType
+  local get_weapon_hold_type = fl.anim.GetWeaponHoldType
 
   -- Called when to translate player activities.
   function GM:TranslateActivity(player, act)
-    local animations = player.flAnimTable
+    local animations = player.fl_anim_table
 
     if !animations then
       return self.BaseClass:TranslateActivity(player, act)
@@ -57,23 +57,23 @@ do
 
     if player:InVehicle() then
       local vehicle = player:GetVehicle()
-      local vehicleClass = vehicle:GetClass()
-      local vehicleAnims = animations['vehicle']
+      local vehicle_class = vehicle:GetClass()
+      local vehicle_anims = animations['vehicle']
 
-      if vehicleAnims and vehicleAnims[vehicleClass] then
-        local anim = vehicleAnims[vehicleClass][1]
-        local position = vehicleAnims[vehicleClass][2]
+      if vehicle_anims and vehicle_anims[vehicle_class] then
+        local anim = vehicle_anims[vehicle_class][1]
+        local position = vehicle_anims[vehicle_class][2]
 
         if position then
           player:ManipulateBonePosition(0, position)
-          player.shouldUndoBones = true
+          player.should_undo_bones = true
         end
 
         if isstring(anim) then
           player.CalcSeqOverride = player:LookupSequence(anim)
 
           -- Cache the result of LookupSequence for added performance.
-          player.flAnimTable['vehicle'][vehicleClass][1] = player.CalcSeqOverride
+          player.fl_anim_table['vehicle'][vehicle_class][1] = player.CalcSeqOverride
 
           return
         end
@@ -85,7 +85,7 @@ do
         if isstring(anim) then
           player.CalcSeqOverride = player:LookupSequence(anim)
 
-          player.flAnimTable['normal'][ACT_MP_CROUCH_IDLE][1] = player.CalcSeqOverride
+          player.fl_anim_table['normal'][ACT_MP_CROUCH_IDLE][1] = player.CalcSeqOverride
 
           return
         end
@@ -93,16 +93,16 @@ do
         return anim
       end
     elseif player:OnGround() then
-      local holdType = getWeaponHoldtype(player, player:GetActiveWeapon())
-      local holdTypeAnims = animations[holdType]
+      local holdtype = get_weapon_hold_type(player, player:GetActiveWeapon())
+      local holdtype_anims = animations[holdtype]
 
-      if player.shouldUndoBones then
+      if player.should_undo_bones then
         player:ManipulateBonePosition(0, Vector(0, 0, 0))
-        player.shouldUndoBones = false
+        player.should_undo_bones = false
       end
 
-      if holdTypeAnims and holdTypeAnims[act] then
-        local anim = holdTypeAnims[act]
+      if holdtype_anims and holdtype_anims[act] then
+        local anim = holdtype_anims[act]
 
         if istable(anim) then
           if hook.Call('ModelWeaponRaised', nil, player, model) then
@@ -113,7 +113,7 @@ do
         elseif isstring(anim) then
           player.CalcSeqOverride = player:LookupSequence(anim)
 
-          player.flAnimTable[holdType][act] = player.CalcSeqOverride
+          player.fl_anim_table[holdtype][act] = player.CalcSeqOverride
 
           return
         end
@@ -162,35 +162,35 @@ function GM:DoAnimationEvent(player, event, data)
 end
 
 do
-  local animCache = {}
+  local anim_cache = {}
 
-  function GM:PlayerModelChanged(player, strNewModel, strOldModel)
-    if !strNewModel then return end
+  function GM:PlayerModelChanged(player, new_model, old_model)
+    if !new_model then return end
 
     if CLIENT then
       player:SetIK(false)
     end
 
-    if !animCache[strNewModel] then
-      animCache[strNewModel] = fl.anim:GetTable(strNewModel)
+    if !anim_cache[new_model] then
+      anim_cache[new_model] = fl.anim:GetTable(new_model)
     end
 
-    player.flAnimTable = animCache[strNewModel]
+    player.fl_anim_table = anim_cache[new_model]
   end
 end
 
-function GM:PlayerNoClip(player, bState)
-  if bState == false then
-    local bShouldExit = plugin.call('PlayerExitNoclip', player)
+function GM:PlayerNoClip(player, b_state)
+  if b_state == false then
+    local b_should_exit = plugin.call('PlayerExitNoclip', player)
 
-    if bShouldExit != nil then
-      return bShouldExit
+    if b_should_exit != nil then
+      return b_should_exit
     end
   else
-    local bShouldEnter = plugin.call('PlayerEnterNoclip', player)
+    local b_should_enter = plugin.call('PlayerEnterNoclip', player)
 
-    if bShouldEnter != nil then
-      return bShouldEnter
+    if b_should_enter != nil then
+      return b_should_enter
     end
   end
 
@@ -211,10 +211,10 @@ end)
 
 function GM:OnReloaded()
   -- Reload the tools.
-  local toolGun = weapons.GetStored('gmod_tool')
+  local tool_gun = weapons.GetStored('gmod_tool')
 
   for k, v in pairs(fl.tool:GetAll()) do
-    toolGun.Tool[v.Mode] = v
+    tool_gun.Tool[v.Mode] = v
   end
 
   if fl.development then

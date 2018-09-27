@@ -20,24 +20,24 @@ function Theme:init(name, parent)
   end
 end
 
-function Theme:OnLoaded() end
-function Theme:OnUnloaded() end
+function Theme:on_loaded() end
+function Theme:on_unloaded() end
 
-function Theme:Remove()
-  return theme.RemoveTheme(self.id)
+function Theme:remove()
+  return theme.remove_theme(self.id)
 end
 
-function Theme:AddPanel(id, callback)
+function Theme:add_panel(id, callback)
   self.panels[id] = callback
 end
 
-function Theme:CreatePanel(id, parent, ...)
+function Theme:create_panel(id, parent, ...)
   if self.panels[id] then
     return self.panels[id](id, parent, ...)
   end
 end
 
-function Theme:SetOption(key, value)
+function Theme:set_option(key, value)
   if key then
     self.options[key] = value
   end
@@ -45,7 +45,7 @@ function Theme:SetOption(key, value)
   return self.options[key]
 end
 
-function Theme:SetFont(key, value, scale, data)
+function Theme:set_font(key, value, scale, data)
   if key then
     self.fonts[key] = font.GetSize(value, scale, data)
   end
@@ -53,7 +53,7 @@ function Theme:SetFont(key, value, scale, data)
   return self.fonts[key]
 end
 
-function Theme:SetColor(id, val)
+function Theme:set_color(id, val)
   val = val or Color(255, 255, 255)
 
   self.colors[id] = val
@@ -61,25 +61,25 @@ function Theme:SetColor(id, val)
   return val
 end
 
-function Theme:SetMaterial(id, val)
+function Theme:set_material(id, val)
   self.materials[id] = (!isstring(val) and val) or util.get_material(val)
   return self.materials[id]
 end
 
-function Theme:SetSound(id, val)
+function Theme:set_sound(id, val)
   self.sounds[id] = val or Sound()
   return self.sounds[id]
 end
 
-function Theme:GetFont(key, default)
+function Theme:get_font(key, default)
   return self.fonts[key] or default
 end
 
-function Theme:GetOption(key, default)
+function Theme:get_option(key, default)
   return self.options[key] or default
 end
 
-function Theme:GetColor(id, failsafe)
+function Theme:get_color(id, failsafe)
   local col = self.colors[id]
 
   if col then
@@ -89,7 +89,7 @@ function Theme:GetColor(id, failsafe)
   end
 end
 
-function Theme:GetMaterial(id, failsafe)
+function Theme:get_material(id, failsafe)
   local mat = self.materials[id]
 
   if mat then
@@ -99,7 +99,7 @@ function Theme:GetMaterial(id, failsafe)
   end
 end
 
-function Theme:GetSound(id, failsafe)
+function Theme:get_sound(id, failsafe)
   local sound = self.sounds[id]
 
   if sound then
@@ -110,7 +110,7 @@ function Theme:GetSound(id, failsafe)
 end
 
 function Theme:register()
-  return theme.RegisterTheme(self)
+  return theme.register_theme(self)
 end
 
 function Theme:__tostring()

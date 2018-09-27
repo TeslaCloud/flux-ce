@@ -10,7 +10,7 @@ PANEL.m_MainColor = Color(255, 100, 100)
 PANEL.m_AccentColor = Color(200, 200, 200)
 PANEL.m_DrawBackground = true
 PANEL.m_Title = 'Flux Base Panel'
-PANEL.m_Font = theme.GetFont('menu_titles') or 'flRoboto'
+PANEL.m_Font = theme.get_font('menu_titles') or 'flRoboto'
 
 AccessorFunc(PANEL, 'm_DrawBackground', 'DrawBackground')
 AccessorFunc(PANEL, 'm_BackgroundColor', 'BackgroundColor')
@@ -20,8 +20,8 @@ AccessorFunc(PANEL, 'm_MainColor', 'MainColor')
 AccessorFunc(PANEL, 'm_TextColor', 'TextColor')
 AccessorFunc(PANEL, 'm_AccentColor', 'AccentColor')
 
-function PANEL:Paint(width, height) theme.Hook('PaintPanel', self, width, height) end
-function PANEL:Think() theme.Hook('PanelThink', self) end
+function PANEL:Paint(width, height) theme.hook('PaintPanel', self, width, height) end
+function PANEL:Think() theme.hook('PanelThink', self) end
 
 -- MVC Functionality for all FL panels.
 function PANEL:Push(name, ...)

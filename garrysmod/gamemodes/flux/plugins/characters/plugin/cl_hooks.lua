@@ -10,13 +10,13 @@ end
 
 function flCharacters:OnIntroPanelRemoved()
   if !fl.client:GetCharacter() then
-    fl.intro_panel = theme.CreatePanel('main_menu')
+    fl.intro_panel = theme.create_panel('main_menu')
 
     if IsValid(fl.intro_panel) then
       fl.intro_panel:MakePopup()
     else
       timer.Create('flCreateMainPanel', 0.1, 0, function()
-        fl.intro_panel = theme.CreatePanel('main_menu')
+        fl.intro_panel = theme.create_panel('main_menu')
 
         if IsValid(fl.intro_panel) then
           fl.intro_panel:MakePopup()
@@ -54,26 +54,26 @@ do
 end
 
 function flCharacters:OnThemeLoaded(current_theme)
-  current_theme:AddPanel('main_menu', function(id, parent, ...)
+  current_theme:add_panel('main_menu', function(id, parent, ...)
     return vgui.Create('fl_main_menu', parent)
   end)
 
-  current_theme:AddPanel('character_creation', function(id, parent, ...)
+  current_theme:add_panel('character_creation', function(id, parent, ...)
     return vgui.Create('fl_character_creation', parent)
   end)
 
-  current_theme:AddPanel('char_create.load', function(id, parent, ...)
+  current_theme:add_panel('char_create.load', function(id, parent, ...)
     return vgui.Create('fl_character_load', parent)
   end)
 
-  current_theme:AddPanel('char_create.general', function(id, parent, ...)
+  current_theme:add_panel('char_create.general', function(id, parent, ...)
     return vgui.Create('fl_character_general', parent)
   end)
 
   if IsValid(fl.intro_panel) then
     fl.intro_panel:Remove()
 
-    fl.intro_panel = theme.CreatePanel('main_menu')
+    fl.intro_panel = theme.create_panel('main_menu')
     fl.intro_panel:MakePopup()
   end
 end
@@ -84,7 +84,7 @@ function flCharacters:AddTabMenuItems(menu)
     icon = 'fa-users',
     override = function(menuPanel, button)
       menuPanel:SafeRemove()
-      fl.intro_panel = theme.CreatePanel('main_menu')
+      fl.intro_panel = theme.create_panel('main_menu')
     end
   }, 1)
 end
@@ -139,9 +139,9 @@ function flCharacters:RebuildScoreboardPlayerCard(card, player)
 
   card.descLabel = vgui.Create('DLabel', card)
   card.descLabel:SetText(phys_desc)
-  card.descLabel:SetFont(theme.GetFont('text_smaller'))
+  card.descLabel:SetFont(theme.get_font('text_smaller'))
   card.descLabel:SetPos(x, card.nameLabel:GetTall())
-  card.descLabel:SetTextColor(theme.GetColor('text'))
+  card.descLabel:SetTextColor(theme.get_color('text'))
   card.descLabel:SizeToContents()
 end
 
@@ -150,7 +150,7 @@ function flCharacters:AddCharacterCreationMenuStages(panel)
 end
 
 function flCharacters:AddMainMenuItems(panel, sidebar)
-  local scrW, scrH = ScrW(), ScrH()
+  local scr_w, scr_h = ScrW(), ScrH()
 
   if fl.client:GetCharacter() then
     panel:add_button(t'main_menu.continue', function(btn)
@@ -159,20 +159,20 @@ function flCharacters:AddMainMenuItems(panel, sidebar)
   end
 
   panel:add_button(t'char_create.title', function(btn)
-    panel.menu = theme.CreatePanel('character_creation', panel)
+    panel.menu = theme.create_panel('character_creation', panel)
     panel.menu:SetPos(ScrW(), 0)
-    panel.menu:MoveTo(0, 0, theme.GetOption('menu_anim_duration'), 0, 0.5)
+    panel.menu:MoveTo(0, 0, theme.get_option('menu_anim_duration'), 0, 0.5)
 
-    panel.sidebar:MoveTo(-panel.sidebar:GetWide(), theme.GetOption('menu_sidebar_y'), theme.GetOption('menu_anim_duration'), 0, 0.5)
+    panel.sidebar:MoveTo(-panel.sidebar:GetWide(), theme.get_option('menu_sidebar_y'), theme.get_option('menu_anim_duration'), 0, 0.5)
   end)
 
   if #fl.client:GetAllCharacters() > 0 then
     panel:add_button(t'char_create.load', function(btn)
-      panel.menu = theme.CreatePanel('char_create.load', panel)
+      panel.menu = theme.create_panel('char_create.load', panel)
       panel.menu:SetPos(-panel.menu:GetWide(), 0)
-      panel.menu:MoveTo(0, 0, theme.GetOption('menu_anim_duration'), 0, 0.5)
+      panel.menu:MoveTo(0, 0, theme.get_option('menu_anim_duration'), 0, 0.5)
   
-      panel.sidebar:MoveTo(ScrW(), theme.GetOption('menu_sidebar_y'), theme.GetOption('menu_anim_duration'), 0, 0.5)
+      panel.sidebar:MoveTo(ScrW(), theme.get_option('menu_sidebar_y'), theme.get_option('menu_anim_duration'), 0, 0.5)
     end)
   end
 
@@ -190,7 +190,7 @@ netstream.Hook('PlayerCreatedCharacter', function(success, status)
       fl.intro_panel.menu:goto_stage(-1)
       fl.intro_panel.menu:ClearData()
 
-      timer.Simple(theme.GetOption('menu_anim_duration') * #fl.intro_panel.menu.stages, function()
+      timer.Simple(theme.get_option('menu_anim_duration') * #fl.intro_panel.menu.stages, function()
         local chars = fl.client:GetAllCharacters()
 
         if #chars == 1 then

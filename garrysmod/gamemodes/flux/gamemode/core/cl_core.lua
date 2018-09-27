@@ -69,7 +69,7 @@ do
 end
 
 function fl.set_circle_percent(percentage)
-  fl.client.circleActionPercentage = tonumber(percentage) or -1
+  fl.client.circle_action_percentage = tonumber(percentage) or -1
 end
 
 function surface.draw_text_scaled(text, font_name, pos_x, pos_y, scale, color)

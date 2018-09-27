@@ -13,7 +13,7 @@ function Stamina:HUDPaint()
     cur_alpha = Lerp(frame_time, cur_alpha, 0)
   end
 
-  if theme.Hook('DrawStaminaBar', stamina, percentage, cur_alpha, frame_time) == nil then
+  if theme.hook('DrawStaminaBar', stamina, percentage, cur_alpha, frame_time) == nil then
     local cx, cy = ScrC()
     local x, y = cx - w * 0.5, cy - h * 0.5 + 100
     cur_wide = Lerp(frame_time, cur_wide, w * percentage)

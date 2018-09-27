@@ -1,6 +1,6 @@
 DEFINE_BASECLASS('gamemode_base')
 
-function GM:DoPlayerDeath(player, attacker, damageInfo) end
+function GM:DoPlayerDeath(player, attacker, damage_info) end
 
 function GM:Initialize()
   local config_file = fileio.Read('gamemodes/flux/flux.yml')
@@ -15,10 +15,10 @@ function GM:Initialize()
 end
 
 function GM:InitPostEntity()
-  local toolGun = weapons.GetStored('gmod_tool')
+  local tool_gun = weapons.GetStored('gmod_tool')
 
   for k, v in pairs(fl.tool:GetAll()) do
-    toolGun.Tool[v.Mode] = v
+    tool_gun.Tool[v.Mode] = v
   end
 
   hook.run('LoadData')
@@ -60,33 +60,33 @@ function GM:PlayerSpawn(player)
 
   hook.run('PostPlayerSpawn', player)
 
-  local oldHands = player:GetHands()
+  local old_hands = player:GetHands()
 
-  if IsValid(oldHands) then
-    oldHands:Remove()
+  if IsValid(old_hands) then
+    old_hands:Remove()
   end
 
-  local handsEntity = ents.Create('gmod_hands')
+  local hands_entity = ents.Create('gmod_hands')
 
-  if IsValid(handsEntity) then
-    player:SetHands(handsEntity)
-    handsEntity:SetOwner(player)
+  if IsValid(hands_entity) then
+    player:SetHands(hands_entity)
+    hands_entity:SetOwner(player)
 
     local info = player_manager.RunClass(player, 'GetHandsModel')
 
     if info then
-      handsEntity:SetModel(info.model)
-      handsEntity:SetSkin(info.skin)
-      handsEntity:SetBodyGroups(info.body)
+      hands_entity:SetModel(info.model)
+      hands_entity:SetSkin(info.skin)
+      hands_entity:SetBodyGroups(info.body)
     end
 
-    local viewModel = player:GetViewModel(0)
-    handsEntity:AttachToViewmodel(viewModel)
+    local view_model = player:GetViewModel(0)
+    hands_entity:AttachToViewmodel(view_model)
 
-    viewModel:DeleteOnRemove(handsEntity)
-    player:DeleteOnRemove(handsEntity)
+    view_model:DeleteOnRemove(hands_entity)
+    player:DeleteOnRemove(hands_entity)
 
-    handsEntity:Spawn()
+    hands_entity:Spawn()
   end
 end
 
@@ -135,9 +135,9 @@ function GM:PlayerDeath(player, inflictor, attacker)
 end
 
 function GM:PlayerDeathThink(player)
-  local respawnTime = player:get_nv('respawn_time', 0)
+  local respawn_time = player:get_nv('respawn_time', 0)
 
-  if respawnTime <= CurTime() then
+  if respawn_time <= CurTime() then
     player:Spawn()
   end
 
@@ -162,17 +162,17 @@ function GM:OnPluginFileChange(file_name)
 end
 
 function GM:GetFallDamage(player, speed)
-  local fallDamage = hook.run('FLGetFallDamage', player, speed)
+  local fall_damage = hook.run('FLGetFallDamage', player, speed)
 
   if speed < 660 then
     speed = speed - 250
   end
 
-  if !fallDamage then
-    fallDamage = 100 * ((speed) / 850) * 0.75
+  if !fall_damage then
+    fall_damage = 100 * ((speed) / 850) * 0.75
   end
 
-  return fallDamage
+  return fall_damage
 end
 
 function GM:PlayerShouldTakeDamage(player, attacker)
@@ -287,42 +287,42 @@ function GM:PlayerGiveSWEP(player, weapon, swep)
   return true
 end
 
-function GM:OnPhysgunFreeze(weapon, physObj, entity, player)
+function GM:OnPhysgunFreeze(weapon, phys_obj, entity, player)
   if player:can('physgun_freeze') then
-    BaseClass.OnPhysgunFreeze(self, weapon, physObj, entity, player)
+    BaseClass.OnPhysgunFreeze(self, weapon, phys_obj, entity, player)
 
     return false
   end
 end
 
-function GM:EntityTakeDamage(ent, damageInfo)
+function GM:EntityTakeDamage(ent, damage_info)
   if IsValid(ent) and ent:IsPlayer() then
-    hook.run('PlayerTakeDamage', ent, damageInfo)
+    hook.run('PlayerTakeDamage', ent, damage_info)
   end
 end
 
-function GM:PlayerTakeDamage(player, damageInfo)
+function GM:PlayerTakeDamage(player, damage_info)
   netstream.Start(player, 'PlayerTakeDamage')
 end
 
 function GM:OneSecond()
-  local curTime = CurTime()
-  local sysTime = SysTime()
+  local cur_time = CurTime()
+  local sys_time = SysTime()
 
-  if !fl.nextSaveData then
-    fl.nextSaveData = curTime + 10
-  elseif fl.nextSaveData <= curTime then
+  if !fl.next_save_data then
+    fl.next_save_data = cur_time + 10
+  elseif fl.next_save_data <= cur_time then
     if hook.run('FLShouldSaveData') != false then
       hook.run('FLSaveData')
     end
 
-    fl.nextSaveData = curTime + config.get('data_save_interval')
+    fl.next_save_data = cur_time + config.get('data_save_interval')
   end
 
-  if !fl.NextPlayerCountCheck then
-    fl.NextPlayerCountCheck = sysTime + 1800
-  elseif fl.NextPlayerCountCheck <= sysTime then
-    fl.NextPlayerCountCheck = sysTime + 1800
+  if !fl.next_player_count_check then
+    fl.next_player_count_check = sys_time + 1800
+  elseif fl.next_player_count_check <= sys_time then
+    fl.next_player_count_check = sys_time + 1800
 
     if #player.GetAll() == 0 then
       if hook.run('ShouldServerAutoRestart') != false then
@@ -334,7 +334,7 @@ function GM:OneSecond()
 end
 
 function GM:PreLoadPlugins()
-  fl.shared.disabledPlugins = data.Load('disabled_plugins', {})
+  fl.shared.disabled_plugins = data.Load('disabled_plugins', {})
 end
 
 do
@@ -358,17 +358,17 @@ function GM:FLSaveData()
   hook.run('SaveData')
 end
 
-function GM:PlayerOneSecond(player, curTime)
+function GM:PlayerOneSecond(player, cur_time)
   local pos = player:GetPos()
 
-  if player.lastPos != pos then
-    hook.run('PlayerPositionChanged', player, player.lastPos, pos, curTime)
+  if player.last_pos != pos then
+    hook.run('PlayerPositionChanged', player, player.last_pos, pos, cur_time)
   end
 
-  player.lastPos = pos
+  player.last_pos = pos
 end
 
-function GM:PlayerThink(player, curTime)
+function GM:PlayerThink(player, cur_time)
   local act = player:GetAction()
 
   if act != 'idle' and act != 'spawning' then
@@ -377,9 +377,9 @@ function GM:PlayerThink(player, curTime)
 end
 
 function GM:PlayerSay(player, text, bTeamChat)
-  local isCommand, length = string.is_command(tostring(text))
+  local is_command, length = string.is_command(tostring(text))
 
-  if isCommand then
+  if is_command then
     fl.command:Interpret(player, text:utf8sub(1 + length, text:utf8len()))
 
     return ''
@@ -391,29 +391,28 @@ function GM:ShowHelp(player) end
 -- Awful awful awful code, but it's kinda necessary in some rare cases.
 -- Avoid using PlayerThink whenever possible though.
 do
-  local thinkDelay = 1 * 0.125
-  local secondDelay = 1
-  local nextThink = 0
-  local nextSecond = 0
+  local think_delay = 1 * 0.125
+  local next_think = 0
+  local next_second = 0
 
   function GM:Tick()
-    local curTime = CurTime()
+    local cur_time = CurTime()
 
-    if curTime >= nextThink then
-      local oneSecondTick = (curTime >= nextSecond)
+    if cur_time >= next_think then
+      local oneSecondTick = (cur_time >= next_second)
 
       for k, v in ipairs(player.GetAll()) do
-        hook.Call('PlayerThink', self, v, curTime)
+        hook.Call('PlayerThink', self, v, cur_time)
 
         if oneSecondTick then
-          hook.Call('PlayerOneSecond', self, v, curTime)
+          hook.Call('PlayerOneSecond', self, v, cur_time)
         end
       end
 
-      nextThink = curTime + thinkDelay
+      next_think = cur_time + think_delay
 
       if oneSecondTick then
-        nextSecond = curTime + 1
+        next_second = cur_time + 1
       end
     end
   end

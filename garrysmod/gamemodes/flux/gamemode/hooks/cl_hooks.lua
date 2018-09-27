@@ -35,25 +35,25 @@ function GM:FluxClientSchemaLoaded()
 end
 
 do
-  local scrW, scrH = ScrW(), ScrH()
-  local nextCheck = CurTime()
+  local scr_w, scr_h = ScrW(), ScrH()
+  local next_check = CurTime()
 
   -- This will let us detect whether the resolution has been changed, then call a hook if it has.
   function GM:Tick()
-    local curTime = CurTime()
+    local cur_time = CurTime()
 
-    if curTime >= nextCheck then
-      local newW, newH = ScrW(), ScrH()
+    if cur_time >= next_check then
+      local new_w, new_h = ScrW(), ScrH()
 
-      if scrW != newW or scrH != newH then
-        fl.print('Resolution changed from '..scrW..'x'..scrH..' to '..newW..'x'..newH..'.')
+      if scr_w != new_w or scr_h != new_h then
+        fl.print('Resolution changed from '..scr_w..'x'..scr_h..' to '..new_w..'x'..new_h..'.')
 
-        hook.run('OnResolutionChanged', newW, newH, scrW, scrH)
+        hook.run('OnResolutionChanged', new_w, new_h, scr_w, scr_h)
 
-        scrW, scrH = newW, newH
+        scr_w, scr_h = new_w, new_h
       end
 
-      nextCheck = curTime + 1
+      next_check = cur_time + 1
     end
   end
 end
@@ -68,28 +68,28 @@ function GM:ForceDermaSkin()
 end
 
 -- Called when the resolution has been changed and fonts need to be resized to fit the client's res.
-function GM:OnResolutionChanged(oldW, oldH, newW, newH)
+function GM:OnResolutionChanged(old_w, old_h, new_w, new_h)
   font.CreateFonts()
 end
 
 -- Called when the scoreboard should be shown.
 function GM:ScoreboardShow()
   if hook.run('ShouldScoreboardShow') != false then
-    if fl.tabMenu and fl.tabMenu.CloseMenu then
-      fl.tabMenu:CloseMenu(true)
+    if fl.tab_menu and fl.tab_menu.CloseMenu then
+      fl.tab_menu:CloseMenu(true)
     end
 
-    fl.tabMenu = theme.CreatePanel('tab_menu', nil, 'fl_tab_menu')
-    fl.tabMenu:MakePopup()
-    fl.tabMenu.heldTime = CurTime() + 0.3
+    fl.tab_menu = theme.create_panel('tab_menu', nil, 'fl_tab_menu')
+    fl.tab_menu:MakePopup()
+    fl.tab_menu.held_time = CurTime() + 0.3
   end
 end
 
 -- Called when the scoreboard should be hidden.
 function GM:ScoreboardHide()
   if hook.run('ShouldScoreboardHide') != false then
-    if fl.tabMenu and fl.tabMenu.heldTime and CurTime() >= fl.tabMenu.heldTime then
-      fl.tabMenu:CloseMenu()
+    if fl.tab_menu and fl.tab_menu.held_time and CurTime() >= fl.tab_menu.held_time then
+      fl.tab_menu:CloseMenu()
     end
   end
 end
@@ -106,31 +106,31 @@ function GM:HUDDrawScoreBoard()
       percentage = 0
     end
 
-    local hooked, hookedPercentage = plugin.call('GetLoadingScreenMessage')
+    local hooked, hooked_percentage = plugin.call('GetLoadingScreenMessage')
 
     if isstring(hooked) then
       text = hooked
 
-      if isnumber(hookedPercentage) then
-        percentage = hookedPercentage
+      if isnumber(hooked_percentage) then
+        percentage = hooked_percentage
       end
     end
 
     percentage = math.Clamp(percentage, 0, 100)
 
     local font = font.GetSize('flRobotoCondensed', font.Scale(24))
-    local scrW, scrH = ScrW(), ScrH()
+    local scr_w, scr_h = ScrW(), ScrH()
     local w, h = util.text_size(text, font)
 
-    draw.RoundedBox(0, 0, 0, scrW, scrH, Color(0, 0, 0))
-    draw.SimpleText(text, font, scrW * 0.5 - w * 0.5, scrH - 128, Color(255, 255, 255))
+    draw.RoundedBox(0, 0, 0, scr_w, scr_h, Color(0, 0, 0))
+    draw.SimpleText(text, font, scr_w * 0.5 - w * 0.5, scr_h - 128, Color(255, 255, 255))
 
-    local barW, barH = scrW / 3.5, 6
-    local barX, barY = scrW * 0.5 - barW * 0.5, scrH - 80
-    local fillW = math.Clamp(barW * (percentage / 100), 0, barW - 2)
+    local bar_w, bar_h = scr_w / 3.5, 6
+    local bar_x, bar_y = scr_w * 0.5 - bar_w * 0.5, scr_h - 80
+    local fill_w = math.Clamp(bar_w * (percentage / 100), 0, bar_w - 2)
 
-    draw.RoundedBox(0, barX, barY, barW, barH, Color(22, 22, 22))
-    draw.RoundedBox(0, barX + 1, barY + 1, fillW, barH - 2, Color(245, 245, 245))
+    draw.RoundedBox(0, bar_x, bar_y, bar_w, bar_h, Color(22, 22, 22))
+    draw.RoundedBox(0, bar_x + 1, bar_y + 1, fill_w, bar_h - 2, Color(245, 245, 245))
 
     plugin.call('PostDrawLoadingScreen')
   end
@@ -139,39 +139,39 @@ end
 -- Called when the player's HUD is drawn.
 function GM:HUDPaint()
   if fl.client:HasInitialized() and hook.run('ShouldHUDPaint') != false then
-    local curTime = CurTime()
-    local scrW, scrH = ScrW(), ScrH()
+    local cur_time = CurTime()
+    local scr_w, scr_h = ScrW(), ScrH()
 
-    if fl.client.lastDamage and fl.client.lastDamage > (curTime - 0.3) then
-      local alpha = math.Clamp(255 - 255 * (curTime - fl.client.lastDamage) * 3.75, 0, 200)
-      draw.textured_rect(util.get_material('materials/flux/hl2rp/blood.png'), 0, 0, scrW, scrH, Color(255, 0, 0, alpha))
-      draw.RoundedBox(0, 0, 0, scrW, scrH, Color(255, 210, 210, alpha))
+    if fl.client.last_damage and fl.client.last_damage > (cur_time - 0.3) then
+      local alpha = math.Clamp(255 - 255 * (cur_time - fl.client.last_damage) * 3.75, 0, 200)
+      draw.textured_rect(util.get_material('materials/flux/hl2rp/blood.png'), 0, 0, scr_w, scr_h, Color(255, 0, 0, alpha))
+      draw.RoundedBox(0, 0, 0, scr_w, scr_h, Color(255, 210, 210, alpha))
     end
 
     if !fl.client:Alive() then
-      hook.run('HUDPaintDeathBackground', curTime, scrW, scrH)
-        theme.Call('PaintDeathScreen', curTime, scrW, scrH)
-      hook.run('HUDPaintDeathForeground', curTime, scrW, scrH)
+      hook.run('HUDPaintDeathBackground', cur_time, scr_w, scr_h)
+        theme.call('PaintDeathScreen', cur_time, scr_w, scr_h)
+      hook.run('HUDPaintDeathForeground', cur_time, scr_w, scr_h)
     else
       fl.client.respawnAlpha = 0
 
-      if isnumber(fl.client.whiteAlpha) and fl.client.whiteAlpha > 0.5 then
-        fl.client.whiteAlpha = Lerp(0.04, fl.client.whiteAlpha, 0)
+      if isnumber(fl.client.white_alpha) and fl.client.white_alpha > 0.5 then
+        fl.client.white_alpha = Lerp(0.04, fl.client.white_alpha, 0)
       end
 
-      if !hook.run('FLHUDPaint', curTime, scrW, scrH) then
+      if !hook.run('FLHUDPaint', cur_time, scr_w, scr_h) then
         InfoDisplay:draw_all()
 
         self.BaseClass:HUDPaint()
       end
     end
 
-    draw.RoundedBox(0, 0, 0, scrW, scrH, Color(255, 255, 255, fl.client.whiteAlpha or 0))
+    draw.RoundedBox(0, 0, 0, scr_w, scr_h, Color(255, 255, 255, fl.client.white_alpha or 0))
   end
 end
 
-function GM:FLHUDPaint(curTime, scrW, scrH)
-  local percentage = fl.client.circleActionPercentage
+function GM:FLHUDPaint(cur_time, scr_w, scr_h)
+  local percentage = fl.client.circle_action_percentage
 
   if percentage and percentage > -1 then
     local x, y = ScrC()
@@ -180,14 +180,14 @@ function GM:FLHUDPaint(curTime, scrW, scrH)
     surface.draw_circle(x, y, 41, 64)
     surface.draw_circle_outline(x, y, 41, 10, 64)
 
-    surface.SetDrawColor(theme.GetColor('text'))
+    surface.SetDrawColor(theme.get_color('text'))
     surface.draw_circle_outline_partial(math.Clamp(percentage, 0, 100), x, y, 40, 8  , 64)
 
-    fl.client.circleActionPercentage = nil
+    fl.client.circle_action_percentage = nil
   end
 end
 
-function GM:HUDPaintDeathBackground(curTime, w, h)
+function GM:HUDPaintDeathBackground(cur_time, w, h)
   draw.textured_rect(util.get_material('materials/flux/hl2rp/blood.png'), 0, 0, w, h, Color(255, 0, 0, 200))
 end
 
@@ -197,8 +197,8 @@ function GM:HUDDrawTargetID()
     local ent = trace.Entity
 
     if IsValid(ent) then
-      local screenPos = (trace.HitPos + Vector(0, 0, 16)):ToScreen()
-      local x, y = screenPos.x, screenPos.y
+      local screen_pos = (trace.HitPos + Vector(0, 0, 16)):ToScreen()
+      local x, y = screen_pos.x, screen_pos.y
       local distance = fl.client:GetPos():Distance(trace.HitPos)
 
       if ent:IsPlayer() then
@@ -213,8 +213,8 @@ end
 function GM:DrawPlayerTargetID(player, x, y, distance)
   if distance < 640 then
     local alpha = 255
-    local tooltip_small = theme.GetFont('tooltip_small')
-    local tooltip_large = theme.GetFont('tooltip_large')
+    local tooltip_small = theme.get_font('tooltip_small')
+    local tooltip_large = theme.get_font('tooltip_large')
 
     if distance > 500 then
       local d = distance - 500
@@ -233,10 +233,10 @@ function GM:DrawPlayerTargetID(player, x, y, distance)
         alpha = math.Clamp((255 * (35 - d) / 35), 0, 255)
       end
 
-      local smallerFont = font.GetSize(tooltip_small, 12)
+      local smaller_font = font.GetSize(tooltip_small, 12)
       local text = t'target_id.information'
-      local width, height = util.text_size(text, smallerFont)
-      draw.SimpleText(text, smallerFont, x - width * 0.5, y + 5, Color(50, 255, 50, alpha))
+      local width, height = util.text_size(text, smaller_font)
+      draw.SimpleText(text, smaller_font, x - width * 0.5, y + 5, Color(50, 255, 50, alpha))
     end
   end
 end
@@ -260,10 +260,10 @@ function GM:PopulateToolMenu()
 end
 
 function GM:SynchronizeTools()
-   local toolGun = weapons.GetStored('gmod_tool')
+   local tool_gun = weapons.GetStored('gmod_tool')
 
   for k, v in pairs(fl.tool:GetAll()) do
-    toolGun.Tool[v.Mode] = v
+    tool_gun.Tool[v.Mode] = v
   end
 end
 
@@ -288,8 +288,8 @@ function GM:AddTabMenuItems(menu)
   })
 end
 
-function GM:OnMenuPanelOpen(menuPanel, activePanel)
-  activePanel:SetPos(menuPanel:GetWide() * 0.5 - activePanel:GetWide() * 0.5 + font.Scale(200) + 6, menuPanel:GetTall() * 0.5 - activePanel:GetTall() * 0.5)
+function GM:OnMenuPanelOpen(menu_panel, active_panel)
+  active_panel:SetPos(menu_panel:GetWide() * 0.5 - active_panel:GetWide() * 0.5 + font.Scale(200) + 6, menu_panel:GetTall() * 0.5 - active_panel:GetTall() * 0.5)
 end
 
 function GM:AddAdminMenuItems(panel, sidebar)
@@ -301,8 +301,8 @@ function GM:AddAdminMenuItems(panel, sidebar)
   panel:AddPanel('admin_permissions_editor', 'Permissions', 'manage_permissions')
 end
 
-function GM:PlayerBindPress(player, bind, bPressed)
-  if bind:find('gmod_undo') and bPressed then
+function GM:PlayerBindPress(player, bind, b_pressed)
+  if bind:find('gmod_undo') and b_pressed then
     if hook.run('SoftUndo', player) != nil then
       return true
     end
@@ -324,7 +324,7 @@ function GM:OnIntroPanelCreated()
 end
 
 do
-  local hiddenElements = { -- Hide default HUD elements.
+  local hidden_elements = { -- Hide default HUD elements.
     CHudHealth = true,
     CHudBattery = true,
     CHudAmmo = true,
@@ -335,7 +335,7 @@ do
   }
 
   function GM:HUDShouldDraw(element)
-    if hiddenElements[element] then
+    if hidden_elements[element] then
       return false
     end
 

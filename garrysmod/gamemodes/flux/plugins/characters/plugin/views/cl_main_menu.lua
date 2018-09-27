@@ -9,7 +9,7 @@ function PANEL:Init()
 
   self:MakePopup()
 
-  local menuMusic = theme.GetOption('menu_music')
+  local menuMusic = theme.get_sound('menu_music')
 
   if !fl.menuMusic and menuMusic and menuMusic != '' then
     sound.PlayFile(menuMusic, '', function(station)
@@ -21,12 +21,12 @@ function PANEL:Init()
     end)
   end
 
-  theme.Hook('CreateMainMenu', self)
+  theme.hook('CreateMainMenu', self)
 end
 
 function PANEL:Paint(w, h)
   if self:IsVisible() then
-    theme.Hook('PaintMainMenu', self, w, h)
+    theme.hook('PaintMainMenu', self, w, h)
   end
 end
 
@@ -38,14 +38,14 @@ function PANEL:RecreateSidebar(bShouldCreateButtons)
   end
 
   self.sidebar = vgui.Create('fl_sidebar', self)
-  self.sidebar:SetPos(theme.GetOption('menu_sidebar_x'), theme.GetOption('menu_sidebar_y'))
-  self.sidebar:SetSize(theme.GetOption('menu_sidebar_width'), theme.GetOption('menu_sidebar_height'))
-  self.sidebar:SetMargin(theme.GetOption('menu_sidebar_margin'))
+  self.sidebar:SetPos(theme.get_option('menu_sidebar_x'), theme.get_option('menu_sidebar_y'))
+  self.sidebar:SetSize(theme.get_option('menu_sidebar_width'), theme.get_option('menu_sidebar_height'))
+  self.sidebar:SetMargin(theme.get_option('menu_sidebar_margin'))
   self.sidebar:AddSpace(16)
 
   self.sidebar.Paint = function() end
 
-  self.sidebar:AddSpace(theme.GetOption('menu_sidebar_logo_space'))
+  self.sidebar:AddSpace(theme.get_option('menu_sidebar_logo_space'))
 
   if bShouldCreateButtons then
     hook.run('AddMainMenuItems', self, self.sidebar)
@@ -54,7 +54,7 @@ end
 
 function PANEL:OpenMenu(panel, data)
   if !IsValid(self.menu) then
-    self.menu = theme.CreatePanel(panel, self)
+    self.menu = theme.create_panel(panel, self)
 
     if self.menu.set_data then
       self.menu:set_data(data)
@@ -74,13 +74,13 @@ end
 function PANEL:to_main_menu(bFromRight)
   self:RecreateSidebar(true)
 
-  self.sidebar:SetPos(bFromRight and ScrW() or -self.sidebar:GetWide(), theme.GetOption('menu_sidebar_y'))
+  self.sidebar:SetPos(bFromRight and ScrW() or -self.sidebar:GetWide(), theme.get_option('menu_sidebar_y'))
   self.sidebar:SetDisabled(true)
-  self.sidebar:MoveTo(theme.GetOption('menu_sidebar_x'), theme.GetOption('menu_sidebar_y'), theme.GetOption('menu_anim_duration'), 0, 0.5, function()
+  self.sidebar:MoveTo(theme.get_option('menu_sidebar_x'), theme.get_option('menu_sidebar_y'), theme.get_option('menu_anim_duration'), 0, 0.5, function()
     self.sidebar:SetDisabled(false)
   end)
 
-  self.menu:MoveTo(bFromRight and -self.menu:GetWide() or ScrW(), 0, theme.GetOption('menu_anim_duration'), 0, 0.5, function()
+  self.menu:MoveTo(bFromRight and -self.menu:GetWide() or ScrW(), 0, theme.get_option('menu_anim_duration'), 0, 0.5, function()
     if self.menu.Close then
       self.menu:Close()
     else
@@ -104,17 +104,17 @@ end
 
 function PANEL:add_button(text, callback)
   local button = vgui.Create('fl_button', self)
-  button:SetSize(theme.GetOption('menu_sidebar_width'), theme.GetOption('menu_sidebar_button_height'))
+  button:SetSize(theme.get_option('menu_sidebar_width'), theme.get_option('menu_sidebar_button_height'))
   button:SetText(string.utf8upper(text))
   button:SetDrawBackground(false)
-  button:SetFont(theme.GetFont('menu_larger'))
-  button:SetPos(theme.GetOption('menu_sidebar_button_offset_x'), 0)
+  button:SetFont(theme.get_font('menu_larger'))
+  button:SetPos(theme.get_option('menu_sidebar_button_offset_x'), 0)
   button:SetTextAutoposition(false)
-  button:SetCentered(theme.GetOption('menu_sidebar_button_centered'))
+  button:SetCentered(theme.get_option('menu_sidebar_button_centered'))
   button:SetTextOffset(8)
 
   button.DoClick = function(btn)
-    surface.PlaySound(theme.GetOption('button_click_success_sound'))
+    surface.PlaySound(theme.get_sound('button_click_success_sound'))
   
     btn:SetActive(true)
 

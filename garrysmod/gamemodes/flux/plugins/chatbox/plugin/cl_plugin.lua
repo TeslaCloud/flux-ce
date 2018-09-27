@@ -30,7 +30,7 @@ function chatbox.Compile(messageTable)
   local curX, curY = 0, 0
   local total_height = 0
   local max_height = font.Scale(messageTable.max_height)
-  local font = _font.GetSize(theme.GetFont('Chatbox_Normal'), cur_size)
+  local font = _font.GetSize(theme.get_font('Chatbox_Normal'), cur_size)
 
   if plugin.call('ChatboxCompileMessage', data, compiled) != true then
     for k, v in ipairs(data) do
@@ -66,7 +66,7 @@ function chatbox.Compile(messageTable)
       elseif isnumber(v) then
         cur_size = _font.Scale(v)
 
-        font = _font.GetSize(theme.GetFont('Chatbox_Normal'), cur_size)
+        font = _font.GetSize(theme.get_font('Chatbox_Normal'), cur_size)
 
         table.insert(compiled, cur_size)
       elseif istable(v) then
@@ -119,10 +119,10 @@ end
 
 function chatbox.Show()
   if !IsValid(chatbox.panel) then
-    chatbox.width = theme.GetOption('Chatbox_Width') or 100
-    chatbox.height = theme.GetOption('Chatbox_Height') or 100
-    chatbox.x = theme.GetOption('Chatbox_X') or 0
-    chatbox.y = theme.GetOption('Chatbox_Y') or 0
+    chatbox.width = theme.get_option('Chatbox_Width') or 100
+    chatbox.height = theme.get_option('Chatbox_Height') or 100
+    chatbox.x = theme.get_option('Chatbox_X') or 0
+    chatbox.y = theme.get_option('Chatbox_Y') or 0
 
     chatbox.panel = vgui.Create('flChatPanel')
   end

@@ -39,7 +39,7 @@ function flFactions:PreStageChange(id, panel)
 end
 
 function flFactions:OnThemeLoaded(current_theme)
-  current_theme:AddPanel('CharCreation_Faction', function(id, parent, ...)
+  current_theme:add_panel('CharCreation_Faction', function(id, parent, ...)
     return vgui.Create('flCharCreationFaction', parent)
   end)
 end

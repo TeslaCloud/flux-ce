@@ -10,9 +10,9 @@ do
   local color_blue = Color(0, 0, 255)
 
   function PLUGIN:OnThemeLoaded(current_theme)
-    color_red = current_theme:GetColor('esp_red')
-    color_blue = current_theme:GetColor('esp_blue')
-    color_grey = current_theme:GetColor('esp_grey')
+    color_red = current_theme:get_color('esp_red')
+    color_blue = current_theme:get_color('esp_blue')
+    color_grey = current_theme:get_color('esp_grey')
     color_lightred = color_red:lighten(100)
     color_lightblue = color_blue:lighten(200)
   end
@@ -33,18 +33,18 @@ do
         local size = 52 * math.abs(350 / clientPos:Distance(pos))
         local teamColor = team.GetColor(v:Team()) or Color(255, 255, 255)
 
-        local w, h = util.text_size(v:Name(), theme.GetFont('text_small'))
-        draw.SimpleText(v:Name(), theme.GetFont('text_small'), textPos.x - w * 0.5, textPos.y, teamColor)
+        local w, h = util.text_size(v:Name(), theme.get_font('text_small'))
+        draw.SimpleText(v:Name(), theme.get_font('text_small'), textPos.x - w * 0.5, textPos.y, teamColor)
 
-        w, h = util.text_size(v:SteamName(), theme.GetFont('text_smaller'))
-        draw.SimpleText(v:SteamName(), theme.GetFont('text_smaller'), textPos.x - w * 0.5, textPos.y + 14, color_lightblue)
+        w, h = util.text_size(v:SteamName(), theme.get_font('text_smaller'))
+        draw.SimpleText(v:SteamName(), theme.get_font('text_smaller'), textPos.x - w * 0.5, textPos.y + 14, color_lightblue)
 
         if v:Alive() then
           surface.SetDrawColor(teamColor)
           surface.DrawOutlinedRect(x - size * 0.5, y - size * 0.5, size, (screenPos.y - y) * 1.25)
         else
-          w, h = util.text_size('*DEAD*', theme.GetFont('text_smaller'))
-          draw.SimpleText('*DEAD*', theme.GetFont('text_smaller'), textPos.x - w * 0.5, textPos.y + 28, color_lightred)
+          w, h = util.text_size('*DEAD*', theme.get_font('text_smaller'))
+          draw.SimpleText('*DEAD*', theme.get_font('text_smaller'), textPos.x - w * 0.5, textPos.y + 28, color_lightred)
         end
 
         local bx, by = x - size * 0.5, y - size * 0.5 + (screenPos.y - y) * 1.25

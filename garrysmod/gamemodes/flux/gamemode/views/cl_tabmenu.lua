@@ -4,17 +4,17 @@ PANEL.buttons = {}
 PANEL.activePanel = nil
 
 function PANEL:Init()
-  local scrW, scrH = ScrW(), ScrH()
+  local scr_w, scr_h = ScrW(), ScrH()
 
   self:SetPos(0, 0)
-  self:SetSize(scrW, scrH)
+  self:SetSize(scr_w, scr_h)
 
   local curX, curY = hook.run('AdjustMenuItemPositions', self)
   curX = curX or 42
   curY = curY or 200
 
   self.closeButton = vgui.Create('fl_button', self)
-  self.closeButton:SetFont(theme.GetFont('menu_large'))
+  self.closeButton:SetFont(theme.get_font('menu_large'))
   self.closeButton:SetText(string.utf8upper(t'tab_menu.close_menu'))
   self.closeButton:SetPos(6, curY)
   self.closeButton:SetSizeEx(200, 38)
@@ -40,7 +40,7 @@ function PANEL:Init()
     button:SetText(v.title)
     button:SetIcon(v.icon)
     button:SetCentered(false)
-    button:SetFont(v.font or theme.GetFont('menu_normal'))
+    button:SetFont(v.font or theme.get_font('menu_normal'))
 
     button.DoClick = function(btn)
       if v.override then
@@ -63,11 +63,11 @@ function PANEL:Init()
         if self.activePanel.GetMenuSize then
           self.activePanel:SetSize(self.activePanel:GetMenuSize())
         else
-          self.activePanel:SetSize(scrW * 0.5, scrH * 0.5)
+          self.activePanel:SetSize(scr_w * 0.5, scr_h * 0.5)
         end
 
         self.activeBtn = btn
-        self.activeBtn:SetTextColor(theme.GetColor('accent_light'))
+        self.activeBtn:SetTextColor(theme.get_color('accent_light'))
 
         if self.activePanel.Rebuild then
           self.activePanel:Rebuild()
@@ -120,7 +120,7 @@ function PANEL:OnMousePressed()
 end
 
 function PANEL:Paint(w, h)
-  theme.Hook('PaintTabMenu', self, w, h)
+  theme.hook('PaintTabMenu', self, w, h)
 end
 
 vgui.Register('fl_tab_menu', PANEL, 'EditablePanel')
