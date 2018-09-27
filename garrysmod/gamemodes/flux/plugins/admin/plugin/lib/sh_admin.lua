@@ -327,6 +327,7 @@ do
   fl.admin:RegisterPermission('spawn_sweps', 'Spawn SWEPs', 'Grants access to spawn scripted weapons.', 'flags')
   fl.admin:RegisterPermission('physgun_freeze', 'Freeze Protected Entities', 'Grants access to freeze protected entities.', 'flags')
   fl.admin:RegisterPermission('physgun_pickup', 'Unlimited Physgun', 'Grants access to pick up any entity with the physics gun.', 'flags')
+  fl.admin:RegisterPermission('voice', 'Voice chat access', 'Grants access to voice chat.', 'flags')
 
   -- General permissions
   fl.admin:RegisterPermission('context_menu', 'Access Context Menu', 'Grants access to the context menu.', 'general')
