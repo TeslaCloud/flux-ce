@@ -5,3 +5,9 @@ function flAdmin:AddTabMenuItems(menu)
     icon = 'fa-shield'
   })
 end
+
+function flAdmin:PlayerStartVoice(player)
+  if !player:can('voice') then
+    return false
+  end
+end

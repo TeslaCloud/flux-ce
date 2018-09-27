@@ -94,7 +94,7 @@ function attributes.include_type(id, global_var, folder)
   pipeline.include_folder(id, folder)
 end
 
-function attribute.id_from_attr_id(atts_table, attr_id)
+function attributes.id_from_attr_id(atts_table, attr_id)
   for k, v in pairs(atts_table) do
     if v.attr_id == attr_id then return v.id end
   end

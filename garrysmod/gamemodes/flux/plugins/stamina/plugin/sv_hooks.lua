@@ -45,6 +45,9 @@ function Stamina:start_running(player, prevent_drain)
 
   timer.Pause('stam_regen_'..steam_id)
 
+  hook.run('PlayerStartRunning', player)
+  hook.run_client(player, 'PlayerStartRunning', player)
+
   if !prevent_drain and !self.running[steam_id] then
     if !timer.Exists(id) then
       table.insert(self.timer_ids, id)
@@ -78,6 +81,9 @@ function Stamina:stop_running(player, prevent_regen)
   local id = 'stam_regen_'..steam_id
 
   timer.Pause('stam_run_'..steam_id)
+
+  hook.run('PlayerStopRunning', player)
+  hook.run_client(player, 'PlayerStopRunning', player)
 
   if !prevent_regen and self.running[steam_id] != false then
     player.stamina_regenerating = true
