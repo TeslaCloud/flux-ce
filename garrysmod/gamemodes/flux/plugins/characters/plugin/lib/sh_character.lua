@@ -40,6 +40,8 @@ function character.Create(player, data)
   char.health = player:Health() or 100
   char.user = player.record
 
+  player.record.characters[char.character_id] = char
+
   if SERVER then
     local char_id = player.record.character_id
 
@@ -131,6 +133,12 @@ else
   netstream.Hook('fl_create_character', function(idx, data)
     fl.client.characters = fl.client.characters or {}
     fl.client.characters[idx] = data
+
+    if IsValid(fl.intro_panel) then
+      fl.intro_panel:SafeRemove()
+      fl.intro_panel = theme.create_panel('main_menu')
+      fl.intro_panel:MakePopup()
+    end
   end)
 end
 
