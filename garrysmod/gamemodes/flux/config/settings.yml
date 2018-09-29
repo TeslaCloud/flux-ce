@@ -1,2 +1,6 @@
 test_setting: 'Hello World'
 lite_refresh: true
+webhooks: # Discord webhook support
+  example:
+    id: '123456789'
+    key: 'secret_key_goes_here'
