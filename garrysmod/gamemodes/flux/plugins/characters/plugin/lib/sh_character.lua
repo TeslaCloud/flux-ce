@@ -38,6 +38,7 @@ function character.Create(player, data)
   char.money = data.money or 0
   char.character_id = #player.record.characters + 1
   char.health = player:Health() or 100
+  char.user = player.record
 
   if SERVER then
     local char_id = player.record.character_id
@@ -194,18 +195,21 @@ do
     return self:get_nv('phys_desc', 'This character has no description!')
   end
 
-  function player_meta:get_gender()
-    local char = self:GetCharacter()
+  do
+    local genders = {
+      [CHAR_GENDER_MALE] = 'male',
+      [CHAR_GENDER_FEMALE] = 'female'
+    }
 
-    if char then
-      if char.gender == CHAR_GENDER_MALE then
-        return 'male'
-      else
-        return 'female'
+    function player_meta:get_gender()
+      local char = self:GetCharacter()
+
+      if char then
+        return genders[char.gender] or 'no_gender'
       end
-    end
 
-    return 'no_gender'
+      return 'no_gender'
+    end
   end
 
   function player_meta:GetCharacterVar(id, default)
