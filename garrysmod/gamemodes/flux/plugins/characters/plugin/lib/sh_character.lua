@@ -205,8 +205,8 @@ do
 
   do
     local genders = {
-      [CHAR_GENDER_MALE] = 'male',
-      [CHAR_GENDER_FEMALE] = 'female'
+      [8] = 'male',
+      [9] = 'female'
     }
 
     function player_meta:get_gender()
