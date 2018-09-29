@@ -165,23 +165,23 @@ function ActiveRecord.Base:_fetch_relation(callback, objects, n, obj_id)
     if !relation.child then
       local obj = relation.model:where(relation.column_name, current_object.id)
       if relation.many then
-        obj:rescue(function()
-          current_object[relation.as] = {}
-          return self:_fetch_relation(callback, objects, n + 1, obj_id)
-        end):get(function(res)
+        obj:get(function(res)
           current_object[relation.as] = {}
           for k, v in ipairs(res) do
             v:_process_child(current_object, current_object.class)
             table.insert(current_object[relation.as], v)
           end
           return self:_fetch_relation(callback, objects, n + 1, obj_id)
+        end):rescue(function()
+          current_object[relation.as] = {}
+          return self:_fetch_relation(callback, objects, n + 1, obj_id)
         end)
       else
-        obj:first():rescue(function()
-          return self:_fetch_relation(callback, objects, n + 1, obj_id)
-        end):expect(function(res)
+        obj:first():expect(function(res)
           res:_process_child(current_object, current_object.class)
           current_object[relation.as] = res
+          return self:_fetch_relation(callback, objects, n + 1, obj_id)
+        end):rescue(function()
           return self:_fetch_relation(callback, objects, n + 1, obj_id)
         end)
       end
@@ -245,13 +245,16 @@ function ActiveRecord.Base:run_query(callback)
 end
 
 function ActiveRecord.Base:expect(callback)
-  return self:limit(1):run_query(function(results)
+  self._get = nil
+  self._expect = function(results)
     callback(results[1].object)
-  end)
+  end
+  return self
 end
 
 function ActiveRecord.Base:get(callback)
-  return self:run_query(function(results)
+  self._expect = nil
+  self._get = function(results)
     local all_objects = {}
 
     for k, v in ipairs(results) do
@@ -259,12 +262,27 @@ function ActiveRecord.Base:get(callback)
     end
 
     callback(all_objects)
-  end)
+  end
+
+  return self
+end
+
+function ActiveRecord.Base:fetch()
+  local callback = nil
+  if self._expect then
+    self:limit(1)
+    callback = self._expect
+    self._expect = nil
+  elseif self._get then
+    callback = self._get
+    self._get = nil
+  end
+  return self:run_query(callback)
 end
 
 function ActiveRecord.Base:rescue(callback)
   self._rescue = callback
-  return self
+  return self:fetch()
 end
 
 local except = {
