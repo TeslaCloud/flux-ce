@@ -19,6 +19,12 @@ function Log:write(message, action, object, subject, io)
   return self
 end
 
+function Log:to_discord(message, webhook)
+  if SERVER and webhook then
+    webhook:push(message)
+  end
+end
+
 function Log:print(message, action, object, subject)
   return self:write(message, action, object, subject, function(message, action, object, subject)
     local prefix = (isstring(action) and action:capitalize()..' - ' or '')
