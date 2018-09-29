@@ -19,9 +19,9 @@ function PLUGIN:HUDPaint()
   local fallen, getup = fl.client:IsDoingAction('fallen'), fl.client:IsDoingAction('getup')
 
   if (fallen or getup) and plugin.call('ShouldFallenHUDPaint') != false then
-    local scr_w, scr_h = ScrW(), ScrH()
+    local scrw, scrh = ScrW(), ScrH()
 
-    draw.RoundedBox(0, 0, 0, scr_w, scr_h, Color(0, 0, 0, 100))
+    draw.RoundedBox(0, 0, 0, scrw, scrh, Color(0, 0, 0, 100))
 
     if getup then
       local barValue = 100 - 100 * ((fl.client:get_nv('getup_end', 0) - CurTime()) / fl.client:get_nv('getup_time'))
@@ -32,7 +32,7 @@ function PLUGIN:HUDPaint()
       local text = t'press_jump_to_getup'
       local w, h = util.text_size(text, theme.get_font('text_normal'))
 
-      draw.SimpleText(text, theme.get_font('text_normal'), scr_w * 0.5 - w * 0.5, scr_h * 0.5 - h * 0.5, theme.get_color('text'))
+      draw.SimpleText(text, theme.get_font('text_normal'), scrw * 0.5 - w * 0.5, scrh * 0.5 - h * 0.5, theme.get_color('text'))
     end
   end
 end

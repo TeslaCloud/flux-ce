@@ -17,7 +17,7 @@ PANEL.id = 'general'
 PANEL.text = 'char_create.general'
 
 function PANEL:Init()
-  local scr_w, scr_h = ScrW(), ScrH()
+  local scrw, scrh = ScrW(), ScrH()
 
   self.gender_label = vgui.Create('DLabel', self)
   self.gender_label:SetPos(4, font.Scale(36) + 6)
@@ -75,7 +75,7 @@ function PANEL:Init()
 
   self.name_entry = vgui.Create('DTextEntry', self)
   self.name_entry:SetPos(self.name_label:GetWide() + 8, font.Scale(72))
-  self.name_entry:SetSize(scr_w / 8, 24)
+  self.name_entry:SetSize(scrw / 8, 24)
   self.name_entry:SetFont(theme.get_font('text_smaller'))
   self.name_entry:SetText('')
 
@@ -99,7 +99,7 @@ function PANEL:Init()
 
   self.desc_entry = vgui.Create('DTextEntry', self)
   self.desc_entry:SetPos(self.desc_label:GetWide() + 8, font.Scale(108))
-  self.desc_entry:SetSize(scr_w / 4 - self.desc_label:GetWide() - 4, font.Scale(72))
+  self.desc_entry:SetSize(scrw / 4 - self.desc_label:GetWide() - 4, font.Scale(72))
   self.desc_entry:SetFont(theme.get_font('text_smaller'))
   self.desc_entry:SetText('')
   self.desc_entry:SetMultiline(true)
@@ -107,13 +107,13 @@ function PANEL:Init()
 
   self.models_list = vgui.Create('fl_sidebar', self)
   self.models_list:SetPos(4, font.Scale(180) + 4)
-  self.models_list:SetSize(scr_w / 4, 136)
+  self.models_list:SetSize(scrw / 4, 136)
   self.models_list:SetVisible(false)
   self.models_list.Paint = function() end
 
   self.model = vgui.Create('DModelPanel', self)
-  self.model:SetPos(scr_w / 4 + 32, 32)
-  self.model:SetSize(scr_w / 4, scr_h / 2 - 36)
+  self.model:SetPos(scrw / 4 + 32, 32)
+  self.model:SetSize(scrw / 4, scrh / 2 - 36)
   self.model:SetFOV(50)
   self.model:SetCamPos(Vector(80, 0, 50))
   self.model:SetLookAt(Vector(0, 0, 37))

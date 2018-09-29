@@ -150,7 +150,7 @@ function flCharacters:AddCharacterCreationMenuStages(panel)
 end
 
 function flCharacters:AddMainMenuItems(panel, sidebar)
-  local scr_w, scr_h = ScrW(), ScrH()
+  local scrw, scrh = ScrW(), ScrH()
 
   if fl.client:GetCharacter() then
     panel:add_button(t'main_menu.continue', function(btn)

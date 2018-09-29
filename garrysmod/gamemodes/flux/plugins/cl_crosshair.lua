@@ -21,15 +21,15 @@ function PLUGIN:HUDPaint()
       curGap = realGap
     end
 
-    local scr_w, scr_h = ScrW(), ScrH()
+    local scrw, scrh = ScrW(), ScrH()
 
-    draw.RoundedBox(0, scr_w * 0.5 - halfSize, scr_h * 0.5 - halfSize, size, size, drawColor)
+    draw.RoundedBox(0, scrw * 0.5 - halfSize, scrh * 0.5 - halfSize, size, size, drawColor)
 
-    draw.RoundedBox(0, scr_w * 0.5 - halfSize - curGap, scr_h * 0.5 - halfSize, size, size, drawColor)
-    draw.RoundedBox(0, scr_w * 0.5 - halfSize + curGap, scr_h * 0.5 - halfSize, size, size, drawColor)
+    draw.RoundedBox(0, scrw * 0.5 - halfSize - curGap, scrh * 0.5 - halfSize, size, size, drawColor)
+    draw.RoundedBox(0, scrw * 0.5 - halfSize + curGap, scrh * 0.5 - halfSize, size, size, drawColor)
 
-    draw.RoundedBox(0, scr_w * 0.5 - halfSize, scr_h * 0.5 - halfSize - curGap, size, size, drawColor)
-    draw.RoundedBox(0, scr_w * 0.5 - halfSize, scr_h * 0.5 - halfSize + curGap, size, size, drawColor)
+    draw.RoundedBox(0, scrw * 0.5 - halfSize, scrh * 0.5 - halfSize - curGap, size, size, drawColor)
+    draw.RoundedBox(0, scrw * 0.5 - halfSize, scrh * 0.5 - halfSize + curGap, size, size, drawColor)
   end
 end
 

@@ -35,7 +35,7 @@ function GM:FluxClientSchemaLoaded()
 end
 
 do
-  local scr_w, scr_h = ScrW(), ScrH()
+  local scrw, scrh = ScrW(), ScrH()
   local next_check = CurTime()
 
   -- This will let us detect whether the resolution has been changed, then call a hook if it has.
@@ -45,12 +45,12 @@ do
     if cur_time >= next_check then
       local new_w, new_h = ScrW(), ScrH()
 
-      if scr_w != new_w or scr_h != new_h then
-        fl.print('Resolution changed from '..scr_w..'x'..scr_h..' to '..new_w..'x'..new_h..'.')
+      if scrw != new_w or scrh != new_h then
+        fl.print('Resolution changed from '..scrw..'x'..scrh..' to '..new_w..'x'..new_h..'.')
 
-        hook.run('OnResolutionChanged', new_w, new_h, scr_w, scr_h)
+        hook.run('OnResolutionChanged', new_w, new_h, scrw, scrh)
 
-        scr_w, scr_h = new_w, new_h
+        scrw, scrh = new_w, new_h
       end
 
       next_check = cur_time + 1
@@ -119,14 +119,14 @@ function GM:HUDDrawScoreBoard()
     percentage = math.Clamp(percentage, 0, 100)
 
     local font = font.GetSize('flRobotoCondensed', font.Scale(24))
-    local scr_w, scr_h = ScrW(), ScrH()
+    local scrw, scrh = ScrW(), ScrH()
     local w, h = util.text_size(text, font)
 
-    draw.RoundedBox(0, 0, 0, scr_w, scr_h, Color(0, 0, 0))
-    draw.SimpleText(text, font, scr_w * 0.5 - w * 0.5, scr_h - 128, Color(255, 255, 255))
+    draw.RoundedBox(0, 0, 0, scrw, scrh, Color(0, 0, 0))
+    draw.SimpleText(text, font, scrw * 0.5 - w * 0.5, scrh - 128, Color(255, 255, 255))
 
-    local bar_w, bar_h = scr_w / 3.5, 6
-    local bar_x, bar_y = scr_w * 0.5 - bar_w * 0.5, scr_h - 80
+    local bar_w, bar_h = scrw / 3.5, 6
+    local bar_x, bar_y = scrw * 0.5 - bar_w * 0.5, scrh - 80
     local fill_w = math.Clamp(bar_w * (percentage / 100), 0, bar_w - 2)
 
     draw.RoundedBox(0, bar_x, bar_y, bar_w, bar_h, Color(22, 22, 22))
@@ -140,18 +140,18 @@ end
 function GM:HUDPaint()
   if fl.client:HasInitialized() and hook.run('ShouldHUDPaint') != false then
     local cur_time = CurTime()
-    local scr_w, scr_h = ScrW(), ScrH()
+    local scrw, scrh = ScrW(), ScrH()
 
     if fl.client.last_damage and fl.client.last_damage > (cur_time - 0.3) then
       local alpha = math.Clamp(255 - 255 * (cur_time - fl.client.last_damage) * 3.75, 0, 200)
-      draw.textured_rect(util.get_material('materials/flux/hl2rp/blood.png'), 0, 0, scr_w, scr_h, Color(255, 0, 0, alpha))
-      draw.RoundedBox(0, 0, 0, scr_w, scr_h, Color(255, 210, 210, alpha))
+      draw.textured_rect(util.get_material('materials/flux/hl2rp/blood.png'), 0, 0, scrw, scrh, Color(255, 0, 0, alpha))
+      draw.RoundedBox(0, 0, 0, scrw, scrh, Color(255, 210, 210, alpha))
     end
 
     if !fl.client:Alive() then
-      hook.run('HUDPaintDeathBackground', cur_time, scr_w, scr_h)
-        theme.call('PaintDeathScreen', cur_time, scr_w, scr_h)
-      hook.run('HUDPaintDeathForeground', cur_time, scr_w, scr_h)
+      hook.run('HUDPaintDeathBackground', cur_time, scrw, scrh)
+        theme.call('PaintDeathScreen', cur_time, scrw, scrh)
+      hook.run('HUDPaintDeathForeground', cur_time, scrw, scrh)
     else
       fl.client.respawnAlpha = 0
 
@@ -159,18 +159,18 @@ function GM:HUDPaint()
         fl.client.white_alpha = Lerp(0.04, fl.client.white_alpha, 0)
       end
 
-      if !hook.run('FLHUDPaint', cur_time, scr_w, scr_h) then
+      if !hook.run('FLHUDPaint', cur_time, scrw, scrh) then
         InfoDisplay:draw_all()
 
         self.BaseClass:HUDPaint()
       end
     end
 
-    draw.RoundedBox(0, 0, 0, scr_w, scr_h, Color(255, 255, 255, fl.client.white_alpha or 0))
+    draw.RoundedBox(0, 0, 0, scrw, scrh, Color(255, 255, 255, fl.client.white_alpha or 0))
   end
 end
 
-function GM:FLHUDPaint(cur_time, scr_w, scr_h)
+function GM:FLHUDPaint(cur_time, scrw, scrh)
   local percentage = fl.client.circle_action_percentage
 
   if percentage and percentage > -1 then
@@ -260,10 +260,10 @@ function GM:PopulateToolMenu()
 end
 
 function GM:SynchronizeTools()
-   local tool_gun = weapons.GetStored('gmod_tool')
+   local toolgun = weapons.GetStored('gmod_tool')
 
   for k, v in pairs(fl.tool:GetAll()) do
-    tool_gun.Tool[v.Mode] = v
+    toolgun.Tool[v.Mode] = v
   end
 end
 
@@ -301,8 +301,8 @@ function GM:AddAdminMenuItems(panel, sidebar)
   panel:AddPanel('admin_permissions_editor', 'Permissions', 'manage_permissions')
 end
 
-function GM:PlayerBindPress(player, bind, b_pressed)
-  if bind:find('gmod_undo') and b_pressed then
+function GM:PlayerBindPress(player, bind, pressed)
+  if bind:find('gmod_undo') and pressed then
     if hook.run('SoftUndo', player) != nil then
       return true
     end

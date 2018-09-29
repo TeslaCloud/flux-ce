@@ -9,7 +9,7 @@ end)
 
 netstream.Hook('player_created', function(player)
   player:send_config()
-  player:sync_net_vars()
+  player:sync_nv()
 end)
 
 netstream.Hook('player_set_lang', function(player, lang)

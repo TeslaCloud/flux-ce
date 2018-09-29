@@ -4,7 +4,7 @@ theme.current_theme = current_theme
 local stored = theme.stored or {}
 theme.stored = stored
 
-function theme.get_all()
+function theme.all()
   return stored
 end
 
@@ -145,11 +145,11 @@ function theme.set_derma_skin()
   derma.RefreshSkins()
 end
 
-function theme.load_theme(themeID, b_is_reloading)
+function theme.load_theme(themeID, reloading)
   local theme_table = theme.find_theme(themeID)
 
   if theme_table then
-    if !b_is_reloading and hook.run('ShouldThemeLoad', theme_table) == false then
+    if !reloading and hook.run('ShouldThemeLoad', theme_table) == false then
       return
     end
 
@@ -165,7 +165,7 @@ function theme.load_theme(themeID, b_is_reloading)
       next = next.base
     end
 
-    if !b_is_reloading and current_theme.on_loaded then
+    if !reloading and current_theme.on_loaded then
       current_theme:on_loaded()
     end
 

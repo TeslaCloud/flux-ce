@@ -2,23 +2,23 @@
 PANEL.chars = {}
 
 function PANEL:Init()
-  local scr_w, scr_h = ScrW(), ScrH()
+  local scrw, scrh = ScrW(), ScrH()
 
   self:SetPos(0, 0)
-  self:SetSize(scr_w, scr_h)
+  self:SetSize(scrw, scrh)
 
   self.btnClose:SafeRemove()
 
   self.list = vgui.Create('fl_horizontalbar', self)
-  self.list:SetSize(scr_w / 2, scr_h / 2)
-  self.list:SetPos(scr_w / 2 - self.list:GetWide() / 2, scr_h / 2 - self.list:GetTall() / 2)
+  self.list:SetSize(scrw / 2, scrh / 2)
+  self.list:SetPos(scrw / 2 - self.list:GetWide() / 2, scrh / 2 - self.list:GetTall() / 2)
   self.list:SetCentered(true)
 
   self:RebuildCharacterList()
 
   self.back = vgui.Create('fl_button', self)
   self.back:SetSize(self.list:GetWide() / 4, theme.get_option('menu_sidebar_button_height'))
-  self.back:SetPos(scr_w / 2 + self.list:GetWide() / 2 - self.back:GetWide(), scr_h / 2 + self.list:GetTall() / 2 + self.back:GetTall())
+  self.back:SetPos(scrw / 2 + self.list:GetWide() / 2 - self.back:GetWide(), scrh / 2 + self.list:GetTall() / 2 + self.back:GetTall())
   self.back:SetIcon('fa-chevron-right', true)
   self.back:SetIconSize(16)
   self.back:SetFont(theme.get_font('text_normal_smaller'))

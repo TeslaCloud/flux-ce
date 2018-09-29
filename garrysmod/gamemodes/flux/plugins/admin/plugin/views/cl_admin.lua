@@ -3,12 +3,12 @@ PANEL.curPanel = nil
 PANEL.panels = {}
 
 function PANEL:Init()
-  local scr_w, scr_h = ScrW(), ScrH()
+  local scrw, scrh = ScrW(), ScrH()
   local width, height = self:GetMenuSize()
 
   self:SetTitle('Admin')
   self:SetSize(width, height)
-  self:SetPos(scr_w * 0.5 - width * 0.5, scr_h * 0.5 - height * 0.5)
+  self:SetPos(scrw * 0.5 - width * 0.5, scrh * 0.5 - height * 0.5)
 
   self.sidebar = vgui.Create('fl_sidebar', self)
   self.sidebar:SetSize(width / 5, height)
@@ -58,7 +58,7 @@ function PANEL:OpenPanel(id)
   if istable(panel) then
     if panel.permission and !fl.client:can(panel.permission) then return end
 
-    local scr_w, scr_h = ScrW(), ScrH()
+    local scrw, scrh = ScrW(), ScrH()
     local sW, sH = self.sidebar:GetWide(), self.sidebar:GetTall()
 
     self.curPanel = theme.create_panel(panel.id, self, unpack(panel.arguments))
