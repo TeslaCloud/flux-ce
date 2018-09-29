@@ -179,18 +179,18 @@ do
   end
 end
 
-function GM:PlayerNoClip(player, b_state)
-  if b_state == false then
-    local b_should_exit = plugin.call('PlayerExitNoclip', player)
+function GM:PlayerNoClip(player, state)
+  if state == false then
+    local should_exit = plugin.call('PlayerExitNoclip', player)
 
-    if b_should_exit != nil then
-      return b_should_exit
+    if should_exit != nil then
+      return should_exit
     end
   else
-    local b_should_enter = plugin.call('PlayerEnterNoclip', player)
+    local should_enter = plugin.call('PlayerEnterNoclip', player)
 
-    if b_should_enter != nil then
-      return b_should_enter
+    if should_enter != nil then
+      return should_enter
     end
   end
 
@@ -211,10 +211,10 @@ end)
 
 function GM:OnReloaded()
   -- Reload the tools.
-  local tool_gun = weapons.GetStored('gmod_tool')
+  local toolgun = weapons.GetStored('gmod_tool')
 
   for k, v in pairs(fl.tool:GetAll()) do
-    tool_gun.Tool[v.Mode] = v
+    toolgun.Tool[v.Mode] = v
   end
 
   if fl.development then

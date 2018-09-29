@@ -5,17 +5,17 @@ THEME.description = 'Factory theme. This is a fail-safety theme that other theme
 THEME.should_reload = true
 
 function THEME:on_loaded()
-  local scr_w, scr_h = ScrW(), ScrH()
+  local scrw, scrh = ScrW(), ScrH()
 
   self:set_option('frame_header_size', 24)
   self:set_option('frame_line_weight', 2)
   self:set_option('menu_sidebar_width', 300)
-  self:set_option('menu_sidebar_height', scr_h)
+  self:set_option('menu_sidebar_height', scrh)
   self:set_option('menu_sidebar_x', 0)
   self:set_option('menu_sidebar_y', 0)
   self:set_option('menu_sidebar_margin', -1)
   self:set_option('menu_sidebar_logo', 'flux/flux_icon.png')
-  self:set_option('menu_sidebar_logo_space', scr_h / 3)
+  self:set_option('menu_sidebar_logo_space', scrh / 3)
   self:set_option('menu_sidebar_button_height', font.Scale(42)) -- We can cheat and scale buttons the same way we scale fonts!
   self:set_option('menu_sidebar_button_offset_x', 16)
   self:set_option('menu_sidebar_button_centered', false)
@@ -205,7 +205,7 @@ function THEME:PaintButton(panel, w, h)
   end
 end
 
-function THEME:PaintDeathScreen(curTime, scr_w, scr_h)
+function THEME:PaintDeathScreen(curTime, scrw, scrh)
   local respawnTimeRemaining = fl.client:get_nv('respawn_time', 0) - curTime
   local barValue = 100 - 100 * (respawnTimeRemaining / config.get('respawn_delay'))
   local font = self:get_font('text_normal_large')
@@ -215,12 +215,12 @@ function THEME:PaintDeathScreen(curTime, scr_w, scr_h)
 
   fl.client.respawnAlpha = math.Clamp(fl.client.respawnAlpha + 1, 0, 200)
 
-  draw.RoundedBox(0, 0, 0, scr_w, scr_h, Color(0, 0, 0, fl.client.respawnAlpha))
+  draw.RoundedBox(0, 0, 0, scrw, scrh, Color(0, 0, 0, fl.client.respawnAlpha))
 
   draw.SimpleText(t'player_message.died', font, 16, 16, color_white)
   draw.SimpleText(t('player_message.respawn', math.ceil(respawnTimeRemaining)), font, 16, 16 + util.font_size(font), color_white)
 
-  draw.RoundedBox(0, 0, 0, scr_w / 100 * barValue, 2, color_white)
+  draw.RoundedBox(0, 0, 0, scrw / 100 * barValue, 2, color_white)
 
   if respawnTimeRemaining <= 3 then
     fl.client.white_alpha = math.Clamp(255 * (1.5 - respawnTimeRemaining * 0.5), 0, 255)

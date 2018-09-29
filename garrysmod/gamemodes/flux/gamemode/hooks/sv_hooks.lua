@@ -15,10 +15,10 @@ function GM:Initialize()
 end
 
 function GM:InitPostEntity()
-  local tool_gun = weapons.GetStored('gmod_tool')
+  local toolgun = weapons.GetStored('gmod_tool')
 
   for k, v in pairs(fl.tool:GetAll()) do
-    tool_gun.Tool[v.Mode] = v
+    toolgun.Tool[v.Mode] = v
   end
 
   hook.run('LoadData')

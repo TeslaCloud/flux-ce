@@ -73,7 +73,7 @@ end
 
 -- A function to send all current networked globals and entities' variables
 -- to a player.
-function player_meta:sync_net_vars()
+function player_meta:sync_nv()
   for k, v in pairs(globals) do
     netstream.Start(self, 'set_global_netvar', k, v)
   end

@@ -1,5 +1,5 @@
 function flChatbox:OnThemeLoaded(current_theme)
-  local scr_w, scr_h = ScrW(), ScrH()
+  local scrw, scrh = ScrW(), ScrH()
 
   font.Create('flChatFont', {
     font = 'Arial',
@@ -13,10 +13,10 @@ function flChatbox:OnThemeLoaded(current_theme)
   current_theme:set_font('Chatbox_ItalicBold', 'flRobotoCondensedItalicBold', font.Scale(20))
   current_theme:set_font('Chatbox_Syntax', 'flRobotoCondensed', font.Scale(24))
 
-  current_theme:set_option('Chatbox_Width', scr_w / 2.25)
-  current_theme:set_option('Chatbox_Height', scr_h / 2.25)
+  current_theme:set_option('Chatbox_Width', scrw / 2.25)
+  current_theme:set_option('Chatbox_Height', scrh / 2.25)
   current_theme:set_option('Chatbox_X', font.Scale(8))
-  current_theme:set_option('Chatbox_Y', scr_h - current_theme:get_option('Chatbox_Height') - font.Scale(32))
+  current_theme:set_option('Chatbox_Y', scrh - current_theme:get_option('Chatbox_Height') - font.Scale(32))
 end
 
 function flChatbox:OnResolutionChanged(newW, newH)

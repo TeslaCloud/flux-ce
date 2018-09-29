@@ -4,10 +4,10 @@ PANEL.buttons = {}
 PANEL.activePanel = nil
 
 function PANEL:Init()
-  local scr_w, scr_h = ScrW(), ScrH()
+  local scrw, scrh = ScrW(), ScrH()
 
   self:SetPos(0, 0)
-  self:SetSize(scr_w, scr_h)
+  self:SetSize(scrw, scrh)
 
   local curX, curY = hook.run('AdjustMenuItemPositions', self)
   curX = curX or 42
@@ -63,7 +63,7 @@ function PANEL:Init()
         if self.activePanel.GetMenuSize then
           self.activePanel:SetSize(self.activePanel:GetMenuSize())
         else
-          self.activePanel:SetSize(scr_w * 0.5, scr_h * 0.5)
+          self.activePanel:SetSize(scrw * 0.5, scrh * 0.5)
         end
 
         self.activeBtn = btn

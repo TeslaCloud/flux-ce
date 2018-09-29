@@ -12,7 +12,7 @@ function fl.notification:process_queue()
     queue_locked = true
 
     local text, lifetime = notification.text, notification.lifetime
-    local scr_w = ScrW()
+    local scrw = ScrW()
     lifetime = lifetime or 8
     text = t(text) or ''
 
@@ -29,8 +29,8 @@ function fl.notification:process_queue()
     panel:SetBackgroundColor(notification.back_color)
 
     local w, h = panel:GetSize()
-    panel:SetPos(scr_w - w - 8, -h)
-    panel:MoveTo(scr_w - w - 8, 8, 0.13)
+    panel:SetPos(scrw - w - 8, -h)
+    panel:MoveTo(scrw - w - 8, 8, 0.13)
 
     display[top].panel = panel
     display[top].width = w
