@@ -2,18 +2,6 @@ DEFINE_BASECLASS('gamemode_base')
 
 function GM:DoPlayerDeath(player, attacker, damage_info) end
 
-function GM:Initialize()
-  local config_file = fileio.Read('gamemodes/flux/flux.yml')
-
-  if config_file then
-    config.import(config_file, CONFIG_FLUX)
-  end
-
-  config.load()
-
-  ActiveRecord.connect()
-end
-
 function GM:InitPostEntity()
   local toolgun = weapons.GetStored('gmod_tool')
 
