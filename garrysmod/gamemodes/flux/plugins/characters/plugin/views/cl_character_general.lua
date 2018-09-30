@@ -22,68 +22,76 @@ function PANEL:Init()
   self.gender_label = vgui.Create('DLabel', self)
   self.gender_label:SetPos(4, font.Scale(36) + 6)
   self.gender_label:SetText(t'char_create.gender')
-  self.gender_label:SetFont(theme.get_font('text_small'))
+  self.gender_label:SetFont(theme.get_font('text_normal_smaller'))
   self.gender_label:SetTextColor(Color('white'))
   self.gender_label:SizeToContents()
 
-  self.gender_male = vgui.Create('fl_image_button', self)
-  self.gender_male:SetPos(self.gender_label:GetWide() + 8, font.Scale(36) + 4)
+  self.gender_male = vgui.Create('fl_button', self)
+  self.gender_male:SetPos(self.gender_label:GetWide() + 12, font.Scale(36) + 4)
   self.gender_male:SetSize(24, 24)
   self.gender_male:SetDrawBackground(false)
-  self.gender_male:SetImage('icon16/user.png')
+  self.gender_male:SetIcon('fa-mars')
+  self.gender_male:SetIconSize(24, 24)
   self.gender_male.DoClick = function(btn)
     if !btn:IsActive() then
       surface.PlaySound('buttons/blip1.wav')
 
       if self.gender_female:IsActive() then
         self.gender_female:SetActive(false)
+        self.gender_female:SetTextColor(theme.get_color('text'))
       end
 
       self:GetParent().char_data.gender = 'Male'
       self:RebuildModels()
 
       btn:SetActive(true)
+      btn:SetTextColor(Color('blue'):lighten(40))
     end
   end
 
-  self.gender_female = vgui.Create('fl_image_button', self)
-  self.gender_female:SetPos(self.gender_label:GetWide() + self.gender_male:GetWide() + 12, font.Scale(36) + 4)
+  self.gender_female = vgui.Create('fl_button', self)
+  self.gender_female:SetPos(self.gender_label:GetWide() + self.gender_male:GetWide() + 24, font.Scale(36) + 4)
   self.gender_female:SetSize(24, 24)
   self.gender_female:SetDrawBackground(false)
-  self.gender_female:SetImage('icon16/user_female.png')
+  self.gender_female:SetIcon('fa-venus')
+  self.gender_female:SetIconSize(24, 24)
   self.gender_female.DoClick = function(btn)
     if !btn:IsActive() then
       surface.PlaySound('buttons/blip1.wav')
 
       if self.gender_male:IsActive() then
         self.gender_male:SetActive(false)
+        self.gender_male:SetTextColor(theme.get_color('text'))
       end
 
       self:GetParent().char_data.gender = 'Female'
       self:RebuildModels()
 
       btn:SetActive(true)
+      btn:SetTextColor(Color('red'):lighten(40))
     end
   end
 
   self.name_label = vgui.Create('DLabel', self)
   self.name_label:SetPos(4, font.Scale(72) + 2)
   self.name_label:SetText(t'char_create.name')
-  self.name_label:SetFont(theme.get_font('text_small'))
+  self.name_label:SetFont(theme.get_font('text_normal_smaller'))
   self.name_label:SetTextColor(Color('white'))
   self.name_label:SizeToContents()
 
   self.name_entry = vgui.Create('DTextEntry', self)
   self.name_entry:SetPos(self.name_label:GetWide() + 8, font.Scale(72))
   self.name_entry:SetSize(scrw / 8, 24)
-  self.name_entry:SetFont(theme.get_font('text_smaller'))
+  self.name_entry:SetFont(theme.get_font('text_normal_smaller'))
   self.name_entry:SetText('')
 
-  self.name_random = vgui.Create('DImageButton', self)
-  self.name_random:SetPos(self.name_label:GetWide() + self.name_entry:GetWide() + 16, font.Scale(72) + 2)
-  self.name_random:SetSize(16, 16)
-  self.name_random:SetImage('icon16/wand.png')
-  self.name_random:SetTooltip('char_create.random_name')
+  self.name_random = vgui.Create('fl_button', self)
+  self.name_random:SetPos(self.name_label:GetWide() + self.name_entry:GetWide() + 16, font.Scale(72.5))
+  self.name_random:SetSize(24, 24)
+  self.name_random:SetIcon('fa-random')
+  self.name_random:SetIconSize(24, 24)
+  self.name_random:SetTooltip(t'char_create.random_name')
+  self.name_random:SetDrawBackground(false)
   self.name_random.DoClick = function(btn)
     surface.PlaySound('buttons/blip1.wav')
 
@@ -93,14 +101,14 @@ function PANEL:Init()
   self.desc_label = vgui.Create('DLabel', self)
   self.desc_label:SetPos(4, font.Scale(108) + 2)
   self.desc_label:SetText(t'char_create.desc')
-  self.desc_label:SetFont(theme.get_font('text_small'))
+  self.desc_label:SetFont(theme.get_font('text_normal_smaller'))
   self.desc_label:SetTextColor(Color('white'))
   self.desc_label:SizeToContents()
 
   self.desc_entry = vgui.Create('DTextEntry', self)
   self.desc_entry:SetPos(self.desc_label:GetWide() + 8, font.Scale(108))
   self.desc_entry:SetSize(scrw / 4 - self.desc_label:GetWide() - 4, font.Scale(72))
-  self.desc_entry:SetFont(theme.get_font('text_smaller'))
+  self.desc_entry:SetFont(theme.get_font('text_normal_smaller'))
   self.desc_entry:SetText('')
   self.desc_entry:SetMultiline(true)
   self.desc_entry:SetVerticalScrollbarEnabled(true)
@@ -233,10 +241,12 @@ function PANEL:OnOpen(parent)
 
   if parent.char_data.gender == 'Female' then
     self.gender_female:SetActive(true)
+    self.gender_female:SetTextColor(Color('red'):lighten(40))
 
     self:RebuildModels()
   elseif parent.char_data.gender == 'Male' then
     self.gender_male:SetActive(true)
+    self.gender_male:SetTextColor(Color('blue'):lighten(40))
 
     self:RebuildModels()
   end
