@@ -184,6 +184,10 @@ function flCharacters:AddMainMenuItems(panel, sidebar)
   end)
 end
 
+function flCharacters:PanelCharacterSet(panel, char_data)
+  panel.model.Entity:SetSkin(char_data.skin or 1)
+end
+
 netstream.Hook('PlayerCreatedCharacter', function(success, status)
   if IsValid(fl.intro_panel) and IsValid(fl.intro_panel.menu) then
     if success then

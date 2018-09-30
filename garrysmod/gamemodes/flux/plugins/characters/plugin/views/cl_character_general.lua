@@ -119,6 +119,17 @@ function PANEL:Init()
   self.model:SetLookAt(Vector(0, 0, 37))
   self.model:SetAnimated(true)
   self.model.LayoutEntity = function(entity) end
+
+  self.skin = vgui.Create('fl_counter', self)
+  self.skin:SetPos(8, font.Scale(180) + self.models_list:GetTall() + 4)
+  self.skin:SetSize(32, 64)
+  self.skin:SetText(t'char_create.skin')
+  self.skin:SetValue(1)
+  self.skin:SetVisible(false)
+  self.skin:SetMin(1)
+  self.skin.OnClick = function(panel, value)
+    self.model.Entity:SetSkin(value)
+  end
 end
 
 function PANEL:RebuildModels()
@@ -173,6 +184,15 @@ function PANEL:RebuildModels()
       self.model:SetModel(v)
       self.model.Entity:SetSequence(ACT_IDLE)
 
+      local skins = self.model.Entity:SkinCount()
+
+      if skins > 1 then
+        self.skin:SetMax(skins)
+        self.skin:SetVisible(true)
+      else
+        self.skin:SetVisible(false)
+      end
+
       btn.isActive = true
 
       self.models_list.prevBtn = btn
@@ -203,6 +223,14 @@ function PANEL:OnOpen(parent)
   self.desc_entry:SetText(parent.char_data.description or '')
   self.models_list.model = parent.char_data.model
 
+  if parent.char_data.skin then
+    self.skin:SetValue(parent.char_data.skin)
+  end
+
+  if IsValid(self.model.Entity) then
+    self.model.Entity:SetSkin(self.skin)
+  end
+
   if parent.char_data.gender == 'Female' then
     self.gender_female:SetActive(true)
 
@@ -221,7 +249,8 @@ function PANEL:OnClose(parent)
     name = self.name_entry:GetValue(),
     description = self.desc_entry:GetValue(),
     gender = gender,
-    model = self.models_list.model
+    model = self.models_list.model,
+    skin = self.skin:GetValue()
   })
 end
 

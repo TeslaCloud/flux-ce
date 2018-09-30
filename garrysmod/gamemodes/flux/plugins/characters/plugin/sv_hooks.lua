@@ -34,6 +34,7 @@ end
 function flCharacters:OnActiveCharacterSet(player, character)
   player:Spawn()
   player:SetModel(character.model or 'models/humans/group01/male_02.mdl')
+  player:SetSkin(character.skin or 1)
   player:SetHealth(character.health or player:GetMaxHealth())
   player:StripAmmo()
   player:ScreenFade(SCREENFADE.IN, Color('white'), .5, .5)
