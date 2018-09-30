@@ -51,7 +51,7 @@ end
 function PANEL:SetMessage(msgInfo)
   self.messageData = msgInfo
 
-  self:SetSize(self:GetWide(), msgInfo.total_height)
+  self:SetSize(self:GetWide() - 4, msgInfo.total_height)
 end
 
 -- Those people want us gone :(
