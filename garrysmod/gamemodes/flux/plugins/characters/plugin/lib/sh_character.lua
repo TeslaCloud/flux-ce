@@ -33,6 +33,7 @@ function character.Create(player, data)
   char.name = data.name
   char.user_id = player.record.id
   char.model = data.model or ''
+  char.skin = data.skin or 1
   char.gender = data.gender
   char.phys_desc = data.phys_desc or ''
   char.money = data.money or 0
@@ -79,6 +80,7 @@ if SERVER then
       name = char.name,
       phys_desc = char.phys_desc or 'This character has no physical description set!',
       model = char.model or 'models/humans/group01/male_02.mdl',
+      skin = char.skin or 1,
       gender = char.gender,
       inventory = char.inventory,
       ammo = char.ammo,

@@ -34,6 +34,7 @@ en:
     random_name: Choose random name.
     desc: 'Description:'
     gender: 'Gender:'
+    skin: 'Skin'
     back: BACK
     next: NEXT
     main_menu: MAIN MENU
