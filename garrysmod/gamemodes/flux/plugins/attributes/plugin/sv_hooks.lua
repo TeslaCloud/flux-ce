@@ -15,8 +15,10 @@ end
 function flAttributes:OnCharacterDelete(player, char_id)
   local char = player.record.characters[char_id]
 
-  for k, v in pairs(char.attributes) do
-    v:destroy()
+  if char.attributes then
+    for k, v in pairs(char.attributes) do
+      v:destroy()
+    end
   end
 end
 
