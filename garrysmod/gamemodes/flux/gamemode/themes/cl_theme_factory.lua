@@ -153,11 +153,6 @@ function THEME:PaintButton(panel, w, h)
       surface.SetDrawColor(self:get_color('main_dark'))
       surface.DrawRect(1, 1, w - 1, h - 2)
     end
-  else
-    if curAmt > 0 and panel.m_Active then
-      surface.SetDrawColor(Color(150, 150, 150, curAmt))
-      surface.DrawRect(1, 1, w - 2, h - 2)
-    end
   end
 
   if icon then
