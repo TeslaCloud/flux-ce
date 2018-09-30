@@ -146,7 +146,7 @@ function PANEL:AddPanel(panel)
 
   local idx = table.insert(self.history, panel)
 
-  panel:SetPos(0, self.lastPos)
+  panel:SetPos(2, self.lastPos)
   panel.messageIndex = idx
 
   self.scrollPanel:AddItem(panel)
@@ -199,11 +199,13 @@ function PANEL:Think()
 end
 
 function PANEL:Paint(w, h)
-  plugin.call('ChatboxPaintBackground', w, h, self)
+  if self.isOpen then
+    theme.hook('ChatboxPaintBackground', self, w, h)
+  end
 end
 
 function PANEL:PaintOver(w, h)
-  if plugin.call('ChatboxPaintOver', w, h, self) == nil then
+  if theme.hook('ChatboxPaintOver', self, w, h) == nil then
     local entry = self.text_entry
 
     if IsValid(entry) then

@@ -65,10 +65,6 @@ function flChatbox:ChatboxTextEntered(text)
   chatbox.Hide()
 end
 
-function flChatbox:ChatboxPaintOver(w, h, panel)
-  
-end
-
 netstream.Hook('Chatbox::AddMessage', function(messageData)
   if IsValid(chatbox.panel) then
     chatbox.panel:AddMessage(messageData)
