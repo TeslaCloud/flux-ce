@@ -92,7 +92,7 @@ if SERVER then
   end
 
   function character.Save(player, character)
-    if !IsValid(player) or !istable(character) or hook.run('PreSaveCharacter', player, character) == false then return end
+    if !IsValid(player) or !IsValid(character) or hook.run('PreSaveCharacter', player, character) == false then return end
 
     hook.run('SaveCharacterData', player, character)
       character:save()
