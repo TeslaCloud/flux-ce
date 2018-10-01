@@ -13,16 +13,16 @@ function GM:InitPostEntity()
     fl.localPlayerCreated = true
   end)
 
-   for k, v in ipairs(player.GetAll()) do
-     local model = v:GetModel()
+  for k, v in ipairs(player.GetAll()) do
+    local model = v:GetModel()
 
-     hook.run('PlayerModelChanged', v, model, model)
-   end
+    hook.run('PlayerModelChanged', v, model, model)
+  end
 
-   hook.run('SynchronizeTools')
-   hook.run('LoadData')
+  hook.run('SynchronizeTools')
+  hook.run('LoadData')
 
-   plugin.call('FLInitPostEntity')
+  plugin.call('FLInitPostEntity')
 end
 
 function GM:PlayerInitialized()

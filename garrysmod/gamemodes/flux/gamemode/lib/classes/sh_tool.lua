@@ -12,6 +12,36 @@
 --]]
 
 class 'Tool'
+Tool.is_flux_tool = true
+
+function Tool:DrawToolScreen(w, h)
+  surface.SetFont('GModToolScreen')
+
+  local text = t('tool.'..self.id..'.name')
+  local y = 104
+  local w, h = surface.GetTextSize(text)
+  w = w + 64
+
+  y = y - h * 0.5
+
+  local x = RealTime() * 250 % w * -1
+
+  while x < w do
+    surface.SetTextColor(0, 0, 0, 255)
+    surface.SetTextPos(x + 3, y + 3)
+    surface.DrawText(text)
+
+    surface.SetTextColor(255, 255, 255, 255)
+    surface.SetTextPos(x, y)
+    surface.DrawText(text)
+
+    x = x + w
+  end
+end
+
+function Tool:GetHelpText()
+  return t('tool.'..self.id..'.desc')
+end
 
 function Tool:MakeGhostEntity(model, pos, angle)
   util.PrecacheModel(model)
