@@ -6,6 +6,9 @@ en:
       ExtraColor]'
     text_added: You have added a 3D text.
     text_removed: You have removed a 3D text.
+  3d_picture:
+    placed: Picture placed.
+    removed: Picture removed.
   tool:
     texts:
       name: Text Tool
@@ -27,3 +30,11 @@ en:
       opt8: Text Wrapped in a Box (Style 3)
       opt9: Text Wrapped in a Box (Style 4)
       opt91: Text Wrapped in a Box (Blurry)
+    pictures:
+      name: Picture Placer
+      desc: Add images to 3D surfaces.
+      '0': 'Left Click: Add picture, Right Click: Remove picture.'
+      url: URL
+      width: Width
+      height: Height
+      fade: Fade Distance Offset
