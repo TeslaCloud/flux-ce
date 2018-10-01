@@ -1,6 +1,6 @@
 function table.Merge(dest, source)
   for k, v in pairs(source) do
-    if istable(v) and istable(dest[k]) then
+    if istable(v) and istable(dest[k]) and k != 'class' then
       table.Merge(dest[k], v)
     else
       dest[k] = v
