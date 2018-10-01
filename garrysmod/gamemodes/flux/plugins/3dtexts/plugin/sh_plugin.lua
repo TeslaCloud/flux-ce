@@ -74,19 +74,20 @@ else
   function fl3DText:RemoveAtTrace(trace)
     if !trace then return false end
 
-    local hitPos = trace.HitPos
-    local traceStart = trace.StartPos
+    local hit_pos = trace.HitPos - trace.HitNormal
+    local trace_start = trace.StartPos
 
     for k, v in pairs(self.stored) do
       local pos = v.pos
       local normal = v.normal
       local ang = normal:Angle()
       local w, h = util.text_size(v.text, theme.get_font('text_3d2d'))
-      local startPos = pos - -ang:Right() * (w * 0.05) * v.scale
-      local end_pos = pos + -ang:Right() * (w * 0.05) * v.scale
+      local ang_right = -ang:Right()
+      local start_pos = pos - ang_right * (w * 0.05) * v.scale
+      local end_pos = pos + ang_right * (w * 0.05) * v.scale
 
-      if math.abs(math.abs(hitPos.z) - math.abs(pos.z)) < 4 * v.scale then
-        if util.vectors_intersect(traceStart, hitPos, startPos, end_pos) then
+      if math.abs(math.abs(hit_pos.z) - math.abs(pos.z)) < 4 * v.scale then
+        if util.vectors_intersect(trace_start, hit_pos, start_pos, end_pos) then
           netstream.Start('fl3DText_Remove', k)
 
           return true
