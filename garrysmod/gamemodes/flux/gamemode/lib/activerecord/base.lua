@@ -229,7 +229,10 @@ function ActiveRecord.Base:run_query(callback)
         if #self.relations == 0 then
           return callback(objects)
         else
-          return self:_fetch_relation(callback, objects)
+          ar_add_indent()
+          local ret = self:_fetch_relation(callback, objects)
+          ar_sub_indent()
+          return ret
         end
       elseif isfunction(self._rescue) then
         self._rescue(self.class.new())
@@ -334,6 +337,7 @@ function ActiveRecord.Base:save()
     query:execute()
   end
   if self.id and #self.relations > 0 then
+    ar_add_indent()
     for _, relation in ipairs(self.relations) do
       if !relation.child then
         if relation.many and istable(self[relation.as]) then
@@ -348,6 +352,7 @@ function ActiveRecord.Base:save()
         end
       end
     end
+    ar_sub_indent()
   end
   return self
 end
