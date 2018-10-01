@@ -82,8 +82,8 @@ else
       local normal = v.normal
       local ang = normal:Angle()
       local w, h = util.text_size(v.text, theme.get_font('text_3d2d'))
-      local startPos = pos - -ang:Right() * (w * 0.50) * v.scale
-      local end_pos = pos + -ang:Right() * (w * 0.50) * v.scale
+      local startPos = pos - -ang:Right() * (w * 0.05) * v.scale
+      local end_pos = pos + -ang:Right() * (w * 0.05) * v.scale
 
       if math.abs(math.abs(hitPos.z) - math.abs(pos.z)) < 4 * v.scale then
         if util.vectors_intersect(traceStart, hitPos, startPos, end_pos) then

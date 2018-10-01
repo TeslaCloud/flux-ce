@@ -37,13 +37,12 @@ do
 
     local base_class = self.BaseClass
 
-    if (base_class:HandlePlayerNoClipping(player, velocity) or
+    if !(base_class:HandlePlayerNoClipping(player, velocity) or
       base_class:HandlePlayerDriving(player) or
       base_class:HandlePlayerVaulting(player, velocity) or
       base_class:HandlePlayerJumping(player, velocity) or
       base_class:HandlePlayerSwimming(player, velocity) or
       base_class:HandlePlayerDucking(player, velocity)) then
-    else
       local len2D = velocity:Length2D()
 
       if len2D > 150 then
@@ -84,7 +83,7 @@ do
 
         if position then
           player:ManipulateBonePosition(0, position)
-          player.should_undo_bones = true
+          player.should_reset_position = true
         end
 
         if isstring(anim) then
@@ -93,30 +92,20 @@ do
           -- Cache the result of LookupSequence for added performance.
           player.fl_anim_table['vehicle'][vehicle_class][1] = player.CalcSeqOverride
 
-          return
+          return player.CalcSeqOverride
         end
 
         return anim
       else
-        local anim = animations['normal'][ACT_MP_CROUCH_IDLE][1]
-
-        if isstring(anim) then
-          player.CalcSeqOverride = player:LookupSequence(anim)
-
-          player.fl_anim_table['normal'][ACT_MP_CROUCH_IDLE][1] = player.CalcSeqOverride
-
-          return
-        end
-
-        return anim
+        return animations['normal'][ACT_MP_CROUCH_IDLE][1]
       end
     elseif player:OnGround() then
       local holdtype = get_weapon_hold_type(player, player:GetActiveWeapon())
       local holdtype_anims = animations[holdtype]
 
-      if player.should_undo_bones then
-        player:ManipulateBonePosition(0, Vector(0, 0, 0))
-        player.should_undo_bones = false
+      if player.should_reset_position then
+        player:ManipulateBonePosition(0, vector_origin)
+        player.should_reset_position = nil
       end
 
       if holdtype_anims and holdtype_anims[act] then
@@ -133,7 +122,7 @@ do
 
           player.fl_anim_table[holdtype][act] = player.CalcSeqOverride
 
-          return
+          return player.CalcSeqOverride
         end
 
         return anim
