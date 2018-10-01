@@ -102,7 +102,9 @@ function PANEL:SetOpen(bIsOpen)
   end
 
   for k, v in ipairs(self.history) do
-    v.forceShow = bIsOpen
+    if IsValid(v) then
+      v.forceShow = bIsOpen
+    end
   end
 end
 
@@ -141,7 +143,13 @@ end
 
 function PANEL:AddPanel(panel)
   if #self.history >= config.get('chatbox_max_messages') then
-    self.history[1]:Eject()
+    local last_history = self.history[1]
+
+    if IsValid(last_history) then
+      last_history:Eject()
+    else
+      self:RemoveMessage(1)
+    end
   end
 
   local idx = table.insert(self.history, panel)
