@@ -1,0 +1,22 @@
+body {
+  color: white;
+  background: #111111;
+  font-family: Arial;
+}
+
+.content {
+  font-size: 14px;
+}
+
+.plugin__card {
+  padding: 8px;
+  margin: 4px;
+}
+
+.plugin__title {
+  font-size: 16px;
+}
+
+.plugin__author {
+  color: #ffffffaa;
+}

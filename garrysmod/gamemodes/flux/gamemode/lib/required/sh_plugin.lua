@@ -17,7 +17,9 @@ local default_extras = {
   'config',
   'languages',
   'controllers',
-  'views',
+  'views', 'views/html',
+  'views/assets/stylesheets',
+  'views/assets/javascripts',
   'tools',
   'themes',
   'entities',
@@ -533,10 +535,16 @@ function plugin.include_folders(folder)
         pipeline.include_folder('theme', folder..'/themes/')
       elseif v == 'tools' then
         pipeline.include_folder('tool', folder..'/tools/')
-      elseif SERVER and v == 'languages' then
-        pipeline.include_folder('language', folder..'/languages/')
-      elseif SERVER and v == 'migrations' then
-        pipeline.include_folder('migrations', folder..'/migrations/')
+      elseif SERVER then
+        if v == 'languages' then
+          pipeline.include_folder('language', folder..'/languages/')
+        elseif v == 'migrations' then
+          pipeline.include_folder('migrations', folder..'/migrations/')
+        elseif v:find('/assets/') or v:find('/html/') then
+          pipeline.include_folder('html', folder..'/'..v)
+        else
+          util.include_folder(folder..'/'..v)
+        end
       else
         util.include_folder(folder..'/'..v)
       end
