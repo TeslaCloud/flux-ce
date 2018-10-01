@@ -161,8 +161,6 @@ function GM:HUDPaint()
 
       if !hook.run('FLHUDPaint', cur_time, scrw, scrh) then
         InfoDisplay:draw_all()
-
-        self.BaseClass:HUDPaint()
       end
     end
 
