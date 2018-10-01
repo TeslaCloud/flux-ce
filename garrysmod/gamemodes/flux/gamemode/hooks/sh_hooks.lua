@@ -1,7 +1,21 @@
-hook.Remove('PostDrawEffects', 'RenderWidgets')
-hook.Remove('PlayerTick', 'TickWidgets')
-hook.Remove('PlayerInitialSpawn', 'PlayerAuthSpawn')
-hook.Remove('RenderScene', 'RenderStereoscopy')
+function GM:Initialize()
+  hook.Remove('PostDrawEffects', 'RenderWidgets')
+  hook.Remove('PlayerTick', 'TickWidgets')
+  hook.Remove('PlayerInitialSpawn', 'PlayerAuthSpawn')
+  hook.Remove('RenderScene', 'RenderStereoscopy')
+
+  if sv then
+    local config_file = fileio.Read('gamemodes/flux/flux.yml')
+
+    if config_file then
+      config.import(config_file, CONFIG_FLUX)
+    end
+
+    config.load()
+
+    ActiveRecord.connect()
+  end
+end
 
 -- Called when gamemode's server browser name needs to be retrieved.
 function GM:GetGameDescription()
