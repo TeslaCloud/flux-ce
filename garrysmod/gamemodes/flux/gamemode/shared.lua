@@ -92,6 +92,9 @@ if !LITE_REFRESH then
   if SERVER then
     pipeline.include_folder('language', 'flux/gamemode/languages')
     pipeline.include_folder('migrations', 'flux/gamemode/migrations')
+    pipeline.include_folder('html', 'flux/gamemode/views/html')
+    pipeline.include_folder('html', 'flux/gamemode/views/assets/stylesheets')
+    pipeline.include_folder('html', 'flux/gamemode/views/assets/javascripts')
   end
   util.include_folder('models', true)
   util.include_folder('controllers', true)

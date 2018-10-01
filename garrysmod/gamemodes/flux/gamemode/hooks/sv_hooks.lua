@@ -326,7 +326,7 @@ function GM:PreLoadPlugins()
 end
 
 do
-  local function add_client_file(path, contents)
+  local function write_client_file(path, contents)
     fileio.MakeDirectory 'lua/flux'
     fileio.MakeDirectory 'lua/flux/client'
 
@@ -334,10 +334,27 @@ do
     AddCSLuaFile('flux/client/'..path)
   end
 
+  local function write_client_files()
+    write_client_file('0_shared.lua', 'fl.shared = fl.deserialize([['..fl.serialize(fl.shared)..']])\n')
+    write_client_file('1_settings.lua', 'Settings = fl.deserialize([['..fl.serialize(Settings)..']])\n')
+    write_client_file('2_lang.lua', "library.new('lang', fl)\nfl.lang.stored = fl.deserialize([["..fl.serialize(fl.lang.stored).."]])\n")
+  end
+
+  concommand.Add('fl_reload_html', function(player)
+    if !IsValid(player) then
+      print('Rewriting HTML...')
+      write_client_file('3_html.lua', fl.html:generate_html_file() or '-- .keep')
+      write_client_file('4_css.lua', fl.html:generate_css_file() or '-- .keep')
+      write_client_file('5_js.lua', fl.html:generate_js_file() or '-- .keep')
+    end
+  end)
+
   function GM:OnSchemaLoaded()
-    add_client_file('lang.lua', "library.new('lang', fl)\nfl.lang.stored = fl.deserialize([["..fl.serialize(fl.lang.stored).."]])\n")
-    add_client_file('shared.lua', 'fl.shared = fl.deserialize([['..fl.serialize(fl.shared)..']])\n')
-    add_client_file('settings.lua', 'Settings = fl.deserialize([['..fl.serialize(Settings)..']])\n')
+    write_client_files()
+  end
+
+  function GM:OnReloaded()
+    write_client_files()
   end
 end
 
