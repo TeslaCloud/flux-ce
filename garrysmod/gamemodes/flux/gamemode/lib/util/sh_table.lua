@@ -237,6 +237,8 @@ function PrintTable(t, indent, done, indent_length)
 
       if value.class or value.class_name then
         Msg(str_key..':'..string.rep(' ', indent_length - str_key:len())..' #<'..tostring(value.class_name or key)..': '..tostring(value):gsub('table: ', '')..'>\n')
+      elseif IsColor(value) then
+        Msg(str_key..':'..string.rep(' ', indent_length - str_key:len())..' #<Color: '..value.r..' '..value.g..' '..value.b..' '..value.a..'>\n')
       elseif table.Count(value) == 0 then
         Msg(str_key..':'..string.rep(' ', indent_length - str_key:len())..' []\n')
       else
