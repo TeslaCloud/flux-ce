@@ -3,6 +3,7 @@ PLUGIN:set_author('Mr. Meow')
 PLUGIN:set_description('Profile any hooks.')
 
 if !fl.development then return end
+if DBugR then return end
 
 hook._profiler_old_call = hook._profiler_old_call or hook.Call
 
