@@ -25,9 +25,6 @@ en:
     for: for
     and: and
   tab_menu:
-    expand: Expand
-    settings: Settings
-    home: Home
     scoreboard: Players
     admin: Admin
     close_menu: Close Menu
@@ -43,30 +40,6 @@ en:
     armor: ARMOR
     respawn: WAITING TO RESPAWN...
     getup: GETTING UP...
-  settings:
-    dashboard: Dashboard
-    theme: Theme
-    adminesp: Admin ESP
-    binds: Binds
-    general: General
-    hud: HUD
-    backgroundurl: Specify a URL for your background.
-    background_color: Select a color for the dashboard's background.
-    menu_back_color: Select a color for child menu backgrounds.
-    text_color: Select a color for text.
-    enable_adminesp: Enable the Admin ESP.
-    fit_type: Choose a fit for your background.
-    draw_bars: Draw the HUD bars.
-    draw_bar_text: Draw text on the bars.
-    use_tab_dash: Check to use the tab dashboard, uncheck for classic tab menu.
-    fit:
-      tiled: Tiled
-      center: Center
-      fill: Fill
-      fit: Fit
-    draw_legs: Draw your legs.
-    toggle_auto_walk: Toggle Auto-Walk
-    toggle_third_person: Toggle Third-Person
   commands:
     you_must_enter_command: You must enter a command!
     not_valid: "'{1}' is not a valid command!"
@@ -93,11 +66,8 @@ en:
     bugs_text: Encountered a bug? Have an idea that we should totally add to Flux?\nVisit
       our forums at TeslaCloud.net and tell us about it!
   player_message:
-    died: YOU PERISHED
+    died: YOU DIED
     respawn: RESPAWNING IN {1} SECOND(s).
   loading:
     schema: Loading schema and plugins, please wait...
     local_player: Preparing loading sequence, please wait...
-    shared: Receiving shared data, please wait...
-  intro:
-    skip: Press any key to skip intro!
