@@ -2,6 +2,7 @@ local PANEL = {}
 PANEL.history = {}
 PANEL.lastPos = 0
 PANEL.isOpen = false
+PANEL.padding = 8
 
 function PANEL:Init()
   local w, h = self:GetWide(), self:GetTall()
@@ -124,8 +125,9 @@ function PANEL:CreateMessage(messageData)
   if !parsed then return end
 
   local panel = vgui.Create('flChatMessage', self)
+  local half_padding = self.padding * 0.5
 
-  panel:SetSize(self:GetWide(), self:GetWide()) -- Width is placeholder and is later set by compiled message table.
+  panel:SetSize(self:GetWide() - half_padding, self:GetWide() - half_padding) -- Width is placeholder and is later set by compiled message table.
   panel:SetMessage(parsed)
 
   return panel
@@ -154,7 +156,7 @@ function PANEL:AddPanel(panel)
 
   local idx = table.insert(self.history, panel)
 
-  panel:SetPos(2, self.lastPos)
+  panel:SetPos(self.padding, self.lastPos)
   panel.messageIndex = idx
 
   self.scrollPanel:AddItem(panel)

@@ -49,9 +49,13 @@ function PANEL:Think()
 end
 
 function PANEL:SetMessage(msgInfo)
+  local parent = chatbox.panel
+
+  if !IsValid(parent) then return end
+
   self.messageData = msgInfo
 
-  self:SetSize(self:GetWide() - 4, msgInfo.total_height)
+  self:SetSize(self:GetWide() - parent.padding * 0.5, msgInfo.total_height)
 end
 
 -- Those people want us gone :(
