@@ -23,6 +23,10 @@ function GM:GetGameDescription()
   return isstring(name_override) and name_override or 'FL - '..fl.get_schema_name()
 end
 
+-- Disable default hooks for mouth move and grab ear.
+function GM:GrabEarAnimation() end
+function GM:MouthMoveAnimation() end
+
 do
   local vectorAngle = FindMetaTable('Vector').Angle
   local normalizeAngle = math.NormalizeAngle
