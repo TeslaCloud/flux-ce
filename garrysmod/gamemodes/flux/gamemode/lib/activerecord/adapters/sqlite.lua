@@ -21,11 +21,11 @@ function ActiveRecord.Adapters.Sqlite:connect()
 end
 
 function ActiveRecord.Adapters.Sqlite:escape(str)
-  return sql.SQLStr(string.gsub(str, '"', '\''):gsub('\'', '\'\''), true)
+  return sql.SQLStr(string.gsub(str, '"', '`'):gsub("'", "`"), true)
 end
 
 function ActiveRecord.Adapters.Sqlite:unescape(str)
-  return text:gsub('\'\'', '\'')
+  return text:gsub("''", "'")
 end
 
 function ActiveRecord.Adapters.Sqlite:raw_query(query, callback, flags, ...)
