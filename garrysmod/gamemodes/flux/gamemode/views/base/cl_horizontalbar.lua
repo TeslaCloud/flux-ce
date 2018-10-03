@@ -34,7 +34,7 @@ function PANEL:PerformLayout()
       wide = wide + v:GetWide() + self.m_iOverlap
     end
 
-   x = w / 2 - wide / 2
+   x = w * 0.5 - wide * 0.5
   end
 
   for k, v in pairs(self.Panels) do

@@ -32,18 +32,18 @@ end
 
 function PANEL:PerformLayout(w, h)
   self.label:SizeToContents()
-  self.label:SetPos(w / 2 - self.label:GetWide() / 2, 2)
+  self.label:SetPos(w * 0.5 - self.label:GetWide() * 0.5, 2)
 
   self.inc:SetPos(2, self.label:GetTall() + 2)
-  self.inc:SetSize(w - 4, h / 4 - 2)
+  self.inc:SetSize(w - 4, h * 0.25 - 2)
 
   self.dec:SetPos(2, h * 0.75 + 2)
-  self.dec:SetSize(w - 4, h / 4 - 2)
+  self.dec:SetSize(w - 4, h * 0.25 - 2)
 end
 
 function PANEL:Paint(w, h)
   local x, y = util.text_size(self.m_value, self.m_font)
-  draw.SimpleText(self.m_value, self.m_font, w / 2 - x / 2, h * 0.66 - y / 2, self.m_color)
+  draw.SimpleText(self.m_value, self.m_font, w * 0.5 - x * 0.5, h * 0.66 - y * 0.5, self.m_color)
 end
 
 function PANEL:SetText(text)
