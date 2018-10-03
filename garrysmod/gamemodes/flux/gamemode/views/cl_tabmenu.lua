@@ -87,6 +87,7 @@ function PANEL:Init()
   end
 
   draw.set_blur_size(1)
+  fl.blur_update_fps = 0
 
   self.lerpStart = SysTime()
 end
@@ -113,6 +114,7 @@ function PANEL:CloseMenu()
   self:SetVisible(false)
   self:Remove()
   draw.set_blur_size(12)
+  fl.blur_update_fps = 8
 end
 
 function PANEL:OnMousePressed()
