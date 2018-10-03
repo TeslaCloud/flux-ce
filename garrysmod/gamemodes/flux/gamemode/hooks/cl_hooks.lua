@@ -269,6 +269,20 @@ function GM:RenderScreenspaceEffects()
   if fl.client.color_mod then
     DrawColorModify(fl.client.color_mod_table)
   end
+
+  if fl.should_render_blur then
+    render.PushRenderTarget(fl.rt_texture)
+      surface.SetDrawColor(255, 255, 255)
+      surface.SetMaterial(fl.blur_material)
+      surface.DrawTexturedRect(0, 0, ScrW(), ScrH())
+      render.BlurRenderTarget(fl.rt_texture, fl.blur_size or 12, fl.blur_size or 12, fl.blur_passes or 6)
+    render.PopRenderTarget()
+
+    fl.blur_mat:SetTexture('$basetexture', fl.rt_texture)
+    fl.should_render_blur = false
+  else
+    fl.should_render_blur = nil
+  end
 end
 
 -- Called when category icons are presented.
