@@ -40,7 +40,7 @@ local Structure = ActiveRecord.Schema:define(]]..version..[[)
   local level = 2
   local ind = '  '
 
-  for table_name, structure in pairs(ActiveRecord.schema or {}) do
+  for table_name, structure in SortedPairs(ActiveRecord.schema or {}) do
     if !istable(structure) then continue end
 
     result = result + string.rep(ind, level) + 'create_table("' + table_name + '", function(t)\n'
@@ -59,7 +59,7 @@ local Structure = ActiveRecord.Schema:define(]]..version..[[)
     result = result + string.rep(ind, level) + 'end)\n\n'
   end
 
-  for k, v in pairs(ActiveRecord.metadata.indexes) do
+  for k, v in SortedPairs(ActiveRecord.metadata.indexes) do
     result = result + string.rep(ind, level) + 'add_index { ' + table_to_inline(v) + ', name = "'..k..'" }\n'
   end
 

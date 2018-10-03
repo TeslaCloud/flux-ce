@@ -56,7 +56,7 @@ function ActiveRecord.Adapters.Mysqloo:connect(config)
       self.connection:ping()
     end)
   else
-    ErrorNoHalt(string.format('ActiveRecord - MySQLOO is not found!\nPlease make sure you have gmsv_mysqloo in your lua/bin folder!\n'))
+    ErrorNoHalt('ActiveRecord - MySQLOO is not found!\nPlease make sure you have gmsv_mysqloo in your lua/bin folder!\n')
   end
 end
 
@@ -93,7 +93,8 @@ function ActiveRecord.Adapters.Mysqloo:raw_query(query, callback, flags, ...)
       local status, a, b, c, d = pcall(callback, result, query, math.Round(os.clock() - query_start, 3))
 
       if !status then
-        ErrorNoHalt(string.format('ActiveRecord - MySQL Callback Error!\n%s\n', a))
+        ErrorNoHalt('ActiveRecord - MySQL Callback Error!\n')
+        ErrorNoHalt(a..'\n')
       end
 
       return a, b, c, d

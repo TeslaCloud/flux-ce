@@ -21,7 +21,7 @@ function ActiveRecord.Adapters.Sqlite:connect()
 end
 
 function ActiveRecord.Adapters.Sqlite:escape(str)
-  return sql.SQLStr(string.gsub(str, '"', '`'):gsub("'", "`"), true)
+  return sql.SQLStr(string.gsub(str, "'", "`"), true)
 end
 
 function ActiveRecord.Adapters.Sqlite:unescape(str)
@@ -41,7 +41,8 @@ function ActiveRecord.Adapters.Sqlite:raw_query(query, callback, flags, ...)
       local status, a, b, c, d = pcall(callback, result, query, math.Round(os.clock() - query_start, 3))
 
       if !status then
-        ErrorNoHalt(string.format('ActiveRecord - SQLite Callback Error!\n%s\n', a))
+        ErrorNoHalt('ActiveRecord - SQLite Callback Error!\n')
+        ErrorNoHalt(a..'\n')
       end
 
       return a, b, c, d

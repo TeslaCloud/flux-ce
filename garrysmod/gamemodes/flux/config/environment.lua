@@ -1,1 +1,1 @@
-return 'production'
+return 'development'
