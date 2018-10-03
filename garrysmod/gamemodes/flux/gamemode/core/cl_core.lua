@@ -1,6 +1,12 @@
 DeriveGamemode('sandbox')
 
 fl.blur_material = Material('pp/blurscreen')
+fl.rt_texture = GetRenderTarget('fl_rt_'..os.time(), ScrW(), ScrH(), false)
+fl.blur_mat = CreateMaterial('fl_mat_'..os.time(), 'UnlitGeneric', {
+  ['$basetexture'] = fl.rt_texture
+})
+fl.blur_size = 12
+fl.blur_passes = 6 -- anything below 6 looks chunky
 
 do
   local centerX, centerY = ScrW() * 0.5, ScrH() * 0.5
@@ -288,53 +294,42 @@ function draw.box(x, y, w, h, color)
 	surface.DrawRect(x, y, w, h)
 end
 
-do
-  local last_frame = -1
+function draw.set_blur_size(size)
+  size = size or 12
+  fl.blur_size = size
+  return size
+end
 
-  -- To be called outside of a panel
-  function draw.blur_box(x, y, w, h, color, blur_amt)
-    blur_amt = blur_amt or 6
-    local scrw, scrh = ScrW(), ScrH()
-
-    surface.SetMaterial(fl.blur_material)
+-- To be called outside of a panel
+function draw.blur_box(x, y, w, h, color)
+  render.SetScissorRect(x, y, x + w, y + h, true)
+    surface.SetMaterial((fl.should_render_blur != nil) and fl.blur_mat or fl.blur_material)
     surface.SetDrawColor(255, 255, 255, 255)
+    surface.DrawTexturedRect(0, 0, ScrW(), ScrH())
+  render.SetScissorRect(0, 0, 0, 0, false)
 
-    for i = 0, 1, 0.3 do
-      fl.blur_material:SetFloat('$blur', i * blur_amt)
-      fl.blur_material:Recompute()
-      render.UpdateScreenEffectTexture()
-      render.SetScissorRect(x, y, x + w, y + h, true)
-        surface.DrawTexturedRect(0, 0, scrw, scrh)
-      render.SetScissorRect(0, 0, 0, 0, false)
-    end
-
-    if color then
-      draw.box(x, y, w, h, color)
-    end
+  if color then
+    draw.box(x, y, w, h, color)
   end
 
-  function draw.blur_panel(panel, color, blur_amt)
-    blur_amt = blur_amt or 6
-    local x, y = panel:GetPos()
-    local w, h = panel:GetSize()
-    local scrw, scrh = ScrW(), ScrH()
+  fl.should_render_blur = true
+end
 
-    surface.SetMaterial(fl.blur_material)
+function draw.blur_panel(panel, color)
+  local x, y = panel:GetPos()
+  local w, h = panel:GetSize()
+
+  render.SetScissorRect(x, y, x + w, y + h, true)
+    surface.SetMaterial((fl.should_render_blur != nil) and fl.blur_mat or fl.blur_material)
     surface.SetDrawColor(255, 255, 255, 255)
+    surface.DrawTexturedRect(-x, -y, ScrW(), ScrH())
+  render.SetScissorRect(0, 0, 0, 0, false)
 
-    for i = 0, 1, 0.3 do
-      fl.blur_material:SetFloat('$blur', i * blur_amt)
-      fl.blur_material:Recompute()
-      render.UpdateScreenEffectTexture()
-      render.SetScissorRect(x, y, x + w, y + h, true)
-        surface.DrawTexturedRect(-x, -y, scrw, scrh)
-      render.SetScissorRect(0, 0, 0, 0, false)
-    end
-
-    if color then
-      draw.box(0, 0, w, h, color)
-    end
+  if color then
+    draw.box(0, 0, w, h, color)
   end
+
+  fl.should_render_blur = true
 end
 
 do

@@ -348,9 +348,9 @@ function THEME:PaintTabMenu(panel, width, height)
   local activePanel = panel.activePanel
   local sidebarColor = ColorAlpha(self:get_color('background'), 125)
 
-  panel.curAlpha = Lerp(fraction, panel.curAlpha or 0, 200)
+  fl.blur_size = Lerp(fraction * 0.4, fl.blur_size, 6)
 
-  draw.RoundedBox(0, 0, 0, width, height, Color(0, 0, 0, panel.curAlpha))
+  draw.blur_panel(panel)
   draw.RoundedBox(0, 0, 0, font.Scale(200) + 6, height, sidebarColor)
   draw.RoundedBox(0, 0, 0, 6, height, sidebarColor)
 

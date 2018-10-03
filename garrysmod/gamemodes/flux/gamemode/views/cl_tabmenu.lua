@@ -86,6 +86,8 @@ function PANEL:Init()
     self.buttons[k] = button
   end
 
+  draw.set_blur_size(1)
+
   self.lerpStart = SysTime()
 end
 
@@ -110,6 +112,7 @@ end
 function PANEL:CloseMenu()
   self:SetVisible(false)
   self:Remove()
+  draw.set_blur_size(12)
 end
 
 function PANEL:OnMousePressed()
