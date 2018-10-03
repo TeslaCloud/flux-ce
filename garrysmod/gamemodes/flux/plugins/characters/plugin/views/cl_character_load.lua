@@ -10,15 +10,15 @@ function PANEL:Init()
   self.btnClose:SafeRemove()
 
   self.list = vgui.Create('fl_horizontalbar', self)
-  self.list:SetSize(scrw / 2, scrh / 2)
-  self.list:SetPos(scrw / 2 - self.list:GetWide() / 2, scrh / 2 - self.list:GetTall() / 2)
+  self.list:SetSize(scrw * 0.5, scrh * 0.5)
+  self.list:SetPos(scrw * 0.5 - self.list:GetWide() * 0.5, scrh * 0.5 - self.list:GetTall() * 0.5)
   self.list:SetCentered(true)
 
   self:RebuildCharacterList()
 
   self.back = vgui.Create('fl_button', self)
-  self.back:SetSize(self.list:GetWide() / 4, theme.get_option('menu_sidebar_button_height'))
-  self.back:SetPos(scrw / 2 + self.list:GetWide() / 2 - self.back:GetWide(), scrh / 2 + self.list:GetTall() / 2 + self.back:GetTall())
+  self.back:SetSize(self.list:GetWide() * 0.25, theme.get_option('menu_sidebar_button_height'))
+  self.back:SetPos(scrw * 0.5 + self.list:GetWide() * 0.5 - self.back:GetWide(), scrh * 0.5 + self.list:GetTall() * 0.5 + self.back:GetTall())
   self.back:SetIcon('fa-chevron-right', true)
   self.back:SetIconSize(16)
   self.back:SetFont(theme.get_font('text_normal_smaller'))
@@ -38,7 +38,7 @@ function PANEL:RebuildCharacterList()
 
   for k, v in ipairs(fl.client:GetAllCharacters()) do
     self.chars[k] = vgui.Create('fl_character_panel', self)
-    self.chars[k]:SetSize(self.list:GetWide() / 4, self.list:GetTall())
+    self.chars[k]:SetSize(self.list:GetWide() * 0.25, self.list:GetTall())
     self.chars[k]:SetCharacter(v)
     self.chars[k]:SetParent(self)
 

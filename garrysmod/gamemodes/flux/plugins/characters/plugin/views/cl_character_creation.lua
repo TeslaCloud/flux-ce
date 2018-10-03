@@ -14,10 +14,10 @@ function PANEL:Init()
 
   self:OpenPanel(self.stages[1])
 
-  local x, y = self:GetWide() / 4, self:GetTall() / 6 + 8
+  local x, y = self:GetWide() * 0.25, self:GetTall() / 6 + 8
 
   self.back = vgui.Create('fl_button', self)
-  self.back:SetSize(self.panel:GetWide() / 4, theme.get_option('menu_sidebar_button_height'))
+  self.back:SetSize(self.panel:GetWide() * 0.25, theme.get_option('menu_sidebar_button_height'))
   self.back:SetPos(x, y + self.panel:GetTall() + self.back:GetTall())
   self.back:SetIcon('fa-chevron-left')
   self.back:SetIconSize(16)
@@ -33,7 +33,7 @@ function PANEL:Init()
   end
 
   self.next = vgui.Create('fl_button', self)
-  self.next:SetSize(self.panel:GetWide() / 4, theme.get_option('menu_sidebar_button_height'))
+  self.next:SetSize(self.panel:GetWide() * 0.25, theme.get_option('menu_sidebar_button_height'))
   self.next:SetPos(x + self.panel:GetWide() - self.next:GetWide(), y + self.panel:GetTall() + self.next:GetTall())
   self.next:SetIcon('fa-chevron-right', true)
   self.next:SetIconSize(16)
@@ -195,7 +195,7 @@ function PANEL:ClearData()
 end
 
 function PANEL:OpenPanel(id)
-  local x, y = self:GetWide() / 4, self:GetTall() / 6 + 8
+  local x, y = self:GetWide() * 0.25, self:GetTall() / 6 + 8
 
   if IsValid(self.panel) then
     if self.panel.OnClose then
@@ -212,7 +212,7 @@ function PANEL:OpenPanel(id)
   end
 
   self.panel = theme.create_panel(id, self)
-  self.panel:SetSize(self:GetWide() / 2, self:GetTall() / 2)
+  self.panel:SetSize(self:GetWide() * 0.5, self:GetTall() * 0.5)
 
   local from
 
