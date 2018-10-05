@@ -124,12 +124,4 @@ end
 
 util.include_folder('hooks', true)
 
-if !LITE_REFRESH then
-  hook.run('PreLoadPlugins')
-
-  fl.include_plugins('flux/plugins')
-end
-
-hook.run('OnPluginsLoaded')
-
 fl.include_schema()
