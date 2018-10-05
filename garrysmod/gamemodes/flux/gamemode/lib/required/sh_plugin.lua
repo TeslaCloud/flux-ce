@@ -308,6 +308,12 @@ function plugin.include(path)
   end
 
   if istable(data.depends) then
+    if IS_DEVELOPMENT then
+      table.map(data.depends_development or {}, function(v)
+        table.insert(data.depends, v)
+      end)
+    end
+  
     for k, v in ipairs(data.depends) do
       if !plugin.require(v) then
         ErrorNoHalt("Not loading the '"..tostring(path).."' plugin! Dependency missing: '"..tostring(v).."'!\n")
