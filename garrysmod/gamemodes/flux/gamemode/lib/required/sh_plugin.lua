@@ -344,13 +344,22 @@ function plugin.include_schema()
   local schema_folder = schemaPath..'/schema'
   local filePath = 'gamemodes/'..schemaPath..'/'..schemaPath..'.yml'
 
+  hook.run('PreLoadPlugins')
+
   if file.Exists(filePath, 'GAME') then
-    fl.dev_print('Checking schema dependencies using '..filePath)
+    fl.dev_print('Reading and loading schema dependencies from '..filePath)
 
-    local dependencies = YAML.eval(fileio.Read(filePath)).depends
+    local schema_yml = YAML.eval(fileio.Read(filePath))
+    local deps = schema_yml.depends or {}
 
-    if istable(dependencies) then
-      for k, v in ipairs(dependencies) do
+    if IS_DEVELOPMENT then
+      table.map(schema_yml.depends_development or {}, function(v)
+        table.insert(deps, v)
+      end)
+    end
+
+    if istable(deps) then
+      for k, v in ipairs(deps) do
         if !plugin.require(v) then
           ErrorNoHalt("Unable to load schema! Dependency missing: '"..tostring(v).."'!\n")
           ErrorNoHalt("Please install this plugin in your schema's 'plugins' folder!\n")
@@ -370,6 +379,8 @@ function plugin.include_schema()
   plugin.include_folders(schema_folder)
   plugin.include_plugins(schemaPath..'/plugins')
 
+  hook.run('OnPluginsLoaded')
+
   if schema_info.name and schema_info.author then
     MsgC(Color(255, 255, 0), schema_info.name)
     MsgC(Color(0, 255, 100), ' by '..schema_info.author..' has been loaded!\n')
@@ -380,37 +391,41 @@ function plugin.include_schema()
   hook.Call('OnSchemaLoaded', GM)
 end
 
--- Please specify full file name if requiring a single-file plugin.
-function plugin.require(pluginName)
-  if !isstring(pluginName) then return false end
+do
+  local tolerance = {
+    '', '.', '..',
+    '/plugin.yml',
+    '.lua',
+    '/plugin/sh_plugin.lua'
+  }
 
-  if !plugin.loaded(pluginName) then
-    local searchPaths = {
-      'flux/plugins/',
-      (fl.get_schema_folder() or 'flux')..'/plugins/'
-    }
+  -- Please specify full file name if requiring a single-file plugin.
+  function plugin.require(name)
+    if !isstring(name) then return false end
 
-    local tolerance = {
-      '', '.', '..',
-      '/plugin.yml',
-      '.lua',
-      '/plugin/sh_plugin.lua'
-    }
+    if !plugin.loaded(name) then
+      local searchPaths = {
+        'flux/plugins/',
+        (fl.get_schema_folder() or 'flux')..'/plugins/'
+      }
 
-    for k, v in ipairs(searchPaths) do
-      for _, ending in ipairs(tolerance) do
-        if file.Exists(v..pluginName..ending, 'LUA') then
-          plugin.include(v..pluginName)
+      for k, v in ipairs(searchPaths) do
+        if !v:find('flux') or !LITE_REFRESH then
+          for _, ending in ipairs(tolerance) do
+            if file.Exists(v..name..ending, 'LUA') then
+              plugin.include(v..name)
 
-          return true
+              return true
+            end
+          end
         end
       end
+    else
+      return true
     end
-  else
-    return true
-  end
 
-  return false
+    return false
+  end
 end
 
 function plugin.include_plugins(folder)
