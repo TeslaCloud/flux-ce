@@ -41,6 +41,13 @@ function PANEL:SetLifetime(time)
     end
   end)
 
+  timer.Simple(time - 1.5, function()
+    if IsValid(self) then
+      local x, y = self:GetPos()
+      self:MoveTo(ScrW(), y, 0.5)
+    end
+  end)
+
   self.lifetime = time
 end
 
@@ -62,7 +69,7 @@ function PANEL:Think()
 
   if (curTime - self.creationTime) > self.lifetime - 1.25 then
     self.curAlpha = self.curAlpha - 3 * frameTime
-  elseif self.curAlpha < 230 then
+  elseif self.curAlpha < 200 then
     self.curAlpha = self.curAlpha + 4 * frameTime
   end
 
@@ -73,6 +80,7 @@ end
 
 function PANEL:Paint(width, height)
   if !theme.hook('PaintNotificationContainer', self, width, height) then
+    draw.blur_panel(self, self.curAlpha)
     draw.RoundedBox(0, 0, 0, width, height, ColorAlpha(self.backgroundColor, self.curAlpha))
   end
 
@@ -80,7 +88,7 @@ function PANEL:Paint(width, height)
     local curY = 4
 
     for k, v in ipairs(self.notificationText) do
-      draw.SimpleText(v, theme.get_font('menu_normal'), 4, curY, ColorAlpha(self.textColor, self.curAlpha + 40))
+      draw.SimpleText(v, theme.get_font('menu_normal'), 4, curY, ColorAlpha(self.textColor, self.curAlpha + 55))
 
       curY = curY + self.fontSize + 4
     end
