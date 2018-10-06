@@ -168,6 +168,8 @@ function GM:PlayerShouldTakeDamage(player, attacker)
 end
 
 function GM:PlayerSpawnProp(player, model)
+  if !IsValid(player) then return true end
+
   if !player:can('spawn_props') then
     return false
   end
@@ -180,6 +182,8 @@ function GM:PlayerSpawnProp(player, model)
 end
 
 function GM:PlayerSpawnObject(player, model, skin)
+  if !IsValid(player) then return true end
+
   if !player:can('spawn_entities') then
     return false
   end
@@ -192,6 +196,8 @@ function GM:PlayerSpawnObject(player, model, skin)
 end
 
 function GM:PlayerSpawnNPC(player, npc, weapon)
+  if !IsValid(player) then return true end
+
   if !player:can('spawn_npcs') then
     return false
   end
@@ -204,6 +210,8 @@ function GM:PlayerSpawnNPC(player, npc, weapon)
 end
 
 function GM:PlayerSpawnEffect(player, model)
+  if !IsValid(player) then return true end
+
   if !player:can('spawn_entities') then
     return false
   end
@@ -216,6 +224,8 @@ function GM:PlayerSpawnEffect(player, model)
 end
 
 function GM:PlayerSpawnVehicle(player, model, name, tab)
+  if !IsValid(player) then return true end
+
   if !player:can('spawn_vehicles') then
     return false
   end
@@ -228,6 +238,8 @@ function GM:PlayerSpawnVehicle(player, model, name, tab)
 end
 
 function GM:PlayerSpawnSWEP(player, weapon, swep)
+  if !IsValid(player) then return true end
+
   if !player:can('spawn_sweps') then
     return false
   end
@@ -240,6 +252,8 @@ function GM:PlayerSpawnSWEP(player, weapon, swep)
 end
 
 function GM:PlayerSpawnSENT(player, class)
+  if !IsValid(player) then return true end
+
   if !player:can('spawn_entities') then
     return false
   end
@@ -252,6 +266,8 @@ function GM:PlayerSpawnSENT(player, class)
 end
 
 function GM:PlayerSpawnRagdoll(player, model)
+  if !IsValid(player) then return true end
+
   if !player:can('spawn_ragdolls') then
     return false
   end
@@ -264,6 +280,8 @@ function GM:PlayerSpawnRagdoll(player, model)
 end
 
 function GM:PlayerGiveSWEP(player, weapon, swep)
+  if !IsValid(player) then return true end
+
   if !player:can('spawn_sweps') then
     return false
   end
