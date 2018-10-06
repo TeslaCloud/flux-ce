@@ -30,7 +30,7 @@ function fl.notification:process_queue()
 
     local w, h = panel:GetSize()
     panel:SetPos(scrw - w - 8, -h)
-    panel:MoveTo(scrw - w - 8, 8, 0.13)
+    panel:MoveTo(scrw - w - 8, 8, 0.1)
 
     display[top].panel = panel
     display[top].width = w
@@ -46,7 +46,7 @@ function fl.notification:process_queue()
 
     table.remove(queue, 1)
 
-    timer.Simple(0.3, function() queue_locked = false fl.notification:process_queue() end)
+    timer.Simple(0.25, function() queue_locked = false fl.notification:process_queue() end)
   end
 end
 
@@ -75,7 +75,7 @@ function fl.notification:Reposition(offset)
     if v and IsValid(v.panel) then
       local x, y = v.panel:GetPos()
 
-      v.panel:MoveTo(x, y + offset + 4, 0.13)
+      v.panel:MoveTo(x, y + offset + 4, 0.1)
     end
   end
 end
