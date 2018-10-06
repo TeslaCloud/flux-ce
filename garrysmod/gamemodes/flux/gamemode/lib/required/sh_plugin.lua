@@ -245,13 +245,28 @@ function plugin.register(obj)
   if SERVER then
     if Schema == obj then
       local folderName = obj.folder:trim_end('/schema')
-      local filePath = 'gamemodes/'..folderName..'/'..folderName..'.yml'
+      local file_path = 'gamemodes/'..folderName..'/'..folderName..'.yml'
 
-      if file.Exists(filePath, 'GAME') then
-        fl.dev_print('Importing config: '..filePath)
+      if file.Exists(file_path, 'GAME') then
+        fl.dev_print('Importing config: '..file_path)
 
-        config.import(fileio.Read(filePath), CONFIG_PLUGIN)
+        config.import(fileio.Read(file_path), CONFIG_PLUGIN)
       end
+    end
+
+    -- Single-file plugins must be made known here.
+    if obj.single_file then
+      fl.shared.plugin_info[obj.folder] = {
+        name = obj.name,
+        description = obj.description,
+        author = obj.author,
+        version = obj.version,
+        folder = obj.folder,
+        single_file = obj.single_file,
+        plugin_main = obj.folder,
+        depends = obj.depends,
+        depends_development = obj.depends_development
+      }
     end
   end
 
@@ -270,6 +285,7 @@ function plugin.include(path)
   local data = {}
   data.id = id
   data.folder = path
+  data.single_file = ext == 'lua'
 
   if reload_data[folder] == false then
     fl.dev_print('Not reloading plugin: '..path)
@@ -280,23 +296,21 @@ function plugin.include(path)
 
   fl.dev_print('Loading plugin: '..path)
 
-  if ext != 'lua' then
-    if SERVER then
-      if file.Exists(path..'/plugin.yml', 'LUA') then
-        local dataTable = YAML.eval(file.Read(path..'/plugin.yml', 'LUA'))
-          dataTable.folder = path..'/plugin'
-          dataTable.plugin_main = 'sh_plugin.lua'
+  if !data.single_file and SERVER then
+    if file.Exists(path..'/plugin.yml', 'LUA') then
+      local dataTable = YAML.eval(file.Read(path..'/plugin.yml', 'LUA'))
+        dataTable.folder = path..'/plugin'
+        dataTable.plugin_main = 'sh_plugin.lua'
 
-          if file.Exists(dataTable.folder..'/sh_'..(dataTable.name or id)..'.lua', 'LUA') then
-            dataTable.plugin_main = 'sh_'..(dataTable.name or id)..'.lua'
-          end
-        table.safe_merge(data, dataTable)
+        if file.Exists(dataTable.folder..'/sh_'..(dataTable.name or id)..'.lua', 'LUA') then
+          dataTable.plugin_main = 'sh_'..(dataTable.name or id)..'.lua'
+        end
+      table.safe_merge(data, dataTable)
 
-        fl.shared.plugin_info[path] = data
-      end
-    else
-      table.safe_merge(data, fl.shared.plugin_info[path])
+      fl.shared.plugin_info[path] = data
     end
+  else
+    table.safe_merge(data, fl.shared.plugin_info[path] or {})
   end
 
   if data.environment then
@@ -330,7 +344,7 @@ function plugin.include(path)
 
   plugin.include_folders(data.folder)
 
-  if ext != 'lua' then
+  if !data.single_file then
     util.include(data.folder..'/'..data.plugin_main)
   else
     if file.Exists(path, 'LUA') then
@@ -348,15 +362,18 @@ function plugin.include_schema()
   local schema_info = fl.get_schema_info()
   local schemaPath = schema_info.folder
   local schema_folder = schemaPath..'/schema'
-  local filePath = 'gamemodes/'..schemaPath..'/'..schemaPath..'.yml'
+  local file_path = 'gamemodes/'..schemaPath..'/'..schemaPath..'.yml'
+  local deps = {}
 
   hook.run('PreLoadPlugins')
 
-  if file.Exists(filePath, 'GAME') then
-    fl.dev_print('Reading and loading schema dependencies from '..filePath)
+  if SERVER and file.Exists(file_path, 'GAME') then
+    fl.dev_print('Reading and loading schema dependencies from '..file_path)
 
-    local schema_yml = YAML.eval(fileio.Read(filePath))
-    local deps = schema_yml.depends or {}
+    fl.shared.schema_info.depends = {}
+
+    local schema_yml = YAML.eval(fileio.Read(file_path))
+    deps = schema_yml.depends or {}
 
     if IS_DEVELOPMENT then
       table.map(schema_yml.depends_development or {}, function(v)
@@ -364,14 +381,22 @@ function plugin.include_schema()
       end)
     end
 
-    if istable(deps) then
-      for k, v in ipairs(deps) do
-        if !plugin.require(v) then
-          ErrorNoHalt("Unable to load schema! Dependency missing: '"..tostring(v).."'!\n")
-          ErrorNoHalt("Please install this plugin in your schema's 'plugins' folder!\n")
+    table.map(deps, function(v)
+      if !v:find('sv_') then
+        table.insert(fl.shared.schema_info.depends, v)
+      end
+    end)
+  elseif CLIENT then
+    deps = fl.shared.schema_info.depends
+  end
 
-          return
-        end
+  if istable(deps) then
+    for k, v in ipairs(deps) do
+      if !plugin.require(v) then
+        ErrorNoHalt("Unable to load schema! Dependency missing: '"..tostring(v).."'!\n")
+        ErrorNoHalt("Please install this plugin in your schema's 'plugins' folder!\n")
+
+        return
       end
     end
   end
