@@ -174,12 +174,11 @@ function GM:FLHUDPaint(cur_time, scrw, scrh)
   if percentage and percentage > -1 then
     local x, y = ScrC()
 
-    surface.SetDrawColor(0, 0, 0, 200)
-    surface.draw_circle(x, y, 41, 64)
-    surface.draw_circle_outline(x, y, 41, 10, 64)
+    surface.SetDrawColor(0, 0, 0, 180)
+    surface.draw_circle_outline(x, y, 65, 5, 64)
 
     surface.SetDrawColor(theme.get_color('text'))
-    surface.draw_circle_outline_partial(math.Clamp(percentage, 0, 100), x, y, 40, 8  , 64)
+    surface.draw_circle_outline_partial(math.Clamp(percentage, 0, 100), x, y, 64, 3, 64)
 
     fl.client.circle_action_percentage = nil
   end

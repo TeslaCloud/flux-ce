@@ -79,6 +79,14 @@ function flItems:HUDPaint()
   end
 end
 
+function flItems:PreDrawHalos()
+  local ent = fl.client:get_nv('hold_entity')
+
+  if IsValid(ent) then
+    halo.Add({ ent }, color_white)
+  end
+end
+
 function flItems:Think()
   if !fl.client:get_nv('hold_start') then return end
 
