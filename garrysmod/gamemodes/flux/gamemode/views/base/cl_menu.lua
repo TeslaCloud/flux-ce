@@ -8,7 +8,7 @@ function PANEL:GetDeleteSelf()
 end
 
 function PANEL:Init()
-  self:SetFont(theme.get_font('text_small'))
+  self:SetFont(theme.get_font('main_menu_small'))
   self:SetTextColor(theme.get_color('text'))
 end
 

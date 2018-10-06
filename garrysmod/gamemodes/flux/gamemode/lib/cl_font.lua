@@ -79,6 +79,12 @@ function font.CreateFonts()
     weight = 500
   })
 
+  font.Create('flRobotoLight', {
+    font = 'Roboto Lt',
+    size = 16,
+    weight = 200
+  })
+
   font.Create('flRobotoBold', {
     font = 'Roboto',
     size = 16,
