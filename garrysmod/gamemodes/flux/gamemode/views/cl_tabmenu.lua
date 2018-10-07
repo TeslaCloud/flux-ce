@@ -9,14 +9,14 @@ function PANEL:Init()
   self:SetPos(0, 0)
   self:SetSize(scrw, scrh)
 
-  local curX, curY = hook.run('AdjustMenuItemPositions', self)
-  curX = curX or 42
-  curY = curY or 200
+  local cur_x, cur_y = hook.run('AdjustMenuItemPositions', self)
+  cur_x = cur_x or 42
+  cur_y = cur_y or 200
 
   self.closeButton = vgui.Create('fl_button', self)
   self.closeButton:SetFont(theme.get_font('menu_large'))
   self.closeButton:SetText(string.utf8upper(t'tab_menu.close_menu'))
-  self.closeButton:SetPos(6, curY)
+  self.closeButton:SetPos(6, cur_y)
   self.closeButton:SetSizeEx(200, 38)
   self.closeButton:SetDrawBackground(false)
   self.closeButton:SetTextAutoposition(true)
@@ -26,7 +26,7 @@ function PANEL:Init()
     self:Remove()
   end
 
-  curY = curY + font.Scale(52)
+  cur_y = cur_y + font.Scale(52)
 
   self.menu_items = {}
 
@@ -35,7 +35,7 @@ function PANEL:Init()
   for k, v in ipairs(self.menu_items) do
     local button = vgui.Create('fl_button', self)
     button:SetDrawBackground(false)
-    button:SetPos(6, curY)
+    button:SetPos(6, cur_y)
     button:SetSizeEx(200, 30)
     button:SetText(v.title)
     button:SetIcon(v.icon)
@@ -53,7 +53,7 @@ function PANEL:Init()
         surface.PlaySound('garrysmod/ui_hover.wav')
 
         if IsValid(self.activePanel) then
-          self.activePanel:SafeRemove()
+          self.activePanel:safe_remove()
 
           self.activeBtn:SetTextColor(nil)
         end
@@ -81,7 +81,7 @@ function PANEL:Init()
       end
     end
 
-    curY = curY + font.Scale(38)
+    cur_y = cur_y + font.Scale(38)
 
     self.buttons[k] = button
   end

@@ -7,23 +7,23 @@ function flChatbox:OnThemeLoaded(current_theme)
     weight = 1000
   })
 
-  current_theme:set_font('Chatbox_Normal', 'flChatFont', font.Scale(20))
-  current_theme:set_font('Chatbox_Bold', 'flRobotoCondensedBold', font.Scale(20))
-  current_theme:set_font('Chatbox_Italic', 'flRobotoCondensedItalic', font.Scale(20))
-  current_theme:set_font('Chatbox_ItalicBold', 'flRobotoCondensedItalicBold', font.Scale(20))
-  current_theme:set_font('Chatbox_Syntax', 'flRobotoCondensed', font.Scale(24))
+  current_theme:set_font('chatbox_normal', 'flChatFont', font.Scale(20))
+  current_theme:set_font('chatbox_bold', 'flRobotoCondensedBold', font.Scale(20))
+  current_theme:set_font('chatbox_italic', 'flRobotoCondensedItalic', font.Scale(20))
+  current_theme:set_font('chatbox_italic_bold', 'flRobotoCondensedItalicBold', font.Scale(20))
+  current_theme:set_font('chatbox_syntax', 'flRobotoCondensed', font.Scale(24))
 
-  current_theme:set_option('Chatbox_Width', scrw / 2.25)
-  current_theme:set_option('Chatbox_Height', scrh / 2.25)
-  current_theme:set_option('Chatbox_X', font.Scale(8))
-  current_theme:set_option('Chatbox_Y', scrh - current_theme:get_option('Chatbox_Height') - font.Scale(32))
+  current_theme:set_option('chatbox_width', scrw / 2.25)
+  current_theme:set_option('chatbox_height', scrh / 2.25)
+  current_theme:set_option('chatbox_x', font.Scale(8))
+  current_theme:set_option('chatbox_y', scrh - current_theme:get_option('chatbox_height') - font.Scale(32))
 end
 
 function flChatbox:OnResolutionChanged(newW, newH)
-  theme.set_option('Chatbox_Width', newW / 2.25)
-  theme.set_option('Chatbox_Height', newH / 2.25)
-  theme.set_option('Chatbox_X', font.Scale(8))
-  theme.set_option('Chatbox_Y', newH - theme.get_option('Chatbox_Height') - font.Scale(32))
+  theme.set_option('chatbox_width', newW / 2.25)
+  theme.set_option('chatbox_height', newH / 2.25)
+  theme.set_option('chatbox_x', font.Scale(8))
+  theme.set_option('chatbox_y', newH - theme.get_option('chatbox_height') - font.Scale(32))
 
   if chatbox.panel then
     chatbox.panel:Remove()
@@ -39,7 +39,7 @@ function flChatbox:PlayerBindPress(player, bind, bPress)
       fl.client.typing_team_chat = false
     end
 
-    chatbox.Show()
+    chatbox.show()
 
     return true
   end
@@ -47,7 +47,7 @@ end
 
 function flChatbox:GUIMousePressed(mouseCode, aimVector)
   if IsValid(chatbox.panel) then
-    chatbox.Hide()
+    chatbox.hide()
   end
 end
 
@@ -59,14 +59,14 @@ end
 
 function flChatbox:ChatboxTextEntered(text)
   if text and text != '' then
-    netstream.Start('Chatbox::PlayerSay', text)
+    netstream.Start('chat_player_say', text)
   end
 
-  chatbox.Hide()
+  chatbox.hide()
 end
 
-netstream.Hook('Chatbox::AddMessage', function(messageData)
+netstream.Hook('chat_add_message', function(message_data)
   if IsValid(chatbox.panel) then
-    chatbox.panel:AddMessage(messageData)
+    chatbox.panel:add_message(message_data)
   end
 end)

@@ -28,7 +28,7 @@ function fl.bars:register(id, data, force)
     id = id,
     text = data.text or '',
     color = data.color or Color(200, 90, 90),
-    maxValue = data.maxValue or 100,
+    max_value = data.max_value or 100,
     hinderColor = data.hinderColor or Color(255, 0, 0),
     hinderText = data.hinderText or '',
     display = data.display or 100,
@@ -45,7 +45,7 @@ function fl.bars:register(id, data, force)
     type = data.type or BAR_TOP,
     font = data.font or 'text_bar',
     spacing = data.spacing or self.defaultSpacing,
-    textOffset = data.textOffset or 1,
+    text_offset = data.text_offset or 1,
     callback = data.callback
   }
 
@@ -70,11 +70,11 @@ function fl.bars:SetValue(id, newValue)
 
     if bar.value != newValue then
       if bar.hinderDisplay and bar.hinderValue then
-        bar.value = math.Clamp(newValue, 0, bar.maxValue - bar.hinderValue + 2)
+        bar.value = math.Clamp(newValue, 0, bar.max_value - bar.hinderValue + 2)
       end
 
       bar.interpolated = util.cubic_ease_in_out_t(150, bar.value, newValue)
-      bar.value = math.Clamp(newValue, 0, bar.maxValue)
+      bar.value = math.Clamp(newValue, 0, bar.max_value)
     end
   end
 end
@@ -86,7 +86,7 @@ function fl.bars:HinderValue(id, newValue)
     theme.call('PreBarHinderValueSet', bar, bar.hinderValue, newValue)
 
     if bar.value != newValue then
-      bar.hinderValue = math.Clamp(newValue, 0, bar.maxValue)
+      bar.hinderValue = math.Clamp(newValue, 0, bar.max_value)
     end
   end
 end
@@ -114,7 +114,7 @@ end
 function fl.bars:Position()
   self:Prioritize()
 
-  local lastY = self.defaultY
+  local last_y = self.defaultY
   local lastX = self.defaultX
 
   for priority, ids in pairs(sorted) do
@@ -126,9 +126,9 @@ function fl.bars:Position()
         offX = offX or 0
         offY = offY or 0
 
-        bar.y = lastY + offY
+        bar.y = last_y + offY
         bar.x = bar.x + offX
-        lastY = lastY + bar.height + bar.spacing
+        last_y = last_y + bar.height + bar.spacing
       end
     end
   end
@@ -136,30 +136,30 @@ function fl.bars:Position()
 end
 
 function fl.bars:Draw(id)
-  local barInfo = self:Get(id)
+  local bar_info = self:Get(id)
 
-  if barInfo then
-    hook.run('PreDrawBar', barInfo)
-    theme.call('PreDrawBar', barInfo)
+  if bar_info then
+    hook.run('PreDrawBar', bar_info)
+    theme.call('PreDrawBar', bar_info)
 
-    if !hook.run('ShouldDrawBar', barInfo) then
+    if !hook.run('ShouldDrawBar', bar_info) then
       return
     end
 
-    theme.call('DrawBarBackground', barInfo)
+    theme.call('DrawBarBackground', bar_info)
 
-    if hook.run('ShouldFillBar', barInfo) or barInfo.value != 0 then
-      theme.call('DrawBarFill', barInfo)
+    if hook.run('ShouldFillBar', bar_info) or bar_info.value != 0 then
+      theme.call('DrawBarFill', bar_info)
     end
 
-    if barInfo.hinderDisplay and barInfo.hinderDisplay <= barInfo.hinderValue then
-      theme.call('DrawBarHindrance', barInfo)
+    if bar_info.hinderDisplay and bar_info.hinderDisplay <= bar_info.hinderValue then
+      theme.call('DrawBarHindrance', bar_info)
     end
 
-    theme.call('DrawBarTexts', barInfo)
+    theme.call('DrawBarTexts', bar_info)
 
-    hook.run('PostDrawBar', barInfo)
-    theme.call('PostDrawBar', barInfo)
+    hook.run('PostDrawBar', bar_info)
+    theme.call('PostDrawBar', bar_info)
   end
 end
 
@@ -199,16 +199,16 @@ do
   function Bars:PreDrawBar(bar)
     bar.curI = bar.curI or 1
 
-    bar.realFillWidth = bar.width * (bar.value / bar.maxValue)
+    bar.real_fill_width = bar.width * (bar.value / bar.max_value)
 
     if bar.interpolated == nil then
-      bar.fillWidth = bar.realFillWidth
+      bar.fill_width = bar.real_fill_width
     else
       if bar.curI > 150 then
         bar.interpolated = nil
         bar.curI = 1
       else
-        bar.fillWidth = bar.width * (bar.interpolated[math.Round(bar.curI)] / bar.maxValue)
+        bar.fill_width = bar.width * (bar.interpolated[math.Round(bar.curI)] / bar.max_value)
         bar.curI = bar.curI + math.Clamp(math.Round(1 * (FrameTime() / 0.006)), 1, 10)
       end
     end
@@ -230,10 +230,10 @@ do
   fl.bars:register('respawn', {
     text = t'bar_text.respawn',
     color = Color(50, 200, 50),
-    maxValue = 100,
+    max_value = 100,
     x = ScrW() * 0.5 - fl.bars.defaultW * 0.5,
     y = ScrH() * 0.5 - 8,
-    textOffset = 1,
+    text_offset = 1,
     height = 16,
     type = BAR_MANUAL
   })

@@ -19,7 +19,7 @@ function flThirdPerson:CalcView(player, pos, angles, fov)
   if !isThirdPerson and !self.wasThirdPerson then return end
 
   local view = {}
-  local curTime = CurTime()
+  local cur_time = CurTime()
 
   view.origin = pos
   view.angles = angles
@@ -27,12 +27,12 @@ function flThirdPerson:CalcView(player, pos, angles, fov)
 
   if isThirdPerson then
     if !start_time or flippedStart then
-      start_time = curTime
+      start_time = cur_time
       flippedStart = false
     end
 
     local forward = angles:Forward() * 75
-    local fraction = (curTime - start_time) / duration
+    local fraction = (cur_time - start_time) / duration
 
     if fraction <= 1 then
       offset.x = Lerp(fraction, 0, forward.x)
@@ -48,12 +48,12 @@ function flThirdPerson:CalcView(player, pos, angles, fov)
     self.wasThirdPerson = true
   else
     if !flippedStart then
-      start_time = curTime
+      start_time = cur_time
       flippedStart = true
     end
 
     local forward = angles:Forward() * 75
-    local fraction = (curTime - start_time) / duration
+    local fraction = (cur_time - start_time) / duration
 
     if fraction <= 1 then
       offset.x = Lerp(fraction, forward.x, 0)

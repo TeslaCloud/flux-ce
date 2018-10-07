@@ -2,30 +2,29 @@ config.set('chatbox_message_margin', 2)
 config.set('chatbox_message_fade_delay', 12)
 config.set('chatbox_max_messages', 100)
 
-local defaultMessageData = {
+local default_msg_data = {
   sender = nil,
   listeners = {},
   data = {},
   position = nil,
   radius = 0,
   filter = nil,
-  shouldTranslate = false,
   rich = false,
   size = 20,
   text = nil,
-  teamChat = false
+  team_chat = false
 }
 
 local filters = {}
-local clientMode = false
+local client_mode = false
 
-function chatbox.AddFilter(id, data)
+function chatbox.add_filter(id, data)
   filters[id] = data
 end
 
-function chatbox.CanHear(listener, messageData)
+function chatbox.can_hear(listener, message_data)
   if listener:HasInitialized() then
-    local position, radius = messageData.position, messageData.radius
+    local position, radius = message_data.position, message_data.radius
 
     if !isnumber(radius) then return false end
     if radius == 0 then return true end
@@ -47,29 +46,27 @@ function chatbox.CanHear(listener, messageData)
   return false
 end
 
-function chatbox.PlayerCanHear(listener, messageData)
-  return plugin.call('PlayerCanHear', listener, messageData) or chatbox.CanHear(listener, messageData)
+function chatbox.player_can_hear(listener, message_data)
+  return plugin.call('PlayerCanHear', listener, message_data) or chatbox.can_hear(listener, message_data)
 end
 
-function chatbox.AddText(listeners, ...)
-  local messageData = {
+function chatbox.add_text(listeners, ...)
+  local message_data = {
     sender = nil,
     listeners = listeners or {},
     data = {},
     position = nil,
     radius = 0,
     filter = nil,
-    shouldTranslate = false,
     rich = false,
     size = 20,
     text = nil,
-    teamChat = false,
-    max_height = 20
+    team_chat = false
   }
 
   if !istable(listeners) then
     if IsValid(listeners) then
-      listeners = {listeners}
+      listeners = { listeners }
     else
       listeners = _player.GetAll()
     end
@@ -78,47 +75,45 @@ function chatbox.AddText(listeners, ...)
   -- Compile the initial message data table.
   for k, v in ipairs({...}) do
     if isstring(v) then
-      table.insert(messageData.data, v)
+      table.insert(message_data.data, v)
 
       if k == 1 then
-        messageData.text = v
+        message_data.text = v
       end
     elseif isnumber(v) then
-      table.insert(messageData.data, v)
-
-      if messageData.max_height < v then
-        messageData.max_height = v
-      end
+      table.insert(message_data.data, v)
     elseif IsColor(v) then
-      table.insert(messageData.data, v)
+      table.insert(message_data.data, v)
     elseif istable(v) then
-      if !v.isData and !clientMode then
-        table.merge(messageData, v)
+      if !v.is_data and !client_mode then
+        table.merge(message_data, v)
       else
-        table.insert(messageData.data, v)
+        table.insert(message_data.data, v)
       end
     elseif IsValid(v) then
-      table.insert(messageData.data, v)
+      table.insert(message_data.data, v)
     end
   end
 
   for k, v in ipairs(listeners) do
-    if chatbox.PlayerCanHear(v, messageData) then
-      netstream.Start(v, 'Chatbox::AddMessage', messageData)
+    if chatbox.player_can_hear(v, message_data) then
+      netstream.Start(v, 'chat_add_message', message_data)
     end
   end
 end
 
-function chatbox.SetClientMode(bClientMode)
-  clientMode = bClientMode
+function chatbox.set_client_mode(val)
+  client_mode = val
 end
 
 function chatbox.message_to_string(message_data, concatenator)
   local to_string = {}
 
   for k, v in pairs(message_data) do
+    if isnumber(v) then continue end
+
     if isstring(v) then
-      to_string[#to_string + 1] = v
+      table.insert(to_string, v)
     elseif IsValid(v) then
       local name = ''
 
@@ -128,43 +123,43 @@ function chatbox.message_to_string(message_data, concatenator)
         name = tostring(v) or v:GetClass()
       end
 
-      to_string[#to_string + 1] = name
+      table.insert(to_string, name)
     end
   end
 
   return table.concat(to_string, concatenator)
 end
 
-netstream.Hook('Chatbox::AddText', function(player, ...)
+netstream.Hook('chat_add_text', function(player, ...)
   if !IsValid(player) then return end
 
-  chatbox.SetClientMode(true)
-  chatbox.AddText(player, ...)
-  chatbox.SetClientMode(false)
+  chatbox.set_client_mode(true)
+  chatbox.add_text(player, ...)
+  chatbox.set_client_mode(false)
 end)
 
-netstream.Hook('Chatbox::PlayerSay', function(player, text, bTeamChat)
+netstream.Hook('chat_player_say', function(player, text, team_chat)
   if !IsValid(player) then return end
 
-  local playerSayOverride = hook.run('PlayerSay', player, text, bTeamChat)
+  local player_say_override = hook.run('PlayerSay', player, text, team_chat)
 
-  if isstring(playerSayOverride) then
-    if playerSayOverride == '' then return end
+  if isstring(player_say_override) then
+    if player_say_override == '' then return end
 
-    text = playerSayOverride
+    text = player_say_override
   end
 
   local message = {
-    hook.run('ChatboxGetPlayerIcon', player, text, bTeamChat) or {},
-    hook.run('ChatboxGetPlayerColor', player, text, bTeamChat) or _team.GetColor(player:Team()),
+    hook.run('ChatboxGetPlayerIcon', player, text, team_chat) or {},
+    hook.run('ChatboxGetPlayerColor', player, text, team_chat) or _team.GetColor(player:Team()),
     player,
-    hook.run('ChatboxGetMessageColor', player, text, bTeamChat) or Color(255, 255, 255),
+    hook.run('ChatboxGetMessageColor', player, text, team_chat) or Color(255, 255, 255),
     ': ',
     text,
-    {sender = player}
+    { sender = player }
   }
 
   hook.run('ChatboxAdjustPlayerSay', player, text, message)
 
-  chatbox.AddText(nil, unpack(message))
+  chatbox.add_text(nil, unpack(message))
 end)

@@ -399,7 +399,7 @@ function GM:PlayerThink(player, cur_time)
   end
 end
 
-function GM:PlayerSay(player, text, bTeamChat)
+function GM:PlayerSay(player, text, team_chat)
   local is_command, length = string.is_command(tostring(text))
 
   if is_command then

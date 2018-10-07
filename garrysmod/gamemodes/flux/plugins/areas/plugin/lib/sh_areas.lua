@@ -132,7 +132,7 @@ function areas.RegisterType(id, name, description, color, defaultCallback)
   }
 end
 
--- callback(player, area, poly, bHasEntered, curPos, curTime)
+-- callback(player, area, poly, bHasEntered, curPos, cur_time)
 function areas.SetCallback(areaType, callback)
   callbacks[areaType] = callback
 end
@@ -145,11 +145,11 @@ areas.RegisterType(
   'area',
   'Simple Area',
   'A simple area. Use this type if you have a callback somewhere in the code that looks up id instead of type ID.',
-  function(player, area, poly, bHasEntered, curPos, curTime)
+  function(player, area, poly, bHasEntered, curPos, cur_time)
     if bHasEntered then
-      hook.run('PlayerEnteredArea', player, area, curTime)
+      hook.run('PlayerEnteredArea', player, area, cur_time)
     else
-      hook.run('PlayerLeftArea', player, area, curTime)
+      hook.run('PlayerLeftArea', player, area, cur_time)
     end
   end
 )

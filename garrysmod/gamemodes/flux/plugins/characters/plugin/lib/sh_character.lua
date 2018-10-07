@@ -137,7 +137,7 @@ else
     fl.client.characters[idx] = data
 
     if IsValid(fl.intro_panel) then
-      fl.intro_panel:SafeRemove()
+      fl.intro_panel:safe_remove()
       fl.intro_panel = theme.create_panel('main_menu')
       fl.intro_panel:MakePopup()
     end

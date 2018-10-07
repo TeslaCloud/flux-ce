@@ -15,7 +15,7 @@ PANEL.m_Permission = {}
 
 function PANEL:Rebuild()
   if IsValid(self.container) then
-    self.container:SafeRemove()
+    self.container:safe_remove()
   end
 
   local width, height = self:GetWide(), self:GetTall()
@@ -79,16 +79,16 @@ end
 
 function PANEL:Rebuild()
   if IsValid(self.listLayout) then
-    self.listLayout:SafeRemove()
+    self.listLayout:safe_remove()
   end
 
   local permissions = fl.admin:GetPermissions()
   local width, height = self:GetWide(), self:GetTall()
 
-  self.scrollPanel = vgui.Create('DScrollPanel', self)
-  self.scrollPanel:SetSize(width, height)
+  self.scroll_panel = vgui.Create('DScrollPanel', self)
+  self.scroll_panel:SetSize(width, height)
 
-  self.listLayout = vgui.Create('DListLayout', self.scrollPanel)
+  self.listLayout = vgui.Create('DListLayout', self.scroll_panel)
   self.listLayout:SetSize(width, height)
 
   for category, perms in pairs(permissions) do
@@ -100,7 +100,7 @@ function PANEL:Rebuild()
 
     collapsibleCategory:SetContents(list)
 
-    local curY = 0
+    local cur_y = 0
 
     for k, v in pairs(perms) do
       local btn = vgui.Create('flPermission')

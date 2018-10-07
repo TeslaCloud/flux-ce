@@ -86,20 +86,20 @@ end
 
 function flAreas:HUDPaint()
   if istable(fl.client.textAreas) then
-    local lastY = 400
-    local curTime = CurTime()
+    local last_y = 400
+    local cur_time = CurTime()
 
     for k, v in pairs(fl.client.textAreas) do
-      if istable(v) and v.endTime > curTime then
+      if istable(v) and v.endTime > cur_time then
         v.alpha = v.alpha or 255
 
-        draw.SimpleText(v.text, theme.get_font('text_large'), 32, lastY, Color(255, 255, 255, v.alpha))
+        draw.SimpleText(v.text, theme.get_font('text_large'), 32, last_y, Color(255, 255, 255, v.alpha))
 
-        if curTime + 2 >= v.endTime then
+        if cur_time + 2 >= v.endTime then
           v.alpha = math.Clamp(v.alpha - 1, 0, 255)
         end
 
-        lastY = lastY + 50
+        last_y = last_y + 50
       end
     end
   end

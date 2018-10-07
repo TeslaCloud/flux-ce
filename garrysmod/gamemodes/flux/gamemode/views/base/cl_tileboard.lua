@@ -69,16 +69,16 @@ function PANEL:AttachPanel(panel, x, y, w, h)
 end
 
 function PANEL:Think()
-  local curTime = CurTime()
+  local cur_time = CurTime()
 
-  if curTime > self.m_NextThink then
+  if cur_time > self.m_NextThink then
     for k, v in ipairs(self.m_Docked) do
       if !IsValid(v.panel) then
         table.remove(self.m_Docked, k)
       end
     end
 
-    self.m_NextThink = curTime + 0.5
+    self.m_NextThink = cur_time + 0.5
   end
 end
 

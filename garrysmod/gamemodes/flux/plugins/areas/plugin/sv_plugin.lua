@@ -1,5 +1,5 @@
 function flAreas:OneSecond()
-  local curTime = CurTime()
+  local cur_time = CurTime()
 
   for k, v in pairs(areas.GetAll()) do
     if istable(v.polys) and isstring(v.type) then
@@ -21,7 +21,7 @@ function flAreas:OneSecond()
             if util.vector_in_poly(pos, v2) then
               -- Player entered the area
               if !table.HasValue(player.lastArea[v.id], k2) then
-                Try('Areas', areas.GetCallback(v.type), player, v, true, pos, curTime)
+                Try('Areas', areas.GetCallback(v.type), player, v, true, pos, cur_time)
 
                 netstream.Start(player, 'PlayerEnteredArea', k, pos)
 
@@ -35,7 +35,7 @@ function flAreas:OneSecond()
           if !enteredArea then
             -- Player left the area
             if table.HasValue(player.lastArea[v.id], k2) then
-              Try('Areas', areas.GetCallback(v.type), player, v, false, pos, curTime)
+              Try('Areas', areas.GetCallback(v.type), player, v, false, pos, cur_time)
 
               netstream.Start(player, 'PlayerLeftArea', k, pos)
 

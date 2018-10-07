@@ -3,10 +3,10 @@ local PANEL = {}
 function PANEL:Init()
   local w, h = self:GetWide(), self:GetTall()
 
-  self.scrollPanel = vgui.Create('DScrollPanel', self)
-  self.scrollPanel:Dock(FILL)
+  self.scroll_panel = vgui.Create('DScrollPanel', self)
+  self.scroll_panel:Dock(FILL)
 
-  self.layout = vgui.Create('DListLayout', self.scrollPanel)
+  self.layout = vgui.Create('DListLayout', self.scroll_panel)
   self.layout:Dock(FILL)
 
   self:Rebuild()
@@ -15,7 +15,7 @@ end
 function PANEL:Rebuild()
   local categories = {}
 
-  self.scrollPanel:Dock(FILL)
+  self.scroll_panel:Dock(FILL)
   self.layout:Dock(FILL)
 
   for id, item_table in pairs(item.GetAll()) do

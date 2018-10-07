@@ -19,12 +19,12 @@ function flHints:DisplayRandom()
 end
 
 function flHints:OneMinute()
-  local curTime = CurTime()
+  local cur_time = CurTime()
 
-  if curTime >= (fl.client.nextHint or 0) then
+  if cur_time >= (fl.client.nextHint or 0) then
     flHints:DisplayRandom()
 
-    fl.client.nextHint = curTime + 300
+    fl.client.nextHint = cur_time + 300
   end
 end
 

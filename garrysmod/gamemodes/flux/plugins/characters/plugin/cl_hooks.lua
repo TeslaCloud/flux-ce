@@ -83,7 +83,7 @@ function flCharacters:AddTabMenuItems(menu)
     title = t'tab_menu.main_menu',
     icon = 'fa-users',
     override = function(menuPanel, button)
-      menuPanel:SafeRemove()
+      menuPanel:safe_remove()
       fl.intro_panel = theme.create_panel('main_menu')
     end
   }, 1)
@@ -91,7 +91,7 @@ end
 
 function flCharacters:PostCharacterLoaded(nCharID)
   if IsValid(fl.intro_panel) then
-    fl.intro_panel:SafeRemove()
+    fl.intro_panel:safe_remove()
   end
 end
 
@@ -122,8 +122,8 @@ function flCharacters:RebuildScoreboardPlayerCard(card, player)
   card.nameLabel:SetPos(x, 2)
 
   if IsValid(card.descLabel) then
-    card.descLabel:SafeRemove()
-    card.spawnIcon:SafeRemove()
+    card.descLabel:safe_remove()
+    card.spawnIcon:safe_remove()
   end
 
   card.spawnIcon = vgui.Create('SpawnIcon', card)

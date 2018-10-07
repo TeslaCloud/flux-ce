@@ -17,7 +17,7 @@ flAreas.toolModes = {
       OnLeftClick = data.OnLeftClick,
       OnRightClick = data.OnRightClick,
       OnReload = data.OnReload or function(mode, tool, trace)
-        local curTime = CurTime()
+        local cur_time = CurTime()
 
         for k, v in pairs(areas.GetAll()) do
           if istable(v.polys) and isstring(v.type) and v.type == data.areaType then
@@ -97,17 +97,17 @@ function flAreas:AddAreaToolModes(modeList)
   modeList:Add(mode)
 end
 
-areas.RegisterType('textarea', 'Text Area', 'Displays text whenever player enters the area.', Color(255, 0, 255), function(player, area, bHasEntered, pos, curTime)
+areas.RegisterType('textarea', 'Text Area', 'Displays text whenever player enters the area.', Color(255, 0, 255), function(player, area, bHasEntered, pos, cur_time)
   player.textAreas = player.textAreas or {}
 
   if bHasEntered then
     local textAreaData = player.textAreas[area.id]
     local areaData = player.textAreas[area.id]
 
-    if istable(areaData) and areaData.resetTime > curTime then
+    if istable(areaData) and areaData.resetTime > cur_time then
       return
     end  
 
-    player.textAreas[area.id] = {text = area.text, endTime = curTime + 10, resetTime = curTime + 20}
+    player.textAreas[area.id] = {text = area.text, endTime = cur_time + 10, resetTime = cur_time + 20}
   end
 end)

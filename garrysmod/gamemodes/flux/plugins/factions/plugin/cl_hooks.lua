@@ -51,7 +51,7 @@ end
 function flFactions:PreRebuildScoreboard(panel, w, h)
   for k, v in ipairs(panel.playerCards) do
     if IsValid(v) then
-      v:SafeRemove()
+      v:safe_remove()
     end
 
     panel.playerCards[k] = nil
@@ -61,17 +61,17 @@ function flFactions:PreRebuildScoreboard(panel, w, h)
 
   for k, v in ipairs(panel.factionCategories) do
     if IsValid(v) then
-      v:SafeRemove()
+      v:safe_remove()
     end
 
     panel.factionCategories[k] = nil
   end
 
-  local curY = font.Scale(40)
+  local cur_y = font.Scale(40)
   local cardTall = font.Scale(32) + 8
   local margin = font.Scale(4)
 
-  local catList = vgui.Create('DListLayout', panel.scrollPanel)
+  local catList = vgui.Create('DListLayout', panel.scroll_panel)
   catList:SetSize(w - 8, h - 36)
   catList:SetPos(4, 36)
 
@@ -82,7 +82,7 @@ function flFactions:PreRebuildScoreboard(panel, w, h)
 
     local cat = vgui.Create('DCollapsibleCategory', panel)
     cat:SetSize(w - 8, 32)
-    cat:SetPos(4, curY)
+    cat:SetPos(4, cur_y)
     cat:SetLabel(faction_table.name or id)
 
     catList:Add(cat)
@@ -104,7 +104,7 @@ function flFactions:PreRebuildScoreboard(panel, w, h)
       table.insert(panel.playerCards, playerCard)
     end
 
-    curY = curY + cat:GetTall() + cardTall + margin
+    cur_y = cur_y + cat:GetTall() + cardTall + margin
   end
 
   return true

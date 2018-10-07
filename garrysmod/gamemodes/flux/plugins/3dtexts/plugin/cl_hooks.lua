@@ -24,20 +24,20 @@ function fl3DText:DrawTextPreview()
       elseif style == 9 then
         local wide = w + 64
         local barColor = Color(255, 255, 255, 40)
-        local barX, barY = -w * 0.5 - 32, -h * 0.5 - 16
+        local barX, bar_y = -w * 0.5 - 32, -h * 0.5 - 16
         local rectWidth = (wide / 3 - wide / 6) * 0.75
 
         -- Draw left thick rectangles
-        draw.RoundedBox(0, barX, barY - 6, rectWidth, 10, barColor)
-        draw.RoundedBox(0, barX, barY + h + 22, rectWidth, 10, barColor)
+        draw.RoundedBox(0, barX, bar_y - 6, rectWidth, 10, barColor)
+        draw.RoundedBox(0, barX, bar_y + h + 22, rectWidth, 10, barColor)
 
         -- ...and the right ones
-        draw.RoundedBox(0, barX + wide - rectWidth, barY - 6, rectWidth, 10, barColor)
-        draw.RoundedBox(0, barX + wide - rectWidth, barY + h + 22, rectWidth, 10, barColor)
+        draw.RoundedBox(0, barX + wide - rectWidth, bar_y - 6, rectWidth, 10, barColor)
+        draw.RoundedBox(0, barX + wide - rectWidth, bar_y + h + 22, rectWidth, 10, barColor)
 
         -- And the middle thingies
-        draw.RoundedBox(0, -(wide / 1.75) * 0.5, barY, wide / 1.75, 4, barColor)
-        draw.RoundedBox(0, -(wide / 1.75) * 0.5, barY + h + 22, wide / 1.75, 4, barColor)
+        draw.RoundedBox(0, -(wide / 1.75) * 0.5, bar_y, wide / 1.75, 4, barColor)
+        draw.RoundedBox(0, -(wide / 1.75) * 0.5, bar_y + h + 22, wide / 1.75, 4, barColor)
       end
     end
 
