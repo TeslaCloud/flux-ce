@@ -20,14 +20,14 @@ function PANEL:Init()
   local scrw, scrh = ScrW(), ScrH()
 
   self.gender_label = vgui.Create('DLabel', self)
-  self.gender_label:SetPos(4, font.Scale(36) + 6)
   self.gender_label:SetText(t'char_create.gender')
   self.gender_label:SetFont(theme.get_font('main_menu_normal'))
   self.gender_label:SetTextColor(Color('white'))
   self.gender_label:SizeToContents()
+  self.gender_label:SetPos(scrw * 0.125 - self.gender_label:GetWide() - 4, font.Scale(36) + 6)
 
   self.gender_male = vgui.Create('fl_button', self)
-  self.gender_male:SetPos(self.gender_label:GetWide() + 12, font.Scale(36) + 4)
+  self.gender_male:SetPos(scrw * 0.125 + 8, font.Scale(36) + 4)
   self.gender_male:SetSize(24, 24)
   self.gender_male:SetDrawBackground(false)
   self.gender_male:SetIcon('fa-mars')
@@ -50,7 +50,7 @@ function PANEL:Init()
   end
 
   self.gender_female = vgui.Create('fl_button', self)
-  self.gender_female:SetPos(self.gender_label:GetWide() + self.gender_male:GetWide() + 24, font.Scale(36) + 4)
+  self.gender_female:SetPos(scrw * 0.125 + self.gender_male:GetWide() + 20, font.Scale(36) + 4)
   self.gender_female:SetSize(24, 24)
   self.gender_female:SetDrawBackground(false)
   self.gender_female:SetIcon('fa-venus')
@@ -73,20 +73,20 @@ function PANEL:Init()
   end
 
   self.name_label = vgui.Create('DLabel', self)
-  self.name_label:SetPos(4, font.Scale(72) + 2)
   self.name_label:SetText(t'char_create.name')
   self.name_label:SetFont(theme.get_font('main_menu_normal'))
   self.name_label:SetTextColor(Color('white'))
   self.name_label:SizeToContents()
+  self.name_label:SetPos(scrw * 0.125 - self.name_label:GetWide() - 4, font.Scale(72) + 2)
 
   self.name_entry = vgui.Create('DTextEntry', self)
-  self.name_entry:SetPos(self.name_label:GetWide() + 8, font.Scale(72))
-  self.name_entry:SetSize(scrw / 8, 24)
+  self.name_entry:SetPos(scrw * 0.125 + 4, font.Scale(72))
+  self.name_entry:SetSize(scrw * 0.125, 24)
   self.name_entry:SetFont(theme.get_font('main_menu_normal'))
   self.name_entry:SetText('')
 
   self.name_random = vgui.Create('fl_button', self)
-  self.name_random:SetPos(self.name_label:GetWide() + self.name_entry:GetWide() + 16, font.Scale(72.5))
+  self.name_random:SetPos(scrw * 0.125 + self.name_entry:GetWide() + 8, font.Scale(72.5))
   self.name_random:SetSize(24, 24)
   self.name_random:SetIcon('fa-random')
   self.name_random:SetIconSize(24, 24)
@@ -99,15 +99,15 @@ function PANEL:Init()
   end
 
   self.desc_label = vgui.Create('DLabel', self)
-  self.desc_label:SetPos(4, font.Scale(108) + 2)
   self.desc_label:SetText(t'char_create.desc')
   self.desc_label:SetFont(theme.get_font('main_menu_normal'))
   self.desc_label:SetTextColor(Color('white'))
   self.desc_label:SizeToContents()
+  self.desc_label:SetPos(scrw * 0.125 - self.desc_label:GetWide() - 4, font.Scale(108) + 2)
 
   self.desc_entry = vgui.Create('DTextEntry', self)
-  self.desc_entry:SetPos(self.desc_label:GetWide() + 8, font.Scale(108))
-  self.desc_entry:SetSize(scrw * 0.25 - self.desc_label:GetWide() - 4, font.Scale(72))
+  self.desc_entry:SetPos(scrw * 0.125 + 4, font.Scale(108))
+  self.desc_entry:SetSize(scrw * 0.125, font.Scale(72))
   self.desc_entry:SetFont(theme.get_font('main_menu_normal'))
   self.desc_entry:SetText('')
   self.desc_entry:SetMultiline(true)
@@ -231,12 +231,14 @@ function PANEL:OnOpen(parent)
   self.desc_entry:SetText(parent.char_data.description or '')
   self.models_list.model = parent.char_data.model
 
-  if parent.char_data.skin then
-    self.skin:SetValue(parent.char_data.skin)
+  local skin = parent.char_data.skin
+
+  if skin then
+    self.skin:SetValue(skin)
   end
 
   if IsValid(self.model.Entity) then
-    self.model.Entity:SetSkin(self.skin)
+    self.model.Entity:SetSkin(skin)
   end
 
   if parent.char_data.gender == 'Female' then
