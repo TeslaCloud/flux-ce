@@ -1,1 +1,18 @@
 demo_key: 123
+depends:
+  - 3dtexts
+  - admin
+  - characters
+  - factions
+  - staticents
+  - chatbox
+  - observer
+  - stamina
+  - thirdperson
+  - 'cl_adminesp.lua'
+  - 'cl_crosshair.lua'
+  - 'cl_hints.lua'
+  - 'cl_toolgun_fix.lua'
+  - 'sh_autowalk.lua'
+  - 'sh_raisegun.lua'
+  - 'sh_weaponselect.lua'
