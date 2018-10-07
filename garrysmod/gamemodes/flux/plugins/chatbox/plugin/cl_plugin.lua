@@ -1,7 +1,7 @@
 local CATEGORY = config.create_category('chatbox', 'Chatbox Settings', 'Customize how the chat box works for your server!')
 CATEGORY:add_slider('chatbox_message_margin', 'Chat Message Margin', 'How much vertical space to put between two messages?', {min = 0, max = 64, default = 2})
-CATEGORY:add_slider('chatbox_message_fade_delay', 'Chat Message Fade Delay', 'How long do the messages stay on the screen before fading away?', {min = 1, max = 128, default = 12})
-CATEGORY:add_slider('chatbox_max_messages', 'Max Chat Messages', 'How much messages should the chat history hold?', {min = 1, max = 256, default = 100})
+CATEGORY:add_slider('chatbox_message_fade_delay', 'Chat Message Fade Delay', 'How long should the messages stay on the screen before fading away?', {min = 1, max = 128, default = 12})
+CATEGORY:add_slider('chatbox_max_messages', 'Max Chat Messages', 'How many messages should the chat history hold?', {min = 1, max = 256, default = 100})
 
 chatbox.width = chatbox.width or 100
 chatbox.height = chatbox.height or 100
