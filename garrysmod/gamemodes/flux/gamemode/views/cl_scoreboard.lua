@@ -2,9 +2,9 @@ local PANEL = {}
 PANEL.playerCards = {}
 
 function PANEL:Init()
-  self.scrollPanel = vgui.Create('DScrollPanel', self)
-  self.scrollPanel:SetPos(0, 0)
-  self.scrollPanel:SetSize(self:GetMenuSize())
+  self.scroll_panel = vgui.Create('DScrollPanel', self)
+  self.scroll_panel:SetPos(0, 0)
+  self.scroll_panel:SetSize(self:GetMenuSize())
 end
 
 function PANEL:Paint(w, h)
@@ -20,13 +20,13 @@ function PANEL:Rebuild()
 
   for k, v in ipairs(self.playerCards) do
     if IsValid(v) then
-      v:SafeRemove()
+      v:safe_remove()
     end
 
     self.playerCards[k] = nil
   end
 
-  local curY = font.Scale(40)
+  local cur_y = font.Scale(40)
   local cardTall = font.Scale(32) + 8
   local margin = font.Scale(4)
 
@@ -35,12 +35,12 @@ function PANEL:Rebuild()
 
     local playerCard = vgui.Create('fl_scoreboard_player', self)
     playerCard:SetSize(w - 8, cardTall)
-    playerCard:SetPos(4, curY)
+    playerCard:SetPos(4, cur_y)
     playerCard:SetPlayer(v)
 
-    self.scrollPanel:AddItem(playerCard)
+    self.scroll_panel:AddItem(playerCard)
 
-    curY = curY + cardTall + margin
+    cur_y = cur_y + cardTall + margin
 
     table.insert(self.playerCards, playerCard)
   end
@@ -71,8 +71,8 @@ function PANEL:Rebuild()
   if !self.player then return end
 
   if IsValid(self.avatarPanel) then
-    self.avatarPanel:SafeRemove()
-    self.nameLabel:SafeRemove()
+    self.avatarPanel:safe_remove()
+    self.nameLabel:safe_remove()
   end
   
   local player = self.player

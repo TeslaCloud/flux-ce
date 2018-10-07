@@ -37,7 +37,7 @@ end
 function PANEL:SetLifetime(time)
   timer.Simple(time, function()
     if IsValid(self) then
-      self:SafeRemove()
+      self:safe_remove()
     end
   end)
 
@@ -64,10 +64,10 @@ function PANEL:SetText(text)
 end
 
 function PANEL:Think()
-  local curTime = CurTime()
+  local cur_time = CurTime()
   local frameTime = FrameTime() / 0.006
 
-  if (curTime - self.creationTime) > self.lifetime - 1.25 then
+  if (cur_time - self.creationTime) > self.lifetime - 1.25 then
     self.curAlpha = self.curAlpha - 3 * frameTime
   elseif self.curAlpha < 200 then
     self.curAlpha = self.curAlpha + 4 * frameTime
@@ -85,12 +85,12 @@ function PANEL:Paint(width, height)
   end
 
   if !theme.hook('PaintNotificationText', self, width, height) then
-    local curY = 4
+    local cur_y = 4
 
     for k, v in ipairs(self.notificationText) do
-      draw.SimpleText(v, theme.get_font('menu_normal'), 4, curY, ColorAlpha(self.textColor, self.curAlpha + 55))
+      draw.SimpleText(v, theme.get_font('menu_normal'), 4, cur_y, ColorAlpha(self.textColor, self.curAlpha + 55))
 
-      curY = curY + self.fontSize + 4
+      cur_y = cur_y + self.fontSize + 4
     end
   end
 end

@@ -1,6 +1,5 @@
 netstream.Hook('ClientIncludedSchema', function(player)
   hook.run('ClientIncludedSchema', player)
-  hook.run('PlayerInitialized', player)
 end)
 
 netstream.Hook('soft_undo', function(player)
@@ -10,6 +9,7 @@ end)
 netstream.Hook('player_created', function(player)
   player:send_config()
   player:sync_nv()
+  hook.run('PlayerInitialized', player)
 end)
 
 netstream.Hook('player_set_lang', function(player, lang)

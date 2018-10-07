@@ -7,7 +7,7 @@ function PANEL:Init()
   self:SetPos(0, 0)
   self:SetSize(scrw, scrh)
 
-  self.btnClose:SafeRemove()
+  self.btnClose:safe_remove()
 
   self.list = vgui.Create('fl_horizontalbar', self)
   self.list:SetSize(scrw * 0.5, scrh * 0.5)

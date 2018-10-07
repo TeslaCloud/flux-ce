@@ -57,37 +57,37 @@ end
 
 function PLUGIN:OnWeaponRaised(player, weapon, bIsRaised)
   if IsValid(weapon) then
-    local curTime = CurTime()
+    local cur_time = CurTime()
 
-    hook.run('UpdateWeaponRaised', player, weapon, bIsRaised, curTime)
+    hook.run('UpdateWeaponRaised', player, weapon, bIsRaised, cur_time)
   end
 end
 
-function PLUGIN:UpdateWeaponRaised(player, weapon, bIsRaised, curTime)
+function PLUGIN:UpdateWeaponRaised(player, weapon, bIsRaised, cur_time)
   if bIsRaised or table.HasValue(blockedWeapons, weapon:GetClass()) then
-    weapon:SetNextPrimaryFire(curTime)
-    weapon:SetNextSecondaryFire(curTime)
+    weapon:SetNextPrimaryFire(cur_time)
+    weapon:SetNextSecondaryFire(cur_time)
 
     if weapon.OnRaised then
-      weapon:OnRaised(player, curTime)
+      weapon:OnRaised(player, cur_time)
     end
   else
-    weapon:SetNextPrimaryFire(curTime + 60)
-    weapon:SetNextSecondaryFire(curTime + 60)
+    weapon:SetNextPrimaryFire(cur_time + 60)
+    weapon:SetNextSecondaryFire(cur_time + 60)
 
     if weapon.OnLowered then
-      weapon:OnLowered(player, curTime)
+      weapon:OnLowered(player, cur_time)
     end
   end
 end
 
-function PLUGIN:PlayerThink(player, curTime)
+function PLUGIN:PlayerThink(player, cur_time)
   local weapon = player:GetActiveWeapon()
 
   if IsValid(weapon) then
     if !player:IsWeaponRaised() then
-      weapon:SetNextPrimaryFire(curTime + 60)
-      weapon:SetNextSecondaryFire(curTime + 60)
+      weapon:SetNextPrimaryFire(cur_time + 60)
+      weapon:SetNextSecondaryFire(cur_time + 60)
     end
   end
 end

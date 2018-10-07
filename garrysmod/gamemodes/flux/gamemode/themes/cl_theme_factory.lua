@@ -114,9 +114,9 @@ function THEME:PaintMainMenu(panel, width, height)
   local wide = self:get_option('menu_sidebar_width') * 0.5
   local title, desc, author = Schema:get_name(), Schema:get_description(), t('main_menu.developed_by', Schema:get_author())
   local logo = self:get_material('schema_logo')
-  local titleW, titleH = util.text_size(title, self:get_font('text_largest'))
-  local descW, descH = util.text_size(desc, self:get_font('main_menu_titles'))
-  local authorW, authorH = util.text_size(author, self:get_font('main_menu_titles'))
+  local title_w, title_h = util.text_size(title, self:get_font('text_largest'))
+  local desc_w, desc_h = util.text_size(desc, self:get_font('main_menu_titles'))
+  local author_w, author_h = util.text_size(author, self:get_font('main_menu_titles'))
 
   surface.SetDrawColor(self:get_color('menu_background'))
   surface.DrawRect(0, 0, width, width)
@@ -125,13 +125,13 @@ function THEME:PaintMainMenu(panel, width, height)
   surface.DrawRect(0, 0, width, 128)
 
   if !logo then
-    draw.SimpleText(title, self:get_font('text_largest'), wide + width * 0.5 - titleW * 0.5, 150, self:get_color('schema_text'))
+    draw.SimpleText(title, self:get_font('text_largest'), wide + width * 0.5 - title_w * 0.5, 150, self:get_color('schema_text'))
   else
     draw.textured_rect(logo, width * 0.5 - 200, 16, 400, 96, Color(255, 255, 255))
   end
 
-  draw.SimpleText(desc, self:get_font('main_menu_titles'), 16, 128 - descH - 8, self:get_color('schema_text'))
-  draw.SimpleText(author, self:get_font('main_menu_titles'), width - authorW - 16, 128 - authorH - 8, self:get_color('schema_text'))
+  draw.SimpleText(desc, self:get_font('main_menu_titles'), 16, 128 - desc_h - 8, self:get_color('schema_text'))
+  draw.SimpleText(author, self:get_font('main_menu_titles'), width - author_w - 16, 128 - author_h - 8, self:get_color('schema_text'))
 end
 
 function THEME:PaintButton(panel, w, h)
@@ -203,8 +203,8 @@ function THEME:PaintButton(panel, w, h)
   end
 end
 
-function THEME:PaintDeathScreen(curTime, scrw, scrh)
-  local respawnTimeRemaining = fl.client:get_nv('respawn_time', 0) - curTime
+function THEME:PaintDeathScreen(cur_time, scrw, scrh)
+  local respawnTimeRemaining = fl.client:get_nv('respawn_time', 0) - cur_time
   local barValue = 100 - 100 * (respawnTimeRemaining / config.get('respawn_delay'))
   local font = self:get_font('text_normal_large')
   local color_white = Color(255, 255, 255)
@@ -231,46 +231,46 @@ function THEME:PaintSidebar(panel, width, height)
   draw.RoundedBox(0, 0, 0, width, height, self:get_color('main_dark'):lighten(10))
 end
 
-function THEME:DrawBarBackground(barInfo)
-  draw.RoundedBox(barInfo.cornerRadius, barInfo.x, barInfo.y, barInfo.width, barInfo.height, self:get_color('main_dark'))
+function THEME:DrawBarBackground(bar_info)
+  draw.RoundedBox(bar_info.cornerRadius, bar_info.x, bar_info.y, bar_info.width, bar_info.height, self:get_color('main_dark'))
 end
 
-function THEME:DrawBarHindrance(barInfo)
-  local length = barInfo.width * (barInfo.hinderValue / barInfo.maxValue)
+function THEME:DrawBarHindrance(bar_info)
+  local length = bar_info.width * (bar_info.hinderValue / bar_info.max_value)
 
-  draw.RoundedBox(barInfo.cornerRadius, barInfo.x + barInfo.width - length - 1, barInfo.y + 1, length, barInfo.height - 2, barInfo.hinderColor)
+  draw.RoundedBox(bar_info.cornerRadius, bar_info.x + bar_info.width - length - 1, bar_info.y + 1, length, bar_info.height - 2, bar_info.hinderColor)
 end
 
-function THEME:DrawBarFill(barInfo)
-  if barInfo.realFillWidth < barInfo.fillWidth then
-    draw.RoundedBox(barInfo.cornerRadius, barInfo.x + 1, barInfo.y + 1, (barInfo.fillWidth or barInfo.width) - 2, barInfo.height - 2, barInfo.color)
-    draw.RoundedBox(barInfo.cornerRadius, barInfo.x + 1, barInfo.y + 1, barInfo.realFillWidth - 2, barInfo.height - 2, Color(230, 230, 230))
-  elseif barInfo.realFillWidth > barInfo.fillWidth then
-    draw.RoundedBox(barInfo.cornerRadius, barInfo.x + 1, barInfo.y + 1, barInfo.realFillWidth - 2, barInfo.height - 2, barInfo.color)
-    draw.RoundedBox(barInfo.cornerRadius, barInfo.x + 1, barInfo.y + 1, (barInfo.fillWidth or barInfo.width) - 2, barInfo.height - 2, Color(230, 230, 230))
+function THEME:DrawBarFill(bar_info)
+  if bar_info.real_fill_width < bar_info.fill_width then
+    draw.RoundedBox(bar_info.cornerRadius, bar_info.x + 1, bar_info.y + 1, (bar_info.fill_width or bar_info.width) - 2, bar_info.height - 2, bar_info.color)
+    draw.RoundedBox(bar_info.cornerRadius, bar_info.x + 1, bar_info.y + 1, bar_info.real_fill_width - 2, bar_info.height - 2, Color(230, 230, 230))
+  elseif bar_info.real_fill_width > bar_info.fill_width then
+    draw.RoundedBox(bar_info.cornerRadius, bar_info.x + 1, bar_info.y + 1, bar_info.real_fill_width - 2, bar_info.height - 2, bar_info.color)
+    draw.RoundedBox(bar_info.cornerRadius, bar_info.x + 1, bar_info.y + 1, (bar_info.fill_width or bar_info.width) - 2, bar_info.height - 2, Color(230, 230, 230))
   else
-    draw.RoundedBox(barInfo.cornerRadius, barInfo.x + 1, barInfo.y + 1, (barInfo.fillWidth or barInfo.width) - 2, barInfo.height - 2, Color(230, 230, 230))
+    draw.RoundedBox(bar_info.cornerRadius, bar_info.x + 1, bar_info.y + 1, (bar_info.fill_width or bar_info.width) - 2, bar_info.height - 2, Color(230, 230, 230))
   end
 end
 
-function THEME:DrawBarTexts(barInfo)
-  local font = theme.get_font(barInfo.font)
+function THEME:DrawBarTexts(bar_info)
+  local font = theme.get_font(bar_info.font)
 
-  render.SetScissorRect(barInfo.x + 1, barInfo.y + 1, barInfo.x + barInfo.realFillWidth, barInfo.y + barInfo.height, true)
-    draw.SimpleText(barInfo.text, font, barInfo.x + 8, barInfo.y + barInfo.textOffset, self:get_color('main_dark'))
+  render.SetScissorRect(bar_info.x + 1, bar_info.y + 1, bar_info.x + bar_info.real_fill_width, bar_info.y + bar_info.height, true)
+    draw.SimpleText(bar_info.text, font, bar_info.x + 8, bar_info.y + bar_info.text_offset, self:get_color('main_dark'))
   render.SetScissorRect(0, 0, 0, 0, false)
 
-  render.SetScissorRect(barInfo.x + barInfo.realFillWidth, barInfo.y + 1, barInfo.x + barInfo.width, barInfo.y + barInfo.height, true)
-    draw.SimpleText(barInfo.text, font, barInfo.x + 8, barInfo.y + barInfo.textOffset, self:get_color('text'))
+  render.SetScissorRect(bar_info.x + bar_info.real_fill_width, bar_info.y + 1, bar_info.x + bar_info.width, bar_info.y + bar_info.height, true)
+    draw.SimpleText(bar_info.text, font, bar_info.x + 8, bar_info.y + bar_info.text_offset, self:get_color('text'))
   render.SetScissorRect(0, 0, 0, 0, false)
 
-  if barInfo.hinderDisplay and barInfo.hinderDisplay <= barInfo.hinderValue then
-    local width = barInfo.width
-    local textWide = util.text_size(barInfo.hinderText, font)
-    local length = width * (barInfo.hinderValue / barInfo.maxValue)
+  if bar_info.hinderDisplay and bar_info.hinderDisplay <= bar_info.hinderValue then
+    local width = bar_info.width
+    local textWide = util.text_size(bar_info.hinderText, font)
+    local length = width * (bar_info.hinderValue / bar_info.max_value)
 
-    render.SetScissorRect(barInfo.x + width - length, barInfo.y, barInfo.x + width, barInfo.y + barInfo.height, true)
-      draw.SimpleText(barInfo.hinderText, font, barInfo.x + width - textWide - 8, barInfo.y + barInfo.textOffset, Color(255, 255, 255))
+    render.SetScissorRect(bar_info.x + width - length, bar_info.y, bar_info.x + width, bar_info.y + bar_info.height, true)
+      draw.SimpleText(bar_info.hinderText, font, bar_info.x + width - textWide - 8, bar_info.y + bar_info.text_offset, Color(255, 255, 255))
     render.SetScissorRect(0, 0, 0, 0, false)
   end
 end

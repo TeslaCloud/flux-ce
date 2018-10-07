@@ -1,10 +1,10 @@
 fl.bars:register('getup', {
   text = t'bar_text.getup',
   color = Color(50, 200, 50),
-  maxValue = 100,
+  max_value = 100,
   x = ScrW() * 0.5 - fl.bars.defaultW * 0.5,
   y = ScrH() * 0.5 - 8,
-  textOffset = 1,
+  text_offset = 1,
   height = 20,
   type = BAR_MANUAL
 })

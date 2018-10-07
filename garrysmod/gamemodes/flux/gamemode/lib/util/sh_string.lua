@@ -87,10 +87,10 @@ function string.find_all(str, pattern)
   if !str or !pattern then return end
 
   local hits = {}
-  local lastPos = 1
+  local last_pos = 1
 
   while true do
-    local startPos, end_pos = string.find(str, pattern, lastPos)
+    local startPos, end_pos = string.find(str, pattern, last_pos)
 
     if !startPos then
       break
@@ -98,7 +98,7 @@ function string.find_all(str, pattern)
 
     table.insert(hits, {string.utf8sub(str, startPos, end_pos), startPos, end_pos})
 
-    lastPos = end_pos + 1
+    last_pos = end_pos + 1
   end
 
   return hits

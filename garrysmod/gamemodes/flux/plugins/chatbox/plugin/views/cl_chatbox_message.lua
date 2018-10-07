@@ -1,44 +1,68 @@
 local PANEL = {}
-PANEL.messageData = {}
+PANEL.message_data = {}
 PANEL.compiled = {}
-PANEL.addTime = 0
-PANEL.forceShow = false
-PANEL.forceAlpha = false
-PANEL.shouldPaint = false
+PANEL.added_at = 0
+PANEL.force_show = false
+PANEL.force_alpha = false
+PANEL.should_paint = false
 PANEL.alpha = 255
+
+function PANEL:set_message(msgInfo)
+  local parent = chatbox.panel
+
+  if !IsValid(parent) then return end
+
+  self.message_data = msgInfo
+
+  self:SetSize(self:GetWide() - parent.padding * 0.5, msgInfo.total_height)
+end
+
+-- Those people want us gone :(
+function PANEL:eject()
+  if plugin.call('ShouldMessageeject', self) != false then
+    local parent = chatbox.panel
+
+    if !IsValid(parent) then return end
+
+    parent:remove_message(self.msg_index or 1)
+    parent:rebuild_history_indexes()
+
+    self:safe_remove()
+  end
+end
 
 function PANEL:Init()
   --if fl.client:can('chat_mod') then
   --  self.moderation = vgui.Create('flChatModeration', self)
   --end
 
-  self.addTime = CurTime()
-  self.fadeTime = self.addTime + config.get('chatbox_message_fade_delay')
+  self.added_at = CurTime()
+  self.fade_at = self.added_at + config.get('chatbox_message_fade_delay')
 end
 
 function PANEL:Think()
-  local curTime = CurTime()
+  local cur_time = CurTime()
 
-  self.shouldPaint = false
+  self.should_paint = false
 
-  if chatbox.panel:IsTypingCommand() then
-    self.forceAlpha = 50
+  if chatbox.panel:typing_command() then
+    self.force_alpha = 50
   else
-    self.forceAlpha = false
+    self.force_alpha = false
   end
 
-  if self.forceShow then
-    self.shouldPaint = true
+  if self.force_show then
+    self.should_paint = true
 
-    if self.forceAlpha then
-      self.alpha = self.forceAlpha
+    if self.force_alpha then
+      self.alpha = self.force_alpha
     else
       self.alpha = 255
     end
-  elseif self.fadeTime > curTime then
-    self.shouldPaint = true
+  elseif self.fade_at > cur_time then
+    self.should_paint = true
 
-    local diff = self.fadeTime - curTime
+    local diff = self.fade_at - cur_time
 
     if diff < 1 then
       self.alpha = Lerp(FrameTime() * 6, self.alpha, 0)
@@ -48,51 +72,27 @@ function PANEL:Think()
   end
 end
 
-function PANEL:SetMessage(msgInfo)
-  local parent = chatbox.panel
-
-  if !IsValid(parent) then return end
-
-  self.messageData = msgInfo
-
-  self:SetSize(self:GetWide() - parent.padding * 0.5, msgInfo.total_height)
-end
-
--- Those people want us gone :(
-function PANEL:Eject()
-  if plugin.call('ShouldMessageEject', self) != false then
-    local parent = chatbox.panel
-
-    if !IsValid(parent) then return end
-
-    parent:RemoveMessage(self.messageIndex or 1)
-    parent:Rebuild()
-
-    self:SafeRemove()
-  end
-end
-
 function PANEL:Paint(w, h)
-  if self.shouldPaint then
+  if self.should_paint then
     if plugin.call('ChatboxPrePaintMessage', w, h, self) == true then return end
 
-    local curColor = Color(255, 255, 255, self.alpha)
-    local curFont = font.GetSize(theme.get_font('Chatbox_Normal'), font.Scale(20))
+    local cur_color = Color(255, 255, 255, self.alpha)
+    local cur_font = font.GetSize(theme.get_font('chatbox_normal'), font.Scale(20))
 
-    for k, v in ipairs(self.messageData) do
+    for k, v in ipairs(self.message_data) do
       if istable(v) then
         if v.text then
-          draw.SimpleTextOutlined(v.text, curFont, v.x, v.y, curColor, nil, nil, 1, Color(30, 30, 30, self.alpha))
+          draw.SimpleTextOutlined(v.text, cur_font, v.x, v.y, cur_color, nil, nil, 1, Color(30, 30, 30, self.alpha))
         elseif IsColor(v) then
-          curColor = ColorAlpha(v, self.alpha)
+          cur_color = ColorAlpha(v, self.alpha)
         elseif v.image then
           draw.textured_rect(util.get_material(v.image), v.x, v.y, v.w, v.h, Color(255, 255, 255, self.alpha))
         end
       elseif isnumber(v) then
-        curFont = font.GetSize(theme.get_font('Chatbox_Normal'), v)
+        cur_font = font.GetSize(theme.get_font('chatbox_normal'), v)
       end
     end
   end
 end
 
-vgui.Register('flChatMessage', PANEL, 'fl_base_panel')
+vgui.Register('fl_chat_message', PANEL, 'fl_base_panel')

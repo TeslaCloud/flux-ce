@@ -34,7 +34,7 @@ function PANEL:Think() end
 
 function PANEL:RecreateSidebar(bShouldCreateButtons)
   if IsValid(self.sidebar) then
-    self.sidebar:SafeRemove()
+    self.sidebar:safe_remove()
   end
 
   self.sidebar = vgui.Create('fl_sidebar', self)
@@ -65,7 +65,7 @@ function PANEL:OpenMenu(panel, data)
         self:OpenMenu(panel, data)
       end)
     else
-      self.menu:SafeRemove()
+      self.menu:safe_remove()
       self:OpenMenu(panel, data)
     end
   end
@@ -84,7 +84,7 @@ function PANEL:to_main_menu(bFromRight)
     if self.menu.Close then
       self.menu:Close()
     else
-      self.menu:SafeRemove()
+      self.menu:safe_remove()
     end
   end)
 end

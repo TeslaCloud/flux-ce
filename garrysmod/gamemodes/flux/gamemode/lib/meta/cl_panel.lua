@@ -5,7 +5,7 @@ function panel_meta:UnDraggable()
   self.m_DragSlot = nil
 end
 
-function panel_meta:SafeRemove()
+function panel_meta:safe_remove()
   self:SetVisible(false)
   self:Remove()
 end

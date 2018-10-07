@@ -52,7 +52,7 @@ function PANEL:OpenPanel(id)
   local panel = self.panels[id]
 
   if IsValid(self.curPanel) then
-    self.curPanel:SafeRemove()
+    self.curPanel:safe_remove()
   end
 
   if istable(panel) then
@@ -96,7 +96,7 @@ function PANEL:SetFullscreen(bFullscreen)
     self.sidebar:MoveTo(0, 0, 0.3)
     self:SetTitle('Admin')
 
-    self.backBtn:SafeRemove()
+    self.backBtn:safe_remove()
   end
 end
 
@@ -108,7 +108,7 @@ vgui.Register('flAdminPanel', PANEL, 'fl_base_panel')
 
 concommand.Add('fl_admin_test', function()
   if IsValid(AdminPanel) then
-    AdminPanel:SafeRemove()
+    AdminPanel:safe_remove()
   else
     AdminPanel = vgui.Create('flAdminPanel')
     AdminPanel:MakePopup()

@@ -8,29 +8,29 @@ chatbox.height = chatbox.height or 100
 chatbox.x = chatbox.x or 0
 chatbox.y = chatbox.y or 0
 
-chatbox.oldAddText = chatbox.oldAddText or chat.AddText
+chatbox.old_add_text = chatbox.old_add_text or chat.AddText
 
 function chat.AddText(...)
-  netstream.Start('Chatbox::AddText', ...)
+  netstream.Start('chat_add_text', ...)
 end
 
-function chatbox.Compile(messageTable)
+function chatbox.compile(msg_table)
   local compiled = {
     total_height = 0
   }
 
-  local data = messageTable.data
-  local should_translate = messageTable.should_translate
+  local data = msg_table.data
+  local should_translate = msg_table.should_translate
   local cur_size = _font.Scale(18)
 
-  if isnumber(messageTable.size) then
-    cur_size = _font.Scale(messageTable.size)
+  if isnumber(msg_table.size) then
+    cur_size = _font.Scale(msg_table.size)
   end
 
-  local curX, curY = 0, 0
+  -- offset x by 1 to prevent weird clipping issues
+  local cur_x, cur_y = 1, 0
   local total_height = 0
-  local max_height = font.Scale(messageTable.max_height)
-  local font = _font.GetSize(theme.get_font('Chatbox_Normal'), cur_size)
+  local font = _font.GetSize(theme.get_font('chatbox_normal'), cur_size)
 
   if plugin.call('ChatboxCompileMessage', data, compiled) != true then
     for k, v in ipairs(data) do
@@ -43,22 +43,22 @@ function chatbox.Compile(messageTable)
           data[k] = t(v)
         end
 
-        local wrapped = util.wrap_text(v, font, chatbox.width, curX)
+        local wrapped = util.wrap_text(v, font, chatbox.width, cur_x)
         local line_count = #wrapped
 
         for k2, v2 in ipairs(wrapped) do
           local w, h = util.text_size(v2, font)
 
-          table.insert(compiled, {text = v2, w = w, h = h, x = curX, y = curY + (max_height - h)})
+          table.insert(compiled, { text = v2, w = w, h = h, x = cur_x, y = cur_y })
 
-          curX = curX + w
+          cur_x = cur_x + w
 
           if line_count > 1 and k2 != line_count then
-            curY = curY + h + config.get('chatbox_message_margin')
+            cur_y = cur_y + h + config.get('chatbox_message_margin')
 
             total_height = total_height + h + config.get('chatbox_message_margin')
 
-            curX = 0
+            cur_x = 0
           elseif total_height < h then
             total_height = h + config.get('chatbox_message_margin')
           end
@@ -66,23 +66,23 @@ function chatbox.Compile(messageTable)
       elseif isnumber(v) then
         cur_size = _font.Scale(v)
 
-        font = _font.GetSize(theme.get_font('Chatbox_Normal'), cur_size)
+        font = _font.GetSize(theme.get_font('chatbox_normal'), cur_size)
 
         table.insert(compiled, cur_size)
       elseif istable(v) then
         if v.image then
           local scaled = _font.Scale(v.height)
-          local imageData = {
+          local image_data = {
             image = v.image,
-            x = curX + 1,
-            y = curY,
+            x = cur_x + 1,
+            y = cur_y,
             w = _font.Scale(v.width),
             h = scaled
           }
 
-          curX = curX + imageData.w + 2
+          cur_x = cur_x + image_data.w + 2
 
-          table.insert(compiled, imageData)
+          table.insert(compiled, image_data)
 
           if total_height < scaled then
             total_height = scaled + config.get('chatbox_message_margin')
@@ -91,19 +91,19 @@ function chatbox.Compile(messageTable)
           table.insert(compiled, Color(v.r, v.g, v.b, v.a))
         end
       elseif IsValid(v) then
-        local toInsert = ''
+        local to_insert = ''
 
         if v:IsPlayer() then
-          toInsert = hook.run('GetPlayerName', v) or v:Name()
+          to_insert = hook.run('GetPlayerName', v) or v:Name()
         else
-          toInsert = tostring(v) or v:GetClass()
+          to_insert = tostring(v) or v:GetClass()
         end
 
-        local w, h = util.text_size(toInsert, font)
+        local w, h = util.text_size(to_insert, font)
 
-        table.insert(compiled, {text = toInsert, w = w, h = h, x = curX, y = curY + (max_height - h)})
+        table.insert(compiled, {text = to_insert, w = w, h = h, x = cur_x, y = cur_y})
 
-        curX = curX + w
+        cur_x = cur_x + w
 
         if total_height < h then
           total_height = h + config.get('chatbox_message_margin')
@@ -117,22 +117,22 @@ function chatbox.Compile(messageTable)
   return compiled
 end
 
-function chatbox.Show()
+function chatbox.show()
   if !IsValid(chatbox.panel) then
-    chatbox.width = theme.get_option('Chatbox_Width') or 100
-    chatbox.height = theme.get_option('Chatbox_Height') or 100
-    chatbox.x = theme.get_option('Chatbox_X') or 0
-    chatbox.y = theme.get_option('Chatbox_Y') or 0
+    chatbox.width = theme.get_option('chatbox_width') or 100
+    chatbox.height = theme.get_option('chatbox_height') or 100
+    chatbox.x = theme.get_option('chatbox_x') or 0
+    chatbox.y = theme.get_option('chatbox_y') or 0
 
     chatbox.panel = vgui.Create('flChatPanel')
   end
 
-  chatbox.panel:SetOpen(true)
+  chatbox.panel:set_open(true)
 end
 
-function chatbox.Hide()
+function chatbox.hide()
   if IsValid(chatbox.panel) then
-    chatbox.panel:SetOpen(false)
+    chatbox.panel:set_open(false)
 
     chatbox.panel:SetMouseInputEnabled(false)
     chatbox.panel:SetKeyboardInputEnabled(false)
@@ -141,6 +141,6 @@ end
 
 concommand.Add('fl_reset_chat', function()
   if IsValid(chatbox.panel) then
-    chatbox.panel:SafeRemove()
+    chatbox.panel:safe_remove()
   end
 end)

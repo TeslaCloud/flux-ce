@@ -1,5 +1,5 @@
 local PANEL = {}
-PANEL.lastPos = 0
+PANEL.last_pos = 0
 PANEL.margin = 0
 
 function PANEL:Init()
@@ -24,20 +24,20 @@ function PANEL:AddPanel(panel, bCenter)
     x = self:GetWide() * 0.5 - panel:GetWide() * 0.5
   end
 
-  panel:SetPos(x, self.lastPos)
+  panel:SetPos(x, self.last_pos)
 
   self:AddItem(panel)
 
-  self.lastPos = self.lastPos + self.margin + panel:GetTall()
+  self.last_pos = self.last_pos + self.margin + panel:GetTall()
 end
 
 function PANEL:AddSpace(px)
-  self.lastPos = self.lastPos + px
+  self.last_pos = self.last_pos + px
 end
 
 function PANEL:Clear()
   self.BaseClass.Clear(self)
-  self.lastPos = 0
+  self.last_pos = 0
 end
 
 function PANEL:SetMargin(margin)

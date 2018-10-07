@@ -1,7 +1,7 @@
 local queue = {}
 
-function PLUGIN:PlayerEnteredTextArea(player, area, curTime)
-  table.insert(queue, { text = 'test test test', expiry = curTime + 8 })
+function PLUGIN:PlayerEnteredTextArea(player, area, cur_time)
+  table.insert(queue, { text = 'test test test', expiry = cur_time + 8 })
 end
 
 function PLUGIN:HUDPaint()

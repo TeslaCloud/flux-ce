@@ -6,7 +6,7 @@ PLUGIN:set_description('Adds prefix adjusting to avoid troubles with certain com
 local stored = {}
 
 function flPrefixes:AddPrefix(prefix, callback)
-  table.insert(stored, {prefix = prefix, callback = callback})
+  table.insert(stored, { prefix = prefix, callback = callback })
 end
 
 function flPrefixes:StringIsCommand(str)
@@ -23,7 +23,7 @@ function flPrefixes:StringIsCommand(str)
   end
 end
 
-function flPrefixes:PlayerSay(player, text, bTeamChat)
+function flPrefixes:PlayerSay(player, text, team_chat)
   for k, v in ipairs(stored) do
     if istable(v.prefix) then
       for k2, v2 in ipairs(v.prefix) do
@@ -31,7 +31,7 @@ function flPrefixes:PlayerSay(player, text, bTeamChat)
           local message = text:utf8sub(v2:utf8len() + 1)
 
           if message != '' then
-            v.callback(player, message, bTeamChat)
+            v.callback(player, message, team_chat)
           end
 
           return ''
@@ -41,7 +41,7 @@ function flPrefixes:PlayerSay(player, text, bTeamChat)
       local message = text:utf8sub(v.prefix:utf8len() + 1)
 
       if message != '' then
-        v.callback(player, message, bTeamChat)
+        v.callback(player, message, team_chat)
       end
 
       return ''
