@@ -29,6 +29,7 @@ function character.Create(player, data)
 
   local char = Character.new()
 
+  char.id = char.last_id + 1
   char.steam_id = player:SteamID()
   char.name = data.name
   char.user_id = player.record.id
