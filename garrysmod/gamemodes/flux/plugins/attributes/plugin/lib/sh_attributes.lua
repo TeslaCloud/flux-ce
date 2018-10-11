@@ -106,7 +106,7 @@ do
   function player_meta:get_attributes()
     local atts_table = {}
 
-    for k, v in pairs(self:GetCharacter().attributes) do
+    for k, v in pairs(self.record.characters[self:GetActiveCharacterID()].attributes) do
       atts_table[v.attr_id] = v
     end
 
