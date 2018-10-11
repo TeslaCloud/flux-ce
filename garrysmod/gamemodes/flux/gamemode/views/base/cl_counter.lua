@@ -39,6 +39,8 @@ function PANEL:PerformLayout(w, h)
 
   self.dec:SetPos(2, h * 0.75 + 2)
   self.dec:SetSize(w - 4, h * 0.25 - 2)
+
+  self:CheckButtons(self.m_value)
 end
 
 function PANEL:Paint(w, h)
@@ -89,12 +91,29 @@ function PANEL:OnIncrease(button)
   self.m_value = math.Clamp(self.m_value + 1, self.m_min, self.m_max)
 
   self:OnClick(self.m_value)
+  self:CheckButtons(self.m_value)
 end
 
 function PANEL:OnDecrease(button)
   self.m_value = math.Clamp(self.m_value - 1, self.m_min, self.m_max)
 
   self:OnClick(self.m_value)
+  self:CheckButtons(self.m_value)
+end
+
+function PANEL:CheckButtons(value)
+  if value == self.m_max then
+    self.inc:SetEnabled(false)
+    self.inc:SetActive(false)
+  elseif value == self.m_min then
+    self.dec:SetEnabled(false)
+    self.dec:SetActive(false)
+  else
+    self.inc:SetEnabled(true)
+    self.inc:SetActive(true)
+    self.dec:SetEnabled(true)
+    self.dec:SetActive(true)
+  end
 end
 
 function PANEL:OnClick(value)

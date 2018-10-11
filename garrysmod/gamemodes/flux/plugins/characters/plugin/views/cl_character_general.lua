@@ -129,14 +129,17 @@ function PANEL:Init()
   self.model.LayoutEntity = function(entity) end
 
   self.skin = vgui.Create('fl_counter', self)
-  self.skin:SetPos(8, font.Scale(180) + self.models_list:GetTall() + 4)
   self.skin:SetSize(32, 64)
+  self.skin:SetPos(scrw * 0.25 + 48, 48)
   self.skin:SetText(t'char_create.skin')
+  self.skin:SetFont(theme.get_font('main_menu_small'))
   self.skin:SetValue(1)
   self.skin:SetVisible(false)
   self.skin:SetMin(1)
   self.skin.OnClick = function(panel, value)
-    self.model.Entity:SetSkin(value)
+    surface.PlaySound('buttons/blip1.wav')
+
+    self.model.Entity:SetSkin(value - 1)
   end
 end
 
@@ -167,7 +170,9 @@ function PANEL:RebuildModels()
 
   if !table.HasValue(models, self.models_list.model) then
     self.models_list.model = nil
+    self.skin:SetVisible(false)
     self:GetParent().char_data.model = nil
+    self:GetParent().char_data.skin = 0
   end
 
   self.model:SetModel(self.models_list.model or '')
@@ -234,7 +239,7 @@ function PANEL:OnOpen(parent)
   local skin = parent.char_data.skin
 
   if skin then
-    self.skin:SetValue(skin)
+    self.skin:SetValue(skin + 1)
   end
 
   if IsValid(self.model.Entity) then
@@ -262,7 +267,7 @@ function PANEL:OnClose(parent)
     description = self.desc_entry:GetValue(),
     gender = gender,
     model = self.models_list.model,
-    skin = self.skin:GetValue()
+    skin = self.skin:GetValue() - 1
   })
 end
 
