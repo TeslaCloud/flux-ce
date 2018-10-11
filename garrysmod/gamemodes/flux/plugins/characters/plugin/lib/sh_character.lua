@@ -33,7 +33,7 @@ function character.Create(player, data)
   char.name = data.name
   char.user_id = player.record.id
   char.model = data.model or ''
-  char.skin = data.skin or 1
+  char.skin = data.skin or 0
   char.gender = data.gender
   char.phys_desc = data.phys_desc or ''
   char.money = data.money or 0
@@ -177,6 +177,7 @@ if SERVER then
     hook.run('OnCharacterDelete', player, id)
 
     player.record.characters[id]:destroy()
+    table.remove(player.record.characters, id)
 
     character.SendToClient(player)
   end)
