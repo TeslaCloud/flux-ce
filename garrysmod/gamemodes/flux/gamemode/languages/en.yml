@@ -56,15 +56,15 @@ en:
     tab: TAB
     commands: Commands
     bugs: Bugs
-    forums_text: You can visit TeslaCloud forums to get support, download schemas\nand
+    forums_text: You can visit TeslaCloud forums to get support, download schemas and
       chat with fellow Flux users!
-    hints_text: These hints can be disabled from clientside settings menu.\nNot in
+    hints_text: These hints can be disabled from clientside settings menu. Not in
       this build though.
     tab_text: "Press 'Show Scoreboard' key (default: TAB) to open Flux's menu."
-    commands_text: Start typing a command in chat to see a list of all available commands\nand
+    commands_text: Start typing a command in chat to see a list of all available commands and
       their syntax help.
-    bugs_text: Encountered a bug? Have an idea that we should totally add to Flux?\nVisit
-      our forums at TeslaCloud.net and tell us about it!
+    bugs_text: Encountered a bug? Have an idea that we should totally add to Flux? Visit
+      our forums at https://teslacloud.net and tell us about it!
   player_message:
     died: YOU DIED
     respawn: RESPAWNING IN {1} SECOND(s).
