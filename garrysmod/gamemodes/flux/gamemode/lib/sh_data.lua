@@ -87,15 +87,15 @@ else
 end
 
 function data.SaveSchema(key, value)
-  return data.Save('schemas/'..fl.get_schema_folder()..'/'..key, value)
+  return data.Save('schemas/'..fl.get_schema_folder()..'/'..game.GetMap()..'/'..key, value)
 end
 
 function data.LoadSchema(key, failSafe)
-  return data.Load('schemas/'..fl.get_schema_folder()..'/'..key, failSafe)
+  return data.Load('schemas/'..fl.get_schema_folder()..'/'..game.GetMap()..'/'..key, failSafe)
 end
 
 function data.DeleteSchema(key)
-  return data.Delete('schemas/'..fl.get_schema_folder()..'/'..key)
+  return data.Delete('schemas/'..fl.get_schema_folder()..'/'..game.GetMap()..'/'..key)
 end
 
 function data.SavePlugin(key, value)

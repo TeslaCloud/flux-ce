@@ -18,7 +18,7 @@ end
 
 if SERVER then
   function config.load()
-    local loaded = data.LoadSchema('config', {})
+    local loaded = data.Load('config', {})
 
     for k, v in pairs(loaded) do
       plugin.call('OnConfigSet', key, stored[k] and stored[k].value, value)
@@ -29,7 +29,7 @@ if SERVER then
   end
 
   function config.save()
-    data.SaveSchema('config', stored)
+    data.Save('config', stored)
   end
 
   function config.set(key, value, hidden, from_config)
