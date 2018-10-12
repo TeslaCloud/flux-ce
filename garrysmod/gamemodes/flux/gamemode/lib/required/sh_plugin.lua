@@ -236,7 +236,7 @@ end
 function plugin.register(obj)
   plugin.cache_functions(obj)
 
-  if obj.ShouldRefresh == false then
+  if obj.should_refresh == false then
     reload_data[obj:get_folder()] = false
   else
     reload_data[obj:get_folder()] = true
@@ -474,7 +474,7 @@ function plugin.include_plugins(folder)
 end
 
 do
-  local entData = {
+  local ent_data = {
     weapons = {
       table = 'SWEP',
       func = weapons.Register,
@@ -504,10 +504,10 @@ do
     local _, dirs = file.Find(folder..'/*', 'LUA')
 
     for k, v in ipairs(dirs) do
-      if !entData[v] then continue end
+      if !ent_data[v] then continue end
 
       local dir = folder..'/'..v
-      local data = entData[v]
+      local data = ent_data[v]
       local files, folders = file.Find(dir..'/*', 'LUA')
 
       for k, v in ipairs(folders) do

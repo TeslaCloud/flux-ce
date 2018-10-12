@@ -84,7 +84,7 @@ function attributes.include_type(id, global_var, folder)
 
     util.include(file_name)
 
-    if pipeline.IsAborted() then _G[global_var] = nil return end
+    if pipeline.is_aborted() then _G[global_var] = nil return end
 
     _G[global_var].type = global_var
     _G[global_var]:register()
