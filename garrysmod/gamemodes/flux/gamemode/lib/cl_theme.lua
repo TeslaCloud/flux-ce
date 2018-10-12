@@ -1,3 +1,6 @@
+-- This library really hates being refreshed :/
+if theme then return end
+
 library.new 'theme'
 local current_theme = theme.current_theme or nil
 theme.current_theme = current_theme
