@@ -352,21 +352,27 @@ do
     AddCSLuaFile('flux/client/'..path)
   end
 
-  local function write_client_files()
-    write_client_file('0_shared.lua', 'fl.shared = fl.deserialize([['..fl.serialize(fl.shared)..']])\n')
-    write_client_file('1_settings.lua', 'Settings = fl.deserialize([['..fl.serialize(Settings)..']])\n')
-    write_client_file('2_lang.lua', "library.new('lang', fl)\nfl.lang.stored = fl.deserialize([["..fl.serialize(fl.lang.stored).."]])\n")
+  local function write_html()
     write_client_file('3_html.lua', fl.html:generate_html_file() or '-- .keep')
     write_client_file('4_css.lua', fl.html:generate_css_file() or '-- .keep')
     write_client_file('5_js.lua', fl.html:generate_js_file() or '-- .keep')
   end
 
+  local function write_client_files()
+    write_client_file('0_shared.lua', 'fl.shared = fl.deserialize([['..fl.serialize(fl.shared)..']])\n')
+    write_client_file('1_settings.lua', 'Settings = fl.deserialize([['..fl.serialize(Settings)..']])\n')
+    write_client_file('2_lang.lua', "library.new('lang', fl)\nfl.lang.stored = fl.deserialize([["..fl.serialize(fl.lang.stored).."]])\n")
+    write_html()
+  end
+
   concommand.Add('fl_reload_html', function(player)
     if !IsValid(player) then
       print('Rewriting HTML...')
-      write_client_file('3_html.lua', fl.html:generate_html_file() or '-- .keep')
-      write_client_file('4_css.lua', fl.html:generate_css_file() or '-- .keep')
-      write_client_file('5_js.lua', fl.html:generate_js_file() or '-- .keep')
+      for k, v in pairs(fl.html.file_pathes) do
+        fl.html[v.pipe][v.file_name] = fileio.Read(k)
+      end
+
+      write_html()
     end
   end)
 

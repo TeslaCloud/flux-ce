@@ -3,6 +3,7 @@ library.new('html', fl)
 fl.html.templates = fl.html.templates or {}
 fl.html.stylesheets = fl.html.stylesheets or {}
 fl.html.javascripts = fl.html.javascripts or {}
+fl.html.file_pathes = fl.html.file_pathes or {}
 
 local common_file_header = [[fl = fl or {}
 fl.html = fl.html or {}
@@ -150,9 +151,14 @@ pipeline.register('html', function(id, file_name, pipe)
     pipe = 'stylesheets'
   end
 
-  local contents = fileio.Read('gamemodes/'..file_name)
+  local file_path = 'gamemodes/'..file_name
+  local contents = fileio.Read(file_path)
+
   if contents then
     file_name = file_name:gsub('%.html', ''):gsub('%.loon', ''):gsub('%.js', ''):gsub('%.css', ''):gsub('%.scss', ''):GetFileFromFilename()
     fl.html[pipe][file_name] = contents
+
+    -- track the file
+    fl.html.file_pathes[file_path] = { pipe = pipe, file_name = file_name }
   end
 end)
