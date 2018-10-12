@@ -15,6 +15,8 @@ function GM:Initialize()
 
     ActiveRecord.connect()
   end
+
+  hook.Run('FLInitialize')
 end
 
 -- Called when gamemode's server browser name needs to be retrieved.
