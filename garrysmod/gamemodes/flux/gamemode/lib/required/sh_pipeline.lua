@@ -10,7 +10,7 @@ library.new 'pipeline'
 local stored = pipeline.stored or {}
 pipeline.stored = stored
 
-local lastPipeAborted = false
+local last_pipe_aborted = false
 
 function pipeline.register(id, callback)
   stored[id] = {
@@ -19,16 +19,16 @@ function pipeline.register(id, callback)
   }
 end
 
-function pipeline.Find(id)
+function pipeline.find(id)
   return stored[id]
 end
 
-function pipeline.Abort()
-  lastPipeAborted = true
+function pipeline.abort()
+  last_pipe_aborted = true
 end
 
-function pipeline.IsAborted()
-  return lastPipeAborted
+function pipeline.is_aborted()
+  return last_pipe_aborted
 end
 
 function pipeline.include(pipe, file_name)
@@ -36,7 +36,7 @@ function pipeline.include(pipe, file_name)
     pipe = stored[pipe]
   end
 
-  lastPipeAborted = false
+  last_pipe_aborted = false
 
   if !pipe then return end
   if !isstring(file_name) then return end

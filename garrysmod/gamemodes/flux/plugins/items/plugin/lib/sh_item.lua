@@ -242,7 +242,7 @@ pipeline.register('item', function(id, file_name, pipe)
 
   util.include(file_name)
 
-  if pipeline.IsAborted() then ITEM = nil return end
+  if pipeline.is_aborted() then ITEM = nil return end
 
   ITEM:register() ITEM = nil
 end)
