@@ -253,7 +253,7 @@ end
 
 if SERVER then
   function item.Load()
-    local loaded = data.LoadSchema('items/instances', {})
+    local loaded = data.load_schema('items/instances', {})
 
     if loaded and table.Count(loaded) > 0 then
       -- Returns functions to instances table after loading.
@@ -275,7 +275,7 @@ if SERVER then
       item.instances = loaded
     end
 
-    local loaded = data.LoadSchema('items/entities', {})
+    local loaded = data.load_schema('items/entities', {})
 
     if loaded and table.Count(loaded) > 0 then
       for id, instanceTable in pairs(loaded) do
@@ -312,7 +312,7 @@ if SERVER then
       end
     end
 
-    data.SaveSchema('items/instances', toSave)
+    data.save_schema('items/instances', toSave)
   end
 
   function item.SaveEntities()
@@ -331,7 +331,7 @@ if SERVER then
       end
     end
 
-    data.SaveSchema('items/entities', entities)
+    data.save_schema('items/entities', entities)
   end
 
   function item.SaveAll()

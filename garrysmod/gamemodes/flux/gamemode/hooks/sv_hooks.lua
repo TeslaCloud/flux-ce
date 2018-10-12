@@ -340,7 +340,7 @@ function GM:OneSecond()
 end
 
 function GM:PreLoadPlugins()
-  fl.shared.disabled_plugins = data.Load('disabled_plugins', {})
+  fl.shared.disabled_plugins = data.load('disabled_plugins', {})
 end
 
 do

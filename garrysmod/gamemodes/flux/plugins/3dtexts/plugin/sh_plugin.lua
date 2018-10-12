@@ -7,13 +7,13 @@ util.include('cl_hooks.lua')
 
 if SERVER then
   function fl3DText:Save()
-    data.SavePlugin('3dtexts', fl3DText.texts)
-    data.SavePlugin('3dpictures', fl3DText.pictures)
+    data.save_plugin('3dtexts', fl3DText.texts)
+    data.save_plugin('3dpictures', fl3DText.pictures)
   end
 
   function fl3DText:Load()
-    local loaded = data.LoadPlugin('3dtexts', {})
-    local loaded_pics = data.LoadPlugin('3dpictures', {})
+    local loaded = data.load_plugin('3dtexts', {})
+    local loaded_pics = data.load_plugin('3dpictures', {})
 
     self.texts = loaded
     self.pictures = loaded_pics
