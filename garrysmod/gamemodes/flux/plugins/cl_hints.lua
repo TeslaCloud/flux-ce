@@ -1,4 +1,4 @@
-PLUGIN:set_alias('flHints')
+PLUGIN:set_global('flHints')
 PLUGIN:set_name('Hints')
 PLUGIN:set_description('Adds hints that are displayed to players.')
 PLUGIN:set_author('Mr. Meow')

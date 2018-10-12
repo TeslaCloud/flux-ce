@@ -1,4 +1,4 @@
-PLUGIN:set_alias('flVisibleLegs')
+PLUGIN:set_global('flVisibleLegs')
 PLUGIN:set_name('Visible Legs')
 PLUGIN:set_author('NightAngel')
 PLUGIN:set_description("Lets clients see their character's legs.")
