@@ -1,20 +1,25 @@
 body {
   color: white;
-  background: #111111;
   font-family: Arial;
 }
 
 .content {
-  font-size: 14px;
+  font-size: 20px;
+}
+
+.panel__title {
+  margin: 12px;
 }
 
 .plugin__card {
   padding: 8px;
   margin: 4px;
+  background: #00000099;
+  border-radius: 8px;
 }
 
 .plugin__title {
-  font-size: 16px;
+  font-size: 28px;
 }
 
 .plugin__author {
