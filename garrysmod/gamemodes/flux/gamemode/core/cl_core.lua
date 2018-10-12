@@ -302,24 +302,22 @@ function draw.set_blur_size(size)
 end
 
 -- To be called outside of a panel
-function draw.blur_box(x, y, w, h, alpha)
+function draw.blur_box(x, y, w, h)
   render.SetScissorRect(x, y, x + w, y + h, true)
-    surface.SetMaterial((fl.should_render_blur != nil) and fl.blur_mat or fl.blur_material)
-    surface.SetDrawColor(255, 255, 255, alpha or 255)
-    surface.DrawTexturedRect(0, 0, ScrW(), ScrH())
+    render.SetMaterial((fl.should_render_blur != nil) and fl.blur_mat or fl.blur_material)
+    render.DrawScreenQuad()
   render.SetScissorRect(0, 0, 0, 0, false)
 
   fl.should_render_blur = true
 end
 
-function draw.blur_panel(panel, alpha)
+function draw.blur_panel(panel)
   local x, y = panel:GetPos()
   local w, h = panel:GetSize()
 
   render.SetScissorRect(x, y, x + w, y + h, true)
-    surface.SetMaterial((fl.should_render_blur != nil) and fl.blur_mat or fl.blur_material)
-    surface.SetDrawColor(255, 255, 255, alpha or 255)
-    surface.DrawTexturedRect(-x, -y, ScrW(), ScrH())
+    render.SetMaterial((fl.should_render_blur != nil) and fl.blur_mat or fl.blur_material)
+    render.DrawScreenQuad()
   render.SetScissorRect(0, 0, 0, 0, false)
 
   fl.should_render_blur = true
