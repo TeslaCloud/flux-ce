@@ -95,11 +95,15 @@ function Plugin:set_data(data)
   table.safe_merge(self, data)
 end
 
-function Plugin:set_alias(alias)
+function Plugin:set_global(alias)
   if isstring(alias) then
     _G[alias] = self
     self.alias = alias
   end
+end
+
+function Plugin:is_schema()
+  return self._is_schema
 end
 
 function Plugin:__tostring()
@@ -404,6 +408,7 @@ function plugin.include_schema()
   if SERVER then AddCSLuaFile(schemaPath..'/gamemode/cl_init.lua') end
 
   Schema = Plugin.new(schema_info.name, schema_info)
+  Schema._is_schema = true
 
   util.include(schema_folder..'/sh_schema.lua')
 

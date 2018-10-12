@@ -1,4 +1,4 @@
-PLUGIN:set_alias('flObserver')
+PLUGIN:set_global('flObserver')
 
 util.include('cl_hooks.lua')
 util.include('sv_hooks.lua')

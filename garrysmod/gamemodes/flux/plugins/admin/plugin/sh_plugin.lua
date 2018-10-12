@@ -1,4 +1,4 @@
-PLUGIN:set_alias('flAdmin')
+PLUGIN:set_global('flAdmin')
 
 util.include('cl_hooks.lua')
 util.include('sv_hooks.lua')

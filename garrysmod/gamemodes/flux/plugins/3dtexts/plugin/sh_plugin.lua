@@ -1,4 +1,4 @@
-PLUGIN:set_alias('fl3DText')
+PLUGIN:set_global('fl3DText')
 
 fl3DText.texts = fl3DText.texts or {}
 fl3DText.pictures = fl3DText.pictures or {}

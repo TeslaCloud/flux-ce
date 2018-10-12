@@ -1,4 +1,4 @@
-PLUGIN:set_alias('flPrefixes')
+PLUGIN:set_global('flPrefixes')
 PLUGIN:set_name('Prefixes')
 PLUGIN:set_author('AleXXX_007')
 PLUGIN:set_description('Adds prefix adjusting to avoid troubles with certain commands.')

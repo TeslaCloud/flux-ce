@@ -1,3 +1,3 @@
-PLUGIN:set_alias('flStaticEnts')
+PLUGIN:set_global('flStaticEnts')
 
 util.include('sv_hooks.lua')

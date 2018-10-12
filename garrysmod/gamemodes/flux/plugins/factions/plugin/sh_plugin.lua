@@ -1,4 +1,4 @@
-PLUGIN:set_alias('flFactions')
+PLUGIN:set_global('flFactions')
 
 plugin.add_extra('factions')
 

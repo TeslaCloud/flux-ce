@@ -1,4 +1,4 @@
-PLUGIN:set_alias('flAttributes')
+PLUGIN:set_global('flAttributes')
 
 util.include('sv_hooks.lua')
 

@@ -1,4 +1,4 @@
-PLUGIN:set_alias('flItems')
+PLUGIN:set_global('flItems')
 
 util.include('cl_hooks.lua')
 util.include('sv_hooks.lua')

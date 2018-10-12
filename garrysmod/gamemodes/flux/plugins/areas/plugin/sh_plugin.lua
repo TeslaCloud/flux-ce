@@ -1,4 +1,4 @@
-PLUGIN:set_alias('flAreas')
+PLUGIN:set_global('flAreas')
 
 util.include('cl_plugin.lua')
 util.include('sv_plugin.lua')
