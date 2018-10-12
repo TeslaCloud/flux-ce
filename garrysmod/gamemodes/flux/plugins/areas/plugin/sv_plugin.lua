@@ -53,11 +53,11 @@ function flAreas:PlayerInitialized(player)
 end
 
 function flAreas:LoadData()
-  local loaded = data.LoadPlugin('areas', {})
+  local loaded = data.load_plugin('areas', {})
 
   areas.SetStored(loaded)
 end
 
 function flAreas:SaveData()
-  data.SavePlugin('areas', areas.GetAll())
+  data.save_plugin('areas', areas.GetAll())
 end

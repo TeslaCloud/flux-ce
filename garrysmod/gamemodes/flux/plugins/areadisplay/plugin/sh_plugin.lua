@@ -15,11 +15,11 @@ util.include('cl_hooks.lua')
 
 if SERVER then
   function PLUGIN:Save()
-    --data.SavePlugin('areas', areas.GetByType('text') or {})
+    --data.save_plugin('areas', areas.GetByType('text') or {})
   end
 
   function PLUGIN:Load()
-    local loaded = data.LoadPlugin('areas', {})
+    local loaded = data.load_plugin('areas', {})
 
     for k, v in pairs(loaded) do
       areas.register(k, v)

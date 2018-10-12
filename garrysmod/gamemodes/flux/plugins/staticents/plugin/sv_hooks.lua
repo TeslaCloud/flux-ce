@@ -77,12 +77,12 @@ function flStaticEnts:PersistenceSave()
 
   for ent_class, v in pairs(to_save) do
     if !istable(v) then continue end
-    data.SavePlugin('static/'..ent_class, v)
+    data.save_plugin('static/'..ent_class, v)
   end
 end
 
 function flStaticEnts:load_class(ent_class)
-  local loaded = data.LoadPlugin('static/'..ent_class, false)
+  local loaded = data.load_plugin('static/'..ent_class, false)
 
   if !istable(loaded) then return end
   if !loaded.Entities then return end
