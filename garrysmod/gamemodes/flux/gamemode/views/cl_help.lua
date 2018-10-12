@@ -13,4 +13,8 @@ function PANEL:Rebuild()
   self.html:render()
 end
 
+function PANEL:GetMenuSize()
+  return font.Scale(1280), font.Scale(900)
+end
+
 vgui.Register('fl_help', PANEL, 'fl_base_panel')
