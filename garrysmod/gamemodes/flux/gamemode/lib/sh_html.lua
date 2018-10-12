@@ -3,7 +3,7 @@ library.new('html', fl)
 fl.html.templates = fl.html.templates or {}
 fl.html.stylesheets = fl.html.stylesheets or {}
 fl.html.javascripts = fl.html.javascripts or {}
-fl.html.file_pathes = fl.html.file_pathes or {}
+fl.html.file_paths = fl.html.file_paths or {}
 
 local common_file_header = [[fl = fl or {}
 fl.html = fl.html or {}
@@ -159,6 +159,6 @@ pipeline.register('html', function(id, file_name, pipe)
     fl.html[pipe][file_name] = contents
 
     -- track the file
-    fl.html.file_pathes[file_path] = { pipe = pipe, file_name = file_name }
+    fl.html.file_paths[file_path] = { pipe = pipe, file_name = file_name }
   end
 end)
