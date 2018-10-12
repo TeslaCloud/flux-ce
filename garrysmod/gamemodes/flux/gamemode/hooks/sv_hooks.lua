@@ -368,7 +368,7 @@ do
   concommand.Add('fl_reload_html', function(player)
     if !IsValid(player) then
       print('Rewriting HTML...')
-      for k, v in pairs(fl.html.file_pathes) do
+      for k, v in pairs(fl.html.file_paths) do
         fl.html[v.pipe][v.file_name] = fileio.Read(k)
       end
 
