@@ -140,34 +140,73 @@ do
     return value
   end
 
-  function player_meta:get_attribute_multiplier(id)
-    return 1
+  function player_meta:get_attribute_multiplier(attr_id)
+    local char = self:GetCharacter()
+    local id = attributes.id_from_attr_id(char.attributes, attr_id)
+    local mult = 1
+
+    for k, v in pairs(char.attribute_multipliers) do
+      if v.attribute_id == id then
+        if v.expires >= CurTime() then
+          mult = mult * v.value
+        else
+          v:destroy()
+          table.remove(char.attribute_multipliers, k)
+        end
+      end
+    end
+
+    return mult
   end
 
-  function player_meta:get_attribute_boost(id)
-    return 0
+  function player_meta:get_attribute_boost(attr_id)
+    local char = self:GetCharacter()
+    local id = attributes.id_from_attr_id(char.attributes, attr_id)
+    local boost = 0
+
+    for k, v in pairs(char.attribute_boosts) do
+      if v.attribute_id == id then
+        if v.expires >= CurTime() then
+          boost = boost + v.value
+        else
+          v:destroy()
+          table.remove(char.attribute_boosts, k)
+        end
+      end
+    end
+
+    return boost
   end
 
   if SERVER then
     function player_meta:set_attribute(attr_id, value)
       local attribute = attributes.find_by_id(attr_id)
+      local atts_table = self:GetCharacter().attributes
 
-      self:GetCharacter().attributes.value = math.Clamp(value, attribute.min, attribute.max)
+      for k, v in pairs(atts_table) do
+        if v.attr_id == attr_id then
+          v.value = math.Clamp(value, attribute.min, attribute.max)
+          v:save()
+
+          break
+        end
+      end
     end
 
     function player_meta:increase_attribute(attr_id, value, no_multiplier)
       local attribute = attributes.find_by_id(attr_id)
       local atts_table = self:get_attributes()
+      local id = attributes.id_from_attr_id(self:GetCharacter().attributes, attr_id)
 
-      if !no_multiplier then
-        value = value * self:get_attribute_multiplier(attr_id)
-
+      if !no_multiplier and attribute.multipliable then
         if value < 0 then
           value = value / self:get_attribute_multiplier(attr_id)
+        else
+          value = value * self:get_attribute_multiplier(attr_id)
         end
       end
 
-      atts_table[attr_id].value = math.Clamp(atts_table[id].value + value, attribute.min, attribute.max)
+      self:GetCharacter().attributes[id].value = math.Clamp(atts_table[attr_id].value + value, attribute.min, attribute.max)
     end
 
     function player_meta:decrease_attribute(attr_id, value, no_multiplier)
@@ -175,7 +214,7 @@ do
     end
 
     function player_meta:attribute_multiplier(attr_id, value, duration)
-      local attribute = attributes.find_by_id(id)
+      local attribute = attributes.find_by_id(attr_id)
 
       if !attribute.multipliable then return end
 
@@ -183,13 +222,16 @@ do
 
       local multiplier = AttributeMultiplier.new()
       multiplier.value = value
-      multiplier.duration = duration
-      multiplier.attribute_id = attribute.id_from_attr_id(atts_table, attr_id)
+      multiplier.expires = CurTime() + duration
+      multiplier.attribute_id = attributes.id_from_attr_id(atts_table, attr_id)
+
+      table.insert(self:GetCharacter().attribute_multipliers, multiplier)
+
       multiplier:save()
     end
 
     function player_meta:attribute_boost(attr_id, value, duration)
-      local attribute = attributes.find_by_id(id)
+      local attribute = attributes.find_by_id(attr_id)
 
       if !attribute.boostable then return end
 
@@ -197,8 +239,11 @@ do
 
       local boost = AttributeBoost.new()
       boost.value = value
-      boost.duration = duration
-      boost.attribute_id = attribute.id_from_attr_id(atts_table, attr_id)
+      boost.expires = CurTime() + duration
+      boost.attribute_id = attributes.id_from_attr_id(atts_table, attr_id)
+
+      table.insert(self:GetCharacter().attribute_boosts, boost)
+
       boost:save()
     end
   end
