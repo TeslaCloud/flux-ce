@@ -1,5 +1,7 @@
 function flAttributes:PostCreateCharacter(player, char_id, char, char_data)
   char.attributes = {}
+  char.attribute_multipliers = {}
+  char.attribute_boosts = {}
 
   for k, v in pairs(attributes.get_stored()) do
     local attribute = attributes.find_by_id(k)
