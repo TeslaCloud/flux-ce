@@ -1,22 +1,12 @@
-<div class="panel__title">
-  <h1>Schema</h1>
+<div class="tab">
+  <button id="default__open" class="tab__links active" onclick="openTab(event, 'plugins')">Plugins</button>
+  <button class="tab__links" onclick="openTab(event, 'credits')">Credits</button>
 </div>
-<div class="content">
-  <div class="plugin__card">
-    <div class="plugin__title"><?= Schema:get_name() ?></div>
-    <div class="plugin__author"><?= Schema:get_author() ?></div>
-  </div>
+
+<div id="plugins" class="tab__content">
+  <?= render_partial('plugins') ?>
 </div>
-<div class="panel__title">
-  <h1>Plugins</h1>
-</div>
-<div class="content">
-  <? for k, v in SortedPairsByMemberValue(plugin.all(), 'author') do ?>
-    <? if istable(v) and !v:is_schema() then ?>
-      <div class="plugin__card">
-        <div class="plugin__title"><?= v.name ?></div>
-        <div class="plugin__author"><?= v.author ?></div>
-      </div>
-    <? end ?>
-  <? end ?>
+
+<div id="credits" class="tab__content">
+  <?= render_partial('credits') ?>
 </div>
