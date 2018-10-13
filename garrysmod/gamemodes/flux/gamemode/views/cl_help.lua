@@ -10,6 +10,7 @@ end
 function PANEL:Rebuild()
   self.html:set_css(render_stylesheet('help'))
   self.html:set_body(render_template('help'))
+  self.html:set_javascript(render_javascript('help'))
   self.html:render()
 end
 

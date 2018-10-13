@@ -1,0 +1,22 @@
+<div class="panel__title">
+  <h1>Schema</h1>
+</div>
+<div class="content">
+  <div class="plugin__card">
+    <div class="plugin__title"><?= Schema:get_name() ?></div>
+    <div class="plugin__author"><?= Schema:get_author() ?></div>
+  </div>
+</div>
+<div class="panel__title">
+  <h1>Plugins</h1>
+</div>
+<div class="content">
+  <? for k, v in SortedPairsByMemberValue(plugin.all(), 'author') do ?>
+    <? if istable(v) and !v:is_schema() then ?>
+      <div class="plugin__card">
+        <div class="plugin__title"><?= v.name ?></div>
+        <div class="plugin__author"><?= v.author ?></div>
+      </div>
+    <? end ?>
+  <? end ?>
+</div>

@@ -1,0 +1,13 @@
+<div class="panel__title">
+  <h1>Credits</h1>
+</div>
+<div class="credits__entry">
+  <div class="credits__name">Mr. Meow</div>
+  <div class="credits__description">Project Lead</div>
+  <div class="credits__description">Lead Dev</div>
+</div>
+<div class="credits__entry">
+  <div class="credits__name">AleXXX_007</div>
+  <div class="credits__description">HL2RP Lead</div>
+  <div class="credits__description">Lead Dev</div>
+</div>

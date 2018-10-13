@@ -128,6 +128,8 @@ if CLIENT then
     if id:find('/') then
       local path, name = id:GetPathFromFilename(), id:GetFileFromFilename()
       id = path..'_'..name
+    elseif !id:starts('_') then
+      id = '_'..id
     end
 
     return render_template(id, locals)
