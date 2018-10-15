@@ -32,7 +32,7 @@ function flItems:PlayerDropItem(player, instance_id)
   if item_table.on_drop then
     local result = item_table:on_drop(player)
 
-    if result == false then
+    if !result then
       return false
     end
   end
@@ -58,9 +58,9 @@ function flItems:PlayerUseItem(player, item_table, ...)
   if item_table.on_use then
     local result = item_table:on_use(player)
 
-    if result == true then
+    if result then
       return
-    elseif result == false then
+    elseif !result then
       return false
     end
   end
