@@ -148,6 +148,19 @@ function to_timestamp(unix_time)
   return os.date('%Y%m%d%H%M%S', unix_time)
 end
 
+function to_os_time(timestamp)
+  local yy, mm, dd, hh, m, ss = string.match(timestamp, '(%d+)%-(%d+)%-(%d+) (%d+):(%d+):(%d+)')
+
+  return os.time({
+    year = yy,
+    month = mm,
+    day = dd,
+    hour = hh,
+    min = m,
+    sec = ss
+  })
+end
+
 do
   local indent_level = 1
 

@@ -147,7 +147,7 @@ do
 
     for k, v in pairs(char.attribute_multipliers) do
       if v.attribute_id == id then
-        if v.expires >= CurTime() then
+        if to_os_time(v.expires) >= os.time() then
           mult = mult * v.value
         else
           v:destroy()
@@ -166,7 +166,7 @@ do
 
     for k, v in pairs(char.attribute_boosts) do
       if v.attribute_id == id then
-        if v.expires >= CurTime() then
+        if to_os_time(v.expires) >= os.time() then
           boost = boost + v.value
         else
           v:destroy()
@@ -222,7 +222,7 @@ do
 
       local multiplier = AttributeMultiplier.new()
       multiplier.value = value
-      multiplier.expires = CurTime() + duration
+      multiplier.expires = to_datetime(os.time() + duration)
       multiplier.attribute_id = attributes.id_from_attr_id(atts_table, attr_id)
 
       table.insert(self:GetCharacter().attribute_multipliers, multiplier)
@@ -239,7 +239,7 @@ do
 
       local boost = AttributeBoost.new()
       boost.value = value
-      boost.expires = CurTime() + duration
+      boost.expires = to_datetime(os.time() + duration)
       boost.attribute_id = attributes.id_from_attr_id(atts_table, attr_id)
 
       table.insert(self:GetCharacter().attribute_boosts, boost)
