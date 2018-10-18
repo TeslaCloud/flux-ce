@@ -1,21 +1,15 @@
-function flCharacters:PlayerInitialSpawn(player)
-  player:SetNoDraw(true)
-  player:SetNotSolid(true)
-  player:Lock()
-
-  timer.Simple(0, function()
-    if IsValid(player) then
-      player:KillSilent()
-      player:StripAmmo()
-    end
-  end)
-end
-
 function flCharacters:PostPlayerSpawn(player)
   if !player:GetCharacter() then
     player:SetNoDraw(true)
     player:SetNotSolid(true)
     player:Lock()
+
+    timer.Simple(0, function()
+      if IsValid(player) then
+        player:KillSilent()
+        player:StripAmmo()
+      end
+    end)
   end
 end
 

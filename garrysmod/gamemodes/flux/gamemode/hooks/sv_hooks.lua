@@ -46,6 +46,10 @@ function GM:PlayerSpawn(player)
   player:SetJumpPower(config.get('jump_power'))
   player:SetRunSpeed(config.get('run_speed'))
 
+  player:SetNoDraw(false)
+  player:UnLock()
+  player:SetNotSolid(false)
+
   hook.run('PostPlayerSpawn', player)
 
   local old_hands = player:GetHands()
@@ -79,10 +83,6 @@ function GM:PlayerSpawn(player)
 end
 
 function GM:PostPlayerSpawn(player)
-  player:SetNoDraw(false)
-  player:UnLock()
-  player:SetNotSolid(false)
-
   player_manager.RunClass(player, 'Loadout')
 
   if player:can('toolgun') then
