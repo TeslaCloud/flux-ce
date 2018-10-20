@@ -27,6 +27,9 @@ function THEME:on_loaded()
   self:set_sound('button_click_danger_sound', 'buttons/button8.wav')
   self:set_sound('menu_music', '')
 
+  self:register_asset('gradient', 'materials/flux/gradient.png', { sizes = { 1, 2, 4 } })
+  self:register_asset('gradient_full', 'materials/flux/gradient_fs.png', { sizes = { 1, 2, 4 } })
+
   local accent_color        = self:set_color('accent', Color(90, 90, 190))
   local main_color          = self:set_color('main', Color(50, 50, 50))
   local outline_color       = self:set_color('outline', Color(65, 65, 65))
@@ -90,17 +93,16 @@ function THEME:CreateMainMenu(panel) end
 function THEME:PaintFrame(panel, width, height)
   local title = panel:GetTitle()
   local accent_color = panel:GetAccentColor()
-  local headerSize = self:get_option('frame_header_size')
+  local header_size = self:get_option('frame_header_size')
   local lineWeight = self:get_option('frame_line_weight')
 
-  surface.SetDrawColor(accent_color)
-  surface.DrawRect(0, 0, width, headerSize)
-
   surface.SetDrawColor(accent_color:darken(30))
-  surface.DrawRect(0, headerSize - lineWeight, width, lineWeight)
+  surface.DrawRect(0, header_size - lineWeight, width, lineWeight)
 
   surface.SetDrawColor(self:get_color('main_dark'))
-  surface.DrawRect(0, headerSize, width, height - headerSize)
+  surface.DrawRect(0, header_size, width, height - header_size)
+
+  draw.textured_rect(self:get_material('gradient'), 0, 0, w, header_size, accent_color)
 
   if title then
     local font = font.GetSize(self:get_font('text_small'), 16)
@@ -571,14 +573,12 @@ end
 function THEME.skin:PaintFrame(panel, w, h)
   local color = theme.get_color('accent')
 
-  surface.SetDrawColor(Color(10, 10, 10))
-  surface.DrawRect(0, 24, w, h)
+  draw.blur_panel(panel)
 
-  surface.SetDrawColor(Color(40, 40, 40))
-  surface.DrawRect(1, 0, w - 2, h - 1)
+  surface.SetDrawColor(Color(10, 10, 10, 150))
+  surface.DrawRect(0, 0, w, h)
 
-  surface.SetDrawColor(color:darken(20))
-  surface.DrawRect(0, 0, w, 24)
+  draw.textured_rect(theme.get_material('gradient'), 0, 0, w, 24, ColorAlpha(color, 200))
 end
 
 function THEME.skin:PaintCollapsibleCategory(panel, w, h)
