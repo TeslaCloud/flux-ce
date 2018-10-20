@@ -293,6 +293,33 @@ local except = {
   last_id = true
 }
 
+local function gen_callback(self, insert)
+  return function(result, query, time)
+    print_query(self.class_name..' '..(insert and 'Create' or 'Update')..' ('..time..'ms)', query)
+    self.saving = false
+
+    -- save relations once we're done saving the thing
+    if self.id and #self.relations > 0 then
+      ar_add_indent()
+      for _, relation in ipairs(self.relations) do
+        if !relation.child then
+          if relation.many and istable(self[relation.as]) then
+            for k, v in ipairs(self[relation.as]) do
+              v:save()
+            end
+          elseif !relation.many and istable(self[relation.as]) then
+            local rel = self[relation.as]
+            if IsValid(rel) and isfunction(rel.save) then
+              self[relation.as]:save()
+            end
+          end
+        end
+      end
+      ar_sub_indent()
+    end
+  end
+end
+
 function ActiveRecord.Base:save()
   local schema = self:get_schema()
 
@@ -317,10 +344,7 @@ function ActiveRecord.Base:save()
       end
       query:insert('created_at', to_datetime(os.time()))
       query:insert('updated_at', to_datetime(os.time()))
-      query:callback(function(result, query, time)
-        print_query(self.class_name..' Create ('..time..'ms)', query)
-        self.saving = false
-      end)
+      query:callback(gen_callback(self, true))
     query:execute()
   else
     local query = ActiveRecord.Database:update(self.table_name)
@@ -330,29 +354,8 @@ function ActiveRecord.Base:save()
         query:update(k, ActiveRecord.type_to_db(self[k], data.type))
       end
       query:update('updated_at', to_datetime(os.time()))
-      query:callback(function(result, query, time)
-        print_query(self.class_name..' Update ('..time..'ms)', query)
-        self.saving = false
-      end)
+      query:callback(gen_callback(self, false))
     query:execute()
-  end
-  if self.id and #self.relations > 0 then
-    ar_add_indent()
-    for _, relation in ipairs(self.relations) do
-      if !relation.child then
-        if relation.many and istable(self[relation.as]) then
-          for k, v in ipairs(self[relation.as]) do
-            v:save()
-          end
-        elseif !relation.many and istable(self[relation.as]) then
-          local rel = self[relation.as]
-          if IsValid(rel) and isfunction(rel.save) then
-            self[relation.as]:save()
-          end
-        end
-      end
-    end
-    ar_sub_indent()
   end
   return self
 end

@@ -16,8 +16,14 @@ ActiveRecord.Adapters.Sqlite.types = {
   json = 'json'
 }
 
+ActiveRecord.Adapters.Sqlite._sql_syntax = 'sqlite'
+
 function ActiveRecord.Adapters.Sqlite:connect()
   self:on_connected()
+end
+
+function ActiveRecord.Adapters.Sqlite:is_sqlite()
+  return true
 end
 
 function ActiveRecord.Adapters.Sqlite:escape(str)

@@ -5,6 +5,7 @@ class 'ActiveRecord::Adapters::Abstract'
 ActiveRecord.Adapters.Abstract._queue = {}
 ActiveRecord.Adapters.Abstract._connected = false
 ActiveRecord.Adapters.Abstract._sync = false
+ActiveRecord.Adapters.Abstract._sql_syntax = 'abstract'
 
 function ActiveRecord.Adapters.Abstract:init()
   self._connected = false
@@ -15,6 +16,22 @@ end
 function ActiveRecord.Adapters.Abstract:sync(sync)
   self._sync = sync
   return self
+end
+
+function ActiveRecord.Adapters.Abstract:get_sql_std()
+  return self._sql_syntax
+end
+
+function ActiveRecord.Adapters.Abstract:is_postgres()
+  return false
+end
+
+function ActiveRecord.Adapters.Abstract:is_mysql()
+  return false
+end
+
+function ActiveRecord.Adapters.Abstract:is_sqlite()
+  return false
 end
 
 function ActiveRecord.Adapters.Abstract:connect(config)
@@ -34,7 +51,7 @@ function ActiveRecord.Adapters.Abstract:unescape(str)
 end
 
 function ActiveRecord.Adapters.Abstract:quote(str)
-  return self:escape(str)
+  return "'"..self:escape(str).."'"
 end
 
 function ActiveRecord.Adapters.Abstract:raw_query(query, callback)
