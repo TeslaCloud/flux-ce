@@ -1,5 +1,6 @@
 local PANEL = {}
 PANEL.prevButton = nil
+PANEL.schema_logo_offset = 450
 
 function PANEL:Init()
   self:SetPos(0, 0)
@@ -30,7 +31,15 @@ function PANEL:Paint(w, h)
   end
 end
 
-function PANEL:Think() end
+function PANEL:Think()
+  local menu_valid = IsValid(self.menu)
+
+  if self.schema_logo_offset > 0 and menu_valid then
+    self.schema_logo_offset = Lerp(FrameTime() * 8, self.schema_logo_offset, 0)
+  elseif self.schema_logo_offset < 450 and !menu_valid then
+    self.schema_logo_offset = Lerp(FrameTime() * 8, self.schema_logo_offset, 450)
+  end
+end
 
 function PANEL:RecreateSidebar(bShouldCreateButtons)
   if IsValid(self.sidebar) then
@@ -71,16 +80,18 @@ function PANEL:OpenMenu(panel, data)
   end
 end
 
-function PANEL:to_main_menu(bFromRight)
+function PANEL:to_main_menu(from_right)
+  local scrw = ScrW()
+
   self:RecreateSidebar(true)
 
-  self.sidebar:SetPos(bFromRight and ScrW() or -self.sidebar:GetWide(), theme.get_option('menu_sidebar_y'))
+  self.sidebar:SetPos(from_right and scrw or -self.sidebar:GetWide(), theme.get_option('menu_sidebar_y'))
   self.sidebar:SetDisabled(true)
   self.sidebar:MoveTo(theme.get_option('menu_sidebar_x'), theme.get_option('menu_sidebar_y'), theme.get_option('menu_anim_duration'), 0, 0.5, function()
     self.sidebar:SetDisabled(false)
   end)
 
-  self.menu:MoveTo(bFromRight and -self.menu:GetWide() or ScrW(), 0, theme.get_option('menu_anim_duration'), 0, 0.5, function()
+  self.menu:MoveTo(from_right and -self.menu:GetWide() or scrw, 0, theme.get_option('menu_anim_duration'), 0, 0.5, function()
     if self.menu.Close then
       self.menu:Close()
     else
