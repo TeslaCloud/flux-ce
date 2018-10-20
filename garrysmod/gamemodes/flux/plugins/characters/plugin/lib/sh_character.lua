@@ -39,7 +39,7 @@ function character.Create(player, data)
   char.phys_desc = data.phys_desc or ''
   char.money = data.money or 0
   char.character_id = #player.record.characters + 1
-  char.health = player:Health() or 100
+  char.health = 100
   char.user = player.record
 
   player.record.characters[char.character_id] = char
