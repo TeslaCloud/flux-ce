@@ -147,7 +147,7 @@ do
 
     for k, v in pairs(char.attribute_multipliers) do
       if v.attribute_id == id then
-        if to_os_time(v.expires) >= os.time() then
+        if time_from_timestamp(v.expires) >= os.time() then
           mult = mult * v.value
         else
           v:destroy()
@@ -166,7 +166,7 @@ do
 
     for k, v in pairs(char.attribute_boosts) do
       if v.attribute_id == id then
-        if to_os_time(v.expires) >= os.time() then
+        if time_from_timestamp(v.expires) >= os.time() then
           boost = boost + v.value
         else
           v:destroy()

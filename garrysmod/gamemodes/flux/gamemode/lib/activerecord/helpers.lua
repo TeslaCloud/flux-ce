@@ -191,3 +191,15 @@ do
     end
   end
 end
+
+function time_from_timestamp(timestamp)
+  local yy, mm, dd, hh, m, ss = string.match(timestamp, '(%d+)%-(%d+)%-(%d+) (%d+):(%d+):(%d+)')
+   return os.time({
+    year = yy,
+    month = mm,
+    day = dd,
+    hour = hh,
+    min = m,
+    sec = ss
+  })
+end
