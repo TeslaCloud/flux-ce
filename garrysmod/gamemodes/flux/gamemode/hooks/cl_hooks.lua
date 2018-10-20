@@ -165,6 +165,8 @@ function GM:HUDPaint()
     end
 
     draw.RoundedBox(0, 0, 0, scrw, scrh, Color(255, 255, 255, fl.client.white_alpha or 0))
+
+    self.BaseClass:HUDPaint()
   end
 end
 
@@ -190,18 +192,44 @@ end
 
 function GM:HUDDrawTargetID()
   if IsValid(fl.client) and fl.client:Alive() then
-    local trace = fl.client:GetEyeTraceNoCursor()
-    local ent = trace.Entity
+    local entities = ents.FindInCone(EyePos(), EyeVector(), 256, 0.98) -- 0.94 gives approximately 40 degrees
+    local ent
+    local dist
+    local client_pos = EyePos()
 
+    for k, v in ipairs(entities) do
+      if !IsValid(v) then continue end
+
+      local ent_distance = v:GetPos():Distance(client_pos)
+
+      if !dist then
+        dist = ent_distance
+        ent = v
+      end
+
+      if ent_distance < dist then
+        dist = ent_distance
+        ent = v
+      end
+    end
+  
     if IsValid(ent) then
-      local screen_pos = (trace.HitPos + Vector(0, 0, 16)):ToScreen()
+      local trace = util.TraceLine({
+        start = client_pos,
+        endpos = ent:GetPos(),
+        filter = { ent, fl.client }
+      })
+
+      if trace.Hit then return end
+
+      local pos = ent:GetPos()
+      local screen_pos = (pos + Vector(0, 0, 16)):ToScreen()
       local x, y = screen_pos.x, screen_pos.y
-      local distance = fl.client:GetPos():Distance(trace.HitPos)
 
       if ent:IsPlayer() then
-        hook.run('DrawPlayerTargetID', ent, x, y, distance)
+        hook.run('DrawPlayerTargetID', ent, x, y, dist)
       elseif ent.DrawTargetID then
-        ent:DrawTargetID(x, y, distance)
+        ent:DrawTargetID(x, y, dist)
       end
     end
   end

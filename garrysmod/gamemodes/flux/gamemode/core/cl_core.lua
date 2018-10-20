@@ -323,6 +323,11 @@ function draw.blur_panel(panel)
   fl.should_render_blur = true
 end
 
+function draw.line(x, y, x2, y2, color)
+  surface.SetDrawColor(color)
+  surface.DrawLine(x, y, x2, y2)
+end
+
 do
   local ang = 0
 

@@ -93,15 +93,15 @@ else
   end
 
   function ENT:DrawTargetID(x, y, distance)
-    if distance > 370 then return end
+    if distance > 256 then return end
 
     local text = 'ERROR'
-    local desc = "This item's data has failed to fetch. This is an error."
-    local alpha = 255
+    local desc = 'Meow probably broke it again'
+    local alpha = self.alpha or 255
 
-    if distance > 210 then
-      local d = distance - 210
-      alpha = math.Clamp(255 * (160 - d) / 160, 0, 255)
+    if distance > 100 then
+      local d = distance - 100
+      alpha = math.Clamp(255 * (156 - d) / 156, 0, 255)
     end
 
     local col = Color(255, 255, 255, alpha)
@@ -127,6 +127,14 @@ else
 
     local width, height = util.text_size(text, theme.get_font('tooltip_large'))
     local width2, height2 = util.text_size(desc, theme.get_font('tooltip_small'))
+    local max_width = math.max(width, width2)
+    local box_x = x - max_width * 0.5 - 8
+    local accent_color = ColorAlpha(theme.get_color('accent'), math.max(0, alpha - 75))
+    local ent_pos = self:GetPos():ToScreen()
+
+    draw.textured_rect(theme.get_material('gradient'), box_x, y - 8, max_width + 16, height + height2 + 16, accent_color)
+
+    draw.line(box_x, y + height + height2 + 8, ent_pos.x, ent_pos.y, accent_color)
 
     draw.SimpleTextOutlined(text, theme.get_font('tooltip_large'), x - width * 0.5, y, col, nil, nil, 1, col2)
     y = y + 26
