@@ -37,6 +37,31 @@ function Theme:create_panel(id, parent, ...)
   end
 end
 
+function Theme:register_asset(name, path, options)
+  options = options or {}
+
+  if path:find('%.mdl') then
+    util.PrecacheModel(path)
+  elseif path:find('%.png') or path:find('%.jp[e]?g') then
+    if options.sizes then
+      local scrh = ScrH()
+      local base_size = 720
+
+      for k, v in ipairs(options.sizes) do
+        if scrh < base_size then
+          return self:set_material(name, path)
+        elseif scrh <= base_size * v then
+          return self:set_material(name, path:gsub('%.', '_'..v..'x.'))
+        end
+      end
+
+      return self:set_material(name, path)
+    else
+      return self:set_material(name, path)
+    end
+  end
+end
+
 function Theme:set_option(key, value)
   if key then
     self.options[key] = value
