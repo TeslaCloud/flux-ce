@@ -2,6 +2,7 @@ config.set('stam_drain_scale', 1)
 config.set('stam_regen_scale', 1)
 config.set('stam_jump_penalty', 25)
 config.set('stam_max', 100)
+config.set('stam_regen_delay', 3)
 
 Stamina.running = Stamina.running or {}
 Stamina.timer_ids = Stamina.timer_ids or {}
@@ -10,6 +11,7 @@ local drain_scale = 4 * config.get('stam_drain_scale', 1)
 local regen_scale = 2 * config.get('stam_regen_scale', 1)
 local jump_penalty = config.get('stam_jump_penalty', 25)
 local max_stamina = config.get('stam_max', 100)
+local regen_delay = config.get('stam_regen_delay', 3)
 
 function Stamina:OnConfigSet(key, old_value, new_value)
   if key == 'stam_drain_scale' then
@@ -20,6 +22,8 @@ function Stamina:OnConfigSet(key, old_value, new_value)
     max_stamina = new_value
   elseif key == 'stam_jump_penalty' then
     jump_penalty = new_value
+  elseif key == 'stam_regen_delay' then
+    regen_delay = new_value
   end
 end
 
@@ -90,13 +94,13 @@ function Stamina:stop_running(player, prevent_regen)
   end
 
   if !prevent_regen and self.running[steam_id] != false then
-    player.stamina_regenerating = true
-
     if !timer.Exists(id) then
       table.insert(self.timer_ids, id)
 
       timer.Create(id, 0.2, 0, function()
         if IsValid(player) then
+          player.stamina_regenerating = true
+
           local new_stam = player:get_nv('stamina', 100) + 1 * regen_scale * (plugin.call('StaminaAdjustRegenScale', player) or 1)
 
           self:set_stamina(player, new_stam)
@@ -130,7 +134,7 @@ function Stamina:PlayerThink(player, cur_time)
       self:stop_running(player, true)
       player.was_running = false
       player.standing_since = cur_time
-    elseif !player.stamina_regenerating and (cur_time - (player.standing_since or 0)) > 1 then
+    elseif !player.stamina_regenerating and (cur_time - (player.standing_since or 0)) > regen_delay then
       self:stop_running(player)
     end
   end
