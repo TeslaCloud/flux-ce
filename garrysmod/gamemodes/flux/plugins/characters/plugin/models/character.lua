@@ -9,7 +9,6 @@ Character:validates('phys_desc', { presence = true, min_length = 16, max_length 
 Character:validates('character_id', { presence = true })
 Character:validates('gender', { presence = true })
 Character:validates('model', { presence = true })
-Character:validates('character_id', { presence = true })
 Character:validates('user_id', { presence = true })
 Character:validates('steam_id', { presence = true })
 
