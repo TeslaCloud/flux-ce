@@ -48,6 +48,18 @@ function ActiveRecord.Query:escape(text)
   return ActiveRecord.adapter:escape(tostring(text))
 end
 
+function ActiveRecord.Query:quote(text)
+  return ActiveRecord.adapter:quote(tostring(text))
+end
+
+function ActiveRecord.Query:quote_column(text)
+  if text:find(' ') then
+    return '"'..text..'"'
+  else
+    return text
+  end
+end
+
 function ActiveRecord.Query:for_table(table_name)
   self.table_name = table_name
 end
@@ -61,45 +73,45 @@ function ActiveRecord.Query:where_raw(condition)
 end
 
 function ActiveRecord.Query:where_equal(key, value)
-  table.insert(self.where_list, '`'..key..'` = \''..self:escape(value)..'\'')
+  table.insert(self.where_list, key..' = '..self:quote(value))
 end
 
 function ActiveRecord.Query:where_not_equal(key, value)
-  table.insert(self.where_list, '`'..key..'` != \''..self:escape(value)..'\'')
+  table.insert(self.where_list, key..' != '..self:quote(value))
 end
 
 function ActiveRecord.Query:where_like(key, value)
-  table.insert(self.where_list, '`'..key..'` LIKE \''..self:escape(value)..'\'')
+  table.insert(self.where_list, key..' LIKE '..self:quote(value))
 end
 
 function ActiveRecord.Query:where_not_like(key, value)
-  table.insert(self.where_list, '`'..key..'` NOT LIKE \''..self:escape(value)..'\'')
+  table.insert(self.where_list, key..' NOT LIKE '..self:quote(value))
 end
 
 function ActiveRecord.Query:where_gt(key, value)
-  table.insert(self.where_list, '`'..key..'` > \''..self:escape(value)..'\'')
+  table.insert(self.where_list, key..' > '..self:quote(value))
 end
 
 function ActiveRecord.Query:where_lt(key, value)
-  table.insert(self.where_list, '`'..key..'` < \''..self:escape(value)..'\'')
+  table.insert(self.where_list, key..' < '..self:quote(value))
 end
 
 function ActiveRecord.Query:where_gte(key, value)
-  table.insert(self.where_list, '`'..key..'` >= \''..self:escape(value)..'\'')
+  table.insert(self.where_list, key..' >= '..self:quote(value))
 end
 
 function ActiveRecord.Query:where_lte(key, value)
-  table.insert(self.where_list, '`'..key..'` <= \''..self:escape(value)..'\'')
+  table.insert(self.where_list, key..' <= '..self:quote(value))
 end
 
 function ActiveRecord.Query:order(key)
   if isstring(key) then
-    table.insert(self.order_list, '`'..key..'` DESC')
+    table.insert(self.order_list, key..' DESC')
   elseif istable(key) then
     if key['asc'] then
-      table.insert(self.order_list, '`'..key['asc']..'` ASC')
+      table.insert(self.order_list, key['asc']..' ASC')
     elseif key['desc'] then
-      table.insert(self.order_list, '`'..key['desc']..'` DESC')
+      table.insert(self.order_list, key['desc']..' DESC')
     end
   end
 end
@@ -109,31 +121,31 @@ function ActiveRecord.Query:callback(callback)
 end
 
 function ActiveRecord.Query:select(field_name)
-  table.insert(self.select_list, '`'..field_name..'`')
+  table.insert(self.select_list, self:quote_column(field_name))
 end
 
 function ActiveRecord.Query:remove(field_name)
-  table.insert(self.remove_column_list, '`'..field_name..'`')
+  table.insert(self.remove_column_list, self:quote_column(field_name))
 end
 
 function ActiveRecord.Query:rename(what, into)
-  table.insert(self.rename_list, {'`'..what..'`', '`'..into..'`'})
+  table.insert(self.rename_list, { self:quote_column(what), self:quote_column(into) })
 end
 
 function ActiveRecord.Query:insert(key, value)
-  table.insert(self.insert_list, {'`'..key..'`', '\''..self:escape(value)..'\''})
+  table.insert(self.insert_list, { key, self:quote(value) })
 end
 
 function ActiveRecord.Query:update(key, value)
-  table.insert(self.update_list, {'`'..key..'`', '\''..self:escape(value)..'\''})
+  table.insert(self.update_list, { key, self:quote(value) })
 end
 
 function ActiveRecord.Query:create(key, value)
-  table.insert(self.create_list, {'`'..key..'`', value})
+  table.insert(self.create_list, { self:quote_column(key), value })
 end
 
 function ActiveRecord.Query:set_primary_key(key)
-  self.prim_key = '`'..key..'`'
+  self.prim_key = self:quote_column(key)
 end
 
 function ActiveRecord.Query:limit(value)
@@ -149,7 +161,7 @@ function ActiveRecord.Query:overwrite(overwrite)
 end
 
 local function build_select_query(query_obj)
-  local query_string = {'SELECT'}
+  local query_string = { 'SELECT ' }
 
   if !istable(query_obj.select_list) or #query_obj.select_list == 0 then
     table.insert(query_string, ' *')
@@ -158,7 +170,7 @@ local function build_select_query(query_obj)
   end
 
   if isstring(query_obj.table_name) then
-    table.insert(query_string, ' FROM `'..query_obj.table_name..'` ')
+    table.insert(query_string, ' FROM '..query_obj:quote_column(query_obj.table_name)..' ')
   else
     ErrorNoHalt('ActiveRecord - No table name specified!\n')
     return
@@ -183,12 +195,12 @@ local function build_select_query(query_obj)
 end
 
 local function build_insert_query(query_obj)
-  local query_string = {'INSERT INTO'}
+  local query_string = {'INSERT INTO '}
   local key_list = {}
   local value_list = {}
 
   if isstring(query_obj.table_name) then
-    table.insert(query_string, ' `'..query_obj.table_name..'`')
+    table.insert(query_string, query_obj:quote_column(query_obj.table_name))
   else
     ErrorNoHalt('ActiveRecord - No table name specified!\n')
     return
@@ -210,10 +222,10 @@ local function build_insert_query(query_obj)
 end
 
 local function build_update_query(query_obj)
-  local query_string = {'UPDATE'}
+  local query_string = {'UPDATE '}
 
   if isstring(query_obj.table_name) then
-    table.insert(query_string, ' `'..query_obj.table_name..'`')
+    table.insert(query_string, query_obj:quote_column(query_obj.table_name))
   else
     ErrorNoHalt('ActiveRecord - No table name specified!\n')
     return
@@ -245,10 +257,10 @@ local function build_update_query(query_obj)
 end
 
 local function build_delete_query(query_obj)
-  local query_string = {'DELETE FROM'}
+  local query_string = {'DELETE FROM '}
 
   if isstring(query_obj.table_name) then
-    table.insert(query_string, ' `'..query_obj.table_name..'`')
+    table.insert(query_string, query_obj:quote_column(query_obj.table_name))
   else
     ErrorNoHalt('ActiveRecord - No table name specified!\n')
     return
@@ -268,10 +280,10 @@ local function build_delete_query(query_obj)
 end
 
 local function build_drop_query(query_obj)
-  local query_string = {'DROP TABLE'}
+  local query_string = {'DROP TABLE '}
 
   if isstring(query_obj.table_name) then
-    table.insert(query_string, ' `'..query_obj.table_name..'`')
+    table.insert(query_string, query_obj:quote_column(query_obj.table_name))
   else
     ErrorNoHalt('ActiveRecord - No table name specified!\n')
     return
@@ -281,10 +293,10 @@ local function build_drop_query(query_obj)
 end
 
 local function build_truncate_query(query_obj)
-  local query_string = {'TRUNCATE TABLE'}
+  local query_string = {'TRUNCATE TABLE '}
 
   if isstring(query_obj.table_name) then
-    table.insert(query_string, ' `'..query_obj.table_name..'`')
+    table.insert(query_string, ' '..query_obj:quote_column(query_obj.table_name))
   else
     ErrorNoHalt('ActiveRecord - No table name specified!\n')
     return
@@ -294,21 +306,21 @@ local function build_truncate_query(query_obj)
 end
 
 local function build_create_query(query_obj)
-  local query_string = { 'DROP TABLE IF EXISTS' }
+  local query_string = { 'DROP TABLE IF EXISTS ' }
 
   if !query_obj._overwrite then
-    query_string = { 'CREATE TABLE IF NOT EXISTS' }
+    query_string = { 'CREATE TABLE IF NOT EXISTS ' }
   end
 
   if isstring(query_obj.table_name) then
-    table.insert(query_string, ' `'..query_obj.table_name..'`')
+    table.insert(query_string, query_obj:quote_column(query_obj.table_name))
   else
     ErrorNoHalt('ActiveRecord - No table name specified!\n')
     return
   end
 
   if query_obj._overwrite then
-    table.insert(query_string, ';\nCREATE TABLE `'..query_obj.table_name..'`')
+    table.insert(query_string, ';\nCREATE TABLE '..query_obj:quote_column(query_obj.table_name))
   end
 
   table.insert(query_string, ' (')
@@ -327,7 +339,7 @@ local function build_create_query(query_obj)
     table.insert(query_string, ' '..table.concat(create_list, ', '))
   end
 
-  if isstring(query_obj.prim_key) then
+  if isstring(query_obj.prim_key) and ActiveRecord.adapter_name != 'pg' then
     table.insert(query_string, ', PRIMARY KEY')
     table.insert(query_string, ' ('..query_obj.prim_key..')')
   end
@@ -342,10 +354,10 @@ local function build_create_query(query_obj)
 end
 
 local function build_change_query(query)
-  local query_string = {'ALTER TABLE'}
+  local query_string = {'ALTER TABLE '}
 
   if isstring(query.table_name) then
-    table.insert(query_string, ' `'..query.table_name..'`')
+    table.insert(query_string, ' '..query:quote_column(query.table_name))
   else
     ErrorNoHalt('ActiveRecord - No table name specified!\n')
     return
@@ -404,7 +416,7 @@ function ActiveRecord.Query:execute(queue_query)
 
   if isstring(query_string) then
     query_string = query_string:ensure_ending(';')
-    query_string = query_string:gsub(' ;', ';'):gsub('`  ', '` ')
+    query_string = query_string:gsub(' ;', ';'):gsub('  ', ' ')
 
     if !queue_query then
       return ActiveRecord.adapter:raw_query(query_string, self._callback)

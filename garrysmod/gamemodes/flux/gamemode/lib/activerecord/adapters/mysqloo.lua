@@ -16,8 +16,14 @@ ActiveRecord.Adapters.Mysqloo.types = {
   json = 'text'
 }
 
+ActiveRecord.Adapters.Mysqloo._sql_syntax = 'mysql'
+
 function ActiveRecord.Adapters.Mysqloo:init()
   require('mysqloo')
+end
+
+function ActiveRecord.Adapters.Mysqloo:is_mysql()
+  return true
 end
 
 function ActiveRecord.Adapters.Mysqloo:connect(config)
@@ -69,10 +75,6 @@ end
 
 function ActiveRecord.Adapters.Mysqloo:escape(str)
   return self.connection:escape(str)
-end
-
-function ActiveRecord.Adapters.Mysqloo:quote(str)
-  return "`"..self:escape(str).."`"
 end
 
 function ActiveRecord.Adapters.Mysqloo:raw_query(query, callback, flags, ...)

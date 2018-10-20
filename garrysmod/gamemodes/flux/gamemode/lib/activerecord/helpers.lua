@@ -49,7 +49,8 @@ function add_index(args)
   local cols = istable(args[2]) and args[2] or { args[2] }
   local len = args['length']
   local index_name = args['name'] or args[1]..'_'..table.concat(cols, '_')..'_index'
-  local adapter_name = ActiveRecord.adapter_name
+  local postgres = ActiveRecord.adapter:is_postgres()
+  local sqlite = ActiveRecord.adapter:is_sqlite()
 
   if ActiveRecord.metadata.indexes[index_name] then return end
 
@@ -59,29 +60,41 @@ function add_index(args)
     query = query..' IF NOT EXISTS '
   end
 
-  query = query..ActiveRecord.adapter:quote(index_name)
+  query = query..index_name
 
 
-  query = query..' ON '..ActiveRecord.adapter:quote(args[1])
+  query = query..' ON '..args[1]
 
-  query = query..' ('
+  local function _columns(query)
+    query = query..' ('
 
-  for k, v in ipairs(cols) do
-    query = query..ActiveRecord.adapter:quote(v)
+    for k, v in ipairs(cols) do
+      query = query..v
 
-    if len and adapter_name != 'sqlite' then
-      query = query..'('..(istable(len) and len[v] or len)..')'
+      if len and !sqlite then
+        query = query..'('..(istable(len) and len[v] or len)..')'
+      end
+
+      if k != #cols then
+        query = query..', '
+      end
     end
 
-    if k != #cols then
-      query = query..', '
-    end
+    query = query..')'
+  
+    return query
   end
 
-  query = query..')'
+  if !postgres then
+    query = _columns(query)
+  end
 
-  if adapter_name != 'sqlite' then
-    query = query..' USING '..(args['using'] or 'BTREE')
+  if !sqlite then
+    query = query..' USING '..(args['using'] or (postgres and 'btree' or 'BTREE'))
+  end
+  
+  if postgres then
+    query = _columns(query)
   end
 
   if args['where'] then
@@ -100,7 +113,7 @@ end
 function drop_index(index_name, table_name)
   ActiveRecord.metadata.indexes[index_name] = nil 
 
-  ActiveRecord.adapter:raw_query('DROP INDEX IF EXISTS '..ActiveRecord.adapter:quote(index_name)..' ON '..ActiveRecord.adapter:quote(table_name)..';', function(results, query_str, time)
+  ActiveRecord.adapter:raw_query('DROP INDEX IF EXISTS '..index_name..' ON '..table_name..';', function(results, query_str, time)
     print_query('Drop Index ('..time..'ms)', query_str)
   end)
 end
@@ -114,10 +127,10 @@ function create_reference(args)
 
   if ActiveRecord.metadata.references[constraint_name] then return end
 
-  local query = 'ALTER TABLE '..ActiveRecord.adapter:quote(table_name)
-    ..' ADD CONSTRAINT '..ActiveRecord.adapter:quote(constraint_name)
-    ..' FOREIGN KEY ('..ActiveRecord.adapter:quote(key)..') REFERENCES '
-    ..ActiveRecord.adapter:quote(foreign_table)..'('..ActiveRecord.adapter:quote(foreign_key)..')'
+  local query = 'ALTER TABLE '..table_name
+    ..' ADD CONSTRAINT '..constraint_name
+    ..' FOREIGN KEY ('..key..') REFERENCES '
+    ..foreign_table..'('..foreign_key..')'
   query = query..(cascade and ' ON DELETE CASCADE;' or ';')
 
   ActiveRecord.metadata.references[constraint_name] = args
@@ -133,9 +146,9 @@ function create_primary_key(table_name, key)
   if ActiveRecord.metadata.prim_keys[pkey_name] then return end
 
   ActiveRecord.metadata.prim_keys[pkey_name] = { table_name, key }
-  ActiveRecord.adapter:raw_query('ALTER TABLE '..ActiveRecord.adapter:quote(table_name)
-    ..' ADD CONSTRAINT '..ActiveRecord.adapter:quote(pkey_name)
-    ..' PRIMARY KEY ('..ActiveRecord.adapter:quote(key)..');', function(result, query_str, time)
+  ActiveRecord.adapter:raw_query('ALTER TABLE '..table_name
+    ..' ADD CONSTRAINT '..pkey_name
+    ..' PRIMARY KEY ('..key..');', function(result, query_str, time)
       print_query('Create Primary Key ('..time..'ms)', query_str)
   end)
 end
@@ -146,19 +159,6 @@ end
 
 function to_timestamp(unix_time)
   return os.date('%Y%m%d%H%M%S', unix_time)
-end
-
-function to_os_time(timestamp)
-  local yy, mm, dd, hh, m, ss = string.match(timestamp, '(%d+)%-(%d+)%-(%d+) (%d+):(%d+):(%d+)')
-
-  return os.time({
-    year = yy,
-    month = mm,
-    day = dd,
-    hour = hh,
-    min = m,
-    sec = ss
-  })
 end
 
 do
