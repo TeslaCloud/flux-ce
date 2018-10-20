@@ -58,7 +58,8 @@ function ActiveRecord.Adapters.Mysqloo:connect(config)
 
     self.connection:connect()
 
-    timer.Create("Mysqloo#keep_alive", 300, 0, function()
+    -- ping it every 30 seconds to make sure we're not losing connection
+    timer.Create("Mysqloo#keep_alive", 30, 0, function()
       self.connection:ping()
     end)
   else
