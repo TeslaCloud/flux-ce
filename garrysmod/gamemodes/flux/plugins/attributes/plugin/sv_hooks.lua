@@ -11,9 +11,3 @@ function flAttributes:PostCreateCharacter(player, char_id, char, char_data)
     table.insert(char.attributes, att)
   end
 end
-
-function flAttributes:OnCharacterDelete(player, char_id)
-  for k, v in pairs(player.record.characters[char_id].attributes) do
-    v:destroy()
-  end
-end

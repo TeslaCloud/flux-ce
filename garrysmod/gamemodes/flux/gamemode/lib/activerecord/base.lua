@@ -367,10 +367,11 @@ function ActiveRecord.Base:save()
 end
 
 function ActiveRecord.Base:destroy()
+  local class_name = self.class_name
   local query = ActiveRecord.Database:delete(self.table_name)
     query:where('id', self.id)
     query:callback(function(result, query, time)
-      print_query(self.class_name..' Delete ('..time..'ms)', query)
+      print_query(class_name..' Delete ('..time..'ms)', query)
     end)
   query:execute()
   self = nil

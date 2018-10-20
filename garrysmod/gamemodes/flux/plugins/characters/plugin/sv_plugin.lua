@@ -3,12 +3,27 @@
 function player_meta:SetActiveCharacter(id)
   local cur_char_id = self:GetActiveCharacterID()
 
+  id = tonumber(id)
+
+  if !id then return end
+
   if cur_char_id then
     hook.run('OnCharacterChange', self, self:GetCharacter(), id)
   end
 
-  self:set_nv('active_character', tonumber(id))
-  self.current_character = self.record.characters[tonumber(id)]
+  local real_character = nil 
+
+  for k, v in ipairs(self.record.characters) do
+    if v.character_id == id then
+      real_character = v
+      break
+    end
+  end
+
+  if !real_character then return end
+
+  self:set_nv('active_character', real_character.id)
+  self.current_character = real_character
 
   local char_data = self:GetCharacter()
 

@@ -54,6 +54,10 @@ function ActiveRecord.Adapters.Abstract:quote(str)
   return "'"..self:escape(str).."'"
 end
 
+function ActiveRecord.Adapters.Abstract:quote_name(str)
+  return str
+end
+
 function ActiveRecord.Adapters.Abstract:raw_query(query, callback)
 end
 
