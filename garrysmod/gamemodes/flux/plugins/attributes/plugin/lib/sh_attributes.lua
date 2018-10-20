@@ -186,8 +186,6 @@ do
       for k, v in pairs(atts_table) do
         if v.attr_id == attr_id then
           v.value = math.Clamp(value, attribute.min, attribute.max)
-          v:save()
-
           break
         end
       end
@@ -221,13 +219,10 @@ do
       local atts_table = self:get_attributes()
 
       local multiplier = AttributeMultiplier.new()
-      multiplier.value = value
-      multiplier.expires = to_datetime(os.time() + duration)
-      multiplier.attribute_id = attributes.id_from_attr_id(atts_table, attr_id)
-
+        multiplier.value = value
+        multiplier.expires = to_datetime(os.time() + duration)
+        multiplier.attribute_id = attributes.id_from_attr_id(atts_table, attr_id)
       table.insert(self:GetCharacter().attribute_multipliers, multiplier)
-
-      multiplier:save()
     end
 
     function player_meta:attribute_boost(attr_id, value, duration)
@@ -238,13 +233,10 @@ do
       local atts_table = self:get_attributes()
 
       local boost = AttributeBoost.new()
-      boost.value = value
-      boost.expires = to_datetime(os.time() + duration)
-      boost.attribute_id = attributes.id_from_attr_id(atts_table, attr_id)
-
+        boost.value = value
+        boost.expires = to_datetime(os.time() + duration)
+        boost.attribute_id = attributes.id_from_attr_id(atts_table, attr_id)
       table.insert(self:GetCharacter().attribute_boosts, boost)
-
-      boost:save()
     end
   end
 end
