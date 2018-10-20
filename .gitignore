@@ -1,7 +1,7 @@
 ._*.*
 ._*
 ThirdPartyLegalNotices.txt
-bin/
+/bin/
 garrysmod/addons/
 garrysmod/bin/
 garrysmod/cfg/
@@ -53,3 +53,4 @@ steamapps/
 *.rad
 *.bat
 *.local.yml
+/libintl.dll
