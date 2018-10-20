@@ -4,6 +4,7 @@ ActiveRecord.Base.query_map = a{}
 ActiveRecord.Base.table_name = ''
 ActiveRecord.Base.schema = nil
 ActiveRecord.Base.relations = {}
+ActiveRecord.Base.validations = {}
 
 function ActiveRecord.Base:init()
   self.fetched = false
@@ -321,42 +322,47 @@ local function gen_callback(self, insert)
 end
 
 function ActiveRecord.Base:save()
-  local schema = self:get_schema()
+  ActiveRecord.Validator:validate_model(self, function()
+    local schema = self:get_schema()
 
-  if !schema or self.saving then return self end
+    if !self.id then
+      self.class.last_id = self.class.last_id + 1
+      self.id = self.class.last_id
+    end
 
-  if !self.id then
-    self.class.last_id = self.class.last_id + 1
-    self.id = self.class.last_id
-  end
+    self.saving = true
 
-  self.saving = true
+    if !self.fetched then
+      self.fetched = true
 
-  if !self.fetched then
-    self.fetched = true
+      self.class.last_id = self.id
 
-    self.class.last_id = self.id
+      local query = ActiveRecord.Database:insert(self.table_name)
+        for k, data in pairs(schema) do
+          if except[k] then continue end
+          query:insert(k, ActiveRecord.type_to_db(self[k], data.type))
+        end
+        query:insert('created_at', to_datetime(os.time()))
+        query:insert('updated_at', to_datetime(os.time()))
+        query:callback(gen_callback(self, true))
+      query:execute()
+    else
+      local query = ActiveRecord.Database:update(self.table_name)
+        query:where('id', self.id)
+        for k, data in pairs(schema) do
+          if except[k] then continue end
+          query:update(k, ActiveRecord.type_to_db(self[k], data.type))
+        end
+        query:update('updated_at', to_datetime(os.time()))
+        query:callback(gen_callback(self, false))
+      query:execute()
+    end
+  end, function(model, column, err_code)
+    if model.invalid then
+      model:invalid(column, err_code)
+    end
+  end)
 
-    local query = ActiveRecord.Database:insert(self.table_name)
-      for k, data in pairs(schema) do
-        if except[k] then continue end
-        query:insert(k, ActiveRecord.type_to_db(self[k], data.type))
-      end
-      query:insert('created_at', to_datetime(os.time()))
-      query:insert('updated_at', to_datetime(os.time()))
-      query:callback(gen_callback(self, true))
-    query:execute()
-  else
-    local query = ActiveRecord.Database:update(self.table_name)
-      query:where('id', self.id)
-      for k, data in pairs(schema) do
-        if except[k] then continue end
-        query:update(k, ActiveRecord.type_to_db(self[k], data.type))
-      end
-      query:update('updated_at', to_datetime(os.time()))
-      query:callback(gen_callback(self, false))
-    query:execute()
-  end
   return self
 end
 
@@ -428,4 +434,17 @@ function ActiveRecord.Base:belongs_to(target, one)
       target_class = target
     })
   end
+end
+
+function ActiveRecord.Base:invalid(column, err_code)
+  ErrorNoHalt('ActiveRecord - Validation failed!\n')
+  ErrorNoHalt(self.class_name..'#'..tostring(column)..' failed with error code '..tostring(err_code)..'\n')
+end
+
+function ActiveRecord.Base:validates(column, options)
+  local current_options = self.validations[column] or {}
+  for k, v in pairs(options) do
+    table.insert(current_options, { id = k, value = v })
+  end
+  self.validations[column] = current_options
 end
