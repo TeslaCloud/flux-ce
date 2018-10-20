@@ -53,11 +53,7 @@ function ActiveRecord.Query:quote(text)
 end
 
 function ActiveRecord.Query:quote_column(text)
-  if text:find(' ') then
-    return '"'..text..'"'
-  else
-    return text
-  end
+  return ActiveRecord.adapter:quote_name(tostring(text))
 end
 
 function ActiveRecord.Query:for_table(table_name)
@@ -73,45 +69,45 @@ function ActiveRecord.Query:where_raw(condition)
 end
 
 function ActiveRecord.Query:where_equal(key, value)
-  table.insert(self.where_list, key..' = '..self:quote(value))
+  table.insert(self.where_list, self:quote_column(key)..' = '..self:quote(value))
 end
 
 function ActiveRecord.Query:where_not_equal(key, value)
-  table.insert(self.where_list, key..' != '..self:quote(value))
+  table.insert(self.where_list, self:quote_column(key)..' != '..self:quote(value))
 end
 
 function ActiveRecord.Query:where_like(key, value)
-  table.insert(self.where_list, key..' LIKE '..self:quote(value))
+  table.insert(self.where_list, self:quote_column(key)..' LIKE '..self:quote(value))
 end
 
 function ActiveRecord.Query:where_not_like(key, value)
-  table.insert(self.where_list, key..' NOT LIKE '..self:quote(value))
+  table.insert(self.where_list, self:quote_column(key)..' NOT LIKE '..self:quote(value))
 end
 
 function ActiveRecord.Query:where_gt(key, value)
-  table.insert(self.where_list, key..' > '..self:quote(value))
+  table.insert(self.where_list, self:quote_column(key)..' > '..self:quote(value))
 end
 
 function ActiveRecord.Query:where_lt(key, value)
-  table.insert(self.where_list, key..' < '..self:quote(value))
+  table.insert(self.where_list, self:quote_column(key)..' < '..self:quote(value))
 end
 
 function ActiveRecord.Query:where_gte(key, value)
-  table.insert(self.where_list, key..' >= '..self:quote(value))
+  table.insert(self.where_list, self:quote_column(key)..' >= '..self:quote(value))
 end
 
 function ActiveRecord.Query:where_lte(key, value)
-  table.insert(self.where_list, key..' <= '..self:quote(value))
+  table.insert(self.where_list, self:quote_column(key)..' <= '..self:quote(value))
 end
 
 function ActiveRecord.Query:order(key)
   if isstring(key) then
-    table.insert(self.order_list, key..' DESC')
+    table.insert(self.order_list, self:quote_column(key)..' DESC')
   elseif istable(key) then
     if key['asc'] then
-      table.insert(self.order_list, key['asc']..' ASC')
+      table.insert(self.order_list, self:quote_column(key['asc'])..' ASC')
     elseif key['desc'] then
-      table.insert(self.order_list, key['desc']..' DESC')
+      table.insert(self.order_list, self:quote_column(key['desc'])..' DESC')
     end
   end
 end
@@ -207,7 +203,7 @@ local function build_insert_query(query_obj)
   end
 
   for k, v in ipairs(query_obj.insert_list) do
-    table.insert(key_list, v[1])
+    table.insert(key_list, query_obj:quote_column(v[1]))
     table.insert(value_list, v[2])
   end
 

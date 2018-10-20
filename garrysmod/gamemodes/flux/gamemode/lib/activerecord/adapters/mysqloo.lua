@@ -77,6 +77,10 @@ function ActiveRecord.Adapters.Mysqloo:escape(str)
   return self.connection:escape(str)
 end
 
+function ActiveRecord.Adapters.Mysqloo:quote_name(str)
+  return '`'..str..'`'
+end
+
 function ActiveRecord.Adapters.Mysqloo:raw_query(query, callback, flags, ...)
   if !self.connection then
     return self:queue(query)

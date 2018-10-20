@@ -70,6 +70,10 @@ function ActiveRecord.Adapters.Pg:quote(str)
   return self.connection:quote(str)
 end
 
+function ActiveRecord.Adapters.Pg:quote_name(str)
+  return self.connection:quote_name(str)
+end
+
 function ActiveRecord.Adapters.Pg:raw_query(query, callback, flags, ...)
   if !self.connection then
     return self:queue(query)

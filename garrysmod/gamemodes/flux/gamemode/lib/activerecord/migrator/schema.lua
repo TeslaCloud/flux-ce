@@ -28,7 +28,7 @@ function ActiveRecord.Schema:setup_references()
   for k, v in pairs(references) do
     for k2, v2 in pairs(v) do
       if !is_sqlite then
-        create_reference({ table_name = k, key = k2, foreign_table = v2, foreign_key = 'id' })
+        create_reference({ table_name = k, key = k2, foreign_table = v2, foreign_key = 'id', cascade = true })
       else
         add_index { k, k2 } -- only add index if SQLite
       end
