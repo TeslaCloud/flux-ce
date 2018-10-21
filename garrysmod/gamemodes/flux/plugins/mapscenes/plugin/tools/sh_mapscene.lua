@@ -33,14 +33,14 @@ function TOOL.BuildCPanel(CPanel)
   end
 
   list.OnRowRightClick = function(panel, line)
-		local menu = DermaMenu()
+    local menu = DermaMenu()
     menu:AddOption('delete', function()
       netstream.Start('flRemoveMapscene', line)
       list:RemoveLine(line)
     end):SetIcon('icon16/cancel.png')
-		menu:Open()
+    menu:Open()
 
-		RegisterDermaMenuForClose(menu)
+    RegisterDermaMenuForClose(menu)
   end
 
   CPanel:AddItem(list)
