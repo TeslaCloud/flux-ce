@@ -1,29 +1,30 @@
-function flMapscene:save()
-  data.save_plugin('mapsceneanim', flMapscene.anim)
-  data.save_plugin('mapscenepoints', flMapscene.points)
+config.set('mapscenes_speed', 15)
+config.set('mapscenes_animated', false)
+config.set('mapscenes_rotate_speed', 0.05)
+
+function flMapscenes:save()
+  data.save_plugin('mapscenepoints', flMapscenes.points)
 end
 
-function flMapscene:load()
-  local anim = data.load_plugin('mapsceneanim', {})
+function flMapscenes:load()
   local points = data.load_plugin('mapscenepoints', {})
 
-  self.anim = anim
   self.points = points
 end
 
-function flMapscene:LoadData()
+function flMapscenes:LoadData()
   self:load()
 end
 
-function flMapscene:SaveData()
+function flMapscenes:SaveData()
   self:save()
 end
 
-function flMapscene:PlayerInitialized(player)
+function flMapscenes:PlayerInitialized(player)
   netstream.Start(player, 'flLoadMapscene', self.anim, self.points)
 end
 
-function flMapscene:add_point(pos, ang)
+function flMapscenes:add_point(pos, ang)
   table.insert(self.points, {
     pos = pos,
     ang = ang
@@ -33,3 +34,12 @@ function flMapscene:add_point(pos, ang)
 
   self:save()
 end
+
+netstream.Hook('flRemoveMapscene', function(player, id)
+  print(id)
+  table.remove(flMapscenes.points, id)
+
+  netstream.Start(nil, 'flDeleteMapscene', id)
+
+  flMapscenes:save()
+end)
