@@ -1,5 +1,9 @@
 en:
   mapscene:
-    a: b
+    title: Mapscene
+    point_added: Point added
   tool:
-    a: b
+    mapscene:
+      name: Main menu background
+      desc: Set main menu camera position.
+      '0': 'Left Click: Add point'

@@ -1,7 +1,6 @@
-PLUGIN:set_global('flMapscene')
+PLUGIN:set_global('flMapscenes')
 
-flMapscene.anim = flMapscene.anim or { rotate = 0, move = 0, delay = 10 }
-flMapscene.points = flMapscene.points or {}
+flMapscenes.points = flMapscenes.points or {}
 
 util.include('cl_hooks.lua')
 util.include('cl_plugin.lua')

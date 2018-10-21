@@ -10,9 +10,38 @@ function TOOL:LeftClick(trace)
 
   if !IsValid(player) or !player:can('mapsceneadd') then return end
 
-  flMapscene:add_point(player:EyePos(), player:GetAngles())
+  flMapscenes:add_point(player:EyePos(), player:GetAngles())
 
-  fl.player:notify(player, '3d_text.text_added')
+  fl.player:notify(player, 'mapscene.point_added')
 
    return true
+end
+
+function TOOL.BuildCPanel(CPanel)
+  local list = vgui.Create('DListView')
+  list:SetSize(30, 90)
+  list:AddColumn(t'mapscene.title')
+  list.Think = function(panel)
+    if #flMapscenes.points != #list:GetLines() then
+      list:Clear()
+
+      for k, v in pairs(flMapscenes.points) do
+        local line = list:AddLine(t'mapscene.title'..' #'..k)
+        line.id = k
+      end
+    end
+  end
+
+  list.OnRowRightClick = function(panel, line)
+		local menu = DermaMenu()
+    menu:AddOption('delete', function()
+      netstream.Start('flRemoveMapscene', line)
+      list:RemoveLine(line)
+    end):SetIcon('icon16/cancel.png')
+		menu:Open()
+
+		RegisterDermaMenuForClose(menu)
+  end
+
+  CPanel:AddItem(list)
 end
