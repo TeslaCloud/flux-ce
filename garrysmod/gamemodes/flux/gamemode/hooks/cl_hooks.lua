@@ -214,13 +214,7 @@ function GM:HUDDrawTargetID()
     end
   
     if IsValid(ent) then
-      local trace = util.TraceLine({
-        start = client_pos,
-        endpos = ent:GetPos(),
-        filter = { ent, fl.client }
-      })
-
-      if trace.Hit then return end
+      if util.vectors_have_obstacle(client_pos, ent:GetPos(), { ent, fl.client }) then return end
 
       local pos = ent:GetPos()
       local screen_pos = (pos + Vector(0, 0, 16)):ToScreen()
