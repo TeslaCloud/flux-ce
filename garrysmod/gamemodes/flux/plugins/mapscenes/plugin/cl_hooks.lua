@@ -47,9 +47,6 @@ function flMapscenes:CalcView(player, origin, angles, fov)
         if config.get('mapscenes_animated') and #self.points > 1 then
           local next_point = self.points[self.scene < #self.points and self.scene + 1 or 1]
 
-          self.pos = self.pos
-          self.ang = self.ang
-
           self.start_time = self.start_time or cur_time
           self.end_time = self.end_time or cur_time + config.get('mapscenes_speed')
 
