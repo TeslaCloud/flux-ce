@@ -60,6 +60,15 @@ function PANEL:add_message(message_data)
 
     if IsValid(panel) then
       self:add_panel(panel)
+
+      timer.Simple(0.05, function()
+        local scroll = self.scroll_panel
+        local value = panel:GetTall() + self.padding
+
+        if scroll:GetCanvas():GetTall() - scroll:GetTall() - scroll.VBar:GetScroll() <= value then
+          self.scroll_panel.VBar:AddScroll(value)
+        end
+      end)
     end
   end
 end

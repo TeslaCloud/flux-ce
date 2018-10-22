@@ -68,5 +68,7 @@ end
 netstream.Hook('chat_add_message', function(message_data)
   if IsValid(chatbox.panel) then
     chatbox.panel:add_message(message_data)
+
+    chat.PlaySound()
   end
 end)
