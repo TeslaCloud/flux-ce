@@ -28,29 +28,31 @@ function flPrefixes:StringIsCommand(str)
 end
 
 function flPrefixes:PlayerSay(player, text, team_chat)
-  for k, v in pairs(stored) do
-    if istable(v.prefix) then
-      for k2, v2 in ipairs(v.prefix) do
-        if text:utf8lower():starts(v2) or v.check and v.check(text) then
-          local message = text:utf8sub((text:utf8lower():starts(v2) and v2:utf8len() or 0) + 1)
+  if !string.is_command(text) then
+    for k, v in pairs(stored) do
+      if istable(v.prefix) then
+        for k2, v2 in ipairs(v.prefix) do
+          if text:utf8lower():starts(v2) or v.check and v.check(text) then
+            local message = text:utf8sub((text:utf8lower():starts(v2) and v2:utf8len() or 0) + 1)
 
-          if message != '' then
-            v.callback(player, message, team_chat)
-            hook.run('PlayerUsedPrefix', player, k, message, team_chat)
+            if message != '' then
+              v.callback(player, message, team_chat)
+              hook.run('PlayerUsedPrefix', player, k, message, team_chat)
+            end
+
+            return ''
           end
-
-          return ''
         end
-      end
-    elseif text:utf8lower():starts(v.prefix) or v.check and v.check(text) then
-      local message = text:utf8sub((text:utf8lower():starts(v.prefix) and v.prefix:utf8len() or 0) + 1)
+      elseif text:utf8lower():starts(v.prefix) or v.check and v.check(text) then
+        local message = text:utf8sub((text:utf8lower():starts(v.prefix) and v.prefix:utf8len() or 0) + 1)
 
-      if message != '' then
-        v.callback(player, message, team_chat)
-        hook.run('PlayerUsedPrefix', player, k, message, team_chat)
-      end
+        if message != '' then
+          v.callback(player, message, team_chat)
+          hook.run('PlayerUsedPrefix', player, k, message, team_chat)
+        end
 
-      return ''
+        return ''
+      end
     end
   end
 end
