@@ -299,6 +299,14 @@ local function gen_callback(self, insert)
     print_query(self.class_name..' '..(insert and 'Create' or 'Update')..' ('..time..'ms)', query)
     self.saving = false
 
+    if insert and self.after_create then
+      self:after_create()
+    end
+
+    if self.after_save then
+      self:after_save()
+    end
+
     -- save relations once we're done saving the thing
     if self.id and #self.relations > 0 then
       ar_add_indent()
@@ -322,6 +330,10 @@ local function gen_callback(self, insert)
 end
 
 function ActiveRecord.Base:save()
+  if self.before_save then
+    self:before_save(self.fetched)
+  end
+
   ActiveRecord.Validator:validate_model(self, function()
     local schema = self:get_schema()
 
@@ -336,6 +348,10 @@ function ActiveRecord.Base:save()
       self.fetched = true
 
       self.class.last_id = self.id
+
+      if self.before_create then
+        self:before_create()
+      end
 
       local query = ActiveRecord.Database:insert(self.table_name)
         for k, data in pairs(schema) do
@@ -445,7 +461,11 @@ end
 function ActiveRecord.Base:validates(column, options)
   local current_options = self.validations[column] or {}
   for k, v in pairs(options) do
-    table.insert(current_options, { id = k, value = v })
+    if id == 'case_sensitive' then -- todo: unhack this
+      current_options.case_sensitive = v
+    else
+      table.insert(current_options, { id = k, value = v })
+    end
   end
   self.validations[column] = current_options
 end
