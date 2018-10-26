@@ -1,11 +1,13 @@
-function flChatbox:OnThemeLoaded(current_theme)
-  local scrw, scrh = ScrW(), ScrH()
-
+function flChatbox:CreateFonts()
   font.Create('flChatFont', {
     font = 'Arial',
     size = 16,
     weight = 1000
   })
+end
+
+function flChatbox:OnThemeLoaded(current_theme)
+  local scrw, scrh = ScrW(), ScrH()
 
   current_theme:set_font('chatbox_normal', 'flChatFont', font.Scale(20))
   current_theme:set_font('chatbox_bold', 'flRobotoCondensedBold', font.Scale(20))
