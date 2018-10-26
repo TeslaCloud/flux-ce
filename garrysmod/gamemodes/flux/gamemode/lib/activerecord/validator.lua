@@ -17,7 +17,7 @@ local function run_validation(model, column, v_opts, v_id, success_callback, err
     local validator = ActiveRecord.Validator.validators[vo.id]
 
     if isfunction(validator) then
-      return validator(model, column, vo.value, function()
+      return validator(model, column, vo.value, v_opts, function()
         process_next()
       end, error_callback)
     end
@@ -56,7 +56,27 @@ function ActiveRecord.Validator:validate_model(model, success_callback, error_ca
 
   local schema_key = next(schema)
 
-  validate_column(model, schema, validations, schema_key, success_callback, error_callback)
+  if model.before_validation then
+    model:before_validation(!model.fetched)
+  end
+
+  local after_validation = function(succeeded)
+    if model.after_validation then
+      model:after_validation(succeeded, !model.fetched)
+    end
+  end
+
+  local _on_success = function(...)
+    after_validation(true)
+    return success_callback(...)
+  end
+
+  local _on_fail = function(...)
+    after_validation(false)
+    return error_callback(...)
+  end
+
+  validate_column(model, schema, validations, schema_key, _on_success, _on_fail)
 
   return self
 end
@@ -66,15 +86,15 @@ function ActiveRecord.Validator:add(id, callback)
   return self
 end
 
-ActiveRecord.Validator:add('presence', function(model, column, val, success_callback, error_callback)
-  if model[column] then
+ActiveRecord.Validator:add('presence', function(model, column, val, opts, success_callback, error_callback)
+  if model[column] != nil then
     success_callback(model)
   else
     error_callback(model, column, 'presence')
   end
 end)
 
-ActiveRecord.Validator:add('min_length', function(model, column, val, success_callback, error_callback)
+ActiveRecord.Validator:add('min_length', function(model, column, val, opts, success_callback, error_callback)
   local c = model[column]
 
   if c and c:len() >= val then
@@ -84,7 +104,7 @@ ActiveRecord.Validator:add('min_length', function(model, column, val, success_ca
   end
 end)
 
-ActiveRecord.Validator:add('max_length', function(model, column, val, success_callback, error_callback)
+ActiveRecord.Validator:add('max_length', function(model, column, val, opts, success_callback, error_callback)
   local c = model[column]
 
   if c and c:len() <= val then
@@ -94,12 +114,34 @@ ActiveRecord.Validator:add('max_length', function(model, column, val, success_ca
   end
 end)
 
-ActiveRecord.Validator:add('format', function(model, column, val, success_callback, error_callback)
+ActiveRecord.Validator:add('format', function(model, column, val, opts, success_callback, error_callback)
   local c = model[column]
 
   if c and c:match(val) then
     success_callback(model)
   else
     error_callback(model, column, 'format')
+  end
+end)
+
+ActiveRecord.Validator:add('uniqueness', function(model, column, val, opts, success_callback, error_callback)
+  if model[column] != nil then
+    local m = nil
+
+    if opts.case_sensitive then
+      m = model:where('lower('..column..') = ?', string.lower(tostring(model[column])))
+    else
+      m = model:where(column, tostring(model[column]))
+    end
+
+    if m then
+      m:get(function()
+        error_callback(model, column, 'uniqueness')    
+      end):rescue(function()
+        success_callback(model)
+      end)
+    else
+      error_callback(model, column, 'uniqueness')
+    end
   end
 end)
