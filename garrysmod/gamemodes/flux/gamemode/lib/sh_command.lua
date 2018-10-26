@@ -191,6 +191,19 @@ if SERVER then
     -- Target everyone.
     ['*'] = function(player, str)
       return _player.GetAll(), '*'
+    end,
+    -- Target all players in radius.
+    ['!'] = function(player, str)
+      local radius = tonumber(str:utf8sub(2, str:utf8len()))
+      local to_ret = {}
+
+      for k, v in pairs(_player.GetAll()) do
+        if v != player and player:GetPos():Distance(v:GetPos()) <= radius then
+          table.insert(to_ret, v)
+        end
+      end
+
+      return to_ret, '!'
     end
   }
 
