@@ -5,8 +5,12 @@ PLUGIN:set_description('Adds prefix adjusting to avoid troubles with certain com
 
 local stored = {}
 
-function flPrefixes:AddPrefix(prefix, callback)
-  table.insert(stored, { prefix = prefix, callback = callback })
+function flPrefixes:AddPrefix(id, prefix, callback, check)
+  stored[id] = {
+    prefix = prefix,
+    callback = callback,
+    check = check
+  }
 end
 
 function flPrefixes:StringIsCommand(str)
@@ -24,24 +28,26 @@ function flPrefixes:StringIsCommand(str)
 end
 
 function flPrefixes:PlayerSay(player, text, team_chat)
-  for k, v in ipairs(stored) do
+  for k, v in pairs(stored) do
     if istable(v.prefix) then
       for k2, v2 in ipairs(v.prefix) do
-        if text:utf8lower():starts(v2) then
-          local message = text:utf8sub(v2:utf8len() + 1)
+        if text:utf8lower():starts(v2) or v.check and v.check(text) then
+          local message = text:utf8sub((text:utf8lower():starts(v2) and v2:utf8len() or 0) + 1)
 
           if message != '' then
             v.callback(player, message, team_chat)
+            hook.run('PlayerUsedPrefix', player, k, message, team_chat)
           end
 
           return ''
         end
       end
-    elseif text:utf8lower():starts(v.prefix) then
-      local message = text:utf8sub(v.prefix:utf8len() + 1)
+    elseif text:utf8lower():starts(v.prefix) or v.check and v.check(text) then
+      local message = text:utf8sub((text:utf8lower():starts(v.prefix) and v.prefix:utf8len() or 0) + 1)
 
       if message != '' then
         v.callback(player, message, team_chat)
+        hook.run('PlayerUsedPrefix', player, k, message, team_chat)
       end
 
       return ''
