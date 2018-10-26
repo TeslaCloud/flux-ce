@@ -170,13 +170,13 @@ function string.count(str, char)
   return hits
 end
 
-function string.spelling(str)
+function string.spelling(str, first_lower)
   local len = str:utf8len()
   local end_text = str:utf8sub(-1)
 
-  str = str:utf8sub(1, 1):utf8upper()..str:utf8sub(2, len)
+  str = (!first_lower and str:utf8sub(1, 1):utf8upper() or str:utf8sub(1, 1):utf8lower())..str:utf8sub(2, len)
 
-  if (end_text != '.') and (end_text != '!') and (end_text != '?') and ((end_text != '"')) then
+  if end_text != '.' and end_text != '!' and end_text != '?' then
     str = str..'.'
   end
 
