@@ -80,15 +80,14 @@ function util.list_to_string(callback, separator, ...)
   return result
 end
 
-function util.player_list_to_string(...)
-  local list = {...}
-  local nlist = #list
+function util.player_list_to_string(player_list)
+  local nlist = #player_list
 
   if nlist > 1 and nlist == #_player.GetAll() then
     return t'chat.everyone'
   end
 
-  return util.list_to_string(function(obj) return (IsValid(obj) and obj:Name()) or 'Unknown Player' end, nil, ...)
+  return util.list_to_string(function(obj) return (IsValid(obj) and obj:Name()) or 'Unknown Player' end, nil, unpack(player_list))
 end
 
 function util.remove_newlines(str)
