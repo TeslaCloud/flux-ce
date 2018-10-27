@@ -171,7 +171,7 @@ function flCharacters:AddMainMenuItems(panel, sidebar)
       panel.menu = theme.create_panel('char_create.load', panel)
       panel.menu:SetPos(-panel.menu:GetWide(), 0)
       panel.menu:MoveTo(0, 0, theme.get_option('menu_anim_duration'), 0.25, 0.5)
-  
+
       panel.sidebar:MoveTo(ScrW(), theme.get_option('menu_sidebar_y'), theme.get_option('menu_anim_duration'), 0.25, 0.5)
     end)
   end

@@ -67,7 +67,7 @@ function ActiveRecord.Migrator:run_migrations(folder, force)
 
       local start_time = os.clock()
       local migration = include(folder..v)
-      
+
       if migration and isfunction(migration.up) then
         migration:up()
 

@@ -27,7 +27,7 @@ function ActiveRecord.Model:populate()
 
         self:generate_helpers(v, column, data.type)
       end
-  
+
       v.schema = schema
 
       local query = ActiveRecord.Database:select(v.table_name)

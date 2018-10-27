@@ -50,7 +50,7 @@ do
 
   function ActiveRecord.str_to_type(str, type)
     local conv = converters[type]
-  
+
     if conv then
       return conv(str)
     end

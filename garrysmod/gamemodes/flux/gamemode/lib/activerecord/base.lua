@@ -161,7 +161,7 @@ function ActiveRecord.Base:_fetch_relation(callback, objects, n, obj_id)
 
   local current_object = objects[obj_id].object
   local relation = self.relations[n]
-  
+
   if relation then
     if !relation.child then
       local obj = relation.model:where(relation.column_name, current_object.id)

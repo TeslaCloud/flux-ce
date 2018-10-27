@@ -331,7 +331,7 @@ function plugin.include(path)
         table.insert(data.depends, v)
       end)
     end
-  
+
     for k, v in ipairs(data.depends) do
       if !plugin.require(v) then
         ErrorNoHalt("Not loading the '"..tostring(path).."' plugin! Dependency missing: '"..tostring(v).."'!\n")

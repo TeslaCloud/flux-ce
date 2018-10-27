@@ -7,7 +7,7 @@ concommand.Add('ar_recreate_schema', function(player)
         ================================================
         Warning! You are about to recreate the database!
         This will destroy all of the data stored in it!
-        
+
         Please enter this command again within 3 seconds
                     to confirm this action.
         ================================================

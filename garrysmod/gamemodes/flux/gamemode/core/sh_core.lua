@@ -340,7 +340,7 @@ do
     Description: Registers an action that can be assigned to a player.
     Argument: string id - Identifier of the action.
     Argument: function callback - Function to call when the action is executed.
-  
+
     Returns: nil
   --]]
   function fl.register_action(id, callback)
@@ -351,7 +351,7 @@ do
     Function: fl.get_action (string id)
     Description: Retreives the action callback with the specified identifier.
     Argument: string id - ID of the action to get the callback of.
-  
+
     Returns: function - The callback.
   --]]
   function fl.get_action(id)
@@ -361,7 +361,7 @@ do
   --[[
     Function: fl.get_all_actions ()
     Description: Can be used to directly access the table storing all of the actions.
-  
+
     Returns: table - The action_storage table.
   --]]
   function fl.get_all_actions()

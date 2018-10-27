@@ -175,7 +175,7 @@ function ActiveRecord.recreate_schema()
 
   timer.Simple(0.25, function()
     ActiveRecord.generate_tables()
-    
+
     print 'Done! Restarting...'
 
     timer.Simple(0.5, function()

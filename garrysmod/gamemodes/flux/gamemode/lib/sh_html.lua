@@ -113,11 +113,11 @@ if CLIENT then
 
   function render_template(id, locals)
     local prev_namespace = current_namespace
-  
+
     if id:find('/') then
       current_namespace = prev_namespace..id:GetPathFromFilename()
     end
-  
+
     local rendered = fl.html:render_template(current_namespace..id, locals)
     current_namespace = prev_namespace
 

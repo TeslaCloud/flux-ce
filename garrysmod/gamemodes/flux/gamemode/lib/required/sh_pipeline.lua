@@ -40,7 +40,7 @@ function pipeline.include(pipe, file_name)
 
   if !pipe then return end
   if !isstring(file_name) then return end
-  
+
   local extension = string.GetExtensionFromFilename(file_name) or ''
   local id = (string.GetFileFromFilename(file_name) or ''):gsub('%.'..extension, ''):to_id()
 
