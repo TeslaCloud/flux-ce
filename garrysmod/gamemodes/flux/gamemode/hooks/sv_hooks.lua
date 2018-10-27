@@ -5,7 +5,7 @@ function GM:DoPlayerDeath(player, attacker, damage_info) end
 function GM:InitPostEntity()
   local toolgun = weapons.GetStored('gmod_tool')
 
-  for k, v in pairs(fl.tool:GetAll()) do
+  for k, v in pairs(fl.tool.stored) do
     toolgun.Tool[v.Mode] = v
   end
 
