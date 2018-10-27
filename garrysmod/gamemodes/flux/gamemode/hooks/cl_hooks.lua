@@ -192,7 +192,7 @@ end
 
 function GM:HUDDrawTargetID()
   if IsValid(fl.client) and fl.client:Alive() then
-    local entities = ents.FindInCone(EyePos(), EyeVector(), 256, 0.98) -- 0.94 gives approximately 40 degrees
+    local entities = ents.FindInCone(EyePos(), EyeVector(), 256, 0.98) -- 0.98 gives approximately 40 degrees
     local ent
     local dist
     local client_pos = EyePos()
@@ -214,9 +214,16 @@ function GM:HUDDrawTargetID()
     end
   
     if IsValid(ent) then
-      if util.vector_obstructed(client_pos, ent:GetPos(), { ent, fl.client }) then return end
+      local pos
 
-      local pos = ent:GetPos()
+      if ent:IsPlayer() then
+        pos = ent:GetBonePosition(ent:LookupBone('ValveBiped.Bip01_Head1'))
+      else
+        pos = ent:GetPos()
+      end
+
+      if util.vector_obstructed(client_pos, pos, { ent, fl.client }) then return end
+
       local screen_pos = (pos + Vector(0, 0, 16)):ToScreen()
       local x, y = screen_pos.x, screen_pos.y
 
