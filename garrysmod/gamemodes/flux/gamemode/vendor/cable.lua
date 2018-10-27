@@ -7,6 +7,19 @@
 if cable then return end
 if !pon then include 'pon.lua' end
 
+if !table.map then
+  function table.map(t, c)
+    local new_table = {}
+    for k, v in pairs(t) do
+      local val = c(v)
+      if val != nil then
+        table.insert(new_table, val)
+      end
+    end
+    return new_table
+  end
+end
+
 _player = _player or player
 
 cable = cable or {}
