@@ -84,7 +84,7 @@ function PANEL:RebuildStageList()
 
         if !self.stage_list.next_click or self.stage_list.next_click <= cur_time then
           self:goto_stage(k)
-  
+
           self.stage_list.next_click = cur_time + 1
         end
       end
@@ -162,7 +162,7 @@ function PANEL:NextStage()
       if self.panel.OnClose then
         self.panel:OnClose(self)
       end
-  
+
       cable.send('CreateCharacter', self.char_data)
     end,
     t'no')

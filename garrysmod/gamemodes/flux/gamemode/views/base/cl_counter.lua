@@ -79,7 +79,7 @@ end
 
 function PANEL:SetColor(color)
   self.m_color = color
-  
+
   self.label:SetTextColor(self.m_color)
 end
 

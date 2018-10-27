@@ -212,7 +212,7 @@ function GM:HUDDrawTargetID()
         ent = v
       end
     end
-  
+
     if IsValid(ent) then
       local pos
 

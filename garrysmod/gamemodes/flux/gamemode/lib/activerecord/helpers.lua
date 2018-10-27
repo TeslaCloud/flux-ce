@@ -81,7 +81,7 @@ function add_index(args)
     end
 
     query = query..')'
-  
+
     return query
   end
 
@@ -92,7 +92,7 @@ function add_index(args)
   if !sqlite then
     query = query..' USING '..(args['using'] or (postgres and 'btree' or 'BTREE'))
   end
-  
+
   if postgres then
     query = _columns(query)
   end

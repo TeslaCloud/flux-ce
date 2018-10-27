@@ -12,7 +12,7 @@ local function run_validation(model, column, v_opts, v_id, success_callback, err
   end
 
   local vo = v_opts[v_id]
-  
+
   if vo then
     local validator = ActiveRecord.Validator.validators[vo.id]
 

@@ -126,7 +126,7 @@ function PANEL:add_button(text, callback)
 
   button.DoClick = function(btn)
     surface.PlaySound(theme.get_sound('button_click_success_sound'))
-  
+
     btn:SetActive(true)
 
     if IsValid(self.prevButton) and self.prevButton != btn then

@@ -74,7 +74,7 @@ function PANEL:Rebuild()
     self.avatarPanel:safe_remove()
     self.nameLabel:safe_remove()
   end
-  
+
   local player = self.player
 
   self.avatarPanel = vgui.Create('AvatarImage', self)

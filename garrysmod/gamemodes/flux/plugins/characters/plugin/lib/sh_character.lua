@@ -199,7 +199,7 @@ do
     if self:IsBot() then return true end
 
     local id = self:GetActiveCharacterID()
-  
+
     return id and id > 0
   end
 
@@ -244,7 +244,7 @@ do
 
       return self.char_data
     end
-  
+
     local char_id = self:GetActiveCharacterID()
 
     if char_id then
