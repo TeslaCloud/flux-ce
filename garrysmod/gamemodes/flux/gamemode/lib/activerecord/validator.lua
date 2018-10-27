@@ -128,7 +128,7 @@ ActiveRecord.Validator:add('uniqueness', function(model, column, val, opts, succ
   if model[column] != nil then
     local m = nil
 
-    if opts.case_sensitive then
+    if !opts.case_sensitive then
       m = model:where('lower('..column..') = ?', string.lower(tostring(model[column])))
     else
       m = model:where(column, tostring(model[column]))
