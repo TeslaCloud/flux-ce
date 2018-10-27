@@ -24,7 +24,7 @@ function player_meta:SetModel(sPath)
   hook.run('PlayerModelChanged', self, sPath, oldModel)
 
   if SERVER then
-    netstream.Start(nil, 'PlayerModelChanged', self:EntIndex(), sPath, oldModel)
+    cable.send(nil, 'PlayerModelChanged', self:EntIndex(), sPath, oldModel)
   end
 
   return self:flSetModel(sPath)

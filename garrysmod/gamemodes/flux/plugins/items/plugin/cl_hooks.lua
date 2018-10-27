@@ -65,7 +65,7 @@ function flItems:PlayerUseItemMenu(item_table, bIsEntity)
 end
 
 function flItems:PlayerDropItem(item_table, panel, mouseX, mouseY)
-  netstream.Start('PlayerDropItem', item_table.instance_id)
+  cable.send('PlayerDropItem', item_table.instance_id)
 end
 
 function flItems:HUDPaint()
@@ -98,7 +98,7 @@ function flItems:Think()
     local w, h = ScrW() * 0.5, ScrH() * 0.5
 
     if !scrPos.visible or math.abs(w - x) > font.Scale(350) or math.abs(h - y) > font.Scale(350) then
-      netstream.Start('Flux::Items::AbortHoldStart', true)
+      cable.send('Flux::Items::AbortHoldStart', true)
     end
   end
 end
@@ -106,11 +106,11 @@ end
 function flItems:OnItemDataReceived()
   for k, v in ipairs(ents.GetAll()) do
     if IsValid(v) and v:GetClass() == 'fl_item' then
-      netstream.Start('RequestItemData', v:EntIndex())
+      cable.send('RequestItemData', v:EntIndex())
     end
   end
 end
 
-netstream.Hook('PlayerUseItemEntity', function(entity)
+cable.receive('PlayerUseItemEntity', function(entity)
   hook.run('PlayerUseItemMenu', entity.item, true)
 end)

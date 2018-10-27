@@ -51,7 +51,7 @@ function character.Create(player, data)
 
     character.Save(player, char)
 
-    netstream.Start('fl_create_character', char.character_id, character.to_networkable(player, char))
+    cable.send('fl_create_character', char.character_id, character.to_networkable(player, char))
   end
 
   return CHAR_SUCCESS
@@ -59,7 +59,7 @@ end
 
 if SERVER then
   function character.SendToClient(player)
-    netstream.Start(player, 'fl_loadcharacters', character.all_to_networkable(player))
+    cable.send(player, 'fl_loadcharacters', character.all_to_networkable(player))
   end
 
   function character.all_to_networkable(player)
@@ -129,11 +129,11 @@ if SERVER then
     end
   end
 else
-  netstream.Hook('fl_loadcharacters', function(data)
+  cable.receive('fl_loadcharacters', function(data)
     fl.client.characters = data
   end)
 
-  netstream.Hook('fl_create_character', function(idx, data)
+  cable.receive('fl_create_character', function(idx, data)
     fl.client.characters = fl.client.characters or {}
     fl.client.characters[idx] = data
 
@@ -146,7 +146,7 @@ else
 end
 
 if SERVER then
-  netstream.Hook('CreateCharacter', function(player, data)
+  cable.receive('CreateCharacter', function(player, data)
     data.gender  = (data.gender and data.gender == 'Female' and CHAR_GENDER_FEMALE) or CHAR_GENDER_MALE
     data.phys_desc = data.description
 
@@ -156,23 +156,23 @@ if SERVER then
 
     if status == CHAR_SUCCESS then
       character.SendToClient(player)
-      netstream.Start(player, 'PlayerCreatedCharacter', true, status)
+      cable.send(player, 'PlayerCreatedCharacter', true, status)
 
       fl.dev_print('Success')
     else
-      netstream.Start(player, 'PlayerCreatedCharacter', false, status)
+      cable.send(player, 'PlayerCreatedCharacter', false, status)
 
       fl.dev_print('Error')
     end
   end)
 
-  netstream.Hook('PlayerSelectCharacter', function(player, id)
+  cable.receive('PlayerSelectCharacter', function(player, id)
     fl.dev_print(player:Name()..' has loaded character #'..id)
 
     player:SetActiveCharacter(id)
   end)
 
-  netstream.Hook('PlayerDeleteCharacter', function(player, id)
+  cable.receive('PlayerDeleteCharacter', function(player, id)
     fl.dev_print(player:Name()..' has deleted character #'..id)
 
     hook.run('OnCharacterDelete', player, id)

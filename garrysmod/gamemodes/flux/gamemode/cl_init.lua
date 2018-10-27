@@ -1,11 +1,11 @@
 fl = fl or {}
 fl.start_time = os.clock()
 
--- Include pON, Netstream and UTF-8 library
-if !string.utf8len or !pon or !netstream then
-  include 'thirdparty/utf8.lua'
-  include 'thirdparty/pon.lua'
-  include 'thirdparty/netstream.lua'
+-- Include pON, Cable and UTF-8 library
+if !string.utf8len or !pon or !cable then
+  include 'vendor/utf8.lua'
+  include 'vendor/pon.lua'
+  include 'vendor/cable.lua'
 end
 
 if fl.initialized then

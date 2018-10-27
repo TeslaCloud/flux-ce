@@ -37,12 +37,12 @@ function netvars.set_nv(key, value, send)
 
   globals[key] = value
 
-  netstream.Start(send, 'set_global_netvar', key, value)
+  cable.send(send, 'set_global_netvar', key, value)
 end
 
 -- A function to send entity's networked variables to a player (or players).
 function ent_meta:SendNetVar(key, recv)
-  netstream.Start(recv, 'set_netvar', self:EntIndex(), key, (stored[self] and stored[self][key]))
+  cable.send(recv, 'set_netvar', self:EntIndex(), key, (stored[self] and stored[self][key]))
 end
 
 -- A function to get entity's networked variable.
@@ -57,7 +57,7 @@ end
 -- A function to flush all entity's networked variables.
 function ent_meta:ClearNetVars(recv)
   stored[self] = nil
-  netstream.Start(recv, 'delete_netvar', self:EntIndex())
+  cable.send(recv, 'delete_netvar', self:EntIndex())
 end
 
 -- A function to set entity's networked variable.
@@ -75,13 +75,13 @@ end
 -- to a player.
 function player_meta:sync_nv()
   for k, v in pairs(globals) do
-    netstream.Start(self, 'set_global_netvar', k, v)
+    cable.send(self, 'set_global_netvar', k, v)
   end
 
   for k, v in pairs(stored) do
     if IsValid(k) then
       for k2, v2 in pairs(v) do
-        netstream.Start(self, 'set_netvar', k:EntIndex(), k2, v2)
+        cable.send(self, 'set_netvar', k:EntIndex(), k2, v2)
       end
     end
   end

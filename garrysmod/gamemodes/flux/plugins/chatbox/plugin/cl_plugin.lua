@@ -11,7 +11,7 @@ chatbox.y = chatbox.y or 0
 chatbox.old_add_text = chatbox.old_add_text or chat.AddText
 
 function chat.AddText(...)
-  netstream.Start('chat_add_text', ...)
+  cable.send('chat_add_text', ...)
 end
 
 function chatbox.compile(msg_table)

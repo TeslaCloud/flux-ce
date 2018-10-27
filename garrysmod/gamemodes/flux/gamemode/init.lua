@@ -27,20 +27,20 @@ if !LITE_REFRESH then
   end
 
   -- Put that under an if because it doesn't change.
-  if !string.utf8len or !pon or !netstream then
-    AddCSLuaFile 'thirdparty/utf8.lua'
-    AddCSLuaFile 'thirdparty/pon.lua'
-    AddCSLuaFile 'thirdparty/netstream.lua'
+  if !string.utf8len or !pon or !cable then
+    AddCSLuaFile 'vendor/utf8.lua'
+    AddCSLuaFile 'vendor/pon.lua'
+    AddCSLuaFile 'vendor/cable.lua'
   end
 
   AddCSLuaFile 'shared.lua'
 
-  -- Include pON, Netstream and UTF-8 library.
-  if !string.utf8len or !pon or !netstream or !YAML then
-    include 'thirdparty/utf8.lua'
-    include 'thirdparty/pon.lua'
-    include 'thirdparty/netstream.lua'
-    YAML = include 'thirdparty/yaml.lua'
+  -- Include pON, Cable and UTF-8 library.
+  if !string.utf8len or !pon or !cable or !YAML then
+    include 'vendor/utf8.lua'
+    include 'vendor/pon.lua'
+    include 'vendor/cable.lua'
+    YAML = include 'vendor/yaml.lua'
 
     Settings = Settings or YAML.read('gamemodes/flux/config/settings.yml')
     Settings.database = YAML.read('gamemodes/flux/config/database.yml')

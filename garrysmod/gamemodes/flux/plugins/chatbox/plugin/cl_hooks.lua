@@ -61,13 +61,13 @@ end
 
 function flChatbox:ChatboxTextEntered(text)
   if text and text != '' then
-    netstream.Start('chat_player_say', text)
+    cable.send('chat_player_say', text)
   end
 
   chatbox.hide()
 end
 
-netstream.Hook('chat_add_message', function(message_data)
+cable.receive('chat_add_message', function(message_data)
   if IsValid(chatbox.panel) then
     chatbox.panel:add_message(message_data)
 

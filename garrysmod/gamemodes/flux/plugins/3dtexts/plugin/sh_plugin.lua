@@ -20,8 +20,8 @@ if SERVER then
   end
 
   function fl3DText:PlayerInitialized(player)
-    netstream.Start(player, 'flLoad3DTexts', self.texts)
-    netstream.Start(player, 'flLoad3DPictures', self.pictures)
+    cable.send(player, 'flLoad3DTexts', self.texts)
+    cable.send(player, 'flLoad3DPictures', self.pictures)
   end
 
   function fl3DText:LoadData()
@@ -39,7 +39,7 @@ if SERVER then
 
     self:Save()
 
-    netstream.Start(nil, 'fl3DText_Add', data)
+    cable.send(nil, 'fl3DText_Add', data)
   end
 
   function fl3DText:AddPicture(data)
@@ -49,74 +49,74 @@ if SERVER then
 
     self:Save()
 
-    netstream.Start(nil, 'fl3DPicture_Add', data)
+    cable.send(nil, 'fl3DPicture_Add', data)
   end
 
   function fl3DText:Remove(player)
     if player:can('textremove') then
-      netstream.Start(player, 'fl3DText_Calculate', true)
+      cable.send(player, 'fl3DText_Calculate', true)
     end
   end
 
   function fl3DText:RemovePicture(player)
     if player:can('textremove') then
-      netstream.Start(player, 'fl3DPicture_Calculate', true)
+      cable.send(player, 'fl3DPicture_Calculate', true)
     end
   end
 
-  netstream.Hook('fl3DText_Remove', function(player, idx)
+  cable.receive('fl3DText_Remove', function(player, idx)
     if player:can('textremove') then
       table.remove(fl3DText.texts, idx)
 
       fl3DText:Save()
 
-      netstream.Start(nil, 'fl3DText_Remove', idx)
+      cable.send(nil, 'fl3DText_Remove', idx)
 
       fl.player:notify(player, t'3d_text.text_removed')
     end
   end)
 
-  netstream.Hook('fl3DPicture_Remove', function(player, idx)
+  cable.receive('fl3DPicture_Remove', function(player, idx)
     if player:can('textremove') then
       table.remove(fl3DText.pictures, idx)
 
       fl3DText:Save()
 
-      netstream.Start(nil, 'fl3DPicture_Remove', idx)
+      cable.send(nil, 'fl3DPicture_Remove', idx)
 
       fl.player:notify(player, t'3d_picture.removed')
     end
   end)
 else
-  netstream.Hook('flLoad3DTexts', function(data)
+  cable.receive('flLoad3DTexts', function(data)
     fl3DText.texts = data or {}
   end)
 
-  netstream.Hook('fl3DText_Add', function(data)
+  cable.receive('fl3DText_Add', function(data)
     table.insert(fl3DText.texts, data)
   end)
 
-  netstream.Hook('fl3DText_Remove', function(idx)
+  cable.receive('fl3DText_Remove', function(idx)
     table.remove(fl3DText.texts, idx)
   end)
 
-  netstream.Hook('flLoad3DPictures', function(data)
+  cable.receive('flLoad3DPictures', function(data)
     fl3DText.pictures = data or {}
   end)
 
-  netstream.Hook('fl3DPicture_Add', function(data)
+  cable.receive('fl3DPicture_Add', function(data)
     table.insert(fl3DText.pictures, data)
   end)
 
-  netstream.Hook('fl3DPicture_Remove', function(idx)
+  cable.receive('fl3DPicture_Remove', function(idx)
     table.remove(fl3DText.pictures, idx)
   end)
 
-  netstream.Hook('fl3DText_Calculate', function()
+  cable.receive('fl3DText_Calculate', function()
     fl3DText:RemoveAtTrace(fl.client:GetEyeTraceNoCursor())
   end)
 
-  netstream.Hook('fl3DPicture_Calculate', function()
+  cable.receive('fl3DPicture_Calculate', function()
     fl3DText:RemovePictureAtTrace(fl.client:GetEyeTraceNoCursor())
   end)
 
@@ -137,7 +137,7 @@ else
 
       if math.abs(math.abs(hit_pos.z) - math.abs(pos.z)) < 4 * v.scale then
         if util.vectors_intersect(trace_start, hit_pos, start_pos, end_pos) then
-          netstream.Start('fl3DText_Remove', k)
+          cable.send('fl3DText_Remove', k)
 
           return true
         end
@@ -164,7 +164,7 @@ else
 
       if math.abs(math.abs(hit_pos.z) - math.abs(pos.z)) < height * 0.05 then
         if util.vectors_intersect(trace_start, hit_pos, start_pos, end_pos) then
-          netstream.Start('fl3DPicture_Remove', k)
+          cable.send('fl3DPicture_Remove', k)
 
           return true
         end

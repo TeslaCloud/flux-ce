@@ -163,7 +163,7 @@ function PANEL:NextStage()
         self.panel:OnClose(self)
       end
   
-      netstream.Start('CreateCharacter', self.char_data)
+      cable.send('CreateCharacter', self.char_data)
     end,
     t'no')
   end

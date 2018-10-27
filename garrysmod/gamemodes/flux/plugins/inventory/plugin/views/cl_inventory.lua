@@ -211,7 +211,7 @@ function PANEL:SlotsToInventory()
     end
   end
 
-  netstream.Start('InventorySync', self.inventory)
+  cable.send('InventorySync', self.inventory)
 end
 
 function PANEL:GetMenuSize()

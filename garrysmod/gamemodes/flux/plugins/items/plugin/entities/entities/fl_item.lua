@@ -116,7 +116,7 @@ else
       desc = self.item.description
     else
       if !self.dataRequested then
-        netstream.Start('RequestItemData', self:EntIndex())
+        cable.send('RequestItemData', self:EntIndex())
         self.dataRequested = true
       end
 

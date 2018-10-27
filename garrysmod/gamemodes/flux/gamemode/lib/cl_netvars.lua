@@ -33,14 +33,14 @@ function ent_meta:get_nv(key, default)
 end
 
 -- Called from the server to set global networked variables.
-netstream.Hook('set_global_netvar', function(key, value)
+cable.receive('set_global_netvar', function(key, value)
   if key and value != nil then
     globals[key] = value
   end
 end)
 
 -- Called from the server to set entity's networked variable.
-netstream.Hook('set_netvar', function(entIdx, key, value)
+cable.receive('set_netvar', function(entIdx, key, value)
   if key and value != nil then
     stored[entIdx] = stored[entIdx] or {}
     stored[entIdx][key] = value
@@ -48,6 +48,6 @@ netstream.Hook('set_netvar', function(entIdx, key, value)
 end)
 
 -- Called from the server to delete entity from networked table.
-netstream.Hook('delete_netvar', function(entIdx)
+cable.receive('delete_netvar', function(entIdx)
   stored[entIdx] = nil
 end)

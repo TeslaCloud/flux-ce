@@ -364,12 +364,12 @@ if SERVER then
     end
   end
 
-  netstream.Hook('Flux::Command::Run', function(player, command)
+  cable.receive('Flux::Command::Run', function(player, command)
     fl.command:Interpret(player, command)
   end)
 else
   function fl.command:Send(command)
-    netstream.Start('Flux::Command::Run', command)
+    cable.send('Flux::Command::Run', command)
   end
 end
 

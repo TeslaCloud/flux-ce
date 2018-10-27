@@ -6,11 +6,11 @@ function fl.player:notify(player, message, arguments)
     return
   end
 
-  netstream.Start(player, 'fl_notification', message, arguments)
+  cable.send(player, 'fl_notification', message, arguments)
 end
 
 function fl.player:broadcast(message, arguments)
   ServerLog('Notification: '..t(message, arguments))
 
-  netstream.Start(nil, 'fl_notification', message, arguments)
+  cable.send(nil, 'fl_notification', message, arguments)
 end

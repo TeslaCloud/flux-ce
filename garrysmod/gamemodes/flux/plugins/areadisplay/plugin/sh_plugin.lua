@@ -27,7 +27,7 @@ if SERVER then
   end
 
   function PLUGIN:PlayerInitialized(player)
-    --netstream.Start(player, 'flLoadTextAreas', areas.GetByType('text'))
+    --cable.send(player, 'flLoadTextAreas', areas.GetByType('text'))
   end
 
   function PLUGIN:InitPostEntity()
@@ -38,7 +38,7 @@ if SERVER then
     --self:Save()
   end
 else
-  netstream.Hook('flLoadTextAreas', function(data)
+  cable.receive('flLoadTextAreas', function(data)
     for k, v in pairs(data) do
       areas.register(k, v)
     end
