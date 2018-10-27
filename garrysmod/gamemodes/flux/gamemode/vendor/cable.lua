@@ -93,7 +93,7 @@ if SERVER then
       local args = {...}
 
       -- Allow networked strings some time to catch up for the first time.
-      timer.Simple(0.25, function()
+      timer.Simple(0.1, function()
         cable.send(player, id, unpack(args))
       end)
 
