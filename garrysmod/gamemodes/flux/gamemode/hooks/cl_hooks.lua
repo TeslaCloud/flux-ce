@@ -268,10 +268,10 @@ function GM:DrawPlayerTargetID(player, x, y, distance)
 end
 
 function GM:PopulateToolMenu()
-  for ToolName, TOOL in pairs(fl.tool:GetAll()) do
+  for ToolName, TOOL in pairs(fl.tool.stored) do
     if TOOL.AddToMenu != false then
       spawnmenu.AddToolMenuOption(
-        TOOL.Tab or 'main',
+        TOOL.Tab or 'Main',
         TOOL.Category or 'New Category',
         ToolName,
         TOOL.Name or t(ToolName),
@@ -286,9 +286,9 @@ function GM:PopulateToolMenu()
 end
 
 function GM:SynchronizeTools()
-   local toolgun = weapons.GetStored('gmod_tool')
+  local toolgun = weapons.GetStored('gmod_tool')
 
-  for k, v in pairs(fl.tool:GetAll()) do
+  for k, v in pairs(fl.tool.stored) do
     toolgun.Tool[v.Mode] = v
   end
 end

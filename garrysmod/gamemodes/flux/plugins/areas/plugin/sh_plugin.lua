@@ -40,7 +40,7 @@ flAreas.toolModes = {
       ClientConVar = vars
     })
 
-    local tool = fl.tool:Get('area')
+    local tool = fl.tool:get('area')
 
     if IsValid(tool) and istable(vars) then
       table.merge(tool.ClientConVar, vars)

@@ -222,7 +222,7 @@ function GM:OnReloaded()
   -- Reload the tools.
   local toolgun = weapons.GetStored('gmod_tool')
 
-  for k, v in pairs(fl.tool:GetAll()) do
+  for k, v in pairs(fl.tool.stored) do
     toolgun.Tool[v.Mode] = v
   end
 

@@ -11,7 +11,7 @@ function PLUGIN:FLInitPostEntity()
     local mode = gmod_toolmode:GetString()
     local tool_object = self:GetToolObject()
 
-    -- Don't draw help for a nonexistant tool!
+    -- Don't draw help for a nonexistent tool!
     if !tool_object then return end
 
     tool_object:DrawHUD()
