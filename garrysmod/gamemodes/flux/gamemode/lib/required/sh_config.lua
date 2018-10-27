@@ -65,7 +65,7 @@ if SERVER then
       end
 
       if !stored[key].hidden then
-        netstream.Start(nil, 'config_set_var', key, stored[key].value)
+        cable.send(nil, 'config_set_var', key, stored[key].value)
       end
 
       cache[key] = value
@@ -77,7 +77,7 @@ if SERVER then
   function player_meta:send_config()
     for k, v in pairs(stored) do
       if !v.hidden then
-        netstream.Start(self, 'config_set_var', k, v.value)
+        cable.send(self, 'config_set_var', k, v.value)
       end
     end
 
@@ -149,7 +149,7 @@ else
     return menu_items
   end
 
-  netstream.Hook('config_set_var', function(key, value)
+  cable.receive('config_set_var', function(key, value)
     if key == nil then return end
 
     stored[key] = stored[key] or {}

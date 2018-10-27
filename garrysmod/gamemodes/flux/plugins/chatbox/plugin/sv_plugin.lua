@@ -97,7 +97,7 @@ function chatbox.add_text(listeners, ...)
 
   for k, v in ipairs(listeners) do
     if chatbox.player_can_hear(v, message_data) then
-      netstream.Start(v, 'chat_add_message', message_data)
+      cable.send(v, 'chat_add_message', message_data)
     end
   end
 end
@@ -130,7 +130,7 @@ function chatbox.message_to_string(message_data, concatenator)
   return table.concat(to_string, concatenator)
 end
 
-netstream.Hook('chat_add_text', function(player, ...)
+cable.receive('chat_add_text', function(player, ...)
   if !IsValid(player) then return end
 
   chatbox.set_client_mode(true)
@@ -138,7 +138,7 @@ netstream.Hook('chat_add_text', function(player, ...)
   chatbox.set_client_mode(false)
 end)
 
-netstream.Hook('chat_player_say', function(player, text, team_chat)
+cable.receive('chat_player_say', function(player, text, team_chat)
   if !IsValid(player) then return end
 
   local player_say_override = hook.run('PlayerSay', player, text, team_chat)

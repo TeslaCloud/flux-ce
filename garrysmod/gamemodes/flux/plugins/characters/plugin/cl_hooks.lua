@@ -188,7 +188,7 @@ function flCharacters:PanelCharacterSet(panel, char_data)
   panel.model.Entity:SetSkin(char_data.skin or 1)
 end
 
-netstream.Hook('PlayerCreatedCharacter', function(success, status)
+cable.receive('PlayerCreatedCharacter', function(success, status)
   if IsValid(fl.intro_panel) and IsValid(fl.intro_panel.menu) then
     if success then
       fl.intro_panel.menu:goto_stage(-1)
@@ -198,7 +198,7 @@ netstream.Hook('PlayerCreatedCharacter', function(success, status)
         local chars = fl.client:GetAllCharacters()
 
         if #chars == 1 then
-          netstream.Start('PlayerSelectCharacter', chars[1].character_id)
+          cable.send('PlayerSelectCharacter', chars[1].character_id)
         end
       end)
     else

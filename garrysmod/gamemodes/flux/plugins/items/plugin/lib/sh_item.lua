@@ -202,7 +202,7 @@ function item.New(id, data, forcedID)
 
     if SERVER then
       item.AsyncSave()
-      netstream.Start(nil, 'ItemNewInstance', id, (data or 1), itemID)
+      cable.send(nil, 'ItemNewInstance', id, (data or 1), itemID)
     end
 
     return instances[id][itemID]
@@ -356,17 +356,17 @@ if SERVER then
 
   function item.NetworkItemData(player, item_table)
     if item.IsInstance(item_table) then
-      netstream.Start(player, 'ItemData', item_table.id, item_table.instance_id, item_table.data)
+      cable.send(player, 'ItemData', item_table.id, item_table.instance_id, item_table.data)
     end
   end
 
   function item.NetworkItem(player, instance_id)
-    netstream.Start(player, 'NetworkItem', instance_id, item.ToSave(item.FindInstanceByID(instance_id)))
+    cable.send(player, 'NetworkItem', instance_id, item.ToSave(item.FindInstanceByID(instance_id)))
   end
 
   function item.NetworkEntityData(player, ent)
     if IsValid(ent) then
-      netstream.Start(player, 'ItemEntData', ent:EntIndex(), ent.item.id, ent.item.instance_id)
+      cable.send(player, 'ItemEntData', ent:EntIndex(), ent.item.id, ent.item.instance_id)
     end
   end
 
@@ -425,7 +425,7 @@ if SERVER then
     return ent, item_table
   end
 
-  netstream.Hook('RequestItemData', function(player, entIndex)
+  cable.receive('RequestItemData', function(player, entIndex)
     local ent = Entity(entIndex)
 
     if IsValid(ent) then
@@ -433,13 +433,13 @@ if SERVER then
     end
   end)
 else
-  netstream.Hook('ItemData', function(id, instance_id, data)
+  cable.receive('ItemData', function(id, instance_id, data)
     if istable(instances[id][instance_id]) then
       instances[id][instance_id].data = data
     end
   end)
 
-  netstream.Hook('NetworkItem', function(instance_id, item_table)
+  cable.receive('NetworkItem', function(instance_id, item_table)
     if item_table and stored[item_table.id] then
       local newTable = table.Copy(stored[item_table.id])
       table.safe_merge(newTable, item_table)
@@ -452,7 +452,7 @@ else
     end
   end)
 
-  netstream.Hook('ItemEntData', function(entIndex, id, instance_id)
+  cable.receive('ItemEntData', function(entIndex, id, instance_id)
     local ent = Entity(entIndex)
 
     if IsValid(ent) then
@@ -470,7 +470,7 @@ else
     end
   end)
 
-  netstream.Hook('ItemNewInstance', function(id, data, itemID)
+  cable.receive('ItemNewInstance', function(id, data, itemID)
     item.New(id, data, itemID)
   end)
 end

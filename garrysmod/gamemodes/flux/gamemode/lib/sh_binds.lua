@@ -75,10 +75,10 @@ local hooks = {}
 
 if SERVER then
   function hooks:PlayerButtonDown(player, nKey)
-    netstream.Start(player, 'FLBindPressed', nKey)
+    cable.send(player, 'FLBindPressed', nKey)
   end
 else
-  netstream.Hook('FLBindPressed', function(nKey)
+  cable.receive('FLBindPressed', function(nKey)
     local bind = fl.binds:GetBind(nKey)
 
     if bind then

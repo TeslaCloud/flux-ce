@@ -26,7 +26,7 @@ function GM:PlayerInitialSpawn(player)
     return
   end
 
-  netstream.Start(nil, 'PlayerInitialSpawn', player:EntIndex())
+  cable.send(nil, 'PlayerInitialSpawn', player:EntIndex())
 end
 
 function GM:PlayerSpawn(player)
@@ -134,7 +134,7 @@ end
 
 function GM:PlayerDisconnected(player)
   player:save_player()
-  netstream.Start(nil, 'PlayerDisconnected', player:EntIndex())
+  cable.send(nil, 'PlayerDisconnected', player:EntIndex())
 
   Log:notify(player:Name()..' ('..player:GetUserGroup()..') has disconnected from the server.', { action = 'player_events' })
 end
@@ -308,7 +308,7 @@ function GM:EntityTakeDamage(ent, damage_info)
 end
 
 function GM:PlayerTakeDamage(player, damage_info)
-  netstream.Start(player, 'PlayerTakeDamage')
+  cable.send(player, 'PlayerTakeDamage')
 end
 
 function GM:OneSecond()

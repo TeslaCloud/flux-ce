@@ -21,7 +21,7 @@ function flMapscenes:SaveData()
 end
 
 function flMapscenes:PlayerInitialized(player)
-  netstream.Start(player, 'flLoadMapscene', self.anim, self.points)
+  cable.send(player, 'flLoadMapscene', self.anim, self.points)
 end
 
 function flMapscenes:add_point(pos, ang)
@@ -30,16 +30,16 @@ function flMapscenes:add_point(pos, ang)
     ang = ang
   })
 
-  netstream.Start(nil, 'flAddMapscene', pos, ang)
+  cable.send(nil, 'flAddMapscene', pos, ang)
 
   self:save()
 end
 
-netstream.Hook('flRemoveMapscene', function(player, id)
+cable.receive('flRemoveMapscene', function(player, id)
   print(id)
   table.remove(flMapscenes.points, id)
 
-  netstream.Start(nil, 'flDeleteMapscene', id)
+  cable.send(nil, 'flDeleteMapscene', id)
 
   flMapscenes:save()
 end)

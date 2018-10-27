@@ -11,7 +11,7 @@ function flItems:ClientIncludedSchema(player)
 end
 
 function flItems:PlayerUseItemEntity(player, entity, item_table)
-  netstream.Start(player, 'PlayerUseItemEntity', entity)
+  cable.send(player, 'PlayerUseItemEntity', entity)
 end
 
 function flItems:PlayerTakeItem(player, item_table, ...)
@@ -81,7 +81,7 @@ function flItems:OnItemTaken(player, item_table, slot)
 end
 
 function flItems:PlayerInventoryUpdated(player)
-  netstream.Start(player, 'RefreshInventory')
+  cable.send(player, 'RefreshInventory')
 end
 
 function flItems:PlayerCanUseItem(player, item_table, action, ...)
@@ -118,11 +118,11 @@ function flCharacters:PreSaveCharacter(player, index)
   end
 end
 
-netstream.Hook('PlayerDropItem', function(player, instance_id)
+cable.receive('PlayerDropItem', function(player, instance_id)
   hook.run('PlayerDropItem', player, instance_id)
 end)
 
-netstream.Hook('Flux::Items::AbortHoldStart', function(player)
+cable.receive('Flux::Items::AbortHoldStart', function(player)
   local ent = player:get_nv('hold_entity')
 
   if IsValid(ent) then

@@ -29,5 +29,5 @@ function ServerLog(...)
 end
 
 function hook.run_client(player, strHookName, ...)
-  netstream.Start(player, 'Hook_RunCL', strHookName, ...)
+  cable.send(player, 'Hook_RunCL', strHookName, ...)
 end

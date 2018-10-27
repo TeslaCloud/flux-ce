@@ -152,7 +152,7 @@ if SERVER then
     end
   end
 
-  netstream.Hook('ItemMenuAction', function(player, instance_id, action, ...)
+  cable.receive('ItemMenuAction', function(player, instance_id, action, ...)
     local item_table = item.FindInstanceByID(instance_id)
 
     if !item_table then return end
@@ -162,7 +162,7 @@ if SERVER then
   end)
 else
   function Item:do_menu_action(act, ...)
-    netstream.Start('ItemMenuAction', self.instance_id, act, ...)
+    cable.send('ItemMenuAction', self.instance_id, act, ...)
   end
 
   function Item:get_use_text()

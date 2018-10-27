@@ -465,7 +465,7 @@ function fl.include_schema()
 
     -- Wait just a tiny bit for stuff to catch up
     timer.Simple(0.2, function()
-      netstream.Start('ClientIncludedSchema', true)
+      cable.send('ClientIncludedSchema', true)
       hook.run('FluxClientSchemaLoaded')
     end)
   end

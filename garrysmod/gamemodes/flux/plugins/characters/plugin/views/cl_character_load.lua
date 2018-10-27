@@ -87,7 +87,7 @@ function PANEL:Init()
     local cur_time = CurTime()
 
     if !self.next_click or self.next_click <= cur_time then
-      netstream.Start('PlayerSelectCharacter', self.char_data.character_id)
+      cable.send('PlayerSelectCharacter', self.char_data.character_id)
 
       self.next_click = cur_time + 1
     end
@@ -109,7 +109,7 @@ function PANEL:Init()
         local char_id = self.char_data.character_id
 
         table.remove(fl.client.characters, char_id)
-        netstream.Start('PlayerDeleteCharacter', char_id)
+        cable.send('PlayerDeleteCharacter', char_id)
 
         fl.intro_panel.menu:RebuildCharacterList()
       end

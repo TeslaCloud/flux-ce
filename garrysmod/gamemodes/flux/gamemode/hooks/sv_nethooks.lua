@@ -1,17 +1,17 @@
-netstream.Hook('ClientIncludedSchema', function(player)
+cable.receive('ClientIncludedSchema', function(player)
   hook.run('ClientIncludedSchema', player)
 end)
 
-netstream.Hook('soft_undo', function(player)
+cable.receive('soft_undo', function(player)
   fl.undo:do_player(player)
 end)
 
-netstream.Hook('player_created', function(player)
+cable.receive('player_created', function(player)
   player:send_config()
   player:sync_nv()
   hook.run('PlayerInitialized', player)
 end)
 
-netstream.Hook('player_set_lang', function(player, lang)
+cable.receive('player_set_lang', function(player, lang)
   player:set_nv('language', lang)
 end)

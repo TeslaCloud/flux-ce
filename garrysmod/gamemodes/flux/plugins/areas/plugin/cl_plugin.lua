@@ -105,26 +105,26 @@ function flAreas:HUDPaint()
   end
 end
 
-netstream.Hook('PlayerEnteredArea', function(areaIdx, idx, pos)
+cable.receive('PlayerEnteredArea', function(areaIdx, idx, pos)
   local area = areas.GetAll()[areaIdx]
 
   Try('Areas', areas.GetCallback(area.type), fl.client, area, true, pos, CurTime())
 end)
 
-netstream.Hook('PlayerLeftArea', function(areaIdx, idx, pos)
+cable.receive('PlayerLeftArea', function(areaIdx, idx, pos)
   local area = areas.GetAll()[areaIdx]
 
   Try('Areas', areas.GetCallback(area.type), fl.client, area, false, pos, CurTime())
 end)
 
-netstream.Hook('flLoadAreas', function(areaStorage)
+cable.receive('flLoadAreas', function(areaStorage)
   areas.SetStored(areaStorage)
 end)
 
-netstream.Hook('flAreaRemove', function(id)
+cable.receive('flAreaRemove', function(id)
   areas.Remove(id)
 end)
 
-netstream.Hook('flAreaRegister', function(id, data)
+cable.receive('flAreaRegister', function(id, data)
   areas.register(id, data)
 end)

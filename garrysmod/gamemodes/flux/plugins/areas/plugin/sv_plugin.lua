@@ -23,7 +23,7 @@ function flAreas:OneSecond()
               if !table.HasValue(player.lastArea[v.id], k2) then
                 Try('Areas', areas.GetCallback(v.type), player, v, true, pos, cur_time)
 
-                netstream.Start(player, 'PlayerEnteredArea', k, pos)
+                cable.send(player, 'PlayerEnteredArea', k, pos)
 
                 table.insert(player.lastArea[v.id], k2)
               end
@@ -37,7 +37,7 @@ function flAreas:OneSecond()
             if table.HasValue(player.lastArea[v.id], k2) then
               Try('Areas', areas.GetCallback(v.type), player, v, false, pos, cur_time)
 
-              netstream.Start(player, 'PlayerLeftArea', k, pos)
+              cable.send(player, 'PlayerLeftArea', k, pos)
 
               table.RemoveByValue(player.lastArea[v.id], k2)
             end
@@ -49,7 +49,7 @@ function flAreas:OneSecond()
 end
 
 function flAreas:PlayerInitialized(player)
-  netstream.Start(player, 'flLoadAreas', areas.GetAll())
+  cable.send(player, 'flLoadAreas', areas.GetAll())
 end
 
 function flAreas:LoadData()

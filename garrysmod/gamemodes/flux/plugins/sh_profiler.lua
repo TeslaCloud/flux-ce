@@ -29,7 +29,7 @@ if CLIENT then
   local largest_sv_n = 0
   local metrics_sv = {}
 
-  netstream.Hook('profiler_update', function(metrics_data)
+  cable.receive('profiler_update', function(metrics_data)
     metrics_sv = metrics_data
     total_sv = 0
     total_cl = 0
@@ -67,7 +67,7 @@ if CLIENT then
   end
 else
   timer.Create('profiler_update', 1, 0, function()
-    netstream.Start(nil, 'profiler_update', metrics)
+    cable.send(nil, 'profiler_update', metrics)
     metrics = {}
   end)
 end
