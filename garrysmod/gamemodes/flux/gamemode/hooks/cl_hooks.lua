@@ -214,7 +214,7 @@ function GM:HUDDrawTargetID()
     end
   
     if IsValid(ent) then
-      if util.vectors_have_obstacle(client_pos, ent:GetPos(), { ent, fl.client }) then return end
+      if util.vector_obstructed(client_pos, ent:GetPos(), { ent, fl.client }) then return end
 
       local pos = ent:GetPos()
       local screen_pos = (pos + Vector(0, 0, 16)):ToScreen()

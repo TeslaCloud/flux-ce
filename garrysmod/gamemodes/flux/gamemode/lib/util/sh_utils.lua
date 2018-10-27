@@ -147,7 +147,7 @@ function get_player_name(player)
   return IsValid(player) and player:Name() or 'Console'
 end
 
-function util.vectors_have_obstacle(vec1, vec2, filter)
+function util.vector_obstructed(vec1, vec2, filter)
   local trace = util.TraceLine({
     start = vec1,
     endpos = vec2,
