@@ -291,8 +291,8 @@ function draw.textured_rect(material, x, y, w, h, color)
 end
 
 function draw.box(x, y, w, h, color)
-	surface.SetDrawColor(color or Color(255, 255, 255))
-	surface.DrawRect(x, y, w, h)
+  surface.SetDrawColor(color or Color(255, 255, 255))
+  surface.DrawRect(x, y, w, h)
 end
 
 function draw.set_blur_size(size)
