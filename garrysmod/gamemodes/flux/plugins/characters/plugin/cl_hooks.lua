@@ -117,7 +117,7 @@ function flCharacters:RebuildScoreboardPlayerCard(card, player)
   local x, y = card.nameLabel:GetPos()
   local oldX = x
 
-  x = x + font.Scale(32) + 4
+  x = x + font.scale(32) + 4
 
   card.nameLabel:SetPos(x, 2)
 

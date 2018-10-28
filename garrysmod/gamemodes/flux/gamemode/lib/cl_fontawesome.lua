@@ -13,7 +13,7 @@ end
 
 library.new('fa', fl)
 
-local faCodes = {
+local fa_codes = {
   ['fa-glass'] = 'f000',
   ['fa-music'] = 'f001',
   ['fa-search'] = 'f002',
@@ -807,7 +807,7 @@ local buffer = {}
 fl.fa.hooks = {}
 
 function fl.fa.hooks:CreateFonts()
-  font.Create('flFontAwesome', {
+  font.create('flFontAwesome', {
     font = 'FontAwesome',
     extended = true,
     size = 16, -- default icon size is 16x16
@@ -818,11 +818,11 @@ end
 
 plugin.add_hooks('FontAwesome', fl.fa.hooks)
 
-function fl.fa:GetIcon(id)
-  if faCodes[id] then
+function fl.fa:get(id)
+  if fa_codes[id] then
     if !buffer[id] then
-      local rawCode = faCodes[id]
-      buffer[id] = util.hex_to_decimalimal(rawCode)
+      local raw = fa_codes[id]
+      buffer[id] = util.hex_to_decimalimal(raw)
     end
 
     return string.utf8char(buffer[id])
@@ -831,7 +831,7 @@ function fl.fa:GetIcon(id)
   return id
 end
 
-function fl.fa:Draw(id, x, y, size, color, xAlign, yAlign, outlineWidth, outlineColor)
+function fl.fa:draw(id, x, y, size, color, xAlign, yAlign, outline_width, outline_color)
   if id:starts('fa ') then
     id = id:sub(4, id:len())
   end
@@ -840,14 +840,14 @@ function fl.fa:Draw(id, x, y, size, color, xAlign, yAlign, outlineWidth, outline
     id = 'fa-'..id
   end
 
-  if !faCodes[id] then return end
+  if !fa_codes[id] then return end
 
   size = size or 16
-  color = color or Color(255, 255, 255)
+  color = color or color_white
 
-  if outlineWidth then
-    return draw.SimpleTextOutlined(self:GetIcon(id), font.GetSize('flFontAwesome', size), x, y, color, xAlign, yAlign, outlineWidth, outlineColor)
+  if outline_width then
+    return draw.SimpleTextOutlined(self:get(id), font.size('flFontAwesome', size), x, y, color, xAlign, yAlign, outline_width, outline_color)
   else
-    return draw.SimpleText(self:GetIcon(id), font.GetSize('flFontAwesome', size), x, y, color, xAlign, yAlign)
+    return draw.SimpleText(self:get(id), font.size('flFontAwesome', size), x, y, color, xAlign, yAlign)
   end
 end

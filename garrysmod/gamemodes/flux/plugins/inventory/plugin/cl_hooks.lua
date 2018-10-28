@@ -56,7 +56,7 @@ function fl_inventory:PostCharacterLoaded()
     local cx, cy = ScrC()
     hotbar:SetVisible(true)
     hotbar:Rebuild()
-    hotbar:SetPos(cx - w * 0.5, ScrH() - h - font.Scale(32))
+    hotbar:SetPos(cx - w * 0.5, ScrH() - h - font.scale(32))
   end
 end
 

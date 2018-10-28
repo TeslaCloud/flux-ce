@@ -19,7 +19,7 @@ end)
 cable.receive('fl_notification', function(message, arguments)
   message = t(message, arguments)
 
-  fl.notification:Add(message, 8, Color(175, 175, 235))
+  fl.notification:add(message, 8, Color(175, 175, 235))
 
   chat.AddText(Color(255, 255, 255), message)
 end)

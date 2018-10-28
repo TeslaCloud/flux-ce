@@ -97,7 +97,7 @@ function flItems:Think()
     local x, y = scr_pos.x, scr_pos.y
     local w, h = ScrW() * 0.5, ScrH() * 0.5
 
-    if !scr_pos.visible or math.abs(w - x) > font.Scale(350) or math.abs(h - y) > font.Scale(350) then
+    if !scr_pos.visible or math.abs(w - x) > font.scale(350) or math.abs(h - y) > font.scale(350) then
       cable.send('Flux::Items::Aborthold_start', true)
     end
   end

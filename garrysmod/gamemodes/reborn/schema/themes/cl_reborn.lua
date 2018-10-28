@@ -13,7 +13,7 @@ function THEME:OnLoaded()
   self:SetMaterial("schema_logo", "materials/flux/hl2rp/logo.png")
   self:SetMaterial("Gradient", "materials/flux/hl2rp/gradient.png")
 
-  self:SetFont("text_bar", self:GetFont("main_font"), math.max(font.Scale(14), 14), { weight = 600 })
+  self:SetFont("text_bar", self:GetFont("main_font"), math.max(font.scale(14), 14), { weight = 600 })
 end
 
 function THEME:TestHook()

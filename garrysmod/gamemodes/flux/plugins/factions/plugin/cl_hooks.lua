@@ -67,9 +67,9 @@ function flFactions:PreRebuildScoreboard(panel, w, h)
     panel.faction_categories[k] = nil
   end
 
-  local cur_y = font.Scale(40)
-  local card_tall = font.Scale(32) + 8
-  local margin = font.Scale(4)
+  local cur_y = font.scale(40)
+  local card_tall = font.scale(32) + 8
+  local margin = font.scale(4)
 
   local cat_list = vgui.Create('DListLayout', panel.scroll_panel)
   cat_list:SetSize(w - 8, h - 36)

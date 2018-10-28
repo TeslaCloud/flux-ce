@@ -16,7 +16,7 @@ function THEME:on_loaded()
   self:set_option('menu_sidebar_margin', -1)
   self:set_option('menu_sidebar_logo', 'flux/flux_icon.png')
   self:set_option('menu_sidebar_logo_space', scrh / 3)
-  self:set_option('menu_sidebar_button_height', font.Scale(42)) -- We can cheat and scale buttons the same way we scale fonts!
+  self:set_option('menu_sidebar_button_height', font.scale(42)) -- We can cheat and scale buttons the same way we scale fonts!
   self:set_option('menu_sidebar_button_offset_x', 16)
   self:set_option('menu_sidebar_button_centered', false)
   self:set_option('menu_logo_height', 100)
@@ -49,32 +49,32 @@ function THEME:on_loaded()
   self:set_color('esp_blue', Color(0, 0, 255))
   self:set_color('esp_grey', Color(100, 100, 100))
 
-  local main_font           = self:set_font('main_font', 'flRoboto', font.Scale(16))
-  local main_font_condensed = self:set_font('main_font_condensed', 'flRobotoCondensed', font.Scale(16))
-  local light_font          = self:set_font('light_font', 'flRobotoLight', font.Scale(16))
-  self:set_font('menu_titles', 'flRobotoLight', font.Scale(14))
-  self:set_font('menu_tiny', 'flRobotoLt', font.Scale(16))
-  self:set_font('menu_small', 'flRobotoLt', font.Scale(20))
-  self:set_font('menu_normal', main_font_condensed, font.Scale(24))
-  self:set_font('menu_large', main_font_condensed, font.Scale(30))
-  self:set_font('menu_larger', main_font_condensed, font.Scale(42))
-  self:set_font('main_menu_title', light_font, font.Scale(48))
-  self:set_font('main_menu_large', light_font, font.Scale(42))
-  self:set_font('main_menu_titles', light_font, font.Scale(24))
-  self:set_font('main_menu_normal', light_font, font.Scale(20))
-  self:set_font('main_menu_small', light_font, font.Scale(18))
-  self:set_font('tooltip_small', main_font_condensed, font.Scale(16))
-  self:set_font('tooltip_normal', main_font_condensed, font.Scale(21))
-  self:set_font('tooltip_large', main_font_condensed, font.Scale(26))
-  self:set_font('text_largest', main_font, font.Scale(90))
-  self:set_font('text_large', main_font, font.Scale(48))
-  self:set_font('text_normal_large', main_font, font.Scale(36))
-  self:set_font('text_normal', main_font, font.Scale(23))
-  self:set_font('text_normal_smaller', main_font, font.Scale(20))
-  self:set_font('text_small', main_font, font.Scale(18))
-  self:set_font('text_smaller', main_font, font.Scale(16))
-  self:set_font('text_smallest', main_font, font.Scale(14))
-  self:set_font('text_bar', main_font, font.Scale(17), {weight = 600})
+  local main_font           = self:set_font('main_font', 'flRoboto', font.scale(16))
+  local main_font_condensed = self:set_font('main_font_condensed', 'flRobotoCondensed', font.scale(16))
+  local light_font          = self:set_font('light_font', 'flRobotoLight', font.scale(16))
+  self:set_font('menu_titles', 'flRobotoLight', font.scale(14))
+  self:set_font('menu_tiny', 'flRobotoLt', font.scale(16))
+  self:set_font('menu_small', 'flRobotoLt', font.scale(20))
+  self:set_font('menu_normal', main_font_condensed, font.scale(24))
+  self:set_font('menu_large', main_font_condensed, font.scale(30))
+  self:set_font('menu_larger', main_font_condensed, font.scale(42))
+  self:set_font('main_menu_title', light_font, font.scale(48))
+  self:set_font('main_menu_large', light_font, font.scale(42))
+  self:set_font('main_menu_titles', light_font, font.scale(24))
+  self:set_font('main_menu_normal', light_font, font.scale(20))
+  self:set_font('main_menu_small', light_font, font.scale(18))
+  self:set_font('tooltip_small', main_font_condensed, font.scale(16))
+  self:set_font('tooltip_normal', main_font_condensed, font.scale(21))
+  self:set_font('tooltip_large', main_font_condensed, font.scale(26))
+  self:set_font('text_largest', main_font, font.scale(90))
+  self:set_font('text_large', main_font, font.scale(48))
+  self:set_font('text_normal_large', main_font, font.scale(36))
+  self:set_font('text_normal', main_font, font.scale(23))
+  self:set_font('text_normal_smaller', main_font, font.scale(20))
+  self:set_font('text_small', main_font, font.scale(18))
+  self:set_font('text_smaller', main_font, font.scale(16))
+  self:set_font('text_smallest', main_font, font.scale(14))
+  self:set_font('text_bar', main_font, font.scale(17), {weight = 600})
   self:set_font('text_3d2d', main_font, 256)
 
   -- Set from schema theme.
@@ -106,7 +106,7 @@ function THEME:PaintFrame(panel, width, height)
   draw.textured_rect(self:get_material('gradient'), 0, 0, w, header_size, accent_color)
 
   if title then
-    local font = font.GetSize(self:get_font('text_small'), 16)
+    local font = font.size(self:get_font('text_small'), 16)
     local fontSize = util.font_size(font)
 
     draw.SimpleText(title, font, 6, 3 * (16 / fontSize), panel:GetTextColor())
@@ -164,9 +164,9 @@ function THEME:PaintButton(panel, w, h)
   if icon then
     if !panel.m_Centered then
       if panel.m_IconLeft then
-        fl.fa:Draw(icon, (panel.m_IconSize and h * 0.5 - panel.m_IconSize * 0.5) or 3, (panel.m_IconSize and h * 0.5 - panel.m_IconSize * 0.5) or 3, (panel.m_IconSize or h - 6), text_color)
+        fl.fa:draw(icon, (panel.m_IconSize and h * 0.5 - panel.m_IconSize * 0.5) or 3, (panel.m_IconSize and h * 0.5 - panel.m_IconSize * 0.5) or 3, (panel.m_IconSize or h - 6), text_color)
       else
-        fl.fa:Draw(icon, w - panel.m_IconSize - 8, (panel.m_IconSize and h * 0.5 - panel.m_IconSize * 0.5) or 3, (panel.m_IconSize or h - 6), text_color)
+        fl.fa:draw(icon, w - panel.m_IconSize - 8, (panel.m_IconSize and h * 0.5 - panel.m_IconSize * 0.5) or 3, (panel.m_IconSize or h - 6), text_color)
       end
     end
   end
@@ -180,9 +180,9 @@ function THEME:PaintButton(panel, w, h)
           local textPos = (w - width - panel.m_IconSize) * 0.5
 
           if panel.m_IconLeft then
-            fl.fa:Draw(icon, textPos - panel.m_IconSize - 8, (panel.m_IconSize and h * 0.5 - panel.m_IconSize * 0.5) or 3, (panel.m_IconSize or h - 6), text_color)
+            fl.fa:draw(icon, textPos - panel.m_IconSize - 8, (panel.m_IconSize and h * 0.5 - panel.m_IconSize * 0.5) or 3, (panel.m_IconSize or h - 6), text_color)
           else
-            fl.fa:Draw(icon, textPos + width + panel.m_IconSize * 0.5, (panel.m_IconSize and h * 0.5 - panel.m_IconSize * 0.5) or 3, (panel.m_IconSize or h - 6), text_color)
+            fl.fa:draw(icon, textPos + width + panel.m_IconSize * 0.5, (panel.m_IconSize and h * 0.5 - panel.m_IconSize * 0.5) or 3, (panel.m_IconSize or h - 6), text_color)
           end
 
           draw.SimpleText(title, font, textPos, h * 0.5 - height * 0.5, text_color)
@@ -201,7 +201,7 @@ function THEME:PaintButton(panel, w, h)
     end
   else
     if panel.m_Centered then
-      fl.fa:Draw(icon, w * 0.5 - panel.m_IconSize * 0.5, (panel.m_IconSize and h * 0.5 - panel.m_IconSize * 0.5) or 3, (panel.m_IconSize or h - 6), text_color)
+      fl.fa:draw(icon, w * 0.5 - panel.m_IconSize * 0.5, (panel.m_IconSize and h * 0.5 - panel.m_IconSize * 0.5) or 3, (panel.m_IconSize or h - 6), text_color)
     end
   end
 end
@@ -279,7 +279,7 @@ function THEME:DrawBarTexts(bar_info)
 end
 
 function THEME:AdminPanelPaintOver(panel, width, height)
-  local smallestFont = font.GetSize(self:get_font('text_smallest'), 14)
+  local smallestFont = font.size(self:get_font('text_smallest'), 14)
   local text_color = self:get_color('text')
   local versionString = 'Admin Mod Version: v0.2.0 (indev)'
 
@@ -357,7 +357,7 @@ function THEME:PaintTabMenu(panel, width, height)
   fl.blur_size = Lerp(fraction * 0.4, fl.blur_size, 6)
 
   draw.blur_panel(panel)
-  draw.RoundedBox(0, 0, 0, font.Scale(200) + 6, height, sidebarColor)
+  draw.RoundedBox(0, 0, 0, font.scale(200) + 6, height, sidebarColor)
   draw.RoundedBox(0, 0, 0, 6, height, sidebarColor)
 
   if IsValid(active_panel) then

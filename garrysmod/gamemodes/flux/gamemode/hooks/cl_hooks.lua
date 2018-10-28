@@ -31,7 +31,7 @@ function GM:PlayerInitialized()
 end
 
 function GM:FluxClientSchemaLoaded()
-  font.CreateFonts()
+  font.create_fonts()
 end
 
 do
@@ -69,7 +69,7 @@ end
 
 -- Called when the resolution has been changed and fonts need to be resized to fit the client's res.
 function GM:OnResolutionChanged(old_w, old_h, new_w, new_h)
-  font.CreateFonts()
+  font.create_fonts()
 end
 
 -- Called when the scoreboard should be shown.
@@ -118,7 +118,7 @@ function GM:HUDDrawScoreBoard()
 
     percentage = math.Clamp(percentage, 0, 100)
 
-    local font = font.GetSize('flRobotoCondensed', font.Scale(24))
+    local font = font.size('flRobotoCondensed', font.scale(24))
     local scrw, scrh = ScrW(), ScrH()
     local w, h = util.text_size(text, font)
 
@@ -259,7 +259,7 @@ function GM:DrawPlayerTargetID(player, x, y, distance)
         alpha = math.Clamp((255 * (35 - d) / 35), 0, 255)
       end
 
-      local smaller_font = font.GetSize(tooltip_small, 12)
+      local smaller_font = font.size(tooltip_small, 12)
       local text = t'target_id.information'
       local width, height = util.text_size(text, smaller_font)
       draw.SimpleText(text, smaller_font, x - width * 0.5, y + 5, Color(50, 255, 50, alpha))
@@ -338,7 +338,7 @@ function GM:AddTabMenuItems(menu)
 end
 
 function GM:OnMenuPanelOpen(menu_panel, active_panel)
-  active_panel:SetPos(menu_panel:GetWide() * 0.5 - active_panel:GetWide() * 0.5 + font.Scale(200) + 6, menu_panel:GetTall() * 0.5 - active_panel:GetTall() * 0.5)
+  active_panel:SetPos(menu_panel:GetWide() * 0.5 - active_panel:GetWide() * 0.5 + font.scale(200) + 6, menu_panel:GetTall() * 0.5 - active_panel:GetTall() * 0.5)
 end
 
 function GM:AddAdminMenuItems(panel, sidebar)
