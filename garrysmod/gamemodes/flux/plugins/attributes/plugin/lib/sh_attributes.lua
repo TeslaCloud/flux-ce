@@ -1,9 +1,8 @@
 library.new 'attributes'
 
 local stored = attributes.stored or {}
-attributes.stored = stored
-
 local types = attributes.types or {}
+attributes.stored = stored
 attributes.types = types
 
 function attributes.get_stored()
@@ -14,7 +13,7 @@ function attributes.get_id_list()
   local atts_table = {}
 
   for k, v in pairs(stored) do
-    atts_table[#atts_table + 1] = k
+    table.insert(atts_table, k)
   end
 
   return atts_table
@@ -63,9 +62,7 @@ function attributes.register(id, data)
 end
 
 function attributes.find_by_id(id)
-  id = id:to_id()
-
-  return stored[id]
+  return stored[id:to_id()]
 end
 
 function attributes.register_type(id, global_var, folder)

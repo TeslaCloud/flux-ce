@@ -78,6 +78,10 @@ if SERVER then
   end
 
   function cable.send(player, id, ...)
+    if isstring(player) then
+      error('cable.send - bad argument #1 (must not be a string)\n')
+    end
+
     if !cable.check_networked_string(id) then
       local args = {...}
 
@@ -90,7 +94,7 @@ if SERVER then
     end
 
     if !istable(player) then
-      if player and IsValid(player) then
+      if IsValid(player) then
         player = { player }
       else
         player = _player.GetAll()
