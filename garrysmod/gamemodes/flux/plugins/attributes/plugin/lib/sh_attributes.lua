@@ -104,11 +104,13 @@ do
   local player_meta = FindMetaTable('Player')
 
   function player_meta:get_attributes()
-    if !self.record.characters then return {} end
+    local char_id = self:GetActiveCharacterID()
+
+    if !self.record.characters or !self.record.characters[char_id] then return {} end
 
     local atts_table = {}
 
-    for k, v in pairs(self.record.characters[self:GetActiveCharacterID()].attributes) do
+    for k, v in pairs(self.record.characters[char_id].attributes) do
       atts_table[v.attr_id] = v
     end
 
