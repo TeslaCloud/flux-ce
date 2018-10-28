@@ -23,7 +23,11 @@ function chatbox.add_filter(id, data)
 end
 
 function chatbox.can_hear(listener, message_data)
-  if listener:HasInitialized() then
+  if plugin.call('PlayerCanHear', listener, message_data) then
+    return true
+  end
+
+  if IsValid(listener) and listener:HasInitialized() then
     local position, radius = message_data.position, message_data.radius
 
     if !isnumber(radius) then return false end
@@ -44,10 +48,6 @@ function chatbox.can_hear(listener, message_data)
   end
 
   return false
-end
-
-function chatbox.player_can_hear(listener, message_data)
-  return plugin.call('PlayerCanHear', listener, message_data) or chatbox.can_hear(listener, message_data)
 end
 
 function chatbox.add_text(listeners, ...)
@@ -96,8 +96,12 @@ function chatbox.add_text(listeners, ...)
   end
 
   for k, v in ipairs(listeners) do
-    if chatbox.player_can_hear(v, message_data) then
-      cable.send(v, 'chat_add_message', message_data)
+    local data = message_data
+
+    hook.run('AdjustMessageData', v, data)
+
+    if chatbox.can_hear(v, data) then
+      netstream.Start(v, 'chat_add_message', data)
     end
   end
 end
