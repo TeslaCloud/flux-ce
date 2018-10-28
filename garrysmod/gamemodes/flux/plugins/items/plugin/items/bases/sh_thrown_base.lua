@@ -14,7 +14,7 @@ ItemThrown.thrown_ammo_class = 'Grenade'
 ItemThrown:add_button(t'item.option.unload', {
   icon = 'icon16/add.png',
   callback = 'OnUnload',
-  onShow = function(item_table)
+  on_show = function(item_table)
     return false
   end
 })

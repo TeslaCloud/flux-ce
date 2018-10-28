@@ -1,14 +1,14 @@
 local COMMAND = Command.new('giveitem')
 COMMAND.name = 'GiveItem'
-COMMAND.description = 'Gives specified item to a player.'
-COMMAND.syntax = '<string target> <string item name or unique ID>'
+COMMAND.description = t'give_item.description'
+COMMAND.syntax = t'give_item.syntax'
 COMMAND.category = 'character_management'
 COMMAND.arguments = 2
 COMMAND.player_arg = 1
 COMMAND.aliases = { 'chargiveitem', 'plygiveitem' }
 
-function COMMAND:on_run(player, targets, itemName, amount)
-  local item_table = item.Find(itemName)
+function COMMAND:on_run(player, targets, item_name, amount)
+  local item_table = item.Find(item_name)
 
   if item_table then
     amount = tonumber(amount) or 1
@@ -18,12 +18,12 @@ function COMMAND:on_run(player, targets, itemName, amount)
         v:GiveItem(item_table.id)
       end
 
-      fl.player:notify(v, (get_player_name(player))..' has given you '..amount..' '..item_table.name.."'s.")
+      fl.player:notify(v, t('give_item.target_message', { get_player_name(player), amount, item_table.name }))
     end
 
-    fl.player:notify(player, 'You have given '..amount..' '..item_table.name.."'s to "..util.player_list_to_string(targets)..'.')
+    fl.player:notify(player, t('give_item.player_message', { util.player_list_to_string(targets), amount, item_table.name }))
   else
-    fl.player:notify(player, "'"..itemName.."' is not a valid item!")
+    fl.player:notify(player, t('give_item.invalid_item', item_name))
   end
 end
 

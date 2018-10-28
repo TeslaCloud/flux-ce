@@ -1,4 +1,4 @@
-local blurTexture = Material('pp/blurscreen')
+local blur_texture = Material('pp/blurscreen')
 local color_white = Color(255, 255, 255)
 
 function fl3DText:DrawTextPreview()
@@ -23,21 +23,21 @@ function fl3DText:DrawTextPreview()
         draw.RoundedBox(0, -w * 0.5 - 32, -h * 0.5 + h + 10, w + 64, 6, Color(255, 255, 255, 40))
       elseif style == 9 then
         local wide = w + 64
-        local barColor = Color(255, 255, 255, 40)
-        local barX, bar_y = -w * 0.5 - 32, -h * 0.5 - 16
-        local rectWidth = (wide / 3 - wide / 6) * 0.75
+        local bar_color = Color(255, 255, 255, 40)
+        local bar_x, bar_y = -w * 0.5 - 32, -h * 0.5 - 16
+        local rect_width = (wide / 3 - wide / 6) * 0.75
 
         -- Draw left thick rectangles
-        draw.RoundedBox(0, barX, bar_y - 6, rectWidth, 10, barColor)
-        draw.RoundedBox(0, barX, bar_y + h + 22, rectWidth, 10, barColor)
+        draw.RoundedBox(0, bar_x, bar_y - 6, rect_width, 10, bar_color)
+        draw.RoundedBox(0, bar_x, bar_y + h + 22, rect_width, 10, bar_color)
 
         -- ...and the right ones
-        draw.RoundedBox(0, barX + wide - rectWidth, bar_y - 6, rectWidth, 10, barColor)
-        draw.RoundedBox(0, barX + wide - rectWidth, bar_y + h + 22, rectWidth, 10, barColor)
+        draw.RoundedBox(0, bar_x + wide - rect_width, bar_y - 6, rect_width, 10, bar_color)
+        draw.RoundedBox(0, bar_x + wide - rect_width, bar_y + h + 22, rect_width, 10, bar_color)
 
         -- And the middle thingies
-        draw.RoundedBox(0, -(wide / 1.75) * 0.5, bar_y, wide / 1.75, 4, barColor)
-        draw.RoundedBox(0, -(wide / 1.75) * 0.5, bar_y + h + 22, wide / 1.75, 4, barColor)
+        draw.RoundedBox(0, -(wide / 1.75) * 0.5, bar_y, wide / 1.75, 4, bar_color)
+        draw.RoundedBox(0, -(wide / 1.75) * 0.5, bar_y + h + 22, wide / 1.75, 4, bar_color)
       end
     end
 
@@ -67,7 +67,7 @@ end
 
 function fl3DText:PostDrawOpaqueRenderables()
   local weapon = fl.client:GetActiveWeapon()
-  local clientPos = fl.client:GetPos()
+  local client_pos = fl.client:GetPos()
 
   if IsValid(weapon) and weapon:GetClass() == 'gmod_tool' then
     local mode = weapon:GetMode()
@@ -81,38 +81,38 @@ function fl3DText:PostDrawOpaqueRenderables()
 
   for k, v in ipairs(self.texts) do
     local pos = v.pos
-    local distance = clientPos:Distance(pos)
-    local fadeOffset = v.fadeOffset or 1000
-    local drawDistance = (1024 + fadeOffset)
+    local distance = client_pos:Distance(pos)
+    local fade_offset = v.fade_offset or 1000
+    local draw_distance = (1024 + fade_offset)
 
-    if distance > drawDistance then continue end
+    if distance > draw_distance then continue end
 
-    local fadeAlpha = 255
-    local fadeDistance = (768 + fadeOffset)
+    local fade_alpha = 255
+    local fade_distance = (768 + fade_offset)
 
-    if distance > fadeDistance then
-      local d = distance - fadeDistance
-      fadeAlpha = math.Clamp((255 * ((drawDistance - fadeDistance) - d) / (drawDistance - fadeDistance)), 0, 255)
+    if distance > fade_distance then
+      local d = distance - fade_distance
+      fade_alpha = math.Clamp((255 * ((draw_distance - fade_distance) - d) / (draw_distance - fade_distance)), 0, 255)
     end
 
     local angle = v.angle
     local normal = v.normal
     local scale = v.scale
     local text = v.text
-    local textColor = v.color
-    local backColor = v.extraColor
+    local text_color = v.color
+    local back_color = v.extra_color
     local style = v.style
     local w, h = util.text_size(text, theme.get_font('text_3d2d'))
-    local posX, posY = -w * 0.5, -h * 0.5
+    local pos_x, pos_y = -w * 0.5, -h * 0.5
 
     if style >= 2 then
       cam.Start3D2D(pos + (normal * 0.4), angle, 0.1 * scale)
         if style >= 5 then
-          local boxAlpha = backColor.a
-          local boxX, boxY = posX - 32, posY - 16
+          local box_alpha = back_color.a
+          local box_x, box_y = pos_x - 32, pos_y - 16
 
           if style == 6 then
-            boxAlpha = boxAlpha * math.abs(math.sin(CurTime() * 3))
+            box_alpha = box_alpha * math.abs(math.sin(CurTime() * 3))
           end
 
           if style == 10 then
@@ -127,71 +127,71 @@ function fl3DText:PostDrawOpaqueRenderables()
             render.SetStencilReferenceValue(ref or 75)
 
             surface.SetDrawColor(255, 255, 255, 10)
-            surface.DrawRect(boxX, boxY, w + 64, h + 32)
+            surface.DrawRect(box_x, box_y, w + 64, h + 32)
 
             render.SetStencilCompareFunction(STENCIL_EQUAL)
 
-            render.SetMaterial(blurTexture)
+            render.SetMaterial(blur_texture)
 
             for i = 0, 1, 0.3 do
-              blurTexture:SetFloat('$blur', i * 8)
-              blurTexture:Recompute()
+              blur_texture:SetFloat('$blur', i * 8)
+              blur_texture:Recompute()
               render.UpdateScreenEffectTexture()
               render.DrawScreenQuad()
             end
 
             render.SetStencilEnable(false)
 
-            surface.SetDrawColor(ColorAlpha(backColor, 10))
-            surface.DrawRect(boxX, boxY, w + 64, h + 32)
+            surface.SetDrawColor(ColorAlpha(back_color, 10))
+            surface.DrawRect(box_x, box_y, w + 64, h + 32)
           elseif style != 8 and style != 9 then
-            draw.RoundedBox(0, boxX, posY - 16, w + 64, h + 32, ColorAlpha(v.extraColor, math.Clamp(fadeAlpha, 0, boxAlpha)))
+            draw.RoundedBox(0, box_x, pos_y - 16, w + 64, h + 32, ColorAlpha(v.extra_color, math.Clamp(fade_alpha, 0, box_alpha)))
           end
 
           if style == 7 or style == 8 then
-            local barColor = Color(255, 255, 255, math.Clamp(fadeAlpha, 0, boxAlpha))
+            local bar_color = Color(255, 255, 255, math.Clamp(fade_alpha, 0, box_alpha))
 
-            draw.RoundedBox(0, boxX, boxY, w + 64, 6, barColor)
-            draw.RoundedBox(0, boxX, boxY + h + 26, w + 64, 6, barColor)
+            draw.RoundedBox(0, box_x, box_y, w + 64, 6, bar_color)
+            draw.RoundedBox(0, box_x, box_y + h + 26, w + 64, 6, bar_color)
           elseif style == 9 then
             local tall, wide = 6, w + 64
-            local rectWidth = (wide / 3 - wide / 6) * 0.75
-            local barColor = Color(255, 255, 255, math.Clamp(fadeAlpha, 0, boxAlpha))
+            local rect_width = (wide / 3 - wide / 6) * 0.75
+            local bar_color = Color(255, 255, 255, math.Clamp(fade_alpha, 0, box_alpha))
 
             -- Draw left thick rectangles
-            draw.RoundedBox(0, boxX, boxY - 6, rectWidth, 10, barColor)
-            draw.RoundedBox(0, boxX, boxY + h + 22, rectWidth, 10, barColor)
+            draw.RoundedBox(0, box_x, box_y - 6, rect_width, 10, bar_color)
+            draw.RoundedBox(0, box_x, box_y + h + 22, rect_width, 10, bar_color)
 
             -- ...and the right ones
-            draw.RoundedBox(0, boxX + wide - rectWidth, boxY - 6, rectWidth, 10, barColor)
-            draw.RoundedBox(0, boxX + wide - rectWidth, boxY + h + 22, rectWidth, 10, barColor)
+            draw.RoundedBox(0, box_x + wide - rect_width, box_y - 6, rect_width, 10, bar_color)
+            draw.RoundedBox(0, box_x + wide - rect_width, box_y + h + 22, rect_width, 10, bar_color)
 
             -- And the middle thingies
-            draw.RoundedBox(0, -(wide / 1.75) * 0.5, boxY, wide / 1.75, 4, barColor)
-            draw.RoundedBox(0, -(wide / 1.75) * 0.5, boxY + h + 22, wide / 1.75, 4, barColor)
+            draw.RoundedBox(0, -(wide / 1.75) * 0.5, box_y, wide / 1.75, 4, bar_color)
+            draw.RoundedBox(0, -(wide / 1.75) * 0.5, box_y + h + 22, wide / 1.75, 4, bar_color)
           end
         end
 
         if style != 3 then
-          draw.SimpleText(text, theme.get_font('text_3d2d'), posX, posY, ColorAlpha(textColor, math.Clamp(fadeAlpha, 0, 100)):darken(30))
+          draw.SimpleText(text, theme.get_font('text_3d2d'), pos_x, pos_y, ColorAlpha(text_color, math.Clamp(fade_alpha, 0, 100)):darken(30))
         end
       cam.End3D2D()
     end
 
     if style >= 3 then
       cam.Start3D2D(pos + (normal * 0.95 * (scale + 0.5)), angle, 0.1 * scale)
-        draw.SimpleText(text, theme.get_font('text_3d2d'), posX, posY, Color(0, 0, 0, math.Clamp(fadeAlpha, 0, 240)))
+        draw.SimpleText(text, theme.get_font('text_3d2d'), pos_x, pos_y, Color(0, 0, 0, math.Clamp(fade_alpha, 0, 240)))
       cam.End3D2D()
     end
 
     cam.Start3D2D(pos + (normal * 1.25 * (scale + 0.5)), angle, 0.1 * scale)
-      draw.SimpleText(text, theme.get_font('text_3d2d'), posX, posY, ColorAlpha(textColor, fadeAlpha))
+      draw.SimpleText(text, theme.get_font('text_3d2d'), pos_x, pos_y, ColorAlpha(text_color, fade_alpha))
     cam.End3D2D()
   end
 
   for k, v in ipairs(self.pictures) do
     local pos = v.pos
-    local distance = clientPos:Distance(pos)
+    local distance = client_pos:Distance(pos)
     local fade_offset = v.fade_offset or 1000
     local draw_distance = 1024 + fade_offset
 

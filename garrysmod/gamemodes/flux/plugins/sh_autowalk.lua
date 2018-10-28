@@ -10,14 +10,14 @@ if SERVER then
     [IN_MOVERIGHT] = true
   }
 
-  function PLUGIN:SetupMove(player, moveData, cmdData)
+  function PLUGIN:SetupMove(player, move_data, cmd_data)
     if !player:get_nv('auto_walk') then return end
 
-    moveData:SetForwardSpeed(moveData:GetMaxSpeed())
+    move_data:SetForwardSpeed(move_data:GetMaxSpeed())
 
     -- If they try to move, break the autowalk.
     for k, v in pairs(check) do
-      if cmdData:KeyDown(k) then
+      if cmd_data:KeyDown(k) then
         player:set_nv('auto_walk', false)
 
         break
@@ -39,10 +39,10 @@ else
 --  fl.hint:Add('Autowalk', 'Press 'B' to toggle auto walking.')
 
   -- We do this so there's no need to do an unnecessary check for if client or server in the hook itself.
-  function PLUGIN:SetupMove(player, moveData, cmdData)
+  function PLUGIN:SetupMove(player, move_data, cmd_data)
     if !player:get_nv('auto_walk') then return end
 
-    moveData:SetForwardSpeed(moveData:GetMaxSpeed())
+    move_data:SetForwardSpeed(move_data:GetMaxSpeed())
   end
 
   fl.binds:AddBind('ToggleAutoWalk', 'toggleautowalk', KEY_B)

@@ -1,4 +1,8 @@
 en:
+  static:
+    description: Makes the entity you're looking at static.
+  unstatic:
+    description: Makes the entity you're looking at not static.
   err:
     not_valid_entity: This is not a valid entity!
     cannot_static_this: You cannot static this entity!

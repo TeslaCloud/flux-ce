@@ -1,7 +1,7 @@
 local PANEL = {}
 PANEL.menu_items = {}
 PANEL.buttons = {}
-PANEL.activePanel = nil
+PANEL.active_panel = nil
 
 function PANEL:Init()
   local scrw, scrh = ScrW(), ScrH()
@@ -52,28 +52,28 @@ function PANEL:Init()
       if v.panel then
         surface.PlaySound('garrysmod/ui_hover.wav')
 
-        if IsValid(self.activePanel) then
-          self.activePanel:safe_remove()
+        if IsValid(self.active_panel) then
+          self.active_panel:safe_remove()
 
           self.activeBtn:SetTextColor(nil)
         end
 
-        self.activePanel = vgui.Create(v.panel, self)
+        self.active_panel = vgui.Create(v.panel, self)
 
-        if self.activePanel.GetMenuSize then
-          self.activePanel:SetSize(self.activePanel:GetMenuSize())
+        if self.active_panel.GetMenuSize then
+          self.active_panel:SetSize(self.active_panel:GetMenuSize())
         else
-          self.activePanel:SetSize(scrw * 0.5, scrh * 0.5)
+          self.active_panel:SetSize(scrw * 0.5, scrh * 0.5)
         end
 
         self.activeBtn = btn
         self.activeBtn:SetTextColor(theme.get_color('accent_light'))
 
-        if self.activePanel.Rebuild then
-          self.activePanel:Rebuild()
+        if self.active_panel.Rebuild then
+          self.active_panel:Rebuild()
         end
 
-        hook.run('OnMenuPanelOpen', self, self.activePanel)
+        hook.run('OnMenuPanelOpen', self, self.active_panel)
       end
 
       if v.callback then
@@ -93,7 +93,7 @@ function PANEL:Init()
 end
 
 function PANEL:Think()
-  if !IsValid(self.activePanel) and IsValid(self.activeBtn) then
+  if !IsValid(self.active_panel) and IsValid(self.activeBtn) then
     self.activeBtn:SetTextColor(nil)
   end
 end
@@ -118,9 +118,9 @@ function PANEL:CloseMenu()
 end
 
 function PANEL:OnMousePressed()
-  if IsValid(self.activePanel) then
-    self.activePanel:SetVisible(false)
-    self.activePanel:Remove()
+  if IsValid(self.active_panel) then
+    self.active_panel:SetVisible(false)
+    self.active_panel:Remove()
   end
 end
 

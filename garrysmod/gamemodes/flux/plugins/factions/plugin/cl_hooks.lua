@@ -33,7 +33,7 @@ function flFactions:PreStageChange(id, panel)
     local faction_table = faction.find_by_id(faction_id)
 
     if gender == 'Universal' and faction_table.has_gender then
-      return false, t('char_creation.no_gender')
+      return false, t'char_creation.no_gender'
     end
   end
 end
@@ -57,23 +57,23 @@ function flFactions:PreRebuildScoreboard(panel, w, h)
     panel.playerCards[k] = nil
   end
 
-  panel.factionCategories = panel.factionCategories or {}
+  panel.faction_categories = panel.faction_categories or {}
 
-  for k, v in ipairs(panel.factionCategories) do
+  for k, v in ipairs(panel.faction_categories) do
     if IsValid(v) then
       v:safe_remove()
     end
 
-    panel.factionCategories[k] = nil
+    panel.faction_categories[k] = nil
   end
 
   local cur_y = font.Scale(40)
-  local cardTall = font.Scale(32) + 8
+  local card_tall = font.Scale(32) + 8
   local margin = font.Scale(4)
 
-  local catList = vgui.Create('DListLayout', panel.scroll_panel)
-  catList:SetSize(w - 8, h - 36)
-  catList:SetPos(4, 36)
+  local cat_list = vgui.Create('DListLayout', panel.scroll_panel)
+  cat_list:SetSize(w - 8, h - 36)
+  cat_list:SetPos(4, 36)
 
   for id, faction_table in pairs(faction.GetAll()) do
     local players = faction.GetPlayers(id)
@@ -85,7 +85,7 @@ function flFactions:PreRebuildScoreboard(panel, w, h)
     cat:SetPos(4, cur_y)
     cat:SetLabel(faction_table.name or id)
 
-    catList:Add(cat)
+    cat_list:Add(cat)
 
     local list = vgui.Create('DPanelList', panel)
     list:SetSpacing(5)
@@ -95,7 +95,7 @@ function flFactions:PreRebuildScoreboard(panel, w, h)
 
     for k, v in ipairs(players) do
       local playerCard = vgui.Create('fl_scoreboard_player', self)
-      playerCard:SetSize(w - 8, cardTall)
+      playerCard:SetSize(w - 8, card_tall)
       playerCard:SetPlayer(v)
       playerCard:SetPos(0, 5)
 
@@ -104,7 +104,7 @@ function flFactions:PreRebuildScoreboard(panel, w, h)
       table.insert(panel.playerCards, playerCard)
     end
 
-    cur_y = cur_y + cat:GetTall() + cardTall + margin
+    cur_y = cur_y + cat:GetTall() + card_tall + margin
   end
 
   return true

@@ -14,25 +14,25 @@ if SERVER then
   return
 end
 
-PLUGIN.WeaponIndex = PLUGIN.WeaponIndex or 1
-PLUGIN.IsOpen = PLUGIN.IsOpen or false
-PLUGIN.OpenTime = PLUGIN.OpenTime or 0
-PLUGIN.CurAlpha = PLUGIN.CurAlpha or 255
-PLUGIN.Display = PLUGIN.Display or {}
-PLUGIN.IndexOffset = PLUGIN.IndexOffset or nil
+PLUGIN.weapon_index = PLUGIN.weapon_index or 1
+PLUGIN.is_open = PLUGIN.is_open or false
+PLUGIN.open_time = PLUGIN.open_time or 0
+PLUGIN.cur_alpha = PLUGIN.cur_alpha or 255
+PLUGIN.display = PLUGIN.display or {}
+PLUGIN.index_offset = PLUGIN.index_offset or nil
 
-local function relativeClamp(n, min, max)
+local function relative_clamp(n, min, max)
   if n > max then
-    return relativeClamp(n - max, min, max)
+    return relative_clamp(n - max, min, max)
   elseif n < min then
-    return relativeClamp(max - n, min, max)
+    return relative_clamp(max - n, min, max)
   end
 
   return n
 end
 
-local function safeIndex(tab, idx)
-  return tab[relativeClamp(idx, 1, #tab)]
+local function safe_index(tab, idx)
+  return tab[relative_clamp(idx, 1, #tab)]
 end
 
 function PLUGIN:HUDShouldDraw(element)
@@ -42,20 +42,20 @@ function PLUGIN:HUDShouldDraw(element)
 end
 
 function PLUGIN:HUDPaint()
-  if self.IsOpen then
-    if self.IndexOffset and self.IndexOffset != 0 then
-      local dir = (self.IndexOffset == math.abs(self.IndexOffset)) -- true = down, false = up
-      local frameTime = FrameTime() * 16
+  if self.is_open then
+    if self.index_offset and self.index_offset != 0 then
+      local dir = (self.index_offset == math.abs(self.index_offset)) -- true = down, false = up
+      local frame_time = FrameTime() * 16
       local targets = {}
 
-      if !self.Display[1].target then
-        local idx = self.WeaponIndex - ((dir and self.IndexOffset - 1) or self.IndexOffset + 1)
+      if !self.display[1].target then
+        local idx = self.weapon_index - ((dir and self.index_offset - 1) or self.index_offset + 1)
         targets = self:MakeDisplay(idx, true)
       end
 
-      for k, v in ipairs(self.Display) do
+      for k, v in ipairs(self.display) do
         if !v.target then
-          local next = safeIndex(targets, (dir and k - 1) or k + 1)
+          local next = safe_index(targets, (dir and k - 1) or k + 1)
 
           -- Make first and last weapons look nicer when scrolling.
           if dir and k == 1 then
@@ -67,7 +67,7 @@ function PLUGIN:HUDPaint()
           end
 
           v.target = next.y
-          v.scaleTarget = next.scale
+          v.scale_target = next.scale
           v.weapon = next.weapon
 
           if k == 3 + ((dir and 1) or -1) then
@@ -76,19 +76,19 @@ function PLUGIN:HUDPaint()
         end
 
         if math.abs(v.y - v.target) < 1 then
-          self.IndexOffset = (dir and self.IndexOffset - 1) or self.IndexOffset + 1
-          self:MakeDisplay(self.WeaponIndex - self.IndexOffset)
+          self.index_offset = (dir and self.index_offset - 1) or self.index_offset + 1
+          self:MakeDisplay(self.weapon_index - self.index_offset)
 
           break
         end
 
-        local absOffset = math.Clamp(math.abs(self.IndexOffset), 1, 100)
+        local abs_offset = math.Clamp(math.abs(self.index_offset), 1, 100)
 
-        self.Display[k].y = Lerp(frameTime * absOffset, v.y, v.target)
-        self.Display[k].scale = Lerp(frameTime * absOffset, v.scale, v.scaleTarget)
+        self.display[k].y = Lerp(frame_time * abs_offset, v.y, v.target)
+        self.display[k].scale = Lerp(frame_time * abs_offset, v.scale, v.scale_target)
 
-        if self.Display[k + ((dir and 1) or -1)] and self.Display[k + ((dir and 1) or -1)].highlight then
-          self.Display[k].highlight = false
+        if self.display[k + ((dir and 1) or -1)] and self.display[k + ((dir and 1) or -1)].highlight then
+          self.display[k].highlight = false
         end
       end
     end
@@ -98,10 +98,10 @@ function PLUGIN:HUDPaint()
 
     render.SetScissorRect(x, y, x + w, y + h, true)
 
-    draw.RoundedBox(0, x, y, w, h, Color(40, 40, 40, 100 * (self.CurAlpha / 255)))
+    draw.RoundedBox(0, x, y, w, h, Color(40, 40, 40, 100 * (self.cur_alpha / 255)))
 
-    for k, v in ipairs(self.Display) do
-      local color = Color(255, 255, 255, self.CurAlpha * v.scale / 1.3)
+    for k, v in ipairs(self.display) do
+      local color = Color(255, 255, 255, self.cur_alpha * v.scale / 1.3)
 
       if v.highlight then
         color = theme.get_color('accent')
@@ -115,126 +115,126 @@ function PLUGIN:HUDPaint()
 end
 
 function PLUGIN:Think()
-  if self.IsOpen then
-    if CurTime() - self.OpenTime > 5 then
-      self.CurAlpha = math.Clamp(self.CurAlpha - 2, 0, 255)
+  if self.is_open then
+    if CurTime() - self.open_time > 5 then
+      self.cur_alpha = math.Clamp(self.cur_alpha - 2, 0, 255)
 
-      if self.CurAlpha == 0 then
-        self.IsOpen = false
+      if self.cur_alpha == 0 then
+        self.is_open = false
       end
     else
-      self.CurAlpha = Lerp(FrameTime() * 16, self.CurAlpha, 255)
+      self.cur_alpha = Lerp(FrameTime() * 16, self.cur_alpha, 255)
     end
   end
 end
 
 function PLUGIN:MakeDisplay(index, tab)
-  local clientWeapons = fl.client:GetWeapons()
-  local count = table.Count(clientWeapons)
-  local offsetY = 32
+  local client_weapons = fl.client:GetWeapons()
+  local count = table.Count(client_weapons)
+  local offsety = 32
   local result = {}
 
   for i = -2, 2 do
     local scale = 1 - math.abs(i * 0.25)
 
     table.insert(result, {
-      weapon = safeIndex(clientWeapons, index + i),
+      weapon = safe_index(client_weapons, index + i),
       scale = scale,
       x = ScrW() - 300,
-      y = ScrH() * 0.5 - 90 + offsetY - 36 * scale * 0.5,
+      y = ScrH() * 0.5 - 90 + offsety - 36 * scale * 0.5,
       highlight = (i == 0)
     })
 
-    offsetY = offsetY + 32
+    offsety = offsety + 32
   end
 
   if tab then
     return result
   else
-    self.Display = result
+    self.display = result
   end
 end
 
 function PLUGIN:OnWeaponIndexChange(oldIndex, index)
-  self.IsOpen = true
-  self.OpenTime = CurTime()
+  self.is_open = true
+  self.open_time = CurTime()
 
-  if #self.Display == 0 then
+  if #self.display == 0 then
     self:MakeDisplay(index)
   else
-    self.IndexOffset = index - oldIndex
+    self.index_offset = index - oldIndex
 
-    local weaponCount = #fl.client:GetWeapons()
+    local weapon_count = #fl.client:GetWeapons()
 
-    if math.abs(self.IndexOffset) == (weaponCount - 1) then
-      self.IndexOffset = -(self.IndexOffset / (weaponCount - 1))
+    if math.abs(self.index_offset) == (weapon_count - 1) then
+      self.index_offset = -(self.index_offset / (weapon_count - 1))
     end
   end
 end
 
 function PLUGIN:OnWeaponSelected(index)
-  self.IsOpen = false
-  self.CurAlpha = 0
-  self.Display = {}
+  self.is_open = false
+  self.cur_alpha = 0
+  self.display = {}
 end
 
 do
-  local prevIndex = 0
+  local prev_index = 0
 
   function PLUGIN:PlayerBindPress(player, bind, bIsPressed)
     local weapon = player:GetActiveWeapon()
 
     if !player:InVehicle() then
       if player:KeyDown(IN_RELOAD) then
-        local weaponCount = table.Count(player:GetWeapons())
-        local oldIndex = self.WeaponIndex
+        local weapon_count = table.Count(player:GetWeapons())
+        local oldIndex = self.weapon_index
         bind = bind:lower()
 
         if bind:find('invprev') and bIsPressed then
-          self.WeaponIndex = relativeClamp(self.WeaponIndex - 1, 1, weaponCount)
+          self.weapon_index = relative_clamp(self.weapon_index - 1, 1, weapon_count)
 
-          plugin.call('OnWeaponIndexChange', oldIndex, self.WeaponIndex)
+          plugin.call('OnWeaponIndexChange', oldIndex, self.weapon_index)
 
           return true
         elseif bind:find('invnext') and bIsPressed then
-          self.WeaponIndex = relativeClamp(self.WeaponIndex + 1, 1, weaponCount)
+          self.weapon_index = relative_clamp(self.weapon_index + 1, 1, weapon_count)
 
-          plugin.call('OnWeaponIndexChange', oldIndex, self.WeaponIndex)
+          plugin.call('OnWeaponIndexChange', oldIndex, self.weapon_index)
 
           return true
         elseif bind:find('slot') and bIsPressed then
           local index = tonumber(bind:sub(5, bind:len())) or 1
-          local classicScroll = false
+          local classic_scroll = false
 
-          if index == prevIndex or (index == 2 and prevIndex == 1) or (index == 1 and prevIndex == 2) then
+          if index == prev_index or (index == 2 and prev_index == 1) or (index == 1 and prev_index == 2) then
             if index == 1 then
-              self.WeaponIndex = self.WeaponIndex - 1
+              self.weapon_index = self.weapon_index - 1
             else
-              self.WeaponIndex = self.WeaponIndex + 1
+              self.weapon_index = self.weapon_index + 1
             end
 
-            self.WeaponIndex = relativeClamp(self.WeaponIndex, 1, weaponCount)
+            self.weapon_index = relative_clamp(self.weapon_index, 1, weapon_count)
 
-            classicScroll = true
+            classic_scroll = true
           end
 
-          prevIndex = index
+          prev_index = index
 
-          if !classicScroll then
-            index = relativeClamp(index, 1, weaponCount)
+          if !classic_scroll then
+            index = relative_clamp(index, 1, weapon_count)
 
-            self.WeaponIndex = index
+            self.weapon_index = index
           else
-            index = self.WeaponIndex
+            index = self.weapon_index
           end
 
           plugin.call('OnWeaponIndexChange', oldIndex, index)
 
           return true
-        elseif bind:find('attack') and self.IsOpen and bIsPressed then
-          RunConsoleCommand('selectweapon', self.WeaponIndex)
+        elseif bind:find('attack') and self.is_open and bIsPressed then
+          RunConsoleCommand('selectweapon', self.weapon_index)
 
-          plugin.call('OnWeaponSelected', self.WeaponIndex)
+          plugin.call('OnWeaponSelected', self.weapon_index)
 
           return true
         end

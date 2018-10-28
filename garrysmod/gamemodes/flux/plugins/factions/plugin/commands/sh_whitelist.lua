@@ -8,8 +8,8 @@ COMMAND.arguments = 2
 COMMAND.player_arg = 1
 COMMAND.aliases = { 'plywhitelist', 'givewhitelist', 'setwhitelisted' }
 
-function COMMAND:on_run(player, targets, name, bStrict)
-  local whitelist = faction.Find(name, (bStrict and true) or false)
+function COMMAND:on_run(player, targets, name, strict)
+  local whitelist = faction.Find(name, (strict and true) or false)
 
   if whitelist then
     for k, v in ipairs(targets) do

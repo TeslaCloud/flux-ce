@@ -1,17 +1,17 @@
 local function PermButtonDoClick(panel, btn)
-  panel.m_PermissionValue = btn.permValue or PERM_NO
-  btn.isSelected = true
+  panel.m_permission_value = btn.permValue or PERM_NO
+  btn.is_selected = true
 
-  if IsValid(panel.prevBtn) then
-    panel.prevBtn.isSelected = false
+  if IsValid(panel.prev_button) then
+    panel.prev_button.is_selected = false
   end
 
-  panel.prevBtn = btn
+  panel.prev_button = btn
 end
 
 local PANEL = {}
-PANEL.m_PermissionValue = PERM_NO
-PANEL.m_Permission = {}
+PANEL.m_permission_value = PERM_NO
+PANEL.m_permission = {}
 
 function PANEL:Rebuild()
   if IsValid(self.container) then
@@ -20,7 +20,7 @@ function PANEL:Rebuild()
 
   local width, height = self:GetWide(), self:GetTall()
   local font = font.GetSize(theme.get_font('text_normal_smaller'), font.Scale(18))
-  local fontSize = draw.GetFontHeight(font)
+  local font_size = draw.GetFontHeight(font)
   local permission = self:GetPermission()
   local quarter = width * 0.25
 
@@ -29,44 +29,44 @@ function PANEL:Rebuild()
   self.container:SetPos(0, 0)
 
   self.title = vgui.Create('DLabel', self.container)
-  self.title:SetPos(0, height * 0.5 - fontSize * 0.5)
+  self.title:SetPos(0, height * 0.5 - font_size * 0.5)
   self.title:SetFont(font)
   self.title:SetText(permission.name or 'No Permission')
   self.title:SetSize(quarter, height)
 
-  self.btnNo = vgui.Create('DButton', self.container)
-  self.btnNo:SetPos(quarter, 0)
-  self.btnNo:SetSize(quarter * 0.8, height)
-  self.btnNo:SetText('')
-  self.btnNo.permValue = PERM_NO
-  self.btnNo.Paint = function(btn, w, h) theme.call('PaintPermissionButton', self, btn, w, h) end
-  self.btnNo.DoClick = function(btn) PermButtonDoClick(self, btn) end
+  self.button_no = vgui.Create('DButton', self.container)
+  self.button_no:SetPos(quarter, 0)
+  self.button_no:SetSize(quarter * 0.8, height)
+  self.button_no:SetText('')
+  self.button_no.permValue = PERM_NO
+  self.button_no.Paint = function(btn, w, h) theme.call('PaintPermissionButton', self, btn, w, h) end
+  self.button_no.DoClick = function(btn) PermButtonDoClick(self, btn) end
 
-  self.btnAllow = vgui.Create('DButton', self.container)
-  self.btnAllow:SetPos(quarter * 2, 0)
-  self.btnAllow:SetSize(quarter * 0.8, height)
-  self.btnAllow:SetText('')
-  self.btnAllow.permValue = PERM_ALLOW
-  self.btnAllow.Paint = function(btn, w, h) theme.call('PaintPermissionButton', self, btn, w, h) end
-  self.btnAllow.DoClick = function(btn) PermButtonDoClick(self, btn) end
+  self.button_allow = vgui.Create('DButton', self.container)
+  self.button_allow:SetPos(quarter * 2, 0)
+  self.button_allow:SetSize(quarter * 0.8, height)
+  self.button_allow:SetText('')
+  self.button_allow.permValue = PERM_ALLOW
+  self.button_allow.Paint = function(btn, w, h) theme.call('PaintPermissionButton', self, btn, w, h) end
+  self.button_allow.DoClick = function(btn) PermButtonDoClick(self, btn) end
 
-  self.btnNever = vgui.Create('DButton', self.container)
-  self.btnNever:SetPos(quarter * 3, 0)
-  self.btnNever:SetSize(quarter * 0.8, height)
-  self.btnNever:SetText('')
-  self.btnNever.permValue = PERM_NEVER
-  self.btnNever.Paint = function(btn, w, h) theme.call('PaintPermissionButton', self, btn, w, h) end
-  self.btnNever.DoClick = function(btn) PermButtonDoClick(self, btn) end
+  self.button_never = vgui.Create('DButton', self.container)
+  self.button_never:SetPos(quarter * 3, 0)
+  self.button_never:SetSize(quarter * 0.8, height)
+  self.button_never:SetText('')
+  self.button_never.permValue = PERM_NEVER
+  self.button_never.Paint = function(btn, w, h) theme.call('PaintPermissionButton', self, btn, w, h) end
+  self.button_never.DoClick = function(btn) PermButtonDoClick(self, btn) end
 end
 
 function PANEL:SetPermission(perm)
-  self.m_Permission = perm or {}
+  self.m_permission = perm or {}
 
   self:Rebuild()
 end
 
 function PANEL:GetPermission()
-  return self.m_Permission
+  return self.m_permission
 end
 
 vgui.Register('flPermission', PANEL, 'fl_base_panel')
@@ -78,8 +78,8 @@ function PANEL:Init()
 end
 
 function PANEL:Rebuild()
-  if IsValid(self.listLayout) then
-    self.listLayout:safe_remove()
+  if IsValid(self.list_layout) then
+    self.list_layout:safe_remove()
   end
 
   local permissions = fl.admin:GetPermissions()
@@ -88,17 +88,17 @@ function PANEL:Rebuild()
   self.scroll_panel = vgui.Create('DScrollPanel', self)
   self.scroll_panel:SetSize(width, height)
 
-  self.listLayout = vgui.Create('DListLayout', self.scroll_panel)
-  self.listLayout:SetSize(width, height)
+  self.list_layout = vgui.Create('DListLayout', self.scroll_panel)
+  self.list_layout:SetSize(width, height)
 
   for category, perms in pairs(permissions) do
-    local collapsibleCategory = vgui.Create('DCollapsibleCategory', self.listLayout)
-    collapsibleCategory:SetLabel(category)
-    collapsibleCategory:SetSize(width, 21)
+    local collapsible_category = vgui.Create('DCollapsibleCategory', self.list_layout)
+    collapsible_category:SetLabel(category)
+    collapsible_category:SetSize(width, 21)
 
-    local list = vgui.Create('DListLayout', listLayout)
+    local list = vgui.Create('DListLayout', list_layout)
 
-    collapsibleCategory:SetContents(list)
+    collapsible_category:SetContents(list)
 
     local cur_y = 0
 

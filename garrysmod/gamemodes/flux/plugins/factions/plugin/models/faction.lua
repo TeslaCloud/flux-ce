@@ -59,65 +59,65 @@ function Faction:AddClass(id, class_name, description, color, callback)
   }
 end
 
-function Faction:AddRank(id, nameFilter)
+function Faction:AddRank(id, name_filter)
   if !id then return end
 
-  if !nameFilter then nameFilter = id end
+  if !name_filter then name_filter = id end
 
   table.insert(self.rank, {
     id = id,
-    name = nameFilter
+    name = name_filter
   })
 end
 
-function Faction:GenerateName(player, charName, rank, defaultData)
-  defaultData = defaultData or {}
+function Faction:GenerateName(player, char_name, rank, default_data)
+  default_data = default_data or {}
 
-  if hook.run('ShouldNameGenerate', player, self, charName, rank, defaultData) == false then return player:Name() end
+  if hook.run('ShouldNameGenerate', player, self, char_name, rank, default_data) == false then return player:Name() end
 
   if isfunction(self.MakeName) then
-    return self:MakeName(player, charName, rank, defaultData) or 'John Doe'
+    return self:MakeName(player, char_name, rank, default_data) or 'John Doe'
   end
 
-  local finalName = self.name_template
+  local final_name = self.name_template
 
-  if finalName:find('{name}') then
-    finalName = finalName:Replace('{name}', charName or '')
+  if final_name:find('{name}') then
+    final_name = final_name:Replace('{name}', char_name or '')
   end
 
-  if finalName:find('{rank}') then
+  if final_name:find('{rank}') then
     for k, v in ipairs(self.rank) do
       if v.id == rank or k == rank then
-        finalName = finalName:Replace('{rank}', v.name)
+        final_name = final_name:Replace('{rank}', v.name)
 
         break
       end
     end
   end
 
-  local assistants = string.find_all(finalName, '{[%w]+:[%w]+}')
+  local assistants = string.find_all(final_name, '{[%w]+:[%w]+}')
 
   for k, v in ipairs(assistants) do
     v = v[1]
 
     if v:starts('{callback:') then
-      local funcName = v:utf8sub(11, v:utf8len() - 1)
-      local callback = self[funcName]
+      local func_name = v:utf8sub(11, v:utf8len() - 1)
+      local callback = self[func_name]
 
       if isfunction(callback) then
-        finalName = finalName:Replace(v, callback(self, player))
+        final_name = final_name:Replace(v, callback(self, player))
       end
     elseif v:starts('{data:') then
       local key = v:utf8sub(7, v:utf8len() - 1)
-      local data = player:GetCharacterData(key, (defaultData[key] or self.data[key] or ''))
+      local data = player:GetCharacterData(key, (default_data[key] or self.data[key] or ''))
 
       if isstring(data) then
-        finalName = finalName:Replace(v, data)
+        final_name = final_name:Replace(v, data)
       end
     end
   end
 
-  return finalName
+  return final_name
 end
 
 function Faction:set_data(key, value)

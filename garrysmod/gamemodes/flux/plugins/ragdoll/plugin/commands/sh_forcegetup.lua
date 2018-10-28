@@ -1,7 +1,7 @@
 local COMMAND = Command.new('forcegetup')
 COMMAND.name = 'ForceGetUp'
-COMMAND.description = 'Forces a player to get up.'
-COMMAND.syntax = '<target> [number GetUpTime]'
+COMMAND.description = t'force_getup.description'
+COMMAND.syntax = t'force_getup.syntax'
 COMMAND.category = 'roleplay'
 COMMAND.arguments = 1
 COMMAND.player_arg = 1
@@ -20,7 +20,7 @@ function COMMAND:on_run(player, target, delay)
       target:SetRagdollState(RAGDOLL_NONE)
     end)
   else
-    player:notify('This player cannot be unragdolled right now!')
+    player:notify(t'cant_now')
   end
 end
 

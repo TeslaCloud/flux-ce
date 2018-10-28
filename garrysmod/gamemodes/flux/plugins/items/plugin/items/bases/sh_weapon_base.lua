@@ -13,7 +13,7 @@ ItemWeapon.weapon_class = 'weapon_pistol'
 ItemWeapon:add_button(t'item.option.unload', {
   icon = 'icon16/add.png',
   callback = 'OnUnload',
-  onShow = function(item_table)
+  on_show = function(item_table)
     local ammo = item_table:get_data('ammo', {0, 0})
     local weapon = fl.client:GetWeapon(item_table.weapon_class)
 

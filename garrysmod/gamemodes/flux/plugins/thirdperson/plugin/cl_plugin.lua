@@ -9,14 +9,14 @@ local duration = 0.15
 local flippedStart = flThirdPerson.flippedStart or false
 flThirdPerson.flippedStart = flippedStart
 
-flThirdPerson.wasThirdPerson = flThirdPerson.wasThirdPerson or false
+flThirdPerson.was_third_person = flThirdPerson.was_third_person or false
 
 -- This is very basic and WIP, but it works.
 function flThirdPerson:CalcView(player, pos, angles, fov)
-  local isThirdPerson = player:get_nv('third_person')
+  local is_third_person = player:get_nv('third_person')
 
   -- This also fixes weird view glitch on autorefresh.
-  if !isThirdPerson and !self.wasThirdPerson then return end
+  if !is_third_person and !self.was_third_person then return end
 
   local view = {}
   local cur_time = CurTime()
@@ -25,7 +25,7 @@ function flThirdPerson:CalcView(player, pos, angles, fov)
   view.angles = angles
   view.fov = fov
 
-  if isThirdPerson then
+  if is_third_person then
     if !start_time or flippedStart then
       start_time = cur_time
       flippedStart = false
@@ -45,7 +45,7 @@ function flThirdPerson:CalcView(player, pos, angles, fov)
     view.origin = pos - offset
     view.drawviewer = true
 
-    self.wasThirdPerson = true
+    self.was_third_person = true
   else
     if !flippedStart then
       start_time = cur_time
@@ -62,7 +62,7 @@ function flThirdPerson:CalcView(player, pos, angles, fov)
       view.drawviewer = true
     else
       offset = Vector(0, 0, 0)
-      self.wasThirdPerson = false
+      self.was_third_person = false
     end
 
     view.origin = pos - offset

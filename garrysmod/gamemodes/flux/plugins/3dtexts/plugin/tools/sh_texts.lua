@@ -27,8 +27,8 @@ function TOOL:LeftClick(trace)
   local style = self:GetClientNumber('style')
   local scale = self:GetClientNumber('scale')
   local color = Color(self:GetClientNumber('r', 0), self:GetClientNumber('g', 0), self:GetClientNumber('b', 0), self:GetClientNumber('a', 0))
-  local extraColor = Color(self:GetClientNumber('r2', 0), self:GetClientNumber('g2', 0), self:GetClientNumber('b2', 0), self:GetClientNumber('a2', 0))
-  local fadeOffset = self:GetClientNumber('fade')
+  local extra_color = Color(self:GetClientNumber('r2', 0), self:GetClientNumber('g2', 0), self:GetClientNumber('b2', 0), self:GetClientNumber('a2', 0))
+  local fade_offset = self:GetClientNumber('fade')
 
   if !text or text == '' then return false end
 
@@ -40,12 +40,12 @@ function TOOL:LeftClick(trace)
     text = text,
     style = style,
     color = color,
-    extraColor = extraColor,
+    extra_color = extra_color,
     angle = angle,
     pos = trace.HitPos,
     normal = trace.HitNormal,
     scale = scale,
-    fadeOffset = fadeOffset
+    fade_offset = fade_offset
   }
 
   fl3DText:AddText(data)
@@ -85,9 +85,9 @@ function TOOL.BuildCPanel(CPanel)
 
   CPanel:AddControl('Header', { Description = t'tool.texts.desc' })
 
-  local controlPresets = CPanel:AddControl('ComboBox', { MenuButton = 1, Folder = 'textstyle', Options = options, CVars = {'texts_style'} })
-  controlPresets.Button:SetVisible(false)
-  controlPresets.DropDown:SetValue('Please Choose')
+  local control_resets = CPanel:AddControl('ComboBox', { MenuButton = 1, Folder = 'textstyle', Options = options, CVars = {'texts_style'} })
+  control_resets.Button:SetVisible(false)
+  control_resets.DropDown:SetValue('Please Choose')
 
   CPanel:AddControl('TextBox', { Label = t'tool.texts.text', Command = 'texts_text', MaxLenth = '128' })
   CPanel:AddControl('Color', { Label = t'tool.texts.color', Red = 'texts_r', Green = 'texts_g', Blue = 'texts_b', Alpha = 'texts_a' })

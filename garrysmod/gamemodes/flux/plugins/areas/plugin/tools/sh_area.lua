@@ -11,10 +11,10 @@ function TOOL:LeftClick(trace)
   if !player:can('area_tool') then return end
 
   local mode = self:GetClientNumber('mode')
-  local modeTable = flAreas.toolModes[mode]
+  local mode_table = flAreas.tool_modes[mode]
 
-  if istable(modeTable) and isfunction(modeTable.OnLeftClick) then
-    return modeTable:OnLeftClick(self, trace)
+  if istable(mode_table) and isfunction(mode_table.OnLeftClick) then
+    return mode_table:OnLeftClick(self, trace)
   end
 
    return true
@@ -26,10 +26,10 @@ function TOOL:RightClick(trace)
   if !player:can('area_tool') then return end
 
   local mode = self:GetClientNumber('mode')
-  local modeTable = flAreas.toolModes[mode]
+  local mode_table = flAreas.tool_modes[mode]
 
-  if istable(modeTable) and isfunction(modeTable.OnRightClick) then
-    return modeTable:OnRightClick(self, trace)
+  if istable(mode_table) and isfunction(mode_table.OnRightClick) then
+    return mode_table:OnRightClick(self, trace)
   end
 
    return true
@@ -41,10 +41,10 @@ function TOOL:Reload(trace)
   if !player:can('area_tool') then return end
 
   local mode = self:GetClientNumber('mode')
-  local modeTable = flAreas.toolModes[mode]
+  local mode_table = flAreas.tool_modes[mode]
 
-  if istable(modeTable) and isfunction(modeTable.OnReload) then
-    return modeTable:OnReload(self, trace)
+  if istable(mode_table) and isfunction(mode_table.OnReload) then
+    return mode_table:OnReload(self, trace)
   end
 
    return true
@@ -53,13 +53,13 @@ end
 function TOOL:GetAreaMode()
   local mode = self:GetClientNumber('mode')
 
-  return flAreas.toolModes[mode]
+  return flAreas.tool_modes[mode]
 end
 
 if CLIENT then
   -- A function to add the controls for the tool in the tool menu.
   local function BuildCPanel(panel)
-    local modeList = flAreas.toolModes
+    local mode_list = flAreas.tool_modes
 
     panel:ClearControls()
 
@@ -76,7 +76,7 @@ if CLIENT then
       end
     end
 
-    for k, v in ipairs(modeList) do
+    for k, v in ipairs(mode_list) do
       if mode == k then
         list:AddLine(' '..k..' >> '..v.title)
       else
@@ -88,10 +88,10 @@ if CLIENT then
 
     panel:AddItem(list)
 
-    local modeTable = modeList[mode]
+    local mode_table = mode_list[mode]
 
-    if istable(modeTable) and isfunction(modeTable.BuildCPanel) then
-      modeTable:BuildCPanel(panel)
+    if istable(mode_table) and isfunction(mode_table.BuildCPanel) then
+      mode_table:BuildCPanel(panel)
     end
   end
 
@@ -123,9 +123,9 @@ function TOOL.BuildCPanel(CPanel)
 
   CPanel:AddControl('Header', { Description = 'tool.area.desc' })
 
-  local controlPresets = CPanel:AddControl('ComboBox', { MenuButton = 1, Folder = 'areatype', Options = options, CVars = {'area_areatype'} })
-  controlPresets.Button:SetVisible(false)
-  controlPresets.DropDown:SetValue('Simple Area')
+  local control_presets = CPanel:AddControl('ComboBox', { MenuButton = 1, Folder = 'areatype', Options = options, CVars = {'area_areatype'} })
+  control_presets.Button:SetVisible(false)
+  control_presets.DropDown:SetValue('Simple Area')
 
   CPanel:AddControl('TextBox', { Label = 'tool.area.text', Command = 'area_uniqueid', MaxLenth = '20' })
   CPanel:AddControl('Slider', { Label = 'tool.area.height', Command = 'area_height', Type = 'Float', Min = -2048, Max = 2048 })

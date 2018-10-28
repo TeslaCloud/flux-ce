@@ -54,10 +54,10 @@ function PANEL:add_button(text, callback)
   button.DoClick = function(btn)
     btn:SetActive(true)
 
-    if IsValid(self.prevButton) and self.prevButton != btn then
-      self.prevButton:SetActive(false)
+    if IsValid(self.prev_button) and self.prev_button != btn then
+      self.prev_button:SetActive(false)
     end
-     self.prevButton = btn
+     self.prev_button = btn
 
     if isfunction(callback) then
       callback(btn)

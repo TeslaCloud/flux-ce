@@ -283,7 +283,7 @@ function PANEL:PaintOver(w, h)
             if #cmds == 1 then
               local small_font = theme.get_font('text_small')
               local w2, h2 = draw.SimpleText(v.description, small_font, 16, 16 + h + 4, color_white)
-              local aliases = '[none]'
+              local aliases = '[-]'
 
               if v.aliases and #v.aliases > 0 then
                 aliases = table.concat(v.aliases or {}, ', ')

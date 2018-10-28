@@ -24,6 +24,7 @@ en:
     permanently: permanently
     for: for
     and: and
+  cant_now: You cannot do this right now!
   tab_menu:
     scoreboard: Players
     admin: Admin

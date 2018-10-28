@@ -1,4 +1,5 @@
-name: 'Attributes'
-description: "Adds character attributes."
-author: "AleXXX_007"
-depends: ["characters"]
+name: Attributes
+description: Adds character attributes.
+author: AleXXX_007
+depends: 
+  - characters

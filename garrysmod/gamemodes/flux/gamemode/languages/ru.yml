@@ -31,6 +31,7 @@ ru:
     permanently: навсегда
     for: на
     and: и
+  cant_now: Вы не можете сделать это сейчас!
   tab_menu:
     expand: Развернуть
     settings: Настройки

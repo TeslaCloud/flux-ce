@@ -1,14 +1,14 @@
 do
   local cache = nil
-  local tempCache = nil
-  local renderColor = Color(50, 255, 50)
-  local renderColorRed = Color(255, 50, 50)
-  local lastAmt = nil
+  local temp_cache = nil
+  local render_color = Color(50, 255, 50)
+  local render_color_red = Color(255, 50, 50)
+  local last_amt = nil
   local render = render
-  local areaColors = {}
+  local area_colors = {}
 
-  function flAreas:PostDrawOpaqueRenderables(bDrawDepth, bDrawSkybox)
-    if bDrawDepth or bDrawSkybox then return end
+  function flAreas:PostDrawOpaqueRenderables(draw_depth, draw_skybox)
+    if draw_depth or draw_skybox then return end
 
     local weapon = fl.client:GetActiveWeapon()
 
@@ -16,11 +16,11 @@ do
       local tool = fl.client:GetTool()
       local mode = tool:GetAreaMode()
       local verts = (tool and tool.area and tool.area.verts)
-      local areasTable = areas.GetByType(mode.areaType)
-      local areasCount = #areasTable
+      local area_table = areas.GetByType(mode.area_type)
+      local areas_count = #area_table
 
-      if istable(verts) and (!tempCache or #tempCache != #verts) then
-        tempCache = {}
+      if istable(verts) and (!temp_cache or #temp_cache != #verts) then
+        temp_cache = {}
 
         for k, v in ipairs(verts) do
           local n
@@ -31,20 +31,20 @@ do
             n = verts[k + 1]
           end
 
-          table.insert(tempCache, {v, n})
+          table.insert(temp_cache, {v, n})
         end
       elseif !verts then
-        tempCache = nil
+        temp_cache = nil
       end
 
-      if !lastAmt then lastAmt = areasCount end
+      if !last_amt then last_amt = areas_count end
 
-      if !cache or lastAmt != areasCount then
+      if !cache or last_amt != areas_count then
         cache = {}
 
-        areaColors[mode.areaType] = areas.GetColor(mode.areaType)
+        area_colors[mode.area_type] = areas.GetColor(mode.area_type)
 
-        for k, v in pairs(areasTable) do
+        for k, v in pairs(area_table) do
           for k2, v2 in ipairs(v.polys) do
             for idx, p in ipairs(v2) do
               local n
@@ -55,29 +55,29 @@ do
                 n = v2[idx + 1]
               end
 
-              local add = Vector(0, 0, v.maxH)
+              local add = Vector(0, 0, v.maxh)
 
-              table.insert(cache, {p, n, p + add, n + add})
+              table.insert(cache, { p, n, p + add, n + add })
             end
           end
         end
       end
 
-      local areaRenderColor = areaColors[mode.areaType]
+      local area_render_color = area_colors[mode.area_type]
 
       if cache then
         for k, v in ipairs(cache) do
           local p, ap = v[1], v[3]
 
-          render.DrawLine(p, v[2], areaRenderColor)
-          render.DrawLine(ap, v[4], areaRenderColor)
-          render.DrawLine(ap, p, areaRenderColor)
+          render.DrawLine(p, v[2], area_render_color)
+          render.DrawLine(ap, v[4], area_render_color)
+          render.DrawLine(ap, p, area_render_color)
         end
       end
 
-      if tempCache then
-        for k, v in ipairs(tempCache) do
-          render.DrawLine(v[1], v[2], renderColorRed)
+      if temp_cache then
+        for k, v in ipairs(temp_cache) do
+          render.DrawLine(v[1], v[2], render_color_red)
         end
       end
     end
@@ -85,17 +85,17 @@ do
 end
 
 function flAreas:HUDPaint()
-  if istable(fl.client.textAreas) then
+  if istable(fl.client.text_areas) then
     local last_y = 400
     local cur_time = CurTime()
 
-    for k, v in pairs(fl.client.textAreas) do
-      if istable(v) and v.endTime > cur_time then
+    for k, v in pairs(fl.client.text_areas) do
+      if istable(v) and v.end_time > cur_time then
         v.alpha = v.alpha or 255
 
         draw.SimpleText(v.text, theme.get_font('text_large'), 32, last_y, Color(255, 255, 255, v.alpha))
 
-        if cur_time + 2 >= v.endTime then
+        if cur_time + 2 >= v.end_time then
           v.alpha = math.Clamp(v.alpha - 1, 0, 255)
         end
 
@@ -105,20 +105,20 @@ function flAreas:HUDPaint()
   end
 end
 
-cable.receive('PlayerEnteredArea', function(areaIdx, idx, pos)
-  local area = areas.GetAll()[areaIdx]
+cable.receive('PlayerEnteredArea', function(area_idx, idx, pos)
+  local area = areas.GetAll()[area_idx]
 
   Try('Areas', areas.GetCallback(area.type), fl.client, area, true, pos, CurTime())
 end)
 
-cable.receive('PlayerLeftArea', function(areaIdx, idx, pos)
-  local area = areas.GetAll()[areaIdx]
+cable.receive('PlayerLeftArea', function(area_idx, idx, pos)
+  local area = areas.GetAll()[area_idx]
 
   Try('Areas', areas.GetCallback(area.type), fl.client, area, false, pos, CurTime())
 end)
 
-cable.receive('flLoadAreas', function(areaStorage)
-  areas.SetStored(areaStorage)
+cable.receive('flLoadAreas', function(area_storage)
+  areas.SetStored(area_storage)
 end)
 
 cable.receive('flAreaRemove', function(id)

@@ -12,7 +12,7 @@ function fl.command:Create(id, data)
   data.id = id:to_id()
   data.name = data.name or 'Unknown'
   data.description = data.description or 'An undescribed command.'
-  data.syntax = data.syntax or '[none]'
+  data.syntax = data.syntax or '[-]'
   data.immunity = data.immunity or false
   data.player_arg = data.player_arg or nil
   data.arguments = data.arguments or 0
