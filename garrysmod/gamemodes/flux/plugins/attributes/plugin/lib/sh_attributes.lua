@@ -145,13 +145,15 @@ do
     local id = attributes.id_from_attr_id(char.attributes, attr_id)
     local mult = 1
 
-    for k, v in pairs(char.attribute_multipliers) do
-      if v.attribute_id == id then
-        if time_from_timestamp(v.expires) >= os.time() then
-          mult = mult * v.value
-        else
-          v:destroy()
-          table.remove(char.attribute_multipliers, k)
+    if char.attribute_multipliers then
+      for k, v in pairs(char.attribute_multipliers) do
+        if v.attribute_id == id then
+          if time_from_timestamp(v.expires) >= os.time() then
+            mult = mult * v.value
+          else
+            v:destroy()
+            table.remove(char.attribute_multipliers, k)
+          end
         end
       end
     end
@@ -164,13 +166,15 @@ do
     local id = attributes.id_from_attr_id(char.attributes, attr_id)
     local boost = 0
 
-    for k, v in pairs(char.attribute_boosts) do
-      if v.attribute_id == id then
-        if time_from_timestamp(v.expires) >= os.time() then
-          boost = boost + v.value
-        else
-          v:destroy()
-          table.remove(char.attribute_boosts, k)
+    if char.attribute_boosts then
+      for k, v in pairs(char.attribute_boosts) do
+        if v.attribute_id == id then
+          if time_from_timestamp(v.expires) >= os.time() then
+            boost = boost + v.value
+          else
+            v:destroy()
+            table.remove(char.attribute_boosts, k)
+          end
         end
       end
     end
