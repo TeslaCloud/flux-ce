@@ -10,10 +10,10 @@ fl.blur_passes = 8 -- anything below 8 looks chunky
 fl.blur_update_fps = 8 -- how many frames per second should we render the lazy blurs. 0 for unlimited.
 
 do
-  local centerX, centerY = ScrW() * 0.5, ScrH() * 0.5
+  local center_x, center_y = ScrW() * 0.5, ScrH() * 0.5
 
   function ScrC()
-    return centerX, centerY
+    return center_x, center_y
   end
 end
 
