@@ -6,15 +6,16 @@ PLUGIN:set_description('Adds prefix adjusting to avoid troubles with certain com
 local stored = {}
 
 function flPrefixes:AddPrefix(id, prefix, callback, check)
-  stored[id] = {
+  table.insert(stored, {
+    id = id,
     prefix = prefix,
     callback = callback,
     check = check
-  }
+  })
 end
 
 function flPrefixes:StringIsCommand(str)
-  for k, v in pairs(stored) do
+  for k, v in ipairs(stored) do
     if istable(v.prefix) then
       for k1, v1 in pairs(v.prefix) do
         if str:utf8lower():starts(v1) then
@@ -29,7 +30,7 @@ end
 
 function flPrefixes:PlayerSay(player, text, team_chat)
   if !string.is_command(text) then
-    for k, v in pairs(stored) do
+    for k, v in ipairs(stored) do
       if istable(v.prefix) then
         for k2, v2 in ipairs(v.prefix) do
           if text:utf8lower():starts(v2) or v.check and v.check(text) then
@@ -37,7 +38,7 @@ function flPrefixes:PlayerSay(player, text, team_chat)
 
             if message != '' then
               v.callback(player, message, team_chat)
-              hook.run('PlayerUsedPrefix', player, k, message, team_chat)
+              hook.run('PlayerUsedPrefix', player, v.id, message, team_chat)
             end
 
             return ''
@@ -48,7 +49,7 @@ function flPrefixes:PlayerSay(player, text, team_chat)
 
         if message != '' then
           v.callback(player, message, team_chat)
-          hook.run('PlayerUsedPrefix', player, k, message, team_chat)
+          hook.run('PlayerUsedPrefix', player, v.id, message, team_chat)
         end
 
         return ''
