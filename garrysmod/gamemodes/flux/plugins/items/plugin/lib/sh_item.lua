@@ -458,6 +458,10 @@ else
     if IsValid(ent) then
       local item_table = instances[id][instance_id]
 
+      if item_table == nil then
+        return cable.send('RequestItemData', ent_index)
+      end
+
       -- Client has to know this shit too I guess?
       ent:SetModel(item_table:GetModel())
       ent:SetSkin(item_table.skin)
