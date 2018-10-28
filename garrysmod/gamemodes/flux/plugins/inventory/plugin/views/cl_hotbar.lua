@@ -6,7 +6,7 @@ PANEL.draw_inventory_slots = true
 function PANEL:Rebuild()
   local w, h = self:GetSize()
   local cx, cy = ScrC()
-  self:SetPos(cx - w * 0.5, ScrH() - h - font.Scale(32))
+  self:SetPos(cx - w * 0.5, ScrH() - h - font.scale(32))
 
   self.BaseClass.Rebuild(self)
 end

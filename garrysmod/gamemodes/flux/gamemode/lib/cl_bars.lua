@@ -11,7 +11,7 @@ fl.bars.sorted = sorted
 -- Some fail-safety variables.
 fl.bars.defaultX = 8
 fl.bars.defaultY = 8
-fl.bars.defaultW = font.Scale(312)
+fl.bars.defaultW = font.scale(312)
 fl.bars.defaultH = 18
 fl.bars.defaultSpacing = 6
 

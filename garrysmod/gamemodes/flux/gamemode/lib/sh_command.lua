@@ -217,7 +217,7 @@ if SERVER then
       local target = _player.find(str)
 
       if IsValid(target) then
-        return {target}
+        return { target }
       elseif istable(target) and #target > 0 then
         return target
       end

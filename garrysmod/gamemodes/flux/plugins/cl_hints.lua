@@ -15,7 +15,7 @@ function flHints:DisplayRandom()
   if hint.callback and hint.callback() != true then return end
   if hint.play_sound then surface.PlaySound('hl1/fvox/blip.wav') end
 
-  fl.notification:Add(hint.text, 15, hint.color)
+  fl.notification:add(hint.text, 15, hint.color)
 end
 
 function flHints:OneMinute()

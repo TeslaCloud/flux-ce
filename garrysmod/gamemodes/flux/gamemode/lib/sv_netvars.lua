@@ -11,9 +11,9 @@ local ent_meta = FindMetaTable('Entity')
 local player_meta = FindMetaTable('Player')
 
 -- A function to check if value's type cannot be serialized and print an error if it is so.
-local function IsBadType(key, val)
+local function is_bad_type(key, val)
   if isfunction(val) then
-    ErrorNoHalt('Cannot store functions as NetVars! ('..key..')\n')
+    ErrorNoHalt('Cannot network functions! ('..key..')\n')
 
     return true
   end
@@ -32,7 +32,7 @@ end
 
 -- A function to set a networked global.
 function netvars.set_nv(key, value, send)
-  if IsBadType(key, value) then return end
+  if is_bad_type(key, value) then return end
   if netvars.get_nv(key) == value then return end
 
   globals[key] = value
@@ -62,7 +62,7 @@ end
 
 -- A function to set entity's networked variable.
 function ent_meta:set_nv(key, value, send)
-  if IsBadType(key, value) then return end
+  if is_bad_type(key, value) then return end
   if !istable(value) and self:get_nv(key) == value then return end
 
   stored[self] = stored[self] or {}

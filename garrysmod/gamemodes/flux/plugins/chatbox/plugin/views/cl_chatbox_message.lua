@@ -77,7 +77,7 @@ function PANEL:Paint(w, h)
     if plugin.call('ChatboxPrePaintMessage', w, h, self) == true then return end
 
     local cur_color = Color(255, 255, 255, self.alpha)
-    local cur_font = font.GetSize(theme.get_font('chatbox_normal'), font.Scale(20))
+    local cur_font = font.size(theme.get_font('chatbox_normal'), font.scale(20))
 
     for k, v in ipairs(self.message_data) do
       if istable(v) then
@@ -89,7 +89,7 @@ function PANEL:Paint(w, h)
           draw.textured_rect(util.get_material(v.image), v.x, v.y, v.w, v.h, Color(255, 255, 255, self.alpha))
         end
       elseif isnumber(v) then
-        cur_font = font.GetSize(theme.get_font('chatbox_normal'), v)
+        cur_font = font.size(theme.get_font('chatbox_normal'), v)
       end
     end
   end

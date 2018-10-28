@@ -1,5 +1,5 @@
 function flChatbox:CreateFonts()
-  font.Create('flChatFont', {
+  font.create('flChatFont', {
     font = 'Arial',
     size = 16,
     weight = 1000
@@ -9,23 +9,23 @@ end
 function flChatbox:OnThemeLoaded(current_theme)
   local scrw, scrh = ScrW(), ScrH()
 
-  current_theme:set_font('chatbox_normal', 'flChatFont', font.Scale(20))
-  current_theme:set_font('chatbox_bold', 'flRobotoCondensedBold', font.Scale(20))
-  current_theme:set_font('chatbox_italic', 'flRobotoCondensedItalic', font.Scale(20))
-  current_theme:set_font('chatbox_italic_bold', 'flRobotoCondensedItalicBold', font.Scale(20))
-  current_theme:set_font('chatbox_syntax', 'flRobotoCondensed', font.Scale(24))
+  current_theme:set_font('chatbox_normal', 'flChatFont', font.scale(20))
+  current_theme:set_font('chatbox_bold', 'flRobotoCondensedBold', font.scale(20))
+  current_theme:set_font('chatbox_italic', 'flRobotoCondensedItalic', font.scale(20))
+  current_theme:set_font('chatbox_italic_bold', 'flRobotoCondensedItalicBold', font.scale(20))
+  current_theme:set_font('chatbox_syntax', 'flRobotoCondensed', font.scale(24))
 
   current_theme:set_option('chatbox_width', scrw / 2.25)
   current_theme:set_option('chatbox_height', scrh / 2.25)
-  current_theme:set_option('chatbox_x', font.Scale(8))
-  current_theme:set_option('chatbox_y', scrh - current_theme:get_option('chatbox_height') - font.Scale(32))
+  current_theme:set_option('chatbox_x', font.scale(8))
+  current_theme:set_option('chatbox_y', scrh - current_theme:get_option('chatbox_height') - font.scale(32))
 end
 
 function flChatbox:OnResolutionChanged(newW, newH)
   theme.set_option('chatbox_width', newW / 2.25)
   theme.set_option('chatbox_height', newH / 2.25)
-  theme.set_option('chatbox_x', font.Scale(8))
-  theme.set_option('chatbox_y', newH - theme.get_option('chatbox_height') - font.Scale(32))
+  theme.set_option('chatbox_x', font.scale(8))
+  theme.set_option('chatbox_y', newH - theme.get_option('chatbox_height') - font.scale(32))
 
   if chatbox.panel then
     chatbox.panel:Remove()

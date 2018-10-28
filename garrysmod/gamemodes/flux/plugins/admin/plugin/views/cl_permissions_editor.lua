@@ -19,7 +19,7 @@ function PANEL:Rebuild()
   end
 
   local width, height = self:GetWide(), self:GetTall()
-  local font = font.GetSize(theme.get_font('text_normal_smaller'), font.Scale(18))
+  local font = font.size(theme.get_font('text_normal_smaller'), font.scale(18))
   local font_size = draw.GetFontHeight(font)
   local permission = self:GetPermission()
   local quarter = width * 0.25

@@ -17,7 +17,7 @@ end
 -- Initiate shared boot.
 include 'shared.lua'
 
-font.CreateFonts()
+font.create_fonts()
 
 if fl.initialized then
   MsgC(Color(0, 255, 100, 255), 'Auto-reloaded in '..math.Round(os.clock() - fl.start_time, 3).. ' second(s)\n')

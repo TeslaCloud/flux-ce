@@ -42,20 +42,23 @@ function fl.notification:process_queue()
 
     top = top + 1
 
-    self:Reposition(h)
+    self:reposition(h)
 
     table.remove(queue, 1)
 
-    timer.Simple(0.25, function() queue_locked = false fl.notification:process_queue() end)
+    timer.Simple(0.25, function()
+      queue_locked = false
+      fl.notification:process_queue()
+    end)
   end
 end
 
-function fl.notification:Add(text, lifetime, text_color, back_color)
+function fl.notification:add(text, lifetime, text_color, back_color)
   table.insert(queue, { text = text, lifetime = lifetime, text_color = text_color, back_color = back_color })
   self:process_queue()
 end
 
-function fl.notification:AddPopup(text, lifetime, x, y, text_color, back_color)
+function fl.notification:add_popup(text, lifetime, x, y, text_color, back_color)
   local panel = vgui.Create('fl_notification')
   panel:SetPos(x, y)
   panel:SetText(text)
@@ -68,7 +71,7 @@ function fl.notification:AddPopup(text, lifetime, x, y, text_color, back_color)
   end
 end
 
-function fl.notification:Reposition(offset)
+function fl.notification:reposition(offset)
   if !isnumber(offset) then return end
 
   for k, v in ipairs(display) do

@@ -21,16 +21,16 @@ function chatbox.compile(msg_table)
 
   local data = msg_table.data
   local should_translate = msg_table.should_translate
-  local cur_size = _font.Scale(18)
+  local cur_size = _font.scale(18)
 
   if isnumber(msg_table.size) then
-    cur_size = _font.Scale(msg_table.size)
+    cur_size = _font.scale(msg_table.size)
   end
 
   -- offset x by 1 to prevent weird clipping issues
   local cur_x, cur_y = 1, 0
   local total_height = 0
-  local font = _font.GetSize(theme.get_font('chatbox_normal'), cur_size)
+  local font = _font.size(theme.get_font('chatbox_normal'), cur_size)
 
   if plugin.call('ChatboxCompileMessage', data, compiled) != true then
     for k, v in ipairs(data) do
@@ -64,19 +64,19 @@ function chatbox.compile(msg_table)
           end
         end
       elseif isnumber(v) then
-        cur_size = _font.Scale(v)
+        cur_size = _font.scale(v)
 
-        font = _font.GetSize(theme.get_font('chatbox_normal'), cur_size)
+        font = _font.size(theme.get_font('chatbox_normal'), cur_size)
 
         table.insert(compiled, cur_size)
       elseif istable(v) then
         if v.image then
-          local scaled = _font.Scale(v.height)
+          local scaled = _font.scale(v.height)
           local image_data = {
             image = v.image,
             x = cur_x + 1,
             y = cur_y,
-            w = _font.Scale(v.width),
+            w = _font.scale(v.width),
             h = scaled
           }
 

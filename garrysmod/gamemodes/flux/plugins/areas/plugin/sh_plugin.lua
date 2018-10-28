@@ -105,7 +105,7 @@ areas.RegisterType('textarea', 'Text Area', 'Displays text whenever player enter
 
     if istable(area_data) and area_data.reset_time > cur_time then
       return
-    end  
+    end
 
     player.text_areas[area.id] = {text = area.text, end_time = cur_time + 10, reset_time = cur_time + 20}
   end

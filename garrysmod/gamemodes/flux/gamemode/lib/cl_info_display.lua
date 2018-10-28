@@ -53,16 +53,16 @@ function InfoDisplay:draw(info)
     if info.min_percentage and info.min_percentage >= info.percentage then return 0 end
 
     local fa_icon = isstring(info.icon)
-    local size = font.Scale(info.size)
+    local size = font.scale(info.size)
     local x_pos, y_pos = last_x + margin, size + margin
     local circle_size = size * 0.5
     local circle_pos = x_pos + circle_size
     local font_size = size * 0.8
     local half_size = font_size * 0.5
-    local ox, oy = font.Scale(info.offset_x), font.Scale(info.offset_y)
+    local ox, oy = font.scale(info.offset_x), font.scale(info.offset_y)
 
     if fa_icon then
-      fl.fa:Draw(info.icon, x_pos + circle_size - half_size + ox, margin + circle_size - half_size + oy, font_size, info.back_color)
+      fl.fa:draw(info.icon, x_pos + circle_size - half_size + ox, margin + circle_size - half_size + oy, font_size, info.back_color)
       surface.SetDrawColor(info.back_color)
       surface.draw_circle_outline(x_pos + size * 0.5, margin + size * 0.5, circle_size, 3, 64)
     else
@@ -72,7 +72,7 @@ function InfoDisplay:draw(info)
     if !info.circle then
       if fa_icon then
         render.SetScissorRect(x_pos, y_pos - (size / 100 * info.percentage), x_pos + size, y_pos, true)
-          fl.fa:Draw(info.icon, x_pos + circle_size - half_size + ox, margin + circle_size - half_size + oy, font_size, info.color)
+          fl.fa:draw(info.icon, x_pos + circle_size - half_size + ox, margin + circle_size - half_size + oy, font_size, info.color)
           surface.SetDrawColor(info.color)
           surface.draw_circle_outline(x_pos + size * 0.5, margin + size * 0.5, circle_size, 3, 64)
         render.SetScissorRect(0, 0, 0, 0, false)

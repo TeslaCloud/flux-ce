@@ -1,7 +1,7 @@
 ﻿library.new 'base64'
 
 do
-  local base64Chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/'
+  local base64_chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/'
 
   function base64.encode(data)
     return ((data:gsub('.', function(x)
@@ -23,19 +23,19 @@ do
         c = c + (x:sub(i, i) == '1' and 2^(6 - i) or 0)
       end
 
-      return base64Chars:sub(c + 1, c + 1)
+      return base64_chars:sub(c + 1, c + 1)
     end)..({ '', '==', '=' })[#data % 3 + 1])
   end
 
   function base64.decode(data)
-    data = string.gsub(data, '[^'..base64Chars..'=]', '')
+    data = string.gsub(data, '[^'..base64_chars..'=]', '')
 
     return (data:gsub('.', function(x)
       if x == '=' then
         return ''
       end
 
-      local r, f = '', (base64Chars:find(x) - 1)
+      local r, f = '', (base64_chars:find(x) - 1)
 
       for i = 6, 1, -1 do
         r = r..(f % 2^i - f % 2^(i - 1) > 0 and '1' or '0')

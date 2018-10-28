@@ -72,7 +72,7 @@ end
 
 function Theme:set_font(key, value, scale, data)
   if key then
-    self.fonts[key] = font.GetSize(value, scale, data)
+    self.fonts[key] = font.size(value, scale, data)
   end
 
   return self.fonts[key]

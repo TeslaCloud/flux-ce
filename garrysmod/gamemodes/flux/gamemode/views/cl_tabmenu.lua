@@ -26,7 +26,7 @@ function PANEL:Init()
     self:Remove()
   end
 
-  cur_y = cur_y + font.Scale(52)
+  cur_y = cur_y + font.scale(52)
 
   self.menu_items = {}
 
@@ -81,7 +81,7 @@ function PANEL:Init()
       end
     end
 
-    cur_y = cur_y + font.Scale(38)
+    cur_y = cur_y + font.scale(38)
 
     self.buttons[k] = button
   end

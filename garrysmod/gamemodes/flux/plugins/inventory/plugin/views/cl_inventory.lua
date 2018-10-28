@@ -215,7 +215,7 @@ function PANEL:SlotsToInventory()
 end
 
 function PANEL:GetMenuSize()
-  return font.Scale(560), font.Scale(self.inventory_slots * 0.125 * 68 + 36)
+  return font.scale(560), font.scale(self.inventory_slots * 0.125 * 68 + 36)
 end
 
 function PANEL:Rebuild()

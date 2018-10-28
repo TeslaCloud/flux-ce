@@ -85,7 +85,7 @@ function PANEL:SetFullscreen(bFullscreen)
       local font = fl.fonts:GetSize(theme.get_font('text_small'), 16)
       local fontSize = util.font_size(font)
 
-      fl.fa:Draw('fa-chevron-left', 6, 5, 14, Color(255, 255, 255))
+      fl.fa:draw('fa-chevron-left', 6, 5, 14, Color(255, 255, 255))
       draw.SimpleText('Go Back', font, 24, 3 * (16 / fontSize), Color(255, 255, 255))
     end
 
@@ -101,7 +101,7 @@ function PANEL:SetFullscreen(bFullscreen)
 end
 
 function PANEL:GetMenuSize()
-  return font.Scale(1280), font.Scale(900)
+  return font.scale(1280), font.scale(900)
 end
 
 vgui.Register('flAdminPanel', PANEL, 'fl_base_panel')
