@@ -26,40 +26,40 @@ do
 
         local pos = v:GetPos()
         local head = Vector(pos.x, pos.y, pos.z + 60)
-        local screenPos = pos:ToScreen()
-        local headPos = head:ToScreen()
-        local textPos = Vector(head.x, head.y, head.z + 30):ToScreen()
-        local x, y = headPos.x, headPos.y
+        local screen_pos = pos:ToScreen()
+        local head_pos = head:ToScreen()
+        local text_pos = Vector(head.x, head.y, head.z + 30):ToScreen()
+        local x, y = head_pos.x, head_pos.y
         local size = 52 * math.abs(350 / clientPos:Distance(pos))
-        local teamColor = team.GetColor(v:Team()) or Color(255, 255, 255)
+        local team_color = team.GetColor(v:Team()) or Color(255, 255, 255)
 
         local w, h = util.text_size(v:Name(), theme.get_font('text_small'))
-        draw.SimpleText(v:Name(), theme.get_font('text_small'), textPos.x - w * 0.5, textPos.y, teamColor)
+        draw.SimpleText(v:Name(), theme.get_font('text_small'), text_pos.x - w * 0.5, text_pos.y, team_color)
 
         w, h = util.text_size(v:SteamName(), theme.get_font('text_smaller'))
-        draw.SimpleText(v:SteamName(), theme.get_font('text_smaller'), textPos.x - w * 0.5, textPos.y + 14, color_lightblue)
+        draw.SimpleText(v:SteamName(), theme.get_font('text_smaller'), text_pos.x - w * 0.5, text_pos.y + 14, color_lightblue)
 
         if v:Alive() then
-          surface.SetDrawColor(teamColor)
-          surface.DrawOutlinedRect(x - size * 0.5, y - size * 0.5, size, (screenPos.y - y) * 1.25)
+          surface.SetDrawColor(team_color)
+          surface.DrawOutlinedRect(x - size * 0.5, y - size * 0.5, size, (screen_pos.y - y) * 1.25)
         else
           w, h = util.text_size('*DEAD*', theme.get_font('text_smaller'))
-          draw.SimpleText('*DEAD*', theme.get_font('text_smaller'), textPos.x - w * 0.5, textPos.y + 28, color_lightred)
+          draw.SimpleText('*DEAD*', theme.get_font('text_smaller'), text_pos.x - w * 0.5, text_pos.y + 28, color_lightred)
         end
 
-        local bx, by = x - size * 0.5, y - size * 0.5 + (screenPos.y - y) * 1.25
-        local hpM = math.Clamp((v:Health() or 0) / v:GetMaxHealth(), 0, 1)
+        local bx, by = x - size * 0.5, y - size * 0.5 + (screen_pos.y - y) * 1.25
+        local health = math.Clamp((v:Health() or 0) / v:GetMaxHealth(), 0, 1)
 
-        if hpM > 0 then
+        if health > 0 then
           draw.RoundedBox(0, bx, by, size, 2, color_grey)
-          draw.RoundedBox(0, bx, by, size * hpM, 2, color_red)
+          draw.RoundedBox(0, bx, by, size * health, 2, color_red)
         end
 
-        local arM = math.Clamp((v:Armor() or 0) / 100, 0, 1)
+        local armor = math.Clamp((v:Armor() or 0) / 100, 0, 1)
 
-        if arM > 0 then
+        if armor > 0 then
           draw.RoundedBox(0, bx, by + 3, size, 2, color_grey)
-          draw.RoundedBox(0, bx, by + 3, size * arM, 2, color_blue)
+          draw.RoundedBox(0, bx, by + 3, size * armor, 2, color_blue)
         end
       end
     end

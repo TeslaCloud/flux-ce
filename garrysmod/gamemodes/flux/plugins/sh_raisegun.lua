@@ -3,23 +3,23 @@ PLUGIN:set_author('Mr. Meow')
 PLUGIN:set_description('Allows weapons to be lowered and raised by holding R key.')
 
 local player_meta = FindMetaTable('Player')
-local blockedWeapons = {
+local blocked_weapons = {
   'weapon_physgun',
   'gmod_tool',
   'gmod_camera',
   'weapon_physcannon'
 }
 
-local rotationTranslate = {
+local rotation_translate = {
   ['default'] = Angle(30, -30, -25),
   ['weapon_fists'] = Angle(30, -30, -50)
 }
 
-function player_meta:SetWeaponRaised(bIsRaised)
+function player_meta:SetWeaponRaised(raised)
   if SERVER then
-    self:SetDTBool(BOOL_WEAPON_RAISED, bIsRaised)
+    self:SetDTBool(BOOL_WEAPON_RAISED, raised)
 
-    hook.run('OnWeaponRaised', self, self:GetActiveWeapon(), bIsRaised)
+    hook.run('OnWeaponRaised', self, self:GetActiveWeapon(), raised)
   end
 end
 
@@ -30,14 +30,14 @@ function player_meta:IsWeaponRaised()
     return false
   end
 
-  if table.HasValue(blockedWeapons, weapon:GetClass()) then
+  if table.HasValue(blocked_weapons, weapon:GetClass()) then
     return true
   end
 
-  local shouldRaise = hook.run('ShouldWeaponBeRaised', self, weapon)
+  local should_raise = hook.run('ShouldWeaponBeRaised', self, weapon)
 
-  if shouldRaise then
-    return shouldRaise
+  if should_raise then
+    return should_raise
   end
 
   if self:GetDTBool(BOOL_WEAPON_RAISED) then
@@ -55,16 +55,16 @@ function player_meta:ToggleWeaponRaised()
   end
 end
 
-function PLUGIN:OnWeaponRaised(player, weapon, bIsRaised)
+function PLUGIN:OnWeaponRaised(player, weapon, raised)
   if IsValid(weapon) then
     local cur_time = CurTime()
 
-    hook.run('UpdateWeaponRaised', player, weapon, bIsRaised, cur_time)
+    hook.run('UpdateWeaponRaised', player, weapon, raised, cur_time)
   end
 end
 
-function PLUGIN:UpdateWeaponRaised(player, weapon, bIsRaised, cur_time)
-  if bIsRaised or table.HasValue(blockedWeapons, weapon:GetClass()) then
+function PLUGIN:UpdateWeaponRaised(player, weapon, raised, cur_time)
+  if raised or table.HasValue(blocked_weapons, weapon:GetClass()) then
     weapon:SetNextPrimaryFire(cur_time)
     weapon:SetNextSecondaryFire(cur_time)
 
@@ -110,7 +110,7 @@ function PLUGIN:ModelWeaponRaised(player, model)
   return player:IsWeaponRaised()
 end
 
-function PLUGIN:PlayerSwitchWeapon(player, oldWeapon, newWeapon)
+function PLUGIN:PlayerSwitchWeapon(player, old_weapon, new_weapon)
   player:SetWeaponRaised(false)
 end
 
@@ -119,42 +119,42 @@ function PLUGIN:PlayerSetupDataTables(player)
 end
 
 if CLIENT then
-  function PLUGIN:CalcViewModelView(weapon, viewModel, oldEyePos, oldEyeAngles, eyePos, eyeAngles)
+  function PLUGIN:CalcViewModelView(weapon, view_model, old_eye_pos, old_eye_angles, eye_pos, eye_angles)
     if !IsValid(weapon) then
       return
     end
 
-    local targetVal = 0
+    local target_val = 0
 
     if !fl.client:IsWeaponRaised() then
-      targetVal = 100
+      target_val = 100
     end
 
     local fraction = (fl.client.curRaisedFrac or 0) / 100
-    local rotation = rotationTranslate[weapon:GetClass()] or rotationTranslate['default']
+    local rotation = rotation_translate[weapon:GetClass()] or rotation_translate['default']
 
-    eyeAngles:RotateAroundAxis(eyeAngles:Up(), rotation.p * fraction)
-    eyeAngles:RotateAroundAxis(eyeAngles:Forward(), rotation.y * fraction)
-    eyeAngles:RotateAroundAxis(eyeAngles:Right(), rotation.r * fraction)
+    eye_angles:RotateAroundAxis(eye_angles:Up(), rotation.p * fraction)
+    eye_angles:RotateAroundAxis(eye_angles:Forward(), rotation.y * fraction)
+    eye_angles:RotateAroundAxis(eye_angles:Right(), rotation.r * fraction)
 
-    fl.client.curRaisedFrac = Lerp(FrameTime() * 2, fl.client.curRaisedFrac or 0, targetVal)
+    fl.client.curRaisedFrac = Lerp(FrameTime() * 2, fl.client.curRaisedFrac or 0, target_val)
 
-    viewModel:SetAngles(eyeAngles)
+    view_model:SetAngles(eye_angles)
 
     if weapon.GetViewModelPosition then
-      local position, angles = weapon:GetViewModelPosition(eyePos, eyeAngles)
+      local position, angles = weapon:GetViewModelPosition(eye_pos, eye_angles)
 
-      oldEyePos = position or oldEyePos
-      eyeAngles = angles or eyeAngles
+      old_eye_pos = position or old_eye_pos
+      eye_angles = angles or eye_angles
     end
 
     if weapon.CalcViewModelView then
-      local position, angles = weapon:CalcViewModelView(viewModel, oldEyePos, oldEyeAngles, eyePos, eyeAngles)
+      local position, angles = weapon:CalcViewModelView(view_model, old_eye_pos, old_eye_angles, eye_pos, eye_angles)
 
-      oldEyePos = position or oldEyePos
-      eyeAngles = angles or eyeAngles
+      old_eye_pos = position or old_eye_pos
+      eye_angles = angles or eye_angles
     end
 
-    return oldEyePos, eyeAngles
+    return old_eye_pos, eye_angles
   end
 end

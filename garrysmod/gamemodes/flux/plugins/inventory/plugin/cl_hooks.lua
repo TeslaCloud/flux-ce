@@ -3,8 +3,8 @@ function fl_inventory:AddTabMenuItems(menu)
     title = 'Inventory',
     panel = 'fl_inventory',
     icon = 'fa-inbox',
-    callback = function(menuPanel, button)
-      local inv = menuPanel.activePanel
+    callback = function(menu_panel, button)
+      local inv = menu_panel.active_panel
       inv:SetPlayer(fl.client)
       inv:SetTitle('Inventory')
     end
@@ -70,8 +70,8 @@ spawnmenu.AddCreationTab('Items', function()
 end, 'icon16/wand.png', 40)
 
 cable.receive('RefreshInventory', function()
-  if fl.tab_menu and fl.tab_menu.activePanel and fl.tab_menu.activePanel.Rebuild then
-    fl.tab_menu.activePanel:Rebuild()
+  if fl.tab_menu and fl.tab_menu.active_panel and fl.tab_menu.active_panel.Rebuild then
+    fl.tab_menu.active_panel:Rebuild()
   end
 
   if IsValid(fl.client.hotbar) then

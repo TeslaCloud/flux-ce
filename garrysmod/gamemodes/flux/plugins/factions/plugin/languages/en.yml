@@ -8,6 +8,8 @@ en:
     syntax: '<target> <faction> [is faction search strict]'
     message: '{1} has removed {2} from the {3} whitelist.'
   set_faction:
+    description: Set player's faction.
+    syntax: '<name> <faction> [data]'
     message: '{1} has added {2} to the {3} faction.'
   err:
     whitelist_not_valid: "'{1}' is not a valid faction!"

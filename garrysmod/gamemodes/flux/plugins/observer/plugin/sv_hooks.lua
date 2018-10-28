@@ -9,12 +9,12 @@ function flObserver:PlayerEnterNoclip(player)
     return false
   end
 
-  player.observerData = {
+  player.observer_data = {
     position = player:GetPos(),
     angles = player:EyeAngles(),
     color = player:GetColor(),
-    moveType = player:GetMoveType(),
-    shouldReset = (plugin.call('ShouldObserverReset', player) != false)
+    move_type = player:GetMoveType(),
+    should_reset = (plugin.call('ShouldObserverReset', player) != false)
   }
 
   player:SetMoveType(MOVETYPE_NOCLIP)
@@ -30,17 +30,17 @@ function flObserver:PlayerEnterNoclip(player)
 end
 
 function flObserver:PlayerExitNoclip(player)
-  local data = player.observerData
+  local data = player.observer_data
 
   if data then
-    player:SetMoveType(data.moveType or MOVETYPE_WALK)
+    player:SetMoveType(data.move_type or MOVETYPE_WALK)
     player:DrawWorldModel(true)
     player:DrawShadow(true)
     player:SetNoDraw(false)
     player:SetNotSolid(false)
     player:SetColor(data.color)
 
-    if data.shouldReset then
+    if data.should_reset then
       timer.Simple(FrameTime(), function()
         if IsValid(player) then
           player:SetPos(data.position)
@@ -50,7 +50,7 @@ function flObserver:PlayerExitNoclip(player)
     end
   end
 
-  player.observerData = nil
+  player.observer_data = nil
   player:set_nv('observer', false)
 
   return false

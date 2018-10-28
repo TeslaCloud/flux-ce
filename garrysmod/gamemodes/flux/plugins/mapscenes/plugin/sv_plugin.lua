@@ -21,7 +21,7 @@ function flMapscenes:SaveData()
 end
 
 function flMapscenes:PlayerInitialized(player)
-  cable.send(player, 'flLoadMapscene', self.anim, self.points)
+  cable.send(player, 'flLoadMapscene', self.points)
 end
 
 function flMapscenes:add_point(pos, ang)
@@ -36,7 +36,6 @@ function flMapscenes:add_point(pos, ang)
 end
 
 cable.receive('flRemoveMapscene', function(player, id)
-  print(id)
   table.remove(flMapscenes.points, id)
 
   cable.send(nil, 'flDeleteMapscene', id)

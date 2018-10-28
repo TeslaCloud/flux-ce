@@ -7,12 +7,12 @@ COMMAND.arguments = 2
 COMMAND.player_arg = 1
 COMMAND.aliases = { 'setname' }
 
-function COMMAND:on_run(player, targets, newName)
+function COMMAND:on_run(player, targets, new_name)
   local target = targets[1]
 
-  fl.player:broadcast('char_set_name.message', { get_player_name(player), target:Name(), newName })
+  fl.player:broadcast('char_set_name.message', { get_player_name(player), target:Name(), new_name })
 
-  character.set_name(target, target:GetCharacter(), newName)
+  character.set_name(target, target:GetCharacter(), new_name)
 end
 
 COMMAND:register()

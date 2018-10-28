@@ -5,7 +5,7 @@ function PANEL:Init()
   self:SetPos(0, 0)
   self:SetSize(ScrW(), ScrH())
 
-  self.btnClose:safe_remove()
+  self.button_close:safe_remove()
 
   self.stage = 1
   self.stages = {}

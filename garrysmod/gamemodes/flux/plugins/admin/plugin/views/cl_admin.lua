@@ -1,5 +1,5 @@
 local PANEL = {}
-PANEL.curPanel = nil
+PANEL.cur_panel = nil
 PANEL.panels = {}
 
 function PANEL:Init()
@@ -51,22 +51,22 @@ end
 function PANEL:OpenPanel(id)
   local panel = self.panels[id]
 
-  if IsValid(self.curPanel) then
-    self.curPanel:safe_remove()
+  if IsValid(self.cur_panel) then
+    self.cur_panel:safe_remove()
   end
 
   if istable(panel) then
     if panel.permission and !fl.client:can(panel.permission) then return end
 
     local scrw, scrh = ScrW(), ScrH()
-    local sW, sH = self.sidebar:GetWide(), self.sidebar:GetTall()
+    local sw, sh = self.sidebar:GetWide(), self.sidebar:GetTall()
 
-    self.curPanel = theme.create_panel(panel.id, self, unpack(panel.arguments))
-    self.curPanel:SetPos(sW, 0)
-    self.curPanel:SetSize(self:GetWide() - sW, self:GetTall())
+    self.cur_panel = theme.create_panel(panel.id, self, unpack(panel.arguments))
+    self.cur_panel:SetPos(sw, 0)
+    self.cur_panel:SetSize(self:GetWide() - sw, self:GetTall())
 
-    if self.curPanel.OnOpened then
-      self.curPanel:OnOpened(self, panel)
+    if self.cur_panel.OnOpened then
+      self.cur_panel:OnOpened(self, panel)
     end
   end
 end
@@ -76,12 +76,12 @@ function PANEL:SetFullscreen(bFullscreen)
     self.sidebar:MoveTo(-self.sidebar:GetWide(), 0, 0.3)
     self:SetTitle('')
 
-    self.backBtn = vgui.Create('DButton', self)
-    self.backBtn:SetPos(0, 0)
-    self.backBtn:SetSize(100, 0)
-    self.backBtn:SetText('')
+    self.back_button = vgui.Create('DButton', self)
+    self.back_button:SetPos(0, 0)
+    self.back_button:SetSize(100, 0)
+    self.back_button:SetText('')
 
-    self.backBtn.Paint = function(btn, w, h)
+    self.back_button.Paint = function(btn, w, h)
       local font = fl.fonts:GetSize(theme.get_font('text_small'), 16)
       local fontSize = util.font_size(font)
 
@@ -89,14 +89,14 @@ function PANEL:SetFullscreen(bFullscreen)
       draw.SimpleText('Go Back', font, 24, 3 * (16 / fontSize), Color(255, 255, 255))
     end
 
-    self.backBtn.DoClick = function(btn)
+    self.back_button.DoClick = function(btn)
       self:SetFullscreen(false)
     end
   else
     self.sidebar:MoveTo(0, 0, 0.3)
     self:SetTitle('Admin')
 
-    self.backBtn:safe_remove()
+    self.back_button:safe_remove()
   end
 end
 
@@ -107,10 +107,10 @@ end
 vgui.Register('flAdminPanel', PANEL, 'fl_base_panel')
 
 concommand.Add('fl_admin_test', function()
-  if IsValid(AdminPanel) then
-    AdminPanel:safe_remove()
+  if IsValid(admin_panel) then
+    admin_panel:safe_remove()
   else
-    AdminPanel = vgui.Create('flAdminPanel')
-    AdminPanel:MakePopup()
+    admin_panel = vgui.Create('flAdminPanel')
+    admin_panel:MakePopup()
   end
 end)

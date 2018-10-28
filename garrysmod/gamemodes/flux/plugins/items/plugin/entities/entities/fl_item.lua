@@ -13,11 +13,11 @@ if SERVER then
     self:PhysicsInit(SOLID_VPHYSICS)
     self:SetUseType(ONOFF_USE)
 
-    local physObj = self:GetPhysicsObject()
+    local phys_obj = self:GetPhysicsObject()
 
-    if IsValid(physObj) then
-      physObj:EnableMotion(true)
-      physObj:Wake()
+    if IsValid(phys_obj) then
+      phys_obj:EnableMotion(true)
+      phys_obj:Wake()
     end
   end
 
@@ -37,24 +37,24 @@ if SERVER then
     hook.run('OnEntityItemSet', self, item_table)
   end
 
-  function ENT:Use(activator, caller, useType, value)
-    local lastActivator = self:get_nv('last_activator')
+  function ENT:Use(activator, caller, use_type, value)
+    local last_activator = self:get_nv('last_activator')
 
     -- prevent minge-grabbing glitch
-    if IsValid(lastActivator) and lastActivator != activator then return end
+    if IsValid(last_activator) and last_activator != activator then return end
 
-    local holdStart = activator:get_nv('hold_start')
+    local hold_start = activator:get_nv('hold_start')
 
-    if useType == USE_ON then
-      if !holdStart then
+    if use_type == USE_ON then
+      if !hold_start then
         activator:set_nv('hold_start', CurTime())
         activator:set_nv('hold_entity', self)
         self:set_nv('last_activator', activator)
       end
-    elseif useType == USE_OFF then
-      if !holdStart then return end
+    elseif use_type == USE_OFF then
+      if !hold_start then return end
 
-      if CurTime() - holdStart < 0.5 then
+      if CurTime() - hold_start < 0.5 then
         if IsValid(caller) and caller:IsPlayer() then
           if self.item then
             hook.run('PlayerUseItemEntity', caller, self, self.item)
@@ -71,19 +71,19 @@ if SERVER then
   end
 
   function ENT:Think()
-    local lastActivator = self:get_nv('last_activator')
+    local last_activator = self:get_nv('last_activator')
 
-    if !IsValid(lastActivator) then return end
+    if !IsValid(last_activator) then return end
 
-    local holdStart = lastActivator:get_nv('hold_start')
+    local hold_start = last_activator:get_nv('hold_start')
 
-    if holdStart and CurTime() - holdStart > 0.5 then
+    if hold_start and CurTime() - hold_start > 0.5 then
       if self.item then
-        self.item:do_menu_action('on_take', lastActivator)
+        self.item:do_menu_action('on_take', last_activator)
       end
 
-      lastActivator:set_nv('hold_start', false)
-      lastActivator:set_nv('hold_entity', false)
+      last_activator:set_nv('hold_start', false)
+      last_activator:set_nv('hold_entity', false)
       self:set_nv('last_activator', false)
     end
   end

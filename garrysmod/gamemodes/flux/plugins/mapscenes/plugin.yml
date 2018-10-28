@@ -1,5 +1,5 @@
-name: 'Mapscenes'
-description: 'Customize your character menu background with fancy flying camera.'
-author: 'AleXXX_007'
+name: Mapscenes
+description: Customize your character menu background with fancy flying camera.
+author: AleXXX_007
 depends:
   - characters

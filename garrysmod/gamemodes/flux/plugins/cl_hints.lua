@@ -5,15 +5,15 @@ PLUGIN:set_author('Mr. Meow')
 
 local stored = {}
 
-function flHints:Add(id, text, color, bPlaySound, callback)
-  table.insert(stored, {id = id, text = text, color = color, playSound = bPlaySound or false, callback = callback})
+function flHints:Add(id, text, color, play_sound, callback)
+  table.insert(stored, {id = id, text = text, color = color, play_sound = play_sound or false, callback = callback})
 end
 
 function flHints:DisplayRandom()
   local hint = table.Random(stored)
 
   if hint.callback and hint.callback() != true then return end
-  if hint.playSound then surface.PlaySound('hl1/fvox/blip.wav') end
+  if hint.play_sound then surface.PlaySound('hl1/fvox/blip.wav') end
 
   fl.notification:Add(hint.text, 15, hint.color)
 end

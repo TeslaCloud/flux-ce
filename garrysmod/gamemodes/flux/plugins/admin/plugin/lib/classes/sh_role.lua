@@ -82,10 +82,10 @@ function Role:register()
 end
 
 -- Called when player's primary group is being set to this group.
-function Role:OnGroupSet(player, oldGroup) end
+function Role:OnGroupSet(player, old_group) end
 
 -- Called when player's primary group is taken or modified.
-function Role:OnGroupTake(player, newGroup) end
+function Role:OnGroupTake(player, new_group) end
 
 Role.SetParent = Role.set_base
 

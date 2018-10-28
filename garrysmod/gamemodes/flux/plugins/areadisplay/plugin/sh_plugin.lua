@@ -2,8 +2,8 @@ areas.RegisterType(
   'text',
   'Text Area',
   'An area that displays text when player enters it.',
-  function(player, area, poly, bHasEntered, curPos, cur_time)
-    if bHasEntered then
+  function(player, area, poly, has_entered, cur_pos, cur_time)
+    if has_entered then
       plugin.call('PlayerEnteredTextArea', player, area, cur_time)
     else
       plugin.call('PlayerLeftTextArea', player, area, cur_time)

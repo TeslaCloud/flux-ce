@@ -12,8 +12,6 @@ fl.admin.players = players
 local bans = fl.admin.bans or {}
 fl.admin.bans = bans
 
-local compilerCache = {}
-
 function fl.admin:GetPermissions()
   return permissions
 end

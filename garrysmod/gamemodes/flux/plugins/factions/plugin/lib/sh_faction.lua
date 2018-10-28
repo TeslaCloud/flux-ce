@@ -38,9 +38,9 @@ function faction.GetPlayers(id)
   return players
 end
 
-function faction.Find(name, bStrict)
+function faction.Find(name, strict)
   for k, v in pairs(stored) do
-    if bStrict then
+    if strict then
       if k:utf8lower() == name:utf8lower() then
         return v
       elseif v.name:utf8lower() == name:utf8lower() then
@@ -86,13 +86,13 @@ do
   end
 
   function player_meta:SetFaction(id)
-    local oldFaction = self:GetFaction()
-    local factionTable = faction.find_by_id(id)
+    local old_faction = self:GetFaction()
+    local faction_table = faction.find_by_id(id)
     local char = self:GetCharacter()
 
-    self:set_nv('name', factionTable:GenerateName(self, self:GetCharacterVar('name', self:Name()), 1))
+    self:set_nv('name', faction_table:GenerateName(self, self:GetCharacterVar('name', self:Name()), 1))
     self:SetRank(1)
-    self:SetTeam(factionTable.team_id)
+    self:SetTeam(faction_table.team_id)
     self:set_nv('faction', id)
     self:SetDefaultFactionModel()
 
@@ -102,43 +102,43 @@ do
       character.Save(self, char)
     end
 
-    if oldFaction then
-      oldFaction:OnPlayerExited(self)
+    if old_faction then
+      old_faction:OnPlayerExited(self)
     end
 
-    factionTable:OnPlayerEntered(self)
+    faction_table:OnPlayerEntered(self)
 
-    hook.run('OnPlayerFactionChanged', self, factionTable, oldFaction)
+    hook.run('OnPlayerFactionChanged', self, faction_table, old_faction)
   end
 
   function player_meta:SetDefaultFactionModel()
-    local factionTable = self:GetFaction()
-    local factionModels = factionTable.models
+    local faction_table = self:GetFaction()
+    local faction_models = faction_table.models
     local char = self:GetCharacter()
 
-    if istable(factionModels) then
-      local playerModel = string.GetFileFromFilename(self:GetModel())
-      local universal = factionModels.universal or {}
+    if istable(faction_models) then
+      local player_model = string.GetFileFromFilename(self:GetModel())
+      local universal = faction_models.universal or {}
       local model
-      local modelTable
+      local model_table
 
-      if factionTable.has_gender then
-        local male = factionModels.male or {}
-        local female = factionModels.female or {}
+      if faction_table.has_gender then
+        local male = faction_models.male or {}
+        local female = faction_models.female or {}
         local gender = self:get_nv('gender', -1)
 
         if gender == CHAR_GENDER_MALE and #male > 0 then
-          modelTable = male
+          model_table = male
         elseif gender == CHAR_GENDER_FEMALE and #female > 0 then
-          modelTable = female
+          model_table = female
         end
       elseif #universal > 0 then
-        modelTable = universal
+        model_table = universal
       end
 
-      if modelTable then
-        for k, v in pairs(modelTable) do
-          if string.find(v, playerModel) then
+      if model_table then
+        for k, v in pairs(model_table) do
+          if string.find(v, player_model) then
             model = v
 
             break
@@ -146,7 +146,7 @@ do
         end
 
         if !model then
-          model = modelTable[math.random(#modelTable)]
+          model = model_table[math.random(#model_table)]
         end
 
         character.SetModel(self, self:GetCharacter(), model)
@@ -162,9 +162,9 @@ do
     if isnumber(rank) then
       self:SetCharacterData('Rank', rank)
     elseif isstring(rank) then
-      local factionTable = self:GetFaction()
+      local faction_table = self:GetFaction()
 
-      for k, v in ipairs(factionTable.rank) do
+      for k, v in ipairs(faction_table.rank) do
         if string.utf8lower(v.id) == string.utf8lower(rank) then
           self:SetCharacterData('Rank', k)
         end
@@ -176,14 +176,14 @@ do
     return self:GetCharacterData('Rank', -1)
   end
 
-  function player_meta:IsRank(strRank, bStrict)
-    local factionTable = self:GetFaction()
+  function player_meta:IsRank(strRank, strict)
+    local faction_table = self:GetFaction()
     local rank = self:GetRank()
 
-    if rank != -1 and factionTable then
-      for k, v in ipairs(factionTable.rank) do
+    if rank != -1 and faction_table then
+      for k, v in ipairs(faction_table.rank) do
         if string.utf8lower(v.id) == string.utf8lower(strRank) then
-          return (bStrict and k == rank) or k <= rank
+          return (strict and k == rank) or k <= rank
         end
       end
     end

@@ -1,22 +1,22 @@
 local COMMAND = Command.new('setfaction')
 
 COMMAND.name = 'Setfaction'
-COMMAND.description = "Change player's faction."
-COMMAND.syntax = '<name> <faction> [data]'
+COMMAND.description = t'set_faction.description'
+COMMAND.syntax = t'set_faction.syntax'
 COMMAND.category = 'player_management'
 COMMAND.arguments = 2
 COMMAND.player_arg = 1
 COMMAND.aliases = { 'plytransfer', 'charsetfaction', 'chartransfer' }
 
-function COMMAND:on_run(player, targets, name, bStrict)
-  local factionTable = faction.Find(name, (bStrict and true) or false)
+function COMMAND:on_run(player, targets, name, strict)
+  local faction_table = faction.Find(name, (strict and true) or false)
 
-  if factionTable then
+  if faction_table then
     for k, v in ipairs(targets) do
-      v:SetFaction(factionTable.faction_id)
+      v:SetFaction(faction_table.faction_id)
     end
 
-    fl.player:broadcast('set_faction.message', { get_player_name(player), util.player_list_to_string(targets), factionTable.print_name })
+    fl.player:broadcast('set_faction.message', { get_player_name(player), util.player_list_to_string(targets), faction_table.print_name })
   else
     player:notify('err.whitelist_not_valid',  name)
   end

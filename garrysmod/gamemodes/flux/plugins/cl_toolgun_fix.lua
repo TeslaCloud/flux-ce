@@ -24,47 +24,47 @@ function PLUGIN:FLInitPostEntity()
     local w, h = 0, 0
     local is_flux = tool_object.is_flux_tool
 
-    local TextTable = {}
-    local QuadTable = {}
+    local text_table = {}
+    local quad_table = {}
 
-    QuadTable.texture = self.Gradient
-    QuadTable.color = Color(10, 10, 10, 180)
+    quad_table.texture = self.Gradient
+    quad_table.color = Color(10, 10, 10, 180)
 
-    QuadTable.x = 0
-    QuadTable.y = y - 8
-    QuadTable.w = 600
-    QuadTable.h = self.ToolNameHeight - (y - 8)
-    draw.TexturedQuad(QuadTable)
+    quad_table.x = 0
+    quad_table.y = y - 8
+    quad_table.w = 600
+    quad_table.h = self.ToolNameHeight - (y - 8)
+    draw.TexturedQuad(quad_table)
 
-    TextTable.font = 'GModToolName'
-    TextTable.color = Color(240, 240, 240, 255)
-    TextTable.pos = { x, y }
-    TextTable.text = !is_flux and '#tool.'..mode..'.name' or t('tool.'..mode..'.name')
-    w, h = draw.TextShadow(TextTable, 2)
+    text_table.font = 'GModToolName'
+    text_table.color = Color(240, 240, 240, 255)
+    text_table.pos = { x, y }
+    text_table.text = !is_flux and '#tool.'..mode..'.name' or t('tool.'..mode..'.name')
+    w, h = draw.TextShadow(text_table, 2)
     y = y + h
 
-    TextTable.font = 'GModToolSubtitle'
-    TextTable.pos = { x, y }
-    TextTable.text = !is_flux and '#tool.'..mode..'.desc' or t('tool.'..mode..'.desc')
-    w, h = draw.TextShadow(TextTable, 1)
+    text_table.font = 'GModToolSubtitle'
+    text_table.pos = { x, y }
+    text_table.text = !is_flux and '#tool.'..mode..'.desc' or t('tool.'..mode..'.desc')
+    w, h = draw.TextShadow(text_table, 1)
     y = y + h + 8
 
     self.ToolNameHeight = y
 
-    QuadTable.y = y
-    QuadTable.h = self.InfoBoxHeight
+    quad_table.y = y
+    quad_table.h = self.InfoBoxHeight
     local alpha = math.Clamp(255 + (tool_object.LastMessage - CurTime()) * 800, 10, 255)
-    QuadTable.color = Color(alpha, alpha, alpha, 230)
-    draw.TexturedQuad(QuadTable)
+    quad_table.color = Color(alpha, alpha, alpha, 230)
+    draw.TexturedQuad(quad_table)
 
     y = y + 4
 
-    TextTable.font = 'GModToolHelp'
+    text_table.font = 'GModToolHelp'
 
     if (!tool_object.Information) then
-      TextTable.pos = { x + self.InfoBoxHeight, y }
-      TextTable.text = tool_object:GetHelpText()
-      w, h = draw.TextShadow(TextTable, 1)
+      text_table.pos = { x + self.InfoBoxHeight, y }
+      text_table.text = tool_object:GetHelpText()
+      w, h = draw.TextShadow(text_table, 1)
 
       surface.SetDrawColor(255, 255, 255, 255)
       surface.SetTexture(self.InfoIcon)
@@ -89,10 +89,10 @@ function PLUGIN:FLInitPostEntity()
         txt = tool_object:GetHelpText()
       end
 
-      TextTable.text = txt
-      TextTable.pos = { x + 21, y + h2 }
+      text_table.text = txt
+      text_table.pos = { x + 21, y + h2 }
 
-      w, h = draw.TextShadow(TextTable, 1)
+      w, h = draw.TextShadow(text_table, 1)
 
       if (!v.icon) then
         if (v.name:StartWith('info')) then v.icon = 'gui/info' end

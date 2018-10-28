@@ -1,7 +1,7 @@
 local COMMAND = Command.new('forcefall')
 COMMAND.name = 'ForceFall'
-COMMAND.description = 'Forces a player to fall down on the ground.'
-COMMAND.syntax = '<target> [number GetUpTime]'
+COMMAND.description = t'force_fall.description'
+COMMAND.syntax = t'force_fall.syntax'
 COMMAND.category = 'roleplay'
 COMMAND.arguments = 1
 COMMAND.player_arg = 1
@@ -27,7 +27,7 @@ function COMMAND:on_run(player, target, delay)
       end)
     end
   else
-    player:notify('This player cannot be ragdolled right now!')
+    player:notify(t'cant_now')
   end
 end
 

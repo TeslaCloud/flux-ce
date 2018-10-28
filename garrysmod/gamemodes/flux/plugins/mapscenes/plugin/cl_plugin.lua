@@ -1,5 +1,4 @@
-cable.receive('flLoadMapscene', function(anim, points)
-  flMapscenes.anim = anim or {}
+cable.receive('flLoadMapscene', function(points)
   flMapscenes.points = points or {}
 end)
 

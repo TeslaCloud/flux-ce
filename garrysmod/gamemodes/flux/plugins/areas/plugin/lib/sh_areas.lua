@@ -16,8 +16,8 @@ function areas.GetAll()
   return stored
 end
 
-function areas.SetStored(storedTable)
-  stored = (istable(storedTable) and storedTable) or {}
+function areas.SetStored(stored_table)
+  stored = (istable(stored_table) and stored_table) or {}
 end
 
 function areas.GetCallbacks()
@@ -51,8 +51,8 @@ function areas.Create(id, height, data)
 
   if !stored[id] then
     area.id = id
-    area.minH = 0
-    area.maxH = 0
+    area.minh = 0
+    area.maxh = 0
     area.height = height or 0
     area.verts = {}
     area.polys = {}
@@ -67,10 +67,10 @@ function areas.Create(id, height, data)
 
   function area:AddVertex(vect)
     if #self.verts == 0 then
-      self.minH = vect.z
-      self.maxH = self.minH + self.height
+      self.minh = vect.z
+      self.maxh = self.minh + self.height
     else
-      vect.z = self.minH
+      vect.z = self.minh
     end
 
     table.insert(self.verts, vect)
@@ -116,37 +116,37 @@ function areas.Remove(id)
 end
 
 function areas.GetColor(typeID)
-  local typeTable = types[typeID]
+  local type_table = types[typeID]
 
-  if istable(typeTable) then
-    return typeTable.color
+  if istable(type_table) then
+    return type_table.color
   end
 end
 
-function areas.RegisterType(id, name, description, color, defaultCallback)
+function areas.RegisterType(id, name, description, color, default_callback)
   types[id] = {
     name = name,
     description = description,
-    callback = defaultCallback,
+    callback = default_callback,
     color = color or Color(255, 0, 255)
   }
 end
 
--- callback(player, area, poly, bHasEntered, curPos, cur_time)
-function areas.SetCallback(areaType, callback)
-  callbacks[areaType] = callback
+-- callback(player, area, poly, has_entered, cur_pos, cur_time)
+function areas.SetCallback(area_type, callback)
+  callbacks[area_type] = callback
 end
 
-function areas.GetCallback(areaType)
-  return callbacks[areaType] or (types[areaType] and types[areaType].callback) or function() fl.dev_print("Callback for area type '"..areaType.."' could not be found!") end
+function areas.GetCallback(area_type)
+  return callbacks[area_type] or (types[area_type] and types[area_type].callback) or function() fl.dev_print("Callback for area type '"..area_type.."' could not be found!") end
 end
 
 areas.RegisterType(
   'area',
   'Simple Area',
   'A simple area. Use this type if you have a callback somewhere in the code that looks up id instead of type ID.',
-  function(player, area, poly, bHasEntered, curPos, cur_time)
-    if bHasEntered then
+  function(player, area, poly, has_entered, cur_pos, cur_time)
+    if has_entered then
       hook.run('PlayerEnteredArea', player, area, cur_time)
     else
       hook.run('PlayerLeftArea', player, area, cur_time)

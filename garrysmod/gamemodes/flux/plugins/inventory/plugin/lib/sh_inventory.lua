@@ -1,7 +1,3 @@
-if !item then
-  error("Attempt to use inventory system without Flux's items system.\n")
-end
-
 library.new 'inventory'
 
 do

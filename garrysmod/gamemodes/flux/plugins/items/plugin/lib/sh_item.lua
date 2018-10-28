@@ -83,7 +83,7 @@ function item.register(id, data)
   instances[id] = instances[id] or {}
 end
 
-function item.ToSave(item_table)
+function item.to_save(item_table)
   if !item_table then return end
 
   return {
@@ -257,11 +257,11 @@ if SERVER then
 
     if loaded and table.Count(loaded) > 0 then
       -- Returns functions to instances table after loading.
-      for id, instanceTable in pairs(loaded) do
+      for id, instance_table in pairs(loaded) do
         local item_table = item.find_by_id(id)
 
         if item_table then
-          for k, v in pairs(instanceTable) do
+          for k, v in pairs(instance_table) do
             local newItem = table.Copy(item_table)
 
             table.safe_merge(newItem, v)
@@ -278,8 +278,8 @@ if SERVER then
     local loaded = data.load_schema('items/entities', {})
 
     if loaded and table.Count(loaded) > 0 then
-      for id, instanceTable in pairs(loaded) do
-        for k, v in pairs(instanceTable) do
+      for id, instance_table in pairs(loaded) do
+        for k, v in pairs(instance_table) do
           if instances[id] and instances[id][k] then
             item.Spawn(v.position, v.angles, instances[id][k])
           else
@@ -294,33 +294,33 @@ if SERVER then
   end
 
   function item.SaveInstances()
-    local toSave = {}
+    local to_save = {}
 
     for k, v in pairs(instances) do
       if k == 'count' then
-        toSave[k] = v
+        to_save[k] = v
       else
-        toSave[k] = {}
+        to_save[k] = {}
       end
 
       if istable(v) then
         for k2, v2 in pairs(v) do
           if istable(v2) then
-            toSave[k][k2] = item.ToSave(v2)
+            to_save[k][k2] = item.to_save(v2)
           end
         end
       end
     end
 
-    data.save_schema('items/instances', toSave)
+    data.save_schema('items/instances', to_save)
   end
 
   function item.SaveEntities()
-    local itemEnts = ents.FindByClass('fl_item')
+    local item_ents = ents.FindByClass('fl_item')
 
     entities = {}
 
-    for k, v in ipairs(itemEnts) do
+    for k, v in ipairs(item_ents) do
       if IsValid(v) and v.item then
         entities[v.item.id] = entities[v.item.id] or {}
 
@@ -361,7 +361,7 @@ if SERVER then
   end
 
   function item.NetworkItem(player, instance_id)
-    cable.send(player, 'NetworkItem', instance_id, item.ToSave(item.FindInstanceByID(instance_id)))
+    cable.send(player, 'NetworkItem', instance_id, item.to_save(item.FindInstanceByID(instance_id)))
   end
 
   function item.NetworkEntityData(player, ent)
@@ -372,9 +372,9 @@ if SERVER then
 
   -- A function to send info about items in the world.
   function item.SendToPlayer(player)
-    local itemEnts = ents.FindByClass('fl_item')
+    local item_ents = ents.FindByClass('fl_item')
 
-    for k, v in ipairs(itemEnts) do
+    for k, v in ipairs(item_ents) do
       if v.item then
         item.NetworkItem(player, v.item.instance_id)
       end
@@ -425,8 +425,8 @@ if SERVER then
     return ent, item_table
   end
 
-  cable.receive('RequestItemData', function(player, entIndex)
-    local ent = Entity(entIndex)
+  cable.receive('RequestItemData', function(player, ent_index)
+    local ent = Entity(ent_index)
 
     if IsValid(ent) then
       item.NetworkEntityData(player, ent)
@@ -452,8 +452,8 @@ else
     end
   end)
 
-  cable.receive('ItemEntData', function(entIndex, id, instance_id)
-    local ent = Entity(entIndex)
+  cable.receive('ItemEntData', function(ent_index, id, instance_id)
+    local ent = Entity(ent_index)
 
     if IsValid(ent) then
       local item_table = instances[id][instance_id]

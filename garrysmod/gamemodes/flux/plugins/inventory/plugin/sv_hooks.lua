@@ -45,17 +45,17 @@ function fl_inventory:SaveCharacterData(player, char)
 end
 
 cable.receive('InventorySync', function(player, inventory)
-  local newInventory = {}
+  local new_inventory = {}
 
   for slot, ids in ipairs(inventory) do
-    newInventory[slot] = {}
+    new_inventory[slot] = {}
 
     for k, v in ipairs(ids) do
       if player:HasItemByID(v) then
-        table.insert(newInventory[slot], v)
+        table.insert(new_inventory[slot], v)
       end
     end
   end
 
-  player:SetInventory(newInventory)
+  player:SetInventory(new_inventory)
 end)

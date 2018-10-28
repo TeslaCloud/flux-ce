@@ -15,13 +15,13 @@ end
 function player_meta:SetUserGroup(group)
   group = group or 'user'
 
-  local groupObj = fl.admin:FindGroup(group)
-  local oldGroupObj = fl.admin:FindGroup(self:GetUserGroup())
+  local group_obj = fl.admin:FindGroup(group)
+  local old_group_obj = fl.admin:FindGroup(self:GetUserGroup())
 
   self:set_nv('role', group)
 
-  if oldGroupObj and groupObj and oldGroupObj:OnGroupTake(self, groupObj) == nil then
-    if groupObj:OnGroupSet(self, oldGroupObj) == nil then
+  if old_group_obj and group_obj and old_group_obj:OnGroupTake(self, group_obj) == nil then
+    if group_obj:OnGroupSet(self, old_group_obj) == nil then
       self:SaveUsergroup()
     end
   end

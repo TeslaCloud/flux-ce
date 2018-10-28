@@ -1,7 +1,7 @@
 local COMMAND = Command.new('getup')
 COMMAND.name = 'GetUp'
-COMMAND.description = 'Get up if you are currently fallen.'
-COMMAND.syntax = '[number GetUpTime]'
+COMMAND.description = t'getup.description'
+COMMAND.syntax = t'getup.syntax'
 COMMAND.category = 'roleplay'
 COMMAND.aliases = { 'chargetup', 'unfall', 'unfallover' }
 COMMAND.no_console = true
@@ -20,7 +20,7 @@ function COMMAND:on_run(player, delay)
       player:ResetAction()
     end)
   else
-    player:notify('You cannot do this right now!')
+    player:notify(t'cant_now')
   end
 end
 

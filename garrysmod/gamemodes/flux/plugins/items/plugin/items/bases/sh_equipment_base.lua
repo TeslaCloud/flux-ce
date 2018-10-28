@@ -43,8 +43,8 @@ function ItemEquippable:OnUnEquipped(player) end
 function ItemEquippable:PostEquipped(player) end
 function ItemEquippable:PostUnEquipped(player) end
 
-function ItemEquippable:Equip(player, bShouldEquip)
-  if bShouldEquip then
+function ItemEquippable:Equip(player, should_equip)
+  if should_equip then
     if self:OnEquipped(player) != false then
       self:set_data('equipped', true)
       self:PostEquipped(player)

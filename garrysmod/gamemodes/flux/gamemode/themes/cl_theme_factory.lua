@@ -351,7 +351,7 @@ end
 
 function THEME:PaintTabMenu(panel, width, height)
   local fraction = FrameTime() * 8
-  local activePanel = panel.activePanel
+  local active_panel = panel.active_panel
   local sidebarColor = ColorAlpha(self:get_color('background'), 125)
 
   fl.blur_size = Lerp(fraction * 0.4, fl.blur_size, 6)
@@ -360,7 +360,7 @@ function THEME:PaintTabMenu(panel, width, height)
   draw.RoundedBox(0, 0, 0, font.Scale(200) + 6, height, sidebarColor)
   draw.RoundedBox(0, 0, 0, 6, height, sidebarColor)
 
-  if IsValid(activePanel) then
+  if IsValid(active_panel) then
     panel.posY = panel.posY or 0
 
     local activeButton = panel.activeBtn
@@ -376,11 +376,11 @@ function THEME:PaintTabMenu(panel, width, height)
 
     panel.prevY = panel.posY
 
-    if !activePanel.indicatorLerp then
-      activePanel.indicatorLerp = 0
+    if !active_panel.indicatorLerp then
+      active_panel.indicatorLerp = 0
     end
 
-    activePanel.indicatorLerp = Lerp(fraction, activePanel.indicatorLerp, targetH)
+    active_panel.indicatorLerp = Lerp(fraction, active_panel.indicatorLerp, targetH)
 
     draw.RoundedBox(0, 0, panel.posY, 6, targetH, self:get_color('accent_light'))
   end
@@ -428,9 +428,9 @@ function THEME.skin:LayoutFrame(panel)
   panel.lblTitle:SizeToContents()
   panel.lblTitle:SetExpensiveShadow(nil)
 
-  panel.btnClose:SetDrawBackground(true)
-  panel.btnClose:SetPos(panel:GetWide() - 22, 2)
-  panel.btnClose:SetSize(18, 18)
+  panel.button_close:SetDrawBackground(true)
+  panel.button_close:SetPos(panel:GetWide() - 22, 2)
+  panel.button_close:SetSize(18, 18)
   panel.lblTitle:SetPos(8, 2)
   panel.lblTitle:SetSize(panel:GetWide() - 25, 20)
 end

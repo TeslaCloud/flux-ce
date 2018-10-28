@@ -1,4 +1,10 @@
 en:
+  give_item:
+    description: Gives specified item to a player.
+    syntax: '<target> <item name or unique ID>'
+    target_message: '{1} has given you {2}x{3}.'
+    player_message: You have given {2}x{3} to {1}.
+    invalid_item: "'{1}' is not valid item!"
   tab_menu:
     inventory: Inventory
   hint:

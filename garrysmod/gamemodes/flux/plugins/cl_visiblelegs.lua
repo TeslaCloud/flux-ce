@@ -102,7 +102,7 @@ function flVisibleLegs:RenderScreenspaceEffects()
       self:SpawnLegs(player)
     end
 
-    local realTime = RealTime()
+    local real_time = RealTime()
     local legs = player.legs
 
     angs.p = 0
@@ -123,12 +123,12 @@ function flVisibleLegs:RenderScreenspaceEffects()
     legs:SetMaterial(player:GetMaterial())
     legs:SetSequence(player:GetSequence())
     legs:SetColor(player:GetColor())
-    legs:FrameAdvance(realTime - (legs.lastDraw or realTime))
+    legs:FrameAdvance(real_time - (legs.last_draw or real_time))
     legs:SetPlaybackRate(player:GetPlaybackRate())
     legs:SetRenderOrigin(origin)
     legs:SetRenderAngles(angs)
     legs:DrawModel()
 
-    legs.lastDraw = realTime
+    legs.last_draw = real_time
   cam.End3D()
 end

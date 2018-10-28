@@ -7,25 +7,25 @@ if !areas then
   util.include('lib/sh_areas.lua')
 end
 
-flAreas.toolModes = {
+flAreas.tool_modes = {
   Add = function(list, data)
     local vars = data.ClientConVar or data.ConVars or data.ClientConVars or data.ConVar
 
     table.insert(list, {
       title = data.title or 'Unknown Mode',
-      areaType = data.areaType or 'area',
+      area_type = data.area_type or 'area',
       OnLeftClick = data.OnLeftClick,
       OnRightClick = data.OnRightClick,
       OnReload = data.OnReload or function(mode, tool, trace)
         local cur_time = CurTime()
 
         for k, v in pairs(areas.GetAll()) do
-          if istable(v.polys) and isstring(v.type) and v.type == data.areaType then
+          if istable(v.polys) and isstring(v.type) and v.type == data.area_type then
             for k2, v2 in ipairs(v.polys) do
               local pos = trace.HitPos
               local z = pos.z + 16
 
-              if z > v2[1].z and z < v.maxH then
+              if z > v2[1].z and z < v.maxh then
                 if util.vector_in_poly(pos, v2) then
                   areas.Remove(v.id)
 
@@ -51,13 +51,13 @@ flAreas.toolModes = {
 }
 
 function flAreas:OnSchemaLoaded()
-  plugin.call('AddAreaToolModes', self.toolModes)
+  plugin.call('AddAreaToolModes', self.tool_modes)
 end
 
 function flAreas:AddAreaToolModes(modeList)
   local mode = {}
   mode.title = 'Text Area'
-  mode.areaType = 'textarea'
+  mode.area_type = 'textarea'
   mode.ClientConVar = mode.ClientConVar or {}
   mode.ClientConVar['height'] = '512'
   mode.ClientConVar['text'] = 'Sample Text'
@@ -70,7 +70,7 @@ function flAreas:AddAreaToolModes(modeList)
     if !id or id == '' then return false end
 
     if !tool.area then
-      tool.area = areas.Create(id, height, {type = self.areaType})
+      tool.area = areas.Create(id, height, { type = self.area_type })
       tool.area.text = text
     end
 
@@ -97,17 +97,16 @@ function flAreas:AddAreaToolModes(modeList)
   modeList:Add(mode)
 end
 
-areas.RegisterType('textarea', 'Text Area', 'Displays text whenever player enters the area.', Color(255, 0, 255), function(player, area, bHasEntered, pos, cur_time)
-  player.textAreas = player.textAreas or {}
+areas.RegisterType('textarea', 'Text Area', 'Displays text whenever player enters the area.', Color(255, 0, 255), function(player, area, has_entered, pos, cur_time)
+  player.text_areas = player.text_areas or {}
 
-  if bHasEntered then
-    local textAreaData = player.textAreas[area.id]
-    local areaData = player.textAreas[area.id]
+  if has_entered then
+    local area_data = player.text_areas[area.id]
 
-    if istable(areaData) and areaData.resetTime > cur_time then
+    if istable(area_data) and area_data.reset_time > cur_time then
       return
     end  
 
-    player.textAreas[area.id] = {text = area.text, endTime = cur_time + 10, resetTime = cur_time + 20}
+    player.text_areas[area.id] = {text = area.text, end_time = cur_time + 10, reset_time = cur_time + 20}
   end
 end)

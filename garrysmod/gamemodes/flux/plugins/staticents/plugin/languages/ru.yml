@@ -1,4 +1,8 @@
 ru:
+  static:
+    description: Сохранить объект, на который Вы смотрите.
+  unstatic:
+    description: Удалить объект из списка на сохранение.
   err:
     not_valid_entity: Вы должны смотреть на энтити!
     cannot_static_this: Вы не можете сохранить этот энтити!

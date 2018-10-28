@@ -1,7 +1,6 @@
 local COMMAND = Command.new('static')
 COMMAND.name = 'Static'
-COMMAND.description = "Makes the entity you're looking at static."
-COMMAND.syntax = '[none]'
+COMMAND.description = t'static.description'
 COMMAND.category = 'misc'
 COMMAND.aliases = { 'staticadd', 'staticpropadd' }
 

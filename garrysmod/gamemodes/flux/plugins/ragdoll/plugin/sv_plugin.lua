@@ -11,9 +11,9 @@ function player_meta:SetRagdollEntity(ent)
 end
 
 function player_meta:IsRagdolled()
-  local ragState = self:GetDTInt(INT_RAGDOLL_STATE)
+  local rag_state = self:GetDTInt(INT_RAGDOLL_STATE)
 
-  if ragState and ragState != RAGDOLL_NONE then
+  if rag_state and rag_state != RAGDOLL_NONE then
     return true
   end
 

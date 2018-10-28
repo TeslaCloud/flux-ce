@@ -1,5 +1,5 @@
 local PANEL = {}
-PANEL.prevButton = nil
+PANEL.prev_button = nil
 PANEL.schema_logo_offset = 450
 
 function PANEL:Init()
@@ -10,14 +10,14 @@ function PANEL:Init()
 
   self:MakePopup()
 
-  local menuMusic = theme.get_sound('menu_music')
+  local menu_music = theme.get_sound('menu_music')
 
-  if !fl.menuMusic and menuMusic and menuMusic != '' then
-    sound.PlayFile(menuMusic, '', function(station)
+  if !fl.menu_music and menu_music and menu_music != '' then
+    sound.PlayFile(menu_music, '', function(station)
       if IsValid(station) then
         station:Play()
 
-        fl.menuMusic = station
+        fl.menu_music = station
       end
     end)
   end
@@ -129,11 +129,11 @@ function PANEL:add_button(text, callback)
 
     btn:SetActive(true)
 
-    if IsValid(self.prevButton) and self.prevButton != btn then
-      self.prevButton:SetActive(false)
+    if IsValid(self.prev_button) and self.prev_button != btn then
+      self.prev_button:SetActive(false)
     end
 
-    self.prevButton = btn
+    self.prev_button = btn
 
     if isfunction(callback) then
       callback(btn)

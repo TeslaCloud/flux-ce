@@ -5,13 +5,13 @@ function PANEL:Init()
   self:SetMainColor(theme.get_color('main'))
   self:SetAccentColor(theme.get_color('accent'))
 
-  self.btnClose = vgui.Create('fl_button', self)
-  self.btnClose:SetSize(20, 20)
-  self.btnClose:SetPos(0, 0)
-  self.btnClose:SetIcon('fa-times')
-  self.btnClose:SetText('')
-  self.btnClose:SetDrawBackground(false)
-  self.btnClose.DoClick = function(button)
+  self.button_close = vgui.Create('fl_button', self)
+  self.button_close:SetSize(20, 20)
+  self.button_close:SetPos(0, 0)
+  self.button_close:SetIcon('fa-times')
+  self.button_close:SetText('')
+  self.button_close:SetDrawBackground(false)
+  self.button_close.DoClick = function(button)
     self:SetVisible(false)
     self:Remove()
   end
@@ -24,8 +24,8 @@ end
 function PANEL:Think()
   local w, h = self:GetSize()
 
-  if IsValid(self.btnClose) then
-    self.btnClose:SetPos(w - 20, 0)
+  if IsValid(self.button_close) then
+    self.button_close:SetPos(w - 20, 0)
   end
 
   theme.hook('FrameThink')

@@ -65,7 +65,7 @@ function Item:add_button(name, data)
     data = {
       icon = 'path/to/icon.png',
       callback = 'on_use', -- This will call ITEM:on_use function when the button is pressed.
-      onShow = function(item_table) -- Client-Side function. Determines whether the button will be shown.
+      on_show = function(item_table) -- Client-Side function. Determines whether the button will be shown.
         return true
       end
     }
