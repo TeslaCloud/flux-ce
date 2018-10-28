@@ -176,7 +176,7 @@ function string.spelling(str, first_lower)
 
   str = (!first_lower and str:utf8sub(1, 1):utf8upper() or str:utf8sub(1, 1):utf8lower())..str:utf8sub(2, len)
 
-  if end_text != '.' and end_text != '!' and end_text != '?' then
+  if end_text != '.' and end_text != '!' and end_text != '?' and end_text != '"' then
     str = str..'.'
   end
 

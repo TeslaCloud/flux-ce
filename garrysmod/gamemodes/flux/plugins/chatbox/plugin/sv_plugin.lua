@@ -101,7 +101,7 @@ function chatbox.add_text(listeners, ...)
     hook.run('AdjustMessageData', v, data)
 
     if chatbox.can_hear(v, data) then
-      netstream.Start(v, 'chat_add_message', data)
+      cable.send(v, 'chat_add_message', data)
     end
   end
 end
