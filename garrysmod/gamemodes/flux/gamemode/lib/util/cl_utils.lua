@@ -197,8 +197,13 @@ function util.wrap_text(text, font, width, initial_width)
 
     -- The width of the word is LESS OR EQUAL than what we have remaining.
     if w <= remain then
-      current_word = current_word..v..' '
-      cur_width = cur_width + w + spaceWidth
+      if k != #exploded then
+        current_word = current_word..v..' '
+        cur_width = cur_width + w + spaceWidth
+      else
+        current_word = current_word..v
+        cur_width = cur_width + w
+      end
     else -- The width of the word is MORE than what we have remaining.
       if w > width then -- The width is more than total width we have available.
         for _, v2 in ipairs(string.Explode('', v)) do
