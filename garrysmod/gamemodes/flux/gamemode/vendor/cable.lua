@@ -90,7 +90,7 @@ if SERVER then
     end
 
     if !istable(player) then
-      if IsValid(player) then
+      if player and IsValid(player) then
         player = { player }
       else
         player = _player.GetAll()
