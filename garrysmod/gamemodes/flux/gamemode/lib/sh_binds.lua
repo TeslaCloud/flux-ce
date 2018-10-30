@@ -1,23 +1,23 @@
 if CLIENT then
   library.new('binds', fl)
 
-  local keyEnums = fl.binds.keyEnums or {}
+  local key_enums = fl.binds.key_enums or {}
   local stored = fl.binds.stored or {}
-  fl.binds.keyEnums = keyEnums
+  fl.binds.key_enums = key_enums
   fl.binds.stored = stored
 
-  if #keyEnums == 0 then
+  if #key_enums == 0 then
     for k, v in pairs(_G) do
       if string.sub(k, 1, 6) == 'MOUSE_' then
-        keyEnums[v] = k
+        key_enums[v] = k
       elseif string.sub(k, 1, 4) == 'KEY_' then
-        keyEnums[v] = k
+        key_enums[v] = k
       end
     end
   end
 
   function fl.binds:GetEnums()
-    return keyEnums
+    return key_enums
   end
 
   function fl.binds:GetAll()
@@ -27,7 +27,7 @@ if CLIENT then
   function fl.binds:GetBound()
     local binds = {}
 
-    for k, v in pairs(keyEnums) do
+    for k, v in pairs(key_enums) do
       local bind = input.LookupKeyBinding(k)
 
       if !tonumber(bind) then
@@ -41,7 +41,7 @@ if CLIENT then
   function fl.binds:GetUnbound()
     local binds = {}
 
-    for k, v in pairs(keyEnums) do
+    for k, v in pairs(key_enums) do
       local bind = input.LookupKeyBinding(k)
 
       if tonumber(bind) then
@@ -52,18 +52,18 @@ if CLIENT then
     return binds
   end
 
-  function fl.binds:GetBind(nKey)
-    return stored[nKey]
+  function fl.binds:GetBind(key)
+    return stored[key]
   end
 
-  function fl.binds:SetBind(command, nKey)
+  function fl.binds:SetBind(command, key)
     for k, v in pairs(stored) do
       if v == command then
         stored[k] = nil
       end
     end
 
-    stored[nKey] = command
+    stored[key] = command
   end
 
   function fl.binds:AddBind(id, command, key)
@@ -74,12 +74,12 @@ end
 local hooks = {}
 
 if SERVER then
-  function hooks:PlayerButtonDown(player, nKey)
-    cable.send(player, 'FLBindPressed', nKey)
+  function hooks:PlayerButtonDown(player, key)
+    cable.send(player, 'FLBindPressed', key)
   end
 else
-  cable.receive('FLBindPressed', function(nKey)
-    local bind = fl.binds:GetBind(nKey)
+  cable.receive('FLBindPressed', function(key)
+    local bind = fl.binds:GetBind(key)
 
     if bind then
       RunConsoleCommand(bind)
