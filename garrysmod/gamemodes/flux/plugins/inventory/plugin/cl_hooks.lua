@@ -1,7 +1,7 @@
-function fl_inventory:AddTabMenuItems(menu)
+function Inventory:AddTabMenuItems(menu)
   menu:AddMenuItem('inventory', {
     title = 'Inventory',
-    panel = 'fl_inventory',
+    panel = 'Inventory',
     icon = 'fa-inbox',
     callback = function(menu_panel, button)
       local inv = menu_panel.active_panel
@@ -31,7 +31,7 @@ function PLUGIN:OnContextMenuClose()
   end
 end
 
-function fl_inventory:create_hotbar()
+function Inventory:create_hotbar()
   fl.client.hotbar = vgui.Create('fl_hotbar')
   fl.client.hotbar:SetPlayer(fl.client)
   fl.client.hotbar:SetVisible(false)
@@ -39,13 +39,13 @@ function fl_inventory:create_hotbar()
   return fl.client.hotbar
 end
 
-function fl_inventory:FLInitPostEntity()
+function Inventory:FLInitPostEntity()
   if IsValid(fl.client) then
     self:create_hotbar()
   end
 end
 
-function fl_inventory:PostCharacterLoaded()
+function Inventory:PostCharacterLoaded()
   if !IsValid(fl.client.hotbar) then
     self:create_hotbar()
   end

@@ -1,11 +1,11 @@
-PLUGIN:set_global('flPrefixes')
+PLUGIN:set_global('Prefixes')
 PLUGIN:set_name('Prefixes')
 PLUGIN:set_author('AleXXX_007')
 PLUGIN:set_description('Adds prefix adjusting to avoid troubles with certain commands.')
 
 local stored = {}
 
-function flPrefixes:AddPrefix(id, prefix, callback, check)
+function Prefixes:add(id, prefix, callback, check)
   table.insert(stored, {
     id = id,
     prefix = prefix,
@@ -14,7 +14,7 @@ function flPrefixes:AddPrefix(id, prefix, callback, check)
   })
 end
 
-function flPrefixes:StringIsCommand(str)
+function Prefixes:StringIsCommand(str)
   for k, v in ipairs(stored) do
     if istable(v.prefix) then
       for k1, v1 in pairs(v.prefix) do
@@ -28,7 +28,7 @@ function flPrefixes:StringIsCommand(str)
   end
 end
 
-function flPrefixes:PlayerSay(player, text, team_chat)
+function Prefixes:PlayerSay(player, text, team_chat)
   if !string.is_command(text) then
     for k, v in ipairs(stored) do
       if istable(v.prefix) then

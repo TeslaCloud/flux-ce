@@ -323,4 +323,4 @@ function PANEL:Rebuild()
   end, {})
 end
 
-vgui.Register('fl_inventory', PANEL, 'fl_base_panel')
+vgui.Register('Inventory', PANEL, 'fl_base_panel')

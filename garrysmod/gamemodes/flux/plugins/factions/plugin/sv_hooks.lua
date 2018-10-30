@@ -1,4 +1,4 @@
-function flFactions:PostPlayerSpawn(player)
+function Factions:PostPlayerSpawn(player)
   local player_faction = player:GetFaction()
 
   if player_faction then
@@ -8,28 +8,28 @@ function flFactions:PostPlayerSpawn(player)
   end
 end
 
-function flFactions:SavePlayerData(player, save_data)
+function Factions:SavePlayerData(player, save_data)
   save_data.whitelists = fl.serialize(player:GetWhitelists())
 end
 
-function flFactions:OnActiveCharacterSet(player, char)
+function Factions:OnActiveCharacterSet(player, char)
   player:set_nv('faction', char.faction)
 end
 
-function flFactions:PostCreateCharacter(player, char_id, char, char_data)
+function Factions:PostCreateCharacter(player, char_id, char, char_data)
   char.faction = char_data.faction or 'player'
 end
 
-function flFactions:SaveCharacterData(player, char)
+function Factions:SaveCharacterData(player, char)
   char.faction = char.faction
 end
 
-function flFactions:RestoreCharacter(player, char_id, char)
+function Factions:RestoreCharacter(player, char_id, char)
   char.faction = char.faction
   char.char_class = data.char_class or ''
 end
 
-function flFactions:PlayerRestored(player, record)
+function Factions:PlayerRestored(player, record)
   if player:IsBot() then
     if faction.Count() > 0 then
       local random_faction = table.Random(faction.GetAll())

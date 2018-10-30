@@ -11,7 +11,7 @@ function TOOL:LeftClick(trace)
   if !player:can('area_tool') then return end
 
   local mode = self:GetClientNumber('mode')
-  local mode_table = flAreas.tool_modes[mode]
+  local mode_table = Area.tool_modes[mode]
 
   if istable(mode_table) and isfunction(mode_table.OnLeftClick) then
     return mode_table:OnLeftClick(self, trace)
@@ -26,7 +26,7 @@ function TOOL:RightClick(trace)
   if !player:can('area_tool') then return end
 
   local mode = self:GetClientNumber('mode')
-  local mode_table = flAreas.tool_modes[mode]
+  local mode_table = Area.tool_modes[mode]
 
   if istable(mode_table) and isfunction(mode_table.OnRightClick) then
     return mode_table:OnRightClick(self, trace)
@@ -41,7 +41,7 @@ function TOOL:Reload(trace)
   if !player:can('area_tool') then return end
 
   local mode = self:GetClientNumber('mode')
-  local mode_table = flAreas.tool_modes[mode]
+  local mode_table = Area.tool_modes[mode]
 
   if istable(mode_table) and isfunction(mode_table.OnReload) then
     return mode_table:OnReload(self, trace)
@@ -53,13 +53,13 @@ end
 function TOOL:GetAreaMode()
   local mode = self:GetClientNumber('mode')
 
-  return flAreas.tool_modes[mode]
+  return Area.tool_modes[mode]
 end
 
 if CLIENT then
   -- A function to add the controls for the tool in the tool menu.
   local function BuildCPanel(panel)
-    local mode_list = flAreas.tool_modes
+    local mode_list = Area.tool_modes
 
     panel:ClearControls()
 

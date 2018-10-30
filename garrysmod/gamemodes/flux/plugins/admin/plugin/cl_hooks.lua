@@ -1,4 +1,4 @@
-function flAdmin:AddTabMenuItems(menu)
+function Bolt:AddTabMenuItems(menu)
   menu:AddMenuItem('admin', {
     title = 'Admin',
     panel = 'flAdminPanel',
@@ -6,7 +6,7 @@ function flAdmin:AddTabMenuItems(menu)
   })
 end
 
-function flAdmin:PlayerStartVoice(player)
+function Bolt:PlayerStartVoice(player)
   if !player:can('voice') then
     return false
   end

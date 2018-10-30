@@ -1,4 +1,4 @@
-PLUGIN:set_global('flAreas')
+PLUGIN:set_global('Area')
 
 util.include('cl_plugin.lua')
 util.include('sv_plugin.lua')
@@ -7,7 +7,7 @@ if !areas then
   util.include('lib/sh_areas.lua')
 end
 
-flAreas.tool_modes = {
+Area.tool_modes = {
   Add = function(list, data)
     local vars = data.ClientConVar or data.ConVars or data.ClientConVars or data.ConVar
 
@@ -50,11 +50,11 @@ flAreas.tool_modes = {
   end
 }
 
-function flAreas:OnSchemaLoaded()
+function Area:OnSchemaLoaded()
   plugin.call('AddAreaToolModes', self.tool_modes)
 end
 
-function flAreas:AddAreaToolModes(modeList)
+function Area:AddAreaToolModes(modeList)
   local mode = {}
   mode.title = 'Text Area'
   mode.area_type = 'textarea'

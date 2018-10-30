@@ -12,11 +12,11 @@ local whitelisted_ents = {
   prop_ragdoll              = true
 }
 
-function flStaticEnts:whitelist_ent(ent_class)
+function StaticEnts:whitelist_ent(ent_class)
   whitelisted_ents[ent_class] = true
 end
 
-function flStaticEnts:PlayerMakeStatic(player, is_static)
+function StaticEnts:PlayerMakeStatic(player, is_static)
   if (is_static and !player:can('static')) or (!is_static and !player:can('unstatic')) then
     fl.player:notify(player, 'err.no_permission', player:Name())
     return
@@ -50,15 +50,15 @@ function flStaticEnts:PlayerMakeStatic(player, is_static)
   fl.player:notify(player, (is_static and 'static.added') or 'static.removed')
 end
 
-function flStaticEnts:SaveData()
+function StaticEnts:SaveData()
   hook.run('PersistenceSave')
 end
 
-function flStaticEnts:ShutDown()
+function StaticEnts:ShutDown()
   hook.run('PersistenceSave')
 end
 
-function flStaticEnts:PersistenceSave()
+function StaticEnts:PersistenceSave()
   local entities = {}
 
   for k, v in ipairs(ents.GetAll()) do
@@ -81,7 +81,7 @@ function flStaticEnts:PersistenceSave()
   end
 end
 
-function flStaticEnts:load_class(ent_class)
+function StaticEnts:load_class(ent_class)
   local loaded = data.load_plugin('static/'..ent_class, false)
 
   if !istable(loaded) then return end
@@ -104,12 +104,12 @@ function flStaticEnts:load_class(ent_class)
   end
 end
 
-function flStaticEnts:PersistenceLoad()
+function StaticEnts:PersistenceLoad()
   for ent_class, v in pairs(whitelisted_ents) do
     self:load_class(ent_class)
   end
 end
 
-function flStaticEnts:InitPostEntity()
+function StaticEnts:InitPostEntity()
   hook.run('PersistenceLoad')
 end

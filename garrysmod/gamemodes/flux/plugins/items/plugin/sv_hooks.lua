@@ -1,20 +1,20 @@
-function flItems:InitPostEntity()
+function Items:InitPostEntity()
   item.Load()
 end
 
-function flItems:SaveData()
+function Items:SaveData()
   item.SaveAll()
 end
 
-function flItems:ClientIncludedSchema(player)
+function Items:ClientIncludedSchema(player)
   item.SendToPlayer(player)
 end
 
-function flItems:PlayerUseItemEntity(player, entity, item_table)
+function Items:PlayerUseItemEntity(player, entity, item_table)
   cable.send(player, 'PlayerUseItemEntity', entity)
 end
 
-function flItems:PlayerTakeItem(player, item_table, ...)
+function Items:PlayerTakeItem(player, item_table, ...)
   if IsValid(item_table.entity) then
     local success = player:GiveItemByID(item_table.instance_id)
 
@@ -25,7 +25,7 @@ function flItems:PlayerTakeItem(player, item_table, ...)
   end
 end
 
-function flItems:PlayerDropItem(player, instance_id)
+function Items:PlayerDropItem(player, instance_id)
   local item_table = item.FindInstanceByID(instance_id)
   local trace = player:GetEyeTraceNoCursor()
 
@@ -54,7 +54,7 @@ function flItems:PlayerDropItem(player, instance_id)
   item.AsyncSaveEntities()
 end
 
-function flItems:PlayerUseItem(player, item_table, ...)
+function Items:PlayerUseItem(player, item_table, ...)
   if item_table.on_use then
     local result = item_table:on_use(player)
 
@@ -72,19 +72,19 @@ function flItems:PlayerUseItem(player, item_table, ...)
   end
 end
 
-function flItems:OnItemGiven(player, item_table, slot)
+function Items:OnItemGiven(player, item_table, slot)
   hook.run('PlayerInventoryUpdated', player)
 end
 
-function flItems:OnItemTaken(player, item_table, slot)
+function Items:OnItemTaken(player, item_table, slot)
   hook.run('PlayerInventoryUpdated', player)
 end
 
-function flItems:PlayerInventoryUpdated(player)
+function Items:PlayerInventoryUpdated(player)
   cable.send(player, 'RefreshInventory')
 end
 
-function flItems:PlayerCanUseItem(player, item_table, action, ...)
+function Items:PlayerCanUseItem(player, item_table, action, ...)
   local trace = player:GetEyeTraceNoCursor()
 
   if (!player:HasItemByID(item_table.instance_id) and !IsValid(item_table.entity)) or (IsValid(item_table.entity) and trace.Entity and trace.Entity != item_table.entity) then
@@ -92,7 +92,7 @@ function flItems:PlayerCanUseItem(player, item_table, action, ...)
   end
 end
 
-function flItems:PostCharacterLoaded(player, character)
+function Items:PostCharacterLoaded(player, character)
   local ply_inv = player:GetInventory()
 
   for slot, ids in ipairs(ply_inv) do
@@ -106,7 +106,7 @@ function flItems:PostCharacterLoaded(player, character)
   end
 end
 
-function flCharacters:PreSaveCharacter(player, index)
+function Characters:PreSaveCharacter(player, index)
   local ply_inv = player:GetInventory()
 
   for slot, ids in ipairs(ply_inv) do

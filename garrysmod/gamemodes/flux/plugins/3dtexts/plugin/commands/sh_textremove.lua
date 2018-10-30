@@ -4,7 +4,7 @@ COMMAND.description = 'Removes a 3D text.'
 COMMAND.category = 'misc'
 
 function COMMAND:on_run(player)
-  fl3DText:Remove(player)
+  SurfaceText:Remove(player)
 end
 
 COMMAND:register()

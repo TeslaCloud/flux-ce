@@ -1,4 +1,4 @@
-function flItems:PlayerUseItemMenu(item_table, is_entity)
+function Items:PlayerUseItemMenu(item_table, is_entity)
   if !item_table then return end
 
   local item_menu = vgui.Create('fl_menu')
@@ -64,11 +64,11 @@ function flItems:PlayerUseItemMenu(item_table, is_entity)
   end
 end
 
-function flItems:PlayerDropItem(item_table, panel, mousex, mousey)
+function Items:PlayerDropItem(item_table, panel, mousex, mousey)
   cable.send('PlayerDropItem', item_table.instance_id)
 end
 
-function flItems:HUDPaint()
+function Items:HUDPaint()
   local hold_start = fl.client:get_nv('hold_start')
 
   if hold_start then
@@ -79,7 +79,7 @@ function flItems:HUDPaint()
   end
 end
 
-function flItems:PreDrawHalos()
+function Items:PreDrawHalos()
   local ent = fl.client:get_nv('hold_entity')
 
   if IsValid(ent) then
@@ -87,7 +87,7 @@ function flItems:PreDrawHalos()
   end
 end
 
-function flItems:Think()
+function Items:Think()
   if !fl.client:get_nv('hold_start') then return end
 
   local ent = fl.client:get_nv('hold_entity')
@@ -103,7 +103,7 @@ function flItems:Think()
   end
 end
 
-function flItems:OnItemDataReceived()
+function Items:OnItemDataReceived()
   for k, v in ipairs(ents.GetAll()) do
     if IsValid(v) and v:GetClass() == 'fl_item' then
       cable.send('RequestItemData', v:EntIndex())

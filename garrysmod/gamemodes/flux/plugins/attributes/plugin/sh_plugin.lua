@@ -1,8 +1,8 @@
-PLUGIN:set_global('flAttributes')
+PLUGIN:set_global('Attributes')
 
 util.include('sv_hooks.lua')
 
-function flAttributes:PluginIncludeFolder(extra, folder)
+function Attributes:PluginIncludeFolder(extra, folder)
   for k, v in pairs(attributes.types) do
     if extra == k then
       attributes.include_type(k, v, folder..'/'..k..'/')

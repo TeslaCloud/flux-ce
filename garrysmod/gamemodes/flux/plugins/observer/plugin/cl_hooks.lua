@@ -1,7 +1,7 @@
-function flObserver:PlayerEnterNoclip(player)
+function Observer:PlayerEnterNoclip(player)
   return false
 end
 
-function flObserver:PlayerExitNoclip(player)
+function Observer:PlayerExitNoclip(player)
   return false
 end

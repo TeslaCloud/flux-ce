@@ -10,7 +10,7 @@ function TOOL:LeftClick(trace)
 
   if !IsValid(player) or !player:can('mapsceneadd') then return end
 
-  flMapscenes:add_point(player:EyePos(), player:GetAngles())
+  Mapscenes:add_point(player:EyePos(), player:GetAngles())
 
   fl.player:notify(player, 'mapscene.point_added')
 
@@ -22,10 +22,10 @@ function TOOL.BuildCPanel(CPanel)
   list:SetSize(30, 90)
   list:AddColumn(t'mapscene.title')
   list.Think = function(panel)
-    if #flMapscenes.points != #list:GetLines() then
+    if #Mapscenes.points != #list:GetLines() then
       list:Clear()
 
-      for k, v in pairs(flMapscenes.points) do
+      for k, v in pairs(Mapscenes.points) do
         local line = list:AddLine(t'mapscene.title'..' #'..k)
         line.id = k
       end

@@ -1,4 +1,4 @@
-PLUGIN:set_global('flVisibleLegs')
+PLUGIN:set_global('VisibleLegs')
 PLUGIN:set_name('Visible Legs')
 PLUGIN:set_author('NightAngel')
 PLUGIN:set_description("Lets clients see their character's legs.")
@@ -54,7 +54,7 @@ if IsValid(fl.client) and fl.client.legs then
   fl.client.legs:Remove()
 end
 
-function flVisibleLegs:PlayerModelChanged(player, sNewModel, sOldModel)
+function VisibleLegs:PlayerModelChanged(player, sNewModel, sOldModel)
   if fl.client.legs then
     fl.client.legs:Remove()
   end
@@ -63,7 +63,7 @@ end
 local offset = Vector(-50, -50, 0)
 local scale = Vector(1, 1, 1)
 
-function flVisibleLegs:SpawnLegs(player)
+function VisibleLegs:SpawnLegs(player)
   if IsValid(player.legs) then
     player.legs:Remove()
   end
@@ -87,7 +87,7 @@ function flVisibleLegs:SpawnLegs(player)
   end
 end
 
-function flVisibleLegs:RenderScreenspaceEffects()
+function VisibleLegs:RenderScreenspaceEffects()
   local player = fl.client
 
   if player:get_nv('observer') or player:ShouldDrawLocalPlayer() or !player:Alive() then return end
