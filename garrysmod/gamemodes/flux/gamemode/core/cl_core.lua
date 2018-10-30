@@ -337,3 +337,27 @@ do
     end
   end
 end
+
+do
+  local anim_cache = {}
+
+  function fl.update_animation(id, x, y, delta)
+    anim_cache[id] = { x = x, y = y, delta = delta }
+    return anim_cache[id]
+  end
+
+  function fl.register_animation(id, x, y, delta)
+    anim_cache[id] = anim_cache[id] or fl.update_animation(id, x, y, delta)
+  end
+
+  function fl.draw_animation(id, tx, ty, callback)
+    local anim = anim_cache[id]
+
+    if !anim then error(id..' is not a registered animation!\n') end
+
+    callback(anim.x or tx, anim.y or ty)
+
+    if anim.x then anim.x = Lerp(anim.delta, anim.x, tx) end
+    if anim.y then anim.y = Lerp(anim.delta, anim.y, ty) end
+  end
+end
