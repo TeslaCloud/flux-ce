@@ -41,7 +41,7 @@ function PANEL:Think()
   end
 end
 
-function PANEL:RecreateSidebar(bShouldCreateButtons)
+function PANEL:RecreateSidebar(create_buttons)
   if IsValid(self.sidebar) then
     self.sidebar:safe_remove()
   end
@@ -56,7 +56,7 @@ function PANEL:RecreateSidebar(bShouldCreateButtons)
 
   self.sidebar:AddSpace(theme.get_option('menu_sidebar_logo_space'))
 
-  if bShouldCreateButtons then
+  if create_buttons then
     hook.run('AddMainMenuItems', self, self.sidebar)
   end
 end

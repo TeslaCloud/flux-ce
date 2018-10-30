@@ -33,8 +33,8 @@ function Chatbox:OnResolutionChanged(newW, newH)
   end
 end
 
-function Chatbox:PlayerBindPress(player, bind, bPress)
-  if fl.client:HasInitialized() and (string.find(bind, 'messagemode') or string.find(bind, 'messagemode2')) and bPress then
+function Chatbox:PlayerBindPress(player, bind, pressed)
+  if fl.client:HasInitialized() and (string.find(bind, 'messagemode') or string.find(bind, 'messagemode2')) and pressed then
     if string.find(bind, 'messagemode2') then
       fl.client.typing_team_chat = true
     else

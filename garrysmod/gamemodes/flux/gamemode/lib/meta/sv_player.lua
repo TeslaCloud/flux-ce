@@ -27,15 +27,13 @@ function player_meta:SetPlayerData(key, value)
 end
 
 function player_meta:GetPlayerData(key, default)
-  local data = self:get_data()
-
-  return data[key] or default
+  return self:get_data()[key] or default
 end
 
-function player_meta:SetInitialized(bIsInitialized)
-  if bIsInitialized == nil then bIsInitialized = true end
+function player_meta:SetInitialized(initialized)
+  if initialized == nil then initialized = true end
 
-  self:SetDTBool(BOOL_INITIALIZED, bIsInitialized)
+  self:SetDTBool(BOOL_INITIALIZED, initialized)
 end
 
 function player_meta:notify(message, arguments)

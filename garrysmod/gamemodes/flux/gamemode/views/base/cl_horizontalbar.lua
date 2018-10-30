@@ -6,8 +6,8 @@ function PANEL:Init()
   self.btnRight:SetVisible(false)
 end
 
-function PANEL:SetCentered(bCentered)
-  self.centered = bCentered
+function PANEL:SetCentered(centered)
+  self.centered = centered
 end
 
 function PANEL:Paint(width, height)
@@ -34,11 +34,11 @@ function PANEL:PerformLayout()
       wide = wide + v:GetWide() + self.m_iOverlap
     end
 
-  x = w * 0.5 - wide * 0.5
+    x = w * 0.5 - wide * 0.5
   end
 
   for k, v in pairs(self.Panels) do
-    if (!IsValid(v)) then continue end
+    if !IsValid(v) then continue end
 
     v:SetPos(x, 0)
     v:SetTall(h)

@@ -181,7 +181,7 @@ end
 do
   local prev_index = 0
 
-  function PLUGIN:PlayerBindPress(player, bind, bIsPressed)
+  function PLUGIN:PlayerBindPress(player, bind, pressed)
     local weapon = player:GetActiveWeapon()
 
     if !player:InVehicle() then
@@ -190,19 +190,19 @@ do
         local oldIndex = self.weapon_index
         bind = bind:lower()
 
-        if bind:find('invprev') and bIsPressed then
+        if bind:find('invprev') and pressed then
           self.weapon_index = relative_clamp(self.weapon_index - 1, 1, weapon_count)
 
           plugin.call('OnWeaponIndexChange', oldIndex, self.weapon_index)
 
           return true
-        elseif bind:find('invnext') and bIsPressed then
+        elseif bind:find('invnext') and pressed then
           self.weapon_index = relative_clamp(self.weapon_index + 1, 1, weapon_count)
 
           plugin.call('OnWeaponIndexChange', oldIndex, self.weapon_index)
 
           return true
-        elseif bind:find('slot') and bIsPressed then
+        elseif bind:find('slot') and pressed then
           local index = tonumber(bind:sub(5, bind:len())) or 1
           local classic_scroll = false
 
@@ -231,7 +231,7 @@ do
           plugin.call('OnWeaponIndexChange', oldIndex, index)
 
           return true
-        elseif bind:find('attack') and self.is_open and bIsPressed then
+        elseif bind:find('attack') and self.is_open and pressed then
           RunConsoleCommand('selectweapon', self.weapon_index)
 
           plugin.call('OnWeaponSelected', self.weapon_index)

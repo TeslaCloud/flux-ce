@@ -71,8 +71,8 @@ function PANEL:OpenPanel(id)
   end
 end
 
-function PANEL:SetFullscreen(bFullscreen)
-  if bFullscreen then
+function PANEL:SetFullscreen(fullscreen)
+  if fullscreen then
     self.sidebar:MoveTo(-self.sidebar:GetWide(), 0, 0.3)
     self:SetTitle('')
 

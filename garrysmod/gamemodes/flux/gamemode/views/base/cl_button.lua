@@ -30,8 +30,8 @@ function PANEL:Think()
   end
 end
 
-function PANEL:SetCentered(bCentered)
-  self.m_Centered = bCentered
+function PANEL:SetCentered(centered)
+  self.m_Centered = centered
 end
 
 function PANEL:SetActive(active)
@@ -65,10 +65,10 @@ function PANEL:SetTextOffset(pos)
   self.m_TextPos = pos or 0
 end
 
-function PANEL:SetIcon(icon, bRight)
+function PANEL:SetIcon(icon, right)
   self.m_Icon = tostring(icon) or false
 
-  if bRight then
+  if right then
     self.m_IconLeft = false
   end
 end
@@ -90,8 +90,8 @@ function PANEL:OnMousePressed(key)
   end
 end
 
-function PANEL:SetTextAutoposition(bAutoposition)
-  self.m_Autopos = bAutoposition
+function PANEL:SetTextAutoposition(autopos)
+  self.m_Autopos = autopos
 end
 
 function PANEL:SizeToContents()
