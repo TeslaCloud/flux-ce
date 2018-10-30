@@ -266,11 +266,11 @@ do
 
     str = str:Replace('-', '')
 
-    local exploded = string.Explode(' ', str)
+    local pieces = str:split(' ')
     local result = 0
     local token, num = '', 0
 
-    for k, v in ipairs(exploded) do
+    for k, v in ipairs(pieces) do
       local n = tonumber(v)
 
       if isstring(v) then

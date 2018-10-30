@@ -53,9 +53,9 @@ end
 
 function PANEL:SetText(text)
   if text:find('\n') then
-    text = string.Explode('\n', text)
+    text = text:split('\n')
   else
-    text = {text}
+    text = { text }
   end
 
   self.notificationText = text

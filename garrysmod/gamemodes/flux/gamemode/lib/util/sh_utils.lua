@@ -91,11 +91,11 @@ function util.player_list_to_string(player_list)
 end
 
 function util.remove_newlines(str)
-  local exploded = string.Explode('', str)
+  local pieces = str:split()
   local to_ret = ''
   local skip = ''
 
-  for k, v in ipairs(exploded) do
+  for k, v in ipairs(pieces) do
     if skip != '' then
       to_ret = to_ret..v
 
@@ -125,9 +125,10 @@ function util.remove_newlines(str)
 end
 
 function txt(text)
-  local lines = string.Explode('\n', (text or ''):chomp('\n'))
+  local lines = (text or ''):chomp('\n'):split('\n')
   local lowest_indent
   local output = ''
+
   for k, v in ipairs(lines) do
     if v:match('^[%s]+$') then continue end
     local indent = v:match('^([%s]+)')
@@ -137,9 +138,11 @@ function txt(text)
       lowest_indent = indent
     end
   end
+
   for k, v in ipairs(lines) do
     output = output..v:trim_start(lowest_indent)..'\n'
   end
+
   return output:chomp(' '):chomp('\n')
 end
 

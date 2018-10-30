@@ -7,7 +7,7 @@ end
 
 function fl_inventory:OnActiveCharacterSet(player, character)
   local inv = {}
-  local item_ids = string.Explode(',', character.item_ids or '')
+  local item_ids = (character.item_ids or ''):split(',')
 
   for k, v in ipairs(item_ids) do
     if !tonumber(v) then continue end
