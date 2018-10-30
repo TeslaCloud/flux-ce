@@ -30,7 +30,7 @@ end
 function ActiveRecord.dump_schema(version)
   local result = [[--
 -- This is an ActiveRecord schema file.
--- Dumped at ]]..to_datetime(os.time())..[[ 
+-- Dumped at ]]..to_datetime(os.time())..[[
 --
 local Structure = ActiveRecord.Schema:define(]]..version..[[)
   function Structure:create_tables()

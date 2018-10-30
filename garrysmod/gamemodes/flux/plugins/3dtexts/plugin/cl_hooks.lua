@@ -60,7 +60,7 @@ function SurfaceText:DrawPicturePreview()
     if url:ends('.png') or url:ends('.jpg') or url:ends('.jpeg') then
       draw.textured_rect(URLMaterial(url), -width * 0.5, -height * 0.5, width, height, color_white)
     else
-      draw.RoundedBox(0, -width * 0.5, -height * 0.5, width, height, Color(255, 0, 0, 40))      
+      draw.RoundedBox(0, -width * 0.5, -height * 0.5, width, height, Color(255, 0, 0, 40))
     end
   cam.End3D2D()
 end

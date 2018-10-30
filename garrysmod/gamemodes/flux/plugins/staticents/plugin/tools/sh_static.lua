@@ -10,7 +10,7 @@ function TOOL:LeftClick(trace)
 
   plugin.call('PlayerMakeStatic', player, true)
 
-   return true
+  return true
 end
 
 function TOOL:RightClick(trace)

@@ -14,7 +14,7 @@ function TOOL:LeftClick(trace)
 
   fl.player:notify(player, 'mapscene.point_added')
 
-   return true
+  return true
 end
 
 function TOOL.BuildCPanel(CPanel)

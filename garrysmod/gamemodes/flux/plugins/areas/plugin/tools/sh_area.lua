@@ -17,7 +17,7 @@ function TOOL:LeftClick(trace)
     return mode_table:OnLeftClick(self, trace)
   end
 
-   return true
+  return true
 end
 
 function TOOL:RightClick(trace)
@@ -32,7 +32,7 @@ function TOOL:RightClick(trace)
     return mode_table:OnRightClick(self, trace)
   end
 
-   return true
+  return true
 end
 
 function TOOL:Reload(trace)
@@ -47,7 +47,7 @@ function TOOL:Reload(trace)
     return mode_table:OnReload(self, trace)
   end
 
-   return true
+  return true
 end
 
 function TOOL:GetAreaMode()

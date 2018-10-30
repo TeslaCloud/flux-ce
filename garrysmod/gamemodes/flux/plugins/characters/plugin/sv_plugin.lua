@@ -11,7 +11,7 @@ function player_meta:SetActiveCharacter(id)
     hook.run('OnCharacterChange', self, self:GetCharacter(), id)
   end
 
-  local real_character = nil 
+  local real_character = nil
 
   for k, v in ipairs(self.record.characters) do
     if v.character_id == id then

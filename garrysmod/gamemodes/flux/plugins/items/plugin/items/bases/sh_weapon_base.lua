@@ -17,7 +17,7 @@ ItemWeapon:add_button(t'item.option.unload', {
     local ammo = item_table:get_data('ammo', {0, 0})
     local weapon = fl.client:GetWeapon(item_table.weapon_class)
 
-    if ((ammo[1] > 0 or ammo[2] > 0 or IsValid(weapon) and (weapon:Clip1() != 0 or weapon:Clip2() != 0)) 
+    if ((ammo[1] > 0 or ammo[2] > 0 or IsValid(weapon) and (weapon:Clip1() != 0 or weapon:Clip2() != 0))
       and !IsValid(item_table.Entity) and item_table:IsEquipped()) then
       return true
     end

@@ -1,6 +1,6 @@
 function Mapscenes:RenderScreenspaceEffects()
   if IsValid(fl.client) and fl.client:Alive() and IsValid(fl.client:GetActiveWeapon()) and fl.client:GetActiveWeapon():GetClass() == 'gmod_tool'
-   and fl.client:GetTool() and fl.client:GetTool().Name == 'Mapscene tool' and !IsValid(fl.intro_panel) then
+  and fl.client:GetTool() and fl.client:GetTool().Name == 'Mapscene tool' and !IsValid(fl.intro_panel) then
     for k, v in pairs(self.points) do
       local start_pos = v.pos:ToScreen()
 
