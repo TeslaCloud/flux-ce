@@ -17,10 +17,10 @@ function PANEL:Paint(width, height)
   theme.hook('PaintSidebar', self, width, height)
 end
 
-function PANEL:AddPanel(panel, bCenter)
+function PANEL:AddPanel(panel, center)
   local x, y = panel:GetPos()
 
-  if bCenter then
+  if center then
     x = self:GetWide() * 0.5 - panel:GetWide() * 0.5
   end
 

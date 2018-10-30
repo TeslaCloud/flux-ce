@@ -13,9 +13,9 @@ function PANEL:SetGridSize(x, y)
   self.m_GridSize.y = y
 end
 
-function PANEL:GetGridSize(bDimension)
-  if isbool(bDimension) then
-    if bDimension then
+function PANEL:GetGridSize(dimension)
+  if isbool(dimension) then
+    if dimension then
       return self.m_GridSize.x
     else
       return self.m_GridSize.y

@@ -10,32 +10,32 @@ end
 
 player_meta.flName = player_meta.flName or player_meta.Name
 
-function player_meta:Name(bForceTrueName)
-  return (!bForceTrueName and hook.run('GetPlayerName', self)) or self:get_nv('name', self:flName())
+function player_meta:Name(force_true_name)
+  return (!force_true_name and hook.run('GetPlayerName', self)) or self:get_nv('name', self:flName())
 end
 
 function player_meta:SteamName()
   return self:flName()
 end
 
-function player_meta:SetModel(sPath)
-  local oldModel = self:GetModel()
+function player_meta:SetModel(path)
+  local old_model = self:GetModel()
 
-  hook.run('PlayerModelChanged', self, sPath, oldModel)
+  hook.run('PlayerModelChanged', self, path, old_model)
 
   if SERVER then
-    cable.send(nil, 'PlayerModelChanged', self:EntIndex(), sPath, oldModel)
+    cable.send(nil, 'PlayerModelChanged', self:EntIndex(), path, old_model)
   end
 
-  return self:flSetModel(sPath)
+  return self:flSetModel(path)
 end
 
 --[[
   Actions system
 --]]
 
-function player_meta:SetAction(id, bForce)
-  if bForce or self:GetAction() == 'none' then
+function player_meta:SetAction(id, force)
+  if force or self:GetAction() == 'none' then
     self:set_nv('action', id)
 
     return true

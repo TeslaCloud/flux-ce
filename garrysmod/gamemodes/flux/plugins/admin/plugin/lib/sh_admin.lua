@@ -58,14 +58,14 @@ function fl.admin:create_group(id, data)
   end
 end
 
-function fl.admin:AddPermission(id, category, data, bForce)
+function fl.admin:AddPermission(id, category, data, force)
   if !id then return end
 
   category = category or 'general'
   data.id = id
   permissions[category] = permissions[category] or {}
 
-  if !permissions[category][id] or bForce then
+  if !permissions[category][id] or force then
     permissions[category][id] = data
   end
 end
@@ -171,7 +171,7 @@ if SERVER then
     bans[id] = obj
   end
 
-  function fl.admin:ban(player, duration, reason, bPreventKick)
+  function fl.admin:ban(player, duration, reason, prevent_kick)
     if !isstring(player) and !IsValid(player) then return end
 
     duration = duration or 0
@@ -184,7 +184,7 @@ if SERVER then
       name = player:SteamName()
       steam_id = player:SteamID()
 
-      if !bPreventKick then
+      if !prevent_kick then
         player:Kick('You have been banned: '..tostring(reason))
       end
     end
