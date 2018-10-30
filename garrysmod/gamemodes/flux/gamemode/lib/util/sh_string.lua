@@ -229,22 +229,26 @@ end
 
 function string.parse_table(str, ref)
   ref = istable(ref) and ref or _G
-  local tables = string.Explode('::', str)
+  local tables = str:split('::')
+
   for k, v in ipairs(tables) do
     ref = ref[v]
     if !istable(ref) then return false, v end
   end
+
   return ref
 end
 
 function string.parse_parent(str, ref)
   ref = istable(ref) and ref or _G
-  local tables = string.Explode('::', str)
+  local tables = str:split('::')
+
   for k, v in ipairs(tables) do
     local new_ref = ref[v]
     if !istable(new_ref) then return ref, v end
     ref = new_ref
   end
+
   if istable(ref) then
     return ref, str
   else

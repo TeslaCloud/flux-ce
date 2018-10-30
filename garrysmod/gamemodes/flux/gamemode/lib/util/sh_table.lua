@@ -99,10 +99,10 @@ end
 function table.from_string(str)
   str = util.remove_newlines(str)
 
-  local exploded = string.Explode(',', str)
+  local pieces = str:split(',')
   local tab = {}
 
-  for k, v in ipairs(exploded) do
+  for k, v in ipairs(pieces) do
     if !isstring(v) then continue end
 
     if !string.find(v, '=') then
@@ -118,7 +118,7 @@ function table.from_string(str)
         local last_key = nil
         local buff = v
 
-        for k2, v2 in ipairs(exploded) do
+        for k2, v2 in ipairs(pieces) do
           if k2 <= k then continue end
 
           if v2:find('}') then
@@ -134,7 +134,7 @@ function table.from_string(str)
 
         if last_key then
           for i = k, last_key do
-            exploded[i] = nil
+            pieces[i] = nil
           end
 
           v = table.from_string(buff)
@@ -148,7 +148,7 @@ function table.from_string(str)
 
       table.insert(tab, v)
     else
-      local parts = string.Explode('=', v)
+      local parts = v:split('=')
       local key = parts[1]:trim_end(' ', true):trim_end('\t', true)
       local value = parts[2]:trim_start(' ', true):trim_start('\t', true)
 
@@ -191,12 +191,12 @@ function s(what)
 end
 
 function w(str)
-  return string.Split(str, ' ')
+  return str:split(' ')
 end
 
 function wk(str)
   local ret = {}
-  for k, v in ipairs(string.Split(str, ' ')) do
+  for k, v in ipairs(str:split(' ')) do
     ret[v] = true
   end
   return ret

@@ -180,14 +180,6 @@ do
     surface.DrawPoly(info)
   end
 
-
-  local function scale_vertices(vertices, scale_x, scale_y)
-    for k, v in pairs(vertices) do
-      v.x = v.x * scale_x
-      v.y = v.y * scale_y
-    end
-  end
-
   function surface.draw_circle_partial(percentage, x, y, radius, passes)
     if !percentage or !x or !y or !radius then
       error('surface.draw_circle_partial - Too few arguments to function call (4 expected)')

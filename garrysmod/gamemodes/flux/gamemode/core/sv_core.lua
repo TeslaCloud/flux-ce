@@ -1,30 +1,30 @@
 DeriveGamemode('sandbox')
 
-fileio.OldWrite = fileio.OldWrite or fileio.Write
+fileio.old_write = fileio.old_write or fileio.Write
 
 function fileio.Write(file_name, file_contents)
-  local exploded = string.Explode('/', file_name)
-  local curPath = ''
+  local pieces = string.split(file_name, '/')
+  local current_path = ''
 
-  for k, v in ipairs(exploded) do
+  for k, v in ipairs(pieces) do
     if string.GetExtensionFromFilename(v) != nil then
       break
     end
 
-    curPath = curPath..v..'/'
+    current_path = current_path..v..'/'
 
-    if !file.Exists(curPath, 'GAME') then
-      fileio.MakeDirectory(curPath)
+    if !file.Exists(current_path, 'GAME') then
+      fileio.MakeDirectory(current_path)
     end
   end
 
-  fileio.OldWrite(file_name, file_contents)
+  fileio.old_write(file_name, file_contents)
 end
 
-oldServerLog = oldServerLog or ServerLog
+old_server_log = old_server_log or ServerLog
 
 function ServerLog(...)
-  oldServerLog(...)
+  old_server_log(...)
   print('')
 end
 

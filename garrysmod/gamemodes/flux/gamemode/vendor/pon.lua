@@ -147,7 +147,7 @@ do
     table.insert(output, '}')
   end
 
-  --  ENCODE STRING
+  -- ENCODE STRING
   local gsub = string.gsub
   encode['string'] = function(self, str, output)
     --if try_cache(str, output) then return end
@@ -159,22 +159,22 @@ do
     end
   end
 
-  --  ENCODE NUMBER
+  -- ENCODE NUMBER
   encode['number'] = function(self, num, output)
     table.insert(output, tonumber(num)..';')
   end
 
-  --  ENCODE BOOLEAN
+  -- ENCODE BOOLEAN
   encode['boolean'] = function(self, val, output)
     table.insert(output, val and 't' or 'f')
   end
 
-  --  ENCODE VECTOR
+  -- ENCODE VECTOR
   encode['Vector'] = function(self, val, output)
     table.insert(output, ('v'..val.x..','..val.y)..(','..val.z..';'))
   end
 
-  --  ENCODE ANGLE
+  -- ENCODE ANGLE
   encode['Angle'] = function(self, val, output)
     table.insert(output, ('a'..val.p..','..val.y)..(','..val.r..';'))
   end

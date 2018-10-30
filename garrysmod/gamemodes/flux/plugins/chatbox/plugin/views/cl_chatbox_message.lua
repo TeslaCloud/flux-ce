@@ -33,7 +33,7 @@ end
 
 function PANEL:Init()
   --if fl.client:can('chat_mod') then
-  --  self.moderation = vgui.Create('flChatModeration', self)
+  -- self.moderation = vgui.Create('flChatModeration', self)
   --end
 
   self.added_at = CurTime()

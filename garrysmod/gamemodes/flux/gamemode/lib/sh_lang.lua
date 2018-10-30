@@ -64,7 +64,7 @@ local default_lang_table = {
 function fl.lang:get_phrase(id, ref)
   ref = ref or stored
 
-  local tables = string.Explode('.', id)
+  local tables = id:split('.')
 
   for k, v in ipairs(tables) do
     local val = ref[v]

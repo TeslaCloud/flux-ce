@@ -37,7 +37,7 @@ function util.hex_to_decimalimal(hex)
   if isnumber(hex) then return hex end
 
   local sum = 0
-  local chars = table.Reverse(string.Explode('', hex))
+  local chars = table.Reverse(hex:split())
   local idx = 1
 
   for i = 0, hex:len() - 1 do

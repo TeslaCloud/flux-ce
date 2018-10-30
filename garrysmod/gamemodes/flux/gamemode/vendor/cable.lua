@@ -20,7 +20,7 @@ function cable.receive(id, callback)
 
   return net.Receive(id, function(length, player)
     local c_len = net.ReadUInt(8)
-    local c_tables = table.map(string.Split(net.ReadString(), ';'), function(v) return tonumber(v) end)
+    local c_tables = table.map(string.split(net.ReadString(), ';'), function(v) return tonumber(v) end)
     local args = {}
 
     if c_len > 0 then

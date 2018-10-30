@@ -126,10 +126,10 @@ do
   function util.cache_url_material(url)
     if isstring(url) and url != '' then
       local url_crc = util.CRC(url)
-      local exploded = string.Explode('/', url)
+      local pieces = url:split('/')
 
-      if istable(exploded) and #exploded > 0 then
-        local extension = string.GetExtensionFromFilename(exploded[#exploded])
+      if istable(pieces) and #pieces > 0 then
+        local extension = string.GetExtensionFromFilename(pieces[#pieces])
 
         if extension then
           local extension = '.'..extension
@@ -141,7 +141,7 @@ do
             return
           end
 
-          local directories = string.Explode('/', path)
+          local directories = path:split('/')
           local currentPath = ''
 
           for k, v in pairs(directories) do
@@ -187,17 +187,17 @@ function util.wrap_text(text, font, width, initial_width)
   local output = {}
   local spaceWidth = util.text_size(' ', font)
   local dashWidth = util.text_size('-', font)
-  local exploded = string.Explode(' ', text)
+  local pieces = text:split(' ')
   local cur_width = initial_width or 0
   local current_word = ''
 
-  for k, v in ipairs(exploded) do
+  for k, v in ipairs(pieces) do
     local w, h = util.text_size(v, font)
     local remain = width - cur_width
 
     -- The width of the word is LESS OR EQUAL than what we have remaining.
     if w <= remain then
-      if k != #exploded then
+      if k != #pieces then
         current_word = current_word..v..' '
         cur_width = cur_width + w + spaceWidth
       else
@@ -206,7 +206,7 @@ function util.wrap_text(text, font, width, initial_width)
       end
     else -- The width of the word is MORE than what we have remaining.
       if w > width then -- The width is more than total width we have available.
-        for _, v2 in ipairs(string.Explode('', v)) do
+        for _, v2 in ipairs(v:split()) do
           local char_width, _ = util.text_size(v2, font)
 
           remain = width - cur_width
