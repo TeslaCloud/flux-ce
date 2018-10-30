@@ -37,7 +37,7 @@ function TOOL:LeftClick(trace)
     normal = trace.HitNormal
   }
 
-  fl3DText:AddPicture(data)
+  SurfaceText:AddPicture(data)
 
   fl.player:notify(player, '3d_picture.placed')
 
@@ -47,7 +47,7 @@ end
 function TOOL:RightClick(trace)
   if CLIENT then return true end
 
-  fl3DText:RemovePicture(self:GetOwner())
+  SurfaceText:RemovePicture(self:GetOwner())
 
   return true
 end

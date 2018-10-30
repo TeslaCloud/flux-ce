@@ -1,9 +1,9 @@
-PLUGIN:set_global('flAdmin')
+PLUGIN:set_global('Bolt')
 
 util.include('cl_hooks.lua')
 util.include('sv_hooks.lua')
 
-function flAdmin:OnPluginLoaded()
+function Bolt:OnPluginLoaded()
   plugin.add_extra('commands')
   plugin.add_extra('roles')
 
@@ -13,7 +13,7 @@ function flAdmin:OnPluginLoaded()
   fl.admin:include_roles(folder..'/roles/')
 end
 
-function flAdmin:PluginIncludeFolder(extra, folder)
+function Bolt:PluginIncludeFolder(extra, folder)
   if extra == 'roles' then
     fl.admin:include_roles(folder..'/roles/')
 
@@ -21,10 +21,10 @@ function flAdmin:PluginIncludeFolder(extra, folder)
   end
 end
 
-function flAdmin:PlayerHasPermission(player, action, object)
+function Bolt:PlayerHasPermission(player, action, object)
   return fl.admin:can(player, action, object)
 end
 
-function flAdmin:PlayerIsRoot(player)
+function Bolt:PlayerIsRoot(player)
   return player.can_anything
 end

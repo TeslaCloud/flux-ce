@@ -1,4 +1,4 @@
-function flMapscenes:RenderScreenspaceEffects()
+function Mapscenes:RenderScreenspaceEffects()
   if IsValid(fl.client) and fl.client:Alive() and IsValid(fl.client:GetActiveWeapon()) and fl.client:GetActiveWeapon():GetClass() == 'gmod_tool'
    and fl.client:GetTool() and fl.client:GetTool().Name == 'Mapscene tool' and !IsValid(fl.intro_panel) then
     for k, v in pairs(self.points) do
@@ -17,7 +17,7 @@ end
 
 local view = {}
 
-function flMapscenes:CalcView(player, origin, angles, fov)
+function Mapscenes:CalcView(player, origin, angles, fov)
   if IsValid(fl.intro_panel) then
     if #self.points > 0 then
       local cur_time = CurTime()

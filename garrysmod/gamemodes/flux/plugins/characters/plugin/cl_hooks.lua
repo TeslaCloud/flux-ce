@@ -1,4 +1,4 @@
-function flCharacters:PlayerInitialized()
+function Characters:PlayerInitialized()
   if !fl.client:GetCharacter() and !IsValid(fl.intro_panel) then
     fl.intro_panel = vgui.Create('flIntro')
 
@@ -8,7 +8,7 @@ function flCharacters:PlayerInitialized()
   end
 end
 
-function flCharacters:OnIntroPanelRemoved()
+function Characters:OnIntroPanelRemoved()
   if !fl.client:GetCharacter() then
     fl.intro_panel = theme.create_panel('main_menu')
 
@@ -31,7 +31,7 @@ end
 do
   local curVolume = 1
 
-  function flCharacters:Tick()
+  function Characters:Tick()
     if fl.menu_music then
       if !system.HasFocus() then
         fl.menu_music:SetVolume(0)
@@ -53,7 +53,7 @@ do
   end
 end
 
-function flCharacters:OnThemeLoaded(current_theme)
+function Characters:OnThemeLoaded(current_theme)
   current_theme:add_panel('main_menu', function(id, parent, ...)
     return vgui.Create('fl_main_menu', parent)
   end)
@@ -78,7 +78,7 @@ function flCharacters:OnThemeLoaded(current_theme)
   end
 end
 
-function flCharacters:AddTabMenuItems(menu)
+function Characters:AddTabMenuItems(menu)
   menu:AddMenuItem('mainmenu', {
     title = t'tab_menu.main_menu',
     icon = 'fa-users',
@@ -89,31 +89,31 @@ function flCharacters:AddTabMenuItems(menu)
   }, 1)
 end
 
-function flCharacters:PostCharacterLoaded(nCharID)
+function Characters:PostCharacterLoaded(nCharID)
   if IsValid(fl.intro_panel) then
     fl.intro_panel:safe_remove()
   end
 end
 
-function flCharacters:ShouldDrawLoadingScreen()
+function Characters:ShouldDrawLoadingScreen()
   if !fl.intro_panel then
     return true
   end
 end
 
-function flCharacters:ShouldHUDPaint()
+function Characters:ShouldHUDPaint()
   return fl.client:CharacterLoaded()
 end
 
-function flCharacters:ShouldScoreboardHide()
+function Characters:ShouldScoreboardHide()
   return fl.client:CharacterLoaded()
 end
 
-function flCharacters:ShouldScoreboardShow()
+function Characters:ShouldScoreboardShow()
   return fl.client:CharacterLoaded()
 end
 
-function flCharacters:RebuildScoreboardPlayerCard(card, player)
+function Characters:RebuildScoreboardPlayerCard(card, player)
   local x, y = card.nameLabel:GetPos()
   local oldX = x
 
@@ -145,11 +145,11 @@ function flCharacters:RebuildScoreboardPlayerCard(card, player)
   card.descLabel:SizeToContents()
 end
 
-function flCharacters:AddCharacterCreationMenuStages(panel)
+function Characters:AddCharacterCreationMenuStages(panel)
   panel:add_stage('char_create.general')
 end
 
-function flCharacters:AddMainMenuItems(panel, sidebar)
+function Characters:AddMainMenuItems(panel, sidebar)
   local scrw, scrh = ScrW(), ScrH()
 
   if fl.client:GetCharacter() then
@@ -184,7 +184,7 @@ function flCharacters:AddMainMenuItems(panel, sidebar)
   end)
 end
 
-function flCharacters:PanelCharacterSet(panel, char_data)
+function Characters:PanelCharacterSet(panel, char_data)
   panel.model.Entity:SetSkin(char_data.skin or 1)
 end
 

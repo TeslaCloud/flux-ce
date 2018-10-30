@@ -1,4 +1,4 @@
-function flCharacters:PostPlayerSpawn(player)
+function Characters:PostPlayerSpawn(player)
   if !player:GetCharacter() then
     player:SetNoDraw(true)
     player:SetNotSolid(true)
@@ -13,19 +13,19 @@ function flCharacters:PostPlayerSpawn(player)
   end
 end
 
-function flCharacters:PlayerRestored(player)
+function Characters:PlayerRestored(player)
   hook.run('PostRestoreCharacters', player)
 end
 
-function flCharacters:PlayerInitialized(player)
+function Characters:PlayerInitialized(player)
   character.SendToClient(player)
 end
 
-function flCharacters:PostCharacterLoaded(player, character)
+function Characters:PostCharacterLoaded(player, character)
   hook.run_client(player, 'PostCharacterLoaded', character.id)
 end
 
-function flCharacters:OnActiveCharacterSet(player, character)
+function Characters:OnActiveCharacterSet(player, character)
   player:Spawn()
   player:SetModel(character.model or 'models/humans/group01/male_02.mdl')
   player:SetSkin(character.skin or 1)
@@ -42,14 +42,14 @@ function flCharacters:OnActiveCharacterSet(player, character)
   hook.run('PostCharacterLoaded', player, character)
 end
 
-function flCharacters:OnCharacterChange(player, oldChar, newCharID)
+function Characters:OnCharacterChange(player, oldChar, newCharID)
   player:SaveCharacter()
 end
 
-function flCharacters:PlayerDisconnected(player)
+function Characters:PlayerDisconnected(player)
   player:SaveCharacter()
 end
 
-function flCharacters:PlayerDeath(player, inflictor, attacker)
+function Characters:PlayerDeath(player, inflictor, attacker)
   player:SaveCharacter()
 end

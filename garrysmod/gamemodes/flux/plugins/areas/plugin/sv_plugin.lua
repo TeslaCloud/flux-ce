@@ -1,4 +1,4 @@
-function flAreas:OneSecond()
+function Area:OneSecond()
   local cur_time = CurTime()
 
   for k, v in pairs(areas.GetAll()) do
@@ -48,16 +48,16 @@ function flAreas:OneSecond()
   end
 end
 
-function flAreas:PlayerInitialized(player)
+function Area:PlayerInitialized(player)
   cable.send(player, 'flLoadAreas', areas.GetAll())
 end
 
-function flAreas:LoadData()
+function Area:LoadData()
   local loaded = data.load_plugin('areas', {})
 
   areas.SetStored(loaded)
 end
 
-function flAreas:SaveData()
+function Area:SaveData()
   data.save_plugin('areas', areas.GetAll())
 end

@@ -1,8 +1,8 @@
-function flAdmin:PlayerCreated(player, record)
+function Bolt:PlayerCreated(player, record)
   record.banned = record.banned or false
 end
 
-function flAdmin:ActiveRecordReady()
+function Bolt:ActiveRecordReady()
   Ban:all():get(function(objects)
     for k, v in ipairs(objects) do
       fl.admin:record_ban(v.steam_id, v)
@@ -10,7 +10,7 @@ function flAdmin:ActiveRecordReady()
   end)
 end
 
-function flAdmin:CheckPassword(steam_id64, ip, sv_pass, cl_pass, name)
+function Bolt:CheckPassword(steam_id64, ip, sv_pass, cl_pass, name)
   local steam_id = util.SteamIDFrom64(steam_id64)
   local entry = fl.admin:get_bans()[steam_id]
 
@@ -25,7 +25,7 @@ function flAdmin:CheckPassword(steam_id64, ip, sv_pass, cl_pass, name)
   end
 end
 
-function flAdmin:PlayerRestored(player, record)
+function Bolt:PlayerRestored(player, record)
   local root_steamid = config.get('root_steamid')
 
   if record.role then
@@ -53,10 +53,10 @@ function flAdmin:PlayerRestored(player, record)
   Log:notify(player:Name()..' ('..player:GetUserGroup()..') has connected to the server.', { action = 'player_events' })
 end
 
-function flAdmin:CommandCheckImmunity(player, target, can_equal)
+function Bolt:CommandCheckImmunity(player, target, can_equal)
   return fl.admin:CheckImmunity(player, v, can_equal)
 end
 
-function flAdmin:OnCommandCreated(id, data)
+function Bolt:OnCommandCreated(id, data)
   fl.admin:PermissionFromCommand(data)
 end

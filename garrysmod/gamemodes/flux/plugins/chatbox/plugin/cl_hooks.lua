@@ -1,4 +1,4 @@
-function flChatbox:CreateFonts()
+function Chatbox:CreateFonts()
   font.create('flChatFont', {
     font = 'Arial',
     size = 16,
@@ -6,7 +6,7 @@ function flChatbox:CreateFonts()
   })
 end
 
-function flChatbox:OnThemeLoaded(current_theme)
+function Chatbox:OnThemeLoaded(current_theme)
   local scrw, scrh = ScrW(), ScrH()
 
   current_theme:set_font('chatbox_normal', 'flChatFont', font.scale(20))
@@ -21,7 +21,7 @@ function flChatbox:OnThemeLoaded(current_theme)
   current_theme:set_option('chatbox_y', scrh - current_theme:get_option('chatbox_height') - font.scale(32))
 end
 
-function flChatbox:OnResolutionChanged(newW, newH)
+function Chatbox:OnResolutionChanged(newW, newH)
   theme.set_option('chatbox_width', newW / 2.25)
   theme.set_option('chatbox_height', newH / 2.25)
   theme.set_option('chatbox_x', font.scale(8))
@@ -33,7 +33,7 @@ function flChatbox:OnResolutionChanged(newW, newH)
   end
 end
 
-function flChatbox:PlayerBindPress(player, bind, bPress)
+function Chatbox:PlayerBindPress(player, bind, bPress)
   if fl.client:HasInitialized() and (string.find(bind, 'messagemode') or string.find(bind, 'messagemode2')) and bPress then
     if string.find(bind, 'messagemode2') then
       fl.client.typing_team_chat = true
@@ -47,19 +47,19 @@ function flChatbox:PlayerBindPress(player, bind, bPress)
   end
 end
 
-function flChatbox:GUIMousePressed(mouseCode, aimVector)
+function Chatbox:GUIMousePressed(mouseCode, aimVector)
   if IsValid(chatbox.panel) then
     chatbox.hide()
   end
 end
 
-function flChatbox:HUDShouldDraw(element)
+function Chatbox:HUDShouldDraw(element)
   if element == 'CHudChat' then
     return false
   end
 end
 
-function flChatbox:ChatboxTextEntered(text)
+function Chatbox:ChatboxTextEntered(text)
   if text and text != '' then
     cable.send('chat_player_say', text)
   end

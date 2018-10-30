@@ -1,11 +1,11 @@
-function fl_inventory:PostCreateCharacter(player, char_id, char, char_data)
+function Inventory:PostCreateCharacter(player, char_id, char, char_data)
   char.items = ''
   char.inventory = {}
 
   plugin.call('AddDefaultItems', player, char, char.inventory)
 end
 
-function fl_inventory:OnActiveCharacterSet(player, character)
+function Inventory:OnActiveCharacterSet(player, character)
   local inv = {}
   local item_ids = (character.item_ids or ''):split(',')
 
@@ -30,7 +30,7 @@ function fl_inventory:OnActiveCharacterSet(player, character)
   player:set_nv('inventory', character.real_inventory)
 end
 
-function fl_inventory:SaveCharacterData(player, char)
+function Inventory:SaveCharacterData(player, char)
   local item_ids = {}
   for inv_type, inv in pairs(char.real_inventory or {}) do
     if !istable(inv) then continue end

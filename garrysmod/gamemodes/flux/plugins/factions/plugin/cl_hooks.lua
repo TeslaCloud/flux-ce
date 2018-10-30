@@ -1,4 +1,4 @@
-function flFactions:CharPanelCreated(id, panel)
+function Factions:CharPanelCreated(id, panel)
   if id == 'char_create.general' then
     local faction_table
     local char_data = panel:GetParent().char_data
@@ -26,7 +26,7 @@ function flFactions:CharPanelCreated(id, panel)
   end
 end
 
-function flFactions:PreStageChange(id, panel)
+function Factions:PreStageChange(id, panel)
   if id == 'char_create.general' then
     local gender = (panel.gender_female:IsActive() and 'Female') or (panel.gender_male:IsActive() and 'Male') or 'Universal'
     local faction_id = panel:GetParent().char_data.faction
@@ -38,17 +38,17 @@ function flFactions:PreStageChange(id, panel)
   end
 end
 
-function flFactions:OnThemeLoaded(current_theme)
+function Factions:OnThemeLoaded(current_theme)
   current_theme:add_panel('CharCreation_Faction', function(id, parent, ...)
     return vgui.Create('flCharCreationFaction', parent)
   end)
 end
 
-function flFactions:AddCharacterCreationMenuStages(panel)
+function Factions:AddCharacterCreationMenuStages(panel)
   panel:add_stage('CharCreation_Faction', 1)
 end
 
-function flFactions:PreRebuildScoreboard(panel, w, h)
+function Factions:PreRebuildScoreboard(panel, w, h)
   for k, v in ipairs(panel.playerCards) do
     if IsValid(v) then
       v:safe_remove()

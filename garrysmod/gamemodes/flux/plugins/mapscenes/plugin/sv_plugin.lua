@@ -2,29 +2,29 @@ config.set('mapscenes_speed', 15)
 config.set('mapscenes_animated', false)
 config.set('mapscenes_rotate_speed', 0.05)
 
-function flMapscenes:save()
-  data.save_plugin('mapscenepoints', flMapscenes.points)
+function Mapscenes:save()
+  data.save_plugin('mapscenepoints', Mapscenes.points)
 end
 
-function flMapscenes:load()
+function Mapscenes:load()
   local points = data.load_plugin('mapscenepoints', {})
 
   self.points = points
 end
 
-function flMapscenes:LoadData()
+function Mapscenes:LoadData()
   self:load()
 end
 
-function flMapscenes:SaveData()
+function Mapscenes:SaveData()
   self:save()
 end
 
-function flMapscenes:PlayerInitialized(player)
+function Mapscenes:PlayerInitialized(player)
   cable.send(player, 'flLoadMapscene', self.points)
 end
 
-function flMapscenes:add_point(pos, ang)
+function Mapscenes:add_point(pos, ang)
   table.insert(self.points, {
     pos = pos,
     ang = ang
@@ -36,9 +36,9 @@ function flMapscenes:add_point(pos, ang)
 end
 
 cable.receive('flRemoveMapscene', function(player, id)
-  table.remove(flMapscenes.points, id)
+  table.remove(Mapscenes.points, id)
 
   cable.send(nil, 'flDeleteMapscene', id)
 
-  flMapscenes:save()
+  Mapscenes:save()
 end)

@@ -11,13 +11,13 @@ function PANEL:Rebuild()
   self.BaseClass.Rebuild(self)
 end
 
-vgui.Register('fl_hotbar', PANEL, 'fl_inventory')
+vgui.Register('fl_hotbar', PANEL, 'Inventory')
 
 concommand.Add('fl_hotbar_rebuild', function()
   if IsValid(fl.client.hotbar) then
     local hotbar = fl.client.hotbar
     hotbar:Remove()
-    hotbar = fl_inventory:create_hotbar()
+    hotbar = Inventory:create_hotbar()
     hotbar:Rebuild()
     hotbar:SetVisible(false)
   end

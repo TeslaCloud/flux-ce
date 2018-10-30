@@ -7,7 +7,7 @@ do
   local render = render
   local area_colors = {}
 
-  function flAreas:PostDrawOpaqueRenderables(draw_depth, draw_skybox)
+  function Area:PostDrawOpaqueRenderables(draw_depth, draw_skybox)
     if draw_depth or draw_skybox then return end
 
     local weapon = fl.client:GetActiveWeapon()
@@ -84,7 +84,7 @@ do
   end
 end
 
-function flAreas:HUDPaint()
+function Area:HUDPaint()
   if istable(fl.client.text_areas) then
     local last_y = 400
     local cur_time = CurTime()

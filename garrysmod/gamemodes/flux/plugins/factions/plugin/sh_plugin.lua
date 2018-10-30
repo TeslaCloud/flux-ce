@@ -1,11 +1,11 @@
-PLUGIN:set_global('flFactions')
+PLUGIN:set_global('Factions')
 
 plugin.add_extra('factions')
 
 util.include('cl_hooks.lua')
 util.include('sv_hooks.lua')
 
-function flFactions:PluginIncludeFolder(extra, folder_name)
+function Factions:PluginIncludeFolder(extra, folder_name)
   if extra == 'factions' then
     faction.IncludeFactions(folder_name..'/factions/')
 
@@ -13,7 +13,7 @@ function flFactions:PluginIncludeFolder(extra, folder_name)
   end
 end
 
-function flFactions:ShouldNameGenerate(player)
+function Factions:ShouldNameGenerate(player)
   if player:IsBot() then
     return false
   end

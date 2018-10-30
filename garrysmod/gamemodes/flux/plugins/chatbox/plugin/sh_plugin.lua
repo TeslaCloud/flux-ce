@@ -1,4 +1,4 @@
-PLUGIN:set_global('flChatbox')
+PLUGIN:set_global('Chatbox')
 
 library.new 'chatbox'
 

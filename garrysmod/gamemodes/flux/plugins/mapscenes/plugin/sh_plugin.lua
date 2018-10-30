@@ -1,6 +1,6 @@
-PLUGIN:set_global('flMapscenes')
+PLUGIN:set_global('Mapscenes')
 
-flMapscenes.points = flMapscenes.points or {}
+Mapscenes.points = Mapscenes.points or {}
 
 util.include('cl_hooks.lua')
 util.include('cl_plugin.lua')

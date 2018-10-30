@@ -1,4 +1,4 @@
-PLUGIN:set_global('fl_inventory')
+PLUGIN:set_global('Inventory')
 
 util.include('cl_hooks.lua')
 util.include('sv_hooks.lua')

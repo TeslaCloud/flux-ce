@@ -1,7 +1,7 @@
 local blur_texture = Material('pp/blurscreen')
 local color_white = Color(255, 255, 255)
 
-function fl3DText:DrawTextPreview()
+function SurfaceText:DrawTextPreview()
   local tool = fl.client:GetTool()
   local text = tool:GetClientInfo('text')
   local style = tool:GetClientNumber('style')
@@ -45,7 +45,7 @@ function fl3DText:DrawTextPreview()
   cam.End3D2D()
 end
 
-function fl3DText:DrawPicturePreview()
+function SurfaceText:DrawPicturePreview()
   local tool = fl.client:GetTool()
   local url = tool:GetClientInfo('url')
   local width = tool:GetClientNumber('width')
@@ -65,7 +65,7 @@ function fl3DText:DrawPicturePreview()
   cam.End3D2D()
 end
 
-function fl3DText:PostDrawOpaqueRenderables()
+function SurfaceText:PostDrawOpaqueRenderables()
   local weapon = fl.client:GetActiveWeapon()
   local client_pos = fl.client:GetPos()
 

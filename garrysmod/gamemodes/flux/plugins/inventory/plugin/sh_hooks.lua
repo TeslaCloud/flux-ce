@@ -1,4 +1,4 @@
-function fl_inventory:PlayerBindPress(player, bind, pressed)
+function Inventory:PlayerBindPress(player, bind, pressed)
   if bind:find('slot') and pressed then
     local n = tonumber(bind:match('slot(%d+)'))
 
@@ -8,7 +8,7 @@ function fl_inventory:PlayerBindPress(player, bind, pressed)
   end
 end
 
-function fl_inventory:PlayerSelectSlot(player, slot)
+function Inventory:PlayerSelectSlot(player, slot)
   local instance_id = player:get_first_in_slot(slot)
   local item_table = item.FindByInstanceID(instance_id)
 
