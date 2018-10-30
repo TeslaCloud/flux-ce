@@ -1,5 +1,5 @@
 name: Stamina
 description: Adds stamina to prevent people from running for too long.
 author: Mr. Meow
-depends: 
+depends:
   - characters

@@ -62,7 +62,6 @@ function add_index(args)
 
   query = query..index_name
 
-
   query = query..' ON '..args[1]
 
   local function _columns(query)
@@ -111,7 +110,7 @@ function add_index(args)
 end
 
 function drop_index(index_name, table_name)
-  ActiveRecord.metadata.indexes[index_name] = nil 
+  ActiveRecord.metadata.indexes[index_name] = nil
 
   ActiveRecord.adapter:raw_query('DROP INDEX IF EXISTS '..index_name..' ON '..table_name..';', function(results, query_str, time)
     print_query('Drop Index ('..time..'ms)', query_str)
@@ -194,7 +193,7 @@ end
 
 function time_from_timestamp(timestamp)
   local yy, mm, dd, hh, m, ss = string.match(timestamp, '(%d+)%-(%d+)%-(%d+) (%d+):(%d+):(%d+)')
-   return os.time({
+  return os.time({
     year = yy,
     month = mm,
     day = dd,

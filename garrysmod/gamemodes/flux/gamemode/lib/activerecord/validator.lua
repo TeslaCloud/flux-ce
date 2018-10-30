@@ -136,7 +136,7 @@ ActiveRecord.Validator:add('uniqueness', function(model, column, val, opts, succ
 
     if m then
       m:get(function()
-        error_callback(model, column, 'uniqueness')    
+        error_callback(model, column, 'uniqueness')
       end):rescue(function()
         success_callback(model)
       end)

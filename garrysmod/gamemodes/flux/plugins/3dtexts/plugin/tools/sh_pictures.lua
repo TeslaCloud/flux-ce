@@ -41,7 +41,7 @@ function TOOL:LeftClick(trace)
 
   fl.player:notify(player, '3d_picture.placed')
 
-   return true
+  return true
 end
 
 function TOOL:RightClick(trace)

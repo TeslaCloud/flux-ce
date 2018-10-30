@@ -19,7 +19,7 @@ function PANEL:Rebuild()
   self.layout:Dock(FILL)
 
   for id, item_table in pairs(item.GetAll()) do
-    if !categories[item_table.category] then 
+    if !categories[item_table.category] then
       categories[item_table.category] = {}
     end
 
