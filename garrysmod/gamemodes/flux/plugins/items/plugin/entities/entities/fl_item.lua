@@ -93,7 +93,7 @@ else
   end
 
   function ENT:DrawTargetID(x, y, distance)
-    if distance > 256 then return end
+    if distance > 150 then return end
 
     local text = 'ERROR'
     local desc = 'Meow probably broke it again'
@@ -101,7 +101,7 @@ else
 
     if distance > 100 then
       local d = distance - 100
-      alpha = math.Clamp(255 * (156 - d) / 156, 0, 255)
+      alpha = math.Clamp(255 * (50 - d) / 50, 0, 255)
     end
 
     local col = Color(255, 255, 255, alpha)
@@ -128,13 +128,23 @@ else
     local width, height = util.text_size(text, theme.get_font('tooltip_large'))
     local width2, height2 = util.text_size(desc, theme.get_font('tooltip_small'))
     local max_width = math.max(width, width2)
-    local box_x = x - max_width * 0.5 - 8
-    local accent_color = ColorAlpha(theme.get_color('accent'), math.max(0, alpha - 75))
+    local box_x, box_y = x - max_width * 0.5 - 8, y - 8
+    local box_width, box_height = max_width + 16, height + height2 + 16
+    local accent_color = ColorAlpha(theme.get_color('accent'), 200)
     local ent_pos = self:GetPos():ToScreen()
+    local anim_id = 'itemid_gradient_'..self.item.instance_id
 
-    draw.textured_rect(theme.get_material('gradient'), box_x, y - 8, max_width + 16, height + height2 + 16, accent_color)
+    fl.register_animation(anim_id, box_x - max_width, nil, FrameTime() * 8)
 
-    draw.line(box_x, y + height + height2 + 8, ent_pos.x, ent_pos.y, accent_color)
+    render.SetScissorRect(box_x, box_y, box_x + box_width, box_y + box_height, true)
+      fl.draw_animation(anim_id, alpha > 150 and box_x or box_x - max_width, box_y, function(x, y)
+        draw.textured_rect(theme.get_material('gradient'), alpha > 240 and box_x or x, y, box_width, box_height, accent_color)
+      end)
+    render.SetScissorRect(0, 0, 0, 0, false)
+
+    if alpha > 100 then
+      draw.line(box_x, y + height + height2 + 8, ent_pos.x, ent_pos.y, accent_color)
+    end
 
     draw.SimpleTextOutlined(text, theme.get_font('tooltip_large'), x - width * 0.5, y, col, nil, nil, 1, col2)
     y = y + 26
