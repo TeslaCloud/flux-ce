@@ -142,11 +142,11 @@ if SERVER then
   local macros = {
     -- Target everyone in a user group.
     ['@'] = function(player, str)
-      local groupName = str:utf8sub(2, str:utf8len()):utf8lower()
+      local group_name = str:utf8sub(2, str:utf8len()):utf8lower()
       local to_ret = {}
 
       for k, v in ipairs(_player.GetAll()) do
-        if v:GetUserGroup() == groupName then
+        if v:GetUserGroup() == group_name then
           table.insert(to_ret, v)
         end
       end

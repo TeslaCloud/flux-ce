@@ -79,6 +79,7 @@ function table.slice(t, from, to)
   for i = from, to do
     table.insert(new_table, t[i])
   end
+
   return new_table
 end
 
@@ -196,9 +197,11 @@ end
 
 function wk(str)
   local ret = {}
+
   for k, v in ipairs(str:split(' ')) do
     ret[v] = true
   end
+
   return ret
 end
 

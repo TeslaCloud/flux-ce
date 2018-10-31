@@ -1,5 +1,5 @@
 local PANEL = {}
-PANEL.playerCards = {}
+PANEL.player_cards = {}
 
 function PANEL:Init()
   self.scroll_panel = vgui.Create('DScrollPanel', self)
@@ -18,31 +18,31 @@ function PANEL:Rebuild()
     return
   end
 
-  for k, v in ipairs(self.playerCards) do
+  for k, v in ipairs(self.player_cards) do
     if IsValid(v) then
       v:safe_remove()
     end
 
-    self.playerCards[k] = nil
+    self.player_cards[k] = nil
   end
 
   local cur_y = font.scale(40)
-  local cardTall = font.scale(32) + 8
+  local card_tall = font.scale(32) + 8
   local margin = font.scale(4)
 
   for k, v in ipairs(_player.GetAll()) do
     if !v:HasInitialized() then continue end
 
-    local playerCard = vgui.Create('fl_scoreboard_player', self)
-    playerCard:SetSize(w - 8, cardTall)
-    playerCard:SetPos(4, cur_y)
-    playerCard:SetPlayer(v)
+    local player_card = vgui.Create('fl_scoreboard_player', self)
+    player_card:SetSize(w - 8, card_tall)
+    player_card:SetPos(4, cur_y)
+    player_card:SetPlayer(v)
 
-    self.scroll_panel:AddItem(playerCard)
+    self.scroll_panel:AddItem(player_card)
 
-    cur_y = cur_y + cardTall + margin
+    cur_y = cur_y + card_tall + margin
 
-    table.insert(self.playerCards, playerCard)
+    table.insert(self.player_cards, player_card)
   end
 
   hook.run('RebuildScoreboard', self, w, h)
@@ -70,24 +70,24 @@ end
 function PANEL:Rebuild()
   if !self.player then return end
 
-  if IsValid(self.avatarPanel) then
-    self.avatarPanel:safe_remove()
-    self.nameLabel:safe_remove()
+  if IsValid(self.avatar_panel) then
+    self.avatar_panel:safe_remove()
+    self.name_label:safe_remove()
   end
 
   local player = self.player
 
-  self.avatarPanel = vgui.Create('AvatarImage', self)
-  self.avatarPanel:SetSizeEx(32, 32)
-  self.avatarPanel:SetPos(4, 4)
-  self.avatarPanel:SetPlayer(player, 64)
+  self.avatar_panel = vgui.Create('AvatarImage', self)
+  self.avatar_panel:SetSizeEx(32, 32)
+  self.avatar_panel:SetPos(4, 4)
+  self.avatar_panel:SetPlayer(player, 64)
 
-  self.nameLabel = vgui.Create('DLabel', self)
-  self.nameLabel:SetText(player:Name())
-  self.nameLabel:SetPos(font.scale(32) + 16, self:GetTall() * 0.5 - util.text_height(player:Name(), theme.get_font('text_normal')) * 0.5)
-  self.nameLabel:SetFont(theme.get_font('text_normal'))
-  self.nameLabel:SetTextColor(theme.get_color('text'))
-  self.nameLabel:SizeToContents()
+  self.name_label = vgui.Create('DLabel', self)
+  self.name_label:SetText(player:Name())
+  self.name_label:SetPos(font.scale(32) + 16, self:GetTall() * 0.5 - util.text_height(player:Name(), theme.get_font('text_normal')) * 0.5)
+  self.name_label:SetFont(theme.get_font('text_normal'))
+  self.name_label:SetTextColor(theme.get_color('text'))
+  self.name_label:SizeToContents()
 
   hook.run('RebuildScoreboardPlayerCard', self, player)
 end

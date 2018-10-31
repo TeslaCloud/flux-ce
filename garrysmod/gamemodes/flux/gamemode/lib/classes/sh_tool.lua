@@ -121,16 +121,16 @@ function Tool:UpdateGhostEntity()
   local trace = self:GetOwner():GetEyeTrace()
   if !trace.Hit then return end
 
-  local Ang1, Ang2 = self:GetNormal(1):Angle(), (trace.HitNormal * -1):Angle()
-  local TargetAngle = self:GetEnt(1):AlignAngles(Ang1, Ang2)
+  local ang1, ang2 = self:GetNormal(1):Angle(), (trace.HitNormal * -1):Angle()
+  local target_angle = self:GetEnt(1):AlignAngles(ang1, ang2)
 
   self.GhostEntity:SetPos(self:GetEnt(1):GetPos())
-  self.GhostEntity:SetAngles(TargetAngle)
+  self.GhostEntity:SetAngles(target_angle)
 
-  local TranslatedPos = self.GhostEntity:LocalToWorld(self:GetLocalPos(1))
-  local TargetPos = trace.HitPos + (self:GetEnt(1):GetPos() - TranslatedPos) + trace.HitNormal
+  local translated_pos = self.GhostEntity:LocalToWorld(self:GetLocalPos(1))
+  local target_pos = trace.HitPos + (self:GetEnt(1):GetPos() - translated_pos) + trace.HitNormal
 
-  self.GhostEntity:SetPos(TargetPos)
+  self.GhostEntity:SetPos(target_pos)
 end
 
 function Tool:UpdateData()
@@ -298,7 +298,6 @@ end
 
 function Tool:GetServerInfo(property)
   local mode = self:GetMode()
-
   return GetConVarString(mode..'_'..property)
 end
 

@@ -1,6 +1,6 @@
 function game.get_ammo_list()
   local last_ammo_name = game.GetAmmoName(1)
-  local ammo_table = {last_ammo_name}
+  local ammo_table = { last_ammo_name }
 
   while last_ammo_name != nil do
     last_ammo_name = game.GetAmmoName(table.insert(ammo_table, last_ammo_name))
@@ -33,19 +33,19 @@ function util.to_b(value)
   return (tonumber(value) == 1 or value == true or value == 'true')
 end
 
-function util.wait_for_ent(entIndex, callback, delay, waitTime)
-  local entity = Entity(entIndex)
+function util.wait_for_ent(ent_index, callback, delay, wait_time)
+  local entity = Entity(ent_index)
 
   if !IsValid(entity) then
-    local timerName = CurTime()..'_EntWait'
+    local timer_name = CurTime()..'_EntWait'
 
-    timer.Create(timerName, delay or 0, waitTime or 100, function()
-      local entity = Entity(entIndex)
+    timer.Create(timer_name, delay or 0, wait_time or 100, function()
+      local entity = Entity(ent_index)
 
       if IsValid(entity) then
         callback(entity)
 
-        timer.Remove(timerName)
+        timer.Remove(timer_name)
       end
     end)
   else

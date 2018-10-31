@@ -16,7 +16,6 @@ function util.include(file_name)
       return include(file_name)
     else
       AddCSLuaFile(file_name)
-
       return include(file_name)
     end
   else
@@ -398,7 +397,6 @@ function fl.serialize(tab)
     return value
   else
     print('You must serialize a table, not '..type(tab)..'!')
-
     return ''
   end
 end
@@ -428,7 +426,6 @@ function fl.deserialize(data)
     return value
   else
     print('You must deserialize a string, not '..type(data)..'!')
-
     return {}
   end
 end

@@ -40,14 +40,14 @@ cable.receive('set_global_netvar', function(key, value)
 end)
 
 -- Called from the server to set entity's networked variable.
-cable.receive('set_netvar', function(entIdx, key, value)
+cable.receive('set_netvar', function(ent_idx, key, value)
   if key and value != nil then
-    stored[entIdx] = stored[entIdx] or {}
-    stored[entIdx][key] = value
+    stored[ent_idx] = stored[ent_idx] or {}
+    stored[ent_idx][key] = value
   end
 end)
 
 -- Called from the server to delete entity from networked table.
-cable.receive('delete_netvar', function(entIdx)
-  stored[entIdx] = nil
+cable.receive('delete_netvar', function(ent_idx)
+  stored[ent_idx] = nil
 end)

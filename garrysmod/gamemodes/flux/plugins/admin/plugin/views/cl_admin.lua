@@ -83,10 +83,10 @@ function PANEL:SetFullscreen(fullscreen)
 
     self.back_button.Paint = function(btn, w, h)
       local font = fl.fonts:GetSize(theme.get_font('text_small'), 16)
-      local fontSize = util.font_size(font)
+      local font_size = util.font_size(font)
 
       fl.fa:draw('fa-chevron-left', 6, 5, 14, Color(255, 255, 255))
-      draw.SimpleText('Go Back', font, 24, 3 * (16 / fontSize), Color(255, 255, 255))
+      draw.SimpleText('Go Back', font, 24, 3 * (16 / font_size), Color(255, 255, 255))
     end
 
     self.back_button.DoClick = function(btn)

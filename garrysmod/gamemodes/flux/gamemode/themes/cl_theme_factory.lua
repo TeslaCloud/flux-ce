@@ -95,21 +95,21 @@ function THEME:PaintFrame(panel, width, height)
   local title = panel:GetTitle()
   local accent_color = panel:GetAccentColor()
   local header_size = self:get_option('frame_header_size')
-  local lineWeight = self:get_option('frame_line_weight')
+  local line_weight = self:get_option('frame_line_weight')
 
   surface.SetDrawColor(accent_color:darken(30))
-  surface.DrawRect(0, header_size - lineWeight, width, lineWeight)
+  surface.DrawRect(0, header_size - line_weight, width, line_weight)
 
   surface.SetDrawColor(self:get_color('main_dark'))
   surface.DrawRect(0, header_size, width, height - header_size)
 
-  draw.textured_rect(self:get_material('gradient'), 0, 0, w, header_size, accent_color)
+  draw.textured_rect(self:get_material('gradient'), 0, 0, width, header_size, accent_color)
 
   if title then
     local font = font.size(self:get_font('text_small'), 16)
-    local fontSize = util.font_size(font)
+    local font_size = util.font_size(font)
 
-    draw.SimpleText(title, font, 6, 3 * (16 / fontSize), panel:GetTextColor())
+    draw.SimpleText(title, font, 6, 3 * (16 / font_size), panel:GetTextColor())
   end
 end
 
@@ -138,8 +138,8 @@ function THEME:PaintMainMenu(panel, width, height)
 end
 
 function THEME:PaintButton(panel, w, h)
-  local curAmt = panel.m_CurAmt
-  local text_color = panel.m_TextColorOverride or self:get_color('text'):darken(curAmt)
+  local cur_amt = panel.m_CurAmt
+  local text_color = panel.m_TextColorOverride or self:get_color('text'):darken(cur_amt)
   local title = panel.m_Title
   local font = panel.m_Font
   local icon = panel.m_Icon
@@ -150,7 +150,7 @@ function THEME:PaintButton(panel, w, h)
       surface.SetDrawColor(self:get_color('outline'))
       surface.DrawRect(0, 0, w, h)
 
-      surface.SetDrawColor(self:get_color('main'):lighten(curAmt))
+      surface.SetDrawColor(self:get_color('main'):lighten(cur_amt))
       surface.DrawRect(1, 1, w - 2, h - 2)
     else
       surface.SetDrawColor(self:get_color('outline'))
@@ -207,24 +207,24 @@ function THEME:PaintButton(panel, w, h)
 end
 
 function THEME:PaintDeathScreen(cur_time, scrw, scrh)
-  local respawnTimeRemaining = fl.client:get_nv('respawn_time', 0) - cur_time
-  local barValue = 100 - 100 * (respawnTimeRemaining / config.get('respawn_delay'))
+  local respawn_time_remaining = fl.client:get_nv('respawn_time', 0) - cur_time
+  local bar_value = 100 - 100 * (respawn_time_remaining / config.get('respawn_delay'))
   local font = self:get_font('text_normal_large')
   local color_white = Color(255, 255, 255)
 
-  if !fl.client.respawnAlpha then fl.client.respawnAlpha = 0 end
+  if !fl.client.respawn_alpha then fl.client.respawn_alpha = 0 end
 
-  fl.client.respawnAlpha = math.Clamp(fl.client.respawnAlpha + 1, 0, 200)
+  fl.client.respawn_alpha = math.Clamp(fl.client.respawn_alpha + 1, 0, 200)
 
-  draw.RoundedBox(0, 0, 0, scrw, scrh, Color(0, 0, 0, fl.client.respawnAlpha))
+  draw.RoundedBox(0, 0, 0, scrw, scrh, Color(0, 0, 0, fl.client.respawn_alpha))
 
   draw.SimpleText(t'player_message.died', font, 16, 16, color_white)
-  draw.SimpleText(t('player_message.respawn', math.ceil(respawnTimeRemaining)), font, 16, 16 + util.font_size(font), color_white)
+  draw.SimpleText(t('player_message.respawn', math.ceil(respawn_time_remaining)), font, 16, 16 + util.font_size(font), color_white)
 
-  draw.RoundedBox(0, 0, 0, scrw / 100 * barValue, 2, color_white)
+  draw.RoundedBox(0, 0, 0, scrw / 100 * bar_value, 2, color_white)
 
-  if respawnTimeRemaining <= 3 then
-    fl.client.white_alpha = math.Clamp(255 * (1.5 - respawnTimeRemaining * 0.5), 0, 255)
+  if respawn_time_remaining <= 3 then
+    fl.client.white_alpha = math.Clamp(255 * (1.5 - respawn_time_remaining * 0.5), 0, 255)
   else
     fl.client.white_alpha = 0
   end
@@ -235,24 +235,24 @@ function THEME:PaintSidebar(panel, width, height)
 end
 
 function THEME:DrawBarBackground(bar_info)
-  draw.RoundedBox(bar_info.cornerRadius, bar_info.x, bar_info.y, bar_info.width, bar_info.height, self:get_color('main_dark'))
+  draw.RoundedBox(bar_info.corner_radius, bar_info.x, bar_info.y, bar_info.width, bar_info.height, self:get_color('main_dark'))
 end
 
 function THEME:DrawBarHindrance(bar_info)
-  local length = bar_info.width * (bar_info.hinderValue / bar_info.max_value)
+  local length = bar_info.width * (bar_info.hinder_value / bar_info.max_value)
 
-  draw.RoundedBox(bar_info.cornerRadius, bar_info.x + bar_info.width - length - 1, bar_info.y + 1, length, bar_info.height - 2, bar_info.hinderColor)
+  draw.RoundedBox(bar_info.corner_radius, bar_info.x + bar_info.width - length - 1, bar_info.y + 1, length, bar_info.height - 2, bar_info.hinder_color)
 end
 
 function THEME:DrawBarFill(bar_info)
   if bar_info.real_fill_width < bar_info.fill_width then
-    draw.RoundedBox(bar_info.cornerRadius, bar_info.x + 1, bar_info.y + 1, (bar_info.fill_width or bar_info.width) - 2, bar_info.height - 2, bar_info.color)
-    draw.RoundedBox(bar_info.cornerRadius, bar_info.x + 1, bar_info.y + 1, bar_info.real_fill_width - 2, bar_info.height - 2, Color(230, 230, 230))
+    draw.RoundedBox(bar_info.corner_radius, bar_info.x + 1, bar_info.y + 1, (bar_info.fill_width or bar_info.width) - 2, bar_info.height - 2, bar_info.color)
+    draw.RoundedBox(bar_info.corner_radius, bar_info.x + 1, bar_info.y + 1, bar_info.real_fill_width - 2, bar_info.height - 2, Color(230, 230, 230))
   elseif bar_info.real_fill_width > bar_info.fill_width then
-    draw.RoundedBox(bar_info.cornerRadius, bar_info.x + 1, bar_info.y + 1, bar_info.real_fill_width - 2, bar_info.height - 2, bar_info.color)
-    draw.RoundedBox(bar_info.cornerRadius, bar_info.x + 1, bar_info.y + 1, (bar_info.fill_width or bar_info.width) - 2, bar_info.height - 2, Color(230, 230, 230))
+    draw.RoundedBox(bar_info.corner_radius, bar_info.x + 1, bar_info.y + 1, bar_info.real_fill_width - 2, bar_info.height - 2, bar_info.color)
+    draw.RoundedBox(bar_info.corner_radius, bar_info.x + 1, bar_info.y + 1, (bar_info.fill_width or bar_info.width) - 2, bar_info.height - 2, Color(230, 230, 230))
   else
-    draw.RoundedBox(bar_info.cornerRadius, bar_info.x + 1, bar_info.y + 1, (bar_info.fill_width or bar_info.width) - 2, bar_info.height - 2, Color(230, 230, 230))
+    draw.RoundedBox(bar_info.corner_radius, bar_info.x + 1, bar_info.y + 1, (bar_info.fill_width or bar_info.width) - 2, bar_info.height - 2, Color(230, 230, 230))
   end
 end
 
@@ -267,46 +267,46 @@ function THEME:DrawBarTexts(bar_info)
     draw.SimpleText(bar_info.text, font, bar_info.x + 8, bar_info.y + bar_info.text_offset, self:get_color('text'))
   render.SetScissorRect(0, 0, 0, 0, false)
 
-  if bar_info.hinderDisplay and bar_info.hinderDisplay <= bar_info.hinderValue then
+  if bar_info.hinder_display and bar_info.hinder_display <= bar_info.hinder_value then
     local width = bar_info.width
-    local textWide = util.text_size(bar_info.hinderText, font)
-    local length = width * (bar_info.hinderValue / bar_info.max_value)
+    local text_wide = util.text_size(bar_info.hinder_text, font)
+    local length = width * (bar_info.hinder_value / bar_info.max_value)
 
     render.SetScissorRect(bar_info.x + width - length, bar_info.y, bar_info.x + width, bar_info.y + bar_info.height, true)
-      draw.SimpleText(bar_info.hinderText, font, bar_info.x + width - textWide - 8, bar_info.y + bar_info.text_offset, Color(255, 255, 255))
+      draw.SimpleText(bar_info.hinder_text, font, bar_info.x + width - text_wide - 8, bar_info.y + bar_info.text_offset, Color(255, 255, 255))
     render.SetScissorRect(0, 0, 0, 0, false)
   end
 end
 
 function THEME:AdminPanelPaintOver(panel, width, height)
-  local smallestFont = font.size(self:get_font('text_smallest'), 14)
+  local smallest_font = font.size(self:get_font('text_smallest'), 14)
   local text_color = self:get_color('text')
-  local versionString = 'Admin Mod Version: v0.2.0 (indev)'
+  local version_string = 'Admin Mod Version: v0.2.0 (indev)'
 
   DisableClipping(true)
     draw.RoundedBox(0, 0, height, width, 16, self:get_color('background'))
 
-    draw.SimpleText(fl.client:SteamName()..' ('..fl.client:GetUserGroup()..')', smallestFont, 6, height + 1, text_color)
+    draw.SimpleText(fl.client:SteamName()..' ('..fl.client:GetUserGroup()..')', smallest_font, 6, height + 1, text_color)
 
-    local w, h = util.text_size(versionString, smallestFont)
+    local w, h = util.text_size(version_string, smallest_font)
 
-    draw.SimpleText(versionString, smallestFont, width - w - 6, height + 1, text_color)
+    draw.SimpleText(version_string, smallest_font, width - w - 6, height + 1, text_color)
   DisableClipping(false)
 end
 
-function THEME:PaintPermissionButton(permPanel, btn, w, h)
+function THEME:PaintPermissionButton(perm_panel, btn, w, h)
   local color = Color(255, 255, 255)
   local title = ''
-  local permType = btn.permValue
+  local perm_type = btn.permValue
   local font = self:get_font('text_small')
 
-  if permType == PERM_NO then
+  if perm_type == PERM_NO then
     color = Color(120, 120, 120)
     title = t'perm.not_set'
-  elseif permType == PERM_ALLOW then
+  elseif perm_type == PERM_ALLOW then
     color = Color(100, 220, 100)
     title = t'perm.allow'
-  elseif permType == PERM_NEVER then
+  elseif perm_type == PERM_NEVER then
     color = Color(220, 100, 100)
     title = t'perm.never'
   else
@@ -322,28 +322,28 @@ function THEME:PaintPermissionButton(permPanel, btn, w, h)
   draw.RoundedBox(0, 0, 0, w, h, text_color)
   draw.RoundedBox(0, 1, 1, w - 2, h - 1, color)
 
-  local tW, tH = util.text_size(title, font)
+  local tw, th = util.text_size(title, font)
 
-  draw.SimpleText(title, font, w * 0.5 - tW * 0.5, 2, text_color)
+  draw.SimpleText(title, font, w * 0.5 - tw * 0.5, 2, text_color)
 
-  local sqrSize = h * 0.5
+  local sqr_size = h * 0.5
 
-  draw.RoundedBox(0, sqrSize * 0.5, sqrSize * 0.5, sqrSize, sqrSize, Color(255, 255, 255))
+  draw.RoundedBox(0, sqr_size * 0.5, sqr_size * 0.5, sqr_size, sqr_size, Color(255, 255, 255))
 
   if btn.isSelected then
-    draw.RoundedBox(0, sqrSize * 0.5 + 2, sqrSize * 0.5 + 2, sqrSize - 4, sqrSize - 4, Color(0, 0, 0))
+    draw.RoundedBox(0, sqr_size * 0.5 + 2, sqr_size * 0.5 + 2, sqr_size - 4, sqr_size - 4, Color(0, 0, 0))
   end
 end
 
 function THEME:PaintScoreboard(panel, width, height)
-  local titleFont = self:get_font('menu_large')
+  local title_font = self:get_font('menu_large')
 
   draw.RoundedBox(0, 0, 0, width, height, ColorAlpha(self:get_color('background'), 150))
 
   local title = t'scoreboard.title'
 
   DisableClipping(true)
-    draw.SimpleText(title, titleFont, 4, -util.text_height(title, titleFont) * 0.5, self:get_color('text'))
+    draw.SimpleText(title, title_font, 4, -util.text_height(title, title_font) * 0.5, self:get_color('text'))
   DisableClipping(false)
 
   draw.SimpleText(t'scoreboard.help', self:get_font('text_small'), 4, 14, self:get_color('text'))
@@ -352,37 +352,37 @@ end
 function THEME:PaintTabMenu(panel, width, height)
   local fraction = FrameTime() * 8
   local active_panel = panel.active_panel
-  local sidebarColor = ColorAlpha(self:get_color('background'), 125)
+  local sidebar_color = ColorAlpha(self:get_color('background'), 125)
 
   fl.blur_size = Lerp(fraction * 0.4, fl.blur_size, 6)
 
   draw.blur_panel(panel)
-  draw.RoundedBox(0, 0, 0, font.scale(200) + 6, height, sidebarColor)
-  draw.RoundedBox(0, 0, 0, 6, height, sidebarColor)
+  draw.RoundedBox(0, 0, 0, font.scale(200) + 6, height, sidebar_color)
+  draw.RoundedBox(0, 0, 0, 6, height, sidebar_color)
 
   if IsValid(active_panel) then
-    panel.posY = panel.posY or 0
+    panel.pos_y = panel.pos_y or 0
 
-    local activeButton = panel.activeBtn
+    local active_button = panel.activeBtn
 
-    if !IsValid(activeButton) then return end
+    if !IsValid(active_button) then return end
 
-    local x, y = activeButton:GetPos()
-    local targetH = activeButton:GetTall()
+    local x, y = active_button:GetPos()
+    local target_h = active_button:GetTall()
 
-    if panel.prevY != y then
-      panel.posY = Lerp(fraction, panel.posY, y)
+    if panel.prev_y != y then
+      panel.pos_y = Lerp(fraction, panel.pos_y, y)
     end
 
-    panel.prevY = panel.posY
+    panel.prev_y = panel.pos_y
 
-    if !active_panel.indicatorLerp then
-      active_panel.indicatorLerp = 0
+    if !active_panel.indicator_lerp then
+      active_panel.indicator_lerp = 0
     end
 
-    active_panel.indicatorLerp = Lerp(fraction, active_panel.indicatorLerp, targetH)
+    active_panel.indicator_lerp = Lerp(fraction, active_panel.indicator_lerp, target_h)
 
-    draw.RoundedBox(0, 0, panel.posY, 6, targetH, self:get_color('accent_light'))
+    draw.RoundedBox(0, 0, panel.pos_y, 6, target_h, self:get_color('accent_light'))
   end
 end
 

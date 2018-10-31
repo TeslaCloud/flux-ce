@@ -20,8 +20,11 @@ AccessorFunc(PANEL, 'm_MainColor', 'MainColor')
 AccessorFunc(PANEL, 'm_TextColor', 'TextColor')
 AccessorFunc(PANEL, 'm_AccentColor', 'AccentColor')
 
-function PANEL:Paint(width, height) theme.hook('PaintPanel', self, width, height) end
-function PANEL:Think() theme.hook('PanelThink', self) end
+function PANEL:Paint(width, height) theme.hook('PaintPanel', self, width, height)
+end
+
+function PANEL:Think() theme.hook('PanelThink', self)
+end
 
 -- MVC Functionality for all FL panels.
 function PANEL:Push(name, ...)

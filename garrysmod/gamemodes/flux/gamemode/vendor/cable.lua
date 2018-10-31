@@ -74,6 +74,7 @@ if SERVER then
       net_cache[id] = util.AddNetworkString(id)
       return false
     end
+
     return true
   end
 

@@ -113,13 +113,13 @@ function fl.lang:add(index, value, reference)
 end
 
 function fl.lang:get_plural(language, phrase, count)
-  local langTable = stored[language]
+  local lang_table = stored[language]
   local translated = t(phrase)
 
-  if !langTable then return translated end
+  if !lang_table then return translated end
 
-  if langTable.pluralize then
-    return langTable:pluralize(phrase, count, translated)
+  if lang_table.pluralize then
+    return lang_table:pluralize(phrase, count, translated)
   elseif language == 'en' then
     if !string.vowel(translated:sub(translated:len(), translated:len())) then
       return translated..'es'
@@ -134,10 +134,10 @@ end
 function fl.lang:nice_time(language, time)
   time = tonumber(time) or 0
 
-  local langTable = stored[language]
+  local lang_table = stored[language]
 
-  if langTable and langTable.nice_time then
-    return langTable:nice_time(time)
+  if lang_table and lang_table.nice_time then
+    return lang_table:nice_time(time)
   end
 
   return string.nice_time(time)
@@ -146,10 +146,10 @@ end
 function fl.lang:nice_time_full(language, time)
   time = tonumber(time) or 0
 
-  local langTable = stored[language]
+  local lang_table = stored[language]
 
-  if langTable and langTable.nice_time_full then
-    return langTable:nice_time_full(time)
+  if lang_table and lang_table.nice_time_full then
+    return lang_table:nice_time_full(time)
   end
 
   return string.nice_time(time)
@@ -158,13 +158,13 @@ end
 function fl.lang:get_case(language, phrase, case)
   if language == 'en' then return t(phrase) end
 
-  local langTable = stored[language]
+  local lang_table = stored[language]
   local translated = t(phrase)
 
-  if !langTable then return translated end
+  if !lang_table then return translated end
 
-  if langTable.get_case then
-    return langTable:get_case(phrase, count, translated)
+  if lang_table.get_case then
+    return lang_table:get_case(phrase, count, translated)
   end
 
   return translated
@@ -206,6 +206,7 @@ else
   pipeline.register('language', function(id, file_name, pipe)
     if file_name:ends('.yml') then
       local contents = fileio.Read('gamemodes/'..file_name)
+
       if contents then
         for k, v in pairs(YAML.eval(contents)) do
           fl.lang:add(k, v)

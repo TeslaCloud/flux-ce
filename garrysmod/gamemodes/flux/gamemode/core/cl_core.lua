@@ -37,7 +37,6 @@ do
 
     if enable then
       fl.client.color_mod = true
-
       return true
     end
 

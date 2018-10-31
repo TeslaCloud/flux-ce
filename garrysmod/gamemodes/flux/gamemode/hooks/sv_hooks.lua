@@ -1,6 +1,7 @@
 DEFINE_BASECLASS('gamemode_base')
 
-function GM:DoPlayerDeath(player, attacker, damage_info) end
+function GM:DoPlayerDeath(player, attacker, damage_info)
+end
 
 function GM:InitPostEntity()
   local toolgun = weapons.GetStored('gmod_tool')
@@ -22,7 +23,6 @@ function GM:PlayerInitialSpawn(player)
 
   if player:IsBot() then
     player:SetInitialized(true)
-
     return
   end
 
@@ -431,19 +431,19 @@ do
     local cur_time = CurTime()
 
     if cur_time >= next_think then
-      local oneSecondTick = (cur_time >= next_second)
+      local one_second_tick = (cur_time >= next_second)
 
       for k, v in ipairs(player.GetAll()) do
         hook.Call('PlayerThink', self, v, cur_time)
 
-        if oneSecondTick then
+        if one_second_tick then
           hook.Call('PlayerOneSecond', self, v, cur_time)
         end
       end
 
       next_think = cur_time + think_delay
 
-      if oneSecondTick then
+      if one_second_tick then
         next_second = cur_time + 1
       end
     end

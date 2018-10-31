@@ -1,7 +1,7 @@
 local player_meta = FindMetaTable('Player')
 
 function player_meta:save_player()
-  local saveData = {
+  local save_data = {
     steam_id = self:SteamID(),
     name = self:Name(),
     joinTime = self.flJoinTime or os.time(),
@@ -9,7 +9,7 @@ function player_meta:save_player()
     data = fl.serialize(self:get_data())
   }
 
-  hook.run('SavePlayerData', self, saveData)
+  hook.run('SavePlayerData', self, save_data)
 
   if self.record then self.record:save() end
 end
@@ -41,17 +41,17 @@ function player_meta:notify(message, arguments)
 end
 
 function player_meta:GetAmmoTable()
-  local ammoTable = {}
+  local ammo_table = {}
 
   for k, v in pairs(game.get_ammo_list()) do
-    local ammoCount = self:GetAmmoCount(k)
+    local ammo_count = self:GetAmmoCount(k)
 
-    if ammoCount > 0 then
-      ammoTable[k] = ammoCount
+    if ammo_count > 0 then
+      ammo_table[k] = ammo_count
     end
   end
 
-  return ammoTable
+  return ammo_table
 end
 
 function player_meta:RestorePlayer()

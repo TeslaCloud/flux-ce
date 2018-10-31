@@ -2,10 +2,10 @@ local flPlayer = {}
 flPlayer.DisplayName = 'Flux Player'
 DEFINE_BASECLASS('player_default')
 
-local modelList = {}
+local model_list = {}
 
 for k, v in pairs(player_manager.AllValidModels()) do
-  modelList[v:lower()] = k
+  model_list[v:lower()] = k
 end
 
 flPlayer.loadout = {
@@ -25,21 +25,21 @@ end
 
 -- Called on player spawn to determine which hand model to use.
 function flPlayer:GetHandsModel()
-  local playerModel = string.lower(self.Player:GetModel())
+  local player_model = string.lower(self.Player:GetModel())
 
-  if modelList[playerModel] then
-    return player_manager.TranslatePlayerHands(modelList[playerModel])
+  if model_list[player_model] then
+    return player_manager.TranslatePlayerHands(model_list[player_model])
   end
 
-  for k, v in pairs(modelList) do
-    if string.find(string.gsub(playerModel, '_', ''), v) then
-      modelList[playerModel] = v
+  for k, v in pairs(model_list) do
+    if string.find(string.gsub(player_model, '_', ''), v) then
+      model_list[player_model] = v
 
       break
     end
   end
 
-  return player_manager.TranslatePlayerHands(modelList[playerModel])
+  return player_manager.TranslatePlayerHands(model_list[player_model])
 end
 
 -- Called after view model is drawn.

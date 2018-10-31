@@ -1,6 +1,3 @@
-local colorBlack = Color(0, 0, 0, 255)
-local colorWhite = Color(255, 255, 255, 255)
-
 local PANEL = {}
 
 function PANEL:Init()
@@ -16,10 +13,10 @@ function PANEL:Init()
   hook.run('OnIntroPanelCreated', self)
 end
 
-local logoW, logoH = 600, 110
+local logo_w, logo_h = 600, 110
 local w_mod, h_mod = 6, 1.1
 local cur_radius, cur_alpha = 0, 0
-local exX, exY = 0, 0
+local exx, exy = 0, 0
 local color = Color(140, 0, 220)
 local remove_alpha = 255
 local logo_delta = 1
@@ -32,15 +29,15 @@ function PANEL:Paint(w, h)
 
   draw.textured_rect(
     util.get_material('materials/flux/tc_logo.png'),
-    w * 0.5 - logoW * 0.5 - delta_modifier * logo_delta * 0.5 * w_mod,
-    h * 0.5 - logoH * 0.5 - delta_modifier * logo_delta * 0.5 * h_mod,
-    logoW + delta_modifier * logo_delta * w_mod,
-    logoH + delta_modifier * logo_delta * h_mod,
+    w * 0.5 - logo_w * 0.5 - delta_modifier * logo_delta * 0.5 * w_mod,
+    h * 0.5 - logo_h * 0.5 - delta_modifier * logo_delta * 0.5 * h_mod,
+    logo_w + delta_modifier * logo_delta * w_mod,
+    logo_h + delta_modifier * logo_delta * h_mod,
     Color(255, 255, 255, remove_alpha)
   )
 
   if self.started then
-    if self.shouldRemove then
+    if self.should_remove then
       self:MoveToFront()
 
       remove_alpha = math.Clamp(remove_alpha - 3, 0, 255)
@@ -48,10 +45,10 @@ function PANEL:Paint(w, h)
 
     logo_delta = math.max(Lerp(frame_time * 6, logo_delta, 0), 0)
 
-    if !self.shouldRemove then
+    if !self.should_remove then
       if logo_delta < 0.05 then
         local cx, cy = ScrC()
-        exX, exY = cx, cy
+        exx, exy = cx, cy
 
         if cur_alpha == 0 then
           cur_alpha = 255
@@ -65,7 +62,7 @@ function PANEL:Paint(w, h)
         end
 
         surface.SetDrawColor(color.r, color.g, color.b, cur_alpha)
-        surface.draw_circle(exX, exY, cur_radius, 180)
+        surface.draw_circle(exx, exy, cur_radius, 180)
 
         cur_radius = cur_radius + 3
         cur_alpha = math.Clamp(Lerp(frame_time * 8, cur_alpha, 1), 0, 255)
@@ -75,7 +72,7 @@ function PANEL:Paint(w, h)
 end
 
 function PANEL:CloseMenu()
-  self.shouldRemove = true
+  self.should_remove = true
 
   timer.Simple(1, function()
     self:Remove()

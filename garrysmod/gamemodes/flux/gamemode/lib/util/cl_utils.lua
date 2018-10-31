@@ -11,7 +11,7 @@ do
     else
       surface.SetFont(font)
 
-      local result = {surface.GetTextSize(text)}
+      local result = { surface.GetTextSize(text) }
 
       cache[text] = {}
       cache[text][font] = result
@@ -35,10 +35,10 @@ end
 
 function util.get_panel_class(panel)
   if panel and panel.GetTable then
-    local pTable = panel:GetTable()
+    local panel_table = panel:GetTable()
 
-    if pTable and pTable.ClassName then
-      return pTable.ClassName
+    if panel_table and panel_table.ClassName then
+      return panel_table.ClassName
     end
   end
 end
@@ -60,12 +60,12 @@ function util.fit_to_aspect(x, y, x2, y2)
   return x, y
 end
 
-function util.cubic_ease_in(curStep, steps, from, to)
-  return (to - from) * math.pow(curStep / steps, 3) + from
+function util.cubic_ease_in(cur_step, steps, from, to)
+  return (to - from) * math.pow(cur_step / steps, 3) + from
 end
 
-function util.cubic_ease_out(curStep, steps, from, to)
-  return (to - from) * (math.pow(curStep / steps - 1, 3) + 1) + from
+function util.cubic_ease_out(cur_step, steps, from, to)
+  return (to - from) * (math.pow(cur_step / steps - 1, 3) + 1) + from
 end
 
 function util.cubic_ease_in_t(steps, from, to)
@@ -88,11 +88,11 @@ function util.cubic_ease_out_t(steps, from, to)
   return result
 end
 
-function util.cubic_ease_in_out(curStep, steps, from, to)
-  if curStep > (steps * 0.5) then
-    return util.cubic_ease_out(curStep - steps * 0.5, steps * 0.5, from, to)
+function util.cubic_ease_in_out(cur_step, steps, from, to)
+  if cur_step > (steps * 0.5) then
+    return util.cubic_ease_out(cur_step - steps * 0.5, steps * 0.5, from, to)
   else
-    return util.cubic_ease_in(curStep, steps, from, to)
+    return util.cubic_ease_in(cur_step, steps, from, to)
   end
 end
 
@@ -132,7 +132,8 @@ do
         local extension = string.GetExtensionFromFilename(pieces[#pieces])
 
         if extension then
-          local extension = '.'..extension
+          extension = '.'..extension
+
           local path = 'flux/materials/'..url_crc..extension
 
           if _file.Exists(path, 'DATA') then
@@ -142,12 +143,12 @@ do
           end
 
           local directories = path:split('/')
-          local currentPath = ''
+          local current_path = ''
 
           for k, v in pairs(directories) do
             if k < #directories then
-              currentPath = currentPath..v..'/'
-              file.CreateDir(currentPath)
+              current_path = current_path..v..'/'
+              file.CreateDir(current_path)
             end
           end
 
@@ -185,8 +186,8 @@ function util.wrap_text(text, font, width, initial_width)
   if !text or !font or !width then return end
 
   local output = {}
-  local spaceWidth = util.text_size(' ', font)
-  local dashWidth = util.text_size('-', font)
+  local space_width = util.text_size(' ', font)
+  local dash_width = util.text_size('-', font)
   local pieces = text:split(' ')
   local cur_width = initial_width or 0
   local current_word = ''
@@ -199,7 +200,7 @@ function util.wrap_text(text, font, width, initial_width)
     if w <= remain then
       if k != #pieces then
         current_word = current_word..v..' '
-        cur_width = cur_width + w + spaceWidth
+        cur_width = cur_width + w + space_width
       else
         current_word = current_word..v
         cur_width = cur_width + w
@@ -211,7 +212,7 @@ function util.wrap_text(text, font, width, initial_width)
 
           remain = width - cur_width
 
-          if (char_width + dashWidth + spaceWidth) < remain then
+          if (char_width + dash_width + space_width) < remain then
             current_word = current_word..v2
             cur_width = cur_width + char_width
           else

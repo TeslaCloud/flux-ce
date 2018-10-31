@@ -80,9 +80,11 @@ end
 
 local function generate_file_from_table(t, tab_name)
   local final_file = common_file_header
+
   for k, v in pairs(t) do
     final_file = final_file..tab_name..'["'..k..'"] = [['..v..']]\n'
   end
+
   return final_file
 end
 

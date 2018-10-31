@@ -153,24 +153,24 @@ end
 
 -- A function to unhook a plugin from cache.
 function plugin.remove_from_cache(id)
-  local pluginTable = plugin.find(id) or (istable(id) and id)
+  local plugin_table = plugin.find(id) or (istable(id) and id)
 
   -- Awful lot of if's and end's.
-  if pluginTable then
-    if pluginTable.OnUnhook then
+  if plugin_table then
+    if plugin_table.OnUnhook then
       try {
-        pluginTable.OnUnhook, pluginTable
+        plugin_table.OnUnhook, plugin_table
       } catch {
         function(exception)
-          ErrorNoHalt('OnUnhook method has failed to run! '..tostring(pluginTable)..'\n'..tostring(exception)..'\n')
+          ErrorNoHalt('OnUnhook method has failed to run! '..tostring(plugin_table)..'\n'..tostring(exception)..'\n')
         end
       }
     end
 
-    for k, v in pairs(pluginTable) do
+    for k, v in pairs(plugin_table) do
       if isfunction(v) and hooks_cache[k] then
         for index, tab in ipairs(hooks_cache[k]) do
-          if tab[2] == pluginTable then
+          if tab[2] == plugin_table then
             table.remove(hooks_cache[k], index)
 
             break
@@ -183,34 +183,34 @@ end
 
 -- A function to cache existing plugin's hooks.
 function plugin.recache(id)
-  local pluginTable = plugin.find(id)
+  local plugin_table = plugin.find(id)
 
-  if pluginTable then
-    if pluginTable.OnRecache then
+  if plugin_table then
+    if plugin_table.OnRecache then
       try {
-        pluginTable.OnRecache, pluginTable
+        plugin_table.OnRecache, plugin_table
       } catch {
         function(exception)
-          ErrorNoHalt('OnRecache method has failed to run! '..tostring(pluginTable)..'\n'..tostring(exception)..'\n')
+          ErrorNoHalt('OnRecache method has failed to run! '..tostring(plugin_table)..'\n'..tostring(exception)..'\n')
         end
       }
     end
 
-    plugin.cache_functions(pluginTable)
+    plugin.cache_functions(plugin_table)
   end
 end
 
 -- A function to remove the plugin entirely.
 function plugin.remove(id)
-  local pluginTable, pluginID = plugin.find(id)
+  local plugin_table, pluginID = plugin.find(id)
 
-  if pluginTable then
-    if pluginTable.OnRemoved then
+  if plugin_table then
+    if plugin_table.OnRemoved then
       try {
-        pluginTable.OnRemoved, pluginTable
+        plugin_table.OnRemoved, plugin_table
       } catch {
         function(exception)
-          ErrorNoHalt('OnRemoved method has failed to run! '..tostring(pluginTable)..'\n'..tostring(exception)..'\n')
+          ErrorNoHalt('OnRemoved method has failed to run! '..tostring(plugin_table)..'\n'..tostring(exception)..'\n')
         end
       }
     end
@@ -248,8 +248,8 @@ function plugin.register(obj)
 
   if SERVER then
     if Schema == obj then
-      local folderName = obj.folder:trim_end('/schema')
-      local file_path = 'gamemodes/'..folderName..'/'..folderName..'.yml'
+      local folder_name = obj.folder:trim_end('/schema')
+      local file_path = 'gamemodes/'..folder_name..'/'..folder_name..'.yml'
 
       if file.Exists(file_path, 'GAME') then
         fl.dev_print('Importing config: '..file_path)
@@ -283,7 +283,6 @@ function plugin.register(obj)
 end
 
 function plugin.include(path)
-  local hasMainFile = false
   local id = path:GetFileFromFilename()
   local ext = id:GetExtensionFromFilename()
   local data = {}
@@ -302,14 +301,14 @@ function plugin.include(path)
 
   if !data.single_file and SERVER then
     if file.Exists(path..'/plugin.yml', 'LUA') then
-      local dataTable = YAML.eval(file.Read(path..'/plugin.yml', 'LUA'))
-        dataTable.folder = path..'/plugin'
-        dataTable.plugin_main = 'sh_plugin.lua'
+      local data_table = YAML.eval(file.Read(path..'/plugin.yml', 'LUA'))
+        data_table.folder = path..'/plugin'
+        data_table.plugin_main = 'sh_plugin.lua'
 
-        if file.Exists(dataTable.folder..'/sh_'..(dataTable.name or id)..'.lua', 'LUA') then
-          dataTable.plugin_main = 'sh_'..(dataTable.name or id)..'.lua'
+        if file.Exists(data_table.folder..'/sh_'..(data_table.name or id)..'.lua', 'LUA') then
+          data_table.plugin_main = 'sh_'..(data_table.name or id)..'.lua'
         end
-      table.safe_merge(data, dataTable)
+      table.safe_merge(data, data_table)
 
       fl.shared.plugin_info[path] = data
     end
@@ -364,9 +363,9 @@ end
 
 function plugin.include_schema()
   local schema_info = fl.get_schema_info()
-  local schemaPath = schema_info.folder
-  local schema_folder = schemaPath..'/schema'
-  local file_path = 'gamemodes/'..schemaPath..'/'..schemaPath..'.yml'
+  local schema_path = schema_info.folder
+  local schema_folder = schema_path..'/schema'
+  local file_path = 'gamemodes/'..schema_path..'/'..schema_path..'.yml'
   local deps = {}
 
   hook.run('PreLoadPlugins')
@@ -405,7 +404,7 @@ function plugin.include_schema()
     end
   end
 
-  if SERVER then AddCSLuaFile(schemaPath..'/gamemode/cl_init.lua') end
+  if SERVER then AddCSLuaFile(schema_path..'/gamemode/cl_init.lua') end
 
   Schema = Plugin.new(schema_info.name, schema_info)
   Schema._is_schema = true
@@ -413,7 +412,7 @@ function plugin.include_schema()
   util.include(schema_folder..'/sh_schema.lua')
 
   plugin.include_folders(schema_folder)
-  plugin.include_plugins(schemaPath..'/plugins')
+  plugin.include_plugins(schema_path..'/plugins')
 
   hook.run('OnPluginsLoaded')
 
@@ -440,12 +439,12 @@ do
     if !isstring(name) then return false end
 
     if !plugin.loaded(name) then
-      local searchPaths = {
+      local search_paths = {
         'flux/plugins/',
         (fl.get_schema_folder() or 'flux')..'/plugins/'
       }
 
-      for k, v in ipairs(searchPaths) do
+      for k, v in ipairs(search_paths) do
         if !v:find('flux') or !LITE_REFRESH then
           for _, ending in ipairs(tolerance) do
             if file.Exists(v..name..ending, 'LUA') then
@@ -483,7 +482,7 @@ do
     weapons = {
       table = 'SWEP',
       func = weapons.Register,
-      defaultData = {
+      default_data = {
         Primary = {},
         Secondary = {},
         Base = 'weapon_base'
@@ -492,7 +491,7 @@ do
     entities = {
       table = 'ENT',
       func = scripted_ents.Register,
-      defaultData = {
+      default_data = {
         Type = 'anim',
         Base = 'base_gmodentity',
         Spawnable = true
@@ -521,7 +520,7 @@ do
         local register = false
         local var = data.table
 
-        _G[var] = table.Copy(data.defaultData)
+        _G[var] = table.Copy(data.default_data)
         _G[var].ClassName = id
 
         if file.Exists(path..'/shared.lua', 'LUA') then
@@ -556,7 +555,7 @@ do
         local id = (string.GetFileFromFilename(path) or ''):Replace('.lua', ''):to_id()
         local var = data.table
 
-        _G[var] = table.Copy(data.defaultData)
+        _G[var] = table.Copy(data.default_data)
         _G[var].ClassName = id
 
         util.include(path)

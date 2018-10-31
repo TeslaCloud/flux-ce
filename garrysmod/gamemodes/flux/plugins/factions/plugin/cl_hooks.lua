@@ -49,12 +49,12 @@ function Factions:AddCharacterCreationMenuStages(panel)
 end
 
 function Factions:PreRebuildScoreboard(panel, w, h)
-  for k, v in ipairs(panel.playerCards) do
+  for k, v in ipairs(panel.player_cards) do
     if IsValid(v) then
       v:safe_remove()
     end
 
-    panel.playerCards[k] = nil
+    panel.player_cards[k] = nil
   end
 
   panel.faction_categories = panel.faction_categories or {}
@@ -94,14 +94,14 @@ function Factions:PreRebuildScoreboard(panel, w, h)
     cat:SetContents(list)
 
     for k, v in ipairs(players) do
-      local playerCard = vgui.Create('fl_scoreboard_player', self)
-      playerCard:SetSize(w - 8, card_tall)
-      playerCard:SetPlayer(v)
-      playerCard:SetPos(0, 5)
+      local player_card = vgui.Create('fl_scoreboard_player', self)
+      player_card:SetSize(w - 8, card_tall)
+      player_card:SetPlayer(v)
+      player_card:SetPos(0, 5)
 
-      list:AddItem(playerCard)
+      list:AddItem(player_card)
 
-      table.insert(panel.playerCards, playerCard)
+      table.insert(panel.player_cards, player_card)
     end
 
     cur_y = cur_y + cat:GetTall() + card_tall + margin

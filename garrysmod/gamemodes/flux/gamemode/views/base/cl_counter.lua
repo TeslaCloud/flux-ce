@@ -117,7 +117,6 @@ function PANEL:CheckButtons(value)
 end
 
 function PANEL:OnClick(value)
-
 end
 
 vgui.Register('fl_counter', PANEL, 'fl_base_panel')
