@@ -62,11 +62,11 @@ function player_meta:DoAction(id)
   end
 
   if act and act != 'none' then
-    local actionTable = fl.get_action(act)
+    local action_table = fl.get_action(act)
 
-    if istable(actionTable) and isfunction(actionTable.callback) then
+    if istable(action_table) and isfunction(action_table.callback) then
       try {
-        actionTable.callback, self, act
+        action_table.callback, self, act
       } catch {
         function(exception)
           ErrorNoHalt("Player action '"..tostring(act).."' has failed to run!\n"..exception..'\n')

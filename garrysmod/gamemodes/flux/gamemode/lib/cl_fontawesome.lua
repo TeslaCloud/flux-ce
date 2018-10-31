@@ -831,7 +831,7 @@ function fl.fa:get(id)
   return id
 end
 
-function fl.fa:draw(id, x, y, size, color, xAlign, yAlign, outline_width, outline_color)
+function fl.fa:draw(id, x, y, size, color, x_align, y_align, outline_width, outline_color)
   if id:starts('fa ') then
     id = id:sub(4, id:len())
   end
@@ -846,8 +846,8 @@ function fl.fa:draw(id, x, y, size, color, xAlign, yAlign, outline_width, outlin
   color = color or color_white
 
   if outline_width then
-    return draw.SimpleTextOutlined(self:get(id), font.size('flFontAwesome', size), x, y, color, xAlign, yAlign, outline_width, outline_color)
+    return draw.SimpleTextOutlined(self:get(id), font.size('flFontAwesome', size), x, y, color, x_align, y_align, outline_width, outline_color)
   else
-    return draw.SimpleText(self:get(id), font.size('flFontAwesome', size), x, y, color, xAlign, yAlign)
+    return draw.SimpleText(self:get(id), font.size('flFontAwesome', size), x, y, color, x_align, y_align)
   end
 end

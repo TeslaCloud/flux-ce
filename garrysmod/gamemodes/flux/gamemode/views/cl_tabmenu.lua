@@ -13,14 +13,14 @@ function PANEL:Init()
   cur_x = cur_x or 42
   cur_y = cur_y or 200
 
-  self.closeButton = vgui.Create('fl_button', self)
-  self.closeButton:SetFont(theme.get_font('menu_large'))
-  self.closeButton:SetText(string.utf8upper(t'tab_menu.close_menu'))
-  self.closeButton:SetPos(6, cur_y)
-  self.closeButton:SetSizeEx(200, 38)
-  self.closeButton:SetDrawBackground(false)
-  self.closeButton:SetTextAutoposition(true)
-  self.closeButton.DoClick = function(btn)
+  self.close_button = vgui.Create('fl_button', self)
+  self.close_button:SetFont(theme.get_font('menu_large'))
+  self.close_button:SetText(string.utf8upper(t'tab_menu.close_menu'))
+  self.close_button:SetPos(6, cur_y)
+  self.close_button:SetSizeEx(200, 38)
+  self.close_button:SetDrawBackground(false)
+  self.close_button:SetTextAutoposition(true)
+  self.close_button.DoClick = function(btn)
     surface.PlaySound('garrysmod/ui_click.wav')
     self:SetVisible(false)
     self:Remove()
@@ -55,7 +55,7 @@ function PANEL:Init()
         if IsValid(self.active_panel) then
           self.active_panel:safe_remove()
 
-          self.activeBtn:SetTextColor(nil)
+          self.active_button:SetTextColor(nil)
         end
 
         self.active_panel = vgui.Create(v.panel, self)
@@ -66,8 +66,8 @@ function PANEL:Init()
           self.active_panel:SetSize(scrw * 0.5, scrh * 0.5)
         end
 
-        self.activeBtn = btn
-        self.activeBtn:SetTextColor(theme.get_color('accent_light'))
+        self.active_button = btn
+        self.active_button:SetTextColor(theme.get_color('accent_light'))
 
         if self.active_panel.Rebuild then
           self.active_panel:Rebuild()
@@ -93,8 +93,8 @@ function PANEL:Init()
 end
 
 function PANEL:Think()
-  if !IsValid(self.active_panel) and IsValid(self.activeBtn) then
-    self.activeBtn:SetTextColor(nil)
+  if !IsValid(self.active_panel) and IsValid(self.active_button) then
+    self.active_button:SetTextColor(nil)
   end
 end
 

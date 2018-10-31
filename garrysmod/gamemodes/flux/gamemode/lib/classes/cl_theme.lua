@@ -20,8 +20,11 @@ function Theme:init(name, parent)
   end
 end
 
-function Theme:on_loaded() end
-function Theme:on_unloaded() end
+function Theme:on_loaded()
+end
+
+function Theme:on_unloaded()
+end
 
 function Theme:remove()
   return theme.remove_theme(self.id)

@@ -29,18 +29,18 @@ function fl.bars:register(id, data, force)
     text = data.text or '',
     color = data.color or Color(200, 90, 90),
     max_value = data.max_value or 100,
-    hinderColor = data.hinderColor or Color(255, 0, 0),
-    hinderText = data.hinderText or '',
+    hinder_color = data.hinder_color or Color(255, 0, 0),
+    hinder_text = data.hinder_text or '',
     display = data.display or 100,
-    minDisplay = data.minDisplay or 0,
-    hinderDisplay = data.hinderDisplay or false,
+    min_display = data.min_display or 0,
+    hinder_display = data.hinder_display or false,
     value = data.value or 0,
-    hinderValue = data.hinderValue or 0,
+    hinder_value = data.hinder_value or 0,
     x = data.x or self.defaultX,
     y = data.y or self.defaultY,
     width = data.width or self.defaultW,
     height = data.height or self.defaultH,
-    cornerRadius = data.cornerRadius or 0,
+    corner_radius = data.corner_radius or 0,
     priority = data.priority or table.Count(stored),
     type = data.type or BAR_TOP,
     font = data.font or 'text_bar',
@@ -62,31 +62,31 @@ function fl.bars:Get(id)
   return false
 end
 
-function fl.bars:SetValue(id, newValue)
+function fl.bars:SetValue(id, new_value)
   local bar = self:Get(id)
 
   if bar then
-    theme.call('PreBarValueSet', bar, bar.value, newValue)
+    theme.call('PreBarValueSet', bar, bar.value, new_value)
 
-    if bar.value != newValue then
-      if bar.hinderDisplay and bar.hinderValue then
-        bar.value = math.Clamp(newValue, 0, bar.max_value - bar.hinderValue + 2)
+    if bar.value != new_value then
+      if bar.hinder_display and bar.hinder_value then
+        bar.value = math.Clamp(new_value, 0, bar.max_value - bar.hinder_value + 2)
       end
 
-      bar.interpolated = util.cubic_ease_in_out_t(150, bar.value, newValue)
-      bar.value = math.Clamp(newValue, 0, bar.max_value)
+      bar.interpolated = util.cubic_ease_in_out_t(150, bar.value, new_value)
+      bar.value = math.Clamp(new_value, 0, bar.max_value)
     end
   end
 end
 
-function fl.bars:HinderValue(id, newValue)
+function fl.bars:HinderValue(id, new_value)
   local bar = self:Get(id)
 
   if bar then
-    theme.call('PreBarHinderValueSet', bar, bar.hinderValue, newValue)
+    theme.call('PreBarHinderValueSet', bar, bar.hinder_value, new_value)
 
-    if bar.value != newValue then
-      bar.hinderValue = math.Clamp(newValue, 0, bar.max_value)
+    if bar.value != new_value then
+      bar.hinder_value = math.Clamp(new_value, 0, bar.max_value)
     end
   end
 end
@@ -115,7 +115,6 @@ function fl.bars:Position()
   self:Prioritize()
 
   local last_y = self.defaultY
-  local lastX = self.defaultX
 
   for priority, ids in pairs(sorted) do
     for k, v in pairs(ids) do
@@ -152,7 +151,7 @@ function fl.bars:Draw(id)
       theme.call('DrawBarFill', bar_info)
     end
 
-    if bar_info.hinderDisplay and bar_info.hinderDisplay <= bar_info.hinderValue then
+    if bar_info.hinder_display and bar_info.hinder_display <= bar_info.hinder_value then
       theme.call('DrawBarHindrance', bar_info)
     end
 
@@ -197,28 +196,28 @@ do
   end
 
   function Bars:PreDrawBar(bar)
-    bar.curI = bar.curI or 1
+    bar.cur_i = bar.cur_i or 1
 
     bar.real_fill_width = bar.width * (bar.value / bar.max_value)
 
     if bar.interpolated == nil then
       bar.fill_width = bar.real_fill_width
     else
-      if bar.curI > 150 then
+      if bar.cur_i > 150 then
         bar.interpolated = nil
-        bar.curI = 1
+        bar.cur_i = 1
       else
-        bar.fill_width = bar.width * (bar.interpolated[math.Round(bar.curI)] / bar.max_value)
-        bar.curI = bar.curI + math.Clamp(math.Round(1 * (FrameTime() / 0.006)), 1, 10)
+        bar.fill_width = bar.width * (bar.interpolated[math.Round(bar.cur_i)] / bar.max_value)
+        bar.cur_i = bar.cur_i + math.Clamp(math.Round(1 * (FrameTime() / 0.006)), 1, 10)
       end
     end
 
     bar.text = string.utf8upper(bar.text)
-    bar.hinderText = string.utf8upper(bar.hinderText)
+    bar.hinder_text = string.utf8upper(bar.hinder_text)
   end
 
   function Bars:ShouldDrawBar(bar)
-    if bar.display < bar.value or bar.minDisplay >= bar.value then
+    if bar.display < bar.value or bar.min_display >= bar.value then
       return false
     end
 

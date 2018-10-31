@@ -71,21 +71,21 @@ end
 
 -- 'borrowed' from lua/vgui/dscrollpanel.lua
 function PANEL:PerformLayout()
-  local oldHeight = self.pnlCanvas:GetTall()
-  local oldWidth = self:GetWide()
-  local YPos = 0
+  local old_height = self.pnlCanvas:GetTall()
+  local old_width = self:GetWide()
+  local ypos = 0
 
   self:Rebuild()
 
   self.VBar:SetUp(self:GetTall(), self.pnlCanvas:GetTall())
-  YPos = self.VBar:GetOffset()
+  ypos = self.VBar:GetOffset()
 
-  self.pnlCanvas:SetPos(0, YPos)
-  self.pnlCanvas:SetWide(oldWidth)
+  self.pnlCanvas:SetPos(0, ypos)
+  self.pnlCanvas:SetWide(old_width)
 
   self:Rebuild()
 
-  if oldHeight != self.pnlCanvas:GetTall() then
+  if old_height != self.pnlCanvas:GetTall() then
     self.VBar:SetScroll(self.VBar:GetScroll())
   end
 end

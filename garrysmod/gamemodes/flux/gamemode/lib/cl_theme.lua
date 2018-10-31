@@ -30,9 +30,9 @@ function theme.register_theme(obj)
   stored[obj.id] = obj
 end
 
-function theme.create_panel(panelID, parent, ...)
-  if current_theme and hook.run('ShouldThemeCreatePanel', panelID, current_theme) != false then
-    return current_theme:create_panel(panelID, parent, ...)
+function theme.create_panel(panel_id, parent, ...)
+  if current_theme and hook.run('ShouldThemeCreatePanel', panel_id, current_theme) != false then
+    return current_theme:create_panel(panel_id, parent, ...)
   end
 end
 

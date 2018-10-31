@@ -103,8 +103,8 @@ else
 
     menu_items[id] = {
       category = {name = name or 'Other', description = description or ''},
-      AddKey = function(key, name, description, dataType, data)
-        config.add_to_menu(id, key, name, description, dataType, data)
+      AddKey = function(key, name, description, data_type, data)
+        config.add_to_menu(id, key, name, description, data_type, data)
       end,
       add_slider = function(key, name, description, data)
         config.add_to_menu(id, key, name, description, 'number', data)
@@ -131,7 +131,7 @@ else
     return menu_items[id]
   end
 
-  function config.add_to_menu(category, key, name, description, dataType, data)
+  function config.add_to_menu(category, key, name, description, data_type, data)
     if !category or !key then return end
 
     menu_items[category] = menu_items[category] or {}
@@ -140,7 +140,7 @@ else
     table.insert(menu_items[category].configs, {
       name = name or key,
       description = description or 'This config has no description set.',
-      type = dataType,
+      type = data_type,
       data = data or {}
     })
   end

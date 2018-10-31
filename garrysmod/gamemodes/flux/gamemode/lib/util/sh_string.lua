@@ -90,13 +90,13 @@ function string.find_all(str, pattern)
   local last_pos = 1
 
   while true do
-    local startPos, end_pos = string.find(str, pattern, last_pos)
+    local start_pos, end_pos = string.find(str, pattern, last_pos)
 
-    if !startPos then
+    if !start_pos then
       break
     end
 
-    table.insert(hits, {string.utf8sub(str, startPos, end_pos), startPos, end_pos})
+    table.insert(hits, {string.utf8sub(str, start_pos, end_pos), start_pos, end_pos})
 
     last_pos = end_pos + 1
   end
@@ -219,6 +219,7 @@ function string.chomp(str, what)
   else
     str = str:trim_start(what, true):trim_end(what, true)
   end
+
   return str
 end
 
@@ -228,11 +229,13 @@ function string.capitalize(str)
 end
 
 function string.parse_table(str, ref)
-  ref = istable(ref) and ref or _G
   local tables = str:split('::')
+
+  ref = istable(ref) and ref or _G
 
   for k, v in ipairs(tables) do
     ref = ref[v]
+  
     if !istable(ref) then return false, v end
   end
 
@@ -240,12 +243,15 @@ function string.parse_table(str, ref)
 end
 
 function string.parse_parent(str, ref)
-  ref = istable(ref) and ref or _G
   local tables = str:split('::')
+
+  ref = istable(ref) and ref or _G
 
   for k, v in ipairs(tables) do
     local new_ref = ref[v]
+
     if !istable(new_ref) then return ref, v end
+
     ref = new_ref
   end
 

@@ -35,10 +35,10 @@ function PANEL:PositionPanel(obj)
   if !size.x or !size.y or size.x <= 0 or size.y <= 0 then return end
 
   local w, h = self:GetWide(), self:GetTall()
-  local unitX, unitY = w / size.x, h / size.y
+  local unit_x, unit_y = w / size.x, h / size.y
 
-  panel:SetPos(obj.pos.x * (size.x - 1) * unitX, obj.pos.y * (size.y - 1) * unitY)
-  panel:SetSize(unitX * obj.pos.w, unitY * obj.pos.h)
+  panel:SetPos(obj.pos.x * (size.x - 1) * unit_x, obj.pos.y * (size.y - 1) * unit_y)
+  panel:SetSize(unit_x * obj.pos.w, unit_y * obj.pos.h)
 
   return obj
 end

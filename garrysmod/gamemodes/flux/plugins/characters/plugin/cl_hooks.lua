@@ -114,12 +114,12 @@ function Characters:ShouldScoreboardShow()
 end
 
 function Characters:RebuildScoreboardPlayerCard(card, player)
-  local x, y = card.nameLabel:GetPos()
+  local x, y = card.name_label:GetPos()
   local oldX = x
 
   x = x + font.scale(32) + 4
 
-  card.nameLabel:SetPos(x, 2)
+  card.name_label:SetPos(x, 2)
 
   if IsValid(card.descLabel) then
     card.descLabel:safe_remove()
@@ -140,7 +140,7 @@ function Characters:RebuildScoreboardPlayerCard(card, player)
   card.descLabel = vgui.Create('DLabel', card)
   card.descLabel:SetText(phys_desc)
   card.descLabel:SetFont(theme.get_font('text_smaller'))
-  card.descLabel:SetPos(x, card.nameLabel:GetTall())
+  card.descLabel:SetPos(x, card.name_label:GetTall())
   card.descLabel:SetTextColor(theme.get_color('text'))
   card.descLabel:SizeToContents()
 end

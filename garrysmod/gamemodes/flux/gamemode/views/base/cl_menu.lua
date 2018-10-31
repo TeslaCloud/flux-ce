@@ -51,7 +51,7 @@ vgui.Register('fl_menu_item', PANEL, 'DButton')
 
 local PANEL = {}
 PANEL.last = 0
-PANEL.optionHeight = 32
+PANEL.option_height = 32
 PANEL.count = 0
 
 function PANEL:GetDeleteSelf()
@@ -64,7 +64,7 @@ function PANEL:AddOption(name, callback)
   local panel = vgui.Create('fl_menu_item', self)
   panel:SetPos(0, 0)
   panel:MoveTo(0, self.last, 0.15 * self.count)
-  panel:SetSize(self:GetWide(), self.optionHeight)
+  panel:SetSize(self:GetWide(), self.option_height)
   panel:SetTextColor(theme.get_color('text'))
   panel:SetText(name)
   panel:MoveToBack()
@@ -73,7 +73,7 @@ function PANEL:AddOption(name, callback)
     panel.DoClick = callback
   end
 
-  self.last = self.last + self.optionHeight
+  self.last = self.last + self.option_height
   self.count = self.count + 1
 
   self:AddItem(panel)

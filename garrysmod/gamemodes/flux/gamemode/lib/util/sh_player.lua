@@ -1,9 +1,9 @@
 -- A function to select a random player.
 function player.random()
-  local allPly = player.GetAll()
+  local all_ply = player.GetAll()
 
-  if #allPly > 0 then
-    return allPly[math.random(1, #allPly)]
+  if #all_ply > 0 then
+    return all_ply[math.random(1, #all_ply)]
   end
 end
 
@@ -13,10 +13,10 @@ function player.find(name, case_sensitive, return_first)
   if !isstring(name) then return (IsValid(name) and name) or nil end
 
   local hits = {}
-  local isSteamID = name:starts('STEAM_')
+  local is_steamid = name:starts('STEAM_')
 
   for k, v in ipairs(_player.GetAll()) do
-    if isSteamID then
+    if is_steamid then
       if v:SteamID() == name then
         return v
       end

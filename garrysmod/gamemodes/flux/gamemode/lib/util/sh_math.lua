@@ -50,25 +50,25 @@ end
 
 -- A function to determine whether vector from A to B intersects with a
 -- vector from C to D.
-function util.vectors_intersect(vFrom, vTo, vFrom2, vTo2)
+function util.vectors_intersect(from, to, from2, to2)
   local d1, d2, a1, a2, b1, b2, c1, c2
 
-  a1 = vTo.y - vFrom.y
-  b1 = vFrom.x - vTo.x
-  c1 = (vTo.x * vFrom.y) - (vFrom.x * vTo.y)
+  a1 = to.y - from.y
+  b1 = from.x - to.x
+  c1 = (to.x * from.y) - (from.x * to.y)
 
-  d1 = (a1 * vFrom2.x) + (b1 * vFrom2.y) + c1
-  d2 = (a1 * vTo2.x) + (b1 * vTo2.y) + c1
+  d1 = (a1 * from2.x) + (b1 * from2.y) + c1
+  d2 = (a1 * to2.x) + (b1 * to2.y) + c1
 
   if d1 > 0 and d2 > 0 then return false end
   if d1 < 0 and d2 < 0 then return false end
 
-  a2 = vTo2.y - vFrom2.y
-  b2 = vFrom2.x - vTo2.x
-  c2 = (vTo2.x * vFrom2.y) - (vFrom2.x * vTo2.y)
+  a2 = to2.y - from2.y
+  b2 = from2.x - to2.x
+  c2 = (to2.x * from2.y) - (from2.x * to2.y)
 
-  d1 = (a2 * vFrom.x) + (b2 * vFrom.y) + c2
-  d2 = (a2 * vTo.x) + (b2 * vTo.y) + c2
+  d1 = (a2 * from.x) + (b2 * from.y) + c2
+  d2 = (a2 * to.x) + (b2 * to.y) + c2
 
   if d1 > 0 and d2 > 0 then return false end
   if d1 < 0 and d2 < 0 then return false end
@@ -79,23 +79,23 @@ function util.vectors_intersect(vFrom, vTo, vFrom2, vTo2)
 end
 
 -- A function to determine whether a 2D point is inside of a 2D polygon.
-function util.vector_in_poly(point, polyVertices)
-  if !isvector(point) or !istable(polyVertices) or !isvector(polyVertices[1]) then
+function util.vector_in_poly(point, poly_vertices)
+  if !isvector(point) or !istable(poly_vertices) or !isvector(poly_vertices[1]) then
     return
   end
 
   local intersections = 0
 
-  for k, v in ipairs(polyVertices) do
-    local nextVert
+  for k, v in ipairs(poly_vertices) do
+    local next_vert
 
-    if k < #polyVertices then
-      nextVert = polyVertices[k + 1]
-    elseif k == #polyVertices then
-      nextVert = polyVertices[1]
+    if k < #poly_vertices then
+      next_vert = poly_vertices[k + 1]
+    elseif k == #poly_vertices then
+      next_vert = poly_vertices[1]
     end
 
-    if nextVert and util.vectors_intersect(point, Vector(99999, 99999, 0), v, nextVert) then
+    if next_vert and util.vectors_intersect(point, Vector(99999, 99999, 0), v, next_vert) then
       intersections = intersections + 1
     end
   end

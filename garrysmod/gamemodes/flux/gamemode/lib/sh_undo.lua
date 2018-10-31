@@ -31,10 +31,10 @@ function fl.undo:Finish()
 end
 
 function fl.undo:Remove(player, id)
-  local queueTable = queue[player]
+  local queue_table = queue[player]
 
-  if queueTable then
-    for k, v in ipairs(queueTable) do
+  if queue_table then
+    for k, v in ipairs(queue_table) do
       if v.id == id then
         queue[player][k] = nil
       end

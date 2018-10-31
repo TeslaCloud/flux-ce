@@ -59,8 +59,11 @@ do
 end
 
 -- Remove default death notices.
-function GM:DrawDeathNotice() end
-function GM:AddDeathNotice() end
+function GM:DrawDeathNotice()
+end
+
+function GM:AddDeathNotice()
+end
 
 -- Called when default GWEN skin is required.
 function GM:ForceDermaSkin()
@@ -153,7 +156,7 @@ function GM:HUDPaint()
         theme.call('PaintDeathScreen', cur_time, scrw, scrh)
       hook.run('HUDPaintDeathForeground', cur_time, scrw, scrh)
     else
-      fl.client.respawnAlpha = 0
+      fl.client.respawn_alpha = 0
 
       if isnumber(fl.client.white_alpha) and fl.client.white_alpha > 0.5 then
         fl.client.white_alpha = Lerp(0.04, fl.client.white_alpha, 0)
