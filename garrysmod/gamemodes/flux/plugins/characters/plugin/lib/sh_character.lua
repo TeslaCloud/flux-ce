@@ -51,7 +51,7 @@ function character.Create(player, data)
 
     character.Save(player, char)
 
-    cable.send('fl_create_character', char.character_id, character.to_networkable(player, char))
+    cable.send(player, 'fl_create_character', char.character_id, character.to_networkable(player, char))
   end
 
   return CHAR_SUCCESS

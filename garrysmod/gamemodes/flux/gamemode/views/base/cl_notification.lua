@@ -30,7 +30,7 @@ function PANEL:SetTextColor(col)
   self.text_color = col or Color(255, 255, 255)
 end
 
-function PANEL:SetGackgroundColor(col)
+function PANEL:SetBackgroundColor(col)
   self.background_color = col or Color(0, 0, 0)
 end
 
