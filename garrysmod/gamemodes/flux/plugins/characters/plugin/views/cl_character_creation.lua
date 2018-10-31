@@ -99,7 +99,7 @@ function PANEL:goto_stage(stage)
     self:PrevStage()
 
     if self.stage != stage then
-      timer.Create('flux_char_panel_change', .1, self.stage - stage - 1, function()
+      timer.Create('flux_char_panel_change', .1, self.stage - stage, function()
         self:PrevStage()
       end)
     end
@@ -107,7 +107,7 @@ function PANEL:goto_stage(stage)
     self:NextStage()
 
     if self.stage != stage then
-      timer.Create('flux_char_panel_change', .1, stage - self.stage + 1, function()
+      timer.Create('flux_char_panel_change', .1, stage - self.stage, function()
         self:NextStage()
       end)
     end
