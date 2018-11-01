@@ -1,3 +1,38 @@
+function Items:HUDPaint()
+  local hold_start = fl.client:get_nv('hold_start')
+
+  if hold_start then
+    local diff = math.Clamp(math.Round(CurTime() - hold_start, 3), 0.01, 0.5)
+    local percentage = math.Clamp((diff / 0.5) * 100, 0, 100)
+
+    fl.set_circle_percent(percentage)
+  end
+end
+
+function Items:PreDrawHalos()
+  local ent = fl.client:get_nv('hold_entity')
+
+  if IsValid(ent) then
+    halo.Add({ ent }, color_white)
+  end
+end
+
+function Items:Think()
+  if !fl.client:get_nv('hold_start') then return end
+
+  local ent = fl.client:get_nv('hold_entity')
+
+  if IsValid(ent) and fl.client:get_nv('hold_start') then
+    local scr_pos = ent:GetPos():ToScreen()
+    local x, y = scr_pos.x, scr_pos.y
+    local w, h = ScrW() * 0.5, ScrH() * 0.5
+
+    if !scr_pos.visible or math.abs(w - x) > font.scale(350) or math.abs(h - y) > font.scale(350) then
+      cable.send('Flux::Items::Aborthold_start', true)
+    end
+  end
+end
+
 function Items:PlayerUseItemMenu(item_table, is_entity)
   if !item_table then return end
 
@@ -64,43 +99,8 @@ function Items:PlayerUseItemMenu(item_table, is_entity)
   end
 end
 
-function Items:PlayerDropItem(item_table, panel, mousex, mousey)
+function Items:PlayerDropItem(item_table, panel, mouse_x, mouse_y)
   cable.send('PlayerDropItem', item_table.instance_id)
-end
-
-function Items:HUDPaint()
-  local hold_start = fl.client:get_nv('hold_start')
-
-  if hold_start then
-    local diff = math.Clamp(math.Round(CurTime() - hold_start, 3), 0.01, 0.5)
-    local percentage = math.Clamp((diff / 0.5) * 100, 0, 100)
-
-    fl.set_circle_percent(percentage)
-  end
-end
-
-function Items:PreDrawHalos()
-  local ent = fl.client:get_nv('hold_entity')
-
-  if IsValid(ent) then
-    halo.Add({ ent }, color_white)
-  end
-end
-
-function Items:Think()
-  if !fl.client:get_nv('hold_start') then return end
-
-  local ent = fl.client:get_nv('hold_entity')
-
-  if IsValid(ent) and fl.client:get_nv('hold_start') then
-    local scr_pos = ent:GetPos():ToScreen()
-    local x, y = scr_pos.x, scr_pos.y
-    local w, h = ScrW() * 0.5, ScrH() * 0.5
-
-    if !scr_pos.visible or math.abs(w - x) > font.scale(350) or math.abs(h - y) > font.scale(350) then
-      cable.send('Flux::Items::Aborthold_start', true)
-    end
-  end
 end
 
 function Items:OnItemDataReceived()

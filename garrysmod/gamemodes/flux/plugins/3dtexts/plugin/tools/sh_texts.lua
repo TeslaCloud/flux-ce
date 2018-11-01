@@ -48,7 +48,7 @@ function TOOL:LeftClick(trace)
     fade_offset = fade_offset
   }
 
-  SurfaceText:AddText(data)
+  SurfaceText:add_text(data)
 
   fl.player:notify(player, '3d_text.text_added')
 
@@ -58,7 +58,7 @@ end
 function TOOL:RightClick(trace)
   if CLIENT then return true end
 
-  SurfaceText:Remove(self:GetOwner())
+  SurfaceText:remove_text(self:GetOwner())
 
   return true
 end

@@ -71,32 +71,32 @@ function Factions:PreRebuildScoreboard(panel, w, h)
   local card_tall = font.scale(32) + 8
   local margin = font.scale(4)
 
-  local cat_list = vgui.Create('DListLayout', panel.scroll_panel)
-  cat_list:SetSize(w - 8, h - 36)
-  cat_list:SetPos(4, 36)
+  local category_list = vgui.Create('DListLayout', panel.scroll_panel)
+  category_list:SetSize(w - 8, h - 36)
+  category_list:SetPos(4, 36)
 
-  for id, faction_table in pairs(faction.GetAll()) do
-    local players = faction.GetPlayers(id)
+  for k, v in pairs(faction.get_all()) do
+    local players = faction.get_players(k)
 
     if #players == 0 then continue end
 
-    local cat = vgui.Create('DCollapsibleCategory', panel)
-    cat:SetSize(w - 8, 32)
-    cat:SetPos(4, cur_y)
-    cat:SetLabel(faction_table.name or id)
+    local category = vgui.Create('DCollapsibleCategory', panel)
+    category:SetSize(w - 8, 32)
+    category:SetPos(4, cur_y)
+    category:SetLabel(v.name or k)
 
-    cat_list:Add(cat)
+    category_list:Add(category)
 
     local list = vgui.Create('DPanelList', panel)
     list:SetSpacing(5)
     list:EnableHorizontal(false)
 
-    cat:SetContents(list)
+    category:SetContents(list)
 
-    for k, v in ipairs(players) do
+    for k1, v1 in ipairs(players) do
       local player_card = vgui.Create('fl_scoreboard_player', self)
       player_card:SetSize(w - 8, card_tall)
-      player_card:set_player(v)
+      player_card:set_player(v1)
       player_card:SetPos(0, 5)
 
       list:AddItem(player_card)
@@ -104,7 +104,7 @@ function Factions:PreRebuildScoreboard(panel, w, h)
       table.insert(panel.player_cards, player_card)
     end
 
-    cur_y = cur_y + cat:GetTall() + card_tall + margin
+    cur_y = cur_y + category:GetTall() + card_tall + margin
   end
 
   return true

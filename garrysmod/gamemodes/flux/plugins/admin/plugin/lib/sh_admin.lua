@@ -1,26 +1,23 @@
 library.new('admin', fl)
 
 local roles = fl.admin.roles or {}
-fl.admin.roles = roles
-
 local permissions = fl.admin.permissions or {}
-fl.admin.permissions = permissions
-
 local players = fl.admin.players or {}
-fl.admin.players = players
-
 local bans = fl.admin.bans or {}
+fl.admin.roles = roles
+fl.admin.permissions = permissions
+fl.admin.players = players
 fl.admin.bans = bans
 
-function fl.admin:GetPermissions()
+function fl.admin:get_permissions()
   return permissions
 end
 
-function fl.admin:GetRoles()
+function fl.admin:get_roles()
   return roles
 end
 
-function fl.admin:GetPlayers()
+function fl.admin:get_players()
   return players
 end
 
@@ -58,7 +55,7 @@ function fl.admin:create_group(id, data)
   end
 end
 
-function fl.admin:AddPermission(id, category, data, force)
+function fl.admin:add_permission(id, category, data, force)
   if !id then return end
 
   category = category or 'general'
@@ -70,7 +67,7 @@ function fl.admin:AddPermission(id, category, data, force)
   end
 end
 
-function fl.admin:RegisterPermission(id, name, description, category)
+function fl.admin:register_permission(id, name, description, category)
   if !isstring(id) or id == '' then return end
 
   local data = {}
@@ -78,13 +75,13 @@ function fl.admin:RegisterPermission(id, name, description, category)
     data.description = description or 'No description provided.'
     data.category = category or 'general'
     data.name = name or id
-  self:AddPermission(id, category, data, true)
+  self:add_permission(id, category, data, true)
 end
 
-function fl.admin:PermissionFromCommand(cmd)
+function fl.admin:permission_from_command(cmd)
   if !cmd then return end
 
-  self:RegisterPermission(cmd.id, cmd.name, cmd.description, cmd.category)
+  self:register_permission(cmd.id, cmd.name, cmd.description, cmd.category)
 end
 
 function fl.admin:can(player, action, object)
@@ -100,7 +97,7 @@ function fl.admin:can(player, action, object)
   return false
 end
 
-function fl.admin:FindGroup(id)
+function fl.admin:find_group(id)
   if roles[id] then
     return roles[id]
   end
@@ -108,17 +105,17 @@ function fl.admin:FindGroup(id)
   return nil
 end
 
-function fl.admin:GroupExists(id)
-  return self:FindGroup(id)
+function fl.admin:group_exists(id)
+  return self:find_group(id)
 end
 
-function fl.admin:CheckImmunity(player, target, can_equal)
+function fl.admin:check_immunity(player, target, can_equal)
   if !IsValid(player) or !IsValid(target) then
     return true
   end
 
-  local group1 = self:FindGroup(player:GetUserGroup())
-  local group2 = self:FindGroup(target:GetUserGroup())
+  local group1 = self:find_group(player:GetUserGroup())
+  local group2 = self:find_group(target:GetUserGroup())
 
   if !isnumber(group1.immunity) or !isnumber(group2.immunity) then
     return true
@@ -135,14 +132,6 @@ function fl.admin:CheckImmunity(player, target, can_equal)
   return false
 end
 
-pipeline.register('role', function(id, file_name, pipe)
-  ROLE = Role.new(id)
-
-  util.include(file_name)
-
-  ROLE:register() ROLE = nil
-end)
-
 function fl.admin:include_roles(directory)
   pipeline.include_folder('role', directory)
 end
@@ -157,7 +146,7 @@ if SERVER then
   end
 
   -- INTERNAL
-  function fl.admin:AddBan(steam_id, name, unban_time, duration, reason)
+  function fl.admin:add_ban(steam_id, name, unban_time, duration, reason)
     local obj = bans[steam_id] or Ban.new()
       obj.name = name
       obj.steam_id = steam_id
@@ -189,7 +178,7 @@ if SERVER then
       end
     end
 
-    self:AddBan(steam_id, name, os.time() + duration, duration, reason)
+    self:add_ban(steam_id, name, os.time() + duration, duration, reason)
   end
 
   function fl.admin:remove_ban(steam_id)
@@ -250,7 +239,7 @@ do
     noscope = 420
   }
 
-  function fl.admin:InterpretBanTime(str)
+  function fl.admin:interpret_ban_time(str)
     if isnumber(str) then return str * 60 end
     if !isstring(str) then return false end
 
@@ -314,19 +303,28 @@ end
 
 do
   -- Flags
-  fl.admin:RegisterPermission('physgun', 'Access Physgun', 'Grants access to the physics gun.', 'flags')
-  fl.admin:RegisterPermission('toolgun', 'Access Tool Gun', 'Grants access to the tool gun.', 'flags')
-  fl.admin:RegisterPermission('spawn_props', 'Spawn Props', 'Grants access to spawn props.', 'flags')
-  fl.admin:RegisterPermission('spawn_chairs', 'Spawn Chairs', 'Grants access to spawn chairs.', 'flags')
-  fl.admin:RegisterPermission('spawn_vehicles', 'Spawn Vehicles', 'Grants access to spawn vehicles.', 'flags')
-  fl.admin:RegisterPermission('spawn_entities', 'Spawn All Entities', 'Grants access to spawn any entity.', 'flags')
-  fl.admin:RegisterPermission('spawn_npcs', 'Spawn NPCs', 'Grants access to spawn NPCs.', 'flags')
-  fl.admin:RegisterPermission('spawn_ragdolls', 'Spawn Ragdolls', 'Grants access to spawn ragdolls.', 'flags')
-  fl.admin:RegisterPermission('spawn_sweps', 'Spawn SWEPs', 'Grants access to spawn scripted weapons.', 'flags')
-  fl.admin:RegisterPermission('physgun_freeze', 'Freeze Protected Entities', 'Grants access to freeze protected entities.', 'flags')
-  fl.admin:RegisterPermission('physgun_pickup', 'Unlimited Physgun', 'Grants access to pick up any entity with the physics gun.', 'flags')
-  fl.admin:RegisterPermission('voice', 'Voice chat access', 'Grants access to voice chat.', 'flags')
+  fl.admin:register_permission('physgun', 'Access Physgun', 'Grants access to the physics gun.', 'flags')
+  fl.admin:register_permission('toolgun', 'Access Tool Gun', 'Grants access to the tool gun.', 'flags')
+  fl.admin:register_permission('spawn_props', 'Spawn Props', 'Grants access to spawn props.', 'flags')
+  fl.admin:register_permission('spawn_chairs', 'Spawn Chairs', 'Grants access to spawn chairs.', 'flags')
+  fl.admin:register_permission('spawn_vehicles', 'Spawn Vehicles', 'Grants access to spawn vehicles.', 'flags')
+  fl.admin:register_permission('spawn_entities', 'Spawn All Entities', 'Grants access to spawn any entity.', 'flags')
+  fl.admin:register_permission('spawn_npcs', 'Spawn NPCs', 'Grants access to spawn NPCs.', 'flags')
+  fl.admin:register_permission('spawn_ragdolls', 'Spawn Ragdolls', 'Grants access to spawn ragdolls.', 'flags')
+  fl.admin:register_permission('spawn_sweps', 'Spawn SWEPs', 'Grants access to spawn scripted weapons.', 'flags')
+  fl.admin:register_permission('physgun_freeze', 'Freeze Protected Entities', 'Grants access to freeze protected entities.', 'flags')
+  fl.admin:register_permission('physgun_pickup', 'Unlimited Physgun', 'Grants access to pick up any entity with the physics gun.', 'flags')
+  fl.admin:register_permission('voice', 'Voice chat access', 'Grants access to voice chat.', 'flags')
 
   -- General permissions
-  fl.admin:RegisterPermission('context_menu', 'Access Context Menu', 'Grants access to the context menu.', 'general')
+  fl.admin:register_permission('context_menu', 'Access Context Menu', 'Grants access to the context menu.', 'general')
 end
+
+pipeline.register('role', function(id, file_name, pipe)
+  ROLE = Role.new(id)
+
+  util.include(file_name)
+
+  ROLE:register()
+  ROLE = nil
+end)

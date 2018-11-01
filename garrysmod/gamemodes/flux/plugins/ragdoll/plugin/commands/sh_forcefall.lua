@@ -14,8 +14,8 @@ function COMMAND:on_run(player, target, delay)
 
   target = target[1]
 
-  if IsValid(target) and target:Alive() and !target:IsRagdolled() then
-    target:SetRagdollState(RAGDOLL_FALLENOVER)
+  if IsValid(target) and target:Alive() and !target:is_ragdolled() then
+    target:set_ragdoll_state(RAGDOLL_FALLENOVER)
 
     player:notify(target:name()..' has been ragdolled!')
 
@@ -23,7 +23,7 @@ function COMMAND:on_run(player, target, delay)
       target:notify('Getting up...')
 
       timer.Simple(delay, function()
-        target:SetRagdollState(RAGDOLL_NONE)
+        target:set_ragdoll_state(RAGDOLL_NONE)
       end)
     end
   else

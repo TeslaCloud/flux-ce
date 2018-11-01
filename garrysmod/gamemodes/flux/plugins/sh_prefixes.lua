@@ -5,15 +5,6 @@ PLUGIN:set_description('Adds prefix adjusting to avoid troubles with certain com
 
 local stored = {}
 
-function Prefixes:add(id, prefix, callback, check)
-  table.insert(stored, {
-    id = id,
-    prefix = prefix,
-    callback = callback,
-    check = check
-  })
-end
-
 function Prefixes:StringIsCommand(str)
   for k, v in ipairs(stored) do
     if istable(v.prefix) then
@@ -56,4 +47,13 @@ function Prefixes:PlayerSay(player, text, team_chat)
       end
     end
   end
+end
+
+function Prefixes:add(id, prefix, callback, check)
+  table.insert(stored, {
+    id = id,
+    prefix = prefix,
+    callback = callback,
+    check = check
+  })
 end

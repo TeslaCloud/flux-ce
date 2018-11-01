@@ -12,7 +12,7 @@ function COMMAND:on_run(player, targets, model)
 
   fl.player:broadcast('char_set_model.message', { get_player_name(player), target:name(), model })
 
-  character.SetModel(target, target:GetCharacter(), model)
+  character.set_model(target, target:get_character(), model)
 end
 
 COMMAND:register()

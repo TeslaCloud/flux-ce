@@ -8,14 +8,14 @@ COMMAND.player_arg = 1
 COMMAND.aliases = { 'chargiveitem', 'plygiveitem' }
 
 function COMMAND:on_run(player, targets, item_name, amount)
-  local item_table = item.Find(item_name)
+  local item_table = item.find(item_name)
 
   if item_table then
     amount = tonumber(amount) or 1
 
     for k, v in ipairs(targets) do
       for i = 1, amount do
-        v:GiveItem(item_table.id)
+        v:give_item(item_table.id)
       end
 
       fl.player:notify(v, t('give_item.target_message', { get_player_name(player), amount, item_table.name }))

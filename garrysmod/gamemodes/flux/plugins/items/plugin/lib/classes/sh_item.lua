@@ -10,6 +10,11 @@ function Item:init(id)
   }
 end
 
+-- Fancy output if you do print(item_table).
+function Item:__tostring()
+  return 'Item ['..tostring(self.instance_id)..']['..(self.name or self.id)..']'
+end
+
 function Item:get_name()
   return self.print_name or self.name
 end
@@ -47,15 +52,15 @@ function Item:get_max_stack()
   return self.max_stack or 64
 end
 
-function Item:GetModel()
+function Item:get_model()
   return self.model or 'models/props_lab/cactus.mdl'
 end
 
-function Item:GetSkin()
+function Item:get_skin()
   return self.skin or 0
 end
 
-function Item:GetColor()
+function Item:get_color()
   return self.color or Color(255, 255, 255)
 end
 
@@ -97,12 +102,12 @@ if SERVER then
 
     self.data[id] = value
 
-    item.NetworkItemData(self:get_player(), self)
+    item.network_item_data(self:get_player(), self)
   end
 
   function Item:get_player()
     for k, v in ipairs(player.GetAll()) do
-      if v:HasItemByID(self.instance_id) then
+      if v:has_item_by_id(self.instance_id) then
         return v
       end
     end
@@ -153,7 +158,7 @@ if SERVER then
   end
 
   cable.receive('ItemMenuAction', function(player, instance_id, action, ...)
-    local item_table = item.FindInstanceByID(instance_id)
+    local item_table = item.find_instance_by_id(instance_id)
 
     if !item_table then return end
     if hook.run('PlayerCanUseItem', player, item_table, action, ...) == false then return end
@@ -174,7 +179,7 @@ else
   end
 
   function Item:get_drop_text()
-    return self.DropText or t'item.option.drop'
+    return self.drop_text or t'item.option.drop'
   end
 
   function Item:get_cancel_text()
@@ -194,9 +199,4 @@ end
 
 function Item:register()
   return item.register(self.id, self)
-end
-
--- Fancy output if you do print(item_table).
-function Item:__tostring()
-  return 'Item ['..tostring(self.instance_id)..']['..(self.name or self.id)..']'
 end

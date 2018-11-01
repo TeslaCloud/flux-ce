@@ -4,6 +4,43 @@ hook.Remove('PersistenceSave', 'PersistenceSave')
 hook.Remove('PersistenceLoad', 'PersistenceLoad')
 hook.Remove('InitPostEntity', 'PersistenceInit')
 
+function StaticEnts:InitPostEntity()
+  hook.run('PersistenceLoad')
+end
+
+function StaticEnts:ShutDown()
+  hook.run('PersistenceSave')
+end
+
+function StaticEnts:PersistenceSave()
+  local entities = {}
+
+  for k, v in ipairs(ents.GetAll()) do
+    if v:GetPersistent() then
+      local ent_class = v:GetClass()
+      entities[ent_class] = entities[ent_class] or {}
+      table.insert(entities[ent_class], v)
+    end
+  end
+
+  local to_save = {}
+
+  for ent_class, entities in pairs(entities) do
+    to_save[ent_class] = duplicator.CopyEnts(entities)
+  end
+
+  for ent_class, v in pairs(to_save) do
+    if !istable(v) then continue end
+    data.save_plugin('static/'..ent_class, v)
+  end
+end
+
+function StaticEnts:PersistenceLoad()
+  for ent_class, v in pairs(whitelisted_ents) do
+    self:load_class(ent_class)
+  end
+end
+
 local whitelisted_ents = {
   gmod_light                = true,
   gmod_lamp                 = true,
@@ -11,10 +48,6 @@ local whitelisted_ents = {
   prop_physics_multiplayer  = true,
   prop_ragdoll              = true
 }
-
-function StaticEnts:whitelist_ent(ent_class)
-  whitelisted_ents[ent_class] = true
-end
 
 function StaticEnts:PlayerMakeStatic(player, is_static)
   if (is_static and !player:can('static')) or (!is_static and !player:can('unstatic')) then
@@ -54,33 +87,6 @@ function StaticEnts:SaveData()
   hook.run('PersistenceSave')
 end
 
-function StaticEnts:ShutDown()
-  hook.run('PersistenceSave')
-end
-
-function StaticEnts:PersistenceSave()
-  local entities = {}
-
-  for k, v in ipairs(ents.GetAll()) do
-    if v:GetPersistent() then
-      local ent_class = v:GetClass()
-      entities[ent_class] = entities[ent_class] or {}
-      table.insert(entities[ent_class], v)
-    end
-  end
-
-  local to_save = {}
-
-  for ent_class, entities in pairs(entities) do
-    to_save[ent_class] = duplicator.CopyEnts(entities)
-  end
-
-  for ent_class, v in pairs(to_save) do
-    if !istable(v) then continue end
-    data.save_plugin('static/'..ent_class, v)
-  end
-end
-
 function StaticEnts:load_class(ent_class)
   local loaded = data.load_plugin('static/'..ent_class, false)
 
@@ -104,12 +110,6 @@ function StaticEnts:load_class(ent_class)
   end
 end
 
-function StaticEnts:PersistenceLoad()
-  for ent_class, v in pairs(whitelisted_ents) do
-    self:load_class(ent_class)
-  end
-end
-
-function StaticEnts:InitPostEntity()
-  hook.run('PersistenceLoad')
+function StaticEnts:whitelist_ent(ent_class)
+  whitelisted_ents[ent_class] = true
 end

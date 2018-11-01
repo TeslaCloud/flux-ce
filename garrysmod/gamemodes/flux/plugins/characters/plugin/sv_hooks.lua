@@ -1,5 +1,9 @@
+function Characters:PlayerInitialized(player)
+  character.send_to_client(player)
+end
+
 function Characters:PostPlayerSpawn(player)
-  if !player:GetCharacter() then
+  if !player:get_character() then
     player:SetNoDraw(true)
     player:SetNotSolid(true)
     player:Lock()
@@ -13,12 +17,16 @@ function Characters:PostPlayerSpawn(player)
   end
 end
 
-function Characters:PlayerRestored(player)
-  hook.run('PostRestoreCharacters', player)
+function Characters:PlayerDeath(player, inflictor, attacker)
+  player:save_character()
 end
 
-function Characters:PlayerInitialized(player)
-  character.SendToClient(player)
+function Characters:PlayerDisconnected(player)
+  player:save_character()
+end
+
+function Characters:PlayerRestored(player)
+  hook.run('PostRestoreCharacters', player)
 end
 
 function Characters:PostCharacterLoaded(player, character)
@@ -42,14 +50,6 @@ function Characters:OnActiveCharacterSet(player, character)
   hook.run('PostCharacterLoaded', player, character)
 end
 
-function Characters:OnCharacterChange(player, oldChar, newCharID)
-  player:SaveCharacter()
-end
-
-function Characters:PlayerDisconnected(player)
-  player:SaveCharacter()
-end
-
-function Characters:PlayerDeath(player, inflictor, attacker)
-  player:SaveCharacter()
+function Characters:OnCharacterChange(player, old_char, new_char_id)
+  player:save_character()
 end

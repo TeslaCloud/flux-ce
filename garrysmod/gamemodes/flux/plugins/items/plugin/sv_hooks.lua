@@ -1,13 +1,13 @@
 function Items:InitPostEntity()
-  item.Load()
+  item.load()
 end
 
 function Items:SaveData()
-  item.SaveAll()
+  item.save_all()
 end
 
 function Items:ClientIncludedSchema(player)
-  item.SendToPlayer(player)
+  item.send_to_player(player)
 end
 
 function Items:PlayerUseItemEntity(player, entity, item_table)
@@ -16,17 +16,17 @@ end
 
 function Items:PlayerTakeItem(player, item_table, ...)
   if IsValid(item_table.entity) then
-    local success = player:GiveItemByID(item_table.instance_id)
+    local success = player:give_item_by_id(item_table.instance_id)
 
     if success then
       item_table.entity:Remove()
-      item.AsyncSaveEntities()
+      item.async_save_entities()
     end
   end
 end
 
 function Items:PlayerDropItem(player, instance_id)
-  local item_table = item.FindInstanceByID(instance_id)
+  local item_table = item.find_instance_by_id(instance_id)
   local trace = player:GetEyeTraceNoCursor()
 
   if item_table.on_drop then
@@ -37,21 +37,22 @@ function Items:PlayerDropItem(player, instance_id)
     end
   end
 
-  player:TakeItemByID(instance_id)
+  player:take_item_by_id(instance_id)
 
   local distance = trace.HitPos:Distance(player:GetPos())
 
   if distance < 80 then
-    item.Spawn(trace.HitPos, Angle(0, 0, 0), item_table)
+    item.spawn(trace.HitPos, Angle(0, 0, 0), item_table)
   else
-    local ent, item_table = item.Spawn(player:EyePos() + trace.Normal * 20, Angle(0, 0, 0), item_table)
+    local ent, item_table = item.spawn(player:EyePos() + trace.Normal * 20, Angle(0, 0, 0), item_table)
     local phys_obj = ent:GetPhysicsObject()
+
     if IsValid(phys_obj) then
       phys_obj:ApplyForceCenter(trace.Normal * 200)
     end
   end
 
-  item.AsyncSaveEntities()
+  item.async_save_entities()
 end
 
 function Items:PlayerUseItem(player, item_table, ...)
@@ -68,7 +69,7 @@ function Items:PlayerUseItem(player, item_table, ...)
   if IsValid(item_table.entity) then
     item_table.entity:Remove()
   else
-    player:TakeItemByID(item_table.instance_id)
+    player:take_item_by_id(item_table.instance_id)
   end
 end
 
@@ -87,17 +88,17 @@ end
 function Items:PlayerCanUseItem(player, item_table, action, ...)
   local trace = player:GetEyeTraceNoCursor()
 
-  if (!player:HasItemByID(item_table.instance_id) and !IsValid(item_table.entity)) or (IsValid(item_table.entity) and trace.Entity and trace.Entity != item_table.entity) then
+  if (!player:has_item_by_id(item_table.instance_id) and !IsValid(item_table.entity)) or (IsValid(item_table.entity) and trace.Entity and trace.Entity != item_table.entity) then
     return false
   end
 end
 
 function Items:PostCharacterLoaded(player, character)
-  local ply_inv = player:GetInventory()
+  local ply_inv = player:get_inventory()
 
   for slot, ids in ipairs(ply_inv) do
     for k, v in ipairs(ids) do
-      local item_table = item.FindInstanceByID(v)
+      local item_table = item.find_instance_by_id(v)
 
       if istable(item_table) then
         item_table:on_loadout(player)
@@ -107,11 +108,11 @@ function Items:PostCharacterLoaded(player, character)
 end
 
 function Characters:PreSaveCharacter(player, index)
-  local ply_inv = player:GetInventory()
+  local ply_inv = player:get_inventory()
 
   for slot, ids in ipairs(ply_inv) do
     for k, v in ipairs(ids) do
-      local item_table = item.FindInstanceByID(v)
+      local item_table = item.find_instance_by_id(v)
 
       item_table:on_save(player)
     end

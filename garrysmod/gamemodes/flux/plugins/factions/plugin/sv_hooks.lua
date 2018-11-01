@@ -1,15 +1,15 @@
 function Factions:PostPlayerSpawn(player)
-  local player_faction = player:GetFaction()
+  local player_faction = player:get_faction()
 
   if player_faction then
     player:SetTeam(player_faction.team_id or 1)
 
-    player:set_nv('name', player_faction:GenerateName(player, player:GetCharacterVar('name', player:name()), player:GetRank()))
+    player:set_nv('name', player_faction:generate_name(player, player:get_character_var('name', player:name()), player:get_rank()))
   end
 end
 
 function Factions:SavePlayerData(player, save_data)
-  save_data.whitelists = fl.serialize(player:GetWhitelists())
+  save_data.whitelists = fl.serialize(player:get_whitelists())
 end
 
 function Factions:OnActiveCharacterSet(player, char)
@@ -31,8 +31,8 @@ end
 
 function Factions:PlayerRestored(player, record)
   if player:IsBot() then
-    if faction.Count() > 0 then
-      local random_faction = table.Random(faction.GetAll())
+    if faction.count() > 0 then
+      local random_faction = table.Random(faction.get_all())
 
       player:set_nv('faction', random_faction.faction_id)
 

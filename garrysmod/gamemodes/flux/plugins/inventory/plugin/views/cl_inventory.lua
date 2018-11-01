@@ -1,85 +1,23 @@
 local PANEL = {}
-PANEL.itemData = nil
-PANEL.itemCount = 0
+PANEL.item_data = nil
+PANEL.item_count = 0
 PANEL.instance_ids = {}
-PANEL.isHovered = false
+PANEL.is_hovered = false
 PANEL.slot_number = nil
 
-function PANEL:SetItem(instance_id)
-  if istable(instance_id) then
-    if #instance_id > 1 then
-      self:SetItemMulti(instance_id)
-
-      return
-    else
-      return self:SetItem(instance_id[1])
-    end
-  end
-
-  if isnumber(instance_id) then
-    self.itemData = item.FindInstanceByID(instance_id)
-
-    if self.itemData then
-      self.itemCount = 1
-      self.instance_ids = {instance_id}
-    end
-
-    self:rebuild()
-  end
-end
-
-function PANEL:SetItemMulti(ids)
-  local itemData = item.FindInstanceByID(ids[1])
-
-  if itemData and !itemData.stackable then return end
-
-  self.itemData = itemData
-  self.itemCount = #ids
-  self.instance_ids = ids
-  self:rebuild()
-end
-
-function PANEL:Combine(panel2)
-  for i = 1, #panel2.instance_ids do
-    if #self.instance_ids < self.itemData.max_stack then
-      table.insert(self.instance_ids, panel2.instance_ids[1])
-      table.remove(panel2.instance_ids, 1)
-    end
-  end
-
-  self.itemCount = #self.instance_ids
-  self:rebuild()
-
-  panel2.itemCount = #panel2.instance_ids
-
-  if panel2.itemCount > 0 then
-    panel2:rebuild()
-  else
-    panel2:Reset()
-  end
-end
-
-function PANEL:Reset()
-  self.itemData = nil
-  self.itemCount = 0
-
-  self:rebuild()
-  self:undraggable()
-end
-
 function PANEL:Paint(w, h)
-  local drawColor = Color(0, 0, 0, 150)
+  local draw_color = Color(0, 0, 0, 150)
 
-  if self.isHovered and !self:IsHovered() then
-    self.isHovered = false
+  if self.is_hovered and !self:IsHovered() then
+    self.is_hovered = false
   end
 
-  if !self.isHovered then
-    if !self.itemData then
-      drawColor = drawColor:darken(25)
+  if !self.is_hovered then
+    if !self.item_data then
+      draw_color = draw_color:darken(25)
     else
-      if self.itemData.special_color then
-        surface.SetDrawColor(self.itemData.special_color)
+      if self.item_data.special_color then
+        surface.SetDrawColor(self.item_data.special_color)
         surface.DrawOutlinedRect(0, 0, w, h)
         surface.DrawOutlinedRect(1, 1, w - 2, h - 2)
       end
@@ -90,31 +28,31 @@ function PANEL:Paint(w, h)
       end
     end
   else
-    local item_table = self.itemData
-    local curSlot = fl.inventoryDragSlot
+    local item_table = self.item_data
+    local cur_slot = fl.inventory_drag_slot
 
     if item_table then
-      if IsValid(curSlot) and curSlot.itemData != item_table then
-        local slotData = curSlot.itemData
+      if IsValid(cur_slot) and cur_slot.item_data != item_table then
+        local slot_data = cur_slot.item_data
 
-        if slotData.id == item_table.id and slotData.stackable and curSlot.itemCount < slotData.max_stack then
-          drawColor = Color(200, 200, 60)
+        if slot_data.id == item_table.id and slot_data.stackable and cur_slot.item_count < slot_data.max_stack then
+          draw_color = Color(200, 200, 60)
         else
-          drawColor = Color(200, 60, 60, 160)
+          draw_color = Color(200, 60, 60, 160)
         end
       else
-        drawColor = drawColor:lighten(30)
+        draw_color = draw_color:lighten(30)
       end
     else
-      drawColor = Color(60, 200, 60, 160)
+      draw_color = Color(60, 200, 60, 160)
     end
   end
 
-  draw.RoundedBox(0, 0, 0, w, h, drawColor)
+  draw.RoundedBox(0, 0, 0, w, h, draw_color)
 
-  if self.itemCount >= 2 then
+  if self.item_count >= 2 then
     DisableClipping(true)
-      draw.SimpleText(self.itemCount, theme.get_font('text_smallest'), 52, 50, Color(200, 200, 200))
+      draw.SimpleText(self.item_count, theme.get_font('text_smallest'), 52, 50, Color(200, 200, 200))
     DisableClipping(false)
   end
 
@@ -125,34 +63,9 @@ function PANEL:Paint(w, h)
   end
 end
 
-function PANEL:rebuild()
-  if !self.itemData then
-    if IsValid(self.spawnIcon) then
-      self.spawnIcon:safe_remove()
-    end
-
-    self:undraggable()
-
-    return
-  else
-    self:Droppable('flItem')
-  end
-
-  if IsValid(self.spawnIcon) then
-    self.spawnIcon:SetVisible(false)
-    self.spawnIcon:Remove()
-  end
-
-  self.spawnIcon = vgui.Create('SpawnIcon', self)
-  self.spawnIcon:SetPos(2, 2)
-  self.spawnIcon:SetSize(60, 60)
-  self.spawnIcon:SetModel(self.itemData.model, self.itemData.skin)
-  self.spawnIcon:SetMouseInputEnabled(false)
-end
-
 function PANEL:OnMousePressed(...)
-  self.mousePressed = CurTime()
-  fl.inventoryDragSlot = self
+  self.mouse_pressed = CurTime()
+  fl.inventory_drag_slot = self
 
   self.BaseClass.OnMousePressed(self, ...)
 end
@@ -162,18 +75,105 @@ function PANEL:OnMouseReleased(...)
   local w, h = self:GetSize()
 
   if surface.mouse_in_rect(x, y, w, h) then
-    if self.itemData and self.mousePressed and self.mousePressed > (CurTime() - 0.15) then
-      fl.inventoryDragSlot = nil
+    if self.item_data and self.mouse_pressed and self.mouse_pressed > (CurTime() - 0.15) then
+      fl.inventory_drag_slot = nil
 
       if #self.instance_ids > 1 then
         hook.run('PlayerUseItemMenu', self.instance_ids)
       else
-        hook.run('PlayerUseItemMenu', self.itemData)
+        hook.run('PlayerUseItemMenu', self.item_data)
       end
     end
   end
 
   self.BaseClass.OnMouseReleased(self, ...)
+end
+
+function PANEL:set_item(instance_id)
+  if istable(instance_id) then
+    if #instance_id > 1 then
+      self:set_item_multi(instance_id)
+
+      return
+    else
+      return self:set_item(instance_id[1])
+    end
+  end
+
+  if isnumber(instance_id) then
+    self.item_data = item.find_instance_by_id(instance_id)
+
+    if self.item_data then
+      self.item_count = 1
+      self.instance_ids = {instance_id}
+    end
+
+    self:rebuild()
+  end
+end
+
+function PANEL:set_item_multi(ids)
+  local item_data = item.find_instance_by_id(ids[1])
+
+  if item_data and !item_data.stackable then return end
+
+  self.item_data = item_data
+  self.item_count = #ids
+  self.instance_ids = ids
+  self:rebuild()
+end
+
+function PANEL:combine(panel2)
+  for i = 1, #panel2.instance_ids do
+    if #self.instance_ids < self.item_data.max_stack then
+      table.insert(self.instance_ids, panel2.instance_ids[1])
+      table.remove(panel2.instance_ids, 1)
+    end
+  end
+
+  self.item_count = #self.instance_ids
+  self:rebuild()
+
+  panel2.item_count = #panel2.instance_ids
+
+  if panel2.item_count > 0 then
+    panel2:rebuild()
+  else
+    panel2:reset()
+  end
+end
+
+function PANEL:reset()
+  self.item_data = nil
+  self.item_count = 0
+
+  self:rebuild()
+  self:undraggable()
+end
+
+function PANEL:rebuild()
+  if !self.item_data then
+    if IsValid(self.spawn_icon) then
+      self.spawn_icon:safe_remove()
+    end
+
+    self:undraggable()
+
+    return
+  else
+    self:Droppable('flItem')
+  end
+
+  if IsValid(self.spawn_icon) then
+    self.spawn_icon:SetVisible(false)
+    self.spawn_icon:Remove()
+  end
+
+  self.spawn_icon = vgui.Create('SpawnIcon', self)
+  self.spawn_icon:SetPos(2, 2)
+  self.spawn_icon:SetSize(60, 60)
+  self.spawn_icon:SetModel(self.item_data.model, self.item_data.skin)
+  self.spawn_icon:SetMouseInputEnabled(false)
 end
 
 vgui.Register('flInventoryItem', PANEL, 'DPanel')
@@ -185,29 +185,29 @@ PANEL.inventory_slots = 8
 PANEL.inventory_type = 'inventory'
 PANEL.player = nil
 
-function PANEL:SetInventory(inv)
+function PANEL:set_inventory(inv)
   self.inventory = inv
 end
 
 function PANEL:set_player(player)
   self.player = player
-  self:SetInventory(player:GetInventory(self.inventory_type))
+  self:set_inventory(player:get_inventory(self.inventory_type))
 
   self:rebuild()
 end
 
-function PANEL:SetSlots(num)
+function PANEL:set_slots(num)
   self.inventory_slots = num
 
   self:rebuild()
 end
 
-function PANEL:SlotsToInventory()
+function PANEL:slots_to_inventory()
   for k, v in ipairs(self.slots) do
-    if v.slotNum and v.itemData and #v.instance_ids > 0 then
-      self.inventory[v.slotNum] = v.instance_ids
+    if v.slot_num and v.item_data and #v.instance_ids > 0 then
+      self.inventory[v.slot_num] = v.instance_ids
     else
-      self.inventory[v.slotNum] = {}
+      self.inventory[v.slot_num] = {}
     end
   end
 
@@ -226,7 +226,7 @@ function PANEL:rebuild()
   self:SetSize(560, multiplier * 68 + 36)
 
   if IsValid(self.player) then
-    self:SetInventory(self.player:GetInventory(self.inventory_type))
+    self:set_inventory(self.player:get_inventory(self.inventory_type))
   end
 
   self.scroll = self.scroll or vgui.Create('DScrollPanel', self) //Create the Scroll panel
@@ -244,35 +244,35 @@ function PANEL:rebuild()
   self.list:SetSpaceX(4)
 
   for i = 1, self.inventory_slots do
-    local invSlot = self.list:Add('flInventoryItem')
-    invSlot:SetSize(64, 64)
-    invSlot.slotNum = i
+    local inv_slot = self.list:Add('flInventoryItem')
+    inv_slot:SetSize(64, 64)
+    inv_slot.slot_num = i
 
     if self.draw_inventory_slots then
-      invSlot.slot_number = i
+      inv_slot.slot_number = i
     end
 
     if self.inventory[i] and #self.inventory[i] > 0 then
       if #self.inventory[i] > 1 then
-        invSlot:SetItemMulti(self.inventory[i])
+        inv_slot:set_item_multi(self.inventory[i])
       else
-        invSlot:SetItem(self.inventory[i][1])
+        inv_slot:set_item(self.inventory[i][1])
       end
     end
 
-    invSlot:Receiver('flItem', function(receiver, dropped, isDropped, menuIndex, mouseX, mouseY)
-      if isDropped then
-        fl.inventoryDragSlot = nil
+    inv_slot:Receiver('flItem', function(receiver, dropped, is_dropped, menu_index, mouse_x, mouse_y)
+      if is_dropped then
+        fl.inventory_drag_slot = nil
 
-        if receiver.itemData then
-          if (receiver.itemData.id == dropped[1].itemData.id and
-            receiver.slotNum != dropped[1].slotNum and receiver.itemData.stackable) then
-            receiver:Combine(dropped[1])
-            self:SlotsToInventory()
+        if receiver.item_data then
+          if (receiver.item_data.id == dropped[1].item_data.id and
+            receiver.slot_num != dropped[1].slot_num and receiver.item_data.stackable) then
+            receiver:combine(dropped[1])
+            self:slots_to_inventory()
 
             return
           else
-            receiver.isHovered = false
+            receiver.is_hovered = false
 
             return
           end
@@ -280,11 +280,11 @@ function PANEL:rebuild()
 
         local split = false
 
-        if input.IsKeyDown(KEY_LCONTROL) and dropped[1].itemCount > 1 then
+        if input.IsKeyDown(KEY_LCONTROL) and dropped[1].item_count > 1 then
           split = {{}, {}}
 
-          for i2 = 1, dropped[1].itemCount do
-            if i2 <= math.floor(dropped[1].itemCount * 0.5) then
+          for i2 = 1, dropped[1].item_count do
+            if i2 <= math.floor(dropped[1].item_count * 0.5) then
               table.insert(split[1], dropped[1].instance_ids[i2])
             else
               table.insert(split[2], dropped[1].instance_ids[i2])
@@ -293,32 +293,32 @@ function PANEL:rebuild()
         end
 
         if !split then
-          receiver:SetItem(dropped[1].instance_ids)
+          receiver:set_item(dropped[1].instance_ids)
         else
-          receiver:SetItemMulti(split[1])
-          dropped[1]:SetItemMulti(split[2])
+          receiver:set_item_multi(split[1])
+          dropped[1]:set_item_multi(split[2])
         end
 
-        receiver.isHovered = false
+        receiver.is_hovered = false
 
         if !split then
-          dropped[1]:Reset()
+          dropped[1]:reset()
         else
           dropped[1]:rebuild()
         end
 
-        self:SlotsToInventory()
+        self:slots_to_inventory()
       else
-        receiver.isHovered = true
+        receiver.is_hovered = true
       end
-    end, {'Place'})
+    end, { 'Place' })
 
-    self.slots[i] = invSlot
+    self.slots[i] = inv_slot
   end
 
-  self:GetParent():Receiver('flItem', function(receiver, dropped, isDropped, menuIndex, mouseX, mouseY)
-    if isDropped then
-      hook.run('PlayerDropItem', dropped[1].itemData, dropped[1], mouseX, mouseY)
+  self:GetParent():Receiver('flItem', function(receiver, dropped, is_dropped, menu_index, mouse_x, mouse_y)
+    if is_dropped then
+      hook.run('PlayerDropItem', dropped[1].item_data, dropped[1], mouse_x, mouse_y)
     end
   end, {})
 end

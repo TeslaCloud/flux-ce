@@ -1,13 +1,12 @@
 local start_time = ThirdPerson.start_time or nil
-ThirdPerson.start_time = start_time
-
 local offset = ThirdPerson.offset or Vector(0, 0, 0)
+ThirdPerson.start_time = start_time
 ThirdPerson.offset = offset
 
 local duration = 0.15
 
-local flippedStart = ThirdPerson.flippedStart or false
-ThirdPerson.flippedStart = flippedStart
+local flipped_start = ThirdPerson.flipped_start or false
+ThirdPerson.flipped_start = flipped_start
 
 ThirdPerson.was_third_person = ThirdPerson.was_third_person or false
 
@@ -26,9 +25,9 @@ function ThirdPerson:CalcView(player, pos, angles, fov)
   view.fov = fov
 
   if is_third_person then
-    if !start_time or flippedStart then
+    if !start_time or flipped_start then
       start_time = cur_time
-      flippedStart = false
+      flipped_start = false
     end
 
     local forward = angles:Forward() * 75
@@ -43,13 +42,13 @@ function ThirdPerson:CalcView(player, pos, angles, fov)
     end
 
     view.origin = pos - offset
-    view.drawviewer = true
+    view.draw_viewer = true
 
     self.was_third_person = true
   else
-    if !flippedStart then
+    if !flipped_start then
       start_time = cur_time
-      flippedStart = true
+      flipped_start = true
     end
 
     local forward = angles:Forward() * 75
@@ -59,7 +58,7 @@ function ThirdPerson:CalcView(player, pos, angles, fov)
       offset.x = Lerp(fraction, forward.x, 0)
       offset.y = Lerp(fraction, forward.y, 0)
       offset.z = Lerp(fraction, forward.z, 0)
-      view.drawviewer = true
+      view.draw_viewer = true
     else
       offset = Vector(0, 0, 0)
       self.was_third_person = false

@@ -69,8 +69,8 @@ function PANEL:OpenMenu(panel, data)
       self.menu:set_data(data)
     end
   else
-    if self.menu.Close then
-      self.menu:Close(function()
+    if self.menu.close then
+      self.menu:close(function()
         self:OpenMenu(panel, data)
       end)
     else
@@ -92,8 +92,8 @@ function PANEL:to_main_menu(from_right)
   end)
 
   self.menu:MoveTo(from_right and -self.menu:GetWide() or scrw, 0, theme.get_option('menu_anim_duration'), 0, 0.5, function()
-    if self.menu.Close then
-      self.menu:Close()
+    if self.menu.close then
+      self.menu:close()
     else
       self.menu:safe_remove()
     end

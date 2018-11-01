@@ -253,8 +253,8 @@ function GM:DrawPlayerTargetID(player, x, y, distance)
     local width, height = util.text_size(player:name(), tooltip_large)
     draw.SimpleText(player:name(), tooltip_large, x - width * 0.5, y - 40, Color(255, 255, 255, alpha))
 
-    local width, height = util.text_size(player:GetPhysDesc(), tooltip_small)
-    draw.SimpleText(player:GetPhysDesc(), tooltip_small, x - width * 0.5, y - 14, Color(255, 255, 255, alpha))
+    local width, height = util.text_size(player:get_phys_desc(), tooltip_small)
+    draw.SimpleText(player:get_phys_desc(), tooltip_small, x - width * 0.5, y - 14, Color(255, 255, 255, alpha))
 
     if distance < 125 then
       if distance > 90 then

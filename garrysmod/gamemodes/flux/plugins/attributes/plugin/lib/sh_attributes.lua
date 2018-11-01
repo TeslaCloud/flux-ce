@@ -101,7 +101,7 @@ do
   local player_meta = FindMetaTable('Player')
 
   function player_meta:get_attributes()
-    local char_id = self:GetActiveCharacterID()
+    local char_id = self:get_active_character_id()
 
     if !self.record.characters or !self.record.characters[char_id] then return {} end
 
@@ -142,7 +142,7 @@ do
   end
 
   function player_meta:get_attribute_multiplier(attr_id)
-    local char = self:GetCharacter()
+    local char = self:get_character()
     local id = attributes.id_from_attr_id(char.attributes, attr_id)
     local mult = 1
 
@@ -163,7 +163,7 @@ do
   end
 
   function player_meta:get_attribute_boost(attr_id)
-    local char = self:GetCharacter()
+    local char = self:get_character()
     local id = attributes.id_from_attr_id(char.attributes, attr_id)
     local boost = 0
 
@@ -186,7 +186,7 @@ do
   if SERVER then
     function player_meta:set_attribute(attr_id, value)
       local attribute = attributes.find_by_id(attr_id)
-      local atts_table = self:GetCharacter().attributes
+      local atts_table = self:get_character().attributes
 
       for k, v in pairs(atts_table) do
         if v.attr_id == attr_id then
@@ -199,7 +199,7 @@ do
     function player_meta:increase_attribute(attr_id, value, no_multiplier)
       local attribute = attributes.find_by_id(attr_id)
       local atts_table = self:get_attributes()
-      local id = attributes.id_from_attr_id(self:GetCharacter().attributes, attr_id)
+      local id = attributes.id_from_attr_id(self:get_character().attributes, attr_id)
 
       if !no_multiplier and attribute.multipliable then
         if value < 0 then
@@ -209,7 +209,7 @@ do
         end
       end
 
-      self:GetCharacter().attributes[id].value = math.Clamp(atts_table[attr_id].value + value, attribute.min, attribute.max)
+      self:get_character().attributes[id].value = math.Clamp(atts_table[attr_id].value + value, attribute.min, attribute.max)
     end
 
     function player_meta:decrease_attribute(attr_id, value, no_multiplier)
@@ -227,7 +227,7 @@ do
         multiplier.value = value
         multiplier.expires = to_datetime(os.time() + duration)
         multiplier.attribute_id = attributes.id_from_attr_id(atts_table, attr_id)
-      table.insert(self:GetCharacter().attribute_multipliers, multiplier)
+      table.insert(self:get_character().attribute_multipliers, multiplier)
     end
 
     function player_meta:attribute_boost(attr_id, value, duration)
@@ -241,7 +241,7 @@ do
         boost.value = value
         boost.expires = to_datetime(os.time() + duration)
         boost.attribute_id = attributes.id_from_attr_id(atts_table, attr_id)
-      table.insert(self:GetCharacter().attribute_boosts, boost)
+      table.insert(self:get_character().attribute_boosts, boost)
     end
   end
 end

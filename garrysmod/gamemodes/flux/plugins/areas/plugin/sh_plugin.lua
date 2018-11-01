@@ -19,7 +19,7 @@ Area.tool_modes = {
       OnReload = data.OnReload or function(mode, tool, trace)
         local cur_time = CurTime()
 
-        for k, v in pairs(areas.GetAll()) do
+        for k, v in pairs(areas.get_all()) do
           if istable(v.polys) and isstring(v.type) and v.type == data.area_type then
             for k2, v2 in ipairs(v.polys) do
               local pos = trace.HitPos
@@ -27,7 +27,7 @@ Area.tool_modes = {
 
               if z > v2[1].z and z < v.maxh then
                 if util.vector_in_poly(pos, v2) then
-                  areas.Remove(v.id)
+                  areas.remove(v.id)
 
                   return true
                 end
@@ -54,7 +54,7 @@ function Area:OnSchemaLoaded()
   plugin.call('AddAreaToolModes', self.tool_modes)
 end
 
-function Area:AddAreaToolModes(modeList)
+function Area:AddAreaToolModes(mode_list)
   local mode = {}
   mode.title = 'Text Area'
   mode.area_type = 'textarea'
@@ -70,11 +70,11 @@ function Area:AddAreaToolModes(modeList)
     if !id or id == '' then return false end
 
     if !tool.area then
-      tool.area = areas.Create(id, height, { type = self.area_type })
+      tool.area = areas.create(id, height, { type = self.area_type })
       tool.area.text = text
     end
 
-    tool.area:AddVertex(trace.HitPos)
+    tool.area:add_vertex(trace.HitPos)
 
     return true
   end
@@ -94,10 +94,10 @@ function Area:AddAreaToolModes(modeList)
     panel:AddControl('Slider', { Label = 'tool.area.height', Command = 'area_height', Type = 'Float', Min = -2048, Max = 2048 })
   end
 
-  modeList:Add(mode)
+  mode_list:Add(mode)
 end
 
-areas.RegisterType('textarea', 'Text Area', 'Displays text whenever player enters the area.', Color(255, 0, 255), function(player, area, has_entered, pos, cur_time)
+areas.register_type('textarea', 'Text Area', 'Displays text whenever player enters the area.', Color(255, 0, 255), function(player, area, has_entered, pos, cur_time)
   player.text_areas = player.text_areas or {}
 
   if has_entered then

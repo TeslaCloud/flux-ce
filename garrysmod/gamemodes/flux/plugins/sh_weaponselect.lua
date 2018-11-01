@@ -50,7 +50,7 @@ function PLUGIN:HUDPaint()
 
       if !self.display[1].target then
         local idx = self.weapon_index - ((dir and self.index_offset - 1) or self.index_offset + 1)
-        targets = self:MakeDisplay(idx, true)
+        targets = self:make_display(idx, true)
       end
 
       for k, v in ipairs(self.display) do
@@ -77,7 +77,7 @@ function PLUGIN:HUDPaint()
 
         if math.abs(v.y - v.target) < 1 then
           self.index_offset = (dir and self.index_offset - 1) or self.index_offset + 1
-          self:MakeDisplay(self.weapon_index - self.index_offset)
+          self:make_display(self.weapon_index - self.index_offset)
 
           break
         end
@@ -126,56 +126,6 @@ function PLUGIN:Think()
       self.cur_alpha = Lerp(FrameTime() * 16, self.cur_alpha, 255)
     end
   end
-end
-
-function PLUGIN:MakeDisplay(index, tab)
-  local client_weapons = fl.client:GetWeapons()
-  local count = table.Count(client_weapons)
-  local offsety = 32
-  local result = {}
-
-  for i = -2, 2 do
-    local scale = 1 - math.abs(i * 0.25)
-
-    table.insert(result, {
-      weapon = safe_index(client_weapons, index + i),
-      scale = scale,
-      x = ScrW() - 300,
-      y = ScrH() * 0.5 - 90 + offsety - 36 * scale * 0.5,
-      highlight = (i == 0)
-    })
-
-    offsety = offsety + 32
-  end
-
-  if tab then
-    return result
-  else
-    self.display = result
-  end
-end
-
-function PLUGIN:OnWeaponIndexChange(old_index, index)
-  self.is_open = true
-  self.open_time = CurTime()
-
-  if #self.display == 0 then
-    self:MakeDisplay(index)
-  else
-    self.index_offset = index - old_index
-
-    local weapon_count = #fl.client:GetWeapons()
-
-    if math.abs(self.index_offset) == (weapon_count - 1) then
-      self.index_offset = -(self.index_offset / (weapon_count - 1))
-    end
-  end
-end
-
-function PLUGIN:OnWeaponSelected(index)
-  self.is_open = false
-  self.cur_alpha = 0
-  self.display = {}
 end
 
 do
@@ -240,5 +190,55 @@ do
         end
       end
     end
+  end
+end
+
+function PLUGIN:OnWeaponIndexChange(old_index, index)
+  self.is_open = true
+  self.open_time = CurTime()
+
+  if #self.display == 0 then
+    self:make_display(index)
+  else
+    self.index_offset = index - old_index
+
+    local weapon_count = #fl.client:GetWeapons()
+
+    if math.abs(self.index_offset) == (weapon_count - 1) then
+      self.index_offset = -(self.index_offset / (weapon_count - 1))
+    end
+  end
+end
+
+function PLUGIN:OnWeaponSelected(index)
+  self.is_open = false
+  self.cur_alpha = 0
+  self.display = {}
+end
+
+function PLUGIN:make_display(index, tab)
+  local client_weapons = fl.client:GetWeapons()
+  local count = table.Count(client_weapons)
+  local offsety = 32
+  local result = {}
+
+  for i = -2, 2 do
+    local scale = 1 - math.abs(i * 0.25)
+
+    table.insert(result, {
+      weapon = safe_index(client_weapons, index + i),
+      scale = scale,
+      x = ScrW() - 300,
+      y = ScrH() * 0.5 - 90 + offsety - 36 * scale * 0.5,
+      highlight = (i == 0)
+    })
+
+    offsety = offsety + 32
+  end
+
+  if tab then
+    return result
+  else
+    self.display = result
   end
 end

@@ -1,7 +1,7 @@
 function PLUGIN:PlayerDeath(player)
-  player:SetRagdollState(RAGDOLL_DUMMY)
+  player:set_ragdoll_state(RAGDOLL_DUMMY)
 end
 
 function PLUGIN:PlayerSpawn(player)
-  player:SetRagdollState(RAGDOLL_NONE)
+  player:set_ragdoll_state(RAGDOLL_NONE)
 end

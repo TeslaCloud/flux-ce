@@ -1,5 +1,30 @@
+do
+  local cur_volume = 1
+
+  function Characters:Tick()
+    if fl.menu_music then
+      if !system.HasFocus() then
+        fl.menu_music:SetVolume(0)
+      else
+        fl.menu_music:SetVolume(cur_volume)
+      end
+
+      if !IsValid(fl.intro_panel) then
+        if cur_volume > 0.05 then
+          cur_volume = Lerp(0.1, cur_volume, 0)
+          fl.menu_music:SetVolume(cur_volume)
+        else
+          cur_volume = 1
+          fl.menu_music:Stop()
+          fl.menu_music = nil
+        end
+      end
+    end
+  end
+end
+
 function Characters:PlayerInitialized()
-  if !fl.client:GetCharacter() and !IsValid(fl.intro_panel) then
+  if !fl.client:get_character() and !IsValid(fl.intro_panel) then
     fl.intro_panel = vgui.Create('flIntro')
 
     if IsValid(fl.intro_panel) then
@@ -9,7 +34,7 @@ function Characters:PlayerInitialized()
 end
 
 function Characters:OnIntroPanelRemoved()
-  if !fl.client:GetCharacter() then
+  if !fl.client:get_character() then
     fl.intro_panel = theme.create_panel('main_menu')
 
     if IsValid(fl.intro_panel) then
@@ -24,31 +49,6 @@ function Characters:OnIntroPanelRemoved()
           timer.Remove('flCreateMainPanel')
         end
       end)
-    end
-  end
-end
-
-do
-  local curVolume = 1
-
-  function Characters:Tick()
-    if fl.menu_music then
-      if !system.HasFocus() then
-        fl.menu_music:SetVolume(0)
-      else
-        fl.menu_music:SetVolume(curVolume)
-      end
-
-      if !IsValid(fl.intro_panel) then
-        if curVolume > 0.05 then
-          curVolume = Lerp(0.1, curVolume, 0)
-          fl.menu_music:SetVolume(curVolume)
-        else
-          curVolume = 1
-          fl.menu_music:Stop()
-          fl.menu_music = nil
-        end
-      end
     end
   end
 end
@@ -82,14 +82,14 @@ function Characters:AddTabMenuItems(menu)
   menu:add_menu_item('mainmenu', {
     title = t'tab_menu.main_menu',
     icon = 'fa-users',
-    override = function(menuPanel, button)
-      menuPanel:safe_remove()
+    override = function(menu_panel, button)
+      menu_panel:safe_remove()
       fl.intro_panel = theme.create_panel('main_menu')
     end
   }, 1)
 end
 
-function Characters:PostCharacterLoaded(nCharID)
+function Characters:PostCharacterLoaded(char_id)
   if IsValid(fl.intro_panel) then
     fl.intro_panel:safe_remove()
   end
@@ -102,15 +102,15 @@ function Characters:ShouldDrawLoadingScreen()
 end
 
 function Characters:ShouldHUDPaint()
-  return fl.client:CharacterLoaded()
+  return fl.client:is_character_loaded()
 end
 
 function Characters:ShouldScoreboardHide()
-  return fl.client:CharacterLoaded()
+  return fl.client:is_character_loaded()
 end
 
 function Characters:ShouldScoreboardShow()
-  return fl.client:CharacterLoaded()
+  return fl.client:is_character_loaded()
 end
 
 function Characters:RebuildScoreboardPlayerCard(card, player)
@@ -123,15 +123,15 @@ function Characters:RebuildScoreboardPlayerCard(card, player)
 
   if IsValid(card.desc_label) then
     card.desc_label:safe_remove()
-    card.spawnIcon:safe_remove()
+    card.spawn_icon:safe_remove()
   end
 
-  card.spawnIcon = vgui.Create('SpawnIcon', card)
-  card.spawnIcon:SetPos(oldX - 4, 4)
-  card.spawnIcon:SetSize(32, 32)
-  card.spawnIcon:SetModel(player:GetModel())
+  card.spawn_icon = vgui.Create('SpawnIcon', card)
+  card.spawn_icon:SetPos(oldX - 4, 4)
+  card.spawn_icon:SetSize(32, 32)
+  card.spawn_icon:SetModel(player:GetModel())
 
-  local phys_desc = player:GetPhysDesc()
+  local phys_desc = player:get_phys_desc()
 
   if phys_desc:utf8len() > 64 then
     phys_desc = phys_desc:utf8sub(1, 64)..'...'
@@ -152,7 +152,7 @@ end
 function Characters:AddMainMenuItems(panel, sidebar)
   local scrw, scrh = ScrW(), ScrH()
 
-  if fl.client:GetCharacter() then
+  if fl.client:get_character() then
     panel:add_button(t'main_menu.continue', function(btn)
       panel:Remove()
     end)
@@ -166,7 +166,7 @@ function Characters:AddMainMenuItems(panel, sidebar)
     panel.sidebar:MoveTo(-panel.sidebar:GetWide(), theme.get_option('menu_sidebar_y'), theme.get_option('menu_anim_duration'), 0.25, 0.5)
   end)
 
-  if #fl.client:GetAllCharacters() > 0 then
+  if #fl.client:get_all_characters() > 0 then
     panel:add_button(t'char_create.load', function(btn)
       panel.menu = theme.create_panel('char_create.load', panel)
       panel.menu:SetPos(-panel.menu:GetWide(), 0)
@@ -192,10 +192,10 @@ cable.receive('PlayerCreatedCharacter', function(success, status)
   if IsValid(fl.intro_panel) and IsValid(fl.intro_panel.menu) then
     if success then
       fl.intro_panel.menu:goto_stage(-1)
-      fl.intro_panel.menu:ClearData()
+      fl.intro_panel.menu:clear_data()
 
       timer.Simple(theme.get_option('menu_anim_duration') * #fl.intro_panel.menu.stages, function()
-        local chars = fl.client:GetAllCharacters()
+        local chars = fl.client:get_all_characters()
 
         if #chars == 1 then
           cable.send('PlayerSelectCharacter', chars[1].character_id)
@@ -203,10 +203,10 @@ cable.receive('PlayerCreatedCharacter', function(success, status)
       end)
     else
       local text = 'We were unable to create a character! (unknown error)'
-      local hookText = hook.run('GetCharCreationErrorText', success, status)
+      local hook_text = hook.run('GetCharCreationErrorText', success, status)
 
-      if hookText then
-        text = hookText
+      if hook_text then
+        text = hook_text
       elseif status == CHAR_ERR_NAME then
         text = "Your character's name must be between "..config.get('character_min_name_len')..' and '..config.get('character_max_name_len')..' characters long!'
       elseif status == CHAR_ERR_DESC then

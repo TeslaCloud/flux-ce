@@ -9,13 +9,13 @@ COMMAND.no_console = true
 function COMMAND:on_run(player, delay)
   delay = math.Clamp(tonumber(delay) or 4, 2, 60)
 
-  if player:Alive() and player:IsRagdolled() then
+  if player:Alive() and player:is_ragdolled() then
     player:set_nv('getup_end', CurTime() + delay)
     player:set_nv('getup_time', delay)
     player:set_action('getup', true)
 
     timer.Simple(delay, function()
-      player:SetRagdollState(RAGDOLL_NONE)
+      player:set_ragdoll_state(RAGDOLL_NONE)
 
       player:reset_action()
     end)

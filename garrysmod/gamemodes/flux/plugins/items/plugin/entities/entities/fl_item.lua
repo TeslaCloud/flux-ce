@@ -1,8 +1,8 @@
 AddCSLuaFile()
 
 ENT.Type = 'anim'
-ENT.print_name = 'Item'
-ENT.category = 'Flux'
+ENT.PrintName = 'Item'
+ENT.Category = 'Flux'
 ENT.Spawnable = false
 ENT.RenderGroup = RENDERGROUP_BOTH
 
@@ -19,22 +19,6 @@ if SERVER then
       phys_obj:EnableMotion(true)
       phys_obj:Wake()
     end
-  end
-
-  function ENT:SetItem(item_table)
-    if !item_table then return false end
-
-    hook.run('PreEntityItemSet', self, item_table)
-
-    self:SetModel(item_table:GetModel())
-    self:SetSkin(item_table.skin)
-    self:SetColor(item_table:GetColor())
-
-    self.item = item_table
-
-    item.NetworkEntityData(nil, self)
-
-    hook.run('OnEntityItemSet', self, item_table)
   end
 
   function ENT:Use(activator, caller, use_type, value)
@@ -86,6 +70,22 @@ if SERVER then
       last_activator:set_nv('hold_entity', false)
       self:set_nv('last_activator', false)
     end
+  end
+
+  function ENT:set_item(item_table)
+    if !item_table then return false end
+
+    hook.run('PreEntityItemSet', self, item_table)
+
+    self:SetModel(item_table:get_model())
+    self:SetSkin(item_table.skin)
+    self:SetColor(item_table:get_color())
+
+    self.item = item_table
+
+    item.network_entity_data(nil, self)
+
+    hook.run('OnEntityItemSet', self, item_table)
   end
 else
   function ENT:Draw()
