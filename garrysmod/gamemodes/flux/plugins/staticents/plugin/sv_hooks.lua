@@ -4,6 +4,14 @@ hook.Remove('PersistenceSave', 'PersistenceSave')
 hook.Remove('PersistenceLoad', 'PersistenceLoad')
 hook.Remove('InitPostEntity', 'PersistenceInit')
 
+local whitelisted_ents = {
+  gmod_light                = true,
+  gmod_lamp                 = true,
+  prop_physics              = true,
+  prop_physics_multiplayer  = true,
+  prop_ragdoll              = true
+}
+
 function StaticEnts:InitPostEntity()
   hook.run('PersistenceLoad')
 end
@@ -40,14 +48,6 @@ function StaticEnts:PersistenceLoad()
     self:load_class(ent_class)
   end
 end
-
-local whitelisted_ents = {
-  gmod_light                = true,
-  gmod_lamp                 = true,
-  prop_physics              = true,
-  prop_physics_multiplayer  = true,
-  prop_ragdoll              = true
-}
 
 function StaticEnts:PlayerMakeStatic(player, is_static)
   if (is_static and !player:can('static')) or (!is_static and !player:can('unstatic')) then
