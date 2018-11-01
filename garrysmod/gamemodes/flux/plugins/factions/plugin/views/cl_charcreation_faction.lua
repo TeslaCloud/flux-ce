@@ -7,7 +7,7 @@ function PANEL:ButtonClicked(button)
   self.faction_id = button.faction.faction_id
 end
 
-function PANEL:OnOpen(parent)
+function PANEL:on_open(parent)
   self.faction_id = parent.char_data.faction or ''
 
   self.chooser = vgui.Create('fl_horizontalbar', self)
@@ -15,8 +15,8 @@ function PANEL:OnOpen(parent)
   self.chooser:SetPos(0, self:GetTall() / 8 + 8)
   self.chooser:SetOverlap(4)
 
-  for k, v in pairs(faction.GetAll()) do
-    if !v.whitelisted or fl.client:HasWhitelist(v.faction_id) then
+  for k, v in pairs(faction.get_all()) do
+    if !v.whitelisted or fl.client:has_whitelist(v.faction_id) then
       local button = vgui.Create('fl_image_button')
       button:SetSize(self.chooser:GetWide() / 3, self.chooser:GetTall())
       button:SetImage(v.material)
@@ -66,20 +66,20 @@ function PANEL:OnOpen(parent)
   self.chooser:SetVisible(true)
 end
 
-function PANEL:OnClose(parent)
-  parent:CollectData({
+function PANEL:on_close(parent)
+  parent:collect_data({
     faction = self.faction_id
   })
 end
 
-function PANEL:OnValidate()
+function PANEL:on_validate()
   if self.faction_id == '' then
     return false, t('char_create.no_faction')
   end
 
   local faction = faction.find_by_id(self.faction_id)
 
-  if faction.whitelisted and !fl.client:HasWhitelist(self.faction_id) then
+  if faction.whitelisted and !fl.client:has_whitelist(self.faction_id) then
     return false, t('char_create.no_whitelist')
   end
 end

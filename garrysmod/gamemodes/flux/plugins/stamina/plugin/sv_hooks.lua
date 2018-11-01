@@ -31,6 +31,57 @@ function Stamina:OnActiveCharacterSet(player)
   return player:set_nv('stamina', 100)
 end
 
+function Stamina:PlayerThink(player, cur_time)
+  if player:running() then
+    if !player.was_running then
+      player:SetFOV(100, 0.5)
+      self:start_running(player)
+      player.was_running = cur_time
+    end
+  else
+    if player.was_running then
+      player:SetFOV(0, 0.5)
+      self:stop_running(player, true)
+      player.was_running = false
+      player.standing_since = cur_time
+    elseif !player.stamina_regenerating and (cur_time - (player.standing_since or 0)) > regen_delay then
+      self:stop_running(player)
+    end
+  end
+
+  if player:GetMoveType() == MOVETYPE_WALK then
+    if !player:OnGround() then
+      player.standing_since = cur_time
+
+      if player.was_on_ground then
+        self:set_stamina(player, player:get_nv('stamina', 100) - jump_penalty)
+        self:start_running(player, true)
+      end
+
+      player.was_on_ground = false
+    elseif !player.was_on_ground then
+      player.standing_since = cur_time
+      player.was_on_ground = true
+    end
+  end
+
+  if player:get_nv('stamina', 100) <= 1 then
+    player:SetRunSpeed(player:GetWalkSpeed())
+    player:SetJumpPower(0)
+  else
+    player:SetRunSpeed(config.get('run_speed'))
+    player:SetJumpPower(config.get('jump_power'))
+  end
+end
+
+function Stamina:OnReloaded()
+  for k, v in ipairs(self.timer_ids) do
+    if timer.Exists(v) then
+      timer.Remove(v)
+    end
+  end
+end
+
 function Stamina:set_stamina(player, stamina)
   return player:set_nv('stamina', math.Clamp(stamina, 0, max_stamina))
 end
@@ -117,57 +168,6 @@ function Stamina:stop_running(player, prevent_regen)
       end)
     else
       timer.UnPause(id)
-    end
-  end
-end
-
-function Stamina:PlayerThink(player, cur_time)
-  if player:running() then
-    if !player.was_running then
-      player:SetFOV(100, 0.5)
-      self:start_running(player)
-      player.was_running = cur_time
-    end
-  else
-    if player.was_running then
-      player:SetFOV(0, 0.5)
-      self:stop_running(player, true)
-      player.was_running = false
-      player.standing_since = cur_time
-    elseif !player.stamina_regenerating and (cur_time - (player.standing_since or 0)) > regen_delay then
-      self:stop_running(player)
-    end
-  end
-
-  if player:GetMoveType() == MOVETYPE_WALK then
-    if !player:OnGround() then
-      player.standing_since = cur_time
-
-      if player.was_on_ground then
-        self:set_stamina(player, player:get_nv('stamina', 100) - jump_penalty)
-        self:start_running(player, true)
-      end
-
-      player.was_on_ground = false
-    elseif !player.was_on_ground then
-      player.standing_since = cur_time
-      player.was_on_ground = true
-    end
-  end
-
-  if player:get_nv('stamina', 100) <= 1 then
-    player:SetRunSpeed(player:GetWalkSpeed())
-    player:SetJumpPower(0)
-  else
-    player:SetRunSpeed(config.get('run_speed'))
-    player:SetJumpPower(config.get('jump_power'))
-  end
-end
-
-function Stamina:OnReloaded()
-  for k, v in ipairs(self.timer_ids) do
-    if timer.Exists(v) then
-      timer.Remove(v)
     end
   end
 end

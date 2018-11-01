@@ -3,11 +3,6 @@ util.include('sv_plugin.lua')
 util.include('sv_hooks.lua')
 util.include('sh_enums.lua')
 
-function PLUGIN:PlayerSetupDataTables(player)
-  player:DTVar('Int', INT_RAGDOLL_STATE, 'RagdollState')
-  player:DTVar('Entity', ENT_RAGDOLL, 'RagdollEntity')
-end
-
 function PLUGIN:CalcView(player, origin, angles, fov)
   local view = GAMEMODE.BaseClass:CalcView(player, origin, angles, fov) or {}
   local entity = player:GetDTEntity(ENT_RAGDOLL)
@@ -26,4 +21,9 @@ function PLUGIN:CalcView(player, origin, angles, fov)
       return view
     end
   end
+end
+
+function PLUGIN:PlayerSetupDataTables(player)
+  player:DTVar('Int', INT_RAGDOLL_STATE, 'RagdollState')
+  player:DTVar('Entity', ENT_RAGDOLL, 'RagdollEntity')
 end

@@ -1,6 +1,6 @@
 ﻿library.new 'character'
 
-function character.Create(player, data)
+function character.create(player, data)
   if (!isstring(data.name) or (data.name:utf8len() < config.get('character_min_name_len')
     or data.name:utf8len() > config.get('character_max_name_len'))) then
     return CHAR_ERR_NAME
@@ -49,7 +49,7 @@ function character.Create(player, data)
 
     hook.run('PostCreateCharacter', player, char_id, char, data)
 
-    character.Save(player, char)
+    character.save(player, char)
 
     cable.send(player, 'fl_create_character', char.character_id, character.to_networkable(player, char))
   end
@@ -58,7 +58,7 @@ function character.Create(player, data)
 end
 
 if SERVER then
-  function character.SendToClient(player)
+  function character.send_to_client(player)
     cable.send(player, 'fl_loadcharacters', character.all_to_networkable(player))
   end
 
@@ -92,7 +92,7 @@ if SERVER then
     }
   end
 
-  function character.Save(player, character)
+  function character.save(player, character)
     if !IsValid(player) or !IsValid(character) or hook.run('PreSaveCharacter', player, character) == false then return end
 
     hook.run('SaveCharacterData', player, character)
@@ -100,11 +100,11 @@ if SERVER then
     hook.run('PostSaveCharacter', player, character)
   end
 
-  function character.SaveAll(player)
+  function character.save_all(player)
     if !IsValid(player) then return end
 
     for k, v in ipairs(player.record.characters) do
-      character.Save(player, v)
+      character.save(player, v)
     end
   end
 
@@ -114,20 +114,57 @@ if SERVER then
 
       player:set_nv('name', char.name)
 
-      character.Save(player, char)
+      character.save(player, char)
     end
   end
 
-  function character.SetModel(player, char, model)
+  function character.set_model(player, char, model)
     if char then
       char.model = model or char.model
 
       player:set_nv('model', char.model)
       player:SetModel(char.model)
 
-      character.Save(player, char)
+      character.save(player, char)
     end
   end
+
+  cable.receive('CreateCharacter', function(player, data)
+    data.gender  = (data.gender and data.gender == 'Female' and CHAR_GENDER_FEMALE) or CHAR_GENDER_MALE
+    data.phys_desc = data.description
+
+    local status = character.create(player, data)
+
+    fl.dev_print('Creating character. Status: '..status)
+
+    if status == CHAR_SUCCESS then
+      character.send_to_client(player)
+      cable.send(player, 'PlayerCreatedCharacter', true, status)
+
+      fl.dev_print('Success')
+    else
+      cable.send(player, 'PlayerCreatedCharacter', false, status)
+
+      fl.dev_print('Error')
+    end
+  end)
+
+  cable.receive('PlayerSelectCharacter', function(player, id)
+    fl.dev_print(player:name()..' has loaded character #'..id)
+
+    player:set_active_character(id)
+  end)
+
+  cable.receive('PlayerDeleteCharacter', function(player, id)
+    fl.dev_print(player:name()..' has deleted character #'..id)
+
+    hook.run('OnCharacterDelete', player, id)
+
+    player.record.characters[id]:destroy()
+    table.remove(player.record.characters, id)
+
+    character.send_to_client(player)
+  end)
 else
   cable.receive('fl_loadcharacters', function(data)
     fl.client.characters = data
@@ -145,65 +182,26 @@ else
   end)
 end
 
-if SERVER then
-  cable.receive('CreateCharacter', function(player, data)
-    data.gender  = (data.gender and data.gender == 'Female' and CHAR_GENDER_FEMALE) or CHAR_GENDER_MALE
-    data.phys_desc = data.description
-
-    local status = character.Create(player, data)
-
-    fl.dev_print('Creating character. Status: '..status)
-
-    if status == CHAR_SUCCESS then
-      character.SendToClient(player)
-      cable.send(player, 'PlayerCreatedCharacter', true, status)
-
-      fl.dev_print('Success')
-    else
-      cable.send(player, 'PlayerCreatedCharacter', false, status)
-
-      fl.dev_print('Error')
-    end
-  end)
-
-  cable.receive('PlayerSelectCharacter', function(player, id)
-    fl.dev_print(player:name()..' has loaded character #'..id)
-
-    player:SetActiveCharacter(id)
-  end)
-
-  cable.receive('PlayerDeleteCharacter', function(player, id)
-    fl.dev_print(player:name()..' has deleted character #'..id)
-
-    hook.run('OnCharacterDelete', player, id)
-
-    player.record.characters[id]:destroy()
-    table.remove(player.record.characters, id)
-
-    character.SendToClient(player)
-  end)
-end
-
 do
   local player_meta = FindMetaTable('Player')
 
-  function player_meta:GetActiveCharacterID()
+  function player_meta:get_active_character_id()
     return tonumber(self:get_nv('active_character', nil))
   end
 
-  function player_meta:GetCharacterKey()
+  function player_meta:get_character_key()
     return self:get_nv('key', -1)
   end
 
-  function player_meta:CharacterLoaded()
+  function player_meta:is_character_loaded()
     if self:IsBot() then return true end
 
-    local id = self:GetActiveCharacterID()
+    local id = self:get_active_character_id()
 
     return id and id > 0
   end
 
-  function player_meta:GetPhysDesc()
+  function player_meta:get_phys_desc()
     return self:get_nv('phys_desc', 'This character has no description!')
   end
 
@@ -214,7 +212,7 @@ do
     }
 
     function player_meta:get_gender()
-      local char = self:GetCharacter()
+      local char = self:get_character()
 
       if char then
         return genders[char.gender] or 'no_gender'
@@ -224,19 +222,19 @@ do
     end
   end
 
-  function player_meta:GetCharacterVar(id, default)
+  function player_meta:get_character_var(id, default)
     if SERVER then
-      return self:GetCharacter()[id] or default
+      return self:get_character()[id] or default
     else
       return self:get_nv(id, default)
     end
   end
 
-  function player_meta:GetCharacterData(key, default)
-    return self:GetCharacterVar('data', {})[key] or default
+  function player_meta:get_character_data(key, default)
+    return self:get_character_var('data', {})[key] or default
   end
 
-  function player_meta:GetCharacter()
+  function player_meta:get_character()
     if SERVER and self.current_character then
       return self.current_character
     elseif self:IsBot() then
@@ -245,14 +243,14 @@ do
       return self.char_data
     end
 
-    local char_id = self:GetActiveCharacterID()
+    local char_id = self:get_active_character_id()
 
     if char_id then
-      return self:GetAllCharacters()[char_id]
+      return self:get_all_characters()[char_id]
     end
   end
 
-  function player_meta:GetAllCharacters()
+  function player_meta:get_all_characters()
     return SERVER and self.record.characters or self.characters
   end
 end

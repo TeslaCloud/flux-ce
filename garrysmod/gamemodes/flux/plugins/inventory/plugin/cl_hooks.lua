@@ -1,16 +1,3 @@
-function Inventory:AddTabMenuItems(menu)
-  menu:add_menu_item('inventory', {
-    title = 'Inventory',
-    panel = 'Inventory',
-    icon = 'fa-inbox',
-    callback = function(menu_panel, button)
-      local inv = menu_panel.active_panel
-      inv:set_player(fl.client)
-      inv:SetTitle('Inventory')
-    end
-  })
-end
-
 function PLUGIN:OnContextMenuOpen()
   if IsValid(fl.client.hotbar) then
     fl.client.hotbar:SetVisible(true)
@@ -31,12 +18,17 @@ function PLUGIN:OnContextMenuClose()
   end
 end
 
-function Inventory:create_hotbar()
-  fl.client.hotbar = vgui.Create('fl_hotbar')
-  fl.client.hotbar:set_player(fl.client)
-  fl.client.hotbar:SetVisible(false)
-  fl.client.hotbar:rebuild()
-  return fl.client.hotbar
+function Inventory:AddTabMenuItems(menu)
+  menu:add_menu_item('inventory', {
+    title = 'Inventory',
+    panel = 'Inventory',
+    icon = 'fa-inbox',
+    callback = function(menu_panel, button)
+      local inv = menu_panel.active_panel
+      inv:set_player(fl.client)
+      inv:SetTitle('Inventory')
+    end
+  })
 end
 
 function Inventory:FLInitPostEntity()
@@ -60,14 +52,14 @@ function Inventory:PostCharacterLoaded()
   end
 end
 
-spawnmenu.AddCreationTab('Items', function()
-  local panel = vgui.Create('flItemSpawner')
+function Inventory:create_hotbar()
+  fl.client.hotbar = vgui.Create('fl_hotbar')
+  fl.client.hotbar:set_player(fl.client)
+  fl.client.hotbar:SetVisible(false)
+  fl.client.hotbar:rebuild()
 
-  panel:Dock(FILL)
-  panel:rebuild()
-
-  return panel
-end, 'icon16/wand.png', 40)
+  return fl.client.hotbar
+end
 
 cable.receive('RefreshInventory', function()
   if fl.tab_menu and fl.tab_menu.active_panel and fl.tab_menu.active_panel.rebuild then
@@ -78,3 +70,12 @@ cable.receive('RefreshInventory', function()
     fl.client.hotbar:rebuild()
   end
 end)
+
+spawnmenu.AddCreationTab('Items', function()
+  local panel = vgui.Create('flItemSpawner')
+
+  panel:Dock(FILL)
+  panel:rebuild()
+
+  return panel
+end, 'icon16/wand.png', 40)

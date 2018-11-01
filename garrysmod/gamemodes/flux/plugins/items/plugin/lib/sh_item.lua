@@ -1,35 +1,36 @@
 library.new 'item'
 
--- Item Templates storage.
 local stored = item.stored or {}
+local instances = item.instances or {}
+local sorted = item.sorted or {}
+local entities = item.entities or {}
+
+-- Item Templates storage.
 item.stored = stored
 
 -- Actual items.
-local instances = item.instances or {}
 item.instances = instances
 
 -- Instances table indexed by instance ID.
 -- For quicker item lookups.
-local sorted = item.sorted or {}
 item.sorted = sorted
 
 -- Items currently dropped and lying on the ground.
-local entities = item.entities or {}
 item.entities = entities
 
-function item.GetAll()
+function item.get_all()
   return stored
 end
 
-function item.GetInstances()
+function item.get_instances()
   return instances
 end
 
-function item.GetSorted()
+function item.get_sorted()
   return sorted
 end
 
-function item.GetEntities()
+function item.get_entities()
   return entities
 end
 
@@ -124,14 +125,14 @@ function item.find_by_id(id)
 end
 
 -- Find all instances of certain template ID.
-function item.FindAllInstances(id)
+function item.find_all_instances(id)
   if instances[id] then
     return instances[id]
   end
 end
 
 -- Finds instance by it's ID.
-function item.FindInstanceByID(instance_id)
+function item.find_instance_by_id(instance_id)
   for item_id, item_instances in pairs(instances) do
     if istable(item_instances) then
       for k, item_table in pairs(item_instances) do
@@ -144,19 +145,19 @@ function item.FindInstanceByID(instance_id)
 end
 
 -- Finds an item template that belongs to certain instance ID.
-function item.FindByInstanceID(instance_id)
+function item.find_by_instance_id(instance_id)
   if !instance_id then return end
 
   if !sorted[instance_id] then
-    sorted[instance_id] = item.FindInstanceByID(instance_id)
+    sorted[instance_id] = item.find_instance_by_id(instance_id)
   end
 
   return sorted[instance_id]
 end
 
-function item.Find(name)
+function item.find(name)
   if isnumber(name) then
-    return item.FindInstanceByID(name)
+    return item.find_instance_by_id(name)
   end
 
   if stored[id] then
@@ -178,41 +179,41 @@ function item.Find(name)
   end
 end
 
-function item.GenerateID()
+function item.generate_id()
   instances.count = instances.count or 0
   instances.count = instances.count + 1
 
   return instances.count
 end
 
-function item.New(id, data, forcedID)
+function item.new(id, data, forced_id)
   local item_table = item.find_by_id(id)
 
   if item_table then
-    local itemID = forcedID or item.GenerateID()
+    local item_id = forced_id or item.generate_id()
 
     instances[id] = instances[id] or {}
-    instances[id][itemID] = table.Copy(item_table)
+    instances[id][item_id] = table.Copy(item_table)
 
     if istable(data) then
-      table.safe_merge(instances[id][itemID], data)
+      table.safe_merge(instances[id][item_id], data)
     end
 
-    instances[id][itemID].instance_id = itemID
+    instances[id][item_id].instance_id = item_id
 
     if SERVER then
-      item.AsyncSave()
-      cable.send(nil, 'ItemNewInstance', id, (data or 1), itemID)
+      item.async_save()
+      cable.send(nil, 'ItemNewInstance', id, (data or 1), item_id)
     end
 
-    return instances[id][itemID]
+    return instances[id][item_id]
   end
 end
 
-function item.Remove(instance_id)
-  local item_table = (istable(instance_id) and instance_id) or item.FindInstanceByID(instance_id)
+function item.remove(instance_id)
+  local item_table = (istable(instance_id) and instance_id) or item.find_instance_by_id(instance_id)
 
-  if item_table and item.IsInstance(item_table) then
+  if item_table and item.is_instance(item_table) then
     if IsValid(item_table.entity) then
       item_table.entity:Remove()
     end
@@ -220,39 +221,29 @@ function item.Remove(instance_id)
     instances[item_table.id][item_table.instance_id] = nil
 
     if SERVER then
-      item.AsyncSave()
+      item.async_save()
     end
 
     fl.dev_print('Removed item instance ID: '..item_table.instance_id)
   end
 end
 
-function item.IsInstance(item_table)
+function item.is_instance(item_table)
   if !istable(item_table) then return end
 
   return (item_table.instance_id or ITEM_TEMPLATE) > ITEM_INVALID
 end
 
-function item.CreateBase(name)
+function item.create_base(name)
   class(name, Item)
 end
 
-pipeline.register('item', function(id, file_name, pipe)
-  ITEM = Item.new(id)
-
-  util.include(file_name)
-
-  if pipeline.is_aborted() then ITEM = nil return end
-
-  ITEM:register() ITEM = nil
-end)
-
-function item.IncludeItems(directory)
+function item.include_items(directory)
   pipeline.include_folder('item', directory)
 end
 
 if SERVER then
-  function item.Load()
+  function item.load()
     local loaded = data.load_schema('items/instances', {})
 
     if loaded and table.Count(loaded) > 0 then
@@ -262,11 +253,11 @@ if SERVER then
 
         if item_table then
           for k, v in pairs(instance_table) do
-            local newItem = table.Copy(item_table)
+            local new_item = table.Copy(item_table)
 
-            table.safe_merge(newItem, v)
+            table.safe_merge(new_item, v)
 
-            loaded[id][k] = newItem
+            loaded[id][k] = new_item
           end
         end
       end
@@ -281,7 +272,7 @@ if SERVER then
       for id, instance_table in pairs(loaded) do
         for k, v in pairs(instance_table) do
           if instances[id] and instances[id][k] then
-            item.Spawn(v.position, v.angles, instances[id][k])
+            item.spawn(v.position, v.angles, instances[id][k])
           else
             loaded[id][k] = nil
           end
@@ -293,7 +284,7 @@ if SERVER then
     end
   end
 
-  function item.SaveInstances()
+  function item.save_instances()
     local to_save = {}
 
     for k, v in pairs(instances) do
@@ -315,7 +306,7 @@ if SERVER then
     data.save_schema('items/instances', to_save)
   end
 
-  function item.SaveEntities()
+  function item.save_entities()
     local item_ents = ents.FindByClass('fl_item')
 
     entities = {}
@@ -334,63 +325,63 @@ if SERVER then
     data.save_schema('items/entities', entities)
   end
 
-  function item.SaveAll()
-    item.SaveInstances()
-    item.SaveEntities()
+  function item.save_all()
+    item.save_instances()
+    item.save_entities()
   end
 
-  function item.AsyncSave()
-    local handle = coroutine.create(item.SaveAll)
+  function item.async_save()
+    local handle = coroutine.create(item.save_all)
     coroutine.resume(handle)
   end
 
-  function item.AsyncSaveInstances()
-    local handle = coroutine.create(item.SaveInstances)
+  function item.async_save_instances()
+    local handle = coroutine.create(item.save_instances)
     coroutine.resume(handle)
   end
 
-  function item.AsyncSaveEntities()
-    local handle = coroutine.create(item.SaveEntities)
+  function item.async_save_entities()
+    local handle = coroutine.create(item.save_entities)
     coroutine.resume(handle)
   end
 
-  function item.NetworkItemData(player, item_table)
-    if item.IsInstance(item_table) then
+  function item.network_item_data(player, item_table)
+    if item.is_instance(item_table) then
       cable.send(player, 'ItemData', item_table.id, item_table.instance_id, item_table.data)
     end
   end
 
-  function item.NetworkItem(player, instance_id)
-    cable.send(player, 'NetworkItem', instance_id, item.to_save(item.FindInstanceByID(instance_id)))
+  function item.network_item(player, instance_id)
+    cable.send(player, 'NetworkItem', instance_id, item.to_save(item.find_instance_by_id(instance_id)))
   end
 
-  function item.NetworkEntityData(player, ent)
+  function item.network_entity_data(player, ent)
     if IsValid(ent) then
       cable.send(player, 'ItemEntData', ent:EntIndex(), ent.item.id, ent.item.instance_id)
     end
   end
 
   -- A function to send info about items in the world.
-  function item.SendToPlayer(player)
+  function item.send_to_player(player)
     local item_ents = ents.FindByClass('fl_item')
 
     for k, v in ipairs(item_ents) do
       if v.item then
-        item.NetworkItem(player, v.item.instance_id)
+        item.network_item(player, v.item.instance_id)
       end
     end
 
     hook.run_client(player, 'OnItemDataReceived')
   end
 
-  function item.Spawn(position, angles, item_table)
+  function item.spawn(position, angles, item_table)
     if !position or !istable(item_table) then
       ErrorNoHalt('No position or item table is not a table!\n')
 
       return
     end
 
-    if !item.IsInstance(item_table) then
+    if !item.is_instance(item_table) then
       ErrorNoHalt('Cannot spawn non-instantiated item!\n')
 
       return
@@ -398,7 +389,7 @@ if SERVER then
 
     local ent = ents.Create('fl_item')
 
-    ent:SetItem(item_table)
+    ent:set_item(item_table)
 
     local mins, maxs = ent:GetCollisionBounds()
 
@@ -411,7 +402,7 @@ if SERVER then
     ent:Spawn()
 
     item_table:set_entity(ent)
-    item.NetworkItem(player, item_table.instance_id)
+    item.network_item(player, item_table.instance_id)
 
     entities[item_table.id] = entities[item_table.id] or {}
     entities[item_table.id][item_table.instance_id] = entities[item_table.id][item_table.instance_id] or {}
@@ -420,7 +411,7 @@ if SERVER then
       angles = angles
     }
 
-    item.AsyncSaveEntities()
+    item.async_save_entities()
 
     return ent, item_table
   end
@@ -429,7 +420,7 @@ if SERVER then
     local ent = Entity(ent_index)
 
     if IsValid(ent) then
-      item.NetworkEntityData(player, ent)
+      item.network_entity_data(player, ent)
     end
   end)
 else
@@ -441,12 +432,12 @@ else
 
   cable.receive('NetworkItem', function(instance_id, item_table)
     if item_table and stored[item_table.id] then
-      local newTable = table.Copy(stored[item_table.id])
-      table.safe_merge(newTable, item_table)
+      local new_table = table.Copy(stored[item_table.id])
+      table.safe_merge(new_table, item_table)
 
-      instances[newTable.id][instance_id] = newTable
+      instances[new_table.id][instance_id] = new_table
 
-      print('Received instance ID '..tostring(newTable))
+      print('Received instance ID '..tostring(new_table))
     else
       print('FAILED TO RECEIVE INSTANCE ID '..instance_id)
     end
@@ -463,9 +454,9 @@ else
       end
 
       -- Client has to know this shit too I guess?
-      ent:SetModel(item_table:GetModel())
+      ent:SetModel(item_table:get_model())
       ent:SetSkin(item_table.skin)
-      ent:SetColor(item_table:GetColor())
+      ent:SetColor(item_table:get_color())
 
       -- Restore item's functions. For some weird reason they aren't properly initialized.
       table.safe_merge(ent, scripted_ents.Get('fl_item'))
@@ -474,7 +465,17 @@ else
     end
   end)
 
-  cable.receive('ItemNewInstance', function(id, data, itemID)
-    item.New(id, data, itemID)
+  cable.receive('ItemNewInstance', function(id, data, item_id)
+    item.new(id, data, item_id)
   end)
 end
+
+pipeline.register('item', function(id, file_name, pipe)
+  ITEM = Item.new(id)
+
+  util.include(file_name)
+
+  if pipeline.is_aborted() then ITEM = nil return end
+
+  ITEM:register() ITEM = nil
+end)

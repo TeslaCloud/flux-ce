@@ -6,12 +6,25 @@ SurfaceText.pictures = SurfaceText.pictures or {}
 util.include('cl_hooks.lua')
 
 if SERVER then
-  function SurfaceText:Save()
+  function SurfaceText:PlayerInitialized(player)
+    cable.send(player, 'flLoad3DTexts', self.texts)
+    cable.send(player, 'flLoad3DPictures', self.pictures)
+  end
+
+  function SurfaceText:LoadData()
+    self:load()
+  end
+
+  function SurfaceText:SaveData()
+    self:save()
+  end
+
+  function SurfaceText:save()
     data.save_plugin('3dtexts', SurfaceText.texts)
     data.save_plugin('3dpictures', SurfaceText.pictures)
   end
 
-  function SurfaceText:Load()
+  function SurfaceText:load()
     local loaded = data.load_plugin('3dtexts', {})
     local loaded_pics = data.load_plugin('3dpictures', {})
 
@@ -19,46 +32,33 @@ if SERVER then
     self.pictures = loaded_pics
   end
 
-  function SurfaceText:PlayerInitialized(player)
-    cable.send(player, 'flLoad3DTexts', self.texts)
-    cable.send(player, 'flLoad3DPictures', self.pictures)
-  end
-
-  function SurfaceText:LoadData()
-    self:Load()
-  end
-
-  function SurfaceText:SaveData()
-    self:Save()
-  end
-
-  function SurfaceText:AddText(data)
+  function SurfaceText:add_text(data)
     if !data or !data.text or !data.pos or !data.angle or !data.style or !data.scale then return end
 
     table.insert(SurfaceText.texts, data)
 
-    self:Save()
+    self:save()
 
     cable.send(nil, 'SurfaceText_Add', data)
   end
 
-  function SurfaceText:AddPicture(data)
+  function SurfaceText:add_picture(data)
     if !data or !data.url or !data.width or !data.height then return end
 
     table.insert(SurfaceText.pictures, data)
 
-    self:Save()
+    self:save()
 
     cable.send(nil, 'fl3DPicture_Add', data)
   end
 
-  function SurfaceText:Remove(player)
+  function SurfaceText:remove_text(player)
     if player:can('textremove') then
       cable.send(player, 'SurfaceText_Calculate', true)
     end
   end
 
-  function SurfaceText:RemovePicture(player)
+  function SurfaceText:remove_picture(player)
     if player:can('textremove') then
       cable.send(player, 'fl3DPicture_Calculate', true)
     end
@@ -68,7 +68,7 @@ if SERVER then
     if player:can('textremove') then
       table.remove(SurfaceText.texts, idx)
 
-      SurfaceText:Save()
+      SurfaceText:save()
 
       cable.send(nil, 'SurfaceText_Remove', idx)
 
@@ -80,7 +80,7 @@ if SERVER then
     if player:can('textremove') then
       table.remove(SurfaceText.pictures, idx)
 
-      SurfaceText:Save()
+      SurfaceText:save()
 
       cable.send(nil, 'fl3DPicture_Remove', idx)
 
@@ -88,39 +88,7 @@ if SERVER then
     end
   end)
 else
-  cable.receive('flLoad3DTexts', function(data)
-    SurfaceText.texts = data or {}
-  end)
-
-  cable.receive('SurfaceText_Add', function(data)
-    table.insert(SurfaceText.texts, data)
-  end)
-
-  cable.receive('SurfaceText_Remove', function(idx)
-    table.remove(SurfaceText.texts, idx)
-  end)
-
-  cable.receive('flLoad3DPictures', function(data)
-    SurfaceText.pictures = data or {}
-  end)
-
-  cable.receive('fl3DPicture_Add', function(data)
-    table.insert(SurfaceText.pictures, data)
-  end)
-
-  cable.receive('fl3DPicture_Remove', function(idx)
-    table.remove(SurfaceText.pictures, idx)
-  end)
-
-  cable.receive('SurfaceText_Calculate', function()
-    SurfaceText:RemoveAtTrace(fl.client:GetEyeTraceNoCursor())
-  end)
-
-  cable.receive('fl3DPicture_Calculate', function()
-    SurfaceText:RemovePictureAtTrace(fl.client:GetEyeTraceNoCursor())
-  end)
-
-  function SurfaceText:RemoveAtTrace(trace)
+  function SurfaceText:trace_remove_text(trace)
     if !trace then return false end
 
     local hit_pos = trace.HitPos - trace.HitNormal
@@ -147,7 +115,7 @@ else
     return false
   end
 
-  function SurfaceText:RemovePictureAtTrace(trace)
+  function SurfaceText:trace_remove_picture(trace)
     if !trace then return false end
 
     local hit_pos = trace.HitPos - trace.HitNormal
@@ -173,4 +141,36 @@ else
 
     return false
   end
+
+  cable.receive('flLoad3DTexts', function(data)
+    SurfaceText.texts = data or {}
+  end)
+
+  cable.receive('SurfaceText_Add', function(data)
+    table.insert(SurfaceText.texts, data)
+  end)
+
+  cable.receive('SurfaceText_Remove', function(idx)
+    table.remove(SurfaceText.texts, idx)
+  end)
+
+  cable.receive('flLoad3DPictures', function(data)
+    SurfaceText.pictures = data or {}
+  end)
+
+  cable.receive('fl3DPicture_Add', function(data)
+    table.insert(SurfaceText.pictures, data)
+  end)
+
+  cable.receive('fl3DPicture_Remove', function(idx)
+    table.remove(SurfaceText.pictures, idx)
+  end)
+
+  cable.receive('SurfaceText_Calculate', function()
+    SurfaceText:trace_remove_text(fl.client:GetEyeTraceNoCursor())
+  end)
+
+  cable.receive('fl3DPicture_Calculate', function()
+    SurfaceText:trace_remove_picture(fl.client:GetEyeTraceNoCursor())
+  end)
 end

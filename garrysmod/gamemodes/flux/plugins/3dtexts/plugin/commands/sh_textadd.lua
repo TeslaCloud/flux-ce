@@ -28,7 +28,7 @@ function COMMAND:on_run(player, text, scale, style, color, extra_color)
     scale = scale or 1
   }
 
-  SurfaceText:AddText(data)
+  SurfaceText:add_text(data)
 
   fl.player:notify(player, t'3d_text.text_added')
 end

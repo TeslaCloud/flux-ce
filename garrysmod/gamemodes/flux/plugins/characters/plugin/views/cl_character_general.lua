@@ -42,7 +42,7 @@ function PANEL:Init()
       end
 
       self:GetParent().char_data.gender = 'Male'
-      self:RebuildModels()
+      self:rebuild_models()
 
       btn:set_active(true)
       btn:set_text_color(Color('blue'):lighten(40))
@@ -65,7 +65,7 @@ function PANEL:Init()
       end
 
       self:GetParent().char_data.gender = 'Female'
-      self:RebuildModels()
+      self:rebuild_models()
 
       btn:set_active(true)
       btn:set_text_color(Color('red'):lighten(40))
@@ -143,17 +143,17 @@ function PANEL:Init()
   end
 end
 
-function PANEL:RebuildModels()
+function PANEL:rebuild_models()
   local char_data = self:GetParent().char_data
-  local factionTable = faction.find_by_id(char_data.faction)
+  local faction_table = faction.find_by_id(char_data.faction)
   local models
 
   if char_data.gender == 'Male' then
-    models = factionTable.models.male
+    models = faction_table.models.male
   elseif char_data.gender == 'Female' then
-    models = factionTable.models.female
+    models = faction_table.models.female
   else
-    models = factionTable.models.universal
+    models = faction_table.models.universal
   end
 
   local i = 0
@@ -189,7 +189,7 @@ function PANEL:RebuildModels()
     button:SetPos(i * 68 + 4, offset)
     button.DoClick = function(btn)
       if IsValid(self.models_list.prevBtn) then
-        self.models_list.prevBtn.isActive = false
+        self.models_list.prevBtn.is_active = false
       end
 
       self.models_list.model = v
@@ -206,13 +206,13 @@ function PANEL:RebuildModels()
         self.skin:SetVisible(false)
       end
 
-      btn.isActive = true
+      btn.is_active = true
 
       self.models_list.prevBtn = btn
     end
 
     if self.models_list.model == v then
-      button.isActive = true
+      button.is_active = true
 
       self.models_list.prevBtn = button
     end
@@ -220,7 +220,7 @@ function PANEL:RebuildModels()
     button.Paint = function(btn, w, h)
       btn.OverlayFade = math.Clamp((btn.OverlayFade or 0) - RealFrameTime() * 640 * 2, 0, 255)
 
-      if dragndrop.IsDragging() or (!btn:IsHovered() and !btn.isActive) then return end
+      if dragndrop.IsDragging() or (!btn:IsHovered() and !btn.is_active) then return end
 
       btn.OverlayFade = math.Clamp(btn.OverlayFade + RealFrameTime() * 640 * 8, 0, 255)
     end
@@ -231,7 +231,7 @@ function PANEL:RebuildModels()
   end
 end
 
-function PANEL:OnOpen(parent)
+function PANEL:on_open(parent)
   self.name_entry:SetText(parent.char_data.name or '')
   self.desc_entry:SetText(parent.char_data.description or '')
   self.models_list.model = parent.char_data.model
@@ -250,19 +250,19 @@ function PANEL:OnOpen(parent)
     self.gender_female:set_active(true)
     self.gender_female:set_text_color(Color('red'):lighten(40))
 
-    self:RebuildModels()
+    self:rebuild_models()
   elseif parent.char_data.gender == 'Male' then
     self.gender_male:set_active(true)
     self.gender_male:set_text_color(Color('blue'):lighten(40))
 
-    self:RebuildModels()
+    self:rebuild_models()
   end
 end
 
-function PANEL:OnClose(parent)
+function PANEL:on_close(parent)
   local gender = (self.gender_female:is_active() and 'Female') or (self.gender_male:is_active() and 'Male') or 'Universal'
 
-  parent:CollectData({
+  parent:collect_data({
     name = self.name_entry:GetValue(),
     description = self.desc_entry:GetValue(),
     gender = gender,
@@ -271,7 +271,7 @@ function PANEL:OnClose(parent)
   })
 end
 
-function PANEL:OnValidate()
+function PANEL:on_validate()
   local name = self.name_entry:GetValue()
   local desc = self.desc_entry:GetValue()
 
@@ -280,9 +280,9 @@ function PANEL:OnValidate()
       return false, t'char_create.name_invalid'
     end
 
-    if name:utf8len() < config.get('character_min_name_len')
-    or name:utf8len() > config.get('character_max_name_len') then
-      return false, t('char_create.name_len', {config.get('character_min_name_len'), config.get('character_max_name_len')})
+    if name:utf8len() < config.get('character_min_name_len') or
+    name:utf8len() > config.get('character_max_name_len') then
+      return false, t('char_create.name_len', { config.get('character_min_name_len'), config.get('character_max_name_len') })
     end
   end
 
@@ -291,9 +291,9 @@ function PANEL:OnValidate()
       return false, t'char_create.desc_invalid'
     end
 
-    if desc:utf8len() < config.get('character_min_desc_len')
-      or desc:utf8len() > config.get('character_max_desc_len') then
-      return false, t('char_create.desc_len', {config.get('character_min_desc_len'), config.get('character_max_desc_len')})
+    if desc:utf8len() < config.get('character_min_desc_len') or
+    desc:utf8len() > config.get('character_max_desc_len') then
+      return false, t('char_create.desc_len', { config.get('character_min_desc_len'), config.get('character_max_desc_len') })
     end
   end
 

@@ -1,7 +1,3 @@
-function Observer:ShouldObserverReset(player)
-  return config.get('observer_reset')
-end
-
 function Observer:PlayerEnterNoclip(player)
   if !player:can('noclip') then
     fl.player:notify(player, 'You do not have permission to do this.')
@@ -54,4 +50,8 @@ function Observer:PlayerExitNoclip(player)
   player:set_nv('observer', false)
 
   return false
+end
+
+function Observer:ShouldObserverReset(player)
+  return config.get('observer_reset')
 end

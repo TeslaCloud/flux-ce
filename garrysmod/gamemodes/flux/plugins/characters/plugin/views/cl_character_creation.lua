@@ -12,7 +12,7 @@ function PANEL:Init()
 
   hook.run('AddCharacterCreationMenuStages', self)
 
-  self:OpenPanel(self.stages[1])
+  self:open_panel(self.stages[1])
 
   local x, y = self:GetWide() * 0.25, self:GetTall() / 6 + 8
 
@@ -29,7 +29,7 @@ function PANEL:Init()
   self.back.DoClick = function(btn)
     surface.PlaySound(theme.get_sound('button_click_success_sound'))
 
-    self:PrevStage()
+    self:prev_stage()
   end
 
   self.next = vgui.Create('fl_button', self)
@@ -45,7 +45,7 @@ function PANEL:Init()
   self.next.DoClick = function(btn)
     surface.PlaySound(theme.get_sound('button_click_success_sound'))
 
-    self:NextStage()
+    self:next_stage()
   end
 
   self.stage_list = vgui.Create('fl_horizontalbar', self)
@@ -54,22 +54,28 @@ function PANEL:Init()
   self.stage_list:SetOverlap(4)
   self.stage_list:set_centered(true)
 
-  self:RebuildStageList()
+  self:rebuild()
 end
 
-function PANEL:RebuildStageList()
+function PANEL:Paint(w, h)
+  if self:IsVisible() then
+    theme.hook('PaintCharCreationMainPanel', self, w, h)
+  end
+end
+
+function PANEL:rebuild()
   self.stage_list:Clear()
 
   for k, v in ipairs(self.stages) do
     local button = vgui.Create('fl_button', self.stage_list)
     button:SetSize(self.panel:GetWide() / 5, theme.get_option('menu_sidebar_button_height'))
-    button:set_icon('fa-chevron-right', true)
-    button:set_icon_size(16)
     button:SetFont(theme.get_font('main_menu_normal'))
     button:SetTitle(t(v))
     button:SetDrawBackground(false)
-    button:SizeToContents()
+    button:set_icon('fa-chevron-right', true)
+    button:set_icon_size(16)
     button:set_centered(true)
+    button:SizeToContents()
 
     if k > self.stage then
       button:set_enabled(false)
@@ -96,29 +102,29 @@ end
 
 function PANEL:goto_stage(stage)
   if stage < self.stage then
-    self:PrevStage()
+    self:prev_stage()
 
     if self.stage != stage then
       timer.Create('flux_char_panel_change', .1, self.stage - stage, function()
-        self:PrevStage()
+        self:prev_stage()
       end)
     end
   elseif stage > self.stage then
-    self:NextStage()
+    self:next_stage()
 
     if self.stage != stage then
       timer.Create('flux_char_panel_change', .1, stage - self.stage, function()
-        self:NextStage()
+        self:next_stage()
       end)
     end
   end
 end
 
-function PANEL:SetStage(stage)
+function PANEL:set_stage(stage)
   if self.stage != stage then
-    self:OpenPanel(self.stages[stage])
+    self:open_panel(self.stages[stage])
     self.stage = stage
-    self:RebuildStageList()
+    self:rebuild()
 
     if self.stage == 1 then
         self.back:SetTitle(t'char_create.main_menu')
@@ -134,9 +140,9 @@ function PANEL:SetStage(stage)
   end
 end
 
-function PANEL:NextStage()
-  if self.panel and self.panel.OnValidate then
-    local success, error = self.panel:OnValidate()
+function PANEL:next_stage()
+  if self.panel and self.panel.on_validate then
+    local success, error = self.panel:on_validate()
 
     if success == false then
       self:GetParent():notify(error or t'char_create.unknown_error')
@@ -154,13 +160,13 @@ function PANEL:NextStage()
   end
 
   if self.stage != #self.stages then
-    self:SetStage(self.stage + 1)
+    self:set_stage(self.stage + 1)
   else
     surface.PlaySound('vo/npc/male01/answer37.wav')
 
     Derma_Query(t'char_create.confirm_msg', t'char_create.confirm', t'yes', function()
-      if self.panel.OnClose then
-        self.panel:OnClose(self)
+      if self.panel.on_close then
+        self.panel:on_close(self)
       end
 
       cable.send('CreateCharacter', self.char_data)
@@ -169,15 +175,15 @@ function PANEL:NextStage()
   end
 end
 
-function PANEL:PrevStage()
+function PANEL:prev_stage()
   if self.stage != 1 then
-    self:SetStage(self.stage - 1)
+    self:set_stage(self.stage - 1)
   else
     self:GetParent():to_main_menu()
   end
 end
 
-function PANEL:Close(callback)
+function PANEL:close(callback)
   self:SetVisible(false)
   self:Remove()
 
@@ -186,20 +192,20 @@ function PANEL:Close(callback)
   end
 end
 
-function PANEL:CollectData(newData)
-  table.safe_merge(self.char_data, newData)
+function PANEL:collect_data(new_data)
+  table.safe_merge(self.char_data, new_data)
 end
 
-function PANEL:ClearData()
+function PANEL:clear_data()
   table.Empty(self.char_data)
 end
 
-function PANEL:OpenPanel(id)
+function PANEL:open_panel(id)
   local x, y = self:GetWide() * 0.25, self:GetTall() / 6 + 8
 
   if IsValid(self.panel) then
-    if self.panel.OnClose then
-      self.panel:OnClose(self)
+    if self.panel.on_close then
+      self.panel:on_close(self)
     end
 
     local to = self:GetWide()
@@ -227,8 +233,8 @@ function PANEL:OpenPanel(id)
   self.panel:SetPos(from, y)
   self.panel:MoveTo(x, y, theme.get_option('menu_anim_duration'), 0, 0.5)
 
-  if self.panel.OnOpen then
-    self.panel:OnOpen(self)
+  if self.panel.on_open then
+    self.panel:on_open(self)
   end
 
   hook.run('CharPanelCreated', id, self.panel)
@@ -239,12 +245,6 @@ function PANEL:add_stage(id, index)
     table.insert(self.stages, index, id)
   else
     table.insert(self.stages, id)
-  end
-end
-
-function PANEL:Paint(w, h)
-  if self:IsVisible() then
-    theme.hook('PaintCharCreationMainPanel', self, w, h)
   end
 end
 

@@ -1,4 +1,4 @@
--- Alternatively, you can use item.CreateBase('ItemUsable')
+-- Alternatively, you can use item.create_base('ItemUsable')
 class 'ItemUsable' extends 'Item'
 
 ItemUsable.name = 'Usable Items Base'

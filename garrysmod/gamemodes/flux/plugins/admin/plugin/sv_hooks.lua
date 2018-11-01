@@ -1,15 +1,3 @@
-function Bolt:PlayerCreated(player, record)
-  record.banned = record.banned or false
-end
-
-function Bolt:ActiveRecordReady()
-  Ban:all():get(function(objects)
-    for k, v in ipairs(objects) do
-      fl.admin:record_ban(v.steam_id, v)
-    end
-  end)
-end
-
 function Bolt:CheckPassword(steam_id64, ip, sv_pass, cl_pass, name)
   local steam_id = util.SteamIDFrom64(steam_id64)
   local entry = fl.admin:get_bans()[steam_id]
@@ -23,6 +11,18 @@ function Bolt:CheckPassword(steam_id64, ip, sv_pass, cl_pass, name)
       return false, 'You are still banned: '..tostring(entry.reason)
     end
   end
+end
+
+function Bolt:PlayerCreated(player, record)
+  record.banned = record.banned or false
+end
+
+function Bolt:ActiveRecordReady()
+  Ban:all():get(function(objects)
+    for k, v in ipairs(objects) do
+      fl.admin:record_ban(v.steam_id, v)
+    end
+  end)
 end
 
 function Bolt:PlayerRestored(player, record)
@@ -47,16 +47,16 @@ function Bolt:PlayerRestored(player, record)
   end
 
   if record.permissions then
-    player:SetCustomPermissions(record.permissions)
+    player:set_custom_permissions(record.permissions)
   end
 
   Log:notify(player:name()..' ('..player:GetUserGroup()..') has connected to the server.', { action = 'player_events' })
 end
 
 function Bolt:CommandCheckImmunity(player, target, can_equal)
-  return fl.admin:CheckImmunity(player, v, can_equal)
+  return fl.admin:check_immunity(player, v, can_equal)
 end
 
 function Bolt:OnCommandCreated(id, data)
-  fl.admin:PermissionFromCommand(data)
+  fl.admin:permission_from_command(data)
 end

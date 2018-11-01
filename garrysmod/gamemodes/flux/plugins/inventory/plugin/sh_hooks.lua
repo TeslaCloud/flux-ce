@@ -10,7 +10,7 @@ end
 
 function Inventory:PlayerSelectSlot(player, slot)
   local instance_id = player:get_first_in_slot(slot)
-  local item_table = item.FindByInstanceID(instance_id)
+  local item_table = item.find_by_instance_id(instance_id)
 
   if item_table then
     item_table:do_menu_action('on_use')

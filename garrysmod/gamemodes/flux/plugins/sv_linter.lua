@@ -104,11 +104,9 @@ function read_string(code, pos, cur_char, tokens)
 end
 
 function read_comment(code, pos, cur_char, tokens)
-
 end
 
 function read_token(code, pos, cur_char, tokens)
-
 end
 
 local function lex(code, pos, tokens)

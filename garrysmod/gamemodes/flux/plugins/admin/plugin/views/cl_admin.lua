@@ -40,15 +40,15 @@ function PANEL:add_panel(id, title, permission, ...)
   }
 
   self.sidebar:add_button(title, function(btn)
-    self:OpenPanel(id)
+    self:open_panel(id)
   end)
 end
 
-function PANEL:RemovePanel(id)
+function PANEL:remove_panel(id)
   self.panels[id] = nil
 end
 
-function PANEL:OpenPanel(id)
+function PANEL:open_panel(id)
   local panel = self.panels[id]
 
   if IsValid(self.cur_panel) then
@@ -65,13 +65,13 @@ function PANEL:OpenPanel(id)
     self.cur_panel:SetPos(sw, 0)
     self.cur_panel:SetSize(self:GetWide() - sw, self:GetTall())
 
-    if self.cur_panel.OnOpened then
-      self.cur_panel:OnOpened(self, panel)
+    if self.cur_panel.on_opened then
+      self.cur_panel:on_opened(self, panel)
     end
   end
 end
 
-function PANEL:SetFullscreen(fullscreen)
+function PANEL:set_fullscreen(fullscreen)
   if fullscreen then
     self.sidebar:MoveTo(-self.sidebar:GetWide(), 0, 0.3)
     self:SetTitle('')
@@ -90,7 +90,7 @@ function PANEL:SetFullscreen(fullscreen)
     end
 
     self.back_button.DoClick = function(btn)
-      self:SetFullscreen(false)
+      self:set_fullscreen(false)
     end
   else
     self.sidebar:MoveTo(0, 0, 0.3)

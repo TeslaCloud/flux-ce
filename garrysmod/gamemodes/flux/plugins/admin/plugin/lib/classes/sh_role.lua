@@ -62,6 +62,50 @@ function Role:can(player, action, object)
   return false
 end
 
+-- Called when player's primary group is being set to this group.
+function Role:on_group_set(player, old_group) end
+
+-- Called when player's primary group is taken or modified.
+function Role:on_group_take(player, new_group) end
+
+Role.set_parent = Role.set_base
+
+function Role:get_id()
+  return self.role_id
+end
+
+function Role:get_name()
+  return self.name or 'Unknown'
+end
+
+function Role:get_description()
+  return self.description or 'This group has no description'
+end
+
+function Role:get_color()
+  return self.color or Color('white')
+end
+
+function Role:get_immunity()
+  return self.immunity or 0
+end
+
+function Role:is_protected()
+  return self.protected or false
+end
+
+function Role:get_permissions()
+  return self.permissions or {}
+end
+
+function Role:get_icon()
+  return self.icon or 'icon16/user.png'
+end
+
+function Role:get_base()
+  return self.base or nil
+end
+
 function Role:register()
   if self.define_permissions then
     local old_can, old_cannot, old_anything = can, cannot, allow_anything
@@ -81,48 +125,4 @@ function Role:register()
   fl.admin:create_group(self.role_id, self)
 end
 
--- Called when player's primary group is being set to this group.
-function Role:OnGroupSet(player, old_group) end
-
--- Called when player's primary group is taken or modified.
-function Role:OnGroupTake(player, new_group) end
-
-Role.SetParent = Role.set_base
-
-function Role:GetID()
-  return self.role_id
-end
-
-function Role:get_name()
-  return self.name or 'Unknown'
-end
-
-function Role:get_description()
-  return self.description or 'This group has no description'
-end
-
-function Role:GetColor()
-  return self.color or Color('white')
-end
-
-function Role:GetImmunity()
-  return self.immunity or 0
-end
-
-function Role:GetIsProtected()
-  return self.protected or false
-end
-
-function Role:GetPermissions()
-  return self.permissions or {}
-end
-
-function Role:GetIcon()
-  return self.icon or 'icon16/user.png'
-end
-
-function Role:GetBase()
-  return self.base or nil
-end
-
-Role.GetParent = Role.GetBase
+Role.get_parent = Role.get_base

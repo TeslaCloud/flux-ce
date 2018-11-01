@@ -15,7 +15,7 @@ function Faction:init(id)
   self.has_name = true
   self.has_description = true
   self.has_gender = true
-  self.models = {male = {}, female = {}, universal = {}}
+  self.models = { male = {}, female = {}, universal = {} }
   self.classes = {}
   self.rank = {}
   self.data = {}
@@ -24,15 +24,15 @@ function Faction:init(id)
   -- set via Faction:set_data.
 end
 
-function Faction:GetColor()
+function Faction:get_color()
   return self.color
 end
 
-function Faction:GetMaterial()
+function Faction:get_material()
   return self.material and util.get_material(self.material)
 end
 
-function Faction:GetImage()
+function Faction:get_image()
   return self.material
 end
 
@@ -48,7 +48,7 @@ function Faction:get_description()
   return self.description
 end
 
-function Faction:AddClass(id, class_name, description, color, callback)
+function Faction:add_class(id, class_name, description, color, callback)
   if !id then return end
 
   self.classes[id] = {
@@ -59,7 +59,7 @@ function Faction:AddClass(id, class_name, description, color, callback)
   }
 end
 
-function Faction:AddRank(id, name_filter)
+function Faction:add_rank(id, name_filter)
   if !id then return end
 
   if !name_filter then name_filter = id end
@@ -70,7 +70,7 @@ function Faction:AddRank(id, name_filter)
   })
 end
 
-function Faction:GenerateName(player, char_name, rank, default_data)
+function Faction:generate_name(player, char_name, rank, default_data)
   default_data = default_data or {}
 
   if hook.run('ShouldNameGenerate', player, self, char_name, rank, default_data) == false then return player:name() end
@@ -109,7 +109,7 @@ function Faction:GenerateName(player, char_name, rank, default_data)
       end
     elseif v:starts('{data:') then
       local key = v:utf8sub(7, v:utf8len() - 1)
-      local data = player:GetCharacterData(key, (default_data[key] or self.data[key] or ''))
+      local data = player:get_character_data(key, (default_data[key] or self.data[key] or ''))
 
       if isstring(data) then
         final_name = final_name:Replace(v, data)
@@ -128,8 +128,8 @@ function Faction:set_data(key, value)
   self.data[key] = tostring(value)
 end
 
-function Faction:OnPlayerEntered(player) end
-function Faction:OnPlayerExited(player) end
+function Faction:on_player_entered(player) end
+function Faction:on_player_exited(player) end
 
 function Faction:register()
   faction.register(self.faction_id, self)

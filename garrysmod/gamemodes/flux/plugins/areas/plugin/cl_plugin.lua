@@ -16,7 +16,7 @@ do
       local tool = fl.client:GetTool()
       local mode = tool:GetAreaMode()
       local verts = (tool and tool.area and tool.area.verts)
-      local area_table = areas.GetByType(mode.area_type)
+      local area_table = areas.get_by_type(mode.area_type)
       local areas_count = #area_table
 
       if istable(verts) and (!temp_cache or #temp_cache != #verts) then
@@ -42,7 +42,7 @@ do
       if !cache or last_amt != areas_count then
         cache = {}
 
-        area_colors[mode.area_type] = areas.GetColor(mode.area_type)
+        area_colors[mode.area_type] = areas.get_color(mode.area_type)
 
         for k, v in pairs(area_table) do
           for k2, v2 in ipairs(v.polys) do
@@ -106,23 +106,23 @@ function Area:HUDPaint()
 end
 
 cable.receive('PlayerEnteredArea', function(area_idx, idx, pos)
-  local area = areas.GetAll()[area_idx]
+  local area = areas.get_all()[area_idx]
 
-  Try('Areas', areas.GetCallback(area.type), fl.client, area, true, pos, CurTime())
+  Try('Areas', areas.get_callback(area.type), fl.client, area, true, pos, CurTime())
 end)
 
 cable.receive('PlayerLeftArea', function(area_idx, idx, pos)
-  local area = areas.GetAll()[area_idx]
+  local area = areas.get_all()[area_idx]
 
-  Try('Areas', areas.GetCallback(area.type), fl.client, area, false, pos, CurTime())
+  Try('Areas', areas.get_callback(area.type), fl.client, area, false, pos, CurTime())
 end)
 
 cable.receive('flLoadAreas', function(area_storage)
-  areas.SetStored(area_storage)
+  areas.set_stored(area_storage)
 end)
 
 cable.receive('flAreaRemove', function(id)
-  areas.Remove(id)
+  areas.remove(id)
 end)
 
 cable.receive('flAreaRegister', function(id, data)

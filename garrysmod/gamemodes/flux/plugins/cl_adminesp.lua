@@ -9,14 +9,6 @@ do
   local color_red = Color(255, 0, 0)
   local color_blue = Color(0, 0, 255)
 
-  function PLUGIN:OnThemeLoaded(current_theme)
-    color_red = current_theme:get_color('esp_red')
-    color_blue = current_theme:get_color('esp_blue')
-    color_grey = current_theme:get_color('esp_grey')
-    color_lightred = color_red:lighten(100)
-    color_lightblue = color_blue:lighten(200)
-  end
-
   function PLUGIN:HUDPaint()
     if IsValid(fl.client) and fl.client:Alive() and fl.client:GetMoveType() == MOVETYPE_NOCLIP and can('admin_esp') then
       local clientPos = fl.client:GetPos()
@@ -63,5 +55,13 @@ do
         end
       end
     end
+  end
+
+  function PLUGIN:OnThemeLoaded(current_theme)
+    color_red = current_theme:get_color('esp_red')
+    color_blue = current_theme:get_color('esp_blue')
+    color_grey = current_theme:get_color('esp_grey')
+    color_lightred = color_red:lighten(100)
+    color_lightblue = color_blue:lighten(200)
   end
 end

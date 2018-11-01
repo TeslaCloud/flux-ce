@@ -1,16 +1,16 @@
 local player_meta = FindMetaTable('Player')
 
-player_meta.OldGetRagdoll = player_meta.OldGetRagdoll or player_meta.GetRagdollEntity
+player_meta.old_get_ragdoll = player_meta.old_get_ragdoll or player_meta.get_ragdoll_entity
 
-function player_meta:GetRagdollEntity()
+function player_meta:get_ragdoll_entity()
   return self:GetDTEntity(ENT_RAGDOLL)
 end
 
-function player_meta:SetRagdollEntity(ent)
-  self:SetDTEntity(ENT_RAGDOLL, ent)
+function player_meta:set_ragdoll_entity(entity)
+  self:SetDTEntity(ENT_RAGDOLL, entity)
 end
 
-function player_meta:IsRagdolled()
+function player_meta:is_ragdolled()
   local rag_state = self:GetDTInt(INT_RAGDOLL_STATE)
 
   if rag_state and rag_state != RAGDOLL_NONE then
@@ -20,7 +20,7 @@ function player_meta:IsRagdolled()
   return false
 end
 
-function player_meta:FindBestPosition(margin, filter)
+function player_meta:find_best_position(margin, filter)
   margin = margin or 3
 
   local pos = self:GetPos()
@@ -66,13 +66,13 @@ function player_meta:FindBestPosition(margin, filter)
   return positions
 end
 
-function player_meta:CreateRagdollEntity(decay, fallen)
+function player_meta:create_ragdoll_entity(decay, fallen)
   if !IsValid(self:GetDTEntity(ENT_RAGDOLL)) then
     local ragdoll = ents.Create('prop_ragdoll')
       ragdoll:SetModel(self:GetModel())
       ragdoll:SetPos(self:GetPos())
       ragdoll:SetAngles(self:GetAngles())
-      ragdoll:SetSkin(self:GetSkin())
+      ragdoll:SetSkin(self:get_skin())
       ragdoll:SetMaterial(self:GetMaterial())
       ragdoll:SetColor(self:GetColor())
       ragdoll.decay = decay
@@ -84,7 +84,7 @@ function player_meta:CreateRagdollEntity(decay, fallen)
         if IsValid(self) then
           self:SetPos(ragdoll:GetPos())
 
-          self:ResetRagdollEntity()
+          self:reset_ragdoll_entity()
 
           if ragdoll.weapons then
             for k, v in ipairs(ragdoll.weapons) do
@@ -103,7 +103,7 @@ function player_meta:CreateRagdollEntity(decay, fallen)
 
             if !self:is_stuck() then return end
 
-            local positions = self:FindBestPosition(4, {ragdoll, self})
+            local positions = self:find_best_position(4, {ragdoll, self})
 
             for k, v in ipairs(positions) do
               self:SetPos(v)
@@ -137,14 +137,14 @@ function player_meta:CreateRagdollEntity(decay, fallen)
       local velocity = self:GetVelocity()
 
       for i = 1, ragdoll:GetPhysicsObjectCount() do
-        local physObj = ragdoll:GetPhysicsObjectNum(i)
+        local phys_obj = ragdoll:GetPhysicsObjectNum(i)
         local bone = ragdoll:TranslatePhysBoneToBone(i)
         local position, angle = self:GetBonePosition(bone)
 
-        if IsValid(physObj) then
-          physObj:SetPos(position)
-          physObj:SetAngles(angle)
-          physObj:SetVelocity(velocity)
+        if IsValid(phys_obj) then
+          phys_obj:SetPos(position)
+          phys_obj:SetAngles(angle)
+          phys_obj:SetVelocity(velocity)
         end
       end
     end
@@ -153,7 +153,7 @@ function player_meta:CreateRagdollEntity(decay, fallen)
   end
 end
 
-function player_meta:ResetRagdollEntity()
+function player_meta:reset_ragdoll_entity()
   local ragdoll = self:GetDTEntity(ENT_RAGDOLL)
 
   if IsValid(ragdoll) then
@@ -171,17 +171,17 @@ function player_meta:ResetRagdollEntity()
   end
 end
 
-function player_meta:SetRagdollState(state)
+function player_meta:set_ragdoll_state(state)
   local state = state or RAGDOLL_NONE
 
   self:SetDTInt(INT_RAGDOLL_STATE, state)
 
   if state == RAGDOLL_FALLENOVER then
     self:set_action('fallen', true)
-    self:CreateRagdollEntity(nil, true)
+    self:create_ragdoll_entity(nil, true)
   elseif state == RAGDOLL_DUMMY then
-    self:CreateRagdollEntity(120)
+    self:create_ragdoll_entity(120)
   elseif state == RAGDOLL_NONE then
-    self:ResetRagdollEntity()
+    self:reset_ragdoll_entity()
   end
 end

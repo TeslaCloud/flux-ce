@@ -1,70 +1,6 @@
 local blur_texture = Material('pp/blurscreen')
 local color_white = Color(255, 255, 255)
 
-function SurfaceText:DrawTextPreview()
-  local tool = fl.client:GetTool()
-  local text = tool:GetClientInfo('text')
-  local style = tool:GetClientNumber('style')
-  local trace = fl.client:GetEyeTrace()
-  local normal = trace.HitNormal
-  local w, h = util.text_size(text, theme.get_font('text_3d2d'))
-  local angle = normal:Angle()
-  angle:RotateAroundAxis(angle:Forward(), 90)
-  angle:RotateAroundAxis(angle:Right(), 270)
-
-  cam.Start3D2D(trace.HitPos + (normal * 1.25), angle, 0.1 * tool:GetClientNumber('scale'))
-    if style >= 5 then
-      if style != 8 and style != 9 then
-        draw.RoundedBox(0, -w * 0.5 - 32, -h * 0.5 - 16, w + 64, h + 32, Color(tool:GetClientNumber('r2', 0), tool:GetClientNumber('g2', 0), tool:GetClientNumber('b2', 0), 40))
-      end
-
-      if style == 7 or style == 8 then
-        draw.RoundedBox(0, -w * 0.5 - 32, -h * 0.5 - 16, w + 64, 6, Color(255, 255, 255, 40))
-        draw.RoundedBox(0, -w * 0.5 - 32, -h * 0.5 + h + 10, w + 64, 6, Color(255, 255, 255, 40))
-      elseif style == 9 then
-        local wide = w + 64
-        local bar_color = Color(255, 255, 255, 40)
-        local bar_x, bar_y = -w * 0.5 - 32, -h * 0.5 - 16
-        local rect_width = (wide / 3 - wide / 6) * 0.75
-
-        -- Draw left thick rectangles
-        draw.RoundedBox(0, bar_x, bar_y - 6, rect_width, 10, bar_color)
-        draw.RoundedBox(0, bar_x, bar_y + h + 22, rect_width, 10, bar_color)
-
-        -- ...and the right ones
-        draw.RoundedBox(0, bar_x + wide - rect_width, bar_y - 6, rect_width, 10, bar_color)
-        draw.RoundedBox(0, bar_x + wide - rect_width, bar_y + h + 22, rect_width, 10, bar_color)
-
-        -- And the middle thingies
-        draw.RoundedBox(0, -(wide / 1.75) * 0.5, bar_y, wide / 1.75, 4, bar_color)
-        draw.RoundedBox(0, -(wide / 1.75) * 0.5, bar_y + h + 22, wide / 1.75, 4, bar_color)
-      end
-    end
-
-    draw.SimpleText(text, theme.get_font('text_3d2d'), -w * 0.5, -h * 0.5, Color(tool:GetClientNumber('r', 0), tool:GetClientNumber('g', 0), tool:GetClientNumber('b', 0), 60))
-  cam.End3D2D()
-end
-
-function SurfaceText:DrawPicturePreview()
-  local tool = fl.client:GetTool()
-  local url = tool:GetClientInfo('url')
-  local width = tool:GetClientNumber('width')
-  local height = tool:GetClientNumber('height')
-  local trace = fl.client:GetEyeTrace()
-  local normal = trace.HitNormal
-  local angle = normal:Angle()
-  angle:RotateAroundAxis(angle:Forward(), 90)
-  angle:RotateAroundAxis(angle:Right(), 270)
-
-  cam.Start3D2D(trace.HitPos + (normal * 1.25), angle, 0.1)
-    if url:ends('.png') or url:ends('.jpg') or url:ends('.jpeg') then
-      draw.textured_rect(URLMaterial(url), -width * 0.5, -height * 0.5, width, height, color_white)
-    else
-      draw.RoundedBox(0, -width * 0.5, -height * 0.5, width, height, Color(255, 0, 0, 40))
-    end
-  cam.End3D2D()
-end
-
 function SurfaceText:PostDrawOpaqueRenderables()
   local weapon = fl.client:GetActiveWeapon()
   local client_pos = fl.client:GetPos()
@@ -73,9 +9,9 @@ function SurfaceText:PostDrawOpaqueRenderables()
     local mode = weapon:GetMode()
 
     if mode == 'texts' then
-      self:DrawTextPreview()
+      self:draw_text_preview()
     elseif mode == 'pictures' then
-      self:DrawPicturePreview()
+      self:draw_picture_preview()
     end
   end
 
@@ -212,4 +148,68 @@ function SurfaceText:PostDrawOpaqueRenderables()
       draw.textured_rect(URLMaterial(v.url), -width * 0.5, -height * 0.5, width, height, ColorAlpha(color_white, fade_alpha))
     cam.End3D2D()
   end
+end
+
+function SurfaceText:draw_text_preview()
+  local tool = fl.client:GetTool()
+  local text = tool:GetClientInfo('text')
+  local style = tool:GetClientNumber('style')
+  local trace = fl.client:GetEyeTrace()
+  local normal = trace.HitNormal
+  local w, h = util.text_size(text, theme.get_font('text_3d2d'))
+  local angle = normal:Angle()
+  angle:RotateAroundAxis(angle:Forward(), 90)
+  angle:RotateAroundAxis(angle:Right(), 270)
+
+  cam.Start3D2D(trace.HitPos + (normal * 1.25), angle, 0.1 * tool:GetClientNumber('scale'))
+    if style >= 5 then
+      if style != 8 and style != 9 then
+        draw.RoundedBox(0, -w * 0.5 - 32, -h * 0.5 - 16, w + 64, h + 32, Color(tool:GetClientNumber('r2', 0), tool:GetClientNumber('g2', 0), tool:GetClientNumber('b2', 0), 40))
+      end
+
+      if style == 7 or style == 8 then
+        draw.RoundedBox(0, -w * 0.5 - 32, -h * 0.5 - 16, w + 64, 6, Color(255, 255, 255, 40))
+        draw.RoundedBox(0, -w * 0.5 - 32, -h * 0.5 + h + 10, w + 64, 6, Color(255, 255, 255, 40))
+      elseif style == 9 then
+        local wide = w + 64
+        local bar_color = Color(255, 255, 255, 40)
+        local bar_x, bar_y = -w * 0.5 - 32, -h * 0.5 - 16
+        local rect_width = (wide / 3 - wide / 6) * 0.75
+
+        -- Draw left thick rectangles
+        draw.RoundedBox(0, bar_x, bar_y - 6, rect_width, 10, bar_color)
+        draw.RoundedBox(0, bar_x, bar_y + h + 22, rect_width, 10, bar_color)
+
+        -- ...and the right ones
+        draw.RoundedBox(0, bar_x + wide - rect_width, bar_y - 6, rect_width, 10, bar_color)
+        draw.RoundedBox(0, bar_x + wide - rect_width, bar_y + h + 22, rect_width, 10, bar_color)
+
+        -- And the middle thingies
+        draw.RoundedBox(0, -(wide / 1.75) * 0.5, bar_y, wide / 1.75, 4, bar_color)
+        draw.RoundedBox(0, -(wide / 1.75) * 0.5, bar_y + h + 22, wide / 1.75, 4, bar_color)
+      end
+    end
+
+    draw.SimpleText(text, theme.get_font('text_3d2d'), -w * 0.5, -h * 0.5, Color(tool:GetClientNumber('r', 0), tool:GetClientNumber('g', 0), tool:GetClientNumber('b', 0), 60))
+  cam.End3D2D()
+end
+
+function SurfaceText:draw_picture_preview()
+  local tool = fl.client:GetTool()
+  local url = tool:GetClientInfo('url')
+  local width = tool:GetClientNumber('width')
+  local height = tool:GetClientNumber('height')
+  local trace = fl.client:GetEyeTrace()
+  local normal = trace.HitNormal
+  local angle = normal:Angle()
+  angle:RotateAroundAxis(angle:Forward(), 90)
+  angle:RotateAroundAxis(angle:Right(), 270)
+
+  cam.Start3D2D(trace.HitPos + (normal * 1.25), angle, 0.1)
+    if url:ends('.png') or url:ends('.jpg') or url:ends('.jpeg') then
+      draw.textured_rect(URLMaterial(url), -width * 0.5, -height * 0.5, width, height, color_white)
+    else
+      draw.RoundedBox(0, -width * 0.5, -height * 0.5, width, height, Color(255, 0, 0, 40))
+    end
+  cam.End3D2D()
 end

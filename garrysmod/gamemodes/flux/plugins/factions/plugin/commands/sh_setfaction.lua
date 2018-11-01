@@ -9,11 +9,11 @@ COMMAND.player_arg = 1
 COMMAND.aliases = { 'plytransfer', 'charsetfaction', 'chartransfer' }
 
 function COMMAND:on_run(player, targets, name, strict)
-  local faction_table = faction.Find(name, (strict and true) or false)
+  local faction_table = faction.find(name, (strict and true) or false)
 
   if faction_table then
     for k, v in ipairs(targets) do
-      v:SetFaction(faction_table.faction_id)
+      v:set_faction(faction_table.faction_id)
     end
 
     fl.player:broadcast('set_faction.message', { get_player_name(player), util.player_list_to_string(targets), faction_table.print_name })

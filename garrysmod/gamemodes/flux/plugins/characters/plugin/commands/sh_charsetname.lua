@@ -12,7 +12,7 @@ function COMMAND:on_run(player, targets, new_name)
 
   fl.player:broadcast('char_set_name.message', { get_player_name(player), target:name(), new_name })
 
-  character.set_name(target, target:GetCharacter(), new_name)
+  character.set_name(target, target:get_character(), new_name)
 end
 
 COMMAND:register()

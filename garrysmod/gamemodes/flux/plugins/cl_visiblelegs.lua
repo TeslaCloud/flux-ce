@@ -63,30 +63,6 @@ end
 local offset = Vector(-50, -50, 0)
 local scale = Vector(1, 1, 1)
 
-function VisibleLegs:SpawnLegs(player)
-  if IsValid(player.legs) then
-    player.legs:Remove()
-  end
-
-  player.legs = ClientsideModel(player:GetModel(), RENDERGROUP_VIEWMODEL)
-
-  local legs = player.legs
-
-  if IsValid(legs) then
-    for k, v in pairs(hiddenBones) do
-      local bone = legs:LookupBone(v)
-
-      if bone then
-        legs:ManipulateBonePosition(bone, offset)
-        legs:ManipulateBoneScale(bone, scale)
-      end
-    end
-
-    legs:SetNoDraw(true)
-    legs:SetIK(true)
-  end
-end
-
 function VisibleLegs:RenderScreenspaceEffects()
   local player = fl.client
 
@@ -99,7 +75,7 @@ function VisibleLegs:RenderScreenspaceEffects()
 
   cam.Start3D(EyePos(), EyeAngles())
     if !IsValid(player.legs) then
-      self:SpawnLegs(player)
+      self:spawn_legs(player)
     end
 
     local real_time = RealTime()
@@ -131,4 +107,28 @@ function VisibleLegs:RenderScreenspaceEffects()
 
     legs.last_draw = real_time
   cam.End3D()
+end
+
+function VisibleLegs:spawn_legs(player)
+  if IsValid(player.legs) then
+    player.legs:Remove()
+  end
+
+  player.legs = ClientsideModel(player:GetModel(), RENDERGROUP_VIEWMODEL)
+
+  local legs = player.legs
+
+  if IsValid(legs) then
+    for k, v in pairs(hiddenBones) do
+      local bone = legs:LookupBone(v)
+
+      if bone then
+        legs:ManipulateBonePosition(bone, offset)
+        legs:ManipulateBoneScale(bone, scale)
+      end
+    end
+
+    legs:SetNoDraw(true)
+    legs:SetIK(true)
+  end
 end

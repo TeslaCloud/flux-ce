@@ -1,5 +1,5 @@
 local function PermButtonDoClick(panel, btn)
-  panel.m_permission_value = btn.perm_value or PERM_NO
+  panel.permission_value = btn.perm_value or PERM_NO
   btn.is_selected = true
 
   if IsValid(panel.prev_button) then
@@ -10,8 +10,8 @@ local function PermButtonDoClick(panel, btn)
 end
 
 local PANEL = {}
-PANEL.m_permission_value = PERM_NO
-PANEL.m_permission = {}
+PANEL.permission_value = PERM_NO
+PANEL.permission = {}
 
 function PANEL:rebuild()
   if IsValid(self.container) then
@@ -21,7 +21,7 @@ function PANEL:rebuild()
   local width, height = self:GetWide(), self:GetTall()
   local font = font.size(theme.get_font('text_normal_smaller'), font.scale(18))
   local font_size = draw.GetFontHeight(font)
-  local permission = self:GetPermission()
+  local permission = self:get_permission()
   local quarter = width * 0.25
 
   self.container = vgui.Create('fl_base_panel', self)
@@ -59,14 +59,14 @@ function PANEL:rebuild()
   self.button_never.DoClick = function(btn) PermButtonDoClick(self, btn) end
 end
 
-function PANEL:SetPermission(perm)
-  self.m_permission = perm or {}
+function PANEL:set_permission(perm)
+  self.permission = perm or {}
 
   self:rebuild()
 end
 
-function PANEL:GetPermission()
-  return self.m_permission
+function PANEL:get_permission()
+  return self.permission
 end
 
 vgui.Register('flPermission', PANEL, 'fl_base_panel')
@@ -82,7 +82,7 @@ function PANEL:rebuild()
     self.list_layout:safe_remove()
   end
 
-  local permissions = fl.admin:GetPermissions()
+  local permissions = fl.admin:get_permissions()
   local width, height = self:GetWide(), self:GetTall()
 
   self.scroll_panel = vgui.Create('DScrollPanel', self)
@@ -105,7 +105,7 @@ function PANEL:rebuild()
     for k, v in pairs(perms) do
       local btn = vgui.Create('flPermission')
       btn:SetSize(width, 20)
-      btn:SetPermission(v)
+      btn:set_permission(v)
 
       local pan = list:Add(btn)
 
@@ -114,7 +114,7 @@ function PANEL:rebuild()
   end
 end
 
-function PANEL:OnOpened()
+function PANEL:on_opened()
   self:rebuild()
 end
 

@@ -7,30 +7,6 @@ PANEL.force_alpha = false
 PANEL.should_paint = false
 PANEL.alpha = 255
 
-function PANEL:set_message(msgInfo)
-  local parent = chatbox.panel
-
-  if !IsValid(parent) then return end
-
-  self.message_data = msgInfo
-
-  self:SetSize(self:GetWide() - parent.padding * 0.5, msgInfo.total_height)
-end
-
--- Those people want us gone :(
-function PANEL:eject()
-  if plugin.call('ShouldMessageeject', self) != false then
-    local parent = chatbox.panel
-
-    if !IsValid(parent) then return end
-
-    parent:remove_message(self.msg_index or 1)
-    parent:rebuild_history_indexes()
-
-    self:safe_remove()
-  end
-end
-
 function PANEL:Init()
   --if fl.client:can('chat_mod') then
   -- self.moderation = vgui.Create('flChatModeration', self)
@@ -92,6 +68,30 @@ function PANEL:Paint(w, h)
         cur_font = font.size(theme.get_font('chatbox_normal'), v)
       end
     end
+  end
+end
+
+function PANEL:set_message(msg_info)
+  local parent = chatbox.panel
+
+  if !IsValid(parent) then return end
+
+  self.message_data = msg_info
+
+  self:SetSize(self:GetWide() - parent.padding * 0.5, msg_info.total_height)
+end
+
+-- Those people want us gone :(
+function PANEL:eject()
+  if plugin.call('ShouldMessageeject', self) != false then
+    local parent = chatbox.panel
+
+    if !IsValid(parent) then return end
+
+    parent:remove_message(self.msg_index or 1)
+    parent:rebuild_history_indexes()
+
+    self:safe_remove()
   end
 end
 

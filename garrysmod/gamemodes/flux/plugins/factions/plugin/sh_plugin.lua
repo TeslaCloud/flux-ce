@@ -7,7 +7,7 @@ util.include('sv_hooks.lua')
 
 function Factions:PluginIncludeFolder(extra, folder_name)
   if extra == 'factions' then
-    faction.IncludeFactions(folder_name..'/factions/')
+    faction.include_factions(folder_name..'/factions/')
 
     return true
   end

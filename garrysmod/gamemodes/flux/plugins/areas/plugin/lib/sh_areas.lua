@@ -1,38 +1,35 @@
 library.new 'areas'
 
 local stored = areas.stored or {}
-areas.stored = stored
-
 local callbacks = areas.callbacks or {}
-areas.callbacks = callbacks
-
 local types = areas.types or {}
-areas.types = types
-
 local top = areas.top or 0
+areas.stored = stored
+areas.callbacks = callbacks
+areas.types = types
 areas.top = top
 
-function areas.GetAll()
+function areas.get_all()
   return stored
 end
 
-function areas.SetStored(stored_table)
+function areas.set_stored(stored_table)
   stored = (istable(stored_table) and stored_table) or {}
 end
 
-function areas.GetCallbacks()
+function areas.get_callbacks()
   return callbacks
 end
 
-function areas.GetTypes()
+function areas.get_types()
   return types
 end
 
-function areas.GetCount()
+function areas.get_count()
   return top
 end
 
-function areas.GetByType(type)
+function areas.get_by_type(type)
   local to_ret = {}
 
   for k, v in pairs(stored) do
@@ -44,7 +41,7 @@ function areas.GetByType(type)
   return to_ret
 end
 
-function areas.Create(id, height, data)
+function areas.create(id, height, data)
   data = data or {}
 
   local area = {}
@@ -65,7 +62,7 @@ function areas.Create(id, height, data)
     area = stored[id]
   end
 
-  function area:AddVertex(vect)
+  function area:add_vertex(vect)
     if #self.verts == 0 then
       self.minh = vect.z
       self.maxh = self.minh + self.height
@@ -76,13 +73,13 @@ function areas.Create(id, height, data)
     table.insert(self.verts, vect)
   end
 
-  function area:FinishPoly()
+  function area:finish_poly()
     table.insert(self.polys, self.verts)
     self.verts = {}
   end
 
   function area:register()
-    if #self.verts > 2 then self:FinishPoly() end
+    if #self.verts > 2 then self:finish_poly() end
 
     return areas.register(id, self)
   end
@@ -107,7 +104,7 @@ function areas.register(id, data)
   return stored[id]
 end
 
-function areas.Remove(id)
+function areas.remove(id)
   stored[id] = nil
 
   if SERVER then
@@ -115,7 +112,7 @@ function areas.Remove(id)
   end
 end
 
-function areas.GetColor(typeID)
+function areas.get_color(typeID)
   local type_table = types[typeID]
 
   if istable(type_table) then
@@ -123,7 +120,7 @@ function areas.GetColor(typeID)
   end
 end
 
-function areas.RegisterType(id, name, description, color, default_callback)
+function areas.register_type(id, name, description, color, default_callback)
   types[id] = {
     name = name,
     description = description,
@@ -133,15 +130,15 @@ function areas.RegisterType(id, name, description, color, default_callback)
 end
 
 -- callback(player, area, poly, has_entered, cur_pos, cur_time)
-function areas.SetCallback(area_type, callback)
+function areas.set_callback(area_type, callback)
   callbacks[area_type] = callback
 end
 
-function areas.GetCallback(area_type)
+function areas.get_callback(area_type)
   return callbacks[area_type] or (types[area_type] and types[area_type].callback) or function() fl.dev_print("Callback for area type '"..area_type.."' could not be found!") end
 end
 
-areas.RegisterType(
+areas.register_type(
   'area',
   'Simple Area',
   'A simple area. Use this type if you have a callback somewhere in the code that looks up id instead of type ID.',

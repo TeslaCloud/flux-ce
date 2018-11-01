@@ -11,7 +11,7 @@ function COMMAND:on_run(player, targets, duration, ...)
   local pieces = {...}
   local reason = 'You have been banned.'
 
-  duration = fl.admin:InterpretBanTime(duration)
+  duration = fl.admin:interpret_ban_time(duration)
 
   if !isnumber(duration) then
     fl.player:notify(player, "'"..tostring(duration).."' could not be interpreted as duration!")
