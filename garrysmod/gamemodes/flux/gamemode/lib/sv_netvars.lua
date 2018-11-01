@@ -41,7 +41,7 @@ function netvars.set_nv(key, value, send)
 end
 
 -- A function to send entity's networked variables to a player (or players).
-function ent_meta:SendNetVar(key, recv)
+function ent_meta:send_net_var(key, recv)
   cable.send(recv, 'set_netvar', self:EntIndex(), key, (stored[self] and stored[self][key]))
 end
 
@@ -55,7 +55,7 @@ function ent_meta:get_nv(key, default)
 end
 
 -- A function to flush all entity's networked variables.
-function ent_meta:ClearNetVars(recv)
+function ent_meta:clear_net_vars(recv)
   stored[self] = nil
   cable.send(recv, 'delete_netvar', self:EntIndex())
 end
@@ -68,7 +68,7 @@ function ent_meta:set_nv(key, value, send)
   stored[self] = stored[self] or {}
   stored[self][key] = value
 
-  self:SendNetVar(key, send)
+  self:send_net_var(key, send)
 end
 
 -- A function to send all current networked globals and entities' variables

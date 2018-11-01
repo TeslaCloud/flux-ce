@@ -49,12 +49,12 @@ function PANEL:RecreateSidebar(create_buttons)
   self.sidebar = vgui.Create('fl_sidebar', self)
   self.sidebar:SetPos(theme.get_option('menu_sidebar_x'), theme.get_option('menu_sidebar_y'))
   self.sidebar:SetSize(theme.get_option('menu_sidebar_width'), theme.get_option('menu_sidebar_height'))
-  self.sidebar:SetMargin(theme.get_option('menu_sidebar_margin'))
-  self.sidebar:AddSpace(16)
+  self.sidebar:set_margin(theme.get_option('menu_sidebar_margin'))
+  self.sidebar:add_space(16)
 
   self.sidebar.Paint = function() end
 
-  self.sidebar:AddSpace(theme.get_option('menu_sidebar_logo_space'))
+  self.sidebar:add_space(theme.get_option('menu_sidebar_logo_space'))
 
   if create_buttons then
     hook.run('AddMainMenuItems', self, self.sidebar)
@@ -102,10 +102,10 @@ end
 
 function PANEL:notify(text)
   local panel = vgui.Create('fl_notification', self)
-  panel:SetText(text)
-  panel:SetLifetime(6)
-  panel:SetTextColor(Color('pink'))
-  panel:SetBackgroundColor(Color(50, 50, 50, 220))
+  panel:set_text(text)
+  panel:set_lifetime(6)
+  panel:set_text_color(Color('pink'))
+  panel:set_background_color(Color(50, 50, 50, 220))
 
   local w, h = panel:GetSize()
   panel:SetPos(ScrW() * 0.5 - w * 0.5, ScrH() - 128)
@@ -116,21 +116,21 @@ end
 function PANEL:add_button(text, callback)
   local button = vgui.Create('fl_button', self)
   button:SetSize(theme.get_option('menu_sidebar_width'), theme.get_option('menu_sidebar_button_height'))
-  button:SetText(string.utf8upper(text))
+  button:set_text(string.utf8upper(text))
   button:SetDrawBackground(false)
   button:SetFont(theme.get_font('main_menu_large'))
   button:SetPos(theme.get_option('menu_sidebar_button_offset_x'), 0)
-  button:SetTextAutoposition(false)
-  button:SetCentered(theme.get_option('menu_sidebar_button_centered'))
-  button:SetTextOffset(8)
+  button:set_text_autoposition(false)
+  button:set_centered(theme.get_option('menu_sidebar_button_centered'))
+  button:set_text_offset(8)
 
   button.DoClick = function(btn)
     surface.PlaySound(theme.get_sound('button_click_success_sound'))
 
-    btn:SetActive(true)
+    btn:set_active(true)
 
     if IsValid(self.prev_button) and self.prev_button != btn then
-      self.prev_button:SetActive(false)
+      self.prev_button:set_active(false)
     end
 
     self.prev_button = btn
@@ -142,8 +142,8 @@ function PANEL:add_button(text, callback)
     end
   end
 
-  self.sidebar:AddPanel(button)
-  self.sidebar:AddSpace(6)
+  self.sidebar:add_panel(button)
+  self.sidebar:add_space(6)
 
   return button
 end

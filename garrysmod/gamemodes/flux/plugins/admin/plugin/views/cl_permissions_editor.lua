@@ -1,5 +1,5 @@
 local function PermButtonDoClick(panel, btn)
-  panel.m_permission_value = btn.permValue or PERM_NO
+  panel.m_permission_value = btn.perm_value or PERM_NO
   btn.is_selected = true
 
   if IsValid(panel.prev_button) then
@@ -13,7 +13,7 @@ local PANEL = {}
 PANEL.m_permission_value = PERM_NO
 PANEL.m_permission = {}
 
-function PANEL:Rebuild()
+function PANEL:rebuild()
   if IsValid(self.container) then
     self.container:safe_remove()
   end
@@ -38,7 +38,7 @@ function PANEL:Rebuild()
   self.button_no:SetPos(quarter, 0)
   self.button_no:SetSize(quarter * 0.8, height)
   self.button_no:SetText('')
-  self.button_no.permValue = PERM_NO
+  self.button_no.perm_value = PERM_NO
   self.button_no.Paint = function(btn, w, h) theme.call('PaintPermissionButton', self, btn, w, h) end
   self.button_no.DoClick = function(btn) PermButtonDoClick(self, btn) end
 
@@ -46,7 +46,7 @@ function PANEL:Rebuild()
   self.button_allow:SetPos(quarter * 2, 0)
   self.button_allow:SetSize(quarter * 0.8, height)
   self.button_allow:SetText('')
-  self.button_allow.permValue = PERM_ALLOW
+  self.button_allow.perm_value = PERM_ALLOW
   self.button_allow.Paint = function(btn, w, h) theme.call('PaintPermissionButton', self, btn, w, h) end
   self.button_allow.DoClick = function(btn) PermButtonDoClick(self, btn) end
 
@@ -54,7 +54,7 @@ function PANEL:Rebuild()
   self.button_never:SetPos(quarter * 3, 0)
   self.button_never:SetSize(quarter * 0.8, height)
   self.button_never:SetText('')
-  self.button_never.permValue = PERM_NEVER
+  self.button_never.perm_value = PERM_NEVER
   self.button_never.Paint = function(btn, w, h) theme.call('PaintPermissionButton', self, btn, w, h) end
   self.button_never.DoClick = function(btn) PermButtonDoClick(self, btn) end
 end
@@ -62,7 +62,7 @@ end
 function PANEL:SetPermission(perm)
   self.m_permission = perm or {}
 
-  self:Rebuild()
+  self:rebuild()
 end
 
 function PANEL:GetPermission()
@@ -74,10 +74,10 @@ vgui.Register('flPermission', PANEL, 'fl_base_panel')
 local PANEL = {}
 
 function PANEL:Init()
-  self:Rebuild()
+  self:rebuild()
 end
 
-function PANEL:Rebuild()
+function PANEL:rebuild()
   if IsValid(self.list_layout) then
     self.list_layout:safe_remove()
   end
@@ -109,13 +109,13 @@ function PANEL:Rebuild()
 
       local pan = list:Add(btn)
 
-      btn:Rebuild()
+      btn:rebuild()
     end
   end
 end
 
 function PANEL:OnOpened()
-  self:Rebuild()
+  self:rebuild()
 end
 
 vgui.Register('permissions_editor', PANEL, 'fl_base_panel')

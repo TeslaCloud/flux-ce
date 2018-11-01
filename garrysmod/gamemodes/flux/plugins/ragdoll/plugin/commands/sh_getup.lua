@@ -12,12 +12,12 @@ function COMMAND:on_run(player, delay)
   if player:Alive() and player:IsRagdolled() then
     player:set_nv('getup_end', CurTime() + delay)
     player:set_nv('getup_time', delay)
-    player:SetAction('getup', true)
+    player:set_action('getup', true)
 
     timer.Simple(delay, function()
       player:SetRagdollState(RAGDOLL_NONE)
 
-      player:ResetAction()
+      player:reset_action()
     end)
   else
     player:notify(t'cant_now')

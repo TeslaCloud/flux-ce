@@ -94,7 +94,7 @@ function chatbox.compile(msg_table)
         local to_insert = ''
 
         if v:IsPlayer() then
-          to_insert = hook.run('GetPlayerName', v) or v:Name()
+          to_insert = hook.run('GetPlayerName', v) or v:name()
         else
           to_insert = tostring(v) or v:GetClass()
         end

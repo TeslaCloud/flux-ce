@@ -30,22 +30,22 @@ function PANEL:Init()
   self.gender_male:SetPos(scrw * 0.125 + 8, font.scale(36) + 4)
   self.gender_male:SetSize(24, 24)
   self.gender_male:SetDrawBackground(false)
-  self.gender_male:SetIcon('fa-mars')
-  self.gender_male:SetIconSize(24, 24)
+  self.gender_male:set_icon('fa-mars')
+  self.gender_male:set_icon_size(24, 24)
   self.gender_male.DoClick = function(btn)
-    if !btn:IsActive() then
+    if !btn:is_active() then
       surface.PlaySound('buttons/blip1.wav')
 
-      if self.gender_female:IsActive() then
-        self.gender_female:SetActive(false)
-        self.gender_female:SetTextColor(theme.get_color('text'))
+      if self.gender_female:is_active() then
+        self.gender_female:set_active(false)
+        self.gender_female:set_text_color(theme.get_color('text'))
       end
 
       self:GetParent().char_data.gender = 'Male'
       self:RebuildModels()
 
-      btn:SetActive(true)
-      btn:SetTextColor(Color('blue'):lighten(40))
+      btn:set_active(true)
+      btn:set_text_color(Color('blue'):lighten(40))
     end
   end
 
@@ -53,22 +53,22 @@ function PANEL:Init()
   self.gender_female:SetPos(scrw * 0.125 + self.gender_male:GetWide() + 20, font.scale(36) + 4)
   self.gender_female:SetSize(24, 24)
   self.gender_female:SetDrawBackground(false)
-  self.gender_female:SetIcon('fa-venus')
-  self.gender_female:SetIconSize(24, 24)
+  self.gender_female:set_icon('fa-venus')
+  self.gender_female:set_icon_size(24, 24)
   self.gender_female.DoClick = function(btn)
-    if !btn:IsActive() then
+    if !btn:is_active() then
       surface.PlaySound('buttons/blip1.wav')
 
-      if self.gender_male:IsActive() then
-        self.gender_male:SetActive(false)
-        self.gender_male:SetTextColor(theme.get_color('text'))
+      if self.gender_male:is_active() then
+        self.gender_male:set_active(false)
+        self.gender_male:set_text_color(theme.get_color('text'))
       end
 
       self:GetParent().char_data.gender = 'Female'
       self:RebuildModels()
 
-      btn:SetActive(true)
-      btn:SetTextColor(Color('red'):lighten(40))
+      btn:set_active(true)
+      btn:set_text_color(Color('red'):lighten(40))
     end
   end
 
@@ -88,8 +88,8 @@ function PANEL:Init()
   self.name_random = vgui.Create('fl_button', self)
   self.name_random:SetPos(scrw * 0.125 + self.name_entry:GetWide() + 8, font.scale(72.5))
   self.name_random:SetSize(24, 24)
-  self.name_random:SetIcon('fa-random')
-  self.name_random:SetIconSize(24, 24)
+  self.name_random:set_icon('fa-random')
+  self.name_random:set_icon_size(24, 24)
   self.name_random:SetTooltip(t'char_create.random_name')
   self.name_random:SetDrawBackground(false)
   self.name_random.DoClick = function(btn)
@@ -131,12 +131,12 @@ function PANEL:Init()
   self.skin = vgui.Create('fl_counter', self)
   self.skin:SetSize(32, 64)
   self.skin:SetPos(scrw * 0.25 + 48, 48)
-  self.skin:SetText(t'char_create.skin')
-  self.skin:SetFont(theme.get_font('main_menu_small'))
-  self.skin:SetValue(1)
+  self.skin:set_text(t'char_create.skin')
+  self.skin:set_font(theme.get_font('main_menu_small'))
+  self.skin:set_value(1)
   self.skin:SetVisible(false)
-  self.skin:SetMin(1)
-  self.skin.OnClick = function(panel, value)
+  self.skin:set_min(1)
+  self.skin.on_click = function(panel, value)
     surface.PlaySound('buttons/blip1.wav')
 
     self.model.Entity:SetSkin(value - 1)
@@ -200,7 +200,7 @@ function PANEL:RebuildModels()
       local skins = self.model.Entity:SkinCount()
 
       if skins > 1 then
-        self.skin:SetMax(skins)
+        self.skin:set_max(skins)
         self.skin:SetVisible(true)
       else
         self.skin:SetVisible(false)
@@ -239,7 +239,7 @@ function PANEL:OnOpen(parent)
   local skin = parent.char_data.skin
 
   if skin then
-    self.skin:SetValue(skin + 1)
+    self.skin:set_value(skin + 1)
   end
 
   if IsValid(self.model.Entity) then
@@ -247,27 +247,27 @@ function PANEL:OnOpen(parent)
   end
 
   if parent.char_data.gender == 'Female' then
-    self.gender_female:SetActive(true)
-    self.gender_female:SetTextColor(Color('red'):lighten(40))
+    self.gender_female:set_active(true)
+    self.gender_female:set_text_color(Color('red'):lighten(40))
 
     self:RebuildModels()
   elseif parent.char_data.gender == 'Male' then
-    self.gender_male:SetActive(true)
-    self.gender_male:SetTextColor(Color('blue'):lighten(40))
+    self.gender_male:set_active(true)
+    self.gender_male:set_text_color(Color('blue'):lighten(40))
 
     self:RebuildModels()
   end
 end
 
 function PANEL:OnClose(parent)
-  local gender = (self.gender_female:IsActive() and 'Female') or (self.gender_male:IsActive() and 'Male') or 'Universal'
+  local gender = (self.gender_female:is_active() and 'Female') or (self.gender_male:is_active() and 'Male') or 'Universal'
 
   parent:CollectData({
     name = self.name_entry:GetValue(),
     description = self.desc_entry:GetValue(),
     gender = gender,
     model = self.models_list.model,
-    skin = self.skin:GetValue() - 1
+    skin = self.skin:get_value() - 1
   })
 end
 

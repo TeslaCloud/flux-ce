@@ -50,7 +50,7 @@ function Bolt:PlayerRestored(player, record)
     player:SetCustomPermissions(record.permissions)
   end
 
-  Log:notify(player:Name()..' ('..player:GetUserGroup()..') has connected to the server.', { action = 'player_events' })
+  Log:notify(player:name()..' ('..player:GetUserGroup()..') has connected to the server.', { action = 'player_events' })
 end
 
 function Bolt:CommandCheckImmunity(player, target, can_equal)

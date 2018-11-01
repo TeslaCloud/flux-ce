@@ -27,7 +27,7 @@ function chatbox.can_hear(listener, message_data)
     return true
   end
 
-  if IsValid(listener) and listener:HasInitialized() then
+  if IsValid(listener) and listener:has_initialized() then
     local position, radius = message_data.position, message_data.radius
 
     if !isnumber(radius) then return false end
@@ -122,7 +122,7 @@ function chatbox.message_to_string(message_data, concatenator)
       local name = ''
 
       if v:IsPlayer() then
-        name = hook.run('GetPlayerName', v) or v:Name()
+        name = hook.run('GetPlayerName', v) or v:name()
       else
         name = tostring(v) or v:GetClass()
       end

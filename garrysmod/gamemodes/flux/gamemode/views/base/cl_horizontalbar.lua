@@ -6,10 +6,6 @@ function PANEL:Init()
   self.btnRight:SetVisible(false)
 end
 
-function PANEL:SetCentered(centered)
-  self.centered = centered
-end
-
 function PANEL:Paint(width, height)
   theme.hook('PaintHorizontalbar', self, width, height)
 end
@@ -55,6 +51,10 @@ function PANEL:PerformLayout()
   end
 
   self.pnlCanvas.x = self.OffsetX * -1
+end
+
+function PANEL:set_centered(centered)
+  self.centered = centered
 end
 
 vgui.Register('fl_horizontalbar', PANEL, 'DHorizontalScroller')

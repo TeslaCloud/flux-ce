@@ -167,13 +167,13 @@ if SERVER then
   end)
 
   cable.receive('PlayerSelectCharacter', function(player, id)
-    fl.dev_print(player:Name()..' has loaded character #'..id)
+    fl.dev_print(player:name()..' has loaded character #'..id)
 
     player:SetActiveCharacter(id)
   end)
 
   cable.receive('PlayerDeleteCharacter', function(player, id)
-    fl.dev_print(player:Name()..' has deleted character #'..id)
+    fl.dev_print(player:name()..' has deleted character #'..id)
 
     hook.run('OnCharacterDelete', player, id)
 

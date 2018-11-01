@@ -33,11 +33,11 @@ do
         local size = 52 * math.abs(350 / clientPos:Distance(pos))
         local team_color = team.GetColor(v:Team()) or Color(255, 255, 255)
 
-        local w, h = util.text_size(v:Name(), theme.get_font('text_small'))
-        draw.SimpleText(v:Name(), theme.get_font('text_small'), text_pos.x - w * 0.5, text_pos.y, team_color)
+        local w, h = util.text_size(v:name(), theme.get_font('text_small'))
+        draw.SimpleText(v:name(), theme.get_font('text_small'), text_pos.x - w * 0.5, text_pos.y, team_color)
 
-        w, h = util.text_size(v:SteamName(), theme.get_font('text_smaller'))
-        draw.SimpleText(v:SteamName(), theme.get_font('text_smaller'), text_pos.x - w * 0.5, text_pos.y + 14, color_lightblue)
+        w, h = util.text_size(v:steam_name(), theme.get_font('text_smaller'))
+        draw.SimpleText(v:steam_name(), theme.get_font('text_smaller'), text_pos.x - w * 0.5, text_pos.y + 14, color_lightblue)
 
         if v:Alive() then
           surface.SetDrawColor(team_color)

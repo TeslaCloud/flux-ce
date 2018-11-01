@@ -73,7 +73,7 @@ end
 function Faction:GenerateName(player, char_name, rank, default_data)
   default_data = default_data or {}
 
-  if hook.run('ShouldNameGenerate', player, self, char_name, rank, default_data) == false then return player:Name() end
+  if hook.run('ShouldNameGenerate', player, self, char_name, rank, default_data) == false then return player:name() end
 
   if isfunction(self.MakeName) then
     return self:MakeName(player, char_name, rank, default_data) or 'John Doe'

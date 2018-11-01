@@ -1,10 +1,10 @@
 if CLIENT then
   library.new('binds', fl)
 
-  local key_enums = fl.binds.key_enums or {}
   local stored = fl.binds.stored or {}
-  fl.binds.key_enums = key_enums
+  local key_enums = fl.binds.key_enums or {}
   fl.binds.stored = stored
+  fl.binds.key_enums = key_enums
 
   if #key_enums == 0 then
     for k, v in pairs(_G) do
@@ -16,15 +16,15 @@ if CLIENT then
     end
   end
 
-  function fl.binds:GetEnums()
+  function fl.binds:get_enums()
     return key_enums
   end
 
-  function fl.binds:GetAll()
+  function fl.binds:get_all()
     return stored
   end
 
-  function fl.binds:GetBound()
+  function fl.binds:get_bound()
     local binds = {}
 
     for k, v in pairs(key_enums) do
@@ -38,7 +38,7 @@ if CLIENT then
     return binds
   end
 
-  function fl.binds:GetUnbound()
+  function fl.binds:get_unbound()
     local binds = {}
 
     for k, v in pairs(key_enums) do
@@ -52,11 +52,11 @@ if CLIENT then
     return binds
   end
 
-  function fl.binds:GetBind(key)
+  function fl.binds:get_bind(key)
     return stored[key]
   end
 
-  function fl.binds:SetBind(command, key)
+  function fl.binds:set_bind(command, key)
     for k, v in pairs(stored) do
       if v == command then
         stored[k] = nil
@@ -66,8 +66,8 @@ if CLIENT then
     stored[key] = command
   end
 
-  function fl.binds:AddBind(id, command, key)
-    self:SetBind(command, key)
+  function fl.binds:add_bind(id, command, key)
+    self:set_bind(command, key)
   end
 end
 
@@ -79,7 +79,7 @@ if SERVER then
   end
 else
   cable.receive('FLBindPressed', function(key)
-    local bind = fl.binds:GetBind(key)
+    local bind = fl.binds:get_bind(key)
 
     if bind then
       RunConsoleCommand(bind)

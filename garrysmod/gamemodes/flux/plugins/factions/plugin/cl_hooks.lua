@@ -28,7 +28,7 @@ end
 
 function Factions:PreStageChange(id, panel)
   if id == 'char_create.general' then
-    local gender = (panel.gender_female:IsActive() and 'Female') or (panel.gender_male:IsActive() and 'Male') or 'Universal'
+    local gender = (panel.gender_female:is_active() and 'Female') or (panel.gender_male:is_active() and 'Male') or 'Universal'
     local faction_id = panel:GetParent().char_data.faction
     local faction_table = faction.find_by_id(faction_id)
 
@@ -96,7 +96,7 @@ function Factions:PreRebuildScoreboard(panel, w, h)
     for k, v in ipairs(players) do
       local player_card = vgui.Create('fl_scoreboard_player', self)
       player_card:SetSize(w - 8, card_tall)
-      player_card:SetPlayer(v)
+      player_card:set_player(v)
       player_card:SetPos(0, 5)
 
       list:AddItem(player_card)

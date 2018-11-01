@@ -24,7 +24,7 @@ function PANEL:SetItem(instance_id)
       self.instance_ids = {instance_id}
     end
 
-    self:Rebuild()
+    self:rebuild()
   end
 end
 
@@ -36,7 +36,7 @@ function PANEL:SetItemMulti(ids)
   self.itemData = itemData
   self.itemCount = #ids
   self.instance_ids = ids
-  self:Rebuild()
+  self:rebuild()
 end
 
 function PANEL:Combine(panel2)
@@ -48,12 +48,12 @@ function PANEL:Combine(panel2)
   end
 
   self.itemCount = #self.instance_ids
-  self:Rebuild()
+  self:rebuild()
 
   panel2.itemCount = #panel2.instance_ids
 
   if panel2.itemCount > 0 then
-    panel2:Rebuild()
+    panel2:rebuild()
   else
     panel2:Reset()
   end
@@ -63,8 +63,8 @@ function PANEL:Reset()
   self.itemData = nil
   self.itemCount = 0
 
-  self:Rebuild()
-  self:UnDraggable()
+  self:rebuild()
+  self:undraggable()
 end
 
 function PANEL:Paint(w, h)
@@ -125,13 +125,13 @@ function PANEL:Paint(w, h)
   end
 end
 
-function PANEL:Rebuild()
+function PANEL:rebuild()
   if !self.itemData then
     if IsValid(self.spawnIcon) then
       self.spawnIcon:safe_remove()
     end
 
-    self:UnDraggable()
+    self:undraggable()
 
     return
   else
@@ -189,17 +189,17 @@ function PANEL:SetInventory(inv)
   self.inventory = inv
 end
 
-function PANEL:SetPlayer(player)
+function PANEL:set_player(player)
   self.player = player
   self:SetInventory(player:GetInventory(self.inventory_type))
 
-  self:Rebuild()
+  self:rebuild()
 end
 
 function PANEL:SetSlots(num)
   self.inventory_slots = num
 
-  self:Rebuild()
+  self:rebuild()
 end
 
 function PANEL:SlotsToInventory()
@@ -214,11 +214,11 @@ function PANEL:SlotsToInventory()
   cable.send('InventorySync', self.inventory)
 end
 
-function PANEL:GetMenuSize()
+function PANEL:get_menu_size()
   return font.scale(560), font.scale(self.inventory_slots * 0.125 * 68 + 36)
 end
 
-function PANEL:Rebuild()
+function PANEL:rebuild()
   dragndrop.Clear()
 
   local multiplier = self.inventory_slots / 8
@@ -304,7 +304,7 @@ function PANEL:Rebuild()
         if !split then
           dropped[1]:Reset()
         else
-          dropped[1]:Rebuild()
+          dropped[1]:rebuild()
         end
 
         self:SlotsToInventory()

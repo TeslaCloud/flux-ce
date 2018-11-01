@@ -2,16 +2,14 @@ local PANEL = {}
 
 function PANEL:Init()
   self:SetTitle('Flux Frame')
-  self:SetMainColor(theme.get_color('main'))
-  self:SetAccentColor(theme.get_color('accent'))
 
   self.button_close = vgui.Create('fl_button', self)
   self.button_close:SetSize(20, 20)
   self.button_close:SetPos(0, 0)
-  self.button_close:SetIcon('fa-times')
-  self.button_close:SetText('')
+  self.button_close:set_icon('fa-times')
+  self.button_close:set_text('')
   self.button_close:SetDrawBackground(false)
-  self.button_close.DoClick = function(button)
+  self.button_close.DoClick = function(btn)
     self:SetVisible(false)
     self:Remove()
   end

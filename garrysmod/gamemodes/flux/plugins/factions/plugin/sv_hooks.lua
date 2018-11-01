@@ -4,7 +4,7 @@ function Factions:PostPlayerSpawn(player)
   if player_faction then
     player:SetTeam(player_faction.team_id or 1)
 
-    player:set_nv('name', player_faction:GenerateName(player, player:GetCharacterVar('name', player:Name()), player:GetRank()))
+    player:set_nv('name', player_faction:GenerateName(player, player:GetCharacterVar('name', player:name()), player:GetRank()))
   end
 end
 

@@ -1,32 +1,32 @@
 local PANEL = {}
-PANEL.m_value = 1
-PANEL.m_max = 0
-PANEL.m_min = 100
-PANEL.m_font = 'flRoboto'
-PANEL.m_color = Color('white')
+PANEL.value = 1
+PANEL.max = 0
+PANEL.min = 100
+PANEL.font = 'flRoboto'
+PANEL.color = Color('white')
 
 function PANEL:Init()
   self.label = vgui.Create('DLabel', self)
-  self.label:SetText(self.m_Title)
-  self.label:SetFont(self.m_font)
-  self.label:SetTextColor(self.m_color)
+  self.label:SetText(self.title)
+  self.label:SetFont(self.font)
+  self.label:SetTextColor(self.color)
 
   self.inc = vgui.Create('fl_button', self)
-  self.inc:SetIcon('fa-chevron-up')
-  self.inc:SetIconSize(16)
-  self.inc:SetCentered(true)
+  self.inc:set_icon('fa-chevron-up')
+  self.inc:set_icon_size(16)
+  self.inc:set_centered(true)
   self.inc:SetDrawBackground(false)
-  self.inc.DoClick = function(button)
-    self:OnIncrease()
+  self.inc.DoClick = function(btn)
+    self:increase()
   end
 
   self.dec = vgui.Create('fl_button', self)
-  self.dec:SetIcon('fa-chevron-down')
-  self.dec:SetIconSize(16)
-  self.dec:SetCentered(true)
+  self.dec:set_icon('fa-chevron-down')
+  self.dec:set_icon_size(16)
+  self.dec:set_centered(true)
   self.dec:SetDrawBackground(false)
-  self.dec.DoClick = function(button)
-    self:OnDecrease()
+  self.dec.DoClick = function(btn)
+    self:decrease()
   end
 end
 
@@ -40,83 +40,83 @@ function PANEL:PerformLayout(w, h)
   self.dec:SetPos(2, h * 0.75 + 2)
   self.dec:SetSize(w - 4, h * 0.25 - 2)
 
-  self:CheckButtons(self.m_value)
+  self:check_buttons(self.value)
 end
 
 function PANEL:Paint(w, h)
-  local x, y = util.text_size(self.m_value, self.m_font)
-  draw.SimpleText(self.m_value, self.m_font, w * 0.5 - x * 0.5, h * 0.66 - y * 0.5, self.m_color)
+  local x, y = util.text_size(self.value, self.font)
+  draw.SimpleText(self.value, self.font, w * 0.5 - x * 0.5, h * 0.66 - y * 0.5, self.color)
 end
 
-function PANEL:SetText(text)
-  self.m_Title = text
+function PANEL:set_text(text)
+  self.title = text
 
-  self.label:SetText(self.m_Title)
+  self.label:SetText(self.title)
 end
 
-function PANEL:SetMax(max)
-  self.m_max = max
+function PANEL:set_max(max)
+  self.max = max
 end
 
-function PANEL:SetMin(min)
-  self.m_min = min
+function PANEL:set_min(min)
+  self.min = min
 end
 
-function PANEL:SetMinMax(min, max)
-  self.m_min = min
-  self.m_max = max
+function PANEL:set_min_max(min, max)
+  self.min = min
+  self.max = max
 end
 
-function PANEL:SetValue(value)
-  self.m_value = value
+function PANEL:set_value(value)
+  self.value = value
 end
 
-function PANEL:SetFont(font)
-  self.m_font = font
+function PANEL:set_font(font)
+  self.font = font
 
-  self.label:SetFont(self.m_font)
+  self.label:SetFont(self.font)
 end
 
-function PANEL:SetColor(color)
-  self.m_color = color
+function PANEL:set_color(color)
+  self.color = color
 
-  self.label:SetTextColor(self.m_color)
+  self.label:SetTextColor(self.color)
 end
 
-function PANEL:GetValue()
-  return self.m_value
+function PANEL:get_value()
+  return self.value
 end
 
-function PANEL:OnIncrease(button)
-  self.m_value = math.Clamp(self.m_value + 1, self.m_min, self.m_max)
+function PANEL:increase(button)
+  self.value = math.Clamp(self.value + 1, self.min, self.max)
 
-  self:OnClick(self.m_value)
-  self:CheckButtons(self.m_value)
+  self:on_click(self.value)
+  self:check_buttons(self.value)
 end
 
-function PANEL:OnDecrease(button)
-  self.m_value = math.Clamp(self.m_value - 1, self.m_min, self.m_max)
+function PANEL:decrease(button)
+  self.value = math.Clamp(self.value - 1, self.min, self.max)
 
-  self:OnClick(self.m_value)
-  self:CheckButtons(self.m_value)
+  self:on_click(self.value)
+  self:check_buttons(self.value)
 end
 
-function PANEL:CheckButtons(value)
-  if value == self.m_max then
-    self.inc:SetEnabled(false)
-    self.inc:SetActive(false)
-  elseif value == self.m_min then
-    self.dec:SetEnabled(false)
-    self.dec:SetActive(false)
+function PANEL:check_buttons(value)
+  if value == self.max then
+    self.inc:set_enabled(false)
+    self.inc:set_active(false)
+  elseif value == self.min then
+    self.dec:set_enabled(false)
+    self.dec:set_active(false)
   else
-    self.inc:SetEnabled(true)
-    self.inc:SetActive(true)
-    self.dec:SetEnabled(true)
-    self.dec:SetActive(true)
+    self.inc:set_enabled(true)
+    self.inc:set_active(true)
+    self.dec:set_enabled(true)
+    self.dec:set_active(true)
   end
 end
 
-function PANEL:OnClick(value)
+function PANEL:on_click(value)
 end
 
 vgui.Register('fl_counter', PANEL, 'fl_base_panel')

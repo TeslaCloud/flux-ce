@@ -9,10 +9,10 @@ function PANEL:Init()
   self.layout = vgui.Create('DListLayout', self.scroll_panel)
   self.layout:Dock(FILL)
 
-  self:Rebuild()
+  self:rebuild()
 end
 
-function PANEL:Rebuild()
+function PANEL:rebuild()
   local categories = {}
 
   self.scroll_panel:Dock(FILL)

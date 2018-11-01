@@ -84,7 +84,7 @@ function PANEL:rebuild_history_indexes()
   end
 
   self.history = new_history
-  self:Rebuild()
+  self:rebuild()
 end
 
 function PANEL:add_panel(panel)
@@ -189,10 +189,10 @@ function PANEL:Init()
     end
   end
 
-  self:Rebuild()
+  self:rebuild()
 end
 
-function PANEL:Rebuild()
+function PANEL:rebuild()
   self:SetSize(chatbox.width, chatbox.height)
   self:SetPos(chatbox.x, chatbox.y)
 

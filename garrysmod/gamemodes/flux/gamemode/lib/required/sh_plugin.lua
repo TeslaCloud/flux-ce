@@ -202,7 +202,7 @@ end
 
 -- A function to remove the plugin entirely.
 function plugin.remove(id)
-  local plugin_table, pluginID = plugin.find(id)
+  local plugin_table, plugin_id = plugin.find(id)
 
   if plugin_table then
     if plugin_table.OnRemoved then
@@ -217,7 +217,7 @@ function plugin.remove(id)
 
     plugin.remove_from_cache(id)
 
-    stored[pluginID] = nil
+    stored[plugin_id] = nil
   end
 end
 

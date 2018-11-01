@@ -1,5 +1,5 @@
 function Bolt:AddTabMenuItems(menu)
-  menu:AddMenuItem('admin', {
+  menu:add_menu_item('admin', {
     title = 'Admin',
     panel = 'flAdminPanel',
     icon = 'fa-shield'

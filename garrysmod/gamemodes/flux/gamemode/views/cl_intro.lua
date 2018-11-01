@@ -4,10 +4,10 @@ function PANEL:Init()
   self:SetSize(ScrW(), ScrH())
   self:SetPos(0, 0)
 
-  self:StartAnimation()
+  self:start_animation()
 
   timer.Simple(4, function()
-    self:CloseMenu()
+    self:close_menu()
   end)
 
   hook.run('OnIntroPanelCreated', self)
@@ -71,7 +71,7 @@ function PANEL:Paint(w, h)
   end
 end
 
-function PANEL:CloseMenu()
+function PANEL:close_menu()
   self.should_remove = true
 
   timer.Simple(1, function()
@@ -81,7 +81,7 @@ function PANEL:CloseMenu()
   hook.run('OnIntroPanelRemoved')
 end
 
-function PANEL:StartAnimation()
+function PANEL:start_animation()
   timer.Simple(0.6, function()
     self.started = true
   end)

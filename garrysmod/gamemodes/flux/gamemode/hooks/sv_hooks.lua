@@ -19,10 +19,10 @@ function GM:PlayerInitialSpawn(player)
   player_manager.RunClass(player, 'Spawn')
 
   player:SetUserGroup('user')
-  player:RestorePlayer()
+  player:restore_player()
 
   if player:IsBot() then
-    player:SetInitialized(true)
+    player:set_initialized(true)
     return
   end
 
@@ -105,7 +105,7 @@ function GM:PlayerSetModel(player)
     self.BaseClass:PlayerSetModel(player)
   elseif player:IsBot() then
     player:SetModel(player:get_nv('model', 'models/humans/group01/male_0'..math.random(1, 9)..'.mdl'))
-  elseif player:HasInitialized() then
+  elseif player:has_initialized() then
     player:SetModel(player:get_nv('model', 'models/humans/group01/male_02.mdl'))
   elseif self.BaseClass.PlayerSetModel then
     self.BaseClass:PlayerSetModel(player)
@@ -113,7 +113,7 @@ function GM:PlayerSetModel(player)
 end
 
 function GM:PlayerInitialized(player)
-  player:SetInitialized(true)
+  player:set_initialized(true)
 
   hook.run_client(player, 'PlayerInitialized')
 end
@@ -136,11 +136,11 @@ function GM:PlayerDisconnected(player)
   player:save_player()
   cable.send(nil, 'PlayerDisconnected', player:EntIndex())
 
-  Log:notify(player:Name()..' ('..player:GetUserGroup()..') has disconnected from the server.', { action = 'player_events' })
+  Log:notify(player:name()..' ('..player:GetUserGroup()..') has disconnected from the server.', { action = 'player_events' })
 end
 
 function GM:EntityRemoved(entity)
-  entity:ClearNetVars()
+  entity:clear_net_vars()
 
   self.BaseClass:EntityRemoved(entity)
 end
@@ -401,10 +401,10 @@ function GM:PlayerOneSecond(player, cur_time)
 end
 
 function GM:PlayerThink(player, cur_time)
-  local act = player:GetAction()
+  local act = player:get_action()
 
   if act != 'idle' and act != 'spawning' then
-    player:DoAction()
+    player:do_action()
   end
 end
 
@@ -412,7 +412,7 @@ function GM:PlayerSay(player, text, team_chat)
   local is_command, length = string.is_command(tostring(text))
 
   if is_command then
-    fl.command:Interpret(player, text:utf8sub(1 + length, text:utf8len()))
+    fl.command:interpret(player, text:utf8sub(1 + length, text:utf8len()))
 
     return ''
   end

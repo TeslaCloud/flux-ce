@@ -26,51 +26,14 @@ function PANEL:SizeToContents()
   self:SetSize(bx + 8, by + 8)
 end
 
-function PANEL:SetTextColor(col)
-  self.text_color = col or Color(255, 255, 255)
-end
-
-function PANEL:SetBackgroundColor(col)
-  self.background_color = col or Color(0, 0, 0)
-end
-
-function PANEL:SetLifetime(time)
-  timer.Simple(time, function()
-    if IsValid(self) then
-      self:safe_remove()
-    end
-  end)
-
-  timer.Simple(time - 1.5, function()
-    if IsValid(self) then
-      local x, y = self:GetPos()
-      self:MoveTo(ScrW(), y, 0.5)
-    end
-  end)
-
-  self.lifetime = time
-end
-
-function PANEL:SetText(text)
-  if text:find('\n') then
-    text = text:split('\n')
-  else
-    text = { text }
-  end
-
-  self.notification_text = text
-
-  self:SizeToContents()
-end
-
 function PANEL:Think()
   local cur_time = CurTime()
-  local frameTime = FrameTime() / 0.006
+  local frame_time = FrameTime() / 0.006
 
   if (cur_time - self.creation_time) > self.lifetime - 1.25 then
-    self.cur_alpha = self.cur_alpha - 3 * frameTime
+    self.cur_alpha = self.cur_alpha - 3 * frame_time
   elseif self.cur_alpha < 200 then
-    self.cur_alpha = self.cur_alpha + 4 * frameTime
+    self.cur_alpha = self.cur_alpha + 4 * frame_time
   end
 
   if self.PostThink then
@@ -93,6 +56,43 @@ function PANEL:Paint(width, height)
       cur_y = cur_y + self.font_size + 4
     end
   end
+end
+
+function PANEL:set_text_color(col)
+  self.text_color = col or Color(255, 255, 255)
+end
+
+function PANEL:set_background_color(col)
+  self.background_color = col or Color(0, 0, 0)
+end
+
+function PANEL:set_lifetime(time)
+  timer.Simple(time, function()
+    if IsValid(self) then
+      self:safe_remove()
+    end
+  end)
+
+  timer.Simple(time - 1.5, function()
+    if IsValid(self) then
+      local x, y = self:GetPos()
+      self:MoveTo(ScrW(), y, 0.5)
+    end
+  end)
+
+  self.lifetime = time
+end
+
+function PANEL:set_text(text)
+  if text:find('\n') then
+    text = text:split('\n')
+  else
+    text = { text }
+  end
+
+  self.notification_text = text
+
+  self:SizeToContents()
 end
 
 vgui.Register('fl_notification', PANEL, 'EditablePanel')

@@ -97,23 +97,23 @@ function player_meta:CreateRagdollEntity(decay, fallen)
           self:SetNoDraw(false)
           self:SetNotSolid(false)
 
-          if self:IsStuck() then
+          if self:is_stuck() then
             self:DropToFloor()
             self:SetPos(self:GetPos() + Vector(0, 0, 16))
 
-            if !self:IsStuck() then return end
+            if !self:is_stuck() then return end
 
             local positions = self:FindBestPosition(4, {ragdoll, self})
 
             for k, v in ipairs(positions) do
               self:SetPos(v)
 
-              if !self:IsStuck() then
+              if !self:is_stuck() then
                 return
               else
                 self:DropToFloor()
 
-                if !self:IsStuck() then return end
+                if !self:is_stuck() then return end
               end
             end
           end
@@ -177,7 +177,7 @@ function player_meta:SetRagdollState(state)
   self:SetDTInt(INT_RAGDOLL_STATE, state)
 
   if state == RAGDOLL_FALLENOVER then
-    self:SetAction('fallen', true)
+    self:set_action('fallen', true)
     self:CreateRagdollEntity(nil, true)
   elseif state == RAGDOLL_DUMMY then
     self:CreateRagdollEntity(120)

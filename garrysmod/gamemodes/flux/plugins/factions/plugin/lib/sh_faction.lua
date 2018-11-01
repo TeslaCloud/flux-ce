@@ -90,7 +90,7 @@ do
     local faction_table = faction.find_by_id(id)
     local char = self:GetCharacter()
 
-    self:set_nv('name', faction_table:GenerateName(self, self:GetCharacterVar('name', self:Name()), 1))
+    self:set_nv('name', faction_table:GenerateName(self, self:GetCharacterVar('name', self:name()), 1))
     self:SetRank(1)
     self:SetTeam(faction_table.team_id)
     self:set_nv('faction', id)

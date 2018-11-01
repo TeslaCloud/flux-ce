@@ -2,7 +2,7 @@ local player_meta = FindMetaTable('Player')
 
 function player_meta:SaveUsergroup()
   if self.record then
-    self.record.name = self:Name()
+    self.record.name = self:name()
     self.record.role = self:GetUserGroup()
     self.record:save()
   end
@@ -32,5 +32,5 @@ function player_meta:SetCustomPermissions(data)
 end
 
 function player_meta:RunCommand(cmd)
-  return fl.command:Interpret(self, cmd)
+  return fl.command:interpret(self, cmd)
 end

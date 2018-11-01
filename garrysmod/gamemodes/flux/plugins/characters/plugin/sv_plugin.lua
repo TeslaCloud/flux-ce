@@ -27,7 +27,7 @@ function player_meta:SetActiveCharacter(id)
 
   local char_data = self:GetCharacter()
 
-  self:set_nv('name', char_data.name or self:SteamName())
+  self:set_nv('name', char_data.name or self:steam_name())
   self:set_nv('phys_desc', char_data.phys_desc or '')
   self:set_nv('gender', char_data.gender or CHAR_GENDER_MALE)
   self:set_nv('key', char_data.key or -1)

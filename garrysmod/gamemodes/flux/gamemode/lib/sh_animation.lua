@@ -80,11 +80,11 @@ stored.player = {
   }
 }
 
-function fl.anim:GetAll()
+function fl.anim:get_all()
   return stored
 end
 
-function fl.anim:SetModelClass(model, class)
+function fl.anim:set_model_class(model, class)
   if !stored[class] then
     class = 'player'
   end
@@ -92,7 +92,7 @@ function fl.anim:SetModelClass(model, class)
   models[string.lower(model)] = class
 end
 
-function fl.anim:GetModelClass(model)
+function fl.anim:get_model_class(model)
   if !model then return 'player' end
 
   local model_class = models[string.lower(model)]
@@ -104,18 +104,18 @@ function fl.anim:GetModelClass(model)
   return 'player'
 end
 
-function fl.anim:GetTable(model)
+function fl.anim:get_table(model)
   if !model then return end
 
   if string.find(model, '/player/') then
     return
   end
 
-  return stored[self:GetModelClass(model)]
+  return stored[self:get_model_class(model)]
 end
 
 do
-  local translateHoldTypes = {
+  local translate_hold_types = {
     ['']                  = 'normal',
     ['slam']              = 'normal',
     ['grenade']           = 'normal',
@@ -133,7 +133,7 @@ do
     ['revolver']          = 'pistol'
   }
 
-  local weaponHoldTypes = {
+  local weapon_hold_types = {
     ['weapon_ar2']        = 'smg',
     ['weapon_smg1']       = 'smg',
     ['weapon_physgun']    = 'smg',
@@ -154,16 +154,16 @@ do
   }
 
   -- A function to get a weapon's hold type.
-  function fl.anim:GetWeaponHoldType(player, weapon)
+  function fl.anim:get_weapon_hold_type(player, weapon)
     if !IsValid(weapon) then return 'normal' end
 
-    local translated_hold_type = weaponHoldTypes[string.lower(weapon:GetClass())]
+    local translated_hold_type = weapon_hold_types[string.lower(weapon:GetClass())]
     local hold_type = 'normal'
 
     if translated_hold_type then
       hold_type = translated_hold_type
     elseif weapon and weapon.HoldType then
-      translated_hold_type = translateHoldTypes[weapon.HoldType]
+      translated_hold_type = translate_hold_types[weapon.HoldType]
 
       if translated_hold_type then
         hold_type = translated_hold_type

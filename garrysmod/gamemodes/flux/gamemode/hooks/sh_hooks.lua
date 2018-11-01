@@ -65,7 +65,7 @@ do
 end
 
 do
-  local get_weapon_hold_type = fl.anim.GetWeaponHoldType
+  local get_weapon_hold_type = fl.anim.get_weapon_hold_type
 
   -- Called when to translate player activities.
   function GM:TranslateActivity(player, act)
@@ -184,7 +184,7 @@ do
     end
 
     if !anim_cache[new_model] then
-      anim_cache[new_model] = fl.anim:GetTable(new_model)
+      anim_cache[new_model] = fl.anim:get_table(new_model)
     end
 
     player.fl_anim_table = anim_cache[new_model]

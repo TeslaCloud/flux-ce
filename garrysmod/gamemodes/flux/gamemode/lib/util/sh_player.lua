@@ -24,11 +24,11 @@ function player.find(name, case_sensitive, return_first)
       continue
     end
 
-    if v:Name(true):find(name) then
+    if v:name(true):find(name) then
       table.insert(hits, v)
-    elseif !case_sensitive and v:Name(true):utf8lower():find(name:utf8lower()) then
+    elseif !case_sensitive and v:name(true):utf8lower():find(name:utf8lower()) then
       table.insert(hits, v)
-    elseif v:SteamName():utf8lower():find(name:utf8lower()) then
+    elseif v:steam_name():utf8lower():find(name:utf8lower()) then
       table.insert(hits, v)
     end
 

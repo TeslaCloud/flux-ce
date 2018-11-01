@@ -71,4 +71,4 @@ function ThirdPerson:CalcView(player, pos, angles, fov)
   return view
 end
 
-fl.binds:AddBind('ToggleThirdPerson', 'flThirdPerson', KEY_X)
+fl.binds:add_bind('ToggleThirdPerson', 'flThirdPerson', KEY_X)

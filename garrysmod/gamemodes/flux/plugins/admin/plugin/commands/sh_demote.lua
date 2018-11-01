@@ -11,7 +11,7 @@ function COMMAND:on_run(player, targets)
   for k, target in ipairs(targets) do
     target:SetUserGroup('user')
 
-    fl.player:broadcast('demote.message', { get_player_name(player), target:Name(), target:GetUserGroup() })
+    fl.player:broadcast('demote.message', { get_player_name(player), target:name(), target:GetUserGroup() })
   end
 end
 

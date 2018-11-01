@@ -1,5 +1,5 @@
 local PANEL = {}
-PANEL.m_CurAmt = 160
+PANEL.cur_amt = 160
 
 function PANEL:Init()
   self.Image = vgui.Create('DImage', self)
@@ -11,12 +11,13 @@ function PANEL:SetImage(img)
   self.Image:SetImage(img)
 end
 
-function PANEL:Paint(w, h) end
+function PANEL:Paint(w, h)
+end
 
 function PANEL:PaintOver(w, h)
-  local active = self.m_Active
+  local active = self.active
 
-  draw.RoundedBox(0, 0, 0, w, h, Color(0, 0, 0, (!active and self.m_CurAmt * 4) or 0))
+  draw.RoundedBox(0, 0, 0, w, h, Color(0, 0, 0, (!active and self.cur_amt * 4) or 0))
 
   if active then
     surface.SetDrawColor(theme.get_color('accent'))
@@ -26,9 +27,9 @@ end
 
 function PANEL:Think()
   if self:IsHovered() then
-    self.m_CurAmt = math.Clamp(self.m_CurAmt - 1, 0, 40)
+    self.cur_amt = math.Clamp(self.cur_amt - 1, 0, 40)
   else
-    self.m_CurAmt = math.Clamp(self.m_CurAmt + 1, 0, 40)
+    self.cur_amt = math.Clamp(self.cur_amt + 1, 0, 40)
   end
 
   self.Image:SetSize(self:GetWide(), self:GetTall())

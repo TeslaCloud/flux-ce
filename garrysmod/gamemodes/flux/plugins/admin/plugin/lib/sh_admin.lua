@@ -181,7 +181,7 @@ if SERVER then
     local name = steam_id
 
     if !isstring(player) and IsValid(player) then
-      name = player:SteamName()
+      name = player:steam_name()
       steam_id = player:SteamID()
 
       if !prevent_kick then

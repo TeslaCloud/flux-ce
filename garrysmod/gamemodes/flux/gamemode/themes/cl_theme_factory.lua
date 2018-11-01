@@ -138,15 +138,15 @@ function THEME:PaintMainMenu(panel, width, height)
 end
 
 function THEME:PaintButton(panel, w, h)
-  local cur_amt = panel.m_CurAmt
+  local cur_amt = panel.cur_amt
   local text_color = panel.m_TextColorOverride or self:get_color('text'):darken(cur_amt)
-  local title = panel.m_Title
-  local font = panel.m_Font
-  local icon = panel.m_Icon
-  local left = panel.m_IconLeft
+  local title = panel.title
+  local font = panel.font
+  local icon = panel.icon
+  local left = panel.icon_left
 
-  if panel.m_DrawBackground then
-    if !panel.m_Active then
+  if panel.draw_background then
+    if !panel.active then
       surface.SetDrawColor(self:get_color('outline'))
       surface.DrawRect(0, 0, w, h)
 
@@ -162,11 +162,11 @@ function THEME:PaintButton(panel, w, h)
   end
 
   if icon then
-    if !panel.m_Centered then
-      if panel.m_IconLeft then
-        fl.fa:draw(icon, (panel.m_IconSize and h * 0.5 - panel.m_IconSize * 0.5) or 3, (panel.m_IconSize and h * 0.5 - panel.m_IconSize * 0.5) or 3, (panel.m_IconSize or h - 6), text_color)
+    if !panel.centered then
+      if panel.icon_left then
+        fl.fa:draw(icon, (panel.icon_size and h * 0.5 - panel.icon_size * 0.5) or 3, (panel.icon_size and h * 0.5 - panel.icon_size * 0.5) or 3, (panel.icon_size or h - 6), text_color)
       else
-        fl.fa:draw(icon, w - panel.m_IconSize - 8, (panel.m_IconSize and h * 0.5 - panel.m_IconSize * 0.5) or 3, (panel.m_IconSize or h - 6), text_color)
+        fl.fa:draw(icon, w - panel.icon_size - 8, (panel.icon_size and h * 0.5 - panel.icon_size * 0.5) or 3, (panel.icon_size or h - 6), text_color)
       end
     end
   end
@@ -174,15 +174,15 @@ function THEME:PaintButton(panel, w, h)
   if title and title != '' then
     local width, height = util.text_size(title, font)
 
-    if panel.m_Autopos then
+    if panel.autopos then
       if icon then
-        if panel.m_Centered then
-          local textPos = (w - width - panel.m_IconSize) * 0.5
+        if panel.centered then
+          local textPos = (w - width - panel.icon_size) * 0.5
 
-          if panel.m_IconLeft then
-            fl.fa:draw(icon, textPos - panel.m_IconSize - 8, (panel.m_IconSize and h * 0.5 - panel.m_IconSize * 0.5) or 3, (panel.m_IconSize or h - 6), text_color)
+          if panel.icon_left then
+            fl.fa:draw(icon, textPos - panel.icon_size - 8, (panel.icon_size and h * 0.5 - panel.icon_size * 0.5) or 3, (panel.icon_size or h - 6), text_color)
           else
-            fl.fa:draw(icon, textPos + width + panel.m_IconSize * 0.5, (panel.m_IconSize and h * 0.5 - panel.m_IconSize * 0.5) or 3, (panel.m_IconSize or h - 6), text_color)
+            fl.fa:draw(icon, textPos + width + panel.icon_size * 0.5, (panel.icon_size and h * 0.5 - panel.icon_size * 0.5) or 3, (panel.icon_size or h - 6), text_color)
           end
 
           draw.SimpleText(title, font, textPos, h * 0.5 - height * 0.5, text_color)
@@ -193,15 +193,15 @@ function THEME:PaintButton(panel, w, h)
         draw.SimpleText(title, font, w * 0.5 - width * 0.5, h * 0.5 - height * 0.5, text_color)
       end
     else
-      if panel.m_Centered then
+      if panel.centered then
         draw.SimpleText(title, font, (w - width) * 0.5, h * 0.5 - height * 0.5, text_color)
       else
         draw.SimpleText(title, font, panel.m_TextPos or 0, h * 0.5 - height * 0.5, text_color)
       end
     end
   else
-    if panel.m_Centered then
-      fl.fa:draw(icon, w * 0.5 - panel.m_IconSize * 0.5, (panel.m_IconSize and h * 0.5 - panel.m_IconSize * 0.5) or 3, (panel.m_IconSize or h - 6), text_color)
+    if panel.centered then
+      fl.fa:draw(icon, w * 0.5 - panel.icon_size * 0.5, (panel.icon_size and h * 0.5 - panel.icon_size * 0.5) or 3, (panel.icon_size or h - 6), text_color)
     end
   end
 end
@@ -286,7 +286,7 @@ function THEME:AdminPanelPaintOver(panel, width, height)
   DisableClipping(true)
     draw.RoundedBox(0, 0, height, width, 16, self:get_color('background'))
 
-    draw.SimpleText(fl.client:SteamName()..' ('..fl.client:GetUserGroup()..')', smallest_font, 6, height + 1, text_color)
+    draw.SimpleText(fl.client:steam_name()..' ('..fl.client:GetUserGroup()..')', smallest_font, 6, height + 1, text_color)
 
     local w, h = util.text_size(version_string, smallest_font)
 
@@ -297,7 +297,7 @@ end
 function THEME:PaintPermissionButton(perm_panel, btn, w, h)
   local color = Color(255, 255, 255)
   local title = ''
-  local perm_type = btn.permValue
+  local perm_type = btn.perm_value
   local font = self:get_font('text_small')
 
   if perm_type == PERM_NO then

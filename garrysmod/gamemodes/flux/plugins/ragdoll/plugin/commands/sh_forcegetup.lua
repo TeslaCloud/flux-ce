@@ -14,7 +14,7 @@ function COMMAND:on_run(player, target, delay)
   if IsValid(target) and target:Alive() and target:IsRagdolled() then
     target:SetRagdollState(RAGDOLL_FALLENOVER)
 
-    player:notify(target:Name()..' has been unragdolled!')
+    player:notify(target:name()..' has been unragdolled!')
 
     timer.Simple(delay, function()
       target:SetRagdollState(RAGDOLL_NONE)

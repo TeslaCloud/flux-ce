@@ -1,15 +1,11 @@
 local PANEL = {}
 PANEL.icon = nil
-PANEL.iconW = 16
-PANEL.iconH = 16
-
-function PANEL:GetDeleteSelf()
-  return true
-end
+PANEL.icon_w = 16
+PANEL.icon_h = 16
 
 function PANEL:Init()
   self:SetFont(theme.get_font('main_menu_small'))
-  self:SetTextColor(theme.get_color('text'))
+  self:set_text_color(theme.get_color('text'))
 end
 
 function PANEL:Paint(w, h)
@@ -22,7 +18,7 @@ function PANEL:Paint(w, h)
   draw.RoundedBox(0, 0, 0, w, h, col)
 
   if self.icon then
-    draw.textured_rect(self.icon, 8, h * 0.5 - self.iconH * 0.5, self.iconW, self.iconH, Color(255, 255, 255))
+    draw.textured_rect(self.icon, 8, h * 0.5 - self.icon_h * 0.5, self.icon_w, self.icon_h, Color(255, 255, 255))
   end
 end
 
@@ -36,15 +32,15 @@ function PANEL:OnMousePressed(mouse)
   return DButton.OnMouseReleased(self, mouse)
 end
 
-function PANEL:SetIcon(icon)
+function PANEL:set_icon(icon)
   self.icon = util.get_material(icon)
 end
 
-function PANEL:SetIconSize(w, h)
+function PANEL:set_icon_size(w, h)
   h = h or w
 
-  self.iconW = w
-  self.iconH = h
+  self.icon_w = w
+  self.icon_h = h
 end
 
 vgui.Register('fl_menu_item', PANEL, 'DButton')
@@ -53,59 +49,6 @@ local PANEL = {}
 PANEL.last = 0
 PANEL.option_height = 32
 PANEL.count = 0
-
-function PANEL:GetDeleteSelf()
-  return true
-end
-
-function PANEL:AddOption(name, callback)
-  local w, h = self:GetSize()
-
-  local panel = vgui.Create('fl_menu_item', self)
-  panel:SetPos(0, 0)
-  panel:MoveTo(0, self.last, 0.15 * self.count)
-  panel:SetSize(self:GetWide(), self.option_height)
-  panel:SetTextColor(theme.get_color('text'))
-  panel:SetText(name)
-  panel:MoveToBack()
-
-  if callback then
-    panel.DoClick = callback
-  end
-
-  self.last = self.last + self.option_height
-  self.count = self.count + 1
-
-  self:AddItem(panel)
-  self:SetSize(w, self.last)
-
-  return panel
-end
-
-function PANEL:AddSpacer(px)
-  px = px or 1
-
-  local panel = vgui.Create('DPanel', self)
-  panel:SetSize(self:GetWide(), px)
-  panel:SetPos(0, 0)
-  panel:MoveToBack()
-
-  panel.Paint = function(pan, w, h)
-    local wide = math.ceil(w * 0.1)
-
-    draw.RoundedBox(0, 0, 0, w, h, theme.get_color('text'))
-    draw.RoundedBox(0, 0, 0, wide, h, theme.get_color('background'))
-    draw.RoundedBox(0, w - wide, 0, wide, h, theme.get_color('background'))
-  end
-
-  panel:MoveTo(0, self.last, 0.15 * self.count)
-
-  self:AddItem(panel)
-
-  self.last = self.last + px
-
-  return panel
-end
 
 function PANEL:PerformLayout()
   local w = 128
@@ -136,7 +79,7 @@ function PANEL:PerformLayout()
   DScrollPanel.PerformLayout(self)
 end
 
-function PANEL:Open(x, y)
+function PANEL:open(x, y)
   x = x or gui.MouseX()
   y = y or gui.MouseY()
 
@@ -154,6 +97,55 @@ function PANEL:Open(x, y)
   self:RequestFocus()
 
   return self
+end
+
+function PANEL:add_option(name, callback)
+  local w, h = self:GetSize()
+
+  local panel = vgui.Create('fl_menu_item', self)
+  panel:SetPos(0, 0)
+  panel:MoveTo(0, self.last, 0.15 * self.count)
+  panel:SetSize(self:GetWide(), self.option_height)
+  panel:set_text_color(theme.get_color('text'))
+  panel:set_text(name)
+  panel:MoveToBack()
+
+  if callback then
+    panel.DoClick = callback
+  end
+
+  self.last = self.last + self.option_height
+  self.count = self.count + 1
+
+  self:AddItem(panel)
+  self:SetSize(w, self.last)
+
+  return panel
+end
+
+function PANEL:add_spacer(px)
+  px = px or 1
+
+  local panel = vgui.Create('DPanel', self)
+  panel:SetSize(self:GetWide(), px)
+  panel:SetPos(0, 0)
+  panel:MoveToBack()
+
+  panel.Paint = function(pan, w, h)
+    local wide = math.ceil(w * 0.1)
+
+    draw.RoundedBox(0, 0, 0, w, h, theme.get_color('text'))
+    draw.RoundedBox(0, 0, 0, wide, h, theme.get_color('background'))
+    draw.RoundedBox(0, w - wide, 0, wide, h, theme.get_color('background'))
+  end
+
+  panel:MoveTo(0, self.last, 0.15 * self.count)
+
+  self:AddItem(panel)
+
+  self.last = self.last + px
+
+  return panel
 end
 
 vgui.Register('fl_menu', PANEL, 'DScrollPanel')
