@@ -78,8 +78,8 @@ end
 -- Called when the scoreboard should be shown.
 function GM:ScoreboardShow()
   if hook.run('ShouldScoreboardShow') != false then
-    if fl.tab_menu and fl.tab_menu.CloseMenu then
-      fl.tab_menu:CloseMenu(true)
+    if fl.tab_menu and fl.tab_menu.close_menu then
+      fl.tab_menu:close_menu(true)
     end
 
     fl.tab_menu = theme.create_panel('tab_menu', nil, 'fl_tab_menu')
@@ -92,7 +92,7 @@ end
 function GM:ScoreboardHide()
   if hook.run('ShouldScoreboardHide') != false then
     if fl.tab_menu and fl.tab_menu.held_time and CurTime() >= fl.tab_menu.held_time then
-      fl.tab_menu:CloseMenu()
+      fl.tab_menu:close_menu()
     end
   end
 end
@@ -100,7 +100,7 @@ end
 function GM:HUDDrawScoreBoard()
   self.BaseClass:HUDDrawScoreBoard()
 
-  if !fl.client or !fl.client:HasInitialized() or hook.run('ShouldDrawLoadingScreen') then
+  if !fl.client or !fl.client:has_initialized() or hook.run('ShouldDrawLoadingScreen') then
     local text = t'loading.schema'
     local percentage = 50
 
@@ -141,7 +141,7 @@ end
 
 -- Called when the player's HUD is drawn.
 function GM:HUDPaint()
-  if fl.client:HasInitialized() and hook.run('ShouldHUDPaint') != false then
+  if fl.client:has_initialized() and hook.run('ShouldHUDPaint') != false then
     local cur_time = CurTime()
     local scrw, scrh = ScrW(), ScrH()
 
@@ -250,8 +250,8 @@ function GM:DrawPlayerTargetID(player, x, y, distance)
       alpha = math.Clamp((255 * (140 - d) / 140), 0, 255)
     end
 
-    local width, height = util.text_size(player:Name(), tooltip_large)
-    draw.SimpleText(player:Name(), tooltip_large, x - width * 0.5, y - 40, Color(255, 255, 255, alpha))
+    local width, height = util.text_size(player:name(), tooltip_large)
+    draw.SimpleText(player:name(), tooltip_large, x - width * 0.5, y - 40, Color(255, 255, 255, alpha))
 
     local width, height = util.text_size(player:GetPhysDesc(), tooltip_small)
     draw.SimpleText(player:GetPhysDesc(), tooltip_small, x - width * 0.5, y - 14, Color(255, 255, 255, alpha))
@@ -327,13 +327,13 @@ end
 
 -- Called when category icons are presented.
 function GM:AddTabMenuItems(menu)
-  menu:AddMenuItem('scoreboard', {
+  menu:add_menu_item('scoreboard', {
     title = t'tab_menu.scoreboard',
     panel = 'fl_scoreboard',
     icon = 'fa-list-alt'
   })
 
-  menu:AddMenuItem('help', {
+  menu:add_menu_item('help', {
     title = 'Help',
     icon = 'fa-book',
     panel = 'fl_help',

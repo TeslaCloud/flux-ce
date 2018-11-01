@@ -6,10 +6,6 @@ function PANEL:Init()
   self:SetUpdateOnType(true)
 end
 
-function PANEL:SetLimit(nLimit)
-  PANEL.limit = math.abs(nLimit or 0)
-end
-
 function PANEL:Paint(w, h)
   if !hook.run('ChatboxEntryPaint', self, 0, 0, w, h) then
     draw.RoundedBox(2, 0, 0, w, h, theme.get_color('background'))
@@ -26,6 +22,10 @@ function PANEL:Think()
       self:SetValue(string.utf8sub(text, 0, self.limit))
     end
   end
+end
+
+function PANEL:set_limit(limit)
+  PANEL.limit = math.abs(limit or 0)
 end
 
 vgui.Register('fl_text_entry', PANEL, 'DTextEntry')

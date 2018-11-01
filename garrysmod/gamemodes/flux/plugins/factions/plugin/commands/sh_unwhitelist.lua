@@ -16,7 +16,7 @@ function COMMAND:on_run(player, targets, name, strict)
       if v:HasWhitelist(whitelist.faction_id) then
         v:TakeWhitelist(whitelist.faction_id)
       elseif #targets == 1 then
-        player:notify('err.target_not_whitelisted', { v:Name(), whitelist.print_name })
+        player:notify('err.target_not_whitelisted', { v:name(), whitelist.print_name })
 
         return
       end

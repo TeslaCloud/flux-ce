@@ -3,7 +3,7 @@ library.new('undo', fl)
 local queue = {}
 local buffer = {}
 
-function fl.undo:Create(id, name)
+function fl.undo:create(id, name)
   buffer = {
     id = id,
     name = name,
@@ -12,15 +12,15 @@ function fl.undo:Create(id, name)
   }
 end
 
-function fl.undo:Add(callback, ...)
+function fl.undo:add(callback, ...)
   table.insert(buffer.functions, {func = callback, args = {...}})
 end
 
-function fl.undo:SetPlayer(player)
+function fl.undo:set_player(player)
   buffer.player = player
 end
 
-function fl.undo:Finish()
+function fl.undo:finish()
   if istable(buffer) and IsValid(buffer.player) then
     queue[buffer.player] = queue[buffer.player] or {}
 
@@ -30,7 +30,7 @@ function fl.undo:Finish()
   buffer = {}
 end
 
-function fl.undo:Remove(player, id)
+function fl.undo:remove(player, id)
   local queue_table = queue[player]
 
   if queue_table then
@@ -42,7 +42,7 @@ function fl.undo:Remove(player, id)
   end
 end
 
-function fl.undo:Do(obj)
+function fl.undo:execute(obj)
   if istable(obj) and istable(obj.functions) then
     for k, v in ipairs(obj.functions) do
       try {
@@ -61,7 +61,7 @@ function fl.undo:do_player(player)
 
   if count > 0 then
     -- do the top of the queue
-    self:Do(queue[player][count])
+    self:execute(queue[player][count])
     table.remove(queue[player], count)
   end
 end

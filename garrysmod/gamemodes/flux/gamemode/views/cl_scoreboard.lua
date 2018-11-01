@@ -4,14 +4,14 @@ PANEL.player_cards = {}
 function PANEL:Init()
   self.scroll_panel = vgui.Create('DScrollPanel', self)
   self.scroll_panel:SetPos(0, 0)
-  self.scroll_panel:SetSize(self:GetMenuSize())
+  self.scroll_panel:SetSize(self:get_menu_size())
 end
 
 function PANEL:Paint(w, h)
   theme.hook('PaintScoreboard', self, w, h)
 end
 
-function PANEL:Rebuild()
+function PANEL:rebuild()
   local w, h = self:GetSize()
 
   if hook.run('PreRebuildScoreboard', self, w, h) != nil then
@@ -31,12 +31,12 @@ function PANEL:Rebuild()
   local margin = font.scale(4)
 
   for k, v in ipairs(_player.GetAll()) do
-    if !v:HasInitialized() then continue end
+    if !v:has_initialized() then continue end
 
     local player_card = vgui.Create('fl_scoreboard_player', self)
     player_card:SetSize(w - 8, card_tall)
     player_card:SetPos(4, cur_y)
-    player_card:SetPlayer(v)
+    player_card:set_player(v)
 
     self.scroll_panel:AddItem(player_card)
 
@@ -48,7 +48,7 @@ function PANEL:Rebuild()
   hook.run('RebuildScoreboard', self, w, h)
 end
 
-function PANEL:GetMenuSize()
+function PANEL:get_menu_size()
   return font.scale(1280), font.scale(900)
 end
 
@@ -57,17 +57,17 @@ vgui.Register('fl_scoreboard', PANEL, 'fl_base_panel')
 local PANEL = {}
 PANEL.player = false
 
-function PANEL:SetPlayer(player)
-  self.player = player
-
-  self:Rebuild()
-end
-
 function PANEL:Paint(w, h)
   draw.RoundedBox(0, 0, 0, w, h, theme.get_color('background_light'))
 end
 
-function PANEL:Rebuild()
+function PANEL:set_player(player)
+  self.player = player
+
+  self:rebuild()
+end
+
+function PANEL:rebuild()
   if !self.player then return end
 
   if IsValid(self.avatar_panel) then
@@ -78,13 +78,13 @@ function PANEL:Rebuild()
   local player = self.player
 
   self.avatar_panel = vgui.Create('AvatarImage', self)
-  self.avatar_panel:SetSizeEx(32, 32)
+  self.avatar_panel:set_size_ex(32, 32)
   self.avatar_panel:SetPos(4, 4)
-  self.avatar_panel:SetPlayer(player, 64)
+  self.avatar_panel:set_player(player, 64)
 
   self.name_label = vgui.Create('DLabel', self)
-  self.name_label:SetText(player:Name())
-  self.name_label:SetPos(font.scale(32) + 16, self:GetTall() * 0.5 - util.text_height(player:Name(), theme.get_font('text_normal')) * 0.5)
+  self.name_label:SetText(player:name())
+  self.name_label:SetPos(font.scale(32) + 16, self:GetTall() * 0.5 - util.text_height(player:name(), theme.get_font('text_normal')) * 0.5)
   self.name_label:SetFont(theme.get_font('text_normal'))
   self.name_label:SetTextColor(theme.get_color('text'))
   self.name_label:SizeToContents()

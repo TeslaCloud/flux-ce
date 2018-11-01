@@ -7,7 +7,7 @@ local ent_meta = FindMetaTable('Entity')
 --]]
 ent_meta.flSetModel = ent_meta.flSetModel or ent_meta.SetModel
 
-function ent_meta:IsStuck()
+function ent_meta:is_stuck()
   local pos = self:GetPos()
 
   local trace = util.TraceHull({

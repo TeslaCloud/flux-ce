@@ -45,5 +45,5 @@ else
     move_data:SetForwardSpeed(move_data:GetMaxSpeed())
   end
 
-  fl.binds:AddBind('ToggleAutoWalk', 'toggleautowalk', KEY_B)
+  fl.binds:add_bind('ToggleAutoWalk', 'toggleautowalk', KEY_B)
 end

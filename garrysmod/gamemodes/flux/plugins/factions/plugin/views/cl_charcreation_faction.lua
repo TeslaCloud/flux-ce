@@ -23,7 +23,7 @@ function PANEL:OnOpen(parent)
       button.faction = v
 
       if v.faction_id == self.faction_id then
-        button:SetActive(true)
+        button:set_active(true)
         self.prev_button = button
       end
 
@@ -35,7 +35,7 @@ function PANEL:OnOpen(parent)
       label:SizeToContents()
 
       button.DoClick = function(btn)
-        if button:IsActive() then return end
+        if button:is_active() then return end
 
         local cur_time = CurTime()
 
@@ -45,10 +45,10 @@ function PANEL:OnOpen(parent)
             surface.PlaySound(table.Random(v.menu_sound))
           end
 
-          btn:SetActive(true)
+          btn:set_active(true)
 
           if IsValid(self.prev_button) and self.prev_button != btn then
-            self.prev_button:SetActive(false)
+            self.prev_button:set_active(false)
           end
 
           self.prev_button = btn

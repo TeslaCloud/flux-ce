@@ -18,7 +18,7 @@ end
 
 function StaticEnts:PlayerMakeStatic(player, is_static)
   if (is_static and !player:can('static')) or (!is_static and !player:can('unstatic')) then
-    fl.player:notify(player, 'err.no_permission', player:Name())
+    fl.player:notify(player, 'err.no_permission', player:name())
     return
   end
 

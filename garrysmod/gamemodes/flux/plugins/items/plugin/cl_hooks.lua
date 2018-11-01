@@ -4,13 +4,13 @@ function Items:PlayerUseItemMenu(item_table, is_entity)
   local item_menu = vgui.Create('fl_menu')
 
   if !item_table.name then
-    local close_button = item_menu:AddOption(item_table.cancel_text or t'item.option.cancel', function() end)
+    local close_button = item_menu:add_option(item_table.cancel_text or t'item.option.cancel', function() end)
     close_button:SetIcon('icon16/cross.png')
   else
     if item_table.custom_buttons then
       for k, v in pairs(item_table.custom_buttons) do
         if (v.on_show and v.on_show(item_table) == true) or !v.on_show then
-          local button = item_menu:AddOption(k, function()
+          local button = item_menu:add_option(k, function()
             item_table:do_menu_action(v.callback)
           end)
 
@@ -20,7 +20,7 @@ function Items:PlayerUseItemMenu(item_table, is_entity)
     end
 
     if item_table.on_use then
-      local use_button = item_menu:AddOption(item_table:get_use_text(), function()
+      local use_button = item_menu:add_option(item_table:get_use_text(), function()
         item_table:do_menu_action('on_use')
       end)
 
@@ -28,24 +28,24 @@ function Items:PlayerUseItemMenu(item_table, is_entity)
     end
 
     if is_entity then
-      local take_button = item_menu:AddOption(item_table:get_take_text(), function()
+      local take_button = item_menu:add_option(item_table:get_take_text(), function()
         item_table:do_menu_action('on_take')
       end)
 
       take_button:SetIcon(item_table.take_icon or 'icon16/wrench.png')
     else
-      local drop_button = item_menu:AddOption(item_table:get_drop_text(), function()
+      local drop_button = item_menu:add_option(item_table:get_drop_text(), function()
         item_table:do_menu_action('on_drop')
       end)
 
       drop_button:SetIcon(item_table.take_icon or 'icon16/wrench.png')
     end
 
-    local close_button = item_menu:AddOption(item_table:get_cancel_text(), function() end)
+    local close_button = item_menu:add_option(item_table:get_cancel_text(), function() end)
     close_button:SetIcon(item_table.cancel_icon or 'icon16/cross.png')
   end
 
-  item_menu:Open()
+  item_menu:open()
 
   if item_table.entity then
     item_menu:SetPos(ScrW() * 0.5, ScrH() * 0.5)

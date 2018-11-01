@@ -1,7 +1,7 @@
 local panel_meta = FindMetaTable('Panel')
 
 -- Seriously, Newman? I have to write this myself?
-function panel_meta:UnDraggable()
+function panel_meta:undraggable()
   self.m_DragSlot = nil
 end
 
@@ -10,11 +10,11 @@ function panel_meta:safe_remove()
   self:Remove()
 end
 
-function panel_meta:SetPosEx(x, y)
+function panel_meta:set_pos_ex(x, y)
   self:SetPos(font.scale(x), font.scale(y))
 end
 
-function panel_meta:SetSizeEx(w, h)
+function panel_meta:set_size_ex(w, h)
   self:SetSize(font.scale(w), font.scale(h))
 end
 

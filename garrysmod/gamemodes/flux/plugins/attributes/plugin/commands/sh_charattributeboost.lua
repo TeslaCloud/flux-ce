@@ -12,7 +12,7 @@ function COMMAND:on_run(player, targets, attr_id, value, duration)
   local attribute = attributes.find_by_id(attr_id)
 
   if attribute and attribute.boostable then
-    fl.player:broadcast('char_attribute_boost.message', { get_player_name(player), target:Name(), attribute.name, value, duration })
+    fl.player:broadcast('char_attribute_boost.message', { get_player_name(player), target:name(), attribute.name, value, duration })
 
     target:attribute_boost(attr_id:to_id(), tonumber(value), tonumber(duration))
   else

@@ -4,40 +4,41 @@
 --]]
 
 local PANEL = {}
-PANEL.m_BackgroundColor = Color(0, 0, 0)
-PANEL.m_TextColor = Color(255, 255, 255)
-PANEL.m_MainColor = Color(255, 100, 100)
-PANEL.m_AccentColor = Color(200, 200, 200)
-PANEL.m_DrawBackground = true
-PANEL.m_Title = 'Flux Base Panel'
-PANEL.m_Font = theme.get_font('menu_titles') or 'flRoboto'
+PANEL.draw_background = true
+PANEL.background_color = Color(0, 0, 0)
+PANEL.text_color = Color(255, 255, 255)
+PANEL.main_color = Color(255, 100, 100)
+PANEL.accent_color = Color(200, 200, 200)
+PANEL.title = 'Flux Base Panel'
+PANEL.font = theme.get_font('menu_titles') or 'flRoboto'
 
-AccessorFunc(PANEL, 'm_DrawBackground', 'DrawBackground')
-AccessorFunc(PANEL, 'm_BackgroundColor', 'BackgroundColor')
-AccessorFunc(PANEL, 'm_Title', 'Title')
-AccessorFunc(PANEL, 'm_Font', 'Font')
-AccessorFunc(PANEL, 'm_MainColor', 'MainColor')
-AccessorFunc(PANEL, 'm_TextColor', 'TextColor')
-AccessorFunc(PANEL, 'm_AccentColor', 'AccentColor')
+AccessorFunc(PANEL, 'draw_background', 'DrawBackground')
+AccessorFunc(PANEL, 'background_color', 'BackgroundColor')
+AccessorFunc(PANEL, 'text_color', 'TextColor')
+AccessorFunc(PANEL, 'main_color', 'MainColor')
+AccessorFunc(PANEL, 'accent_color', 'AccentColor')
+AccessorFunc(PANEL, 'title', 'Title')
+AccessorFunc(PANEL, 'font', 'Font')
 
-function PANEL:Paint(width, height) theme.hook('PaintPanel', self, width, height)
+function PANEL:Paint(width, height)
+  theme.hook('PaintPanel', self, width, height)
 end
 
 function PANEL:Think() theme.hook('PanelThink', self)
 end
 
 -- MVC Functionality for all FL panels.
-function PANEL:Push(name, ...)
+function PANEL:push(name, ...)
   mvc.push(name, ...)
 end
 
-function PANEL:Pull(name, handler, prevent_remove)
+function PANEL:pull(name, handler, prevent_remove)
   mvc.pull(name, handler, prevent_remove)
 end
 
-function PANEL:Request(name, handler, ...)
-  self:Pull(name, handler)
-  self:Push(name, ...)
+function PANEL:request(name, handler, ...)
+  self:pull(name, handler)
+  self:push(name, ...)
 end
 
 vgui.Register('fl_base_panel', PANEL, 'EditablePanel')

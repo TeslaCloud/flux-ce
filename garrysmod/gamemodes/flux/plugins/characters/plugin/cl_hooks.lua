@@ -79,7 +79,7 @@ function Characters:OnThemeLoaded(current_theme)
 end
 
 function Characters:AddTabMenuItems(menu)
-  menu:AddMenuItem('mainmenu', {
+  menu:add_menu_item('mainmenu', {
     title = t'tab_menu.main_menu',
     icon = 'fa-users',
     override = function(menuPanel, button)
@@ -121,8 +121,8 @@ function Characters:RebuildScoreboardPlayerCard(card, player)
 
   card.name_label:SetPos(x, 2)
 
-  if IsValid(card.descLabel) then
-    card.descLabel:safe_remove()
+  if IsValid(card.desc_label) then
+    card.desc_label:safe_remove()
     card.spawnIcon:safe_remove()
   end
 
@@ -137,12 +137,12 @@ function Characters:RebuildScoreboardPlayerCard(card, player)
     phys_desc = phys_desc:utf8sub(1, 64)..'...'
   end
 
-  card.descLabel = vgui.Create('DLabel', card)
-  card.descLabel:SetText(phys_desc)
-  card.descLabel:SetFont(theme.get_font('text_smaller'))
-  card.descLabel:SetPos(x, card.name_label:GetTall())
-  card.descLabel:SetTextColor(theme.get_color('text'))
-  card.descLabel:SizeToContents()
+  card.desc_label = vgui.Create('DLabel', card)
+  card.desc_label:SetText(phys_desc)
+  card.desc_label:SetFont(theme.get_font('text_smaller'))
+  card.desc_label:SetPos(x, card.name_label:GetTall())
+  card.desc_label:SetTextColor(theme.get_color('text'))
+  card.desc_label:SizeToContents()
 end
 
 function Characters:AddCharacterCreationMenuStages(panel)

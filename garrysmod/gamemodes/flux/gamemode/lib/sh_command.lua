@@ -2,11 +2,10 @@ library.new('command', fl)
 
 local stored = fl.command.stored or {}
 local aliases = fl.command.aliases or {}
-
 fl.command.stored = stored
 fl.command.aliases = aliases
 
-function fl.command:Create(id, data)
+function fl.command:create(id, data)
   if !id or !data then return end
 
   data.id = id:to_id()
@@ -38,7 +37,7 @@ function fl.command:find_by_id(id)
   if aliases[id] then return stored[aliases[id]] end
 end
 
-function fl.command:Find(id)
+function fl.command:find(id)
   id = id:utf8lower()
 
   local found = self:find_by_id(id)
@@ -173,7 +172,7 @@ if SERVER then
       local name = str:utf8sub(2, str:utf8len() - 1)
 
       for k, v in ipairs(_player.GetAll()) do
-        if v:Name() == name then
+        if v:name() == name then
           return { v }, '['
         end
       end
@@ -226,7 +225,7 @@ if SERVER then
     return false
   end
 
-  function fl.command:Interpret(player, text)
+  function fl.command:interpret(player, text)
     local args
 
     if isstring(text) then
@@ -304,7 +303,7 @@ if SERVER then
             if istable(targets) and #targets > 0 then
               for k, v in ipairs(targets) do
                 if cmd_table.immunity and IsValid(player) and hook.run('CommandCheckImmunity', player, v, cmd_table.can_equal) == false then
-                  fl.player:notify(player, t('commands.higher_immunity', v:Name()))
+                  fl.player:notify(player, t('commands.higher_immunity', v:name()))
 
                   return
                 end
@@ -326,10 +325,10 @@ if SERVER then
           -- Let plugins hook into this and abort command's execution if necessary.
           if !hook.run('PlayerRunCommand', player, cmd_table, args) then
             if IsValid(player) then
-              ServerLog(player:Name()..' has used /'..cmd_table.name..' '..text:utf8sub(string.utf8len(command) + 2, string.utf8len(text)))
+              ServerLog(player:name()..' has used /'..cmd_table.name..' '..text:utf8sub(string.utf8len(command) + 2, string.utf8len(text)))
             end
 
-            self:Run(player, cmd_table, args)
+            self:run(player, cmd_table, args)
           end
         else
           fl.player:notify(player, '/'..cmd_table.name..' '..cmd_table.syntax)
@@ -351,7 +350,7 @@ if SERVER then
   end
 
   -- Warning: this function assumes that command is valid and all permission checks have been done.
-  function fl.command:Run(player, cmd_table, arguments)
+  function fl.command:run(player, cmd_table, arguments)
     if cmd_table.on_run then
       try {
         cmd_table.on_run, cmd_table, player, unpack(arguments)
@@ -365,22 +364,22 @@ if SERVER then
   end
 
   cable.receive('Flux::Command::Run', function(player, command)
-    fl.command:Interpret(player, command)
+    fl.command:interpret(player, command)
   end)
 else
-  function fl.command:Send(command)
+  function fl.command:send(command)
     cable.send('Flux::Command::Run', command)
   end
 end
 
 -- An internal function that powers the flc and flCmd console commands.
-function fl.command.ConCommand(player, cmd, args, argsText)
+function fl.command.con_command(player, cmd, args, args_text)
   if SERVER then
-    fl.command:Interpret(player, argsText)
+    fl.command:interpret(player, args_text)
   else
-    fl.command:Send(argsText)
+    fl.command:send(args_text)
   end
 end
 
-concommand.Add('flCmd', fl.command.ConCommand)
-concommand.Add('flc', fl.command.ConCommand)
+concommand.Add('flCmd', fl.command.con_command)
+concommand.Add('flc', fl.command.con_command)

@@ -4,17 +4,17 @@ PANEL.categories = {}
 function PANEL:Init()
   self.html = vgui.Create('fl_html', self)
   self.html:Dock(FILL)
-  self:Rebuild()
+  self:rebuild()
 end
 
-function PANEL:Rebuild()
+function PANEL:rebuild()
   self.html:set_css(render_stylesheet('help'))
   self.html:set_body(render_template('help'))
   self.html:set_javascript(render_javascript('help'))
   self.html:render()
 end
 
-function PANEL:GetMenuSize()
+function PANEL:get_menu_size()
   return font.scale(1280), font.scale(900)
 end
 

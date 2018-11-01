@@ -1,6 +1,6 @@
 local player_meta = FindMetaTable('Player')
 
-function player_meta:HasInitialized()
+function player_meta:has_initialized()
   return self:GetDTBool(BOOL_INITIALIZED) or false
 end
 
@@ -8,14 +8,14 @@ function player_meta:get_data()
   return self:get_nv('fl_data', {})
 end
 
-player_meta.flName = player_meta.flName or player_meta.Name
+player_meta.fl_name = player_meta.fl_name or player_meta.Name
 
-function player_meta:Name(force_true_name)
-  return (!force_true_name and hook.run('GetPlayerName', self)) or self:get_nv('name', self:flName())
+function player_meta:name(force_true_name)
+  return (!force_true_name and hook.run('GetPlayerName', self)) or self:get_nv('name', self:fl_name())
 end
 
-function player_meta:SteamName()
-  return self:flName()
+function player_meta:steam_name()
+  return self:fl_name()
 end
 
 function player_meta:SetModel(path)
@@ -34,28 +34,28 @@ end
   Actions system
 --]]
 
-function player_meta:SetAction(id, force)
-  if force or self:GetAction() == 'none' then
+function player_meta:set_action(id, force)
+  if force or self:get_action() == 'none' then
     self:set_nv('action', id)
 
     return true
   end
 end
 
-function player_meta:GetAction()
+function player_meta:get_action()
   return self:get_nv('action', 'none')
 end
 
-function player_meta:IsDoingAction(id)
-  return (self:GetAction() == id)
+function player_meta:is_doing_action(id)
+  return (self:get_action() == id)
 end
 
-function player_meta:ResetAction()
-  self:SetAction('none', true)
+function player_meta:reset_action()
+  self:set_action('none', true)
 end
 
-function player_meta:DoAction(id)
-  local act = self:GetAction()
+function player_meta:do_action(id)
+  local act = self:get_action()
 
   if isstring(id) then
     act = id

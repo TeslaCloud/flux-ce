@@ -1,14 +1,14 @@
 local PANEL = {}
 
-PANEL.m_Title = ''
-PANEL.m_Icon = false
-PANEL.m_Autopos = true
-PANEL.m_CurAmt = 0
-PANEL.m_Active = false
-PANEL.m_IconSize = nil
-PANEL.m_IconLeft = true
-PANEL.m_Enabled = true
-PANEL.m_Centered = false
+PANEL.title = ''
+PANEL.icon = false
+PANEL.autopos = true
+PANEL.cur_amt = 0
+PANEL.active = false
+PANEL.icon_size = nil
+PANEL.icon_left = true
+PANEL.enabled = true
+PANEL.centered = false
 
 function PANEL:Paint(w, h)
   theme.hook('PaintButton', self, w, h)
@@ -17,65 +17,17 @@ end
 function PANEL:Think()
   self.BaseClass.Think(self)
 
-  local frameTime = FrameTime() / 0.006
+  local frame_time = FrameTime() / 0.006
 
   if self:IsHovered() then
-    self.m_CurAmt = math.Clamp(self.m_CurAmt + 1 * frameTime, 0, 40)
+    self.cur_amt = math.Clamp(self.cur_amt + 1 * frame_time, 0, 40)
   else
-    self.m_CurAmt = math.Clamp(self.m_CurAmt - 1 * frameTime, 0, 40)
+    self.cur_amt = math.Clamp(self.cur_amt - 1 * frame_time, 0, 40)
   end
 
   if !self.m_IconSizeOverride then
-    self.m_IconSize = self:GetTall() - 6
+    self.icon_size = self:GetTall() - 6
   end
-end
-
-function PANEL:SetCentered(centered)
-  self.m_Centered = centered
-end
-
-function PANEL:SetActive(active)
-  self.m_Active = active
-end
-
-function PANEL:IsActive()
-  return self.m_Active
-end
-
-function PANEL:Toggle()
-  self.m_Active = !self.m_Active
-end
-
-function PANEL:SetEnabled(enabled)
-  self.m_Enabled = enabled
-  self.m_TextColorOverride = (!enabled and theme.get_color('text'):darken(50)) or nil
-
-  self:SetMouseInputEnabled(enabled)
-end
-
-function PANEL:SetTextColor(color)
-  self.m_TextColorOverride = color
-end
-
-function PANEL:SetText(newText)
-  return self:SetTitle(newText)
-end
-
-function PANEL:SetTextOffset(pos)
-  self.m_TextPos = pos or 0
-end
-
-function PANEL:SetIcon(icon, right)
-  self.m_Icon = tostring(icon) or false
-
-  if right then
-    self.m_IconLeft = false
-  end
-end
-
-function PANEL:SetIconSize(size)
-  self.m_IconSize = size
-  self.m_IconSizeOverride = true
 end
 
 function PANEL:OnMousePressed(key)
@@ -90,19 +42,67 @@ function PANEL:OnMousePressed(key)
   end
 end
 
-function PANEL:SetTextAutoposition(autopos)
-  self.m_Autopos = autopos
-end
-
 function PANEL:SizeToContents()
-  local w, h = util.text_size(self.m_Title, self.m_Font)
+  local w, h = util.text_size(self.title, self.font)
   local add = 0
 
-  if self.m_Icon then
+  if self.icon then
     add = h * 1.5 - 2
   end
 
   self:SetSize(w * 1.15 + add, h * 1.5)
+end
+
+function PANEL:set_centered(centered)
+  self.centered = centered
+end
+
+function PANEL:set_active(active)
+  self.active = active
+end
+
+function PANEL:is_active()
+  return self.active
+end
+
+function PANEL:toggle()
+  self.active = !self.active
+end
+
+function PANEL:set_enabled(enabled)
+  self.enabled = enabled
+  self.m_TextColorOverride = (!enabled and theme.get_color('text'):darken(50)) or nil
+
+  self:SetMouseInputEnabled(enabled)
+end
+
+function PANEL:set_text_color(color)
+  self.m_TextColorOverride = color
+end
+
+function PANEL:set_text(new_text)
+  return self:SetTitle(new_text)
+end
+
+function PANEL:set_text_offset(pos)
+  self.m_TextPos = pos or 0
+end
+
+function PANEL:set_icon(icon, right)
+  self.icon = tostring(icon) or false
+
+  if right then
+    self.icon_left = false
+  end
+end
+
+function PANEL:set_icon_size(size)
+  self.icon_size = size
+  self.m_IconSizeOverride = true
+end
+
+function PANEL:set_text_autoposition(autopos)
+  self.autopos = autopos
 end
 
 vgui.Register('fl_button', PANEL, 'fl_base_panel')

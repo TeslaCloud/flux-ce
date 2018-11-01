@@ -9,11 +9,11 @@ fl.bars.stored = stored
 fl.bars.sorted = sorted
 
 -- Some fail-safety variables.
-fl.bars.defaultX = 8
-fl.bars.defaultY = 8
-fl.bars.defaultW = font.scale(312)
-fl.bars.defaultH = 18
-fl.bars.defaultSpacing = 6
+fl.bars.default_x = 8
+fl.bars.default_y = 8
+fl.bars.default_w = font.scale(312)
+fl.bars.default_h = 18
+fl.bars.default_spacing = 6
 
 function fl.bars:register(id, data, force)
   if !data then return end
@@ -36,15 +36,15 @@ function fl.bars:register(id, data, force)
     hinder_display = data.hinder_display or false,
     value = data.value or 0,
     hinder_value = data.hinder_value or 0,
-    x = data.x or self.defaultX,
-    y = data.y or self.defaultY,
-    width = data.width or self.defaultW,
-    height = data.height or self.defaultH,
+    x = data.x or self.default_x,
+    y = data.y or self.default_y,
+    width = data.width or self.default_w,
+    height = data.height or self.default_h,
     corner_radius = data.corner_radius or 0,
     priority = data.priority or table.Count(stored),
     type = data.type or BAR_TOP,
     font = data.font or 'text_bar',
-    spacing = data.spacing or self.defaultSpacing,
+    spacing = data.spacing or self.default_spacing,
     text_offset = data.text_offset or 1,
     callback = data.callback
   }
@@ -54,7 +54,7 @@ function fl.bars:register(id, data, force)
   return stored[id]
 end
 
-function fl.bars:Get(id)
+function fl.bars:get(id)
   if stored[id] then
     return stored[id]
   end
@@ -62,8 +62,8 @@ function fl.bars:Get(id)
   return false
 end
 
-function fl.bars:SetValue(id, new_value)
-  local bar = self:Get(id)
+function fl.bars:set_value(id, new_value)
+  local bar = self:get(id)
 
   if bar then
     theme.call('PreBarValueSet', bar, bar.value, new_value)
@@ -79,8 +79,8 @@ function fl.bars:SetValue(id, new_value)
   end
 end
 
-function fl.bars:HinderValue(id, new_value)
-  local bar = self:Get(id)
+function fl.bars:hinder_value(id, new_value)
+  local bar = self:get(id)
 
   if bar then
     theme.call('PreBarHinderValueSet', bar, bar.hinder_value, new_value)
@@ -91,7 +91,7 @@ function fl.bars:HinderValue(id, new_value)
   end
 end
 
-function fl.bars:Prioritize()
+function fl.bars:prioritize()
   sorted = {}
 
   for k, v in pairs(stored) do
@@ -111,14 +111,14 @@ function fl.bars:Prioritize()
   return sorted
 end
 
-function fl.bars:Position()
-  self:Prioritize()
+function fl.bars:position()
+  self:prioritize()
 
-  local last_y = self.defaultY
+  local last_y = self.default_y
 
   for priority, ids in pairs(sorted) do
     for k, v in pairs(ids) do
-      local bar = self:Get(v)
+      local bar = self:get(v)
 
       if bar and bar.type == BAR_TOP then
         local offX, offY = hook.run('AdjustBarPos', bar)
@@ -134,8 +134,8 @@ function fl.bars:Position()
 
 end
 
-function fl.bars:Draw(id)
-  local bar_info = self:Get(id)
+function fl.bars:draw(id)
+  local bar_info = self:get(id)
 
   if bar_info then
     hook.run('PreDrawBar', bar_info)
@@ -165,13 +165,13 @@ end
 function fl.bars:DrawTopBars()
   for priority, ids in pairs(sorted) do
     for k, v in ipairs(ids) do
-      self:Draw(v)
+      self:draw(v)
     end
   end
 end
 
-function fl.bars:Adjust(id, data)
-  local bar = self:Get(id)
+function fl.bars:adjust(id, data)
+  local bar = self:get(id)
 
   if bar then
     table.merge(bar, data)
@@ -183,11 +183,11 @@ do
 
   function Bars:LazyTick()
     if IsValid(fl.client) then
-      fl.bars:Position()
+      fl.bars:position()
 
       for k, v in pairs(stored) do
         if v.callback then
-          fl.bars:SetValue(v.id, v.callback(stored[k]))
+          fl.bars:set_value(v.id, v.callback(stored[k]))
         end
 
         hook.run('AdjustBarInfo', k, stored[k])
@@ -230,7 +230,7 @@ do
     text = t'bar_text.respawn',
     color = Color(50, 200, 50),
     max_value = 100,
-    x = ScrW() * 0.5 - fl.bars.defaultW * 0.5,
+    x = ScrW() * 0.5 - fl.bars.default_w * 0.5,
     y = ScrH() * 0.5 - 8,
     text_offset = 1,
     height = 16,

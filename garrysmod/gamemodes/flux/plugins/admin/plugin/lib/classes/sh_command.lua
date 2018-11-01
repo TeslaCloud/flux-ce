@@ -20,5 +20,5 @@ function Command:__tostring()
 end
 
 function Command:register()
-  fl.command:Create(self.id, self)
+  fl.command:create(self.id, self)
 end

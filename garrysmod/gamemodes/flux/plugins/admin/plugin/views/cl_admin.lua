@@ -4,7 +4,7 @@ PANEL.panels = {}
 
 function PANEL:Init()
   local scrw, scrh = ScrW(), ScrH()
-  local width, height = self:GetMenuSize()
+  local width, height = self:get_menu_size()
 
   self:SetTitle('Admin')
   self:SetSize(width, height)
@@ -31,7 +31,7 @@ function PANEL:PaintOver(w, h)
   theme.call('AdminPanelPaintOver', self, w, h)
 end
 
-function PANEL:AddPanel(id, title, permission, ...)
+function PANEL:add_panel(id, title, permission, ...)
   self.panels[id] = {
     id = id,
     title = title,
@@ -79,7 +79,7 @@ function PANEL:SetFullscreen(fullscreen)
     self.back_button = vgui.Create('DButton', self)
     self.back_button:SetPos(0, 0)
     self.back_button:SetSize(100, 0)
-    self.back_button:SetText('')
+    self.back_button:set_text('')
 
     self.back_button.Paint = function(btn, w, h)
       local font = fl.fonts:GetSize(theme.get_font('text_small'), 16)
@@ -100,7 +100,7 @@ function PANEL:SetFullscreen(fullscreen)
   end
 end
 
-function PANEL:GetMenuSize()
+function PANEL:get_menu_size()
   return font.scale(1280), font.scale(900)
 end
 

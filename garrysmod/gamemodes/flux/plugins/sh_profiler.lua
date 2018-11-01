@@ -89,15 +89,15 @@ if CLIENT then
   PANEL.lines = {}
 
   function PANEL:Init()
-    self:Rebuild()
+    self:rebuild()
   end
 
   function PANEL:update_metrics(metrics, counts, metrics_sv, counts_sv)
     self.metrics, self.counts, self.metrics_sv, self.counts_sv = metrics, counts, metrics_sv, counts_sv
-    self:Rebuild()
+    self:rebuild()
   end
 
-  function PANEL:Rebuild()
+  function PANEL:rebuild()
     if !IsValid(self.sv_list) then
       self.sv_list = vgui.Create('DListView', self)
       self.sv_list:Dock(FILL)

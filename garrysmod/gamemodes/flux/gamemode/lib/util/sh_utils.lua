@@ -87,7 +87,7 @@ function util.player_list_to_string(player_list)
     return t'chat.everyone'
   end
 
-  return util.list_to_string(function(obj) return (IsValid(obj) and obj:Name()) or 'Unknown Player' end, nil, unpack(player_list))
+  return util.list_to_string(function(obj) return (IsValid(obj) and obj:name()) or 'Unknown Player' end, nil, unpack(player_list))
 end
 
 function util.remove_newlines(str)
@@ -147,7 +147,7 @@ function txt(text)
 end
 
 function get_player_name(player)
-  return IsValid(player) and player:Name() or 'Console'
+  return IsValid(player) and player:name() or 'Console'
 end
 
 function util.vector_obstructed(vec1, vec2, filter)
