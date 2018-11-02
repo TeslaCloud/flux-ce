@@ -27,8 +27,8 @@ function Stamina:OnConfigSet(key, old_value, new_value)
   end
 end
 
-function Stamina:OnActiveCharacterSet(player)
-  return player:set_nv('stamina', 100)
+function Stamina:PostPlayerSpawn(player)
+  player:set_nv('stamina', 100)
 end
 
 function Stamina:PlayerThink(player, cur_time)
