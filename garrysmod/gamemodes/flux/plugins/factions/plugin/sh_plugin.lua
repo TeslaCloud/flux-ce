@@ -5,9 +5,9 @@ plugin.add_extra('factions')
 util.include('cl_hooks.lua')
 util.include('sv_hooks.lua')
 
-function Factions:PluginIncludeFolder(extra, folder_name)
+function Factions:PluginIncludeFolder(extra, folder)
   if extra == 'factions' then
-    faction.include_factions(folder_name..'/factions/')
+    faction.include_factions(folder..'/factions/')
 
     return true
   end
