@@ -75,10 +75,10 @@ local hooks = {}
 
 if SERVER then
   function hooks:PlayerButtonDown(player, key)
-    cable.send(player, 'FLBindPressed', key)
+    cable.send(player, 'fl_bind_pressed', key)
   end
 else
-  cable.receive('FLBindPressed', function(key)
+  cable.receive('fl_bind_pressed', function(key)
     local bind = fl.binds:get_bind(key)
 
     if bind then

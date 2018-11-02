@@ -11,7 +11,7 @@ function Items:ClientIncludedSchema(player)
 end
 
 function Items:PlayerUseItemEntity(player, entity, item_table)
-  cable.send(player, 'PlayerUseItemEntity', entity)
+  cable.send(player, 'fl_player_use_item_entity', entity)
 end
 
 function Items:PlayerTakeItem(player, item_table, ...)
@@ -82,7 +82,7 @@ function Items:OnItemTaken(player, item_table, slot)
 end
 
 function Items:PlayerInventoryUpdated(player)
-  cable.send(player, 'RefreshInventory')
+  cable.send(player, 'fl_inventory_refresh')
 end
 
 function Items:PlayerCanUseItem(player, item_table, action, ...)
@@ -119,11 +119,11 @@ function Characters:PreSaveCharacter(player, index)
   end
 end
 
-cable.receive('PlayerDropItem', function(player, instance_id)
+cable.receive('fl_player_drop_item', function(player, instance_id)
   hook.run('PlayerDropItem', player, instance_id)
 end)
 
-cable.receive('Flux::Items::AbortHoldStart', function(player)
+cable.receive('fl_items_abort_hold_start', function(player)
   local ent = player:get_nv('hold_entity')
 
   if IsValid(ent) then

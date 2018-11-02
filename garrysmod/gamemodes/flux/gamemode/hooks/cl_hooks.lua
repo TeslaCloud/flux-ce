@@ -6,10 +6,10 @@ timer.Remove('HintSystem_Annoy2')
 function GM:InitPostEntity()
   fl.client = fl.client or LocalPlayer()
 
-  cable.send('player_set_lang', GetConVar('gmod_language'):GetString())
+  cable.send('fl_player_set_lang', GetConVar('gmod_language'):GetString())
 
   timer.Simple(0.4, function()
-    cable.send('player_created', true)
+    cable.send('fl_player_created', true)
     fl.localPlayerCreated = true
   end)
 
@@ -366,7 +366,7 @@ function GM:ContextMenuOpen()
 end
 
 function GM:SoftUndo(player)
-  cable.send('soft_undo')
+  cable.send('fl_undo_soft')
 
   if #fl.undo:get_player(fl.client) > 0 then return true end
 end
