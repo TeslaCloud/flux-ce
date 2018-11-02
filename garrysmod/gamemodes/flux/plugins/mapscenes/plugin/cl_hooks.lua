@@ -18,7 +18,7 @@ end
 local view = {}
 
 function Mapscenes:CalcView(player, origin, angles, fov)
-  if IsValid(fl.intro_panel) then
+  if hook.run('ShouldMapsceneRender') then
     if #self.points > 0 then
       local cur_time = CurTime()
 
