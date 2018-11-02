@@ -1,14 +1,14 @@
-cable.receive('flLoadMapscene', function(points)
+cable.receive('fl_mapscene_load', function(points)
   Mapscenes.points = points or {}
 end)
 
-cable.receive('flAddMapscene', function(pos, ang)
+cable.receive('fl_mapscene_add', function(pos, ang)
   table.insert(Mapscenes.points, {
     pos = pos,
     ang = ang
   })
 end)
 
-cable.receive('flDeleteMapscene', function(index)
+cable.receive('fl_mapscene_delete', function(index)
   table.remove(Mapscenes.points, index)
 end)

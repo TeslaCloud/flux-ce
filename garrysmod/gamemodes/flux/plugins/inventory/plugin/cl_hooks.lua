@@ -61,7 +61,7 @@ function Inventory:create_hotbar()
   return fl.client.hotbar
 end
 
-cable.receive('RefreshInventory', function()
+cable.receive('fl_inventory_refresh', function()
   if fl.tab_menu and fl.tab_menu.active_panel and fl.tab_menu.active_panel.rebuild then
     fl.tab_menu.active_panel:rebuild()
   end

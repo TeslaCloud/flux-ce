@@ -3,7 +3,7 @@ config.set('mapscenes_animated', false)
 config.set('mapscenes_rotate_speed', 0.05)
 
 function Mapscenes:PlayerInitialized(player)
-  cable.send(player, 'flLoadMapscene', self.points)
+  cable.send(player, 'fl_mapscene_load', self.points)
 end
 
 function Mapscenes:LoadData()
@@ -30,15 +30,15 @@ function Mapscenes:add_point(pos, ang)
     ang = ang
   })
 
-  cable.send(nil, 'flAddMapscene', pos, ang)
+  cable.send(nil, 'fl_mapscene_add', pos, ang)
 
   self:save()
 end
 
-cable.receive('flRemoveMapscene', function(player, id)
+cable.receive('fl_mapscene_remove', function(player, id)
   table.remove(Mapscenes.points, id)
 
-  cable.send(nil, 'flDeleteMapscene', id)
+  cable.send(nil, 'fl_mapscene_delete', id)
 
   Mapscenes:save()
 end)

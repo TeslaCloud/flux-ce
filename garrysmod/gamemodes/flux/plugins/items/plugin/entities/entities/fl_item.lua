@@ -116,7 +116,7 @@ else
       desc = self.item.description
     else
       if !self.dataRequested then
-        cable.send('RequestItemData', self:EntIndex())
+        cable.send('fl_items_data_request', self:EntIndex())
         self.dataRequested = true
       end
 

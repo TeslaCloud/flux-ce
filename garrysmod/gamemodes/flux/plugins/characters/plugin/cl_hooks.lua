@@ -188,7 +188,7 @@ function Characters:PanelCharacterSet(panel, char_data)
   panel.model.Entity:SetSkin(char_data.skin or 1)
 end
 
-cable.receive('PlayerCreatedCharacter', function(success, status)
+cable.receive('fl_player_created_character', function(success, status)
   if IsValid(fl.intro_panel) and IsValid(fl.intro_panel.menu) then
     if success then
       fl.intro_panel.menu:goto_stage(-1)
@@ -198,7 +198,7 @@ cable.receive('PlayerCreatedCharacter', function(success, status)
         local chars = fl.client:get_all_characters()
 
         if #chars == 1 then
-          cable.send('PlayerSelectCharacter', chars[1].character_id)
+          cable.send('fl_player_select_character', chars[1].character_id)
         end
       end)
     else

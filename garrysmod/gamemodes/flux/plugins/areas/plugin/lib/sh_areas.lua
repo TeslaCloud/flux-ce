@@ -98,7 +98,7 @@ function areas.register(id, data)
   top = top + 1
 
   if SERVER then
-    cable.send(nil, 'flAreaRegister', id, data)
+    cable.send(nil, 'fl_area_register', id, data)
   end
 
   return stored[id]
@@ -108,7 +108,7 @@ function areas.remove(id)
   stored[id] = nil
 
   if SERVER then
-    cable.send(nil, 'flAreaRemove', id)
+    cable.send(nil, 'fl_area_remove', id)
   end
 end
 

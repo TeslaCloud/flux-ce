@@ -101,7 +101,7 @@ function chatbox.add_text(listeners, ...)
     hook.run('AdjustMessageData', v, data)
 
     if chatbox.can_hear(v, data) then
-      cable.send(v, 'chat_add_message', data)
+      cable.send(v, 'fl_chat_message_add', data)
     end
   end
 end
@@ -134,7 +134,7 @@ function chatbox.message_to_string(message_data, concatenator)
   return table.concat(to_string, concatenator)
 end
 
-cable.receive('chat_add_text', function(player, ...)
+cable.receive('fl_chat_text_add', function(player, ...)
   if !IsValid(player) then return end
 
   chatbox.set_client_mode(true)
@@ -142,7 +142,7 @@ cable.receive('chat_add_text', function(player, ...)
   chatbox.set_client_mode(false)
 end)
 
-cable.receive('chat_player_say', function(player, text, team_chat)
+cable.receive('fl_chat_player_say', function(player, text, team_chat)
   if !IsValid(player) then return end
 
   local player_say_override = hook.run('PlayerSay', player, text, team_chat)

@@ -203,7 +203,7 @@ function item.new(id, data, forced_id)
 
     if SERVER then
       item.async_save()
-      cable.send(nil, 'ItemNewInstance', id, (data or 1), item_id)
+      cable.send(nil, 'fl_items_new_instance', id, (data or 1), item_id)
     end
 
     return instances[id][item_id]
@@ -347,17 +347,17 @@ if SERVER then
 
   function item.network_item_data(player, item_table)
     if item.is_instance(item_table) then
-      cable.send(player, 'ItemData', item_table.id, item_table.instance_id, item_table.data)
+      cable.send(player, 'fl_items_data', item_table.id, item_table.instance_id, item_table.data)
     end
   end
 
   function item.network_item(player, instance_id)
-    cable.send(player, 'NetworkItem', instance_id, item.to_save(item.find_instance_by_id(instance_id)))
+    cable.send(player, 'fl_items_network', instance_id, item.to_save(item.find_instance_by_id(instance_id)))
   end
 
   function item.network_entity_data(player, ent)
     if IsValid(ent) then
-      cable.send(player, 'ItemEntData', ent:EntIndex(), ent.item.id, ent.item.instance_id)
+      cable.send(player, 'fl_items_ent_data', ent:EntIndex(), ent.item.id, ent.item.instance_id)
     end
   end
 
@@ -416,7 +416,7 @@ if SERVER then
     return ent, item_table
   end
 
-  cable.receive('RequestItemData', function(player, ent_index)
+  cable.receive('fl_items_data_request', function(player, ent_index)
     local ent = Entity(ent_index)
 
     if IsValid(ent) then
@@ -424,13 +424,13 @@ if SERVER then
     end
   end)
 else
-  cable.receive('ItemData', function(id, instance_id, data)
+  cable.receive('fl_items_data', function(id, instance_id, data)
     if istable(instances[id][instance_id]) then
       instances[id][instance_id].data = data
     end
   end)
 
-  cable.receive('NetworkItem', function(instance_id, item_table)
+  cable.receive('fl_items_network', function(instance_id, item_table)
     if item_table and stored[item_table.id] then
       local new_table = table.Copy(stored[item_table.id])
       table.safe_merge(new_table, item_table)
@@ -443,14 +443,14 @@ else
     end
   end)
 
-  cable.receive('ItemEntData', function(ent_index, id, instance_id)
+  cable.receive('fl_items_ent_data', function(ent_index, id, instance_id)
     local ent = Entity(ent_index)
 
     if IsValid(ent) then
       local item_table = instances[id][instance_id]
 
       if item_table == nil then
-        return cable.send('RequestItemData', ent_index)
+        return cable.send('fl_items_data_request', ent_index)
       end
 
       -- Client has to know this shit too I guess?
@@ -465,7 +465,7 @@ else
     end
   end)
 
-  cable.receive('ItemNewInstance', function(id, data, item_id)
+  cable.receive('fl_items_new_instance', function(id, data, item_id)
     item.new(id, data, item_id)
   end)
 end

@@ -363,12 +363,12 @@ if SERVER then
     end
   end
 
-  cable.receive('Flux::Command::Run', function(player, command)
+  cable.receive('fl_command_run', function(player, command)
     fl.command:interpret(player, command)
   end)
 else
   function fl.command:send(command)
-    cable.send('Flux::Command::Run', command)
+    cable.send('fl_command_run', command)
   end
 end
 

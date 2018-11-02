@@ -15,7 +15,7 @@ util.include('cl_hooks.lua')
 
 if SERVER then
   function PLUGIN:PlayerInitialized(player)
-    --cable.send(player, 'flLoadTextAreas', areas.get_by_type('text'))
+    --cable.send(player, 'fl_areas_text_load', areas.get_by_type('text'))
   end
 
   function PLUGIN:InitPostEntity()
@@ -38,7 +38,7 @@ if SERVER then
     end
   end
 else
-  cable.receive('flLoadTextAreas', function(data)
+  cable.receive('fl_areas_text_load', function(data)
     for k, v in pairs(data) do
       areas.register(k, v)
     end

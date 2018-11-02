@@ -211,7 +211,7 @@ function PANEL:slots_to_inventory()
     end
   end
 
-  cable.send('InventorySync', self.inventory)
+  cable.send('fl_inventory_sync', self.inventory)
 end
 
 function PANEL:get_menu_size()

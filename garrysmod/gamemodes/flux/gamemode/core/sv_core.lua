@@ -29,5 +29,5 @@ function ServerLog(...)
 end
 
 function hook.run_client(player, strHookName, ...)
-  cable.send(player, 'Hook_RunCL', strHookName, ...)
+  cable.send(player, 'fl_hook_run_cl', strHookName, ...)
 end

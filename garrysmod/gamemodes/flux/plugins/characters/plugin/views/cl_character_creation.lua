@@ -169,7 +169,7 @@ function PANEL:next_stage()
         self.panel:on_close(self)
       end
 
-      cable.send('CreateCharacter', self.char_data)
+      cable.send('fl_create_character', self.char_data)
     end,
     t'no')
   end

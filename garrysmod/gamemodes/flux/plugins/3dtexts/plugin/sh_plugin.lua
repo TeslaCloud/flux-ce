@@ -7,8 +7,8 @@ util.include('cl_hooks.lua')
 
 if SERVER then
   function SurfaceText:PlayerInitialized(player)
-    cable.send(player, 'flLoad3DTexts', self.texts)
-    cable.send(player, 'flLoad3DPictures', self.pictures)
+    cable.send(player, 'fl_surface_text_load', self.texts)
+    cable.send(player, 'fl_surface_picture_load', self.pictures)
   end
 
   function SurfaceText:LoadData()
@@ -39,7 +39,7 @@ if SERVER then
 
     self:save()
 
-    cable.send(nil, 'SurfaceText_Add', data)
+    cable.send(nil, 'fl_surface_text_add', data)
   end
 
   function SurfaceText:add_picture(data)
@@ -49,40 +49,40 @@ if SERVER then
 
     self:save()
 
-    cable.send(nil, 'fl3DPicture_Add', data)
+    cable.send(nil, 'fl_surface_picture_add', data)
   end
 
   function SurfaceText:remove_text(player)
     if player:can('textremove') then
-      cable.send(player, 'SurfaceText_Calculate', true)
+      cable.send(player, 'fl_surface_text_calculate', true)
     end
   end
 
   function SurfaceText:remove_picture(player)
     if player:can('textremove') then
-      cable.send(player, 'fl3DPicture_Calculate', true)
+      cable.send(player, 'fl_surface_picture_calculate', true)
     end
   end
 
-  cable.receive('SurfaceText_Remove', function(player, idx)
+  cable.receive('fl_surface_text_remove', function(player, idx)
     if player:can('textremove') then
       table.remove(SurfaceText.texts, idx)
 
       SurfaceText:save()
 
-      cable.send(nil, 'SurfaceText_Remove', idx)
+      cable.send(nil, 'fl_surface_text_remove', idx)
 
       fl.player:notify(player, t'3d_text.text_removed')
     end
   end)
 
-  cable.receive('fl3DPicture_Remove', function(player, idx)
+  cable.receive('fl_surface_picture_remove', function(player, idx)
     if player:can('textremove') then
       table.remove(SurfaceText.pictures, idx)
 
       SurfaceText:save()
 
-      cable.send(nil, 'fl3DPicture_Remove', idx)
+      cable.send(nil, 'fl_surface_picture_remove', idx)
 
       fl.player:notify(player, t'3d_picture.removed')
     end
@@ -105,7 +105,7 @@ else
 
       if math.abs(math.abs(hit_pos.z) - math.abs(pos.z)) < 4 * v.scale then
         if util.vectors_intersect(trace_start, hit_pos, start_pos, end_pos) then
-          cable.send('SurfaceText_Remove', k)
+          cable.send('fl_surface_text_remove', k)
 
           return true
         end
@@ -132,7 +132,7 @@ else
 
       if math.abs(math.abs(hit_pos.z) - math.abs(pos.z)) < height * 0.05 then
         if util.vectors_intersect(trace_start, hit_pos, start_pos, end_pos) then
-          cable.send('fl3DPicture_Remove', k)
+          cable.send('fl_surface_picture_remove', k)
 
           return true
         end
@@ -142,35 +142,35 @@ else
     return false
   end
 
-  cable.receive('flLoad3DTexts', function(data)
+  cable.receive('fl_surface_text_load', function(data)
     SurfaceText.texts = data or {}
   end)
 
-  cable.receive('SurfaceText_Add', function(data)
+  cable.receive('fl_surface_text_add', function(data)
     table.insert(SurfaceText.texts, data)
   end)
 
-  cable.receive('SurfaceText_Remove', function(idx)
+  cable.receive('fl_surface_text_remove', function(idx)
     table.remove(SurfaceText.texts, idx)
   end)
 
-  cable.receive('flLoad3DPictures', function(data)
+  cable.receive('fl_surface_picture_load', function(data)
     SurfaceText.pictures = data or {}
   end)
 
-  cable.receive('fl3DPicture_Add', function(data)
+  cable.receive('fl_surface_picture_add', function(data)
     table.insert(SurfaceText.pictures, data)
   end)
 
-  cable.receive('fl3DPicture_Remove', function(idx)
+  cable.receive('fl_surface_picture_remove', function(idx)
     table.remove(SurfaceText.pictures, idx)
   end)
 
-  cable.receive('SurfaceText_Calculate', function()
+  cable.receive('fl_surface_text_calculate', function()
     SurfaceText:trace_remove_text(fl.client:GetEyeTraceNoCursor())
   end)
 
-  cable.receive('fl3DPicture_Calculate', function()
+  cable.receive('fl_surface_picture_calculate', function()
     SurfaceText:trace_remove_picture(fl.client:GetEyeTraceNoCursor())
   end)
 end

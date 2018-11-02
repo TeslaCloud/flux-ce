@@ -444,7 +444,7 @@ function fl.include_schema()
 
     -- Wait just a tiny bit for stuff to catch up
     timer.Simple(0.2, function()
-      cable.send('ClientIncludedSchema', true)
+      cable.send('fl_client_included_schema', true)
       hook.run('FluxClientSchemaLoaded')
     end)
   end
