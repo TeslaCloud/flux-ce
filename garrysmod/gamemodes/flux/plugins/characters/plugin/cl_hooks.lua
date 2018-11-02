@@ -33,6 +33,12 @@ function Characters:PlayerInitialized()
   end
 end
 
+function Characters:ShouldMapsceneRender()
+  if IsValid(fl.intro_panel) then
+    return true
+  end
+end
+
 function Characters:OnIntroPanelRemoved()
   if !fl.client:get_character() then
     fl.intro_panel = theme.create_panel('main_menu')
