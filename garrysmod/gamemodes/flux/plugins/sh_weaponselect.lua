@@ -135,7 +135,7 @@ do
     local weapon = player:GetActiveWeapon()
 
     if !player:InVehicle() then
-      if player:KeyDown(IN_RELOAD) then
+      if hook.run('ShouldOpenWepselect') != false then
         local weapon_count = table.Count(player:GetWeapons())
         local old_index = self.weapon_index
         bind = bind:lower()
