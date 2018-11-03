@@ -27,7 +27,7 @@ function PANEL:PerformLayout()
     local wide = 0
 
     for k, v in pairs(self.Panels) do
-      wide = wide + v:GetWide() + self.m_iOverlap
+      wide = wide + v:GetWide() + (k != #self.Panels and self.m_iOverlap or 0)
     end
 
     x = w * 0.5 - wide * 0.5
