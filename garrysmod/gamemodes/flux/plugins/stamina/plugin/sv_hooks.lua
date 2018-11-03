@@ -53,7 +53,7 @@ function Stamina:PlayerThink(player, cur_time)
     if !player:OnGround() then
       player.standing_since = cur_time
 
-      if player.was_on_ground then
+      if player.was_on_ground and player.m_bJumping then
         self:set_stamina(player, player:get_nv('stamina', 100) - jump_penalty)
         self:start_running(player, true)
       end
