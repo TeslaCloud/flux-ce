@@ -108,7 +108,9 @@ function Characters:ShouldDrawLoadingScreen()
 end
 
 function Characters:ShouldHUDPaint()
-  return fl.client:is_character_loaded()
+  if !fl.client:is_character_loaded() then
+    return false
+  end
 end
 
 function Characters:ShouldScoreboardHide()
