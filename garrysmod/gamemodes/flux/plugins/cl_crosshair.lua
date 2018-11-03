@@ -10,7 +10,7 @@ local gap = 8
 local cur_gap = gap
 
 function PLUGIN:HUDPaint()
-  if !plugin.call('PreDrawCrosshair') then
+  if hook.run('ShouldHUDPaint') != false then
     local trace = fl.client:GetEyeTraceNoCursor()
     local distance = fl.client:GetPos():Distance(trace.HitPos)
     local draw_color = plugin.call('AdjustCrosshairColor', trace, distance) or Color(255, 255, 255)
