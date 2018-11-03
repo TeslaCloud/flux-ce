@@ -63,7 +63,7 @@ function TOOL:RightClick(trace)
   return true
 end
 
-local textStyles = {
+local text_styles = {
   ['tool.texts.opt1'] = 1,
   ['tool.texts.opt2'] = 2,
   ['tool.texts.opt3'] = 3,
@@ -79,7 +79,7 @@ local textStyles = {
 function TOOL.BuildCPanel(CPanel)
   local options = {}
 
-  for k, v in pairs(textStyles) do
+  for k, v in pairs(text_styles) do
     options[t(k)] = {['texts_style'] = v}
   end
 
