@@ -45,22 +45,16 @@ end
 -- Called after view model is drawn.
 function flPlayer:PostDrawViewModel(viewmodel, weapon)
   if weapon.UseHands or !weapon:IsScripted() then
-    local handsEntity = fl.client:GetHands()
+    local hands_entity = fl.client:GetHands()
 
-    if IsValid(handsEntity) then
-      handsEntity:DrawModel()
+    if IsValid(hands_entity) then
+      hands_entity:DrawModel()
     end
   end
 end
 
 function flPlayer:Loadout()
-  self.Player:StripWeapons()
-
-  for k, v in pairs(self.loadout) do
-    self.Player:Give(v)
-  end
-
-  self.Player:SelectWeapon(self.loadout[1])
+  hook.run('PostPlayerLoadout', self.Player, self.loadout)
 end
 
 player_manager.RegisterClass('flPlayer', flPlayer, 'player_default')

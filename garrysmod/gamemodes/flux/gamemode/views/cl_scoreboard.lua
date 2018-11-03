@@ -80,7 +80,7 @@ function PANEL:rebuild()
   self.avatar_panel = vgui.Create('AvatarImage', self)
   self.avatar_panel:set_size_ex(32, 32)
   self.avatar_panel:SetPos(4, 4)
-  self.avatar_panel:set_player(player, 64)
+  self.avatar_panel:SetPlayer(player, 64)
 
   self.name_label = vgui.Create('DLabel', self)
   self.name_label:SetText(player:name())
