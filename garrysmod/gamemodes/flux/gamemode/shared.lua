@@ -25,10 +25,6 @@ LITE_REFRESH     = fl.initialized and Settings.lite_refresh or false
 
 fl.development   = !IS_PRODUCTION
 
--- Aliases for serverside and clientside constants.
-sv               = SERVER
-cl               = CLIENT
-
 -- Fix for the name conflicts.
 _player, _team, _file, _table, _sound = player, team, file, table, sound
 

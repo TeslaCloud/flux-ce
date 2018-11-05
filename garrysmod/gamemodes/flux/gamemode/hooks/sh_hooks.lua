@@ -4,7 +4,7 @@ function GM:Initialize()
   hook.Remove('PlayerInitialSpawn', 'PlayerAuthSpawn')
   hook.Remove('RenderScene', 'RenderStereoscopy')
 
-  if sv then
+  if SERVER then
     local config_file = fileio.Read('gamemodes/flux/flux.yml')
 
     if config_file then
