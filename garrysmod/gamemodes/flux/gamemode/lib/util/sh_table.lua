@@ -266,3 +266,5 @@ function PrintTable(t, indent, done, indent_length)
     end
   end
 end
+
+print_table = PrintTable
