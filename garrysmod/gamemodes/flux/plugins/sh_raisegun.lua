@@ -8,10 +8,10 @@ local rotation_translate = {
 }
 
 local blocked_weapons = {
-  'weapon_physgun',
-  'gmod_tool',
-  'gmod_camera',
-  'weapon_physcannon'
+  ['weapon_physgun'] = true,
+  ['gmod_tool'] = true,
+  ['gmod_camera'] = true,
+  ['weapon_physcannon'] = true
 }
 
 if CLIENT then
@@ -82,7 +82,7 @@ function PLUGIN:OnWeaponRaised(player, weapon, raised)
 end
 
 function PLUGIN:UpdateWeaponRaised(player, weapon, raised, cur_time)
-  if raised or table.HasValue(blocked_weapons, weapon:GetClass()) then
+  if raised or blocked_weapons[weapon:GetClass()] then
     weapon:SetNextPrimaryFire(cur_time)
     weapon:SetNextSecondaryFire(cur_time)
 
@@ -135,7 +135,7 @@ function player_meta:is_weapon_raised()
     return false
   end
 
-  if table.HasValue(blocked_weapons, weapon:GetClass()) then
+  if blocked_weapons[weapon:GetClass()] then
     return true
   end
 
