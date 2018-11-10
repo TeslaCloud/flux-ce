@@ -219,7 +219,7 @@ function ActiveRecord.Base:run_query(callback)
     end
     self.query_map = a{}
     query:callback(function(results, query, time)
-      print_query(self.class_name..' Load ('..time..'ms)', query)
+      print_query(self.class_name..' Load ('..time..'s)', query)
       if istable(results) and #results > 0 then
         local objects = {}
 
@@ -296,7 +296,7 @@ local except = {
 
 local function gen_callback(self, insert)
   return function(result, query, time)
-    print_query(self.class_name..' '..(insert and 'Create' or 'Update')..' ('..time..'ms)', query)
+    print_query(self.class_name..' '..(insert and 'Create' or 'Update')..' ('..time..'s)', query)
     self.saving = false
 
     if insert and self.after_create then
@@ -387,7 +387,7 @@ function ActiveRecord.Base:destroy()
   local query = ActiveRecord.Database:delete(self.table_name)
     query:where('id', self.id)
     query:callback(function(result, query, time)
-      print_query(class_name..' Delete ('..time..'ms)', query)
+      print_query(class_name..' Delete ('..time..'s)', query)
     end)
   query:execute()
   self = nil

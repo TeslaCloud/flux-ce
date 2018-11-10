@@ -45,7 +45,7 @@ end
 function ActiveRecord.restore_schema()
   local query = ActiveRecord.Database:select('ar_schema')
     query:callback(function(result, query, time)
-      print_query('Schema Restore ('..time..'ms)', query)
+      print_query('Schema Restore ('..time..'s)', query)
 
       if istable(result) then
         for k, v in ipairs(result) do
@@ -73,7 +73,7 @@ function ActiveRecord.get_meta_key(key, default)
     query:where('key', key)
     query:limit(1)
     query:callback(function(res, query_str, time)
-      print_query('Meta Get ('..time..'ms)', query_str)
+      print_query('Meta Get ('..time..'s)', query_str)
       if istable(res) and #res > 0 then
         return res[1] and res[1].value or default
       end
@@ -91,7 +91,7 @@ function ActiveRecord.set_meta_key(key, value)
           q:where('key', key)
           q:update('value', value)
           q:callback(function(r, query_str, time)
-            print_query('Meta Update ('..time..'ms)', query_str)
+            print_query('Meta Update ('..time..'s)', query_str)
           end)
         q:execute()
       else
@@ -99,7 +99,7 @@ function ActiveRecord.set_meta_key(key, value)
           q:insert('key', key)
           q:insert('value', value)
           q:callback(function(r, query_str, time)
-            print_query('Meta Insert ('..time..'ms)', query_str)
+            print_query('Meta Insert ('..time..'s)', query_str)
           end)
         q:execute()
       end

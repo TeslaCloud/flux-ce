@@ -247,3 +247,16 @@ function string.parse_parent(str, ref)
     return false
   end
 end
+
+-- https://stackoverflow.com/questions/11401890/case-insensitive-lua-pattern-matching
+function i(pattern)
+  local p = pattern:gsub("(%%?)(.)", function(percent, letter)
+    if percent != "" or !letter:match("%a") then
+      return percent..letter
+    else
+      return string.format("[%s%s]", letter:lower(), letter:upper())
+    end
+  end)
+
+  return p
+end

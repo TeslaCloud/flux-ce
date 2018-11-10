@@ -1,5 +1,5 @@
 include 'inflector.lua'
-include 'pluralize.lua'
+include 'inflections.lua'
 
 function ActiveRecord.generate_create_func(obj, type, def)
   obj[type] = function(s, name, ...)

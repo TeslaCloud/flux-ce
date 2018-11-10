@@ -3,7 +3,7 @@ function create_table(name, callback)
     query:overwrite(true)
     callback(query)
     query:callback(function(result, query_str, time)
-      print_query('Create Table ('..time..'ms)', query_str)
+      print_query('Create Table ('..time..'s)', query_str)
     end)
   query:execute()
 end
@@ -11,7 +11,7 @@ end
 function drop_table(name)
   local query = ActiveRecord.Database:drop(name)
     query:callback(function(result, query, time)
-      print_query('Drop Table ('..time..'ms)', query)
+      print_query('Drop Table ('..time..'s)', query)
     end)
   return query:execute()
 end
@@ -20,7 +20,7 @@ function change_table(name, callback)
   local query = ActiveRecord.Database:change(name)
     callback(query)
     query:callback(function(result, query_str, time)
-      print_query('Change Table ('..time..'ms)', query_str)
+      print_query('Change Table ('..time..'s)', query_str)
     end)
   query:execute()
 end
@@ -105,7 +105,7 @@ function add_index(args)
   ActiveRecord.metadata.indexes[index_name] = args
 
   ActiveRecord.adapter:raw_query(query, function(results, query_str, time)
-    print_query('Add Index ('..time..'ms)', query_str)
+    print_query('Add Index ('..time..'s)', query_str)
   end)
 end
 
@@ -113,7 +113,7 @@ function drop_index(index_name, table_name)
   ActiveRecord.metadata.indexes[index_name] = nil
 
   ActiveRecord.adapter:raw_query('DROP INDEX IF EXISTS '..index_name..' ON '..table_name..';', function(results, query_str, time)
-    print_query('Drop Index ('..time..'ms)', query_str)
+    print_query('Drop Index ('..time..'s)', query_str)
   end)
 end
 
@@ -135,7 +135,7 @@ function create_reference(args)
   ActiveRecord.metadata.references[constraint_name] = args
 
   ActiveRecord.adapter:raw_query(query, function(result, query_str, time)
-    print_query('Create Reference ('..time..'ms)', query_str)
+    print_query('Create Reference ('..time..'s)', query_str)
   end)
 end
 
@@ -148,7 +148,7 @@ function create_primary_key(table_name, key)
   ActiveRecord.adapter:raw_query('ALTER TABLE '..table_name
     ..' ADD CONSTRAINT '..pkey_name
     ..' PRIMARY KEY ('..key..');', function(result, query_str, time)
-      print_query('Create Primary Key ('..time..'ms)', query_str)
+      print_query('Create Primary Key ('..time..'s)', query_str)
   end)
 end
 
