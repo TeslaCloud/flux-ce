@@ -8,7 +8,7 @@ local irregular_words = {
   data = 'data', ammo = 'ammo'
 }
 
-function ActiveRecord.Infector:pluralize(str)
+function ActiveRecord.Inflector:pluralize(str)
   if irregular_words[str] then return irregular_words[str] end
 
   local len = str:len()

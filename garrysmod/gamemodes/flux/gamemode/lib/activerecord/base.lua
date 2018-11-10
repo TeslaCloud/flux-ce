@@ -12,7 +12,7 @@ function ActiveRecord.Base:init()
 end
 
 function ActiveRecord.Base:class_extended(new_class)
-  new_class.table_name = ActiveRecord.Infector:pluralize(new_class.class_name:underscore())
+  new_class.table_name = ActiveRecord.Inflector:pluralize(new_class.class_name:underscore())
   new_class.last_id = 0
 
   ActiveRecord.Model:add(new_class)
@@ -436,7 +436,7 @@ function ActiveRecord.Base:has_many(what)
 end
 
 function ActiveRecord.Base:has_one(what)
-  return self:has({ ActiveRecord.Infector:pluralize(what), as = what }, false)
+  return self:has({ ActiveRecord.Inflector:pluralize(what), as = what }, false)
 end
 
 function ActiveRecord.Base:belongs_to(target, one)

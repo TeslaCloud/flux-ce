@@ -1,4 +1,4 @@
-include 'infector.lua'
+include 'inflector.lua'
 include 'pluralize.lua'
 
 function ActiveRecord.generate_create_func(obj, type, def)
@@ -70,7 +70,7 @@ do
 end
 
 function ActiveRecord.generate_table_name(class_name)
-  return ActiveRecord.Infector:pluralize(class_name:underscore())
+  return ActiveRecord.Inflector:pluralize(class_name:underscore())
 end
 
 function ActiveRecord.generate_tables()
