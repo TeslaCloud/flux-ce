@@ -1,5 +1,5 @@
 function Area:PlayerInitialized(player)
-  cable.send(player, 'fl_areas_load', areas.get_all())
+  cable.send(player, 'fl_areas_load', areas.all())
 end
 
 function Area:LoadData()
@@ -9,13 +9,13 @@ function Area:LoadData()
 end
 
 function Area:SaveData()
-  data.save_plugin('areas', areas.get_all())
+  data.save_plugin('areas', areas.all())
 end
 
 function Area:OneSecond()
   local cur_time = CurTime()
 
-  for k, v in pairs(areas.get_all()) do
+  for k, v in pairs(areas.all()) do
     if istable(v.polys) and isstring(v.type) then
       for k2, v2 in ipairs(v.polys) do
         for plyID, player in ipairs(_player.GetAll()) do

@@ -106,13 +106,13 @@ function Area:HUDPaint()
 end
 
 cable.receive('fl_player_entered_area', function(area_idx, idx, pos)
-  local area = areas.get_all()[area_idx]
+  local area = areas.all()[area_idx]
 
   Try('Areas', areas.get_callback(area.type), fl.client, area, true, pos, CurTime())
 end)
 
 cable.receive('fl_player_left_area', function(area_idx, idx, pos)
-  local area = areas.get_all()[area_idx]
+  local area = areas.all()[area_idx]
 
   Try('Areas', areas.get_callback(area.type), fl.client, area, false, pos, CurTime())
 end)

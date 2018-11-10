@@ -129,14 +129,14 @@ do
     str = str:gsub(' ', '_')
 
     for k, v in ipairs(blocked_chars) do
-      str = str:Replace(v, '')
+      str = str:replace(v, '')
     end
 
     return str
   end
 end
 
-function string.ensure_ending(str, ending)
+function string.ensure_end(str, ending)
   if str:ends(ending) then return str end
   return str..ending
 end

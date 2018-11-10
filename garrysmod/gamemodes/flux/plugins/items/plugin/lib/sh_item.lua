@@ -18,7 +18,7 @@ item.sorted = sorted
 -- Items currently dropped and lying on the ground.
 item.entities = entities
 
-function item.get_all()
+function item.all()
   return stored
 end
 

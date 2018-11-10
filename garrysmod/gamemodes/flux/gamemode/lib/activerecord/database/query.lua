@@ -411,7 +411,7 @@ function ActiveRecord.Query:execute(queue_query)
   end
 
   if isstring(query_string) then
-    query_string = query_string:ensure_ending(';')
+    query_string = query_string:ensure_end(';')
     query_string = query_string:gsub(' ;', ';'):gsub('  ', ' ')
 
     if !queue_query then

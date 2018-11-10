@@ -75,7 +75,7 @@ function Factions:PreRebuildScoreboard(panel, w, h)
   category_list:SetSize(w - 8, h - 36)
   category_list:SetPos(4, 36)
 
-  for k, v in pairs(faction.get_all()) do
+  for k, v in pairs(faction.all()) do
     local players = faction.get_players(k)
 
     if #players == 0 then continue end

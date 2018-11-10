@@ -18,7 +18,7 @@ function PANEL:rebuild()
   self.scroll_panel:Dock(FILL)
   self.layout:Dock(FILL)
 
-  for id, item_table in pairs(item.get_all()) do
+  for id, item_table in pairs(item.all()) do
     if !categories[item_table.category] then
       categories[item_table.category] = {}
     end

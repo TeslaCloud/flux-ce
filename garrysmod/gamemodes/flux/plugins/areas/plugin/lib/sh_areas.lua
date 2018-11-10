@@ -9,7 +9,7 @@ areas.callbacks = callbacks
 areas.types = types
 areas.top = top
 
-function areas.get_all()
+function areas.all()
   return stored
 end
 

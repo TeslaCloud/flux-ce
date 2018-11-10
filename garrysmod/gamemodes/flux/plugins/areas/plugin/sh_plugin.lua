@@ -19,7 +19,7 @@ Area.tool_modes = {
       OnReload = data.OnReload or function(mode, tool, trace)
         local cur_time = CurTime()
 
-        for k, v in pairs(areas.get_all()) do
+        for k, v in pairs(areas.all()) do
           if istable(v.polys) and isstring(v.type) and v.type == data.area_type then
             for k2, v2 in ipairs(v.polys) do
               local pos = trace.HitPos

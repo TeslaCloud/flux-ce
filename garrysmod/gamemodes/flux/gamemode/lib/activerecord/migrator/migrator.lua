@@ -53,7 +53,7 @@ function ActiveRecord.Migrator:run_migrations(folder, force)
   local migration_count = 0
   local initial_version = tonumber(self.schema.version) or 0
 
-  folder = folder:ensure_ending('/')
+  folder = folder:ensure_end('/')
 
   local files, folders = file.Find(folder..'*', 'LUA')
 
@@ -138,7 +138,7 @@ function ActiveRecord.Migrator:generate_migration(name, body, verbose, file_path
   fileio.Delete(self.db_path..'/migrate/.keep')
 
   local version = self:generate_version()
-  file_path = (file_path and file_path:ensure_ending('/') or (self.db_path..'/migrate/'))..version..'_'..name:underscore()..'.lua'
+  file_path = (file_path and file_path:ensure_end('/') or (self.db_path..'/migrate/'))..version..'_'..name:underscore()..'.lua'
 
   fileio.Write(file_path, [[local Migration = ActiveRecord.Migration.new(]]..version..[[)
   function Migration:change()

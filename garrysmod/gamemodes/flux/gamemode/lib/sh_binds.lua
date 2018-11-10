@@ -20,7 +20,7 @@ if CLIENT then
     return key_enums
   end
 
-  function fl.binds:get_all()
+  function fl.binds:all()
     return stored
   end
 

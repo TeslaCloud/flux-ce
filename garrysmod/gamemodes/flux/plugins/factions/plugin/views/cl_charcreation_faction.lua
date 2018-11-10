@@ -15,7 +15,7 @@ function PANEL:on_open(parent)
   self.chooser:SetPos(0, self:GetTall() / 8 + 8)
   self.chooser:SetOverlap(4)
 
-  for k, v in pairs(faction.get_all()) do
+  for k, v in pairs(faction.all()) do
     if !v.whitelisted or fl.client:has_whitelist(v.faction_id) then
       local button = vgui.Create('fl_image_button')
       button:SetSize(self.chooser:GetWide() / 3, self.chooser:GetTall())
