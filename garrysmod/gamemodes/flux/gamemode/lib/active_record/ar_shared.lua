@@ -3,6 +3,7 @@ ActiveRecord = ActiveRecord or {}
 -- We only need to include ActiveRecord once.
 if !ActiveRecord.Base then
   if SERVER then
+    AddCSLuaFile()
     AddCSLuaFile 'base.lua'
     return include 'active_record.lua'
   end

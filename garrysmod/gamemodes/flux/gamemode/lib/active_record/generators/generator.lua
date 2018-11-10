@@ -1,6 +1,3 @@
-include 'inflector.lua'
-include 'inflections.lua'
-
 function ActiveRecord.generate_create_func(obj, type, def)
   obj[type] = function(s, name, ...)
     local args = {...}
@@ -70,7 +67,7 @@ do
 end
 
 function ActiveRecord.generate_table_name(class_name)
-  return ActiveRecord.Inflector:pluralize(class_name:underscore())
+  return Flow.Inflector:pluralize(class_name:underscore())
 end
 
 function ActiveRecord.generate_tables()

@@ -1,6 +1,6 @@
 -- Most of regular expressions are taken from here:
 -- https://github.com/rails/rails/blob/master/activesupport/lib/active_support/inflections.rb
-ActiveRecord.Inflector:inflections('en', function(inflect)
+Flow.Inflector:inflections('en', function(inflect)
   inflect:plural(i'^(ax)is$', '%1es')
   inflect:plural(i'(test)is$', '%1es')
   inflect:plural(i'(octop)us$', '%1i')

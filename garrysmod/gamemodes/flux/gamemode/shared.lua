@@ -5,12 +5,12 @@ GM.Website       = 'https://teslacloud.net/'
 GM.Email         = 'support@teslacloud.net'
 
 -- Define Flux-Specific fields.
-GM.version       = '0.4.4-alpha'
-GM.version_num   = '0.4.4'
-GM.date          = '11/10/2018'
-GM.build         = '20181110'
+GM.version       = '0.5.0-alpha'
+GM.version_num   = '0.5.0'
+GM.date          = '11/11/2018'
+GM.build         = '20181111'
 GM.description   = 'A free roleplay gamemode framework.'
-GM.code_name     = 'Apple Cider'
+GM.code_name     = 'Chocolate Milkshake'
 
 -- It would be very nice of you to leave below values as they are if you're using official schemas.
 -- While we can do nothing to stop you from changing them, we'll very much appreciate it if you don't.
@@ -57,7 +57,10 @@ if !LITE_REFRESH then
   include 'core/sh_core.lua'
   util.include 'core/sh_enums.lua'
 
-  util.include_folder('lib/util', true)
+  -- Include the Crate (Flux libraries) class
+  util.include 'lib/required/sh_crate.lua'
+
+  Crate:include 'flow'
 
   if CLIENT then
     local files, folders = file.Find('flux/client/*.lua', 'LUA')
@@ -76,7 +79,10 @@ if !LITE_REFRESH then
   util.include_folder('lib/required', true)
 
   -- Include ActiveRecord for database management
-  util.include 'lib/activerecord/ar_shared.lua'
+  Crate:include 'active_record'
+
+  -- And ActiveNetwork for easy variable networking
+  Crate:include 'active_network'
 
   -- So that we don't get duplicates on refresh.
   plugin.clear_cache()

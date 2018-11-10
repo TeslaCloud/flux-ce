@@ -1,13 +1,13 @@
-class 'ActiveRecord::Inflector'
+class 'Flow::Inflector'
 
-ActiveRecord.Inflector._plurals = {}
-ActiveRecord.Inflector._singulars = {}
-ActiveRecord.Inflector._irregulars = {}
-ActiveRecord.Inflector._irregulars_rev = {}
-ActiveRecord.Inflector._uncountables = {}
-ActiveRecord.Inflector.current_language = 'en'
+Flow.Inflector._plurals = {}
+Flow.Inflector._singulars = {}
+Flow.Inflector._irregulars = {}
+Flow.Inflector._irregulars_rev = {}
+Flow.Inflector._uncountables = {}
+Flow.Inflector.current_language = 'en'
 
-function ActiveRecord.Inflector:inflections(lang, func)
+function Flow.Inflector:inflections(lang, func)
   self.current_language     = lang or 'en'
   self._plurals[lang]        = self._plurals[lang] or {}
   self._singulars[lang]      = self._singulars[lang] or {}
@@ -20,27 +20,27 @@ function ActiveRecord.Inflector:inflections(lang, func)
   return self
 end
 
-function ActiveRecord.Inflector:plurals()
+function Flow.Inflector:plurals()
   return self._plurals[self.current_language]
 end
 
-function ActiveRecord.Inflector:singulars()
+function Flow.Inflector:singulars()
   return self._singulars[self.current_language]
 end
 
-function ActiveRecord.Inflector:uncountables()
+function Flow.Inflector:uncountables()
   return self._uncountables[self.current_language]
 end
 
-function ActiveRecord.Inflector:irregulars()
+function Flow.Inflector:irregulars()
   return self._irregulars[self.current_language]
 end
 
-function ActiveRecord.Inflector:irregulars_reverse()
+function Flow.Inflector:irregulars_reverse()
   return self._irregulars_rev[self.current_language]
 end
 
-function ActiveRecord.Inflector:plural(expression, replacement)
+function Flow.Inflector:plural(expression, replacement)
   table.insert(self._plurals[self.current_language], {
     expression = expression,
     replacement = replacement
@@ -49,7 +49,7 @@ function ActiveRecord.Inflector:plural(expression, replacement)
   return self
 end
 
-function ActiveRecord.Inflector:singular(expression, replacement)
+function Flow.Inflector:singular(expression, replacement)
   table.insert(self._singulars[self.current_language], {
     expression = expression,
     replacement = replacement
@@ -58,14 +58,14 @@ function ActiveRecord.Inflector:singular(expression, replacement)
   return self
 end
 
-function ActiveRecord.Inflector:irregular(word, replacement)
+function Flow.Inflector:irregular(word, replacement)
   self._irregulars[self.current_language][word] = replacement
   self._irregulars_rev[self.current_language][replacement] = word
 
   return self
 end
 
-function ActiveRecord.Inflector:uncountable(words)
+function Flow.Inflector:uncountable(words)
   local lang = self.current_language
 
   if isstring(words) then
@@ -79,7 +79,7 @@ function ActiveRecord.Inflector:uncountable(words)
   return self
 end
 
-function ActiveRecord.Inflector:pluralize(word)
+function Flow.Inflector:pluralize(word)
   local irregular = self:irregulars()[word]
 
   if irregular then return irregular end
@@ -96,7 +96,7 @@ function ActiveRecord.Inflector:pluralize(word)
   return word
 end
 
-function ActiveRecord.Inflector:singularize(word)
+function Flow.Inflector:singularize(word)
   local irregular = self:irregulars_reverse()[word]
 
   if irregular then return irregular end

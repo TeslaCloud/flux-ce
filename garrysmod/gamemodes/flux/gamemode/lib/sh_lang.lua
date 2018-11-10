@@ -89,12 +89,6 @@ function t(phrase, args, force_lang)
   return phrase
 end
 
--- Pack the language string into a format that is sendable to clients.
-function L(phrase, args)
-  ErrorNoHalt('"L" is deprecated and will be removed in 0.5! Do not use it!')
-  return phrase, args
-end
-
 function fl.lang:all()
   return stored
 end
