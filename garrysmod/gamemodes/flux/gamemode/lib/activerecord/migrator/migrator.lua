@@ -119,7 +119,7 @@ end
 
 function ActiveRecord.Migrator:migration_exists(version, name)
   version = version or 0
-  name = (name or ''):to_snake_case()
+  name = (name or ''):underscore()
 
   local files, folders = file.Find(self.db_path..'/migrate/*.lua', 'GAME')
 
@@ -138,7 +138,7 @@ function ActiveRecord.Migrator:generate_migration(name, body, verbose, file_path
   fileio.Delete(self.db_path..'/migrate/.keep')
 
   local version = self:generate_version()
-  file_path = (file_path and file_path:ensure_ending('/') or (self.db_path..'/migrate/'))..version..'_'..name:to_snake_case()..'.lua'
+  file_path = (file_path and file_path:ensure_ending('/') or (self.db_path..'/migrate/'))..version..'_'..name:underscore()..'.lua'
 
   fileio.Write(file_path, [[local Migration = ActiveRecord.Migration.new(]]..version..[[)
   function Migration:change()

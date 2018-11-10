@@ -70,7 +70,7 @@ do
 end
 
 function ActiveRecord.generate_table_name(class_name)
-  return ActiveRecord.Infector:pluralize(class_name:to_snake_case())
+  return ActiveRecord.Infector:pluralize(class_name:underscore())
 end
 
 function ActiveRecord.generate_tables()

@@ -57,11 +57,7 @@ function faction.find(name, strict)
   return false
 end
 
-function faction.count()
-  return count
-end
-
-function faction.get_all()
+function faction.all()
   return stored
 end
 

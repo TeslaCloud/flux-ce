@@ -12,7 +12,7 @@ function ActiveRecord.Base:init()
 end
 
 function ActiveRecord.Base:class_extended(new_class)
-  new_class.table_name = ActiveRecord.Infector:pluralize(new_class.class_name:to_snake_case())
+  new_class.table_name = ActiveRecord.Infector:pluralize(new_class.class_name:underscore())
   new_class.last_id = 0
 
   ActiveRecord.Model:add(new_class)
@@ -400,7 +400,7 @@ function ActiveRecord.Base:has(what, many)
     local should_add = true
     relation.child = false
     if istable(what) then
-      table_name = what[1]:to_snake_case()
+      table_name = what[1]:underscore()
       relation.as = what.as or table_name
     elseif isstring(what) then
       table_name = what
@@ -423,7 +423,7 @@ function ActiveRecord.Base:has(what, many)
       end
     end
     relation.table_name = table_name
-    relation.column_name = self.class_name:to_snake_case()..'_id'
+    relation.column_name = self.class_name:underscore()..'_id'
     if should_add then
       local index = table.insert(self.relations, relation)
       self.relations[table_name] = index
@@ -447,7 +447,7 @@ function ActiveRecord.Base:belongs_to(target, one)
     target:has(self.table_name, !one)
     table.insert(self.relations, {
       child = true,
-      as = target.class_name:to_snake_case(),
+      as = target.class_name:underscore(),
       target_class = target
     })
   end

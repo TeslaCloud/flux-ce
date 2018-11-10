@@ -183,34 +183,20 @@ function string.spelling(str, first_lower)
   return str
 end
 
-function string.trim(...)
-  return string.Trim(...)
-end
-
-function string.starts(...)
-  return string.StartWith(...)
-end
-
-function string.ends(...)
-  return string.EndsWith(...)
-end
-
 function string.presence(str)
   return isstring(str) and (str != '' and str) or nil
 end
 
-function string.to_snake_case(str)
-  str = str[1]:lower()..str:sub(2, str:len())
-
-  return str:gsub('([%w])([A-Z])([a-z])', function(a, b, c)
-    return string.lower(a)..'_'..string.lower(b)..string.lower(c)
-  end):lower()
+function string.underscore(str)
+  return str:gsub('::', '/'):
+         gsub('([A-Z]+)([A-Z][a-z])', '%1_%2'):
+         gsub('([a-z%d])([A-Z])', '%1_%2'):
+         gsub('[%-%s]', '_'):
+         lower()
 end
 
-function string.snake_to_pascal_case(str)
-  str = str[1]:upper()..str:sub(2, str:len())
-
-  return str:gsub('_([a-z])', string.upper)
+function string.camel_case(str)
+  return str:capitalize():gsub('_([a-z])', string.upper)
 end
 
 function string.chomp(str, what)

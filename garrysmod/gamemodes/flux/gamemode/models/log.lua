@@ -1,7 +1,7 @@
 class 'Log' extends 'ActiveRecord::Base'
 
 function Log:write(message, action, object, subject, io)
-  action = isstring(action) and action:to_snake_case() or ''
+  action = isstring(action) and action:underscore() or ''
 
   if SERVER then
     local log = Log.new()
@@ -13,7 +13,7 @@ function Log:write(message, action, object, subject, io)
   end
 
   if isfunction(io) then
-    io(message, action:snake_to_pascal_case(), object, subject)
+    io(message, action:camel_case(), object, subject)
   end
 
   return self

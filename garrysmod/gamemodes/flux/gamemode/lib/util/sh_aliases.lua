@@ -238,7 +238,7 @@ player_manager.run_class = player_manager.RunClass
 player_manager.set_player_class = player_manager.SetPlayerClass
 player_manager.translate_player_hands = player_manager.TranslatePlayerHands
 player_manager.translate_player_model = player_manager.TranslatePlayerModel
-player_manager.translate_toplayer_model_name = player_manager.TranslateToPlayerModelName
+player_manager.translate_to_player_model_name = player_manager.TranslateToPlayerModelName
 
 player.all = player.GetAll
 player.bots = player.GetBots
@@ -322,6 +322,7 @@ string.to_minutes_seconds_milliseconds = string.ToMinutesSecondsMilliseconds
 string.to_table = string.ToTable
 string.trim_left = string.TrimLeft
 string.trim_right = string.TrimRight
+string.trim = string.Trim
 string.split = function(str, sep)
   sep = sep or ''
   return string.Split(str, sep)
@@ -425,7 +426,7 @@ util.date_stamp = util.DateStamp
 util.decal = util.Decal
 util.decal_material = util.DecalMaterial
 util.decompress = util.Decompress
-util.distance_toline = util.DistanceToLine
+util.distance_to_line = util.DistanceToLine
 util.effect = util.Effect
 util.from_json = util.JSONToTable
 util.get_model_info = util.GetModelInfo
@@ -444,10 +445,10 @@ util.is_valid_physics_object = util.IsValidPhysicsObject
 util.is_valid_prop = util.IsValidProp
 util.is_valid_ragdoll = util.IsValidRagdoll
 util.key_values_to_table_preserve_order = util.KeyValuesToTablePreserveOrder
-util.key_values_totable = util.KeyValuesToTable
+util.key_values_to_table = util.KeyValuesToTable
 util.local_to_world = util.LocalToWorld
 util.network_id_to_string = util.NetworkIDToString
-util.network_string_toid = util.NetworkStringToID
+util.network_string_to_id = util.NetworkStringToID
 util.nice_float = util.NiceFloat
 util.particle_tracer = util.ParticleTracer
 util.particle_tracer_ex = util.ParticleTracerEx
@@ -455,7 +456,7 @@ util.point_contents = util.PointContents
 util.precache_model = util.PrecacheModel
 util.precache_sound = util.PrecacheSound
 util.quick_trace = util.QuickTrace
-util.relative_path_tofull = util.RelativePathToFull
+util.full_path = util.RelativePathToFull
 util.remove_pdata = util.RemovePData
 util.screen_shake = util.ScreenShake
 util.set_pdata = util.SetPData
@@ -465,7 +466,7 @@ util.stack = util.Stack
 util.steamid_from64 = util.SteamIDFrom64
 util.steamid_to_64 = util.SteamIDTo64
 util.string_to_type = util.StringToType
-util.table_tokey_values = util.TableToKeyValues
+util.table_to_kv = util.TableToKeyValues
 util.timer = util.Timer
 util.timer_cycle = util.TimerCycle
 util.to_json = util.TableToJSON
@@ -524,7 +525,7 @@ if CLIENT then
   chat.open = chat.Open
   chat.play_sound = chat.PlaySound
 
-  cleanup.updateui = cleanup.UpdateUI
+  cleanup.update_ui = cleanup.UpdateUI
 
   controlpanel.clear = controlpanel.Clear
   controlpanel.get = controlpanel.Get
@@ -608,10 +609,10 @@ if CLIENT then
   gui.is_console_visible = gui.IsConsoleVisible
   gui.is_gameui_visible = gui.IsGameUIVisible
   gui.mouse_pos = gui.MousePos
-  gui.mousex = gui.MouseX
-  gui.mousey = gui.MouseY
+  gui.mouse_x = gui.MouseX
+  gui.mouse_y = gui.MouseY
   gui.open_url = gui.OpenURL
-  gui.screen_tovector = gui.ScreenToVector
+  gui.screen_to_vector = gui.ScreenToVector
   gui.set_mouse_pos = gui.SetMousePos
 
   GWEN.create_texture_border = GWEN.CreateTextureBorder
@@ -620,7 +621,6 @@ if CLIENT then
   GWEN.texture_color = GWEN.TextureColor
 
   halo.add = halo.Add
-  halo.render = halo.Render
   halo.rendered_entity = halo.RenderedEntity
 
   input.check_key_trapping = input.CheckKeyTrapping
@@ -718,7 +718,7 @@ if CLIENT then
   render.clear_stencil_buffer_rectangle = render.ClearStencilBufferRectangle
   render.compute_dynamic_lighting = render.ComputeDynamicLighting
   render.compute_lighting = render.ComputeLighting
-  render.copy_render_target_totexture = render.CopyRenderTargetToTexture
+  render.copy_render_target_to_texture = render.CopyRenderTargetToTexture
   render.copy_texture = render.CopyTexture
   render.cull_mode = render.CullMode
   render.depth_range = render.DepthRange
@@ -731,8 +731,8 @@ if CLIENT then
   render.draw_screen_quad_ex = render.DrawScreenQuadEx
   render.draw_sphere = render.DrawSphere
   render.draw_sprite = render.DrawSprite
-  render.draw_texture_toscreen = render.DrawTextureToScreen
-  render.draw_texture_toscreen_rect = render.DrawTextureToScreenRect
+  render.draw_texture_to_screen = render.DrawTextureToScreen
+  render.draw_texture_to_screen_rect = render.DrawTextureToScreenRect
   render.draw_wireframe_box = render.DrawWireframeBox
   render.draw_wireframe_sphere = render.DrawWireframeSphere
   render.enable_clipping = render.EnableClipping
@@ -826,7 +826,7 @@ if CLIENT then
   render.set_stencilz_fail_operation = render.SetStencilZFailOperation
   render.set_tone_mapping_scale_linear = render.SetToneMappingScaleLinear
   render.set_view_port = render.SetViewPort
-  render.set_write_depth_todest_alpha = render.SetWriteDepthToDestAlpha
+  render.set_write_depth_to_dest_alpha = render.SetWriteDepthToDestAlpha
   render.spin = render.Spin
   render.start_beam = render.StartBeam
   render.supports_pixel_shaders_1_4 = render.SupportsPixelShaders_1_4
@@ -859,7 +859,7 @@ if CLIENT then
   spawnmenu.add_tool_tab = spawnmenu.AddToolTab
   spawnmenu.clear_tool_menus = spawnmenu.ClearToolMenus
   spawnmenu.create_content_icon = spawnmenu.CreateContentIcon
-  spawnmenu.do_save_totext_files = spawnmenu.DoSaveToTextFiles
+  spawnmenu.do_save_to_text_files = spawnmenu.DoSaveToTextFiles
   spawnmenu.get_content_type = spawnmenu.GetContentType
   spawnmenu.get_creation_tabs = spawnmenu.GetCreationTabs
   spawnmenu.get_custom_prop_table = spawnmenu.GetCustomPropTable
@@ -868,7 +868,7 @@ if CLIENT then
   spawnmenu.get_tools = spawnmenu.GetTools
   spawnmenu.populate_from_engine_text_files = spawnmenu.PopulateFromEngineTextFiles
   spawnmenu.populate_from_text_files = spawnmenu.PopulateFromTextFiles
-  spawnmenu.save_totext_files = spawnmenu.SaveToTextFiles
+  spawnmenu.save_to_text_files = spawnmenu.SaveToTextFiles
   spawnmenu.set_active_control_panel = spawnmenu.SetActiveControlPanel
   spawnmenu.switch_tool_tab = spawnmenu.SwitchToolTab
 
