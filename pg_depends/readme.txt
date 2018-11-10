@@ -1,4 +1,5 @@
-Put these files to the folder where your srcds executable is, which is usually these paths:
+1. Locate the files for your OS (windows or linux)
+2. Put these files to the folder where your srcds executable is, which is usually these paths:
 
 On Windows:
 .\SERVER_DIR\srcds.exe

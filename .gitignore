@@ -55,3 +55,6 @@ steamapps/
 *.bat
 *.local.yml
 /libintl.dll
+/srcds_run
+/srcds_linux
+/start.sh
