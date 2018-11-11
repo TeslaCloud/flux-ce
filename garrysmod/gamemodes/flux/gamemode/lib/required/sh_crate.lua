@@ -27,8 +27,6 @@ end
 function Crate:try_include(path, original_path)
   local main_file = path:ensure_end('/')..'cratefile.lua'
 
-  print(main_file)
-
   if file.Exists(main_file, 'LUA') then
     return util.include(main_file)
   else
