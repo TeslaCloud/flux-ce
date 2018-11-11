@@ -25,7 +25,7 @@ function PANEL:Think()
     self.cur_amt = math.Clamp(self.cur_amt - 1 * frame_time, 0, 40)
   end
 
-  if !self.m_IconSizeOverride then
+  if !self.icon_size_override then
     self.icon_size = self:GetTall() - 6
   end
 end
@@ -71,13 +71,13 @@ end
 
 function PANEL:set_enabled(enabled)
   self.enabled = enabled
-  self.m_TextColorOverride = (!enabled and theme.get_color('text'):darken(50)) or nil
+  self.text_color_override = (!enabled and theme.get_color('text'):darken(50)) or nil
 
   self:SetMouseInputEnabled(enabled)
 end
 
 function PANEL:set_text_color(color)
-  self.m_TextColorOverride = color
+  self.text_color_override = color
 end
 
 function PANEL:set_text(new_text)
@@ -85,7 +85,11 @@ function PANEL:set_text(new_text)
 end
 
 function PANEL:set_text_offset(pos)
-  self.m_TextPos = pos or 0
+  self.text_offset = pos or 0
+end
+
+function PANEL:get_text_offset()
+  return self.text_offset or 0
 end
 
 function PANEL:set_icon(icon, right)
@@ -98,7 +102,7 @@ end
 
 function PANEL:set_icon_size(size)
   self.icon_size = size
-  self.m_IconSizeOverride = true
+  self.icon_size_override = true
 end
 
 function PANEL:set_text_autoposition(autopos)

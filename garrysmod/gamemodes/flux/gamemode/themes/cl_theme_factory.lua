@@ -139,7 +139,7 @@ end
 
 function THEME:PaintButton(panel, w, h)
   local cur_amt = panel.cur_amt
-  local text_color = panel.m_TextColorOverride or self:get_color('text'):darken(cur_amt)
+  local text_color = panel.text_color_override or self:get_color('text'):darken(cur_amt)
   local title = panel.title
   local font = panel.font
   local icon = panel.icon
@@ -177,26 +177,26 @@ function THEME:PaintButton(panel, w, h)
     if panel.autopos then
       if icon then
         if panel.centered then
-          local textPos = (w - width - panel.icon_size) * 0.5
+          local text_pos = (w - width - panel.icon_size) * 0.5
 
           if panel.icon_left then
-            fl.fa:draw(icon, textPos - panel.icon_size - 8, (panel.icon_size and h * 0.5 - panel.icon_size * 0.5) or 3, (panel.icon_size or h - 6), text_color)
+            fl.fa:draw(icon, text_pos - panel.icon_size - 8, (panel.icon_size and h * 0.5 - panel.icon_size * 0.5) or 3, (panel.icon_size or h - 6), text_color)
           else
-            fl.fa:draw(icon, textPos + width + panel.icon_size * 0.5, (panel.icon_size and h * 0.5 - panel.icon_size * 0.5) or 3, (panel.icon_size or h - 6), text_color)
+            fl.fa:draw(icon, text_pos + width + panel.icon_size * 0.5, (panel.icon_size and h * 0.5 - panel.icon_size * 0.5) or 3, (panel.icon_size or h - 6), text_color)
           end
 
-          draw.SimpleText(title, font, textPos, h * 0.5 - height * 0.5, text_color)
+          draw.SimpleText(title, font, text_pos + panel:get_text_offset(), h * 0.5 - height * 0.5, text_color)
         else
-          draw.SimpleText(title, font, h + 8, h * 0.5 - height * 0.5, text_color)
+          draw.SimpleText(title, font, h + 8 + panel:get_text_offset(), h * 0.5 - height * 0.5, text_color)
         end
       else
-        draw.SimpleText(title, font, w * 0.5 - width * 0.5, h * 0.5 - height * 0.5, text_color)
+        draw.SimpleText(title, font, w * 0.5 - width * 0.5 + panel:get_text_offset(), h * 0.5 - height * 0.5, text_color)
       end
     else
       if panel.centered then
-        draw.SimpleText(title, font, (w - width) * 0.5, h * 0.5 - height * 0.5, text_color)
+        draw.SimpleText(title, font, (w - width) * 0.5 + panel:get_text_offset(), h * 0.5 - height * 0.5, text_color)
       else
-        draw.SimpleText(title, font, panel.m_TextPos or 0, h * 0.5 - height * 0.5, text_color)
+        draw.SimpleText(title, font, panel:get_text_offset(), h * 0.5 - height * 0.5, text_color)
       end
     end
   else
