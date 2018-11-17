@@ -300,10 +300,6 @@ local last_render = 0
 local blur_render_time = 1 / fl.blur_update_fps
 
 function GM:RenderScreenspaceEffects()
-  if fl.client.color_mod then
-    DrawColorModify(fl.client.color_mod_table)
-  end
-
   if fl.should_render_blur then
     local cur_time = CurTime()
 
