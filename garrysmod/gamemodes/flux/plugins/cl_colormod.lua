@@ -63,3 +63,4 @@ function PLUGIN:RenderScreenspaceEffects()
   if fl.client.color_mod then
     DrawColorModify(fl.client.color_mod_table)
   end
+end

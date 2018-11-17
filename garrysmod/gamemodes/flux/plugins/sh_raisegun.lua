@@ -2,6 +2,8 @@ PLUGIN:set_name('Raise Weapon')
 PLUGIN:set_author('Mr. Meow')
 PLUGIN:set_description('Allows weapons to be lowered and raised by holding R key.')
 
+BOOL_WEAPON_RAISED = 1
+
 local rotation_translate = {
   ['default'] = Angle(30, -30, -25),
   ['weapon_fists'] = Angle(30, -30, -50)

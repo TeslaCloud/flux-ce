@@ -1,6 +1,5 @@
 -- DTVars
 BOOL_INITIALIZED              = 0   -- Whether player has passed all initialization steps.
-BOOL_WEAPON_RAISED            = 1   -- Whether player has their active weapon raised.
 
 -- Permissions
 PERM_NO                       = 0   -- Not Set (no), means that this user has no permission.
