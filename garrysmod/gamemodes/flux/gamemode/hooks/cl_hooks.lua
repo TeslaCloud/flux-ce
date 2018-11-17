@@ -216,6 +216,16 @@ function GM:HUDDrawTargetID()
       end
     end
 
+    if !IsValid(ent) then
+      local trace = fl.client:GetEyeTraceNoCursor()
+      local trace_ent = trace.Entity
+
+      if IsValid(trace_ent) then
+        dist = trace_ent:GetPos():Distance(client_pos)
+        ent = trace_ent
+      end
+    end
+
     if IsValid(ent) then
       local pos
 
