@@ -249,33 +249,40 @@ function GM:HUDDrawTargetID()
   end
 end
 
-function GM:DrawPlayerTargetID(player, x, y, distance)
+function GM:GetPlayerDrawInfo(player, x, y, distance, lines)
   if distance < 640 then
     local alpha = 255
-    local tooltip_small = theme.get_font('tooltip_small')
-    local tooltip_large = theme.get_font('tooltip_large')
 
     if distance > 500 then
       local d = distance - 500
       alpha = math.Clamp((255 * (140 - d) / 140), 0, 255)
     end
 
-    local width, height = util.text_size(player:name(), tooltip_large)
-    draw.SimpleText(player:name(), tooltip_large, x - width * 0.5, y - 40, Color(255, 255, 255, alpha))
+    lines['name'] = {
+      text = player:name(),
+      font = theme.get_font('tooltip_large'),
+      color = Color(255, 255, 255, alpha),
+      priority = 100
+    }
+  end
+end
 
-    local width, height = util.text_size(player:get_phys_desc(), tooltip_small)
-    draw.SimpleText(player:get_phys_desc(), tooltip_small, x - width * 0.5, y - 14, Color(255, 255, 255, alpha))
+function GM:DrawPlayerTargetID(player, x, y, distance)
+  local lines = {}
 
-    if distance < 125 then
-      if distance > 90 then
-        local d = distance - 90
-        alpha = math.Clamp((255 * (35 - d) / 35), 0, 255)
-      end
+  hook.run('GetPlayerDrawInfo', player, x, y, distance, lines)
+  hook.run('PrePlayerDrawInfo', player, x, y, distance, lines)
 
-      local smaller_font = font.size(tooltip_small, 12)
-      local text = t'target_id.information'
-      local width, height = util.text_size(text, smaller_font)
-      draw.SimpleText(text, smaller_font, x - width * 0.5, y + 5, Color(50, 255, 50, alpha))
+  for k, v in SortedPairsByMemberValue(lines, 'priority') do
+    local font = v.font or theme.get_font('tooltip_small')
+    local color = v.color or Color('white')
+    local text = v.text
+
+    if text then
+      local w, h = util.text_size(text, font)
+      draw.SimpleText(text, font, x - w * 0.5 + (v.offset_x or 0), y + (v.offset_y or 0), color)
+
+      y = y + h + 2
     end
   end
 end

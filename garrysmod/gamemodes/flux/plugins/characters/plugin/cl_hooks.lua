@@ -157,6 +157,24 @@ function Characters:AddCharacterCreationMenuStages(panel)
   panel:add_stage('char_create.general')
 end
 
+function Characters:GetPlayerDrawInfo(player, x, y, distance, lines)
+  if distance < 640 then
+    local alpha = 255
+
+    if distance > 500 then
+      local d = distance - 500
+      alpha = math.Clamp((255 * (140 - d) / 140), 0, 255)
+    end
+
+    lines['desc'] = {
+      text = player:get_phys_desc(),
+      font = theme.get_font('tooltip_small'),
+      color = Color(255, 255, 255, alpha),
+      priority = 200
+    }
+  end
+end
+
 function Characters:AddMainMenuItems(panel, sidebar)
   local scrw, scrh = ScrW(), ScrH()
 
