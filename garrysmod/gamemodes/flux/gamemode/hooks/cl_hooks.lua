@@ -287,6 +287,15 @@ function GM:DrawPlayerTargetID(player, x, y, distance)
   end
 end
 
+function GM:HUDItemPickedUp(item_name)
+end
+
+function GM:HUDAmmoPickedUp(item_name, amount)
+end
+
+function GM:HUDDrawPickupHistory()
+end
+
 function GM:PopulateToolMenu()
   for ToolName, TOOL in pairs(fl.tool.stored) do
     if TOOL.AddToMenu != false then
@@ -390,13 +399,14 @@ end
 
 do
   local hidden_elements = { -- Hide default HUD elements.
-    CHudHealth = true,
-    CHudBattery = true,
     CHudAmmo = true,
-    CHudSecondaryAmmo = true,
+    CHudBattery = true,
+    CHudHealth = true,
     CHudCrosshair = true,
+    CHudDamageIndicator = true,
+    CHudSecondaryAmmo = true,
     CHudHistoryResource = true,
-    CHudDamageIndicator = true
+    CHudPoisonDamageIndicator = true
   }
 
   function GM:HUDShouldDraw(element)
