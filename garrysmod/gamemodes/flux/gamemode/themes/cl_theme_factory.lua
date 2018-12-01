@@ -574,8 +574,6 @@ end
 function THEME.skin:PaintFrame(panel, w, h)
   local color = theme.get_color('accent')
 
-  draw.blur_panel(panel)
-
   surface.SetDrawColor(Color(10, 10, 10, 150))
   surface.DrawRect(0, 0, w, h)
 
