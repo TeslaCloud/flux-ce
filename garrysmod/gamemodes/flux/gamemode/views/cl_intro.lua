@@ -87,4 +87,4 @@ function PANEL:start_animation()
   end)
 end
 
-derma.DefineControl('flIntro', '', PANEL, 'EditablePanel')
+derma.DefineControl('fl_intro', '', PANEL, 'EditablePanel')

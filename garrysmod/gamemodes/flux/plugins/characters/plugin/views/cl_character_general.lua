@@ -304,4 +304,4 @@ function PANEL:on_validate()
   end
 end
 
-vgui.Register('fl_character_general', PANEL, 'fl_character_creation_base')
+vgui.Register('fl_char_create_general', PANEL, 'fl_character_creation_base')

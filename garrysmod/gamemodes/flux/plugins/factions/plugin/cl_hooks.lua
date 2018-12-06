@@ -39,13 +39,13 @@ function Factions:PreStageChange(id, panel)
 end
 
 function Factions:OnThemeLoaded(current_theme)
-  current_theme:add_panel('CharCreation_Faction', function(id, parent, ...)
-    return vgui.Create('flCharCreationFaction', parent)
+  current_theme:add_panel('char_create.faction', function(id, parent, ...)
+    return vgui.Create('fl_char_create_faction', parent)
   end)
 end
 
 function Factions:AddCharacterCreationMenuStages(panel)
-  panel:add_stage('CharCreation_Faction', 1)
+  panel:add_stage('char_create.faction', 1)
 end
 
 function Factions:PreRebuildScoreboard(panel, w, h)

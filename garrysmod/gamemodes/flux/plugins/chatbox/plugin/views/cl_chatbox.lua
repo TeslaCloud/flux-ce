@@ -304,4 +304,4 @@ function PANEL:rebuild()
   end
 end
 
-vgui.Register('flChatPanel', PANEL, 'fl_base_panel')
+vgui.Register('fl_chat_panel', PANEL, 'fl_base_panel')

@@ -1,6 +1,6 @@
 local PANEL = {}
 PANEL.id = 'faction'
-PANEL.text = 'CharCreation_Faction'
+PANEL.text = 'char_create.faction'
 PANEL.faction_id = ''
 
 function PANEL:ButtonClicked(button)
@@ -84,4 +84,4 @@ function PANEL:on_validate()
   end
 end
 
-vgui.Register('flCharCreationFaction', PANEL, 'fl_character_creation_base')
+vgui.Register('fl_char_create_faction', PANEL, 'fl_character_creation_base')

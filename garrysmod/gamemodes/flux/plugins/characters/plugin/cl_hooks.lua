@@ -25,7 +25,7 @@ end
 
 function Characters:PlayerInitialized()
   if !fl.client:get_character() and !IsValid(fl.intro_panel) then
-    fl.intro_panel = vgui.Create('flIntro')
+    fl.intro_panel = vgui.Create('fl_intro')
 
     if IsValid(fl.intro_panel) then
       fl.intro_panel:MakePopup()
@@ -64,16 +64,16 @@ function Characters:OnThemeLoaded(current_theme)
     return vgui.Create('fl_main_menu', parent)
   end)
 
-  current_theme:add_panel('character_creation', function(id, parent, ...)
-    return vgui.Create('fl_character_creation', parent)
+  current_theme:add_panel('char_create', function(id, parent, ...)
+    return vgui.Create('fl_char_create', parent)
   end)
 
   current_theme:add_panel('char_create.load', function(id, parent, ...)
-    return vgui.Create('fl_character_load', parent)
+    return vgui.Create('fl_char_load', parent)
   end)
 
   current_theme:add_panel('char_create.general', function(id, parent, ...)
-    return vgui.Create('fl_character_general', parent)
+    return vgui.Create('fl_char_create_general', parent)
   end)
 
   if IsValid(fl.intro_panel) then
@@ -185,7 +185,7 @@ function Characters:AddMainMenuItems(panel, sidebar)
   end
 
   panel:add_button(t'char_create.title', function(btn)
-    panel.menu = theme.create_panel('character_creation', panel)
+    panel.menu = theme.create_panel('char_create', panel)
     panel.menu:SetPos(ScrW(), 0)
     panel.menu:MoveTo(0, 0, theme.get_option('menu_anim_duration'), 0.25, 0.5)
 

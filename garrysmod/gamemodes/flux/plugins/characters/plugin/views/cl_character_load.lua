@@ -61,7 +61,7 @@ function PANEL:close(callback)
   end
 end
 
-vgui.Register('fl_character_load', PANEL, 'fl_frame')
+vgui.Register('fl_char_load', PANEL, 'fl_frame')
 
 local PANEL = {}
 

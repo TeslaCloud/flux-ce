@@ -124,7 +124,7 @@ function chatbox.show()
     chatbox.x = theme.get_option('chatbox_x') or 0
     chatbox.y = theme.get_option('chatbox_y') or 0
 
-    chatbox.panel = vgui.Create('flChatPanel')
+    chatbox.panel = vgui.Create('fl_chat_panel')
   end
 
   chatbox.panel:set_open(true)

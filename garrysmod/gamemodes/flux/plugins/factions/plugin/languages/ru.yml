@@ -15,6 +15,6 @@ ru:
     whitelist_not_valid: "'{1}' не является фракцией!"
     target_not_whitelisted: У {1} нет доступа к фракции {2}!
   char_create:
+    faction: Фракция
     no_whitelist: У Вас нет доступа к этой фракции.
     no_faction: Вы не выбрали фракцию.
-  CharCreation_Faction: Фракция

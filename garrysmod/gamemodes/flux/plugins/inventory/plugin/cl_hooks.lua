@@ -72,7 +72,7 @@ cable.receive('fl_inventory_refresh', function()
 end)
 
 spawnmenu.AddCreationTab('Items', function()
-  local panel = vgui.Create('flItemSpawner')
+  local panel = vgui.Create('fl_item_spawner')
 
   panel:Dock(FILL)
   panel:rebuild()

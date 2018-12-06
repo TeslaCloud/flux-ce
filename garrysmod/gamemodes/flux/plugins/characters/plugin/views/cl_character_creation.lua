@@ -248,4 +248,4 @@ function PANEL:add_stage(id, index)
   end
 end
 
-vgui.Register('fl_character_creation', PANEL, 'fl_frame')
+vgui.Register('fl_char_create', PANEL, 'fl_frame')

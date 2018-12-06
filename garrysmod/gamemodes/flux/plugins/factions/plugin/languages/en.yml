@@ -15,6 +15,6 @@ en:
     whitelist_not_valid: "'{1}' is not a valid faction!"
     target_not_whitelisted: '{1} is not on the {2} whitelist!'
   char_create:
+    faction: Faction
     no_whitelist: You don't have access to this faction.
     no_faction: You didn't choose a faction.
-  CharCreation_Faction: Faction
