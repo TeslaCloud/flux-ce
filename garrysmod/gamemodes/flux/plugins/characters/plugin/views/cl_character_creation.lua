@@ -27,9 +27,15 @@ function PANEL:Init()
   self.back:set_centered(true)
 
   self.back.DoClick = function(btn)
-    surface.PlaySound(theme.get_sound('button_click_success_sound'))
+    local cur_time = CurTime()
 
-    self:prev_stage()
+    if !self.back.next_click or self.back.next_click < cur_time then
+      surface.PlaySound(theme.get_sound('button_click_success_sound'))
+
+      self:prev_stage()
+
+      self.back.next_click = cur_time + 1
+    end
   end
 
   self.next = vgui.Create('fl_button', self)
@@ -43,9 +49,15 @@ function PANEL:Init()
   self.next:set_centered(true)
 
   self.next.DoClick = function(btn)
-    surface.PlaySound(theme.get_sound('button_click_success_sound'))
+    local cur_time = CurTime()
 
-    self:next_stage()
+    if !self.next.next_click or self.next.next_click < cur_time then
+      surface.PlaySound(theme.get_sound('button_click_success_sound'))
+
+      self:next_stage()
+
+      self.next.next_click = cur_time + 1
+    end
   end
 
   self.stage_list = vgui.Create('fl_horizontalbar', self)
