@@ -207,7 +207,7 @@ function Characters:AddMainMenuItems(panel, sidebar)
   end
 
   panel:add_button(t'main_menu.disconnect', function(btn)
-    Derma_Query(t'main_menu.disconnect_msg', t'main_menu.disconnect_msg', t'yes', function()
+    Derma_Query(t'main_menu.disconnect_msg', t'main_menu.disconnect', t'yes', function()
       RunConsoleCommand('disconnect')
     end,
     t'no')
