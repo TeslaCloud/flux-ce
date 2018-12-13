@@ -101,16 +101,18 @@ function PANEL:to_main_menu(from_right)
 end
 
 function PANEL:notify(text)
-  local panel = vgui.Create('fl_notification', self)
-  panel:set_text(text)
-  panel:set_lifetime(6)
-  panel:set_text_color(Color('pink'))
-  panel:set_background_color(Color(50, 50, 50, 220))
+  if IsValid(self.notification) then return end
 
-  local w, h = panel:GetSize()
-  panel:SetPos(ScrW() * 0.5 - w * 0.5, ScrH() - 128)
+  self.notification = vgui.Create('fl_notification', self)
+  self.notification:set_text(text)
+  self.notification:set_lifetime(6)
+  self.notification:set_text_color(theme.get_color('accent'))
+  self.notification:set_background_color(Color(50, 50, 50, 220))
 
-  function panel:PostThink() self:MoveToFront() end
+  local w, h = self.notification:GetSize()
+  self.notification:SetPos(ScrW() * 0.5 - w * 0.5, ScrH() - 128)
+
+  function self.notification:PostThink() self:MoveToFront() end
 end
 
 function PANEL:add_button(text, callback)
