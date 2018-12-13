@@ -185,6 +185,8 @@ function Characters:AddMainMenuItems(panel, sidebar)
   end
 
   panel:add_button(t'char_create.title', function(btn)
+    btn:set_enabled(false)
+
     panel.menu = theme.create_panel('char_create', panel)
     panel.menu:SetPos(ScrW(), 0)
     panel.menu:MoveTo(0, 0, theme.get_option('menu_anim_duration'), 0.25, 0.5)
@@ -194,6 +196,8 @@ function Characters:AddMainMenuItems(panel, sidebar)
 
   if #fl.client:get_all_characters() > 0 then
     panel:add_button(t'char_create.load', function(btn)
+      btn:set_enabled(false)
+
       panel.menu = theme.create_panel('char_create.load', panel)
       panel.menu:SetPos(-panel.menu:GetWide(), 0)
       panel.menu:MoveTo(0, 0, theme.get_option('menu_anim_duration'), 0.25, 0.5)
