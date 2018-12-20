@@ -28,7 +28,7 @@ en:
   tab_menu:
     scoreboard: Players
     admin: Admin
-    close_menu: Close Menu
+    close_menu: BACK
   scoreboard:
     title: PLAYER LIST
     help: Clicking player's card may bring up some options.

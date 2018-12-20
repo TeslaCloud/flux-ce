@@ -10,16 +10,22 @@ function PANEL:Init()
   self:SetSize(scrw, scrh)
 
   local cur_x, cur_y = hook.run('AdjustMenuItemPositions', self)
-  cur_x = cur_x or 42
-  cur_y = cur_y or 200
+  local offset = font.scale(4)
+  local size_x, size_y = font.scale(72), font.scale(72)
+  local icon_size = 40
+
+  cur_x = cur_x or 0
+  cur_y = cur_y or 0
 
   self.close_button = vgui.Create('fl_button', self)
-  self.close_button:SetFont(theme.get_font('menu_large'))
-  self.close_button:set_text(string.utf8upper(t'tab_menu.close_menu'))
-  self.close_button:SetPos(6, cur_y)
-  self.close_button:set_size_ex(200, 38)
+  self.close_button:SetPos(cur_x, cur_y)
   self.close_button:SetDrawBackground(false)
-  self.close_button:set_text_autoposition(true)
+  self.close_button:SetFont(theme.get_font('menu_larger'))
+  self.close_button:set_text(t'tab_menu.close_menu')
+  self.close_button:set_centered(true)
+  self.close_button:set_text_offset(offset)
+  self.close_button:SizeToContents()
+  self.close_button:SetTall(size_y)
   self.close_button.DoClick = function(btn)
     surface.PlaySound('garrysmod/ui_click.wav')
 
@@ -27,7 +33,7 @@ function PANEL:Init()
     self:Remove()
   end
 
-  cur_y = cur_y + font.scale(52)
+  cur_x = cur_x + self.close_button:GetWide() + size_x
 
   self.menu_items = {}
 
@@ -35,13 +41,13 @@ function PANEL:Init()
 
   for k, v in ipairs(self.menu_items) do
     local button = vgui.Create('fl_button', self)
+    button:SetSize(size_x, size_y)
     button:SetDrawBackground(false)
-    button:SetPos(6, cur_y)
-    button:set_size_ex(200, 30)
-    button:set_text(v.title)
+    button:SetPos(cur_x, cur_y)
+    button:SetTooltip(v.title)
     button:set_icon(v.icon)
-    button:set_centered(false)
-    button:SetFont(v.font or theme.get_font('menu_normal'))
+    button:set_icon_size(icon_size)
+    button:set_centered(true)
 
     button.DoClick = function(btn)
       if v.override then
@@ -68,7 +74,7 @@ function PANEL:Init()
         end
 
         self.active_button = btn
-        self.active_button:set_text_color(theme.get_color('accent_light'))
+        self.active_button:set_text_color(theme.get_color('accent'))
 
         if self.active_panel.rebuild then
           self.active_panel:rebuild()
@@ -82,7 +88,12 @@ function PANEL:Init()
       end
     end
 
-    cur_y = cur_y + font.scale(38)
+    cur_x = cur_x + button:GetWide() + offset
+
+    if cur_x >= ScrW() - button:GetWide() + offset then
+      cur_y = cur_y + offset
+      cur_x = offset
+    end
 
     self.buttons[k] = button
   end
@@ -103,6 +114,12 @@ function PANEL:OnMousePressed()
   if IsValid(self.active_panel) then
     self.active_panel:SetVisible(false)
     self.active_panel:Remove()
+  end
+end
+
+function PANEL:OnKeyCodePressed(key)
+  if key == KEY_TAB then
+    self.close_button.DoClick()
   end
 end
 

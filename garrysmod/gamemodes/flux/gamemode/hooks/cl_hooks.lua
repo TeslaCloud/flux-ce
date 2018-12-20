@@ -363,7 +363,7 @@ function GM:AddTabMenuItems(menu)
 end
 
 function GM:OnMenuPanelOpen(menu_panel, active_panel)
-  active_panel:SetPos(menu_panel:GetWide() * 0.5 - active_panel:GetWide() * 0.5 + font.scale(200) + 6, menu_panel:GetTall() * 0.5 - active_panel:GetTall() * 0.5)
+  active_panel:SetPos(menu_panel:GetWide() * 0.5 - active_panel:GetWide() * 0.5, menu_panel:GetTall() * 0.5 - active_panel:GetTall() * 0.5)
 end
 
 function GM:AddAdminMenuItems(panel, sidebar)

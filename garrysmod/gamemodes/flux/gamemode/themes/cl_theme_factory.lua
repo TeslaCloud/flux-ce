@@ -339,8 +339,7 @@ function THEME:PaintTabMenu(panel, width, height)
   fl.blur_size = Lerp(fraction * 0.4, fl.blur_size, 6)
 
   draw.blur_panel(panel)
-  draw.RoundedBox(0, 0, 0, font.scale(200) + 6, height, sidebar_color)
-  draw.RoundedBox(0, 0, 0, 6, height, sidebar_color)
+  draw.RoundedBox(0, 0, 0, width, font.scale(72), sidebar_color)
 
   if IsValid(active_panel) then
     panel.pos_y = panel.pos_y or 0
