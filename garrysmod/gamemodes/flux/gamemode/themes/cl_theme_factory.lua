@@ -144,65 +144,47 @@ function THEME:PaintButton(panel, w, h)
   local font = panel.font
   local icon = panel.icon
   local left = panel.icon_left
+  local center = panel.centered
+  local offset = panel:get_text_offset()
+  local text_x, text_y = offset, 0
+  local icon_x, icon_y = 0, 0
+  local text_w, text_h, icon_w, icon_h
 
   if panel.draw_background then
-    if !panel.active then
-      surface.SetDrawColor(self:get_color('outline'))
-      surface.DrawRect(0, 0, w, h)
+    surface.SetDrawColor(self:get_color('outline'))
+    surface.DrawRect(0, 0, w, h)
 
-      surface.SetDrawColor(self:get_color('main'):lighten(cur_amt))
-      surface.DrawRect(1, 1, w - 2, h - 2)
-    else
-      surface.SetDrawColor(self:get_color('outline'))
-      surface.DrawRect(0, 0, w, h)
+    surface.SetDrawColor(self:get_color('main_dark') and panel.active or self:get_color('main'):lighten(cur_amt))
+    surface.DrawRect(1, 1, w - 2, h - 2)
+  end
 
-      surface.SetDrawColor(self:get_color('main_dark'))
-      surface.DrawRect(1, 1, w - 1, h - 2)
+  if title != '' then
+    text_w, text_h = util.text_size(title, font)
+    text_y = h / 2 - text_h / 2
+
+    if center then
+      text_x = offset + w / 2 - text_w / 2
     end
   end
 
   if icon then
-    if !panel.centered then
-      if panel.icon_left then
-        fl.fa:draw(icon, (panel.icon_size and h * 0.5 - panel.icon_size * 0.5) or 3, (panel.icon_size and h * 0.5 - panel.icon_size * 0.5) or 3, (panel.icon_size or h - 6), text_color)
-      else
-        fl.fa:draw(icon, w - panel.icon_size - 8, (panel.icon_size and h * 0.5 - panel.icon_size * 0.5) or 3, (panel.icon_size or h - 6), text_color)
-      end
+    icon_w, icon_h = util.text_size(fl.fa:get(icon), _font.size('flFontAwesome', panel.icon_size))
+    icon_x = (left and text_x or text_x + text_w)
+    icon_y = h / 2 - icon_h / 2
+
+    text_x = text_x + (left and icon_w + 4 or -4)
+
+    if center and title == '' then
+      icon_x = w / 2 - icon_w / 2
     end
   end
 
-  if title and title != '' then
-    local width, height = util.text_size(title, font)
+  if title != '' then
+    draw.SimpleText(title, font, text_x, text_y, text_color)
+  end
 
-    if panel.autopos then
-      if icon then
-        if panel.centered then
-          local text_pos = (w - width - panel.icon_size) * 0.5
-
-          if panel.icon_left then
-            fl.fa:draw(icon, text_pos - panel.icon_size - 8, (panel.icon_size and h * 0.5 - panel.icon_size * 0.5) or 3, (panel.icon_size or h - 6), text_color)
-          else
-            fl.fa:draw(icon, text_pos + width + panel.icon_size * 0.5, (panel.icon_size and h * 0.5 - panel.icon_size * 0.5) or 3, (panel.icon_size or h - 6), text_color)
-          end
-
-          draw.SimpleText(title, font, text_pos + panel:get_text_offset(), h * 0.5 - height * 0.5, text_color)
-        else
-          draw.SimpleText(title, font, h + 8 + panel:get_text_offset(), h * 0.5 - height * 0.5, text_color)
-        end
-      else
-        draw.SimpleText(title, font, w * 0.5 - width * 0.5 + panel:get_text_offset(), h * 0.5 - height * 0.5, text_color)
-      end
-    else
-      if panel.centered then
-        draw.SimpleText(title, font, (w - width) * 0.5 + panel:get_text_offset(), h * 0.5 - height * 0.5, text_color)
-      else
-        draw.SimpleText(title, font, panel:get_text_offset(), h * 0.5 - height * 0.5, text_color)
-      end
-    end
-  else
-    if panel.centered then
-      fl.fa:draw(icon, w * 0.5 - panel.icon_size * 0.5, (panel.icon_size and h * 0.5 - panel.icon_size * 0.5) or 3, (panel.icon_size or h - 6), text_color)
-    end
+  if icon then
+    fl.fa:draw(icon, icon_x, icon_y, panel.icon_size, text_color)
   end
 end
 
