@@ -14,6 +14,7 @@ function PANEL:on_open(parent)
   self.chooser:SetSize(self:GetWide(), self:GetTall() / 8 * 7 - 8)
   self.chooser:SetPos(0, self:GetTall() / 8 + 8)
   self.chooser:SetOverlap(4)
+  self.chooser:set_centered(true)
 
   for k, v in pairs(faction.all()) do
     if !v.whitelisted or fl.client:has_whitelist(v.faction_id) then
