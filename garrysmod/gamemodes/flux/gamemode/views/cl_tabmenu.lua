@@ -14,10 +14,19 @@ function PANEL:Init()
   local size_x, size_y = font.scale(72), font.scale(72)
   local icon_size = 40
 
+  self.button_panel = vgui.create('EditablePanel', self)
+  self.button_panel:SetPos(0, -size_y)
+  self.button_panel:SetSize(scrw, size_y)
+  self.button_panel.Paint = function(p, w, h)
+    theme.hook('PaintTabMenuButtonPanel', self, w, h)
+  end
+
+  self.button_panel:MoveTo(0, 0, theme.get_option('menu_anim_duration'), 0, 0.5)
+
   cur_x = cur_x or 0
   cur_y = cur_y or 0
 
-  self.close_button = vgui.Create('fl_button', self)
+  self.close_button = vgui.Create('fl_button', self.button_panel)
   self.close_button:SetPos(cur_x, cur_y)
   self.close_button:SetDrawBackground(false)
   self.close_button:SetFont(theme.get_font('menu_larger'))
@@ -27,7 +36,7 @@ function PANEL:Init()
   self.close_button:SizeToContents()
   self.close_button:SetTall(size_y)
   self.close_button.DoClick = function(btn)
-    self:safe_remove()
+    self:close_menu()
   end
 
   cur_x = cur_x + self.close_button:GetWide() + size_x
@@ -37,7 +46,7 @@ function PANEL:Init()
   hook.run('AddTabMenuItems', self)
 
   for k, v in ipairs(self.menu_items) do
-    local button = vgui.Create('fl_button', self)
+    local button = vgui.Create('fl_button', self.button_panel)
     button:SetSize(size_x, size_y)
     button:SetDrawBackground(false)
     button:SetPos(cur_x, cur_y)
@@ -47,6 +56,8 @@ function PANEL:Init()
     button:set_centered(true)
 
     button.DoClick = function(btn)
+      if IsValid(self.active_panel) and v.id == self.active_panel.id then return end
+
       if v.override then
         v.override(self, btn)
 
@@ -77,6 +88,8 @@ function PANEL:Init()
           self.active_panel:rebuild()
         end
 
+        self.active_panel.id = v.id
+
         hook.run('OnMenuPanelOpen', self, self.active_panel)
       end
 
@@ -97,8 +110,7 @@ function PANEL:Init()
 
   draw.set_blur_size(1)
   fl.blur_update_fps = 0
-
-  self.lerpStart = SysTime()
+  self.blur_target = 6
 end
 
 function PANEL:Think()
@@ -109,14 +121,13 @@ end
 
 function PANEL:OnMousePressed()
   if IsValid(self.active_panel) then
-    self.active_panel:SetVisible(false)
-    self.active_panel:Remove()
+    self.active_panel:safe_remove()
   end
 end
 
 function PANEL:OnKeyCodePressed(key)
   if key == KEY_TAB then
-    self.close_button.DoClick()
+    self:close_menu()
   end
 end
 
@@ -137,10 +148,17 @@ function PANEL:add_menu_item(id, data, index)
 end
 
 function PANEL:close_menu()
-  self:SetVisible(false)
-  self:Remove()
-  draw.set_blur_size(12)
-  fl.blur_update_fps = 8
+  self.blur_target = 0
+
+  if IsValid(self.active_panel) then
+    self.active_panel:AlphaTo(0, theme.get_option('menu_anim_duration'), 0)
+  end
+
+  self.button_panel:MoveTo(0, -self.button_panel:GetTall(), theme.get_option('menu_anim_duration'), 0, 0.5, function()
+    self:safe_remove()
+
+    fl.blur_update_fps = 8
+  end)
 end
 
 vgui.Register('fl_tab_menu', PANEL, 'EditablePanel')

@@ -332,15 +332,17 @@ function THEME:PaintScoreboard(panel, width, height)
   draw.SimpleText(t'scoreboard.help', self:get_font('text_small'), 4, 14, self:get_color('text'))
 end
 
+function THEME:PaintTabMenuButtonPanel(panel, width, height)
+  draw.RoundedBox(0, 0, 0, width, height, ColorAlpha(self:get_color('background'), 125))
+end
+
 function THEME:PaintTabMenu(panel, width, height)
   local fraction = FrameTime() * 8
   local active_panel = panel.active_panel
-  local sidebar_color = ColorAlpha(self:get_color('background'), 125)
 
-  fl.blur_size = Lerp(fraction * 0.4, fl.blur_size, 6)
+  fl.blur_size = Lerp(fraction, fl.blur_size, panel.blur_target)
 
   draw.blur_panel(panel)
-  draw.RoundedBox(0, 0, 0, width, font.scale(72), sidebar_color)
 
   if IsValid(active_panel) then
     panel.pos_y = panel.pos_y or 0
