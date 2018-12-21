@@ -10,8 +10,7 @@ function PANEL:Init()
   self.button_close:set_text('')
   self.button_close:SetDrawBackground(false)
   self.button_close.DoClick = function(btn)
-    self:SetVisible(false)
-    self:Remove()
+    self:safe_remove()
   end
 end
 

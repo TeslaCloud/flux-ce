@@ -53,8 +53,7 @@ function PANEL:rebuild()
 end
 
 function PANEL:close(callback)
-  self:SetVisible(false)
-  self:Remove()
+  self:safe_remove()
 
   if callback then
     callback()

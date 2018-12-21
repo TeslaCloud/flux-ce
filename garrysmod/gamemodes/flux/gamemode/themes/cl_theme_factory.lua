@@ -89,7 +89,8 @@ function THEME:on_loaded()
   end)
 end
 
-function THEME:CreateMainMenu(panel) end
+function THEME:CreateMainMenu(panel)
+end
 
 function THEME:PaintFrame(panel, width, height)
   local title = panel:GetTitle()

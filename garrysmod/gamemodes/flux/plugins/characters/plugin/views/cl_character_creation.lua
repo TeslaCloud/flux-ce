@@ -196,8 +196,7 @@ function PANEL:prev_stage()
 end
 
 function PANEL:close(callback)
-  self:SetVisible(false)
-  self:Remove()
+  self:safe_remove()
 
   if callback then
     callback()
