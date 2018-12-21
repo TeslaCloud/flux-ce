@@ -27,10 +27,7 @@ function PANEL:Init()
   self.close_button:SizeToContents()
   self.close_button:SetTall(size_y)
   self.close_button.DoClick = function(btn)
-    surface.PlaySound('garrysmod/ui_click.wav')
-
-    self:SetVisible(false)
-    self:Remove()
+    self:safe_remove()
   end
 
   cur_x = cur_x + self.close_button:GetWide() + size_x

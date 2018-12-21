@@ -47,7 +47,7 @@ function PANEL:Paint(width, height)
     draw.RoundedBox(0, 0, 0, width, height, ColorAlpha(self.background_color, self.cur_alpha))
   end
 
-  if !theme.hook('Paintnotification_text', self, width, height) then
+  if !theme.hook('PaintNotificationText', self, width, height) then
     local cur_y = 4
 
     for k, v in ipairs(self.notification_text) do
