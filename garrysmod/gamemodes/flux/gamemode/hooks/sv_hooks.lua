@@ -418,7 +418,8 @@ function GM:PlayerSay(player, text, team_chat)
   end
 end
 
-function GM:ShowHelp(player) end
+function GM:ShowHelp(player)
+end
 
 -- Awful awful awful code, but it's kinda necessary in some rare cases.
 -- Avoid using PlayerThink whenever possible though.

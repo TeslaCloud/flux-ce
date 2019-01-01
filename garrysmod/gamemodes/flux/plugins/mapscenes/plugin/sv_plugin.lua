@@ -15,7 +15,7 @@ function Mapscenes:SaveData()
 end
 
 function Mapscenes:save()
-  data.save_plugin('mapscenepoints', Mapscenes.points)
+  data.save_plugin('mapscenepoints', self.points)
 end
 
 function Mapscenes:load()
