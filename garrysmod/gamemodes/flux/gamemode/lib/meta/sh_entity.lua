@@ -20,3 +20,17 @@ function ent_meta:is_stuck()
 
   return trace.Entity and (trace.Entity:IsWorld() or trace.Entity:IsValid())
 end
+
+function ent_meta:is_door()
+  if IsValid(self) then
+    local class = self:GetClass():lower()
+
+    if class and class:find('door') or
+    class == 'prop_dynamic' and self:GetModel():lower():find('door') or
+    class == 'func_movelinear' then
+      return true
+    end
+  end
+
+  return false
+end

@@ -159,3 +159,17 @@ function util.vector_obstructed(vec1, vec2, filter)
 
   return trace.Hit
 end
+
+function util.door_is_opened(entity)
+  if entity:is_door() then
+    local data = entity:GetSaveTable()
+
+    if data.m_toggle_state then
+      return data.m_toggle_state == 0
+    elseif data.m_eDoorState then
+      return data.m_eDoorState != 0
+    end
+  end
+
+  return false
+end
