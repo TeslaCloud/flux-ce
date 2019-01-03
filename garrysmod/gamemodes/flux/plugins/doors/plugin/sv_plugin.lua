@@ -21,6 +21,10 @@ function Doors:save()
         end
       end
 
+      if v.conditions then
+        save_table.conditions = v.conditions
+      end
+
       table.insert(doors, save_table)
     end
   end
@@ -40,10 +44,16 @@ function Doors:load()
           v1.on_load(door, v[k1], true)
         end
       end
+
+      door.conditions = v.conditions
     end
   end
 end
 
 cable.receive('fl_send_door_data', function(player, entity, id, data)
   Doors.properties[id].on_load(entity, data, false)
+end)
+
+cable.receive('fl_send_door_conditions', function(player, entity, conditions)
+  entity.conditions = conditions
 end)

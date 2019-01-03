@@ -73,20 +73,64 @@ Doors:register_property('locked', {
   end
 })
 
-Doors:register_condition('Player', {
-  name = 'Specific player',
-  text = 'Player is %s',
+Doors:register_condition('steamid', {
+  name = 'Player with specific SteamID',
+  text = 'SteamID %s %s',
+  format = function(panel, data)
+    local panel_data = panel.data
+    local steamid = panel_data.steamid
+    local operator = util.operator_to_symbol(panel_data.operator) or '<Select operator>'
+    local parameter = steamid and steamid..' ('..player.name_from_steamid(steamid)..')' or '<Select parameter>'
+
+    return string.format(data.text, operator, parameter)
+  end,
   icon = 'icon16/user.png',
-  check = function(player, value)
-    return player:SteamID() == value
+  check = function(player, data)
+    if !data.operator or !data.steamid then return false end
+
+    return util.process_operator(data.operator, player:SteamID(), data.steamid)
+  end,
+  set_parameters = function(id, data, panel, menu)
+    Derma_StringRequest(
+      t(data.name),
+      'Input players steamID.',
+      '',
+      function(text)
+        if text:starts('STEAM_') then
+          panel.data.steamid = text
+
+          panel.update()
+        else
+          data.set_parameters(id, data, panel)
+        end
+      end
+    )
+  end,
+  set_operator = function(id, data, panel, menu)
+    Derma_Query(
+      'Select operator',
+      t(data.name),
+      'Equal (==)',
+      function()
+        panel.data.operator = 'equal'
+
+        panel.update()
+      end,
+      'Unequal (!=)',
+      function()
+        panel.data.operator = 'unequal'
+
+        panel.update()
+      end
+    )
   end
 })
 
-Doors:register_condition('Character', {
+Doors:register_condition('character', {
   name = 'Specific character',
   text = 'Character is %s',
   icon = 'icon16/emoticon_smile.png',
-  check = function(player, value)
+  on_check = function(player, value)
     return player:get_active_character_id() == value
   end
 })

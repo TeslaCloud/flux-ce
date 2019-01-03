@@ -13,26 +13,9 @@ function PANEL:Init()
   self.properties:SetSize(0, self:GetTall() * 0.5)
   self.properties:Dock(TOP)
 
-  self.conditions = vgui.create('DTree', self)
+  self.conditions = vgui.create('fl_door_conditions', self)
   self.conditions:SetSize(0, self:GetTall() - self.properties:GetTall() - 34)
   self.conditions:Dock(TOP)
-
-  self.conditions.root = self.conditions:AddNode('Press RMB here to add new condition.', 'icon16/key.png')
-  self.conditions.root:SetExpanded(true)
-  self.conditions.root.DoRightClick = function(panel)
-    local menu = DermaMenu()
-
-    local sub_menu = menu:AddSubMenu('Add condition')
-    
-    for k, v in pairs(Doors.conditions) do
-      sub_menu:AddOption(v.name, function()
-        panel:AddNode(v.text, v.icon)
-      end)
-    end
-
-    menu:Open()
-  end
-
 end
 
 function PANEL:OnKeyCodePressed(key)
@@ -45,9 +28,11 @@ function PANEL:OnRemove()
   for k, v in pairs(self:get_door_data()) do
     cable.send('fl_send_door_data', self:get_door(), k, v)
   end
+
+  cable.send('fl_send_door_conditions', self:get_door(), self.conditions:get_conditions())
 end
 
-function PANEL:set_door(entity)
+function PANEL:set_door(entity, conditions)
   self.door = entity
 
   for k, v in pairs(Doors.properties) do
@@ -61,6 +46,10 @@ function PANEL:set_door(entity)
       end
     end
   end
+
+  if conditions then
+    self.conditions:set_conditions(self.conditions.root, conditions)
+  end
 end
 
 function PANEL:get_door()
@@ -73,3 +62,117 @@ end
 
 vgui.register('fl_door_menu', PANEL, 'DFrame')
 
+PANEL = {}
+
+function PANEL:Init()
+  self:SetIndentSize(0)
+
+  self.root = self:AddNode('Press RMB here to add new condition.', 'icon16/key.png')
+  self.root:SetExpanded(true)
+  self.root.childs = {}
+  self.root.DoRightClick = function(panel)
+    self:node_options(panel, true, #panel.childs == 0)
+  end
+end
+
+function PANEL:node_options(panel, root, first)
+  local menu = DermaMenu()
+
+  local sub_menu = menu:AddSubMenu('Add condition')
+  
+  for k, v in pairs(Doors.conditions) do
+    sub_menu:AddOption(v.name, function()
+      self:add_condition(panel, k)
+      
+      if first then
+        panel:SetText('Conditions')
+      end
+    end)
+  end
+
+  local id = panel.id
+
+  if id then
+    local data = Doors.conditions[id]
+
+    menu:AddSpacer()
+
+    if data.set_parameters then
+      menu:AddOption('Set parameters...', function()
+        data.set_parameters(id, data, panel, menu)
+      end)
+    end
+
+    if data.set_operator then
+      menu:AddOption('Set operator...', function()
+        data.set_operator(id, data, panel, menu)
+      end)
+    end
+
+    menu:AddOption('Delete', function()
+      if #panel:GetParentNode().childs == 1 then
+        panel:GetParentNode():SetText('Press RMB here to add new condition.')
+      end
+
+      panel:safe_remove()
+    end)
+  end
+
+  menu:Open()
+end
+
+function PANEL:add_condition(parent, id, data)
+  local condition_data = Doors.conditions[id]
+  local node = parent:AddNode('', condition_data.icon)
+  node:SetExpanded(true)
+  node.id = id
+  node.data = data or {}
+  node.childs = {}
+  node.DoRightClick = function()
+    self:node_options(node)
+  end
+
+  node.update = function()
+    node:SetText(condition_data.format(node, condition_data))
+  end
+
+  node.update()
+
+  table.insert(parent.childs, node)
+
+  return node
+end
+
+function PANEL:get_conditions(panel)
+  if !IsValid(panel) then panel = self.root end
+
+  local conditions = {}
+
+  for k, v in pairs(panel.childs) do
+    local node = {
+      id = v.id,
+      data = v.data
+    }
+
+    if v.childs then
+      node.childs = self:get_conditions(v)
+    end
+
+    table.insert(conditions, node)
+  end
+
+  return conditions
+end
+
+function PANEL:set_conditions(parent, conditions)
+  for k, v in pairs(conditions) do
+    local data = Doors.conditions[v.id]
+    local node = self:add_condition(parent, v.id, v.data)
+
+    if v.childs then
+      self:set_conditions(node, v.childs)
+    end
+  end
+end
+
+vgui.register('fl_door_conditions', PANEL, 'DTree')
