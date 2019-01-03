@@ -43,3 +43,14 @@ function player.find(name, case_sensitive, return_first)
     return hits[1]
   end
 end
+
+function player.name_from_steamid(steamid)
+  local steam64 = util.SteamIDTo64(steamid)
+  local steam_name
+
+  steamworks.request_player_info(steam64, function(_steam_name)
+    steam_name = _steam_name
+  end)
+
+  return steam_name
+end

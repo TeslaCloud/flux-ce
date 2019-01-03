@@ -173,3 +173,64 @@ function util.door_is_opened(entity)
 
   return false
 end
+
+local operators = {
+  equal = function(a, b)
+    return a == b
+  end,
+  unequal = function(a, b)
+    return a != b
+  end,
+  less = function(a, b)
+    return a < b
+  end,
+  greater = function(a, b)
+    return a > b
+  end,
+  less_equal = function(a, b)
+    return a <= b
+  end,
+  greater_equal = function(a, b)
+    return a >= b
+  end,
+  ['and'] = function(a, b)
+    return a and b
+  end,
+  ['or'] = function(a, b)
+    return a or b
+  end,
+  ['not'] = function(a, b)
+    return !a
+  end
+}
+
+
+local operators_symbol = {
+  equal = '==',
+  unequal = '!=',
+  less = '<',
+  greater = '>',
+  less_equal = '<=',
+  greater_equal = '>=',
+  ['and'] = '&&',
+  ['or'] = '||',
+  ['not'] = '!'
+}
+
+function util.process_operator(op, a, b)
+  return operators[op](a, b)
+end
+
+function util.get_operators()
+  local list = {}
+
+  for k, v in pairs(operators) do
+    table.insert(list, k)
+  end
+
+  return list
+end
+
+function util.operator_to_symbol(op)
+  return operators_symbol[op]
+end
