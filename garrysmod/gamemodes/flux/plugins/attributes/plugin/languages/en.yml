@@ -3,3 +3,11 @@ en:
     description: "Set charater's attribute."
     syntax: <target> <attribute_id> <value>
     message: "{1} has set {2}'s attribute {3} to {4}."
+  doors:
+    attributes: Attributes
+    conditions:
+      attribute:
+        name: Player with certain attribute value
+        text: Attribute
+        message1: Select attribute
+        message2: Select attribute value
