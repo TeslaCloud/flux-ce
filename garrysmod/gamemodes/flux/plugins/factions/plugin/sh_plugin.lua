@@ -82,7 +82,8 @@ function Factions:OnPluginsLoaded()
     end,
     icon = 'icon16/award_star_gold_1.png',
     check = function(player, entity, data)
-      if !data.operator or !data.rank then return false end
+      if !data.operator or !data.rank or !data.faction_id then return false end
+      if player:get_faction_id() != data.faction_id then return false end
 
       return util.process_operator(data.operator, player:get_rank(), data.rank)
     end,
