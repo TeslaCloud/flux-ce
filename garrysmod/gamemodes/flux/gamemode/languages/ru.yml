@@ -110,3 +110,13 @@ ru:
     shared: Получение данных с сервера...
   intro:
     skip: Нажмите любую клавишу...
+  operators:
+    less: Меньше
+    greater: Больше
+    less_equal: Меньше или равно
+    greater_equal: Больше или равно
+    equal: Равно
+    unequal: Не равно
+    and: И
+    or: ИЛИ
+    not: НЕ

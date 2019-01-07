@@ -72,3 +72,13 @@ en:
   loading:
     schema: Loading schema and plugins, please wait...
     local_player: Preparing loading sequence, please wait...
+  operators:
+    less: Less
+    greater: Greater
+    less_equal: Less or equal
+    greater_equal: Greater or equal
+    equal: Equal
+    unequal: Unequal
+    and: AND
+    or: OR
+    not: NOT

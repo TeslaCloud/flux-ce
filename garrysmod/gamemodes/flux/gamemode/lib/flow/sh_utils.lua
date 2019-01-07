@@ -206,12 +206,12 @@ local operators = {
 
 
 local operators_symbol = {
-  equal = '==',
-  unequal = '!=',
   less = '<',
   greater = '>',
   less_equal = '<=',
   greater_equal = '>=',
+  equal = '==',
+  unequal = '!=',
   ['and'] = '&&',
   ['or'] = '||',
   ['not'] = '!'
@@ -227,6 +227,40 @@ function util.get_operators()
   for k, v in pairs(operators) do
     table.insert(list, k)
   end
+
+  return list
+end
+
+function util.get_logical_operators()
+  local list = {
+    equal = '==',
+    unequal = '!=',
+    ['and'] = '&&',
+    ['or'] = '||',
+    ['not'] = '!'
+  }
+
+  return list
+end
+
+function util.get_relational_operators()
+  local list = {
+    less = '<',
+    greater = '>',
+    less_equal = '<=',
+    greater_equal = '>=',
+    equal = '==',
+    unequal = '!='
+  }
+
+  return list
+end
+
+function util.get_equal_operators()
+  local list = {
+    equal = '==',
+    unequal = '!='
+  }
 
   return list
 end
