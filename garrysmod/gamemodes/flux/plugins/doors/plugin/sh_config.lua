@@ -6,7 +6,7 @@ Doors:register_property('name', {
     entity:set_nv('fl_name', data)
   end,
   create_panel = function(entity, panel)
-    local name = panel.properties:CreateRow('General', 'Name')
+    local name = panel.properties:CreateRow(t'doors.categories.general', t'doors.properties.name')
     name:Setup('Generic')
 
     return name
@@ -21,8 +21,8 @@ Doors:register_property('title_type', {
     entity:set_nv('fl_title_type', data)
   end,
   create_panel = function(entity, panel)
-    local title_type = panel.properties:CreateRow('General', 'Title type')
-    title_type:Setup('Combo', { text = 'Select title type...' })
+    local title_type = panel.properties:CreateRow(t'doors.categories.general', t'doors.properties.title_type.name')
+    title_type:Setup('Combo', { text = t'doors.properties.title_type.select' })
 
     for k, v in pairs(Doors.title_types) do
       title_type:AddChoice(v.name, v.data)
@@ -66,7 +66,7 @@ Doors:register_property('locked', {
     entity:set_nv('fl_locked', data)
   end,
   create_panel = function(entity, panel)
-    local locked = panel.properties:CreateRow('General', 'Locked')
+    local locked = panel.properties:CreateRow(t'doors.categories.general', t'doors.properties.locked')
     locked:Setup('Boolean')
 
     return locked
@@ -74,18 +74,18 @@ Doors:register_property('locked', {
 })
 
 Doors:register_condition('steamid', {
-  name = 'Player with specific SteamID',
-  text = 'SteamID %s %s',
+  name = t'doors.conditions.steamid.name',
+  text = t'doors.conditions.steamid.text'..' %s %s',
   format = function(panel, data)
     local panel_data = panel.data
     local steamid = panel_data.steamid
-    local operator = util.operator_to_symbol(panel_data.operator) or '<Select operator>'
-    local parameter = steamid and steamid..' ('..player.name_from_steamid(steamid)..')' or '<Select parameter>'
+    local operator = util.operator_to_symbol(panel_data.operator) or t'doors.select_operator'
+    local parameter = steamid and steamid..' ('..player.name_from_steamid(steamid)..')' or t'doors.select_parameter'
 
     return string.format(data.text, operator, parameter)
   end,
-  icon = 'icon16/user.png',
-  check = function(player, data)
+  icon = 'vgui/resource/icon_steam',
+  check = function(player, entity, data)
     if !data.operator or !data.steamid then return false end
 
     return util.process_operator(data.operator, player:SteamID(), data.steamid)
@@ -93,7 +93,7 @@ Doors:register_condition('steamid', {
   set_parameters = function(id, data, panel, menu)
     Derma_StringRequest(
       t(data.name),
-      'Input players steamID.',
+      t'doors.conditions.steamid.message',
       '',
       function(text)
         if text:starts('STEAM_') then
@@ -106,31 +106,134 @@ Doors:register_condition('steamid', {
       end
     )
   end,
-  set_operator = function(id, data, panel, menu)
-    Derma_Query(
-      'Select operator',
-      t(data.name),
-      'Equal (==)',
-      function()
-        panel.data.operator = 'equal'
+  set_operator = 'equal'
+})
 
-        panel.update()
-      end,
-      'Unequal (!=)',
-      function()
-        panel.data.operator = 'unequal'
+Doors:register_condition('model', {
+  name = t'doors.conditions.model.name',
+  text = t'doors.conditions.model.text'..' %s %s',
+  format = function(panel, data)
+    local panel_data = panel.data
+    local operator = util.operator_to_symbol(panel_data.operator) or t'doors.select_operator'
+    local parameter = panel_data.model or t'doors.select_parameter'
+
+    return string.format(data.text, operator, parameter)
+  end,
+  icon = 'icon16/bricks.png',
+  check = function(player, entity, data)
+    if !data.operator or !data.model then return false end
+
+    return util.process_operator(data.operator, player:GetModel(), data.model)
+  end,
+  set_parameters = function(id, data, panel, menu)
+    Derma_StringRequest(
+      t(data.name),
+      t'doors.conditions.model.message',
+      '',
+      function(text)
+        if text:starts('models') then
+          panel.data.model = text
+
+          panel.update()
+        else
+          data.set_parameters(id, data, panel)
+        end
+      end
+    )
+  end,
+  set_operator = 'equal'
+})
+
+Doors:register_condition('health', {
+  name = t'doors.conditions.health.name',
+  text = t'doors.conditions.health.text'..' %s %s',
+  format = function(panel, data)
+    local panel_data = panel.data
+    local operator = util.operator_to_symbol(panel_data.operator) or t'doors.select_operator'
+    local parameter = panel_data.health or t'doors.select_parameter'
+
+    return string.format(data.text, operator, parameter)
+  end,
+  icon = 'icon16/heart.png',
+  check = function(player, entity, data)
+    if !data.operator or !data.health then return false end
+
+    return util.process_operator(data.operator, player:Health(), data.health)
+  end,
+  set_parameters = function(id, data, panel, menu)
+    Derma_StringRequest(
+      t(data.name),
+      t'doors.conditions.health.message',
+      '',
+      function(text)
+        panel.data.health = tonumber(text)
 
         panel.update()
       end
     )
-  end
+  end,
+  set_operator = 'relational'
 })
 
-Doors:register_condition('character', {
-  name = 'Specific character',
-  text = 'Character is %s',
-  icon = 'icon16/emoticon_smile.png',
-  on_check = function(player, value)
-    return player:get_active_character_id() == value
-  end
+Doors:register_condition('armor', {
+  name = t'doors.conditions.armor.name',
+  text = t'doors.conditions.armor.text'..' %s %s',
+  format = function(panel, data)
+    local panel_data = panel.data
+    local operator = util.operator_to_symbol(panel_data.operator) or t'doors.select_operator'
+    local parameter = panel_data.armor or t'doors.select_parameter'
+
+    return string.format(data.text, operator, parameter)
+  end,
+  icon = 'icon16/shield.png',
+  check = function(player, entity, data)
+    if !data.operator or !data.armor then return false end
+
+    return util.process_operator(data.operator, player:Armor(), data.armor)
+  end,
+  set_parameters = function(id, data, panel, menu)
+    Derma_StringRequest(
+      t(data.name),
+      t'doors.conditions.armor.message',
+      '',
+      function(text)
+        panel.data.armor = tonumber(text)
+
+        panel.update()
+      end
+    )
+  end,
+  set_operator = 'relational'
+})
+
+Doors:register_condition('active_weapon', {
+  name = t'doors.conditions.weapon.name',
+  text = t'doors.conditions.weapon.text'..' %s %s',
+  format = function(panel, data)
+    local panel_data = panel.data
+    local operator = util.operator_to_symbol(panel_data.operator) or t'doors.select_operator'
+    local parameter = panel_data.weapon or t'doors.select_parameter'
+
+    return string.format(data.text, operator, parameter)
+  end,
+  icon = 'icon16/gun.png',
+  check = function(player, entity, data)
+    if !data.operator or !data.weapon then return false end
+    if !IsValid(player:GetActiveWeapon()) then return false end
+
+    return util.process_operator(data.operator, player:GetActiveWeapon():GetClass(), data.weapon)
+  end,
+  set_parameters = function(id, data, panel, menu)
+    Derma_StringRequest(
+      t(data.name),
+      t'doors.conditions.weapon.message',
+      '',
+      function(text)
+        panel.data.weapon = text
+
+        panel.update()
+      end
+    )
+  end,
+  set_operator = 'equal'
 })

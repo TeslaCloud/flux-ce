@@ -25,6 +25,8 @@ function PANEL:OnKeyCodePressed(key)
 end
 
 function PANEL:OnRemove()
+  CloseDermaMenus()
+
   for k, v in pairs(self:get_door_data()) do
     cable.send('fl_send_door_data', self:get_door(), k, v)
   end
@@ -67,7 +69,7 @@ PANEL = {}
 function PANEL:Init()
   self:SetIndentSize(0)
 
-  self.root = self:AddNode('Press RMB here to add new condition.', 'icon16/key.png')
+  self.root = self:AddNode(t'doors.right_click', 'icon16/key.png')
   self.root:SetExpanded(true)
   self.root.childs = {}
   self.root.DoRightClick = function(panel)
@@ -78,16 +80,12 @@ end
 function PANEL:node_options(panel, root, first)
   local menu = DermaMenu()
 
-  local sub_menu = menu:AddSubMenu('Add condition')
+  local sub_menu = menu:AddSubMenu(t'doors.add_condition')
   
   for k, v in pairs(Doors.conditions) do
     sub_menu:AddOption(v.name, function()
       self:add_condition(panel, k)
-      
-      if first then
-        panel:SetText('Conditions')
-      end
-    end)
+    end):SetIcon(v.icon)
   end
 
   local id = panel.id
@@ -98,22 +96,34 @@ function PANEL:node_options(panel, root, first)
     menu:AddSpacer()
 
     if data.set_parameters then
-      menu:AddOption('Set parameters...', function()
+      menu:AddOption(t'doors.set_parameter', function()
         data.set_parameters(id, data, panel, menu)
       end)
     end
 
     if data.set_operator then
-      menu:AddOption('Set operator...', function()
-        data.set_operator(id, data, panel, menu)
+      menu:AddOption(t'doors.set_operator', function()
+        if isfunction(data.set_operator) then
+          data.set_operator(id, data, panel, menu)
+        elseif isstring(data.set_operator) then
+          local selector = vgui.create('fl_selector')
+          selector:set_title(t(data.name))
+          selector:set_text(t'doors.select_operator')
+          selector:set_value(t'doors.operators')
+          selector:Center()
+
+          for k, v in pairs(util['get_'..data.set_operator..'_operators']()) do
+            selector:add_choice(t('operators.'..k)..' ('..v..')', function()
+              panel.data.operator = k
+        
+              panel.update()
+            end)
+          end
+        end
       end)
     end
 
-    menu:AddOption('Delete', function()
-      if #panel:GetParentNode().childs == 1 then
-        panel:GetParentNode():SetText('Press RMB here to add new condition.')
-      end
-
+    menu:AddOption(t'doors.delete', function()
       panel:safe_remove()
     end)
   end
@@ -149,6 +159,8 @@ function PANEL:get_conditions(panel)
   local conditions = {}
 
   for k, v in pairs(panel.childs) do
+    if !IsValid(v) then continue end
+
     local node = {
       id = v.id,
       data = v.data
