@@ -24,6 +24,10 @@ function Faction:init(id)
   -- set via Faction:set_data.
 end
 
+function Faction:get_name()
+  return self.name
+end
+
 function Faction:get_color()
   return self.color
 end
@@ -46,6 +50,14 @@ end
 
 function Faction:get_description()
   return self.description
+end
+
+function Faction:get_ranks()
+  return self.rank
+end
+
+function Faction:get_rank(number)
+  return self.rank[number]
 end
 
 function Faction:add_class(id, class_name, description, color, callback)
