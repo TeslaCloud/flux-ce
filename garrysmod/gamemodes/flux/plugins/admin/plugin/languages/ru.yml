@@ -45,3 +45,10 @@ ru:
     never: Никогда
     allow_override: Разрешить (Обход)
     error: Ошибка
+  doors:
+    conditions:
+      role:
+        name: Игрок с определенной ролью
+        text: Роль
+        message: Выберите роль
+    roles: Роль

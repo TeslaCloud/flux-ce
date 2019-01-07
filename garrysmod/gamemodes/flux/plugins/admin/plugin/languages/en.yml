@@ -43,3 +43,10 @@ en:
     never: Never
     allow_override: Allow (Override)
     error: Invalid Permission
+  doors:
+    conditions:
+      role:
+        name: Player with specific role
+        text: Role
+        message: Select role
+    roles: Roles
