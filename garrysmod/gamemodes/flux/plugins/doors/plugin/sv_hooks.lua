@@ -3,7 +3,9 @@ function PLUGIN:ShowSpare1(player)
   local entity = trace.Entity
 
   if IsValid(entity) and entity:is_door() then
-    cable.send(player, 'fl_door_menu', entity, entity.conditions)
+    local can_lock = hook.run('PlayerCanLockDoor', player, entity)
+
+    cable.send(player, 'fl_door_menu', entity, can_lock, entity.conditions)
   end
 end
 
