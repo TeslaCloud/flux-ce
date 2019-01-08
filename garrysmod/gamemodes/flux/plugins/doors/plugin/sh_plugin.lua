@@ -20,7 +20,6 @@ function Doors:register_title_type(id, data)
 end
 
 util.include('sh_config.lua')
-util.include('cl_hooks.lua')
 util.include('cl_plugin.lua')
 util.include('sv_hooks.lua')
 util.include('sv_plugin.lua')

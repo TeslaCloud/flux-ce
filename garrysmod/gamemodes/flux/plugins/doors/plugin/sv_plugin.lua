@@ -41,7 +41,7 @@ function Doors:load()
 
       for k1, v1 in pairs(self.properties) do
         if v1.on_load then
-          v1.on_load(door, v[k1], true)
+          v1.on_load(door, v[k1])
         end
       end
 
@@ -51,7 +51,7 @@ function Doors:load()
 end
 
 cable.receive('fl_send_door_data', function(player, entity, id, data)
-  Doors.properties[id].on_load(entity, data, false)
+  Doors.properties[id].on_load(entity, data)
 end)
 
 cable.receive('fl_send_door_conditions', function(player, entity, conditions)
