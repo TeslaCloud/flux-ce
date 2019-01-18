@@ -1,6 +1,6 @@
 function Bolt:CheckPassword(steam_id64, ip, sv_pass, cl_pass, name)
   local steam_id = util.SteamIDFrom64(steam_id64)
-  local entry = fl.admin:get_bans()[steam_id]
+  local entry = self:get_bans()[steam_id]
 
   if entry and plugin.call('ShouldCheckBan', steam_id, ip, name) != false then
     if entry.duration != 0 and entry.unbanTime >= os.time() and plugin.call('ShouldExpireBan', steam_id, ip, name) != false then
@@ -20,7 +20,7 @@ end
 function Bolt:ActiveRecordReady()
   Ban:all():get(function(objects)
     for k, v in ipairs(objects) do
-      fl.admin:record_ban(v.steam_id, v)
+      self:record_ban(v.steam_id, v)
     end
   end)
 end
@@ -54,9 +54,9 @@ function Bolt:PlayerRestored(player, record)
 end
 
 function Bolt:CommandCheckImmunity(player, target, can_equal)
-  return fl.admin:check_immunity(player, v, can_equal)
+  return self:check_immunity(player, v, can_equal)
 end
 
 function Bolt:OnCommandCreated(id, data)
-  fl.admin:permission_from_command(data)
+  self:permission_from_command(data)
 end

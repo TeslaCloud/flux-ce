@@ -3,12 +3,12 @@ local player_meta = FindMetaTable('Player')
 function player_meta:SetUserGroup(group)
   group = group or 'user'
 
-  local group_obj = fl.admin:find_group(group)
-  local old_group_obj = fl.admin:find_group(self:GetUserGroup())
+  local group_obj = Bolt:find_group(group)
+  local old_group_obj = Bolt:find_group(self:GetUserGroup())
 
   self:set_nv('role', group)
 
-  if old_group_obj and group_obj and old_group_obj:on_group_take(self, group_obj) == nil then
+  if old_group_obj and group_obj and old_group_obj:on_group_taken(self, group_obj) == nil then
     if group_obj:on_group_set(self, old_group_obj) == nil then
       self:save_usergroup()
     end

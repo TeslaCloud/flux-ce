@@ -10,19 +10,19 @@ function Bolt:OnPluginLoaded()
   local folder = self:get_folder()
 
   util.include_folder(folder..'/commands/')
-  fl.admin:include_roles(folder..'/roles/')
+  Bolt:include_roles(folder..'/roles/')
 end
 
 function Bolt:PluginIncludeFolder(extra, folder)
   if extra == 'roles' then
-    fl.admin:include_roles(folder..'/roles/')
+    Bolt:include_roles(folder..'/roles/')
 
     return true
   end
 end
 
 function Bolt:PlayerHasPermission(player, action, object)
-  return fl.admin:can(player, action, object)
+  return Bolt:can(player, action, object)
 end
 
 function Bolt:PlayerIsRoot(player)

@@ -82,7 +82,7 @@ function PANEL:rebuild()
     self.list_layout:safe_remove()
   end
 
-  local permissions = fl.admin:get_permissions()
+  local permissions = Bolt:get_permissions()
   local width, height = self:GetWide(), self:GetTall()
 
   self.scroll_panel = vgui.Create('DScrollPanel', self)

@@ -4,7 +4,7 @@ util.include('cl_hooks.lua')
 util.include('sv_hooks.lua')
 
 if fl.admin then
-  fl.admin:register_permission('noclip', 'Noclip', 'Lets the player use observer mode / noclip.', 'general')
+  Bolt:register_permission('noclip', 'Noclip', 'Lets the player use observer mode / noclip.', 'general')
 end
 
 if SERVER then

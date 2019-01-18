@@ -8,7 +8,7 @@ COMMAND.aliases = { 'plyunban' }
 
 function COMMAND:on_run(player, steam_id)
   if isstring(steam_id) and steam_id != '' then
-    local success, copy = fl.admin:remove_ban(steam_id)
+    local success, copy = Bolt:remove_ban(steam_id)
 
     if success then
       fl.player:broadcast('unban_message', {

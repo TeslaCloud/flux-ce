@@ -11,7 +11,7 @@ function COMMAND:on_run(player, targets, duration, ...)
   local pieces = {...}
   local reason = 'You have been banned.'
 
-  duration = fl.admin:interpret_ban_time(duration)
+  duration = Bolt:interpret_ban_time(duration)
 
   if !isnumber(duration) then
     fl.player:notify(player, "'"..tostring(duration).."' could not be interpreted as duration!")
@@ -24,7 +24,7 @@ function COMMAND:on_run(player, targets, duration, ...)
   end
 
   for k, v in ipairs(targets) do
-    fl.admin:ban(v, duration, reason)
+    Bolt:ban(v, duration, reason)
   end
 
   for k, v in ipairs(_player.GetAll()) do

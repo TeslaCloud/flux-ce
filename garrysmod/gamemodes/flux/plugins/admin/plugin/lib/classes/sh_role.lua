@@ -66,7 +66,7 @@ end
 function Role:on_group_set(player, old_group) end
 
 -- Called when player's primary group is taken or modified.
-function Role:on_group_take(player, new_group) end
+function Role:on_group_taken(player, new_group) end
 
 Role.set_parent = Role.set_base
 
@@ -122,7 +122,7 @@ function Role:register()
     can, cannot, allow_anything = old_can, old_cannot, old_anything
   end
 
-  fl.admin:create_group(self.role_id, self)
+  Bolt:create_group(self.role_id, self)
 end
 
 Role.get_parent = Role.get_base

@@ -9,7 +9,7 @@ function ROLE:define_permissions()
 end
 
 -- Called when player's primary group is being set to this group.
-function ROLE:on_group_set(player, oldGroup) end
+function ROLE:on_group_set(player, previous_group) end
 
 -- Called when player's primary group is taken or modified.
-function ROLE:on_group_take(player, newGroup) end
+function ROLE:on_group_taken(player, new_group) end

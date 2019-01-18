@@ -1,31 +1,33 @@
-library.new('admin', fl)
+if !Bolt then
+  PLUGIN:set_global('Bolt')
+end
 
-local roles = fl.admin.roles or {}
-local permissions = fl.admin.permissions or {}
-local players = fl.admin.players or {}
-local bans = fl.admin.bans or {}
-fl.admin.roles = roles
-fl.admin.permissions = permissions
-fl.admin.players = players
-fl.admin.bans = bans
+local roles = Bolt.roles or {}
+local permissions = Bolt.permissions or {}
+local players = Bolt.players or {}
+local bans = Bolt.bans or {}
+Bolt.roles = roles
+Bolt.permissions = permissions
+Bolt.players = players
+Bolt.bans = bans
 
-function fl.admin:get_permissions()
+function Bolt:get_permissions()
   return permissions
 end
 
-function fl.admin:get_roles()
+function Bolt:get_roles()
   return roles
 end
 
-function fl.admin:get_players()
+function Bolt:get_players()
   return players
 end
 
-function fl.admin:get_bans()
+function Bolt:get_bans()
   return bans
 end
 
-function fl.admin:create_group(id, data)
+function Bolt:create_group(id, data)
   if !isstring(id) then return end
 
   data.id = id
@@ -55,7 +57,7 @@ function fl.admin:create_group(id, data)
   end
 end
 
-function fl.admin:add_permission(id, category, data, force)
+function Bolt:add_permission(id, category, data, force)
   if !id then return end
 
   category = category or 'general'
@@ -67,7 +69,7 @@ function fl.admin:add_permission(id, category, data, force)
   end
 end
 
-function fl.admin:register_permission(id, name, description, category)
+function Bolt:register_permission(id, name, description, category)
   if !isstring(id) or id == '' then return end
 
   local data = {}
@@ -78,13 +80,13 @@ function fl.admin:register_permission(id, name, description, category)
   self:add_permission(id, category, data, true)
 end
 
-function fl.admin:permission_from_command(cmd)
+function Bolt:permission_from_command(cmd)
   if !cmd then return end
 
   self:register_permission(cmd.id, cmd.name, cmd.description, cmd.category)
 end
 
-function fl.admin:can(player, action, object)
+function Bolt:can(player, action, object)
   if !IsValid(player) then return true end
   if player:is_root() then return true end
 
@@ -97,7 +99,7 @@ function fl.admin:can(player, action, object)
   return false
 end
 
-function fl.admin:find_group(id)
+function Bolt:find_group(id)
   if roles[id] then
     return roles[id]
   end
@@ -105,11 +107,11 @@ function fl.admin:find_group(id)
   return nil
 end
 
-function fl.admin:group_exists(id)
+function Bolt:group_exists(id)
   return self:find_group(id)
 end
 
-function fl.admin:check_immunity(player, target, can_equal)
+function Bolt:check_immunity(player, target, can_equal)
   if !IsValid(player) or !IsValid(target) then
     return true
   end
@@ -132,7 +134,7 @@ function fl.admin:check_immunity(player, target, can_equal)
   return false
 end
 
-function fl.admin:include_roles(directory)
+function Bolt:include_roles(directory)
   pipeline.include_folder('role', directory)
 end
 
@@ -146,7 +148,7 @@ if SERVER then
   end
 
   -- INTERNAL
-  function fl.admin:add_ban(steam_id, name, unban_time, duration, reason)
+  function Bolt:add_ban(steam_id, name, unban_time, duration, reason)
     local obj = bans[steam_id] or Ban.new()
       obj.name = name
       obj.steam_id = steam_id
@@ -156,11 +158,11 @@ if SERVER then
     self:record_ban(steam_id, obj:save())
   end
 
-  function fl.admin:record_ban(id, obj)
+  function Bolt:record_ban(id, obj)
     bans[id] = obj
   end
 
-  function fl.admin:ban(player, duration, reason, prevent_kick)
+  function Bolt:ban(player, duration, reason, prevent_kick)
     if !isstring(player) and !IsValid(player) then return end
 
     duration = duration or 0
@@ -181,7 +183,7 @@ if SERVER then
     self:add_ban(steam_id, name, os.time() + duration, duration, reason)
   end
 
-  function fl.admin:remove_ban(steam_id)
+  function Bolt:remove_ban(steam_id)
     local obj = bans[steam_id]
     if obj then
       local dump = obj:dump()
@@ -239,7 +241,7 @@ do
     noscope = 420
   }
 
-  function fl.admin:interpret_ban_time(str)
+  function Bolt:interpret_ban_time(str)
     if isnumber(str) then return str * 60 end
     if !isstring(str) then return false end
 
@@ -303,21 +305,21 @@ end
 
 do
   -- Flags
-  fl.admin:register_permission('physgun', 'Access Physgun', 'Grants access to the physics gun.', 'flags')
-  fl.admin:register_permission('toolgun', 'Access Tool Gun', 'Grants access to the tool gun.', 'flags')
-  fl.admin:register_permission('spawn_props', 'Spawn Props', 'Grants access to spawn props.', 'flags')
-  fl.admin:register_permission('spawn_chairs', 'Spawn Chairs', 'Grants access to spawn chairs.', 'flags')
-  fl.admin:register_permission('spawn_vehicles', 'Spawn Vehicles', 'Grants access to spawn vehicles.', 'flags')
-  fl.admin:register_permission('spawn_entities', 'Spawn All Entities', 'Grants access to spawn any entity.', 'flags')
-  fl.admin:register_permission('spawn_npcs', 'Spawn NPCs', 'Grants access to spawn NPCs.', 'flags')
-  fl.admin:register_permission('spawn_ragdolls', 'Spawn Ragdolls', 'Grants access to spawn ragdolls.', 'flags')
-  fl.admin:register_permission('spawn_sweps', 'Spawn SWEPs', 'Grants access to spawn scripted weapons.', 'flags')
-  fl.admin:register_permission('physgun_freeze', 'Freeze Protected Entities', 'Grants access to freeze protected entities.', 'flags')
-  fl.admin:register_permission('physgun_pickup', 'Unlimited Physgun', 'Grants access to pick up any entity with the physics gun.', 'flags')
-  fl.admin:register_permission('voice', 'Voice chat access', 'Grants access to voice chat.', 'flags')
+  Bolt:register_permission('physgun', 'Access Physgun', 'Grants access to the physics gun.', 'flags')
+  Bolt:register_permission('toolgun', 'Access Tool Gun', 'Grants access to the tool gun.', 'flags')
+  Bolt:register_permission('spawn_props', 'Spawn Props', 'Grants access to spawn props.', 'flags')
+  Bolt:register_permission('spawn_chairs', 'Spawn Chairs', 'Grants access to spawn chairs.', 'flags')
+  Bolt:register_permission('spawn_vehicles', 'Spawn Vehicles', 'Grants access to spawn vehicles.', 'flags')
+  Bolt:register_permission('spawn_entities', 'Spawn All Entities', 'Grants access to spawn any entity.', 'flags')
+  Bolt:register_permission('spawn_npcs', 'Spawn NPCs', 'Grants access to spawn NPCs.', 'flags')
+  Bolt:register_permission('spawn_ragdolls', 'Spawn Ragdolls', 'Grants access to spawn ragdolls.', 'flags')
+  Bolt:register_permission('spawn_sweps', 'Spawn SWEPs', 'Grants access to spawn scripted weapons.', 'flags')
+  Bolt:register_permission('physgun_freeze', 'Freeze Protected Entities', 'Grants access to freeze protected entities.', 'flags')
+  Bolt:register_permission('physgun_pickup', 'Unlimited Physgun', 'Grants access to pick up any entity with the physics gun.', 'flags')
+  Bolt:register_permission('voice', 'Voice chat access', 'Grants access to voice chat.', 'flags')
 
   -- General permissions
-  fl.admin:register_permission('context_menu', 'Access Context Menu', 'Grants access to the context menu.', 'general')
+  Bolt:register_permission('context_menu', 'Access Context Menu', 'Grants access to the context menu.', 'general')
 end
 
 pipeline.register('role', function(id, file_name, pipe)
