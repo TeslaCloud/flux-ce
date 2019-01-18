@@ -57,6 +57,7 @@ function Plugin:init(id, data)
   self.name = data.name or 'Unknown Plugin'
   self.author = data.author or 'Unknown Author'
   self.folder = data.folder or name:to_id()
+  self.path = data.path or self.folder
   self.description = data.description or 'This plugin has no description.'
   self.id = id or data.id or name:to_id() or 'unknown'
 
@@ -69,6 +70,10 @@ end
 
 function Plugin:get_folder()
   return self.folder
+end
+
+function Plugin:get_path()
+  return self.path
 end
 
 function Plugin:get_author()
@@ -144,7 +149,7 @@ function plugin.find(id)
     return stored[id], id
   else
     for k, v in pairs(stored) do
-      if v.id == id or v:get_folder() == id or v:get_name() == id then
+      if v.id == id or v:get_folder() == id or v:get_path() == id or v:get_name() == id then
         return v, k
       end
     end
@@ -241,9 +246,9 @@ function plugin.register(obj)
   plugin.cache_functions(obj)
 
   if obj.should_refresh == false then
-    reload_data[obj:get_folder()] = false
+    reload_data[obj:get_path()] = false
   else
-    reload_data[obj:get_folder()] = true
+    reload_data[obj:get_path()] = true
   end
 
   if SERVER then
@@ -278,7 +283,7 @@ function plugin.register(obj)
     obj:OnPluginLoaded()
   end
 
-  stored[obj:get_folder()] = obj
+  stored[obj:get_path()] = obj
   load_cache[obj.id] = true
 end
 
@@ -287,6 +292,7 @@ function plugin.include(path)
   local ext = id:GetExtensionFromFilename()
   local data = {}
   data.id = id
+  data.path = path
   data.folder = path
   data.single_file = ext == 'lua'
 
