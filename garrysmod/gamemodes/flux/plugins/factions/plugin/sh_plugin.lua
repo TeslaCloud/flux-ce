@@ -42,19 +42,14 @@ function Factions:OnPluginsLoaded()
         return util.process_operator(data.operator, player:get_faction_id(), data.faction_id)
       end,
       set_parameters = function(id, data, panel, menu)
-        local selector = vgui.create('fl_selector')
-        selector:set_title(t(data.name))
-        selector:set_text(t'doors.conditions.faction.message')
-        selector:set_value(t'doors.factions')
-        selector:Center()
-
-        for k, v in pairs(faction.all()) do
-          selector:add_choice(t(v.name), function()
-            panel.data.faction_id = faction.faction_id
+        panel:create_selector(data.name, 'doors.conditions.faction.message', 'doors.factions', faction.all(), 
+        function(selector, _faction)
+          selector:add_choice(t(_faction.name), function()
+            panel.data.faction_id = _faction.faction_id
       
             panel.update()
           end)
-        end
+        end)
       end,
       set_operator = 'equal'
     })
@@ -87,35 +82,25 @@ function Factions:OnPluginsLoaded()
         return util.process_operator(data.operator, player:get_rank(), data.rank)
       end,
       set_parameters = function(id, data, panel, menu)
-        local selector = vgui.create('fl_selector')
-        selector:set_title(t(data.name))
-        selector:set_text(t'doors.conditions.faction.message')
-        selector:set_value(t'doors.factions')
-        selector:Center()
+        panel:create_selector(data.name, 'doors.conditions.faction.message', 'doors.factions', faction.all(), 
+        function(faction_selector, _faction)
+          if #_faction:get_ranks() == 0 then continue end
   
-        for k, v in pairs(faction.all()) do
-          if #v:get_ranks() == 0 then continue end
-  
-          selector:add_choice(t(v.name), function()
-            panel.data.faction_id = faction.faction_id
+          faction_selector:add_choice(t(_faction.name), function()
+            panel.data.faction_id = _faction.faction_id
       
             panel.update()
-  
-            local rank_selector = vgui.create('fl_selector')
-            rank_selector:set_title(t(data.name))
-            rank_selector:set_text(t'doors.conditions.rank.message')
-            rank_selector:set_value(t'doors.ranks')
-            rank_selector:Center()
-      
-            for k1, v1 in pairs(v:get_ranks()) do
-              rank_selector:add_choice(t(v1.id), function()
-                panel.data.rank = faction.rank
+
+            panel:create_selector(data.name, 'doors.conditions.rank.message', 'doors.ranks', _faction:get_ranks(), 
+            function(rank_selector, rank)
+              rank_selector:add_choice(t(rank.name), function()
+                panel.data.rank = rank.id
           
                 panel.update()
               end)
-            end
+            end)
           end)
-        end
+        end)
       end,
       set_operator = 'relational'
     })

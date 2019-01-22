@@ -48,19 +48,14 @@ function Bolt:OnPluginsLoaded()
         return util.process_operator(data.operator, player:get_role(), data.role)
       end,
       set_parameters = function(id, data, panel, menu)
-        local selector = vgui.create('fl_selector')
-        selector:set_title(t(data.name))
-        selector:set_text(t'doors.conditions.role.message')
-        selector:set_value(t'doors.roles')
-        selector:Center()
-
-        for k, v in pairs(self:get_roles()) do
-          selector:add_choice(t(v.name), function()
-            panel.data.role = v.id
+        panel:create_selector(data.name, 'doors.conditions.role.message', 'doors.roles', self:get_roles(), 
+        function(selector, group)
+          selector:add_choice(t(group.name), function()
+            panel.data.role = group.id
       
             panel.update()
           end)
-        end
+        end)
       end,
       set_operator = 'equal'
     })

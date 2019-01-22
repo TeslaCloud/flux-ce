@@ -24,23 +24,18 @@ function Characters:OnPluginsLoaded()
         return util.process_operator(data.operator, player:get_active_character_id(), data.character_id)
       end,
       set_parameters = function(id, data, panel, menu)
-        local selector = vgui.create('fl_selector')
-        selector:set_title(t(data.name))
-        selector:set_text(t'doors.conditions.character.message')
-        selector:set_value(t'doors.characters')
-        selector:Center()
-
-        for k, v in ipairs(player.all()) do
-          local character = v:get_character()
+        panel:create_selector(data.name, 'doors.conditions.character.message', 'doors.characters', player.all(), 
+        function(selector, player)
+          local character = player:get_character()
 
           if character then
-            selector:add_choice(v:name(), function()
+            selector:add_choice(player:name(), function()
               panel.data.character_id = character.character_id
         
               panel.update()
             end)
           end
-        end
+        end)
       end,
       set_operator = 'equal'
     })

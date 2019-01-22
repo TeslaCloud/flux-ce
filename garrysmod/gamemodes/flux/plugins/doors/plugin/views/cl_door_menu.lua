@@ -187,4 +187,18 @@ function PANEL:set_conditions(parent, conditions)
   end
 end
 
+function PANEL:create_selector(title, message, default_value, choices, callback)
+  local selector = vgui.create('fl_selector')
+  selector:set_title(t(title))
+  selector:set_text(t(message))
+  selector:set_value(t(default_value))
+  selector:Center()
+
+  for k, v in pairs(choices) do
+    callback(selector, v)
+  end
+
+  return selector
+end
+
 vgui.register('fl_door_conditions', PANEL, 'DTree')

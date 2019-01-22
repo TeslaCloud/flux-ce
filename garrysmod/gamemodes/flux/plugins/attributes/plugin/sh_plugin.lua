@@ -36,15 +36,10 @@ function Attributes:OnPluginsLoaded()
         return util.process_operator(data.operator, player:get_attribute(data.attribute), data.attribute_value)
       end,
       set_parameters = function(id, data, panel, menu)
-        local selector = vgui.create('fl_selector')
-        selector:set_title(t(data.name))
-        selector:set_text(t'doors.conditions.attribute.message1')
-        selector:set_value(t'doors.attributes')
-        selector:Center()
-
-        for k, v in pairs(attributes.get_stored()) do
-          selector:add_choice(t(v.name), function()
-            panel.data.attribute = v.attr_id
+        panel:create_selector(data.name, 'doors.conditions.attribute.message1', 'doors.attributes', attributes.get_stored(), 
+        function(selector, value)
+          selector:add_choice(t(value.name), function()
+            panel.data.attribute = value.attr_id
       
             panel.update()
 
@@ -56,10 +51,9 @@ function Attributes:OnPluginsLoaded()
                 panel.data.attribute_value = tonumber(text)
         
                 panel.update()
-              end
-            )
+              end)
           end)
-        end
+        end)
       end,
       set_operator = 'relational'
     })
