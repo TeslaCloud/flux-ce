@@ -15,4 +15,7 @@ cable.receive('fl_door_menu', function(entity, can_lock, conditions)
 
   menu:Open()
   menu:Center()
+
+  menu:MakePopup()
+  menu:DoModal()
 end)
