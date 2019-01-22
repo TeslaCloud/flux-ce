@@ -54,6 +54,6 @@ en:
   conditions:
     character:
       name: Specific character
-      text: Character
+      text: Character {1} {2}
       message: Select character
     characters: Characters

@@ -10,21 +10,21 @@ en:
     delete: Delete condition
     steamid:
       name: Player with specific SteamID
-      text: SteamID
+      text: SteamID {1} {2}
       message: Input player's SteamID
     model:
       name: Player with specific model
-      text: Model
+      text: Model {1} {2}
       message: Input model path
     health:
       name: Player with certain health value
-      text: Health
+      text: Health {1} {2}
       message: Input health value
     armor:
       name: Player with certain armor value
-      text: Armor
+      text: Armor {1} {2}
       message: Input armor value
     weapon:
       name: Player with specific weapon in hands
-      text: Active weapon class
+      text: Active weapon class {1} {2}
       message: Input weapon class

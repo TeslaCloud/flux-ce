@@ -21,28 +21,27 @@ end
 
 function Factions:OnPluginsLoaded()
   if Conditions then
-    Conditions:register('faction', {
-      name = t'condition.faction.name',
-      text = t'condition.faction.text'..' %s %s',
-      format = function(panel, data)
-        local panel_data = panel.data
-        local operator = util.operator_to_symbol(panel_data.operator) or t'condition.select_operator'
-        local faction_name = t'condition.select_parameter'
+    Conditions:register_condition('faction', {
+      name = 'conditions.faction.name',
+      text = 'conditions.faction.text',
+      get_args = function(panel, data)
+        local operator = util.operator_to_symbol(panel.data.operator)
+        local faction_name
 
-        if panel_data.faction_id then
-          faction_name = faction.find_by_id(panel_data.faction_id):get_name()
+        if panel.data.faction_id then
+          faction_name = faction.find_by_id(panel.data.faction_id):get_name()
         end
 
-        return string.format(data.text, operator, faction_name)
+        return { operator, faction_name }
       end,
       icon = 'icon16/group.png',
-      check = function(player, entity, data)
+      check = function(player, data)
         if !data.operator or !data.faction_id then return false end
 
         return util.process_operator(data.operator, player:get_faction_id(), data.faction_id)
       end,
-      set_parameters = function(id, data, panel, menu)
-        panel:create_selector(data.name, 'condition.faction.message', 'condition.factions', faction.all(), 
+      set_parameters = function(id, data, panel, menu, parent)
+        parent:create_selector(data.name, 'conditions.faction.message', 'conditions.factions', faction.all(), 
         function(selector, _faction)
           selector:add_choice(t(_faction.name), function()
             panel.data.faction_id = _faction.faction_id
@@ -54,44 +53,43 @@ function Factions:OnPluginsLoaded()
       set_operator = 'equal'
     })
 
-    Conditions:register('rank', {
-      name = t'condition.rank.name',
-      text = t'condition.rank.text'..' %s %s %s',
-      format = function(panel, data)
-        local panel_data = panel.data
-        local operator = util.operator_to_symbol(panel_data.operator) or t'condition.select_operator'
-        local faction_name = t'condition.select_parameter'
-        local rank_name = t'condition.select_parameter'
+    Conditions:register_condition('rank', {
+      name = 'conditions.rank.name',
+      text = 'conditions.rank.text',
+      get_args = function(panel, data)
+        local operator = util.operator_to_symbol(panel.data.operator)
+        local faction_name
+        local rank_name
   
-        if panel_data.faction_id then
-          local _faction = faction.find_by_id(panel_data.faction_id)
+        if panel.data.faction_id then
+          local _faction = faction.find_by_id(panel.data.faction_id)
           faction_name = _faction:get_name()
   
-          if panel_data.rank then
-            rank_name = _faction:get_rank(panel_data.rank).id
+          if panel.data.rank then
+            rank_name = _faction:get_rank(panel.data.rank).id
           end
         end
   
-        return string.format(data.text, faction_name, operator, rank_name)
+        return { operator, faction_name, rank_name }
       end,
       icon = 'icon16/award_star_gold_1.png',
-      check = function(player, entity, data)
+      check = function(player, data)
         if !data.operator or !data.rank or !data.faction_id then return false end
         if player:get_faction_id() != data.faction_id then return false end
   
         return util.process_operator(data.operator, player:get_rank(), data.rank)
       end,
-      set_parameters = function(id, data, panel, menu)
-        panel:create_selector(data.name, 'condition.faction.message', 'condition.factions', faction.all(), 
+      set_parameters = function(id, data, panel, menu, parent)
+        parent:create_selector(data.name, 'conditions.faction.message', 'conditions.factions', faction.all(), 
         function(faction_selector, _faction)
-          if #_faction:get_ranks() == 0 then continue end
+          if #_faction:get_ranks() == 0 then return end
   
           faction_selector:add_choice(t(_faction.name), function()
             panel.data.faction_id = _faction.faction_id
       
             panel.update()
 
-            panel:create_selector(data.name, 'condition.rank.message', 'condition.ranks', _faction:get_ranks(), 
+            parent:create_selector(data.name, 'conditions.rank.message', 'conditions.ranks', _faction:get_ranks(), 
             function(rank_selector, rank)
               rank_selector:add_choice(t(rank.name), function()
                 panel.data.rank = rank.id

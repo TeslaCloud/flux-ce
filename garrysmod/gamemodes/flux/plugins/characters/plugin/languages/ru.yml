@@ -54,6 +54,6 @@ ru:
   conditions:
     character:
       name: Определенный персонаж
-      text: Персонаж
+      text: Персонаж {1} {2}
       message: Выберите персонажа
     characters: Персонажи

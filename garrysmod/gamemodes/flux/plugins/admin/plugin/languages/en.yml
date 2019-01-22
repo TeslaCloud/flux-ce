@@ -46,6 +46,6 @@ en:
   conditions:
     role:
       name: Player with specific role
-      text: Role
+      text: Role {1} {2}
       message: Select role
     roles: Roles

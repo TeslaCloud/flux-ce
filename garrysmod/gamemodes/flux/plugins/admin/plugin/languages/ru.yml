@@ -48,6 +48,6 @@ ru:
   conditions:
     role:
       name: Игрок с определенной ролью
-      text: Роль
+      text: Роль {1} {2}
       message: Выберите роль
     roles: Роли

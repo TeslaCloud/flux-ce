@@ -31,15 +31,14 @@ end
 
 function Bolt:OnPluginsLoaded()
   if Conditions then
-    Conditions:register('bolt_role', {
-      name = t'condition.role.name',
-      text = t'condition.role.text'..' %s %s',
-      format = function(panel, data)
-        local panel_data = panel.data
-        local operator = util.operator_to_symbol(panel_data.operator) or t'condition.select_operator'
-        local parameter = panel_data.role or t'condition.select_parameter'
-    
-        return string.format(data.text, operator, parameter)
+    Conditions:register_condition('bolt_role', {
+      name = 'conditions.role.name',
+      text = 'conditions.role.text',
+      get_args = function(panel, data)
+        local operator = util.operator_to_symbol(panel.data.operator)
+        local parameter = panel.data.role
+
+        return { operator, parameter }
       end,
       icon = 'icon16/group.png',
       check = function(player, data)
@@ -47,8 +46,8 @@ function Bolt:OnPluginsLoaded()
 
         return util.process_operator(data.operator, player:get_role(), data.role)
       end,
-      set_parameters = function(id, data, panel, menu)
-        panel:create_selector(data.name, 'condition.role.message', 'condition.roles', self:get_roles(), 
+      set_parameters = function(id, data, panel, menu, parent)
+        parent:create_selector(data.name, 'conditions.role.message', 'conditions.roles', self:get_roles(), 
         function(selector, group)
           selector:add_choice(t(group.name), function()
             panel.data.role = group.id

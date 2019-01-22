@@ -6,7 +6,7 @@ ru:
   conditions:
     attribute:
       name: Игрок с определенным атрибутом
-      text: Атрибуты
+      text: Атрибут {2} {1} {3}
       message1: Выберите атрибут
       message2: Выберите значение атрибута
     attributes: Атрибуты

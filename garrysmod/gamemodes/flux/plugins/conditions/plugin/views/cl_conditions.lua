@@ -16,8 +16,8 @@ function PANEL:node_options(panel, root, first)
 
   local sub_menu = menu:AddSubMenu(t'conditions.add_condition')
   
-  for k, v in pairs(condition) do
-    sub_menu:AddOption(v.name, function()
+  for k, v in pairs(Conditions:get_all()) do
+    sub_menu:AddOption(t(v.name), function()
       self:add_condition(panel, k)
     end):SetIcon(v.icon)
   end
@@ -25,13 +25,13 @@ function PANEL:node_options(panel, root, first)
   local id = panel.id
 
   if id then
-    local data = condition[id]
+    local data = Conditions:get_all()[id]
 
     menu:AddSpacer()
 
     if data.set_parameters then
       menu:AddOption(t'conditions.set_parameter', function()
-        data.set_parameters(id, data, panel, menu)
+        data.set_parameters(id, data, panel, menu, self)
       end)
     end
 
@@ -42,7 +42,7 @@ function PANEL:node_options(panel, root, first)
         elseif isstring(data.set_operator) then
           local selector = vgui.create('fl_selector')
           selector:set_title(t(data.name))
-          selector:set_text(t'condition.select_operator')
+          selector:set_text(t'conditions.select_operator')
           selector:set_value(t'conditions.operators')
           selector:Center()
 
@@ -66,7 +66,7 @@ function PANEL:node_options(panel, root, first)
 end
 
 function PANEL:add_condition(parent, id, data)
-  local condition_data = condition[id]
+  local condition_data = Conditions:get_all()[id]
   local node = parent:AddNode('', condition_data.icon)
   node:SetExpanded(true)
   node.id = id
@@ -77,7 +77,21 @@ function PANEL:add_condition(parent, id, data)
   end
 
   node.update = function()
-    node:SetText(condition_data.format(node, condition_data))
+    local args = {}
+
+    for k, v in pairs(condition_data.get_args(node, condition_data)) do
+      if v != '' then
+        args[k] = t(v)
+      else
+        if k == 1 then
+          args[k] = t'conditions.select_operator'
+        else
+          args[k] = t'conditions.select_parameter'
+        end
+      end
+    end
+  
+    node:SetText(t(condition_data.text, args))
   end
 
   node.update()
@@ -112,7 +126,7 @@ end
 
 function PANEL:set_conditions(parent, conditions)
   for k, v in pairs(conditions) do
-    local data = condition[v.id]
+    local data = Conditions:get_all()[v.id]
     local node = self:add_condition(parent, v.id, v.data)
 
     if v.childs then
