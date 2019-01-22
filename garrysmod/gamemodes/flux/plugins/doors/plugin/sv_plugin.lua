@@ -50,8 +50,18 @@ function Doors:load()
   end
 end
 
+function Doors:lock_door(entity, lock)
+  Doors.properties['locked'].on_load(entity, lock)
+
+  entity:EmitSound('doors/door_latch1.wav', 60)
+end
+
 cable.receive('fl_send_door_data', function(player, entity, id, data)
   Doors.properties[id].on_load(entity, data)
+end)
+
+cable.receive('fl_lock_door', function(player, entity, lock)
+  Doors:lock_door(entity, lock)
 end)
 
 cable.receive('fl_send_door_conditions', function(player, entity, conditions)

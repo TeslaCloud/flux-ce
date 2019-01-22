@@ -4,7 +4,7 @@ cable.receive('fl_door_menu', function(entity, can_lock, conditions)
   
   if can_lock then
     menu:AddOption(locked and 'Unlock' or 'Lock', function()
-      cable.send('fl_send_door_data', entity, 'locked', !locked)
+      cable.send('fl_lock_door', entity, !locked)
     end)
   end
 
