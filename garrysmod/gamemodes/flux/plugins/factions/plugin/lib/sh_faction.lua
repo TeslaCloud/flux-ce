@@ -90,10 +90,10 @@ do
     end
 
     if old_faction then
-      old_faction:on_player_exited(self)
+      old_faction:on_player_leave(self)
     end
 
-    faction_table:on_player_entered(self)
+    faction_table:on_player_join(self)
 
     hook.run('OnPlayerFactionChanged', self, faction_table, old_faction)
   end

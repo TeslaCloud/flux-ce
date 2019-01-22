@@ -140,10 +140,10 @@ function Faction:set_data(key, value)
   self.data[key] = tostring(value)
 end
 
-function Faction:on_player_entered(player)
+function Faction:on_player_join(player)
 end
 
-function Faction:on_player_exited(player)
+function Faction:on_player_leave(player)
 end
 
 function Faction:register()
