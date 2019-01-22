@@ -103,8 +103,7 @@ Doors:register_condition('steamid', {
         else
           data.set_parameters(id, data, panel)
         end
-      end
-    )
+      end)
   end,
   set_operator = 'equal'
 })
@@ -138,8 +137,7 @@ Doors:register_condition('model', {
         else
           data.set_parameters(id, data, panel)
         end
-      end
-    )
+      end)
   end,
   set_operator = 'equal'
 })
@@ -169,8 +167,7 @@ Doors:register_condition('health', {
         panel.data.health = tonumber(text)
 
         panel.update()
-      end
-    )
+      end)
   end,
   set_operator = 'relational'
 })
@@ -200,8 +197,7 @@ Doors:register_condition('armor', {
         panel.data.armor = tonumber(text)
 
         panel.update()
-      end
-    )
+      end)
   end,
   set_operator = 'relational'
 })
@@ -232,8 +228,7 @@ Doors:register_condition('active_weapon', {
         panel.data.weapon = text
 
         panel.update()
-      end
-    )
+      end)
   end,
   set_operator = 'equal'
 })
