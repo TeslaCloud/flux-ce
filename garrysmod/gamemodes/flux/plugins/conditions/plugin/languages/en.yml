@@ -1,0 +1,30 @@
+en:
+  conditions:
+    select_operator: <Select operator>
+    select_parameter: <Select parameter>
+    right_click: Right click here to add new condition
+    add_condition: Add condition
+    set_parameter: Set parameter...
+    set_operator: Set operator...
+    operators: Operators
+    delete: Delete condition
+    steamid:
+      name: Player with specific SteamID
+      text: SteamID
+      message: Input player's SteamID
+    model:
+      name: Player with specific model
+      text: Model
+      message: Input model path
+    health:
+      name: Player with certain health value
+      text: Health
+      message: Input health value
+    armor:
+      name: Player with certain armor value
+      text: Armor
+      message: Input armor value
+    weapon:
+      name: Player with specific weapon in hands
+      text: Active weapon class
+      message: Input weapon class

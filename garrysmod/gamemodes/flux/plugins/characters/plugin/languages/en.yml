@@ -51,10 +51,9 @@ en:
     no_model: You must select a model.
   tab_menu:
     main_menu: Main Menu
-  doors:
-    conditions:
-      character:
-        name: Specific character
-        text: Character
-        message: Select character
+  conditions:
+    character:
+      name: Specific character
+      text: Character
+      message: Select character
     characters: Characters

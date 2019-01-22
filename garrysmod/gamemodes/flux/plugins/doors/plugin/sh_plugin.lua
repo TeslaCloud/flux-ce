@@ -1,13 +1,13 @@
 PLUGIN:set_global('Doors')
 
-local conditions = Doors.conditions or {}
+local conditions = condition or {}
 local properties = Doors.properties or {}
 local title_types = Doors.title_types or {}
-Doors.conditions = conditions
+condition = conditions
 Doors.properties = properties
 Doors.title_types = title_types
 
-function Doors:register_condition(id, data)
+function Conditions:register(id, data)
   conditions[id] = data
 end
 

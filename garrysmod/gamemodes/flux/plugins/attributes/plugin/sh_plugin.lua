@@ -13,15 +13,15 @@ function Attributes:PluginIncludeFolder(extra, folder)
 end
 
 function Attributes:OnPluginsLoaded()
-  if Doors then
-    Doors:register_condition('attribute', {
-      name = t'doors.conditions.attribute.name',
-      text = t'doors.conditions.attribute.text'..' %s %s %s',
+  if Conditions then
+    Conditions:register('attribute', {
+      name = t'condition.attribute.name',
+      text = t'condition.attribute.text'..' %s %s %s',
       format = function(panel, data)
         local panel_data = panel.data
-        local attribute_name = t'doors.select_parameter'
-        local operator = util.operator_to_symbol(panel_data.operator) or t'doors.select_operator'
-        local attribute_value = panel_data.attribute_value or t'doors.select_parameter'
+        local attribute_name = t'condition.select_parameter'
+        local operator = util.operator_to_symbol(panel_data.operator) or t'condition.select_operator'
+        local attribute_value = panel_data.attribute_value or t'condition.select_parameter'
 
         if panel_data.attribute then
           attribute_name = attributes.find_by_id(panel_data.attribute).name
@@ -36,7 +36,7 @@ function Attributes:OnPluginsLoaded()
         return util.process_operator(data.operator, player:get_attribute(data.attribute), data.attribute_value)
       end,
       set_parameters = function(id, data, panel, menu)
-        panel:create_selector(data.name, 'doors.conditions.attribute.message1', 'doors.attributes', attributes.get_stored(), 
+        panel:create_selector(data.name, 'condition.attribute.message1', 'condition.attributes', attributes.get_stored(), 
         function(selector, value)
           selector:add_choice(t(value.name), function()
             panel.data.attribute = value.attr_id
@@ -45,7 +45,7 @@ function Attributes:OnPluginsLoaded()
 
             Derma_StringRequest(
               t(data.name),
-              t'doors.conditions.attribute.message2',
+              t'condition.attribute.message2',
               '',
               function(text)
                 panel.data.attribute_value = tonumber(text)

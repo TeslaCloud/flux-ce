@@ -51,10 +51,9 @@ ru:
     no_model: Вы не выбрали модель.
   tab_menu:
     main_menu: Главное меню
-  doors:
-    conditions:
-      character:
-        name: Определенный персонаж
-        text: Персонаж
-        message: Выберите персонажа
+  conditions:
+    character:
+      name: Определенный персонаж
+      text: Персонаж
+      message: Выберите персонажа
     characters: Персонажи

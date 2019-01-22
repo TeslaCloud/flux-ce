@@ -1,14 +1,6 @@
 ru:
   doors:
     title: Двери
-    select_operator: <Выберите оператор>
-    select_parameter: <Выберите параметр>
-    right_click: Нажмите ПКМ здесь, чтобы добавить новое условие
-    add_condition: Добавить условие
-    set_parameter: Установить параметр...
-    set_operator: Установить оператор...
-    operators: Операторы
-    delete: Удалить условие
     categories:
       general: Общее
     properties:
@@ -17,24 +9,3 @@ ru:
         name: Внешний вид таблички
         select: Выберите тип...
       locked: Закрыто
-    conditions:
-      steamid:
-        name: Игрок с определенным SteamID
-        text: SteamID
-        message: Введите SteamID игрока
-      model:
-        name: Игрок с определенной моделью
-        text: Модель
-        message: Введите путь до модели
-      health:
-        name: Игрок с определенным уровнем здоровья
-        text: Здоровье
-        message: Введите уровень здоровья
-      armor:
-        name: Игрок с определенным значением брони
-        text: Броня
-        message: Введите значение брони
-      weapon:
-        name: Игрок с определенным оружием в руках
-        text: Класс активного оружия
-        message: Введите класс оружия

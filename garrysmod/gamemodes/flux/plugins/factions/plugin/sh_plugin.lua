@@ -20,14 +20,14 @@ function Factions:ShouldNameGenerate(player)
 end
 
 function Factions:OnPluginsLoaded()
-  if Doors then
-    Doors:register_condition('faction', {
-      name = t'doors.conditions.faction.name',
-      text = t'doors.conditions.faction.text'..' %s %s',
+  if Conditions then
+    Conditions:register('faction', {
+      name = t'condition.faction.name',
+      text = t'condition.faction.text'..' %s %s',
       format = function(panel, data)
         local panel_data = panel.data
-        local operator = util.operator_to_symbol(panel_data.operator) or t'doors.select_operator'
-        local faction_name = t'doors.select_parameter'
+        local operator = util.operator_to_symbol(panel_data.operator) or t'condition.select_operator'
+        local faction_name = t'condition.select_parameter'
 
         if panel_data.faction_id then
           faction_name = faction.find_by_id(panel_data.faction_id):get_name()
@@ -42,7 +42,7 @@ function Factions:OnPluginsLoaded()
         return util.process_operator(data.operator, player:get_faction_id(), data.faction_id)
       end,
       set_parameters = function(id, data, panel, menu)
-        panel:create_selector(data.name, 'doors.conditions.faction.message', 'doors.factions', faction.all(), 
+        panel:create_selector(data.name, 'condition.faction.message', 'condition.factions', faction.all(), 
         function(selector, _faction)
           selector:add_choice(t(_faction.name), function()
             panel.data.faction_id = _faction.faction_id
@@ -54,14 +54,14 @@ function Factions:OnPluginsLoaded()
       set_operator = 'equal'
     })
 
-    Doors:register_condition('rank', {
-      name = t'doors.conditions.rank.name',
-      text = t'doors.conditions.rank.text'..' %s %s %s',
+    Conditions:register('rank', {
+      name = t'condition.rank.name',
+      text = t'condition.rank.text'..' %s %s %s',
       format = function(panel, data)
         local panel_data = panel.data
-        local operator = util.operator_to_symbol(panel_data.operator) or t'doors.select_operator'
-        local faction_name = t'doors.select_parameter'
-        local rank_name = t'doors.select_parameter'
+        local operator = util.operator_to_symbol(panel_data.operator) or t'condition.select_operator'
+        local faction_name = t'condition.select_parameter'
+        local rank_name = t'condition.select_parameter'
   
         if panel_data.faction_id then
           local _faction = faction.find_by_id(panel_data.faction_id)
@@ -82,7 +82,7 @@ function Factions:OnPluginsLoaded()
         return util.process_operator(data.operator, player:get_rank(), data.rank)
       end,
       set_parameters = function(id, data, panel, menu)
-        panel:create_selector(data.name, 'doors.conditions.faction.message', 'doors.factions', faction.all(), 
+        panel:create_selector(data.name, 'condition.faction.message', 'condition.factions', faction.all(), 
         function(faction_selector, _faction)
           if #_faction:get_ranks() == 0 then continue end
   
@@ -91,7 +91,7 @@ function Factions:OnPluginsLoaded()
       
             panel.update()
 
-            panel:create_selector(data.name, 'doors.conditions.rank.message', 'doors.ranks', _faction:get_ranks(), 
+            panel:create_selector(data.name, 'condition.rank.message', 'condition.ranks', _faction:get_ranks(), 
             function(rank_selector, rank)
               rank_selector:add_choice(t(rank.name), function()
                 panel.data.rank = rank.id
