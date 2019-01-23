@@ -10,12 +10,13 @@ function PANEL:Init()
   self.door_data = {}
 
   self.properties = vgui.create('DProperties', self)
-  self.properties:SetSize(0, self:GetTall() * 0.5)
+  self.properties:SetSize(self:GetWide() - 10, self:GetTall() * 0.5)
   self.properties:Dock(TOP)
 
   self.conditions = vgui.create('fl_conditions', self)
-  self.conditions:SetSize(0, self:GetTall() - self.properties:GetTall() - 34)
+  self.conditions:SetSize(self:GetWide() - 10, self:GetTall() - self.properties:GetTall() - 34)
   self.conditions:Dock(TOP)
+  self.conditions:update()
 end
 
 function PANEL:OnKeyCodePressed(key)

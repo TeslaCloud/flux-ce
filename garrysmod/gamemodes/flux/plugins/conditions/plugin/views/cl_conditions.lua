@@ -9,6 +9,62 @@ function PANEL:Init()
   self.root.DoRightClick = function(panel)
     self:node_options(panel, true, #panel.childs == 0)
   end
+
+  self.save = vgui.create('fl_button', self)
+  self.save:SetSize(font.scale(24), font.scale(24))
+  self.save:set_icon('fa-save')
+  self.save:set_centered(true)
+  self.save.DoClick = function(btn)
+    surface.play_sound('garrysmod/ui_click.wav')
+
+    Derma_StringRequest(t'conditions.save.title',
+    t'conditions.save.message',
+    '',
+    function(text)
+      data.save('conditions/'..text, self:get_conditions())
+
+      surface.play_sound('garrysmod/ui_click.wav')
+    end,
+    function(text)
+      surface.play_sound('garrysmod/ui_click.wav')
+    end)
+  end
+
+  self.load = vgui.create('fl_button', self)
+  self.load:SetSize(font.scale(24), font.scale(24))
+  self.load:set_icon('fa-folder-o')
+  self.load:set_centered(true)
+  self.load.DoClick = function(btn)
+    surface.play_sound('garrysmod/ui_click.wav')
+
+    local frame = vgui.create('DFrame')
+    frame:SetSize(ScrW() * 0.2, ScrH() * 0.2)
+    frame:SetTitle(t'conditions.load.title')
+    frame:Center()
+    frame:MakePopup()
+
+    local list = vgui.create('DListView', frame)
+    list:Dock(FILL)
+    list:AddColumn(t'conditions.load.column')
+
+    for k, v in pairs(data.get_files('conditions')) do
+      list:AddLine(v)
+    end
+
+    list.OnRowSelected = function(lst, index, line)
+      surface.play_sound('garrysmod/ui_click.wav')
+
+      self:clear()
+      self:set_conditions(self.root, data.load('conditions/'..line:GetColumnText(1)))
+
+      frame:safe_remove()
+    end
+  end
+end
+
+function PANEL:update()
+  self.save:SetPos(self:GetWide() - self.save:GetWide() - 2, 2)
+  self.load:SetPos(self:GetWide() - self.save:GetWide() * 2 - 4, 2)
 end
 
 function PANEL:node_options(panel, root, first)
@@ -133,6 +189,14 @@ function PANEL:set_conditions(parent, conditions)
       self:set_conditions(node, v.childs)
     end
   end
+end
+
+function PANEL:clear()
+  for k, v in pairs(self.root.childs) do
+    v:safe_remove()
+  end
+
+  self.root.childs = {}
 end
 
 function PANEL:create_selector(title, message, default_value, choices, callback)

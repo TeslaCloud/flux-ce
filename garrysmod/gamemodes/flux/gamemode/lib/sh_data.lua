@@ -69,6 +69,14 @@ else
     end
   end
 
+  function data.get_files(folder, default)
+    if !isstring(folder) then return end
+
+    local files, dirs = file.find('flux/'..folder..'/*', 'DATA')
+ 
+    return files
+  end
+
   function data.delete(key)
     if !isstring(key) then return end
 
