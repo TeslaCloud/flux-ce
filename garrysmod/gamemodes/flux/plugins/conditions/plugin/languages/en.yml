@@ -8,6 +8,12 @@ en:
     set_operator: Set operator...
     operators: Operators
     delete: Delete condition
+    save:
+      title: Condition saving
+      message: Specify preset name.
+    load:
+      title: Condition loading
+      column: Select preset
     steamid:
       name: Player with specific SteamID
       text: SteamID {1} {2}

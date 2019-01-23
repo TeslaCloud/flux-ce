@@ -11,8 +11,8 @@ function Characters:OnPluginsLoaded()
       name = 'conditions.character.name',
       text = 'conditions.character.text',
       get_args = function(panel, data)
-        local operator = util.operator_to_symbol(panel.data.operator)
-        local character_id = panel.data.character_id
+        local operator = util.operator_to_symbol(panel.data.operator) or ''
+        local character_id = panel.data.character_id or ''
 
         return { operator, character_id }
       end,

@@ -57,9 +57,9 @@ function Factions:OnPluginsLoaded()
       name = 'conditions.rank.name',
       text = 'conditions.rank.text',
       get_args = function(panel, data)
-        local operator = util.operator_to_symbol(panel.data.operator)
-        local faction_name
-        local rank_name
+        local operator = util.operator_to_symbol(panel.data.operator) or ''
+        local faction_name = ''
+        local rank_name = ''
   
         if panel.data.faction_id then
           local _faction = faction.find_by_id(panel.data.faction_id)

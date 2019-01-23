@@ -8,6 +8,12 @@ ru:
     set_operator: Установить оператор...
     operators: Операторы
     delete: Удалить условие
+    save:
+      title: Сохранение набора условий
+      message: Напишите название сохранения
+    load:
+      title: Загрузка набора условий
+      column: Выберите сохранение
     steamid:
       name: Игрок с определенным SteamID
       text: SteamID {1} {2}

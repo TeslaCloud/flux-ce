@@ -3,8 +3,8 @@ Conditions:register_condition('steamid', {
   text = 'conditions.steamid.text',
   get_args = function(panel, data)
     local steamid = panel.data.steamid
-    local operator = util.operator_to_symbol(panel.data.operator)
-    local parameter = steamid and steamid..' ('..player.name_from_steamid(steamid)..')'
+    local operator = util.operator_to_symbol(panel.data.operator) or ''
+    local parameter = steamid and steamid..' ('..player.name_from_steamid(steamid)..')' or ''
 
     return { operator, parameter }
   end,
@@ -36,8 +36,8 @@ Conditions:register_condition('model', {
   name = 'conditions.model.name',
   text = 'conditions.model.text',
   get_args = function(panel, data)
-    local operator = util.operator_to_symbol(panel.data.operator)
-    local parameter = panel.data.model
+    local operator = util.operator_to_symbol(panel.data.operator) or ''
+    local parameter = panel.data.model or ''
 
     return { operator, parameter }
   end,
@@ -69,8 +69,8 @@ Conditions:register_condition('health', {
   name = 'conditions.health.name',
   text = 'conditions.health.text',
   get_args = function(panel, data)
-    local operator = util.operator_to_symbol(panel.data.operator)
-    local parameter = panel.data.health
+    local operator = util.operator_to_symbol(panel.data.operator) or ''
+    local parameter = panel.data.health or ''
 
     return { operator, parameter }
   end,
@@ -98,8 +98,8 @@ Conditions:register_condition('armor', {
   name = 'conditions.armor.name',
   text = 'conditions.armor.text',
   get_args = function(panel, data)
-    local operator = util.operator_to_symbol(panel.data.operator)
-    local parameter = panel.data.armor
+    local operator = util.operator_to_symbol(panel.data.operator) or ''
+    local parameter = panel.data.armor or ''
 
     return { operator, parameter }
   end,
@@ -127,8 +127,8 @@ Conditions:register_condition('active_weapon', {
   name = 'conditions.weapon.name',
   text = 'conditions.weapon.text',
   get_args = function(panel, data)
-    local operator = util.operator_to_symbol(panel.data.operator)
-    local parameter = panel.data.weapon
+    local operator = util.operator_to_symbol(panel.data.operator) or ''
+    local parameter = panel.data.weapon or ''
 
     return { operator, parameter }
   end,
