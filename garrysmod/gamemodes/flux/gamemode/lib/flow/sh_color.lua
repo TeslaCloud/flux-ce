@@ -257,6 +257,10 @@ function color_meta:lighten(amt)
   )
 end
 
+function color_meta:alpha(amt)
+  return ColorAlpha(self, amt)
+end
+
 function util.text_color_from_base(base_color)
   local average = (base_color.r + base_color.g + base_color.b) / 3
 

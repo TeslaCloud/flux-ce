@@ -44,7 +44,7 @@ function PANEL:set_door(entity, conditions)
 
       local row = v.create_panel(entity, self)
       row:SetValue(value)
-      row.DataChanged = function(p, data)
+      row.DataChanged = function(pnl, data)
         self.door_data[k] = data
       end
     end

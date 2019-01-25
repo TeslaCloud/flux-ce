@@ -9,3 +9,6 @@ ru:
         name: Внешний вид таблички
         select: Выберите тип...
       locked: Закрыто
+    title_type:
+      none: 'Отсутствует'
+      center: 'По центру'
