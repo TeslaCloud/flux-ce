@@ -117,14 +117,19 @@ function chatbox.compile(msg_table)
   return compiled
 end
 
+function chatbox.create()
+  chatbox.width = theme.get_option('chatbox_width') or 100
+  chatbox.height = theme.get_option('chatbox_height') or 100
+  chatbox.x = theme.get_option('chatbox_x') or 0
+  chatbox.y = theme.get_option('chatbox_y') or 0
+
+  chatbox.panel = vgui.Create('fl_chat_panel')
+  chatbox.panel:set_open(false)
+end
+
 function chatbox.show()
   if !IsValid(chatbox.panel) then
-    chatbox.width = theme.get_option('chatbox_width') or 100
-    chatbox.height = theme.get_option('chatbox_height') or 100
-    chatbox.x = theme.get_option('chatbox_x') or 0
-    chatbox.y = theme.get_option('chatbox_y') or 0
-
-    chatbox.panel = vgui.Create('fl_chat_panel')
+    chatbox.create()
   end
 
   chatbox.panel:set_open(true)

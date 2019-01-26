@@ -68,9 +68,11 @@ function Chatbox:ChatboxTextEntered(text)
 end
 
 cable.receive('fl_chat_message_add', function(message_data)
-  if IsValid(chatbox.panel) then
-    chatbox.panel:add_message(message_data)
-
-    chat.PlaySound()
+  if !IsValid(chatbox.panel) then
+    chatbox.create()
   end
+
+  chatbox.panel:add_message(message_data)
+
+  chat.PlaySound()
 end)
