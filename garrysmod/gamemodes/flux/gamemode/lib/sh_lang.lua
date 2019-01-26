@@ -68,6 +68,7 @@ function fl.lang:get_phrase(id, ref)
 
   for k, v in ipairs(tables) do
     local val = ref[v]
+
     if istable(val) then
       ref = val
     else
@@ -80,7 +81,8 @@ end
 
 function t(phrase, args, force_lang)
   args = istable(args) and args or { args }
-  local phrase = fl.lang:get_phrase(phrase, stored[force_lang or current_language]) or phrase
+
+  local phrase = fl.lang:get_phrase(phrase, stored[force_lang or current_language]) or fl.lang:get_phrase(phrase, stored['en']) or phrase
 
   for k, v in pairs(args) do
     phrase = string.gsub(phrase, '{'..k..'}', v)
@@ -98,6 +100,7 @@ function fl.lang:add(index, value, reference)
 
   if istable(value) then
     reference[index] = reference[index] or {}
+
     for k, v in pairs(value) do
       self:add(k, v, reference[index])
     end
