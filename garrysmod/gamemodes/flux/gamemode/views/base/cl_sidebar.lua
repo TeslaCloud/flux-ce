@@ -90,4 +90,12 @@ function PANEL:set_margin(margin)
   self.margin = tonumber(margin) or 0
 end
 
+function PANEL:center_items()
+  for k, v in ipairs(self:GetCanvas():GetChildren()) do
+    local x, y = v:GetPos()
+
+    v:SetPos(self:GetWide() / 2 - v:GetWide() / 2, y)
+  end
+end
+
 vgui.Register('fl_sidebar', PANEL, 'DScrollPanel')

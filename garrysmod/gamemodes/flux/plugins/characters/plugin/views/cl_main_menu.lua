@@ -1,6 +1,7 @@
 local PANEL = {}
 PANEL.prev_button = nil
 PANEL.schema_logo_offset = 450
+PANEL.max_wide = 0
 
 function PANEL:Init()
   self:SetPos(0, 0)
@@ -48,16 +49,21 @@ function PANEL:RecreateSidebar(create_buttons)
 
   self.sidebar = vgui.Create('fl_sidebar', self)
   self.sidebar:SetPos(theme.get_option('menu_sidebar_x'), theme.get_option('menu_sidebar_y'))
-  self.sidebar:SetSize(theme.get_option('menu_sidebar_width'), theme.get_option('menu_sidebar_height'))
+  self.sidebar:SetSize(0, theme.get_option('menu_sidebar_height'))
   self.sidebar:set_margin(theme.get_option('menu_sidebar_margin'))
   self.sidebar:add_space(16)
 
-  self.sidebar.Paint = function() end
-
-  self.sidebar:add_space(theme.get_option('menu_sidebar_logo_space'))
+  self.sidebar.Paint = function(pnl, w, h)
+  end
 
   if create_buttons then
     hook.run('AddMainMenuItems', self, self.sidebar)
+
+    local x, y = self.sidebar:GetPos()
+
+    self.sidebar:SetWide(self.max_wide)
+    self.sidebar:SetPos(x - self.max_wide / 2, y)
+    self.sidebar:center_items()
   end
 end
 
@@ -87,7 +93,7 @@ function PANEL:to_main_menu(from_right)
 
   self.sidebar:SetPos(from_right and scrw or -self.sidebar:GetWide(), theme.get_option('menu_sidebar_y'))
   self.sidebar:SetDisabled(true)
-  self.sidebar:MoveTo(theme.get_option('menu_sidebar_x'), theme.get_option('menu_sidebar_y'), theme.get_option('menu_anim_duration'), 0, 0.5, function()
+  self.sidebar:MoveTo(theme.get_option('menu_sidebar_x') - self.max_wide / 2, theme.get_option('menu_sidebar_y'), theme.get_option('menu_anim_duration'), 0, 0.5, function()
     self.sidebar:SetDisabled(false)
   end)
 
@@ -117,14 +123,15 @@ end
 
 function PANEL:add_button(text, callback)
   local button = vgui.Create('fl_button', self)
-  button:SetSize(theme.get_option('menu_sidebar_width'), theme.get_option('menu_sidebar_button_height'))
-  button:set_text(string.utf8upper(text))
+  button:SetTall(theme.get_option('menu_sidebar_button_height'))
   button:SetDrawBackground(false)
   button:SetFont(theme.get_font('main_menu_large'))
-  button:SetPos(theme.get_option('menu_sidebar_button_offset_x'), 0)
+  button:set_text(string.utf8upper(text))
   button:set_text_autoposition(false)
   button:set_centered(theme.get_option('menu_sidebar_button_centered'))
   button:set_text_offset(8)
+
+  button:SizeToContents()
 
   button.DoClick = function(btn)
     surface.PlaySound(theme.get_sound('button_click_success_sound'))
@@ -142,6 +149,12 @@ function PANEL:add_button(text, callback)
     elseif isstring(callback) then
       self:OpenMenu(callback)
     end
+  end
+
+  local wide = button:GetWide()
+
+  if self.max_wide < wide then
+    self.max_wide = wide
   end
 
   self.sidebar:add_panel(button)
