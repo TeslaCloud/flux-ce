@@ -5,7 +5,7 @@ PANEL.icon_h = 16
 
 function PANEL:Init()
   self:SetFont(theme.get_font('main_menu_small'))
-  self:set_text_color(theme.get_color('text'))
+  self:SetTextColor(theme.get_color('text'))
 end
 
 function PANEL:Paint(w, h)
@@ -79,6 +79,10 @@ function PANEL:PerformLayout()
   DScrollPanel.PerformLayout(self)
 end
 
+function PANEL:GetDeleteSelf()
+  return true
+end
+
 function PANEL:open(x, y)
   x = x or gui.MouseX()
   y = y or gui.MouseY()
@@ -106,8 +110,8 @@ function PANEL:add_option(name, callback)
   panel:SetPos(0, 0)
   panel:MoveTo(0, self.last, 0.15 * self.count)
   panel:SetSize(self:GetWide(), self.option_height)
-  panel:set_text_color(theme.get_color('text'))
-  panel:set_text(name)
+  panel:SetTextColor(theme.get_color('text'))
+  panel:SetText(name)
   panel:MoveToBack()
 
   if callback then
