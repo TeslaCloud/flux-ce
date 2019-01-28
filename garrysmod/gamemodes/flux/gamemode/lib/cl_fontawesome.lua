@@ -1,10 +1,8 @@
 --[[
-  Flux © 2016-2018 TeslaCloud Studios
-  Do not share or re-distribute before
-  the framework is publicly released.
-
   Font-Awesome's creators and license can be found here:
   http://fontawesome.io/
+
+  (Font-Awesome 4)
 --]]
 
 if !font then
