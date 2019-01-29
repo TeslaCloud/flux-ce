@@ -99,11 +99,3 @@ end
 function player_meta:is_root()
   return hook.run('PlayerIsRoot', self)
 end
-
-function player_meta:has_group(group)
-  if self:GetUserGroup() == group then
-    return true
-  end
-
-  return hook.run('PlayerHasGroup', self, group)
-end

@@ -8,13 +8,14 @@ fl.command.aliases = aliases
 function fl.command:create(id, data)
   if !id or !data then return end
 
-  data.id = id:to_id()
-  data.name = data.name or 'Unknown'
-  data.description = data.description or 'An undescribed command.'
-  data.syntax = data.syntax or '[-]'
-  data.immunity = data.immunity or false
-  data.player_arg = data.player_arg or nil
-  data.arguments = data.arguments or 0
+  data.id           = id:to_id()
+  data.name         = data.name         or 'Unknown'
+  data.syntax       = data.syntax       or '[-]'
+  data.immunity     = data.immunity     or false
+  data.arguments    = data.arguments    or 0
+  data.permission   = data.permission   or ''
+  data.player_arg   = data.player_arg   or nil
+  data.description  = data.description  or 'An undescribed command.'
 
   stored[id] = data
 
@@ -153,7 +154,7 @@ if SERVER then
       return to_ret, '@'
     end,
     -- Target everyone with str in their name.
-    ['('] = function(player, str)
+      ['('] = function(player, str)
       local name = str:utf8sub(2, str:utf8len() - 1)
       local to_ret = _player.find(name)
 
@@ -251,7 +252,7 @@ if SERVER then
     local cmd_table = self:find_by_id(command)
 
     if cmd_table then
-      if (!IsValid(player) and !cmd_table.no_console) or player:can(cmd_table.id) then
+      if (!IsValid(player) and !cmd_table.no_console) or player:can(cmd_table.permission) then
         if hook.run('PlayerCanRunCommand', player, cmd_table, from_console) != nil then return end
 
         if cmd_table.arguments == 0 or cmd_table.arguments <= #args then

@@ -27,7 +27,7 @@ function Bolt:get_bans()
   return bans
 end
 
-function Bolt:create_group(id, data)
+function Bolt:create_role(id, data)
   if !isstring(id) then return end
 
   data.id = id
@@ -87,8 +87,9 @@ function Bolt:permission_from_command(cmd)
 end
 
 function Bolt:can(player, action, object)
-  if !IsValid(player) then return true end
-  if player:is_root() then return true end
+  if !IsValid(player) or player:is_root() or action == '' then
+    return true
+  end
 
   local role = roles[player:GetUserGroup()]
 

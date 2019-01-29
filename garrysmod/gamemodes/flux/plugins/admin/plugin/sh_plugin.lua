@@ -22,7 +22,7 @@ function Bolt:PluginIncludeFolder(extra, folder)
 end
 
 function Bolt:PlayerHasPermission(player, action, object)
-  return Bolt:can(player, action, object)
+  return self:can(player, action, object)
 end
 
 function Bolt:PlayerIsRoot(player)

@@ -16,7 +16,9 @@ function Role:init(id)
 end
 
 function Role:allow(action, object, callback)
-  object = istable(object) and object.class_name or 'anything'
+  object = (istable(object) and object.class_name)
+        or (isstring(object) and object)
+        or 'anything'
 
   local perm = self.permissions[object] or {}
   perm[action] = {
@@ -28,9 +30,12 @@ function Role:allow(action, object, callback)
 end
 
 function Role:disallow(action, object)
-  object = istable(object) and object.class_name or 'anything'
+  object = (istable(object) and object.class_name)
+        or (isstring(object) and object)
+        or 'anything'
 
   local perm = self.permissions[object] or {}
+
   perm[action] = {
     allowed = false
   }
@@ -44,6 +49,7 @@ end
 
 function Role:can(player, action, object)
   if self.can_anything then return true end
+  if action == '' then return true end
 
   local permissions = self.permissions[object or 'anything']
 
@@ -62,11 +68,11 @@ function Role:can(player, action, object)
   return false
 end
 
--- Called when player's primary group is being set to this group.
-function Role:on_group_set(player, old_group) end
+-- Called when player's role is being set to this role.
+function Role:on_role_set(player, old_group) end
 
--- Called when player's primary group is taken or modified.
-function Role:on_group_taken(player, new_group) end
+-- Called when player's role is taken or modified.
+function Role:on_role_taken(player, new_group) end
 
 Role.set_parent = Role.set_base
 
@@ -122,7 +128,7 @@ function Role:register()
     can, cannot, allow_anything = old_can, old_cannot, old_anything
   end
 
-  Bolt:create_group(self.role_id, self)
+  Bolt:create_role(self.role_id, self)
 end
 
 Role.get_parent = Role.get_base

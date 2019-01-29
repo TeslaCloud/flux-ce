@@ -8,7 +8,7 @@ end
 function player_meta:IsSuperAdmin()
   if self:is_root() then return true end
 
-  return self:has_group('superadmin')
+  return self:can 'administrate'
 end
 
 function player_meta:IsAdmin()
@@ -16,7 +16,7 @@ function player_meta:IsAdmin()
     return true
   end
 
-  return self:has_group('moderator')
+  return self:can 'moderate'
 end
 
 function player_meta:get_role()
@@ -36,5 +36,5 @@ function player_meta:is_assistant()
     return true
   end
 
-  return self:has_group('assistant')
+  return self:can 'staff'
 end
