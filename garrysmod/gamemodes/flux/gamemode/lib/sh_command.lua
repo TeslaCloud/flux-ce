@@ -225,7 +225,7 @@ if SERVER then
     return false
   end
 
-  function fl.command:interpret(player, text)
+  function fl.command:interpret(player, text, from_console)
     local args
 
     if isstring(text) then
@@ -252,6 +252,8 @@ if SERVER then
 
     if cmd_table then
       if (!IsValid(player) and !cmd_table.no_console) or player:can(cmd_table.id) then
+        if hook.run('PlayerCanRunCommand', player, cmd_table, from_console) != nil then return end
+
         if cmd_table.arguments == 0 or cmd_table.arguments <= #args then
           if cmd_table.immunity or cmd_table.player_arg != nil then
             local target_arg = args[(cmd_table.player_arg or 1)]
@@ -364,7 +366,7 @@ if SERVER then
   end
 
   cable.receive('fl_command_run', function(player, command)
-    fl.command:interpret(player, command)
+    fl.command:interpret(player, command, true)
   end)
 else
   function fl.command:send(command)
@@ -375,7 +377,7 @@ end
 -- An internal function that powers the flc and flCmd console commands.
 function fl.command.con_command(player, cmd, args, args_text)
   if SERVER then
-    fl.command:interpret(player, args_text)
+    fl.command:interpret(player, args_text, true)
   else
     fl.command:send(args_text)
   end
