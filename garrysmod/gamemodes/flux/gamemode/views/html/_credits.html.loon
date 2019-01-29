@@ -2,7 +2,7 @@
   <h1>Credits</h1>
 </div>
 <div class="credits__entry">
-  <div class="credits__name">Mr. Meow</div>
+  <div class="credits__name">Meow the Cat</div>
   <div class="credits__description">Project Lead</div>
   <div class="credits__description">Lead Dev</div>
 </div>
@@ -10,4 +10,20 @@
   <div class="credits__name">AleXXX_007</div>
   <div class="credits__description">HL2RP Lead</div>
   <div class="credits__description">Lead Dev</div>
+</div>
+<div class="credits__entry">
+  <div class="credits__name">Community Contributions</div>
+  <div class="credits__description">Seriously thanks a lot to all the people supporting the framework and helping us out with contributions. You rock!</div>
+</div>
+<br>
+<div class="panel__title">
+  <h2>Past Contributors</h2>
+</div>
+<div class="credits__entry">
+  <div class="credits__name">NightAngel</div>
+  <div class="credits__description">Developer</div>
+</div>
+<div class="credits__entry">
+  <div class="credits__name">Zib (zigbomb)</div>
+  <div class="credits__description">Designer</div>
 </div>
