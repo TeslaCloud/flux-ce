@@ -79,7 +79,7 @@ end
 function GM:ScoreboardShow()
   if hook.run('ShouldScoreboardShow') != false then
     if fl.tab_menu and fl.tab_menu.close_menu then
-      fl.tab_menu:close_menu(true)
+      fl.tab_menu:close_menu()
     end
 
     fl.tab_menu = theme.create_panel('tab_menu', nil, 'fl_tab_menu')
