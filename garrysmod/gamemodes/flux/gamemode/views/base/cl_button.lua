@@ -50,7 +50,7 @@ function PANEL:SizeToContents()
     add = h * 1.5 - 2
   end
 
-  self:SetSize(w * 1.15 + add, h * 1.5)
+  self:SetSize(w * 1.15 + add, h * 1.15)
 end
 
 function PANEL:set_centered(centered)
