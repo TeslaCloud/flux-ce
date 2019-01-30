@@ -321,7 +321,7 @@ end
 function THEME:PaintScoreboard(panel, width, height)
   local title_font = self:get_font('menu_large')
 
-  draw.RoundedBox(0, 0, 0, width, height, ColorAlpha(self:get_color('background'), 150))
+  draw.RoundedBox(0, 0, 0, width, height, self:get_color('background'):alpha(150))
 
   local title = t'scoreboard.title'
 
@@ -333,7 +333,7 @@ function THEME:PaintScoreboard(panel, width, height)
 end
 
 function THEME:PaintTabMenuButtonPanel(panel, width, height)
-  draw.RoundedBox(0, 0, 0, width, height, ColorAlpha(self:get_color('background'), 125))
+  draw.RoundedBox(0, 0, 0, width, height, self:get_color('background'):alpha(125))
 end
 
 function THEME:PaintTabMenu(panel, width, height)
@@ -430,7 +430,7 @@ end
 -- Called when a tab is painted.
 function THEME.skin:PaintTab(panel, w, h)
   if panel:GetPropertySheet():GetActiveTab() == panel then
-    self:DrawGenericBackground(4, 0, w - 8, h - 8, ColorAlpha(self.colTab, 220))
+    self:DrawGenericBackground(4, 0, w - 8, h - 8, self.colTab:alpha(220))
   else
     self:DrawGenericBackground(0, 0, w, h, Color(40, 40, 40))
   end
@@ -561,7 +561,7 @@ function THEME.skin:PaintFrame(panel, w, h)
   surface.SetDrawColor(Color(10, 10, 10, 150))
   surface.DrawRect(0, 0, w, h)
 
-  draw.textured_rect(theme.get_material('gradient'), 0, 0, w, 24, ColorAlpha(color, 200))
+  draw.textured_rect(theme.get_material('gradient'), 0, 0, w, 24, color:alpha(200))
 end
 
 function THEME.skin:PaintCollapsibleCategory(panel, w, h)

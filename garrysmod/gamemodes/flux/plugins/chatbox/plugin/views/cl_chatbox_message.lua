@@ -60,7 +60,7 @@ function PANEL:Paint(w, h)
         if v.text then
           draw.SimpleTextOutlined(v.text, cur_font, v.x, v.y, cur_color, nil, nil, 1, Color(30, 30, 30, self.alpha))
         elseif IsColor(v) then
-          cur_color = ColorAlpha(v, self.alpha)
+          cur_color = v:alpha(self.alpha)
         elseif v.image then
           draw.textured_rect(util.get_material(v.image), v.x, v.y, v.w, v.h, Color(255, 255, 255, self.alpha))
         end

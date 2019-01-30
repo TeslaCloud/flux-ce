@@ -130,7 +130,7 @@ else
     local max_width = math.max(width, width2)
     local box_x, box_y = x - max_width * 0.5 - 8, y - 8
     local box_width, box_height = max_width + 16, height + height2 + 16
-    local accent_color = ColorAlpha(theme.get_color('accent'), 200)
+    local accent_color = theme.get_color('accent'):alpha(200)
     local ent_pos = self:GetPos():ToScreen()
     local anim_id = 'itemid_gradient_'..self.item.instance_id
 

@@ -44,14 +44,14 @@ end
 function PANEL:Paint(width, height)
   if !theme.hook('PaintNotificationContainer', self, width, height) then
     draw.blur_panel(self, self.cur_alpha)
-    draw.RoundedBox(0, 0, 0, width, height, ColorAlpha(self.background_color, self.cur_alpha))
+    draw.RoundedBox(0, 0, 0, width, height, self.background_color:alpha(self.cur_alpha))
   end
 
   if !theme.hook('PaintNotificationText', self, width, height) then
     local cur_y = 4
 
     for k, v in ipairs(self.notification_text) do
-      draw.SimpleText(v, theme.get_font('menu_normal'), 4, cur_y, ColorAlpha(self.text_color, self.cur_alpha + 55))
+      draw.SimpleText(v, theme.get_font('menu_normal'), 4, cur_y, self.text_color:alpha(self.cur_alpha + 55))
 
       cur_y = cur_y + self.font_size + 4
     end

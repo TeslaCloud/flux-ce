@@ -183,7 +183,7 @@ function GM:FLHUDPaint(cur_time, scrw, scrh)
     surface.SetDrawColor(0, 0, 0, 180 * alpha / 255)
     surface.draw_circle_outline(x, y, 65, 5, 64)
 
-    surface.SetDrawColor(ColorAlpha(theme.get_color('text'), alpha))
+    surface.SetDrawColor(theme.get_color('text'):alpha(alpha))
     surface.draw_circle_outline_partial(math.Clamp(percentage, 0, 100), x, y, 64, 3, 64)
 
     fl.client.circle_action_percentage = nil

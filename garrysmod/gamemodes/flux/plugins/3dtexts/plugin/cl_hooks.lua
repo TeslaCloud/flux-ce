@@ -78,10 +78,10 @@ function SurfaceText:PostDrawOpaqueRenderables()
 
             render.SetStencilEnable(false)
 
-            surface.SetDrawColor(ColorAlpha(back_color, 10))
+            surface.SetDrawColor(back_color:alpha(10))
             surface.DrawRect(box_x, box_y, w + 64, h + 32)
           elseif style != 8 and style != 9 then
-            draw.RoundedBox(0, box_x, pos_y - 16, w + 64, h + 32, ColorAlpha(v.extra_color, math.Clamp(fade_alpha, 0, box_alpha)))
+            draw.RoundedBox(0, box_x, pos_y - 16, w + 64, h + 32, v.extra_color:alpha(math.clamp(fade_alpha, 0, box_alpha)))
           end
 
           if style == 7 or style == 8 then
@@ -109,7 +109,7 @@ function SurfaceText:PostDrawOpaqueRenderables()
         end
 
         if style != 3 then
-          draw.SimpleText(text, theme.get_font('text_3d2d'), pos_x, pos_y, ColorAlpha(text_color, math.Clamp(fade_alpha, 0, 100)):darken(30))
+          draw.SimpleText(text, theme.get_font('text_3d2d'), pos_x, pos_y, text_color:alpha(math.clamp(fade_alpha, 0, 100)):darken(30))
         end
       cam.End3D2D()
     end
@@ -121,7 +121,7 @@ function SurfaceText:PostDrawOpaqueRenderables()
     end
 
     cam.Start3D2D(pos + (normal * 1.25 * (scale + 0.5)), angle, 0.1 * scale)
-      draw.SimpleText(text, theme.get_font('text_3d2d'), pos_x, pos_y, ColorAlpha(text_color, fade_alpha))
+      draw.SimpleText(text, theme.get_font('text_3d2d'), pos_x, pos_y, text_color:alpha(fade_alpha))
     cam.End3D2D()
   end
 
@@ -145,7 +145,7 @@ function SurfaceText:PostDrawOpaqueRenderables()
     local width = v.width
 
     cam.Start3D2D(pos + (v.normal * 0.4), v.angle, 0.1)
-      draw.textured_rect(URLMaterial(v.url), -width * 0.5, -height * 0.5, width, height, ColorAlpha(color_white, fade_alpha))
+      draw.textured_rect(URLMaterial(v.url), -width * 0.5, -height * 0.5, width, height, color_white:alpha(fade_alpha))
     cam.End3D2D()
   end
 end
