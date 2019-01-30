@@ -83,10 +83,6 @@ function THEME:on_loaded()
   self:add_panel('tab_menu', function(id, parent, ...)
     return vgui.Create('fl_tab_menu', parent)
   end)
-
-  self:add_panel('admin_permissions_editor', function(id, parent, ...)
-    return vgui.Create('permissions_editor', parent)
-  end)
 end
 
 function THEME:CreateMainMenu(panel)

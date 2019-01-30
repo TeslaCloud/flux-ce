@@ -11,3 +11,18 @@ function Bolt:AddTabMenuItems(menu)
     icon = 'fa-shield'
   })
 end
+
+function Bolt:AddAdminMenuItems(panel, sidebar)
+  sidebar:add_button('Manage Config')
+  sidebar:add_button('Manage Players')
+  sidebar:add_button('Manage Admins')
+  sidebar:add_button('Group Editor')
+  sidebar:add_button('Item Editor')
+  panel:add_panel('admin_permissions_editor', 'Permissions', 'manage_permissions')
+end
+
+function Bolt:OnThemeLoaded(current_theme)
+  current_theme:add_panel('admin_permissions_editor', function(id, parent, ...)
+    return vgui.Create('permissions_editor', parent)
+  end)
+end

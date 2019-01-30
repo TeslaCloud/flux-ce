@@ -367,15 +367,6 @@ function GM:OnMenuPanelOpen(menu_panel, active_panel)
   active_panel:SetPos(menu_panel:GetWide() * 0.5 - active_panel:GetWide() * 0.5, menu_panel:GetTall() * 0.5 - active_panel:GetTall() * 0.5)
 end
 
-function GM:AddAdminMenuItems(panel, sidebar)
-  sidebar:add_button('Manage Config')
-  sidebar:add_button('Manage Players')
-  sidebar:add_button('Manage Admins')
-  sidebar:add_button('Group Editor')
-  sidebar:add_button('Item Editor')
-  panel:add_panel('admin_permissions_editor', 'Permissions', 'manage_permissions')
-end
-
 function GM:PlayerBindPress(player, bind, pressed)
   if bind:find('gmod_undo') and pressed then
     if hook.run('SoftUndo', player) != nil then
