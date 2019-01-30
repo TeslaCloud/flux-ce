@@ -3,7 +3,7 @@ function Bolt:CheckPassword(steam_id64, ip, sv_pass, cl_pass, name)
   local entry = self:get_bans()[steam_id]
 
   if entry and plugin.call('ShouldCheckBan', steam_id, ip, name) != false then
-    if entry.duration != 0 and entry.unbanTime >= os.time() and plugin.call('ShouldExpireBan', steam_id, ip, name) != false then
+    if entry.duration != 0 and entry.unban_time >= os.time() and plugin.call('ShouldExpireBan', steam_id, ip, name) != false then
       self:remove_ban(steam_id)
 
       return true

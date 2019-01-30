@@ -223,7 +223,7 @@ do
     moment = 1
   }
 
-  local numTokens = {
+  local num_tokens = {
     one = 1,
     two = 2,
     three = 3,
@@ -269,14 +269,14 @@ do
         v = v:trim_end('s')
       end
 
-      if !n and !tokens[v] and !numTokens[v] then continue end
+      if !n and !tokens[v] and !num_tokens[v] then continue end
 
       if n then
         num = n
       elseif isstring(v) then
         v = v:trim_end('s')
 
-        local ntok = numTokens[v]
+        local ntok = num_tokens[v]
 
         if ntok then
           num = ntok

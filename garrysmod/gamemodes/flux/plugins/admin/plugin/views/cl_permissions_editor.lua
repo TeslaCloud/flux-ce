@@ -69,7 +69,7 @@ function PANEL:get_permission()
   return self.permission
 end
 
-vgui.Register('flPermission', PANEL, 'fl_base_panel')
+vgui.Register('fl_permission', PANEL, 'fl_base_panel')
 
 local PANEL = {}
 
@@ -103,7 +103,7 @@ function PANEL:rebuild()
     local cur_y = 0
 
     for k, v in pairs(perms) do
-      local btn = vgui.Create('flPermission')
+      local btn = vgui.Create('fl_permission')
       btn:SetSize(width, 20)
       btn:set_permission(v)
 
