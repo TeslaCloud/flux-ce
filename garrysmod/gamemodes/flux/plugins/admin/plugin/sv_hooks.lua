@@ -57,6 +57,6 @@ function Bolt:CommandCheckImmunity(player, target, can_equal)
   return self:check_immunity(player, v, can_equal)
 end
 
-function Bolt:OnCommandCreated(id, data)
-  self:permission_from_command(data)
+function Bolt:CommandCheckImmunity(player, target, can_equal)
+  return self:check_immunity(player, v, can_equal)
 end

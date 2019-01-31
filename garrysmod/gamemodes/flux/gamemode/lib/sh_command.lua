@@ -252,7 +252,7 @@ if SERVER then
     local cmd_table = self:find_by_id(command)
 
     if cmd_table then
-      if (!IsValid(player) and !cmd_table.no_console) or player:can(cmd_table.permission) then
+      if (!IsValid(player) and !cmd_table.no_console) or player:can(cmd_table.id) then
         if hook.run('PlayerCanRunCommand', player, cmd_table, from_console) != nil then return end
 
         if cmd_table.arguments == 0 or cmd_table.arguments <= #args then

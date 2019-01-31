@@ -29,6 +29,10 @@ function Bolt:PlayerIsRoot(player)
   return player.can_anything
 end
 
+function Bolt:OnCommandCreated(id, data)
+  self:permission_from_command(data)
+end
+
 function Bolt:OnPluginsLoaded()
   if Conditions then
     Conditions:register_condition('bolt_role', {
