@@ -143,9 +143,7 @@ function PANEL:set_player(player)
 
   self:rebuild()
 
-  for k, v in pairs(player:get_permissions()) do
-    self.permissions[k]:set_value(v)
-  end
+  self:set_permissions(player:get_permissions())
 end
 
 function PANEL:get_player()
