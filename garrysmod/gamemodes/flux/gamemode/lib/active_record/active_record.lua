@@ -5,7 +5,7 @@ ActiveRecord.metadata = ActiveRecord.metadata or {
   prim_keys = {},
   adapter = '', db_name = ''
 }
-ActiveRecord.db_settings = Settings.database[FLUX_ENV] or Settings.database['development'] or {}
+ActiveRecord.db_settings = DatabaseSettings[FLUX_ENV] or DatabaseSettings['development'] or {}
 ActiveRecord.adapter_name = ActiveRecord.db_settings.adapter or 'sqlite'
 
 include 'generators/generator.lua'

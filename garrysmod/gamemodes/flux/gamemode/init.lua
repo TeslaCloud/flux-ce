@@ -43,7 +43,7 @@ if !LITE_REFRESH then
     YAML = include 'vendor/yaml.lua'
 
     Settings = Settings or YAML.read('gamemodes/flux/config/settings.yml')
-    Settings.database = YAML.read('gamemodes/flux/config/database.yml')
+    DatabaseSettings = YAML.read('gamemodes/flux/config/database.yml')
   end
 end
 
