@@ -189,7 +189,6 @@ do
   if SERVER then
     function player_meta:set_whitelists(data)
       self:set_nv('whitelists', data)
-      self:save_player()
     end
 
     function player_meta:give_whitelist(name)

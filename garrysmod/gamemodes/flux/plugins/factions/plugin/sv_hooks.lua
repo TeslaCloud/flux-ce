@@ -8,8 +8,13 @@ function Factions:PostPlayerSpawn(player)
   end
 end
 
-  save_data.whitelists = fl.serialize(player:get_whitelists())
 function Factions:SavePlayerData(player)
+  for k, v in pairs(player:get_whitelists()) do
+    local whitelist = Whitelist.new()
+      whitelist.user_id = player.record.id
+      whitelist.faction_id = v
+    table.insert(player.record.whitelists, whitelist)
+  end
 end
 
 function Factions:OnActiveCharacterSet(player, char)
@@ -30,6 +35,16 @@ function Factions:RestoreCharacter(player, char_id, char)
 end
 
 function Factions:PlayerRestored(player, record)
+  if record.whitelists then
+    local whitelists = {}
+
+    for k, v in pairs(record.whitelists) do
+      table.insert(whitelists, v.faction_id)
+    end
+
+    player:set_whitelists(whitelists)
+  end
+
   if player:IsBot() then
     if faction.count > 0 then
       local random_faction = table.Random(faction.all())
