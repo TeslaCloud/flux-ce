@@ -143,7 +143,6 @@ function PANEL:set_player(player)
 
   self:rebuild()
 
-  print_table(player:get_permissions())
   for k, v in pairs(player:get_permissions()) do
     self.permissions[k]:set_value(v)
   end
