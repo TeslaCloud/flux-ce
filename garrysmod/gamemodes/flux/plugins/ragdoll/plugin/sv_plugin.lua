@@ -72,7 +72,7 @@ function player_meta:create_ragdoll_entity(decay, fallen)
       ragdoll:SetModel(self:GetModel())
       ragdoll:SetPos(self:GetPos())
       ragdoll:SetAngles(self:GetAngles())
-      ragdoll:SetSkin(self:get_skin())
+      ragdoll:SetSkin(self:GetSkin())
       ragdoll:SetMaterial(self:GetMaterial())
       ragdoll:SetColor(self:GetColor())
       ragdoll.decay = decay
