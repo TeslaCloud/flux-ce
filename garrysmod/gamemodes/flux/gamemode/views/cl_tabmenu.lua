@@ -119,12 +119,6 @@ function PANEL:Think()
   end
 end
 
-function PANEL:OnMousePressed()
-  if IsValid(self.active_panel) then
-    self.active_panel:safe_remove()
-  end
-end
-
 function PANEL:OnKeyCodePressed(key)
   if key == KEY_TAB then
     self:close_menu()
