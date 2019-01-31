@@ -100,7 +100,6 @@ function PANEL:node_options(panel, root, first)
           selector:set_title(t(data.name))
           selector:set_text(t'conditions.select_operator')
           selector:set_value(t'conditions.operators')
-          selector:Center()
 
           for k, v in pairs(util['get_'..data.set_operator..'_operators']()) do
             selector:add_choice(t('operators.'..k)..' ('..v..')', function()
@@ -204,7 +203,6 @@ function PANEL:create_selector(title, message, default_value, choices, callback)
   selector:set_title(t(title))
   selector:set_text(t(message))
   selector:set_value(t(default_value))
-  selector:Center()
 
   for k, v in pairs(choices) do
     callback(selector, v)

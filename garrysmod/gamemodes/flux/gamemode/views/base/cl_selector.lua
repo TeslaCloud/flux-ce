@@ -27,6 +27,7 @@ function PANEL:Init()
   self:SizeToContents()
   self:MakePopup()
   self:DoModal()
+  self:Center()
 end
 
 function PANEL:SizeToContents()
