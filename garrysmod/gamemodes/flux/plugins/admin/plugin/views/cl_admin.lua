@@ -11,8 +11,10 @@ function PANEL:Init()
   self:SetPos(scrw * 0.5 - width * 0.5, scrh * 0.5 - height * 0.5)
 
   self.sidebar = vgui.Create('fl_sidebar', self)
-  self.sidebar:SetSize(width / 5, height)
+  self.sidebar:SetSize(width / 5 - 8, height)
   self.sidebar:SetPos(0, 0)
+  self.sidebar.Paint = function(pnl, w, h)
+  end
 
   self:SetKeyboardInputEnabled(true)
 
@@ -25,6 +27,8 @@ function PANEL:Paint(w, h)
   draw.box_outlined(0, -4, -4, w + 8, h + 24, 2, theme.get_color('background'))
 
   DisableClipping(false)
+
+  draw.RoundedBox(0, 0, 0, w, h, theme.get_color('background'):alpha(150))
 end
 
 function PANEL:PaintOver(w, h)
@@ -39,9 +43,14 @@ function PANEL:add_panel(id, title, permission, ...)
     arguments = {...}
   }
 
-  self.sidebar:add_button(title, function(btn)
-    self:open_panel(id)
+  local button = self.sidebar:add_button(title, function(btn)
+    if !self.cur_panel or self.cur_panel.id != id then
+      self:open_panel(id)
+    end
   end)
+  button:SetFont(theme.get_font('text_normal'))
+  button:SizeToContentsY()
+  button:set_centered(true)
 end
 
 function PANEL:remove_panel(id)
@@ -58,12 +67,13 @@ function PANEL:open_panel(id)
   if istable(panel) then
     if panel.permission and !fl.client:can(panel.permission) then return end
 
-    local scrw, scrh = ScrW(), ScrH()
     local sw, sh = self.sidebar:GetWide(), self.sidebar:GetTall()
 
     self.cur_panel = theme.create_panel(panel.id, self, unpack(panel.arguments))
     self.cur_panel:SetPos(sw, 0)
     self.cur_panel:SetSize(self:GetWide() - sw, self:GetTall())
+    self.cur_panel:SetParent(self)
+    self.cur_panel.id = id
 
     if self.cur_panel.on_opened then
       self.cur_panel:on_opened(self, panel)

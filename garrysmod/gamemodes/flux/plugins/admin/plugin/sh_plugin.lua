@@ -2,6 +2,7 @@ PLUGIN:set_global('Bolt')
 
 util.include('cl_hooks.lua')
 util.include('sv_hooks.lua')
+util.include('sv_plugin.lua')
 
 function Bolt:OnPluginLoaded()
   plugin.add_extra('commands')
