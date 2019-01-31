@@ -359,8 +359,12 @@ do
   end
 
   local function write_client_files()
+    -- Do not send server-only settings to client!
+    local settings_copy = table.Copy(Settings)
+    settings_copy.server = nil 
+
     write_client_file('0_shared.lua', 'fl.shared = fl.deserialize([['..fl.serialize(fl.shared)..']])\n')
-    write_client_file('1_settings.lua', 'Settings = fl.deserialize([['..fl.serialize(Settings)..']])\n')
+    write_client_file('1_settings.lua', 'Settings = fl.deserialize([['..fl.serialize(settings_copy)..']])\n')
     write_client_file('2_lang.lua', "library.new('lang', fl)\nfl.lang.stored = fl.deserialize([["..fl.serialize(fl.lang.stored).."]])\n")
     write_html()
   end
