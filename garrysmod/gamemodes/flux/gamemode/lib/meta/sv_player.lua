@@ -1,15 +1,7 @@
 local player_meta = FindMetaTable('Player')
 
 function player_meta:save_player()
-  local save_data = {
-    steam_id = self:SteamID(),
-    name = self:name(),
-    joinTime = self.flJoinTime or os.time(),
-    lastPlayTime = os.time(),
-    data = fl.serialize(self:get_data())
-  }
-
-  hook.run('SavePlayerData', self, save_data)
+  hook.run('SavePlayerData', self)
 
   if self.record then self.record:save() end
 end

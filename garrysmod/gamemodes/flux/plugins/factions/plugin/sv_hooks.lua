@@ -8,8 +8,8 @@ function Factions:PostPlayerSpawn(player)
   end
 end
 
-function Factions:SavePlayerData(player, save_data)
   save_data.whitelists = fl.serialize(player:get_whitelists())
+function Factions:SavePlayerData(player)
 end
 
 function Factions:OnActiveCharacterSet(player, char)
