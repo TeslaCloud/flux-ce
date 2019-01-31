@@ -151,7 +151,7 @@ function THEME:PaintButton(panel, w, h)
     surface.SetDrawColor(self:get_color('outline'))
     surface.DrawRect(0, 0, w, h)
 
-    surface.SetDrawColor(self:get_color('main_dark') and panel.active or self:get_color('main'):lighten(cur_amt))
+    surface.SetDrawColor(panel.active and self:get_color('main_dark') or self:get_color('main'):lighten(cur_amt))
     surface.DrawRect(1, 1, w - 2, h - 2)
   end
 
@@ -274,7 +274,7 @@ function THEME:AdminPanelPaintOver(panel, width, height)
 end
 
 function THEME:PaintPermissionButton(perm_panel, btn, w, h)
-  local color = Color(255, 255, 255)
+  local color = color_white
   local title = ''
   local perm_type = btn.perm_value
   local font = self:get_font('text_small')
@@ -309,7 +309,7 @@ function THEME:PaintPermissionButton(perm_panel, btn, w, h)
 
   draw.RoundedBox(0, sqr_size * 0.5, sqr_size * 0.5, sqr_size, sqr_size, Color(255, 255, 255))
 
-  if btn.isSelected then
+  if btn.is_selected then
     draw.RoundedBox(0, sqr_size * 0.5 + 2, sqr_size * 0.5 + 2, sqr_size - 4, sqr_size - 4, Color(0, 0, 0))
   end
 end
