@@ -42,7 +42,7 @@ function PANEL:OnMousePressed(key)
   end
 end
 
-function PANEL:SizeToContents()
+function PANEL:SizeToContentsX()
   local w, h = util.text_size(self.title, self.font)
   local add = 0
 
@@ -50,7 +50,18 @@ function PANEL:SizeToContents()
     add = h * 1.5 - 2
   end
 
-  self:SetSize(w * 1.15 + add, h * 1.15)
+  self:SetWide(w * 1.15 + add)
+end
+
+function PANEL:SizeToContentsY()
+  local w, h = util.text_size(self.title, self.font)
+
+  self:SetTall(h * 1.15)
+end
+
+function PANEL:SizeToContents()
+  self:SizeToContentsX()
+  self:SizeToContentsY()
 end
 
 function PANEL:set_centered(centered)
