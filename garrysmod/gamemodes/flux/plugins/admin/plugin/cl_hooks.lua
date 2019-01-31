@@ -13,12 +13,7 @@ function Bolt:AddTabMenuItems(menu)
 end
 
 function Bolt:AddAdminMenuItems(panel, sidebar)
-  --sidebar:add_button('Manage Config')
-  --sidebar:add_button('Manage Players')
-  --sidebar:add_button('Manage Admins')
-  --sidebar:add_button('Group Editor')
-  --sidebar:add_button('Item Editor')
-  panel:add_panel('admin_player_management', 'Player Management', 'manage_permissions')
+  panel:add_panel('admin_player_management', t'admin.player_management', 'manage_permissions')
 end
 
 function Bolt:OnThemeLoaded(current_theme)

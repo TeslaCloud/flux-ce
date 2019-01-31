@@ -1,6 +1,7 @@
 PLUGIN:set_global('Bolt')
 
 util.include('cl_hooks.lua')
+util.include('sh_enums.lua')
 util.include('sv_hooks.lua')
 util.include('sv_plugin.lua')
 

@@ -1,4 +1,19 @@
 en:
+  admin:
+    player_management: Player management
+    players: Players
+    avatar_tooltip: Left click - Open profile, Right click - Copy SteamID
+    role: Role
+    selector:
+      title: Changing player's role
+      message: Select a new role.
+      roles: Roles
+  categories:
+    administration: Administration
+    flags: Flags
+    general: General
+    misc: Misc
+    sever_management: Server management
   err:
     group_not_valid: "'{1}' is not a valid user group!"
     not_banned: Steam ID '{1}' is not banned!
@@ -27,7 +42,7 @@ en:
   set_group:
     description: Sets player's usergroup.
     syntax: <target> <usergroup>"
-    message: {1} has set {2}'s user group to {3}.
+    message: "{1} has set {2}'s user group to {3}."
   role:
     user: The base rank that is automatically given to the player.
     assistant: Low clearance administrative rank given to assistant staff members.

@@ -1,4 +1,19 @@
-ru:
+ru:  
+  admin:
+    player_management: Управление игроками
+    players: Игроки
+    avatar_tooltip: Левый клик - открыть профиль, Правый клик - копировать SteamID
+    role: Роль
+    selector:
+      title: Изменение роли игрока
+      message: Выберите новую роль.
+      roles: Роли
+  categories:
+    administration: Администрирование
+    flags: Флаги
+    general: Основное
+    misc: Разное
+    sever_management: Управление сервером
   err:
     group_not_valid: "'{1}' не является группой пользователя!"
     not_banned: Steam ID '{1}' не находится в блокировке!

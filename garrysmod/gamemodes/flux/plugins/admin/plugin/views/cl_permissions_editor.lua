@@ -165,7 +165,7 @@ function PANEL:rebuild()
 
   for category, perms in SortedPairs(permissions) do
     local collapsible_category = vgui.Create('DCollapsibleCategory', self.list_layout)
-    collapsible_category:SetLabel(category)
+    collapsible_category:SetLabel(t(category))
     collapsible_category:SetSize(width, 21)
 
     local list = vgui.Create('DListLayout', list_layout)

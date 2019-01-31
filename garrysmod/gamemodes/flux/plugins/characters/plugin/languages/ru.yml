@@ -57,3 +57,5 @@ ru:
       text: Персонаж {1} {2}
       message: Выберите персонажа
     characters: Персонажи
+  categories:
+    character_management: Управление персонажем
