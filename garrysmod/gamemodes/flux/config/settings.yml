@@ -1,6 +1,7 @@
-test_setting: 'Hello World'
+test_setting: "Hello World"
 lite_refresh: true
+experimental: false # Whether to enable experimental features.
 webhooks: # Discord webhook support
   example:
-    id: '123456789'
-    key: 'secret_key_goes_here'
+    id: "123456789"
+    key: "secret_key_goes_here"
