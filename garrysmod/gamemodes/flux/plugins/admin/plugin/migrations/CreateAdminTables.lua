@@ -1,6 +1,6 @@
 ActiveRecord.define_model('permissions', function(t)
   t:string 'permission_id'
-  t:string 'object'
+  t:integer 'object'
   t:integer 'user_id'
 end)
 

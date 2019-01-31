@@ -27,8 +27,12 @@ function player_meta:set_permissions(perm_table)
   self:set_nv('permissions', perm_table)
 end
 
-function player_meta:set_custom_permissions(data)
-  self:set_nv('permissions', data)
+function player_meta:set_permission(perm, value)
+  local perm_table = self:get_permissions()
+
+  perm_table[perm] = value != PERM_NO and value or nil
+
+  self:set_permissions(perm_table)
 end
 
 function player_meta:run_command(cmd)

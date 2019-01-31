@@ -21,6 +21,9 @@ function PANEL:Init()
 
   self.player_info = vgui.create('fl_player_info', self)
   self.player_info:SetVisible(false)
+
+  self.perm_editor = vgui.create('fl_permissions_editor', self)
+  self.perm_editor:SetVisible(false)
 end
 
 function PANEL:on_opened()
@@ -29,6 +32,11 @@ function PANEL:on_opened()
   self.player_info:DockMargin(2, 4, 4, 2)
   self.player_info:Dock(TOP)
   self.player_info:SetTall(scrh / 6)
+
+  self.perm_editor:DockMargin(2, 2, 4, 4)
+  self.perm_editor:Dock(FILL)
+  self.perm_editor:SetSize(self:GetWide() - self.player_list:GetWide() - 12, self:GetTall() - self.player_info:GetTall() - 12)
+  self.perm_editor:rebuild()
 end
 
 function PANEL:set_player(player)
@@ -39,6 +47,7 @@ function PANEL:set_player(player)
 
   self.active_player = player
   self.player_info:set_player(player)
+  self.perm_editor:set_player(player)
 end
 
 function PANEL:get_player()

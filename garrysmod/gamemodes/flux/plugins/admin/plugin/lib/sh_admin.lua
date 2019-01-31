@@ -91,6 +91,14 @@ function Bolt:can(player, action, object)
     return true
   end
 
+  local perm = player:get_permission(action)
+
+  if perm == PERM_ALLOW then
+    return true
+  elseif perm == PERM_NEVER then
+    return false
+  end
+
   local role = roles[player:GetUserGroup()]
 
   if istable(role) and isfunction(role.can) then
