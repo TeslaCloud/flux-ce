@@ -42,7 +42,6 @@ function PANEL:rebuild()
   self.button_no.perm_value = PERM_NO
   self.button_no.Paint = function(btn, w, h) theme.call('PaintPermissionButton', self, btn, w, h) end
   self.button_no.DoClick = function(btn) self:select_button(btn) end
-  self.button_no:DoClick()
 
   self.button_never = vgui.Create('DButton', self.container)
   self.button_never:SetPos(quarter * 3, 0)
@@ -98,11 +97,11 @@ end
 
 function PANEL:set_value(perm)
   if perm == PERM_ALLOW then
-    self.button_allow:DoClick()
+    self:select_button(self.button_allow)
   elseif perm == PERM_NEVER then
-    self.button_never:DoClick()
+    self:select_button(self.button_never)
   else
-    self.button_no:DoClick()
+    self:select_button(self.button_no)
   end
 end
 
@@ -134,7 +133,7 @@ end
 
 function PANEL:set_permissions(perm_list)
   for k, v in pairs(perm_list) do
-    self.permissions[k]:set_value(v)
+    self.permissions[k]:set_value(tonumber(v))
   end
 end
 
@@ -179,8 +178,8 @@ function PANEL:rebuild()
       local btn = vgui.Create('fl_permission', self)
       btn:SetSize(width, 20)
       btn:set_permission(v)
+      btn:set_value(PERM_NO)
       btn:set_player(self:get_player())
-      btn:rebuild()
 
       list:Add(btn)
 

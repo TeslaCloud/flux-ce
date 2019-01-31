@@ -36,7 +36,6 @@ function PANEL:on_opened()
   self.perm_editor:DockMargin(2, 2, 4, 4)
   self.perm_editor:Dock(FILL)
   self.perm_editor:SetSize(self:GetWide() - self.player_list:GetWide() - 12, self:GetTall() - self.player_info:GetTall() - 12)
-  self.perm_editor:rebuild()
 end
 
 function PANEL:set_player(player)

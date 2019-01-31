@@ -115,12 +115,3 @@ function PANEL:get_menu_size()
 end
 
 vgui.Register('fl_admin_panel', PANEL, 'fl_base_panel')
-
-concommand.Add('fl_admin_test', function()
-  if IsValid(admin_panel) then
-    admin_panel:safe_remove()
-  else
-    admin_panel = vgui.Create('fl_admin_panel')
-    admin_panel:MakePopup()
-  end
-end)
