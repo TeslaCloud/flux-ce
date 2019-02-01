@@ -59,20 +59,6 @@ function Bolt:PlayerRestored(player, record)
   Log:notify(player:name()..' ('..player:GetUserGroup()..') has connected to the server.', { action = 'player_events' })
 end
 
-function Bolt:SavePlayerData(player)
-  for k, v in pairs(player.record.permissions) do
-    v:destroy()
-  end
-
-  for k, v in pairs(player:get_permissions()) do
-    local perm = Permission.new()
-      perm.permission_id = k
-      perm.object = v
-      perm.user_id = player.record.id
-    table.insert(player.record.permissions, perm)
-  end
-end
-
 function Bolt:CommandCheckImmunity(player, target, can_equal)
   return self:check_immunity(player, v, can_equal)
 end
