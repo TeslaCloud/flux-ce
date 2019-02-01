@@ -51,8 +51,6 @@ function Bolt:PlayerRestored(player, record)
 
     for k, v in pairs(record.permissions) do
       perm_table[v.permission_id] = v.object
-
-      v:destroy()
     end
 
     player:set_permissions(perm_table)
@@ -62,6 +60,10 @@ function Bolt:PlayerRestored(player, record)
 end
 
 function Bolt:SavePlayerData(player)
+  for k, v in pairs(player.record.permissions) do
+    v:destroy()
+  end
+
   for k, v in pairs(player:get_permissions()) do
     local perm = Permission.new()
       perm.permission_id = k
