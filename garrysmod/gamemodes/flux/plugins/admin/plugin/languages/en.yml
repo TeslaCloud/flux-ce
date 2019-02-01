@@ -61,9 +61,9 @@ en:
     syntax: <target>
     message: '{1} has demoted {2} from {3} to user.'
   perm:
-    not_set: Not Set (No)
+    not_set: Don't change
     allow: Allow
-    never: Never
+    never: Forbid
     allow_override: Allow (Override)
     error: Invalid Permission
   conditions:

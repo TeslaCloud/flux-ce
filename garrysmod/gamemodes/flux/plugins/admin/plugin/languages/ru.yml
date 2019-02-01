@@ -63,9 +63,9 @@ ru:
     syntax: <игрок>
     message: '{1} понизил {2} с {3} до пользователя.'
   perm:
-    not_set: Не указано (нет)
+    not_set: Не менять
     allow: Разрешить
-    never: Никогда
+    never: Запретить
     allow_override: Разрешить (Обход)
     error: Ошибка
   conditions:
