@@ -9,6 +9,12 @@ ActiveRecord.Base.validations = {}
 function ActiveRecord.Base:init()
   self.fetched = false
   self.saving = false
+
+  for k, v in ipairs(self.relations) do
+    if !self[v.table_name] and v.many then
+      self[v.table_name] = {}
+    end
+  end
 end
 
 function ActiveRecord.Base:class_extended(new_class)

@@ -26,7 +26,8 @@ local LUA_TOKENS = {
   ['func']     = 'func',        ['unless']   = 'unless',      ['until']     = 'until',
   ['+=']       = 'add_assign',  ['-=']       = 'sub_assign',  ['*=']        = 'mul_assign',
   ['/=']       = 'div_assign',  ['||=']      = 'or_assign',   ['&&=']       = 'and_assign',
-  ['..=']      = 'con_assign',  ['->']       = 'arrow'
+  ['..=']      = 'con_assign',  ['->']       = 'arrow',
+  ['elsif']    = 'elsif'
 }
 local TK_TO_REPRESENTATION = {}
 local NAME_TO_ENUM = {}
