@@ -1,14 +1,14 @@
 en:
   fall:
     description: Fall down on the ground.
-    syntax: '[Get up time]'
+    syntax: "[Get up time]"
   force_fall:
     description: Forces a player to fall down on the ground.
-    syntax: '<target> [Get up time]'
+    syntax: "<target> [Get up time]"
   force_getup:
     description: Forces a player to get up.
-    syntax: '<target> [Get up time]'
+    syntax: "<target> [Get up time]"
   getup:
     description: Get up if you are currently fallen.
-    syntax: '[Get up time]'
+    syntax: "[Get up time]"
   press_jump_to_getup: Press the 'jump' key to get up...

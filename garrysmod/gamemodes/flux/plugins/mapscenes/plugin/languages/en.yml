@@ -6,4 +6,4 @@ en:
     mapscene:
       name: Main menu background
       desc: Set main menu camera position.
-      '0': 'Left Click: Add point'
+      "0": "Left Click: Add node"

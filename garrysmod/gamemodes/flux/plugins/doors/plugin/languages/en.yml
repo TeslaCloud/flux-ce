@@ -10,5 +10,5 @@ en:
         select: Select title type...
       locked: Locked
     title_type:
-      none: 'None'
-      center: 'Centered'
+      none: "None"
+      center: "Centered"

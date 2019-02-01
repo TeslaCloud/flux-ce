@@ -1,4 +1,4 @@
 # Root user's SteamID. They have access to everything.
 # Make this a table is you want multiple root users
 # like ['STEAM_0:0:1', 'STEAM_0:0:2']
-root_steamid: ['STEAM_0:1:14196407', 'STEAM_0:1:44952839']
+root_steamid: ["STEAM_0:1:14196407", "STEAM_0:1:44952839"]

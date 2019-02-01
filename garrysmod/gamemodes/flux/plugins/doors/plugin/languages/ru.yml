@@ -10,5 +10,5 @@ ru:
         select: Выберите тип...
       locked: Закрыто
     title_type:
-      none: 'Отсутствует'
-      center: 'По центру'
+      none: "Отсутствует"
+      center: "По центру"

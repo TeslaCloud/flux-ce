@@ -1,6 +1,8 @@
 en:
   static:
     description: Makes the entity you're looking at static.
+    added: You have added a static entity!
+    removed: You have removed this static entity!
   unstatic:
     description: Makes the entity you're looking at not static.
   err:
@@ -8,11 +10,8 @@ en:
     cannot_static_this: You cannot static this entity!
     already_static: This entity is already static!
     not_static: This entity is not static!
-  static:
-    added: You have added a static entity!
-    removed: You have removed this static entity!
   tool:
     static:
       name: Static Add/Remove
       desc: Add and remove static entities.
-      '0': 'Left Click: Add, Right Click: Remove.'
+      "0": "Left Click: Add, Right Click: Remove."

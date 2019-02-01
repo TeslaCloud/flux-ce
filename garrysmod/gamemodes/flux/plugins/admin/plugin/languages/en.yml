@@ -26,18 +26,18 @@ en:
     group_not_valid: "'{1}' is not a valid user group!"
     not_banned: Steam ID '{1}' is not banned!
     no_permission: You have no permissions to do that, {1}.
-  freeze_bots_message: '{1} has frozen all bots.'
-  unfreeze_bots_message: '{1} has unfrozen all bots.'
-  kick_message: '{1} has kicked {2}. ({3})'
-  ban_message: '{admin} has banned {target} {time}. ({reason})'
-  unban_message: '{admin} has unbanned {target}.'
-  add_bots_message: '{1} has added {2} bots to the server.'
-  kick_bots_message: '{1} has kicked all bots.'
-  map_restart_message: '{1} is restarting the map in {2} second(s)!'
-  map_change_message: '{1} is changing the level to {2} in {3} second(s)!'
+  freeze_bots_message: "{1} has frozen all bots."
+  unfreeze_bots_message: "{1} has unfrozen all bots."
+  kick_message: "{1} has kicked {2}. ({3})"
+  ban_message: "{admin} has banned {target} {time}. ({reason})"
+  unban_message: "{admin} has unbanned {target}."
+  add_bots_message: "{1} has added {2} bots to the server."
+  kick_bots_message: "{1} has kicked all bots."
+  map_restart_message: "{1} is restarting the map in {2} second(s)!"
+  map_change_message: "{1} is changing the level to {2} in {3} second(s)!"
   cmd_desc:
-    usage: 'Syntax:'
-    aliases: 'Aliases:'
+    usage: "Syntax:"
+    aliases: "Aliases:"
   kickcmd:
     description: Kicks player from the server.
     syntax: <target> [reason]
@@ -59,11 +59,11 @@ en:
   demote:
     description: Demote a player to user.
     syntax: <target>
-    message: '{1} has demoted {2} from {3} to user.'
+    message: "{1} has demoted {2} from {3} to user."
   perm:
-    not_set: Don't change
+    not_set: No (inherit)
     allow: Allow
-    never: Forbid
+    never: Revoke
     allow_override: Allow (Override)
     error: Invalid Permission
   conditions:

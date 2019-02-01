@@ -1,26 +1,26 @@
 en:
   time:
     seconds:
-      '1': "{1} second"
-      '2': "{1} seconds"
+      "1": "{1} second"
+      "2": "{1} seconds"
     minutes:
-      '1': "{1} minute"
-      '2': "{1} minutes"
+      "1": "{1} minute"
+      "2": "{1} minutes"
     hours:
-      '1': "{1} hour"
-      '2': "{1} hours"
+      "1": "{1} hour"
+      "2": "{1} hours"
     days:
-      '1': "{1} day"
-      '2': "{1} days"
+      "1": "{1} day"
+      "2": "{1} days"
     weeks:
-      '1': "{1} week"
-      '2': "{1} weeks"
+      "1": "{1} week"
+      "2": "{1} weeks"
     months:
-      '1': "{1} month"
-      '2': "{1} months"
+      "1": "{1} month"
+      "2": "{1} months"
     years:
-      '1': "{1} year"
-      '2': "{1} years"
+      "1": "{1} year"
+      "2": "{1} years"
     permanently: permanently
     for: for
     and: and
@@ -32,8 +32,8 @@ en:
   scoreboard:
     title: PLAYER LIST
     help: Clicking player's card may bring up some options.
-  'yes': 'Yes'
-  'no': 'No'
+  "yes": "Yes"
+  "no": "No"
   chat:
     everyone: everyone
   bar_text:
@@ -57,14 +57,18 @@ en:
     tab: TAB
     commands: Commands
     bugs: Bugs
-    forums_text: You can visit TeslaCloud forums to get support, download schemas and
+    forums_text:
+      You can visit TeslaCloud forums to get support, download schemas and
       chat with fellow Flux users!
-    hints_text: These hints can be disabled from clientside settings menu. Not in
+    hints_text:
+      These hints can be disabled from clientside settings menu. Not in
       this build though.
     tab_text: "Press 'Show Scoreboard' key (default: TAB) to open Flux's menu."
-    commands_text: Start typing a command in chat to see a list of all available commands and
+    commands_text:
+      Start typing a command in chat to see a list of all available commands and
       their syntax help.
-    bugs_text: Encountered a bug? Have an idea that we should totally add to Flux? Visit
+    bugs_text:
+      Encountered a bug? Have an idea that we should totally add to Flux? Visit
       our forums at https://teslacloud.net and tell us about it!
   player_message:
     died: YOU DIED

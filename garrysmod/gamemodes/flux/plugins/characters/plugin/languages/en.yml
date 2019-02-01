@@ -30,18 +30,18 @@ en:
     select: Select
     delete: Delete
     general: General Character Information
-    name: 'Full name:'
+    name: "Full name:"
     random_name: Choose a random name.
-    desc: 'Description:'
-    gender: 'Gender:'
-    skin: 'Skin'
+    desc: "Description:"
+    gender: "Gender:"
+    skin: "Skin"
     back: BACK
     next: NEXT
     main_menu: MAIN MENU
     confirm: Character creation confirmation
     confirm_msg: Are you sure that you want to create this character?
     delete_confirm: Character delete confirmation
-    delete_confirm_msg: 'Are you sure that you want to delete this character? Write their name if so: {1}'
+    delete_confirm_msg: "Are you sure that you want to delete this character? Write their name if so: {1}"
     name_invalid: Invalid name.
     name_len: "Your character's name must be between {1} and {2} characters long."
     desc_invalid: Invalid physical description.
