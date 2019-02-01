@@ -14,6 +14,7 @@ ru:
     general: Основное
     misc: Разное
     sever_management: Управление сервером
+    player_management: Управление игроками
   err:
     group_not_valid: "'{1}' не является группой пользователя!"
     not_banned: Steam ID '{1}' не находится в блокировке!

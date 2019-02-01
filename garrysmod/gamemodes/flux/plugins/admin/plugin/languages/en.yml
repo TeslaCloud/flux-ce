@@ -14,6 +14,7 @@ en:
     general: General
     misc: Misc
     sever_management: Server management
+    player_management: Player management
   err:
     group_not_valid: "'{1}' is not a valid user group!"
     not_banned: Steam ID '{1}' is not banned!

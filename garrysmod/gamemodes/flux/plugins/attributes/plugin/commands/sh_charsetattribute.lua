@@ -2,7 +2,7 @@
 COMMAND.name = 'CharSetAttribute'
 COMMAND.description = t'char_set_attribute.description'
 COMMAND.syntax = t'char_set_attribute.syntax'
-COMMAND.category = 'character_management'
+COMMAND.category = 'categories.character_management'
 COMMAND.arguments = 3
 COMMAND.player_arg = 1
 COMMAND.aliases = { 'setatt', 'setattribute', 'charsetatt' }

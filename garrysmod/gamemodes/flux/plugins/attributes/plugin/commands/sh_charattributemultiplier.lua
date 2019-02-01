@@ -2,7 +2,7 @@
 COMMAND.name = 'CharAttributeMultiplier'
 COMMAND.description = t'char_attribute_multiplier.description'
 COMMAND.syntax = t'char_attribute_multiplier.syntax'
-COMMAND.category = 'character_management'
+COMMAND.category = 'categories.character_management'
 COMMAND.arguments = 4
 COMMAND.player_arg = 1
 COMMAND.aliases = { 'attmult', 'attmultiplier', 'attributemult', 'attributemultiplier', 'charattmult' }

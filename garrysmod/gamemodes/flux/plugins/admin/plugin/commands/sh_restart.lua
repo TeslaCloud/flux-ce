@@ -2,7 +2,7 @@ local COMMAND = Command.new('restart')
 COMMAND.name = 'Restart'
 COMMAND.description = 'Restarts the current map.'
 COMMAND.syntax = '[number Delay]'
-COMMAND.category = 'server_management'
+COMMAND.category = 'categories.server_management'
 COMMAND.arguments = 0
 COMMAND.aliases = { 'maprestart' }
 

@@ -2,7 +2,7 @@
 COMMAND.name = 'CharAttributeBoost'
 COMMAND.description = t'char_attribute_boost.description'
 COMMAND.syntax = t'char_attribute_boost.syntax'
-COMMAND.category = 'character_management'
+COMMAND.category = 'categories.character_management'
 COMMAND.arguments = 4
 COMMAND.player_arg = 1
 COMMAND.aliases = { 'attboost', 'attboost', 'attributeboost', 'attributeboost', 'charattboost' }

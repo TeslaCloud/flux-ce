@@ -2,7 +2,7 @@ local COMMAND = Command.new('fall')
 COMMAND.name = 'Fall'
 COMMAND.description = t'fall.description'
 COMMAND.syntax = t'fall.syntax'
-COMMAND.category = 'roleplay'
+COMMAND.category = 'categories.roleplay'
 COMMAND.aliases = { 'fallover', 'charfallover' }
 COMMAND.no_console = true
 

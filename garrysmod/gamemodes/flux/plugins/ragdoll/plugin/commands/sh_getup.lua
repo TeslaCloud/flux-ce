@@ -2,7 +2,7 @@ local COMMAND = Command.new('getup')
 COMMAND.name = 'GetUp'
 COMMAND.description = t'getup.description'
 COMMAND.syntax = t'getup.syntax'
-COMMAND.category = 'roleplay'
+COMMAND.category = 'categories.roleplay'
 COMMAND.aliases = { 'chargetup', 'unfall', 'unfallover' }
 COMMAND.no_console = true
 

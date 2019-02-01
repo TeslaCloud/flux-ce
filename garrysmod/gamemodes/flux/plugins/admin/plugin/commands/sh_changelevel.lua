@@ -2,7 +2,7 @@ local COMMAND = Command.new('changelevel')
 COMMAND.name = 'Changelevel'
 COMMAND.description = 'Changes the level to specified map.'
 COMMAND.syntax = '<string Map> [number Delay]'
-COMMAND.category = 'server_management'
+COMMAND.category = 'categories.server_management'
 COMMAND.arguments = 1
 COMMAND.aliases = { 'map' }
 
