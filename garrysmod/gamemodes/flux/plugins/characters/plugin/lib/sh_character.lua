@@ -25,22 +25,19 @@ function character.create(player, data)
     return result or CHAR_ERR_UNKNOWN
   end
 
-  player.record.characters = player.record.characters or {}
-
   local char = Character.new()
-
-  char.id = char.last_id + 1
-  char.steam_id = player:SteamID()
-  char.name = data.name
-  char.user_id = player.record.id
-  char.model = data.model or ''
-  char.skin = data.skin or 0
-  char.gender = data.gender
-  char.phys_desc = data.phys_desc or ''
-  char.money = data.money or 0
-  char.character_id = #player.record.characters + 1
-  char.health = 100
-  char.user = player.record
+    char.id = char.last_id + 1
+    char.steam_id = player:SteamID()
+    char.name = data.name
+    char.user_id = player.record.id
+    char.model = data.model or ''
+    char.skin = data.skin or 0
+    char.gender = data.gender
+    char.phys_desc = data.phys_desc or ''
+    char.money = data.money or 0
+    char.character_id = #player.record.characters + 1
+    char.health = 100
+    char.user = player.record
 
   player.record.characters[char.character_id] = char
 

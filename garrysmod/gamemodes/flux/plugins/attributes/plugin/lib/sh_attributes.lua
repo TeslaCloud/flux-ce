@@ -227,7 +227,9 @@ do
         multiplier.value = value
         multiplier.expires = to_datetime(os.time() + duration)
         multiplier.attribute_id = attributes.id_from_attr_id(atts_table, attr_id)
-      table.insert(self:get_character().attribute_multipliers, multiplier)
+      multiplier:save()
+
+      self:get_character().attribute_multipliers[multiplier.id] = multiplier
     end
 
     function player_meta:attribute_boost(attr_id, value, duration)
@@ -241,7 +243,9 @@ do
         boost.value = value
         boost.expires = to_datetime(os.time() + duration)
         boost.attribute_id = attributes.id_from_attr_id(atts_table, attr_id)
-      table.insert(self:get_character().attribute_boosts, boost)
+      boost:save()
+
+      self:get_character().attribute_boosts[boost.id] = boost
     end
   end
 end

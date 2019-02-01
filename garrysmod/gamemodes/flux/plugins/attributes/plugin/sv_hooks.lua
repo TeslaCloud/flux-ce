@@ -1,6 +1,4 @@
 function Attributes:PostCreateCharacter(player, char_id, char, char_data)
-  char.attributes = {}
-
   for k, v in pairs(attributes.get_stored()) do
     local attribute = attributes.find_by_id(k)
 
