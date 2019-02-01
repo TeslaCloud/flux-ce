@@ -16,9 +16,9 @@ function Role:init(id)
 end
 
 function Role:allow(action, object, callback)
-  object = (istable(object) and object.class_name)
-        or (isstring(object) and object)
-        or 'anything'
+  object = (istable(object) and object.class_name) or
+        (isstring(object) and object) or
+        'anything'
 
   local perm = self.permissions[object] or {}
   perm[action] = {
@@ -30,9 +30,9 @@ function Role:allow(action, object, callback)
 end
 
 function Role:disallow(action, object)
-  object = (istable(object) and object.class_name)
-        or (isstring(object) and object)
-        or 'anything'
+  object = (istable(object) and object.class_name) or
+        (isstring(object) and object) or
+        'anything'
 
   local perm = self.permissions[object] or {}
 
