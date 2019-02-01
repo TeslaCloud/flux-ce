@@ -92,6 +92,8 @@ if !LITE_REFRESH then
   util.include_folder('lib/classes', true)
   util.include_folder('lib/meta', true)
   if SERVER then
+    Crate:include 'packager'
+
     pipeline.include_folder('language', 'flux/gamemode/languages')
     pipeline.include_folder('migrations', 'flux/gamemode/migrations')
     pipeline.include_folder('html', 'flux/gamemode/views/html')
