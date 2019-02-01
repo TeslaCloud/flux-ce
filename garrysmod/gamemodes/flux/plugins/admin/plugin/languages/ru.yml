@@ -4,6 +4,9 @@ ru:
     players: Игроки
     avatar_tooltip: Левый клик - открыть профиль, Правый клик - копировать SteamID
     role: Роль
+    allow_all: Разрешить всё
+    no_all: "'Нет' для всех"
+    never_all: Запретить всё
     selector:
       title: Изменение роли игрока
       message: Выберите новую роль.

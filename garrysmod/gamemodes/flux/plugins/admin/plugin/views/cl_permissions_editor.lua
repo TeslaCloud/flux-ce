@@ -27,13 +27,18 @@ function PANEL:rebuild()
     self.title:SetTooltip(permission.description)
   end
 
-  self.button_allow = vgui.Create('DButton', self.container)
-  self.button_allow:SetPos(quarter, 0)
-  self.button_allow:SetSize(quarter * 0.9, height)
-  self.button_allow:SetText('')
-  self.button_allow.perm_value = PERM_ALLOW
-  self.button_allow.Paint = function(btn, w, h) theme.call('PaintPermissionButton', self, btn, w, h) end
-  self.button_allow.DoClick = function(btn) self:select_button(btn) end
+  self.button = vgui.Create('DButton', self.container)
+  self.button:SetPos(quarter, 0)
+  self.button:SetSize(quarter * 0.9, height)
+  self.button:SetText('')
+  self.button.perm_value = PERM_ALLOW
+  self.button.Paint = function(btn, w, h) theme.call('PaintPermissionButton', self, btn, w, h) end
+  self.button.DoClick = function(btn)
+    if btn.is_selected then return end
+
+    surface.PlaySound('buttons/button14.wav')
+    self:select_button(btn)
+  end
 
   self.button_no = vgui.Create('DButton', self.container)
   self.button_no:SetPos(quarter * 2, 0)
@@ -41,7 +46,12 @@ function PANEL:rebuild()
   self.button_no:SetText('')
   self.button_no.perm_value = PERM_NO
   self.button_no.Paint = function(btn, w, h) theme.call('PaintPermissionButton', self, btn, w, h) end
-  self.button_no.DoClick = function(btn) self:select_button(btn) end
+  self.button_no.DoClick = function(btn)
+    if btn.is_selected then return end
+
+    surface.PlaySound('ui/buttonclick.wav')
+    self:select_button(btn)
+  end
 
   self.button_never = vgui.Create('DButton', self.container)
   self.button_never:SetPos(quarter * 3, 0)
@@ -49,7 +59,12 @@ function PANEL:rebuild()
   self.button_never:SetText('')
   self.button_never.perm_value = PERM_NEVER
   self.button_never.Paint = function(btn, w, h) theme.call('PaintPermissionButton', self, btn, w, h) end
-  self.button_never.DoClick = function(btn) self:select_button(btn) end
+  self.button_never.DoClick = function(btn)
+    if btn.is_selected then return end
+
+    surface.PlaySound('buttons/button10.wav')
+    self:select_button(btn)
+  end
 end
 
 function PANEL:select_button(button)
@@ -97,7 +112,7 @@ end
 
 function PANEL:set_value(perm)
   if perm == PERM_ALLOW then
-    self:select_button(self.button_allow)
+    self:select_button(self.button)
   elseif perm == PERM_NEVER then
     self:select_button(self.button_never)
   else
@@ -172,18 +187,60 @@ function PANEL:rebuild()
 
     collapsible_category:SetContents(list)
 
+    if table.count(perms) > 1 then
+      local panel = vgui.create('fl_base_panel')
+
+      local category_buttons = {
+        t'admin.allow_all',
+        t'admin.no_all',
+        t'admin.never_all'
+      }
+
+      local quarter = width / 4
+
+      for k, v in pairs(category_buttons) do
+        local button = vgui.create('fl_button', panel)
+        button:SetSize(quarter * 0.9, 20)
+        button:SetPos(quarter * k, 2)
+        button:SetFont(theme.get_font('text_small'))
+        button:set_text(v)
+        button:set_centered(true)
+        button.DoClick = function(btn)
+          local can_click = false
+
+          for k1, v1 in pairs(perms) do
+            if self.permissions[v1.id]:get_value() != k - 1 then
+              can_click = true
+
+              break
+            end
+          end
+
+          if !can_click then return end
+
+          surface.PlaySound('buttons/button4.wav')
+
+          for k1, v1 in pairs(perms) do
+            self.permissions[v1.id]:set_value(k - 1)
+          end
+        end
+      end
+
+      list:Add(panel)
+    end
+
     local cur_y = 0
 
     for k, v in SortedPairs(perms) do
-      local btn = vgui.Create('fl_permission', self)
-      btn:SetSize(width, 20)
-      btn:set_permission(v)
-      btn:set_value(PERM_NO)
-      btn:set_player(self:get_player())
+      local button = vgui.Create('fl_permission', self)
+      button:SetSize(width, 20)
+      button:set_permission(v)
+      button:set_value(PERM_NO)
+      button:set_player(self:get_player())
 
-      list:Add(btn)
+      list:Add(button)
 
-      self.permissions[v.id] = btn
+      self.permissions[v.id] = button
     end
   end
 end

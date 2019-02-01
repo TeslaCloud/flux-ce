@@ -4,6 +4,9 @@ en:
     players: Players
     avatar_tooltip: Left click - Open profile, Right click - Copy SteamID
     role: Role
+    allow_all: Allow all
+    no_all: "'No' for all"
+    never_all: Forbid all
     selector:
       title: Changing player's role
       message: Select a new role.
