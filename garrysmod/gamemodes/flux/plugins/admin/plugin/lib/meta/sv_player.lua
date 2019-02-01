@@ -64,6 +64,53 @@ function player_meta:set_permission(perm_id, value)
   self:set_permissions(perm_table)
 end
 
+function player_meta:set_temp_permissions(perm_table)
+  self:set_nv('temp_permissions', perm_table)
+end
+
+function player_meta:set_temp_permission(perm_id, value, duration)
+  local create = true
+
+  if self.record.temp_permissions then
+    for k, v in pairs(self.record.temp_permissions) do
+      if v.permission_id == perm_id then
+        create = false
+
+        if v.object == value then
+          v.expires = to_datetime(time_from_timestamp(v.expires) + duration)
+          v:save()
+        else
+          v.object = value
+          v.expires = to_datetime(os.time() + duration)
+          v:save()
+        end
+
+        break
+      end
+    end
+
+    if create then
+      local temp_perm = Temp_permission.new()
+        temp_perm.permission_id = perm_id
+        temp_perm.object = value
+        temp_perm.expires = to_datetime(os.time() + duration)
+        temp_perm.user_id = self.record.id
+      temp_perm:save()
+
+      self.record.temp_permissions[temp_perm.id] = temp_perm
+    end
+  end
+
+  local perm_table = self:get_temp_permissions()
+
+  perm_table[perm_id] = {
+    value = value,
+    expires = os.time() + duration
+  }
+
+  self:set_temp_permissions(perm_table)
+end
+
 function player_meta:run_command(cmd)
   return fl.command:interpret(self, cmd)
 end

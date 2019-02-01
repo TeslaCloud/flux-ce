@@ -56,6 +56,19 @@ function Bolt:PlayerRestored(player, record)
     player:set_permissions(perm_table)
   end
 
+  if record.temp_permissions then
+    local perm_table = {}
+
+    for k, v in pairs(record.temp_permissions) do
+      perm_table[v.permission_id] = {
+        value = v.object,
+        expires = time_from_timestamp(v.expires)
+      }
+    end
+
+    player:set_permissions(perm_table)
+  end
+
   Log:notify(player:name()..' ('..player:GetUserGroup()..') has connected to the server.', { action = 'player_events' })
 end
 

@@ -91,6 +91,26 @@ function Bolt:can(player, action, object)
     return true
   end
 
+  local temp_perm = player:get_temp_permission(action)
+
+  if temp_perm then
+    if time_from_timestamp(temp_perm.expires) > os.time() then
+      local value = temp_perm.value
+
+      if value == PERM_ALLOW then
+        return true
+      elseif value == PERM_NEVER then
+        return false
+      end
+    else
+      if CLIENT then
+        cable.send('fl_delete_temp_permission', player, action)
+      else
+        self:delete_temp_permission(player, action)
+      end
+    end
+  end
+
   local perm = player:get_permission(action)
 
   if perm == PERM_ALLOW then

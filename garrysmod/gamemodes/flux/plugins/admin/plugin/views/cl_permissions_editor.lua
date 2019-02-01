@@ -27,17 +27,43 @@ function PANEL:rebuild()
     self.title:SetTooltip(permission.description)
   end
 
-  self.button = vgui.Create('DButton', self.container)
-  self.button:SetPos(quarter, 0)
-  self.button:SetSize(quarter * 0.9, height)
-  self.button:SetText('')
-  self.button.perm_value = PERM_ALLOW
-  self.button.Paint = function(btn, w, h) theme.call('PaintPermissionButton', self, btn, w, h) end
-  self.button.DoClick = function(btn)
+  self.button_allow = vgui.Create('DButton', self.container)
+  self.button_allow:SetPos(quarter, 0)
+  self.button_allow:SetSize(quarter * 0.9, height)
+  self.button_allow:SetText('')
+  self.button_allow.perm_value = PERM_ALLOW
+  self.button_allow.Paint = function(btn, w, h) theme.call('PaintPermissionButton', self, btn, w, h) end
+  self.button_allow.DoClick = function(btn)
     if btn.is_selected then return end
 
     surface.PlaySound('buttons/button14.wav')
     self:select_button(btn)
+  end
+  self.button_allow.DoRightClick = function(btn)
+    surface.PlaySound('buttons/button14.wav')
+
+    Derma_StringRequest(t'admin.temp_permission.title',
+      t'admin.temp_permission.message',
+      '',
+      function(text)
+        local duration = Bolt:interpret_ban_time(text)
+        local perm_id = self:get_permission().id
+        local perm_value = btn.perm_value
+
+        if text == '' then
+          cable.send('fl_delete_temp_permission', self:get_player(), perm_id)
+
+          self:set_temporary(perm_value, 0)
+
+          return
+        end
+
+        if duration then
+          cable.send('fl_temp_permission', self:get_player(), perm_id, perm_value, duration)
+
+          self:set_temporary(perm_value, os.time() + duration)
+        end
+      end)
   end
 
   self.button_no = vgui.Create('DButton', self.container)
@@ -52,6 +78,32 @@ function PANEL:rebuild()
     surface.PlaySound('ui/buttonclick.wav')
     self:select_button(btn)
   end
+  self.button_no.DoRightClick = function(btn)
+    surface.PlaySound('buttons/button14.wav')
+
+    Derma_StringRequest(t'admin.temp_permission.title',
+      t'admin.temp_permission.message',
+      '',
+      function(text)
+        local duration = Bolt:interpret_ban_time(text)
+        local perm_id = self:get_permission().id
+        local perm_value = btn.perm_value
+
+        if text == '' then
+          cable.send('fl_delete_temp_permission', self:get_player(), perm_id)
+
+          self:set_temporary(perm_value, 0)
+
+          return
+        end
+
+        if duration then
+          cable.send('fl_temp_permission', self:get_player(), perm_id, perm_value, duration)
+
+          self:set_temporary(perm_value, os.time() + duration)
+        end
+      end)
+  end
 
   self.button_never = vgui.Create('DButton', self.container)
   self.button_never:SetPos(quarter * 3, 0)
@@ -64,6 +116,32 @@ function PANEL:rebuild()
 
     surface.PlaySound('buttons/button10.wav')
     self:select_button(btn)
+  end
+  self.button_never.DoRightClick = function(btn)
+    surface.PlaySound('buttons/button14.wav')
+
+    Derma_StringRequest(t'admin.temp_permission.title',
+      t'admin.temp_permission.message',
+      '',
+      function(text)
+        local duration = Bolt:interpret_ban_time(text)
+        local perm_id = self:get_permission().id
+        local perm_value = btn.perm_value
+
+        if text == '' then
+          cable.send('fl_delete_temp_permission', self:get_player(), perm_id)
+
+          self:set_temporary(perm_value, 0)
+
+          return
+        end
+
+        if duration then
+          cable.send('fl_temp_permission', self:get_player(), perm_id, perm_value, duration)
+
+          self:set_temporary(perm_value, os.time() + duration)
+        end
+      end)
   end
 end
 
@@ -110,14 +188,32 @@ function PANEL:get_value()
   return self.permission_value
 end
 
-function PANEL:set_value(perm)
+function PANEL:get_button(perm)
   if perm == PERM_ALLOW then
-    self:select_button(self.button)
+    return self.button_allow
   elseif perm == PERM_NEVER then
-    self:select_button(self.button_never)
+    return self.button_never
   else
-    self:select_button(self.button_no)
+    return self.button_no
   end
+end
+
+function PANEL:set_value(perm)
+  self:select_button(self:get_button(perm))
+end
+
+function PANEL:set_temporary(perm, expires)
+  local button = self:get_button(perm)
+  button.is_temp = expires != 0 and true or nil
+
+  button:SetTooltip(expires != 0 and t'admin.expires'..' '..string.nice_time(expires - os.time()) or false)
+
+  if IsValid(self.prev_temp) and self.prev_temp != button then
+    self.prev_temp.is_temp = nil
+    self.prev_temp:SetTooltip(false)
+  end
+
+  self.prev_temp = button
 end
 
 vgui.Register('fl_permission', PANEL, 'fl_base_panel')
@@ -146,9 +242,17 @@ function PANEL:get_permissions()
   return perm_list
 end
 
-function PANEL:set_permissions(perm_list)
+function PANEL:set_permissions(perm_list, temp_perm_list)
   for k, v in pairs(perm_list) do
     self.permissions[k]:set_value(tonumber(v))
+  end
+
+  if temp_perm_list then
+    for k, v in pairs(temp_perm_list) do
+      if v.expires > os.time() then
+        self.permissions[k]:set_temporary(tonumber(v.value), v.expires)
+      end
+    end
   end
 end
 
@@ -157,7 +261,7 @@ function PANEL:set_player(player)
 
   self:rebuild()
 
-  self:set_permissions(player:get_permissions())
+  self:set_permissions(player:get_permissions(), player:get_temp_permissions())
 end
 
 function PANEL:get_player()

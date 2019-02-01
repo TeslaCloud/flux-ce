@@ -7,6 +7,10 @@ en:
     allow_all: Allow all
     no_all: "'No' for all"
     never_all: Forbid all
+    expires: Expires in
+    temp_permission:
+      title: Give temporary permission
+      message: Specify permission duration. If permission already given, this time will be added to it. Leave empty to take temporary permission.
     selector:
       title: Changing player's role
       message: Select a new role.

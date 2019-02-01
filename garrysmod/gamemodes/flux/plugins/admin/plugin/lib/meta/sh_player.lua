@@ -28,7 +28,15 @@ function player_meta:get_permissions()
 end
 
 function player_meta:get_permission(perm)
-  return self:get_nv('permissions', {})[perm] or PERM_NO
+  return self:get_permissions()[perm] or PERM_NO
+end
+
+function player_meta:get_temp_permissions()
+  return self:get_nv('temp_permissions', {})
+end
+
+function player_meta:get_temp_permission(perm)
+  return self:get_temp_permissions()[perm]
 end
 
 function player_meta:is_assistant()

@@ -312,6 +312,10 @@ function THEME:PaintPermissionButton(perm_panel, btn, w, h)
   if btn.is_selected then
     draw.RoundedBox(0, sqr_size * 0.5 + 2, sqr_size * 0.5 + 2, sqr_size - 4, sqr_size - 4, Color(0, 0, 0))
   end
+
+  if btn.is_temp then
+    fl.fa:draw('fa-clock-o', w - h - 2, 2, h - 4, Color(255, 255, 255))
+  end
 end
 
 function THEME:PaintScoreboard(panel, width, height)
