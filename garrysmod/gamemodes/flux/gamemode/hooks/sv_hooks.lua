@@ -425,6 +425,12 @@ end
 function GM:ShowHelp(player)
 end
 
+function GM:ServerRestart()
+  for k, v in ipairs(player.all()) do
+    v:save_player()
+  end
+end
+
 -- Awful awful awful code, but it's kinda necessary in some rare cases.
 -- Avoid using PlayerThink whenever possible though.
 do
