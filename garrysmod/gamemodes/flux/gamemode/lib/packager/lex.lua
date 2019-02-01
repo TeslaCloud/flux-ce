@@ -202,8 +202,9 @@ function Packager.Lexer:tokenize(input)
       line = line + 1
       next()
       return true
-    elseif current == ' ' or current == '\t' or
-        current == '\v' or current == '\f' then
+    elseif current == ' ' or current == '\t'
+        or current == '\v' or current == '\f'
+        or current == ';' then
         next()
         return true
     elseif current == '-' then
