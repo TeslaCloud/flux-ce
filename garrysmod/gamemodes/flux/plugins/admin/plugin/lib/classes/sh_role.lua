@@ -7,12 +7,12 @@ Role.icon = 'icon16/user.png'
 Role.immunity = 0
 Role.protected = false
 Role.base = nil
-Role.permissions = {} -- permissions table isn't kept in ActiveRecord.
 
 function Role:init(id)
   if !id then return end
 
   self.role_id = id:to_id()
+  self.permissions = {}
 end
 
 function Role:allow(action, object, callback)
