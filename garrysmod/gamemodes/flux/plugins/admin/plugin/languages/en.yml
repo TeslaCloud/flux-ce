@@ -17,7 +17,8 @@ en:
       roles: Roles
   categories:
     administration: Administration
-    flags: Flags
+    tools: Tools
+    spawn: Spawn
     general: General
     misc: Misc
     server_management: Server management

@@ -333,21 +333,20 @@ do
 end
 
 do
-  -- Flags
-  Bolt:register_permission('physgun', 'Access Physgun', 'Grants access to the physics gun.', 'categories.flags')
-  Bolt:register_permission('toolgun', 'Access Tool Gun', 'Grants access to the tool gun.', 'categories.flags')
-  Bolt:register_permission('spawn_props', 'Spawn Props', 'Grants access to spawn props.', 'categories.flags')
-  Bolt:register_permission('spawn_chairs', 'Spawn Chairs', 'Grants access to spawn chairs.', 'categories.flags')
-  Bolt:register_permission('spawn_vehicles', 'Spawn Vehicles', 'Grants access to spawn vehicles.', 'categories.flags')
-  Bolt:register_permission('spawn_entities', 'Spawn All Entities', 'Grants access to spawn any entity.', 'categories.flags')
-  Bolt:register_permission('spawn_npcs', 'Spawn NPCs', 'Grants access to spawn NPCs.', 'categories.flags')
-  Bolt:register_permission('spawn_ragdolls', 'Spawn Ragdolls', 'Grants access to spawn ragdolls.', 'categories.flags')
-  Bolt:register_permission('spawn_sweps', 'Spawn SWEPs', 'Grants access to spawn scripted weapons.', 'categories.flags')
-  Bolt:register_permission('physgun_freeze', 'Freeze Protected Entities', 'Grants access to freeze protected entities.', 'categories.flags')
-  Bolt:register_permission('physgun_pickup', 'Unlimited Physgun', 'Grants access to pick up any entity with the physics gun.', 'categories.flags')
-  Bolt:register_permission('voice', 'Voice chat access', 'Grants access to voice chat.', 'categories.flags')
+  Bolt:register_permission('physgun', 'Access Physgun', 'Grants access to the physics gun.', 'categories.tools')
+  Bolt:register_permission('toolgun', 'Access Tool Gun', 'Grants access to the tool gun.', 'categories.tools')
+  Bolt:register_permission('physgun_freeze', 'Freeze Protected Entities', 'Grants access to freeze protected entities.', 'categories.tools')
+  Bolt:register_permission('physgun_pickup', 'Unlimited Physgun', 'Grants access to pick up any entity with the physics gun.', 'categories.tools')
 
-  -- General permissions
+  Bolt:register_permission('spawn_props', 'Spawn Props', 'Grants access to spawn props.', 'categories.spawn')
+  Bolt:register_permission('spawn_chairs', 'Spawn Chairs', 'Grants access to spawn chairs.', 'categories.spawn')
+  Bolt:register_permission('spawn_vehicles', 'Spawn Vehicles', 'Grants access to spawn vehicles.', 'categories.spawn')
+  Bolt:register_permission('spawn_entities', 'Spawn All Entities', 'Grants access to spawn any entity.', 'categories.spawn')
+  Bolt:register_permission('spawn_npcs', 'Spawn NPCs', 'Grants access to spawn NPCs.', 'categories.spawn')
+  Bolt:register_permission('spawn_ragdolls', 'Spawn Ragdolls', 'Grants access to spawn ragdolls.', 'categories.spawn')
+  Bolt:register_permission('spawn_sweps', 'Spawn SWEPs', 'Grants access to spawn scripted weapons.', 'categories.spawn')
+
+  Bolt:register_permission('voice', 'Voice chat access', 'Grants access to voice chat.', 'categories.general')
   Bolt:register_permission('context_menu', 'Access Context Menu', 'Grants access to the context menu.', 'categories.general')
 end
 

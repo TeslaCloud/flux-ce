@@ -17,7 +17,8 @@ ru:
       roles: Роли
   categories:
     administration: Администрирование
-    flags: Флаги
+    tools: Инструменты
+    spawn: Спавн
     general: Основное
     misc: Разное
     server_management: Управление сервером
