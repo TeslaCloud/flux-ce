@@ -15,7 +15,7 @@ cable.receive('fl_door_menu', function(entity, can_lock, conditions)
     end)
   end
 
-  if menu:ChildCount < 1 then return end
+  if menu:ChildCount() < 1 then return end
 
   menu:Open()
   menu:Center()
