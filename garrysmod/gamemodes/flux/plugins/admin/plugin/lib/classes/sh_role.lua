@@ -125,6 +125,9 @@ function Role:register()
         self:allow_anything(action, object)
       end
       self:define_permissions()
+
+      hook.run('OnDefinePermissions', self)
+
     can, cannot, allow_anything = old_can, old_cannot, old_anything
   end
 

@@ -35,6 +35,9 @@ function Bolt:OnCommandCreated(id, data)
   self:permission_from_command(data)
 end
 
+function Bolt:OnDefinePermissions(role)
+end
+
 function Bolt:OnPluginsLoaded()
   if Conditions then
     Conditions:register_condition('bolt_role', {
