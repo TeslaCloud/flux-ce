@@ -8,10 +8,14 @@ cable.receive('fl_door_menu', function(entity, can_lock, conditions)
     end)
   end
 
-  menu:AddOption('Settings', function()
-    local door_menu = vgui.create('fl_door_menu')
-    door_menu:set_door(entity, conditions)
-  end)
+  if can('manage_doors') then
+    menu:AddOption('Settings', function()
+      local door_menu = vgui.create('fl_door_menu')
+      door_menu:set_door(entity, conditions)
+    end)
+  end
+
+  if menu:ChildCount < 1 then return end
 
   menu:Open()
   menu:Center()
