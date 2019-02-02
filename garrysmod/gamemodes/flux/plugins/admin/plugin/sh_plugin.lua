@@ -39,33 +39,36 @@ function Bolt:OnDefinePermissions(role)
 end
 
 function Bolt:OnPluginsLoaded()
-  if Conditions then
-    Conditions:register_condition('bolt_role', {
-      name = 'conditions.role.name',
-      text = 'conditions.role.text',
-      get_args = function(panel, data)
-        local operator = util.operator_to_symbol(panel.data.operator)
-        local parameter = panel.data.role
+  hook.run('RegisterPermissions')
+end
 
-        return { operator, parameter }
-      end,
-      icon = 'icon16/group.png',
-      check = function(player, data)
-        if !data.operator or !data.role then return false end
+function Bolt:RegisterConditions()
+  Conditions:register_condition('bolt_role', {
+    name = 'conditions.role.name',
+    text = 'conditions.role.text',
+    get_args = function(panel, data)
+      local operator = util.operator_to_symbol(panel.data.operator)
+      local parameter = panel.data.role
 
-        return util.process_operator(data.operator, player:get_role(), data.role)
-      end,
-      set_parameters = function(id, data, panel, menu, parent)
-        parent:create_selector(data.name, 'conditions.role.message', 'conditions.roles', self:get_roles(), 
-        function(selector, group)
-          selector:add_choice(t(group.name), function()
-            panel.data.role = group.id
-      
-            panel.update()
-          end)
+      return { operator, parameter }
+    end,
+    icon = 'icon16/group.png',
+    check = function(player, data)
+      if !data.operator or !data.role then return false end
+
+      return util.process_operator(data.operator, player:get_role(), data.role)
+    end,
+    set_parameters = function(id, data, panel, menu, parent)
+      parent:create_selector(data.name, 'conditions.role.message', 'conditions.roles', self:get_roles(), 
+      function(selector, group)
+        selector:add_choice(t(group.name), function()
+          panel.data.role = group.id
+    
+          panel.update()
         end)
-      end,
-      set_operator = 'equal'
-    })
-  end
+      end)
+    end,
+    set_operator = 'equal'
+  })
+end
 end

@@ -13,3 +13,7 @@ end
 
 util.include('sh_config.lua')
 util.include('sv_plugin.lua')
+
+function Conditions:OnPluginsLoaded()
+  hook.run('RegisterConditions')
+end
