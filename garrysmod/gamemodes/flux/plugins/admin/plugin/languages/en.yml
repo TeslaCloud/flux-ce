@@ -21,6 +21,7 @@ en:
     spawn: Spawn
     general: General
     misc: Misc
+    level_design: Level design
     server_management: Server management
     player_management: Player management
   err:

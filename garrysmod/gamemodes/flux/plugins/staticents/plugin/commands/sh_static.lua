@@ -1,7 +1,7 @@
 local COMMAND = Command.new('static')
 COMMAND.name = 'Static'
 COMMAND.description = t'static.description'
-COMMAND.category = 'categories.misc'
+COMMAND.category = 'categories.level_design'
 COMMAND.aliases = { 'staticadd', 'staticpropadd' }
 
 function COMMAND:on_run(player)

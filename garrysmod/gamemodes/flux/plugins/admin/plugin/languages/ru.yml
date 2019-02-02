@@ -21,6 +21,7 @@ ru:
     spawn: Спавн
     general: Основное
     misc: Разное
+    level_design: Дизайн уровней
     server_management: Управление сервером
     player_management: Управление игроками
   err:
