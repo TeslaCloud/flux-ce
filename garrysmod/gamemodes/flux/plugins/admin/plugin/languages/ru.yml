@@ -20,7 +20,7 @@ ru:
     flags: Флаги
     general: Основное
     misc: Разное
-    sever_management: Управление сервером
+    server_management: Управление сервером
     player_management: Управление игроками
   err:
     group_not_valid: "'{1}' не является группой пользователя!"

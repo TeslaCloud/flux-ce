@@ -20,7 +20,7 @@ en:
     flags: Flags
     general: General
     misc: Misc
-    sever_management: Server management
+    server_management: Server management
     player_management: Player management
   err:
     group_not_valid: "'{1}' is not a valid user group!"
