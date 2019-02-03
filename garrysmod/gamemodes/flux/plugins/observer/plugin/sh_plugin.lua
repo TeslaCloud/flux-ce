@@ -6,7 +6,7 @@ util.include('sv_hooks.lua')
 if SERVER then
   config.set('observer_reset', false)
 else
-  config.add_to_menu('general', 'observer_reset', 'Observer Reset', "Whether or not should player's position be restored when they leave observer mode?", 'boolean')
+  config.add_to_menu('general', 'observer_reset', 'config.general.observer_reset.name', 'config.general.observer_reset.desc', 'boolean')
 end
 
 function Bolt:RegisterPermissions()
