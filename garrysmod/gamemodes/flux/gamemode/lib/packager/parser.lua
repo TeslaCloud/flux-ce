@@ -1,5 +1,27 @@
 include 'lex.lua'
 
+LITERAL_TOKENS    = {
+  [TK_name]       = true,
+  [TK_number]     = true,
+  [TK_string]     = true,
+  [TK_nil]        = true,
+  [TK_false]      = true,
+  [TK_true]       = true
+}
+
+ASSIGNMENT_TOKENS = {
+  [string.byte('=')]           = true,
+  [TK_add_assign] = true,
+  [TK_sub_assign] = true,
+  [TK_mul_assign] = true,
+  [TK_div_assign] = true,
+  [TK_or_assign]  = true,
+  [TK_and_assign] = true,
+  [TK_con_assign] = true
+}
+
+local indent_level = 0
+
 class 'ASTBase'
 
 function ASTBase:inspect()
@@ -53,13 +75,17 @@ end
 function ASTChunk:inspect()
   local str = '(begin '
 
+  indent_level = indent_level + 1
+
   if #self.chunks > 0 then
     for k, v in ipairs(self.chunks) do
-      str = str..'\n  '..v:inspect()
+      str = str..'\n'..string.rep('  ', indent_level)..v:inspect()
     end
   end
 
-  return str..')'
+  indent_level = indent_level - 1
+
+  return str..'\n'..string.rep('  ', indent_level)..')'
 end
 
 class 'ASTNode' extends 'ASTBase'
@@ -94,6 +120,30 @@ function ASTField:inspect()
   return str
 end
 
+class 'ASTLiteral' extends 'ASTBase'
+ASTLiteral.what = nil
+
+function ASTLiteral:init(what)
+  self.what = what
+  return self
+end
+
+local lit_to_prefix = {
+  [TK_name]       = 'var',
+  [TK_number]     = 'number',
+  [TK_string]     = 'string',
+  [TK_false]      = 'bool',
+  [TK_true]       = 'bool'
+}
+
+function ASTLiteral:inspect()
+  if self.what.tk != TK_nil then
+    return tostring(lit_to_prefix[self.what.tk])..'('..tostring(self.what and self.what.val)..')'
+  else
+    return tostring(self.what and self.what.val)
+  end
+end
+
 class 'ASTFuncProto' extends 'ASTBase'
 ASTFuncProto.name = nil
 ASTFuncProto.args = nil
@@ -111,6 +161,20 @@ ASTCondition.body = nil
 class 'ASTCall' extends 'ASTBase'
 ASTCall.name = nil
 ASTCall.args = nil
+
+function ASTCall:inspect()
+  local str = '(call ('..tostring(self.name:inspect())..' '
+
+  for k, v in ipairs(self.args) do
+    str = str..v:inspect()
+
+    if k < #self.args then
+      str = str..' '
+    end
+  end
+  
+  return str..'))'
+end
 
 local tree_openers = {
   [TK_if] = true, [TK_while] = true, [TK_unless] = true,
@@ -211,10 +275,60 @@ end
 function Packager.Parser:parse_call_assign()
   if self.current.tk == TK_name then
     local name = self:expr_field()
+
+    -- call with arguments
+    if LITERAL_TOKENS[self.current.tk] or self.current.tk == string.byte('(') then
+      return self:parse_call(name)
+    elseif ASSIGNMENT_TOKENS[self.current.tk] then -- assignment
+      return self:parse_assignment(name)
+    else
+      error('unexpected "'..self.current.val..'" on line '..self.current.line)
+    end
   else
     error('unexpected "'..self.current.val..'" on line '..self.current.line)
   end
 
+  return
+end
+
+function Packager.Parser:parse_call(name)
+  local call = ASTCall.new()
+  call.name = name
+  call.args = {}
+
+  if self.current.tk == string.byte('(') then
+    self:next() -- eat '('
+  end
+
+  while LITERAL_TOKENS[self.current.tk] or self.current.tk == string.byte(')')
+     or self.current.tk == string.byte(',') do
+    local tk = self.current.tk
+
+    if tk == string.byte(',') then
+      tk = self:next().tk
+    end
+
+    if tk != TK_name then
+      table.insert(call.args, ASTLiteral.new(self.current))
+    else
+      if self:peek(1) == string.byte('(') then
+        table.insert(call.args, self:parse_call())
+      else
+        table.insert(call.args, ASTLiteral.new(self.current))
+      end
+    end
+
+    self:next()
+
+    if self.current.tk != string.byte(',') then break end
+  end
+
+  if self.current.tk == string.byte(')') then self:next() end
+
+  return call
+end
+
+function Packager.Parser:parse_assignment(name)
   return
 end
 
@@ -268,26 +382,28 @@ end
 
 function Packager.Parser:expr_field()
   local field = ASTField.new()
+  local expecting_name = true
 
   while self.current and (self.current.tk == TK_name or self.current.tk == string.byte('.') or self.current.tk == string.byte(':')) do
-    if self.current.tk == TK_name then
+    if expecting_name and self.current.tk == TK_name then
       table.insert(field.fields, self.current)
+      self:next() -- eat name
+      expecting_name = false
     elseif self.current.tk == string.byte('.') then
       self:expect(TK_name, 1)
-      self:next()
+      self:next() -- eat '.'
       table.insert(field.fields, self.current)
+      self:next() -- eat name
     elseif self.current.tk == string.byte(':') then
       self:expect(TK_name, 1)
-      self:next()
+      self:next() -- eat ':'
       table.insert(field.fields, self.current)
       field.call = true
-      self:next()
+      self:next() -- eat name
       break
     else
       break
     end
-  
-    self:next()
   end
 
   return field
@@ -351,10 +467,12 @@ function Packager.Parser:parse(tokens)
 end
 
 local parsed = Packager.Parser:parse([[
-  func library.test:test(a, b)
+  func hello.world(a, b)
   end
 
   func foo
+    print "Hello I'm a shitty parser!"
+    print true, false, nil
   end
 ]])
 
