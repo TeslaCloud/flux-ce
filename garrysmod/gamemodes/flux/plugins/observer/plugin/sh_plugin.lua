@@ -10,5 +10,5 @@ else
 end
 
 function Bolt:RegisterPermissions()
-  Bolt:register_permission('noclip', 'Noclip', 'Lets the player use observer mode / noclip.', 'categories.general')
+  Bolt:register_permission('noclip', 'Noclip', 'Lets the player use observer mode / noclip.', 'categories.general', 'moderator')
 end

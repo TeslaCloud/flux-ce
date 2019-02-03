@@ -2,6 +2,7 @@
 COMMAND.name = 'CharSetModel'
 COMMAND.description = t'char_set_model.description'
 COMMAND.syntax = t'char_set_model.syntax'
+COMMAND.permission = 'assistant'
 COMMAND.category = 'categories.character_management'
 COMMAND.arguments = 2
 COMMAND.player_arg = 1

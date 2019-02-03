@@ -2,6 +2,7 @@ local COMMAND = Command.new('forcefall')
 COMMAND.name = 'ForceFall'
 COMMAND.description = t'force_fall.description'
 COMMAND.syntax = t'force_fall.syntax'
+COMMAND.permission = 'assistant'
 COMMAND.category = 'categories.roleplay'
 COMMAND.arguments = 1
 COMMAND.player_arg = 1

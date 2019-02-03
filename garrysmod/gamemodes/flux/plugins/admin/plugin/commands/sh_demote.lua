@@ -2,6 +2,7 @@ local COMMAND = Command.new('demote')
 COMMAND.name = 'Demote'
 COMMAND.description = t'demote.description'
 COMMAND.syntax = t'demote.syntax'
+COMMAND.permission = 'administrator'
 COMMAND.category = 'categories.player_management'
 COMMAND.arguments = 1
 COMMAND.immunity = true

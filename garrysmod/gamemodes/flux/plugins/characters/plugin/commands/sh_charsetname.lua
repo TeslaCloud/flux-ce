@@ -2,6 +2,7 @@
 COMMAND.name = 'CharSetName'
 COMMAND.description = t'char_set_name.description'
 COMMAND.syntax = t'char_set_name.syntax'
+COMMAND.permission = 'assistant'
 COMMAND.category = 'categories.character_management'
 COMMAND.arguments = 2
 COMMAND.player_arg = 1

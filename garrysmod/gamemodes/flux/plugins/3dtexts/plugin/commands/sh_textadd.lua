@@ -2,7 +2,8 @@ local COMMAND = Command.new('textadd')
 COMMAND.name = 'TextAdd'
 COMMAND.description = t'3d_text.text_add_desc'
 COMMAND.syntax = t'3d_text.text_add_syntax'
-COMMAND.category = 'misc'
+COMMAND.permission = 'assistant'
+COMMAND.category = 'categories.level_design'
 COMMAND.arguments = 1
 
 function COMMAND:on_run(player, text, scale, style, color, extra_color)

@@ -1,6 +1,7 @@
 local COMMAND = Command.new('static')
 COMMAND.name = 'Static'
 COMMAND.description = t'static.description'
+COMMAND.permission = 'assistant'
 COMMAND.category = 'categories.level_design'
 COMMAND.aliases = { 'staticadd', 'staticpropadd' }
 

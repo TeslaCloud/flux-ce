@@ -20,5 +20,5 @@ util.include('sv_hooks.lua')
 util.include('sv_plugin.lua')
 
 function Doors:RegisterPermissions()
-  Bolt:register_permission('manage_doors', 'Doors settings access', 'Grants access to customize doors.', 'categories.level_design')
+  Bolt:register_permission('manage_doors', 'Doors settings access', 'Grants access to customize doors.', 'categories.level_design', 'assistant')
 end

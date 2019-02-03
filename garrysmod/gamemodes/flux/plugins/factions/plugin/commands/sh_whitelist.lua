@@ -3,6 +3,7 @@ local COMMAND = Command.new('whitelist')
 COMMAND.name = 'Whitelist'
 COMMAND.description = t'whitelist.description'
 COMMAND.syntax = t'whitelist.syntax'
+COMMAND.permission = 'moderator'
 COMMAND.category = 'categories.player_management'
 COMMAND.arguments = 2
 COMMAND.player_arg = 1
