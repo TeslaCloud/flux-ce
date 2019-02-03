@@ -1,5 +1,17 @@
 include 'lex.lua'
 
+TK_lparen         = string.byte('(')
+TK_rparen         = string.byte(')')
+TK_lbracket       = string.byte('[')
+TK_rbracket       = string.byte(']')
+TK_lbrace         = string.byte('{')
+TK_rbrace         = string.byte('}')
+TK_comma          = string.byte(',')
+TK_dot            = string.byte('.')
+TK_colon          = string.byte(':')
+TK_semicolon      = string.byte(';')
+TK_assign         = string.byte('=')
+
 LITERAL_TOKENS    = {
   [TK_name]       = true,
   [TK_number]     = true,
@@ -10,7 +22,7 @@ LITERAL_TOKENS    = {
 }
 
 ASSIGNMENT_TOKENS = {
-  [string.byte('=')]           = true,
+  [TK_assign]     = true,
   [TK_add_assign] = true,
   [TK_sub_assign] = true,
   [TK_mul_assign] = true,
@@ -20,161 +32,7 @@ ASSIGNMENT_TOKENS = {
   [TK_con_assign] = true
 }
 
-local indent_level = 0
-
-class 'ASTBase'
-
-function ASTBase:inspect()
-  local str = '('..self.class_name
-
-  if self.name then
-    str = str..'('..self.name:inspect()..') '
-  else
-    str = str..' '
-  end
-
-  if self.left then
-    str = str..'['..self.left:inspect()
-
-    if self.right then
-      str = str..self.right:inspect()
-    end
-
-    str = str..'] '
-  elseif self.args then
-    str = str..'['
-
-    for k, v in ipairs(self.args) do
-      str = str..v.val
-
-      if k != self.argc then
-        str = str..', '
-      end
-    end
-
-    str = str..'] '
-  end
-
-  if self.body then
-    str = str..self.body:inspect()
-  end
-
-  return str..')'
-end
-
-class 'ASTBody' extends 'ASTBase'
-ASTBody.body = nil
-
-class 'ASTChunk' extends 'ASTBase'
-ASTChunk.chunks = nil
-
-function ASTChunk:init()
-  self.chunks = {}
-end
-
-function ASTChunk:inspect()
-  local str = '(begin '
-
-  indent_level = indent_level + 1
-
-  if #self.chunks > 0 then
-    for k, v in ipairs(self.chunks) do
-      str = str..'\n'..string.rep('  ', indent_level)..v:inspect()
-    end
-  end
-
-  indent_level = indent_level - 1
-
-  return str..'\n'..string.rep('  ', indent_level)..')'
-end
-
-class 'ASTNode' extends 'ASTBase'
-ASTNode.op = nil
-ASTNode.left = nil
-ASTNode.right = nil
-
-class 'ASTField' extends 'ASTBase'
-ASTField.fields = nil
-ASTField.call = false -- false for . true for :
-
-function ASTField:init()
-  self.fields = {}
-end
-
-function ASTField:inspect()
-  local str = ''
-  local n_fields = #self.fields
-
-  for k, v in ipairs(self.fields) do
-    str = str..v.val
-
-    if k != n_fields then
-      if k == n_fields - 1 and self.call then
-        str = str..':'
-      else
-        str = str..'.'
-      end
-    end
-  end
-
-  return str
-end
-
-class 'ASTLiteral' extends 'ASTBase'
-ASTLiteral.what = nil
-
-function ASTLiteral:init(what)
-  self.what = what
-  return self
-end
-
-local lit_to_prefix = {
-  [TK_name]       = 'var',
-  [TK_number]     = 'number',
-  [TK_string]     = 'string',
-  [TK_false]      = 'bool',
-  [TK_true]       = 'bool'
-}
-
-function ASTLiteral:inspect()
-  if self.what.tk != TK_nil then
-    return tostring(lit_to_prefix[self.what.tk])..'('..tostring(self.what and self.what.val)..')'
-  else
-    return tostring(self.what and self.what.val)
-  end
-end
-
-class 'ASTFuncProto' extends 'ASTBase'
-ASTFuncProto.name = nil
-ASTFuncProto.args = nil
-ASTFuncProto.argc = 0
-ASTFuncProto.body = nil
-
-class 'ASTConditionTree' extends 'ASTBase'
-ASTConditionTree.body = nil
-
-class 'ASTCondition' extends 'ASTBase'
-ASTCondition.type = nil
-ASTCondition.cond = nil
-ASTCondition.body = nil
-
-class 'ASTCall' extends 'ASTBase'
-ASTCall.name = nil
-ASTCall.args = nil
-
-function ASTCall:inspect()
-  local str = '(call ('..tostring(self.name:inspect())..' '
-
-  for k, v in ipairs(self.args) do
-    str = str..v:inspect()
-
-    if k < #self.args then
-      str = str..' '
-    end
-  end
-  
-  return str..'))'
-end
+include 'parser_classes.lua'
 
 local tree_openers = {
   [TK_if] = true, [TK_while] = true, [TK_unless] = true,
@@ -228,17 +86,17 @@ function Packager.Parser:parse_function()
   func_proto.argc = 0
 
   -- Function has arguments!
-  if self.current.tk == string.byte('(') then
+  if self.current.tk == TK_lparen then
     self:next() -- eat '('
 
-    while self.current and (self.current.tk == TK_name or self.current.tk == string.byte(',') or self.current.tk == string.byte(')')) do
+    while self.current and (self.current.tk == TK_name or self.current.tk == TK_comma or self.current.tk == TK_rparen) do
       if self.current.tk == TK_name then
         table.insert(func_proto.args, self.current)
         func_proto.argc = func_proto.argc + 1
         self:next()
-      elseif self.current.tk == string.byte(',') then
+      elseif self.current.tk == TK_comma then
         self:next() continue
-      elseif self.current.tk == string.byte(')') then
+      elseif self.current.tk == TK_rparen then
         self:next() -- eat ')'
         break
       end
@@ -277,7 +135,7 @@ function Packager.Parser:parse_call_assign()
     local name = self:expr_field()
 
     -- call with arguments
-    if LITERAL_TOKENS[self.current.tk] or self.current.tk == string.byte('(') then
+    if LITERAL_TOKENS[self.current.tk] or self.current.tk == TK_lparen then
       return self:parse_call(name)
     elseif ASSIGNMENT_TOKENS[self.current.tk] then -- assignment
       return self:parse_assignment(name)
@@ -296,22 +154,22 @@ function Packager.Parser:parse_call(name)
   call.name = name
   call.args = {}
 
-  if self.current.tk == string.byte('(') then
+  if self.current.tk == TK_lparen then
     self:next() -- eat '('
   end
 
-  while LITERAL_TOKENS[self.current.tk] or self.current.tk == string.byte(')')
-     or self.current.tk == string.byte(',') do
+  while LITERAL_TOKENS[self.current.tk] or self.current.tk == TK_rparen
+     or self.current.tk == TK_comma do
     local tk = self.current.tk
 
-    if tk == string.byte(',') then
+    if tk == TK_comma then
       tk = self:next().tk
     end
 
     if tk != TK_name then
       table.insert(call.args, ASTLiteral.new(self.current))
     else
-      if self:peek(1) == string.byte('(') then
+      if self:peek(1) == TK_lparen then
         table.insert(call.args, self:parse_call())
       else
         table.insert(call.args, ASTLiteral.new(self.current))
@@ -320,10 +178,10 @@ function Packager.Parser:parse_call(name)
 
     self:next()
 
-    if self.current.tk != string.byte(',') then break end
+    if self.current.tk != TK_comma then break end
   end
 
-  if self.current.tk == string.byte(')') then self:next() end
+  if self.current.tk == TK_rparen then self:next() end
 
   return call
 end
@@ -384,17 +242,17 @@ function Packager.Parser:expr_field()
   local field = ASTField.new()
   local expecting_name = true
 
-  while self.current and (self.current.tk == TK_name or self.current.tk == string.byte('.') or self.current.tk == string.byte(':')) do
+  while self.current and (self.current.tk == TK_name or self.current.tk == TK_dot or self.current.tk == TK_colon) do
     if expecting_name and self.current.tk == TK_name then
       table.insert(field.fields, self.current)
       self:next() -- eat name
       expecting_name = false
-    elseif self.current.tk == string.byte('.') then
+    elseif self.current.tk == TK_dot then
       self:expect(TK_name, 1)
       self:next() -- eat '.'
       table.insert(field.fields, self.current)
       self:next() -- eat name
-    elseif self.current.tk == string.byte(':') then
+    elseif self.current.tk == TK_colon then
       self:expect(TK_name, 1)
       self:next() -- eat ':'
       table.insert(field.fields, self.current)
