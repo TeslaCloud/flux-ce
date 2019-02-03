@@ -1,9 +1,9 @@
 class 'ActiveRecord::Base'
 
-ActiveRecord.Base.query_map = a{}
-ActiveRecord.Base.table_name = ''
-ActiveRecord.Base.schema = nil
-ActiveRecord.Base.relations = {}
+ActiveRecord.Base.query_map   = a{}
+ActiveRecord.Base.table_name  = ''
+ActiveRecord.Base.schema      = nil
+ActiveRecord.Base.relations   = {}
 ActiveRecord.Base.validations = {}
 
 function ActiveRecord.Base:init()
@@ -457,6 +457,7 @@ function ActiveRecord.Base:belongs_to(target, one)
       target_class = target
     })
   end
+  return self
 end
 
 function ActiveRecord.Base:invalid(column, err_code)
@@ -474,4 +475,5 @@ function ActiveRecord.Base:validates(column, options)
     end
   end
   self.validations[column] = current_options
+  return self
 end
