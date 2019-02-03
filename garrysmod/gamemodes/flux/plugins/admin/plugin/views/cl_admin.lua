@@ -43,14 +43,22 @@ function PANEL:add_panel(id, title, permission, ...)
     arguments = {...}
   }
 
-  local button = self.sidebar:add_button(title, function(btn)
+  local button = vgui.create('fl_button')
+  button:SetWide(self.sidebar:GetWide())
+  button:SetDrawBackground(true)
+  button:SetFont(theme.get_font('text_normal'))
+  button:set_text(title)
+  button:set_text_autoposition(true)
+  button:SizeToContentsY()
+  button:set_centered(true)
+  button.DoClick = function(btn)
     if !self.cur_panel or self.cur_panel.id != id then
       self:open_panel(id)
     end
-  end)
-  button:SetFont(theme.get_font('text_normal'))
-  button:SizeToContentsY()
-  button:set_centered(true)
+  end
+
+  self.sidebar:add_panel(button)
+  self.sidebar:add_space(2)
 end
 
 function PANEL:remove_panel(id)
