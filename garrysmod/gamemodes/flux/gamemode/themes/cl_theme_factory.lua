@@ -273,6 +273,12 @@ function THEME:AdminPanelPaintOver(panel, width, height)
   DisableClipping(false)
 end
 
+function THEME:PaintConfigLine(panel, w, h)
+  if panel.order % 2 != 0 then
+    draw.RoundedBox(0, 0, 0, w, h, theme.get_color('background'):alpha(150))
+  end
+end
+
 function THEME:PaintPermissionButton(perm_panel, btn, w, h)
   local color = color_white
   local title = ''
