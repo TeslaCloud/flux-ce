@@ -32,6 +32,9 @@ ru:
     for: на
     and: и
   cant_now: Вы не можете сделать это сейчас!
+  chat:
+    aliases: Алиасы
+    no_commands_found: Команды не найдены.
   tab_menu:
     expand: Развернуть
     settings: Настройки

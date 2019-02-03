@@ -148,14 +148,14 @@ function PANEL:PaintOver(w, h)
 
             if #cmds == 1 then
               local small_font = theme.get_font('text_small')
-              local w2, h2 = draw.SimpleText(v.description, small_font, 16, 16 + h + 4, color_white)
+              local w2, h2 = draw.SimpleText(t(v.description), small_font, 16, 16 + h + 4, color_white)
               local aliases = '[-]'
 
               if v.aliases and #v.aliases > 0 then
                 aliases = table.concat(v.aliases or {}, ', ')
               end
 
-              draw.SimpleText('Aliases: ' + aliases, small_font, 16, 16 + h + h2 + 4, color_white)
+              draw.SimpleText(t'chat.aliases'..': ' + aliases, small_font, 16, 16 + h + h2 + 4, color_white)
             end
 
             last_y = last_y + h + 8
@@ -163,7 +163,7 @@ function PANEL:PaintOver(w, h)
             if k >= 10 then break end
           end
         else
-          draw.SimpleText('No commands found!', font, 16, 16, color)
+          draw.SimpleText(t'chat.no_commands_found', font, 16, 16, color)
         end
       end
     end
