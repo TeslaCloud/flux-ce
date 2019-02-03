@@ -287,7 +287,7 @@ function PANEL:rebuild()
     collapsible_category:SetLabel(t(category))
     collapsible_category:SetSize(width, 21)
 
-    local list = vgui.Create('DListLayout', list_layout)
+    local list = vgui.Create('DListLayout', self.list_layout)
 
     collapsible_category:SetContents(list)
 
