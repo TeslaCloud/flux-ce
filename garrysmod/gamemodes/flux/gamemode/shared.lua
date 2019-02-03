@@ -8,7 +8,7 @@ GM.Email         = 'support@teslacloud.net'
 GM.version       = '0.5.1-alpha'
 GM.version_num   = '0.5.1'
 GM.date          = '2/3/2019'
-GM.build         = '20180203'
+GM.build         = '20190203'
 GM.description   = 'A free roleplay gamemode framework.'
 GM.code_name     = 'Chocolate Milkshake'
 
