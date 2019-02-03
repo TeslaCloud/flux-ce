@@ -2,6 +2,7 @@ TOOL.Category = 'Flux'
 TOOL.Name = 'Picture Placer'
 TOOL.Command = nil
 TOOL.ConfigName = ''
+TOOL.permission = 'pictures'
 
 TOOL.ClientConVar['url'] = ''
 TOOL.ClientConVar['width'] = '512'

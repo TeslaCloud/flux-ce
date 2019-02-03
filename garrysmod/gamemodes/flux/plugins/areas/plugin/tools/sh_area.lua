@@ -2,6 +2,7 @@ TOOL.Category = 'Flux'
 TOOL.Name = 'Area Tool'
 TOOL.Command = nil
 TOOL.ConfigName = ''
+TOOL.permission = 'areas'
 
 TOOL.ClientConVar['mode'] = '1'
 

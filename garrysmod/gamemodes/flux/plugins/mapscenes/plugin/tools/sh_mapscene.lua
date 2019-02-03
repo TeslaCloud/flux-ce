@@ -2,6 +2,7 @@ TOOL.Category = 'Flux'
 TOOL.Name = 'Mapscene tool'
 TOOL.Command = nil
 TOOL.ConfigName = ''
+TOOL.permission = 'mapscenes'
 
 function TOOL:LeftClick(trace)
   if CLIENT then return true end
@@ -18,6 +19,8 @@ function TOOL:LeftClick(trace)
 end
 
 function TOOL.BuildCPanel(CPanel)
+  if !can('mapscenes') then return end
+
   local list = vgui.Create('DListView')
   list:SetSize(30, 90)
   list:AddColumn(t'mapscene.title')
@@ -33,6 +36,8 @@ function TOOL.BuildCPanel(CPanel)
   end
 
   list.OnRowRightClick = function(panel, line)
+    if !can('mapscenes') then return end
+
     local menu = DermaMenu()
     menu:AddOption('delete', function()
       cable.send('fl_mapscene_remove', line)

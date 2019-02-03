@@ -7,6 +7,10 @@ if !areas then
   util.include('lib/sh_areas.lua')
 end
 
+function Area:RegisterPermissions()
+  Bolt:register_permission('areas', 'Manage areas', 'Grants access to manage areas.', 'categories.level_design', 'moderator')
+end
+
 Area.tool_modes = {
   Add = function(list, data)
     local vars = data.ClientConVar or data.ConVars or data.ClientConVars or data.ConVar

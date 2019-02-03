@@ -2,6 +2,7 @@ TOOL.Category = 'Flux'
 TOOL.Name = 'Text Tool'
 TOOL.Command = nil
 TOOL.ConfigName = ''
+TOOL.permission = 'texts'
 
 TOOL.ClientConVar['text'] = 'Sample Text'
 TOOL.ClientConVar['style'] = '1'

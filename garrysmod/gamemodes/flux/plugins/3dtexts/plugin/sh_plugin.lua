@@ -5,6 +5,11 @@ SurfaceText.pictures = SurfaceText.pictures or {}
 
 util.include('cl_hooks.lua')
 
+function SurfaceText:RegisterPermissions()
+  Bolt:register_permission('texts', 'Place / delete texts', 'Grants access to place and delete texts.', 'categories.level_design', 'assistent')
+  Bolt:register_permission('pictures', 'Place / delete pictures', 'Grants access to place and delete pictures.', 'categories.level_design', 'assistent')
+end
+
 if SERVER then
   function SurfaceText:PlayerInitialized(player)
     cable.send(player, 'fl_surface_text_load', self.texts)

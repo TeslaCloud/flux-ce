@@ -2,6 +2,7 @@ TOOL.Category = 'Flux'
 TOOL.Name = 'Static Add/Remove'
 TOOL.Command = nil
 TOOL.ConfigName = ''
+TOOL.permission = 'static_tool'
 
 function TOOL:LeftClick(trace)
   if CLIENT then return true end
