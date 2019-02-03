@@ -81,7 +81,7 @@ if SERVER then
       end
     end
 
-    player.flHasSentConfig = true
+    player.fl_has_sent_config = true
   end
 else
   local menu_items = config.menu_items or {}
@@ -102,7 +102,7 @@ else
     id = id or 'other'
 
     menu_items[id] = {
-      category = {name = name or 'Other', description = description or ''},
+      category = { name = name or 'Other', description = description or '' },
       AddKey = function(key, name, description, data_type, data)
         config.add_to_menu(id, key, name, description, data_type, data)
       end,
