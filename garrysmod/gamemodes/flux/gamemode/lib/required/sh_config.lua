@@ -103,7 +103,7 @@ else
 
     menu_items[id] = {
       category = { name = name or 'Other', description = description or '' },
-      AddKey = function(key, name, description, data_type, data)
+      add_key = function(key, name, description, data_type, data)
         config.add_to_menu(id, key, name, description, data_type, data)
       end,
       add_slider = function(key, name, description, data)
