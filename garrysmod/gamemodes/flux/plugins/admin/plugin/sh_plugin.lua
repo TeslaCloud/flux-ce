@@ -78,8 +78,8 @@ function Bolt:RegisterConditions()
 end
 
 function Bolt:RegisterPermissions()
-  Bolt:register_permission('physgun', 'Access Physgun', 'Grants access to the physics gun.', 'categories.tools', 'assistant')
-  Bolt:register_permission('toolgun', 'Access Tool Gun', 'Grants access to the tool gun.', 'categories.tools', 'assistant')
+  Bolt:register_permission('physgun', 'Physgun', 'Grants access to the physics gun.', 'categories.tools', 'assistant')
+  Bolt:register_permission('toolgun', 'Tool Gun', 'Grants access to the tool gun.', 'categories.tools', 'assistant')
   Bolt:register_permission('physgun_freeze', 'Freeze Protected Entities', 'Grants access to freeze protected entities.', 'categories.tools', 'assistant')
   Bolt:register_permission('physgun_pickup', 'Unlimited Physgun', 'Grants access to pick up any entity with the physics gun.', 'categories.tools', 'moderator')
 
@@ -92,7 +92,7 @@ function Bolt:RegisterPermissions()
   Bolt:register_permission('spawn_sweps', 'Spawn SWEPs', 'Grants access to spawn scripted weapons.', 'categories.spawn', 'moderator')
 
   Bolt:register_permission('voice', 'Voice chat access', 'Grants access to voice chat.', 'categories.general')
-  Bolt:register_permission('context_menu', 'Access Context Menu', 'Grants access to the context menu.', 'categories.general', 'assistant')
+  Bolt:register_permission('context_menu', 'Context Menu', 'Grants access to the context menu.', 'categories.general', 'assistant')
 
   Bolt:register_permission('manage_permissions', 'Permission editor', 'Grants access to permission editor.', 'categories.player_management', 'administrator')
 end
