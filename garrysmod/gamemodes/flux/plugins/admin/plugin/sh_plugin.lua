@@ -93,4 +93,6 @@ function Bolt:RegisterPermissions()
 
   Bolt:register_permission('voice', 'Voice chat access', 'Grants access to voice chat.', 'categories.general')
   Bolt:register_permission('context_menu', 'Access Context Menu', 'Grants access to the context menu.', 'categories.general', 'assistant')
+
+  Bolt:register_permission('manage_permissions', 'Permission editor', 'Grants access to permission editor.', 'categories.player_management', 'administrator')
 end
