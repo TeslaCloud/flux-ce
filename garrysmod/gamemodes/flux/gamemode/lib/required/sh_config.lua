@@ -101,6 +101,8 @@ else
   function config.create_category(id, name, description)
     id = id or 'other'
 
+    if menu_items[id] then return menu_items[id] end
+
     menu_items[id] = {
       category = { name = name or 'Other', description = description or '' },
       add_key = function(key, name, description, data_type, data)
@@ -137,12 +139,14 @@ else
     menu_items[category] = menu_items[category] or {}
     menu_items[category].configs = menu_items[category].configs or {}
 
-    table.insert(menu_items[category].configs, {
+    if menu_items[category][key] then return end
+
+    menu_items[category].configs[key] = {
       name = name or key,
       description = description or 'This config has no description set.',
       type = data_type,
       data = data or {}
-    })
+    }
   end
 
   function config.get_menu_keys()
