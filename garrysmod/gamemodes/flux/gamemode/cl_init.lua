@@ -14,11 +14,6 @@ else
   MsgC(Color(0, 255, 100, 255), 'Initializing...\n')
 end
 
--- Gotta have screen scaling before everything else!
-if !set_screen_scale then
-  include 'flux/gamemode/lib/cl_scaling.lua'
-end
-
 -- Initiate shared boot.
 include 'shared.lua'
 

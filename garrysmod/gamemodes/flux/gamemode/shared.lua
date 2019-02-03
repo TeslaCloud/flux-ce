@@ -70,6 +70,12 @@ if !LITE_REFRESH then
     end
 
     include 'lib/sh_lang.lua'
+
+    -- Experimental!
+    -- Gotta have screen scaling before everything else!
+    if !set_screen_scale then
+      include 'flux/gamemode/lib/cl_scaling.lua'
+    end
   end
 
   util.include 'core/cl_core.lua'
@@ -78,10 +84,10 @@ if !LITE_REFRESH then
   -- This way we put things we want loaded BEFORE anything else in here, like plugin, config, etc.
   util.include_folder('lib/required', true)
 
-  -- Include ActiveRecord for database management
+  -- Include ActiveRecord for database management.
   Crate:include 'active_record'
 
-  -- And ActiveNetwork for easy variable networking
+  -- And ActiveNetwork for easy variable networking.
   Crate:include 'active_network'
 
   -- So that we don't get duplicates on refresh.
