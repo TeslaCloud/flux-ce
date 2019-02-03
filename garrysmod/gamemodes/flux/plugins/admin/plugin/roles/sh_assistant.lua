@@ -6,8 +6,5 @@ ROLE.immunity = 100
 ROLE.base = 'user'
 
 function ROLE:define_permissions()
-  can 'noclip'
-  can 'kick'
-  can 'ban'
-  can 'staff'
+
 end

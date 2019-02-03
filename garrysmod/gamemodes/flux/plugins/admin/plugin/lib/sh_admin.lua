@@ -15,6 +15,18 @@ function Bolt:get_permissions()
   return permissions
 end
 
+function Bolt:get_all_permissions()
+  local perm_table = {}
+
+  for k, v in pairs(permissions) do
+    for k1, v1 in pairs(v) do
+      perm_table[k1] = v1
+    end
+  end
+
+  return perm_table
+end
+
 function Bolt:get_roles()
   return roles
 end
@@ -57,6 +69,16 @@ function Bolt:create_role(id, data)
   end
 end
 
+function Bolt:allow_childs(role, perm_id)
+  role:allow(perm_id)
+
+  for k, v in pairs(self:get_roles()) do
+    if v.base == role.role_id then
+      self:allow_childs(v, perm_id)
+    end
+  end
+end
+
 function Bolt:add_permission(id, category, data, force)
   if !id then return end
 
@@ -69,7 +91,7 @@ function Bolt:add_permission(id, category, data, force)
   end
 end
 
-function Bolt:register_permission(id, name, description, category)
+function Bolt:register_permission(id, name, description, category, role)
   if !isstring(id) or id == '' then return end
 
   local data = {}
@@ -77,13 +99,14 @@ function Bolt:register_permission(id, name, description, category)
     data.description = description or 'No description provided.'
     data.category = category or 'general'
     data.name = name or id
+    data.role = role
   self:add_permission(id, category, data, true)
 end
 
 function Bolt:permission_from_command(cmd)
   if !cmd then return end
 
-  self:register_permission(cmd.id, cmd.name, cmd.description, cmd.category)
+  self:register_permission(cmd.id, cmd.name, cmd.description, cmd.category, cmd.permission)
 end
 
 function Bolt:can(player, action, object)

@@ -13,7 +13,7 @@ function fl.command:create(id, data)
   data.syntax       = data.syntax       or '[-]'
   data.immunity     = data.immunity     or false
   data.arguments    = data.arguments    or 0
-  data.permission   = data.permission   or ''
+  data.permission   = data.permission   or 'user'
   data.player_arg   = data.player_arg   or nil
   data.description  = data.description  or 'An undescribed command.'
 

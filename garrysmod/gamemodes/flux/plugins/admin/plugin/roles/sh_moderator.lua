@@ -6,9 +6,5 @@ ROLE.immunity = 200
 ROLE.base = 'assistant'
 
 function ROLE:define_permissions()
-  can 'noclip'
-  can 'moderate'
-  can('manage', User)
-  can('manage', Ban)
-  can('manage', Character)
+
 end

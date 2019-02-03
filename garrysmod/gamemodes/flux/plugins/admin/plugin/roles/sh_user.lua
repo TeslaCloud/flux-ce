@@ -5,7 +5,7 @@ ROLE.icon = 'icon16/user.png'
 ROLE.immunity = 0
 
 function ROLE:define_permissions()
-  can 'test'
+
 end
 
 -- Called when player's primary group is being set to this group.
