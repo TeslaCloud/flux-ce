@@ -24,6 +24,7 @@ ru:
     level_design: Дизайн уровней
     server_management: Управление сервером
     player_management: Управление игроками
+    compatibility: Совместимость
   err:
     group_not_valid: "'{1}' не является группой пользователя!"
     not_banned: Steam ID '{1}' не находится в блокировке!
