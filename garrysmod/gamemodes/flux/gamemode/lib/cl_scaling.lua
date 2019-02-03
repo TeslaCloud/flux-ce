@@ -5,6 +5,9 @@
 -- do not refresh
 if set_screen_scale or !Settings.experimental then return end
 
+-- disable at all for now!
+if true then return end
+
 local scale = 1
 
 function set_screen_scale(new_scale)
