@@ -89,3 +89,22 @@ en:
     and: AND
     or: OR
     not: NOT
+  config:
+    general:
+      title: General settings
+      desc: General settings related to the Flux framework itself.
+      prefixes:
+        name: Command prefixes
+        desc: What chat prefixes to consider as command prefixes (<prefix>somecommand, e.g. /somecommand).
+      walk_speed:
+        name: Walk speed
+        desc: How fast does the player walk.
+      run_speed:
+        name: Run Speed
+        desc: How fast does the player run (while holding SHIFT by default).
+      crouch_speed:
+        name: Crouchwalk speed
+        desc: How fast does the player walk while crouched (while holding CTRL by default).
+      respawn_time:
+        name: Respawn time
+        desc: How long does it take for a player to respawn after their death (in seconds).

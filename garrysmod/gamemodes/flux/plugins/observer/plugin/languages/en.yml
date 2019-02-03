@@ -1,0 +1,6 @@
+en:
+  config:
+    general:
+      observer_reset:
+        name: Observer reset
+        desc: "Whether or not should player's position be restored when they leave observer mode?"

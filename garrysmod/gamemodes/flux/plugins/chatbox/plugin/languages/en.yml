@@ -1,0 +1,14 @@
+en:
+  config:
+    chatbox:
+      title: Chatbox
+      desc: Customize how the chat box works for your server!
+      margin:
+        name: Message margin
+        desc: How much vertical space to put between two messages.
+      fade_delay:
+        name: Message fade delay
+        desc: How long should the messages stay on the screen before fading away.
+      max_messages:
+        name: Max messages
+        desc: How many messages should the chat history hold.

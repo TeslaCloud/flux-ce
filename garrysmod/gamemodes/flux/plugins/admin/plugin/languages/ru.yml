@@ -15,6 +15,11 @@ ru:
       title: Изменение роли игрока
       message: Выберите новую роль.
       roles: Роли
+    config_editor: Конфигурация
+    new_config: Добавить новое значение
+    new_config_text: Введите новое значение.
+    delete_config: Удалить значение
+    delete_config_text: Вы уверены, что хотите ударить данное значение?
   categories:
     administration: Администрирование
     tools: Инструменты
