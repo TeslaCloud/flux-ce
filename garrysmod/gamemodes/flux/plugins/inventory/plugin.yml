@@ -1,5 +1,5 @@
 name: Inventory
 description: Provides player inventories.
-author: Mr. Meow
+author: TeslaCloud Studios
 depends:
   - items

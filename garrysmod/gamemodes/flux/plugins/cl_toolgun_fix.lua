@@ -1,5 +1,5 @@
 PLUGIN:set_name('Toolgun Render Fix')
-PLUGIN:set_author('Mr. Meow')
+PLUGIN:set_author('TeslaCloud Studios')
 PLUGIN:set_description('Fixes toolgun help rendering incorrectly with Flux phrases.')
 
 function PLUGIN:FLInitPostEntity()

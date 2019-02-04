@@ -7,7 +7,7 @@ local Color   = Color
 SKIN = {}
 
 SKIN.print_name                         = 'Flux Skin'
-SKIN.Author                             = 'Mr. Meow'
+SKIN.Author                             = 'TeslaCloud Studios'
 SKIN.DermaVersion                       = 1
 SKIN.GwenTexture                        = Material('gwenskin/GModDefault.png')
 

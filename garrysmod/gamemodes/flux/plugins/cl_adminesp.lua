@@ -1,5 +1,5 @@
 PLUGIN:set_name('Admin ESP')
-PLUGIN:set_author('Mr. Meow')
+PLUGIN:set_author('TeslaCloud Studios')
 PLUGIN:set_description('Adds an ESP for admins.')
 
 do

@@ -1,7 +1,7 @@
 -- WIP WIP WIP
 
 PLUGIN:set_name('Linter')
-PLUGIN:set_author('Mr. Meow')
+PLUGIN:set_author('TeslaCloud Studios')
 PLUGIN:set_description('Yells at you for stylistic mistakes.')
 
 if !fl.development then return end

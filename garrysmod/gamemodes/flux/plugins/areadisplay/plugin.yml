@@ -1,5 +1,5 @@
 name: Area Display
 description: Displays area name when player enters an area.
-author: Mr. Meow
+author: TeslaCloud Studios
 depends:
   - areas

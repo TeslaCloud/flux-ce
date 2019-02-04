@@ -1,5 +1,5 @@
 PLUGIN:set_name('Hook Profiler')
-PLUGIN:set_author('Mr. Meow')
+PLUGIN:set_author('TeslaCloud Studios')
 PLUGIN:set_description('Profile any hooks.')
 PLUGIN:set_global('Profiler')
 

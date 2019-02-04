@@ -1,5 +1,5 @@
 PLUGIN:set_name('Flux Dev HUD')
-PLUGIN:set_author('Mr. Meow')
+PLUGIN:set_author('TeslaCloud Studios')
 PLUGIN:set_description('Adds developer HUD.')
 
 function PLUGIN:HUDPaint()

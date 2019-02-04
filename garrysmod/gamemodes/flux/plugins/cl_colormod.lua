@@ -1,5 +1,5 @@
 PLUGIN:set_name('Color Modify')
-PLUGIN:set_author('AleXXX_007')
+PLUGIN:set_author('TeslaCloud Studios')
 PLUGIN:set_description('Provides a color modify API.')
 
 do

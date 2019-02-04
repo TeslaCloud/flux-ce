@@ -5,8 +5,8 @@
   Alexander Grist-Hucker
   http://www.alexgrist.com
 
-  Mr. Meow
-  https://mrmeow.me
+  Meow the Cat
+  https://teslacloud.net
 --]]
 
 class 'ActiveRecord::Query'

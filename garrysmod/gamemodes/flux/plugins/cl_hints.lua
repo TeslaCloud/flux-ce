@@ -1,7 +1,7 @@
 PLUGIN:set_global('flHints')
 PLUGIN:set_name('Hints')
 PLUGIN:set_description('Adds hints that are displayed to players.')
-PLUGIN:set_author('Mr. Meow')
+PLUGIN:set_author('TeslaCloud Studios')
 
 local stored = {}
 

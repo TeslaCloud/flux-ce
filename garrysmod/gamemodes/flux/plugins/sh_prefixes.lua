@@ -1,6 +1,6 @@
 PLUGIN:set_global('Prefixes')
 PLUGIN:set_name('Prefixes')
-PLUGIN:set_author('AleXXX_007')
+PLUGIN:set_author('TeslaCloud Studios')
 PLUGIN:set_description('Adds prefix adjusting to avoid troubles with certain commands.')
 
 local stored = {}
