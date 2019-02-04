@@ -107,18 +107,18 @@ function ASTLiteral:init(what)
 end
 
 local lit_to_prefix = {
-  [TK_name]       = 'var',
   [TK_number]     = 'number',
-  [TK_string]     = 'string',
   [TK_false]      = 'bool',
   [TK_true]       = 'bool'
 }
 
 function ASTLiteral:inspect()
-  if self.what.tk != TK_nil then
-    return tostring(lit_to_prefix[self.what.tk])..'('..tostring(self.what and self.what.val)..')'
-  else
+  if self.what.tk == TK_string then
+    return '"'..tostring(self.what and self.what.val)..'"'
+  elseif self.what.tk == TK_nil then
     return tostring(self.what and self.what.val)
+  else
+    return tostring(lit_to_prefix[self.what.tk])..'('..tostring(self.what and self.what.val)..')'
   end
 end
 
@@ -152,4 +152,11 @@ function ASTCall:inspect()
   end
   
   return str..'))'
+end
+
+class 'ASTReturn' extends 'ASTBase'
+ASTReturn.what = nil
+
+function ASTReturn:inspect()
+  return '(return '..self.what:inspect()..')'
 end

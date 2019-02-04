@@ -11,6 +11,13 @@ TK_dot            = string.byte('.')
 TK_colon          = string.byte(':')
 TK_semicolon      = string.byte(';')
 TK_assign         = string.byte('=')
+TK_add            = string.byte('+')
+TK_sub            = string.byte('-')
+TK_mul            = string.byte('*')
+TK_div            = string.byte('/')
+TK_pow            = string.byte('^')
+TK_greater        = string.byte('>')
+TK_less           = string.byte('<')
 
 LITERAL_TOKENS    = {
   [TK_name]       = true,
@@ -61,6 +68,53 @@ function Packager.Parser:expect(token, how_far)
 
   if this_token != token then
     error('syntax error, '..token..' expected, got '..this_token)
+  end
+end
+
+do
+  local peek_length = 16
+
+  local function shoot_left(code, from_where)
+    local str = ''
+
+    for i = 1, peek_length do
+      local v = code[from_where - i]
+
+      if v == '\n' or (from_where - i) < 1 then
+        break
+      end
+
+      str = v..str
+    end
+
+    return str
+  end
+
+  local function shoot_right(code, from_where)
+    local str = ''
+
+    for i = 1, peek_length do
+      local v = code[from_where + i]
+
+      if v == '\n' or (from_where + i) > code:len() then
+        break
+      end
+
+      str = str..v
+    end
+
+    return str
+  end
+
+  function Packager.Parser:point_at(token)
+    if !token then token = self.current end
+
+    local tk_begin = token.pos - string.len(token.val)
+    local left, right = shoot_left(self.source, tk_begin), shoot_right(self.source, token.pos)
+    local str = left..token.val..right
+    local pointer = string.rep('-', left:len())..'^'..string.rep('-', right:len() + token.val:len() - 1)
+
+    return str..'\n'..pointer
   end
 end
 
@@ -140,9 +194,23 @@ function Packager.Parser:parse_call_assign()
     elseif ASSIGNMENT_TOKENS[self.current.tk] then -- assignment
       return self:parse_assignment(name)
     else
+      print(self:point_at(self.current))
+      error('unexpected "'..self.current.val..'" on line '..self.current.line)
+    end
+  elseif LITERAL_TOKENS[self.current.tk] then -- implicit return
+    if self:peek().tk == TK_end then
+      local ret_ast = ASTReturn.new()
+      ret_ast.what = ASTLiteral.new(self.current)
+
+      self:next(2) -- eat literal and 'end'
+
+      return ret_ast
+    else
+      print(self:point_at(self.current))
       error('unexpected "'..self.current.val..'" on line '..self.current.line)
     end
   else
+    print(self:point_at(self.current))
     error('unexpected "'..self.current.val..'" on line '..self.current.line)
   end
 
@@ -158,8 +226,7 @@ function Packager.Parser:parse_call(name)
     self:next() -- eat '('
   end
 
-  while LITERAL_TOKENS[self.current.tk] or self.current.tk == TK_rparen
-     or self.current.tk == TK_comma do
+  while LITERAL_TOKENS[self.current.tk] or self.current.tk == TK_comma do
     local tk = self.current.tk
 
     if tk == TK_comma then
@@ -169,11 +236,15 @@ function Packager.Parser:parse_call(name)
     if tk != TK_name then
       table.insert(call.args, ASTLiteral.new(self.current))
     else
-      if self:peek(1) == TK_lparen then
-        table.insert(call.args, self:parse_call())
+      local name = self:expr_field()
+
+      if self.current.tk == TK_lparen then
+        table.insert(call.args, self:parse_call(name))
       else
-        table.insert(call.args, ASTLiteral.new(self.current))
+        table.insert(call.args, name)
       end
+
+      continue
     end
 
     self:next()
@@ -313,7 +384,10 @@ end
 
 function Packager.Parser:parse(tokens)
   if isstring(tokens) then
+    self.source = tokens
     tokens = Packager.Lexer:tokenize(tokens)
+  else
+    self.source = ''
   end
 
   if !istable(tokens) then return false end
@@ -324,13 +398,13 @@ function Packager.Parser:parse(tokens)
   return self:parse_chunk()
 end
 
-local parsed = Packager.Parser:parse([[
-  func hello.world(a, b)
+local parsed = Packager.Parser:parse([[func hello.world(a, b)
   end
 
   func foo
     print "Hello I'm a shitty parser!"
-    print true, false, nil
+    print 123, string.gsub(a, '%s+', ''), test, false
+    false
   end
 ]])
 
