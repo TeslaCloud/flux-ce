@@ -6,6 +6,7 @@ TK_lbracket       = string.byte('[')
 TK_rbracket       = string.byte(']')
 TK_lbrace         = string.byte('{')
 TK_rbrace         = string.byte('}')
+TK_vbar           = string.byte('|')
 TK_comma          = string.byte(',')
 TK_dot            = string.byte('.')
 TK_colon          = string.byte(':')
@@ -52,6 +53,11 @@ Packager.Parser.tokens = nil
 Packager.Parser.current = nil
 Packager.Parser.current_pos = 1
 
+function Packager.Parser:throw_error(msg, where)
+  print(self:point_at(where or self.current))
+  error(msg)
+end
+
 function Packager.Parser:next(how_far)
   how_far = how_far or 1
   self.current = self.tokens[self.current_pos + how_far]
@@ -64,10 +70,10 @@ function Packager.Parser:peek(how_far)
 end
 
 function Packager.Parser:expect(token, how_far)
-  local this_token = self.tokens[self.current_pos + (how_far or 0)].tk
+  local target_token = self.tokens[self.current_pos + (how_far or 0)] or {}
 
-  if this_token != token then
-    error('syntax error, '..token..' expected, got '..this_token)
+  if target_token.tk != token then
+    self:throw_error('syntax error, '..Packager.Lexer:visualize(token)..' expected, got '..tostring(target_token.val))
   end
 end
 
@@ -194,8 +200,7 @@ function Packager.Parser:parse_call_assign()
     elseif ASSIGNMENT_TOKENS[self.current.tk] then -- assignment
       return self:parse_assignment(name)
     else
-      print(self:point_at(self.current))
-      error('unexpected "'..self.current.val..'" on line '..self.current.line)
+      self:throw_error('unexpected "'..self.current.val..'" on line '..self.current.line)
     end
   elseif LITERAL_TOKENS[self.current.tk] then -- implicit return
     if self:peek().tk == TK_end then
@@ -206,12 +211,10 @@ function Packager.Parser:parse_call_assign()
 
       return ret_ast
     else
-      print(self:point_at(self.current))
-      error('unexpected "'..self.current.val..'" on line '..self.current.line)
+      self:throw_error('unexpected "'..self.current.val..'" on line '..self.current.line)
     end
   else
-    print(self:point_at(self.current))
-    error('unexpected "'..self.current.val..'" on line '..self.current.line)
+    self:throw_error('unexpected "'..self.current.val..'" on line '..self.current.line)
   end
 
   return

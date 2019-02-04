@@ -43,6 +43,14 @@ for k, v in pairs(LUA_TOKENS) do
   idx = idx + 1
 end
 
+function Packager.Lexer:visualize(tk)
+  if tk > 255 then
+    return 'TK_'..TK_TO_VISUAL[tk]
+  else
+    return string.char(tk)
+  end
+end
+
 function Packager.Lexer:tokenize(input)
   local tokens = {}
   local buf = ''
@@ -84,14 +92,6 @@ function Packager.Lexer:tokenize(input)
     local old_buf = buf
     buf = ''
     return old_buf
-  end
-
-  local function visualize(tk)
-    if tk > 255 then
-      return 'TK_'..TK_TO_VISUAL[tk]
-    else
-      return string.char(tk)
-    end
   end
 
   local function push(tk, val)
