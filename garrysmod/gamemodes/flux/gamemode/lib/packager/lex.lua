@@ -140,9 +140,14 @@ function Packager.Lexer:tokenize(input)
     local newlines = 0
     local opener = current
 
-    next() -- eat opener
+    current, char_id = next() -- eat opener
 
     while true do
+      if current == opener then
+        next() -- eat opener
+        break
+      end
+  
       current, char_id = save_next()
 
       if current == '\\' then
@@ -165,9 +170,6 @@ function Packager.Lexer:tokenize(input)
         current, char_id = next()
       elseif current == '\n' then
         newlines = newlines + 1
-      elseif current == opener then
-        next() -- eat opener
-        break
       elseif !current or !char_id then
         break
       end
