@@ -279,18 +279,26 @@ end
 
 function Packager.Parser:parse_node()
   local node = ASTNode.new()
+  local left
 
-  if LITERAL_TOKENS[self.current.tk] then
-    local left = self:expr_field()
+  if self.current.tk == TK_name then
+    left = self:expr_field()
+  elseif LITERAL_TOKENS[self.current.tk] then
+    left = ASTLiteral.new(self.current)
+    self:next() -- eat literal
+  else
+    return
+  end
 
-    if BINARY_OPS[self.current.tk] then
-      node.op = self.current
-      node.left = left
+  if BINARY_OPS[self.current.tk] then
+    node.op = self.current
+    node.left = left
 
-      self:next() -- eat operator
+    self:next() -- eat operator
 
-      node.right = self:parse_node()
-    end
+    node.right = self:parse_node()
+  elseif self.current.tk == TK_end then
+    node.left = left
   end
 
   return node
