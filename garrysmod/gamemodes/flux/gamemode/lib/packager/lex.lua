@@ -65,6 +65,7 @@ TK_gt             = string.byte('>')
 TK_lt             = string.byte('<')
 TK_ex             = string.byte('!')
 TK_tild           = string.byte('~')
+TK_length         = string.byte('#')
 
 function Packager.Lexer:visualize(tk)
   if tk > 255 then
