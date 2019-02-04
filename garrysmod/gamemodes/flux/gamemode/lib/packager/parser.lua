@@ -62,7 +62,10 @@ Packager.Parser.current = nil
 Packager.Parser.current_pos = 1
 
 function Packager.Parser:throw_error(msg, where)
-  print(self:point_at(where or self.current))
+  if self.source and self.source != '' then
+    print(self:point_at(where or self.current))
+  end
+
   error(msg)
 end
 
