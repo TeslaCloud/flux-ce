@@ -43,6 +43,29 @@ for k, v in pairs(LUA_TOKENS) do
   idx = idx + 1
 end
 
+TK_lparen         = string.byte('(')
+TK_rparen         = string.byte(')')
+TK_lbracket       = string.byte('[')
+TK_rbracket       = string.byte(']')
+TK_lbrace         = string.byte('{')
+TK_rbrace         = string.byte('}')
+TK_vbar           = string.byte('|')
+TK_comma          = string.byte(',')
+TK_dot            = string.byte('.')
+TK_colon          = string.byte(':')
+TK_semicolon      = string.byte(';')
+TK_assign         = string.byte('=')
+TK_add            = string.byte('+')
+TK_sub            = string.byte('-')
+TK_mul            = string.byte('*')
+TK_div            = string.byte('/')
+TK_pow            = string.byte('^')
+TK_mod            = string.byte('%')
+TK_gt             = string.byte('>')
+TK_lt             = string.byte('<')
+TK_ex             = string.byte('!')
+TK_tild           = string.byte('~')
+
 function Packager.Lexer:visualize(tk)
   if tk > 255 then
     return 'TK_'..TK_TO_VISUAL[tk]
@@ -238,7 +261,7 @@ function Packager.Lexer:tokenize(input)
         return true
       end
 
-      push(string.byte('-'), '-')
+      push(TK_sub, '-')
       return true
     elseif current == '+' then
       current, char_id = next()
@@ -248,7 +271,7 @@ function Packager.Lexer:tokenize(input)
         return true
       end
 
-      push(string.byte('+'), '+')
+      push(TK_add, '+')
       return true
     elseif current == '*' then
       current, char_id = next()
@@ -258,7 +281,7 @@ function Packager.Lexer:tokenize(input)
         return true
       end
 
-      push(string.byte('*'), '*')
+      push(TK_mul, '*')
       return true
     elseif current == '/' then
       current, char_id = next()
@@ -288,7 +311,7 @@ function Packager.Lexer:tokenize(input)
         return true
       end
 
-      push(string.byte('/'), '/')
+      push(TK_div, '/')
       return true
     elseif current == '|' then
       current, char_id = next()
@@ -306,7 +329,7 @@ function Packager.Lexer:tokenize(input)
         return true
       end
 
-      push(string.byte('|'), '|')
+      push(TK_vbar, '|')
       return true
     elseif current == '&' then
       current, char_id = next()
@@ -328,27 +351,27 @@ function Packager.Lexer:tokenize(input)
       return true
     elseif current == '>' then
       current, char_id = next()
-      if current != '=' then push(string.byte('>'), '>')
+      if current != '=' then push(TK_gt, '>')
       else next() push(TK_ge, '>=') end
       return true
     elseif current == '<' then
       current, char_id = next()
-      if current != '=' then push(string.byte('<'), '<')
+      if current != '=' then push(TK_lt, '<')
       else next() push(TK_le, '<=') end
       return true
     elseif current == '!' then
       current, char_id = next()
-      if current != '=' then push(string.byte('!'), '!')
+      if current != '=' then push(TK_ex, '!')
       else next() push(TK_ne, '!=') end
       return true
     elseif current == '~' then
       current, char_id = next()
-      if current != '=' then push(string.byte('~'), '~')
+      if current != '=' then push(TK_tild, '~')
       else next() push(TK_ne, '~=') end
       return true
     elseif current == '=' then
       current, char_id = next()
-      if current != '=' then push(string.byte('='), '=')
+      if current != '=' then push(TK_assign, '=')
       else next() push(TK_eq, '==') end
       return true
     elseif current == '\'' or current == '"' then
@@ -379,7 +402,7 @@ function Packager.Lexer:tokenize(input)
         return true
       end
 
-      push(string.byte('.'), '.')
+      push(TK_dot, '.')
       return true
     elseif current and char_id then -- single-char tokens
       push(char_id, current)

@@ -1,25 +1,5 @@
 include 'lex.lua'
 
-TK_lparen         = string.byte('(')
-TK_rparen         = string.byte(')')
-TK_lbracket       = string.byte('[')
-TK_rbracket       = string.byte(']')
-TK_lbrace         = string.byte('{')
-TK_rbrace         = string.byte('}')
-TK_vbar           = string.byte('|')
-TK_comma          = string.byte(',')
-TK_dot            = string.byte('.')
-TK_colon          = string.byte(':')
-TK_semicolon      = string.byte(';')
-TK_assign         = string.byte('=')
-TK_add            = string.byte('+')
-TK_sub            = string.byte('-')
-TK_mul            = string.byte('*')
-TK_div            = string.byte('/')
-TK_pow            = string.byte('^')
-TK_greater        = string.byte('>')
-TK_less           = string.byte('<')
-
 LITERAL_TOKENS    = {
   [TK_name]       = true,
   [TK_number]     = true,
@@ -38,6 +18,34 @@ ASSIGNMENT_TOKENS = {
   [TK_or_assign]  = true,
   [TK_and_assign] = true,
   [TK_con_assign] = true
+}
+
+BINARY_OPS = {
+  [TK_add]        = true,
+  [TK_sub]        = true,
+  [TK_div]        = true,
+  [TK_mul]        = true,
+  [TK_pow]        = true,
+  [TK_gt]         = true,
+  [TK_lt]         = true,
+  [TK_eq]         = true,
+  [TK_ge]         = true,
+  [TK_le]         = true,
+  [TK_ne]         = true,
+  [TK_concat]     = true,
+  [TK_and]        = true,
+  [TK_or]         = true
+}
+
+BINOP_PRIORITY = {
+  [TK_add]  = 6,  [TK_mul]    = 7,
+  [TK_sub]  = 6,  [TK_div]    = 7,
+  [TK_mod]  = 7,
+  [TK_pow]  = 10, [TK_concat] = 5,
+  [TK_eq]   = 3,  [TK_ne]     = 3,
+  [TK_lt]   = 3,  [TK_gt]     = 3,
+  [TK_le]   = 3,  [TK_ge]     = 3,
+  [TK_and]  = 2,  [TK_or]     = 1
 }
 
 include 'parser_classes.lua'
@@ -163,7 +171,7 @@ function Packager.Parser:parse_function()
     end
   end
 
-  func_proto.body = self:parse_body()
+  func_proto.body = self:parse_chunk()
 
   return func_proto
 end
@@ -181,12 +189,6 @@ function Packager.Parser:parse_chunk()
   end
 
   return ast
-end
-
-function Packager.Parser:parse_body()
-  local parsed = self:parse_chunk()
-
-  return parsed
 end
 
 -- Just a variable on it's own
@@ -275,6 +277,25 @@ function Packager.Parser:parse_while()
   return
 end
 
+function Packager.Parser:parse_node()
+  local node = ASTNode.new()
+
+  if LITERAL_TOKENS[self.current.tk] then
+    local left = self:expr_field()
+
+    if BINARY_OPS[self.current.tk] then
+      node.op = self.current
+      node.left = left
+
+      self:next() -- eat operator
+
+      node.right = self:parse_node()
+    end
+  end
+
+  return node
+end
+
 function Packager.Parser:parse_until()
   return
 end
@@ -308,7 +329,15 @@ function Packager.Parser:parse_unless()
 end
 
 function Packager.Parser:parse_return()
-  return
+  local ret_ast = ASTReturn.new()
+
+  self:next() -- eat 'return'
+
+  if self.current and self.current.tk != TK_end then
+    ret_ast.what = self:parse_node()
+  end
+
+  return ret_ast
 end
 
 function Packager.Parser:parse_continue()
@@ -419,7 +448,7 @@ local parsed = Packager.Parser:parse([[
   func aaa
     print "Hello I'm a shitty parser!"
     print 123, string.gsub(a, '%s+', ''), test, false
-    false
+    return false
   end
 ]])
 

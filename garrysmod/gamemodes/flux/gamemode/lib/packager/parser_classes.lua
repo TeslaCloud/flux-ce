@@ -3,7 +3,7 @@ local indent_level = 0
 class 'ASTBase'
 
 function ASTBase:inspect()
-  local str = '('..self.class_name
+  local str = '('..self.class_name:gsub('AST', '')
 
   if self.name then
     str = str..'('..self.name:inspect()..') '
