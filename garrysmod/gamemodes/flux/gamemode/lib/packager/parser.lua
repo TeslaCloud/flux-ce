@@ -222,6 +222,8 @@ function Packager.Parser:parse_call(name)
   call.name = name
   call.args = {}
 
+  local expecting_name = true
+
   if self.current.tk == TK_lparen then
     self:next() -- eat '('
   end
@@ -231,11 +233,12 @@ function Packager.Parser:parse_call(name)
 
     if tk == TK_comma then
       tk = self:next().tk
+      expecting_name = true
     end
 
     if tk != TK_name then
       table.insert(call.args, ASTLiteral.new(self.current))
-    else
+    elseif expecting_name then
       local name = self:expr_field()
 
       if self.current.tk == TK_lparen then
@@ -244,7 +247,11 @@ function Packager.Parser:parse_call(name)
         table.insert(call.args, name)
       end
 
+      expecting_name = false
+
       continue
+    elseif self.current.tk == TK_name then
+      break
     end
 
     self:next()
@@ -398,10 +405,15 @@ function Packager.Parser:parse(tokens)
   return self:parse_chunk()
 end
 
-local parsed = Packager.Parser:parse([[func hello.world(a, b)
+local parsed = Packager.Parser:parse([[
+  func hello.world(a, b)
+    foo()
+    bar(a, b)
+    baz a, b
+    faz fez(1, false, true, nil, asdf)
   end
 
-  func foo
+  func aaa
     print "Hello I'm a shitty parser!"
     print 123, string.gsub(a, '%s+', ''), test, false
     false
