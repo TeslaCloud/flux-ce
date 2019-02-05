@@ -52,7 +52,7 @@ function item.register(id, data)
     id = data.name:to_id()
   end
 
-  fl.dev_print('Registering item: ' .. tostring(id))
+  fl.dev_print('Registering item: '..tostring(id))
 
   data.id = id
   data.name = data.name or 'Unknown Item'

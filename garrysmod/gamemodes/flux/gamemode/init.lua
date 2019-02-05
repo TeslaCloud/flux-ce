@@ -51,8 +51,8 @@ end
 include 'shared.lua'
 
 if fl.initialized then
-  MsgC(Color(0, 255, 100, 255), 'Auto-reloaded in '..math.Round(os.clock() - fl.start_time, 3).. ' second(s)\n')
+  MsgC(Color(0, 255, 100, 255), 'Auto-reloaded in '..math.Round(os.clock() - fl.start_time, 3)..' second(s)\n')
 else
-  MsgC(Color(0, 255, 100, 255), 'Flux v'..GM.version..' ('..GM.code_name..') has finished loading in '..math.Round(os.clock() - fl.start_time, 3).. ' second(s)\n')
+  MsgC(Color(0, 255, 100, 255), 'Flux v'..GM.version..' ('..GM.code_name..') has finished loading in '..math.Round(os.clock() - fl.start_time, 3)..' second(s)\n')
   fl.initialized = true
 end

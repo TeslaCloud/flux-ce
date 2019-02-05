@@ -84,7 +84,7 @@ function PLUGIN:FLInitPostEntity()
       if (v.stage and v.stage != self:GetStage()) then continue end
       if (v.op and v.op != tool_object:GetOperation()) then continue end
 
-      local txt = '#tool.' .. GetConVarString('gmod_toolmode') .. '.' .. v.name
+      local txt = '#tool.'..GetConVarString('gmod_toolmode')..'.'..v.name
       if (v.name == 'info') then
         txt = tool_object:GetHelpText()
       end
