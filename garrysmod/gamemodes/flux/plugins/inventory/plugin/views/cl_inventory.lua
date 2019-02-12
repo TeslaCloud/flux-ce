@@ -161,7 +161,7 @@ function PANEL:rebuild()
 
     return
   else
-    self:Droppable('flItem')
+    self:Droppable('fl_item')
   end
 
   if IsValid(self.spawn_icon) then
@@ -176,7 +176,7 @@ function PANEL:rebuild()
   self.spawn_icon:SetMouseInputEnabled(false)
 end
 
-vgui.Register('flInventoryItem', PANEL, 'DPanel')
+vgui.Register('fl_inventory_item', PANEL, 'DPanel')
 
 local PANEL = {}
 PANEL.inventory = {}
@@ -244,7 +244,7 @@ function PANEL:rebuild()
   self.list:SetSpaceX(4)
 
   for i = 1, self.inventory_slots do
-    local inv_slot = self.list:Add('flInventoryItem')
+    local inv_slot = self.list:Add('fl_inventory_item')
     inv_slot:SetSize(64, 64)
     inv_slot.slot_num = i
 
@@ -260,7 +260,7 @@ function PANEL:rebuild()
       end
     end
 
-    inv_slot:Receiver('flItem', function(receiver, dropped, is_dropped, menu_index, mouse_x, mouse_y)
+    inv_slot:Receiver('fl_item', function(receiver, dropped, is_dropped, menu_index, mouse_x, mouse_y)
       if is_dropped then
         fl.inventory_drag_slot = nil
 
@@ -316,11 +316,11 @@ function PANEL:rebuild()
     self.slots[i] = inv_slot
   end
 
-  self:GetParent():Receiver('flItem', function(receiver, dropped, is_dropped, menu_index, mouse_x, mouse_y)
+  self:GetParent():Receiver('fl_item', function(receiver, dropped, is_dropped, menu_index, mouse_x, mouse_y)
     if is_dropped then
       hook.run('PlayerDropItem', dropped[1].item_data, dropped[1], mouse_x, mouse_y)
     end
   end, {})
 end
 
-vgui.Register('Inventory', PANEL, 'fl_base_panel')
+vgui.Register('fl_inventory', PANEL, 'fl_base_panel')

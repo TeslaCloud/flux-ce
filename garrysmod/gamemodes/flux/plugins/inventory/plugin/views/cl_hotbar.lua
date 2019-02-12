@@ -11,7 +11,7 @@ function PANEL:rebuild()
   self.BaseClass.rebuild(self)
 end
 
-vgui.Register('fl_hotbar', PANEL, 'Inventory')
+vgui.Register('fl_hotbar', PANEL, 'fl_inventory')
 
 concommand.Add('fl_hotbar_rebuild', function()
   if IsValid(fl.client.hotbar) then

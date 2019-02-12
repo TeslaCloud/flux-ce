@@ -21,12 +21,12 @@ end
 function Inventory:AddTabMenuItems(menu)
   menu:add_menu_item('inventory', {
     title = 'Inventory',
-    panel = 'Inventory',
+    panel = 'fl_inventory',
     icon = 'fa-inbox',
     callback = function(menu_panel, button)
       local inv = menu_panel.active_panel
-      inv:set_player(fl.client)
       inv:SetTitle('Inventory')
+      inv:set_player(fl.client)
     end
   })
 end
