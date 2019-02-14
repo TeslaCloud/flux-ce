@@ -97,6 +97,8 @@ function Items:PlayerUseItemMenu(item_table, is_entity)
 
     item_menu:SetPos(x, y)
   end
+
+  item_menu:SetKeyboardInputEnabled(true)
 end
 
 function Items:PlayerDropItem(item_table, panel, mouse_x, mouse_y)
