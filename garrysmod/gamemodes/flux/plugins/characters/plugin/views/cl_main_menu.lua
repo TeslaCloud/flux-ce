@@ -24,6 +24,12 @@ function PANEL:Init()
   end
 
   theme.hook('CreateMainMenu', self)
+
+  fl.blur_update_fps = 0
+end
+
+function PANEL:OnRemove()
+  fl.blur_update_fps = 8
 end
 
 function PANEL:Paint(w, h)
