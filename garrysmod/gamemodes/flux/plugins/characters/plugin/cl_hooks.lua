@@ -46,13 +46,13 @@ function Characters:OnIntroPanelRemoved()
     if IsValid(fl.intro_panel) then
       fl.intro_panel:MakePopup()
     else
-      timer.Create('flCreateMainPanel', 0.1, 0, function()
+      timer.Create('fl_create_main_panel', 0.1, 0, function()
         fl.intro_panel = theme.create_panel('main_menu')
 
         if IsValid(fl.intro_panel) then
           fl.intro_panel:MakePopup()
 
-          timer.Remove('flCreateMainPanel')
+          timer.Remove('fl_create_main_panel')
         end
       end)
     end
