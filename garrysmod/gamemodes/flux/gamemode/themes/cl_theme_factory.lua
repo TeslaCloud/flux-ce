@@ -274,7 +274,7 @@ function THEME:AdminPanelPaintOver(panel, width, height)
 end
 
 function THEME:PaintConfigLine(panel, w, h)
-  if panel.order % 2 != 0 then
+  if panel.dark then
     draw.RoundedBox(0, 0, 0, w, h, theme.get_color('background'):alpha(150))
   end
 end

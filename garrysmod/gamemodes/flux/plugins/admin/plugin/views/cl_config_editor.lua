@@ -18,17 +18,17 @@ function PANEL:Init()
 
     collapsible_category:SetContents(list)
 
-    local i = 1
+    local dark = false
 
     for k1, v1 in pairs(v.configs) do
       local config_line = vgui.create('fl_config_line')
       config_line:set_config(k1, v1)
       config_line:SetWide(width)
-      config_line.order = i
+      config_line.dark = dark
 
       list:Add(config_line)
 
-      i = i + 1
+      dark = !dark
     end
   end
 end
