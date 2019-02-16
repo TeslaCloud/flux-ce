@@ -165,7 +165,9 @@ function THEME:PaintButton(panel, w, h)
   end
 
   if icon then
-    icon_w, icon_h = util.text_size(fl.fa:get(icon), _font.size('flFontAwesome', panel.icon_size))
+    local icon_text, text_font = fl.fa:get(icon)
+
+    icon_w, icon_h = util.text_size(icon_text, _font.size('flFontAwesome', panel.icon_size))
     icon_x = (left and text_x or text_x + text_w)
     icon_y = h / 2 - icon_h / 2
 

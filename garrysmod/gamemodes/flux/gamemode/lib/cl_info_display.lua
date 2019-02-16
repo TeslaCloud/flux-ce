@@ -111,7 +111,7 @@ InfoDisplay:add('health', {
 })
 
 InfoDisplay:add('armor', {
-  icon = 'fa-shield',
+  icon = 'fa-shield-alt',
   min_percentage = 2,
   max_percentage = 101,
   size = 80,
