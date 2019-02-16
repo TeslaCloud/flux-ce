@@ -324,3 +324,55 @@ function PANEL:rebuild()
 end
 
 vgui.Register('fl_inventory', PANEL, 'fl_base_panel')
+
+local PANEL = {}
+
+function PANEL:Paint(w, h)
+  draw.RoundedBox(0, 0, 0, w, h, Color(0, 0, 0, 150))
+end
+
+function PANEL:get_menu_size()
+  return ScrW() / 1.5, ScrH() / 1.5
+end
+
+function PANEL:on_close()
+  self.hotbar:AlphaTo(0, theme.get_option('menu_anim_duration'), 0)
+end
+
+function PANEL:on_change()
+  self.hotbar:safe_remove()
+end
+
+function PANEL:rebuild()
+  if IsValid(self.inventory) or IsValid(self.hotbar) then
+    self.inventory:rebuild()
+    self.hotbar:rebuild()
+
+    return
+  end
+
+  self.inventory = vgui.create('fl_inventory', self)
+  self.inventory:set_player(fl.client)
+
+  local w, h = self:GetSize()
+  local width, height = self.inventory:GetSize()
+
+  if width < w / 2 then
+    local x, y = self.inventory:GetPos()
+
+    self.inventory:SetPos(w / 2 - width - 2, y)
+  end
+
+  if height < h then
+    local x, y = self.inventory:GetPos()
+
+    self.inventory:SetPos(x, h / 2 - height / 2)
+  end
+
+  self.hotbar = vgui.Create('fl_hotbar', self:GetParent())
+  self.hotbar:set_slot_padding(8)
+  self.hotbar:set_player(fl.client)
+  self.hotbar:rebuild()
+end
+
+vgui.Register('fl_inventory_menu', PANEL, 'fl_base_panel')
