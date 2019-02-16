@@ -68,6 +68,10 @@ function PANEL:Init()
         surface.PlaySound('garrysmod/ui_hover.wav')
 
         if IsValid(self.active_panel) then
+          if self.active_panel.on_change then
+            self.active_panel:on_change()
+          end
+
           self.active_panel:safe_remove()
 
           self.active_button:set_text_color(nil)
@@ -146,6 +150,10 @@ function PANEL:close_menu()
 
   if IsValid(self.active_panel) then
     self.active_panel:AlphaTo(0, theme.get_option('menu_anim_duration'), 0)
+
+    if self.active_panel.on_close then
+      self.active_panel:on_close()
+    end
   end
 
   self.button_panel:MoveTo(0, -self.button_panel:GetTall(), theme.get_option('menu_anim_duration'), 0, 0.5, function()
