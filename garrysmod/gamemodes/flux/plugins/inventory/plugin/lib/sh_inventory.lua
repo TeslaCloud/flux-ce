@@ -4,8 +4,11 @@ do
   local player_meta = FindMetaTable('Player')
 
   function player_meta:get_inventory(type)
-    local inventory = self:get_nv('inventory', {})[type or 'hotbar'] or {}
+    type = type or 'hotbar'
+
+    local inventory = self:get_nv('inventory', {})[type] or {}
     inventory.width, inventory.height = self:get_inventory_size(type)
+    inventory.type = type
 
     return inventory
   end
@@ -142,29 +145,31 @@ do
     function player_meta:take_item_by_id(instance_id)
       if !instance_id or instance_id < 1 then return end
 
-      local ply_inv = self:get_inventory()
-
-      for k, v in ipairs(ply_inv) do
+      for k, v in pairs(self:get_nv('inventory', {})) do
         for k1, v1 in ipairs(v) do
-          if table.HasValue(v1, instance_id) then
-            table.RemoveByValue(ply_inv[k][k1], instance_id)
-            self:set_inventory(ply_inv)
+          for k2, v2 in ipairs(v1) do
+            if table.HasValue(v2, instance_id) then
+              table.RemoveByValue(v[k1][k2], instance_id)
+              self:set_inventory(v, k)
 
-            hook.run('OnItemTaken', self, instance_id, k1, k)
+              hook.run('OnItemTaken', self, instance_id, k2, k1)
 
-            break
+              break
+            end
           end
         end
       end
     end
 
     function player_meta:take_item(id, amount)
-      amount = amount or 1
-      local invInstances = self:find_instances(id, amount)
+      local inv_instances = self:find_instances(id, amount)
 
-      for i = 1, #invInstances do
+      amount = amount or 1
+
+      for i = 1, #inv_instances do
         if amount > 0 then
-          self:take_item_by_id(invInstances[i].instance_id)
+          self:take_item_by_id(inv_instances[i].instance_id)
+
           amount = amount - 1
         end
       end
@@ -199,13 +204,15 @@ do
     return self:find_instances(id)[1]
   end
 
-  function player_meta:has_item_by_id(instance_id)
-    local ply_inv = self:get_inventory()
+  function player_meta:has_item_by_id(instance_id, inv_type)
+    local inventories = !inv_type and self:get_nv('inventory', {}) or { self:get_inventory(inv_type) }
 
-    for k, v in ipairs(ply_inv) do
+    for k, v in pairs(inventories) do 
       for k1, v1 in ipairs(v) do
-        if table.HasValue(v1, instance_id) then
-          return true
+        for k2, v2 in ipairs(v1) do
+          if table.HasValue(v2, instance_id) then
+            return true
+          end
         end
       end
     end

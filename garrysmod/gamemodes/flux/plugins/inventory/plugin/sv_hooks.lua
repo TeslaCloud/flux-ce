@@ -4,9 +4,11 @@ end
 
 function Inventory:OnActiveCharacterSet(player, character)
   local inv = {}
-  local item_ids = (character.item_ids or ''):split(',')
+  local item_ids = (character.item_ids or ''):split(';')
 
   for k, v in ipairs(item_ids) do
+    v = v:split(',')
+
     if !tonumber(v) then continue end
 
     local instance = item.find_instance_by_id(tonumber(v))
@@ -43,7 +45,7 @@ function Inventory:SaveCharacterData(player, char)
       if !istable(slot) then continue end
 
       for k, v in ipairs(slot) do
-        table.insert(item_ids, v)
+        table.insert(item_ids, table.concat(v, ','))
       end
     end
   end
@@ -62,6 +64,9 @@ cable.receive('fl_inventory_sync', function(player, inventory, inv_type)
 
       for k2, v2 in ipairs(v1) do
         if player:has_item_by_id(v2) then
+          local item_table = item.find_instance_by_id(v2)
+          item_table.inventory_type = inv_type
+
           table.insert(new_inventory[k][k1], v2)
         end
       end
