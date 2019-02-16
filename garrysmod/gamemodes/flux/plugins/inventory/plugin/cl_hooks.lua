@@ -31,7 +31,7 @@ function Inventory:AddTabMenuItems(menu)
   })
 end
 
-function Inventory:FLInitPostEntity()
+function Inventory:InitPostEntity()
   if IsValid(fl.client) then
     self:create_hotbar()
   end
