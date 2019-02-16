@@ -1,7 +1,4 @@
 function Inventory:PostCreateCharacter(player, char_id, char, char_data)
-  char.items = ''
-  char.inventory = {}
-
   plugin.call('AddDefaultItems', player, char, char.inventory)
 end
 

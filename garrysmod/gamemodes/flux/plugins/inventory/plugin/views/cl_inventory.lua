@@ -105,7 +105,7 @@ function PANEL:set_item(instance_id)
 
     if self.item_data then
       self.item_count = 1
-      self.instance_ids = {instance_id}
+      self.instance_ids = { instance_id }
     end
 
     self:rebuild()

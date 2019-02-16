@@ -1,5 +1,4 @@
 local PANEL = {}
-PANEL.inventory_slots = 8
 PANEL.inventory_type = 'hotbar'
 PANEL.draw_inventory_slots = true
 
