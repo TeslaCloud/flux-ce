@@ -55,6 +55,7 @@ function Inventory:create_hotbar()
   fl.client.hotbar = vgui.Create('fl_hotbar')
   fl.client.hotbar:SetVisible(false)
   fl.client.hotbar:set_player(fl.client)
+  fl.client.hotbar:set_slot_padding(8)
   fl.client.hotbar:rebuild()
 
   return fl.client.hotbar

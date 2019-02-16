@@ -51,18 +51,22 @@ function Inventory:SaveCharacterData(player, char)
   char.item_ids = table.concat(item_ids, ',')
 end
 
-cable.receive('fl_inventory_sync', function(player, inventory)
+cable.receive('fl_inventory_sync', function(player, inventory, inv_type)
   local new_inventory = {}
 
-  for slot, ids in ipairs(inventory) do
-    new_inventory[slot] = {}
+  for k, v in ipairs(inventory) do
+    new_inventory[k] = new_inventory[k] or {}
 
-    for k, v in ipairs(ids) do
-      if player:has_item_by_id(v) then
-        table.insert(new_inventory[slot], v)
+    for k1, v1 in ipairs(v) do
+      new_inventory[k][k1] = new_inventory[k][k1] or {}
+
+      for k2, v2 in ipairs(v1) do
+        if player:has_item_by_id(v2) then
+          table.insert(new_inventory[k][k1], v2)
+        end
       end
     end
   end
 
-  player:set_inventory(new_inventory)
+  player:set_inventory(new_inventory, inv_type)
 end)

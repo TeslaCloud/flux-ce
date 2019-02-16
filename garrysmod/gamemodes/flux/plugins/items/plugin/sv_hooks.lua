@@ -73,7 +73,7 @@ function Items:PlayerUseItem(player, item_table, ...)
   end
 end
 
-function Items:OnItemGiven(player, item_table, slot)
+function Items:OnItemGiven(player, item_table, x, y)
   hook.run('PlayerInventoryUpdated', player)
 end
 
@@ -107,14 +107,16 @@ function Items:PostCharacterLoaded(player, character)
   end
 end
 
-function Characters:PreSaveCharacter(player, index)
+function Items:PreSaveCharacter(player, index)
   local ply_inv = player:get_inventory()
 
-  for slot, ids in ipairs(ply_inv) do
-    for k, v in ipairs(ids) do
-      local item_table = item.find_instance_by_id(v)
+  for k, v in ipairs(player:get_nv('inventory', {})) do
+    for k1, v1 in ipairs(v) do
+      for k2, v2 in ipairs(v1) do
+        local item_table = item.find_instance_by_id(v2)
 
-      item_table:on_save(player)
+        item_table:on_save(player)
+      end
     end
   end
 end

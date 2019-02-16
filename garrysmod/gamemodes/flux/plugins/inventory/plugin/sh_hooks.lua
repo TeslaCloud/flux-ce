@@ -9,7 +9,7 @@ function Inventory:PlayerBindPress(player, bind, pressed)
 end
 
 function Inventory:PlayerSelectSlot(player, slot)
-  local instance_id = player:get_first_in_slot(slot)
+  local instance_id = player:get_first_in_slot(slot, 1)
   local item_table = item.find_by_instance_id(instance_id)
 
   if item_table then

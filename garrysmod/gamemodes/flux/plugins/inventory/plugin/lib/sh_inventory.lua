@@ -4,7 +4,10 @@ do
   local player_meta = FindMetaTable('Player')
 
   function player_meta:get_inventory(type)
-    return self:get_nv('inventory', {})[type or 'hotbar'] or {}
+    local inventory = self:get_nv('inventory', {})[type or 'hotbar'] or {}
+    inventory.width, inventory.height = self:get_inventory_size(type)
+
+    return inventory
   end
 
   function player_meta:set_inventory(new_inv, type)
@@ -19,53 +22,70 @@ do
     end
   end
 
-  function player_meta:get_slot(id, type)
-    return self:get_inventory(type)[id] or {}
+  function player_meta:get_slot(x, y, type)
+    local inv = self:get_inventory(type)
+    inv[y] = inv[y] or {}
+
+    return inv[y][x] or {}
   end
 
-  function player_meta:get_first_in_slot(id, type)
-    return self:get_slot(id, type)[1]
+  function player_meta:get_first_in_slot(x, y, type)
+    return self:get_slot(x, y, type)[1]
+  end
+
+  function player_meta:get_inventory_size(type)
+    if type == 'main_inventory' then
+      return config.get('inventory_width'), config.get('inventory_height')
+    elseif type == 'hotbar' then
+      return config.get('hotbar_width'), config.get('hotbar_height')
+    else
+      return hook.run('GetInventorySize', player, type)
+    end
   end
 
   if SERVER then
     function player_meta:add_item(item_table)
       if !item_table then return -1 end
 
-      local ply_inv = self:get_inventory()
-      local slots = self:get_character_data('inventory_slots', 8)
+      local ply_inv = self:get_inventory('hotbar')
 
-      for i = 1, slots do
+      for i = 1, ply_inv.height do
         ply_inv[i] = ply_inv[i] or {}
-        local ids = ply_inv[i]
 
-        -- Empty slot
-        if #ids == 0 then
-          table.insert(ply_inv[i], item_table.instance_id)
+        for k = 1, ply_inv.width do
+          ply_inv[i][k] = ply_inv[i][k] or {}
 
-          item_table.slot_id = i
-          item_table.inventory_type = ply_inv.type or 'hotbar'
+          local ids = ply_inv[i][k]
 
-          self:set_inventory(ply_inv)
+          -- Empty slot
+          if #ids == 0 then
+            table.insert(ply_inv[i][k], item_table.instance_id)
 
-          item.network_item(self, item_table.instance_id)
-
-          return i
-        end
-
-        local slot_table = item.find_instance_by_id(ids[1])
-
-        if item_table.stackable and item_table.id == slot_table.id then
-          if #ids < item_table.max_stack and plugin.call('ShouldItemStack', item_table, slot_table) != false then
-            table.insert(ply_inv[i], item_table.instance_id)
-
-            item_table.slot_id = i
+            item_table.slot_id = { i, k }
             item_table.inventory_type = ply_inv.type or 'hotbar'
 
             self:set_inventory(ply_inv)
 
             item.network_item(self, item_table.instance_id)
 
-            return i
+            return i, k
+          end
+
+          local slot_table = item.find_instance_by_id(ids[1])
+
+          if item_table.stackable and item_table.id == slot_table.id then
+            if #ids < item_table.max_stack and plugin.call('ShouldItemStack', item_table, slot_table) != false then
+              table.insert(ply_inv[i][k], item_table.instance_id)
+
+              item_table.slot_id = { i, k }
+              item_table.inventory_type = ply_inv.type or 'hotbar'
+
+              self:set_inventory(ply_inv)
+
+              item.network_item(self, item_table.instance_id)
+
+              return i, k
+            end
           end
         end
       end
@@ -84,12 +104,12 @@ do
         item_table = item.new(id, data)
       end
 
-      local slot = self:add_item(item_table)
+      local x, y = self:add_item(item_table)
 
-      if slot and slot != -1 then
-        hook.run('OnItemGiven', self, item_table, slot)
+      if x and y and x != -1 and y != -1 then
+        hook.run('OnItemGiven', self, item_table, x, y)
         return true
-      elseif slot == -1 then
+      elseif x == -1 then
         fl.dev_print("Failed to add item to player's inventory (item_table is invalid)! "..tostring(item_table))
       else
         fl.dev_print("Failed to add item to player's inventory (inv is full)! "..tostring(item_table))
@@ -105,12 +125,12 @@ do
 
       if !item_table then return end
 
-      local slot = self:add_item(item_table)
+      local x, y = self:add_item(item_table)
 
-      if slot and slot != -1 then
-        hook.run('OnItemGiven', self, item_table, slot)
+      if x and y and x != -1 then
+        hook.run('OnItemGiven', self, item_table, x, y)
         return true
-      elseif slot == -1 then
+      elseif x == -1 then
         fl.dev_print("Failed to add item to player's inventory (item_table is invalid)! "..tostring(item_table))
       else
         fl.dev_print("Failed to add item to player's inventory (inv is full)! "..tostring(item_table))
@@ -124,14 +144,16 @@ do
 
       local ply_inv = self:get_inventory()
 
-      for slot, ids in ipairs(ply_inv) do
-        if table.HasValue(ids, instance_id) then
-          table.RemoveByValue(ply_inv[slot], instance_id)
-          self:set_inventory(ply_inv)
+      for k, v in ipairs(ply_inv) do
+        for k1, v1 in ipairs(v) do
+          if table.HasValue(v1, instance_id) then
+            table.RemoveByValue(ply_inv[k][k1], instance_id)
+            self:set_inventory(ply_inv)
 
-          hook.run('OnItemTaken', self, instance_id, slot)
+            hook.run('OnItemTaken', self, instance_id, k1, k)
 
-          break
+            break
+          end
         end
       end
     end
@@ -180,9 +202,11 @@ do
   function player_meta:has_item_by_id(instance_id)
     local ply_inv = self:get_inventory()
 
-    for slot, ids in ipairs(ply_inv) do
-      if table.HasValue(ids, instance_id) then
-        return true
+    for k, v in ipairs(ply_inv) do
+      for k1, v1 in ipairs(v) do
+        if table.HasValue(v1, instance_id) then
+          return true
+        end
       end
     end
 
