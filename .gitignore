@@ -54,6 +54,7 @@ steamapps/
 *.rad
 *.bat
 *.local.yml
+*.local.lua
 /libintl.dll
 /srcds_run
 /srcds_linux

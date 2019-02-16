@@ -17,7 +17,8 @@ GM.code_name     = 'Chocolate Milkshake'
 GM.name_override = false -- Set to any string to override schema's browser name. This overrides the prefix too.
 
 -- Environment stuff
-FLUX_ENV         = include 'flux/config/environment.lua' or 'development'
+FLUX_ENV_PATH    = file.Exists('gamemodes/flux/config/environment.local.lua', 'GAME') and 'flux/config/environment.local.lua' or 'flux/config/environment.lua'
+FLUX_ENV         = include(FLUX_ENV_PATH) or 'development'
 IS_DEVELOPMENT   = FLUX_ENV == 'development'
 IS_STAGING       = FLUX_ENV == 'staging'
 IS_PRODUCTION    = FLUX_ENV == 'production'
