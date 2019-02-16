@@ -1364,7 +1364,6 @@ local fa_data = {
   ['fa-zhihu']                               = 60996
 }
 
-
 fl.fa.hooks = {}
 
 function fl.fa.hooks:CreateFonts()
