@@ -12,6 +12,7 @@ end
 
 library.new('fa', fl)
 
+-- This table is auto-generated, don't worry :)
 local fa_data = {
   ['fa-accessible-icon']                     = 60584,
   ['fa-accusoft']                            = 60585,
@@ -1364,26 +1365,27 @@ local fa_data = {
   ['fa-zhihu']                               = 60996
 }
 
+-- Convert to raw glyphs.
+for k, v in pairs(fa_data) do
+  fa_data[k] = string.utf8char(v)
+end
+
 fl.fa.hooks = {}
 
 function fl.fa.hooks:CreateFonts()
   font.create('flFontAwesome', {
-    font = 'FluxFontAwesome',
-    extended = true,
-    size = 16 -- default icon size is 16x16
+    font      = 'FluxFontAwesome',
+    extended  = true,
+    size      = 16, -- default icon size is 16x16
+    antialias = true,
+    weight    = 400
   })
 end
 
 plugin.add_hooks('FontAwesome', fl.fa.hooks)
 
 function fl.fa:get(id)
-  local data = fa_data[id]
-
-  if data then
-    return string.utf8char(data)
-  end
-
-  return id
+  return fa_data[id] or id
 end
 
 function fl.fa:draw(id, x, y, size, color, x_align, y_align, outline_width, outline_color)
@@ -1400,38 +1402,9 @@ function fl.fa:draw(id, x, y, size, color, x_align, y_align, outline_width, outl
   size = size or 16
   color = color or color_white
 
-  local icon = self:get(id)
-
   if outline_width then
-    return draw.SimpleTextOutlined(icon, font.size('flFontAwesome', size), x, y, color, x_align, y_align, outline_width, outline_color)
+    return draw.SimpleTextOutlined(self:get(id), font.size('flFontAwesome', size), x, y, color, x_align, y_align, outline_width, outline_color)
   else
-    return draw.SimpleText(icon, font.size('flFontAwesome', size), x, y, color, x_align, y_align)
+    return draw.SimpleText(self:get(id), font.size('flFontAwesome', size), x, y, color, x_align, y_align)
   end
 end
-
-concommand.Add("fl_fa_test", function()
-  local p = vgui.Create("DFrame")
-  p:SetPos(0, 0)
-  p:SetSize(ScrW(), ScrH())
-
-  local color_red = Color(255, 0, 0)
-  
-  function p:Paint(w, h)
-    local cur_w = 16
-    local cur_h = 24
-
-    for k, v in pairs(fa_data) do
-      fl.fa:draw(k, cur_w, cur_h, 16, color_red)
-      cur_w = cur_w + 16
-
-      if cur_w >= (w - 16) then
-        cur_h = cur_h + 16
-        cur_w = 16
-
-        if cur_h >= h then
-          break
-        end
-      end
-    end
-  end
-end)
