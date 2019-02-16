@@ -13,9 +13,12 @@
 </div>
 <div class="credits__entry">
   <div class="credits__name">Community Contributions</div>
-  <div class="credits__description">Seriously thanks a lot to all the people supporting the framework and helping us out with contributions. You rock!</div>
+  <div class="credits__description">
+    Seriously thanks a lot to all the people supporting the framework and
+    helping us out with contributions. You rock!
+  </div>
 </div>
-<br>
+<br />
 <div class="panel__title">
   <h2>Past Contributors</h2>
 </div>

@@ -1,6 +1,10 @@
 <div class="tab">
-  <button id="default__open" class="tab__links active" onclick="openTab(event, 'plugins')">Plugins</button>
-  <button class="tab__links" onclick="openTab(event, 'credits')">Credits</button>
+  <button id="default__open" class="tab__links active" onclick="openTab(event, 'plugins')">
+    Plugins
+  </button>
+  <button class="tab__links" onclick="openTab(event, 'credits')">
+    Credits
+  </button>
 </div>
 
 <div id="plugins" class="tab__content">
