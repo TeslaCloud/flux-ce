@@ -13,9 +13,7 @@ function Factions:SavePlayerData(player)
     local whitelist = Whitelist.new()
       whitelist.user_id = player.record.id
       whitelist.faction_id = v
-    whitelist:save()
-
-    player.record.whitelists[whitelist.id] = whitelist
+    table.insert(player.record.whitelists, whitelist)
   end
 end
 

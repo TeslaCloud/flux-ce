@@ -6,8 +6,6 @@ function Attributes:PostCreateCharacter(player, char_id, char, char_data)
       att.character_id = char.id
       att.attr_id = k
       att.value = char_data.attributes[k] or attribute.min
-    att:save()
-
-    char.attributes[att.id] = att
+    table.insert(char.attributes, att)
   end
 end

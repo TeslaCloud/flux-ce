@@ -111,6 +111,6 @@ areas.register_type('textarea', 'Text Area', 'Displays text whenever player ente
       return
     end
 
-    player.text_areas[area.id] = {text = area.text, end_time = cur_time + 10, reset_time = cur_time + 20}
+    player.text_areas[area.id] = { text = area.text, end_time = cur_time + 10, reset_time = cur_time + 20 }
   end
 end)

@@ -38,7 +38,6 @@ function player_meta:set_permission(perm_id, value)
         if value != PERM_NO then
           if value != v.object then
             v.object = value
-            v:save()
           end
         else
           v:destroy()
@@ -52,9 +51,7 @@ function player_meta:set_permission(perm_id, value)
       perm.permission_id = perm_id
       perm.object = value
       perm.user_id = self.record.id
-    perm:save()
-
-    self.record.permissions[perm.id] = perm
+    table.insert(self.record.permissions, perm)
   end
 
   local perm_table = self:get_permissions()
@@ -78,11 +75,9 @@ function player_meta:set_temp_permission(perm_id, value, duration)
 
         if v.object == value then
           v.expires = to_datetime(time_from_timestamp(v.expires) + duration)
-          v:save()
         else
           v.object = value
           v.expires = to_datetime(os.time() + duration)
-          v:save()
         end
 
         break
@@ -95,9 +90,7 @@ function player_meta:set_temp_permission(perm_id, value, duration)
         temp_perm.object = value
         temp_perm.expires = to_datetime(os.time() + duration)
         temp_perm.user_id = self.record.id
-      temp_perm:save()
-
-      self.record.temp_permissions[temp_perm.id] = temp_perm
+      table.insert(self.record.temp_permissions, temp_perm)
     end
   end
 
