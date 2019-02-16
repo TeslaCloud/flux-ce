@@ -37,7 +37,7 @@ function util.wait_for_ent(ent_index, callback, delay, wait_time)
   local entity = Entity(ent_index)
 
   if !IsValid(entity) then
-    local timer_name = CurTime()..'_EntWait'
+    local timer_name = CurTime()..'_ent_wait'
 
     timer.Create(timer_name, delay or 0, wait_time or 100, function()
       local entity = Entity(ent_index)

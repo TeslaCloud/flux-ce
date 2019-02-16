@@ -59,7 +59,7 @@ end
 
 function PLUGIN:KeyPress(player, key)
   if key == IN_RELOAD then
-    timer.Create('WeaponRaise'..player:SteamID(), 1, 1, function()
+    timer.Create('fl_weapon_raise_'..player:SteamID(), 1, 1, function()
       player:toggle_weapon_raised()
     end)
   end
@@ -67,7 +67,7 @@ end
 
 function PLUGIN:KeyRelease(player, key)
   if key == IN_RELOAD then
-    timer.Remove('WeaponRaise'..player:SteamID())
+    timer.Remove('fl_weapon_raise_'..player:SteamID())
   end
 end
 

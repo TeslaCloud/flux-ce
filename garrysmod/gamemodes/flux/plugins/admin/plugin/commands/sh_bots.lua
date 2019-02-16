@@ -42,7 +42,7 @@ function COMMAND:on_run(player, num_bots)
 
   fl.player:broadcast('add_bots_message', { get_player_name(player), num_bots })
 
-  timer.Create('ADD_BOTS', 0.2, num_bots, function()
+  timer.Create('fl_add_bots', 0.2, num_bots, function()
     RunConsoleCommand('bot')
   end)
 end
