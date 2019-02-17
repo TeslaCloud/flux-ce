@@ -146,8 +146,10 @@ do
       if !instance_id or instance_id < 1 then return end
 
       for k, v in pairs(self:get_nv('inventory', {})) do
-        for k1, v1 in ipairs(v) do
-          for k2, v2 in ipairs(v1) do
+        for k1, v1 in pairs(v) do
+          if !istable(v1) then continue end
+
+          for k2, v2 in pairs(v1) do
             if table.HasValue(v2, instance_id) then
               table.RemoveByValue(v[k1][k2], instance_id)
               self:set_inventory(v, k)
