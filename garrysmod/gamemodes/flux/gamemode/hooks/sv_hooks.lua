@@ -416,7 +416,7 @@ function GM:PlayerSay(player, text, team_chat)
   local is_command, length = string.is_command(tostring(text))
 
   if is_command then
-    fl.command:interpret(player, text:utf8sub(1 + length, text:utf8len()))
+    fl.command:interpret(player, text:utf8sub(1 + length, utf8.len(text)))
 
     return ''
   end

@@ -18,8 +18,8 @@ function PANEL:Think()
   local text = self:GetValue()
 
   if text and text != '' then
-    if string.utf8len(text) > self.limit then
-      self:SetValue(string.utf8sub(text, 0, self.limit))
+    if utf8.len(text) > self.limit then
+      self:SetValue(string.utf8sub(text, 1, self.limit))
     end
   end
 end

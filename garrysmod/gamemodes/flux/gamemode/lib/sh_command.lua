@@ -142,7 +142,7 @@ if SERVER then
   local macros = {
     -- Target everyone in a user group.
     ['@'] = function(player, str)
-      local group_name = str:utf8sub(2, str:utf8len()):utf8lower()
+      local group_name = str:utf8sub(2, utf8.len(str)):utf8lower()
       local to_ret = {}
 
       for k, v in ipairs(_player.GetAll()) do
@@ -155,7 +155,7 @@ if SERVER then
     end,
     -- Target everyone with str in their name.
       ['('] = function(player, str)
-      local name = str:utf8sub(2, str:utf8len() - 1)
+      local name = str:utf8sub(2, utf8.len(str) - 1)
       local to_ret = _player.find(name)
 
       if IsValid(to_ret) then
@@ -170,7 +170,7 @@ if SERVER then
     end,
     -- Target the first person whose nick is exactly str.
     ['['] = function(player, str)
-      local name = str:utf8sub(2, str:utf8len() - 1)
+      local name = str:utf8sub(2, utf8.len(str) - 1)
 
       for k, v in ipairs(_player.GetAll()) do
         if v:name() == name then
@@ -194,7 +194,7 @@ if SERVER then
     end,
     -- Target all players in radius.
     ['!'] = function(player, str)
-      local radius = tonumber(str:utf8sub(2, str:utf8len()))
+      local radius = tonumber(str:utf8sub(2, utf8.len(str)))
       local to_ret = {}
 
       for k, v in pairs(_player.GetAll()) do
@@ -328,7 +328,7 @@ if SERVER then
           -- Let plugins hook into this and abort command's execution if necessary.
           if !hook.run('PlayerRunCommand', player, cmd_table, args) then
             if IsValid(player) then
-              ServerLog(player:name()..' has used /'..cmd_table.name..' '..text:utf8sub(string.utf8len(command) + 2, string.utf8len(text)))
+              ServerLog(player:name()..' has used /'..cmd_table.name..' '..text:utf8sub(utf8.len(command) + 2, utf8.len(text)))
             end
 
             self:run(player, cmd_table, args)

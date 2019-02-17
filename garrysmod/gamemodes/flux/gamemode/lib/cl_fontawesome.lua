@@ -1367,7 +1367,7 @@ local fa_data = {
 
 -- Convert to raw glyphs.
 for k, v in pairs(fa_data) do
-  fa_data[k] = string.utf8char(v)
+  fa_data[k] = utf8.char(v)
 end
 
 fl.fa.hooks = {}

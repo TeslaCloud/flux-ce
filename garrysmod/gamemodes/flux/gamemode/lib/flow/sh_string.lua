@@ -45,7 +45,7 @@ function string.trim_end(str, needle, all_occurences)
       return str
     end
 
-    return str:utf8sub(1, str:utf8len() - needle:utf8len())
+    return str:utf8sub(1, utf8.len(str) - utf8.len(needle))
   else
     return str
   end
@@ -66,7 +66,7 @@ function string.trim_start(str, needle, all_occurences)
       return str
     end
 
-    return str:utf8sub(needle:utf8len() + 1, str:utf8len())
+    return str:utf8sub(utf8.len(needle) + 1, utf8.len(str))
   else
     return str
   end
@@ -110,7 +110,7 @@ function string.is_command(str)
 
   for k, v in ipairs(prefixes) do
     if str:starts(v) and hook.run('StringIsCommand', str) != false then
-      return true, string.utf8len(v)
+      return true, utf8.len(v)
     end
   end
 
@@ -171,7 +171,7 @@ function string.count(str, char)
 end
 
 function string.spelling(str, first_lower)
-  local len = str:utf8len()
+  local len = utf8.len(str)
   local end_text = str:utf8sub(-1)
 
   str = (!first_lower and str:utf8sub(1, 1):utf8upper() or str:utf8sub(1, 1):utf8lower())..str:utf8sub(2, len)
@@ -210,8 +210,8 @@ function string.chomp(str, what)
 end
 
 function string.capitalize(str)
-  local len = string.utf8len(str)
-  return string.utf8upper(str[1])..(len > 1 and string.utf8sub(str, 2, string.utf8len(str)) or '')
+  local len = utf8.len(str)
+  return string.utf8upper(str[1])..(len > 1 and string.utf8sub(str, 2, utf8.len(str)) or '')
 end
 
 function string.parse_table(str, ref)

@@ -280,8 +280,8 @@ function PANEL:on_validate()
       return false, t'char_create.name_invalid'
     end
 
-    if name:utf8len() < config.get('character_min_name_len') or
-    name:utf8len() > config.get('character_max_name_len') then
+    if utf8.len(name) < config.get('character_min_name_len') or
+    utf8.len(name) > config.get('character_max_name_len') then
       return false, t('char_create.name_len', { config.get('character_min_name_len'), config.get('character_max_name_len') })
     end
   end
@@ -291,8 +291,8 @@ function PANEL:on_validate()
       return false, t'char_create.desc_invalid'
     end
 
-    if desc:utf8len() < config.get('character_min_desc_len') or
-    desc:utf8len() > config.get('character_max_desc_len') then
+    if utf8.len(desc) < config.get('character_min_desc_len') or
+    utf8.len(desc) > config.get('character_max_desc_len') then
       return false, t('char_create.desc_len', { config.get('character_min_desc_len'), config.get('character_max_desc_len') })
     end
   end

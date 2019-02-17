@@ -74,7 +74,7 @@ function PANEL:Init()
 
     if history_entry and history_entry != '' and should_set then
       entry:SetText(history_entry)
-      entry:SetCaretPos(string.utf8len(history_entry))
+      entry:SetCaretPos(utf8.len(history_entry))
 
       return true
     end

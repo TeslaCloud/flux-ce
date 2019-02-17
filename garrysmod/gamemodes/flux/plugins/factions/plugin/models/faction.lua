@@ -113,14 +113,14 @@ function Faction:generate_name(player, char_name, rank, default_data)
     v = v[1]
 
     if v:starts('{callback:') then
-      local func_name = v:utf8sub(11, v:utf8len() - 1)
+      local func_name = v:utf8sub(11, utf8.len(v) - 1)
       local callback = self[func_name]
 
       if isfunction(callback) then
         final_name = final_name:Replace(v, callback(self, player))
       end
     elseif v:starts('{data:') then
-      local key = v:utf8sub(7, v:utf8len() - 1)
+      local key = v:utf8sub(7, utf8.len(v) - 1)
       local data = player:get_character_data(key, (default_data[key] or self.data[key] or ''))
 
       if isstring(data) then

@@ -147,7 +147,7 @@ function Characters:RebuildScoreboardPlayerCard(card, player)
 
   local phys_desc = player:get_phys_desc()
 
-  if phys_desc:utf8len() > 64 then
+  if utf8.len(phys_desc) > 64 then
     phys_desc = phys_desc:utf8sub(1, 64)..'...'
   end
 

@@ -25,7 +25,7 @@ function Prefixes:PlayerSay(player, text, team_chat)
       if istable(v.prefix) then
         for k2, v2 in ipairs(v.prefix) do
           if text:utf8lower():starts(v2) or v.check and v.check(text) then
-            local message = text:utf8sub((text:utf8lower():starts(v2) and v2:utf8len() or 0) + 1)
+            local message = text:utf8sub((text:utf8lower():starts(v2) and utf8.len(v2) or 0) + 1)
 
             if message != '' then
               v.callback(player, message, team_chat)
@@ -36,7 +36,7 @@ function Prefixes:PlayerSay(player, text, team_chat)
           end
         end
       elseif text:utf8lower():starts(v.prefix) or v.check and v.check(text) then
-        local message = text:utf8sub((text:utf8lower():starts(v.prefix) and v.prefix:utf8len() or 0) + 1)
+        local message = text:utf8sub((text:utf8lower():starts(v.prefix) and v.utf8.len(prefix) or 0) + 1)
 
         if message != '' then
           v.callback(player, message, team_chat)
