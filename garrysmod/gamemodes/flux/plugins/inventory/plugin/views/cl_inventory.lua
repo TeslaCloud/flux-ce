@@ -313,7 +313,7 @@ function PANEL:rebuild()
 
           if receiver.item_data then
             if (receiver.item_data.id == dropped[1].item_data.id and
-              receiver.inv_x != dropped[1].inv_x and receiver.inv_y != dropped[1].inv_y and receiver.item_data.stackable) then
+              !(receiver.inv_x == dropped[1].inv_x and receiver.inv_y == dropped[1].inv_y) and receiver.item_data.stackable) then
               receiver:combine(dropped[1])
               self:slots_to_inventory()
 
