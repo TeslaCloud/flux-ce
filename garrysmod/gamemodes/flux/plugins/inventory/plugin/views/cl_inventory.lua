@@ -372,6 +372,7 @@ function PANEL:rebuild()
         end
       end, {})
 
+      self:Receiver('fl_item')
     end
   end
 
