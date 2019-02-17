@@ -144,6 +144,7 @@ function PANEL:combine(panel2)
 end
 
 function PANEL:reset()
+  self.instance_ids = {}
   self.item_data = nil
   self.item_count = 0
 
@@ -274,6 +275,7 @@ function PANEL:rebuild()
   dragndrop.Clear()
 
   self.scroll:Clear()
+  self.slots = {}
 
   if IsValid(self.player) then
     self:set_inventory(self.player:get_inventory(self.inventory_type))
@@ -299,6 +301,11 @@ function PANEL:rebuild()
           inv_slot:set_item(self.inventory[i][k][1])
         end
       end
+
+      self.slots[i] = self.slots[i] or {}
+      self.slots[i][k] = inv_slot
+
+      self.scroll:AddItem(inv_slot)
 
       inv_slot:Receiver('fl_item', function(receiver, dropped, is_dropped, menu_index, mouse_x, mouse_y)
         if is_dropped then
@@ -349,11 +356,10 @@ function PANEL:rebuild()
 
           self:slots_to_inventory()
 
-          local inv_from = receiver:get_inventory_panel()
-          local inv_to = dropped[1]:get_inventory_panel()
+          local inv_from = dropped[1]:get_inventory_panel()
 
-          if inv_from.inventory_type != inv_to.inventory_type then
-            inv_to:slots_to_inventory()
+          if self.inventory_type != inv_from.inventory_type then
+            inv_from:slots_to_inventory()
           end
         else
           receiver.is_hovered = true
@@ -366,10 +372,6 @@ function PANEL:rebuild()
         end
       end, {})
 
-      self.slots[i] = self.slots[i] or {}
-      self.slots[i][k] = inv_slot
-
-      self.scroll:AddItem(inv_slot)
     end
   end
 
