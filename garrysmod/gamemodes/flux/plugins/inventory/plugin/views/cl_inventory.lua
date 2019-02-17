@@ -416,7 +416,7 @@ vgui.Register('fl_inventory', PANEL, 'fl_base_panel')
 local PANEL = {}
 
 function PANEL:Paint(w, h)
-  draw.RoundedBox(0, 0, 0, w, h, Color(0, 0, 0, 150))
+  theme.hook('PaintInventoryBackground', self, w, h)
 end
 
 function PANEL:get_menu_size()
