@@ -49,16 +49,18 @@ function PANEL:Paint(w, h)
   end
 
   draw.RoundedBox(0, 0, 0, w, h, draw_color)
+end
 
+function PANEL:PaintOver(w, h)
   if self.item_count >= 2 then
     DisableClipping(true)
-      draw.SimpleText(self.item_count, theme.get_font('text_smallest'), 52, 50, Color(200, 200, 200))
+      draw.SimpleText(self.item_count, theme.get_font('text_smallest'), 52, 50, Color(225, 225, 225))
     DisableClipping(false)
   end
 
   if isnumber(self.slot_number) then
     DisableClipping(true)
-      draw.SimpleText(self.slot_number, theme.get_font('text_smallest'), 4, 50, Color(200, 200, 200))
+      draw.SimpleText(self.slot_number, theme.get_font('text_smallest'), 4, 50, Color(175, 175, 175))
     DisableClipping(false)
   end
 end
