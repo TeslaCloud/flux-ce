@@ -11,7 +11,7 @@ en:
     character:
       title: Character
       desc: Character configuration.
-      min_name_len: 
+      min_name_len:
         name: Minimum Character Name Length
         desc: "The minimum amount of characters that player's name can be."
       max_name_len:
@@ -66,3 +66,5 @@ en:
     characters: Characters
   categories:
     character_management: Character management
+  loading:
+    characters: Loading characters, please wait...
