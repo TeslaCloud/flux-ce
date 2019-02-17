@@ -3,6 +3,8 @@ function Chatbox:OnResolutionChanged(new_width, new_height)
   theme.set_option('chatbox_height', new_height / 2.25)
   theme.set_option('chatbox_x', font.scale(8))
   theme.set_option('chatbox_y', new_height - theme.get_option('chatbox_height') - font.scale(32))
+  local entry_height = theme.set_option('chatbox_text_entry_height', font.scale(38))
+  theme.set_option('chatbox_text_entry_text_size', entry_height * 0.9)
 
   if chatbox.panel then
     chatbox.panel:Remove()
@@ -47,16 +49,21 @@ end
 function Chatbox:OnThemeLoaded(current_theme)
   local scrw, scrh = ScrW(), ScrH()
 
+  current_theme:set_option('chatbox_width', scrw / 2.25)
+  current_theme:set_option('chatbox_height', scrh / 2.25)
+  current_theme:set_option('chatbox_x', font.scale(8))
+  current_theme:set_option('chatbox_y', scrh - current_theme:get_option('chatbox_height') - font.scale(32))
+  local entry_height = current_theme:set_option('chatbox_text_entry_height', font.scale(38))
+  local text_size = current_theme:set_option('chatbox_text_entry_text_size', entry_height * 0.75)
+
   current_theme:set_font('chatbox_normal', 'flChatFont', font.scale(20))
   current_theme:set_font('chatbox_bold', 'flRobotoCondensedBold', font.scale(20))
   current_theme:set_font('chatbox_italic', 'flRobotoCondensedItalic', font.scale(20))
   current_theme:set_font('chatbox_italic_bold', 'flRobotoCondensedItalicBold', font.scale(20))
   current_theme:set_font('chatbox_syntax', 'flRobotoCondensed', font.scale(24))
+  current_theme:set_font('chatbox_text_entry', 'flRoboto', text_size)
 
-  current_theme:set_option('chatbox_width', scrw / 2.25)
-  current_theme:set_option('chatbox_height', scrh / 2.25)
-  current_theme:set_option('chatbox_x', font.scale(8))
-  current_theme:set_option('chatbox_y', scrh - current_theme:get_option('chatbox_height') - font.scale(32))
+  current_theme:set_color('chat_text_entry_background', Color(0, 0, 0, 215))
 end
 
 function Chatbox:ChatboxTextEntered(text)

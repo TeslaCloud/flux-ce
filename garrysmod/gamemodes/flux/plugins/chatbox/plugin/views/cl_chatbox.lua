@@ -80,6 +80,11 @@ function PANEL:Init()
     end
   end
 
+  self.text_entry.Paint = function(entry, w, h)
+    draw.rounded_box(8, 0, 0, w, h, theme.get_color('chat_text_entry_background'))
+    entry:DrawTextEntryText(theme.get_color('text'), theme.get_color('accent'), theme.get_color('text'))
+  end
+
   self:rebuild()
 end
 
@@ -283,9 +288,11 @@ function PANEL:rebuild()
   self:SetSize(chatbox.width, chatbox.height)
   self:SetPos(chatbox.x, chatbox.y)
 
-  self.text_entry:SetSize(chatbox.width, 20)
-  self.text_entry:SetPos(0, chatbox.height - 20)
-  self.text_entry:SetFont(theme.get_font('text_small'))
+  local text_entry_height = font.scale(42)
+
+  self.text_entry:SetSize(chatbox.width, text_entry_height)
+  self.text_entry:SetPos(0, chatbox.height - text_entry_height)
+  self.text_entry:SetFont(theme.get_font('chatbox_text_entry'))
   self.text_entry:SetTextColor(theme.get_color('text'))
   self.text_entry:RequestFocus()
 
