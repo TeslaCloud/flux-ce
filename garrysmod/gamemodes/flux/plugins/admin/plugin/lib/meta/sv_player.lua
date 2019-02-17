@@ -50,8 +50,8 @@ function player_meta:set_permission(perm_id, value)
     local perm = Permission.new()
       perm.permission_id = perm_id
       perm.object = value
-      perm.user_id = self.record.id
-    table.insert(self.record.permissions, perm)
+      perm.user_id = self.record:get_id()
+    self.record.permissions[perm:get_id()] = perm
   end
 
   local perm_table = self:get_permissions()
@@ -85,12 +85,12 @@ function player_meta:set_temp_permission(perm_id, value, duration)
     end
 
     if create then
-      local temp_perm = Temp_permission.new()
+      local temp_perm = TempPermission.new()
         temp_perm.permission_id = perm_id
         temp_perm.object = value
         temp_perm.expires = to_datetime(os.time() + duration)
-        temp_perm.user_id = self.record.id
-      table.insert(self.record.temp_permissions, temp_perm)
+        temp_perm.user_id = self.record:get_id()
+      self.record.temp_permissions[temp_perm:get_id()] = temp_perm
     end
   end
 

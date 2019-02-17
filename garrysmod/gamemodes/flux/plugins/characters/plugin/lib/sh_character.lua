@@ -26,10 +26,10 @@ function character.create(player, data)
   end
 
   local char = Character.new()
-    char.id = char.last_id + 1
+    char.id = char:get_id()
     char.steam_id = player:SteamID()
     char.name = data.name
-    char.user_id = player.record.id
+    char.user_id = player.record:get_id()
     char.model = data.model or ''
     char.skin = data.skin or 0
     char.gender = data.gender
@@ -38,7 +38,6 @@ function character.create(player, data)
     char.character_id = #player.record.characters + 1
     char.health = 100
     char.user = player.record
-
   player.record.characters[char.character_id] = char
 
   if SERVER then

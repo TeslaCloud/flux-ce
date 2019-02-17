@@ -1,3 +1,3 @@
-class 'Temp_permission' extends 'ActiveRecord::Base'
+class 'TempPermission' extends 'ActiveRecord::Base'
 
-Temp_permission:belongs_to 'User'
+TempPermission:belongs_to 'User'

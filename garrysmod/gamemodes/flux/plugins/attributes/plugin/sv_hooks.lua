@@ -3,9 +3,9 @@ function Attributes:PostCreateCharacter(player, char_id, char, char_data)
     local attribute = attributes.find_by_id(k)
 
     local att = Attribute.new()
-      att.character_id = char.id
+      att.character_id = char:get_id()
       att.attr_id = k
       att.value = char_data.attributes[k] or attribute.min
-    table.insert(char.attributes, att)
+    char.attributes[att:get_id()] = att
   end
 end

@@ -5,6 +5,7 @@ ActiveRecord.Base.table_name  = ''
 ActiveRecord.Base.schema      = nil
 ActiveRecord.Base.relations   = {}
 ActiveRecord.Base.validations = {}
+ActiveRecord.Base.last_id     = 0
 
 function ActiveRecord.Base:init()
   self.fetched = false
@@ -27,6 +28,15 @@ end
 function ActiveRecord.Base:get_schema()
   self.schema = self.schema or ActiveRecord.schema[self.table_name] or {}
   return self.schema
+end
+
+function ActiveRecord.Base:get_id()
+  if !self.id then
+    self.class.last_id = self.class.last_id + 1
+    self.id = self.class.last_id
+  end
+
+  return self.id
 end
 
 -- Dump object as a simple data table.
@@ -352,8 +362,6 @@ function ActiveRecord.Base:save()
 
     if !self.fetched then
       self.fetched = true
-
-      self.class.last_id = self.id
 
       if self.before_create then
         self:before_create()
