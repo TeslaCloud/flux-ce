@@ -317,6 +317,12 @@ function PANEL:rebuild()
               receiver:combine(dropped[1])
               self:slots_to_inventory()
 
+              local inv_from = dropped[1]:get_inventory_panel()
+
+              if self.inventory_type != inv_from.inventory_type then
+                inv_from:slots_to_inventory()
+              end
+
               return
             else
               receiver.is_hovered = false
