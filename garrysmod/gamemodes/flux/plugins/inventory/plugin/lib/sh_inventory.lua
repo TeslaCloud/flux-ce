@@ -21,7 +21,7 @@ do
       char.real_inventory[type] = new_inv
       character.save(self, char)
 
-      return self:set_nv('inventory', char.real_inventory)
+      self:set_nv('inventory', char.real_inventory)
     end
   end
 
@@ -64,14 +64,14 @@ do
           if #ids == 0 then
             table.insert(ply_inv[i][k], item_table.instance_id)
 
-            item_table.slot_id = { i, k }
+            item_table.slot_id = { k, i }
             item_table.inventory_type = ply_inv.type or 'hotbar'
 
             self:set_inventory(ply_inv)
 
             item.network_item(self, item_table.instance_id)
 
-            return i, k
+            return k, i
           end
 
           local slot_table = item.find_instance_by_id(ids[1])
@@ -80,14 +80,14 @@ do
             if #ids < item_table.max_stack and plugin.call('ShouldItemStack', item_table, slot_table) != false then
               table.insert(ply_inv[i][k], item_table.instance_id)
 
-              item_table.slot_id = { i, k }
+              item_table.slot_id = { k, i }
               item_table.inventory_type = ply_inv.type or 'hotbar'
 
               self:set_inventory(ply_inv)
 
               item.network_item(self, item_table.instance_id)
 
-              return i, k
+              return k, i
             end
           end
         end
@@ -207,11 +207,15 @@ do
   function player_meta:has_item_by_id(instance_id, inv_type)
     local inventories = !inv_type and self:get_nv('inventory', {}) or { self:get_inventory(inv_type) }
 
-    for k, v in pairs(inventories) do 
-      for k1, v1 in ipairs(v) do
-        for k2, v2 in ipairs(v1) do
-          if table.HasValue(v2, instance_id) then
-            return true
+    for k, v in pairs(inventories) do
+      for k1, v1 in pairs(v) do
+        if !istable(v1) then continue end
+
+        for k2, v2 in pairs(v1) do
+          for k3, v3 in pairs(v2) do
+            if v3 == instance_id then
+              return true
+            end
           end
         end
       end
