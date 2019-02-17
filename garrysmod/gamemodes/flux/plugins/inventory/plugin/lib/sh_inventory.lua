@@ -47,10 +47,12 @@ do
   end
 
   if SERVER then
-    function player_meta:add_item(item_table)
+    function player_meta:add_item(item_table, inv_type)
       if !item_table then return -1 end
 
-      local ply_inv = self:get_inventory('hotbar')
+      inv_type = inv_type or 'hotbar'
+
+      local ply_inv = self:get_inventory(inv_type)
 
       for i = 1, ply_inv.height do
         ply_inv[i] = ply_inv[i] or {}
@@ -65,9 +67,9 @@ do
             table.insert(ply_inv[i][k], item_table.instance_id)
 
             item_table.slot_id = { k, i }
-            item_table.inventory_type = ply_inv.type or 'hotbar'
+            item_table.inventory_type = inv_type
 
-            self:set_inventory(ply_inv)
+            self:set_inventory(ply_inv, inv_type)
 
             item.network_item(self, item_table.instance_id)
 
@@ -81,9 +83,9 @@ do
               table.insert(ply_inv[i][k], item_table.instance_id)
 
               item_table.slot_id = { k, i }
-              item_table.inventory_type = ply_inv.type or 'hotbar'
+              item_table.inventory_type = inv_type
 
-              self:set_inventory(ply_inv)
+              self:set_inventory(ply_inv, inv_type)
 
               item.network_item(self, item_table.instance_id)
 
@@ -91,6 +93,10 @@ do
             end
           end
         end
+      end
+
+      if inv_type == 'hotbar' then
+        return self:add_item(item_table, 'main_inventory')
       end
 
       return false
@@ -107,7 +113,7 @@ do
         item_table = item.new(id, data)
       end
 
-      local x, y = self:add_item(item_table)
+      local x, y = self:add_item(item_table, 'hotbar')
 
       if x and y and x != -1 and y != -1 then
         hook.run('OnItemGiven', self, item_table, x, y)
@@ -128,10 +134,11 @@ do
 
       if !item_table then return end
 
-      local x, y = self:add_item(item_table)
+      local x, y = self:add_item(item_table, 'hotbar')
 
       if x and y and x != -1 then
         hook.run('OnItemGiven', self, item_table, x, y)
+
         return true
       elseif x == -1 then
         fl.dev_print("Failed to add item to player's inventory (item_table is invalid)! "..tostring(item_table))
