@@ -267,7 +267,7 @@ function PANEL:slots_to_inventory()
     end
   end
 
-  cable.send('fl_inventory_sync', self.inventory, self.inventory_type)
+  cable.send('fl_inventory_sync', self.inventory)
 end
 
 function PANEL:rebuild()
