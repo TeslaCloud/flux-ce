@@ -1,7 +1,3 @@
-function Characters:PlayerInitialized(player)
-  character.send_to_client(player)
-end
-
 function Characters:PostPlayerSpawn(player)
   if !player:get_character() then
     player:SetNoDraw(true)
@@ -26,6 +22,8 @@ function Characters:PlayerDisconnected(player)
 end
 
 function Characters:PlayerRestored(player)
+  character.send_to_client(player)
+
   hook.run('PostRestoreCharacters', player)
 end
 

@@ -33,6 +33,12 @@ function Characters:PlayerInitialized()
   end
 end
 
+function Characters:GetLoadingScreenMessage()
+  if !fl.client.characters then
+    return t'loading.characters', 75
+  end
+end
+
 function Characters:ShouldMapsceneRender()
   if IsValid(fl.intro_panel) then
     return true
