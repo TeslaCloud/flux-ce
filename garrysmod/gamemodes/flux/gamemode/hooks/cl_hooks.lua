@@ -10,7 +10,7 @@ function GM:InitPostEntity()
 
   timer.Simple(0.4, function()
     cable.send('fl_player_created', true)
-    fl.localPlayerCreated = true
+    fl.local_player_created = true
   end)
 
   for k, v in ipairs(player.GetAll()) do
@@ -104,7 +104,7 @@ function GM:HUDDrawScoreBoard()
     local text = t'loading.schema'
     local percentage = 50
 
-    if !fl.localPlayerCreated then
+    if !fl.local_player_created then
       text = t'loading.local_player'
       percentage = 0
     end
