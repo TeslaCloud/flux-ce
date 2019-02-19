@@ -5,10 +5,10 @@ GM.Website       = 'https://teslacloud.net/'
 GM.Email         = 'support@teslacloud.net'
 
 -- Define Flux-Specific fields.
-GM.version       = '0.5.1-alpha'
-GM.version_num   = '0.5.1'
-GM.date          = '2/3/2019'
-GM.build         = '20190203'
+GM.version       = '0.5.2-alpha'
+GM.version_num   = '0.5.2'
+GM.date          = '2/19/2019'
+GM.build         = '20190219'
 GM.description   = 'A free roleplay gamemode framework.'
 GM.code_name     = 'Chocolate Milkshake'
 
