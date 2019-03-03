@@ -51,16 +51,17 @@ PANEL.option_height = 32
 PANEL.count = 0
 
 function PANEL:PerformLayout()
-  local w = 128
+  local w = 0
 
   -- Find the widest one
   for k, pnl in pairs(self:GetCanvas():GetChildren()) do
-    if pnl.PerformLayout then
-      pnl:PerformLayout()
-    end
+    pnl:InvalidateLayout()
+    pnl:SizeToContentsX()
 
     w = math.max(w, pnl:GetWide())
   end
+
+  w = w * 1.2
 
   self:SetWide(w)
 
