@@ -82,12 +82,12 @@ function Items:PlayerUseItem(player, item_table, ...)
 end
 
 function Items:OnItemGiven(player, item_table, x, y)
-  hook.run('ItemInventoryChanged', item_table.instance_id, item_table.inventory_type)
+  hook.run('ItemInventoryChanged', player, item_table.instance_id, item_table.inventory_type)
   hook.run('PlayerInventoryUpdated', player)
 end
 
 function Items:OnItemTaken(player, instance_id, slot_x, slot_y, inv_type)
-  hook.run('ItemInventoryChanged', instance_id, nil, inv_type)
+  hook.run('ItemInventoryChanged', player, instance_id, nil, inv_type)
   hook.run('PlayerInventoryUpdated', player)
 end
 

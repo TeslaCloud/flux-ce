@@ -58,9 +58,7 @@ function ItemEquippable:equip(player, should_equip)
   end
 end
 
-function ItemEquippable:on_inventory_changed(new_inv, old_inv)
-  local player = self:get_player()
-
+function ItemEquippable:on_inventory_changed(player, new_inv, old_inv)
   if IsValid(player) then
     if new_inv == self.equip_inv then
       self:equip(player, true)
