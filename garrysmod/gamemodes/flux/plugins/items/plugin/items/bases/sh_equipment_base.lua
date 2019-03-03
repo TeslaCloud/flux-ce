@@ -8,8 +8,13 @@ class 'ItemEquippable' extends 'ItemUsable'
 ItemEquippable.name = 'Equipment Base'
 ItemEquippable.description = 'An item that can be equipped.'
 ItemEquippable.category = t'item.category.equipment'
-ItemEquippable.equip_slot = t'item.slot.accessory'
 ItemEquippable.stackable = false
+ItemEquippable.equip_slot = t'item.slot.accessory'
+ItemEquippable.equip_inv = 'hotbar'
+ItemEquippable.action_sounds = {
+  ['equip'] = 'items/ammo_pickup.wav',
+  ['unequip'] = 'items/ammo_pickup.wav'
+}
 
 if CLIENT then
   function ItemEquippable:get_use_text()
@@ -19,22 +24,31 @@ if CLIENT then
       return t'item.option.equip'
     end
   end
+
+  function ItemEquippable:is_action_visible(act)
+    if act == 'use' and IsValid(self.entity) then
+      return false
+    end
+  end
 end
 
 function ItemEquippable:is_equipped()
-  return self:get_data('equipped', false)
+  if CLIENT then
+    print('inv_type', self.inventory_type)
+    print('equip_inv', self.equip_inv)
+  else
+    print('inv_type', self.inventory_type)
+    print('equip_inv', self.equip_inv)
+  end
+  return self.inventory_type == self.equip_inv
 end
 
 function ItemEquippable:on_equipped(player)
-  local ply_inv = player:get_inventory()
+  for k, v in pairs(player:get_items(self.equip_inv)) do
+    local item_table = item.find_instance_by_id(v)
 
-  for slot, ids in ipairs(ply_inv) do
-    for k, v in ipairs(ids) do
-      local item_table = item.find_instance_by_id(v)
-
-      if item_table.equip_slot and item_table.equip_slot == self.equip_slot and item_table:is_equipped() and item_table.instance_id != self.instance_id then
-        return false
-      end
+    if item_table.equip_slot and item_table.equip_slot == self.equip_slot and item_table:is_equipped() and item_table.instance_id != self.instance_id then
+      return false
     end
   end
 end
@@ -46,23 +60,37 @@ function ItemEquippable:post_unequipped(player) end
 function ItemEquippable:equip(player, should_equip)
   if should_equip then
     if self:on_equipped(player) != false then
-      self:set_data('equipped', true)
       self:post_equipped(player)
     end
   else
     if self:on_unequipped(player) != false then
-      self:set_data('equipped', false)
       self:post_unequipped(player)
+    end
+  end
+end
+
+function ItemEquippable:on_inventory_changed(new_inv, old_inv)
+  local player = self:get_player()
+
+  if IsValid(player) then
+    if new_inv == self.equip_inv then
+      self:equip(player, true)
+    elseif old_inv == self.equip_inv then
+      self:equip(player, false)
     end
   end
 end
 
 function ItemEquippable:on_use(player)
   if IsValid(self.entity) then
-    self:do_menu_action('on_take', player)
+    self:do_menu_action('on_take', player, { inv_type = self.equip_inv })
+  else
+    if self:is_equipped() then
+      player:transfer_item(self.instance_id, 'main_inventory')
+    else
+      player:transfer_item(self.instance_id, self.equip_inv)
+    end
   end
-
-  self:equip(player, !self:is_equipped())
 
   return true
 end
