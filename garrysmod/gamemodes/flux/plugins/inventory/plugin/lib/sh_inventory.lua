@@ -3,46 +3,63 @@ library.new 'inventory'
 do
   local player_meta = FindMetaTable('Player')
 
-  function player_meta:get_inventory(type)
-    type = type or 'hotbar'
+  function player_meta:get_inventory(inv_type)
+    inv_type = inv_type or 'hotbar'
 
-    local inventory = self:get_nv('inventory', {})[type] or {}
-    inventory.width, inventory.height = self:get_inventory_size(type)
-    inventory.type = type
+    local inventory = self:get_nv('inventory', {})[inv_type] or {}
+    inventory.width, inventory.height = self:get_inventory_size(inv_type)
+    inventory.type = inv_type
 
     return inventory
   end
 
-  function player_meta:set_inventory(new_inv, type)
+  function player_meta:get_items(inv_type)
+    local item_list = {}
+    local inventories = !inv_type and self:get_nv('inventory', {}) or { self:get_inventory(inv_type) }
+
+    for k, v in pairs(inventories) do
+      for k1, v1 in pairs(v) do
+        if !istable(v1) then continue end
+
+        for k2, v2 in pairs(v1) do
+          table.add(item_list, v2)
+        end
+      end
+    end
+
+    return item_list
+  end
+
+  function player_meta:set_inventory(new_inv, inv_type)
     if SERVER then
-      type = type or 'hotbar'
+    inv_type = inv_type or 'hotbar'
 
       local char = self:get_character()
-      char.real_inventory[type] = new_inv
+      char.real_inventory[inv_type] = new_inv
       character.save(self, char)
 
       self:set_nv('inventory', char.real_inventory)
     end
   end
 
-  function player_meta:get_slot(x, y, type)
-    local inv = self:get_inventory(type)
+  function player_meta:get_slot(x, y, inv_type)
+    local inv = self:get_inventory(inv_type)
     inv[y] = inv[y] or {}
 
     return inv[y][x] or {}
   end
 
-  function player_meta:get_first_in_slot(x, y, type)
-    return self:get_slot(x, y, type)[1]
+  function player_meta:get_first_in_slot(x, y, inv_type)
+    return self:get_slot(x, y, inv_type)[1]
   end
 
-  function player_meta:get_inventory_size(type)
-    if type == 'main_inventory' then
+  function player_meta:get_inventory_size(inv_type)
+    if inv_type == 'main_inventory' then
       return config.get('inventory_width'), config.get('inventory_height')
-    elseif type == 'hotbar' then
+    elseif inv_type == 'hotbar' then
       return config.get('hotbar_width'), config.get('hotbar_height')
     else
-      return hook.run('GetInventorySize', player, type)
+      return hook.run('GetInventorySize', player, inv_type)
     end
   end
 
@@ -157,8 +174,8 @@ do
           if !istable(v1) then continue end
 
           for k2, v2 in pairs(v1) do
-            if table.HasValue(v2, instance_id) then
-              table.RemoveByValue(v[k1][k2], instance_id)
+            if table.has_value(v2, instance_id) then
+              table.remove_by_value(v[k1][k2], instance_id)
               self:set_inventory(v, k)
 
               hook.run('OnItemTaken', self, instance_id, k2, k1)
@@ -187,15 +204,17 @@ do
 
   -- A function to find an amount of instances of an item in player's inventory.
   function player_meta:find_instances(id, amount)
-    amount = amount or 1
     local instances = item.find_all_instances(id)
-    local ply_inv = self:get_inventory()
+    local item_list = self:get_items()
     local to_ret = {}
 
+   amount = amount or 1
+
     for k, v in pairs(instances) do
-      for slot, ids in ipairs(ply_inv) do
-        if table.HasValue(ids, k) then
+      for k1, v1 in pairs(item_list) do
+        if v1 == v then
           table.insert(to_ret, v)
+
           amount = amount - 1
 
           if amount <= 0 then
@@ -214,19 +233,9 @@ do
   end
 
   function player_meta:has_item_by_id(instance_id, inv_type)
-    local inventories = !inv_type and self:get_nv('inventory', {}) or { self:get_inventory(inv_type) }
-
-    for k, v in pairs(inventories) do
-      for k1, v1 in pairs(v) do
-        if !istable(v1) then continue end
-
-        for k2, v2 in pairs(v1) do
-          for k3, v3 in pairs(v2) do
-            if v3 == instance_id then
-              return true
-            end
-          end
-        end
+    for k, v in pairs(self:get_items(inv_type)) do
+      if v == instance_id then
+        return true
       end
     end
 
