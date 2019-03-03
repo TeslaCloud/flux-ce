@@ -80,11 +80,7 @@ function PANEL:OnMouseReleased(...)
     if self.item_data and self.mouse_pressed and self.mouse_pressed > (CurTime() - 0.15) then
       fl.inventory_drag_slot = nil
 
-      if #self.instance_ids > 1 then
-        hook.run('PlayerUseItemMenu', self.instance_ids)
-      else
-        hook.run('PlayerUseItemMenu', self.item_data)
-      end
+      hook.run('PlayerUseItemMenu', self.instance_ids[#self.instance_ids])
     end
   end
 

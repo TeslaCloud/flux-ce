@@ -33,7 +33,9 @@ function Items:Think()
   end
 end
 
-function Items:PlayerUseItemMenu(item_table, is_entity)
+function Items:PlayerUseItemMenu(instance_id, is_entity)
+  local item_table = item.find_instance_by_id(instance_id)
+
   if !item_table then return end
 
   local item_menu = vgui.Create('fl_menu')
@@ -114,5 +116,5 @@ function Items:OnItemDataReceived()
 end
 
 cable.receive('fl_player_use_item_entity', function(entity)
-  hook.run('PlayerUseItemMenu', entity.item, true)
+  hook.run('PlayerUseItemMenu', entity.item.instance_id, true)
 end)
