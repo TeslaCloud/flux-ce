@@ -38,10 +38,7 @@ function Items:PlayerUseItemMenu(item_table, is_entity)
 
   local item_menu = vgui.Create('fl_menu')
 
-  if !item_table.name then
-    local close_button = item_menu:add_option(item_table.cancel_text or t'item.option.cancel', function() end)
-    close_button:SetIcon('icon16/cross.png')
-  else
+  if item_table.name then
     if item_table.custom_buttons then
       for k, v in pairs(item_table.custom_buttons) do
         if (v.on_show and v.on_show(item_table) == true) or !v.on_show then
@@ -55,29 +52,32 @@ function Items:PlayerUseItemMenu(item_table, is_entity)
     end
 
     if item_table.on_use then
-      local use_button = item_menu:add_option(item_table:get_use_text(), function()
-        item_table:do_menu_action('on_use')
-      end)
+      if !item_table.is_action_visible or item_table.is_action_visible('use') != false then
+        local use_button = item_menu:add_option(item_table:get_use_text(), function()
+          item_table:do_menu_action('on_use')
+        end)
 
-      use_button:SetIcon(item_table.use_icon or 'icon16/wrench.png')
+        use_button:SetIcon(item_table.use_icon or 'icon16/wrench.png')
+      end
     end
 
     if is_entity then
-      local take_button = item_menu:add_option(item_table:get_take_text(), function()
-        item_table:do_menu_action('on_take')
-      end)
+      if !item_table.is_action_visible or item_table.is_action_visible('take') != false then
+        local take_button = item_menu:add_option(item_table:get_take_text(), function()
+          item_table:do_menu_action('on_take')
+        end)
 
-      take_button:SetIcon(item_table.take_icon or 'icon16/wrench.png')
+        take_button:SetIcon(item_table.take_icon or 'icon16/wrench.png')
+      end
     else
-      local drop_button = item_menu:add_option(item_table:get_drop_text(), function()
-        item_table:do_menu_action('on_drop')
-      end)
+      if !item_table.is_action_visible or item_table.is_action_visible('drop') != false then
+        local drop_button = item_menu:add_option(item_table:get_drop_text(), function()
+          item_table:do_menu_action('on_drop')
+        end)
 
-      drop_button:SetIcon(item_table.take_icon or 'icon16/wrench.png')
+        drop_button:SetIcon(item_table.take_icon or 'icon16/wrench.png')
+      end
     end
-
-    local close_button = item_menu:add_option(item_table:get_cancel_text(), function() end)
-    close_button:SetIcon(item_table.cancel_icon or 'icon16/cross.png')
   end
 
   item_menu:open()
