@@ -41,6 +41,8 @@ function Inventory:SaveCharacterData(player, char)
 end
 
 function Inventory:ItemInventoryChanged(instance_ids, new_inv, old_inv)
+  if !istable(instance_ids) then instance_ids = { instance_ids } end
+
   for k, v in pairs(instance_ids) do
     local item_table = item.find_instance_by_id(v)
 

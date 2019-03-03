@@ -16,6 +16,14 @@ end
 
 function Items:PlayerTakeItem(player, item_table, ...)
   if IsValid(item_table.entity) then
+    local inv_type
+
+    for k, v in pairs({...}) do
+      if istable(v) and k == 'inv_type' then
+        inv_type = v
+      end
+    end
+
     local success = player:give_item_by_id(item_table.instance_id)
 
     if success then
@@ -74,10 +82,12 @@ function Items:PlayerUseItem(player, item_table, ...)
 end
 
 function Items:OnItemGiven(player, item_table, x, y)
+  hook.run('ItemInventoryChanged', item_table.instance_id, item_table.inventory_type)
   hook.run('PlayerInventoryUpdated', player)
 end
 
-function Items:OnItemTaken(player, item_table, slot)
+function Items:OnItemTaken(player, instance_id, slot_x, slot_y, inv_type)
+  hook.run('ItemInventoryChanged', instance_id, nil, inv_type)
   hook.run('PlayerInventoryUpdated', player)
 end
 
