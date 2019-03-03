@@ -368,6 +368,8 @@ function PANEL:rebuild()
 
           if self.inventory_type != inv_from.inventory_type then
             inv_from:slots_to_inventory()
+
+            cable.send('fl_inventory_changed', dropped[1].instance_ids, self.inventory_type, inv_from.inventory_type)
           end
         else
           receiver.is_hovered = true

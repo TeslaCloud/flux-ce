@@ -58,6 +58,16 @@ function Inventory:SaveCharacterData(player, char)
   char.item_ids = table.concat(item_ids, ',')
 end
 
+function Inventory:ItemInventoryChanged(instance_ids, new_inv, old_inv)
+  for k, v in pairs(instance_ids) do
+    local item_table = item.find_instance_by_id(v)
+
+    if item_table and item_table.on_inventory_changed then
+      item_table:on_inventory_changed(new_inv, old_inv)
+    end
+  end
+end
+
 cable.receive('fl_inventory_sync', function(player, inventory)
   local inv_type = inventory.type
   local new_inventory = {}
@@ -84,4 +94,8 @@ cable.receive('fl_inventory_sync', function(player, inventory)
   new_inventory.type = inv_type
 
   player:set_inventory(new_inventory, inv_type)
+end)
+
+cable.receive('fl_inventory_changed', function(player, instance_ids, new_inv, old_inv)
+  hook.run('ItemInventoryChanged', instance_ids, new_inv, old_inv)
 end)
