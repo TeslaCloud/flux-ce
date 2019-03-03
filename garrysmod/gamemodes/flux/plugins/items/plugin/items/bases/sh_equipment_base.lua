@@ -11,10 +11,6 @@ ItemEquippable.category = t'item.category.equipment'
 ItemEquippable.stackable = false
 ItemEquippable.equip_slot = t'item.slot.accessory'
 ItemEquippable.equip_inv = 'hotbar'
-ItemEquippable.action_sounds = {
-  ['equip'] = 'items/ammo_pickup.wav',
-  ['unequip'] = 'items/ammo_pickup.wav'
-}
 
 if CLIENT then
   function ItemEquippable:get_use_text()
@@ -33,13 +29,6 @@ if CLIENT then
 end
 
 function ItemEquippable:is_equipped()
-  if CLIENT then
-    print('inv_type', self.inventory_type)
-    print('equip_inv', self.equip_inv)
-  else
-    print('inv_type', self.inventory_type)
-    print('equip_inv', self.equip_inv)
-  end
   return self.inventory_type == self.equip_inv
 end
 
