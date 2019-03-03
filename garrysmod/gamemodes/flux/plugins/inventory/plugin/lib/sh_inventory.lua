@@ -200,6 +200,15 @@ do
         end
       end
     end
+
+    function player_meta:transfer_item(instance_id, new_inv)
+      local item_table = item.find_instance_by_id(instance_id)
+
+      if item_table and item_table.inventory_type != new_inv then
+        self:take_item_by_id(instance_id)
+        self:give_item_by_id(instance_id, new_inv)
+      end
+    end
   end
 
   -- A function to find an amount of instances of an item in player's inventory.
