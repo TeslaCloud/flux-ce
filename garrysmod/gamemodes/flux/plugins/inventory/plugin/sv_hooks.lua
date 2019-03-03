@@ -37,25 +37,7 @@ function Inventory:OnActiveCharacterSet(player, character)
 end
 
 function Inventory:SaveCharacterData(player, char)
-  local item_ids = {}
-
-  for k, v in pairs(char.real_inventory or {}) do
-    if !istable(v) then continue end
-
-    for k1, v1 in ipairs(v) do
-      if !istable(v1) then continue end
-
-      for k2, v2 in ipairs(v1) do
-        for k3, v3 in ipairs(v2) do
-          if !table.HasValue(item_ids, v3) then
-            table.insert(item_ids, v3)
-          end
-        end
-      end
-    end
-  end
-
-  char.item_ids = table.concat(item_ids, ',')
+  char.item_ids = table.concat(player:get_items(), ',')
 end
 
 function Inventory:ItemInventoryChanged(instance_ids, new_inv, old_inv)
