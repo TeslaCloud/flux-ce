@@ -30,24 +30,9 @@ function Inventory:AddTabMenuItems(menu)
   })
 end
 
-function Inventory:InitPostEntity()
-  if IsValid(fl.client) then
-    self:create_hotbar()
-  end
-end
-
 function Inventory:PostCharacterLoaded()
   if !IsValid(fl.client.hotbar) then
     self:create_hotbar()
-  end
-
-  if fl.client:Alive() and fl.client:has_initialized() then
-    local hotbar = fl.client.hotbar
-    local w, h = hotbar:GetSize()
-    local cx, cy = ScrC()
-    hotbar:SetVisible(true)
-    hotbar:rebuild()
-    hotbar:SetPos(cx - w * 0.5, ScrH() - h - font.scale(32))
   end
 end
 
