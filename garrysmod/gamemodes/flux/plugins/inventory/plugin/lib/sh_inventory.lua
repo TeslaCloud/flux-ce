@@ -119,7 +119,7 @@ do
       return false
     end
 
-    function player_meta:give_item(id, instance_id, data)
+    function player_meta:give_item(id, instance_id, data, inv_type)
       if !id then return end
 
       local item_table
@@ -130,7 +130,7 @@ do
         item_table = item.new(id, data)
       end
 
-      local x, y = self:add_item(item_table, 'hotbar')
+      local x, y = self:add_item(item_table, inv_type or 'hotbar')
 
       if x and y and x != -1 and y != -1 then
         hook.run('OnItemGiven', self, item_table, x, y)
@@ -144,14 +144,14 @@ do
       return false
     end
 
-    function player_meta:give_item_by_id(instance_id)
+    function player_meta:give_item_by_id(instance_id, inv_type)
       if !tonumber(instance_id) or tonumber(instance_id) <= 0 then return end
 
       local item_table = item.find_instance_by_id(instance_id)
 
       if !item_table then return end
 
-      local x, y = self:add_item(item_table, 'hotbar')
+      local x, y = self:add_item(item_table, inv_type or 'hotbar')
 
       if x and y and x != -1 then
         hook.run('OnItemGiven', self, item_table, x, y)
@@ -178,7 +178,7 @@ do
               table.remove_by_value(v[k1][k2], instance_id)
               self:set_inventory(v, k)
 
-              hook.run('OnItemTaken', self, instance_id, k2, k1)
+              hook.run('OnItemTaken', self, instance_id, k2, k1, k)
 
               break
             end
