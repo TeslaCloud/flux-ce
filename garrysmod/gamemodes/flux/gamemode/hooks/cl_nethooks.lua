@@ -17,6 +17,14 @@ cable.receive('fl_player_model_changed', function(ply_index, new_model, old_mode
 end)
 
 cable.receive('fl_notification', function(message, arguments)
+  if istable(arguments) then
+    for k, v in pairs(arguments) do
+      if isstring(v) then
+        arguments[k] = t(v)
+      end
+    end
+  end
+
   message = t(message, arguments)
 
   fl.notification:add(message, 8, Color(175, 175, 235))
