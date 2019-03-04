@@ -30,9 +30,10 @@ end
 function Bolt:HUDPaint()
   if IsValid(fl.client) and fl.client:has_initialized() and fl.client:Alive()
   and fl.client:get_nv('transmission_prevented') then
-    local text = t'vanish.client_text'
-    local font = theme.get_font('text_normal')
+    local text, font = t'vanish.client_text', theme.get_font('text_normal')
     local w, h = util.text_size(text, font)
-    draw.SimpleText(text, font, ScrW() - w - 16, ScrH() - h - 16, color_white)
+    local x, y = ScrW() - w - 16, ScrH() - h - 16
+    fl.fa:draw('fa-eye-slash', x - h - _font.scale(12), y, h)
+    draw.SimpleText(text, font, x, y, color_white)
   end
 end
