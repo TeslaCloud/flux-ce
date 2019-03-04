@@ -16,7 +16,7 @@ cable.receive('fl_player_model_changed', function(ply_index, new_model, old_mode
   end)
 end)
 
-cable.receive('fl_notification', function(message, arguments)
+cable.receive('fl_notification', function(message, arguments, color)
   if istable(arguments) then
     for k, v in pairs(arguments) do
       if isstring(v) then
@@ -25,11 +25,12 @@ cable.receive('fl_notification', function(message, arguments)
     end
   end
 
+  color = color and Color(color.r, color.g, color.b) or color_white
   message = t(message, arguments)
 
-  fl.notification:add(message, 8, Color(175, 175, 235))
+  fl.notification:add(message, 8, color:darken(50))
 
-  chat.AddText(Color(255, 255, 255), message)
+  chat.AddText(color, message)
 end)
 
 cable.receive('fl_player_take_damage', function()

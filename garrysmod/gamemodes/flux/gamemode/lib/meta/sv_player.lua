@@ -28,8 +28,12 @@ function player_meta:set_initialized(initialized)
   self:SetDTBool(BOOL_INITIALIZED, initialized)
 end
 
-function player_meta:notify(message, arguments)
-  fl.player:notify(self, message, arguments)
+function player_meta:notify(message, arguments, color)
+  fl.player:notify(self, message, arguments, color)
+end
+
+function player_meta:notify_admin(message, arguments)
+  fl.player:notify(self, message, arguments, Color(255, 128, 128))
 end
 
 function player_meta:get_ammo_table()

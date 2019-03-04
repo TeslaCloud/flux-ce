@@ -1,12 +1,12 @@
 library.new('player', fl)
 
-function fl.player:notify(player, message, arguments)
+function fl.player:notify(player, message, arguments, color)
   if !IsValid(player) then
     ServerLog(t(message, arguments))
     return
   end
 
-  cable.send(player, 'fl_notification', message, arguments)
+  cable.send(player, 'fl_notification', message, arguments, color)
 end
 
 function fl.player:broadcast(message, arguments)
