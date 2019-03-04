@@ -22,6 +22,15 @@ function Observer:PlayerEnterNoclip(player)
 
   player:set_nv('observer', true)
 
+  -- Respect that one vanish command from the admin mod.
+  if !player.is_vanished then
+    player:prevent_transmit_conditional(true, function(ply)
+      if ply:can('moderator') then
+        return false
+      end
+    end)
+  end
+
   return false
 end
 
@@ -48,6 +57,14 @@ function Observer:PlayerExitNoclip(player)
 
   player.observer_data = nil
   player:set_nv('observer', false)
+
+  if !player.is_vanished then
+    player:prevent_transmit_conditional(false, function(ply)
+      if ply:can('moderator') then
+        return false
+      end
+    end)
+  end
 
   return false
 end
