@@ -20,4 +20,7 @@ function ent_meta:prevent_transmit_conditional(should_prevent, condition)
       self:prevent_transmit(v, should_prevent)
     end
   end
+
+  -- Let the entity itself know it's gone.
+  self:set_nv('transmission_prevented', should_prevent, self)
 end

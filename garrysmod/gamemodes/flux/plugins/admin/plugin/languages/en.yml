@@ -67,6 +67,7 @@ en:
     disabled: "{player_name} has been unvanished by {admin_name}."
     vanished: "vanished"
     unvanished: "unvanished"
+    client_text: "You are vanished."
   role:
     user: The base rank that is automatically given to the player.
     assistant: Low clearance administrative rank given to assistant staff members.

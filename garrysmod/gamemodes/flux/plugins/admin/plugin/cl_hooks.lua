@@ -26,3 +26,13 @@ function Bolt:OnThemeLoaded(current_theme)
     return vgui.Create('fl_config_editor', parent)
   end)
 end
+
+function Bolt:HUDPaint()
+  if IsValid(fl.client) and fl.client:has_initialized() and fl.client:Alive()
+  and fl.client:get_nv('transmission_prevented') then
+    local text = t'vanish.client_text'
+    local font = theme.get_font('text_normal')
+    local w, h = util.text_size(text, font)
+    draw.SimpleText(text, font, ScrW() - w - 16, ScrH() - h - 16, color_white)
+  end
+end
