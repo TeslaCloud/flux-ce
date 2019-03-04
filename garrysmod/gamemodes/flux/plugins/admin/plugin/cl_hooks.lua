@@ -37,3 +37,17 @@ function Bolt:HUDPaint()
     draw.SimpleText(text, font, x, y, color_white)
   end
 end
+
+function Bolt:PostRender()
+  if fl.client:get_nv('should_fullbright') then
+    render.SetLightingMode(1)
+    fl.client.fullbright_enabled = true
+  end
+end
+
+function Bolt:PreDrawHUD()
+  if fl.client.fullbright_enabled then
+    render.SetLightingMode(0)
+    fl.client.fullbright_enabled = false
+  end
+end

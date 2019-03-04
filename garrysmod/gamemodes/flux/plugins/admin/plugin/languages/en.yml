@@ -68,6 +68,13 @@ en:
     vanished: "vanished"
     unvanished: "unvanished"
     client_text: "You are vanished."
+  fullbright:
+    description: "Disables lights for the specified player."
+    syntax: "<string player> <bool should_hide>"
+    enabled: "{player_name} has enabled fullbright mode for {targets}."
+    disabled: "{player_name} has disabled fullbright mode for {targets}."
+    enabled_self: "Fullbright mode enabled."
+    disabled_self: "Fullbright mode disabled."
   role:
     user: The base rank that is automatically given to the player.
     assistant: Low clearance administrative rank given to assistant staff members.

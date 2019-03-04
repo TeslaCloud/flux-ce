@@ -9,12 +9,13 @@ COMMAND.immunity = true
 COMMAND.aliases = { 'v' }
 
 function COMMAND:on_run(player, targets, should_vanish)
+  local admin_name = get_player_name(player)
+
   for k, target in ipairs(targets) do
     should_vanish = should_vanish != nil and tobool(should_vanish) or !target.is_vanished
 
     local phrase = 'vanish.'..(should_vanish and 'enabled' or 'disabled')
     local target_name = target:Name()
-    local admin_name = get_player_name(player)
 
     target:AddEFlags(EFL_FORCE_CHECK_TRANSMIT)
 
@@ -39,7 +40,7 @@ function COMMAND:on_run(player, targets, should_vanish)
 
     target:prevent_transmit_conditional(should_vanish, function(ply)
       if ply:can('moderator') then
-        ply:notify(phrase, { player_name = target_name, admin_name = admin_name })
+        ply:notify_admin(phrase, { player_name = target_name, admin_name = admin_name })
         return false
       end
     end)
