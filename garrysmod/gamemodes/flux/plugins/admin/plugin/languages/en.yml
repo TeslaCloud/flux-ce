@@ -59,6 +59,14 @@ en:
     description: Sets player's usergroup.
     syntax: <target> <usergroup>"
     message: "{1} has set {2}'s user group to {3}."
+  vanish:
+    description: "Completely hides the specified player from everyone else on the server."
+    syntax: "<string player> [bool should_vanish]"
+    self: "You are now {state}."
+    enabled: "{player_name} has been vanished by {admin_name}."
+    disabled: "{player_name} has been unvanished by {admin_name}."
+    vanished: "vanished"
+    unvanished: "unvanished"
   role:
     user: The base rank that is automatically given to the player.
     assistant: Low clearance administrative rank given to assistant staff members.
