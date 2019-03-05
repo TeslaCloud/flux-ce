@@ -67,7 +67,7 @@ en:
     disabled: "{player_name} has been unvanished by {admin_name}."
     vanished: "vanished"
     unvanished: "unvanished"
-    client_text: "You are vanished."
+    client_text: "You are vanished"
   fullbright:
     description: "Disables lights for the specified player."
     syntax: "<string player> <bool should_hide>"

@@ -67,7 +67,7 @@ ru:
     disabled: "{admin_name} сделал {player_name} видимым."
     vanished: "скрыты от других игроков"
     unvanished: "видимы другим игрокам"
-    client_text: "Вы невидимка."
+    client_text: "Вы невидимка"
   fullbright:
     description: "Отключает темноту."
     syntax: "<игрок> <отключить_свет>"
