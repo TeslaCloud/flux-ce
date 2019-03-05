@@ -34,7 +34,7 @@ function ActiveRecord.Adapters.Abstract:is_sqlite()
   return false
 end
 
-function ActiveRecord.Adapters.Abstract:connect(config)
+function ActiveRecord.Adapters.Abstract:connect(config, on_connected)
   self._connected = true
 end
 
@@ -109,6 +109,11 @@ end
 -- Called when the Database connection fails.
 function ActiveRecord.Adapters.Abstract:on_connection_failed(error_text)
   ErrorNoHalt('ActiveRecord - Unable to connect to the database!\n'..error_text..'\n')
+
+  if error_text:find('does not exist') and !self:is_sqlite() then
+    ErrorNoHalt('HINT:\ntry running "flux db:create" to create the databases.\n\n')
+  end
+
   hook.run('DatabaseConnectionFailed', error_text)
 end
 

@@ -16,7 +16,6 @@ ActiveRecord.define_model('bans', function(t)
   t:string 'steam_id'
   t:text 'reason'
   t:integer 'duration'
-  t:integer 'user_id'
   t:datetime 'unban_time'
 end)
 

@@ -206,7 +206,7 @@ if SERVER then
       obj.steam_id = steam_id
       obj.reason = reason
       obj.duration = duration
-      obj.unban_time = unban_time
+      obj.unban_time = to_datetime(unban_time)
     self:record_ban(steam_id, obj:save())
   end
 

@@ -26,7 +26,7 @@ function ActiveRecord.Adapters.Pg:is_postgres()
   return true
 end
 
-function ActiveRecord.Adapters.Pg:connect(config)
+function ActiveRecord.Adapters.Pg:connect(config, on_connected)
   local host, user, password, port, database = config.host, config.user, config.password, config.port, config.database
 
   if !port then
@@ -46,7 +46,7 @@ function ActiveRecord.Adapters.Pg:connect(config)
         ErrorNoHalt(err)
       end
 
-      self:on_connected()
+      if isfunction(on_connected) then on_connected(self) end
     else
       self:on_connection_failed(err)
     end

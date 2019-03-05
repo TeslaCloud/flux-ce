@@ -26,7 +26,7 @@ function ActiveRecord.Adapters.Mysqloo:is_mysql()
   return true
 end
 
-function ActiveRecord.Adapters.Mysqloo:connect(config)
+function ActiveRecord.Adapters.Mysqloo:connect(config, on_connected)
   local host, user, password, port, database, socket, flags = config.host, config.user, config.password, config.port, config.database, config.socket, config.flags
 
   if !port then
@@ -49,7 +49,8 @@ function ActiveRecord.Adapters.Mysqloo:connect(config)
         ErrorNoHalt('ActiveRecord - Failed to set MySQL encoding to UTF-8!\n')
         ErrorNoHalt(error_message..'\n')
       end
-      self:on_connected()
+
+      if isfunction(on_connected) then on_connected(self) end
     end
 
     self.connection.onConnectionFailed = function(database, error_text)

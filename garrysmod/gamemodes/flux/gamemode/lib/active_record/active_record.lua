@@ -131,7 +131,7 @@ function ActiveRecord.connect()
   end
 
   ActiveRecord.adapter = (ActiveRecord.Adapters[adapter:capitalize()] or ActiveRecord.Adapters.Abstract).new()
-  ActiveRecord.adapter:connect(db_settings)
+  ActiveRecord.adapter:connect(db_settings, ActiveRecord.Adapters.Abstract.on_connected)
 end
 
 function ActiveRecord.on_connected()

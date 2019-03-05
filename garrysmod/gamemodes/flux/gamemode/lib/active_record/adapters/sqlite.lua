@@ -18,8 +18,8 @@ ActiveRecord.Adapters.Sqlite.types = {
 
 ActiveRecord.Adapters.Sqlite._sql_syntax = 'sqlite'
 
-function ActiveRecord.Adapters.Sqlite:connect()
-  self:on_connected()
+function ActiveRecord.Adapters.Sqlite:connect(settings, on_connected)
+  if isfunction(on_connected) then on_connected(self) end
 end
 
 function ActiveRecord.Adapters.Sqlite:is_sqlite()

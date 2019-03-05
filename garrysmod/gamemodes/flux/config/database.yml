@@ -1,20 +1,20 @@
 development:
   adapter: "sqlite"
   encoding: "utf8"
-  host: "example"
-  user: "example"
-  password: "example"
-  database: "example"
-  port: 3306
+  host: "127.0.0.1"
+  user: "username"
+  password: "password"
+  database: "flux_dev"
+  port: 1234
   socket: ~
   flags: ~
 production:
-  adapter: "mysqloo"
+  adapter: "sqlite"
   encoding: "utf8"
   host: "127.0.0.1"
-  user: "flux"
-  password: "flux"
+  user: "username"
+  password: "password"
   database: "flux"
-  port: 3306
+  port: 1234
   socket: ~
   flags: ~

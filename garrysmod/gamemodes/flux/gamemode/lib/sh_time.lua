@@ -133,7 +133,7 @@ function Time:strftime(fmt, time)
 end
 
 function Time:nice(time)
-  time = time or self.time
+  time = time or self.time or 0
   local seconds = math.abs(time or self.time)
   local minutes = seconds * m_const_d
   local hours   = seconds * h_const_d
