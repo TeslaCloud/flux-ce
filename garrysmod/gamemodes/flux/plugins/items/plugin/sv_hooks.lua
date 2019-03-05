@@ -47,6 +47,11 @@ function Items:PlayerDropItem(player, instance_id)
 
   player:take_item_by_id(instance_id)
 
+  item_table.inventory_type = nil
+  item_table.slot_id = nil
+
+  item.network_item(player, instance_id)
+
   local distance = trace.HitPos:Distance(player:GetPos())
 
   if distance < 80 then
