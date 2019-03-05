@@ -54,7 +54,7 @@ function Items:PlayerUseItemMenu(instance_id, is_entity)
     end
 
     if item_table.on_use then
-      if !item_table.is_action_visible or item_table.is_action_visible('use') != false then
+      if !item_table.is_action_visible or item_table:is_action_visible('use') != false then
         local use_button = item_menu:add_option(item_table:get_use_text(), function()
           item_table:do_menu_action('on_use')
         end)
@@ -64,7 +64,7 @@ function Items:PlayerUseItemMenu(instance_id, is_entity)
     end
 
     if is_entity then
-      if !item_table.is_action_visible or item_table.is_action_visible('take') != false then
+      if !item_table.is_action_visible or item_table:is_action_visible('take') != false then
         local take_button = item_menu:add_option(item_table:get_take_text(), function()
           item_table:do_menu_action('on_take')
         end)
@@ -72,7 +72,7 @@ function Items:PlayerUseItemMenu(instance_id, is_entity)
         take_button:SetIcon(item_table.take_icon or 'icon16/wrench.png')
       end
     else
-      if !item_table.is_action_visible or item_table.is_action_visible('drop') != false then
+      if !item_table.is_action_visible or item_table:is_action_visible('drop') != false then
         local drop_button = item_menu:add_option(item_table:get_drop_text(), function()
           item_table:do_menu_action('on_drop')
         end)
@@ -84,7 +84,7 @@ function Items:PlayerUseItemMenu(instance_id, is_entity)
 
   item_menu:open()
 
-  if item_table.entity then
+  if IsValid(item_table.entity) then
     item_menu:SetPos(ScrW() * 0.5, ScrH() * 0.5)
   else
     local x, y = gui.MouseX(), gui.MouseY()
