@@ -200,7 +200,7 @@ function Characters:AddMainMenuItems(panel, sidebar)
     panel.sidebar:MoveTo(-panel.sidebar:GetWide(), theme.get_option('menu_sidebar_y'), theme.get_option('menu_anim_duration'), 0.25, 0.5)
   end)
 
-  if #fl.client:get_all_characters() > 0 then
+  if fl.client:get_all_characters() and #fl.client:get_all_characters() > 0 then
     panel:add_button(t'char_create.load', function(btn)
       btn:set_enabled(false)
 
