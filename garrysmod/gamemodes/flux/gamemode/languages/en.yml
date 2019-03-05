@@ -1,33 +1,30 @@
 en:
   time:
-    seconds:
-      "1": "{1} second"
-      "2": "{1} seconds"
-    minutes:
-      "1": "{1} minute"
-      "2": "{1} minutes"
-    hours:
-      "1": "{1} hour"
-      "2": "{1} hours"
-    days:
-      "1": "{1} day"
-      "2": "{1} days"
-    weeks:
-      "1": "{1} week"
-      "2": "{1} weeks"
-    months:
-      "1": "{1} month"
-      "2": "{1} months"
-    years:
-      "1": "{1} year"
-      "2": "{1} years"
+    just_now: "just now"
+    second: "second"
+    seconds: "seconds"
+    minute: "minute"
+    minutes: "minutes"
+    hour: "hour"
+    hours: "hours"
+    day: "day"
+    days: "days"
+    week: "week"
+    weeks: "weeks"
+    year: "year"
+    years: "years"
+    from_now: "from now"
+    ago: "ago"
+    over: "over"
+    about: "about"
     permanently: permanently
-    for: for
+    for: "for {time}"
     and: and
   cant_now: You cannot do this right now!
   chat:
     aliases: Aliases
     no_commands_found: No commands found!
+    everyone: everyone
   tab_menu:
     scoreboard: Players
     admin: Admin
@@ -37,8 +34,6 @@ en:
     help: Clicking player's card may bring up some options.
   "yes": "Yes"
   "no": "No"
-  chat:
-    everyone: everyone
   bar_text:
     health: HEALTH
     armor: ARMOR
