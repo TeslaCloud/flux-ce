@@ -402,7 +402,7 @@ if SERVER then
     ent:Spawn()
 
     item_table:set_entity(ent)
-    item.network_item(player, item_table.instance_id)
+    item.network_item(nil, item_table.instance_id)
 
     entities[item_table.id] = entities[item_table.id] or {}
     entities[item_table.id][item_table.instance_id] = entities[item_table.id][item_table.instance_id] or {}

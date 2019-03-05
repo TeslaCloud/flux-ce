@@ -115,9 +115,9 @@ else
       text = self.item.print_name
       desc = self.item.description
     else
-      if !self.dataRequested then
+      if !self.data_requested then
         cable.send('fl_items_data_request', self:EntIndex())
-        self.dataRequested = true
+        self.data_requested = true
       end
 
       fl.draw_rotating_cog(x, y - 48, 48, 48, Color(255, 255, 255))
