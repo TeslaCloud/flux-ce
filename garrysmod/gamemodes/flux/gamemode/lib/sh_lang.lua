@@ -5,62 +5,6 @@ fl.lang.stored = stored
 
 local current_language = 'en'
 
-local default_lang_table = {
-  nice_time = function(self, time)
-    if time == 1 then
-      return t('time.seconds.1', time), 0
-    elseif time < 60 then
-      return t('time.seconds.2', time), 0
-    elseif time < (60 * 60) then
-      local _t = math.floor(time / 60)
-      return t('time.minutes.'..(_t != 1 and '2') or '1', _t), time - _t * 60
-    elseif time < (60 * 60 * 24) then
-      local _t = math.floor(time / 60 / 60)
-      return t('time.hours.'..(_t != 1 and '2') or '1', _t), time - _t * 60 * 60
-    elseif time < (60 * 60 * 24 * 7) then
-      local _t = math.floor(time / 60 / 60 / 24)
-      return t('time.days.'..(_t != 1 and '2') or '1', _t), time - _t * 60 * 60 * 24
-    elseif time < (60 * 60 * 24 * 30) then
-      local _t = math.floor(time / 60 / 60 / 24 / 7)
-      return t('time.weeks.'..(_t != 1 and '2') or '1', _t), time - _t * 60 * 60 * 24 * 7
-    elseif time < (60 * 60 * 24 * 30 * 12) then
-      local _t = math.floor(time / 60 / 60 / 24 / 30)
-      return t('time.months.'..(_t != 1 and '2') or '1', _t), time - _t * 60 * 60 * 24 * 30
-    elseif time >= (60 * 60 * 24 * 365) then
-      local _t = math.floor(time / 60 / 60 / 24 / 365)
-      return t('time.years.'..(_t != 1 and '2') or '1', _t), time - _t * 60 * 60 * 24 * 365
-    else
-      return t('time.seconds.2', time), 0
-    end
-  end,
-  nice_time_full = function(self, time)
-    local out = ''
-    local i = 0
-
-    while time > 0 do
-      if i >= 100 then break end -- fail safety
-
-      local str, remainder = self:nice_time(time)
-
-      time = remainder
-
-      if time <= 0 then
-        if i != 0 then
-          out = out..t('time.and')..str
-        else
-          out = str
-        end
-      else
-        out = out..str..' '
-      end
-
-      i = i + 1
-    end
-
-    return out
-  end
-}
-
 function fl.lang:get_phrase(id, ref)
   ref = ref or stored
 
@@ -128,28 +72,10 @@ function fl.lang:get_plural(language, phrase, count)
   return translated
 end
 
-function fl.lang:nice_time(language, time)
+function fl.lang:nice_time(time, lang)
   time = tonumber(time) or 0
 
-  local lang_table = stored[language]
-
-  if lang_table and lang_table.nice_time then
-    return lang_table:nice_time(time)
-  end
-
-  return string.nice_time(time)
-end
-
-function fl.lang:nice_time_full(language, time)
-  time = tonumber(time) or 0
-
-  local lang_table = stored[language]
-
-  if lang_table and lang_table.nice_time_full then
-    return lang_table:nice_time_full(time)
-  end
-
-  return string.nice_time(time)
+  return Time:format_nice(Time:nice_from_now(Time:now() + Time:seconds(time)), lang)
 end
 
 function fl.lang:get_case(language, phrase, case)

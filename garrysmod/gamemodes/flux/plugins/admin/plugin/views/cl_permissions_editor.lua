@@ -206,7 +206,7 @@ function PANEL:set_temporary(perm, expires)
   local button = self:get_button(perm)
   button.is_temp = expires != 0 and true or nil
 
-  button:SetTooltip(expires != 0 and t'admin.expires'..' '..string.nice_time(expires - os.time()) or false)
+  button:SetTooltip(expires != 0 and t'admin.expires'..' '..fl.lang:nice_time(expires - os.time()) or false)
 
   if IsValid(self.prev_temp) and self.prev_temp != button then
     self.prev_temp.is_temp = nil
