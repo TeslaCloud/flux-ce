@@ -638,6 +638,11 @@ function ActiveRecord.Base:has_one(what)
   return self:has({ Flow.Inflector:pluralize(what), as = what }, false)
 end
 
+--- Specifies that the object belongs to a parent object.
+-- ```
+-- MyClass:belongs_to 'user'
+-- ```
+-- @return [ActiveRecord::Base(self)]
 function ActiveRecord.Base:belongs_to(target, one)
   if isstring(target) then
     target = target:parse_table()
