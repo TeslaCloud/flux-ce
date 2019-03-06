@@ -1,12 +1,42 @@
+--- Base class for ActiveRecord database-tied objects.
+-- These objects are also referred to as "models".
 class 'ActiveRecord::Base'
 
+--- @warning [Internal]
+-- Provides backend data storage for the querying engine.
+-- @return [MetaArray]
 ActiveRecord.Base.query_map   = a{}
+
+--- Database table the object is tied to.
+-- @return [String]
 ActiveRecord.Base.table_name  = ''
+
+--- Database schema of the object.
+-- This table contains all the columns that are written to the database.
+-- @return [Array]
 ActiveRecord.Base.schema      = nil
+
+--- @warning [Internal]
+-- Class relations of the object.
+-- Serves as a list of objects that are children to this object
+-- or that this object is a child to.
+-- @return [Array]
 ActiveRecord.Base.relations   = {}
+
+--- @warning [Internal]
+-- List of validations to be ran when the object is being saved,
+-- as well as some internal data related to them.
+-- @return [Array]
 ActiveRecord.Base.validations = {}
+
+--- @warning [Internal]
+-- Biggest ID in the "id" column on the database table.
+-- @return [Integer]
 ActiveRecord.Base.last_id     = 0
 
+--- @warning [Internal]
+-- Sets up basic variables and creates empty tables for
+-- relations that the object has many of.
 function ActiveRecord.Base:init()
   self.fetched = false
   self.saving = false
@@ -18,6 +48,12 @@ function ActiveRecord.Base:init()
   end
 end
 
+--- @warning [Internal]
+-- When the ActiveRecord::Base class is extended,
+-- the new model is added to the global models list,
+-- and it's table name is determined based on the class name.
+-- Make sure you create a table that is named as a lowercase plural
+-- of the class name, or else this will fail!
 function ActiveRecord.Base:class_extended(new_class)
   new_class.table_name = Flow.Inflector:pluralize(new_class.class_name:underscore())
   new_class.last_id = 0
@@ -25,11 +61,19 @@ function ActiveRecord.Base:class_extended(new_class)
   ActiveRecord.Model:add(new_class)
 end
 
+--- Returns the database schema, or attempts to get it from the global schema
+-- storage in case the object hasn't been properly initialized yet.
+-- @return [Array]
 function ActiveRecord.Base:get_schema()
   self.schema = self.schema or ActiveRecord.schema[self.table_name] or {}
   return self.schema
 end
 
+--- @warning [Internal]
+-- @warning [Deprecated]
+-- Returns the last inserted (biggest) ID in the database table
+-- that the current object should be tied to.
+-- @return [Integer]
 function ActiveRecord.Base:get_id()
   if !self.id then
     self.class.last_id = self.class.last_id + 1
@@ -39,7 +83,9 @@ function ActiveRecord.Base:get_id()
   return self.id
 end
 
--- Dump object as a simple data table.
+--- Dump object as a simple data table.
+-- This simply dumps all the values of the variables defined in the schema.
+-- @return [Array, ActiveRecord::Base(self)]
 function ActiveRecord.Base:dump()
   local ret = {}
     for k, data in pairs(self:get_schema()) do
@@ -48,7 +94,16 @@ function ActiveRecord.Base:dump()
   return ret, self
 end
 
--- Basic querying
+--- @category [Query Engine]
+-- Provides utility functions for abstracted database querying.
+
+--- Specifies a WHERE condition in the query.
+-- ```
+-- Object:where('column', 'value')
+-- Object:where('column > ?', 100)
+-- Object:where({ ['column'] = 'value', ['column2'] = { 'value', 'value2' } })
+-- ```
+-- @return [ActiveRecord::Base(self)]
 function ActiveRecord.Base:where(condition, ...)
   local args = {...}
   local query_str = ''
@@ -83,6 +138,14 @@ function ActiveRecord.Base:where(condition, ...)
   return self
 end
 
+--- Specifies a WHERE NOT condition in the query.
+-- Works exactly the same as #where, except that it does the opposite.
+-- ```
+-- Object:where_not('column', 'value')
+-- Object:where_not('column > ?', 100)
+-- Object:where_not({ ['column'] = 'value', ['column2'] = { 'value', 'value2' } })
+-- ```
+-- @return [ActiveRecord::Base(self)]
 function ActiveRecord.Base:where_not(condition, ...)
   local args = {...}
   local query_str = ''
@@ -113,23 +176,41 @@ function ActiveRecord.Base:where_not(condition, ...)
   return self
 end
 
+--- Returns the first object stored in the database.
+-- @return [ActiveRecord::Base(self)]
 function ActiveRecord.Base:first()
   return self:order('id'):limit(1)
 end
 
+--- Returns the last object stored in the database.
+-- @return [ActiveRecord::Base(self)]
 function ActiveRecord.Base:last()
   return self:order('id', 'desc'):limit(1)
 end
 
+--- Returns all of the objects stored in the database.
+-- @return [ActiveRecord::Base(self)]
 function ActiveRecord.Base:all()
   return self:order('id')
 end
 
+--- Inserts an ORDER BY condition into the query.
+-- ```
+-- Object:order('id', 'asc')
+-- ```
+-- @return [ActiveRecord::Base(self)]
 function ActiveRecord.Base:order(column, direction)
   self.query_map:insert { 'order', column, direction }
   return self
 end
 
+--- Finds an object in the database by it's ID.
+-- Optionally can also call a callback right away.
+-- ```
+-- Object:find(1)
+-- Object:find(1, function(obj) ... end)
+-- ```
+-- @return [ActiveRecord::Base(self)]
 function ActiveRecord.Base:find(id, callback)
   if !callback then
     return self:where('id', id):limit(1)
@@ -138,6 +219,13 @@ function ActiveRecord.Base:find(id, callback)
   end
 end
 
+--- Finds an object in the database by a column value.
+-- Optionally can also call a callback right away.
+-- ```
+-- Object:find_by('id', 1)
+-- Object:find_by('id', 1, function(obj) ... end)
+-- ```
+-- @return [ActiveRecord::Base(self)]
 function ActiveRecord.Base:find_by(column, value, callback)
   if !callback then
     return self:where(column, value):limit(1)
@@ -146,11 +234,21 @@ function ActiveRecord.Base:find_by(column, value, callback)
   end
 end
 
+--- Inserts a LIMIT condition into the query.
+-- The code in the example below will find the first 10 entries
+-- that have more than "100" money.
+-- ```
+-- Object:where('money > 100'):limit(10)
+-- ```
+-- @return [ActiveRecord::Base(self)]
 function ActiveRecord.Base:limit(amt)
   self.query_map:insert { 'limit', amt }
   return self
 end
 
+--- @warning [Internal]
+-- Internal function to process child objects or current object as a child to another object.
+-- @return [ActiveRecord::Base(self)]
 function ActiveRecord.Base:_process_child(obj, target_class)
   local should_stop = false
   if isfunction(self.as_child) then
@@ -170,7 +268,9 @@ function ActiveRecord.Base:_process_child(obj, target_class)
   return self
 end
 
--- internal
+--- @warning [Internal]
+-- Internal function to fetch all relations when the object is fetched from the database.
+-- @return [ActiveRecord::Base(self)]
 function ActiveRecord.Base:_fetch_relation(callback, objects, n, obj_id)
   n = n or 1
   obj_id = obj_id or 1
@@ -215,6 +315,9 @@ function ActiveRecord.Base:_fetch_relation(callback, objects, n, obj_id)
   return self
 end
 
+--- @warning [Internal]
+-- Runs current query based on the query map and flushes query map.
+-- @return [ActiveRecord::Base(self)]
 function ActiveRecord.Base:run_query(callback)
   if self.query_map and #self.query_map > 0 then
     local query = ActiveRecord.Database:select(self.table_name)
@@ -264,6 +367,13 @@ function ActiveRecord.Base:run_query(callback)
   return self
 end
 
+--- Used when a single return value is expected.
+-- Calls the callback with a single object when the object has
+-- finished loading from the database.
+-- ```
+-- Object:first():expect(function(obj) ... end)
+-- ```
+-- @return [ActiveRecord::Base(self)]
 function ActiveRecord.Base:expect(callback)
   self._get = nil
   self._expect = function(results)
@@ -272,6 +382,13 @@ function ActiveRecord.Base:expect(callback)
   return self
 end
 
+--- Used when multiple return values are expected.
+-- Calls the callback with all objects that were returned from
+-- the database once the object has finished loading.
+-- ```
+-- Object:all():get(function(results) ... end)
+-- ```
+-- @return [ActiveRecord::Base(self)]
 function ActiveRecord.Base:get(callback)
   self._expect = nil
   self._get = function(results)
@@ -287,6 +404,12 @@ function ActiveRecord.Base:get(callback)
   return self
 end
 
+--- Runs the query.
+-- Use this function to actually launch your queries.
+-- ```
+-- Object:all():get(function(results) ... end):fetch()
+-- ```
+-- @return [ActiveRecord::Base(self)]
 function ActiveRecord.Base:fetch()
   local callback = nil
   if self._expect then
@@ -300,16 +423,29 @@ function ActiveRecord.Base:fetch()
   return self:run_query(callback)
 end
 
+--- Used to catch errors during queries.
+-- This callback is called in case no object was found in the database.
+-- The callback's first argument is a new object of the same class pre-made for you.
+-- ```
+-- Object:where('id > 100000'):first():expect(obj)
+--   ...
+-- end):rescue(function(new_object)
+--   ...
+-- end)
+-- ```
+-- @returns [ActiveRecord::Base(self)]
 function ActiveRecord.Base:rescue(callback)
   self._rescue = callback
   return self:fetch()
 end
 
+--- @ignore
 local except = {
   id = true, created_at = true, updated_at = true,
   last_id = true
 }
 
+--- @ignore
 local function gen_callback(self, insert)
   return function(result, query, time)
     print_query(self.class_name..' '..(insert and 'Create' or 'Update')..' ('..time..'s)', query)
@@ -345,6 +481,14 @@ local function gen_callback(self, insert)
   end
 end
 
+--- Saves the object to the database.
+-- This is the function that actually commits data to the database.
+-- ```
+-- local obj = Object.new()
+--   obj.money = 100
+-- obj:save()
+-- ```
+-- @return [ActiveRecord::Base(self)]
 function ActiveRecord.Base:save()
   if self.before_save then
     self:before_save(self.fetched)
@@ -396,6 +540,12 @@ function ActiveRecord.Base:save()
   return self
 end
 
+--- Deleted the current object from the database.
+-- @warning [Once done, do not attempt saving the object again, since it will cause unpredictable behavior]
+-- ```
+-- obj:destroy()
+-- -- do not use the object after this point.
+-- ```
 function ActiveRecord.Base:destroy()
   local class_name = self.class_name
   local query = ActiveRecord.Database:delete(self.table_name)
@@ -407,7 +557,20 @@ function ActiveRecord.Base:destroy()
   self = nil
 end
 
--- ActiveRecord relations
+--- @category [Database Relations]
+-- Provides functions to bind multiple database-tied objects together.
+
+--- Specifies that the object has one or many of another object.
+-- The object(s) will be stored in a field with the same name
+-- as child's database table.
+-- ```
+-- MyClass:has('User', true)
+-- ...
+-- MyClass:first():expect(function(obj)
+--   print(obj.users) -- table
+-- end)
+-- ```
+-- @return [ActiveRecord::Base(self)]
 function ActiveRecord.Base:has(what, many)
   local relation = {}
     local table_name = ''
@@ -445,10 +608,32 @@ function ActiveRecord.Base:has(what, many)
   return self
 end
 
+--- Specifies that the object has many instances of another object.
+-- The objects will be stored in a field with the same name
+-- as child's database table.
+-- ```
+-- MyClass:has_many 'users'
+-- ...
+-- MyClass:first():expect(function(obj)
+--   print(obj.users) -- table
+-- end)
+-- ```
+-- @return [ActiveRecord::Base(self)]
 function ActiveRecord.Base:has_many(what)
   return self:has(what, true)
 end
 
+--- Specifies that the object has one instance of another object.
+-- The object will be stored in a field with the same name
+-- as child's database table.
+-- ```
+-- MyClass:has_one 'user'
+-- ...
+-- MyClass:first():expect(function(obj)
+--   print(obj.user) -- #<User>
+-- end)
+-- ```
+-- @return [ActiveRecord::Base(self)]
 function ActiveRecord.Base:has_one(what)
   return self:has({ Flow.Inflector:pluralize(what), as = what }, false)
 end
@@ -468,11 +653,18 @@ function ActiveRecord.Base:belongs_to(target, one)
   return self
 end
 
+--- Callback that is called if object's validation fails.
 function ActiveRecord.Base:invalid(column, err_code)
   ErrorNoHalt('ActiveRecord - Validation failed!\n')
   ErrorNoHalt(self.class_name..'#'..tostring(column)..' failed with error code '..tostring(err_code)..'\n')
 end
 
+--- Specifies a validation for a column.
+-- ```
+-- MyObject:validates('email', { presence = true, uniqueness = true })
+-- ```
+-- See all available validations in ActiveRecord::Validator.
+-- @return [ActiveRecord::Base(self)]
 function ActiveRecord.Base:validates(column, options)
   local current_options = self.validations[column] or {}
   for k, v in pairs(options) do
