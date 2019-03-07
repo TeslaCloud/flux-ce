@@ -30,7 +30,7 @@ function ItemWeapon:post_equipped(player)
   if IsValid(weapon) then
     local ammo = self:get_data('ammo', { 0, 0 })
 
-    player:SetActiveWeapon(weapon)
+    player:SelectWeapon(self.weapon_class)
     weapon:SetClip1(ammo[1])
     weapon:SetClip2(ammo[2])
   else
