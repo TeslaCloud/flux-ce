@@ -335,6 +335,20 @@ function PANEL:rebuild()
         end
       end, {})
 
+      local player_panel = self:GetParent().player_model
+
+      if IsValid(player_panel) then
+        player_panel:Receiver('fl_item', function(receiver, dropped, is_dropped, menu_index, mouse_x, mouse_y)
+          if is_dropped then
+            local item_table = dropped[1].item_data
+
+            if item_table.equip_slot and !item_table:is_equipped() then
+              dropped[1].item_data:do_menu_action('on_use')
+            end
+          end
+        end, {})
+      end
+
       self:Receiver('fl_item')
     end
   end
