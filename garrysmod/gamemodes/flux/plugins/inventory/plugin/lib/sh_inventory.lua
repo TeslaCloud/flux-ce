@@ -88,24 +88,9 @@ do
 
           local ids = ply_inv[i][k]
 
-          -- Empty slot
-          if #ids == 0 then
-            table.insert(ply_inv[i][k], item_table.instance_id)
-
-            item_table.slot_id = { k, i }
-            item_table.inventory_type = inv_type
-
-            self:set_inventory(ply_inv, inv_type)
-
-            item.network_item(self, item_table.instance_id)
-
-            return k, i
-          end
-
-          local slot_table = item.find_instance_by_id(ids[1])
-
-          if item_table.stackable and item_table.id == slot_table.id then
-            if #ids < item_table.max_stack and plugin.call('ShouldItemStack', item_table, slot_table) != false then
+          if hook.run('CanItemTransfer', self, item_table, inv_type, k, i) != false then
+            -- Empty slot
+            if #ids == 0 and hook.run('CanItemMove', self, item_table, inv_type, k, i) != false then
               table.insert(ply_inv[i][k], item_table.instance_id)
 
               item_table.slot_id = { k, i }
@@ -116,6 +101,23 @@ do
               item.network_item(self, item_table.instance_id)
 
               return k, i
+            end
+
+            local slot_table = item.find_instance_by_id(ids[1])
+
+            if item_table.stackable and item_table.id == slot_table.id then
+              if #ids < item_table.max_stack and hook.run('CanItemStack', self, item_table, inv_type, k, i) != false then
+                table.insert(ply_inv[i][k], item_table.instance_id)
+
+                item_table.slot_id = { k, i }
+                item_table.inventory_type = inv_type
+
+                self:set_inventory(ply_inv, inv_type)
+
+                item.network_item(self, item_table.instance_id)
+
+                return k, i
+              end
             end
           end
         end

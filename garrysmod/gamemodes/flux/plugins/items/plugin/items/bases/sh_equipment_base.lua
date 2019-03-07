@@ -36,27 +36,30 @@ function ItemEquippable:is_equipped()
   return self.inventory_type == self.equip_inv
 end
 
-function ItemEquippable:on_equipped(player)
-  for k, v in pairs(player:get_items(self.equip_inv)) do
-    local item_table = item.find_instance_by_id(v)
+function ItemEquippable:can_transfer(player, inv_type, x, y)
+  if inv_type == self.equip_inv then
+    for k, v in pairs(player:get_items(self.equip_inv)) do
+      local item_table = item.find_instance_by_id(v)
 
-    if item_table.equip_slot and item_table.equip_slot == self.equip_slot and item_table:is_equipped() and item_table.instance_id != self.instance_id then
-      return false
+      if item_table.equip_slot and item_table.equip_slot == self.equip_slot and item_table:is_equipped() and item_table.instance_id != self.instance_id then
+        return false
+      end
     end
   end
 end
 
-function ItemEquippable:on_unequipped(player) end
+function ItemEquippable:can_equip(player) end
+function ItemEquippable:can_unequip(player) end
 function ItemEquippable:post_equipped(player) end
 function ItemEquippable:post_unequipped(player) end
 
 function ItemEquippable:equip(player, should_equip)
   if should_equip then
-    if self:on_equipped(player) != false then
+    if self:can_equip(player) != false then
       self:post_equipped(player)
     end
   else
-    if self:on_unequipped(player) != false then
+    if self:can_unequip(player) != false then
       self:post_unequipped(player)
     end
   end
@@ -66,8 +69,10 @@ function ItemEquippable:on_inventory_changed(player, new_inv, old_inv)
   if IsValid(player) then
     if new_inv == self.equip_inv then
       self:equip(player, true)
+      player:EmitSound(self.action_sounds['equip'])
     elseif old_inv == self.equip_inv then
       self:equip(player, false)
+      player:EmitSound(self.action_sounds['unequip'])
     end
   end
 end
