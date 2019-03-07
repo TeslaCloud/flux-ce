@@ -429,7 +429,7 @@ function PANEL:rebuild()
   self.player_model.LayoutEntity = function(pnl, ent) end
   self.player_model.rebuild = function(pnl)
     local ent = pnl:GetEntity()
-    ent:SetSequence(ACT_IDLE)
+    ent:SetSequence(ent:get_idle_anim())
     ent:SetSkin(fl.client:GetSkin())
     ent:SetBodyGroups(fl.client:GetBodyGroups())
     ent:SetColor(fl.client:GetColor())

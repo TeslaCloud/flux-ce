@@ -34,3 +34,22 @@ function ent_meta:is_door()
 
   return false
 end
+
+local idle_anims = {
+  'idle01',
+  'idle_subtle',
+  'batonidle1',
+  'idle_unarmed'
+}
+
+function ent_meta:get_idle_anim()
+  for k, v in pairs(idle_anims) do
+    local seq = self:LookupSequence(v)
+
+    if seq > 0 then
+      return seq
+    end
+  end
+
+  return ACT_IDLE
+end

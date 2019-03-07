@@ -195,7 +195,7 @@ function PANEL:rebuild_models()
       self.models_list.model = v
       self:GetParent().char_data.model = v
       self.model:SetModel(v)
-      self.model.Entity:SetSequence(ACT_IDLE)
+      self.model:GetEntity():SetSequence(self.model:GetEntity():get_idle_anim())
 
       local skins = self.model.Entity:SkinCount()
 

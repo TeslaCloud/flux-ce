@@ -138,7 +138,7 @@ function PANEL:set_character(char_data)
   self.char_data = char_data
 
   self.model:SetModel(char_data.model)
-  self.model.Entity:SetSequence(ACT_IDLE)
+  self.model:GetEntity():SetSequence(self.model:GetEntity():get_idle_anim())
 
   if fl.client:get_active_character_id() == char_data.character_id then
     self.select:SetVisible(false)
