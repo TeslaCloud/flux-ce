@@ -390,9 +390,14 @@ function PANEL:on_change()
 end
 
 function PANEL:rebuild()
-  if IsValid(self.inventory) or IsValid(self.hotbar) then
+  if IsValid(self.inventory) then
     self.inventory:rebuild()
     self.hotbar:rebuild()
+    self.equipment:rebuild()
+
+    timer.simple(0.01, function()
+      self.player_model:rebuild()
+    end)
 
     return
   end
@@ -426,16 +431,17 @@ function PANEL:rebuild()
   self.player_model:SetFOV(50)
   self.player_model:SetCamPos(Vector(80, 0, 50))
   self.player_model:SetLookAt(Vector(0, 0, 37))
-  self.player_model:SetModel(fl.client:GetModel())
   self.player_model:SetAnimated(true)
   self.player_model.LayoutEntity = function(pnl, ent) end
   self.player_model.rebuild = function(pnl)
+    pnl:SetModel(fl.client:GetModel())
+
     local ent = pnl:GetEntity()
     ent:SetSequence(ent:get_idle_anim())
     ent:SetSkin(fl.client:GetSkin())
-    ent:SetBodyGroups(fl.client:GetBodyGroups())
     ent:SetColor(fl.client:GetColor())
     ent:SetMaterial(fl.client:GetMaterial())
+    ent:set_bodygroups(fl.client:get_bodygroups())
   end
 
   self.player_model:rebuild()
