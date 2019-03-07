@@ -439,7 +439,7 @@ else
 
       print('Received instance ID '..tostring(new_table))
     else
-      print('FAILED TO RECEIVE INSTANCE ID '..instance_id)
+      print('FAILED TO RECEIVE INSTANCE ID '..(instance_id or ''))
     end
   end)
 

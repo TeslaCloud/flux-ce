@@ -6,9 +6,18 @@ do
   function player_meta:get_inventory(inv_type)
     inv_type = inv_type or 'hotbar'
 
+    local w, h = self:get_inventory_size(inv_type)
     local inventory = self:get_nv('inventory', {})[inv_type] or {}
-    inventory.width, inventory.height = self:get_inventory_size(inv_type)
+    inventory.width, inventory.height = w, h
     inventory.type = inv_type
+
+    for i = 1, h do
+      inventory[i] = inventory[i] or {}
+
+      for k = 1, w do
+        inventory[i][k] = inventory[i][k] or {}
+      end
+    end
 
     return inventory
   end
