@@ -93,4 +93,14 @@ function ItemClothing:post_unequipped(player)
       player:set_bodygroups(native_bodygroups)
     end
   end
+
+  for k, v in pairs(player:get_items(self.equip_inv)) do
+    local item_table = item.find_instance_by_id(v)
+
+    if self.instance_id == v then continue end
+
+    if item_table and !item_table:can_equip(player) then
+      item_table:on_use(player)
+    end
+  end
 end
