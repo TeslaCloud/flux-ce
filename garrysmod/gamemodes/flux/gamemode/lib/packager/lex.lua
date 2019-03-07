@@ -172,7 +172,9 @@ function Packager.Lexer:tokenize(input)
         break
       end
   
-      current, char_id = save_next()
+      if current != '\\' then
+        current, char_id = save_next()
+      end
 
       if current == '\\' then
         current, char_id = next()

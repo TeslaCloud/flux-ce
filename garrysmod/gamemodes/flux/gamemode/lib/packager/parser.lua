@@ -448,6 +448,8 @@ function Packager.Parser:parse(tokens)
   return self:parse_chunk()
 end
 
+if !Settings.experimental then return end
+
 local parsed = Packager.Parser:parse([[
   func hello.world(a, b)
     foo()
