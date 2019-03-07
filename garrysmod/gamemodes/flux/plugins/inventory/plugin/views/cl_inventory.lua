@@ -175,7 +175,7 @@ function PANEL:rebuild()
   self.spawn_icon = vgui.Create('SpawnIcon', self)
   self.spawn_icon:SetPos(2, 2)
   self.spawn_icon:SetSize(60, 60)
-  self.spawn_icon:SetModel(self.item_data.model, self.item_data.skin)
+  self.spawn_icon:SetModel(self.item_data:get_icon_model() or self.item_data:get_model(), self.item_data.skin)
   self.spawn_icon:SetMouseInputEnabled(false)
 end
 

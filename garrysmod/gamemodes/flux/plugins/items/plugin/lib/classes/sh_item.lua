@@ -53,6 +53,10 @@ function Item:get_model()
   return self.model or 'models/props_lab/cactus.mdl'
 end
 
+function Item:get_icon_model()
+  return self.icon_model
+end
+
 function Item:get_skin()
   return self.skin or 0
 end
