@@ -7,6 +7,12 @@ en:
       weapon: Weapon
       ammo: Ammunition
       thrown: Throwing weapon
+    slot:
+      primary: Primary
+      secondary: Secondary
+      heavy: Heavy
+      melee: Melee
+      throwable: Throwable
     option:
       use: Use
       take: Take

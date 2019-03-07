@@ -7,6 +7,12 @@ ru:
       weapon: Оружие
       ammo: Боеприпасы
       thrown: Метательное
+    slot:
+      primary: Основное
+      secondary: Второстепенное
+      heavy: Тяжелое
+      melee: Холодное
+      throwable: Метательное
     option:
       use: Использовать
       take: Взять

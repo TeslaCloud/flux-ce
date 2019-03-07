@@ -9,7 +9,7 @@ ItemEquippable.name = 'Equipment Base'
 ItemEquippable.description = 'An item that can be equipped.'
 ItemEquippable.category = t'item.category.equipment'
 ItemEquippable.stackable = false
-ItemEquippable.equip_slot = t'item.slot.accessory'
+ItemEquippable.equip_slot = 'item.slot.accessory'
 ItemEquippable.equip_inv = 'hotbar'
 
 if CLIENT then
