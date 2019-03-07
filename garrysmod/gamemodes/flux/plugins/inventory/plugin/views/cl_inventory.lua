@@ -395,7 +395,7 @@ function PANEL:rebuild()
     self.hotbar:rebuild()
     self.equipment:rebuild()
 
-    timer.simple(0.01, function()
+    timer.simple(0.05, function()
       self.player_model:rebuild()
     end)
 
