@@ -53,3 +53,19 @@ function ent_meta:get_idle_anim()
 
   return ACT_IDLE
 end
+
+function ent_meta:get_bodygroups()
+  local bodygroups = {}
+
+  for i = 0, self:GetNumBodyGroups() do
+    bodygroups[i] = self:GetBodygroup(i)
+  end
+
+  return bodygroups
+end
+
+function ent_meta:set_bodygroups(bodygroups)
+  for k, v in pairs(bodygroups) do
+    self:SetBodygroup(k, v)
+  end
+end
