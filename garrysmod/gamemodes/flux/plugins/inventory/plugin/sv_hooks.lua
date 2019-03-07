@@ -14,7 +14,7 @@ function Inventory:OnActiveCharacterSet(player, character)
     if instance and instance.slot_id then
       local cur_inv_type = instance.inventory_type or 'hotbar'
       local cur_inv = inv[cur_inv_type] or {}
-      local x, y = unpack(instance.slot_id)
+      local y, x = unpack(instance.slot_id)
 
       cur_inv.type = cur_inv_type
       cur_inv.width, cur_inv.height = player:get_inventory_size(cur_inv_type)
