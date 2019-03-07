@@ -309,64 +309,17 @@ function PANEL:rebuild()
         if is_dropped then
           fl.inventory_drag_slot = nil
 
-          if receiver.item_data then
-            if (receiver.item_data.id == dropped[1].item_data.id and
-              !(receiver.inv_x == dropped[1].inv_x and receiver.inv_y == dropped[1].inv_y) and receiver.item_data.stackable) then
-              receiver:combine(dropped[1])
-              self:slots_to_inventory()
-
-              local inv_from = dropped[1]:get_inventory_panel()
-
-              if self.inventory_type != inv_from.inventory_type then
-                inv_from:slots_to_inventory()
-              end
-
-              return
-            else
-              receiver.is_hovered = false
-
-              return
-            end
-          end
-
           local split = false
 
           if input.IsKeyDown(KEY_LCONTROL) and dropped[1].item_count > 1 then
-            split = {{}, {}}
+            split = {}
 
-            for i2 = 1, dropped[1].item_count do
-              if i2 <= math.floor(dropped[1].item_count * 0.5) then
-                table.insert(split[1], dropped[1].instance_ids[i2])
-              else
-                table.insert(split[2], dropped[1].instance_ids[i2])
-              end
+            for i2 = 1, dropped[1].item_count * 0.5 do
+              table.insert(split, dropped[1].instance_ids[i2])
             end
           end
 
-          if !split then
-            receiver:set_item(dropped[1].instance_ids)
-          else
-            receiver:set_item_multi(split[1])
-            dropped[1]:set_item_multi(split[2])
-          end
-
-          receiver.is_hovered = false
-
-          if !split then
-            dropped[1]:reset()
-          else
-            dropped[1]:rebuild()
-          end
-
-          self:slots_to_inventory()
-
-          local inv_from = dropped[1]:get_inventory_panel()
-
-          if self.inventory_type != inv_from.inventory_type then
-            inv_from:slots_to_inventory()
-
-            cable.send('fl_inventory_changed', receiver.instance_ids, self.inventory_type, inv_from.inventory_type)
-          end
+          cable.send('fl_item_move', !split and dropped[1].instance_ids or split[1], self.inventory_type, receiver.inv_x, receiver.inv_y)
         else
           receiver.is_hovered = true
         end

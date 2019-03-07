@@ -40,18 +40,77 @@ function Inventory:SaveCharacterData(player, char)
   char.item_ids = table.concat(player:get_items(), ',')
 end
 
-function Inventory:ItemInventoryChanged(player, instance_ids, new_inv, old_inv)
-  if !istable(instance_ids) then instance_ids = { instance_ids } end
+function Inventory:OnItemInventoryChanged(player, instance_id, new_inv, old_inv)
+  local item_table = item.find_instance_by_id(instance_id)
+
+  if item_table and item_table.on_inventory_changed then
+    item_table:on_inventory_changed(player, new_inv, old_inv)
+  end
+end
+
+function Inventory:CanItemMove(player, item_table, inv_type, x, y)
+  if item_table.can_move then
+    item_table:can_move(player, inv_type, x, y)
+  end
+end
+
+function Inventory:CanItemTransfer(player, item_table, inv_type, x, y)
+  if item_table.can_transfer then
+    item_table:can_transfer(player, inv_type, x, y)
+  end
+end
+
+function Inventory:CanItemStack(player, item_table, inv_type, x, y)
+  if item_table.can_stack then
+    item_table:can_stack(player, inv_type, x, y)
+  end
+end
+
+function Inventory:OnItemMove(player, instance_ids, inv_type, x, y)
+  local ply_inv = player:get_inventory(inv_type)
 
   for k, v in pairs(instance_ids) do
     local item_table = item.find_instance_by_id(v)
 
-    if item_table and item_table.on_inventory_changed then
-      item_table:on_inventory_changed(player, new_inv, old_inv)
+    if !item_table or hook.run('CanItemMove', player, item_table, inv_type, x, y) == false then
+      return
+    end
+
+    if item_table.inventory_type != inv_type and 
+    hook.run('CanItemTransfer', player, item_table, inv_type, x, y) == false then
+      return
+    end
+
+    if item_table.stackable and hook.run('CanItemStack', player, item_table, inv_type, x, y) == false then
+      return
+    end
+
+    local old_y, old_x = unpack(item_table.slot_id)
+    local old_inv_type = item_table.inventory_type
+
+    table.insert(ply_inv[y][x], v)
+
+    item_table.slot_id = { y, x }
+
+    if old_inv_type != inv_type then
+      local old_inv = player:get_inventory(old_inv_type)
+
+      table.remove_by_value(old_inv[old_y][old_x], v)
+      player:set_inventory(old_inv, old_inv_type)
+
+      hook.run('OnItemInventoryChanged', player, instance_id, inv_type, old_inv_type)
+
+      item_table.inventory_type = inv_type
+    else
+      table.remove_by_value(ply_inv[old_y][old_x], v)
     end
 
     item.network_item(player, v)
   end
+
+  player:set_inventory(ply_inv, inv_type)
+
+  cable.send(player, 'fl_inventory_refresh')
 end
 
 cable.receive('fl_inventory_sync', function(player, inventory)
@@ -82,6 +141,6 @@ cable.receive('fl_inventory_sync', function(player, inventory)
   player:set_inventory(new_inventory, inv_type)
 end)
 
-cable.receive('fl_inventory_changed', function(player, instance_ids, new_inv, old_inv)
-  hook.run('ItemInventoryChanged', player, instance_ids, new_inv, old_inv)
+cable.receive('fl_item_move', function(player, instance_ids, inv_type, x, y)
+  hook.run('OnItemMove', player, instance_ids, inv_type, x, y)
 end)
