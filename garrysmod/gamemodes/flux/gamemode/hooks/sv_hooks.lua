@@ -363,10 +363,29 @@ do
     local settings_copy = table.Copy(Settings)
     settings_copy.server = nil 
 
-    write_client_file('0_shared.lua', 'fl.shared = fl.deserialize([['..fl.serialize(fl.shared)..']])\n')
-    write_client_file('1_settings.lua', 'Settings = fl.deserialize([['..fl.serialize(settings_copy)..']])\n')
-    write_client_file('2_lang.lua', "library.new('lang', fl)\nfl.lang.stored = fl.deserialize([["..fl.serialize(fl.lang.stored).."]])\n")
-    write_html()
+    if IS_DEVELOPMENT then
+      write_client_file('0_shared.lua', 'fl.shared = fl.deserialize([['..fl.serialize(fl.shared)..']])\n')
+      write_client_file('1_settings.lua', 'Settings = fl.deserialize([['..fl.serialize(settings_copy)..']])\n')
+      write_client_file('2_lang.lua', "library.new('lang', fl)\nfl.lang.stored = fl.deserialize([["..fl.serialize(fl.lang.stored).."]])\n")
+      write_html()
+    else
+      print 'Compiling clientside assets...'
+
+      local contents = 'fl.shared=fl.deserialize([['..fl.serialize(fl.shared)..']])'
+      contents = contents..'Settings=fl.deserialize([['..fl.serialize(settings_copy)..']])'
+      contents = contents.."library.new('lang',fl)fl.lang.stored=fl.deserialize([["..fl.serialize(fl.lang.stored).."]])"
+      contents = contents..(fl.html:generate_html_file() or '-- .keep')..' '
+      contents = contents..(fl.html:generate_css_file() or '-- .keep')..' '
+      contents = contents..(fl.html:generate_js_file() or '-- .keep')
+
+      local files, dirs = file.Find('lua/flux/client/*', 'GAME')
+
+      for k, v in ipairs(files) do
+        fileio.Delete('lua/flux/client/'..v)
+      end
+
+      write_client_file('0_production.lua', contents)
+    end
   end
 
   concommand.Add('fl_reload_html', function(player)
