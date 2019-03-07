@@ -344,6 +344,16 @@ function GM:PreLoadPlugins()
 end
 
 do
+  local function purge_client_files()
+    if file.Exists('lua/flux/client', 'GAME') then
+      local files, dirs = file.Find('lua/flux/client/*', 'GAME')
+
+      for k, v in ipairs(files) do
+        fileio.Delete('lua/flux/client/'..v)
+      end
+    end
+  end
+
   local function write_client_file(path, contents)
     fileio.MakeDirectory 'lua/flux'
     fileio.MakeDirectory 'lua/flux/client'
@@ -359,6 +369,9 @@ do
   end
 
   local function write_client_files()
+    -- Get rid of the old files (if any)
+    purge_client_files()
+
     -- Do not send server-only settings to client!
     local settings_copy = table.Copy(Settings)
     settings_copy.server = nil 
@@ -377,12 +390,6 @@ do
       contents = contents..(fl.html:generate_html_file() or '-- .keep')..' '
       contents = contents..(fl.html:generate_css_file() or '-- .keep')..' '
       contents = contents..(fl.html:generate_js_file() or '-- .keep')
-
-      local files, dirs = file.Find('lua/flux/client/*', 'GAME')
-
-      for k, v in ipairs(files) do
-        fileio.Delete('lua/flux/client/'..v)
-      end
 
       write_client_file('0_production.lua', contents)
     end
