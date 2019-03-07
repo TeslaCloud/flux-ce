@@ -79,6 +79,7 @@ function THEME:on_loaded()
 
   -- Set from schema theme.
   -- self:set_material('schema_logo', 'materials/flux/hl2rp/logo.png')
+  self:set_material('gradient_up', 'vgui/gradient-u')
 
   self:add_panel('tab_menu', function(id, parent, ...)
     return vgui.Create('fl_tab_menu', parent)
@@ -376,6 +377,10 @@ function THEME:PaintTabMenu(panel, width, height)
 
     draw.RoundedBox(0, 0, panel.pos_y, 6, target_h, self:get_color('accent_light'))
   end
+end
+
+function THEME:PaintItemSlot(panel, w, h)
+  draw.textured_rect(theme.get_material('gradient_up'), 0, 0, w, h, Color(175, 175, 175, 5))
 end
 
 THEME.skin.frameBorder = Color(255, 255, 255, 255)

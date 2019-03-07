@@ -49,6 +49,8 @@ function PANEL:Paint(w, h)
   end
 
   draw.RoundedBox(0, 0, 0, w, h, draw_color)
+
+  theme.hook('PaintItemSlot', self, w, h)
 end
 
 function PANEL:PaintOver(w, h)
