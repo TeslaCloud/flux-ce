@@ -95,14 +95,14 @@ do
             if #ids == 0 and hook.run('CanItemMove', self, item_table, inv_type, k, i) != false then
               table.insert(ply_inv[i][k], item_table.instance_id)
 
-              item_table.slot_id = { k, i }
+              item_table.slot_id = { i, k }
               item_table.inventory_type = inv_type
 
               self:set_inventory(ply_inv, inv_type)
 
               item.network_item(self, item_table.instance_id)
 
-              return k, i
+              return i, k
             end
 
             local slot_table = item.find_instance_by_id(ids[1])
@@ -111,14 +111,14 @@ do
               if #ids < item_table.max_stack and hook.run('CanItemStack', self, item_table, inv_type, k, i) != false then
                 table.insert(ply_inv[i][k], item_table.instance_id)
 
-                item_table.slot_id = { k, i }
+                item_table.slot_id = { i, k }
                 item_table.inventory_type = inv_type
 
                 self:set_inventory(ply_inv, inv_type)
 
                 item.network_item(self, item_table.instance_id)
 
-                return k, i
+                return i, k
               end
             end
           end
