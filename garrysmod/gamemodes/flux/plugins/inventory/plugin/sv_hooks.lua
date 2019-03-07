@@ -98,7 +98,7 @@ function Inventory:OnItemMove(player, instance_ids, inv_type, x, y)
       table.remove_by_value(old_inv[old_y][old_x], v)
       player:set_inventory(old_inv, old_inv_type)
 
-      hook.run('OnItemInventoryChanged', player, instance_id, inv_type, old_inv_type)
+      hook.run('OnItemInventoryChanged', player, item_table, inv_type, old_inv_type)
 
       item_table.inventory_type = inv_type
     else

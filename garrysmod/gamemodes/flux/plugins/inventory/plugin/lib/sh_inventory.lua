@@ -184,10 +184,14 @@ do
 
           for k2, v2 in pairs(v1) do
             if table.has_value(v2, instance_id) then
+              local item_table = item.find_instance_by_id(instance_id)
+
               table.remove_by_value(v[k1][k2], instance_id)
               self:set_inventory(v, k)
 
-              hook.run('OnItemTaken', self, instance_id, k2, k1, k)
+              if item_table then
+                hook.run('OnItemTaken', self, item_table, k, k2, k1)
+              end
 
               break
             end
