@@ -40,29 +40,27 @@ function Inventory:SaveCharacterData(player, char)
   char.item_ids = table.concat(player:get_items(), ',')
 end
 
-function Inventory:OnItemInventoryChanged(player, instance_id, new_inv, old_inv)
-  local item_table = item.find_instance_by_id(instance_id)
-
-  if item_table and item_table.on_inventory_changed then
+function Inventory:OnItemInventoryChanged(player, item_table, new_inv, old_inv)
+  if item_table.on_inventory_changed then
     item_table:on_inventory_changed(player, new_inv, old_inv)
   end
 end
 
 function Inventory:CanItemMove(player, item_table, inv_type, x, y)
   if item_table.can_move then
-    item_table:can_move(player, inv_type, x, y)
+    return item_table:can_move(player, inv_type, x, y)
   end
 end
 
 function Inventory:CanItemTransfer(player, item_table, inv_type, x, y)
   if item_table.can_transfer then
-    item_table:can_transfer(player, inv_type, x, y)
+    return item_table:can_transfer(player, inv_type, x, y)
   end
 end
 
 function Inventory:CanItemStack(player, item_table, inv_type, x, y)
   if item_table.can_stack then
-    item_table:can_stack(player, inv_type, x, y)
+    return item_table:can_stack(player, inv_type, x, y)
   end
 end
 
