@@ -5,9 +5,6 @@ function Item:init(id)
 
   self.id = string.to_id(id)
   self.data = self.data or {}
-  self.action_sounds = {
-    ['on_use'] = 'items/battery_pickup.wav'
-  }
 end
 
 -- Fancy output if you do print(item_table).

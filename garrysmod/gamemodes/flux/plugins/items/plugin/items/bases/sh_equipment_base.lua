@@ -11,6 +11,10 @@ ItemEquippable.category = t'item.category.equipment'
 ItemEquippable.stackable = false
 ItemEquippable.equip_slot = 'item.slot.accessory'
 ItemEquippable.equip_inv = 'hotbar'
+ItemEquippable.action_sounds = {
+  ['equip'] = 'items/battery_pickup.wav',
+  ['unequip'] = 'items/battery_pickup.wav'
+}
 
 if CLIENT then
   function ItemEquippable:get_use_text()
