@@ -63,6 +63,8 @@ function PANEL:PaintOver(w, h)
       draw.SimpleText(self.slot_number, theme.get_font('text_smallest'), 4, 50, Color(175, 175, 175))
     DisableClipping(false)
   end
+
+  theme.hook('PaintOverItemSlot', self, w, h)
 end
 
 function PANEL:OnMousePressed(...)
@@ -378,6 +380,7 @@ end
 
 function PANEL:on_close()
   self.hotbar:AlphaTo(0, theme.get_option('menu_anim_duration'), 0)
+  self.player_model:safe_remove()
 end
 
 function PANEL:on_change()
@@ -414,6 +417,32 @@ function PANEL:rebuild()
   self.hotbar:set_slot_padding(8)
   self.hotbar:set_player(fl.client)
   self.hotbar:rebuild()
+
+  self.player_model = vgui.Create('DModelPanel', self)
+  self.player_model:SetPos(w / 2, 0)
+  self.player_model:SetSize(w / 2, h)
+  self.player_model:SetFOV(50)
+  self.player_model:SetCamPos(Vector(80, 0, 50))
+  self.player_model:SetLookAt(Vector(0, 0, 37))
+  self.player_model:SetModel(fl.client:GetModel())
+  self.player_model:SetAnimated(true)
+  self.player_model.LayoutEntity = function(pnl, ent) end
+  self.player_model.rebuild = function(pnl)
+    local ent = pnl:GetEntity()
+    ent:SetSequence(ACT_IDLE)
+    ent:SetSkin(fl.client:GetSkin())
+    ent:SetBodyGroups(fl.client:GetBodyGroups())
+    ent:SetColor(fl.client:GetColor())
+    ent:SetMaterial(fl.client:GetMaterial())
+  end
+
+  self.player_model:rebuild()
+
+  self.equipment = vgui.Create('fl_inventory', self)
+  self.equipment.inventory_type = 'equipment'
+  self.equipment:set_slot_padding(8)
+  self.equipment:set_player(fl.client)
+  self.equipment:SetPos(w - self.equipment:GetWide(), h / 2 - self.equipment:GetTall() / 2)
 end
 
 vgui.Register('fl_inventory_menu', PANEL, 'fl_base_panel')

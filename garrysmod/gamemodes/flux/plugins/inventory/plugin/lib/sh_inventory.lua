@@ -67,6 +67,8 @@ do
       return config.get('inventory_width'), config.get('inventory_height')
     elseif inv_type == 'hotbar' then
       return config.get('hotbar_width'), config.get('hotbar_height')
+    elseif inv_type == 'equipment' then
+      return config.get('equipment_width'), config.get('equipment_height')
     else
       return hook.run('GetInventorySize', player, inv_type)
     end
