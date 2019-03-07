@@ -28,9 +28,9 @@ if !LITE_REFRESH then
 
   -- Put that under an if because it doesn't change.
   if !string.utf8upper or !pon or !cable then
-    AddCSLuaFile 'vendor/utf8.lua'
-    AddCSLuaFile 'vendor/pon.lua'
-    AddCSLuaFile 'vendor/cable.lua'
+    AddCSLuaFile 'vendor/utf8.min.lua'
+    AddCSLuaFile 'vendor/pon.min.lua'
+    AddCSLuaFile 'vendor/cable.min.lua'
   end
 
   AddCSLuaFile 'shared.lua'
