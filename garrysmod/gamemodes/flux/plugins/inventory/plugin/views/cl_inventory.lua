@@ -424,7 +424,9 @@ function PANEL:rebuild()
     self.equipment:rebuild()
 
     timer.simple(0.05, function()
-      self.player_model:rebuild()
+      if IsValid(self.player_model) then
+        self.player_model:rebuild()
+      end
     end)
 
     return

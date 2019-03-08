@@ -108,7 +108,7 @@ function Inventory:OnItemMove(player, instance_ids, inv_type, x, y)
 
   player:set_inventory(ply_inv, inv_type)
 
-  cable.send(player, 'fl_inventory_refresh')
+  cable.send(player, 'fl_inventory_refresh', inv_type, old_inv_type)
 end
 
 cable.receive('fl_inventory_sync', function(player, inventory)

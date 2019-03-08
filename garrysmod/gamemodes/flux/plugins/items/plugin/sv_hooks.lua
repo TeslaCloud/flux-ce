@@ -91,7 +91,7 @@ function Items:OnItemGiven(player, item_table, x, y)
 
   item.network_item(player, item_table.instance_id)
 
-  hook.run('PlayerInventoryUpdated', player)
+  hook.run('PlayerInventoryUpdated', player, item_table.inventory_type)
 end
 
 function Items:OnItemTaken(player, item_table, inv_type, slot_x, slot_y)
@@ -99,11 +99,11 @@ function Items:OnItemTaken(player, item_table, inv_type, slot_x, slot_y)
 
   item.network_item(player, item_table.instance_id)
 
-  hook.run('PlayerInventoryUpdated', player)
+  hook.run('PlayerInventoryUpdated', player, inv_type)
 end
 
-function Items:PlayerInventoryUpdated(player)
-  cable.send(player, 'fl_inventory_refresh')
+function Items:PlayerInventoryUpdated(player, inv_type)
+  cable.send(player, 'fl_inventory_refresh', inv_type)
 end
 
 function Items:PlayerCanUseItem(player, item_table, action, ...)
