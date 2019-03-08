@@ -41,4 +41,6 @@ function PANEL:request(name, handler, ...)
   self:push(name, ...)
 end
 
+PANEL.set_title = PANEL.SetTitle
+
 vgui.Register('fl_base_panel', PANEL, 'EditablePanel')
