@@ -3,9 +3,9 @@ fl.start_time = os.clock()
 
 -- Include pON, Cable and UTF-8 library
 if !string.utf8upper or !pon or !cable then
-  include 'vendor/utf8.min.lua'
-  include 'vendor/pon.min.lua'
-  include 'vendor/cable.min.lua'
+  include 'lib/vendor/utf8.min.lua'
+  include 'lib/vendor/pon.min.lua'
+  include 'lib/vendor/cable.min.lua'
 end
 
 if fl.initialized then
