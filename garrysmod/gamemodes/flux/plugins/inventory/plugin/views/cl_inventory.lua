@@ -198,6 +198,8 @@ PANEL.player = nil
 local slot_size = font.scale(64)
 
 function PANEL:Init()
+  self.title = nil
+
   self.horizontal_scroll = vgui.create('DHorizontalScroller', self)
   self.horizontal_scroll.OnMouseWheeled = function(pnl, dlta)
     if !input.IsKeyDown(KEY_LSHIFT) then return end
@@ -216,6 +218,18 @@ function PANEL:Init()
   end
 
   self.horizontal_scroll:AddPanel(self.scroll)
+end
+
+function PANEL:Paint(w, h)
+  if self.title then
+    local text = t(self.title)
+    local font = theme.get_font('text_normal_large')
+    local text_w, text_h = util.text_size(text, font)
+
+    DisableClipping(true)
+      draw.SimpleText(text, font, 0, -text_h - 4, color_white:alpha(150))
+    DisableClipping(false)
+  end
 end
 
 function PANEL:resize()
@@ -418,6 +432,7 @@ function PANEL:rebuild()
 
   self.inventory = vgui.create('fl_inventory', self)
   self.inventory:set_player(fl.client)
+  self.inventory:set_title('inventory.main_inventory')
 
   local w, h = self:GetSize()
   local width, height = self.inventory:GetSize()
@@ -437,6 +452,7 @@ function PANEL:rebuild()
   self.hotbar = vgui.Create('fl_hotbar', self:GetParent())
   self.hotbar:set_slot_padding(8)
   self.hotbar:set_player(fl.client)
+  self.hotbar:set_title('inventory.hotbar')
   self.hotbar:rebuild()
 
   self.player_model = vgui.Create('DModelPanel', self)
@@ -463,6 +479,7 @@ function PANEL:rebuild()
   self.equipment = vgui.Create('fl_inventory', self)
   self.equipment.inventory_type = 'equipment'
   self.equipment:set_slot_padding(8)
+  self.equipment:set_title('inventory.equipment')
   self.equipment:set_player(fl.client)
   self.equipment:SetPos(w - self.equipment:GetWide(), h / 2 - self.equipment:GetTall() / 2)
 end

@@ -1,4 +1,8 @@
 ru:
+  inventory:
+    main_inventory: Инвентарь
+    hotbar: Быстрый доступ
+    equipment: Экипировка
   give_item:
     description: Выдать игроку определенный предмет.
     syntax: "<игрок> <название или ID>"
