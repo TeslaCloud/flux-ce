@@ -463,6 +463,10 @@ local parsed = Packager.Parser:parse([[
     print 123, string.gsub(a, '%s+', ''), test, false
     return false
   end
+
+  func a
+    test
+  end
 ]])
 
 print(parsed:inspect())
