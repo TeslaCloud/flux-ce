@@ -15,7 +15,7 @@ function GM:InitPostEntity()
 end
 
 function GM:PlayerInitialSpawn(player)
-  player_manager.SetPlayerClass(player, 'flPlayer')
+  player_manager.SetPlayerClass(player, 'flux_player')
   player_manager.RunClass(player, 'Spawn')
 
   player:SetUserGroup('user')
@@ -30,7 +30,7 @@ function GM:PlayerInitialSpawn(player)
 end
 
 function GM:PlayerSpawn(player)
-  player_manager.SetPlayerClass(player, 'flPlayer')
+  player_manager.SetPlayerClass(player, 'flux_player')
 
   hook.run('PlayerSetModel', player)
 
