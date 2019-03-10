@@ -6,7 +6,7 @@ if !string.utf8upper or !pon or !cable then
   include 'lib/vendor/utf8.min.lua'
   include 'lib/vendor/pon.min.lua'
   include 'lib/vendor/cable.min.lua'
-  include 'lib/vendor/markdown.min.lua'
+  Markdown = include 'lib/vendor/markdown.min.lua'
 end
 
 if Flux.initialized then

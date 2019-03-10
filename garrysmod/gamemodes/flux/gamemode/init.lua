@@ -41,8 +41,8 @@ if !LITE_REFRESH then
     include 'lib/vendor/utf8.lua'
     include 'lib/vendor/pon.lua'
     include 'lib/vendor/cable.lua'
-    include 'lib/vendor/markdown.lua'
-    YAML = include 'lib/vendor/yaml.lua'
+    Markdown  = include 'lib/vendor/markdown.lua'
+    YAML      = include 'lib/vendor/yaml.lua'
 
     Settings = Settings or YAML.read('gamemodes/flux/config/settings.yml')
     DatabaseSettings = YAML.read('gamemodes/flux/config/database.yml')
