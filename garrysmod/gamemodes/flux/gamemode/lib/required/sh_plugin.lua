@@ -404,6 +404,7 @@ function plugin.include_schema()
       if !plugin.require(v) then
         ErrorNoHalt("Unable to load schema! Dependency missing: '"..tostring(v).."'!\n")
         ErrorNoHalt("Please install this plugin in your schema's 'plugins' folder!\n")
+        ErrorNoHalt("Alternatively please make sure that your server can download packages from the cloud!\n")
 
         return
       end
@@ -463,6 +464,16 @@ do
       end
     else
       return true
+    end
+
+    if Crate:included(name) then
+      return true
+    elseif Crate:exists(name) then
+      local success, err = pcall(Crate.include, Crate, name)
+
+      if success then
+        return true
+      end
     end
 
     return false
