@@ -409,8 +409,13 @@ function PANEL:get_menu_size()
 end
 
 function PANEL:on_close()
-  self.hotbar:AlphaTo(0, Theme.get_option('menu_anim_duration'), 0)
-  self.player_model:safe_remove()
+  if IsValid(self.hotbar) then
+    self.hotbar:AlphaTo(0, Theme.get_option('menu_anim_duration'), 0)
+  end
+
+  if IsValid(self.player_model) then
+    self.player_model:safe_remove()
+  end
 end
 
 function PANEL:on_change()
