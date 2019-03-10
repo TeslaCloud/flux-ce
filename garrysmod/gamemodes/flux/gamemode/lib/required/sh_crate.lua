@@ -14,7 +14,7 @@ if !table.safe_merge then
   include 'flux/gamemode/lib/flow/lib/sh_table.lua'
 end
 
-include 'classes/sh_package.lua'
+util.include 'classes/sh_package.lua'
 
 local crate_metadata = {}
 
@@ -29,9 +29,9 @@ Crate.installed = {}
 Crate.current   = nil
 
 local search_paths = {
-  ['flux/gamemode/lib/']      = true,
+  ['flux/gamemode/lib/']        = true,
   [Flux.schema..'/schema/lib/'] = true,
-  ['_flux/packages/']     = true
+  ['_flux/packages/']           = true
 }
 
 --- Adds a search path relative to 'LUA' system.
@@ -67,7 +67,9 @@ end
 -- ```
 -- @return [Package]
 function Crate:describe(callback)
-  callback(self.current)
+  if callback then
+    callback(self.current)
+  end
 
   local meta = self.current.metadata
 

@@ -1,8 +1,8 @@
-Font.Bars:register('getup', {
+Flux.Bars:register('getup', {
   text = t'bar_text.getup',
   color = Color(50, 200, 50),
   max_value = 100,
-  x = ScrW() * 0.5 - Font.Bars.default_w * 0.5,
+  x = ScrW() * 0.5 - Flux.Bars.default_w * 0.5,
   y = ScrH() * 0.5 - 8,
   text_offset = 1,
   height = 20,
@@ -26,8 +26,8 @@ function PLUGIN:HUDPaint()
     if getup then
       local bar_value = 100 - 100 * ((Flux.client:get_nv('getup_end', 0) - CurTime()) / Flux.client:get_nv('getup_time'))
 
-      Font.Bars:set_value('getup', bar_value)
-      Font.Bars:draw('getup')
+      Flux.Bars:set_value('getup', bar_value)
+      Flux.Bars:draw('getup')
     elseif fallen then
       local text = t'press_jump_to_getup'
       local w, h = util.text_size(text, Theme.get_font('text_normal'))

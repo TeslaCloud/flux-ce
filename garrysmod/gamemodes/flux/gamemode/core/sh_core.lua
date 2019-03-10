@@ -1,5 +1,10 @@
 AddCSLuaFile()
 
+if !string.parse_parent then
+  include 'flux/gamemode/lib/flow/lib/sh_aliases.lua'
+  include 'flux/gamemode/lib/flow/lib/sh_string.lua'
+end
+
 -- A function to include a file based on it's prefix.
 function util.include(file_name)
   if SERVER then

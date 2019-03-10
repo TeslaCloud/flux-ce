@@ -109,7 +109,7 @@ if !LITE_REFRESH then
   if Theme or SERVER then
     pipeline.register('Theme', function(id, file_name, pipe)
       if CLIENT then
-        THEME = Theme.new(id)
+        THEME = ThemeBase.new(id)
 
         util.include(file_name)
 

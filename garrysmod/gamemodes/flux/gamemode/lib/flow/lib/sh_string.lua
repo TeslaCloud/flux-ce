@@ -230,6 +230,7 @@ end
 
 function string.parse_parent(str, ref)
   local tables = str:split('::')
+  local last_ref = str
 
   ref = istable(ref) and ref or _G
 
@@ -238,11 +239,13 @@ function string.parse_parent(str, ref)
 
     if !istable(new_ref) then return ref, v end
 
+    last_ref = v
+
     ref = new_ref
   end
 
   if istable(ref) then
-    return ref, str
+    return ref, last_ref or str
   else
     return false
   end

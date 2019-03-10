@@ -379,7 +379,7 @@ do
     if IS_DEVELOPMENT then
       write_client_file('0_shared.lua', 'Flux.shared = Flux.deserialize([['..Flux.serialize(Flux.shared)..']])\n')
       write_client_file('1_settings.lua', 'Settings = Flux.deserialize([['..Flux.serialize(settings_copy)..']])\n')
-      write_client_file('2_lang.lua', "library'Flux::Lang'\nfl.lang.stored = Flux.deserialize([["..Flux.serialize(Flux.Lang.stored).."]])\n")
+      write_client_file('2_lang.lua', "library'Flux::Lang'\nFlux.Lang.stored = Flux.deserialize([["..Flux.serialize(Flux.Lang.stored).."]])\n")
       write_html()
     else
       print 'Compiling clientside assets...'

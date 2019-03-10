@@ -3,19 +3,19 @@ if !Flux.Lang then util.include 'sh_lang.lua' end
 
 library 'Flux::Bars'
 
-local stored = Font.Bars.stored or {}
-local sorted = Font.Bars.sorted or {}
-Font.Bars.stored = stored
-Font.Bars.sorted = sorted
+local stored = Flux.Bars.stored or {}
+local sorted = Flux.Bars.sorted or {}
+Flux.Bars.stored = stored
+Flux.Bars.sorted = sorted
 
 -- Some fail-safety variables.
-Font.Bars.default_x = 8
-Font.Bars.default_y = 8
-Font.Bars.default_w = Font.scale(312)
-Font.Bars.default_h = 18
-Font.Bars.default_spacing = 6
+Flux.Bars.default_x = 8
+Flux.Bars.default_y = 8
+Flux.Bars.default_w = Font.scale(312)
+Flux.Bars.default_h = 18
+Flux.Bars.default_spacing = 6
 
-function Font.Bars:register(id, data, force)
+function Flux.Bars:register(id, data, force)
   if !data then return end
 
   force = force or Flux.development
@@ -54,7 +54,7 @@ function Font.Bars:register(id, data, force)
   return stored[id]
 end
 
-function Font.Bars:get(id)
+function Flux.Bars:get(id)
   if stored[id] then
     return stored[id]
   end
@@ -62,7 +62,7 @@ function Font.Bars:get(id)
   return false
 end
 
-function Font.Bars:set_value(id, new_value)
+function Flux.Bars:set_value(id, new_value)
   local bar = self:get(id)
 
   if bar then
@@ -79,7 +79,7 @@ function Font.Bars:set_value(id, new_value)
   end
 end
 
-function Font.Bars:hinder_value(id, new_value)
+function Flux.Bars:hinder_value(id, new_value)
   local bar = self:get(id)
 
   if bar then
@@ -91,7 +91,7 @@ function Font.Bars:hinder_value(id, new_value)
   end
 end
 
-function Font.Bars:prioritize()
+function Flux.Bars:prioritize()
   sorted = {}
 
   for k, v in pairs(stored) do
@@ -111,7 +111,7 @@ function Font.Bars:prioritize()
   return sorted
 end
 
-function Font.Bars:position()
+function Flux.Bars:position()
   self:prioritize()
 
   local last_y = self.default_y
@@ -134,7 +134,7 @@ function Font.Bars:position()
 
 end
 
-function Font.Bars:draw(id)
+function Flux.Bars:draw(id)
   local bar_info = self:get(id)
 
   if bar_info then
@@ -162,7 +162,7 @@ function Font.Bars:draw(id)
   end
 end
 
-function Font.Bars:DrawTopBars()
+function Flux.Bars:DrawTopBars()
   for priority, ids in pairs(sorted) do
     for k, v in ipairs(ids) do
       self:draw(v)
@@ -170,7 +170,7 @@ function Font.Bars:DrawTopBars()
   end
 end
 
-function Font.Bars:adjust(id, data)
+function Flux.Bars:adjust(id, data)
   local bar = self:get(id)
 
   if bar then
@@ -183,11 +183,11 @@ do
 
   function Bars:LazyTick()
     if IsValid(Flux.client) then
-      Font.Bars:position()
+      Flux.Bars:position()
 
       for k, v in pairs(stored) do
         if v.callback then
-          Font.Bars:set_value(v.id, v.callback(stored[k]))
+          Flux.Bars:set_value(v.id, v.callback(stored[k]))
         end
 
         hook.run('AdjustBarInfo', k, stored[k])
@@ -226,11 +226,11 @@ do
 
   plugin.add_hooks('FLBarHooks', Bars)
 
-  Font.Bars:register('respawn', {
+  Flux.Bars:register('respawn', {
     text = t'bar_text.respawn',
     color = Color(50, 200, 50),
     max_value = 100,
-    x = ScrW() * 0.5 - Font.Bars.default_w * 0.5,
+    x = ScrW() * 0.5 - Flux.Bars.default_w * 0.5,
     y = ScrH() * 0.5 - 8,
     text_offset = 1,
     height = 16,

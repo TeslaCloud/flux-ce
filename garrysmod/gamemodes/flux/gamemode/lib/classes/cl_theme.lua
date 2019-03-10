@@ -1,46 +1,46 @@
-class 'Theme'
+class 'ThemeBase'
 
-Theme.colors = {}
-Theme.sounds = {}
-Theme.materials = {}
-Theme.options = {}
-Theme.panels = {}
-Theme.fonts = {}
-Theme.skin = {}
+ThemeBase.colors = {}
+ThemeBase.sounds = {}
+ThemeBase.materials = {}
+ThemeBase.options = {}
+ThemeBase.panels = {}
+ThemeBase.fonts = {}
+ThemeBase.skin = {}
 Theme.should_reload = true
 
 --[[ Basic Skeleton --]]
-function Theme:init(name, parent)
+function ThemeBase:init(name, parent)
   self.name = name or 'Unknown'
   self.id = self.name:to_id() -- temporary unique ID
   self.parent = parent
 
   if !self.id then
-    error('Cannot create a Theme without a valid unique ID!')
+    error('Cannot create a theme without a valid unique ID!')
   end
 end
 
-function Theme:on_loaded()
+function ThemeBase:on_loaded()
 end
 
-function Theme:on_unloaded()
+function ThemeBase:on_unloaded()
 end
 
-function Theme:remove()
+function ThemeBase:remove()
   return Theme.remove_theme(self.id)
 end
 
-function Theme:add_panel(id, callback)
+function ThemeBase:add_panel(id, callback)
   self.panels[id] = callback
 end
 
-function Theme:create_panel(id, parent, ...)
+function ThemeBase:create_panel(id, parent, ...)
   if self.panels[id] then
     return self.panels[id](id, parent, ...)
   end
 end
 
-function Theme:register_asset(name, path, options)
+function ThemeBase:register_asset(name, path, options)
   options = options or {}
 
   if path:find('%.mdl') then
@@ -65,7 +65,7 @@ function Theme:register_asset(name, path, options)
   end
 end
 
-function Theme:set_option(key, value)
+function ThemeBase:set_option(key, value)
   if key then
     self.options[key] = value
   end
@@ -73,7 +73,7 @@ function Theme:set_option(key, value)
   return self.options[key]
 end
 
-function Theme:set_font(key, value, scale, data)
+function ThemeBase:set_font(key, value, scale, data)
   if key then
     self.fonts[key] = Font.size(value, scale, data)
   end
@@ -81,7 +81,7 @@ function Theme:set_font(key, value, scale, data)
   return self.fonts[key]
 end
 
-function Theme:set_color(id, val)
+function ThemeBase:set_color(id, val)
   val = val or Color(255, 255, 255)
 
   self.colors[id] = val
@@ -89,25 +89,25 @@ function Theme:set_color(id, val)
   return val
 end
 
-function Theme:set_material(id, val)
+function ThemeBase:set_material(id, val)
   self.materials[id] = (!isstring(val) and val) or util.get_material(val)
   return self.materials[id]
 end
 
-function Theme:set_sound(id, val)
+function ThemeBase:set_sound(id, val)
   self.sounds[id] = val or Sound()
   return self.sounds[id]
 end
 
-function Theme:get_font(key, default)
+function ThemeBase:get_font(key, default)
   return self.fonts[key] or default
 end
 
-function Theme:get_option(key, default)
+function ThemeBase:get_option(key, default)
   return self.options[key] or default
 end
 
-function Theme:get_color(id, failsafe)
+function ThemeBase:get_color(id, failsafe)
   local col = self.colors[id]
 
   if col then
@@ -117,7 +117,7 @@ function Theme:get_color(id, failsafe)
   end
 end
 
-function Theme:get_material(id, failsafe)
+function ThemeBase:get_material(id, failsafe)
   local mat = self.materials[id]
 
   if mat then
@@ -127,7 +127,7 @@ function Theme:get_material(id, failsafe)
   end
 end
 
-function Theme:get_sound(id, failsafe)
+function ThemeBase:get_sound(id, failsafe)
   local sound = self.sounds[id]
 
   if sound then
@@ -137,10 +137,10 @@ function Theme:get_sound(id, failsafe)
   end
 end
 
-function Theme:register()
+function ThemeBase:register()
   return Theme.register_theme(self)
 end
 
-function Theme:__tostring()
-  return 'Theme ['..self.name..']'
+function ThemeBase:__tostring()
+  return 'ThemeBase ['..self.name..']'
 end
