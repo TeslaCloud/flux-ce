@@ -44,7 +44,7 @@ function Inventory:PostCharacterLoaded()
 end
 
 function Inventory:create_hotbar()
-  PLAYER.hotbar = vgui.Create('fl_hotbar')
+  PLAYER.hotbar = vgui.Create('fl_inventory_hotbar')
   PLAYER.hotbar:SetVisible(false)
   PLAYER.hotbar:set_player(PLAYER)
   PLAYER.hotbar:set_slot_padding(8)

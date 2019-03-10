@@ -10,7 +10,7 @@ function PANEL:rebuild()
   self.BaseClass.rebuild(self)
 end
 
-vgui.Register('fl_hotbar', PANEL, 'fl_inventory')
+vgui.Register('fl_inventory_hotbar', PANEL, 'fl_inventory')
 
 concommand.Add('fl_hotbar_rebuild', function()
   if IsValid(PLAYER.hotbar) then
