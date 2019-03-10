@@ -146,7 +146,7 @@ if CLIENT then
   end
 end
 
-pipeline.register('html', function(id, file_name, pipe)
+Pipeline.register('html', function(id, file_name, pipe)
   local pipe = 'templates'
 
   if file_name:ends('.js') then

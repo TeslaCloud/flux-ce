@@ -30,7 +30,7 @@ function Item:set_base(base_class)
 end
 
 function Item:make_base()
-  pipeline.abort()
+  Pipeline.abort()
 end
 
 function Item:get_real_name()

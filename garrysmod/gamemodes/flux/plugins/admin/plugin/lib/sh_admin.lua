@@ -187,7 +187,7 @@ function Bolt:check_immunity(player, target, can_equal)
 end
 
 function Bolt:include_roles(directory)
-  pipeline.include_folder('role', directory)
+  Pipeline.include_folder('role', directory)
 end
 
 if SERVER then
@@ -356,7 +356,7 @@ do
 end
 
 
-pipeline.register('role', function(id, file_name, pipe)
+Pipeline.register('role', function(id, file_name, pipe)
   ROLE = Role.new(id)
 
   util.include(file_name)

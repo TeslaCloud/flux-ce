@@ -5,33 +5,33 @@
   Check out sh_item and sh_admin libraries for examples.
 --]]
 
-library 'pipeline'
+library 'Pipeline'
 
-local stored = pipeline.stored or {}
-pipeline.stored = stored
+local stored = Pipeline.stored or {}
+Pipeline.stored = stored
 
 local last_pipe_aborted = false
 
-function pipeline.register(id, callback)
+function Pipeline.register(id, callback)
   stored[id] = {
     callback = callback,
     id = id
   }
 end
 
-function pipeline.find(id)
+function Pipeline.find(id)
   return stored[id]
 end
 
-function pipeline.abort()
+function Pipeline.abort()
   last_pipe_aborted = true
 end
 
-function pipeline.is_aborted()
+function Pipeline.is_aborted()
   return last_pipe_aborted
 end
 
-function pipeline.include(pipe, file_name)
+function Pipeline.include(pipe, file_name)
   if isstring(pipe) then
     pipe = stored[pipe]
   end
@@ -55,7 +55,7 @@ function pipeline.include(pipe, file_name)
   end
 end
 
-function pipeline.include_folder(id, directory)
+function Pipeline.include_folder(id, directory)
   local pipe = stored[id]
 
   if !pipe then return end
@@ -67,6 +67,6 @@ function pipeline.include_folder(id, directory)
   local files, dirs = _file.Find(directory..'*', 'LUA', 'namedesc')
 
   for k, v in ipairs(files) do
-    pipeline.include(pipe, directory..v)
+    Pipeline.include(pipe, directory..v)
   end
 end

@@ -6,7 +6,7 @@ function Flux.Tool:get(id)
   return self.stored[id]
 end
 
-pipeline.register('tool', function(id, file_name, pipe)
+Pipeline.register('tool', function(id, file_name, pipe)
   TOOL = Tool.new()
   TOOL.Mode = id
   TOOL.id = id

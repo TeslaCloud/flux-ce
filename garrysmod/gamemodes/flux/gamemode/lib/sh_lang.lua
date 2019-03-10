@@ -126,7 +126,7 @@ if CLIENT then
     end
   end)
 else
-  pipeline.register('language', function(id, file_name, pipe)
+  Pipeline.register('language', function(id, file_name, pipe)
     if file_name:ends('.yml') then
       local contents = fileio.Read('gamemodes/'..file_name)
 

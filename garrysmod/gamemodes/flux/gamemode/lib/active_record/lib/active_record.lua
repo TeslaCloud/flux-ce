@@ -184,7 +184,7 @@ function ActiveRecord.recreate_schema()
   end)
 end
 
-pipeline.register('migrations', function(id, file_name, pipe)
+Pipeline.register('migrations', function(id, file_name, pipe)
   if file_name:ends('.lua') then
     ActiveRecord.Migrator:add_file(file_name)
   end

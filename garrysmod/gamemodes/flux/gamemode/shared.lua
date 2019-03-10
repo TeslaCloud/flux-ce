@@ -95,11 +95,11 @@ if !LITE_REFRESH then
   if SERVER then
     Crate:include 'packager'
 
-    pipeline.include_folder('language', 'flux/gamemode/languages')
-    pipeline.include_folder('migrations', 'flux/gamemode/migrations')
-    pipeline.include_folder('html', 'flux/gamemode/views/html')
-    pipeline.include_folder('html', 'flux/gamemode/views/assets/stylesheets')
-    pipeline.include_folder('html', 'flux/gamemode/views/assets/javascripts')
+    Pipeline.include_folder('language', 'flux/gamemode/languages')
+    Pipeline.include_folder('migrations', 'flux/gamemode/migrations')
+    Pipeline.include_folder('html', 'flux/gamemode/views/html')
+    Pipeline.include_folder('html', 'flux/gamemode/views/assets/stylesheets')
+    Pipeline.include_folder('html', 'flux/gamemode/views/assets/javascripts')
   end
   util.include_folder('models', true)
   util.include_folder('controllers', true)
@@ -107,7 +107,7 @@ if !LITE_REFRESH then
   util.include_folder('views', true)
 
   if Theme or SERVER then
-    pipeline.register('Theme', function(id, file_name, pipe)
+    Pipeline.register('Theme', function(id, file_name, pipe)
       if CLIENT then
         THEME = ThemeBase.new(id)
 
@@ -120,11 +120,11 @@ if !LITE_REFRESH then
     end)
 
     -- Theme factory is needed for any other themes that may be in the themes folder.
-    pipeline.include('Theme', 'themes/cl_theme_factory.lua')
-    pipeline.include_folder('Theme', 'flux/gamemode/themes')
+    Pipeline.include('Theme', 'themes/cl_theme_factory.lua')
+    Pipeline.include_folder('Theme', 'flux/gamemode/themes')
   end
 
-  pipeline.include_folder('tool', 'flux/gamemode/tools')
+  Pipeline.include_folder('tool', 'flux/gamemode/tools')
 end
 
 util.include_folder('hooks', true)

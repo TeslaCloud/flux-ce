@@ -76,19 +76,19 @@ function attributes.register_type(id, global_var, folder)
 end
 
 function attributes.include_type(id, global_var, folder)
-  pipeline.register(id, function(id, file_name, pipe)
+  Pipeline.register(id, function(id, file_name, pipe)
     _G[global_var] = Attribute.new(id)
 
     util.include(file_name)
 
-    if pipeline.is_aborted() then _G[global_var] = nil return end
+    if Pipeline.is_aborted() then _G[global_var] = nil return end
 
     _G[global_var].type = global_var
     _G[global_var]:register()
     _G[global_var] = nil
   end)
 
-  pipeline.include_folder(id, folder)
+  Pipeline.include_folder(id, folder)
 end
 
 function attributes.id_from_attr_id(atts_table, attr_id)

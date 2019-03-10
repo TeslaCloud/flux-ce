@@ -599,16 +599,16 @@ function plugin.include_folders(folder)
       if v == 'entities' then
         plugin.include_entities(folder..'/'..v)
       elseif v == 'themes' then
-        pipeline.include_folder('Theme', folder..'/themes/')
+        Pipeline.include_folder('Theme', folder..'/themes/')
       elseif v == 'tools' then
-        pipeline.include_folder('tool', folder..'/tools/')
+        Pipeline.include_folder('tool', folder..'/tools/')
       elseif SERVER then
         if v == 'languages' then
-          pipeline.include_folder('language', folder..'/languages/')
+          Pipeline.include_folder('language', folder..'/languages/')
         elseif v == 'migrations' then
-          pipeline.include_folder('migrations', folder..'/migrations/')
+          Pipeline.include_folder('migrations', folder..'/migrations/')
         elseif v:find('/assets/') or v:find('/html/') then
-          pipeline.include_folder('html', folder..'/'..v)
+          Pipeline.include_folder('html', folder..'/'..v)
         else
           util.include_folder(folder..'/'..v)
         end

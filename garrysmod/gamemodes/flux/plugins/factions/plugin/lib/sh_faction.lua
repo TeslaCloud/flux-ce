@@ -62,7 +62,7 @@ function faction.all()
 end
 
 function faction.include_factions(directory)
-  return pipeline.include_folder('faction', directory)
+  return Pipeline.include_folder('faction', directory)
 end
 
 do
@@ -217,7 +217,7 @@ do
   end
 end
 
-pipeline.register('faction', function(id, file_name, pipe)
+Pipeline.register('faction', function(id, file_name, pipe)
   FACTION = Faction.new(id)
 
   util.include(file_name)

@@ -239,7 +239,7 @@ function item.create_base(name)
 end
 
 function item.include_items(directory)
-  pipeline.include_folder('item', directory)
+  Pipeline.include_folder('item', directory)
 end
 
 if SERVER then
@@ -470,12 +470,12 @@ else
   end)
 end
 
-pipeline.register('item', function(id, file_name, pipe)
+Pipeline.register('item', function(id, file_name, pipe)
   ITEM = Item.new(id)
 
   util.include(file_name)
 
-  if pipeline.is_aborted() then ITEM = nil return end
+  if Pipeline.is_aborted() then ITEM = nil return end
 
   ITEM:register() ITEM = nil
 end)
