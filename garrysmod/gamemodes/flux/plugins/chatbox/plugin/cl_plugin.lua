@@ -1,4 +1,4 @@
-local category = config.create_category('chatbox', 'config.chatbox.title', 'config.chatbox.desc')
+local category = Config.create_category('chatbox', 'config.chatbox.title', 'config.chatbox.desc')
 category.add_slider('chatbox_message_margin', 'config.chatbox.margin.name', 'config.chatbox.margin.desc', { min = 0, max = 64, default = 2 })
 category.add_slider('chatbox_message_fade_delay', 'config.chatbox.fade_delay.name', 'config.chatbox.fade_delay.desc', { min = 1, max = 128, default = 12 })
 category.add_slider('chatbox_max_messages', 'config.chatbox.max_messages.name', 'config.chatbox.max_messages.desc', { min = 1, max = 256, default = 100 })
@@ -54,13 +54,13 @@ function chatbox.compile(msg_table)
           cur_x = cur_x + w
 
           if line_count > 1 and k2 != line_count then
-            cur_y = cur_y + h + config.get('chatbox_message_margin')
+            cur_y = cur_y + h + Config.get('chatbox_message_margin')
 
-            total_height = total_height + h + config.get('chatbox_message_margin')
+            total_height = total_height + h + Config.get('chatbox_message_margin')
 
             cur_x = 0
           elseif total_height < h then
-            total_height = h + config.get('chatbox_message_margin')
+            total_height = h + Config.get('chatbox_message_margin')
           end
         end
       elseif isnumber(v) then
@@ -85,7 +85,7 @@ function chatbox.compile(msg_table)
           table.insert(compiled, image_data)
 
           if total_height < scaled then
-            total_height = scaled + config.get('chatbox_message_margin')
+            total_height = scaled + Config.get('chatbox_message_margin')
           end
         elseif v.r and v.g and v.b and v.a then
           table.insert(compiled, Color(v.r, v.g, v.b, v.a))
@@ -106,7 +106,7 @@ function chatbox.compile(msg_table)
         cur_x = cur_x + w
 
         if total_height < h then
-          total_height = h + config.get('chatbox_message_margin')
+          total_height = h + Config.get('chatbox_message_margin')
         end
       end
     end

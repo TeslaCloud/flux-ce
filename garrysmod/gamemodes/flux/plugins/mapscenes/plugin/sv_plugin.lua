@@ -1,6 +1,6 @@
-config.set('mapscenes_speed', 15)
-config.set('mapscenes_animated', false)
-config.set('mapscenes_rotate_speed', 0.05)
+Config.set('mapscenes_speed', 15)
+Config.set('mapscenes_animated', false)
+Config.set('mapscenes_rotate_speed', 0.05)
 
 function Mapscenes:PlayerInitialized(player)
   Cable.send(player, 'fl_mapscene_load', self.points)

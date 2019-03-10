@@ -7,7 +7,7 @@ function PANEL:Init()
 
   self.list_layout = vgui.Create('DListLayout', self.scroll_panel)
 
-  for k, v in pairs(config.get_menu_keys()) do
+  for k, v in pairs(Config.get_menu_keys()) do
     local collapsible_category = vgui.Create('DCollapsibleCategory', self.list_layout)
     collapsible_category:SetLabel(t(v.category.name))
     collapsible_category:SetSize(width, 21)
@@ -97,7 +97,7 @@ function PANEL:set_config(key, config_table)
     self.slider:SetMin(config_table.data.min or 0)
     self.slider:SetMax(config_table.data.max or 100)
     self.slider:SetDecimals(config_table.data.decimals or 0)
-    self.slider:SetValue(config.get(key) or config_table.data.default or 0)
+    self.slider:SetValue(Config.get(key) or config_table.data.default or 0)
     self.slider.TextArea:SetPaintBackground(true)
     self.slider.PerformLayout = function()
     end
@@ -107,7 +107,7 @@ function PANEL:set_config(key, config_table)
     end
   elseif data_type == 'boolean' then
     self.check = vgui.create('fl_button', self)
-    self.check.value = config.get(key) or config_table.data.default or false
+    self.check.value = Config.get(key) or config_table.data.default or false
     self.check:SetDrawBackground(false)
     self.check:set_icon(self.check.value and 'fa-check' or 'fa-ban')
     self.check:set_centered(true)
@@ -127,7 +127,7 @@ function PANEL:set_config(key, config_table)
   elseif data_type == 'table' then
     self.combo_box = vgui.create('DComboBox', self)
 
-    local data_table = config.get(key)
+    local data_table = Config.get(key)
 
     self.combo_box.rebuild = function()
       self.combo_box:Clear()
@@ -172,7 +172,7 @@ function PANEL:set_config(key, config_table)
     end
   elseif data_type == 'dropdown' then
     self.combo_box = vgui.create('DComboBox', self)
-    self.combo_box:SetValue(config.get(key) or t'admin.select_config')
+    self.combo_box:SetValue(Config.get(key) or t'admin.select_config')
 
     local data_table = config_table.data
 

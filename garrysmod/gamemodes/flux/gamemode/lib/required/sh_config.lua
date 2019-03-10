@@ -1,23 +1,23 @@
 ﻿-- This library is for serverside configs only!
 -- For clientside configs, see cl_settings.lua!
 
-library 'config'
+library 'Config'
 
-local stored = config.stored or {}
-config.stored = stored
+local stored = Config.stored or {}
+Config.stored = stored
 
 local cache = {}
 
-function config.all()
+function Config.all()
   return stored
 end
 
-function config.cache()
+function Config.cache()
   return cache
 end
 
 if SERVER then
-  function config.load()
+  function Config.load()
     local loaded = Data.load('config', {})
 
     for k, v in pairs(loaded) do
@@ -28,11 +28,11 @@ if SERVER then
     return stored
   end
 
-  function config.save()
+  function Config.save()
     Data.save('config', stored)
   end
 
-  function config.set(key, value, hidden, from_config)
+  function Config.set(key, value, hidden, from_config)
     if key != nil then
       if !stored[key] then
         stored[key] = {}
@@ -84,10 +84,10 @@ if SERVER then
     player.fl_has_sent_config = true
   end
 else
-  local menu_items = config.menu_items or {}
-  config.menu_items = menu_items
+  local menu_items = Config.menu_items or {}
+  Config.menu_items = menu_items
 
-  function config.set(key, value)
+  function Config.set(key, value)
     if key != nil then
       stored[key] = stored[key] or {}
 
@@ -98,7 +98,7 @@ else
     end
   end
 
-  function config.create_category(id, name, description)
+  function Config.create_category(id, name, description)
     id = id or 'other'
 
     if menu_items[id] then return menu_items[id] end
@@ -106,22 +106,22 @@ else
     menu_items[id] = {
       category = { name = name or 'Other', description = description or '' },
       add_key = function(key, name, description, data_type, data)
-        config.add_to_menu(id, key, name, description, data_type, data)
+        Config.add_to_menu(id, key, name, description, data_type, data)
       end,
       add_slider = function(key, name, description, data)
-        config.add_to_menu(id, key, name, description, 'number', data)
+        Config.add_to_menu(id, key, name, description, 'number', data)
       end,
       add_table_editor = function(key, name, description, data)
-        config.add_to_menu(id, key, name, description, 'table', data)
+        Config.add_to_menu(id, key, name, description, 'table', data)
       end,
       add_textbox = function(key, name, description, data)
-        config.add_to_menu(id, key, name, description, 'string', data)
+        Config.add_to_menu(id, key, name, description, 'string', data)
       end,
       add_checkbox = function(key, name, description, data)
-        config.add_to_menu(id, key, name, description, 'bool', data)
+        Config.add_to_menu(id, key, name, description, 'bool', data)
       end,
       add_dropdown = function(key, name, description, data)
-        config.add_to_menu(id, key, name, description, 'dropdown', data)
+        Config.add_to_menu(id, key, name, description, 'dropdown', data)
       end,
       configs = {}
     }
@@ -129,11 +129,11 @@ else
     return menu_items[id]
   end
 
-  function config.get_category(id)
+  function Config.get_category(id)
     return menu_items[id]
   end
 
-  function config.add_to_menu(category, key, name, description, data_type, data)
+  function Config.add_to_menu(category, key, name, description, data_type, data)
     if !category or !key then return end
 
     menu_items[category] = menu_items[category] or {}
@@ -149,7 +149,7 @@ else
     }
   end
 
-  function config.get_menu_keys()
+  function Config.get_menu_keys()
     return menu_items
   end
 
@@ -162,7 +162,7 @@ else
   end)
 end
 
-function config.get(key, default)
+function Config.get(key, default)
   if cache[key] then
     return cache[key]
   end
@@ -181,14 +181,14 @@ function config.get(key, default)
 end
 
 if SERVER then
-  function config.import(contents, from_config)
+  function Config.import(contents, from_config)
     if !isstring(contents) or contents == '' then return end
 
     local config_table = YAML.eval(contents)
 
     for k, v in pairs(config_table) do
       if k != 'depends' and plugin.call('ShouldConfigImport', k, v) == nil then
-        config.set(k, v, nil, from_config)
+        Config.set(k, v, nil, from_config)
       end
     end
 

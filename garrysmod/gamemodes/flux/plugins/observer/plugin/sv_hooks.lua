@@ -70,5 +70,5 @@ function Observer:PlayerExitNoclip(player)
 end
 
 function Observer:ShouldObserverReset(player)
-  return config.get('observer_reset')
+  return Config.get('observer_reset')
 end

@@ -5,7 +5,7 @@ local cur_alpha = 0
 function Stamina:HUDPaint()
   local stamina = PLAYER:get_nv('stamina', 100)
   local frame_time = FrameTime() * 8
-  local percentage = (stamina / config.get('stam_max', 100))
+  local percentage = (stamina / Config.get('stam_max', 100))
 
   if stamina < 98 then
     cur_alpha = Lerp(frame_time, cur_alpha, 1)

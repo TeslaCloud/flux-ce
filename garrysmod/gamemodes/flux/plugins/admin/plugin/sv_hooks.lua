@@ -34,7 +34,7 @@ function Bolt:ActiveRecordReady()
 end
 
 function Bolt:PlayerRestored(player, record)
-  local root_steamid = config.get('root_steamid')
+  local root_steamid = Config.get('root_steamid')
 
   if record.role then
     player:SetUserGroup(record.role)

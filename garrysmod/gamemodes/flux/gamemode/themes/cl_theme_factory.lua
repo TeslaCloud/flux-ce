@@ -190,7 +190,7 @@ end
 
 function THEME:PaintDeathScreen(cur_time, scrw, scrh)
   local respawn_time_remaining = PLAYER:get_nv('respawn_time', 0) - cur_time
-  local bar_value = 100 - 100 * (respawn_time_remaining / config.get('respawn_delay'))
+  local bar_value = 100 - 100 * (respawn_time_remaining / Config.get('respawn_delay'))
   local font = self:get_font('text_normal_large')
   local color_white = Color(255, 255, 255)
 

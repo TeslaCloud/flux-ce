@@ -34,5 +34,5 @@ Cable.receive('fl_delete_temp_permission', function(player, target, perm_id)
 end)
 
 Cable.receive('fl_config_change', function(player, key, value)
-  config.set(key, value)
+  Config.set(key, value)
 end)

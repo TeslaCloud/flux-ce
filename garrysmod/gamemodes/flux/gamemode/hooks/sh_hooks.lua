@@ -8,10 +8,10 @@ function GM:Initialize()
     local config_file = fileio.Read('gamemodes/flux/flux.yml')
 
     if config_file then
-      config.import(config_file, CONFIG_FLUX)
+      Config.import(config_file, CONFIG_FLUX)
     end
 
-    config.load()
+    Config.load()
 
     ActiveRecord.connect()
   end

@@ -244,9 +244,9 @@ Cable.receive('fl_player_created_character', function(success, status)
       if hook_text then
         text = hook_text
       elseif status == CHAR_ERR_NAME then
-        text = "Your character's name must be between "..config.get('character_min_name_len')..' and '..config.get('character_max_name_len')..' characters long!'
+        text = "Your character's name must be between "..Config.get('character_min_name_len')..' and '..Config.get('character_max_name_len')..' characters long!'
       elseif status == CHAR_ERR_DESC then
-        text = "Your character's description must be between "..config.get('character_min_desc_len')..' and '..config.get('character_max_desc_len')..' characters long!'
+        text = "Your character's description must be between "..Config.get('character_min_desc_len')..' and '..Config.get('character_max_desc_len')..' characters long!'
       elseif status == CHAR_ERR_GENDER then
         text = 'You must pick a gender for your character before continuing!'
       elseif status == CHAR_ERR_MODEL then

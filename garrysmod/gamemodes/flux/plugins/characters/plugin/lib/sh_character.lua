@@ -1,13 +1,13 @@
 ﻿library 'character'
 
 function character.create(player, data)
-  if (!isstring(data.name) or (utf8.len(data.name) < config.get('character_min_name_len') or
-    utf8.len(data.name) > config.get('character_max_name_len'))) then
+  if (!isstring(data.name) or (utf8.len(data.name) < Config.get('character_min_name_len') or
+    utf8.len(data.name) > Config.get('character_max_name_len'))) then
     return CHAR_ERR_NAME
   end
 
-  if (!isstring(data.phys_desc) or (utf8.len(data.phys_desc) < config.get('character_min_desc_len') or
-    utf8.len(data.phys_desc) > config.get('character_max_desc_len'))) then
+  if (!isstring(data.phys_desc) or (utf8.len(data.phys_desc) < Config.get('character_min_desc_len') or
+    utf8.len(data.phys_desc) > Config.get('character_max_desc_len'))) then
     return CHAR_ERR_DESC
   end
 

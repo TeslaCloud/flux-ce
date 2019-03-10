@@ -1,17 +1,17 @@
-config.set('stam_drain_scale', 1)
-config.set('stam_regen_scale', 1)
-config.set('stam_jump_penalty', 25)
-config.set('stam_max', 100)
-config.set('stam_regen_delay', 3)
+Config.set('stam_drain_scale', 1)
+Config.set('stam_regen_scale', 1)
+Config.set('stam_jump_penalty', 25)
+Config.set('stam_max', 100)
+Config.set('stam_regen_delay', 3)
 
 Stamina.running = Stamina.running or {}
 Stamina.timer_ids = Stamina.timer_ids or {}
 
-local drain_scale = 4 * config.get('stam_drain_scale', 1)
-local regen_scale = 2 * config.get('stam_regen_scale', 1)
-local jump_penalty = config.get('stam_jump_penalty', 25)
-local max_stamina = config.get('stam_max', 100)
-local regen_delay = config.get('stam_regen_delay', 3)
+local drain_scale = 4 * Config.get('stam_drain_scale', 1)
+local regen_scale = 2 * Config.get('stam_regen_scale', 1)
+local jump_penalty = Config.get('stam_jump_penalty', 25)
+local max_stamina = Config.get('stam_max', 100)
+local regen_delay = Config.get('stam_regen_delay', 3)
 
 function Stamina:OnConfigSet(key, old_value, new_value)
   if key == 'stam_drain_scale' then
@@ -69,8 +69,8 @@ function Stamina:PlayerThink(player, cur_time)
     player:SetRunSpeed(player:GetWalkSpeed())
     player:SetJumpPower(0)
   else
-    player:SetRunSpeed(config.get('run_speed'))
-    player:SetJumpPower(config.get('jump_power'))
+    player:SetRunSpeed(Config.get('run_speed'))
+    player:SetJumpPower(Config.get('jump_power'))
   end
 end
 

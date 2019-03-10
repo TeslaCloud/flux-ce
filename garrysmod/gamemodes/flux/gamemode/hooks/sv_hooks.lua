@@ -41,10 +41,10 @@ function GM:PlayerSpawn(player)
   player:UnSpectate()
   player:GodDisable()
 
-  player:SetCrouchedWalkSpeed(config.get('crouched_speed') / config.get('walk_speed'))
-  player:SetWalkSpeed(config.get('walk_speed'))
-  player:SetJumpPower(config.get('jump_power'))
-  player:SetRunSpeed(config.get('run_speed'))
+  player:SetCrouchedWalkSpeed(Config.get('crouched_speed') / Config.get('walk_speed'))
+  player:SetWalkSpeed(Config.get('walk_speed'))
+  player:SetJumpPower(Config.get('jump_power'))
+  player:SetRunSpeed(Config.get('run_speed'))
 
   player:SetNoDraw(false)
   player:UnLock()
@@ -119,7 +119,7 @@ function GM:PlayerInitialized(player)
 end
 
 function GM:PlayerDeath(player, inflictor, attacker)
-  player:set_nv('respawn_time', CurTime() + config.get('respawn_delay'))
+  player:set_nv('respawn_time', CurTime() + Config.get('respawn_delay'))
 end
 
 function GM:PlayerDeathThink(player)
@@ -322,7 +322,7 @@ function GM:OneSecond()
       hook.run('FLSaveData')
     end
 
-    Flux.next_save_data = cur_time + config.get('Data.save_interval')
+    Flux.next_save_data = cur_time + Config.get('Data.save_interval')
   end
 
   if !Flux.next_player_count_check then
@@ -416,7 +416,7 @@ do
 end
 
 function GM:FLSaveData()
-  config.save()
+  Config.save()
   hook.run('SaveData')
 end
 

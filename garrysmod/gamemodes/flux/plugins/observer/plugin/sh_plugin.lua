@@ -4,9 +4,9 @@ util.include('cl_hooks.lua')
 util.include('sv_hooks.lua')
 
 if SERVER then
-  config.set('observer_reset', false)
+  Config.set('observer_reset', false)
 else
-  config.add_to_menu('general', 'observer_reset', 'config.general.observer_reset.name', 'config.general.observer_reset.desc', 'boolean')
+  Config.add_to_menu('general', 'observer_reset', 'config.general.observer_reset.name', 'config.general.observer_reset.desc', 'boolean')
 end
 
 function Bolt:RegisterPermissions()
