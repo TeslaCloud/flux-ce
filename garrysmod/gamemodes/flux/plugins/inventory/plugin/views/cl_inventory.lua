@@ -221,6 +221,10 @@ function PANEL:Init()
 end
 
 function PANEL:Paint(w, h)
+  Theme.hook('PaintInventoryBackground', self, w, h)
+end
+
+function PANEL:PaintOver(w, h)
   if self.title then
     local text = t(self.title)
     local font = Theme.get_font('text_normal_large')
@@ -401,7 +405,7 @@ vgui.Register('fl_inventory', PANEL, 'fl_base_panel')
 local PANEL = {}
 
 function PANEL:Paint(w, h)
-  Theme.hook('PaintInventoryBackground', self, w, h)
+  Theme.hook('PaintTabInventoryBackground', self, w, h)
 end
 
 function PANEL:get_menu_size()
