@@ -218,28 +218,25 @@ do
     end
   end
 
-    function player_meta:find_empty_slot(inv_type)
-      local ply_inv = self:get_inventory(inv_type)
+  function player_meta:find_empty_slot(inv_type)
+    local ply_inv = self:get_inventory(inv_type)
 
-      for i = 1, ply_inv.height do
-        for k = 1, ply_inv.width do
-          if #ply_inv[i][k] == 0 then
-            return i, k
-          end
+    for i = 1, ply_inv.height do
+      for k = 1, ply_inv.width do
+        if #ply_inv[i][k] == 0 then
+          return i, k
         end
       end
     end
+  end
 
-    function player_meta:find_stack_slot(item_table, inv_type)
-      local ply_inv = self:get_inventory(inv_type)
+  function player_meta:find_stack_slot(item_table, inv_type)
+    local ply_inv = self:get_inventory(inv_type)
 
-      for i = 1, ply_inv.height do
-        for k = 1, ply_inv.width do
-          local slot_table = ply_inv[i][k]
-
-          if item_table.stackable and item_table.id == slot_table.id then
-            return i, k
-          end
+    for i = 1, ply_inv.height do
+      for k = 1, ply_inv.width do
+        if hook.run('CanItemStack', self, item_table, inv_type, k, i) != false then
+          return i, k
         end
       end
     end
