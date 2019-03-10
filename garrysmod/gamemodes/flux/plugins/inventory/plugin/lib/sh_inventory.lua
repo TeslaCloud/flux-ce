@@ -24,7 +24,7 @@ do
 
   function player_meta:get_items(inv_type)
     local item_list = {}
-    local inventories = !inv_type and self:get_nv('inventory', {}) or { self:get_inventory(inv_type) }
+    local inventories = !inv_type and self:get_nv('inventory', {}) or { self:get_nv('inventory', {})[inv_type] }
 
     for k, v in pairs(inventories) do
       for k1, v1 in pairs(v) do
@@ -53,9 +53,8 @@ do
 
   function player_meta:get_slot(x, y, inv_type)
     local inv = self:get_inventory(inv_type)
-    inv[y] = inv[y] or {}
 
-    return inv[y][x] or {}
+    return inv[y][x]
   end
 
   function player_meta:get_first_in_slot(x, y, inv_type)
