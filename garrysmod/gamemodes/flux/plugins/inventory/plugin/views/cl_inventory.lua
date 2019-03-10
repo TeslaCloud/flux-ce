@@ -337,7 +337,7 @@ function PANEL:rebuild()
             end
           end
 
-          Cable.send('fl_item_move', !split and dropped[1].instance_ids or split[1], self.inventory_type, receiver.inv_x, receiver.inv_y)
+          Cable.send('fl_item_move', !split and dropped[1].instance_ids or split, self.inventory_type, receiver.inv_x, receiver.inv_y)
         else
           receiver.is_hovered = true
         end
