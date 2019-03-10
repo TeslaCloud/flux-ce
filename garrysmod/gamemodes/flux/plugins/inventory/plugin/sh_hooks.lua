@@ -47,3 +47,20 @@ function Inventory:PlayerSelectSlot(player, slot)
     player.next_slot_click = cur_time + 0.2
   end
 end
+
+function Inventory:GetInventorySize(player, inv_type)
+  if inv_type == 'pockets' then
+    local item_count = 1
+    local max_x = 0
+
+    for k, v in pairs(player:get_items(inv_type)) do
+      local item_table = item.find_instance_by_id(v)
+
+      if item_table and item_table.inventory_type == 'pockets' then
+        max_x = math.max(max_x, item_table.slot_id[2])
+      end
+    end
+
+    return max_x + 1, Config.get('pockets_height')
+  end
+end

@@ -427,6 +427,7 @@ function PANEL:rebuild()
     self.inventory:rebuild()
     self.hotbar:rebuild()
     self.equipment:rebuild()
+    self.pockets:rebuild()
 
     timer.simple(0.05, function()
       if IsValid(self.player_model) then
@@ -444,17 +445,31 @@ function PANEL:rebuild()
   local w, h = self:GetSize()
   local width, height = self.inventory:GetSize()
 
+  self.pockets = vgui.create('fl_inventory', self)
+  self.pockets.inventory_type = 'pockets'
+  self.pockets:set_max_size(w / 2, nil)
+  self.pockets:set_player(PLAYER)
+  self.pockets:set_title('inventory.pockets')
+
   if width < w / 2 then
     local x, y = self.inventory:GetPos()
 
     self.inventory:SetPos(w / 2 - width - 2, y)
   end
 
+  local pockets_title_w, pockets_title_h = util.text_size(self.pockets.title, Theme.get_font('text_normal_large'))
+
+  height = height + pockets_title_h + 8
+
   if height < h then
     local x, y = self.inventory:GetPos()
 
     self.inventory:SetPos(x, h / 2 - height / 2)
   end
+
+  local x, y = self.inventory:GetPos()
+
+  self.pockets:SetPos(x, y + height)
 
   self.hotbar = vgui.Create('fl_hotbar', self:GetParent())
   self.hotbar:set_slot_padding(8)

@@ -3,6 +3,7 @@ en:
     main_inventory: Inventory
     hotbar: Hotbar
     equipment: Equipment
+    pockets: Pockets
   give_item:
     description: Gives specified item to a player.
     syntax: "<target> <item name or unique ID>"
