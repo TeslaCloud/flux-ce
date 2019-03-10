@@ -13,7 +13,7 @@ function COMMAND:on_run(player, targets, attr_id, value)
   local attribute = attributes.find_by_id(attr_id)
 
   if attribute then
-    fl.player:broadcast('char_set_attribute.message', { get_player_name(player), target:name(), attribute.name, value })
+    Flux.Player:broadcast('char_set_attribute.message', { get_player_name(player), target:name(), attribute.name, value })
 
     target:set_attribute(attr_id:to_id(), tonumber(value))
   else

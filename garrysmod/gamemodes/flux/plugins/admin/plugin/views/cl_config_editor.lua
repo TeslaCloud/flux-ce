@@ -46,13 +46,13 @@ local PANEL = {}
 
 function PANEL:Init()
   self.text = vgui.create('DLabel', self)
-  self.text:SetFont(theme.get_font('main_menu_normal'))
+  self.text:SetFont(Theme.get_font('main_menu_normal'))
   self.text:SetTextColor(color_white)
   self.text:SetContentAlignment(5)
 end
 
 function PANEL:Paint(w, h)
-  theme.hook('PaintConfigLine', self, w, h)
+  Theme.hook('PaintConfigLine', self, w, h)
 end
 
 function PANEL:PerformLayout(w, h)
@@ -120,7 +120,7 @@ function PANEL:set_config(key, config_table)
     end
   elseif data_type == 'string' then
     self.text_entry = vgui.create('DTextEntry', self)
-    self.text_entry:SetFont(theme.get_font('main_menu_small'))
+    self.text_entry:SetFont(Theme.get_font('main_menu_small'))
     self.text_entry.OnEnter = function(pnl, value)
       cable.send('fl_config_change', key, self.text_entry:GetValue())
     end

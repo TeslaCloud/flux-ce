@@ -48,6 +48,8 @@ function ActiveRecord.Base:init()
   end
 end
 
+print 'dee'
+
 --- @warning [Internal]
 -- When the ActiveRecord::Base class is extended,
 -- the new model is added to the global models list,

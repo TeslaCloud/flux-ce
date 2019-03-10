@@ -79,12 +79,12 @@ Doors:register_title_type('center', {
   name = 'doors.title_type.center',
   draw = function(entity, w, h, alpha)
     local text = entity:get_nv('fl_name')
-    local font = theme.get_font('text_3d2d')
+    local font = Theme.get_font('text_3d2d')
     local text_w, text_h = util.text_size(text, font)
     local box_x, box_y = -text_w * 0.55, -h / 4 - text_h * 0.55
     local box_w, box_h = text_w * 1.1, text_h * 1.1
 
-    draw.RoundedBox(0, box_x, box_y, box_w, box_h, theme.get_color('background'):alpha(alpha))
+    draw.RoundedBox(0, box_x, box_y, box_w, box_h, Theme.get_color('background'):alpha(alpha))
     draw.RoundedBox(2, box_x - 4, box_y, box_w + 8, 4, color_white:alpha(alpha))
     draw.RoundedBox(2, box_x- 4, box_y + box_h, box_w + 8, 4, color_white:alpha(alpha))
 

@@ -15,7 +15,7 @@ do
     char = char:utf8lower()
 
     if CLIENT then
-      local lang = fl.lang:GetTable(GetConVar('gmod_language'):GetString())
+      local lang = Flux.Lang:GetTable(GetConVar('gmod_language'):GetString())
 
       if lang and isfunction(lang.is_vowel) then
         local override = lang:is_vowel(char)

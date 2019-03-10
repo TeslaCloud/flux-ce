@@ -1,4 +1,4 @@
-library.new 'inventory'
+library 'inventory'
 
 do
   local player_meta = FindMetaTable('Player')
@@ -146,9 +146,9 @@ do
         hook.run('OnItemGiven', self, item_table, x, y)
         return true
       elseif x == -1 then
-        fl.dev_print("Failed to add item to player's inventory (item_table is invalid)! "..tostring(item_table))
+        Flux.dev_print("Failed to add item to player's inventory (item_table is invalid)! "..tostring(item_table))
       else
-        fl.dev_print("Failed to add item to player's inventory (inv is full)! "..tostring(item_table))
+        Flux.dev_print("Failed to add item to player's inventory (inv is full)! "..tostring(item_table))
       end
 
       return false
@@ -168,9 +168,9 @@ do
 
         return true
       elseif x == -1 then
-        fl.dev_print("Failed to add item to player's inventory (item_table is invalid)! "..tostring(item_table))
+        Flux.dev_print("Failed to add item to player's inventory (item_table is invalid)! "..tostring(item_table))
       else
-        fl.dev_print("Failed to add item to player's inventory (inv is full)! "..tostring(item_table))
+        Flux.dev_print("Failed to add item to player's inventory (inv is full)! "..tostring(item_table))
       end
 
       return false

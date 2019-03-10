@@ -25,13 +25,13 @@ if SERVER then
   end
 
   function SurfaceText:save()
-    data.save_plugin('3dtexts', SurfaceText.texts)
-    data.save_plugin('3dpictures', SurfaceText.pictures)
+    Data.save_plugin('3dtexts', SurfaceText.texts)
+    Data.save_plugin('3dpictures', SurfaceText.pictures)
   end
 
   function SurfaceText:load()
-    local loaded = data.load_plugin('3dtexts', {})
-    local loaded_pics = data.load_plugin('3dpictures', {})
+    local loaded = Data.load_plugin('3dtexts', {})
+    local loaded_pics = Data.load_plugin('3dpictures', {})
 
     self.texts = loaded
     self.pictures = loaded_pics
@@ -77,7 +77,7 @@ if SERVER then
 
       cable.send(nil, 'fl_surface_text_remove', idx)
 
-      fl.player:notify(player, t'3d_text.text_removed')
+      Flux.Player:notify(player, t'3d_text.text_removed')
     end
   end)
 
@@ -89,7 +89,7 @@ if SERVER then
 
       cable.send(nil, 'fl_surface_picture_remove', idx)
 
-      fl.player:notify(player, t'3d_picture.removed')
+      Flux.Player:notify(player, t'3d_picture.removed')
     end
   end)
 else
@@ -103,7 +103,7 @@ else
       local pos = v.pos
       local normal = v.normal
       local ang = normal:Angle()
-      local w, h = util.text_size(v.text, theme.get_font('text_3d2d'))
+      local w, h = util.text_size(v.text, Theme.get_font('text_3d2d'))
       local ang_right = -ang:Right()
       local start_pos = pos - ang_right * (w * 0.05) * v.scale
       local end_pos = pos + ang_right * (w * 0.05) * v.scale
@@ -172,10 +172,10 @@ else
   end)
 
   cable.receive('fl_surface_text_calculate', function()
-    SurfaceText:trace_remove_text(fl.client:GetEyeTraceNoCursor())
+    SurfaceText:trace_remove_text(Flux.client:GetEyeTraceNoCursor())
   end)
 
   cable.receive('fl_surface_picture_calculate', function()
-    SurfaceText:trace_remove_picture(fl.client:GetEyeTraceNoCursor())
+    SurfaceText:trace_remove_picture(Flux.client:GetEyeTraceNoCursor())
   end)
 end

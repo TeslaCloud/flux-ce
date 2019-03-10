@@ -1,10 +1,10 @@
 if CLIENT then
-  library.new('binds', fl)
+  library 'Flux::Binds'
 
-  local stored = fl.binds.stored or {}
-  local key_enums = fl.binds.key_enums or {}
-  fl.binds.stored = stored
-  fl.binds.key_enums = key_enums
+  local stored = Flux.Binds.stored or {}
+  local key_enums = Flux.Binds.key_enums or {}
+  Flux.Binds.stored = stored
+  Flux.Binds.key_enums = key_enums
 
   if #key_enums == 0 then
     for k, v in pairs(_G) do
@@ -16,15 +16,15 @@ if CLIENT then
     end
   end
 
-  function fl.binds:get_enums()
+  function Flux.Binds:get_enums()
     return key_enums
   end
 
-  function fl.binds:all()
+  function Flux.Binds:all()
     return stored
   end
 
-  function fl.binds:get_bound()
+  function Flux.Binds:get_bound()
     local binds = {}
 
     for k, v in pairs(key_enums) do
@@ -38,7 +38,7 @@ if CLIENT then
     return binds
   end
 
-  function fl.binds:get_unbound()
+  function Flux.Binds:get_unbound()
     local binds = {}
 
     for k, v in pairs(key_enums) do
@@ -52,11 +52,11 @@ if CLIENT then
     return binds
   end
 
-  function fl.binds:get_bind(key)
+  function Flux.Binds:get_bind(key)
     return stored[key]
   end
 
-  function fl.binds:set_bind(command, key)
+  function Flux.Binds:set_bind(command, key)
     for k, v in pairs(stored) do
       if v == command then
         stored[k] = nil
@@ -66,7 +66,7 @@ if CLIENT then
     stored[key] = command
   end
 
-  function fl.binds:add_bind(id, command, key)
+  function Flux.Binds:add_bind(id, command, key)
     self:set_bind(command, key)
   end
 end
@@ -79,7 +79,7 @@ if SERVER then
   end
 else
   cable.receive('fl_bind_pressed', function(key)
-    local bind = fl.binds:get_bind(key)
+    local bind = Flux.Binds:get_bind(key)
 
     if bind then
       RunConsoleCommand(bind)

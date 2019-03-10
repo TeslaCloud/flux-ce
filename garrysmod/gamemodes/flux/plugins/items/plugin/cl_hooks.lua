@@ -1,16 +1,16 @@
 function Items:HUDPaint()
-  local hold_start = fl.client:get_nv('hold_start')
+  local hold_start = Flux.client:get_nv('hold_start')
 
   if hold_start then
     local diff = math.Clamp(math.Round(CurTime() - hold_start, 3), 0.01, 0.5)
     local percentage = math.Clamp((diff / 0.5) * 100, 0, 100)
 
-    fl.set_circle_percent(percentage)
+    Flux.set_circle_percent(percentage)
   end
 end
 
 function Items:PreDrawHalos()
-  local ent = fl.client:get_nv('hold_entity')
+  local ent = Flux.client:get_nv('hold_entity')
 
   if IsValid(ent) then
     halo.Add({ ent }, color_white)
@@ -18,16 +18,16 @@ function Items:PreDrawHalos()
 end
 
 function Items:Think()
-  if !fl.client:get_nv('hold_start') then return end
+  if !Flux.client:get_nv('hold_start') then return end
 
-  local ent = fl.client:get_nv('hold_entity')
+  local ent = Flux.client:get_nv('hold_entity')
 
-  if IsValid(ent) and fl.client:get_nv('hold_start') then
+  if IsValid(ent) and Flux.client:get_nv('hold_start') then
     local scr_pos = ent:GetPos():ToScreen()
     local x, y = scr_pos.x, scr_pos.y
     local w, h = ScrW() * 0.5, ScrH() * 0.5
 
-    if !scr_pos.visible or math.abs(w - x) > font.scale(350) or math.abs(h - y) > font.scale(350) then
+    if !scr_pos.visible or math.abs(w - x) > Font.scale(350) or math.abs(h - y) > Font.scale(350) then
       cable.send('fl_items_abort_hold_start', true)
     end
   end

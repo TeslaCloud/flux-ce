@@ -2,7 +2,7 @@ PLUGIN:set_name('Crosshair')
 PLUGIN:set_author('TeslaCloud Studios')
 PLUGIN:set_description('Adds a crosshair.')
 
---fl.hint:Add('RunCrosshair', 'Crosshair will change it's size depending on your movement speed\nand distance between you and your view target.')
+--Flux.hint:Add('RunCrosshair', 'Crosshair will change it's size depending on your movement speed\nand distance between you and your view target.')
 
 local size = 2
 local half_size = size * 0.5
@@ -11,15 +11,15 @@ local gap = 8
 local cur_gap = gap
 
 function PLUGIN:ShouldHUDPaintCrosshair()
-  if fl.client:running() or !fl.client:Alive() or !fl.client:has_initialized() then
+  if Flux.client:running() or !Flux.client:Alive() or !Flux.client:has_initialized() then
     return false
   end
 end
 
 function PLUGIN:HUDPaint()
   if hook.run('ShouldHUDPaint') != false and hook.run('ShouldHUDPaintCrosshair') != false then
-    local trace = fl.client:GetEyeTraceNoCursor()
-    local distance = fl.client:GetPos():Distance(trace.HitPos)
+    local trace = Flux.client:GetEyeTraceNoCursor()
+    local distance = Flux.client:GetPos():Distance(trace.HitPos)
     local draw_color = plugin.call('AdjustCrosshairColor', trace, distance) or color_white
     local secondary_draw_color = draw_color:alpha(25)
     local real_gap = plugin.call('AdjustCrosshairGap', trace, distance) or math.Round(gap * math.Clamp(distance / 400, 0.5, 4))
@@ -49,7 +49,7 @@ function PLUGIN:AdjustCrosshairColor(trace, distance)
   local ent = trace.Entity
 
   if distance < 600 and IsValid(ent) and (ent:IsPlayer() or ent:GetClass() == 'fl_item') then
-    return theme.get_color('accent')
+    return Theme.get_color('accent')
   end
 end
 

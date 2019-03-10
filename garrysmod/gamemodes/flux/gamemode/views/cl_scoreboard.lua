@@ -8,7 +8,7 @@ function PANEL:Init()
 end
 
 function PANEL:Paint(w, h)
-  theme.hook('PaintScoreboard', self, w, h)
+  Theme.hook('PaintScoreboard', self, w, h)
 end
 
 function PANEL:rebuild()
@@ -26,9 +26,9 @@ function PANEL:rebuild()
     self.player_cards[k] = nil
   end
 
-  local cur_y = font.scale(40)
-  local card_tall = font.scale(32) + 8
-  local margin = font.scale(4)
+  local cur_y = Font.scale(40)
+  local card_tall = Font.scale(32) + 8
+  local margin = Font.scale(4)
 
   for k, v in ipairs(_player.GetAll()) do
     if !v:has_initialized() then continue end
@@ -49,7 +49,7 @@ function PANEL:rebuild()
 end
 
 function PANEL:get_menu_size()
-  return font.scale(1280), font.scale(900)
+  return Font.scale(1280), Font.scale(900)
 end
 
 vgui.Register('fl_scoreboard', PANEL, 'fl_base_panel')
@@ -58,7 +58,7 @@ local PANEL = {}
 PANEL.player = false
 
 function PANEL:Paint(w, h)
-  draw.RoundedBox(0, 0, 0, w, h, theme.get_color('background_light'))
+  draw.RoundedBox(0, 0, 0, w, h, Theme.get_color('background_light'))
 end
 
 function PANEL:set_player(player)
@@ -84,9 +84,9 @@ function PANEL:rebuild()
 
   self.name_label = vgui.Create('DLabel', self)
   self.name_label:SetText(player:name())
-  self.name_label:SetPos(font.scale(32) + 16, self:GetTall() * 0.5 - util.text_height(player:name(), theme.get_font('text_normal')) * 0.5)
-  self.name_label:SetFont(theme.get_font('text_normal'))
-  self.name_label:SetTextColor(theme.get_color('text'))
+  self.name_label:SetPos(Font.scale(32) + 16, self:GetTall() * 0.5 - util.text_height(player:name(), Theme.get_font('text_normal')) * 0.5)
+  self.name_label:SetFont(Theme.get_font('text_normal'))
+  self.name_label:SetTextColor(Theme.get_color('text'))
   self.name_label:SizeToContents()
 
   hook.run('RebuildScoreboardPlayerCard', self, player)

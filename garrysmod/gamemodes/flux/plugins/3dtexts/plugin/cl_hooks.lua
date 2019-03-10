@@ -2,8 +2,8 @@ local blur_texture = Material('pp/blurscreen')
 local color_white = Color(255, 255, 255)
 
 function SurfaceText:PostDrawOpaqueRenderables()
-  local weapon = fl.client:GetActiveWeapon()
-  local client_pos = fl.client:GetPos()
+  local weapon = Flux.client:GetActiveWeapon()
+  local client_pos = Flux.client:GetPos()
 
   if IsValid(weapon) and weapon:GetClass() == 'gmod_tool' then
     local mode = weapon:GetMode()
@@ -38,7 +38,7 @@ function SurfaceText:PostDrawOpaqueRenderables()
     local text_color = v.color
     local back_color = v.extra_color
     local style = v.style
-    local w, h = util.text_size(text, theme.get_font('text_3d2d'))
+    local w, h = util.text_size(text, Theme.get_font('text_3d2d'))
     local pos_x, pos_y = -w * 0.5, -h * 0.5
 
     if style >= 2 then
@@ -109,19 +109,19 @@ function SurfaceText:PostDrawOpaqueRenderables()
         end
 
         if style != 3 then
-          draw.SimpleText(text, theme.get_font('text_3d2d'), pos_x, pos_y, text_color:alpha(math.clamp(fade_alpha, 0, 100)):darken(30))
+          draw.SimpleText(text, Theme.get_font('text_3d2d'), pos_x, pos_y, text_color:alpha(math.clamp(fade_alpha, 0, 100)):darken(30))
         end
       cam.End3D2D()
     end
 
     if style >= 3 then
       cam.Start3D2D(pos + (normal * 0.95 * (scale + 0.5)), angle, 0.1 * scale)
-        draw.SimpleText(text, theme.get_font('text_3d2d'), pos_x, pos_y, Color(0, 0, 0, math.Clamp(fade_alpha, 0, 240)))
+        draw.SimpleText(text, Theme.get_font('text_3d2d'), pos_x, pos_y, Color(0, 0, 0, math.Clamp(fade_alpha, 0, 240)))
       cam.End3D2D()
     end
 
     cam.Start3D2D(pos + (normal * 1.25 * (scale + 0.5)), angle, 0.1 * scale)
-      draw.SimpleText(text, theme.get_font('text_3d2d'), pos_x, pos_y, text_color:alpha(fade_alpha))
+      draw.SimpleText(text, Theme.get_font('text_3d2d'), pos_x, pos_y, text_color:alpha(fade_alpha))
     cam.End3D2D()
   end
 
@@ -151,12 +151,12 @@ function SurfaceText:PostDrawOpaqueRenderables()
 end
 
 function SurfaceText:draw_text_preview()
-  local tool = fl.client:GetTool()
+  local tool = Flux.client:GetTool()
   local text = tool:GetClientInfo('text')
   local style = tool:GetClientNumber('style')
-  local trace = fl.client:GetEyeTrace()
+  local trace = Flux.client:GetEyeTrace()
   local normal = trace.HitNormal
-  local w, h = util.text_size(text, theme.get_font('text_3d2d'))
+  local w, h = util.text_size(text, Theme.get_font('text_3d2d'))
   local angle = normal:Angle()
   angle:RotateAroundAxis(angle:Forward(), 90)
   angle:RotateAroundAxis(angle:Right(), 270)
@@ -190,16 +190,16 @@ function SurfaceText:draw_text_preview()
       end
     end
 
-    draw.SimpleText(text, theme.get_font('text_3d2d'), -w * 0.5, -h * 0.5, Color(tool:GetClientNumber('r', 0), tool:GetClientNumber('g', 0), tool:GetClientNumber('b', 0), 60))
+    draw.SimpleText(text, Theme.get_font('text_3d2d'), -w * 0.5, -h * 0.5, Color(tool:GetClientNumber('r', 0), tool:GetClientNumber('g', 0), tool:GetClientNumber('b', 0), 60))
   cam.End3D2D()
 end
 
 function SurfaceText:draw_picture_preview()
-  local tool = fl.client:GetTool()
+  local tool = Flux.client:GetTool()
   local url = tool:GetClientInfo('url')
   local width = tool:GetClientNumber('width')
   local height = tool:GetClientNumber('height')
-  local trace = fl.client:GetEyeTrace()
+  local trace = Flux.client:GetEyeTrace()
   local normal = trace.HitNormal
   local angle = normal:Angle()
   angle:RotateAroundAxis(angle:Forward(), 90)

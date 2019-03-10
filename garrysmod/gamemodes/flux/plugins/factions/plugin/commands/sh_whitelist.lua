@@ -17,9 +17,9 @@ function COMMAND:on_run(player, targets, name, strict)
       v:give_whitelist(whitelist.faction_id)
     end
 
-    fl.player:broadcast('whitelist.message', { get_player_name(player), util.player_list_to_string(targets), whitelist.print_name })
+    Flux.Player:broadcast('whitelist.message', { get_player_name(player), util.player_list_to_string(targets), whitelist.print_name })
   else
-    fl.player:notify(player, 'err.whitelist_not_valid', name)
+    Flux.Player:notify(player, 'err.whitelist_not_valid', name)
   end
 end
 

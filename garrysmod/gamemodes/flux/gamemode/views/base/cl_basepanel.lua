@@ -10,7 +10,7 @@ PANEL.text_color = Color(255, 255, 255)
 PANEL.main_color = Color(255, 100, 100)
 PANEL.accent_color = Color(200, 200, 200)
 PANEL.title = 'Flux Base Panel'
-PANEL.font = theme.get_font('menu_titles') or 'flRoboto'
+PANEL.font = Theme.get_font('menu_titles') or 'flRoboto'
 
 AccessorFunc(PANEL, 'draw_background', 'DrawBackground')
 AccessorFunc(PANEL, 'background_color', 'BackgroundColor')
@@ -21,19 +21,19 @@ AccessorFunc(PANEL, 'title', 'Title')
 AccessorFunc(PANEL, 'font', 'Font')
 
 function PANEL:Paint(width, height)
-  theme.hook('PaintPanel', self, width, height)
+  Theme.hook('PaintPanel', self, width, height)
 end
 
-function PANEL:Think() theme.hook('PanelThink', self)
+function PANEL:Think() Theme.hook('PanelThink', self)
 end
 
 -- MVC Functionality for all FL panels.
 function PANEL:push(name, ...)
-  mvc.push(name, ...)
+  MVC.push(name, ...)
 end
 
 function PANEL:pull(name, handler, prevent_remove)
-  mvc.pull(name, handler, prevent_remove)
+  MVC.pull(name, handler, prevent_remove)
 end
 
 function PANEL:request(name, handler, ...)

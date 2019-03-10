@@ -1,3 +1,3 @@
-class 'Data' extends 'ActiveRecord::Base'
+class 'CharacterData' extends 'ActiveRecord::Base'
 
-Data:belongs_to 'Character'
+CharacterData:belongs_to 'Character'

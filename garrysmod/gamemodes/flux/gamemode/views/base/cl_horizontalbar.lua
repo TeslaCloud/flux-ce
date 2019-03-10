@@ -7,7 +7,7 @@ function PANEL:Init()
 end
 
 function PANEL:Paint(width, height)
-  theme.hook('PaintHorizontalbar', self, width, height)
+  Theme.hook('PaintHorizontalbar', self, width, height)
 end
 
 function PANEL:AddPanel(pnl)

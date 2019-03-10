@@ -28,11 +28,11 @@ cable.receive('fl_notification', function(message, arguments, color)
   color = color and Color(color.r, color.g, color.b) or color_white
   message = t(message, arguments)
 
-  fl.notification:add(message, 8, color:darken(50))
+  Flux.Notification:add(message, 8, color:darken(50))
 
   chat.AddText(color, message)
 end)
 
 cable.receive('fl_player_take_damage', function()
-  fl.client.last_damage = CurTime()
+  Flux.client.last_damage = CurTime()
 end)

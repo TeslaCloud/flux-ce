@@ -1,13 +1,13 @@
 DeriveGamemode('sandbox')
 
-fl.blur_material = Material('pp/blurscreen')
-fl.rt_texture = GetRenderTarget('fl_rt_'..os.time(), ScrW(), ScrH(), false)
-fl.blur_mat = CreateMaterial('fl_mat_'..os.time(), 'UnlitGeneric', {
-  ['$basetexture'] = fl.rt_texture
+Flux.blur_material = Material('pp/blurscreen')
+Flux.rt_texture = GetRenderTarget('fl_rt_'..os.time(), ScrW(), ScrH(), false)
+Flux.blur_mat = CreateMaterial('fl_mat_'..os.time(), 'UnlitGeneric', {
+  ['$basetexture'] = Flux.rt_texture
 })
-fl.blur_size = 12
-fl.blur_passes = 8 -- anything below 8 looks chunky
-fl.blur_update_fps = 16 -- how many frames per second should we render the lazy blurs. 0 for unlimited.
+Flux.blur_size = 12
+Flux.blur_passes = 8 -- anything below 8 looks chunky
+Flux.blur_update_fps = 16 -- how many frames per second should we render the lazy blurs. 0 for unlimited.
 
 do
   local center_x, center_y = ScrW() * 0.5, ScrH() * 0.5
@@ -17,9 +17,9 @@ do
   end
 end
 
-function fl.set_circle_percent(percentage, alpha)
-  fl.client.circle_action_percentage = math.clamp(tonumber(percentage), 0, 100)
-  fl.client.circle_action_alpha = math.clamp(tonumber(alpha or 255), 0, 255)
+function Flux.set_circle_percent(percentage, alpha)
+  Flux.client.circle_action_percentage = math.clamp(tonumber(percentage), 0, 100)
+  Flux.client.circle_action_alpha = math.clamp(tonumber(alpha or 255), 0, 255)
 end
 
 function surface.draw_text_scaled(text, font_name, pos_x, pos_y, scale, color)
@@ -232,18 +232,18 @@ end
 
 function draw.set_blur_size(size)
   size = size or 12
-  fl.blur_size = size
+  Flux.blur_size = size
   return size
 end
 
 -- To be called outside of a panel
 function draw.blur_box(x, y, w, h)
   render.SetScissorRect(x, y, x + w, y + h, true)
-    render.SetMaterial((fl.should_render_blur != nil) and fl.blur_mat or fl.blur_material)
+    render.SetMaterial((Flux.should_render_blur != nil) and Flux.blur_mat or Flux.blur_material)
     render.DrawScreenQuad()
   render.SetScissorRect(0, 0, 0, 0, false)
 
-  fl.should_render_blur = true
+  Flux.should_render_blur = true
 end
 
 function draw.blur_panel(panel)
@@ -251,11 +251,11 @@ function draw.blur_panel(panel)
   local w, h = panel:GetSize()
 
   render.SetScissorRect(x, y, x + w, y + h, true)
-    render.SetMaterial((fl.should_render_blur != nil) and fl.blur_mat or fl.blur_material)
+    render.SetMaterial((Flux.should_render_blur != nil) and Flux.blur_mat or Flux.blur_material)
     render.DrawScreenQuad()
   render.SetScissorRect(0, 0, 0, 0, false)
 
-  fl.should_render_blur = true
+  Flux.should_render_blur = true
 end
 
 function draw.line(x, y, x2, y2, color)
@@ -266,7 +266,7 @@ end
 do
   local ang = 0
 
-  function fl.draw_rotating_cog(x, y, w, h, color)
+  function Flux.draw_rotating_cog(x, y, w, h, color)
     color = color or Color(255, 255, 255)
 
     surface.draw_rotated(x, y, ang, function(x, y, ang)
@@ -284,16 +284,16 @@ end
 do
   local anim_cache = {}
 
-  function fl.update_animation(id, x, y, delta)
+  function Flux.update_animation(id, x, y, delta)
     anim_cache[id] = { x = x, y = y, delta = delta }
     return anim_cache[id]
   end
 
-  function fl.register_animation(id, x, y, delta)
-    anim_cache[id] = anim_cache[id] or fl.update_animation(id, x, y, delta)
+  function Flux.register_animation(id, x, y, delta)
+    anim_cache[id] = anim_cache[id] or Flux.update_animation(id, x, y, delta)
   end
 
-  function fl.draw_animation(id, tx, ty, callback)
+  function Flux.draw_animation(id, tx, ty, callback)
     local anim = anim_cache[id]
 
     if !anim then error(id..' is not a registered animation!\n') end

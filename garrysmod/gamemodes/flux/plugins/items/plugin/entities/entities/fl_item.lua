@@ -43,7 +43,7 @@ if SERVER then
           if self.item then
             hook.run('PlayerUseItemEntity', caller, self, self.item)
           else
-            fl.dev_print('Player attempted to use an item entity without item object tied to it!')
+            Flux.dev_print('Player attempted to use an item entity without item object tied to it!')
           end
         end
       end
@@ -120,25 +120,25 @@ else
         self.data_requested = true
       end
 
-      fl.draw_rotating_cog(x, y - 48, 48, 48, Color(255, 255, 255))
+      Flux.draw_rotating_cog(x, y - 48, 48, 48, Color(255, 255, 255))
 
       return
     end
 
-    local width, height = util.text_size(text, theme.get_font('tooltip_large'))
-    local width2, height2 = util.text_size(desc, theme.get_font('tooltip_small'))
+    local width, height = util.text_size(text, Theme.get_font('tooltip_large'))
+    local width2, height2 = util.text_size(desc, Theme.get_font('tooltip_small'))
     local max_width = math.max(width, width2)
     local box_x, box_y = x - max_width * 0.5 - 8, y - 8
     local box_width, box_height = max_width + 16, height + height2 + 16
-    local accent_color = theme.get_color('accent'):alpha(200)
+    local accent_color = Theme.get_color('accent'):alpha(200)
     local ent_pos = self:GetPos():ToScreen()
     local anim_id = 'itemid_gradient_'..self.item.instance_id
 
-    fl.register_animation(anim_id, box_x - max_width, nil, FrameTime() * 8)
+    Flux.register_animation(anim_id, box_x - max_width, nil, FrameTime() * 8)
 
     render.SetScissorRect(box_x, box_y, box_x + box_width, box_y + box_height, true)
-      fl.draw_animation(anim_id, alpha > 150 and box_x or box_x - max_width, box_y, function(x, y)
-        draw.textured_rect(theme.get_material('gradient'), alpha > 240 and box_x or x, y, box_width, box_height, accent_color)
+      Flux.draw_animation(anim_id, alpha > 150 and box_x or box_x - max_width, box_y, function(x, y)
+        draw.textured_rect(Theme.get_material('gradient'), alpha > 240 and box_x or x, y, box_width, box_height, accent_color)
       end)
     render.SetScissorRect(0, 0, 0, 0, false)
 
@@ -146,10 +146,10 @@ else
       draw.line(box_x, y + height + height2 + 8, ent_pos.x, ent_pos.y, accent_color)
     end
 
-    draw.SimpleTextOutlined(text, theme.get_font('tooltip_large'), x - width * 0.5, y, col, nil, nil, 1, col2)
+    draw.SimpleTextOutlined(text, Theme.get_font('tooltip_large'), x - width * 0.5, y, col, nil, nil, 1, col2)
     y = y + 26
 
-    draw.SimpleTextOutlined(desc, theme.get_font('tooltip_small'), x - width2 * 0.5, y, col, nil, nil, 1, col2)
+    draw.SimpleTextOutlined(desc, Theme.get_font('tooltip_small'), x - width2 * 0.5, y, col, nil, nil, 1, col2)
     y = y + 20
 
     hook.run('PostDrawItemTargetID', self, self.item, x, y, alpha, distance)

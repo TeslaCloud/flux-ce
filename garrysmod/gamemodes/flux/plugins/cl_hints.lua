@@ -8,10 +8,10 @@ local stored = {}
 function flHints:OneMinute()
   local cur_time = CurTime()
 
-  if cur_time >= (fl.client.nextHint or 0) then
+  if cur_time >= (Flux.client.nextHint or 0) then
     flHints:display_random()
 
-    fl.client.nextHint = cur_time + 300
+    Flux.client.nextHint = cur_time + 300
   end
 end
 
@@ -25,7 +25,7 @@ function flHints:display_random()
   if hint.callback and hint.callback() != true then return end
   if hint.play_sound then surface.PlaySound('hl1/fvox/blip.wav') end
 
-  fl.notification:add(hint.text, 15, hint.color)
+  Flux.Notification:add(hint.text, 15, hint.color)
 end
 
 do

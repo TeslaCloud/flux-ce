@@ -15,7 +15,7 @@ ItemWeapon:add_button(t'item.option.unload', {
   callback = 'on_unload',
   on_show = function(item_table)
     local ammo = item_table:get_data('ammo', { 0, 0 })
-    local weapon = fl.client:GetWeapon(item_table.weapon_class)
+    local weapon = Flux.client:GetWeapon(item_table.weapon_class)
 
     if ((ammo[1] > 0 or ammo[2] > 0 or IsValid(weapon) and (weapon:Clip1() != 0 or weapon:Clip2() != 0)) and
       !IsValid(item_table.entity) and item_table:is_equipped()) then
@@ -34,7 +34,7 @@ function ItemWeapon:post_equipped(player)
     weapon:SetClip1(ammo[1])
     weapon:SetClip2(ammo[2])
   else
-    fl.dev_print('Invalid weapon class: '..self.weapon_class)
+    Flux.dev_print('Invalid weapon class: '..self.weapon_class)
   end
 end
 
@@ -47,7 +47,7 @@ function ItemWeapon:post_unequipped(player)
     player:StripWeapon(self.weapon_class)
     self:set_data('ammo', ammo)
   else
-    fl.dev_print('Invalid weapon class: '..self.weapon_class)
+    Flux.dev_print('Invalid weapon class: '..self.weapon_class)
   end
 end
 
@@ -72,6 +72,6 @@ function ItemWeapon:on_save(player)
 
     self:set_data('ammo', ammo)
   else
-    fl.dev_print('Invalid weapon class: '..self.weapon_class)
+    Flux.dev_print('Invalid weapon class: '..self.weapon_class)
   end
 end

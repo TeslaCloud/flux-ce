@@ -1,5 +1,5 @@
-fl = fl or {}
-fl.start_time = os.clock()
+Flux = Flux or {}
+Flux.start_time = os.clock()
 
 function safe_require(mod)
   local success, value = pcall(require, mod)
@@ -12,7 +12,7 @@ function safe_require(mod)
   return true
 end
 
-if fl.initialized then
+if Flux.initialized then
   if LITE_REFRESH then
     MsgC(Color(0, 255, 100, 255), 'Schema auto-reload in progress...\n')
   else
@@ -50,9 +50,9 @@ end
 -- Initiate shared boot.
 include 'shared.lua'
 
-if fl.initialized then
-  MsgC(Color(0, 255, 100, 255), 'Auto-reloaded in '..math.Round(os.clock() - fl.start_time, 3)..' second(s)\n')
+if Flux.initialized then
+  MsgC(Color(0, 255, 100, 255), 'Auto-reloaded in '..math.Round(os.clock() - Flux.start_time, 3)..' second(s)\n')
 else
-  MsgC(Color(0, 255, 100, 255), 'Flux v'..GM.version..' ('..GM.code_name..') has finished loading in '..math.Round(os.clock() - fl.start_time, 3)..' second(s)\n')
-  fl.initialized = true
+  MsgC(Color(0, 255, 100, 255), 'Flux v'..GM.version..' ('..GM.code_name..') has finished loading in '..math.Round(os.clock() - Flux.start_time, 3)..' second(s)\n')
+  Flux.initialized = true
 end

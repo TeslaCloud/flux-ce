@@ -1,40 +1,40 @@
-library.new('html', fl)
+library 'Flux::HTML'
 
-fl.html.templates = fl.html.templates or {}
-fl.html.stylesheets = fl.html.stylesheets or {}
-fl.html.javascripts = fl.html.javascripts or {}
-fl.html.file_paths = fl.html.file_paths or {}
+Flux.HTML.templates = Flux.HTML.templates or {}
+Flux.HTML.stylesheets = Flux.HTML.stylesheets or {}
+Flux.HTML.javascripts = Flux.HTML.javascripts or {}
+Flux.HTML.file_paths = Flux.HTML.file_paths or {}
 
-local common_file_header = [[fl = fl or {}
-fl.html = fl.html or {}
+local common_file_header = [[Flux = Flux or {}
+Flux.HTML = Flux.HTML or {}
 
-fl.html.templates = fl.html.templates or {}
-fl.html.stylesheets = fl.html.stylesheets or {}
-fl.html.javascripts = fl.html.javascripts or {}
+Flux.HTML.templates = Flux.HTML.templates or {}
+Flux.HTML.stylesheets = Flux.HTML.stylesheets or {}
+Flux.HTML.javascripts = Flux.HTML.javascripts or {}
 
 ]]
 
-function fl.html:add_template(id, contents)
+function Flux.HTML:add_template(id, contents)
   self.templates[id] = contents
 end
 
-function fl.html:add_stylesheet(id, contents)
+function Flux.HTML:add_stylesheet(id, contents)
   self.stylesheets[id] = contents
 end
 
-function fl.html:add_js(id, contents)
+function Flux.HTML:add_js(id, contents)
   self.javascripts[id] = contents
 end
 
-function fl.html:get_stylesheet(id)
+function Flux.HTML:get_stylesheet(id)
   return self.stylesheets[id]
 end
 
-function fl.html:get_template(id)
+function Flux.HTML:get_template(id)
   return self.templates[id]
 end
 
-function fl.html:get_javascript(id)
+function Flux.HTML:get_javascript(id)
   return self.javascripts[id]
 end
 
@@ -46,7 +46,7 @@ local function val_to_str(val)
   end
 end
 
-function fl.html:render_template(id, locals)
+function Flux.HTML:render_template(id, locals)
   local header = ''
 
   if istable(locals) then
@@ -88,16 +88,16 @@ local function generate_file_from_table(t, tab_name)
   return final_file
 end
 
-function fl.html:generate_html_file()
-  return generate_file_from_table(self.templates, 'fl.html.templates')
+function Flux.HTML:generate_html_file()
+  return generate_file_from_table(self.templates, 'Flux.HTML.templates')
 end
 
-function fl.html:generate_css_file()
-  return generate_file_from_table(self.stylesheets, 'fl.html.stylesheets')
+function Flux.HTML:generate_css_file()
+  return generate_file_from_table(self.stylesheets, 'Flux.HTML.stylesheets')
 end
 
-function fl.html:generate_js_file()
-  return generate_file_from_table(self.javascripts, 'fl.html.javascripts')
+function Flux.HTML:generate_js_file()
+  return generate_file_from_table(self.javascripts, 'Flux.HTML.javascripts')
 end
 
 -- Template renderer
@@ -120,7 +120,7 @@ if CLIENT then
       current_namespace = prev_namespace..id:GetPathFromFilename()
     end
 
-    local rendered = fl.html:render_template(current_namespace..id, locals)
+    local rendered = Flux.HTML:render_template(current_namespace..id, locals)
     current_namespace = prev_namespace
 
     return rendered
@@ -138,11 +138,11 @@ if CLIENT then
   end
 
   function render_stylesheet(id)
-    return fl.html.stylesheets[id]
+    return Flux.HTML.stylesheets[id]
   end
 
   function render_javascript(id)
-    return fl.html.javascripts[id]
+    return Flux.HTML.javascripts[id]
   end
 end
 
@@ -160,9 +160,9 @@ pipeline.register('html', function(id, file_name, pipe)
 
   if contents then
     file_name = file_name:gsub('%.html', ''):gsub('%.loon', ''):gsub('%.js', ''):gsub('%.css', ''):gsub('%.scss', ''):GetFileFromFilename()
-    fl.html[pipe][file_name] = contents
+    Flux.HTML[pipe][file_name] = contents
 
     -- track the file
-    fl.html.file_paths[file_path] = { pipe = pipe, file_name = file_name }
+    Flux.HTML.file_paths[file_path] = { pipe = pipe, file_name = file_name }
   end
 end)

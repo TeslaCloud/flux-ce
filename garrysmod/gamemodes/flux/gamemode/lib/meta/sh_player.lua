@@ -62,7 +62,7 @@ function player_meta:do_action(id)
   end
 
   if act and act != 'none' then
-    local action_table = fl.get_action(act)
+    local action_table = Flux.get_action(act)
 
     if istable(action_table) and isfunction(action_table.callback) then
       try {

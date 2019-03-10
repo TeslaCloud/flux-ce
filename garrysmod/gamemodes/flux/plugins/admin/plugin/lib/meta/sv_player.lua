@@ -105,5 +105,5 @@ function player_meta:set_temp_permission(perm_id, value, duration)
 end
 
 function player_meta:run_command(cmd)
-  return fl.command:interpret(self, cmd)
+  return Flux.Command:interpret(self, cmd)
 end

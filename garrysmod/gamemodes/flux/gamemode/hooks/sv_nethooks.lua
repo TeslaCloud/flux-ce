@@ -3,7 +3,7 @@ cable.receive('fl_client_included_schema', function(player)
 end)
 
 cable.receive('fl_undo_soft', function(player)
-  fl.undo:do_player(player)
+  Flux.Undo:do_player(player)
 end)
 
 cable.receive('fl_player_created', function(player)

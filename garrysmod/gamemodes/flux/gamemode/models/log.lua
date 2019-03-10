@@ -45,6 +45,6 @@ end
 
 function Log:notify(message, arguments)
   self:print(message, arguments.action, arguments.object, arguments.subject)
-  fl.player:broadcast(message, arguments)
+  Flux.Player:broadcast(message, arguments)
   return self
 end

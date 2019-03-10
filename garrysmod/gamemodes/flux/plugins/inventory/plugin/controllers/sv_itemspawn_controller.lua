@@ -1,4 +1,4 @@
-mvc.handler('SpawnMenu::SpawnItem', function(player, item_id)
+MVC.handler('SpawnMenu::SpawnItem', function(player, item_id)
   if !player:can('spawn_items') then
     player:notify('err.no_permission', player:name())
 

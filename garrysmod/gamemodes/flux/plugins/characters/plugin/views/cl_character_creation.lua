@@ -17,9 +17,9 @@ function PANEL:Init()
   local x, y = self:GetWide() * 0.25, self:GetTall() / 6 + 8
 
   self.back = vgui.Create('fl_button', self)
-  self.back:SetSize(self.panel:GetWide() * 0.25, theme.get_option('menu_sidebar_button_height'))
+  self.back:SetSize(self.panel:GetWide() * 0.25, Theme.get_option('menu_sidebar_button_height'))
   self.back:SetPos(x, y + self.panel:GetTall() + self.back:GetTall())
-  self.back:SetFont(theme.get_font('main_menu_normal'))
+  self.back:SetFont(Theme.get_font('main_menu_normal'))
   self.back:SetTitle(t'char_create.main_menu')
   self.back:SetDrawBackground(false)
   self.back:set_icon('fa-chevron-left')
@@ -30,7 +30,7 @@ function PANEL:Init()
     local cur_time = CurTime()
 
     if !self.back.next_click or self.back.next_click < cur_time then
-      surface.PlaySound(theme.get_sound('button_click_success_sound'))
+      surface.PlaySound(Theme.get_sound('button_click_success_sound'))
 
       self:prev_stage()
 
@@ -39,9 +39,9 @@ function PANEL:Init()
   end
 
   self.next = vgui.Create('fl_button', self)
-  self.next:SetSize(self.panel:GetWide() * 0.25, theme.get_option('menu_sidebar_button_height'))
+  self.next:SetSize(self.panel:GetWide() * 0.25, Theme.get_option('menu_sidebar_button_height'))
   self.next:SetPos(x + self.panel:GetWide() - self.next:GetWide(), y + self.panel:GetTall() + self.next:GetTall())
-  self.next:SetFont(theme.get_font('main_menu_normal'))
+  self.next:SetFont(Theme.get_font('main_menu_normal'))
   self.next:SetTitle(t'char_create.next')
   self.next:SetDrawBackground(false)
   self.next:set_icon('fa-chevron-right', true)
@@ -52,7 +52,7 @@ function PANEL:Init()
     local cur_time = CurTime()
 
     if !self.next.next_click or self.next.next_click < cur_time then
-      surface.PlaySound(theme.get_sound('button_click_success_sound'))
+      surface.PlaySound(Theme.get_sound('button_click_success_sound'))
 
       self:next_stage()
 
@@ -61,7 +61,7 @@ function PANEL:Init()
   end
 
   self.stage_list = vgui.Create('fl_horizontalbar', self)
-  self.stage_list:SetSize(self.panel:GetWide(), theme.get_option('menu_sidebar_button_height'))
+  self.stage_list:SetSize(self.panel:GetWide(), Theme.get_option('menu_sidebar_button_height'))
   self.stage_list:SetPos(x, y + self.panel:GetTall() + self.next:GetTall() * 2)
   self.stage_list:SetOverlap(4)
   self.stage_list:set_centered(true)
@@ -71,7 +71,7 @@ end
 
 function PANEL:Paint(w, h)
   if self:IsVisible() then
-    theme.hook('PaintCharCreationMainPanel', self, w, h)
+    Theme.hook('PaintCharCreationMainPanel', self, w, h)
   end
 end
 
@@ -80,8 +80,8 @@ function PANEL:rebuild()
 
   for k, v in ipairs(self.stages) do
     local button = vgui.Create('fl_button', self.stage_list)
-    button:SetSize(self.panel:GetWide() / 5, theme.get_option('menu_sidebar_button_height'))
-    button:SetFont(theme.get_font('main_menu_normal'))
+    button:SetSize(self.panel:GetWide() / 5, Theme.get_option('menu_sidebar_button_height'))
+    button:SetFont(Theme.get_font('main_menu_normal'))
     button:SetTitle(t(v))
     button:SetDrawBackground(false)
     button:set_icon('fa-chevron-right', true)
@@ -93,7 +93,7 @@ function PANEL:rebuild()
       button:set_enabled(false)
     elseif k == self.stage then
       button:set_enabled(true)
-      button:set_text_color(theme.get_color('accent'))
+      button:set_text_color(Theme.get_color('accent'))
     end
 
     button.DoClick = function(btn)
@@ -225,10 +225,10 @@ function PANEL:open_panel(id)
       to = -self.panel:GetWide()
     end
 
-    self.panel:MoveTo(to, y, theme.get_option('menu_anim_duration'), 0, 0.5)
+    self.panel:MoveTo(to, y, Theme.get_option('menu_anim_duration'), 0, 0.5)
   end
 
-  self.panel = theme.create_panel(id, self)
+  self.panel = Theme.create_panel(id, self)
   self.panel:SetSize(self:GetWide() * 0.5, self:GetTall() * 0.5)
 
   local from
@@ -242,7 +242,7 @@ function PANEL:open_panel(id)
   end
 
   self.panel:SetPos(from, y)
-  self.panel:MoveTo(x, y, theme.get_option('menu_anim_duration'), 0, 0.5)
+  self.panel:MoveTo(x, y, Theme.get_option('menu_anim_duration'), 0, 0.5)
 
   if self.panel.on_open then
     self.panel:on_open(self)

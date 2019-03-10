@@ -4,7 +4,7 @@ PLUGIN:set_name('Documentation Generator')
 PLUGIN:set_author('TeslaCloud Studios')
 PLUGIN:set_description('Generates documentation for Flux and/or your schema.')
 
-if !fl.development then return end
+if !Flux.development then return end
 
 local openers = {
   [TK_then] = true,

@@ -26,7 +26,7 @@ function ItemThrown:post_equipped(player)
     player:SetActiveWeapon(weapon)
     player:SetAmmo(1, self.thrown_ammo_class)
   else
-    fl.dev_print('Invalid weapon class: '..self.weapon_class)
+    Flux.dev_print('Invalid weapon class: '..self.weapon_class)
   end
 end
 
@@ -40,6 +40,6 @@ function ItemThrown:post_unequipped(player)
       player:take_item_by_id(self.instance_id)
     end
   else
-    fl.dev_print('Invalid weapon class: '..self.weapon_class)
+    Flux.dev_print('Invalid weapon class: '..self.weapon_class)
   end
 end

@@ -17,7 +17,7 @@ function COMMAND:on_run(player, targets, name, strict)
       v:set_faction(faction_table.faction_id)
     end
 
-    fl.player:broadcast('set_faction.message', { get_player_name(player), util.player_list_to_string(targets), faction_table.print_name })
+    Flux.Player:broadcast('set_faction.message', { get_player_name(player), util.player_list_to_string(targets), faction_table.print_name })
   else
     player:notify('err.whitelist_not_valid',  name)
   end

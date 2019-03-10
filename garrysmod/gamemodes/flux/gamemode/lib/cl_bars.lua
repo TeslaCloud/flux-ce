@@ -1,24 +1,24 @@
 if !font then util.include 'cl_font.lua' end
-if !fl.lang then util.include 'sh_lang.lua' end
+if !Flux.Lang then util.include 'sh_lang.lua' end
 
-library.new('bars', fl)
+library 'Flux::Bars'
 
-local stored = fl.bars.stored or {}
-local sorted = fl.bars.sorted or {}
-fl.bars.stored = stored
-fl.bars.sorted = sorted
+local stored = Font.Bars.stored or {}
+local sorted = Font.Bars.sorted or {}
+Font.Bars.stored = stored
+Font.Bars.sorted = sorted
 
 -- Some fail-safety variables.
-fl.bars.default_x = 8
-fl.bars.default_y = 8
-fl.bars.default_w = font.scale(312)
-fl.bars.default_h = 18
-fl.bars.default_spacing = 6
+Font.Bars.default_x = 8
+Font.Bars.default_y = 8
+Font.Bars.default_w = Font.scale(312)
+Font.Bars.default_h = 18
+Font.Bars.default_spacing = 6
 
-function fl.bars:register(id, data, force)
+function Font.Bars:register(id, data, force)
   if !data then return end
 
-  force = force or fl.development
+  force = force or Flux.development
 
   if stored[id] and !force then
     return stored[id]
@@ -54,7 +54,7 @@ function fl.bars:register(id, data, force)
   return stored[id]
 end
 
-function fl.bars:get(id)
+function Font.Bars:get(id)
   if stored[id] then
     return stored[id]
   end
@@ -62,11 +62,11 @@ function fl.bars:get(id)
   return false
 end
 
-function fl.bars:set_value(id, new_value)
+function Font.Bars:set_value(id, new_value)
   local bar = self:get(id)
 
   if bar then
-    theme.call('PreBarValueSet', bar, bar.value, new_value)
+    Theme.call('PreBarValueSet', bar, bar.value, new_value)
 
     if bar.value != new_value then
       if bar.hinder_display and bar.hinder_value then
@@ -79,11 +79,11 @@ function fl.bars:set_value(id, new_value)
   end
 end
 
-function fl.bars:hinder_value(id, new_value)
+function Font.Bars:hinder_value(id, new_value)
   local bar = self:get(id)
 
   if bar then
-    theme.call('PreBarHinderValueSet', bar, bar.hinder_value, new_value)
+    Theme.call('PreBarHinderValueSet', bar, bar.hinder_value, new_value)
 
     if bar.value != new_value then
       bar.hinder_value = math.Clamp(new_value, 0, bar.max_value)
@@ -91,7 +91,7 @@ function fl.bars:hinder_value(id, new_value)
   end
 end
 
-function fl.bars:prioritize()
+function Font.Bars:prioritize()
   sorted = {}
 
   for k, v in pairs(stored) do
@@ -111,7 +111,7 @@ function fl.bars:prioritize()
   return sorted
 end
 
-function fl.bars:position()
+function Font.Bars:position()
   self:prioritize()
 
   local last_y = self.default_y
@@ -134,35 +134,35 @@ function fl.bars:position()
 
 end
 
-function fl.bars:draw(id)
+function Font.Bars:draw(id)
   local bar_info = self:get(id)
 
   if bar_info then
     hook.run('PreDrawBar', bar_info)
-    theme.call('PreDrawBar', bar_info)
+    Theme.call('PreDrawBar', bar_info)
 
     if !hook.run('ShouldDrawBar', bar_info) then
       return
     end
 
-    theme.call('DrawBarBackground', bar_info)
+    Theme.call('DrawBarBackground', bar_info)
 
     if hook.run('ShouldFillBar', bar_info) or bar_info.value != 0 then
-      theme.call('DrawBarFill', bar_info)
+      Theme.call('DrawBarFill', bar_info)
     end
 
     if bar_info.hinder_display and bar_info.hinder_display <= bar_info.hinder_value then
-      theme.call('DrawBarHindrance', bar_info)
+      Theme.call('DrawBarHindrance', bar_info)
     end
 
-    theme.call('DrawBarTexts', bar_info)
+    Theme.call('DrawBarTexts', bar_info)
 
     hook.run('PostDrawBar', bar_info)
-    theme.call('PostDrawBar', bar_info)
+    Theme.call('PostDrawBar', bar_info)
   end
 end
 
-function fl.bars:DrawTopBars()
+function Font.Bars:DrawTopBars()
   for priority, ids in pairs(sorted) do
     for k, v in ipairs(ids) do
       self:draw(v)
@@ -170,7 +170,7 @@ function fl.bars:DrawTopBars()
   end
 end
 
-function fl.bars:adjust(id, data)
+function Font.Bars:adjust(id, data)
   local bar = self:get(id)
 
   if bar then
@@ -182,12 +182,12 @@ do
   local Bars = {}
 
   function Bars:LazyTick()
-    if IsValid(fl.client) then
-      fl.bars:position()
+    if IsValid(Flux.client) then
+      Font.Bars:position()
 
       for k, v in pairs(stored) do
         if v.callback then
-          fl.bars:set_value(v.id, v.callback(stored[k]))
+          Font.Bars:set_value(v.id, v.callback(stored[k]))
         end
 
         hook.run('AdjustBarInfo', k, stored[k])
@@ -226,11 +226,11 @@ do
 
   plugin.add_hooks('FLBarHooks', Bars)
 
-  fl.bars:register('respawn', {
+  Font.Bars:register('respawn', {
     text = t'bar_text.respawn',
     color = Color(50, 200, 50),
     max_value = 100,
-    x = ScrW() * 0.5 - fl.bars.default_w * 0.5,
+    x = ScrW() * 0.5 - Font.Bars.default_w * 0.5,
     y = ScrH() * 0.5 - 8,
     text_offset = 1,
     height = 16,

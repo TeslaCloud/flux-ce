@@ -1,17 +1,17 @@
 -- Sorta model-view-controller implementation, except the model isn't /actually/ used lol.
 
-library.new 'mvc'
+library 'MVC'
 
 if CLIENT then
   local mvc_hooks = {}
 
-  function mvc.push(name, ...)
+  function MVC.push(name, ...)
     if !isstring(name) then return end
 
     cable.send('fl_mvc_push', name, ...)
   end
 
-  function mvc.pull(name, handler, prevent_remove)
+  function MVC.pull(name, handler, prevent_remove)
     if !isstring(name) or !isfunction(handler) then return end
 
     mvc_hooks[name] = mvc_hooks[name] or {}
@@ -22,13 +22,13 @@ if CLIENT then
     })
   end
 
-  function mvc.request(name, handler, ...)
-    mvc.pull(name, handler)
-    mvc.push(name, ...)
+  function MVC.request(name, handler, ...)
+    MVC.pull(name, handler)
+    MVC.push(name, ...)
   end
 
-  function mvc.listen(name, handler)
-    mvc.pull(name, handler, true)
+  function MVC.listen(name, handler)
+    MVC.pull(name, handler, true)
   end
 
   cable.receive('fl_mvc_pull', function(name, ...)
@@ -52,7 +52,7 @@ if CLIENT then
 else
   local mvc_handlers = {}
 
-  function mvc.handler(name, handler)
+  function MVC.handler(name, handler)
     if !isstring(name) then return end
 
     mvc_handlers[name] = mvc_handlers[name] or {}
@@ -60,7 +60,7 @@ else
     table.insert(mvc_handlers[name], handler)
   end
 
-  function mvc.push(player, name, ...)
+  function MVC.push(player, name, ...)
     if !isstring(name) then return end
 
     cable.send(player, 'fl_mvc_pull', name, ...)

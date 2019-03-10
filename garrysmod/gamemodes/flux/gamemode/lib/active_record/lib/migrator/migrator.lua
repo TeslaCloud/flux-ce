@@ -6,7 +6,7 @@ class 'ActiveRecord::Migrator'
 local migration_files = {}
 
 function ActiveRecord.Migrator:init(version)
-  self.db_path = 'gamemodes/'..fl.get_schema_folder()..'/db'
+  self.db_path = 'gamemodes/'..Flux.get_schema_folder()..'/db'
   self.schema_path = self.db_path..'/schema.lua'
 
   if !file.Exists(self.schema_path, 'GAME') then
@@ -168,7 +168,7 @@ function ActiveRecord.Migrator:migration_from_file(file)
   local contents = fileio.Read(file)
 
   if contents then
-    self:generate_migration(name, contents, fl.development)
+    self:generate_migration(name, contents, Flux.development)
   end
 
   return self

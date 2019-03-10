@@ -11,7 +11,7 @@ function PANEL:Init()
   end
 
   self.save = vgui.create('fl_button', self)
-  self.save:SetSize(font.scale(24), font.scale(24))
+  self.save:SetSize(Font.scale(24), Font.scale(24))
   self.save:set_icon('fa-save')
   self.save:set_centered(true)
   self.save.DoClick = function(btn)
@@ -21,7 +21,7 @@ function PANEL:Init()
     t'conditions.save.message',
     '',
     function(text)
-      data.save('conditions/'..text, self:get_conditions())
+      Data.save('conditions/'..text, self:get_conditions())
 
       surface.play_sound('garrysmod/ui_click.wav')
     end,
@@ -31,7 +31,7 @@ function PANEL:Init()
   end
 
   self.load = vgui.create('fl_button', self)
-  self.load:SetSize(font.scale(24), font.scale(24))
+  self.load:SetSize(Font.scale(24), Font.scale(24))
   self.load:set_icon('fa-folder-o')
   self.load:set_centered(true)
   self.load.DoClick = function(btn)
@@ -47,7 +47,7 @@ function PANEL:Init()
     list:Dock(FILL)
     list:AddColumn(t'conditions.load.column')
 
-    for k, v in pairs(data.get_files('conditions')) do
+    for k, v in pairs(Data.get_files('conditions')) do
       list:AddLine(v)
     end
 
@@ -55,7 +55,7 @@ function PANEL:Init()
       surface.play_sound('garrysmod/ui_click.wav')
 
       self:clear()
-      self:set_conditions(self.root, data.load('conditions/'..line:GetColumnText(1)))
+      self:set_conditions(self.root, Data.load('conditions/'..line:GetColumnText(1)))
 
       frame:safe_remove()
     end

@@ -16,7 +16,7 @@ function Theme:init(name, parent)
   self.parent = parent
 
   if !self.id then
-    error('Cannot create a theme without a valid unique ID!')
+    error('Cannot create a Theme without a valid unique ID!')
   end
 end
 
@@ -27,7 +27,7 @@ function Theme:on_unloaded()
 end
 
 function Theme:remove()
-  return theme.remove_theme(self.id)
+  return Theme.remove_theme(self.id)
 end
 
 function Theme:add_panel(id, callback)
@@ -75,7 +75,7 @@ end
 
 function Theme:set_font(key, value, scale, data)
   if key then
-    self.fonts[key] = font.size(value, scale, data)
+    self.fonts[key] = Font.size(value, scale, data)
   end
 
   return self.fonts[key]
@@ -138,7 +138,7 @@ function Theme:get_sound(id, failsafe)
 end
 
 function Theme:register()
-  return theme.register_theme(self)
+  return Theme.register_theme(self)
 end
 
 function Theme:__tostring()

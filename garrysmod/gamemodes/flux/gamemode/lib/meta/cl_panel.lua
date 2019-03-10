@@ -11,11 +11,11 @@ function panel_meta:safe_remove()
 end
 
 function panel_meta:set_pos_ex(x, y)
-  self:SetPos(font.scale(x), font.scale(y))
+  self:SetPos(Font.scale(x), Font.scale(y))
 end
 
 function panel_meta:set_size_ex(w, h)
-  self:SetSize(font.scale(w), font.scale(h))
+  self:SetSize(Font.scale(w), Font.scale(h))
 end
 
 local model_panel = vgui.GetControlTable('DModelPanel')
@@ -38,7 +38,7 @@ function model_panel:Paint(w, h)
   cam.Start3D(self.vCamPos, ang, self.fFOV, x, y, w, h, 5, self.FarZ)
 
   -- Fix for models being behind blur texture in Z-buffer.
-  if fl.should_render_blur then cam.IgnoreZ(true) end
+  if Flux.should_render_blur then cam.IgnoreZ(true) end
 
   render.SuppressEngineLighting(true)
   render.SetLightingOrigin(ent:GetPos())
@@ -59,7 +59,7 @@ function model_panel:Paint(w, h)
   render.SuppressEngineLighting(false)
 
   -- End fix
-  if fl.should_render_blur then cam.IgnoreZ(false) end
+  if Flux.should_render_blur then cam.IgnoreZ(false) end
 
   cam.End3D()
 

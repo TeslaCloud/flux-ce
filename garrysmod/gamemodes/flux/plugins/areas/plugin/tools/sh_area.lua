@@ -64,7 +64,7 @@ if CLIENT then
 
     panel:ClearControls()
 
-    local mode = fl.client:GetInfoNum('area_mode', 0)
+    local mode = Flux.client:GetInfoNum('area_mode', 0)
     local list = vgui.Create('DListView')
 
     list:SetSize(30, 90)

@@ -14,7 +14,7 @@ function COMMAND:on_run(player, targets, role)
       v:SetUserGroup(role)
     end
 
-    fl.player:broadcast('set_group.message', { get_player_name(player), util.player_list_to_string(targets), role })
+    Flux.Player:broadcast('set_group.message', { get_player_name(player), util.player_list_to_string(targets), role })
   else
     player:notify('err.group_not_valid', role)
   end

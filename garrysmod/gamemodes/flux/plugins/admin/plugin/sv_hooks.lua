@@ -14,7 +14,7 @@ function Bolt:CheckPassword(steam_id64, ip, sv_pass, cl_pass, name)
 end
 
 function Bolt:CanTool(player, trace, tool_name)
-  local tool = fl.tool:get(tool_name)
+  local tool = Flux.Tool:get(tool_name)
 
   if tool and tool.permission and !player:can(tool.permission) then
     return false

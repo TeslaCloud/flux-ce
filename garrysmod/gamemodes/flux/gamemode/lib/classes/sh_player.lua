@@ -45,7 +45,7 @@ end
 -- Called after view model is drawn.
 function flPlayer:PostDrawViewModel(viewmodel, weapon)
   if weapon.UseHands or !weapon:IsScripted() then
-    local hands_entity = fl.client:GetHands()
+    local hands_entity = Flux.client:GetHands()
 
     if IsValid(hands_entity) then
       hands_entity:DrawModel()

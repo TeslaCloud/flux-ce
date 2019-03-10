@@ -14,7 +14,7 @@ function PANEL:Init()
 end
 
 function PANEL:Paint(width, height)
-  theme.hook('PaintSidebar', self, width, height)
+  Theme.hook('PaintSidebar', self, width, height)
 end
 
 function PANEL:Clear()
@@ -59,9 +59,9 @@ end
 
 function PANEL:add_button(text, callback)
   local button = vgui.Create('fl_button', self)
-  button:SetSize(self:GetWide(), theme.get_option('menu_sidebar_height'))
+  button:SetSize(self:GetWide(), Theme.get_option('menu_sidebar_height'))
   button:SetDrawBackground(true)
-  button:SetFont(theme.get_font('text_normal_smaller'))
+  button:SetFont(Theme.get_font('text_normal_smaller'))
   button:set_text(text)
   button:set_text_autoposition(true)
   button.DoClick = function(btn)

@@ -1,4 +1,4 @@
-library.new 'attributes'
+library 'attributes'
 
 local stored = attributes.stored or {}
 local types = attributes.types or {}
@@ -45,7 +45,7 @@ function attributes.register(id, data)
     id = data.name:to_id()
   end
 
-  fl.dev_print('Registering '..string.lower(data.type)..': '..tostring(id))
+  Flux.dev_print('Registering '..string.lower(data.type)..': '..tostring(id))
 
   data.attr_id = id
   data.name = data.name or 'Unknown Attribute'
@@ -72,7 +72,7 @@ function attributes.register_type(id, global_var, folder)
 
   attributes.include_type(id, global_var, folder)
 
-  fl.dev_print('Registering attribute type: ['..id..'] ['..global_var..'] ['..folder..']')
+  Flux.dev_print('Registering attribute type: ['..id..'] ['..global_var..'] ['..folder..']')
 end
 
 function attributes.include_type(id, global_var, folder)

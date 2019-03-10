@@ -8,7 +8,7 @@ COMMAND.arguments = 1
 
 function COMMAND:on_run(player, text, scale, style, color, extra_color)
   if !text or text == '' then
-    fl.player:notify(player, t'3d_text.not_enough_text')
+    Flux.Player:notify(player, t'3d_text.not_enough_text')
 
     return
   end
@@ -31,7 +31,7 @@ function COMMAND:on_run(player, text, scale, style, color, extra_color)
 
   SurfaceText:add_text(data)
 
-  fl.player:notify(player, t'3d_text.text_added')
+  Flux.Player:notify(player, t'3d_text.text_added')
 end
 
 COMMAND:register()

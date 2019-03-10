@@ -27,11 +27,11 @@ if SERVER then
   end
 
   function PLUGIN:save()
-    --data.save_plugin('areas', areas.get_by_type('text') or {})
+    --Data.save_plugin('areas', areas.get_by_type('text') or {})
   end
 
   function PLUGIN:load()
-    local loaded = data.load_plugin('areas', {})
+    local loaded = Data.load_plugin('areas', {})
 
     for k, v in pairs(loaded) do
       areas.register(k, v)

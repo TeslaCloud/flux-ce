@@ -24,18 +24,18 @@ if CLIENT then
 
     local target_val = 0
 
-    if !fl.client:is_weapon_raised() then
+    if !Flux.client:is_weapon_raised() then
       target_val = 100
     end
 
-    local fraction = (fl.client.curRaisedFrac or 0) / 100
+    local fraction = (Flux.client.curRaisedFrac or 0) / 100
     local rotation = rotation_translate[weapon:GetClass()] or rotation_translate['default']
 
     eye_angles:RotateAroundAxis(eye_angles:Up(), rotation.p * fraction)
     eye_angles:RotateAroundAxis(eye_angles:Forward(), rotation.y * fraction)
     eye_angles:RotateAroundAxis(eye_angles:Right(), rotation.r * fraction)
 
-    fl.client.curRaisedFrac = Lerp(FrameTime() * 2, fl.client.curRaisedFrac or 0, target_val)
+    Flux.client.curRaisedFrac = Lerp(FrameTime() * 2, Flux.client.curRaisedFrac or 0, target_val)
 
     view_model:SetAngles(eye_angles)
 

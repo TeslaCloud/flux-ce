@@ -1,11 +1,11 @@
-library.new('command', fl)
+library 'Flux::Command'
 
-local stored = fl.command.stored or {}
-local aliases = fl.command.aliases or {}
-fl.command.stored = stored
-fl.command.aliases = aliases
+local stored = Flux.Command.stored or {}
+local aliases = Flux.Command.aliases or {}
+Flux.Command.stored = stored
+Flux.Command.aliases = aliases
 
-function fl.command:create(id, data)
+function Flux.Command:create(id, data)
   if !id or !data then return end
 
   data.id           = id:to_id()
@@ -31,14 +31,14 @@ function fl.command:create(id, data)
   hook.run('OnCommandCreated', id, data)
 end
 
-function fl.command:find_by_id(id)
+function Flux.Command:find_by_id(id)
   id = id:utf8lower()
 
   if stored[id] then return stored[id] end
   if aliases[id] then return stored[aliases[id]] end
 end
 
-function fl.command:find(id)
+function Flux.Command:find(id)
   id = id:utf8lower()
 
   local found = self:find_by_id(id)
@@ -55,7 +55,7 @@ function fl.command:find(id)
 end
 
 -- A function to find all commands by given search string.
-function fl.command:find_all(id)
+function Flux.Command:find_all(id)
   local hits = {}
   local ids = {}
 
@@ -64,7 +64,7 @@ function fl.command:find_all(id)
       if SERVER then
         table.insert(hits, stored[v])
       else
-        if fl.client:can(v) then
+        if Flux.client:can(v) then
           table.insert(hits, stored[v])
         end
       end
@@ -76,7 +76,7 @@ function fl.command:find_all(id)
   return hits
 end
 
-function fl.command:extract_arguments(text)
+function Flux.Command:extract_arguments(text)
   local arguments = {}
   local word = ''
   local skip = 0
@@ -207,7 +207,7 @@ if SERVER then
     end
   }
 
-  function fl.command:str_to_player(player, str)
+  function Flux.Command:str_to_player(player, str)
     local start = str:utf8sub(1, 1)
     local parser = macros[start] or hook.run('TargetFromString', player, str, start)
 
@@ -226,7 +226,7 @@ if SERVER then
     return false
   end
 
-  function fl.command:interpret(player, text, from_console)
+  function Flux.Command:interpret(player, text, from_console)
     local args
 
     if isstring(text) then
@@ -239,7 +239,7 @@ if SERVER then
       if !IsValid(player) then
         ErrorNoHalt('[Flux:Command] You must enter a command!\n')
       else
-        fl.player:notify(player, 'commands.you_must_enter_command')
+        Flux.Player:notify(player, 'commands.you_must_enter_command')
       end
 
       return
@@ -290,7 +290,7 @@ if SERVER then
                 end
               else
                 if IsValid(player) then
-                  fl.player:notify(player, t('commands.player_invalid', tostring(target_arg)))
+                  Flux.Player:notify(player, t('commands.player_invalid', tostring(target_arg)))
                 else
                   if kind != '^' then
                     ErrorNoHalt("'"..tostring(target_arg).."' is not a valid player!")
@@ -306,7 +306,7 @@ if SERVER then
             if istable(targets) and #targets > 0 then
               for k, v in ipairs(targets) do
                 if cmd_table.immunity and IsValid(player) and hook.run('CommandCheckImmunity', player, v, cmd_table.can_equal) == false then
-                  fl.player:notify(player, t('commands.higher_immunity', v:name()))
+                  Flux.Player:notify(player, t('commands.higher_immunity', v:name()))
 
                   return
                 end
@@ -316,7 +316,7 @@ if SERVER then
               args[cmd_table.player_arg or 1] = targets
             else
               if IsValid(player) then
-                fl.player:notify(player, t('commands.player_invalid', tostring(target_arg)))
+                Flux.Player:notify(player, t('commands.player_invalid', tostring(target_arg)))
               else
                 ErrorNoHalt("'"..tostring(target_arg).."' is not a valid player!\n")
               end
@@ -334,18 +334,18 @@ if SERVER then
             self:run(player, cmd_table, args)
           end
         else
-          fl.player:notify(player, '/'..cmd_table.name..' '..cmd_table.syntax)
+          Flux.Player:notify(player, '/'..cmd_table.name..' '..cmd_table.syntax)
         end
       else
         if IsValid(player) then
-          fl.player:notify(player, 'commands.no_access')
+          Flux.Player:notify(player, 'commands.no_access')
         else
           ErrorNoHalt('This command cannot be run from console!\n')
         end
       end
     else
       if IsValid(player) then
-        fl.player:notify(player, t('commands.not_valid', command))
+        Flux.Player:notify(player, t('commands.not_valid', command))
       else
         ErrorNoHalt("'"..command.."' is not a valid command!\n")
       end
@@ -353,7 +353,7 @@ if SERVER then
   end
 
   -- Warning: this function assumes that command is valid and all permission checks have been done.
-  function fl.command:run(player, cmd_table, arguments)
+  function Flux.Command:run(player, cmd_table, arguments)
     if cmd_table.on_run then
       try {
         cmd_table.on_run, cmd_table, player, unpack(arguments)
@@ -367,22 +367,22 @@ if SERVER then
   end
 
   cable.receive('fl_command_run', function(player, command)
-    fl.command:interpret(player, command, true)
+    Flux.Command:interpret(player, command, true)
   end)
 else
-  function fl.command:send(command)
+  function Flux.Command:send(command)
     cable.send('fl_command_run', command)
   end
 end
 
 -- An internal function that powers the flc and flCmd console commands.
-function fl.command.con_command(player, cmd, args, args_text)
+function Flux.Command.con_command(player, cmd, args, args_text)
   if SERVER then
-    fl.command:interpret(player, args_text, true)
+    Flux.Command:interpret(player, args_text, true)
   else
-    fl.command:send(args_text)
+    Flux.Command:send(args_text)
   end
 end
 
-concommand.Add('flCmd', fl.command.con_command)
-concommand.Add('flc', fl.command.con_command)
+concommand.Add('flCmd', Flux.Command.con_command)
+concommand.Add('flc', Flux.Command.con_command)

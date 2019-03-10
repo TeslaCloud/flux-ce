@@ -1,10 +1,10 @@
 function Chatbox:OnResolutionChanged(new_width, new_height)
-  theme.set_option('chatbox_width', new_width / 2.25)
-  theme.set_option('chatbox_height', new_height / 2.25)
-  theme.set_option('chatbox_x', font.scale(8))
-  theme.set_option('chatbox_y', new_height - theme.get_option('chatbox_height') - font.scale(32))
-  local entry_height = theme.set_option('chatbox_text_entry_height', font.scale(38))
-  theme.set_option('chatbox_text_entry_text_size', entry_height * 0.9)
+  Theme.set_option('chatbox_width', new_width / 2.25)
+  Theme.set_option('chatbox_height', new_height / 2.25)
+  Theme.set_option('chatbox_x', Font.scale(8))
+  Theme.set_option('chatbox_y', new_height - Theme.get_option('chatbox_height') - Font.scale(32))
+  local entry_height = Theme.set_option('chatbox_text_entry_height', Font.scale(38))
+  Theme.set_option('chatbox_text_entry_text_size', entry_height * 0.9)
 
   if chatbox.panel then
     chatbox.panel:Remove()
@@ -13,11 +13,11 @@ function Chatbox:OnResolutionChanged(new_width, new_height)
 end
 
 function Chatbox:PlayerBindPress(player, bind, pressed)
-  if fl.client:has_initialized() and (string.find(bind, 'messagemode') or string.find(bind, 'messagemode2')) and pressed then
+  if Flux.client:has_initialized() and (string.find(bind, 'messagemode') or string.find(bind, 'messagemode2')) and pressed then
     if string.find(bind, 'messagemode2') then
-      fl.client.typing_team_chat = true
+      Flux.client.typing_team_chat = true
     else
-      fl.client.typing_team_chat = false
+      Flux.client.typing_team_chat = false
     end
 
     chatbox.show()
@@ -39,7 +39,7 @@ function Chatbox:HUDShouldDraw(element)
 end
 
 function Chatbox:CreateFonts()
-  font.create('flChatFont', {
+  Font.create('flChatFont', {
     font = 'Arial',
     size = 16,
     weight = 1000
@@ -51,16 +51,16 @@ function Chatbox:OnThemeLoaded(current_theme)
 
   current_theme:set_option('chatbox_width', scrw / 2.25)
   current_theme:set_option('chatbox_height', scrh / 2.25)
-  current_theme:set_option('chatbox_x', font.scale(8))
-  current_theme:set_option('chatbox_y', scrh - current_theme:get_option('chatbox_height') - font.scale(32))
-  local entry_height = current_theme:set_option('chatbox_text_entry_height', font.scale(38))
+  current_theme:set_option('chatbox_x', Font.scale(8))
+  current_theme:set_option('chatbox_y', scrh - current_theme:get_option('chatbox_height') - Font.scale(32))
+  local entry_height = current_theme:set_option('chatbox_text_entry_height', Font.scale(38))
   local text_size = current_theme:set_option('chatbox_text_entry_text_size', entry_height * 0.75)
 
-  current_theme:set_font('chatbox_normal', 'flChatFont', font.scale(20))
-  current_theme:set_font('chatbox_bold', 'flRobotoCondensedBold', font.scale(20))
-  current_theme:set_font('chatbox_italic', 'flRobotoCondensedItalic', font.scale(20))
-  current_theme:set_font('chatbox_italic_bold', 'flRobotoCondensedItalicBold', font.scale(20))
-  current_theme:set_font('chatbox_syntax', 'flRobotoCondensed', font.scale(24))
+  current_theme:set_font('chatbox_normal', 'flChatFont', Font.scale(20))
+  current_theme:set_font('chatbox_bold', 'flRobotoCondensedBold', Font.scale(20))
+  current_theme:set_font('chatbox_italic', 'flRobotoCondensedItalic', Font.scale(20))
+  current_theme:set_font('chatbox_italic_bold', 'flRobotoCondensedItalicBold', Font.scale(20))
+  current_theme:set_font('chatbox_syntax', 'flRobotoCondensed', Font.scale(24))
   current_theme:set_font('chatbox_text_entry', 'flRoboto', text_size)
 
   current_theme:set_color('chat_text_entry_background', Color(0, 0, 0, 215))

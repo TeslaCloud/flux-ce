@@ -8,9 +8,9 @@ end
 
 function PANEL:Paint(w, h)
   if !hook.run('ChatboxEntryPaint', self, 0, 0, w, h) then
-    draw.RoundedBox(2, 0, 0, w, h, theme.get_color('background'))
+    draw.RoundedBox(2, 0, 0, w, h, Theme.get_color('background'))
 
-    self:DrawTextEntryText(theme.get_color('text'), theme.get_color('accent'), theme.get_color('text'))
+    self:DrawTextEntryText(Theme.get_color('text'), Theme.get_color('accent'), Theme.get_color('text'))
   end
 end
 

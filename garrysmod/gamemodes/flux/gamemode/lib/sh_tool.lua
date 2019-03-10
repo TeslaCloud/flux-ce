@@ -1,8 +1,8 @@
-library.new('tool', fl)
+library 'Flux::Tool'
 
-fl.tool.stored = fl.tool.stored  or {}
+Flux.Tool.stored = Flux.Tool.stored  or {}
 
-function fl.tool:get(id)
+function Flux.Tool:get(id)
   return self.stored[id]
 end
 
@@ -19,9 +19,9 @@ pipeline.register('tool', function(id, file_name, pipe)
 
   TOOL:CreateConVars()
 
-  fl.tool.stored[id] = table.Copy(TOOL)
+  Flux.Tool.stored[id] = table.Copy(TOOL)
 
-  fl.dev_print('Registering Tool: '..id)
+  Flux.dev_print('Registering Tool: '..id)
 
   TOOL = nil
 end)

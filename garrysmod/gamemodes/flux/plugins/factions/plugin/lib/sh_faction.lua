@@ -1,4 +1,4 @@
-library.new 'faction'
+library 'faction'
 
 local stored = faction.stored or {}
 local count = faction.count or 0

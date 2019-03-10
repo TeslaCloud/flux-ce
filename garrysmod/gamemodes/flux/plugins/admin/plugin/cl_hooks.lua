@@ -28,26 +28,26 @@ function Bolt:OnThemeLoaded(current_theme)
 end
 
 function Bolt:HUDPaint()
-  if IsValid(fl.client) and fl.client:has_initialized() and fl.client:Alive()
-  and fl.client:get_nv('transmission_prevented') then
-    local text, font = t'vanish.client_text', theme.get_font('text_normal')
+  if IsValid(Flux.client) and Flux.client:has_initialized() and Flux.client:Alive()
+  and Flux.client:get_nv('transmission_prevented') then
+    local text, font = t'vanish.client_text', Theme.get_font('text_normal')
     local w, h = util.text_size(text, font)
     local x, y = ScrW() - w - 16, ScrH() - h - 16
-    fl.fa:draw('fa-eye-slash', x - h - _font.scale(12), y, h)
+    FontAwesome:draw('fa-eye-slash', x - h - Font.scale(12), y, h)
     draw.SimpleText(text, font, x, y, color_white)
   end
 end
 
 function Bolt:PostRender()
-  if fl.client:get_nv('should_fullbright') then
+  if Flux.client:get_nv('should_fullbright') then
     render.SetLightingMode(1)
-    fl.client.fullbright_enabled = true
+    Flux.client.fullbright_enabled = true
   end
 end
 
 function Bolt:PreDrawHUD()
-  if fl.client.fullbright_enabled then
+  if Flux.client.fullbright_enabled then
     render.SetLightingMode(0)
-    fl.client.fullbright_enabled = false
+    Flux.client.fullbright_enabled = false
   end
 end

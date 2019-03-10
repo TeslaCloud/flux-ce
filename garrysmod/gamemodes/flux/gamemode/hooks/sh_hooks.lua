@@ -22,7 +22,7 @@ end
 -- Called when gamemode's server browser name needs to be retrieved.
 function GM:GetGameDescription()
   local name_override = self.name_override
-  return isstring(name_override) and name_override or 'FL - '..fl.get_schema_name()
+  return isstring(name_override) and name_override or 'FL - '..Flux.get_schema_name()
 end
 
 -- Disable default hooks for mouth move and grab ear.
@@ -65,7 +65,7 @@ do
 end
 
 do
-  local get_weapon_hold_type = fl.anim.get_weapon_hold_type
+  local get_weapon_hold_type = Flux.Anim.get_weapon_hold_type
 
   -- Called when to translate player activities.
   function GM:TranslateActivity(player, act)
@@ -184,7 +184,7 @@ do
     end
 
     if !anim_cache[new_model] then
-      anim_cache[new_model] = fl.anim:get_table(new_model)
+      anim_cache[new_model] = Flux.Anim:get_table(new_model)
     end
 
     player.fl_anim_table = anim_cache[new_model]
@@ -216,7 +216,7 @@ function GM:PhysgunPickup(player, entity)
 end
 
 concommand.Add('fl_save_pers', function()
-  if fl.development and SERVER then
+  if Flux.development and SERVER then
     hook.run('PersistenceSave')
   end
 end)
@@ -225,11 +225,11 @@ function GM:OnReloaded()
   -- Reload the tools.
   local toolgun = weapons.GetStored('gmod_tool')
 
-  for k, v in pairs(fl.tool.stored) do
+  for k, v in pairs(Flux.Tool.stored) do
     toolgun.Tool[v.Mode] = v
   end
 
-  if fl.development then
+  if Flux.development then
     for k, v in ipairs(_player.GetAll()) do
       self:PlayerModelChanged(v, v:GetModel(), v:GetModel())
     end

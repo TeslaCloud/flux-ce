@@ -50,13 +50,13 @@ local hiddenBones = {
 }
 
 -- For refresh.
-if IsValid(fl.client) and fl.client.legs then
-  fl.client.legs:Remove()
+if IsValid(Flux.client) and Flux.client.legs then
+  Flux.client.legs:Remove()
 end
 
 function VisibleLegs:PlayerModelChanged(player, sNewModel, sOldModel)
-  if fl.client.legs then
-    fl.client.legs:Remove()
+  if Flux.client.legs then
+    Flux.client.legs:Remove()
   end
 end
 
@@ -64,7 +64,7 @@ local offset = Vector(-50, -50, 0)
 local scale = Vector(1, 1, 1)
 
 function VisibleLegs:RenderScreenspaceEffects()
-  local player = fl.client
+  local player = Flux.client
 
   if player:get_nv('observer') or player:ShouldDrawLocalPlayer() or !player:Alive() then return end
 

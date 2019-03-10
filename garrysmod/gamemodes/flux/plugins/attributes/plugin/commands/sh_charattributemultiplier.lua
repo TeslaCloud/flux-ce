@@ -13,7 +13,7 @@ function COMMAND:on_run(player, targets, attr_id, value, duration)
   local attribute = attributes.find_by_id(attr_id)
 
   if attribute and attribute.multipliable then
-    fl.player:broadcast('char_attribute_multiplier.message', { get_player_name(player), target:name(), attribute.name, value, duration })
+    Flux.Player:broadcast('char_attribute_multiplier.message', { get_player_name(player), target:name(), attribute.name, value, duration })
 
     target:attribute_multiplier(attr_id:to_id(), tonumber(value), tonumber(duration))
     target:increase_attribute(attr_id:to_id(), 1)

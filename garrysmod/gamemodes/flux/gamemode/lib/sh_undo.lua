@@ -1,9 +1,9 @@
-library.new('undo', fl)
+library 'Flux::Undo'
 
 local queue = {}
 local buffer = {}
 
-function fl.undo:create(id, name)
+function Flux.Undo:create(id, name)
   buffer = {
     id = id,
     name = name,
@@ -12,15 +12,15 @@ function fl.undo:create(id, name)
   }
 end
 
-function fl.undo:add(callback, ...)
+function Flux.Undo:add(callback, ...)
   table.insert(buffer.functions, {func = callback, args = {...}})
 end
 
-function fl.undo:set_player(player)
+function Flux.Undo:set_player(player)
   buffer.player = player
 end
 
-function fl.undo:finish()
+function Flux.Undo:finish()
   if istable(buffer) and IsValid(buffer.player) then
     queue[buffer.player] = queue[buffer.player] or {}
 
@@ -30,7 +30,7 @@ function fl.undo:finish()
   buffer = {}
 end
 
-function fl.undo:remove(player, id)
+function Flux.Undo:remove(player, id)
   local queue_table = queue[player]
 
   if queue_table then
@@ -42,7 +42,7 @@ function fl.undo:remove(player, id)
   end
 end
 
-function fl.undo:execute(obj)
+function Flux.Undo:execute(obj)
   if istable(obj) and istable(obj.functions) then
     for k, v in ipairs(obj.functions) do
       try {
@@ -56,7 +56,7 @@ function fl.undo:execute(obj)
   end
 end
 
-function fl.undo:do_player(player)
+function Flux.Undo:do_player(player)
   local count = (queue[player] and #queue[player]) or 0
 
   if count > 0 then
@@ -66,6 +66,6 @@ function fl.undo:do_player(player)
   end
 end
 
-function fl.undo:get_player(player)
+function Flux.Undo:get_player(player)
   return queue[player] or {}
 end

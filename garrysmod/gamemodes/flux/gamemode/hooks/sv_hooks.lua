@@ -6,7 +6,7 @@ end
 function GM:InitPostEntity()
   local toolgun = weapons.GetStored('gmod_tool')
 
-  for k, v in pairs(fl.tool.stored) do
+  for k, v in pairs(Flux.Tool.stored) do
     toolgun.Tool[v.Mode] = v
   end
 
@@ -315,24 +315,24 @@ function GM:OneSecond()
   local cur_time = CurTime()
   local sys_time = SysTime()
 
-  if !fl.next_save_data then
-    fl.next_save_data = cur_time + 10
-  elseif fl.next_save_data <= cur_time then
+  if !Flux.next_save_data then
+    Flux.next_save_data = cur_time + 10
+  elseif Flux.next_save_data <= cur_time then
     if hook.run('FLShouldSaveData') != false then
       hook.run('FLSaveData')
     end
 
-    fl.next_save_data = cur_time + config.get('data_save_interval')
+    Flux.next_save_data = cur_time + config.get('Data.save_interval')
   end
 
-  if !fl.next_player_count_check then
-    fl.next_player_count_check = sys_time + 1800
-  elseif fl.next_player_count_check <= sys_time then
-    fl.next_player_count_check = sys_time + 1800
+  if !Flux.next_player_count_check then
+    Flux.next_player_count_check = sys_time + 1800
+  elseif Flux.next_player_count_check <= sys_time then
+    Flux.next_player_count_check = sys_time + 1800
 
     if #player.GetAll() == 0 then
       if hook.run('ShouldServerAutoRestart') != false then
-        fl.dev_print('Server is empty, restarting...')
+        Flux.dev_print('Server is empty, restarting...')
         RunConsoleCommand('changelevel', game.GetMap())
       end
     end
@@ -340,7 +340,7 @@ function GM:OneSecond()
 end
 
 function GM:PreLoadPlugins()
-  fl.shared.disabled_plugins = data.load('disabled_plugins', {})
+  Flux.shared.disabled_plugins = Data.load('disabled_plugins', {})
 end
 
 do
@@ -363,9 +363,9 @@ do
   end
 
   local function write_html()
-    write_client_file('3_html.lua', fl.html:generate_html_file() or '-- .keep')
-    write_client_file('4_css.lua', fl.html:generate_css_file() or '-- .keep')
-    write_client_file('5_js.lua', fl.html:generate_js_file() or '-- .keep')
+    write_client_file('3_html.lua', Flux.HTML:generate_html_file() or '-- .keep')
+    write_client_file('4_css.lua', Flux.HTML:generate_css_file() or '-- .keep')
+    write_client_file('5_js.lua', Flux.HTML:generate_js_file() or '-- .keep')
   end
 
   local function write_client_files()
@@ -377,19 +377,19 @@ do
     settings_copy.server = nil 
 
     if IS_DEVELOPMENT then
-      write_client_file('0_shared.lua', 'fl.shared = fl.deserialize([['..fl.serialize(fl.shared)..']])\n')
-      write_client_file('1_settings.lua', 'Settings = fl.deserialize([['..fl.serialize(settings_copy)..']])\n')
-      write_client_file('2_lang.lua', "library.new('lang', fl)\nfl.lang.stored = fl.deserialize([["..fl.serialize(fl.lang.stored).."]])\n")
+      write_client_file('0_shared.lua', 'Flux.shared = Flux.deserialize([['..Flux.serialize(Flux.shared)..']])\n')
+      write_client_file('1_settings.lua', 'Settings = Flux.deserialize([['..Flux.serialize(settings_copy)..']])\n')
+      write_client_file('2_lang.lua', "library'Flux::Lang'\nfl.lang.stored = Flux.deserialize([["..Flux.serialize(Flux.Lang.stored).."]])\n")
       write_html()
     else
       print 'Compiling clientside assets...'
 
-      local contents = 'fl.shared=fl.deserialize([['..fl.serialize(fl.shared)..']])'
-      contents = contents..'Settings=fl.deserialize([['..fl.serialize(settings_copy)..']])'
-      contents = contents.."library.new('lang',fl)fl.lang.stored=fl.deserialize([["..fl.serialize(fl.lang.stored).."]])"
-      contents = contents..(fl.html:generate_html_file() or '-- .keep')..' '
-      contents = contents..(fl.html:generate_css_file() or '-- .keep')..' '
-      contents = contents..(fl.html:generate_js_file() or '-- .keep')
+      local contents = 'Flux.shared=Flux.deserialize([['..Flux.serialize(Flux.shared)..']])'
+      contents = contents..'Settings=Flux.deserialize([['..Flux.serialize(settings_copy)..']])'
+      contents = contents.."library'Flux::Lang'Flux.Lang.stored=Flux.deserialize([["..Flux.serialize(Flux.Lang.stored).."]])"
+      contents = contents..(Flux.HTML:generate_html_file() or '-- .keep')..' '
+      contents = contents..(Flux.HTML:generate_css_file() or '-- .keep')..' '
+      contents = contents..(Flux.HTML:generate_js_file() or '-- .keep')
 
       write_client_file('0_production.lua', contents)
     end
@@ -398,8 +398,8 @@ do
   concommand.Add('fl_reload_html', function(player)
     if !IsValid(player) then
       print('Rewriting HTML...')
-      for k, v in pairs(fl.html.file_paths) do
-        fl.html[v.pipe][v.file_name] = fileio.Read(k)
+      for k, v in pairs(Flux.HTML.file_paths) do
+        Flux.HTML[v.pipe][v.file_name] = fileio.Read(k)
       end
 
       write_html()
@@ -442,7 +442,7 @@ function GM:PlayerSay(player, text, team_chat)
   local is_command, length = string.is_command(tostring(text))
 
   if is_command then
-    fl.command:interpret(player, text:utf8sub(1 + length, utf8.len(text)))
+    Flux.Command:interpret(player, text:utf8sub(1 + length, utf8.len(text)))
 
     return ''
   end

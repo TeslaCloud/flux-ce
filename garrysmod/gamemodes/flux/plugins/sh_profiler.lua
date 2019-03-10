@@ -3,7 +3,7 @@ PLUGIN:set_author('TeslaCloud Studios')
 PLUGIN:set_description('Profile any hooks.')
 PLUGIN:set_global('Profiler')
 
-if !fl.development then return end
+if !Flux.development then return end
 if DBugR then return end
 
 hook._profiler_old_call = hook._profiler_old_call or hook.Call

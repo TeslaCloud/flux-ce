@@ -15,7 +15,7 @@ function COMMAND:on_run(player, targets, duration, ...)
   duration = Bolt:interpret_ban_time(duration)
 
   if !isnumber(duration) then
-    fl.player:notify(player, "'"..tostring(duration).."' could not be interpreted as duration!")
+    Flux.Player:notify(player, "'"..tostring(duration).."' could not be interpreted as duration!")
 
     return
   end
@@ -30,7 +30,7 @@ function COMMAND:on_run(player, targets, duration, ...)
 
   for k, v in ipairs(_player.GetAll()) do
     local ply_lang = v:get_nv('language')
-    local time = t('time.for', { time = fl.lang:nice_time(duration, ply_lang) }, ply_lang)
+    local time = t('time.for', { time = Flux.Lang:nice_time(duration, ply_lang) }, ply_lang)
 
     if duration <= 0 then time = t'time.permanently' end
 

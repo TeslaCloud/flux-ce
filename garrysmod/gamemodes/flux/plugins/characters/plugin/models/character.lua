@@ -1,7 +1,7 @@
 class 'Character' extends 'ActiveRecord::Base'
 
 Character:belongs_to 'User'
-Character:has_many 'data'
+Character:has_many 'character_data'
 Character:has_one 'ammo'
 
 Character:validates('name', { presence = true, min_length = 4, max_length = 20 })

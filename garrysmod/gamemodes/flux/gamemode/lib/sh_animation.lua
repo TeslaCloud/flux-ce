@@ -1,9 +1,9 @@
-library.new('anim', fl)
+library 'Flux::Anim'
 
-local stored = fl.anim.stored or {}
-local models = fl.anim.models or {}
-fl.anim.stored = stored
-fl.anim.models = models
+local stored = Flux.Anim.stored or {}
+local models = Flux.Anim.models or {}
+Flux.Anim.stored = stored
+Flux.Anim.models = models
 
 stored.player = {
   normal = {
@@ -80,11 +80,11 @@ stored.player = {
   }
 }
 
-function fl.anim:all()
+function Flux.Anim:all()
   return stored
 end
 
-function fl.anim:set_model_class(model, class)
+function Flux.Anim:set_model_class(model, class)
   if !stored[class] then
     class = 'player'
   end
@@ -92,7 +92,7 @@ function fl.anim:set_model_class(model, class)
   models[string.lower(model)] = class
 end
 
-function fl.anim:get_model_class(model)
+function Flux.Anim:get_model_class(model)
   if !model then return 'player' end
 
   local model_class = models[string.lower(model)]
@@ -104,7 +104,7 @@ function fl.anim:get_model_class(model)
   return 'player'
 end
 
-function fl.anim:get_table(model)
+function Flux.Anim:get_table(model)
   if !model then return end
 
   if string.find(model, '/player/') then
@@ -154,7 +154,7 @@ do
   }
 
   -- A function to get a weapon's hold type.
-  function fl.anim:get_weapon_hold_type(player, weapon)
+  function Flux.Anim:get_weapon_hold_type(player, weapon)
     if !IsValid(weapon) then return 'normal' end
 
     local translated_hold_type = weapon_hold_types[string.lower(weapon:GetClass())]

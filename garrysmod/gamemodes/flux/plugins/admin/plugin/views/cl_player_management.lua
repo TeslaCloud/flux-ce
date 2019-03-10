@@ -84,11 +84,11 @@ function PANEL:Init()
   end
 
   self.name_label = vgui.create('DLabel', self)
-  self.name_label:SetFont(theme.get_font('text_normal_large'))
+  self.name_label:SetFont(Theme.get_font('text_normal_large'))
   self.name_label:SetTextColor(color_white)
 
   self.role_label = vgui.create('DLabel', self)
-  self.role_label:SetFont(theme.get_font('text_normal'))
+  self.role_label:SetFont(Theme.get_font('text_normal'))
   self.role_label:SetTextColor(color_white)
 
   self.role_edit = vgui.create('fl_button', self)

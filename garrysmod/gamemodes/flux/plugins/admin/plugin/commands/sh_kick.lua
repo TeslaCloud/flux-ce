@@ -20,7 +20,7 @@ function COMMAND:on_run(player, targets, ...)
     v:Kick(reason)
   end
 
-  fl.player:broadcast('kick_message', { get_player_name(player), util.player_list_to_string(targets), reason })
+  Flux.Player:broadcast('kick_message', { get_player_name(player), util.player_list_to_string(targets), reason })
 end
 
 COMMAND:register()

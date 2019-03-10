@@ -1,25 +1,25 @@
 -- This library really hates being refreshed :/
-if theme then return end
+if Theme then return end
 
-library.new 'theme'
+library 'Theme'
 
-local stored = theme.stored or {}
-local current_theme = theme.current_theme or nil
-theme.stored = stored
-theme.current_theme = current_theme
+local stored = Theme.stored or {}
+local current_theme = Theme.current_theme or nil
+Theme.stored = stored
+Theme.current_theme = current_theme
 
-function theme.all()
+function Theme.all()
   return stored
 end
 
-function theme.register_theme(obj)
+function Theme.register_theme(obj)
   if obj.parent then
     local parent_theme = stored[obj.parent:to_id()]
 
     if parent_theme then
       local new_obj = table.Copy(parent_theme)
 
-      obj.theme = nil
+      obj.Theme = nil
 
       table.safe_merge(new_obj, obj)
 
@@ -31,13 +31,13 @@ function theme.register_theme(obj)
   stored[obj.id] = obj
 end
 
-function theme.create_panel(panel_id, parent, ...)
+function Theme.create_panel(panel_id, parent, ...)
   if current_theme and hook.run('ShouldThemeCreatePanel', panel_id, current_theme) != false then
     return current_theme:create_panel(panel_id, parent, ...)
   end
 end
 
-function theme.hook(id, ...)
+function Theme.hook(id, ...)
   if isstring(id) and current_theme and current_theme[id] then
     local result = { pcall(current_theme[id], current_theme, ...) }
     local success = result[1]
@@ -51,19 +51,19 @@ function theme.hook(id, ...)
   end
 end
 
-theme.call = theme.hook
+Theme.call = Theme.hook
 
-function theme.get_active_theme()
+function Theme.get_active_theme()
   return (current_theme and current_theme.id)
 end
 
-function theme.set_sound(key, value)
+function Theme.set_sound(key, value)
   if current_theme then
     current_theme:set_sound(key, value)
   end
 end
 
-function theme.get_sound(key, fallback)
+function Theme.get_sound(key, fallback)
   if current_theme then
     return current_theme:get_sound(key, fallback)
   end
@@ -71,19 +71,19 @@ function theme.get_sound(key, fallback)
   return fallback
 end
 
-function theme.set_color(key, value)
+function Theme.set_color(key, value)
   if current_theme then
     current_theme:set_color(key, value)
   end
 end
 
-function theme.set_font(key, value, scale, data)
+function Theme.set_font(key, value, scale, data)
   if current_theme then
     current_theme:set_font(key, value, scale, data)
   end
 end
 
-function theme.get_color(key, fallback)
+function Theme.get_color(key, fallback)
   if current_theme then
     return current_theme:get_color(key, fallback)
   end
@@ -91,7 +91,7 @@ function theme.get_color(key, fallback)
   return fallback
 end
 
-function theme.get_font(key, fallback)
+function Theme.get_font(key, fallback)
   if current_theme then
     return current_theme:get_font(key, fallback)
   end
@@ -99,19 +99,19 @@ function theme.get_font(key, fallback)
   return fallback
 end
 
-function theme.set_option(key, value)
+function Theme.set_option(key, value)
   if current_theme then
     current_theme:set_option(key, value)
   end
 end
 
-function theme.set_material(key, value)
+function Theme.set_material(key, value)
   if current_theme then
     current_theme:set_material(key, value)
   end
 end
 
-function theme.get_material(key, fallback)
+function Theme.get_material(key, fallback)
   if current_theme then
     return current_theme:get_material(key, fallback)
   end
@@ -119,7 +119,7 @@ function theme.get_material(key, fallback)
   return fallback
 end
 
-function theme.get_option(key, fallback)
+function Theme.get_option(key, fallback)
   if current_theme then
     return current_theme:get_option(key, fallback)
   end
@@ -127,17 +127,17 @@ function theme.get_option(key, fallback)
   return fallback
 end
 
-function theme.find_theme(id)
+function Theme.find_theme(id)
   return stored[id:to_id()]
 end
 
-function theme.remove_theme(id)
-  if theme.find_theme(id) then
+function Theme.remove_theme(id)
+  if Theme.find_theme(id) then
     stored[id] = nil
   end
 end
 
-function theme.set_derma_skin()
+function Theme.set_derma_skin()
   if current_theme then
     local skin_table = derma.GetNamedSkin('Flux')
 
@@ -149,8 +149,8 @@ function theme.set_derma_skin()
   derma.RefreshSkins()
 end
 
-function theme.load_theme(themeID, reloading)
-  local theme_table = theme.find_theme(themeID)
+function Theme.load_theme(themeID, reloading)
+  local theme_table = Theme.find_theme(themeID)
 
   if theme_table then
     if !reloading and hook.run('ShouldThemeLoad', theme_table) == false then
@@ -173,13 +173,13 @@ function theme.load_theme(themeID, reloading)
       current_theme:on_loaded()
     end
 
-    theme.set_derma_skin()
+    Theme.set_derma_skin()
 
     hook.run('OnThemeLoaded', current_theme)
   end
 end
 
-function theme.unload_theme()
+function Theme.unload_theme()
   if hook.run('ShouldThemeUnload', current_theme) == false then
     return
   end
@@ -193,16 +193,16 @@ function theme.unload_theme()
   current_theme = nil
 end
 
-function theme.reload()
+function Theme.reload()
   if !current_theme then return end
 
   if (current_theme.should_reload == false) or hook.run('ShouldThemeReload', current_theme) == false then
     return
   end
 
-  theme.load_theme(current_theme.id)
+  Theme.load_theme(current_theme.id)
 
-  theme.hook('OnReloaded')
+  Theme.hook('OnReloaded')
   hook.run('OnThemeReloaded', current_theme)
 end
 
@@ -211,14 +211,14 @@ do
 
   function theme_hooks:PlayerInitialized()
     if !Schema or !Schema.default_theme then
-      theme.load_theme('factory')
+      Theme.load_theme('factory')
     else
-      theme.load_theme(Schema.default_theme or 'factory')
+      Theme.load_theme(Schema.default_theme or 'factory')
     end
   end
 
   function theme_hooks:OnReloaded()
-    theme.reload()
+    Theme.reload()
   end
 
   plugin.add_hooks('flThemeHooks', theme_hooks)

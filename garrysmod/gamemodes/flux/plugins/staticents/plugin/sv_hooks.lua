@@ -39,7 +39,7 @@ function StaticEnts:PersistenceSave()
 
   for ent_class, v in pairs(to_save) do
     if !istable(v) then continue end
-    data.save_plugin('static/'..ent_class, v)
+    Data.save_plugin('static/'..ent_class, v)
   end
 end
 
@@ -51,7 +51,7 @@ end
 
 function StaticEnts:PlayerMakeStatic(player, is_static)
   if (is_static and !player:can('static')) or (!is_static and !player:can('unstatic')) then
-    fl.player:notify(player, 'err.no_permission', player:name())
+    Flux.Player:notify(player, 'err.no_permission', player:name())
     return
   end
 
@@ -59,28 +59,28 @@ function StaticEnts:PlayerMakeStatic(player, is_static)
   local entity = trace.Entity
 
   if !IsValid(entity) then
-    fl.player:notify(player, 'err.not_valid_entity')
+    Flux.Player:notify(player, 'err.not_valid_entity')
     return
   end
 
   if !whitelisted_ents[entity:GetClass()] then
-    fl.player:notify(player, 'err.cannot_static_this')
+    Flux.Player:notify(player, 'err.cannot_static_this')
     return
   end
 
   local ent_static = entity:GetPersistent()
 
   if is_static and ent_static then
-    fl.player:notify(player, 'err.already_static')
+    Flux.Player:notify(player, 'err.already_static')
     return
   elseif !is_static and !ent_static then
-    fl.player:notify(player, 'err.not_static')
+    Flux.Player:notify(player, 'err.not_static')
     return
   end
 
   entity:SetPersistent(is_static)
 
-  fl.player:notify(player, (is_static and 'static.added') or 'static.removed')
+  Flux.Player:notify(player, (is_static and 'static.added') or 'static.removed')
 end
 
 function StaticEnts:SaveData()
@@ -88,7 +88,7 @@ function StaticEnts:SaveData()
 end
 
 function StaticEnts:load_class(ent_class)
-  local loaded = data.load_plugin('static/'..ent_class, false)
+  local loaded = Data.load_plugin('static/'..ent_class, false)
 
   if !istable(loaded) then return end
   if !loaded.Entities then return end

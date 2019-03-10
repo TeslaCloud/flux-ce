@@ -12,7 +12,7 @@ function COMMAND:on_run(player, steam_id)
     local success, copy = Bolt:remove_ban(steam_id)
 
     if success then
-      fl.player:broadcast('unban_message', {
+      Flux.Player:broadcast('unban_message', {
         admin = get_player_name(player),
         target = copy.name
       })

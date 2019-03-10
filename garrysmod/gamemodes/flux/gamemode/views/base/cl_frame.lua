@@ -15,7 +15,7 @@ function PANEL:Init()
 end
 
 function PANEL:Paint(w, h)
-  return theme.hook('PaintFrame', self, w, h)
+  return Theme.hook('PaintFrame', self, w, h)
 end
 
 function PANEL:Think()
@@ -25,7 +25,7 @@ function PANEL:Think()
     self.button_close:SetPos(w - 20, 0)
   end
 
-  theme.hook('FrameThink')
+  Theme.hook('FrameThink')
 end
 
 vgui.Register('fl_frame', PANEL, 'fl_base_panel')

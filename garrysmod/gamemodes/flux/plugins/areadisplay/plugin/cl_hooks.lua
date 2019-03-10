@@ -5,7 +5,7 @@ function PLUGIN:HUDPaint()
     if v.expiry <= CurTime() then
       queue[k] = nil
     else
-      draw.SimpleText(v.text, theme.get_font('text_normal_large'), 48, ScrH() * 0.5, Color(255, 255, 255))
+      draw.SimpleText(v.text, Theme.get_font('text_normal_large'), 48, ScrH() * 0.5, Color(255, 255, 255))
     end
   end
 end

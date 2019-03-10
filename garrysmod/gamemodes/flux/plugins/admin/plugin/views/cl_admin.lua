@@ -24,15 +24,15 @@ end
 function PANEL:Paint(w, h)
   DisableClipping(true)
 
-  draw.box_outlined(0, -4, -4, w + 8, h + 24, 2, theme.get_color('background'))
+  draw.box_outlined(0, -4, -4, w + 8, h + 24, 2, Theme.get_color('background'))
 
   DisableClipping(false)
 
-  draw.RoundedBox(0, 0, 0, w, h, theme.get_color('background'):alpha(150))
+  draw.RoundedBox(0, 0, 0, w, h, Theme.get_color('background'):alpha(150))
 end
 
 function PANEL:PaintOver(w, h)
-  theme.call('AdminPanelPaintOver', self, w, h)
+  Theme.call('AdminPanelPaintOver', self, w, h)
 end
 
 function PANEL:add_panel(id, title, permission, ...)
@@ -46,7 +46,7 @@ function PANEL:add_panel(id, title, permission, ...)
   local button = vgui.create('fl_button')
   button:SetWide(self.sidebar:GetWide())
   button:SetDrawBackground(true)
-  button:SetFont(theme.get_font('text_normal'))
+  button:SetFont(Theme.get_font('text_normal'))
   button:set_text(title)
   button:set_text_autoposition(true)
   button:SizeToContentsY()
@@ -73,11 +73,11 @@ function PANEL:open_panel(id)
   end
 
   if istable(panel) then
-    if panel.permission and !fl.client:can(panel.permission) then return end
+    if panel.permission and !Flux.client:can(panel.permission) then return end
 
     local sw, sh = self.sidebar:GetWide(), self.sidebar:GetTall()
 
-    self.cur_panel = theme.create_panel(panel.id, self, unpack(panel.arguments))
+    self.cur_panel = Theme.create_panel(panel.id, self, unpack(panel.arguments))
     self.cur_panel:SetPos(sw, 0)
     self.cur_panel:SetSize(self:GetWide() - sw, self:GetTall())
     self.cur_panel:SetParent(self)
@@ -100,10 +100,10 @@ function PANEL:set_fullscreen(fullscreen)
     self.back_button:set_text('')
 
     self.back_button.Paint = function(btn, w, h)
-      local font = fl.fonts:GetSize(theme.get_font('text_small'), 16)
+      local font = Flux.fonts:GetSize(Theme.get_font('text_small'), 16)
       local font_size = util.font_size(font)
 
-      fl.fa:draw('fa-chevron-left', 6, 5, 14, Color(255, 255, 255))
+      FontAwesome:draw('fa-chevron-left', 6, 5, 14, Color(255, 255, 255))
       draw.SimpleText('Go Back', font, 24, 3 * (16 / font_size), Color(255, 255, 255))
     end
 
@@ -119,7 +119,7 @@ function PANEL:set_fullscreen(fullscreen)
 end
 
 function PANEL:get_menu_size()
-  return font.scale(1280), font.scale(900)
+  return Font.scale(1280), Font.scale(900)
 end
 
 vgui.Register('fl_admin_panel', PANEL, 'fl_base_panel')

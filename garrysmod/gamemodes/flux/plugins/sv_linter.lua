@@ -4,7 +4,7 @@ PLUGIN:set_name('Linter')
 PLUGIN:set_author('TeslaCloud Studios')
 PLUGIN:set_description('Yells at you for stylistic mistakes.')
 
-if !fl.development then return end
+if !Flux.development then return end
 
 local linter_options = {
   indent_size                 = 2,

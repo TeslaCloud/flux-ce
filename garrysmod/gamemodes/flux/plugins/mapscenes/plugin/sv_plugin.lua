@@ -15,11 +15,11 @@ function Mapscenes:SaveData()
 end
 
 function Mapscenes:save()
-  data.save_plugin('mapscenepoints', self.points)
+  Data.save_plugin('mapscenepoints', self.points)
 end
 
 function Mapscenes:load()
-  local points = data.load_plugin('mapscenepoints', {})
+  local points = Data.load_plugin('mapscenepoints', {})
 
   self.points = points
 end

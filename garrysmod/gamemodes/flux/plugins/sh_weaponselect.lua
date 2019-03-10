@@ -104,10 +104,10 @@ function PLUGIN:HUDPaint()
       local color = Color(255, 255, 255, self.cur_alpha * v.scale / 1.3)
 
       if v.highlight then
-        color = theme.get_color('accent')
+        color = Theme.get_color('accent')
       end
 
-      surface.draw_text_scaled((IsValid(v.weapon) and v.weapon:GetPrintName():utf8upper()) or 'UNKNOWN WEAPON', theme.get_font('text_normal_large'), v.x, v.y, v.scale, color)
+      surface.draw_text_scaled((IsValid(v.weapon) and v.weapon:GetPrintName():utf8upper()) or 'UNKNOWN WEAPON', Theme.get_font('text_normal_large'), v.x, v.y, v.scale, color)
     end
 
     render.SetScissorRect(0, 0, 0, 0, false)
@@ -202,7 +202,7 @@ function PLUGIN:OnWeaponIndexChange(old_index, index)
   else
     self.index_offset = index - old_index
 
-    local weapon_count = #fl.client:GetWeapons()
+    local weapon_count = #Flux.client:GetWeapons()
 
     if math.abs(self.index_offset) == (weapon_count - 1) then
       self.index_offset = -(self.index_offset / (weapon_count - 1))
@@ -217,7 +217,7 @@ function PLUGIN:OnWeaponSelected(index)
 end
 
 function PLUGIN:make_display(index, tab)
-  local client_weapons = fl.client:GetWeapons()
+  local client_weapons = Flux.client:GetWeapons()
   local count = table.Count(client_weapons)
   local offsety = 32
   local result = {}

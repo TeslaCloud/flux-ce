@@ -1,4 +1,4 @@
-﻿library.new 'character'
+﻿library 'character'
 
 function character.create(player, data)
   if (!isstring(data.name) or (utf8.len(data.name) < config.get('character_min_name_len') or
@@ -131,28 +131,28 @@ if SERVER then
 
     local status = character.create(player, data)
 
-    fl.dev_print('Creating character. Status: '..status)
+    Flux.dev_print('Creating character. Status: '..status)
 
     if status == CHAR_SUCCESS then
       character.send_to_client(player)
       cable.send(player, 'fl_player_created_character', true, status)
 
-      fl.dev_print('Success')
+      Flux.dev_print('Success')
     else
       cable.send(player, 'fl_player_created_character', false, status)
 
-      fl.dev_print('Error')
+      Flux.dev_print('Error')
     end
   end)
 
   cable.receive('fl_player_select_character', function(player, id)
-    fl.dev_print(player:name()..' has loaded character #'..id)
+    Flux.dev_print(player:name()..' has loaded character #'..id)
 
     player:set_active_character(id)
   end)
 
   cable.receive('fl_player_delete_character', function(player, id)
-    fl.dev_print(player:name()..' has deleted character #'..id)
+    Flux.dev_print(player:name()..' has deleted character #'..id)
 
     hook.run('OnCharacterDelete', player, id)
 
@@ -163,17 +163,17 @@ if SERVER then
   end)
 else
   cable.receive('fl_characters_load', function(data)
-    fl.client.characters = data
+    Flux.client.characters = data
   end)
 
   cable.receive('fl_create_character', function(idx, data)
-    fl.client.characters = fl.client.characters or {}
-    fl.client.characters[idx] = data
+    Flux.client.characters = Flux.client.characters or {}
+    Flux.client.characters[idx] = data
 
-    if IsValid(fl.intro_panel) then
-      fl.intro_panel:safe_remove()
-      fl.intro_panel = theme.create_panel('main_menu')
-      fl.intro_panel:MakePopup()
+    if IsValid(Flux.intro_panel) then
+      Flux.intro_panel:safe_remove()
+      Flux.intro_panel = Theme.create_panel('main_menu')
+      Flux.intro_panel:MakePopup()
     end
   end)
 end

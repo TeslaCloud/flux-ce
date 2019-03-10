@@ -10,10 +10,10 @@ do
   function Area:PostDrawOpaqueRenderables(draw_depth, draw_skybox)
     if draw_depth or draw_skybox then return end
 
-    local weapon = fl.client:GetActiveWeapon()
+    local weapon = Flux.client:GetActiveWeapon()
 
     if IsValid(weapon) and weapon:GetClass() == 'gmod_tool' and weapon:GetMode() == 'area' then
-      local tool = fl.client:GetTool()
+      local tool = Flux.client:GetTool()
       local mode = tool:GetAreaMode()
       local verts = (tool and tool.area and tool.area.verts)
       local area_table = areas.get_by_type(mode.area_type)
@@ -85,15 +85,15 @@ do
 end
 
 function Area:HUDPaint()
-  if istable(fl.client.text_areas) then
+  if istable(Flux.client.text_areas) then
     local last_y = 400
     local cur_time = CurTime()
 
-    for k, v in pairs(fl.client.text_areas) do
+    for k, v in pairs(Flux.client.text_areas) do
       if istable(v) and v.end_time > cur_time then
         v.alpha = v.alpha or 255
 
-        draw.SimpleText(v.text, theme.get_font('text_large'), 32, last_y, Color(255, 255, 255, v.alpha))
+        draw.SimpleText(v.text, Theme.get_font('text_large'), 32, last_y, Color(255, 255, 255, v.alpha))
 
         if cur_time + 2 >= v.end_time then
           v.alpha = math.Clamp(v.alpha - 1, 0, 255)
@@ -108,13 +108,13 @@ end
 cable.receive('fl_player_entered_area', function(area_idx, idx, pos)
   local area = areas.all()[area_idx]
 
-  Try('Areas', areas.get_callback(area.type), fl.client, area, true, pos, CurTime())
+  Try('Areas', areas.get_callback(area.type), Flux.client, area, true, pos, CurTime())
 end)
 
 cable.receive('fl_player_left_area', function(area_idx, idx, pos)
   local area = areas.all()[area_idx]
 
-  Try('Areas', areas.get_callback(area.type), fl.client, area, false, pos, CurTime())
+  Try('Areas', areas.get_callback(area.type), Flux.client, area, false, pos, CurTime())
 end)
 
 cable.receive('fl_areas_load', function(area_storage)

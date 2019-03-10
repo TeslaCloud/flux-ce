@@ -19,9 +19,9 @@ include 'classes/sh_package.lua'
 local crate_metadata = {}
 
 if SERVER then
-  fl.shared.crates = {}
+  Flux.shared.crates = {}
 else
-  crate_metadata = fl.shared.crates
+  crate_metadata = Flux.shared.crates
 end
 
 Crate           = {}
@@ -30,7 +30,7 @@ Crate.current   = nil
 
 local search_paths = {
   ['flux/gamemode/lib/']      = true,
-  [fl.schema..'/schema/lib/'] = true,
+  [Flux.schema..'/schema/lib/'] = true,
   ['_flux/packages/']     = true
 }
 
@@ -157,7 +157,7 @@ do
       Crate:describe()
     else
       include(file_path)
-      fl.shared.crates[lib_path] = table.Copy(Crate.current.metadata)
+      Flux.shared.crates[lib_path] = table.Copy(Crate.current.metadata)
     end
 
     Crate.installed[lib_path] = Crate.current

@@ -13,7 +13,7 @@ function TOOL:LeftClick(trace)
 
   Mapscenes:add_point(player:EyePos(), player:GetAngles())
 
-  fl.player:notify(player, 'mapscene.point_added')
+  Flux.Player:notify(player, 'mapscene.point_added')
 
   return true
 end

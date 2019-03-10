@@ -10,18 +10,18 @@ function PANEL:Init()
   self:SetSize(scrw, scrh)
 
   local cur_x, cur_y = hook.run('AdjustMenuItemPositions', self)
-  local offset = font.scale(4)
-  local size_x, size_y = font.scale(72), font.scale(72)
+  local offset = Font.scale(4)
+  local size_x, size_y = Font.scale(72), Font.scale(72)
   local icon_size = 40
 
   self.button_panel = vgui.create('EditablePanel', self)
   self.button_panel:SetPos(0, -size_y)
   self.button_panel:SetSize(scrw, size_y)
   self.button_panel.Paint = function(p, w, h)
-    theme.hook('PaintTabMenuButtonPanel', self, w, h)
+    Theme.hook('PaintTabMenuButtonPanel', self, w, h)
   end
 
-  self.button_panel:MoveTo(0, 0, theme.get_option('menu_anim_duration'), 0, 0.5)
+  self.button_panel:MoveTo(0, 0, Theme.get_option('menu_anim_duration'), 0, 0.5)
 
   cur_x = cur_x or 0
   cur_y = cur_y or 0
@@ -29,7 +29,7 @@ function PANEL:Init()
   self.close_button = vgui.Create('fl_button', self.button_panel)
   self.close_button:SetPos(cur_x, cur_y)
   self.close_button:SetDrawBackground(false)
-  self.close_button:SetFont(theme.get_font('menu_larger'))
+  self.close_button:SetFont(Theme.get_font('menu_larger'))
   self.close_button:set_text(t'tab_menu.close_menu')
   self.close_button:set_centered(true)
   self.close_button:set_text_offset(offset)
@@ -86,7 +86,7 @@ function PANEL:Init()
         end
 
         self.active_button = btn
-        self.active_button:set_text_color(theme.get_color('accent'))
+        self.active_button:set_text_color(Theme.get_color('accent'))
 
         if self.active_panel.rebuild then
           self.active_panel:rebuild()
@@ -113,7 +113,7 @@ function PANEL:Init()
   end
 
   draw.set_blur_size(1)
-  fl.blur_update_fps = 0
+  Flux.blur_update_fps = 0
   self.blur_target = 6
 end
 
@@ -130,7 +130,7 @@ function PANEL:OnKeyCodePressed(key)
 end
 
 function PANEL:Paint(w, h)
-  theme.hook('PaintTabMenu', self, w, h)
+  Theme.hook('PaintTabMenu', self, w, h)
 end
 
 function PANEL:add_menu_item(id, data, index)
@@ -149,17 +149,17 @@ function PANEL:close_menu()
   self.blur_target = 0
 
   if IsValid(self.active_panel) then
-    self.active_panel:AlphaTo(0, theme.get_option('menu_anim_duration'), 0)
+    self.active_panel:AlphaTo(0, Theme.get_option('menu_anim_duration'), 0)
 
     if self.active_panel.on_close then
       self.active_panel:on_close()
     end
   end
 
-  self.button_panel:MoveTo(0, -self.button_panel:GetTall(), theme.get_option('menu_anim_duration'), 0, 0.5, function()
+  self.button_panel:MoveTo(0, -self.button_panel:GetTall(), Theme.get_option('menu_anim_duration'), 0, 0.5, function()
     self:safe_remove()
 
-    fl.blur_update_fps = 8
+    Flux.blur_update_fps = 8
   end)
 end
 

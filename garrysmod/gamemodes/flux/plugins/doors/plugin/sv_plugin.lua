@@ -29,11 +29,11 @@ function Doors:save()
     end
   end
 
-  data.save_plugin('doors', doors)
+  Data.save_plugin('doors', doors)
 end
 
 function Doors:load()
-  local doors = data.load_plugin('doors', {})
+  local doors = Data.load_plugin('doors', {})
 
   if doors then
     for k, v in pairs(doors) do

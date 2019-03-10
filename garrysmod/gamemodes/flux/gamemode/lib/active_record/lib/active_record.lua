@@ -61,7 +61,7 @@ function ActiveRecord.restore_schema()
 
       ActiveRecord.ready = true
       ActiveRecord.Model:populate()
-      fl.dev_print 'ActiveRecord - Ready!'
+      Flux.dev_print 'ActiveRecord - Ready!'
       ActiveRecord.Queue:run()
     end)
   query:execute()
@@ -135,7 +135,7 @@ function ActiveRecord.connect()
 end
 
 function ActiveRecord.on_connected()
-  fl.dev_print 'ActiveRecord - Connected to the database!'
+  Flux.dev_print 'ActiveRecord - Connected to the database!'
 
   ActiveRecord.generate_tables()
   ActiveRecord.restore_schema()

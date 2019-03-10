@@ -81,8 +81,8 @@ function PANEL:Init()
   end
 
   self.text_entry.Paint = function(entry, w, h)
-    draw.rounded_box(8, 0, 0, w, h, theme.get_color('chat_text_entry_background'))
-    entry:DrawTextEntryText(theme.get_color('text'), theme.get_color('accent'), theme.get_color('text'))
+    draw.rounded_box(8, 0, 0, w, h, Theme.get_color('chat_text_entry_background'))
+    entry:DrawTextEntryText(Theme.get_color('text'), Theme.get_color('accent'), Theme.get_color('text'))
   end
 
   self:rebuild()
@@ -104,12 +104,12 @@ end
 
 function PANEL:Paint(w, h)
   if self.is_open then
-    theme.hook('ChatboxPaintBackground', self, w, h)
+    Theme.hook('ChatboxPaintBackground', self, w, h)
   end
 end
 
 function PANEL:PaintOver(w, h)
-  if theme.hook('ChatboxPaintOver', self, w, h) == nil then
+  if Theme.hook('ChatboxPaintOver', self, w, h) == nil then
     local entry = self.text_entry
 
     if IsValid(entry) then
@@ -130,9 +130,9 @@ function PANEL:PaintOver(w, h)
         if cmd == '' or cmd == ' ' then return end
 
         if !space then
-          cmds = fl.command:find_all(cmd)
+          cmds = Flux.Command:find_all(cmd)
         else
-          local found = fl.command:find_by_id(cmd)
+          local found = Flux.Command:find_by_id(cmd)
 
           if found then
             table.insert(cmds, found)
@@ -141,7 +141,7 @@ function PANEL:PaintOver(w, h)
 
         draw.RoundedBox(0, 0, 0, w, h - entry:GetTall(), Color(0, 0, 0, 150))
 
-        local font, color = theme.get_font('text_normal'), theme.get_color('accent')
+        local font, color = Theme.get_font('text_normal'), Theme.get_color('accent')
 
         if #cmds > 0 then
           local last_y = 0
@@ -152,7 +152,7 @@ function PANEL:PaintOver(w, h)
             w, h = draw.SimpleText(v.syntax, font, 16 + w + 8, 16 + last_y, color_white)
 
             if #cmds == 1 then
-              local small_font = theme.get_font('text_small')
+              local small_font = Theme.get_font('text_small')
               local w2, h2 = draw.SimpleText(t(v.description), small_font, 16, 16 + h + 4, color_white)
               local aliases = '[-]'
 
@@ -288,12 +288,12 @@ function PANEL:rebuild()
   self:SetSize(chatbox.width, chatbox.height)
   self:SetPos(chatbox.x, chatbox.y)
 
-  local text_entry_height = font.scale(42)
+  local text_entry_height = Font.scale(42)
 
   self.text_entry:SetSize(chatbox.width, text_entry_height)
   self.text_entry:SetPos(0, chatbox.height - text_entry_height)
-  self.text_entry:SetFont(theme.get_font('chatbox_text_entry'))
-  self.text_entry:SetTextColor(theme.get_color('text'))
+  self.text_entry:SetFont(Theme.get_font('chatbox_text_entry'))
+  self.text_entry:SetTextColor(Theme.get_color('text'))
   self.text_entry:RequestFocus()
 
   self.scroll_panel:SetSize(chatbox.width, chatbox.height - self.text_entry:GetTall() - 16)

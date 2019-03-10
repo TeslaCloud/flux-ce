@@ -10,7 +10,7 @@ if !font then
   include('flux/gamemode/lib/cl_font.lua')
 end
 
-library.new('fa', fl)
+library 'FontAwesome'
 
 -- This table is auto-generated, don't worry :)
 local fa_data = {
@@ -1370,10 +1370,10 @@ for k, v in pairs(fa_data) do
   fa_data[k] = utf8.char(v)
 end
 
-fl.fa.hooks = {}
+FontAwesome.hooks = {}
 
-function fl.fa.hooks:CreateFonts()
-  font.create('flFontAwesome', {
+function FontAwesome.hooks:CreateFonts()
+  Font.create('flFontAwesome', {
     font      = 'FluxFontAwesome',
     extended  = true,
     size      = 16, -- default icon size is 16x16
@@ -1382,13 +1382,13 @@ function fl.fa.hooks:CreateFonts()
   })
 end
 
-plugin.add_hooks('FontAwesome', fl.fa.hooks)
+plugin.add_hooks('FontAwesome', FontAwesome.hooks)
 
-function fl.fa:get(id)
+function FontAwesome:get(id)
   return fa_data[id] or id
 end
 
-function fl.fa:draw(id, x, y, size, color, x_align, y_align, outline_width, outline_color)
+function FontAwesome:draw(id, x, y, size, color, x_align, y_align, outline_width, outline_color)
   if id:starts('fa ') then
     id = id:sub(4, id:len())
   end
@@ -1403,8 +1403,8 @@ function fl.fa:draw(id, x, y, size, color, x_align, y_align, outline_width, outl
   color = color or color_white
 
   if outline_width then
-    return draw.SimpleTextOutlined(self:get(id), font.size('flFontAwesome', size), x, y, color, x_align, y_align, outline_width, outline_color)
+    return draw.SimpleTextOutlined(self:get(id), Font.size('flFontAwesome', size), x, y, color, x_align, y_align, outline_width, outline_color)
   else
-    return draw.SimpleText(self:get(id), font.size('flFontAwesome', size), x, y, color, x_align, y_align)
+    return draw.SimpleText(self:get(id), Font.size('flFontAwesome', size), x, y, color, x_align, y_align)
   end
 end

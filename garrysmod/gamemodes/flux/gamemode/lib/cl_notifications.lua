@@ -1,11 +1,11 @@
-library.new('notification', fl)
+library 'Flux::Notification'
 
 local display = {}
 local top = 1
 local queue = {}
 local queue_locked = false
 
-function fl.notification:process_queue()
+function Flux.Notification:process_queue()
   local notification = queue[1]
 
   if !queue_locked and notification then
@@ -48,17 +48,17 @@ function fl.notification:process_queue()
 
     timer.Simple(0.25, function()
       queue_locked = false
-      fl.notification:process_queue()
+      Flux.Notification:process_queue()
     end)
   end
 end
 
-function fl.notification:add(text, lifetime, text_color, back_color)
+function Flux.Notification:add(text, lifetime, text_color, back_color)
   table.insert(queue, { text = text, lifetime = lifetime, text_color = text_color, back_color = back_color })
   self:process_queue()
 end
 
-function fl.notification:add_popup(text, lifetime, x, y, text_color, back_color)
+function Flux.Notification:add_popup(text, lifetime, x, y, text_color, back_color)
   local panel = vgui.Create('fl_notification')
   panel:SetPos(x, y)
   panel:set_text(text)
@@ -71,7 +71,7 @@ function fl.notification:add_popup(text, lifetime, x, y, text_color, back_color)
   end
 end
 
-function fl.notification:reposition(offset)
+function Flux.Notification:reposition(offset)
   if !isnumber(offset) then return end
 
   for k, v in ipairs(display) do

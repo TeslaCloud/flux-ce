@@ -1,12 +1,5 @@
 AddCSLuaFile()
 
---
--- Library: library
--- Description: Provides function for library and class creation, manipulation and instantiation.
---
-library = library or {}
-library.stored = library.stored or {}
-
 -- A function to include a file based on it's prefix.
 function util.include(file_name)
   if SERVER then
@@ -74,13 +67,13 @@ function util.include_folder(dir, base, recursive)
 end
 
 --
--- Function: fl.print (any message)
+-- Function: Flux.print (any message)
 -- Description: Prints a message to the console.
 -- Argument: any message - Any variable to be printed. If it's table, PrintTable will automatically be used.
 --
 -- Returns: nil
 --
-function fl.print(message)
+function Flux.print(message)
   if !istable(message) then
     print(message)
   else
@@ -88,8 +81,8 @@ function fl.print(message)
   end
 end
 
-function fl.dev_print(message)
-  if fl.development then
+function Flux.dev_print(message)
+  if Flux.development then
     Msg('Debug: ')
     MsgC(Color(200, 200, 200), message)
     Msg('\n')
@@ -125,26 +118,13 @@ function file.Write(file_name, contents)
   return file.old_write(file_name, contents)
 end
 
---
--- Function: library.new (string name, table parent = _G)
--- Description: Creates a library inside the parent table.
--- Argument: string name - The name of the library. Must comply with Lua variable name requirements.
--- Argument: table parent (default: _G) - The parent table to put the library into.
---
--- Returns: table - The created library.
---
-function library.new(name, parent)
-  parent = parent or _G
-
-  if !name then return end
+function library(lib_name)
+  local parent, name = lib_name:parse_parent()
 
   parent[name] = parent[name] or {}
 
   return parent[name]
 end
-
--- Set library table's Metatable so that we can call it like a function.
-setmetatable(library, { __call = function(tab, name, parent) return tab.Get(name, parent) end })
 
 --
 -- Function: class(string name, table parent = _G, class base_class = nil)
@@ -192,7 +172,7 @@ function class(name, base_class)
     obj = copy
   end
 
-  library.last_class = { name = name, parent = parent }
+  Flux.last_class = { name = name, parent = parent }
 
   obj.new = function(...)
     local new_obj = {}
@@ -276,8 +256,8 @@ function extends(base_class)
     base_class = base_class:parse_table()
   end
 
-  if istable(library.last_class) and istable(base_class) then
-    local obj = library.last_class.parent[library.last_class.name]
+  if istable(Flux.last_class) and istable(base_class) then
+    local obj = Flux.last_class.parent[Flux.last_class.name]
     local copy = table.Copy(base_class)
 
     table.safe_merge(copy, obj)
@@ -298,8 +278,8 @@ function extends(base_class)
 
     hook.run('OnClassExtended', obj, base_class)
 
-    library.last_class.parent[library.last_class.name] = obj
-    library.last_class = nil
+    Flux.last_class.parent[Flux.last_class.name] = obj
+    Flux.last_class = nil
 
     return true
   end
@@ -313,73 +293,73 @@ end
 --
 
 do
-  local action_storage = fl.action_storage or {}
-  fl.action_storage = action_storage
+  local action_storage = Flux.action_storage or {}
+  Flux.action_storage = action_storage
 
   --
-  -- Function: fl.register_action (string id, function callback)
+  -- Function: Flux.register_action (string id, function callback)
   -- Description: Registers an action that can be assigned to a player.
   -- Argument: string id - Identifier of the action.
   -- Argument: function callback - Function to call when the action is executed.
   --
   -- Returns: nil
   --
-  function fl.register_action(id, callback)
+  function Flux.register_action(id, callback)
     action_storage[id] = callback
   end
 
   --
-  -- Function: fl.get_action (string id)
+  -- Function: Flux.get_action (string id)
   -- Description: Retreives the action callback with the specified identifier.
   -- Argument: string id - ID of the action to get the callback of.
   --
   -- Returns: function - The callback.
   --
-  function fl.get_action(id)
+  function Flux.get_action(id)
     return action_storage[id]
   end
 
   --
-  -- Function: fl.get_all_actions ()
+  -- Function: Flux.get_all_actions ()
   -- Description: Can be used to directly access the table storing all of the actions.
   --
   -- Returns: table - The action_storage table.
   --
-  function fl.get_all_actions()
+  function Flux.get_all_actions()
     return action_storage
   end
 
-  fl.register_action('spawning')
-  fl.register_action('idle')
+  Flux.register_action('spawning')
+  Flux.register_action('idle')
 end
 
 --
--- Function: fl.get_schema_folder ()
+-- Function: Flux.get_schema_folder ()
 -- Description: Gets the folder of the currently loaded schema.
 --
 -- Returns: string - The folder of the currently loaded schema.
 --
-function fl.get_schema_folder()
+function Flux.get_schema_folder()
   if SERVER then
-    return fl.schema
+    return Flux.schema
   else
-    return fl.shared.schema_folder or 'flux'
+    return Flux.shared.schema_folder or 'flux'
   end
 end
 
 -- A function to get schema's name.
-function fl.get_schema_name()
-  return Schema and Schema:get_name() or fl.schema or 'Unknown'
+function Flux.get_schema_name()
+  return Schema and Schema:get_name() or Flux.schema or 'Unknown'
 end
 
 --
--- Function: fl.serialize (table toSerialize)
+-- Function: Flux.serialize (table toSerialize)
 -- Description: Converts a table into the string format.
 -- Argument: table toSerialize - Table to convert.
 --
 -- Returns: string - pON-encoded table. If pON fails then JSON is returned.
 --
-function fl.serialize(tab)
+function Flux.serialize(tab)
   if istable(tab) then
     local success, value = pcall(pon.encode, tab)
 
@@ -402,13 +382,13 @@ function fl.serialize(tab)
 end
 
 --
--- Function: fl.deserialize (string toDeserialize)
+-- Function: Flux.deserialize (string toDeserialize)
 -- Description: Converts a string back into table. Uses pON at first, if it fails it falls back to JSON.
 -- Argument: string toDeserialize - String to convert.
 --
 -- Returns: table - Decoded string.
 --
-function fl.deserialize(data)
+function Flux.deserialize(data)
   if isstring(data) then
     local success, value = pcall(pon.decode, data)
 
@@ -431,12 +411,12 @@ function fl.deserialize(data)
 end
 
 --
--- Function: fl.include_schema ()
+-- Function: Flux.include_schema ()
 -- Description: Includes the currently loaded schema's files. Performs deferred load on client.
 --
 -- Returns: nil
 --
-function fl.include_schema()
+function Flux.include_schema()
   if SERVER then
     return plugin.include_schema()
   else
@@ -451,27 +431,27 @@ function fl.include_schema()
 end
 
 --
--- Function: fl.include_plugins (string folder)
+-- Function: Flux.include_plugins (string folder)
 -- Description: Includes all of the plugins inside the folder. Includes files first, then folders. Does not handle plugin-inside-of-plugin scenarios.
 -- Argument: string folder - Folder relative to Lua's PATH (lua/, gamemodes/).
 --
 -- Returns: nil
 --
-function fl.include_plugins(folder)
+function Flux.include_plugins(folder)
   return plugin.include_plugins(folder)
 end
 
 --
--- Function: fl.get_schema_info ()
+-- Function: Flux.get_schema_info ()
 -- Description: Gets the table containing all of the information about the currently loaded schema.
 --
 -- Returns: table - The schema info table.
 --
-function fl.get_schema_info()
+function Flux.get_schema_info()
   if SERVER then
-    if fl.schema_info then return fl.schema_info end
+    if Flux.schema_info then return Flux.schema_info end
 
-    local schema_folder = string.lower(fl.get_schema_folder())
+    local schema_folder = string.lower(Flux.get_schema_folder())
     local schema_data = util.KeyValuesToTable(
       fileio.Read('gamemodes/'..schema_folder..'/'..schema_folder..'.txt')
     ) or {}
@@ -480,18 +460,18 @@ function fl.get_schema_info()
       schema_data = schema_data['Gamemode']
     end
 
-    fl.schema_info = {}
-      fl.schema_info['name']        = schema_data['title'] or 'Undefined'
-      fl.schema_info['author']      = schema_data['author'] or 'Undefined'
-      fl.schema_info['description'] = schema_data['description'] or 'Undefined'
-      fl.schema_info['version']     = schema_data['version'] or 'Undefined'
-      fl.schema_info['folder']      = string.gsub(schema_folder, '/schema', '')
-    return fl.schema_info
+    Flux.schema_info = {}
+      Flux.schema_info['name']        = schema_data['title'] or 'Undefined'
+      Flux.schema_info['author']      = schema_data['author'] or 'Undefined'
+      Flux.schema_info['description'] = schema_data['description'] or 'Undefined'
+      Flux.schema_info['version']     = schema_data['version'] or 'Undefined'
+      Flux.schema_info['folder']      = string.gsub(schema_folder, '/schema', '')
+    return Flux.schema_info
   else
-    return fl.shared.schema_info
+    return Flux.shared.schema_info
   end
 end
 
 if SERVER then
-  fl.shared.schema_info = fl.get_schema_info()
+  Flux.shared.schema_info = Flux.get_schema_info()
 end

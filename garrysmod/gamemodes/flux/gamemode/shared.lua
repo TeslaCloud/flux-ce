@@ -22,9 +22,9 @@ FLUX_ENV         = include(FLUX_ENV_PATH) or 'development'
 IS_DEVELOPMENT   = FLUX_ENV == 'development'
 IS_STAGING       = FLUX_ENV == 'staging'
 IS_PRODUCTION    = FLUX_ENV == 'production'
-LITE_REFRESH     = fl.initialized and Settings.lite_refresh or false
+LITE_REFRESH     = Flux.initialized and Settings.lite_refresh or false
 
-fl.development   = !IS_PRODUCTION
+Flux.development   = !IS_PRODUCTION
 
 -- Fix for the name conflicts.
 _player, _team, _file, _table, _sound = player, team, file, table, sound
@@ -32,7 +32,7 @@ _player, _team, _file, _table, _sound = player, team, file, table, sound
 AddCSLuaFile(FLUX_ENV_PATH)
 
 if engine.ActiveGamemode() != 'flux' then
-  fl.schema = engine.ActiveGamemode()
+  Flux.schema = engine.ActiveGamemode()
 else
   ErrorNoHalt(txt[[
     ============================================
@@ -47,8 +47,8 @@ end
 if !LITE_REFRESH then
   -- Shared table contains the info that will be networked
   -- to clients automatically when they load.
-  fl.shared = fl.shared or {
-    schema_folder = fl.schema,
+  Flux.shared = Flux.shared or {
+    schema_folder = Flux.schema,
     plugin_info = {},
     unloaded_plugins = {}
   }
@@ -106,8 +106,8 @@ if !LITE_REFRESH then
   util.include_folder('views/base', true)
   util.include_folder('views', true)
 
-  if theme or SERVER then
-    pipeline.register('theme', function(id, file_name, pipe)
+  if Theme or SERVER then
+    pipeline.register('Theme', function(id, file_name, pipe)
       if CLIENT then
         THEME = Theme.new(id)
 
@@ -120,8 +120,8 @@ if !LITE_REFRESH then
     end)
 
     -- Theme factory is needed for any other themes that may be in the themes folder.
-    pipeline.include('theme', 'themes/cl_theme_factory.lua')
-    pipeline.include_folder('theme', 'flux/gamemode/themes')
+    pipeline.include('Theme', 'themes/cl_theme_factory.lua')
+    pipeline.include_folder('Theme', 'flux/gamemode/themes')
   end
 
   pipeline.include_folder('tool', 'flux/gamemode/tools')
@@ -129,4 +129,4 @@ end
 
 util.include_folder('hooks', true)
 
-fl.include_schema()
+Flux.include_schema()

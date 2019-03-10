@@ -1,11 +1,11 @@
-library.new('lang', fl)
+library 'Flux::Lang'
 
-local stored = fl.lang.stored or {}
-fl.lang.stored = stored
+local stored = Flux.Lang.stored or {}
+Flux.Lang.stored = stored
 
 local current_language = 'en'
 
-function fl.lang:get_phrase(id, ref)
+function Flux.Lang:get_phrase(id, ref)
   ref = ref or stored
 
   local tables = id:split('.')
@@ -26,7 +26,7 @@ end
 function t(phrase, args, force_lang)
   args = istable(args) and args or { args }
 
-  local phrase = fl.lang:get_phrase(phrase, stored[force_lang or current_language]) or fl.lang:get_phrase(phrase, stored['en']) or phrase
+  local phrase = Flux.Lang:get_phrase(phrase, stored[force_lang or current_language]) or Flux.Lang:get_phrase(phrase, stored['en']) or phrase
 
   for k, v in pairs(args) do
     phrase = string.gsub(phrase, '{'..k..'}', v)
@@ -35,11 +35,11 @@ function t(phrase, args, force_lang)
   return phrase
 end
 
-function fl.lang:all()
+function Flux.Lang:all()
   return stored
 end
 
-function fl.lang:add(index, value, reference)
+function Flux.Lang:add(index, value, reference)
   reference = reference or stored
 
   if istable(value) then
@@ -53,7 +53,7 @@ function fl.lang:add(index, value, reference)
   end
 end
 
-function fl.lang:get_plural(language, phrase, count)
+function Flux.Lang:get_plural(language, phrase, count)
   local lang_table = stored[language]
   local translated = t(phrase)
 
@@ -72,13 +72,13 @@ function fl.lang:get_plural(language, phrase, count)
   return translated
 end
 
-function fl.lang:nice_time(time, lang)
+function Flux.Lang:nice_time(time, lang)
   time = tonumber(time) or 0
 
   return Time:format_nice(Time:nice_from_now(Time:now() + Time:seconds(time)), lang)
 end
 
-function fl.lang:get_case(language, phrase, case)
+function Flux.Lang:get_case(language, phrase, case)
   if language == 'en' then return t(phrase) end
 
   local lang_table = stored[language]
@@ -93,14 +93,14 @@ function fl.lang:get_case(language, phrase, case)
   return translated
 end
 
-function fl.lang:get_player_lang(player)
+function Flux.Lang:get_player_lang(player)
   if !IsValid(player) then return 'en' end
 
   return player:get_nv('language', 'en')
 end
 
 if CLIENT then
-  function fl.lang:pluralize(phrase, count)
+  function Flux.Lang:pluralize(phrase, count)
     local lang = GetConVar('gmod_language'):GetString()
 
     if lang then
@@ -108,7 +108,7 @@ if CLIENT then
     end
   end
 
-  function fl.lang:case(phrase, case)
+  function Flux.Lang:case(phrase, case)
     local lang = GetConVar('gmod_language'):GetString()
 
     if lang then
@@ -132,7 +132,7 @@ else
 
       if contents then
         for k, v in pairs(YAML.eval(contents)) do
-          fl.lang:add(k, v)
+          Flux.Lang:add(k, v)
         end
       end
     end

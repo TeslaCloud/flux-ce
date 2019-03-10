@@ -8,7 +8,7 @@ function PANEL:rebuild()
   end
 
   local width, height = self:GetWide(), self:GetTall()
-  local font = font.size(theme.get_font('text_normal_smaller'), font.scale(18))
+  local font = Font.size(Theme.get_font('text_normal_smaller'), Font.scale(18))
   local font_size = draw.GetFontHeight(font)
   local permission = self:get_permission()
   local quarter = width * 0.25
@@ -32,7 +32,7 @@ function PANEL:rebuild()
   self.button_allow:SetSize(quarter * 0.9, height)
   self.button_allow:SetText('')
   self.button_allow.perm_value = PERM_ALLOW
-  self.button_allow.Paint = function(btn, w, h) theme.call('PaintPermissionButton', self, btn, w, h) end
+  self.button_allow.Paint = function(btn, w, h) Theme.call('PaintPermissionButton', self, btn, w, h) end
   self.button_allow.DoClick = function(btn)
     if btn.is_selected then return end
 
@@ -71,7 +71,7 @@ function PANEL:rebuild()
   self.button_no:SetSize(quarter * 0.9, height)
   self.button_no:SetText('')
   self.button_no.perm_value = PERM_NO
-  self.button_no.Paint = function(btn, w, h) theme.call('PaintPermissionButton', self, btn, w, h) end
+  self.button_no.Paint = function(btn, w, h) Theme.call('PaintPermissionButton', self, btn, w, h) end
   self.button_no.DoClick = function(btn)
     if btn.is_selected then return end
 
@@ -110,7 +110,7 @@ function PANEL:rebuild()
   self.button_never:SetSize(quarter * 0.9, height)
   self.button_never:SetText('')
   self.button_never.perm_value = PERM_NEVER
-  self.button_never.Paint = function(btn, w, h) theme.call('PaintPermissionButton', self, btn, w, h) end
+  self.button_never.Paint = function(btn, w, h) Theme.call('PaintPermissionButton', self, btn, w, h) end
   self.button_never.DoClick = function(btn)
     if btn.is_selected then return end
 
@@ -206,7 +206,7 @@ function PANEL:set_temporary(perm, expires)
   local button = self:get_button(perm)
   button.is_temp = expires != 0 and true or nil
 
-  button:SetTooltip(expires != 0 and t'admin.expires'..' '..fl.lang:nice_time(expires - os.time()) or false)
+  button:SetTooltip(expires != 0 and t'admin.expires'..' '..Flux.Lang:nice_time(expires - os.time()) or false)
 
   if IsValid(self.prev_temp) and self.prev_temp != button then
     self.prev_temp.is_temp = nil
@@ -227,7 +227,7 @@ function PANEL:Init()
 end
 
 function PANEL:Paint(w, h)
-  theme.call('PaintPermissionEditor', self, w, h)
+  Theme.call('PaintPermissionEditor', self, w, h)
 end
 
 function PANEL:get_permissions()
@@ -306,7 +306,7 @@ function PANEL:rebuild()
         local button = vgui.create('fl_button', panel)
         button:SetSize(quarter * 0.9, 20)
         button:SetPos(quarter * k, 2)
-        button:SetFont(theme.get_font('text_small'))
+        button:SetFont(Theme.get_font('text_small'))
         button:set_text(v)
         button:set_centered(true)
         button.DoClick = function(btn)

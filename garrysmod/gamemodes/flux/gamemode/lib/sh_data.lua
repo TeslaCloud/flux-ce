@@ -1,7 +1,7 @@
-library.new 'data'
+library 'Data'
 
 if SERVER then
-  function data.save(key, value)
+  function Data.save(key, value)
     if !isstring(key) or !istable(value) then return end
 
     if !string.GetExtensionFromFilename(key) then
@@ -11,7 +11,7 @@ if SERVER then
     fileio.Write('settings/flux/'..key, util.TableToJSON(value))
   end
 
-  function data.load(key, default)
+  function Data.load(key, default)
     if !isstring(key) then return end
 
     if !string.GetExtensionFromFilename(key) then
@@ -23,13 +23,13 @@ if SERVER then
     elseif default != nil then
       return default
     else
-      if fl.development then
+      if Flux.development then
         ErrorNoHalt("Attempt to load data key that doesn't exist! ("..key..')\n')
       end
     end
   end
 
-  function data.delete(key)
+  function Data.delete(key)
     if !isstring(key) then return end
 
     if !string.GetExtensionFromFilename(key) then
@@ -41,7 +41,7 @@ if SERVER then
     end
   end
 else
-  function data.save(key, value)
+  function Data.save(key, value)
     if !isstring(key) or !istable(value) then return end
 
     if !string.GetExtensionFromFilename(key) then
@@ -51,7 +51,7 @@ else
     file.Write('flux/'..key, util.TableToJSON(value))
   end
 
-  function data.load(key, default)
+  function Data.load(key, default)
     if !isstring(key) then return end
 
     if !string.GetExtensionFromFilename(key) then
@@ -63,13 +63,13 @@ else
     elseif default != nil then
       return default
     else
-      if fl.development then
+      if Flux.development then
         ErrorNoHalt("Attempt to load data key that doesn't exist! ("..key..')\n')
       end
     end
   end
 
-  function data.get_files(folder, default)
+  function Data.get_files(folder, default)
     if !isstring(folder) then return end
 
     local files, dirs = file.find('flux/'..folder..'/*', 'DATA')
@@ -77,7 +77,7 @@ else
     return files
   end
 
-  function data.delete(key)
+  function Data.delete(key)
     if !isstring(key) then return end
 
     if !string.GetExtensionFromFilename(key) then
@@ -90,28 +90,26 @@ else
   end
 end
 
-function data.save_schema(key, value)
-  return data.save('schemas/'..fl.get_schema_folder()..'/'..game.GetMap()..'/'..key, value)
+function Data.save_schema(key, value)
+  return Data.save('schemas/'..Flux.get_schema_folder()..'/'..game.GetMap()..'/'..key, value)
 end
 
-function data.load_schema(key, default)
-  return data.load('schemas/'..fl.get_schema_folder()..'/'..game.GetMap()..'/'..key, default)
+function Data.load_schema(key, default)
+  return Data.load('schemas/'..Flux.get_schema_folder()..'/'..game.GetMap()..'/'..key, default)
 end
 
-function data.delete_schema(key)
-  return data.delete('schemas/'..fl.get_schema_folder()..'/'..game.GetMap()..'/'..key)
+function Data.delete_schema(key)
+  return Data.delete('schemas/'..Flux.get_schema_folder()..'/'..game.GetMap()..'/'..key)
 end
 
-function data.save_plugin(key, value)
-  return data.save_schema('plugins/'..key, value)
+function Data.save_plugin(key, value)
+  return Data.save_schema('plugins/'..key, value)
 end
 
-function data.load_plugin(key, default)
-  return data.load_schema('plugins/'..key, default)
+function Data.load_plugin(key, default)
+  return Data.load_schema('plugins/'..key, default)
 end
 
-function data.delete_plugin(key)
-  return data.delete_schema('plugins/'..key)
+function Data.delete_plugin(key)
+  return Data.delete_schema('plugins/'..key)
 end
-
-_data = data

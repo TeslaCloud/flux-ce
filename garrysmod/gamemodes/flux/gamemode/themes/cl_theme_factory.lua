@@ -1,7 +1,7 @@
--- Create the default theme that other themes will derive from.
+-- Create the default Theme that other themes will derive from.
 THEME.author = 'TeslaCloud Studios'
 THEME.id = 'factory'
-THEME.description = 'Factory theme. This is a fail-safety theme that other themes use as a base.'
+THEME.description = 'Factory Theme. This is a fail-safety Theme that other themes use as a base.'
 THEME.should_reload = true
 
 function THEME:on_loaded()
@@ -16,7 +16,7 @@ function THEME:on_loaded()
   self:set_option('menu_sidebar_margin', -1)
   self:set_option('menu_sidebar_logo', 'flux/flux_icon.png')
   self:set_option('menu_sidebar_logo_space', scrh / 3)
-  self:set_option('menu_sidebar_button_height', font.scale(42)) -- We can cheat and scale buttons the same way we scale fonts!
+  self:set_option('menu_sidebar_button_height', Font.scale(42)) -- We can cheat and scale buttons the same way we scale fonts!
   self:set_option('menu_sidebar_button_offset_x', 16)
   self:set_option('menu_sidebar_button_centered', false)
   self:set_option('menu_logo_height', 100)
@@ -49,35 +49,35 @@ function THEME:on_loaded()
   self:set_color('esp_blue', Color(0, 0, 255))
   self:set_color('esp_grey', Color(100, 100, 100))
 
-  local main_font           = self:set_font('main_font', 'flRoboto', font.scale(16))
-  local main_font_condensed = self:set_font('main_font_condensed', 'flRobotoCondensed', font.scale(16))
-  local light_font          = self:set_font('light_font', 'flRobotoLight', font.scale(16))
-  self:set_font('menu_titles', 'flRobotoLight', font.scale(14))
-  self:set_font('menu_tiny', 'flRobotoLt', font.scale(16))
-  self:set_font('menu_small', 'flRobotoLt', font.scale(20))
-  self:set_font('menu_normal', main_font_condensed, font.scale(24))
-  self:set_font('menu_large', main_font_condensed, font.scale(30))
-  self:set_font('menu_larger', main_font_condensed, font.scale(42))
-  self:set_font('main_menu_title', light_font, font.scale(48))
-  self:set_font('main_menu_large', light_font, font.scale(42))
-  self:set_font('main_menu_titles', light_font, font.scale(24))
-  self:set_font('main_menu_normal', light_font, font.scale(20))
-  self:set_font('main_menu_small', light_font, font.scale(18))
-  self:set_font('tooltip_small', main_font_condensed, font.scale(16))
-  self:set_font('tooltip_normal', main_font_condensed, font.scale(21))
-  self:set_font('tooltip_large', main_font_condensed, font.scale(26))
-  self:set_font('text_largest', main_font, font.scale(90))
-  self:set_font('text_large', main_font, font.scale(48))
-  self:set_font('text_normal_large', main_font, font.scale(36))
-  self:set_font('text_normal', main_font, font.scale(23))
-  self:set_font('text_normal_smaller', main_font, font.scale(20))
-  self:set_font('text_small', main_font, font.scale(18))
-  self:set_font('text_smaller', main_font, font.scale(16))
-  self:set_font('text_smallest', main_font, font.scale(14))
-  self:set_font('text_bar', main_font, font.scale(17), {weight = 600})
+  local main_font           = self:set_font('main_font', 'flRoboto', Font.scale(16))
+  local main_font_condensed = self:set_font('main_font_condensed', 'flRobotoCondensed', Font.scale(16))
+  local light_font          = self:set_font('light_font', 'flRobotoLight', Font.scale(16))
+  self:set_font('menu_titles', 'flRobotoLight', Font.scale(14))
+  self:set_font('menu_tiny', 'flRobotoLt', Font.scale(16))
+  self:set_font('menu_small', 'flRobotoLt', Font.scale(20))
+  self:set_font('menu_normal', main_font_condensed, Font.scale(24))
+  self:set_font('menu_large', main_font_condensed, Font.scale(30))
+  self:set_font('menu_larger', main_font_condensed, Font.scale(42))
+  self:set_font('main_menu_title', light_font, Font.scale(48))
+  self:set_font('main_menu_large', light_font, Font.scale(42))
+  self:set_font('main_menu_titles', light_font, Font.scale(24))
+  self:set_font('main_menu_normal', light_font, Font.scale(20))
+  self:set_font('main_menu_small', light_font, Font.scale(18))
+  self:set_font('tooltip_small', main_font_condensed, Font.scale(16))
+  self:set_font('tooltip_normal', main_font_condensed, Font.scale(21))
+  self:set_font('tooltip_large', main_font_condensed, Font.scale(26))
+  self:set_font('text_largest', main_font, Font.scale(90))
+  self:set_font('text_large', main_font, Font.scale(48))
+  self:set_font('text_normal_large', main_font, Font.scale(36))
+  self:set_font('text_normal', main_font, Font.scale(23))
+  self:set_font('text_normal_smaller', main_font, Font.scale(20))
+  self:set_font('text_small', main_font, Font.scale(18))
+  self:set_font('text_smaller', main_font, Font.scale(16))
+  self:set_font('text_smallest', main_font, Font.scale(14))
+  self:set_font('text_bar', main_font, Font.scale(17), {weight = 600})
   self:set_font('text_3d2d', main_font, 256)
 
-  -- Set from schema theme.
+  -- Set from schema Theme.
   -- self:set_material('schema_logo', 'materials/flux/hl2rp/logo.png')
   self:set_material('gradient_up', 'vgui/gradient-u')
 
@@ -104,7 +104,7 @@ function THEME:PaintFrame(panel, width, height)
   draw.textured_rect(self:get_material('gradient'), 0, 0, width, header_size, accent_color)
 
   if title then
-    local font = font.size(self:get_font('text_small'), 16)
+    local font = Font.size(self:get_font('text_small'), 16)
     local font_size = util.font_size(font)
 
     draw.SimpleText(title, font, 6, 3 * (16 / font_size), panel:GetTextColor())
@@ -166,9 +166,9 @@ function THEME:PaintButton(panel, w, h)
   end
 
   if icon then
-    local icon_text, text_font = fl.fa:get(icon)
+    local icon_text, text_font = FontAwesome:get(icon)
 
-    icon_w, icon_h = util.text_size(icon_text, _font.size('flFontAwesome', panel.icon_size))
+    icon_w, icon_h = util.text_size(icon_text, Font.size('flFontAwesome', panel.icon_size))
     icon_x = (left and text_x or text_x + text_w)
     icon_y = h / 2 - icon_h / 2
 
@@ -184,21 +184,21 @@ function THEME:PaintButton(panel, w, h)
   end
 
   if icon then
-    fl.fa:draw(icon, icon_x, icon_y, panel.icon_size, text_color)
+    FontAwesome:draw(icon, icon_x, icon_y, panel.icon_size, text_color)
   end
 end
 
 function THEME:PaintDeathScreen(cur_time, scrw, scrh)
-  local respawn_time_remaining = fl.client:get_nv('respawn_time', 0) - cur_time
+  local respawn_time_remaining = Flux.client:get_nv('respawn_time', 0) - cur_time
   local bar_value = 100 - 100 * (respawn_time_remaining / config.get('respawn_delay'))
   local font = self:get_font('text_normal_large')
   local color_white = Color(255, 255, 255)
 
-  if !fl.client.respawn_alpha then fl.client.respawn_alpha = 0 end
+  if !Flux.client.respawn_alpha then Flux.client.respawn_alpha = 0 end
 
-  fl.client.respawn_alpha = math.Clamp(fl.client.respawn_alpha + 1, 0, 200)
+  Flux.client.respawn_alpha = math.Clamp(Flux.client.respawn_alpha + 1, 0, 200)
 
-  draw.RoundedBox(0, 0, 0, scrw, scrh, Color(0, 0, 0, fl.client.respawn_alpha))
+  draw.RoundedBox(0, 0, 0, scrw, scrh, Color(0, 0, 0, Flux.client.respawn_alpha))
 
   draw.SimpleText(t'player_message.died', font, 16, 16, color_white)
   draw.SimpleText(t('player_message.respawn', math.ceil(respawn_time_remaining)), font, 16, 16 + util.font_size(font), color_white)
@@ -206,9 +206,9 @@ function THEME:PaintDeathScreen(cur_time, scrw, scrh)
   draw.RoundedBox(0, 0, 0, scrw / 100 * bar_value, 2, color_white)
 
   if respawn_time_remaining <= 3 then
-    fl.client.white_alpha = math.Clamp(255 * (1.5 - respawn_time_remaining * 0.5), 0, 255)
+    Flux.client.white_alpha = math.Clamp(255 * (1.5 - respawn_time_remaining * 0.5), 0, 255)
   else
-    fl.client.white_alpha = 0
+    Flux.client.white_alpha = 0
   end
 end
 
@@ -239,7 +239,7 @@ function THEME:DrawBarFill(bar_info)
 end
 
 function THEME:DrawBarTexts(bar_info)
-  local font = theme.get_font(bar_info.font)
+  local font = Theme.get_font(bar_info.font)
 
   render.SetScissorRect(bar_info.x + 1, bar_info.y + 1, bar_info.x + bar_info.real_fill_width, bar_info.y + bar_info.height, true)
     draw.SimpleText(bar_info.text, font, bar_info.x + 8, bar_info.y + bar_info.text_offset, self:get_color('main_dark'))
@@ -261,14 +261,14 @@ function THEME:DrawBarTexts(bar_info)
 end
 
 function THEME:AdminPanelPaintOver(panel, width, height)
-  local smallest_font = font.size(self:get_font('text_smallest'), 14)
+  local smallest_font = Font.size(self:get_font('text_smallest'), 14)
   local text_color = self:get_color('text')
   local version_string = 'Admin Mod Version: v0.2.0 (indev)'
 
   DisableClipping(true)
     draw.RoundedBox(0, 0, height, width, 16, self:get_color('background'))
 
-    draw.SimpleText(fl.client:steam_name()..' ('..fl.client:GetUserGroup()..')', smallest_font, 6, height + 1, text_color)
+    draw.SimpleText(Flux.client:steam_name()..' ('..Flux.client:GetUserGroup()..')', smallest_font, 6, height + 1, text_color)
 
     local w, h = util.text_size(version_string, smallest_font)
 
@@ -278,7 +278,7 @@ end
 
 function THEME:PaintConfigLine(panel, w, h)
   if panel.dark then
-    draw.RoundedBox(0, 0, 0, w, h, theme.get_color('background'):alpha(150))
+    draw.RoundedBox(0, 0, 0, w, h, Theme.get_color('background'):alpha(150))
   end
 end
 
@@ -323,7 +323,7 @@ function THEME:PaintPermissionButton(perm_panel, btn, w, h)
   end
 
   if btn.is_temp then
-    fl.fa:draw('fa-clock-o', w - h - 2, 2, h - 4, Color(255, 255, 255))
+    FontAwesome:draw('fa-clock-o', w - h - 2, 2, h - 4, Color(255, 255, 255))
   end
 end
 
@@ -349,7 +349,7 @@ function THEME:PaintTabMenu(panel, width, height)
   local fraction = FrameTime() * 8
   local active_panel = panel.active_panel
 
-  fl.blur_size = Lerp(fraction, fl.blur_size, panel.blur_target)
+  Flux.blur_size = Lerp(fraction, Flux.blur_size, panel.blur_target)
 
   draw.blur_panel(panel)
 
@@ -380,7 +380,7 @@ function THEME:PaintTabMenu(panel, width, height)
 end
 
 function THEME:PaintItemSlot(panel, w, h)
-  draw.textured_rect(theme.get_material('gradient_up'), 0, 0, w, h, Color(175, 175, 175, 5))
+  draw.textured_rect(Theme.get_material('gradient_up'), 0, 0, w, h, Color(175, 175, 175, 5))
 end
 
 THEME.skin.frameBorder = Color(255, 255, 255, 255)
@@ -569,16 +569,16 @@ function THEME.skin:PaintScrollBarGrip(panel)
 end
 
 function THEME.skin:PaintFrame(panel, w, h)
-  local color = theme.get_color('accent')
+  local color = Theme.get_color('accent')
 
   surface.SetDrawColor(Color(10, 10, 10, 150))
   surface.DrawRect(0, 0, w, h)
 
-  draw.textured_rect(theme.get_material('gradient'), 0, 0, w, 24, color:alpha(200))
+  draw.textured_rect(Theme.get_material('gradient'), 0, 0, w, 24, color:alpha(200))
 end
 
 function THEME.skin:PaintCollapsibleCategory(panel, w, h)
-  panel.Header:SetFont(theme.get_font('text_smaller'))
+  panel.Header:SetFont(Theme.get_font('text_smaller'))
 
   if h < 21 then
     self:DrawGenericBackground(0, 0, w, 21, Color(0, 0, 0))

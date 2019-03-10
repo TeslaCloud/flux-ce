@@ -20,7 +20,7 @@ function PANEL:PaintOver(w, h)
   draw.RoundedBox(0, 0, 0, w, h, Color(0, 0, 0, (!active and self.cur_amt * 4) or 0))
 
   if active then
-    surface.SetDrawColor(theme.get_color('accent'))
+    surface.SetDrawColor(Theme.get_color('accent'))
     surface.DrawOutlinedRect(0, 0, w, h)
   end
 end

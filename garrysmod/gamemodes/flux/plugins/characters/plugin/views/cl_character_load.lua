@@ -17,9 +17,9 @@ function PANEL:Init()
   self:rebuild()
 
   self.back = vgui.Create('fl_button', self)
-  self.back:SetSize(self.list:GetWide() * 0.25, theme.get_option('menu_sidebar_button_height'))
+  self.back:SetSize(self.list:GetWide() * 0.25, Theme.get_option('menu_sidebar_button_height'))
   self.back:SetPos(scrw * 0.5 + self.list:GetWide() * 0.5 - self.back:GetWide(), scrh * 0.5 + self.list:GetTall() * 0.5 + self.back:GetTall())
-  self.back:SetFont(theme.get_font('main_menu_normal'))
+  self.back:SetFont(Theme.get_font('main_menu_normal'))
   self.back:SetTitle(t'char_create.main_menu')
   self.back:SetDrawBackground(false)
   self.back:set_icon('fa-chevron-right', true)
@@ -27,7 +27,7 @@ function PANEL:Init()
   self.back:set_centered(true)
 
   self.back.DoClick = function(btn)
-    surface.PlaySound(theme.get_sound('button_click_success_sound'))
+    surface.PlaySound(Theme.get_sound('button_click_success_sound'))
 
     self:GetParent():to_main_menu(true)
   end
@@ -35,14 +35,14 @@ end
 
 function PANEL:Paint(w, h)
   if self:IsVisible() then
-    theme.hook('PaintCharCreationLoadPanel', self, w, h)
+    Theme.hook('PaintCharCreationLoadPanel', self, w, h)
   end
 end
 
 function PANEL:rebuild()
   self.list:Clear()
 
-  for k, v in ipairs(fl.client:get_all_characters()) do
+  for k, v in ipairs(Flux.client:get_all_characters()) do
     self.chars[k] = vgui.Create('fl_character_panel', self)
     self.chars[k]:SetSize(self.list:GetWide() * 0.25, self.list:GetTall())
     self.chars[k]:set_character(v)
@@ -75,7 +75,7 @@ function PANEL:Init()
   self.model.LayoutEntity = function(entity) end
 
   self.select = vgui.Create('fl_button', self)
-  self.select:SetFont(theme.get_font('main_menu_normal'))
+  self.select:SetFont(Theme.get_font('main_menu_normal'))
   self.select:SetTitle(t'char_create.select')
   self.select:SetDrawBackground(false)
   self.select:set_text_color(Color('lightgreen'))
@@ -93,7 +93,7 @@ function PANEL:Init()
   end
 
   self.delete = vgui.Create('fl_button', self)
-  self.delete:SetFont(theme.get_font('main_menu_normal'))
+  self.delete:SetFont(Theme.get_font('main_menu_normal'))
   self.delete:SetDrawBackground(false)
   self.delete:set_text_color(Color('red'))
   self.delete:set_icon('fa-trash')
@@ -107,10 +107,10 @@ function PANEL:Init()
       if text == self.char_data.name then
         local char_id = self.char_data.character_id
 
-        table.remove(fl.client.characters, char_id)
+        table.remove(Flux.client.characters, char_id)
         cable.send('fl_player_delete_character', char_id)
 
-        fl.intro_panel.menu:rebuild()
+        Flux.intro_panel.menu:rebuild()
       end
     end,
     nil, t'char_create.delete')
@@ -119,7 +119,7 @@ end
 
 function PANEL:Paint(w, h)
   if self:IsVisible() then
-    theme.hook('PaintCharPanel', self, w, h)
+    Theme.hook('PaintCharPanel', self, w, h)
   end
 end
 
@@ -127,11 +127,11 @@ function PANEL:PerformLayout(w, h)
   self.model:SetPos(4, 28)
   self.model:SetSize(w - 4, h * .80)
 
-  self.select:SetPos(4, h - theme.get_option('menu_sidebar_button_height'))
-  self.select:SetSize(w / 3 * 2 - 4, theme.get_option('menu_sidebar_button_height'))
+  self.select:SetPos(4, h - Theme.get_option('menu_sidebar_button_height'))
+  self.select:SetSize(w / 3 * 2 - 4, Theme.get_option('menu_sidebar_button_height'))
 
-  self.delete:SetPos(w / 3 * 2, h - theme.get_option('menu_sidebar_button_height'))
-  self.delete:SetSize(w / 3 - 4, theme.get_option('menu_sidebar_button_height'))
+  self.delete:SetPos(w / 3 * 2, h - Theme.get_option('menu_sidebar_button_height'))
+  self.delete:SetSize(w / 3 - 4, Theme.get_option('menu_sidebar_button_height'))
 end
 
 function PANEL:set_character(char_data)
@@ -140,7 +140,7 @@ function PANEL:set_character(char_data)
   self.model:SetModel(char_data.model)
   self.model:GetEntity():SetSequence(self.model:GetEntity():get_idle_anim())
 
-  if fl.client:get_active_character_id() == char_data.character_id then
+  if Flux.client:get_active_character_id() == char_data.character_id then
     self.select:SetVisible(false)
     self.delete:SetVisible(false)
   end

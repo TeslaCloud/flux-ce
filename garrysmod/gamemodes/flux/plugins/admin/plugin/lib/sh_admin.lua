@@ -248,7 +248,7 @@ if SERVER then
   end
 else
   function can(action, object)
-    return fl.client:can(action, object)
+    return Flux.client:can(action, object)
   end
 end
 

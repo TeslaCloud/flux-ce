@@ -17,7 +17,7 @@ function PANEL:on_open(parent)
   self.chooser:set_centered(true)
 
   for k, v in pairs(faction.all()) do
-    if !v.whitelisted or fl.client:has_whitelist(v.faction_id) then
+    if !v.whitelisted or Flux.client:has_whitelist(v.faction_id) then
       local button = vgui.Create('fl_image_button')
       button:SetSize(self.chooser:GetWide() / 3, self.chooser:GetTall())
       button:SetImage(v.material)
@@ -32,7 +32,7 @@ function PANEL:on_open(parent)
       label:Dock(BOTTOM)
       label:DockMargin(4, 0, 0, 0)
       label:SetText(v.name)
-      label:SetFont(theme.get_font('text_normal_large'))
+      label:SetFont(Theme.get_font('text_normal_large'))
       label:SizeToContents()
 
       button.DoClick = function(btn)
@@ -80,7 +80,7 @@ function PANEL:on_validate()
 
   local faction = faction.find_by_id(self.faction_id)
 
-  if faction.whitelisted and !fl.client:has_whitelist(self.faction_id) then
+  if faction.whitelisted and !Flux.client:has_whitelist(self.faction_id) then
     return false, t('char_create.no_whitelist')
   end
 end

@@ -2,21 +2,21 @@ do
   local cur_volume = 1
 
   function Characters:Tick()
-    if fl.menu_music then
+    if Flux.menu_music then
       if !system.HasFocus() then
-        fl.menu_music:SetVolume(0)
+        Flux.menu_music:SetVolume(0)
       else
-        fl.menu_music:SetVolume(cur_volume)
+        Flux.menu_music:SetVolume(cur_volume)
       end
 
-      if !IsValid(fl.intro_panel) then
+      if !IsValid(Flux.intro_panel) then
         if cur_volume > 0.05 then
           cur_volume = Lerp(0.1, cur_volume, 0)
-          fl.menu_music:SetVolume(cur_volume)
+          Flux.menu_music:SetVolume(cur_volume)
         else
           cur_volume = 1
-          fl.menu_music:Stop()
-          fl.menu_music = nil
+          Flux.menu_music:Stop()
+          Flux.menu_music = nil
         end
       end
     end
@@ -24,39 +24,39 @@ do
 end
 
 function Characters:PlayerInitialized()
-  if !fl.client:get_character() and !IsValid(fl.intro_panel) then
-    fl.intro_panel = vgui.Create('fl_intro')
+  if !Flux.client:get_character() and !IsValid(Flux.intro_panel) then
+    Flux.intro_panel = vgui.Create('fl_intro')
 
-    if IsValid(fl.intro_panel) then
-      fl.intro_panel:MakePopup()
+    if IsValid(Flux.intro_panel) then
+      Flux.intro_panel:MakePopup()
     end
   end
 end
 
 function Characters:GetLoadingScreenMessage()
-  if !fl.client.characters then
+  if !Flux.client.characters then
     return t'loading.characters', 75
   end
 end
 
 function Characters:ShouldMapsceneRender()
-  if IsValid(fl.intro_panel) then
+  if IsValid(Flux.intro_panel) then
     return true
   end
 end
 
 function Characters:OnIntroPanelRemoved()
-  if !fl.client:get_character() then
-    fl.intro_panel = theme.create_panel('main_menu')
+  if !Flux.client:get_character() then
+    Flux.intro_panel = Theme.create_panel('main_menu')
 
-    if IsValid(fl.intro_panel) then
-      fl.intro_panel:MakePopup()
+    if IsValid(Flux.intro_panel) then
+      Flux.intro_panel:MakePopup()
     else
       timer.Create('fl_create_main_panel', 0.1, 0, function()
-        fl.intro_panel = theme.create_panel('main_menu')
+        Flux.intro_panel = Theme.create_panel('main_menu')
 
-        if IsValid(fl.intro_panel) then
-          fl.intro_panel:MakePopup()
+        if IsValid(Flux.intro_panel) then
+          Flux.intro_panel:MakePopup()
 
           timer.Remove('fl_create_main_panel')
         end
@@ -82,11 +82,11 @@ function Characters:OnThemeLoaded(current_theme)
     return vgui.Create('fl_char_create_general', parent)
   end)
 
-  if IsValid(fl.intro_panel) then
-    fl.intro_panel:Remove()
+  if IsValid(Flux.intro_panel) then
+    Flux.intro_panel:Remove()
 
-    fl.intro_panel = theme.create_panel('main_menu')
-    fl.intro_panel:MakePopup()
+    Flux.intro_panel = Theme.create_panel('main_menu')
+    Flux.intro_panel:MakePopup()
   end
 end
 
@@ -96,42 +96,42 @@ function Characters:AddTabMenuItems(menu)
     icon = 'fa-users',
     override = function(menu_panel, button)
       menu_panel:safe_remove()
-      fl.intro_panel = theme.create_panel('main_menu')
+      Flux.intro_panel = Theme.create_panel('main_menu')
     end
   }, 1)
 end
 
 function Characters:PostCharacterLoaded(char_id)
-  if IsValid(fl.intro_panel) then
-    fl.intro_panel:safe_remove()
+  if IsValid(Flux.intro_panel) then
+    Flux.intro_panel:safe_remove()
   end
 end
 
 function Characters:ShouldDrawLoadingScreen()
-  if !fl.intro_panel then
+  if !Flux.intro_panel then
     return true
   end
 end
 
 function Characters:ShouldHUDPaint()
-  if !fl.client:is_character_loaded() then
+  if !Flux.client:is_character_loaded() then
     return false
   end
 end
 
 function Characters:ShouldScoreboardHide()
-  return fl.client:is_character_loaded()
+  return Flux.client:is_character_loaded()
 end
 
 function Characters:ShouldScoreboardShow()
-  return fl.client:is_character_loaded()
+  return Flux.client:is_character_loaded()
 end
 
 function Characters:RebuildScoreboardPlayerCard(card, player)
   local x, y = card.name_label:GetPos()
   local oldX = x
 
-  x = x + font.scale(32) + 4
+  x = x + Font.scale(32) + 4
 
   card.name_label:SetPos(x, 2)
 
@@ -153,9 +153,9 @@ function Characters:RebuildScoreboardPlayerCard(card, player)
 
   card.desc_label = vgui.Create('DLabel', card)
   card.desc_label:SetText(phys_desc)
-  card.desc_label:SetFont(theme.get_font('text_smaller'))
+  card.desc_label:SetFont(Theme.get_font('text_smaller'))
   card.desc_label:SetPos(x, card.name_label:GetTall())
-  card.desc_label:SetTextColor(theme.get_color('text'))
+  card.desc_label:SetTextColor(Theme.get_color('text'))
   card.desc_label:SizeToContents()
 end
 
@@ -174,7 +174,7 @@ function Characters:GetPlayerDrawInfo(player, x, y, distance, lines)
 
     lines['desc'] = {
       text = player:get_phys_desc(),
-      font = theme.get_font('tooltip_small'),
+      font = Theme.get_font('tooltip_small'),
       color = Color(255, 255, 255, alpha),
       priority = 200
     }
@@ -184,7 +184,7 @@ end
 function Characters:AddMainMenuItems(panel, sidebar)
   local scrw, scrh = ScrW(), ScrH()
 
-  if fl.client:get_character() then
+  if Flux.client:get_character() then
     panel:add_button(t'main_menu.continue', function(btn)
       panel:Remove()
     end)
@@ -193,22 +193,22 @@ function Characters:AddMainMenuItems(panel, sidebar)
   panel:add_button(t'char_create.title', function(btn)
     btn:set_enabled(false)
 
-    panel.menu = theme.create_panel('char_create', panel)
+    panel.menu = Theme.create_panel('char_create', panel)
     panel.menu:SetPos(ScrW(), 0)
-    panel.menu:MoveTo(0, 0, theme.get_option('menu_anim_duration'), 0.25, 0.5)
+    panel.menu:MoveTo(0, 0, Theme.get_option('menu_anim_duration'), 0.25, 0.5)
 
-    panel.sidebar:MoveTo(-panel.sidebar:GetWide(), theme.get_option('menu_sidebar_y'), theme.get_option('menu_anim_duration'), 0.25, 0.5)
+    panel.sidebar:MoveTo(-panel.sidebar:GetWide(), Theme.get_option('menu_sidebar_y'), Theme.get_option('menu_anim_duration'), 0.25, 0.5)
   end)
 
-  if fl.client:get_all_characters() and #fl.client:get_all_characters() > 0 then
+  if Flux.client:get_all_characters() and #Flux.client:get_all_characters() > 0 then
     panel:add_button(t'char_create.load', function(btn)
       btn:set_enabled(false)
 
-      panel.menu = theme.create_panel('char_create.load', panel)
+      panel.menu = Theme.create_panel('char_create.load', panel)
       panel.menu:SetPos(-panel.menu:GetWide(), 0)
-      panel.menu:MoveTo(0, 0, theme.get_option('menu_anim_duration'), 0.25, 0.5)
+      panel.menu:MoveTo(0, 0, Theme.get_option('menu_anim_duration'), 0.25, 0.5)
 
-      panel.sidebar:MoveTo(ScrW(), theme.get_option('menu_sidebar_y'), theme.get_option('menu_anim_duration'), 0.25, 0.5)
+      panel.sidebar:MoveTo(ScrW(), Theme.get_option('menu_sidebar_y'), Theme.get_option('menu_anim_duration'), 0.25, 0.5)
     end)
   end
 
@@ -225,13 +225,13 @@ function Characters:PanelCharacterSet(panel, char_data)
 end
 
 cable.receive('fl_player_created_character', function(success, status)
-  if IsValid(fl.intro_panel) and IsValid(fl.intro_panel.menu) then
+  if IsValid(Flux.intro_panel) and IsValid(Flux.intro_panel.menu) then
     if success then
-      fl.intro_panel.menu:goto_stage(-1)
-      fl.intro_panel.menu:clear_data()
+      Flux.intro_panel.menu:goto_stage(-1)
+      Flux.intro_panel.menu:clear_data()
 
-      timer.Simple(theme.get_option('menu_anim_duration') * #fl.intro_panel.menu.stages, function()
-        local chars = fl.client:get_all_characters()
+      timer.Simple(Theme.get_option('menu_anim_duration') * #Flux.intro_panel.menu.stages, function()
+        local chars = Flux.client:get_all_characters()
 
         if #chars == 1 then
           cable.send('fl_player_select_character', chars[1].character_id)
@@ -253,7 +253,7 @@ cable.receive('fl_player_created_character', function(success, status)
         text = 'You have not chosen a model or the one you have chosen is invalid!'
       end
 
-      fl.intro_panel:notify(text)
+      Flux.intro_panel:notify(text)
     end
   end
 end)

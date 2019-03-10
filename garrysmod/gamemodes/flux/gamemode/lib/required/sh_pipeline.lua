@@ -5,7 +5,7 @@
   Check out sh_item and sh_admin libraries for examples.
 --]]
 
-library.new 'pipeline'
+library 'pipeline'
 
 local stored = pipeline.stored or {}
 pipeline.stored = stored

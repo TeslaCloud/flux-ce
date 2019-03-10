@@ -42,5 +42,5 @@ function Command:notify_admin(permision, message, arguments)
 end
 
 function Command:register()
-  fl.command:create(self.id, self)
+  Flux.Command:create(self.id, self)
 end

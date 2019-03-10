@@ -10,7 +10,7 @@ COMMAND.aliases = { 'maprestart' }
 function COMMAND:on_run(player, delay)
   delay = tonumber(delay) or 0
 
-  fl.player:broadcast('map_restart_message', { get_player_name(player), delay })
+  Flux.Player:broadcast('map_restart_message', { get_player_name(player), delay })
 
   timer.Simple(delay, function()
     hook.run('FLSaveData')

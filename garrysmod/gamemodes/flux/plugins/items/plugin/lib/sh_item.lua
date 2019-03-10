@@ -1,4 +1,4 @@
-library.new 'item'
+library 'item'
 
 local stored = item.stored or {}
 local instances = item.instances or {}
@@ -52,7 +52,7 @@ function item.register(id, data)
     id = data.name:to_id()
   end
 
-  fl.dev_print('Registering item: '..tostring(id))
+  Flux.dev_print('Registering item: '..tostring(id))
 
   data.id = id
   data.name = data.name or 'Unknown Item'
@@ -224,7 +224,7 @@ function item.remove(instance_id)
       item.async_save()
     end
 
-    fl.dev_print('Removed item instance ID: '..item_table.instance_id)
+    Flux.dev_print('Removed item instance ID: '..item_table.instance_id)
   end
 end
 
@@ -244,7 +244,7 @@ end
 
 if SERVER then
   function item.load()
-    local loaded = data.load_schema('items/instances', {})
+    local loaded = Data.load_schema('items/instances', {})
 
     if loaded and table.Count(loaded) > 0 then
       -- Returns functions to instances table after loading.
@@ -266,7 +266,7 @@ if SERVER then
       item.instances = loaded
     end
 
-    local loaded = data.load_schema('items/entities', {})
+    local loaded = Data.load_schema('items/entities', {})
 
     if loaded and table.Count(loaded) > 0 then
       for id, instance_table in pairs(loaded) do
@@ -303,7 +303,7 @@ if SERVER then
       end
     end
 
-    data.save_schema('items/instances', to_save)
+    Data.save_schema('items/instances', to_save)
   end
 
   function item.save_entities()
@@ -322,7 +322,7 @@ if SERVER then
       end
     end
 
-    data.save_schema('items/entities', entities)
+    Data.save_schema('items/entities', entities)
   end
 
   function item.save_all()

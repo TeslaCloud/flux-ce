@@ -1,4 +1,4 @@
-library.new 'areas'
+library 'areas'
 
 local stored = areas.stored or {}
 local callbacks = areas.callbacks or {}
@@ -135,7 +135,7 @@ function areas.set_callback(area_type, callback)
 end
 
 function areas.get_callback(area_type)
-  return callbacks[area_type] or (types[area_type] and types[area_type].callback) or function() fl.dev_print("Callback for area type '"..area_type.."' could not be found!") end
+  return callbacks[area_type] or (types[area_type] and types[area_type].callback) or function() Flux.dev_print("Callback for area type '"..area_type.."' could not be found!") end
 end
 
 areas.register_type(

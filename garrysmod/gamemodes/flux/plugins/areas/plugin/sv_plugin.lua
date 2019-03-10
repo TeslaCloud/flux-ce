@@ -3,13 +3,13 @@ function Area:PlayerInitialized(player)
 end
 
 function Area:LoadData()
-  local loaded = data.load_plugin('areas', {})
+  local loaded = Data.load_plugin('areas', {})
 
   areas.set_stored(loaded)
 end
 
 function Area:SaveData()
-  data.save_plugin('areas', areas.all())
+  Data.save_plugin('areas', areas.all())
 end
 
 function Area:OneSecond()

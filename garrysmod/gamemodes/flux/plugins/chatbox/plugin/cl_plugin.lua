@@ -21,16 +21,16 @@ function chatbox.compile(msg_table)
 
   local data = msg_table.data
   local should_translate = msg_table.should_translate
-  local cur_size = _font.scale(18)
+  local cur_size = Font.scale(18)
 
   if isnumber(msg_table.size) then
-    cur_size = _font.scale(msg_table.size)
+    cur_size = Font.scale(msg_table.size)
   end
 
   -- offset x by 1 to prevent weird clipping issues
   local cur_x, cur_y = 1, 0
   local total_height = 0
-  local font = _font.size(theme.get_font('chatbox_normal'), cur_size)
+  local font = Font.size(Theme.get_font('chatbox_normal'), cur_size)
 
   if plugin.call('ChatboxCompileMessage', data, compiled) != true then
     for k, v in ipairs(data) do
@@ -64,19 +64,19 @@ function chatbox.compile(msg_table)
           end
         end
       elseif isnumber(v) then
-        cur_size = _font.scale(v)
+        cur_size = Font.scale(v)
 
-        font = _font.size(theme.get_font('chatbox_normal'), cur_size)
+        font = Font.size(Theme.get_font('chatbox_normal'), cur_size)
 
         table.insert(compiled, cur_size)
       elseif istable(v) then
         if v.image then
-          local scaled = _font.scale(v.height)
+          local scaled = Font.scale(v.height)
           local image_data = {
             image = v.image,
             x = cur_x + 1,
             y = cur_y,
-            w = _font.scale(v.width),
+            w = Font.scale(v.width),
             h = scaled
           }
 
@@ -118,10 +118,10 @@ function chatbox.compile(msg_table)
 end
 
 function chatbox.create()
-  chatbox.width = theme.get_option('chatbox_width') or 100
-  chatbox.height = theme.get_option('chatbox_height') or 100
-  chatbox.x = theme.get_option('chatbox_x') or 0
-  chatbox.y = theme.get_option('chatbox_y') or 0
+  chatbox.width = Theme.get_option('chatbox_width') or 100
+  chatbox.height = Theme.get_option('chatbox_height') or 100
+  chatbox.x = Theme.get_option('chatbox_x') or 0
+  chatbox.y = Theme.get_option('chatbox_y') or 0
 
   chatbox.panel = vgui.Create('fl_chat_panel')
   chatbox.panel:set_open(false)

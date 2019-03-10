@@ -4,13 +4,13 @@ timer.Remove('HintSystem_Annoy2')
 
 -- Called when the client connects and spawns.
 function GM:InitPostEntity()
-  fl.client = fl.client or LocalPlayer()
+  Flux.client = Flux.client or LocalPlayer()
 
   cable.send('fl_player_set_lang', GetConVar('gmod_language'):GetString())
 
   timer.Simple(0.4, function()
     cable.send('fl_player_created', true)
-    fl.local_player_created = true
+    Flux.local_player_created = true
   end)
 
   for k, v in ipairs(player.GetAll()) do
@@ -31,7 +31,7 @@ function GM:PlayerInitialized()
 end
 
 function GM:FluxClientSchemaLoaded()
-  font.create_fonts()
+  Font.create_fonts()
 end
 
 do
@@ -46,7 +46,7 @@ do
       local new_w, new_h = ScrW(), ScrH()
 
       if scrw != new_w or scrh != new_h then
-        fl.print('Resolution changed from '..scrw..'x'..scrh..' to '..new_w..'x'..new_h..'.')
+        Flux.print('Resolution changed from '..scrw..'x'..scrh..' to '..new_w..'x'..new_h..'.')
 
         hook.run('OnResolutionChanged', new_w, new_h, scrw, scrh)
 
@@ -72,27 +72,27 @@ end
 
 -- Called when the resolution has been changed and fonts need to be resized to fit the client's res.
 function GM:OnResolutionChanged(old_w, old_h, new_w, new_h)
-  font.create_fonts()
+  Font.create_fonts()
 end
 
 -- Called when the scoreboard should be shown.
 function GM:ScoreboardShow()
   if hook.run('ShouldScoreboardShow') != false then
-    if fl.tab_menu and fl.tab_menu.close_menu then
-      fl.tab_menu:close_menu()
+    if Flux.tab_menu and Flux.tab_menu.close_menu then
+      Flux.tab_menu:close_menu()
     end
 
-    fl.tab_menu = theme.create_panel('tab_menu', nil, 'fl_tab_menu')
-    fl.tab_menu:MakePopup()
-    fl.tab_menu.held_time = CurTime() + 0.3
+    Flux.tab_menu = Theme.create_panel('tab_menu', nil, 'fl_tab_menu')
+    Flux.tab_menu:MakePopup()
+    Flux.tab_menu.held_time = CurTime() + 0.3
   end
 end
 
 -- Called when the scoreboard should be hidden.
 function GM:ScoreboardHide()
   if hook.run('ShouldScoreboardHide') != false then
-    if fl.tab_menu and fl.tab_menu.held_time and CurTime() >= fl.tab_menu.held_time then
-      fl.tab_menu:close_menu()
+    if Flux.tab_menu and Flux.tab_menu.held_time and CurTime() >= Flux.tab_menu.held_time then
+      Flux.tab_menu:close_menu()
     end
   end
 end
@@ -100,11 +100,11 @@ end
 function GM:HUDDrawScoreBoard()
   self.BaseClass:HUDDrawScoreBoard()
 
-  if !fl.client or !fl.client:has_initialized() or hook.run('ShouldDrawLoadingScreen') then
+  if !Flux.client or !Flux.client:has_initialized() or hook.run('ShouldDrawLoadingScreen') then
     local text = t'loading.schema'
     local percentage = 50
 
-    if !fl.local_player_created then
+    if !Flux.local_player_created then
       text = t'loading.local_player'
       percentage = 0
     end
@@ -121,7 +121,7 @@ function GM:HUDDrawScoreBoard()
 
     percentage = math.Clamp(percentage, 0, 100)
 
-    local font = font.size('flRobotoCondensed', font.scale(24))
+    local font = Font.size('flRobotoCondensed', Font.scale(24))
     local scrw, scrh = ScrW(), ScrH()
     local w, h = util.text_size(text, font)
 
@@ -141,25 +141,25 @@ end
 
 -- Called when the player's HUD is drawn.
 function GM:HUDPaint()
-  if fl.client:has_initialized() and hook.run('ShouldHUDPaint') != false then
+  if Flux.client:has_initialized() and hook.run('ShouldHUDPaint') != false then
     local cur_time = CurTime()
     local scrw, scrh = ScrW(), ScrH()
 
-    if fl.client.last_damage and fl.client.last_damage > (cur_time - 0.3) then
-      local alpha = math.Clamp(255 - 255 * (cur_time - fl.client.last_damage) * 3.75, 0, 200)
+    if Flux.client.last_damage and Flux.client.last_damage > (cur_time - 0.3) then
+      local alpha = math.Clamp(255 - 255 * (cur_time - Flux.client.last_damage) * 3.75, 0, 200)
       draw.textured_rect(util.get_material('materials/flux/hl2rp/blood.png'), 0, 0, scrw, scrh, Color(255, 0, 0, alpha))
       draw.RoundedBox(0, 0, 0, scrw, scrh, Color(255, 210, 210, alpha))
     end
 
-    if !fl.client:Alive() then
+    if !Flux.client:Alive() then
       hook.run('HUDPaintDeathBackground', cur_time, scrw, scrh)
-        theme.call('PaintDeathScreen', cur_time, scrw, scrh)
+        Theme.call('PaintDeathScreen', cur_time, scrw, scrh)
       hook.run('HUDPaintDeathForeground', cur_time, scrw, scrh)
     else
-      fl.client.respawn_alpha = 0
+      Flux.client.respawn_alpha = 0
 
-      if isnumber(fl.client.white_alpha) and fl.client.white_alpha > 0.5 then
-        fl.client.white_alpha = Lerp(0.04, fl.client.white_alpha, 0)
+      if isnumber(Flux.client.white_alpha) and Flux.client.white_alpha > 0.5 then
+        Flux.client.white_alpha = Lerp(0.04, Flux.client.white_alpha, 0)
       end
 
       if !hook.run('FLHUDPaint', cur_time, scrw, scrh) then
@@ -167,26 +167,26 @@ function GM:HUDPaint()
       end
     end
 
-    draw.RoundedBox(0, 0, 0, scrw, scrh, Color(255, 255, 255, fl.client.white_alpha or 0))
+    draw.RoundedBox(0, 0, 0, scrw, scrh, Color(255, 255, 255, Flux.client.white_alpha or 0))
 
     self.BaseClass:HUDPaint()
   end
 end
 
 function GM:FLHUDPaint(cur_time, scrw, scrh)
-  local percentage = fl.client.circle_action_percentage
+  local percentage = Flux.client.circle_action_percentage
 
   if percentage and percentage > -1 then
-    local alpha = fl.client.circle_action_alpha
+    local alpha = Flux.client.circle_action_alpha
     local x, y = ScrC()
 
     surface.SetDrawColor(0, 0, 0, 180 * alpha / 255)
     surface.draw_circle_outline(x, y, 65, 5, 64)
 
-    surface.SetDrawColor(theme.get_color('text'):alpha(alpha))
+    surface.SetDrawColor(Theme.get_color('text'):alpha(alpha))
     surface.draw_circle_outline_partial(math.Clamp(percentage, 0, 100), x, y, 64, 3, 64)
 
-    fl.client.circle_action_percentage = nil
+    Flux.client.circle_action_percentage = nil
   end
 end
 
@@ -195,7 +195,7 @@ function GM:HUDPaintDeathBackground(cur_time, w, h)
 end
 
 function GM:HUDDrawTargetID()
-  if IsValid(fl.client) and fl.client:Alive() then
+  if IsValid(Flux.client) and Flux.client:Alive() then
     local entities = ents.FindInCone(EyePos(), EyeVector(), 256, 0.98) -- 0.98 gives approximately 40 degrees
     local ent
     local dist
@@ -218,7 +218,7 @@ function GM:HUDDrawTargetID()
     end
 
     if !IsValid(ent) then
-      local trace = fl.client:GetEyeTraceNoCursor()
+      local trace = Flux.client:GetEyeTraceNoCursor()
       local trace_ent = trace.Entity
 
       if IsValid(trace_ent) then
@@ -236,7 +236,7 @@ function GM:HUDDrawTargetID()
         pos = ent:GetPos()
       end
 
-      if util.vector_obstructed(client_pos, pos, { ent, fl.client }) then return end
+      if util.vector_obstructed(client_pos, pos, { ent, Flux.client }) then return end
 
       local screen_pos = (pos + Vector(0, 0, 16)):ToScreen()
       local x, y = screen_pos.x, screen_pos.y
@@ -261,7 +261,7 @@ function GM:GetPlayerDrawInfo(player, x, y, distance, lines)
 
     lines['name'] = {
       text = player:name(),
-      font = theme.get_font('tooltip_large'),
+      font = Theme.get_font('tooltip_large'),
       color = Color(255, 255, 255, alpha),
       priority = 100
     }
@@ -275,7 +275,7 @@ function GM:DrawPlayerTargetID(player, x, y, distance)
   hook.run('PrePlayerDrawInfo', player, x, y, distance, lines)
 
   for k, v in SortedPairsByMemberValue(lines, 'priority') do
-    local font = v.font or theme.get_font('tooltip_small')
+    local font = v.font or Theme.get_font('tooltip_small')
     local color = v.color or Color('white')
     local text = v.text
 
@@ -298,7 +298,7 @@ function GM:HUDDrawPickupHistory()
 end
 
 function GM:PopulateToolMenu()
-  for ToolName, TOOL in pairs(fl.tool.stored) do
+  for ToolName, TOOL in pairs(Flux.Tool.stored) do
     if TOOL.AddToMenu != false then
       spawnmenu.AddToolMenuOption(
         TOOL.Tab or 'Main',
@@ -318,33 +318,33 @@ end
 function GM:SynchronizeTools()
   local toolgun = weapons.GetStored('gmod_tool')
 
-  for k, v in pairs(fl.tool.stored) do
+  for k, v in pairs(Flux.Tool.stored) do
     toolgun.Tool[v.Mode] = v
   end
 end
 
 local last_render = 0
-local blur_render_time = 1 / fl.blur_update_fps
+local blur_render_time = 1 / Flux.blur_update_fps
 
 function GM:RenderScreenspaceEffects()
-  if fl.should_render_blur then
+  if Flux.should_render_blur then
     local cur_time = CurTime()
 
-    if fl.blur_update_fps == 0 or (cur_time - last_render > blur_render_time) then
-      render.PushRenderTarget(fl.rt_texture)
+    if Flux.blur_update_fps == 0 or (cur_time - last_render > blur_render_time) then
+      render.PushRenderTarget(Flux.rt_texture)
         surface.SetDrawColor(255, 255, 255)
-        surface.SetMaterial(fl.blur_material)
+        surface.SetMaterial(Flux.blur_material)
         surface.DrawTexturedRect(0, 0, ScrW(), ScrH())
-        render.BlurRenderTarget(fl.rt_texture, fl.blur_size or 12, fl.blur_size or 12, fl.blur_passes or 8)
+        render.BlurRenderTarget(Flux.rt_texture, Flux.blur_size or 12, Flux.blur_size or 12, Flux.blur_passes or 8)
       render.PopRenderTarget()
 
       last_render = cur_time
     end
 
-    fl.blur_mat:SetTexture('$basetexture', fl.rt_texture)
-    fl.should_render_blur = false
+    Flux.blur_mat:SetTexture('$basetexture', Flux.rt_texture)
+    Flux.should_render_blur = false
   else
-    fl.should_render_blur = nil
+    Flux.should_render_blur = nil
   end
 end
 
@@ -376,13 +376,13 @@ function GM:PlayerBindPress(player, bind, pressed)
 end
 
 function GM:ContextMenuOpen()
-  return true --fl.client:can('context_menu')
+  return true --Flux.client:can('context_menu')
 end
 
 function GM:SoftUndo(player)
   cable.send('fl_undo_soft')
 
-  if #fl.undo:get_player(fl.client) > 0 then return true end
+  if #Flux.Undo:get_player(Flux.client) > 0 then return true end
 end
 
 function GM:OnIntroPanelCreated()

@@ -1,6 +1,6 @@
 if netvars then return end
 
-library.new 'netvars'
+library 'netvars'
 
 local stored = netvars.stored or {}
 local globals = netvars.globals or {}

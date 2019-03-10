@@ -1,6 +1,6 @@
 if plugin then return end
 
-library.new 'plugin'
+library 'plugin'
 
 local stored = {}
 local unloaded = {}
@@ -227,8 +227,8 @@ function plugin.remove(id)
 end
 
 function plugin.is_disabled(folder)
-  if fl.shared.disabled_plugins then
-    return fl.shared.disabled_plugins[folder]
+  if Flux.shared.disabled_plugins then
+    return Flux.shared.disabled_plugins[folder]
   end
 end
 
@@ -257,7 +257,7 @@ function plugin.register(obj)
       local file_path = 'gamemodes/'..folder_name..'/'..folder_name..'.yml'
 
       if file.Exists(file_path, 'GAME') then
-        fl.dev_print('Importing config: '..file_path)
+        Flux.dev_print('Importing config: '..file_path)
 
         config.import(fileio.Read(file_path), CONFIG_PLUGIN)
       end
@@ -265,7 +265,7 @@ function plugin.register(obj)
 
     -- Single-file plugins must be made known here.
     if obj.single_file then
-      fl.shared.plugin_info[obj.folder] = {
+      Flux.shared.plugin_info[obj.folder] = {
         name = obj.name,
         description = obj.description,
         author = obj.author,
@@ -297,13 +297,13 @@ function plugin.include(path)
   data.single_file = ext == 'lua'
 
   if reload_data[folder] == false then
-    fl.dev_print('Not reloading plugin: '..path)
+    Flux.dev_print('Not reloading plugin: '..path)
     return
   elseif plugin.loaded(id) then
     return
   end
 
-  fl.dev_print('Loading plugin: '..path)
+  Flux.dev_print('Loading plugin: '..path)
 
   if !data.single_file and SERVER then
     if file.Exists(path..'/plugin.yml', 'LUA') then
@@ -316,10 +316,10 @@ function plugin.include(path)
         end
       table.safe_merge(data, data_table)
 
-      fl.shared.plugin_info[path] = data
+      Flux.shared.plugin_info[path] = data
     end
   else
-    table.safe_merge(data, fl.shared.plugin_info[path] or {})
+    table.safe_merge(data, Flux.shared.plugin_info[path] or {})
   end
 
   if data.environment then
@@ -368,7 +368,7 @@ function plugin.include(path)
 end
 
 function plugin.include_schema()
-  local schema_info = fl.get_schema_info()
+  local schema_info = Flux.get_schema_info()
   local schema_path = schema_info.folder
   local schema_folder = schema_path..'/schema'
   local file_path = 'gamemodes/'..schema_path..'/'..schema_path..'.yml'
@@ -377,9 +377,9 @@ function plugin.include_schema()
   hook.run('PreLoadPlugins')
 
   if SERVER and file.Exists(file_path, 'GAME') then
-    fl.dev_print('Reading and loading schema dependencies from '..file_path)
+    Flux.dev_print('Reading and loading schema dependencies from '..file_path)
 
-    fl.shared.schema_info.depends = {}
+    Flux.shared.schema_info.depends = {}
 
     local schema_yml = YAML.eval(fileio.Read(file_path))
     deps = schema_yml.depends or {}
@@ -392,11 +392,11 @@ function plugin.include_schema()
 
     table.map(deps, function(v)
       if !v:find('sv_') then
-        table.insert(fl.shared.schema_info.depends, v)
+        table.insert(Flux.shared.schema_info.depends, v)
       end
     end)
   elseif CLIENT then
-    deps = fl.shared.schema_info.depends
+    deps = Flux.shared.schema_info.depends
   end
 
   if istable(deps) then
@@ -448,7 +448,7 @@ do
     if !plugin.loaded(name) then
       local search_paths = {
         'flux/plugins/',
-        (fl.get_schema_folder() or 'flux')..'/plugins/'
+        (Flux.get_schema_folder() or 'flux')..'/plugins/'
       }
 
       for k, v in ipairs(search_paths) do
@@ -599,7 +599,7 @@ function plugin.include_folders(folder)
       if v == 'entities' then
         plugin.include_entities(folder..'/'..v)
       elseif v == 'themes' then
-        pipeline.include_folder('theme', folder..'/themes/')
+        pipeline.include_folder('Theme', folder..'/themes/')
       elseif v == 'tools' then
         pipeline.include_folder('tool', folder..'/tools/')
       elseif SERVER then
@@ -624,7 +624,7 @@ do
   plugin.old_hook_call = old_hook_call
 
   -- If we're running in development, we should be using pcall'ed hook.Call rather than unsafe one.
-  if fl.development then
+  if Flux.development then
     function hook.Call(name, gm, ...)
       if hooks_cache[name] then
         for k, v in ipairs(hooks_cache[name]) do

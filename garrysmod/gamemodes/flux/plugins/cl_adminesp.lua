@@ -10,11 +10,11 @@ do
   local color_blue = Color(0, 0, 255)
 
   function PLUGIN:HUDPaint()
-    if IsValid(fl.client) and fl.client:Alive() and fl.client:GetMoveType() == MOVETYPE_NOCLIP and can('admin_esp') then
-      local clientPos = fl.client:GetPos()
+    if IsValid(Flux.client) and Flux.client:Alive() and Flux.client:GetMoveType() == MOVETYPE_NOCLIP and can('admin_esp') then
+      local clientPos = Flux.client:GetPos()
 
       for k, v in ipairs(_player.GetAll()) do
-        if v == fl.client then continue end
+        if v == Flux.client then continue end
 
         local pos = v:GetPos()
         local head = Vector(pos.x, pos.y, pos.z + 60)
@@ -25,18 +25,18 @@ do
         local size = 52 * math.abs(350 / clientPos:Distance(pos))
         local team_color = team.GetColor(v:Team()) or Color(255, 255, 255)
 
-        local w, h = util.text_size(v:name(), theme.get_font('text_small'))
-        draw.SimpleText(v:name(), theme.get_font('text_small'), text_pos.x - w * 0.5, text_pos.y, team_color)
+        local w, h = util.text_size(v:name(), Theme.get_font('text_small'))
+        draw.SimpleText(v:name(), Theme.get_font('text_small'), text_pos.x - w * 0.5, text_pos.y, team_color)
 
-        w, h = util.text_size(v:steam_name(), theme.get_font('text_smaller'))
-        draw.SimpleText(v:steam_name(), theme.get_font('text_smaller'), text_pos.x - w * 0.5, text_pos.y + 14, color_lightblue)
+        w, h = util.text_size(v:steam_name(), Theme.get_font('text_smaller'))
+        draw.SimpleText(v:steam_name(), Theme.get_font('text_smaller'), text_pos.x - w * 0.5, text_pos.y + 14, color_lightblue)
 
         if v:Alive() then
           surface.SetDrawColor(team_color)
           surface.DrawOutlinedRect(x - size * 0.5, y - size * 0.5, size, (screen_pos.y - y) * 1.25)
         else
-          w, h = util.text_size('*DEAD*', theme.get_font('text_smaller'))
-          draw.SimpleText('*DEAD*', theme.get_font('text_smaller'), text_pos.x - w * 0.5, text_pos.y + 28, color_lightred)
+          w, h = util.text_size('*DEAD*', Theme.get_font('text_smaller'))
+          draw.SimpleText('*DEAD*', Theme.get_font('text_smaller'), text_pos.x - w * 0.5, text_pos.y + 28, color_lightred)
         end
 
         local bx, by = x - size * 0.5, y - size * 0.5 + (screen_pos.y - y) * 1.25

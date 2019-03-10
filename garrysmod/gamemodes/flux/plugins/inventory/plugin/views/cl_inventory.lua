@@ -29,7 +29,7 @@ function PANEL:Paint(w, h)
     end
   else
     local item_table = self.item_data
-    local cur_slot = fl.inventory_drag_slot
+    local cur_slot = Flux.inventory_drag_slot
 
     if item_table then
       if IsValid(cur_slot) and cur_slot.item_data != item_table then
@@ -50,28 +50,28 @@ function PANEL:Paint(w, h)
 
   draw.RoundedBox(0, 0, 0, w, h, draw_color)
 
-  theme.hook('PaintItemSlot', self, w, h)
+  Theme.hook('PaintItemSlot', self, w, h)
 end
 
 function PANEL:PaintOver(w, h)
   if self.item_count >= 2 then
     DisableClipping(true)
-      draw.SimpleText(self.item_count, theme.get_font('text_smallest'), 52, 50, Color(225, 225, 225))
+      draw.SimpleText(self.item_count, Theme.get_font('text_smallest'), 52, 50, Color(225, 225, 225))
     DisableClipping(false)
   end
 
   if isnumber(self.slot_number) then
     DisableClipping(true)
-      draw.SimpleText(self.slot_number, theme.get_font('text_smallest'), 4, 50, Color(175, 175, 175))
+      draw.SimpleText(self.slot_number, Theme.get_font('text_smallest'), 4, 50, Color(175, 175, 175))
     DisableClipping(false)
   end
 
-  theme.hook('PaintOverItemSlot', self, w, h)
+  Theme.hook('PaintOverItemSlot', self, w, h)
 end
 
 function PANEL:OnMousePressed(...)
   self.mouse_pressed = CurTime()
-  fl.inventory_drag_slot = self
+  Flux.inventory_drag_slot = self
 
   self.BaseClass.OnMousePressed(self, ...)
 end
@@ -82,7 +82,7 @@ function PANEL:OnMouseReleased(...)
 
   if surface.mouse_in_rect(x, y, w, h) then
     if self.item_data and self.mouse_pressed and self.mouse_pressed > (CurTime() - 0.15) then
-      fl.inventory_drag_slot = nil
+      Flux.inventory_drag_slot = nil
 
       hook.run('PlayerUseItemMenu', self.instance_ids[#self.instance_ids])
     end
@@ -195,7 +195,7 @@ PANEL.slots = {}
 PANEL.inventory_type = 'main_inventory'
 PANEL.player = nil
 
-local slot_size = font.scale(64)
+local slot_size = Font.scale(64)
 
 function PANEL:Init()
   self.title = nil
@@ -223,7 +223,7 @@ end
 function PANEL:Paint(w, h)
   if self.title then
     local text = t(self.title)
-    local font = theme.get_font('text_normal_large')
+    local font = Theme.get_font('text_normal_large')
     local text_w, text_h = util.text_size(text, font)
 
     DisableClipping(true)
@@ -325,7 +325,7 @@ function PANEL:rebuild()
 
       inv_slot:Receiver('fl_item', function(receiver, dropped, is_dropped, menu_index, mouse_x, mouse_y)
         if is_dropped then
-          fl.inventory_drag_slot = nil
+          Flux.inventory_drag_slot = nil
 
           local split = false
 
@@ -401,7 +401,7 @@ vgui.Register('fl_inventory', PANEL, 'fl_base_panel')
 local PANEL = {}
 
 function PANEL:Paint(w, h)
-  theme.hook('PaintInventoryBackground', self, w, h)
+  Theme.hook('PaintInventoryBackground', self, w, h)
 end
 
 function PANEL:get_menu_size()
@@ -409,7 +409,7 @@ function PANEL:get_menu_size()
 end
 
 function PANEL:on_close()
-  self.hotbar:AlphaTo(0, theme.get_option('menu_anim_duration'), 0)
+  self.hotbar:AlphaTo(0, Theme.get_option('menu_anim_duration'), 0)
   self.player_model:safe_remove()
 end
 
@@ -433,7 +433,7 @@ function PANEL:rebuild()
   end
 
   self.inventory = vgui.create('fl_inventory', self)
-  self.inventory:set_player(fl.client)
+  self.inventory:set_player(Flux.client)
   self.inventory:set_title('inventory.main_inventory')
 
   local w, h = self:GetSize()
@@ -453,7 +453,7 @@ function PANEL:rebuild()
 
   self.hotbar = vgui.Create('fl_hotbar', self:GetParent())
   self.hotbar:set_slot_padding(8)
-  self.hotbar:set_player(fl.client)
+  self.hotbar:set_player(Flux.client)
   self.hotbar:set_title('inventory.hotbar')
   self.hotbar:rebuild()
 
@@ -466,14 +466,14 @@ function PANEL:rebuild()
   self.player_model:SetAnimated(true)
   self.player_model.LayoutEntity = function(pnl, ent) end
   self.player_model.rebuild = function(pnl)
-    pnl:SetModel(fl.client:GetModel())
+    pnl:SetModel(Flux.client:GetModel())
 
     local ent = pnl:GetEntity()
     ent:SetSequence(ent:get_idle_anim())
-    ent:SetSkin(fl.client:GetSkin())
-    ent:SetColor(fl.client:GetColor())
-    ent:SetMaterial(fl.client:GetMaterial())
-    ent:set_bodygroups(fl.client:get_bodygroups())
+    ent:SetSkin(Flux.client:GetSkin())
+    ent:SetColor(Flux.client:GetColor())
+    ent:SetMaterial(Flux.client:GetMaterial())
+    ent:set_bodygroups(Flux.client:get_bodygroups())
   end
 
   self.player_model:rebuild()
@@ -482,7 +482,7 @@ function PANEL:rebuild()
   self.equipment.inventory_type = 'equipment'
   self.equipment:set_slot_padding(8)
   self.equipment:set_title('inventory.equipment')
-  self.equipment:set_player(fl.client)
+  self.equipment:set_player(Flux.client)
   self.equipment:SetPos(w - self.equipment:GetWide(), h / 2 - self.equipment:GetTall() / 2)
 end
 
