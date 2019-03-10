@@ -19,7 +19,7 @@ ru:
     new_config: Добавить новое значение
     new_config_text: Введите новое значение.
     delete_config: Удалить значение
-    delete_config_text: Вы уверены, что хотите ударить данное значение?
+    delete_config_text: Вы уверены, что хотите удалить данное значение?
   categories:
     administration: Администрирование
     tools: Инструменты
