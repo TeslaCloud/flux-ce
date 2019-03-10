@@ -189,16 +189,16 @@ function THEME:PaintButton(panel, w, h)
 end
 
 function THEME:PaintDeathScreen(cur_time, scrw, scrh)
-  local respawn_time_remaining = Flux.client:get_nv('respawn_time', 0) - cur_time
+  local respawn_time_remaining = PLAYER:get_nv('respawn_time', 0) - cur_time
   local bar_value = 100 - 100 * (respawn_time_remaining / config.get('respawn_delay'))
   local font = self:get_font('text_normal_large')
   local color_white = Color(255, 255, 255)
 
-  if !Flux.client.respawn_alpha then Flux.client.respawn_alpha = 0 end
+  if !PLAYER.respawn_alpha then PLAYER.respawn_alpha = 0 end
 
-  Flux.client.respawn_alpha = math.Clamp(Flux.client.respawn_alpha + 1, 0, 200)
+  PLAYER.respawn_alpha = math.Clamp(PLAYER.respawn_alpha + 1, 0, 200)
 
-  draw.RoundedBox(0, 0, 0, scrw, scrh, Color(0, 0, 0, Flux.client.respawn_alpha))
+  draw.RoundedBox(0, 0, 0, scrw, scrh, Color(0, 0, 0, PLAYER.respawn_alpha))
 
   draw.SimpleText(t'player_message.died', font, 16, 16, color_white)
   draw.SimpleText(t('player_message.respawn', math.ceil(respawn_time_remaining)), font, 16, 16 + util.font_size(font), color_white)
@@ -206,9 +206,9 @@ function THEME:PaintDeathScreen(cur_time, scrw, scrh)
   draw.RoundedBox(0, 0, 0, scrw / 100 * bar_value, 2, color_white)
 
   if respawn_time_remaining <= 3 then
-    Flux.client.white_alpha = math.Clamp(255 * (1.5 - respawn_time_remaining * 0.5), 0, 255)
+    PLAYER.white_alpha = math.Clamp(255 * (1.5 - respawn_time_remaining * 0.5), 0, 255)
   else
-    Flux.client.white_alpha = 0
+    PLAYER.white_alpha = 0
   end
 end
 
@@ -268,7 +268,7 @@ function THEME:AdminPanelPaintOver(panel, width, height)
   DisableClipping(true)
     draw.RoundedBox(0, 0, height, width, 16, self:get_color('background'))
 
-    draw.SimpleText(Flux.client:steam_name()..' ('..Flux.client:GetUserGroup()..')', smallest_font, 6, height + 1, text_color)
+    draw.SimpleText(PLAYER:steam_name()..' ('..PLAYER:GetUserGroup()..')', smallest_font, 6, height + 1, text_color)
 
     local w, h = util.text_size(version_string, smallest_font)
 

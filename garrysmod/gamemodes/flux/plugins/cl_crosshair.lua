@@ -11,15 +11,15 @@ local gap = 8
 local cur_gap = gap
 
 function PLUGIN:ShouldHUDPaintCrosshair()
-  if Flux.client:running() or !Flux.client:Alive() or !Flux.client:has_initialized() then
+  if PLAYER:running() or !PLAYER:Alive() or !PLAYER:has_initialized() then
     return false
   end
 end
 
 function PLUGIN:HUDPaint()
   if hook.run('ShouldHUDPaint') != false and hook.run('ShouldHUDPaintCrosshair') != false then
-    local trace = Flux.client:GetEyeTraceNoCursor()
-    local distance = Flux.client:GetPos():Distance(trace.HitPos)
+    local trace = PLAYER:GetEyeTraceNoCursor()
+    local distance = PLAYER:GetPos():Distance(trace.HitPos)
     local draw_color = plugin.call('AdjustCrosshairColor', trace, distance) or color_white
     local secondary_draw_color = draw_color:alpha(25)
     local real_gap = plugin.call('AdjustCrosshairGap', trace, distance) or math.Round(gap * math.Clamp(distance / 400, 0.5, 4))

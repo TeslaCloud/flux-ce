@@ -1,27 +1,27 @@
 function PLUGIN:OnContextMenuOpen()
-  if IsValid(Flux.client.hotbar) then
+  if IsValid(PLAYER.hotbar) then
     timer.remove('fl_hotbar_popup')
 
-    Flux.client.hotbar:SetAlpha(255)
-    Flux.client.hotbar:SetVisible(true)
-    Flux.client.hotbar:MakePopup()
-    Flux.client.hotbar:MoveToFront()
-    Flux.client.hotbar:SetMouseInputEnabled(true)
-    Flux.client.hotbar:rebuild()
+    PLAYER.hotbar:SetAlpha(255)
+    PLAYER.hotbar:SetVisible(true)
+    PLAYER.hotbar:MakePopup()
+    PLAYER.hotbar:MoveToFront()
+    PLAYER.hotbar:SetMouseInputEnabled(true)
+    PLAYER.hotbar:rebuild()
   end
 end
 
 function PLUGIN:OnContextMenuClose()
-  if IsValid(Flux.client.hotbar) then
+  if IsValid(PLAYER.hotbar) then
     timer.remove('fl_hotbar_popup')
 
-    Flux.client.hotbar:MoveToBack()
-    Flux.client.hotbar:SetMouseInputEnabled(false)
-    Flux.client.hotbar:SetKeyboardInputEnabled(false)
-    Flux.client.hotbar:SetVisible(false)
-    Flux.client.hotbar:rebuild()
+    PLAYER.hotbar:MoveToBack()
+    PLAYER.hotbar:SetMouseInputEnabled(false)
+    PLAYER.hotbar:SetKeyboardInputEnabled(false)
+    PLAYER.hotbar:SetVisible(false)
+    PLAYER.hotbar:rebuild()
 
-    Flux.client.hotbar.next_popup = CurTime() + 0.5
+    PLAYER.hotbar.next_popup = CurTime() + 0.5
   end
 end
 
@@ -38,37 +38,37 @@ function Inventory:AddTabMenuItems(menu)
 end
 
 function Inventory:PostCharacterLoaded()
-  if !IsValid(Flux.client.hotbar) then
+  if !IsValid(PLAYER.hotbar) then
     self:create_hotbar()
   end
 end
 
 function Inventory:create_hotbar()
-  Flux.client.hotbar = vgui.Create('fl_hotbar')
-  Flux.client.hotbar:SetVisible(false)
-  Flux.client.hotbar:set_player(Flux.client)
-  Flux.client.hotbar:set_slot_padding(8)
-  Flux.client.hotbar:rebuild()
+  PLAYER.hotbar = vgui.Create('fl_hotbar')
+  PLAYER.hotbar:SetVisible(false)
+  PLAYER.hotbar:set_player(PLAYER)
+  PLAYER.hotbar:set_slot_padding(8)
+  PLAYER.hotbar:rebuild()
 
-  return Flux.client.hotbar
+  return PLAYER.hotbar
 end
 
 function Inventory:popup_hotbar()
-  if IsValid(Flux.client.hotbar) then
+  if IsValid(PLAYER.hotbar) then
     local cur_alpha = 300
 
-    Flux.client.hotbar:SetVisible(true)
-    Flux.client.hotbar:SetAlpha(255)
+    PLAYER.hotbar:SetVisible(true)
+    PLAYER.hotbar:SetAlpha(255)
 
     timer.create('fl_hotbar_popup', 0.01, cur_alpha, function()
       if Flux.tab_menu:IsVisible() then
-        Flux.client.hotbar:SetVisible(false)
+        PLAYER.hotbar:SetVisible(false)
         timer.remove('fl_hotbar_popup')
       end
 
       cur_alpha = cur_alpha - 2
 
-      Flux.client.hotbar:SetAlpha(cur_alpha)
+      PLAYER.hotbar:SetAlpha(cur_alpha)
     end)
   end
 end
@@ -78,11 +78,11 @@ cable.receive('fl_inventory_refresh', function(inv_type, old_inv_type)
     Flux.tab_menu.active_panel:rebuild()
   end
 
-  if IsValid(Flux.client.hotbar) then
-    Flux.client.hotbar:rebuild()
+  if IsValid(PLAYER.hotbar) then
+    PLAYER.hotbar:rebuild()
 
     if !Flux.tab_menu:IsVisible() and inv_type == 'hotbar' or old_inv_type == 'hotbar' then
-      if !Flux.client.hotbar.next_popup or Flux.client.hotbar.next_popup < CurTime() then
+      if !PLAYER.hotbar.next_popup or PLAYER.hotbar.next_popup < CurTime() then
         Inventory:popup_hotbar()
       end
     end

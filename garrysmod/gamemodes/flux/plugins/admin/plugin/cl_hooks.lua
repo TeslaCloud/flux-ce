@@ -28,8 +28,8 @@ function Bolt:OnThemeLoaded(current_theme)
 end
 
 function Bolt:HUDPaint()
-  if IsValid(Flux.client) and Flux.client:has_initialized() and Flux.client:Alive()
-  and Flux.client:get_nv('transmission_prevented') then
+  if IsValid(PLAYER) and PLAYER:has_initialized() and PLAYER:Alive()
+  and PLAYER:get_nv('transmission_prevented') then
     local text, font = t'vanish.client_text', Theme.get_font('text_normal')
     local w, h = util.text_size(text, font)
     local x, y = ScrW() - w - 16, ScrH() - h - 16
@@ -39,15 +39,15 @@ function Bolt:HUDPaint()
 end
 
 function Bolt:PostRender()
-  if Flux.client:get_nv('should_fullbright') then
+  if PLAYER:get_nv('should_fullbright') then
     render.SetLightingMode(1)
-    Flux.client.fullbright_enabled = true
+    PLAYER.fullbright_enabled = true
   end
 end
 
 function Bolt:PreDrawHUD()
-  if Flux.client.fullbright_enabled then
+  if PLAYER.fullbright_enabled then
     render.SetLightingMode(0)
-    Flux.client.fullbright_enabled = false
+    PLAYER.fullbright_enabled = false
   end
 end

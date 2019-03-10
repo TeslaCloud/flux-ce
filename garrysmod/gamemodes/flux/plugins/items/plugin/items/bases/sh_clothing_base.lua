@@ -21,8 +21,8 @@ ItemClothing.equip_slot = 'item.slot.chest'
 
 if CLIENT then
   function ItemClothing:get_icon_model()
-    if self:get_equip_model(Flux.client) then
-      return self:get_equip_model(Flux.client)
+    if self:get_equip_model(PLAYER) then
+      return self:get_equip_model(PLAYER)
     end
   end
 end

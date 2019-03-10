@@ -34,5 +34,5 @@ cable.receive('fl_notification', function(message, arguments, color)
 end)
 
 cable.receive('fl_player_take_damage', function()
-  Flux.client.last_damage = CurTime()
+  PLAYER.last_damage = CurTime()
 end)

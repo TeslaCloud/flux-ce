@@ -8,10 +8,10 @@ local stored = {}
 function flHints:OneMinute()
   local cur_time = CurTime()
 
-  if cur_time >= (Flux.client.nextHint or 0) then
+  if cur_time >= (PLAYER.nextHint or 0) then
     flHints:display_random()
 
-    Flux.client.nextHint = cur_time + 300
+    PLAYER.nextHint = cur_time + 300
   end
 end
 

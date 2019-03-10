@@ -4,7 +4,7 @@ timer.Remove('HintSystem_Annoy2')
 
 -- Called when the client connects and spawns.
 function GM:InitPostEntity()
-  Flux.client = Flux.client or LocalPlayer()
+  PLAYER = PLAYER or LocalPlayer()
 
   cable.send('fl_player_set_lang', GetConVar('gmod_language'):GetString())
 
@@ -100,7 +100,7 @@ end
 function GM:HUDDrawScoreBoard()
   self.BaseClass:HUDDrawScoreBoard()
 
-  if !Flux.client or !Flux.client:has_initialized() or hook.run('ShouldDrawLoadingScreen') then
+  if !PLAYER or !PLAYER:has_initialized() or hook.run('ShouldDrawLoadingScreen') then
     local text = t'loading.schema'
     local percentage = 50
 
@@ -141,25 +141,25 @@ end
 
 -- Called when the player's HUD is drawn.
 function GM:HUDPaint()
-  if Flux.client:has_initialized() and hook.run('ShouldHUDPaint') != false then
+  if PLAYER:has_initialized() and hook.run('ShouldHUDPaint') != false then
     local cur_time = CurTime()
     local scrw, scrh = ScrW(), ScrH()
 
-    if Flux.client.last_damage and Flux.client.last_damage > (cur_time - 0.3) then
-      local alpha = math.Clamp(255 - 255 * (cur_time - Flux.client.last_damage) * 3.75, 0, 200)
+    if PLAYER.last_damage and PLAYER.last_damage > (cur_time - 0.3) then
+      local alpha = math.Clamp(255 - 255 * (cur_time - PLAYER.last_damage) * 3.75, 0, 200)
       draw.textured_rect(util.get_material('materials/flux/hl2rp/blood.png'), 0, 0, scrw, scrh, Color(255, 0, 0, alpha))
       draw.RoundedBox(0, 0, 0, scrw, scrh, Color(255, 210, 210, alpha))
     end
 
-    if !Flux.client:Alive() then
+    if !PLAYER:Alive() then
       hook.run('HUDPaintDeathBackground', cur_time, scrw, scrh)
         Theme.call('PaintDeathScreen', cur_time, scrw, scrh)
       hook.run('HUDPaintDeathForeground', cur_time, scrw, scrh)
     else
-      Flux.client.respawn_alpha = 0
+      PLAYER.respawn_alpha = 0
 
-      if isnumber(Flux.client.white_alpha) and Flux.client.white_alpha > 0.5 then
-        Flux.client.white_alpha = Lerp(0.04, Flux.client.white_alpha, 0)
+      if isnumber(PLAYER.white_alpha) and PLAYER.white_alpha > 0.5 then
+        PLAYER.white_alpha = Lerp(0.04, PLAYER.white_alpha, 0)
       end
 
       if !hook.run('FLHUDPaint', cur_time, scrw, scrh) then
@@ -167,17 +167,17 @@ function GM:HUDPaint()
       end
     end
 
-    draw.RoundedBox(0, 0, 0, scrw, scrh, Color(255, 255, 255, Flux.client.white_alpha or 0))
+    draw.RoundedBox(0, 0, 0, scrw, scrh, Color(255, 255, 255, PLAYER.white_alpha or 0))
 
     self.BaseClass:HUDPaint()
   end
 end
 
 function GM:FLHUDPaint(cur_time, scrw, scrh)
-  local percentage = Flux.client.circle_action_percentage
+  local percentage = PLAYER.circle_action_percentage
 
   if percentage and percentage > -1 then
-    local alpha = Flux.client.circle_action_alpha
+    local alpha = PLAYER.circle_action_alpha
     local x, y = ScrC()
 
     surface.SetDrawColor(0, 0, 0, 180 * alpha / 255)
@@ -186,7 +186,7 @@ function GM:FLHUDPaint(cur_time, scrw, scrh)
     surface.SetDrawColor(Theme.get_color('text'):alpha(alpha))
     surface.draw_circle_outline_partial(math.Clamp(percentage, 0, 100), x, y, 64, 3, 64)
 
-    Flux.client.circle_action_percentage = nil
+    PLAYER.circle_action_percentage = nil
   end
 end
 
@@ -195,7 +195,7 @@ function GM:HUDPaintDeathBackground(cur_time, w, h)
 end
 
 function GM:HUDDrawTargetID()
-  if IsValid(Flux.client) and Flux.client:Alive() then
+  if IsValid(PLAYER) and PLAYER:Alive() then
     local entities = ents.FindInCone(EyePos(), EyeVector(), 256, 0.98) -- 0.98 gives approximately 40 degrees
     local ent
     local dist
@@ -218,7 +218,7 @@ function GM:HUDDrawTargetID()
     end
 
     if !IsValid(ent) then
-      local trace = Flux.client:GetEyeTraceNoCursor()
+      local trace = PLAYER:GetEyeTraceNoCursor()
       local trace_ent = trace.Entity
 
       if IsValid(trace_ent) then
@@ -236,7 +236,7 @@ function GM:HUDDrawTargetID()
         pos = ent:GetPos()
       end
 
-      if util.vector_obstructed(client_pos, pos, { ent, Flux.client }) then return end
+      if util.vector_obstructed(client_pos, pos, { ent, PLAYER }) then return end
 
       local screen_pos = (pos + Vector(0, 0, 16)):ToScreen()
       local x, y = screen_pos.x, screen_pos.y
@@ -376,13 +376,13 @@ function GM:PlayerBindPress(player, bind, pressed)
 end
 
 function GM:ContextMenuOpen()
-  return true --Flux.client:can('context_menu')
+  return true --PLAYER:can('context_menu')
 end
 
 function GM:SoftUndo(player)
   cable.send('fl_undo_soft')
 
-  if #Flux.Undo:get_player(Flux.client) > 0 then return true end
+  if #Flux.Undo:get_player(PLAYER) > 0 then return true end
 end
 
 function GM:OnIntroPanelCreated()

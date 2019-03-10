@@ -3,7 +3,7 @@ local cur_wide = w
 local cur_alpha = 0
 
 function Stamina:HUDPaint()
-  local stamina = Flux.client:get_nv('stamina', 100)
+  local stamina = PLAYER:get_nv('stamina', 100)
   local frame_time = FrameTime() * 8
   local percentage = (stamina / config.get('stam_max', 100))
 

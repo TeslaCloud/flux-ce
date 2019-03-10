@@ -10,11 +10,11 @@ do
   local color_blue = Color(0, 0, 255)
 
   function PLUGIN:HUDPaint()
-    if IsValid(Flux.client) and Flux.client:Alive() and Flux.client:GetMoveType() == MOVETYPE_NOCLIP and can('admin_esp') then
-      local clientPos = Flux.client:GetPos()
+    if IsValid(PLAYER) and PLAYER:Alive() and PLAYER:GetMoveType() == MOVETYPE_NOCLIP and can('admin_esp') then
+      local clientPos = PLAYER:GetPos()
 
       for k, v in ipairs(_player.GetAll()) do
-        if v == Flux.client then continue end
+        if v == PLAYER then continue end
 
         local pos = v:GetPos()
         local head = Vector(pos.x, pos.y, pos.z + 60)

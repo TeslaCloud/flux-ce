@@ -73,7 +73,7 @@ function PANEL:open_panel(id)
   end
 
   if istable(panel) then
-    if panel.permission and !Flux.client:can(panel.permission) then return end
+    if panel.permission and !PLAYER:can(panel.permission) then return end
 
     local sw, sh = self.sidebar:GetWide(), self.sidebar:GetTall()
 

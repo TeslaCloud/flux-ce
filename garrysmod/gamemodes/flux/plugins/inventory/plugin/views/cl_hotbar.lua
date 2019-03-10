@@ -13,8 +13,8 @@ end
 vgui.Register('fl_hotbar', PANEL, 'fl_inventory')
 
 concommand.Add('fl_hotbar_rebuild', function()
-  if IsValid(Flux.client.hotbar) then
-    local hotbar = Flux.client.hotbar
+  if IsValid(PLAYER.hotbar) then
+    local hotbar = PLAYER.hotbar
     hotbar:Remove()
     hotbar = Inventory:create_hotbar()
     hotbar:rebuild()

@@ -16,7 +16,7 @@ function PLUGIN:PlayerBindPress(player, bind, pressed)
 end
 
 function PLUGIN:HUDPaint()
-  local fallen, getup = Flux.client:is_doing_action('fallen'), Flux.client:is_doing_action('getup')
+  local fallen, getup = PLAYER:is_doing_action('fallen'), PLAYER:is_doing_action('getup')
 
   if (fallen or getup) and plugin.call('ShouldFallenHUDPaint') != false then
     local scrw, scrh = ScrW(), ScrH()
@@ -24,7 +24,7 @@ function PLUGIN:HUDPaint()
     draw.RoundedBox(0, 0, 0, scrw, scrh, Color(0, 0, 0, 100))
 
     if getup then
-      local bar_value = 100 - 100 * ((Flux.client:get_nv('getup_end', 0) - CurTime()) / Flux.client:get_nv('getup_time'))
+      local bar_value = 100 - 100 * ((PLAYER:get_nv('getup_end', 0) - CurTime()) / PLAYER:get_nv('getup_time'))
 
       Flux.Bars:set_value('getup', bar_value)
       Flux.Bars:draw('getup')

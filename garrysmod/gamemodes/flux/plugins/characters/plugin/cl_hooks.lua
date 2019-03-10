@@ -24,7 +24,7 @@ do
 end
 
 function Characters:PlayerInitialized()
-  if !Flux.client:get_character() and !IsValid(Flux.intro_panel) then
+  if !PLAYER:get_character() and !IsValid(Flux.intro_panel) then
     Flux.intro_panel = vgui.Create('fl_intro')
 
     if IsValid(Flux.intro_panel) then
@@ -34,7 +34,7 @@ function Characters:PlayerInitialized()
 end
 
 function Characters:GetLoadingScreenMessage()
-  if !Flux.client.characters then
+  if !PLAYER.characters then
     return t'loading.characters', 75
   end
 end
@@ -46,7 +46,7 @@ function Characters:ShouldMapsceneRender()
 end
 
 function Characters:OnIntroPanelRemoved()
-  if !Flux.client:get_character() then
+  if !PLAYER:get_character() then
     Flux.intro_panel = Theme.create_panel('main_menu')
 
     if IsValid(Flux.intro_panel) then
@@ -114,17 +114,17 @@ function Characters:ShouldDrawLoadingScreen()
 end
 
 function Characters:ShouldHUDPaint()
-  if !Flux.client:is_character_loaded() then
+  if !PLAYER:is_character_loaded() then
     return false
   end
 end
 
 function Characters:ShouldScoreboardHide()
-  return Flux.client:is_character_loaded()
+  return PLAYER:is_character_loaded()
 end
 
 function Characters:ShouldScoreboardShow()
-  return Flux.client:is_character_loaded()
+  return PLAYER:is_character_loaded()
 end
 
 function Characters:RebuildScoreboardPlayerCard(card, player)
@@ -184,7 +184,7 @@ end
 function Characters:AddMainMenuItems(panel, sidebar)
   local scrw, scrh = ScrW(), ScrH()
 
-  if Flux.client:get_character() then
+  if PLAYER:get_character() then
     panel:add_button(t'main_menu.continue', function(btn)
       panel:Remove()
     end)
@@ -200,7 +200,7 @@ function Characters:AddMainMenuItems(panel, sidebar)
     panel.sidebar:MoveTo(-panel.sidebar:GetWide(), Theme.get_option('menu_sidebar_y'), Theme.get_option('menu_anim_duration'), 0.25, 0.5)
   end)
 
-  if Flux.client:get_all_characters() and #Flux.client:get_all_characters() > 0 then
+  if PLAYER:get_all_characters() and #PLAYER:get_all_characters() > 0 then
     panel:add_button(t'char_create.load', function(btn)
       btn:set_enabled(false)
 
@@ -231,7 +231,7 @@ cable.receive('fl_player_created_character', function(success, status)
       Flux.intro_panel.menu:clear_data()
 
       timer.Simple(Theme.get_option('menu_anim_duration') * #Flux.intro_panel.menu.stages, function()
-        local chars = Flux.client:get_all_characters()
+        local chars = PLAYER:get_all_characters()
 
         if #chars == 1 then
           cable.send('fl_player_select_character', chars[1].character_id)

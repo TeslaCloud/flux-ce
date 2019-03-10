@@ -13,11 +13,11 @@ function Chatbox:OnResolutionChanged(new_width, new_height)
 end
 
 function Chatbox:PlayerBindPress(player, bind, pressed)
-  if Flux.client:has_initialized() and (string.find(bind, 'messagemode') or string.find(bind, 'messagemode2')) and pressed then
+  if PLAYER:has_initialized() and (string.find(bind, 'messagemode') or string.find(bind, 'messagemode2')) and pressed then
     if string.find(bind, 'messagemode2') then
-      Flux.client.typing_team_chat = true
+      PLAYER.typing_team_chat = true
     else
-      Flux.client.typing_team_chat = false
+      PLAYER.typing_team_chat = false
     end
 
     chatbox.show()

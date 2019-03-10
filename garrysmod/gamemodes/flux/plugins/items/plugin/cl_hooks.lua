@@ -1,5 +1,5 @@
 function Items:HUDPaint()
-  local hold_start = Flux.client:get_nv('hold_start')
+  local hold_start = PLAYER:get_nv('hold_start')
 
   if hold_start then
     local diff = math.Clamp(math.Round(CurTime() - hold_start, 3), 0.01, 0.5)
@@ -10,7 +10,7 @@ function Items:HUDPaint()
 end
 
 function Items:PreDrawHalos()
-  local ent = Flux.client:get_nv('hold_entity')
+  local ent = PLAYER:get_nv('hold_entity')
 
   if IsValid(ent) then
     halo.Add({ ent }, color_white)
@@ -18,11 +18,11 @@ function Items:PreDrawHalos()
 end
 
 function Items:Think()
-  if !Flux.client:get_nv('hold_start') then return end
+  if !PLAYER:get_nv('hold_start') then return end
 
-  local ent = Flux.client:get_nv('hold_entity')
+  local ent = PLAYER:get_nv('hold_entity')
 
-  if IsValid(ent) and Flux.client:get_nv('hold_start') then
+  if IsValid(ent) and PLAYER:get_nv('hold_start') then
     local scr_pos = ent:GetPos():ToScreen()
     local x, y = scr_pos.x, scr_pos.y
     local w, h = ScrW() * 0.5, ScrH() * 0.5

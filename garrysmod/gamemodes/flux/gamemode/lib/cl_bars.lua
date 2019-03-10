@@ -182,7 +182,7 @@ do
   local Bars = {}
 
   function Bars:LazyTick()
-    if IsValid(Flux.client) then
+    if IsValid(PLAYER) then
       Flux.Bars:position()
 
       for k, v in pairs(stored) do

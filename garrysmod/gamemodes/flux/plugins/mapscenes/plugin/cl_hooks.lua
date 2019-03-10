@@ -1,6 +1,6 @@
 function Mapscenes:RenderScreenspaceEffects()
-  if IsValid(Flux.client) and Flux.client:Alive() and IsValid(Flux.client:GetActiveWeapon()) and Flux.client:GetActiveWeapon():GetClass() == 'gmod_tool' and
-  Flux.client:GetTool() and Flux.client:GetTool().Name == 'Mapscene tool' and !IsValid(Flux.intro_panel) and can('mapscenes') then
+  if IsValid(PLAYER) and PLAYER:Alive() and IsValid(PLAYER:GetActiveWeapon()) and PLAYER:GetActiveWeapon():GetClass() == 'gmod_tool' and
+  PLAYER:GetTool() and PLAYER:GetTool().Name == 'Mapscene tool' and !IsValid(Flux.intro_panel) and can('mapscenes') then
     for k, v in pairs(self.points) do
       local start_pos = v.pos:ToScreen()
 
@@ -28,7 +28,7 @@ function Mapscenes:CalcView(player, origin, angles, fov)
         self.next_scene = self.next_scene or cur_time + config.get('mapscenes_speed')
 
         if self.next_scene <= cur_time then
-          Flux.client:ScreenFade(SCREENFADE.IN, Color(0, 0, 0), 2, 0)
+          PLAYER:ScreenFade(SCREENFADE.IN, Color(0, 0, 0), 2, 0)
           self.scene = self.scene + 1
           self.next_scene = cur_time + config.get('mapscenes_speed')
 

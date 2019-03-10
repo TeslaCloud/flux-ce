@@ -163,12 +163,12 @@ if SERVER then
   end)
 else
   cable.receive('fl_characters_load', function(data)
-    Flux.client.characters = data
+    PLAYER.characters = data
   end)
 
   cable.receive('fl_create_character', function(idx, data)
-    Flux.client.characters = Flux.client.characters or {}
-    Flux.client.characters[idx] = data
+    PLAYER.characters = PLAYER.characters or {}
+    PLAYER.characters[idx] = data
 
     if IsValid(Flux.intro_panel) then
       Flux.intro_panel:safe_remove()

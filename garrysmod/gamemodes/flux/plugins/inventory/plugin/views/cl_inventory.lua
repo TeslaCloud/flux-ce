@@ -433,7 +433,7 @@ function PANEL:rebuild()
   end
 
   self.inventory = vgui.create('fl_inventory', self)
-  self.inventory:set_player(Flux.client)
+  self.inventory:set_player(PLAYER)
   self.inventory:set_title('inventory.main_inventory')
 
   local w, h = self:GetSize()
@@ -453,7 +453,7 @@ function PANEL:rebuild()
 
   self.hotbar = vgui.Create('fl_hotbar', self:GetParent())
   self.hotbar:set_slot_padding(8)
-  self.hotbar:set_player(Flux.client)
+  self.hotbar:set_player(PLAYER)
   self.hotbar:set_title('inventory.hotbar')
   self.hotbar:rebuild()
 
@@ -466,14 +466,14 @@ function PANEL:rebuild()
   self.player_model:SetAnimated(true)
   self.player_model.LayoutEntity = function(pnl, ent) end
   self.player_model.rebuild = function(pnl)
-    pnl:SetModel(Flux.client:GetModel())
+    pnl:SetModel(PLAYER:GetModel())
 
     local ent = pnl:GetEntity()
     ent:SetSequence(ent:get_idle_anim())
-    ent:SetSkin(Flux.client:GetSkin())
-    ent:SetColor(Flux.client:GetColor())
-    ent:SetMaterial(Flux.client:GetMaterial())
-    ent:set_bodygroups(Flux.client:get_bodygroups())
+    ent:SetSkin(PLAYER:GetSkin())
+    ent:SetColor(PLAYER:GetColor())
+    ent:SetMaterial(PLAYER:GetMaterial())
+    ent:set_bodygroups(PLAYER:get_bodygroups())
   end
 
   self.player_model:rebuild()
@@ -482,7 +482,7 @@ function PANEL:rebuild()
   self.equipment.inventory_type = 'equipment'
   self.equipment:set_slot_padding(8)
   self.equipment:set_title('inventory.equipment')
-  self.equipment:set_player(Flux.client)
+  self.equipment:set_player(PLAYER)
   self.equipment:SetPos(w - self.equipment:GetWide(), h / 2 - self.equipment:GetTall() / 2)
 end
 

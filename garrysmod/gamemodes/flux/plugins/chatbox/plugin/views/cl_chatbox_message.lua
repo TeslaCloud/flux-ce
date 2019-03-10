@@ -8,7 +8,7 @@ PANEL.should_paint = false
 PANEL.alpha = 255
 
 function PANEL:Init()
-  --if Flux.client:can('chat_mod') then
+  --if PLAYER:can('chat_mod') then
   -- self.moderation = vgui.Create('fl_chat_moderation', self)
   --end
 

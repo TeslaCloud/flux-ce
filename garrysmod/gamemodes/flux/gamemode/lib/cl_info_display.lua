@@ -106,7 +106,7 @@ InfoDisplay:add('health', {
   offset_x = 6,
   offset_y = 2,
   callback = function(data)
-    data.percentage = (Flux.client:Health() / Flux.client:GetMaxHealth()) * 100
+    data.percentage = (PLAYER:Health() / PLAYER:GetMaxHealth()) * 100
   end
 })
 
@@ -118,6 +118,6 @@ InfoDisplay:add('armor', {
   offset_x = 8,
   offset_y = 2,
   callback = function(data)
-    data.percentage = (Flux.client:Armor() / 100) * 100
+    data.percentage = (PLAYER:Armor() / 100) * 100
   end
 })

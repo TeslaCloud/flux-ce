@@ -64,7 +64,7 @@ function Flux.Command:find_all(id)
       if SERVER then
         table.insert(hits, stored[v])
       else
-        if Flux.client:can(v) then
+        if PLAYER:can(v) then
           table.insert(hits, stored[v])
         end
       end

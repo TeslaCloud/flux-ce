@@ -172,10 +172,10 @@ else
   end)
 
   cable.receive('fl_surface_text_calculate', function()
-    SurfaceText:trace_remove_text(Flux.client:GetEyeTraceNoCursor())
+    SurfaceText:trace_remove_text(PLAYER:GetEyeTraceNoCursor())
   end)
 
   cable.receive('fl_surface_picture_calculate', function()
-    SurfaceText:trace_remove_picture(Flux.client:GetEyeTraceNoCursor())
+    SurfaceText:trace_remove_picture(PLAYER:GetEyeTraceNoCursor())
   end)
 end

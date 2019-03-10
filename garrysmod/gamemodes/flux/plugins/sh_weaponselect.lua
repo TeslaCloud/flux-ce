@@ -202,7 +202,7 @@ function PLUGIN:OnWeaponIndexChange(old_index, index)
   else
     self.index_offset = index - old_index
 
-    local weapon_count = #Flux.client:GetWeapons()
+    local weapon_count = #PLAYER:GetWeapons()
 
     if math.abs(self.index_offset) == (weapon_count - 1) then
       self.index_offset = -(self.index_offset / (weapon_count - 1))
@@ -217,7 +217,7 @@ function PLUGIN:OnWeaponSelected(index)
 end
 
 function PLUGIN:make_display(index, tab)
-  local client_weapons = Flux.client:GetWeapons()
+  local client_weapons = PLAYER:GetWeapons()
   local count = table.Count(client_weapons)
   local offsety = 32
   local result = {}

@@ -2,8 +2,8 @@ local blur_texture = Material('pp/blurscreen')
 local color_white = Color(255, 255, 255)
 
 function SurfaceText:PostDrawOpaqueRenderables()
-  local weapon = Flux.client:GetActiveWeapon()
-  local client_pos = Flux.client:GetPos()
+  local weapon = PLAYER:GetActiveWeapon()
+  local client_pos = PLAYER:GetPos()
 
   if IsValid(weapon) and weapon:GetClass() == 'gmod_tool' then
     local mode = weapon:GetMode()
@@ -151,10 +151,10 @@ function SurfaceText:PostDrawOpaqueRenderables()
 end
 
 function SurfaceText:draw_text_preview()
-  local tool = Flux.client:GetTool()
+  local tool = PLAYER:GetTool()
   local text = tool:GetClientInfo('text')
   local style = tool:GetClientNumber('style')
-  local trace = Flux.client:GetEyeTrace()
+  local trace = PLAYER:GetEyeTrace()
   local normal = trace.HitNormal
   local w, h = util.text_size(text, Theme.get_font('text_3d2d'))
   local angle = normal:Angle()
@@ -195,11 +195,11 @@ function SurfaceText:draw_text_preview()
 end
 
 function SurfaceText:draw_picture_preview()
-  local tool = Flux.client:GetTool()
+  local tool = PLAYER:GetTool()
   local url = tool:GetClientInfo('url')
   local width = tool:GetClientNumber('width')
   local height = tool:GetClientNumber('height')
-  local trace = Flux.client:GetEyeTrace()
+  local trace = PLAYER:GetEyeTrace()
   local normal = trace.HitNormal
   local angle = normal:Angle()
   angle:RotateAroundAxis(angle:Forward(), 90)

@@ -42,7 +42,7 @@ end
 function PANEL:rebuild()
   self.list:Clear()
 
-  for k, v in ipairs(Flux.client:get_all_characters()) do
+  for k, v in ipairs(PLAYER:get_all_characters()) do
     self.chars[k] = vgui.Create('fl_character_panel', self)
     self.chars[k]:SetSize(self.list:GetWide() * 0.25, self.list:GetTall())
     self.chars[k]:set_character(v)
@@ -107,7 +107,7 @@ function PANEL:Init()
       if text == self.char_data.name then
         local char_id = self.char_data.character_id
 
-        table.remove(Flux.client.characters, char_id)
+        table.remove(PLAYER.characters, char_id)
         cable.send('fl_player_delete_character', char_id)
 
         Flux.intro_panel.menu:rebuild()
@@ -140,7 +140,7 @@ function PANEL:set_character(char_data)
   self.model:SetModel(char_data.model)
   self.model:GetEntity():SetSequence(self.model:GetEntity():get_idle_anim())
 
-  if Flux.client:get_active_character_id() == char_data.character_id then
+  if PLAYER:get_active_character_id() == char_data.character_id then
     self.select:SetVisible(false)
     self.delete:SetVisible(false)
   end

@@ -18,8 +18,8 @@ do
 end
 
 function Flux.set_circle_percent(percentage, alpha)
-  Flux.client.circle_action_percentage = math.clamp(tonumber(percentage), 0, 100)
-  Flux.client.circle_action_alpha = math.clamp(tonumber(alpha or 255), 0, 255)
+  PLAYER.circle_action_percentage = math.clamp(tonumber(percentage), 0, 100)
+  PLAYER.circle_action_alpha = math.clamp(tonumber(alpha or 255), 0, 255)
 end
 
 function surface.draw_text_scaled(text, font_name, pos_x, pos_y, scale, color)

@@ -16,16 +16,16 @@ do
   }
 
   function Flux.color_mod_enabled(enable)
-    if !Flux.client.color_mod_table then
-      Flux.client.color_mod_table = default_color_mod
+    if !PLAYER.color_mod_table then
+      PLAYER.color_mod_table = default_color_mod
     end
 
     if enable then
-      Flux.client.color_mod = true
+      PLAYER.color_mod = true
       return true
     end
 
-    Flux.client.color_mod = false
+    PLAYER.color_mod = false
   end
 
   function enable_color_mod()
@@ -37,30 +37,30 @@ do
   end
 
   function Flux.set_color_mod(index, value)
-    if !Flux.client.color_mod_table then
-      Flux.client.color_mod_table = default_color_mod
+    if !PLAYER.color_mod_table then
+      PLAYER.color_mod_table = default_color_mod
     end
 
     if isstring(index) then
       if !index:starts('$pp_colour_') then
         if index == 'color' then index = 'colour' end
 
-        Flux.client.color_mod_table['$pp_colour_'..index] = (isnumber(value) and value) or 0
+        PLAYER.color_mod_table['$pp_colour_'..index] = (isnumber(value) and value) or 0
       else
-        Flux.client.color_mod_table[index] = (isnumber(value) and value) or 0
+        PLAYER.color_mod_table[index] = (isnumber(value) and value) or 0
       end
     end
   end
 
   function Flux.set_color_mod_table(tab)
     if istable(tab) then
-      Flux.client.color_mod_table = tab
+      PLAYER.color_mod_table = tab
     end
   end
 end
 
 function PLUGIN:RenderScreenspaceEffects()
-  if Flux.client.color_mod then
-    DrawColorModify(Flux.client.color_mod_table)
+  if PLAYER.color_mod then
+    DrawColorModify(PLAYER.color_mod_table)
   end
 end
