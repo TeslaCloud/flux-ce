@@ -1,6 +1,6 @@
 class 'Package'
 
-function Package:init()
+function Package:init(file_path, lib_path, full_path)
   self.metadata = {
     name        = '',
     version     = '',
@@ -27,6 +27,10 @@ function Package:init()
     self[k] = f
     self[(!k:ends('y') and k..'s' or k:sub(1, k:len() - 1)..'ies')] = f
   end
+
+  self.metadata.file_path = file_path
+  self.metadata.lib_path = lib_path
+  self.metadata.full_path = full_path
 end
 
 function Package:depends(what)

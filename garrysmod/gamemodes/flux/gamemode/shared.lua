@@ -58,11 +58,6 @@ if !LITE_REFRESH then
   include 'core/sh_core.lua'
   util.include 'core/sh_enums.lua'
 
-  -- Include the Crate (Flux libraries) class
-  util.include 'lib/required/sh_crate.lua'
-
-  Crate:include 'flow'
-
   if CLIENT then
     local files, folders = file.Find('flux/client/*.lua', 'LUA')
 
@@ -71,13 +66,12 @@ if !LITE_REFRESH then
     end
 
     include 'lib/sh_lang.lua'
-
-    -- Experimental!
-    -- Gotta have screen scaling before everything else!
-    if !set_screen_scale then
-      include 'flux/gamemode/lib/cl_scaling.lua'
-    end
   end
+
+  -- Include the Crate (Flux libraries) class
+  util.include 'lib/required/sh_crate.lua'
+
+  Crate:include 'flow'
 
   util.include 'core/cl_core.lua'
   util.include 'core/sv_core.lua'

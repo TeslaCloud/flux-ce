@@ -126,8 +126,8 @@ function ActiveRecord.connect()
   local db_settings = ActiveRecord.db_settings
   local adapter = isstring(db_settings.adapter) and db_settings.adapter:lower() or 'sqlite'
 
-  if file.Exists('flux/gamemode/lib/active_record/adapters/'..adapter..'.lua', 'LUA') then
-    include('flux/gamemode/lib/active_record/adapters/'..adapter..'.lua')
+  if file.Exists('flux/gamemode/lib/active_record/lib/adapters/'..adapter..'.lua', 'LUA') then
+    include('flux/gamemode/lib/active_record/lib/adapters/'..adapter..'.lua')
   end
 
   ActiveRecord.adapter = (ActiveRecord.Adapters[adapter:capitalize()] or ActiveRecord.Adapters.Abstract).new()

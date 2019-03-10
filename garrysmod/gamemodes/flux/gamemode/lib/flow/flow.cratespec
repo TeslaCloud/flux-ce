@@ -7,9 +7,9 @@ Crate:describe(function(s)
   s.author      'TeslaCloud Studios'
   s.email       'support@teslacloud.net'
   s.files       {
-    'sh_aliases.lua', 'sh_string.lua', 'sh_utils.lua', 'sh_color.lua',
-    'sh_math.lua', 'sh_player.lua', 'sh_table.lua', 'sh_wrappers.lua',
-    'cl_utils.lua', 'inflector/inflector.lua', 'inflector/inflections.lua'
+    'lib/sh_aliases.lua', 'lib/sh_string.lua', 'lib/sh_utils.lua', 'lib/sh_color.lua',
+    'lib/sh_math.lua', 'lib/sh_player.lua', 'lib/sh_table.lua', 'lib/sh_wrappers.lua',
+    'lib/cl_utils.lua', 'lib/inflector/inflector.lua', 'lib/inflector/inflections.lua'
   }
   s.global      'Flow'
   s.website     'https://teslacloud.net'

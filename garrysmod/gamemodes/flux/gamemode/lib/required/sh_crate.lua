@@ -6,15 +6,23 @@
 if Crate then return end
 
 if !string.ensure_end then
-  include 'flux/gamemode/lib/flow/sh_aliases.lua'
-  include 'flux/gamemode/lib/flow/sh_string.lua'
+  include 'flux/gamemode/lib/flow/lib/sh_aliases.lua'
+  include 'flux/gamemode/lib/flow/lib/sh_string.lua'
 end
 
 if !table.safe_merge then
-  include 'flux/gamemode/lib/flow/sh_table.lua'
+  include 'flux/gamemode/lib/flow/lib/sh_table.lua'
 end
 
 include 'classes/sh_package.lua'
+
+local crate_metadata = {}
+
+if SERVER then
+  fl.shared.crates = {}
+else
+  crate_metadata = fl.shared.crates
+end
 
 Crate           = {}
 Crate.installed = {}
@@ -71,21 +79,26 @@ function Crate:describe(callback)
     _G[meta.global] = _G[meta.global] or {}
   end
 
+  local full_path = meta.full_path
+
   if istable(meta.file) then
     for k, file in ipairs(meta.file) do
-      if file:starts('sv') or file:starts('cl') or file:starts('sh') then
-        util.include(file)
+      local filename = file:file_from_filename()
+
+      if filename:starts('sv') or filename:starts('cl') or filename:starts('sh') then
+        util.include(full_path..file)
       else
-        include(file)
+        include(full_path..file)
       end
     end
   elseif isstring(meta.file) then
     local file = meta.file
+    local filename = file:file_from_filename()
 
-    if file:starts('sv') or file:starts('cl') or file:starts('sh') then
-      util.include(file)
+    if filename:starts('sv') or filename:starts('cl') or filename:starts('sh') then
+      util.include(full_path..file)
     else
-      include(file)
+      include(full_path..file)
     end
   end
 
@@ -102,66 +115,51 @@ Crate.present       = Crate.included
 Crate.is_installed  = Crate.included
 
 do
-  local function do_include(path, original_path)
-    Crate.current = Package.new()
+  local function do_include(file_path, lib_path, full_path)
+    Crate.current = Package.new(file_path, lib_path, full_path)
     CRATE = Crate.current
 
-    local values = { util.include(path) }
+    if CLIENT then
+      Crate.current.metadata = crate_metadata[lib_path]
+      Crate:describe()
+    else
+      include(file_path)
+      fl.shared.crates[lib_path] = table.Copy(Crate.current.metadata)
+    end
 
-    Crate.installed[original_path] = Crate.current
+    Crate.installed[lib_path] = Crate.current
 
     Crate.current = nil
-
-    return unpack(values)
-  end
-
-  --- @warning [Internal]
-  -- Attempts to include the package with the provided path.
-  -- @return [...]
-  function Crate:try_include(path, original_path)
-    local main_file = path:ensure_end('/')..'cratefile.lua'
-
-    if file.Exists(main_file, 'LUA') then
-      return do_include(main_file, original_path)
-    else
-      if file.Exists(path..'.lua', 'LUA') then
-        return do_include(path..'.lua', original_path)
-      else
-        for k, v in ipairs(w'sh_ sv_ cl_') do
-          local new_path = path:gsub('('..original_path..')', v..'%1.lua')
-
-          if file.Exists(new_path, 'LUA') then
-            return do_include(new_path, original_path)
-          end
-        end
-      end
-    end
+    CRATE         = nil
   end
 
   --- Attempts to include the package with the specified name.
   -- This function will look for the package in the search paths that have previously been added.
   -- If no package with the matching name can be found, throws an error.
   -- @return [...]
-  function Crate:include(path)
-    local original_path = path
+  function Crate:include(lib_path)
+    if SERVER then
+      local folder_path = lib_path:ensure_end('/')
+      local files, _ = file.Find(folder_path..'*.cratespec', 'LUA')
 
-    if !file.Exists(path, 'LUA') then
-      local succeeded = false
+      if !istable(files) or #files == 0 then
+        for path, v in pairs(search_paths) do
+          local full_path = path..folder_path:ensure_end('/')
+          local files, _ = file.Find(full_path..'*.cratespec', 'LUA')
 
-      for k, v in pairs(search_paths) do
-        local success, err = pcall(self.try_include, self, k..path, original_path)
-
-        if success then
-          succeeded = true
-          break
+          if istable(files) and #files > 0 then
+            return do_include(full_path..files[1], lib_path, full_path)
+          end
         end
-      end
 
-      if !succeeded then
-        error('could not load "'..original_path..'" (library not found)')
+        error('could not load "'..lib_path..'" (no crate spec file found)')
+      elseif istable(files) and #files > 0 then
+        return do_include(folder_path..files[1], lib_path, folder_path)
+      else
+        error('could not load "'..lib_path..'" (library not found)')
       end
     else
-      return do_include(path, original_path)
+      return do_include(crate_metadata[lib_path].file_path, lib_path, lib_path)
     end
   end
 end
