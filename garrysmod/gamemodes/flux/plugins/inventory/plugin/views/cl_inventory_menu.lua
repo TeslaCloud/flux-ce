@@ -84,7 +84,28 @@ function PANEL:rebuild()
   self.player_model:SetCamPos(Vector(80, 0, 50))
   self.player_model:SetLookAt(Vector(0, 0, 37))
   self.player_model:SetAnimated(true)
-  self.player_model.LayoutEntity = function(pnl, ent) end
+  self.player_model.angles = Angle(0, 0, 0)
+
+  self.player_model.DragMousePress = function(pnl)
+    pnl.press_x, pnl.press_y = gui.MousePos()
+    pnl.pressed = true
+  end
+
+  self.player_model.DragMouseRelease = function(pnl)
+    pnl.pressed = false
+  end
+
+  self.player_model.LayoutEntity = function(pnl, ent)
+    if pnl.pressed then
+      local mx, my = gui.MousePos()
+
+      pnl.angles = pnl.angles - Angle(0, (pnl.press_x or mx) - mx, 0)
+      pnl.press_x, pnl.press_y = mx, my
+    end
+
+    ent:SetAngles(pnl.angles)
+  end
+
   self.player_model.rebuild = function(pnl)
     pnl:SetModel(PLAYER:GetModel())
 
