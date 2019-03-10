@@ -447,7 +447,7 @@ function PANEL:rebuild()
 
   self.pockets = vgui.create('fl_inventory', self)
   self.pockets.inventory_type = 'pockets'
-  self.pockets:set_max_size(w / 2, nil)
+  self.pockets:set_max_size(self.inventory:GetWide(), nil)
   self.pockets:set_player(PLAYER)
   self.pockets:set_title('inventory.pockets')
 
