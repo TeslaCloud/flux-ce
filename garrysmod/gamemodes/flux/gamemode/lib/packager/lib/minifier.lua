@@ -18,6 +18,8 @@ function Packager.Minifier:minify(source)
         val = '&&'
       elseif v.tk == TK_or then
         val = '||'
+      elseif v.tk == TK_not then
+        val = '!'
       end
 
       if v.tk != TK_string and (val[1]:match('[%w_]') and result[#result]:match('[%w_]')) then
