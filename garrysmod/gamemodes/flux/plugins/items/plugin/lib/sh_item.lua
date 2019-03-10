@@ -60,6 +60,7 @@ function item.register(id, data)
   data.description = data.description or 'This item has no description!'
   data.weight = data.weight or 1
   data.stackable = data.stackable or false
+  data.pocket_size = data.pocket_size or false
   data.max_stack = data.max_stack or 64
   data.model = data.model or 'models/props_lab/cactus.mdl'
   data.skin = data.skin or 0
@@ -94,6 +95,7 @@ function item.to_save(item_table)
     description = item_table.description,
     weight = item_table.weight,
     stackable = item_table.stackable,
+    pocket_size = item_table.pocket_size,
     max_stack = item_table.max_stack,
     model = item_table.model,
     skin = item_table.skin,
