@@ -59,10 +59,10 @@ if !LITE_REFRESH then
   util.include 'core/sh_enums.lua'
 
   if CLIENT then
-    local files, folders = file.Find('flux/client/*.lua', 'LUA')
+    local files, folders = file.Find('_flux/client/*.lua', 'LUA')
 
     for k, v in ipairs(files) do
-      include('flux/client/'..v)
+      include('_flux/client/'..v)
     end
 
     include 'lib/sh_lang.lua'

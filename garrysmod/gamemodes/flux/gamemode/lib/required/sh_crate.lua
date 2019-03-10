@@ -31,7 +31,7 @@ Crate.current   = nil
 local search_paths = {
   ['flux/gamemode/lib/']      = true,
   [fl.schema..'/schema/lib/'] = true,
-  ['lua/_flux/packages/']     = true
+  ['_flux/packages/']     = true
 }
 
 --- Adds a search path relative to 'LUA' system.
@@ -114,6 +114,39 @@ end
 Crate.present       = Crate.included
 Crate.is_installed  = Crate.included
 
+--- Searches for a package with the specified name and returns
+-- a full path to it's cratespec, the name of the package and
+-- full path to the folder.
+-- Returns false if the package cannot be found.
+-- @return [String(cratespec_path) String(name) String(folder_path)]
+-- @return [Boolean]
+function Crate:find(name)
+  local folder_path = name:ensure_end('/')
+  local files, _ = file.Find(folder_path..'*.cratespec', 'LUA')
+
+  if !istable(files) or #files == 0 then
+    for path, v in pairs(search_paths) do
+      local full_path = path..folder_path:ensure_end('/')
+      local files, _ = file.Find(full_path..'*.cratespec', 'LUA')
+
+      if istable(files) and #files > 0 then
+        return full_path..files[1], name, full_path
+      end
+    end
+  elseif istable(files) then
+    return folder_path..files[1], name, folder_path
+  end
+
+  return false
+end
+
+--- Searches for the package with the specified name and
+-- returns true if the package exists, false otherwise.
+-- @return [Boolean]
+function Crate:exists(name)
+  return tobool(self:find(name))
+end
+
 do
   local function do_include(file_path, lib_path, full_path)
     Crate.current = Package.new(file_path, lib_path, full_path)
@@ -137,9 +170,9 @@ do
   -- This function will look for the package in the search paths that have previously been added.
   -- If no package with the matching name can be found, throws an error.
   -- @return [...]
-  function Crate:include(lib_path)
+  function Crate:include(name)
     if SERVER then
-      local folder_path = lib_path:ensure_end('/')
+      local folder_path = name:ensure_end('/')
       local files, _ = file.Find(folder_path..'*.cratespec', 'LUA')
 
       if !istable(files) or #files == 0 then
@@ -148,18 +181,18 @@ do
           local files, _ = file.Find(full_path..'*.cratespec', 'LUA')
 
           if istable(files) and #files > 0 then
-            return do_include(full_path..files[1], lib_path, full_path)
+            return do_include(full_path..files[1], name, full_path)
           end
         end
 
-        error('could not load "'..lib_path..'" (no crate spec file found)')
+        error('could not load "'..name..'" (no crate spec file found)')
       elseif istable(files) and #files > 0 then
-        return do_include(folder_path..files[1], lib_path, folder_path)
+        return do_include(folder_path..files[1], name, folder_path)
       else
-        error('could not load "'..lib_path..'" (library not found)')
+        error('could not load "'..name..'" (library not found)')
       end
     else
-      return do_include(crate_metadata[lib_path].file_path, lib_path, lib_path)
+      return do_include(crate_metadata[name].file_path, name, name)
     end
   end
 end

@@ -345,21 +345,21 @@ end
 
 do
   local function purge_client_files()
-    if file.Exists('lua/flux/client', 'GAME') then
-      local files, dirs = file.Find('lua/flux/client/*', 'GAME')
+    if file.Exists('lua/_flux/client', 'GAME') then
+      local files, dirs = file.Find('lua/_flux/client/*', 'GAME')
 
       for k, v in ipairs(files) do
-        fileio.Delete('lua/flux/client/'..v)
+        fileio.Delete('lua/_flux/client/'..v)
       end
     end
   end
 
   local function write_client_file(path, contents)
-    fileio.MakeDirectory 'lua/flux'
-    fileio.MakeDirectory 'lua/flux/client'
+    fileio.MakeDirectory 'lua/_flux'
+    fileio.MakeDirectory 'lua/_flux/client'
 
-    fileio.Write('lua/flux/client/'..path, contents)
-    AddCSLuaFile('flux/client/'..path)
+    fileio.Write('lua/_flux/client/'..path, contents)
+    AddCSLuaFile('_flux/client/'..path)
   end
 
   local function write_html()
