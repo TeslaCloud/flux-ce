@@ -284,7 +284,7 @@ function PANEL:slots_to_inventory()
     end
   end
 
-  cable.send('fl_inventory_sync', self.inventory)
+  Cable.send('fl_inventory_sync', self.inventory)
 end
 
 function PANEL:rebuild()
@@ -337,7 +337,7 @@ function PANEL:rebuild()
             end
           end
 
-          cable.send('fl_item_move', !split and dropped[1].instance_ids or split[1], self.inventory_type, receiver.inv_x, receiver.inv_y)
+          Cable.send('fl_item_move', !split and dropped[1].instance_ids or split[1], self.inventory_type, receiver.inv_x, receiver.inv_y)
         else
           receiver.is_hovered = true
         end

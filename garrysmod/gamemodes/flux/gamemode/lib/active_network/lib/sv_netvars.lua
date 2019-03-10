@@ -37,12 +37,12 @@ function netvars.set_nv(key, value, send)
 
   globals[key] = value
 
-  cable.send(send, 'fl_netvar_global_set', key, value)
+  Cable.send(send, 'fl_netvar_global_set', key, value)
 end
 
 -- A function to send entity's networked variables to a player (or players).
 function ent_meta:send_net_var(key, recv)
-  cable.send(recv, 'fl_netvar_set', self:EntIndex(), key, (stored[self] and stored[self][key]))
+  Cable.send(recv, 'fl_netvar_set', self:EntIndex(), key, (stored[self] and stored[self][key]))
 end
 
 -- A function to get entity's networked variable.
@@ -57,7 +57,7 @@ end
 -- A function to flush all entity's networked variables.
 function ent_meta:clear_net_vars(recv)
   stored[self] = nil
-  cable.send(recv, 'fl_netvar_delete', self:EntIndex())
+  Cable.send(recv, 'fl_netvar_delete', self:EntIndex())
 end
 
 -- A function to set entity's networked variable.
@@ -75,13 +75,13 @@ end
 -- to a player.
 function player_meta:sync_nv()
   for k, v in pairs(globals) do
-    cable.send(self, 'fl_netvar_global_set', k, v)
+    Cable.send(self, 'fl_netvar_global_set', k, v)
   end
 
   for k, v in pairs(stored) do
     if IsValid(k) then
       for k2, v2 in pairs(v) do
-        cable.send(self, 'fl_netvar_set', k:EntIndex(), k2, v2)
+        Cable.send(self, 'fl_netvar_set', k:EntIndex(), k2, v2)
       end
     end
   end

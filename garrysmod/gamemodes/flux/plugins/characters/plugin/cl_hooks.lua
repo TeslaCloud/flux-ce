@@ -224,7 +224,7 @@ function Characters:PanelCharacterSet(panel, char_data)
   panel.model.Entity:SetSkin(char_data.skin or 1)
 end
 
-cable.receive('fl_player_created_character', function(success, status)
+Cable.receive('fl_player_created_character', function(success, status)
   if IsValid(Flux.intro_panel) and IsValid(Flux.intro_panel.menu) then
     if success then
       Flux.intro_panel.menu:goto_stage(-1)
@@ -234,7 +234,7 @@ cable.receive('fl_player_created_character', function(success, status)
         local chars = PLAYER:get_all_characters()
 
         if #chars == 1 then
-          cable.send('fl_player_select_character', chars[1].character_id)
+          Cable.send('fl_player_select_character', chars[1].character_id)
         end
       end)
     else

@@ -47,7 +47,7 @@ function character.create(player, data)
 
     character.save(player, char)
 
-    cable.send(player, 'fl_create_character', char.character_id, character.to_networkable(player, char))
+    Cable.send(player, 'fl_create_character', char.character_id, character.to_networkable(player, char))
   end
 
   return CHAR_SUCCESS
@@ -55,7 +55,7 @@ end
 
 if SERVER then
   function character.send_to_client(player)
-    cable.send(player, 'fl_characters_load', character.all_to_networkable(player))
+    Cable.send(player, 'fl_characters_load', character.all_to_networkable(player))
   end
 
   function character.all_to_networkable(player)
@@ -125,7 +125,7 @@ if SERVER then
     end
   end
 
-  cable.receive('fl_create_character', function(player, data)
+  Cable.receive('fl_create_character', function(player, data)
     data.gender  = (data.gender and data.gender == 'Female' and CHAR_GENDER_FEMALE) or CHAR_GENDER_MALE
     data.phys_desc = data.description
 
@@ -135,23 +135,23 @@ if SERVER then
 
     if status == CHAR_SUCCESS then
       character.send_to_client(player)
-      cable.send(player, 'fl_player_created_character', true, status)
+      Cable.send(player, 'fl_player_created_character', true, status)
 
       Flux.dev_print('Success')
     else
-      cable.send(player, 'fl_player_created_character', false, status)
+      Cable.send(player, 'fl_player_created_character', false, status)
 
       Flux.dev_print('Error')
     end
   end)
 
-  cable.receive('fl_player_select_character', function(player, id)
+  Cable.receive('fl_player_select_character', function(player, id)
     Flux.dev_print(player:name()..' has loaded character #'..id)
 
     player:set_active_character(id)
   end)
 
-  cable.receive('fl_player_delete_character', function(player, id)
+  Cable.receive('fl_player_delete_character', function(player, id)
     Flux.dev_print(player:name()..' has deleted character #'..id)
 
     hook.run('OnCharacterDelete', player, id)
@@ -162,11 +162,11 @@ if SERVER then
     character.send_to_client(player)
   end)
 else
-  cable.receive('fl_characters_load', function(data)
+  Cable.receive('fl_characters_load', function(data)
     PLAYER.characters = data
   end)
 
-  cable.receive('fl_create_character', function(idx, data)
+  Cable.receive('fl_create_character', function(idx, data)
     PLAYER.characters = PLAYER.characters or {}
     PLAYER.characters[idx] = data
 

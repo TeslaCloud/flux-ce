@@ -27,7 +27,7 @@ if !LITE_REFRESH then
   end
 
   -- Put that under an if because it doesn't change.
-  if !string.utf8upper or !pon or !cable then
+  if !string.utf8upper or !pon or !Cable then
     AddCSLuaFile 'lib/vendor/utf8.min.lua'
     AddCSLuaFile 'lib/vendor/pon.min.lua'
     AddCSLuaFile 'lib/vendor/cable.min.lua'
@@ -37,10 +37,10 @@ if !LITE_REFRESH then
   AddCSLuaFile 'shared.lua'
 
   -- Include the required third-party libraries.
-  if !string.utf8upper or !pon or !cable or !YAML then
+  if !string.utf8upper or !pon or !Cable or !YAML then
     include 'lib/vendor/utf8.lua'
     include 'lib/vendor/pon.lua'
-    include 'lib/vendor/cable.lua'
+    Cable     = include 'lib/vendor/cable.lua'
     Markdown  = include 'lib/vendor/markdown.lua'
     YAML      = include 'lib/vendor/yaml.lua'
 

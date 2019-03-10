@@ -154,7 +154,7 @@ if SERVER then
     end
   end
 
-  cable.receive('fl_items_menu_action', function(player, instance_id, action, ...)
+  Cable.receive('fl_items_menu_action', function(player, instance_id, action, ...)
     local item_table = item.find_instance_by_id(instance_id)
 
     if !item_table then return end
@@ -164,7 +164,7 @@ if SERVER then
   end)
 else
   function Item:do_menu_action(act, ...)
-    cable.send('fl_items_menu_action', self.instance_id, act, ...)
+    Cable.send('fl_items_menu_action', self.instance_id, act, ...)
   end
 
   function Item:get_use_text()

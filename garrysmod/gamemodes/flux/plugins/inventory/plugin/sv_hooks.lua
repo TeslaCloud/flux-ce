@@ -108,10 +108,10 @@ function Inventory:OnItemMove(player, instance_ids, inv_type, x, y)
 
   player:set_inventory(ply_inv, inv_type)
 
-  cable.send(player, 'fl_inventory_refresh', inv_type, old_inv_type)
+  Cable.send(player, 'fl_inventory_refresh', inv_type, old_inv_type)
 end
 
-cable.receive('fl_inventory_sync', function(player, inventory)
+Cable.receive('fl_inventory_sync', function(player, inventory)
   local inv_type = inventory.type
   local new_inventory = {}
 
@@ -139,6 +139,6 @@ cable.receive('fl_inventory_sync', function(player, inventory)
   player:set_inventory(new_inventory, inv_type)
 end)
 
-cable.receive('fl_item_move', function(player, instance_ids, inv_type, x, y)
+Cable.receive('fl_item_move', function(player, instance_ids, inv_type, x, y)
   hook.run('OnItemMove', player, instance_ids, inv_type, x, y)
 end)

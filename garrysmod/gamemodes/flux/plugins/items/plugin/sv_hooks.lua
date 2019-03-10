@@ -11,7 +11,7 @@ function Items:ClientIncludedSchema(player)
 end
 
 function Items:PlayerUseItemEntity(player, entity, item_table)
-  cable.send(player, 'fl_player_use_item_entity', entity)
+  Cable.send(player, 'fl_player_use_item_entity', entity)
 end
 
 function Items:PlayerTakeItem(player, item_table, ...)
@@ -103,7 +103,7 @@ function Items:OnItemTaken(player, item_table, inv_type, slot_x, slot_y)
 end
 
 function Items:PlayerInventoryUpdated(player, inv_type)
-  cable.send(player, 'fl_inventory_refresh', inv_type)
+  Cable.send(player, 'fl_inventory_refresh', inv_type)
 end
 
 function Items:PlayerCanUseItem(player, item_table, action, ...)
@@ -142,11 +142,11 @@ function Items:PreSaveCharacter(player, index)
   end
 end
 
-cable.receive('fl_player_drop_item', function(player, instance_id)
+Cable.receive('fl_player_drop_item', function(player, instance_id)
   hook.run('PlayerDropItem', player, instance_id)
 end)
 
-cable.receive('fl_items_abort_hold_start', function(player)
+Cable.receive('fl_items_abort_hold_start', function(player)
   local ent = player:get_nv('hold_entity')
 
   if IsValid(ent) then

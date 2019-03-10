@@ -1,5 +1,5 @@
 function Area:PlayerInitialized(player)
-  cable.send(player, 'fl_areas_load', areas.all())
+  Cable.send(player, 'fl_areas_load', areas.all())
 end
 
 function Area:LoadData()
@@ -37,7 +37,7 @@ function Area:OneSecond()
               if !table.HasValue(player.last_area[v.id], k2) then
                 Try('Areas', areas.get_callback(v.type), player, v, true, pos, cur_time)
 
-                cable.send(player, 'fl_player_entered_area', k, pos)
+                Cable.send(player, 'fl_player_entered_area', k, pos)
 
                 table.insert(player.last_area[v.id], k2)
               end
@@ -51,7 +51,7 @@ function Area:OneSecond()
             if table.HasValue(player.last_area[v.id], k2) then
               Try('Areas', areas.get_callback(v.type), player, v, false, pos, cur_time)
 
-              cable.send(player, 'fl_player_left_area', k, pos)
+              Cable.send(player, 'fl_player_left_area', k, pos)
 
               table.RemoveByValue(player.last_area[v.id], k2)
             end

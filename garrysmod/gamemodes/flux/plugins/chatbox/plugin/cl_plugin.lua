@@ -11,7 +11,7 @@ chatbox.y = chatbox.y or 0
 chatbox.old_add_text = chatbox.old_add_text or chat.AddText
 
 function chat.AddText(...)
-  cable.send('fl_chat_text_add', ...)
+  Cable.send('fl_chat_text_add', ...)
 end
 
 function chatbox.compile(msg_table)

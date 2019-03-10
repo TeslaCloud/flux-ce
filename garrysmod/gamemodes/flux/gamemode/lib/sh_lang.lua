@@ -122,7 +122,7 @@ if CLIENT then
     if current_language != new_lang then
       current_language = new_lang
 
-      cable.send('fl_player_set_lang', new_lang)
+      Cable.send('fl_player_set_lang', new_lang)
     end
   end)
 else

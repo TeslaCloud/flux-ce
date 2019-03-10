@@ -28,7 +28,7 @@ function Items:Think()
     local w, h = ScrW() * 0.5, ScrH() * 0.5
 
     if !scr_pos.visible or math.abs(w - x) > Font.scale(350) or math.abs(h - y) > Font.scale(350) then
-      cable.send('fl_items_abort_hold_start', true)
+      Cable.send('fl_items_abort_hold_start', true)
     end
   end
 end
@@ -104,17 +104,17 @@ function Items:PlayerUseItemMenu(instance_id, is_entity)
 end
 
 function Items:PlayerDropItem(item_table, panel, mouse_x, mouse_y)
-  cable.send('fl_player_drop_item', item_table.instance_id)
+  Cable.send('fl_player_drop_item', item_table.instance_id)
 end
 
 function Items:OnItemDataReceived()
   for k, v in ipairs(ents.GetAll()) do
     if IsValid(v) and v:GetClass() == 'fl_item' then
-      cable.send('fl_items_data_request', v:EntIndex())
+      Cable.send('fl_items_data_request', v:EntIndex())
     end
   end
 end
 
-cable.receive('fl_player_use_item_entity', function(entity)
+Cable.receive('fl_player_use_item_entity', function(entity)
   hook.run('PlayerUseItemMenu', entity.item.instance_id, true)
 end)

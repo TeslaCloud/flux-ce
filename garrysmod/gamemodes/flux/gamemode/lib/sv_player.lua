@@ -6,11 +6,11 @@ function Flux.Player:notify(player, message, arguments, color)
     return
   end
 
-  cable.send(player, 'fl_notification', message, arguments, color)
+  Cable.send(player, 'fl_notification', message, arguments, color)
 end
 
 function Flux.Player:broadcast(message, arguments)
   ServerLog('Notification: '..t(message, arguments))
 
-  cable.send(nil, 'fl_notification', message, arguments)
+  Cable.send(nil, 'fl_notification', message, arguments)
 end

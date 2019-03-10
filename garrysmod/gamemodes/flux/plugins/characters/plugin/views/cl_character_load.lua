@@ -86,7 +86,7 @@ function PANEL:Init()
     local cur_time = CurTime()
 
     if !self.next_click or self.next_click <= cur_time then
-      cable.send('fl_player_select_character', self.char_data.character_id)
+      Cable.send('fl_player_select_character', self.char_data.character_id)
 
       self.next_click = cur_time + 1
     end
@@ -108,7 +108,7 @@ function PANEL:Init()
         local char_id = self.char_data.character_id
 
         table.remove(PLAYER.characters, char_id)
-        cable.send('fl_player_delete_character', char_id)
+        Cable.send('fl_player_delete_character', char_id)
 
         Flux.intro_panel.menu:rebuild()
       end

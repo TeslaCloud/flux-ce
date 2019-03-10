@@ -5,14 +5,11 @@
   Flux edition. Won't work outside of Flux due to dependencies.
 --]]
 
--- Cable shouldn't be reloaded
-if cable then return end
 if !pon then include 'pon.lua' end
 
 _player = _player or player
 
-cable = cable or {}
-
+local cable = {}
 local net_cache = {}
 
 function cable.receive(id, callback)
@@ -113,3 +110,5 @@ else
     net.SendToServer()
   end
 end
+
+return cable

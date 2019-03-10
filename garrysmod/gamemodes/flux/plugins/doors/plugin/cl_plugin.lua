@@ -1,10 +1,10 @@
-cable.receive('fl_door_menu', function(entity, can_lock, conditions)
+Cable.receive('fl_door_menu', function(entity, can_lock, conditions)
   local menu = DermaMenu()
   local locked = entity:get_nv('fl_locked')
   
   if can_lock then
     menu:AddOption(locked and 'Unlock' or 'Lock', function()
-      cable.send('fl_lock_door', entity, !locked)
+      Cable.send('fl_lock_door', entity, !locked)
     end)
   end
 

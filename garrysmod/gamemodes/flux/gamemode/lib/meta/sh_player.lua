@@ -24,7 +24,7 @@ function player_meta:SetModel(path)
   hook.run('PlayerModelChanged', self, path, old_model)
 
   if SERVER then
-    cable.send(nil, 'fl_player_model_changed', self:EntIndex(), path, old_model)
+    Cable.send(nil, 'fl_player_model_changed', self:EntIndex(), path, old_model)
   end
 
   return self:flSetModel(path)

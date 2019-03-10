@@ -68,13 +68,13 @@ end
 
 function Chatbox:ChatboxTextEntered(text)
   if text and text != '' then
-    cable.send('fl_chat_player_say', text)
+    Cable.send('fl_chat_player_say', text)
   end
 
   chatbox.hide()
 end
 
-cable.receive('fl_chat_message_add', function(message_data)
+Cable.receive('fl_chat_message_add', function(message_data)
   if !IsValid(chatbox.panel) then
     chatbox.create()
   end

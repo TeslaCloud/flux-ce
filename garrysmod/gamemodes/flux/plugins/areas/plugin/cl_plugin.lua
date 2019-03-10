@@ -105,26 +105,26 @@ function Area:HUDPaint()
   end
 end
 
-cable.receive('fl_player_entered_area', function(area_idx, idx, pos)
+Cable.receive('fl_player_entered_area', function(area_idx, idx, pos)
   local area = areas.all()[area_idx]
 
   Try('Areas', areas.get_callback(area.type), PLAYER, area, true, pos, CurTime())
 end)
 
-cable.receive('fl_player_left_area', function(area_idx, idx, pos)
+Cable.receive('fl_player_left_area', function(area_idx, idx, pos)
   local area = areas.all()[area_idx]
 
   Try('Areas', areas.get_callback(area.type), PLAYER, area, false, pos, CurTime())
 end)
 
-cable.receive('fl_areas_load', function(area_storage)
+Cable.receive('fl_areas_load', function(area_storage)
   areas.set_stored(area_storage)
 end)
 
-cable.receive('fl_area_remove', function(id)
+Cable.receive('fl_area_remove', function(id)
   areas.remove(id)
 end)
 
-cable.receive('fl_area_register', function(id, data)
+Cable.receive('fl_area_register', function(id, data)
   areas.register(id, data)
 end)

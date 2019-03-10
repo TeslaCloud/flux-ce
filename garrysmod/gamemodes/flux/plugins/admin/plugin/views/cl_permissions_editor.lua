@@ -51,7 +51,7 @@ function PANEL:rebuild()
         local perm_value = btn.perm_value
 
         if text == '' then
-          cable.send('fl_delete_temp_permission', self:get_player(), perm_id)
+          Cable.send('fl_delete_temp_permission', self:get_player(), perm_id)
 
           self:set_temporary(perm_value, 0)
 
@@ -59,7 +59,7 @@ function PANEL:rebuild()
         end
 
         if duration then
-          cable.send('fl_temp_permission', self:get_player(), perm_id, perm_value, duration)
+          Cable.send('fl_temp_permission', self:get_player(), perm_id, perm_value, duration)
 
           self:set_temporary(perm_value, os.time() + duration)
         end
@@ -90,7 +90,7 @@ function PANEL:rebuild()
         local perm_value = btn.perm_value
 
         if text == '' then
-          cable.send('fl_delete_temp_permission', self:get_player(), perm_id)
+          Cable.send('fl_delete_temp_permission', self:get_player(), perm_id)
 
           self:set_temporary(perm_value, 0)
 
@@ -98,7 +98,7 @@ function PANEL:rebuild()
         end
 
         if duration then
-          cable.send('fl_temp_permission', self:get_player(), perm_id, perm_value, duration)
+          Cable.send('fl_temp_permission', self:get_player(), perm_id, perm_value, duration)
 
           self:set_temporary(perm_value, os.time() + duration)
         end
@@ -129,7 +129,7 @@ function PANEL:rebuild()
         local perm_value = btn.perm_value
 
         if text == '' then
-          cable.send('fl_delete_temp_permission', self:get_player(), perm_id)
+          Cable.send('fl_delete_temp_permission', self:get_player(), perm_id)
 
           self:set_temporary(perm_value, 0)
 
@@ -137,7 +137,7 @@ function PANEL:rebuild()
         end
 
         if duration then
-          cable.send('fl_temp_permission', self:get_player(), perm_id, perm_value, duration)
+          Cable.send('fl_temp_permission', self:get_player(), perm_id, perm_value, duration)
 
           self:set_temporary(perm_value, os.time() + duration)
         end
@@ -156,7 +156,7 @@ function PANEL:select_button(button)
   local player = self:get_player()
 
   if IsValid(player) and (value != player:get_permission(perm.id)) then
-    cable.send('fl_bolt_set_permission', player, perm.id, value)
+    Cable.send('fl_bolt_set_permission', player, perm.id, value)
   end
 
   if IsValid(self.prev_button) and self.prev_button != button then

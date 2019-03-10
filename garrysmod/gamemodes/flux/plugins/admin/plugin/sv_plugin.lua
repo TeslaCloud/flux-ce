@@ -15,24 +15,24 @@ function Bolt:delete_temp_permission(player, perm_id)
 
 end
 
-cable.receive('fl_bolt_set_role', function(player, target, role_id)
+Cable.receive('fl_bolt_set_role', function(player, target, role_id)
   target:SetUserGroup(role_id)
 
   Flux.Player:broadcast('set_group.message', { get_player_name(player), target:steam_name(true), role_id })
 end)
 
-cable.receive('fl_bolt_set_permission', function(player, target, perm_id, value)
+Cable.receive('fl_bolt_set_permission', function(player, target, perm_id, value)
   target:set_permission(perm_id, value)
 end)
 
-cable.receive('fl_temp_permission', function(player, target, perm_id, value, duration)
+Cable.receive('fl_temp_permission', function(player, target, perm_id, value, duration)
   target:set_temp_permission(perm_id, value, duration)
 end)
 
-cable.receive('fl_delete_temp_permission', function(player, target, perm_id)
+Cable.receive('fl_delete_temp_permission', function(player, target, perm_id)
   Bolt:delete_temp_permission(target, perm_id)
 end)
 
-cable.receive('fl_config_change', function(player, key, value)
+Cable.receive('fl_config_change', function(player, key, value)
   config.set(key, value)
 end)

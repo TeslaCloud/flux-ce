@@ -366,12 +366,12 @@ if SERVER then
     end
   end
 
-  cable.receive('fl_command_run', function(player, command)
+  Cable.receive('fl_command_run', function(player, command)
     Flux.Command:interpret(player, command, true)
   end)
 else
   function Flux.Command:send(command)
-    cable.send('fl_command_run', command)
+    Cable.send('fl_command_run', command)
   end
 end
 

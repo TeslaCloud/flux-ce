@@ -75,10 +75,10 @@ local hooks = {}
 
 if SERVER then
   function hooks:PlayerButtonDown(player, key)
-    cable.send(player, 'fl_bind_pressed', key)
+    Cable.send(player, 'fl_bind_pressed', key)
   end
 else
-  cable.receive('fl_bind_pressed', function(key)
+  Cable.receive('fl_bind_pressed', function(key)
     local bind = Flux.Binds:get_bind(key)
 
     if bind then

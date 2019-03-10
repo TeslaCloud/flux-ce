@@ -40,7 +40,7 @@ function TOOL.BuildCPanel(CPanel)
 
     local menu = DermaMenu()
     menu:AddOption('delete', function()
-      cable.send('fl_mapscene_remove', line)
+      Cable.send('fl_mapscene_remove', line)
       list:RemoveLine(line)
     end):SetIcon('icon16/cancel.png')
     menu:Open()

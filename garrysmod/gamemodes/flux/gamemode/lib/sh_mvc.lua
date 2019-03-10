@@ -8,7 +8,7 @@ if CLIENT then
   function MVC.push(name, ...)
     if !isstring(name) then return end
 
-    cable.send('fl_mvc_push', name, ...)
+    Cable.send('fl_mvc_push', name, ...)
   end
 
   function MVC.pull(name, handler, prevent_remove)
@@ -31,7 +31,7 @@ if CLIENT then
     MVC.pull(name, handler, true)
   end
 
-  cable.receive('fl_mvc_pull', function(name, ...)
+  Cable.receive('fl_mvc_pull', function(name, ...)
     local hooks = mvc_hooks[name]
 
     if hooks then
@@ -63,10 +63,10 @@ else
   function MVC.push(player, name, ...)
     if !isstring(name) then return end
 
-    cable.send(player, 'fl_mvc_pull', name, ...)
+    Cable.send(player, 'fl_mvc_pull', name, ...)
   end
 
-  cable.receive('fl_mvc_push', function(player, name, ...)
+  Cable.receive('fl_mvc_push', function(player, name, ...)
     local handlers = mvc_handlers[name]
 
     if handlers then

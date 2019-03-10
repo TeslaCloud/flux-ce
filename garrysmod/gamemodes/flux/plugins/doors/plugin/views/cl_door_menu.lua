@@ -29,10 +29,10 @@ function PANEL:OnRemove()
   CloseDermaMenus()
 
   for k, v in pairs(self:get_door_data()) do
-    cable.send('fl_send_door_data', self:get_door(), k, v)
+    Cable.send('fl_send_door_data', self:get_door(), k, v)
   end
 
-  cable.send('fl_send_door_conditions', self:get_door(), self.conditions:get_conditions())
+  Cable.send('fl_send_door_conditions', self:get_door(), self.conditions:get_conditions())
 end
 
 function PANEL:set_door(entity, conditions)

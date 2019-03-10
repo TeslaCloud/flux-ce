@@ -73,7 +73,7 @@ function Inventory:popup_hotbar()
   end
 end
 
-cable.receive('fl_inventory_refresh', function(inv_type, old_inv_type)
+Cable.receive('fl_inventory_refresh', function(inv_type, old_inv_type)
   if Flux.tab_menu and Flux.tab_menu.active_panel and Flux.tab_menu.active_panel.rebuild then
     Flux.tab_menu.active_panel:rebuild()
   end

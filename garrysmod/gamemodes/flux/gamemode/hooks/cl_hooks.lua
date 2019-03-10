@@ -6,10 +6,10 @@ timer.Remove('HintSystem_Annoy2')
 function GM:InitPostEntity()
   PLAYER = PLAYER or LocalPlayer()
 
-  cable.send('fl_player_set_lang', GetConVar('gmod_language'):GetString())
+  Cable.send('fl_player_set_lang', GetConVar('gmod_language'):GetString())
 
   timer.Simple(0.4, function()
-    cable.send('fl_player_created', true)
+    Cable.send('fl_player_created', true)
     Flux.local_player_created = true
   end)
 
@@ -380,7 +380,7 @@ function GM:ContextMenuOpen()
 end
 
 function GM:SoftUndo(player)
-  cable.send('fl_undo_soft')
+  Cable.send('fl_undo_soft')
 
   if #Flux.Undo:get_player(PLAYER) > 0 then return true end
 end

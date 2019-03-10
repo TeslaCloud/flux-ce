@@ -127,7 +127,7 @@ function Bolt:can(player, action, object)
       end
     else
       if CLIENT then
-        cable.send('fl_delete_temp_permission', player, action)
+        Cable.send('fl_delete_temp_permission', player, action)
       else
         self:delete_temp_permission(player, action)
       end

@@ -103,7 +103,7 @@ function PANEL:Init()
 
     for k, v in pairs(Bolt:get_roles()) do
       selector:add_choice(v.name, function()
-        cable.send('fl_bolt_set_role', self.player, v.role_id)
+        Cable.send('fl_bolt_set_role', self.player, v.role_id)
 
         timer.simple(0.05, function()
           self:rebuild()

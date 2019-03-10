@@ -33,7 +33,7 @@ if CLIENT then
   local metrics_sv = {}
   local counts_sv = {}
 
-  cable.receive('fl_profiler_update', function(metrics_data, counts_data)
+  Cable.receive('fl_profiler_update', function(metrics_data, counts_data)
     metrics_sv = metrics_data
     counts_sv = counts_data
     total_sv = 0
@@ -145,7 +145,7 @@ if CLIENT then
   end)
 else
   timer.Create('fl_profiler_update', 1, 0, function()
-    cable.send(nil, 'fl_profiler_update', metrics, counts)
+    Cable.send(nil, 'fl_profiler_update', metrics, counts)
     metrics = {}
     counts = {}
   end)

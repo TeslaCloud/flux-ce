@@ -103,7 +103,7 @@ function PANEL:set_config(key, config_table)
     end
 
     self.slider.OnValueChanged = function(pnl, value)
-      cable.send('fl_config_change', key, self.slider:GetValue())
+      Cable.send('fl_config_change', key, self.slider:GetValue())
     end
   elseif data_type == 'boolean' then
     self.check = vgui.create('fl_button', self)
@@ -114,7 +114,7 @@ function PANEL:set_config(key, config_table)
     self.check.DoClick = function(btn)
       btn.value = !btn.value
 
-      cable.send('fl_config_change', key, btn.value)
+      Cable.send('fl_config_change', key, btn.value)
 
       self.check:set_icon(btn.value and 'fa-check' or 'fa-ban')
     end
@@ -122,7 +122,7 @@ function PANEL:set_config(key, config_table)
     self.text_entry = vgui.create('DTextEntry', self)
     self.text_entry:SetFont(Theme.get_font('main_menu_small'))
     self.text_entry.OnEnter = function(pnl, value)
-      cable.send('fl_config_change', key, self.text_entry:GetValue())
+      Cable.send('fl_config_change', key, self.text_entry:GetValue())
     end
   elseif data_type == 'table' then
     self.combo_box = vgui.create('DComboBox', self)
@@ -153,7 +153,7 @@ function PANEL:set_config(key, config_table)
           if text != '' then
             table.insert(data_table, text)
 
-            cable.send('fl_config_change', key, data_table)
+            Cable.send('fl_config_change', key, data_table)
 
             self.combo_box.rebuild()
           end
@@ -164,7 +164,7 @@ function PANEL:set_config(key, config_table)
         t'yes', function()
           table.remove(data_table, index)
 
-          cable.send('fl_config_change', key, data_table)
+          Cable.send('fl_config_change', key, data_table)
 
           self.combo_box.rebuild()
         end, t'no')
@@ -183,7 +183,7 @@ function PANEL:set_config(key, config_table)
     end
 
     self.combo_box.OnSelect = function(pnl, index, text, data)
-      cable.send('fl_config_change', key, data)
+      Cable.send('fl_config_change', key, data)
     end
   end
 end
