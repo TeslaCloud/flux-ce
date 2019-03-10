@@ -47,8 +47,9 @@ end
 
 function PANEL:resize()
   local max_w, max_h = self:get_max_size()
-  local width = self.inv_w * (slot_size + self:get_slot_padding())
-  local height = self.inv_h * (slot_size + self:get_slot_padding())
+  local padding = self:get_slot_padding()
+  local width = self.inv_w * (slot_size + padding) - padding
+  local height = self.inv_h * (slot_size + padding) - padding
 
   if height >= max_h then
     width = width + 16
