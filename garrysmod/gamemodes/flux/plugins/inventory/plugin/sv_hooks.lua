@@ -69,6 +69,10 @@ function Inventory:CanItemTransfer(player, item_table, inv_type, x, y)
     return false
   end
 
+  if inv_type == 'pockets' and !item_table.pocket_size then
+    return false
+  end
+
   if item_table.can_transfer then
     return item_table:can_transfer(player, inv_type, x, y)
   end
