@@ -39,18 +39,6 @@ do
     return item_list
   end
 
-  function player_meta:set_inventory(new_inv, inv_type)
-    if SERVER then
-    inv_type = inv_type or 'hotbar'
-
-      local char = self:get_character()
-      char.real_inventory[inv_type] = new_inv
-      character.save(self, char)
-
-      self:set_nv('inventory', char.real_inventory)
-    end
-  end
-
   function player_meta:get_slot(x, y, inv_type)
     local inv = self:get_inventory(inv_type)
 
@@ -74,6 +62,16 @@ do
   end
 
   if SERVER then
+    function player_meta:set_inventory(new_inv, inv_type)
+      inv_type = inv_type or 'hotbar'
+
+      local char = self:get_character()
+      char.real_inventory[inv_type] = new_inv
+      character.save(self, char)
+
+      self:set_nv('inventory', char.real_inventory)
+    end
+
     function player_meta:add_item(item_table, inv_type)
       if !item_table then return -1 end
 
