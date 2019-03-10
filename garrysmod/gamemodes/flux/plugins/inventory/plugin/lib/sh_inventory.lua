@@ -50,14 +50,17 @@ do
   end
 
   function player_meta:get_inventory_size(inv_type)
-    if inv_type == 'main_inventory' then
-      return Config.get('inventory_width'), Config.get('inventory_height')
-    elseif inv_type == 'hotbar' then
-      return Config.get('hotbar_width'), Config.get('hotbar_height')
-    elseif inv_type == 'equipment' then
-      return Config.get('equipment_width'), Config.get('equipment_height')
+    local w, h = hook.run('GetInventorySize', self, inv_type)
+    local inv_sizes = {
+      ['main_inventory'] = { Config.get('inventory_width'), Config.get('inventory_height') },
+      ['hotbar'] = { Config.get('hotbar_width'), Config.get('hotbar_height') },
+      ['equipment'] = { Config.get('equipment_width'), Config.get('equipment_height') }
+    }
+
+    if w and h then
+      return w, h
     else
-      return hook.run('GetInventorySize', player, inv_type)
+      return unpack(inv_sizes[inv_type])
     end
   end
 
