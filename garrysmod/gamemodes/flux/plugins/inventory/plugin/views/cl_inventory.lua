@@ -242,7 +242,7 @@ function PANEL:resize()
   end
 
   self.scroll:SetWide(width)
-  self.horizontal_scroll:SetSize(math.min(width, max_w / 2), math.min(height, max_h))
+  self.horizontal_scroll:SetSize(math.min(width, max_w), math.min(height, max_h))
 end
 
 function PANEL:set_inventory(inventory)
