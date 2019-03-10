@@ -34,15 +34,7 @@ function PANEL:Paint(w, h)
 end
 
 function PANEL:PaintOver(w, h)
-  if self.title then
-    local text = t(self.title)
-    local font = Theme.get_font('text_normal_large')
-    local text_w, text_h = util.text_size(text, font)
-
-    DisableClipping(true)
-      draw.SimpleText(text, font, 0, -text_h - 4, color_white:alpha(150))
-    DisableClipping(false)
-  end
+  Theme.hook('PaintOverInventoryBackground', self, w, h)
 end
 
 function PANEL:resize()

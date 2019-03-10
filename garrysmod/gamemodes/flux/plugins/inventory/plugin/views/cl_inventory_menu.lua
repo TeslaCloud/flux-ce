@@ -59,7 +59,7 @@ function PANEL:rebuild()
 
   local pockets_title_w, pockets_title_h = util.text_size(self.pockets.title, Theme.get_font('text_normal_large'))
 
-  height = height + pockets_title_h + 8
+  height = height + pockets_title_h + 16
 
   if height < h then
     local x, y = self.inventory:GetPos()

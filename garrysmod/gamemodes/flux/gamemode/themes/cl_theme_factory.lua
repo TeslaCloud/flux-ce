@@ -80,6 +80,7 @@ function THEME:on_loaded()
   -- Set from schema Theme.
   -- self:set_material('schema_logo', 'materials/flux/hl2rp/logo.png')
   self:set_material('gradient_up', 'vgui/gradient-u')
+  self:set_material('gradient_down', 'vgui/gradient-d')
 
   self:add_panel('tab_menu', function(id, parent, ...)
     return vgui.Create('fl_tab_menu', parent)
@@ -380,7 +381,26 @@ function THEME:PaintTabMenu(panel, width, height)
 end
 
 function THEME:PaintItemSlot(panel, w, h)
-  draw.textured_rect(Theme.get_material('gradient_up'), 0, 0, w, h, Color(175, 175, 175, 5))
+  draw.textured_rect(self:get_material('gradient_up'), 0, 0, w, h, Color(30, 30, 30, 100))
+end
+
+function THEME:PaintInventoryBackground(panel, w, h)
+  DisableClipping(true)
+    draw.RoundedBox(0, -4, -4, w + 8, h + 8, Color(50, 50, 50, 100))
+  DisableClipping(false)
+end
+
+function THEME:PaintOverInventoryBackground(panel, w, h)
+  if panel.title then
+    local text = t(panel.title)
+    local font = self:get_font('text_normal_large')
+    local text_w, text_h = util.text_size(text, font)
+
+    DisableClipping(true)
+      draw.textured_rect(self:get_material('gradient_down'), -4, -text_h - 4, text_w + 8, text_h, Color(50, 50, 50, 100))
+      draw.SimpleText(text, font, 0, -text_h - 4, color_white:alpha(150))
+    DisableClipping(false)
+  end
 end
 
 THEME.skin.frameBorder = Color(255, 255, 255, 255)

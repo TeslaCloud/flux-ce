@@ -6,7 +6,7 @@ PANEL.is_hovered = false
 PANEL.slot_number = nil
 
 function PANEL:Paint(w, h)
-  local draw_color = Color(0, 0, 0, 150)
+  local draw_color = Color(30, 30, 30, 100)
 
   if self.is_hovered and !self:IsHovered() then
     self.is_hovered = false
