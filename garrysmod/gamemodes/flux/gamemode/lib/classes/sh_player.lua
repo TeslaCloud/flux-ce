@@ -1,5 +1,5 @@
-local flPlayer = {}
-flPlayer.DisplayName = 'Flux Player'
+local flux_player = {}
+flux_player.DisplayName = 'Flux Player'
 DEFINE_BASECLASS('player_default')
 
 local model_list = {}
@@ -8,12 +8,12 @@ for k, v in pairs(player_manager.AllValidModels()) do
   model_list[v:lower()] = k
 end
 
-flPlayer.loadout = {
+flux_player.loadout = {
   'weapon_fists'
 }
 
 -- Called when the data tables are setup.
-function flPlayer:SetupDataTables()
+function flux_player:SetupDataTables()
   if !self.Player or !self.Player.DTVar then
     return
   end
@@ -24,7 +24,7 @@ function flPlayer:SetupDataTables()
 end
 
 -- Called on player spawn to determine which hand model to use.
-function flPlayer:GetHandsModel()
+function flux_player:GetHandsModel()
   local player_model = string.lower(self.Player:GetModel())
 
   if model_list[player_model] then
@@ -43,7 +43,7 @@ function flPlayer:GetHandsModel()
 end
 
 -- Called after view model is drawn.
-function flPlayer:PostDrawViewModel(viewmodel, weapon)
+function flux_player:PostDrawViewModel(viewmodel, weapon)
   if weapon.UseHands or !weapon:IsScripted() then
     local hands_entity = PLAYER:GetHands()
 
@@ -53,8 +53,8 @@ function flPlayer:PostDrawViewModel(viewmodel, weapon)
   end
 end
 
-function flPlayer:Loadout()
+function flux_player:Loadout()
   hook.run('PostPlayerLoadout', self.Player, self.loadout)
 end
 
-player_manager.RegisterClass('flPlayer', flPlayer, 'player_default')
+player_manager.RegisterClass('flux_player', flux_player, 'player_default')
