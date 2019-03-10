@@ -82,33 +82,25 @@ do
 
       local ply_inv = self:get_inventory(inv_type)
 
-      if (item_table.inventory_type != inv_type and hook.run('CanItemTransfer', self, item_table, inv_type, x, y) != false) or
-      item_table.inventory_type == inv_type then
-        local y, x = self:find_stack_slot(item_table)
+      if hook.run('CanItemTransfer', self, item_table, inv_type, x, y) != false then
+        local y, x = self:find_stack_slot(item_table, inv_type)
 
         if x and y then
-          local ids = ply_inv[y][x]
-          local slot_table = item.find_instance_by_id(ids[1])
+          table.insert(ply_inv[y][x], item_table.instance_id)
 
-          if item_table.stackable and item_table.id == slot_table.id then
-            if #ids < item_table.max_stack and hook.run('CanItemStack', self, item_table, inv_type, x, y) != false then
-              table.insert(ply_inv[y][x], item_table.instance_id)
+          item_table.slot_id = { y, x }
+          item_table.inventory_type = inv_type
 
-              item_table.slot_id = { y, x }
-              item_table.inventory_type = inv_type
+          self:set_inventory(ply_inv, inv_type)
 
-              self:set_inventory(ply_inv, inv_type)
+          item.network_item(self, item_table.instance_id)
 
-              item.network_item(self, item_table.instance_id)
-
-              return y, x
-            end
-          end
+          return y, x
         end
 
         y, x = self:find_empty_slot(inv_type)
 
-        if x and y and hook.run('CanItemMove', self, item_table, inv_type, x, y) != false then
+        if hook.run('CanItemMove', self, item_table, inv_type, x, y) != false then
           table.insert(ply_inv[y][x], item_table.instance_id)
 
           item_table.slot_id = { y, x }
@@ -227,6 +219,7 @@ do
         end
       end
     end
+  end
 
     function player_meta:find_empty_slot(inv_type)
       local ply_inv = self:get_inventory(inv_type)

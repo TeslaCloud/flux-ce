@@ -47,18 +47,50 @@ function Inventory:OnItemInventoryChanged(player, item_table, new_inv, old_inv)
 end
 
 function Inventory:CanItemMove(player, item_table, inv_type, x, y)
+  if !item_table or !x or !y or !inv_type then
+    return false
+  end
+
   if item_table.can_move then
     return item_table:can_move(player, inv_type, x, y)
   end
 end
 
 function Inventory:CanItemTransfer(player, item_table, inv_type, x, y)
+  if !item_table or !inv_type then
+    return false
+  end
+
+  if item_table.inventory_type == inv_type then
+    return true
+  end
+
+  if inv_type == 'equipment' and !item_table.equip_slot then
+    return false
+  end
+
   if item_table.can_transfer then
     return item_table:can_transfer(player, inv_type, x, y)
   end
 end
 
 function Inventory:CanItemStack(player, item_table, inv_type, x, y)
+  if !item_table or !x or !y or !inv_type then
+    return false
+  end
+
+  local ids = player:get_slot(x, y, inv_type)
+
+  if #ids == 0 then
+    return true
+  end
+
+  local slot_table = item.find_instance_by_id(ids[1])
+
+  if item_table.id != slot_table.id or #ids >= item_table.max_stack then
+    return false
+  end
+
   if item_table.can_stack then
     return item_table:can_stack(player, inv_type, x, y)
   end
@@ -70,16 +102,9 @@ function Inventory:OnItemMove(player, instance_ids, inv_type, x, y)
   for k, v in pairs(instance_ids) do
     local item_table = item.find_instance_by_id(v)
 
-    if !item_table or hook.run('CanItemMove', player, item_table, inv_type, x, y) == false then
-      return
-    end
-
-    if item_table.inventory_type != inv_type and 
-    hook.run('CanItemTransfer', player, item_table, inv_type, x, y) == false then
-      return
-    end
-
-    if item_table.stackable and hook.run('CanItemStack', player, item_table, inv_type, x, y) == false then
+    if hook.run('CanItemTransfer', player, item_table, inv_type, x, y) == false or
+       hook.run('CanItemMove', player, item_table, inv_type, x, y) == false or 
+       hook.run('CanItemStack', player, item_table, inv_type, x, y) == false then
       return
     end
 
