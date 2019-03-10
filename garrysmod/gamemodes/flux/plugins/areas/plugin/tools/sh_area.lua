@@ -115,7 +115,7 @@ if CLIENT then
 end
 /*
 function TOOL.BuildCPanel(CPanel)
-  local types = areas.get_types()
+  local types = Areas.get_types()
   local options = {}
 
   for k, v in pairs(types) do

@@ -1,4 +1,4 @@
-areas.register_type(
+Areas.register_type(
   'text',
   'Text Area',
   'An area that displays text when player enters it.',
@@ -15,7 +15,7 @@ util.include('cl_hooks.lua')
 
 if SERVER then
   function PLUGIN:PlayerInitialized(player)
-    --Cable.send(player, 'fl_areas_text_load', areas.get_by_type('text'))
+    --Cable.send(player, 'fl_areas_text_load', Areas.get_by_type('text'))
   end
 
   function PLUGIN:InitPostEntity()
@@ -27,20 +27,20 @@ if SERVER then
   end
 
   function PLUGIN:save()
-    --Data.save_plugin('areas', areas.get_by_type('text') or {})
+    --Data.save_plugin('areas', Areas.get_by_type('text') or {})
   end
 
   function PLUGIN:load()
     local loaded = Data.load_plugin('areas', {})
 
     for k, v in pairs(loaded) do
-      areas.register(k, v)
+      Areas.register(k, v)
     end
   end
 else
   Cable.receive('fl_areas_text_load', function(data)
     for k, v in pairs(data) do
-      areas.register(k, v)
+      Areas.register(k, v)
     end
   end)
 end

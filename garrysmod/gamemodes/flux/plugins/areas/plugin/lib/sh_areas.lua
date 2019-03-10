@@ -1,35 +1,35 @@
-library 'areas'
+library 'Areas'
 
-local stored = areas.stored or {}
-local callbacks = areas.callbacks or {}
-local types = areas.types or {}
-local top = areas.top or 0
-areas.stored = stored
-areas.callbacks = callbacks
-areas.types = types
-areas.top = top
+local stored = Areas.stored or {}
+local callbacks = Areas.callbacks or {}
+local types = Areas.types or {}
+local top = Areas.top or 0
+Areas.stored = stored
+Areas.callbacks = callbacks
+Areas.types = types
+Areas.top = top
 
-function areas.all()
+function Areas.all()
   return stored
 end
 
-function areas.set_stored(stored_table)
+function Areas.set_stored(stored_table)
   stored = (istable(stored_table) and stored_table) or {}
 end
 
-function areas.get_callbacks()
+function Areas.get_callbacks()
   return callbacks
 end
 
-function areas.get_types()
+function Areas.get_types()
   return types
 end
 
-function areas.get_count()
+function Areas.get_count()
   return top
 end
 
-function areas.get_by_type(type)
+function Areas.get_by_type(type)
   local to_ret = {}
 
   for k, v in pairs(stored) do
@@ -41,7 +41,7 @@ function areas.get_by_type(type)
   return to_ret
 end
 
-function areas.create(id, height, data)
+function Areas.create(id, height, data)
   data = data or {}
 
   local area = {}
@@ -81,13 +81,13 @@ function areas.create(id, height, data)
   function area:register()
     if #self.verts > 2 then self:finish_poly() end
 
-    return areas.register(id, self)
+    return Areas.register(id, self)
   end
 
   return area
 end
 
-function areas.register(id, data)
+function Areas.register(id, data)
   if !id or !data then return end
   if #data.polys < 1 then return end
 
@@ -104,7 +104,7 @@ function areas.register(id, data)
   return stored[id]
 end
 
-function areas.remove(id)
+function Areas.remove(id)
   stored[id] = nil
 
   if SERVER then
@@ -112,15 +112,15 @@ function areas.remove(id)
   end
 end
 
-function areas.get_color(typeID)
-  local type_table = types[typeID]
+function Areas.get_color(type_id)
+  local type_table = types[type_id]
 
   if istable(type_table) then
     return type_table.color
   end
 end
 
-function areas.register_type(id, name, description, color, default_callback)
+function Areas.register_type(id, name, description, color, default_callback)
   types[id] = {
     name = name,
     description = description,
@@ -130,15 +130,15 @@ function areas.register_type(id, name, description, color, default_callback)
 end
 
 -- callback(player, area, poly, has_entered, cur_pos, cur_time)
-function areas.set_callback(area_type, callback)
+function Areas.set_callback(area_type, callback)
   callbacks[area_type] = callback
 end
 
-function areas.get_callback(area_type)
+function Areas.get_callback(area_type)
   return callbacks[area_type] or (types[area_type] and types[area_type].callback) or function() Flux.dev_print("Callback for area type '"..area_type.."' could not be found!") end
 end
 
-areas.register_type(
+Areas.register_type(
   'area',
   'Simple Area',
   'A simple area. Use this type if you have a callback somewhere in the code that looks up id instead of type ID.',

@@ -23,7 +23,7 @@ Area.tool_modes = {
       OnReload = data.OnReload or function(mode, tool, trace)
         local cur_time = CurTime()
 
-        for k, v in pairs(areas.all()) do
+        for k, v in pairs(Areas.all()) do
           if istable(v.polys) and isstring(v.type) and v.type == data.area_type then
             for k2, v2 in ipairs(v.polys) do
               local pos = trace.HitPos
@@ -31,7 +31,7 @@ Area.tool_modes = {
 
               if z > v2[1].z and z < v.maxh then
                 if util.vector_in_poly(pos, v2) then
-                  areas.remove(v.id)
+                  Areas.remove(v.id)
 
                   return true
                 end
@@ -74,7 +74,7 @@ function Area:AddAreaToolModes(mode_list)
     if !id or id == '' then return false end
 
     if !tool.area then
-      tool.area = areas.create(id, height, { type = self.area_type })
+      tool.area = Areas.create(id, height, { type = self.area_type })
       tool.area.text = text
     end
 
@@ -101,7 +101,7 @@ function Area:AddAreaToolModes(mode_list)
   mode_list:Add(mode)
 end
 
-areas.register_type('textarea', 'Text Area', 'Displays text whenever player enters the area.', Color(255, 0, 255), function(player, area, has_entered, pos, cur_time)
+Areas.register_type('textarea', 'Text Area', 'Displays text whenever player enters the area.', Color(255, 0, 255), function(player, area, has_entered, pos, cur_time)
   player.text_areas = player.text_areas or {}
 
   if has_entered then

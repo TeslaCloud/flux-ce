@@ -1,21 +1,21 @@
 function Area:PlayerInitialized(player)
-  Cable.send(player, 'fl_areas_load', areas.all())
+  Cable.send(player, 'fl_areas_load', Areas.all())
 end
 
 function Area:LoadData()
   local loaded = Data.load_plugin('areas', {})
 
-  areas.set_stored(loaded)
+  Areas.set_stored(loaded)
 end
 
 function Area:SaveData()
-  Data.save_plugin('areas', areas.all())
+  Data.save_plugin('areas', Areas.all())
 end
 
 function Area:OneSecond()
   local cur_time = CurTime()
 
-  for k, v in pairs(areas.all()) do
+  for k, v in pairs(Areas.all()) do
     if istable(v.polys) and isstring(v.type) then
       for k2, v2 in ipairs(v.polys) do
         for plyID, player in ipairs(_player.GetAll()) do
@@ -35,7 +35,7 @@ function Area:OneSecond()
             if util.vector_in_poly(pos, v2) then
               -- Player entered the area
               if !table.HasValue(player.last_area[v.id], k2) then
-                Try('Areas', areas.get_callback(v.type), player, v, true, pos, cur_time)
+                Try('Areas', Areas.get_callback(v.type), player, v, true, pos, cur_time)
 
                 Cable.send(player, 'fl_player_entered_area', k, pos)
 
@@ -49,7 +49,7 @@ function Area:OneSecond()
           if !entered_area then
             -- Player left the area
             if table.HasValue(player.last_area[v.id], k2) then
-              Try('Areas', areas.get_callback(v.type), player, v, false, pos, cur_time)
+              Try('Areas', Areas.get_callback(v.type), player, v, false, pos, cur_time)
 
               Cable.send(player, 'fl_player_left_area', k, pos)
 
