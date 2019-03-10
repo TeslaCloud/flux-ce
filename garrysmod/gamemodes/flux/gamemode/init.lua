@@ -31,15 +31,17 @@ if !LITE_REFRESH then
     AddCSLuaFile 'lib/vendor/utf8.min.lua'
     AddCSLuaFile 'lib/vendor/pon.min.lua'
     AddCSLuaFile 'lib/vendor/cable.min.lua'
+    AddCSLuaFile 'lib/vendor/markdown.min.lua'
   end
 
   AddCSLuaFile 'shared.lua'
 
-  -- Include pON, Cable and UTF-8 library.
+  -- Include the required third-party libraries.
   if !string.utf8upper or !pon or !cable or !YAML then
     include 'lib/vendor/utf8.lua'
     include 'lib/vendor/pon.lua'
     include 'lib/vendor/cable.lua'
+    include 'lib/vendor/markdown.lua'
     YAML = include 'lib/vendor/yaml.lua'
 
     Settings = Settings or YAML.read('gamemodes/flux/config/settings.yml')
