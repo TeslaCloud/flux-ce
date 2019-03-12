@@ -22,7 +22,7 @@ function player_meta:set_active_character(id)
 
   if !real_character then return end
 
-  self:set_nv('active_character', real_character:get_id())
+  self:set_nv('active_character', real_character.id)
   self.current_character = real_character
 
   local char_data = self:get_character()

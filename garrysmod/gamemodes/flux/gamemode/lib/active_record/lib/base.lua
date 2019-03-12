@@ -30,11 +30,6 @@ ActiveRecord.Base.relations   = {}
 ActiveRecord.Base.validations = {}
 
 --- @warning [Internal]
--- Biggest ID in the "id" column on the database table.
--- @return [Integer]
-ActiveRecord.Base.last_id     = 0
-
---- @warning [Internal]
 -- Sets up basic variables and creates empty tables for
 -- relations that the object has many of.
 function ActiveRecord.Base:init()
@@ -56,7 +51,6 @@ end
 -- of the class name, or else this will fail!
 function ActiveRecord.Base:class_extended(new_class)
   new_class.table_name = Flow.Inflector:pluralize(new_class.class_name:underscore())
-  new_class.last_id = 0
 
   ActiveRecord.Model:add(new_class)
 end
@@ -67,20 +61,6 @@ end
 function ActiveRecord.Base:get_schema()
   self.schema = self.schema or ActiveRecord.schema[self.table_name] or {}
   return self.schema
-end
-
---- @warning [Internal]
--- @warning [Deprecated]
--- Returns the last inserted (biggest) ID in the database table
--- that the current object should be tied to.
--- @return [Integer]
-function ActiveRecord.Base:get_id()
-  if !self.id then
-    self.class.last_id = self.class.last_id + 1
-    self.id = self.class.last_id
-  end
-
-  return self.id
 end
 
 --- Dump object as a simple data table.
@@ -441,8 +421,7 @@ end
 
 --- @ignore
 local except = {
-  id = true, created_at = true, updated_at = true,
-  last_id = true
+  id = true, created_at = true, updated_at = true
 }
 
 --- @ignore
@@ -450,6 +429,12 @@ local function gen_callback(self, insert)
   return function(result, query, time)
     print_query(self.class_name..' '..(insert and 'Create' or 'Update')..' ('..time..'s)', query)
     self.saving = false
+
+    -- Set #id to last insert id.
+    if insert and istable(result) then
+      local r = result[1]
+      self.id = r['id'] or r['last_insert_rowid()'] or r['last_insert_id()']
+    end
 
     if insert and self.after_create then
       self:after_create()
@@ -466,12 +451,14 @@ local function gen_callback(self, insert)
         if !relation.child then
           if relation.many and istable(self[relation.as]) then
             for k, v in ipairs(self[relation.as]) do
+              v[relation.column_name] = self.id
               v:save()
             end
           elseif !relation.many and istable(self[relation.as]) then
             local rel = self[relation.as]
             if IsValid(rel) and isfunction(rel.save) then
-              self[relation.as]:save()
+              rel[relation.column_name] = self.id
+              rel:save()
             end
           end
         end
@@ -497,11 +484,6 @@ function ActiveRecord.Base:save()
   ActiveRecord.Validator:validate_model(self, function()
     local schema = self:get_schema()
 
-    if !self.id then
-      self.class.last_id = self.class.last_id + 1
-      self.id = self.class.last_id
-    end
-
     self.saving = true
 
     if !self.fetched then
@@ -520,7 +502,7 @@ function ActiveRecord.Base:save()
         query:insert('updated_at', to_datetime(os.time()))
         query:callback(gen_callback(self, true))
       query:execute()
-    else
+    elseif self.id then
       local query = ActiveRecord.Database:update(self.table_name)
         query:where('id', self.id)
         for k, data in pairs(schema) do
@@ -530,6 +512,8 @@ function ActiveRecord.Base:save()
         query:update('updated_at', to_datetime(os.time()))
         query:callback(gen_callback(self, false))
       query:execute()
+    else
+      ErrorNoHalt('Warning: attempt to save model without valid id ('..tostring(self.class_name)..')\n')
     end
   end, function(model, column, err_code)
     if model.invalid then

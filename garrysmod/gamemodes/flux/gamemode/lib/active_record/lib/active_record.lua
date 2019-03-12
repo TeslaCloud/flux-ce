@@ -26,7 +26,7 @@ function ActiveRecord.add_to_schema(table_name, column_name, type)
   if !ActiveRecord.ready then
     error('Attempt to edit schema too early!')
   end
-  local t = ActiveRecord.schema[table_name] or { last_id = 0 }
+  local t = ActiveRecord.schema[table_name] or {}
   if t[column_name] then
     t[column_name] = { id = t[column_name].id, type = type }
   else
@@ -36,8 +36,7 @@ function ActiveRecord.add_to_schema(table_name, column_name, type)
       query:insert('abstract_type', type)
       query:insert('definition', ActiveRecord.adapter.types[type] or '')
     query:execute()
-    t.last_id = t.last_id + 1
-    t[column_name] = { id = t.last_id, type = type }
+    t[column_name] = { id = -1, type = type }
   end
   ActiveRecord.schema[table_name] = t
 end
@@ -49,12 +48,9 @@ function ActiveRecord.restore_schema()
 
       if istable(result) then
         for k, v in ipairs(result) do
-          local t = ActiveRecord.schema[v.table_name] or { last_id = 0 }
+          local t = ActiveRecord.schema[v.table_name] or {}
           v.id = tonumber(v.id) or 0
           t[v.column_name] = { id = v.id, type = v.abstract_type }
-          if t.last_id < v.id then
-            t.last_id = v.id
-          end
           ActiveRecord.schema[v.table_name] = t
         end
       end

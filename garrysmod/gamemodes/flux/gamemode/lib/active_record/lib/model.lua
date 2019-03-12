@@ -29,16 +29,6 @@ function ActiveRecord.Model:populate()
       end
 
       v.schema = schema
-
-      local query = ActiveRecord.Database:select(v.table_name)
-        query:order('id')
-        query:limit(1)
-        query:callback(function(result, time, query)
-          if istable(result) and #result > 0 then
-            v.last_id = result[1].id
-          end
-        end)
-      query:execute()
     end
   end
   return self

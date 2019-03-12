@@ -34,7 +34,7 @@ function ActiveRecord.Adapters.Sqlite:unescape(str)
   return text:gsub("''", "'")
 end
 
-function ActiveRecord.Adapters.Sqlite:raw_query(query, callback, flags, ...)
+function ActiveRecord.Adapters.Sqlite:raw_query(query, callback, query_type)
   local query_start = os.clock()
   local result = sql.Query(query)
 
@@ -53,5 +53,11 @@ function ActiveRecord.Adapters.Sqlite:raw_query(query, callback, flags, ...)
 
       return a, b, c, d
     end
+  end
+end
+
+function ActiveRecord.Adapters.Sqlite:append_query_string(query, query_string, query_type)
+  if query_type == 'insert' then
+    return query_string:ensure_end(';')..' SELECT last_insert_rowid();'
   end
 end

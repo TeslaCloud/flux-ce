@@ -26,10 +26,8 @@ function character.create(player, data)
   end
 
   local char = Character.new()
-    char.id = char:get_id()
     char.steam_id = player:SteamID()
     char.name = data.name
-    char.user_id = player.record:get_id()
     char.model = data.model or ''
     char.skin = data.skin or 0
     char.gender = data.gender
@@ -38,7 +36,7 @@ function character.create(player, data)
     char.character_id = #player.record.characters + 1
     char.health = 100
     char.user = player.record
-  player.record.characters[char.character_id] = char
+  table.insert(player.record.characters, char)
 
   if SERVER then
     local char_id = player.record.character_id
@@ -92,7 +90,7 @@ if SERVER then
     if !IsValid(player) or !IsValid(character) or hook.run('PreSaveCharacter', player, character) == false then return end
 
     hook.run('SaveCharacterData', player, character)
-      character:save()
+      player.record:save()
     hook.run('PostSaveCharacter', player, character)
   end
 

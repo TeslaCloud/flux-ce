@@ -1,15 +1,15 @@
-library 'attributes'
+library 'Attributes'
 
-local stored = attributes.stored or {}
-local types = attributes.types or {}
-attributes.stored = stored
-attributes.types = types
+local stored = Attributes.stored or {}
+local types = Attributes.types or {}
+Attributes.stored = stored
+Attributes.types = types
 
-function attributes.get_stored()
+function Attributes.get_stored()
   return stored
 end
 
-function attributes.get_id_list()
+function Attributes.get_id_list()
   local atts_table = {}
 
   for k, v in pairs(stored) do
@@ -19,10 +19,10 @@ function attributes.get_id_list()
   return atts_table
 end
 
-function attributes.get_by_type(type)
+function Attributes.get_by_type(type)
   local atts_table = {}
 
-  for k, v in pairs(attributes.stored) do
+  for k, v in pairs(Attributes.stored) do
     if v.type == type then
       atts_table[k] = v
     end
@@ -31,7 +31,7 @@ function attributes.get_by_type(type)
   return atts_table
 end
 
-function attributes.register(id, data)
+function Attributes.register(id, data)
   if !data then return end
 
   if !isstring(id) and !isstring(data.name) then
@@ -44,8 +44,6 @@ function attributes.register(id, data)
   if !id then
     id = data.name:to_id()
   end
-
-  Flux.dev_print('Registering '..string.lower(data.type)..': '..tostring(id))
 
   data.attr_id = id
   data.name = data.name or 'Unknown Attribute'
@@ -61,21 +59,19 @@ function attributes.register(id, data)
   stored[id] = data
 end
 
-function attributes.find_by_id(id)
+function Attributes.find_by_id(id)
   return stored[id:to_id()]
 end
 
-function attributes.register_type(id, global_var, folder)
+function Attributes.register_type(id, global_var, folder)
   types[id] = global_var
 
   plugin.add_extra(id)
 
-  attributes.include_type(id, global_var, folder)
-
-  Flux.dev_print('Registering attribute type: ['..id..'] ['..global_var..'] ['..folder..']')
+  Attributes.include_type(id, global_var, folder)
 end
 
-function attributes.include_type(id, global_var, folder)
+function Attributes.include_type(id, global_var, folder)
   Pipeline.register(id, function(id, file_name, pipe)
     _G[global_var] = Attribute.new(id)
 
@@ -91,9 +87,11 @@ function attributes.include_type(id, global_var, folder)
   Pipeline.include_folder(id, folder)
 end
 
-function attributes.id_from_attr_id(atts_table, attr_id)
+function Attributes.id_from_attr_id(atts_table, attr_id)
   for k, v in pairs(atts_table) do
-    if v.attr_id == attr_id then return v.id end
+    if v.attr_id == attr_id then
+      return v.id
+    end
   end
 end
 
@@ -101,6 +99,7 @@ do
   local player_meta = FindMetaTable('Player')
 
   function player_meta:get_attributes()
+    --[[
     local char_id = self:get_active_character_id()
 
     if !self.record.characters or !self.record.characters[char_id] then return {} end
@@ -112,10 +111,13 @@ do
     end
 
     return atts_table
+    --]]
+    return {}
   end
 
   function player_meta:get_attribute(id, no_boost)
-    local attribute = attributes.find_by_id(id)
+    --[[
+    local attribute = Attributes.find_by_id(id)
     local atts_table = self:get_attributes()
 
     if !atts_table[id] then
@@ -139,16 +141,19 @@ do
     end
 
     return value
+    --]]
+    return 1 -- Remove for now because I need to re-do the database structure for this from scratch....
   end
 
   function player_meta:get_attribute_multiplier(attr_id)
+    --[[
     local char = self:get_character()
-    local id = attributes.id_from_attr_id(char.attributes, attr_id)
+    local id = Attributes.id_from_attr_id(char.attributes, attr_id)
     local mult = 1
 
-    if char.attribute_multipliers then
-      for k, v in pairs(char.attribute_multipliers) do
-        if v.attribute_id == id then
+    if char.attributes then
+      for k, v in pairs(char.attributes) do
+        if v.id == id then
           if time_from_timestamp(v.expires) >= os.time() then
             mult = mult * v.value
           else
@@ -160,11 +165,14 @@ do
     end
 
     return mult
+    --]]
+    return 1 -- Remove for now because I need to re-do the database structure for this from scratch....
   end
 
   function player_meta:get_attribute_boost(attr_id)
+    --[[
     local char = self:get_character()
-    local id = attributes.id_from_attr_id(char.attributes, attr_id)
+    local id = Attributes.id_from_attr_id(char.attributes, attr_id)
     local boost = 0
 
     if char.attribute_boosts then
@@ -181,11 +189,14 @@ do
     end
 
     return boost
+    --]]
+    return 0 -- Remove for now because I need to re-do the database structure for this from scratch....
   end
 
   if SERVER then
     function player_meta:set_attribute(attr_id, value)
-      local attribute = attributes.find_by_id(attr_id)
+      --[[
+      local attribute = Attributes.find_by_id(attr_id)
       local atts_table = self:get_character().attributes
 
       for k, v in pairs(atts_table) do
@@ -194,12 +205,14 @@ do
           break
         end
       end
+      --]]
     end
 
     function player_meta:increase_attribute(attr_id, value, no_multiplier)
-      local attribute = attributes.find_by_id(attr_id)
+      --[[
+      local attribute = Attributes.find_by_id(attr_id)
       local atts_table = self:get_attributes()
-      local id = attributes.id_from_attr_id(self:get_character().attributes, attr_id)
+      local id = Attributes.id_from_attr_id(self:get_character().attributes, attr_id)
 
       if !no_multiplier and attribute.multipliable then
         if value < 0 then
@@ -210,14 +223,18 @@ do
       end
 
       self:get_character().attributes[id].value = math.Clamp(atts_table[attr_id].value + value, attribute.min, attribute.max)
+      --]]
     end
 
     function player_meta:decrease_attribute(attr_id, value, no_multiplier)
+      --[[
       self:increase_attribute(attr_id, -value, no_multiplier)
+      --]]
     end
 
     function player_meta:attribute_multiplier(attr_id, value, duration)
-      local attribute = attributes.find_by_id(attr_id)
+      --[[
+      local attribute = Attributes.find_by_id(attr_id)
 
       if !attribute.multipliable then return end
 
@@ -226,12 +243,14 @@ do
       local multiplier = AttributeMultiplier.new()
         multiplier.value = value
         multiplier.expires = to_datetime(os.time() + duration)
-        multiplier.attribute_id = attributes.id_from_attr_id(atts_table, attr_id)
+        multiplier.attribute_id = Attributes.id_from_attr_id(atts_table, attr_id)
       self:get_character().attribute_multipliers[multiplier:get_id()] = multiplier
+      --]]
     end
 
     function player_meta:attribute_boost(attr_id, value, duration)
-      local attribute = attributes.find_by_id(attr_id)
+      --[[
+      local attribute = Attributes.find_by_id(attr_id)
 
       if !attribute.boostable then return end
 
@@ -240,8 +259,9 @@ do
       local boost = AttributeBoost.new()
         boost.value = value
         boost.expires = to_datetime(os.time() + duration)
-        boost.attribute_id = attributes.id_from_attr_id(atts_table, attr_id)
+        boost.attribute_id = Attributes.id_from_attr_id(atts_table, attr_id)
       self:get_character().attribute_boost[boost:get_id()] = boost
+      --]]
     end
   end
 end

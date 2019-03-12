@@ -1,18 +1,18 @@
-PLUGIN:set_global('Attributes')
+PLUGIN:set_global('AttributesPlugin')
 
 util.include('sv_hooks.lua')
 
-function Attributes:PluginIncludeFolder(extra, folder)
-  for k, v in pairs(attributes.types) do
+function AttributesPlugin:PluginIncludeFolder(extra, folder)
+  for k, v in pairs(Attributes.types) do
     if extra == k then
-      attributes.include_type(k, v, folder..'/'..k..'/')
+      Attributes.include_type(k, v, folder..'/'..k..'/')
 
       return true
     end
   end
 end
 
-function Attributes:RegisterConditions()
+function AttributesPlugin:RegisterConditions()
   Conditions:register_condition('attribute', {
     name = 'conditions.attribute.name',
     text = 'conditions.attribute.text',
@@ -22,7 +22,7 @@ function Attributes:RegisterConditions()
       local attribute_value = panel.data.attribute_value or ''
 
       if panel.data.attribute then
-        attribute_name = attributes.find_by_id(panel.data.attribute).name
+        attribute_name = Attributes.find_by_id(panel.data.attribute).name
       end
 
       return { operator, attribute_name, attribute_value }
@@ -34,7 +34,7 @@ function Attributes:RegisterConditions()
       return util.process_operator(data.operator, player:get_attribute(data.attribute), tonumber(data.attribute_value))
     end,
     set_parameters = function(id, data, panel, menu, parent)
-      parent:create_selector(data.name, 'conditions.attribute.message1', 'conditions.attributes', attributes.get_stored(), 
+      parent:create_selector(data.name, 'conditions.attribute.message1', 'conditions.attributes', Attributes.get_stored(), 
       function(selector, value)
         selector:add_choice(t(value.name), function()
           panel.data.attribute = value.attr_id

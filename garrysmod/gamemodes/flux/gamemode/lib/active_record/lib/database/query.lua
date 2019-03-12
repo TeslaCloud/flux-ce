@@ -404,7 +404,7 @@ function ActiveRecord.Query:execute(queue_query)
     query_string = build_change_query(self)
   end
 
-  local hooked = ActiveRecord.adapter:append_query_string(self, query_string)
+  local hooked = ActiveRecord.adapter:append_query_string(self, query_string, query_type)
 
   if isstring(hooked) then
     query_string = hooked
@@ -415,9 +415,9 @@ function ActiveRecord.Query:execute(queue_query)
     query_string = query_string:gsub(' ;', ';'):gsub('  ', ' ')
 
     if !queue_query then
-      return ActiveRecord.adapter:raw_query(query_string, self._callback)
+      return ActiveRecord.adapter:raw_query(query_string, self._callback, query_type)
     else
-      return ActiveRecord.adapter:queue(query_string, self._callback)
+      return ActiveRecord.adapter:queue(query_string, self._callback, query_type)
     end
   end
 end

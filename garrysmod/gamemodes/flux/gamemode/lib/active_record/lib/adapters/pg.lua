@@ -74,7 +74,7 @@ function ActiveRecord.Adapters.Pg:quote_name(str)
   return self.connection:quote_name(str)
 end
 
-function ActiveRecord.Adapters.Pg:raw_query(query, callback, flags, ...)
+function ActiveRecord.Adapters.Pg:raw_query(query, callback, query_type)
   if !self.connection then
     return self:queue(query)
   end
@@ -128,5 +128,11 @@ end
 function ActiveRecord.Adapters.Pg:create_column(query, column, args, obj, type, def)
   if type == 'primary_key' then
     query:set_primary_key(column)
+  end
+end
+
+function ActiveRecord.Adapters.Pg:append_query_string(query, query_string, query_type)
+  if query_type == 'insert' then
+    return query_string..' RETURNING id'
   end
 end

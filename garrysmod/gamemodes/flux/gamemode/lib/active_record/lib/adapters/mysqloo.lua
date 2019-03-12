@@ -83,7 +83,7 @@ function ActiveRecord.Adapters.Mysqloo:quote_name(str)
   return '`'..str..'`'
 end
 
-function ActiveRecord.Adapters.Mysqloo:raw_query(query, callback, flags, ...)
+function ActiveRecord.Adapters.Mysqloo:raw_query(query, callback, query_type)
   if !self.connection then
     return self:queue(query)
   end
@@ -109,7 +109,6 @@ function ActiveRecord.Adapters.Mysqloo:raw_query(query, callback, flags, ...)
     end
   end
 
-  query_obj:setOption(mysqloo.OPTION_NAMED_FIELDS)
   query_obj.onSuccess = success_func
   query_obj.onError = function(query_obj, error_text)
     ErrorNoHalt('ActiveRecord - MySQL Query Error!\n')
@@ -138,5 +137,12 @@ end
 function ActiveRecord.Adapters.Mysqloo:create_column(query, column, args, obj, type, def)
   if type == 'primary_key' then
     query:set_primary_key(column)
+  end
+end
+
+function ActiveRecord.Adapters.Mysqloo:append_query_string(query, query_string, query_type)
+  if query_type == 'insert' then
+    query_string = query_string:ensure_end(';')
+    return query_string..' SELECT last_insert_id();'
   end
 end

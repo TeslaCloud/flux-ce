@@ -58,19 +58,19 @@ function ActiveRecord.Adapters.Abstract:quote_name(str)
   return str
 end
 
-function ActiveRecord.Adapters.Abstract:raw_query(query, callback)
+function ActiveRecord.Adapters.Abstract:raw_query(query, callback, query_type)
 end
 
-function ActiveRecord.Adapters.Abstract:queue(query, callback)
+function ActiveRecord.Adapters.Abstract:queue(query, callback, query_type)
   if isstring(query) then
-    table.insert(self._queue, { query, callback })
+    table.insert(self._queue, { query, callback, query_type })
   end
 end
 
 function ActiveRecord.Adapters.Abstract:append_query(query, query_type, queue)
 end
 
-function ActiveRecord.Adapters.Abstract:append_query_string(query, query_string)
+function ActiveRecord.Adapters.Abstract:append_query_string(query, query_string, query_type)
 end
 
 function ActiveRecord.Adapters.Abstract:create_column(query, column, args, obj, type, def)
@@ -83,7 +83,7 @@ function ActiveRecord.Adapters.Abstract:think()
       local query_string = queue_obj[1]
 
       if isstring(query_string) then
-        self:raw_query(query_string, queue_obj[2])
+        self:raw_query(query_string, queue_obj[2], queue_obj[3])
       end
 
       table.remove(self._queue, 1)

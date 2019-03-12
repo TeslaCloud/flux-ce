@@ -10,7 +10,7 @@ COMMAND.aliases = { 'attboost', 'attboost', 'attributeboost', 'attributeboost', 
 
 function COMMAND:on_run(player, targets, attr_id, value, duration)
   local target = targets[1]
-  local attribute = attributes.find_by_id(attr_id)
+  local attribute = Attributes.find_by_id(attr_id)
 
   if attribute and attribute.boostable then
     Flux.Player:broadcast('char_attribute_boost.message', { get_player_name(player), target:name(), attribute.name, value, duration })
