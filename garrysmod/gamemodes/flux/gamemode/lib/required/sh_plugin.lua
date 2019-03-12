@@ -102,6 +102,11 @@ end
 
 function Plugin:set_global(alias)
   if isstring(alias) then
+    if alias[1]:is_lower() then
+      MsgC(Color('red'), 'Warning: bad plugin alias ('..alias..')\nplugin globals must follow the ConstantStyle!\n')
+      MsgC(Color('orange'), 'The compatibility behavior is deprecated and this\nwarning will become an error in Flux 0.6!\n')
+    end
+
     _G[alias] = self
     self.alias = alias
   end
