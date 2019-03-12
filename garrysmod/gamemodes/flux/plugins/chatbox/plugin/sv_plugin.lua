@@ -23,7 +23,7 @@ function Chatbox.add_filter(id, data)
 end
 
 function Chatbox.can_hear(listener, message_data)
-  if plugin.call('PlayerCanHear', listener, message_data) then
+  if Plugin.call('PlayerCanHear', listener, message_data) then
     return true
   end
 

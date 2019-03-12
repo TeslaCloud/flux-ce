@@ -226,7 +226,7 @@ function PANEL:create_message(message_data)
 end
 
 function PANEL:add_message(message_data)
-  if message_data and plugin.call('ChatboxShouldAddMessage', message_data) != false then
+  if message_data and Plugin.call('ChatboxShouldAddMessage', message_data) != false then
     local panel = self:create_message(message_data)
 
     if IsValid(panel) then

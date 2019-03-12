@@ -3,7 +3,7 @@ function Inventory:PlayerBindPress(player, bind, pressed)
     local n = tonumber(bind:match('slot(%d+)'))
 
     if n then
-      plugin.call('PlayerSelectSlot', player, n)
+      Plugin.call('PlayerSelectSlot', player, n)
     end
   end
 end

@@ -221,5 +221,5 @@ do
     Theme.reload()
   end
 
-  plugin.add_hooks('flThemeHooks', theme_hooks)
+  Plugin.add_hooks('flThemeHooks', theme_hooks)
 end

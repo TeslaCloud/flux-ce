@@ -50,7 +50,7 @@ end
 
 function PANEL:Paint(w, h)
   if self.should_paint then
-    if plugin.call('ChatboxPrePaintMessage', w, h, self) == true then return end
+    if Plugin.call('ChatboxPrePaintMessage', w, h, self) == true then return end
 
     local cur_color = Color(255, 255, 255, self.alpha)
     local cur_font = Font.size(Theme.get_font('chatbox_normal'), Font.scale(20))
@@ -83,7 +83,7 @@ end
 
 -- Those people want us gone :(
 function PANEL:eject()
-  if plugin.call('ShouldMessageeject', self) != false then
+  if Plugin.call('ShouldMessageeject', self) != false then
     local parent = Chatbox.panel
 
     if !IsValid(parent) then return end

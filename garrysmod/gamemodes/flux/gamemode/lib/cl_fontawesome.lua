@@ -1382,7 +1382,7 @@ function FontAwesome.hooks:CreateFonts()
   })
 end
 
-plugin.add_hooks('FontAwesome', FontAwesome.hooks)
+Plugin.add_hooks('FontAwesome', FontAwesome.hooks)
 
 function FontAwesome:get(id)
   return fa_data[id] or id

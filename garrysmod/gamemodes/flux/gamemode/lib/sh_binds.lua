@@ -87,4 +87,4 @@ else
   end)
 end
 
-plugin.add_hooks('FLBinds', hooks)
+Plugin.add_hooks('FLBinds', hooks)

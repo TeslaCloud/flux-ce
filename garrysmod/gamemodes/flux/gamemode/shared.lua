@@ -86,7 +86,7 @@ if !LITE_REFRESH then
   Crate:include 'active_network'
 
   -- So that we don't get duplicates on refresh.
-  plugin.clear_cache()
+  Plugin.clear_cache()
 
   util.include_folder('config', true)
   util.include_folder('lib', true)

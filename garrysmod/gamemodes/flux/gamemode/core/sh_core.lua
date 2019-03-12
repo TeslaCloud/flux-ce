@@ -433,9 +433,9 @@ end
 --
 function Flux.include_schema()
   if SERVER then
-    return plugin.include_schema()
+    return Plugin.include_schema()
   else
-    plugin.include_schema()
+    Plugin.include_schema()
 
     -- Wait just a tiny bit for stuff to catch up
     timer.Simple(0.2, function()
@@ -453,7 +453,7 @@ end
 -- Returns: nil
 --
 function Flux.include_plugins(folder)
-  return plugin.include_plugins(folder)
+  return Plugin.include_plugins(folder)
 end
 
 --

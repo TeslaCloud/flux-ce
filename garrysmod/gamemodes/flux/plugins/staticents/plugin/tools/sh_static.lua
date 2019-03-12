@@ -9,7 +9,7 @@ function TOOL:LeftClick(trace)
 
   local player = self:GetOwner()
 
-  plugin.call('PlayerMakeStatic', player, true)
+  Plugin.call('PlayerMakeStatic', player, true)
 
   return true
 end
@@ -19,7 +19,7 @@ function TOOL:RightClick(trace)
 
   local player = self:GetOwner()
 
-  plugin.call('PlayerMakeStatic', player, false)
+  Plugin.call('PlayerMakeStatic', player, false)
 
   return true
 end

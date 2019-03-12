@@ -6,8 +6,8 @@ util.include('sv_hooks.lua')
 util.include('sv_plugin.lua')
 
 function Bolt:OnPluginLoaded()
-  plugin.add_extra('commands')
-  plugin.add_extra('roles')
+  Plugin.add_extra('commands')
+  Plugin.add_extra('roles')
 
   local folder = self:get_folder()
 

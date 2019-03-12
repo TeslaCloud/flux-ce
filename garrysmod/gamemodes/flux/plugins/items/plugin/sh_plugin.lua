@@ -5,8 +5,8 @@ util.include('sv_hooks.lua')
 util.include('sh_enums.lua')
 
 function Items:OnPluginLoaded()
-  plugin.add_extra('items')
-  plugin.add_extra('items/bases')
+  Plugin.add_extra('items')
+  Plugin.add_extra('items/bases')
 
   util.include_folder(self:get_folder()..'/items/bases')
   item.include_items(self:get_folder()..'/items/')

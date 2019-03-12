@@ -10,7 +10,7 @@ function Observer:PlayerEnterNoclip(player)
     angles = player:EyeAngles(),
     color = player:GetColor(),
     move_type = player:GetMoveType(),
-    should_reset = (plugin.call('ShouldObserverReset', player) != false)
+    should_reset = (Plugin.call('ShouldObserverReset', player) != false)
   }
 
   player:SetMoveType(MOVETYPE_NOCLIP)

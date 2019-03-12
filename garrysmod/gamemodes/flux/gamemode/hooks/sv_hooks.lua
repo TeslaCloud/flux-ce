@@ -11,7 +11,7 @@ function GM:InitPostEntity()
   end
 
   hook.run('LoadData')
-  plugin.call('FLInitPostEntity')
+  Plugin.call('FLInitPostEntity')
 end
 
 function GM:PlayerInitialSpawn(player)
@@ -143,10 +143,6 @@ function GM:EntityRemoved(entity)
   entity:clear_net_vars()
 
   self.BaseClass:EntityRemoved(entity)
-end
-
-function GM:OnPluginFileChange(file_name)
-  plugin.OnPluginChanged(file_name)
 end
 
 function GM:GetFallDamage(player, speed)

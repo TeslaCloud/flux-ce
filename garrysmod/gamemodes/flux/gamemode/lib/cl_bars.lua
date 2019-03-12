@@ -224,7 +224,7 @@ do
     return true
   end
 
-  plugin.add_hooks('FLBarHooks', Bars)
+  Plugin.add_hooks('FLBarHooks', Bars)
 
   Flux.Bars:register('respawn', {
     text = t'bar_text.respawn',

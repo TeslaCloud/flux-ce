@@ -1,6 +1,8 @@
-if plugin then return end
+if Plugin then return end
 
-library 'plugin'
+util.include 'classes/sh_plugin_instance.lua'
+
+library 'Plugin'
 
 local stored = {}
 local unloaded = {}
@@ -28,105 +30,30 @@ local default_extras = {
 
 local extras = table.Copy(default_extras)
 
-function plugin.all()
+function Plugin.all()
   return stored
 end
 
-function plugin.get_cache()
+function Plugin.get_cache()
   return hooks_cache
 end
 
-function plugin.clear_cache()
-  plugin.clear_extras()
+function Plugin.clear_cache()
+  Plugin.clear_extras()
 
   hooks_cache = {}
   load_cache = {}
 end
 
-function plugin.clear_load_cache()
+function Plugin.clear_load_cache()
   load_cache = {}
 end
 
-function plugin.clear_extras()
+function Plugin.clear_extras()
   extras = table.Copy(default_extras)
 end
 
-class 'Plugin'
-
-function Plugin:init(id, data)
-  self.name = data.name or 'Unknown Plugin'
-  self.author = data.author or 'Unknown Author'
-  self.folder = data.folder or name:to_id()
-  self.path = data.path or self.folder
-  self.description = data.description or 'This plugin has no description.'
-  self.id = id or data.id or name:to_id() or 'unknown'
-
-  table.safe_merge(self, data)
-end
-
-function Plugin:get_name()
-  return self.name
-end
-
-function Plugin:get_folder()
-  return self.folder
-end
-
-function Plugin:get_path()
-  return self.path
-end
-
-function Plugin:get_author()
-  return self.author
-end
-
-function Plugin:get_description()
-  return self.description
-end
-
-function Plugin:set_name(name)
-  self.name = name or self.name or 'Unknown Plugin'
-end
-
-function Plugin:set_author(author)
-  self.author = author or self.author or 'Unknown'
-end
-
-function Plugin:set_description(desc)
-  self.description = desc or self.description or 'No description provided!'
-end
-
-function Plugin:set_data(data)
-  table.safe_merge(self, data)
-end
-
-function Plugin:set_global(alias)
-  if isstring(alias) then
-    if alias[1]:is_lower() then
-      MsgC(Color('red'), 'Warning: bad plugin alias ('..alias..')\nplugin globals must follow the ConstantStyle!\n')
-      MsgC(Color('orange'), 'The compatibility behavior is deprecated and this\nwarning will become an error in Flux 0.6!\n')
-    end
-
-    _G[alias] = self
-    self.alias = alias
-  end
-end
-
-function Plugin:is_schema()
-  return self._is_schema
-end
-
-function Plugin:__tostring()
-  return 'Plugin ['..self.name..']'
-end
-
-function Plugin:register()
-  plugin.register(self)
-end
-
-Plugin = Plugin
-
-function plugin.cache_functions(obj, id)
+function Plugin.cache_functions(obj, id)
   for k, v in pairs(obj) do
     if isfunction(v) then
       hooks_cache[k] = hooks_cache[k] or {}
@@ -135,11 +62,11 @@ function plugin.cache_functions(obj, id)
   end
 end
 
-function plugin.add_hooks(id, obj)
-  plugin.cache_functions(obj, id)
+function Plugin.add_hooks(id, obj)
+  Plugin.cache_functions(obj, id)
 end
 
-function plugin.remove_hooks(id)
+function Plugin.remove_hooks(id)
   for k, v in pairs(hooks_cache) do
     for k2, v2 in ipairs(v) do
       if v2.id and v2.id == id then
@@ -149,7 +76,7 @@ function plugin.remove_hooks(id)
   end
 end
 
-function plugin.find(id)
+function Plugin.find(id)
   if stored[id] then
     return stored[id], id
   else
@@ -162,8 +89,8 @@ function plugin.find(id)
 end
 
 -- A function to unhook a plugin from cache.
-function plugin.remove_from_cache(id)
-  local plugin_table = plugin.find(id) or (istable(id) and id)
+function Plugin.remove_from_cache(id)
+  local plugin_table = Plugin.find(id) or (istable(id) and id)
 
   -- Awful lot of if's and end's.
   if plugin_table then
@@ -192,8 +119,8 @@ function plugin.remove_from_cache(id)
 end
 
 -- A function to cache existing plugin's hooks.
-function plugin.recache(id)
-  local plugin_table = plugin.find(id)
+function Plugin.recache(id)
+  local plugin_table = Plugin.find(id)
 
   if plugin_table then
     if plugin_table.OnRecache then
@@ -206,13 +133,13 @@ function plugin.recache(id)
       }
     end
 
-    plugin.cache_functions(plugin_table)
+    Plugin.cache_functions(plugin_table)
   end
 end
 
 -- A function to remove the plugin entirely.
-function plugin.remove(id)
-  local plugin_table, plugin_id = plugin.find(id)
+function Plugin.remove(id)
+  local plugin_table, plugin_id = Plugin.find(id)
 
   if plugin_table then
     if plugin_table.OnRemoved then
@@ -225,19 +152,19 @@ function plugin.remove(id)
       }
     end
 
-    plugin.remove_from_cache(id)
+    Plugin.remove_from_cache(id)
 
     stored[plugin_id] = nil
   end
 end
 
-function plugin.is_disabled(folder)
+function Plugin.is_disabled(folder)
   if Flux.shared.disabled_plugins then
     return Flux.shared.disabled_plugins[folder]
   end
 end
 
-function plugin.loaded(obj)
+function Plugin.loaded(obj)
   if istable(obj) then
     return load_cache[obj.id]
   elseif isstring(obj) then
@@ -247,8 +174,8 @@ function plugin.loaded(obj)
   return false
 end
 
-function plugin.register(obj)
-  plugin.cache_functions(obj)
+function Plugin.register(obj)
+  Plugin.cache_functions(obj)
 
   if obj.should_refresh == false then
     reload_data[obj:get_path()] = false
@@ -292,7 +219,7 @@ function plugin.register(obj)
   load_cache[obj.id] = true
 end
 
-function plugin.include(path)
+function Plugin.include(path)
   local id = path:GetFileFromFilename()
   local ext = id:GetExtensionFromFilename()
   local data = {}
@@ -304,7 +231,7 @@ function plugin.include(path)
   if reload_data[folder] == false then
     Flux.dev_print('Not reloading plugin: '..path)
     return
-  elseif plugin.loaded(id) then
+  elseif Plugin.loaded(id) then
     return
   end
 
@@ -343,20 +270,20 @@ function plugin.include(path)
     end
 
     for k, v in ipairs(data.depends) do
-      if !plugin.require(v) then
+      if !Plugin.require(v) then
         ErrorNoHalt("Not loading the '"..tostring(path).."' plugin! Dependency missing: '"..tostring(v).."'!\n")
         return
       end
     end
   end
 
-  PLUGIN = Plugin.new(id, data)
+  PLUGIN = PluginInstance.new(id, data)
 
   if stored[path] then
     PLUGIN = stored[path]
   end
 
-  plugin.include_folders(data.folder)
+  Plugin.include_folders(data.folder)
 
   if !data.single_file then
     util.include(data.folder..'/'..data.plugin_main)
@@ -372,7 +299,7 @@ function plugin.include(path)
   return data
 end
 
-function plugin.include_schema()
+function Plugin.include_schema()
   local schema_info = Flux.get_schema_info()
   local schema_path = schema_info.folder
   local schema_folder = schema_path..'/schema'
@@ -406,7 +333,7 @@ function plugin.include_schema()
 
   if istable(deps) then
     for k, v in ipairs(deps) do
-      if !plugin.require(v) then
+      if !Plugin.require(v) then
         ErrorNoHalt("Unable to load schema! Dependency missing: '"..tostring(v).."'!\n")
         ErrorNoHalt("Please install this plugin in your schema's 'plugins' folder!\n")
         ErrorNoHalt("Alternatively please make sure that your server can download packages from the cloud!\n")
@@ -418,13 +345,13 @@ function plugin.include_schema()
 
   if SERVER then AddCSLuaFile(schema_path..'/gamemode/cl_init.lua') end
 
-  Schema = Plugin.new(schema_info.name, schema_info)
+  Schema = PluginInstance.new(schema_info.name, schema_info)
   Schema._is_schema = true
 
   util.include(schema_folder..'/sh_schema.lua')
 
-  plugin.include_folders(schema_folder)
-  plugin.include_plugins(schema_path..'/plugins')
+  Plugin.include_folders(schema_folder)
+  Plugin.include_plugins(schema_path..'/plugins')
 
   hook.run('OnPluginsLoaded')
 
@@ -446,11 +373,11 @@ do
     '/plugin/sh_plugin.lua'
   }
 
-  -- Please specify full file name if requiring a single-file plugin.
-  function plugin.require(name)
+  -- Please specify full file name if requiring a single-file Plugin.
+  function Plugin.require(name)
     if !isstring(name) then return false end
 
-    if !plugin.loaded(name) then
+    if !Plugin.loaded(name) then
       local search_paths = {
         'flux/plugins/',
         (Flux.get_schema_folder() or 'flux')..'/plugins/'
@@ -460,7 +387,7 @@ do
         if !v:find('flux') or !LITE_REFRESH then
           for _, ending in ipairs(tolerance) do
             if file.Exists(v..name..ending, 'LUA') then
-              plugin.include(v..name)
+              Plugin.include(v..name)
 
               return true
             end
@@ -485,17 +412,17 @@ do
   end
 end
 
-function plugin.include_plugins(folder)
+function Plugin.include_plugins(folder)
   local files, folders = file.Find(folder..'/*', 'LUA')
 
   for k, v in ipairs(files) do
     if v:GetExtensionFromFilename() == 'lua' then
-      plugin.include(folder..'/'..v)
+      Plugin.include(folder..'/'..v)
     end
   end
 
   for k, v in ipairs(folders) do
-    plugin.include(folder..'/'..v)
+    Plugin.include(folder..'/'..v)
   end
 end
 
@@ -526,7 +453,7 @@ do
     }
   }
 
-  function plugin.include_entities(folder)
+  function Plugin.include_entities(folder)
     local _, dirs = file.Find(folder..'/*', 'LUA')
 
     for k, v in ipairs(dirs) do
@@ -592,17 +519,17 @@ do
   end
 end
 
-function plugin.add_extra(extra)
+function Plugin.add_extra(extra)
   if !isstring(extra) then return end
 
   table.insert(extras, extra)
 end
 
-function plugin.include_folders(folder)
+function Plugin.include_folders(folder)
   for k, v in ipairs(extras) do
-    if plugin.call('PluginIncludeFolder', v, folder) == nil then
+    if Plugin.call('PluginIncludeFolder', v, folder) == nil then
       if v == 'entities' then
-        plugin.include_entities(folder..'/'..v)
+        Plugin.include_entities(folder..'/'..v)
       elseif v == 'themes' then
         Pipeline.include_folder('Theme', folder..'/themes/')
       elseif v == 'tools' then
@@ -625,8 +552,8 @@ function plugin.include_folders(folder)
 end
 
 do
-  local old_hook_call = plugin.old_hook_call or hook.Call
-  plugin.old_hook_call = old_hook_call
+  local old_hook_call = Plugin.old_hook_call or hook.Call
+  Plugin.old_hook_call = old_hook_call
 
   -- If we're running in development, we should be using pcall'ed hook.Call rather than unsafe one.
   if Flux.development then
@@ -670,7 +597,7 @@ do
 
   -- This function DOES NOT call GM: (gamemode) hooks!
   -- It only calls plugin, schema and hook.Add'ed hooks!
-  function plugin.call(name, ...)
+  function Plugin.call(name, ...)
     return hook.Call(name, nil, ...)
   end
 

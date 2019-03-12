@@ -1,5 +1,5 @@
 function Inventory:PostCreateCharacter(player, char_id, char, char_data)
-  plugin.call('AddDefaultItems', player, char, char.inventory)
+  Plugin.call('AddDefaultItems', player, char, char.inventory)
 end
 
 function Inventory:OnActiveCharacterSet(player, character)

@@ -55,7 +55,7 @@ Area.tool_modes = {
 }
 
 function Area:OnSchemaLoaded()
-  plugin.call('AddAreaToolModes', self.tool_modes)
+  Plugin.call('AddAreaToolModes', self.tool_modes)
 end
 
 function Area:AddAreaToolModes(mode_list)

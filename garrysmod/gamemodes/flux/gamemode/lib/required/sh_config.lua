@@ -21,7 +21,7 @@ if SERVER then
     local loaded = Data.load('config', {})
 
     for k, v in pairs(loaded) do
-      plugin.call('OnConfigSet', key, stored[k] and stored[k].value, value)
+      Plugin.call('OnConfigSet', key, stored[k] and stored[k].value, value)
       stored[k] = v
     end
 
@@ -56,7 +56,7 @@ if SERVER then
         end
       end
 
-      plugin.call('OnConfigSet', key, stored[key].value, value)
+      Plugin.call('OnConfigSet', key, stored[key].value, value)
 
       stored[key].value = value
 
@@ -91,7 +91,7 @@ else
     if key != nil then
       stored[key] = stored[key] or {}
 
-      plugin.call('OnConfigSet', key, stored[key].value, value)
+      Plugin.call('OnConfigSet', key, stored[key].value, value)
 
       stored[key].value = value
       cache[key] = value
@@ -187,7 +187,7 @@ if SERVER then
     local config_table = YAML.eval(contents)
 
     for k, v in pairs(config_table) do
-      if k != 'depends' and plugin.call('ShouldConfigImport', k, v) == nil then
+      if k != 'depends' and Plugin.call('ShouldConfigImport', k, v) == nil then
         Config.set(k, v, nil, from_config)
       end
     end

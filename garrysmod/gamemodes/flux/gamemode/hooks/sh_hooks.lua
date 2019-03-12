@@ -193,13 +193,13 @@ end
 
 function GM:PlayerNoClip(player, state)
   if state == false then
-    local should_exit = plugin.call('PlayerExitNoclip', player)
+    local should_exit = Plugin.call('PlayerExitNoclip', player)
 
     if should_exit != nil then
       return should_exit
     end
   else
-    local should_enter = plugin.call('PlayerEnterNoclip', player)
+    local should_enter = Plugin.call('PlayerEnterNoclip', player)
 
     if should_enter != nil then
       return should_enter

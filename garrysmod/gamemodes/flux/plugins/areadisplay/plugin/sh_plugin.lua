@@ -4,9 +4,9 @@ Areas.register_type(
   'An area that displays text when player enters it.',
   function(player, area, poly, has_entered, cur_pos, cur_time)
     if has_entered then
-      plugin.call('PlayerEnteredTextArea', player, area, cur_time)
+      Plugin.call('PlayerEnteredTextArea', player, area, cur_time)
     else
-      plugin.call('PlayerLeftTextArea', player, area, cur_time)
+      Plugin.call('PlayerLeftTextArea', player, area, cur_time)
     end
   end
 )

@@ -18,7 +18,7 @@ end
 function PLUGIN:HUDPaint()
   local fallen, getup = PLAYER:is_doing_action('fallen'), PLAYER:is_doing_action('getup')
 
-  if (fallen or getup) and plugin.call('ShouldFallenHUDPaint') != false then
+  if (fallen or getup) and Plugin.call('ShouldFallenHUDPaint') != false then
     local scrw, scrh = ScrW(), ScrH()
 
     draw.RoundedBox(0, 0, 0, scrw, scrh, Color(0, 0, 0, 100))

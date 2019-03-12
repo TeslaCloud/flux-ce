@@ -1,6 +1,6 @@
 PLUGIN:set_global('Factions')
 
-plugin.add_extra('factions')
+Plugin.add_extra('factions')
 
 util.include('cl_hooks.lua')
 util.include('sv_hooks.lua')

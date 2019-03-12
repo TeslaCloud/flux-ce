@@ -66,7 +66,7 @@ end
 function Attributes.register_type(id, global_var, folder)
   types[id] = global_var
 
-  plugin.add_extra(id)
+  Plugin.add_extra(id)
 
   Attributes.include_type(id, global_var, folder)
 end

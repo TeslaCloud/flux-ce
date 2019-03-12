@@ -6,7 +6,7 @@ COMMAND.category = 'categories.level_design'
 COMMAND.aliases = { 'staticadd', 'staticpropadd' }
 
 function COMMAND:on_run(player)
-  plugin.call('PlayerMakeStatic', player, true)
+  Plugin.call('PlayerMakeStatic', player, true)
 end
 
 COMMAND:register()

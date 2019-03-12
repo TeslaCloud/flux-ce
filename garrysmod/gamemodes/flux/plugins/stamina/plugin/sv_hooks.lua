@@ -111,7 +111,7 @@ function Stamina:start_running(player, prevent_drain)
 
       timer.Create(id, 0.2, 0, function()
         if IsValid(player) then
-          local new_stam = player:get_nv('stamina', 100) - 1 * drain_scale * (plugin.call('StaminaAdjustDrainScale', player) or 1)
+          local new_stam = player:get_nv('stamina', 100) - 1 * drain_scale * (Plugin.call('StaminaAdjustDrainScale', player) or 1)
 
           self:set_stamina(player, new_stam)
 
@@ -152,7 +152,7 @@ function Stamina:stop_running(player, prevent_regen)
         if IsValid(player) then
           player.stamina_regenerating = true
 
-          local new_stam = player:get_nv('stamina', 100) + 1 * regen_scale * (plugin.call('StaminaAdjustRegenScale', player) or 1)
+          local new_stam = player:get_nv('stamina', 100) + 1 * regen_scale * (Plugin.call('StaminaAdjustRegenScale', player) or 1)
 
           self:set_stamina(player, new_stam)
 
