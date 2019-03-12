@@ -1,16 +1,16 @@
-if netvars then return end
+if ActiveNetwork then return end
 
-library 'netvars'
+library 'ActiveNetwork'
 
-local stored = netvars.stored or {}
-local globals = netvars.globals or {}
-netvars.stored = stored
-netvars.globals = globals
+local stored = ActiveNetwork.stored or {}
+local globals = ActiveNetwork.globals or {}
+ActiveNetwork.stored = stored
+ActiveNetwork.globals = globals
 
 local ent_meta = FindMetaTable('Entity')
 
 -- A function to get a networked global.
-function netvars.get_nv(key, default)
+function ActiveNetwork.get_nv(key, default)
   if globals[key] != nil then
     return globals[key]
   end
@@ -19,7 +19,7 @@ function netvars.get_nv(key, default)
 end
 
 -- Cannot set them on client.
-function netvars.set_nv() end
+function ActiveNetwork.set_nv() end
 
 -- A function to get entity's networked variable.
 function ent_meta:get_nv(key, default)

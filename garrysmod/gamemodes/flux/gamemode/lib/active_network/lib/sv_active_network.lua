@@ -1,11 +1,11 @@
-if netvars then return end
+if ActiveNetwork then return end
 
-library 'netvars'
+library 'ActiveNetwork'
 
-local stored = netvars.stored or {}
-local globals = netvars.globals or {}
-netvars.stored = stored
-netvars.globals = globals
+local stored = ActiveNetwork.stored or {}
+local globals = ActiveNetwork.globals or {}
+ActiveNetwork.stored = stored
+ActiveNetwork.globals = globals
 
 local ent_meta = FindMetaTable('Entity')
 local player_meta = FindMetaTable('Player')
@@ -22,7 +22,7 @@ local function is_bad_type(key, val)
 end
 
 -- A function to get a networked global.
-function netvars.get_nv(key, default)
+function ActiveNetwork.get_nv(key, default)
   if globals[key] != nil then
     return globals[key]
   end
@@ -31,9 +31,9 @@ function netvars.get_nv(key, default)
 end
 
 -- A function to set a networked global.
-function netvars.set_nv(key, value, send)
+function ActiveNetwork.set_nv(key, value, send)
   if is_bad_type(key, value) then return end
-  if netvars.get_nv(key) == value then return end
+  if ActiveNetwork.get_nv(key) == value then return end
 
   globals[key] = value
 
