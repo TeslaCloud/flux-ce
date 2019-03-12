@@ -502,7 +502,7 @@ function ActiveRecord.Base:save()
         query:insert('updated_at', to_datetime(os.time()))
         query:callback(gen_callback(self, true))
       query:execute()
-    elseif self.id then
+    elseif !self.saving and self.id then
       local query = ActiveRecord.Database:update(self.table_name)
         query:where('id', self.id)
         for k, data in pairs(schema) do
@@ -512,8 +512,6 @@ function ActiveRecord.Base:save()
         query:update('updated_at', to_datetime(os.time()))
         query:callback(gen_callback(self, false))
       query:execute()
-    else
-      ErrorNoHalt('Warning: attempt to save model without valid id ('..tostring(self.class_name)..')\n')
     end
   end, function(model, column, err_code)
     if model.invalid then
