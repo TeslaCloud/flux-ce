@@ -86,7 +86,7 @@ do
     if char then
       char.faction = id
 
-      character.save(self, char)
+      Characters.save(self, char)
     end
 
     if old_faction then
@@ -136,7 +136,7 @@ do
           model = model_table[math.random(#model_table)]
         end
 
-        character.set_model(self, self:get_character(), model)
+        Characters.set_model(self, self:get_character(), model)
       end
     end
   end

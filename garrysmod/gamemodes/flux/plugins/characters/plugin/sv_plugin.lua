@@ -55,6 +55,6 @@ function player_meta:save_character()
   local char = self:get_character()
 
   if char then
-    character.save(self, char)
+    Characters.save(self, char)
   end
 end

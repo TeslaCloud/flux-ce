@@ -22,7 +22,7 @@ function Characters:PlayerDisconnected(player)
 end
 
 function Characters:PlayerRestored(player)
-  character.send_to_client(player)
+  Characters.send_to_client(player)
 
   hook.run('PostRestoreCharacters', player)
 end

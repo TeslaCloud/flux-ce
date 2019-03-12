@@ -1,6 +1,8 @@
-﻿library 'character'
+﻿if !Characters then
+  PLUGIN:set_global('Characters')
+end
 
-function character.create(player, data)
+function Characters.create(player, data)
   if (!isstring(data.name) or (utf8.len(data.name) < Config.get('character_min_name_len') or
     utf8.len(data.name) > Config.get('character_max_name_len'))) then
     return CHAR_ERR_NAME
@@ -43,31 +45,31 @@ function character.create(player, data)
 
     hook.run('PostCreateCharacter', player, char_id, char, data)
 
-    character.save(player, char)
+    Characters.save(player, char)
 
-    Cable.send(player, 'fl_create_character', char.character_id, character.to_networkable(player, char))
+    Cable.send(player, 'fl_create_character', char.character_id, Characters.to_networkable(player, char))
   end
 
   return CHAR_SUCCESS
 end
 
 if SERVER then
-  function character.send_to_client(player)
-    Cable.send(player, 'fl_characters_load', character.all_to_networkable(player))
+  function Characters.send_to_client(player)
+    Cable.send(player, 'fl_characters_load', Characters.all_to_networkable(player))
   end
 
-  function character.all_to_networkable(player)
+  function Characters.all_to_networkable(player)
     local characters = player.record.characters or {}
     local ret = {}
 
     for k, v in pairs(characters) do
-      ret[k] = character.to_networkable(player, v)
+      ret[k] = Characters.to_networkable(player, v)
     end
 
     return ret
   end
 
-  function character.to_networkable(player, char)
+  function Characters.to_networkable(player, char)
     if !IsValid(player) or !char then return end
 
     return {
@@ -86,7 +88,7 @@ if SERVER then
     }
   end
 
-  function character.save(player, character)
+  function Characters.save(player, character)
     if !IsValid(player) or !IsValid(character) or hook.run('PreSaveCharacter', player, character) == false then return end
 
     hook.run('SaveCharacterData', player, character)
@@ -94,32 +96,32 @@ if SERVER then
     hook.run('PostSaveCharacter', player, character)
   end
 
-  function character.save_all(player)
+  function Characters.save_all(player)
     if !IsValid(player) then return end
 
     for k, v in ipairs(player.record.characters) do
-      character.save(player, v)
+      Characters.save(player, v)
     end
   end
 
-  function character.set_name(player, char, new_name)
+  function Characters.set_name(player, char, new_name)
     if char then
       char.name = new_name or char.name
 
       player:set_nv('name', char.name)
 
-      character.save(player, char)
+      Characters.save(player, char)
     end
   end
 
-  function character.set_model(player, char, model)
+  function Characters.set_model(player, char, model)
     if char then
       char.model = model or char.model
 
       player:set_nv('model', char.model)
       player:SetModel(char.model)
 
-      character.save(player, char)
+      Characters.save(player, char)
     end
   end
 
@@ -127,12 +129,12 @@ if SERVER then
     data.gender  = (data.gender and data.gender == 'Female' and CHAR_GENDER_FEMALE) or CHAR_GENDER_MALE
     data.phys_desc = data.description
 
-    local status = character.create(player, data)
+    local status = Characters.create(player, data)
 
     Flux.dev_print('Creating character. Status: '..status)
 
     if status == CHAR_SUCCESS then
-      character.send_to_client(player)
+      Characters.send_to_client(player)
       Cable.send(player, 'fl_player_created_character', true, status)
 
       Flux.dev_print('Success')
@@ -157,7 +159,7 @@ if SERVER then
     player.record.characters[id]:destroy()
     table.remove(player.record.characters, id)
 
-    character.send_to_client(player)
+    Characters.send_to_client(player)
   end)
 else
   Cable.receive('fl_characters_load', function(data)
