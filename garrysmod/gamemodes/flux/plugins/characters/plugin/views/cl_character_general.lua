@@ -145,7 +145,7 @@ end
 
 function PANEL:rebuild_models()
   local char_data = self:GetParent().char_data
-  local faction_table = faction.find_by_id(char_data.faction)
+  local faction_table = Factions.find_by_id(char_data.faction)
   local models
 
   if char_data.gender == 'Male' then

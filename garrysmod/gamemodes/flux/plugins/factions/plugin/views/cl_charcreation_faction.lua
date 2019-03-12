@@ -16,7 +16,7 @@ function PANEL:on_open(parent)
   self.chooser:SetOverlap(4)
   self.chooser:set_centered(true)
 
-  for k, v in pairs(faction.all()) do
+  for k, v in pairs(Factions.all()) do
     if !v.whitelisted or PLAYER:has_whitelist(v.faction_id) then
       local button = vgui.Create('fl_image_button')
       button:SetSize(self.chooser:GetWide() / 3, self.chooser:GetTall())
@@ -78,7 +78,7 @@ function PANEL:on_validate()
     return false, t('char_create.no_faction')
   end
 
-  local faction = faction.find_by_id(self.faction_id)
+  local faction = Factions.find_by_id(self.faction_id)
 
   if faction.whitelisted and !PLAYER:has_whitelist(self.faction_id) then
     return false, t('char_create.no_whitelist')

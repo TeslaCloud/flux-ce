@@ -45,8 +45,8 @@ function Factions:PlayerRestored(player, record)
   end
 
   if player:IsBot() then
-    if faction.count > 0 then
-      local random_faction = table.Random(faction.all())
+    if self.count > 0 then
+      local random_faction = table.Random(self.all())
 
       player:set_nv('faction', random_faction.faction_id)
 

@@ -147,5 +147,5 @@ function Faction:on_player_leave(player)
 end
 
 function Faction:register()
-  faction.register(self.faction_id, self)
+  Factions.add_faction(self.faction_id, self)
 end

@@ -7,7 +7,7 @@ util.include('sv_hooks.lua')
 
 function Factions:PluginIncludeFolder(extra, folder)
   if extra == 'factions' then
-    faction.include_factions(folder..'/factions/')
+    self.include_factions(folder..'/factions/')
 
     return true
   end
@@ -28,7 +28,7 @@ function Factions:RegisterConditions()
       local faction_name
 
       if panel.data.faction_id then
-        faction_name = faction.find_by_id(panel.data.faction_id):get_name()
+        faction_name = self.find_by_id(panel.data.faction_id):get_name()
       end
 
       return { operator, faction_name }
@@ -40,7 +40,7 @@ function Factions:RegisterConditions()
       return util.process_operator(data.operator, player:get_faction_id(), data.faction_id)
     end,
     set_parameters = function(id, data, panel, menu, parent)
-      parent:create_selector(data.name, 'conditions.faction.message', 'conditions.factions', faction.all(), 
+      parent:create_selector(data.name, 'conditions.faction.message', 'conditions.factions', self.all(), 
       function(selector, _faction)
         selector:add_choice(t(_faction.name), function()
           panel.data.faction_id = _faction.faction_id
@@ -79,7 +79,7 @@ function Factions:RegisterConditions()
       return util.process_operator(data.operator, player:get_rank(), data.rank)
     end,
     set_parameters = function(id, data, panel, menu, parent)
-      parent:create_selector(data.name, 'conditions.faction.message', 'conditions.factions', faction.all(), 
+      parent:create_selector(data.name, 'conditions.faction.message', 'conditions.factions', self.all(), 
       function(faction_selector, _faction)
         if #_faction:get_ranks() == 0 then return end
 

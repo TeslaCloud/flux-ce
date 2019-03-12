@@ -4,7 +4,7 @@ function Factions:CharPanelCreated(id, panel)
     local char_data = panel:GetParent().char_data
 
     if char_data and char_data.faction then
-      faction_table = faction.find_by_id(char_data.faction)
+      faction_table = Factions.find_by_id(char_data.faction)
     end
 
     if faction_table and !faction_table.has_name then
@@ -30,7 +30,7 @@ function Factions:PreStageChange(id, panel)
   if id == 'char_create.general' then
     local gender = (panel.gender_female:is_active() and 'Female') or (panel.gender_male:is_active() and 'Male') or 'Universal'
     local faction_id = panel:GetParent().char_data.faction
-    local faction_table = faction.find_by_id(faction_id)
+    local faction_table = Factions.find_by_id(faction_id)
 
     if gender == 'Universal' and faction_table.has_gender then
       return false, t'char_creation.no_gender'
@@ -75,8 +75,8 @@ function Factions:PreRebuildScoreboard(panel, w, h)
   category_list:SetSize(w - 8, h - 36)
   category_list:SetPos(4, 36)
 
-  for k, v in pairs(faction.all()) do
-    local players = faction.get_players(k)
+  for k, v in pairs(Factions.all()) do
+    local players = Factions.get_players(k)
 
     if #players == 0 then continue end
 

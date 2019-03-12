@@ -1,11 +1,13 @@
-library 'faction'
+if !Factions then
+  PLUGIN:set_global 'Factions'
+end
 
-local stored = faction.stored or {}
-local count = faction.count or 0
-faction.stored = stored
-faction.count = count
+local stored = Factions.stored or {}
+local count = Factions.count or 0
+Factions.stored = stored
+Factions.count = count
 
-function faction.register(id, data)
+function Factions.add_faction(id, data)
   if !id or !data then return end
 
   data.faction_id = id:to_id() or (data.name and data.name:to_id())
@@ -21,11 +23,11 @@ function faction.register(id, data)
   count = count + 1
 end
 
-function faction.find_by_id(id)
+function Factions.find_by_id(id)
   return stored[id]
 end
 
-function faction.get_players(id)
+function Factions.get_players(id)
   local players = {}
 
   for k, v in ipairs(_player.GetAll()) do
@@ -37,7 +39,7 @@ function faction.get_players(id)
   return players
 end
 
-function faction.find(name, strict)
+function Factions.find(name, strict)
   for k, v in pairs(stored) do
     if strict then
       if k:utf8lower() == name:utf8lower() then
@@ -57,11 +59,11 @@ function faction.find(name, strict)
   return false
 end
 
-function faction.all()
+function Factions.all()
   return stored
 end
 
-function faction.include_factions(directory)
+function Factions.include_factions(directory)
   return Pipeline.include_folder('faction', directory)
 end
 
@@ -74,7 +76,7 @@ do
 
   function player_meta:set_faction(id)
     local old_faction = self:get_faction()
-    local faction_table = faction.find_by_id(id)
+    local faction_table = Factions.find_by_id(id)
     local char = self:get_character()
 
     self:set_nv('name', faction_table:generate_name(self, self:get_character_var('name', self:name()), 1))
@@ -142,7 +144,7 @@ do
   end
 
   function player_meta:get_faction()
-    return faction.find_by_id(self:get_faction_id())
+    return Factions.find_by_id(self:get_faction_id())
   end
 
   function player_meta:set_rank(rank)

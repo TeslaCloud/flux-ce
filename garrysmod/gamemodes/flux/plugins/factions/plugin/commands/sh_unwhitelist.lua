@@ -10,7 +10,7 @@ COMMAND.player_arg = 1
 COMMAND.aliases = { 'takewhitelist', 'plytakewhitelist', 'plyunwhitelist' }
 
 function COMMAND:on_run(player, targets, name, strict)
-  local whitelist = faction.find(name, strict)
+  local whitelist = Factions.find(name, strict)
 
   if whitelist then
     for k, v in ipairs(targets) do

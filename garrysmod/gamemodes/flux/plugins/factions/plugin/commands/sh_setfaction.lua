@@ -10,7 +10,7 @@ COMMAND.player_arg = 1
 COMMAND.aliases = { 'plytransfer', 'charsetfaction', 'chartransfer' }
 
 function COMMAND:on_run(player, targets, name, strict)
-  local faction_table = faction.find(name, (strict and true) or false)
+  local faction_table = Factions.find(name, (strict and true) or false)
 
   if faction_table then
     for k, v in ipairs(targets) do
