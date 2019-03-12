@@ -199,9 +199,25 @@ function Packager.Parser:parse_call_assign()
   if self.current.tk == TK_name then
     local name = self:expr_field()
 
+    -- implicit return of a variable
+    if self.current.tk == TK_end then
+      local ret_ast = ASTReturn.new()
+      ret_ast.what = name
+      return ret_ast
+    end
+
     -- call with arguments
     if LITERAL_TOKENS[self.current.tk] or self.current.tk == TK_lparen then
-      return self:parse_call(name)
+      local call_ast = self:parse_call(name)
+
+      -- implicit return
+      if self.current.tk == TK_end then
+        local ret_ast = ASTReturn.new()
+        ret_ast.what = call_ast
+        return ret_ast
+      end
+
+      return call_ast
     elseif ASSIGNMENT_TOKENS[self.current.tk] then -- assignment
       return self:parse_assignment(name)
     else
@@ -460,12 +476,16 @@ local parsed = Packager.Parser:parse([[
 
   func aaa
     print "Hello I'm a shitty parser!"
-    print 123, string.gsub(a, '%s+', ''), test, false
+    print 123, a:gsub('%s+', ''), test, false
     return false
   end
 
   func a
-    test
+    self.id
+  end
+
+  func b
+    123 + 321
   end
 ]])
 
