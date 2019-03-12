@@ -1,7 +1,5 @@
 PLUGIN:set_global('Chatbox')
 
-library 'chatbox'
-
 -- Enums for message data structures.
 CHAT_ERROR  = -1
 CHAT_NONE   = 0

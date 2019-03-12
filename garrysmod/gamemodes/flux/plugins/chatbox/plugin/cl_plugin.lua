@@ -3,18 +3,18 @@ category.add_slider('chatbox_message_margin', 'config.chatbox.margin.name', 'con
 category.add_slider('chatbox_message_fade_delay', 'config.chatbox.fade_delay.name', 'config.chatbox.fade_delay.desc', { min = 1, max = 128, default = 12 })
 category.add_slider('chatbox_max_messages', 'config.chatbox.max_messages.name', 'config.chatbox.max_messages.desc', { min = 1, max = 256, default = 100 })
 
-chatbox.width = chatbox.width or 100
-chatbox.height = chatbox.height or 100
-chatbox.x = chatbox.x or 0
-chatbox.y = chatbox.y or 0
+Chatbox.width = Chatbox.width or 100
+Chatbox.height = Chatbox.height or 100
+Chatbox.x = Chatbox.x or 0
+Chatbox.y = Chatbox.y or 0
 
-chatbox.old_add_text = chatbox.old_add_text or chat.AddText
+Chatbox.old_add_text = Chatbox.old_add_text or chat.AddText
 
 function chat.AddText(...)
   Cable.send('fl_chat_text_add', ...)
 end
 
-function chatbox.compile(msg_table)
+function Chatbox.compile(msg_table)
   local compiled = {
     total_height = 0
   }
@@ -43,7 +43,7 @@ function chatbox.compile(msg_table)
           data[k] = t(v)
         end
 
-        local wrapped = util.wrap_text(v, font, chatbox.width, cur_x)
+        local wrapped = util.wrap_text(v, font, Chatbox.width, cur_x)
         local line_count = #wrapped
 
         for k2, v2 in ipairs(wrapped) do
@@ -117,35 +117,35 @@ function chatbox.compile(msg_table)
   return compiled
 end
 
-function chatbox.create()
-  chatbox.width = Theme.get_option('chatbox_width') or 100
-  chatbox.height = Theme.get_option('chatbox_height') or 100
-  chatbox.x = Theme.get_option('chatbox_x') or 0
-  chatbox.y = Theme.get_option('chatbox_y') or 0
+function Chatbox.create()
+  Chatbox.width = Theme.get_option('chatbox_width') or 100
+  Chatbox.height = Theme.get_option('chatbox_height') or 100
+  Chatbox.x = Theme.get_option('chatbox_x') or 0
+  Chatbox.y = Theme.get_option('chatbox_y') or 0
 
-  chatbox.panel = vgui.Create('fl_chat_panel')
-  chatbox.panel:set_open(false)
+  Chatbox.panel = vgui.Create('fl_chat_panel')
+  Chatbox.panel:set_open(false)
 end
 
-function chatbox.show()
-  if !IsValid(chatbox.panel) then
-    chatbox.create()
+function Chatbox.show()
+  if !IsValid(Chatbox.panel) then
+    Chatbox.create()
   end
 
-  chatbox.panel:set_open(true)
+  Chatbox.panel:set_open(true)
 end
 
-function chatbox.hide()
-  if IsValid(chatbox.panel) then
-    chatbox.panel:set_open(false)
+function Chatbox.hide()
+  if IsValid(Chatbox.panel) then
+    Chatbox.panel:set_open(false)
 
-    chatbox.panel:SetMouseInputEnabled(false)
-    chatbox.panel:SetKeyboardInputEnabled(false)
+    Chatbox.panel:SetMouseInputEnabled(false)
+    Chatbox.panel:SetKeyboardInputEnabled(false)
   end
 end
 
 concommand.Add('fl_reset_chat', function()
-  if IsValid(chatbox.panel) then
-    chatbox.panel:safe_remove()
+  if IsValid(Chatbox.panel) then
+    Chatbox.panel:safe_remove()
   end
 end)

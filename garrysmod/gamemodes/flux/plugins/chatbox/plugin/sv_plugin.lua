@@ -18,11 +18,11 @@ local default_msg_data = {
 local filters = {}
 local client_mode = false
 
-function chatbox.add_filter(id, data)
+function Chatbox.add_filter(id, data)
   filters[id] = data
 end
 
-function chatbox.can_hear(listener, message_data)
+function Chatbox.can_hear(listener, message_data)
   if plugin.call('PlayerCanHear', listener, message_data) then
     return true
   end
@@ -50,7 +50,7 @@ function chatbox.can_hear(listener, message_data)
   return false
 end
 
-function chatbox.add_text(listeners, ...)
+function Chatbox.add_text(listeners, ...)
   local message_data = {
     sender = nil,
     listeners = listeners or {},
@@ -100,17 +100,17 @@ function chatbox.add_text(listeners, ...)
 
     hook.run('AdjustMessageData', v, data)
 
-    if chatbox.can_hear(v, data) then
+    if Chatbox.can_hear(v, data) then
       Cable.send(v, 'fl_chat_message_add', data)
     end
   end
 end
 
-function chatbox.set_client_mode(val)
+function Chatbox.set_client_mode(val)
   client_mode = val
 end
 
-function chatbox.message_to_string(message_data, concatenator)
+function Chatbox.message_to_string(message_data, concatenator)
   local to_string = {}
 
   for k, v in pairs(message_data) do
@@ -137,9 +137,9 @@ end
 Cable.receive('fl_chat_text_add', function(player, ...)
   if !IsValid(player) then return end
 
-  chatbox.set_client_mode(true)
-  chatbox.add_text(player, ...)
-  chatbox.set_client_mode(false)
+  Chatbox.set_client_mode(true)
+  Chatbox.add_text(player, ...)
+  Chatbox.set_client_mode(false)
 end)
 
 Cable.receive('fl_chat_player_say', function(player, text, team_chat)
@@ -165,5 +165,5 @@ Cable.receive('fl_chat_player_say', function(player, text, team_chat)
 
   hook.run('ChatboxAdjustPlayerSay', player, text, message)
 
-  chatbox.add_text(nil, unpack(message))
+  Chatbox.add_text(nil, unpack(message))
 end)

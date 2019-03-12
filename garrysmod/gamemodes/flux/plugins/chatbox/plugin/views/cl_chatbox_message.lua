@@ -21,7 +21,7 @@ function PANEL:Think()
 
   self.should_paint = false
 
-  if chatbox.panel:typing_command() then
+  if Chatbox.panel:typing_command() then
     self.force_alpha = 50
   else
     self.force_alpha = false
@@ -72,7 +72,7 @@ function PANEL:Paint(w, h)
 end
 
 function PANEL:set_message(msg_info)
-  local parent = chatbox.panel
+  local parent = Chatbox.panel
 
   if !IsValid(parent) then return end
 
@@ -84,7 +84,7 @@ end
 -- Those people want us gone :(
 function PANEL:eject()
   if plugin.call('ShouldMessageeject', self) != false then
-    local parent = chatbox.panel
+    local parent = Chatbox.panel
 
     if !IsValid(parent) then return end
 

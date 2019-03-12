@@ -91,7 +91,7 @@ end
 function PANEL:Think()
   if self.is_open then
     if input.IsKeyDown(KEY_ESCAPE) then
-      chatbox.hide()
+      Chatbox.hide()
 
       if gui.IsGameUIVisible() then
         gui.HideGameUI()
@@ -212,7 +212,7 @@ function PANEL:typing_command()
 end
 
 function PANEL:create_message(message_data)
-  local parsed = chatbox.compile(message_data)
+  local parsed = Chatbox.compile(message_data)
 
   if !parsed then return end
 
@@ -285,18 +285,18 @@ function PANEL:remove_message(idx)
 end
 
 function PANEL:rebuild()
-  self:SetSize(chatbox.width, chatbox.height)
-  self:SetPos(chatbox.x, chatbox.y)
+  self:SetSize(Chatbox.width, Chatbox.height)
+  self:SetPos(Chatbox.x, Chatbox.y)
 
   local text_entry_height = Font.scale(42)
 
-  self.text_entry:SetSize(chatbox.width, text_entry_height)
-  self.text_entry:SetPos(0, chatbox.height - text_entry_height)
+  self.text_entry:SetSize(Chatbox.width, text_entry_height)
+  self.text_entry:SetPos(0, Chatbox.height - text_entry_height)
   self.text_entry:SetFont(Theme.get_font('chatbox_text_entry'))
   self.text_entry:SetTextColor(Theme.get_color('text'))
   self.text_entry:RequestFocus()
 
-  self.scroll_panel:SetSize(chatbox.width, chatbox.height - self.text_entry:GetTall() - 16)
+  self.scroll_panel:SetSize(Chatbox.width, Chatbox.height - self.text_entry:GetTall() - 16)
   self.scroll_panel:PerformLayout()
   self.scroll_panel.VBar:SetScroll(self.scroll_panel.VBar.CanvasSize or 0)
 

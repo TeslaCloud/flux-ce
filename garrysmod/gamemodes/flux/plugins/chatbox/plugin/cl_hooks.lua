@@ -6,9 +6,9 @@ function Chatbox:OnResolutionChanged(new_width, new_height)
   local entry_height = Theme.set_option('chatbox_text_entry_height', Font.scale(38))
   Theme.set_option('chatbox_text_entry_text_size', entry_height * 0.9)
 
-  if chatbox.panel then
-    chatbox.panel:Remove()
-    chatbox.panel = nil
+  if Chatbox.panel then
+    Chatbox.panel:Remove()
+    Chatbox.panel = nil
   end
 end
 
@@ -20,15 +20,15 @@ function Chatbox:PlayerBindPress(player, bind, pressed)
       PLAYER.typing_team_chat = false
     end
 
-    chatbox.show()
+    Chatbox.show()
 
     return true
   end
 end
 
 function Chatbox:GUIMousePressed(mouseCode, aim_vector)
-  if IsValid(chatbox.panel) then
-    chatbox.hide()
+  if IsValid(Chatbox.panel) then
+    Chatbox.hide()
   end
 end
 
@@ -71,15 +71,15 @@ function Chatbox:ChatboxTextEntered(text)
     Cable.send('fl_chat_player_say', text)
   end
 
-  chatbox.hide()
+  Chatbox.hide()
 end
 
 Cable.receive('fl_chat_message_add', function(message_data)
-  if !IsValid(chatbox.panel) then
-    chatbox.create()
+  if !IsValid(Chatbox.panel) then
+    Chatbox.create()
   end
 
-  chatbox.panel:add_message(message_data)
+  Chatbox.panel:add_message(message_data)
 
   chat.PlaySound()
 end)
