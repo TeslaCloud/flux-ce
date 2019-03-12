@@ -54,8 +54,10 @@ function PluginInstance:set_global(alias)
       MsgC(Color('orange'), 'The compatibility behavior is deprecated and this\nwarning will become an error in Flux 0.6!\n')
     end
 
-    _G[alias] = self
-    self.alias = alias
+    if !istable(_G[alias]) then
+      _G[alias] = self
+      self.alias = alias
+    end
   end
 end
 
