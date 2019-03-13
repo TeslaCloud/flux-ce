@@ -4,13 +4,13 @@ GM.Author        = 'TeslaCloud Studios'
 GM.Website       = 'https://teslacloud.net/'
 GM.Email         = 'support@teslacloud.net'
 
-local version    = '0.6.0-alpha'
+local version    = '0.6.1-alpha'
 
 -- Define Flux-Specific fields.
 GM.version       = version
-GM.version_num   = '0.6.0'
-GM.date          = '3/13/2019'
-GM.build         = '20190313'
+GM.version_num   = '0.6.1'
+GM.date          = '3/14/2019'
+GM.build         = '20190314'
 GM.description   = 'A free roleplay gamemode framework.'
 GM.code_name     = 'Cherry Soda'
 
