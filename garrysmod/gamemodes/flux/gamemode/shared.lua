@@ -4,8 +4,10 @@ GM.Author        = 'TeslaCloud Studios'
 GM.Website       = 'https://teslacloud.net/'
 GM.Email         = 'support@teslacloud.net'
 
+local version    = '0.6.0-alpha'
+
 -- Define Flux-Specific fields.
-GM.version       = '0.6.0-alpha'
+GM.version       = version
 GM.version_num   = '0.6.0'
 GM.date          = '3/13/2019'
 GM.build         = '20190313'
@@ -30,6 +32,10 @@ Flux.development   = !IS_PRODUCTION
 _player, _team, _file, _table, _sound = player, team, file, table, sound
 
 AddCSLuaFile(FLUX_ENV_PATH)
+
+function Flux.get_version()
+  return version
+end
 
 if engine.ActiveGamemode() != 'flux' then
   Flux.schema = engine.ActiveGamemode()
@@ -88,7 +94,6 @@ if !LITE_REFRESH then
   -- So that we don't get duplicates on refresh.
   Plugin.clear_cache()
 
-  util.include_folder('config', true)
   util.include_folder('lib', true)
   util.include_folder('lib/classes', true)
   util.include_folder('lib/meta', true)

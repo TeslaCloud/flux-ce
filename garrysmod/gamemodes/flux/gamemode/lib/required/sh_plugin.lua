@@ -367,7 +367,7 @@ end
 
 do
   local tolerance = {
-    '', '.', '..',
+    '',
     '/plugin.yml',
     '.lua',
     '/plugin/sh_plugin.lua'
@@ -380,6 +380,7 @@ do
     if !Plugin.loaded(name) then
       local search_paths = {
         'flux/plugins/',
+        '_flux/plugins/'..Flux.get_version()..'/',
         (Flux.get_schema_folder() or 'flux')..'/plugins/'
       }
 
@@ -388,6 +389,14 @@ do
           for _, ending in ipairs(tolerance) do
             if file.Exists(v..name..ending, 'LUA') then
               Plugin.include(v..name)
+
+              return true
+            end
+          end
+
+          for _, prefix in pairs({ 'sv_', 'sh_', 'cl_' }) do
+            if file.Exists(v..prefix..name..'.lua', 'LUA') then
+              Plugin.include(v..prefix..name..'.lua')
 
               return true
             end
