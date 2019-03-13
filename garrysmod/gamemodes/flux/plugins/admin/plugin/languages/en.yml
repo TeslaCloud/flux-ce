@@ -39,7 +39,9 @@ en:
   kick_message: "{1} has kicked {2}. ({3})"
   ban_message: "{admin} has banned {target} {time}. ({reason})"
   unban_message: "{admin} has unbanned {target}."
-  add_bots_message: "{1} has added {2} bots to the server."
+  add_bots_message: "{1} has added {2} {3} to the server."
+  bot_one: bot
+  bot_many: bots
   kick_bots_message: "{1} has kicked all bots."
   map_restart_message: "{1} is restarting the map in {2} second(s)!"
   map_change_message: "{1} is changing the level to {2} in {3} second(s)!"

@@ -40,7 +40,7 @@ COMMAND.aliases = { 'bot', 'bots' }
 function COMMAND:on_run(player, num_bots)
   num_bots = math.Clamp((tonumber(num_bots) or 1), 1, 128)
 
-  Flux.Player:broadcast('add_bots_message', { get_player_name(player), num_bots })
+  Flux.Player:broadcast('add_bots_message', { get_player_name(player), num_bots, num_bots == 1 and 'bot_one' or 'bot_many' })
 
   timer.Create('fl_add_bots', 0.2, num_bots, function()
     RunConsoleCommand('bot')

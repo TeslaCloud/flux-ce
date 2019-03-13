@@ -39,7 +39,9 @@ ru:
   kick_message: "{1} кикнул {2}. ({3})"
   ban_message: "{admin} заблокировал {target} {time}. ({reason})"
   unban_message: "{admin} разблокировал {target}."
-  add_bots_message: "{1} добавил {2} ботов на сервер."
+  add_bots_message: "{1} добавил {2} {3} на сервер."
+  bot_one: бота
+  bot_many: ботов
   kick_bots_message: "{1} кикнул всех ботов."
   map_restart_message: "{1} перезапускает карту через {2} секунд!"
   map_change_message: "{1} меняет карту на {2} через {3} секунд!"
