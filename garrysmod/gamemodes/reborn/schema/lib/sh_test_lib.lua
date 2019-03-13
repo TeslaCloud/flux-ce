@@ -2,7 +2,7 @@
   This is how you define a library.
 --]]
 
-library.new('Test', Schema)
+library 'Schema::Test'
 
 function Schema.Test:do_nothing()
 
