@@ -2,7 +2,6 @@ if !ItemUsable then
   util.include('sh_usable_base.lua')
 end
 
--- Alternatively, you can use item.create_base('ItemAmmo')
 class 'ItemAmmo' extends 'ItemUsable'
 
 ItemAmmo.name = 'Usable Items Base'

@@ -1,40 +1,40 @@
-library 'item'
+library 'Item'
 
-local stored = item.stored or {}
-local instances = item.instances or {}
-local sorted = item.sorted or {}
-local entities = item.entities or {}
+local stored = Item.stored or {}
+local instances = Item.instances or {}
+local sorted = Item.sorted or {}
+local entities = Item.entities or {}
 
 -- Item Templates storage.
-item.stored = stored
+Item.stored = stored
 
 -- Actual items.
-item.instances = instances
+Item.instances = instances
 
 -- Instances table indexed by instance ID.
 -- For quicker item lookups.
-item.sorted = sorted
+Item.sorted = sorted
 
 -- Items currently dropped and lying on the ground.
-item.entities = entities
+Item.entities = entities
 
-function item.all()
+function Item.all()
   return stored
 end
 
-function item.get_instances()
+function Item.get_instances()
   return instances
 end
 
-function item.get_sorted()
+function Item.get_sorted()
   return sorted
 end
 
-function item.get_entities()
+function Item.get_entities()
   return entities
 end
 
-function item.register(id, data)
+function Item.register(id, data)
   if !data then return end
 
   if !isstring(data.name) and isstring(data.print_name) then
@@ -85,7 +85,7 @@ function item.register(id, data)
   instances[id] = instances[id] or {}
 end
 
-function item.to_save(item_table)
+function Item.to_saveable(item_table)
   if !item_table then return end
 
   return {
@@ -118,7 +118,7 @@ function item.to_save(item_table)
 end
 
 -- Find item's template by it's ID.
-function item.find_by_id(id)
+function Item.find_by_id(id)
   for k, v in pairs(stored) do
     if k == id or v.id == id then
       return v
@@ -127,14 +127,14 @@ function item.find_by_id(id)
 end
 
 -- Find all instances of certain template ID.
-function item.find_all_instances(id)
+function Item.find_all_instances(id)
   if instances[id] then
     return instances[id]
   end
 end
 
 -- Finds instance by it's ID.
-function item.find_instance_by_id(instance_id)
+function Item.find_instance_by_id(instance_id)
   for item_id, item_instances in pairs(instances) do
     if istable(item_instances) then
       for k, item_table in pairs(item_instances) do
@@ -147,19 +147,19 @@ function item.find_instance_by_id(instance_id)
 end
 
 -- Finds an item template that belongs to certain instance ID.
-function item.find_by_instance_id(instance_id)
+function Item.find_by_instance_id(instance_id)
   if !instance_id then return end
 
   if !sorted[instance_id] then
-    sorted[instance_id] = item.find_instance_by_id(instance_id)
+    sorted[instance_id] = Item.find_instance_by_id(instance_id)
   end
 
   return sorted[instance_id]
 end
 
-function item.find(name)
+function Item.find(name)
   if isnumber(name) then
-    return item.find_instance_by_id(name)
+    return Item.find_instance_by_id(name)
   end
 
   if stored[id] then
@@ -181,18 +181,18 @@ function item.find(name)
   end
 end
 
-function item.generate_id()
+function Item.generate_id()
   instances.count = instances.count or 0
   instances.count = instances.count + 1
 
   return instances.count
 end
 
-function item.new(id, data, forced_id)
-  local item_table = item.find_by_id(id)
+function Item.create(id, data, forced_id)
+  local item_table = Item.find_by_id(id)
 
   if item_table then
-    local item_id = forced_id or item.generate_id()
+    local item_id = forced_id or Item.generate_id()
 
     instances[id] = instances[id] or {}
     instances[id][item_id] = table.Copy(item_table)
@@ -204,7 +204,7 @@ function item.new(id, data, forced_id)
     instances[id][item_id].instance_id = item_id
 
     if SERVER then
-      item.async_save()
+      Item.async_save()
       Cable.send(nil, 'fl_items_new_instance', id, (data or 1), item_id)
     end
 
@@ -212,10 +212,10 @@ function item.new(id, data, forced_id)
   end
 end
 
-function item.remove(instance_id)
-  local item_table = (istable(instance_id) and instance_id) or item.find_instance_by_id(instance_id)
+function Item.remove(instance_id)
+  local item_table = (istable(instance_id) and instance_id) or Item.find_instance_by_id(instance_id)
 
-  if item_table and item.is_instance(item_table) then
+  if item_table and Item.is_instance(item_table) then
     if IsValid(item_table.entity) then
       item_table.entity:Remove()
     end
@@ -223,35 +223,31 @@ function item.remove(instance_id)
     instances[item_table.id][item_table.instance_id] = nil
 
     if SERVER then
-      item.async_save()
+      Item.async_save()
     end
 
     Flux.dev_print('Removed item instance ID: '..item_table.instance_id)
   end
 end
 
-function item.is_instance(item_table)
+function Item.is_instance(item_table)
   if !istable(item_table) then return end
 
   return (item_table.instance_id or ITEM_TEMPLATE) > ITEM_INVALID
 end
 
-function item.create_base(name)
-  class(name, Item)
-end
-
-function item.include_items(directory)
+function Item.include_items(directory)
   Pipeline.include_folder('item', directory)
 end
 
 if SERVER then
-  function item.load()
+  function Item.load()
     local loaded = Data.load_schema('items/instances', {})
 
     if loaded and table.Count(loaded) > 0 then
       -- Returns functions to instances table after loading.
       for id, instance_table in pairs(loaded) do
-        local item_table = item.find_by_id(id)
+        local item_table = Item.find_by_id(id)
 
         if item_table then
           for k, v in pairs(instance_table) do
@@ -265,7 +261,7 @@ if SERVER then
       end
 
       instances = loaded
-      item.instances = loaded
+      Item.instances = loaded
     end
 
     local loaded = Data.load_schema('items/entities', {})
@@ -274,7 +270,7 @@ if SERVER then
       for id, instance_table in pairs(loaded) do
         for k, v in pairs(instance_table) do
           if instances[id] and instances[id][k] then
-            item.spawn(v.position, v.angles, instances[id][k])
+            Item.spawn(v.position, v.angles, instances[id][k])
           else
             loaded[id][k] = nil
           end
@@ -282,11 +278,11 @@ if SERVER then
       end
 
       entities = loaded
-      item.entities = loaded
+      Item.entities = loaded
     end
   end
 
-  function item.save_instances()
+  function Item.save_instances()
     local to_save = {}
 
     for k, v in pairs(instances) do
@@ -299,7 +295,7 @@ if SERVER then
       if istable(v) then
         for k2, v2 in pairs(v) do
           if istable(v2) then
-            to_save[k][k2] = item.to_save(v2)
+            to_save[k][k2] = Item.to_saveable(v2)
           end
         end
       end
@@ -308,7 +304,7 @@ if SERVER then
     Data.save_schema('items/instances', to_save)
   end
 
-  function item.save_entities()
+  function Item.save_entities()
     local item_ents = ents.FindByClass('fl_item')
 
     entities = {}
@@ -327,63 +323,63 @@ if SERVER then
     Data.save_schema('items/entities', entities)
   end
 
-  function item.save_all()
-    item.save_instances()
-    item.save_entities()
+  function Item.save_all()
+    Item.save_instances()
+    Item.save_entities()
   end
 
-  function item.async_save()
-    local handle = coroutine.create(item.save_all)
+  function Item.async_save()
+    local handle = coroutine.create(Item.save_all)
     coroutine.resume(handle)
   end
 
-  function item.async_save_instances()
-    local handle = coroutine.create(item.save_instances)
+  function Item.async_save_instances()
+    local handle = coroutine.create(Item.save_instances)
     coroutine.resume(handle)
   end
 
-  function item.async_save_entities()
-    local handle = coroutine.create(item.save_entities)
+  function Item.async_save_entities()
+    local handle = coroutine.create(Item.save_entities)
     coroutine.resume(handle)
   end
 
-  function item.network_item_data(player, item_table)
-    if item.is_instance(item_table) then
+  function Item.network_item_data(player, item_table)
+    if Item.is_instance(item_table) then
       Cable.send(player, 'fl_items_data', item_table.id, item_table.instance_id, item_table.data)
     end
   end
 
-  function item.network_item(player, instance_id)
-    Cable.send(player, 'fl_items_network', instance_id, item.to_save(item.find_instance_by_id(instance_id)))
+  function Item.network_item(player, instance_id)
+    Cable.send(player, 'fl_items_network', instance_id, Item.to_saveable(Item.find_instance_by_id(instance_id)))
   end
 
-  function item.network_entity_data(player, ent)
+  function Item.network_entity_data(player, ent)
     if IsValid(ent) then
       Cable.send(player, 'fl_items_ent_data', ent:EntIndex(), ent.item.id, ent.item.instance_id)
     end
   end
 
   -- A function to send info about items in the world.
-  function item.send_to_player(player)
+  function Item.send_to_player(player)
     local item_ents = ents.FindByClass('fl_item')
 
     for k, v in ipairs(item_ents) do
       if v.item then
-        item.network_item(player, v.item.instance_id)
+        Item.network_item(player, v.item.instance_id)
       end
     end
 
     hook.run_client(player, 'OnItemDataReceived')
   end
 
-  function item.spawn(position, angles, item_table)
+  function Item.spawn(position, angles, item_table)
     if !position or !istable(item_table) then
       ErrorNoHalt('No position or item table is not a table!\n')
 
       return
     end
 
-    if !item.is_instance(item_table) then
+    if !Item.is_instance(item_table) then
       ErrorNoHalt('Cannot spawn non-instantiated item!\n')
 
       return
@@ -404,7 +400,7 @@ if SERVER then
     ent:Spawn()
 
     item_table:set_entity(ent)
-    item.network_item(nil, item_table.instance_id)
+    Item.network_item(nil, item_table.instance_id)
 
     entities[item_table.id] = entities[item_table.id] or {}
     entities[item_table.id][item_table.instance_id] = entities[item_table.id][item_table.instance_id] or {}
@@ -413,7 +409,7 @@ if SERVER then
       angles = angles
     }
 
-    item.async_save_entities()
+    Item.async_save_entities()
 
     return ent, item_table
   end
@@ -422,7 +418,7 @@ if SERVER then
     local ent = Entity(ent_index)
 
     if IsValid(ent) then
-      item.network_entity_data(player, ent)
+      Item.network_entity_data(player, ent)
     end
   end)
 else
@@ -468,12 +464,12 @@ else
   end)
 
   Cable.receive('fl_items_new_instance', function(id, data, item_id)
-    item.new(id, data, item_id)
+    Item.create(id, data, item_id)
   end)
 end
 
 Pipeline.register('item', function(id, file_name, pipe)
-  ITEM = Item.new(id)
+  ITEM = ItemBase.new(id)
 
   util.include(file_name)
 

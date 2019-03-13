@@ -2,7 +2,6 @@ if !ItemEquippable then
   util.include('sh_equipment_base.lua')
 end
 
--- Alternatively, you can use item.create_base('ItemClothing')
 class 'ItemClothing' extends 'ItemEquippable'
 
 ItemClothing.name = 'Clothing Base'
@@ -95,7 +94,7 @@ function ItemClothing:post_unequipped(player)
   end
 
   for k, v in pairs(player:get_items(self.equip_inv)) do
-    local item_table = item.find_instance_by_id(v)
+    local item_table = Item.find_instance_by_id(v)
 
     if self.instance_id == v then continue end
 

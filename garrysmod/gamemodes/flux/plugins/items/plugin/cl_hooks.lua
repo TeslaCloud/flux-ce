@@ -34,7 +34,7 @@ function Items:Think()
 end
 
 function Items:PlayerUseItemMenu(instance_id, is_entity)
-  local item_table = item.find_instance_by_id(instance_id)
+  local item_table = Item.find_instance_by_id(instance_id)
 
   if !item_table then return end
 

@@ -103,7 +103,7 @@ function PANEL:set_item(instance_id)
   end
 
   if isnumber(instance_id) then
-    self.item_data = item.find_instance_by_id(instance_id)
+    self.item_data = Item.find_instance_by_id(instance_id)
 
     if self.item_data then
       self.item_count = 1
@@ -115,7 +115,7 @@ function PANEL:set_item(instance_id)
 end
 
 function PANEL:set_item_multi(ids)
-  local item_data = item.find_instance_by_id(ids[1])
+  local item_data = Item.find_instance_by_id(ids[1])
 
   if item_data and !item_data.stackable then return end
 

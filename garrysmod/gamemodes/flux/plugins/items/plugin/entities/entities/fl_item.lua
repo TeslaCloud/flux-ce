@@ -83,7 +83,7 @@ if SERVER then
 
     self.item = item_table
 
-    item.network_entity_data(nil, self)
+    Item.network_entity_data(nil, self)
 
     hook.run('OnEntityItemSet', self, item_table)
   end

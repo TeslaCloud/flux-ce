@@ -2,7 +2,6 @@ if !ItemEquippable then
   util.include('sh_equipment_base.lua')
 end
 
--- Alternatively, you can use item.create_base('ItemWeapon')
 class 'ItemWeapon' extends 'ItemEquippable'
 
 ItemWeapon.name = 'Weapon Base'

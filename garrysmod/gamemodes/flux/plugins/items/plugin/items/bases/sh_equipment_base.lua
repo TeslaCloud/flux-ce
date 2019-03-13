@@ -2,7 +2,6 @@ if !ItemUsable then
   util.include('sh_usable_base.lua')
 end
 
--- Alternatively, you can use item.create_base('ItemEquippable')
 class 'ItemEquippable' extends 'ItemUsable'
 
 ItemEquippable.name = 'Equipment Base'
@@ -43,7 +42,7 @@ function ItemEquippable:can_transfer(player, inv_type, x, y)
     end
 
     for k, v in pairs(player:get_items(self.equip_inv)) do
-      local item_table = item.find_instance_by_id(v)
+      local item_table = Item.find_instance_by_id(v)
 
       if item_table.equip_slot and item_table:is_equipped() and item_table.instance_id != self.instance_id then
         if item_table.equip_slot == self.equip_slot then

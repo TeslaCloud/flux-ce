@@ -9,7 +9,7 @@ COMMAND.player_arg = 1
 COMMAND.aliases = { 'chargiveitem', 'plygiveitem' }
 
 function COMMAND:on_run(player, targets, item_name, amount)
-  local item_table = item.find(item_name)
+  local item_table = Item.find(item_name)
 
   if item_table then
     amount = tonumber(amount) or 1

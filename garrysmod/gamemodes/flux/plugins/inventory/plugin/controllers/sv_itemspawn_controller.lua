@@ -5,11 +5,11 @@ MVC.handler('SpawnMenu::SpawnItem', function(player, item_id)
     return
   end
 
-  local item_table = item.new(item_id)
+  local item_table = Item.create(item_id)
 
   if item_table then
     local trace = player:GetEyeTraceNoCursor()
 
-    item.spawn(trace.HitPos, nil, item_table)
+    Item.spawn(trace.HitPos, nil, item_table)
   end
 end)

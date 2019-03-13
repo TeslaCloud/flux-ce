@@ -93,7 +93,7 @@ do
 
           self:set_inventory(ply_inv, inv_type)
 
-          item.network_item(self, item_table.instance_id)
+          Item.network_item(self, item_table.instance_id)
 
           return y, x
         end
@@ -108,7 +108,7 @@ do
 
           self:set_inventory(ply_inv, inv_type)
 
-          item.network_item(self, item_table.instance_id)
+          Item.network_item(self, item_table.instance_id)
 
           return y, x
         end
@@ -127,9 +127,9 @@ do
       local item_table
 
       if instance_id and instance_id > 0 then
-        item_table = item.find_instance_by_id(instance_id)
+        item_table = Item.find_instance_by_id(instance_id)
       else
-        item_table = item.new(id, data)
+        item_table = Item.create(id, data)
       end
 
       local x, y = self:add_item(item_table, inv_type or 'hotbar')
@@ -149,7 +149,7 @@ do
     function player_meta:give_item_by_id(instance_id, inv_type)
       if !tonumber(instance_id) or tonumber(instance_id) <= 0 then return end
 
-      local item_table = item.find_instance_by_id(instance_id)
+      local item_table = Item.find_instance_by_id(instance_id)
 
       if !item_table then return end
 
@@ -177,7 +177,7 @@ do
 
           for k2, v2 in pairs(v1) do
             if table.has_value(v2, instance_id) then
-              local item_table = item.find_instance_by_id(instance_id)
+              local item_table = Item.find_instance_by_id(instance_id)
 
               table.remove_by_value(v[k1][k2], instance_id)
               self:set_inventory(v, k)
@@ -208,7 +208,7 @@ do
     end
 
     function player_meta:transfer_item(instance_id, new_inv)
-      local item_table = item.find_instance_by_id(instance_id)
+      local item_table = Item.find_instance_by_id(instance_id)
 
       if item_table and item_table.inventory_type != new_inv then
         local y, x = self:find_empty_slot(new_inv)
@@ -247,7 +247,7 @@ do
 
   -- A function to find an amount of instances of an item in player's inventory.
   function player_meta:find_instances(id, amount)
-    local instances = item.find_all_instances(id)
+    local instances = Item.find_all_instances(id)
     local item_list = self:get_items()
     local to_ret = {}
 

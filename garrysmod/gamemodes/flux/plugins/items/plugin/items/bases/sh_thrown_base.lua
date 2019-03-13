@@ -2,7 +2,6 @@ if !ItemWeapon then
   util.include('sh_weapon_base.lua')
 end
 
--- Alternatively, you can use item.create_base('ItemThrown')
 class 'ItemThrown' extends 'ItemWeapon'
 
 ItemThrown.name = 'Thrown Base'

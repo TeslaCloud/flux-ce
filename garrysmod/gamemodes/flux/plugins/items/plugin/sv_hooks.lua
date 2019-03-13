@@ -1,13 +1,13 @@
 function Items:InitPostEntity()
-  item.load()
+  Item.load()
 end
 
 function Items:SaveData()
-  item.save_all()
+  Item.save_all()
 end
 
 function Items:ClientIncludedSchema(player)
-  item.send_to_player(player)
+  Item.send_to_player(player)
 end
 
 function Items:PlayerUseItemEntity(player, entity, item_table)
@@ -28,13 +28,13 @@ function Items:PlayerTakeItem(player, item_table, ...)
 
     if success then
       item_table.entity:Remove()
-      item.async_save_entities()
+      Item.async_save_entities()
     end
   end
 end
 
 function Items:PlayerDropItem(player, instance_id)
-  local item_table = item.find_instance_by_id(instance_id)
+  local item_table = Item.find_instance_by_id(instance_id)
   local trace = player:GetEyeTraceNoCursor()
 
   if item_table.on_drop then
@@ -50,14 +50,14 @@ function Items:PlayerDropItem(player, instance_id)
   item_table.inventory_type = nil
   item_table.slot_id = nil
 
-  item.network_item(player, instance_id)
+  Item.network_item(player, instance_id)
 
   local distance = trace.HitPos:Distance(player:GetPos())
 
   if distance < 80 then
-    item.spawn(trace.HitPos, Angle(0, 0, 0), item_table)
+    Item.spawn(trace.HitPos, Angle(0, 0, 0), item_table)
   else
-    local ent, item_table = item.spawn(player:EyePos() + trace.Normal * 20, Angle(0, 0, 0), item_table)
+    local ent, item_table = Item.spawn(player:EyePos() + trace.Normal * 20, Angle(0, 0, 0), item_table)
     local phys_obj = ent:GetPhysicsObject()
 
     if IsValid(phys_obj) then
@@ -65,7 +65,7 @@ function Items:PlayerDropItem(player, instance_id)
     end
   end
 
-  item.async_save_entities()
+  Item.async_save_entities()
 end
 
 function Items:PlayerUseItem(player, item_table, ...)
@@ -89,7 +89,7 @@ end
 function Items:OnItemGiven(player, item_table, x, y)
   hook.run('OnItemInventoryChanged', player, item_table, item_table.inventory_type)
 
-  item.network_item(player, item_table.instance_id)
+  Item.network_item(player, item_table.instance_id)
 
   hook.run('PlayerInventoryUpdated', player, item_table.inventory_type)
 end
@@ -97,7 +97,7 @@ end
 function Items:OnItemTaken(player, item_table, inv_type, slot_x, slot_y)
   hook.run('OnItemInventoryChanged', player, item_table, nil, inv_type)
 
-  item.network_item(player, item_table.instance_id)
+  Item.network_item(player, item_table.instance_id)
 
   hook.run('PlayerInventoryUpdated', player, inv_type)
 end
@@ -119,7 +119,7 @@ function Items:PostCharacterLoaded(player, character)
 
   for slot, ids in ipairs(ply_inv) do
     for k, v in ipairs(ids) do
-      local item_table = item.find_instance_by_id(v)
+      local item_table = Item.find_instance_by_id(v)
 
       if istable(item_table) then
         item_table:on_loadout(player)
@@ -134,7 +134,7 @@ function Items:PreSaveCharacter(player, index)
   for k, v in ipairs(player:get_nv('inventory', {})) do
     for k1, v1 in ipairs(v) do
       for k2, v2 in ipairs(v1) do
-        local item_table = item.find_instance_by_id(v2)
+        local item_table = Item.find_instance_by_id(v2)
 
         item_table:on_save(player)
       end

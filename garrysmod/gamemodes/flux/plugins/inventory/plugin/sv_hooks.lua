@@ -9,7 +9,7 @@ function Inventory:OnActiveCharacterSet(player, character)
   for k, v in ipairs(item_ids) do
     if !tonumber(v) then continue end
 
-    local instance = item.find_instance_by_id(tonumber(v))
+    local instance = Item.find_instance_by_id(tonumber(v))
 
     if instance and instance.slot_id then
       local cur_inv_type = instance.inventory_type or 'hotbar'
@@ -25,7 +25,7 @@ function Inventory:OnActiveCharacterSet(player, character)
 
       table.insert(slot, instance.instance_id)
 
-      item.network_item(player, instance.instance_id)
+      Item.network_item(player, instance.instance_id)
 
       cur_inv[y][x] = slot
       inv[cur_inv_type] = cur_inv
@@ -89,7 +89,7 @@ function Inventory:CanItemStack(player, item_table, inv_type, x, y)
     return true
   end
 
-  local slot_table = item.find_instance_by_id(ids[1])
+  local slot_table = Item.find_instance_by_id(ids[1])
 
   if item_table.id != slot_table.id or #ids >= item_table.max_stack then
     return false
@@ -104,7 +104,7 @@ function Inventory:OnItemMove(player, instance_ids, inv_type, x, y)
   local ply_inv = player:get_inventory(inv_type)
 
   for k, v in pairs(instance_ids) do
-    local item_table = item.find_instance_by_id(v)
+    local item_table = Item.find_instance_by_id(v)
 
     if hook.run('CanItemTransfer', player, item_table, inv_type, x, y) == false or
        hook.run('CanItemMove', player, item_table, inv_type, x, y) == false or 
@@ -132,7 +132,7 @@ function Inventory:OnItemMove(player, instance_ids, inv_type, x, y)
       table.remove_by_value(ply_inv[old_y][old_x], v)
     end
 
-    item.network_item(player, v)
+    Item.network_item(player, v)
   end
 
   player:set_inventory(ply_inv, inv_type)
@@ -152,7 +152,7 @@ Cable.receive('fl_inventory_sync', function(player, inventory)
 
       for k2, v2 in ipairs(v1) do
         if player:has_item_by_id(v2) then
-          local item_table = item.find_instance_by_id(v2)
+          local item_table = Item.find_instance_by_id(v2)
           item_table.inventory_type = inv_type
           item_table.slot_id = { k1, k }
 

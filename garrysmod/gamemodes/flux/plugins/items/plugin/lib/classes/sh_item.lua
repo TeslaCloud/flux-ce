@@ -1,6 +1,6 @@
-class 'Item'
+class 'ItemBase'
 
-function Item:init(id)
+function ItemBase:init(id)
   if !isstring(id) then return end
 
   self.id = string.to_id(id)
@@ -8,17 +8,17 @@ function Item:init(id)
 end
 
 -- Fancy output if you do print(item_table).
-function Item:__tostring()
+function ItemBase:__tostring()
   return 'Item ['..tostring(self.instance_id)..']['..(self.name or self.id)..']'
 end
 
-function Item:get_name()
+function ItemBase:get_name()
   return self.print_name or self.name
 end
 
-Item.name = Item.get_name
+ItemBase.name = ItemBase.get_name
 
-function Item:set_base(base_class)
+function ItemBase:set_base(base_class)
   if isstring(base_class) then
     base_class = _G[base_class]
   end
@@ -29,39 +29,39 @@ function Item:set_base(base_class)
   ITEM = base_class.new(self.id)
 end
 
-function Item:make_base()
+function ItemBase:make_base()
   Pipeline.abort()
 end
 
-function Item:get_real_name()
+function ItemBase:get_real_name()
   return self.name or 'Unknown Item'
 end
 
-function Item:get_description()
+function ItemBase:get_description()
   return self.description or 'This item has no description!'
 end
 
-function Item:get_weight()
+function ItemBase:get_weight()
   return self.weight or 1
 end
 
-function Item:get_max_stack()
+function ItemBase:get_max_stack()
   return self.max_stack or 64
 end
 
-function Item:get_model()
+function ItemBase:get_model()
   return self.model or 'models/props_lab/cactus.mdl'
 end
 
-function Item:get_skin()
+function ItemBase:get_skin()
   return self.skin or 0
 end
 
-function Item:get_color()
+function ItemBase:get_color()
   return self.color or Color(255, 255, 255)
 end
 
-function Item:add_button(name, data)
+function ItemBase:add_button(name, data)
   --[[
     Example data structure:
     data = {
@@ -80,29 +80,29 @@ function Item:add_button(name, data)
   self.custom_buttons[name] = data
 end
 
-function Item:set_action_sound(act, sound)
+function ItemBase:set_action_sound(act, sound)
   self.action_sounds[act] = sound
 end
 
 -- Returns:
 -- nothing/nil = drop like normal
 -- false = prevents item appearing and doesn't remove it from inventory.
-function Item:on_drop(player) end
+function ItemBase:on_drop(player) end
 
-function Item:on_loadout(player) end
+function ItemBase:on_loadout(player) end
 
-function Item:on_save(player) end
+function ItemBase:on_save(player) end
 
 if SERVER then
-  function Item:set_data(id, value)
+  function ItemBase:set_data(id, value)
     if !id then return end
 
     self.data[id] = value
 
-    item.network_item_data(self:get_player(), self)
+    Item.network_item_data(self:get_player(), self)
   end
 
-  function Item:get_player()
+  function ItemBase:get_player()
     for k, v in ipairs(player.GetAll()) do
       if v:has_item_by_id(self.instance_id) then
         return v
@@ -110,7 +110,7 @@ if SERVER then
     end
   end
 
-  function Item:do_menu_action(act, player, ...)
+  function ItemBase:do_menu_action(act, player, ...)
     if act == 'on_take' then
       if hook.run('PlayerTakeItem', player, self, ...) != nil then return end
     end
@@ -155,7 +155,7 @@ if SERVER then
   end
 
   Cable.receive('fl_items_menu_action', function(player, instance_id, action, ...)
-    local item_table = item.find_instance_by_id(instance_id)
+    local item_table = Item.find_instance_by_id(instance_id)
 
     if !item_table then return end
     if hook.run('PlayerCanUseItem', player, item_table, action, ...) == false then return end
@@ -163,41 +163,41 @@ if SERVER then
     item_table:do_menu_action(action, player, ...)
   end)
 else
-  function Item:do_menu_action(act, ...)
+  function ItemBase:do_menu_action(act, ...)
     Cable.send('fl_items_menu_action', self.instance_id, act, ...)
   end
 
-  function Item:get_use_text()
+  function ItemBase:get_use_text()
     return self.use_text or t'item.option.use'
   end
 
-  function Item:get_take_text()
+  function ItemBase:get_take_text()
     return self.take_text or t'item.option.take'
   end
 
-  function Item:get_drop_text()
+  function ItemBase:get_drop_text()
     return self.drop_text or t'item.option.drop'
   end
 
-  function Item:get_cancel_text()
+  function ItemBase:get_cancel_text()
     return self.cancel_text or t'item.option.cancel'
   end
 
-  function Item:get_icon_model()
+  function ItemBase:get_icon_model()
     return self.icon_model
   end
 end
 
-function Item:get_data(id, default)
+function ItemBase:get_data(id, default)
   if !id then return end
 
   return self.data[id] or default
 end
 
-function Item:set_entity(ent)
+function ItemBase:set_entity(ent)
   self.entity = ent
 end
 
-function Item:register()
-  return item.register(self.id, self)
+function ItemBase:register()
+  return Item.register(self.id, self)
 end
