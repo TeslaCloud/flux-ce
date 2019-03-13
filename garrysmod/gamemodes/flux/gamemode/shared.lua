@@ -10,7 +10,7 @@ GM.version_num   = '0.6.0'
 GM.date          = '3/13/2019'
 GM.build         = '20190313'
 GM.description   = 'A free roleplay gamemode framework.'
-GM.code_name     = 'Chocolate Milkshake'
+GM.code_name     = 'Cherry Soda'
 
 -- It would be very nice of you to leave below values as they are if you're using official schemas.
 -- While we can do nothing to stop you from changing them, we'll very much appreciate it if you don't.
