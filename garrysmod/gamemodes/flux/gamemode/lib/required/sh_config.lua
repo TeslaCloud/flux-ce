@@ -181,10 +181,24 @@ function Config.get(key, default)
 end
 
 if SERVER then
-  function Config.import(contents, from_config)
-    if !isstring(contents) or contents == '' then return end
+  function Config.import(path, from_config)
+    from_config = from_config or CONFIG_FLUX
 
-    local config_table = YAML.eval(contents)
+    local config_table
+
+    if isstring(path) then
+      local contents = fileio.Read(path)
+
+      if contents then
+        config_table = YAML.eval(contents)
+      else
+        return
+      end
+    elseif istable(path) then
+      config_table = path
+    else
+      return
+    end
 
     for k, v in pairs(config_table) do
       if k != 'depends' and Plugin.call('ShouldConfigImport', k, v) == nil then
@@ -193,5 +207,33 @@ if SERVER then
     end
 
     return config_table
+  end
+end
+
+function Config.read(path, from_config)
+  from_config = from_config or CONFIG_FLUX
+
+  local config_table
+
+  if isstring(path) then
+    config_table = YAML.eval(fileio.Read(path))
+  elseif istable(path) then
+    config_table = path
+  else
+    return
+  end
+
+  if CLIENT and istable(config_table.categories) then
+    for category, data in pairs(config_table.categories) do
+      Config.create_category(category, data.name, data.description)
+    end
+  end
+
+  for name, data in pairs(config_table.configs) do
+    if SERVER then
+      Config.set(name, data.default_value)
+    else
+      Config.add_to_menu(data.category or 'general', name, data.name, data.description, data.type, data)
+    end
   end
 end

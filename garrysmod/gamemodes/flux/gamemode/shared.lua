@@ -14,6 +14,8 @@ GM.build         = '20190313'
 GM.description   = 'A free roleplay gamemode framework.'
 GM.code_name     = 'Cherry Soda'
 
+print('Flux version '..GM.version..' ('..GM.code_name..')')
+
 -- It would be very nice of you to leave below values as they are if you're using official schemas.
 -- While we can do nothing to stop you from changing them, we'll very much appreciate it if you don't.
 GM.name_override = false -- Set to any string to override schema's browser name. This overrides the prefix too.
@@ -59,7 +61,7 @@ if !LITE_REFRESH then
     unloaded_plugins = {}
   }
 
-  print('Flux environment: '..FLUX_ENV)
+  print('Environment: '..FLUX_ENV)
 
   include 'core/sh_core.lua'
   util.include 'core/sh_enums.lua'
@@ -84,6 +86,9 @@ if !LITE_REFRESH then
 
   -- This way we put things we want loaded BEFORE anything else in here, like plugin, config, etc.
   util.include_folder('lib/required', true)
+
+  -- Read configs.
+  Config.read(Settings.configs)
 
   -- Include ActiveRecord for database management.
   Crate:include 'active_record'

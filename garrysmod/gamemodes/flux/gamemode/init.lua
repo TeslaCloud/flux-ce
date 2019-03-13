@@ -38,14 +38,15 @@ if !LITE_REFRESH then
 
   -- Include the required third-party libraries.
   if !string.utf8upper or !pon or !Cable or !YAML then
-    include 'lib/vendor/utf8.lua'
-    include 'lib/vendor/pon.lua'
-    Cable     = include 'lib/vendor/cable.lua'
-    Markdown  = include 'lib/vendor/markdown.lua'
-    YAML      = include 'lib/vendor/yaml.lua'
+    include           'lib/vendor/utf8.lua'
+    include           'lib/vendor/pon.lua'
+    Cable             = include 'lib/vendor/cable.lua'
+    Markdown          = include 'lib/vendor/markdown.lua'
+    YAML              = include 'lib/vendor/yaml.lua'
 
-    Settings = Settings or YAML.read('gamemodes/flux/config/settings.yml')
-    DatabaseSettings = YAML.read('gamemodes/flux/config/database.yml')
+    Settings          = Settings or YAML.read('gamemodes/flux/config/settings.yml')
+    Settings.configs  = Settings.configs or YAML.read('gamemodes/flux/config/config.yml')
+    DatabaseSettings  = YAML.read('gamemodes/flux/config/database.yml')
   end
 end
 
@@ -55,6 +56,6 @@ include 'shared.lua'
 if Flux.initialized then
   MsgC(Color(0, 255, 100, 255), 'Auto-reloaded in '..math.Round(os.clock() - Flux.start_time, 3)..' second(s)\n')
 else
-  MsgC(Color(0, 255, 100, 255), 'Flux v'..GM.version..' ('..GM.code_name..') has finished loading in '..math.Round(os.clock() - Flux.start_time, 3)..' second(s)\n')
+  MsgC(Color(0, 255, 100, 255), 'Boot complete in '..math.Round(os.clock() - Flux.start_time, 3)..' second(s)\n')
   Flux.initialized = true
 end

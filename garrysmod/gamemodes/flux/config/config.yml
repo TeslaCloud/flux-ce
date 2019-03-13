@@ -1,0 +1,73 @@
+categories:
+  general:
+    name: config.general.title
+    description: config.general.desc
+configs:
+  walk_speed:
+    name: config.general.walk_speed.name
+    description: config.general.walk_speed.desc
+    category: general
+    type: number
+    min_value: 0
+    max_value: 1024
+    default_value: 100
+  run_speed:
+    name: config.general.run_speed.name
+    description: config.general.run_speed.desc
+    category: general
+    type: number
+    min_value: 0
+    max_value: 1024
+    default_value: 200
+  crouched_speed:
+    name: config.general.crouch_speed.name
+    description: config.general.crouch_speed.desc
+    category: general
+    type: number
+    min_value: 0
+    max_value: 1024
+    default_value: 55
+  respawn_delay:
+    name: config.general.respawn_time.name
+    description: config.general.respawn_time.desc
+    category: general
+    type: number
+    min_value: 0
+    max_value: 600
+    default_value: 30
+  command_prefixes:
+    name: config.general.prefixes.name
+    description: config.general.prefixes.desc
+    category: general
+    type: table
+    default_value: ["!", "/"]
+  jump_power:
+    name: config.general.jump_power.name
+    description: config.general.jump_power.desc
+    category: general
+    type: number
+    min_value: 0
+    max_value: 1024
+    default_value: 150
+  data_save_interval:
+    name: config.general.data_save_interval.name
+    description: config.general.data_save_interval.desc
+    category: general
+    type: number
+    min_value: 0
+    max_value: 3600
+    default_value: 360
+  player_data_save_interval:
+    name: config.general.player_data_save_interval.name
+    description: config.general.player_data_save_interval.desc
+    category: general
+    type: number
+    min_value: 0
+    max_value: 3600
+    default_value: 360
+  root_steamid:
+    name: config.general.root_steamid.name
+    description: config.general.root_steamid.desc
+    category: general
+    type: string
+    default_value: "STEAM_0:0:00000000"

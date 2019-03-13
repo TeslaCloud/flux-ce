@@ -23,7 +23,7 @@ Font.create_fonts()
 if Flux.initialized then
   MsgC(Color(0, 255, 100, 255), 'Auto-reloaded in '..math.Round(os.clock() - Flux.start_time, 3)..' second(s)\n')
 else
-  MsgC(Color(0, 255, 100, 255), 'Flux v'..GM.version..' ('..GM.code_name..') has finished loading in '..math.Round(os.clock() - Flux.start_time, 3)..' second(s)\n')
+  MsgC(Color(0, 255, 100, 255), 'Boot complete in '..math.Round(os.clock() - Flux.start_time, 3)..' second(s)\n')
 
   Flux.initialized = true
 end

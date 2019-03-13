@@ -318,7 +318,7 @@ function GM:OneSecond()
       hook.run('FLSaveData')
     end
 
-    Flux.next_save_data = cur_time + Config.get('Data.save_interval')
+    Flux.next_save_data = cur_time + Config.get('data_save_interval', 360)
   end
 
   if !Flux.next_player_count_check then

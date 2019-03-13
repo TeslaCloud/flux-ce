@@ -1,6 +1,0 @@
-local category = Config.create_category('general', 'config.general.title', 'config.general.desc')
-category.add_table_editor('command_prefixes', 'config.general.prefixes.name', 'config.general.prefixes.desc', { '!', '/' })
-category.add_slider('walk_speed', 'config.general.walk_speed.name', 'config.general.walk_speed.desc', { min = 0, max = 1024, default = 100 })
-category.add_slider('run_speed', 'config.general.run_speed.name', 'config.general.run_speed.desc', { min = 0, max = 1024, default = 200 })
-category.add_slider('crouched_speed', 'config.general.crouch_speed.name', 'config.general.crouch_speed.desc', { min = 0, max = 1024, default = 55 })
-category.add_slider('respawn_delay', 'config.general.respawn_time.name', 'config.general.respawn_time.desc', { min = 0, max = 600, default = 30 })
