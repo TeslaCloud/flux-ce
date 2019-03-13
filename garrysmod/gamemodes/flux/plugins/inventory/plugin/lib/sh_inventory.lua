@@ -1,4 +1,6 @@
-library 'inventory'
+if !Inventory then
+  PLUGIN:set_global('Inventory')
+end
 
 do
   local player_meta = FindMetaTable('Player')
