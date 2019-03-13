@@ -14,7 +14,7 @@ if !table.safe_merge then
   include 'flux/gamemode/lib/flow/lib/sh_table.lua'
 end
 
-util.include 'classes/sh_package.lua'
+util.include '../classes/sh_package.lua'
 
 local crate_metadata = {}
 

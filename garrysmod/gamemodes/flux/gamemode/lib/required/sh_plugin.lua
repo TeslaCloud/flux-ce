@@ -1,6 +1,6 @@
 if Plugin then return end
 
-util.include 'classes/sh_plugin_instance.lua'
+util.include '../classes/sh_plugin_instance.lua'
 
 library 'Plugin'
 
