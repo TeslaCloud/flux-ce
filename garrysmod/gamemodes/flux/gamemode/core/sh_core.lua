@@ -127,8 +127,7 @@ function library(lib_name)
   local parent, name = lib_name:parse_parent()
 
   if name[1]:is_lower() then
-    MsgC(Color('red'), 'Warning: bad module name ('..name..')\nmodule names must follow the ConstantStyle!\n')
-    MsgC(Color('orange'), 'The compatibility behavior is deprecated and this\nwarning will become an error in Flux 0.6!\n')
+    error('bad module name ('..name..')\nmodule names must follow the ConstantStyle!\n')
   end
 
   parent[name] = parent[name] or {}
@@ -157,8 +156,7 @@ function class(name, base_class)
   parent[name] = {}
 
   if name[1]:is_lower() then
-    MsgC(Color('red'), 'Warning: bad class name ('..name..')\nclass names must follow the ConstantStyle!\n')
-    MsgC(Color('orange'), 'The compatibility behavior is deprecated and this\nwarning will become an error in Flux 0.6!\n')
+    error('bad class name ('..name..')\nclass names must follow the ConstantStyle!\n')
   end
 
   local obj = parent[name]
