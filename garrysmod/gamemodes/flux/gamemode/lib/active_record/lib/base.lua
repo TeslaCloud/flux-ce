@@ -502,7 +502,7 @@ function ActiveRecord.Base:save()
         query:insert('updated_at', to_datetime(os.time()))
         query:callback(gen_callback(self, true))
       query:execute()
-    elseif !self.saving and self.id then
+    elseif self.id then
       local query = ActiveRecord.Database:update(self.table_name)
         query:where('id', self.id)
         for k, data in pairs(schema) do
@@ -512,6 +512,9 @@ function ActiveRecord.Base:save()
         query:update('updated_at', to_datetime(os.time()))
         query:callback(gen_callback(self, false))
       query:execute()
+    elseif !self.saving then
+      ErrorNoHalt(self.class_name.." does not have a valid ID after saving. This should never happen!\n")
+      ErrorNoHalt("Please report this issue to TeslaCloud along with your logs.\n")
     end
   end, function(model, column, err_code)
     if model.invalid then

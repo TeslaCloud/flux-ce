@@ -89,19 +89,11 @@ if SERVER then
   end
 
   function Characters.save(player, character)
-    if !IsValid(player) or !IsValid(character) or hook.run('PreSaveCharacter', player, character) == false then return end
+    if !IsValid(player) or !istable(character) or hook.run('PreSaveCharacter', player, character) == false then return end
 
     hook.run('SaveCharacterData', player, character)
       player.record:save()
     hook.run('PostSaveCharacter', player, character)
-  end
-
-  function Characters.save_all(player)
-    if !IsValid(player) then return end
-
-    for k, v in ipairs(player.record.characters) do
-      Characters.save(player, v)
-    end
   end
 
   function Characters.set_name(player, char, new_name)
@@ -167,6 +159,10 @@ else
   end)
 
   Cable.receive('fl_create_character', function(idx, data)
+    if !PLAYER then
+      PLAYER = LocalPlayer()
+    end
+
     PLAYER.characters = PLAYER.characters or {}
     PLAYER.characters[idx] = data
 
