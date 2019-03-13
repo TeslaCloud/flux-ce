@@ -1,6 +1,6 @@
 if Plugin then return end
 
-util.include '../classes/sh_plugin_instance.lua'
+util.include 'flux/gamemode/lib/classes/sh_plugin_instance.lua'
 
 library 'Plugin'
 
@@ -377,6 +377,12 @@ do
   function Plugin.require(name)
     if !isstring(name) then return false end
 
+    if CLIENT and Flux.shared.deps_info[name] then
+      if Flux.shared.deps_info[name].server_only then
+        return true
+      end
+    end
+
     if !Plugin.loaded(name) then
       local search_paths = {
         'flux/plugins/',
@@ -397,6 +403,12 @@ do
           for _, prefix in pairs({ 'sv_', 'sh_', 'cl_' }) do
             if file.Exists(v..prefix..name..'.lua', 'LUA') then
               Plugin.include(v..prefix..name..'.lua')
+
+              if prefix == 'sv_' then
+                Flux.shared.deps_info[name] = {
+                  server_only = true
+                }
+              end
 
               return true
             end
@@ -543,6 +555,22 @@ function Plugin.include_folders(folder)
         Pipeline.include_folder('Theme', folder..'/themes/')
       elseif v == 'tools' then
         Pipeline.include_folder('tool', folder..'/tools/')
+      elseif v == 'config' then
+        if SERVER then
+          local files, folders = file.Find('gamemodes/'..folder..'/config/*.yml', 'GAME')
+
+          if files then
+            local configs = {}
+
+            for k, v in pairs(files) do
+              table.Merge(configs, Config.read('gamemodes/'..folder..'/config/'..v))
+            end
+
+            Flux.shared.configs[folder] = configs
+          end
+        elseif Flux.shared.configs[folder] then
+          Config.read(Flux.shared.configs[folder])
+        end
       elseif SERVER then
         if v == 'languages' then
           Pipeline.include_folder('language', folder..'/languages/')

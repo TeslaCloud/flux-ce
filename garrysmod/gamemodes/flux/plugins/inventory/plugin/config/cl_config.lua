@@ -1,8 +1,0 @@
-local category = Config.create_category('inventory', 'config.inventory.title', 'config.inventory.desc')
-category.add_slider('inventory_width', 'config.inventory.width.name', 'config.inventory.width.desc', { min = 1, max = 64, default = 8 })
-category.add_slider('invendory_height', 'config.inventory.height.name', 'config.inventory.height.desc', { min = 1, max = 64, default = 6 })
-category.add_slider('hotbar_width', 'config.inventory.hotbar_width.name', 'config.inventory.hotbar_width.desc', { min = 1, max = 64, default = 8 })
-category.add_slider('hotbar_height', 'config.inventory.hotbar_height.name', 'config.inventory.hotbar_height.desc', { min = 1, max = 64, default = 1 })
-category.add_slider('equipment_width', 'config.inventory.equipment_width.name', 'config.inventory.equipment_width.desc', { min = 1, max = 64, default = 1 })
-category.add_slider('equipment_height', 'config.inventory.equipment_height.name', 'config.inventory.equipment_height.desc', { min = 1, max = 64, default = 8 })
-category.add_slider('pockets_height', 'config.inventory.pockets_height.name', 'config.inventory.pockets_height.desc', { min = 1, max = 64, default = 1 })

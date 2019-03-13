@@ -58,7 +58,9 @@ if !LITE_REFRESH then
   Flux.shared = Flux.shared or {
     schema_folder = Flux.schema,
     plugin_info = {},
-    unloaded_plugins = {}
+    unloaded_plugins = {},
+    configs = {},
+    deps_info = {}
   }
 
   print('Environment: '..FLUX_ENV)

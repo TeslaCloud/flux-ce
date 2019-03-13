@@ -1,5 +1,0 @@
-local category = Config.create_category('character', 'config.character.title', 'config.character.desc')
-category.add_slider('character_min_name_len', 'config.character.min_name_len.name', 'config.character.min_name_len.desc', { min = 1, max = 256, default = 4 })
-category.add_slider('character_max_name_len', 'config.character.max_name_len.name', 'config.character.max_name_len.desc', { min = 1, max = 256, default = 32 })
-category.add_slider('character_min_desc_len', 'config.character.min_desc_len.name', 'config.character.min_desc_len.desc', { min = 1, max = 1024, default = 32 })
-category.add_slider('character_max_desc_len', 'config.character.max_desc_len.name', 'config.character.max_desc_len.desc', { min = 1, max = 1024, default = 256 })

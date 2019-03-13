@@ -1,9 +1,3 @@
-Config.set('stam_drain_scale', 1)
-Config.set('stam_regen_scale', 1)
-Config.set('stam_jump_penalty', 25)
-Config.set('stam_max', 100)
-Config.set('stam_regen_delay', 3)
-
 Stamina.running = Stamina.running or {}
 Stamina.timer_ids = Stamina.timer_ids or {}
 

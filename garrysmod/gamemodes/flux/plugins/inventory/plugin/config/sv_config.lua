@@ -1,7 +1,0 @@
-Config.set('inventory_width', 8)
-Config.set('inventory_height', 6)
-Config.set('hotbar_width', 8)
-Config.set('hotbar_height', 1)
-Config.set('equipment_width', 1)
-Config.set('equipment_height', 8)
-Config.set('pockets_height', 1)

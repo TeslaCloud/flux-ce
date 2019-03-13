@@ -229,11 +229,15 @@ function Config.read(path, from_config)
     end
   end
 
-  for name, data in pairs(config_table.configs) do
-    if SERVER then
-      Config.set(name, data.default_value)
-    else
-      Config.add_to_menu(data.category or 'general', name, data.name, data.description, data.type, data)
+  if istable(config_table.configs) then
+    for name, data in pairs(config_table.configs) do
+      if SERVER then
+        Config.set(name, data.default_value)
+      else
+        Config.add_to_menu(data.category or 'general', name, data.name, data.description, data.type, data)
+      end
     end
   end
+
+  return config_table
 end

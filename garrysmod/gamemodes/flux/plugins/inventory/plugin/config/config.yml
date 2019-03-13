@@ -1,0 +1,61 @@
+categories:
+  inventory:
+    name: config.inventory.title
+    description: config.inventory.desc
+configs:
+  inventory_width:
+    name: config.inventory.width.name
+    description: config.inventory.width.desc
+    category: inventory
+    type: number
+    min_value: 1
+    max_value: 64
+    default_value: 8
+  inventory_height:
+    name: config.inventory.height.name
+    description: config.inventory.height.desc
+    category: inventory
+    type: number
+    min_value: 1
+    max_value: 64
+    default_value: 6
+  hotbar_height:
+    name: config.inventory.hotbar_height.name
+    description: config.inventory.hotbar_height.desc
+    category: inventory
+    type: number
+    min_value: 1
+    max_value: 64
+    default_value: 1
+  hotbar_width:
+    name: config.inventory.hotbar_width.name
+    description: config.inventory.hotbar_width.desc
+    category: inventory
+    type: number
+    min_value: 1
+    max_value: 64
+    default_value: 8
+  equipment_width:
+    name: config.inventory.equipment_width.name
+    description: config.inventory.equipment_width.desc
+    category: inventory
+    type: number
+    min_value: 1
+    max_value: 64
+    default_value: 1
+  equipment_height:
+    name: config.inventory.equipment_height.name
+    description: config.inventory.equipment_height.desc
+    category: inventory
+    type: number
+    min_value: 1
+    max_value: 64
+    default_value: 8
+  pockets_height:
+    name: config.inventory.pockets_height.name
+    description: config.inventory.pockets_height.desc
+    category: inventory
+    type: number
+    min_value: 1
+    max_value: 64
+    default_value: 1

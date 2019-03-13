@@ -1,0 +1,37 @@
+categories:
+  character:
+    name: config.character.title
+    description: config.character.desc
+configs:
+  character_min_name_len:
+    name: config.character.min_name_len.name
+    description: config.character.min_name_len.desc
+    category: character
+    type: number
+    min_value: 1
+    max_value: 256
+    default_value: 4
+  character_max_name_len:
+    name: config.character.max_name_len.name
+    description: config.character.max_name_len.desc
+    category: character
+    type: number
+    min_value: 1
+    max_value: 256
+    default_value: 24
+  character_min_desc_len:
+    name: config.character.min_desc_len.name
+    description: config.character.min_desc_len.desc
+    category: character
+    type: number
+    min_value: 1
+    max_value: 256
+    default_value: 32
+  character_max_desc_len:
+    name: config.character.max_desc_len.name
+    description: config.character.max_desc_len.desc
+    category: character
+    type: number
+    min_value: 1
+    max_value: 256
+    default_value: 256
