@@ -1,43 +1,43 @@
 categories:
   stamina:
-    name: Stamina
-    description: Stamina plugin configuration
+    name: config.stamina.title
+    description: config.stamina.title
 configs:
   stam_drain_scale:
-    name: Drain Scale
-    description: How fast should the stamina drain. Depends on the server tickrate.
+    name: config.stamina.stam_drain_scale.name
+    description: config.stamina.stam_drain_scale.desc
     category: stamina
     type: number
     min_value: 0
     max_value: 100
     default_value: 1
   stam_regen_scale:
-    name: Regeneration Scale
-    description: How fast should the stamina regenerate. Depends on the server tickrate.
+    name: config.stamina.stam_regen_scale.name
+    description: config.stamina.stam_regen_scale.desc
     category: stamina
     type: number
     min_value: 0
     max_value: 100
     default_value: 1
   stam_jump_penalty:
-    name: Jump Penalty
-    description: How much stamina points to take when the player jumps.
+    name: config.stamina.stam_jump_penalty.name
+    description: config.stamina.stam_jump_penalty.desc
     category: stamina
     type: number
     min_value: 0
     max_value: 1024
     default_value: 25
   stam_max:
-    name: Max Stamina
-    description: Max value of player's stamina.
+    name: config.stamina.stam_max.name
+    description: config.stamina.stam_max.desc
     category: stamina
     type: number
     min_value: 0
     max_value: 1024
     default_value: 100
   stam_regen_delay:
-    name: Regeneration Delay
-    description: How many seconds to wait before starting stamina regeneration.
+    name: config.stamina.stam_regen_delay.name
+    description: config.stamina.stam_regen_delay.desc
     category: stamina
     type: number
     min_value: 0
