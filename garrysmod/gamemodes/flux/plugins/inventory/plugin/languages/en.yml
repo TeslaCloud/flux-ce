@@ -15,3 +15,28 @@ en:
   hint:
     inventory: Inventory
     inventory_text: Drag'n'Drop an item outside of inventory screen to drop it.
+  config:
+    inventory:
+      title: Inventory
+      desc: General inventory settings.
+      width:
+        name: Main inventory width
+        desc: Width of the main player inventory in slots.
+      height:
+        name: Main inventory height
+        desc: Height of the main player inventory in slots.
+      hotbar_width:
+        name: Hotbar inventory width
+        desc: Width of the player hotbar inventory in slots.
+      hotbar_height:
+        name: Hotbar inventory height
+        desc: Height of the player hotbar inventory in slots.
+      equipment_width:
+        name: Equipment inventory width
+        desc: Width of the player equipment inventory in slots.
+      equipment_height:
+        name: Equipment inventory height
+        desc: Height of the player equipment inventory in slots.
+      pockets_height:
+        name: Pockets height
+        desc: Height of the player pockets inventory in slots.
