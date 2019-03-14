@@ -37,7 +37,7 @@ function PANEL:on_opened()
   local width, height = self:GetWide(), self:GetTall()
 
   self.scroll_panel:SetSize(width, height)
-  self.list_layout:SetSize(width, height)
+  self.list_layout:SetSize(width - 16, height)
 end
 
 vgui.Register('fl_config_editor', PANEL, 'fl_base_panel')
