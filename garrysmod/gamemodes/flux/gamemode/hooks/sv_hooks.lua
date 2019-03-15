@@ -453,6 +453,10 @@ function GM:ServerRestart()
   end
 end
 
+function GM:AllowPlayerPickup(player, entity)
+  return false
+end
+
 function GM:OnConfigSet(key, old_value, new_value)
   if key == 'walk_speed' then
     for k, v in ipairs(player.all()) do
