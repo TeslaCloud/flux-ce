@@ -84,7 +84,7 @@ function Items:PlayerUseItemMenu(instance_id, is_entity)
 
   item_menu:open()
 
-  if IsValid(item_table.entity) then
+  if is_entity then
     item_menu:SetPos(ScrW() * 0.5, ScrH() * 0.5)
   else
     local x, y = gui.MouseX(), gui.MouseY()

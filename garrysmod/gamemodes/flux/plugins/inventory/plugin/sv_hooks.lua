@@ -52,7 +52,9 @@ function Inventory:CanItemMove(player, item_table, inv_type, x, y)
   end
 
   if item_table.can_move then
-    return item_table:can_move(player, inv_type, x, y)
+    if item_table:can_move(player, inv_type, x, y) == false then
+      return false
+    end
   end
 end
 
@@ -74,7 +76,9 @@ function Inventory:CanItemTransfer(player, item_table, inv_type, x, y)
   end
 
   if item_table.can_transfer then
-    return item_table:can_transfer(player, inv_type, x, y)
+    if item_table:can_transfer(player, inv_type, x, y) == false then
+      return false
+    end
   end
 end
 
@@ -91,16 +95,20 @@ function Inventory:CanItemStack(player, item_table, inv_type, x, y)
 
   local slot_table = Item.find_instance_by_id(ids[1])
 
-  if item_table.id != slot_table.id or #ids >= item_table.max_stack then
-    return false
+    if item_table.id != slot_table.id or #ids >= item_table.max_stack then
+      return false
+    end
   end
 
   if item_table.can_stack then
-    return item_table:can_stack(player, inv_type, x, y)
+    if item_table:can_stack(player, inv_type, x, y) == false then
+      return false
+    end
   end
 end
 
 function Inventory:OnItemMove(player, instance_ids, inv_type, x, y)
+  local old_inv_type
   local ply_inv = player:get_inventory(inv_type)
 
   for k, v in pairs(instance_ids) do
@@ -113,7 +121,8 @@ function Inventory:OnItemMove(player, instance_ids, inv_type, x, y)
     end
 
     local old_y, old_x = unpack(item_table.slot_id)
-    local old_inv_type = item_table.inventory_type
+
+    old_inv_type = item_table.inventory_type
 
     table.insert(ply_inv[y][x], v)
 

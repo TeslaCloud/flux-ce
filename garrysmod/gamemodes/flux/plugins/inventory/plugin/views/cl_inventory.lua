@@ -72,6 +72,10 @@ function PANEL:set_player(player)
   self:rebuild()
 end
 
+function PANEL:get_player()
+  return self.player
+end
+
 function PANEL:set_inv_size(inv_w, inv_h)
   self.inv_w = inv_w or 8
   self.inv_h = inv_h or 8
