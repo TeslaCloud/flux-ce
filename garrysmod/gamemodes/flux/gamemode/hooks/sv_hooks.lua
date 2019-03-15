@@ -453,6 +453,26 @@ function GM:ServerRestart()
   end
 end
 
+function GM:OnConfigSet(key, old_value, new_value)
+  if key == 'walk_speed' then
+    for k, v in ipairs(player.all()) do
+      v:SetWalkSpeed(new_value)
+    end
+  elseif key == 'run_speed' then
+    for k, v in ipairs(player.all()) do
+      v:SetRunSpeed(new_value)
+    end
+  elseif key == 'crouched_speed' then
+    for k, v in ipairs(player.all()) do
+      v:SetCrouchedWalkSpeed(new_value)
+    end
+  elseif key == 'jump_power' then
+    for k, v in ipairs(player.all()) do
+      v:SetJumpPower(new_value)
+    end 
+  end
+end
+
 -- Awful awful awful code, but it's kinda necessary in some rare cases.
 -- Avoid using PlayerThink whenever possible though.
 do
