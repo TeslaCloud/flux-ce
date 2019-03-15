@@ -9,6 +9,9 @@ do
     inv_type = inv_type or 'hotbar'
 
     local w, h = self:get_inventory_size(inv_type)
+
+    if !w or !h then return end
+
     local inventory = self:get_nv('inventory', {})[inv_type] or {}
     inventory.width, inventory.height = w, h
     inventory.type = inv_type
@@ -61,7 +64,7 @@ do
 
     if w and h then
       return w, h
-    else
+    elseif inv_sizes[inv_type] then
       return unpack(inv_sizes[inv_type])
     end
   end

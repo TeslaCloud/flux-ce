@@ -147,7 +147,13 @@ function PANEL:rebuild()
             end
           end
 
-          Cable.send('fl_item_move', !split and dropped[1].instance_ids or split, self.inventory_type, receiver.inv_x, receiver.inv_y)
+          local instance_ids = !split and dropped[1].instance_ids or split
+
+          if hook.run('CanItemMove', instance_ids, self, receiver) != false then
+            Cable.send('fl_item_move', instance_ids, self.inventory_type, receiver.inv_x, receiver.inv_y)
+          end
+
+          hook.run('OnItemMove', instance_ids, self, receiver)
         else
           receiver.is_hovered = true
         end

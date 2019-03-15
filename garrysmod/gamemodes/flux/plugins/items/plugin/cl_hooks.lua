@@ -38,6 +38,8 @@ function Items:PlayerUseItemMenu(instance_id, is_entity)
 
   if !item_table then return end
 
+  if hook.run('CanItemMenuOpen', item_table) == false then return end
+
   local item_menu = vgui.Create('fl_menu')
 
   if item_table.name then

@@ -37,13 +37,7 @@ function Items:PlayerDropItem(player, instance_id)
   local item_table = Item.find_instance_by_id(instance_id)
   local trace = player:GetEyeTraceNoCursor()
 
-  if item_table.on_drop then
-    local result = item_table:on_drop(player)
-
-    if result == false then
-      return false
-    end
-  end
+  if hook.run('CanPlayerDropItem', player, item_table) == false then return end
 
   player:take_item_by_id(instance_id)
 
@@ -112,6 +106,14 @@ function Items:PlayerCanUseItem(player, item_table, action, ...)
   if (!player:has_item_by_id(item_table.instance_id) and !IsValid(item_table.entity)) or 
   (IsValid(item_table.entity) and trace.Entity and trace.Entity != item_table.entity) then
     return false
+  end
+end
+
+function Items:CanPlayerDropItem(player, item_Table)
+  if item_table.on_drop then
+    if item_table:on_drop(player) == false then
+      return false
+    end
   end
 end
 

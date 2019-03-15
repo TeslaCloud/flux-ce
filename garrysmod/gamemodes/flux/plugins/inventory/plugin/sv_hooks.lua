@@ -87,13 +87,15 @@ function Inventory:CanItemStack(player, item_table, inv_type, x, y)
     return false
   end
 
-  local ids = player:get_slot(x, y, inv_type)
+  local ply_inv = player:get_inventory(inv_type)
+  local ids = ply_ind and ply_inv[y][x]
 
-  if #ids == 0 then
-    return true
-  end
+  if ids then
+    if #ids == 0 then
+      return true
+    end
 
-  local slot_table = Item.find_instance_by_id(ids[1])
+    local slot_table = Item.find_instance_by_id(ids[1])
 
     if item_table.id != slot_table.id or #ids >= item_table.max_stack then
       return false

@@ -88,6 +88,8 @@ Cable.receive('fl_inventory_refresh', function(inv_type, old_inv_type)
       end
     end
   end
+
+  hook.run('OnInventoryRefresh', inv_type, old_inv_type)
 end)
 
 spawnmenu.AddCreationTab('Items', function()
