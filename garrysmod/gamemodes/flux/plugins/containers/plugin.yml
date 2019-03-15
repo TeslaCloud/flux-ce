@@ -1,0 +1,5 @@
+name: Containers
+description: Adds prop-based containers for items.
+author: TeslaCloud Studios
+depends:
+  - inventory
