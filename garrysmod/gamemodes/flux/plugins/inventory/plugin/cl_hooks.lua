@@ -30,6 +30,7 @@ function Inventory:AddTabMenuItems(menu)
     title = 'Inventory',
     panel = 'fl_inventory_menu',
     icon = 'fa-inbox',
+    default = true,
     callback = function(menu_panel, button)
       local inv = menu_panel.active_panel
       inv:SetTitle('Inventory')

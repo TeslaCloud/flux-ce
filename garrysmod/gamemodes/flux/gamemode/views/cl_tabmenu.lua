@@ -110,6 +110,14 @@ function PANEL:Init()
     end
 
     self.buttons[k] = button
+
+    if v.default then
+      self.default_panel = k
+    end
+  end
+
+  if self.default_panel then
+    self.buttons[self.default_panel]:DoClick()
   end
 
   draw.set_blur_size(1)
