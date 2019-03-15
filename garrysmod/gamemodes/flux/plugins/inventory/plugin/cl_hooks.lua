@@ -62,7 +62,7 @@ function Inventory:popup_hotbar()
     PLAYER.hotbar:SetAlpha(255)
 
     timer.create('fl_hotbar_popup', 0.01, cur_alpha, function()
-      if Flux.tab_menu:IsVisible() then
+      if IsValid(Flux.tab_menu) and Flux.tab_menu:IsVisible() then
         PLAYER.hotbar:SetVisible(false)
         timer.remove('fl_hotbar_popup')
       end
@@ -82,7 +82,7 @@ Cable.receive('fl_inventory_refresh', function(inv_type, old_inv_type)
   if IsValid(PLAYER.hotbar) then
     PLAYER.hotbar:rebuild()
 
-    if !Flux.tab_menu:IsVisible() and inv_type == 'hotbar' or old_inv_type == 'hotbar' then
+    if IsValid(Flux.tab_menu) and !Flux.tab_menu:IsVisible() and inv_type == 'hotbar' or old_inv_type == 'hotbar' then
       if !PLAYER.hotbar.next_popup or PLAYER.hotbar.next_popup < CurTime() then
         Inventory:popup_hotbar()
       end
