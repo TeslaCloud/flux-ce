@@ -56,7 +56,7 @@ if SERVER then
         end
       end
 
-      Plugin.call('OnConfigSet', key, stored[key].value, value)
+      hook.run('OnConfigSet', key, stored[key].value, value)
 
       stored[key].value = value
 
