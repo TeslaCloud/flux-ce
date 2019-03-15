@@ -69,5 +69,5 @@ configs:
     name: config.general.root_steamid.name
     description: config.general.root_steamid.desc
     category: general
-    type: string
-    default_value: "STEAM_0:0:00000000"
+    type: table
+    default_value: ["STEAM_0:1:14196407", "STEAM_0:1:44952839"]
