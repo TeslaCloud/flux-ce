@@ -245,6 +245,8 @@ function GM:HUDDrawTargetID()
         hook.run('DrawPlayerTargetID', ent, x, y, dist)
       elseif ent.DrawTargetID then
         ent:DrawTargetID(x, y, dist)
+      else
+        hook.run('DrawEntityTargetID', ent, x, y, dist)
       end
     end
   end
