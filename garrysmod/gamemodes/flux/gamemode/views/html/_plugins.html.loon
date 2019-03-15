@@ -11,7 +11,7 @@
   <h1>Plugins</h1>
 </div>
 <div class="content">
-  <? for k, v in SortedPairsByMemberValue(plugin.all(), 'author') do ?>
+  <? for k, v in SortedPairsByMemberValue(Plugin.all(), 'author') do ?>
     <? if istable(v) and !v:is_schema() then ?>
       <div class="plugin__card">
         <div class="plugin__title"><?= v.name ?></div>
