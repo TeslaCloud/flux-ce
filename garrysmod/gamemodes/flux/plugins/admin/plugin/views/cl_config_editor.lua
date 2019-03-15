@@ -94,10 +94,10 @@ function PANEL:set_config(key, config_table)
 
   if data_type == 'number' then
     self.slider = vgui.create('DNumSlider', self)
-    self.slider:SetMin(config_table.data.min or 0)
-    self.slider:SetMax(config_table.data.max or 100)
+    self.slider:SetMin(config_table.data.min_value or 0)
+    self.slider:SetMax(config_table.data.max_value or 100)
     self.slider:SetDecimals(config_table.data.decimals or 0)
-    self.slider:SetValue(Config.get(key) or config_table.data.default or 0)
+    self.slider:SetValue(Config.get(key) or config_table.data.default_value or 0)
     self.slider.TextArea:SetPaintBackground(true)
     self.slider.PerformLayout = function()
     end
@@ -107,7 +107,7 @@ function PANEL:set_config(key, config_table)
     end
   elseif data_type == 'boolean' then
     self.check = vgui.create('fl_button', self)
-    self.check.value = Config.get(key) or config_table.data.default or false
+    self.check.value = Config.get(key) or config_table.data.default_value or false
     self.check:SetDrawBackground(false)
     self.check:set_icon(self.check.value and 'fa-check' or 'fa-ban')
     self.check:set_centered(true)
