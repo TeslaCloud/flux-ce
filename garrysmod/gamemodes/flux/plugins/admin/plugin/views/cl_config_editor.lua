@@ -133,7 +133,7 @@ function PANEL:set_config(key, config_table)
       self.combo_box:Clear()
       self.combo_box:SetValue(t(config_table.name))
 
-      if data_table then
+      if istable(data_table) then
         for k, v in pairs(data_table) do
           self.combo_box:AddChoice(t(v), v)
         end
