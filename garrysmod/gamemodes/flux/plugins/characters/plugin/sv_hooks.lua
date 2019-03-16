@@ -22,10 +22,11 @@ function Characters:PlayerDisconnected(player)
 end
 
 function Characters:PlayerRestored(player)
-  print("playe.record:")
+  print("player.record:")
   PrintTable(player.record or {})
 
   timer.Simple(0.5, function()
+    print("Sending characters...")
     Characters.send_to_client(player)
   end)
 

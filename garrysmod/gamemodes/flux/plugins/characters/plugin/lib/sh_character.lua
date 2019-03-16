@@ -59,7 +59,12 @@ end
 
 if SERVER then
   function Characters.send_to_client(player)
-    Cable.send(player, 'fl_characters_load', Characters.all_to_networkable(player))
+    print("Sending characters to client...")
+    local nwkbl = Characters.all_to_networkable(player)
+    print("Networkable table:")
+    PrintTable(nwkbl)
+    print("sending cable stream")
+    Cable.send(player, 'fl_characters_load', nwkbl)
   end
 
   function Characters.all_to_networkable(player)
@@ -159,11 +164,15 @@ if SERVER then
   end)
 else
   Cable.receive('fl_characters_load', function(data)
+    print("hey we received some characters")
     if !PLAYER then
       PLAYER = LocalPlayer()
     end
 
     PLAYER.characters = data
+
+    print("PLAYER.characters set!")
+    PrintTable(PLAYER.characters)
   end)
 
   Cable.receive('fl_create_character', function(idx, data)
