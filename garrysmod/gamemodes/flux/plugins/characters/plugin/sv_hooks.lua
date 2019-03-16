@@ -22,7 +22,12 @@ function Characters:PlayerDisconnected(player)
 end
 
 function Characters:PlayerRestored(player)
-  Characters.send_to_client(player)
+  print("playe.record:")
+  PrintTable(player.record or {})
+
+  timer.Simple(0.5, function()
+    Characters.send_to_client(player)
+  end)
 
   hook.run('PostRestoreCharacters', player)
 end
