@@ -42,7 +42,7 @@ function PLUGIN:HUDShouldDraw(element)
 end
 
 function PLUGIN:HUDPaint()
-  if IsValid(PLAYER) then return end
+  if !IsValid(PLAYER) then return end
 
   if self.is_open then
     if self.index_offset and self.index_offset != 0 then

@@ -116,7 +116,7 @@ function GM:HUDDrawScoreBoard()
       text = t'loading.local_player'
       percentage = 0
     elseif !IsValid(PLAYER) then
-      text = t.'loading.player_object'
+      text = t'loading.player_object'
       percentage = 20
     end
 

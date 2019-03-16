@@ -3,7 +3,7 @@ local cur_wide = w
 local cur_alpha = 0
 
 function Stamina:HUDPaint()
-  if IsValid(PLAYER) then return end
+  if !IsValid(PLAYER) then return end
 
   local stamina = PLAYER:get_nv('stamina', 100)
   local frame_time = FrameTime() * 8
