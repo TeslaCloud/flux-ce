@@ -109,8 +109,8 @@ function Items:PlayerCanUseItem(player, item_table, action, ...)
   end
 end
 
-function Items:CanPlayerDropItem(player, item_Table)
-  if item_table.on_drop then
+function Items:CanPlayerDropItem(player, item_table)
+  if istable(item_table) and item_table.on_drop then
     if item_table:on_drop(player) == false then
       return false
     end
