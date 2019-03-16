@@ -194,7 +194,7 @@ do
   end
 
   function player_meta:get_phys_desc()
-    return self:get_nv('phys_desc', 'This character has no description!')
+    return self:get_character_var('phys_desc', 'This character has no description!')
   end
 
   do
@@ -204,13 +204,7 @@ do
     }
 
     function player_meta:get_gender()
-      local char = self:get_character()
-
-      if char then
-        return genders[char.gender] or 'no_gender'
-      end
-
-      return 'no_gender'
+      return self:get_character_var('gender', 'no_gender')
     end
   end
 
