@@ -60,7 +60,7 @@ do
 end
 
 function PLUGIN:RenderScreenspaceEffects()
-  if PLAYER.color_mod then
+  if IsValid(PLAYER) and PLAYER.color_mod then
     DrawColorModify(PLAYER.color_mod_table)
   end
 end

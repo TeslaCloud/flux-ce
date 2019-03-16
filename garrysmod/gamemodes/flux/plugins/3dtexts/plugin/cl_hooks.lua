@@ -2,6 +2,8 @@ local blur_texture = Material('pp/blurscreen')
 local color_white = Color(255, 255, 255)
 
 function SurfaceText:PostDrawOpaqueRenderables()
+  if !IsValid(PLAYER) then return end
+
   local weapon = PLAYER:GetActiveWeapon()
   local client_pos = PLAYER:GetPos()
 

@@ -4,7 +4,7 @@ timer.Remove('HintSystem_Annoy2')
 
 -- Called when the client connects and spawns.
 function GM:InitPostEntity()
-  PLAYER = PLAYER or LocalPlayer()
+  PLAYER = LocalPlayer()
 
   Cable.send('fl_player_set_lang', GetConVar('gmod_language'):GetString())
 

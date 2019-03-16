@@ -25,13 +25,17 @@ function Characters:PlayerRestored(player)
   local timer_name = 'fl_send_characters_to_'..player:SteamID()
 
   timer.Create(timer_name, 0.25, 0, function()
-    if player:has_initialized() then
+    if IsValid(player) and player:has_initialized() then
       print("SENDING CHARACTERS ("..timer_name..")")
 
       Characters.send_to_client(player)
 
       hook.run('PostRestoreCharacters', player)
 
+      timer.Remove(timer_name)
+    end
+
+    if !IsValid(player) then
       timer.Remove(timer_name)
     end
   end)
