@@ -164,22 +164,20 @@ if SERVER then
   end)
 else
   Cable.receive('fl_characters_load', function(data)
-    print("hey we received some characters")
-    if !PLAYER then
-      PLAYER = LocalPlayer()
-    end
+    timer.Create('fl_characters_defer', 0.1, 0, function()
+      -- Wait until player is valid.
+      if IsValid(PLAYER) then
+        PLAYER.characters = data
 
-    PLAYER.characters = data
+        print("PLAYER.characters set!")
+        PrintTable(PLAYER.characters)
 
-    print("PLAYER.characters set!")
-    PrintTable(PLAYER.characters)
+        timer.Remove('fl_characters_defer')
+      end
+    end)
   end)
 
   Cable.receive('fl_create_character', function(idx, data)
-    if !PLAYER then
-      PLAYER = LocalPlayer()
-    end
-
     PLAYER.characters = PLAYER.characters or {}
     PLAYER.characters[idx] = data
 

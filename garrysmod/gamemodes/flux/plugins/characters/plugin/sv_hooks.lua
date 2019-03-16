@@ -22,15 +22,19 @@ function Characters:PlayerDisconnected(player)
 end
 
 function Characters:PlayerRestored(player)
-  print("player.record:")
-  PrintTable(player.record or {})
+  local timer_name = 'fl_send_characters_to_'..player:SteamID()
 
-  timer.Simple(0.5, function()
-    print("Sending characters...")
-    Characters.send_to_client(player)
+  timer.Create(timer_name, 0.25, 0, function()
+    if player:has_initialized() then
+      print("SENDING CHARACTERS ("..timer_name..")")
+
+      Characters.send_to_client(player)
+
+      hook.run('PostRestoreCharacters', player)
+
+      timer.Remove(timer_name)
+    end
   end)
-
-  hook.run('PostRestoreCharacters', player)
 end
 
 function Characters:PostCharacterLoaded(player, character)
