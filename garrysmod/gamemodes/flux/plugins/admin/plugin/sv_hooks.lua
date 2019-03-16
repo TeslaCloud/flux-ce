@@ -83,3 +83,12 @@ end
 function Bolt:CommandCheckImmunity(player, target, can_equal)
   return self:check_immunity(player, v, can_equal)
 end
+
+-- Vanish admins for newly connected players.
+function Bolt:PlayerInitialSpawn(player)
+  for k, v in ipairs(_player.GetAll()) do
+    if (v.is_vanished or v:get_nv('observer')) and !player:can('moderator') then
+      v:prevent_transmit(player, true)
+    end
+  end
+end
