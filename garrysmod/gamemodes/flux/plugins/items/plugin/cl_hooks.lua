@@ -122,5 +122,7 @@ function Items:OnItemDataReceived()
 end
 
 Cable.receive('fl_player_use_item_entity', function(entity)
-  hook.run('PlayerUseItemMenu', entity.item.instance_id, true)
+  if IsValid(entity) and entity.item then
+    hook.run('PlayerUseItemMenu', entity.item.instance_id, true)
+  end
 end)
