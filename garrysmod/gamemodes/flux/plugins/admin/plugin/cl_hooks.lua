@@ -39,7 +39,7 @@ function Bolt:HUDPaint()
 end
 
 function Bolt:PostRender()
-  if PLAYER:get_nv('should_fullbright') then
+  if IsValid(PLAYER) and PLAYER:get_nv('should_fullbright') then
     render.SetLightingMode(1)
     PLAYER.fullbright_enabled = true
   end

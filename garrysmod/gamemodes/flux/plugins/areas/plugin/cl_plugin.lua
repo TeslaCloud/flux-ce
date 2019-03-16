@@ -85,7 +85,7 @@ do
 end
 
 function Area:HUDPaint()
-  if istable(PLAYER.text_areas) then
+  if IsValid(PLAYER) and istable(PLAYER.text_areas) then
     local last_y = 400
     local cur_time = CurTime()
 

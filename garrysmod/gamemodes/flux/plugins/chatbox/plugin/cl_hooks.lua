@@ -13,7 +13,7 @@ function Chatbox:OnResolutionChanged(new_width, new_height)
 end
 
 function Chatbox:PlayerBindPress(player, bind, pressed)
-  if PLAYER:has_initialized() and (string.find(bind, 'messagemode') or string.find(bind, 'messagemode2')) and pressed then
+  if IsValid(PLAYER) and PLAYER:has_initialized() and (string.find(bind, 'messagemode') or string.find(bind, 'messagemode2')) and pressed then
     if string.find(bind, 'messagemode2') then
       PLAYER.typing_team_chat = true
     else

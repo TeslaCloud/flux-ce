@@ -17,7 +17,7 @@ function PLUGIN:ShouldHUDPaintCrosshair()
 end
 
 function PLUGIN:HUDPaint()
-  if hook.run('ShouldHUDPaint') != false and hook.run('ShouldHUDPaintCrosshair') != false then
+  if IsValid(PLAYER) and hook.run('ShouldHUDPaint') != false and hook.run('ShouldHUDPaintCrosshair') != false then
     local trace = PLAYER:GetEyeTraceNoCursor()
     local distance = PLAYER:GetPos():Distance(trace.HitPos)
     local draw_color = Plugin.call('AdjustCrosshairColor', trace, distance) or color_white

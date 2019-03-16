@@ -16,6 +16,8 @@ function PLUGIN:PlayerBindPress(player, bind, pressed)
 end
 
 function PLUGIN:HUDPaint()
+  if IsValid(PLAYER) then return end
+
   local fallen, getup = PLAYER:is_doing_action('fallen'), PLAYER:is_doing_action('getup')
 
   if (fallen or getup) and Plugin.call('ShouldFallenHUDPaint') != false then

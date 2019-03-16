@@ -42,6 +42,8 @@ function PLUGIN:HUDShouldDraw(element)
 end
 
 function PLUGIN:HUDPaint()
+  if IsValid(PLAYER) then return end
+
   if self.is_open then
     if self.index_offset and self.index_offset != 0 then
       local dir = (self.index_offset == math.abs(self.index_offset)) -- true = down, false = up
