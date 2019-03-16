@@ -10,9 +10,11 @@ end
 
 player_meta.fl_name = player_meta.fl_name or player_meta.Name
 
-function player_meta:name(force_true_name)
+function player_meta:Name(force_true_name)
   return (!force_true_name and hook.run('GetPlayerName', self)) or self:get_nv('name', self:fl_name())
 end
+
+player_meta.name = player_meta.Name
 
 function player_meta:steam_name()
   return self:fl_name()

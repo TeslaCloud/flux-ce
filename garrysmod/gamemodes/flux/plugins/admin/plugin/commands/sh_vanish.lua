@@ -15,7 +15,7 @@ function COMMAND:on_run(player, targets, should_vanish)
     should_vanish = should_vanish != nil and tobool(should_vanish) or !target.is_vanished
 
     local phrase = 'vanish.'..(should_vanish and 'enabled' or 'disabled')
-    local target_name = target:Name()
+    local target_name = target:name()
 
     target:AddEFlags(EFL_FORCE_CHECK_TRANSMIT)
 
