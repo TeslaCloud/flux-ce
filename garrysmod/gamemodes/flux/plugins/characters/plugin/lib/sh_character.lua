@@ -27,6 +27,10 @@ function Characters.create(player, data)
     return result or CHAR_ERR_UNKNOWN
   end
 
+  if !istable(player.record) then
+    return CHAR_ERR_RECORD
+  end
+
   local char = Character.new()
     char.steam_id = player:SteamID()
     char.name = data.name
@@ -59,7 +63,7 @@ if SERVER then
   end
 
   function Characters.all_to_networkable(player)
-    local characters = player.record.characters or {}
+    local characters = player.record and player.record.characters or {}
     local ret = {}
 
     for k, v in pairs(characters) do
@@ -155,6 +159,10 @@ if SERVER then
   end)
 else
   Cable.receive('fl_characters_load', function(data)
+    if !PLAYER then
+      PLAYER = LocalPlayer()
+    end
+
     PLAYER.characters = data
   end)
 

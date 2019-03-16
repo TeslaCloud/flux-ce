@@ -34,7 +34,7 @@ function Characters:PlayerInitialized()
 end
 
 function Characters:GetLoadingScreenMessage()
-  if !PLAYER.characters then
+  if !IsValid(PLAYER) or !istable(PLAYER.characters) then
     return t'loading.characters', 75
   end
 end
@@ -251,6 +251,8 @@ Cable.receive('fl_player_created_character', function(success, status)
         text = 'You must pick a gender for your character before continuing!'
       elseif status == CHAR_ERR_MODEL then
         text = 'You have not chosen a model or the one you have chosen is invalid!'
+      elseif status == CHAR_ERR_RECORD then
+        text = 'ActiveRecord screwed up again, try reconnecting or restarting your server...'
       end
 
       Flux.intro_panel:notify(text)

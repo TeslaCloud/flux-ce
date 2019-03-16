@@ -10,4 +10,5 @@ CHAR_ERR_MODEL      = 7    -- Client has not selected a model.
 CHAR_GENDER_MALE    = 8    -- Guys.
 CHAR_GENDER_FEMALE  = 9    -- Gals.
 CHAR_GENDER_NONE    = 10   -- Gender-less characters such as vorts.
+CHAR_ERR_RECORD     = 11   -- ActiveRecord screwed up again.
 CHAR_ERR_UNKNOWN    = 999  -- Something else went wrong.
