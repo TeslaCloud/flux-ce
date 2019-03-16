@@ -36,7 +36,7 @@ function Prefixes:PlayerSay(player, text, team_chat)
           end
         end
       elseif text:utf8lower():starts(v.prefix) or v.check and v.check(text) then
-        local message = text:utf8sub((text:utf8lower():starts(v.prefix) and v.utf8.len(prefix) or 0) + 1)
+        local message = text:utf8sub((text:utf8lower():starts(v.prefix) and utf8.len(v.prefix) or 0) + 1)
 
         if message != '' then
           v.callback(player, message, team_chat)
