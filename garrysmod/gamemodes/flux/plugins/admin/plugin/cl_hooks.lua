@@ -46,7 +46,7 @@ function Bolt:PostRender()
 end
 
 function Bolt:PreDrawHUD()
-  if PLAYER.fullbright_enabled then
+  if IsValid(PLAYER) and PLAYER.fullbright_enabled then
     render.SetLightingMode(0)
     PLAYER.fullbright_enabled = false
   end

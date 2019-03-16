@@ -1,4 +1,6 @@
 function Items:HUDPaint()
+  if !IsValid(PLAYER) then return end
+
   local hold_start = PLAYER:get_nv('hold_start')
 
   if hold_start then
@@ -10,6 +12,8 @@ function Items:HUDPaint()
 end
 
 function Items:PreDrawHalos()
+  if !IsValid(PLAYER) then return end
+
   local ent = PLAYER:get_nv('hold_entity')
 
   if IsValid(ent) then
@@ -18,7 +22,7 @@ function Items:PreDrawHalos()
 end
 
 function Items:Think()
-  if !PLAYER:get_nv('hold_start') then return end
+  if !IsValid(PLAYER) or !PLAYER:get_nv('hold_start') then return end
 
   local ent = PLAYER:get_nv('hold_entity')
 

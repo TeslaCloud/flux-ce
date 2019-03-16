@@ -66,7 +66,7 @@ local scale = Vector(1, 1, 1)
 function VisibleLegs:RenderScreenspaceEffects()
   local player = PLAYER
 
-  if player:get_nv('observer') or player:ShouldDrawLocalPlayer() or !player:Alive() then return end
+  if !IsValid(player) or player:get_nv('observer') or player:ShouldDrawLocalPlayer() or !player:Alive() then return end
 
   local angs = player:EyeAngles()
 

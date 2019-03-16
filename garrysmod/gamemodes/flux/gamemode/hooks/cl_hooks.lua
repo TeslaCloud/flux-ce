@@ -23,6 +23,14 @@ function GM:InitPostEntity()
   hook.run('LoadData')
 
   Plugin.call('FLInitPostEntity')
+
+  timer.Create('flux_please_dont_screw_up', 0.1, 0, function()
+    if !IsValid(PLAYER) then
+      PLAYER = LocalPlayer()
+    else
+      timer.Remove('flux_please_dont_screw_up')
+    end
+  end)
 end
 
 function GM:PlayerInitialized()

@@ -8,7 +8,7 @@ do
   local area_colors = {}
 
   function Area:PostDrawOpaqueRenderables(draw_depth, draw_skybox)
-    if draw_depth or draw_skybox then return end
+    if draw_depth or draw_skybox or !IsValid(PLAYER) then return end
 
     local weapon = PLAYER:GetActiveWeapon()
 
