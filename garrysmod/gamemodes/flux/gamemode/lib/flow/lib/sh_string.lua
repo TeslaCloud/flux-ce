@@ -104,6 +104,10 @@ function string.find_all(str, pattern)
   return hits
 end
 
+function string.include(str, substring, start_pos)
+  return string.find(str, substring, start_pos, true)
+end
+
 -- A function to check if string is command or not.
 function string.is_command(str)
   local prefixes = Config.get('command_prefixes') or {}

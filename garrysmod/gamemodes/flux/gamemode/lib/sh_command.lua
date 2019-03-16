@@ -60,7 +60,7 @@ function Flux.Command:find_all(id)
   local ids = {}
 
   for k, v in pairs(aliases) do
-    if !ids[v] and (k:find(id) or v:find(id)) then
+    if !ids[v] and (k:include(id) or v:include(id)) then
       if SERVER then
         table.insert(hits, stored[v])
       else
