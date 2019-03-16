@@ -87,7 +87,7 @@ function Flux.print(message)
 end
 
 function Flux.dev_print(message)
-  if Flux.development then
+  if Flux.development or Settings.debug_output_in_production then
     Msg('Debug: ')
     MsgC(Color(200, 200, 200), message)
     Msg('\n')

@@ -26,8 +26,6 @@ function Characters:PlayerRestored(player)
 
   timer.Create(timer_name, 0.25, 0, function()
     if IsValid(player) and player:has_initialized() then
-      print("SENDING CHARACTERS ("..timer_name..")")
-
       Characters.send_to_client(player)
 
       hook.run('PostRestoreCharacters', player)

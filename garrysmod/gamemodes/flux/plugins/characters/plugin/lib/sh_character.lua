@@ -59,12 +59,7 @@ end
 
 if SERVER then
   function Characters.send_to_client(player)
-    print("Sending characters to client...")
-    local nwkbl = Characters.all_to_networkable(player)
-    print("Networkable table:")
-    PrintTable(nwkbl)
-    print("sending cable stream")
-    Cable.send(player, 'fl_characters_load', nwkbl)
+    Cable.send(player, 'fl_characters_load', Characters.all_to_networkable(player))
   end
 
   function Characters.all_to_networkable(player)
@@ -168,9 +163,6 @@ else
       -- Wait until player is valid.
       if IsValid(PLAYER) then
         PLAYER.characters = data
-
-        print("PLAYER.characters set!")
-        PrintTable(PLAYER.characters)
 
         timer.Remove('fl_characters_defer')
       end

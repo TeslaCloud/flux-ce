@@ -183,7 +183,7 @@ do
   end
 
   function print_query(prefix, query)
-    if !IS_PRODUCTION then
+    if !IS_PRODUCTION or Settings.debug_output_in_production then
       MsgC(Color('cyan'), string.rep('  ', indent_level)..prefix..' ')
       MsgC(Color(100, 220, 100), query)
       Msg('\n')
