@@ -100,13 +100,16 @@ end
 function GM:HUDDrawScoreBoard()
   self.BaseClass:HUDDrawScoreBoard()
 
-  if !PLAYER or !PLAYER:has_initialized() or hook.run('ShouldDrawLoadingScreen') then
+  if !IsValid(PLAYER) or !PLAYER:has_initialized() or hook.run('ShouldDrawLoadingScreen') then
     local text = t'loading.schema'
-    local percentage = 50
+    local percentage = 80
 
     if !Flux.local_player_created then
       text = t'loading.local_player'
       percentage = 0
+    elseif !IsValid(PLAYER) then
+      text = t.'loading.player_object'
+      percentage = 20
     end
 
     local hooked, hooked_percentage = Plugin.call('GetLoadingScreenMessage')

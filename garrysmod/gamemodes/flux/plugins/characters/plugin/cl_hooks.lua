@@ -34,6 +34,7 @@ function Characters:PlayerInitialized()
 end
 
 function Characters:GetLoadingScreenMessage()
+  print("Characters:GetLoadingScreenMessage()")
   if !IsValid(PLAYER) or !istable(PLAYER.characters) then
     return t'loading.characters', 75
   end

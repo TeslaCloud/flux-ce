@@ -115,7 +115,9 @@ end
 function GM:PlayerInitialized(player)
   player:set_initialized(true)
 
-  hook.run_client(player, 'PlayerInitialized')
+  timer.Simple(0.25, function()
+    hook.run_client(player, 'PlayerInitialized')
+  end)
 end
 
 function GM:PlayerDeath(player, inflictor, attacker)
