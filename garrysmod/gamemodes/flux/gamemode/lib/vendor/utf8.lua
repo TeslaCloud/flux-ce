@@ -2046,14 +2046,14 @@ function utf8.sub (s, i, j)
 end
 
 
-function utf8.upper (s)
-  return string.gsub(s, '('..utf8.charpattern..')', utf8_lc_uc)
+function utf8.upper(s)
+  return ({ string.gsub(s, '('..utf8.charpattern..')', utf8_lc_uc) })[1]
 end
 
-function utf8.lower (s)
-  return string.gsub(s, '('..utf8.charpattern..')', utf8_uc_lc)
+function utf8.lower(s)
+  return ({ string.gsub(s, '('..utf8.charpattern..')', utf8_uc_lc) })[1]
 end
 
-string.utf8sub      = utf8.sub
-string.utf8upper    = utf8.upper
-string.utf8lower    = utf8.lower
+string.utf8sub   = utf8.sub
+string.utf8upper = utf8.upper
+string.utf8lower = utf8.lower
