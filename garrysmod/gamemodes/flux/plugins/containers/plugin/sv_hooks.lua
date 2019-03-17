@@ -40,7 +40,7 @@ function Container:PlayerUse(player, entity)
       end
 
       if container_data.open_sound then
-        entity:EmitSound(container_data.open_sound, 25, 100, 0.25)
+        entity:EmitSound(container_data.open_sound, 55)
       end
 
       entity:set_nv('inventory', entity.inventory)
@@ -173,7 +173,7 @@ Cable.receive('fl_container_closed', function(player, entity)
   local container_data = Container.all()[entity:GetModel()]
 
   if container_data.close_sound then
-    entity:EmitSound(container_data.close_sound, 25, 100, 0.5)
+    entity:EmitSound(container_data.close_sound, 55)
   end
 
   if entity.receviers then
