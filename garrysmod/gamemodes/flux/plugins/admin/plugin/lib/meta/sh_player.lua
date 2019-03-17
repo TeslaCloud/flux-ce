@@ -1,18 +1,14 @@
 local player_meta = FindMetaTable('Player')
 
 -- Implement common admin interfaces.
-function player_meta:GetUserGroup()
-  return self:get_role()
-end
-
-function player_meta:IsSuperAdmin()
+function player_meta:is_super_admin()
   if self:is_root() then return true end
 
   return self:can 'administrate'
 end
 
-function player_meta:IsAdmin()
-  if self:IsSuperAdmin() then
+function player_meta:is_admin()
+  if self:is_super_admin() then
     return true
   end
 
@@ -22,6 +18,10 @@ end
 function player_meta:get_role()
   return self:get_nv('role', 'user')
 end
+
+player_meta.GetUserGroup  = function(self) return self:get_role() end
+player_meta.IsSuperAdmin  = function(self) return self:is_super_admin() end
+player_meta.IsAdmin       = function(self) return self:is_admin() end
 
 function player_meta:get_permissions()
   return self:get_nv('permissions', {})
