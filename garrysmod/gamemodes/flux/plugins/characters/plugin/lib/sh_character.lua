@@ -189,7 +189,7 @@ do
   end
 
   function player_meta:get_character_key()
-    return self:get_nv('key', -1)
+    return self:get_nv('key')
   end
 
   function player_meta:is_character_loaded()
@@ -236,7 +236,7 @@ do
       return self.char_data
     end
 
-    local char_id = self:get_active_character_id()
+    local char_id = self:get_character_key()
 
     if char_id then
       return self:get_all_characters()[char_id]
