@@ -138,57 +138,62 @@ do
 
     if !player:InVehicle() then
       if hook.run('ShouldOpenWepselect', player) != false then
+        local cur_time = CurTime()
         local weapon_count = table.Count(player:GetWeapons())
         local old_index = self.weapon_index
         bind = bind:lower()
 
-        if bind:find('invprev') and pressed then
-          self.weapon_index = relative_clamp(self.weapon_index - 1, 1, weapon_count)
+        if weapon_count > 1 and (!self.next_change or self.next_change <= cur_time) then
+          if bind:find('invprev') and pressed then
+            self.weapon_index = relative_clamp(self.weapon_index - 1, 1, weapon_count)
 
-          Plugin.call('OnWeaponIndexChange', old_index, self.weapon_index)
+            Plugin.call('OnWeaponIndexChange', old_index, self.weapon_index)
 
-          return true
-        elseif bind:find('invnext') and pressed then
-          self.weapon_index = relative_clamp(self.weapon_index + 1, 1, weapon_count)
+            return true
+          elseif bind:find('invnext') and pressed then
+            self.weapon_index = relative_clamp(self.weapon_index + 1, 1, weapon_count)
 
-          Plugin.call('OnWeaponIndexChange', old_index, self.weapon_index)
+            Plugin.call('OnWeaponIndexChange', old_index, self.weapon_index)
 
-          return true
-        elseif bind:find('slot') and pressed then
-          local index = tonumber(bind:sub(5, bind:len())) or 1
-          local classic_scroll = false
+            return true
+          elseif bind:find('slot') and pressed then
+            local index = tonumber(bind:sub(5, bind:len())) or 1
+            local classic_scroll = false
 
-          if index == prev_index or (index == 2 and prev_index == 1) or (index == 1 and prev_index == 2) then
-            if index == 1 then
-              self.weapon_index = self.weapon_index - 1
-            else
-              self.weapon_index = self.weapon_index + 1
+            if index == prev_index or (index == 2 and prev_index == 1) or (index == 1 and prev_index == 2) then
+              if index == 1 then
+                self.weapon_index = self.weapon_index - 1
+              else
+                self.weapon_index = self.weapon_index + 1
+              end
+
+              self.weapon_index = relative_clamp(self.weapon_index, 1, weapon_count)
+
+              classic_scroll = true
             end
 
-            self.weapon_index = relative_clamp(self.weapon_index, 1, weapon_count)
+            prev_index = index
 
-            classic_scroll = true
+            if !classic_scroll then
+              index = relative_clamp(index, 1, weapon_count)
+
+              self.weapon_index = index
+            else
+              index = self.weapon_index
+            end
+
+            Plugin.call('OnWeaponIndexChange', old_index, index)
+
+            return true
+          elseif bind:find('attack') and self.is_open and pressed then
+            RunConsoleCommand('selectweapon', self.weapon_index)
+
+            Plugin.call('OnWeaponSelected', self.weapon_index)
+
+            return true
           end
 
-          prev_index = index
-
-          if !classic_scroll then
-            index = relative_clamp(index, 1, weapon_count)
-
-            self.weapon_index = index
-          else
-            index = self.weapon_index
-          end
-
-          Plugin.call('OnWeaponIndexChange', old_index, index)
-
-          return true
-        elseif bind:find('attack') and self.is_open and pressed then
-          RunConsoleCommand('selectweapon', self.weapon_index)
-
-          Plugin.call('OnWeaponSelected', self.weapon_index)
-
-          return true
+          self.next_change = cur_time + 0.2
         end
       end
     end
