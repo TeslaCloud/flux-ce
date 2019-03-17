@@ -4,7 +4,7 @@ function Container:PlayerUse(player, entity)
   if !player.next_cont_use or player.next_cont_use <= cur_time then
     local container_data = Container:all()[entity:GetModel()]
 
-    if container_data then
+    if container_data and entity:GetClass() == 'prop_physics' then
       container_data.w = container_data.w or 4
       container_data.h = container_data.h or 4
 
