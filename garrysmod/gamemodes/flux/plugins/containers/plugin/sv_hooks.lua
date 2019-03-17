@@ -5,34 +5,36 @@ function Container:PlayerUse(player, entity)
     local container_data = Container:all()[entity:GetModel()]
 
     if container_data then
-      container_data.width = container_data.width or 4
-      container_data.height = container_data.height or 4
+      container_data.w = container_data.w or 4
+      container_data.h = container_data.h or 4
 
       if !entity.inventory then
         local inventory = {}
 
-        for i = 1, container_data.height do
+        for i = 1, container_data.h do
           inventory[i] = {}
 
-          for k = 1, container_data.width do
+          for k = 1, container_data.w do
             inventory[i][k] = {}
           end
         end
 
-        inventory.width, inventory.height = container_data.width, container_data.height
+        inventory.width, inventory.height = container_data.w, container_data.h
         inventory.type = 'container'
 
         entity.inventory = inventory
       end
 
-      for i = 1, container_data.height do
-        for k = 1, container_data.width do
-          for k1, v1 in pairs(entity.inventory[i][k]) do
-            local item_table = Item.find_instance_by_id(v1)
+      for i = 1, container_data.h do
+        for k = 1, container_data.w do
+          if entity.inventory[i][k] then
+            for k1, v1 in pairs(entity.inventory[i][k]) do
+              local item_table = Item.find_instance_by_id(v1)
 
-            item_table.inventory_entity = entity
+              item_table.inventory_entity = entity
 
-            Item.network_item(player, v1)
+              Item.network_item(player, v1)
+            end
           end
         end
       end
