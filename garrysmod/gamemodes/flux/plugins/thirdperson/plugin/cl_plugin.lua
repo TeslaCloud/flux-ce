@@ -42,7 +42,7 @@ function ThirdPerson:CalcView(player, pos, angles, fov)
     end
 
     view.origin = pos - offset
-    view.draw_viewer = true
+    view.drawviewer = true
 
     self.was_third_person = true
   else
@@ -58,7 +58,7 @@ function ThirdPerson:CalcView(player, pos, angles, fov)
       offset.x = Lerp(fraction, forward.x, 0)
       offset.y = Lerp(fraction, forward.y, 0)
       offset.z = Lerp(fraction, forward.z, 0)
-      view.draw_viewer = true
+      view.drawviewer = true
     else
       offset = Vector(0, 0, 0)
       self.was_third_person = false
@@ -70,4 +70,4 @@ function ThirdPerson:CalcView(player, pos, angles, fov)
   return view
 end
 
-Flux.Binds:add_bind('ToggleThirdPerson', 'flThirdPerson', KEY_X)
+Flux.Binds:add_bind('ToggleThirdPerson', 'fl_third_person', KEY_X)
