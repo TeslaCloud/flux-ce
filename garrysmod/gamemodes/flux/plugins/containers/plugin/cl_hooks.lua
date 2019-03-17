@@ -1,25 +1,28 @@
 function Container:DrawEntityTargetID(entity, x, y, dist)
-  local container_data = Container:all()[entity:GetModel()]
+  if dist < 300 then
+    local container_data = Container:all()[entity:GetModel()]
 
-  if container_data then
-    local title = t(container_data.name)
+    if container_data then
+      local title = t(container_data.name)
+      local alpha = 255 - 255 * (dist / 300)
 
-    if title then
-      local font = Theme.get_font('tooltip_large')
-      local text_w, text_h = util.text_size(title, font)
+      if title then
+        local font = Theme.get_font('tooltip_large')
+        local text_w, text_h = util.text_size(title, font)
 
-      draw.SimpleTextOutlined(title, font, x - text_w / 2, y, Theme.get_color('accent_light'), nil, nil, 1, color_black)
+        draw.SimpleTextOutlined(title, font, x - text_w * 0.5, y, Theme.get_color('accent_light'):alpha(alpha), nil, nil, 1, color_black:alpha(alpha))
 
-      y = y + text_h + 4
-    end
+        y = y + text_h + 4
+      end
 
-    local desc = t(container_data.desc)
+      local desc = t(container_data.desc)
 
-    if desc then
-      local font = Theme.get_font('tooltip_normal')
-      local text_w, text_h = util.text_size(desc, font)
+      if desc then
+        local font = Theme.get_font('tooltip_normal')
+        local text_w, text_h = util.text_size(desc, font)
 
-      draw.SimpleTextOutlined(desc, font, x - text_w / 2, y, color_white, nil, nil, 1, color_black)
+        draw.SimpleTextOutlined(desc, font, x - text_w * 0.5, y, color_white:alpha(alpha), nil, nil, 1, color_black:alpha(alpha))
+      end
     end
   end
 end
