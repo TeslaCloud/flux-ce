@@ -103,3 +103,34 @@ function Bolt:PlayerOneMinute(player)
   end
 end
 
+function Bolt:PlayerPermissionChanged(player, perm_id, value)
+  if perm_id == 'toolgun' then
+    if value == PERM_ALLOW then
+      player:Give('gmod_tool')
+    elseif value == PERM_NO then
+      player:StripWeapon('gmod_tool')
+    end
+  end
+
+  if perm_id == 'physgun' then
+    if value == PERM_ALLOW then
+      player:Give('weapon_physgun')
+    elseif value == PERM_NO then
+      player:StripWeapon('weapon_physgun')
+    end
+  end
+end
+
+function Bolt:PlayerUserGroupChanged(player, group, old_group)
+  if group:can('toolgun') then
+    player:Give('gmod_tool')
+  else
+    player:StripWeapon('gmod_tool')
+  end
+
+  if group:can('physgun') then
+    player:Give('weapon_physgun')
+  else
+    player:StripWeapon('weapon_physgun')
+  end
+end

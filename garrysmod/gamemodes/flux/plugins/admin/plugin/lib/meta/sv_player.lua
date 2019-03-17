@@ -13,6 +13,8 @@ function player_meta:SetUserGroup(group)
       self:save_usergroup()
     end
   end
+
+  hook.run('PlayerUserGroupChanged', self, group_obj, old_group_obj)
 end
 
 function player_meta:save_usergroup()
@@ -58,6 +60,8 @@ function player_meta:set_permission(perm_id, value)
   perm_table[perm_id] = value != PERM_NO and value or nil
 
   self:set_permissions(perm_table)
+
+  hook.run('PlayerPermissionChanged', self, perm_id, value)
 end
 
 function player_meta:set_temp_permissions(perm_table)
