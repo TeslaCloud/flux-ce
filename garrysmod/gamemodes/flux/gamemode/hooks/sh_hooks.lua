@@ -241,6 +241,10 @@ end
 -- Utility timers to call hooks that should be executed every once in a while.
 timer.Create('fl_one_minute', 60, 0, function()
   hook.run('OneMinute')
+
+  for k, v in ipairs(_player.all()) do
+    hook.run('PlayerOneMinute', v)
+  end
 end)
 
 timer.Create('fl_one_second', 1, 0, function()

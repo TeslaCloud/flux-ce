@@ -125,12 +125,6 @@ function Bolt:can(player, action, object)
       elseif value == PERM_NEVER then
         return false
       end
-    else
-      if CLIENT then
-        Cable.send('fl_delete_temp_permission', player, action)
-      else
-        self:delete_temp_permission(player, action)
-      end
     end
   end
 

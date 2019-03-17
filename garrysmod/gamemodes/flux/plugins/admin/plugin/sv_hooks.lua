@@ -92,3 +92,14 @@ function Bolt:PlayerInitialSpawn(player)
     end
   end
 end
+
+function Bolt:PlayerOneMinute(player)
+  local temp_permissions = player:get_temp_permissions()
+
+  for k, v in pairs(temp_permissions) do
+    if time_from_timestamp(v.expires) <= os.time() then
+      self:delete_temp_permission(player, k)
+    end
+  end
+end
+
