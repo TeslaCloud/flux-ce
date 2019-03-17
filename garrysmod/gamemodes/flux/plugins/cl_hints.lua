@@ -8,10 +8,10 @@ local stored = {}
 function Hints:OneMinute()
   local cur_time = CurTime()
 
-  if cur_time >= (PLAYER.nextHint or 0) then
+  if cur_time >= (PLAYER.next_hint or 0) then
     self:display_random()
 
-    PLAYER.nextHint = cur_time + 300
+    PLAYER.next_hint = cur_time + 300
   end
 end
 
