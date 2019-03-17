@@ -56,6 +56,16 @@ function Container:PlayerUse(player, entity)
   end
 end
 
+function Container:EntityRemoved(entity)
+  if entity.receviers then
+    for k, v in ipairs(entity.receivers) do
+      if IsValid(v) then
+        Cable.send(v, 'fl_close_container')
+      end
+    end
+  end
+end
+
 function Container:PlayerSpawnedProp(player, model, entity)
   if Container:all()[model] then
     entity:SetPersistent(true)

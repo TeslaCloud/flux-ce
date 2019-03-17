@@ -60,3 +60,9 @@ Cable.receive('fl_open_container', function(entity)
   Flux.container:set_target_entity(entity)
   Flux.container:rebuild()
 end)
+
+Cable.receive('fl_close_container', function(entity)
+  if IsValid(Flux.container) then
+    Flux.container:safe_remove()
+  end
+end)
