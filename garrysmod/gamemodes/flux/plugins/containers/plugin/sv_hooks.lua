@@ -93,6 +93,31 @@ function Container:CanPlayerDropItem(player, item_table)
   end
 end
 
+function Container:CanItemMoveToContainer(player, item_table, inv_type, x, y, entity)
+  if inv_type == 'container' then
+    local ent_inv = entity:get_nv('inventory')
+    local ids = ent_inv and ent_inv[y][x]
+
+    if ids then
+      if #ids == 0 then
+        return true
+      end
+
+      local slot_table = Item.find_instance_by_id(ids[1])
+
+      if item_table.id != slot_table.id or #ids >= item_table.max_stack then
+        return false
+      end
+    end
+
+    if item_table.can_stack then
+      if item_table:can_stack(player, inv_type, x, y) == false then
+        return false
+      end
+    end
+  end
+end
+
 function Container:ItemContainerMove(player, instance_ids, inv_type, x, y, entity)
   local ent_inv
   local old_inv_type

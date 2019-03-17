@@ -88,7 +88,7 @@ function Inventory:CanItemStack(player, item_table, inv_type, x, y)
   end
 
   local ply_inv = player:get_inventory(inv_type)
-  local ids = ply_ind and ply_inv[y][x]
+  local ids = ply_inv and ply_inv[y][x]
 
   if ids then
     if #ids == 0 then
