@@ -1,3 +1,18 @@
+#
+# Use this file to register new configs related to Flux itself.
+#
+# Looking for Flux framework settings? Check out the settings.yml file!
+#
+# !!!!
+# DO NOT USE THIS FILE TO REGISTER CONFIGURATION FOR YOUR SCHEMA
+# OR PLUGIN.
+#
+# If you wish to add configuration to your plugin, create a similar
+# file in the following path:
+# plugins/<your_plugin>/plugin/config/config.yml
+# gamemodes/<your_schema>/schema/config/config.yml
+# !!!!
+#
 categories:
   general:
     name: config.general.title

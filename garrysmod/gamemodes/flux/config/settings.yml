@@ -1,8 +1,40 @@
+#
+# Any settings that you put here will be available in the
+# "Settings" global table.
+#
+# It is highly recommended to make a copy of this file called
+# "settings.local.yml", instead of editing this file directly,
+# so that you have an untouched copy of this configuration file
+# in the event you need it.
+#
+# Also, in case you are using a git push-to-deploy configuration,
+# you can add *.local.yml files to your .gitignore so that your
+# real configuration (and passwords) are not commited to your
+# repository.
+#
+
+# Set this to true if you wish to see most of the debug output
+# while running in the "production" environment.
 debug_output_in_production: false
+
+# Lite refresh tells Flux to not go through the full refresh by
+# not reloading the framework itself, only the schema.
+# This is useful for schema development, but if you are working on
+# Flux itself, set this to false to make Flux refresh.
 lite_refresh: true
-experimental: false # Whether to enable experimental features.
+
+# Set this to true to enable experimental features.
+# These features are unstable and may (and probably will) cause your server to crash.
+experimental: false
+
+# Any settings under the "server" category will not be sent to clients.
+# Use this to store sensitive details, such as passwords.
 server:
-  webhooks: # Discord webhook support
+  # Flux supports webhooks for logging. Register them here by putting in their name
+  # as the index, and secret key.
+  webhooks:
     example:
       id: "123456789"
       key: "secret_key_goes_here"
+      types:
+        - "all"

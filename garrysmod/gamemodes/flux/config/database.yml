@@ -1,3 +1,38 @@
+#
+# This is your database configuration file.
+# Entires are separated by environment like so:
+##
+# environment_name:
+#   config_key: "config value"
+##
+# Normally if you are starting a server, provided you don't edit the
+# environment configuration, the environment will be set to "production".
+#
+# For your convenience the default values are set to zero-setup sqlite.
+# However, SQLite is not an optimal solution in the long run since it
+# runs the queries in the current thread (meaning it causes lag ever so
+# slightly if it does something particularly large/difficult).
+#
+# If you are running a moderately large server (24+ players online), or if you
+# experience lag (particularly when players join), it is highly
+# recommended that you switch your database adapter to "mysqloo" or "pg".
+#
+# MySQLOO is for MySQL, use it if you have a MySQL server. It provides
+# moderately good performance and support for queries-in-the-background.
+# MariaDB is recommended for MySQL.
+#
+# PG is for PostgreSQL, if you happen to run your server on a VPS/VDS,
+# it is highly recommended that you install PostgreSQL since it provides
+# better performance when dealing with larger data sets.
+# PostgreSQL 9.1+ is supported.
+#
+# Additionally both MySQL and PostgreSQL support database constraints and
+# indexes that make complex database operations that Flux performs safer
+# and faster.
+#
+# mysqloo - default port is 3306
+# pg      - default port is 5432
+#
 development:
   adapter: "sqlite"
   encoding: "utf8"

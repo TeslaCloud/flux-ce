@@ -1,1 +1,14 @@
+--
+-- This is the environment setting file.
+-- It is used to tell Flux how it should run.
+--
+-- Valid values: production development staging
+--
+-- "production" is more suited for normal server operation since it runs
+-- faster and generally optimizes itself to perform better at the expense
+-- of errors being harder to debug and having more destructive effects.
+-- "development" is suited if you are a developer who is writing code for Flux.
+-- It uses safe mode on hooks and provides more information in the console.
+-- "staging" is a semi-production environment. Use it on test servers.
+--
 return 'production'
