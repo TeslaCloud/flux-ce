@@ -112,7 +112,6 @@ local function color_id_from_color(col)
   return tostring(ri - 1)
 end
 
-
 function print_colored(text, color, background_color, style)
   local color_sequence = color_clear_sequence
 
