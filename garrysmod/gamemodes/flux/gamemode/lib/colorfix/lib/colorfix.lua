@@ -26,7 +26,7 @@ local function sequence_from_color(col)
   local dist, windist, ri
 
   for i = 1, color_map_len do
-    dist = (src.r - color_map[i].r)^2 + (src.g - color_map[i].g)^2 + (src.b - color_map[i].b)^2
+    dist = (col.r - color_map[i].r)^2 + (col.g - color_map[i].g)^2 + (col.b - color_map[i].b)^2
 
     if i == 1 or dist < windist then
       windist = dist
