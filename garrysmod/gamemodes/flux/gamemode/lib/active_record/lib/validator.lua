@@ -97,7 +97,7 @@ end)
 ActiveRecord.Validator:add('min_length', function(model, column, val, opts, success_callback, error_callback)
   local c = model[column]
 
-  if isstring(c) and c:utf8len() >= val then
+  if isstring(c) and utf8.len(c) >= val then
     success_callback(model)
   else
     error_callback(model, column, 'min_length')
@@ -107,7 +107,7 @@ end)
 ActiveRecord.Validator:add('max_length', function(model, column, val, opts, success_callback, error_callback)
   local c = model[column]
 
-  if isstring(c) and c:utf8len() <= val then
+  if isstring(c) and utf8.len(c) <= val then
     success_callback(model)
   else
     error_callback(model, column, 'max_length')

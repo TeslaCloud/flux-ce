@@ -328,8 +328,6 @@ string.split = function(str, sep)
   return string.Split(str, sep)
 end
 
-string.utf8len = utf8.len
-
 system.app_time = system.AppTime
 system.battery_power = system.BatteryPower
 system.get_country = system.GetCountry
