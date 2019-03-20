@@ -82,7 +82,7 @@ if !LITE_REFRESH then
   util.include 'lib/required/sh_crate.lua'
 
   -- Fix colors on Linux!
-  if system.IsLinux() then
+  if SERVER and system.IsLinux() then
     Crate:include 'colorfix'
   end
 
