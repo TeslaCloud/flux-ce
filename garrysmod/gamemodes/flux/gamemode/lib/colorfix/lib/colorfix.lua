@@ -1,7 +1,7 @@
 _MsgC                       = _MsgC         or MsgC
 _ErrorNoHalt                = _ErrorNoHalt  or ErrorNoHalt
 
-local available_colors = {
+local available_colors      = {
   Color(0, 0, 0),       Color(128, 0, 0),     Color(0, 128, 0),
   Color(128, 128, 0),   Color(0, 0, 128),     Color(128, 0, 128),
   Color(0, 128, 128),   Color(192, 192, 192), Color(128, 128, 128),
