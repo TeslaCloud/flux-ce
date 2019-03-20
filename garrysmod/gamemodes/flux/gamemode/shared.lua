@@ -81,6 +81,11 @@ if !LITE_REFRESH then
   -- Include the Crate (Flux libraries) class
   util.include 'lib/required/sh_crate.lua'
 
+  -- Fix colors on Linux!
+  if system.IsLinux() then
+    Crate:include 'colorfix'
+  end
+
   Crate:include 'flow'
 
   util.include 'core/cl_core.lua'
