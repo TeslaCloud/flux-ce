@@ -16,6 +16,9 @@ function ActiveRecord.Queue:run()
       end
     end)
   end
+
+  -- Purge storage once we are done.
+  self.stored = {}
 end
 
 function ActiveRecord.Queue:add_type(type)
