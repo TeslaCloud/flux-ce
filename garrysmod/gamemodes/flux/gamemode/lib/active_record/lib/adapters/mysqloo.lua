@@ -33,6 +33,10 @@ function ActiveRecord.Adapters.Mysqloo:connect(config, on_connected)
     port = 3306
   end
 
+  if host == 'localhost' then
+    host = '127.0.0.1'
+  end
+
   if mysqloo then
     local client_flag = flags or 0
 

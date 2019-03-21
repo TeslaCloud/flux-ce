@@ -33,6 +33,10 @@ function ActiveRecord.Adapters.Pg:connect(config, on_connected)
     port = 5432
   end
 
+  if host == 'localhost' then
+    host = '127.0.0.1'
+  end
+
   if pg then
     self.connection = pg.new_connection()
 
