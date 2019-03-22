@@ -8,9 +8,9 @@ local version    = '0.6.3-alpha'
 
 -- Define Flux-Specific fields.
 GM.version       = version
-GM.version_num   = '0.6.3'
+GM.version_num   = Flux.
 GM.date          = '3/20/2019'
-GM.build         = '20190320'
+GM.build         = '20190322'
 GM.description   = 'A free roleplay gamemode framework.'
 GM.code_name     = 'Cherry Soda'
 
@@ -39,19 +39,6 @@ function Flux.get_version()
   return version
 end
 
-if engine.ActiveGamemode() != 'flux' then
-  Flux.schema = engine.ActiveGamemode()
-else
-  ErrorNoHalt(txt[[
-    ============================================
-             +gamemode is set to 'flux'
-    Set it to your schema's folder name instead!
-    ============================================
-  ]])
-
-  return
-end
-
 if !LITE_REFRESH then
   -- Shared table contains the info that will be networked
   -- to clients automatically when they load.
@@ -66,7 +53,7 @@ if !LITE_REFRESH then
   print('Environment: '..FLUX_ENV)
 
   include 'core/sh_core.lua'
-  util.include 'core/sh_enums.lua'
+  require_relative 'core/sh_enums.lua'
 
   if CLIENT then
     local files, folders = file.Find('_flux/client/*.lua', 'LUA')
@@ -79,7 +66,7 @@ if !LITE_REFRESH then
   end
 
   -- Include the Crate (Flux libraries) class
-  util.include 'lib/required/sh_crate.lua'
+  require_relative 'lib/required/sh_crate.lua'
 
   -- Fix colors on Linux!
   if SERVER and system.IsLinux() then
@@ -88,11 +75,11 @@ if !LITE_REFRESH then
 
   Crate:include 'flow'
 
-  util.include 'core/cl_core.lua'
-  util.include 'core/sv_core.lua'
+  require_relative 'core/cl_core.lua'
+  require_relative 'core/sv_core.lua'
 
   -- This way we put things we want loaded BEFORE anything else in here, like plugin, config, etc.
-  util.include_folder('lib/required', true)
+  require_relative_folder('lib/required', true)
 
   -- Read configs.
   Config.read(Settings.configs)
@@ -106,9 +93,9 @@ if !LITE_REFRESH then
   -- So that we don't get duplicates on refresh.
   Plugin.clear_cache()
 
-  util.include_folder('lib', true)
-  util.include_folder('lib/classes', true)
-  util.include_folder('lib/meta', true)
+  require_relative_folder('lib', true)
+  require_relative_folder('lib/classes', true)
+  require_relative_folder('lib/meta', true)
   if SERVER then
     Crate:include 'packager'
 
@@ -118,21 +105,21 @@ if !LITE_REFRESH then
     Pipeline.include_folder('html', 'flux/gamemode/views/assets/stylesheets')
     Pipeline.include_folder('html', 'flux/gamemode/views/assets/javascripts')
   end
-  util.include_folder('models', true)
-  util.include_folder('controllers', true)
-  util.include_folder('views/base', true)
-  util.include_folder('views', true)
+  require_relative_folder('models', true)
+  require_relative_folder('controllers', true)
+  require_relative_folder('views/base', true)
+  require_relative_folder('views', true)
 
   if Theme or SERVER then
     Pipeline.register('Theme', function(id, file_name, pipe)
       if CLIENT then
         THEME = ThemeBase.new(id)
 
-        util.include(file_name)
+        require_relative(file_name)
 
         THEME:register() THEME = nil
       else
-        util.include(file_name)
+        require_relative(file_name)
       end
     end)
 
@@ -144,6 +131,6 @@ if !LITE_REFRESH then
   Pipeline.include_folder('tool', 'flux/gamemode/tools')
 end
 
-util.include_folder('hooks', true)
+require_relative_folder('hooks', true)
 
 Flux.include_schema()

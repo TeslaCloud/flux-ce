@@ -13,7 +13,7 @@ Pipeline.register('tool', function(id, file_name, pipe)
 
   hook.run('PreIncludeTool', TOOL)
 
-  util.include(file_name)
+  require_relative(file_name)
 
   hook.run('ToolPreCreateConvars', TOOL)
 

@@ -1,9 +1,9 @@
 PLUGIN:set_global('Characters')
 
-util.include('cl_hooks.lua')
-util.include('sv_plugin.lua')
-util.include('sv_hooks.lua')
-util.include('sh_enums.lua')
+require_relative('cl_hooks.lua')
+require_relative('sv_plugin.lua')
+require_relative('sv_hooks.lua')
+require_relative('sh_enums.lua')
 
 function Characters:RegisterConditions()
   Conditions:register_condition('character', {

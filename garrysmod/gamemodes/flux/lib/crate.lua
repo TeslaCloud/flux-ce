@@ -1,20 +1,38 @@
 ---
--- Crate is a fancy name for Flux libraries
+-- Crate is a fancy name for Flux packages.
 --
 -- This library is the centralized controlling mechanism for them.
 
+AddCSLuaFile()
+
 if Crate then return end
 
+if !require_relative then
+  include 'flux/crates/flow/lib/sh_helpers.lua'
+end
+
+if !Flux then
+  require_relative 'flux/lib/flux_struct'
+end
+
+if !class then
+  require_relative 'flux/crates/flow/lib/sh_class'
+end
+
+if !library then
+  require_relative 'flux/crates/flow/lib/sh_library'
+end
+
 if !string.ensure_end then
-  include 'flux/gamemode/lib/flow/lib/sh_aliases.lua'
-  include 'flux/gamemode/lib/flow/lib/sh_string.lua'
+  require_relative 'flux/crates/flow/lib/sh_aliases'
+  require_relative 'flux/crates/flow/lib/sh_string'
 end
 
 if !table.safe_merge then
-  include 'flux/gamemode/lib/flow/lib/sh_table.lua'
+  require_relative 'flux/crates/flow/lib/sh_table'
 end
 
-util.include 'flux/gamemode/lib/classes/sh_package.lua'
+require_relative 'package'
 
 local crate_metadata = {}
 
@@ -24,14 +42,16 @@ else
   crate_metadata = Flux.shared.crates
 end
 
-Crate           = {}
-Crate.installed = {}
-Crate.current   = nil
+Crate                           = {}
+Crate.installed                 = {}
+Crate.current                   = nil
 
 local search_paths = {
-  ['flux/gamemode/lib/']        = true,
+  ['flux/crates/']              = true,
   [Flux.schema..'/schema/lib/'] = true,
-  ['_flux/packages/']           = true
+  [Flux.schema..'/crates/']     = true,
+  ['_flux/packages/']           = true,
+  ['']                          = true
 }
 
 --- Adds a search path relative to 'LUA' system.
@@ -75,10 +95,27 @@ function Crate:describe(callback)
 
   if istable(meta.global) then
     for k, v in ipairs(meta.global) do
-      _G[v] = _G[v] or {}
+      _G[v] = istable(_G[v]) and _G[v] or {}
+
+      if !_G[v].__crate__ then
+        _G[v].__crate__ = meta
+      end
     end
   elseif isstring(meta.global) then
-    _G[meta.global] = _G[meta.global] or {}
+    _G[meta.global] = istable(_G[meta.global]) and _G[meta.global] or {}
+
+    if !_G[meta.global].__crate__ then
+      _G[meta.global].__crate__ = meta
+    end
+  end
+
+  -- Once globals are set-up, include dependencies!
+  if istable(meta.deps) then
+    for k, name in ipairs(meta.deps) do
+      if !self:included(name) then
+        self:include(name)
+      end
+    end
   end
 
   local full_path = meta.full_path
@@ -88,7 +125,7 @@ function Crate:describe(callback)
       local filename = file:file_from_filename()
 
       if filename:starts('sv') or filename:starts('cl') or filename:starts('sh') then
-        util.include(full_path..file)
+        require_relative(full_path..file)
       else
         include(full_path..file)
       end
@@ -98,7 +135,7 @@ function Crate:describe(callback)
     local filename = file:file_from_filename()
 
     if filename:starts('sv') or filename:starts('cl') or filename:starts('sh') then
-      util.include(full_path..file)
+      require_relative(full_path..file)
     else
       include(full_path..file)
     end

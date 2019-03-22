@@ -1,5 +1,5 @@
-if !font then util.include 'cl_font.lua' end
-if !Flux.Lang then util.include 'sh_lang.lua' end
+if !font then require_relative 'cl_font.lua' end
+if !Flux.Lang then require_relative 'sh_lang.lua' end
 
 library 'Flux::Bars'
 

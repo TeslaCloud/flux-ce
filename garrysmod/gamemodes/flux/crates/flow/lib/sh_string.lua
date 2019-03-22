@@ -1,3 +1,7 @@
+if !string.utf8lower then
+  include 'flux/lib/vendor/utf8.lua'
+end
+
 local string_meta = getmetatable('')
 
 do

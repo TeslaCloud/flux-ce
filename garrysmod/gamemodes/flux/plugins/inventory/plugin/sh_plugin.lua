@@ -1,5 +1,5 @@
 PLUGIN:set_global('Inventory')
 
-util.include('cl_hooks.lua')
-util.include('sv_hooks.lua')
-util.include('sh_hooks.lua')
+require_relative('cl_hooks.lua')
+require_relative('sv_hooks.lua')
+require_relative('sh_hooks.lua')

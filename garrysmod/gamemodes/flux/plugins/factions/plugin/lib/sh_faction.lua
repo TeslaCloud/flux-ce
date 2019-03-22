@@ -222,7 +222,7 @@ end
 Pipeline.register('faction', function(id, file_name, pipe)
   FACTION = Faction.new(id)
 
-  util.include(file_name)
+  require_relative(file_name)
 
   FACTION:register() FACTION = nil
 end)

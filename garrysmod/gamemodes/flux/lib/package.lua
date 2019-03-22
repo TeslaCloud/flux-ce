@@ -12,7 +12,8 @@ function Package:init(file_path, lib_path, full_path)
     file        = { },
     website     = '',
     license     = '',
-    global      = ''
+    global      = '',
+    deps        = { }
   }
 
   for k, v in pairs(self.metadata) do
@@ -36,7 +37,9 @@ end
 function Package:depends(what)
   local name = isstring(self) and self or what
 
-  if !Crate:included(name) then
-    Crate:include(name)
+  if istable(self) then
+    table.insert(self.metadata.deps, name)
+  else
+    table.insert(CRATE.metadata.deps, name)
   end
 end

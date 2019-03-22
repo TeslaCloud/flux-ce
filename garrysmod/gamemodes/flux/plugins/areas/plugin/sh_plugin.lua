@@ -1,10 +1,10 @@
 PLUGIN:set_global('Area')
 
-util.include('cl_plugin.lua')
-util.include('sv_plugin.lua')
+require_relative('cl_plugin.lua')
+require_relative('sv_plugin.lua')
 
 if !areas then
-  util.include('lib/sh_areas.lua')
+  require_relative('lib/sh_areas.lua')
 end
 
 function Area:RegisterPermissions()

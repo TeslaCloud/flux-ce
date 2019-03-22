@@ -1,5 +1,5 @@
 if !ItemEquippable then
-  util.include('sh_equipment_base.lua')
+  require_relative('sh_equipment_base.lua')
 end
 
 class 'ItemClothing' extends 'ItemEquippable'

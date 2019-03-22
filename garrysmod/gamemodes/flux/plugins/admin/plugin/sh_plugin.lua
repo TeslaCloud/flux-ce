@@ -1,9 +1,9 @@
 PLUGIN:set_global('Bolt')
 
-util.include('cl_hooks.lua')
-util.include('sh_enums.lua')
-util.include('sv_hooks.lua')
-util.include('sv_plugin.lua')
+require_relative('cl_hooks.lua')
+require_relative('sh_enums.lua')
+require_relative('sv_hooks.lua')
+require_relative('sv_plugin.lua')
 
 function Bolt:OnPluginLoaded()
   Plugin.add_extra('commands')
@@ -11,7 +11,7 @@ function Bolt:OnPluginLoaded()
 
   local folder = self:get_folder()
 
-  util.include_folder(folder..'/commands/')
+  require_relative_folder(folder..'/commands/')
   Bolt:include_roles(folder..'/roles/')
 end
 

@@ -1,5 +1,5 @@
 if !ItemUsable then
-  util.include('sh_usable_base.lua')
+  require_relative('sh_usable_base.lua')
 end
 
 class 'ItemConsumable' extends 'ItemUsable'

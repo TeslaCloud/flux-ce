@@ -471,7 +471,7 @@ end
 Pipeline.register('item', function(id, file_name, pipe)
   ITEM = ItemBase.new(id)
 
-  util.include(file_name)
+  require_relative(file_name)
 
   if Pipeline.is_aborted() then ITEM = nil return end
 

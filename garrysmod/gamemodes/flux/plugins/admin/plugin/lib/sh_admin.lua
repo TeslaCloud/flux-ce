@@ -353,7 +353,7 @@ end
 Pipeline.register('role', function(id, file_name, pipe)
   ROLE = Role.new(id)
 
-  util.include(file_name)
+  require_relative(file_name)
 
   ROLE:register()
   ROLE = nil

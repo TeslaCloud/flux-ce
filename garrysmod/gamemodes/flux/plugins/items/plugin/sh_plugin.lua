@@ -1,14 +1,14 @@
 PLUGIN:set_global('Items')
 
-util.include('cl_hooks.lua')
-util.include('sv_hooks.lua')
-util.include('sh_enums.lua')
+require_relative('cl_hooks.lua')
+require_relative('sv_hooks.lua')
+require_relative('sh_enums.lua')
 
 function Items:OnPluginLoaded()
   Plugin.add_extra('items')
   Plugin.add_extra('items/bases')
 
-  util.include_folder(self:get_folder()..'/items/bases')
+  require_relative_folder(self:get_folder()..'/items/bases')
   Item.include_items(self:get_folder()..'/items/')
 end
 

@@ -1,6 +1,6 @@
 if Plugin then return end
 
-util.include 'flux/gamemode/lib/classes/sh_plugin_instance.lua'
+require_relative 'plugin_instance'
 
 library 'Plugin'
 
@@ -286,10 +286,10 @@ function Plugin.include(path)
   Plugin.include_folders(data.folder)
 
   if !data.single_file then
-    util.include(data.folder..'/'..data.plugin_main)
+    require_relative(data.folder..'/'..data.plugin_main)
   else
     if file.Exists(path, 'LUA') then
-      util.include(path)
+      require_relative(path)
     end
   end
 
@@ -348,7 +348,7 @@ function Plugin.include_schema()
   Schema = PluginInstance.new(schema_info.name, schema_info)
   Schema._is_schema = true
 
-  util.include(schema_folder..'/sh_schema.lua')
+  require_relative(schema_folder..'/sh_schema.lua')
 
   Plugin.include_folders(schema_folder)
   Plugin.include_plugins(schema_path..'/plugins')
@@ -494,19 +494,19 @@ do
         _G[var].ClassName = id
 
         if file.Exists(path..'/shared.lua', 'LUA') then
-          util.include(path..'/shared.lua')
+          require_relative(path..'/shared.lua')
 
           register = true
         end
 
         if file.Exists(path..'/init.lua', 'LUA') then
-          util.include(path..'/init.lua')
+          require_relative(path..'/init.lua')
 
           register = true
         end
 
         if file.Exists(path..'/cl_init.lua', 'LUA') then
-          util.include(path..'/cl_init.lua')
+          require_relative(path..'/cl_init.lua')
 
           register = true
         end
@@ -528,7 +528,7 @@ do
         _G[var] = table.Copy(data.default_data)
         _G[var].ClassName = id
 
-        util.include(path)
+        require_relative(path)
 
         if data.clientside and !CLIENT then _G[var] = nil continue end
 
@@ -579,10 +579,10 @@ function Plugin.include_folders(folder)
         elseif v:find('/assets/') or v:find('/html/') then
           Pipeline.include_folder('html', folder..'/'..v)
         else
-          util.include_folder(folder..'/'..v)
+          require_relative_folder(folder..'/'..v)
         end
       else
-        util.include_folder(folder..'/'..v)
+        require_relative_folder(folder..'/'..v)
       end
     end
   end

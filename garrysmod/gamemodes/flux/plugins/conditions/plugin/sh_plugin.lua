@@ -11,8 +11,8 @@ function Conditions:get_all()
   return stored
 end
 
-util.include('sh_config.lua')
-util.include('sv_plugin.lua')
+require_relative('sh_config.lua')
+require_relative('sv_plugin.lua')
 
 function Conditions:OnPluginsLoaded()
   hook.run('RegisterConditions')

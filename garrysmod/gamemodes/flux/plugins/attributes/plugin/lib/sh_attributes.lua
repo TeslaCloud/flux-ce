@@ -75,7 +75,7 @@ function Attributes.include_type(id, global_var, folder)
   Pipeline.register(id, function(id, file_name, pipe)
     _G[global_var] = Attribute.new(id)
 
-    util.include(file_name)
+    require_relative(file_name)
 
     if Pipeline.is_aborted() then _G[global_var] = nil return end
 

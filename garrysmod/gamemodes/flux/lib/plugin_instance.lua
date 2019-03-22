@@ -1,12 +1,12 @@
 class 'PluginInstance'
 
 function PluginInstance:init(id, data)
-  self.name = data.name or 'Unknown Plugin'
-  self.author = data.author or 'Unknown Author'
-  self.folder = data.folder or name:to_id()
-  self.path = data.path or self.folder
-  self.description = data.description or 'This plugin has no description.'
-  self.id = id or data.id or name:to_id() or 'unknown'
+  self.name         = data.name         or 'Unknown Plugin'
+  self.author       = data.author       or 'Unknown Author'
+  self.folder       = data.folder       or name:to_id()
+  self.path         = data.path         or self.folder
+  self.description  = data.description  or 'This plugin has no description.'
+  self.id           = id or data.id     or name:to_id() or 'unknown'
 
   table.safe_merge(self, data)
 end

@@ -3,7 +3,7 @@ PLUGIN:set_global('SurfaceText')
 SurfaceText.texts = SurfaceText.texts or {}
 SurfaceText.pictures = SurfaceText.pictures or {}
 
-util.include('cl_hooks.lua')
+require_relative('cl_hooks.lua')
 
 function SurfaceText:RegisterPermissions()
   Bolt:register_permission('texts', 'Place / delete texts', 'Grants access to place and delete texts.', 'categories.level_design', 'assistent')
