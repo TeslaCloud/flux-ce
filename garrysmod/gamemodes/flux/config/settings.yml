@@ -38,3 +38,9 @@ server:
       key: "secret_key_goes_here"
       types:
         - "all"
+  # Use this section to set default values of configuration keys.
+  configuration:
+    # Root user's SteamID. They have access to everything.
+    # Make this a table is you want multiple root users
+    # like ['STEAM_0:0:1', 'STEAM_0:0:2']
+    root_steamid: ["STEAM_0:0:00000000", "STEAM_0:0:00000000"]

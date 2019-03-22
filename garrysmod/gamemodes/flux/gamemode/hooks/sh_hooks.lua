@@ -5,10 +5,10 @@ function GM:Initialize()
   hook.Remove('RenderScene', 'RenderStereoscopy')
 
   if SERVER then
-    local config_file = fileio.Read('gamemodes/flux/flux.yml')
+    local config_data = Settings.server.configuration
 
-    if config_file then
-      Config.import(config_file, CONFIG_FLUX)
+    if istable(config_data) then
+      Config.import(config_data, CONFIG_FLUX)
     end
 
     Config.load()
