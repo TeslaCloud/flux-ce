@@ -65,7 +65,7 @@ function ActiveRecord.Migrator:run_migrations(folder, force)
 
         print('-> '..folder..v)
         print('Updated '..self.schema.version..' -> '..migration.version)
-        print('('..math.Round(os.clock() - start_time, 4)..'ms)\n')
+        print('('..math.Round(os.clock() - start_time, 4)..'s)\n')
 
         self.schema.version = migration.version or self.schema.version
 
@@ -80,7 +80,7 @@ function ActiveRecord.Migrator:run_migrations(folder, force)
     end
 
     if migration_count > 0 then
-      print('Ran '..migration_count..' migration'..(migration_count > 1 and 's' or '')..' in '..math.Round(os.clock() - migration_start, 4)..'ms.')
+      print('Ran '..migration_count..' migration'..(migration_count > 1 and 's' or '')..' in '..math.Round(os.clock() - migration_start, 4)..'s.')
       self:generate_schema()
     end
   end
