@@ -10,16 +10,8 @@ function ActiveRecord.Migrator:init(version)
   self.schema_path = self.db_path..'/schema.lua'
 
   if !file.Exists(self.schema_path, 'GAME') then
-    if !file.Exists('gamemodes/flux/db/schema.lua', 'GAME') then
-      ErrorNoHalt "Warning - Unable to find the 'db/schema.lua' file. Attempting to generate schema...\n"
-      return self:generate_schema(version)
-    else
-      ErrorNoHalt 'Warning - The database structure file is defined in framework, not schema!\n'
-      ErrorNoHalt("You should move it to: "..self.schema_path..'\n')
-
-      self.db_path = 'gamemodes/flux/db'
-      self.schema_path = 'gamemodes/flux/db/schema.lua'
-    end
+    ErrorNoHalt "Warning - Unable to find the 'db/schema.lua' file. Attempting to generate schema...\n"
+    return self:generate_schema(version)
   end
 
   self.schema = include(self.schema_path:gsub('gamemodes/', ''))
