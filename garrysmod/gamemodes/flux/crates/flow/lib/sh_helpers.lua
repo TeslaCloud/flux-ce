@@ -1,3 +1,18 @@
+AddCSLuaFile()
+
+local should_ignore_client = false
+local should_ignore_server = false
+
+function require_ignore(who, should_ignore)
+  who = who:lower()
+
+  if who == 'server' or who == 'sv' then
+    should_ignore_server = should_ignore
+  else
+    should_ignore_client = should_ignore
+  end
+end
+
 -- A function to include a file based on it's prefix.
 function require_relative(file_name)
   if !file_name:EndsWith('.lua') then
@@ -5,16 +20,20 @@ function require_relative(file_name)
   end
 
   if SERVER then
-    if string.find(file_name, 'cl_') or file_name:EndsWith('/cl_init.lua') then
-      return AddCSLuaFile(file_name)
-    elseif !string.find(file_name, 'sv_') then
-      AddCSLuaFile(file_name)
+    if !should_ignore_client then
+      if string.find(file_name, 'cl_', 1, true) or file_name:EndsWith('/cl_init.lua') then
+        return AddCSLuaFile(file_name)
+      elseif !string.find(file_name, 'sv_', 1, true) then
+        AddCSLuaFile(file_name)
+      end
     end
   else
-    if string.find(file_name, 'sv_') or string.find(file_name, 'cratespec') or file_name:EndsWith('/init.lua') then
+    if string.find(file_name, 'sv_', 1, true) or string.find(file_name, 'cratespec', 1, true) or file_name:EndsWith('/init.lua') then
       return
     end
   end
+
+  if SERVER and should_ignore_server then return end
 
   return include(file_name)
 end
