@@ -30,7 +30,7 @@ local LUA_TOKENS = {
   ['super']     = 'super',        ['begin']     = 'begin',          ['rescue']    = 'rescue',
   ['+=']        = 'add_assign',   ['-=']        = 'sub_assign',     ['*=']        = 'mul_assign',
   ['/=']        = 'div_assign',   ['||=']       = 'or_assign',      ['&&=']       = 'and_assign',
-  ['^=']        = 'xor_assign',   ['%=']        = 'mod_assign'      ['|=']        = 'bor_assign',
+  ['^=']        = 'xor_assign',   ['%=']        = 'mod_assign',     ['|=']        = 'bor_assign',
   ['&=']        = 'band_assign',  ['>>=']       = 'brshift_assign', ['<<=']       = 'blshift_assign',
   ['<=>']       = 'spaceship',    ['>>']        = 'brshift',        ['<<']        = 'blshift',
   ['..=']       = 'con_assign',   ['->']        = 'arrow',          ['::']        = 'scope',
