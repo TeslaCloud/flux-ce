@@ -11,7 +11,7 @@ if !require_relative then
   include 'flux/crates/flow/lib/sh_helpers.lua'
 end
 
-if !Flux then
+if !Flux or (CLIENT and (!Flux or !Flux.shared)) then
   require_relative 'flux/lib/flux_struct'
 end
 

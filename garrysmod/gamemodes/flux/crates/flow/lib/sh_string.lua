@@ -1,5 +1,9 @@
 if !string.utf8lower then
-  include 'flux/lib/vendor/utf8.lua'
+  if SERVER then
+    include 'flux/lib/vendor/utf8.lua'
+  else
+    include 'flux/lib/vendor/utf8.min.lua'
+  end
 end
 
 local string_meta = getmetatable('')

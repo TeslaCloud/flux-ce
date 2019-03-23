@@ -21,3 +21,11 @@ if !Flux then
     }
   }
 end
+
+if CLIENT then
+  local files, folders = file.Find('_flux/client/*.lua', 'LUA')
+
+  for k, v in ipairs(files) do
+    include('_flux/client/'..v)
+  end
+end
