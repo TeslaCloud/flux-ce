@@ -27,3 +27,9 @@ if !string.utf8upper or !pon or !Cable or !YAML then
   Settings.configs  = Settings.configs or YAML.read('gamemodes/flux/config/config.yml')
   DatabaseSettings  = YAML.read('gamemodes/flux/config/database.yml')
 end
+
+if SERVER then
+  function CRATE:__installed__()
+    hook.Call('FluxCrateLoaded')
+  end
+end

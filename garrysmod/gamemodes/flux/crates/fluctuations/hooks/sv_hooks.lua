@@ -404,7 +404,7 @@ do
     end
   end)
 
-  function GM:OnSchemaLoaded()
+  function GM:FluxCrateLoaded()
     write_client_files()
   end
 
