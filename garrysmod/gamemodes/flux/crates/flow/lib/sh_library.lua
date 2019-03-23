@@ -1,3 +1,8 @@
+if !string.parse_parent then
+  include 'sh_aliases.lua'
+  include 'sh_string.lua'
+end
+
 function library(lib_name)
   local parent, name = lib_name:parse_parent()
 

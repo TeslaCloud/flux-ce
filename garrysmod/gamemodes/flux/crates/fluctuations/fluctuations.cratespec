@@ -6,7 +6,7 @@ Crate:describe(function(s)
   s.description 'Core files that provide most of what Flux actually is.'
   s.authors     { 'TeslaCloud Studios', 'Meow the Cat', 'AleXXX_007', 'NightAngel', 'Zigbomb' }
   s.email       'support@teslacloud.net'
-  s.files       { 'cl_flux.lua', 'shared.lua' }
+  s.files       'shared.lua'
   s.website     'https://teslacloud.net'
   s.license     'CC-BY-NC-SA 4.0'
 
