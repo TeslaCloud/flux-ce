@@ -97,6 +97,64 @@ function table.remove_functions(obj)
   return obj
 end
 
+--
+-- Function: table.serialize (table toSerialize)
+-- Description: Converts a table into the string format.
+-- Argument: table toSerialize - Table to convert.
+--
+-- Returns: string - pON-encoded table. If pON fails then JSON is returned.
+--
+function table.serialize(tab)
+  if istable(tab) then
+    local success, value = pcall(pon.encode, tab)
+
+    if !success then
+      success, value = pcall(util.TableToJSON, tab)
+
+      if !success then
+        ErrorNoHalt('Failed to serialize a table!\n')
+        ErrorNoHalt(value..'\n')
+
+        return ''
+      end
+    end
+
+    return value
+  else
+    print('You must serialize a table, not '..type(tab)..'!')
+    return ''
+  end
+end
+
+--
+-- Function: table.deserialize (string toDeserialize)
+-- Description: Converts a string back into table. Uses pON at first, if it fails it falls back to JSON.
+-- Argument: string toDeserialize - String to convert.
+--
+-- Returns: table - Decoded string.
+--
+function table.deserialize(data)
+  if isstring(data) then
+    local success, value = pcall(pon.decode, data)
+
+    if !success then
+      success, value = pcall(util.JSONToTable, data)
+
+      if !success then
+        ErrorNoHalt('Failed to deserialize a string!\n')
+        ErrorNoHalt(value..'\n')
+
+        return {}
+      end
+    end
+
+    return value
+  else
+    print('You must deserialize a string, not '..type(data)..'!')
+    return {}
+  end
+end
+
 function table.from_string(str)
   str = util.remove_newlines(str)
 

@@ -375,16 +375,16 @@ do
     settings_copy.server = nil
 
     if IS_DEVELOPMENT then
-      write_client_file('0_shared.lua', 'Flux.shared = Flux.deserialize([['..Flux.serialize(Flux.shared)..']])\n')
-      write_client_file('1_settings.lua', 'Settings = Flux.deserialize([['..Flux.serialize(settings_copy)..']])\n')
-      write_client_file('2_lang.lua', "library'Flux::Lang'\nFlux.Lang.stored = Flux.deserialize([["..Flux.serialize(Flux.Lang.stored).."]])\n")
+      write_client_file('0_shared.lua', 'Flux.shared = table.deserialize([['..table.serialize(Flux.shared)..']])\n')
+      write_client_file('1_settings.lua', 'Settings = table.deserialize([['..table.serialize(settings_copy)..']])\n')
+      write_client_file('2_lang.lua', "library'Flux::Lang'\nFlux.Lang.stored = table.deserialize([["..table.serialize(Flux.Lang.stored).."]])\n")
       write_html()
     else
       print 'Compiling clientside assets...'
 
-      local contents = 'Flux.shared=Flux.deserialize([['..Flux.serialize(Flux.shared)..']])'
-      contents = contents..'Settings=Flux.deserialize([['..Flux.serialize(settings_copy)..']])'
-      contents = contents.."library'Flux::Lang'Flux.Lang.stored=Flux.deserialize([["..Flux.serialize(Flux.Lang.stored).."]])"
+      local contents = 'Flux.shared=table.deserialize([['..table.serialize(Flux.shared)..']])'
+      contents = contents..'Settings=table.deserialize([['..table.serialize(settings_copy)..']])'
+      contents = contents.."library'Flux::Lang'Flux.Lang.stored=table.deserialize([["..table.serialize(Flux.Lang.stored).."]])"
       contents = contents..(Flux.HTML:generate_html_file() or '-- .keep')..' '
       contents = contents..(Flux.HTML:generate_css_file() or '-- .keep')..' '
       contents = contents..(Flux.HTML:generate_js_file() or '-- .keep')

@@ -42,7 +42,7 @@ local function val_to_str(val)
   if isstring(val) then
     return '"'..val:gsub('"', '\\"')..'"'
   elseif istable(val) then
-    return 'Flux.deserialize("'..Flux.serialize(val)..'")'
+    return 'table.deserialize("'..table.serialize(val)..'")'
   else
     return tostring(val)
   end
