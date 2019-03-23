@@ -8,6 +8,9 @@ if !Pipeline or !Plugin or !Config then
   require_relative 'config'
 end
 
+-- The rest of the file is serverside-only.
+if !SERVER then return end
+
 if !string.utf8upper or !pon or !Cable then
   AddCSLuaFile      'vendor/utf8.min.lua'
   AddCSLuaFile      'vendor/pon.min.lua'
@@ -28,8 +31,6 @@ if !string.utf8upper or !pon or !Cable or !YAML then
   DatabaseSettings  = YAML.read('gamemodes/flux/config/database.yml')
 end
 
-if SERVER then
-  function CRATE:__installed__()
-    hook.Call('FluxCrateLoaded', GM or GAMEMODE)
-  end
+function CRATE:__installed__()
+  hook.Call('FluxCrateLoaded', GM or GAMEMODE)
 end
