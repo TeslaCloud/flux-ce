@@ -51,33 +51,33 @@ for k, v in pairs(LUA_TOKENS) do
   idx = idx + 1
 end
 
-TK_lparen         = string.byte('(')
-TK_rparen         = string.byte(')')
-TK_lbracket       = string.byte('[')
-TK_rbracket       = string.byte(']')
-TK_lbrace         = string.byte('{')
-TK_rbrace         = string.byte('}')
-TK_vbar           = string.byte('|')
-TK_comma          = string.byte(',')
-TK_dot            = string.byte('.')
-TK_colon          = string.byte(':')
-TK_semicolon      = string.byte(';')
-TK_assign         = string.byte('=')
-TK_add            = string.byte('+')
-TK_sub            = string.byte('-')
-TK_mul            = string.byte('*')
-TK_div            = string.byte('/')
-TK_mod            = string.byte('%')
-TK_gt             = string.byte('>')
-TK_lt             = string.byte('<')
-TK_ex             = string.byte('!')
-TK_tild           = string.byte('~')
-TK_length         = string.byte('#')
-TK_bor            = string.byte('|')
-TK_band           = string.byte('&')
-TK_xor            = string.byte('^')
-TK_bflip          = string.byte('~')
-TK_question       = string.byte('?')
+TK_add        = string.byte '+'
+TK_assign     = string.byte '='
+TK_band       = string.byte '&'
+TK_bflip      = string.byte '~'
+TK_bor        = string.byte '|'
+TK_colon      = string.byte ':'
+TK_comma      = string.byte ','
+TK_div        = string.byte '/'
+TK_dot        = string.byte '.'
+TK_ex         = string.byte '!'
+TK_gt         = string.byte '>'
+TK_lbrace     = string.byte '{'
+TK_lbracket   = string.byte '['
+TK_length     = string.byte '#'
+TK_lparen     = string.byte '('
+TK_lt         = string.byte '<'
+TK_mod        = string.byte '%'
+TK_mul        = string.byte '*'
+TK_question   = string.byte '?'
+TK_rbrace     = string.byte '}'
+TK_rbracket   = string.byte ']'
+TK_rparen     = string.byte ')'
+TK_semicolon  = string.byte ';'
+TK_sub        = string.byte '-'
+TK_tild       = string.byte '~'
+TK_vbar       = string.byte '|'
+TK_xor        = string.byte '^'
 
 function Packager.Lexer:visualize(tk)
   if tk > 255 then
