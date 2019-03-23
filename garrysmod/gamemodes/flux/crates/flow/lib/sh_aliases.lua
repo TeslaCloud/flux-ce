@@ -644,7 +644,7 @@ if CLIENT then
   input.was_mouse_double_pressed = input.WasMouseDoublePressed
   input.was_mouse_pressed = input.WasMousePressed
   input.was_mouse_released = input.WasMouseReleased
-  
+
   killicon.add = killicon.Add
   killicon.add_alias = killicon.AddAlias
   killicon.add_font = killicon.AddFont

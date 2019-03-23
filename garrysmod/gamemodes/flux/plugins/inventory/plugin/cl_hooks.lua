@@ -80,7 +80,7 @@ Cable.receive('fl_inventory_refresh', function(inv_type, old_inv_type)
   if IsValid(PLAYER.hotbar) then
     PLAYER.hotbar:rebuild()
 
-    if (!IsValid(Flux.tab_menu) or (IsValid(Flux.tab_menu) and !Flux.tab_menu:IsVisible())) and 
+    if (!IsValid(Flux.tab_menu) or (IsValid(Flux.tab_menu) and !Flux.tab_menu:IsVisible())) and
     (inv_type == 'hotbar' or old_inv_type == 'hotbar') and
     !PLAYER.hotbar:IsVisible() then
       if !PLAYER.hotbar.next_popup or PLAYER.hotbar.next_popup < CurTime() then

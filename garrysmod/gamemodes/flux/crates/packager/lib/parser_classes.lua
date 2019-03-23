@@ -150,7 +150,7 @@ function ASTCall:inspect()
       str = str..' '
     end
   end
-  
+
   return str..'))'
 end
 

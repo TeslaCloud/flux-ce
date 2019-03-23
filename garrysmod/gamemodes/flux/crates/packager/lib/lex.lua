@@ -175,7 +175,7 @@ function Packager.Lexer:tokenize(input)
         next() -- eat opener
         break
       end
-  
+
       if current != '\\' then
         current, char_id = save_next()
       end
@@ -220,7 +220,7 @@ function Packager.Lexer:tokenize(input)
       while char.is_ident(char_id) do
         current, char_id = save_next()
       end
-      
+
       if LUA_TOKENS[buf] then
         push(NAME_TO_ENUM[buf], clear())
         return true

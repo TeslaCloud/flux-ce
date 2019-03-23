@@ -64,11 +64,11 @@ function Bolt:RegisterConditions()
       return util.process_operator(data.operator, player:get_role(), data.role)
     end,
     set_parameters = function(id, data, panel, menu, parent)
-      parent:create_selector(data.name, 'conditions.role.message', 'conditions.roles', self:get_roles(), 
+      parent:create_selector(data.name, 'conditions.role.message', 'conditions.roles', self:get_roles(),
       function(selector, group)
         selector:add_choice(t(group.name), function()
           panel.data.role = group.id
-    
+
           panel.update()
         end)
       end)

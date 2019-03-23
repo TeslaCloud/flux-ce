@@ -229,7 +229,7 @@ function string.parse_table(str, ref)
 
   for k, v in ipairs(tables) do
     ref = ref[v]
-  
+
     if !istable(ref) then return false, v end
   end
 

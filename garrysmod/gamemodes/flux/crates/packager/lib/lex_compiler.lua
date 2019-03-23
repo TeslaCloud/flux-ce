@@ -15,5 +15,5 @@ end
 function Luna.SimpleCompiler:compile()
   local tokens = self.tokens -- for quicker access
   local level = 0 -- current indent level
-  
+
 end

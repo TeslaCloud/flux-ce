@@ -16,7 +16,7 @@ if !LITE_REFRESH then
     ErrorNoHalt('The fileio module has failed to load!\nPlease make sure that you have gmsv_fileio_'..((system.IsWindows() and 'win32') or 'linux')..'.dll in garrysmod/lua/bin folder!\nAborting startup...\n')
     return
   end
-  
+
   include 'flux/lib/crate.lua'
 
   Crate:include 'flux'

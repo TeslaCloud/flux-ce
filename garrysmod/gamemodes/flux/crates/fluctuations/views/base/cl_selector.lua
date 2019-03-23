@@ -5,7 +5,7 @@ function PANEL:Init()
   self:SetDraggable(false)
   self:SetBackgroundBlur(true)
   self:SetDrawOnTop(true)
-  
+
   self.text = vgui.Create('DLabel', self)
   self.text:Dock(TOP)
   self.text:SetText('')

@@ -73,7 +73,7 @@ else
     if !isstring(folder) then return end
 
     local files, dirs = file.find('flux/'..folder..'/*', 'DATA')
- 
+
     return files
   end
 

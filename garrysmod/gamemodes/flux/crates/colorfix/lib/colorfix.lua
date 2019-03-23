@@ -135,7 +135,7 @@ function print_colored(text, color, background_color, style)
     if style.bold == true then
       color_sequence = color_sequence.."\27[1m"
     end
-    
+
     if style.dim == true or style.dimmed == true then
       color_sequence = color_sequence.."\27[2m"
     end

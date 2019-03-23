@@ -13,7 +13,7 @@ function Doors:PlayerUse(player, entity)
   local cur_time = CurTime()
 
   if (!entity.next_use or entity.next_use <= cur_time) and IsValid(entity) and entity:is_door() and
-  player:GetPos():Distance(entity:GetPos()) < 115 and 
+  player:GetPos():Distance(entity:GetPos()) < 115 and
   hook.run('PlayerCanLockDoor', player, entity) and player:IsSprinting() then
     local locked = entity:get_nv('fl_locked')
 

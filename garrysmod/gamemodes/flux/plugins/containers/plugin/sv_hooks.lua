@@ -132,7 +132,7 @@ function Container:ItemContainerMove(player, instance_ids, inv_type, x, y, entit
 
     if hook.run('CanItemMoveToContainer', player, item_table, inv_type, x, y, entity) == false or
        hook.run('CanItemTransfer', player, item_table, inv_type, x, y) == false or
-       hook.run('CanItemMove', player, item_table, inv_type, x, y) == false or 
+       hook.run('CanItemMove', player, item_table, inv_type, x, y) == false or
        hook.run('CanItemStack', player, item_table, inv_type, x, y) == false then
       return
     end
@@ -162,7 +162,7 @@ function Container:ItemContainerMove(player, instance_ids, inv_type, x, y, entit
         table.insert(ply_inv[y][x], v)
         table.remove_by_value(ent_inv[old_y][old_x], v)
 
-        item_table.inventory_entity = nil 
+        item_table.inventory_entity = nil
       end
 
       item_table.inventory_type = inv_type

@@ -40,11 +40,11 @@ function Factions:RegisterConditions()
       return util.process_operator(data.operator, player:get_faction_id(), data.faction_id)
     end,
     set_parameters = function(id, data, panel, menu, parent)
-      parent:create_selector(data.name, 'conditions.faction.message', 'conditions.factions', self.all(), 
+      parent:create_selector(data.name, 'conditions.faction.message', 'conditions.factions', self.all(),
       function(selector, _faction)
         selector:add_choice(t(_faction.name), function()
           panel.data.faction_id = _faction.faction_id
-    
+
           panel.update()
         end)
       end)
@@ -79,20 +79,20 @@ function Factions:RegisterConditions()
       return util.process_operator(data.operator, player:get_rank(), data.rank)
     end,
     set_parameters = function(id, data, panel, menu, parent)
-      parent:create_selector(data.name, 'conditions.faction.message', 'conditions.factions', self.all(), 
+      parent:create_selector(data.name, 'conditions.faction.message', 'conditions.factions', self.all(),
       function(faction_selector, _faction)
         if #_faction:get_ranks() == 0 then return end
 
         faction_selector:add_choice(t(_faction.name), function()
           panel.data.faction_id = _faction.faction_id
-    
+
           panel.update()
 
-          parent:create_selector(data.name, 'conditions.rank.message', 'conditions.ranks', _faction:get_ranks(), 
+          parent:create_selector(data.name, 'conditions.rank.message', 'conditions.ranks', _faction:get_ranks(),
           function(rank_selector, rank)
             rank_selector:add_choice(t(rank.name), function()
               panel.data.rank = rank.id
-        
+
               panel.update()
             end)
           end)

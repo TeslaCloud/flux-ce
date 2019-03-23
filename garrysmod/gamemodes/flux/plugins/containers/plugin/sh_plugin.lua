@@ -112,7 +112,7 @@ Container:register_prop('models/props_c17/oildrum001.mdl', {
 Container:register_prop({
   'models/props_combine/breendesk.mdl',
   'models/props_interiors/Furniture_Desk01a.mdl'
-}, 
+},
 {
   name = 'container.desk.title',
   desc = 'container.desk.desc',
@@ -242,7 +242,7 @@ Container:register_prop({
   'models/Items/ammocrate_smg1.mdl',
   'models/Items/ammocrate_ar2.mdl',
   'models/Items/ammocrate_grenade.mdl'
-}, 
+},
 {
   name = 'container.metal_box.title',
   desc = 'container.metal_box.desc',

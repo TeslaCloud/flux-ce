@@ -103,7 +103,7 @@ end
 function Items:PlayerCanUseItem(player, item_table, action, ...)
   local trace = player:GetEyeTraceNoCursor()
 
-  if (!player:has_item_by_id(item_table.instance_id) and !IsValid(item_table.entity)) or 
+  if (!player:has_item_by_id(item_table.instance_id) and !IsValid(item_table.entity)) or
   (IsValid(item_table.entity) and trace.Entity and trace.Entity != item_table.entity) then
     return false
   end

@@ -117,7 +117,7 @@ function Inventory:OnItemMove(player, instance_ids, inv_type, x, y)
     local item_table = Item.find_instance_by_id(v)
 
     if hook.run('CanItemTransfer', player, item_table, inv_type, x, y) == false or
-       hook.run('CanItemMove', player, item_table, inv_type, x, y) == false or 
+       hook.run('CanItemMove', player, item_table, inv_type, x, y) == false or
        hook.run('CanItemStack', player, item_table, inv_type, x, y) == false then
       return
     end

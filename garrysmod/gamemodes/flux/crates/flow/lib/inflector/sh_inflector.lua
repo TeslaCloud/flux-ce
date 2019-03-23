@@ -92,7 +92,7 @@ function Flow.Inflector:pluralize(word)
   if self:uncountables()[word] then return original_word end
 
   for k, v in ipairs(self:plurals()) do
-    local original_text = word 
+    local original_text = word
     local text, replacements = word:gsub(v.expression, v.replacement)
 
     if (replacements or 0) > 0 then
@@ -116,7 +116,7 @@ function Flow.Inflector:singularize(word)
   if self:uncountables()[word] then return original_word end
 
   for k, v in ipairs(self:singulars()) do
-    local original_text = word 
+    local original_text = word
     local text, replacements = word:gsub(v.expression, v.replacement)
 
     if (replacements or 0) > 0 then

@@ -372,7 +372,7 @@ do
 
     -- Do not send server-only settings to client!
     local settings_copy = table.Copy(Settings)
-    settings_copy.server = nil 
+    settings_copy.server = nil
 
     if IS_DEVELOPMENT then
       write_client_file('0_shared.lua', 'Flux.shared = Flux.deserialize([['..Flux.serialize(Flux.shared)..']])\n')
@@ -475,7 +475,7 @@ function GM:OnConfigSet(key, old_value, new_value)
   elseif key == 'jump_power' then
     for k, v in ipairs(player.all()) do
       v:SetJumpPower(new_value)
-    end 
+    end
   end
 end
 

@@ -53,7 +53,7 @@ function Container:OnItemMove(instance_ids, inventory_panel, receiver)
   local item_table = Item.find_instance_by_id(instance_ids[1])
 
   if IsValid(inventory_panel.entity) or item_table and item_table.inventory_type == 'container' then
-    Cable.send('fl_item_container_move', instance_ids, inventory_panel.inventory_type, receiver.inv_x, receiver.inv_y, 
+    Cable.send('fl_item_container_move', instance_ids, inventory_panel.inventory_type, receiver.inv_x, receiver.inv_y,
     inventory_panel.entity or item_table.inventory_entity)
   end
 end

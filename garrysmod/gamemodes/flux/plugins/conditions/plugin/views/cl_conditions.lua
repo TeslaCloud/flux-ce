@@ -71,7 +71,7 @@ function PANEL:node_options(panel, root, first)
   local menu = DermaMenu()
 
   local sub_menu = menu:AddSubMenu(t'conditions.add_condition')
-  
+
   for k, v in pairs(Conditions:get_all()) do
     sub_menu:AddOption(t(v.name), function()
       self:add_condition(panel, k)
@@ -104,7 +104,7 @@ function PANEL:node_options(panel, root, first)
           for k, v in pairs(util['get_'..data.set_operator..'_operators']()) do
             selector:add_choice(t('operators.'..k)..' ('..v..')', function()
               panel.data.operator = k
-        
+
               panel.update()
             end)
           end
@@ -145,7 +145,7 @@ function PANEL:add_condition(parent, id, data)
         end
       end
     end
-  
+
     node:SetText(t(condition_data.text, args))
   end
 

@@ -50,7 +50,7 @@ function ItemEquippable:can_transfer(player, inv_type, x, y)
         elseif istable(self.equip_slot) then
           for k1, v1 in pairs(self.equip_slot) do
             if v1 == item_table.equip_slot then
-              return false 
+              return false
             elseif istable(item_table.equip_slot) then
               for k2, v2 in pairs(item_table.equip_slot) do
                 if v1 == v2 then
