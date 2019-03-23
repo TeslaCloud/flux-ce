@@ -204,7 +204,6 @@ local operators = {
   end
 }
 
-
 local operators_symbol = {
   less = '<',
   greater = '>',

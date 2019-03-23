@@ -349,7 +349,6 @@ do
   end
 end
 
-
 Pipeline.register('role', function(id, file_name, pipe)
   ROLE = Role.new(id)
 
