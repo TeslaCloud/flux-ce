@@ -10,24 +10,28 @@ class 'Packager::Lexer'
 
 local char = include 'char.lua'
 local LUA_TOKENS = {
-  ['and']      = 'and',         ['in']       = 'in',          ['..']        = 'concat',
-  ['break']    = 'break',       ['local']    = 'local',       ['...']       = 'dots',
-  ['do']       = 'do',          ['nil']      = 'nil',         ['==']        = 'eq',
-  ['else']     = 'else',        ['not']      = 'not',         ['>=']        = 'ge',
-  ['elseif']   = 'elseif',      ['or']       = 'or',          ['<=']        = 'le',
-  ['end']      = 'end',         ['return']   = 'return',      ['!=']        = 'ne',
-  ['false']    = 'false',       ['then']     = 'then',        ['<number>']  = 'number',
-  ['for']      = 'for',         ['true']     = 'true',        ['<name>']    = 'name',
-  ['function'] = 'function',    ['while']    = 'while',       ['<string>']  = 'string',
-  ['if']       = 'if',          ['continue'] = 'continue',    ['<eof>']     = 'eof',
+  ['and']       = 'and',        ['in']        = 'in',         ['..']        = 'concat',
+  ['break']     = 'break',      ['local']     = 'local',      ['...']       = 'dots',
+  ['do']        = 'do',         ['nil']       = 'nil',        ['==']        = 'eq',
+  ['else']      = 'else',       ['not']       = 'not',        ['>=']        = 'ge',
+  ['elseif']    = 'elseif',     ['or']        = 'or',         ['<=']        = 'le',
+  ['end']       = 'end',        ['return']    = 'return',     ['!=']        = 'ne',
+  ['false']     = 'false',      ['then']      = 'then',       ['~=']        = 'ne',
+  ['for']       = 'for',        ['true']      = 'true',       ['<number>']  = 'number',
+  ['function']  = 'function',   ['while']     = 'while',      ['<name>']    = 'name',
+  ['if']        = 'if',         ['continue']  = 'continue',   ['<string>']  = 'string',
+                                                              ['<eof>']     = 'eof',
                                                               ['<comment>'] = 'comment',
   -- Luna
-  ['import']   = 'import',      ['export']   = 'export',      ['class']     = 'class',
-  ['func']     = 'func',        ['unless']   = 'unless',      ['until']     = 'until',
-  ['+=']       = 'add_assign',  ['-=']       = 'sub_assign',  ['*=']        = 'mul_assign',
-  ['/=']       = 'div_assign',  ['||=']      = 'or_assign',   ['&&=']       = 'and_assign',
-  ['..=']      = 'con_assign',  ['->']       = 'arrow',
-  ['elsif']    = 'elsif'
+  ['import']    = 'import',     ['export']    = 'export',     ['class']     = 'class',
+  ['func']      = 'func',       ['unless']    = 'unless',     ['until']     = 'until',
+  ['from']      = 'from',       ['switch']    = 'switch',     ['case']      = 'case',
+  ['elsif']     = 'elsif',      ['lib']       = 'library',    ['library']   = 'library',
+  ['super']     = 'super',      ['begin']     = 'begin',      ['rescue']    = 'rescue',
+  ['+=']        = 'add_assign', ['-=']        = 'sub_assign', ['*=']        = 'mul_assign',
+  ['/=']        = 'div_assign', ['||=']       = 'or_assign',  ['&&=']       = 'and_assign',
+  ['..=']       = 'con_assign', ['->']        = 'arrow',      ['::']        = 'scope',
+  ['&&']        = 'and',        ['||']        = 'or',         ['@@']        = 'this_class'
 }
 local TK_TO_REPRESENTATION = {}
 local NAME_TO_ENUM = {}
