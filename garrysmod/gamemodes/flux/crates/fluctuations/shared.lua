@@ -1,20 +1,21 @@
--- Define basic GM info fields.
-GM.Name          = 'Flux'
-GM.Author        = 'TeslaCloud Studios'
-GM.Website       = 'https://teslacloud.net/'
-GM.Email         = 'support@teslacloud.net'
+local metadata = Flux.__crate__
 
-local version    = '0.6.3-alpha'
+-- Define basic GM info fields.
+GM.Name          = metadata.name
+GM.Author        = metadata.author[1]
+GM.Website       = metadata.email
+GM.Email         = metadata.website
+
+local version    = metadata.version
 
 -- Define Flux-Specific fields.
 GM.version       = version
-GM.version_num   = Flux.
-GM.date          = '3/20/2019'
-GM.build         = '20190322'
-GM.description   = 'A free roleplay gamemode framework.'
-GM.code_name     = 'Cherry Soda'
+GM.date          = metadata.date
+GM.build         = string.gsub(metadata.date or '', '%-', '')
+GM.description   = metadata.description
+GM.code_name     = 'Sweet Mead'
 
-print('Flux version '..GM.version..' ('..GM.code_name..')')
+print('Flux core version '..version..' ('..GM.code_name..')')
 
 -- It would be very nice of you to leave below values as they are if you're using official schemas.
 -- While we can do nothing to stop you from changing them, we'll very much appreciate it if you don't.
@@ -40,20 +41,10 @@ function Flux.get_version()
 end
 
 if !LITE_REFRESH then
-  -- Shared table contains the info that will be networked
-  -- to clients automatically when they load.
-  Flux.shared = Flux.shared or {
-    schema_folder = Flux.schema,
-    plugin_info = {},
-    unloaded_plugins = {},
-    configs = {},
-    deps_info = {}
-  }
-
   print('Environment: '..FLUX_ENV)
 
-  include 'core/sh_core.lua'
-  require_relative 'core/sh_enums.lua'
+  require_relative 'core/sh_core'
+  require_relative 'core/sh_enums'
 
   if CLIENT then
     local files, folders = file.Find('_flux/client/*.lua', 'LUA')
@@ -65,30 +56,11 @@ if !LITE_REFRESH then
     include 'lib/sh_lang.lua'
   end
 
-  -- Include the Crate (Flux libraries) class
-  require_relative 'lib/required/sh_crate.lua'
-
-  -- Fix colors on Linux!
-  if SERVER and system.IsLinux() then
-    Crate:include 'colorfix'
-  end
-
-  Crate:include 'flow'
-
-  require_relative 'core/cl_core.lua'
-  require_relative 'core/sv_core.lua'
-
-  -- This way we put things we want loaded BEFORE anything else in here, like plugin, config, etc.
-  require_relative_folder('lib/required', true)
+  require_relative 'core/cl_core'
+  require_relative 'core/sv_core'
 
   -- Read configs.
   Config.read(Settings.configs)
-
-  -- Include ActiveRecord for database management.
-  Crate:include 'active_record'
-
-  -- And ActiveNetwork for easy variable networking.
-  Crate:include 'active_network'
 
   -- So that we don't get duplicates on refresh.
   Plugin.clear_cache()
@@ -97,13 +69,11 @@ if !LITE_REFRESH then
   require_relative_folder('lib/classes', true)
   require_relative_folder('lib/meta', true)
   if SERVER then
-    Crate:include 'packager'
-
-    Pipeline.include_folder('language', 'flux/gamemode/languages')
-    Pipeline.include_folder('migrations', 'flux/gamemode/migrations')
-    Pipeline.include_folder('html', 'flux/gamemode/views/html')
-    Pipeline.include_folder('html', 'flux/gamemode/views/assets/stylesheets')
-    Pipeline.include_folder('html', 'flux/gamemode/views/assets/javascripts')
+    Pipeline.include_folder('language', 'flux/crates/fluctuations/languages')
+    Pipeline.include_folder('migrations', 'flux/crates/fluctuations/migrations')
+    Pipeline.include_folder('html', 'flux/crates/fluctuations/views/html')
+    Pipeline.include_folder('html', 'flux/crates/fluctuations/views/assets/stylesheets')
+    Pipeline.include_folder('html', 'flux/crates/fluctuations/views/assets/javascripts')
   end
   require_relative_folder('models', true)
   require_relative_folder('controllers', true)
@@ -125,10 +95,10 @@ if !LITE_REFRESH then
 
     -- Theme factory is needed for any other themes that may be in the themes folder.
     Pipeline.include('Theme', 'themes/cl_theme_factory.lua')
-    Pipeline.include_folder('Theme', 'flux/gamemode/themes')
+    Pipeline.include_folder('Theme', 'flux/crates/fluctuations/themes')
   end
 
-  Pipeline.include_folder('tool', 'flux/gamemode/tools')
+  Pipeline.include_folder('tool', 'flux/crates/fluctuations/tools')
 end
 
 require_relative_folder('hooks', true)
