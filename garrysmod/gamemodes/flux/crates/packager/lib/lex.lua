@@ -10,28 +10,32 @@ class 'Packager::Lexer'
 
 local char = include 'char.lua'
 local LUA_TOKENS = {
-  ['and']       = 'and',        ['in']        = 'in',         ['..']        = 'concat',
-  ['break']     = 'break',      ['local']     = 'local',      ['...']       = 'dots',
-  ['do']        = 'do',         ['nil']       = 'nil',        ['==']        = 'eq',
-  ['else']      = 'else',       ['not']       = 'not',        ['>=']        = 'ge',
-  ['elseif']    = 'elseif',     ['or']        = 'or',         ['<=']        = 'le',
-  ['end']       = 'end',        ['return']    = 'return',     ['!=']        = 'ne',
-  ['false']     = 'false',      ['then']      = 'then',       ['~=']        = 'ne',
-  ['for']       = 'for',        ['true']      = 'true',       ['<number>']  = 'number',
-  ['function']  = 'function',   ['while']     = 'while',      ['<name>']    = 'name',
-  ['if']        = 'if',         ['continue']  = 'continue',   ['<string>']  = 'string',
-                                                              ['<eof>']     = 'eof',
-                                                              ['<comment>'] = 'comment',
+  ['and']       = 'and',          ['in']        = 'in',             ['..']        = 'concat',
+  ['break']     = 'break',        ['local']     = 'local',          ['...']       = 'dots',
+  ['do']        = 'do',           ['nil']       = 'nil',            ['==']        = 'eq',
+  ['else']      = 'else',         ['not']       = 'not',            ['>=']        = 'ge',
+  ['elseif']    = 'elseif',       ['or']        = 'or',             ['<=']        = 'le',
+  ['end']       = 'end',          ['return']    = 'return',         ['!=']        = 'ne',
+  ['false']     = 'false',        ['then']      = 'then',           ['~=']        = 'lne',
+  ['for']       = 'for',          ['true']      = 'true',           ['<number>']  = 'number',
+  ['function']  = 'function',     ['while']     = 'while',          ['<name>']    = 'name',
+  ['if']        = 'if',           ['continue']  = 'continue',       ['<string>']  = 'string',
+                                                                    ['<eof>']     = 'eof',
+                                                                    ['<comment>'] = 'comment',
   -- Luna
-  ['import']    = 'import',     ['export']    = 'export',     ['class']     = 'class',
-  ['func']      = 'func',       ['unless']    = 'unless',     ['until']     = 'until',
-  ['from']      = 'from',       ['switch']    = 'switch',     ['case']      = 'case',
-  ['elsif']     = 'elsif',      ['lib']       = 'library',    ['library']   = 'library',
-  ['super']     = 'super',      ['begin']     = 'begin',      ['rescue']    = 'rescue',
-  ['+=']        = 'add_assign', ['-=']        = 'sub_assign', ['*=']        = 'mul_assign',
-  ['/=']        = 'div_assign', ['||=']       = 'or_assign',  ['&&=']       = 'and_assign',
-  ['..=']       = 'con_assign', ['->']        = 'arrow',      ['::']        = 'scope',
-  ['&&']        = 'and',        ['||']        = 'or',         ['@@']        = 'this_class'
+  ['import']    = 'import',       ['export']    = 'export',         ['class']     = 'class',
+  ['func']      = 'func',         ['unless']    = 'unless',         ['until']     = 'until',
+  ['from']      = 'from',         ['switch']    = 'switch',         ['case']      = 'case',
+  ['elsif']     = 'elsif',        ['lib']       = 'library',        ['library']   = 'library',
+  ['super']     = 'super',        ['begin']     = 'begin',          ['rescue']    = 'rescue',
+  ['+=']        = 'add_assign',   ['-=']        = 'sub_assign',     ['*=']        = 'mul_assign',
+  ['/=']        = 'div_assign',   ['||=']       = 'or_assign',      ['&&=']       = 'and_assign',
+  ['^=']        = 'xor_assign',   ['%=']        = 'mod_assign'      ['|=']        = 'bor_assign',
+  ['&=']        = 'band_assign',  ['>>=']       = 'brshift_assign', ['<<=']       = 'blshift_assign',
+  ['<=>']       = 'spaceship',    ['>>']        = 'brshift',        ['<<']        = 'blshift',
+  ['..=']       = 'con_assign',   ['->']        = 'arrow',          ['::']        = 'scope',
+  ['&&']        = 'and',          ['||']        = 'or',             ['@@']        = 'this_class',
+  ['**']        = 'pow',          ['**=']       = 'pow_assign'
 }
 local TK_TO_REPRESENTATION = {}
 local NAME_TO_ENUM = {}
@@ -63,13 +67,17 @@ TK_add            = string.byte('+')
 TK_sub            = string.byte('-')
 TK_mul            = string.byte('*')
 TK_div            = string.byte('/')
-TK_pow            = string.byte('^')
 TK_mod            = string.byte('%')
 TK_gt             = string.byte('>')
 TK_lt             = string.byte('<')
 TK_ex             = string.byte('!')
 TK_tild           = string.byte('~')
 TK_length         = string.byte('#')
+TK_bor            = string.byte('|')
+TK_band           = string.byte('&')
+TK_xor            = string.byte('^')
+TK_bflip          = string.byte('~')
+TK_question       = string.byte('?')
 
 function Packager.Lexer:visualize(tk)
   if tk > 255 then
