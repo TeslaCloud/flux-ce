@@ -24,4 +24,5 @@ Crate:describe(function(s)
   s.depends     'active_record'
   s.depends     'active_network'
   s.depends     'packager'
+  s.depends     'fluctuations'
 end)
