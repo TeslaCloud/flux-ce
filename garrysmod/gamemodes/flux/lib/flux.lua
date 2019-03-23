@@ -2,8 +2,10 @@ if !Flux then
   require_relative 'flux_struct'
 end
 
-if !Pipeline then
+if !Pipeline or !Plugin or !Config then
   require_relative 'pipeline'
+  require_relative 'plugin'
+  require_relative 'config'
 end
 
 if !string.utf8upper or !pon or !Cable then

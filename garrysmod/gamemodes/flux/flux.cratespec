@@ -6,7 +6,7 @@ Crate:describe(function(s)
   s.description 'A gamemode framework made primarily for database-driven roleplay gamemodes.'
   s.authors     { 'TeslaCloud Studios', 'Meow the Cat', 'AleXXX_007', 'NightAngel', 'Zig' }
   s.email       'support@teslacloud.net'
-  s.files       { 'lib/flux.lua', 'lib/config.lua', 'lib/pipeline.lua', 'lib/plugin.lua' }
+  s.files       { 'lib/flux.lua' }
   s.global      'Flux'
   s.website     'https://teslacloud.net'
   s.license     'CC-BY-NC-SA 4.0'
