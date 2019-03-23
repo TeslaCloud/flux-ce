@@ -22,9 +22,6 @@ if !LITE_REFRESH then
   Crate:include 'flux'
 end
 
--- Initiate shared boot.
-include 'shared.lua'
-
 if Flux.initialized then
   MsgC(Color(0, 255, 100, 255), 'Code reloaded in '..math.Round(os.clock() - start_time, 3)..' second(s)\n')
 else
