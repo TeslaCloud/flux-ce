@@ -30,6 +30,6 @@ end
 
 if SERVER then
   function CRATE:__installed__()
-    hook.Call('FluxCrateLoaded')
+    hook.Call('FluxCrateLoaded', GM or GAMEMODE)
   end
 end
