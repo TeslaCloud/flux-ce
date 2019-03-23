@@ -7,7 +7,7 @@
 --]]
 
 if !font then
-  include('flux/gamemode/lib/cl_font.lua')
+  include('flux/crates/fluctuations/lib/cl_font.lua')
 end
 
 library 'FontAwesome'

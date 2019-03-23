@@ -23,7 +23,7 @@ end
 function require_relative_folder(dir, base, recursive)
   if base then
     if isbool(base) then
-      base = 'flux/gamemode/'
+      base = 'flux/crates/fluctuations/'
     elseif !base:EndsWith('/') then
       base = base..'/'
     end

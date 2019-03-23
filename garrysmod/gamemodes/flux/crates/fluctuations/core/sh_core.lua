@@ -1,8 +1,8 @@
 AddCSLuaFile()
 
 if !string.parse_parent then
-  include 'flux/gamemode/lib/flow/lib/sh_aliases.lua'
-  include 'flux/gamemode/lib/flow/lib/sh_string.lua'
+  include 'flux/cratesflow/lib/sh_aliases.lua'
+  include 'flux/crates/flow/lib/sh_string.lua'
 end
 
 --
