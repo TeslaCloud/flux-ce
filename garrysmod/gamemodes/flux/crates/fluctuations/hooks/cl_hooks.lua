@@ -311,15 +311,15 @@ function GM:HUDDrawPickupHistory()
 end
 
 function GM:PopulateToolMenu()
-  for ToolName, TOOL in pairs(Flux.Tool.stored) do
+  for tool_name, TOOL in pairs(Flux.Tool.stored) do
     if TOOL.AddToMenu != false then
       spawnmenu.AddToolMenuOption(
         TOOL.Tab or 'Main',
         TOOL.Category or 'New Category',
-        ToolName,
-        TOOL.Name or t(ToolName),
-        TOOL.Command or 'gmod_tool '..ToolName,
-        TOOL.ConfigName or ToolName,
+        tool_name,
+        TOOL.Name or t(tool_name),
+        TOOL.Command or 'gmod_tool '..tool_name,
+        TOOL.ConfigName or tool_name,
         TOOL.BuildCPanel
       )
     end
