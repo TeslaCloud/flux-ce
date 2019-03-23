@@ -188,6 +188,12 @@ end
 
 do
   local function do_include(file_path, lib_path, full_path)
+    local parent_crate
+
+    if Crate.current then
+      parent_crate = Crate.current
+    end
+
     Crate.current = Package.new(file_path, lib_path, full_path)
     CRATE = Crate.current
 
@@ -201,8 +207,8 @@ do
 
     Crate.installed[lib_path] = Crate.current
 
-    Crate.current = nil
-    CRATE         = nil
+    Crate.current = parent_crate
+    CRATE         = parent_crate
   end
 
   --- Attempts to include the package with the specified name.
