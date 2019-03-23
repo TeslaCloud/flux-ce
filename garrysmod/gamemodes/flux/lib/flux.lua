@@ -1,3 +1,11 @@
+if !Flux then
+  require_relative 'flux_struct'
+end
+
+if !Pipeline then
+  require_relative 'pipeline'
+end
+
 if !string.utf8upper or !pon or !Cable then
   AddCSLuaFile      'vendor/utf8.min.lua'
   AddCSLuaFile      'vendor/pon.min.lua'

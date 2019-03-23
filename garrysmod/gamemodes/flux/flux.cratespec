@@ -16,6 +16,11 @@ Crate:describe(function(s)
   end
 
   s.depends     'flow'
+
+  if !Settings then
+    require_relative 'lib/flux'
+  end
+
   s.depends     'active_record'
   s.depends     'active_network'
   s.depends     'packager'
