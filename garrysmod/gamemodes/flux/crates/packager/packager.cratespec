@@ -10,6 +10,7 @@ Crate:describe(function(s)
   s.global      'Packager'
   s.website     'https://teslacloud.net'
   s.license     'MIT'
+  s.serverside  true
 
   s.depends     'flow'
 end)

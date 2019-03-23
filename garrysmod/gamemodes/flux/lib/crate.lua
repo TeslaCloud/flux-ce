@@ -93,6 +93,18 @@ function Crate:describe(callback)
 
   local meta = self.current.metadata
 
+  if SERVER and meta.clientside then
+    if istable(meta.file) then
+      for k, file in ipairs(meta.file) do
+        AddCSLuaFile(file)
+      end
+    elseif isstring(meta.file) then
+      AddCSLuaFile(meta.file)
+    end
+
+    return self.current
+  end
+
   if istable(meta.global) then
     for k, v in ipairs(meta.global) do
       _G[v] = istable(_G[v]) and _G[v] or {}
@@ -118,6 +130,10 @@ function Crate:describe(callback)
     end
   end
 
+  if meta.serverside then
+    require_ignore('client', true)
+  end
+
   local full_path = meta.full_path
 
   if istable(meta.file) then
@@ -139,6 +155,10 @@ function Crate:describe(callback)
     else
       include(full_path..file)
     end
+  end
+
+  if meta.serverside then
+    require_ignore('client', false)
   end
 
   return self.current
@@ -202,7 +222,12 @@ do
       Crate:describe()
     else
       include(file_path)
-      Flux.shared.crates[lib_path] = table.Copy(Crate.current.metadata)
+
+      if !Crate.current.metadata.serverside then
+        Flux.shared.crates[lib_path] = table.Copy(Crate.current.metadata)
+      else
+        Flux.shared.crates[lib_path] = false
+      end
     end
 
     Crate.installed[lib_path] = Crate.current
@@ -241,7 +266,11 @@ do
         error('could not load "'..name..'" (library not found)')
       end
     else
-      return do_include(crate_metadata[name].file_path, name, name)
+      local meta = crate_metadata[name]
+
+      if meta == false then return end
+
+      return do_include(meta.file_path, name, name)
     end
   end
 end

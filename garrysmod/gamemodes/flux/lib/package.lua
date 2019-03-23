@@ -13,7 +13,9 @@ function Package:init(file_path, lib_path, full_path)
     website     = '',
     license     = '',
     global      = '',
-    deps        = { }
+    deps        = { },
+    serverside  = false,
+    clientside  = false
   }
 
   for k, v in pairs(self.metadata) do
