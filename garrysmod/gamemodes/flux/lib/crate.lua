@@ -207,6 +207,10 @@ do
 
     Crate.installed[lib_path] = Crate.current
 
+    if isfunction(Crate.current.__installed__) then
+      Crate.current:__installed__()
+    end
+
     Crate.current = parent_crate
     CRATE         = parent_crate
   end
