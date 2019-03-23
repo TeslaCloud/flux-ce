@@ -9,7 +9,7 @@ CHAT_SIZE   = 3
 CHAT_ITALIC = 4
 CHAT_BOLD   = 5
 
-require_relative('cl_plugin.lua')
-require_relative('sv_plugin.lua')
-require_relative('cl_hooks.lua')
-require_relative('sv_hooks.lua')
+require_relative 'cl_plugin'
+require_relative 'sv_plugin'
+require_relative 'cl_hooks'
+require_relative 'sv_hooks'

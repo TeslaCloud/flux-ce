@@ -1,10 +1,10 @@
 PLUGIN:set_global('Area')
 
-require_relative('cl_plugin.lua')
-require_relative('sv_plugin.lua')
+require_relative 'cl_plugin'
+require_relative 'sv_plugin'
 
 if !areas then
-  require_relative('lib/sh_areas.lua')
+  require_relative 'lib/sh_areas'
 end
 
 function Area:RegisterPermissions()

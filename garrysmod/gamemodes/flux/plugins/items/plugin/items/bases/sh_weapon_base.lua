@@ -1,5 +1,5 @@
 if !ItemEquippable then
-  require_relative('sh_equipment_base.lua')
+  require_relative 'sh_equipment_base'
 end
 
 class 'ItemWeapon' extends 'ItemEquippable'

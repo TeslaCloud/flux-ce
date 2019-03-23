@@ -2,8 +2,8 @@ PLUGIN:set_global('Factions')
 
 Plugin.add_extra('factions')
 
-require_relative('cl_hooks.lua')
-require_relative('sv_hooks.lua')
+require_relative 'cl_hooks'
+require_relative 'sv_hooks'
 
 function Factions:PluginIncludeFolder(extra, folder)
   if extra == 'factions' then

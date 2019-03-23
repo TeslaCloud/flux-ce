@@ -13,11 +13,11 @@ function Doors:register_title_type(id, data)
   title_types[id] = data
 end
 
-require_relative('sh_config.lua')
-require_relative('cl_hooks.lua')
-require_relative('cl_plugin.lua')
-require_relative('sv_hooks.lua')
-require_relative('sv_plugin.lua')
+require_relative 'sh_config'
+require_relative 'cl_hooks'
+require_relative 'cl_plugin'
+require_relative 'sv_hooks'
+require_relative 'sv_plugin'
 
 function Doors:RegisterPermissions()
   Bolt:register_permission('manage_doors', 'Doors settings access', 'Grants access to customize doors.', 'categories.level_design', 'assistant')

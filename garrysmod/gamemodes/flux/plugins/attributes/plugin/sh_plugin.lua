@@ -1,6 +1,6 @@
 PLUGIN:set_global('AttributesPlugin')
 
-require_relative('sv_hooks.lua')
+require_relative 'sv_hooks'
 
 function AttributesPlugin:PluginIncludeFolder(extra, folder)
   for k, v in pairs(Attributes.types) do

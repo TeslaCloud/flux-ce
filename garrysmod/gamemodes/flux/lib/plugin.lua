@@ -348,7 +348,7 @@ function Plugin.include_schema()
   Schema = PluginInstance.new(schema_info.name, schema_info)
   Schema._is_schema = true
 
-  require_relative(schema_folder..'/sh_schema.lua')
+  require_relative(schema_folder..'/sh_schema')
 
   Plugin.include_folders(schema_folder)
   Plugin.include_plugins(schema_path..'/plugins')
@@ -494,19 +494,19 @@ do
         _G[var].ClassName = id
 
         if file.Exists(path..'/shared.lua', 'LUA') then
-          require_relative(path..'/shared.lua')
+          require_relative(path..'/shared')
 
           register = true
         end
 
         if file.Exists(path..'/init.lua', 'LUA') then
-          require_relative(path..'/init.lua')
+          require_relative(path..'/init')
 
           register = true
         end
 
         if file.Exists(path..'/cl_init.lua', 'LUA') then
-          require_relative(path..'/cl_init.lua')
+          require_relative(path..'/cl_init')
 
           register = true
         end

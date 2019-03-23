@@ -1,8 +1,8 @@
 PLUGIN:set_global('Items')
 
-require_relative('cl_hooks.lua')
-require_relative('sv_hooks.lua')
-require_relative('sh_enums.lua')
+require_relative 'cl_hooks'
+require_relative 'sv_hooks'
+require_relative 'sh_enums'
 
 function Items:OnPluginLoaded()
   Plugin.add_extra('items')

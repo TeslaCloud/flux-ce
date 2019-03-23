@@ -1,9 +1,9 @@
 PLUGIN:set_global('Bolt')
 
-require_relative('cl_hooks.lua')
-require_relative('sh_enums.lua')
-require_relative('sv_hooks.lua')
-require_relative('sv_plugin.lua')
+require_relative 'cl_hooks'
+require_relative 'sh_enums'
+require_relative 'sv_hooks'
+require_relative 'sv_plugin'
 
 function Bolt:OnPluginLoaded()
   Plugin.add_extra('commands')

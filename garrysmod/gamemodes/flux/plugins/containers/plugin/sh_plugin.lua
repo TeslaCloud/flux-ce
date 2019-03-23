@@ -19,8 +19,8 @@ do
   end
 end
 
-require_relative('cl_hooks.lua')
-require_relative('sv_hooks.lua')
+require_relative 'cl_hooks'
+require_relative 'sv_hooks'
 
 Container:register_prop({
   'models/props_junk/cardboard_box001a.mdl',

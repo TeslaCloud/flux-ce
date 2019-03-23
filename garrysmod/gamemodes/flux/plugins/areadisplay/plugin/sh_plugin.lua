@@ -11,7 +11,7 @@ Areas.register_type(
   end
 )
 
-require_relative('cl_hooks.lua')
+require_relative 'cl_hooks'
 
 if SERVER then
   function PLUGIN:PlayerInitialized(player)

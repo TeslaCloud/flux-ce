@@ -1,5 +1,5 @@
 if !ItemWeapon then
-  require_relative('sh_weapon_base.lua')
+  require_relative 'sh_weapon_base'
 end
 
 class 'ItemThrown' extends 'ItemWeapon'

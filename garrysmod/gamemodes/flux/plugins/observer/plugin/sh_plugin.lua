@@ -1,7 +1,7 @@
 PLUGIN:set_global('Observer')
 
-require_relative('cl_hooks.lua')
-require_relative('sv_hooks.lua')
+require_relative 'cl_hooks'
+require_relative 'sv_hooks'
 
 if SERVER then
   Config.set('observer_reset', false)
