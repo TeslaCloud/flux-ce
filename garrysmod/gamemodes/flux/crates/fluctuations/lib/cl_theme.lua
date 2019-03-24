@@ -5,6 +5,7 @@ library 'Theme'
 
 local stored = Theme.stored or {}
 local current_theme = Theme.current_theme or nil
+local has_initialized = false
 Theme.stored = stored
 Theme.current_theme = current_theme
 
@@ -206,6 +207,10 @@ function Theme.reload()
   hook.run('OnThemeReloaded', current_theme)
 end
 
+function Theme.initialized()
+  return has_initialized
+end
+
 do
   local theme_hooks = {}
 
@@ -215,6 +220,8 @@ do
     else
       Theme.load_theme(Schema.default_theme or 'factory')
     end
+
+    has_initialized = true
   end
 
   function theme_hooks:OnReloaded()

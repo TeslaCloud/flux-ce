@@ -131,7 +131,7 @@ end
 
 function Chatbox.show()
   if !IsValid(Chatbox.panel) then
-    if PLAYER and PLAYER:has_initialized() then
+    if Theme.initialized() then
       Chatbox.create()
     else
       return
