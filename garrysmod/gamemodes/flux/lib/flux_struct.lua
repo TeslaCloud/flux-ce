@@ -35,7 +35,11 @@ if CLIENT then
   if !table.deserialize then
     include 'flux/crates/flow/lib/sh_table.lua'
     include 'flux/crates/flow/lib/sh_library.lua'
+    include 'flux/crates/flow/lib/sh_class.lua'
+    include 'flux/crates/flow/lib/sh_helpers.lua'
   end
+
+  include 'flux.lua'
 
   local files, folders = file.Find('_flux/client/*.lua', 'LUA')
 
