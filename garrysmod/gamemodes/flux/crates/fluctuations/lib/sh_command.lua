@@ -335,7 +335,15 @@ if SERVER then
             if IsValid(player) then
               message = player:name()..' has used /'..cmd_table.name..' '..text:utf8sub(utf8.len(command) + 2, utf8.len(text))
             else
-              message = 'Console has issued the '..cmd_table.name..' command with the following arguments: '..text:sub(string.len(command) + 2, string.len(text))
+              message = 'Console has issued the '..cmd_table.name..' command'
+
+              local arg_str = text:sub(string.len(command) + 2, string.len(text))
+
+              if arg_str and arg_str:gsub(' ', '') != '' then
+                message = message..'with the following arguments: '..arg_str
+              else
+                message = message..'.'
+              end
             end
 
             Log:colored(
