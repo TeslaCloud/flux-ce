@@ -19,6 +19,10 @@ function player_meta:get_role()
   return self:get_nv('role', 'user')
 end
 
+function player_meta:is_staff()
+  return self:can 'staff'
+end
+
 player_meta.GetUserGroup  = function(self) return self:get_role() end
 player_meta.IsSuperAdmin  = function(self) return self:is_super_admin() end
 player_meta.IsAdmin       = function(self) return self:is_admin() end

@@ -350,7 +350,7 @@ if SERVER then
                 ','
               )
             ):replicate(function(listener)
-              return listener:can(cmd_table.id)
+              return listener:is_staff() and listener:can(cmd_table.id)
             end)
 
             self:run(player, cmd_table, args)
