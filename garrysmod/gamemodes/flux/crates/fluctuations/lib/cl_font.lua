@@ -34,6 +34,7 @@ end
 
 function Font.size(name, size, data)
   if !size then return name end
+  if !name then return false end
 
   local new_name = name..':'..size
 
