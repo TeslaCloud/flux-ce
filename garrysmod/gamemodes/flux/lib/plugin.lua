@@ -197,7 +197,7 @@ function Plugin.register(obj)
   end
 
   if SERVER then
-    if Schema == obj then
+    if SCHEMA == obj then
       local folder_name = obj.folder:trim_end('/schema')
       local file_path = 'gamemodes/'..folder_name..'/'..folder_name..'.yml'
 
@@ -356,8 +356,8 @@ function Plugin.include_schema()
 
   if SERVER then AddCSLuaFile(schema_path..'/gamemode/cl_init.lua') end
 
-  Schema = PluginInstance.new(schema_info.name, schema_info)
-  Schema._is_schema = true
+  SCHEMA = PluginInstance.new(schema_info.name, schema_info)
+  SCHEMA._is_schema = true
 
   require_relative(schema_folder..'/sh_schema')
 
@@ -371,7 +371,7 @@ function Plugin.include_schema()
     MsgC(Color(0, 255, 100), ' by '..schema_info.author..' has been loaded!\n')
   end
 
-  Schema:register()
+  SCHEMA:register()
 
   hook.Call('OnSchemaLoaded', GM)
 end

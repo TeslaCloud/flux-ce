@@ -215,10 +215,10 @@ do
   local theme_hooks = {}
 
   function theme_hooks:PlayerInitialized()
-    if !Schema or !Schema.default_theme then
+    if !SCHEMA or !SCHEMA.default_theme then
       Theme.load_theme('factory')
     else
-      Theme.load_theme(Schema.default_theme or 'factory')
+      Theme.load_theme(SCHEMA.default_theme or 'factory')
     end
 
     has_initialized = true

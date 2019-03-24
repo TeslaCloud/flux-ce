@@ -95,7 +95,7 @@ function PANEL:Init()
   self.name_random.DoClick = function(btn)
     surface.PlaySound('buttons/blip1.wav')
 
-    self.name_entry:SetText(Schema:get_random_name(self:GetParent().char_data))
+    self.name_entry:SetText(SCHEMA:get_random_name(self:GetParent().char_data))
   end
 
   self.desc_label = vgui.Create('DLabel', self)

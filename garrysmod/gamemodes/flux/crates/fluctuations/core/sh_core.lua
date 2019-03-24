@@ -114,7 +114,7 @@ end
 
 -- A function to get schema's name.
 function Flux.get_schema_name()
-  return Schema and Schema:get_name() or Flux.schema or 'Unknown'
+  return SCHEMA and SCHEMA:get_name() or Flux.schema or 'Unknown'
 end
 
 --

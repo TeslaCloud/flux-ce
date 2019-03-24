@@ -39,7 +39,7 @@ if SERVER then
 
         if PLUGIN then
           stored[key].added_by = PLUGIN:get_name()
-        elseif Schema then
+        elseif SCHEMA then
           stored[key].added_by = 'Schema'
         else
           stored[key].added_by = 'Flux'
