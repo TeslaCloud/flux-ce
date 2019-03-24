@@ -40,6 +40,9 @@ function Flux.get_version()
   return version
 end
 
+-- So that we don't get duplicates on refresh.
+Plugin.clear_cache()
+
 if !LITE_REFRESH then
   print('Environment: '..FLUX_ENV)
 
@@ -55,9 +58,6 @@ if !LITE_REFRESH then
 
   -- Read configs.
   Config.read(Settings.configs)
-
-  -- So that we don't get duplicates on refresh.
-  Plugin.clear_cache()
 
   require_relative_folder('lib', true)
   require_relative_folder('lib/classes', true)
@@ -93,8 +93,8 @@ if !LITE_REFRESH then
   end
 
   Pipeline.include_folder('tool', 'flux/crates/fluctuations/tools')
+else
+  print 'Performing partial code reload...'
 end
 
 require_relative_folder('hooks', true)
-
-Flux.include_schema()

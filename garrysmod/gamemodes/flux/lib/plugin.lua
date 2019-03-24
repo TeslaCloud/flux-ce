@@ -39,10 +39,23 @@ function Plugin.get_cache()
 end
 
 function Plugin.clear_cache()
-  Plugin.clear_extras()
+  if Flux.initialized then
+    Plugin.clear_extras()
 
-  hooks_cache = {}
-  load_cache = {}
+    if !LITE_REFRESH then
+      hooks_cache = {}
+      load_cache = {}
+    else
+      for hook_name, hook_table in pairs(hooks_cache) do
+        for k, obj in ipairs(hook_table) do
+          if istable(obj) and istable(obj[2]) and isstring(obj[2].path) and !obj[2].path:include('flux') then
+            load_cache[obj[2].id] = nil
+            hooks_cache[hook_name][k] = nil
+          end
+        end
+      end
+    end
+  end
 end
 
 function Plugin.clear_load_cache()
@@ -334,9 +347,7 @@ function Plugin.include_schema()
   if istable(deps) then
     for k, v in ipairs(deps) do
       if !Plugin.require(v) then
-        ErrorNoHalt("Unable to load schema! Dependency missing: '"..tostring(v).."'!\n")
-        ErrorNoHalt("Please install this plugin in your schema's 'plugins' folder!\n")
-        ErrorNoHalt("Alternatively please make sure that your server can download packages from the cloud!\n")
+        ErrorNoHalt("Unable to load schema! Dependency missing: '"..tostring(v).."'!\nPlease install this plugin in your schema's 'plugins' folder!\nAlternatively please make sure that your server can download packages from the cloud!\n")
 
         return
       end
@@ -391,27 +402,31 @@ do
       }
 
       for k, v in ipairs(search_paths) do
-        if !v:find('flux') or !LITE_REFRESH then
-          for _, ending in ipairs(tolerance) do
-            if file.Exists(v..name..ending, 'LUA') then
+        local should_include = !LITE_REFRESH or !v:include('flux')
+
+        for _, ending in ipairs(tolerance) do
+          if file.Exists(v..name..ending, 'LUA') then
+            if should_include then
               Plugin.include(v..name)
-
-              return true
             end
+
+            return true
           end
+        end
 
-          for _, prefix in pairs({ 'sv_', 'sh_', 'cl_' }) do
-            if file.Exists(v..prefix..name..'.lua', 'LUA') then
+        for _, prefix in pairs({ 'sv_', 'sh_', 'cl_' }) do
+          if file.Exists(v..prefix..name..'.lua', 'LUA') then
+            if should_include then
               Plugin.include(v..prefix..name..'.lua')
-
-              if prefix == 'sv_' then
-                Flux.shared.deps_info[name] = {
-                  server_only = true
-                }
-              end
-
-              return true
             end
+
+            if prefix == 'sv_' then
+              Flux.shared.deps_info[name] = {
+                server_only = true
+              }
+            end
+
+            return true
           end
         end
       end
