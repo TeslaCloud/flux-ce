@@ -206,6 +206,13 @@ function Crate:exists(name)
   return tobool(self:find(name))
 end
 
+--- Reloads the package with the specified name.
+-- @return [Table(self)]
+function Crate:reload(name)
+  self.installed[name] = nil
+  return self:include(name)
+end
+
 do
   local function do_include(file_path, lib_path, full_path)
     local parent_crate
