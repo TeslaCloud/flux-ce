@@ -5,6 +5,8 @@ local aliases = Flux.Command.aliases or {}
 Flux.Command.stored = stored
 Flux.Command.aliases = aliases
 
+local command_log_color = Color('orange')
+
 function Flux.Command:create(id, data)
   if !id or !data then return end
 
@@ -256,9 +258,10 @@ if SERVER then
         if hook.run('PlayerCanRunCommand', player, cmd_table, from_console) != nil then return end
 
         if cmd_table.arguments == 0 or cmd_table.arguments <= #args then
+          local targets = {}
+
           if cmd_table.immunity or cmd_table.player_arg != nil then
             local target_arg = args[(cmd_table.player_arg or 1)]
-            local targets = {}
 
             if istable(target_arg) then
               local cache = {}
@@ -327,9 +330,28 @@ if SERVER then
 
           -- Let plugins hook into this and abort command's execution if necessary.
           if !hook.run('PlayerRunCommand', player, cmd_table, args) then
+            local message
+
             if IsValid(player) then
-              ServerLog(player:name()..' has used /'..cmd_table.name..' '..text:utf8sub(utf8.len(command) + 2, utf8.len(text)))
+              message = player:name()..' has used /'..cmd_table.name..' '..text:utf8sub(utf8.len(command) + 2, utf8.len(text))
+            else
+              message = 'Console has issued the '..cmd_table.name..' command with the following arguments: '..text:sub(string.len(command) + 2, string.len(text))
             end
+
+            Log:colored(
+              command_log_color,
+              message,
+              'PlayerRunCommand',
+              IsValid(player) and player.record.id or 'console',
+              table.concat(
+                table.map(targets, function(v)
+                  return IsValid(v) and v.record and v.record.id
+                end),
+                ','
+              )
+            ):replicate(function(listener)
+              return listener:can(cmd_table.id)
+            end)
 
             self:run(player, cmd_table, args)
           end
