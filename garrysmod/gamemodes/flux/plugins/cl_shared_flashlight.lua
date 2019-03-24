@@ -2,6 +2,9 @@ PLUGIN:set_name 'Shared Flashlight'
 PLUGIN:set_author 'TeslaCloud Studios'
 PLUGIN:set_description "Makes other player's flashlight lights visible to you."
 
+-- experimental for now
+if !Settings.experimental then return end
+
 local flashlight_cutoff = 780 ^ 2
 
 function PLUGIN:Think()
