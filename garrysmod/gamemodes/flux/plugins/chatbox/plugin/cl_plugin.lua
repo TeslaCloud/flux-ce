@@ -32,6 +32,8 @@ function Chatbox.compile(msg_table)
   local total_height = 0
   local font = Font.size(Theme.get_font('chatbox_normal'), cur_size)
 
+  if !font then return end
+
   if Plugin.call('ChatboxCompileMessage', data, compiled) != true then
     for k, v in ipairs(data) do
       if Plugin.call('ChatboxCompileMessageData', v, compiled) == true then
