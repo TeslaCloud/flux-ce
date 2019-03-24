@@ -96,7 +96,8 @@ function Flow.Inflector:pluralize(word)
     local text, replacements = word:gsub(v.expression, v.replacement)
 
     if (replacements or 0) > 0 then
-      return original_word:gsub(original_text, text)
+      local ret = original_word:gsub(original_text, text)
+      return ret
     end
   end
 
@@ -120,7 +121,8 @@ function Flow.Inflector:singularize(word)
     local text, replacements = word:gsub(v.expression, v.replacement)
 
     if (replacements or 0) > 0 then
-      return original_word:gsub(original_text, text)
+      local ret = original_word:gsub(original_text, text)
+      return ret
     end
   end
 
