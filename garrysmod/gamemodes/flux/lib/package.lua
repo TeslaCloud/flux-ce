@@ -10,6 +10,8 @@ function Package:init(file_path, lib_path, full_path)
     author      = '',
     email       = '',
     file        = { },
+    cl_file     = { },
+    sv_file     = { },
     website     = '',
     license     = '',
     global      = '',

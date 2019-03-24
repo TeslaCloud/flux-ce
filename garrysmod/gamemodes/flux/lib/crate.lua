@@ -135,6 +135,28 @@ function Crate:describe(callback)
   end
 
   local full_path = meta.full_path
+  local client_files, server_files = meta.cl_file, meta.sv_file
+
+  if isstring(client_files) then client_files = { client_files } end
+  if isstring(server_files) then server_files = { server_files } end
+
+  if SERVER then
+    if istable(client_files) then
+      for k, v in ipairs(client_files) do
+        AddCSLuaFile(v)
+      end
+    end
+
+    if istable(server_files) then
+      for k, v in ipairs(server_files) do
+        include(v)
+      end
+    end
+  elseif istable(client_files) then
+    for k, v in ipairs(client_files) do
+      include(v)
+    end
+  end
 
   if istable(meta.file) then
     for k, file in ipairs(meta.file) do
