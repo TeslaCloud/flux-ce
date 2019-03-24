@@ -15,11 +15,11 @@ if CRATE then
         for k, v in pairs(self.metadata.deps) do
           Crate:reload(v)
         end
+      else
+        -- Reload fluctuations either way since we actually need it's shared file.
+        Crate:reload 'fluctuations'
       end
     end
-
-    -- Reload fluctuations either way since we actually need it's shared file.
-    Crate:reload 'fluctuations'
 
     Flux.include_schema()
 
