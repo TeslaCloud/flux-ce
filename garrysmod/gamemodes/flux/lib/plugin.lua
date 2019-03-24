@@ -552,7 +552,7 @@ function Plugin.include_folders(folder)
       if v == 'entities' then
         Plugin.include_entities(folder..'/'..v)
       elseif v == 'themes' then
-        Pipeline.include_folder('Theme', folder..'/themes/')
+        Pipeline.include_folder('theme', folder..'/themes/')
       elseif v == 'tools' then
         Pipeline.include_folder('tool', folder..'/tools/')
       elseif v == 'config' then

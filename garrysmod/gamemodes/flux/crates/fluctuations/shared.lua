@@ -75,7 +75,7 @@ if !LITE_REFRESH then
   require_relative_folder('views', true)
 
   if Theme or SERVER then
-    Pipeline.register('Theme', function(id, file_name, pipe)
+    Pipeline.register('theme', function(id, file_name, pipe)
       if CLIENT then
         THEME = ThemeBase.new(id)
 
@@ -88,8 +88,8 @@ if !LITE_REFRESH then
     end)
 
     -- Theme factory is needed for any other themes that may be in the themes folder.
-    Pipeline.include('Theme', 'themes/cl_theme_factory.lua')
-    Pipeline.include_folder('Theme', 'flux/crates/fluctuations/themes')
+    Pipeline.include('theme', 'themes/cl_theme_factory.lua')
+    Pipeline.include_folder('theme', 'flux/crates/fluctuations/themes')
   end
 
   Pipeline.include_folder('tool', 'flux/crates/fluctuations/tools')
