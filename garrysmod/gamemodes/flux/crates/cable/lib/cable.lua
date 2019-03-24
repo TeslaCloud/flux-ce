@@ -5,8 +5,6 @@
   Flux edition. Won't work outside of Flux due to dependencies.
 --]]
 
-if !pon then include 'pon.lua' end
-
 _player = _player or player
 
 local cable = {}

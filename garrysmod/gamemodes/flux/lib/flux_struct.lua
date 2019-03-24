@@ -24,22 +24,18 @@ if !Flux then
 end
 
 if CLIENT then
-  -- Include the required third-party libraries.
-  if !string.utf8upper or !pon or !Cable then
-    include 'flux/lib/vendor/utf8.min.lua'
-    include 'flux/lib/vendor/pon.min.lua'
-    Cable     = include 'flux/lib/vendor/cable.min.lua'
-    Markdown  = include 'flux/lib/vendor/markdown.min.lua'
+  -- Include the required the UTF-8 library.
+  if !string.utf8upper then
+    include 'flux/crates/utf8/lib/utf8.min.lua'
   end
 
   if !table.deserialize then
+    include 'flux/crates/pon/lib/pon.min.lua'
     include 'flux/crates/flow/lib/sh_table.lua'
     include 'flux/crates/flow/lib/sh_library.lua'
     include 'flux/crates/flow/lib/sh_class.lua'
     include 'flux/crates/flow/lib/sh_helpers.lua'
   end
-
-  include 'flux.lua'
 
   local files, folders = file.Find('_flux/client/*.lua', 'LUA')
 

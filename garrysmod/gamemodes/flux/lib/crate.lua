@@ -124,6 +124,11 @@ function Crate:describe(callback)
   -- Once globals are set-up, include dependencies!
   if istable(meta.deps) then
     for k, name in ipairs(meta.deps) do
+      if name:EndsWith('.lua') then
+        include(self.current.__path__..name)
+        continue
+      end
+  
       if !self:included(name) then
         self:include(name)
       end
@@ -154,29 +159,16 @@ function Crate:describe(callback)
     end
   elseif istable(client_files) then
     for k, v in ipairs(client_files) do
-      include(v)
+      include(self.current.__path__..v)
     end
   end
 
   if istable(meta.file) then
     for k, file in ipairs(meta.file) do
-      local filename = file:file_from_filename()
-
-      if filename:starts('sv') or filename:starts('cl') or filename:starts('sh') then
-        require_relative(full_path..file)
-      else
-        include(full_path..file)
-      end
+      require_relative(full_path..file)
     end
   elseif isstring(meta.file) then
-    local file = meta.file
-    local filename = file:file_from_filename()
-
-    if filename:starts('sv') or filename:starts('cl') or filename:starts('sh') then
-      require_relative(full_path..file)
-    else
-      include(full_path..file)
-    end
+    require_relative(full_path..meta.file)
   end
 
   if meta.serverside then
@@ -274,6 +266,9 @@ do
   -- If no package with the matching name can be found, throws an error.
   -- @return [...]
   function Crate:include(name)
+    -- Skip Lua files.
+    if name:EndsWith('.lua') then return true end
+
     if SERVER then
       local folder_path = name:ensure_end('/')
       local files, _ = file.Find(folder_path..'*.cratespec', 'LUA')
@@ -299,7 +294,7 @@ do
 
       if meta == false then return end
 
-      return do_include(meta.file_path, name, name)
+      return do_include(meta.file_path, name, meta.full_path)
     end
   end
 end

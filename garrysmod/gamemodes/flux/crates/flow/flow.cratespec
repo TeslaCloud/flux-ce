@@ -16,4 +16,6 @@ Crate:describe(function(s)
   s.global      'Flow'
   s.website     'https://teslacloud.net'
   s.license     'MIT'
+
+  s.depends     'pon'
 end)

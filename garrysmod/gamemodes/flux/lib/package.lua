@@ -34,8 +34,9 @@ function Package:init(file_path, lib_path, full_path)
   end
 
   self.metadata.file_path = file_path
-  self.metadata.lib_path = lib_path
+  self.metadata.lib_path  = lib_path
   self.metadata.full_path = full_path
+  self.__path__           = full_path
 end
 
 function Package:depends(what)

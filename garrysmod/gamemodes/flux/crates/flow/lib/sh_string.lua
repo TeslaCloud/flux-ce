@@ -1,8 +1,8 @@
 if !string.utf8lower then
   if SERVER then
-    include 'flux/lib/vendor/utf8.lua'
+    include 'flux/crates/utf8/lib/utf8.lua'
   else
-    include 'flux/lib/vendor/utf8.min.lua'
+    include 'flux/crates/utf8/lib/utf8.min.lua'
   end
 end
 
