@@ -76,7 +76,11 @@ end
 
 Cable.receive('fl_chat_message_add', function(message_data)
   if !IsValid(Chatbox.panel) then
-    Chatbox.create()
+    if PLAYER and PLAYER:has_initialized() then
+      Chatbox.create()
+    else
+      return
+    end
   end
 
   Chatbox.panel:add_message(message_data)

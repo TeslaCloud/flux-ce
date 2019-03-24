@@ -131,7 +131,11 @@ end
 
 function Chatbox.show()
   if !IsValid(Chatbox.panel) then
-    Chatbox.create()
+    if PLAYER and PLAYER:has_initialized() then
+      Chatbox.create()
+    else
+      return
+    end
   end
 
   Chatbox.panel:set_open(true)
