@@ -76,7 +76,7 @@ function Log:replicate(condition)
 
   for k, v in ipairs(player.all()) do
     if condition(v) then
-      Cable.send('log_replicate', last_log.message, last_log.action, last_log.object, last_log.subject, last_log.data)
+      Cable.send(v, 'log_replicate', last_log.message, last_log.action, last_log.object, last_log.subject, last_log.data)
     end
   end
 
