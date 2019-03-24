@@ -7,7 +7,7 @@ Flux.blur_mat = CreateMaterial('fl_mat_'..os.time(), 'UnlitGeneric', {
 })
 Flux.blur_size = 12
 Flux.blur_passes = 8 -- anything below 8 looks chunky
-Flux.blur_update_fps = 16 -- how many frames per second should we render the lazy blurs. 0 for unlimited.
+Flux.blur_update_fps = 24 -- how many frames per second should we render the lazy blurs. 0 for unlimited.
 
 do
   local center_x, center_y = ScrW() * 0.5, ScrH() * 0.5
