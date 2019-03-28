@@ -21,6 +21,12 @@ Cable.receive('fl_notification', function(message, arguments, color)
     for k, v in pairs(arguments) do
       if isstring(v) then
         arguments[k] = t(v)
+      elseif isentity(v) and IsValid(v) then
+        if v:IsPlayer() then
+          arguments[k] = hook.run('GetPlayerName', v) or v:name()
+        else
+          arguments[k] = tostring(v) or v:GetClass()
+        end
       end
     end
   end
