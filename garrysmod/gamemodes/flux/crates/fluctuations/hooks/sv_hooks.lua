@@ -470,7 +470,7 @@ function GM:OnConfigSet(key, old_value, new_value)
     end
   elseif key == 'crouched_speed' then
     for k, v in ipairs(player.all()) do
-      v:SetCrouchedWalkSpeed(new_value)
+      v:SetCrouchedWalkSpeed(new_value / Config.get('walk_speed'))
     end
   elseif key == 'jump_power' then
     for k, v in ipairs(player.all()) do

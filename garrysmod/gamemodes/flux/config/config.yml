@@ -40,9 +40,8 @@ configs:
     category: general
     type: number
     min_value: 0
-    max_value: 1
-    default_value: 1
-    decimals: 2
+    max_value: 1024
+    default_value: 50
   respawn_delay:
     name: config.general.respawn_time.name
     description: config.general.respawn_time.desc
