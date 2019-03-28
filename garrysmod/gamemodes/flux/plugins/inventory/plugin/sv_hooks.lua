@@ -97,6 +97,10 @@ function Inventory:CanItemStack(player, item_table, inv_type, x, y)
       return true
     end
 
+    if !item_table.stackable then
+      return false
+    end
+
     local slot_table = Item.find_instance_by_id(ids[1])
 
     if item_table.id != slot_table.id or #ids >= item_table.max_stack then
