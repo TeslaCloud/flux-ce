@@ -60,10 +60,12 @@ function PANEL:PaintOver(w, h)
     DisableClipping(false)
   end
 
-  if isnumber(self.slot_number) then
-    DisableClipping(true)
-      draw.SimpleText(self.slot_number, Theme.get_font('text_smallest'), 4, 50, Color(175, 175, 175))
-    DisableClipping(false)
+  if !self:IsDragging() then
+    if isnumber(self.slot_number) then
+      DisableClipping(true)
+        draw.SimpleText(self.slot_number, Theme.get_font('text_smallest'), 4, 50, Color(175, 175, 175))
+      DisableClipping(false)
+    end
   end
 
   Theme.hook('PaintOverItemSlot', self, w, h)
