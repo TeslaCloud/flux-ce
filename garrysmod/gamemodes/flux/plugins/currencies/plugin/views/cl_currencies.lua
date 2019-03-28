@@ -61,10 +61,10 @@ function PANEL:rebuild()
       give_button:Dock(RIGHT)
       give_button.DoClick = function(btn)
         Derma_StringRequest(t'currency.give.title', t'currency.give.message', '', function(text)
-          local amount = tonumber(text)
+          local value = tonumber(text)
 
-          if amount and amount > 0 then
-            Cable.send('fl_currency_give', amount, k)
+          if value and value > 0 then
+            Cable.send('fl_currency_give', value, k)
           else
             PLAYER:notify('currency.notify.invalid_amount')
           end
@@ -80,10 +80,10 @@ function PANEL:rebuild()
       drop_button:Dock(RIGHT)
       drop_button.DoClick = function(btn)
         Derma_StringRequest(t'currency.drop.title', t'currency.drop.message', '', function(text)
-          local amount = tonumber(text)
+          local value = tonumber(text)
 
-          if amount and amount > 0 then
-            Cable.send('fl_currency_drop', amount, k)
+          if value and value > 0 then
+            Cable.send('fl_currency_drop', value, k)
           else
             PLAYER:notify('currency.notify.invalid_amount')
           end
