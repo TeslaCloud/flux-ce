@@ -61,7 +61,7 @@ function Inventory:popup_hotbar()
   PLAYER.hotbar:SetAlpha(255)
 
   timer.create('fl_hotbar_popup', 0.01, cur_alpha, function()
-    if IsValid(Flux.tab_menu) and Flux.tab_menu:IsVisible() then
+    if IsValid(Flux.tab_menu) and Flux.tab_menu:IsVisible() or cur_alpha <= 0 then
       PLAYER.hotbar:SetVisible(false)
       timer.remove('fl_hotbar_popup')
     end
