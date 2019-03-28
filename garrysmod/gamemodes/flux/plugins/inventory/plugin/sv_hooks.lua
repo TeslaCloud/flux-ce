@@ -37,7 +37,9 @@ function Inventory:OnActiveCharacterSet(player, character)
 end
 
 function Inventory:SaveCharacterData(player, char)
-  char.item_ids = table.concat(player:get_items(), ',')
+  if player:get_active_character_id() == char.id then
+    char.item_ids = table.concat(player:get_items(), ',')
+  end
 end
 
 function Inventory:OnItemInventoryChanged(player, item_table, new_inv, old_inv)
