@@ -35,6 +35,8 @@ function PANEL:rebuild()
       end
     end)
 
+    hook.run('OnInventoryRebuild', self, false)
+
     return
   end
 
@@ -125,6 +127,8 @@ function PANEL:rebuild()
   self.equipment:set_title('inventory.equipment')
   self.equipment:set_player(PLAYER)
   self.equipment:SetPos(w - self.equipment:GetWide(), h / 2 - self.equipment:GetTall() / 2)
+
+  hook.run('OnInventoryRebuild', self, true)
 end
 
 vgui.Register('fl_inventory_menu', PANEL, 'fl_base_panel')
