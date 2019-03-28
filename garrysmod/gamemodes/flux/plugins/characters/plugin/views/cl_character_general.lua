@@ -85,17 +85,19 @@ function PANEL:Init()
   self.name_entry:SetFont(Theme.get_font('main_menu_normal'))
   self.name_entry:SetText('')
 
-  self.name_random = vgui.Create('fl_button', self)
-  self.name_random:SetPos(scrw * 0.125 + self.name_entry:GetWide() + 8, Font.scale(72.5))
-  self.name_random:SetSize(24, 24)
-  self.name_random:set_icon('fa-random')
-  self.name_random:set_icon_size(24, 24)
-  self.name_random:SetTooltip(t'char_create.random_name')
-  self.name_random:SetDrawBackground(false)
-  self.name_random.DoClick = function(btn)
-    surface.PlaySound('buttons/blip1.wav')
+  if SCHEMA.get_random_name then
+    self.name_random = vgui.Create('fl_button', self)
+    self.name_random:SetPos(scrw * 0.125 + self.name_entry:GetWide() + 8, Font.scale(72.5))
+    self.name_random:SetSize(24, 24)
+    self.name_random:set_icon('fa-random')
+    self.name_random:set_icon_size(24, 24)
+    self.name_random:SetTooltip(t'char_create.random_name')
+    self.name_random:SetDrawBackground(false)
+    self.name_random.DoClick = function(btn)
+      surface.PlaySound('buttons/blip1.wav')
 
-    self.name_entry:SetText(SCHEMA:get_random_name(self:GetParent().char_data))
+      self.name_entry:SetText(SCHEMA:get_random_name(self:GetParent().char_data))
+    end
   end
 
   self.desc_label = vgui.Create('DLabel', self)

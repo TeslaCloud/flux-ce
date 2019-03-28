@@ -113,27 +113,27 @@ function THEME:PaintFrame(panel, width, height)
 end
 
 function THEME:PaintMainMenu(panel, width, height)
-  local wide = self:get_option('menu_sidebar_width') * 0.5
   local title, desc, author = SCHEMA:get_name(), SCHEMA:get_description(), t('main_menu.developed_by', SCHEMA:get_author())
   local logo = self:get_material('schema_logo')
   local title_w, title_h = util.text_size(title, self:get_font('text_largest'))
   local desc_w, desc_h = util.text_size(desc, self:get_font('main_menu_titles'))
   local author_w, author_h = util.text_size(author, self:get_font('main_menu_titles'))
+  local bar_height = Font.scale(128)
 
   surface.SetDrawColor(self:get_color('menu_background'))
   surface.DrawRect(0, 0, width, width)
 
   surface.SetDrawColor(self:get_color('menu_background'):lighten(40))
-  surface.DrawRect(0, 0, width, 128)
+  surface.DrawRect(0, 0, width, bar_height)
 
   if !logo then
-    draw.SimpleText(title, self:get_font('text_largest'), wide + width * 0.5 - title_w * 0.5, 150, self:get_color('schema_text'))
+    draw.SimpleText(title, self:get_font('text_largest'), width * 0.5 - title_w * 0.5, bar_height - title_h - 8, self:get_color('schema_text'))
   else
-    draw.textured_rect(logo, width * 0.5 - 200, 16, 400, 96, Color(255, 255, 255))
+    draw.textured_rect(logo, width * 0.5 - Font.scale(200), 16, 400, 96, Color(255, 255, 255))
   end
 
-  draw.SimpleText(desc, self:get_font('main_menu_titles'), 16, 128 - desc_h - 8, self:get_color('schema_text'))
-  draw.SimpleText(author, self:get_font('main_menu_titles'), width - author_w - 16, 128 - author_h - 8, self:get_color('schema_text'))
+  draw.SimpleText(desc, self:get_font('main_menu_titles'), 16, bar_height - desc_h - 8, self:get_color('schema_text'))
+  draw.SimpleText(author, self:get_font('main_menu_titles'), width - author_w - 16, bar_height - author_h - 8, self:get_color('schema_text'))
 end
 
 function THEME:PaintButton(panel, w, h)
@@ -400,6 +400,45 @@ function THEME:PaintOverInventoryBackground(panel, w, h)
       draw.textured_rect(self:get_material('gradient_down'), -4, -text_h - 4, text_w + 8, text_h, Color(50, 50, 50, 100))
       draw.SimpleText(text, font, 0, -text_h - 4, color_white:alpha(150))
     DisableClipping(false)
+  end
+end
+
+function THEME:ChatboxPaintBackground(panel, width, height)
+  DisableClipping(true)
+    draw.box(0, -8, width, height - panel.text_entry:GetTall(), self:get_color('menu_background'))
+  DisableClipping(false)
+end
+
+function THEME:PaintCharPanel(panel, w, h)
+  if panel.char_data then
+    local char_data = panel.char_data
+    local name_w, name_h = util.text_size(char_data.name, self:get_font('main_menu_titles'))
+
+    draw.SimpleText(char_data.name, self:get_font('main_menu_titles'), w * 0.5 - name_w * 0.5, 4, self:get_color('schema_text'))
+
+    if PLAYER:get_active_character_id() == char_data.character_id then
+      surface.SetDrawColor(self:get_color('accent'))
+      surface.DrawOutlinedRect(0, 0, w, h)
+    end
+  end
+end
+
+function THEME:PaintCharCreationMainPanel(panel, w, h)
+  local title, font = t 'char_create.text', Theme.get_font 'main_menu_title'
+  local title_w, title_h = util.text_size(title, font)
+  draw.SimpleText(title, font, w * 0.5 - title_w * 0.5, h / 8)
+end
+
+function THEME:PaintCharCreationLoadPanel(panel, w, h)
+  local title, font = t 'char_create.load', Theme.get_font 'main_menu_title'
+  local title_w, title_h = util.text_size(title, font)
+  draw.SimpleText(title, font, w * 0.5 - title_w * 0.5, h / 8)
+end
+
+function THEME:PaintCharCreationBasePanel(panel, w, h)
+  if isstring(panel.text) then
+    local text_w, text_h = util.text_size(t(panel.text), Theme.get_font('main_menu_large'))
+    draw.SimpleText(t(panel.text), Theme.get_font('main_menu_large'), w * 0.5 - text_w * 0.5, 0, Theme.get_color('text'))
   end
 end
 
