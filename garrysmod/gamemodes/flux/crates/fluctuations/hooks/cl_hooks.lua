@@ -403,6 +403,31 @@ function GM:OnIntroPanelCreated()
 end
 
 do
+  local prev_angles = nil
+
+  function GM:Think()
+    if IsValid(PLAYER) then
+      local lerp_step = FrameTime() * 6
+      local angles = PLAYER:EyeAngles()
+
+      if !prev_angles then prev_angles = angles end
+
+      local x, y = Flux.global_ui_offset()
+      local pitch, yaw = (prev_angles.pitch - angles.pitch), (prev_angles.yaw - angles.yaw)
+      pitch = (pitch + 180) % 360 - 180
+      yaw = (yaw + 180) % 360 - 180
+
+      x = Lerp(lerp_step, x - yaw, 0)
+      y = Lerp(lerp_step, y + pitch, 0)
+
+      Flux.__set_global_offset__(x, y)
+
+      prev_angles = angles
+    end
+  end
+end
+
+do
   local hidden_elements = { -- Hide default HUD elements.
     CHudAmmo = true,
     CHudBattery = true,

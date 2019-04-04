@@ -9,25 +9,6 @@ local half_size = size * 0.5
 local double_size = size * 2
 local gap = 8
 local cur_gap = gap
-local global_offset = { x = 0, y = 0 }
-local prev_angles = nil
-
-function PLUGIN:Think()
-  if IsValid(PLAYER) then
-    local angles = PLAYER:EyeAngles()
-
-    if !prev_angles then prev_angles = angles end
-
-    local pitch, yaw = (prev_angles.pitch - angles.pitch), (prev_angles.yaw - angles.yaw)
-    pitch = (pitch + 180) % 360 - 180
-    yaw = (yaw + 180) % 360 - 180
-
-    global_offset.x = global_offset.x - yaw
-    global_offset.y = global_offset.y + pitch
-
-    prev_angles = angles
-  end
-end
 
 function PLUGIN:ShouldHUDPaintCrosshair()
   if PLAYER:running() or !PLAYER:Alive() or !PLAYER:has_initialized() then
@@ -44,8 +25,6 @@ function PLUGIN:HUDPaint()
     local secondary_draw_color = draw_color:alpha(25)
     local real_gap = Plugin.call('AdjustCrosshairGap', trace, distance) or math.Round(gap * math.Clamp(distance / 400, 0.5, 4))
     cur_gap = Lerp(lerp_step, cur_gap, real_gap)
-    global_offset.x = Lerp(lerp_step, global_offset.x, 0)
-    global_offset.y = Lerp(lerp_step, global_offset.y, 0)
 
     if math.abs(cur_gap - real_gap) < 0.5 then
       cur_gap = real_gap
@@ -56,7 +35,7 @@ function PLUGIN:HUDPaint()
     end
 
     local scrw, scrh = ScrW(), ScrH()
-    local gox, goy = global_offset.x, global_offset.y
+    local gox, goy = Flux.global_ui_offset()
 
     draw.RoundedBox(0, gox + (scrw * 0.5 - half_size), goy + (scrh * 0.5 - half_size), size, size, draw_color)
 
@@ -65,10 +44,6 @@ function PLUGIN:HUDPaint()
 
     draw.RoundedBox(0, gox + (scrw * 0.5 - size), goy + (scrh * 0.5 - half_size - cur_gap), double_size, size, secondary_draw_color)
     draw.RoundedBox(0, gox + (scrw * 0.5 - size), goy + (scrh * 0.5 - half_size + cur_gap), double_size, size, secondary_draw_color)
-
-    local angles = PLAYER:EyeAngles()
-
-    draw.SimpleText(tostring(angles), 'default', 16, 100, Color(255, 0, 0))
   end
 end
 

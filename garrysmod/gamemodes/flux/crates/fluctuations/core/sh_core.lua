@@ -179,6 +179,18 @@ function Flux.get_schema_info()
   end
 end
 
+do
+  local global_offset = { x = 0, y = 0 }
+
+  function Flux.__set_global_offset__(x, y)
+    global_offset = { x = x, y = y }
+  end
+
+  function Flux.global_ui_offset()
+    return global_offset.x, global_offset.y
+  end
+end
+
 if SERVER then
   Flux.shared.schema_info = Flux.get_schema_info()
 end
