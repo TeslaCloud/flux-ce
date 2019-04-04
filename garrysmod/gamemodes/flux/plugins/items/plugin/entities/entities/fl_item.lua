@@ -112,8 +112,8 @@ else
         return
       end
 
-      text = self.item.print_name
-      desc = self.item.description
+      text = t(self.item.print_name)
+      desc = t(self.item.description)
     else
       if !self.data_requested then
         Cable.send('fl_items_data_request', self:EntIndex())
@@ -125,11 +125,25 @@ else
       return
     end
 
-    local width, height = util.text_size(text, Theme.get_font('tooltip_large'))
-    local width2, height2 = util.text_size(desc, Theme.get_font('tooltip_small'))
-    local max_width = math.max(width, width2)
+    local name_font = Theme.get_font('tooltip_large')
+    local desc_font = Theme.get_font('tooltip_small')
+    local width, height = util.text_size(text, name_font)
+    local max_width = width
+    local desc_height = 0
+    local wrapped = util.wrap_text(desc, desc_font, ScrW() * 0.33, 0)
+
+    for k, v in pairs(wrapped) do
+      local w, h = util.text_size(v, desc_font)
+
+      desc_height = desc_height + h
+
+      if w > max_width then
+        max_width = w
+      end
+    end
+  
     local box_x, box_y = x - max_width * 0.5 - 8, y - 8
-    local box_width, box_height = max_width + 16, height + height2 + 16
+    local box_width, box_height = max_width + 16, height + desc_height + 16
     local accent_color = Theme.get_color('accent'):alpha(200)
     local ent_pos = self:GetPos():ToScreen()
     local anim_id = 'itemid_gradient_'..self.item.instance_id
@@ -143,14 +157,20 @@ else
     render.SetScissorRect(0, 0, 0, 0, false)
 
     if alpha > 100 then
-      draw.line(box_x, y + height + height2 + 8, ent_pos.x, ent_pos.y, accent_color)
+      draw.line(box_x, y + height + desc_height + 8, ent_pos.x, ent_pos.y, accent_color)
     end
 
-    draw.SimpleTextOutlined(text, Theme.get_font('tooltip_large'), x - width * 0.5, y, col, nil, nil, 1, col2)
+    draw.SimpleTextOutlined(text, name_font, x - width * 0.5, y, col, nil, nil, 1, col2)
+
     y = y + 26
 
-    draw.SimpleTextOutlined(desc, Theme.get_font('tooltip_small'), x - width2 * 0.5, y, col, nil, nil, 1, col2)
-    y = y + 20
+    for k, v in pairs(wrapped) do
+      local w, h = util.text_size(v, desc_font)
+
+      draw.SimpleTextOutlined(v, desc_font, x - w * 0.5, y, col, nil, nil, 1, col2)
+
+      y = y + h
+    end
 
     hook.run('PostDrawItemTargetID', self, self.item, x, y, alpha, distance)
   end
