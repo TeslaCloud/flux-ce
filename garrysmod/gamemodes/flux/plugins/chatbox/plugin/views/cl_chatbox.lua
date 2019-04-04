@@ -288,7 +288,7 @@ function PANEL:rebuild()
   self:SetSize(Chatbox.width, Chatbox.height)
   self:SetPos(Chatbox.x, Chatbox.y)
 
-  local text_entry_height = Font.scale(42)
+  local text_entry_height = Theme.get_option('chatbox_text_entry_height', 40)
 
   self.text_entry:SetSize(Chatbox.width, text_entry_height)
   self.text_entry:SetPos(0, Chatbox.height - text_entry_height)
