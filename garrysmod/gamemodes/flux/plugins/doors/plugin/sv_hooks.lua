@@ -3,7 +3,7 @@ function Doors:ShowSpare1(player)
   local entity = trace.Entity
 
   if IsValid(entity) and entity:is_door() and player:GetPos():Distance(entity:GetPos()) < 115 then
-    local can_lock = hook.run('PlayerCanLockDoor', player, entity)
+    local can_lock = hook.run('PlayerCanLockDoor', player, entity) or false
 
     Cable.send(player, 'fl_door_menu', entity, can_lock, entity.conditions)
   end
