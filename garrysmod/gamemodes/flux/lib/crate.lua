@@ -105,26 +105,24 @@ function Crate:describe(callback)
     return self.current
   end
 
-  if istable(meta.global) then
-    for k, v in ipairs(meta.global) do
+  if !istable(meta.global) then
+    meta.global = { meta.global }
+  end
+
+  for k, v in ipairs(meta.global) do
+    if isstring(v) then
       _G[v] = istable(_G[v]) and _G[v] or {}
 
       if !_G[v].__crate__ then
         _G[v].__crate__ = meta
       end
     end
-  elseif isstring(meta.global) then
-    _G[meta.global] = istable(_G[meta.global]) and _G[meta.global] or {}
-
-    if !_G[meta.global].__crate__ then
-      _G[meta.global].__crate__ = meta
-    end
   end
 
   -- Once globals are set-up, include dependencies!
   if istable(meta.deps) then
     for k, name in ipairs(meta.deps) do
-      if name:EndsWith('.lua') then
+      if name:ends('.lua') then
         include(self.current.__path__..name)
         continue
       end
@@ -223,12 +221,18 @@ end
 --- Reloads the package with the specified name.
 -- @return [Table(self)]
 function Crate:reload(name)
-  self.installed[name] = nil
-  return self:include(name)
+  if istable(self.installed[name]) and self.installed[name].metadata.reload then
+    self.installed[name] = nil
+    return self:include(name)
+  end
 end
 
 do
   local function do_include(file_path, lib_path, full_path)
+    if istable(Crate.installed[lib_path]) and !Crate.installed[lib_path].metadata.reload then
+      return
+    end
+
     local parent_crate
 
     if Crate.current then

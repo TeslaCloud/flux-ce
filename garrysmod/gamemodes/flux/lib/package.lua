@@ -17,7 +17,8 @@ function Package:init(file_path, lib_path, full_path)
     global      = '',
     deps        = { },
     serverside  = false,
-    clientside  = false
+    clientside  = false,
+    reload      = true
   }
 
   for k, v in pairs(self.metadata) do
