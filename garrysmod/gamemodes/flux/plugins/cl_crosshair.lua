@@ -18,8 +18,12 @@ function PLUGIN:Think()
 
     if !prev_angles then prev_angles = angles end
 
-    global_offset.x = global_offset.x - (prev_angles.yaw - angles.yaw)
-    global_offset.y = global_offset.y + (prev_angles.pitch - angles.pitch)
+    local pitch, yaw = (prev_angles.pitch - angles.pitch), (prev_angles.yaw - angles.yaw)
+    pitch = (pitch + 180) % 360 - 180
+    yaw = (yaw + 180) % 360 - 180
+
+    global_offset.x = global_offset.x - yaw
+    global_offset.y = global_offset.y + pitch
 
     prev_angles = angles
   end
@@ -61,6 +65,10 @@ function PLUGIN:HUDPaint()
 
     draw.RoundedBox(0, gox + (scrw * 0.5 - size), goy + (scrh * 0.5 - half_size - cur_gap), double_size, size, secondary_draw_color)
     draw.RoundedBox(0, gox + (scrw * 0.5 - size), goy + (scrh * 0.5 - half_size + cur_gap), double_size, size, secondary_draw_color)
+
+    local angles = PLAYER:EyeAngles()
+
+    draw.SimpleText(tostring(angles), 'default', 16, 100, Color(255, 0, 0))
   end
 end
 
