@@ -27,7 +27,7 @@ function Inventory:PlayerSelectSlot(player, slot)
             surface.PlaySound('common/wpn_select.wav')
           end
         end
-      else
+      elseif item_table.on_use then
         item_table:do_menu_action('on_use')
       end
     else
