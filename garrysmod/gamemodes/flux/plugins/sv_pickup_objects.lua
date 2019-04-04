@@ -27,14 +27,25 @@ function PLUGIN:pickup_at_trace(player)
         player:PickupObject(ent)
         player.holding_object = ent
 
-        timer.Create('check_ent_hold_'..player:SteamID(), 0.1, 0, function()
+        local timer_name = 'check_ent_hold_'..player:SteamID()
+
+        timer.Create(timer_name, 0.1, 0, function()
+          if !IsValid(player) then
+            if IsValid(ent) then
+              hook.run('PlayerDropObject', player, ent)
+            end
+
+            timer.Remove(timer_name)
+            return
+          end
+
           if IsValid(ent) and !ent:IsPlayerHolding() then
             hook.run('PlayerDropObject', player, ent)
             player.holding_object = nil
-            timer.Remove('check_ent_hold_'..player:SteamID())
+            timer.Remove(timer_name)
           elseif !IsValid(ent) then
             player.holding_object = nil
-            timer.Remove('check_ent_hold_'..player:SteamID())
+            timer.Remove(timer_name)
           end
         end)
 
@@ -54,6 +65,10 @@ function PLUGIN:KeyRelease(player, key)
       self:pickup_at_trace(player)
     end
   end
+
+  if key == IN_RELOAD and IsValid(player.holding_object) then
+    self:pickup_at_trace(player)
+  end
 end
 
 function PLUGIN:PlayerPickupObject(player, ent)
@@ -67,11 +82,15 @@ function PLUGIN:PlayerPickupObject(player, ent)
     ent:SetCollisionGroup(COLLISION_GROUP_PASSABLE_DOOR)
   end
 
-  player.next_pickup = CurTime() + 1
+  if IsValid(player) then
+    player.next_pickup = CurTime() + 1
+  end
 end
 
 function PLUGIN:PlayerDropObject(player, ent)
   ent:SetCollisionGroup(COLLISION_GROUP_NONE)
 
-  player.next_pickup = CurTime() + 1
+  if IsValid(player) then
+    player.next_pickup = CurTime() + 1
+  end
 end
