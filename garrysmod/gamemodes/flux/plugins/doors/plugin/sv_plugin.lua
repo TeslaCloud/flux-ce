@@ -35,7 +35,7 @@ end
 function Doors:load()
   local doors = Data.load_plugin('doors', {})
 
-  if doors then
+  if #doors > 0 then
     for k, v in pairs(doors) do
       local door = ents.GetMapCreatedEntity(v.id)
 
@@ -47,6 +47,8 @@ function Doors:load()
 
       door.conditions = v.conditions
     end
+  else
+    hook.run('InitialDoorsLoad')
   end
 end
 
