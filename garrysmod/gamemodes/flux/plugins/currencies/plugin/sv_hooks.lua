@@ -11,7 +11,6 @@ end
 function Currencies:OnActiveCharacterSet(player, character)
   local currencies = {}
 
-  print_table(character)
   if character.currencies then
     for k, v in pairs(character.currencies) do
       currencies[v.currency_id] = v.amount
