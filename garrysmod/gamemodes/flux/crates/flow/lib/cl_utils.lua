@@ -185,6 +185,8 @@ end
 function util.wrap_text(text, font, width, initial_width)
   if !text or !font or !width then return end
 
+  text = text:gsub('\n', '')
+
   local output = {}
   local space_width = util.text_size(' ', font)
   local dash_width = util.text_size('-', font)
