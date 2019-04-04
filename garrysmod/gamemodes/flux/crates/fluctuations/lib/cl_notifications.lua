@@ -16,10 +16,10 @@ function Flux.Notification:process_queue()
     lifetime = lifetime or 8
     text = t(text) or ''
 
-    display[top] = {text = text, lifetime = lifetime, panel = nil, width = 0, height = 0, isLast = true}
+    display[top] = { text = text, lifetime = lifetime, panel = nil, width = 0, height = 0, is_last = true }
 
     if display[top - 1] then
-      display[top - 1].isLast = false
+      display[top - 1].is_last = false
     end
 
     local panel = vgui.Create('fl_notification')
