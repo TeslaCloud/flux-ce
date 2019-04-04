@@ -12,17 +12,23 @@ end
 function Doors:PlayerUse(player, entity)
   local cur_time = CurTime()
 
-  if (!entity.next_use or entity.next_use <= cur_time) and IsValid(entity) and entity:is_door() and
-  player:GetPos():Distance(entity:GetPos()) < 115 and
-  hook.run('PlayerCanLockDoor', player, entity) and player:IsSprinting() then
-    local locked = entity:get_nv('fl_locked')
+  if IsValid(entity) and entity:is_door() and player:GetPos():Distance(entity:GetPos()) < 115 then
+    if !entity.next_use or entity.next_use <= cur_time then
+      if hook.run('PlayerCanLockDoor', player, entity) and player:IsSprinting() then
+        local locked = entity:get_nv('fl_locked')
 
-    self:lock_door(entity, !locked)
-    entity:Fire(locked and 'Open' or 'Close')
+        self:lock_door(entity, !locked)
+        entity:Fire(locked and 'Open' or 'Close')
 
-    entity.next_use = cur_time + 2
+        entity.next_use = cur_time + 2
 
-    if !locked then
+        if !locked then
+          return false
+        end
+      end
+
+      hook.run('PlayerUseDoor', player, entity)
+    else
       return false
     end
   end
