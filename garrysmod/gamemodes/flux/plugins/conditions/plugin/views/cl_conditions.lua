@@ -32,7 +32,7 @@ function PANEL:Init()
 
   self.load = vgui.create('fl_button', self)
   self.load:SetSize(Font.scale(24), Font.scale(24))
-  self.load:set_icon('fa-folder-o')
+  self.load:set_icon('fa-folder-open')
   self.load:set_centered(true)
   self.load.DoClick = function(btn)
     surface.play_sound('garrysmod/ui_click.wav')
