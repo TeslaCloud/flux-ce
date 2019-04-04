@@ -6,7 +6,7 @@
 -- Lexer. Convert input into a stream of tokens.
 --
 
-class 'Packager::Lexer'
+class 'LuaLexer'
 
 local char = include 'char.lua'
 local LUA_TOKENS = {
@@ -21,21 +21,7 @@ local LUA_TOKENS = {
   ['function']  = 'function',     ['while']     = 'while',          ['<name>']    = 'name',
   ['if']        = 'if',           ['continue']  = 'continue',       ['<string>']  = 'string',
                                                                     ['<eof>']     = 'eof',
-                                                                    ['<comment>'] = 'comment',
-  -- Luna
-  ['import']    = 'import',       ['export']    = 'export',         ['class']     = 'class',
-  ['func']      = 'func',         ['unless']    = 'unless',         ['until']     = 'until',
-  ['from']      = 'from',         ['switch']    = 'switch',         ['case']      = 'case',
-  ['elsif']     = 'elsif',        ['lib']       = 'library',        ['library']   = 'library',
-  ['super']     = 'super',        ['begin']     = 'begin',          ['rescue']    = 'rescue',
-  ['+=']        = 'add_assign',   ['-=']        = 'sub_assign',     ['*=']        = 'mul_assign',
-  ['/=']        = 'div_assign',   ['||=']       = 'or_assign',      ['&&=']       = 'and_assign',
-  ['^=']        = 'xor_assign',   ['%=']        = 'mod_assign',     ['|=']        = 'bor_assign',
-  ['&=']        = 'band_assign',  ['>>=']       = 'brshift_assign', ['<<=']       = 'blshift_assign',
-  ['<=>']       = 'spaceship',    ['>>']        = 'brshift',        ['<<']        = 'blshift',
-  ['..=']       = 'con_assign',   ['->']        = 'arrow',          ['::']        = 'scope',
-  ['&&']        = 'and',          ['||']        = 'or',             ['@@']        = 'this_class',
-  ['**']        = 'pow',          ['**=']       = 'pow_assign'
+                                                                    ['<comment>'] = 'comment'
 }
 local TK_TO_REPRESENTATION = {}
 local NAME_TO_ENUM = {}
@@ -78,8 +64,12 @@ TK_sub        = string.byte '-'
 TK_tild       = string.byte '~'
 TK_vbar       = string.byte '|'
 TK_xor        = string.byte '^'
+TK_space      = string.byte ' '
+TK_tab        = string.byte '\t'
+TK_cr         = string.byte '\r'
+TK_lf         = string.byte '\n'
 
-function Packager.Lexer:visualize(tk)
+function LuaLexer:visualize(tk)
   if tk > 255 then
     return 'TK_'..TK_TO_VISUAL[tk]
   else
@@ -87,11 +77,13 @@ function Packager.Lexer:visualize(tk)
   end
 end
 
-function Packager.Lexer:tokenize(input)
+function LuaLexer:tokenize(input, extended)
   local tokens = {}
   local buf = ''
   local cur_pos = 1
   local line = 1
+
+  if !input then return false end
 
   local function peek()
     local char = input[cur_pos + 1]
@@ -241,10 +233,14 @@ function Packager.Lexer:tokenize(input)
     if current == '\n' then
       line = line + 1
       next()
+      if extended then push(TK_lf, '\n') end
       return true
     elseif current == ' ' or current == '\t'
-        or current == '\v' or current == '\f'
-        or current == ';' then
+      or current == '\v' or current == '\f'
+      or current == ';' then
+        if extended and (current != '\v' and current != '\f') then
+          push(string.byte(current), current)
+        end
         next()
         return true
     elseif current == '-' then
@@ -266,45 +262,21 @@ function Packager.Lexer:tokenize(input)
           push(TK_comment, clear())
         end
         return true
-      elseif current == '=' then
-        push(TK_sub_assign, '-=')
-        next() clear()
-        return true
-      elseif current == '>' then
-        push(TK_arrow, '->')
-        next() clear()
-        return true
       end
 
       push(TK_sub, '-')
       return true
     elseif current == '+' then
       current, char_id = next()
-      if current == '=' then
-        push(TK_add_assign, '+=')
-        next() clear()
-        return true
-      end
-
       push(TK_add, '+')
       return true
     elseif current == '*' then
       current, char_id = next()
-      if current == '=' then
-        push(TK_mul_assign, '*=')
-        next() clear()
-        return true
-      end
-
       push(TK_mul, '*')
       return true
     elseif current == '/' then
       current, char_id = next()
-      if current == '=' then
-        push(TK_div_assign, '/=')
-        next() clear()
-        return true
-      elseif current == '/' then -- C-style comment (thanks garry)
+      if current == '/' then -- C-style comment (thanks garry)
         next() -- eat /
         while current != '\n' do
           current, char_id = save_next()
@@ -333,13 +305,6 @@ function Packager.Lexer:tokenize(input)
 
       if current == '|' then
         current, char_id = next()
-
-        if current == '=' then
-          push(TK_or_assign, '||=')
-          next()
-          return true
-        end
-
         push(TK_or, '||')
         return true
       end
@@ -351,13 +316,6 @@ function Packager.Lexer:tokenize(input)
 
       if current == '&' then
         current, char_id = next()
-
-        if current == '=' then
-          push(TK_and_assign, '&&=')
-          next()
-          return true
-        end
-
         push(TK_and, '&&')
         return true
       end
@@ -405,10 +363,6 @@ function Packager.Lexer:tokenize(input)
 
         if current == '.' then
           push(TK_dots, '...')
-          next()
-          return true
-        elseif current == '=' then
-          push(TK_con_assign, '..=')
           next()
           return true
         end

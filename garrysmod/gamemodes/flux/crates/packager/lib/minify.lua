@@ -1,9 +1,7 @@
-include 'lex.lua'
-
 class 'Packager::Minifier'
 
 function Packager.Minifier:minify(source)
-  local tokens = Packager.Lexer:tokenize(source)
+  local tokens = LuaLexer:tokenize(source)
   local result = ''
 
   for k, v in ipairs(tokens) do

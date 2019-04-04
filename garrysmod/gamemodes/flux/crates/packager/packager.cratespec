@@ -6,11 +6,12 @@ Crate:describe(function(s)
   s.description 'Flux package system with version control and dependency resolution. Also provides Luna language backend.'
   s.authors     { 'TeslaCloud Studios', 'Meow the Cat' }
   s.email       'support@teslacloud.net'
-  s.files       { 'lib/lex.lua', 'lib/parse.lua', 'lib/minify.lua', 'lib/lex_compiler.lua' }
+  s.files       { 'lib/parse.lua', 'lib/minify.lua', 'lib/lex_compiler.lua' }
   s.global      'Packager'
   s.website     'https://teslacloud.net'
   s.license     'MIT'
   s.serverside  (true)
 
   s.depends     'flow'
+  s.depends     'lex_tools'
 end)

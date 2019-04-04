@@ -1,5 +1,3 @@
-include 'lex.lua'
-
 LITERAL_TOKENS    = {
   [TK_name]       = true,
   [TK_number]     = true,
@@ -84,7 +82,7 @@ function Packager.Parser:expect(token, how_far)
   local target_token = self.tokens[self.current_pos + (how_far or 0)] or {}
 
   if target_token.tk != token then
-    self:throw_error('syntax error, '..Packager.Lexer:visualize(token)..' expected, got '..tostring(target_token.val))
+    self:throw_error('syntax error, '..LunaLexer:visualize(token)..' expected, got '..tostring(target_token.val))
   end
 end
 
@@ -451,7 +449,7 @@ end
 function Packager.Parser:parse(tokens)
   if isstring(tokens) then
     self.source = tokens
-    tokens = Packager.Lexer:tokenize(tokens)
+    tokens = LunaLexer:tokenize(tokens)
   else
     self.source = ''
   end

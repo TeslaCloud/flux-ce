@@ -5,6 +5,9 @@ PLUGIN:set_author('TeslaCloud Studios')
 PLUGIN:set_description('Generates documentation for Flux and/or your schema.')
 
 if !Flux.development then return end
+if !Settings.experimental then return end
+
+local green, orange, red = Color(0, 255, 0), Color(255, 150, 0), Color(255, 0, 0)
 
 local openers = {
   [TK_then] = true,
@@ -12,7 +15,7 @@ local openers = {
 }
 
 local function extract_functions(code)
-  local tokens = Packager.Lexer:tokenize(code)
+  local tokens = LuaLexer:tokenize(code)
   local func_data = {}
   local opens = 0
   local skip_next = false
@@ -73,17 +76,11 @@ end
 
 local function extract_functions_from_files(folder)
   local func_data = {}
-  local files, dirs = file.Find(folder..'*', 'GAME')
+  local files = File.get_list(folder)
 
   for k, v in ipairs(files) do
     if v:ends('.lua') then
-      table.Merge(func_data, extract_functions(fileio.Read(folder..v)))
-    end
-  end
-
-  for k, v in ipairs(dirs) do
-    if !v:starts('.') then
-      table.Merge(func_data, extract_functions_from_files(folder..v..'/'))
+      table.Merge(func_data, extract_functions(fileio.Read(v)))
     end
   end
 
@@ -112,3 +109,5 @@ function analyze_folder(folder)
   print('  -> '..(partial > 0 and partial or 'no')..' partially documented '..(partial != 1 and 'functions' or 'function'))
   print('  -> '..(documented > 0 and documented or 'no')..' documented '..(documented != 1 and 'functions' or 'function'))
 end
+
+analyze_folder('gamemodes/flux/')
