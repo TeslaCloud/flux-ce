@@ -9,9 +9,9 @@ en:
     properties:
       name: Name
       title_type:
-        name: Title type
-        select: Select title type...
+        name: Title Type
+        select: Select...
       locked: Locked
     title_type:
-      none: "None"
+      none: "Disabled"
       center: "Centered"

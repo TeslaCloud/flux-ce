@@ -10,19 +10,19 @@ en:
   config:
     character:
       title: Character
-      desc: Character configuration.
+      desc: Character system settings.
       min_name_len:
         name: Minimum Character Name Length
-        desc: "The minimum amount of characters that player's name can be."
+        desc: "The minimum length of the character's name."
       max_name_len:
         name: Maximum Character Name Length
-        desc: "The maximum amount of characters that player's name can be."
+        desc: "The maximum length of the character's name."
       min_desc_len:
         name: Minimum Character Description Length
-        desc: "The maximum amount of characters that character's description can be."
+        desc: "The minimum length of the character's physical description."
       max_desc_len:
         name: Maximum Character Description Length
-        desc: "The maximum amount of characters that character's description can be."
+        desc: "The maximum length of the character's physical description."
   main_menu:
     disconnect: Disconnect
     disconnect_msg: Are you sure that you want to disconnect from this server?
@@ -38,33 +38,33 @@ en:
     delete: Delete
     general: General Character Information
     name: "Full name:"
-    random_name: Choose a random name.
+    random_name: Randomize Name.
     desc: "Description:"
     gender: "Gender:"
     skin: "Skin"
     back: BACK
     next: NEXT
     main_menu: MAIN MENU
-    confirm: Character creation confirmation
+    confirm: Create Character
     confirm_msg: Are you sure that you want to create this character?
-    delete_confirm: Character delete confirmation
-    delete_confirm_msg: "Are you sure that you want to delete this character? Write their name if so: {1}"
+    delete_confirm: Delete Character
+    delete_confirm_msg: "Please type in your character's name to confirm deletion: {1}"
     name_invalid: Invalid name.
     name_len: "Your character's name must be between {1} and {2} characters long."
     desc_invalid: Invalid physical description.
     desc_len: "Your character's physical description must be between {1} and {2} characters long."
-    unknown_error: Unknown error.
+    unknown_error: Unknown Error. Meow probably screwed up again.
     no_gender: You must select a gender.
     no_model: You must select a model.
   tab_menu:
     main_menu: Main Menu
   conditions:
     character:
-      name: Specific character
-      text: Character {1} {2}
-      message: Select character
+      name: Specific Character
+      text: "Character: {1} {2}"
+      message: Select Character
     characters: Characters
   categories:
-    character_management: Character management
+    character_management: Character Management
   loading:
     characters: Loading characters, please wait...

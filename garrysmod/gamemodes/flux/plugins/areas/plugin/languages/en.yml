@@ -2,7 +2,7 @@ en:
   tool:
     area:
       name: Area Tool
-      desc: Create polygonal areas easy mode.
+      desc: Create polygonal areas, ez mode.
       "0": "Left Click: Add Area Point, Right Click: Create Area."
       text: Area ID
       height: Height

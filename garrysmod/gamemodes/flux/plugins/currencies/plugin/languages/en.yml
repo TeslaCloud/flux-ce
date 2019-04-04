@@ -3,28 +3,28 @@ en:
     description: Give money to the player you looking at.
     syntax: <amount> [currency]
   drop_money:
-    description: Put the money where you look.
+    description: Drop money at your target location.
     syntax: <amount> [currency]
   set_money:
-    description: Set amount of currency for player.
+    description: Set money for player.
     syntax: <target> <amount> [currency]
-    message: You have set currency amount for {1} to {3} x {2}.
+    message: "{1}'s {2} successfully set to {3}."
   currency:
     title: Money
     give:
       title: Give money
-      message: How much money you want to give?
+      message: Amount to give.
     drop:
       title: Drop money
-      message: How much money you want to drop?
+      message: Amount to drop.
     notify:
-      invalid_entity: Entity invalid or not found.
-      too_far: Target is too far.
-      not_enough_money: Not enough money.
-      invalid_currency: Currency not found.
-      invalid_amount: Invalid amount.
-      pickup: You picked up {2} x {1}.
-      receive: You received {3} x {2} from {1}.
-      give: You gave {3} x {2} to {1}.
-      drop: You dropped {2} x {1}.
-      set: Your currency amount has been set to {2} x {1}.
+      invalid_entity: This is not a valid entity!
+      too_far: You are too far away from the target.
+      not_enough_money: Insufficient funds.
+      invalid_currency: This is not a valid currency.
+      invalid_amount: This is not a valid amount.
+      pickup: You picked up {2} {1}.
+      receive: You received {3} {2} from {1}.
+      give: You gave {3} {2} to {1}.
+      drop: You dropped {2} {1}.
+      set: Your {1} balance has been set to {2}.
