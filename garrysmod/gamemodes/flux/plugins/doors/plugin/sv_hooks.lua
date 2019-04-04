@@ -33,8 +33,6 @@ function Doors:PlayerUse(player, entity)
     else
       return false
     end
-  else
-    return false
   end
 end
 
