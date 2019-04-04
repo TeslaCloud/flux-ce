@@ -9,6 +9,21 @@ local half_size = size * 0.5
 local double_size = size * 2
 local gap = 8
 local cur_gap = gap
+local global_offset = { x = 0, y = 0 }
+local prev_angles = nil
+
+function PLUGIN:Think()
+  if IsValid(PLAYER) then
+    local angles = PLAYER:EyeAngles()
+
+    if !prev_angles then prev_angles = angles end
+
+    global_offset.x = global_offset.x - (prev_angles.yaw - angles.yaw)
+    global_offset.y = global_offset.y + (prev_angles.pitch - angles.pitch)
+
+    prev_angles = angles
+  end
+end
 
 function PLUGIN:ShouldHUDPaintCrosshair()
   if PLAYER:running() or !PLAYER:Alive() or !PLAYER:has_initialized() then
@@ -18,12 +33,15 @@ end
 
 function PLUGIN:HUDPaint()
   if IsValid(PLAYER) and hook.run('ShouldHUDPaint') != false and hook.run('ShouldHUDPaintCrosshair') != false then
+    local lerp_step = FrameTime() * 6
     local trace = PLAYER:GetEyeTraceNoCursor()
     local distance = PLAYER:GetPos():Distance(trace.HitPos)
     local draw_color = Plugin.call('AdjustCrosshairColor', trace, distance) or color_white
     local secondary_draw_color = draw_color:alpha(25)
     local real_gap = Plugin.call('AdjustCrosshairGap', trace, distance) or math.Round(gap * math.Clamp(distance / 400, 0.5, 4))
-    cur_gap = Lerp(FrameTime() * 6, cur_gap, real_gap)
+    cur_gap = Lerp(lerp_step, cur_gap, real_gap)
+    global_offset.x = Lerp(lerp_step, global_offset.x, 0)
+    global_offset.y = Lerp(lerp_step, global_offset.y, 0)
 
     if math.abs(cur_gap - real_gap) < 0.5 then
       cur_gap = real_gap
@@ -34,14 +52,15 @@ function PLUGIN:HUDPaint()
     end
 
     local scrw, scrh = ScrW(), ScrH()
+    local gox, goy = global_offset.x, global_offset.y
 
-    draw.RoundedBox(0, scrw * 0.5 - half_size, scrh * 0.5 - half_size, size, size, draw_color)
+    draw.RoundedBox(0, gox + (scrw * 0.5 - half_size), goy + (scrh * 0.5 - half_size), size, size, draw_color)
 
-    draw.RoundedBox(0, scrw * 0.5 - half_size - cur_gap, scrh * 0.5 - size, size, double_size, secondary_draw_color)
-    draw.RoundedBox(0, scrw * 0.5 - half_size + cur_gap, scrh * 0.5 - size, size, double_size, secondary_draw_color)
+    draw.RoundedBox(0, gox + (scrw * 0.5 - half_size - cur_gap), goy + (scrh * 0.5 - size), size, double_size, secondary_draw_color)
+    draw.RoundedBox(0, gox + (scrw * 0.5 - half_size + cur_gap), goy + (scrh * 0.5 - size), size, double_size, secondary_draw_color)
 
-    draw.RoundedBox(0, scrw * 0.5 - size, scrh * 0.5 - half_size - cur_gap, double_size, size, secondary_draw_color)
-    draw.RoundedBox(0, scrw * 0.5 - size, scrh * 0.5 - half_size + cur_gap, double_size, size, secondary_draw_color)
+    draw.RoundedBox(0, gox + (scrw * 0.5 - size), goy + (scrh * 0.5 - half_size - cur_gap), double_size, size, secondary_draw_color)
+    draw.RoundedBox(0, gox + (scrw * 0.5 - size), goy + (scrh * 0.5 - half_size + cur_gap), double_size, size, secondary_draw_color)
   end
 end
 
