@@ -1,6 +1,9 @@
 ru:
   doors:
     title: Двери
+    unlock: Отпереть
+    lock: Запереть
+    settings: Настройки
     categories:
       general: Общее
     properties:

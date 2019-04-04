@@ -1,6 +1,9 @@
 en:
   doors:
     title: Doors
+    unlock: Unlock
+    lock: Lock
+    settings: Settings
     categories:
       general: General
     properties:
