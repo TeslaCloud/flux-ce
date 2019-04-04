@@ -256,17 +256,19 @@ do
     local item_list = self:get_items()
     local to_ret = {}
 
-   amount = amount or 1
+    amount = amount or 1
 
-    for k, v in pairs(instances) do
-      for k1, v1 in pairs(item_list) do
-        if v1 == v then
-          table.insert(to_ret, v)
+    if instances then
+      for k, v in pairs(instances) do
+        for k1, v1 in pairs(item_list) do
+          if v1 == k then
+            table.insert(to_ret, v)
 
-          amount = amount - 1
+            amount = amount - 1
 
-          if amount <= 0 then
-            return to_ret
+            if amount <= 0 then
+              return to_ret
+            end
           end
         end
       end
