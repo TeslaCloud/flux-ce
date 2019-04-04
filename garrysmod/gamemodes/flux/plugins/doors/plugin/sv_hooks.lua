@@ -27,10 +27,14 @@ function Doors:PlayerUse(player, entity)
         end
       end
 
+      entity.next_use = cur_time + 0.5
+
       hook.run('PlayerUseDoor', player, entity)
     else
       return false
     end
+  else
+    return false
   end
 end
 
