@@ -158,7 +158,7 @@ Pipeline.register('html', function(id, file_name, pipe)
   end
 
   local file_path = 'gamemodes/'..file_name
-  local contents = fileio.Read(file_path)
+  local contents = File.read(file_path)
 
   if contents then
     file_name = file_name:gsub('%.html', ''):gsub('%.loon', ''):gsub('%.js', ''):gsub('%.css', ''):gsub('%.scss', ''):GetFileFromFilename()

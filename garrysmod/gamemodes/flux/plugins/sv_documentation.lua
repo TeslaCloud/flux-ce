@@ -80,7 +80,7 @@ local function extract_functions_from_files(folder)
 
   for k, v in ipairs(files) do
     if v:ends('.lua') then
-      table.Merge(func_data, extract_functions(fileio.Read(v)))
+      table.Merge(func_data, extract_functions(File.read(v)))
     end
   end
 

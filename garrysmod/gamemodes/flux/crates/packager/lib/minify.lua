@@ -51,7 +51,7 @@ function Packager.Minifier:minify_folder(folder)
 
   for k, v in ipairs(files) do
     if v:ends('.lua') then
-      code = code..'function '..(folder..v):gsub('[/%s%.]', '_')..'(...)\n'..tostring(fileio.Read(folder..v))..'\nend'
+      code = code..'function '..(folder..v):gsub('[/%s%.]', '_')..'(...)\n'..tostring(File.read(folder..v))..'\nend'
     end
   end
 

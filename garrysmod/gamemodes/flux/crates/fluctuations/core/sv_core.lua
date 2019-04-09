@@ -1,8 +1,8 @@
 DeriveGamemode('sandbox')
 
-fileio.old_write = fileio.old_write or fileio.Write
+File.old_write = File.old_write or File.write
 
-function fileio.Write(file_name, file_contents)
+function File.write(file_name, file_contents)
   local pieces = string.split(file_name, '/')
   local current_path = ''
 
@@ -14,11 +14,11 @@ function fileio.Write(file_name, file_contents)
     current_path = current_path..v..'/'
 
     if !file.Exists(current_path, 'GAME') then
-      fileio.MakeDirectory(current_path)
+      File.mkdir(current_path)
     end
   end
 
-  fileio.old_write(file_name, file_contents)
+  File.old_write(file_name, file_contents)
 end
 
 old_server_log = old_server_log or ServerLog

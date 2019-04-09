@@ -83,7 +83,7 @@ local function point_at(source, token)
 end
 
 local function do_lint(file)
-  local source = fileio.Read(file)
+  local source = File.read(file)
   local tokens = LuaLexer:tokenize(source, true)
   local lines = source:split('\n')
   local error = false

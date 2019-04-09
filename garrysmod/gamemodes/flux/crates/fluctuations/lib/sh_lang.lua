@@ -128,7 +128,7 @@ if CLIENT then
 else
   Pipeline.register('language', function(id, file_name, pipe)
     if file_name:ends('.yml') then
-      local contents = fileio.Read('gamemodes/'..file_name)
+      local contents = File.read('gamemodes/'..file_name)
 
       if contents then
         for k, v in pairs(YAML.eval(contents)) do

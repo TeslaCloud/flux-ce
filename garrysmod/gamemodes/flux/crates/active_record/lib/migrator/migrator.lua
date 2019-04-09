@@ -22,8 +22,8 @@ function ActiveRecord.Migrator:init(version)
 end
 
 function ActiveRecord.Migrator:generate_schema(version)
-  fileio.Delete(self.db_path..'/.keep')
-  fileio.Write(self.schema_path, ActiveRecord.dump_schema(version or (self.schema and self.schema.version) or 0))
+  File.delete(self.db_path..'/.keep')
+  File.write(self.schema_path, ActiveRecord.dump_schema(version or (self.schema and self.schema.version) or 0))
   self.schema = include(self.schema_path:gsub('gamemodes/', ''))
   ActiveRecord.metadata = self.schema.metadata or ActiveRecord.metadata or {}
 
@@ -127,12 +127,12 @@ function ActiveRecord.Migrator:migration_exists(version, name)
 end
 
 function ActiveRecord.Migrator:generate_migration(name, body, verbose, file_path)
-  fileio.Delete(self.db_path..'/migrate/.keep')
+  File.delete(self.db_path..'/migrate/.keep')
 
   local version = self:generate_version()
   file_path = (file_path and file_path:ensure_end('/') or (self.db_path..'/migrate/'))..version..'_'..name:underscore()..'.lua'
 
-  fileio.Write(file_path, [[local Migration = ActiveRecord.Migration.new(]]..version..[[)
+  File.write(file_path, [[local Migration = ActiveRecord.Migration.new(]]..version..[[)
   function Migration:change()
 ]]..string.set_indent(body or '', '    '):trim_end('    ')..[[
   end
@@ -157,7 +157,7 @@ function ActiveRecord.Migrator:migration_from_file(file)
 
   if self:migration_exists(version, name) then return end
 
-  local contents = fileio.Read(file)
+  local contents = File.read(file)
 
   if contents then
     self:generate_migration(name, contents, Flux.development)

@@ -204,7 +204,7 @@ function Plugin.register(obj)
       if file.Exists(file_path, 'GAME') then
         Flux.dev_print('Importing config: '..file_path)
 
-        Config.import(fileio.Read(file_path), CONFIG_PLUGIN)
+        Config.import(File.read(file_path), CONFIG_PLUGIN)
       end
     end
 
@@ -326,7 +326,7 @@ function Plugin.include_schema()
 
     Flux.shared.schema_info.depends = {}
 
-    local schema_yml = YAML.eval(fileio.Read(file_path))
+    local schema_yml = YAML.eval(File.read(file_path))
     deps = schema_yml.depends or {}
 
     if IS_DEVELOPMENT then

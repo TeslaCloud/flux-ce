@@ -187,7 +187,7 @@ if SERVER then
     local config_table
 
     if isstring(path) then
-      local contents = fileio.Read(path)
+      local contents = File.read(path)
 
       if contents then
         config_table = YAML.eval(contents)
@@ -216,7 +216,7 @@ function Config.read(path, from_config)
   local config_table
 
   if isstring(path) then
-    config_table = YAML.eval(fileio.Read(path))
+    config_table = YAML.eval(File.read(path))
   elseif istable(path) then
     config_table = path
   else

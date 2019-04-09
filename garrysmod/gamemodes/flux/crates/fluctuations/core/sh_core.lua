@@ -160,7 +160,7 @@ function Flux.get_schema_info()
 
     local schema_folder = string.lower(Flux.get_schema_folder())
     local schema_data = util.KeyValuesToTable(
-      fileio.Read('gamemodes/'..schema_folder..'/'..schema_folder..'.txt')
+      File.read('gamemodes/'..schema_folder..'/'..schema_folder..'.txt')
     ) or {}
 
     if schema_data['Gamemode'] then

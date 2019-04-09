@@ -8,7 +8,7 @@ if SERVER then
       key = key..'.json'
     end
 
-    fileio.Write('settings/flux/'..key, util.TableToJSON(value))
+    File.write('settings/flux/'..key, util.TableToJSON(value))
   end
 
   function Data.load(key, default)
@@ -19,7 +19,7 @@ if SERVER then
     end
 
     if file.Exists('settings/flux/'..key, 'GAME') then
-      return util.JSONToTable(fileio.Read('settings/flux/'..key))
+      return util.JSONToTable(File.read('settings/flux/'..key))
     elseif default != nil then
       return default
     else
@@ -37,7 +37,7 @@ if SERVER then
     end
 
     if file.Exists('settings/flux/'..key, 'GAME') then
-      fileio.Delete('settings/flux/'..key)
+      File.delete('settings/flux/'..key)
     end
   end
 else

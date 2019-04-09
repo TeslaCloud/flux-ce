@@ -347,16 +347,16 @@ do
       local files, dirs = file.Find('lua/_flux/client/*', 'GAME')
 
       for k, v in ipairs(files) do
-        fileio.Delete('lua/_flux/client/'..v)
+        File.delete('lua/_flux/client/'..v)
       end
     end
   end
 
   local function write_client_file(path, contents)
-    fileio.MakeDirectory 'lua/_flux'
-    fileio.MakeDirectory 'lua/_flux/client'
+    File.mkdir 'lua/_flux'
+    File.mkdir 'lua/_flux/client'
 
-    fileio.Write('lua/_flux/client/'..path, contents)
+    File.write('lua/_flux/client/'..path, contents)
     AddCSLuaFile('_flux/client/'..path)
   end
 
@@ -397,7 +397,7 @@ do
     if !IsValid(player) then
       print('Rewriting HTML...')
       for k, v in pairs(Flux.HTML.file_paths) do
-        Flux.HTML[v.pipe][v.file_name] = fileio.Read(k)
+        Flux.HTML[v.pipe][v.file_name] = File.read(k)
       end
 
       write_html()
