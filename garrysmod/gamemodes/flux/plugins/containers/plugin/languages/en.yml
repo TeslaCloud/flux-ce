@@ -5,67 +5,67 @@ en:
       desc: A regular cardboard box. No, you can't hide inside it.
     cupboard:
       title: Cupboard
-      desc:
+      desc: ""
     drawer:
       title: Drawer
-      desc:
+      desc: ""
     small_drawer:
       title: Small Drawer
-      desc:
+      desc: ""
     tall_drawer:
       title: Tall Drawer
-      desc:
+      desc: ""
     dresser:
       title: Dresser
-      desc:
+      desc: ""
     fridge:
       title: Fridge
-      desc:
+      desc: ""
     lockers:
       title: Locker
-      desc:
+      desc: ""
     barrel:
       title: Barrel
-      desc:
+      desc: ""
     desk:
       title: Desk
-      desc:
+      desc: ""
     medium_box:
       title: Box
-      desc:
+      desc: ""
     small_box:
       title: Small Box
-      desc:
+      desc: ""
     trash_bin:
       title: Trash Can
-      desc:
+      desc: ""
     dumpster:
       title: Trash Dumpster
-      desc:
+      desc: ""
     wooden_crate:
       title: Crate
-      desc:
+      desc: ""
     big_wooden_crate:
       title: Big Crate
-      desc:
+      desc: ""
     file_cabinet:
       title: Filing Cabinet
-      desc:
+      desc: ""
     tall_file_cabinet:
       title: Tall Filing Cabinet
-      desc:
+      desc: ""
     storage_closet:
       title: Closet
-      desc:
+      desc: ""
     large_fridge:
       title: Industrial Fridge
-      desc:
+      desc: ""
     counter:
       title: Counter
-      desc:
+      desc: ""
     metal_box:
       title: Metal Container
-      desc:
+      desc: ""
     medium_wooden_crate:
       title: Wooden Crate
-      desc:
+      desc: ""
