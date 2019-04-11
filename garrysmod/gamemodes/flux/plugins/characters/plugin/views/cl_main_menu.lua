@@ -11,16 +11,18 @@ function PANEL:Init()
 
   self:MakePopup()
 
-  local menu_music = Theme.get_sound('menu_music')
+  if !Flux.development then
+    local menu_music = Theme.get_sound('menu_music')
 
-  if !Flux.menu_music and menu_music and menu_music != '' then
-    sound.PlayFile(menu_music, '', function(station)
-      if IsValid(station) then
-        station:Play()
+    if !Flux.menu_music and menu_music and menu_music != '' then
+      sound.PlayFile(menu_music, '', function(station)
+        if IsValid(station) then
+          station:Play()
 
-        Flux.menu_music = station
-      end
-    end)
+          Flux.menu_music = station
+        end
+      end)
+    end
   end
 
   Theme.hook('CreateMainMenu', self)
