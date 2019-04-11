@@ -14,6 +14,8 @@ function Inventory:PlayerSelectSlot(player, slot)
   local item_table = Item.find_by_instance_id(instance_id)
 
   if !player.next_slot_click or player.next_slot_click <= cur_time then
+    self:popup_hotbar()
+
     if item_table then
       if item_table.weapon_class then
         local weapon = player:GetWeapon(item_table.weapon_class)
