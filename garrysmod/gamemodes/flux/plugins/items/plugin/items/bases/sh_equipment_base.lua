@@ -62,10 +62,12 @@ function ItemEquippable:can_transfer(player, inv_type, x, y)
         end
       end
     end
-  elseif inv_type != self.equip_inv then
+  elseif inv_type != self.equip_inv and self.inventory_type == self.equip_inv then
     if self:can_unequip(player) == false then
       return false
     end
+  else
+    return false
   end
 end
 
