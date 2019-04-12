@@ -1,3 +1,4 @@
+![Flux](https://i.gyazo.com/571065675b6d4ad8228eebe0cc1e0d10.png)
 # Flux
 Flux is a WIP gamemode framework designed with performance and convenience in mind.
 
