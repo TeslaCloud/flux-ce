@@ -3,6 +3,10 @@ DEFINE_BASECLASS('gamemode_base')
 function GM:DoPlayerDeath(player, attacker, damage_info)
 end
 
+function GM:PlayerDeathSound(player)
+  return true
+end
+
 function GM:InitPostEntity()
   local toolgun = weapons.GetStored('gmod_tool')
 
