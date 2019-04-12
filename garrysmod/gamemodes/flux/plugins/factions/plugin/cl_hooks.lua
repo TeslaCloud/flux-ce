@@ -102,6 +102,16 @@ function Factions:PreRebuildScoreboard(panel, w, h)
       player_card:set_player(v1)
       player_card:SetPos(0, 5)
 
+      local timer_name = 'ping_updater_'..v1:SteamID()
+
+      timer.Create(timer_name, 1, 0, function()
+        if IsValid(player_card) and IsValid(v1) then
+          player_card.ping:SetText(v1:Ping())
+        else
+          timer.Remove(timer_name)
+        end
+      end)
+
       list:AddItem(player_card)
 
       table.insert(panel.player_cards, player_card)

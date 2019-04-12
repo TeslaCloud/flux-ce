@@ -93,6 +93,16 @@ function PANEL:rebuild()
   self.name_label:SetTextColor(Theme.get_color('text'))
   self.name_label:SizeToContents()
 
+  text = player:Ping()
+  text_w, text_h = util.text_size(text, font)
+
+  self.ping = vgui.Create('DLabel', self)
+  self.ping:SetText(text)
+  self.ping:SetPos(self:GetWide() - text_w - Font.scale(16), self:GetTall() * 0.5 - text_h * 0.5)
+  self.ping:SetFont(font)    
+  self.ping:SetTextColor(Theme.get_color('text'))
+  self.ping:SizeToContents()
+
   hook.run('RebuildScoreboardPlayerCard', self, player)
 end
 
