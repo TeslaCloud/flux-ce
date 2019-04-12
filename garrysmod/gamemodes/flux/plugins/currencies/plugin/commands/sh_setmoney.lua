@@ -1,7 +1,7 @@
 ﻿local COMMAND = Command.new('setmoney')
 COMMAND.name = 'SetMoney'
-COMMAND.description = t'set_money.description'
-COMMAND.syntax = t'set_money.syntax'
+COMMAND.description = 'set_money.description'
+COMMAND.syntax = 'set_money.syntax'
 COMMAND.permission = 'moderator'
 COMMAND.category = 'categories.character_management'
 COMMAND.arguments = 3

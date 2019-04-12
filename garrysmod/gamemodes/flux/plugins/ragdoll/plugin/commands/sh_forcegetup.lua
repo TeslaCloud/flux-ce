@@ -1,7 +1,7 @@
 local COMMAND = Command.new('forcegetup')
 COMMAND.name = 'ForceGetUp'
-COMMAND.description = t'force_getup.description'
-COMMAND.syntax = t'force_getup.syntax'
+COMMAND.description = 'force_getup.description'
+COMMAND.syntax = 'force_getup.syntax'
 COMMAND.permission = 'assistant'
 COMMAND.category = 'categories.roleplay'
 COMMAND.arguments = 1

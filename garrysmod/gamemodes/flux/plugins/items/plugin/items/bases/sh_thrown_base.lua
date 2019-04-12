@@ -6,7 +6,7 @@ class 'ItemThrown' extends 'ItemWeapon'
 
 ItemThrown.name = 'Thrown Base'
 ItemThrown.description = 'An weapon that can be thrown.'
-ItemThrown.category = t'item.category.thrown'
+ItemThrown.category = 'item.category.thrown'
 ItemThrown.equip_slot = 'item.slot.throwable'
 ItemThrown.weapon_class = 'weapon_frag'
 ItemThrown.thrown_ammo_class = 'Grenade'

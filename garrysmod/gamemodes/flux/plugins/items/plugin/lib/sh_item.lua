@@ -67,7 +67,7 @@ function Item.register(id, data)
   data.color = data.color or nil
   data.cost = data.cost or 0
   data.special_color = data.special_color or nil
-  data.category = data.category or t('item.category.other')
+  data.category = data.category or 'item.category.other'
   data.is_base = data.is_base or false
   data.instance_id = ITEM_TEMPLATE
   data.data = data.data or {}

@@ -168,19 +168,19 @@ else
   end
 
   function ItemBase:get_use_text()
-    return self.use_text or t'item.option.use'
+    return self.use_text or 'item.option.use'
   end
 
   function ItemBase:get_take_text()
-    return self.take_text or t'item.option.take'
+    return self.take_text or 'item.option.take'
   end
 
   function ItemBase:get_drop_text()
-    return self.drop_text or t'item.option.drop'
+    return self.drop_text or 'item.option.drop'
   end
 
   function ItemBase:get_cancel_text()
-    return self.cancel_text or t'item.option.cancel'
+    return self.cancel_text or 'item.option.cancel'
   end
 
   function ItemBase:get_icon_model()

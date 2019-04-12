@@ -1,7 +1,7 @@
 ﻿local COMMAND = Command.new('charattributemultiplier')
 COMMAND.name = 'CharAttributeMultiplier'
-COMMAND.description = t'char_attribute_multiplier.description'
-COMMAND.syntax = t'char_attribute_multiplier.syntax'
+COMMAND.description = 'char_attribute_multiplier.description'
+COMMAND.syntax = 'char_attribute_multiplier.syntax'
 COMMAND.permission = 'moderator'
 COMMAND.category = 'categories.character_management'
 COMMAND.arguments = 4

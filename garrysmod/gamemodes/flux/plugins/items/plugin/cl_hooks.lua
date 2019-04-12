@@ -50,7 +50,7 @@ function Items:PlayerUseItemMenu(instance_id, is_entity)
     if item_table.custom_buttons then
       for k, v in pairs(item_table.custom_buttons) do
         if (v.on_show and v.on_show(item_table) == true) or !v.on_show then
-          local button = item_menu:add_option(k, function()
+          local button = item_menu:add_option(t(k), function()
             item_table:do_menu_action(v.callback)
           end)
 
@@ -61,7 +61,7 @@ function Items:PlayerUseItemMenu(instance_id, is_entity)
 
     if item_table.on_use then
       if !item_table.is_action_visible or item_table:is_action_visible('use') != false then
-        local use_button = item_menu:add_option(item_table:get_use_text(), function()
+        local use_button = item_menu:add_option(t(item_table:get_use_text()), function()
           item_table:do_menu_action('on_use')
         end)
 
@@ -71,7 +71,7 @@ function Items:PlayerUseItemMenu(instance_id, is_entity)
 
     if is_entity then
       if !item_table.is_action_visible or item_table:is_action_visible('take') != false then
-        local take_button = item_menu:add_option(item_table:get_take_text(), function()
+        local take_button = item_menu:add_option(t(item_table:get_take_text()), function()
           item_table:do_menu_action('on_take')
         end)
 
@@ -79,7 +79,7 @@ function Items:PlayerUseItemMenu(instance_id, is_entity)
       end
     else
       if !item_table.is_action_visible or item_table:is_action_visible('drop') != false then
-        local drop_button = item_menu:add_option(item_table:get_drop_text(), function()
+        local drop_button = item_menu:add_option(t(item_table:get_drop_text()), function()
           item_table:do_menu_action('on_drop')
         end)
 

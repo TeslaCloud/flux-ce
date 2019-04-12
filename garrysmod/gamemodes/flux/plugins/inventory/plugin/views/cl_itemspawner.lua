@@ -31,13 +31,14 @@ function PANEL:rebuild()
   for id, category in pairs(categories) do
     local collapsible = self.layout:Add('DCollapsibleCategory')
     local list = vgui.Create('DIconLayout', self)
-    collapsible:SetLabel(id)
+    collapsible:SetLabel(t(id))
     collapsible:SetContents(list)
 
     for k, v in ipairs(category) do
       local spawn_icon = list:Add('SpawnIcon')
       spawn_icon:SetSize(48, 48)
       spawn_icon:SetModel(v.item_table.model)
+      spawn_icon:SetToolTip(t(v.item_table:get_name())..'\n'..t(v.item_table:get_description()))
 
       spawn_icon.DoClick = function(btn)
         MVC.push('SpawnMenu::SpawnItem', v.id)

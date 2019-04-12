@@ -1,5 +1,5 @@
 ROLE.name = 'User'
-ROLE.description = t'role.user'
+ROLE.description = 'role.user'
 ROLE.color = Color(255, 255, 255)
 ROLE.icon = 'icon16/user.png'
 ROLE.immunity = 0

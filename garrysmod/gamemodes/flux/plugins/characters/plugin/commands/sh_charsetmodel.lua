@@ -1,7 +1,7 @@
 ﻿local COMMAND = Command.new('charsetmodel')
 COMMAND.name = 'CharSetModel'
-COMMAND.description = t'char_set_model.description'
-COMMAND.syntax = t'char_set_model.syntax'
+COMMAND.description = 'char_set_model.description'
+COMMAND.syntax = 'char_set_model.syntax'
 COMMAND.permission = 'assistant'
 COMMAND.category = 'categories.character_management'
 COMMAND.arguments = 2

@@ -1,7 +1,7 @@
 ﻿local COMMAND = Command.new('charattributeboost')
 COMMAND.name = 'CharAttributeBoost'
-COMMAND.description = t'char_attribute_boost.description'
-COMMAND.syntax = t'char_attribute_boost.syntax'
+COMMAND.description = 'char_attribute_boost.description'
+COMMAND.syntax = 'char_attribute_boost.syntax'
 COMMAND.permission = 'moderator'
 COMMAND.category = 'categories.character_management'
 COMMAND.arguments = 4

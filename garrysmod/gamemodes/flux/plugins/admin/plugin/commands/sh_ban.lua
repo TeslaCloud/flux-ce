@@ -1,7 +1,7 @@
 local COMMAND = Command.new('ban')
 COMMAND.name = 'Ban'
-COMMAND.description = t'bancmd.description'
-COMMAND.syntax = t'bancmd.syntax'
+COMMAND.description = 'bancmd.description'
+COMMAND.syntax = 'bancmd.syntax'
 COMMAND.permission = 'assistant'
 COMMAND.category = 'categories.administration'
 COMMAND.arguments = 2

@@ -3,6 +3,7 @@ en:
     category:
       consumables: Consumables
       equipment: Equipment
+      clothing: Clothing
       other: Other
       weapon: Weapon
       ammo: Ammunition

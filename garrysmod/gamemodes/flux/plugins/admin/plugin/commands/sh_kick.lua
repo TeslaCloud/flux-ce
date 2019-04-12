@@ -1,7 +1,7 @@
 local COMMAND = Command.new('kick')
 COMMAND.name = 'Kick'
-COMMAND.description = t'kickcmd.description'
-COMMAND.syntax = t'kickcmd.syntax'
+COMMAND.description = 'kickcmd.description'
+COMMAND.syntax = 'kickcmd.syntax'
 COMMAND.permission = 'assistant'
 COMMAND.category = 'categories.administration'
 COMMAND.arguments = 1

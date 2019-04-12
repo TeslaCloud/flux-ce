@@ -1,7 +1,7 @@
 local COMMAND = Command.new('giveitem')
 COMMAND.name = 'GiveItem'
-COMMAND.description = t'give_item.description'
-COMMAND.syntax = t'give_item.syntax'
+COMMAND.description = 'give_item.description'
+COMMAND.syntax = 'give_item.syntax'
 COMMAND.permission = 'moderator'
 COMMAND.category = 'categories.character_management'
 COMMAND.arguments = 2

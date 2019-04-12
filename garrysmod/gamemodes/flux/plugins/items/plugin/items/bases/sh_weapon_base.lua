@@ -6,10 +6,10 @@ class 'ItemWeapon' extends 'ItemEquippable'
 
 ItemWeapon.name = 'Weapon Base'
 ItemWeapon.description = 'An weapon that can be equipped.'
-ItemWeapon.category = t'item.category.weapon'
+ItemWeapon.category = 'item.category.weapon'
 ItemWeapon.equip_slot = 'item.slot.primary'
 ItemWeapon.weapon_class = 'weapon_pistol'
-ItemWeapon:add_button(t'item.option.unload', {
+ItemWeapon:add_button('item.option.unload', {
   icon = 'icon16/add.png',
   callback = 'on_unload',
   on_show = function(item_table)

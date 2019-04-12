@@ -1,7 +1,7 @@
 ﻿local COMMAND = Command.new('dropmoney')
 COMMAND.name = 'DropMoney'
-COMMAND.description = t'drop_money.description'
-COMMAND.syntax = t'drop_money.syntax'
+COMMAND.description = 'drop_money.description'
+COMMAND.syntax = 'drop_money.syntax'
 COMMAND.category = 'categories.general'
 COMMAND.arguments = 2
 COMMAND.aliases = { 'dropcash', 'droptokens' }

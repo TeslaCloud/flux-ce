@@ -1,7 +1,7 @@
 ﻿local COMMAND = Command.new('charsetattribute')
 COMMAND.name = 'CharSetAttribute'
-COMMAND.description = t'char_set_attribute.description'
-COMMAND.syntax = t'char_set_attribute.syntax'
+COMMAND.description = 'char_set_attribute.description'
+COMMAND.syntax = 'char_set_attribute.syntax'
 COMMAND.permission = 'moderator'
 COMMAND.category = 'categories.character_management'
 COMMAND.arguments = 3

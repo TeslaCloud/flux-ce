@@ -1,7 +1,7 @@
 local COMMAND = Command.new('fullbright')
 COMMAND.name = 'Fullbright'
-COMMAND.description = t'fullbright.description'
-COMMAND.syntax = t'fullbright.syntax'
+COMMAND.description = 'fullbright.description'
+COMMAND.syntax = 'fullbright.syntax'
 COMMAND.permission = 'moderator'
 COMMAND.category = 'categories.player_management'
 COMMAND.arguments = 2

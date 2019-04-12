@@ -149,7 +149,7 @@ function PANEL:PaintOver(w, h)
 
           for k, v in ipairs(cmds) do
             local w, h = draw.SimpleText('/' + v.name, font, 16, 16 + last_y, color)
-            w, h = draw.SimpleText(v.syntax, font, 16 + w + 8, 16 + last_y, color_white)
+            w, h = draw.SimpleText(t(v.syntax), font, 16 + w + 8, 16 + last_y, color_white)
 
             if #cmds == 1 then
               local small_font = Theme.get_font('text_small')

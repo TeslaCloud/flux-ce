@@ -1,6 +1,6 @@
 local COMMAND = Command.new('unstatic')
 COMMAND.name = 'UnStatic'
-COMMAND.description = t'unstatic.description'
+COMMAND.description = 'unstatic.description'
 COMMAND.permission = 'assistant'
 COMMAND.category = 'categories.level_design'
 COMMAND.aliases = { 'staticpropremove', 'staticremove' }

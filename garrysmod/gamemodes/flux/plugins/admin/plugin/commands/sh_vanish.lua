@@ -1,7 +1,7 @@
 local COMMAND = Command.new('vanish')
 COMMAND.name = 'Vanish'
-COMMAND.description = t'vanish.description'
-COMMAND.syntax = t'vanish.syntax'
+COMMAND.description = 'vanish.description'
+COMMAND.syntax = 'vanish.syntax'
 COMMAND.permission = 'moderator'
 COMMAND.category = 'categories.player_management'
 COMMAND.arguments = 1

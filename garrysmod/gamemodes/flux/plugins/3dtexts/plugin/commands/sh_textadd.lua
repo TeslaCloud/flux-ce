@@ -1,7 +1,7 @@
 local COMMAND = Command.new('textadd')
 COMMAND.name = 'TextAdd'
-COMMAND.description = t'3d_text.text_add_desc'
-COMMAND.syntax = t'3d_text.text_add_syntax'
+COMMAND.description = '3d_text.text_add_desc'
+COMMAND.syntax = '3d_text.text_add_syntax'
 COMMAND.permission = 'assistant'
 COMMAND.category = 'categories.level_design'
 COMMAND.arguments = 1

@@ -179,6 +179,8 @@ function PANEL:rebuild()
   self.spawn_icon:SetSize(60, 60)
   self.spawn_icon:SetModel(self.item_data:get_icon_model() or self.item_data:get_model(), self.item_data.skin)
   self.spawn_icon:SetMouseInputEnabled(false)
+
+  self:SetToolTip(t(self.item_data:get_name())..'\n'..t(self.item_data:get_description()))
 end
 
 function PANEL:get_inventory_panel()

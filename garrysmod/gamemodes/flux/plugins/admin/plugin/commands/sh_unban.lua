@@ -1,7 +1,7 @@
 local COMMAND = Command.new('unban')
 COMMAND.name = 'Unban'
-COMMAND.description = t'unbancmd.description'
-COMMAND.syntax = t'unbancmd.syntax'
+COMMAND.description = 'unbancmd.description'
+COMMAND.syntax = 'unbancmd.syntax'
 COMMAND.permission = 'assistant'
 COMMAND.category = 'categories.administration'
 COMMAND.arguments = 1
