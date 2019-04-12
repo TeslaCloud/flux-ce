@@ -129,25 +129,24 @@ end
 
 function Characters:RebuildScoreboardPlayerCard(card, player)
   local x, y = card.name_label:GetPos()
-  local old_x = x
   local text = player:steam_name()
   local font = Theme.get_font('text_normal')
   local text_height = util.text_height(text, font)
 
-  self.steam_name = vgui.Create('DLabel', card)
-  self.steam_name:SetText(text)
-  self.steam_name:SetPos(Font.scale(32) + 16, card:GetTall() * 0.5 - text_height * 0.5)
-  self.steam_name:SetFont(font)
-  self.steam_name:SetTextColor(Theme.get_color('text'))
-  self.steam_name:SizeToContents()
+  card.steam_name = vgui.Create('DLabel', card)
+  card.steam_name:SetText(text)
+  card.steam_name:SetPos(Font.scale(32) + 16, card:GetTall() * 0.5 - text_height * 0.6)
+  card.steam_name:SetFont(font)
+  card.steam_name:SetTextColor(Theme.get_color('text'))
+  card.steam_name:SizeToContents()
 
   if hook.run('IsCharacterCardVisible', card, player) != false then
-    self.steam_name:SetText(self.steam_name:GetText()..' '..t'scoreboard.is_playing')
-    self.steam_name:SizeToContents()
+    card.steam_name:SetText(card.steam_name:GetText()..' '..t'scoreboard.is_playing')
+    card.steam_name:SizeToContents()
 
-    x = x + Font.scale(32) + self.steam_name:GetWide() + Font.scale(4)
+    x = x + card.steam_name:GetWide() + util.text_width(' ', font)
 
-    card.name_label:SetPos(x, 2)
+    card.name_label:SetPos(x, card:GetTall() * 0.5 - text_height * 0.6)
 
     if IsValid(card.desc_label) then
       card.desc_label:safe_remove()
@@ -155,23 +154,22 @@ function Characters:RebuildScoreboardPlayerCard(card, player)
     end
 
     card.spawn_icon = vgui.Create('SpawnIcon', card)
-    card.spawn_icon:SetPos(old_x + self.steam_name:GetWide() + Font.scale(4), 4)
+    card.spawn_icon:SetPos(card:GetWide() - card.spawn_icon:GetWide() - Font.scale(32), 4)
     card.spawn_icon:SetSize(32, 32)
     card.spawn_icon:SetModel(player:GetModel())
+    card.spawn_icon:SetEnabled(false)
 
     local phys_desc = player:get_phys_desc()
 
-    if utf8.len(phys_desc) > 64 then
-      phys_desc = phys_desc:utf8sub(1, 64)..'...'
+    if utf8.len(phys_desc) > 128 then
+      phys_desc = phys_desc:utf8sub(1, 128)..'...'
     end
-
-    x = x + Font.scale(4)
 
     card.desc_label = vgui.Create('DLabel', card)
     card.desc_label:SetText(phys_desc)
-    card.desc_label:SetFont(Theme.get_font('text_smaller'))
-    card.desc_label:SetPos(x, card.name_label:GetTall())
-    card.desc_label:SetTextColor(Theme.get_color('text'))
+    card.desc_label:SetFont(Theme.get_font('text_smallest'))
+    card.desc_label:SetPos(x, card.name_label:GetTall() + Font.scale(2))
+    card.desc_label:SetTextColor(Theme.get_color('text'):darken(50))
     card.desc_label:SizeToContents()
   else
     card.name_label:SetVisible(false)

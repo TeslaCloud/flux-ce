@@ -32,6 +32,8 @@ en:
   scoreboard:
     title: PLAYER LIST
     help: Clicking player's card may bring up some options.
+    ping: Ping
+    players_online: Players Online
   "yes": "Yes"
   "no": "No"
   bar_text:

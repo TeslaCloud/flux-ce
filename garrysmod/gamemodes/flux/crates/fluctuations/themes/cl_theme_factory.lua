@@ -60,6 +60,7 @@ function THEME:on_loaded()
   self:set_font('menu_larger', main_font_condensed, Font.scale(42))
   self:set_font('main_menu_title', light_font, Font.scale(48))
   self:set_font('main_menu_large', light_font, Font.scale(42))
+  self:set_font('main_menu_normal_large', light_font, Font.scale(36))
   self:set_font('main_menu_titles', light_font, Font.scale(24))
   self:set_font('main_menu_normal', light_font, Font.scale(20))
   self:set_font('main_menu_small', light_font, Font.scale(18))
@@ -74,7 +75,7 @@ function THEME:on_loaded()
   self:set_font('text_small', main_font, Font.scale(18))
   self:set_font('text_smaller', main_font, Font.scale(16))
   self:set_font('text_smallest', main_font, Font.scale(14))
-  self:set_font('text_bar', main_font, Font.scale(17), {weight = 600})
+  self:set_font('text_bar', main_font, Font.scale(17), { weight = 600 })
   self:set_font('text_3d2d', main_font, 256)
 
   -- Set from schema Theme.
@@ -329,17 +330,24 @@ function THEME:PaintPermissionButton(perm_panel, btn, w, h)
 end
 
 function THEME:PaintScoreboard(panel, width, height)
-  local title_font = self:get_font('menu_large')
-
-  draw.RoundedBox(0, 0, 0, width, height, self:get_color('background'):alpha(150))
-
-  local title = t'scoreboard.title'
+  local text = t('scoreboard.title')
+  local font = self:get_font('main_menu_large')
+  local text_w, text_h = util.text_size(text, font)
 
   DisableClipping(true)
-    draw.SimpleText(title, title_font, 4, -util.text_height(title, title_font) * 0.5, self:get_color('text'))
+    draw.RoundedBox(0, -4, -4, width + 8, height + 8, Color(50, 50, 50, 100))
+    draw.textured_rect(self:get_material('gradient_down'), -4, -text_h - 4, text_w + 8, text_h, Color(50, 50, 50, 100))
+    draw.SimpleText(text, font, 0, -text_h - 4, color_white)
   DisableClipping(false)
 
-  draw.SimpleText(t'scoreboard.help', self:get_font('text_small'), 4, 14, self:get_color('text'))
+  font = self:get_font('text_small')
+
+  draw.SimpleText(t'scoreboard.help', font, 4, 0, self:get_color('text'))
+
+  text = t'scoreboard.ping'
+  text_w, text_h = util.text_size(text, font)
+
+  draw.SimpleText(text, font, width - text_w - 8, 0, self:get_color('text'))
 end
 
 function THEME:PaintTabMenuButtonPanel(panel, width, height)

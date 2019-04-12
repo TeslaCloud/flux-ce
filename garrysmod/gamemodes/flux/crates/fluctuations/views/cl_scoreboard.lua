@@ -28,7 +28,7 @@ function PANEL:rebuild()
 
   local cur_y = Font.scale(40)
   local card_tall = Font.scale(32) + 8
-  local margin = Font.scale(4)
+  local margin = Font.scale(2)
 
   for k, v in ipairs(_player.GetAll()) do
     if !v:has_initialized() then continue end
@@ -49,7 +49,7 @@ function PANEL:rebuild()
 end
 
 function PANEL:get_menu_size()
-  return Font.scale(1280), Font.scale(900)
+  return Font.scale(1280), Font.scale(800)
 end
 
 vgui.Register('fl_scoreboard', PANEL, 'fl_base_panel')

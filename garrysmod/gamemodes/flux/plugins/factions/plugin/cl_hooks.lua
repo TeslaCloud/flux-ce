@@ -71,27 +71,40 @@ function Factions:PreRebuildScoreboard(panel, w, h)
   end
 
   local cur_y = Font.scale(40)
-  local card_tall = Font.scale(32) + 8
-  local margin = Font.scale(4)
+  local card_tall = Font.scale(40)
+  local margin = Font.scale(2)
 
   local category_list = vgui.Create('DListLayout', panel.scroll_panel)
-  category_list:SetSize(w - 8, h - 36)
-  category_list:SetPos(4, 36)
+  category_list:SetSize(w - 8, h - Font.scale(20))
+  category_list:SetPos(4, Font.scale(20))
+
+  local players_table = {}
 
   for k, v in pairs(Factions.all()) do
     local players = Factions.get_players(k)
 
     if #players == 0 then continue end
 
+    players_table[k] = players
+  end
+
+  hook.run('PreRebuildFactionCategories', players_table)
+
+  for k, v in pairs(players_table) do
+    local faction = (k == 'players_online' and t'scoreboard.players_online') or Factions.find_by_id(k)
+    local players = v
+
+    if #players == 0 then continue end
+
     local category = vgui.Create('DCollapsibleCategory', panel)
     category:SetSize(w - 8, 32)
     category:SetPos(4, cur_y)
-    category:SetLabel(t(v.name) or k)
+    category:SetLabel(isstring(faction) and faction or t(faction.name) or k)
 
     category_list:Add(category)
 
     local list = vgui.Create('DPanelList', panel)
-    list:SetSpacing(5)
+    list:SetSpacing(Font.scale(2))
     list:EnableHorizontal(false)
 
     category:SetContents(list)
