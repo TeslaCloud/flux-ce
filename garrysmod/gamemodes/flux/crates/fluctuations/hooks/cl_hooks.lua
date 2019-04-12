@@ -252,7 +252,7 @@ function GM:HUDDrawTargetID()
       local screen_pos = (pos + Vector(0, 0, 16)):ToScreen()
       local x, y = screen_pos.x, screen_pos.y
 
-      if ent:IsPlayer() then
+      if ent:IsPlayer() and ent:has_initialized() and ent:Alive() then
         hook.run('DrawPlayerTargetID', ent, x, y, dist)
       elseif ent.DrawTargetID then
         ent:DrawTargetID(x, y, dist)
