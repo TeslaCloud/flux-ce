@@ -86,7 +86,7 @@ function Factions:PreRebuildScoreboard(panel, w, h)
     local category = vgui.Create('DCollapsibleCategory', panel)
     category:SetSize(w - 8, 32)
     category:SetPos(4, cur_y)
-    category:SetLabel(v.name or k)
+    category:SetLabel(t(v.name) or k)
 
     category_list:Add(category)
 
