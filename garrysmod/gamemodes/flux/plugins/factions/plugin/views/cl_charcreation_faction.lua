@@ -31,7 +31,7 @@ function PANEL:on_open(parent)
       local label = vgui.Create('DLabel', button)
       label:Dock(BOTTOM)
       label:DockMargin(4, 0, 0, 0)
-      label:SetText(v.name)
+      label:SetText(t(v.name))
       label:SetFont(Theme.get_font('text_normal_large'))
       label:SizeToContents()
 
