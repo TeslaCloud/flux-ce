@@ -393,7 +393,7 @@ end
 function THEME:PaintOverInventoryBackground(panel, w, h)
   if panel.title then
     local text = t(panel.title)
-    local font = self:get_font('text_normal_large')
+    local font = self:get_font('main_menu_large')
     local text_w, text_h = util.text_size(text, font)
 
     DisableClipping(true)

@@ -13,7 +13,7 @@ end
 function PANEL:PaintOver(w, h)
   if self.title then
     local text = t(self.title)
-    local font = Theme.get_font('text_normal')
+    local font = Theme.get_font('main_menu_normal_large')
     local text_w, text_h = util.text_size(text, font)
 
     DisableClipping(true)
