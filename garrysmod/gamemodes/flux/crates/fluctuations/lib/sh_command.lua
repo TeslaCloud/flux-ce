@@ -340,7 +340,7 @@ if SERVER then
               local arg_str = text:sub(string.len(command) + 2, string.len(text))
 
               if arg_str and arg_str:gsub(' ', '') != '' then
-                message = message..'with the following arguments: '..arg_str
+                message = message..' with the following arguments: '..arg_str
               else
                 message = message..'.'
               end
