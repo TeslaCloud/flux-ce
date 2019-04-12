@@ -291,12 +291,13 @@ function GM:DrawPlayerTargetID(player, x, y, distance)
     local font = v.font or Theme.get_font('tooltip_small')
     local color = v.color or Color('white')
     local text = v.text
+    local wrapped = util.wrap_text(text, font, ScrW() * 0.33, 0)
 
-    if text then
-      local w, h = util.text_size(text, font)
-      draw.SimpleText(text, font, x - w * 0.5 + (v.offset_x or 0), y + (v.offset_y or 0), color)
+    for k1, v1 in pairs(wrapped) do
+      local w, h = util.text_size(v1, font)
+      draw.SimpleText(v1, font, x - w * 0.5 + (v.offset_x or 0), y + (v.offset_y or 0), color)
 
-      y = y + h + 2
+      y = y + h + 1
     end
   end
 end
