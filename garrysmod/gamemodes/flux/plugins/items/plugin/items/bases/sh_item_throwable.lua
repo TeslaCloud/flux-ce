@@ -1,16 +1,16 @@
 if !ItemWeapon then
-  require_relative 'sh_weapon_base'
+  require_relative 'sh_item_weapon'
 end
 
-class 'ItemThrown' extends 'ItemWeapon'
+class 'ItemThrowable' extends 'ItemWeapon'
 
-ItemThrown.name = 'Thrown Base'
-ItemThrown.description = 'An weapon that can be thrown.'
-ItemThrown.category = 'item.category.thrown'
-ItemThrown.equip_slot = 'item.slot.throwable'
-ItemThrown.weapon_class = 'weapon_frag'
-ItemThrown.thrown_ammo_class = 'Grenade'
-ItemThrown:add_button(t'item.option.unload', {
+ItemThrowable.name = 'Throwable Base'
+ItemThrowable.description = 'A throwable weapon.'
+ItemThrowable.category = 'item.category.thrown'
+ItemThrowable.equip_slot = 'item.slot.throwable'
+ItemThrowable.weapon_class = 'weapon_frag'
+ItemThrowable.thrown_ammo_class = 'Grenade'
+ItemThrowable:add_button(t'item.option.unload', {
   icon = 'icon16/add.png',
   callback = 'on_unload',
   on_show = function(item_table)
@@ -18,7 +18,7 @@ ItemThrown:add_button(t'item.option.unload', {
   end
 })
 
-function ItemThrown:post_equipped(player)
+function ItemThrowable:post_equipped(player)
   local weapon = player:Give(self.weapon_class, true)
 
   if IsValid(weapon) then
@@ -29,7 +29,7 @@ function ItemThrown:post_equipped(player)
   end
 end
 
-function ItemThrown:post_unequipped(player)
+function ItemThrowable:post_unequipped(player)
   local weapon = player:GetWeapon(self.weapon_class)
 
   if IsValid(weapon) then

@@ -1,5 +1,5 @@
 if !ItemUsable then
-  require_relative 'sh_usable_base'
+  require_relative 'sh_item_usable'
 end
 
 class 'ItemConsumable' extends 'ItemUsable'

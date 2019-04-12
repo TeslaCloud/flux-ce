@@ -1,5 +1,5 @@
 if !ItemEquippable then
-  require_relative 'sh_equipment_base'
+  require_relative 'sh_item_equipment'
 end
 
 class 'ItemWeapon' extends 'ItemEquippable'
