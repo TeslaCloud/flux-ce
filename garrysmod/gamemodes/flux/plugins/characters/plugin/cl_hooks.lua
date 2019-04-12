@@ -129,34 +129,53 @@ end
 
 function Characters:RebuildScoreboardPlayerCard(card, player)
   local x, y = card.name_label:GetPos()
-  local oldX = x
+  local old_x = x
+  local text = player:steam_name()
+  local font = Theme.get_font('text_normal')
+  local text_height = util.text_height(text, font)
 
-  x = x + Font.scale(32) + 4
+  self.steam_name = vgui.Create('DLabel', card)
+  self.steam_name:SetText(text)
+  self.steam_name:SetPos(Font.scale(32) + 16, card:GetTall() * 0.5 - text_height * 0.5)
+  self.steam_name:SetFont(font)
+  self.steam_name:SetTextColor(Theme.get_color('text'))
+  self.steam_name:SizeToContents()
 
-  card.name_label:SetPos(x, 2)
+  if hook.run('IsCharacterCardVisible', card, player) != false then
+    self.steam_name:SetText(self.steam_name:GetText()..' '..t'scoreboard.is_playing')
+    self.steam_name:SizeToContents()
 
-  if IsValid(card.desc_label) then
-    card.desc_label:safe_remove()
-    card.spawn_icon:safe_remove()
+    x = x + Font.scale(32) + self.steam_name:GetWide() + Font.scale(4)
+
+    card.name_label:SetPos(x, 2)
+
+    if IsValid(card.desc_label) then
+      card.desc_label:safe_remove()
+      card.spawn_icon:safe_remove()
+    end
+
+    card.spawn_icon = vgui.Create('SpawnIcon', card)
+    card.spawn_icon:SetPos(old_x + self.steam_name:GetWide() + Font.scale(4), 4)
+    card.spawn_icon:SetSize(32, 32)
+    card.spawn_icon:SetModel(player:GetModel())
+
+    local phys_desc = player:get_phys_desc()
+
+    if utf8.len(phys_desc) > 64 then
+      phys_desc = phys_desc:utf8sub(1, 64)..'...'
+    end
+
+    x = x + Font.scale(4)
+
+    card.desc_label = vgui.Create('DLabel', card)
+    card.desc_label:SetText(phys_desc)
+    card.desc_label:SetFont(Theme.get_font('text_smaller'))
+    card.desc_label:SetPos(x, card.name_label:GetTall())
+    card.desc_label:SetTextColor(Theme.get_color('text'))
+    card.desc_label:SizeToContents()
+  else
+    card.name_label:SetVisible(false)
   end
-
-  card.spawn_icon = vgui.Create('SpawnIcon', card)
-  card.spawn_icon:SetPos(oldX - 4, 4)
-  card.spawn_icon:SetSize(32, 32)
-  card.spawn_icon:SetModel(player:GetModel())
-
-  local phys_desc = player:get_phys_desc()
-
-  if utf8.len(phys_desc) > 64 then
-    phys_desc = phys_desc:utf8sub(1, 64)..'...'
-  end
-
-  card.desc_label = vgui.Create('DLabel', card)
-  card.desc_label:SetText(phys_desc)
-  card.desc_label:SetFont(Theme.get_font('text_smaller'))
-  card.desc_label:SetPos(x, card.name_label:GetTall())
-  card.desc_label:SetTextColor(Theme.get_color('text'))
-  card.desc_label:SizeToContents()
 end
 
 function Characters:AddCharacterCreationMenuStages(panel)

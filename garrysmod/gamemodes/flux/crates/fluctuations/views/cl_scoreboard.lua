@@ -82,10 +82,14 @@ function PANEL:rebuild()
   self.avatar_panel:SetPos(4, 4)
   self.avatar_panel:SetPlayer(player, 64)
 
+  local text = player:name()
+  local font = Theme.get_font('text_normal')
+  local text_w, text_h = util.text_size(text, font)
+
   self.name_label = vgui.Create('DLabel', self)
-  self.name_label:SetText(player:name())
-  self.name_label:SetPos(Font.scale(32) + 16, self:GetTall() * 0.5 - util.text_height(player:name(), Theme.get_font('text_normal')) * 0.5)
-  self.name_label:SetFont(Theme.get_font('text_normal'))
+  self.name_label:SetText(text)
+  self.name_label:SetPos(Font.scale(32) + 16, self:GetTall() * 0.5 - text_h * 0.5)
+  self.name_label:SetFont(font)    
   self.name_label:SetTextColor(Theme.get_color('text'))
   self.name_label:SizeToContents()
 

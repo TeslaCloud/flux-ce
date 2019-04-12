@@ -68,3 +68,5 @@ en:
     character_management: Character Management
   loading:
     characters: Loading characters, please wait...
+  scoreboard:
+    is_playing: is playing

@@ -68,3 +68,5 @@ ru:
     character_management: Управление персонажем
   loading:
     characters: Загрузка персонажей, пожалуйста подождите...
+  scoreboard:
+    is_playing: играет за
