@@ -5,6 +5,7 @@ en:
     text_add_syntax:
       "<string Text> [number Scale] [number Style] [string Color] [string
       ExtraColor]"
+    text_remove_desc: Delete the text you are looking at.
     text_added: You have added a 3D text.
     text_removed: You have removed a 3D text.
   3d_picture:

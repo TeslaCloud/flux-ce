@@ -1,6 +1,6 @@
 local COMMAND = Command.new('freezebots')
 COMMAND.name = 'FreezeBots'
-COMMAND.description = 'Freezes all of the bots.'
+COMMAND.description = 'botscmd.freeze.description'
 COMMAND.permission = 'moderator'
 COMMAND.category = 'categories.server_management'
 COMMAND.aliases = { 'botfreeze', 'freezebot', 'bot_freeze', 'bot_zombie' }
@@ -15,7 +15,7 @@ COMMAND:register()
 
 local COMMAND = Command.new('unfreezebots')
 COMMAND.name = 'UnfreezeBots'
-COMMAND.description = 'Unfreezes all of the bots.'
+COMMAND.description = 'botscmd.unfreeze.description'
 COMMAND.permission = 'moderator'
 COMMAND.category = 'categories.server_management'
 COMMAND.aliases = { 'botunfreeze', 'unfreezebot', 'bot_unfreeze', 'bot_unzombie' }
@@ -30,8 +30,8 @@ COMMAND:register()
 
 local COMMAND = Command.new('addbots')
 COMMAND.name = 'AddBots'
-COMMAND.description = 'Adds specified amount of bots to the server.'
-COMMAND.syntax = '[number Bots]'
+COMMAND.description = 'botscmd.add.description'
+COMMAND.syntax = 'botscmd.add.syntax'
 COMMAND.permission = 'moderator'
 COMMAND.category = 'categories.server_management'
 COMMAND.arguments = 0
@@ -51,7 +51,7 @@ COMMAND:register()
 
 local COMMAND = Command.new('kickbots')
 COMMAND.name = 'KickBots'
-COMMAND.description = 'Kicks all bots.'
+COMMAND.description = 'botscmd.kick.description'
 COMMAND.permission = 'moderator'
 COMMAND.category = 'categories.server_management'
 COMMAND.aliases = { 'botkick', 'kickbot', 'bot_kick' }

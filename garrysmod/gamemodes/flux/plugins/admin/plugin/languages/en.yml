@@ -48,6 +48,19 @@ en:
   cmd_desc:
     usage: "Syntax:"
     aliases: "Aliases:"
+  botscmd:
+    freeze:
+      description: Freezes all of the bots.
+    unfreeze:
+      description: Unfreezes all of the bots.
+    add:
+      description: Adds specified amount of bots to the server.
+      syntax: "[number Amount]"
+    kick:
+      description: Kicks all bots.
+  changelevel:
+    description: Changes the level to specified map.
+    syntax: <string Map> [number Delay]
   kickcmd:
     description: Kicks player from the server.
     syntax: <target> [reason]
@@ -86,6 +99,9 @@ en:
     description: Demote a player to user.
     syntax: <target>
     message: "{1} has demoted {2} from {3} to user."
+  restart:
+    description: Restarts the current map.
+    syntax: "[number Delay]"
   perm:
     not_set: No (inherit)
     allow: Allow

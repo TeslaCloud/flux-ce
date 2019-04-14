@@ -48,6 +48,19 @@ ru:
   cmd_desc:
     usage: "Синтаксис:"
     aliases: "Алиасы:"
+  botscmd:
+    freeze:
+      description: Замораживает всех ботов.
+    unfreeze:
+      description: Размораживает всех ботов.
+    add:
+      description: Добавляет определенное количество ботов на сервер.
+      syntax: "[количество]"
+    kick:
+      description: Кикнуть всех ботов.
+  changelevel:
+    description: Меняет карту на указанную.
+    syntax: <карта> [задержка]
   kickcmd:
     description: Выкидывает игрока с сервера.
     syntax: <игрок> [причина]
@@ -89,6 +102,9 @@ ru:
     description: Понижает игрока до пользователя.
     syntax: <игрок>
     message: "{1} понизил {2} с {3} до пользователя."
+  restart:
+    description: Перезапускает текущую карту.
+    syntax: "[заждержка]"
   perm:
     not_set: Не менять
     allow: Разрешить
