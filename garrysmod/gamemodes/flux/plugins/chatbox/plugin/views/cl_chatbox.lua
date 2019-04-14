@@ -108,8 +108,8 @@ function PANEL:Paint(w, h)
   end
 end
 
-function PANEL:PaintOver(w, h)
-  if Theme.hook('ChatboxPaintOver', self, w, h) == nil then
+function PANEL:PaintOver(width, height)
+  if Theme.hook('ChatboxPaintOver', self, width, height) == nil then
     local entry = self.text_entry
 
     if IsValid(entry) then
@@ -139,7 +139,7 @@ function PANEL:PaintOver(w, h)
           end
         end
 
-        draw.RoundedBox(0, 0, 0, w, h - entry:GetTall(), Color(0, 0, 0, 150))
+        draw.RoundedBox(0, 0, 0, width, height - entry:GetTall(), Color(0, 0, 0, 150))
 
         local font, color = Theme.get_font('text_normal'), Theme.get_color('accent')
 
@@ -152,15 +152,24 @@ function PANEL:PaintOver(w, h)
             w, h = draw.SimpleText(t(v.syntax), font, 16 + w + 8, 16 + last_y, color_white)
 
             if #cmds == 1 then
+              local cur_y = 20 + h
               local small_font = Theme.get_font('text_small')
-              local w2, h2 = draw.SimpleText(t(v.description), small_font, 16, 16 + h + 4, color_white)
+              local desc = t(v:get_description())
+              local wrapped = util.wrap_text(desc, small_font, width, 16)
+
+              for k1, v1 in pairs(wrapped) do
+                local text_w, text_h = draw.SimpleText(v1, small_font, 16, cur_y, color_white)
+
+                cur_y = cur_y + text_h + Font.scale(2)
+              end
+
               local aliases = '[-]'
 
               if v.aliases and #v.aliases > 0 then
                 aliases = table.concat(v.aliases or {}, ', ')
               end
 
-              draw.SimpleText(t'chat.aliases'..': ' + aliases, small_font, 16, 16 + h + h2 + 4, color_white)
+              draw.SimpleText(t'chat.aliases'..': ' + aliases, small_font, 16, cur_y, color_white)
             end
 
             last_y = last_y + h + 8
