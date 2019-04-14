@@ -21,10 +21,6 @@ en:
     for: "for {time}"
     and: and
   cant_now: You cannot do this right now!
-  chat:
-    aliases: Aliases
-    no_commands_found: No commands found!
-    everyone: everyone
   tab_menu:
     scoreboard: Players
     admin: Admin

@@ -12,3 +12,7 @@ en:
       max_messages:
         name: Max messages
         desc: How many messages should the chat history hold.
+  chat:
+    aliases: Aliases
+    no_commands_found: No commands found!
+    everyone: everyone
