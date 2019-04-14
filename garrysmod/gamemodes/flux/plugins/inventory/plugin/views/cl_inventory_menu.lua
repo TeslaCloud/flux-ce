@@ -79,10 +79,17 @@ function PANEL:rebuild()
   self.hotbar:set_title('inventory.hotbar')
   self.hotbar:rebuild()
 
+  self.equipment = vgui.Create('fl_inventory', self)
+  self.equipment.inventory_type = 'equipment'
+  self.equipment:set_slot_padding(8)
+  self.equipment:set_title('inventory.equipment')
+  self.equipment:set_player(PLAYER)
+  self.equipment:SetPos(w - self.equipment:GetWide(), h / 2 - self.equipment:GetTall() / 2)
+
   self.player_model = vgui.Create('DModelPanel', self)
   self.player_model:SetPos(w / 2, 0)
-  self.player_model:SetSize(w / 2, h)
-  self.player_model:SetFOV(50)
+  self.player_model:SetSize(w / 2 - self.equipment:GetWide(), h)
+  self.player_model:SetFOV(45)
   self.player_model:SetCamPos(Vector(80, 0, 50))
   self.player_model:SetLookAt(Vector(0, 0, 37))
   self.player_model:SetAnimated(true)
@@ -120,13 +127,6 @@ function PANEL:rebuild()
   end
 
   self.player_model:rebuild()
-
-  self.equipment = vgui.Create('fl_inventory', self)
-  self.equipment.inventory_type = 'equipment'
-  self.equipment:set_slot_padding(8)
-  self.equipment:set_title('inventory.equipment')
-  self.equipment:set_player(PLAYER)
-  self.equipment:SetPos(w - self.equipment:GetWide(), h / 2 - self.equipment:GetTall() / 2)
 
   hook.run('OnInventoryRebuild', self, true)
 end

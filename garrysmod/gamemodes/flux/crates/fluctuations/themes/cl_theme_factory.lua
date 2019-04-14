@@ -398,6 +398,27 @@ function THEME:PaintInventoryBackground(panel, w, h)
   DisableClipping(false)
 end
 
+function THEME:PaintTabInventoryBackground(panel, w, h)
+  if IsValid(panel.player_model) then
+    local x, y = panel.player_model:GetPos()
+    local player_w, player_h = panel.player_model:GetSize()
+    local text = PLAYER:name()
+    local font = self:get_font('main_menu_large')
+    local text_w, text_h = util.text_size(text, font)
+
+    x = x + 4
+    player_w = player_w - 10
+
+    DisableClipping(true)
+      draw.RoundedBox(0, x, y, player_w, player_h, Color(50, 50, 50, 100))
+      draw.RoundedBox(0, x + 4, y + 4, player_w - 8, player_h - 8, Color(0, 0, 0, 100))
+      draw.textured_rect(self:get_material('gradient_up'), x + 4, y + 4, player_w - 8, player_h - 8, Color(30, 30, 30, 100))
+      draw.textured_rect(self:get_material('gradient_down'), x, y - text_h, text_w + 8, text_h, Color(50, 50, 50, 100))
+      draw.SimpleText(text, font, x + 4, -text_h, color_white:alpha(150))
+    DisableClipping(false)
+  end
+end
+
 function THEME:PaintOverInventoryBackground(panel, w, h)
   if panel.title then
     local text = t(panel.title)
