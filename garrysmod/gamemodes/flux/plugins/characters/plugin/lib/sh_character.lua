@@ -110,6 +110,16 @@ if SERVER then
     end
   end
 
+  function Characters.set_desc(player, char, new_desc)
+    if char then
+      char.phys_desc = new_desc or char.phys_desc
+
+      player:set_nv('phys_desc', char.phys_desc)
+
+      Characters.save(player, char)
+    end
+  end
+
   function Characters.set_model(player, char, model)
     if char then
       char.model = model or char.model

@@ -128,6 +128,19 @@ function PANEL:rebuild()
 
   self.player_model:rebuild()
 
+  self.desc = vgui.create('DTextEntry', self)
+  self.desc:SetSize(self.player_model:GetWide() - 8, Font.scale(24))
+  self.desc:SetPos(self.player_model.x + 4, self.player_model.y + self.player_model:GetTall() - self.desc:GetTall() - 4)
+  self.desc:SetText(PLAYER:get_phys_desc())
+  self.desc:SetFont(Theme.get_font('main_menu_normal'))
+  self.desc.OnEnter = function(pnl)
+    local text = pnl:GetValue()
+
+    if text:len() >= Config.get('character_min_desc_len') and text:len() <= Config.get('character_max_desc_len') then
+      Cable.send('fl_character_desc_change', text)
+    end
+  end
+
   hook.run('OnInventoryRebuild', self, true)
 end
 

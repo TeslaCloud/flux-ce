@@ -15,6 +15,8 @@ en:
   hint:
     inventory: Inventory
     inventory_text: Drag'n'Drop an item outside of inventory screen to drop it.
+  notify:
+    char_desc_changed: You have changed your character description
   config:
     inventory:
       title: Inventory

@@ -188,3 +188,8 @@ end)
 Cable.receive('fl_item_move', function(player, instance_ids, inv_type, x, y)
   hook.run('OnItemMove', player, instance_ids, inv_type, x, y)
 end)
+
+Cable.receive('fl_character_desc_change', function(player, text)
+  Characters.set_desc(player, player:get_character(), text)
+  player:notify('notify.char_desc_changed')
+end)

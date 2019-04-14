@@ -15,6 +15,8 @@ ru:
   hint:
     inventory: Инвентарь
     inventory_text: Перетащите предмет за пределы инвентаря, чтобы выбросить его.
+  notify:
+    char_desc_changed: Вы изменили описание вашего персонажа
   config:
     inventory:
       title: Инвентарь
