@@ -4,7 +4,7 @@ function Currencies:OnInventoryRebuild(panel, first)
   end
 
   local text = t(panel.money.title)
-  local font = Theme.get_font('text_normal')
+  local font = Theme.get_font('main_menu_normal_large')
   local text_w, text_h = util.text_size(text, font)
 
   panel.money:set_currencies(PLAYER:get_nv('fl_currencies'))
