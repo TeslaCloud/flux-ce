@@ -406,15 +406,12 @@ function THEME:PaintTabInventoryBackground(panel, w, h)
     local font = self:get_font('main_menu_large')
     local text_w, text_h = util.text_size(text, font)
 
-    x = x + 4
-    player_w = player_w - 10
-
     DisableClipping(true)
-      draw.RoundedBox(0, x, y, player_w, player_h, Color(50, 50, 50, 100))
-      draw.RoundedBox(0, x + 4, y + 4, player_w - 8, player_h - 8, Color(0, 0, 0, 100))
-      draw.textured_rect(self:get_material('gradient_up'), x + 4, y + 4, player_w - 8, player_h - 8, Color(30, 30, 30, 100))
-      draw.textured_rect(self:get_material('gradient_down'), x, y - text_h, text_w + 8, text_h, Color(50, 50, 50, 100))
-      draw.SimpleText(text, font, x + 4, -text_h, color_white:alpha(150))
+      draw.RoundedBox(0, x - 4, y - 4, player_w + 8, player_h + 8, Color(50, 50, 50, 100))
+      draw.RoundedBox(0, x, y, player_w, player_h, Color(0, 0, 0, 100))
+      draw.textured_rect(self:get_material('gradient_up'), x, y, player_w, player_h, Color(30, 30, 30, 100))
+      draw.textured_rect(self:get_material('gradient_down'), x - 4, y - text_h - 4, text_w + 8, text_h, Color(50, 50, 50, 100))
+      draw.SimpleText(text, font, x, -text_h, color_white:alpha(150))
     DisableClipping(false)
   end
 end
