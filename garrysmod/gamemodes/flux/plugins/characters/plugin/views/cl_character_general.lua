@@ -129,7 +129,27 @@ function PANEL:Init()
   self.model:SetLookAt(Vector(0, 0, 37))
   self.model:SetAnimated(true)
   self.model.LayoutEntity = function(entity) end
+  self.model.angles = Angle(0, 0, 0)
 
+  self.model.DragMousePress = function(pnl)
+    pnl.press_x, pnl.press_y = gui.MousePos()
+    pnl.pressed = true
+  end
+
+  self.model.DragMouseRelease = function(pnl)
+    pnl.pressed = false
+  end
+
+  self.model.LayoutEntity = function(pnl, ent)
+    if pnl.pressed then
+      local mx, my = gui.MousePos()
+
+      pnl.angles = pnl.angles - Angle(0, (pnl.press_x or mx) - mx, 0)
+      pnl.press_x, pnl.press_y = mx, my
+    end
+
+    ent:SetAngles(pnl.angles)
+  end
   self.skin = vgui.Create('fl_counter', self)
   self.skin:SetSize(32, 64)
   self.skin:SetPos(scrw * 0.25 + 48, 48)

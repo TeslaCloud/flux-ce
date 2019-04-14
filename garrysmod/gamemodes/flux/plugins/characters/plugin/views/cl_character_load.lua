@@ -68,9 +68,9 @@ function PANEL:Init()
   self:SetPaintBackground(false)
 
   self.model = vgui.Create('DModelPanel', self)
-  self.model:SetFOV(50)
-  self.model:SetCamPos(Vector(50, 0, 35))
-  self.model:SetLookAt(Vector(0, 0, 35))
+  self.model:SetFOV(30)
+  self.model:SetCamPos(Vector(80, 0, 50))
+  self.model:SetLookAt(Vector(0, 0, 37))
   self.model:SetAnimated(true)
   self.model.LayoutEntity = function(entity) end
 
