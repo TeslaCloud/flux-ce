@@ -69,7 +69,7 @@ function Inventory:CanItemTransfer(player, item_table, inv_type, x, y)
     return true
   end
 
-  if inv_type == 'equipment' and !item_table.equip_slot then
+  if inv_type == 'equipment' and (!item_table.equip_slot or item_table.equip_inv != 'equipment') then
     return false
   end
 

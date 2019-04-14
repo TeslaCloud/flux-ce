@@ -66,8 +66,6 @@ function ItemEquipable:can_transfer(player, inv_type, x, y)
     if self:can_unequip(player) == false then
       return false
     end
-  else
-    return false
   end
 end
 
@@ -99,6 +97,12 @@ end
 function ItemEquipable:on_use(player)
   if IsValid(self.entity) then
     self:do_menu_action('on_take', player, { inv_type = self.equip_inv })
+
+    timer.simple(0.1, function()
+      if !IsValid(self.entity) then
+        self:do_menu_action('on_use', player)
+      end
+    end)
   else
     if self:is_equipped() then
       player:transfer_item(self.instance_id, 'main_inventory')
