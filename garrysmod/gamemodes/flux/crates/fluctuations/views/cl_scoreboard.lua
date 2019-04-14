@@ -88,7 +88,7 @@ function PANEL:rebuild()
 
   self.name_label = vgui.Create('DLabel', self)
   self.name_label:SetText(text)
-  self.name_label:SetPos(Font.scale(32) + 16, self:GetTall() * 0.5 - text_h * 0.5)
+  self.name_label:SetPos(Font.scale(32) + 16, self:GetTall() * 0.5 - text_h * 0.6)
   self.name_label:SetFont(font)    
   self.name_label:SetTextColor(Theme.get_color('text'))
   self.name_label:SizeToContents()

@@ -135,18 +135,16 @@ function Characters:RebuildScoreboardPlayerCard(card, player)
 
   card.steam_name = vgui.Create('DLabel', card)
   card.steam_name:SetText(text)
-  card.steam_name:SetPos(Font.scale(32) + 16, card:GetTall() * 0.5 - text_height * 0.6)
   card.steam_name:SetFont(font)
   card.steam_name:SetTextColor(Theme.get_color('text'))
   card.steam_name:SizeToContents()
 
   if hook.run('IsCharacterCardVisible', card, player) != false then
-    card.steam_name:SetText(card.steam_name:GetText()..' '..t'scoreboard.is_playing')
+    card.avatar_panel:SetPos(card:GetWide() - card.avatar_panel:GetWide() - Font.scale(48), 4)
+
+    card.steam_name:SetText(card.steam_name:GetText())
     card.steam_name:SizeToContents()
-
-    x = x + card.steam_name:GetWide() + util.text_width(' ', font)
-
-    card.name_label:SetPos(x, card:GetTall() * 0.5 - text_height * 0.6)
+    card.steam_name:SetPos(card.avatar_panel.x - card.steam_name:GetWide() - Font.scale(4), card:GetTall() * 0.5 - text_height * 0.5)
 
     if IsValid(card.desc_label) then
       card.desc_label:safe_remove()
@@ -154,7 +152,7 @@ function Characters:RebuildScoreboardPlayerCard(card, player)
     end
 
     card.spawn_icon = vgui.Create('SpawnIcon', card)
-    card.spawn_icon:SetPos(card:GetWide() - card.spawn_icon:GetWide() - Font.scale(32), 4)
+    card.spawn_icon:SetPos(4, 4)
     card.spawn_icon:SetSize(32, 32)
     card.spawn_icon:SetModel(player:GetModel())
     card.spawn_icon:SetEnabled(false)
@@ -168,10 +166,11 @@ function Characters:RebuildScoreboardPlayerCard(card, player)
     card.desc_label = vgui.Create('DLabel', card)
     card.desc_label:SetText(phys_desc)
     card.desc_label:SetFont(Theme.get_font('text_smallest'))
-    card.desc_label:SetPos(x, card.name_label:GetTall() + Font.scale(2))
     card.desc_label:SetTextColor(Theme.get_color('text'):darken(50))
     card.desc_label:SizeToContents()
+    card.desc_label:SetPos(card.name_label.x, card.name_label:GetTall() + Font.scale(2))
   else
+    card.steam_name:SetPos(Font.scale(32) + 16, card:GetTall() * 0.5 - text_height * 0.6)
     card.name_label:SetVisible(false)
   end
 end
