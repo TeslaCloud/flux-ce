@@ -39,6 +39,10 @@ function Characters:PlayerRestored(player)
   end)
 end
 
+function Characters:PostCreateCharacter(player, char_id, char, char_data)
+  char.phys_desc = char.phys_desc:gsub('\n', ' | ')
+end
+
 function Characters:PostCharacterLoaded(player, character)
   hook.run_client(player, 'PostCharacterLoaded', character.id)
 end
