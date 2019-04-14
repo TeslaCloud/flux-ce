@@ -41,6 +41,10 @@ function Command:notify_admin(permision, message, arguments)
   self:notify(permission, message, arguments, Color(255, 128, 128))
 end
 
+function Command:get_description()
+  return self.description
+end
+
 function Command:register()
   Flux.Command:create(self.id, self)
 end
