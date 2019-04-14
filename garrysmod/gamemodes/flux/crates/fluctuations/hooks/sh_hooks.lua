@@ -33,11 +33,11 @@ function GM:MouthMoveAnimation()
 end
 
 do
-  local vectorAngle = FindMetaTable('Vector').Angle
-  local normalizeAngle = math.NormalizeAngle
+  local vector_angle = FindMetaTable('Vector').Angle
+  local normalize_angle = math.NormalizeAngle
 
   function GM:CalcMainActivity(player, velocity)
-    player:SetPoseParameter('move_yaw', normalizeAngle(vectorAngle(velocity)[2] - player:EyeAngles()[2]))
+    player:SetPoseParameter('move_yaw', normalize_angle(vector_angle(velocity)[2] - player:EyeAngles()[2]))
     player.CalcIdeal = ACT_MP_STAND_IDLE
 
     local base_class = self.BaseClass
