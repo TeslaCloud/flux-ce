@@ -1,8 +1,8 @@
-if !ItemEquippable then
+if !ItemEquipable then
   require_relative 'sh_item_equipable'
 end
 
-class 'ItemWearable' extends 'ItemEquippable'
+class 'ItemWearable' extends 'ItemEquipable'
 
 ItemWearable.name = 'Clothing Base'
 ItemWearable.description = 'Clothes that can be equipped.'

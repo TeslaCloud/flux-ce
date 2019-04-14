@@ -1,8 +1,8 @@
-if !ItemEquippable then
+if !ItemEquipable then
   require_relative 'sh_item_equipable'
 end
 
-class 'ItemWeapon' extends 'ItemEquippable'
+class 'ItemWeapon' extends 'ItemEquipable'
 
 ItemWeapon.name = 'Weapon Base'
 ItemWeapon.description = 'An weapon that can be equipped.'

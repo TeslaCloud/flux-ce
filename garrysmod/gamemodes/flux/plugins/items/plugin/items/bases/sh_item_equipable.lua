@@ -2,21 +2,21 @@ if !ItemUsable then
   require_relative 'sh_item_usable'
 end
 
-class 'ItemEquippable' extends 'ItemUsable'
+class 'ItemEquipable' extends 'ItemUsable'
 
-ItemEquippable.name = 'Equipment Base'
-ItemEquippable.description = 'An item that can be equipped.'
-ItemEquippable.category = 'item.category.equipment'
-ItemEquippable.stackable = false
-ItemEquippable.equip_slot = 'item.slot.accessory'
-ItemEquippable.equip_inv = 'hotbar'
-ItemEquippable.action_sounds = {
+ItemEquipable.name = 'Equipment Base'
+ItemEquipable.description = 'An item that can be equipped.'
+ItemEquipable.category = 'item.category.equipment'
+ItemEquipable.stackable = false
+ItemEquipable.equip_slot = 'item.slot.accessory'
+ItemEquipable.equip_inv = 'hotbar'
+ItemEquipable.action_sounds = {
   ['equip'] = 'items/battery_pickup.wav',
   ['unequip'] = 'items/battery_pickup.wav'
 }
 
 if CLIENT then
-  function ItemEquippable:get_use_text()
+  function ItemEquipable:get_use_text()
     if self:is_equipped() then
       return t'item.option.unequip'
     else
@@ -24,18 +24,18 @@ if CLIENT then
     end
   end
 
-  function ItemEquippable:is_action_visible(act)
+  function ItemEquipable:is_action_visible(act)
     if act == 'use' and IsValid(self.entity) then
       return false
     end
   end
 end
 
-function ItemEquippable:is_equipped()
+function ItemEquipable:is_equipped()
   return self.inventory_type == self.equip_inv
 end
 
-function ItemEquippable:can_transfer(player, inv_type, x, y)
+function ItemEquipable:can_transfer(player, inv_type, x, y)
   if inv_type == self.equip_inv then
     if self:can_equip(player) == false then
       return false
@@ -71,12 +71,12 @@ function ItemEquippable:can_transfer(player, inv_type, x, y)
   end
 end
 
-function ItemEquippable:can_equip(player) end
-function ItemEquippable:can_unequip(player) end
-function ItemEquippable:post_equipped(player) end
-function ItemEquippable:post_unequipped(player) end
+function ItemEquipable:can_equip(player) end
+function ItemEquipable:can_unequip(player) end
+function ItemEquipable:post_equipped(player) end
+function ItemEquipable:post_unequipped(player) end
 
-function ItemEquippable:equip(player, should_equip)
+function ItemEquipable:equip(player, should_equip)
   if should_equip then
     self:post_equipped(player)
   else
@@ -84,7 +84,7 @@ function ItemEquippable:equip(player, should_equip)
   end
 end
 
-function ItemEquippable:on_inventory_changed(player, new_inv, old_inv)
+function ItemEquipable:on_inventory_changed(player, new_inv, old_inv)
   if IsValid(player) then
     if new_inv == self.equip_inv then
       player:EmitSound(self.action_sounds['equip'])
@@ -96,7 +96,7 @@ function ItemEquippable:on_inventory_changed(player, new_inv, old_inv)
   end
 end
 
-function ItemEquippable:on_use(player)
+function ItemEquipable:on_use(player)
   if IsValid(self.entity) then
     self:do_menu_action('on_take', player, { inv_type = self.equip_inv })
   else
@@ -110,10 +110,10 @@ function ItemEquippable:on_use(player)
   return true
 end
 
-function ItemEquippable:on_loadout(player)
+function ItemEquipable:on_loadout(player)
   if self:is_equipped() then
     self:equip(player, true)
   end
 end
 
-ItemEquippable = ItemEquippable
+ItemEquipable = ItemEquipable
