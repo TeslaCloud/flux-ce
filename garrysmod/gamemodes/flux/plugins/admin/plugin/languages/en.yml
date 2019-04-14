@@ -71,7 +71,7 @@ en:
     description: Unban the specified Steam ID if it is banned.
     syntax: <target SteamID>
   set_group:
-    description: Sets player's usergroup.
+    description: "Sets player's usergroup. Usergoups: {1}"
     syntax: <target> <usergroup>"
     message: "{1} has set {2}'s user group to {3}."
   vanish:

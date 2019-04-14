@@ -8,6 +8,16 @@ COMMAND.arguments = 3
 COMMAND.player_arg = 1
 COMMAND.aliases = { 'setcash', 'settokens' }
 
+function COMMAND:get_description()
+  local currencies = {}
+
+  for k, v in pairs(Currencies:all()) do
+    table.insert(currencies, k)
+  end
+
+  return t(self.description, table.concat(currencies, ', '))
+end
+
 function COMMAND:on_run(player, targets, amount, currency)
   amount = tonumber(amount)
 

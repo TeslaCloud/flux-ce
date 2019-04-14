@@ -1,12 +1,12 @@
 en:
   give_money:
-    description: Give money to the player you looking at.
+    description: "Give money to the player you looking at. Currencies: {1}"
     syntax: <amount> [currency]
   drop_money:
-    description: Drop money at your target location.
+    description: "Drop money at your target location. Currencies: {1}"
     syntax: <amount> [currency]
   set_money:
-    description: Set money for player.
+    description: "Set money for player. Currencies: {1}"
     syntax: <target> <amount> [currency]
     message: "{1}'s {2} successfully set to {3}."
   currency:

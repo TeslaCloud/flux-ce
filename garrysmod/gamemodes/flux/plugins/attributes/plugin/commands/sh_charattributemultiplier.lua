@@ -8,6 +8,10 @@ COMMAND.arguments = 4
 COMMAND.player_arg = 1
 COMMAND.aliases = { 'attmult', 'attmultiplier', 'attributemult', 'attributemultiplier', 'charattmult' }
 
+function COMMAND:get_description()
+  return t(self.description, table.concat(Attributes.get_id_list(), ', '))
+end
+
 function COMMAND:on_run(player, targets, attr_id, value, duration)
   local target = targets[1]
   local attribute = Attributes.find_by_id(attr_id)

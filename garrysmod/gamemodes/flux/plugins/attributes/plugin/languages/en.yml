@@ -1,8 +1,16 @@
 en:
   char_set_attribute:
-    description: "Set charater's attribute."
+    description: "Set charater's attribute. Attributes: {1}"
     syntax: <target> <attribute_id> <value>
     message: "{1} has set {2}'s attribute {3} to {4}."
+  char_attribute_boost:
+    description: "Boost charater's attribute. Attributes: {1}"
+    syntax: <target> <attribute_id> <value> <duration>
+    message: "{1} has boosted {2}'s attribute {3} to {4} for {5}."
+  char_attribute_multiplier:
+    description: "Give a leveling multilier to a charater's attribute. Attributes: {1}"
+    syntax: <target> <attribute_id> <value> <duration>
+    message: "{1} has set {2}'s attribute {3} to {4} for {5}."
   conditions:
     attribute:
       name: Matching Attribute Value

@@ -6,6 +6,18 @@ COMMAND.category = 'categories.general'
 COMMAND.arguments = 2
 COMMAND.aliases = { 'givecash', 'givetokens' }
 
+function COMMAND:get_description()
+  local currencies = {}
+
+  for k, v in pairs(Currencies:all()) do
+    if !v.hidden or player:get_money(k) > 0 then
+      table.insert(currencies, k)
+    end
+  end
+
+  return t(self.description, table.concat(currencies, ', '))
+end
+
 function COMMAND:on_run(player, amount, currency)
   amount = tonumber(amount)
 

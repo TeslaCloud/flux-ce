@@ -1,14 +1,14 @@
 en:
   whitelist:
-    description: Add a player to a faction whitelist.
+    description: "Add a player to a faction whitelist. Factions: {1}"
     syntax: "<target> <faction> [is faction search strict]"
     message: "{1} has added {2} to the {3} whitelist."
   take_whitelist:
-    description: Remove a player from a faction whitelist.
+    description: "Remove a player from a faction whitelist. Factions: {1}"
     syntax: "<target> <faction> [is faction search strict]"
     message: "{1} has removed {2} from the {3} whitelist."
   set_faction:
-    description: Set player's faction.
+    description: "Set player's faction. Factions: {1}"
     syntax: "<name> <faction> [data]"
     message: "{1} has added {2} to the {3} faction."
   err:

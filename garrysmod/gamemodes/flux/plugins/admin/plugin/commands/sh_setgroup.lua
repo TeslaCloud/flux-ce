@@ -8,6 +8,16 @@ COMMAND.arguments = 2
 COMMAND.immunity = true
 COMMAND.aliases = { 'plysetgroup', 'setusergroup', 'plysetusergroup' }
 
+function COMMAND:get_description()
+  local groups = {}
+
+  for k, v in pairs(Bolt:get_roles()) do
+    table.insert(groups, k)
+  end
+
+  return t(self.description, table.concat(groups, ', '))
+end
+
 function COMMAND:on_run(player, targets, role)
   if Bolt:group_exists(role) then
     for k, v in ipairs(targets) do

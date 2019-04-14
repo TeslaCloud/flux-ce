@@ -9,6 +9,16 @@ COMMAND.arguments = 2
 COMMAND.player_arg = 1
 COMMAND.aliases = { 'plytransfer', 'charsetfaction', 'chartransfer' }
 
+function COMMAND:get_description()
+  local factions = {}
+
+  for k, v in pairs(Factions.all()) do
+    table.insert(factions, k)
+  end
+
+  return t(self.description, table.concat(factions, ', '))
+end
+
 function COMMAND:on_run(player, targets, name, strict)
   local faction_table = Factions.find(name, (strict and true) or false)
 
