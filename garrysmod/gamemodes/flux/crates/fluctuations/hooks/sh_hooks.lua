@@ -5,7 +5,12 @@ function GM:Initialize()
   hook.Remove('RenderScene', 'RenderStereoscopy')
 
   if SERVER then
+    if !istable(Settings.server) then
+      error 'Serverside settings missing! Check your YAML configuration files!\n'
+    end
+
     local config_data = Settings.server.configuration
+    local webhooks    = Settings.server.webhooks
 
     if istable(config_data) then
       Config.import(config_data, CONFIG_FLUX)
@@ -13,7 +18,19 @@ function GM:Initialize()
 
     Config.load()
 
-    ActiveRecord.connect()
+    ActiveRecord.establish_connection(ActiveRecord.db_settings)
+
+    if istable(webhooks) then
+      for id, data in pairs(webhooks) do
+        if id != 'example' then
+          if isstring(data.id) and isstring(data.key) then
+            Webhook:add(id, Webhook.new(data.id, data.key))
+          else
+            ErrorNoHalt('Unable to add Discord webhook "'..tostring(id)..'" (invalid configuration)\n')
+          end
+        end
+      end
+    end
   end
 
   hook.Run('FLInitialize')

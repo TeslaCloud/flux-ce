@@ -1,12 +1,13 @@
-ActiveRecord.schema = ActiveRecord.schema or {}
-ActiveRecord.metadata = ActiveRecord.metadata or {
-  indexes = {},
-  references = {},
-  prim_keys = {},
-  adapter = '', db_name = ''
+ActiveRecord.schema       = ActiveRecord.schema               or {}
+ActiveRecord.db_settings  = DatabaseSettings[FLUX_ENV]        or DatabaseSettings['development'] or {}
+ActiveRecord.adapter_name = ActiveRecord.db_settings.adapter  or 'sqlite'
+ActiveRecord.metadata     = ActiveRecord.metadata             or {
+  indexes     = {},
+  references  = {},
+  prim_keys   = {},
+  adapter     = '',
+  db_name     = ''
 }
-ActiveRecord.db_settings = DatabaseSettings[FLUX_ENV] or DatabaseSettings['development'] or {}
-ActiveRecord.adapter_name = ActiveRecord.db_settings.adapter or 'sqlite'
 
 include 'generators/generator.lua'
 include 'database/database.lua'
@@ -26,7 +27,9 @@ function ActiveRecord.add_to_schema(table_name, column_name, type)
   if !ActiveRecord.ready then
     error('Attempt to edit schema too early!')
   end
+
   local t = ActiveRecord.schema[table_name] or {}
+
   if t[column_name] then
     t[column_name] = { id = t[column_name].id, type = type }
   else
@@ -36,8 +39,10 @@ function ActiveRecord.add_to_schema(table_name, column_name, type)
       query:insert('abstract_type', type)
       query:insert('definition', ActiveRecord.adapter.types[type] or '')
     query:execute()
+
     t[column_name] = { id = -1, type = type }
   end
+
   ActiveRecord.schema[table_name] = t
 end
 
@@ -118,16 +123,27 @@ function ActiveRecord.define_model(name, callback)
   end
 end
 
-function ActiveRecord.connect()
-  local db_settings = ActiveRecord.db_settings
-  local adapter = isstring(db_settings.adapter) and db_settings.adapter:lower() or 'sqlite'
+-- Setup aliases for common adapters.
+local adapter_aliases = {
+  ['postgresql']  = 'pg',
+  ['sqlite3']     = 'sqlite',
+  ['mysql']       = 'mysqloo'
+}
+
+function ActiveRecord.establish_connection(config)
+  local adapter = isstring(config.adapter) and config.adapter:lower() or 'sqlite'
+
+  if adapter_aliases[adapter] then
+    adapter         = adapter_aliases[adapter]
+    config.adapter  = adapter
+  end
 
   if file.Exists('flux/crates/active_record/lib/adapters/'..adapter..'.lua', 'LUA') then
     include('flux/crates/active_record/lib/adapters/'..adapter..'.lua')
   end
 
   ActiveRecord.adapter = (ActiveRecord.Adapters[adapter:capitalize()] or ActiveRecord.Adapters.Abstract).new()
-  ActiveRecord.adapter:connect(db_settings, ActiveRecord.Adapters.Abstract.on_connected)
+  ActiveRecord.adapter:connect(config, ActiveRecord.Adapters.Abstract.on_connected)
 end
 
 function ActiveRecord.on_connected()
