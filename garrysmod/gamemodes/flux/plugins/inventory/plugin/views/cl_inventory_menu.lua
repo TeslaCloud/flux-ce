@@ -77,7 +77,6 @@ function PANEL:rebuild()
   self.hotbar:set_slot_padding(8)
   self.hotbar:set_player(PLAYER)
   self.hotbar:set_title('inventory.hotbar')
-  self.hotbar:rebuild()
 
   self.equipment = vgui.Create('fl_inventory', self)
   self.equipment.inventory_type = 'equipment'
@@ -140,6 +139,11 @@ function PANEL:rebuild()
       Cable.send('fl_character_desc_change', text)
     end
   end
+
+  self.inventory:rebuild()
+  self.hotbar:rebuild()
+  self.equipment:rebuild()
+  self.pockets:rebuild()
 
   hook.run('OnInventoryRebuild', self, true)
 end
