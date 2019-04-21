@@ -7,6 +7,10 @@ function GM:PlayerDeathSound(player)
   return true
 end
 
+function GM:CanPlayerSuicide(player)
+  return false
+end
+
 function GM:InitPostEntity()
   local toolgun = weapons.GetStored('gmod_tool')
 
