@@ -28,13 +28,11 @@ end
 function Stamina:PlayerThink(player, cur_time)
   if player:running() then
     if !player.was_running then
-      player:SetFOV(100, 0.5)
       self:start_running(player)
       player.was_running = cur_time
     end
   else
     if player.was_running then
-      player:SetFOV(0, 0.5)
       self:stop_running(player, true)
       player.was_running = false
       player.standing_since = cur_time
