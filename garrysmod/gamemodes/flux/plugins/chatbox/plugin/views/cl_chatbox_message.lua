@@ -63,6 +63,8 @@ function PANEL:Paint(w, h)
           cur_color = v:alpha(self.alpha)
         elseif v.image then
           draw.textured_rect(util.get_material(v.image), v.x, v.y, v.w, v.h, Color(255, 255, 255, self.alpha))
+        elseif v.icon then
+          FontAwesome:draw(v.icon, v.x, v.y, v.w, v.h, v.color)
         end
       elseif isnumber(v) then
         cur_font = Font.size(Theme.get_font('chatbox_normal'), v)

@@ -72,7 +72,7 @@ function Chatbox.compile(msg_table)
 
         table.insert(compiled, cur_size)
       elseif istable(v) then
-        if v.image then
+        if v.image or v.icon then
           local scaled = Font.scale(v.height)
           local image_data = {
             image = v.image,
@@ -81,6 +81,12 @@ function Chatbox.compile(msg_table)
             w = Font.scale(v.width),
             h = scaled
           }
+
+          if v.icon then
+            image_data.image = nil 
+            image_data.icon = v.icon
+            image_data.color = v.color or color_white
+          end
 
           cur_x = cur_x + image_data.w + 2
 
