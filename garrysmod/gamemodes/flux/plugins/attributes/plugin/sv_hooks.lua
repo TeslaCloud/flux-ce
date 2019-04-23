@@ -4,7 +4,7 @@ function AttributesPlugin:PostCreateCharacter(player, char_id, char, char_data)
 
     local att = Attribute.new()
       att.attr_id = k
-      att.value = char_data.attributes[k] or attribute.min
+      att.value = char.attributes[k] or attribute.min
     table.insert(char.attributes, att)
   end
 end

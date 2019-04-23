@@ -56,6 +56,10 @@ en:
     unknown_error: Unknown Error. Meow probably screwed up again.
     no_gender: You must select a gender.
     no_model: You must select a model.
+    error:
+      fatal: 'Something probably went wrong, please try reconnecting.'
+      critical: 'Server may be experiencing connection issues, please wait...'
+      lag: 'The request is taking a while, hold up...'
   tab_menu:
     main_menu: Main Menu
   conditions:

@@ -131,7 +131,7 @@ if SERVER then
     end
   end
 
-  Cable.receive('fl_create_character', function(player, data)
+  MVC.handler('fl_create_character', function(player, data)
     data.gender  = (data.gender and data.gender == 'Female' and CHAR_GENDER_FEMALE) or CHAR_GENDER_MALE
     data.phys_desc = data.description
 
@@ -141,11 +141,12 @@ if SERVER then
 
     if status == CHAR_SUCCESS then
       Characters.send_to_client(player)
-      Cable.send(player, 'fl_player_created_character', true, status)
+
+      respond_to { success = true, status = status }
 
       Flux.dev_print('Success')
     else
-      Cable.send(player, 'fl_player_created_character', false, status)
+      respond_to { success = false, status = status }
 
       Flux.dev_print('Error')
     end

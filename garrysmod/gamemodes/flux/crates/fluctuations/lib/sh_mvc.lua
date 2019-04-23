@@ -51,6 +51,7 @@ if CLIENT then
   end)
 else
   local mvc_handlers = {}
+  local current_handler = nil
 
   function MVC.handler(name, handler)
     if !isstring(name) then return end
@@ -66,8 +67,16 @@ else
     Cable.send(player, 'fl_mvc_pull', name, ...)
   end
 
+  -- utility
+  function respond_to(data)
+    MVC.push(current_handler[1], current_handler[2], data)
+  end
+
   Cable.receive('fl_mvc_push', function(player, name, ...)
     local handlers = mvc_handlers[name]
+    local old_handler = current_handler
+
+    current_handler = { player, name }
 
     if handlers then
       for k, v in ipairs(handlers) do
@@ -79,5 +88,7 @@ else
         end
       end
     end
+
+    current_handler = old_handler
   end)
 end

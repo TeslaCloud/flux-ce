@@ -75,6 +75,36 @@ function PANEL:Paint(w, h)
   end
 end
 
+do
+  local color_black_transparent = Color(0, 0, 0, 200)
+
+  function PANEL:PaintOver(w, h)
+    if self.request_sent then
+      local cx, cy = ScrC()
+      local font = Theme.get_font('main_menu_normal')
+      local diff_time = CurTime() - self.request_sent
+      local text = ''
+
+      draw.RoundedBox(0, 0, 0, w, h, color_black_transparent)
+
+      if diff_time > 15 then
+        text = t'char_create.error.fatal'
+      elseif diff_time > 10 then
+        text = t'char_create.error.critical'
+      elseif diff_time > 5 then
+        text = t'char_create.error.lag'
+      end
+      
+      local tx, ty = util.text_size(text, font)
+
+      Flux.draw_rotating_cog(cx - 32, cy - 64, 64, 64, color_white)
+      draw.SimpleText(text, font, cx - tx * 0.5, cy + 128, color_white)
+
+      return true
+    end
+  end
+end
+
 function PANEL:rebuild()
   self.stage_list:Clear()
 
@@ -177,11 +207,50 @@ function PANEL:next_stage()
     surface.PlaySound('vo/npc/male01/answer37.wav')
 
     Derma_Query(t'char_create.confirm_msg', t'char_create.confirm', t'yes', function()
-      if self.panel.on_close then
-        self.panel:on_close(self)
-      end
+      self:request('fl_create_character', function(response)
+        if IsValid(Flux.intro_panel) and IsValid(Flux.intro_panel.menu) then
+          if response.success then
+            Flux.intro_panel.menu:goto_stage(-1)
+            Flux.intro_panel.menu:clear_data()
 
-      Cable.send('fl_create_character', self.char_data)
+            timer.Simple(Theme.get_option('menu_anim_duration') * #Flux.intro_panel.menu.stages, function()
+              local chars = PLAYER:get_all_characters()
+
+              if #chars == 1 then
+                Cable.send('fl_player_select_character', chars[1].character_id)
+              end
+            end)
+          else
+            local status = response.status
+            local text = 'We were unable to create a character! (unknown error)'
+            local hook_text = hook.run('GetCharCreationErrorText', response.success, status)
+
+            if hook_text then
+              text = hook_text
+            elseif status == CHAR_ERR_NAME then
+              text = "Your character's name must be between "..Config.get('character_min_name_len')..' and '..Config.get('character_max_name_len')..' characters long!'
+            elseif status == CHAR_ERR_DESC then
+              text = "Your character's description must be between "..Config.get('character_min_desc_len')..' and '..Config.get('character_max_desc_len')..' characters long!'
+            elseif status == CHAR_ERR_GENDER then
+              text = 'You must pick a gender for your character before continuing!'
+            elseif status == CHAR_ERR_MODEL then
+              text = 'You have not chosen a model or the one you have chosen is invalid!'
+            elseif status == CHAR_ERR_RECORD then
+              text = 'ActiveRecord screwed up again, try reconnecting or restarting your server...'
+            end
+
+            Flux.intro_panel:notify(text)
+          end
+        end
+
+        self.request_sent = nil
+
+        if response.success and self.panel.on_close then
+          self.panel:on_close(self)
+        end
+      end, self.char_data)
+
+      self.request_sent = CurTime()
     end,
     t'no')
   end
