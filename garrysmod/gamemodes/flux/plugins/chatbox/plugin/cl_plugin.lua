@@ -73,22 +73,28 @@ function Chatbox.compile(msg_table)
         table.insert(compiled, cur_size)
       elseif istable(v) then
         if v.image or v.icon then
+          v.height  = v.height  or v.size
+          v.width   = v.width   or v.size
+
+          local margin = Font.scale(v.margin or 2)
+          local margin_side = math.ceil(margin * 0.5)
           local scaled = Font.scale(v.height)
           local image_data = {
             image = v.image,
-            x = cur_x + 1,
-            y = cur_y,
-            w = Font.scale(v.width),
-            h = scaled
+            x     = cur_x + margin_side,
+            y     = cur_y,
+            w     = Font.scale(v.width),
+            h     = scaled
           }
 
+          print(margin, margin_side)
+
           if v.icon then
-            image_data.image = nil 
-            image_data.icon = v.icon
-            image_data.color = v.color or color_white
+            image_data.image  = nil 
+            image_data.icon   = v.icon
           end
 
-          cur_x = cur_x + image_data.w + 2
+          cur_x = cur_x + image_data.w + margin
 
           table.insert(compiled, image_data)
 
@@ -109,7 +115,7 @@ function Chatbox.compile(msg_table)
 
         local w, h = util.text_size(to_insert, font)
 
-        table.insert(compiled, {text = to_insert, w = w, h = h, x = cur_x, y = cur_y})
+        table.insert(compiled, { text = to_insert, w = w, h = h, x = cur_x, y = cur_y })
 
         cur_x = cur_x + w
 

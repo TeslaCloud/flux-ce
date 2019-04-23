@@ -19,6 +19,10 @@ function player_meta:get_role()
   return self:get_nv('role', 'user')
 end
 
+function player_meta:get_role_table()
+  return Bolt:find_group(self:get_role()) or {}
+end
+
 function player_meta:is_staff()
   return self:can 'staff'
 end

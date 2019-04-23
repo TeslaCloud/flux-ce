@@ -137,6 +137,6 @@ end
 
 function Bolt:ChatboxGetPlayerIcon(player, text, team_chat)
   if IsValid(player) then
-    return { icon = player:get_role_table().icon or 'fa-user', size = 14, margin = 6, is_data = true }
+    return { icon = player:get_role_table().icon or 'fa-user', size = 14, margin = 10, is_data = true }
   end
 end

@@ -53,18 +53,20 @@ function PANEL:Paint(w, h)
     if Plugin.call('ChatboxPrePaintMessage', w, h, self) == true then return end
 
     local cur_color = Color(255, 255, 255, self.alpha)
+    local white_alpha = Color(255, 255, 255, self.alpha)
+    local outline_alpha = Color(30, 30, 30, self.alpha)
     local cur_font = Font.size(Theme.get_font('chatbox_normal'), Font.scale(20))
 
     for k, v in ipairs(self.message_data) do
       if istable(v) then
         if v.text then
-          draw.SimpleTextOutlined(v.text, cur_font, v.x, v.y, cur_color, nil, nil, 1, Color(30, 30, 30, self.alpha))
+          draw.SimpleTextOutlined(v.text, cur_font, v.x, v.y, cur_color, nil, nil, 1, outline_alpha)
         elseif IsColor(v) then
           cur_color = v:alpha(self.alpha)
         elseif v.image then
-          draw.textured_rect(util.get_material(v.image), v.x, v.y, v.w, v.h, Color(255, 255, 255, self.alpha))
+          draw.textured_rect(util.get_material(v.image), v.x, v.y, v.w, v.h, white_alpha)
         elseif v.icon then
-          FontAwesome:draw(v.icon, v.x, v.y, v.w, v.h, v.color)
+          FontAwesome:draw(v.icon, v.x, v.y, v.h, white_alpha)
         end
       elseif isnumber(v) then
         cur_font = Font.size(Theme.get_font('chatbox_normal'), v)
