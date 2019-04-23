@@ -1,7 +1,7 @@
 ROLE.name = 'User'
 ROLE.description = 'role.user'
 ROLE.color = Color(255, 255, 255)
-ROLE.icon = 'icon16/user.png'
+ROLE.icon = 'fa-user'
 ROLE.immunity = 0
 
 function ROLE:define_permissions()

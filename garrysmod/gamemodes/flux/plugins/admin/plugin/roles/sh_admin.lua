@@ -1,7 +1,7 @@
 ROLE.name = 'Administrator'
 ROLE.description = 'role.admin'
 ROLE.color = Color(255, 255, 255)
-ROLE.icon = 'icon16/shield.png'
+ROLE.icon = 'fa-user-shield'
 ROLE.immunity = 300
 ROLE.base = 'moderator'
 

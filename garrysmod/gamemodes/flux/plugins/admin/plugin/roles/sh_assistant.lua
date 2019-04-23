@@ -1,7 +1,7 @@
 ROLE.name = 'Assistant'
 ROLE.description = 'role.assistant'
 ROLE.color = Color(255, 255, 255)
-ROLE.icon = 'icon16/smile.png'
+ROLE.icon = 'fa-user-plus'
 ROLE.immunity = 100
 ROLE.base = 'user'
 
