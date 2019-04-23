@@ -30,11 +30,19 @@ function Font.create(name, font_data)
 
   surface.CreateFont(name, font_data)
   stored[name] = font_data
+
+  return stored[name]
 end
 
 function Font.size(name, size, data)
   if !size then return name end
   if !name then return false end
+
+  local font = stored[name]
+
+  if font and font.size == size then
+    return name
+  end
 
   local new_name = name..':'..size
 
@@ -57,14 +65,6 @@ end
 
 function Font.clear()
   stored = {}
-end
-
-function Font.clear_sizes()
-  for k, v in pairs(stored) do
-    if k:find('\\') then
-      stored[k] = nil
-    end
-  end
 end
 
 function Font.get(name)
