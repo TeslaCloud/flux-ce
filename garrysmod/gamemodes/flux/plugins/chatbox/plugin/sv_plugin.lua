@@ -10,7 +10,7 @@ local default_msg_data = {
   radius = 0,
   filter = nil,
   rich = false,
-  size = 20,
+  size = Config.get('default_font_size', 20),
   text = nil,
   team_chat = false
 }
@@ -59,7 +59,7 @@ function Chatbox.add_text(listeners, ...)
     radius = 0,
     filter = nil,
     rich = false,
-    size = 20,
+    size = Config.get('default_font_size', 20),
     text = nil,
     team_chat = false
   }

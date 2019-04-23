@@ -21,7 +21,7 @@ function Chatbox.compile(msg_table)
 
   local data = msg_table.data
   local should_translate = msg_table.should_translate
-  local cur_size = Font.scale(18)
+  local cur_size = Theme.get_option('chatbox_text_normal_size')
 
   if isnumber(msg_table.size) then
     cur_size = Font.scale(msg_table.size)
@@ -31,8 +31,13 @@ function Chatbox.compile(msg_table)
   local cur_x, cur_y = 1, 0
   local total_height = 0
   local font = Font.size(Theme.get_font('chatbox_normal'), cur_size)
+  local v_offset = 0
+  local fix = Theme.get_option('chatbox_fix_alignment') == true
+  local fix_const = 0.2 -- 4 * 0.05
 
   if !font then return end
+
+  table.insert(compiled, cur_size)
 
   if Plugin.call('ChatboxCompileMessage', data, compiled) != true then
     for k, v in ipairs(data) do
@@ -51,7 +56,12 @@ function Chatbox.compile(msg_table)
         for k2, v2 in ipairs(wrapped) do
           local w, h = util.text_size(v2, font)
 
-          table.insert(compiled, { text = v2, w = w, h = h, x = cur_x, y = cur_y })
+          if !fix then
+            table.insert(compiled, { text = v2, w = w, h = h, x = cur_x, y = cur_y })
+          else
+            table.insert(compiled, { text = v2, w = w, h = h, x = cur_x, y = cur_y - h * fix_const })
+            h = h - (h * fix_const)
+          end
 
           cur_x = cur_x + w
 
@@ -115,7 +125,12 @@ function Chatbox.compile(msg_table)
 
         local w, h = util.text_size(to_insert, font)
 
-        table.insert(compiled, { text = to_insert, w = w, h = h, x = cur_x, y = cur_y })
+        if !fix then
+          table.insert(compiled, { text = to_insert, w = w, h = h, x = cur_x, y = cur_y })
+        else
+          table.insert(compiled, { text = to_insert, w = w, h = h, x = cur_x, y = cur_y - h * fix_const })
+          h = h - (h * fix_const)
+        end
 
         cur_x = cur_x + w
 

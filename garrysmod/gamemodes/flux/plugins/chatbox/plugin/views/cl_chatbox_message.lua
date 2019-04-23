@@ -55,7 +55,7 @@ function PANEL:Paint(w, h)
     local cur_color = Color(255, 255, 255, self.alpha)
     local white_alpha = Color(255, 255, 255, self.alpha)
     local outline_alpha = Color(30, 30, 30, self.alpha)
-    local cur_font = Font.size(Theme.get_font('chatbox_normal'), Font.scale(20))
+    local cur_font = Font.size(Theme.get_font('chatbox_normal'), Font.scale(Config.get('default_font_size')))
 
     for k, v in ipairs(self.message_data) do
       if istable(v) then

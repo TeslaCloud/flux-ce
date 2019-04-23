@@ -39,29 +39,51 @@ function Chatbox:HUDShouldDraw(element)
 end
 
 function Chatbox:CreateFonts()
-  Font.create('flChatFont', {
-    font = 'Arial',
-    size = 16,
-    weight = 1000
+  Font.create('chat_font', {
+    font    = 'Montserrat Medium',
+    size    = 16
+  })
+
+  Font.create('chat_font_bold', {
+    font    = 'Montserrat ExtraBold',
+    size    = 16
+  })
+
+  Font.create('chat_font_italic', {
+    font    = 'Montserrat Medium',
+    size    = 16,
+    italic = true
+  })
+
+  Font.create('chat_font_italic_bold', {
+    font    = 'Montserrat ExtraBold',
+    size    = 16,
+    italic  = true
   })
 end
 
 function Chatbox:OnThemeLoaded(current_theme)
   local scrw, scrh = ScrW(), ScrH()
 
+  current_theme:set_option('chatbox_text_small_size', Font.scale(Config.get('small_font_size')))
+  current_theme:set_option('chatbox_text_normal_size', Font.scale(Config.get('default_font_size')))
+  current_theme:set_option('chatbox_text_big_size', Font.scale(Config.get('big_font_size')))
   current_theme:set_option('chatbox_width', scrw * 0.375)
   current_theme:set_option('chatbox_height', scrh * 0.45)
   current_theme:set_option('chatbox_x', Font.scale(8))
   current_theme:set_option('chatbox_y', scrh - current_theme:get_option('chatbox_height') - Font.scale(32))
+  current_theme:set_option('chatbox_fix_alignment', true)
+
   local entry_height = current_theme:set_option('chatbox_text_entry_height', Font.scale(32))
   local text_size = current_theme:set_option('chatbox_text_entry_text_size', entry_height * 0.75)
+  local font_size = current_theme:get_option('chatbox_text_normal_size')
 
-  current_theme:set_font('chatbox_normal', 'flChatFont', Font.scale(18))
-  current_theme:set_font('chatbox_bold', 'flRobotoCondensedBold', Font.scale(18))
-  current_theme:set_font('chatbox_italic', 'flRobotoCondensedItalic', Font.scale(18))
-  current_theme:set_font('chatbox_italic_bold', 'flRobotoCondensedItalicBold', Font.scale(18))
-  current_theme:set_font('chatbox_syntax', 'flRobotoCondensed', Font.scale(24))
-  current_theme:set_font('chatbox_text_entry', 'flRoboto', text_size)
+  current_theme:set_font('chatbox_normal',      'chat_font',              font_size)
+  current_theme:set_font('chatbox_bold',        'chat_font_bold',         font_size)
+  current_theme:set_font('chatbox_italic',      'chat_font_italic',       font_size)
+  current_theme:set_font('chatbox_italic_bold', 'chat_font_italic_bold',  font_size)
+  current_theme:set_font('chatbox_syntax',      'flRobotoCondensed',      Font.scale(24))
+  current_theme:set_font('chatbox_text_entry',  'chat_font',              text_size)
 
   current_theme:set_color('chat_text_entry_background', Color(0, 0, 0, 215))
 end

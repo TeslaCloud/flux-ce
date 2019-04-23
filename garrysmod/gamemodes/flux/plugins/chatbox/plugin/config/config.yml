@@ -1,0 +1,29 @@
+categories:
+  chatbox:
+    name: Chatbox
+    description: Chatbox configuration
+configs:
+  default_font_size:
+    name: Default Font Size
+    description: Default font size to use for Chat Box.
+    category: chatbox
+    type: number
+    min_value: 1
+    max_value: 128
+    default_value: 22
+  small_font_size:
+    name: Small Font Size
+    description: Font size to use for smaller text in chatbox.
+    category: chatbox
+    type: number
+    min_value: 1
+    max_value: 128
+    default_value: 20
+  big_font_size:
+    name: Big Font Size
+    description: Font size to use for bigger text in chatbox.
+    category: chatbox
+    type: number
+    min_value: 1
+    max_value: 128
+    default_value: 26
