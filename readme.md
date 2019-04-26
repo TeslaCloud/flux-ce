@@ -6,12 +6,12 @@ Flux is a WIP gamemode framework designed with performance and convenience in mi
 Current version of Flux is currently in active development as an open alpha. This means that you can install it and it will run, but there will almost inevitably be bugs and issues, as well as a lot of missing features. If you are not a developer, it is probably better for you to wait until Flux is in beta.
 
 # Installation
-If you want to just get Flux up and running, simply download this repo, as well as the reborn schema, and match the repo folders with your Garry's Mod dedicated server folders.
+If you want to just get Flux up and running, simply download this repo, as well as the reborn schema, and match the repo folders with your Garry's Mod dedicated server folders. You can also clone this repo directly and then install the server on top, so that you get an easy way to update without hassle.
 
 **Flux is only guaranteed to work on dedicated servers (srcds). We do not support "listen" servers (launching from Garry's Mod client).**
 
 ### Database setup
-Depending on your use case, you may want to setup a database. An SQLite is the default option and requires to further setup. It is perfect if you simply want to take a look at Flux and how it works. If you want to run Flux in production, however, you should consider setting up a MySQL (MariaDB) or PostgreSQL database.
+Depending on your use case, you may want to setup a database. An SQLite is the default option and requires no further setup. It is perfect if you simply want to take a look at Flux and how it works. If you want to run Flux in production, however, you should consider setting up a MySQL (MariaDB) or PostgreSQL database.
 
 Follow the instructions in `/garrysmod/gamemodes/flux/config/database.yml` to learn more.
 
