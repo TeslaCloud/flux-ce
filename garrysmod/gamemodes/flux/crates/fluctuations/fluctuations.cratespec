@@ -8,7 +8,7 @@ Crate:describe(function(s)
   s.email       'support@teslacloud.net'
   s.files       'shared.lua'
   s.website     'https://teslacloud.net'
-  s.license     'CC-BY-NC-SA 4.0'
+  s.license     'MIT'
 
   s.depends     'flow'
 end)
