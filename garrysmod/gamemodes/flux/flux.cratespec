@@ -9,7 +9,7 @@ Crate:describe(function(s)
   s.file        'lib/flux.lua'
   s.global      'Flux'
   s.website     'https://teslacloud.net'
-  s.license     'MIT
+  s.license     'MIT'
 
   if system.IsLinux() then
     s.depends   'colorfix'
