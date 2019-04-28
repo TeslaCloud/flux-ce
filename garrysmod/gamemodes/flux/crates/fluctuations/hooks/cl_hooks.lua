@@ -409,7 +409,7 @@ do
   local prev_angles = nil
 
   function GM:Think()
-    if IsValid(PLAYER) then
+    if IsValid(PLAYER) and !PLAYER:IsFlagSet(FL_FROZEN) then
       local lerp_step = FrameTime() * 6
       local angles = PLAYER:EyeAngles()
 
