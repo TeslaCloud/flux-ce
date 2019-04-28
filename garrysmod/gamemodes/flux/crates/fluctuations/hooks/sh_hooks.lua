@@ -59,12 +59,12 @@ do
 
     local base_class = self.BaseClass
 
-    if !base_class:HandlePlayerNoClipping(player, velocity) or
+    if !(base_class:HandlePlayerNoClipping(player, velocity) or
       base_class:HandlePlayerDriving(player) or
       base_class:HandlePlayerVaulting(player, velocity) or
       base_class:HandlePlayerJumping(player, velocity) or
       base_class:HandlePlayerSwimming(player, velocity) or
-      base_class:HandlePlayerDucking(player, velocity) then
+      base_class:HandlePlayerDucking(player, velocity)) then
       local len2D = velocity:Length2D()
 
       if len2D > 150 then
