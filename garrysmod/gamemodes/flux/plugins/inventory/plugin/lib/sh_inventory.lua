@@ -312,4 +312,16 @@ do
 
     return false
   end
+
+  function player_meta:get_item_from_weapon(weapon_class)
+    local items = self:get_items()
+
+    for k, v in pairs(items) do
+      local item_table = Item.find_instance_by_id(v)
+
+      if item_table:is_equipped() and item_table.weapon_class == weapon_class then
+        return item_table
+      end
+    end
+  end
 end
