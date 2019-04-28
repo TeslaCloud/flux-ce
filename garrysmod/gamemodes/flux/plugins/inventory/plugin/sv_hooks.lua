@@ -157,6 +157,18 @@ function Inventory:OnItemMove(player, instance_ids, inv_type, x, y)
   Cable.send(player, 'fl_inventory_refresh', inv_type, old_inv_type)
 end
 
+function Inventory:PlayerThrewGrenade(player, entity)
+  local items = player:get_items()
+
+  for k, v in pairs(items) do
+    local item_table = Item.find_instance_by_id(v)
+
+    if item_table:is_equipped() and item_table.thrown_ammo_class then
+      player:take_item_by_id(v)
+    end
+  end
+end
+
 Cable.receive('fl_inventory_sync', function(player, inventory)
   local inv_type = inventory.type
   local new_inventory = {}

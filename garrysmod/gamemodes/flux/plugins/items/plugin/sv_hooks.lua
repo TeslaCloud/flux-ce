@@ -2,6 +2,14 @@ function Items:InitPostEntity()
   Item.load()
 end
 
+function Items:OnEntityCreated(entity)
+  if entity:GetClass() == 'npc_grenade_frag' then
+    local player = entity:GetOwner()
+
+    hook.run('PlayerThrewGrenade', player, entity)
+  end
+end
+
 function Items:SaveData()
   Item.save_all()
 end
