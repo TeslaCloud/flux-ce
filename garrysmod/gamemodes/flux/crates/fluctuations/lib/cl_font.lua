@@ -46,7 +46,7 @@ function Font.size(name, size, data)
 
   local new_name = name
 
-  if !string.find(new_name, ':%d') then
+  if string.match(new_name, ':(%d)') != size then
     new_name = new_name..':'..size
   end
 
