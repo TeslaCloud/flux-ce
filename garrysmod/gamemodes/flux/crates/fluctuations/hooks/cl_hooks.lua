@@ -244,7 +244,7 @@ function GM:HUDDrawTargetID()
       if ent:IsPlayer() then
         local bone = ent:LookupBone('ValveBiped.Bip01_Head1')
 
-        pos = bone and ent:GetBonePosition() or ent:GetPos()
+        pos = bone and ent:GetBonePosition(bone) or ent:GetPos()
       else
         pos = ent:GetPos()
       end
