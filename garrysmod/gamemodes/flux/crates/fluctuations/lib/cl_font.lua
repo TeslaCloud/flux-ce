@@ -44,7 +44,11 @@ function Font.size(name, size, data)
     return name
   end
 
-  local new_name = name..':'..size
+  local new_name = name
+
+  if !string.find(new_name, ':%d') then
+    new_name = new_name..':'..size
+  end
 
   if !stored[new_name] then
     local font_data = table.Copy(stored[name])
