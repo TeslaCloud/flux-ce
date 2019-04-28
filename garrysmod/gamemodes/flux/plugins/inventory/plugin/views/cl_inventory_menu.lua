@@ -16,10 +16,18 @@ function PANEL:on_close()
   if IsValid(self.player_model) then
     self.player_model:safe_remove()
   end
+
+  if IsValid(self.desc) then
+    self.desc:save()
+  end
 end
 
 function PANEL:on_change()
   self.hotbar:safe_remove()
+
+  if IsValid(self.desc) then
+    self.desc:save()
+  end
 end
 
 function PANEL:rebuild()
@@ -132,11 +140,40 @@ function PANEL:rebuild()
   self.desc:SetPos(self.player_model.x + 4, self.player_model.y + self.player_model:GetTall() - self.desc:GetTall() - 4)
   self.desc:SetText(PLAYER:get_phys_desc())
   self.desc:SetFont(Theme.get_font('main_menu_normal'))
-  self.desc.OnEnter = function(pnl)
+  self.desc.saved = true
+  self.desc.save = function(pnl)
     local text = pnl:GetValue()
 
     if text:len() >= Config.get('character_min_desc_len') and text:len() <= Config.get('character_max_desc_len') then
       Cable.send('fl_character_desc_change', text)
+      pnl.saved = true
+
+      return true
+    else
+      return false
+    end
+  end
+
+  self.desc.PaintOver = function(pnl, w, h)
+    local color = pnl.saved and Color('lightgreen') or Color('orange')
+
+    surface.SetDrawColor(color)
+    surface.DrawOutlinedRect(0, 0, w, h)
+  end
+
+  self.desc.OnChange = function(pnl, text)
+    if text != PLAYER:get_phys_desc() then
+      pnl.saved = false
+    end
+  end
+
+  self.desc.OnEnter = function(pnl)
+    local err = !pnl:save()
+
+    if !err then
+      surface.PlaySound('buttons/button14.wav')
+    else
+      surface.PlaySound('buttons/button10.wav')
     end
   end
 
