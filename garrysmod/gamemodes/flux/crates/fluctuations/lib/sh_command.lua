@@ -293,7 +293,7 @@ if SERVER then
                 end
               else
                 if IsValid(player) then
-                  Flux.Player:notify(player, t('commands.player_invalid', tostring(target_arg)))
+                  Flux.Player:notify(player, 'commands.player_invalid', { tostring(target_arg) })
                 else
                   if kind != '^' then
                     ErrorNoHalt("'"..tostring(target_arg).."' is not a valid player!")
@@ -309,7 +309,7 @@ if SERVER then
             if istable(targets) and #targets > 0 then
               for k, v in ipairs(targets) do
                 if cmd_table.immunity and IsValid(player) and hook.run('CommandCheckImmunity', player, v, cmd_table.can_equal) == false then
-                  Flux.Player:notify(player, t('commands.higher_immunity', v:name()))
+                  Flux.Player:notify(player, 'commands.higher_immunity', { v:name() })
 
                   return
                 end
@@ -319,7 +319,7 @@ if SERVER then
               args[cmd_table.player_arg or 1] = targets
             else
               if IsValid(player) then
-                Flux.Player:notify(player, t('commands.player_invalid', tostring(target_arg)))
+                Flux.Player:notify(player, 'commands.player_invalid', { tostring(target_arg) })
               else
                 ErrorNoHalt("'"..tostring(target_arg).."' is not a valid player!\n")
               end
@@ -364,7 +364,7 @@ if SERVER then
             self:run(player, cmd_table, args)
           end
         else
-          Flux.Player:notify(player, '/'..cmd_table.name..' '..cmd_table.syntax)
+          Flux.Player:notify(player, 'commands.syntax', { cmd_table.name, cmd_table.syntax })
         end
       else
         if IsValid(player) then
@@ -375,7 +375,7 @@ if SERVER then
       end
     else
       if IsValid(player) then
-        Flux.Player:notify(player, t('commands.not_valid', command))
+        Flux.Player:notify(player, 'commands.not_valid', command)
       else
         ErrorNoHalt("'"..command.."' is not a valid command!\n")
       end

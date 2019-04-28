@@ -44,6 +44,7 @@ en:
     player_invalid: "'{1}' is not a valid player!"
     steamid_invalid: "'{1}' is not a valid Steam ID!"
     higher_immunity: "{1} has higher immunity than you!"
+    syntax: "Incorrect syntax, use /{1} {2}"
   target_id:
     information: Press `E` for more information.
     action: Press `E` for actions.
