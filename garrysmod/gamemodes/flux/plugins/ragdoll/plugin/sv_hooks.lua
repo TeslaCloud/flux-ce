@@ -8,8 +8,7 @@ function PLUGIN:PlayerSpawn(player)
 end
 
 function PLUGIN:PlayerThink(player)
-  if !player:Alive() and player:IsFrozen() then
-    print('think')
+  if !player:Alive() and player:is_ragdolled() then
     hook.run('PlayerDeathThink', player)
   end
 end
