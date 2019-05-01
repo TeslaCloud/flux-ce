@@ -158,6 +158,8 @@ function Inventory:OnItemMove(player, instance_ids, inv_type, x, y)
 end
 
 function Inventory:PlayerThrewGrenade(player, entity)
+  if !IsValid(player) then return end
+
   local items = player:get_items()
 
   for k, v in pairs(items) do
