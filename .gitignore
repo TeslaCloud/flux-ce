@@ -61,3 +61,7 @@ steamapps/
 /srcds_run
 /srcds_linux
 /start.sh
+
+.vscode
+.nano
+.vim
