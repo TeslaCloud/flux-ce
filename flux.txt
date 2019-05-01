@@ -3,7 +3,7 @@
   'title'         'Flux'
   'maps'          '^rp_'
   'base'          'sandbox'
-  'version'       '0.7.1 (20190404) - alpha'
+  'version'       '0.7.2 (20190501) - alpha'
   'author'        'TeslaCloud Studios'
   'description'   'A free roleplay gamemode framework.'
   'workshopid'    '1518849094'
