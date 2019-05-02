@@ -32,9 +32,6 @@ debugoverlay.swept_box = debugoverlay.SweptBox
 debugoverlay.text = debugoverlay.Text
 debugoverlay.triangle = debugoverlay.Triangle
 
-drive._m = drive._M
-drive._name = drive._NAME
-drive._package = drive._PACKAGE
 drive.calc_view = drive.CalcView
 drive.create_move = drive.CreateMove
 drive.destroy_method = drive.DestroyMethod
@@ -48,9 +45,6 @@ drive.register = drive.Register
 drive.start = drive.Start
 drive.start_move = drive.StartMove
 
-duplicator._m = duplicator._M
-duplicator._name = duplicator._NAME
-duplicator._package = duplicator._PACKAGE
 duplicator.allow = duplicator.Allow
 duplicator.bone_modifiers = duplicator.BoneModifiers
 duplicator.constraint_type = duplicator.ConstraintType
