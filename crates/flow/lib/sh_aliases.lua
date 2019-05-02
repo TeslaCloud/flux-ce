@@ -355,6 +355,7 @@ table.force_insert = table.ForceInsert
 table.get_keys = table.GetKeys
 table.has_value = table.HasValue
 table.inherit = table.Inherit
+table.is_empty = table.IsEmpty
 table.is_sequential = table.IsSequential
 table.key_from_value = table.KeyFromValue
 table.keys_from_value = table.KeysFromValue
