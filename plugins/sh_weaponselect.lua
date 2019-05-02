@@ -225,7 +225,6 @@ end
 
 function PLUGIN:make_display(index, tab)
   local client_weapons = PLAYER:GetWeapons()
-  local count = table.Count(client_weapons)
   local offsety = 32
   local result = {}
 
