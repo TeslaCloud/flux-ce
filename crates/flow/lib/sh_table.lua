@@ -10,6 +10,8 @@ function table.Merge(dest, source)
   return dest
 end
 
+table.merge = table.Merge
+
 function table.safe_merge(to, from)
   local old_idx_to, old_idx = to.__index, from.__index
   local references = {}
@@ -76,6 +78,7 @@ end
 
 function table.slice(t, from, to)
   local new_table = {}
+
   for i = from, to do
     table.insert(new_table, t[i])
   end
