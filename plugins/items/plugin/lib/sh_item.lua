@@ -244,7 +244,7 @@ if SERVER then
   function Item.load()
     local loaded = Data.load_schema('items/instances', {})
 
-    if loaded and table.Count(loaded) > 0 then
+    if loaded and !table.IsEmpty(loaded) then
       -- Returns functions to instances table after loading.
       for id, instance_table in pairs(loaded) do
         local item_table = Item.find_by_id(id)
@@ -266,7 +266,7 @@ if SERVER then
 
     local loaded = Data.load_schema('items/entities', {})
 
-    if loaded and table.Count(loaded) > 0 then
+    if loaded and !table.IsEmpty(loaded) then
       for id, instance_table in pairs(loaded) do
         for k, v in pairs(instance_table) do
           if instances[id] and instances[id][k] then

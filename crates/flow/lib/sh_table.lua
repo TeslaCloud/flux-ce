@@ -300,7 +300,7 @@ function PrintTable(t, indent, done, indent_length)
         Msg(str_key..':'..string.rep(' ', indent_length - str_key:len())..' #<'..tostring(value.class_name or key)..': '..tostring(value):gsub('table: ', '')..'>\n')
       elseif IsColor(value) then
         Msg(str_key..':'..string.rep(' ', indent_length - str_key:len())..' #<Color: '..value.r..' '..value.g..' '..value.b..' '..value.a..'>\n')
-      elseif table.Count(value) == 0 then
+      elseif table.IsEmpty(value) then
         Msg(str_key..':'..string.rep(' ', indent_length - str_key:len())..' []\n')
       else
         done[value] = true
