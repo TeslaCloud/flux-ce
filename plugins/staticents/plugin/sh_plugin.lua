@@ -9,9 +9,11 @@ end
 --- @deprecation[Remove in 1.0_b]
 if CLIENT then
   concommand.Add('fl_persistence_backup', function(player)
-    print("Running persistence backup on server...")
+    if player:IsSuperAdmin() then
+      print('Requesting the server to make a backup...')
 
-    Cable.send('flux_persistence_backup', true)
+      Cable.send('flux_persistence_backup', true)
+    end
   end)
 
   Cable.receive('flux_persistence_backup', function(status)
@@ -21,12 +23,13 @@ if CLIENT then
       print('  -> error!')
     end
   end)
+--- @deprecation[Remove in 1.0_b]
 else
-  Cable.receive('flux_persistence_backup', function(player)
+  local function _run_backup(player)
     if IsValid(player) and !player:IsSuperAdmin() then return end
 
-    local pn = IsValid(player) and player:Name() or "Console"
-    local sid = IsValid(player) and player:SteamID() or "N/A"
+    local pn = IsValid(player) and player:Name() or 'Console'
+    local sid = IsValid(player) and player:SteamID() or 'N/A'
 
     print('Running persistence backup, as requested by '..pn..' ('..sid..')')
 
@@ -61,16 +64,21 @@ else
 
     for ent_class, v in pairs(to_save) do
       if !istable(v) then
-        print("  -> error: saveable data is not a table! ("..ent_class..")")
+        print('  -> error: saveable data is not a table! ('..ent_class..')')
         status = false
         break
       end
-      print("  -> "..ent_class)
+      print('  -> '..ent_class)
       file.Write(target_dir..'/'..ent_class..'.txt', util.TableToJSON(v))
     end
 
-    print("  -> "..(status and "done!" or "error!"))
+    print('  -> '..(status and 'done!' or 'error!'))
 
-    Cable.send(player, 'flux_persistence_backup', status)
-  end)
+    if IsValid(player) then
+      Cable.send(player, 'flux_persistence_backup', status)
+    end
+  end
+
+  Cable.receive('flux_persistence_backup', _run_backup)
+  concommand.Add('fl_persistence_backup', _run_backup)
 end
