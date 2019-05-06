@@ -2,11 +2,11 @@ ru:
   char_set_name:
     description: Выставляет имя персонажа.
     syntax: <игрок> <новое имя>
-    message: "{1} сменил имя {2} на {3}."
+    message: "{1} меняет имя {2} на {3}."
   char_set_model:
     description: Выставляет модель персонажа.
     syntax: <игрок> <новая модель>
-    message: "{1} сменил модель {2} на {3}."
+    message: "{1} меняет модель {2} на {3}."
   config:
     character:
       title: Персонаж

@@ -7,7 +7,7 @@ ru:
   give_item:
     description: Выдать игроку определенный предмет.
     syntax: "<игрок> <название или ID>"
-    target_message: "{1} выдал вам {2}x{3}."
+    target_message: "{1} выдает вам {2}x{3}."
     player_message: Вы выдали {2}x{3} {1}.
     invalid_item: "Предмет '{1}' не найден."
   tab_menu:
