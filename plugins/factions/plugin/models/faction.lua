@@ -100,31 +100,29 @@ function Faction:generate_name(player, char_name, rank, default_data)
   if final_name:find('{rank}') then
     for k, v in ipairs(self.rank) do
       if v.id == rank or k == rank then
-        final_name = final_name:Replace('{rank}', v.name)
+        final_name = final_name:replace('{rank}', v.name)
 
         break
       end
     end
   end
 
-  local assistants = string.find_all(final_name, '{[%w]+:[%w]+}')
+  local helpers = string.find_all(final_name, '{([%w]+):([%w]+)}')
 
-  for k, v in ipairs(assistants) do
-    v = v[1]
+  for k, v in ipairs(helpers) do
+    local m1, m2 = v.matches[1], v.matches[2]
 
-    if v:starts('{callback:') then
-      local func_name = v:utf8sub(11, utf8.len(v) - 1)
-      local callback = self[func_name]
+    if m1 == 'callback' then
+      local callback = self[m2]
 
       if isfunction(callback) then
-        final_name = final_name:Replace(v, callback(self, player))
+        final_name = final_name:replace(v.text, callback(self, player))
       end
-    elseif v:starts('{data:') then
-      local key = v:utf8sub(7, utf8.len(v) - 1)
-      local data = player:get_character_data(key, (default_data[key] or self.data[key] or ''))
+    elseif m1 == 'data' then
+      local data = player:get_character_data(m2, default_data[m2] or self.data[m2] or '')
 
       if isstring(data) then
-        final_name = final_name:Replace(v, data)
+        final_name = final_name:replace(v.text, data)
       end
     end
   end
