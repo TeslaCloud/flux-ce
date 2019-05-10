@@ -7,6 +7,8 @@ COMMAND.aliases = { 'fallover', 'charfallover' }
 COMMAND.no_console = true
 
 function COMMAND:on_run(player, delay)
+  delay = tonumber(delay)
+
   if isnumber(delay) and delay > 0 then
     delay = math.Clamp(delay or 0, 2, 60)
   end
