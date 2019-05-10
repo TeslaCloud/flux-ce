@@ -87,8 +87,8 @@ function Faction:generate_name(player, char_name, rank, default_data)
 
   if hook.run('ShouldNameGenerate', player, self, char_name, rank, default_data) == false then return player:name() end
 
-  if isfunction(self.MakeName) then
-    return self:MakeName(player, char_name, rank, default_data) or 'John Doe'
+  if isfunction(self.make_name) then
+    return self:make_name(player, char_name, rank, default_data) or 'John Doe'
   end
 
   local final_name = self.name_template
