@@ -109,3 +109,9 @@ end
 function player_meta:run_command(cmd)
   return Flux.Command:interpret(self, cmd)
 end
+
+function player_meta:teleport(pos)
+  self.prev_pos = self:GetPos()
+  self:SetPos(pos)
+  self:un_stuck()
+end

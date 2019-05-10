@@ -70,6 +70,15 @@ ru:
   unbancmd:
     description: Разблокировать игрока с таким Steam ID если тот находится в блокировке.
     syntax: <заблокированный SteamID>
+  tpcmd:
+    description: Телепортировать игрока туда, куда вы смотрите.
+    syntax: <игрок>
+  tptocmd:
+    description: Телепортироваться к игроку.
+    syntax: <игрок>
+  return:
+    description: Вернуть игрока туда, где он находился до телепорта.
+    syntax: <игрок>
   set_group:
     description: "Выставляет группу пользователя игрока. Группы: {1}"
     syntax: <игрок> <группа>
