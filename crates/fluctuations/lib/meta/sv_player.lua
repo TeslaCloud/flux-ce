@@ -77,3 +77,65 @@ function player_meta:restore_player()
     hook.run('PlayerRestored', self, obj)
   end)
 end
+
+function player_meta:find_best_position(margin, filter)
+  margin = margin or 3
+
+  local pos = self:GetPos()
+  local min, max = Vector(-16, -16, 0), Vector(16, 16, 32)
+  local positions = {}
+
+  for x = -margin, margin do
+    for y = -margin, margin do
+      local pick = pos + Vector(x * margin * 10, y * margin * 10, 0)
+
+      if !util.IsInWorld(pick) then continue end
+
+      local data = {}
+        data.start = pick + min + Vector(0, 0, margin * 1.25)
+        data.endpos = pick + max
+        data.filter = filter or self
+      local trace = util.TraceLine(data)
+
+      if trace.StartSolid or trace.Hit then continue end
+
+      data.start = pick + Vector(-max.x, -max.y, margin * 1.25)
+      data.endpos = pick + Vector(min.x, min.y, 32)
+
+      local trace2 = util.TraceLine(data)
+
+      if trace2.StartSolid or trace2.Hit then continue end
+
+      data.start = pos
+      data.endpos = pick
+
+      local trace3 = util.TraceLine(data)
+
+      if trace3.Hit then continue end
+
+      table.insert(positions, pick)
+    end
+  end
+
+  table.sort(positions, function(a, b)
+    return a:Distance(pos) < b:Distance(pos)
+  end)
+
+  return positions
+end
+
+function player_meta:un_stuck(filter)
+  local positions = self:find_best_position(4, filter)
+
+  for k, v in ipairs(positions) do
+    self:SetPos(v)
+
+    if !self:is_stuck() then
+      return
+    else
+      self:DropToFloor()
+
+      if !self:is_stuck() then return end
+    end
+  end
+end
