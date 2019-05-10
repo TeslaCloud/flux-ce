@@ -98,13 +98,19 @@ function string.find_all(str, pattern)
   local last_pos = 1
 
   while true do
-    local start_pos, end_pos = string.find(str, pattern, last_pos)
+    local find_data = { string.find(str, pattern, last_pos) }
+    local start_pos, end_pos = find_data[1], find_data[2]
 
     if !start_pos then
       break
     end
 
-    table.insert(hits, {string.utf8sub(str, start_pos, end_pos), start_pos, end_pos})
+    table.insert(hits, {
+      text      = string.utf8sub(str, start_pos, end_pos),
+      start_pos = start_pos,
+      end_pos   = end_pos,
+      matches   = table.map(find_data, function(v) if isstring(v) then return v end end)
+    })
 
     last_pos = end_pos + 1
   end
