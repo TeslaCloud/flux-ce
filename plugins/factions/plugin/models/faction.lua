@@ -107,7 +107,7 @@ function Faction:generate_name(player, char_name, rank, default_data)
     end
   end
 
-  local helpers = string.find_all(final_name, '{([%w]+):([%w]+)}')
+  local helpers = string.find_all(final_name, '{([%w_]+):([%w_]+)}')
 
   for k, v in ipairs(helpers) do
     local m1, m2 = v.matches[1], v.matches[2]
