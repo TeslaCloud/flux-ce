@@ -1,21 +1,21 @@
 Crate:describe(function(s)
-  s.name        'Flow'
-  s.version     '1.0'
-  s.date        '2019-03-09'
-  s.summary     'A collection of utility libraries.'
-  s.description 'A collection of the utility libraries that Flux relies on. They provide a lot of misc. functions and aliases for development convenience.'
-  s.author      'TeslaCloud Studios'
-  s.email       'support@teslacloud.net'
-  s.files       {
+  s.name        = 'Flow'
+  s.version     = '1.0'
+  s.date        = '2019-03-09'
+  s.summary     = 'A collection of utility libraries.'
+  s.description = 'A collection of the utility libraries that Flux relies on. They provide a lot of misc. functions and aliases for development convenience.'
+  s.author      = 'TeslaCloud Studios'
+  s.email       = 'support@teslacloud.net'
+  s.files       = {
     'lib/sh_helpers.lua',
     'lib/sh_aliases.lua', 'lib/sh_string.lua', 'lib/sh_utils.lua', 'lib/sh_color.lua',
     'lib/sh_class.lua', 'lib/sh_library.lua', 'lib/sh_unit.lua', 'lib/sh_table.lua',
     'lib/sh_math.lua', 'lib/sh_player.lua', 'lib/sh_file.lua', 'lib/sh_wrappers.lua',
     'lib/cl_utils.lua', 'lib/inflector/sh_inflector.lua', 'lib/inflector/sh_inflections.lua'
   }
-  s.global      'Flow'
-  s.website     'https://teslacloud.net'
-  s.license     'MIT'
+  s.global      = 'Flow'
+  s.website     = 'https://teslacloud.net'
+  s.license     = 'MIT'
 
   s.depends     'pon'
 end)

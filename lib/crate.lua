@@ -66,17 +66,17 @@ end
 -- For every singular function there is a plural alias and vice versa.
 -- ```
 -- Crate:describe(function(s)
---   s.name        'Example Package'
---   s.version     '1.0'
---   s.date        '2019-03-09'
---   s.summary     'Brief summary of what the package does.'
---   s.description 'A more detailed description of what the package does.'
---   s.authors     { 'Flux Developer' }
---   s.email       'example@example.com'
---   s.files       { 'lib/example.lua', 'config/example.lua' }
---   s.global      'ExamplePackage'
---   s.website     'https://example.com'
---   s.license     'MIT'
+--   s.name        = 'Example Package'
+--   s.version     = '1.0'
+--   s.date        = '2019-03-09'
+--   s.summary     = 'Brief summary of what the package does.'
+--   s.description = 'A more detailed description of what the package does.'
+--   s.authors     = { 'Flux Developer' }
+--   s.email       = 'example@example.com'
+--   s.files       = { 'lib/example.lua', 'config/example.lua' }
+--   s.global      = 'ExamplePackage'
+--   s.website     = 'https://example.com'
+--   s.license     = 'MIT'
 --
 --   s.depends     'random_dependency'
 --
@@ -88,7 +88,20 @@ end
 -- @return [Package]
 function Crate:describe(callback)
   if callback then
-    callback(self.current)
+    local mt = setmetatable({ depends = self.current.depends }, { __newindex = function(o, k, v)
+      if k:ends('s') then
+        if k:ends('ies') then
+          k = k:gsub('ies$', 'y')
+        else
+          k = k:gsub('s$', '')
+        end
+      end
+
+      self.current.metadata[k] = v
+    end
+    })
+
+    callback(mt)
   end
 
   local meta = self.current.metadata

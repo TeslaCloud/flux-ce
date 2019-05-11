@@ -1,15 +1,15 @@
 Crate:describe(function(s)
-  s.name        'Flux'
-  s.version     '0.7.2'
-  s.date        '2019-05-01'
-  s.summary     'A gamemode framework.'
-  s.description 'A gamemode framework made primarily for database-driven roleplay gamemodes.'
-  s.authors     { 'TeslaCloud Studios', 'Meow the Cat', 'AleXXX_007', 'NightAngel', 'Zig' }
-  s.email       'support@teslacloud.net'
-  s.file        'lib/flux.lua'
-  s.global      'Flux'
-  s.website     'https://teslacloud.net'
-  s.license     'MIT'
+  s.name        = 'Flux'
+  s.version     = '0.7.2'
+  s.date        = '2019-05-01'
+  s.summary     = 'A gamemode framework.'
+  s.description = 'A gamemode framework made primarily for database-driven roleplay gamemodes.'
+  s.authors     = { 'TeslaCloud Studios', 'Meow the Cat', 'AleXXX_007', 'NightAngel', 'Zig' }
+  s.email       = 'support@teslacloud.net'
+  s.file        = 'lib/flux.lua'
+  s.global      = 'Flux'
+  s.website     = 'https://teslacloud.net'
+  s.license     = 'MIT'
 
   if system.IsLinux() then
     s.depends   'colorfix'
