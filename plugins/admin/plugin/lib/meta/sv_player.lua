@@ -113,5 +113,5 @@ end
 function player_meta:teleport(pos)
   self.prev_pos = self:GetPos()
   self:SetPos(pos)
-  self:un_stuck()
+  self:unstuck()
 end

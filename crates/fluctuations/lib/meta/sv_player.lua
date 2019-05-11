@@ -124,7 +124,7 @@ function player_meta:find_best_position(margin, filter)
   return positions
 end
 
-function player_meta:un_stuck(filter)
+function player_meta:unstuck(filter)
   local positions = self:find_best_position(4, filter)
 
   for k, v in ipairs(positions) do

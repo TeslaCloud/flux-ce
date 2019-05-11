@@ -57,7 +57,7 @@ function player_meta:create_ragdoll_entity(decay, fallen)
 
             if !self:is_stuck() then return end
 
-            self:un_stuck({ ragdoll, self })
+            self:unstuck({ ragdoll, self })
           end
         end
       end)
