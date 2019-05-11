@@ -241,6 +241,7 @@ function Crate:reload(name)
 end
 
 do
+  --- @ignore
   local function do_include(file_path, lib_path, full_path)
     if istable(Crate.installed[lib_path]) and !Crate.installed[lib_path].metadata.reload then
       return
