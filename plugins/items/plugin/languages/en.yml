@@ -7,7 +7,7 @@ en:
       other: Other
       weapon: Weapon
       ammo: Ammunition
-      thrown: Throwing weapon
+      thrown: Throwable weapon
     slot:
       primary: Primary
       secondary: Secondary
