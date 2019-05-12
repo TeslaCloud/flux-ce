@@ -210,8 +210,8 @@ function PANEL:rebuild_models()
     button:SetModel(v)
     button:SetPos(i * 68 + 4, offset)
     button.DoClick = function(btn)
-      if IsValid(self.models_list.prevBtn) then
-        self.models_list.prevBtn.is_active = false
+      if IsValid(self.models_list.prev_btn) then
+        self.models_list.prev_btn.is_active = false
       end
 
       self.models_list.model = v
@@ -231,13 +231,13 @@ function PANEL:rebuild_models()
 
       btn.is_active = true
 
-      self.models_list.prevBtn = btn
+      self.models_list.prev_btn = btn
     end
 
     if self.models_list.model == v then
       button.is_active = true
 
-      self.models_list.prevBtn = button
+      self.models_list.prev_btn = button
     end
 
     button.Paint = function(btn, w, h)
