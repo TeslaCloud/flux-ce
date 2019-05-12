@@ -434,10 +434,8 @@ else
       table.safe_merge(new_table, item_table)
 
       instances[new_table.id][instance_id] = new_table
-
-      print('Received instance ID '..tostring(new_table))
     else
-      print('FAILED TO RECEIVE INSTANCE ID '..(instance_id or ''))
+      print('Failed to receive item instance #'..(instance_id or '')..', please report that.')
     end
   end)
 
