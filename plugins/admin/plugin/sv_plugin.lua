@@ -12,7 +12,6 @@ function Bolt:delete_temp_permission(player, perm_id)
   perm_table[perm_id] = nil
 
   player:set_temp_permissions(perm_table)
-
 end
 
 Cable.receive('fl_bolt_set_role', function(player, target, role_id)

@@ -77,7 +77,7 @@ function Bolt:PlayerRestored(player, record)
     player:set_permissions(perm_table)
   end
 
-  Log:notify(player:name()..' ('..player:GetUserGroup()..') has connected to the server.', { action = 'player_events' })
+  Log:notify(player:name()..' has connected to the server.', { action = 'player_events' })
 end
 
 function Bolt:CommandCheckImmunity(player, target, can_equal)
@@ -94,9 +94,7 @@ function Bolt:PlayerInitialSpawn(player)
 end
 
 function Bolt:PlayerOneMinute(player)
-  local temp_permissions = player:get_temp_permissions()
-
-  for k, v in pairs(temp_permissions) do
+  for k, v in pairs(player:get_temp_permissions()) do
     if time_from_timestamp(v.expires) <= os.time() then
       self:delete_temp_permission(player, k)
     end
@@ -110,9 +108,7 @@ function Bolt:PlayerPermissionChanged(player, perm_id, value)
     elseif value == PERM_NO then
       player:StripWeapon('gmod_tool')
     end
-  end
-
-  if perm_id == 'physgun' then
+  elseif perm_id == 'physgun' then
     if value == PERM_ALLOW then
       player:Give('weapon_physgun')
     elseif value == PERM_NO then

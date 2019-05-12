@@ -41,7 +41,7 @@ function Bolt:OnPluginsLoaded()
   for k, v in pairs(self:get_roles()) do
     for k1, v1 in pairs(self:get_all_permissions()) do
       if v.role_id == v1.role then
-        self:allow_childs(v, k1)
+        self:allow_children(v, k1)
       end
     end
   end

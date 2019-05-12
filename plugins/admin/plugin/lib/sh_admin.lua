@@ -69,12 +69,12 @@ function Bolt:create_role(id, data)
   end
 end
 
-function Bolt:allow_childs(role, perm_id)
+function Bolt:allow_children(role, perm_id)
   role:allow(perm_id)
 
   for k, v in pairs(self:get_roles()) do
     if v.base == role.role_id then
-      self:allow_childs(v, perm_id)
+      self:allow_children(v, perm_id)
     end
   end
 end
