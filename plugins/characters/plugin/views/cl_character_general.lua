@@ -223,6 +223,7 @@ function PANEL:rebuild_models()
 
       if skins > 1 then
         self.skin:set_max(skins)
+        self.skin:set_value(1)
         self.skin:SetVisible(true)
       else
         self.skin:SetVisible(false)
