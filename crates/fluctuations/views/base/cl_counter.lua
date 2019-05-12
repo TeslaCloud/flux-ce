@@ -40,7 +40,7 @@ function PANEL:PerformLayout(w, h)
   self.dec:SetPos(2, h * 0.75 + 2)
   self.dec:SetSize(w - 4, h * 0.25 - 2)
 
-  self:check_buttons(self.value)
+  self:check_buttons()
 end
 
 function PANEL:Paint(w, h)
@@ -56,19 +56,23 @@ end
 
 function PANEL:set_max(max)
   self.max = max
+  self:check_buttons()
 end
 
 function PANEL:set_min(min)
   self.min = min
+  self:check_buttons()
 end
 
 function PANEL:set_min_max(min, max)
   self.min = min
   self.max = max
+  self:check_buttons()
 end
 
 function PANEL:set_value(value)
   self.value = value
+  self:check_buttons()
 end
 
 function PANEL:set_font(font)
@@ -91,26 +95,31 @@ function PANEL:increase(button)
   self.value = math.Clamp(self.value + 1, self.min, self.max)
 
   self:on_click(self.value)
-  self:check_buttons(self.value)
+  self:check_buttons()
 end
 
 function PANEL:decrease(button)
   self.value = math.Clamp(self.value - 1, self.min, self.max)
 
   self:on_click(self.value)
-  self:check_buttons(self.value)
+  self:check_buttons()
 end
 
-function PANEL:check_buttons(value)
+function PANEL:check_buttons()
+  local value = self.value
+
   if value == self.max then
     self.inc:set_enabled(false)
     self.inc:set_active(false)
-  elseif value == self.min then
-    self.dec:set_enabled(false)
-    self.dec:set_active(false)
   else
     self.inc:set_enabled(true)
     self.inc:set_active(true)
+  end
+
+  if value == self.min then
+    self.dec:set_enabled(false)
+    self.dec:set_active(false)
+  else
     self.dec:set_enabled(true)
     self.dec:set_active(true)
   end
