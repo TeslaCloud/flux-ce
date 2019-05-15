@@ -8,4 +8,6 @@ Crate:describe(function(s)
   s.cl_file     = 'lib/pon.min.lua'
   s.sv_file     = 'lib/pon.lua'
   s.license     = 'file'
+
+  add_client_env('PON_PATH', CRATE.__path__)
 end)

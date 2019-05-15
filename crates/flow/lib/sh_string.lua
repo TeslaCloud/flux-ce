@@ -1,10 +1,14 @@
-if !string.utf8lower then
-  if SERVER then
-    include 'flux/crates/utf8/lib/utf8.lua'
-  else
-    include 'flux/crates/utf8/lib/utf8.min.lua'
+local String = {
+  lower = function(...)
+    return (string.utf8lower or string.lower)(...)
+  end,
+  upper = function(...)
+    return (string.utf8upper or string.upper)(...)
+  end,
+  sub = function(...)
+    return (string.utf8sub or string.sub)(...)
   end
-end
+}
 
 local string_meta = getmetatable('')
 
@@ -20,7 +24,7 @@ do
 
   -- A function to check whether character is vowel or not.
   function string.vowel(char)
-    char = char:utf8lower()
+    char = String.lower(char)
 
     if CLIENT then
       local lang = Flux.Lang:GetTable(GetConVar('gmod_language'):GetString())
@@ -53,7 +57,7 @@ function string.trim_end(str, needle, all_occurences)
       return str
     end
 
-    return str:utf8sub(1, utf8.len(str) - utf8.len(needle))
+    return String.sub(str, 1, utf8.len(str) - utf8.len(needle))
   else
     return str
   end
@@ -74,7 +78,7 @@ function string.trim_start(str, needle, all_occurences)
       return str
     end
 
-    return str:utf8sub(utf8.len(needle) + 1, utf8.len(str))
+    return String.sub(str, utf8.len(needle) + 1, utf8.len(str))
   else
     return str
   end
@@ -82,12 +86,12 @@ end
 
 -- A function to check whether the string is full uppercase or not.
 function string.is_upper(str)
-  return string.utf8upper(str) == str
+  return String.upper(str) == str
 end
 
 -- A function to check whether the string is full lowercase or not.
 function string.is_lower(str)
-  return string.utf8lower(str) == str
+  return String.lower(str) == str
 end
 
 -- A function to find all occurences of a substring in a string.
@@ -106,7 +110,7 @@ function string.find_all(str, pattern)
     end
 
     table.insert(hits, {
-      text      = string.utf8sub(str, start_pos, end_pos),
+      text      = String.sub(str, start_pos, end_pos),
       start_pos = start_pos,
       end_pos   = end_pos,
       matches   = table.map(find_data, function(v) if isstring(v) then return v end end)
@@ -143,7 +147,7 @@ do
   }
 
   function string.to_id(str)
-    str = str:utf8lower()
+    str = String.lower(str)
     str = str:gsub(' ', '_')
 
     for k, v in ipairs(blocked_chars) do
@@ -190,9 +194,9 @@ end
 
 function string.spelling(str, first_lower)
   local len = utf8.len(str)
-  local end_text = str:utf8sub(-1)
+  local end_text = String.sub(str, -1)
 
-  str = (!first_lower and str:utf8sub(1, 1):utf8upper() or str:utf8sub(1, 1):utf8lower())..str:utf8sub(2, len)
+  str = (!first_lower and String.upper(String.sub(str, 1, 1)) or String.lower(String.sub(str, 1, 1)))..String.sub(str, 2, len)
 
   if end_text != '.' and end_text != '!' and end_text != '?' and end_text != '"' then
     str = str..'.'
@@ -229,7 +233,7 @@ end
 
 function string.capitalize(str)
   local len = utf8.len(str)
-  return string.utf8upper(str[1])..(len > 1 and string.utf8sub(str, 2, utf8.len(str)) or '')
+  return String.upper(str[1])..(len > 1 and String.sub(str, 2, utf8.len(str)) or '')
 end
 
 function string.parse_table(str, ref)

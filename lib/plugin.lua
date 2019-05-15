@@ -268,9 +268,9 @@ function Plugin.include(path)
   end
 
   if data.environment then
-    if isstring(data.environment) and FLUX_ENV != data.environment then
+    if isstring(data.environment) and ENV['FLUX_ENV'] != data.environment then
       return
-    elseif istable(data.environment) and !table.HasValue(data.environment, FLUX_ENV) then
+    elseif istable(data.environment) and !table.HasValue(data.environment, ENV['FLUX_ENV']) then
       return
     end
   end

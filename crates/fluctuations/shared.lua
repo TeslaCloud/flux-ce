@@ -23,10 +23,11 @@ GM.name_override = false -- Set to any string to override schema's browser name.
 
 -- Environment stuff
 FLUX_ENV_PATH    = file.Exists('flux/config/environment.local.lua', 'LUA') and 'flux/config/environment.local.lua' or 'flux/config/environment.lua'
-FLUX_ENV         = string.lower(include(FLUX_ENV_PATH) or 'development')
-IS_PRODUCTION    = FLUX_ENV == 'production'
+setenv('FLUX_ENV', string.lower(include(FLUX_ENV_PATH) or 'development'))
+
+IS_PRODUCTION    = ENV['FLUX_ENV'] == 'production'
 IS_DEVELOPMENT   = !IS_PRODUCTION
-IS_STAGING       = FLUX_ENV == 'staging'
+IS_TEST          = ENV['FLUX_ENV'] == 'test'
 LITE_REFRESH     = Flux.initialized and Settings.lite_refresh or false
 
 Flux.development = !IS_PRODUCTION
@@ -44,7 +45,9 @@ end
 Plugin.clear_cache()
 
 if !LITE_REFRESH then
-  print('Environment: '..FLUX_ENV)
+  print('Environment: '..ENV['FLUX_ENV'])
+
+  local crate_path = CRATE.__path__
 
   require_relative 'core/sh_core'
   require_relative 'core/sh_enums'
@@ -63,11 +66,11 @@ if !LITE_REFRESH then
   require_relative_folder('lib/classes', true)
   require_relative_folder('lib/meta', true)
   if SERVER then
-    Pipeline.include_folder('language', 'flux/crates/fluctuations/languages')
-    Pipeline.include_folder('migrations', 'flux/crates/fluctuations/migrations')
-    Pipeline.include_folder('html', 'flux/crates/fluctuations/views/html')
-    Pipeline.include_folder('html', 'flux/crates/fluctuations/views/assets/stylesheets')
-    Pipeline.include_folder('html', 'flux/crates/fluctuations/views/assets/javascripts')
+    Pipeline.include_folder('language', crate_path..'languages')
+    Pipeline.include_folder('migrations', crate_path..'migrations')
+    Pipeline.include_folder('html', crate_path..'views/html')
+    Pipeline.include_folder('html', crate_path..'views/assets/stylesheets')
+    Pipeline.include_folder('html', crate_path..'views/assets/javascripts')
   end
   require_relative_folder('models', true)
   require_relative_folder('controllers', true)
@@ -89,10 +92,10 @@ if !LITE_REFRESH then
 
     -- Theme factory is needed for any other themes that may be in the themes folder.
     Pipeline.include('theme', 'themes/cl_theme_factory.lua')
-    Pipeline.include_folder('theme', 'flux/crates/fluctuations/themes')
+    Pipeline.include_folder('theme', crate_path..'themes')
   end
 
-  Pipeline.include_folder('tool', 'flux/crates/fluctuations/tools')
+  Pipeline.include_folder('tool', crate_path..'tools')
 else
   print 'Performing partial code reload...'
 end

@@ -36,3 +36,5 @@ if !SERVER then return end
 Settings          = Settings or YAML.read('gamemodes/flux/config/settings.yml')
 Settings.configs  = Settings.configs or YAML.read('gamemodes/flux/config/config.yml')
 DatabaseSettings  = YAML.read('gamemodes/flux/config/database.yml')
+
+AddCSLuaFile('_flux/environment.lua')

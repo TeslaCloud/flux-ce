@@ -1,5 +1,8 @@
+-- Store for later use.
+local CRATE = CRATE
+
 ActiveRecord.schema       = ActiveRecord.schema               or {}
-ActiveRecord.db_settings  = DatabaseSettings[FLUX_ENV]        or DatabaseSettings['development'] or {}
+ActiveRecord.db_settings  = DatabaseSettings[ENV['FLUX_ENV']] or DatabaseSettings['development'] or {}
 ActiveRecord.adapter_name = ActiveRecord.db_settings.adapter  or 'sqlite'
 ActiveRecord.metadata     = ActiveRecord.metadata             or {
   indexes     = {},
@@ -138,8 +141,10 @@ function ActiveRecord.establish_connection(config)
     config.adapter  = adapter
   end
 
-  if file.Exists('flux/crates/active_record/lib/adapters/'..adapter..'.lua', 'LUA') then
-    include('flux/crates/active_record/lib/adapters/'..adapter..'.lua')
+  local path = CRATE.__path__
+
+  if file.Exists(path..'lib/adapters/'..adapter..'.lua', 'LUA') then
+    include(path..'lib/adapters/'..adapter..'.lua')
   end
 
   ActiveRecord.adapter = (ActiveRecord.Adapters[adapter:capitalize()] or ActiveRecord.Adapters.Abstract).new()

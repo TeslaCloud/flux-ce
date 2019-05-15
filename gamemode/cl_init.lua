@@ -1,5 +1,6 @@
 local start_time = os.clock()
 
+include 'env.lua'
 include 'flux/lib/crate.lua'
 
 if Flux.initialized then

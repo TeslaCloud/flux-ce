@@ -42,7 +42,7 @@ end
 function require_relative_folder(dir, base, recursive)
   if base then
     if isbool(base) then
-      base = 'flux/crates/fluctuations/'
+      base = CRATE and CRATE.__path__ or 'flux/'
     elseif !base:EndsWith('/') then
       base = base..'/'
     end

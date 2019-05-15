@@ -6,8 +6,8 @@
   Font-Awesome 5 Code is released under the MIT License.
 --]]
 
-if !font then
-  include('flux/crates/fluctuations/lib/cl_font.lua')
+if !Font then
+  include(CRATE.__path__..'lib/cl_font.lua')
 end
 
 library 'FontAwesome'

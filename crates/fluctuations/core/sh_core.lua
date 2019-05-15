@@ -1,10 +1,5 @@
 AddCSLuaFile()
 
-if !string.parse_parent then
-  include 'flux/cratesflow/lib/sh_aliases.lua'
-  include 'flux/crates/flow/lib/sh_string.lua'
-end
-
 --
 -- Function: Flux.print (any message)
 -- Description: Prints a message to the console.
