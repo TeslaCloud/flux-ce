@@ -24,7 +24,7 @@ function util.validate(...)
   return true
 end
 
--- A function to do C-style formatted prints.
+-- A function to print C-style formatted strings.
 function printf(str, ...)
   print(Format(str, ...))
 end

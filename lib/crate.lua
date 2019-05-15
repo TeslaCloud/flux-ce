@@ -273,6 +273,119 @@ function Crate:reload(name)
   end
 end
 
+--- Parse version string.
+-- @return [Hash]
+function Crate:parse_version(version)
+  local buf = nil
+  local init = 1
+  local last = 'x'
+  local version_data = {
+    x = nil,
+    y = nil,
+    z = nil,
+    sum = nil,
+    suffix = nil,
+    op = '=='
+  }
+
+  version = version:gsub('%s', '')
+
+  if version[1] == '~' or version[1] == '>' then
+    version_data.op = ({ ['>']=1, ['=']=1 })[version[2]] and version:sub(1, 2) or version:sub(1, 1)
+    init = version_data.op:len() + 1
+  end
+
+  for i = init, version:len() do
+    local v = version[i]
+
+    if v != '.' and v != '-' then
+      buf = (buf or '')..v
+    else
+      if buf then
+        if !version_data.x then
+          version_data.x = tonumber(buf)
+          last = 'y'
+        elseif !version_data.y then
+          version_data.y = tonumber(buf)
+          last = 'z'
+        elseif !version_data.z then
+          version_data.z = tonumber(buf)
+          last = 'suffix'
+        end
+
+        if v == '-' then last = 'suffix' end
+
+        buf = nil
+      else
+        error('invalid package version: '..tostring(version)..'\n')
+      end
+    end
+  end
+
+  if buf then
+    version_data[last] = buf
+  end
+
+  version_data.x = tonumber(version_data.x) or 0
+  version_data.y = tonumber(version_data.y) or 0
+  version_data.z = tonumber(version_data.z) or 0
+  version_data.sum = tonumber(
+    tostring(version_data.x)..
+    tostring(version_data.y)..
+    tostring(version_data.z)
+  )
+
+  return version_data
+end
+
+--- Returns -1 if version1 is older than version2.
+-- Returns 0 if versions are equal.
+-- Returns 1 if version1 is newer than version2.
+-- @return[Number]
+function Crate:compare_version(version1, version2)
+  if !istable(version1) or !istable(version2) then return false end
+
+  local s1, s2 = version1.sum or 0, version2.sum or 0
+
+  if s1 < s2 then
+    return -1
+  elseif s1 == s2 then
+    return 0
+  elseif s1 > s2 then
+    return 1
+  end
+end
+
+--- Returns true if version2 matches the version1 template.
+-- @return[Number]
+function Crate:is_version(version1, version2)
+  local res = self:compare_version(version1, version2)
+
+  if version1.op == '==' and res == 0 then
+    if version1.suffix and version1.suffix != version2.suffix then return false end
+
+    return true
+  elseif version1.op == '>=' and (res == -1 or res == 0) then
+    return true
+  elseif version1.op == '~>' and res != 1 then
+    if res == 0 then return true end
+
+    local x, y, z, x1, y1, z1 = version1.x, version1.y, version1.z, version2.x, version2.y, version2.z
+
+    if x == x1 then
+      if y == y1 then
+        return z1 >= z
+      elseif z == 0 and y == 0 then
+        return true
+      elseif z == 0 then
+        return y1 >= y
+      end
+    end
+  end
+
+  return false
+end
+
 do
   --- @ignore
   local function do_include(file_path, lib_path, full_path)
@@ -316,7 +429,7 @@ do
   -- This function will look for the package in the search paths that have previously been added.
   -- If no package with the matching name can be found, throws an error.
   -- @return [...]
-  function Crate:include(name)
+  function Crate:include(name, version)
     -- Skip Lua files.
     if name:EndsWith('.lua') then return true end
 
