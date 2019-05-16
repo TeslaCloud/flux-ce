@@ -60,7 +60,7 @@ function Stamina:PlayerThink(player, cur_time)
 end
 
 function Stamina:KeyPress(player, key)
-  if key == IN_JUMP and player:OnGround() then
+  if key == IN_JUMP and player:OnGround() and player:GetMoveType() == MOVETYPE_WALK then
     local cur_stam = player:get_nv('stamina', max_stamina)
 
     if cur_stam < 1 then return end
