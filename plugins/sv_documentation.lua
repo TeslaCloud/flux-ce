@@ -75,39 +75,113 @@ local function extract_functions(code)
 end
 
 local function extract_functions_from_files(folder)
-  local func_data = {}
+  local stdlib, crates, plugins = {}, {}, {}
   local files = File.get_list(folder)
 
   for k, v in ipairs(files) do
     if v:ends('.lua') then
-      table.Merge(func_data, extract_functions(File.read(v)))
+      if v:find('plugins/') then
+        local plugin_name = v:match('plugins/([%w_]+)/')
+        if !plugin_name then continue end
+        plugins[plugin_name] = plugins[plugin_name] or {}
+        table.Merge(plugins[plugin_name], extract_functions(File.read(v)))
+      elseif v:find('crates/') then
+        local crate_name = v:match('crates/([%w_]+)/')
+        if !crate_name then continue end
+        crates[crate_name] = crates[crate_name] or {}
+        table.Merge(crates[crate_name], extract_functions(File.read(v)))
+      else
+        table.Merge(stdlib, extract_functions(File.read(v)))
+      end
     end
   end
 
-  return func_data
+  return stdlib, crates, plugins
+end
+
+local function render_html_for(name, data)
+  local globals = {}
+  local class_methods = {}
+  local modules = {}
+  local hooks = {}
+
+  for k, v in SortedPairs(data) do
+    if k:find('%.') then
+      if k:find(':') then
+        table.insert(class_methods, k)
+      else
+        table.insert(modules, k)
+      end
+    elseif k:find(':') then
+      if k:find('^GM:') then
+        table.insert(hooks, k)
+      else
+        table.insert(class_methods, k)
+      end
+    else
+      table.insert(globals, k)
+    end
+  end
+
+  local out = '<!DOCTYPE html><html lang="en"><head><style>.function { display: flex; flex-flow: row; padding: 4px; }'
+  out = out..'.container { display: flex; flex-flow: column; font-family: Arial; }'
+  out = out..'.category_title { font-size: 32px; font-weight: bold; padding: 8px; }'
+  out = out..'</style><body>'
+  out = out..'<div class="container">'
+
+  out = out..'<div class="category_title">'..name..'</div>'
+  out = out..'<div class="category_title">Globals</div>'
+  for k, v in ipairs(globals) do
+    out = out..'<div class="function">'..tostring(v)..'( ... )</div>'
+  end
+
+  out = out..'<div class="category_title">Class Methods</div>'
+  for k, v in ipairs(class_methods) do
+    out = out..'<div class="function">'..tostring(v)..'( ... )</div>'
+  end
+
+  out = out..'<div class="category_title">Module Methods</div>'
+  for k, v in ipairs(modules) do
+    out = out..'<div class="function">'..tostring(v)..'( ... )</div>'
+  end
+
+  out = out..'<div class="category_title">Hooks</div>'
+  for k, v in ipairs(hooks) do
+    out = out..'<div class="function">'..tostring(v)..'( ... )</div>'
+  end
+
+  out = out..'</div></body></html>'
+
+  return out
 end
 
 function analyze_folder(folder)
   print('Analyzing: '..folder)
 
-  local func_data = extract_functions_from_files(folder)
+  local stdlib, crates, plugins = extract_functions_from_files(folder)
+  local index_file = '<!DOCTYPE html><html lang="en"><body>'
 
-  local undocumented, partial, documented = 0, 0, 0
+  print 'Rendering HTML documentation...'
+  print '  -> stdlib'
+  File.write('gamemodes/flux/docs/stdlib/index.html', render_html_for('stdlib', stdlib))
 
-  for k, v in pairs(func_data) do
-    if #v.comments == 0 then
-      undocumented = undocumented + 1
-    elseif v.comments[1].val:starts('-') then
-      documented = documented + 1
-    else
-      partial = partial + 1
-    end
+  index_file = index_file..'<a href="stdlib/index.html">stdlib</a><br>'
+
+  print '  -> crates'
+  for name, data in SortedPairs(crates) do
+    print('    '..name)
+    File.write('gamemodes/flux/docs/crates/'..name:underscore()..'.html', render_html_for(name, data))
+    index_file = index_file..'<a href="crates/'..name:underscore()..'.html">'..name..'</a><br>'
   end
 
-  print('Done! Found '..(table.Count(func_data))..' functions.')
-  print('  -> '..(undocumented > 0 and undocumented or 'no')..' undocumented '..(undocumented != 1 and 'functions' or 'function'))
-  print('  -> '..(partial > 0 and partial or 'no')..' partially documented '..(partial != 1 and 'functions' or 'function'))
-  print('  -> '..(documented > 0 and documented or 'no')..' documented '..(documented != 1 and 'functions' or 'function'))
+  print '  -> plugins'
+  for name, data in SortedPairs(crates) do
+    print('    '..name)
+    File.write('gamemodes/flux/docs/plugins/'..name:underscore()..'.html', render_html_for(name, data))
+    index_file = index_file..'<a href="plugins/'..name:underscore()..'.html">'..name..'</a><br>'
+  end
+
+  File.write('gamemodes/flux/docs/index.html', index_file..'</body></html>')
 end
 
 analyze_folder('gamemodes/flux/')
