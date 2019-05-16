@@ -13,20 +13,20 @@ ActiveRecord.Base.table_name  = ''
 
 --- Database schema of the object.
 -- This table contains all the columns that are written to the database.
--- @return [Array]
+-- @return [Hash]
 ActiveRecord.Base.schema      = nil
 
 --- @warning [Internal]
 -- Class relations of the object.
 -- Serves as a list of objects that are children to this object
 -- or that this object is a child to.
--- @return [Array]
+-- @return [Hash]
 ActiveRecord.Base.relations   = {}
 
 --- @warning [Internal]
 -- List of validations to be ran when the object is being saved,
 -- as well as some internal data related to them.
--- @return [Array]
+-- @return [Hash]
 ActiveRecord.Base.validations = {}
 
 --- @warning [Internal]
@@ -57,7 +57,7 @@ end
 
 --- Returns the database schema, or attempts to get it from the global schema
 -- storage in case the object hasn't been properly initialized yet.
--- @return [Array]
+-- @return [Hash schema]
 function ActiveRecord.Base:get_schema()
   self.schema = self.schema or ActiveRecord.schema[self.table_name] or {}
   return self.schema
@@ -65,7 +65,7 @@ end
 
 --- Dump object as a simple data table.
 -- This simply dumps all the values of the variables defined in the schema.
--- @return [Array, ActiveRecord::Base(self)]
+-- @return [Hash schema, ActiveRecord::Base(self)]
 function ActiveRecord.Base:dump()
   local ret = {}
     for k, data in pairs(self:get_schema()) do
@@ -413,7 +413,7 @@ end
 --   ...
 -- end)
 -- ```
--- @returns [ActiveRecord::Base(self)]
+-- @return [ActiveRecord::Base(self)]
 function ActiveRecord.Base:rescue(callback)
   self._rescue = callback
   return self:fetch()

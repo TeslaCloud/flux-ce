@@ -13,7 +13,7 @@ ENV = ENV or {}
 
 if !getenv then
   --- Gets an environment variable matching the "key" name.
-  -- @return[String environment variable]
+  -- @return [String environment variable]
   function getenv(key, default)
     local res = ENV[key]
 
@@ -28,7 +28,7 @@ end
 if !setenv then
   --- Sets an environment variable "key" to "value".
   -- Will be automatically converted to string by C backend.
-  -- @return[String environment variable reference]
+  -- @return [String environment variable reference]
   function setenv(key, value)
     ENV[key] = value
     return ENV[key]

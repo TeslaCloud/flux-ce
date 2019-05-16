@@ -83,15 +83,14 @@ else
   crate_metadata = Flux.shared.crates
 end
 
-Crate                           = {}
-Crate.installed                 = {}
-Crate.current                   = nil
+Crate             = {}
+Crate.installed   = {}
+Crate.current     = nil
 
 --- Adds a search path relative to 'LUA' system.
--- @return [Table(self)]
+-- @return [self]
 function Crate:add_path(path)
   search_paths[path:ensure_end('/')] = true
-
   return self
 end
 
@@ -223,6 +222,8 @@ function Crate:describe(callback)
 end
 
 --- Determines if the package has already been installed.
+-- @alias [Crate.present]
+-- @alias [Crate.is_installed]
 -- @return [Boolean]
 function Crate:included(name)
   return istable(self.installed[name])
@@ -341,7 +342,7 @@ end
 --- Returns -1 if version1 is older than version2.
 -- Returns 0 if versions are equal.
 -- Returns 1 if version1 is newer than version2.
--- @return[Number]
+-- @return [Number]
 function Crate:compare_version(version1, version2)
   if !istable(version1) or !istable(version2) then return false end
 
@@ -357,7 +358,7 @@ function Crate:compare_version(version1, version2)
 end
 
 --- Returns true if version2 matches the version1 template.
--- @return[Number]
+-- @return [Number]
 function Crate:is_version(version1, version2)
   local res = self:compare_version(version1, version2)
 

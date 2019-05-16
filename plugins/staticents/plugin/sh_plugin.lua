@@ -6,7 +6,7 @@ function StaticEnts:RegisterPermissions()
   Bolt:register_permission('static_tool', 'Static (tool)', 'Grants access to make entities static / unstatic.', 'categories.level_design', 'assistant')
 end
 
---- @deprecation[Remove in 1.0_b]
+--- @deprecation [Remove in 1.0_b]
 if CLIENT then
   concommand.Add('fl_persistence_backup', function(player)
     if player:IsSuperAdmin() then
@@ -23,7 +23,7 @@ if CLIENT then
       print('  -> error!')
     end
   end)
---- @deprecation[Remove in 1.0_b]
+--- @deprecation [Remove in 1.0_b]
 else
   local function _run_backup(player)
     if IsValid(player) and !player:IsSuperAdmin() then return end
