@@ -18,8 +18,7 @@ do
     ['e'] = true,
     ['o'] = true,
     ['i'] = true,
-    ['u'] = true,
-    ['y'] = true
+    ['u'] = true
   }
 
   -- A function to check whether character is vowel or not.
