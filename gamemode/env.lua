@@ -12,6 +12,8 @@ AddCSLuaFile()
 ENV = ENV or {}
 
 if !getenv then
+  --- Gets an environment variable matching the "key" name.
+  -- @return[String environment variable]
   function getenv(key, default)
     local res = ENV[key]
 
@@ -24,6 +26,9 @@ if !getenv then
 end
 
 if !setenv then
+  --- Sets an environment variable "key" to "value".
+  -- Will be automatically converted to string by C backend.
+  -- @return[String environment variable reference]
   function setenv(key, value)
     ENV[key] = value
     return ENV[key]
@@ -33,6 +38,8 @@ end
 do
   local client_vars = {}
 
+  --- Adds an environment variable to the clientside environment variables list.
+  -- Can only be used once. Forced key and value to be strings.
   function add_client_env(key, value)
     if SERVER and !client_vars[key] then
       client_vars[key] = true
