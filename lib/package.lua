@@ -1,5 +1,8 @@
+--- A Flux package (also referred to as "Crate") instance class.
+-- This provides basic information fields and dependencies.
 class 'Package'
 
+--- Class constructor. Takes file path, file name and folder path as the arguments.
 function Package:init(file_path, lib_path, full_path)
   self.metadata = {
     name        = '',
@@ -21,25 +24,14 @@ function Package:init(file_path, lib_path, full_path)
     reload      = true
   }
 
-  for k, v in pairs(self.metadata) do
-    local f = function(obj, new_val)
-      if istable(obj) and obj.class_name == self.class_name then
-        obj.metadata[k] = new_val
-      else
-        self.metadata[k] = obj
-      end
-    end
-
-    self[k] = f
-    self[(!k:ends('y') and k..'s' or k:sub(1, k:len() - 1)..'ies')] = f
-  end
-
   self.metadata.file_path = file_path
   self.metadata.lib_path  = lib_path
   self.metadata.full_path = full_path
   self.__path__           = full_path
 end
 
+--- Specifies that a package is dependant on another package or plugin.
+-- Merely adds to the dependency list. Can be called with either : or .
 function Package:depends(what)
   local name = isstring(self) and self or what
 
