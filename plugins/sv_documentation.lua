@@ -81,12 +81,12 @@ local function extract_functions_from_files(folder)
   for k, v in ipairs(files) do
     if v:ends('.lua') then
       if v:find('plugins/') then
-        local plugin_name = v:match('plugins/([%w_]+)/')
+        local plugin_name = v:match('plugins/([%w_%.]+)')
         if !plugin_name then continue end
         plugins[plugin_name] = plugins[plugin_name] or {}
         table.Merge(plugins[plugin_name], extract_functions(File.read(v)))
       elseif v:find('crates/') then
-        local crate_name = v:match('crates/([%w_]+)/')
+        local crate_name = v:match('crates/([%w_%.]+)/')
         if !crate_name then continue end
         crates[crate_name] = crates[crate_name] or {}
         table.Merge(crates[crate_name], extract_functions(File.read(v)))
@@ -165,7 +165,7 @@ function analyze_folder(folder)
   print '  -> stdlib'
   File.write('gamemodes/flux/docs/stdlib/index.html', render_html_for('stdlib', stdlib))
 
-  index_file = index_file..'<a href="stdlib/index.html">stdlib</a><br>'
+  index_file = index_file..'<h2>Flux</h2><a href="stdlib/index.html">stdlib</a><br><h2>Crates</h2>'
 
   print '  -> crates'
   for name, data in SortedPairs(crates) do
@@ -174,8 +174,10 @@ function analyze_folder(folder)
     index_file = index_file..'<a href="crates/'..name:underscore()..'.html">'..name..'</a><br>'
   end
 
+  index_file = index_file..'<h2>Plugins</h2>'
+
   print '  -> plugins'
-  for name, data in SortedPairs(crates) do
+  for name, data in SortedPairs(plugins) do
     print('    '..name)
     File.write('gamemodes/flux/docs/plugins/'..name:underscore()..'.html', render_html_for(name, data))
     index_file = index_file..'<a href="plugins/'..name:underscore()..'.html">'..name..'</a><br>'
