@@ -80,7 +80,7 @@ end
 
 function player_meta:running()
   if self:Alive() and !self:Crouching() and self:GetMoveType() == MOVETYPE_WALK and
-  (self:OnGround() or self:WaterLevel() > 0) and self:GetVelocity():Length2DSqr() > (Config.get('walk_speed', 100) + 20)^2 then
+     self:GetVelocity():Length2DSqr() > (Config.get('walk_speed', 100) + 20)^2 then
     return true
   end
 

@@ -22,14 +22,14 @@ function Stamina:OnConfigSet(key, old_value, new_value)
 end
 
 function Stamina:PostPlayerSpawn(player)
-  player:set_nv('stamina', 100)
+  player:set_nv('stamina', max_stamina)
 end
 
 function Stamina:PlayerThink(player, cur_time)
   if player:running() then
     if !player.was_running then
       self:start_running(player)
-      player.was_running = cur_time
+      player.was_running = true
     end
   else
     if player.was_running then
@@ -41,28 +41,36 @@ function Stamina:PlayerThink(player, cur_time)
     end
   end
 
-  if player:GetMoveType() == MOVETYPE_WALK then
-    if !player:OnGround() then
-      player.standing_since = cur_time
+  local cur_stam = player:get_nv('stamina', max_stamina)
 
-      if player.was_on_ground and player.m_bJumping then
-        self:set_stamina(player, player:get_nv('stamina', 100) - jump_penalty)
-        self:start_running(player, true)
-      end
-
-      player.was_on_ground = false
-    elseif !player.was_on_ground then
-      player.standing_since = cur_time
-      player.was_on_ground = true
+  if cur_stam != max_stamina and player.jumped_at and !player.was_running then
+    if cur_time - regen_delay > player.jumped_at then
+      self:stop_running(player)
+      player.jumped_at = nil
     end
   end
 
-  if player:get_nv('stamina', 100) <= 1 then
+  if cur_stam <= 1 then
     player:SetRunSpeed(player:GetWalkSpeed())
     player:SetJumpPower(0)
   else
     player:SetRunSpeed(Config.get('run_speed'))
     player:SetJumpPower(Config.get('jump_power'))
+  end
+end
+
+function Stamina:KeyPress(player, key)
+  if key == IN_JUMP and player:OnGround() then
+    local cur_stam = player:get_nv('stamina', max_stamina)
+
+    if cur_stam < 1 then return end
+
+    self:set_stamina(player, cur_stam - jump_penalty)
+
+    if !player.was_running and !self.running[player:SteamID()] then
+      self.running[player:SteamID()] = true
+      player.jumped_at = CurTime()
+    end
   end
 end
 
@@ -79,7 +87,7 @@ function Stamina:set_stamina(player, stamina)
 end
 
 function Stamina:get_stamina(player)
-  return player:get_nv('stamina', 100)
+  return player:get_nv('stamina', max_stamina)
 end
 
 function Stamina:start_running(player, prevent_drain)
@@ -103,7 +111,7 @@ function Stamina:start_running(player, prevent_drain)
 
       timer.Create(id, 0.2, 0, function()
         if IsValid(player) then
-          local new_stam = player:get_nv('stamina', 100) - 1 * drain_scale * (Plugin.call('StaminaAdjustDrainScale', player) or 1)
+          local new_stam = player:get_nv('stamina', max_stamina) - 1 * drain_scale * (Plugin.call('StaminaAdjustDrainScale', player) or 1)
 
           self:set_stamina(player, new_stam)
 
@@ -144,7 +152,7 @@ function Stamina:stop_running(player, prevent_regen)
         if IsValid(player) then
           player.stamina_regenerating = true
 
-          local new_stam = player:get_nv('stamina', 100) + 1 * regen_scale * (Plugin.call('StaminaAdjustRegenScale', player) or 1)
+          local new_stam = player:get_nv('stamina', max_stamina) + 1 * regen_scale * (Plugin.call('StaminaAdjustRegenScale', player) or 1)
 
           self:set_stamina(player, new_stam)
 
