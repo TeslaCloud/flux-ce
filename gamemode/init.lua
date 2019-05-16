@@ -1,5 +1,8 @@
 local start_time = os.clock()
 
+--- Includes a module and returns a boolean depending on success.
+-- Does now throw Lua errors.
+-- @return [Boolean success]
 function require_module(mod)
   local success, value = pcall(require, mod)
 
