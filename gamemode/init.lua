@@ -15,7 +15,11 @@ function require_module(mod)
 end
 
 if !require_module 'file' then
-  ErrorNoHalt('The file module has failed to load!\nPlease make sure that you have gmsv_file_'..((system.IsWindows() and 'win32') or 'linux')..'.dll in garrysmod/lua/bin folder!\nAborting startup...\n')
+  ErrorNoHalt(
+    'The file module has failed to load!\nPlease make sure that you have gmsv_file_'..
+    ((system.IsWindows() and 'win32') or 'linux')..
+    '.dll in garrysmod/lua/bin folder!\nAborting startup...\n'
+  )
   return
 end
 

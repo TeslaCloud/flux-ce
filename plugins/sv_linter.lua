@@ -29,7 +29,7 @@ local linter_options = {
   max_function_name_length    = 24,
   function_name_exceeded      = 'warn',
   semicolons                  = 'error',
-  max_line_length             = 150,
+  max_line_length             = 200,
   allow_crlf                  = false
 }
 

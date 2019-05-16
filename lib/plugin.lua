@@ -347,7 +347,11 @@ function Plugin.include_schema()
   if istable(deps) then
     for k, v in ipairs(deps) do
       if !Plugin.require(v) then
-        ErrorNoHalt("Unable to load schema! Dependency missing: '"..tostring(v).."'!\nPlease install this plugin in your schema's 'plugins' folder!\nAlternatively please make sure that your server can download packages from the cloud!\n")
+        ErrorNoHalt(
+          "Unable to load schema! Dependency missing: '"..
+          tostring(v)..
+          "'!\nPlease install this plugin in your schema's 'plugins' folder!\nAlternatively please make sure that your server can download packages from the cloud!\n"
+        )
 
         return
       end
