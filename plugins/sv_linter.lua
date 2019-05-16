@@ -161,4 +161,4 @@ function lint_folder(folder)
   print('Found total of '..total_issues..' issues in '..total_files..' files.')
 end
 
-lint_folder('gamemodes/flux/')
+--lint_folder('gamemodes/flux/')
