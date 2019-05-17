@@ -28,11 +28,11 @@ function PANEL:set_html(contents)
 end
 
 function PANEL:render()
-  local html = '<!doctype html><head>'
+  local html = '<!DOCTYPE html><html lang="en"><head>'
   html = html..self.html_head
   html = html..'<style>'..(self.css or '')..'</style></head>'
   html = html..'<body>'..(self.html_body or '')
-  html = html..'<script type="text/javascript">'..self.js..'</script></body>'
+  html = html..'<script type="text/javascript">'..self.js..'</script></body></html>'
   self:set_html(html)
 end
 

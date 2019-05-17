@@ -103,7 +103,7 @@ function Flux.HTML:generate_js_file()
 end
 
 -- Template renderer
-if CLIENT then
+do
   local current_namespace = ''
 
   function set_template_namespace(ns)

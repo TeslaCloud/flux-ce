@@ -393,9 +393,9 @@ do
       local contents = 'Flux.shared=table.deserialize([['..table.serialize(Flux.shared)..']])'
       contents = contents..'Settings=table.deserialize([['..table.serialize(settings_copy)..']])'
       contents = contents.."library'Flux::Lang'Flux.Lang.stored=table.deserialize([["..table.serialize(Flux.Lang.stored).."]])"
-      contents = contents..(Flux.HTML:generate_html_file() or '-- .keep')..' '
-      contents = contents..(Flux.HTML:generate_css_file() or '-- .keep')..' '
-      contents = contents..(Flux.HTML:generate_js_file() or '-- .keep')
+      contents = contents..(Flux.HTML:generate_html_file() or '')..' '
+      contents = contents..(Flux.HTML:generate_css_file() or '')..' '
+      contents = contents..(Flux.HTML:generate_js_file() or '')
 
       write_client_file('0_production.lua', contents)
     end
@@ -403,12 +403,23 @@ do
 
   concommand.Add('fl_reload_html', function(player)
     if !IsValid(player) then
-      print('Rewriting HTML...')
+      print('Reloading HTML...')
+
+      local total = tostring(table.Count(Flux.HTML.file_paths))
+      local len = total:len()
+      local i = 0
+
+      Msg('  -> 0 / '..total)
+
       for k, v in pairs(Flux.HTML.file_paths) do
+        i = i + 1
+        Msg('\r  -> '..i..' / '..total)
         Flux.HTML[v.pipe][v.file_name] = File.read(k)
       end
 
       write_html()
+
+      Msg ' (done)\n'
     end
   end)
 
