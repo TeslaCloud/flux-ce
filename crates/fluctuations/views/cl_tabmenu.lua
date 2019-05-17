@@ -12,7 +12,7 @@ function PANEL:Init()
   local cur_x, cur_y = hook.run('AdjustMenuItemPositions', self)
   local offset = Font.scale(4)
   local size_x, size_y = Font.scale(72), Font.scale(72)
-  local icon_size = 40
+  local icon_size = Font.scale(40)
 
   self.button_panel = vgui.create('EditablePanel', self)
   self.button_panel:SetPos(0, -size_y)

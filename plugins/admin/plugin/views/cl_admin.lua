@@ -103,7 +103,7 @@ function PANEL:set_fullscreen(fullscreen)
       local font = Flux.fonts:GetSize(Theme.get_font('text_small'), 16)
       local font_size = util.font_size(font)
 
-      FontAwesome:draw('fa-chevron-left', 6, 5, 14, Color(255, 255, 255))
+      FontAwesome:draw('fa-chevron-left', Font.scale(6), Font.scale(5), Font.scale(14), Color(255, 255, 255))
       draw.SimpleText('Go Back', font, 24, 3 * (16 / font_size), Color(255, 255, 255))
     end
 

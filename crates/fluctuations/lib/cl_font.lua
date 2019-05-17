@@ -3,22 +3,8 @@ library 'Font'
 -- We want the fonts to recreate on refresh.
 local stored = {}
 
-do
-  local aspect = ScrW() / ScrH()
-
-  local function screen_is_ratio(w, h)
-    return (aspect == w / h)
-  end
-
-  function Font.scale(size)
-    if screen_is_ratio(16, 9) then
-      return math.floor(size * (ScrH() / 1080))
-    elseif screen_is_ratio(4, 3) then
-      return math.floor(size * (ScrH() / 1024))
-    end
-
-    return math.floor(size * (ScrH() / 1200))
-  end
+function Font.scale(size)
+  return math.floor(size * (ScrH() / 1080))
 end
 
 function Font.create(name, font_data)

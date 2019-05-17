@@ -17,6 +17,8 @@ PANEL.id = 'general'
 PANEL.text = 'char_create.general'
 
 function PANEL:Init()
+  local fa_icon_size = Font.scale(24)
+  local margin = Font.scale(20)
   local scrw, scrh = ScrW(), ScrH()
 
   self.gender_label = vgui.Create('DLabel', self)
@@ -28,10 +30,10 @@ function PANEL:Init()
 
   self.gender_male = vgui.Create('fl_button', self)
   self.gender_male:SetPos(scrw * 0.125 + 8, Font.scale(36) + 4)
-  self.gender_male:SetSize(24, 24)
+  self.gender_male:SetSize(fa_icon_size, fa_icon_size)
   self.gender_male:SetDrawBackground(false)
   self.gender_male:set_icon('fa-mars')
-  self.gender_male:set_icon_size(24, 24)
+  self.gender_male:set_icon_size(fa_icon_size, fa_icon_size)
   self.gender_male.DoClick = function(btn)
     if !btn:is_active() then
       surface.PlaySound('buttons/blip1.wav')
@@ -50,11 +52,11 @@ function PANEL:Init()
   end
 
   self.gender_female = vgui.Create('fl_button', self)
-  self.gender_female:SetPos(scrw * 0.125 + self.gender_male:GetWide() + 20, Font.scale(36) + 4)
-  self.gender_female:SetSize(24, 24)
+  self.gender_female:SetPos(scrw * 0.125 + self.gender_male:GetWide() + margin, Font.scale(36) + 4)
+  self.gender_female:SetSize(fa_icon_size, fa_icon_size)
   self.gender_female:SetDrawBackground(false)
   self.gender_female:set_icon('fa-venus')
-  self.gender_female:set_icon_size(24, 24)
+  self.gender_female:set_icon_size(fa_icon_size, fa_icon_size)
   self.gender_female.DoClick = function(btn)
     if !btn:is_active() then
       surface.PlaySound('buttons/blip1.wav')
@@ -81,16 +83,16 @@ function PANEL:Init()
 
   self.name_entry = vgui.Create('DTextEntry', self)
   self.name_entry:SetPos(scrw * 0.125 + 4, Font.scale(72))
-  self.name_entry:SetSize(scrw * 0.125, 24)
+  self.name_entry:SetSize(scrw * 0.125, fa_icon_size)
   self.name_entry:SetFont(Theme.get_font('main_menu_normal'))
   self.name_entry:SetText('')
 
   if SCHEMA.get_random_name then
     self.name_random = vgui.Create('fl_button', self)
     self.name_random:SetPos(scrw * 0.125 + self.name_entry:GetWide() + 8, Font.scale(72.5))
-    self.name_random:SetSize(24, 24)
+    self.name_random:SetSize(fa_icon_size, fa_icon_size)
     self.name_random:set_icon('fa-random')
-    self.name_random:set_icon_size(24, 24)
+    self.name_random:set_icon_size(fa_icon_size, fa_icon_size)
     self.name_random:SetTooltip(t'char_create.random_name')
     self.name_random:SetDrawBackground(false)
     self.name_random.DoClick = function(btn)

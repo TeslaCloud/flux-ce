@@ -2,6 +2,8 @@
 PANEL.char_data = {}
 
 function PANEL:Init()
+  local fa_icon_size = Font.scale(16)
+
   self:SetPos(0, 0)
   self:SetSize(ScrW(), ScrH())
 
@@ -23,7 +25,7 @@ function PANEL:Init()
   self.back:SetTitle(t'char_create.main_menu')
   self.back:SetDrawBackground(false)
   self.back:set_icon('fa-chevron-left')
-  self.back:set_icon_size(16)
+  self.back:set_icon_size(fa_icon_size)
   self.back:set_centered(true)
 
   self.back.DoClick = function(btn)
@@ -45,7 +47,7 @@ function PANEL:Init()
   self.next:SetTitle(t'char_create.next')
   self.next:SetDrawBackground(false)
   self.next:set_icon('fa-chevron-right', true)
-  self.next:set_icon_size(16)
+  self.next:set_icon_size(fa_icon_size)
   self.next:set_centered(true)
 
   self.next.DoClick = function(btn)
@@ -115,7 +117,7 @@ function PANEL:rebuild()
     button:SetTitle(t(v))
     button:SetDrawBackground(false)
     button:set_icon('fa-chevron-right', true)
-    button:set_icon_size(16)
+    button:set_icon_size(Font.scale(16))
     button:set_centered(true)
     button:SizeToContents()
 

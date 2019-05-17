@@ -6,6 +6,8 @@ PANEL.font = 'flRoboto'
 PANEL.color = Color('white')
 
 function PANEL:Init()
+  local fa_icon_size = Font.scale(16)
+
   self.label = vgui.Create('DLabel', self)
   self.label:SetText(self.title)
   self.label:SetFont(self.font)
@@ -13,7 +15,7 @@ function PANEL:Init()
 
   self.inc = vgui.Create('fl_button', self)
   self.inc:set_icon('fa-chevron-up')
-  self.inc:set_icon_size(16)
+  self.inc:set_icon_size(fa_icon_size)
   self.inc:set_centered(true)
   self.inc:SetDrawBackground(false)
   self.inc.DoClick = function(btn)
@@ -22,7 +24,7 @@ function PANEL:Init()
 
   self.dec = vgui.Create('fl_button', self)
   self.dec:set_icon('fa-chevron-down')
-  self.dec:set_icon_size(16)
+  self.dec:set_icon_size(fa_icon_size)
   self.dec:set_centered(true)
   self.dec:SetDrawBackground(false)
   self.dec.DoClick = function(btn)
