@@ -59,7 +59,7 @@ function require_relative_folder(dir, base, recursive)
 
     -- First include the files.
     for k, v in ipairs(files) do
-      if v:GetExtensionFromFilename() == 'lua' then
+      if File.ext(v) == 'lua' then
         require_relative(dir..v)
       end
     end

@@ -148,7 +148,7 @@ end
 
 function ActiveRecord.Migrator:migration_from_file(file)
   file = file:ensure_start('gamemodes/')
-  local file_name = file:GetFileFromFilename()
+  local file_name = File.name(file)
   local version, name = file_name:match('^(%d+)_([^%.]+)%.lua')
 
   if !version then

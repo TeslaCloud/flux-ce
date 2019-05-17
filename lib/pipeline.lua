@@ -49,8 +49,8 @@ function Pipeline.include(pipe, file_name)
   if !pipe then return end
   if !isstring(file_name) then return end
 
-  local extension = string.GetExtensionFromFilename(file_name) or ''
-  local id = (string.GetFileFromFilename(file_name) or ''):gsub('%.'..extension, ''):to_id()
+  local extension = File.ext(file_name) or ''
+  local id = (File.name(file_name) or ''):gsub('%.'..extension, ''):to_id()
 
   if id:starts('cl_') or id:starts('sh_') or id:starts('sv_') then
     id = id:sub(4, id:len())

@@ -106,7 +106,7 @@ do
     local char = self:get_character()
 
     if istable(faction_models) then
-      local player_model = string.GetFileFromFilename(self:GetModel())
+      local player_model = File.name(self:GetModel())
       local universal = faction_models.universal or {}
       local model
       local model_table

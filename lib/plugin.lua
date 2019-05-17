@@ -233,8 +233,8 @@ function Plugin.register(obj)
 end
 
 function Plugin.include(path)
-  local id = path:GetFileFromFilename()
-  local ext = id:GetExtensionFromFilename()
+  local id = File.name(path)
+  local ext = File.ext(id)
   local data = {}
   data.id = id
   data.path = path
@@ -456,7 +456,7 @@ function Plugin.include_plugins(folder)
   local files, folders = file.Find(folder..'/*', 'LUA')
 
   for k, v in ipairs(files) do
-    if v:GetExtensionFromFilename() == 'lua' then
+    if File.ext(v) == 'lua' then
       Plugin.include(folder..'/'..v)
     end
   end
@@ -505,7 +505,7 @@ do
 
       for k, v in ipairs(folders) do
         local path = dir..'/'..v
-        local id = (string.GetFileFromFilename(path) or ''):Replace('.lua', ''):to_id()
+        local id = (File.name(path) or ''):gsub('%.lua$', ''):to_id()
         local register = false
         local var = data.table
 
@@ -541,7 +541,7 @@ do
 
       for k, v in ipairs(files) do
         local path = dir..'/'..v
-        local id = (string.GetFileFromFilename(path) or ''):Replace('.lua', ''):to_id()
+        local id = (File.name(path) or ''):gsub('%.lua$', ''):to_id()
         local var = data.table
 
         _G[var] = table.Copy(data.default_data)

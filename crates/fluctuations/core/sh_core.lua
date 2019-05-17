@@ -38,7 +38,7 @@ function file.Write(file_name, contents)
   local current_path = ''
 
   for k, v in ipairs(pieces) do
-    if string.GetExtensionFromFilename(v) != nil then
+    if File.ext(v) != nil then
       break
     end
 

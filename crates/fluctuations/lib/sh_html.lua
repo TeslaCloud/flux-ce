@@ -119,7 +119,7 @@ do
     local prev_namespace = current_namespace
 
     if id:find('/') then
-      current_namespace = prev_namespace..id:GetPathFromFilename()
+      current_namespace = prev_namespace..File.path(id)
     end
 
     local rendered = Flux.HTML:render_template(current_namespace..id, locals)
@@ -130,7 +130,7 @@ do
 
   function render_partial(id, locals)
     if id:find('/') then
-      local path, name = id:GetPathFromFilename(), id:GetFileFromFilename()
+      local path, name = File.path(id), File.name(id)
       id = path..'_'..name
     elseif !id:starts('_') then
       id = '_'..id
@@ -161,7 +161,7 @@ Pipeline.register('html', function(id, file_name, pipe)
   local contents = File.read(file_path)
 
   if contents then
-    file_name = file_name:gsub('%.html', ''):gsub('%.loon', ''):gsub('%.js', ''):gsub('%.css', ''):gsub('%.scss', ''):GetFileFromFilename()
+    file_name = File.name(file_name:gsub('/([%w_]+)%..+$', '%1'))
     Flux.HTML[pipe][file_name] = contents
 
     -- track the file

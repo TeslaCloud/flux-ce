@@ -4,7 +4,7 @@ if SERVER then
   function Data.save(key, value)
     if !isstring(key) or !istable(value) then return end
 
-    if !string.GetExtensionFromFilename(key) then
+    if !File.ext(key) then
       key = key..'.json'
     end
 
@@ -14,7 +14,7 @@ if SERVER then
   function Data.load(key, default)
     if !isstring(key) then return end
 
-    if !string.GetExtensionFromFilename(key) then
+    if !File.ext(key) then
       key = key..'.json'
     end
 
@@ -32,7 +32,7 @@ if SERVER then
   function Data.delete(key)
     if !isstring(key) then return end
 
-    if !string.GetExtensionFromFilename(key) then
+    if !File.ext(key) then
       key = key..'.json'
     end
 
@@ -44,7 +44,7 @@ else
   function Data.save(key, value)
     if !isstring(key) or !istable(value) then return end
 
-    if !string.GetExtensionFromFilename(key) then
+    if !File.ext(key) then
       key = key..'.dat'
     end
 
@@ -54,7 +54,7 @@ else
   function Data.load(key, default)
     if !isstring(key) then return end
 
-    if !string.GetExtensionFromFilename(key) then
+    if !File.ext(key) then
       key = key..'.dat'
     end
 
@@ -80,7 +80,7 @@ else
   function Data.delete(key)
     if !isstring(key) then return end
 
-    if !string.GetExtensionFromFilename(key) then
+    if !File.ext(key) then
       key = key..'.dat'
     end
 

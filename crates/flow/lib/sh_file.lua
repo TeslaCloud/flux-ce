@@ -9,7 +9,7 @@ function File.write(file_name, file_contents)
   local current_path = ''
 
   for k, v in ipairs(pieces) do
-    if string.GetExtensionFromFilename(v) != nil then
+    if File.ext(v) != nil then
       break
     end
 
@@ -50,8 +50,43 @@ function File.touch(filename)
   return File.append(filename, '')
 end
 
+function File.exists(filename)
+  return file.Exists(filename, 'GAME')
+end
+
+function File.find(filename, sort)
+  return file.Find(filename, 'GAME', sort)
+end
+
+function File.is_dir(filename)
+  return file.IsDir(filename, 'GAME')
+end
+
+function File.size(filename)
+  return file.Size(filename, 'GAME')
+end
+
+function File.time(filename)
+  return file.Time(filename, 'GAME')
+end
+
+function File.ext(filename)
+  return string.GetExtensionFromFilename(filename)
+end
+
+function File.name(filename)
+  return string.GetFileFromFilename(filename)
+end
+
+function File.path(filename)
+  return string.GetPathFromFilename(filename)
+end
+
 File.rm               = File.delete
 File.create           = File.touch
 File.remove           = File.delete
+File.extension        = File.ext
+File.is_folder        = File.is_dir
+File.is_directory     = File.is_dir
 File.make_directory   = File.mkdir
 File.create_directory = File.mkdir
