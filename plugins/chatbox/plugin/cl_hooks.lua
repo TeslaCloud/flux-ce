@@ -3,7 +3,7 @@ function Chatbox:OnResolutionChanged(new_width, new_height)
   Theme.set_option('chatbox_height', new_height * 0.45)
   Theme.set_option('chatbox_x', Font.scale(8))
   Theme.set_option('chatbox_y', new_height - Theme.get_option('chatbox_height') - Font.scale(32))
-  local entry_height = Theme.set_option('chatbox_text_entry_height', Font.scale(38))
+  local entry_height = Theme.set_option('chatbox_text_entry_height', Font.scale(38)) or Font.scale(38)
   Theme.set_option('chatbox_text_entry_text_size', entry_height * 0.9)
 
   if Chatbox.panel then

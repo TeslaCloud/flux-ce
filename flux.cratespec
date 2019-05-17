@@ -21,6 +21,7 @@ Crate:describe(function(s)
   s.depends     'markdown'
   s.depends     'yaml'
   s.depends     'flow'
+  s.depends     'tween'
   s.depends     'lib/flux.lua'
   s.depends     'active_record'
   s.depends     'active_network'

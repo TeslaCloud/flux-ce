@@ -364,6 +364,6 @@ function tween.new(duration, subject, target, easing)
   }, Tween_mt)
 end
 
-Tween = tween
+table.Merge(_G['Tween'], tween)
 
 return tween
