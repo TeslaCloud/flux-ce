@@ -235,7 +235,7 @@ do
   end
 
   function player_meta:get_character_data(key, default)
-    return self:get_character_var('data', {})[key] or default
+    error 'Player#get_character_data is deprecated!\n'
   end
 
   function player_meta:get_character()

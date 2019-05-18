@@ -149,20 +149,20 @@ do
 
   function player_meta:set_rank(rank)
     if isnumber(rank) then
-      self:set_character_data('rank', rank)
+      self:get_character().rank = rank
     elseif isstring(rank) then
       local faction_table = self:get_faction()
 
       for k, v in ipairs(faction_table.rank) do
         if string.utf8lower(v.id) == string.utf8lower(rank) then
-          self:set_character_data('rank', k)
+          self:get_character().rank = rank
         end
       end
     end
   end
 
   function player_meta:get_rank()
-    return self:get_character_data('rank', -1)
+    return self:get_character().rank or -1
   end
 
   function player_meta:is_rank(str_rank, strict)

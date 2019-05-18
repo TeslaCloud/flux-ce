@@ -119,7 +119,7 @@ function Faction:generate_name(player, char_name, rank, default_data)
         final_name = final_name:replace(v.text, callback(self, player))
       end
     elseif m1 == 'data' then
-      local data = player:get_character_data(m2, default_data[m2] or self.data[m2] or '')
+      local data = default_data[m2] or self.data[m2] or ''
 
       if isstring(data) then
         final_name = final_name:replace(v.text, data)
