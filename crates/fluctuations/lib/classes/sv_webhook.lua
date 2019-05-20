@@ -7,9 +7,9 @@ Webhook.key       = nil
 Webhook.hooks     = {}
 
 function Webhook:init(id, key)
-  self.id = id or ''
-  self.key = key or ''
-  self.url = self.base_url:gsub('{key}', self.key):gsub('{id}', self.id)
+  self.id   = id or ''
+  self.key  = key or ''
+  self.url  = self.base_url:gsub('{key}', self.key):gsub('{id}', self.id)
 end
 
 function Webhook:push(message, data)

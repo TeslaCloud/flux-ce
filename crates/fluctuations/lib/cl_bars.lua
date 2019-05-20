@@ -3,16 +3,14 @@ if !Flux.Lang then require_relative 'sh_lang' end
 
 library 'Flux::Bars'
 
-local stored = Flux.Bars.stored or {}
-local sorted = Flux.Bars.sorted or {}
-Flux.Bars.stored = stored
-Flux.Bars.sorted = sorted
-
--- Some fail-safety variables.
-Flux.Bars.default_x = 8
-Flux.Bars.default_y = 8
-Flux.Bars.default_w = Font.scale(312)
-Flux.Bars.default_h = 18
+local stored              = Flux.Bars.stored or {}
+local sorted              = Flux.Bars.sorted or {}
+Flux.Bars.stored          = stored
+Flux.Bars.sorted          = sorted
+Flux.Bars.default_x       = 8
+Flux.Bars.default_y       = 8
+Flux.Bars.default_w       = Font.scale(312)
+Flux.Bars.default_h       = 18
 Flux.Bars.default_spacing = 6
 
 function Flux.Bars:register(id, data, force)

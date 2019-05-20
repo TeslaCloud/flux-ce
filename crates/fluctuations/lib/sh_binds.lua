@@ -1,10 +1,10 @@
 if CLIENT then
   library 'Flux::Binds'
 
-  local stored = Flux.Binds.stored or {}
-  local key_enums = Flux.Binds.key_enums or {}
-  Flux.Binds.stored = stored
-  Flux.Binds.key_enums = key_enums
+  local stored          = Flux.Binds.stored     or {}
+  local key_enums       = Flux.Binds.key_enums  or {}
+  Flux.Binds.stored     = stored
+  Flux.Binds.key_enums  = key_enums
 
   if #key_enums == 0 then
     for k, v in pairs(_G) do

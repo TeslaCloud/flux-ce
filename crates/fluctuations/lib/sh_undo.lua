@@ -1,7 +1,7 @@
 library 'Flux::Undo'
 
-local queue = {}
-local buffer = {}
+local queue   = {}
+local buffer  = {}
 
 function Flux.Undo:create(id, name)
   buffer = {

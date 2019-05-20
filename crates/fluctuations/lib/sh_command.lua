@@ -1,11 +1,10 @@
 library 'Flux::Command'
 
-local stored = Flux.Command.stored or {}
-local aliases = Flux.Command.aliases or {}
-Flux.Command.stored = stored
-Flux.Command.aliases = aliases
-
 local command_log_color = Color('orange')
+local stored            = Flux.Command.stored   or {}
+local aliases           = Flux.Command.aliases  or {}
+Flux.Command.stored     = stored
+Flux.Command.aliases    = aliases
 
 function Flux.Command:create(id, data)
   if !id or !data then return end

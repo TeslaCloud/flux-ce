@@ -1,9 +1,9 @@
 library 'Flux::Anim'
 
-local stored = Flux.Anim.stored or {}
-local models = Flux.Anim.models or {}
-Flux.Anim.stored = stored
-Flux.Anim.models = models
+local stored      = Flux.Anim.stored or {}
+local models      = Flux.Anim.models or {}
+Flux.Anim.stored  = stored
+Flux.Anim.models  = models
 
 stored.player = {
   normal = {

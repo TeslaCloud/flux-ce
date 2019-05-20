@@ -1,22 +1,21 @@
 class 'ThemeBase'
 
-ThemeBase.colors = {}
-ThemeBase.sounds = {}
+ThemeBase.colors    = {}
+ThemeBase.sounds    = {}
 ThemeBase.materials = {}
-ThemeBase.options = {}
-ThemeBase.panels = {}
-ThemeBase.fonts = {}
-ThemeBase.skin = {}
+ThemeBase.options   = {}
+ThemeBase.panels    = {}
+ThemeBase.fonts     = {}
+ThemeBase.skin      = {}
 Theme.should_reload = true
 
---[[ Basic Skeleton --]]
 function ThemeBase:init(name, parent)
-  self.name = name or 'Unknown'
-  self.id = self.name:to_id() -- temporary unique ID
+  self.name   = name or 'Unknown'
+  self.id     = self.name:to_id() -- temporary unique ID
   self.parent = parent
 
   if !self.id then
-    error('Cannot create a theme without a valid unique ID!')
+    error 'Cannot create a theme without a valid unique ID!\n'
   end
 end
 

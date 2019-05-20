@@ -1,30 +1,30 @@
 library 'InfoDisplay'
 
-local stored = InfoDisplay.stored or {}
-InfoDisplay.stored = stored
+local stored        = InfoDisplay.stored or {}
+InfoDisplay.stored  = stored
 
-local margin = 26
-local last_x = 0
-local white = Color(255, 255, 255)
-local back_color = Color(40, 40, 40, 120)
+local margin        = 26
+local last_x        = 0
+local white         = Color(255, 255, 255)
+local back_color    = Color(40, 40, 40, 120)
 
 function InfoDisplay:add(id, data)
-  id = id:to_id()
+  id                  = id:to_id()
 
-  data.id = id
+  data.id             = id
   data.min_percentage = data.min_percentage or nil
   data.max_percentage = data.max_percentage or 100
-  data.size = data.size or 80
-  data.icon = data.icon or 'fa-plus'
-  data.color = data.color or white
-  data.back_color = data.back_color or back_color
-  data.circle = data.circle or false
-  data.percentage = data.percentage or 100
-  data.offset_x = data.offset_x or 0
-  data.offset_y = data.offset_y or 0
-  data.callback = data.callback or 0
+  data.size           = data.size           or 80
+  data.icon           = data.icon           or 'fa-plus'
+  data.color          = data.color          or white
+  data.back_color     = data.back_color     or back_color
+  data.circle         = data.circle         or false
+  data.percentage     = data.percentage     or 100
+  data.offset_x       = data.offset_x       or 0
+  data.offset_y       = data.offset_y       or 0
+  data.callback       = data.callback       or 0
 
-  stored[id] = data
+  stored[id]          = data
 
   return self
 end

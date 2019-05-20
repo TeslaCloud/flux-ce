@@ -1,11 +1,11 @@
 library 'Flux::HTML'
 
-Flux.HTML.templates = Flux.HTML.templates or {}
-Flux.HTML.stylesheets = Flux.HTML.stylesheets or {}
-Flux.HTML.javascripts = Flux.HTML.javascripts or {}
-Flux.HTML.file_paths = Flux.HTML.file_paths or {}
+Flux.HTML.templates       = Flux.HTML.templates   or {}
+Flux.HTML.stylesheets     = Flux.HTML.stylesheets or {}
+Flux.HTML.javascripts     = Flux.HTML.javascripts or {}
+Flux.HTML.file_paths      = Flux.HTML.file_paths  or {}
 
-local common_file_header = [[Flux = Flux or {}
+local common_file_header  = [[Flux = Flux or {}
 Flux.HTML = Flux.HTML or {}
 
 Flux.HTML.templates = Flux.HTML.templates or {}

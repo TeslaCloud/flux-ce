@@ -1,21 +1,21 @@
 class 'Time'
 
-local ms_const    = 0.001
-local m_const     = 60
-local h_const     = 60 * 60
-local d_const     = 60 * 60 * 24
-local w_const     = 60 * 60 * 24 * 7
-local mt_const    = 60 * 60 * 24 * 30
-local y_const     = 60 * 60 * 24 * 365
-local ms_const_d  = 1 / ms_const
-local m_const_d   = 1 / m_const
-local h_const_d   = 1 / h_const
-local d_const_d   = 1 / d_const
-local w_const_d   = 1 / w_const
-local mt_const_d  = 1 / mt_const
-local y_const_d   = 1 / y_const
+local ms_const      = 0.001
+local m_const       = 60
+local h_const       = 60 * 60
+local d_const       = 60 * 60 * 24
+local w_const       = 60 * 60 * 24 * 7
+local mt_const      = 60 * 60 * 24 * 30
+local y_const       = 60 * 60 * 24 * 365
+local ms_const_d    = 1 / ms_const
+local m_const_d     = 1 / m_const
+local h_const_d     = 1 / h_const
+local d_const_d     = 1 / d_const
+local w_const_d     = 1 / w_const
+local mt_const_d    = 1 / mt_const
+local y_const_d     = 1 / y_const
 
-local mappings = {
+local mappings      = {
   ['milliseconds']  = ms_const_d,
   ['millisecond']   = ms_const_d,
   ['ms']            = ms_const_d,

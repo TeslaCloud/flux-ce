@@ -3,11 +3,11 @@ if Theme then return end
 
 library 'Theme'
 
-local stored = Theme.stored or {}
-local current_theme = Theme.current_theme or nil
+local stored          = Theme.stored        or {}
+local current_theme   = Theme.current_theme or nil
 local has_initialized = false
-Theme.stored = stored
-Theme.current_theme = current_theme
+Theme.stored          = stored
+Theme.current_theme   = current_theme
 
 function Theme.all()
   return stored

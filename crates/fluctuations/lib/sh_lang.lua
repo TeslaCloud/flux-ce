@@ -1,9 +1,8 @@
 library 'Flux::Lang'
 
-local stored = Flux.Lang.stored or {}
-Flux.Lang.stored = stored
-
-local current_language = 'en'
+local current_language  = 'en'
+local stored            = Flux.Lang.stored or {}
+Flux.Lang.stored        = stored
 
 function Flux.Lang:get_phrase(id, ref)
   ref = ref or stored
