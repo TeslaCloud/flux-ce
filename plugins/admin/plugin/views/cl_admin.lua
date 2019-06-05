@@ -40,7 +40,7 @@ function PANEL:add_panel(id, title, permission, ...)
     id = id,
     title = title,
     permission = permission,
-    arguments = {...}
+    arguments = { ... }
   }
 
   local button = vgui.create('fl_button')

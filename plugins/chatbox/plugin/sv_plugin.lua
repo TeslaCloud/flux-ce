@@ -73,7 +73,7 @@ function Chatbox.add_text(listeners, ...)
   end
 
   -- Compile the initial message data table.
-  for k, v in ipairs({...}) do
+  for k, v in ipairs({ ... }) do
     if isstring(v) then
       table.insert(message_data.data, v)
 

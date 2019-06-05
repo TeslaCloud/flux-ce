@@ -140,7 +140,7 @@ do
       local start_angle, end_angle, step = -90, 360 / 100 * percentage - 90, 360 / passes
 
       if math.abs(start_angle - end_angle) != 0 then
-        table.insert(info, {x = 0, y = 0})
+        table.insert(info, { x = 0, y = 0 })
       end
 
       for i = start_angle, end_angle + step, step do
@@ -150,7 +150,7 @@ do
         local x = math.cos(rads)
         local y = math.sin(rads)
 
-        table.insert(info, {x = x, y = y})
+        table.insert(info, { x = x, y = y })
       end
 
       for k, v in ipairs(info) do

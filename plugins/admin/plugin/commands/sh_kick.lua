@@ -9,7 +9,7 @@ COMMAND.immunity = true
 COMMAND.aliases = { 'plykick' }
 
 function COMMAND:on_run(player, targets, ...)
-  local pieces = {...}
+  local pieces = { ... }
   local reason = 'Kicked for unspecified reason.'
 
   if #pieces > 0 then

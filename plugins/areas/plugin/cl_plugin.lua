@@ -31,7 +31,7 @@ do
             n = verts[k + 1]
           end
 
-          table.insert(temp_cache, {v, n})
+          table.insert(temp_cache, { v, n })
         end
       elseif !verts then
         temp_cache = nil

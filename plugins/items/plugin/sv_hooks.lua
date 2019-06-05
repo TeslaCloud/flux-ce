@@ -26,7 +26,7 @@ function Items:PlayerTakeItem(player, item_table, ...)
   if IsValid(item_table.entity) then
     local inv_type
 
-    for k, v in pairs({...}) do
+    for k, v in pairs({ ... }) do
       if istable(v) and k == 'inv_type' then
         inv_type = v
       end

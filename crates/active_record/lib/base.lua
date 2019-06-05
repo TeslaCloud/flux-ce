@@ -85,7 +85,7 @@ end
 -- ```
 -- @return [ActiveRecord::Base(self)]
 function ActiveRecord.Base:where(condition, ...)
-  local args = {...}
+  local args = { ... }
   local query_str = ''
 
   if #args > 0 then
@@ -127,7 +127,7 @@ end
 -- ```
 -- @return [ActiveRecord::Base(self)]
 function ActiveRecord.Base:where_not(condition, ...)
-  local args = {...}
+  local args = { ... }
   local query_str = ''
 
   if #args > 0 then

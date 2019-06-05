@@ -163,7 +163,7 @@ end
 function MsgC(...)
   local this_sequence = color_clear_sequence
 
-  for k, v in ipairs({...}) do
+  for k, v in ipairs({ ... }) do
     if istable(v) then
       this_sequence = color_start_sequence..color_id_from_color(v).."m"
     else

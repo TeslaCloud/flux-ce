@@ -70,7 +70,7 @@ function Plugin.cache_functions(obj, id)
   for k, v in pairs(obj) do
     if isfunction(v) then
       hooks_cache[k] = hooks_cache[k] or {}
-      table.insert(hooks_cache[k], {v, obj, id = id})
+      table.insert(hooks_cache[k], { v, obj, id = id })
     end
   end
 end
