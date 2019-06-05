@@ -119,12 +119,12 @@ function TOOL.BuildCPanel(CPanel)
   local options = {}
 
   for k, v in pairs(types) do
-    options[v.name] = {['area_areatype'] = k}
+    options[v.name] = { ['area_areatype'] = k }
   end
 
   CPanel:AddControl('Header', { Description = 'tool.area.desc' })
 
-  local control_presets = CPanel:AddControl('ComboBox', { MenuButton = 1, Folder = 'areatype', Options = options, CVars = {'area_areatype'} })
+  local control_presets = CPanel:AddControl('ComboBox', { MenuButton = 1, Folder = 'areatype', Options = options, CVars = { 'area_areatype' } })
   control_presets.Button:SetVisible(false)
   control_presets.DropDown:SetValue('Simple Area')
 

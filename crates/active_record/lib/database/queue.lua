@@ -24,7 +24,7 @@ end
 function ActiveRecord.Queue:add_type(type)
   self.types[type] = function(obj, ...)
     self.stored[self.current_table] = self.stored[self.current_table] or {}
-    table.insert(self.stored[self.current_table], { type, {...} })
+    table.insert(self.stored[self.current_table], { type, { ... } })
   end
 end
 

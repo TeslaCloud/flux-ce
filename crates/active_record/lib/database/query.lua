@@ -191,7 +191,7 @@ local function build_select_query(query_obj)
 end
 
 local function build_insert_query(query_obj)
-  local query_string = {'INSERT INTO '}
+  local query_string = { 'INSERT INTO ' }
   local key_list = {}
   local value_list = {}
 
@@ -218,7 +218,7 @@ local function build_insert_query(query_obj)
 end
 
 local function build_update_query(query_obj)
-  local query_string = {'UPDATE '}
+  local query_string = { 'UPDATE ' }
 
   if isstring(query_obj.table_name) then
     table.insert(query_string, query_obj:quote_column(query_obj.table_name))
@@ -253,7 +253,7 @@ local function build_update_query(query_obj)
 end
 
 local function build_delete_query(query_obj)
-  local query_string = {'DELETE FROM '}
+  local query_string = { 'DELETE FROM ' }
 
   if isstring(query_obj.table_name) then
     table.insert(query_string, query_obj:quote_column(query_obj.table_name))
@@ -276,7 +276,7 @@ local function build_delete_query(query_obj)
 end
 
 local function build_drop_query(query_obj)
-  local query_string = {'DROP TABLE '}
+  local query_string = { 'DROP TABLE ' }
 
   if isstring(query_obj.table_name) then
     table.insert(query_string, query_obj:quote_column(query_obj.table_name))
@@ -289,7 +289,7 @@ local function build_drop_query(query_obj)
 end
 
 local function build_truncate_query(query_obj)
-  local query_string = {'TRUNCATE TABLE '}
+  local query_string = { 'TRUNCATE TABLE ' }
 
   if isstring(query_obj.table_name) then
     table.insert(query_string, ' '..query_obj:quote_column(query_obj.table_name))
@@ -350,7 +350,7 @@ local function build_create_query(query_obj)
 end
 
 local function build_change_query(query)
-  local query_string = {'ALTER TABLE '}
+  local query_string = { 'ALTER TABLE ' }
 
   if isstring(query.table_name) then
     table.insert(query_string, ' '..query:quote_column(query.table_name))

@@ -1,6 +1,6 @@
 function ActiveRecord.generate_create_func(obj, type, def)
   obj[type] = function(s, name, ...)
-    local args = {...}
+    local args = { ... }
     if istable(name) then
       args = name
       name = args[1]

@@ -5,7 +5,7 @@ end
 
 function Try(id, func, ...)
   id = id or 'Try'
-  local result = {pcall(func, ...)}
+  local result = { pcall(func, ...) }
   local success = result[1]
   table.remove(result, 1)
 
@@ -38,7 +38,7 @@ do
   function catch(handler)
     local func = try_cache.f
     local args = try_cache.args or {}
-    local result = {pcall(func, unpack(args))}
+    local result = { pcall(func, unpack(args)) }
     local success = result[1]
     table.remove(result, 1)
 

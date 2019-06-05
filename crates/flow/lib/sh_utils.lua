@@ -11,7 +11,7 @@ end
 
 -- A function to check whether all of the arguments in vararg are valid (via IsValid).
 function util.validate(...)
-  local validate = {...}
+  local validate = { ... }
 
   if #validate <= 0 then return false end
 
@@ -62,7 +62,7 @@ function util.list_to_string(callback, separator, ...)
     separator = ', '
   end
 
-  local list = {...}
+  local list = { ... }
   local result = ''
 
   for k, v in ipairs(list) do

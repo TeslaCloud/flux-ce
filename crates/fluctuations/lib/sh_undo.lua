@@ -13,7 +13,7 @@ function Flux.Undo:create(id, name)
 end
 
 function Flux.Undo:add(callback, ...)
-  table.insert(buffer.functions, {func = callback, args = {...}})
+  table.insert(buffer.functions, { func = callback, args = { ... } })
 end
 
 function Flux.Undo:set_player(player)

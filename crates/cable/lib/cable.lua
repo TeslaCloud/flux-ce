@@ -39,7 +39,7 @@ function cable.receive(id, callback)
 end
 
 local function write_sendable_args(...)
-  local args = {...}
+  local args = { ... }
   local length = 0
   local table_header = ''
   local send = {}
@@ -79,7 +79,7 @@ if SERVER then
     end
 
     if !cable.check_networked_string(id) then
-      local args = {...}
+      local args = { ... }
 
       -- Allow networked strings some time to catch up for the first time.
       timer.Simple(0.1, function()

@@ -74,8 +74,8 @@ function PANEL:attach_panel(panel, x, y, w, h)
 
   panel:SetParent(self)
 
-  local idx = table.insert(self.docked, {panel = panel, pos = {x = x, y = y, w = w, h = h}})
-  local obj = self.docked[table.insert(self.docked, {panel = panel, pos = {x = x, y = y, w = w, h = h}})]
+  local idx = table.insert(self.docked, { panel = panel, pos = { x = x, y = y, w = w, h = h } })
+  local obj = self.docked[table.insert(self.docked, { panel = panel, pos = { x = x, y = y, w = w, h = h } })]
 
   panel.m_DockedTileID = idx
 
