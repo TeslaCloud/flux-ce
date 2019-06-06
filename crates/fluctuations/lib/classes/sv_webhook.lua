@@ -6,10 +6,11 @@ Webhook.id        = nil
 Webhook.key       = nil
 Webhook.hooks     = {}
 
-function Webhook:init(id, key)
-  self.id   = id or ''
-  self.key  = key or ''
-  self.url  = self.base_url:gsub('{key}', self.key):gsub('{id}', self.id)
+function Webhook:init(id, key, types)
+  self.id     = id or ''
+  self.key    = key or ''
+  self.url    = self.base_url:gsub('{key}', self.key):gsub('{id}', self.id)
+  self.types  = istable(types) and types or {}
 end
 
 function Webhook:push(message, data)
@@ -41,8 +42,34 @@ function Webhook:get(id)
   return self.hooks[id]
 end
 
+function Webhook:all()
+  return self.hooks
+end
+
+function Webhook:get_type(type)
+  local ret = {}
+
+  for k, v in pairs(self.hooks) do
+    if v:is_type(type) then
+      table.insert(ret, v)
+    end
+  end
+
+  return ret
+end
+
 function Webhook:present(id)
   return tobool(self.hooks[id])
+end
+
+function Webhook:is_type(type)
+  for k, v in ipairs(self.types) do
+    if v == type or v == 'all' then
+      return true
+    end
+  end
+
+  return false
 end
 
 Webhook.exists      = Webhook.present

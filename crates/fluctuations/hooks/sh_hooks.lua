@@ -24,7 +24,7 @@ function GM:Initialize()
       for id, data in pairs(webhooks) do
         if id != 'example' then
           if isstring(data.id) and isstring(data.key) then
-            Webhook:add(id, Webhook.new(data.id, data.key))
+            Webhook:add(id, Webhook.new(data.id, data.key, data.types))
           else
             ErrorNoHalt('Unable to add Discord webhook "'..tostring(id)..'" (invalid configuration)\n')
           end

@@ -6,6 +6,8 @@ local replication_data = nil
 function Log:write(message, action, object, subject, io)
   action = isstring(action) and action:underscore() or ''
 
+  self.last_message = message
+
   if SERVER then
     local log = Log.new()
       log.body = message
@@ -31,10 +33,19 @@ function Log:write(message, action, object, subject, io)
   return self
 end
 
-function Log:to_discord(message, webhook)
-  if SERVER and webhook then
-    webhook:push(message)
+function Log:to_discord(type, message)
+  if SERVER then
+    message = message or self.last_message
+    type = type or 'all'
+
+    local hooks = Webhook:get_type(string.lower(type))
+
+    for k, v in ipairs(hooks) do
+      v:push(message)
+    end
   end
+
+  return self
 end
 
 function Log:print(message, action, object, subject)
@@ -54,7 +65,7 @@ end
 function Log:colored(color, message, action, object, subject)
   return self:write(message, action, object, subject, function(message, action, object, subject)
     MsgC(color, (isstring(action) and action:capitalize()..' - ' or '')..message)
-    
+
     replication_data = { type = 'colored', color = color }
 
     if !message:ends('\n') then
