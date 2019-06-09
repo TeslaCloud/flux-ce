@@ -39,7 +39,7 @@ function table.safe_merge(to, from)
 end
 
 function table.map(t, c)
-  local new_table = {}
+  local new_table = a{}
 
   for k, v in pairs(t) do
     local val = c(v)
@@ -65,7 +65,7 @@ function table.map_kv(t, c)
 end
 
 function table.select(t, what)
-  local new_table = {}
+  local new_table = a{}
 
   for k, v in pairs(t) do
     if istable(v) then
@@ -77,7 +77,7 @@ function table.select(t, what)
 end
 
 function table.slice(t, from, to)
-  local new_table = {}
+  local new_table = a{}
 
   for i = from, to do
     table.insert(new_table, t[i])
@@ -131,7 +131,7 @@ function table.sum(tab)
 end
 
 function table.flatten(tab)
-  local t = {}
+  local t = a{}
 
   for k, v in pairs(tab) do
     if istable(v) and !v.class then
@@ -145,7 +145,7 @@ function table.flatten(tab)
 end
 
 function table.uniq(tab, condition)
-  local t = {}
+  local t = a{}
   local vals = {}
 
   condition = condition or function(v) return vals[v] end
@@ -223,7 +223,7 @@ function table.join(tab, sep)
 end
 
 function table.delete_if(tab, callback)
-  local new_tab = {}
+  local new_tab = a{}
 
   for k, v in pairs(tab) do
     if callback(k, v) != true then
@@ -245,7 +245,7 @@ function table.delete(tab, callback)
 end
 
 function table.keep_if(tab, callback)
-  local new_tab = {}
+  local new_tab = a{}
 
   for k, v in pairs(tab) do
     if callback(k, v) == true then
@@ -301,7 +301,7 @@ function table.none(tab, callback)
 end
 
 function table.partition(tab, callback)
-  local t1, t2 = {}, {}
+  local t1, t2 = a{}, a{}
 
   for k, v in pairs(tab) do
     if callback(k, v) then
@@ -315,7 +315,7 @@ function table.partition(tab, callback)
 end
 
 function table.to_array(tab)
-  local a = {}
+  local a = a{}
 
   for k, v in pairs(tab) do
     table.insert(a, { k, v })
@@ -325,7 +325,7 @@ function table.to_array(tab)
 end
 
 function table.to_hash(tab)
-  local h = {}
+  local h = a{}
 
   for k, v in ipairs(tab) do
     if istable(v) then
@@ -400,7 +400,7 @@ function table.from_string(str)
   str = util.remove_newlines(str)
 
   local pieces = str:split(',')
-  local tab = {}
+  local tab = a{}
 
   for k, v in ipairs(pieces) do
     if !isstring(v) then continue end
