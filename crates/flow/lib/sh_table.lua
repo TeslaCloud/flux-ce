@@ -100,6 +100,244 @@ function table.remove_functions(obj)
   return obj
 end
 
+do
+  local ops = {
+    ['+']  = function(a, b) return a + b end,
+    ['-']  = function(a, b) return a - b end,
+    ['*']  = function(a, b) return a * b end,
+    ['/']  = function(a, b) return a / b end,
+    ['**'] = function(a, b) return a ^ b end,
+    ['^']  = function(a, b) return a ^ b end,
+    ['%']  = function(a, b) return a % b end
+  }
+
+  function table.reduce(tab, op)
+    local sum = 0
+
+    if !isfunction(op) then
+      op = ops[op]
+    end
+
+    for k, v in ipairs(tab) do
+      sum = op(sum, v)
+    end
+
+    return sum
+  end
+end
+
+function table.sum(tab)
+  return table.reduce(tab, '+')
+end
+
+function table.flatten(tab)
+  local t = {}
+
+  for k, v in pairs(tab) do
+    if istable(v) and !v.class then
+      table.insert(t, table.flatten(tab))
+    else
+      table.insert(t, v)
+    end
+  end
+
+  return v
+end
+
+function table.uniq(tab, condition)
+  local t = {}
+  local vals = {}
+
+  condition = condition or function(v) return vals[v] end
+
+  for k, v in pairs(tab) do
+    if !condition(v) then
+      t[k] = v
+      vals[v] = true
+    end
+  end
+
+  return t
+end
+
+do
+  local function run_comp(key, value, t2)
+    if !istable(value) then
+      if value != t2[key] then
+        return false
+      end
+    else
+      if !table.equal(value, t2[key]) then
+        return false
+      end
+    end
+
+    return true
+  end
+
+  function table.equal(tab1, tab2)
+    if !istable(tab1) or !istable(tab2) then return false end
+    if tab1 == tab2 then return true end
+
+    local t1, t2 = 0, 0
+
+    for k, v in pairs(tab1) do
+      t1 = t1 + 1
+
+      if !run_comp(k, v, tab2) then
+        return false
+      end
+    end
+
+    for k, v in pairs(tab2) do
+      t2 = t2 + 1
+
+      if !run_comp(k, v, tab1) then
+        return false
+      end
+    end
+
+    if t1 != t2 then return false end
+
+    return true
+  end
+end
+
+function table.hash(tab)
+  return tostring(tab):gsub('table: 0x', '')
+end
+
+function table.join(tab, sep)
+  local str = ''
+  sep = sep or ''
+
+  for k, v in pairs(tab) do
+    if !istable(v) then
+      str = str..tostring(v)
+    else
+      str = str..table.join(v, sep)
+    end
+  end
+
+  return str
+end
+
+function table.delete_if(tab, callback)
+  local new_tab = {}
+
+  for k, v in pairs(tab) do
+    if callback(k, v) != true then
+      new_tab[k] = v
+    end
+  end
+
+  return new_tab
+end
+
+function table.delete(tab, callback)
+  for k, v in pairs(tab) do
+    if callback(k, v) == true then
+      tab[k] = nil
+    end
+  end
+
+  return tab
+end
+
+function table.keep_if(tab, callback)
+  local new_tab = {}
+
+  for k, v in pairs(tab) do
+    if callback(k, v) == true then
+      new_tab[k] = v
+    end
+  end
+
+  return new_tab
+end
+
+function table.keep(tab, callback)
+  for k, v in pairs(tab) do
+    if callback(k, v) != true then
+      tab[k] = nil
+    end
+  end
+
+  return tab
+end
+
+function table.first(tab)
+  return tab[1]
+end
+
+function table.last(tab)
+  return tab[#tab]
+end
+
+function table.one(tab, callback)
+  local hit = false
+
+  for k, v in pairs(tab) do
+    if callback(k, v) then
+      if !hit then
+        hit = true
+      else
+        return false
+      end
+    end
+  end
+
+  return hit
+end
+
+function table.none(tab, callback)
+  for k, v in pairs(tab) do
+    if callback(k, v) then
+      return false
+    end
+  end
+
+  return true
+end
+
+function table.partition(tab, callback)
+  local t1, t2 = {}, {}
+
+  for k, v in pairs(tab) do
+    if callback(k, v) then
+      table.insert(t1, v)
+    else
+      table.insert(t2, v)
+    end
+  end
+
+  return t1, t2
+end
+
+function table.to_array(tab)
+  local a = {}
+
+  for k, v in pairs(tab) do
+    table.insert(a, { k, v })
+  end
+
+  return a
+end
+
+function table.to_hash(tab)
+  local h = {}
+
+  for k, v in ipairs(tab) do
+    if istable(v) then
+      h[v[1]] = v[2]
+    else
+      table.insert(v)
+    end
+  end
+
+  return h
+end
+
 --
 -- Function: table.serialize (table toSerialize)
 -- Description: Converts a table into the string format.
