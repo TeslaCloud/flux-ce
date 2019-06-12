@@ -19,41 +19,45 @@ function Prefixes:StringIsCommand(str)
   end
 end
 
-function Prefixes:PlayerSay(player, text, team_chat)
-  if !string.is_command(text) then
-    for k, v in ipairs(stored) do
-      if istable(v.prefix) then
-        for k2, v2 in ipairs(v.prefix) do
-          if text:utf8lower():starts(v2) or v.check and v.check(text) then
-            local message = text:utf8sub((text:utf8lower():starts(v2) and utf8.len(v2) or 0) + 1)
+if SERVER then
+  function Prefixes:PlayerSay(player, text, team_chat)
+    if !string.is_command(text) then
+      for k, v in ipairs(stored) do
+        if istable(v.prefix) then
+          for k2, v2 in ipairs(v.prefix) do
+            if text:utf8lower():starts(v2) or v.check and v.check(text) then
+              local message = text:utf8sub((text:utf8lower():starts(v2) and utf8.len(v2) or 0) + 1)
 
-            if message != '' then
-              v.callback(player, message, team_chat)
-              hook.run('PlayerUsedPrefix', player, v.id, message, team_chat)
+              if message != '' then
+                v.callback(player, message, team_chat)
+
+                hook.run('PlayerUsedPrefix', player, v.id, message, team_chat)
+              end
+
+              return ''
             end
-
-            return ''
           end
-        end
-      elseif text:utf8lower():starts(v.prefix) or v.check and v.check(text) then
-        local message = text:utf8sub((text:utf8lower():starts(v.prefix) and utf8.len(v.prefix) or 0) + 1)
+        elseif text:utf8lower():starts(v.prefix) or v.check and v.check(text) then
+          local message = text:utf8sub((text:utf8lower():starts(v.prefix) and utf8.len(v.prefix) or 0) + 1)
 
-        if message != '' then
-          v.callback(player, message, team_chat)
-          hook.run('PlayerUsedPrefix', player, v.id, message, team_chat)
-        end
+          if message != '' then
+            v.callback(player, message, team_chat)
 
-        return ''
+            hook.run('PlayerUsedPrefix', player, v.id, message, team_chat)
+          end
+
+          return ''
+        end
       end
     end
   end
-end
 
-function Prefixes:add(id, prefix, callback, check)
-  table.insert(stored, {
-    id = id,
-    prefix = prefix,
-    callback = callback,
-    check = check
-  })
+  function Prefixes:add(id, prefix, callback, check)
+    table.insert(stored, {
+      id = id,
+      prefix = prefix,
+      callback = callback,
+      check = check
+    })
+  end
 end
