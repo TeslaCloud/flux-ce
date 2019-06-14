@@ -9,3 +9,9 @@ end
 function Chatbox:ChatboxGetMessageColor(player, text, team_chat)
   return Color(255, 255, 255)
 end
+
+function Chatbox:PlayerCanHear(player, message_data)
+  if player == message_data.sender then
+    return true
+  end
+end
