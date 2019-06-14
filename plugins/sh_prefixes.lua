@@ -52,12 +52,7 @@ if SERVER then
     end
   end
 
-  function Prefixes:add(id, prefix, callback, check)
-    table.insert(stored, {
-      id = id,
-      prefix = prefix,
-      callback = callback,
-      check = check
-    })
+  function Prefixes:add(id, data)
+    stored[id] = data
   end
 end
