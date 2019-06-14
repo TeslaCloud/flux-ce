@@ -191,14 +191,19 @@ function string.count(str, char)
   return hits
 end
 
-function string.spelling(str, first_lower)
+function string.spelling(str, first_lower, no_period)
   local len = utf8.len(str)
   local end_text = String.sub(str, -1)
+  local first_char = String.sub(str, 1, 1)
 
-  str = (!first_lower and String.upper(String.sub(str, 1, 1)) or String.lower(String.sub(str, 1, 1)))..String.sub(str, 2, len)
+  if !str:is_upper() then
+    str = (!first_lower and String.upper(String.sub(str, 1, 1)) or String.lower(String.sub(str, 1, 1)))..String.sub(str, 2, len)
+  end
 
-  if end_text != '.' and end_text != '!' and end_text != '?' and end_text != '"' then
-    str = str..'.'
+  if !no_period then
+    if end_text != '.' and end_text != '!' and end_text != '?' and end_text != '"' then
+      str = str..'.'
+    end
   end
 
   return str
