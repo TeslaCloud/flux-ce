@@ -36,13 +36,13 @@ function Chatbox.can_hear(listener, message_data)
 
     if istable(position) then
       for k, v in pairs(position) do
-        if isvector(v) and v:Distance(listener:GetPos()) <= radius then
+        if isvector(v) and v:Distance(listener:EyePos()) <= radius then
           return true
         end
       end
     end
 
-    if isvector(position) and position:Distance(listener:GetPos()) <= radius then
+    if isvector(position) and position:Distance(listener:EyePos()) <= radius then
       return true
     end
   end
