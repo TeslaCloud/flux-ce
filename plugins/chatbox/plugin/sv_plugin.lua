@@ -134,15 +134,7 @@ function Chatbox.message_to_string(message_data, concatenator)
   return table.concat(to_string, concatenator)
 end
 
-Cable.receive('fl_chat_text_add', function(player, ...)
-  if !IsValid(player) then return end
-
-  Chatbox.set_client_mode(true)
-  Chatbox.add_text(player, ...)
-  Chatbox.set_client_mode(false)
-end)
-
-Cable.receive('fl_chat_player_say', function(player, text, team_chat)
+function Chatbox.player_say(player, text, team_chat)
   if !IsValid(player) then return end
 
   local player_say_override = hook.run('PlayerSay', player, text, team_chat)
@@ -152,6 +144,8 @@ Cable.receive('fl_chat_player_say', function(player, text, team_chat)
 
     text = player_say_override
   end
+
+  text = text:trim()
 
   local message = {
     hook.run('ChatboxGetPlayerIcon', player, text, team_chat) or {},
@@ -166,4 +160,16 @@ Cable.receive('fl_chat_player_say', function(player, text, team_chat)
   hook.run('ChatboxAdjustPlayerSay', player, text, message)
 
   Chatbox.add_text(nil, unpack(message))
+end
+
+Cable.receive('fl_chat_text_add', function(player, ...)
+  if !IsValid(player) then return end
+
+  Chatbox.set_client_mode(true)
+  Chatbox.add_text(player, ...)
+  Chatbox.set_client_mode(false)
+end)
+
+Cable.receive('fl_chat_player_say', function(player, text, team_chat)
+  Chatbox.player_say(player, text, team_chat)
 end)
