@@ -20,6 +20,14 @@
 </div>
 <br />
 <div class="panel__title">
+  <h2>Special Thanks</h2>
+</div>
+<div class="credits__entry">
+  <div class="credits__name">Atle</div>
+  <div class="credits__description">Gamemode design help</div>
+</div>
+<br />
+<div class="panel__title">
   <h2>Past Contributors</h2>
 </div>
 <div class="credits__entry">
