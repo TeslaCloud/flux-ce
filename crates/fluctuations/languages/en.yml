@@ -21,6 +21,7 @@ en:
     for: "for {time}"
     and: and
   cant_now: You cannot do this right now!
+  avatar_tooltip: Left click - Open profile, Right click - Copy SteamID
   tab_menu:
     scoreboard: Players
     admin: Admin

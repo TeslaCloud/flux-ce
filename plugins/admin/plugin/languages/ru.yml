@@ -2,7 +2,6 @@ ru:
   admin:
     player_management: Управление игроками
     players: Игроки
-    avatar_tooltip: Левый клик - открыть профиль, Правый клик - копировать SteamID
     role: Роль
     allow_all: Разрешить всё
     no_all: "'Нет' для всех"

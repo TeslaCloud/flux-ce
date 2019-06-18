@@ -2,7 +2,6 @@ en:
   admin:
     player_management: Player management
     players: Players
-    avatar_tooltip: Left click - Open profile, Right click - Copy SteamID
     role: Role
     allow_all: Allow all
     no_all: "'No' for all"

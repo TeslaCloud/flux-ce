@@ -32,6 +32,7 @@ ru:
     for: на
     and: и
   cant_now: Вы не можете сделать это сейчас!
+  avatar_tooltip: Левый клик - открыть профиль, Правый клик - копировать SteamID
   tab_menu:
     expand: Развернуть
     settings: Настройки

@@ -77,10 +77,10 @@ function PANEL:rebuild()
 
   local player = self.player
 
-  self.avatar_panel = vgui.Create('AvatarImage', self)
+  self.avatar_panel = vgui.Create('fl_avatar_panel', self)
   self.avatar_panel:set_size_ex(32, 32)
   self.avatar_panel:SetPos(4, 4)
-  self.avatar_panel:SetPlayer(player, 64)
+  self.avatar_panel:set_player(player, 64)
 
   local text = player:name()
   local font = Theme.get_font('text_normal')

@@ -58,30 +58,7 @@ vgui.Register('fl_player_management', PANEL, 'fl_base_panel')
 PANEL = {}
 
 function PANEL:Init()
-  self.avatar = vgui.create('AvatarImage', self)
-  self.avatar:SetTooltip(t'admin.avatar_tooltip')
-
-  self.avatar.button = vgui.create('DButton', self.avatar)
-  self.avatar.button:Dock(FILL)
-  self.avatar.button:SetText('')
-  self.avatar.button.Paint = function()
-  end
-
-  self.avatar.button.DoClick = function(pnl)
-    local player = self.player
-
-    if IsValid(player) then
-      player:ShowProfile()
-    end
-  end
-
-  self.avatar.button.DoRightClick = function(pnl)
-    local player = self.player
-
-    if IsValid(player) then
-      SetClipboardText(player:SteamID())
-    end
-  end
+  self.avatar = vgui.create('fl_avatar_panel', self)
 
   self.name_label = vgui.create('DLabel', self)
   self.name_label:SetFont(Theme.get_font('text_normal_large'))
@@ -134,7 +111,7 @@ end
 function PANEL:rebuild()
   local player = self.player
 
-  self.avatar:SetPlayer(player, 128)
+  self.avatar:set_player(player, 128)
 
   self.name_label:SetText(player:steam_name(true)..' ('..player:name(true)..')')
   self.name_label:SizeToContents()
