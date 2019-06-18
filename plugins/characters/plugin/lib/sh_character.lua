@@ -2,6 +2,10 @@
   PLUGIN:set_global('Characters')
 end
 
+CHAR_GENDER_MALE    = 8    -- Guys.
+CHAR_GENDER_FEMALE  = 9    -- Gals.
+CHAR_GENDER_NONE    = 10   -- Gender-less characters such as vorts.
+
 function Characters.create(player, data)
   if (!isstring(data.name) or (utf8.len(data.name) < Config.get('character_min_name_len') or
     utf8.len(data.name) > Config.get('character_max_name_len'))) then
@@ -223,7 +227,7 @@ do
     }
 
     function player_meta:get_gender()
-      return genders[self:get_character_var('gender', 10)]
+      return genders[self:get_character_var('gender', CHAR_GENDER_NONE)]
     end
   end
 
