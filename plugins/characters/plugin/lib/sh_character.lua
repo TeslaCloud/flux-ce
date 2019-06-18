@@ -217,9 +217,9 @@ do
 
   do
     local genders = {
-      [8] = 'male',
-      [9] = 'female',
-      [10] = 'no_gender'
+      [CHAR_GENDER_MALE] = 'male',
+      [CHAR_GENDER_FEMALE] = 'female',
+      [CHAR_GENDER_NONE] = 'no_gender'
     }
 
     function player_meta:get_gender()
