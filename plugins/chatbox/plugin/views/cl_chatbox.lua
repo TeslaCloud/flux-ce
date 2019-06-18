@@ -231,6 +231,10 @@ function PANEL:create_message(message_data)
   panel:SetSize(self:GetWide() - half_padding, self:GetWide() - half_padding) -- Width is placeholder and is later set by compiled message table.
   panel:set_message(parsed)
 
+  if self.is_open then
+    panel.force_show = true
+  end
+
   return panel
 end
 
