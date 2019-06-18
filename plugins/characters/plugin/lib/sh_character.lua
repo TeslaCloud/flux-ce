@@ -218,11 +218,12 @@ do
   do
     local genders = {
       [8] = 'male',
-      [9] = 'female'
+      [9] = 'female',
+      [10] = 'no_gender'
     }
 
     function player_meta:get_gender()
-      return self:get_character_var('gender', 'no_gender')
+      return genders[self:get_character_var('gender', 10)]
     end
   end
 
