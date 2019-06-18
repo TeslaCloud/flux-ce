@@ -3,11 +3,13 @@ function Items:InitPostEntity()
 end
 
 function Items:OnEntityCreated(entity)
-  if entity:GetClass() == 'npc_grenade_frag' then
+  if IsValid(entity) and entity:GetClass() == 'npc_grenade_frag' then
     timer.simple(0, function()
-      local player = entity:GetOwner()
+      if IsValid(entity) then
+        local player = entity:GetOwner()
 
-      hook.run('PlayerThrewGrenade', player, entity)
+        hook.run('PlayerThrewGrenade', player, entity)
+      end
     end)
   end
 end
