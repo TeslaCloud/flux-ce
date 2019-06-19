@@ -129,3 +129,17 @@ do
   math.scale_width  = math.scale_x
   math.scale_height = math.scale
 end
+
+function math.even(num)
+  return num % 2 == 0
+end
+
+function math.odd(num)
+  return num % 2 != 0
+end
+
+function math.divisible(num, factor)
+  return num % factor == 0
+end
+
+math.divisible_by = math.divisible
