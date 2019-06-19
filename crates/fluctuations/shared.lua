@@ -21,17 +21,6 @@ print('Flux core version '..version..' ('..GM.code_name..')')
 -- While we can do nothing to stop you from changing them, we'll very much appreciate it if you don't.
 GM.name_override = false -- Set to any string to override schema's browser name. This overrides the prefix too.
 
--- Environment stuff
-FLUX_ENV_PATH    = file.Exists('flux/config/environment.local.lua', 'LUA') and 'flux/config/environment.local.lua' or 'flux/config/environment.lua'
-setenv('FLUX_ENV', string.lower(include(FLUX_ENV_PATH) or 'development'))
-
-IS_PRODUCTION    = ENV['FLUX_ENV'] == 'production'
-IS_DEVELOPMENT   = !IS_PRODUCTION
-IS_TEST          = ENV['FLUX_ENV'] == 'test'
-LITE_REFRESH     = Flux.initialized and Settings.lite_refresh or false
-
-Flux.development = !IS_PRODUCTION
-
 -- Fix for the name conflicts.
 _player, _team, _file, _table, _sound = player, team, file, table, sound
 

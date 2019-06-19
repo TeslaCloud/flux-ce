@@ -71,7 +71,7 @@ function player_meta:do_action(id)
         action_table.callback, self, act
       } catch {
         function(exception)
-          ErrorNoHalt("Player action '"..tostring(act).."' has failed to run!\n"..exception..'\n')
+          error_with_traceback("Player action '"..tostring(act).."' has failed to run!\n"..exception)
         end
       }
     end

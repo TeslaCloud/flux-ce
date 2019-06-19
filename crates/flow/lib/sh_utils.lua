@@ -304,9 +304,29 @@ function print_traceback(suppress, ...)
   return pieces
 end
 
+--- Prints an error using ErrorNoHalt but without character limit.
+-- @see[ErrorNoHalt]
+function long_error(...)
+  local text = table.concat({...})
+  local len = string.len(text)
+  local pieces = {}
+
+  if len > 200 then
+    for i = 1, len / 200 do
+      table.insert(pieces, text:sub((i - 1) * 200, math.min(i * 200, len)))
+    end
+  else
+    pieces = { text }
+  end
+
+  for k, v in ipairs(pieces) do
+    ErrorNoHalt(v)
+  end
+end
+
 --- Print an error message followed by a complete stack traceback.
 function error_with_traceback(msg)
-  ErrorNoHalt(msg..'\n')
+  long_error(msg..'\n')
   print_traceback()
 end
 

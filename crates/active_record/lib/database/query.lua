@@ -168,7 +168,7 @@ local function build_select_query(query_obj)
   if isstring(query_obj.table_name) then
     table.insert(query_string, ' FROM '..query_obj:quote_column(query_obj.table_name)..' ')
   else
-    ErrorNoHalt('ActiveRecord - No table name specified!\n')
+    error_with_traceback('ActiveRecord - No table name specified!')
     return
   end
 
@@ -198,7 +198,7 @@ local function build_insert_query(query_obj)
   if isstring(query_obj.table_name) then
     table.insert(query_string, query_obj:quote_column(query_obj.table_name))
   else
-    ErrorNoHalt('ActiveRecord - No table name specified!\n')
+    error_with_traceback('ActiveRecord - No table name specified!')
     return
   end
 
@@ -223,7 +223,7 @@ local function build_update_query(query_obj)
   if isstring(query_obj.table_name) then
     table.insert(query_string, query_obj:quote_column(query_obj.table_name))
   else
-    ErrorNoHalt('ActiveRecord - No table name specified!\n')
+    error_with_traceback('ActiveRecord - No table name specified!')
     return
   end
 
@@ -258,7 +258,7 @@ local function build_delete_query(query_obj)
   if isstring(query_obj.table_name) then
     table.insert(query_string, query_obj:quote_column(query_obj.table_name))
   else
-    ErrorNoHalt('ActiveRecord - No table name specified!\n')
+    error_with_traceback('ActiveRecord - No table name specified!')
     return
   end
 
@@ -281,7 +281,7 @@ local function build_drop_query(query_obj)
   if isstring(query_obj.table_name) then
     table.insert(query_string, query_obj:quote_column(query_obj.table_name))
   else
-    ErrorNoHalt('ActiveRecord - No table name specified!\n')
+    error_with_traceback('ActiveRecord - No table name specified!')
     return
   end
 
@@ -294,7 +294,7 @@ local function build_truncate_query(query_obj)
   if isstring(query_obj.table_name) then
     table.insert(query_string, ' '..query_obj:quote_column(query_obj.table_name))
   else
-    ErrorNoHalt('ActiveRecord - No table name specified!\n')
+    error_with_traceback('ActiveRecord - No table name specified!')
     return
   end
 
@@ -311,7 +311,7 @@ local function build_create_query(query_obj)
   if isstring(query_obj.table_name) then
     table.insert(query_string, query_obj:quote_column(query_obj.table_name))
   else
-    ErrorNoHalt('ActiveRecord - No table name specified!\n')
+    error_with_traceback('ActiveRecord - No table name specified!')
     return
   end
 
@@ -355,7 +355,7 @@ local function build_change_query(query)
   if isstring(query.table_name) then
     table.insert(query_string, ' '..query:quote_column(query.table_name))
   else
-    ErrorNoHalt('ActiveRecord - No table name specified!\n')
+    error_with_traceback('ActiveRecord - No table name specified!')
     return
   end
 

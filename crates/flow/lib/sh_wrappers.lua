@@ -11,7 +11,7 @@ function Try(id, func, ...)
 
   if !success then
     ErrorNoHalt('[Try:'..id..'] Failed to run the function!\n')
-    ErrorNoHalt(unpack(result), '\n')
+    error_with_traceback(unpack(result))
   elseif result[1] != nil then
     return unpack(result)
   end
@@ -54,7 +54,7 @@ do
         handler[1](unpack(result))
       else
         ErrorNoHalt('[Try:Exception] Failed to run the function!\n')
-        ErrorNoHalt(unpack(result), '\n')
+        error_with_traceback(unpack(result))
       end
     elseif result[1] != nil then
       return unpack(result)

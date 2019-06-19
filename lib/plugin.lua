@@ -112,7 +112,7 @@ function Plugin.remove_from_cache(id)
         plugin_table.OnUnhook, plugin_table
       } catch {
         function(exception)
-          ErrorNoHalt('OnUnhook method has failed to run! '..tostring(plugin_table)..'\n'..tostring(exception)..'\n')
+          error_with_traceback('OnUnhook method has failed to run! '..tostring(plugin_table)..'\n'..tostring(exception))
         end
       }
     end
@@ -141,7 +141,7 @@ function Plugin.recache(id)
         plugin_table.OnRecache, plugin_table
       } catch {
         function(exception)
-          ErrorNoHalt('OnRecache method has failed to run! '..tostring(plugin_table)..'\n'..tostring(exception)..'\n')
+          error_with_traceback('OnRecache method has failed to run! '..tostring(plugin_table)..'\n'..tostring(exception))
         end
       }
     end
@@ -160,7 +160,7 @@ function Plugin.remove(id)
         plugin_table.OnRemoved, plugin_table
       } catch {
         function(exception)
-          ErrorNoHalt('OnRemoved method has failed to run! '..tostring(plugin_table)..'\n'..tostring(exception)..'\n')
+          error_with_traceback('OnRemoved method has failed to run! '..tostring(plugin_table)..'\n'..tostring(exception))
         end
       }
     end
@@ -347,7 +347,7 @@ function Plugin.include_schema()
   if istable(deps) then
     for k, v in ipairs(deps) do
       if !Plugin.require(v) then
-        ErrorNoHalt(
+        long_error(
           "Unable to load schema! Dependency missing: '"..
           tostring(v)..
           "'!\nPlease install this plugin in your schema's 'plugins' folder!\nAlternatively please make sure that your server can download packages from the cloud!\n"
@@ -620,7 +620,7 @@ do
 
           if !success then
             ErrorNoHalt('[Flux - '..(v.id or v[2]:get_name())..'] The '..name..' hook has failed to run!\n')
-            ErrorNoHalt(tostring(a), '\n')
+            error_with_traceback(tostring(a))
 
             if name != 'OnHookError' then
               hook.Call('OnHookError', gm, name, v)

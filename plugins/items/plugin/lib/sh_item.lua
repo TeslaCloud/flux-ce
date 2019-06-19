@@ -42,9 +42,7 @@ function Item.register(id, data)
   end
 
   if !isstring(id) and !isstring(data.name) then
-    ErrorNoHalt('Attempt to register an item without a valid ID!')
-    print_traceback()
-
+    error_with_traceback('Attempt to register an item without a valid ID!')
     return
   end
 
@@ -374,14 +372,12 @@ if SERVER then
 
   function Item.spawn(position, angles, item_table)
     if !position or !istable(item_table) then
-      ErrorNoHalt('No position or item table is not a table!\n')
-
+      error_with_traceback('No position or item table is not a table!')
       return
     end
 
     if !Item.is_instance(item_table) then
-      ErrorNoHalt('Cannot spawn non-instantiated item!\n')
-
+      error_with_traceback('Cannot spawn non-instantiated item!')
       return
     end
 

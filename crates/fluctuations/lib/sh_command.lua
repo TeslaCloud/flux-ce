@@ -389,7 +389,7 @@ if SERVER then
       } catch {
         function(exception)
           ErrorNoHalt("'"..cmd_table.id.."' command has failed to run!\n")
-          ErrorNoHalt(exception..'\n')
+          error_with_traceback(exception)
         end
       }
     end

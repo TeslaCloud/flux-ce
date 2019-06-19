@@ -51,7 +51,7 @@ function ActiveRecord.Adapters.Mysqloo:connect(config, on_connected)
 
       if !success then
         ErrorNoHalt('ActiveRecord - Failed to set MySQL encoding to UTF-8!\n')
-        ErrorNoHalt(error_message..'\n')
+        error_with_traceback(error_message)
       end
 
       if isfunction(on_connected) then on_connected(self) end
@@ -106,7 +106,7 @@ function ActiveRecord.Adapters.Mysqloo:raw_query(query, callback, query_type)
 
       if !status then
         ErrorNoHalt('ActiveRecord - MySQL Callback Error!\n')
-        ErrorNoHalt(a..'\n')
+        error_with_traceback(a)
       end
 
       return a, b, c, d
@@ -116,8 +116,8 @@ function ActiveRecord.Adapters.Mysqloo:raw_query(query, callback, query_type)
   query_obj.onSuccess = success_func
   query_obj.onError = function(query_obj, error_text)
     ErrorNoHalt('ActiveRecord - MySQL Query Error!\n')
-    ErrorNoHalt('Query: '..query..'\n')
-    ErrorNoHalt(error_text..'\n')
+    long_error('Query: '..query..'\n')
+    error_with_traceback(error_text)
   end
   if self._sync then
     query_obj.onSuccess = nil

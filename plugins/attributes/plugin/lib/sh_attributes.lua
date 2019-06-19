@@ -35,9 +35,7 @@ function Attributes.register(id, data)
   if !data then return end
 
   if !isstring(id) and !isstring(data.name) then
-    ErrorNoHalt('Attempt to register an attribute without a valid ID!')
-    print_traceback()
-
+    error_with_traceback('Attempt to register an attribute without a valid ID!')
     return
   end
 

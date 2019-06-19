@@ -354,7 +354,7 @@ function table.serialize(tab)
 
       if !success then
         ErrorNoHalt('Failed to serialize a table!\n')
-        ErrorNoHalt(value..'\n')
+        error_with_traceback(value)
 
         return ''
       end
@@ -383,7 +383,7 @@ function table.deserialize(data)
 
       if !success then
         ErrorNoHalt('Failed to deserialize a string!\n')
-        ErrorNoHalt(value..'\n')
+        error_with_traceback(value)
 
         return {}
       end

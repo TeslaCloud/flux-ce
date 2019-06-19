@@ -47,7 +47,7 @@ function ActiveRecord.Adapters.Pg:connect(config, on_connected)
 
       if !success then
         ErrorNoHalt('ActiveRecord - Failed to set connection encoding:\n')
-        ErrorNoHalt(err)
+        error_with_traceback(err)
       end
 
       if isfunction(on_connected) then on_connected(self) end
@@ -97,7 +97,7 @@ function ActiveRecord.Adapters.Pg:raw_query(query, callback, query_type)
 
       if !status then
         ErrorNoHalt('ActiveRecord - PostgreSQL Callback Error!\n')
-        ErrorNoHalt(a..'\n')
+        error_with_traceback(a)
       end
 
       return a, b, c, d
@@ -107,8 +107,8 @@ function ActiveRecord.Adapters.Pg:raw_query(query, callback, query_type)
   query_obj:on("success", success_func)
   query_obj:on("error", function(error_text)
     ErrorNoHalt('ActiveRecord - PostgreSQL Query Error!\n')
-    ErrorNoHalt('Query: '..query..'\n')
-    ErrorNoHalt(error_text..'\n')
+    long_error('Query: '..query..'\n')
+    error_with_traceback(error_text)
   end)
 
   if self._sync then
@@ -120,8 +120,8 @@ function ActiveRecord.Adapters.Pg:raw_query(query, callback, query_type)
       return success_func(res, size)
     else
       ErrorNoHalt('ActiveRecord - PostgreSQL Query Error!\n')
-      ErrorNoHalt('Query: '..query..'\n')
-      ErrorNoHalt(tostring(res)..'\n')
+      long_error('Query: '..query..'\n')
+      error_with_traceback(tostring(res))
     end
   else
     query_obj:set_sync(false)

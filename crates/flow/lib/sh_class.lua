@@ -42,7 +42,7 @@ function class(name, base_class)
         base_class.class_extended, base_class, copy
       } catch {
         function(exception)
-          ErrorNoHalt(tostring(exception) + '\n')
+          error_with_traceback(tostring(exception))
         end
       }
     end
@@ -78,7 +78,7 @@ function class(name, base_class)
 
       if !success then
         ErrorNoHalt('['..name..'] Class constructor has failed to run!\n')
-        ErrorNoHalt(value..'\n')
+        error_with_traceback(value)
       end
     end
 
@@ -145,7 +145,7 @@ function extends(base_class)
         base_class.class_extended, base_class, copy
       } catch {
         function(exception)
-          ErrorNoHalt(tostring(exception) + '\n')
+          error_with_traceback(tostring(exception))
         end
       }
     end

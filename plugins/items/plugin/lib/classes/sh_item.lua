@@ -129,7 +129,7 @@ if SERVER then
           self[act], self, player, ...
         } catch {
           function(exception)
-            ErrorNoHalt('Item callback has failed to run! '..tostring(exception)..'\n')
+            error_with_traceback('Item callback has failed to run! '..tostring(exception))
           end
         }
 

@@ -13,8 +13,7 @@ local player_meta = FindMetaTable('Player')
 -- A function to check if value's type cannot be serialized and print an error if it is so.
 local function is_bad_type(key, val)
   if isfunction(val) then
-    ErrorNoHalt('Cannot network functions! ('..key..')\n')
-
+    error_with_traceback('Cannot network functions! ('..key..')')
     return true
   end
 

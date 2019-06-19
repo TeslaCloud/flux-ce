@@ -24,7 +24,7 @@ if SERVER then
       return default
     else
       if Flux.development then
-        ErrorNoHalt("Attempt to load data key that doesn't exist! ("..key..')\n')
+        error_with_traceback("Attempt to load data key that doesn't exist! ("..key..')')
       end
     end
   end
@@ -64,7 +64,7 @@ else
       return default
     else
       if Flux.development then
-        ErrorNoHalt("Attempt to load data key that doesn't exist! ("..key..')\n')
+        error_with_traceback("Attempt to load data key that doesn't exist! ("..key..')')
       end
     end
   end

@@ -40,7 +40,7 @@ if CLIENT then
 
         if !success then
           ErrorNoHalt("The '"..name.." - "..tostring(k).."' MVC callback has failed to run!\n")
-          ErrorNoHalt(tostring(value)..'\n')
+          error_with_traceback(tostring(value))
         end
 
         if !v.prevent_remove then
@@ -84,7 +84,7 @@ else
 
         if !success then
           ErrorNoHalt("The '"..name.." - "..tostring(k).."' MVC handler has failed to run!\n")
-          ErrorNoHalt(tostring(value)..'\n')
+          error_with_traceback(tostring(value))
         end
       end
     end
