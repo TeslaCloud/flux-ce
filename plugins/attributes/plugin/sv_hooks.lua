@@ -8,7 +8,3 @@ function AttributesPlugin:PostCreateCharacter(player, char_id, char, char_data)
     table.insert(char.attributes, att)
   end
 end
-
-function AttributesPlugin:Initialize()
-  error 'i am deliberate error!'
-end
