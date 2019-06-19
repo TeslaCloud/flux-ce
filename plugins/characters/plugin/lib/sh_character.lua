@@ -239,10 +239,6 @@ do
     end
   end
 
-  function player_meta:get_character_data(key, default)
-    error 'Player#get_character_data is deprecated!\n'
-  end
-
   function player_meta:get_character()
     if SERVER and self.current_character then
       return self.current_character

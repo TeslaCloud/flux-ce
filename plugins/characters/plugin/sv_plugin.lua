@@ -43,10 +43,6 @@ function player_meta:set_character_var(id, val)
   end
 end
 
-function player_meta:set_character_data(key, value)
-  error 'Player#set_character_data is deprecated!\n'
-end
-
 function player_meta:save_character()
   local char = self:get_character()
 
