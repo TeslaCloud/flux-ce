@@ -260,6 +260,10 @@ function ActiveRecord.Base:_fetch_relation(callback, objects, n, obj_id)
 
   if relation then
     if !relation.child then
+      if !relation.model then
+        error_with_traceback('Relation has no model! ('..tostring(relation.table_name)..')')
+        return
+      end
       local obj = relation.model:where(relation.column_name, current_object.id)
       if relation.many then
         obj:get(function(res)
