@@ -303,3 +303,18 @@ function print_traceback(suppress, ...)
 
   return pieces
 end
+
+local env = table.Copy(_G)
+local unsafe = w'debug require setfenv getfenv File _G _R RunString CompileString rawget rawset rawequal setmetatable coroutine module package newproxy'
+
+for k, v in ipairs(unsafe) do
+  env[v] = nil 
+end
+
+env['string']['dump'] = nil
+
+function include_sandboxed(f)
+  local c = CompileString(file.Read(f, 'LUA'), f)
+  debug.setfenv(c, env)
+  return c()
+end
