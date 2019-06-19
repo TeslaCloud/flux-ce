@@ -48,7 +48,7 @@ do
   end
 end
 
-if Flux.initialized then return end
+if Flux and Flux.initialized then return end
 
 if CLIENT then
   include '_flux/environment.lua'
