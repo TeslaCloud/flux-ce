@@ -267,3 +267,11 @@ end
 function util.operator_to_symbol(op)
   return operators_symbol[op]
 end
+
+--- Similar to <=> operator in other languages.
+-- @returns [Number, -1 if a < b, 0 if a == b, and 1 if a > b]
+function compare(a, b)
+  if a > b then  return 1 end
+  if a == b then return 0 end
+  return -1
+end
