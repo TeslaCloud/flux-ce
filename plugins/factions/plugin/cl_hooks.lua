@@ -94,7 +94,7 @@ function Factions:PreRebuildScoreboard(panel, w, h)
     local faction = (k == 'players_online' and t'scoreboard.players_online') or Factions.find_by_id(k)
     local players = v
 
-    if #players == 0 then continue end
+    if table.count(players) == 0 then continue end
 
     local category = vgui.Create('DCollapsibleCategory', panel)
     category:SetSize(w - 8, 32)
@@ -109,7 +109,9 @@ function Factions:PreRebuildScoreboard(panel, w, h)
 
     category:SetContents(list)
 
-    for k1, v1 in ipairs(players) do
+    for k1, v1 in pairs(players) do
+      if !IsValid(v1) then continue end
+
       local player_card = vgui.Create('fl_scoreboard_player', self)
       player_card:SetSize(w - 8, card_tall)
       player_card:set_player(v1)
