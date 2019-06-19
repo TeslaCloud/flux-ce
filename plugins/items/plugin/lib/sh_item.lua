@@ -43,7 +43,7 @@ function Item.register(id, data)
 
   if !isstring(id) and !isstring(data.name) then
     ErrorNoHalt('Attempt to register an item without a valid ID!')
-    debug.Trace()
+    print_traceback()
 
     return
   end

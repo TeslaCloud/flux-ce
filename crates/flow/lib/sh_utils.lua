@@ -275,3 +275,31 @@ function compare(a, b)
   if a == b then return 0 end
   return -1
 end
+
+--- Print traceback to current function call.
+-- @return [Array string pieces of the traceback]
+function print_traceback(suppress, ...)
+  local trace_text = debug.traceback(...)
+
+  trace_text = trace_text
+                 :gsub('stack traceback:\n', '\n')
+                 :gsub(': in main chunk', '')
+                 :gsub(': in function', ': in')
+                 :gsub('\n%s+', '\n')
+                 :gsub('^\n', '')
+
+  local pieces = trace_text:split('\n')
+  pieces[1] = '' -- remove the actual call to debug.traceback
+
+  if !suppress then
+    for k, v in ipairs(pieces) do
+      if v and v != '' then
+        Msg('    ')
+        MsgC(Color(0, 255, 255), 'from '..v)
+        Msg('\n')
+      end
+    end
+  end
+
+  return pieces
+end
