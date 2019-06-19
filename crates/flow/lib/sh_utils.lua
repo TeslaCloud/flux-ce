@@ -313,7 +313,7 @@ function long_error(...)
 
   if len > 200 then
     for i = 1, len / 200 do
-      table.insert(pieces, text:sub((i - 1) * 200, math.min(i * 200, len)))
+      table.insert(pieces, text:sub((i - 1) * 200 + 1, math.min(i * 200, len)))
     end
   else
     pieces = { text }
@@ -321,6 +321,10 @@ function long_error(...)
 
   for k, v in ipairs(pieces) do
     ErrorNoHalt(v)
+  end
+
+  if text:ends('\n') then
+    print ''
   end
 end
 
