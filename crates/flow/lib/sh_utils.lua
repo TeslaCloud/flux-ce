@@ -304,6 +304,12 @@ function print_traceback(suppress, ...)
   return pieces
 end
 
+--- Print an error message followed by a complete stack traceback.
+function error_with_traceback(msg)
+  ErrorNoHalt(msg..'\n')
+  print_traceback()
+end
+
 local env = table.Copy(_G)
 local unsafe = w'debug require setfenv getfenv File _G _R RunString CompileString rawget rawset rawequal setmetatable coroutine module package newproxy'
 
