@@ -1,10 +1,13 @@
 local PANEL = {}
 
 function PANEL:Init()
+  local padding = math.scale(4)
+
   self:SetTitle('Flux Frame')
+  self:DockPadding(padding, Theme.get_option('frame_header_size') + padding, padding, padding)
 
   self.button_close = vgui.Create('fl_button', self)
-  self.button_close:SetSize(20, 20)
+  self.button_close:SetSize(math.scale_size(20, 20))
   self.button_close:SetPos(0, 0)
   self.button_close:set_icon('fa-times')
   self.button_close:set_text('')

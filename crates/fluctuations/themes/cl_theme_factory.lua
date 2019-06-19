@@ -7,8 +7,8 @@ THEME.should_reload = true
 function THEME:on_loaded()
   local scrw, scrh = ScrW(), ScrH()
 
-  self:set_option('frame_header_size', 24)
-  self:set_option('frame_line_weight', 2)
+  self:set_option('frame_header_size', math.scale(24))
+  self:set_option('frame_line_weight', math.scale(2))
   self:set_option('menu_sidebar_width', 300)
   self:set_option('menu_sidebar_height', scrh)
   self:set_option('menu_sidebar_x', 0)
@@ -16,7 +16,7 @@ function THEME:on_loaded()
   self:set_option('menu_sidebar_margin', -1)
   self:set_option('menu_sidebar_logo', 'flux/flux_icon.png')
   self:set_option('menu_sidebar_logo_space', scrh / 3)
-  self:set_option('menu_sidebar_button_height', math.scale(42)) -- We can cheat and scale buttons the same way we scale fonts!
+  self:set_option('menu_sidebar_button_height', math.scale(42))
   self:set_option('menu_sidebar_button_offset_x', 16)
   self:set_option('menu_sidebar_button_centered', false)
   self:set_option('menu_logo_height', 100)
@@ -93,7 +93,7 @@ end
 
 function THEME:PaintFrame(panel, width, height)
   local title = panel:GetTitle()
-  local accent_color = panel:GetAccentColor()
+  local accent_color = self:get_color('accent')
   local header_size = self:get_option('frame_header_size')
   local line_weight = self:get_option('frame_line_weight')
 
