@@ -17,9 +17,3 @@ ActiveRecord.define_model('characters', function(t)
   t:integer 'user_id'
   t:integer 'health'
 end)
-
-ActiveRecord.define_model('character_data', function(t)
-  t:string 'key'
-  t:text 'value'
-  t:integer 'character_id'
-end)
