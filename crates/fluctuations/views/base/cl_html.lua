@@ -29,10 +29,10 @@ end
 
 function PANEL:render()
   local html = '<!DOCTYPE html><html lang="en"><head>'
-  html = html..self.html_head
+  html = html..(self.html_head or '')
   html = html..'<style>'..(self.css or '')..'</style></head>'
   html = html..'<body>'..(self.html_body or '')
-  html = html..'<script type="text/javascript">'..self.js..'</script></body></html>'
+  html = html..'<script type="text/javascript">'..(self.js or '')..'</script></body></html>'
   self:set_html(html)
 end
 
