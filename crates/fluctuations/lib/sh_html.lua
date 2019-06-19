@@ -162,7 +162,6 @@ Pipeline.register('html', function(id, file_name, pipe)
 
   if contents then
     file_name = File.name(file_name):gsub('^([%w_]+)%..+$', '%1')
-    print(file_name)
     Flux.HTML[pipe][file_name] = contents
 
     -- track the file

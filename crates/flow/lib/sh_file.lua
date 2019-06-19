@@ -82,7 +82,29 @@ function File.path(filename)
   return string.GetPathFromFilename(filename)
 end
 
+function File.ls(path, include_hidden)
+  local final = {}
+  local files, folders = file.Find(path, 'GAME')
+
+  if !files or !folders then return end
+
+  table.add(files, folders)
+
+  final = table.map(files, function(f)
+    if include_hidden then
+      return f
+    else
+      if !f:starts('.') then
+        return f
+      end
+    end
+  end)
+
+  return final
+end
+
 File.rm               = File.delete
+File.dir              = File.ls
 File.create           = File.touch
 File.remove           = File.delete
 File.extension        = File.ext
