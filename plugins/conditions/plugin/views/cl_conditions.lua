@@ -11,7 +11,7 @@ function PANEL:Init()
   end
 
   self.save = vgui.create('fl_button', self)
-  self.save:SetSize(Font.scale(24), Font.scale(24))
+  self.save:SetSize(math.scale(24), math.scale(24))
   self.save:set_icon('fa-save')
   self.save:set_centered(true)
   self.save.DoClick = function(btn)
@@ -31,7 +31,7 @@ function PANEL:Init()
   end
 
   self.load = vgui.create('fl_button', self)
-  self.load:SetSize(Font.scale(24), Font.scale(24))
+  self.load:SetSize(math.scale(24), math.scale(24))
   self.load:set_icon('fa-folder-open')
   self.load:set_centered(true)
   self.load.DoClick = function(btn)

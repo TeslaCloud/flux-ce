@@ -1,4 +1,4 @@
-local w, h = Font.scale(512), Font.scale(4)
+local w, h = math.scale(512), math.scale(4)
 local cur_wide = w
 local cur_alpha = 0
 
@@ -18,7 +18,7 @@ function Stamina:HUDPaint()
   if Theme.hook('DrawStaminaBar', stamina, percentage, cur_alpha, frame_time) == nil then
     local cx, cy = ScrC()
     local gx, gy = Flux.global_ui_offset()
-    local x, y = gx + cx - w * 0.5, gy + cy - h * 0.5 + Font.scale(300)
+    local x, y = gx + cx - w * 0.5, gy + cy - h * 0.5 + math.scale(300)
     local cur_modifier = 255 * -(percentage - 1)
     cur_wide = Lerp(frame_time, cur_wide, w * percentage)
 

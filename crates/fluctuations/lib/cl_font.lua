@@ -3,10 +3,6 @@ library 'Font'
 -- We want the fonts to recreate on refresh.
 local stored = {}
 
-function Font.scale(size)
-  return math.floor(size * (ScrH() / 1080))
-end
-
 function Font.create(name, font_data)
   if name == nil or !istable(font_data) then return end
   if stored[name] then return end

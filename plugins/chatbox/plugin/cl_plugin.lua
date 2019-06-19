@@ -24,7 +24,7 @@ function Chatbox.compile(msg_table)
   local cur_size = Theme.get_option('chatbox_text_normal_size')
 
   if isnumber(msg_table.size) then
-    cur_size = Font.scale(msg_table.size)
+    cur_size = math.scale(msg_table.size)
   end
 
   -- offset x by 1 to prevent weird clipping issues
@@ -76,7 +76,7 @@ function Chatbox.compile(msg_table)
           end
         end
       elseif isnumber(v) then
-        cur_size = Font.scale(v)
+        cur_size = math.scale(v)
 
         font = Font.size(Theme.get_font('chatbox_normal'), cur_size)
 
@@ -86,14 +86,14 @@ function Chatbox.compile(msg_table)
           v.height  = v.height  or v.size
           v.width   = v.width   or v.size
 
-          local margin = Font.scale(v.margin or 2)
+          local margin = math.scale(v.margin or 2)
           local margin_side = math.ceil(margin * 0.5)
-          local scaled = Font.scale(v.height)
+          local scaled = math.scale(v.height)
           local image_data = {
             image = v.image,
             x     = cur_x + margin_side,
             y     = cur_y,
-            w     = Font.scale(v.width),
+            w     = math.scale(v.width),
             h     = scaled
           }
 

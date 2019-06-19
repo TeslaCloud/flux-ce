@@ -70,13 +70,13 @@ function Factions:PreRebuildScoreboard(panel, w, h)
     panel.faction_categories[k] = nil
   end
 
-  local cur_y = Font.scale(40)
-  local card_tall = Font.scale(40)
-  local margin = Font.scale(2)
+  local cur_y = math.scale(40)
+  local card_tall = math.scale(40)
+  local margin = math.scale(2)
 
   local category_list = vgui.Create('DListLayout', panel.scroll_panel)
-  category_list:SetSize(w - 8, h - Font.scale(20))
-  category_list:SetPos(4, Font.scale(20))
+  category_list:SetSize(w - 8, h - math.scale(20))
+  category_list:SetPos(4, math.scale(20))
 
   local players_table = {}
 
@@ -104,7 +104,7 @@ function Factions:PreRebuildScoreboard(panel, w, h)
     category_list:Add(category)
 
     local list = vgui.Create('DPanelList', panel)
-    list:SetSpacing(Font.scale(2))
+    list:SetSpacing(math.scale(2))
     list:EnableHorizontal(false)
 
     category:SetContents(list)

@@ -136,7 +136,7 @@ function PANEL:rebuild()
   self.player_model:rebuild()
 
   self.desc = vgui.create('DTextEntry', self)
-  self.desc:SetSize(self.player_model:GetWide() - 8, Font.scale(24))
+  self.desc:SetSize(self.player_model:GetWide() - 8, math.scale(24))
   self.desc:SetPos(self.player_model.x + 4, self.player_model.y + self.player_model:GetTall() - self.desc:GetTall() - 4)
   self.desc:SetText(PLAYER:get_phys_desc())
   self.desc:SetFont(Theme.get_font('main_menu_normal'))

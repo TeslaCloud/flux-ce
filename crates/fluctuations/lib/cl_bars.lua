@@ -9,7 +9,7 @@ Flux.Bars.stored          = stored
 Flux.Bars.sorted          = sorted
 Flux.Bars.default_x       = 8
 Flux.Bars.default_y       = 8
-Flux.Bars.default_w       = Font.scale(312)
+Flux.Bars.default_w       = math.scale_width(312)
 Flux.Bars.default_h       = 18
 Flux.Bars.default_spacing = 6
 

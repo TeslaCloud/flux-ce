@@ -26,9 +26,9 @@ function PANEL:rebuild()
     self.player_cards[k] = nil
   end
 
-  local cur_y = Font.scale(40)
-  local card_tall = Font.scale(32) + 8
-  local margin = Font.scale(2)
+  local cur_y = math.scale(40)
+  local card_tall = math.scale(32) + 8
+  local margin = math.scale(2)
 
   for k, v in ipairs(_player.GetAll()) do
     if !v:has_initialized() then continue end
@@ -49,7 +49,7 @@ function PANEL:rebuild()
 end
 
 function PANEL:get_menu_size()
-  return Font.scale(1280), Font.scale(800)
+  return math.scale(1280), math.scale(800)
 end
 
 vgui.Register('fl_scoreboard', PANEL, 'fl_base_panel')
@@ -88,7 +88,7 @@ function PANEL:rebuild()
 
   self.name_label = vgui.Create('DLabel', self)
   self.name_label:SetText(text)
-  self.name_label:SetPos(Font.scale(32) + 16, self:GetTall() * 0.5 - text_h * 0.6)
+  self.name_label:SetPos(math.scale(32) + 16, self:GetTall() * 0.5 - text_h * 0.6)
   self.name_label:SetFont(font)    
   self.name_label:SetTextColor(Theme.get_color('text'))
   self.name_label:SizeToContents()
@@ -98,7 +98,7 @@ function PANEL:rebuild()
 
   self.ping = vgui.Create('DLabel', self)
   self.ping:SetText(text)
-  self.ping:SetPos(self:GetWide() - text_w - Font.scale(16), self:GetTall() * 0.5 - text_h * 0.5)
+  self.ping:SetPos(self:GetWide() - text_w - math.scale(16), self:GetTall() * 0.5 - text_h * 0.5)
   self.ping:SetFont(font)    
   self.ping:SetTextColor(Theme.get_color('text'))
   self.ping:SizeToContents()

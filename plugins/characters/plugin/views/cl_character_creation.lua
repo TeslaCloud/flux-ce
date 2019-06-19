@@ -2,7 +2,7 @@
 PANEL.char_data = {}
 
 function PANEL:Init()
-  local fa_icon_size = Font.scale(16)
+  local fa_icon_size = math.scale(16)
 
   self:SetPos(0, 0)
   self:SetSize(ScrW(), ScrH())
@@ -117,7 +117,7 @@ function PANEL:rebuild()
     button:SetTitle(t(v))
     button:SetDrawBackground(false)
     button:set_icon('fa-chevron-right', true)
-    button:set_icon_size(Font.scale(16))
+    button:set_icon_size(math.scale(16))
     button:set_centered(true)
     button:SizeToContents()
 

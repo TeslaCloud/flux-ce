@@ -160,7 +160,7 @@ function PANEL:PaintOver(width, height)
               for k1, v1 in pairs(wrapped) do
                 local text_w, text_h = draw.SimpleText(v1, small_font, 16, cur_y, color_white)
 
-                cur_y = cur_y + text_h + Font.scale(2)
+                cur_y = cur_y + text_h + math.scale(2)
               end
 
               local aliases = '[-]'

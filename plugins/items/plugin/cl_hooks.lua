@@ -31,7 +31,7 @@ function Items:Think()
     local x, y = scr_pos.x, scr_pos.y
     local w, h = ScrW() * 0.5, ScrH() * 0.5
 
-    if !scr_pos.visible or math.abs(w - x) > Font.scale(350) or math.abs(h - y) > Font.scale(350) then
+    if !scr_pos.visible or math.abs(w - x) > math.scale(350) or math.abs(h - y) > math.scale(350) then
       Cable.send('fl_items_abort_hold_start', true)
     end
   end

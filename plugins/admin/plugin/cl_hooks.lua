@@ -33,7 +33,7 @@ function Bolt:HUDPaint()
     local text, font = t'vanish.client_text', Theme.get_font('text_normal')
     local w, h = util.text_size(text, font)
     local x, y = ScrW() - w - 16, ScrH() - h - 16
-    FontAwesome:draw('fa-eye-slash', x - h - Font.scale(12), y, h)
+    FontAwesome:draw('fa-eye-slash', x - h - math.scale(12), y, h)
     draw.SimpleText(text, font, x, y, color_white)
   end
 end

@@ -4,7 +4,7 @@ PANEL.slots = {}
 PANEL.inventory_type = 'main_inventory'
 PANEL.player = nil
 
-local slot_size = Font.scale(64)
+local slot_size = math.scale(64)
 
 function PANEL:Init()
   self.title = nil

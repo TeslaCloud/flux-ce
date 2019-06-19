@@ -132,7 +132,7 @@ function GM:HUDDrawScoreBoard()
 
     percentage = math.Clamp(percentage, 0, 100)
 
-    local font = Font.size('flRobotoCondensed', Font.scale(24))
+    local font = Font.size('flRobotoCondensed', math.scale(24))
     local scrw, scrh = ScrW(), ScrH()
     local w, h = util.text_size(text, font)
 

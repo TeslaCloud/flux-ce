@@ -103,7 +103,7 @@ function PANEL:set_fullscreen(fullscreen)
       local font = Flux.fonts:GetSize(Theme.get_font('text_small'), 16)
       local font_size = util.font_size(font)
 
-      FontAwesome:draw('fa-chevron-left', Font.scale(6), Font.scale(5), Font.scale(14), Color(255, 255, 255))
+      FontAwesome:draw('fa-chevron-left', math.scale(6), math.scale(5), math.scale(14), Color(255, 255, 255))
       draw.SimpleText('Go Back', font, 24, 3 * (16 / font_size), Color(255, 255, 255))
     end
 
@@ -119,7 +119,7 @@ function PANEL:set_fullscreen(fullscreen)
 end
 
 function PANEL:get_menu_size()
-  return Font.scale(1280), Font.scale(900)
+  return math.scale(1280), math.scale(900)
 end
 
 vgui.Register('fl_admin_panel', PANEL, 'fl_base_panel')

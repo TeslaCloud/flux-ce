@@ -53,13 +53,13 @@ function InfoDisplay:draw(info)
     if info.min_percentage and info.min_percentage >= info.percentage then return 0 end
 
     local fa_icon = isstring(info.icon)
-    local size = Font.scale(info.size)
+    local size = math.scale(info.size)
     local x_pos, y_pos = last_x + margin, size + margin
     local circle_size = size * 0.5
     local circle_pos = x_pos + circle_size
     local font_size = size * 0.8
     local half_size = font_size * 0.5
-    local ox, oy = Font.scale(info.offset_x), Font.scale(info.offset_y)
+    local ox, oy = math.scale(info.offset_x), math.scale(info.offset_y)
 
     if fa_icon then
       FontAwesome:draw(info.icon, x_pos + circle_size - half_size + ox, margin + circle_size - half_size + oy, font_size, info.back_color)

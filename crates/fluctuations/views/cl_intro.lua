@@ -13,7 +13,7 @@ function PANEL:Init()
   hook.run('OnIntroPanelCreated', self)
 end
 
-local logo_w, logo_h = Font.scale(800), Font.scale(150)
+local logo_w, logo_h = math.scale(800), math.scale(150)
 local logo_data = {
   width = logo_w,
   height = logo_h,

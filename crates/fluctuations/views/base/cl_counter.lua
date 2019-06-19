@@ -6,7 +6,7 @@ PANEL.font = 'flRoboto'
 PANEL.color = Color('white')
 
 function PANEL:Init()
-  local fa_icon_size = Font.scale(16)
+  local fa_icon_size = math.scale(16)
 
   self.label = vgui.Create('DLabel', self)
   self.label:SetText(self.title)

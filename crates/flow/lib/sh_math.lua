@@ -108,3 +108,24 @@ function util.vector_in_poly(point, poly_vertices)
     return true
   end
 end
+
+do
+  local scale_factor_x = 1 / 1920
+  local scale_factor_y = 1 / 1080
+
+  function math.scale(size)
+    return math.floor(size * (ScrH() * scale_factor_y))
+  end
+
+  function math.scale_x(size)
+    return math.floor(size * (ScrW() * scale_factor_x))
+  end
+
+  function math.scale_size(x, y)
+    return math.scale_x(x), math.scale(y)
+  end
+
+  math.scale_y      = math.scale
+  math.scale_width  = math.scale_x
+  math.scale_height = math.scale
+end

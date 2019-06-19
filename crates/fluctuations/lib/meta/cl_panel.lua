@@ -11,11 +11,11 @@ function panel_meta:safe_remove()
 end
 
 function panel_meta:set_pos_ex(x, y)
-  self:SetPos(Font.scale(x), Font.scale(y))
+  self:SetPos(math.scale(x), math.scale(y))
 end
 
 function panel_meta:set_size_ex(w, h)
-  self:SetSize(Font.scale(w), Font.scale(h))
+  self:SetSize(math.scale(w), math.scale(h))
 end
 
 local model_panel = vgui.GetControlTable('DModelPanel')
