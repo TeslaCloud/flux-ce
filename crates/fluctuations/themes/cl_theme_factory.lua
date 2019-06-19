@@ -149,6 +149,7 @@ function THEME:PaintButton(panel, w, h)
   local text_x, text_y = offset, 0
   local icon_x, icon_y = 0, 0
   local text_w, text_h, icon_w, icon_h
+  local icon_size = panel.icon_size
 
   if panel.draw_background then
     surface.SetDrawColor(self:get_color('outline'))
@@ -169,7 +170,6 @@ function THEME:PaintButton(panel, w, h)
 
   if icon then
     local icon_text, text_font = FontAwesome:get(icon)
-    local icon_size = math.scale(panel.icon_size)
 
     icon_w, icon_h = util.text_size(icon_text, Font.size('flFontAwesome', icon_size))
     icon_x = (left and text_x or text_x + text_w)
