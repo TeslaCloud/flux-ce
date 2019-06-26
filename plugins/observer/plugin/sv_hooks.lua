@@ -19,6 +19,7 @@ function Observer:PlayerEnterNoclip(player)
   player:SetNoDraw(true)
   player:SetNotSolid(true)
   player:SetColor(Color(0, 0, 0, 0))
+  player:GodEnable()
 
   player:set_nv('observer', true)
 
@@ -44,6 +45,7 @@ function Observer:PlayerExitNoclip(player)
     player:SetNoDraw(false)
     player:SetNotSolid(false)
     player:SetColor(data.color)
+    player:GodDisable()
 
     if data.should_reset then
       timer.Simple(FrameTime(), function()
