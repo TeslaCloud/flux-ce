@@ -33,10 +33,12 @@ function Stamina:PlayerThink(player, cur_time)
     end
   else
     if player.was_running then
+      Chatbox.add_text(player, 'Was running, stopping')
       self:stop_running(player, true)
       player.was_running = false
       player.standing_since = cur_time
     elseif !player.stamina_regenerating and (cur_time - (player.standing_since or 0)) > regen_delay then
+      Chatbox.add_text(player, 'Regen started')
       self:stop_running(player)
     end
   end
@@ -70,6 +72,7 @@ function Stamina:KeyPress(player, key)
     if cur_stam < jump_penalty then return end
 
     self:set_stamina(player, cur_stam - jump_penalty)
+    self.stamina_regenerating = false
 
     player.jumped_at = CurTime()
   end
@@ -106,10 +109,12 @@ function Stamina:start_running(player, prevent_drain)
     hook.run_client(player, 'PlayerStartRunning', player)
   end
 
-  if !prevent_drain and !self.running[steam_id] then
+  if !prevent_drain then
+    self.running[steam_id] = true
+
     if !timer.Exists(id) then
       table.insert(self.timer_ids, id)
-
+      
       timer.Create(id, 0.2, 0, function()
         if IsValid(player) then
           local new_stam = player:get_nv('stamina', max_stamina) - 1 * drain_scale * (Plugin.call('StaminaAdjustDrainScale', player) or 1)
@@ -119,8 +124,6 @@ function Stamina:start_running(player, prevent_drain)
           if new_stam <= 0 then
             timer.Pause(id)
           end
-
-          self.running[steam_id] = true
         else
           timer.Remove(id)
           self.running[steam_id] = false
@@ -145,14 +148,15 @@ function Stamina:stop_running(player, prevent_regen)
     hook.run_client(player, 'PlayerStopRunning', player)
   end
 
-  if !prevent_regen and self.running[steam_id] != false then
+  if !prevent_regen then
+    self.running[steam_id] = false
+    player.stamina_regenerating = true
+
     if !timer.Exists(id) then
       table.insert(self.timer_ids, id)
 
       timer.Create(id, 0.2, 0, function()
         if IsValid(player) then
-          player.stamina_regenerating = true
-
           local new_stam = player:get_nv('stamina', max_stamina) + 1 * regen_scale * (Plugin.call('StaminaAdjustRegenScale', player) or 1)
 
           self:set_stamina(player, new_stam)
@@ -163,8 +167,6 @@ function Stamina:stop_running(player, prevent_regen)
         else
           timer.Remove(id)
         end
-
-        self.running[steam_id] = false
       end)
     else
       timer.UnPause(id)
