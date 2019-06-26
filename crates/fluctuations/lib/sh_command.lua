@@ -220,7 +220,7 @@ if SERVER then
       if IsValid(target) then
         return { target }
       elseif istable(target) and #target > 0 then
-        return target
+        return { target[1] }
       end
     end
 
