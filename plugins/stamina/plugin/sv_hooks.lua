@@ -71,6 +71,7 @@ function Stamina:KeyPress(player, key)
 
     self:set_stamina(player, cur_stam - jump_penalty)
     self.stamina_regenerating = false
+    timer.Pause('stam_regen_'..player:SteamID())
 
     player.jumped_at = CurTime()
   end
