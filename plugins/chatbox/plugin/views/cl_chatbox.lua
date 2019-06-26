@@ -2,7 +2,7 @@ local PANEL = {}
 PANEL.history = {}
 PANEL.last_pos = 0
 PANEL.is_open = false
-PANEL.padding = 8
+PANEL.padding = Theme.get_option('chatbox_padding', math.scale(8))
 
 function PANEL:Init()
   local w, h = self:GetWide(), self:GetTall()
@@ -228,7 +228,7 @@ function PANEL:create_message(message_data)
   local panel = vgui.Create('fl_chat_message', self)
   local half_padding = self.padding * 0.5
 
-  panel:SetSize(self:GetWide() - half_padding, self:GetWide() - half_padding) -- Width is placeholder and is later set by compiled message table.
+  panel:SetSize(self:GetWide() - self.padding * 2, self:GetWide() - self.padding * 2) -- Width is placeholder and is later set by compiled message table.
   panel:set_message(parsed)
 
   if self.is_open then

@@ -73,6 +73,7 @@ function Chatbox:OnThemeLoaded(current_theme)
   current_theme:set_option('chatbox_x', math.scale(8))
   current_theme:set_option('chatbox_y', scrh - current_theme:get_option('chatbox_height') - math.scale(32))
   current_theme:set_option('chatbox_fix_alignment', true)
+  current_theme:set_option('chatbox_padding', math.scale(8))
 
   local entry_height = current_theme:set_option('chatbox_text_entry_height', math.scale(32))
   local text_size = current_theme:set_option('chatbox_text_entry_text_size', entry_height * 0.75)

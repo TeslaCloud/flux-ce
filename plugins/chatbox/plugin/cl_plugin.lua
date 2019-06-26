@@ -50,7 +50,7 @@ function Chatbox.compile(msg_table)
           data[k] = t(v)
         end
 
-        local wrapped = util.wrap_text(v, font, Chatbox.width, cur_x)
+        local wrapped = util.wrap_text(v, font, Chatbox.width - Theme.get_option('chatbox_padding', math.scale(8)) * 4, cur_x)
         local line_count = #wrapped
 
         for k2, v2 in ipairs(wrapped) do
