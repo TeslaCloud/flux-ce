@@ -16,7 +16,7 @@ function Inventory:PlayerSelectSlot(player, slot)
 
     if !player.next_slot_click or player.next_slot_click <= cur_time then
       if item_table then
-        if item_table.ClassName == 'ItemWeapon' then
+        if item_table.class_name == 'ItemWeapon' or item_table.class_name == 'ItemThrowable' then
           local weapon = player:GetWeapon(item_table.weapon_class)
 
           if IsValid(weapon) then
@@ -30,7 +30,7 @@ function Inventory:PlayerSelectSlot(player, slot)
               self:popup_hotbar()
             end
           end
-        elseif item_table.ClassName != 'ItemEquipable' and item_table.on_use then
+        elseif item_table.class_name != 'ItemEquipable' and item_table.on_use then
           item_table:do_menu_action('on_use')
 
           self:popup_hotbar()
