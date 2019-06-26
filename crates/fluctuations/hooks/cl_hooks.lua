@@ -207,51 +207,39 @@ end
 
 function GM:HUDDrawTargetID()
   if IsValid(PLAYER) and PLAYER:Alive() then
-    local entities = ents.FindInCone(EyePos(), EyeVector(), 256, 0.98) -- 0.98 gives approximately 40 degrees
-    local ent
-    local dist
     local client_pos = EyePos()
+    local trace = PLAYER:GetEyeTraceNoCursor()
+    local trace_ent = trace.Entity
+    local ent, dist, center_distance
 
-    for k, v in ipairs(entities) do
-      if !IsValid(v) then continue end
+    if IsValid(trace_ent) then
+      dist = trace_ent:EyePos():Distance(client_pos)
+      ent = trace_ent
+    else
+      local entities = ents.FindInCone(client_pos, trace.Normal, 512, 0.98) -- 0.98 gives approximately 10 degrees
 
-      local ent_distance = v:GetPos():Distance(client_pos)
+      for k, v in ipairs(entities) do
+        if !IsValid(v) then continue end
+        
+        local pos = v:EyePos()
+        local screen_pos = pos:ToScreen()
+        local x, y = screen_pos.x, screen_pos.y
+        local to_center = math.distance(x, y, ScrC())
 
-      if !dist then
-        dist = ent_distance
-        ent = v
-      end
-
-      if ent_distance < dist then
-        dist = ent_distance
-        ent = v
-      end
-    end
-
-    if !IsValid(ent) then
-      local trace = PLAYER:GetEyeTraceNoCursor()
-      local trace_ent = trace.Entity
-
-      if IsValid(trace_ent) then
-        dist = trace_ent:GetPos():Distance(client_pos)
-        ent = trace_ent
+        if !center_distance or to_center < center_distance then
+          center_distance = to_center
+          dist = pos:Distance(client_pos)
+          ent = v
+        end
       end
     end
 
     if IsValid(ent) then
-      local pos
-
-      if ent:IsPlayer() then
-        local bone = ent:LookupBone('ValveBiped.Bip01_Head1')
-
-        pos = bone and ent:GetBonePosition(bone) or ent:GetPos()
-      else
-        pos = ent:GetPos()
-      end
+      local pos = ent:EyePos()
 
       if util.vector_obstructed(client_pos, pos, { ent, PLAYER }) then return end
 
-      local screen_pos = (pos + Vector(0, 0, 16)):ToScreen()
+      local screen_pos = (pos + Vector(0, 0, 10 + dist * 0.075)):ToScreen()
       local x, y = screen_pos.x, screen_pos.y
 
       if ent:IsPlayer() and ent:has_initialized() and ent:Alive() then
@@ -266,21 +254,12 @@ function GM:HUDDrawTargetID()
 end
 
 function GM:GetPlayerDrawInfo(player, x, y, distance, lines)
-  if distance < 640 then
-    local alpha = 255
-
-    if distance > 500 then
-      local d = distance - 500
-      alpha = math.Clamp((255 * (140 - d) / 140), 0, 255)
-    end
-
-    lines['name'] = {
-      text = player:name(),
-      font = Theme.get_font('tooltip_large'),
-      color = Color(255, 255, 255, alpha),
-      priority = 100
-    }
-  end
+  lines['name'] = {
+    text = player:name(),
+    font = Theme.get_font('tooltip_large'),
+    color = Color('white'),
+    priority = 100
+  }
 end
 
 function GM:DrawPlayerTargetID(player, x, y, distance)
@@ -289,15 +268,27 @@ function GM:DrawPlayerTargetID(player, x, y, distance)
   hook.run('GetPlayerDrawInfo', player, x, y, distance, lines)
   hook.run('PrePlayerDrawInfo', player, x, y, distance, lines)
 
+  local alpha = 255
+
+  if distance < 640 then
+    if distance > 500 then
+      local d = distance - 500
+
+      alpha = math.Clamp(255 * (140 - d) / 140, 0, 255)
+    end
+  else
+    return
+  end
+
   for k, v in SortedPairsByMemberValue(lines, 'priority') do
     local font = v.font or Theme.get_font('tooltip_small')
-    local color = v.color or Color('white')
+    local color = v.color:alpha(alpha) or Color(255, 255, 255, alpha)
     local text = v.text
     local wrapped = util.wrap_text(text, font, ScrW() * 0.33, 0)
 
     for k1, v1 in pairs(wrapped) do
       local w, h = util.text_size(v1, font)
-      draw.SimpleText(v1, font, x - w * 0.5 + (v.offset_x or 0), y + (v.offset_y or 0), color)
+      draw.SimpleTextOutlined(v1, font, x - w * 0.5 + (v.offset_x or 0), y + (v.offset_y or 0), color, nil, nil, 1, Color(0, 0, 0, alpha))
 
       y = y + h + 1
     end
