@@ -129,30 +129,28 @@ function Items:CanPlayerDropItem(player, item_table)
   end
 end
 
-function Items:PostCharacterLoaded(player, character)
-  local ply_inv = player:get_inventory()
+function Items:PostPlayerSpawn(player)
+  timer.Simple(0, function()
+    local ply_inv = player:get_items()
 
-  for slot, ids in ipairs(ply_inv) do
-    for k, v in ipairs(ids) do
+    for k, v in ipairs(ply_inv) do
       local item_table = Item.find_instance_by_id(v)
 
       if istable(item_table) then
         item_table:on_loadout(player)
       end
     end
-  end
+  end)
 end
 
 function Items:PreSaveCharacter(player, index)
-  local ply_inv = player:get_inventory()
+  local ply_inv = player:get_items()
 
-  for k, v in ipairs(player:get_nv('inventory', {})) do
-    for k1, v1 in ipairs(v) do
-      for k2, v2 in ipairs(v1) do
-        local item_table = Item.find_instance_by_id(v2)
+  for k, v in ipairs(ply_inv) do
+    local item_table = Item.find_instance_by_id(v2)
 
-        item_table:on_save(player)
-      end
+    if istable(item_table) then
+      item_table:on_save(player)
     end
   end
 end
