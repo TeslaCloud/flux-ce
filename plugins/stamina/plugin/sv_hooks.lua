@@ -50,12 +50,16 @@ function Stamina:PlayerThink(player, cur_time)
     end
   end
 
+  if cur_stam < jump_penalty then
+    player:SetJumpPower(1)
+  else
+    player:SetJumpPower(Config.get('jump_power'))
+  end
+
   if cur_stam <= 1 then
     player:SetRunSpeed(player:GetWalkSpeed())
-    player:SetJumpPower(0)
   else
     player:SetRunSpeed(Config.get('run_speed'))
-    player:SetJumpPower(Config.get('jump_power'))
   end
 end
 
@@ -63,7 +67,7 @@ function Stamina:KeyPress(player, key)
   if key == IN_JUMP and player:OnGround() and player:GetMoveType() == MOVETYPE_WALK then
     local cur_stam = player:get_nv('stamina', max_stamina)
 
-    if cur_stam < 1 then return end
+    if cur_stam < jump_penalty then return end
 
     self:set_stamina(player, cur_stam - jump_penalty)
 
