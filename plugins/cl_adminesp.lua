@@ -10,7 +10,8 @@ do
   local color_blue = Color(0, 0, 255)
 
   function PLUGIN:HUDPaint()
-    if IsValid(PLAYER) and PLAYER:Alive() and PLAYER:GetMoveType() == MOVETYPE_NOCLIP and can('admin_esp') then
+    if IsValid(PLAYER) and PLAYER:Alive() and PLAYER:GetMoveType() == MOVETYPE_NOCLIP and can('admin_esp') and
+    !PLAYER:InVehicle() then
       local clientPos = PLAYER:GetPos()
 
       for k, v in ipairs(_player.GetAll()) do
