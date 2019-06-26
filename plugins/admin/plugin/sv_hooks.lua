@@ -21,6 +21,12 @@ function Bolt:CanTool(player, trace, tool_name)
   end
 end
 
+function Bolt:PlayerCanHearPlayersVoice(player, talker)
+  if !talker:can('voice') then
+    return false
+  end
+end
+
 function Bolt:PlayerCreated(player, record)
   record.banned = record.banned or false
 end
