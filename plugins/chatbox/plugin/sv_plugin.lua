@@ -72,26 +72,39 @@ function Chatbox.add_text(listeners, ...)
     end
   end
 
+  local last_string = false
+
   -- Compile the initial message data table.
   for k, v in ipairs({ ... }) do
     if isstring(v) then
-      table.insert(message_data.data, v)
+      if !last_string then
+        table.insert(message_data.data, v)
+      else
+        local str = table.last(message_data.data)
+        message_data.data[#message_data.data] = str..v
+      end
 
       if k == 1 then
         message_data.text = v
       end
-    elseif isnumber(v) then
-      table.insert(message_data.data, v)
-    elseif IsColor(v) then
-      table.insert(message_data.data, v)
-    elseif istable(v) then
-      if !v.is_data and !client_mode then
-        table.merge(message_data, v)
-      else
+
+      last_string = true
+    else
+      last_string = false
+
+      if isnumber(v) then
+        table.insert(message_data.data, v)
+      elseif IsColor(v) then
+        table.insert(message_data.data, v)
+      elseif istable(v) then
+        if !v.is_data and !client_mode then
+          table.merge(message_data, v)
+        else
+          table.insert(message_data.data, v)
+        end
+      elseif IsValid(v) then
         table.insert(message_data.data, v)
       end
-    elseif IsValid(v) then
-      table.insert(message_data.data, v)
     end
   end
 
