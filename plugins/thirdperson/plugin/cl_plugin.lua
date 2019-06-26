@@ -70,4 +70,4 @@ function ThirdPerson:CalcView(player, pos, angles, fov)
   return view
 end
 
-Flux.Binds:add_bind('ToggleThirdPerson', 'fl_third_person', KEY_X)
+Flux.Binds:add_bind('ToggleThirdPerson', 'fl_third_person', KEY_P)
