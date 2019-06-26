@@ -9,16 +9,14 @@ function Inventory:PlayerBindPress(player, bind, pressed)
 end
 
 function Inventory:PlayerSelectSlot(player, slot)
-  if slot > 1 and slot < 9 then
+  if slot >= 1 and slot < 9 then
     local cur_time = CurTime()
     local instance_id = player:get_first_in_slot(slot, 1)
     local item_table = Item.find_by_instance_id(instance_id)
 
     if !player.next_slot_click or player.next_slot_click <= cur_time then
-      self:popup_hotbar()
-
       if item_table then
-        if item_table.weapon_class then
+        if item_table.ClassName == 'ItemWeapon' then
           local weapon = player:GetWeapon(item_table.weapon_class)
 
           if IsValid(weapon) then
@@ -28,10 +26,14 @@ function Inventory:PlayerSelectSlot(player, slot)
 
             if IsValid(active_weapon) and active_weapon != weapon then
               surface.PlaySound('common/wpn_select.wav')
+
+              self:popup_hotbar()
             end
           end
-        elseif item_table.on_use then
+        elseif item_table.ClassName != 'ItemEquipable' and item_table.on_use then
           item_table:do_menu_action('on_use')
+
+          self:popup_hotbar()
         end
       else
         local weapon = player:GetWeapon('weapon_fists')
@@ -43,6 +45,8 @@ function Inventory:PlayerSelectSlot(player, slot)
 
           if IsValid(active_weapon) and active_weapon != weapon then
             surface.PlaySound('common/wpn_hudoff.wav')
+
+            self:popup_hotbar()
           end
         end
       end
