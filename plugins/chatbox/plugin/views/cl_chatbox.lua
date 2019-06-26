@@ -24,6 +24,7 @@ function PANEL:Init()
   self.text_entry = vgui.Create('fl_text_entry', self)
   self.text_entry:SetText('')
   self.text_entry:SetSize(1, 1)
+  self.text_entry:set_limit(Config.get('max_message_length', 512))
   self.text_entry.history = {}
   self.text_entry.last_index = 0
 

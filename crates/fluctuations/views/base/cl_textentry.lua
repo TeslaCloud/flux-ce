@@ -14,18 +14,23 @@ function PANEL:Paint(w, h)
   end
 end
 
-function PANEL:Think()
+function PANEL:AllowInput(char)
   local text = self:GetValue()
 
   if text and text != '' then
-    if utf8.len(text) > self.limit then
-      self:SetValue(string.utf8sub(text, 1, self.limit))
+    print(utf8.len(text), self:get_limit())
+    if self:get_limit() != 0 and utf8.len(text) >= self:get_limit() then
+      return true
     end
   end
 end
 
 function PANEL:set_limit(limit)
-  PANEL.limit = math.abs(limit or 0)
+  self.limit = math.abs(limit or 0)
+end
+
+function PANEL:get_limit()
+  return self.limit or 0
 end
 
 vgui.Register('fl_text_entry', PANEL, 'DTextEntry')

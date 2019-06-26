@@ -27,3 +27,11 @@ configs:
     min_value: 1
     max_value: 128
     default_value: 26
+  max_message_length:
+    name: Maximum Message Length
+    description: How long the chat message can be.
+    category: chatbox
+    type: number
+    min_value: 64
+    max_value: 2048
+    default_value: 512
