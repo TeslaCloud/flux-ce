@@ -33,12 +33,10 @@ function Stamina:PlayerThink(player, cur_time)
     end
   else
     if player.was_running then
-      Chatbox.add_text(player, 'Was running, stopping')
       self:stop_running(player, true)
       player.was_running = false
       player.standing_since = cur_time
     elseif !player.stamina_regenerating and (cur_time - (player.standing_since or 0)) > regen_delay then
-      Chatbox.add_text(player, 'Regen started')
       self:stop_running(player)
     end
   end
