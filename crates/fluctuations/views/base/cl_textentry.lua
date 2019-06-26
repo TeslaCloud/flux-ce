@@ -18,7 +18,6 @@ function PANEL:AllowInput(char)
   local text = self:GetValue()
 
   if text and text != '' then
-    print(utf8.len(text), self:get_limit())
     if self:get_limit() != 0 and utf8.len(text) >= self:get_limit() then
       return true
     end
