@@ -200,7 +200,7 @@ do
       if r:starts('#') then
         return util.hex_to_color(r)
       elseif colors[r:lower()] then
-        return colors[r:lower()]
+        return colors[r:lower()]:alpha(g)
       else
         return Color(255, 255, 255)
       end
@@ -258,7 +258,16 @@ function color_meta:lighten(amt)
 end
 
 function color_meta:alpha(amt)
-  return ColorAlpha(self, amt)
+  return ColorAlpha(self, amt or 255)
+end
+
+function LerpColor(fraction, color_from, color_to)
+  return Color(
+    Lerp(fraction, color_from.r, color_to.r),
+    Lerp(fraction, color_from.g, color_to.g),
+    Lerp(fraction, color_from.b, color_to.b),
+    Lerp(fraction, color_from.a, color_to.a)
+  )
 end
 
 function util.text_color_from_base(base_color)
