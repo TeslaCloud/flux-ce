@@ -209,16 +209,17 @@ function util.wrap_text(text, font, width, initial_width)
       end
     else -- The width of the word is MORE than what we have remaining.
       if w > width then -- The width is more than total width we have available.
-        for _, v2 in ipairs(v:split()) do
-          local char_width, _ = util.text_size(v2, font)
+        for i = 1, utf8.len(v) do
+          local char = v:utf8sub(i, i)
+          local char_width, _ = util.text_size(char, font)
 
           remain = width - cur_width
 
           if (char_width + dash_width + space_width) < remain then
-            current_word = current_word..v2
+            current_word = current_word..char
             cur_width = cur_width + char_width
           else
-            current_word = current_word..v2..'-'
+            current_word = current_word..char..'-'
 
             table.insert(output, current_word)
 
