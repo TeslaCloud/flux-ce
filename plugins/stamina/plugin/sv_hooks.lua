@@ -71,10 +71,7 @@ function Stamina:KeyPress(player, key)
 
     self:set_stamina(player, cur_stam - jump_penalty)
 
-    if !player.was_running and !self.running[player:SteamID()] then
-      self.running[player:SteamID()] = true
-      player.jumped_at = CurTime()
-    end
+    player.jumped_at = CurTime()
   end
 end
 
@@ -163,12 +160,11 @@ function Stamina:stop_running(player, prevent_regen)
           if new_stam >= max_stamina then
             timer.Pause(id)
           end
-
-          self.running[steam_id] = false
         else
           timer.Remove(id)
-          self.running[steam_id] = false
         end
+
+        self.running[steam_id] = false
       end)
     else
       timer.UnPause(id)
