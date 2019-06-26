@@ -19,10 +19,10 @@ function Stamina:HUDPaint()
     local cx, cy = ScrC()
     local gx, gy = Flux.global_ui_offset()
     local x, y = gx + cx - w * 0.5, gy + cy - h * 0.5 + math.scale(300)
-    local cur_modifier = 255 * -(percentage - 1)
+
     cur_wide = Lerp(frame_time, cur_wide, w * percentage)
 
     draw.textured_rect(Theme.get_material('gradient'), x - 2, y - 2, w + 4, h + 4, Color(0, 0, 0, 160 * cur_alpha))
-    draw.RoundedBox(0, x, y, cur_wide, h, Color(255 - cur_modifier * 0.25, 255 - cur_modifier * 0.75, 255 * percentage, 175 * cur_alpha))
+    draw.RoundedBox(0, x, y, cur_wide, h, LerpColor(1 - percentage, Color(0, 225, 0), Color(200, 0, 0)):alpha(200 * cur_alpha))
   end
 end
