@@ -26,7 +26,7 @@ function Stamina:PostPlayerSpawn(player)
 end
 
 function Stamina:PlayerThink(player, cur_time)
-  if player:running() then
+  if player:running() and player:OnGround() then
     if !player.was_running then
       self:start_running(player)
       player.was_running = true
