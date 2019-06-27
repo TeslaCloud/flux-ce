@@ -65,7 +65,7 @@ do
 
       local area_render_color = area_colors[mode.area_type]
 
-      if cache then
+      if cache and areas_count > 0 then
         for k, v in ipairs(cache) do
           local p, ap = v[1], v[3]
 
