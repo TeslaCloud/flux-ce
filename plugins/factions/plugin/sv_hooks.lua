@@ -18,19 +18,14 @@ end
 
 function Factions:OnActiveCharacterSet(player, char)
   player:set_nv('faction', char.faction)
+
+  local player_faction = player:get_faction()
+
+  player:SetTeam(player_faction.team_id or 1)
 end
 
 function Factions:PostCreateCharacter(player, char_id, char, char_data)
   char.faction = char_data.faction or 'player'
-end
-
-function Factions:SaveCharacterData(player, char)
-  char.faction = char.faction
-end
-
-function Factions:RestoreCharacter(player, char_id, char)
-  char.faction = char.faction
-  char.char_class = data.char_class or ''
 end
 
 function Factions:PlayerRestored(player, record)
