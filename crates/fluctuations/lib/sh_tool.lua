@@ -21,7 +21,7 @@ Pipeline.register('tool', function(id, file_name, pipe)
 
   Flux.Tool.stored[id] = table.Copy(TOOL)
 
-  Flux.dev_print('Registering Tool: '..id)
+  add_debug_metric('tools', id)
 
   TOOL = nil
 end)

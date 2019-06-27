@@ -33,3 +33,5 @@ else
   Crate:include 'flux'
   MsgC(Color(0, 255, 100, 255), 'Boot complete in '..math.Round(os.clock() - start_time, 3)..' second(s)\n')
 end
+
+print_debug_metrics()

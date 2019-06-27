@@ -11,7 +11,8 @@ Crate:describe(function(s)
     'lib/sh_aliases.lua', 'lib/sh_string.lua', 'lib/sh_utils.lua', 'lib/sh_color.lua',
     'lib/sh_class.lua', 'lib/sh_library.lua', 'lib/sh_unit.lua', 'lib/sh_table.lua',
     'lib/sh_math.lua', 'lib/sh_player.lua', 'lib/sh_file.lua', 'lib/sh_wrappers.lua',
-    'lib/cl_utils.lua', 'lib/inflector/sh_inflector.lua', 'lib/inflector/sh_inflections.lua'
+    'lib/cl_utils.lua', 'lib/inflector/sh_inflector.lua', 'lib/inflector/sh_inflections.lua',
+    'lib/sh_debug.lua'
   }
   s.global      = 'Flow'
   s.website     = 'https://teslacloud.net'

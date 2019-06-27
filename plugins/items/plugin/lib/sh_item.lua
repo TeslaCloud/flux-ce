@@ -50,7 +50,7 @@ function Item.register(id, data)
     id = data.name:to_id()
   end
 
-  Flux.dev_print('Registering item: '..tostring(id))
+  add_debug_metric('items', tostring(id))
 
   data.id = id
   data.name = data.name or 'Unknown Item'

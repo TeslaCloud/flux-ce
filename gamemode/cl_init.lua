@@ -12,3 +12,5 @@ else
 end
 
 Font.create_fonts()
+
+print_debug_metrics()
