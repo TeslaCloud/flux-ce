@@ -141,6 +141,8 @@ function Chatbox.compile(msg_table)
 
   compiled.total_height = math.max(total_height, compiled.total_height)
 
+  hook.run('ChatboxMessageCompiled', compiled)
+
   return compiled
 end
 

@@ -97,6 +97,20 @@ function Chatbox:ChatboxTextEntered(text)
   Chatbox.hide()
 end
 
+function Chatbox:ChatboxMessageCompiled(compiled)
+  local to_print = {}
+
+  for k, v in pairs(compiled) do
+    if istable(v) and v.text or IsColor(v) then
+      table.insert(to_print, IsColor(v) and v or v.text)
+    end
+  end
+
+  table.insert(to_print, '\n')
+
+  MsgC(unpack(to_print))
+end
+
 Cable.receive('fl_chat_message_add', function(message_data)
   if !IsValid(Chatbox.panel) then
     if Theme.initialized() then
