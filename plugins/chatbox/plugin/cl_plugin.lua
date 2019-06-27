@@ -174,6 +174,8 @@ function Chatbox.hide()
 
     Chatbox.panel:SetMouseInputEnabled(false)
     Chatbox.panel:SetKeyboardInputEnabled(false)
+
+    hook.run('ChatTextChanged', '')
   end
 end
 
