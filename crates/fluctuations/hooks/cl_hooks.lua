@@ -383,7 +383,18 @@ function GM:PlayerBindPress(player, bind, pressed)
 end
 
 function GM:ContextMenuOpen()
-  return true --PLAYER:can('context_menu')
+  if PLAYER:can('context_menu') then
+    if !IsValid(g_ContextMenu) then
+      CreateContextMenu()
+    end
+  else
+    if IsValid(g_ContextMenu) then
+      g_ContextMenu:safe_remove()
+    end
+  end
+
+
+  return true
 end
 
 function GM:SoftUndo(player)
