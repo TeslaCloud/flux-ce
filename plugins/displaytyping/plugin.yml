@@ -1,0 +1,5 @@
+name: Display Typing
+description: Displays when a character is typing and what exactly.
+author: TeslaCloud Studios
+depends:
+  - chatbox

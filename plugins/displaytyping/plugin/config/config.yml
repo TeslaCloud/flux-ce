@@ -1,0 +1,10 @@
+categories:
+  display_typing:
+    name: Disply Typing
+    description: Display Typing plugin configuration
+configs:
+  display_exact_message:
+    name: Display Exact Message
+    description: Display full message that the player is currently typing.
+    category: display_typing
+    type: bool
