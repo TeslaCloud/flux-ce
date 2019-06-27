@@ -300,3 +300,11 @@ function i(pattern)
     return p
   end
 end
+
+function string.fmt(format, data)
+  data = istable(data) and data or {}
+
+  return string.gsub(format, '{([%w_]+)}', function(hit)
+    return data[hit] or ''
+  end)
+end
