@@ -45,5 +45,5 @@ else
     move_data:SetForwardSpeed(move_data:GetMaxSpeed())
   end
 
-  Flux.Binds:add_bind('ToggleAutoWalk', 'toggleautowalk', KEY_T)
+  Flux.Binds:add_bind('ToggleAutoWalk', 'toggleautowalk', KEY_N)
 end
