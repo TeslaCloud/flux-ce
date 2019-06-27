@@ -78,8 +78,8 @@ function PANEL:rebuild()
   local player = self.player
 
   self.avatar_panel = vgui.Create('fl_avatar_panel', self)
-  self.avatar_panel:set_size_ex(32, 32)
-  self.avatar_panel:SetPos(4, 4)
+  self.avatar_panel:set_size_ex(math.scale_size(32, 32))
+  self.avatar_panel:SetPos(math.scale_size(4, 4))
   self.avatar_panel:set_player(player, 64)
 
   local text = player:name()
@@ -88,7 +88,7 @@ function PANEL:rebuild()
 
   self.name_label = vgui.Create('DLabel', self)
   self.name_label:SetText(text)
-  self.name_label:SetPos(math.scale(32) + 16, self:GetTall() * 0.5 - text_h * 0.6)
+  self.name_label:SetPos(math.scale(48), math.scale(4))
   self.name_label:SetFont(font)    
   self.name_label:SetTextColor(Theme.get_color('text'))
   self.name_label:SizeToContents()
