@@ -10,7 +10,7 @@ local function clamp_position_to_screen(x, y, text_w, text_h)
 end
 
 function DisplayTyping:draw_player_typing_text(player, text, ply_pos, dist)
-  local hide_text = Config.get('display_exact_message') == true
+  local hide_text = Config.get('display_exact_message') == false
 
   if hide_text then
     text = hook.Run('DisplayTypingTextType', player, text) or 'TYPING...'
