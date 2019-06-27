@@ -1,9 +1,13 @@
 local player_meta = FindMetaTable('Player')
 
 function player_meta:save_player()
-  hook.run('SavePlayerData', self)
+  if hook.run('PreSavePlayerData', self) == true then return end
 
-  if self.record then self.record:save() end
+  if self.record then
+    self.record:save()
+  end
+
+  hook.run('PostSavePlayerData', self)
 end
 
 function player_meta:set_data(data)

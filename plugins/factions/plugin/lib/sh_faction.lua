@@ -87,8 +87,6 @@ do
 
     if char then
       char.faction = id
-
-      Characters.save(self, char)
     end
 
     if old_faction then

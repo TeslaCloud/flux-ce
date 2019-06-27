@@ -75,8 +75,6 @@ do
 
       local char = self:get_character()
       char.real_inventory[inv_type] = new_inv
-      Characters.save(self, char)
-
       self:set_nv('inventory', char.real_inventory)
     end
 

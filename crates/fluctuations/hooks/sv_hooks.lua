@@ -143,10 +143,13 @@ function GM:PlayerDeathThink(player)
 end
 
 function GM:PlayerDisconnected(player)
-  player:save_player()
+  if player.should_save_data != false then
+    player:save_player()
+  end
+
   Cable.send(nil, 'fl_player_disconnected', player:EntIndex())
 
-  Log:notify(player:name()..' ('..player:GetUserGroup()..') has disconnected from the server.', { action = 'player_events' })
+  Log:notify(player:name()..' has disconnected from the server.', { action = 'player_events' })
 end
 
 function GM:EntityRemoved(entity)

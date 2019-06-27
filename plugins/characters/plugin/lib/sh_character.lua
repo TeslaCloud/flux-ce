@@ -100,27 +100,21 @@ if SERVER then
     if !IsValid(player) or !istable(character) or hook.run('PreSaveCharacter', player, character) == false then return end
 
     hook.run('SaveCharacterData', player, character)
-      player.record:save()
-    hook.run('PostSaveCharacter', player, character)
+
+    player:save_player()
   end
 
   function Characters.set_name(player, char, new_name)
     if char then
       char.name = new_name or char.name
-
       player:set_nv('name', char.name)
-
-      Characters.save(player, char)
     end
   end
 
   function Characters.set_desc(player, char, new_desc)
     if char then
       char.phys_desc = new_desc or char.phys_desc
-
       player:set_nv('phys_desc', char.phys_desc)
-
-      Characters.save(player, char)
     end
   end
 
@@ -130,8 +124,6 @@ if SERVER then
 
       player:set_nv('model', char.model)
       player:SetModel(char.model)
-
-      Characters.save(player, char)
     end
   end
 

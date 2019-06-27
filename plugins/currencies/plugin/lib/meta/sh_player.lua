@@ -35,8 +35,6 @@
           end
         end
 
-        Characters.save(self, char)
-
         self:set_nv('fl_currencies', currency_table)
 
         hook.run('PlayerMoneyChanged', self, currency, value, old_value)

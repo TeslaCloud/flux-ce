@@ -19,6 +19,7 @@ end
 
 function Characters:PlayerDisconnected(player)
   player:save_character()
+  player.should_save_data = false
 end
 
 function Characters:PlayerRestored(player)
@@ -65,5 +66,9 @@ function Characters:OnActiveCharacterSet(player, character)
 end
 
 function Characters:OnCharacterChange(player, old_char, new_char_id)
+  player:save_character()
+end
+
+function Characters:PlayerOneMinute(player)
   player:save_character()
 end
