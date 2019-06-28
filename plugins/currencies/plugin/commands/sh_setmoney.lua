@@ -4,7 +4,7 @@ COMMAND.description = 'set_money.description'
 COMMAND.syntax = 'set_money.syntax'
 COMMAND.permission = 'moderator'
 COMMAND.category = 'categories.character_management'
-COMMAND.arguments = 3
+COMMAND.arguments = 2
 COMMAND.player_arg = 1
 COMMAND.aliases = { 'setcash', 'settokens' }
 
@@ -28,19 +28,19 @@ function COMMAND:on_run(player, targets, amount, currency)
   end
 
   amount = math.max(0, amount)
+  currency = currency or Config.get('default_currency')
 
-  local currency_data = Currencies:find_currency(currency)
+  if !Currencies:find_currency(currency) then
+    currency = Config.get('default_currency')
 
-  if !currency_data then
-    currency_data = Currencies:find_currency(Config.get('default_currency'))
-
-    if !currency_data then
+    if !Currencies:find_currency(currency) then
       player:notify('currency.notify.invalid_currency')
 
       return
     end
   end
 
+  local currency_data = Currencies:find_currency(currency)
 
   player:notify('set_money.message', { util.player_list_to_string(targets), amount, currency_data.name })
 

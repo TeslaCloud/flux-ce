@@ -3,7 +3,7 @@ COMMAND.name = 'GiveMoney'
 COMMAND.description = 'give_money.description'
 COMMAND.syntax = 'give_money.syntax'
 COMMAND.category = 'categories.general'
-COMMAND.arguments = 2
+COMMAND.arguments = 1
 COMMAND.aliases = { 'givecash', 'givetokens' }
 
 function COMMAND:get_description()
@@ -28,6 +28,7 @@ function COMMAND:on_run(player, amount, currency)
   end
 
   amount = math.max(0, amount)
+  currency = currency or Config.get('default_currency')
 
   if !Currencies:find_currency(currency) then
     currency = Config.get('default_currency')
