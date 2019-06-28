@@ -41,16 +41,3 @@ function DisplayTyping:DrawPlayerTargetID(player)
   end
 end
 
-function DisplayTyping:DisplayTypingTextType(player, text)
-  if text:starts('/me') then
-    return t'display_typing.performing'
-  elseif text:starts('/w') then
-    return t'display_typing.whispering'
-  elseif text:starts('/y') then
-    return t'display_typing.yelling'
-  elseif !text:is_command() then
-    return t'display_typing.talking'
-  end
-
-  return t'display_typing.typing'
-end
