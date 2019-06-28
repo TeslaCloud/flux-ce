@@ -179,7 +179,7 @@ function Characters:AddCharacterCreationMenuStages(panel)
   panel:add_stage('char_create.general')
 end
 
-function Characters:GetPlayerDrawInfo(player, x, y, distance, lines)
+function Characters:GetDrawPlayerInfo(player, x, y, distance, lines)
   lines['desc'] = {
     text = player:get_phys_desc(),
     font = Theme.get_font('tooltip_small'),

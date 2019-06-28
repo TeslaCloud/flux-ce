@@ -253,7 +253,7 @@ function GM:HUDDrawTargetID()
   end
 end
 
-function GM:GetPlayerDrawInfo(player, x, y, distance, lines)
+function GM:GetDrawPlayerInfo(player, x, y, distance, lines)
   lines['name'] = {
     text = player:name(),
     font = Theme.get_font('tooltip_large'),
@@ -265,8 +265,9 @@ end
 function GM:DrawPlayerTargetID(player, x, y, distance)
   local lines = {}
 
-  hook.run('GetPlayerDrawInfo', player, x, y, distance, lines)
-  hook.run('PrePlayerDrawInfo', player, x, y, distance, lines)
+  hook.run('GetDrawPlayerInfo', player, x, y, distance, lines)
+
+  if hook.run('PreDrawPlayerInfo', player, x, y, distance, lines) == false then return end
 
   local alpha = 255
 
