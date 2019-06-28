@@ -17,7 +17,7 @@ function DisplayTyping:HUDPaint()
 
     if dist > max_distance or util.vector_obstructed(PLAYER:EyePos(), v:EyePos(), { PLAYER, v }) then continue end
 
-    local text = v:get_nv('chat_text', 'test')
+    local text = v:get_nv('chat_text', '')
 
     if text != '' then
       local text_len = utf8.len(text)
