@@ -1,6 +1,6 @@
-local margin = 48
-local max_distance = 512 ^ 2
-local fade_distance = 400 ^ 2
+local margin = math.scale(48)
+local max_distance = 350 ^ 2
+local fade_distance = 200 ^ 2
 local color_white = Color(255, 255, 255)
 local color_black = Color(0, 0, 0)
 
@@ -11,20 +11,22 @@ end
 
 function DisplayTyping:draw_player_typing_text(player, text, ply_pos, dist)
   local hide_text = Config.get('display_exact_message') == false
+  local mult = hook.Run('DisplayTypingAdjustFadeoffMultiplier', player, text) or 1
 
   if hide_text then
-    text = hook.Run('DisplayTypingTextType', player, text) or 'TYPING...'
+    text = hook.Run('DisplayTypingTextType', player, text) or t'display_typing.typing'
   end
 
-  local mult = hook.Run('DisplayTypingAdjustFadeoffMultiplier', player, text) or 1
   local md, fd = max_distance * mult, fade_distance * mult
   local dist_diff = md - fd
 
-  local pos = ply_pos + Vector(0, 0, 90)
+  local pos = ply_pos + Vector(0, 0, 10 + math.sqrt(dist) * 0.09)
   local screen_pos = pos:ToScreen()
+
   local scrw, scrh = ScrW(), ScrH()
-  local font = Theme.get_font('text_normal')
+  local font = Theme.get_font('menu_large')
   local text_w, text_h = util.text_size(text, font)
+
   local x, y = clamp_position_to_screen(screen_pos.x, screen_pos.y, text_w, text_h)
   local alpha = 255
 
@@ -39,5 +41,5 @@ function DisplayTyping:draw_player_typing_text(player, text, ply_pos, dist)
     x, y = clamp_position_to_screen(screen_pos.x, screen_pos.y, text_w, text_h)
   end
 
-  draw.SimpleTextOutlined(text, font, x, y, ColorAlpha(color_white, alpha), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, color_black)
+  draw.SimpleTextOutlined(text, font, x, y, ColorAlpha(color_white, alpha), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, ColorAlpha(color_black, alpha))
 end

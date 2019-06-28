@@ -1,4 +1,4 @@
-local max_distance = 512 ^ 2
+local max_distance = 350 ^ 2
 
 function DisplayTyping:ChatTextChanged(new_text)
   Cable.send('display_typing_text_changed', new_text)
@@ -7,37 +7,26 @@ end
 function DisplayTyping:HUDPaint()
   if !IsValid(PLAYER) then return end
 
-  local local_pos = PLAYER:GetPos()
+  local local_pos = PLAYER:EyePos()
 
   for k, v in ipairs(player.all()) do
     if v == PLAYER then continue end
 
-    local ply_pos = v:GetPos()
+    local ply_pos = v:EyePos()
     local dist = local_pos:DistToSqr(ply_pos)
 
-    if dist > max_distance then continue end
+    if dist > max_distance or util.vector_obstructed(PLAYER:EyePos(), v:EyePos(), { PLAYER, v }) then continue end
 
-    local text = v:get_nv('chat_text', '')
+    local text = v:get_nv('chat_text', 'test')
 
     if text != '' then
-      local tl = utf8.len(text)
+      local text_len = utf8.len(text)
 
-      if tl >= 48 then
-        text = '...'..text:utf8sub(tl - 45, tl)
+      if text_len >= 48 then
+        text = '...'..text:utf8sub(text_len - 45, text_len)
       end
 
       self:draw_player_typing_text(v, text, ply_pos, dist)
     end
   end
 end
-
-function DisplayTyping:DrawPlayerTargetID(player)
-  if IsValid(player) and IsValid(PLAYER) and player:get_nv('chat_text', '') != '' then
-    local tr = PLAYER:GetEyeTraceNoCursor()
-
-    if tr.Entity != player then
-      return false
-    end
-  end
-end
-
