@@ -398,6 +398,17 @@ function GM:ContextMenuOpen()
   return true
 end
 
+function GM:SpawnMenuOpen()
+  timer.Remove('HintSystem_OpeningContext')
+  timer.Remove('HintSystem_EditingSpawnlists')
+
+  return true
+end
+
+function GM:SpawnlistContentChanged()
+  timer.Remove('HintSystem_EditingSpawnlistsSave')
+end
+
 function GM:SoftUndo(player)
   Cable.send('fl_undo_soft')
 
