@@ -29,7 +29,7 @@ function Inventory:AddTabMenuItems(menu)
   menu:add_menu_item('inventory', {
     title = 'Inventory',
     panel = 'fl_inventory_menu',
-    icon = 'fa-inbox',
+    icon = 'fa-briefcase',
     default = true,
     callback = function(menu_panel, button)
       local inv = menu_panel.active_panel

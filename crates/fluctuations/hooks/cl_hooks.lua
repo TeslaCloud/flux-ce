@@ -361,12 +361,12 @@ function GM:AddTabMenuItems(menu)
   menu:add_menu_item('scoreboard', {
     title = t'tab_menu.scoreboard',
     panel = 'fl_scoreboard',
-    icon = 'fa-list-alt'
+    icon = 'fa-users'
   })
 
   menu:add_menu_item('help', {
     title = 'Help',
-    icon = 'fa-book',
+    icon = 'fa-info-circle',
     panel = 'fl_help',
   })
 end

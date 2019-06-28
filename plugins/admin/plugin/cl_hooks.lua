@@ -8,7 +8,7 @@ function Bolt:AddTabMenuItems(menu)
   menu:add_menu_item('admin', {
     title = 'Admin',
     panel = 'fl_admin_panel',
-    icon = 'fa-user-shield'
+    icon = 'fa-shield-alt'
   })
 end
 
