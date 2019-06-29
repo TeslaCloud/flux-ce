@@ -1,5 +1,5 @@
 
-function Currencies:PostCreateCharacter(player, char_id, char, char_data)
+function Currencies:PostCreateCharacter(player, char, char_data)
   for k, v in pairs(Currencies.all()) do
     local currency = Currency.new()
       currency.currency_id = k

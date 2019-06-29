@@ -24,7 +24,7 @@ function Factions:OnActiveCharacterSet(player, char)
   player:SetTeam(player_faction.team_id or 1)
 end
 
-function Factions:PostCreateCharacter(player, char_id, char, char_data)
+function Factions:PostCreateCharacter(player, char, char_data)
   char.faction = char_data.faction or 'player'
 end
 

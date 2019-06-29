@@ -1,4 +1,4 @@
-function Inventory:PostCreateCharacter(player, char_id, char, char_data)
+function Inventory:PostCreateCharacter(player, char, char_data)
   Plugin.call('AddDefaultItems', player, char, char.inventory)
 end
 

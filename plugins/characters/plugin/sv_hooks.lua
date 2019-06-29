@@ -40,7 +40,7 @@ function Characters:PlayerRestored(player)
   end)
 end
 
-function Characters:PostCreateCharacter(player, char_id, char, char_data)
+function Characters:PostCreateCharacter(player, char, char_data)
   char.phys_desc = char.phys_desc:gsub('\n', ' | ')
 end
 
