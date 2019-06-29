@@ -2,9 +2,9 @@
   PLUGIN:set_global('Characters')
 end
 
-CHAR_GENDER_MALE    = 8    -- Guys.
-CHAR_GENDER_FEMALE  = 9    -- Gals.
-CHAR_GENDER_NONE    = 10   -- Gender-less characters such as vorts.
+CHAR_GENDER_MALE    = 0    -- Guys.
+CHAR_GENDER_FEMALE  = 1    -- Gals.
+CHAR_GENDER_NONE    = 2    -- Gender-less characters such as vorts.
 
 function Characters.create(player, data)
   local hook_result = hook.run('PlayerCreateCharacter', player, data)
@@ -20,8 +20,6 @@ function Characters.create(player, data)
     char.skin = data.skin or 0
     char.gender = data.gender
     char.phys_desc = data.phys_desc or ''
-    char.money = data.money or 0
-    char.character_id = #player.record.characters + 1
     char.health = 100
     char.user = player.record
   table.insert(player.record.characters, char)
@@ -59,18 +57,16 @@ if SERVER then
     if !IsValid(player) or !char then return end
 
     return {
+      id = tonumber(char.id),
+      user_id = char.user_id,
       steam_id = player:SteamID(),
       name = char.name,
+      gender = char.gender,
       phys_desc = char.phys_desc or 'This character has no physical description set!',
       model = char.model or 'models/humans/group01/male_02.mdl',
       skin = char.skin or 1,
-      gender = char.gender,
-      inventory = char.inventory,
-      ammo = char.ammo,
-      money = char.money,
       data = char.data,
-      character_id = char.character_id,
-      user_id = char.user_id
+      ammo = char.ammo
     }
   end
 
