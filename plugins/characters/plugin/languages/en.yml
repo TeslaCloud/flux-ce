@@ -60,6 +60,7 @@ en:
       fatal: 'Something probably went wrong, please try reconnecting.'
       critical: 'Server may be experiencing connection issues, please wait...'
       lag: 'The request is taking a while, hold up...'
+      record: 'ActiveRecord screwed up again, try reconnecting or restarting your server...'
   tab_menu:
     main_menu: Main Menu
   conditions:

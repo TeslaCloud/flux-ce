@@ -7,32 +7,10 @@ CHAR_GENDER_FEMALE  = 9    -- Gals.
 CHAR_GENDER_NONE    = 10   -- Gender-less characters such as vorts.
 
 function Characters.create(player, data)
-  if (!isstring(data.name) or (utf8.len(data.name) < Config.get('character_min_name_len') or
-    utf8.len(data.name) > Config.get('character_max_name_len'))) then
-    return CHAR_ERR_NAME
-  end
+  local hook_result = hook.run('PlayerCreateCharacter', player, data)
 
-  if (!isstring(data.phys_desc) or (utf8.len(data.phys_desc) < Config.get('character_min_desc_len') or
-    utf8.len(data.phys_desc) > Config.get('character_max_desc_len'))) then
-    return CHAR_ERR_DESC
-  end
-
-  if !isnumber(data.gender) or (data.gender < CHAR_GENDER_MALE or data.gender > CHAR_GENDER_NONE) then
-    return CHAR_ERR_GENDER
-  end
-
-  if !isstring(data.model) or data.model == '' then
-    return CHAR_ERR_MODEL
-  end
-
-  local hooked, result = hook.run('PlayerCreateCharacter', player, data)
-
-  if hooked == false then
-    return result or CHAR_ERR_UNKNOWN
-  end
-
-  if !istable(player.record) then
-    return CHAR_ERR_RECORD
+  if hook_result then
+    return hook_result
   end
 
   local char = Character.new()

@@ -36,7 +36,7 @@ function Factions:PreStageChange(id, panel)
     local faction_table = Factions.find_by_id(faction_id)
 
     if gender == 'Universal' and faction_table.has_gender then
-      return false, t'char_creation.no_gender'
+      return false, t'char_create.no_gender'
     end
   end
 end

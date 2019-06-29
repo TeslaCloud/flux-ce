@@ -72,3 +72,27 @@ end
 function Characters:PlayerOneMinute(player)
   player:save_character()
 end
+
+function Characters:PlayerCreateCharacter(player, data)
+  if (!isstring(data.name) or (utf8.len(data.name) < Config.get('character_min_name_len') or
+    utf8.len(data.name) > Config.get('character_max_name_len'))) then
+    return CHAR_ERR_NAME
+  end
+
+  if (!isstring(data.phys_desc) or (utf8.len(data.phys_desc) < Config.get('character_min_desc_len') or
+    utf8.len(data.phys_desc) > Config.get('character_max_desc_len'))) then
+    return CHAR_ERR_DESC
+  end
+
+  if !isnumber(data.gender) or (data.gender < CHAR_GENDER_MALE or data.gender > CHAR_GENDER_NONE) then
+    return CHAR_ERR_GENDER
+  end
+
+  if !isstring(data.model) or data.model == '' then
+    return CHAR_ERR_MODEL
+  end
+
+  if !istable(player.record) then
+    return CHAR_ERR_RECORD
+  end
+end
