@@ -54,7 +54,7 @@ function Characters:OnActiveCharacterSet(player, character)
   player:SetSkin(character.skin or 1)
   player:SetHealth(character.health or player:GetMaxHealth())
   player:StripAmmo()
-  player:ScreenFade(SCREENFADE.IN, Color('white'), .5, .5)
+  player:ScreenFade(SCREENFADE.IN, Color('white'), 4, 1)
 
   if istable(character.ammo) then
     for k, v in pairs(character.ammo) do
