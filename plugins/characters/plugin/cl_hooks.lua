@@ -230,39 +230,3 @@ end
 function Characters:PanelCharacterSet(panel, char_data)
   panel.model.Entity:SetSkin(char_data.skin or 1)
 end
-
-Cable.receive('fl_player_created_character', function(success, status)
-  if IsValid(Flux.intro_panel) and IsValid(Flux.intro_panel.menu) then
-    if success then
-      Flux.intro_panel.menu:goto_stage(-1)
-      Flux.intro_panel.menu:clear_data()
-
-      timer.Simple(Theme.get_option('menu_anim_duration') * #Flux.intro_panel.menu.stages, function()
-        local chars = PLAYER:get_all_characters()
-
-        if #chars == 1 then
-          Cable.send('fl_player_select_character', chars[1].character_id)
-        end
-      end)
-    else
-      local text = 'We were unable to create a character! (unknown error)'
-      local hook_text = hook.run('GetCharCreationErrorText', success, status)
-
-      if hook_text then
-        text = hook_text
-      elseif status == CHAR_ERR_NAME then
-        text = "Your character's name must be between "..Config.get('character_min_name_len')..' and '..Config.get('character_max_name_len')..' characters long!'
-      elseif status == CHAR_ERR_DESC then
-        text = "Your character's description must be between "..Config.get('character_min_desc_len')..' and '..Config.get('character_max_desc_len')..' characters long!'
-      elseif status == CHAR_ERR_GENDER then
-        text = 'You must pick a gender for your character before continuing!'
-      elseif status == CHAR_ERR_MODEL then
-        text = 'You have not chosen a model or the one you have chosen is invalid!'
-      elseif status == CHAR_ERR_RECORD then
-        text = 'ActiveRecord screwed up again, try reconnecting or restarting your server...'
-      end
-
-      Flux.intro_panel:notify(text)
-    end
-  end
-end)
