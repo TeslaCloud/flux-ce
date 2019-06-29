@@ -224,21 +224,21 @@ function PANEL:next_stage()
             end)
           else
             local status = response.status
-            local text = 'We were unable to create a character! (unknown error)'
+            local text = t'char_create.unknown_error'
             local hook_text = hook.run('GetCharCreationErrorText', response.success, status)
 
             if hook_text then
               text = hook_text
             elseif status == CHAR_ERR_NAME then
-              text = "Your character's name must be between "..Config.get('character_min_name_len')..' and '..Config.get('character_max_name_len')..' characters long!'
+              text = t('char_create.name_len', { Config.get('character_min_name_len'), Config.get('character_max_name_len') })
             elseif status == CHAR_ERR_DESC then
-              text = "Your character's description must be between "..Config.get('character_min_desc_len')..' and '..Config.get('character_max_desc_len')..' characters long!'
+              text = t('char_create.desc_len', { Config.get('character_min_desc_len'), Config.get('character_max_desc_len') })
             elseif status == CHAR_ERR_GENDER then
-              text = 'You must pick a gender for your character before continuing!'
+              text = t'char_create.no_gender'
             elseif status == CHAR_ERR_MODEL then
-              text = 'You have not chosen a model or the one you have chosen is invalid!'
+              text = t'char_create.no_model'
             elseif status == CHAR_ERR_RECORD then
-              text = 'ActiveRecord screwed up again, try reconnecting or restarting your server...'
+              text = t'char_create.error.record'
             end
 
             Flux.intro_panel:notify(text)
