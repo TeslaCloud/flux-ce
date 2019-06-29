@@ -65,7 +65,7 @@ function Characters:OnActiveCharacterSet(player, character)
   hook.run('PostCharacterLoaded', player, character)
 end
 
-function Characters:OnCharacterChange(player, old_char, new_char_id)
+function Characters:OnCharacterChange(player, new_char, old_char)
   player:save_character()
 end
 
