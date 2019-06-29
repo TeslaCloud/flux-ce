@@ -1,36 +1,28 @@
 ﻿local player_meta = FindMetaTable('Player')
 
 function player_meta:set_active_character(id)
-  local cur_char_id = self:get_active_character_id()
-
   id = tonumber(id)
 
   if !id then return end
 
-  if cur_char_id then
-    hook.run('OnCharacterChange', self, self:get_character(), id)
-  end
-
-  local real_character = nil
-
-  for k, v in ipairs(self.record.characters) do
-    if v.character_id == id then
-      real_character = v
-      break
-    end
-  end
+  local real_character = self:get_character_by_id(id)
 
   if !real_character then return end
 
-  self:set_nv('active_character', real_character.id)
+  local cur_char_id = self:get_active_character_id()
+
+  if cur_char_id then
+    hook.run('OnCharacterChange', self, real_character, self:get_character())
+  end
+
+  self:set_nv('active_character', tonumber(real_character.id))
   self.current_character = real_character
 
   local char_data = self:get_character()
 
   self:set_nv('name', char_data.name or self:steam_name())
-  self:set_nv('phys_desc', char_data.phys_desc or '')
   self:set_nv('gender', char_data.gender or CHAR_GENDER_MALE)
-  self:set_nv('key', char_data.character_id or -1)
+  self:set_nv('phys_desc', char_data.phys_desc or '')
   self:set_nv('model', char_data.model or 'models/humans/group01/male_02.mdl')
 
   hook.run('OnActiveCharacterSet', self, self:get_character())

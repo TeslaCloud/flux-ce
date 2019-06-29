@@ -25,13 +25,11 @@ function Characters.create(player, data)
   table.insert(player.record.characters, char)
 
   if SERVER then
-    local char_id = player.record.character_id
-
-    hook.run('PostCreateCharacter', player, char_id, char, data)
+    hook.run('PostCreateCharacter', player, char, data)
 
     Characters.save(player, char)
 
-    Cable.send(player, 'fl_create_character', char.character_id, Characters.to_networkable(player, char))
+    Cable.send(player, 'fl_create_character', Characters.to_networkable(player, char))
   end
 
   return CHAR_SUCCESS
@@ -145,6 +143,10 @@ if SERVER then
     respond_to()
   end)
 
+  Cable.receive('fl_player_select_character', function(player, id)
+    Flux.dev_print(player:name()..' has loaded character #'..id)
+
+    player:set_active_character(id)
   end)
 else
   Cable.receive('fl_characters_load', function(data)
@@ -158,59 +160,25 @@ else
     end)
   end)
 
-  Cable.receive('fl_create_character', function(idx, data)
+  Cable.receive('fl_create_character', function(data)
     PLAYER.characters = PLAYER.characters or {}
-    PLAYER.characters[idx] = data
-
-    if IsValid(Flux.intro_panel) then
-      Flux.intro_panel:safe_remove()
-      Flux.intro_panel = Theme.create_panel('main_menu')
-      Flux.intro_panel:MakePopup()
-    end
+    table.insert(PLAYER.characters, data)
   end)
 end
 
 do
   local player_meta = FindMetaTable('Player')
 
+  function player_meta:get_character_by_id(id)
+    for k, v in ipairs(self:get_all_characters()) do
+      if id == tonumber(v.id) then
+        return v
+      end
+    end
+  end
+
   function player_meta:get_active_character_id()
-    return tonumber(self:get_nv('active_character', nil))
-  end
-
-  function player_meta:get_character_key()
-    return self:get_nv('key')
-  end
-
-  function player_meta:is_character_loaded()
-    if self:IsBot() then return true end
-
-    local id = self:get_active_character_id()
-
-    return id and id > 0
-  end
-
-  function player_meta:get_phys_desc()
-    return self:get_character_var('phys_desc', 'This character has no description!')
-  end
-
-  do
-    local genders = {
-      [CHAR_GENDER_MALE] = 'male',
-      [CHAR_GENDER_FEMALE] = 'female',
-      [CHAR_GENDER_NONE] = 'no_gender'
-    }
-
-    function player_meta:get_gender()
-      return genders[self:get_character_var('gender', CHAR_GENDER_NONE)]
-    end
-  end
-
-  function player_meta:get_character_var(id, default)
-    if SERVER then
-      return self:get_character()[id] or default
-    else
-      return self:get_nv(id, default)
-    end
+    return self:get_nv('active_character')
   end
 
   function player_meta:get_character()
@@ -222,11 +190,37 @@ do
       return self.char_data
     end
 
-    local char_id = self:get_character_key()
+    return self:get_character_by_id(self:get_active_character_id())
+  end
 
-    if char_id then
-      return self:get_all_characters()[char_id]
+  function player_meta:is_character_loaded()
+    if self:IsBot() then return true end
+
+    local id = self:get_active_character_id()
+
+    return id and id > 0
+  end
+
+  function player_meta:get_character_var(id, default)
+    if SERVER then
+      return self:get_character()[id] or default
+    else
+      return self:get_nv(id, default)
     end
+  end
+
+  function player_meta:get_phys_desc()
+    return self:get_character_var('phys_desc', 'This character has no description!')
+  end
+
+  local genders = {
+    [CHAR_GENDER_MALE] = 'male',
+    [CHAR_GENDER_FEMALE] = 'female',
+    [CHAR_GENDER_NONE] = 'no_gender'
+  }
+
+  function player_meta:get_gender()
+    return genders[self:get_character_var('gender', CHAR_GENDER_NONE)]
   end
 
   function player_meta:get_all_characters()
