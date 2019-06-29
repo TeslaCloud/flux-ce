@@ -1,5 +1,6 @@
 local PANEL = {}
 PANEL.prev_button = nil
+PANEL.schema_logo_offset = math.scale(450)
 PANEL.max_wide = 0
 
 function PANEL:Init()
@@ -44,8 +45,8 @@ function PANEL:Think()
 
   if self.schema_logo_offset > 0 and menu_valid then
     self.schema_logo_offset = Lerp(FrameTime() * 8, self.schema_logo_offset, 0)
-  elseif self.schema_logo_offset < 450 and !menu_valid then
-    self.schema_logo_offset = Lerp(FrameTime() * 8, self.schema_logo_offset, 450)
+  elseif self.schema_logo_offset < math.scale(450) and !menu_valid then
+    self.schema_logo_offset = Lerp(FrameTime() * 8, self.schema_logo_offset, math.scale(450))
   end
 end
 

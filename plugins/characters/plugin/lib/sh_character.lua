@@ -92,6 +92,7 @@ if SERVER then
   function Characters.set_name(player, char, new_name)
     if char then
       char.name = new_name or char.name
+
       player:set_nv('name', char.name)
     end
   end
@@ -99,6 +100,7 @@ if SERVER then
   function Characters.set_desc(player, char, new_desc)
     if char then
       char.phys_desc = new_desc or char.phys_desc
+
       player:set_nv('phys_desc', char.phys_desc)
     end
   end
@@ -113,7 +115,7 @@ if SERVER then
   end
 
   MVC.handler('fl_create_character', function(player, data)
-    data.gender  = (data.gender and data.gender == 'Female' and CHAR_GENDER_FEMALE) or CHAR_GENDER_MALE
+    data.gender  = (data.gender and data.gender == 'female' and CHAR_GENDER_FEMALE) or CHAR_GENDER_MALE
     data.phys_desc = data.description
 
     local status = Characters.create(player, data)

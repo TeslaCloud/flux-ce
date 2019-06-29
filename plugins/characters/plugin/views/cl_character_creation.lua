@@ -285,7 +285,7 @@ function PANEL:collect_data(new_data)
 end
 
 function PANEL:clear_data()
-  table.Empty(self.char_data)
+  table.empty(self.char_data)
 end
 
 function PANEL:open_panel(id)
