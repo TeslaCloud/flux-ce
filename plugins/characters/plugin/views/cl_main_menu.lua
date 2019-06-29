@@ -143,6 +143,10 @@ function PANEL:add_button(text, callback)
   button:SizeToContents()
 
   button.DoClick = function(btn)
+    local cur_time = CurTime()
+
+    if self.next_click and self.next_click > cur_time then return end
+
     surface.PlaySound(Theme.get_sound('button_click_success_sound'))
 
     btn:set_active(true)
@@ -158,6 +162,8 @@ function PANEL:add_button(text, callback)
     elseif isstring(callback) then
       self:OpenMenu(callback)
     end
+
+    self.next_click = cur_time + 1
   end
 
   local wide = button:GetWide()
