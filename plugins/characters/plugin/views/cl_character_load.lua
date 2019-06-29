@@ -42,7 +42,7 @@ end
 function PANEL:rebuild()
   self.list:Clear()
 
-  for k, v in ipairs(PLAYER:get_all_characters()) do
+  for k, v in pairs(PLAYER:get_all_characters()) do
     self.chars[k] = vgui.Create('fl_character_panel', self)
     self.chars[k]:SetSize(self.list:GetWide() * 0.25, self.list:GetTall())
     self.chars[k]:set_character(v)
@@ -105,12 +105,13 @@ function PANEL:Init()
     Derma_StringRequest(t'char_create.delete_confirm', t('char_create.delete_confirm_msg', { self.char_data.name }), '',
     function(text)
       if text == self.char_data.name then
-        local char_id = self.char_data.character_id
+        Cable.send('fl_player_delete_character', self.char_data.id)
 
-        table.remove(PLAYER.characters, char_id)
-        Cable.send('fl_player_delete_character', char_id)
-
-        Flux.intro_panel.menu:rebuild()
+        self:SetDisabled(true)
+        self.model:SetVisible(false)
+        self:AlphaTo(0, Theme.get_option('menu_anim_duration'), 0, function()
+          Flux.intro_panel.menu:rebuild()
+        end)
       end
     end,
     nil, t'char_create.delete')

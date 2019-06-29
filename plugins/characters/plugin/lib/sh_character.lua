@@ -78,6 +78,19 @@ if SERVER then
     player:save_player()
   end
 
+  function Characters.delete(player, id)
+    player:get_character_by_id(id):destroy()
+
+    for k, v in pairs(player:get_all_characters()) do
+      if tonumber(v.id) == id then
+        table.remove(player.record.characters, k)
+        break
+      end
+    end
+
+    Characters.send_to_client(player)
+  end
+
   function Characters.set_name(player, char, new_name)
     if char then
       char.name = new_name or char.name
@@ -122,21 +135,16 @@ if SERVER then
     end
   end)
 
-  Cable.receive('fl_player_select_character', function(player, id)
-    Flux.dev_print(player:name()..' has loaded character #'..id)
-
-    player:set_active_character(id)
-  end)
-
-  Cable.receive('fl_player_delete_character', function(player, id)
+  MVC.handler('fl_delete_character', function(player, id)
     Flux.dev_print(player:name()..' has deleted character #'..id)
 
     hook.run('OnCharacterDelete', player, id)
 
-    player.record.characters[id]:destroy()
-    table.remove(player.record.characters, id)
+    Characters.delete(player, id)
 
-    Characters.send_to_client(player)
+    respond_to()
+  end)
+
   end)
 else
   Cable.receive('fl_characters_load', function(data)
