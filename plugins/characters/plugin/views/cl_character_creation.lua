@@ -150,7 +150,9 @@ function PANEL:goto_stage(stage)
 
     if self.stage != stage then
       timer.Create('flux_char_panel_change', .1, self.stage - stage, function()
-        self:prev_stage()
+        if IsValid(self) then
+          self:prev_stage()
+        end
       end)
     end
   elseif stage > self.stage then
@@ -158,7 +160,9 @@ function PANEL:goto_stage(stage)
 
     if self.stage != stage then
       timer.Create('flux_char_panel_change', .1, stage - self.stage, function()
-        self:next_stage()
+        if IsValid(self) then
+          self:next_stage()
+        end
       end)
     end
   end
@@ -210,18 +214,24 @@ function PANEL:next_stage()
 
     Derma_Query(t'char_create.confirm_msg', t'char_create.confirm', t'yes', function()
       self:request('fl_create_character', function(response)
-        if IsValid(Flux.intro_panel) and IsValid(Flux.intro_panel.menu) then
+        if IsValid(Flux.intro_panel) and IsValid(self) then
           if response.success then
-            Flux.intro_panel.menu:goto_stage(-1)
-            Flux.intro_panel.menu:clear_data()
+            local chars = PLAYER:get_all_characters()
 
-            timer.Simple(Theme.get_option('menu_anim_duration') * #Flux.intro_panel.menu.stages, function()
-              local chars = PLAYER:get_all_characters()
+            self:goto_stage(0)
+            self:clear_data()
 
-              if #chars == 1 then
-                Cable.send('fl_player_select_character', chars[1].character_id)
-              end
-            end)
+            if #chars == 1 then
+              Flux.intro_panel.hide_sidebar = true
+
+              timer.simple(Theme.get_option('menu_anim_duration') * #self.stages, function()
+                hook.run('FirstCharacterCreated', chars[1])
+
+                timer.simple(1.5, function()
+                  Cable.send('fl_player_select_character', chars[1].id)
+                end)
+              end)
+            end
           else
             local status = response.status
             local text = t'char_create.unknown_error'
@@ -246,10 +256,6 @@ function PANEL:next_stage()
         end
 
         self.request_sent = nil
-
-        if response.success and self.panel.on_close then
-          self.panel:on_close(self)
-        end
       end, self.char_data)
 
       self.request_sent = CurTime()

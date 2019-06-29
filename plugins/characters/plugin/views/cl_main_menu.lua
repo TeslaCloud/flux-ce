@@ -1,6 +1,5 @@
 local PANEL = {}
 PANEL.prev_button = nil
-PANEL.schema_logo_offset = 450
 PANEL.max_wide = 0
 
 function PANEL:Init()
@@ -97,13 +96,15 @@ end
 function PANEL:to_main_menu(from_right)
   local scrw = ScrW()
 
-  self:RecreateSidebar(true)
+  if !self.hide_sidebar then
+    self:RecreateSidebar(true)
 
-  self.sidebar:SetPos(from_right and scrw or -self.sidebar:GetWide(), Theme.get_option('menu_sidebar_y'))
-  self.sidebar:SetDisabled(true)
-  self.sidebar:MoveTo(Theme.get_option('menu_sidebar_x') - self.max_wide / 2, Theme.get_option('menu_sidebar_y'), Theme.get_option('menu_anim_duration'), 0, 0.5, function()
-    self.sidebar:SetDisabled(false)
-  end)
+    self.sidebar:SetPos(from_right and scrw or -self.sidebar:GetWide(), Theme.get_option('menu_sidebar_y'))
+    self.sidebar:SetDisabled(true)
+    self.sidebar:MoveTo(Theme.get_option('menu_sidebar_x') - self.max_wide / 2, Theme.get_option('menu_sidebar_y'), Theme.get_option('menu_anim_duration'), 0, 0.5, function()
+      self.sidebar:SetDisabled(false)
+    end)
+  end
 
   self.menu:MoveTo(from_right and -self.menu:GetWide() or scrw, 0, Theme.get_option('menu_anim_duration'), 0, 0.5, function()
     if self.menu.close then
