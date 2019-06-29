@@ -24,7 +24,7 @@ do
 end
 
 function Characters:PlayerInitialized()
-  if !PLAYER:get_character() and !IsValid(Flux.intro_panel) then
+  if !PLAYER:is_character_loaded() and !IsValid(Flux.intro_panel) then
     Flux.intro_panel = vgui.Create('fl_intro')
 
     if IsValid(Flux.intro_panel) then
@@ -191,7 +191,7 @@ end
 function Characters:AddMainMenuItems(panel, sidebar)
   local scrw, scrh = ScrW(), ScrH()
 
-  if PLAYER:get_character() then
+  if PLAYER:is_character_loaded() then
     panel:add_button(t'main_menu.continue', function(btn)
       panel:Remove()
     end)
