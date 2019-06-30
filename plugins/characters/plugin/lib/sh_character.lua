@@ -63,7 +63,6 @@ if SERVER then
       phys_desc = char.phys_desc or 'This character has no physical description set!',
       model = char.model or 'models/humans/group01/male_02.mdl',
       skin = char.skin or 1,
-      data = char.data,
       ammo = char.ammo
     }
   end
