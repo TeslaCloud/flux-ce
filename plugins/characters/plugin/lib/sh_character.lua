@@ -113,6 +113,14 @@ if SERVER then
     end
   end
 
+  function Characters.set_gender(player, char, new_gender)
+    if char then
+      char.gender = new_gender or char.gender
+
+      player:set_nv('gender', char.gender)
+    end
+  end
+
   MVC.handler('fl_create_character', function(player, data)
     data.gender  = (data.gender and data.gender == 'female' and CHAR_GENDER_FEMALE) or CHAR_GENDER_MALE
     data.phys_desc = data.description
