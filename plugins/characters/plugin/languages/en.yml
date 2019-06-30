@@ -7,6 +7,12 @@ en:
     description: "Set character's model."
     syntax: <target> <new model>
     message: "{1} has set {2}'s model to {3}."
+  char_set_desc:
+    description: "Set character's physical description."
+    syntax: <target> <new desc>
+  char_set_gender:
+    description: "Set character's gender: male, female or no_gender"
+    syntax: <target> <new gender>
   config:
     character:
       title: Character

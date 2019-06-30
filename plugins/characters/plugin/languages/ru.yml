@@ -7,6 +7,12 @@ ru:
     description: Выставляет модель персонажа.
     syntax: <игрок> <новая модель>
     message: "{1} меняет модель {2} на {3}."
+  char_set_desc:
+    description: Выставляет описание персонажа.
+    syntax: <игрок> <новое описание>
+  char_set_gender:
+    description: "Выставляет пол персонажа: male, female или no_gender."
+    syntax: <игрок> <новый пол>
   config:
     character:
       title: Персонаж

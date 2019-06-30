@@ -8,7 +8,8 @@ COMMAND.arguments = 2
 COMMAND.player_arg = 1
 COMMAND.aliases = { 'setname' }
 
-function COMMAND:on_run(player, targets, new_name)
+function COMMAND:on_run(player, targets, ...)
+  local new_name = table.concat({ ... }, ' ')
   local target = targets[1]
 
   Flux.Player:broadcast('char_set_name.message', { get_player_name(player), target:name(), new_name })
