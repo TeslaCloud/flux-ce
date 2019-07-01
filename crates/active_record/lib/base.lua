@@ -327,7 +327,7 @@ function ActiveRecord.Base:run_query(callback)
         local objects = {}
 
         for k, v in ipairs(results) do
-          table.insert(objects, ActiveRecord.Relation.new(v, self.class))
+          table.insert(objects, self:_create_restored(v))
         end
 
         if #self.relations == 0 then
@@ -349,6 +349,28 @@ function ActiveRecord.Base:run_query(callback)
     query:execute()
   end
   return self
+end
+
+--- @warning [Internal]
+-- Internal function to create a new instance of object based on the
+-- data from the database.
+-- @return [ActiveRecord::Base(object)]
+function ActiveRecord.Base:_create_restored(data)
+  local object = self.class.new()
+  object.id = data.id
+  object.fetched = true
+
+  local schema = ActiveRecord.schema[self.table_name]
+
+  for k, v in pairs(data) do
+    object[k] = ActiveRecord.str_to_type(v, schema[k] and schema[k].type or 'string')
+  end
+
+  if isfunction(object.restored) then
+    object:restored()
+  end
+
+  return object
 end
 
 --- Used when a single return value is expected.
