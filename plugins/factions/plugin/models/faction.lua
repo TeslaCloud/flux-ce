@@ -59,6 +59,23 @@ function Faction:get_rank(number)
   return self.rank[number]
 end
 
+function Faction:get_models()
+  return self.models
+end
+
+function Faction:get_random_model(player)
+  local faction_models = self:get_models()
+  local gender = player:get_gender()
+
+  if istable(faction_models) then
+    if gender == 'no_gender' or !faction_models[gender] or #faction_models[gender] == 0 then
+      gender = 'universal'
+    end
+
+    return table.random(faction_models[gender])
+  end
+end
+
 function Faction:add_class(id, class_name, description, color, callback)
   if !id then return end
 
@@ -81,7 +98,9 @@ function Faction:add_rank(id, name_filter)
   })
 end
 
-function Faction:generate_name(player, char_name, rank, default_data)
+function Faction:generate_name(player, rank, default_data)
+  local char_name = player:name()
+
   default_data = default_data or {}
 
   if hook.run('ShouldNameGenerate', player, self, char_name, rank, default_data) == false then return player:name() end
