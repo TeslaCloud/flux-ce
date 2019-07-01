@@ -43,7 +43,7 @@ function PANEL:Init()
         self.gender_female:set_text_color(Theme.get_color('text'))
       end
 
-      self:GetParent().char_data.gender = 'Male'
+      self:GetParent().char_data.gender = 'male'
       self:rebuild_models()
 
       btn:set_active(true)
@@ -66,7 +66,7 @@ function PANEL:Init()
         self.gender_male:set_text_color(Theme.get_color('text'))
       end
 
-      self:GetParent().char_data.gender = 'Female'
+      self:GetParent().char_data.gender = 'female'
       self:rebuild_models()
 
       btn:set_active(true)
@@ -98,7 +98,7 @@ function PANEL:Init()
     self.name_random.DoClick = function(btn)
       surface.PlaySound('buttons/blip1.wav')
 
-      self.name_entry:SetText(SCHEMA:get_random_name(self:GetParent().char_data))
+      self.name_entry:SetText(SCHEMA:get_random_name(self:GetParent().char_data.gender))
     end
   end
 
