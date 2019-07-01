@@ -27,13 +27,13 @@ function COMMAND:on_run(player, targets, name, strict)
       if v:has_whitelist(whitelist.faction_id) then
         v:take_whitelist(whitelist.faction_id)
       elseif #targets == 1 then
-        player:notify('err.target_not_whitelisted', { v:name(), whitelist.print_name })
+        player:notify('err.target_not_whitelisted', { v:name(), whitelist.name })
 
         return
       end
     end
 
-    Flux.Player:broadcast('take_whitelist.message', { get_player_name(player), util.player_list_to_string(targets), whitelist.print_name })
+    Flux.Player:broadcast('take_whitelist.message', { get_player_name(player), util.player_list_to_string(targets), whitelist.name })
   else
     player:notify('err.whitelist_not_valid',  name)
   end

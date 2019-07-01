@@ -13,7 +13,6 @@ function Factions.add_faction(id, data)
   data.faction_id = id:to_id() or (data.name and data.name:to_id())
   data.name = data.name or 'Unknown Faction'
   data.description = data.description or 'This faction has no description!'
-  data.print_name = data.print_name or data.name or 'Unknown Faction'
 
   team.SetUp(count + 1, data.name, data.color or Color(255, 255, 255))
 
