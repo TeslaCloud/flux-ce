@@ -13,8 +13,9 @@ function Factions.add_faction(id, data)
   data.faction_id = id:to_id() or (data.name and data.name:to_id())
   data.name = data.name or 'Unknown Faction'
   data.description = data.description or 'This faction has no description!'
+  data.color = data.color or Color(255, 255, 255)
 
-  team.SetUp(count + 1, data.name, data.color or Color(255, 255, 255))
+  team.SetUp(count + 1, data.name, data.color)
 
   data.team_id = count + 1
 
@@ -41,15 +42,11 @@ end
 function Factions.find(name, strict)
   for k, v in pairs(stored) do
     if strict then
-      if k:utf8lower() == name:utf8lower() then
-        return v
-      elseif v.name:utf8lower() == name:utf8lower() then
+      if k:utf8lower() == name:utf8lower() or v.name:utf8lower() == name:utf8lower() then
         return v
       end
     else
-      if k:utf8lower():find(name:utf8lower()) then
-        return v
-      elseif v.name:utf8lower():find(name:utf8lower()) then
+      if k:utf8lower():find(name:utf8lower()) or v.name:utf8lower():find(name:utf8lower()) then
         return v
       end
     end
