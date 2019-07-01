@@ -65,7 +65,7 @@ function PluginInstance:is_schema()
 end
 
 function PluginInstance:__tostring()
-  return 'Plugin ['..self.name..']'
+  return '#<Plugin:'..self.name..'>'
 end
 
 function PluginInstance:register()

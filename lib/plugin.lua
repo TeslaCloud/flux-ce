@@ -39,19 +39,19 @@ function Plugin.get_cache()
 end
 
 function Plugin.clear_cache()
-  if Flux.initialized then
-    Plugin.clear_extras()
+  if !Flux.initialized then return end
 
-    if !LITE_REFRESH then
-      hooks_cache = {}
-      load_cache = {}
-    else
-      for hook_name, hook_table in pairs(hooks_cache) do
-        for k, obj in ipairs(hook_table) do
-          if istable(obj) and istable(obj[2]) and isstring(obj[2].path) and !obj[2].path:include('flux') then
-            load_cache[obj[2].id] = nil
-            hooks_cache[hook_name][k] = nil
-          end
+  Plugin.clear_extras()
+
+  if !LITE_REFRESH then
+    hooks_cache = {}
+    load_cache = {}
+  else
+    for hook_name, hook_table in pairs(hooks_cache) do
+      for k, obj in ipairs(hook_table) do
+        if istable(obj) and istable(obj[2]) and isstring(obj[2].path) and !obj[2].path:include('flux') then
+          load_cache[obj[2].id] = nil
+          hooks_cache[hook_name][k] = nil
         end
       end
     end
@@ -105,7 +105,6 @@ end
 function Plugin.remove_from_cache(id)
   local plugin_table = Plugin.find(id) or (istable(id) and id)
 
-  -- Awful lot of if's and end's.
   if plugin_table then
     if plugin_table.OnUnhook then
       try {
@@ -118,13 +117,12 @@ function Plugin.remove_from_cache(id)
     end
 
     for k, v in pairs(plugin_table) do
-      if isfunction(v) and hooks_cache[k] then
-        for index, tab in ipairs(hooks_cache[k]) do
-          if tab[2] == plugin_table then
-            table.remove(hooks_cache[k], index)
+      if !isfunction(v) or !hooks_cache[k] then continue end
 
-            break
-          end
+      for index, tab in ipairs(hooks_cache[k]) do
+        if tab[2] == plugin_table then
+          table.remove(hooks_cache[k], index)
+          break
         end
       end
     end

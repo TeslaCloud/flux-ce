@@ -28,11 +28,11 @@ if SERVER then
 
       if #folders > 0 then
         for _, f in ipairs(folders) do
-          if f != '.' and f != '..' then
-            if file.Exists(path..f..'/flow.cratespec', 'LUA') then
-              flow_path = path..f..'/'
-              break
-            end
+          if f[1] == '.' then continue end
+
+          if file.Exists(path..f..'/flow.cratespec', 'LUA') then
+            flow_path = path..f..'/'
+            break
           end
         end
       end
