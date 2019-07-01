@@ -259,8 +259,16 @@ end
 timer.Create('fl_one_minute', 60, 0, function()
   hook.run('OneMinute')
 
+  local i = 0
+
   for k, v in ipairs(_player.all()) do
-    hook.run('PlayerOneMinute', v)
+    i = i + 1
+
+    timer.Simple(0.25 * i, function()
+      if IsValid(v) then
+        hook.run('PlayerOneMinute', v)
+      end
+    end)
   end
 end)
 
