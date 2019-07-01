@@ -186,7 +186,7 @@ do
     end
   end
 
-  function player_meta:get_active_character_id()
+  function player_meta:get_character_id()
     return self:get_nv('active_character')
   end
 
@@ -199,13 +199,13 @@ do
       return self.char_data
     end
 
-    return self:get_character_by_id(self:get_active_character_id())
+    return self:get_character_by_id(self:get_character_id())
   end
 
   function player_meta:is_character_loaded()
     if self:IsBot() then return true end
 
-    local id = self:get_active_character_id()
+    local id = self:get_character_id()
 
     return id and id > 0
   end

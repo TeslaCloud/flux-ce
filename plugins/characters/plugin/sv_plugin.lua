@@ -9,7 +9,7 @@ function player_meta:set_active_character(id)
 
   if !real_character then return end
 
-  local cur_char_id = self:get_active_character_id()
+  local cur_char_id = self:get_character_id()
 
   if cur_char_id then
     hook.run('OnCharacterChange', self, real_character, self:get_character())

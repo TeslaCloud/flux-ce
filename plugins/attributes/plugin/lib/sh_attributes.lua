@@ -98,7 +98,7 @@ do
 
   function player_meta:get_attributes()
     --[[
-    local char_id = self:get_active_character_id()
+    local char_id = self:get_character_id()
 
     if !self.record.characters or !self.record.characters[char_id] then return {} end
 

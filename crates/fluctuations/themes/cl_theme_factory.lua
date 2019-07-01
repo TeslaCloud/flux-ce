@@ -443,7 +443,7 @@ function THEME:PaintCharPanel(panel, w, h)
 
     draw.SimpleText(char_data.name, self:get_font('main_menu_titles'), w * 0.5 - name_w * 0.5, 4, self:get_color('schema_text'))
 
-    if PLAYER:get_active_character_id() == char_data.character_id then
+    if PLAYER:get_character_id() == char_data.character_id then
       surface.SetDrawColor(self:get_color('accent'))
       surface.DrawOutlinedRect(0, 0, w, h)
     end

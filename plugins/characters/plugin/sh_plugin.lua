@@ -19,7 +19,7 @@ function Characters:RegisterConditions()
     check = function(player, data)
       if !data.operator or !data.character_id then return false end
 
-      return util.process_operator(data.operator, player:get_active_character_id(), data.character_id)
+      return util.process_operator(data.operator, player:get_character_id(), data.character_id)
     end,
     set_parameters = function(id, data, panel, menu, parent)
       parent:create_selector(data.name, 'conditions.character.message', 'conditions.characters', player.all(),
