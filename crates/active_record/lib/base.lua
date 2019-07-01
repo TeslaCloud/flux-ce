@@ -228,6 +228,17 @@ function ActiveRecord.Base:limit(amt)
   return self
 end
 
+--- Inserts a OFFSET condition into the query.
+-- The code in the example below will return the SECOND entry in the database:
+-- ```
+-- Object:where('money > 100'):skip(1):limit(1)
+-- ```
+-- @return [ActiveRecord::Base(self)]
+function ActiveRecord.Base:skip(amt)
+  self.query_map:insert { 'offset', amt }
+  return self
+end
+
 --- @warning [Internal]
 -- Internal function to process child objects or current object as a child to another object.
 -- @return [ActiveRecord::Base(self)]
@@ -320,6 +331,8 @@ function ActiveRecord.Base:run_query(callback)
         end
       elseif t == 'limit' then
         query:limit(a)
+      elseif t == 'offset' then
+        query:offset(a)
       end
     end
     self.query_map = a{}
