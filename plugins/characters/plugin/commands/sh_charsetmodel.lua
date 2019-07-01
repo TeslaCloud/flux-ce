@@ -13,7 +13,7 @@ function COMMAND:on_run(player, targets, model)
 
   Flux.Player:broadcast('char_set_model.message', { get_player_name(player), target:name(), model })
 
-  Characters.set_model(target, target:get_character(), model)
+  Characters.set_model(target, model)
 end
 
 COMMAND:register()

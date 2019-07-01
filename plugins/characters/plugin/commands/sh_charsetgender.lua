@@ -19,7 +19,7 @@ function COMMAND:on_run(player, targets, new_gender)
   }
 
   if valid_genders[new_gender] then
-    Characters.set_gender(target, target:get_character(), valid_genders[new_gender])
+    Characters.set_gender(target, valid_genders[new_gender])
   end
 end
 

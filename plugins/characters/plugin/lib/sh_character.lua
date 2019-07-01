@@ -6,6 +6,12 @@ CHAR_GENDER_MALE    = 0    -- Guys.
 CHAR_GENDER_FEMALE  = 1    -- Gals.
 CHAR_GENDER_NONE    = 2    -- Gender-less characters such as vorts.
 
+local translate_gender = {
+  [CHAR_GENDER_MALE] = 'male',
+  [CHAR_GENDER_FEMALE] = 'female',
+  [CHAR_GENDER_NONE] = 'no_gender'
+}
+
 function Characters.create(player, data)
   local hook_result = hook.run('PlayerCreateCharacter', player, data)
 
@@ -88,37 +94,63 @@ if SERVER then
     Characters.send_to_client(player)
   end
 
-  function Characters.set_name(player, char, new_name)
+  function Characters.set_name(player, new_name)
+    if !new_name or !isstring(new_name) then return end
+
+    local char = player:get_character()
+    local old_name = player:get_nv('name')
+  
     if char then
       char.name = new_name or char.name
-
-      player:set_nv('name', char.name)
     end
+
+    player:set_nv('name', new_name)
+    hook.run('CharacterNameChanged', player, char, new_name, old_name)
   end
 
-  function Characters.set_desc(player, char, new_desc)
+  function Characters.set_desc(player, new_desc)
+    if !new_desc or !isstring(new_desc) then return end
+
+    local char = player:get_character()
+    local old_desc = player:get_nv('desc')
+  
     if char then
       char.phys_desc = new_desc or char.phys_desc
-
-      player:set_nv('phys_desc', char.phys_desc)
     end
+
+    player:set_nv('desc', new_desc)
+    hook.run('CharacterDescChanged', player, char, new_desc, old_desc)
   end
 
-  function Characters.set_model(player, char, model)
+  function Characters.set_model(player, model)
+    if !model or !isstring(model) then return end
+
+    local char = player:get_character()
+    local old_model = player:get_nv('model')
+  
     if char then
       char.model = model or char.model
-
-      player:set_nv('model', char.model)
-      player:SetModel(char.model)
     end
+
+    player:set_nv('model', model)
+    player:SetModel(model)
+    hook.run('CharacterModelChanged', player, char, model, old_model)
   end
 
-  function Characters.set_gender(player, char, new_gender)
-    if char then
-      char.gender = new_gender or char.gender
+  function Characters.set_gender(player, new_gender)
+    new_gender = isstring(new_gender) and table.key_from_value(translate_gender, new_gender) or new_gender
 
-      player:set_nv('gender', char.gender)
+    if !new_gender then return end
+
+    local char = player:get_character()
+    local old_gender = player:get_nv('gender')
+  
+    if char then
+      char.gender = new_gender or char.name
     end
+
+    player:set_nv('gender', new_gender)
+    hook.run('CharacterGenderChanged', player, char, new_gender, old_gender)
   end
 
   MVC.handler('fl_create_character', function(player, data)
@@ -222,14 +254,8 @@ do
     return self:get_character_var('phys_desc', 'This character has no description!')
   end
 
-  local genders = {
-    [CHAR_GENDER_MALE] = 'male',
-    [CHAR_GENDER_FEMALE] = 'female',
-    [CHAR_GENDER_NONE] = 'no_gender'
-  }
-
   function player_meta:get_gender()
-    return genders[self:get_character_var('gender', CHAR_GENDER_NONE)]
+    return translate_gender[self:get_character_var('gender', CHAR_GENDER_NONE)]
   end
 
   function player_meta:get_all_characters()

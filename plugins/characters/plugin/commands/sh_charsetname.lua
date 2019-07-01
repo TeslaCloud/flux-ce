@@ -14,7 +14,7 @@ function COMMAND:on_run(player, targets, ...)
 
   Flux.Player:broadcast('char_set_name.message', { get_player_name(player), target:name(), new_name })
 
-  Characters.set_name(target, target:get_character(), new_name)
+  Characters.set_name(target, new_name)
 end
 
 COMMAND:register()

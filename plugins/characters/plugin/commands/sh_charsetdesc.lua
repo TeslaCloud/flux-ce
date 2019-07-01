@@ -12,7 +12,7 @@ function COMMAND:on_run(player, targets, ...)
   local new_desc = table.concat({ ... }, ' ')
   local target = targets[1]
 
-  Characters.set_desc(target, target:get_character(), new_desc)
+  Characters.set_desc(target, new_desc)
 end
 
 COMMAND:register()
