@@ -202,3 +202,19 @@ function time_from_timestamp(timestamp)
     sec = ss
   })
 end
+
+function sql_escape(str)
+  return ActiveRecord.adapter:escape(str)
+end
+
+function sql_unescape(str)
+  return ActiveRecord.adapter:unescape(str)
+end
+
+function sql_quote(str)
+  return ActiveRecord.adapter:quote(str)
+end
+
+function sql_quote_name(str)
+  return ActiveRecord.adapter:quote_name(str)
+end

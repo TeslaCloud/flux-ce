@@ -94,23 +94,25 @@ function ActiveRecord.Base:where(condition, ...)
 
       query_str = condition:gsub('%?', function()
         n = n + 1
-        return "'"..ActiveRecord.adapter:escape(tostring(args[n])).."'"
+        return "'"..sql_escape(tostring(args[n])).."'"
       end)
     else
-      query_str = condition..' = \''..ActiveRecord.adapter:escape(tostring(args[1]))..'\''
+      query_str = condition..' = \''..sql_escape(tostring(args[1]))..'\''
     end
   elseif istable(condition) then
     local should_and = false
     for k, v in pairs(condition) do
       query_str = query_str..(should_and and ' AND ' or '')..k
       if !istable(v) then
-        query_str = query_str..' = \''..ActiveRecord.adapter:escape(tostring(v))..'\''
+        query_str = query_str..' = \''..sql_escape(tostring(v))..'\''
       else
-        v = table.map(v, function(t) return "'"..ActiveRecord.adapter:escape(tostring(t)).."'" end)
+        v = table.map(v, function(t) return "'"..sql_escape(tostring(t)).."'" end)
         query_str = query_str..' IN ('..table.concat(v, ', ')..')'
       end
       should_and = true
     end
+  elseif isstring(condition) then
+    query_str = condition
   end
 
   self.query_map:insert { 'where', query_str }
@@ -135,16 +137,16 @@ function ActiveRecord.Base:where_not(condition, ...)
 
     query_str = 'NOT ('..condition:gsub('%?', function()
       n = n + 1
-      return "'"..ActiveRecord.adapter:escape(tostring(args[n])).."'"
+      return "'"..sql_escape(tostring(args[n])).."'"
     end)..')'
   elseif istable(condition) then
     local should_and = false
     for k, v in pairs(condition) do
       query_str = query_str..(should_and and ' AND ' or '')..k
       if !istable(v) then
-        query_str = query_str..' != \''..ActiveRecord.adapter:escape(tostring(v))..'\''
+        query_str = query_str..' != \''..sql_escape(tostring(v))..'\''
       else
-        v = table.map(v, function(t) return "'"..ActiveRecord.adapter:escape(tostring(t)).."'" end)
+        v = table.map(v, function(t) return "'"..sql_escape(tostring(t)).."'" end)
         query_str = query_str..' NOT IN ('..table.concat(v, ', ')..')'
       end
       should_and = true
