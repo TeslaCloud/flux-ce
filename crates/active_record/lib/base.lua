@@ -268,7 +268,7 @@ function ActiveRecord.Base:_fetch_relation(callback, objects, n, obj_id)
   n = n or 1
   obj_id = obj_id or 1
 
-  local current_object = objects[obj_id].object
+  local current_object = objects[obj_id]
   local relation = self.relations[n]
 
   if relation then
@@ -398,7 +398,7 @@ end
 function ActiveRecord.Base:expect(callback)
   self._get = nil
   self._expect = function(results)
-    callback(results[1].object)
+    callback(results[1])
   end
   return self
 end
@@ -416,7 +416,7 @@ function ActiveRecord.Base:get(callback)
     local all_objects = {}
 
     for k, v in ipairs(results) do
-      table.insert(all_objects, v.object)
+      table.insert(all_objects, v)
     end
 
     callback(all_objects)
