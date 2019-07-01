@@ -3,12 +3,8 @@ PANEL.id = 'faction'
 PANEL.text = 'char_create.faction'
 PANEL.faction_id = ''
 
-function PANEL:ButtonClicked(button)
-  self.faction_id = button.faction.faction_id
-end
-
 function PANEL:on_open(parent)
-  self.faction_id = parent.char_data.faction or ''
+  self.faction_id = parent.char_data.faction or self.faction_id
 
   self.chooser = vgui.Create('fl_horizontalbar', self)
   self.chooser:SetSize(self:GetWide(), self:GetTall() / 8 * 7 - 8)
@@ -53,8 +49,7 @@ function PANEL:on_open(parent)
           end
 
           self.prev_button = btn
-
-          self:ButtonClicked(btn)
+          self.faction_id = v.faction_id
 
           self.chooser.next_click = cur_time + 2
         end
@@ -75,13 +70,13 @@ end
 
 function PANEL:on_validate()
   if self.faction_id == '' then
-    return false, t('char_create.no_faction')
+    return false, t'char_create.no_faction'
   end
 
   local faction = Factions.find_by_id(self.faction_id)
 
   if faction.whitelisted and !PLAYER:has_whitelist(self.faction_id) then
-    return false, t('char_create.no_whitelist')
+    return false, t'char_create.no_whitelist'
   end
 end
 
