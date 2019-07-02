@@ -109,15 +109,17 @@ function PANEL:Init()
       cur_x = offset
     end
 
-    self.buttons[k] = button
+    self.buttons[v.id] = button
 
     if v.default then
-      self.default_panel = k
+      self.default_panel = v.id
     end
   end
 
-  if self.default_panel then
-    self.buttons[self.default_panel]:DoClick()
+  local panel_id = PLAYER.tab_panel or self.default_panel
+
+  if panel_id then
+    self.buttons[panel_id]:DoClick()
   end
 
   draw.set_blur_size(1)
@@ -158,6 +160,8 @@ function PANEL:close_menu()
 
   if IsValid(self.active_panel) then
     self.active_panel:AlphaTo(0, Theme.get_option('menu_anim_duration'), 0)
+
+    PLAYER.tab_panel = self.active_panel.id
 
     if self.active_panel.on_close then
       self.active_panel:on_close()
