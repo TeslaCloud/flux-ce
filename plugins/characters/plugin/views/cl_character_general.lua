@@ -169,17 +169,7 @@ end
 
 function PANEL:rebuild_models()
   local char_data = self:GetParent().char_data
-  local faction_table = Factions.find_by_id(char_data.faction)
-  local models
-
-  if char_data.gender == 'Male' then
-    models = faction_table.models.male
-  elseif char_data.gender == 'Female' then
-    models = faction_table.models.female
-  else
-    models = faction_table.models.universal
-  end
-
+  local models = hook.run('GetCharacterCreationModels', char_data)
   local i = 0
   local offset = 4
 

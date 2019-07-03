@@ -51,6 +51,12 @@ function Factions:AddCharacterCreationMenuStages(panel)
   panel:add_stage('char_create.faction', 1)
 end
 
+function Factions:GetCharacterCreationModels(char_data)
+  local faction_table = Factions.find_by_id(char_data.faction)
+
+  return faction_table:get_gender_models(char_data.gender)
+end
+
 function Factions:PreRebuildScoreboard(panel, w, h)
   for k, v in ipairs(panel.player_cards) do
     if IsValid(v) then

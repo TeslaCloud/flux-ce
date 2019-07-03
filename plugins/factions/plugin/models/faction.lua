@@ -63,17 +63,18 @@ function Faction:get_models()
   return self.models
 end
 
-function Faction:get_random_model(player)
+function Faction:get_gender_models(gender)
   local faction_models = self:get_models()
-  local gender = player:get_gender()
 
-  if istable(faction_models) then
-    if gender == 'no_gender' or !faction_models[gender] or #faction_models[gender] == 0 then
-      gender = 'universal'
-    end
-
-    return table.random(faction_models[gender])
+  if gender == 'no_gender' or !faction_models[gender] or #faction_models[gender] == 0 then
+    gender = 'universal'
   end
+
+  return faction_models[gender]
+end
+
+function Faction:get_random_model(player)
+  return table.random(self:get_gender_models(player:get_gender()))
 end
 
 function Faction:add_class(id, class_name, description, color, callback)
