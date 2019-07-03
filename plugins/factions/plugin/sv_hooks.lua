@@ -24,6 +24,8 @@ end
 
 function Factions:PostCreateCharacter(player, char, char_data)
   char.faction = char_data.faction or 'player'
+  char.rank = char_data.rank or 1
+  char.char_class = char_data.char_class or ''
 end
 
 function Factions:PlayerRestored(player, record)
