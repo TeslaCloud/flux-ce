@@ -111,6 +111,8 @@ if SERVER then
 
     player:set_nv('name', new_name)
     hook.run('CharacterNameChanged', player, char, new_name, old_name)
+
+    Characters.send_to_client(player)
   end
 
   function Characters.set_desc(player, new_desc)
@@ -125,6 +127,8 @@ if SERVER then
 
     player:set_nv('desc', new_desc)
     hook.run('CharacterDescChanged', player, char, new_desc, old_desc)
+
+    Characters.send_to_client(player)
   end
 
   function Characters.set_model(player, model)
@@ -140,6 +144,8 @@ if SERVER then
     player:set_nv('model', model)
     player:SetModel(model)
     hook.run('CharacterModelChanged', player, char, model, old_model)
+
+    Characters.send_to_client(player)
   end
 
   function Characters.set_gender(player, new_gender)
@@ -156,6 +162,8 @@ if SERVER then
 
     player:set_nv('gender', new_gender)
     hook.run('CharacterGenderChanged', player, char, new_gender, old_gender)
+
+    Characters.send_to_client(player)
   end
 
   MVC.handler('fl_create_character', function(player, data)
