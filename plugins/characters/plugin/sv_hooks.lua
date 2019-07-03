@@ -1,5 +1,5 @@
 function Characters:PostPlayerSpawn(player)
-  if !player:get_character() then
+  if !player:is_character_loaded() then
     player:SetNoDraw(true)
     player:SetNotSolid(true)
     player:Lock()
