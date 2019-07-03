@@ -28,6 +28,7 @@ function Characters.create(player, data)
     char.phys_desc = data.phys_desc or ''
     char.health = 100
     char.user = player.record
+    char.user_id = player.record.id
   table.insert(player.record.characters, char)
 
   if SERVER then
