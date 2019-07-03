@@ -1,4 +1,4 @@
-function AttributesPlugin:PostCreateCharacter(player, char_id, char, char_data)
+function AttributesPlugin:PostCreateCharacter(player, char, char_data)
   for k, v in pairs(Attributes.get_stored()) do
     local attribute = Attributes.find_by_id(k)
 
