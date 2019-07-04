@@ -11,6 +11,18 @@ en:
     description: "Set player's faction. Factions: {1}"
     syntax: "<name> <faction> [data]"
     message: "{1} has added {2} to the {3} faction."
+  set_rank:
+    description: "Set character's rank in their faction."
+    syntax: "<target> <rank>"
+    message: "{1} has set {2}'s rank to {3}."
+  promote:
+    description: "Promote character in their faction."
+    syntax: "<target>"
+    message: "{1} has promoted {2}."
+  demote:
+    description: "Demote character in their faction."
+    syntax: "<target>"
+    message: "{1} has demoted {2}."
   err:
     whitelist_not_valid: "'{1}' is not a valid faction!"
     target_not_whitelisted: "{1} is not on the {2} whitelist!"
