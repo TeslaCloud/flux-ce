@@ -2,7 +2,7 @@ local COMMAND = Command.new('unstatic')
 COMMAND.name = 'UnStatic'
 COMMAND.description = 'command.unstatic.description'
 COMMAND.permission = 'assistant'
-COMMAND.category = 'perm.categories.level_design'
+COMMAND.category = 'permission.categories.level_design'
 COMMAND.aliases = { 'staticpropremove', 'staticremove' }
 
 function COMMAND:on_run(player)

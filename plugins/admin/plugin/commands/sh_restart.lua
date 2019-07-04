@@ -3,7 +3,7 @@ COMMAND.name = 'Restart'
 COMMAND.description = 'command.restart.description'
 COMMAND.syntax = 'command.restart.syntax'
 COMMAND.permission = 'moderator'
-COMMAND.category = 'perm.categories.server_management'
+COMMAND.category = 'permission.categories.server_management'
 COMMAND.arguments = 0
 COMMAND.aliases = { 'maprestart' }
 

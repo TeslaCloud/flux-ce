@@ -102,7 +102,7 @@ function PANEL:node_options(panel, root, first)
           selector:set_value(t'ui.condition.operators')
 
           for k, v in pairs(util['get_'..data.set_operator..'_operators']()) do
-            selector:add_choice(t('operators.'..k)..' ('..v..')', function()
+            selector:add_choice(t('operator.'..k)..' ('..v..')', function()
               panel.data.operator = k
 
               panel.update()

@@ -6,8 +6,8 @@ SurfaceText.pictures = SurfaceText.pictures or {}
 require_relative 'cl_hooks'
 
 function SurfaceText:RegisterPermissions()
-  Bolt:register_permission('texts', 'Place / delete texts', 'Grants access to place and delete texts.', 'perm.categories.level_design', 'assistent')
-  Bolt:register_permission('pictures', 'Place / delete pictures', 'Grants access to place and delete pictures.', 'perm.categories.level_design', 'assistent')
+  Bolt:register_permission('texts', 'Place / delete texts', 'Grants access to place and delete texts.', 'permission.categories.level_design', 'assistent')
+  Bolt:register_permission('pictures', 'Place / delete pictures', 'Grants access to place and delete pictures.', 'permission.categories.level_design', 'assistent')
 end
 
 if SERVER then

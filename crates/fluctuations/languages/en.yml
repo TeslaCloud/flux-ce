@@ -54,7 +54,7 @@ en:
     bugs:
       Encountered a bug? Have an idea that we should totally add to Flux? Visit
       our forums at https://teslacloud.net and tell us about it!
-  operators:
+  operator:
     less: Less
     greater: Greater
     less_equal: Less or equal

@@ -36,7 +36,7 @@ ru:
       max_desc_len:
         name: Максимальная длина описания персонажа
         desc: Максимальное количество символов в описании персонажа.
-  perm:
+  permission:
     categories:
       character_management: Управление персонажем
   ui:

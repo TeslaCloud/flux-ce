@@ -2,7 +2,7 @@
 COMMAND.name = 'GiveMoney'
 COMMAND.description = 'command.give_money.description'
 COMMAND.syntax = 'command.give_money.syntax'
-COMMAND.category = 'perm.categories.general'
+COMMAND.category = 'permission.categories.general'
 COMMAND.arguments = 1
 COMMAND.aliases = { 'givecash', 'givetokens' }
 

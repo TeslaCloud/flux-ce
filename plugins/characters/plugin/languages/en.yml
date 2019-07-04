@@ -36,7 +36,7 @@ en:
       max_desc_len:
         name: Maximum Character Description Length
         desc: "The maximum length of the character's physical description."
-  perm:
+  permission:
     categories:
       character_management: Character Management
   ui:

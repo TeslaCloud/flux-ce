@@ -77,7 +77,7 @@ ru:
     group_not_valid: "'{1}' не является группой пользователя!"
     not_banned: Steam ID '{1}' не находится в блокировке!
     no_permission: У вас недостаточно прав чтобы сделать это, {1}.
-  perm:
+  permission:
     categories:
       administration: Администрирование
       tools: Инструменты
@@ -119,7 +119,7 @@ ru:
     cmd_desc:
       usage: "Синтаксис:"
       aliases: "Алиасы:"
-    perm:
+    permission:
       not_set: Не менять
       allow: Разрешить
       never: Запретить

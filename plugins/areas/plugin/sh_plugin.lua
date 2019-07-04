@@ -8,7 +8,7 @@ if !areas then
 end
 
 function Area:RegisterPermissions()
-  Bolt:register_permission('areas', 'Manage areas', 'Grants access to manage areas.', 'perm.categories.level_design', 'moderator')
+  Bolt:register_permission('areas', 'Manage areas', 'Grants access to manage areas.', 'permission.categories.level_design', 'moderator')
 end
 
 Area.tool_modes = {

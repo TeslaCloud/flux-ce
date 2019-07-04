@@ -3,7 +3,7 @@ COMMAND.name = 'Unban'
 COMMAND.description = 'command.unban.description'
 COMMAND.syntax = 'command.unban.syntax'
 COMMAND.permission = 'assistant'
-COMMAND.category = 'perm.categories.administration'
+COMMAND.category = 'permission.categories.administration'
 COMMAND.arguments = 1
 COMMAND.aliases = { 'plyunban' }
 

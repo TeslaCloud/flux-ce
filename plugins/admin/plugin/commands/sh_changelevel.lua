@@ -3,7 +3,7 @@ COMMAND.name = 'Changelevel'
 COMMAND.description = 'command.changelevel.description'
 COMMAND.syntax = 'command.changelevel.syntax'
 COMMAND.permission = 'moderator'
-COMMAND.category = 'perm.categories.server_management'
+COMMAND.category = 'permission.categories.server_management'
 COMMAND.arguments = 1
 COMMAND.aliases = { 'map' }
 

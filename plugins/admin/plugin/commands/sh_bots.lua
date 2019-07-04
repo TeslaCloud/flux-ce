@@ -2,7 +2,7 @@ local COMMAND = Command.new('freezebots')
 COMMAND.name = 'FreezeBots'
 COMMAND.description = 'command.freezebots.description'
 COMMAND.permission = 'moderator'
-COMMAND.category = 'perm.categories.server_management'
+COMMAND.category = 'permission.categories.server_management'
 COMMAND.aliases = { 'botfreeze', 'freezebot', 'bot_freeze', 'bot_zombie' }
 
 function COMMAND:on_run(player)
@@ -17,7 +17,7 @@ local COMMAND = Command.new('unfreezebots')
 COMMAND.name = 'UnfreezeBots'
 COMMAND.description = 'command.unfreezebots.description'
 COMMAND.permission = 'moderator'
-COMMAND.category = 'perm.categories.server_management'
+COMMAND.category = 'permission.categories.server_management'
 COMMAND.aliases = { 'botunfreeze', 'unfreezebot', 'bot_unfreeze', 'bot_unzombie' }
 
 function COMMAND:on_run(player)
@@ -33,7 +33,7 @@ COMMAND.name = 'AddBots'
 COMMAND.description = 'command.addbots.description'
 COMMAND.syntax = 'command.addbots.syntax'
 COMMAND.permission = 'moderator'
-COMMAND.category = 'perm.categories.server_management'
+COMMAND.category = 'permission.categories.server_management'
 COMMAND.arguments = 0
 COMMAND.aliases = { 'bot', 'bots' }
 
@@ -53,7 +53,7 @@ local COMMAND = Command.new('kickbots')
 COMMAND.name = 'KickBots'
 COMMAND.description = 'command.kickbots.description'
 COMMAND.permission = 'moderator'
-COMMAND.category = 'perm.categories.server_management'
+COMMAND.category = 'permission.categories.server_management'
 COMMAND.aliases = { 'botkick', 'kickbot' }
 
 function COMMAND:on_run(player)

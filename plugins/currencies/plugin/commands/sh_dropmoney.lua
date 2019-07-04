@@ -2,7 +2,7 @@
 COMMAND.name = 'DropMoney'
 COMMAND.description = 'command.drop_money.description'
 COMMAND.syntax = 'command.drop_money.syntax'
-COMMAND.category = 'perm.categories.general'
+COMMAND.category = 'permission.categories.general'
 COMMAND.arguments = 1
 COMMAND.aliases = { 'dropcash', 'droptokens' }
 
