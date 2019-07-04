@@ -1,3 +1,5 @@
 ru:
-  display_typing:
-    typing: ПЕЧАТАЕТ...
+  ui:
+    hud:
+      display_typing:
+        typing: ПЕЧАТАЕТ...

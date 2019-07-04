@@ -1,9 +1,9 @@
 local COMMAND = Command.new('forcefall')
 COMMAND.name = 'ForceFall'
-COMMAND.description = 'force_fall.description'
-COMMAND.syntax = 'force_fall.syntax'
+COMMAND.description = 'command.force_fall.description'
+COMMAND.syntax = 'command.force_fall.syntax'
 COMMAND.permission = 'assistant'
-COMMAND.category = 'categories.roleplay'
+COMMAND.category = 'perm.categories.roleplay'
 COMMAND.arguments = 1
 COMMAND.player_arg = 1
 COMMAND.aliases = { 'forcefallover', 'plyfall' }
@@ -28,7 +28,7 @@ function COMMAND:on_run(player, target, delay)
       end)
     end
   else
-    player:notify(t'cant_now')
+    player:notify(t'error.cant_now')
   end
 end
 

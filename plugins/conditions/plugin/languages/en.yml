@@ -1,19 +1,5 @@
 en:
-  conditions:
-    select_operator: <Select operator>
-    select_parameter: <Select parameter>
-    right_click: Right click here to add new condition
-    add_condition: Add condition
-    set_parameter: Set parameter...
-    set_operator: Set operator...
-    operators: Operators
-    delete: Delete condition
-    save:
-      title: Condition saving
-      message: Specify preset name.
-    load:
-      title: Condition loading
-      column: Select preset
+  condition:
     steamid:
       name: Player with specific SteamID
       text: SteamID {1} {2}
@@ -34,3 +20,19 @@ en:
       name: Player with specific weapon in hands
       text: Active weapon class {1} {2}
       message: Input weapon class
+  ui:
+    condition:
+      select_operator: <Select operator>
+      select_parameter: <Select parameter>
+      right_click: Right click here to add new condition
+      add_condition: Add condition
+      set_parameter: Set parameter...
+      set_operator: Set operator...
+      operators: Operators
+      delete: Delete condition
+      save:
+        title: Condition saving
+        message: Specify preset name.
+      load:
+        title: Condition loading
+        column: Select preset

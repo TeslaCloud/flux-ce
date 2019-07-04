@@ -13,8 +13,8 @@ function Bolt:AddTabMenuItems(menu)
 end
 
 function Bolt:AddAdminMenuItems(panel, sidebar)
-  panel:add_panel('admin_player_management', t'admin.player_management', 'manage_permissions')
-  panel:add_panel('admin_config_editor', t'admin.config_editor', 'manage_config')
+  panel:add_panel('admin_player_management', t'ui.admin.player_management', 'manage_permissions')
+  panel:add_panel('admin_config_editor', t'ui.admin.config_editor', 'manage_config')
 end
 
 function Bolt:OnThemeLoaded(current_theme)
@@ -30,7 +30,7 @@ end
 function Bolt:HUDPaint()
   if IsValid(PLAYER) and PLAYER:has_initialized() and PLAYER:Alive()
   and PLAYER:get_nv('transmission_prevented') then
-    local text, font = t'vanish.client_text', Theme.get_font('text_normal')
+    local text, font = t'ui.hud.vanish', Theme.get_font('text_normal')
     local w, h = util.text_size(text, font)
     local x, y = ScrW() - w - 16, ScrH() - h - 16
     FontAwesome:draw('fa-eye-slash', x - h - math.scale(12), y, h)

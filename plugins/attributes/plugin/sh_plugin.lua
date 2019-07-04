@@ -14,8 +14,8 @@ end
 
 function AttributesPlugin:RegisterConditions()
   Conditions:register_condition('attribute', {
-    name = 'conditions.attribute.name',
-    text = 'conditions.attribute.text',
+    name = 'condition.attribute.name',
+    text = 'condition.attribute.text',
     get_args = function(panel, data)
       local attribute_name = ''
       local operator = util.operator_to_symbol(panel.data.operator) or ''
@@ -34,7 +34,7 @@ function AttributesPlugin:RegisterConditions()
       return util.process_operator(data.operator, player:get_attribute(data.attribute), tonumber(data.attribute_value))
     end,
     set_parameters = function(id, data, panel, menu, parent)
-      parent:create_selector(data.name, 'conditions.attribute.message1', 'conditions.attributes', Attributes.get_stored(),
+      parent:create_selector(data.name, 'condition.attribute.message1', 'condition.attributes', Attributes.get_stored(),
       function(selector, value)
         selector:add_choice(t(value.name), function()
           panel.data.attribute = value.attr_id
@@ -43,7 +43,7 @@ function AttributesPlugin:RegisterConditions()
 
           Derma_StringRequest(
             t(data.name),
-            t'conditions.attribute.message2',
+            t'condition.attribute.message2',
             '',
             function(text)
               panel.data.attribute_value = text

@@ -1,7 +1,7 @@
 local PANEL = {}
 
 function PANEL:Init()
-  self:SetTooltip(t'avatar_tooltip')
+  self:SetTooltip(t'ui.avatar_tooltip')
 
   self.button = vgui.create('DButton', self)
   self.button:Dock(FILL)

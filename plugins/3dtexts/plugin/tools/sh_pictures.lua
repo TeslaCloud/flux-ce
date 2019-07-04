@@ -40,7 +40,7 @@ function TOOL:LeftClick(trace)
 
   SurfaceText:add_picture(data)
 
-  Flux.Player:notify(player, '3d_picture.placed')
+  Flux.Player:notify(player, 'notification.3d_picture.placed')
 
   return true
 end
@@ -54,7 +54,7 @@ function TOOL:RightClick(trace)
 end
 
 function TOOL.BuildCPanel(CPanel)
-  CPanel:AddControl('Header',  { Description = t'tool.texts.desc' })
+  CPanel:AddControl('Header',  { Description = t'tool.pictures.desc' })
   CPanel:AddControl('TextBox', { Label = t'tool.pictures.url', Command = 'pictures_url', MaxLenth = '256' })
   CPanel:AddControl('Slider',  { Label = t'tool.pictures.width', Command = 'pictures_width', Type = 'Integer', Min = 1, Max = 4000 })
   CPanel:AddControl('Slider',  { Label = t'tool.pictures.height', Command = 'pictures_height', Type = 'Integer', Min = 1, Max = 4000 })

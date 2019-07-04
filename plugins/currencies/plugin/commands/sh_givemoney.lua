@@ -1,8 +1,8 @@
 ﻿local COMMAND = Command.new('givemoney')
 COMMAND.name = 'GiveMoney'
-COMMAND.description = 'give_money.description'
-COMMAND.syntax = 'give_money.syntax'
-COMMAND.category = 'categories.general'
+COMMAND.description = 'command.give_money.description'
+COMMAND.syntax = 'command.give_money.syntax'
+COMMAND.category = 'perm.categories.general'
 COMMAND.arguments = 1
 COMMAND.aliases = { 'givecash', 'givetokens' }
 
@@ -22,7 +22,7 @@ function COMMAND:on_run(player, amount, currency)
   amount = tonumber(amount)
 
   if !amount then
-    player:notify('currency.notify.invalid_amount')
+    player:notify('notification.currency.invalid_amount')
 
     return
   end
@@ -34,7 +34,7 @@ function COMMAND:on_run(player, amount, currency)
     currency = Config.get('default_currency')
 
     if !Currencies:find_currency(currency) then
-      player:notify('currency.notify.invalid_currency')
+      player:notify('notification.currency.invalid_currency')
 
       return
     end

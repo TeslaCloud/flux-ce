@@ -14,7 +14,7 @@ vgui.Register('fl_character_creation_base', PANEL, 'fl_base_panel')
 
 local PANEL = {}
 PANEL.id = 'general'
-PANEL.text = 'char_create.general'
+PANEL.text = 'ui.char_create.general'
 
 function PANEL:Init()
   local fa_icon_size = math.scale(24)
@@ -22,7 +22,7 @@ function PANEL:Init()
   local scrw, scrh = ScrW(), ScrH()
 
   self.gender_label = vgui.Create('DLabel', self)
-  self.gender_label:SetText(t'char_create.gender')
+  self.gender_label:SetText(t'ui.char_create.gender')
   self.gender_label:SetFont(Theme.get_font('main_menu_normal'))
   self.gender_label:SetTextColor(Color('white'))
   self.gender_label:SizeToContents()
@@ -75,7 +75,7 @@ function PANEL:Init()
   end
 
   self.name_label = vgui.Create('DLabel', self)
-  self.name_label:SetText(t'char_create.name')
+  self.name_label:SetText(t'ui.char_create.name')
   self.name_label:SetFont(Theme.get_font('main_menu_normal'))
   self.name_label:SetTextColor(Color('white'))
   self.name_label:SizeToContents()
@@ -93,7 +93,7 @@ function PANEL:Init()
     self.name_random:SetSize(fa_icon_size, fa_icon_size)
     self.name_random:set_icon('fa-random')
     self.name_random:set_icon_size(fa_icon_size, fa_icon_size)
-    self.name_random:SetTooltip(t'char_create.random_name')
+    self.name_random:SetTooltip(t'ui.char_create.random_name')
     self.name_random:SetDrawBackground(false)
     self.name_random.DoClick = function(btn)
       surface.PlaySound('buttons/blip1.wav')
@@ -103,7 +103,7 @@ function PANEL:Init()
   end
 
   self.desc_label = vgui.Create('DLabel', self)
-  self.desc_label:SetText(t'char_create.desc')
+  self.desc_label:SetText(t'ui.char_create.desc')
   self.desc_label:SetFont(Theme.get_font('main_menu_normal'))
   self.desc_label:SetTextColor(Color('white'))
   self.desc_label:SizeToContents()
@@ -155,7 +155,7 @@ function PANEL:Init()
   self.skin = vgui.Create('fl_counter', self)
   self.skin:SetSize(32, 64)
   self.skin:SetPos(scrw * 0.25 + 48, 48)
-  self.skin:set_text(t'char_create.skin')
+  self.skin:set_text(t'ui.char_create.skin')
   self.skin:set_font(Theme.get_font('main_menu_small'))
   self.skin:set_value(1)
   self.skin:SetVisible(false)
@@ -292,29 +292,29 @@ function PANEL:on_validate()
 
   if self.name_entry:IsVisible() then
     if !isstring(name) then
-      return false, t'char_create.name_invalid'
+      return false, t'ui.char_create.name_invalid'
     end
 
     if utf8.len(name) < Config.get('character_min_name_len') or
     utf8.len(name) > Config.get('character_max_name_len') then
-      return false, t('char_create.name_len', { Config.get('character_min_name_len'), Config.get('character_max_name_len') })
+      return false, t('ui.char_create.name_len', { Config.get('character_min_name_len'), Config.get('character_max_name_len') })
     end
   end
 
   if self.desc_entry:IsVisible() then
     if !isstring(desc) then
-      return false, t'char_create.desc_invalid'
+      return false, t'ui.char_create.desc_invalid'
     end
 
     if utf8.len(desc) < Config.get('character_min_desc_len') or
     utf8.len(desc) > Config.get('character_max_desc_len') then
-      return false, t('char_create.desc_len', { Config.get('character_min_desc_len'), Config.get('character_max_desc_len') })
+      return false, t('ui.char_create.desc_len', { Config.get('character_min_desc_len'), Config.get('character_max_desc_len') })
     end
   end
 
   if self.models_list:IsVisible() then
     if !self.models_list.model then
-      return false, t'char_create.no_model'
+      return false, t'ui.char_create.no_model'
     end
   end
 end

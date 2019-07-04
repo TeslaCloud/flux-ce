@@ -1,9 +1,5 @@
 en:
-  doors:
-    title: Doors
-    unlock: Unlock
-    lock: Lock
-    settings: Settings
+  door:
     categories:
       general: General
     properties:
@@ -15,3 +11,9 @@ en:
     title_type:
       none: "Disabled"
       center: "Centered"
+  ui:
+    door:
+      title: Doors
+      unlock: Unlock
+      lock: Lock
+      settings: Settings

@@ -1,9 +1,9 @@
 local COMMAND = Command.new('vanish')
 COMMAND.name = 'Vanish'
-COMMAND.description = 'vanish.description'
-COMMAND.syntax = 'vanish.syntax'
+COMMAND.description = 'command.vanish.description'
+COMMAND.syntax = 'command.vanish.syntax'
 COMMAND.permission = 'moderator'
-COMMAND.category = 'categories.player_management'
+COMMAND.category = 'perm.categories.player_management'
 COMMAND.arguments = 1
 COMMAND.immunity = true
 COMMAND.aliases = { 'v' }
@@ -14,7 +14,7 @@ function COMMAND:on_run(player, targets, should_vanish)
   for k, target in ipairs(targets) do
     should_vanish = should_vanish != nil and tobool(should_vanish) or !target.is_vanished
 
-    local phrase = 'vanish.'..(should_vanish and 'enabled' or 'disabled')
+    local phrase = 'command.vanish.'..(should_vanish and 'enabled' or 'disabled')
     local target_name = target:name()
 
     target:AddEFlags(EFL_FORCE_CHECK_TRANSMIT)
@@ -45,7 +45,7 @@ function COMMAND:on_run(player, targets, should_vanish)
       end
     end)
 
-    target:notify('vanish.self', { state = 'vanish.'..(should_vanish and 'vanished' or 'unvanished') })
+    target:notify('command.vanish.self', { state = 'command.vanish.'..(should_vanish and 'vanished' or 'unvanished') })
 
     target.is_vanished = should_vanish
   end

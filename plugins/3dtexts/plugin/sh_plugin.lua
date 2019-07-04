@@ -6,8 +6,8 @@ SurfaceText.pictures = SurfaceText.pictures or {}
 require_relative 'cl_hooks'
 
 function SurfaceText:RegisterPermissions()
-  Bolt:register_permission('texts', 'Place / delete texts', 'Grants access to place and delete texts.', 'categories.level_design', 'assistent')
-  Bolt:register_permission('pictures', 'Place / delete pictures', 'Grants access to place and delete pictures.', 'categories.level_design', 'assistent')
+  Bolt:register_permission('texts', 'Place / delete texts', 'Grants access to place and delete texts.', 'perm.categories.level_design', 'assistent')
+  Bolt:register_permission('pictures', 'Place / delete pictures', 'Grants access to place and delete pictures.', 'perm.categories.level_design', 'assistent')
 end
 
 if SERVER then
@@ -77,7 +77,7 @@ if SERVER then
 
       Cable.send(nil, 'fl_surface_text_remove', idx)
 
-      Flux.Player:notify(player, t'3d_text.text_removed')
+      Flux.Player:notify(player, t'notification.3d_text.text_removed')
     end
   end)
 
@@ -89,7 +89,7 @@ if SERVER then
 
       Cable.send(nil, 'fl_surface_picture_remove', idx)
 
-      Flux.Player:notify(player, t'3d_picture.removed')
+      Flux.Player:notify(player, t'notification.3d_picture.removed')
     end
   end)
 else

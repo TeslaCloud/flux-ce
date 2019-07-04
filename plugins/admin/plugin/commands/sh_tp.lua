@@ -1,9 +1,9 @@
 local COMMAND = Command.new('tp')
 COMMAND.name = 'Tp'
-COMMAND.description = 'tpcmd.description'
-COMMAND.syntax = 'tpcmd.syntax'
+COMMAND.description = 'command.tp.description'
+COMMAND.syntax = 'command.tp.syntax'
 COMMAND.permission = 'assistant'
-COMMAND.category = 'categories.administration'
+COMMAND.category = 'perm.categories.administration'
 COMMAND.arguments = 1
 COMMAND.immunity = true
 COMMAND.aliases = { 'teleport', 'plytp', 'bring' }
@@ -17,7 +17,7 @@ function COMMAND:on_run(player, targets)
     end
   end
 
-  player:notify('tpcmd.notify', util.player_list_to_string(targets))
+  player:notify('tp.notify', util.player_list_to_string(targets))
 end
 
 COMMAND:register()

@@ -8,7 +8,7 @@ if !areas then
 end
 
 function Area:RegisterPermissions()
-  Bolt:register_permission('areas', 'Manage areas', 'Grants access to manage areas.', 'categories.level_design', 'moderator')
+  Bolt:register_permission('areas', 'Manage areas', 'Grants access to manage areas.', 'perm.categories.level_design', 'moderator')
 end
 
 Area.tool_modes = {
@@ -93,9 +93,9 @@ function Area:AddAreaToolModes(mode_list)
   end
 
   function mode:BuildCPanel(panel)
-    panel:AddControl('Header', { Description = 'tool.area.desc' })
-    panel:AddControl('TextBox', { Label = 'tool.area.text', Command = 'area_text', MaxLenth = '256' })
-    panel:AddControl('Slider', { Label = 'tool.area.height', Command = 'area_height', Type = 'Float', Min = -2048, Max = 2048 })
+    panel:AddControl('Header', { Description = t'tool.area.desc' })
+    panel:AddControl('TextBox', { Label = t'tool.area.text', Command = 'area_text', MaxLenth = '256' })
+    panel:AddControl('Slider', { Label = t'tool.area.height', Command = 'area_height', Type = 'Float', Min = -2048, Max = 2048 })
   end
 
   mode_list:Add(mode)

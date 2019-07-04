@@ -1,11 +1,12 @@
 en:
-  static:
-    description: Makes the entity you're looking at static.
-    added: You have added a static entity!
-    removed: You have removed this static entity!
-  unstatic:
-    description: Makes the entity you're looking at not static.
-  err:
+  command:
+    static:
+      description: Makes the entity you're looking at static.
+      added: You have added a static entity!
+      removed: You have removed this static entity!
+    unstatic:
+      description: Makes the entity you're looking at not static.
+  error:
     not_valid_entity: This is not a valid entity!
     cannot_static_this: You cannot static this entity!
     already_static: This entity is already static!

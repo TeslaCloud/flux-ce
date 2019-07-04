@@ -1,4 +1,15 @@
 en:
+  condition:
+    has_item:
+      name: Character with certain item in the inventory
+      text: Has item {1} {2}
+      message: Input item id
+    has_item_data:
+      name: Character with item that contains certain data value
+      text: Has item {2} with data {3} {1} {4}
+      message1: Input item id
+      message2: Input item data key
+      message3: Input item data value
   item:
     category:
       consumables: Consumables
@@ -7,7 +18,7 @@ en:
       other: Other
       weapon: Weapon
       ammo: Ammunition
-      thrown: Throwable weapon
+      throwable: Throwable weapon
     slot:
       primary: Primary
       secondary: Secondary
@@ -23,14 +34,3 @@ en:
       unequip: Unequip
       unload: Unload
       load: Load
-  conditions:
-    has_item:
-      name: Character with certain item in the inventory
-      text: Has item {1} {2}
-      message: Input item id
-    has_item_data:
-      name: Character with item that contains certain data value
-      text: Has item {2} with data {3} {1} {4}
-      message1: Input item id
-      message2: Input item data key
-      message3: Input item data value

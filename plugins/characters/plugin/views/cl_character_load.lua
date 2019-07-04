@@ -20,7 +20,7 @@ function PANEL:Init()
   self.back:SetSize(self.list:GetWide() * 0.25, Theme.get_option('menu_sidebar_button_height'))
   self.back:SetPos(scrw * 0.5 + self.list:GetWide() * 0.5 - self.back:GetWide(), scrh * 0.5 + self.list:GetTall() * 0.5 + self.back:GetTall())
   self.back:SetFont(Theme.get_font('main_menu_normal'))
-  self.back:SetTitle(t'char_create.main_menu')
+  self.back:SetTitle(t'ui.char_create.main_menu')
   self.back:SetDrawBackground(false)
   self.back:set_icon('fa-chevron-right', true)
   self.back:set_icon_size(math.scale(16))
@@ -76,7 +76,7 @@ function PANEL:Init()
 
   self.select = vgui.Create('fl_button', self)
   self.select:SetFont(Theme.get_font('main_menu_normal'))
-  self.select:SetTitle(t'char_create.select')
+  self.select:SetTitle(t'ui.char_create.select')
   self.select:SetDrawBackground(false)
   self.select:set_text_color(Color('lightgreen'))
   self.select:set_icon('fa-check')
@@ -102,7 +102,7 @@ function PANEL:Init()
   self.delete.DoClick = function(btn)
     surface.PlaySound('vo/npc/male01/answer37.wav')
 
-    Derma_StringRequest(t'char_create.delete_confirm', t('char_create.delete_confirm_msg', { self.char_data.name }), '',
+    Derma_StringRequest(t'ui.char_create.delete_confirm', t('ui.char_create.delete_confirm_msg', { self.char_data.name }), '',
     function(text)
       if text == self.char_data.name then
         Cable.send('fl_player_delete_character', self.char_data.id)
@@ -114,7 +114,7 @@ function PANEL:Init()
         end)
       end
     end,
-    nil, t'char_create.delete')
+    nil, t'ui.char_create.delete')
   end
 end
 

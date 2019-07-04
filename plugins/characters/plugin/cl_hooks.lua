@@ -35,7 +35,7 @@ end
 
 function Characters:GetLoadingScreenMessage()
   if !IsValid(PLAYER) or !istable(PLAYER.characters) then
-    return t'loading.characters', 75
+    return t'ui.hud.loading.characters', 75
   end
 end
 
@@ -78,7 +78,7 @@ function Characters:OnThemeLoaded(current_theme)
     return vgui.Create('fl_char_load', parent)
   end)
 
-  current_theme:add_panel('char_create.general', function(id, parent, ...)
+  current_theme:add_panel('ui.char_create.general', function(id, parent, ...)
     return vgui.Create('fl_char_create_general', parent)
   end)
 
@@ -92,7 +92,7 @@ end
 
 function Characters:AddTabMenuItems(menu)
   menu:add_menu_item('mainmenu', {
-    title = t'tab_menu.main_menu',
+    title = t'ui.tab_menu.main_menu',
     icon = 'fa-bars',
     override = function(menu_panel, button)
       menu_panel:safe_remove()
@@ -176,7 +176,7 @@ function Characters:RebuildScoreboardPlayerCard(card, player)
 end
 
 function Characters:AddCharacterCreationMenuStages(panel)
-  panel:add_stage('char_create.general')
+  panel:add_stage('ui.char_create.general')
 end
 
 function Characters:GetDrawPlayerInfo(player, x, y, distance, lines)
@@ -192,12 +192,12 @@ function Characters:AddMainMenuItems(panel, sidebar)
   local scrw, scrh = ScrW(), ScrH()
 
   if PLAYER:is_character_loaded() then
-    panel:add_button(t'main_menu.continue', function(btn)
+    panel:add_button(t'ui.main_menu.continue', function(btn)
       panel:Remove()
     end)
   end
 
-  panel:add_button(t'char_create.title', function(btn)
+  panel:add_button(t'ui.char_create.title', function(btn)
     btn:set_enabled(false)
 
     panel.menu = Theme.create_panel('char_create', panel)
@@ -208,7 +208,7 @@ function Characters:AddMainMenuItems(panel, sidebar)
   end)
 
   if PLAYER:get_all_characters() and #PLAYER:get_all_characters() > 0 then
-    panel:add_button(t'char_create.load', function(btn)
+    panel:add_button(t'ui.char_create.load', function(btn)
       btn:set_enabled(false)
 
       panel.menu = Theme.create_panel('char_create.load', panel)
@@ -219,11 +219,11 @@ function Characters:AddMainMenuItems(panel, sidebar)
     end)
   end
 
-  panel:add_button(t'main_menu.disconnect', function(btn)
-    Derma_Query(t'main_menu.disconnect_msg', t'main_menu.disconnect', t'yes', function()
+  panel:add_button(t'ui.main_menu.disconnect', function(btn)
+    Derma_Query(t'ui.main_menu.disconnect_msg', t'ui.main_menu.disconnect', t'ui.yes', function()
       RunConsoleCommand('disconnect')
     end,
-    t'no')
+    t'ui.no')
   end)
 end
 

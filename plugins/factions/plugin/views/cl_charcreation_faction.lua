@@ -1,6 +1,6 @@
 local PANEL = {}
 PANEL.id = 'faction'
-PANEL.text = 'char_create.faction'
+PANEL.text = 'ui.char_create.faction'
 PANEL.faction_id = ''
 
 function PANEL:on_open(parent)
@@ -70,13 +70,13 @@ end
 
 function PANEL:on_validate()
   if self.faction_id == '' then
-    return false, t'char_create.no_faction'
+    return false, t'ui.char_create.no_faction'
   end
 
   local faction = Factions.find_by_id(self.faction_id)
 
   if faction.whitelisted and !PLAYER:has_whitelist(self.faction_id) then
-    return false, t'char_create.no_whitelist'
+    return false, t'ui.char_create.no_whitelist'
   end
 end
 

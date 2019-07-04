@@ -42,8 +42,8 @@ function PANEL:rebuild()
   self.button_allow.DoRightClick = function(btn)
     surface.PlaySound('buttons/button14.wav')
 
-    Derma_StringRequest(t'admin.temp_permission.title',
-      t'admin.temp_permission.message',
+    Derma_StringRequest(t'ui.admin.temp_permission.title',
+      t'ui.admin.temp_permission.message',
       '',
       function(text)
         local duration = Bolt:interpret_ban_time(text)
@@ -81,8 +81,8 @@ function PANEL:rebuild()
   self.button_no.DoRightClick = function(btn)
     surface.PlaySound('buttons/button14.wav')
 
-    Derma_StringRequest(t'admin.temp_permission.title',
-      t'admin.temp_permission.message',
+    Derma_StringRequest(t'ui.admin.temp_permission.title',
+      t'ui.admin.temp_permission.message',
       '',
       function(text)
         local duration = Bolt:interpret_ban_time(text)
@@ -120,8 +120,8 @@ function PANEL:rebuild()
   self.button_never.DoRightClick = function(btn)
     surface.PlaySound('buttons/button14.wav')
 
-    Derma_StringRequest(t'admin.temp_permission.title',
-      t'admin.temp_permission.message',
+    Derma_StringRequest(t'ui.admin.temp_permission.title',
+      t'ui.admin.temp_permission.message',
       '',
       function(text)
         local duration = Bolt:interpret_ban_time(text)
@@ -206,7 +206,7 @@ function PANEL:set_temporary(perm, expires)
   local button = self:get_button(perm)
   button.is_temp = expires != 0 and true or nil
 
-  button:SetTooltip(expires != 0 and t'admin.expires'..' '..Flux.Lang:nice_time(expires - os.time()) or false)
+  button:SetTooltip(expires != 0 and t'ui.admin.expires'..' '..Flux.Lang:nice_time(expires - os.time()) or false)
 
   if IsValid(self.prev_temp) and self.prev_temp != button then
     self.prev_temp.is_temp = nil
@@ -295,9 +295,9 @@ function PANEL:rebuild()
       local panel = vgui.create('fl_base_panel')
 
       local category_buttons = {
-        t'admin.allow_all',
-        t'admin.no_all',
-        t'admin.never_all'
+        t'ui.admin.allow_all',
+        t'ui.admin.no_all',
+        t'ui.admin.never_all'
       }
 
       local quarter = width / 4

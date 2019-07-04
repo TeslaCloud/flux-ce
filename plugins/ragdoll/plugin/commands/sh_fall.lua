@@ -1,8 +1,8 @@
 local COMMAND = Command.new('fall')
 COMMAND.name = 'Fall'
-COMMAND.description = 'fall.description'
-COMMAND.syntax = 'fall.syntax'
-COMMAND.category = 'categories.roleplay'
+COMMAND.description = 'command.fall.description'
+COMMAND.syntax = 'command.fall.syntax'
+COMMAND.category = 'perm.categories.roleplay'
 COMMAND.aliases = { 'fallover', 'charfallover' }
 COMMAND.no_console = true
 
@@ -20,7 +20,7 @@ function COMMAND:on_run(player, delay)
       player:run_command('getup '..tostring(delay))
     end
   else
-    player:notify(t'cant_now')
+    player:notify(t'error.cant_now')
   end
 end
 

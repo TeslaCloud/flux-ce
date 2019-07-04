@@ -1,90 +1,4 @@
 en:
-  time:
-    just_now: "just now"
-    second: "second"
-    seconds: "seconds"
-    minute: "minute"
-    minutes: "minutes"
-    hour: "hour"
-    hours: "hours"
-    day: "day"
-    days: "days"
-    week: "week"
-    weeks: "weeks"
-    year: "year"
-    years: "years"
-    from_now: "from now"
-    ago: "ago"
-    over: "over"
-    about: "about"
-    permanently: permanently
-    for: "for {time}"
-    and: and
-  cant_now: You cannot do this right now!
-  avatar_tooltip: Left click - Open profile, Right click - Copy SteamID
-  tab_menu:
-    scoreboard: Players
-    admin: Admin
-    close_menu: BACK
-  scoreboard:
-    title: PLAYER LIST
-    help: Clicking player's card may bring up some options.
-    ping: Ping
-    players_online: Players Online
-  "yes": "Yes"
-  "no": "No"
-  bar_text:
-    health: HEALTH
-    armor: ARMOR
-    respawn: WAITING TO RESPAWN...
-    getup: GETTING UP...
-  commands:
-    you_must_enter_command: You must enter a command!
-    not_valid: "'{1}' is not a valid command!"
-    no_access: You do not have access to this command!
-    player_invalid: "'{1}' is not a valid player!"
-    steamid_invalid: "'{1}' is not a valid Steam ID!"
-    higher_immunity: "{1} has higher immunity than you!"
-    syntax: "Incorrect syntax, use /{1} {2}"
-  target_id:
-    information: Press `E` for more information.
-    action: Press `E` for actions.
-  hint:
-    forums: Forums
-    hints: Hints
-    tab: TAB
-    commands: Commands
-    bugs: Bugs
-    forums_text:
-      You can visit TeslaCloud forums to get support, download schemas and
-      chat with fellow Flux users!
-    hints_text:
-      These hints can be disabled from clientside settings menu. Not in
-      this build though.
-    tab_text: "Press 'Show Scoreboard' key (default: TAB) to open Flux's menu."
-    commands_text:
-      Start typing a command in chat to see a list of all available commands and
-      their syntax help.
-    bugs_text:
-      Encountered a bug? Have an idea that we should totally add to Flux? Visit
-      our forums at https://teslacloud.net and tell us about it!
-  player_message:
-    died: YOU DIED
-    respawn: RESPAWNING IN {1} SECOND(s).
-  loading:
-    schema: Loading schema and plugins, please wait...
-    local_player: Preparing loading sequence, please wait...
-    player_object: Waiting for local player to be created, please wait...
-  operators:
-    less: Less
-    greater: Greater
-    less_equal: Less or equal
-    greater_equal: Greater or equal
-    equal: Equal
-    unequal: Unequal
-    and: AND
-    or: OR
-    not: NOT
   config:
     general:
       title: General settings
@@ -116,3 +30,82 @@ en:
       player_data_save_interval:
         name: Player data save interval
         desc: Amount of time between player data savings.
+  error:
+    cant_now: You cannot do this right now!
+    commands:
+      higher_immunity: "{1} has higher immunity than you!"
+      no_access: You do not have access to this command!
+      not_valid: "'{1}' is not a valid command!"
+      player_invalid: "'{1}' is not a valid player!"
+      steamid_invalid: "'{1}' is not a valid Steam ID!"
+      syntax: "Incorrect syntax, use /{1} {2}"
+      you_must_enter_command: You must enter a command!
+  hint:
+    forums:
+      You can visit TeslaCloud forums to get support, download schemas and
+      chat with fellow Flux users!
+    hints:
+      These hints can be disabled from clientside settings menu. Not in
+      this build though.
+    tab: "Press 'Show Scoreboard' key (default: TAB) to open Flux's menu."
+    commands:
+      Start typing a command in chat to see a list of all available commands and
+      their syntax help.
+    bugs:
+      Encountered a bug? Have an idea that we should totally add to Flux? Visit
+      our forums at https://teslacloud.net and tell us about it!
+  operators:
+    less: Less
+    greater: Greater
+    less_equal: Less or equal
+    greater_equal: Greater or equal
+    equal: Equal
+    unequal: Unequal
+    and: AND
+    or: OR
+    not: NOT
+  time:
+    just_now: "just now"
+    second: "second"
+    seconds: "seconds"
+    minute: "minute"
+    minutes: "minutes"
+    hour: "hour"
+    hours: "hours"
+    day: "day"
+    days: "days"
+    week: "week"
+    weeks: "weeks"
+    year: "year"
+    years: "years"
+    from_now: "from now"
+    ago: "ago"
+    over: "over"
+    about: "about"
+    permanently: permanently
+    for: "for {time}"
+    and: and
+  ui:
+    hud:
+      bar_text:
+        getup: GETTING UP...
+        respawn: WAITING TO RESPAWN...
+      loading:
+        local_player: Preparing loading sequence, please wait...
+        player_object: Waiting for local player to be created, please wait...
+        schema: Loading schema and plugins, please wait...
+      player_message:
+        died: YOU DIED
+        respawn: RESPAWNING IN {1} SECOND(s).
+    avatar_tooltip: Left click - Open profile, Right click - Copy SteamID
+    scoreboard:
+      help: Clicking player's card may bring up some options.
+      ping: Ping
+      players_online: Players Online
+      title: PLAYER LIST
+    tab_menu:
+      admin: Admin
+      close_menu: BACK
+      scoreboard: Players
+    yes: "Yes"
+    no: "No"

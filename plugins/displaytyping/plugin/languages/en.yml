@@ -1,3 +1,5 @@
 en:
-  display_typing:
-    typing: TYPING...
+  ui:
+    hud:
+      display_typing:
+        typing: TYPING...

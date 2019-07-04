@@ -1,9 +1,9 @@
 local COMMAND = Command.new('return')
 COMMAND.name = 'Return'
-COMMAND.description = 'returncmd.description'
-COMMAND.syntax = 'returncmd.syntax'
+COMMAND.description = 'command.return.description'
+COMMAND.syntax = 'command.return.syntax'
 COMMAND.permission = 'assistant'
-COMMAND.category = 'categories.administration'
+COMMAND.category = 'perm.categories.administration'
 COMMAND.arguments = 1
 COMMAND.immunity = true
 COMMAND.aliases = { 'return', 'back' }
@@ -16,7 +16,7 @@ function COMMAND:on_run(player, targets)
     end
   end
 
-  player:notify('returncmd.notify', util.player_list_to_string(targets))
+  player:notify('return.notify', util.player_list_to_string(targets))
 end
 
 COMMAND:register()

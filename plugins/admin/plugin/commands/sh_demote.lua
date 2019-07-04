@@ -1,9 +1,9 @@
 local COMMAND = Command.new('demote')
 COMMAND.name = 'Demote'
-COMMAND.description = 'demote.description'
-COMMAND.syntax = 'demote.syntax'
+COMMAND.description = 'command.demote.description'
+COMMAND.syntax = 'command.demote.syntax'
 COMMAND.permission = 'administrator'
-COMMAND.category = 'categories.player_management'
+COMMAND.category = 'perm.categories.player_management'
 COMMAND.arguments = 1
 COMMAND.immunity = true
 COMMAND.aliases = { 'plydemote' }

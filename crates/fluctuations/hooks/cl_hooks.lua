@@ -109,14 +109,14 @@ function GM:HUDDrawScoreBoard()
   self.BaseClass:HUDDrawScoreBoard()
 
   if !IsValid(PLAYER) or !PLAYER:has_initialized() or hook.run('ShouldDrawLoadingScreen') then
-    local text = t'loading.schema'
+    local text = t'ui.hud.loading.schema'
     local percentage = 80
 
     if !Flux.local_player_created then
-      text = t'loading.local_player'
+      text = t'ui.hud.loading.local_player'
       percentage = 0
     elseif !IsValid(PLAYER) then
-      text = t'loading.player_object'
+      text = t'ui.hud.loading.player_object'
       percentage = 20
     end
 
@@ -359,7 +359,7 @@ end
 -- Called when category icons are presented.
 function GM:AddTabMenuItems(menu)
   menu:add_menu_item('scoreboard', {
-    title = t'tab_menu.scoreboard',
+    title = t'ui.tab_menu.scoreboard',
     panel = 'fl_scoreboard',
     icon = 'fa-users'
   })

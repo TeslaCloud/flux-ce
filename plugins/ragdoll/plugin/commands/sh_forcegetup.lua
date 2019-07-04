@@ -1,9 +1,9 @@
 local COMMAND = Command.new('forcegetup')
 COMMAND.name = 'ForceGetUp'
-COMMAND.description = 'force_getup.description'
-COMMAND.syntax = 'force_getup.syntax'
+COMMAND.description = 'command.force_getup.description'
+COMMAND.syntax = 'command.force_getup.syntax'
 COMMAND.permission = 'assistant'
-COMMAND.category = 'categories.roleplay'
+COMMAND.category = 'perm.categories.roleplay'
 COMMAND.arguments = 1
 COMMAND.player_arg = 1
 COMMAND.aliases = { 'forcegetup', 'plygetup' }
@@ -21,7 +21,7 @@ function COMMAND:on_run(player, target, delay)
       target:set_ragdoll_state(RAGDOLL_NONE)
     end)
   else
-    player:notify(t'cant_now')
+    player:notify(t'error.cant_now')
   end
 end
 

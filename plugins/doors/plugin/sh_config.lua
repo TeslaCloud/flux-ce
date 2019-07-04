@@ -6,7 +6,7 @@ Doors:register_property('name', {
     entity:set_nv('fl_name', data)
   end,
   create_panel = function(entity, panel)
-    local name = panel.properties:CreateRow(t'doors.categories.general', t'doors.properties.name')
+    local name = panel.properties:CreateRow(t'door.categories.general', t'door.properties.name')
     name:Setup('Generic')
 
     return name
@@ -21,14 +21,14 @@ Doors:register_property('title_type', {
     entity:set_nv('fl_title_type', data)
   end,
   create_panel = function(entity, panel)
-    local title_type = panel.properties:CreateRow(t'doors.categories.general', t'doors.properties.title_type.name')
-    title_type:Setup('Combo', { text = t'doors.properties.title_type.select' })
+    local title_type = panel.properties:CreateRow(t'door.categories.general', t'door.properties.title_type.name')
+    title_type:Setup('Combo', { text = t'door.properties.title_type.select' })
 
     for k, v in pairs(Doors.title_types) do
       title_type:AddChoice(t(v.name), k)
     end
 
-    title_type:AddChoice(t'doors.title_type.none', '')
+    title_type:AddChoice(t'door.title_type.none', '')
 
     return title_type
   end
@@ -68,7 +68,7 @@ Doors:register_property('locked', {
     entity:set_nv('fl_locked', data)
   end,
   create_panel = function(entity, panel)
-    local locked = panel.properties:CreateRow(t'doors.categories.general', t'doors.properties.locked')
+    local locked = panel.properties:CreateRow(t'door.categories.general', t'door.properties.locked')
     locked:Setup('Boolean')
 
     return locked
@@ -76,7 +76,7 @@ Doors:register_property('locked', {
 })
 
 Doors:register_title_type('center', {
-  name = 'doors.title_type.center',
+  name = 'door.title_type.center',
   draw = function(entity, w, h, alpha)
     local text = entity:get_nv('fl_name')
     local font = Theme.get_font('text_3d2d')

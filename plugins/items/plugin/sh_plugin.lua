@@ -22,8 +22,8 @@ end
 
 function Items:RegisterConditions()
   Conditions:register_condition('has_item', {
-    name = 'conditions.has_item.name',
-    text = 'conditions.has_item.text',
+    name = 'condition.has_item.name',
+    text = 'condition.has_item.text',
     get_args = function(panel, data)
       local operator = util.operator_to_symbol(panel.data.operator) or ''
       local parameter = panel.data.item_id or ''
@@ -39,7 +39,7 @@ function Items:RegisterConditions()
     set_parameters = function(id, data, panel, menu, parent)
       Derma_StringRequest(
         t(data.name),
-        t'conditions.has_item.message',
+        t'condition.has_item.message',
         '',
         function(text)
           panel.data.item_id = text:lower()
@@ -51,8 +51,8 @@ function Items:RegisterConditions()
   })
 
   Conditions:register_condition('has_item_data', {
-    name = 'conditions.has_item_data.name',
-    text = 'conditions.has_item_data.text',
+    name = 'condition.has_item_data.name',
+    text = 'condition.has_item_data.text',
     get_args = function(panel, data)
       local operator = util.operator_to_symbol(panel.data.operator) or ''
       local item_id = panel.data.item_id or ''
@@ -84,7 +84,7 @@ function Items:RegisterConditions()
     set_parameters = function(id, data, panel, menu, parent)
       Derma_StringRequest(
         t(data.name),
-        t'conditions.has_item_data.message1',
+        t'condition.has_item_data.message1',
         '',
         function(text)
           panel.data.item_id = text:lower()
@@ -93,7 +93,7 @@ function Items:RegisterConditions()
 
           Derma_StringRequest(
             t(data.name),
-            t'conditions.has_item_data.message2',
+            t'condition.has_item_data.message2',
             '',
             function(text)
               panel.data.key = text
@@ -102,7 +102,7 @@ function Items:RegisterConditions()
 
               Derma_StringRequest(
                 t(data.name),
-                t'conditions.has_item_data.message3',
+                t'condition.has_item_data.message3',
                 '',
                 function(text)
                   panel.data.value = text

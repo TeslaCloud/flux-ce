@@ -1,7 +1,7 @@
 local PANEL = {}
 
 function PANEL:Init()
-  self.title = t'currency.title'
+  self.title = t'ui.currency.title'
 end
 
 function PANEL:Paint(w, h)
@@ -57,18 +57,18 @@ function PANEL:rebuild()
         local give_button = vgui.create('fl_button', line)
         give_button:SetSize(button_size, button_size)
         give_button:SetDrawBackground(false)
-        give_button:SetTooltip(t'currency.give.title')
+        give_button:SetTooltip(t'ui.currency.give.title')
         give_button:set_icon('fa-hand-holding-usd')
         give_button:set_icon_size(button_size)
         give_button:Dock(RIGHT)
         give_button.DoClick = function(btn)
-          Derma_StringRequest(t'currency.give.title', t'currency.give.message', '', function(text)
+          Derma_StringRequest(t'ui.currency.give.title', t'ui.currency.give.message', '', function(text)
             local value = tonumber(text)
 
             if value and value > 0 then
               Cable.send('fl_currency_give', value, k)
             else
-              PLAYER:notify('currency.notify.invalid_amount')
+              PLAYER:notify('notification.currency.invalid_amount')
             end
           end)
         end
@@ -78,18 +78,18 @@ function PANEL:rebuild()
         local drop_button = vgui.create('fl_button', line)
         drop_button:SetSize(button_size, button_size)
         drop_button:SetDrawBackground(false)
-        drop_button:SetTooltip(t'currency.drop.title')
+        drop_button:SetTooltip(t'ui.currency.drop.title')
         drop_button:set_icon('coins')
         drop_button:set_icon_size(button_size)
         drop_button:Dock(RIGHT)
         drop_button.DoClick = function(btn)
-          Derma_StringRequest(t'currency.drop.title', t'currency.drop.message', '', function(text)
+          Derma_StringRequest(t'ui.currency.drop.title', t'ui.currency.drop.message', '', function(text)
             local value = tonumber(text)
 
             if value and value > 0 then
               Cable.send('fl_currency_drop', value, k)
             else
-              PLAYER:notify('currency.notify.invalid_amount')
+              PLAYER:notify('notification.currency.invalid_amount')
             end
           end)
         end

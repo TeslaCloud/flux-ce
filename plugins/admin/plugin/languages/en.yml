@@ -1,124 +1,126 @@
 en:
-  admin:
-    player_management: Player management
-    players: Players
-    role: Role
-    allow_all: Allow all
-    no_all: "'No' for all"
-    never_all: Forbid all
-    expires: Expires in
-    temp_permission:
-      title: Give temporary permission
-      message: Specify permission duration. If permission already given, this time will be added to it. Leave empty to take temporary permission.
-    selector:
-      title: Changing player's role
-      message: Select a new role.
-      roles: Roles
-    config_editor: Config editor
-    new_config: Add new table value
-    new_config_text: Enter new value.
-    delete_config: Delete table value
-    delete_config_text: Are you sure that you want to delete this value?
-  categories:
-    administration: Administration
-    tools: Tools
-    spawn: Spawn
-    general: General
-    misc: Misc
-    level_design: Level design
-    server_management: Server management
-    player_management: Player management
-    compatibility: Compatibility
-  err:
-    group_not_valid: "'{1}' is not a valid user group!"
-    not_banned: Steam ID '{1}' is not banned!
-    no_permission: You have no permissions to do that, {1}.
-  freeze_bots_message: "{1} has frozen all bots."
-  unfreeze_bots_message: "{1} has unfrozen all bots."
-  kick_message: "{1} has kicked {2}. ({3})"
-  ban_message: "{admin} has banned {target} {time}. ({reason})"
-  unban_message: "{admin} has unbanned {target}."
-  add_bots_message: "{1} has added {2} {3} to the server."
-  bot_one: bot
-  bot_many: bots
-  kick_bots_message: "{1} has kicked all bots."
-  map_restart_message: "{1} is restarting the map in {2} second(s)!"
-  map_change_message: "{1} is changing the level to {2} in {3} second(s)!"
-  cmd_desc:
-    usage: "Syntax:"
-    aliases: "Aliases:"
-  botscmd:
-    freeze:
+  command:
+    freezebots:
       description: Freezes all of the bots.
-    unfreeze:
+      message: "{1} has frozen all bots."
+    unfreezebots:
       description: Unfreezes all of the bots.
-    add:
+      message: "{1} has unfrozen all bots."
+    addbots:
       description: Adds specified amount of bots to the server.
       syntax: "[number Amount]"
-    kick:
+      message: "{1} has added {2} {3} to the server."
+      bot_one: bot
+      bot_many: bots
+    kickbots:
       description: Kicks all bots.
-  changelevel:
-    description: Changes the level to specified map.
-    syntax: <string Map> [number Delay]
-  kickcmd:
-    description: Kicks player from the server.
-    syntax: <target> [reason]
-  bancmd:
-    description: Ban this sucker!
-    syntax: <target> <duration> [reason]
-  unbancmd:
-    description: Unban the specified Steam ID if it is banned.
-    syntax: <target SteamID>
-  tpcmd:
-    description: Teleport player to position you looking at.
-    syntax: <target>
-  tptocmd:
-    description: Teleport to target's position.
-    syntax: <target>
-  return:
-    description: Bring player back to their previous position before teleport.
-    syntax: <target>
-  set_group:
-    description: "Sets player's usergroup. Usergoups: {1}"
-    syntax: <target> <usergroup>
-    message: "{1} has set {2}'s user group to {3}."
-  vanish:
-    description: "Completely hides the specified player from everyone else on the server."
-    syntax: "<string player> [bool should_vanish]"
-    self: "You are now {state}."
-    enabled: "{player_name} has been vanished by {admin_name}."
-    disabled: "{player_name} has been unvanished by {admin_name}."
-    vanished: "vanished"
-    unvanished: "unvanished"
-    client_text: "You are vanished"
-  fullbright:
-    description: "Disables lights for the specified player."
-    syntax: "<string player> <bool should_hide>"
-    enabled: "{player_name} has enabled fullbright mode for {targets}."
-    disabled: "{player_name} has disabled fullbright mode for {targets}."
-    enabled_self: "Fullbright mode enabled."
-    disabled_self: "Fullbright mode disabled."
-  role:
-    user: The base rank that is automatically given to the player.
-    assistant: Low clearance administrative rank given to assistant staff members.
-    moderator: An administrative rank given to trusted staff members.
-    admin: A high level administrative rank given to the most trusted of staff members.
-  demote:
-    description: Demote a player to user.
-    syntax: <target>
-    message: "{1} has demoted {2} from {3} to user."
-  restart:
-    description: Restarts the current map.
-    syntax: "[number Delay]"
-  perm:
-    not_set: No (inherit)
-    allow: Allow
-    never: Revoke
-    allow_override: Allow (Override)
-    error: Invalid Permission
-  conditions:
+      message: "{1} has kicked all bots."
+    changelevel:
+      description: Changes the level to specified map.
+      syntax: <string Map> [number Delay]
+      message: "{1} is changing the level to {2} in {3} second(s)!"
+    kick:
+      description: Kicks player from the server.
+      syntax: <target> [reason]
+      message: "{1} has kicked {2}. ({3})"
+    ban:
+      description: Ban this sucker!
+      syntax: <target> <duration> [reason]
+      message: "{admin} has banned {target} {time}. ({reason})"
+    unban:
+      description: Unban the specified Steam ID if it is banned.
+      syntax: <target SteamID>
+      message: "{admin} has unbanned {target}."
+    tp:
+      description: Teleport player to position you looking at.
+      syntax: <target>
+    tpto:
+      description: Teleport to target's position.
+      syntax: <target>
+    return:
+      description: Bring player back to their previous position before teleport.
+      syntax: <target>
+    setgroup:
+      description: "Sets player's usergroup. Usergoups: {1}"
+      syntax: <target> <usergroup>
+      message: "{1} has set {2}'s user group to {3}."
+    vanish:
+      description: "Completely hides the specified player from everyone else on the server."
+      syntax: "<string player> [bool should_vanish]"
+      self: "You are now {state}."
+      enabled: "{player_name} has been vanished by {admin_name}."
+      disabled: "{player_name} has been unvanished by {admin_name}."
+      vanished: "vanished"
+      unvanished: "unvanished"
+    fullbright:
+      description: "Disables lights for the specified player."
+      syntax: "<string player> <bool should_hide>"
+      enabled: "{player_name} has enabled fullbright mode for {targets}."
+      disabled: "{player_name} has disabled fullbright mode for {targets}."
+      enabled_self: "Fullbright mode enabled."
+      disabled_self: "Fullbright mode disabled."
+    demote:
+      description: Demote a player to user.
+      syntax: <target>
+      message: "{1} has demoted {2} from {3} to user."
+    restart:
+      description: Restarts the current map.
+      syntax: "[number Delay]"
+      message: "{1} is restarting the map in {2} second(s)!"
+  condition:
     role:
       name: Player with specific role
       text: Role {1} {2}
       message: Select role
     roles: Roles
+  error:
+    group_not_valid: "'{1}' is not a valid user group!"
+    not_banned: Steam ID '{1}' is not banned!
+    no_permission: You have no permissions to do that, {1}.
+  perm:
+    categories:
+      administration: Administration
+      tools: Tools
+      spawn: Spawn
+      general: General
+      misc: Misc
+      level_design: Level design
+      server_management: Server management
+      player_management: Player management
+      compatibility: Compatibility
+  role:
+    user: The base rank that is automatically given to the player.
+    assistant: Low clearance administrative rank given to assistant staff members.
+    moderator: An administrative rank given to trusted staff members.
+    admin: A high level administrative rank given to the most trusted of staff members.
+  ui:
+    hud:
+      vanish: "You are vanished"
+    admin:
+      player_management: Player management
+      players: Players
+      role: Role
+      allow_all: Allow all
+      no_all: "'No' for all"
+      never_all: Forbid all
+      expires: Expires in
+      temp_permission:
+        title: Give temporary permission
+        message: Specify permission duration. If permission already given, this time will be added to it. Leave empty to take temporary permission.
+      selector:
+        title: Changing player's role
+        message: Select a new role.
+        roles: Roles
+      config_editor: Config editor
+      new_config: Add new table value
+      new_config_text: Enter new value.
+      delete_config: Delete table value
+      delete_config_text: Are you sure that you want to delete this value?
+    cmd_desc:
+      usage: "Syntax:"
+      aliases: "Aliases:"
+    perm:
+      not_set: No (inherit)
+      allow: Allow
+      never: Revoke
+      error: Invalid Permission

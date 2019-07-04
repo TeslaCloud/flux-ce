@@ -1,22 +1,11 @@
 en:
-  inventory:
-    main_inventory: Inventory
-    hotbar: Hotbar
-    equipment: Equipment
-    pockets: Pockets
-  give_item:
-    description: Gives specified item to a player.
-    syntax: "<target> <item name or unique ID>"
-    target_message: "{1} has given you {2}x{3}."
-    player_message: You have given {2}x{3} to {1}.
-    invalid_item: "'{1}' is not valid item!"
-  tab_menu:
-    inventory: Inventory
-  hint:
-    inventory: Inventory
-    inventory_text: Drag'n'Drop an item outside of inventory screen to drop it.
-  notify:
-    char_desc_changed: You have changed your character description
+  command:
+    give_item:
+      description: Gives specified item to a player.
+      syntax: "<target> <item name or unique ID>"
+      target_message: "{1} has given you {2}x{3}."
+      player_message: You have given {2}x{3} to {1}.
+      invalid_item: "'{1}' is not valid item!"
   config:
     inventory:
       title: Inventory
@@ -42,3 +31,15 @@ en:
       pockets_height:
         name: Pockets height
         desc: Height of the player pockets inventory in slots.
+  hint:
+    inventory: Drag'n'Drop an item outside of inventory screen to drop it.
+  notification:
+    char_desc_changed: You have changed your character description
+  ui:
+    inventory:
+      main_inventory: Inventory
+      hotbar: Hotbar
+      equipment: Equipment
+      pockets: Pockets
+    tab_menu:
+      inventory: Inventory

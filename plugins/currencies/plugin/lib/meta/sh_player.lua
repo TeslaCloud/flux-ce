@@ -94,7 +94,7 @@
       money_ent:Spawn()
 
       self:take_money(currency, value)
-      self:notify('currency.notify.drop', { value, currency_data.name }, Color('red'))
+      self:notify('notification.currency.drop', { value, currency_data.name }, Color('red'))
 
       money_ent.next_pickup = CurTime() + 0.5
     end
@@ -115,9 +115,9 @@
       local currency_data = Currencies:find_currency(currency)
 
       self:take_money(currency, value)
-      self:notify('currency.notify.give', { target, value, currency_data.name }, Color('red'))
+      self:notify('notification.currency.give', { target, value, currency_data.name }, Color('red'))
       target:give_money(currency, value)
-      target:notify('currency.notify.receive', { player, value, currency_data.name }, Color('green'))
+      target:notify('notification.currency.receive', { player, value, currency_data.name }, Color('green'))
     end
   end
 end

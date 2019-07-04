@@ -1,18 +1,25 @@
 en:
-  char_set_name:
-    description: "Set character's name."
-    syntax: <target> <new name>
-    message: "{1} has set {2}'s name to {3}."
-  char_set_model:
-    description: "Set character's model."
-    syntax: <target> <new model>
-    message: "{1} has set {2}'s model to {3}."
-  char_set_desc:
-    description: "Set character's physical description."
-    syntax: <target> <new desc>
-  char_set_gender:
-    description: "Set character's gender: male, female or no_gender"
-    syntax: <target> <new gender>
+  command:
+    char_set_name:
+      description: "Set character's name."
+      syntax: <target> <new name>
+      message: "{1} has set {2}'s name to {3}."
+    char_set_model:
+      description: "Set character's model."
+      syntax: <target> <new model>
+      message: "{1} has set {2}'s model to {3}."
+    char_set_desc:
+      description: "Set character's physical description."
+      syntax: <target> <new desc>
+    char_set_gender:
+      description: "Set character's gender: male, female or no_gender"
+      syntax: <target> <new gender>
+  condition:
+    character:
+      name: Specific Character
+      text: "Character: {1} {2}"
+      message: Select Character
+    characters: Characters
   config:
     character:
       title: Character
@@ -29,55 +36,49 @@ en:
       max_desc_len:
         name: Maximum Character Description Length
         desc: "The maximum length of the character's physical description."
-  main_menu:
-    disconnect: Disconnect
-    disconnect_msg: Are you sure that you want to disconnect from this server?
-    settings: Settings
-    continue: Continue
-    developed_by: Developed by {1}.
-  char_create:
-    title: CREATE A CHARACTER
-    text: CHARACTER CREATION
-    create: CREATE
-    load: LOAD CHARACTER
-    select: Select
-    delete: Delete
-    general: General Character Information
-    name: "Full name:"
-    random_name: Randomize Name.
-    desc: "Description:"
-    gender: "Gender:"
-    skin: "Skin"
-    back: BACK
-    next: NEXT
-    main_menu: MAIN MENU
-    confirm: Create Character
-    confirm_msg: Are you sure that you want to create this character?
-    delete_confirm: Delete Character
-    delete_confirm_msg: "Please type in your character's name to confirm deletion: {1}"
-    name_invalid: Invalid name.
-    name_len: "Your character's name must be between {1} and {2} characters long."
-    desc_invalid: Invalid physical description.
-    desc_len: "Your character's physical description must be between {1} and {2} characters long."
-    unknown_error: Unknown Error. Meow probably screwed up again.
-    no_gender: You must select a gender.
-    no_model: You must select a model.
-    error:
-      fatal: "Something probably went wrong, please try reconnecting."
-      critical: "Server may be experiencing connection issues, please wait..."
-      lag: "The request is taking a while, hold up..."
-      record: "ActiveRecord screwed up again, try reconnecting or restarting your server..."
-  tab_menu:
-    main_menu: Main Menu
-  conditions:
-    character:
-      name: Specific Character
-      text: "Character: {1} {2}"
-      message: Select Character
-    characters: Characters
-  categories:
-    character_management: Character Management
-  loading:
-    characters: Loading characters, please wait...
-  scoreboard:
-    is_playing: is playing
+  perm:
+    categories:
+      character_management: Character Management
+  ui:
+    hud:
+      loading:
+        characters: Loading characters, please wait...
+    main_menu:
+      disconnect: Disconnect
+      disconnect_msg: Are you sure that you want to disconnect from this server?
+      continue: Continue
+      developed_by: Developed by {1}.
+    char_create:
+      title: CREATE A CHARACTER
+      text: CHARACTER CREATION
+      create: CREATE
+      load: LOAD CHARACTER
+      select: Select
+      delete: Delete
+      general: General Character Information
+      name: "Full name:"
+      random_name: Randomize Name.
+      desc: "Description:"
+      gender: "Gender:"
+      skin: "Skin"
+      back: BACK
+      next: NEXT
+      main_menu: MAIN MENU
+      confirm: Create Character
+      confirm_msg: Are you sure that you want to create this character?
+      delete_confirm: Delete Character
+      delete_confirm_msg: "Please type in your character's name to confirm deletion: {1}"
+      name_invalid: Invalid name.
+      name_len: "Your character's name must be between {1} and {2} characters long."
+      desc_invalid: Invalid physical description.
+      desc_len: "Your character's physical description must be between {1} and {2} characters long."
+      unknown_error: Unknown Error. Meow probably screwed up again.
+      no_gender: You must select a gender.
+      no_model: You must select a model.
+      error:
+        fatal: "Something probably went wrong, please try reconnecting."
+        critical: "Server may be experiencing connection issues, please wait..."
+        lag: "The request is taking a while, hold up..."
+        record: "ActiveRecord screwed up again, try reconnecting or restarting your server..."
+    tab_menu:
+      main_menu: Main Menu

@@ -114,7 +114,7 @@ function THEME:PaintFrame(panel, width, height)
 end
 
 function THEME:PaintMainMenu(panel, width, height)
-  local title, desc, author = SCHEMA:get_name(), SCHEMA:get_description(), t('main_menu.developed_by', SCHEMA:get_author())
+  local title, desc, author = SCHEMA:get_name(), SCHEMA:get_description(), t('ui.main_menu.developed_by', SCHEMA:get_author())
   local logo = self:get_material('schema_logo')
   local title_w, title_h = util.text_size(title, self:get_font('text_largest'))
   local desc_w, desc_h = util.text_size(desc, self:get_font('main_menu_titles'))
@@ -203,8 +203,8 @@ function THEME:PaintDeathScreen(cur_time, scrw, scrh)
 
   draw.RoundedBox(0, 0, 0, scrw, scrh, Color(0, 0, 0, PLAYER.respawn_alpha))
 
-  draw.SimpleText(t'player_message.died', font, 16, 16, color_white)
-  draw.SimpleText(t('player_message.respawn', math.ceil(respawn_time_remaining)), font, 16, 16 + util.font_size(font), color_white)
+  draw.SimpleText(t'ui.hud.player_message.died', font, 16, 16, color_white)
+  draw.SimpleText(t('ui.hud.player_message.respawn', math.ceil(respawn_time_remaining)), font, 16, 16 + util.font_size(font), color_white)
 
   draw.RoundedBox(0, 0, 0, scrw / 100 * bar_value, 2, color_white)
 
@@ -293,15 +293,15 @@ function THEME:PaintPermissionButton(perm_panel, btn, w, h)
 
   if perm_type == PERM_NO then
     color = Color(120, 120, 120)
-    title = t'perm.not_set'
+    title = t'ui.perm.not_set'
   elseif perm_type == PERM_ALLOW then
     color = Color(100, 220, 100)
-    title = t'perm.allow'
+    title = t'ui.perm.allow'
   elseif perm_type == PERM_NEVER then
     color = Color(220, 100, 100)
-    title = t'perm.never'
+    title = t'ui.perm.never'
   else
-    title = t'perm.error'
+    title = t'ui.perm.error'
   end
 
   local text_color = color:darken(75)
@@ -331,7 +331,7 @@ function THEME:PaintPermissionButton(perm_panel, btn, w, h)
 end
 
 function THEME:PaintScoreboard(panel, width, height)
-  local text = t('scoreboard.title')
+  local text = t('ui.scoreboard.title')
   local font = self:get_font('main_menu_large')
   local text_w, text_h = util.text_size(text, font)
 
@@ -343,9 +343,9 @@ function THEME:PaintScoreboard(panel, width, height)
 
   font = self:get_font('text_small')
 
-  draw.SimpleText(t'scoreboard.help', font, 4, 0, self:get_color('text'))
+  draw.SimpleText(t'ui.scoreboard.help', font, 4, 0, self:get_color('text'))
 
-  text = t'scoreboard.ping'
+  text = t'ui.scoreboard.ping'
   text_w, text_h = util.text_size(text, font)
 
   draw.SimpleText(text, font, width - text_w - 8, 0, self:get_color('text'))
@@ -451,13 +451,13 @@ function THEME:PaintCharPanel(panel, w, h)
 end
 
 function THEME:PaintCharCreationMainPanel(panel, w, h)
-  local title, font = t 'char_create.text', Theme.get_font 'main_menu_title'
+  local title, font = t'ui.char_create.text', Theme.get_font 'main_menu_title'
   local title_w, title_h = util.text_size(title, font)
   draw.SimpleText(title, font, w * 0.5 - title_w * 0.5, h / 8)
 end
 
 function THEME:PaintCharCreationLoadPanel(panel, w, h)
-  local title, font = t 'char_create.load', Theme.get_font 'main_menu_title'
+  local title, font = t'ui.char_create.load', Theme.get_font 'main_menu_title'
   local title_w, title_h = util.text_size(title, font)
   draw.SimpleText(title, font, w * 0.5 - title_w * 0.5, h / 8)
 end

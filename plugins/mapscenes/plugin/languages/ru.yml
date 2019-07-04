@@ -1,7 +1,10 @@
 ru:
-  mapscene:
-    title: Точка камеры
-    point_added: Точка установлена
+  notification:
+    mapscene:
+      point_added: Точка установлена
+  ui:
+    mapscene:
+      title: Точка камеры
   tool:
     mapscene:
       name: Фон главного меню

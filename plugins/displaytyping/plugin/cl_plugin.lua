@@ -14,7 +14,7 @@ function DisplayTyping:draw_player_typing_text(player, text, ply_pos, dist)
   local mult = hook.Run('DisplayTypingAdjustFadeoffMultiplier', player, text) or 1
 
   if hide_text then
-    text = hook.Run('DisplayTypingTextType', player, text) or t'display_typing.typing'
+    text = hook.Run('DisplayTypingTextType', player, text) or t'ui.hud.display_typing.typing'
   end
 
   local md, fd = max_distance * mult, fade_distance * mult

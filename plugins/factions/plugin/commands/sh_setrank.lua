@@ -1,9 +1,9 @@
 local COMMAND = Command.new('setrank')
 COMMAND.name = 'SetRank'
-COMMAND.description = 'set_rank.description'
-COMMAND.syntax = 'set_rank.syntax'
+COMMAND.description = 'command.set_rank.description'
+COMMAND.syntax = 'command.set_rank.syntax'
 COMMAND.permission = 'assistant'
-COMMAND.category = 'categories.character_management'
+COMMAND.category = 'perm.categories.character_management'
 COMMAND.arguments = 2
 COMMAND.player_arg = 1
 COMMAND.aliases = { 'plysetrank', 'charsetrank' }

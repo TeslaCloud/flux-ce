@@ -3,7 +3,7 @@ local PANEL = {}
 function PANEL:Init()
   self:SetIndentSize(0)
 
-  self.root = self:AddNode(t'conditions.right_click', 'icon16/key.png')
+  self.root = self:AddNode(t'ui.condition.right_click', 'icon16/key.png')
   self.root:SetExpanded(true)
   self.root.childs = {}
   self.root.DoRightClick = function(panel)
@@ -17,8 +17,8 @@ function PANEL:Init()
   self.save.DoClick = function(btn)
     surface.play_sound('garrysmod/ui_click.wav')
 
-    Derma_StringRequest(t'conditions.save.title',
-    t'conditions.save.message',
+    Derma_StringRequest(t'ui.condition.save.title',
+    t'ui.condition.save.message',
     '',
     function(text)
       Data.save('conditions/'..text, self:get_conditions())
@@ -39,13 +39,13 @@ function PANEL:Init()
 
     local frame = vgui.create('DFrame')
     frame:SetSize(ScrW() * 0.2, ScrH() * 0.2)
-    frame:SetTitle(t'conditions.load.title')
+    frame:SetTitle(t'ui.condition.load.title')
     frame:Center()
     frame:MakePopup()
 
     local list = vgui.create('DListView', frame)
     list:Dock(FILL)
-    list:AddColumn(t'conditions.load.column')
+    list:AddColumn(t'ui.condition.load.column')
 
     for k, v in pairs(Data.get_files('conditions')) do
       list:AddLine(v)
@@ -70,7 +70,7 @@ end
 function PANEL:node_options(panel, root, first)
   local menu = DermaMenu()
 
-  local sub_menu = menu:AddSubMenu(t'conditions.add_condition')
+  local sub_menu = menu:AddSubMenu(t'ui.condition.add_condition')
 
   for k, v in pairs(Conditions:get_all()) do
     sub_menu:AddOption(t(v.name), function()
@@ -86,20 +86,20 @@ function PANEL:node_options(panel, root, first)
     menu:AddSpacer()
 
     if data.set_parameters then
-      menu:AddOption(t'conditions.set_parameter', function()
+      menu:AddOption(t'ui.condition.set_parameter', function()
         data.set_parameters(id, data, panel, menu, self)
       end)
     end
 
     if data.set_operator then
-      menu:AddOption(t'conditions.set_operator', function()
+      menu:AddOption(t'ui.condition.set_operator', function()
         if isfunction(data.set_operator) then
           data.set_operator(id, data, panel, menu)
         elseif isstring(data.set_operator) then
           local selector = vgui.create('fl_selector')
           selector:set_title(t(data.name))
-          selector:set_text(t'conditions.select_operator')
-          selector:set_value(t'conditions.operators')
+          selector:set_text(t'ui.condition.select_operator')
+          selector:set_value(t'ui.condition.operators')
 
           for k, v in pairs(util['get_'..data.set_operator..'_operators']()) do
             selector:add_choice(t('operators.'..k)..' ('..v..')', function()
@@ -112,7 +112,7 @@ function PANEL:node_options(panel, root, first)
       end)
     end
 
-    menu:AddOption(t'conditions.delete', function()
+    menu:AddOption(t'ui.condition.delete', function()
       panel:safe_remove()
     end)
   end
@@ -139,9 +139,9 @@ function PANEL:add_condition(parent, id, data)
         args[k] = t(v)
       else
         if k == 1 then
-          args[k] = t'conditions.select_operator'
+          args[k] = t'ui.condition.select_operator'
         else
-          args[k] = t'conditions.select_parameter'
+          args[k] = t'ui.condition.select_parameter'
         end
       end
     end

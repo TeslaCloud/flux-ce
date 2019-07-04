@@ -170,7 +170,7 @@ function PANEL:PaintOver(width, height)
                 aliases = table.concat(v.aliases or {}, ', ')
               end
 
-              draw.SimpleText(t'chat.aliases'..': ' + aliases, small_font, 16, cur_y, color_white)
+              draw.SimpleText(t'ui.chat.aliases'..': ' + aliases, small_font, 16, cur_y, color_white)
             end
 
             last_y = last_y + h + 8
@@ -178,7 +178,7 @@ function PANEL:PaintOver(width, height)
             if k >= 10 then break end
           end
         else
-          draw.SimpleText(t'chat.no_commands_found', font, 16, 16, color)
+          draw.SimpleText(t'ui.chat.no_commands_found', font, 16, 16, color)
         end
       end
     end
@@ -216,7 +216,7 @@ function PANEL:typing_command()
     local cmd = self.text_entry:GetValue()
 
     if cmd != '/' then
-      return cmd:is_command()
+      return command:is_command()
     end
   end
 end

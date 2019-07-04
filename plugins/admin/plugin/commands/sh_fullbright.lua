@@ -1,9 +1,9 @@
 local COMMAND = Command.new('fullbright')
 COMMAND.name = 'Fullbright'
-COMMAND.description = 'fullbright.description'
-COMMAND.syntax = 'fullbright.syntax'
+COMMAND.description = 'command.fullbright.description'
+COMMAND.syntax = 'command.fullbright.syntax'
 COMMAND.permission = 'moderator'
-COMMAND.category = 'categories.player_management'
+COMMAND.category = 'perm.categories.player_management'
 COMMAND.arguments = 2
 COMMAND.immunity = true
 COMMAND.aliases = { 'fb' }

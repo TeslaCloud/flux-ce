@@ -1,9 +1,9 @@
 local COMMAND = Command.new('tpto')
 COMMAND.name = 'Tpto'
-COMMAND.description = 'tptocmd.description'
-COMMAND.syntax = 'tptocmd.syntax'
+COMMAND.description = 'command.tpto.description'
+COMMAND.syntax = 'command.tpto.syntax'
 COMMAND.permission = 'assistant'
-COMMAND.category = 'categories.administration'
+COMMAND.category = 'perm.categories.administration'
 COMMAND.arguments = 1
 COMMAND.immunity = true
 COMMAND.aliases = { 'goto' }
@@ -15,7 +15,7 @@ function COMMAND:on_run(player, targets)
     player:teleport(target:GetPos())
   end
 
-  player:notify('tptocmd.notify', target:name())
+  player:notify('tpto.notify', target:name())
 end
 
 COMMAND:register()

@@ -139,7 +139,7 @@ function PANEL:set_config(key, config_table)
         end
       end
 
-      self.combo_box:AddChoice(t'admin.new_config', '')
+      self.combo_box:AddChoice(t'ui.admin.new_config', '')
     end
 
     self.combo_box:rebuild()
@@ -147,8 +147,8 @@ function PANEL:set_config(key, config_table)
     self.combo_box.OnSelect = function(pnl, index, text, data)
 
       if data == '' then
-        Derma_StringRequest(t'admin.new_config',
-        t'admin.new_config_text',
+        Derma_StringRequest(t'ui.admin.new_config',
+        t'ui.admin.new_config_text',
         '', function(text)
           if text != '' then
             table.insert(data_table, text)
@@ -159,20 +159,20 @@ function PANEL:set_config(key, config_table)
           end
         end)
       else
-        Derma_Query(t'admin.delete_config_text',
-        t'admin.delete_config',
-        t'yes', function()
+        Derma_Query(t'ui.admin.delete_config_text',
+        t'ui.admin.delete_config',
+        t'ui.yes', function()
           table.remove(data_table, index)
 
           Cable.send('fl_config_change', key, data_table)
 
           self.combo_box.rebuild()
-        end, t'no')
+        end, t'ui.no')
       end
     end
   elseif data_type == 'dropdown' then
     self.combo_box = vgui.create('DComboBox', self)
-    self.combo_box:SetValue(Config.get(key) or t'admin.select_config')
+    self.combo_box:SetValue(Config.get(key) or t'ui.admin.select_config')
 
     local data_table = config_table.data
 

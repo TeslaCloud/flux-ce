@@ -1,2 +1,17 @@
 ru:
-  press_jump_to_getup: Нажмите 'прыжок', чтобы встать...
+  command:
+    fall:
+      description: Упасть на землю.
+      syntax: "[время на подъем]"
+    force_fall:
+      description: Уронить игрока на землю.
+      syntax: "<игрок> [время на подъем]"
+    force_getup:
+      description: Поднять игрока с земли.
+      syntax: "<игрок> [время на подъем]"
+    getup:
+      description: Подняться с земли.
+      syntax: "[время на подъем]"
+  ui:
+    hud:
+      press_jump_to_getup: Нажмите 'прыжок', чтобы встать...

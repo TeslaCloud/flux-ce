@@ -10,7 +10,7 @@ function Mapscenes:RenderScreenspaceEffects()
         render.DrawLine(v.pos, v.pos + v.ang:Forward() * 20, Color('lightblue'))
       cam.End3D()
 
-      draw.SimpleText(t'mapscene.title'..' #'..k, Theme.get_font('text_small'), start_pos.x, start_pos.y, Color('lightblue'))
+      draw.SimpleText(t'ui.mapscene.title'..' #'..k, Theme.get_font('text_small'), start_pos.x, start_pos.y, Color('lightblue'))
     end
   end
 end

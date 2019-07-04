@@ -22,7 +22,7 @@ function PANEL:Init()
   self.back:SetSize(self.panel:GetWide() * 0.25, Theme.get_option('menu_sidebar_button_height'))
   self.back:SetPos(x, y + self.panel:GetTall() + self.back:GetTall())
   self.back:SetFont(Theme.get_font('main_menu_normal'))
-  self.back:SetTitle(t'char_create.main_menu')
+  self.back:SetTitle(t'ui.char_create.main_menu')
   self.back:SetDrawBackground(false)
   self.back:set_icon('fa-chevron-left')
   self.back:set_icon_size(fa_icon_size)
@@ -44,7 +44,7 @@ function PANEL:Init()
   self.next:SetSize(self.panel:GetWide() * 0.25, Theme.get_option('menu_sidebar_button_height'))
   self.next:SetPos(x + self.panel:GetWide() - self.next:GetWide(), y + self.panel:GetTall() + self.next:GetTall())
   self.next:SetFont(Theme.get_font('main_menu_normal'))
-  self.next:SetTitle(t'char_create.next')
+  self.next:SetTitle(t'ui.char_create.next')
   self.next:SetDrawBackground(false)
   self.next:set_icon('fa-chevron-right', true)
   self.next:set_icon_size(fa_icon_size)
@@ -90,11 +90,11 @@ do
       draw.RoundedBox(0, 0, 0, w, h, color_black_transparent)
 
       if diff_time > 15 then
-        text = t'char_create.error.fatal'
+        text = t'ui.char_create.error.fatal'
       elseif diff_time > 10 then
-        text = t'char_create.error.critical'
+        text = t'ui.char_create.error.critical'
       elseif diff_time > 5 then
-        text = t'char_create.error.lag'
+        text = t'ui.char_create.error.lag'
       end
       
       local tx, ty = util.text_size(text, font)
@@ -175,15 +175,15 @@ function PANEL:set_stage(stage)
     self:rebuild()
 
     if self.stage == 1 then
-        self.back:SetTitle(t'char_create.main_menu')
+        self.back:SetTitle(t'ui.char_create.main_menu')
     else
-        self.back:SetTitle(t'char_create.back')
+        self.back:SetTitle(t'ui.char_create.back')
     end
 
     if self.stage == #self.stages then
-        self.next:SetTitle(t'char_create.create')
+        self.next:SetTitle(t'ui.char_create.create')
     else
-        self.next:SetTitle(t'char_create.next')
+        self.next:SetTitle(t'ui.char_create.next')
     end
   end
 end
@@ -193,7 +193,7 @@ function PANEL:next_stage()
     local success, error = self.panel:on_validate()
 
     if success == false then
-      self:GetParent():notify(error or t'char_create.unknown_error')
+      self:GetParent():notify(error or t'ui.char_create.unknown_error')
 
       return false
     end
@@ -202,7 +202,7 @@ function PANEL:next_stage()
   local success, error = hook.run('PreStageChange', self.stages[self.stage],  self.panel)
 
   if success == false then
-    self:GetParent():notify(error or t'char_create.unknown_error')
+    self:GetParent():notify(error or t'ui.char_create.unknown_error')
 
     return false
   end
@@ -212,7 +212,7 @@ function PANEL:next_stage()
   else
     surface.PlaySound('vo/npc/male01/answer37.wav')
 
-    Derma_Query(t'char_create.confirm_msg', t'char_create.confirm', t'yes', function()
+    Derma_Query(t'ui.char_create.confirm_msg', t'ui.char_create.confirm', t'ui.yes', function()
       self:request('fl_create_character', function(response)
         if IsValid(Flux.intro_panel) and IsValid(self) then
           if response.success then
@@ -234,21 +234,21 @@ function PANEL:next_stage()
             end
           else
             local status = response.status
-            local text = t'char_create.unknown_error'
+            local text = t'ui.char_create.unknown_error'
             local hook_text = hook.run('GetCharCreationErrorText', response.success, status)
 
             if hook_text then
               text = hook_text
             elseif status == CHAR_ERR_NAME then
-              text = t('char_create.name_len', { Config.get('character_min_name_len'), Config.get('character_max_name_len') })
+              text = t('ui.char_create.name_len', { Config.get('character_min_name_len'), Config.get('character_max_name_len') })
             elseif status == CHAR_ERR_DESC then
-              text = t('char_create.desc_len', { Config.get('character_min_desc_len'), Config.get('character_max_desc_len') })
+              text = t('ui.char_create.desc_len', { Config.get('character_min_desc_len'), Config.get('character_max_desc_len') })
             elseif status == CHAR_ERR_GENDER then
-              text = t'char_create.no_gender'
+              text = t'ui.char_create.no_gender'
             elseif status == CHAR_ERR_MODEL then
-              text = t'char_create.no_model'
+              text = t'ui.char_create.no_model'
             elseif status == CHAR_ERR_RECORD then
-              text = t'char_create.error.record'
+              text = t'ui.char_create.error.record'
             end
 
             Flux.intro_panel:notify(text)
@@ -260,7 +260,7 @@ function PANEL:next_stage()
 
       self.request_sent = CurTime()
     end,
-    t'no')
+    t'ui.no')
   end
 end
 

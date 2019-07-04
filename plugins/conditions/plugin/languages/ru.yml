@@ -1,19 +1,5 @@
 ru:
-  conditions:
-    select_operator: <Выберите оператор>
-    select_parameter: <Выберите параметр>
-    right_click: Нажмите ПКМ здесь, чтобы добавить новое условие
-    add_condition: Добавить условие
-    set_parameter: Установить параметр...
-    set_operator: Установить оператор...
-    operators: Операторы
-    delete: Удалить условие
-    save:
-      title: Сохранение набора условий
-      message: Напишите название сохранения
-    load:
-      title: Загрузка набора условий
-      column: Выберите сохранение
+  condition:
     steamid:
       name: Игрок с определенным SteamID
       text: SteamID {1} {2}
@@ -34,3 +20,19 @@ ru:
       name: Игрок с определенным оружием в руках
       text: Класс активного оружия {1} {2}
       message: Введите класс оружия
+  ui:
+    condition:
+      select_operator: <Выберите оператор>
+      select_parameter: <Выберите параметр>
+      right_click: Нажмите ПКМ здесь, чтобы добавить новое условие
+      add_condition: Добавить условие
+      set_parameter: Установить параметр...
+      set_operator: Установить оператор...
+      operators: Операторы
+      delete: Удалить условие
+      save:
+        title: Сохранение набора условий
+        message: Напишите название сохранения
+      load:
+        title: Загрузка набора условий
+        column: Выберите сохранение

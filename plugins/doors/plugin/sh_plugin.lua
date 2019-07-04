@@ -20,7 +20,7 @@ require_relative 'sv_hooks'
 require_relative 'sv_plugin'
 
 function Doors:RegisterPermissions()
-  Bolt:register_permission('manage_doors', 'Doors settings access', 'Grants access to customize doors.', 'categories.level_design', 'assistant')
+  Bolt:register_permission('manage_doors', 'Doors settings access', 'Grants access to customize doors.', 'perm.categories.level_design', 'assistant')
 end
 
 function Doors:OnPluginsLoaded()

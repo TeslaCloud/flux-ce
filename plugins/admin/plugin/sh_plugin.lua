@@ -49,8 +49,8 @@ end
 
 function Bolt:RegisterConditions()
   Conditions:register_condition('bolt_role', {
-    name = 'conditions.role.name',
-    text = 'conditions.role.text',
+    name = 'condition.role.name',
+    text = 'condition.role.text',
     get_args = function(panel, data)
       local operator = util.operator_to_symbol(panel.data.operator)
       local parameter = panel.data.role
@@ -64,7 +64,7 @@ function Bolt:RegisterConditions()
       return util.process_operator(data.operator, player:get_role(), data.role)
     end,
     set_parameters = function(id, data, panel, menu, parent)
-      parent:create_selector(data.name, 'conditions.role.message', 'conditions.roles', self:get_roles(),
+      parent:create_selector(data.name, 'condition.role.message', 'condition.roles', self:get_roles(),
       function(selector, group)
         selector:add_choice(t(group.name), function()
           panel.data.role = group.id
@@ -78,25 +78,25 @@ function Bolt:RegisterConditions()
 end
 
 function Bolt:RegisterPermissions()
-  Bolt:register_permission('physgun', 'Physgun', 'Grants access to the physics gun.', 'categories.tools', 'assistant')
-  Bolt:register_permission('toolgun', 'Tool Gun', 'Grants access to the tool gun.', 'categories.tools', 'assistant')
-  Bolt:register_permission('physgun_freeze', 'Freeze Protected Entities', 'Grants access to freeze protected entities.', 'categories.tools', 'assistant')
-  Bolt:register_permission('physgun_pickup', 'Unlimited Physgun', 'Grants access to pick up any entity with the physics gun.', 'categories.tools', 'moderator')
+  Bolt:register_permission('physgun', 'Physgun', 'Grants access to the physics gun.', 'perm.categories.tools', 'assistant')
+  Bolt:register_permission('toolgun', 'Tool Gun', 'Grants access to the tool gun.', 'perm.categories.tools', 'assistant')
+  Bolt:register_permission('physgun_freeze', 'Freeze Protected Entities', 'Grants access to freeze protected entities.', 'perm.categories.tools', 'assistant')
+  Bolt:register_permission('physgun_pickup', 'Unlimited Physgun', 'Grants access to pick up any entity with the physics gun.', 'perm.categories.tools', 'moderator')
 
-  Bolt:register_permission('spawn_props', 'Spawn Props', 'Grants access to spawn props.', 'categories.spawn', 'assistant')
-  Bolt:register_permission('spawn_chairs', 'Spawn Chairs', 'Grants access to spawn chairs.', 'categories.spawn', 'assistant')
-  Bolt:register_permission('spawn_entities', 'Spawn All Entities', 'Grants access to spawn any entity.', 'categories.spawn', 'assistant')
-  Bolt:register_permission('spawn_vehicles', 'Spawn Vehicles', 'Grants access to spawn vehicles.', 'categories.spawn', 'moderator')
-  Bolt:register_permission('spawn_npcs', 'Spawn NPCs', 'Grants access to spawn NPCs.', 'categories.spawn', 'moderator')
-  Bolt:register_permission('spawn_ragdolls', 'Spawn Ragdolls', 'Grants access to spawn ragdolls.', 'categories.spawn', 'assistant')
-  Bolt:register_permission('spawn_sweps', 'Spawn SWEPs', 'Grants access to spawn scripted weapons.', 'categories.spawn', 'moderator')
+  Bolt:register_permission('spawn_props', 'Spawn Props', 'Grants access to spawn props.', 'perm.categories.spawn', 'assistant')
+  Bolt:register_permission('spawn_chairs', 'Spawn Chairs', 'Grants access to spawn chairs.', 'perm.categories.spawn', 'assistant')
+  Bolt:register_permission('spawn_entities', 'Spawn All Entities', 'Grants access to spawn any entity.', 'perm.categories.spawn', 'assistant')
+  Bolt:register_permission('spawn_vehicles', 'Spawn Vehicles', 'Grants access to spawn vehicles.', 'perm.categories.spawn', 'moderator')
+  Bolt:register_permission('spawn_npcs', 'Spawn NPCs', 'Grants access to spawn NPCs.', 'perm.categories.spawn', 'moderator')
+  Bolt:register_permission('spawn_ragdolls', 'Spawn Ragdolls', 'Grants access to spawn ragdolls.', 'perm.categories.spawn', 'assistant')
+  Bolt:register_permission('spawn_sweps', 'Spawn SWEPs', 'Grants access to spawn scripted weapons.', 'perm.categories.spawn', 'moderator')
 
-  Bolt:register_permission('voice', 'Voice chat access', 'Grants access to voice chat.', 'categories.general')
-  Bolt:register_permission('context_menu', 'Context Menu', 'Grants access to the context menu.', 'categories.general', 'assistant')
+  Bolt:register_permission('voice', 'Voice chat access', 'Grants access to voice chat.', 'perm.categories.general')
+  Bolt:register_permission('context_menu', 'Context Menu', 'Grants access to the context menu.', 'perm.categories.general', 'assistant')
 
-  Bolt:register_permission('manage_permissions', 'Permission editor', 'Grants access to permission editor.', 'categories.player_management', 'administrator')
+  Bolt:register_permission('manage_permissions', 'Permission editor', 'Grants access to permission editor.', 'perm.categories.player_management', 'administrator')
 
-  Bolt:register_permission('staff', 'Assistant access', 'General access for assistants.', 'categories.compatibility', 'assistant')
-  Bolt:register_permission('moderate', 'Admin access', 'General access for admins. Other addons will identify player as admin.', 'categories.compatibility', 'moderator')
-  Bolt:register_permission('administrate', 'Super Admin access', 'General access for superadmins. Other addons will identify player as superadmin.', 'categories.compatibility', 'administrator')
+  Bolt:register_permission('staff', 'Assistant access', 'General access for assistants.', 'perm.categories.compatibility', 'assistant')
+  Bolt:register_permission('moderate', 'Admin access', 'General access for admins. Other addons will identify player as admin.', 'perm.categories.compatibility', 'moderator')
+  Bolt:register_permission('administrate', 'Super Admin access', 'General access for superadmins. Other addons will identify player as superadmin.', 'perm.categories.compatibility', 'administrator')
 end

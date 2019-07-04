@@ -13,7 +13,7 @@ function TOOL:LeftClick(trace)
 
   Mapscenes:add_point(player:EyePos(), player:GetAngles())
 
-  Flux.Player:notify(player, 'mapscene.point_added')
+  Flux.Player:notify(player, 'notification.mapscene.point_added')
 
   return true
 end
@@ -23,13 +23,13 @@ function TOOL.BuildCPanel(CPanel)
 
   local list = vgui.Create('DListView')
   list:SetSize(30, 90)
-  list:AddColumn(t'mapscene.title')
+  list:AddColumn(t'ui.mapscene.title')
   list.Think = function(panel)
     if #Mapscenes.points != #list:GetLines() then
       list:Clear()
 
       for k, v in pairs(Mapscenes.points) do
-        local line = list:AddLine(t'mapscene.title'..' #'..k)
+        local line = list:AddLine(t'ui.mapscene.title'..' #'..k)
         line.id = k
       end
     end

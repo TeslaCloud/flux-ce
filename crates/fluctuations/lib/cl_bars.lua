@@ -225,7 +225,7 @@ do
   Plugin.add_hooks('FLBarHooks', Bars)
 
   Flux.Bars:register('respawn', {
-    text = t'bar_text.respawn',
+    text = t'ui.hud.bar_text.respawn',
     color = Color(50, 200, 50),
     max_value = 100,
     x = ScrW() * 0.5 - Flux.Bars.default_w * 0.5,

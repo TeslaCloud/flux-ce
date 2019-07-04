@@ -1,125 +1,126 @@
 ru:
-  admin:
-    player_management: Управление игроками
-    players: Игроки
-    role: Роль
-    allow_all: Разрешить всё
-    no_all: "'Нет' для всех"
-    never_all: Запретить всё
-    expires: Истекает через
-    temp_permission:
-      title: Выдача временного разрешения
-      message: Укажите, на какое время будет выдано это разрешение. Если оно уже существует, оно будет продлено на это время. Оставьте пустым, чтобы изъять разрешение.
-    selector:
-      title: Изменение роли игрока
-      message: Выберите новую роль.
-      roles: Роли
-    config_editor: Конфигурация
-    new_config: Добавить новое значение
-    new_config_text: Введите новое значение.
-    delete_config: Удалить значение
-    delete_config_text: Вы уверены, что хотите удалить данное значение?
-  categories:
-    administration: Администрирование
-    tools: Инструменты
-    spawn: Спавн
-    general: Основное
-    misc: Разное
-    level_design: Дизайн уровней
-    server_management: Управление сервером
-    player_management: Управление игроками
-    compatibility: Совместимость
-  err:
-    group_not_valid: "'{1}' не является группой пользователя!"
-    not_banned: Steam ID '{1}' не находится в блокировке!
-    no_permission: У вас недостаточно прав чтобы сделать это, {1}.
-  freeze_bots_message: "Боты заморожены по команде от {1}."
-  unfreeze_bots_message: "Боты разморожены по команде от {1}."
-  kick_message: "{1} исключает {2} из игры. ({3})"
-  ban_message: "{admin} заблокировал {target} {time}. ({reason})"
-  unban_message: "{admin} разблокировал {target}."
-  add_bots_message: "{1} добавляет {2} {3} на сервер."
-  bot_one: бота
-  bot_many: ботов
-  kick_bots_message: "Все боты были удалены по команде от {1}."
-  map_restart_message: "{1} перезапускает карту через {2} секунд!"
-  map_change_message: "{1} меняет карту на {2} через {3} секунд!"
-  cmd_desc:
-    usage: "Синтаксис:"
-    aliases: "Алиасы:"
-  botscmd:
-    freeze:
+  command:
+    freezebots:
       description: Замораживает всех ботов.
-    unfreeze:
+      message: "{1} замораживает ботов."
+    unfreezebots:
       description: Размораживает всех ботов.
-    add:
+      message: "{1} размораживает ботов."
+    addbots:
       description: Добавляет определенное количество ботов на сервер.
       syntax: "[количество]"
-    kick:
+      message: "{1} добавляет {2} {3} на сервер."
+      bot_one: бота
+      bot_many: ботов
+    kickbots:
       description: Кикнуть всех ботов.
-  changelevel:
-    description: Меняет карту на указанную.
-    syntax: <карта> [задержка]
-  kickcmd:
-    description: Выкидывает игрока с сервера.
-    syntax: <игрок> [причина]
-  bancmd:
-    description: Забанить урода!
-    syntax: <игрок> <срок блокировки> [причина]
-  unbancmd:
-    description: Разблокировать игрока с таким Steam ID если тот находится в блокировке.
-    syntax: <заблокированный SteamID>
-  tpcmd:
-    description: Телепортировать игрока туда, куда вы смотрите.
-    syntax: <игрок>
-  tptocmd:
-    description: Телепортироваться к игроку.
-    syntax: <игрок>
-  return:
-    description: Вернуть игрока туда, где он находился до телепорта.
-    syntax: <игрок>
-  set_group:
-    description: "Выставляет группу пользователя игрока. Группы: {1}"
-    syntax: <игрок> <группа>
-    message: "{1} добавляет {2} к группе '{3}'."
-  vanish:
-    description: "Полностью скрывает игрока от всех, кроме администрации."
-    syntax: "<игрок> [скрыть]"
-    self: "Вы теперь {state}."
-    enabled: "{admin_name} делает {player_name} невидимкой."
-    disabled: "{admin_name} сделал {player_name} видимым."
-    vanished: "скрыты от других игроков"
-    unvanished: "видимы другим игрокам"
-    client_text: "Вы невидимка"
-  fullbright:
-    description: "Отключает темноту."
-    syntax: "<игрок> <отключить_свет>"
-    enabled: "{player_name} включает ночное видение для {targets}."
-    disabled: "{player_name} отключает ночное видение {targets}."
-    enabled_self: "Вы теперь видите в темноте."
-    disabled_self: "Вы больше не видите в темноте."
-  role:
-    user: Ранг, выдаваемый всем игрокам при заходе на сервер.
-    assistant: Административный ранг с низким уровнем доступа, для помощников администрации.
-    moderator: Административный ранг для доверенных членов команды.
-    admin: Административный ранг высшего уровня, имеющий доступ ко всему.
-    root: Ранг с полным доступом ко всему.
-  demote:
-    description: Понижает игрока до пользователя.
-    syntax: <игрок>
-    message: "{1} понижает {2} с {3} до пользователя."
-  restart:
-    description: Перезапускает текущую карту.
-    syntax: "[задержка]"
-  perm:
-    not_set: Не менять
-    allow: Разрешить
-    never: Запретить
-    allow_override: Разрешить (Обход)
-    error: Ошибка
-  conditions:
+      message: "{1} удаляет всех ботов."
+    changelevel:
+      description: Меняет карту на указанную.
+      syntax: <карта> [задержка]
+      message: "{1} меняет карту на {2} через {3} секунд!"
+    kick:
+      description: Выкидывает игрока с сервера.
+      syntax: <игрок> [причина]
+      message: "{1} исключает {2} из игры. ({3})"
+    ban:
+      description: Забанить урода!
+      syntax: <игрок> <срок блокировки> [причина]
+      message: "{admin} заблокировал {target} {time}. ({reason})"
+    unban:
+      description: Разблокировать игрока с таким Steam ID если тот находится в блокировке.
+      syntax: <заблокированный SteamID>
+      message: "{admin} разблокировал {target}."
+    tp:
+      description: Телепортировать игрока туда, куда вы смотрите.
+      syntax: <игрок>
+    tpto:
+      description: Телепортироваться к игроку.
+      syntax: <игрок>
+    return:
+      description: Вернуть игрока туда, где он находился до телепорта.
+      syntax: <игрок>
+    setgroup:
+      description: "Выставляет группу пользователя игрока. Группы: {1}"
+      syntax: <игрок> <группа>
+      message: "{1} добавляет {2} к группе '{3}'."
+    vanish:
+      description: "Полностью скрывает игрока от всех, кроме администрации."
+      syntax: "<игрок> [скрыть]"
+      self: "Вы теперь {state}."
+      enabled: "{admin_name} делает {player_name} невидимкой."
+      disabled: "{admin_name} сделал {player_name} видимым."
+      vanished: "скрыты от других игроков"
+      unvanished: "видимы другим игрокам"
+    fullbright:
+      description: "Отключает темноту."
+      syntax: "<игрок> <отключить_свет>"
+      enabled: "{player_name} включает ночное видение для {targets}."
+      disabled: "{player_name} отключает ночное видение {targets}."
+      enabled_self: "Вы теперь видите в темноте."
+      disabled_self: "Вы больше не видите в темноте."
+    demote:
+      description: Понижает игрока до пользователя.
+      syntax: <игрок>
+      message: "{1} понижает {2} с {3} до пользователя."
+    restart:
+      description: Перезапускает текущую карту.
+      syntax: "[задержка]"
+      message: "{1} перезапускает карту через {2} секунд!"
+  condition:
     role:
       name: Игрок с определенной ролью
       text: Роль {1} {2}
       message: Выберите роль
     roles: Роли
+  error:
+    group_not_valid: "'{1}' не является группой пользователя!"
+    not_banned: Steam ID '{1}' не находится в блокировке!
+    no_permission: У вас недостаточно прав чтобы сделать это, {1}.
+  perm:
+    categories:
+      administration: Администрирование
+      tools: Инструменты
+      spawn: Спавн
+      general: Основное
+      misc: Разное
+      level_design: Дизайн уровней
+      server_management: Управление сервером
+      player_management: Управление игроками
+      compatibility: Совместимость
+  role:
+    user: Ранг, выдаваемый всем игрокам при заходе на сервер.
+    assistant: Административный ранг с низким уровнем доступа, для помощников администрации.
+    moderator: Административный ранг для доверенных членов команды.
+    admin: Административный ранг высшего уровня, имеющий доступ ко всему.
+  ui:
+    hud:
+      vanish: Вы невидимы
+    admin:
+      player_management: Управление игроками
+      players: Игроки
+      role: Роль
+      allow_all: Разрешить всё
+      no_all: "'Нет' для всех"
+      never_all: Запретить всё
+      expires: Истекает через
+      temp_permission:
+        title: Выдача временного разрешения
+        message: Укажите, на какое время будет выдано это разрешение. Если оно уже существует, оно будет продлено на это время. Оставьте пустым, чтобы изъять разрешение.
+      selector:
+        title: Изменение роли игрока
+        message: Выберите новую роль.
+        roles: Роли
+      config_editor: Конфигурация
+      new_config: Добавить новое значение
+      new_config_text: Введите новое значение.
+      delete_config: Удалить значение
+      delete_config_text: Вы уверены, что хотите удалить данное значение?
+    cmd_desc:
+      usage: "Синтаксис:"
+      aliases: "Алиасы:"
+    perm:
+      not_set: Не менять
+      allow: Разрешить
+      never: Запретить
+      error: Ошибка

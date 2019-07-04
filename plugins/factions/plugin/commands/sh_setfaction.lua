@@ -1,9 +1,9 @@
 local COMMAND = Command.new('setfaction')
 COMMAND.name = 'Setfaction'
-COMMAND.description = 'set_faction.description'
-COMMAND.syntax = 'set_faction.syntax'
+COMMAND.description = 'command.set_faction.description'
+COMMAND.syntax = 'command.set_faction.syntax'
 COMMAND.permission = 'assistant'
-COMMAND.category = 'categories.character_management'
+COMMAND.category = 'perm.categories.character_management'
 COMMAND.arguments = 2
 COMMAND.player_arg = 1
 COMMAND.aliases = { 'plytransfer', 'charsetfaction', 'chartransfer' }
@@ -28,7 +28,7 @@ function COMMAND:on_run(player, targets, name, strict)
 
     Flux.Player:broadcast('set_faction.message', { get_player_name(player), util.player_list_to_string(targets), faction_table.name })
   else
-    player:notify('err.whitelist_not_valid',  name)
+    player:notify('error.whitelist_not_valid',  name)
   end
 end
 

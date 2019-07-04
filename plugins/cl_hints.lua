@@ -29,10 +29,10 @@ function Hints:display_random()
 end
 
 do
-  Hints:add(t('hint.forums'), t('hint.forums_text'))
-  Hints:add(t('hint.hints'), t('hint.hints_text'))
-  Hints:add(t('hint.tab'), t('hint.tab_text'))
-  Hints:add(t('hint.inventory'), t('hint.inventory_text'))
-  Hints:add(t('hint.commands'), t('hint.commands_text'))
-  Hints:add(t('hint.bugs'), t('hint.bugs_text'))
+  Hints:add('forums', t'hint.forums')
+  Hints:add('hints', t'hint.hints')
+  Hints:add('tab', t'hint.tab')
+  Hints:add('inventory', t'hint.inventory')
+  Hints:add('commands', t'hint.commands')
+  Hints:add('bugs', t'hint.bugs')
 end

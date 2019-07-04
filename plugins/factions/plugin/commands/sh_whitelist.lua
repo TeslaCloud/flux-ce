@@ -1,9 +1,9 @@
 local COMMAND = Command.new('whitelist')
 COMMAND.name = 'Whitelist'
-COMMAND.description = 'whitelist.description'
-COMMAND.syntax = 'whitelist.syntax'
+COMMAND.description = 'command.whitelist.description'
+COMMAND.syntax = 'command.whitelist.syntax'
 COMMAND.permission = 'moderator'
-COMMAND.category = 'categories.player_management'
+COMMAND.category = 'perm.categories.player_management'
 COMMAND.arguments = 2
 COMMAND.player_arg = 1
 COMMAND.aliases = { 'plywhitelist', 'givewhitelist', 'setwhitelisted' }
@@ -28,7 +28,7 @@ function COMMAND:on_run(player, targets, name, strict)
 
     Flux.Player:broadcast('whitelist.message', { get_player_name(player), util.player_list_to_string(targets), whitelist.name })
   else
-    Flux.Player:notify(player, 'err.whitelist_not_valid', name)
+    Flux.Player:notify(player, 'error.whitelist_not_valid', name)
   end
 end
 

@@ -6,7 +6,7 @@ function PANEL:Init()
   self.player_list = vgui.create('DListView', self)
   self.player_list:DockMargin(4, 4, 2, 4)
   self.player_list:Dock(LEFT)
-  self.player_list:AddColumn(t'admin.players')
+  self.player_list:AddColumn(t'ui.admin.players')
   self.player_list:SetWide(scrw / 6)
 
   for k, v in ipairs(player.all()) do
@@ -74,9 +74,9 @@ function PANEL:Init()
   self.role_edit:SetDrawBackground(false)
   self.role_edit.DoClick = function(btn)
     local selector = vgui.create('fl_selector')
-    selector:set_title(t'admin.selector.title')
-    selector:set_text(t'admin.selector.message')
-    selector:set_value(t'admin.selector.roles')
+    selector:set_title(t'ui.admin.selector.title')
+    selector:set_text(t'ui.admin.selector.message')
+    selector:set_value(t'ui.admin.selector.roles')
 
     for k, v in pairs(Bolt:get_roles()) do
       selector:add_choice(v.name, function()
@@ -116,7 +116,7 @@ function PANEL:rebuild()
   self.name_label:SetText(player:steam_name(true)..' ('..player:name(true)..')')
   self.name_label:SizeToContents()
 
-  self.role_label:SetText(t'admin.role'..': '..player:GetUserGroup():upper())
+  self.role_label:SetText(t'ui.admin.role'..': '..player:GetUserGroup():upper())
   self.role_label:SizeToContents()
 
   self:InvalidateLayout()

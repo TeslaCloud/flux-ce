@@ -51,7 +51,7 @@ end
 
 function StaticEnts:PlayerMakeStatic(player, is_static)
   if (is_static and !player:can('static')) or (!is_static and !player:can('unstatic')) then
-    Flux.Player:notify(player, 'err.no_permission', player:name())
+    Flux.Player:notify(player, 'error.no_permission', player:name())
     return
   end
 
@@ -59,22 +59,22 @@ function StaticEnts:PlayerMakeStatic(player, is_static)
   local entity = trace.Entity
 
   if !IsValid(entity) then
-    Flux.Player:notify(player, 'err.not_valid_entity')
+    Flux.Player:notify(player, 'error.not_valid_entity')
     return
   end
 
   if !whitelisted_ents[entity:GetClass()] then
-    Flux.Player:notify(player, 'err.cannot_static_this')
+    Flux.Player:notify(player, 'error.cannot_static_this')
     return
   end
 
   local ent_static = entity:GetPersistent()
 
   if is_static and ent_static then
-    Flux.Player:notify(player, 'err.already_static')
+    Flux.Player:notify(player, 'error.already_static')
     return
   elseif !is_static and !ent_static then
-    Flux.Player:notify(player, 'err.not_static')
+    Flux.Player:notify(player, 'error.not_static')
     return
   end
 

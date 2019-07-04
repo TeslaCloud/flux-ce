@@ -1,36 +1,5 @@
 en:
-  whitelist:
-    description: "Add a player to a faction whitelist. Factions: {1}"
-    syntax: "<target> <faction> [is faction search strict]"
-    message: "{1} has added {2} to the {3} whitelist."
-  take_whitelist:
-    description: "Remove a player from a faction whitelist. Factions: {1}"
-    syntax: "<target> <faction> [is faction search strict]"
-    message: "{1} has removed {2} from the {3} whitelist."
-  set_faction:
-    description: "Set character's faction. Factions: {1}"
-    syntax: "<name> <faction> [data]"
-    message: "{1} has added {2} to the {3} faction."
-  set_rank:
-    description: "Set character's rank in their faction."
-    syntax: "<target> <rank>"
-    message: "{1} has set {2}'s rank to {3}."
-  promote:
-    description: "Promote character in their faction."
-    syntax: "<target>"
-    message: "{1} has promoted {2}."
-  demote:
-    description: "Demote character in their faction."
-    syntax: "<target>"
-    message: "{1} has demoted {2}."
-  err:
-    whitelist_not_valid: "'{1}' is not a valid faction!"
-    target_not_whitelisted: "{1} is not on the {2} whitelist!"
-  char_create:
-    faction: Faction
-    no_whitelist: You don't have access to this faction.
-    no_faction: You didn't choose a faction.
-  conditions:
+  condition:
     faction:
       name: Player in specific faction
       text: Faction {1} {2}
@@ -41,3 +10,36 @@ en:
       message: Select rank
     factions: Factions
     ranks: Ranks
+  command:
+    whitelist:
+      description: "Add a player to a faction whitelist. Factions: {1}"
+      syntax: "<target> <faction> [is faction search strict]"
+      message: "{1} has added {2} to the {3} whitelist."
+    take_whitelist:
+      description: "Remove a player from a faction whitelist. Factions: {1}"
+      syntax: "<target> <faction> [is faction search strict]"
+      message: "{1} has removed {2} from the {3} whitelist."
+    set_faction:
+      description: "Set character's faction. Factions: {1}"
+      syntax: "<name> <faction> [data]"
+      message: "{1} has added {2} to the {3} faction."
+    set_rank:
+      description: "Set character's rank in their faction."
+      syntax: "<target> <rank>"
+      message: "{1} has set {2}'s rank to {3}."
+    promoterank:
+      description: "Promote character in their faction."
+      syntax: "<target>"
+      message: "{1} has promoterankd {2}."
+    demoterank:
+      description: "Demote character in their faction."
+      syntax: "<target>"
+      message: "{1} has demoterankd {2}."
+  error:
+    whitelist_not_valid: "'{1}' is not a valid faction!"
+    target_not_whitelisted: "{1} is not on the {2} whitelist!"
+  ui:
+    char_create:
+      faction: Faction
+      no_whitelist: You don't have access to this faction.
+      no_faction: You didn't choose a faction.

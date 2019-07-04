@@ -1,23 +1,17 @@
 en:
-  give_money:
-    description: "Give money to the player you looking at. Currencies: {1}"
-    syntax: <amount> [currency]
-  drop_money:
-    description: "Drop money at your target location. Currencies: {1}"
-    syntax: <amount> [currency]
-  set_money:
-    description: "Set money for player. Currencies: {1}"
-    syntax: <target> <amount> [currency]
-    message: "{1}'s {2} successfully set to {3}."
-  currency:
-    title: Money
-    give:
-      title: Give money
-      message: Amount to give.
-    drop:
-      title: Drop money
-      message: Amount to drop.
-    notify:
+  command:
+    give_money:
+      description: "Give money to the player you looking at. Currencies: {1}"
+      syntax: <amount> [currency]
+    drop_money:
+      description: "Drop money at your target location. Currencies: {1}"
+      syntax: <amount> [currency]
+    set_money:
+      description: "Set money for player. Currencies: {1}"
+      syntax: <target> <amount> [currency]
+      message: "{1}'s {2} successfully set to {3}."
+  notification:
+    currency:
       invalid_entity: This is not a valid entity!
       too_far: You are too far away from the target.
       not_enough_money: Insufficient funds.
@@ -28,3 +22,12 @@ en:
       give: You gave {3} {2} to {1}.
       drop: You dropped {2} {1}.
       set: Your {1} balance has been set to {2}.
+  ui:
+    currency:
+      title: Money
+      give:
+        title: Give money
+        message: Amount to give.
+      drop:
+        title: Drop money
+        message: Amount to drop.

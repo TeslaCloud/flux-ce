@@ -1,9 +1,12 @@
 en:
-  mapscene:
-    title: Mapscene
-    point_added: Point added
+  notification:
+    mapscene:
+      point_added: Point added
   tool:
     mapscene:
       name: Main menu background
       desc: Set main menu camera position.
       "0": "Left Click: Add node"
+  ui:
+    mapscene:
+      title: Mapscene

@@ -36,19 +36,19 @@ function Factions:PreStageChange(id, panel)
     local faction_table = Factions.find_by_id(faction_id)
 
     if gender == 'Universal' and faction_table.has_gender then
-      return false, t'char_create.no_gender'
+      return false, t'ui.char_create.no_gender'
     end
   end
 end
 
 function Factions:OnThemeLoaded(current_theme)
-  current_theme:add_panel('char_create.faction', function(id, parent, ...)
+  current_theme:add_panel('ui.char_create.faction', function(id, parent, ...)
     return vgui.Create('fl_char_create_faction', parent)
   end)
 end
 
 function Factions:AddCharacterCreationMenuStages(panel)
-  panel:add_stage('char_create.faction', 1)
+  panel:add_stage('ui.char_create.faction', 1)
 end
 
 function Factions:GetCharacterCreationModels(char_data)
@@ -97,7 +97,7 @@ function Factions:PreRebuildScoreboard(panel, w, h)
   hook.run('PreRebuildFactionCategories', players_table)
 
   for k, v in pairs(players_table) do
-    local faction = (k == 'players_online' and t'scoreboard.players_online') or Factions.find_by_id(k)
+    local faction = (k == 'players_online' and t'ui.scoreboard.players_online') or Factions.find_by_id(k)
     local players = v
 
     if table.count(players) == 0 then continue end

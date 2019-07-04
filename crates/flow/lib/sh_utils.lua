@@ -84,7 +84,7 @@ function util.player_list_to_string(player_list)
   local nlist = #player_list
 
   if nlist > 1 and nlist == #_player.GetAll() then
-    return t'chat.everyone'
+    return 'ui.chat.everyone'
   end
 
   return util.list_to_string(function(obj) return (IsValid(obj) and obj:name()) or 'Unknown Player' end, nil, unpack(player_list))

@@ -1,6 +1,6 @@
 Conditions:register_condition('steamid', {
-  name = 'conditions.steamid.name',
-  text = 'conditions.steamid.text',
+  name = 'condition.steamid.name',
+  text = 'condition.steamid.text',
   get_args = function(panel, data)
     local steamid = panel.data.steamid
     local operator = util.operator_to_symbol(panel.data.operator) or ''
@@ -17,7 +17,7 @@ Conditions:register_condition('steamid', {
   set_parameters = function(id, data, panel, menu, parent)
     Derma_StringRequest(
       t(data.name),
-      t'conditions.steamid.message',
+      t'condition.steamid.message',
       '',
       function(text)
         if text:starts('STEAM_') then
@@ -33,8 +33,8 @@ Conditions:register_condition('steamid', {
 })
 
 Conditions:register_condition('model', {
-  name = 'conditions.model.name',
-  text = 'conditions.model.text',
+  name = 'condition.model.name',
+  text = 'condition.model.text',
   get_args = function(panel, data)
     local operator = util.operator_to_symbol(panel.data.operator) or ''
     local parameter = panel.data.model or ''
@@ -50,7 +50,7 @@ Conditions:register_condition('model', {
   set_parameters = function(id, data, panel, menu, parent)
     Derma_StringRequest(
       t(data.name),
-      t'conditions.model.message',
+      t'condition.model.message',
       '',
       function(text)
         if text:starts('models') then
@@ -66,8 +66,8 @@ Conditions:register_condition('model', {
 })
 
 Conditions:register_condition('health', {
-  name = 'conditions.health.name',
-  text = 'conditions.health.text',
+  name = 'condition.health.name',
+  text = 'condition.health.text',
   get_args = function(panel, data)
     local operator = util.operator_to_symbol(panel.data.operator) or ''
     local parameter = panel.data.health or ''
@@ -83,7 +83,7 @@ Conditions:register_condition('health', {
   set_parameters = function(id, data, panel, menu, parent)
     Derma_StringRequest(
       t(data.name),
-      t'conditions.health.message',
+      t'condition.health.message',
       '',
       function(text)
         panel.data.health = tonumber(text)
@@ -95,8 +95,8 @@ Conditions:register_condition('health', {
 })
 
 Conditions:register_condition('armor', {
-  name = 'conditions.armor.name',
-  text = 'conditions.armor.text',
+  name = 'condition.armor.name',
+  text = 'condition.armor.text',
   get_args = function(panel, data)
     local operator = util.operator_to_symbol(panel.data.operator) or ''
     local parameter = panel.data.armor or ''
@@ -112,7 +112,7 @@ Conditions:register_condition('armor', {
   set_parameters = function(id, data, panel, menu, parent)
     Derma_StringRequest(
       t(data.name),
-      t'conditions.armor.message',
+      t'condition.armor.message',
       '',
       function(text)
         panel.data.armor = tonumber(text)
@@ -124,8 +124,8 @@ Conditions:register_condition('armor', {
 })
 
 Conditions:register_condition('active_weapon', {
-  name = 'conditions.weapon.name',
-  text = 'conditions.weapon.text',
+  name = 'condition.weapon.name',
+  text = 'condition.weapon.text',
   get_args = function(panel, data)
     local operator = util.operator_to_symbol(panel.data.operator) or ''
     local parameter = panel.data.weapon or ''
@@ -142,7 +142,7 @@ Conditions:register_condition('active_weapon', {
   set_parameters = function(id, data, panel, menu, parent)
     Derma_StringRequest(
       t(data.name),
-      t'conditions.weapon.message',
+      t'condition.weapon.message',
       '',
       function(text)
         panel.data.weapon = text

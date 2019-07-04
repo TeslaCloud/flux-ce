@@ -12,7 +12,8 @@ ru:
       max_messages:
         name: Максимальное количество сообщений
         desc: Максимальный размер истории сообщений.
-  chat:
-    aliases: Алиасы
-    no_commands_found: Команды не найдены.
-    everyone: всем
+  ui:
+    chat:
+      aliases: Алиасы
+      no_commands_found: Команды не найдены.
+      everyone: всем

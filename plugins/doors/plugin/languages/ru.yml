@@ -1,9 +1,5 @@
 ru:
-  doors:
-    title: Двери
-    unlock: Отпереть
-    lock: Запереть
-    settings: Настройки
+  door:
     categories:
       general: Общее
     properties:
@@ -15,3 +11,9 @@ ru:
     title_type:
       none: "Отсутствует"
       center: "По центру"
+  ui:
+    door:
+      title: Двери
+      unlock: Отпереть
+      lock: Запереть
+      settings: Настройки

@@ -1,9 +1,9 @@
 ﻿local COMMAND = Command.new('charsetattribute')
 COMMAND.name = 'CharSetAttribute'
-COMMAND.description = 'char_set_attribute.description'
-COMMAND.syntax = 'char_set_attribute.syntax'
+COMMAND.description = 'command.char_set_attribute.description'
+COMMAND.syntax = 'command.char_set_attribute.syntax'
 COMMAND.permission = 'moderator'
-COMMAND.category = 'categories.character_management'
+COMMAND.category = 'perm.categories.character_management'
 COMMAND.arguments = 3
 COMMAND.player_arg = 1
 COMMAND.aliases = { 'setatt', 'setattribute', 'charsetatt' }
@@ -21,7 +21,7 @@ function COMMAND:on_run(player, targets, attr_id, value)
 
     target:set_attribute(attr_id:to_id(), tonumber(value))
   else
-    player:notify('err.attribute_not_valid', attr_id)
+    player:notify('error.attribute_not_valid', attr_id)
   end
 end
 

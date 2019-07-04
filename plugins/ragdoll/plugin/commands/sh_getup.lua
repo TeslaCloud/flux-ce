@@ -1,8 +1,8 @@
 local COMMAND = Command.new('getup')
 COMMAND.name = 'GetUp'
-COMMAND.description = 'getup.description'
-COMMAND.syntax = 'getup.syntax'
-COMMAND.category = 'categories.roleplay'
+COMMAND.description = 'command.getup.description'
+COMMAND.syntax = 'command.getup.syntax'
+COMMAND.category = 'perm.categories.roleplay'
 COMMAND.aliases = { 'chargetup', 'unfall', 'unfallover' }
 COMMAND.no_console = true
 
@@ -20,7 +20,7 @@ function COMMAND:on_run(player, delay)
       player:reset_action()
     end)
   else
-    player:notify(t'cant_now')
+    player:notify(t'error.cant_now')
   end
 end
 

@@ -1,22 +1,11 @@
 ru:
-  inventory:
-    main_inventory: Инвентарь
-    hotbar: Быстрый доступ
-    equipment: Экипировка
-    pockets: Карманы
-  give_item:
-    description: Выдать игроку определенный предмет.
-    syntax: "<игрок> <название или ID>"
-    target_message: "{1} выдает вам {2}x{3}."
-    player_message: Вы выдали {2}x{3} {1}.
-    invalid_item: "Предмет '{1}' не найден."
-  tab_menu:
-    inventory: Инвентарь
-  hint:
-    inventory: Инвентарь
-    inventory_text: Перетащите предмет за пределы инвентаря, чтобы выбросить его.
-  notify:
-    char_desc_changed: Вы изменили описание вашего персонажа
+  command:
+    give_item:
+      description: Выдать игроку определенный предмет.
+      syntax: "<игрок> <название или ID>"
+      target_message: "{1} выдает вам {2}x{3}."
+      player_message: Вы выдали {2}x{3} {1}.
+      invalid_item: "Предмет '{1}' не найден."
   config:
     inventory:
       title: Инвентарь
@@ -42,3 +31,15 @@ ru:
       pockets_height:
         name: Высота инвентаря карманов
         desc: Высота инвентаря карманов игрока в слотах.
+  hint:
+    inventory: Перетащите предмет за пределы инвентаря, чтобы выбросить его.
+  notification:
+    char_desc_changed: Вы изменили описание вашего персонажа
+  ui:
+    inventory:
+      main_inventory: Инвентарь
+      hotbar: Быстрый доступ
+      equipment: Экипировка
+      pockets: Карманы
+    tab_menu:
+      inventory: Инвентарь

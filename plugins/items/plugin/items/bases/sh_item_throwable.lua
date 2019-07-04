@@ -6,7 +6,7 @@ class 'ItemThrowable' extends 'ItemWeapon'
 
 ItemThrowable.name = 'Throwable Base'
 ItemThrowable.description = 'A throwable weapon.'
-ItemThrowable.category = 'item.category.thrown'
+ItemThrowable.category = 'item.category.throwable'
 ItemThrowable.equip_slot = 'item.slot.throwable'
 ItemThrowable.weapon_class = 'weapon_frag'
 ItemThrowable.thrown_ammo_class = 'Grenade'

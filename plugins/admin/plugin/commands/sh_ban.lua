@@ -1,9 +1,9 @@
 local COMMAND = Command.new('ban')
 COMMAND.name = 'Ban'
-COMMAND.description = 'bancmd.description'
-COMMAND.syntax = 'bancmd.syntax'
+COMMAND.description = 'command.ban.description'
+COMMAND.syntax = 'command.ban.syntax'
 COMMAND.permission = 'assistant'
-COMMAND.category = 'categories.administration'
+COMMAND.category = 'perm.categories.administration'
 COMMAND.arguments = 2
 COMMAND.immunity = true
 COMMAND.aliases = { 'plyban' }
@@ -34,7 +34,7 @@ function COMMAND:on_run(player, targets, duration, ...)
 
     if duration <= 0 then time = t'time.permanently' end
 
-    v:notify('ban_message', {
+    v:notify('command.ban.message', {
       admin = get_player_name(player),
       target = util.player_list_to_string(targets),
       time = time,

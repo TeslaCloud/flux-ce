@@ -68,7 +68,7 @@ function PANEL:rebuild()
 
   self.inventory = vgui.create('fl_inventory', self)
   self.inventory:set_player(PLAYER)
-  self.inventory:set_title('inventory.main_inventory')
+  self.inventory:set_title('ui.inventory.main_inventory')
 
   local w, h = self:GetSize()
   local width, height = self.inventory:GetSize()
@@ -77,7 +77,7 @@ function PANEL:rebuild()
   self.pockets.inventory_type = 'pockets'
   self.pockets:set_max_size(self.inventory:GetWide(), nil)
   self.pockets:set_player(PLAYER)
-  self.pockets:set_title('inventory.pockets')
+  self.pockets:set_title('ui.inventory.pockets')
 
   if width < w / 2 then
     local x, y = self.inventory:GetPos()
@@ -102,7 +102,7 @@ function PANEL:rebuild()
   self.hotbar = vgui.Create('fl_inventory_hotbar', self)
   self.hotbar:set_slot_padding(8)
   self.hotbar:set_player(PLAYER)
-  self.hotbar:set_title('inventory.hotbar')
+  self.hotbar:set_title('ui.inventory.hotbar')
   self.hotbar:rebuild()
 
   if IsValid(target_ent) then

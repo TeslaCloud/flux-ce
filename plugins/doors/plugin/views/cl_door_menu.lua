@@ -3,7 +3,7 @@ local PANEL = {}
 function PANEL:Init()
   self:SetSize(ScrW() * 0.25, ScrH() * 0.4)
   self:Center()
-  self:SetTitle(t'doors.title')
+  self:SetTitle(t'ui.door.title')
 
   self:MakePopup()
 
