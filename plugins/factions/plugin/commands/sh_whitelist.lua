@@ -1,5 +1,4 @@
 local COMMAND = Command.new('whitelist')
-
 COMMAND.name = 'Whitelist'
 COMMAND.description = 'whitelist.description'
 COMMAND.syntax = 'whitelist.syntax'

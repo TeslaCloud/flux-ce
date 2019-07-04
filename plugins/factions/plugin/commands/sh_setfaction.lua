@@ -1,10 +1,9 @@
 local COMMAND = Command.new('setfaction')
-
 COMMAND.name = 'Setfaction'
 COMMAND.description = 'set_faction.description'
 COMMAND.syntax = 'set_faction.syntax'
 COMMAND.permission = 'assistant'
-COMMAND.category = 'categories.player_management'
+COMMAND.category = 'categories.character_management'
 COMMAND.arguments = 2
 COMMAND.player_arg = 1
 COMMAND.aliases = { 'plytransfer', 'charsetfaction', 'chartransfer' }
