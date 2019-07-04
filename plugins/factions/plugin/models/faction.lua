@@ -15,7 +15,6 @@ function Faction:init(id)
   self.has_description = true
   self.has_gender = true
   self.models = { male = {}, female = {}, universal = {} }
-  self.classes = {}
   self.rank = {}
   self.data = {}
   self.name_template = '{rank} {name}'
@@ -75,17 +74,6 @@ end
 
 function Faction:get_random_model(player)
   return table.random(self:get_gender_models(player:get_gender()))
-end
-
-function Faction:add_class(id, class_name, description, color, callback)
-  if !id then return end
-
-  self.classes[id] = {
-    name = class_name,
-    description = description,
-    color = color,
-    callback = callback
-  }
 end
 
 function Faction:add_rank(id, name_filter)
