@@ -216,7 +216,7 @@ function PANEL:typing_command()
     local cmd = self.text_entry:GetValue()
 
     if cmd != '/' then
-      return command:is_command()
+      return cmd:is_command()
     end
   end
 end
