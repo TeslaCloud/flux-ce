@@ -1,6 +1,6 @@
 function Mapscenes:RenderScreenspaceEffects()
-  if IsValid(PLAYER) and PLAYER:Alive() and IsValid(PLAYER:GetActiveWeapon()) and PLAYER:GetActiveWeapon():GetClass() == 'gmod_tool' and
-  PLAYER:GetTool() and PLAYER:GetTool().Name == 'Mapscene tool' and !IsValid(Flux.intro_panel) and can('mapscenes') then
+  if IsValid(PLAYER) and PLAYER:Alive() and IsValid(PLAYER:GetActiveWeapon()) and PLAYER:GetActiveWeapon():GetClass() == 'gmod_tool'
+  and PLAYER:GetTool() and PLAYER:GetTool().Name == 'Mapscene tool' and !IsValid(Flux.intro_panel) and can('mapscenes') then
     for k, v in pairs(self.points) do
       local start_pos = v.pos:ToScreen()
 

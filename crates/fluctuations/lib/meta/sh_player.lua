@@ -79,8 +79,8 @@ function player_meta:do_action(id)
 end
 
 function player_meta:running()
-  if self:Alive() and !self:Crouching() and self:GetMoveType() == MOVETYPE_WALK and
-     self:GetVelocity():Length2DSqr() > (Config.get('walk_speed', 100) + 20)^2 then
+  if self:Alive() and !self:Crouching() and self:GetMoveType() == MOVETYPE_WALK
+  and self:GetVelocity():Length2DSqr() > (Config.get('walk_speed', 100) + 20)^2 then
     return true
   end
 

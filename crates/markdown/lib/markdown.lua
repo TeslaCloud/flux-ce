@@ -347,8 +347,8 @@ end
 local function headers(array)
   local i = 1
   while i <= #array - 1 do
-    if array[i].type  == "normal" and array[i+1].type == "ruler" and
-      (array[i+1].ruler_char == "-" or array[i+1].ruler_char == "=") then
+    if array[i].type  == "normal" and array[i+1].type == "ruler"
+    and (array[i+1].ruler_char == "-" or array[i+1].ruler_char == "=") then
       local info = {line = array[i].line}
       info.text = info.line
       info.type = "header"
