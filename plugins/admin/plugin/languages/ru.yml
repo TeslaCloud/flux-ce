@@ -1,72 +1,70 @@
 ru:
   command:
+    ban:
+      description: Забанить урода!
+      syntax: <игрок> <срок блокировки> [причина]
+      message: "{admin} банит {target} на {time}. ({reason})"
     freezebots:
       description: Замораживает всех ботов.
-      message: "{1} замораживает ботов."
+      message: "{player} замораживает ботов."
     unfreezebots:
       description: Размораживает всех ботов.
-      message: "{1} размораживает ботов."
+      message: "{player} размораживает ботов."
     addbots:
       description: Добавляет определенное количество ботов на сервер.
       syntax: "[количество]"
-      message: "{1} добавляет {2} {3} на сервер."
+      message: "{player} добавляет {amount} {bots} на сервер."
       bot_one: бота
       bot_many: ботов
     kickbots:
       description: Кикнуть всех ботов.
-      message: "{1} удаляет всех ботов."
+      message: "{player} кикает всех ботов."
     changelevel:
       description: Меняет карту на указанную.
       syntax: <карта> [задержка]
-      message: "{1} меняет карту на {2} через {3} секунд!"
-    kick:
-      description: Выкидывает игрока с сервера.
-      syntax: <игрок> [причина]
-      message: "{1} исключает {2} из игры. ({3})"
-    ban:
-      description: Забанить урода!
-      syntax: <игрок> <срок блокировки> [причина]
-      message: "{admin} заблокировал {target} {time}. ({reason})"
-    unban:
-      description: Разблокировать игрока с таким Steam ID если тот находится в блокировке.
-      syntax: <заблокированный SteamID>
-      message: "{admin} разблокировал {target}."
-    tp:
-      description: Телепортировать игрока туда, куда вы смотрите.
-      syntax: <игрок>
-    tpto:
-      description: Телепортироваться к игроку.
-      syntax: <игрок>
-    return:
-      description: Вернуть игрока туда, где он находился до телепорта.
-      syntax: <игрок>
-    setgroup:
-      description: "Выставляет группу пользователя игрока. Группы: {1}"
-      syntax: <игрок> <группа>
-      message: "{1} добавляет {2} к группе '{3}'."
-    vanish:
-      description: "Полностью скрывает игрока от всех, кроме администрации."
-      syntax: "<игрок> [скрыть]"
-      self: "Вы теперь {state}."
-      enabled: "{admin_name} делает {player_name} невидимкой."
-      disabled: "{admin_name} сделал {player_name} видимым."
-      vanished: "скрыты от других игроков"
-      unvanished: "видимы другим игрокам"
-    fullbright:
-      description: "Отключает темноту."
-      syntax: "<игрок> <отключить_свет>"
-      enabled: "{player_name} включает ночное видение для {targets}."
-      disabled: "{player_name} отключает ночное видение {targets}."
-      enabled_self: "Вы теперь видите в темноте."
-      disabled_self: "Вы больше не видите в темноте."
+      message: "{player} меняет карту на {map} через {delay} секунд!"
     demote:
       description: Понижает игрока до пользователя.
       syntax: <игрок>
-      message: "{1} понижает {2} с {3} до пользователя."
+      message: "{player} понижает {target} до пользователя."
+    kick:
+      description: Выкидывает игрока с сервера.
+      syntax: <игрок> [причина]
+      message: "{player} кикает {target}. ({reason})"
     restart:
       description: Перезапускает текущую карту.
       syntax: "[задержка]"
-      message: "{1} перезапускает карту через {2} секунд!"
+      message: "{player} перезапускает карту через {delay} секунд!"
+    return:
+      description: Вернуть игрока туда, где он находился до телепорта.
+      syntax: <игрок>
+      message: "{player} возвращает {target} на предыдущую позицию."
+    setgroup:
+      description: "Меняет группу пользователя игрока. Группы: {1}"
+      syntax: <игрок> <группа>
+      message: "{player} добавляет {target} к группе {group}."
+    tp:
+      description: Телепортировать игрока туда, куда вы смотрите.
+      syntax: <игрок>
+      message: "{player} телепортировал {target}."
+    tpto:
+      description: Телепортироваться к игроку.
+      syntax: <игрок>
+      message: "{player} телепортировался к {target}."
+    unban:
+      description: Разбанить игрока по SteamID, если тот находится в блокировке.
+      syntax: <забаненный SteamID>
+      message: "{player} разбанивает {target}."
+    vanish:
+      description: "Полностью скрывает игрока от всех, кроме администрации."
+      syntax: "<игрок> [скрыть]"
+      enabled: "{player} делает {target} невидимым."
+      disabled: "{player} делает {target} видимым."
+    fullbright:
+      description: "Отключает темноту."
+      syntax: "<игрок> <отключить_свет>"
+      enabled: "{player} включает ночное видение для {target}."
+      disabled: "{player} отключает ночное видение {target}."
   condition:
     role:
       name: Игрок с определенной ролью
@@ -77,6 +75,17 @@ ru:
     group_not_valid: "'{1}' не является группой пользователя!"
     not_banned: Steam ID '{1}' не находится в блокировке!
     no_permission: У вас недостаточно прав чтобы сделать это, {1}.
+  notification:
+    demote: Вы были понижены с должности {group} до пользователя.
+    fullbright:
+      enabled: "Вы теперь видите в темноте."
+      disabled: "Вы больше не видите в темноте."
+    return: Вы были возвращены на предыдущую позицию.
+    setgroup: Ваша группа была изменена на {group}.
+    tp: Вы были телепортированы.
+    vanish:
+      enabled: Теперь вы скрыты от других игроков.
+      disabled: Теперь вы видимы для других игроков.
   permission:
     categories:
       administration: Администрирование

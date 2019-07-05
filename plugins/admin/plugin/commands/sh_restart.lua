@@ -10,9 +10,12 @@ COMMAND.aliases = { 'maprestart' }
 function COMMAND:on_run(player, delay)
   delay = tonumber(delay) or 0
 
-  Flux.Player:broadcast('command.restart.message', { get_player_name(player), delay })
+  self:notify_staff('command.restart.message', {
+    player = get_player_name(player),
+    delay = delay
+  })
 
-  timer.Simple(delay, function()
+  timer.simple(delay, function()
     hook.run('FLSaveData')
     hook.run('ServerRestart')
 

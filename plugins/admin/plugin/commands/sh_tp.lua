@@ -14,10 +14,14 @@ function COMMAND:on_run(player, targets)
   for k, v in pairs(targets) do
     if IsValid(v) then
       v:teleport(pos)
+      v:notify('notification.tp')
     end
   end
 
-  player:notify('tp.notify', util.player_list_to_string(targets))
+  self:notify_staff('command.tp.message', {
+    player = get_player_name(player),
+    target = util.player_list_to_string(targets)
+  })
 end
 
 COMMAND:register()

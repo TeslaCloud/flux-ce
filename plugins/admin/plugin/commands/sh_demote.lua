@@ -9,11 +9,17 @@ COMMAND.immunity = true
 COMMAND.aliases = { 'plydemote' }
 
 function COMMAND:on_run(player, targets)
-  for k, target in ipairs(targets) do
-    target:SetUserGroup('user')
-
-    Flux.Player:broadcast('demote.message', { get_player_name(player), target:name(), target:GetUserGroup() })
+  for k, v in ipairs(targets) do
+    v:notify('notification.demote', {
+      group = v:GetUserGroup()
+    })
+    v:SetUserGroup('user')
   end
+
+  self:notify_staff('command.demote.message', {
+    player = get_player_name(player),
+    target = util.player_list_to_string(targets)
+  })
 end
 
 COMMAND:register()

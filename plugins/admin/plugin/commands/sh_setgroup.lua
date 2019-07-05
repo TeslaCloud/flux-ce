@@ -21,10 +21,17 @@ end
 function COMMAND:on_run(player, targets, role)
   if Bolt:group_exists(role) then
     for k, v in ipairs(targets) do
+      v:notify('notification.setgroup', {
+        group = role
+      })
       v:SetUserGroup(role)
     end
 
-    Flux.Player:broadcast('setgroup.message', { get_player_name(player), util.player_list_to_string(targets), role })
+    self:notify_staff('command.setgroup.message', {
+      player = get_player_name(player),
+      target = util.player_list_to_string(targets),
+      group = role
+    })
   else
     player:notify('error.group_not_valid', role)
   end

@@ -11,14 +11,14 @@ COMMAND.aliases = { 'fb' }
 function COMMAND:on_run(player, targets, should_fullbright)
   should_fullbright = tobool(should_fullbright)
 
-  for k, target in ipairs(targets) do
-    target:set_nv('should_fullbright', should_fullbright, target)
-    target:notify('fullbright.'..(should_fullbright and 'enabled' or 'disabled')..'_self')
+  for k, v in ipairs(targets) do
+    v:set_nv('should_fullbright', should_fullbright)
+    v:notify('notification.fullbright.'..(should_fullbright and 'enabled' or 'disabled'))
   end
 
-  self:notify_admin('moderator', 'fullbright.'..(should_fullbright and 'enabled' or 'disabled'), {
-    targets = util.player_list_to_string(targets),
-    player_name = get_player_name(player)
+  self:notify_staff('command.fullbright.'..(should_fullbright and 'enabled' or 'disabled'), {
+    player = get_player_name(player),
+    target = util.player_list_to_string(targets)
   })
 end
 

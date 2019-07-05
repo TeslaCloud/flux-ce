@@ -17,7 +17,11 @@ end
 Cable.receive('fl_bolt_set_role', function(player, target, role_id)
   target:SetUserGroup(role_id)
 
-  Flux.Player:broadcast('setgroup.message', { get_player_name(player), target:steam_name(true), role_id })
+  self:notify_staff('setgroup.message', {
+    player = get_player_name(player),
+    target = target:steam_name(true),
+    group = role_id
+  })
 end)
 
 Cable.receive('fl_bolt_set_permission', function(player, target, perm_id, value)

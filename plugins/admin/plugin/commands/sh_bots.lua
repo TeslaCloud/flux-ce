@@ -6,7 +6,9 @@ COMMAND.category = 'permission.categories.server_management'
 COMMAND.aliases = { 'botfreeze', 'freezebot', 'bot_freeze', 'bot_zombie' }
 
 function COMMAND:on_run(player)
-  Flux.Player:broadcast('command.freezebots.message', get_player_name(player))
+  self:notify_staff('command.freezebots.message', {
+    player = get_player_name(player)
+  })
 
   RunConsoleCommand('bot_zombie', 1)
 end
@@ -21,7 +23,9 @@ COMMAND.category = 'permission.categories.server_management'
 COMMAND.aliases = { 'botunfreeze', 'unfreezebot', 'bot_unfreeze', 'bot_unzombie' }
 
 function COMMAND:on_run(player)
-  Flux.Player:broadcast('command.unfreezebots.message', get_player_name(player))
+  self:notify_staff('command.unfreezebots.message', {
+    player = get_player_name(player)
+  })
 
   RunConsoleCommand('bot_zombie', 0)
 end
@@ -38,11 +42,15 @@ COMMAND.arguments = 0
 COMMAND.aliases = { 'bot', 'bots' }
 
 function COMMAND:on_run(player, num_bots)
-  num_bots = math.Clamp((tonumber(num_bots) or 1), 1, 128)
+  num_bots = math.clamp((tonumber(num_bots) or 1), 1, 128)
 
-  Flux.Player:broadcast('command.addbots.message', { get_player_name(player), num_bots, num_bots == 1 and 'command.addbots.bot_one' or 'command.addbots.bot_many' })
+  self:notify_staff('command.addbots.message', {
+    player = get_player_name(player),
+    amount = num_bots,
+    bots = num_bots == 1 and 'command.addbots.bot_one' or 'command.addbots.bot_many'
+  })
 
-  timer.Create('fl_add_bots', 0.2, num_bots, function()
+  timer.create('fl_add_bots', 0.2, num_bots, function()
     RunConsoleCommand('bot')
   end)
 end
@@ -57,9 +65,11 @@ COMMAND.category = 'permission.categories.server_management'
 COMMAND.aliases = { 'botkick', 'kickbot' }
 
 function COMMAND:on_run(player)
-  Flux.Player:broadcast('command.kickbots.message', get_player_name(player))
+  self:notify_staff('command.kickbots.message', {
+    player = get_player_name(player)
+  })
 
-  for k, v in ipairs(_player.GetAll()) do
+  for k, v in ipairs(_player.all()) do
     if v:IsBot() then
       v:Kick('Kicking bots')
     end

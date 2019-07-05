@@ -9,14 +9,18 @@ COMMAND.immunity = true
 COMMAND.aliases = { 'return', 'back' }
 
 function COMMAND:on_run(player, targets)
-  for k, v in pairs(targets) do
+  for k, v in ipairs(targets) do
     if IsValid(v) and v.prev_pos then
+      v:notify('notification.return')
       v:teleport(v.prev_pos)
       v.prev_pos = nil
     end
   end
 
-  player:notify('return.notify', util.player_list_to_string(targets))
+  self:notify_staff('command.return.message', {
+    player = get_player_name(player),
+    target = util.player_list_to_string(targets)
+  })
 end
 
 COMMAND:register()

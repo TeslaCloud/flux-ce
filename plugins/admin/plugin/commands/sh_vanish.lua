@@ -9,46 +9,45 @@ COMMAND.immunity = true
 COMMAND.aliases = { 'v' }
 
 function COMMAND:on_run(player, targets, should_vanish)
-  local admin_name = get_player_name(player)
+  for k, v in ipairs(targets) do
+    should_vanish = should_vanish != nil and tobool(should_vanish) or !v.is_vanished
 
-  for k, target in ipairs(targets) do
-    should_vanish = should_vanish != nil and tobool(should_vanish) or !target.is_vanished
-
-    local phrase = 'command.vanish.'..(should_vanish and 'enabled' or 'disabled')
-    local target_name = target:name()
-
-    target:AddEFlags(EFL_FORCE_CHECK_TRANSMIT)
+    v:AddEFlags(EFL_FORCE_CHECK_TRANSMIT)
 
     -- Make sure we are not interfering with observer.
-    if !target:get_nv('observer') then
+    if !v:get_nv('observer') then
       if should_vanish then
-        target.old_color = target:GetColor()
+        v.old_color = target:GetColor()
 
-        target:DrawWorldModel(false)
-        target:DrawShadow(false)
-        target:SetNoDraw(true)
-        target:SetNotSolid(true)
-        target:SetColor(Color(0, 0, 0, 0))
+        v:DrawWorldModel(false)
+        v:DrawShadow(false)
+        v:SetNoDraw(true)
+        v:SetNotSolid(true)
+        v:SetColor(Color(0, 0, 0, 0))
       else
-        target:DrawWorldModel(true)
-        target:DrawShadow(true)
-        target:SetNoDraw(false)
-        target:SetNotSolid(false)
-        target:SetColor(target.old_color)
+        v:DrawWorldModel(true)
+        v:DrawShadow(true)
+        v:SetNoDraw(false)
+        v:SetNotSolid(false)
+        v:SetColor(v.old_color)
       end
     end
 
-    target:prevent_transmit_conditional(should_vanish, function(ply)
+    v:prevent_transmit_conditional(should_vanish, function(ply)
       if ply:can('moderator') then
-        ply:notify_admin(phrase, { player_name = target_name, admin_name = admin_name })
         return false
       end
     end)
 
-    target:notify('command.vanish.self', { state = 'command.vanish.'..(should_vanish and 'vanished' or 'unvanished') })
+    v:notify('notification.vanish.'..(should_vanish and 'enabled' or 'disabled'))
 
-    target.is_vanished = should_vanish
+    v.is_vanished = should_vanish
   end
+
+  self:notify_staff('command.vanish.'..(should_vanish and 'enabled' or 'disabled'), {
+    player = get_player_name(player),
+    target = util.player_list_to_string(targets)
+  })
 end
 
 COMMAND:register()

@@ -15,7 +15,10 @@ function COMMAND:on_run(player, targets)
     player:teleport(target:GetPos())
   end
 
-  player:notify('tpto.notify', target:name())
+  self:notify_staff('command.tpto.message', {
+    player = get_player_name(player),
+    target = util.player_list_to_string({ target })
+  })
 end
 
 COMMAND:register()

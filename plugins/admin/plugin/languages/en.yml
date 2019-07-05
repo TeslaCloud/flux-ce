@@ -1,72 +1,70 @@
 en:
   command:
+    ban:
+      description: Ban this sucker!
+      syntax: <target> <duration> [reason]
+      message: "{player} has banned {target} for {time}. ({reason})"
     freezebots:
       description: Freezes all of the bots.
-      message: "{1} has frozen all bots."
+      message: "{player} has frozen all bots."
     unfreezebots:
       description: Unfreezes all of the bots.
-      message: "{1} has unfrozen all bots."
+      message: "{player} has unfrozen all bots."
     addbots:
       description: Adds specified amount of bots to the server.
       syntax: "[number Amount]"
-      message: "{1} has added {2} {3} to the server."
+      message: "{player} has added {amount} {bots} to the server."
       bot_one: bot
       bot_many: bots
     kickbots:
       description: Kicks all bots.
-      message: "{1} has kicked all bots."
+      message: "{player} has kicked all bots."
     changelevel:
       description: Changes the level to specified map.
       syntax: <string Map> [number Delay]
-      message: "{1} is changing the level to {2} in {3} second(s)!"
-    kick:
-      description: Kicks player from the server.
-      syntax: <target> [reason]
-      message: "{1} has kicked {2}. ({3})"
-    ban:
-      description: Ban this sucker!
-      syntax: <target> <duration> [reason]
-      message: "{admin} has banned {target} {time}. ({reason})"
-    unban:
-      description: Unban the specified Steam ID if it is banned.
-      syntax: <target SteamID>
-      message: "{admin} has unbanned {target}."
-    tp:
-      description: Teleport player to position you looking at.
-      syntax: <target>
-    tpto:
-      description: Teleport to target's position.
-      syntax: <target>
-    return:
-      description: Bring player back to their previous position before teleport.
-      syntax: <target>
-    setgroup:
-      description: "Sets player's usergroup. Usergoups: {1}"
-      syntax: <target> <usergroup>
-      message: "{1} has set {2}'s user group to {3}."
-    vanish:
-      description: "Completely hides the specified player from everyone else on the server."
-      syntax: "<string player> [bool should_vanish]"
-      self: "You are now {state}."
-      enabled: "{player_name} has been vanished by {admin_name}."
-      disabled: "{player_name} has been unvanished by {admin_name}."
-      vanished: "vanished"
-      unvanished: "unvanished"
-    fullbright:
-      description: "Disables lights for the specified player."
-      syntax: "<string player> <bool should_hide>"
-      enabled: "{player_name} has enabled fullbright mode for {targets}."
-      disabled: "{player_name} has disabled fullbright mode for {targets}."
-      enabled_self: "Fullbright mode enabled."
-      disabled_self: "Fullbright mode disabled."
+      message: "{player} is changing the level to {map} in {delay} second(s)!"
     demote:
       description: Demote a player to user.
       syntax: <target>
-      message: "{1} has demoted {2} from {3} to user."
+      message: "{player} has demoted {target} to user."
+    kick:
+      description: Kicks player from the server.
+      syntax: <target> [reason]
+      message: "{player} has kicked {target}. ({reason})"
     restart:
       description: Restarts the current map.
       syntax: "[number Delay]"
-      message: "{1} is restarting the map in {2} second(s)!"
+      message: "{player} is restarting the map in {delay} second(s)!"
+    return:
+      description: Bring player back to their previous position before teleport.
+      syntax: <target>
+      message: "{player} returned {target} to their previous position."
+    setgroup:
+      description: "Sets player's usergroup. Usergoups: {groups}"
+      syntax: <target> <usergroup>
+      message: "{player} has set {target}'s user group to {group}."
+    tp:
+      description: Teleport player to position you looking at.
+      syntax: <target>
+      message: "{player} has teleported {target}."
+    tpto:
+      description: Teleport to target's position.
+      syntax: <target>
+      message: "{player} has teleported to {target}."
+    unban:
+      description: Unban the specified SteamID if it is banned.
+      syntax: <target SteamID>
+      message: "{player} has unbanned {target}."
+    vanish:
+      description: "Completely hides the specified player from everyone else on the server."
+      syntax: "<string player> [bool should_vanish]"
+      enabled: "{target} has been vanished by {player}."
+      disabled: "{target} has been unvanished by {player}."
+    fullbright:
+      description: "Disables lights for the specified player."
+      syntax: "<string player> <bool should_hide>"
+      enabled: "{player} has enabled fullbright mode for {target}."
+      disabled: "{player} has disabled fullbright mode for {target}."
   condition:
     role:
       name: Player with specific role
@@ -77,6 +75,17 @@ en:
     group_not_valid: "'{1}' is not a valid user group!"
     not_banned: Steam ID '{1}' is not banned!
     no_permission: You have no permissions to do that, {1}.
+  notification:
+    demote: You have been demoted from {group} to user.
+    fullbright:
+      enabled: Fullbright mode enabled.
+      disabled: Fullbright mode disabled.
+    return: You have been returned to your previous position.
+    setgroup: Your usergroup was set to {group}
+    tp: You have been teleported.
+    vanish:
+      enabled: You are now vanished.
+      disabled: You are now unvanished.
   permission:
     categories:
       administration: Administration

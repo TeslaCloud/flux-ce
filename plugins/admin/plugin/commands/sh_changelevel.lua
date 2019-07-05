@@ -11,9 +11,13 @@ function COMMAND:on_run(player, map, delay)
   map = tostring(map) or 'gm_construct'
   delay = tonumber(delay) or 10
 
-  Flux.Player:broadcast('command.changelevel.message', { get_player_name(player), map, delay })
+  self:notify_staff('command.changelevel.message', {
+    player = get_player_name(player),
+    map = map,
+    delay = delay
+  })
 
-  timer.Simple(delay, function()
+  timer.simple(delay, function()
     RunConsoleCommand('changelevel', map)
   end)
 end

@@ -9,38 +9,26 @@ COMMAND.immunity = true
 COMMAND.aliases = { 'plyban' }
 
 function COMMAND:on_run(player, targets, duration, ...)
-  local pieces = { ... }
-  local reason = 'You have been banned.'
+  local reason = table.concat({ ... }, ' ') or 'You have been banned.'
 
   duration = Bolt:interpret_ban_time(duration)
 
   if !isnumber(duration) then
-    Flux.Player:notify(player, "'"..tostring(duration).."' could not be interpreted as duration!")
+    player:notify('error.invalid_time', { tostring(duration) })
 
     return
-  end
-
-  if #pieces > 0 then
-    reason = table.concat(pieces, ' ')
   end
 
   for k, v in ipairs(targets) do
     Bolt:ban(v, duration, reason)
   end
 
-  for k, v in ipairs(_player.GetAll()) do
-    local ply_lang = v:get_nv('language')
-    local time = t('time.for', { time = Flux.Lang:nice_time(duration, ply_lang) }, ply_lang)
-
-    if duration <= 0 then time = t'time.permanently' end
-
-    v:notify('command.ban.message', {
-      admin = get_player_name(player),
-      target = util.player_list_to_string(targets),
-      time = time,
-      reason = reason
-    })
-  end
+  self:notify_staff('command.ban.message', {
+    player = get_player_name(player),
+    target = util.player_list_to_string(targets),
+    time = Flux.Lang:nice_time(duration),
+    reason = reason
+  })
 end
 
 COMMAND:register()
