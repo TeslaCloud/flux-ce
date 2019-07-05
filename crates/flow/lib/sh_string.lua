@@ -214,11 +214,11 @@ function string.presence(str)
 end
 
 function string.underscore(str)
-  return str:gsub('::', '/'):
-         gsub('([A-Z]+)([A-Z][a-z])', '%1_%2'):
-         gsub('([a-z%d])([A-Z])', '%1_%2'):
-         gsub('[%-%s]', '_'):
-         lower()
+  return str:gsub('::', '/')
+            :gsub('([A-Z]+)([A-Z][a-z])', '%1_%2')
+            :gsub('([a-z%d])([A-Z])', '%1_%2')
+            :gsub('[%-%s]', '_')
+            :lower()
 end
 
 function string.camel_case(str)
