@@ -17,7 +17,7 @@ function COMMAND:on_run(player, targets, attr_id, value, duration)
   local attribute = Attributes.find_by_id(attr_id)
 
   if attribute and attribute.boostable then
-    Flux.Player:broadcast('char_attribute_boost.message', { get_player_name(player), target:name(), attribute.name, value, duration })
+    self:notify_staff('char_attribute_boost.message', { get_player_name(player), target:name(), attribute.name, value, duration })
 
     target:attribute_boost(attr_id:to_id(), tonumber(value), tonumber(duration))
   else

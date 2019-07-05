@@ -13,7 +13,7 @@ function COMMAND:on_run(player, targets)
     v:demoterank_rank()
   end
 
-  Flux.Player:broadcast('demoterank.message', { get_player_name(player), util.player_list_to_string(targets) })
+  self:notify_staff('demoterank.message', { get_player_name(player), util.player_list_to_string(targets) })
 end
 
 COMMAND:register()

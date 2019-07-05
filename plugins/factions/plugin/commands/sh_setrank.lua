@@ -19,7 +19,7 @@ function COMMAND:on_run(player, targets, rank)
     end
   end
 
-  Flux.Player:broadcast('set_rank.message', { get_player_name(player), util.player_list_to_string(targets), rank })
+  self:notify_staff('set_rank.message', { get_player_name(player), util.player_list_to_string(targets), rank })
 end
 
 COMMAND:register()

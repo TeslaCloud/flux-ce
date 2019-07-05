@@ -11,7 +11,7 @@ COMMAND.aliases = { 'setmodel' }
 function COMMAND:on_run(player, targets, model)
   local target = targets[1]
 
-  Flux.Player:broadcast('char_set_model.message', { get_player_name(player), target:name(), model })
+  self:notify_staff('char_set_model.message', { get_player_name(player), target:name(), model })
 
   Characters.set_model(target, model)
 end

@@ -13,7 +13,7 @@ function COMMAND:on_run(player, targets)
     v:promoterank_rank()
   end
 
-  Flux.Player:broadcast('promoterank.message', { get_player_name(player), util.player_list_to_string(targets) })
+  self:notify_staff('promoterank.message', { get_player_name(player), util.player_list_to_string(targets) })
 end
 
 COMMAND:register()

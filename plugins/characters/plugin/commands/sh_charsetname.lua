@@ -12,7 +12,7 @@ function COMMAND:on_run(player, targets, ...)
   local new_name = table.concat({ ... }, ' ')
   local target = targets[1]
 
-  Flux.Player:broadcast('char_set_name.message', { get_player_name(player), target:name(), new_name })
+  self:notify_staff('char_set_name.message', { get_player_name(player), target:name(), new_name })
 
   Characters.set_name(target, new_name)
 end
