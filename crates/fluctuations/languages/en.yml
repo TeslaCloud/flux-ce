@@ -40,6 +40,7 @@ en:
       steamid_invalid: "'{1}' is not a valid Steam ID!"
       syntax: "Incorrect syntax, use /{1} {2}"
       you_must_enter_command: You must enter a command!
+    invalid_time: "'{1}' could not be interpreted as time!"
   hint:
     forums:
       You can visit TeslaCloud forums to get support, download schemas and

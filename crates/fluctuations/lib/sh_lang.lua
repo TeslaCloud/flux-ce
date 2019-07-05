@@ -72,7 +72,11 @@ function Flux.Lang:get_plural(language, phrase, count)
 end
 
 function Flux.Lang:nice_time(time, lang)
-  time = tonumber(time) or 0
+  lang = lang or current_language
+
+  if !isnumber(time) then
+    time = tonumber(time) or 0
+  end
 
   return Time:format_nice(Time:nice_from_now(Time:now() + Time:seconds(time)), lang)
 end
