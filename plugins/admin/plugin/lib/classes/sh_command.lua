@@ -41,6 +41,10 @@ function Command:notify_admin(permision, message, arguments)
   self:notify(permission, message, arguments, Color(255, 128, 128))
 end
 
+function Command:notify_staff(message, arguments)
+  self:notify('staff', message, arguments, Color(150, 150, 255))
+end
+
 function Command:get_description()
   return self.description
 end
