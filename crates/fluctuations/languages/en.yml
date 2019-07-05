@@ -54,6 +54,8 @@ en:
     bugs:
       Encountered a bug? Have an idea that we should totally add to Flux? Visit
       our forums at https://teslacloud.net and tell us about it!
+  notification:
+    console: Console
   operator:
     less: Less
     greater: Greater

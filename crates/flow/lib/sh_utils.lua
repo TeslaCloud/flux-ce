@@ -147,7 +147,7 @@ function txt(text)
 end
 
 function get_player_name(player)
-  return IsValid(player) and player:name() or 'Console'
+  return IsValid(player) and player:steam_name() or t'notification.console'
 end
 
 function util.vector_obstructed(vec1, vec2, filter)
