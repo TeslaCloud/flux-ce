@@ -15,7 +15,7 @@ function PLUGIN:PlayerSwitchedFlashlight(player)
     if !IsValid(player.shared_flashlight) then return end
 
     player.shared_flashlight:Remove()
-    player.shared_flashlight = nil 
+    player.shared_flashlight = nil
   else
     player.shared_flashlight = ents.Create 'env_projectedtexture'
     player.shared_flashlight:SetParent(player)

@@ -113,7 +113,7 @@ function Stamina:start_running(player, prevent_drain)
 
     if !timer.Exists(id) then
       table.insert(self.timer_ids, id)
-      
+
       timer.Create(id, 0.2, 0, function()
         if IsValid(player) then
           local new_stam = player:get_nv('stamina', max_stamina) - 1 * drain_scale * (Plugin.call('StaminaAdjustDrainScale', player) or 1)

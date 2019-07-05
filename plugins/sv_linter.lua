@@ -144,7 +144,7 @@ function lint_folder(folder)
 
       total_issues = total_issues + n_issues
     end
-  
+
     MsgC(status_colors[status], '.')
 
     total_files = total_files + 1

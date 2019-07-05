@@ -96,7 +96,7 @@ do
       elseif diff_time > 5 then
         text = t'ui.char_create.error.lag'
       end
-      
+
       local tx, ty = util.text_size(text, font)
 
       Flux.draw_rotating_cog(cx - 32, cy - 64, 64, 64, color_white)

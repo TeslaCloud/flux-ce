@@ -220,7 +220,7 @@ function GM:HUDDrawTargetID()
 
       for k, v in ipairs(entities) do
         if !IsValid(v) then continue end
-        
+
         local pos = v:EyePos()
         local screen_pos = pos:ToScreen()
         local x, y = screen_pos.x, screen_pos.y

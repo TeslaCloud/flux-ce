@@ -85,7 +85,7 @@
       end
 
       money_ent:SetModel(model)
-      
+
       local mins, maxs = money_ent:GetCollisionBounds()
 
       pos = pos + Vector(0, 0, maxs.z)

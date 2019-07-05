@@ -98,7 +98,7 @@ function Chatbox.compile(msg_table)
           }
 
           if v.icon then
-            image_data.image  = nil 
+            image_data.image  = nil
             image_data.icon   = v.icon
           end
 

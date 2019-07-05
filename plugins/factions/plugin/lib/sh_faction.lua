@@ -153,7 +153,7 @@ do
 
       self:get_character().rank = rank
       self:set_nv('rank', rank)
-      
+
       Characters.set_name(self, faction_table:generate_name(self, rank))
 
       hook.run('OnRankChanged', player, rank, old_rank)

@@ -141,7 +141,7 @@ else
         max_width = w
       end
     end
-  
+
     local box_x, box_y = x - max_width * 0.5 - 8, y - 8
     local box_width, box_height = max_width + 16, height + desc_height + 16
     local accent_color = Theme.get_color('accent'):alpha(200)

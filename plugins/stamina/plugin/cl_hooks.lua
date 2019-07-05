@@ -3,7 +3,7 @@ local cur_wide = w
 local cur_alpha = 0
 
 function Stamina:HUDPaint()
-  if IsValid(PLAYER) and PLAYER:Alive() then 
+  if IsValid(PLAYER) and PLAYER:Alive() then
     local stamina = PLAYER:get_nv('stamina', 100)
     local frame_time = FrameTime() * 8
     local percentage = (stamina / Config.get('stam_max', 100))

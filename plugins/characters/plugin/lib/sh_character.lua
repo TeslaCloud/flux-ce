@@ -83,9 +83,9 @@ if SERVER then
 
   function Characters.delete(player, id)
     local char = player:get_character_by_id(id)
-  
+
     if char then
-      char:destroy() 
+      char:destroy()
 
       for k, v in pairs(player:get_all_characters()) do
         if tonumber(v.id) == id then
@@ -104,7 +104,7 @@ if SERVER then
 
     local char = player:get_character()
     local old_name = player:get_nv('name')
-  
+
     if char then
       char.name = new_name or char.name
     end
@@ -120,7 +120,7 @@ if SERVER then
 
     local char = player:get_character()
     local old_desc = player:get_nv('desc')
-  
+
     if char then
       char.phys_desc = new_desc or char.phys_desc
     end
@@ -136,7 +136,7 @@ if SERVER then
 
     local char = player:get_character()
     local old_model = player:get_nv('model')
-  
+
     if char then
       char.model = model or char.model
     end
@@ -155,7 +155,7 @@ if SERVER then
 
     local char = player:get_character()
     local old_gender = player:get_nv('gender')
-  
+
     if char then
       char.gender = new_gender or char.name
     end

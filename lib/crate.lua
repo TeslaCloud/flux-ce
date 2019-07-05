@@ -171,7 +171,7 @@ function Crate:describe(callback)
         include(self.current.__path__..name)
         continue
       end
-  
+
       if !self:included(name) then
         self:include(name)
       end

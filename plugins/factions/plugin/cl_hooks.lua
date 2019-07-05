@@ -10,7 +10,7 @@ function Factions:CharPanelCreated(id, panel)
     if faction_table and !faction_table.has_name then
       panel.name_label:SetVisible(false)
       panel.name_entry:SetVisible(false)
-      
+
       if SCHEMA.get_random_name then
         panel.name_random:SetVisible(false)
       end
