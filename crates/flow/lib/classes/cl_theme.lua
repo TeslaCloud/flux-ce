@@ -141,5 +141,5 @@ function ThemeBase:register()
 end
 
 function ThemeBase:__tostring()
-  return 'ThemeBase ['..self.name..']'
+  return '#<Theme:'..self.name..'>'
 end

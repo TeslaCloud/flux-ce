@@ -353,5 +353,5 @@ function Tool:CheckObjects()
 end
 
 function Tool:__tostring()
-  return 'Tool ['..(self.id or 'Unknown')..']'
+  return '#<Tool:'..(self.id or 'Unknown')..'>'
 end
