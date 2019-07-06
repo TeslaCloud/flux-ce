@@ -16,7 +16,7 @@ ru:
   notification:
     currency:
       pickup: Вы подобрали {currency} x {value}.
-      receive: Вы получили {3} x {currency} от {target}.
+      receive: Вы получили {currency} x {value} от {target}.
       give: Вы дали {target} {currency} x {value}.
       drop: Вы положили {currency} x {value}.
       set: Количество вашей валюты {currency} было установлено на {value}.
