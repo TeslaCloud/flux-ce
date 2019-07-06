@@ -204,7 +204,7 @@ function THEME:PaintDeathScreen(cur_time, scrw, scrh)
   draw.RoundedBox(0, 0, 0, scrw, scrh, Color(0, 0, 0, PLAYER.respawn_alpha))
 
   draw.SimpleText(t'ui.hud.player_message.died', font, 16, 16, color_white)
-  draw.SimpleText(t('ui.hud.player_message.respawn', math.ceil(respawn_time_remaining)), font, 16, 16 + util.font_size(font), color_white)
+  draw.SimpleText(t('ui.hud.player_message.respawn', { time = math.ceil(respawn_time_remaining) }), font, 16, 16 + util.font_size(font), color_white)
 
   draw.RoundedBox(0, 0, 0, scrw / 100 * bar_value, 2, color_white)
 

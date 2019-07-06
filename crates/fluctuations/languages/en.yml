@@ -32,15 +32,15 @@ en:
         desc: Amount of time between player data savings.
   error:
     cant_now: You cannot do this right now!
-    commands:
-      higher_immunity: "{1} has higher immunity than you!"
+    command:
+      higher_immunity: "{target} has higher immunity than you!"
       no_access: You do not have access to this command!
-      not_valid: "'{1}' is not a valid command!"
-      player_invalid: "'{1}' is not a valid player!"
-      steamid_invalid: "'{1}' is not a valid Steam ID!"
-      syntax: "Incorrect syntax, use /{1} {2}"
+      not_valid: "'{command}' is not a valid command!"
+      player_invalid: "'{player}' is not a valid player!"
+      syntax: "Incorrect syntax, use /{command} {syntax}"
       you_must_enter_command: You must enter a command!
-    invalid_time: "'{1}' could not be interpreted as time!"
+    invalid_time: "'{time}' could not be interpreted as time!"
+    invalid_value: "'{value}' is not a valid value!"
   hint:
     forums:
       You can visit TeslaCloud forums to get support, download schemas and
@@ -99,7 +99,7 @@ en:
         schema: Loading schema and plugins, please wait...
       player_message:
         died: YOU DIED
-        respawn: RESPAWNING IN {1} SECOND(s).
+        respawn: RESPAWNING IN {time} SECOND(s).
     avatar_tooltip: Left click - Open profile, Right click - Copy SteamID
     scoreboard:
       help: Clicking player's card may bring up some options.
