@@ -41,6 +41,8 @@ en:
       you_must_enter_command: You must enter a command!
     invalid_time: "'{time}' could not be interpreted as time!"
     invalid_value: "'{value}' is not a valid value!"
+    invalid_entity: This is not a valid entity!
+    too_far: You are too far away to do that!
   hint:
     forums:
       You can visit TeslaCloud forums to get support, download schemas and

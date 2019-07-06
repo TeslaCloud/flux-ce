@@ -1,7 +1,7 @@
 ﻿local COMMAND = Command.new('setmoney')
 COMMAND.name = 'SetMoney'
-COMMAND.description = 'command.set_money.description'
-COMMAND.syntax = 'command.set_money.syntax'
+COMMAND.description = 'command.setmoney.description'
+COMMAND.syntax = 'command.setmoney.syntax'
 COMMAND.permission = 'moderator'
 COMMAND.category = 'permission.categories.character_management'
 COMMAND.arguments = 2
@@ -15,14 +15,14 @@ function COMMAND:get_description()
     table.insert(currencies, k)
   end
 
-  return t(self.description, table.concat(currencies, ', '))
+  return t(self.description, { currencies = table.concat(currencies, ', ') })
 end
 
 function COMMAND:on_run(player, targets, amount, currency)
   amount = tonumber(amount)
 
   if !amount then
-    player:notify('notification.currency.invalid_amount')
+    player:notify('error.invalid_value')
 
     return
   end
@@ -34,7 +34,7 @@ function COMMAND:on_run(player, targets, amount, currency)
     currency = Config.get('default_currency')
 
     if !Currencies:find_currency(currency) then
-      player:notify('notification.currency.invalid_currency')
+      player:notify('error.currency.invalid_currency')
 
       return
     end
@@ -42,15 +42,17 @@ function COMMAND:on_run(player, targets, amount, currency)
 
   local currency_data = Currencies:find_currency(currency)
 
-  player:notify('set_money.message', { util.player_list_to_string(targets), amount, currency_data.name })
-
   for k, v in ipairs(targets) do
     v:set_money(currency, amount)
-
-    if player != v then
-      v:notify('notification.currency.set', { amount, currency })
-    end
+    v:notify('notification.currency.set', { value = amount, currency = currency_data.name })
   end
+
+  self:notify_staff('command.setmoney.message', {
+    player = get_player_name(player),
+    target = util.player_list_to_string(targets),
+    value = amount,
+    currency = currency_data.name
+  })
 end
 
 COMMAND:register()

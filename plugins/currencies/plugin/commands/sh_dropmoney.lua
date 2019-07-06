@@ -1,7 +1,7 @@
 ﻿local COMMAND = Command.new('dropmoney')
 COMMAND.name = 'DropMoney'
-COMMAND.description = 'command.drop_money.description'
-COMMAND.syntax = 'command.drop_money.syntax'
+COMMAND.description = 'command.dropmoney.description'
+COMMAND.syntax = 'command.dropmoney.syntax'
 COMMAND.category = 'permission.categories.general'
 COMMAND.arguments = 1
 COMMAND.aliases = { 'dropcash', 'droptokens' }
@@ -15,14 +15,14 @@ function COMMAND:get_description()
     end
   end
 
-  return t(self.description, table.concat(currencies, ', '))
+  return t(self.description, { currencies = table.concat(currencies, ', ') })
 end
 
 function COMMAND:on_run(player, amount, currency)
   amount = tonumber(amount)
 
   if !amount then
-    player:notify('notification.currency.invalid_amount')
+    player:notify('error.invalid_value')
 
     return
   end
@@ -34,7 +34,7 @@ function COMMAND:on_run(player, amount, currency)
     currency = Config.get('default_currency')
 
     if !Currencies:find_currency(currency) then
-      player:notify('notification.currency.invalid_currency')
+      player:notify('error.currency.invalid_currency')
 
       return
     end

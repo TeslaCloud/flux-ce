@@ -68,7 +68,7 @@ function PANEL:rebuild()
             if value and value > 0 then
               Cable.send('fl_currency_give', value, k)
             else
-              PLAYER:notify('notification.currency.invalid_amount')
+              PLAYER:notify('error.invalid_amount')
             end
           end)
         end
@@ -89,7 +89,7 @@ function PANEL:rebuild()
             if value and value > 0 then
               Cable.send('fl_currency_drop', value, k)
             else
-              PLAYER:notify('notification.currency.invalid_amount')
+              PLAYER:notify('error.invalid_amount')
             end
           end)
         end

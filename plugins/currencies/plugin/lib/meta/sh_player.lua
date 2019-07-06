@@ -3,7 +3,7 @@
 
   function player_meta:get_money(currency)
     if Currencies:find_currency(currency) then
-      return self:get_nv('fl_currencies')[currency] or 0
+      return self:get_nv('fl_currencies', {})[currency] or 0
     end
 
     return 0
@@ -22,7 +22,7 @@
 
         value = math.max(0, math.round(value, currency_data.decimals or 0))
 
-        local currency_table = self:get_nv('fl_currencies')
+        local currency_table = self:get_nv('fl_currencies', {})
         currency_table[currency] = value
 
         local char = self:get_character()
@@ -94,7 +94,7 @@
       money_ent:Spawn()
 
       self:take_money(currency, value)
-      self:notify('notification.currency.drop', { value, currency_data.name }, Color('red'))
+      self:notify('notification.currency.drop', { value = value, currency = currency_data.name}, Color('salmon'))
 
       money_ent.next_pickup = CurTime() + 0.5
     end
@@ -115,9 +115,9 @@
       local currency_data = Currencies:find_currency(currency)
 
       self:take_money(currency, value)
-      self:notify('notification.currency.give', { target, value, currency_data.name }, Color('red'))
+      self:notify('notification.currency.give', { target = target, value = value, currency = currency_data.name }, Color('salmon'))
       target:give_money(currency, value)
-      target:notify('notification.currency.receive', { player, value, currency_data.name }, Color('green'))
+      target:notify('notification.currency.receive', { target = player, value = value, currency = currency_data.name }, Color('green'))
     end
   end
 end
