@@ -5,7 +5,7 @@ COMMAND.syntax = 'command.tpto.syntax'
 COMMAND.permission = 'assistant'
 COMMAND.category = 'permission.categories.administration'
 COMMAND.arguments = 1
-COMMAND.immunity = true
+COMMAND.player_arg = 1
 COMMAND.aliases = { 'goto' }
 
 function COMMAND:on_run(player, targets)
