@@ -1,4 +1,3 @@
-local COMMAND = Command.new('demote')
 COMMAND.name = 'Demote'
 COMMAND.description = 'command.demote.description'
 COMMAND.syntax = 'command.demote.syntax'
@@ -21,5 +20,3 @@ function COMMAND:on_run(player, targets)
     target = util.player_list_to_string(targets)
   })
 end
-
-COMMAND:register()

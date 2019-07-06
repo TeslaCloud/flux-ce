@@ -1,4 +1,3 @@
-local COMMAND = Command.new('setgroup')
 COMMAND.name = 'SetGroup'
 COMMAND.description = 'command.setgroup.description'
 COMMAND.syntax = 'command.setgroup.syntax'
@@ -36,5 +35,3 @@ function COMMAND:on_run(player, targets, role)
     player:notify('error.group_not_valid', { group = role })
   end
 end
-
-COMMAND:register()

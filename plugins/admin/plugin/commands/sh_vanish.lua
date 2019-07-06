@@ -1,4 +1,3 @@
-local COMMAND = Command.new('vanish')
 COMMAND.name = 'Vanish'
 COMMAND.description = 'command.vanish.description'
 COMMAND.syntax = 'command.vanish.syntax'
@@ -49,5 +48,3 @@ function COMMAND:on_run(player, targets, should_vanish)
     target = util.player_list_to_string(targets)
   })
 end
-
-COMMAND:register()

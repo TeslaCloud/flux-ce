@@ -1,5 +1,4 @@
-﻿local COMMAND = Command.new('charsetname')
-COMMAND.name = 'CharSetName'
+﻿COMMAND.name = 'CharSetName'
 COMMAND.description = 'command.charsetname.description'
 COMMAND.syntax = 'command.charsetname.syntax'
 COMMAND.permission = 'assistant'
@@ -21,5 +20,3 @@ function COMMAND:on_run(player, targets, ...)
   Characters.set_name(target, new_name)
   target:notify('notification.name_changed', { name = new_name })
 end
-
-COMMAND:register()

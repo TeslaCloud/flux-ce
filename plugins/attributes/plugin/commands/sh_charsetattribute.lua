@@ -1,5 +1,4 @@
-﻿local COMMAND = Command.new('charsetattribute')
-COMMAND.name = 'CharSetAttribute'
+﻿COMMAND.name = 'CharSetAttribute'
 COMMAND.description = 'command.charsetattribute.description'
 COMMAND.syntax = 'command.charsetattribute.syntax'
 COMMAND.permission = 'moderator'
@@ -43,5 +42,3 @@ function COMMAND:on_run(player, targets, attr_id, value)
     player:notify('error.attribute_not_valid', attr_id)
   end
 end
-
-COMMAND:register()

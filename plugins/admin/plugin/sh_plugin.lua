@@ -6,13 +6,8 @@ require_relative 'sv_hooks'
 require_relative 'sv_plugin'
 
 function Bolt:OnPluginLoaded()
-  Plugin.add_extra('commands')
   Plugin.add_extra('roles')
-
-  local folder = self:get_folder()
-
-  require_relative_folder(folder..'/commands/')
-  Bolt:include_roles(folder..'/roles/')
+  Bolt:include_roles(self:get_folder()..'/roles/')
 end
 
 function Bolt:PluginIncludeFolder(extra, folder)

@@ -1,5 +1,4 @@
-﻿local COMMAND = Command.new('charattributemultiplier')
-COMMAND.name = 'CharAttributeMultiplier'
+﻿COMMAND.name = 'CharAttributeMultiplier'
 COMMAND.description = 'command.charattributemultiplier.description'
 COMMAND.syntax = 'command.charattributemultiplier.syntax'
 COMMAND.permission = 'moderator'
@@ -54,5 +53,3 @@ function COMMAND:on_run(player, targets, attr_id, value, duration)
     player:notify('error.attribute_not_valid', attr_id)
   end
 end
-
-COMMAND:register()

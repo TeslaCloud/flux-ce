@@ -1,4 +1,3 @@
-local COMMAND = Command.new('forcegetup')
 COMMAND.name = 'ForceGetUp'
 COMMAND.description = 'command.forcegetup.description'
 COMMAND.syntax = 'command.forcegetup.syntax'
@@ -29,5 +28,3 @@ function COMMAND:on_run(player, targets, delay)
     time = delay
   })
 end
-
-COMMAND:register()

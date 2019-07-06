@@ -1,4 +1,3 @@
-local COMMAND = Command.new('changelevel')
 COMMAND.name = 'Changelevel'
 COMMAND.description = 'command.changelevel.description'
 COMMAND.syntax = 'command.changelevel.syntax'
@@ -21,5 +20,3 @@ function COMMAND:on_run(player, map, delay)
     RunConsoleCommand('changelevel', map)
   end)
 end
-
-COMMAND:register()

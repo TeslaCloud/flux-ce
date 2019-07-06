@@ -572,6 +572,8 @@ function Plugin.include_folders(folder)
         Pipeline.include_folder('theme', folder..'/themes/')
       elseif v == 'tools' then
         Pipeline.include_folder('tool', folder..'/tools/')
+      elseif v == 'commands' then
+        Pipeline.include_folder('commands', folder..'/commands/')
       elseif v == 'config' then
         if SERVER then
           local files, folders = file.Find('gamemodes/'..folder..'/config/*.yml', 'GAME')

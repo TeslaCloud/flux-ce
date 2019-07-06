@@ -1,5 +1,4 @@
-﻿local COMMAND = Command.new('charsetdesc')
-COMMAND.name = 'CharSetDesc'
+﻿COMMAND.name = 'CharSetDesc'
 COMMAND.description = 'command.charsetdesc.description'
 COMMAND.syntax = 'command.charsetdesc.syntax'
 COMMAND.permission = 'assistant'
@@ -21,5 +20,3 @@ function COMMAND:on_run(player, targets, ...)
     desc = new_desc
   })
 end
-
-COMMAND:register()

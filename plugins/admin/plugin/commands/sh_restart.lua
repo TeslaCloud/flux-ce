@@ -1,4 +1,3 @@
-local COMMAND = Command.new('restart')
 COMMAND.name = 'Restart'
 COMMAND.description = 'command.restart.description'
 COMMAND.syntax = 'command.restart.syntax'
@@ -22,5 +21,3 @@ function COMMAND:on_run(player, delay)
     RunConsoleCommand('changelevel', game.GetMap())
   end)
 end
-
-COMMAND:register()

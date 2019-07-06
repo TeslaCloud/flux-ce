@@ -1,4 +1,3 @@
-local COMMAND = Command.new('unwhitelist')
 COMMAND.name = 'UnWhitelist'
 COMMAND.description = 'command.unwhitelist.description'
 COMMAND.syntax = 'command.unwhitelist.syntax'
@@ -38,5 +37,3 @@ function COMMAND:on_run(player, targets, faction_id, strict)
     player:notify('error.invalid_faction', { faction = faction_id })
   end
 end
-
-COMMAND:register()

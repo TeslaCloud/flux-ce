@@ -1,5 +1,4 @@
-﻿local COMMAND = Command.new('setmoney')
-COMMAND.name = 'SetMoney'
+﻿COMMAND.name = 'SetMoney'
 COMMAND.description = 'command.setmoney.description'
 COMMAND.syntax = 'command.setmoney.syntax'
 COMMAND.permission = 'moderator'
@@ -54,5 +53,3 @@ function COMMAND:on_run(player, targets, amount, currency)
     currency = currency_data.name
   })
 end
-
-COMMAND:register()

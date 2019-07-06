@@ -1,5 +1,4 @@
-﻿local COMMAND = Command.new('givemoney')
-COMMAND.name = 'GiveMoney'
+﻿COMMAND.name = 'GiveMoney'
 COMMAND.description = 'command.givemoney.description'
 COMMAND.syntax = 'command.givemoney.syntax'
 COMMAND.category = 'permission.categories.general'
@@ -46,5 +45,3 @@ function COMMAND:on_run(player, amount, currency)
     player:notify(err)
   end
 end
-
-COMMAND:register()

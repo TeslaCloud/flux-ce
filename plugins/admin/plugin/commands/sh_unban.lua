@@ -1,4 +1,3 @@
-local COMMAND = Command.new('unban')
 COMMAND.name = 'Unban'
 COMMAND.description = 'command.unban.description'
 COMMAND.syntax = 'command.unban.syntax'
@@ -23,5 +22,3 @@ function COMMAND:on_run(player, steam_id)
     player:notify('error.not_banned', { steam_id = steam_id })
   end
 end
-
-COMMAND:register()

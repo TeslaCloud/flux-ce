@@ -1,4 +1,3 @@
-local COMMAND = Command.new('kick')
 COMMAND.name = 'Kick'
 COMMAND.description = 'command.kick.description'
 COMMAND.syntax = 'command.kick.syntax'
@@ -25,5 +24,3 @@ function COMMAND:on_run(player, targets, ...)
     reason = reason
   })
 end
-
-COMMAND:register()

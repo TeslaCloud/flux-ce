@@ -1,4 +1,3 @@
-local COMMAND = Command.new('promoterank')
 COMMAND.name = 'PromoteRank'
 COMMAND.description = 'command.promoterank.description'
 COMMAND.syntax = 'command.promoterank.syntax'
@@ -19,5 +18,3 @@ function COMMAND:on_run(player, targets)
     v:notify('notification.promote_rank', { rank = v:get_rank_name() }, Color('lightgreen'))
   end
 end
-
-COMMAND:register()

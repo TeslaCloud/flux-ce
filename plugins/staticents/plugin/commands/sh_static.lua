@@ -1,4 +1,3 @@
-local COMMAND = Command.new('static')
 COMMAND.name = 'Static'
 COMMAND.description = 'command.static.description'
 COMMAND.permission = 'assistant'
@@ -8,5 +7,3 @@ COMMAND.aliases = { 'staticadd', 'staticpropadd' }
 function COMMAND:on_run(player)
   Plugin.call('PlayerMakeStatic', player, true)
 end
-
-COMMAND:register()

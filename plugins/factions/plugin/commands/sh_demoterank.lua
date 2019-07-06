@@ -1,4 +1,3 @@
-local COMMAND = Command.new('demoterank')
 COMMAND.name = 'DemoteRank'
 COMMAND.description = 'command.demoterank.description'
 COMMAND.syntax = 'command.demoterank.syntax'
@@ -19,5 +18,3 @@ function COMMAND:on_run(player, targets)
     v:notify('notification.demote_rank', { rank = v:get_rank_name() }, Color('salmon'))
   end
 end
-
-COMMAND:register()

@@ -1,4 +1,3 @@
-local COMMAND = Command.new('return')
 COMMAND.name = 'Return'
 COMMAND.description = 'command.return.description'
 COMMAND.syntax = 'command.return.syntax'
@@ -22,5 +21,3 @@ function COMMAND:on_run(player, targets)
     target = util.player_list_to_string(targets)
   })
 end
-
-COMMAND:register()

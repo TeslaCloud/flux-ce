@@ -1,4 +1,3 @@
-local COMMAND = Command.new('giveitem')
 COMMAND.name = 'GiveItem'
 COMMAND.description = 'command.giveitem.description'
 COMMAND.syntax = 'command.giveitem.syntax'
@@ -34,5 +33,3 @@ function COMMAND:on_run(player, targets, item_name, amount)
     player:notify('error.invalid_item', { item = item_name })
   end
 end
-
-COMMAND:register()

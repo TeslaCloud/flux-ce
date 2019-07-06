@@ -1,4 +1,3 @@
-local COMMAND = Command.new('getup')
 COMMAND.name = 'GetUp'
 COMMAND.description = 'command.getup.description'
 COMMAND.syntax = 'command.getup.syntax'
@@ -25,5 +24,3 @@ function COMMAND:on_run(player, delay)
     player:notify('error.cant_now')
   end
 end
-
-COMMAND:register()

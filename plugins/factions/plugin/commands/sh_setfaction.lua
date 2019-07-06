@@ -1,4 +1,3 @@
-local COMMAND = Command.new('setfaction')
 COMMAND.name = 'Setfaction'
 COMMAND.description = 'command.setfaction.description'
 COMMAND.syntax = 'command.setfaction.syntax'
@@ -36,5 +35,3 @@ function COMMAND:on_run(player, targets, name, strict)
     player:notify('error.invalid_faction',  name)
   end
 end
-
-COMMAND:register()

@@ -1,4 +1,3 @@
-local COMMAND = Command.new('setrank')
 COMMAND.name = 'SetRank'
 COMMAND.description = 'command.setrank.description'
 COMMAND.syntax = 'command.setrank.syntax'
@@ -33,5 +32,3 @@ function COMMAND:on_run(player, targets, rank)
     end
   end
 end
-
-COMMAND:register()

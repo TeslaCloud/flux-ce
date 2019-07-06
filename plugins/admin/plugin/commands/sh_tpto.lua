@@ -1,4 +1,3 @@
-local COMMAND = Command.new('tpto')
 COMMAND.name = 'Tpto'
 COMMAND.description = 'command.tpto.description'
 COMMAND.syntax = 'command.tpto.syntax'
@@ -20,5 +19,3 @@ function COMMAND:on_run(player, targets)
     target = util.player_list_to_string({ target })
   })
 end
-
-COMMAND:register()

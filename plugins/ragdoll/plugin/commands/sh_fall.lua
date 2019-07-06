@@ -1,4 +1,3 @@
-local COMMAND = Command.new('fall')
 COMMAND.name = 'Fall'
 COMMAND.description = 'command.fall.description'
 COMMAND.syntax = 'command.fall.syntax'
@@ -19,5 +18,3 @@ function COMMAND:on_run(player, delay)
     player:notify('error.cant_now')
   end
 end
-
-COMMAND:register()

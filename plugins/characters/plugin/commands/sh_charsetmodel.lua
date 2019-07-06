@@ -1,5 +1,4 @@
-﻿local COMMAND = Command.new('charsetmodel')
-COMMAND.name = 'CharSetModel'
+﻿COMMAND.name = 'CharSetModel'
 COMMAND.description = 'command.charsetmodel.description'
 COMMAND.syntax = 'command.charsetmodel.syntax'
 COMMAND.permission = 'assistant'
@@ -20,5 +19,3 @@ function COMMAND:on_run(player, targets, model)
     model = model
   })
 end
-
-COMMAND:register()

@@ -1,5 +1,4 @@
-﻿local COMMAND = Command.new('charattributeboost')
-COMMAND.name = 'CharAttributeBoost'
+﻿COMMAND.name = 'CharAttributeBoost'
 COMMAND.description = 'command.charattributeboost.description'
 COMMAND.syntax = 'command.charattributeboost.syntax'
 COMMAND.permission = 'moderator'
@@ -54,5 +53,3 @@ function COMMAND:on_run(player, targets, attr_id, value, duration)
     player:notify('error.attribute_not_valid', attr_id)
   end
 end
-
-COMMAND:register()

@@ -1,4 +1,3 @@
-local COMMAND = Command.new('fullbright')
 COMMAND.name = 'Fullbright'
 COMMAND.description = 'command.fullbright.description'
 COMMAND.syntax = 'command.fullbright.syntax'
@@ -21,5 +20,3 @@ function COMMAND:on_run(player, targets, should_fullbright)
     target = util.player_list_to_string(targets)
   })
 end
-
-COMMAND:register()

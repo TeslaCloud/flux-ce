@@ -1,4 +1,3 @@
-local COMMAND = Command.new('forcefall')
 COMMAND.name = 'ForceFall'
 COMMAND.description = 'command.forcefall.description'
 COMMAND.syntax = 'command.forcefall.syntax'
@@ -27,5 +26,3 @@ function COMMAND:on_run(player, targets, delay)
     time = delay
   })
 end
-
-COMMAND:register()

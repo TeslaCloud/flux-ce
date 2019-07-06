@@ -1,5 +1,4 @@
-﻿local COMMAND = Command.new('charsetgender')
-COMMAND.name = 'CharSetGender'
+﻿COMMAND.name = 'CharSetGender'
 COMMAND.description = 'command.charsetgender.description'
 COMMAND.syntax = 'command.charsetgender.syntax'
 COMMAND.permission = 'assistant'
@@ -32,5 +31,3 @@ function COMMAND:on_run(player, targets, new_gender)
     player:notify('error.invalid_gender', { gender = 'ui.gender.'..new_gender })
   end
 end
-
-COMMAND:register()

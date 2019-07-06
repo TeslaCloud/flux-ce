@@ -1,4 +1,3 @@
-local COMMAND = Command.new('ban')
 COMMAND.name = 'Ban'
 COMMAND.description = 'command.ban.description'
 COMMAND.syntax = 'command.ban.syntax'
@@ -36,5 +35,3 @@ function COMMAND:on_run(player, targets, duration, ...)
     reason = reason
   })
 end
-
-COMMAND:register()
