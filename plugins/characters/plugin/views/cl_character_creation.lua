@@ -240,9 +240,9 @@ function PANEL:next_stage()
             if hook_text then
               text = hook_text
             elseif status == CHAR_ERR_NAME then
-              text = t('ui.char_create.name_len', { Config.get('character_min_name_len'), Config.get('character_max_name_len') })
+              text = t('ui.char_create.name_len', { min = Config.get('character_min_name_len'), max = Config.get('character_max_name_len') })
             elseif status == CHAR_ERR_DESC then
-              text = t('ui.char_create.desc_len', { Config.get('character_min_desc_len'), Config.get('character_max_desc_len') })
+              text = t('ui.char_create.desc_len', { min = Config.get('character_min_desc_len'), max = Config.get('character_max_desc_len') })
             elseif status == CHAR_ERR_GENDER then
               text = t'ui.char_create.no_gender'
             elseif status == CHAR_ERR_MODEL then

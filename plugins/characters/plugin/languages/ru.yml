@@ -1,19 +1,21 @@
 ru:
   command:
-    char_set_name:
+    charsetname:
       description: Выставляет имя персонажа.
       syntax: <игрок> <новое имя>
-      message: "{1} меняет имя {2} на {3}."
-    char_set_model:
+      message: "{player} меняет имя {target} на {name}."
+    charsetmodel:
       description: Выставляет модель персонажа.
       syntax: <игрок> <новая модель>
-      message: "{1} меняет модель {2} на {3}."
-    char_set_desc:
+      message: "{player} меняет модель {target} на {model}."
+    charsetdesc:
       description: Выставляет описание персонажа.
       syntax: <игрок> <новое описание>
-    char_set_gender:
+      message: "{player} меняет описание {target} на {desc}."
+    charsetgender:
       description: "Выставляет пол персонажа: male, female или no_gender."
       syntax: <игрок> <новый пол>
+      message: "{player} меняет пол {target} на {gender}."
   condition:
     character:
       name: Определенный персонаж
@@ -36,6 +38,11 @@ ru:
       max_desc_len:
         name: Максимальная длина описания персонажа
         desc: Максимальное количество символов в описании персонажа.
+  notification:
+    name_changed: "Имя вашего персонажа было изменено на {name}."
+    model_changed: "Модель вашего персонажа была изменена на {model}."
+    desc_changed: "Описание вашего персонажа было изменено на {desc}."
+    gender_changed: "Пол вашего персонажа был изменен на {gender}."
   permission:
     categories:
       character_management: Управление персонажем
@@ -47,7 +54,7 @@ ru:
       disconnect: Отключиться
       disconnect_msg: Вы действительно хотите отключиться от сервера?
       continue: Продолжить
-      developed_by: Под авторством {1}.
+      developed_by: Под авторством {author}.
     char_create:
       title: СОЗДАТЬ ПЕРСОНАЖА
       text: СОЗДАНИЕ ПЕРСОНАЖА
@@ -67,11 +74,11 @@ ru:
       confirm: Подтверждение создания персонажа
       confirm_msg: Вы уверены, что хотите создать такого персонажа?
       delete_confirm: Подтверждение удаления персонажа
-      delete_confirm_msg: "Вы уверены, что хотите удалить этого персонажа? Напишите его имя, для подтверждения: {1}"
+      delete_confirm_msg: "Вы уверены, что хотите удалить этого персонажа? Напишите его имя, для подтверждения: {name}"
       name_invalid: Некорректное имя.
-      name_len: Длина имени Вашего персонажа должна быть от {1} до {2}.
+      name_len: Длина имени Вашего персонажа должна быть от {min} до {max}.
       desc_invalid: Некорректное описание.
-      desc_len: Длина описания Вашего персонажа должна быть от {1} до {2}.
+      desc_len: Длина описания Вашего персонажа должна быть от {min} до {min}.
       unknown_error: Неизвестная ошибка.
       no_gender: Вы не выбрали пол.
       no_model: Вы не выбрали модель.

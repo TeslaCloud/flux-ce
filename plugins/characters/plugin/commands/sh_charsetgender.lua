@@ -1,7 +1,7 @@
 ﻿local COMMAND = Command.new('charsetgender')
 COMMAND.name = 'CharSetGender'
-COMMAND.description = 'command.char_set_gender.description'
-COMMAND.syntax = 'command.char_set_gender.syntax'
+COMMAND.description = 'command.charsetgender.description'
+COMMAND.syntax = 'command.charsetgender.syntax'
 COMMAND.permission = 'assistant'
 COMMAND.category = 'permission.categories.character_management'
 COMMAND.arguments = 2

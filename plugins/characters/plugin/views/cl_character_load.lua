@@ -102,7 +102,7 @@ function PANEL:Init()
   self.delete.DoClick = function(btn)
     surface.PlaySound('vo/npc/male01/answer37.wav')
 
-    Derma_StringRequest(t'ui.char_create.delete_confirm', t('ui.char_create.delete_confirm_msg', { self.char_data.name }), '',
+    Derma_StringRequest(t'ui.char_create.delete_confirm', t('ui.char_create.delete_confirm_msg', { name = self.char_data.name }), '',
     function(text)
       if text == self.char_data.name then
         Cable.send('fl_player_delete_character', self.char_data.id)
