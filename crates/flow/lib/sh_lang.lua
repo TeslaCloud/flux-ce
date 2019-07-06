@@ -4,34 +4,33 @@ local current_language  = 'en'
 local stored            = Flux.Lang.stored or {}
 Flux.Lang.stored        = stored
 
-function Flux.Lang:get_phrase(id, ref)
-  ref = ref or stored
+do
+  local function _get_phrase(tabs, ref)
+    for k, v in ipairs(tabs) do
+      local val = ref[v]
 
-  local tables = id:split('.')
-
-  for k, v in ipairs(tables) do
-    local val = ref[v]
-
-    if istable(val) then
-      ref = val
-    else
-      return val
+      if istable(val) then
+        ref = val
+      else
+        return val
+      end
     end
+
+    return false
   end
 
-  return false
-end
+  function t(phrase, args, force_lang)
+    args = istable(args) and args or { args }
 
-function t(phrase, args, force_lang)
-  args = istable(args) and args or { args }
+    local tabs = phrase:split('.')
+    local phrase = _get_phrase(tabs, stored[force_lang or current_language]) or _get_phrase(tabs, stored['en']) or phrase
 
-  local phrase = Flux.Lang:get_phrase(phrase, stored[force_lang or current_language]) or Flux.Lang:get_phrase(phrase, stored['en']) or phrase
+    for k, v in pairs(args) do
+      phrase = string.gsub(phrase, '{'..k..'}', v)
+    end
 
-  for k, v in pairs(args) do
-    phrase = string.gsub(phrase, '{'..k..'}', v)
+    return phrase
   end
-
-  return phrase
 end
 
 function Flux.Lang:all()
