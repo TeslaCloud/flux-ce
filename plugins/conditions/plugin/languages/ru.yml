@@ -2,23 +2,23 @@ ru:
   condition:
     steamid:
       name: Игрок с определенным SteamID
-      text: SteamID {1} {2}
+      text: SteamID {operator} {parameter}
       message: Введите SteamID игрока
     model:
       name: Игрок с определенной моделью
-      text: Модель {1} {2}
+      text: Модель {operator} {parameter}
       message: Введите путь до модели
     health:
       name: Игрок с определенным уровнем здоровья
-      text: Здоровье {1} {2}
+      text: Здоровье {operator} {parameter}
       message: Введите уровень здоровья
     armor:
       name: Игрок с определенным значением брони
-      text: Броня {1} {2}
+      text: Броня {operator} {parameter}
       message: Введите значение брони
     weapon:
       name: Игрок с определенным оружием в руках
-      text: Класс активного оружия {1} {2}
+      text: Класс активного оружия {operator} {parameter}
       message: Введите класс оружия
   ui:
     condition:
