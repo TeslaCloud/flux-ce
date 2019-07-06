@@ -11,9 +11,9 @@ cookie.set = cookie.Set
 
 cvars.add_change_callback = cvars.AddChangeCallback
 cvars.bool = cvars.Bool
-cvars.get_con_var_callbacks = cvars.GetConVarCallbacks
+cvars.get_convar_callbacks = cvars.GetConVarCallbacks
 cvars.number = cvars.Number
-cvars.on_con_var_changed = cvars.OnConVarChanged
+cvars.on_convar_changed = cvars.OnConVarChanged
 cvars.remove_change_callback = cvars.RemoveChangeCallback
 cvars.string = cvars.String
 
@@ -338,7 +338,7 @@ table.collapse_key_value = table.CollapseKeyValue
 table.copy = table.Copy
 table.copy_from_to = table.CopyFromTo
 table.count = table.Count
-table.de_sanitise = table.DeSanitise
+table.desanitise = table.DeSanitise
 table.empty = table.Empty
 table.find_next = table.FindNext
 table.find_prev = table.FindPrev
@@ -525,9 +525,6 @@ if CLIENT then
   controlpanel.clear = controlpanel.Clear
   controlpanel.get = controlpanel.Get
 
-  derma._m = derma._M
-  derma._name = derma._NAME
-  derma._package = derma._PACKAGE
   derma.color = derma.Color
   derma.controls = derma.Controls
   derma.define_control = derma.DefineControl
