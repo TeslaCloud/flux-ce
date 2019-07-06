@@ -9,11 +9,15 @@ COMMAND.player_arg = 1
 COMMAND.aliases = { 'plydemoterank', 'chardemoterank' }
 
 function COMMAND:on_run(player, targets)
-  for k, v in ipairs(targets) do
-    v:demoterank_rank()
-  end
+  self:notify_staff('command.demoterank.message', {
+    player = get_player_name(player),
+    target = util.player_list_to_string(targets)
+  })
 
-  self:notify_staff('demoterank.message', { get_player_name(player), util.player_list_to_string(targets) })
+  for k, v in ipairs(targets) do
+    v:demote_rank()
+    v:notify('notification.demote_rank', { rank = v:get_rank_name() }, Color('salmon'))
+  end
 end
 
 COMMAND:register()

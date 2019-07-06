@@ -1,7 +1,7 @@
 local COMMAND = Command.new('setfaction')
 COMMAND.name = 'Setfaction'
-COMMAND.description = 'command.set_faction.description'
-COMMAND.syntax = 'command.set_faction.syntax'
+COMMAND.description = 'command.setfaction.description'
+COMMAND.syntax = 'command.setfaction.syntax'
 COMMAND.permission = 'assistant'
 COMMAND.category = 'permission.categories.character_management'
 COMMAND.arguments = 2
@@ -15,20 +15,25 @@ function COMMAND:get_description()
     table.insert(factions, k)
   end
 
-  return t(self.description, table.concat(factions, ', '))
+  return t(self.description, { factions = table.concat(factions, ', ') })
 end
 
 function COMMAND:on_run(player, targets, name, strict)
   local faction_table = Factions.find(name, (strict and true) or false)
 
   if faction_table then
+    self:notify_staff('command.setfaction.message', {
+      player = get_player_name(player),
+      target = util.player_list_to_string(targets),
+      faction = faction_table.name
+    })
+
     for k, v in ipairs(targets) do
       v:set_faction(faction_table.faction_id)
+      v:notify('notification.faction_changed', { faction = faction_table.name }, faction_table.color)
     end
-
-    self:notify_staff('set_faction.message', { get_player_name(player), util.player_list_to_string(targets), faction_table.name })
   else
-    player:notify('error.whitelist_not_valid',  name)
+    player:notify('error.invalid_faction',  name)
   end
 end
 

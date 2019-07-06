@@ -1,7 +1,7 @@
 local COMMAND = Command.new('unwhitelist')
 COMMAND.name = 'UnWhitelist'
-COMMAND.description = 'command.take_whitelist.description'
-COMMAND.syntax = 'command.take_whitelist.syntax'
+COMMAND.description = 'command.unwhitelist.description'
+COMMAND.syntax = 'command.unwhitelist.syntax'
 COMMAND.permission = 'moderator'
 COMMAND.category = 'permission.categories.player_management'
 COMMAND.arguments = 2
@@ -15,26 +15,27 @@ function COMMAND:get_description()
     table.insert(factions, k)
   end
 
-  return t(self.description, table.concat(factions, ', '))
+  return t(self.description, { factions = table.concat(factions, ', ') })
 end
 
-function COMMAND:on_run(player, targets, name, strict)
-  local whitelist = Factions.find(name, strict)
+function COMMAND:on_run(player, targets, faction_id, strict)
+  local whitelist = Factions.find(faction_id, strict)
 
   if whitelist then
     for k, v in ipairs(targets) do
       if v:has_whitelist(whitelist.faction_id) then
         v:take_whitelist(whitelist.faction_id)
-      elseif #targets == 1 then
-        player:notify('error.target_not_whitelisted', { v:name(), whitelist.name })
-
-        return
+        v:notify('notification.whitelist_taken', { faction = whitelist.name }, Color('salmon'))
       end
     end
 
-    self:notify_staff('take_whitelist.message', { get_player_name(player), util.player_list_to_string(targets), whitelist.name })
+    self:notify_staff('command.unwhitelist.message', {
+      player = get_player_name(player),
+      target = util.player_list_to_string(targets),
+      faction = whitelist.name
+    })
   else
-    player:notify('error.whitelist_not_valid',  name)
+    player:notify('error.invalid_faction', { faction = faction_id })
   end
 end
 

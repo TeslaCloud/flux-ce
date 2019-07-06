@@ -15,20 +15,25 @@ function COMMAND:get_description()
     table.insert(factions, k)
   end
 
-  return t(self.description, table.concat(factions, ', '))
+  return t(self.description, { factions = table.concat(factions, ', ') })
 end
 
-function COMMAND:on_run(player, targets, name, strict)
-  local whitelist = Factions.find(name, (strict and true) or false)
+function COMMAND:on_run(player, targets, faction_id, strict)
+  local whitelist = Factions.find(faction_id, (strict and true) or false)
 
   if whitelist then
     for k, v in ipairs(targets) do
       v:give_whitelist(whitelist.faction_id)
+      v:notify('notification.whitelist_given', { faction = whitelist.name }, whitelist.color)
     end
 
-    self:notify_staff('whitelist.message', { get_player_name(player), util.player_list_to_string(targets), whitelist.name })
+    self:notify_staff('command.whitelist.message', {
+      player = get_player_name(player),
+      target = util.player_list_to_string(targets),
+      faction = whitelist.name
+    })
   else
-    player:notify('error.whitelist_not_valid', name)
+    player:notify('error.invalid_faction', faction_id)
   end
 end
 

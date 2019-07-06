@@ -1,43 +1,49 @@
 ru:
-  condition:
-    faction:
-      name: Персонаж, состоящий в определенной фракции
-      text: Фракция {1} {2}
-      message: Выберите фракцию
-    rank:
-      name: Персонаж с определенным рангом в какой-либо фракции
-      text: Ранг {2} {1} {3}
-      message: Выберите ранг
-    factions: Фракции
-    ranks: Ранги
   command:
     whitelist:
-      description: "Дает игроку доступ к фракции. Фракции: {1}"
+      description: "Дает игроку доступ к фракции. Фракции: {factions}"
       syntax: "<игрок> <фракция> [строгий режим поиска]"
-      message: "{1} дает {2} доступ к фракции {3}."
-    take_whitelist:
-      description: "Убирает у игрока доступ к фракции. Фракции: {1}"
+      message: "{player} дает {target} доступ к фракции {faction}."
+    unwhitelist:
+      description: "Убирает у игрока доступ к фракции. Фракции: {factions}"
       syntax: "<игрок> <фракция> [строгий режим поиска]"
-      message: "{1} забирает у {2} доступ к фракции {3}."
-    set_faction:
-      description: "Установить фракцию персонажа. Фракции: {1}"
+      message: "{player} забирает у {target} доступ к фракции {faction}."
+    setfaction:
+      description: "Установить фракцию персонажа. Фракции: {factions}"
       syntax: "<игрок> <фракция> [доп. данные]"
-      message: "{1} меняет фракцию {2} на {3}."
-    set_rank:
+      message: "{player} меняет фракцию {target} на {faction}."
+    setrank:
       description: "Установить ранг персонажа во фракции."
       syntax: "<игрок> <ранг>"
-      message: "{1} установил ранг {2} на {3}."
+      message: "{player} установил ранг {target} на {rank}."
     promoterank:
       description: "Повысить игрока во фракции."
       syntax: "<игрок>"
-      message: "{1} повышает {2}."
+      message: "{player} повышает {target} в ранге."
     demoterank:
       description: "Понизить игрока во фракции."
       syntax: "<игрок>"
-      message: "{1} понижает {2}."
+      message: "{player} понижает {target} в ранге."
+  condition:
+    faction:
+      name: Персонаж, состоящий в определенной фракции
+      text: Фракция {operator} {faction}
+      message: Выберите фракцию
+    rank:
+      name: Персонаж с определенным рангом в какой-либо фракции
+      text: Ранг {faction} {operator} {rank}
+      message: Выберите ранг
+    factions: Фракции
+    ranks: Ранги
   error:
-    whitelist_not_valid: "'{1}' не является фракцией!"
-    target_not_whitelisted: У {1} нет доступа к фракции {2}!
+    invalid_faction: "'{faction}' не является фракцией!"
+  notification:
+    demote_rank: Вы были понижены до ранга {rank}.
+    promote_rank: Вы были повышены до ранга {rank}.
+    faction_changed: Ваша фракция была изменена на {faction}.
+    rank_changed: Ваш ранг во фракции был изменен на {rank}.
+    whitelist_taken: Вы потеряли доступ к фракции {faction}.
+    whitelist_given: Вы получили доступ к фракции {faction}.
   ui:
     char_create:
       faction: Фракция
