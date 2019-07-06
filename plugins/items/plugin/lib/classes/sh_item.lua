@@ -5,11 +5,13 @@ function ItemBase:init(id)
 
   self.id = string.to_id(id)
   self.data = self.data or {}
+  self.bases = self.bases or {}
+  self.base_count = 0
 end
 
 -- Fancy output if you do print(item_table).
 function ItemBase:__tostring()
-  return 'Item ['..tostring(self.instance_id)..']['..(self.name or self.id)..']'
+  return '#<Item:'..(self.name or self.id)..' '..tostring(self.instance_id)..'>'
 end
 
 function ItemBase:get_name()
@@ -18,20 +20,36 @@ end
 
 ItemBase.name = ItemBase.get_name
 
-function ItemBase:set_base(base_class)
-  if isstring(base_class) then
-    base_class = _G[base_class]
+function ItemBase:base_off(what)
+  if isstring(what) then
+    what = what:capitalize()
   end
 
-  if !istable(base_class) then return end
+  local module_table = isstring(what) and (what:parse_table() or ('Item'..what):parse_table()) or what
 
-  ITEM = nil
-  ITEM = base_class.new(self.id)
+  if !istable(module_table) then return end
+
+  for k, v in pairs(module_table) do
+    if !self[k] then
+      self[k] = v
+    end
+  end
+
+  self.bases[module_table.class_name] = module_table
+
+  if isstring(what) then
+    self.bases[what] = module_table
+  end
+
+  self.base_count = self.base_count + 1
 end
 
-function ItemBase:make_base()
-  Pipeline.abort()
+function ItemBase:is(base)
+  return self.bases[base:capitalize()]
 end
+
+ItemBase.based_off = ItemBase.is
+ItemBase.derive = ItemBase.base_off
 
 function ItemBase:get_real_name()
   return self.name or 'Unknown Item'
