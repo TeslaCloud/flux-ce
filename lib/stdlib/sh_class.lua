@@ -31,6 +31,7 @@ function class(name, base_class)
   obj.base_class = obj.BaseClass
   obj.static_class = true
   obj.class = obj
+  obj.included_modules = {}
 
   -- If this class is based off some other class - copy it's parent's data.
   if istable(base_class) then
@@ -100,6 +101,8 @@ function class(name, base_class)
         self[k] = v
       end
     end
+
+    table.insert(self.included_modules, module_table)
   end
 
   return parent[name]
