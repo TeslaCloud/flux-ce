@@ -80,7 +80,7 @@ function StaticEnts:PlayerMakeStatic(player, is_static)
 
   entity:SetPersistent(is_static)
 
-  player:notify((is_static and 'static.added') or 'static.removed')
+  player:notify((is_static and 'notification.static.added') or 'notification.static.removed')
 end
 
 function StaticEnts:SaveData()
