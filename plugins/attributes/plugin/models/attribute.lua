@@ -11,5 +11,5 @@ function Attribute:init(id)
 end
 
 function Attribute:register()
-  return Attributes.register(self.id, self)
+  return Attributes.register(self.attr_id, self)
 end
