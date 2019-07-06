@@ -36,8 +36,9 @@ do
           surface.SetDrawColor(team_color)
           surface.DrawOutlinedRect(x - size * 0.5, y - size * 0.5, size, (screen_pos.y - y) * 1.25)
         else
-          w, h = util.text_size('*DEAD*', Theme.get_font('text_smaller'))
-          draw.SimpleText('*DEAD*', Theme.get_font('text_smaller'), text_pos.x - w * 0.5, text_pos.y + 28, color_lightred)
+          local text = t'ui.hud.dead'
+          w, h = util.text_size(text, Theme.get_font('text_smaller'))
+          draw.SimpleText(text, Theme.get_font('text_smaller'), text_pos.x - w * 0.5, text_pos.y + 28, color_lightred)
         end
 
         local bx, by = x - size * 0.5, y - size * 0.5 + (screen_pos.y - y) * 1.25

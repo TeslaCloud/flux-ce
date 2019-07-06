@@ -103,6 +103,7 @@ ru:
     and: и
   ui:
     hud:
+      dead: "*МЁРТВ*"
       bar_text:
         getup: ВЫ ПОДНИМАЕТЕСЬ НА НОГИ...
         respawn: ВОЗРОЖДЕНИЕ...

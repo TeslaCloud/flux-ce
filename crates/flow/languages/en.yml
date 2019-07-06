@@ -92,6 +92,7 @@ en:
     and: and
   ui:
     hud:
+      dead: "*DEAD*"
       bar_text:
         getup: GETTING UP...
         respawn: WAITING TO RESPAWN...
