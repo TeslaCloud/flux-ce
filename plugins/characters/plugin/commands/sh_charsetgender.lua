@@ -20,16 +20,16 @@ function COMMAND:on_run(player, targets, new_gender)
   if valid_genders[new_gender] then
     for k, v in ipairs(targets) do
       Characters.set_gender(v, valid_genders[new_gender])
-      v:notify('notifications.gender_changed', new_gender)
+      v:notify('notification.gender_changed', { gender = 'ui.gender.'..new_gender })
     end
 
     self:notify_staff('command.charsetgender.message', {
       player = get_player_name(player),
       target = util.player_list_to_string(targets),
-      gender = new_gender
+      gender = 'ui.gender.'..new_gender
     })
   else
-    player:notify('error.invalid_gender', new_gender)
+    player:notify('error.invalid_gender', { gender = 'ui.gender.'..new_gender })
   end
 end
 

@@ -47,6 +47,10 @@ en:
     categories:
       character_management: Character Management
   ui:
+    gender:
+      male: Male
+      female: Female
+      no_gender: No gender
     hud:
       loading:
         characters: Loading characters, please wait...

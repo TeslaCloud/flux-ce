@@ -19,7 +19,7 @@ function COMMAND:on_run(player, targets, ...)
   })
 
   Characters.set_name(target, new_name)
-  target:notify('notification.name_changed', new_name)
+  target:notify('notification.name_changed', { name = new_name })
 end
 
 COMMAND:register()

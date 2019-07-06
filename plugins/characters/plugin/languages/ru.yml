@@ -47,6 +47,10 @@ ru:
     categories:
       character_management: Управление персонажем
   ui:
+    gender:
+      male: Мужской
+      female: Женский
+      no_gender: Бесполый
     hud:
       loading:
         characters: Загрузка персонажей, пожалуйста подождите...

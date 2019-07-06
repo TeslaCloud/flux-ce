@@ -10,7 +10,7 @@ COMMAND.aliases = { 'setmodel' }
 
 function COMMAND:on_run(player, targets, model)
   for k, v in ipairs(targets) do
-    v:notify('notification.model_changed', model)
+    v:notify('notification.model_changed', { model = model })
     Characters.set_model(v, model)
   end
 
