@@ -34,32 +34,41 @@ function Pipeline.is_aborted()
   return last_pipe_aborted
 end
 
---- Include a filename using a specified pipeline.
--- This automatically resolves server/client/shared realms,
--- and automatically extracts ID based on the filename
--- (for example, "sh_test_file.lua" becomes "test_file" in the ID).
--- After that if the pipe is a valid registered pipeline, the callback is called.
-function Pipeline.include(pipe, file_name)
-  if isstring(pipe) then
-    pipe = stored[pipe]
-  end
+do
+  local filename_prefixes = {
+    ['cl_'] = true,
+    ['sh_'] = true,
+    ['sv_'] = true
+  }
 
-  last_pipe_aborted = false
+  --- Include a filename using a specified pipeline.
+  -- This automatically resolves server/client/shared realms,
+  -- and automatically extracts ID based on the filename
+  -- (for example, "sh_test_file.lua" becomes "test_file" in the ID).
+  -- After that if the pipe is a valid registered pipeline, the callback is called.
+  function Pipeline.include(pipe, file_name)
+    if isstring(pipe) then
+      pipe = stored[pipe]
+    end
 
-  if !pipe then return end
-  if !isstring(file_name) then return end
+    last_pipe_aborted = false
 
-  local extension = File.ext(file_name) or ''
-  local id = (File.name(file_name) or ''):gsub('%.'..extension, ''):to_id()
+    if !pipe then return end
+    if !isstring(file_name) then return end
 
-  if id:starts('cl_') or id:starts('sh_') or id:starts('sv_') then
-    id = id:sub(4, id:len())
-  end
+    local extension = File.ext(file_name) or ''
+    local id = (File.name(file_name) or ''):gsub('%.'..extension..'$', ''):to_id()
+    local start = id:sub(1, 3)
 
-  if id == '' then return end
+    if filename_prefixes[start] then
+      id = id:sub(4, id:len())
+    end
 
-  if isfunction(pipe.callback) then
-    pipe.callback(id, file_name, pipe)
+    if id:len() == 0 then return end
+
+    if isfunction(pipe.callback) then
+      pipe.callback(id, file_name, pipe)
+    end
   end
 end
 
