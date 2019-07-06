@@ -6,7 +6,6 @@ Crate:describe(function(s)
   s.description = 'A gamemode framework made primarily for database-driven roleplay gamemodes.'
   s.authors     = { 'TeslaCloud Studios', 'Meow the Cat', 'AleXXX_007', 'NightAngel', 'Zig' }
   s.email       = 'support@teslacloud.net'
-  s.file        = 'lib/flux.lua'
   s.global      = 'Flux'
   s.website     = 'https://teslacloud.net'
   s.license     = 'MIT'
@@ -20,11 +19,10 @@ Crate:describe(function(s)
   s.depends     'utf8'
   s.depends     'markdown'
   s.depends     'yaml'
-  s.depends     'flow'
   s.depends     'tween'
   s.depends     'lib/flux.lua'
   s.depends     'active_record'
   s.depends     'active_network'
   s.depends     'packager'
-  s.depends     'fluctuations'
+  s.depends     'flow'
 end)

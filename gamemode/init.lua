@@ -24,6 +24,7 @@ if !require_module 'file' then
 end
 
 include 'env.lua'
+include 'flux/lib/stdlib/sh_stdlib.lua'
 include 'flux/lib/crate.lua'
 
 if Flux.initialized then

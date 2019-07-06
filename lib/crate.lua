@@ -7,7 +7,6 @@ AddCSLuaFile()
 
 if Crate then return end
 
-local flow_path = 'flux/crates/flow/'
 local schema_name = engine.ActiveGamemode()
 local search_paths = {
   ['flux/crates/']              = true,
@@ -17,60 +16,8 @@ local search_paths = {
   ['']                          = true
 }
 
-if SERVER then
-  if !file.Exists(flow_path:gsub('/$', ''), 'LUA') then
-    flow_path = nil
-
-    for path, _ in pairs(search_paths) do
-      if flow_path then break end
-
-      local _, folders = file.Find(path..'flow*', 'LUA')
-
-      if #folders > 0 then
-        for _, f in ipairs(folders) do
-          if f[1] == '.' then continue end
-
-          if file.Exists(path..f..'/flow.cratespec', 'LUA') then
-            flow_path = path..f..'/'
-            break
-          end
-        end
-      end
-    end
-  end
-else
-  flow_path = getenv 'FLOW_PATH'
-end
-
-if !flow_path then
-  error 'flow: package not found!\n'
-else
-  add_client_env('FLOW_PATH', flow_path)
-end
-
-if !require_relative then
-  include(flow_path..'lib/sh_helpers.lua')
-end
-
 if !Flux or (CLIENT and (!Flux or !Flux.shared or !Flux.shared.crates)) then
   require_relative 'flux/lib/flux_struct'
-end
-
-if !class then
-  require_relative(flow_path..'lib/sh_class')
-end
-
-if !library then
-  require_relative(flow_path..'lib/sh_library')
-end
-
-if !string.ensure_end then
-  require_relative(flow_path..'lib/sh_aliases')
-  require_relative(flow_path..'lib/sh_string')
-end
-
-if !table.safe_merge then
-  require_relative(flow_path..'lib/sh_table')
 end
 
 require_relative 'package'

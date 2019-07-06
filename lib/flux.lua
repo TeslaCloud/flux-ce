@@ -28,8 +28,8 @@ if CRATE then
           Crate:reload(v)
         end
       else
-        -- Reload fluctuations either way since we actually need it's shared file.
-        Crate:reload 'fluctuations'
+        -- Reload flow either way since we actually need it's shared file.
+        Crate:reload 'flow'
       end
     end
 

@@ -12,6 +12,5 @@ Crate:describe(function(s)
   s.license     = 'MIT'
   s.serverside  = true
 
-  s.depends     'flow'
   s.depends     'lex_tools'
 end)

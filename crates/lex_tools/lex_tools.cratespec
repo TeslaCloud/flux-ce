@@ -9,6 +9,4 @@ Crate:describe(function(s)
   s.files       = { 'lib/char.lua', 'lib/lua_lex.lua' }
   s.website     = 'https://teslacloud.net'
   s.license     = 'MIT'
-
-  s.depends     'flow'
 end)

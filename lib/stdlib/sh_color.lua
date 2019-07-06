@@ -192,8 +192,8 @@ do
     yellowgreen          = Color(154, 205, 50)
   }
 
-  local old_color = Flux.old_color or Color
-  Flux.old_color = old_color
+  local old_color = __OLD_COLOR_FUNCTION__ or Color
+  __OLD_COLOR_FUNCTION__ = old_color
 
   function Color(r, g, b, a)
     if isstring(r) then
