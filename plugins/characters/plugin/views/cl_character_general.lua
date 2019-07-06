@@ -261,12 +261,12 @@ function PANEL:on_open(parent)
     self.model.Entity:SetSkin(skin)
   end
 
-  if parent.char_data.gender == 'Female' then
+  if parent.char_data.gender == 'female' then
     self.gender_female:set_active(true)
     self.gender_female:set_text_color(Color('red'):lighten(40))
 
     self:rebuild_models()
-  elseif parent.char_data.gender == 'Male' then
+  elseif parent.char_data.gender == 'male' then
     self.gender_male:set_active(true)
     self.gender_male:set_text_color(Color('blue'):lighten(40))
 
@@ -275,7 +275,7 @@ function PANEL:on_open(parent)
 end
 
 function PANEL:on_close(parent)
-  local gender = (self.gender_female:is_active() and 'Female') or (self.gender_male:is_active() and 'Male') or 'Universal'
+  local gender = (self.gender_female:is_active() and 'female') or (self.gender_male:is_active() and 'male') or 'universal'
 
   parent:collect_data({
     name = self.name_entry:GetValue(),

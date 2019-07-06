@@ -31,11 +31,11 @@ end
 
 function Factions:PreStageChange(id, panel)
   if id == 'char_create.general' then
-    local gender = (panel.gender_female:is_active() and 'Female') or (panel.gender_male:is_active() and 'Male') or 'Universal'
+    local gender = (panel.gender_female:is_active() and 'female') or (panel.gender_male:is_active() and 'male') or 'universal'
     local faction_id = panel:GetParent().char_data.faction
     local faction_table = Factions.find_by_id(faction_id)
 
-    if gender == 'Universal' and faction_table.has_gender then
+    if gender == 'universal' and faction_table.has_gender then
       return false, t'ui.char_create.no_gender'
     end
   end
