@@ -48,7 +48,7 @@ function ItemBase:is(base)
   if isstring(base) then
     base = base:capitalize()
     return self.bases[base] or self.bases['Item'..base]
-  else
+  elseif istable(base) then
     for k, v in pairs(self.bases) do
       if base.class_name == v.class_name then
         return true
