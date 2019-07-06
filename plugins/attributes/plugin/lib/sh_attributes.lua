@@ -71,7 +71,7 @@ end
 
 function Attributes.include_type(id, global_var, folder)
   Pipeline.register(id, function(id, file_name, pipe)
-    _G[global_var] = Attribute.new(file_name:match('(%a+).lua'))
+    _G[global_var] = Attribute.new(id)
 
     require_relative(file_name)
 
