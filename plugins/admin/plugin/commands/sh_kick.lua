@@ -9,7 +9,11 @@ COMMAND.immunity = true
 COMMAND.aliases = { 'plykick' }
 
 function COMMAND:on_run(player, targets, ...)
-  local reason = table.concat({ ... }, ' ') or 'Kicked for unspecified reason.'
+  local reason = table.concat({ ... }, ' ')
+
+  if !reason or reason == '' then
+    reason = 'ui.no_reason'
+  end
 
   for k, v in ipairs(targets) do
     v:Kick(reason)

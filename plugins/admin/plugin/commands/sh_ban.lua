@@ -9,7 +9,11 @@ COMMAND.immunity = true
 COMMAND.aliases = { 'plyban' }
 
 function COMMAND:on_run(player, targets, duration, ...)
-  local reason = table.concat({ ... }, ' ') or 'You have been banned.'
+  local reason = table.concat({ ... }, ' ')
+
+  if !reason or reason == '' then
+    reason = 'ui.no_reason'
+  end
 
   duration = Bolt:interpret_ban_time(duration)
 

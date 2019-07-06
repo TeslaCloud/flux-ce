@@ -133,3 +133,4 @@ en:
       allow: Allow
       never: Revoke
       error: Invalid Permission
+    no_reason: Unspecified reason
