@@ -1,6 +1,6 @@
 MVC.handler('SpawnMenu::SpawnItem', function(player, item_id)
   if !player:can('spawn_items') then
-    player:notify('error.no_permission', player:name())
+    player:notify('error.no_permission')
 
     return
   end
