@@ -30,7 +30,7 @@ ru:
     kick:
       description: Выкидывает игрока с сервера.
       syntax: <игрок> [причина]
-      message: "{player} кикает {target}. ({reason})"
+      message: "{player} кикает {target} ({reason})."
     restart:
       description: Перезапускает текущую карту.
       syntax: "[задержка]"

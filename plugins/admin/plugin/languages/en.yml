@@ -30,7 +30,7 @@ en:
     kick:
       description: Kicks player from the server.
       syntax: <target> [reason]
-      message: "{player} has kicked {target}. ({reason})"
+      message: "{player} has kicked {target} ({reason})."
     restart:
       description: Restarts the current map.
       syntax: "[number Delay]"
