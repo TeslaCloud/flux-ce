@@ -28,7 +28,7 @@ function COMMAND:on_run(player, targets, attr_id, value, duration)
   end
 
   if !value then
-    player:notify('error.invalid_value', { value = value })
+    player:notify('error.invalid_value')
 
     return
   end
