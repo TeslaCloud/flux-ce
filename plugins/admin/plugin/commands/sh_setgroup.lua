@@ -15,7 +15,7 @@ function COMMAND:get_description()
     table.insert(groups, k)
   end
 
-  return t(self.description, table.concat(groups, ', '))
+  return t(self.description, { groups = table.concat(groups, ', ') })
 end
 
 function COMMAND:on_run(player, targets, role)

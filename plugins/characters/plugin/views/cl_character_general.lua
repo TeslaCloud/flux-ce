@@ -297,7 +297,7 @@ function PANEL:on_validate()
 
     if utf8.len(name) < Config.get('character_min_name_len') or
     utf8.len(name) > Config.get('character_max_name_len') then
-      return false, t('ui.char_create.name_len', { Config.get('character_min_name_len'), Config.get('character_max_name_len') })
+      return false, t('ui.char_create.name_len', { min = Config.get('character_min_name_len'), max = Config.get('character_max_name_len') })
     end
   end
 
@@ -308,7 +308,7 @@ function PANEL:on_validate()
 
     if utf8.len(desc) < Config.get('character_min_desc_len') or
     utf8.len(desc) > Config.get('character_max_desc_len') then
-      return false, t('ui.char_create.desc_len', { Config.get('character_min_desc_len'), Config.get('character_max_desc_len') })
+      return false, t('ui.char_create.desc_len', { min = Config.get('character_min_desc_len'), max = Config.get('character_max_desc_len') })
     end
   end
 
