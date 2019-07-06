@@ -45,7 +45,18 @@ function ItemBase:base_off(what)
 end
 
 function ItemBase:is(base)
-  return self.bases[base:capitalize()]
+  if isstring(base) then
+    base = base:capitalize()
+    return self.bases[base] or self.bases['Item'..base]
+  else
+    for k, v in pairs(self.bases) do
+      if base.class_name == v.class_name then
+        return true
+      end
+    end
+  end
+
+  return false
 end
 
 ItemBase.based_off = ItemBase.is
