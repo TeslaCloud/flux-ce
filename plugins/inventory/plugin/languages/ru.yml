@@ -1,11 +1,9 @@
 ru:
   command:
-    give_item:
+    giveitem:
       description: Выдать игроку определенный предмет.
       syntax: "<игрок> <название или ID>"
-      target_message: "{1} выдает вам {2}x{3}."
-      player_message: Вы выдали {2}x{3} {1}.
-      invalid_item: "Предмет '{1}' не найден."
+      message: "{player} выдает {target} {item} x {amount}."
   config:
     inventory:
       title: Инвентарь
@@ -31,10 +29,13 @@ ru:
       pockets_height:
         name: Высота инвентаря карманов
         desc: Высота инвентаря карманов игрока в слотах.
+  error:
+    invalid_item: Предмет {item} не найден.
   hint:
     inventory: Перетащите предмет за пределы инвентаря, чтобы выбросить его.
   notification:
-    char_desc_changed: Вы изменили описание вашего персонажа
+    char_desc_changed: Вы изменили описание вашего персонажа.
+    item_given: Вам выдали {item} x {amount}.
   ui:
     inventory:
       main_inventory: Инвентарь

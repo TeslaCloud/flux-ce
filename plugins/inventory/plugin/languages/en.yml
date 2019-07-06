@@ -1,11 +1,9 @@
 en:
   command:
-    give_item:
+    giveitem:
       description: Gives specified item to a player.
       syntax: "<target> <item name or unique ID>"
-      target_message: "{1} has given you {2}x{3}."
-      player_message: You have given {2}x{3} to {1}.
-      invalid_item: "'{1}' is not valid item!"
+      message: "{player} has given {item} x {amount} to {target}."
   config:
     inventory:
       title: Inventory
@@ -31,10 +29,13 @@ en:
       pockets_height:
         name: Pockets height
         desc: Height of the player pockets inventory in slots.
+  error:
+    invalid_item: Item '{item}' is not valid.
   hint:
     inventory: Drag'n'Drop an item outside of inventory screen to drop it.
   notification:
-    char_desc_changed: You have changed your character description
+    char_desc_changed: You have changed your character description.
+    item_given: You have been given {item} x {amount}.
   ui:
     inventory:
       main_inventory: Inventory
