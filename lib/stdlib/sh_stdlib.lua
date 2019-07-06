@@ -1,3 +1,5 @@
+if Flux and Flux.initialized then return end
+
 if SERVER then
   AddCSLuaFile()
   AddCSLuaFile 'cl_utils.lua'
