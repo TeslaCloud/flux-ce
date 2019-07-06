@@ -1,5 +1,3 @@
-AddCSLuaFile()
-
 local should_ignore_client = false
 local should_ignore_server = false
 

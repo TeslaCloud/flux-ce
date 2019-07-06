@@ -17,16 +17,17 @@ if SERVER then
   AddCSLuaFile 'sh_debug.lua'
 end
 
-include 'sh_helpers.lua'
 include 'sh_aliases.lua'
+
+include 'sh_helpers.lua'
 include 'sh_string.lua'
 include 'sh_table.lua'
+include 'sh_math.lua'
 include 'sh_utils.lua'
 include 'sh_color.lua'
 include 'sh_class.lua'
 include 'sh_library.lua'
 include 'sh_unit.lua'
-include 'sh_math.lua'
 include 'sh_player.lua'
 include 'sh_file.lua'
 include 'sh_wrappers.lua'
