@@ -81,7 +81,7 @@ if SERVER then
       end
     end
 
-    player.fl_has_sent_config = true
+    self.fl_has_sent_config = true
   end
 else
   local menu_items = Config.menu_items or {}
