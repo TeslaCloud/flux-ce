@@ -1,17 +1,17 @@
 ru:
   command:
-    char_set_attribute:
-      description: "Установить атрибут персонажа. Атрибуты: {1}"
+    charsetattribute:
+      description: "Установить атрибут персонажа. Атрибуты: {attributes}"
       syntax: <цель> <атрибут> <значение>
-      message: "{1} устанавливает атрибут {3} на {4} для {2}."
-    char_attribute_boost:
-      description: "Усилить атрибут персонажа. Атрибуты: {1}"
+      message: "{player} устанавливает {target} атрибут {attribute} на {value}."
+    charattributeboost:
+      description: "Усилить атрибут персонажа. Атрибуты: {attributes}"
       syntax: <цель> <атрибут> <значение> <длительность>
-      message: "{1} усиливает атрибут {3} на {4} для {2} на {5} с."
-    char_attribute_multiplier:
-      description: "Дать игроку модификатор прокачки атрибута. Атрибуты: {1}"
+      message: "{player} усиливает {target} атрибут {attribute} на {value} на {time}."
+    charattributemultiplier:
+      description: "Дать игроку модификатор прокачки атрибута. Значение 1.5 ускорит прокачку на 50%, 2 - на 100% и т.д. Атрибуты: {attributes}"
       syntax: <цель> <атрибут> <значение> <длительность>
-      message: "{1} добавляет множитель атрибута {3} на {4} для {2} на {5} с."
+      message: "{player} добавляет {target} множитель прокачки атрибута {attribute} на {value} на {time}."
   condition:
     attribute:
       name: Игрок с определенным атрибутом
@@ -19,3 +19,8 @@ ru:
       message1: Выберите атрибут
       message2: Выберите значение атрибута
     attributes: Атрибуты
+  notification:
+    attribute:
+      boost: Ваш атрибут '{attribute}' был увеличен на {value} на {time}.
+      multiplier: Ваш множитель прокачки атрибута '{attribute}' был установлен на {value} на {time}.
+      set: Ваш атрибут '{attribute}' был установлен на {value}.

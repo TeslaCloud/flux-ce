@@ -1,17 +1,17 @@
 en:
   command:
-    char_set_attribute:
-      description: "Set charater's attribute. Attributes: {1}"
+    charsetattribute:
+      description: "Set charater's attribute. Attributes: {attributes}"
       syntax: <target> <attribute_id> <value>
-      message: "{1} has set {2}'s attribute {3} to {4}."
-    char_attribute_boost:
-      description: "Boost charater's attribute. Attributes: {1}"
+      message: "{player} has set {target}'s attribute {attribute} to {value}."
+    charattributeboost:
+      description: "Boost charater's attribute. Attributes: {attributes}"
       syntax: <target> <attribute_id> <value> <duration>
-      message: "{1} has boosted {2}'s attribute {3} to {4} for {5}."
-    char_attribute_multiplier:
-      description: "Give a leveling multilier to a charater's attribute. Attributes: {1}"
+      message: "{player} has boosted {target}'s attribute {attribute} by {value} for {time}."
+    charattributemultiplier:
+      description: "Give a leveling multilier to a charater's attribute. Value 1.5 will speed up leveling by 50%, 2 - by 100% etc. Attributes: {attributes}"
       syntax: <target> <attribute_id> <value> <duration>
-      message: "{1} has set {2}'s attribute {3} to {4} for {5}."
+      message: "{player} has set {target}'s {attribute} leveling multiplier to {value} for {time}."
   condition:
     attribute:
       name: Matching Attribute Value
@@ -19,3 +19,8 @@ en:
       message1: Attribute name
       message2: Attribute value
     attributes: Attributes
+  notification:
+    attribute:
+      boost: Your attribute '{attribute}' was boosted by {value} for {time}.
+      multiplier: Your leveling modifier for attribute '{attribute}' was set to {value} for {time}.
+      set: Your attribute '{attribute}' was set to {value}.
