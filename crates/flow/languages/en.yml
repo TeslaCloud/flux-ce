@@ -43,6 +43,7 @@ en:
     invalid_value: "You specified an invalid argument value!"
     invalid_entity: This is not a valid entity!
     too_far: You are too far away to do that!
+    wait: You can not do it right now, please wait!
   hint:
     forums:
       You can visit TeslaCloud forums to get support, download schemas and
