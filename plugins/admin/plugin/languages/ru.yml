@@ -40,7 +40,7 @@ ru:
       syntax: <игрок>
       message: "{player} возвращает {target} на предыдущую позицию."
     setgroup:
-      description: "Меняет группу пользователя игрока. Группы: {1}"
+      description: "Меняет группу пользователя игрока. Группы: {groups}"
       syntax: <игрок> <группа>
       message: "{player} добавляет {target} к группе {group}."
     tp:
