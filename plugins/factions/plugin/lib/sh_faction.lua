@@ -101,8 +101,20 @@ do
     return SERVER and self.record.whitelists or self:get_nv('whitelists', {})
   end
 
-  function player_meta:has_whitelist(name)
-    return table.has_value(self:get_whitelists(), name)
+  function player_meta:has_whitelist(faction_id)
+    local whitelists = self:get_whitelists()
+
+    if CLIENT then
+      return table.has_value(whitelists, name)
+    end
+
+    for k, v in pairs(whitelists) do
+      if v.faction_id == faction_id then
+        return true
+      end
+    end
+
+    return false
   end
 
   if SERVER then
@@ -179,30 +191,31 @@ do
       end
     end
 
-    function player_meta:give_whitelist(name)
-      if !self:has_whitelist(name) then
+    function player_meta:give_whitelist(faction_id)
+      if !self:has_whitelist(faction_id) then
         local whitelist = Whitelist.new()
-          whitelist.faction_id = v
+          whitelist.faction_id = faction_id
         table.insert(self.record.whitelists, whitelist)
 
         local whitelist_table = self:get_nv('whitelists', {})
-          table.insert(whitelist_table, name)
+          table.insert(whitelist_table, faction_id)
         self:set_nv('whitelists', whitelist_table)
       end
     end
 
-    function player_meta:take_whitelist(name)
-      if self:has_whitelist(name) then
+    function player_meta:take_whitelist(faction_id)
+      if self:has_whitelist(faction_id) then
         for k, v in pairs(self.record.whitelists) do
-          if v.faction_id == name then
+          if v.faction_id == faction_id then
             v:destroy()
+            table.remove(self.record.whitelists, k)
 
             break
           end
         end
 
         local whitelist_table = self:get_nv('whitelists', {})
-          table.remove_by_value(whitelist_table, name)
+          table.remove_by_value(whitelist_table, faction_id)
         self:set_nv('whitelists', whitelist_table)
       end
     end
