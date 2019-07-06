@@ -11,7 +11,6 @@ COMMAND.aliases = { 'setgender' }
 function COMMAND:on_run(player, targets, new_gender)
   new_gender = new_gender:utf8lower()
 
-  local target = targets[1]
   local valid_genders = {
     ['male'] = CHAR_GENDER_MALE,
     ['female'] = CHAR_GENDER_FEMALE,
@@ -19,7 +18,18 @@ function COMMAND:on_run(player, targets, new_gender)
   }
 
   if valid_genders[new_gender] then
-    Characters.set_gender(target, valid_genders[new_gender])
+    for k, v in ipairs(targets) do
+      Characters.set_gender(v, valid_genders[new_gender])
+      v:notify('notifications.gender_changed', new_gender)
+    end
+
+    self:notify_staff('command.charsetgender.message', {
+      player = get_player_name(player),
+      target = util.player_list_to_string(targets),
+      gender = new_gender
+    })
+  else
+    player:notify('error.invalid_gender', new_gender)
   end
 end
 

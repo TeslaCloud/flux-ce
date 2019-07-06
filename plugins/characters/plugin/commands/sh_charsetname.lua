@@ -12,9 +12,14 @@ function COMMAND:on_run(player, targets, ...)
   local new_name = table.concat({ ... }, ' ')
   local target = targets[1]
 
-  self:notify_staff('char_set_name.message', { get_player_name(player), target:name(), new_name })
+  self:notify_staff('command.charsetname.message', {
+    player = get_player_name(player),
+    target = util.player_list_to_string({ target }),
+    name = new_name
+  })
 
   Characters.set_name(target, new_name)
+  target:notify('notification.name_changed', new_name)
 end
 
 COMMAND:register()
