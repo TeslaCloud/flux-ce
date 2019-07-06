@@ -17,6 +17,7 @@ function COMMAND:on_run(player, targets, attr_id, value, duration)
 
   local attribute = Attributes.find_by_id(attr_id)
   duration = Bolt:interpret_ban_time(duration)
+  value = tonumber(value)
 
   if !isnumber(duration) then
     player:notify('error.invalid_time', {
@@ -26,12 +27,10 @@ function COMMAND:on_run(player, targets, attr_id, value, duration)
     return
   end
 
-  if !tonumber(value) then
+  if !value then
     player:notify('error.invalid_value', { value = value })
 
     return
-  else
-    value = tonumber(value)
   end
 
   if attribute and attribute.multipliable then

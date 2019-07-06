@@ -16,13 +16,12 @@ function COMMAND:on_run(player, targets, attr_id, value)
   attr_id = attr_id:to_id()
 
   local attribute = Attributes.find_by_id(attr_id)
+  value = tonumber(value)
 
-  if !tonumber(value) then
+  if !value then
     player:notify('error.invalid_value', { value = value })
 
     return
-  else
-    value = tonumber(value)
   end
 
   if attribute then
