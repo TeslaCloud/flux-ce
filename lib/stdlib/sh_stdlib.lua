@@ -1,4 +1,5 @@
 if SERVER then
+  AddCSLuaFile()
   AddCSLuaFile 'sh_helpers.lua'
   AddCSLuaFile 'sh_aliases.lua'
   AddCSLuaFile 'sh_string.lua'
