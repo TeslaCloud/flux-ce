@@ -1,35 +1,31 @@
 local COMMAND = Command.new('forcefall')
 COMMAND.name = 'ForceFall'
-COMMAND.description = 'command.force_fall.description'
-COMMAND.syntax = 'command.force_fall.syntax'
+COMMAND.description = 'command.forcefall.description'
+COMMAND.syntax = 'command.forcefall.syntax'
 COMMAND.permission = 'assistant'
 COMMAND.category = 'permission.categories.roleplay'
 COMMAND.arguments = 1
 COMMAND.player_arg = 1
 COMMAND.aliases = { 'forcefallover', 'plyfall' }
 
-function COMMAND:on_run(player, target, delay)
-  if isnumber(delay) and delay > 0 then
-    delay = math.Clamp(delay or 0, 2, 60)
-  end
+function COMMAND:on_run(player, targets, delay)
+  delay = math.clamp(tonumber(delay) or 0, 0, 60)
 
-  target = target[1]
+  for k, v in ipairs(targets) do
+    if IsValid(v) and v:Alive() and !v:is_ragdolled() then
+      v:set_ragdoll_state(RAGDOLL_FALLENOVER)
 
-  if IsValid(target) and target:Alive() and !target:is_ragdolled() then
-    target:set_ragdoll_state(RAGDOLL_FALLENOVER)
-
-    player:notify(target:name()..' has been ragdolled!')
-
-    if delay and delay > 0 then
-      target:notify('Getting up...')
-
-      timer.Simple(delay, function()
-        target:set_ragdoll_state(RAGDOLL_NONE)
-      end)
+      if delay > 0 then
+        v:run_command('getup '..tostring(delay))
+      end
     end
-  else
-    player:notify(t'error.cant_now')
   end
+
+  self:notify_staff('command.forcefall.message', {
+    player = get_player_name(player),
+    target = util.player_list_to_string(targets),
+    time = delay
+  })
 end
 
 COMMAND:register()
