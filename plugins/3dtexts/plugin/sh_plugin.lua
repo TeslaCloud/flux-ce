@@ -77,7 +77,7 @@ if SERVER then
 
       Cable.send(nil, 'fl_surface_text_remove', idx)
 
-      Flux.Player:notify(player, t'notification.3d_text.text_removed')
+      player:notify(t'notification.3d_text.text_removed')
     end
   end)
 
@@ -89,7 +89,7 @@ if SERVER then
 
       Cable.send(nil, 'fl_surface_picture_remove', idx)
 
-      Flux.Player:notify(player, t'notification.3d_picture.removed')
+      player:notify(t'notification.3d_picture.removed')
     end
   end)
 else

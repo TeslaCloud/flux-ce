@@ -40,7 +40,7 @@ function TOOL:LeftClick(trace)
 
   SurfaceText:add_picture(data)
 
-  Flux.Player:notify(player, 'notification.3d_picture.placed')
+  player:notify('notification.3d_picture.placed')
 
   return true
 end

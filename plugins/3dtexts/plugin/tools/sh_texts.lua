@@ -51,7 +51,7 @@ function TOOL:LeftClick(trace)
 
   SurfaceText:add_text(data)
 
-  Flux.Player:notify(player, 'notification.3d_text.text_added')
+  player:notify('notification.3d_text.text_added')
 
   return true
 end

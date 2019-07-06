@@ -240,7 +240,7 @@ if SERVER then
       if !IsValid(player) then
         ErrorNoHalt('[Flux:Command] You must enter a command!\n')
       else
-        Flux.Player:notify(player, 'error.commands.you_must_enter_command')
+        player:notify('error.command.you_must_enter_command')
       end
 
       return
@@ -292,7 +292,9 @@ if SERVER then
                 end
               else
                 if IsValid(player) then
-                  Flux.Player:notify(player, 'error.commands.player_invalid', { tostring(target_arg) })
+                  player:notify('error.command.player_invalid', {
+                    player = tostring(target_arg)
+                  })
                 else
                   if kind != '^' then
                     ErrorNoHalt("'"..tostring(target_arg).."' is not a valid player!")
@@ -308,7 +310,9 @@ if SERVER then
             if istable(targets) and #targets > 0 then
               for k, v in ipairs(targets) do
                 if cmd_table.immunity and IsValid(player) and hook.run('CommandCheckImmunity', player, v, cmd_table.can_equal) == false then
-                  Flux.Player:notify(player, 'error.commands.higher_immunity', { v:name() })
+                  player:notify('error.command.higher_immunity', {
+                    target = get_player_name(v)
+                  })
 
                   return
                 end
@@ -318,7 +322,9 @@ if SERVER then
               args[cmd_table.player_arg or 1] = targets
             else
               if IsValid(player) then
-                Flux.Player:notify(player, 'error.commands.player_invalid', { tostring(target_arg) })
+                player:notify('error.command.player_invalid', {
+                  player = tostring(target_arg)
+                })
               else
                 ErrorNoHalt("'"..tostring(target_arg).."' is not a valid player!\n")
               end
@@ -363,18 +369,23 @@ if SERVER then
             self:run(player, cmd_table, args)
           end
         else
-          Flux.Player:notify(player, 'error.commands.syntax', { cmd_table.name, cmd_table.syntax })
+          player:notify('error.command.syntax', {
+            command = cmd_table.name,
+            syntax = cmd_table.syntax
+          })
         end
       else
         if IsValid(player) then
-          Flux.Player:notify(player, 'error.commands.no_access')
+          player:notify('error.command.no_access')
         else
           ErrorNoHalt('This command cannot be run from console!\n')
         end
       end
     else
       if IsValid(player) then
-        Flux.Player:notify(player, 'error.commands.not_valid', command)
+        player:notify('error.command.not_valid', {
+          command = command
+        })
       else
         ErrorNoHalt("'"..command.."' is not a valid command!\n")
       end

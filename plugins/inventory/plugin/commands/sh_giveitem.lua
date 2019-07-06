@@ -19,12 +19,12 @@ function COMMAND:on_run(player, targets, item_name, amount)
         v:give_item(item_table.id)
       end
 
-      Flux.Player:notify(v, t('command.give_item.target_message', { get_player_name(player), amount, item_table.name }))
+      v:notify(t('command.give_item.target_message', { get_player_name(player), amount, item_table.name }))
     end
 
-    Flux.Player:notify(player, t('command.give_item.player_message', { util.player_list_to_string(targets), amount, item_table.name }))
+    player:notify(t('command.give_item.player_message', { util.player_list_to_string(targets), amount, item_table.name }))
   else
-    Flux.Player:notify(player, t('command.give_item.invalid_item', item_name))
+    player:notify(t('command.give_item.invalid_item', item_name))
   end
 end
 

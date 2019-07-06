@@ -28,7 +28,7 @@ function COMMAND:on_run(player, targets, name, strict)
 
     self:notify_staff('whitelist.message', { get_player_name(player), util.player_list_to_string(targets), whitelist.name })
   else
-    Flux.Player:notify(player, 'error.whitelist_not_valid', name)
+    player:notify('error.whitelist_not_valid', name)
   end
 end
 

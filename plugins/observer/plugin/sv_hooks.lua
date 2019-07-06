@@ -1,6 +1,6 @@
 function Observer:PlayerEnterNoclip(player)
   if !player:can('noclip') then
-    Flux.Player:notify(player, 'You do not have permission to do this.')
+    player:notify('You do not have permission to do this.')
 
     return false
   end
