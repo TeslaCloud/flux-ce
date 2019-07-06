@@ -58,6 +58,10 @@ function Faction:get_rank(number)
   return self.rank[number]
 end
 
+function Faction:get_rank_name(number)
+  return self:get_rank(number).id
+end
+
 function Faction:get_models()
   return self.models
 end

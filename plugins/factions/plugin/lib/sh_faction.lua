@@ -78,6 +78,10 @@ do
     return SERVER and self:get_character().rank or self:get_nv('rank', -1)
   end
 
+  function player_meta:get_rank_name()
+    return self:get_faction():get_rank_name(self:get_rank())
+  end
+
   function player_meta:is_rank(str_rank, strict)
     local faction_table = self:get_faction()
     local rank = self:get_rank()
