@@ -144,7 +144,8 @@ function PANEL:rebuild()
   self.desc.save = function(pnl)
     local text = pnl:GetValue()
 
-    if text:len() >= Config.get('character_min_desc_len') and text:len() <= Config.get('character_max_desc_len') then
+    if text:len() >= Config.get('character_min_desc_len') and text:len() <= Config.get('character_max_desc_len')
+    and text != PLAYER:get_phys_desc() then
       Cable.send('fl_character_desc_change', text)
       pnl.saved = true
 

@@ -205,4 +205,5 @@ end)
 
 Cable.receive('fl_character_desc_change', function(player, text)
   Characters.set_desc(player, text)
+  player:notify('notification.char_desc_changed')
 end)
