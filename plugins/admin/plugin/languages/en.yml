@@ -72,9 +72,9 @@ en:
       message: Select role
     roles: Roles
   error:
-    group_not_valid: "'{1}' is not a valid user group!"
-    not_banned: Steam ID '{1}' is not banned!
-    no_permission: You have no permissions to do that, {1}.
+    group_not_valid: "'{group}' is not a valid user group!"
+    not_banned: Steam ID '{steam_id}' is not banned!
+    no_permission: You have no permissions to do that.
   notification:
     demote: You have been demoted from {group} to user.
     fullbright:

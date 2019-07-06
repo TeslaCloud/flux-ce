@@ -33,7 +33,7 @@ function COMMAND:on_run(player, targets, role)
       group = role
     })
   else
-    player:notify('error.group_not_valid', role)
+    player:notify('error.group_not_valid', { group = role })
   end
 end
 

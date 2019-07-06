@@ -17,10 +17,10 @@ function COMMAND:on_run(player, steam_id)
         target = copy.name
       })
     else
-      player:notify('error.not_banned', steam_id)
+      player:notify('error.not_banned', { steam_id = steam_id })
     end
   else
-    player:notify('error.not_banned', steam_id)
+    player:notify('error.not_banned', { steam_id = steam_id })
   end
 end
 

@@ -72,9 +72,9 @@ ru:
       message: Выберите роль
     roles: Роли
   error:
-    group_not_valid: "'{1}' не является группой пользователя!"
-    not_banned: Steam ID '{1}' не находится в блокировке!
-    no_permission: У вас недостаточно прав чтобы сделать это, {1}.
+    group_not_valid: "'{group}' не является группой пользователя!"
+    not_banned: Steam ID '{steam_id}' не находится в блокировке!
+    no_permission: У вас недостаточно прав чтобы сделать это.
   notification:
     demote: Вы были понижены с должности {group} до пользователя.
     fullbright:

@@ -14,7 +14,9 @@ function COMMAND:on_run(player, targets, duration, ...)
   duration = Bolt:interpret_ban_time(duration)
 
   if !isnumber(duration) then
-    player:notify('error.invalid_time', { tostring(duration) })
+    player:notify('error.invalid_time', {
+      time = tostring(duration)
+    })
 
     return
   end
