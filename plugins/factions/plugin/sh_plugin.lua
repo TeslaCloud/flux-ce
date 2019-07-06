@@ -31,7 +31,7 @@ function Factions:RegisterConditions()
         faction_name = self.find_by_id(panel.data.faction_id):get_name()
       end
 
-      return { operator, faction_name }
+      return { operator = operator, faction = faction_name }
     end,
     icon = 'icon16/group.png',
     check = function(player, data)
@@ -69,7 +69,7 @@ function Factions:RegisterConditions()
         end
       end
 
-      return { operator, faction_name, rank_name }
+      return { operator = operator, faction = faction_name, rank = rank_name }
     end,
     icon = 'icon16/award_star_gold_1.png',
     check = function(player, data)

@@ -13,7 +13,7 @@ function Characters:RegisterConditions()
       local operator = util.operator_to_symbol(panel.data.operator) or ''
       local character_id = panel.data.character_id or ''
 
-      return { operator, character_id }
+      return { operator = operator, character = character_id }
     end,
     icon = 'icon16/user.png',
     check = function(player, data)

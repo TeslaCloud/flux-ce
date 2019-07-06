@@ -17,7 +17,7 @@ en:
   condition:
     character:
       name: Specific Character
-      text: "Character: {1} {2}"
+      text: "Character {operator} {character}"
       message: Select Character
     characters: Characters
   config:

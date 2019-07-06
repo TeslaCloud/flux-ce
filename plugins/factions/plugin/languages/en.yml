@@ -2,11 +2,11 @@ en:
   condition:
     faction:
       name: Player in specific faction
-      text: Faction {1} {2}
+      text: Faction {operator} {faction}
       message: Select faction
     rank:
       name: Player with certain rank in specific faction
-      text: Rank {2} {1} {3}
+      text: Rank {faction} {operator} {rank}
       message: Select rank
     factions: Factions
     ranks: Ranks

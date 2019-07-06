@@ -17,7 +17,7 @@ ru:
   condition:
     character:
       name: Определенный персонаж
-      text: Персонаж {1} {2}
+      text: Персонаж {operator} {character}
       message: Выберите персонажа
     characters: Персонажи
   config:

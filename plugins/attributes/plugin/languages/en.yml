@@ -15,7 +15,7 @@ en:
   condition:
     attribute:
       name: Matching Attribute Value
-      text: Attribute {2} {1} {3}
+      text: Attribute {attribute} {operator} {value}
       message1: Attribute name
       message2: Attribute value
     attributes: Attributes

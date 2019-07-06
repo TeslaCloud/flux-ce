@@ -25,7 +25,7 @@ function AttributesPlugin:RegisterConditions()
         attribute_name = Attributes.find_by_id(panel.data.attribute).name
       end
 
-      return { operator, attribute_name, attribute_value }
+      return { operator = operator, attribute = attribute_name, value = attribute_value }
     end,
     icon = 'icon16/chart_bar.png',
     check = function(player, data)

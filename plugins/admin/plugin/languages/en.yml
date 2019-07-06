@@ -68,7 +68,7 @@ en:
   condition:
     role:
       name: Player with specific role
-      text: Role {1} {2}
+      text: Role {operator} {parameter}
       message: Select role
     roles: Roles
   error:

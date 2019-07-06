@@ -28,7 +28,7 @@ function Items:RegisterConditions()
       local operator = util.operator_to_symbol(panel.data.operator) or ''
       local parameter = panel.data.item_id or ''
 
-      return { operator, parameter }
+      return { operator = operator, parameter = parameter }
     end,
     icon = 'icon16/brick.png',
     check = function(player, data)
@@ -59,7 +59,7 @@ function Items:RegisterConditions()
       local key = panel.data.key or ''
       local value = panel.data.value or ''
 
-      return { operator, item_id, key, value }
+      return { operator = operator, item = item_id, key = key, value = value }
     end,
     icon = 'icon16/brick_add.png',
     check = function(player, data)
