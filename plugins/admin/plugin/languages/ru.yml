@@ -68,7 +68,7 @@ ru:
   condition:
     role:
       name: Игрок с определенной ролью
-      text: Роль {operator} {parameter}
+      text: Роль {operator} {role}
       message: Выберите роль
     roles: Роли
   error:

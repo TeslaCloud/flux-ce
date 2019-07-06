@@ -2,23 +2,23 @@ en:
   condition:
     steamid:
       name: Player with specific SteamID
-      text: SteamID {operator} {parameter}
+      text: SteamID {operator} {steam_id}
       message: Input player's SteamID
     model:
       name: Player with specific model
-      text: Model {operator} {parameter}
+      text: Model {operator} {model}
       message: Input model path
     health:
       name: Player with certain health value
-      text: Health {operator} {parameter}
+      text: Health {operator} {health}
       message: Input health value
     armor:
       name: Player with certain armor value
-      text: Armor {operator} {parameter}
+      text: Armor {operator} {armor}
       message: Input armor value
     weapon:
       name: Player with specific weapon in hands
-      text: Active weapon class {operator} {parameter}
+      text: Active weapon class {operator} {weapon}
       message: Input weapon class
   ui:
     condition:

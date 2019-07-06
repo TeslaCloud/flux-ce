@@ -2,11 +2,11 @@ en:
   condition:
     has_item:
       name: Character with certain item in the inventory
-      text: Has item {1} {2}
+      text: Has item {operator} {item}
       message: Input item id
     has_item_data:
       name: Character with item that contains certain data value
-      text: Has item {2} with data {3} {1} {4}
+      text: Has item {item} with data {key} {operator} {value}
       message1: Input item id
       message2: Input item data key
       message3: Input item data value

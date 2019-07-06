@@ -6,7 +6,7 @@ Conditions:register_condition('steamid', {
     local operator = util.operator_to_symbol(panel.data.operator) or ''
     local parameter = steamid and steamid..' ('..player.name_from_steamid(steamid)..')' or ''
 
-    return { operator = operator, parameter = parameter }
+    return { operator = operator, steam_id = parameter }
   end,
   icon = 'vgui/resource/icon_steam',
   check = function(player, data)
@@ -39,7 +39,7 @@ Conditions:register_condition('model', {
     local operator = util.operator_to_symbol(panel.data.operator) or ''
     local parameter = panel.data.model or ''
 
-    return { operator = operator, parameter = parameter }
+    return { operator = operator, model = parameter }
   end,
   icon = 'icon16/bricks.png',
   check = function(player, data)
@@ -72,7 +72,7 @@ Conditions:register_condition('health', {
     local operator = util.operator_to_symbol(panel.data.operator) or ''
     local parameter = panel.data.health or ''
 
-    return { operator = operator, parameter = parameter }
+    return { operator = operator, health = parameter }
   end,
   icon = 'icon16/heart.png',
   check = function(player, data)
@@ -101,7 +101,7 @@ Conditions:register_condition('armor', {
     local operator = util.operator_to_symbol(panel.data.operator) or ''
     local parameter = panel.data.armor or ''
 
-    return { operator = operator, parameter = parameter }
+    return { operator = operator, armor = parameter }
   end,
   icon = 'icon16/shield.png',
   check = function(player, data)
@@ -130,7 +130,7 @@ Conditions:register_condition('active_weapon', {
     local operator = util.operator_to_symbol(panel.data.operator) or ''
     local parameter = panel.data.weapon or ''
 
-    return { operator = operator, parameter = parameter }
+    return { operator = operator, weapon = parameter }
   end,
   icon = 'icon16/gun.png',
   check = function(player, data)

@@ -55,7 +55,7 @@ function Bolt:RegisterConditions()
       local operator = util.operator_to_symbol(panel.data.operator)
       local parameter = panel.data.role
 
-      return { operator = operator, parameter = parameter }
+      return { operator = operator, role = parameter }
     end,
     icon = 'icon16/group.png',
     check = function(player, data)
