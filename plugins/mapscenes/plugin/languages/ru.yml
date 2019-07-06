@@ -2,11 +2,11 @@ ru:
   notification:
     mapscene:
       point_added: Точка установлена
-  ui:
-    mapscene:
-      title: Точка камеры
   tool:
     mapscene:
       name: Фон главного меню
       desc: Установить положение камеры в главном меню.
       "0": ЛКМ - установить точку
+  ui:
+    mapscene:
+      title: Точка камеры
