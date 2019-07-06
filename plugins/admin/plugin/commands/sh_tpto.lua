@@ -5,7 +5,7 @@ COMMAND.permission = 'assistant'
 COMMAND.category = 'permission.categories.administration'
 COMMAND.arguments = 1
 COMMAND.player_arg = 1
-COMMAND.aliases = { 'goto' }
+COMMAND.alias = 'goto'
 
 function COMMAND:on_run(player, targets)
   local target = targets[1]

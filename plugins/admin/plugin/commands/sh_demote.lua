@@ -5,7 +5,7 @@ COMMAND.permission = 'administrator'
 COMMAND.category = 'permission.categories.player_management'
 COMMAND.arguments = 1
 COMMAND.immunity = true
-COMMAND.aliases = { 'plydemote' }
+COMMAND.alias = 'plydemote'
 
 function COMMAND:on_run(player, targets)
   for k, v in ipairs(targets) do

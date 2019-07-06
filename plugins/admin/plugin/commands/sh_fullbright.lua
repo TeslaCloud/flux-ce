@@ -5,7 +5,7 @@ COMMAND.permission = 'moderator'
 COMMAND.category = 'permission.categories.player_management'
 COMMAND.arguments = 2
 COMMAND.immunity = true
-COMMAND.aliases = { 'fb' }
+COMMAND.alias = 'fb'
 
 function COMMAND:on_run(player, targets, should_fullbright)
   should_fullbright = tobool(should_fullbright)

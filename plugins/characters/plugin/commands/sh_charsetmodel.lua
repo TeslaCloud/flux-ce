@@ -5,7 +5,7 @@ COMMAND.permission = 'assistant'
 COMMAND.category = 'permission.categories.character_management'
 COMMAND.arguments = 2
 COMMAND.player_arg = 1
-COMMAND.aliases = { 'setmodel' }
+COMMAND.alias = 'setmodel'
 
 function COMMAND:on_run(player, targets, model)
   for k, v in ipairs(targets) do

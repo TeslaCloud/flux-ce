@@ -5,7 +5,7 @@ COMMAND.permission = 'assistant'
 COMMAND.category = 'permission.categories.administration'
 COMMAND.arguments = 2
 COMMAND.immunity = true
-COMMAND.aliases = { 'plyban' }
+COMMAND.alias = 'plyban'
 
 function COMMAND:on_run(player, targets, duration, ...)
   local reason = table.concat({ ... }, ' ')

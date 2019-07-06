@@ -5,7 +5,7 @@ COMMAND.permission = 'assistant'
 COMMAND.category = 'permission.categories.character_management'
 COMMAND.arguments = 2
 COMMAND.player_arg = 1
-COMMAND.aliases = { 'setname' }
+COMMAND.alias = 'setname'
 
 function COMMAND:on_run(player, targets, ...)
   local new_name = table.concat({ ... }, ' ')

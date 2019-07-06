@@ -5,7 +5,7 @@ COMMAND.permission = 'assistant'
 COMMAND.category = 'permission.categories.character_management'
 COMMAND.arguments = 2
 COMMAND.player_arg = 1
-COMMAND.aliases = { 'setgender' }
+COMMAND.alias = 'setgender'
 
 function COMMAND:on_run(player, targets, new_gender)
   new_gender = new_gender:utf8lower()

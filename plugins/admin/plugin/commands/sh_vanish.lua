@@ -5,7 +5,7 @@ COMMAND.permission = 'moderator'
 COMMAND.category = 'permission.categories.player_management'
 COMMAND.arguments = 1
 COMMAND.immunity = true
-COMMAND.aliases = { 'v' }
+COMMAND.alias = 'v'
 
 function COMMAND:on_run(player, targets, should_vanish)
   for k, v in ipairs(targets) do

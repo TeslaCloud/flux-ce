@@ -23,6 +23,10 @@ function Flux.Command:create(id, data)
   -- Add original command name to the aliases table.
   aliases[id] = data.id
 
+  if isstring(data.alias) then
+    data.aliases = { data.alias }
+  end
+
   if data.aliases then
     for k, v in ipairs(data.aliases) do
       aliases[v] = id

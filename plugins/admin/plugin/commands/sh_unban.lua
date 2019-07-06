@@ -4,7 +4,7 @@ COMMAND.syntax = 'command.unban.syntax'
 COMMAND.permission = 'assistant'
 COMMAND.category = 'permission.categories.administration'
 COMMAND.arguments = 1
-COMMAND.aliases = { 'plyunban' }
+COMMAND.alias = 'plyunban'
 
 function COMMAND:on_run(player, steam_id)
   if isstring(steam_id) and steam_id != '' then

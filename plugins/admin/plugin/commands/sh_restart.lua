@@ -4,7 +4,7 @@ COMMAND.syntax = 'command.restart.syntax'
 COMMAND.permission = 'moderator'
 COMMAND.category = 'permission.categories.server_management'
 COMMAND.arguments = 0
-COMMAND.aliases = { 'maprestart' }
+COMMAND.alias = 'maprestart'
 
 function COMMAND:on_run(player, delay)
   delay = tonumber(delay) or 0
