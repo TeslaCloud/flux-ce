@@ -82,11 +82,17 @@ function Flux.Command:find_all(id)
 end
 
 function Flux.Command:extract_arguments(text)
+  local raw_args
   local arguments = {}
   local word = ''
   local skip = 0
+  local tlen = string.len(text)
 
-  for i = 1, #text do
+  for i = 1, tlen do
+    if raw_args == nil and #arguments > 0 then
+      raw_args = string.sub(i, tlen)
+    end
+
     if skip > 0 then
       skip = skip - 1
 
@@ -140,7 +146,7 @@ function Flux.Command:extract_arguments(text)
     table.insert(arguments, word)
   end
 
-  return arguments
+  return arguments, (raw_args or '')
 end
 
 if SERVER then
@@ -232,10 +238,10 @@ if SERVER then
   end
 
   function Flux.Command:interpret(player, text, from_console)
-    local args
+    local args, raw_args
 
     if isstring(text) then
-      args = self:extract_arguments(text)
+      args, raw_args = self:extract_arguments(text)
     else
       return
     end
@@ -370,7 +376,7 @@ if SERVER then
               return listener:is_staff() and listener:can(cmd_table.id)
             end)
 
-            self:run(player, cmd_table, args)
+            self:run(player, cmd_table, args, raw_args)
           end
         else
           player:notify('error.command.syntax', {
@@ -397,16 +403,19 @@ if SERVER then
   end
 
   -- Warning: this function assumes that command is valid and all permission checks have been done.
-  function Flux.Command:run(player, cmd_table, arguments)
+  function Flux.Command:run(player, cmd_table, arguments, raw_args)
     if cmd_table.on_run then
-      try {
-        cmd_table.on_run, cmd_table, player, unpack(arguments)
-      } catch {
-        function(exception)
-          ErrorNoHalt("'"..cmd_table.id.."' command has failed to run!\n")
-          error_with_traceback(exception)
-        end
-      }
+      local old_raw_args = cmd_table.raw_args
+      cmd_table.raw_args = raw_args
+
+      local success, error_message = pcall(cmd_table.on_run, cmd_table, player, unpack(arguments))
+
+      cmd_table.raw_args = old_raw_args
+
+      if !success then
+        ErrorNoHalt(tostring(cmd_table)..' command has failed to run!\n')
+        error_with_traceback(error_message)
+      end
     end
   end
 

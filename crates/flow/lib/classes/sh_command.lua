@@ -10,7 +10,7 @@ Command.arguments = 0
 Command.no_console = false
 
 function Command:__tostring()
-  return 'Command ['..self.id..']['..self.name..']'
+  return '#<Command:'..self.id..'>'
 end
 
 function Command:init(id)
