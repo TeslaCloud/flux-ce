@@ -113,11 +113,29 @@ function Items:PlayerInventoryUpdated(player, inv_type)
 end
 
 function Items:PlayerCanUseItem(player, item_table, action, ...)
-  local trace = player:GetEyeTraceNoCursor()
+  local item_entity = item_table.entity
 
-  if (!player:has_item_by_id(item_table.instance_id) and !IsValid(item_table.entity)) or
-  (IsValid(item_table.entity) and trace.Entity and trace.Entity != item_table.entity) then
-    return false
+  if IsValid(item_entity) then
+    local player_pos = player:EyePos()
+    local entity_pos = item_entity:GetPos()
+
+    if player_pos:Distance(entity_pos) > 70 then
+      return false
+    end
+
+    if util.vector_obstructed(player_pos, entity_pos, { item_entity, player }) then
+      return false
+    end
+
+    local entity_vector = entity_pos - player:GetShootPos()
+
+    if (player:GetAimVector():Dot(entity_vector) / entity_vector:Length()) < math.pi / 8 then
+      return false
+    end
+  else
+    if !player:has_item_by_id(item_table.instance_id) then
+      return false
+    end
   end
 end
 

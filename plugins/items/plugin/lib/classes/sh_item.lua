@@ -140,6 +140,8 @@ if SERVER then
   end
 
   function ItemBase:do_menu_action(act, player, ...)
+    if hook.run('PlayerCanUseItem', player, self, act, ...) == false then return end
+
     if act == 'on_take' then
       if hook.run('PlayerTakeItem', player, self, ...) != nil then return end
     end
@@ -187,7 +189,6 @@ if SERVER then
     local item_table = Item.find_instance_by_id(instance_id)
 
     if !item_table then return end
-    if hook.run('PlayerCanUseItem', player, item_table, action, ...) == false then return end
 
     item_table:do_menu_action(action, player, ...)
   end)
