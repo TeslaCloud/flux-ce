@@ -16,6 +16,10 @@ function Config.cache()
   return cache
 end
 
+function Config.find(id)
+  return stored[id]
+end
+
 if SERVER then
   function Config.load()
     local loaded = Data.load('config', {})
