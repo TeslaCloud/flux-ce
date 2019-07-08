@@ -233,6 +233,7 @@ function Config.read(path, from_config)
     for name, data in pairs(config_table.configs) do
       if SERVER then
         Config.set(name, data.default_value)
+        table.safe_merge(stored[name], data)
       else
         Config.add_to_menu(data.category or 'general', name, data.name, data.description, data.type, data)
       end
