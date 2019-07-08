@@ -1,10 +1,10 @@
 categories:
   display_typing:
-    name: Display Typing
-    description: Display Typing plugin configuration
+    name: config.display_typing.title
+    description: config.display_typing.desc
 configs:
   display_exact_message:
-    name: Display Exact Message
-    description: Display full message that the player is currently typing.
+    name: config.display_typing.exact_message.name
+    description: config.display_typing.exact_message.desc
     category: display_typing
     type: boolean
