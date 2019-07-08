@@ -86,6 +86,7 @@ en:
     vanish:
       enabled: You are now vanished.
       disabled: You are now unvanished.
+    config_changed: "{player} has changed {config} config to {value}."
   permission:
     categories:
       administration: Administration

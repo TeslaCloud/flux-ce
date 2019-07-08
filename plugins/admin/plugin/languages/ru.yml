@@ -86,6 +86,7 @@ ru:
     vanish:
       enabled: Теперь вы скрыты от других игроков.
       disabled: Теперь вы видимы для других игроков.
+    config_changed: "{player} изменил значение конфига {config} на {value}."
   permission:
     categories:
       administration: Администрирование

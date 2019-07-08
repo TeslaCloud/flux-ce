@@ -33,5 +33,13 @@ Cable.receive('fl_temp_permission', function(player, target, perm_id, value, dur
 end)
 
 Cable.receive('fl_config_change', function(player, key, value)
+  local config_table = Config.find(key)
+
   Config.set(key, value)
+
+  Command:notify_staff('notification.config_changed', {
+    player = get_player_name(player),
+    config = config_table.name,
+    value = tostring(value)
+  })
 end)
