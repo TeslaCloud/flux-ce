@@ -1,0 +1,7 @@
+configs:
+  observer_reset:
+    name: config.general.observer_reset.name
+    description: config.general.observer_reset.desc
+    category: general
+    type: boolean
+    default_value: false
