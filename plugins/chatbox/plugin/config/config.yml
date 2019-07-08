@@ -1,37 +1,61 @@
 categories:
   chatbox:
-    name: Chatbox
-    description: Chatbox configuration
+    name: config.chatbox.title
+    description: config.chatbox.desc
 configs:
   default_font_size:
-    name: Default Font Size
-    description: Default font size to use for Chat Box.
+    name: config.chatbox.default_font_size.name
+    description: config.chatbox.default_font_size.desc
     category: chatbox
     type: number
     min_value: 1
     max_value: 128
     default_value: 22
   small_font_size:
-    name: Small Font Size
-    description: Font size to use for smaller text in chatbox.
+    name: config.chatbox.small_font_size.name
+    description: config.chatbox.small_font_size.desc
     category: chatbox
     type: number
     min_value: 1
     max_value: 128
     default_value: 20
   big_font_size:
-    name: Big Font Size
-    description: Font size to use for bigger text in chatbox.
+    name: config.chatbox.big_font_size.name
+    description: config.chatbox.big_font_size.desc
     category: chatbox
     type: number
     min_value: 1
     max_value: 128
     default_value: 26
   max_message_length:
-    name: Maximum Message Length
-    description: How long the chat message can be.
+    name: config.chatbox.max_message_length.name
+    description: config.chatbox.max_message_length.desc
     category: chatbox
     type: number
     min_value: 64
     max_value: 2048
     default_value: 512
+  message_margin:
+    name: config.chatbox.message_margin.name
+    description: config.chatbox.message_margin.desc
+    category: chatbox
+    type: number
+    min_value: 0
+    max_value: 64
+    default_value: 2
+  message_fade_delay:
+    name: config.chatbox.message_fade_delay.name
+    description: config.chatbox.message_fade_delay.desc
+    category: chatbox
+    type: number
+    min_value: 1
+    max_value: 128
+    default_value: 12
+  max_messages:
+    name: config.chatbox.max_messages.name
+    description: config.chatbox.max_messages.desc
+    category: chatbox
+    type: number
+    min_value: 1
+    max_value: 256
+    default_value: 100

@@ -273,7 +273,7 @@ function PANEL:rebuild_history_indexes()
 end
 
 function PANEL:add_panel(panel)
-  if #self.history >= Config.get('chatbox_max_messages') then
+  if #self.history >= Config.get('max_messages') then
     local last_history = self.history[1]
 
     if IsValid(last_history) then
@@ -290,7 +290,7 @@ function PANEL:add_panel(panel)
 
   self.scroll_panel:AddItem(panel)
 
-  self.last_pos = self.last_pos + Config.get('chatbox_message_margin') + panel:GetTall()
+  self.last_pos = self.last_pos + Config.get('message_margin') + panel:GetTall()
 end
 
 function PANEL:remove_message(idx)
@@ -320,7 +320,7 @@ function PANEL:rebuild()
     if IsValid(v) then
       v:SetPos(self.padding, self.last_pos)
 
-      self.last_pos = self.last_pos + Config.get('chatbox_message_margin') + v:GetTall()
+      self.last_pos = self.last_pos + Config.get('message_margin') + v:GetTall()
     end
   end
 end

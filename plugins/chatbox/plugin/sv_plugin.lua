@@ -1,7 +1,3 @@
-Config.set('chatbox_message_margin', 2)
-Config.set('chatbox_message_fade_delay', 12)
-Config.set('chatbox_max_messages', 100)
-
 local default_msg_data = {
   sender = nil,
   listeners = {},
