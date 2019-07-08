@@ -39,6 +39,6 @@ function COMMAND:on_run(player, targets, attr_id, value)
       value = value
     })
   else
-    player:notify('error.attribute_not_valid', attr_id)
+    player:notify('error.attribute_not_valid', { attribute = attr_id })
   end
 end

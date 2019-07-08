@@ -19,6 +19,8 @@ ru:
       message1: Выберите атрибут
       message2: Выберите значение атрибута
     attributes: Атрибуты
+  error:
+    attribute_not_valid: "'{attribute}' не является атрибутом!"
   notification:
     attribute:
       boost: Ваш атрибут '{attribute}' был увеличен на {value} на {time}.

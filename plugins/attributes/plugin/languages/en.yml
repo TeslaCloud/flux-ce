@@ -19,6 +19,8 @@ en:
       message1: Attribute name
       message2: Attribute value
     attributes: Attributes
+  error:
+    attribute_not_valid: "'{attribute}' is not a valid attribute!"
   notification:
     attribute:
       boost: Your attribute '{attribute}' was boosted by {value} for {time}.
