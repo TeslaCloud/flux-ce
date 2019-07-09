@@ -10,12 +10,12 @@ function PANEL:Init()
   self.scroll_panel = vgui.Create('DScrollPanel', self)
 
   self.scroll_panel.Paint = function() return true end
-  self.scroll_panel.VBar.Paint = function() return true end
-  self.scroll_panel.VBar.btnUp.Paint = function() return true end
-  self.scroll_panel.VBar.btnDown.Paint = function() return true end
-  self.scroll_panel.VBar.btnGrip.Paint = function() return true end
+  self.scroll_panel:GetVBar().Paint = function() return true end
+  self.scroll_panel:GetVBar().btnUp.Paint = function() return true end
+  self.scroll_panel:GetVBar().btnDown.Paint = function() return true end
+  self.scroll_panel:GetVBar().btnGrip.Paint = function() return true end
 
-  self.scroll_panel.VBar:SetWide(0)
+  self.scroll_panel:GetVBar():SetWide(0)
 
   self.scroll_panel:SetPos(0, 0)
   self.scroll_panel:SetSize(w, h)
@@ -27,8 +27,16 @@ function PANEL:Init()
   self.text_entry:set_limit(Config.get('max_message_length', 512))
   self.text_entry.history = {}
   self.text_entry.last_index = 0
+  self.text_entry:SetMultiline(true)
 
   self.text_entry.OnValueChange = function(entry, value)
+    local value_w, value_h = util.text_size(value, entry:GetFont())
+    local div = entry:GetWide() / value_w * 2
+    local offset = div >= 2 and 0 or div >= 1 and math.scale(25) or math.scale(50)
+
+    self:SetSize(Chatbox.width, Chatbox.height + offset)
+    entry:SetTall(Theme.get_option('chatbox_text_entry_height', 40) + offset)
+
     hook.run('ChatTextChanged', value)
   end
 
@@ -44,6 +52,7 @@ function PANEL:Init()
     end
 
     entry:SetText('')
+    self:rebuild()
   end
 
   self.text_entry.OnKeyCodeTyped = function(entry, code)
@@ -99,7 +108,7 @@ function PANEL:Think()
       end
     end
   else
-    self.scroll_panel.VBar:SetScroll(self.scroll_panel.VBar.CanvasSize)
+    self.scroll_panel:GetVBar():SetScroll(self.scroll_panel:GetVBar().CanvasSize)
   end
 end
 
@@ -250,8 +259,8 @@ function PANEL:add_message(message_data)
         local scroll = self.scroll_panel
         local value = panel:GetTall() + self.padding
 
-        if scroll:GetCanvas():GetTall() - scroll:GetTall() - scroll.VBar:GetScroll() <= value then
-          self.scroll_panel.VBar:AddScroll(value)
+        if scroll:GetCanvas():GetTall() - scroll:GetTall() - scroll:GetVBar():GetScroll() <= value then
+          self.scroll_panel:GetVBar():AddScroll(value)
         end
       end)
     end
@@ -289,6 +298,7 @@ function PANEL:add_panel(panel)
   panel.msg_index = idx
 
   self.scroll_panel:AddItem(panel)
+  self.scroll_panel:GetVBar():AnimateTo(self.last_pos, 1, 0, -1)
 
   self.last_pos = self.last_pos + Config.get('message_margin') + panel:GetTall()
 end
@@ -312,7 +322,7 @@ function PANEL:rebuild()
 
   self.scroll_panel:SetSize(Chatbox.width, Chatbox.height - self.text_entry:GetTall() - 16)
   self.scroll_panel:PerformLayout()
-  self.scroll_panel.VBar:SetScroll(self.scroll_panel.VBar.CanvasSize or 0)
+  self.scroll_panel:GetVBar():SetScroll(self.scroll_panel:GetVBar().CanvasSize or 0)
 
   self.last_pos = 0
 
