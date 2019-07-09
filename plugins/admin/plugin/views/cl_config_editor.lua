@@ -102,8 +102,21 @@ function PANEL:set_config(key, config_table)
     self.slider.PerformLayout = function()
     end
 
+    local timer_id = 'fl_config_set_'..key
+
+    timer.create(timer_id, 0.5, 0, function()
+      local value = math.round(self.slider:GetValue(), config_table.decimals)
+
+      if IsValid(self) and IsValid(self.slider) and !self.slider:IsEditing() and value != Config.get(key) then
+        Cable.send('fl_config_change', key, value)
+        timer.pause(timer_id)
+      end
+    end)
+
+    timer.pause(timer_id)
+
     self.slider.OnValueChanged = function(pnl, value)
-      Cable.send('fl_config_change', key, self.slider:GetValue())
+      timer.unpause(timer_id)
     end
   elseif data_type == 'boolean' then
     self.check = vgui.create('fl_button', self)
