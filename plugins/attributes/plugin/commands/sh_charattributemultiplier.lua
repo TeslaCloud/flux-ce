@@ -14,7 +14,7 @@ end
 function COMMAND:on_run(player, targets, attr_id, value, duration)
   attr_id = attr_id:to_id()
 
-  local attribute = Attributes.find_by_id(attr_id)
+  local attribute = Attributes.find(attr_id)
   duration = Bolt:interpret_ban_time(duration)
   value = tonumber(value)
 

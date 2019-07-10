@@ -9,14 +9,8 @@ function Attributes.get_stored()
   return stored
 end
 
-function Attributes.get_id_list()
-  local atts_table = {}
-
-  for k, v in pairs(stored) do
-    table.insert(atts_table, k)
-  end
-
-  return atts_table
+function Attributes.find(id)
+  return stored[id]
 end
 
 function Attributes.get_by_type(type)

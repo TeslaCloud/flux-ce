@@ -22,7 +22,7 @@ function AttributesPlugin:RegisterConditions()
       local attribute_value = panel.data.attribute_value or ''
 
       if panel.data.attribute then
-        attribute_name = Attributes.find_by_id(panel.data.attribute).name
+        attribute_name = Attributes.find(panel.data.attribute).name
       end
 
       return { operator = operator, attribute = attribute_name, value = attribute_value }
