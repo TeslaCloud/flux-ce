@@ -1,9 +1,7 @@
 library 'Attributes'
 
 local stored = Attributes.stored or {}
-local types = Attributes.types or {}
 Attributes.stored = stored
-Attributes.types = types
 
 function Attributes.get_stored()
   return stored
@@ -28,232 +26,153 @@ end
 function Attributes.register(id, data)
   if !data then return end
 
-  if !isstring(id) and !isstring(data.name) then
+  if !isstring(id) then
     error_with_traceback('Attempt to register an attribute without a valid ID!')
+
     return
   end
 
-  if !id then
-    id = data.name:to_id()
-  end
-
-  data.attr_id = id
-  data.name = data.name or 'Unknown Attribute'
-  data.description = data.description or 'This attribute has no description!'
-  data.max = data.max or 100
+  data.name = data.name or 'attribute.other.name'
+  data.description = data.description or 'attribute.other.desc'
+  data.max = data.max or 10
   data.min = data.min or 0
-  data.category = data.category or 'Attribute_Category_Other'
+  data.category = data.category or 'attribute.category.other'
   data.icon = data.icon
   data.type = data.type
-  data.multipliable = data.multipliable or true
-  data.boostable = data.boostable or true
+  data.has_progress = data.has_progress or true
+  data.total_progress = data.total_progress or 100
+  data.progression_type = data.progression_type or LEVELING_GRADUAL
+  data.progression_coefficient = data.progression_coefficient or 1.5
+  data.hidden = data.hidden or false
+
+  hook.run('AttributeRegistered', id, data)
 
   stored[id] = data
 end
 
-function Attributes.find_by_id(id)
-  return stored[id:to_id()]
-end
-
-function Attributes.register_type(id, global_var, folder)
-  types[id] = global_var
-
-  Plugin.add_extra(id)
-
-  Attributes.include_type(id, global_var, folder)
-end
-
-function Attributes.include_type(id, global_var, folder)
-  Pipeline.register(id, function(id, file_name, pipe)
-    _G[global_var] = Attribute.new(id)
-
-    require_relative(file_name)
-
-    if Pipeline.is_aborted() then _G[global_var] = nil return end
-
-    _G[global_var].type = global_var
-    _G[global_var]:register()
-    _G[global_var] = nil
-  end)
-
-  Pipeline.include_folder(id, folder)
-end
-
-function Attributes.id_from_attr_id(atts_table, attr_id)
-  for k, v in pairs(atts_table) do
-    if v.attr_id == attr_id then
-      return v.id
-    end
-  end
+function Attributes.include_attributes(directory)
+  Pipeline.include_folder('attribute', directory)
 end
 
 do
   local player_meta = FindMetaTable('Player')
 
-  function player_meta:get_attributes()
-    --[[
-    local char_id = self:get_character_id()
+  function player_meta:get_attributes(type)
+    if CLIENT then
+      return self:get_nv('attributes')
+    else
+      local attributes_table = {}
 
-    if !self.record.characters or !self.record.characters[char_id] then return {} end
+      for k, v in pairs(self:get_character().attributes) do
+        local attribute_id = v.attribute_id
+        local attribute_table = Attributes.find(attribute_id)
 
-    local atts_table = {}
+        if type and v.type != attribute_table.type then continue end
 
-    for k, v in pairs(self.record.characters[char_id].attributes) do
-      atts_table[v.attr_id] = v
+        attributes_table[attribute_id] = {
+          level = v.level,
+          progress = v.progress
+        }
+      end
+
+      return attributes_table
     end
-
-    return atts_table
-    --]]
-    return {}
   end
 
-  function player_meta:get_attribute(id, no_boost)
-    --[[
-    local attribute = Attributes.find_by_id(id)
-    local atts_table = self:get_attributes()
+  function player_meta:get_attribute(attribute_id)
+    local attribute_table = Attributes.find(attribute_id)
+    local attribute = self:get_attributes()[attribute_id]
 
-    if !atts_table[id] then
-      return attribute.min
-    end
-
-    local value = atts_table[id].value
-
-    if !no_boost and attribute.boostable then
-      local custom_boosts = {}
-
-      hook.run('GetAttributeBoosts', player, id, custom_boosts)
-
-      value = value + self:get_attribute_boost(id)
-
-      if custom_boosts then
-        for k, v in pairs(custom_boosts) do
-          value = value + v
-        end
-      end
-    end
-
-    return value
-    --]]
-    return 1 -- Remove for now because I need to re-do the database structure for this from scratch....
-  end
-
-  function player_meta:get_attribute_multiplier(attr_id)
-    --[[
-    local char = self:get_character()
-    local id = Attributes.id_from_attr_id(char.attributes, attr_id)
-    local mult = 1
-
-    if char.attributes then
-      for k, v in pairs(char.attributes) do
-        if v.id == id then
-          if time_from_timestamp(v.expires) >= os.time() then
-            mult = mult * v.value
-          else
-            v:destroy()
-            table.remove(char.attribute_multipliers, k)
-          end
-        end
-      end
-    end
-
-    return mult
-    --]]
-    return 1 -- Remove for now because I need to re-do the database structure for this from scratch....
-  end
-
-  function player_meta:get_attribute_boost(attr_id)
-    --[[
-    local char = self:get_character()
-    local id = Attributes.id_from_attr_id(char.attributes, attr_id)
-    local boost = 0
-
-    if char.attribute_boosts then
-      for k, v in pairs(char.attribute_boosts) do
-        if v.attribute_id == id then
-          if time_from_timestamp(v.expires) >= os.time() then
-            boost = boost + v.value
-          else
-            v:destroy()
-            table.remove(char.attribute_boosts, k)
-          end
-        end
-      end
-    end
-
-    return boost
-    --]]
-    return 0 -- Remove for now because I need to re-do the database structure for this from scratch....
+    return attribute.level or attribute_table.min, attribute.progress or 0
   end
 
   if SERVER then
-    function player_meta:set_attribute(attr_id, value)
-      --[[
-      local attribute = Attributes.find_by_id(attr_id)
-      local atts_table = self:get_character().attributes
+    function player_meta:set_attribute(attribute_id, level)
+      local attribute_table = Attributes.find(attribute_id)
+      local char = self:get_character()
 
-      for k, v in pairs(atts_table) do
-        if v.attr_id == attr_id then
-          v.value = math.Clamp(value, attribute.min, attribute.max)
-          break
-        end
-      end
-      --]]
-    end
+      level = math.clamp(level, attribute_table.min, attribute_table.max)
 
-    function player_meta:increase_attribute(attr_id, value, no_multiplier)
-      --[[
-      local attribute = Attributes.find_by_id(attr_id)
-      local atts_table = self:get_attributes()
-      local id = Attributes.id_from_attr_id(self:get_character().attributes, attr_id)
+      if char then
+        for k, v in pairs(char.attributes) do
+          if v.attribute_id == attribute_id then
+            v.level = level
 
-      if !no_multiplier and attribute.multipliable then
-        if value < 0 then
-          value = value / self:get_attribute_multiplier(attr_id)
-        else
-          value = value * self:get_attribute_multiplier(attr_id)
+            break
+          end
         end
       end
 
-      self:get_character().attributes[id].value = math.Clamp(atts_table[attr_id].value + value, attribute.min, attribute.max)
-      --]]
+      local attributes = self:get_nv('attributes')
+        attributes[attribute_id].level = level
+      self:set_nv('attributes', attributes)
     end
 
-    function player_meta:decrease_attribute(attr_id, value, no_multiplier)
-      --[[
-      self:increase_attribute(attr_id, -value, no_multiplier)
-      --]]
+    function player_meta:increase_attribute(attribute_id, amount)
+      amount = amount or 1
+
+      self:set_attribute(attribute_id, self:get_attribute(attribute_id) + amount)
     end
 
-    function player_meta:attribute_multiplier(attr_id, value, duration)
-      --[[
-      local attribute = Attributes.find_by_id(attr_id)
+    function player_meta:decrease_attribute(attribute_id, amount)
+      amount = amount or 1
 
-      if !attribute.multipliable then return end
-
-      local atts_table = self:get_attributes()
-
-      local multiplier = AttributeMultiplier.new()
-        multiplier.value = value
-        multiplier.expires = to_datetime(os.time() + duration)
-        multiplier.attribute_id = Attributes.id_from_attr_id(atts_table, attr_id)
-      self:get_character().attribute_multipliers[multiplier:get_id()] = multiplier
-      --]]
+      self:set_attribute(attribute_id, self:get_attribute(attribute_id) - amount)
     end
 
-    function player_meta:attribute_boost(attr_id, value, duration)
-      --[[
-      local attribute = Attributes.find_by_id(attr_id)
+    function player_meta:progress_attribute(attribute_id, amount)
+      local attribute_table = Attributes.find(attribute_id)
+      local level, progress = self:get_attribute(attribute_id)
 
-      if !attribute.boostable then return end
+      if !attribute_table.has_progress or level == attribute_table.max then return end
 
-      local atts_table = self:get_attributes()
+      local char = self:get_character()
+      local total_progress = attribute_table:get_total_progress(level)
 
-      local boost = AttributeBoost.new()
-        boost.value = value
-        boost.expires = to_datetime(os.time() + duration)
-        boost.attribute_id = Attributes.id_from_attr_id(atts_table, attr_id)
-      self:get_character().attribute_boost[boost:get_id()] = boost
-      --]]
+      progress = progress + amount
+
+      if progress >= total_progress then
+        progress = progress - total_progress
+
+        self:increase_attribute(attribute_id)
+
+        if level + 1 == attribute_table.max then
+          progress = 0
+        end
+      elseif progress < 0 then
+        progress = total_progress + progress
+
+        self:decrease_attribute(attribute_id)
+      end
+
+      if char then
+        for k, v in pairs(char.attributes) do
+          if v.attribute_id == attribute_id then
+            v.progress = progress
+
+            break
+          end
+        end
+      end
+
+      local attributes = self:get_nv('attributes')
+        attributes[attribute_id].progress = progress
+      self:set_nv('attributes', attributes)
+    end
+
+    function player_meta:regress_attribute(attribute_id, amount)
+      self:progress_attribute(attribute_id, -amount)
     end
   end
 end
+
+Pipeline.register('attribute', function(id, file_name, pipe)
+  ATTRIBUTE = Attribute.new(id)
+
+  require_relative(file_name)
+
+  if Pipeline.is_aborted() then ATTRIBUTE = nil return end
+
+  ATTRIBUTE:register()
+  ATTRIBUTE = nil
+end)

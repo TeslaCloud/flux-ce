@@ -1,14 +1,14 @@
 PLUGIN:set_global('AttributesPlugin')
 
+Plugin.add_extra('attributes')
+
 require_relative 'sv_hooks'
 
 function AttributesPlugin:PluginIncludeFolder(extra, folder)
-  for k, v in pairs(Attributes.types) do
-    if extra == k then
-      Attributes.include_type(k, v, folder..'/'..k..'/')
+  if extra == 'attributes' then
+    Attributes.include_attributes(folder..'/attributes')
 
-      return true
-    end
+    return true
   end
 end
 
