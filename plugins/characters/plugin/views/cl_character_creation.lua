@@ -210,6 +210,10 @@ function PANEL:next_stage()
   if self.stage != #self.stages then
     self:set_stage(self.stage + 1)
   else
+    if self.panel.on_close then
+      self.panel:on_close(self)
+    end
+
     surface.PlaySound('vo/npc/male01/answer37.wav')
 
     Derma_Query(t'ui.char_create.confirm_msg', t'ui.char_create.confirm', t'ui.yes', function()
