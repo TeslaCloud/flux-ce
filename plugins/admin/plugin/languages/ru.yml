@@ -75,7 +75,7 @@ ru:
       message: "{player} разморозил {target}."
     respawn:
       description: "Возродить мертвого игрока."
-      syntax: "<игрок>"
+      syntax: "<игрок> [tp / stay]"
       message: "{target} был возрожден благодаря {player}."
     godmode:
       description: "Активирует режим бога игроку."

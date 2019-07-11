@@ -8,6 +8,8 @@ COMMAND.immunity = true
 COMMAND.aliases = { 'respawn', 'plyrespawn' }
 
 function COMMAND:on_run(player, targets, spawn_position)
+  spawn_position = spawn_position and spawn_position:utf8lower()
+
   for k, v in ipairs(targets) do
     if v:Alive() then player:notify('error.respawn') return end
     

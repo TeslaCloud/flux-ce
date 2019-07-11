@@ -75,7 +75,7 @@ en:
       message: "{player} has unfroze {target}."
     respawn:
       description: "Respawn a dead player."
-      syntax: "<string player>"
+      syntax: "<string player> [tp / stay]"
       message: "{target} was respawned by {player}."
     godmode:
       description: "Sets god mode to player."
