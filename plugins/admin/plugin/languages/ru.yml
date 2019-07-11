@@ -65,6 +65,23 @@ ru:
       syntax: "<игрок> <отключить_свет>"
       enabled: "{player} включает ночное видение для {target}."
       disabled: "{player} отключает ночное видение {target}."
+    freeze:
+      description: "Замораживает игрока."
+      syntax: "<игрок>"
+      message: "{player} заморозил {target}."
+    unfreeze:
+      description: "Размораживает игрока."
+      syntax: "<игрок>"
+      message: "{player} разморозил {target}."
+    respawn:
+      description: "Возродить мертвого игрока."
+      syntax: "<игрок>"
+      message: "{target} был возрожден благодаря {player}."
+    godmode:
+      description: "Активирует режим бога игроку."
+      syntax: "<игрок> [активировать]"
+      enabled: "{player} Включил режим бога для {target}."
+      disabled: "{player} Выключил режим бога для {target}."
   condition:
     role:
       name: Игрок с определенной ролью
@@ -75,6 +92,7 @@ ru:
     group_not_valid: "'{group}' не является группой пользователя!"
     not_banned: Steam ID '{steam_id}' не находится в блокировке!
     no_permission: У вас недостаточно прав чтобы сделать это.
+    respawn: "Вы не можете возродить живого игрока."
   notification:
     demote: Вы были понижены с должности {group} до пользователя.
     fullbright:
@@ -86,6 +104,12 @@ ru:
     vanish:
       enabled: Теперь вы скрыты от других игроков.
       disabled: Теперь вы видимы для других игроков.
+    freeze: "Вы были заморожены {player}."
+    unfreeze: "Вы были разморожены {player}."
+    godmode:
+      enabled: "Режим бога активирован."
+      disabled: "Режим бога отключен."
+    respawn: "Вы были возрождены благодаря {player}."
     config_changed: "{player} изменил значение конфига {config} на {value}."
   permission:
     categories:

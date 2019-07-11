@@ -65,6 +65,23 @@ en:
       syntax: "<string player> <bool should_hide>"
       enabled: "{player} has enabled fullbright mode for {target}."
       disabled: "{player} has disabled fullbright mode for {target}."
+    freeze:
+      description: "Freezes a player."
+      syntax: "<string player>"
+      message: "{player} has froze {target}."
+    unfreeze:
+      description: "Unfreezes a player."
+      syntax: "<string player>"
+      message: "{player} has unfroze {target}."
+    respawn:
+      description: "Respawn a dead player."
+      syntax: "<string player>"
+      message: "{target} was respawned by {player}."
+    godmode:
+      description: "Sets god mode to player."
+      syntax: "<string player> [bool boolean]"
+      enabled: "{player} has enabled god mode for {target}."
+      disabled: "{player} has disabled god mode for {target}."
   condition:
     role:
       name: Player with specific role
@@ -75,6 +92,7 @@ en:
     group_not_valid: "'{group}' is not a valid user group!"
     not_banned: Steam ID '{steam_id}' is not banned!
     no_permission: You have no permissions to do that.
+    respawn: "You can't respawn an alive player"
   notification:
     demote: You have been demoted from {group} to user.
     fullbright:
@@ -86,6 +104,12 @@ en:
     vanish:
       enabled: You are now vanished.
       disabled: You are now unvanished.
+    freeze: "You've been frozen by {player}."
+    unfreeze: "You've been unfrozen by {player}."
+    godmode:
+      enabled: "God mode enabled."
+      disabled: "God mode disabled."
+    respawn: "You've been respawned by {player}."
     config_changed: "{player} has changed {config} config to {value}."
   permission:
     categories:
