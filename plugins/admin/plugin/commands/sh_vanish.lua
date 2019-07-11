@@ -16,7 +16,7 @@ function COMMAND:on_run(player, targets, should_vanish)
     -- Make sure we are not interfering with observer.
     if !v:get_nv('observer') then
       if should_vanish then
-        v.old_color = target:GetColor()
+        v.old_color = v:GetColor()
 
         v:DrawWorldModel(false)
         v:DrawShadow(false)
