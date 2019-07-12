@@ -2,6 +2,7 @@ PLUGIN:set_global('AttributesPlugin')
 
 Plugin.add_extra('attributes')
 
+require_relative 'sh_enums'
 require_relative 'sv_hooks'
 
 function AttributesPlugin:PluginIncludeFolder(extra, folder)

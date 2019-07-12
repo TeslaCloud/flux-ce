@@ -39,11 +39,11 @@ function Attributes.register(id, data)
   data.category = data.category or 'attribute.category.other'
   data.icon = data.icon
   data.type = data.type
-  data.has_progress = data.has_progress or true
+  data.has_progress = data.has_progress
   data.total_progress = data.total_progress or 100
-  data.progression_type = data.progression_type or LEVELING_GRADUAL
-  data.progression_coefficient = data.progression_coefficient or 1.5
-  data.hidden = data.hidden or false
+  data.progression_type = data.progression_type or PROGRESSION_GEOMETRIC
+  data.progression_coefficient = data.progression_coefficient or 1.2
+  data.hidden = data.hidden
 
   hook.run('AttributeRegistered', id, data)
 
@@ -167,7 +167,7 @@ do
 end
 
 Pipeline.register('attribute', function(id, file_name, pipe)
-  ATTRIBUTE = Attribute.new(id)
+  ATTRIBUTE = AttributeBase.new(id)
 
   require_relative(file_name)
 
