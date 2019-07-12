@@ -57,6 +57,18 @@ function Attributes.include_attributes(directory)
   Pipeline.include_folder('attribute', directory)
 end
 
+function Attributes.destroy_timers(character)
+  for k, v in pairs(character.attributes) do
+    for k1, v1 in pairs(v.attribute_boosts) do
+      timer.destroy('fl_boost_'..v.id..'_'..v1.expires_at)
+    end
+
+    for k1, v1 in pairs(v.attribute_multipliers) do
+      timer.destroy('fl_multiplier_'..v.id..'_'..v1.expires_at)
+    end
+  end
+end
+
 do
   local player_meta = FindMetaTable('Player')
 
@@ -116,8 +128,8 @@ do
 
     for k, v in pairs(attribute.boosts) do
       if time_from_timestamp(v.expires_at) > os.time() then
-      boost = boost + v.value
-    end
+        boost = boost + v.value
+      end
     end
 
     if attribute_table.boost_limited then
@@ -243,10 +255,40 @@ do
 
       for k, v in pairs(self:get_character().attributes) do
         if v.attribute_id == attribute_id then
+          local expires_at = to_datetime(os.time() + duration)
+
           local boost = AttributeBoost.new()
             boost.value = value
-            boost.expires_at = to_datetime(os.time() + duration)
+            boost.expires_at = expires_at
           table.insert(v.attribute_boosts, boost)
+
+          local timer_id = 'fl_boost_'..v.id..'_'..boost.expires_at
+
+          timer.create(timer_id, duration, 1, function()
+            for k1, v1 in pairs(v.attribute_boosts) do
+              if v1.expires_at == expires_at then
+                v1:destroy()
+                table.remove(v.attribute_boosts, k1)
+
+                break
+              end
+            end
+
+            local attributes = self:get_nv('attributes')
+            local boosts = attributes[attribute_id].boosts
+
+            for k1, v1 in pairs(boosts) do
+              if v1.expires_at == expires_at then
+                v1 = nil
+
+                break
+              end
+            end
+
+            self:set_nv('attributes', attributes)
+
+            timer.destroy(timer_id)
+          end)
 
           break
         end
@@ -267,10 +309,38 @@ do
 
       for k, v in pairs(self:get_character().attributes) do
         if v.attribute_id == attribute_id then
-          local multiply = AttributeMultiplier.new()
-            multiply.value = value
-            multiply.expires_at = to_datetime(os.time() + duration)
-          table.insert(v.attribute_multipliers, multiply)
+          local multiplier = AttributeMultiplier.new()
+            multiplier.value = value
+            multiplier.expires_at = to_datetime(os.time() + duration)
+          table.insert(v.attribute_multipliers, multiplier)
+
+          local timer_id = 'fl_multiplier_'..v.id..'_'..multiplier.expires_at
+
+          timer.create(timer_id, duration, 1, function()
+            for k1, v1 in pairs(v.attribute_multipliers) do
+              if v1.expires_at == expires_at then
+                v1:destroy()
+                table.remove(v.attribute_multipliers, k1)
+
+                break
+              end
+            end
+
+            local attributes = self:get_nv('attributes')
+            local multipliers = attributes[attribute_id].multipliers
+
+            for k1, v1 in pairs(multipliers) do
+              if v1.expires_at == expires_at then
+                v1 = nil
+
+                break
+              end
+            end
+
+            self:set_nv('attributes', attributes)
+
+            timer.destroy(timer_id)
+          end)
 
           break
         end
