@@ -104,7 +104,7 @@ do
     local attribute_table = Attributes.find(attribute_id)
     local attribute = self:get_attributes()[attribute_id]
     local level = attribute.level or attribute_table.min
-    local boost = (!no_boost and attribute_table.boostable) and self:get_attribute_boost() or 0
+    local boost = (!no_boost and attribute_table.boostable != false) and self:get_attribute_boost(attribute_id) or 0
 
     return level + boost, attribute.progress or 0
   end
@@ -115,7 +115,9 @@ do
     local boost = 0
 
     for k, v in pairs(attribute.boosts) do
+      if time_from_timestamp(v.expires_at) > os.time() then
       boost = boost + v.value
+    end
     end
 
     if attribute_table.boost_limited then
@@ -253,7 +255,7 @@ do
       local attributes = self:get_nv('attributes')
         table.insert(attributes[attribute_id].boosts, {
           value = value,
-          duration = to_datetime(os.time() + duration)
+          expires_at = to_datetime(os.time() + duration)
         })
       self:set_nv('attributes', attributes)
     end
@@ -277,7 +279,7 @@ do
       local attributes = self:get_nv('attributes')
         table.insert(attributes[attribute_id].multipliers, {
           value = value,
-          duration = to_datetime(os.time() + duration)
+          expires_at = to_datetime(os.time() + duration)
         })
       self:set_nv('attributes', attributes)
     end

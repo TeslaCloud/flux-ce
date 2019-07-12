@@ -1,4 +1,4 @@
-COMMAND.name = 'CharAttributeBoost'
+﻿COMMAND.name = 'CharAttributeBoost'
 COMMAND.description = 'command.charattributeboost.description'
 COMMAND.syntax = 'command.charattributeboost.syntax'
 COMMAND.permission = 'moderator'
@@ -32,14 +32,14 @@ function COMMAND:on_run(player, targets, attribute_id, value, duration)
     return
   end
 
-  if attribute and attribute.boostable then
+  if attribute and attribute.boostable != false then
     for k, v in ipairs(targets) do
       v:notify('notification.attribute.boost', {
         attribute = attribute.name,
         value = value,
         time = Flux.Lang:nice_time(duration)
       })
-      v:attribute_boost(attr_id, value, duration)
+      v:boost_attribute(attribute_id, value, duration)
     end
 
     self:notify_staff('command.charattributeboost.message', {

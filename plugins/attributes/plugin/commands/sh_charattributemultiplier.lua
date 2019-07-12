@@ -1,4 +1,4 @@
-COMMAND.name = 'CharAttributeMultiplier'
+﻿COMMAND.name = 'CharAttributeMultiplier'
 COMMAND.description = 'command.charattributemultiplier.description'
 COMMAND.syntax = 'command.charattributemultiplier.syntax'
 COMMAND.permission = 'moderator'
@@ -39,7 +39,7 @@ function COMMAND:on_run(player, targets, attribute_id, value, duration)
         value = value,
         time = Flux.Lang:nice_time(duration)
       })
-      v:attribute_multiplier(attr_id, value, duration)
+      v:boost_attribute(attribute_id, value, duration)
     end
 
     self:notify_staff('command.charattributemultiplier.message', {
