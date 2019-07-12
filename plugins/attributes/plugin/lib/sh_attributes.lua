@@ -124,25 +124,31 @@ do
       local attribute_table = Attributes.find(attribute_id)
       local level, progress = self:get_attribute(attribute_id)
 
-      if !attribute_table.has_progress or level == attribute_table.max then return end
+      if attribute_table.has_progress then return end
 
       local char = self:get_character()
       local total_progress = attribute_table:get_total_progress(level)
 
       progress = progress + amount
 
-      if progress >= total_progress then
+      while (progress >= total_progress and level < attribute_table.max) do
         progress = progress - total_progress
 
         self:increase_attribute(attribute_id)
+        level = level + 1
+        total_progress = attribute_table:get_total_progress(level)
+      end
 
-        if level + 1 == attribute_table.max then
-          progress = 0
-        end
-      elseif progress < 0 then
-        progress = attribute_table:get_total_progress(level - 1) + progress
-
+      while (progress < 0 and level > attribute_table.min) do
         self:decrease_attribute(attribute_id)
+        level = level - 1
+        total_progress = attribute_table:get_total_progress(level)
+
+        progress = progress + total_progress
+      end
+
+      if level == attribute_table.max or progress < 0 then
+        progress = 0
       end
 
       if char then
