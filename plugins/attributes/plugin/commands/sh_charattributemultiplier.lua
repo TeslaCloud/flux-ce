@@ -1,4 +1,4 @@
-﻿COMMAND.name = 'CharAttributeMultiplier'
+COMMAND.name = 'CharAttributeMultiplier'
 COMMAND.description = 'command.charattributemultiplier.description'
 COMMAND.syntax = 'command.charattributemultiplier.syntax'
 COMMAND.permission = 'moderator'
@@ -11,10 +11,10 @@ function COMMAND:get_description()
   return t(self.description, { attributes = table.concat(Attributes.get_id_list(), ', ') })
 end
 
-function COMMAND:on_run(player, targets, attr_id, value, duration)
-  attr_id = attr_id:to_id()
+function COMMAND:on_run(player, targets, attribute_id, value, duration)
+  attribute_id = attribute_id:to_id()
 
-  local attribute = Attributes.find(attr_id)
+  local attribute = Attributes.find(attribute_id)
   duration = Bolt:interpret_ban_time(duration)
   value = tonumber(value)
 
@@ -50,6 +50,6 @@ function COMMAND:on_run(player, targets, attr_id, value, duration)
       time = Flux.Lang:nice_time(duration)
     })
   else
-    player:notify('error.attribute_not_valid', { attribute = attr_id })
+    player:notify('error.attribute_not_valid', { attribute = attribute_id })
   end
 end

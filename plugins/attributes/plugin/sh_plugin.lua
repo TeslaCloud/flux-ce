@@ -38,7 +38,7 @@ function AttributesPlugin:RegisterConditions()
       parent:create_selector(data.name, 'condition.attribute.message1', 'condition.attributes', Attributes.get_stored(),
       function(selector, value)
         selector:add_choice(t(value.name), function()
-          panel.data.attribute = value.attr_id
+          panel.data.attribute = value.attribute_id
 
           panel.update()
 

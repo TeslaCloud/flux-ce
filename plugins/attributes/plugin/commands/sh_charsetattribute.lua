@@ -1,4 +1,4 @@
-﻿COMMAND.name = 'CharSetAttribute'
+COMMAND.name = 'CharSetAttribute'
 COMMAND.description = 'command.charsetattribute.description'
 COMMAND.syntax = 'command.charsetattribute.syntax'
 COMMAND.permission = 'moderator'
@@ -11,10 +11,10 @@ function COMMAND:get_description()
   return t(self.description, { attributes = table.concat(Attributes.get_id_list(), ', ') })
 end
 
-function COMMAND:on_run(player, targets, attr_id, value)
-  attr_id = attr_id:to_id()
+function COMMAND:on_run(player, targets, attribute_id, value)
+  attribute_id = attribute_id:to_id()
 
-  local attribute = Attributes.find(attr_id)
+  local attribute = Attributes.find(attribute_id)
   value = tonumber(value)
 
   if !value then
@@ -29,7 +29,7 @@ function COMMAND:on_run(player, targets, attr_id, value)
         attribute = attribute.name,
         value = value
       })
-      v:set_attribute(attr_id, value)
+      v:set_attribute(attribute_id, value)
     end
 
     self:notify_staff('command.charsetattribute.message', {
@@ -39,6 +39,6 @@ function COMMAND:on_run(player, targets, attr_id, value)
       value = value
     })
   else
-    player:notify('error.attribute_not_valid', { attribute = attr_id })
+    player:notify('error.attribute_not_valid', { attribute = attribute_id })
   end
 end
