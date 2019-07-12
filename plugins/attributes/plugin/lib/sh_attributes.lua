@@ -140,7 +140,7 @@ do
           progress = 0
         end
       elseif progress < 0 then
-        progress = total_progress + progress
+        progress = attribute_table:get_total_progress(level - 1) + progress
 
         self:decrease_attribute(attribute_id)
       end
