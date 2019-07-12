@@ -8,7 +8,7 @@ COMMAND.player_arg = 1
 COMMAND.aliases = { 'attboost', 'attboost', 'attributeboost', 'attributeboost', 'charattboost' }
 
 function COMMAND:get_description()
-  return t(self.description, { attributes = table.concat(Attributes.get_id_list(), ', ') })
+  return t(self.description, { attributes = table.concat(table.get_keys(Attributes.get_stored()), ', ') })
 end
 
 function COMMAND:on_run(player, targets, attribute_id, value, duration)
