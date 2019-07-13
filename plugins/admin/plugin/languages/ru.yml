@@ -121,6 +121,7 @@ ru:
       level_design: Дизайн уровней
       server_management: Управление сервером
       player_management: Управление игроками
+      configuration: Конфигурация
       compatibility: Совместимость
   role:
     user: Ранг, выдаваемый всем игрокам при заходе на сервер.

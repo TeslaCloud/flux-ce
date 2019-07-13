@@ -90,6 +90,7 @@ function Bolt:RegisterPermissions()
   Bolt:register_permission('context_menu', 'Context Menu', 'Grants access to the context menu.', 'permission.categories.general', 'assistant')
 
   Bolt:register_permission('manage_permissions', 'Permission editor', 'Grants access to permission editor.', 'permission.categories.player_management', 'administrator')
+  Bolt:register_permission('manage_configuration', 'Configuration', 'Grants access to configuration.', 'permission.categories.configuration', 'administrator')
 
   Bolt:register_permission('staff', 'Assistant access', 'General access for assistants.', 'permission.categories.compatibility', 'assistant')
   Bolt:register_permission('moderate', 'Admin access', 'General access for admins. Other addons will identify player as admin.', 'permission.categories.compatibility', 'moderator')
