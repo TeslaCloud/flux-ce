@@ -121,6 +121,7 @@ en:
       level_design: Level design
       server_management: Server management
       player_management: Player management
+      configuration: Configuration
       compatibility: Compatibility
   role:
     user: The base rank that is automatically given to the player.
