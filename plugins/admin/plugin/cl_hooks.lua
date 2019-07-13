@@ -14,7 +14,7 @@ end
 
 function Bolt:AddAdminMenuItems(panel, sidebar)
   panel:add_panel('admin_player_management', t'ui.admin.player_management', 'manage_permissions')
-  panel:add_panel('admin_config_editor', t'ui.admin.config_editor', 'manage_config')
+  panel:add_panel('admin_config_editor', t'ui.admin.config_editor', 'manage_configuration')
 end
 
 function Bolt:OnThemeLoaded(current_theme)
