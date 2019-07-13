@@ -15,7 +15,7 @@ function Bolt:delete_temp_permission(player, perm_id)
 end
 
 Cable.receive('fl_bolt_set_role', function(player, target, role_id)
-  if !player:can("manage_permissions") then return end
+  if !player:can('manage_permissions') then return end
   target:SetUserGroup(role_id)
 
   self:notify_staff('setgroup.message', {
@@ -26,17 +26,17 @@ Cable.receive('fl_bolt_set_role', function(player, target, role_id)
 end)
 
 Cable.receive('fl_bolt_set_permission', function(player, target, perm_id, value)
-  if !player:can("manage_permissions") then return end
+  if !player:can('manage_permissions') then return end
   target:set_permission(perm_id, value)
 end)
 
 Cable.receive('fl_temp_permission', function(player, target, perm_id, value, duration)
-  if !player:can("manage_permissions") then return end
+  if !player:can('manage_permissions') then return end
   target:set_temp_permission(perm_id, value, duration)
 end)
 
 Cable.receive('fl_config_change', function(player, key, value)
-  if !player:can("manage_configuration") then return end
+  if !player:can('manage_configuration') then return end
   local config_table = Config.find(key)
 
   Config.set(key, value)
