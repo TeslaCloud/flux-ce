@@ -105,11 +105,13 @@ function PANEL:set_config(key, config_table)
     local timer_id = 'fl_config_set_'..key
 
     timer.create(timer_id, 0.5, 0, function()
-      local value = math.round(self.slider:GetValue(), config_table.decimals)
+      if IsValid(self) and IsValid(self.slider) and !self.slider:IsEditing() then
+        local value = math.round(self.slider:GetValue(), config_table.decimals)
 
-      if IsValid(self) and IsValid(self.slider) and !self.slider:IsEditing() and value != Config.get(key) then
-        Cable.send('fl_config_change', key, value)
-        timer.pause(timer_id)
+        if value != Config.get(key) then
+          Cable.send('fl_config_change', key, value)
+          timer.pause(timer_id)
+        end
       end
     end)
 
