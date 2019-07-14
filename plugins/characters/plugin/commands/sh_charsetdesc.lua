@@ -14,7 +14,7 @@ function COMMAND:on_run(player, targets, ...)
   Characters.set_desc(target, new_desc)
   target:notify('notification.desc_changed', { desc = new_desc })
 
-  self:notify_staff('command.charsetname.message', {
+  self:notify_staff('command.charsetdesc.message', {
     player = get_player_name(player),
     target = util.player_list_to_string({ target }),
     desc = new_desc
