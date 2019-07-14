@@ -42,13 +42,19 @@ end
 function PANEL:rebuild()
   self.list:Clear()
 
-  for k, v in pairs(PLAYER:get_all_characters()) do
+  local characters = PLAYER:get_all_characters()
+
+  for k, v in pairs(characters) do
     self.chars[k] = vgui.Create('fl_character_panel', self)
     self.chars[k]:SetSize(self.list:GetWide() * 0.25, self.list:GetTall())
     self.chars[k]:set_character(v)
     self.chars[k]:SetParent(self)
 
     self.list:AddPanel(self.chars[k])
+  end
+
+  if #characters == 0 then
+    self.back:DoClick()
   end
 end
 
