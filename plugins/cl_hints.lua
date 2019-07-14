@@ -25,14 +25,14 @@ function Hints:display_random()
   if hint.callback and hint.callback() != true then return end
   if hint.play_sound then surface.PlaySound('hl1/fvox/blip.wav') end
 
-  Flux.Notification:add(hint.text, 15, hint.color)
+  Flux.Notification:add(t(hint.text), 15, hint.color)
 end
 
 do
-  Hints:add('forums', t'hint.forums')
-  Hints:add('hints', t'hint.hints')
-  Hints:add('tab', t'hint.tab')
-  Hints:add('inventory', t'hint.inventory')
-  Hints:add('commands', t'hint.commands')
-  Hints:add('bugs', t'hint.bugs')
+  Hints:add('forums', 'hint.forums')
+  Hints:add('hints', 'hint.hints')
+  Hints:add('tab', 'hint.tab')
+  Hints:add('inventory', 'hint.inventory')
+  Hints:add('commands', 'hint.commands')
+  Hints:add('bugs', 'hint.bugs')
 end
