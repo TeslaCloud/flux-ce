@@ -18,7 +18,7 @@ Cable.receive('fl_bolt_set_role', function(player, target, role_id)
   if !player:can('manage_permissions') then return end
   target:SetUserGroup(role_id)
 
-  self:notify_staff('setgroup.message', {
+  Command:notify_staff('setgroup.message', {
     player = get_player_name(player),
     target = target:steam_name(true),
     group = role_id
