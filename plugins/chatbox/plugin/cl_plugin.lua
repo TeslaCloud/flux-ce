@@ -60,14 +60,16 @@ function Chatbox.compile(msg_table)
 
           cur_x = cur_x + w
 
+          if total_height < h then
+            total_height = h + Config.get('message_margin')
+          end
+
           if line_count > 1 and k2 != line_count then
             cur_y = cur_y + h + Config.get('message_margin')
 
             total_height = total_height + h + Config.get('message_margin')
 
             cur_x = 0
-          elseif total_height < h then
-            total_height = h + Config.get('message_margin')
           end
         end
       elseif isnumber(v) then
