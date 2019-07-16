@@ -295,15 +295,15 @@ function THEME:PaintPermissionButton(perm_panel, btn, w, h)
 
   if perm_type == PERM_NO then
     color = Color(120, 120, 120)
-    title = t'ui.perm.not_set'
+    title = t'ui.permission.not_set'
   elseif perm_type == PERM_ALLOW then
     color = Color(100, 220, 100)
-    title = t'ui.perm.allow'
+    title = t'ui.permission.allow'
   elseif perm_type == PERM_NEVER then
     color = Color(220, 100, 100)
-    title = t'ui.perm.never'
+    title = t'ui.permission.never'
   else
-    title = t'ui.perm.error'
+    title = t'ui.permission.error'
   end
 
   local text_color = color:darken(75)
