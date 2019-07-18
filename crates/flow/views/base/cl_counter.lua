@@ -4,6 +4,7 @@ PANEL.max = 0
 PANEL.min = 100
 PANEL.font = 'flRoboto'
 PANEL.color = Color('white')
+PANEL.title = ''
 
 function PANEL:Init()
   local fa_icon_size = math.scale(16)
@@ -34,20 +35,26 @@ end
 
 function PANEL:PerformLayout(w, h)
   self.label:SizeToContents()
-  self.label:SetPos(w * 0.5 - self.label:GetWide() * 0.5, 2)
+  self.label:SetPos(w * 0.5 - self.label:GetWide() * 0.5, math.scale(4))
 
-  self.inc:SetPos(2, self.label:GetTall() + 2)
-  self.inc:SetSize(w - 4, h * 0.25 - 2)
+  local button_height = (h - self.label:GetTall()) * 0.5
+  local offset = self.label:GetValue() != '' and self.label:GetTall() or 0
 
-  self.dec:SetPos(2, h * 0.75 + 2)
-  self.dec:SetSize(w - 4, h * 0.25 - 2)
+  self.inc:SetSize(w, button_height)
+  self.inc:SetPos(w * 0.5 - self.inc:GetWide() * 0.5, offset + math.scale(2))
+  self.inc:set_icon_size(button_height * 0.75)
+
+  self.dec:SetSize(w, button_height)
+  self.dec:SetPos(w * 0.5 - self.dec:GetWide() * 0.5, h - button_height)
+  self.dec:set_icon_size(button_height * 0.75)
 
   self:check_buttons()
 end
 
 function PANEL:Paint(w, h)
   local x, y = util.text_size(self.value, self.font)
-  draw.SimpleText(self.value, self.font, w * 0.5 - x * 0.5, h * 0.66 - y * 0.5, self.color)
+  local offset = self.label:GetValue() != '' and self.label:GetTall() or 0
+  draw.SimpleText(self.value, self.font, w * 0.5 - x * 0.5, h * 0.5 - y * 0.5 + offset * 0.5, self.color)
 end
 
 function PANEL:set_text(text)
@@ -93,18 +100,24 @@ function PANEL:get_value()
   return self.value
 end
 
-function PANEL:increase(button)
-  self.value = math.Clamp(self.value + 1, self.min, self.max)
+function PANEL:increase()
+  local old_value = self.value
+  local new_value = math.clamp(self.value + 1, self.min, self.max)
 
-  self:on_click(self.value)
-  self:check_buttons()
+  if self:on_click(new_value, old_value) != false then
+    self.value = new_value
+    self:check_buttons()
+  end
 end
 
-function PANEL:decrease(button)
-  self.value = math.Clamp(self.value - 1, self.min, self.max)
+function PANEL:decrease()
+  local old_value = self.value
+  local new_value = math.clamp(self.value - 1, self.min, self.max)
 
-  self:on_click(self.value)
-  self:check_buttons()
+  if self:on_click(new_value, old_value) != false then
+    self.value = new_value
+    self:check_buttons()
+  end
 end
 
 function PANEL:check_buttons()
