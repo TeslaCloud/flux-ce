@@ -1,4 +1,4 @@
-local PANEL = {}
+﻿local PANEL = {}
 PANEL.id = 'base'
 PANEL.text = 'Click sidebar buttons to open character creation menus.'
 
@@ -189,7 +189,12 @@ function PANEL:rebuild_models()
     self:GetParent().char_data.skin = 0
   end
 
-  self.model:SetModel(self.models_list.model or '')
+  local model = self.models_list.model
+
+  if model then
+    self.model:SetModel(model)
+    self.model:GetEntity():SetSequence(self.model:GetEntity():get_idle_anim())
+  end
 
   for k, v in ipairs(models) do
     if i >= 7 then
@@ -251,16 +256,6 @@ function PANEL:on_open(parent)
   self.desc_entry:SetText(parent.char_data.description or '')
   self.models_list.model = parent.char_data.model
 
-  local skin = parent.char_data.skin
-
-  if skin then
-    self.skin:set_value(skin + 1)
-  end
-
-  if IsValid(self.model.Entity) then
-    self.model.Entity:SetSkin(skin)
-  end
-
   if parent.char_data.gender == 'female' then
     self.gender_female:set_active(true)
     self.gender_female:set_text_color(Color('red'):lighten(40))
@@ -271,6 +266,18 @@ function PANEL:on_open(parent)
     self.gender_male:set_text_color(Color('blue'):lighten(40))
 
     self:rebuild_models()
+  end
+
+  local skin = parent.char_data.skin
+
+  if IsValid(self.model.Entity) then
+    self.model.Entity:SetSkin(skin)
+
+    if skin then
+      self.skin:SetVisible(true)
+      self.skin:set_max(self.model.Entity:SkinCount())
+      self.skin:set_value(skin + 1)
+    end
   end
 end
 
