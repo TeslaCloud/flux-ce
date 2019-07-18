@@ -1,4 +1,4 @@
-﻿local PANEL = {}
+local PANEL = {}
 PANEL.id = 'base'
 PANEL.text = 'Click sidebar buttons to open character creation menus.'
 
@@ -156,7 +156,7 @@ function PANEL:Init()
   self.skin:SetSize(32, 64)
   self.skin:SetPos(scrw * 0.25 + 48, 48)
   self.skin:set_text(t'ui.char_create.skin')
-  self.skin:set_font(Theme.get_font('main_menu_small'))
+  self.skin:set_font(Theme.get_font('tooltip_small'))
   self.skin:set_value(1)
   self.skin:SetVisible(false)
   self.skin:set_min(1)
