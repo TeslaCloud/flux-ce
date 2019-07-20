@@ -38,6 +38,8 @@ en:
       max_desc_len:
         name: Maximum Character Description Length
         desc: "The maximum length of the character's physical description."
+  error:
+    invalid_gender: "Invalid gender."
   notification:
     name_changed: "Your character's name was changed to {name}."
     model_changed: "Your character's model was changed to {model}."
