@@ -204,6 +204,8 @@ Cable.receive('fl_item_move', function(player, instance_ids, inv_type, x, y)
 end)
 
 Cable.receive('fl_character_desc_change', function(player, text)
-  Characters.set_desc(player, text)
-  player:notify('notification.char_desc_changed')
+  if text:len() >= Config.get('character_min_desc_len') and text:len() <= Config.get('character_max_desc_len') then
+    Characters.set_desc(player, text)
+    player:notify('notification.char_desc_changed')
+  end
 end)
