@@ -13,7 +13,7 @@ function COMMAND:on_run(player, targets, model)
     Characters.set_model(v, model)
   end
 
-  self:notify_staff('command.command.charsetmodel.message', {
+  self:notify_staff('command.charsetmodel.message', {
     player = get_player_name(player),
     target = util.player_list_to_string(targets),
     model = model
