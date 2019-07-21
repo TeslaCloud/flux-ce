@@ -119,7 +119,7 @@ function Items:PlayerCanUseItem(player, item_table, action, ...)
     local player_pos = player:EyePos()
     local entity_pos = item_entity:GetPos()
 
-    if player_pos:Distance(entity_pos) > 70 then
+    if player_pos:Distance(entity_pos) > 100 then
       return false
     end
 
