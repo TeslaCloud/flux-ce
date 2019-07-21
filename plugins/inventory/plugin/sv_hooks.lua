@@ -165,7 +165,7 @@ function Inventory:PlayerThrewGrenade(player, entity)
   for k, v in pairs(items) do
     local item_table = Item.find_instance_by_id(v)
 
-    if item_table.class_name == 'ItemThrowable' and item_table:is_equipped() then
+    if item_table:is('throwable') and item_table:is_equipped() then
       player:take_item_by_id(v)
     end
   end

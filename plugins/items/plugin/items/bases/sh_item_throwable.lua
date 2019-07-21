@@ -34,11 +34,11 @@ function ItemThrowable:post_unequipped(player)
 
   if IsValid(weapon) then
     player:StripWeapon(self.weapon_class)
-
-    if player:GetAmmoCount(self.thrown_ammo_class) == 0 then
-      player:take_item_by_id(self.instance_id)
-    end
   else
     Flux.dev_print('Invalid weapon class: '..self.weapon_class)
+  end
+
+  if player:GetAmmoCount(self.thrown_ammo_class) == 0 then
+    player:take_item_by_id(self.instance_id)
   end
 end
