@@ -8,7 +8,7 @@ function PLUGIN:PostDrawTranslucentRenderables(depth, skybox)
       local title = v:get_nv('fl_title_type')
       local title_data = Doors.title_types[title]
 
-      if !title or !title_data or !title_data.draw then
+      if !title or title == '' or !title_data or !title_data.draw then
         continue
       end
 
