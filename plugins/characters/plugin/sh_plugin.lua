@@ -24,11 +24,9 @@ function Characters:RegisterConditions()
     set_parameters = function(id, data, panel, menu, parent)
       parent:create_selector(data.name, 'condition.character.message', 'condition.characters', player.all(),
       function(selector, player)
-        local character = player:get_character()
-
-        if character then
+        if player:is_character_loaded() then
           selector:add_choice(player:name(), function()
-            panel.data.character_id = character.character_id
+            panel.data.character_id = player:get_character_id()
 
             panel.update()
           end)
