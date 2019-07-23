@@ -34,6 +34,6 @@ function COMMAND:on_run(player, targets, faction_id, strict)
       faction = whitelist.name
     })
   else
-    player:notify('error.invalid_faction', { faction = faction_id })
+    player:notify('error.faction.invalid', { faction = faction_id })
   end
 end

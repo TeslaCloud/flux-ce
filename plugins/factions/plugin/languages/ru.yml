@@ -36,7 +36,9 @@ ru:
     factions: Фракции
     ranks: Ранги
   error:
-    invalid_faction: "'{faction}' не является фракцией!"
+    faction:
+      invalid: "'{faction}' не является фракцией!"
+      not_selected: Вы не выбрали фракцию.
   notification:
     demote_rank: Вы были понижены до ранга {rank}.
     promote_rank: Вы были повышены до ранга {rank}.

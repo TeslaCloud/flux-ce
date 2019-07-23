@@ -32,6 +32,6 @@ function COMMAND:on_run(player, targets, name, strict)
       v:notify('notification.faction_changed', { faction = faction_table.name }, faction_table.color)
     end
   else
-    player:notify('error.invalid_faction', { faction = name })
+    player:notify('error.faction.invalid', { faction = name })
   end
 end

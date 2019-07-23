@@ -36,7 +36,9 @@ en:
     factions: Factions
     ranks: Ranks
   error:
-    invalid_faction: "'{faction}' is not a valid faction!"
+    faction:
+      invalid: "'{faction}' is not a valid faction!"
+      not_selected: You have not selected faction.
   notification:
     demote_rank: You have been demoted to rank {rank}.
     promote_rank: You have been promoted to rank {rank}.
