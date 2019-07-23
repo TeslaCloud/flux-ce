@@ -43,3 +43,9 @@ end
 function Factions:CharacterGenderChanged(player, char, new_gender, old_gender)
   Characters.set_model(player, player:get_faction():get_random_model(player))
 end
+
+function Factions:PlayerCreateCharacter(player, data)
+  if !data.faction then
+    return CHAR_ERR_FACTION
+  end
+end

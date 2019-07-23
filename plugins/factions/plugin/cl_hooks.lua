@@ -143,3 +143,9 @@ function Factions:PreRebuildScoreboard(panel, w, h)
 
   return true
 end
+
+function Factions:GetCharCreationErrorText(success, status)
+  if status == CHAR_ERR_FACTION then
+    return t'error.faction.not_selected'
+  end
+end
