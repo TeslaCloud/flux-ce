@@ -105,7 +105,7 @@ do
     local whitelists = self:get_whitelists()
 
     if CLIENT then
-      return table.has_value(whitelists, name)
+      return table.has_value(whitelists, faction_id)
     end
 
     for k, v in pairs(whitelists) do
