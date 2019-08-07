@@ -16,6 +16,7 @@
       <div class="plugin__card">
         <div class="plugin__title"><?= v.name ?></div>
         <div class="plugin__author"><?= v.author ?></div>
+        <div class="plugin__description"><?= v.description ?></div>
       </div>
     <? end ?>
   <? end ?>

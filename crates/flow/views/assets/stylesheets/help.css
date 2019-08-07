@@ -30,6 +30,11 @@ body::-webkit-scrollbar {
   color: #ffffffaa;
 }
 
+.plugin__description {
+  color: #ffffffff;
+  font-size: 16px;
+}
+
 .credits__entry {
   margin: 4px;
   padding: 8px;
