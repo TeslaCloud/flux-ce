@@ -1,4 +1,4 @@
-ActiveRecord.define_model('ammo', function(t)
+ActiveRecord.define_model('ammunitions', function(t)
   t:string 'type'
   t:integer 'amount'
   t:integer 'character_id'

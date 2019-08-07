@@ -1,7 +1,7 @@
 class 'Character' extends 'ActiveRecord::Base'
 
 Character:belongs_to 'User'
-Character:has_one 'ammo'
+Character:has_one 'ammunition'
 
 Character:validates('user_id', { presence = true })
 Character:validates('steam_id', { presence = true })

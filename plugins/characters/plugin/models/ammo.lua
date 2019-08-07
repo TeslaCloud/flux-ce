@@ -1,3 +1,3 @@
-class 'Ammo' extends 'ActiveRecord::Base'
+class 'Ammunition' extends 'ActiveRecord::Base'
 
-Ammo:belongs_to 'Character'
+Ammunition:belongs_to 'Character'
