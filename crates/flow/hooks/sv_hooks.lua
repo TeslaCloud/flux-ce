@@ -57,6 +57,7 @@ function GM:PlayerSpawn(player)
   player:SetNoDraw(false)
   player:UnLock()
   player:SetNotSolid(false)
+  player:SetCanZoom(false)
 
   hook.run('PostPlayerSpawn', player)
 
