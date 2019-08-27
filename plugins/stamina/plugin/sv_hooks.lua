@@ -26,7 +26,7 @@ function Stamina:PostPlayerSpawn(player)
 end
 
 function Stamina:PlayerThink(player, cur_time)
-  if player:running() and player:OnGround() then
+  if player:running() and (player:OnGround() or player:WaterLevel() >= 1) then -- We're doing 1 (Slightly Submerged) to prevent the player from jumping on the surface of the water to avoid stamina loss.
     if !player.was_running then
       self:start_running(player)
       player.was_running = true
