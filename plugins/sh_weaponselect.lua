@@ -136,7 +136,7 @@ do
   function PLUGIN:PlayerBindPress(player, bind, pressed)
     local weapon = player:GetActiveWeapon()
 
-    if !player:InVehicle() then
+    if !player:InVehicle() and !player:KeyDown(IN_ATTACK) then
       if hook.run('ShouldOpenWepselect', player) != false then
         local cur_time = CurTime()
         local weapon_count = table.Count(player:GetWeapons())
