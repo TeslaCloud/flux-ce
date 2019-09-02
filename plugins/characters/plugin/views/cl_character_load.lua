@@ -10,7 +10,7 @@ function PANEL:Init()
   self.button_close:safe_remove()
 
   self.list = vgui.Create('fl_horizontalbar', self)
-  self.list:SetSize(scrw * 0.5, scrh * 0.5)
+  self.list:SetSize(scrw * 1, scrh * 0.5)
   self.list:SetPos(scrw * 0.5 - self.list:GetWide() * 0.5, scrh * 0.5 - self.list:GetTall() * 0.5)
   self.list:set_centered(true)
 
@@ -46,7 +46,7 @@ function PANEL:rebuild()
 
   for k, v in pairs(characters) do
     self.chars[k] = vgui.Create('fl_character_panel', self)
-    self.chars[k]:SetSize(self.list:GetWide() * 0.25, self.list:GetTall())
+    self.chars[k]:SetSize(self.list:GetWide() * 0.125, self.list:GetTall())
     self.chars[k]:set_character(v)
     self.chars[k]:SetParent(self)
 
