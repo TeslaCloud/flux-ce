@@ -20,6 +20,7 @@ function PANEL:Init()
   local fa_icon_size = math.scale(24)
   local margin = math.scale(20)
   local scrw, scrh = ScrW(), ScrH()
+  local faction_table = Factions.find_by_id(self:GetParent().char_data.faction)
 
   self.gender_label = vgui.Create('DLabel', self)
   self.gender_label:SetText(t'ui.char_create.gender')
@@ -51,7 +52,7 @@ function PANEL:Init()
     end
   end
 
-  self.gender_female = vgui.Create('fl_button', self)
+  self.gender_female = vgui.Create('fl_button', self) 
   self.gender_female:SetPos(scrw * 0.125 + self.gender_male:GetWide() + margin, math.scale(36) + 4)
   self.gender_female:SetSize(fa_icon_size, fa_icon_size)
   self.gender_female:SetDrawBackground(false)
@@ -122,6 +123,12 @@ function PANEL:Init()
   self.models_list:SetSize(scrw * 0.25, 136)
   self.models_list:SetVisible(false)
   self.models_list.Paint = function() end
+
+  if (!faction_table.has_gender) then
+    self.gender_label:SetVisible(false)
+    self.gender_female:SetVisible(false)
+    self.gender_male:SetVisible(false)
+  end
 
   self.model = vgui.Create('DModelPanel', self)
   self.model:SetPos(scrw * 0.25 + 32, 32)
