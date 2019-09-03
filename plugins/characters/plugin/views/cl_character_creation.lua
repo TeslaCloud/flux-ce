@@ -328,7 +328,6 @@ function PANEL:open_panel(id)
   if self.panel.on_open then
     self.panel:on_open(self)
   end
-
 end
 
 function PANEL:add_stage(id, index)

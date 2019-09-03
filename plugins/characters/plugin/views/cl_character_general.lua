@@ -124,18 +124,18 @@ function PANEL:Init()
   self.models_list:SetVisible(false)
   self.models_list.Paint = function() end
 
-  if (!faction_table.has_gender) then
+  if !faction_table.has_gender then
     self.gender_label:SetVisible(false)
     self.gender_female:SetVisible(false)
     self.gender_male:SetVisible(false)
   end
 
-  if (!faction_table.has_description) then
+  if !faction_table.has_description then
     self.desc_label:SetVisible(false)
     self.desc_entry:SetVisible(false)
   end
 
-  if (!faction_table.has_name) then
+  if !faction_table.has_name then
     self.name_label:SetVisible(false)
     self.name_entry:SetVisible(false)
   end
