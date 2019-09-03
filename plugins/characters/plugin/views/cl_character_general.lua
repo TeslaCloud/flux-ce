@@ -52,7 +52,7 @@ function PANEL:Init()
     end
   end
 
-  self.gender_female = vgui.Create('fl_button', self) 
+  self.gender_female = vgui.Create('fl_button', self)
   self.gender_female:SetPos(scrw * 0.125 + self.gender_male:GetWide() + margin, math.scale(36) + 4)
   self.gender_female:SetSize(fa_icon_size, fa_icon_size)
   self.gender_female:SetDrawBackground(false)
