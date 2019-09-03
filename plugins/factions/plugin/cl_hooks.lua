@@ -21,11 +21,6 @@ function Factions:CharPanelCreated(id, panel)
       panel.desc_entry:SetVisible(false)
     end
 
-    if faction_table and !faction_table.has_gender then
-      panel.gender_label:SetVisible(false)
-      panel.gender_male:SetVisible(false)
-      panel.gender_female:SetVisible(false)
-    end
   end
 end
 
