@@ -329,7 +329,6 @@ function PANEL:open_panel(id)
     self.panel:on_open(self)
   end
 
-  hook.run('CharPanelCreated', id, self.panel)
 end
 
 function PANEL:add_stage(id, index)

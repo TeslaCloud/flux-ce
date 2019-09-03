@@ -1,29 +1,3 @@
-function Factions:CharPanelCreated(id, panel)
-  if id == 'char_create.general' then
-    local faction_table
-    local char_data = panel:GetParent().char_data
-
-    if char_data and char_data.faction then
-      faction_table = Factions.find_by_id(char_data.faction)
-    end
-
-    if faction_table and !faction_table.has_name then
-      panel.name_label:SetVisible(false)
-      panel.name_entry:SetVisible(false)
-
-      if SCHEMA.get_random_name then
-        panel.name_random:SetVisible(false)
-      end
-    end
-
-    if faction_table and !faction_table.has_description then
-      panel.desc_label:SetVisible(false)
-      panel.desc_entry:SetVisible(false)
-    end
-
-  end
-end
-
 function Factions:PreStageChange(id, panel)
   if id == 'char_create.general' then
     local gender = (panel.gender_female:is_active() and 'female') or (panel.gender_male:is_active() and 'male') or 'universal'
