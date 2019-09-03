@@ -130,6 +130,16 @@ function PANEL:Init()
     self.gender_male:SetVisible(false)
   end
 
+  if (!faction_table.has_description) then
+    self.desc_label:SetVisible(false)
+    self.desc_entry:SetVisible(false)
+  end
+
+  if (!faction_table.has_name) then
+    self.name_label:SetVisible(false)
+    self.name_entry:SetVisible(false)
+  end
+
   self.model = vgui.Create('DModelPanel', self)
   self.model:SetPos(scrw * 0.25 + 32, 32)
   self.model:SetSize(scrw * 0.25, scrh * 0.5 - 36)
