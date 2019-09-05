@@ -229,13 +229,13 @@ function PLUGIN:make_display(index, tab)
   local result = {}
 
   for i = -2, 2 do
-    local scale = 1 - math.abs(i * 0.25)
+    local scale = 1.1 - math.abs(i * 0.25)
 
     table.insert(result, {
       weapon = safe_index(client_weapons, index + i),
       scale = scale,
       x = ScrW() - 300,
-      y = ScrH() * 0.5 - 90 + offsety - 36 * scale * 0.5,
+      y = ScrH() * 0.5 - 90 + offsety - 36 * scale * 0.3,
       highlight = (i == 0)
     })
 
