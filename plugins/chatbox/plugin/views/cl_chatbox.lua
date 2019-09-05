@@ -31,8 +31,8 @@ function PANEL:Init()
 
   self.text_entry.OnValueChange = function(entry, value)
     local value_w, value_h = util.text_size(value, entry:GetFont())
-    local div = entry:GetWide() / value_w * 2
-    local offset = div >= 2 and 0 or div >= 1 and math.scale(25) or math.scale(50)
+    local div = math.round(entry:GetWide() / value_w * 2, 1)
+    local offset = div > 2 and 0 or div > 1 and math.scale(25) or math.scale(50)
 
     self:SetSize(Chatbox.width, Chatbox.height + offset)
     entry:SetTall(Theme.get_option('chatbox_text_entry_height', 40) + offset)
