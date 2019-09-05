@@ -1,7 +1,7 @@
 en:
   command:
     ban:
-      description: Prevents a player from joining the server.
+      description: Ban this sucker!
       syntax: <target> <duration> [reason]
       message: "{player} has banned {target} for {time}. ({reason})."
     freezebots:
