@@ -73,9 +73,13 @@ en:
       description: "Unfreezes a player."
       syntax: "<string player>"
       message: "{player} has unfroze {target}."
+    respawnstay:
+      description: "Respawn a dead player in their death location."
+      syntax: "<string player>"
+      message: "{target} was respawned by {player} in their previous location."
     respawn:
       description: "Respawn a dead player."
-      syntax: "<string player> [tp / stay]"
+      syntax: "<string player>"
       message: "{target} was respawned by {player}."
     godmode:
       description: "Sets god mode to player."

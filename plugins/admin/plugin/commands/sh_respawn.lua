@@ -16,7 +16,6 @@ function COMMAND:on_run(player, targets, spawn_position)
     local positions = { ['stay'] = v.last_pos, ['tp'] = player:GetEyeTraceNoCursor().HitPos }
 
     v:Spawn()
-    v:teleport(positions[spawn_position] or positions['stay'])
     v:notify('notification.respawn', {
       player = player
     })
