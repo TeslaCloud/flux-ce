@@ -5,7 +5,7 @@ en:
       desc: A regular cardboard box. No, you can't hide inside it.
     cupboard:
       title: Cupboard
-      desc: "An old wooden cupboard"
+      desc: "An old wooden cupboard."
     drawer:
       title: Drawer
       desc: "A scratched wooden drawer."

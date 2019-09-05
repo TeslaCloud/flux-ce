@@ -1,9 +1,9 @@
 en:
   command:
     ban:
-      description: Ban this sucker!
+      description: Prevents a player from joining the server.
       syntax: <target> <duration> [reason]
-      message: "{player} has banned {target} for {time}. ({reason})"
+      message: "{player} has banned {target} for {time}. ({reason})."
     freezebots:
       description: Freezes all of the bots.
       message: "{player} has frozen all bots."
@@ -92,14 +92,14 @@ en:
     group_not_valid: "'{group}' is not a valid user group!"
     not_banned: Steam ID '{steam_id}' is not banned!
     no_permission: You have no permissions to do that.
-    respawn: "You can't respawn an alive player"
+    respawn: "You can't respawn an alive player."
   notification:
     demote: You have been demoted from {group} to user.
     fullbright:
       enabled: Fullbright mode enabled.
       disabled: Fullbright mode disabled.
     return: You have been returned to your previous position.
-    setgroup: Your usergroup was set to {group}
+    setgroup: Your usergroup was set to {group}.
     tp: You have been teleported.
     vanish:
       enabled: You are now vanished.
