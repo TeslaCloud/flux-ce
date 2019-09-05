@@ -92,7 +92,12 @@ function PANEL:Init()
   end
 
   self.text_entry.Paint = function(entry, w, h)
-    draw.rounded_box(8, 0, 0, w, h, Theme.get_color('chat_text_entry_background'))
+    local offset = math.scale(4)
+
+    DisableClipping(true)
+      draw.rounded_box(offset * 2, 0, -offset, w, h + offset, Theme.get_color('chat_text_entry_background'))
+    DisableClipping(true)
+
     entry:DrawTextEntryText(Theme.get_color('text'), Theme.get_color('accent'), Theme.get_color('text'))
   end
 
