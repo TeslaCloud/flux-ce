@@ -1,4 +1,4 @@
-COMMAND.name = 'Setfaction'
+COMMAND.name = 'SetFaction'
 COMMAND.description = 'command.setfaction.description'
 COMMAND.syntax = 'command.setfaction.syntax'
 COMMAND.permission = 'assistant'
