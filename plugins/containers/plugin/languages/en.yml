@@ -5,67 +5,67 @@ en:
       desc: A regular cardboard box. No, you can't hide inside it.
     cupboard:
       title: Cupboard
-      desc: ""
+      desc: "An old wooden cupboard"
     drawer:
       title: Drawer
-      desc: ""
+      desc: "A scratched wooden drawer."
     small_drawer:
       title: Small Drawer
-      desc: ""
+      desc: "A small scratched wooden drawer."
     tall_drawer:
       title: Tall Drawer
-      desc: ""
+      desc: "A large dresser used for holding clothing."
     dresser:
       title: Dresser
-      desc: ""
+      desc: "A dresser used for holding clothing."
     fridge:
       title: Fridge
-      desc: ""
+      desc: "A refrigerator. It smells like anti-freeze."
     lockers:
       title: Locker
-      desc: ""
+      desc: "A rusted locker. It creaks when you open it."
     barrel:
       title: Barrel
-      desc: ""
+      desc: "A metal barrel. It stinks of chemicals."
     desk:
       title: Desk
-      desc: ""
+      desc: "A wooden desk."
     medium_box:
       title: Box
-      desc: ""
+      desc: "A flimsy cardboard box."
     small_box:
       title: Small Box
-      desc: ""
+      desc: "A small cardboard box."
     trash_bin:
       title: Trash Can
-      desc: ""
+      desc: "A regular trash bin. Its bottom is coated in a layer of sticky manga pages."
     dumpster:
       title: Trash Dumpster
-      desc: ""
+      desc: "A large dumpster used to hold significant amounts of garbage. It smells awful."
     wooden_crate:
       title: Crate
-      desc: ""
+      desc: "A wooden crate."
     big_wooden_crate:
       title: Big Crate
-      desc: ""
+      desc: "A large wooden crate."
     file_cabinet:
       title: Filing Cabinet
-      desc: ""
+      desc: "A rusty filing cabinet."
     tall_file_cabinet:
       title: Tall Filing Cabinet
-      desc: ""
+      desc: "A large rusty filing cabinet."
     storage_closet:
       title: Closet
-      desc: ""
+      desc: "A closet used for holding clothes."
     large_fridge:
       title: Industrial Fridge
-      desc: ""
+      desc: "A large refrigerator. It looks old and overused."
     counter:
       title: Counter
-      desc: ""
+      desc: "A counter piece."
     metal_box:
       title: Metal Container
-      desc: ""
+      desc: "A small metal box. It appears to have rust around the edges."
     medium_wooden_crate:
       title: Wooden Crate
-      desc: ""
+      desc: "A moderately large wooden crate. It creaks when you move it."
