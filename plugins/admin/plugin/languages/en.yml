@@ -27,6 +27,10 @@ en:
       description: Demote a player to user.
       syntax: <target>
       message: "{player} has demoted {target} to user."
+    getinfo:
+      description: "Display a player's information into the chat."
+      syntax: <target>
+      message: "{target} | {char} | {steamID}"
     kick:
       description: Kicks player from the server.
       syntax: <target> [reason]
@@ -98,6 +102,7 @@ en:
     fullbright:
       enabled: Fullbright mode enabled.
       disabled: Fullbright mode disabled.
+    getinfo: "{character} | {player} | {steamID} | Health: {health}"
     return: You have been returned to your previous position.
     setgroup: Your usergroup was set to {group}
     tp: You have been teleported.
