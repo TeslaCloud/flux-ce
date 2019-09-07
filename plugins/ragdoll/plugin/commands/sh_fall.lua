@@ -6,7 +6,7 @@ COMMAND.aliases = { 'fallover', 'charfallover' }
 COMMAND.no_console = true
 
 function COMMAND:on_run(player, delay)
-  delay = math.clamp(tonumber(delay) or 0, 2, 60)
+  delay = math.clamp(tonumber(delay) or 0, 0, 60)
 
   if player:Alive() and !player:is_ragdolled() then
     player:set_ragdoll_state(RAGDOLL_FALLENOVER)
