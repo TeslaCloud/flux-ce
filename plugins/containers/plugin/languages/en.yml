@@ -5,31 +5,31 @@ en:
       desc: A regular cardboard box. No, you can't hide inside it.
     cupboard:
       title: Cupboard
-      desc: "An old wooden cupboard."
+      desc: "An old, battered and scratched wooden cupboard used to store various items."
     drawer:
       title: Drawer
       desc: "A scratched wooden drawer."
     small_drawer:
       title: Small Drawer
-      desc: "A small scratched wooden drawer."
+      desc: "A small drawer usually placed beside beds to store small sentimental items."
     tall_drawer:
       title: Tall Drawer
-      desc: "A large dresser used for holding clothing."
+      desc: "A tall wooden frame that holds many drawers in it."
     dresser:
       title: Dresser
-      desc: "A dresser used for holding clothing."
+      desc: "A large dressed that's chipped and seemingly older in age, used to usually store clothes."
     fridge:
       title: Fridge
-      desc: "A refrigerator. It smells like anti-freeze."
+      desc: "A smaller fridge used in apartments to mainly store small amounts of food."
     lockers:
       title: Locker
       desc: "A rusted locker. It creaks when you open it."
     barrel:
       title: Barrel
-      desc: "A metal barrel. It stinks of chemicals."
+      desc: "A round and tall metallic barrel that reeks of old chemicals."
     desk:
       title: Desk
-      desc: "A wooden desk."
+      desc: "A wide wooden desk with various drawers."
     medium_box:
       title: Box
       desc: "A flimsy cardboard box."
@@ -38,34 +38,49 @@ en:
       desc: "A small cardboard box."
     trash_bin:
       title: Trash Can
-      desc: "A regular trash bin. Its bottom is coated in a layer of sticky manga pages."
+      desc: "A small trash bin that contains various types of trash from many people."
     dumpster:
       title: Trash Dumpster
-      desc: "A large dumpster used to hold significant amounts of garbage. It smells awful."
+      desc: "A large dumpster used to hold significant amounts of garbage that reeks of various disgusting smells."
     wooden_crate:
       title: Crate
-      desc: "A wooden crate."
+      desc: "A simple wooden crate used to hold various objects."
     big_wooden_crate:
       title: Big Crate
-      desc: "A large wooden crate."
+      desc: "A larger wooden crate used for transportation of items."
     file_cabinet:
       title: Filing Cabinet
-      desc: "A rusty filing cabinet."
+      desc: "A rusty filing cabinet that consists of two large drawers."
     tall_file_cabinet:
       title: Tall Filing Cabinet
-      desc: "A large rusty filing cabinet."
+      desc: "A large rusty filing cabinet that consists of many drawers."
     storage_closet:
       title: Closet
-      desc: "A closet used for holding clothes."
+      desc: "A large metallic closet that is used to store not only clothes, but also any type of item that can fit in it."
     large_fridge:
       title: Industrial Fridge
-      desc: "A large refrigerator. It looks old and overused."
+      desc: "An Industrial-Grade fridge used to store many food items of various types."
     counter:
       title: Counter
-      desc: "A counter piece."
+      desc: "A large, metallic counter with a large place able to be utilized for storage."
     metal_box:
       title: Metal Container
       desc: "A small metal box. It appears to have rust around the edges."
     medium_wooden_crate:
       title: Wooden Crate
       desc: "A moderately large wooden crate. It creaks when you move it."
+    small_parts_bin:
+      title: Parts Bin
+      desc: "A smaller set of drawers that store small parts like screws and bolts. Storing big items in it isn't a possibility"
+    small_dresser_table:
+      title: Dresser Table
+      desc: "A table with a mirror attached to it, normally used to store valuables and makeup."
+    medium_water_barrel:
+      title: Water Barrel
+      desc: "A tall, plastic barrel with a plastic cover that enables it to float on the water."
+    medium_cash_reg:
+      title: Cash Register
+      desc: "A moderately sized cash register that is used to store money of various types."
+
+
+

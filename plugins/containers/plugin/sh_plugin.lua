@@ -68,7 +68,7 @@ Container:register_prop('models/props_c17/FurnitureDrawer003a.mdl', {
   name = 'container.tall_drawer.title',
   desc = 'container.tall_drawer.desc',
   w = 1,
-  h = 6,
+  h = 10,
   open_sound = 'physics/wood/wood_plank_impact_soft1.wav',
   close_sound = 'physics/wood/wood_box_impact_hard6.wav'
 })
@@ -259,4 +259,40 @@ Container:register_prop('models/Items/item_item_crate.mdl', {
   h = 4,
   open_sound = 'physics/wood/wood_box_impact_soft1.wav',
   close_sound = 'physics/wood/wood_box_impact_hard5.wav'
+})
+-----------------------------------------------------------------
+Container:register_prop('models/props_lab/partsbin01.mdl', {
+  name = 'container.small_parts_bin.title',
+  desc = 'container.small_parts_bin.desc',
+  w = 4,
+  h = 2,
+  open_sound = 'items/ammocrate_open.wav',
+  close_sound = 'items/ammocrate_close.wav'
+})
+
+Container:register_prop('models/props_interiors/Furniture_Vanity01a.mdl', {
+  name = 'container.small_dresser_table.title',
+  desc = 'container.small_dresser_table.desc',
+  w = 3,
+  h = 1,
+  open_sound = 'physics/wood/wood_box_impact_soft1.wav',
+  close_sound = 'physics/wood/wood_box_impact_hard5.wav'
+})
+
+Container:register_prop('models/props_borealis/bluebarrel001.mdl', {
+  name = 'container.medium_water_barrel.title',
+  desc = 'container.medium_water_barrel.desc',
+  w = 3,
+  h = 6,
+  open_sound = 'items/ammocrate_open.wav',
+  close_sound = 'items/ammocrate_close.wav'
+})
+
+Container:register_prop('models/props_c17/cashregister01a.mdl', {
+  name = 'container.medium_cash_reg.title',
+  desc = 'container.medium_cash_reg.desc',
+  w = 4,
+  h = 2,
+  open_sound = 'items/ammocrate_open.wav',
+  close_sound = 'items/ammocrate_close.wav'
 })
