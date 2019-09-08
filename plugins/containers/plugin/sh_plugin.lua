@@ -260,7 +260,6 @@ Container:register_prop('models/Items/item_item_crate.mdl', {
   open_sound = 'physics/wood/wood_box_impact_soft1.wav',
   close_sound = 'physics/wood/wood_box_impact_hard5.wav'
 })
------------------------------------------------------------------
 Container:register_prop('models/props_lab/partsbin01.mdl', {
   name = 'container.small_parts_bin.title',
   desc = 'container.small_parts_bin.desc',
