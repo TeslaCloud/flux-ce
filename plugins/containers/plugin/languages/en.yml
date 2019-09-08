@@ -5,28 +5,28 @@ en:
       desc: A regular cardboard box. No, you can't hide inside it.
     cupboard:
       title: Cupboard
-      desc: "An old, battered and scratched wooden cupboard used to store various items."
+      desc: "An old, battered wooden cupboard."
     drawer:
       title: Drawer
       desc: "A scratched wooden drawer."
     small_drawer:
       title: Small Drawer
-      desc: "A small drawer usually placed beside beds to store small sentimental items."
+      desc: "A small drawer usually placed beside beds."
     tall_drawer:
       title: Tall Drawer
-      desc: "A tall wooden frame that holds many drawers in it."
+      desc: "A tall drawer that holds small objects."
     dresser:
       title: Dresser
-      desc: "A large dressed that's chipped and seemingly older in age, used to usually store clothes."
+      desc: "A large dresser that's seemingly old in age, used to store clothes."
     fridge:
       title: Fridge
-      desc: "A smaller fridge used in apartments to mainly store small amounts of food."
+      desc: "A small fridge. It reeks of anti-freeze."
     lockers:
       title: Locker
       desc: "A rusted locker. It creaks when you open it."
     barrel:
       title: Barrel
-      desc: "A round and tall metallic barrel that reeks of old chemicals."
+      desc: "A tall metal barrel that reeks of old chemicals."
     desk:
       title: Desk
       desc: "A wide wooden desk with various drawers."
@@ -38,31 +38,31 @@ en:
       desc: "A small cardboard box."
     trash_bin:
       title: Trash Can
-      desc: "A small trash bin that contains various types of trash from many people."
+      desc: "A regular trash bin. Its bottom is coated in a layer of sticky manga pages."
     dumpster:
       title: Trash Dumpster
-      desc: "A large dumpster used to hold significant amounts of garbage that reeks of various disgusting smells."
+      desc: "A large dumpster used to hold significant amounts of garbage garbage. It reeks of a cocktail of disgusting smells."
     wooden_crate:
       title: Crate
-      desc: "A simple wooden crate used to hold various objects."
+      desc: "A wooden crate used to hold various objects."
     big_wooden_crate:
       title: Big Crate
-      desc: "A larger wooden crate used for transportation of items."
+      desc: "A large wooden crate used for transportation of items."
     file_cabinet:
       title: Filing Cabinet
       desc: "A rusty filing cabinet that consists of two large drawers."
     tall_file_cabinet:
       title: Tall Filing Cabinet
-      desc: "A large rusty filing cabinet that consists of many drawers."
+      desc: "A large rusty filing cabinet that consists of multiple drawers."
     storage_closet:
       title: Closet
-      desc: "A large metallic closet that is used to store not only clothes, but also any type of item that can fit in it."
+      desc: "A large metal closet used for storage."
     large_fridge:
       title: Industrial Fridge
-      desc: "An Industrial-Grade fridge used to store many food items of various types."
+      desc: "An industrial-grade fridge used to store food items of any kind."
     counter:
       title: Counter
-      desc: "A large, metallic counter with a large place able to be utilized for storage."
+      desc: "A large metal counter commonly used to store money."
     metal_box:
       title: Metal Container
       desc: "A small metal box. It appears to have rust around the edges."
@@ -71,16 +71,13 @@ en:
       desc: "A moderately large wooden crate. It creaks when you move it."
     small_parts_bin:
       title: Parts Bin
-      desc: "A smaller set of drawers that store small parts like screws and bolts. Storing big items in it isn't a possibility"
+      desc: "A small bin used to store small mechanical components."
     small_dresser_table:
       title: Dresser Table
-      desc: "A table with a mirror attached to it, normally used to store valuables and makeup."
+      desc: "A makeup table, it seems to be missing a mirror."
     medium_water_barrel:
       title: Water Barrel
-      desc: "A tall, plastic barrel with a plastic cover that enables it to float on the water."
+      desc: "A tall plastic barrel. It floats!"
     medium_cash_reg:
       title: Cash Register
-      desc: "A moderately sized cash register that is used to store money of various types."
-
-
-
+      desc: "A moderately sized cash register, it seems to be missing a lock."
