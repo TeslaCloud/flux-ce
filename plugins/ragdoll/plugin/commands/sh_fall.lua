@@ -8,6 +8,11 @@ COMMAND.no_console = true
 function COMMAND:on_run(player, delay)
   delay = math.clamp(tonumber(delay) or 0, 0, 60)
 
+  if delay > 0 and delay < 2 then
+    player:notify('error.cant_now')
+    return
+  end
+
   if player:Alive() and !player:is_ragdolled() then
     player:set_ragdoll_state(RAGDOLL_FALLENOVER)
 
