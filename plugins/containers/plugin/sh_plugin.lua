@@ -295,3 +295,4 @@ Container:register_prop('models/props_c17/cashregister01a.mdl', {
   open_sound = 'items/ammocrate_open.wav',
   close_sound = 'items/ammocrate_close.wav'
 })
+
