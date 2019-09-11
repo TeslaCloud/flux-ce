@@ -137,7 +137,7 @@ do
     local weapon = player:GetActiveWeapon()
 
     if !player:InVehicle() and !player:KeyDown(IN_ATTACK) then
-      if hook.run('ShouldOpenWepselect', player) != false then
+      if hook.run('ShouldOpenWepselect', player, bind, pressed) != false then
         local cur_time = CurTime()
         local weapon_count = table.Count(player:GetWeapons())
         local old_index = self.weapon_index
