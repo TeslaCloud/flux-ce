@@ -6,6 +6,10 @@ Flux.Lang.stored        = stored
 
 do
   local function _get_phrase(tabs, ref)
+    if !ref then
+      ref = stored['en']
+    end
+
     for k, v in ipairs(tabs) do
       local val = ref[v]
 
@@ -23,7 +27,7 @@ do
     args = istable(args) and args or { args }
 
     local tabs = phrase:split('.')
-    local phrase = _get_phrase(tabs, stored[force_lang or current_language]) or _get_phrase(tabs, stored['en']) or phrase
+    local phrase = _get_phrase(tabs, stored[force_lang or current_language]) or phrase
 
     for k, v in pairs(args) do
       phrase = string.gsub(phrase, '{'..k..'}', v)
