@@ -5,10 +5,57 @@ Flux is a WIP gamemode framework designed with performance and convenience in mi
 # Alpha release
 Current version of Flux is currently in active development as an open alpha. This means that you can install it and it will run, but there will almost inevitably be bugs and issues, as well as a lot of missing features. If you are not a developer, it is probably better for you to wait until Flux is in beta.
 
-# Installation
-If you want to just get Flux up and running, put [dependencies](https://github.com/TeslaCloud/flux-dependencies) in your server's root. After that simply download this repo, as well as the [reborn schema](https://github.com/TeslaCloud/reborn), and match the repo folders with your Garry's Mod dedicated server folders. You can also clone this repo directly and then install the server on top, so that you get an easy way to update without hassle.
+# Important
 
 **Flux is only guaranteed to work on dedicated servers (srcds). We do not support "listen" servers (launching from Garry's Mod client).**
+
+# Installation
+**Please read these instructions carefully. We cannot provide support if you disregard one or more steps in there instructions. Thank you!**
+
+### Prerequisites
+* SteamCMD
+* Git
+* Linux: Debian Stretch or newer recommended
+* Windows: Windows 10 / Windown Server 2016+ recommended
+* Windows: Microsoft Visual C++ 2015
+
+### General installation
+
+If you want to just get Flux up and running, clone the [dependencies repository](https://github.com/TeslaCloud/flux-dependencies). After that, simply clone repo inside of the `gamemodes` folder, as well as the [reborn schema](https://github.com/TeslaCloud/reborn) repo.
+
+Here is approximately what you will need to do on a Linux system (you can probably do the same on Windows):
+```sh
+# Clone the dependencies repo into the "flux_server" folder
+git clone https://github.com/TeslaCloud/flux-dependencies.git flux_server
+
+# Then install the server files on top.
+steamcmd +login anonymous +force_install_dir ./flux_server +app_update 4020 +quit
+
+# Navigate to the gamemodes folder.
+cd ./flux_server/garrysmod/gamemodes
+
+# Clone the Flux repository as a gamemode. Make sure to clone into the "flux" folder.
+git clone https://github.com/TeslaCloud/flux-ce.git flux
+
+# Then clone the Reborn schema, or any other schema you'd like to use.
+git clone https://github.com/TeslaCloud/reborn.git
+
+# And you're all set!
+```
+
+### Creating a server startup script.
+
+Example start.sh / start.bat you may end up with:
+
+**Linux:**
+```sh
+./srcds_run +gamemode "reborn" +map "gm_construct" +maxplayers 64 -tickrate 30
+```
+
+**Windows:**
+```bat
+srcds.exe -game garrysmod +gamemode "reborn" +map "gm_construct" +maxplayers 64 -tickrate 30
+```
 
 ### Database setup
 Depending on your use case, you may want to setup a database. An SQLite is the default option and requires no further setup. It is perfect if you simply want to take a look at Flux and how it works. If you want to run Flux in production, however, you should consider setting up a MySQL (MariaDB) or PostgreSQL database.
