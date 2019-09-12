@@ -67,7 +67,7 @@ Giving yourself admin rights is as simple as running the following command in th
 flc setgroup YOUR_NAME_OR_STEAMID admin
 ```
 
-`admin` is the highest-possible usergroup in Flux. Replace `YOUR_NAME_OR_STEAMID` with your full or partial username or character name, or your full SteamID (`STEAM_X:X:X`). The `admin` role will have every single permission by default. It is similar to `superadmin` in other admin solutions, except that the group has literally no limits. Any permission is automatically available to all users in the `admin` usergroup. Please be careful with who you give this usergroup to.
+`admin` is the highest-possible user role in Flux. Replace `YOUR_NAME_OR_STEAMID` with your full or partial username or character name, or your full SteamID (`STEAM_X:X:X`). The `admin` role will have every single permission by default. It is similar to the `superadmin` usergroup in other admin solutions, except that the group has literally no limits. Any permission is automatically available to all users in the `admin` role. Please be careful with who you give this role to.
 
 ### Database setup
 Depending on your use case, you may want to setup a database. SQLite is the default option and requires no further setup. It is perfect if you simply want to take a look at Flux and how it works. If you want to run Flux in production, however, you should consider setting up a MySQL (MariaDB) or PostgreSQL database.
