@@ -6,7 +6,7 @@ Flux is a WIP gamemode framework designed with performance and convenience in mi
 Current version of Flux is currently in active development as an open alpha. This means that you can install it and it will run, but there will almost inevitably be bugs and issues, as well as a lot of missing features. If you are not a developer, it is probably better for you to wait until Flux is in beta.
 
 # Installation
-If you want to just get Flux up and running, simply download this repo, as well as the reborn schema, and match the repo folders with your Garry's Mod dedicated server folders. You can also clone this repo directly and then install the server on top, so that you get an easy way to update without hassle.
+If you want to just get Flux up and running, put [dependencies](https://github.com/TeslaCloud/flux-dependencies) in your server's root. After that simply download this repo, as well as the [reborn schema](https://github.com/TeslaCloud/reborn), and match the repo folders with your Garry's Mod dedicated server folders. You can also clone this repo directly and then install the server on top, so that you get an easy way to update without hassle.
 
 **Flux is only guaranteed to work on dedicated servers (srcds). We do not support "listen" servers (launching from Garry's Mod client).**
 
