@@ -58,7 +58,7 @@ srcds.exe -game garrysmod +gamemode "reborn" +map "gm_construct" +maxplayers 64 
 ```
 
 ### Database setup
-Depending on your use case, you may want to setup a database. An SQLite is the default option and requires no further setup. It is perfect if you simply want to take a look at Flux and how it works. If you want to run Flux in production, however, you should consider setting up a MySQL (MariaDB) or PostgreSQL database.
+Depending on your use case, you may want to setup a database. SQLite is the default option and requires no further setup. It is perfect if you simply want to take a look at Flux and how it works. If you want to run Flux in production, however, you should consider setting up a MySQL (MariaDB) or PostgreSQL database.
 
 Follow the instructions in `/garrysmod/gamemodes/flux/config/database.yml` to learn more.
 
