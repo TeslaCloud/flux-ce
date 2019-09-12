@@ -43,7 +43,7 @@ git clone https://github.com/TeslaCloud/reborn.git
 # And you're all set!
 ```
 
-### Creating a server startup script.
+### Creating a server startup script
 
 Example start.sh / start.bat you may end up with:
 
@@ -56,6 +56,18 @@ Example start.sh / start.bat you may end up with:
 ```bat
 srcds.exe -game garrysmod +gamemode "reborn" +map "gm_construct" +maxplayers 64 -tickrate 30
 ```
+
+### Settings yourself as admin
+
+Flux has a built-in administration solution. **Please do not attempt to install ULX as it is known to have conflicts with Flux.** Other admin mods may or may not work, we provide no official support for any other administration solutions.
+
+Giving yourself admin rights is as simple as running the following command in the srcds console:
+
+```
+flc setgroup YOUR_NAME_OR_STEAMID admin
+```
+
+`admin` is the highest-possible usergroup in Flux. Replace `YOUR_NAME_OR_STEAMID` with your full or partial username or character name, or your full SteamID (`STEAM_X:X:X`). The `admin` role will have every single permission by default. It is similar to `superadmin` in other admin solutions, except that the group has literally no limits. Any permission is automatically available to all users in the `admin` usergroup. Please be careful with who you give this usergroup to.
 
 ### Database setup
 Depending on your use case, you may want to setup a database. SQLite is the default option and requires no further setup. It is perfect if you simply want to take a look at Flux and how it works. If you want to run Flux in production, however, you should consider setting up a MySQL (MariaDB) or PostgreSQL database.
