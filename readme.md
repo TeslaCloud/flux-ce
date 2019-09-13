@@ -16,7 +16,7 @@ Current version of Flux is currently in active development as an open alpha. Thi
 * SteamCMD
 * Git
 * Linux: Debian Stretch or newer recommended
-* Windows: Windows 10 / Windown Server 2016+ recommended
+* Windows: Windows 10 / Windows Server 2016+ recommended
 * Windows: Microsoft Visual C++ 2015
 
 ### General installation
@@ -57,7 +57,7 @@ Example start.sh / start.bat you may end up with:
 srcds.exe -game garrysmod +gamemode "reborn" +map "gm_construct" +maxplayers 64 -tickrate 30
 ```
 
-### Settings yourself as admin
+### Setting yourself as admin
 
 Flux has a built-in administration solution. **Please do not attempt to install ULX as it is known to have conflicts with Flux.** Other admin mods may or may not work, we provide no official support for any other administration solutions.
 
