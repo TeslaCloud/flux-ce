@@ -9,7 +9,7 @@ function COMMAND:on_run(player, delay)
   delay = math.clamp(tonumber(delay) or 0, 0, 60)
 
   if delay > 0 and delay < 2 then
-    player:notify('error.cant_now')
+    player:run_command('fall '..tostring(2))
     return
   end
 
