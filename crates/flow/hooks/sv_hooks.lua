@@ -502,6 +502,16 @@ function GM:OnConfigSet(key, old_value, new_value)
   end
 end
 
+function GM:PostPlayerLoadout(player, default_loadout)
+  player:StripWeapons()
+
+  for k, v in pairs(default_loadout) do
+    player:Give(v)
+  end
+
+  player:SelectWeapon(default_loadout[1])
+end
+
 -- Awful awful awful code, but it's kinda necessary in some rare cases.
 -- Avoid using PlayerThink whenever possible though.
 do
