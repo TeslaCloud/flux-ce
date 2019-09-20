@@ -21,7 +21,7 @@ function COMMAND:on_run(player, targets, ...)
 
     for k, v in ipairs(targets) do
       v:notify( "notification.warn", { 
-       reason = reason 
+        reason = reason 
       })
     end
   end
