@@ -21,6 +21,16 @@ function Factions.add_faction(id, data)
 
   stored[data.faction_id] = data
   count = count + 1
+
+  for k, v in pairs(data.model_classes) do
+    local gender_models = data:get_gender_models(k)
+
+    if gender_models then
+      for k1, v1 in pairs(gender_models) do
+        Flux.Anim:set_model_class(v1, v)
+      end
+    end
+  end
 end
 
 function Factions.find_by_id(id)
