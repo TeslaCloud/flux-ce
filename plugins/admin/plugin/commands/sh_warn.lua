@@ -14,10 +14,10 @@ function COMMAND:on_run(player, targets, ...)
     player:notify('This is not a valid reason!')
   else
     self:notify_staff('command.warn.message', {
-    player = get_player_name(player),
-    target = util.player_list_to_string(targets),
-    reason = reason
-   })
+      player = get_player_name(player),
+      target = util.player_list_to_string(targets),
+      reason = reason
+    })
 
     for k, v in ipairs(targets) do
       v:notify( "notification.warn", { 
