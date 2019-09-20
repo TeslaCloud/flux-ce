@@ -31,6 +31,10 @@ en:
       description: Kicks player from the server.
       syntax: <target> [reason]
       message: "{player} has kicked {target} ({reason})."
+    warn:
+      description: Warns a player.
+      syntax: <target> [reason]
+      message: "{player} has warned {target} for {reason}."
     restart:
       description: Restarts the current map.
       syntax: "[number Delay]"
@@ -106,6 +110,7 @@ en:
       disabled: You are now unvanished.
     freeze: "You've been frozen by {player}."
     unfreeze: "You've been unfrozen by {player}."
+    warn: "You have been warned for {reason}."
     godmode:
       enabled: "God mode enabled."
       disabled: "God mode disabled."
