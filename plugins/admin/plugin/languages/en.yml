@@ -34,7 +34,7 @@ en:
     warn:
       description: Warns a player.
       syntax: <target> [reason]
-      message: "{player} has warned {target} for {reason}"
+      message: "{player} has warned {target} for {reason}."
     restart:
       description: Restarts the current map.
       syntax: "[number Delay]"
