@@ -154,7 +154,7 @@ do
   }
 
   -- A function to get a weapon's hold type.
-  function Flux.Anim:get_weapon_hold_type(player, weapon)
+  function Flux.Anim.get_weapon_hold_type(player, weapon)
     if !IsValid(weapon) then return 'normal' end
 
     local translated_hold_type = weapon_hold_types[string.lower(weapon:GetClass())]
