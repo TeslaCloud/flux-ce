@@ -1,13 +1,13 @@
-﻿COMMAND.name = 'CharSetDesc'
-COMMAND.description = 'command.charsetdesc.description'
-COMMAND.syntax = 'command.charsetdesc.syntax'
-COMMAND.permission = 'assistant'
-COMMAND.category = 'permission.categories.character_management'
-COMMAND.arguments = 2
-COMMAND.player_arg = 1
-COMMAND.aliases = { 'setdesc', 'setdescription', 'physdesc' }
+﻿CMD.name = 'CharSetDesc'
+CMD.description = 'command.charsetdesc.description'
+CMD.syntax = 'command.charsetdesc.syntax'
+CMD.permission = 'assistant'
+CMD.category = 'permission.categories.character_management'
+CMD.arguments = 2
+CMD.player_arg = 1
+CMD.aliases = { 'setdesc', 'setdescription', 'physdesc' }
 
-function COMMAND:on_run(player, targets, ...)
+function CMD:on_run(player, targets, ...)
   local new_desc = table.concat({ ... }, ' ')
   local target = targets[1]
 

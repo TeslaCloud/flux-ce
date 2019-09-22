@@ -1,13 +1,13 @@
-COMMAND.name = 'GiveItem'
-COMMAND.description = 'command.giveitem.description'
-COMMAND.syntax = 'command.giveitem.syntax'
-COMMAND.permission = 'moderator'
-COMMAND.category = 'permission.categories.character_management'
-COMMAND.arguments = 2
-COMMAND.player_arg = 1
-COMMAND.aliases = { 'chargiveitem', 'plygiveitem' }
+CMD.name = 'GiveItem'
+CMD.description = 'command.giveitem.description'
+CMD.syntax = 'command.giveitem.syntax'
+CMD.permission = 'moderator'
+CMD.category = 'permission.categories.character_management'
+CMD.arguments = 2
+CMD.player_arg = 1
+CMD.aliases = { 'chargiveitem', 'plygiveitem' }
 
-function COMMAND:on_run(player, targets, item_name, amount)
+function CMD:on_run(player, targets, item_name, amount)
   local item_table = Item.find(item_name)
   amount = tonumber(amount) or 1
 

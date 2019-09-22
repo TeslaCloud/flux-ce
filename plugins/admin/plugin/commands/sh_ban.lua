@@ -1,13 +1,13 @@
-COMMAND.name = 'Ban'
-COMMAND.description = 'command.ban.description'
-COMMAND.syntax = 'command.ban.syntax'
-COMMAND.permission = 'assistant'
-COMMAND.category = 'permission.categories.administration'
-COMMAND.arguments = 2
-COMMAND.immunity = true
-COMMAND.alias = 'plyban'
+CMD.name = 'Ban'
+CMD.description = 'command.ban.description'
+CMD.syntax = 'command.ban.syntax'
+CMD.permission = 'assistant'
+CMD.category = 'permission.categories.administration'
+CMD.arguments = 2
+CMD.immunity = true
+CMD.alias = 'plyban'
 
-function COMMAND:on_run(player, targets, duration, ...)
+function CMD:on_run(player, targets, duration, ...)
   local reason = table.concat({ ... }, ' ')
 
   if !reason or reason == '' then

@@ -1,13 +1,13 @@
-COMMAND.name = 'Kick'
-COMMAND.description = 'command.kick.description'
-COMMAND.syntax = 'command.kick.syntax'
-COMMAND.permission = 'assistant'
-COMMAND.category = 'permission.categories.administration'
-COMMAND.arguments = 1
-COMMAND.immunity = true
-COMMAND.alias = 'plykick'
+CMD.name = 'Kick'
+CMD.description = 'command.kick.description'
+CMD.syntax = 'command.kick.syntax'
+CMD.permission = 'assistant'
+CMD.category = 'permission.categories.administration'
+CMD.arguments = 1
+CMD.immunity = true
+CMD.alias = 'plykick'
 
-function COMMAND:on_run(player, targets, ...)
+function CMD:on_run(player, targets, ...)
   local reason = table.concat({ ... }, ' ')
 
   if !reason or reason == '' then

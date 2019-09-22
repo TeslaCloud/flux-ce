@@ -1,12 +1,12 @@
-COMMAND.name = 'Changelevel'
-COMMAND.description = 'command.changelevel.description'
-COMMAND.syntax = 'command.changelevel.syntax'
-COMMAND.permission = 'moderator'
-COMMAND.category = 'permission.categories.server_management'
-COMMAND.arguments = 1
-COMMAND.alias = 'map'
+CMD.name = 'Changelevel'
+CMD.description = 'command.changelevel.description'
+CMD.syntax = 'command.changelevel.syntax'
+CMD.permission = 'moderator'
+CMD.category = 'permission.categories.server_management'
+CMD.arguments = 1
+CMD.alias = 'map'
 
-function COMMAND:on_run(player, map, delay)
+function CMD:on_run(player, map, delay)
   map = tostring(map) or 'gm_construct'
   delay = tonumber(delay) or 0
 

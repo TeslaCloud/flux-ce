@@ -1,13 +1,13 @@
-COMMAND.name = 'Unfreeze'
-COMMAND.description = 'command.unfreeze.description'
-COMMAND.syntax = 'command.unfreeze.syntax'
-COMMAND.permission = 'assistant'
-COMMAND.category = 'permission.categories.player_management'
-COMMAND.arguments = 1
-COMMAND.immunity = true
-COMMAND.aliases = { 'unfreeze', 'plyunfreeze' }
+CMD.name = 'Unfreeze'
+CMD.description = 'command.unfreeze.description'
+CMD.syntax = 'command.unfreeze.syntax'
+CMD.permission = 'assistant'
+CMD.category = 'permission.categories.player_management'
+CMD.arguments = 1
+CMD.immunity = true
+CMD.aliases = { 'unfreeze', 'plyunfreeze' }
 
-function COMMAND:on_run(player, targets)
+function CMD:on_run(player, targets)
   for k, v in ipairs(targets) do
     v:Freeze(false)
     v:notify('notification.unfreeze', {

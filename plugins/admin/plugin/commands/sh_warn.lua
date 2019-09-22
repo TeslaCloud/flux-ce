@@ -1,13 +1,13 @@
-COMMAND.name = 'Warn'
-COMMAND.description = 'command.warn.description'
-COMMAND.syntax = 'command.warn.syntax'
-COMMAND.permission = 'assistant'
-COMMAND.category = 'permission.categories.player_management'
-COMMAND.arguments = 1
-COMMAND.immunity = true
-COMMAND.aliases = { 'plywarn', 'warn' }
+CMD.name = 'Warn'
+CMD.description = 'command.warn.description'
+CMD.syntax = 'command.warn.syntax'
+CMD.permission = 'assistant'
+CMD.category = 'permission.categories.player_management'
+CMD.arguments = 1
+CMD.immunity = true
+CMD.aliases = { 'plywarn', 'warn' }
 
-function COMMAND:on_run(player, targets, ...)
+function CMD:on_run(player, targets, ...)
   local reason = table.concat({ ... }, ' ')
 
   if !reason or reason == '' then

@@ -1,9 +1,9 @@
-COMMAND.name = 'Static'
-COMMAND.description = 'command.static.description'
-COMMAND.permission = 'assistant'
-COMMAND.category = 'permission.categories.level_design'
-COMMAND.aliases = { 'staticadd', 'staticpropadd' }
+CMD.name = 'Static'
+CMD.description = 'command.static.description'
+CMD.permission = 'assistant'
+CMD.category = 'permission.categories.level_design'
+CMD.aliases = { 'staticadd', 'staticpropadd' }
 
-function COMMAND:on_run(player)
+function CMD:on_run(player)
   Plugin.call('PlayerMakeStatic', player, true)
 end

@@ -1,10 +1,10 @@
-COMMAND.name = 'KickBots'
-COMMAND.description = 'command.kickbots.description'
-COMMAND.permission = 'moderator'
-COMMAND.category = 'permission.categories.server_management'
-COMMAND.aliases = { 'botkick', 'kickbot' }
+CMD.name = 'KickBots'
+CMD.description = 'command.kickbots.description'
+CMD.permission = 'moderator'
+CMD.category = 'permission.categories.server_management'
+CMD.aliases = { 'botkick', 'kickbot' }
 
-function COMMAND:on_run(player)
+function CMD:on_run(player)
   self:notify_staff('command.kickbots.message', {
     player = get_player_name(player)
   })

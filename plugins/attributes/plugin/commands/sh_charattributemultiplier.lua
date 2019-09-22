@@ -1,17 +1,17 @@
-﻿COMMAND.name = 'CharAttributeMultiplier'
-COMMAND.description = 'command.charattributemultiplier.description'
-COMMAND.syntax = 'command.charattributemultiplier.syntax'
-COMMAND.permission = 'moderator'
-COMMAND.category = 'permission.categories.character_management'
-COMMAND.arguments = 4
-COMMAND.player_arg = 1
-COMMAND.aliases = { 'multiplierattribute', 'attmultiplier', 'attributemult', 'attributemultiplier', 'charattmult' }
+﻿CMD.name = 'CharAttributeMultiplier'
+CMD.description = 'command.charattributemultiplier.description'
+CMD.syntax = 'command.charattributemultiplier.syntax'
+CMD.permission = 'moderator'
+CMD.category = 'permission.categories.character_management'
+CMD.arguments = 4
+CMD.player_arg = 1
+CMD.aliases = { 'multiplierattribute', 'attmultiplier', 'attributemult', 'attributemultiplier', 'charattmult' }
 
-function COMMAND:get_description()
+function CMD:get_description()
   return t(self.description, { attributes = table.concat(table.get_keys(Attributes.get_stored()), ', ') })
 end
 
-function COMMAND:on_run(player, targets, attribute_id, value, duration)
+function CMD:on_run(player, targets, attribute_id, value, duration)
   attribute_id = attribute_id:to_id()
 
   local attribute = Attributes.find(attribute_id)

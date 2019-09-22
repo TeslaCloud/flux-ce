@@ -1,12 +1,12 @@
-COMMAND.name = 'Restart'
-COMMAND.description = 'command.restart.description'
-COMMAND.syntax = 'command.restart.syntax'
-COMMAND.permission = 'moderator'
-COMMAND.category = 'permission.categories.server_management'
-COMMAND.arguments = 0
-COMMAND.alias = 'maprestart'
+CMD.name = 'Restart'
+CMD.description = 'command.restart.description'
+CMD.syntax = 'command.restart.syntax'
+CMD.permission = 'moderator'
+CMD.category = 'permission.categories.server_management'
+CMD.arguments = 0
+CMD.alias = 'maprestart'
 
-function COMMAND:on_run(player, delay)
+function CMD:on_run(player, delay)
   delay = tonumber(delay) or 0
 
   self:notify_staff('command.restart.message', {

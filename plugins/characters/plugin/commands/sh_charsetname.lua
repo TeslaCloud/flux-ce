@@ -1,13 +1,13 @@
-﻿COMMAND.name = 'CharSetName'
-COMMAND.description = 'command.charsetname.description'
-COMMAND.syntax = 'command.charsetname.syntax'
-COMMAND.permission = 'assistant'
-COMMAND.category = 'permission.categories.character_management'
-COMMAND.arguments = 2
-COMMAND.player_arg = 1
-COMMAND.alias = 'setname'
+﻿CMD.name = 'CharSetName'
+CMD.description = 'command.charsetname.description'
+CMD.syntax = 'command.charsetname.syntax'
+CMD.permission = 'assistant'
+CMD.category = 'permission.categories.character_management'
+CMD.arguments = 2
+CMD.player_arg = 1
+CMD.alias = 'setname'
 
-function COMMAND:on_run(player, targets, ...)
+function CMD:on_run(player, targets, ...)
   local new_name = table.concat({ ... }, ' ')
   local target = targets[1]
 

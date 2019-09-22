@@ -1,13 +1,13 @@
-COMMAND.name = 'Fullbright'
-COMMAND.description = 'command.fullbright.description'
-COMMAND.syntax = 'command.fullbright.syntax'
-COMMAND.permission = 'moderator'
-COMMAND.category = 'permission.categories.player_management'
-COMMAND.arguments = 2
-COMMAND.immunity = true
-COMMAND.alias = 'fb'
+CMD.name = 'Fullbright'
+CMD.description = 'command.fullbright.description'
+CMD.syntax = 'command.fullbright.syntax'
+CMD.permission = 'moderator'
+CMD.category = 'permission.categories.player_management'
+CMD.arguments = 2
+CMD.immunity = true
+CMD.alias = 'fb'
 
-function COMMAND:on_run(player, targets, should_fullbright)
+function CMD:on_run(player, targets, should_fullbright)
   should_fullbright = tobool(should_fullbright)
 
   for k, v in ipairs(targets) do

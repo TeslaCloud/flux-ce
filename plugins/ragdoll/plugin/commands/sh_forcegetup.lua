@@ -1,13 +1,13 @@
-COMMAND.name = 'ForceGetUp'
-COMMAND.description = 'command.forcegetup.description'
-COMMAND.syntax = 'command.forcegetup.syntax'
-COMMAND.permission = 'assistant'
-COMMAND.category = 'permission.categories.roleplay'
-COMMAND.arguments = 1
-COMMAND.player_arg = 1
-COMMAND.aliases = { 'forcegetup', 'plygetup' }
+CMD.name = 'ForceGetUp'
+CMD.description = 'command.forcegetup.description'
+CMD.syntax = 'command.forcegetup.syntax'
+CMD.permission = 'assistant'
+CMD.category = 'permission.categories.roleplay'
+CMD.arguments = 1
+CMD.player_arg = 1
+CMD.aliases = { 'forcegetup', 'plygetup' }
 
-function COMMAND:on_run(player, targets, delay)
+function CMD:on_run(player, targets, delay)
   delay = math.clamp(tonumber(delay) or 0, 0, 60)
 
   for k, v in ipairs(targets) do

@@ -1,11 +1,11 @@
-COMMAND.name = 'Fall'
-COMMAND.description = 'command.fall.description'
-COMMAND.syntax = 'command.fall.syntax'
-COMMAND.category = 'permission.categories.roleplay'
-COMMAND.aliases = { 'fallover', 'charfallover' }
-COMMAND.no_console = true
+CMD.name = 'Fall'
+CMD.description = 'command.fall.description'
+CMD.syntax = 'command.fall.syntax'
+CMD.category = 'permission.categories.roleplay'
+CMD.aliases = { 'fallover', 'charfallover' }
+CMD.no_console = true
 
-function COMMAND:on_run(player, delay)
+function CMD:on_run(player, delay)
   delay = math.clamp(tonumber(delay) or 0, 2, 60)
 
   if player:Alive() and !player:is_ragdolled() then

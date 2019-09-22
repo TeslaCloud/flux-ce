@@ -1,9 +1,9 @@
-COMMAND.name = 'UnStatic'
-COMMAND.description = 'command.unstatic.description'
-COMMAND.permission = 'assistant'
-COMMAND.category = 'permission.categories.level_design'
-COMMAND.aliases = { 'staticpropremove', 'staticremove' }
+CMD.name = 'UnStatic'
+CMD.description = 'command.unstatic.description'
+CMD.permission = 'assistant'
+CMD.category = 'permission.categories.level_design'
+CMD.aliases = { 'staticpropremove', 'staticremove' }
 
-function COMMAND:on_run(player)
+function CMD:on_run(player)
   Plugin.call('PlayerMakeStatic', player, false)
 end

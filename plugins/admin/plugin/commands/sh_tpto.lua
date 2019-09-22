@@ -1,13 +1,13 @@
-COMMAND.name = 'Tpto'
-COMMAND.description = 'command.tpto.description'
-COMMAND.syntax = 'command.tpto.syntax'
-COMMAND.permission = 'assistant'
-COMMAND.category = 'permission.categories.administration'
-COMMAND.arguments = 1
-COMMAND.player_arg = 1
-COMMAND.alias = 'goto'
+CMD.name = 'Tpto'
+CMD.description = 'command.tpto.description'
+CMD.syntax = 'command.tpto.syntax'
+CMD.permission = 'assistant'
+CMD.category = 'permission.categories.administration'
+CMD.arguments = 1
+CMD.player_arg = 1
+CMD.alias = 'goto'
 
-function COMMAND:on_run(player, targets)
+function CMD:on_run(player, targets)
   local target = targets[1]
 
   if IsValid(target) then

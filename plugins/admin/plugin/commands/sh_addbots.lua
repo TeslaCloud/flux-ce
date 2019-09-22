@@ -1,12 +1,12 @@
-COMMAND.name = 'AddBots'
-COMMAND.description = 'command.addbots.description'
-COMMAND.syntax = 'command.addbots.syntax'
-COMMAND.permission = 'moderator'
-COMMAND.category = 'permission.categories.server_management'
-COMMAND.arguments = 0
-COMMAND.aliases = { 'bot', 'bots' }
+CMD.name = 'AddBots'
+CMD.description = 'command.addbots.description'
+CMD.syntax = 'command.addbots.syntax'
+CMD.permission = 'moderator'
+CMD.category = 'permission.categories.server_management'
+CMD.arguments = 0
+CMD.aliases = { 'bot', 'bots' }
 
-function COMMAND:on_run(player, num_bots)
+function CMD:on_run(player, num_bots)
   num_bots = math.clamp((tonumber(num_bots) or 1), 1, 128)
 
   self:notify_staff('command.addbots.message', {

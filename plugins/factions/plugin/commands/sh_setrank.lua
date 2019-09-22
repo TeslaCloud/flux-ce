@@ -1,13 +1,13 @@
-COMMAND.name = 'SetRank'
-COMMAND.description = 'command.setrank.description'
-COMMAND.syntax = 'command.setrank.syntax'
-COMMAND.permission = 'assistant'
-COMMAND.category = 'permission.categories.character_management'
-COMMAND.arguments = 2
-COMMAND.player_arg = 1
-COMMAND.aliases = { 'plysetrank', 'charsetrank' }
+CMD.name = 'SetRank'
+CMD.description = 'command.setrank.description'
+CMD.syntax = 'command.setrank.syntax'
+CMD.permission = 'assistant'
+CMD.category = 'permission.categories.character_management'
+CMD.arguments = 2
+CMD.player_arg = 1
+CMD.aliases = { 'plysetrank', 'charsetrank' }
 
-function COMMAND:on_run(player, targets, rank)
+function CMD:on_run(player, targets, rank)
   rank = tonumber(rank)
 
   if !rank then

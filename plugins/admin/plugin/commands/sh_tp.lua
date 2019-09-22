@@ -1,13 +1,13 @@
-COMMAND.name = 'Tp'
-COMMAND.description = 'command.tp.description'
-COMMAND.syntax = 'command.tp.syntax'
-COMMAND.permission = 'assistant'
-COMMAND.category = 'permission.categories.administration'
-COMMAND.arguments = 1
-COMMAND.immunity = true
-COMMAND.aliases = { 'teleport', 'plytp', 'bring' }
+CMD.name = 'Tp'
+CMD.description = 'command.tp.description'
+CMD.syntax = 'command.tp.syntax'
+CMD.permission = 'assistant'
+CMD.category = 'permission.categories.administration'
+CMD.arguments = 1
+CMD.immunity = true
+CMD.aliases = { 'teleport', 'plytp', 'bring' }
 
-function COMMAND:on_run(player, targets)
+function CMD:on_run(player, targets)
   local pos = player:GetEyeTraceNoCursor().HitPos
 
   for k, v in pairs(targets) do

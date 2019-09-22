@@ -1,13 +1,13 @@
-COMMAND.name = 'Vanish'
-COMMAND.description = 'command.vanish.description'
-COMMAND.syntax = 'command.vanish.syntax'
-COMMAND.permission = 'moderator'
-COMMAND.category = 'permission.categories.player_management'
-COMMAND.arguments = 1
-COMMAND.immunity = true
-COMMAND.alias = 'v'
+CMD.name = 'Vanish'
+CMD.description = 'command.vanish.description'
+CMD.syntax = 'command.vanish.syntax'
+CMD.permission = 'moderator'
+CMD.category = 'permission.categories.player_management'
+CMD.arguments = 1
+CMD.immunity = true
+CMD.alias = 'v'
 
-function COMMAND:on_run(player, targets, should_vanish)
+function CMD:on_run(player, targets, should_vanish)
   for k, v in ipairs(targets) do
     should_vanish = should_vanish != nil and tobool(should_vanish) or !v.is_vanished
 

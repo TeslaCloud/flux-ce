@@ -1,13 +1,13 @@
-﻿COMMAND.name = 'SetMoney'
-COMMAND.description = 'command.setmoney.description'
-COMMAND.syntax = 'command.setmoney.syntax'
-COMMAND.permission = 'moderator'
-COMMAND.category = 'permission.categories.character_management'
-COMMAND.arguments = 2
-COMMAND.player_arg = 1
-COMMAND.aliases = { 'setcash', 'settokens' }
+﻿CMD.name = 'SetMoney'
+CMD.description = 'command.setmoney.description'
+CMD.syntax = 'command.setmoney.syntax'
+CMD.permission = 'moderator'
+CMD.category = 'permission.categories.character_management'
+CMD.arguments = 2
+CMD.player_arg = 1
+CMD.aliases = { 'setcash', 'settokens' }
 
-function COMMAND:get_description()
+function CMD:get_description()
   local currencies = {}
 
   for k, v in pairs(Currencies:all()) do
@@ -17,7 +17,7 @@ function COMMAND:get_description()
   return t(self.description, { currencies = table.concat(currencies, ', ') })
 end
 
-function COMMAND:on_run(player, targets, amount, currency)
+function CMD:on_run(player, targets, amount, currency)
   amount = tonumber(amount)
 
   if !amount then

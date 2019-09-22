@@ -1,13 +1,13 @@
-COMMAND.name = 'SetGodmode'
-COMMAND.description = 'command.godmode.description'
-COMMAND.syntax = 'command.godmode.syntax'
-COMMAND.permission = 'assistant'
-COMMAND.category = 'permission.categories.player_management'
-COMMAND.arguments = 1
-COMMAND.immunity = true
-COMMAND.aliases = { 'godmode', 'plysetgodmode' }
+CMD.name = 'SetGodmode'
+CMD.description = 'command.godmode.description'
+CMD.syntax = 'command.godmode.syntax'
+CMD.permission = 'assistant'
+CMD.category = 'permission.categories.player_management'
+CMD.arguments = 1
+CMD.immunity = true
+CMD.aliases = { 'godmode', 'plysetgodmode' }
 
-function COMMAND:on_run(player, targets, boolean)
+function CMD:on_run(player, targets, boolean)
   for k, v in ipairs(targets) do
     boolean = boolean != nil and tobool(boolean) or !v:HasGodMode()
 

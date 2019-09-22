@@ -442,13 +442,13 @@ concommand.Add('flc', Flux.Command.con_command)
 
 Pipeline.register('commands', function(id, file_name, pipe)
   if file_name:ends('.lua') then
-    local old_command = COMMAND
-    COMMAND = Command.new(id)
+    local old_command = CMD
+    CMD = Command.new(id)
 
     require_relative(file_name)
 
-    COMMAND:register()
-    COMMAND = old_command
+    CMD:register()
+    CMD = old_command
   end
 end)
 

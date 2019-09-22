@@ -1,13 +1,13 @@
-COMMAND.name = 'Respawn'
-COMMAND.description = 'command.respawn.description'
-COMMAND.syntax = 'command.respawn.syntax'
-COMMAND.permission = 'assistant'
-COMMAND.category = 'permission.categories.player_management'
-COMMAND.arguments = 1
-COMMAND.immunity = true
-COMMAND.aliases = { 'respawn', 'plyrespawn' }
+CMD.name = 'Respawn'
+CMD.description = 'command.respawn.description'
+CMD.syntax = 'command.respawn.syntax'
+CMD.permission = 'assistant'
+CMD.category = 'permission.categories.player_management'
+CMD.arguments = 1
+CMD.immunity = true
+CMD.aliases = { 'respawn', 'plyrespawn' }
 
-function COMMAND:on_run(player, targets, spawn_position)
+function CMD:on_run(player, targets, spawn_position)
   spawn_position = spawn_position and spawn_position:utf8lower()
 
   for k, v in ipairs(targets) do

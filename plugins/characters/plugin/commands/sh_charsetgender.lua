@@ -1,13 +1,13 @@
-﻿COMMAND.name = 'CharSetGender'
-COMMAND.description = 'command.charsetgender.description'
-COMMAND.syntax = 'command.charsetgender.syntax'
-COMMAND.permission = 'assistant'
-COMMAND.category = 'permission.categories.character_management'
-COMMAND.arguments = 2
-COMMAND.player_arg = 1
-COMMAND.alias = 'setgender'
+﻿CMD.name = 'CharSetGender'
+CMD.description = 'command.charsetgender.description'
+CMD.syntax = 'command.charsetgender.syntax'
+CMD.permission = 'assistant'
+CMD.category = 'permission.categories.character_management'
+CMD.arguments = 2
+CMD.player_arg = 1
+CMD.alias = 'setgender'
 
-function COMMAND:on_run(player, targets, new_gender)
+function CMD:on_run(player, targets, new_gender)
   new_gender = new_gender:utf8lower()
 
   local valid_genders = {

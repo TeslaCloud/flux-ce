@@ -1,11 +1,11 @@
-﻿COMMAND.name = 'GiveMoney'
-COMMAND.description = 'command.givemoney.description'
-COMMAND.syntax = 'command.givemoney.syntax'
-COMMAND.category = 'permission.categories.general'
-COMMAND.arguments = 1
-COMMAND.aliases = { 'givecash', 'givetokens' }
+﻿CMD.name = 'GiveMoney'
+CMD.description = 'command.givemoney.description'
+CMD.syntax = 'command.givemoney.syntax'
+CMD.category = 'permission.categories.general'
+CMD.arguments = 1
+CMD.aliases = { 'givecash', 'givetokens' }
 
-function COMMAND:get_description()
+function CMD:get_description()
   local currencies = {}
 
   for k, v in pairs(Currencies:all()) do
@@ -17,7 +17,7 @@ function COMMAND:get_description()
   return t(self.description, { currencies = table.concat(currencies, ', ') })
 end
 
-function COMMAND:on_run(player, amount, currency)
+function CMD:on_run(player, amount, currency)
   amount = tonumber(amount)
 
   if !amount then

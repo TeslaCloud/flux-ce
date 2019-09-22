@@ -1,13 +1,13 @@
-COMMAND.name = 'Whitelist'
-COMMAND.description = 'command.whitelist.description'
-COMMAND.syntax = 'command.whitelist.syntax'
-COMMAND.permission = 'moderator'
-COMMAND.category = 'permission.categories.player_management'
-COMMAND.arguments = 2
-COMMAND.player_arg = 1
-COMMAND.aliases = { 'plywhitelist', 'givewhitelist', 'setwhitelisted' }
+CMD.name = 'Whitelist'
+CMD.description = 'command.whitelist.description'
+CMD.syntax = 'command.whitelist.syntax'
+CMD.permission = 'moderator'
+CMD.category = 'permission.categories.player_management'
+CMD.arguments = 2
+CMD.player_arg = 1
+CMD.aliases = { 'plywhitelist', 'givewhitelist', 'setwhitelisted' }
 
-function COMMAND:get_description()
+function CMD:get_description()
   local factions = {}
 
   for k, v in pairs(Factions.all()) do
@@ -17,7 +17,7 @@ function COMMAND:get_description()
   return t(self.description, { factions = table.concat(factions, ', ') })
 end
 
-function COMMAND:on_run(player, targets, faction_id, strict)
+function CMD:on_run(player, targets, faction_id, strict)
   local whitelist = Factions.find(faction_id, (strict and true) or false)
 
   if whitelist then

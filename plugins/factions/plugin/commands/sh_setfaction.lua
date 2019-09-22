@@ -1,13 +1,13 @@
-COMMAND.name = 'SetFaction'
-COMMAND.description = 'command.setfaction.description'
-COMMAND.syntax = 'command.setfaction.syntax'
-COMMAND.permission = 'assistant'
-COMMAND.category = 'permission.categories.character_management'
-COMMAND.arguments = 2
-COMMAND.player_arg = 1
-COMMAND.aliases = { 'plytransfer', 'charsetfaction', 'chartransfer' }
+CMD.name = 'SetFaction'
+CMD.description = 'command.setfaction.description'
+CMD.syntax = 'command.setfaction.syntax'
+CMD.permission = 'assistant'
+CMD.category = 'permission.categories.character_management'
+CMD.arguments = 2
+CMD.player_arg = 1
+CMD.aliases = { 'plytransfer', 'charsetfaction', 'chartransfer' }
 
-function COMMAND:get_description()
+function CMD:get_description()
   local factions = {}
 
   for k, v in pairs(Factions.all()) do
@@ -17,7 +17,7 @@ function COMMAND:get_description()
   return t(self.description, { factions = table.concat(factions, ', ') })
 end
 
-function COMMAND:on_run(player, targets, name, strict)
+function CMD:on_run(player, targets, name, strict)
   local faction_table = Factions.find(name, (strict and true) or false)
 
   if faction_table then

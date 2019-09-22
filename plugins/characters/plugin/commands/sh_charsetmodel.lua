@@ -1,13 +1,13 @@
-﻿COMMAND.name = 'CharSetModel'
-COMMAND.description = 'command.charsetmodel.description'
-COMMAND.syntax = 'command.charsetmodel.syntax'
-COMMAND.permission = 'assistant'
-COMMAND.category = 'permission.categories.character_management'
-COMMAND.arguments = 2
-COMMAND.player_arg = 1
-COMMAND.alias = 'setmodel'
+﻿CMD.name = 'CharSetModel'
+CMD.description = 'command.charsetmodel.description'
+CMD.syntax = 'command.charsetmodel.syntax'
+CMD.permission = 'assistant'
+CMD.category = 'permission.categories.character_management'
+CMD.arguments = 2
+CMD.player_arg = 1
+CMD.alias = 'setmodel'
 
-function COMMAND:on_run(player, targets, model)
+function CMD:on_run(player, targets, model)
   for k, v in ipairs(targets) do
     v:notify('notification.model_changed', { model = model })
     Characters.set_model(v, model)

@@ -1,13 +1,13 @@
-COMMAND.name = 'Return'
-COMMAND.description = 'command.return.description'
-COMMAND.syntax = 'command.return.syntax'
-COMMAND.permission = 'assistant'
-COMMAND.category = 'permission.categories.administration'
-COMMAND.arguments = 1
-COMMAND.immunity = true
-COMMAND.aliases = { 'return', 'back' }
+CMD.name = 'Return'
+CMD.description = 'command.return.description'
+CMD.syntax = 'command.return.syntax'
+CMD.permission = 'assistant'
+CMD.category = 'permission.categories.administration'
+CMD.arguments = 1
+CMD.immunity = true
+CMD.aliases = { 'return', 'back' }
 
-function COMMAND:on_run(player, targets)
+function CMD:on_run(player, targets)
   for k, v in ipairs(targets) do
     if IsValid(v) and v.prev_pos then
       v:notify('notification.return')

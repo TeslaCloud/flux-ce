@@ -1,11 +1,11 @@
-COMMAND.name = 'GetUp'
-COMMAND.description = 'command.getup.description'
-COMMAND.syntax = 'command.getup.syntax'
-COMMAND.category = 'permission.categories.roleplay'
-COMMAND.aliases = { 'chargetup', 'unfall', 'unfallover' }
-COMMAND.no_console = true
+CMD.name = 'GetUp'
+CMD.description = 'command.getup.description'
+CMD.syntax = 'command.getup.syntax'
+CMD.category = 'permission.categories.roleplay'
+CMD.aliases = { 'chargetup', 'unfall', 'unfallover' }
+CMD.no_console = true
 
-function COMMAND:on_run(player, delay)
+function CMD:on_run(player, delay)
   delay = math.clamp(tonumber(delay) or 0, 4, 60)
 
   if player:Alive() and player:is_ragdolled() then

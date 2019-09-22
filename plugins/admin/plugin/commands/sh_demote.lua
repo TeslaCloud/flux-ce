@@ -1,13 +1,13 @@
-COMMAND.name = 'Demote'
-COMMAND.description = 'command.demote.description'
-COMMAND.syntax = 'command.demote.syntax'
-COMMAND.permission = 'administrator'
-COMMAND.category = 'permission.categories.player_management'
-COMMAND.arguments = 1
-COMMAND.immunity = true
-COMMAND.alias = 'plydemote'
+CMD.name = 'Demote'
+CMD.description = 'command.demote.description'
+CMD.syntax = 'command.demote.syntax'
+CMD.permission = 'administrator'
+CMD.category = 'permission.categories.player_management'
+CMD.arguments = 1
+CMD.immunity = true
+CMD.alias = 'plydemote'
 
-function COMMAND:on_run(player, targets)
+function CMD:on_run(player, targets)
   for k, v in ipairs(targets) do
     v:notify('notification.demote', {
       group = v:GetUserGroup()

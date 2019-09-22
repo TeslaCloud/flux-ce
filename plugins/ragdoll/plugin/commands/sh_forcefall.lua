@@ -1,13 +1,13 @@
-COMMAND.name = 'ForceFall'
-COMMAND.description = 'command.forcefall.description'
-COMMAND.syntax = 'command.forcefall.syntax'
-COMMAND.permission = 'assistant'
-COMMAND.category = 'permission.categories.roleplay'
-COMMAND.arguments = 1
-COMMAND.player_arg = 1
-COMMAND.aliases = { 'forcefallover', 'plyfall' }
+CMD.name = 'ForceFall'
+CMD.description = 'command.forcefall.description'
+CMD.syntax = 'command.forcefall.syntax'
+CMD.permission = 'assistant'
+CMD.category = 'permission.categories.roleplay'
+CMD.arguments = 1
+CMD.player_arg = 1
+CMD.aliases = { 'forcefallover', 'plyfall' }
 
-function COMMAND:on_run(player, targets, delay)
+function CMD:on_run(player, targets, delay)
   delay = math.clamp(tonumber(delay) or 0, 0, 60)
 
   for k, v in ipairs(targets) do
