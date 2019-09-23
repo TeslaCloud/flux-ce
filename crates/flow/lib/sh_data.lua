@@ -1,4 +1,4 @@
-library 'Data'
+mod 'Data'
 
 if SERVER then
   function Data.save(key, value)

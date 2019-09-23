@@ -1,4 +1,4 @@
-library 'InfoDisplay'
+mod 'InfoDisplay'
 
 local stored        = InfoDisplay.stored or {}
 InfoDisplay.stored  = stored

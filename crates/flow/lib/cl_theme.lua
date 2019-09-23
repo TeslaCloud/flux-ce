@@ -1,7 +1,7 @@
 -- This library really hates being refreshed :/
 if Theme then return end
 
-library 'Theme'
+mod 'Theme'
 
 local stored          = Theme.stored        or {}
 local current_theme   = Theme.current_theme or nil

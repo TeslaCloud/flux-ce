@@ -1,6 +1,6 @@
 if ActiveNetwork then return end
 
-library 'ActiveNetwork'
+mod 'ActiveNetwork'
 
 local stored = ActiveNetwork.stored or {}
 local globals = ActiveNetwork.globals or {}

@@ -1,4 +1,4 @@
-library 'Font'
+mod 'Font'
 
 -- We want the fonts to recreate on refresh.
 local stored = {}

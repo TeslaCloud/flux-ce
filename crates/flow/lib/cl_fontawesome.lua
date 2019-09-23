@@ -10,7 +10,7 @@ if !Font then
   include(CRATE.__path__..'lib/cl_font.lua')
 end
 
-library 'FontAwesome'
+mod 'FontAwesome'
 
 -- This table is auto-generated, don't worry :)
 local fa_data = {

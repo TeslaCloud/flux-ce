@@ -2,7 +2,7 @@ if Plugin then return end
 
 require_relative 'plugin_instance'
 
-library 'Plugin'
+mod 'Plugin'
 
 local stored = {}
 local unloaded = {}

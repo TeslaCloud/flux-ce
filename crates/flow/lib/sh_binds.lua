@@ -1,5 +1,5 @@
 if CLIENT then
-  library 'Flux::Binds'
+  mod 'Flux::Binds'
 
   local stored          = Flux.Binds.stored     or {}
   local key_enums       = Flux.Binds.key_enums  or {}

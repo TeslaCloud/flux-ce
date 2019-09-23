@@ -1,4 +1,4 @@
-library 'Flux::Anim'
+mod 'Flux::Anim'
 
 local stored      = Flux.Anim.stored or {}
 local models      = Flux.Anim.models or {}

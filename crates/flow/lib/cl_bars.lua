@@ -1,7 +1,7 @@
 if !font then require_relative 'cl_font' end
 if !Flux.Lang then require_relative 'sh_lang' end
 
-library 'Flux::Bars'
+mod 'Flux::Bars'
 
 local stored              = Flux.Bars.stored or {}
 local sorted              = Flux.Bars.sorted or {}

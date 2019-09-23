@@ -1,4 +1,4 @@
-library 'Flux::Tool'
+mod 'Flux::Tool'
 
 Flux.Tool.stored = Flux.Tool.stored  or {}
 

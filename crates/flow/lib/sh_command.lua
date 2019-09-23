@@ -1,4 +1,4 @@
-library 'Flux::Command'
+mod 'Flux::Command'
 
 local command_log_color = Color('orange')
 local stored            = Flux.Command.stored   or {}

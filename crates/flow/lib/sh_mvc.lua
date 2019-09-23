@@ -1,6 +1,6 @@
 -- Sorta model-view-controller implementation, except the model isn't /actually/ used lol.
 
-library 'MVC'
+mod 'MVC'
 
 if CLIENT then
   local mvc_hooks = {}

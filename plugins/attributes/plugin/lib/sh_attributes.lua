@@ -1,4 +1,4 @@
-library 'Attributes'
+mod 'Attributes'
 
 local stored = Attributes.stored or {}
 Attributes.stored = stored

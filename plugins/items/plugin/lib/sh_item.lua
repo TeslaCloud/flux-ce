@@ -1,4 +1,4 @@
-library 'Item'
+mod 'Item'
 
 local stored = Item.stored or {}
 local instances = Item.instances or {}

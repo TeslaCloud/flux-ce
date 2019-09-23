@@ -1,4 +1,4 @@
-library 'Flux::Player'
+mod 'Flux::Player'
 
 function Flux.Player:notify(player, message, arguments, color)
   if !IsValid(player) then

@@ -1,4 +1,4 @@
-library 'Flux::Undo'
+mod 'Flux::Undo'
 
 local queue   = {}
 local buffer  = {}

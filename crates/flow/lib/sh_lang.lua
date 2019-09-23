@@ -1,4 +1,4 @@
-library 'Flux::Lang'
+mod 'Flux::Lang'
 
 local current_language  = 'en'
 local stored            = Flux.Lang.stored or {}

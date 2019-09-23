@@ -1,4 +1,4 @@
-library 'Areas'
+mod 'Areas'
 
 local stored = Areas.stored or {}
 local callbacks = Areas.callbacks or {}

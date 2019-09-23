@@ -1,4 +1,4 @@
-library 'Flux::HTML'
+mod 'Flux::HTML'
 
 Flux.HTML.templates       = Flux.HTML.templates   or {}
 Flux.HTML.stylesheets     = Flux.HTML.stylesheets or {}

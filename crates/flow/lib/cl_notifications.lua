@@ -1,4 +1,4 @@
-library 'Flux::Notification'
+mod 'Flux::Notification'
 
 local display = {}
 local top = 1
