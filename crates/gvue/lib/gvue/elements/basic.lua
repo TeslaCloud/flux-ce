@@ -7,10 +7,14 @@ local PANEL = {
     },
     context = {
       attributes = {
+        padding = '0',
         padding_up = 0, padding_right = 0, padding_down = 0, padding_left = 0,
+        margin = '0',
         margin_up = 0, margin_right = 0, margin_down = 0, margin_left = 0,
         up = 0, down = 0, left = 0, right = 0,
+        background = '0',
         background_color = nil, background_image = nil,
+        border = '0',
         border_radius = 0, border_size = 0, border_color = color_white,
         color = color_white,
         font_family = 'default',
