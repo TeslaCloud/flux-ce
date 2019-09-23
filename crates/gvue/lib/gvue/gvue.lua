@@ -4,6 +4,7 @@ mod 'Gvue'
 function Gvue:parse_unit(u)
   if isnumber(u) then return u end
   if !isstring(u) then return 0 end
+  if u:lower() == 'auto' then return 'auto' end
 
   local i, num = 0, nil
   local buf, cur = '', ''

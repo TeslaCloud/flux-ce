@@ -25,7 +25,7 @@ local unit_callbacks = {
   ['vmin']  = function(e, n, what) return n * Gvue:get_screen_dimensions().min end,
   ['vmax']  = function(e, n, what) return n * Gvue:get_screen_dimensions().max end,
   ['ch']    = function(e, n, what)
-    surface.SetFont(e._gvue.context.attributes.font)
+    surface.SetFont(e._gvue.context.attributes.font_family)
     local size = surface.GetTextSize('0')
     return n * size
   end,
