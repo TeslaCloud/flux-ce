@@ -11,6 +11,7 @@
 --
 -- @warning [Internal] Some custom message to append instead of default message for "Internal".
 -- @deprecation [Text to display in the warning window. Should be deprecation reason.]
+-- @deprecation_version [0.8.0]
 -- @param a [Number] Some number
 -- @param b [Object] Some object
 -- @param c [Hash] Table

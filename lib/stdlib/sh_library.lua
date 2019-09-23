@@ -1,3 +1,5 @@
+--- @deprecation [Libraries were replaced with modules]
+-- @deprecation_version [0.8.0]
 function library(lib_name)
   local parent, name = lib_name:parse_parent()
 

@@ -11,6 +11,7 @@ if SERVER then
   AddCSLuaFile 'sh_helpers.lua'
   AddCSLuaFile 'sh_library.lua'
   AddCSLuaFile 'sh_math.lua'
+  AddCSLuaFile 'sh_module.lua'
   AddCSLuaFile 'sh_player.lua'
   AddCSLuaFile 'sh_string.lua'
   AddCSLuaFile 'sh_table.lua'
@@ -28,10 +29,15 @@ include 'sh_math.lua'
 include 'sh_utils.lua'
 include 'sh_color.lua'
 include 'sh_class.lua'
+include 'sh_module.lua'
 include 'sh_library.lua'
 include 'sh_unit.lua'
 include 'sh_player.lua'
 include 'sh_file.lua'
 include 'sh_wrappers.lua'
-include 'cl_utils.lua'
+
+if CLIENT then
+  include 'cl_utils.lua'
+end
+
 include 'sh_debug.lua'
