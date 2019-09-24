@@ -7,6 +7,8 @@
 -- Flux Standard Library
 -- (Garry's Mod Extensions)
 --
+-- "...so that you don't have to"
+--
 -- (C) TeslaCloud Studios
 -- Released under the MIT license.
 
