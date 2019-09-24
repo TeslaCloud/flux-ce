@@ -142,3 +142,15 @@ function Bolt:ChatboxGetPlayerIcon(player, text, team_chat)
     return { icon = player:get_role_table().icon or 'fa-user', size = 14, margin = 10, is_data = true }
   end
 end
+
+function Bolt:GetStaffTable()
+  local staff_table = {}
+
+  for k, v in ipairs(player.GetAll()) do
+    if v:can('staff') then
+      table.insert(staff_table, v)
+    end
+  end
+
+  return staff_table
+end
