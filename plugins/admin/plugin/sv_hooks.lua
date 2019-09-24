@@ -143,14 +143,8 @@ function Bolt:ChatboxGetPlayerIcon(player, text, team_chat)
   end
 end
 
-function Bolt:GetStaffTable()
-  local staff_table = {}
-
-  for k, v in ipairs(player.GetAll()) do
-    if v:can('staff') then
-      table.insert(staff_table, v)
-    end
-  end
-
-  return staff_table
+--- Get a list of all currently online staff members.
+-- @return [Hash - currently online staff members]
+function Bolt:get_staff()
+  return table.keep_if(player.all(), function(k, v) return v:can('staff') end)
 end
