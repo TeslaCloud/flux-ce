@@ -47,6 +47,9 @@ en:
       description: "Sets player's usergroup. Usergoups: {groups}"
       syntax: <target> <usergroup>
       message: "{player} has set {target}'s user group to {group}."
+    staff:
+      description: 'Talk to fellow staff members.'
+      syntax: <message>
     tp:
       description: Teleport player to position you looking at.
       syntax: <target>
