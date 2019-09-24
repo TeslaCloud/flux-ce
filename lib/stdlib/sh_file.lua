@@ -83,24 +83,17 @@ function File.path(filename)
 end
 
 function File.ls(path, include_hidden)
-  local final = {}
   local files, folders = file.Find(path, 'GAME')
 
   if !files or !folders then return end
 
   table.add(files, folders)
 
-  final = table.map(files, function(f)
-    if include_hidden then
+  return table.map(files, function(f)
+    if include_hidden or !f:starts('.') then
       return f
-    else
-      if !f:starts('.') then
-        return f
-      end
     end
   end)
-
-  return final
 end
 
 File.rm               = File.delete

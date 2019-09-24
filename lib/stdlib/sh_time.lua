@@ -1,3 +1,7 @@
+--- The DateTime class represents a time interval, not a point in time.
+-- For points in time, please use Date or DateTime.
+-- @see [Date]
+-- @see [DateTime]
 class 'Time'
 
 local ms_const      = 0.001
@@ -42,17 +46,14 @@ local mappings      = {
   ['y']             = y_const_d
 }
 
-function Time:init(year, month, day, hour, minute, second, timezone)
-  self.time = os.time {
-    year = year,
-    month = month,
-    day = day,
-    hour = hour,
-    min = minute,
-    sec = second
-  }
-
-  self.timezone = timezone or Time:zone()
+--- Initializes a new Time object that represents a time inverval.
+-- ```
+-- local two_days = Time:days(2)
+-- local a_day_after_tomorrow = Date:now() + two_days
+-- ```
+-- @param seconds=current time [Number UNIX time]
+function Time:init(seconds)
+  self.time = seconds or os.time()
 
   for k, v in pairs(mappings) do
     self[k] = function(this)
@@ -61,64 +62,63 @@ function Time:init(year, month, day, hour, minute, second, timezone)
   end
 end
 
-function Time:at(seconds, timezone)
-  local date = os.date('*t', seconds)
-  return Time.new(date.year, date.month, date.day, date.hour, date.min, date.sec, timezone)
-end
-
-function Time:utc(time)
-  local date = os.date('!*t', time or self.time)
-  return Time.new(date.year, date.month, date.day, date.hour, date.min, date.sec, timezone)
-end
-
-function Time:now()
-  return Time:at(os.time())
-end
-
-function Time:tomorrow()
-  return Time:now() + Time:days(1)
-end
-
-function Time:yesterday()
-  return Time:now() - Time:days(1)
-end
-
-function Time:zone()
-  return os.date('%z', self.time)
-end
-
+--- Creates a Time object representing a certain amount of milliseconds.
+-- @param n [Number amount of milliseconds]
+-- @return [Time]
 function Time:milliseconds(n)
-  return Time:at(n * ms_const)
+  return Time.new(n * ms_const)
 end
 
+--- Creates a Time object representing a certain amount of seconds.
+-- @param n [Number amount of seconds]
+-- @return [Time]
 function Time:seconds(n)
-  return Time:at(n)
+  return Time.new(n)
 end
 
+--- Creates a Time object representing a certain amount of minutes.
+-- @param n [Number amount of minutes]
+-- @return [Time]
 function Time:minutes(n)
-  return Time:at(n * m_const)
+  return Time.new(n * m_const)
 end
 
+--- Creates a Time object representing a certain amount of hours.
+-- @param n [Number amount of hours]
+-- @return [Time]
 function Time:hours(n)
-  return Time:at(n * h_const)
+  return Time.new(n * h_const)
 end
 
+--- Creates a Time object representing a certain amount of days.
+-- @param n [Number amount of days]
+-- @return [Time]
 function Time:days(n)
-  return Time:at(n * d_const)
+  return Time.new(n * d_const)
 end
 
+--- Creates a Time object representing a certain amount of weeks.
+-- @param n [Number amount of weeks]
+-- @return [Time]
 function Time:weeks(n)
-  return Time:at(n * w_const)
+  return Time.new(n * w_const)
 end
 
+--- Creates a Time object representing a certain amount of months.
+-- @param n [Number amount of months]
+-- @return [Time]
 function Time:months(n)
-  return Time:at(n * mt_const)
+  return Time.new(n * mt_const)
 end
 
+--- Creates a Time object representing a certain amount of years.
+-- @param n [Number amount of years]
+-- @return [Time]
 function Time:years(n)
-  return Time:at(n * y_const)
+  return Time.new(n * y_const)
 end
 
+--- @ignore
 Time.millisecond  = Time.milliseconds
 Time.ms           = Time.milliseconds
 Time.minute       = Time.minutes
@@ -128,10 +128,9 @@ Time.week         = Time.weeks
 Time.month        = Time.months
 Time.year         = Time.years
 
-function Time:strftime(fmt, time)
-  return os.date(fmt, time or self.time)
-end
-
+--- Creates a nice string representation of time.
+-- @param time=self.time [Number]
+-- @return [String phrases]
 function Time:nice(time)
   time = time or self.time or 0
   local seconds = math.abs(time or self.time)
@@ -161,12 +160,20 @@ function Time:nice(time)
   return 'time.'..time_data[1], time_data[1] != 'just_now' and (time >= 0 and 'time.from_now' or 'time.ago') or '', time_data[2]
 end
 
+--- Creates a nice string representation of time relative to now.
+-- @param time=current time [Number]
+-- @return [String phrases]
 function Time:nice_from_now(time)
-  local now = Time:now()
-  local diff = (istable(time) and time or Time:at(time)) - now
+  local diff = Time.new(math.abs(DateTime.at(time).time - DateTime:now().time))
   return diff:nice()
 end
 
+--- Same as nice, but performs formatting.
+-- @param suffix [String]
+-- @param from_now [String]
+-- @param amt [Number]
+-- @param lang [String]
+-- @return [String phrases]
 function Time:format_nice(suffix, from_now, amt, lang)
   if suffix != 'time.just_now' then
     local floored = math.floor(amt or 1)
@@ -183,46 +190,22 @@ function Time:format_nice(suffix, from_now, amt, lang)
   end
 end
 
-function Time:iso(time)
-  return self:strftime('%Y-%m-%d %H:%M:%S', time or self.time)
+--- @see [Date#strftime]
+function Time:strftime(fmt, time)
+  return Date.strftime(self or Time, fmt, time)
 end
 
-local function run_if_valid_time(right, callback)
-  if istable(right) and right.class_name == Time.class_name then
-    return callback(right)
-  end
+--- @see [DateTime#now]
+function Time:now()
+  return DateTime:now()
 end
 
-function Time:__add(right)
-  return run_if_valid_time(right, function(right)
-    return Time:at(self.time + right.time)
-  end)
+--- @see [DateTime#tomorrow]
+function Time:tomorrow()
+  return DateTime:tomorrow()
 end
 
-function Time:__sub(right)
-  return run_if_valid_time(right, function(right)
-    return Time:at(self.time - right.time)
-  end)
-end
-
-function Time:__mul(right)
-  return run_if_valid_time(right, function(right)
-    return Time:at(self.time * right.time)
-  end)
-end
-
-function Time:__div(right)
-  return run_if_valid_time(right, function(right)
-    return Time:at(self.time / right.time)
-  end)
-end
-
-function Time:__concat(right)
-  return run_if_valid_time(right, function(right)
-    return Time:at(self.time + right.time)
-  end)
-end
-
-function Time:__tostring()
-  return self:iso()
+--- @see [DateTime#yesterday]
+function Time:yesterday()
+  return DateTime:yesterday()
 end

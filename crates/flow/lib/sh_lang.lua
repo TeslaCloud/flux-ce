@@ -81,7 +81,7 @@ function Flux.Lang:nice_time(time, lang)
     time = tonumber(time) or 0
   end
 
-  return Time:format_nice(Time:nice_from_now(Time:now() + Time:seconds(time)), lang)
+  return Time:format_nice(Time:nice_from_now(DateTime:now() + Time:seconds(time)), lang)
 end
 
 function Flux.Lang:get_case(language, phrase, case)

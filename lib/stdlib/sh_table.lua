@@ -67,9 +67,17 @@ end
 function table.select(t, what)
   local new_table = a{}
 
-  for k, v in pairs(t) do
-    if istable(v) then
-      table.insert(new_table, v[what])
+  if isfunction(what) then
+    for k, v in pairs(t) do
+      if what(v, k) != false then
+        table.insert(new_table, v)
+      end
+    end
+  else
+    for k, v in pairs(t) do
+      if istable(v) then
+        table.insert(new_table, v[what])
+      end
     end
   end
 

@@ -153,7 +153,7 @@ function create_primary_key(table_name, key)
 end
 
 function to_datetime(unix_time)
-  return os.date('%Y-%m-%d %H:%M:%S', unix_time)
+  return DateTime:iso(unix_time)
 end
 
 function to_timestamp(unix_time)

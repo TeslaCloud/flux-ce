@@ -56,20 +56,17 @@ function class(name, base_class)
   obj.new = function(...)
     local new_obj = {}
     local real_class = parent[name]
+    local old_super = super
 
     -- Set new object's meta table and copy the data from original class to new object.
     setmetatable(new_obj, real_class)
     table.safe_merge(new_obj, real_class)
 
-    -- If there is a base class, call their constructor.
     local base_class = real_class.BaseClass
-    local has_base_class = true
 
-    while istable(base_class) and has_base_class do
-      if base_class.BaseClass and base_class.ClassName != base_class.BaseClass.ClassName then
-        base_class = base_class.BaseClass
-      else
-        has_base_class = false
+    if base_class and isfunction(base_class.init) then
+      super = function(...)
+        return base_class.init(new_obj, ...)
       end
     end
 
@@ -86,6 +83,8 @@ function class(name, base_class)
     new_obj.class = real_class
     new_obj.static_class = false
     new_obj.IsValid = function() return true end
+
+    super = old_super
 
     -- Return our newly generated object.
     return new_obj

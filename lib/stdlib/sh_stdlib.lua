@@ -1,3 +1,15 @@
+---      _      _ _ _ _ 
+--   ___| |_ __| | (_) |__
+--  / __| __/ _` | | | '_ \
+--  \__ \ || (_| | | | |_) |
+--  |___/\__\__,_|_|_|_.__/
+--
+-- Flux Standard Library
+-- (Garry's Mod Extensions)
+--
+-- (C) TeslaCloud Studios
+-- Released under the MIT license.
+
 if Flux and Flux.initialized then return end
 
 if SERVER then
@@ -18,6 +30,9 @@ if SERVER then
   AddCSLuaFile 'sh_unit.lua'
   AddCSLuaFile 'sh_utils.lua'
   AddCSLuaFile 'sh_wrappers.lua'
+  AddCSLuaFile 'sh_date.lua'
+  AddCSLuaFile 'sh_datetime.lua'
+  AddCSLuaFile 'sh_time.lua'
 end
 
 include 'sh_aliases.lua'
@@ -35,6 +50,9 @@ include 'sh_unit.lua'
 include 'sh_player.lua'
 include 'sh_file.lua'
 include 'sh_wrappers.lua'
+include 'sh_date.lua'
+include 'sh_datetime.lua'
+include 'sh_time.lua'
 
 if CLIENT then
   include 'cl_utils.lua'
