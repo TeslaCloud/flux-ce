@@ -37,7 +37,14 @@ function DateTime:init(year, month, day, hour, minute, second, timezone)
     self.sec = sec
   end
 
-  self.time = os.time(self.data)
+  self.time = os.time {
+    year = self.year,
+    month = self.month,
+    day = self.day,
+    hour = self.hour,
+    min = self.min,
+    sec = self.sec
+  }
   self.timezone = timezone or self:zone()
 end
 
