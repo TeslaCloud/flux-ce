@@ -26,92 +26,6 @@ function Items:PlayerUseItemEntity(player, entity, item_table)
   Cable.send(player, 'fl_player_use_item_entity', entity)
 end
 
-function Items:PlayerTakeItem(player, item_table, ...)
-  if IsValid(item_table.entity) then
-    local inv_type
-
-    for k, v in pairs({ ... }) do
-      if istable(v) and k == 'inv_type' then
-        inv_type = v
-      end
-    end
-
-    local success = player:give_item_by_id(item_table.instance_id)
-
-    if success then
-      item_table.entity:Remove()
-      Item.async_save_entities()
-    end
-  end
-end
-
-function Items:PlayerDropItem(player, instance_id)
-  local item_table = Item.find_instance_by_id(instance_id)
-  local trace = player:GetEyeTraceNoCursor()
-
-  if hook.run('CanPlayerDropItem', player, item_table) == false then return end
-
-  player:take_item_by_id(instance_id)
-
-  item_table.inventory_type = nil
-  item_table.slot_id = nil
-
-  Item.network_item(player, instance_id)
-
-  local distance = trace.HitPos:Distance(player:GetPos())
-
-  if distance < 80 then
-    Item.spawn(trace.HitPos, Angle(0, 0, 0), item_table)
-  else
-    local ent, item_table = Item.spawn(player:EyePos() + trace.Normal * 20, Angle(0, 0, 0), item_table)
-    local phys_obj = ent:GetPhysicsObject()
-
-    if IsValid(phys_obj) then
-      phys_obj:ApplyForceCenter(trace.Normal * 200)
-    end
-  end
-
-  Item.async_save_entities()
-end
-
-function Items:PlayerUseItem(player, item_table, ...)
-  if item_table.on_use then
-    local result = item_table:on_use(player)
-
-    if result == true then
-      return
-    elseif result == false then
-      return false
-    end
-  end
-
-  if IsValid(item_table.entity) then
-    item_table.entity:Remove()
-  else
-    player:take_item_by_id(item_table.instance_id)
-  end
-end
-
-function Items:OnItemGiven(player, item_table, x, y)
-  hook.run('OnItemInventoryChanged', player, item_table, item_table.inventory_type)
-
-  Item.network_item(player, item_table.instance_id)
-
-  hook.run('PlayerInventoryUpdated', player, item_table.inventory_type)
-end
-
-function Items:OnItemTaken(player, item_table, inv_type, slot_x, slot_y)
-  hook.run('OnItemInventoryChanged', player, item_table, nil, inv_type)
-
-  Item.network_item(player, item_table.instance_id)
-
-  hook.run('PlayerInventoryUpdated', player, inv_type)
-end
-
-function Items:PlayerInventoryUpdated(player, inv_type)
-  Cable.send(player, 'fl_inventory_refresh', inv_type)
-end
-
 function Items:PlayerCanUseItem(player, item_table, action, ...)
   local item_entity = item_table.entity
 
@@ -148,17 +62,15 @@ function Items:CanPlayerDropItem(player, item_table)
 end
 
 function Items:PostPlayerSpawn(player)
-  timer.Simple(0, function()
-    local ply_inv = player:get_items()
-
-    for k, v in ipairs(ply_inv) do
-      local item_table = Item.find_instance_by_id(v)
-
-      if istable(item_table) then
-        item_table:on_loadout(player)
+  if player:is_character_loaded() then
+    timer.Simple(0, function()
+      for k, v in pairs(player:get_items()) do
+        if v.on_loadout then
+          v:on_loadout(player)
+        end
       end
-    end
-  end)
+    end)
+  end
 end
 
 function Items:PreSaveCharacter(player, index)
@@ -172,10 +84,6 @@ function Items:PreSaveCharacter(player, index)
     end
   end
 end
-
-Cable.receive('fl_player_drop_item', function(player, instance_id)
-  hook.run('PlayerDropItem', player, instance_id)
-end)
 
 Cable.receive('fl_items_abort_hold_start', function(player)
   local ent = player:get_nv('hold_entity')

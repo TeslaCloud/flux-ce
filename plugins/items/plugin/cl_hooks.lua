@@ -109,10 +109,6 @@ function Items:PlayerUseItemMenu(instance_id, is_entity)
   item_menu:SetKeyboardInputEnabled(true)
 end
 
-function Items:PlayerDropItem(item_table, panel, mouse_x, mouse_y)
-  Cable.send('fl_player_drop_item', item_table.instance_id)
-end
-
 function Items:OnItemDataReceived()
   for k, v in ipairs(ents.GetAll()) do
     if IsValid(v) and v:GetClass() == 'fl_item' then
