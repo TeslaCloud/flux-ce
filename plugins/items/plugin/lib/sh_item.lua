@@ -57,6 +57,8 @@ function Item.register(id, data)
   data.print_name = data.print_name or data.name
   data.description = data.description or 'This item has no description!'
   data.weight = data.weight or 1
+  data.width = data.width or 1
+  data.height = data.height or 1
   data.stackable = data.stackable or false
   data.pocket_size = data.pocket_size or false
   data.max_stack = data.max_stack or 64
@@ -77,7 +79,6 @@ function Item.register(id, data)
   data.use_icon = data.use_icon
   data.take_icon = data.take_icon
   data.cancel_icon = data.cancel_icon
-  data.slot_id = data.slot_id
 
   stored[id] = data
   instances[id] = instances[id] or {}
@@ -92,6 +93,8 @@ function Item.to_saveable(item_table)
     print_name = item_table.print_name,
     description = item_table.description,
     weight = item_table.weight,
+    width = item_table.width,
+    height = item_table.height,
     stackable = item_table.stackable,
     pocket_size = item_table.pocket_size,
     max_stack = item_table.max_stack,
@@ -110,8 +113,6 @@ function Item.to_saveable(item_table)
     use_icon = item_table.use_icon,
     take_icon = item_table.take_icon,
     cancel_icon = item_table.cancel_icon,
-    slot_id = item_table.slot_id,
-    inventory_type = item_table.inventory_type
   }
 end
 
