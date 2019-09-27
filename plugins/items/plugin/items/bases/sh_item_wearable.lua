@@ -53,16 +53,20 @@ function ItemWearable:can_equip(player)
 end
 
 function ItemWearable:post_equipped(player)
-  if self:get_equip_model(player) then
+  local model = self:get_equip_model(player)
+
+  if model then
     self:set_data('native_model', player:GetModel())
-    player:SetModel(self:get_equip_model(player))
+    player:SetModel(model)
   end
 
-  if self:get_bodygroups(player) then
+  local bodygroups = self:get_bodygroups(player)
+
+  if bodygroups then
     local bodygroup_data = player:GetBodyGroups()
     local native_bodygroups = {}
 
-    for k, v in pairs(self:get_bodygroups(player)) do
+    for k, v in pairs(bodygroups) do
       if isstring(k) then
         for k1, v1 in pairs(bodygroup_data) do
           if k == v1.name then

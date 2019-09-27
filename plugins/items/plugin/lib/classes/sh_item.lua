@@ -132,7 +132,7 @@ if SERVER then
   end
 
   function ItemBase:get_player()
-    for k, v in ipairs(player.GetAll()) do
+    for k, v in ipairs(player.all()) do
       if v:has_item_by_id(self.instance_id) then
         return v
       end
