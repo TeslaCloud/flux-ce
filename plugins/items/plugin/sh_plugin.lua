@@ -65,7 +65,7 @@ function Items:RegisterConditions()
     check = function(player, data)
       if !data.operator or !data.item_id or !data.key or !data.value then return false end
 
-      local items = player:find_instances(item_id, 1)
+      local items = player:find_items(item_id)
 
       if #items == 0 then
         return false

@@ -94,12 +94,10 @@ function ItemWearable:post_unequipped(player)
   end
 
   for k, v in pairs(player:get_items(self.equip_inv)) do
-    local item_table = Item.find_instance_by_id(v)
-
     if self.instance_id == v then continue end
 
-    if item_table and !item_table:can_equip(player) then
-      item_table:on_use(player)
+    if !v:can_equip(player) then
+      v:on_use(player)
     end
   end
 end
