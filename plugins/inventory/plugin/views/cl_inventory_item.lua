@@ -2,17 +2,45 @@ local PANEL = {}
 PANEL.item_data = nil
 PANEL.item_count = 0
 PANEL.instance_ids = {}
-PANEL.is_hovered = false
 PANEL.slot_number = nil
 
 function PANEL:Paint(w, h)
   local draw_color = Color(30, 30, 30, 100)
+  local drop_slot = Flux.inventory_drop_slot
 
-  if self.is_hovered and !self:IsHovered() then
-    self.is_hovered = false
-  end
+  if IsValid(drop_slot) and drop_slot:get_inventory_id() == self:get_inventory_id() then
+    local drag_slot = Flux.inventory_drag_slot
+    local slot_w, slot_h = drag_slot:get_item_size()
+    local drop_x, drop_y = drop_slot:get_item_pos()
+    local x, y = self:get_item_pos()
 
-  if !self.is_hovered then
+    if self.is_hovered or self:is_multislot() and drop_x <= x and drop_y <= y
+    and drop_x + slot_w > x and drop_y + slot_h > y then
+      local item_table = self.item_data
+
+      if item_table then
+        if IsValid(drag_slot) and drag_slot.item_data != item_table then
+          local slot_data = drag_slot.item_data
+
+          if slot_data.id == item_table.id and slot_data.stackable
+          and drag_slot.item_count < slot_data.max_stack
+          and drop_slot.item_count < slot_data.max_stack then
+            draw_color = Color(200, 200, 60)
+          else
+            draw_color = Color(200, 60, 60, 160)
+          end
+        else
+          draw_color = draw_color:lighten(30)
+        end
+      else
+        if drop_slot.out_of_bounds then
+          draw_color = Color(200, 60, 60, 160)
+        else
+          draw_color = Color(60, 200, 60, 160)
+        end
+      end
+    end
+  else
     if !self.item_data then
       draw_color = draw_color:darken(25)
     else
@@ -26,25 +54,6 @@ function PANEL:Paint(w, h)
         surface.SetDrawColor(Color(255, 255, 255))
         surface.DrawOutlinedRect(1, 1, w - 2, h - 2)
       end
-    end
-  else
-    local item_table = self.item_data
-    local cur_slot = Flux.inventory_drag_slot
-
-    if item_table then
-      if IsValid(cur_slot) and cur_slot.item_data != item_table then
-        local slot_data = cur_slot.item_data
-
-        if slot_data.id == item_table.id and slot_data.stackable and cur_slot.item_count < slot_data.max_stack then
-          draw_color = Color(200, 200, 60)
-        else
-          draw_color = Color(200, 60, 60, 160)
-        end
-      else
-        draw_color = draw_color:lighten(30)
-      end
-    else
-      draw_color = Color(60, 200, 60, 160)
     end
   end
 
@@ -182,12 +191,24 @@ function PANEL:rebuild()
   self:SetToolTip(t(self.item_data:get_name())..'\n'..t(self.item_data:get_description()))
 end
 
-function PANEL:get_inventory_panel()
-  return self.inventory
+function PANEL:get_item_size()
+  if self.item_data then
+    return self.item_data.width, self.item_data.height
+  end
+
+  return 1, 1
 end
 
-function PANEL:set_inventory_panel(panel)
-  self.inventory = panel
+function PANEL:get_item_pos()
+  return self.slot_x, self.slot_y
+end
+
+function PANEL:get_inventory_id()
+  return self.inventory_id
+end
+
+function PANEL:is_multislot()
+  return self.multislot
 end
 
 vgui.Register('fl_inventory_item', PANEL, 'DPanel')

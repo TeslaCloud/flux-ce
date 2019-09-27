@@ -4,98 +4,35 @@ function PANEL:Paint(w, h)
   Theme.hook('PaintTabInventoryBackground', self, w, h)
 end
 
+function PANEL:PerformLayout(w, h)
+
+end
+
 function PANEL:get_menu_size()
-  return ScrW() / 1.5, ScrH() / 1.5
+  return ScrW() * 0.66, ScrH() * 0.66
 end
 
 function PANEL:on_close()
-  if IsValid(self.hotbar) then
-    self.hotbar:AlphaTo(0, Theme.get_option('menu_anim_duration'), 0)
-  end
-
   if IsValid(self.player_model) then
     self.player_model:safe_remove()
   end
 
-  if IsValid(self.desc) then
-    self.desc:save()
+  if IsValid(self.hotbar) then
+    self.hotbar:safe_remove()
   end
 end
 
 function PANEL:on_change()
-  self.hotbar:safe_remove()
-
-  if IsValid(self.desc) then
-    self.desc:save()
+  if IsValid(self.hotbar) then
+    self.hotbar:safe_remove()
   end
 end
 
 function PANEL:rebuild()
-  if IsValid(self.inventory) then
-    self.inventory:rebuild()
-    self.hotbar:rebuild()
-    self.equipment:rebuild()
-    self.pockets:rebuild()
-
-    timer.simple(0.05, function()
-      if IsValid(self.player_model) then
-        self.player_model:rebuild()
-      end
-    end)
-
-    hook.run('OnInventoryRebuild', self, false)
-
-    return
-  end
-
-  self.inventory = vgui.create('fl_inventory', self)
-  self.inventory:set_player(PLAYER)
-  self.inventory:set_title('ui.inventory.main_inventory')
-
   local w, h = self:GetSize()
-  local width, height = self.inventory:GetSize()
-
-  self.pockets = vgui.create('fl_inventory', self)
-  self.pockets.inventory_type = 'pockets'
-  self.pockets:set_max_size(self.inventory:GetWide(), nil)
-  self.pockets:set_player(PLAYER)
-  self.pockets:set_title('ui.inventory.pockets')
-
-  if width < w / 2 then
-    local x, y = self.inventory:GetPos()
-
-    self.inventory:SetPos(w / 2 - width - 2, y)
-  end
-
-  local pockets_title_w, pockets_title_h = util.text_size(self.pockets.title, Theme.get_font('text_normal_large'))
-
-  height = height + pockets_title_h + 16
-
-  if height < h then
-    local x, y = self.inventory:GetPos()
-
-    self.inventory:SetPos(x, h / 2 - height / 2)
-  end
-
-  local x, y = self.inventory:GetPos()
-
-  self.pockets:SetPos(x, y + height)
-
-  self.hotbar = vgui.Create('fl_inventory_hotbar', self:GetParent())
-  self.hotbar:set_slot_padding(8)
-  self.hotbar:set_player(PLAYER)
-  self.hotbar:set_title('ui.inventory.hotbar')
-
-  self.equipment = vgui.Create('fl_inventory', self)
-  self.equipment.inventory_type = 'equipment'
-  self.equipment:set_slot_padding(8)
-  self.equipment:set_title('ui.inventory.equipment')
-  self.equipment:set_player(PLAYER)
-  self.equipment:SetPos(w - self.equipment:GetWide(), h / 2 - self.equipment:GetTall() / 2)
 
   self.player_model = vgui.Create('DModelPanel', self)
-  self.player_model:SetPos(w / 2 + 8, 0)
-  self.player_model:SetSize(w / 2 - self.equipment:GetWide() - 18, h)
+  self.player_model:DockPadding(math.scale(4), math.scale(4), math.scale(4), math.scale(4))
   self.player_model:SetFOV(47)
   self.player_model:SetCamPos(Vector(80, 0, 50))
   self.player_model:SetLookAt(Vector(0, 0, 37))
@@ -135,9 +72,22 @@ function PANEL:rebuild()
 
   self.player_model:rebuild()
 
-  self.desc = vgui.create('DTextEntry', self)
-  self.desc:SetSize(self.player_model:GetWide() - 8, math.scale(24))
-  self.desc:SetPos(self.player_model.x + 4, self.player_model.y + self.player_model:GetTall() - self.desc:GetTall() - 4)
+  self.player_model:Receiver('fl_item', function(receiver, dropped, is_dropped, menu_index, mouse_x, mouse_y)
+    local dropped = dropped[1]
+
+    if is_dropped then
+      if dropped.item_data then
+        local item_table = dropped.item_data
+
+        if item_table.equip_slot and !item_table:is_equipped() then
+          item_table:do_menu_action('on_use')
+        end
+      end
+    end
+  end)
+
+  self.desc = vgui.create('DTextEntry', self.player_model)
+  self.desc:Dock(BOTTOM)
   self.desc:SetText(PLAYER:get_phys_desc())
   self.desc:SetFont(Theme.get_font('main_menu_normal'))
   self.desc.saved = true
@@ -171,19 +121,42 @@ function PANEL:rebuild()
   self.desc.OnEnter = function(pnl)
     local err = !pnl:save()
 
-    if !err then
-      surface.PlaySound('buttons/button14.wav')
-    else
-      surface.PlaySound('buttons/button10.wav')
-    end
+    surface.PlaySound(err and 'buttons/button10.wav' or 'buttons/button14.wav')
   end
 
-  self.inventory:rebuild()
-  self.hotbar:rebuild()
-  self.equipment:rebuild()
-  self.pockets:rebuild()
+  self.equipment = PLAYER:get_inventory('equipment'):create_panel(self)
+  self.equipment:set_slot_size(math.scale(80))
+  self.equipment:set_slot_padding(math.scale(4))
+  self.equipment:set_title('ui.inventory.equipment')
+  self.equipment:SizeToContents()
+  self.equipment:SetPos(w - self.equipment:GetWide(), h * 0.5 - self.equipment:GetTall() * 0.5)
 
-  hook.run('OnInventoryRebuild', self, true)
+  self.player_model:SetSize(w * 0.5 - self.equipment:GetWide(), h)
+  self.player_model:SetPos(w - self.player_model:GetWide() - self.equipment:GetWide() - math.scale(8))
+
+  self.main_inventory = PLAYER:get_inventory('main_inventory'):create_panel(self)
+  self.main_inventory:set_title('ui.inventory.main_inventory')
+  self.main_inventory:SizeToContents()
+
+  self.pockets = PLAYER:get_inventory('pockets'):create_panel(self)
+  self.pockets:set_slot_size(math.scale(48))
+  self.pockets:set_title('ui.inventory.pockets')
+  self.pockets:SizeToContents()
+
+  local title_w, title_h = util.text_size(self.pockets.title, Theme.get_font('text_normal_large'))
+  local x = self.player_model.x - self.main_inventory:GetWide() - math.scale(8)
+  local y = h * 0.5 - self.main_inventory:GetTall() * 0.5 - self.pockets:GetTall() * 0.5 - title_h * 0.5
+
+  self.main_inventory:SetPos(x, y)
+  self.pockets:SetPos(x, y + self.main_inventory:GetTall() + title_h + math.scale(16))
+
+  self.hotbar = PLAYER:get_inventory('hotbar'):create_panel(self:GetParent())
+  self.hotbar:set_slot_size(math.scale(80))
+  self.hotbar:set_slot_padding(math.scale(8))
+  self.hotbar:draw_inventory_slots(true)
+  self.hotbar:set_title('ui.inventory.hotbar')
+  self.hotbar:SizeToContents()
+  self.hotbar:SetPos(ScrW() * 0.5 - self.hotbar:GetWide() * 0.5, ScrH() - self.hotbar:GetTall() - math.scale(16))
 end
 
 vgui.Register('fl_inventory_menu', PANEL, 'fl_base_panel')
