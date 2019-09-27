@@ -1,163 +1,142 @@
-function Inventory:PostCreateCharacter(player, char, char_data)
+function Inventories:PostCreateCharacter(player, char, char_data)
   Plugin.call('AddDefaultItems', player, char, char.inventory)
 end
 
-function Inventory:OnActiveCharacterSet(player, character)
-  local inv = {}
-  local item_ids = (character.item_ids or ''):split(',')
-
-  for k, v in ipairs(item_ids) do
-    if !tonumber(v) then continue end
-
-    local instance = Item.find_instance_by_id(tonumber(v))
-
-    if instance and instance.slot_id then
-      local cur_inv_type = instance.inventory_type or 'hotbar'
-      local cur_inv = inv[cur_inv_type] or {}
-      local y, x = unpack(instance.slot_id)
-
-      cur_inv.type = cur_inv_type
-      cur_inv.width, cur_inv.height = player:get_inventory_size(cur_inv_type)
-
-      cur_inv[y] = cur_inv[y] or {}
-
-      local slot = cur_inv[y][x] or {}
-
-      table.insert(slot, instance.instance_id)
-
-      Item.network_item(player, instance.instance_id)
-
-      cur_inv[y][x] = slot
-      inv[cur_inv_type] = cur_inv
-    end
-  end
-
-  character.real_inventory = inv
-  player:set_nv('inventory', character.real_inventory)
+function Inventories:PlayerDisconnected(player)
+  player:delete_inventories()
 end
 
-function Inventory:SaveCharacterData(player, char)
+function Inventories:OnActiveCharacterSet(player, character)
+  player:delete_inventories()
+  player:create_inventories()
+end
+
+function Inventories:CreatePlayerInventories(player, inventories)
+  local main_inventory = Inventory.new()
+    main_inventory:set_size(Config.get('inventory_width'), Config.get('inventory_height'))
+    main_inventory.type = 'main_inventory'
+    main_inventory.default = true
+  inventories[main_inventory.type] = main_inventory
+
+  local hotbar = Inventory.new()
+    hotbar:set_size(Config.get('hotbar_width'), Config.get('hotbar_height'))
+    hotbar.type = 'hotbar'
+    hotbar.multislot = false
+  inventories[hotbar.type] = hotbar
+
+  local equipment = Inventory.new()
+    equipment:set_size(Config.get('equipment_width'), Config.get('equipment_height'))
+    equipment.type = 'equipment'
+    equipment.multislot = false
+  inventories[equipment.type] = equipment
+
+  local pockets = Inventory.new()
+    pockets:set_size(1, Config.get('pockets_height'))
+    pockets.type = 'pockets'
+    pockets.infinite_width = true
+    pockets.multislot = false
+  inventories[pockets.type] = pockets
+end
+
+function Inventories:SaveCharacterData(player, char)
   if player:get_character_id() == char.id then
-    char.item_ids = table.concat(player:get_items(), ',')
+    char.item_ids = table.concat(player:get_items_list(), ',')
   end
 end
 
-function Inventory:OnItemInventoryChanged(player, item_table, new_inv, old_inv)
-  if item_table.on_inventory_changed then
-    item_table:on_inventory_changed(player, new_inv, old_inv)
-  end
-end
+function Inventories:PlayerTakeItem(player, item_table, ...)
+  if IsValid(item_table.entity) then
+    local inv_type
 
-function Inventory:CanItemMove(player, item_table, inv_type, x, y)
-  if !item_table or !x or !y or !inv_type then
-    return false
-  end
+    for k, v in pairs({ ... }) do
+      if istable(v) then
+        for k1, v1 in pairs(v) do
+          if k1 == 'inv_type' then
+            inv_type = v1
+          end
+        end
+      end
+    end
 
-  if item_table.can_move then
-    if item_table:can_move(player, inv_type, x, y) == false then
-      return false
+    inv_type = inv_type or item_table.preferred_inventory or player.default_inventory
+    local success, error_text = player:add_item(item_table, inv_type)
+
+    if success then
+      player:sync_inventories()
+      item_table.entity:Remove()
+      Item.async_save_entities()
+
+      hook.run('ItemTransferred', item_table, player:get_inventory(inv_type))
     end
   end
 end
 
-function Inventory:CanItemTransfer(player, item_table, inv_type, x, y)
-  if !item_table or !inv_type then
-    return false
+function Inventories:PlayerDropItem(player, instance_id)
+  local item_table = Item.find_instance_by_id(instance_id)
+  local trace = player:GetEyeTraceNoCursor()
+
+  if hook.run('CanPlayerDropItem', player, item_table) == false then return end
+
+  local inventory = Inventories.find(item_table.inventory_id)
+
+  hook.run('ItemTransferred', item_table, nil, inventory)
+
+  inventory:take_item_by_id(instance_id)
+  inventory:sync()
+
+  local distance = trace.HitPos:Distance(player:GetPos())
+
+  if distance < 80 then
+    Item.spawn(trace.HitPos, Angle(0, 0, 0), item_table)
+  else
+    local ent, item_table = Item.spawn(player:EyePos() + trace.Normal * 20, Angle(0, 0, 0), item_table)
+    local phys_obj = ent:GetPhysicsObject()
+
+    if IsValid(phys_obj) then
+      phys_obj:ApplyForceCenter(trace.Normal * 200)
+    end
   end
 
-  if item_table.inventory_type == inv_type then
-    return true
+  Item.async_save_entities()
+end
+
+function Inventories:ItemTransferred(item_table, new_inventory, old_inventory)
+  if item_table.on_transfer then
+    item_table:on_transfer(new_inventory, old_inventory)
   end
+end
+
+function Inventories:CanItemMove(item_table, inventory, x, y)
+  if item_table.can_move then
+    local success, error_text = item_table:can_move(inventory, x, y)
+
+    if success == false then
+      return false, error_text
+    end
+  end
+end
+
+function Inventories:CanItemTransfer(item_table, inventory, x, y)
+  local inv_type = inventory.type
 
   if inv_type == 'equipment' and (!item_table.equip_slot or item_table.equip_inv != 'equipment') then
-    return false
+    return false, 'error.inventory.cant_equip'
   end
 
   if inv_type == 'pockets' and !item_table.pocket_size then
-    return false
+    return false, 'error.inventory.too_big'
   end
 
   if item_table.can_transfer then
-    if item_table:can_transfer(player, inv_type, x, y) == false then
-      return false
+    local success, error_text = item_table:can_transfer(inventory, x, y)
+
+    if success == false then
+      return false, error_text
     end
   end
 end
 
-function Inventory:CanItemStack(player, item_table, inv_type, x, y)
-  if !item_table or !x or !y or !inv_type then
-    return false
-  end
-
-  local ply_inv = player:get_inventory(inv_type)
-  local ids = ply_inv and ply_inv[y][x]
-
-  if ids then
-    if #ids == 0 then
-      return true
-    end
-
-    if !item_table.stackable then
-      return false
-    end
-
-    local slot_table = Item.find_instance_by_id(ids[1])
-
-    if item_table.id != slot_table.id or #ids >= item_table.max_stack then
-      return false
-    end
-  end
-
-  if item_table.can_stack then
-    if item_table:can_stack(player, inv_type, x, y) == false then
-      return false
-    end
-  end
-end
-
-function Inventory:OnItemMove(player, instance_ids, inv_type, x, y)
-  local old_inv_type
-  local ply_inv = player:get_inventory(inv_type)
-
-  for k, v in pairs(instance_ids) do
-    local item_table = Item.find_instance_by_id(v)
-
-    if hook.run('CanItemTransfer', player, item_table, inv_type, x, y) == false or
-       hook.run('CanItemMove', player, item_table, inv_type, x, y) == false or
-       hook.run('CanItemStack', player, item_table, inv_type, x, y) == false then
-      return
-    end
-
-    local old_y, old_x = unpack(item_table.slot_id)
-
-    old_inv_type = item_table.inventory_type
-
-    table.insert(ply_inv[y][x], v)
-
-    item_table.slot_id = { y, x }
-
-    if old_inv_type != inv_type then
-      local old_inv = player:get_inventory(old_inv_type)
-
-      table.remove_by_value(old_inv[old_y][old_x], v)
-      player:set_inventory(old_inv, old_inv_type)
-
-      hook.run('OnItemInventoryChanged', player, item_table, inv_type, old_inv_type)
-
-      item_table.inventory_type = inv_type
-    else
-      table.remove_by_value(ply_inv[old_y][old_x], v)
-    end
-
-    Item.network_item(player, v)
-  end
-
-  player:set_inventory(ply_inv, inv_type)
-
-  Cable.send(player, 'fl_inventory_refresh', inv_type, old_inv_type)
-end
-
-function Inventory:PlayerThrewGrenade(player, entity)
+function Inventories:PlayerThrewGrenade(player, entity)
   if !IsValid(player) then return end
 
   local items = player:get_items()
@@ -171,36 +150,67 @@ function Inventory:PlayerThrewGrenade(player, entity)
   end
 end
 
-Cable.receive('fl_inventory_sync', function(player, inventory)
-  local inv_type = inventory.type
-  local new_inventory = {}
+function Inventories:PlayerUseItem(player, item_table, ...)
+  if item_table.on_use then
+    local result = item_table:on_use(player)
 
-  for k, v in ipairs(inventory) do
-    new_inventory[k] = new_inventory[k] or {}
-
-    for k1, v1 in ipairs(v) do
-      new_inventory[k][k1] = new_inventory[k][k1] or {}
-
-      for k2, v2 in ipairs(v1) do
-        if player:has_item_by_id(v2) then
-          local item_table = Item.find_instance_by_id(v2)
-          item_table.inventory_type = inv_type
-          item_table.slot_id = { k1, k }
-
-          table.insert(new_inventory[k][k1], v2)
-        end
-      end
+    if result == true then
+      return
+    elseif result == false then
+      return false
     end
   end
 
-  new_inventory.width, new_inventory.height = inventory.width, inventory.height
-  new_inventory.type = inv_type
+  if IsValid(item_table.entity) then
+    item_table.entity:Remove()
+  else
+    local inventory = Inventories.find(item_table.inventory_id)
 
-  player:set_inventory(new_inventory, inv_type)
+    hook.run('ItemTransferred', item_table, nil, inventory)
+
+    inventory:take_item_by_id(item_table.instance_id)
+    inventory:sync()
+  end
+end
+
+function Inventories:OnItemEquipped(player, item_table)
+  if item_table:is('wearable') then
+    Cable.send(player, 'fl_rebuild_player_panel')
+  end
+end
+
+function Inventories:OnItemUnequipped(player, item_table)
+  if item_table:is('wearable') then
+    Cable.send(player, 'fl_rebuild_player_panel')
+  end
+end
+
+Cable.receive('fl_item_move', function(player, instance_ids, inventory_id, x, y)
+  local instance_id = instance_ids[1]
+  local item_table = Item.find_instance_by_id(instance_id)
+  local inventory = Inventories.find(inventory_id)
+
+  if inventory_id == item_table.inventory_id then
+    inventory:move_stack(instance_ids, x, y)
+  else
+    local old_inventory = Inventories.find(item_table.inventory_id)
+
+    if #instance_ids == 1 then
+      old_inventory:transfer_item(instance_id, inventory, x, y)
+    else
+      old_inventory:transfer_stack(instance_ids, inventory, x, y)
+    end
+
+    old_inventory:sync()
+  end
+
+  inventory:sync()
+
+  hook.run('OnItemMoved', player, instance_ids, inventory_id, x, y)
 end)
 
-Cable.receive('fl_item_move', function(player, instance_ids, inv_type, x, y)
-  hook.run('OnItemMove', player, instance_ids, inv_type, x, y)
+Cable.receive('fl_item_drop', function(player, instance_id)
+  hook.run('PlayerDropItem', player, instance_id)
 end)
 
 Cable.receive('fl_character_desc_change', function(player, text)

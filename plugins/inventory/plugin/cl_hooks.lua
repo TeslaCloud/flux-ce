@@ -1,17 +1,17 @@
-function PLUGIN:OnContextMenuOpen()
-  if IsValid(PLAYER.hotbar) then
-    timer.remove('fl_hotbar_popup')
+function Inventories:OnContextMenuOpen()
+  PLAYER.hotbar = Inventories:create_hotbar()
 
-    PLAYER.hotbar:SetAlpha(255)
-    PLAYER.hotbar:SetVisible(true)
-    PLAYER.hotbar:MakePopup()
-    PLAYER.hotbar:MoveToFront()
-    PLAYER.hotbar:SetMouseInputEnabled(true)
-    PLAYER.hotbar:rebuild()
-  end
+  timer.remove('fl_hotbar_popup')
+
+  PLAYER.hotbar:SetAlpha(255)
+  PLAYER.hotbar:SetVisible(true)
+  PLAYER.hotbar:MakePopup()
+  PLAYER.hotbar:MoveToFront()
+  PLAYER.hotbar:SetMouseInputEnabled(true)
+  PLAYER.hotbar:rebuild()
 end
 
-function PLUGIN:OnContextMenuClose()
+function Inventories:OnContextMenuClose()
   if IsValid(PLAYER.hotbar) then
     timer.remove('fl_hotbar_popup')
 
@@ -19,13 +19,12 @@ function PLUGIN:OnContextMenuClose()
     PLAYER.hotbar:SetMouseInputEnabled(false)
     PLAYER.hotbar:SetKeyboardInputEnabled(false)
     PLAYER.hotbar:SetVisible(false)
-    PLAYER.hotbar:rebuild()
 
     PLAYER.hotbar.next_popup = CurTime() + 0.5
   end
 end
 
-function Inventory:AddTabMenuItems(menu)
+function Inventories:AddTabMenuItems(menu)
   menu:add_menu_item('inventory', {
     title = 'Inventory',
     panel = 'fl_inventory_menu',
@@ -38,23 +37,19 @@ function Inventory:AddTabMenuItems(menu)
   })
 end
 
-function Inventory:PostCharacterLoaded()
-  if !IsValid(PLAYER.hotbar) then
-    self:create_hotbar()
-  end
+function Inventories:create_hotbar()
+  local hotbar = PLAYER:get_inventory('hotbar'):create_panel()
+  hotbar:set_slot_size(math.scale(80))
+  hotbar:set_slot_padding(math.scale(8))
+  hotbar:draw_inventory_slots(true)
+  hotbar:set_title()
+  hotbar:SizeToContents()
+  hotbar:SetPos(ScrW() * 0.5 - hotbar:GetWide() * 0.5, ScrH() - hotbar:GetTall() - math.scale(16))
+
+  return hotbar
 end
 
-function Inventory:create_hotbar()
-  PLAYER.hotbar = vgui.Create('fl_inventory_hotbar')
-  PLAYER.hotbar:SetVisible(false)
-  PLAYER.hotbar:set_player(PLAYER)
-  PLAYER.hotbar:set_slot_padding(8)
-  PLAYER.hotbar:rebuild()
-
-  return PLAYER.hotbar
-end
-
-function Inventory:popup_hotbar()
+function Inventories:popup_hotbar()
   local cur_alpha = 300
 
   PLAYER.hotbar:SetVisible(true)
@@ -73,24 +68,45 @@ function Inventory:popup_hotbar()
   end)
 end
 
-Cable.receive('fl_inventory_refresh', function(inv_type, old_inv_type)
-  if Flux.tab_menu and Flux.tab_menu.active_panel and Flux.tab_menu.active_panel.rebuild then
-    Flux.tab_menu.active_panel:rebuild()
+Cable.receive('fl_inventory_sync', function(data)
+  local inventory = Inventories.stored[data.id] or Inventory.new(data.id)
+  inventory.id = data.id
+  inventory.type = data.inv_type
+  inventory.width = data.width
+  inventory.height = data.height
+  inventory.slots = data.slots
+  inventory.multislot = data.multislot
+  inventory.owner = data.owner
+
+  if data.owner and data.owner == PLAYER then
+    PLAYER.inventories = PLAYER.inventories or {}
+    PLAYER.inventories[inventory.type] = inventory
   end
 
-  if IsValid(PLAYER.hotbar) then
-    PLAYER.hotbar:rebuild()
+  if IsValid(inventory.panel) then
+    inventory.panel:rebuild()
+  end
 
-    if (!IsValid(Flux.tab_menu) or (IsValid(Flux.tab_menu) and !Flux.tab_menu:IsVisible()))
-    and (inv_type and inv_type == 'hotbar' or old_inv_type and old_inv_type == 'hotbar')
-    and !PLAYER.hotbar:IsVisible() then
-      if !PLAYER.hotbar.next_popup or PLAYER.hotbar.next_popup < CurTime() then
-        Inventory:popup_hotbar()
+  hook.run('OnInventorySync', inventory)
+end)
+
+Cable.receive('fl_create_hotbar', function()
+  PLAYER.hotbar = Inventories:create_hotbar()
+  PLAYER.hotbar:SetVisible(false)
+end)
+
+Cable.receive('fl_rebuild_player_panel', function()
+  if IsValid(Flux.tab_menu) and Flux.tab_menu:IsVisible() then
+    local active_panel = Flux.tab_menu.active_panel
+
+    if IsValid(active_panel) and active_panel.id == 'inventory' then
+      local player_model = active_panel.player_model
+
+      if IsValid(player_model) then
+        player_model:rebuild()
       end
     end
   end
-
-  hook.run('OnInventoryRefresh', inv_type, old_inv_type)
 end)
 
 spawnmenu.AddCreationTab('Items', function()

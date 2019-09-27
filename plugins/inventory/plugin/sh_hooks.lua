@@ -1,4 +1,4 @@
-function Inventory:PlayerBindPress(player, bind, pressed)
+function Inventories:PlayerBindPress(player, bind, pressed)
   if bind:find('slot') and pressed then
     local n = tonumber(bind:match('slot(%d+)'))
 
@@ -8,10 +8,10 @@ function Inventory:PlayerBindPress(player, bind, pressed)
   end
 end
 
-function Inventory:PlayerSelectSlot(player, slot)
+function Inventories:PlayerSelectSlot(player, slot)
   if slot >= 1 and slot < 9 then
     local cur_time = CurTime()
-    local instance_id = player:get_first_in_slot(slot, 1)
+    local instance_id = player:get_inventory('hotbar'):get_first_in_slot(slot, 1)
     local item_table = Item.find_by_instance_id(instance_id)
 
     if !player.next_slot_click or player.next_slot_click <= cur_time then
@@ -56,7 +56,7 @@ function Inventory:PlayerSelectSlot(player, slot)
   end
 end
 
-function Inventory:GetInventorySize(player, inv_type)
+function Inventories:GetInventorySize(player, inv_type)
   if inv_type == 'pockets' then
     local item_count = 1
     local max_x = 0
