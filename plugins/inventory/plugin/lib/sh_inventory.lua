@@ -281,5 +281,12 @@ do
         new_inventory:sync()
       end
     end
+
+    function player_meta:open_inventory(inventory)
+      inventory:add_receiver(self)
+      inventory:sync()
+
+      Cable.send(self, 'fl_inventory_open', inventory.id)
+    end
   end
 end

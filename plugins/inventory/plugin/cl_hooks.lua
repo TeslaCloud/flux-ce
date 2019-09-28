@@ -110,6 +110,19 @@ Cable.receive('fl_rebuild_player_panel', function()
   end
 end)
 
+Cable.receive('fl_inventory_open', function(inventory_id)
+  local inventory = vgui.create('fl_inventory_container')
+  inventory:open_inventory(inventory_id)
+
+  Flux.container_panel = inventory
+end)
+
+Cable.receive('fl_inventory_close', function()
+  if IsValid(Flux.container_panel) then
+    Flux.container_panel:safe_remove()
+  end
+end)
+
 spawnmenu.AddCreationTab('Items', function()
   local panel = vgui.Create('fl_item_spawner')
 
