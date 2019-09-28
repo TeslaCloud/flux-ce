@@ -211,7 +211,12 @@ do
     end
 
     function player_meta:add_item(item_table, inv_type)
-      return self:get_inventory(inv_type or self.default_inventory or 'main_inventory'):add_item(item_table)
+      local inventory = self:get_inventory(inv_type or self.default_inventory or 'main_inventory')
+      local success, error_text = inventory:add_item(item_table)
+
+      inventory:sync()
+
+      return success, error_text
     end
 
     function player_meta:add_item_by_id(instance_id, inv_type)
@@ -219,16 +224,30 @@ do
     end
 
     function player_meta:give_item(id, data, amount, inv_type)
-      return self:get_inventory(inv_type or self.default_inventory or 'main_inventory'):give_item(id, data, amount)
+      local inventory = self:get_inventory(inv_type or self.default_inventory or 'main_inventory')
+      local success, error_text = inventory:give_item(id, data, amount)
+
+      inventory:sync()
+
+      return success, error_text
     end
 
     function player_meta:take_item(id, inv_type)
       if inv_type then
-        return self:get_inventory(inv_type):take_item(id)
+        local inventory = self:get_inventory(inv_type)
+        local success, error_text = inventory:take_item(id)
+
+        inventory:sync()
+
+        return success, error_text
       else
         for k, v in pairs(self:get_inventories()) do
           if v:has_item(id) then
-            return v:take_item(id)
+            local success, error_text = v:take_item(id)
+
+            v:sync()
+
+            return success, error_text
           end
         end
 
@@ -238,7 +257,12 @@ do
 
     function player_meta:take_items(id, amount, inv_type)
       if inv_type then
-        return self:get_inventory(inv_type):take_items(id, amount)
+        local inventory = self:get_inventory(inv_type)
+        local success, error_text = inventory:take_items(id, amount)
+
+        inventory:sync()
+
+        return success, error_text
       else
         if self:get_items_count(id) < amount then
           return false, 'error.inventory.not_enough_items'
@@ -246,6 +270,7 @@ do
           for k, v in pairs(self:get_inventories()) do
             if amount > 0 and v:has_item(id) then
               v:take_item(id)
+              v:sync()
 
               amount = amount - 1
             end
@@ -258,12 +283,22 @@ do
 
     function player_meta:take_item_by_id(instance_id, inv_type)
       if inv_type then
-        return self:get_inventory(inv_type):take_item_by_id(instance_id)
+        local inventory = self:get_inventory(inv_type)
+        local success, error_text = inventory:take_item_by_id(instance_id)
+
+        inventory:sync()
+
+        return success, error_text
       else
         local has, item_table = self:has_item_by_id(instance_id)
 
         if has then
-          return self:get_inventory(item_table.inventory_type):take_item_table(item_table)
+          local inventory = self:get_inventory(item_table.inventory_type)
+          local success, error_text = inventory:take_item_table(item_table)
+
+          inventory:sync()
+
+          return success, error_text
         else
           return false, 'error.inventory.item_not_found'
         end
