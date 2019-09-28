@@ -73,6 +73,12 @@ function Characters:PlayerOneMinute(player)
   player:save_character()
 end
 
+function Characters:SaveData()
+  for k, v in ipairs(player.all()) do
+    v:save_character()
+  end
+end
+
 function Characters:PlayerCreateCharacter(player, data)
   if (!isstring(data.name) or (utf8.len(data.name) < Config.get('character_min_name_len') or
     utf8.len(data.name) > Config.get('character_max_name_len'))) then

@@ -36,9 +36,7 @@ function player_meta:set_character_var(id, val)
 end
 
 function player_meta:save_character()
-  local char = self:get_character()
-
-  if char then
-    Characters.save(self, char)
+  if self:is_character_loaded() then
+    Characters.save(self, self:get_character())
   end
 end
