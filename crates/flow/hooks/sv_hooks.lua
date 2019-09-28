@@ -340,7 +340,7 @@ function GM:OneSecond()
   elseif Flux.next_player_count_check <= sys_time then
     Flux.next_player_count_check = sys_time + 1800
 
-    if #player.GetAll() == 0 then
+    if #player.all() == 0 then
       if hook.run('ShouldServerAutoRestart') != false then
         Flux.dev_print('Server is empty, restarting...')
         RunConsoleCommand('changelevel', game.GetMap())
@@ -525,7 +525,7 @@ do
     if cur_time >= next_think then
       local one_second_tick = (cur_time >= next_second)
 
-      for k, v in ipairs(player.GetAll()) do
+      for k, v in ipairs(player.all()) do
         hook.Call('PlayerThink', self, v, cur_time)
 
         if one_second_tick then

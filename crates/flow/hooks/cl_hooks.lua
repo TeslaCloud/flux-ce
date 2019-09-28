@@ -13,7 +13,7 @@ function GM:InitPostEntity()
     Flux.local_player_created = true
   end)
 
-  for k, v in ipairs(player.GetAll()) do
+  for k, v in ipairs(player.all()) do
     local model = v:GetModel()
 
     hook.run('PlayerModelChanged', v, model, model)

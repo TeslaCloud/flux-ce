@@ -1,6 +1,6 @@
 -- A function to select a random player.
 function player.random()
-  local all_ply = player.GetAll()
+  local all_ply = player.all()
 
   if #all_ply > 0 then
     return all_ply[math.random(1, #all_ply)]
@@ -15,7 +15,7 @@ function player.find(name, case_sensitive, return_first)
   local hits = {}
   local is_steamid = name:starts('STEAM_')
 
-  for k, v in ipairs(_player.GetAll()) do
+  for k, v in ipairs(_player.all()) do
     if is_steamid then
       if v:SteamID() == name then
         return v

@@ -247,7 +247,7 @@ function GM:OnReloaded()
   end
 
   if Flux.development then
-    for k, v in ipairs(_player.GetAll()) do
+    for k, v in ipairs(_player.all()) do
       self:PlayerModelChanged(v, v:GetModel(), v:GetModel())
     end
   end

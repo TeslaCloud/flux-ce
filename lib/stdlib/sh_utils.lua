@@ -83,7 +83,7 @@ end
 function util.player_list_to_string(player_list)
   local nlist = #player_list
 
-  if nlist > 1 and nlist == #_player.GetAll() then
+  if nlist > 1 and nlist == #_player.all() then
     return 'ui.chat.everyone'
   end
 

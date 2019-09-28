@@ -93,7 +93,7 @@ if SERVER then
       if IsValid(player) then
         player = { player }
       else
-        player = _player.GetAll()
+        player = _player.all()
       end
     end
 

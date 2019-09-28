@@ -30,7 +30,7 @@ function PANEL:rebuild()
   local card_tall = math.scale(32) + 8
   local margin = math.scale(2)
 
-  for k, v in ipairs(_player.GetAll()) do
+  for k, v in ipairs(_player.all()) do
     if !v:has_initialized() then continue end
 
     local player_card = vgui.Create('fl_scoreboard_player', self)

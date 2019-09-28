@@ -156,7 +156,7 @@ if SERVER then
       local group_name = str:utf8sub(2, utf8.len(str)):utf8lower()
       local to_ret = {}
 
-      for k, v in ipairs(_player.GetAll()) do
+      for k, v in ipairs(_player.all()) do
         if v:GetUserGroup() == group_name then
           table.insert(to_ret, v)
         end
@@ -183,7 +183,7 @@ if SERVER then
     ['['] = function(player, str)
       local name = str:utf8sub(2, utf8.len(str) - 1)
 
-      for k, v in ipairs(_player.GetAll()) do
+      for k, v in ipairs(_player.all()) do
         if v:name() == name then
           return { v }, '['
         end
@@ -201,14 +201,14 @@ if SERVER then
     end,
     -- Target everyone.
     ['*'] = function(player, str)
-      return _player.GetAll(), '*'
+      return _player.all(), '*'
     end,
     -- Target all players in radius.
     ['!'] = function(player, str)
       local radius = tonumber(str:utf8sub(2, utf8.len(str)))
       local to_ret = {}
 
-      for k, v in pairs(_player.GetAll()) do
+      for k, v in pairs(_player.all()) do
         if v != player and player:GetPos():Distance(v:GetPos()) <= radius then
           table.insert(to_ret, v)
         end

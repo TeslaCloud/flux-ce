@@ -64,7 +64,7 @@ function Chatbox.add_text(listeners, ...)
     if IsValid(listeners) then
       listeners = { listeners }
     else
-      listeners = _player.GetAll()
+      listeners = _player.all()
     end
   end
 
