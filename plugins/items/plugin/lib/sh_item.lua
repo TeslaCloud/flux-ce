@@ -243,6 +243,25 @@ function Item.include_items(directory)
   Pipeline.include_folder('item', directory)
 end
 
+local item_categories = {}
+
+function Item.set_category_icon(category, icon)
+  item_categories[category] = icon
+end
+
+function Item.get_category_icon(category)
+  return item_categories[category] or 'icon16/bricks.png'
+end
+
+Item.set_category_icon('item.category.ammo', 'icon16/box.png')
+Item.set_category_icon('item.category.consumables', 'icon16/cake.png')
+Item.set_category_icon('item.category.throwable', 'icon16/bomb.png')
+Item.set_category_icon('item.category.weapon', 'icon16/gun.png')
+Item.set_category_icon('item.category.clothing', 'icon16/user.png')
+Item.set_category_icon('item.category.cards', 'icon16/vcard.png')
+Item.set_category_icon('item.category.other', 'icon16/bricks.png')
+Item.set_category_icon('item.category.equipment', 'icon16/package.png')
+
 if SERVER then
   function Item.load()
     local loaded = Data.load_schema('items/instances', {})
