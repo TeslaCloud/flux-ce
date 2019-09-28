@@ -1,7 +1,7 @@
 Crate:describe(function(s)
   s.name        = 'Flux'
-  s.version     = '0.7.10'
-  s.date        = '2019-10-25'
+  s.version     = '0.8.0'
+  s.date        = '2019-09-29'
   s.summary     = 'A gamemode framework.'
   s.description = 'A gamemode framework made primarily for database-driven roleplay gamemodes.'
   s.authors     = { 'TeslaCloud Studios', 'Meow the Cat', 'AleXXX_007', 'NightAngel', 'Zig' }

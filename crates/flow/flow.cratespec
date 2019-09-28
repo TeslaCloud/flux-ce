@@ -1,7 +1,7 @@
 Crate:describe(function(s)
   s.name        = 'Flow'
-  s.version     = '0.7.10'
-  s.date        = '2019-10-25'
+  s.version     = '0.8.0'
+  s.date        = '2019-09-29'
   s.summary     = 'Flux Core.'
   s.description = 'Core files that provide most of what Flux actually is.'
   s.author      = 'TeslaCloud Studios'
