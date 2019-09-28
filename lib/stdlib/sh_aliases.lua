@@ -81,7 +81,7 @@ ents.find_by_name = ents.FindByName
 ents.find_in_box = ents.FindInBox
 ents.find_in_cone = ents.FindInCone
 ents.find_in_sphere = ents.FindInSphere
-ents.get_all = ents.GetAll
+ents.all = ents.GetAll
 ents.get_by_index = ents.GetByIndex
 ents.get_count = ents.GetCount
 

@@ -9,7 +9,7 @@ end
 function Doors:save()
   local doors = {}
 
-  for k, v in ipairs(ents.get_all()) do
+  for k, v in ipairs(ents.all()) do
     if v:is_door() then
       local save_table = {
         id = v:MapCreationID()
