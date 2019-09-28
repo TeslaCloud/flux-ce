@@ -58,13 +58,15 @@ function Attributes.include_attributes(directory)
 end
 
 function Attributes.destroy_timers(character)
-  for k, v in pairs(character.attributes) do
-    for k1, v1 in pairs(v.attribute_boosts) do
-      timer.destroy('fl_boost_'..v.id..'_'..v1.expires_at)
-    end
+  if character.attributes then
+    for k, v in pairs(character.attributes) do
+      for k1, v1 in pairs(v.attribute_boosts) do
+        timer.destroy('fl_boost_'..v.id..'_'..v1.expires_at)
+      end
 
-    for k1, v1 in pairs(v.attribute_multipliers) do
-      timer.destroy('fl_multiplier_'..v.id..'_'..v1.expires_at)
+      for k1, v1 in pairs(v.attribute_multipliers) do
+        timer.destroy('fl_multiplier_'..v.id..'_'..v1.expires_at)
+      end
     end
   end
 end
