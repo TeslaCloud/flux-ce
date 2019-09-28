@@ -74,3 +74,38 @@ function require_relative_folder(dir, base, recursive)
     end
   end
 end
+
+function require_client(file_name)
+  if !file_name:EndsWith('.lua') then
+    file_name = file_name..'.lua'
+  end
+
+  if SERVER then
+    return AddCSLuaFile(file_name)
+  else
+    return include(file_name)
+  end
+end
+
+function require_server(file_name)
+  if !file_name:EndsWith('.lua') then
+    file_name = file_name..'.lua'
+  end
+
+  if SERVER then
+    return include(file_name)
+  end
+end
+
+function require_shared(file_name)
+  if !file_name:EndsWith('.lua') then
+    file_name = file_name..'.lua'
+  end
+
+  if SERVER then
+    AddCSLuaFile(file_name)
+    return include(file_name)
+  else
+    return include(file_name)
+  end
+end
