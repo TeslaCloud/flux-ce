@@ -1,6 +1,15 @@
 local should_ignore_client = false
 local should_ignore_server = false
 
+--- Ignore a certain realm in the require_relative function calls.
+-- ```
+-- require_ignore('server', true)
+-- require_relative('sv_thing.lua') -- will not be included
+-- require_ignore('server', false)
+-- require_relative('sv_thing.lua') -- will be included
+-- ```
+-- @param who [String realm]
+-- @param should_ignore [Boolean whether the realm should be ignored or not]
 function require_ignore(who, should_ignore)
   who = who:lower()
 
@@ -11,7 +20,17 @@ function require_ignore(who, should_ignore)
   end
 end
 
--- A function to include a file based on it's prefix.
+--- Require a file relative to the current file's directory.
+-- The .lua file ending may be omitted.
+-- This function will try to guess the realm the file should be in and
+-- AddCSLuaFile accordingly and automatically.
+-- ```
+-- require_relative 'cl_file'     -- will include cl_file.lua only on client
+-- require_relative 'sv_file'     -- will include sv_file.lua only on server
+-- require_relative 'file'        -- will include file.lua on both client and server
+-- ```
+-- @param file_name [String file to include]
+-- @return [Object return value of include()]
 function require_relative(file_name)
   if !file_name:EndsWith('.lua') then
     file_name = file_name..'.lua'
@@ -36,7 +55,15 @@ function require_relative(file_name)
   return include(file_name)
 end
 
--- A function to include all files in a directory.
+--- Require all files in a folder using require_relative.
+-- Relative to gamemodes/flux/ by default, unless `base` is specified.
+-- ```
+-- require_relative 'my_folder'
+-- ```
+-- @param dir [String folder to include]
+-- @param base=flux/ [String base folder for relativity]
+-- @param recursive=false [Boolean include all files recursively]
+-- @see [require_relative]
 function require_relative_folder(dir, base, recursive)
   if base then
     if isbool(base) then
@@ -75,6 +102,18 @@ function require_relative_folder(dir, base, recursive)
   end
 end
 
+--- Require a clientside-only file.
+-- The .lua file ending may be omitted.
+-- This is equivalent of simply doing this:
+-- ```
+-- if SERVER then
+--   AddCSLuaFile(file_name)
+-- else
+--   include(file_name)
+-- end
+-- ```
+-- @param file_name [String file name to include]
+-- @return [Object return value of include()]
 function require_client(file_name)
   if !file_name:EndsWith('.lua') then
     file_name = file_name..'.lua'
@@ -87,6 +126,16 @@ function require_client(file_name)
   end
 end
 
+--- Require a serverside-only file.
+-- The .lua file ending may be omitted.
+-- This is equivalent of simply doing this:
+-- ```
+-- if SERVER then
+--   include(file_name)
+-- end
+-- ```
+-- @param file_name [String file name to include]
+-- @return [Object return value of include()]
 function require_server(file_name)
   if !file_name:EndsWith('.lua') then
     file_name = file_name..'.lua'
@@ -97,6 +146,19 @@ function require_server(file_name)
   end
 end
 
+--- Require a file on both client and server.
+-- The .lua file ending may be omitted.
+-- This is equivalent of simply doing this:
+-- ```
+-- if SERVER then
+--   AddCSLuaFile(file_name)
+--   include(file_name)
+-- else
+--   include(file_name)
+-- end
+-- ```
+-- @param file_name [String file name to include]
+-- @return [Object return value of include()]
 function require_shared(file_name)
   if !file_name:EndsWith('.lua') then
     file_name = file_name..'.lua'
