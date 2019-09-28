@@ -1,251 +1,311 @@
--- vim: ft=lua ts=2 sw=2
+-- LUA HTML parser
 
--- Syntactic Sugar {{{
-local function rine(val) -- Return (val) If it's Not Empty (non-zero-length)
-	return (val and #val>0) and val
+class 'HTMLParser'
+
+local empty_tags = {
+  br = true,
+  hr = true,
+  img = true,
+  embed = true,
+  param = true,
+  area = true,
+  col = true,
+  input = true,
+  meta = true,
+  link = true,
+  base = true,
+  basefont = true,
+  frame = true,
+  isindex = true
+}
+
+-- omittable tags siblings
+-- if an open tag from the primary entry  follow
+-- an unclosed tag of the secondary,
+-- the secondary is automatically closed
+-- See http://www.w3.org/TR/html5/syntax.html#optional-tags
+local omittable_tags = {
+  tbody = {
+    thead = true,
+    tbody = true,
+    tfoot = true
+  },
+  thead = {
+    thead = true,
+    tbody = true,
+    tfoot = true
+  },
+  tfoot = {
+    thead = true,
+    tbody = true,
+    tfoot = true
+  },
+  td = {
+    td = true,
+    th = true
+  },
+  th = {
+    td = true,
+    th = true
+  },
+  tr = {
+    tr = true
+  },
+  dd = {
+    dd = true,
+    dt = true
+  },
+  dt = {
+    dd = true,
+    dt = true
+  },
+  optgroup = {
+    optgroup = true,
+    option = true
+  },
+  optgroup = {
+    optgroup = true,
+    option = true
+  },
+  address = { p = true},
+  article = { p = true},
+  aside = { p = true},
+  blockquote = { p = true},
+  dir = { p = true},
+  div = { p = true},
+  dl = { p = true},
+  fieldset = { p = true},
+  footer = { p = true},
+  form = { p = true},
+  h1 = { p = true},
+  h2 = { p = true},
+  h3 = { p = true},
+  h4 = { p = true},
+  h5 = { p = true},
+  h6 = { p = true},
+  header = { p = true},
+  hgroup = { p = true},
+  hr = { p = true},
+  menu = { p = true},
+  nav = { p = true},
+  ol = { p = true},
+  p = { p = true},
+  pre = { p = true},
+  section = { p = true},
+  table = { p = true},
+  ul= { p = true}
+}
+
+-- omittable tags children
+local omittable_tags2 = {
+  table = {
+    tr = true,
+    td = true,
+    p = true,
+  },
+  tr = {
+    td = true,
+    p = true
+  },
+  td = {
+    p = true
+  }
+}
+
+function HTMLParser:parse(data, lazy)
+  local tree = {}
+  local stack = {}
+  local level = 0
+  local new_level = 0
+  table.insert(stack, tree)
+  local node
+  local lower_tag
+  local script_open = false
+  local script_val = ""
+  local script_node = nil
+  local tag_match = ""
+  lazy = lazy or false
+
+  for b, op, tag, attr, op2, bl1, val, bl2 in string.gmatch(
+    data,
+    "(<)(%/?!?)([%w:_%-'\\\"%[]+)(.-)(%/?%-?)>"..
+    "([%s\r\n\t]*)([^<]*)([%s\r\n\t]*)"
+  ) do
+    lower_tag = string.lower(tag)
+
+    if script_open then
+      if lower_tag == "script" and op == "/" then
+        node.child_nodes[1].value =   string.gsub(script_val, "^<!%[CDATA%[", "<!--//%1")
+        if val != "" then
+          table.insert(stack[level], {
+            tag_name = "text_node",
+            value = val
+          })
+        end
+        level = level - 1
+        script_open = false
+      else
+        script_val = script_val..b..op..tag..attr..op2..bl1..val..bl2
+      end
+    elseif op == "!" then
+    elseif op == "/" then
+      -- Check if the previous children elements end tag have been omitted
+      -- and should be close automatically
+
+      while !lazy
+      and omittable_tags2[lower_tag]
+      and #stack[level] > 0
+      and omittable_tags2[lower_tag][stack[level][#stack[level]].tag_name]
+      do
+        level = level - 1
+        table.remove(stack)
+      end
+
+      if level == 0 then return tree end
+
+      if lower_tag != stack[level][#stack[level]].tag_name
+      then
+        error("Mismatch: "..lower_tag..
+        ", (has "..stack[level][#stack[level]].tag_name..")")
+      end
+
+      level = level - 1
+      table.remove(stack)
+    else
+
+      level = level + 1
+      node = nil
+      node = {}
+      node.tag_name = lower_tag
+      node.child_nodes = {}
+
+      if attr != "" then
+        node.attr = {}
+
+        for n, v in string.gmatch(
+          attr,
+          "%s([^%s=]+)=\"([^\"]+)\""
+        ) do
+          node.attr[n] = string.gsub(v, '"', '[^\\]\\"')
+        end
+
+        for n, v in string.gmatch(
+          attr,
+          "%s([^%s=]+)='([^']+)'"
+        ) do
+          node.attr[n] = string.gsub(v, '"', '[^\\]\\"')
+        end
+      end
+
+      if lower_tag == "script"
+      and node.attr
+      and !node.attr["src"]
+      then
+        script_val = bl1..val..bl2
+        table.insert(node.child_nodes, {
+          tag_name = "text_node",
+          value = ""
+        })
+
+        table.insert(stack[level], node)
+        script_open = true
+      else
+        -- Check if the previous sibling element end tag has been omitted
+        -- and should be close automatically
+
+        if !lazy
+        and omittable_tags[lower_tag]
+        and level > 1
+        and stack[level-1]
+        and #stack[level-1] > 0
+        and omittable_tags[lower_tag][stack[level-1][#stack[level-1]].tag_name] == true
+        then
+          level = level - 1
+          table.remove(stack)
+          if level==0 then return tree end
+        end
+
+        table.insert(stack[level], node)
+
+        if empty_tags[lower_tag] then
+          if val != "" then
+            table.insert(stack[level], {
+              tag_name = "text_node",
+              value = val
+            })
+          end
+          node.child_nodes = nil
+          level = level - 1
+        else
+          if val != "" then
+            table.insert(node.child_nodes, {
+              tag_name = "text_node",
+              value = val
+            })
+          end
+          table.insert(stack, node.child_nodes)
+        end
+
+      end
+    end
+  end
+  if level!=0 then
+    vlc.msg.dbg("Parse error: "..level)
+  end
+  collectgarbage()
+  return tree
 end
-local function rit(a) -- Return (a) If it's Table
-	return istable(a) and a
+
+function HTMLParser:dump(data)
+  local stack = {data}
+  local d = ""
+  local node = nil
+
+  while #stack != 0 do
+    node = nil
+    node = stack[#stack][1]
+
+    if !node then break end
+
+    if node.tag_name == "text_node" then
+      d = d..node.value:trim()
+    else
+      d = d.."\n"..string.rep (" ", #stack-1)
+      d = d.."<"..node.tag_name
+
+      if node.attr then
+        for a, v in pairs(node.attr) do
+          d = d.." "..a..'="'..v..'"'
+        end
+      end
+
+      if empty_tags[node.tag_name] then
+        d = d.."/>"
+      else
+        d = d..">"
+      end
+    end
+
+    if node.child_nodes and #node.child_nodes > 0 then
+      node.l = #node.child_nodes
+      table.insert(stack, node.child_nodes)
+    else
+      table.remove(stack[#stack], 1)
+      if node.child_nodes and #node.child_nodes == 0 and !empty_tags[node.tag_name] then
+        d = d.."</"..node.tag_name..">"
+      end
+      while #stack > 0 and #stack[#stack] == 0 do
+        table.remove(stack)
+        if #stack > 0 then
+          if stack[#stack][1].l > 1 then
+            d = d.."\n"..string.rep(" ", #stack-1).."</"..stack[#stack][1].tag_name..">"
+          else
+            d = d.."</"..stack[#stack][1].tag_name..">"
+          end
+          table.remove(stack[#stack], 1)
+        end
+      end
+    end
+  end
+  return d
 end
-local noop = function() end
-local esc = function(s) return string.gsub(s, "([%^%$%(%)%%%.%[%]%*%+%-%?])", "%%" .. "%1") end
-local str = tostring
-local char = string.char
-local opts = rit(htmlparser_opts) or {} -- needed for silent/noerr/noout/nonl directives, also needed to be defined before `require` in such case
-local prn = opts.silent and noop or function(l,f,...)
-	local fd = (l=="i") and "stdout" or "stderr"
-	local t = (" [%s] "):format(l:upper())
-	io[fd]
-		:write('[HTMLParser]'..t..f:format(...)
-			..(opts.nonl or "\n")
-		)
-end
-local err = opts.noerr and noop or function(f,...) prn("e",f,...) end
-local out = opts.noout and noop or function(f,...) prn("i",f,...) end
-local line = debug and function(lvl) return debug.getinfo(lvl or 2).currentline end or noop
-local dbg = opts.debug and function(f,...) prn("d",f:gsub("#LINE#",str(line(3))),...) end or noop
--- }}}
--- Requires {{{
-local ElementNode = require_relative 'htmlparser/element_node.lua'
-local voidelements = require_relative 'htmlparser/voidelements.lua'
---}}}
-local HtmlParser = {}
-local function parse(text,limit) -- {{{
-	local opts = rine(opts) -- use top-level opts-table (the one, defined before requiring the module), if exists
-		or rit(htmlparser_opts) -- or defined after requiring (but before calling `parse`)
-		or {} -- fallback otherwise
-	opts.looplimit = opts.looplimit or htmlparser_looplimit
-
-	local text = str(text)
-	local limit = limit or opts.looplimit or 1000
-	local tpl = false
-
-	if not opts.keep_comments then -- Strip (or not) comments {{{
-		text = text:gsub("<!%-%-.-%-%->","") -- Many chances commented code will have syntax errors, that'll lead to parser failures
-	end -- }}}
-
-	local tpr={}
-
-	if not opts.keep_danger_placeholders then -- {{{ little speedup by cost of potential parsing breakages
-		-- search unused "invalid" bytes {{{
-		local busy,i={},0;
-		repeat -- {{{
-			local cc = char(i)
-			if not(text:match(cc)) then -- {{{
-				if not(tpr["<"]) or not(tpr[">"]) then -- {{{
-					if not(busy[i]) then -- {{{
-						if not(tpr["<"]) then -- {{{
-							tpr["<"] = cc;
-						elseif not(tpr[">"]) then
-							tpr[">"] = cc;
-						end -- }}}
-						busy[i] = true
-						dbg("c:{%s}||cc:{%d}||tpr[c]:{%s}",str(c),cc:byte(),str(tpr[c]))
-						dbg("busy[i]:{%s},i:{%d}",str(busy[i]),i)
-						dbg("[FindPH]:#LINE# Success! || i=%d",i)
-					else -- if !busy
-						dbg("[FindPH]:#LINE# Busy! || i=%d",i)
-					end -- if !busy -- }}}
-					dbg("c:{%s}||cc:{%d}||tpr[c]:{%s}",c,cc:byte(),str(tpr[c]))
-					dbg("%s",str(busy[i]))
-				else -- if < or >
-					dbg("[FindPH]:#LINE# Done!",i)
-					break
-				end -- if < or > -- }}}
-			else -- text!match(cc)
-				dbg("[FindPH]:#LINE# Text contains this byte! || i=%d",i)
-			end -- text!match(cc) -- }}}
-			local skip=1
-			if i==31 then
-				skip=96 -- ASCII
-			end
-			i=i+skip
-		until (i==255) -- }}}
-		i=nil
-		--- }}}
-
-		if not(tpr["<"]) or not(tpr[">"]) then
-			err("Impossible to find at least two unused byte codes in this HTML-code. We need it to escape bracket-contained placeholders inside tags.")
-			err("Consider enabling 'keep_danger_placeholders' option (to silence this error, if parser wasn't failed with current HTML-code) or manually replace few random bytes, to free up the codes.")
-		else
-			dbg("[FindPH]:#LINE# Found! || '<'=%d, '>'=%d",tpr["<"]:byte(),tpr[">"]:byte())
-		end
-
---	dbg("tpr[>] || tpr[] || #busy%d")
-
-		-- g {{{
-		local function g(id,...)
-			local arg={...}
-			local orig=arg[id]
-			arg[id]=arg[id]:gsub("(.)",tpr)
-			if arg[id] ~= orig then
-				tpl=true
-				dbg("[g]:#LINE# orig: %s", str(orig))
-				dbg("[g]:#LINE# replaced: %s",str(arg[id]))
-			end
-			dbg("[g]:#LINE# called, id: %s, arg[id]: %s, args { "..(("{%s}, "):rep(#arg):gsub(", $","")).." }",id,arg[id],...)
-			dbg("[g]:#LINE# concat(arg): %s",table.concat(arg))
-			return table.concat(arg)
-		end
-		-- g }}}
-
-		-- tpl-placeholders and attributes {{{
-		text=text
-			:gsub(
-				"(=[%s]-)".. -- only match attr.values, and not random strings between two random apostrophs
-				"(%b'')",
-				function(...)return g(2,...)end
-			)
-			:gsub(
-				"(=[%s]-)".. -- same for "
-				'(%b"")',
-				function(...)return g(2,...)end
-			) -- Escape "<"/">" inside attr.values (see issue #50)
-			:gsub(
-				"(<".. -- Match "<",
-				(opts.tpl_skip_pattern or "[^!]").. -- with exclusion pattern (for example, to ignore comments, which aren't template placeholders, but can legally contain "<"/">" inside.
-				")([^>]+)".. -- If matched, we want to escape '<'s if we meet them inside tag
-				"(>)",
-				function(...)return g(2,...)end
-			)
-			:gsub(
-				"("..
-				(tpr["<"] or "__FAILED__").. -- Here we search for "<", we escaped in previous gsub (and don't break things if we have no escaping replacement)
-				")("..
-				(opts.tpl_marker_pattern or "[^%w%s]").. -- Capture templating symbol
-				")([%g%s]-)".. -- match placeholder's content
-				"(%2)(>)".. -- placeholder's tail
-				"([^>]*>)", -- remainings
-				function(...)return g(5,...)end
-			)
-		-- }}}
-	end -- }}}
-
-	local index = 0
-	local root = ElementNode:new(index, str(text))
-	local node, descend, tpos, opentags = root, true, 1, {}
-
-	while true do -- MainLoop {{{
-		if index == limit then -- {{{
-			err("Main loop reached loop limit (%d). Consider either increasing it or checking HTML-code for syntax errors", limit)
-			break
-		end -- }}}
-		-- openstart/tpos Definitions {{{
-		local openstart, name
-		openstart, tpos, name = root._text:find(
-			"<" ..        -- an uncaptured starting "<"
-			"([%w-]+)" .. -- name = the first word, directly following the "<"
-			"[^>]*>",     -- include, but not capture everything up to the next ">"
-		tpos)
-		dbg("[MainLoop]:#LINE# openstart=%s || tpos=%s || name=%s",str(openstart),str(tpos),str(name))
-		-- }}}
-		if not name then break end
-		-- Some more vars {{{
-		index = index + 1
-		local tag = ElementNode:new(index, str(name), (node or {}), descend, openstart, tpos)
-		node = tag
-		local tagloop
-		local tagst, apos = tag:gettext(), 1
-		-- }}}
-		while true do -- TagLoop {{{
-			if tagloop == limit then -- {{{
-				err("Tag parsing loop reached loop limit (%d). Consider either increasing it or checking HTML-code for syntax errors", limit)
-				break
-			end -- }}}
-			-- Attrs {{{
-			local start, k, eq, quote, v, zsp
-			start, apos, k, zsp, eq, zsp, quote = tagst:find(
-				"%s+" ..         -- some uncaptured space
-				"([^%s=/>]+)" .. -- k = an unspaced string up to an optional "=" or the "/" or ">"
-				"([%s]-)"..      -- zero or more spaces
-				"(=?)" ..        -- eq = the optional; "=", else ""
-				"([%s]-)"..      -- zero or more spaces
-				[=[(['"]?)]=],      -- quote = an optional "'" or '"' following the "=", or ""
-			apos)
-			dbg("[TagLoop]:#LINE# start=%s || apos=%s || k=%s || zsp='%s' || eq='%s', quote=[%s]",str(start),str(apos),str(k),str(zsp),str(eq),str(quote))
-			-- }}}
-			if not k or k == "/>" or k == ">" then break end
-			-- Pattern {{{
-			if eq == "=" then
-				local pattern = "=([^%s>]*)"
-				if quote ~= "" then
-					pattern = quote .. "([^" .. quote .. "]*)" .. quote
-				end
-				start, apos, v = tagst:find(pattern, apos)
-				dbg("[TagLoop]:#LINE# start=%s || apos=%s || v=%s || pattern=%s",str(start),str(apos),str(v),str(pattern))
-			end
-			-- }}}
-			v=v or ""
-			if tpl then -- {{{
-				for rk,rv in pairs(tpr) do
-					v = v:gsub(rv,rk)
-					dbg("[TagLoop]:#LINE# rv=%s || rk=%s",str(rv),str(rk))
-				end
-			end -- }}}
-
-			dbg("[TagLoop]:#LINE# k=%s || v=%s",str(k),str(v))
-			tag:addattribute(k, v)
-			tagloop = (tagloop or 0) + 1
-		end
-		-- }}}
-		if voidelements[tag.name:lower()] then -- {{{
-			descend = false
-			tag:close()
-		else
-			opentags[tag.name] = opentags[tag.name] or {}
-			table.insert(opentags[tag.name], tag)
-		end
-		-- }}}
-		local closeend = tpos
-		local closingloop
-		while true do -- TagCloseLoop {{{
-			if closingloop == limit then
-				err("Tag closing loop reached loop limit (%d). Consider either increasing it or checking HTML-code for syntax errors", limit)
-				break
-			end
-
-			local closestart, closing, closename
-			closestart, closeend, closing, closename = root._text:find("[^<]*<(/?)([%w-]+)", closeend)
-			dbg("[TagCloseLoop]:#LINE# closestart=%s || closeend=%s || closing=%s || closename=%s",str(closestart),str(closeend),str(closing),str(closename))
-
-			if not closing or closing == "" then break end
-
-			tag = table.remove(opentags[closename] or {}) or tag -- kludges for the cases of closing void or non-opened tags
-			closestart = root._text:find("<", closestart)
-			dbg("[TagCloseLoop]:#LINE# closestart=%s",str(closestart))
-			tag:close(closestart, closeend + 1)
-			node = tag.parent
-			descend = true
-			closingloop = (closingloop or 0) + 1
-		end -- }}}
-	end -- }}}
-	if tpl then -- {{{
-		dbg("tpl")
-		for k,v in pairs(tpr) do
-			root._text = root._text:gsub(v,k)
-		end
-	end -- }}}
-	return root
-end -- }}}
-HtmlParser.parse = parse
-return HtmlParser
