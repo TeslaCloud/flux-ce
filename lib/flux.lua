@@ -4,10 +4,6 @@ if !Flux then
   require_relative 'flux_struct'
 end
 
--- Environment stuff
-FLUX_ENV_PATH    = file.Exists('flux/config/environment.local.lua', 'LUA') and 'flux/config/environment.local.lua' or 'flux/config/environment.lua'
-setenv('FLUX_ENV', string.lower(include(FLUX_ENV_PATH) or 'development'))
-
 IS_PRODUCTION    = ENV['FLUX_ENV'] == 'production'
 IS_DEVELOPMENT   = !IS_PRODUCTION
 IS_TEST          = ENV['FLUX_ENV'] == 'test'
