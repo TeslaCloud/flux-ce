@@ -30,7 +30,7 @@ function Inventories:PlayerSelectSlot(player, slot)
               self:popup_hotbar()
             end
           end
-        elseif !item_table:is('weapon') and item_table.on_use then
+        elseif !item_table:is('equipable') and item_table.on_use then
           item_table:do_menu_action('on_use')
 
           self:popup_hotbar()
