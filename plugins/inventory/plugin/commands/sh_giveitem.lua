@@ -13,14 +13,16 @@ function CMD:on_run(player, targets, item_name, amount)
 
   if item_table then
     for k, v in ipairs(targets) do
-      for i = 1, amount do
-        v:give_item(item_table.id)
+      local success, error_text = v:give_item(item_table.id, amount)
+      
+      if success then
+        v:notify('notification.item_given', {
+          amount = amount,
+          item = item_table.name
+        })
+      else
+        player:notify(error_text)
       end
-
-      v:notify('notification.item_given', {
-        amount = amount,
-        item = item_table.name
-      })
     end
 
     self:notify_staff('command.giveitem.message', {

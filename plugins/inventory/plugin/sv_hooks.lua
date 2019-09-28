@@ -65,6 +65,7 @@ function Inventories:PlayerTakeItem(player, item_table, ...)
     end
 
     inv_type = inv_type or item_table.preferred_inventory or player.default_inventory
+
     local success, error_text = player:add_item(item_table, inv_type)
 
     if success then
@@ -73,6 +74,8 @@ function Inventories:PlayerTakeItem(player, item_table, ...)
       Item.async_save_entities()
 
       hook.run('ItemTransferred', item_table, player:get_inventory(inv_type))
+    else
+      player:notify(error_text)
     end
   end
 end
