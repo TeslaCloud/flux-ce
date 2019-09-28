@@ -34,6 +34,7 @@ function GM:InitPostEntity()
 end
 
 function GM:PlayerInitialized()
+  hook.run('PopulateSpawnMenu')
   RunConsoleCommand('spawnmenu_reload')
   hook.run('PopulateToolMenu')
 end

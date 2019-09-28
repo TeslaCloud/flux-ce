@@ -123,11 +123,137 @@ Cable.receive('fl_inventory_close', function()
   end
 end)
 
-spawnmenu.AddCreationTab('Items', function()
-  local panel = vgui.Create('fl_item_spawner')
+local function create_item_icon(item_table, parent)
+  local icon = spawnmenu.CreateContentIcon('model', parent, {
+    model = item_table:get_model(),
+    skin = item_table:get_skin(),
+    wide = math.scale(128),
+    tall = math.scale(128)
+  })
 
-  panel:Dock(FILL)
-  panel:rebuild()
+  local padding = math.scale(4)
+  icon:DockPadding(padding, padding, padding, padding)
 
-  return panel
-end, 'icon16/wand.png', 40)
+  local name_label = vgui.create('DLabel', icon)
+  name_label:SetText(t(item_table:get_name()))
+  name_label:Dock(BOTTOM)
+  name_label:SetTextColor(color_white)
+  name_label:SetFont(Theme.get_font('text_bar'))
+  name_label:SetWrap(true)
+  name_label:SetAutoStretchVertical(true)
+
+  padding = math.scale(2)
+
+  name_label.Paint = function(pnl, w, h)
+    DisableClipping(true)
+      draw.RoundedBox(math.scale(4), -padding, -padding, w + padding * 2, h + padding * 2, Color(0, 0, 0, 150))
+    DisableClipping(false)
+  end
+
+  icon:SetToolTip(t(item_table:get_name())..'\n'..t(item_table:get_description()))
+  icon.DoRightClick = function(pnl)
+    local derma_menu = DermaMenu()
+    local give_self = derma_menu:AddSubMenu(t'ui.spawnmenu.give.self')
+
+    if item_table.stackable then
+      give_self:AddOption(t'ui.spawnmenu.give.stack', function()
+        MVC.push('SpawnMenu::GiveItem', PLAYER, item_table.id, item_table.max_stack)
+      end)
+    end
+
+    give_self:AddOption(t'ui.spawnmenu.give.one', function()
+      MVC.push('SpawnMenu::GiveItem', PLAYER, item_table.id, 1)
+    end)
+
+    local players = player.all()
+
+    if #players > 1 then
+      local give_player = derma_menu:AddSubMenu(t'ui.spawnmenu.give.player')
+
+      for k, v in ipairs(players) do
+        if PLAYER == v then continue end
+
+        local player_line = give_player:AddSubMenu(v:Name())
+
+        if item_table.stackable then
+          player_line:AddOption(t'ui.spawnmenu.give.stack', function()
+            MVC.push('SpawnMenu::GiveItem', v, item_table.id, item_table.max_stack)
+          end)
+        end
+
+        player_line:AddOption(t'ui.spawnmenu.give.one', function()
+          MVC.push('SpawnMenu::GiveItem', v, item_table.id, 1)
+        end)
+      end
+    end
+
+    derma_menu:Open()
+  end
+
+  return icon
+end
+
+function Inventories:spawnmenu_populate_items(content_panel, tree, node)
+  local categories = {}
+
+  for id, item_table in pairs(Item.all()) do
+    if !categories[item_table.category] then
+      categories[item_table.category] = {}
+    end
+
+    table.insert(categories[item_table.category], item_table)
+  end
+
+  for name, category in pairs(categories) do
+    local node = tree:AddNode(t(name), Item.get_category_icon(name))
+    
+    node.DoPopulate = function(pnl)
+      if IsValid(pnl.list) then return end
+
+      pnl.list = vgui.create('ContentContainer', content_panel)
+      pnl.list:SetVisible(false)
+      pnl.list:SetTriggerSpawnlistChange(false)
+
+      for k, item_table in SortedPairsByMemberValue(category, 'name') do
+        local icon = create_item_icon(item_table, pnl.list)
+        icon.DoClick = function(pnl)
+          MVC.push('SpawnMenu::SpawnItem', item_table.id)
+        end
+      end
+    end
+
+    node.DoClick = function(pnl)
+      pnl:DoPopulate()
+      content_panel:SwitchPanel(pnl.list)
+    end
+  end
+end
+
+function Inventories:PopulateSpawnMenu()
+  spawnmenu.AddCreationTab(t'ui.spawnmenu.items', function()
+    local panel = vgui.Create('SpawnmenuContentPanel')
+    panel:EnableSearch('items', 'spawnmenu_populate_items')
+    panel:CallPopulateHook('spawnmenu_populate_items')
+
+    return panel
+  end, 'icon16/briefcase.png', 40)
+end
+
+search.AddProvider(function(query)
+  query = query:utf8lower()
+
+  local results = {}
+
+  for k, item_table in pairs(Item.all()) do
+    if t(item_table:get_name()):utf8lower():find(query) then
+      table.insert(results, {
+        text = item_table.id,
+        func = function() MVC.push('SpawnMenu::SpawnItem', item_table.id) end,
+        icon = create_item_icon(item_table),
+        words = { item_table }
+      })
+    end
+  end
+
+  return results
+end, 'items')
