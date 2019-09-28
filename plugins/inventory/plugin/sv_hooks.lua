@@ -44,6 +44,12 @@ function Inventories:SaveCharacterData(player, char)
   end
 end
 
+function Inventories:PreItemSave(item_table, save_table)
+  save_table.x = item_table.x
+  save_table.y = item_table.y
+  save_table.inventory_type = item_table.inventory_type
+end
+
 function Inventories:PlayerTakeItem(player, item_table, ...)
   if IsValid(item_table.entity) then
     local inv_type
@@ -211,6 +217,14 @@ end)
 
 Cable.receive('fl_item_drop', function(player, instance_id)
   hook.run('PlayerDropItem', player, instance_id)
+end)
+
+Cable.receive('fl_inventory_close', function(player, inventory_id)
+  local inventory = Inventories.find(inventory_id)
+  inventory:remove_receiver(player)
+  inventory:sync()
+
+  hook.run('OnInventoryClosed', player, inventory)
 end)
 
 Cable.receive('fl_character_desc_change', function(player, text)

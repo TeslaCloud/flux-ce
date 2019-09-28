@@ -87,7 +87,7 @@ end
 function Item.to_saveable(item_table)
   if !item_table then return end
 
-  return {
+  local save_table = {
     id = item_table.id,
     name = item_table.name,
     print_name = item_table.print_name,
@@ -114,6 +114,10 @@ function Item.to_saveable(item_table)
     take_icon = item_table.take_icon,
     cancel_icon = item_table.cancel_icon,
   }
+
+  hook.run('PreItemSave', item_table, save_table)
+
+  return save_table
 end
 
 -- Find item's template by it's ID.
