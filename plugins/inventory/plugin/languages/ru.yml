@@ -44,3 +44,10 @@ ru:
       pockets: Карманы
     tab_menu:
       inventory: Инвентарь
+    spawnmenu:
+      items: Предметы
+      give:
+        self: Выдать себе
+        player: Выдать другому игроку
+        stack: Стак
+        one: Один

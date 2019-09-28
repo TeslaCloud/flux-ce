@@ -44,3 +44,10 @@ en:
       pockets: Pockets
     tab_menu:
       inventory: Inventory
+    spawnmenu:
+      items: Items
+      give:
+        self: Give Self
+        player: Give To Other Player
+        stack: Stack
+        one: One
