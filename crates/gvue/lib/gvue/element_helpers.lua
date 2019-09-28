@@ -30,7 +30,7 @@ local unit_callbacks = {
     return n * size
   end,
   ['%']     = function(e, n, what)
-    return n * Gvue:get_context_attribute(Gvue:get_parent_of(e), what or 'font_size'))
+    return n * Gvue:get_context_attribute(Gvue:get_parent_of(e), what or 'font_size')
   end,
 }
 
