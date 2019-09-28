@@ -21,6 +21,8 @@ function StaticEnts:ShutDown()
 end
 
 function StaticEnts:PersistenceSave()
+  hook.run('PrePersistenceSave')
+
   local entities = {}
 
   for k, v in ipairs(ents.GetAll()) do
