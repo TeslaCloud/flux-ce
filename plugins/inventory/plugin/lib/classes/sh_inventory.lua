@@ -1,6 +1,7 @@
 class 'Inventory'
 
 function Inventory:init(id)
+  self.title = 'ui.inventory.title'
   self.type = 'default'
   self.width = 1
   self.height = 1
@@ -24,6 +25,7 @@ end
 function Inventory:to_networkable()
   return {
     id = self.id,
+    title = self.title,
     inv_type = self.type,
     width = self.width,
     height = self.height,

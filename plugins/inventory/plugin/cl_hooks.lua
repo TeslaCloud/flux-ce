@@ -71,6 +71,7 @@ end
 Cable.receive('fl_inventory_sync', function(data)
   local inventory = Inventories.stored[data.id] or Inventory.new(data.id)
   inventory.id = data.id
+  inventory.title = data.title
   inventory.type = data.inv_type
   inventory.width = data.width
   inventory.height = data.height
