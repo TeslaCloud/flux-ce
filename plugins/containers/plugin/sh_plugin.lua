@@ -17,6 +17,10 @@ do
   function Container:all()
     return stored
   end
+
+  function Container:find(model)
+    return stored[model]
+  end
 end
 
 require_relative 'cl_hooks'

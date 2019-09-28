@@ -1,6 +1,6 @@
 function Container:DrawEntityTargetID(entity, x, y, dist)
   if dist < 300 then
-    local container_data = Container:all()[entity:GetModel()]
+    local container_data = self:find(entity:GetModel())
 
     if container_data then
       local title = t(container_data.name)
