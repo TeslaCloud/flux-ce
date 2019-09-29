@@ -1,5 +1,5 @@
 local PANEL = {}
-PANEL.draggable = true
+PANEL.draggable = false
 
 function PANEL:Init()
   local padding = math.scale(4)
