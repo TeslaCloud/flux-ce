@@ -27,17 +27,13 @@ function PANEL:SizeToContents()
   self:SetSize(self.max_w + 4, self.max_h + 4)
 end
 
-function PANEL:set_currencies(currency_table)
-  self.currencies = currency_table
-end
-
 function PANEL:rebuild()
   self.max_w = 0
   self.max_h = 0
   self:Clear()
 
   for k, v in pairs(Currencies.all()) do
-    local amount = self.currencies[k] or 0
+    local amount = PLAYER:get_money(k) or 0
 
     if !v.hidden or v.hidden and amount > 0 then
       local line = vgui.create('DPanel', self)
