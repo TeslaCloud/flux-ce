@@ -76,6 +76,18 @@ function Inventories:popup_hotbar()
   end)
 end
 
+function Inventories:OnMenuPanelOpen(menu_panel, active_panel)
+  if PLAYER.opened_containers then
+    for k, v in pairs(PLAYER.opened_containers) do
+      if IsValid(v) then
+        v:safe_remove()
+      end
+    end
+
+    PLAYER.opened_containers = {}
+  end
+end
+
 Cable.receive('fl_inventory_sync', function(data)
   local inventory = Inventories.stored[data.id] or Inventory.new(data.id)
   inventory.id = data.id
@@ -86,6 +98,7 @@ Cable.receive('fl_inventory_sync', function(data)
   inventory.slots = data.slots
   inventory.multislot = data.multislot
   inventory.owner = data.owner
+  inventory.instance_id = data.instance_id
 
   if data.owner and data.owner == PLAYER then
     PLAYER.inventories = PLAYER.inventories or {}
@@ -119,15 +132,55 @@ Cable.receive('fl_rebuild_player_panel', function()
 end)
 
 Cable.receive('fl_inventory_open', function(inventory_id)
-  local inventory = vgui.create('fl_inventory_container')
-  inventory:open_inventory(inventory_id)
+  if !IsValid(Flux.tab_menu) and !IsValid(Flux.container_panel) then
+    local inventory = vgui.create('fl_inventory_container')
+    inventory:open_inventory(inventory_id)
 
-  Flux.container_panel = inventory
+    Flux.container_panel = inventory
+  else
+    local inventory = Inventories.find(inventory_id)
+    local item_table = Item.find_instance_by_id(inventory.instance_id)
+    local parent = IsValid(Flux.tab_menu) and Flux.tab_menu or IsValid(Flux.container_panel) and Flux.container_panel or nil
+    local frame = vgui.create('fl_frame', parent)
+
+    local inventory_panel = inventory:create_panel(frame)
+    inventory_panel:set_title()
+    inventory_panel:SizeToContents()
+    inventory_panel:rebuild()
+    inventory_panel:Dock(FILL)
+
+    local left, top, right, bottom = frame:GetDockPadding()
+  
+    frame:set_title(t(item_table:get_name()))
+    frame:set_draggable(true)
+    frame:SetSize(inventory_panel:GetWide() + left + right, inventory_panel:GetTall() + top + bottom)
+    frame:SetPos(input.GetCursorPos())
+    frame:MoveToFront()
+    frame.inventory = inventory
+
+    frame.OnRemove = function()
+      local inventory_id = frame.inventory.id
+      Cable.send('fl_inventory_close', inventory_id)
+      
+      PLAYER.opened_containers[inventory_id] = nil
+    end
+
+    PLAYER.opened_containers = PLAYER.opened_containers or {}
+    PLAYER.opened_containers[inventory_id] = frame
+  end
 end)
 
-Cable.receive('fl_inventory_close', function()
-  if IsValid(Flux.container_panel) then
-    Flux.container_panel:safe_remove()
+Cable.receive('fl_inventory_close', function(inventory_id)
+  if inventory_id then
+    local inventory_panel = PLAYER.opened_containers[inventory_id]
+
+    if IsValid(inventory_panel) then
+      inventory_panel:safe_remove()
+    end
+  else
+    if IsValid(Flux.container_panel) then
+      Flux.container_panel:safe_remove()
+    end
   end
 end)
 

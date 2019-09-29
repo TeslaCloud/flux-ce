@@ -125,6 +125,18 @@ function Inventories:PreItemTransfer(item_table, new_inventory, old_inventory)
   end
 end
 
+function Inventories:ItemTransferred(item_table, new_inventory, old_inventory)
+  local inventory = item_table.inventory
+
+  if inventory then
+    for k, v in ipairs(inventory.receivers) do
+      if IsValid(v) and !v:has_item_by_id(item_table.instance_id) then
+        Cable.send(v, 'fl_inventory_close', inventory.id)
+      end
+    end
+  end
+end
+
 function Inventories:CanItemMove(item_table, inventory, x, y)
   if item_table.can_move then
     local success, error_text = item_table:can_move(inventory, x, y)
@@ -148,6 +160,15 @@ function Inventories:CanItemTransfer(item_table, inventory, x, y)
 
   if item_table.can_transfer then
     local success, error_text = item_table:can_transfer(inventory, x, y)
+
+    if success == false then
+      return false, error_text
+    end
+  end
+
+  if inventory.instance_id then
+    local item_container = Item.find_instance_by_id(inventory.instance_id)
+    local success, error_text = item_container:can_contain(item_table)
 
     if success == false then
       return false, error_text

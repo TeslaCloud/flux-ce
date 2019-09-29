@@ -31,7 +31,8 @@ function Inventory:to_networkable()
     height = self.height,
     slots = self.slots,
     multislot = self.multislot,
-    owner = self.owner
+    owner = self.owner,
+    instance_id = self.instance_id
   }
 end
 
@@ -108,6 +109,12 @@ function Inventory:get_items()
 
     if item_table then
       table.insert(items, item_table)
+
+      local inventory = item_table.inventory
+
+      if inventory then
+        table.add(items, inventory:get_items())
+      end
     end
   end
 
