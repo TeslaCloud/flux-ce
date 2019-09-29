@@ -22,6 +22,7 @@ function PANEL:Init()
   self.main_inventory = PLAYER:get_inventory('main_inventory'):create_panel(self)
   self.main_inventory:set_title('ui.inventory.main_inventory')
   self.main_inventory:SizeToContents()
+  self.main_inventory:rebuild()
 
   self.pockets = PLAYER:get_inventory('pockets'):create_panel(self)
   self.pockets:set_slot_size(math.scale(48))
@@ -34,6 +35,7 @@ function PANEL:Init()
 
   self.main_inventory:SetPos(x, y)
   self.pockets:SetPos(x, y + self.main_inventory:GetTall() + title_h + math.scale(16))
+  self.pockets:rebuild()
 
   self.hotbar = PLAYER:get_inventory('hotbar'):create_panel(self)
   self.hotbar:set_slot_size(math.scale(80))
@@ -42,6 +44,7 @@ function PANEL:Init()
   self.hotbar:set_title('ui.inventory.hotbar')
   self.hotbar:SizeToContents()
   self.hotbar:SetPos(ScrW() * 0.5 - self.hotbar:GetWide() * 0.5, ScrH() - self.hotbar:GetTall() - math.scale(16))
+  self.hotbar:rebuild()
 
   draw.set_blur_size(6)
   Flux.blur_update_fps = 0
