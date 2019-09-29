@@ -70,6 +70,10 @@ function Inventories:PlayerTakeItem(player, item_table, ...)
 
     inv_type = inv_type or item_table.preferred_inventory or player.default_inventory
 
+    local player_inventory = player:get_inventory(inv_type)
+
+    hook.run('PreItemTransfer', item_table, player_inventory)
+
     local success, error_text = player:add_item(item_table, inv_type)
 
     if success then
@@ -77,7 +81,7 @@ function Inventories:PlayerTakeItem(player, item_table, ...)
       item_table.entity:Remove()
       Item.async_save_entities()
 
-      hook.run('ItemTransferred', item_table, player:get_inventory(inv_type))
+      hook.run('ItemTransferred', item_table, player_inventory)
     else
       player:notify(error_text)
     end
@@ -92,10 +96,12 @@ function Inventories:PlayerDropItem(player, instance_id)
 
   local inventory = Inventories.find(item_table.inventory_id)
 
-  hook.run('ItemTransferred', item_table, nil, inventory)
+  hook.run('PreItemTransfer', item_table, nil, inventory)
 
   inventory:take_item_by_id(instance_id)
   inventory:sync()
+
+  hook.run('ItemTransferred', item_table, nil, inventory)
 
   local distance = trace.HitPos:Distance(player:GetPos())
 
@@ -113,7 +119,7 @@ function Inventories:PlayerDropItem(player, instance_id)
   Item.async_save_entities()
 end
 
-function Inventories:ItemTransferred(item_table, new_inventory, old_inventory)
+function Inventories:PreItemTransfer(item_table, new_inventory, old_inventory)
   if item_table.on_transfer then
     item_table:on_transfer(new_inventory, old_inventory)
   end
@@ -179,10 +185,12 @@ function Inventories:PlayerUseItem(player, item_table, ...)
   else
     local inventory = Inventories.find(item_table.inventory_id)
 
-    hook.run('ItemTransferred', item_table, nil, inventory)
+    hook.run('PreItemTransfer', item_table, nil, inventory)
 
     inventory:take_item_by_id(item_table.instance_id)
     inventory:sync()
+
+    hook.run('ItemTransferred', item_table, nil, inventory)
   end
 end
 

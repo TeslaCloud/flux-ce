@@ -505,6 +505,8 @@ if SERVER then
       end
     end
 
+    hook.run('PreItemTransfer', item_table, inventory, self)
+
     item_table.inventory_id = inventory.id
     item_table.inventory_type = inventory.type
     item_table.x = x
