@@ -1,13 +1,20 @@
 function Currencies:OnInventoryRebuild(panel)
-  panel.money = vgui.create('fl_currencies', panel)
+  if panel:get_inventory_type() == 'pockets' then
+    local parent = panel:GetParent()
 
-  local text = t(panel.money.title)
-  local font = Theme.get_font('main_menu_normal_large')
-  local text_w, text_h = util.text_size(text, font)
+    if !IsValid(parent.money) then
+      parent.money = vgui.create('fl_currencies', parent)
+    end
 
-  panel.money:rebuild()
-  panel.money:SizeToContents()
-  panel.money:SetPos(panel.pockets.x + panel.pockets:GetWide() + math.scale(8), panel.pockets.y + math.max(panel.pockets:GetTall() - panel.money:GetTall(), text_h))
+    local text = t(parent.money.title)
+    local font = Theme.get_font('main_menu_normal_large')
+    local text_w, text_h = util.text_size(text, font)
+
+    parent.money:rebuild()
+    parent.money:SizeToContents()
+    panel:SetWide(math.min(panel:GetWide(), parent.main_inventory:GetWide() - parent.money:GetWide() - math.scale(16)))
+    parent.money:SetPos(panel.x + panel:GetWide() + math.scale(8), panel.y + math.max(panel:GetTall() - parent.money:GetTall(), text_h))
+  end
 end
 
 Cable.receive('fl_rebuild_currency_panel', function()
