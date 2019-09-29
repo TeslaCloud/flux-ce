@@ -157,6 +157,8 @@ function PANEL:rebuild()
   self.hotbar:set_title('ui.inventory.hotbar')
   self.hotbar:SizeToContents()
   self.hotbar:SetPos(ScrW() * 0.5 - self.hotbar:GetWide() * 0.5, ScrH() - self.hotbar:GetTall() - math.scale(16))
+
+  hook.run('OnInventoryRebuild', self)
 end
 
 vgui.Register('fl_inventory_menu', PANEL, 'fl_base_panel')

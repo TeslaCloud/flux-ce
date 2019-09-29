@@ -105,6 +105,8 @@ Cable.receive('fl_currency_give', function(player, amount, currency)
   if success == false then
     player:notify(err)
   end
+
+  Cable.send(player, 'fl_rebuild_currency_panel')
 end)
 
 Cable.receive('fl_currency_drop', function(player, amount, currency)
@@ -113,4 +115,6 @@ Cable.receive('fl_currency_drop', function(player, amount, currency)
   if success == false then
     player:notify(err)
   end
+
+  Cable.send(player, 'fl_rebuild_currency_panel')
 end)
