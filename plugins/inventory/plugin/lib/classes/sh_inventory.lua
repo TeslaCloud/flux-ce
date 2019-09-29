@@ -70,6 +70,10 @@ function Inventory:get_type()
   return self.type
 end
 
+function Inventory:get_slots()
+  return self.slots
+end
+
 function Inventory:is_multislot()
   return self.multislot
 end
@@ -329,6 +333,8 @@ if SERVER then
           table.insert(self.slots[i][k], item_table.instance_id)
         end
       end
+
+      self:check_size()
     else
       return false, 'error.inventory.no_space'
     end
@@ -378,6 +384,8 @@ if SERVER then
         table.remove_by_value(self.slots[i][k], item_table.instance_id)
       end
     end
+
+    self:check_size()
 
     hook.run('OnItemTaken', item_table, self)
 
@@ -456,6 +464,8 @@ if SERVER then
       end
     end
 
+    self:check_size()
+
     return true
   end
 
@@ -511,6 +521,9 @@ if SERVER then
         table.insert(inventory.slots[i][k], instance_id)
       end
     end
+
+    self:check_size()
+    inventory:check_size()
 
     hook.run('ItemTransferred', item_table, inventory, self)
 
@@ -579,12 +592,35 @@ if SERVER then
       end
     end
   end
+
+  function Inventory:check_size()
+    local max_x, max_y = 0, 0
+
+    for i = 1, self:get_height() do
+      for k = 1, self:get_width() do
+        if !table.is_empty(self:get_slot(k, i)) then
+          max_x, max_y = k, i
+        end
+      end
+    end
+
+    if self:is_height_infinite() then
+      self.height = max_y + 1
+    end
+
+    if self:is_width_infinite() then
+      self.width = max_x + 1
+    end
+
+    self:rebuild()
+    self:sync()
+  end
 else
   function Inventory:create_panel(parent)
     local panel = vgui.create('fl_inventory', parent)
     panel:set_inventory_id(self.id)
     panel:rebuild()
-    
+
     self.panel = panel
 
     return panel

@@ -187,6 +187,14 @@ do
           local inventory_type = item_table.inventory_type
           local inventory = self:get_inventory(inventory_type)
 
+          if inventory:is_width_infinite() and x > inventory:get_width() then
+            inventory:set_width(x + 1)
+          end
+
+          if inventory:is_height_infinite() and y > inventory:get_height() then
+            inventory:set_height(y + 1)
+          end
+
           inventory:add_item(item_table, x, y)
         end
       end

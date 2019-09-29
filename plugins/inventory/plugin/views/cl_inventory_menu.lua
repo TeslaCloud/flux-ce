@@ -15,7 +15,7 @@ function PANEL:on_close()
 
   if IsValid(self.hotbar) then
     self.hotbar:AlphaTo(0, Theme.get_option('menu_anim_duration'), 0, function()
-    self.hotbar:safe_remove()
+      self.hotbar:safe_remove()
     end)
   end
 end

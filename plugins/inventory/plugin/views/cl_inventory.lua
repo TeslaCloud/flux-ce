@@ -199,6 +199,8 @@ function PANEL:rebuild()
       self.scroll:AddItem(slot)
     end
   end
+
+  hook.run('OnInventoryRebuild', self)
 end
 
 function PANEL:set_slot_size(size)

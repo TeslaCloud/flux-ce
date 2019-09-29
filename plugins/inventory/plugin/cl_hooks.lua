@@ -37,6 +37,14 @@ function Inventories:AddTabMenuItems(menu)
   })
 end
 
+function Inventories:OnInventoryRebuild(panel)
+  if panel:get_inventory_type() == 'pockets' then
+    local parent = panel:GetParent()
+    panel:SizeToContents()
+    panel:SetWide(math.min(panel:GetWide(), parent.main_inventory:GetWide()))
+  end
+end
+
 function Inventories:create_hotbar()
   local hotbar = PLAYER:get_inventory('hotbar'):create_panel()
   hotbar:set_slot_size(math.scale(80))
