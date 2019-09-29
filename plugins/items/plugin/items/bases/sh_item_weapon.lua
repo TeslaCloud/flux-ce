@@ -20,6 +20,8 @@ ItemWeapon:add_button('item.option.unload', {
     and !IsValid(item_table.entity) and item_table:is_equipped()) then
       return true
     end
+
+    return false
   end
 })
 
