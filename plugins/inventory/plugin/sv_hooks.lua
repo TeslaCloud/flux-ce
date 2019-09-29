@@ -13,24 +13,28 @@ end
 
 function Inventories:CreatePlayerInventories(player, inventories)
   local main_inventory = Inventory.new()
+    main_inventory.title = 'ui.inventory.main_inventory'
     main_inventory:set_size(Config.get('inventory_width'), Config.get('inventory_height'))
     main_inventory.type = 'main_inventory'
     main_inventory.default = true
   inventories[main_inventory.type] = main_inventory
 
   local hotbar = Inventory.new()
+    hotbar.title = 'ui.inventory.hotbar'
     hotbar:set_size(Config.get('hotbar_width'), Config.get('hotbar_height'))
     hotbar.type = 'hotbar'
     hotbar.multislot = false
   inventories[hotbar.type] = hotbar
 
   local equipment = Inventory.new()
+    equipment.title = 'ui.inventory.equipment'
     equipment:set_size(Config.get('equipment_width'), Config.get('equipment_height'))
     equipment.type = 'equipment'
     equipment.multislot = false
   inventories[equipment.type] = equipment
 
   local pockets = Inventory.new()
+    pockets.title = 'ui.inventory.pockets'
     pockets:set_size(1, Config.get('pockets_height'))
     pockets.type = 'pockets'
     pockets.infinite_width = true

@@ -618,6 +618,7 @@ if SERVER then
 else
   function Inventory:create_panel(parent)
     local panel = vgui.create('fl_inventory', parent)
+    panel:set_title(t(self.title or self.type))
     panel:set_inventory_id(self.id)
     panel:rebuild()
 
