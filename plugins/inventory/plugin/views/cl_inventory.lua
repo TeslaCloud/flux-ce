@@ -135,8 +135,8 @@ function PANEL:SizeToContents()
   self:rebuild()
 end
 
-function PANEL:set_inventory(inventory)
-  self.inventory = inventory
+function PANEL:set_inventory_id(inventory_id)
+  self.inventory_id = inventory_id
 
   self:rebuild()
 end
@@ -212,35 +212,35 @@ function PANEL:set_slot_padding(padding)
 end
 
 function PANEL:get_inventory()
-  return self.inventory
+  return Inventories.find(self:get_inventory_id())
 end
 
 function PANEL:get_inventory_id()
-  return self.inventory.id
+  return self.inventory_id
 end
 
 function PANEL:get_inventory_width()
-  return self.inventory.width
+  return self:get_inventory():get_width()
 end
 
 function PANEL:get_inventory_height()
-  return self.inventory.height
+  return self:get_inventory():get_height()
 end
 
 function PANEL:get_inventory_size()
-  return self.inventory.width, self.inventory.height
+  return self:get_inventory():get_size()
 end
 
 function PANEL:get_inventory_type()
-  return self.inventory.type
+  return self:get_inventory():get_type()
 end
 
 function PANEL:get_slots()
-  return self.inventory.slots
+  return self:get_inventory():get_slots()
 end
 
 function PANEL:get_slot(x, y)
-  return self.inventory.slots[y][x]
+  return self:get_inventory():get_slot(x, y)
 end
 
 function PANEL:get_slot_size()
@@ -252,7 +252,7 @@ function PANEL:get_slot_padding()
 end
 
 function PANEL:is_multislot()
-  return self.inventory.multislot
+  return self:get_inventory():is_multislot()
 end
 
 function PANEL:draw_inventory_slots(bool)
