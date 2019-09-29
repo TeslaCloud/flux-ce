@@ -41,8 +41,9 @@ en:
       you_must_enter_command: You must enter a command!
     invalid_time: "'{time}' could not be interpreted as time!"
     invalid_value: "You specified an invalid argument value!"
+    invalid_amount: You specified an invalid amount!
     invalid_entity: This is not a valid entity!
-    too_far: You are too far away to do that!
+    too_far: Target is too far!
     wait: You can not do it right now, please wait!
   hint:
     forums:
