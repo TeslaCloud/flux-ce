@@ -131,8 +131,6 @@ function PANEL:SizeToContents()
   local height = (slot_size + slot_padding) * self:get_inventory_height() - slot_padding
 
   self:SetSize(width, height)
-
-  self:rebuild()
 end
 
 function PANEL:set_inventory_id(inventory_id)

@@ -4,10 +4,6 @@ function PANEL:Paint(w, h)
   Theme.hook('PaintTabInventoryBackground', self, w, h)
 end
 
-function PANEL:PerformLayout(w, h)
-
-end
-
 function PANEL:get_menu_size()
   return ScrW() * 0.66, ScrH() * 0.66
 end
@@ -18,7 +14,9 @@ function PANEL:on_close()
   end
 
   if IsValid(self.hotbar) then
+    self.hotbar:AlphaTo(0, Theme.get_option('menu_anim_duration'), 0, function()
     self.hotbar:safe_remove()
+    end)
   end
 end
 
@@ -129,6 +127,7 @@ function PANEL:rebuild()
   self.equipment:set_slot_padding(math.scale(4))
   self.equipment:set_title('ui.inventory.equipment')
   self.equipment:SizeToContents()
+  self.equipment:rebuild()
   self.equipment:SetPos(w - self.equipment:GetWide(), h * 0.5 - self.equipment:GetTall() * 0.5)
 
   self.player_model:SetSize(w * 0.5 - self.equipment:GetWide(), h)
@@ -137,6 +136,7 @@ function PANEL:rebuild()
   self.main_inventory = PLAYER:get_inventory('main_inventory'):create_panel(self)
   self.main_inventory:set_title('ui.inventory.main_inventory')
   self.main_inventory:SizeToContents()
+  self.main_inventory:rebuild()
 
   self.pockets = PLAYER:get_inventory('pockets'):create_panel(self)
   self.pockets:set_slot_size(math.scale(48))
@@ -149,6 +149,7 @@ function PANEL:rebuild()
 
   self.main_inventory:SetPos(x, y)
   self.pockets:SetPos(x, y + self.main_inventory:GetTall() + title_h + math.scale(16))
+  self.pockets:rebuild()
 
   self.hotbar = PLAYER:get_inventory('hotbar'):create_panel(self:GetParent())
   self.hotbar:set_slot_size(math.scale(80))
@@ -157,8 +158,7 @@ function PANEL:rebuild()
   self.hotbar:set_title('ui.inventory.hotbar')
   self.hotbar:SizeToContents()
   self.hotbar:SetPos(ScrW() * 0.5 - self.hotbar:GetWide() * 0.5, ScrH() - self.hotbar:GetTall() - math.scale(16))
-
-  hook.run('OnInventoryRebuild', self)
+  self.hotbar:rebuild()
 end
 
 vgui.Register('fl_inventory_menu', PANEL, 'fl_base_panel')
