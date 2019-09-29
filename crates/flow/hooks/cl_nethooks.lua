@@ -17,26 +17,7 @@ Cable.receive('fl_player_model_changed', function(ply_index, new_model, old_mode
 end)
 
 Cable.receive('fl_notification', function(message, arguments, color)
-  if istable(arguments) then
-    for k, v in pairs(arguments) do
-      if isstring(v) then
-        arguments[k] = t(v)
-      elseif isentity(v) and IsValid(v) then
-        if v:IsPlayer() then
-          arguments[k] = hook.run('GetPlayerName', v) or v:name()
-        else
-          arguments[k] = tostring(v) or v:GetClass()
-        end
-      end
-    end
-  end
-
-  color = color and Color(color.r, color.g, color.b) or color_white
-  message = t(message, arguments)
-
-  Flux.Notification:add(message, 8, color:darken(50))
-
-  chat.AddText(color, message)
+  PLAYER:notify(message, arguments, color)
 end)
 
 Cable.receive('fl_player_take_damage', function()

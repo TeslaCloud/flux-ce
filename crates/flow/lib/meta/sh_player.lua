@@ -32,6 +32,31 @@ function player_meta:SetModel(path)
   return self:flSetModel(path)
 end
 
+if CLIENT then
+  function player_meta:notify(message, arguments, color)
+    if istable(arguments) then
+      for k, v in pairs(arguments) do
+        if isstring(v) then
+          arguments[k] = t(v)
+        elseif isentity(v) and IsValid(v) then
+          if v:IsPlayer() then
+            arguments[k] = hook.run('GetPlayerName', v) or v:name()
+          else
+            arguments[k] = tostring(v) or v:GetClass()
+          end
+        end
+      end
+    end
+
+    color = color and Color(color.r, color.g, color.b) or color_white
+    message = t(message, arguments)
+
+    Flux.Notification:add(message, 8, color:darken(50))
+
+    chat.AddText(color, message)
+  end
+end
+
 --[[
   Actions system
 --]]
