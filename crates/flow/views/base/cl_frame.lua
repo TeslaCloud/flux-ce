@@ -20,7 +20,9 @@ function PANEL:Init()
 end
 
 function PANEL:PerformLayout(w, h)
-  self.button_close:SetPos(w - math.scale_x(20), 0)
+  if IsValid(self.button_close) then
+    self.button_close:SetPos(w - math.scale_x(20), 0)
+  end
 end
 
 function PANEL:Paint(w, h)
