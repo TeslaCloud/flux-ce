@@ -78,7 +78,7 @@ if SERVER then
     hook.run('PreEntityItemSet', self, item_table)
 
     self:SetModel(item_table:get_model())
-    self:SetSkin(item_table.skin)
+    self:SetSkin(item_table:get_skin())
     self:SetColor(item_table:get_color())
 
     self.item = item_table
@@ -112,8 +112,8 @@ else
         return
       end
 
-      text = t(self.item.print_name)
-      desc = t(self.item.description)
+      text = t(self.item:get_name())
+      desc = t(self.item:get_description())
     else
       if !self.data_requested then
         Cable.send('fl_items_data_request', self:EntIndex())
