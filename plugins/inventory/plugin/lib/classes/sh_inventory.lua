@@ -355,7 +355,7 @@ if SERVER then
     return self:add_item(Item.find_instance_by_id(instance_id), x, y)
   end
 
-  function Inventory:give_item(id, data, amount)
+  function Inventory:give_item(id, amount, data)
     amount = amount or 1
 
     for i = 1, amount do

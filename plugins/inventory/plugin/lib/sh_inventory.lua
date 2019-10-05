@@ -231,9 +231,9 @@ do
       return self:add_item(Item.find_instance_by_id(instance_id), inv_type)
     end
 
-    function player_meta:give_item(id, data, amount, inv_type)
+    function player_meta:give_item(id, amount, data, inv_type)
       local inventory = self:get_inventory(inv_type or self.default_inventory or 'main_inventory')
-      local success, error_text = inventory:give_item(id, data, amount)
+      local success, error_text = inventory:give_item(id, amount, data)
 
       inventory:sync()
 
