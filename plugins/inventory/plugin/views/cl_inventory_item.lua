@@ -60,7 +60,11 @@ function PANEL:Paint(w, h)
   draw.RoundedBox(0, 0, 0, w, h, draw_color)
 
   Theme.hook('PaintItemSlot', self, w, h)
+
+  if self.item_data and self.item_data.paint_slot then
+    self.item_data:paint_slot(w, h)
   end
+end
 
 function PANEL:PaintOver(w, h)
   if self.item_count >= 2 then
@@ -78,6 +82,10 @@ function PANEL:PaintOver(w, h)
   end
 
   Theme.hook('PaintOverItemSlot', self, w, h)
+
+  if self.item_data and self.item_data.paint_over_slot then
+    self.item_data:paint_over_slot(w, h)
+  end
 end
 
 function PANEL:OnMousePressed(...)
