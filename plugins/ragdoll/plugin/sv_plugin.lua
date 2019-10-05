@@ -42,7 +42,7 @@ function player_meta:create_ragdoll_entity(decay, fallen)
 
           if ragdoll.weapons then
             for k, v in ipairs(ragdoll.weapons) do
-              self:Give(v)
+              self:Give(v, true)
             end
           end
 
