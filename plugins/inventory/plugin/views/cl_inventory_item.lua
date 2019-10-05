@@ -60,7 +60,7 @@ function PANEL:Paint(w, h)
   draw.RoundedBox(0, 0, 0, w, h, draw_color)
 
   Theme.hook('PaintItemSlot', self, w, h)
-end
+  end
 
 function PANEL:PaintOver(w, h)
   if self.item_count >= 2 then
@@ -167,10 +167,6 @@ end
 
 function PANEL:rebuild()
   if !self.item_data then
-    if IsValid(self.spawn_icon) then
-      self.spawn_icon:safe_remove()
-    end
-
     self:undraggable()
 
     return
@@ -178,17 +174,38 @@ function PANEL:rebuild()
     self:Droppable('fl_item')
   end
 
-  if IsValid(self.spawn_icon) then
-    self.spawn_icon:SetVisible(false)
-    self.spawn_icon:Remove()
+  if IsValid(self.model_panel) then
+    self.model_panel:safe_remove()
   end
 
-  self.spawn_icon = vgui.Create('SpawnIcon', self)
-  self.spawn_icon:Dock(FILL)
-  self.spawn_icon:SetModel(self.item_data:get_icon_model() or self.item_data:get_model(), self.item_data.skin)
-  self.spawn_icon:SetMouseInputEnabled(false)
+  local model = self.item_data:get_icon_model() or self.item_data:get_model()
+
+  self.model_panel = vgui.Create('DModelPanel', self)
+  self.model_panel:Dock(FILL)
+  self.model_panel:SetModel(model, self.item_data:get_skin())
+  self.model_panel:SetMouseInputEnabled(false)
+  self.model_panel.LayoutEntity = function(pnl, ent)
+  end
+
+  local entity = self.model_panel:GetEntity()
+  local cam_data
+
+  if self.item_data.get_icon_data then
+    cam_data = self.item_data:get_icon_data()
+  else
+    cam_data = PositionSpawnIcon(entity, entity:GetPos(), true)
+    cam_data.fov = cam_data.fov * 1.1
+  end
+
+  self.model_panel:SetCamPos(cam_data.origin)
+  self.model_panel:SetFOV(cam_data.fov)
+  self.model_panel:SetLookAng(cam_data.angles)
 
   self:SetToolTip(t(self.item_data:get_name())..'\n'..t(self.item_data:get_description()))
+
+  if self.item_data.adjust_model_panel then
+    self.item_data.adjust_model_panel(self.model_panel, self)
+  end
 end
 
 function PANEL:get_item_size()
