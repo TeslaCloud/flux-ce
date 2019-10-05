@@ -76,7 +76,7 @@ end
 function Container:PrePersistenceSave()
   for k, v in ipairs(ents.all()) do
     if v.inventory and self:find(v:GetModel()) then
-      v.items = v.inventory:get_items_list()
+      v.items = v.inventory:get_items_ids()
       v.inventory = nil
     end
   end

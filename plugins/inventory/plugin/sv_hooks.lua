@@ -44,7 +44,7 @@ end
 
 function Inventories:SaveCharacterData(player, char)
   if player:get_character_id() == char.id then
-    char.item_ids = table.concat(player:get_items_list(), ',')
+    char.item_ids = table.concat(player:get_items_ids(), ',')
   end
 end
 

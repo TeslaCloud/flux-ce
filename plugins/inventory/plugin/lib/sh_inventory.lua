@@ -38,14 +38,14 @@ do
     end
   end
 
-  function player_meta:get_items_list(inv_type)
+  function player_meta:get_items_ids(inv_type)
     if inv_type then
       return self:get_inventory(inv_type)
     else
       local items = {}
 
       for k, v in pairs(self:get_inventories()) do
-        table.add(items, v:get_items_list())
+        table.add(items, v:get_items_ids())
       end
 
       return items

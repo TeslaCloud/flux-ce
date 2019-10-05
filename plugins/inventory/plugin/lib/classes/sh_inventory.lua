@@ -104,7 +104,7 @@ end
 function Inventory:get_items()
   local items = {}
 
-  for k, v in pairs(self:get_items_list()) do
+  for k, v in pairs(self:get_items_ids()) do
     local item_table = Item.find_instance_by_id(v)
 
     if item_table then
@@ -121,7 +121,7 @@ function Inventory:get_items()
   return items
 end
 
-function Inventory:get_items_list()
+function Inventory:get_items_ids()
   local items = {}
 
   for i = 1, self.height do
@@ -210,7 +210,7 @@ function Inventory:has_items(id, amount)
 end
 
 function Inventory:has_item_by_id(instance_id)
-  if table.has_value(self:get_items_list(), instance_id) then
+  if table.has_value(self:get_items_ids(), instance_id) then
     return true, Item.find_instance_by_id(instance_id)
   end
 
@@ -591,7 +591,7 @@ if SERVER then
   function Inventory:sync()
     for k, v in pairs(self:get_receivers()) do
       if IsValid(v) then
-        for k1, v1 in pairs(self:get_items_list()) do
+        for k1, v1 in pairs(self:get_items_ids()) do
           Item.network_item(v, v1)
         end
 
