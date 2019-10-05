@@ -68,6 +68,8 @@ function class(name, base_class)
       super = function(...)
         return base_class.init(new_obj, ...)
       end
+
+      real_class.init = isfunction(real_class.init) and real_class_init or function(obj) super() end
     end
 
     -- If there is a constructor - call it.
