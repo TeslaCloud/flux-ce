@@ -5,6 +5,7 @@ PANEL.slot_padding = math.scale(1)
 PANEL.draw_inventory_slots = false
 
 function PANEL:Init()
+  self:RequestFocus()
   self.slot_panels = {}
 
   self.horizontal_scroll = vgui.create('DHorizontalScroller', self)
@@ -25,6 +26,32 @@ function PANEL:Init()
   end
   self.scroll:GetCanvas():Receiver('fl_item', function(receiver, dropped, is_dropped, menu_index, mouse_x, mouse_y)
     dropped = dropped[1]
+
+    if dropped:IsVisible() and dropped:is_multislot() then
+      local w, h = dropped:get_item_size()
+
+      dropped:SetVisible(false)
+
+      local x, y = dropped:get_item_pos()
+      local slot_size = self:get_slot_size()
+      local slot_padding = self:get_slot_padding()
+
+      for i = y, y + h - 1 do
+        for k = x, x + w - 1 do
+          if i == y and k == x then
+            local slot = vgui.create('fl_inventory_item', self.scroll)
+            slot:SetSize(slot_size, slot_size)
+            slot:SetPos((k - 1) * (slot_size + slot_padding), (i - 1) * (slot_size + slot_padding))
+            slot.slot_x = k
+            slot.slot_y = i
+          else
+            local slot = self.slot_panels[i][k]
+            slot:reset()
+            slot:SetVisible(true)
+          end
+        end
+      end
+    end
 
     if is_dropped then
       local drop_slot = Flux.inventory_drop_slot
@@ -50,7 +77,7 @@ function PANEL:Init()
 
       local instance_ids = !split and dropped.instance_ids or split
 
-      Cable.send('fl_item_move', instance_ids, self:get_inventory_id(), drop_slot.slot_x, drop_slot.slot_y)
+      Cable.send('fl_item_move', instance_ids, self:get_inventory_id(), drop_slot.slot_x, drop_slot.slot_y, dropped:is_rotated())
     else
       local w, h = dropped:GetSize()
       local inventory_width, inventory_height = self:get_inventory_size()
@@ -101,6 +128,18 @@ function PANEL:Init()
         Flux.inventory_drop_slot = nil
       end
     end)
+  end
+end
+
+function PANEL:OnKeyCodePressed(key)
+  local droppable = dragndrop.GetDroppable('fl_item')
+
+  if droppable then
+    droppable = droppable[1]
+
+    if key == KEY_R and IsValid(droppable) then
+      droppable:turn()
+    end
   end
 end
 
@@ -167,35 +206,34 @@ function PANEL:rebuild()
 
       if self.slot_panels[i][k] == false then
         slot:SetVisible(false)
+      else
+        local instance_ids = self:get_slot(k, i)
+
+        if instance_ids and #instance_ids > 0 then
+          if #instance_ids == 1 then
+            slot:set_item(instance_ids[1])
+          else
+            slot:set_item_multi(instance_ids)
+          end
+        end
+
+        if self:is_multislot() and slot:IsVisible() then
+          local w, h = slot:get_item_size()
+
+          if w > 1 or h > 1 then
+            for m = 1, h do
+              for n = 1, w do
+                self.slot_panels[i + m - 1][k + n - 1] = false
+              end
+            end
+
+            slot:SetSize((slot_size + slot_padding) * w - slot_padding, (slot_size + slot_padding) * h - slot_padding)
+            slot:rebuild()
+          end
+        end
       end
 
       self.slot_panels[i][k] = slot
-
-      local instance_ids = self:get_slot(k, i)
-
-      if instance_ids and #instance_ids > 0 then
-        if #instance_ids == 1 then
-          slot:set_item(instance_ids[1])
-        else
-          slot:set_item_multi(instance_ids)
-        end
-      end
-
-      if self:is_multislot() and slot:IsVisible() then
-        local w, h = slot:get_item_size()
-
-        if w > 1 or h > 1 then
-          for m = 1, h do
-            for n = 1, w do
-              self.slot_panels[i + m - 1][k + n - 1] = false
-            end
-          end
-
-          slot:SetSize((slot_size + slot_padding) * w - slot_padding, (slot_size + slot_padding) * h - slot_padding)
-          slot:rebuild()
-        end
-      end
-
       self.scroll:AddItem(slot)
     end
   end

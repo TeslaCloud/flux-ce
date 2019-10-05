@@ -52,6 +52,7 @@ function Inventories:PreItemSave(item_table, save_table)
   save_table.x = item_table.x
   save_table.y = item_table.y
   save_table.inventory_type = item_table.inventory_type
+  save_table.rotated = item_table.rotated
 
   if item_table.inventory then
     save_table.items = item_table.inventory:get_items_ids()
@@ -227,20 +228,20 @@ function Inventories:OnItemUnequipped(player, item_table)
   end
 end
 
-Cable.receive('fl_item_move', function(player, instance_ids, inventory_id, x, y)
+Cable.receive('fl_item_move', function(player, instance_ids, inventory_id, x, y, rotated)
   local instance_id = instance_ids[1]
   local item_table = Item.find_instance_by_id(instance_id)
   local inventory = Inventories.find(inventory_id)
 
   if inventory_id == item_table.inventory_id then
-    inventory:move_stack(instance_ids, x, y)
+    inventory:move_stack(instance_ids, x, y, rotated)
   else
     local old_inventory = Inventories.find(item_table.inventory_id)
 
     if #instance_ids == 1 then
-      old_inventory:transfer_item(instance_id, inventory, x, y)
+      old_inventory:transfer_item(instance_id, inventory, x, y, rotated)
     else
-      old_inventory:transfer_stack(instance_ids, inventory, x, y)
+      old_inventory:transfer_stack(instance_ids, inventory, x, y, rotated)
     end
 
     old_inventory:sync()

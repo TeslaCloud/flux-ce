@@ -3,6 +3,7 @@ PANEL.item_data = nil
 PANEL.item_count = 0
 PANEL.instance_ids = {}
 PANEL.slot_number = nil
+PANEL.rotated = false
 
 function PANEL:Paint(w, h)
   local draw_color = Color(30, 30, 30, 100)
@@ -10,33 +11,36 @@ function PANEL:Paint(w, h)
 
   if IsValid(drop_slot) and drop_slot:get_inventory_id() == self:get_inventory_id() then
     local drag_slot = Flux.inventory_drag_slot
-    local slot_w, slot_h = drag_slot:get_item_size()
-    local drop_x, drop_y = drop_slot:get_item_pos()
-    local x, y = self:get_item_pos()
+    
+    if IsValid(drag_slot) then
+      local slot_w, slot_h = drag_slot:get_item_size()
+      local drop_x, drop_y = drop_slot:get_item_pos()
+      local x, y = self:get_item_pos()
 
-    if self.is_hovered or self:is_multislot() and drop_x <= x and drop_y <= y
-    and drop_x + slot_w > x and drop_y + slot_h > y then
-      local item_table = self.item_data
+      if self.is_hovered or self:is_multislot() and drop_x <= x and drop_y <= y
+      and drop_x + slot_w > x and drop_y + slot_h > y then
+        local item_table = self.item_data
 
-      if item_table then
-        if IsValid(drag_slot) and drag_slot.item_data != item_table then
-          local slot_data = drag_slot.item_data
+        if item_table then
+          if drag_slot.item_data != item_table then
+            local slot_data = drag_slot.item_data
 
-          if slot_data.id == item_table.id and slot_data.stackable
-          and drag_slot.item_count < slot_data.max_stack
-          and drop_slot.item_count < slot_data.max_stack then
-            draw_color = Color(200, 200, 60)
+            if slot_data.id == item_table.id and slot_data.stackable
+            and drag_slot.item_count < slot_data.max_stack
+            and drop_slot.item_count < slot_data.max_stack then
+              draw_color = Color(200, 200, 60)
+            else
+              draw_color = Color(200, 60, 60, 160)
+            end
           else
-            draw_color = Color(200, 60, 60, 160)
+            draw_color = draw_color:lighten(30)
           end
         else
-          draw_color = draw_color:lighten(30)
-        end
-      else
-        if drop_slot.out_of_bounds then
-          draw_color = Color(200, 60, 60, 160)
-        else
-          draw_color = Color(60, 200, 60, 160)
+          if drop_slot.out_of_bounds then
+            draw_color = Color(200, 60, 60, 160)
+          else
+            draw_color = Color(60, 200, 60, 160)
+          end
         end
       end
     end
@@ -127,6 +131,7 @@ function PANEL:set_item(instance_id)
     if self.item_data then
       self.item_count = 1
       self.instance_ids = { instance_id }
+      self.rotated = self.item_data.rotated
     end
 
     self:rebuild()
@@ -141,6 +146,7 @@ function PANEL:set_item_multi(ids)
   self.item_data = item_data
   self.item_count = #ids
   self.instance_ids = ids
+  self.rotated = item_data.rotated
   self:rebuild()
 end
 
@@ -168,6 +174,7 @@ function PANEL:reset()
   self.instance_ids = {}
   self.item_data = nil
   self.item_count = 0
+  self.rotated = false
 
   self:rebuild()
   self:undraggable()
@@ -205,6 +212,12 @@ function PANEL:rebuild()
     cam_data.fov = cam_data.fov * 1.1
   end
 
+  if self:is_rotated() then
+    local w, h = self:get_item_size()
+    cam_data.angles.z = cam_data.angles.z - 90
+    cam_data.fov = cam_data.fov * (w / h)
+  end
+
   self.model_panel:SetCamPos(cam_data.origin)
   self.model_panel:SetFOV(cam_data.fov)
   self.model_panel:SetLookAng(cam_data.angles)
@@ -218,7 +231,11 @@ end
 
 function PANEL:get_item_size()
   if self.item_data then
-    return self.item_data.width, self.item_data.height
+    if !self:is_rotated() then
+      return self.item_data.width, self.item_data.height
+    else
+      return self.item_data.height, self.item_data.width
+    end
   end
 
   return 1, 1
@@ -234,6 +251,18 @@ end
 
 function PANEL:is_multislot()
   return self.multislot
+end
+
+function PANEL:turn()
+  local w, h = self:GetSize()
+  self:SetWidth(h)
+  self:SetHeight(w)
+  self.rotated = !self.rotated
+  self:rebuild()
+end
+
+function PANEL:is_rotated()
+  return self.rotated
 end
 
 vgui.Register('fl_inventory_item', PANEL, 'DPanel')
