@@ -17,7 +17,9 @@ Cable.receive('fl_player_model_changed', function(ply_index, new_model, old_mode
 end)
 
 Cable.receive('fl_notification', function(message, arguments, color)
-  PLAYER:notify(message, arguments, color)
+  if IsValid(PLAYER) and PLAYER:has_initialized() then
+    PLAYER:notify(message, arguments, color)
+  end
 end)
 
 Cable.receive('fl_player_take_damage', function()
