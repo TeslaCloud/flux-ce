@@ -10,7 +10,7 @@ ItemThrowable.category = 'item.category.throwable'
 ItemThrowable.equip_slot = 'item.slot.throwable'
 ItemThrowable.weapon_class = 'weapon_frag'
 ItemThrowable.thrown_ammo_class = 'Grenade'
-ItemThrowable:add_button(t'item.option.unload', {
+ItemThrowable:add_button('item.option.unload', {
   icon = 'icon16/add.png',
   callback = 'on_unload',
   on_show = function(item_table)

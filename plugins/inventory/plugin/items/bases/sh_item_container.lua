@@ -1,7 +1,7 @@
 class 'ItemContainer' extends 'ItemBase'
 
-ItemContainer.name = 'Usable Items Base'
-ItemContainer.description = 'An item that can be used.'
+ItemContainer.name = 'Container Items Base'
+ItemContainer.description = 'An item that can be opened.'
 ItemContainer.stackable = false
 ItemContainer.inventory_data = {
   width = 4,
