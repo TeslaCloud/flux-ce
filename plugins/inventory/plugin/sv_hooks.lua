@@ -52,6 +52,10 @@ function Inventories:PreItemSave(item_table, save_table)
   save_table.x = item_table.x
   save_table.y = item_table.y
   save_table.inventory_type = item_table.inventory_type
+
+  if item_table.inventory then
+    save_table.items = item_table.inventory:get_items_ids()
+  end
 end
 
 function Inventories:PlayerTakeItem(player, item_table, ...)

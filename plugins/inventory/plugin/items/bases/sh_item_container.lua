@@ -33,6 +33,7 @@ end
 function ItemContainer:on_open(player)
   if !self.inventory then
     local inventory_data = self:get_inventory_data()
+
     local inventory = Inventory.new()
       inventory.title = self:get_name()
       inventory:set_size(inventory_data.width, inventory_data.height)
@@ -40,6 +41,12 @@ function ItemContainer:on_open(player)
       inventory.multislot = inventory_data.multislot
       inventory.instance_id = self.instance_id
     self.inventory = inventory
+
+    if self.items then
+      inventory:load_items(self.items)
+
+      self.items = nil
+    end
   end
 
   player:open_inventory(self.inventory)
@@ -56,5 +63,7 @@ function ItemContainer:on_instanced()
 end
 
 function ItemContainer:on_save()
-
+  if self.inventory then
+    self.items = self.inventory:get_items_ids()
+  end
 end
