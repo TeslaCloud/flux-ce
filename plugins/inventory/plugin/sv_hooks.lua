@@ -183,12 +183,8 @@ end
 function Inventories:PlayerThrewGrenade(player, entity)
   if !IsValid(player) then return end
 
-  local items = player:get_items()
-
-  for k, v in pairs(items) do
-    local item_table = Item.find_instance_by_id(v)
-
-    if item_table:is('throwable') and item_table:is_equipped() then
+  for k, v in pairs(player:get_items()) do
+    if v:is('throwable') and v:is_equipped() then
       player:take_item_by_id(v)
     end
   end
