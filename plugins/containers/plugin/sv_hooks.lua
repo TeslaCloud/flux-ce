@@ -14,15 +14,7 @@ function Container:PlayerUse(player, entity)
         inventory.entity = entity
 
         if entity.items then
-          for k, v in pairs(entity.items) do
-            local item_table = Item.find_instance_by_id(v)
-
-            if item_table then
-              local x, y = item_table.x, item_table.y
-
-              inventory:add_item(item_table, x, y)
-            end
-          end
+          inventory:load_items(entity.items)
 
           entity.items = nil
         end

@@ -624,6 +624,18 @@ if SERVER then
     self:rebuild()
     self:sync()
   end
+
+  function Inventory:load_items(items_ids)
+    for k, v in pairs(items_ids) do
+      local item_table = Item.find_instance_by_id(v)
+
+      if item_table then
+        local x, y = item_table.x, item_table.y
+
+        self:add_item(item_table, x, y)
+      end
+    end
+  end
 else
   function Inventory:create_panel(parent)
     local panel = vgui.create('fl_inventory', parent)
