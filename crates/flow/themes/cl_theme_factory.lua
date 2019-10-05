@@ -91,26 +91,12 @@ end
 function THEME:CreateMainMenu(panel)
 end
 
-function THEME:PaintFrame(panel, width, height)
-  local title         = panel:GetTitle()
-  local accent_color  = self:get_color('accent')
-  local header_size   = self:get_option('frame_header_size')
-  local line_weight   = self:get_option('frame_line_weight')
+function THEME:PaintFrame(panel, w, h)
+  local text            = t(panel.title)
+  local font            = self:get_font('main_menu_titles')
 
-  surface.SetDrawColor(accent_color:darken(30))
-  surface.DrawRect(0, header_size - line_weight, width, line_weight)
-
-  surface.SetDrawColor(self:get_color('main_dark'))
-  surface.DrawRect(0, header_size, width, height - header_size)
-
-  draw.textured_rect(self:get_material('gradient'), 0, 0, width, header_size, accent_color)
-
-  if title then
-    local font      = Font.size(self:get_font('text_small'), 16)
-    local font_size = util.font_size(font)
-
-    draw.SimpleText(title, font, 6, 3 * (16 / font_size), panel:GetTextColor())
-  end
+  draw.RoundedBox(0, 0, 0, w, h, Color(50, 50, 50, 200))
+  draw.SimpleText(text, font, math.scale(4), math.scale(2), color_white)
 end
 
 function THEME:PaintMainMenu(panel, width, height)
