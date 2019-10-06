@@ -322,12 +322,12 @@ function Inventory:get_item_size(item_table)
 
   local item_w, item_h = item_table.width, item_table.height
 
-    if item_table.rotated then
+  if item_table.rotated then
     return item_h, item_w
   else
     return item_w, item_h
-    end
-    end
+  end
+end
 
 if SERVER then
   function Inventory:add_item(item_table, x, y)
