@@ -44,6 +44,7 @@ function PANEL:Init()
             slot:SetPos((k - 1) * (slot_size + slot_padding), (i - 1) * (slot_size + slot_padding))
             slot.slot_x = k
             slot.slot_y = i
+            slot.inventory_id = self:get_inventory_id()
           else
             local slot = self.slot_panels[i][k]
             slot:reset()
