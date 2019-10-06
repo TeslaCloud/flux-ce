@@ -234,6 +234,10 @@ function Inventories:OnItemUnequipped(player, item_table)
   end
 end
 
+function Inventories:OnItemCreated(item_table)
+  item_table.rotated = false
+end
+
 Cable.receive('fl_item_move', function(player, instance_ids, inventory_id, x, y, was_rotated)
   local instance_id = instance_ids[1]
   local item_table = Item.find_instance_by_id(instance_id)
