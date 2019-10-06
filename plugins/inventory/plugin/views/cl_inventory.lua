@@ -28,61 +28,13 @@ function PANEL:Init()
     dropped = dropped[1]
 
     if dropped:IsVisible() and dropped:is_multislot() then
-      local w, h = dropped:get_item_size()
-
-      dropped:SetVisible(false)
-
-      local x, y = dropped:get_item_pos()
-      local slot_size = self:get_slot_size()
-      local slot_padding = self:get_slot_padding()
-
-      for i = y, y + h - 1 do
-        for k = x, x + w - 1 do
-          if i == y and k == x then
-            local slot = vgui.create('fl_inventory_item', self.scroll)
-            slot:SetSize(slot_size, slot_size)
-            slot:SetPos((k - 1) * (slot_size + slot_padding), (i - 1) * (slot_size + slot_padding))
-            slot.slot_x = k
-            slot.slot_y = i
-            slot.inventory_id = self:get_inventory_id()
-            slot.multislot = self:is_multislot()
-          else
-            local slot = self.slot_panels[i][k]
-            slot:reset()
-            slot:SetVisible(true)
-          end
-        end
-      end
+      self:start_dragging(dropped)
     end
 
     if is_dropped then
-      local drop_slot = Flux.inventory_drop_slot
-
-      Flux.inventory_drag_slot = nil
-      Flux.inventory_drop_slot = nil
-
-      drop_slot.is_hovered = false
-
-      local split = false
-
-      if dropped.item_count > 1 then
-        if input.IsKeyDown(KEY_LCONTROL) then
-          split = {}
-
-          for i2 = 1, dropped.item_count * 0.5 do
-            table.insert(split, dropped.instance_ids[i2])
-          end
-        elseif input.IsKeyDown(KEY_LSHIFT) then
-          split = { dropped.instance_ids[1] }
-        end
-      end
-
-      local instance_ids = !split and dropped.instance_ids or split
-
-      Cable.send('fl_item_move', instance_ids, self:get_inventory_id(), drop_slot.slot_x, drop_slot.slot_y, dropped:is_rotated())
+      self:on_drop(dropped)
     else
       local w, h = dropped:GetSize()
-      local inventory_width, inventory_height = self:get_inventory_size()
       local slot_w, slot_h = dropped:get_item_size()
       local drop_slot = Flux.inventory_drop_slot
       local is_multislot = self:is_multislot()
@@ -90,7 +42,19 @@ function PANEL:Init()
       w, h = w * ((!is_multislot or slot_w == 1) and 0 or 0.25), h * ((!is_multislot or slot_h == 1) and 0 or 0.25)
 
       local slot = receiver:GetClosestChild(mouse_x - w, mouse_y - h)
+
+      slot.is_hovered = true
+
+      if IsValid(drop_slot) then
+        if slot != drop_slot then
+          drop_slot.is_hovered = false
+        else
+          return
+        end
+      end
+
       local slot_x, slot_y = slot:get_item_pos()
+      local inventory_width, inventory_height = self:get_inventory_size()
 
       if is_multislot then
         if slot_x + slot_w - 1 > inventory_width or slot_y + slot_h - 1 > inventory_height then
@@ -98,12 +62,6 @@ function PANEL:Init()
         else
           slot.out_of_bounds = false
         end
-      end
-
-      slot.is_hovered = true
-
-      if IsValid(drop_slot) and slot != drop_slot then
-        drop_slot.is_hovered = false
       end
 
       Flux.inventory_drop_slot = slot
@@ -125,9 +83,8 @@ function PANEL:Init()
 
         if IsValid(drop_slot) then
           drop_slot.is_hovered = false
+          Flux.inventory_drop_slot = nil
         end
-
-        Flux.inventory_drop_slot = nil
       end
     end)
   end
@@ -172,6 +129,62 @@ function PANEL:SizeToContents()
   local height = (slot_size + slot_padding) * self:get_inventory_height() - slot_padding
 
   self:SetSize(width, height)
+end
+
+function PANEL:start_dragging(dropped)
+  local w, h = dropped:get_item_size()
+  local x, y = dropped:get_item_pos()
+  local slot_size = self:get_slot_size()
+  local slot_padding = self:get_slot_padding()
+
+  dropped:SetVisible(false)
+
+  for i = y, y + h - 1 do
+    for k = x, x + w - 1 do
+      if i == y and k == x then
+        local slot = vgui.create('fl_inventory_item', self.scroll)
+        slot:SetSize(slot_size, slot_size)
+        slot:SetPos((k - 1) * (slot_size + slot_padding), (i - 1) * (slot_size + slot_padding))
+        slot.slot_x = k
+        slot.slot_y = i
+        slot.inventory_id = self:get_inventory_id()
+        slot.multislot = self:is_multislot()
+      else
+        local slot = self.slot_panels[i][k]
+        slot:reset()
+        slot:SetVisible(true)
+      end
+    end
+  end
+end
+
+function PANEL:on_drop(dropped)
+  local drop_slot = Flux.inventory_drop_slot
+
+  if drop_slot.out_of_bounds then self:rebuild() return end
+
+  Flux.inventory_drag_slot = nil
+  Flux.inventory_drop_slot = nil
+
+  drop_slot.is_hovered = false
+
+  local split = false
+
+  if dropped.item_count > 1 then
+    if input.IsKeyDown(KEY_LCONTROL) then
+      split = {}
+
+      for i2 = 1, dropped.item_count * 0.5 do
+        table.insert(split, dropped.instance_ids[i2])
+      end
+    elseif input.IsKeyDown(KEY_LSHIFT) then
+      split = { dropped.instance_ids[1] }
+    end
+  end
+
+  local instance_ids = !split and dropped.instance_ids or split
+
+  Cable.send('fl_item_move', instance_ids, self:get_inventory_id(), drop_slot.slot_x, drop_slot.slot_y, dropped:is_rotated())
 end
 
 function PANEL:set_inventory_id(inventory_id)
