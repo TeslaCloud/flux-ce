@@ -230,20 +230,20 @@ function Inventories:OnItemUnequipped(player, item_table)
   end
 end
 
-Cable.receive('fl_item_move', function(player, instance_ids, inventory_id, x, y, rotated)
+Cable.receive('fl_item_move', function(player, instance_ids, inventory_id, x, y, was_rotated)
   local instance_id = instance_ids[1]
   local item_table = Item.find_instance_by_id(instance_id)
   local inventory = Inventories.find(inventory_id)
 
   if inventory_id == item_table.inventory_id then
-    inventory:move_stack(instance_ids, x, y, rotated)
+    inventory:move_stack(instance_ids, x, y, was_rotated)
   else
     local old_inventory = Inventories.find(item_table.inventory_id)
 
     if #instance_ids == 1 then
-      old_inventory:transfer_item(instance_id, inventory, x, y, rotated)
+      old_inventory:transfer_item(instance_id, inventory, x, y, was_rotated)
     else
-      old_inventory:transfer_stack(instance_ids, inventory, x, y, rotated)
+      old_inventory:transfer_stack(instance_ids, inventory, x, y, was_rotated)
     end
 
     old_inventory:sync()

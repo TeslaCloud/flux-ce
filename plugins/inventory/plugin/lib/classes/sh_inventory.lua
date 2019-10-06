@@ -315,20 +315,25 @@ function Inventory:overlaps_only_itself(instance_id, x, y, w, h)
   return true
 end
 
+function Inventory:get_item_size(item_table)
+  if !self:is_multislot() then
+    return 1, 1
+  end
+
+  local item_w, item_h = item_table.width, item_table.height
+
+    if item_table.rotated then
+    return item_h, item_w
+  else
+    return item_w, item_h
+    end
+    end
+
 if SERVER then
   function Inventory:add_item(item_table, x, y)
     if !item_table then return false, 'error.inventory.invalid_item' end
 
-    local w, h = item_table.width, item_table.height
-
-    if item_table.rotated then
-      w = item_table.height
-      h = item_table.width
-    end
-
-    if !self:is_multislot() then
-      w, h = 1, 1
-    end
+    local w, h = self:get_item_size(item_table)
 
     if !x or !y or x < 1 or y < 1 or x + w - 1 > self:get_width() or y + h - 1 > self:get_height() then
       x, y = self:find_position(item_table, w, h)
@@ -381,16 +386,8 @@ if SERVER then
   function Inventory:take_item_table(item_table)
     if !item_table then return false, 'error.inventory.invalid_item' end
 
-    local x, y, w, h = item_table.x, item_table.y, item_table.width, item_table.height
-
-    if item_table.rotated then
-      w = item_table.height
-      h = item_table.width
-    end
-
-    if !self:is_multislot() then
-      w, h = 1, 1
-    end
+    local x, y = item_table.x, item_table.y
+    local w, h = self:get_item_size(item_table)
 
     item_table.inventory_id = nil
     item_table.inventory_type = nil
@@ -437,7 +434,7 @@ if SERVER then
     return self:take_item_table(Item.find_instance_by_id(instance_id))
   end
 
-  function Inventory:move_item(instance_id, x, y, rotated)
+  function Inventory:move_item(instance_id, x, y, was_rotated)
     local item_table = Item.find_instance_by_id(instance_id)
 
     if !item_table then return false, 'error.inventory.invalid_item' end
@@ -448,23 +445,12 @@ if SERVER then
       return false, error_text
     end
 
-    local was_rotated = rotated != item_table.rotated
     local old_x, old_y = item_table.x, item_table.y
-    local w, h = item_table.width, item_table.height
+    local w, h = self:get_item_size(item_table)
     local old_w, old_h = w, h
 
-    if rotated then
-      w, h = item_table.height, item_table.width
-
-      if !was_rotated then
-        old_w, old_h = w, h
-      end
-    elseif was_rotated then
-      old_w, old_h = item_table.height, item_table.width
-    end
-
-    if !self:is_multislot() then
-      w, h, old_w, old_h = 1, 1, 1, 1
+    if was_rotated then
+      w, h = h, w
     end
 
     if !x or !y or x < 1 or y < 1 or x + w - 1 > self:get_width() or y + h - 1 > self:get_height() then
@@ -509,7 +495,7 @@ if SERVER then
     return true
   end
 
-  function Inventory:transfer_item(instance_id, inventory, x, y, rotated)
+  function Inventory:transfer_item(instance_id, inventory, x, y, was_rotated)
     local item_table = Item.find_instance_by_id(instance_id)
 
     if !item_table then return false, 'error.inventory.invalid_item' end
@@ -520,27 +506,12 @@ if SERVER then
       return false, error_text
     end
 
-    local was_rotated = rotated != item_table.rotated
     local old_x, old_y = item_table.x, item_table.y
-    local w, h = item_table.width, item_table.height
-    local old_w, old_h = w, h
+    local w, h = inventory:get_item_size(item_table)
+    local old_w, old_h = self:get_item_size(item_table)
 
-    if rotated then
-      w, h = item_table.height, item_table.width
-
-      if !was_rotated then
-        old_w, old_h = w, h
-      end
-    elseif was_rotated then
-      old_w, old_h = item_table.height, item_table.width
-    end
-
-    if !inventory:is_multislot() then
-      w, h = 1, 1
-    end
-
-    if !self:is_multislot() then
-      old_w, old_h = 1, 1
+    if was_rotated then
+      w, h = h, w
     end
 
     if !x or !y or x < 1 or y < 1 or x + w - 1 > inventory:get_width() or y + h - 1 > inventory:get_height() then
@@ -592,27 +563,19 @@ if SERVER then
     return true
   end
 
-  function Inventory:move_stack(instance_ids, x, y, rotated)
+  function Inventory:move_stack(instance_ids, x, y, was_rotated)
     local instance_id = instance_ids[1]
     local item_table = Item.find_instance_by_id(instance_id)
-    local old_x, old_y, w, h = item_table.x, item_table.y, item_table.width, item_table.height
+    local old_x, old_y = item_table.x, item_table.y
     local slot = self:get_slot(old_x, old_y)
-
-    if item_table.rotated then
-      w = item_table.height
-      h = item_table.width
-    end
-
-    if !self:is_multislot() then
-      w, h = 1, 1
-    end
+    local w, h = self:get_item_size(item_table)
 
     if !table.equal(instance_ids, slot) and self:overlaps_itself(instance_id, x, y, w, h) then
       return true
     end
  
     for k, v in ipairs(instance_ids) do
-      local success, error_text = self:move_item(v, x, y, rotated)
+      local success, error_text = self:move_item(v, x, y, was_rotated)
 
       if !success then
         return success, error_text
@@ -622,9 +585,9 @@ if SERVER then
     return true
   end
 
-  function Inventory:transfer_stack(instance_ids, inventory, x, y, rotated)
+  function Inventory:transfer_stack(instance_ids, inventory, x, y, was_rotated)
     for k, v in ipairs(instance_ids) do
-      local success, error_text = self:transfer_item(v, inventory, x, y, rotated)
+      local success, error_text = self:transfer_item(v, inventory, x, y, was_rotated)
  
       if !success then
         return success, error_text

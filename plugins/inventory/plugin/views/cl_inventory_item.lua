@@ -265,4 +265,8 @@ function PANEL:is_rotated()
   return self.rotated
 end
 
+function PANEL:was_rotated()
+  return self.rotated != self.item_data.rotated
+end
+
 vgui.Register('fl_inventory_item', PANEL, 'DPanel')
