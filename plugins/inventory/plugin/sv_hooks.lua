@@ -93,34 +93,36 @@ function Inventories:PlayerTakeItem(player, item_table, ...)
   end
 end
 
-function Inventories:PlayerDropItem(player, instance_id)
-  local item_table = Item.find_instance_by_id(instance_id)
+function Inventories:PlayerDropItem(player, instance_ids)
   local trace = player:GetEyeTraceNoCursor()
+  local first_item = Item.find_instance_by_id(table.first(instance_ids))
+  local inventory = Inventories.find(first_item.inventory_id)
+  local distance = trace.HitPos:Distance(player:GetPos())
+
+  for k, v in pairs(instance_ids) do
+    local item_table = Item.find_instance_by_id(v)
 
   if hook.run('CanPlayerDropItem', player, item_table) == false then return end
 
-  local inventory = Inventories.find(item_table.inventory_id)
-
   hook.run('PreItemTransfer', item_table, nil, inventory)
 
-  inventory:take_item_by_id(instance_id)
-  inventory:sync()
+    inventory:take_item_by_id(v)
 
   hook.run('ItemTransferred', item_table, nil, inventory)
 
-  local distance = trace.HitPos:Distance(player:GetPos())
-
   if distance < 80 then
-    Item.spawn(trace.HitPos, Angle(0, 0, 0), item_table)
+      Item.spawn(trace.HitPos + Vector(0, 0, 5) * k, Angle(0, 0, 0), item_table)
   else
-    local ent, item_table = Item.spawn(player:EyePos() + trace.Normal * 20, Angle(0, 0, 0), item_table)
+      local ent = Item.spawn(player:EyePos() + trace.Normal * 20 + VectorRand() * 5, Angle(0, 0, 0), item_table)
     local phys_obj = ent:GetPhysicsObject()
 
     if IsValid(phys_obj) then
       phys_obj:ApplyForceCenter(trace.Normal * 200)
     end
   end
+  end
 
+  inventory:sync()
   Item.async_save_entities()
 end
 
@@ -252,8 +254,8 @@ Cable.receive('fl_item_move', function(player, instance_ids, inventory_id, x, y,
   hook.run('OnItemMoved', player, instance_ids, inventory_id, x, y)
 end)
 
-Cable.receive('fl_item_drop', function(player, instance_id)
-  hook.run('PlayerDropItem', player, instance_id)
+Cable.receive('fl_item_drop', function(player, instance_ids)
+  hook.run('PlayerDropItem', player, instance_ids)
 end)
 
 Cable.receive('fl_inventory_close', function(player, inventory_id)

@@ -117,7 +117,7 @@ function PANEL:Init()
       local dropped = dropped[1]
 
       if is_dropped then
-        Cable.send('fl_item_drop', table.last(dropped.instance_ids))
+        Cable.send('fl_item_drop', dropped.instance_ids)
       else
         local drop_slot = Flux.inventory_drop_slot
 
