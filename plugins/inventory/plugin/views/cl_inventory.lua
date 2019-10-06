@@ -45,6 +45,7 @@ function PANEL:Init()
             slot.slot_x = k
             slot.slot_y = i
             slot.inventory_id = self:get_inventory_id()
+            slot.multislot = self:is_multislot()
           else
             local slot = self.slot_panels[i][k]
             slot:reset()
