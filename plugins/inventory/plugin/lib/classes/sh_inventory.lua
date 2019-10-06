@@ -442,7 +442,7 @@ if SERVER then
 
     if !item_table then return false, 'error.inventory.invalid_item' end
 
-    local success, error_text = hook.run('CanItemMove', item_table, inventory, x, y)
+    local success, error_text = hook.run('CanItemMove', item_table, self, x, y)
 
     if success == false then
       return false, error_text
