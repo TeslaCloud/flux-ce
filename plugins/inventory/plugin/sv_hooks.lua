@@ -102,24 +102,24 @@ function Inventories:PlayerDropItem(player, instance_ids)
   for k, v in pairs(instance_ids) do
     local item_table = Item.find_instance_by_id(v)
 
-  if hook.run('CanPlayerDropItem', player, item_table) == false then return end
+    if hook.run('CanPlayerDropItem', player, item_table) == false then return end
 
-  hook.run('PreItemTransfer', item_table, nil, inventory)
+    hook.run('PreItemTransfer', item_table, nil, inventory)
 
     inventory:take_item_by_id(v)
 
-  hook.run('ItemTransferred', item_table, nil, inventory)
+    hook.run('ItemTransferred', item_table, nil, inventory)
 
-  if distance < 80 then
+    if distance < 80 then
       Item.spawn(trace.HitPos + Vector(0, 0, 5) * k, Angle(0, 0, 0), item_table)
-  else
+    else
       local ent = Item.spawn(player:EyePos() + trace.Normal * 20 + VectorRand() * 5, Angle(0, 0, 0), item_table)
-    local phys_obj = ent:GetPhysicsObject()
+      local phys_obj = ent:GetPhysicsObject()
 
-    if IsValid(phys_obj) then
-      phys_obj:ApplyForceCenter(trace.Normal * 200)
+      if IsValid(phys_obj) then
+        phys_obj:ApplyForceCenter(trace.Normal * 200)
+      end
     end
-  end
   end
 
   inventory:sync()
