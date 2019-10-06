@@ -350,12 +350,12 @@ if SERVER then
         end
       end
 
+      hook.run('OnItemAdded', item_table, self, x, y)
+
       self:check_size()
     else
       return false, 'error.inventory.no_space'
     end
-
-    hook.run('OnItemAdded', item_table, self, x, y)
 
     return true
   end
