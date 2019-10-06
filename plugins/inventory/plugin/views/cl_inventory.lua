@@ -27,7 +27,7 @@ function PANEL:Init()
   self.scroll:GetCanvas():Receiver('fl_item', function(receiver, dropped, is_dropped, menu_index, mouse_x, mouse_y)
     dropped = dropped[1]
 
-    if dropped:IsVisible() and dropped:is_multislot() then
+    if dropped:IsVisible() then
       self:start_dragging(dropped)
     end
 
@@ -149,6 +149,10 @@ function PANEL:start_dragging(dropped)
         slot.slot_y = i
         slot.inventory_id = self:get_inventory_id()
         slot.multislot = self:is_multislot()
+
+        if self.draw_inventory_slots == true then
+          slot.slot_number = k + (i - 1) * self:get_inventory_width()
+        end
       else
         local slot = self.slot_panels[i][k]
         slot:reset()
