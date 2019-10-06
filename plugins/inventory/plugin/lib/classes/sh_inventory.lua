@@ -661,6 +661,8 @@ if SERVER then
   end
 
   function Inventory:check_size()
+    if !self:is_height_infinite() and !self:is_width_infinite() then return end
+
     local max_x, max_y = 0, 0
 
     for i = 1, self:get_height() do
