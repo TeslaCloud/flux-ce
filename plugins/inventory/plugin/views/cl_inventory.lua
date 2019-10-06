@@ -153,7 +153,7 @@ function PANEL:start_dragging(dropped)
         if self.draw_inventory_slots == true then
           slot.slot_number = k + (i - 1) * self:get_inventory_width()
         end
-      else
+      elseif self:is_multislot() then
         local slot = self.slot_panels[i][k]
         slot:reset()
         slot:SetVisible(true)
