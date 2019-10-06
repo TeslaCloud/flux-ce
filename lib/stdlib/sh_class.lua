@@ -39,13 +39,11 @@ function class(name, base_class)
     table.safe_merge(copy, obj)
 
     if isfunction(base_class.class_extended) then
-      try {
-        base_class.class_extended, base_class, copy
-      } catch {
-        function(exception)
-          error_with_traceback(tostring(exception))
-        end
-      }
+      local success, exception = pcall(base_class.class_extended, base_class, copy)
+
+      if !success then
+        error_with_traceback(tostring(exception))
+      end
     end
 
     obj = copy
@@ -145,13 +143,11 @@ function extends(base_class)
     table.safe_merge(copy, obj)
 
     if isfunction(base_class.class_extended) then
-      try {
-        base_class.class_extended, base_class, copy
-      } catch {
-        function(exception)
-          error_with_traceback(tostring(exception))
-        end
-      }
+      local success, exception = pcall(base_class.class_extended, base_class, copy)
+
+      if !success then
+        error_with_traceback(tostring(exception))
+      end
     end
 
     obj = copy

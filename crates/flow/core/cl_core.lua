@@ -65,7 +65,7 @@ function surface.draw_scaled(pos_x, pos_y, scale, callback)
 
   cam.PushModelMatrix(matrix)
     if callback then
-      Try('draw_scaled', callback, pos_x, pos_y, scale)
+      try(callback, pos_x, pos_y, scale)
     end
   cam.PopModelMatrix()
 end
@@ -80,7 +80,7 @@ function surface.draw_rotated(pos_x, pos_y, angle, callback)
 
   cam.PushModelMatrix(matrix)
     if callback then
-      Try('draw_rotated', callback, pos_x, pos_y, angle)
+      try(callback, pos_x, pos_y, angle)
     end
   cam.PopModelMatrix()
 end

@@ -164,15 +164,12 @@ if SERVER then
 
     if self[act] then
       if act != 'on_take' and act != 'on_use' and act != 'on_take' then
-        try {
-          self[act], self, player, ...
-        } catch {
-          function(exception)
-            error_with_traceback('Item callback has failed to run! '..tostring(exception))
-          end
-        }
+        local success, exception = pcall(self[act], self, player, ...)
 
-        if !SUCCEEDED then return end
+        if !success then
+          error_with_traceback('Item callback has failed to run! '..tostring(exception))
+          return
+        end
       end
 
       if self.action_sounds[act] then

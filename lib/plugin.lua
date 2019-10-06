@@ -106,14 +106,12 @@ function Plugin.remove_from_cache(id)
   local plugin_table = Plugin.find(id) or (istable(id) and id)
 
   if plugin_table then
-    if plugin_table.OnUnhook then
-      try {
-        plugin_table.OnUnhook, plugin_table
-      } catch {
-        function(exception)
-          error_with_traceback('OnUnhook method has failed to run! '..tostring(plugin_table)..'\n'..tostring(exception))
-        end
-      }
+    if plugin_table.on_unhook then
+      local success, exception = pcall(plugin_table.on_unhook, plugin_table)
+
+      if !success then
+        error_with_traceback('Plugin#on_unhook method has failed to run for '..tostring(plugin_table)..'!\n'..tostring(exception))
+      end
     end
 
     for k, v in pairs(plugin_table) do
@@ -134,14 +132,12 @@ function Plugin.recache(id)
   local plugin_table = Plugin.find(id)
 
   if plugin_table then
-    if plugin_table.OnRecache then
-      try {
-        plugin_table.OnRecache, plugin_table
-      } catch {
-        function(exception)
-          error_with_traceback('OnRecache method has failed to run! '..tostring(plugin_table)..'\n'..tostring(exception))
-        end
-      }
+    if plugin_table.on_recache then
+      local success, exception = pcall(plugin_table.on_recache, plugin_table)
+
+      if !success then
+        error_with_traceback('Plugin#on_recache method has failed to run! '..tostring(plugin_table)..'\n'..tostring(exception))
+      end
     end
 
     Plugin.cache_functions(plugin_table)
@@ -153,14 +149,12 @@ function Plugin.remove(id)
   local plugin_table, plugin_id = Plugin.find(id)
 
   if plugin_table then
-    if plugin_table.OnRemoved then
-      try {
-        plugin_table.OnRemoved, plugin_table
-      } catch {
-        function(exception)
-          error_with_traceback('OnRemoved method has failed to run! '..tostring(plugin_table)..'\n'..tostring(exception))
-        end
-      }
+    if plugin_table.on_removed then
+      local success, exception = pcall(plugin_table.on_removed, plugin_table)
+
+      if !success then
+        error_with_traceback('Plugin#on_removed method has failed to run! '..tostring(plugin_table)..'\n'..tostring(exception))
+      end
     end
 
     Plugin.remove_from_cache(id)

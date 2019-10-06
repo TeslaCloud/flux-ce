@@ -102,13 +102,11 @@ function player_meta:do_action(id)
     local action_table = Flux.get_action(act)
 
     if istable(action_table) and isfunction(action_table.callback) then
-      try {
-        action_table.callback, self, act
-      } catch {
-        function(exception)
-          error_with_traceback("Player action '"..tostring(act).."' has failed to run!\n"..exception)
-        end
-      }
+      local success, result = pcall(action_table.callback, self, act)
+
+      if !success then
+        error_with_traceback("Player action '"..tostring(act).."' has failed to run!\n"..result)
+      end
     end
   end
 end

@@ -45,13 +45,11 @@ end
 function Flux.Undo:execute(obj)
   if istable(obj) and istable(obj.functions) then
     for k, v in ipairs(obj.functions) do
-      try {
-        v.func, obj, unpack(v.args)
-      } catch {
-        function(exception)
-          error_with_traceback('[Flux:Undo] Failed to undo!\n'..tostring(exception))
-        end
-      }
+      local success, exception = pcall(v.func, obj, unpack(v.args))
+
+      if !success then
+        error_with_traceback('[Undo] Failed to undo!\n'..tostring(exception))
+      end
     end
   end
 end
