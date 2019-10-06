@@ -94,6 +94,10 @@ function Inventories:PlayerTakeItem(player, item_table, ...)
 end
 
 function Inventories:PlayerDropItem(player, instance_ids)
+  if isnumber(instance_ids) then
+    instance_ids = { instance_ids }
+  end
+
   local trace = player:GetEyeTraceNoCursor()
   local first_item = Item.find_instance_by_id(table.first(instance_ids))
   local inventory = Inventories.find(first_item.inventory_id)
