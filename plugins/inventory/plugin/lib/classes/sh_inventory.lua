@@ -225,7 +225,7 @@ function Inventory:find_position(item_table, w, h)
 
     if x and y then
       need_rotation = need_rotation != item_table.rotated
-  end
+    end
   end
 
   if !x or !y then
@@ -235,7 +235,7 @@ function Inventory:find_position(item_table, w, h)
       x, y = self:find_empty_slot(h, w)
 
       need_rotation = true
-  end
+    end
   end
 
   return x, y, need_rotation
