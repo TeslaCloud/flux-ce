@@ -233,17 +233,14 @@ end
 
 function Inventory:find_stack(item_table, w, h)
   for k, v in pairs(self:find_items(item_table.id)) do
-    local x, y = v.x, v.y
-
-    if self:can_stack(item_table, x, y) then
-      return x, y
+    if self:can_stack(item_table, v) then
+      return v.x, v.y
     end
   end
 end
 
-function Inventory:can_stack(item_table, x, y)
-  local slot = self:get_slot(x, y)
-  local stack_item = Item.find_instance_by_id(slot[1])
+function Inventory:can_stack(item_table, stack_item)
+  local slot = self:get_slot(stack_item.x, stack_item.y)
 
   if stack_item and stack_item.id == item_table.id
   and item_table.stackable and #slot < item_table.max_stack then
@@ -279,8 +276,9 @@ function Inventory:overlaps_stack(item_table, x, y, w, h)
   for i = y, y + h - 1 do
     for k = x, x + w - 1 do
       local slot = self:get_slot(k, i)
+      local stack_item = Item.find_instance_by_id(slot[1])
 
-      if self:can_stack(item_table, k, i) and !table.has_value(slot, item_table.instance_id) then
+      if stack_item and self:can_stack(item_table, stack_item) and !table.has_value(slot, item_table.instance_id) then
         return true, self:get_item_pos(slot[1])
       end
     end
