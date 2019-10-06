@@ -218,23 +218,33 @@ function Inventory:has_item_by_id(instance_id)
 end
 
 function Inventory:find_position(item_table, w, h)
-  local x, y
+  local x, y, need_rotation
 
   if item_table.stackable then
-    x, y = self:find_stack(item_table, w, h)
+    x, y, need_rotation = self:find_stack(item_table, w, h)
+
+    if x and y then
+      need_rotation = need_rotation != item_table.rotated
+  end
   end
 
   if !x or !y then
     x, y = self:find_empty_slot(w, h)
+
+    if !x or !y then
+      x, y = self:find_empty_slot(h, w)
+
+      need_rotation = true
+  end
   end
 
-  return x, y
+  return x, y, need_rotation
 end
 
 function Inventory:find_stack(item_table, w, h)
   for k, v in pairs(self:find_items(item_table.id)) do
     if self:can_stack(item_table, v) then
-      return v.x, v.y
+      return v.x, v.y, v.rotated
     end
   end
 end
@@ -331,10 +341,11 @@ if SERVER then
   function Inventory:add_item(item_table, x, y)
     if !item_table then return false, 'error.inventory.invalid_item' end
 
+    local need_rotation = false
     local w, h = self:get_item_size(item_table)
 
     if !x or !y or x < 1 or y < 1 or x + w - 1 > self:get_width() or y + h - 1 > self:get_height() then
-      x, y = self:find_position(item_table, w, h)
+      x, y, need_rotation = self:find_position(item_table, w, h)
     end
 
     if x and y then
@@ -342,7 +353,12 @@ if SERVER then
       item_table.inventory_type = self.type
       item_table.x = x
       item_table.y = y
-      item_table.rotated = item_table.rotated or false
+
+      if need_rotation then
+        w, h = h, w
+
+        item_table.rotated = !item_table.rotated
+      end
 
       for i = y, y + h - 1 do
         for k = x, x + w - 1 do
