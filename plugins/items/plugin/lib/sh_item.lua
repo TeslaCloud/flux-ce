@@ -207,9 +207,7 @@ function Item.create(id, data, forced_id)
     instances[id][item_id].instance_id = item_id
 
     if SERVER then
-      if instances[id][item_id].on_created then
-        instances[id][item_id]:on_created()
-      end
+      hook.run('OnItemCreated', instances[id][item_id])
 
       Item.async_save()
       Cable.send(nil, 'fl_items_new_instance', id, (data or 1), item_id)

@@ -85,6 +85,12 @@ function Items:PreSaveCharacter(player, index)
   end
 end
 
+function Items:OnItemCreated(item_table)
+  if item_table.on_created then
+    item_table:on_created()
+  end
+end
+
 Cable.receive('fl_items_abort_hold_start', function(player)
   local ent = player:get_nv('hold_entity')
 
