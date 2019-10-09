@@ -197,8 +197,8 @@ do
   end
 end
 
-function draw.box_outlined(rounding, x, y, w, h, thickness, color, rounding2)
-  rounding2 = rounding2 or rounding
+function draw.stenciled(draw_func, stencil_func)
+  if !isfunction(draw_func) or !isfunction(stencil_func) then return end
 
   render.ClearStencil()
   render.SetStencilEnable(true)
@@ -208,11 +208,21 @@ function draw.box_outlined(rounding, x, y, w, h, thickness, color, rounding2)
     render.SetStencilFailOperation(STENCIL_REPLACE)
 
     render.SetStencilCompareFunction(STENCIL_EQUAL)
-      draw.RoundedBox(rounding2, x + thickness, y + thickness, w - thickness * 2, h - thickness * 2, color)
+      stencil_func()
     render.SetStencilCompareFunction(STENCIL_NOTEQUAL)
-      draw.RoundedBox(rounding, x, y, w, h, color)
+      draw_func()
   render.SetStencilEnable(false)
   render.ClearStencil()
+end
+
+function draw.box_outlined(rounding, x, y, w, h, thickness, color, rounding2)
+  rounding2 = rounding2 or rounding
+
+  draw.stenciled(function()
+    draw.RoundedBox(rounding, x, y, w, h, color)
+  end, function()
+    draw.RoundedBox(rounding2, x + thickness, y + thickness, w - thickness * 2, h - thickness * 2, color)
+  end)
 end
 
 function draw.textured_rect(material, x, y, w, h, color)
