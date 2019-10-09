@@ -7,9 +7,9 @@ Gvue.basic_element_attributes = {
   context = {
     attributes = {
       padding = '0',
-      padding_up = 0, padding_right = 0, padding_down = 0, padding_left = 0,
+      padding_top = 0, padding_right = 0, padding_bottom = 0, padding_left = 0,
       margin = '0',
-      margin_up = 0, margin_right = 0, margin_down = 0, margin_left = 0,
+      margin_top = 0, margin_right = 0, margin_bottom = 0, margin_left = 0,
       up = 0, down = 0, left = 0, right = 0,
       background = '0',
       background_color = nil, background_image = nil,
