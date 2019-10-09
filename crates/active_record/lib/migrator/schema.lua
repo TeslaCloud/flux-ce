@@ -5,7 +5,7 @@ function ActiveRecord.Schema:init(version)
 end
 
 function ActiveRecord.Schema:define(version)
-  return self.new(version)
+  return ActiveRecord.Schema.new(version)
 end
 
 function ActiveRecord.Schema:create_tables()

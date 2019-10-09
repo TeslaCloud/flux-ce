@@ -34,7 +34,6 @@ function ActiveRecord.dump_schema(version)
 --
 local Structure = ActiveRecord.Schema:define(]]..version..[[)
   function Structure:create_tables()
-
 ]]
 
   local level = 2
@@ -56,11 +55,19 @@ local Structure = ActiveRecord.Schema:define(]]..version..[[)
       result = result + string.rep(ind, level) + 't:' + data.type + ' "' + data.column + '"\n'
     end
     level = level - 1
-    result = result + string.rep(ind, level) + 'end)\n\n'
+    result = result + string.rep(ind, level) + 'end)\n'
+  end
+
+  if table.count(ActiveRecord.metadata.indexes) > 0 then
+    result = result + '\n'
   end
 
   for k, v in SortedPairs(ActiveRecord.metadata.indexes) do
-    result = result + string.rep(ind, level) + 'add_index { ' + table_to_inline(v) + ', name = "'..k..'" }\n\n'
+    result = result + string.rep(ind, level) + 'add_index { ' + table_to_inline(v) + ', name = "'..k..'" }\n'
+  end
+
+  if table.count(ActiveRecord.metadata.references) > 0 then
+    result = result + '\n'
   end
 
   for k, v in pairs(ActiveRecord.metadata.references) do
@@ -74,13 +81,17 @@ local Structure = ActiveRecord.Schema:define(]]..version..[[)
       + inner_indent + 'foreign_key   = ' + quote(v.foreign_key) + ',\n'
       + inner_indent + 'cascade       = ' + tostring(v.cascade) + ',\n'
       + inner_indent + 'name          = ' + quote(k)
-      + '\n'..base_indent..'}\n\n'
+      + '\n'..base_indent..'}\n'
+  end
+
+  if table.count(ActiveRecord.metadata.prim_keys) > 0 then
+    result = result + '\n'
   end
 
   for k, v in pairs(ActiveRecord.metadata.prim_keys) do
     result = result + string.rep(ind, level) + '-- ' + k + '\n'
     result = result + string.rep(ind, level) + 'create_primary_key('
-      + quote(v[1]) + ', ' + quote(v[2]) + ')\n\n'
+      + quote(v[1]) + ', ' + quote(v[2]) + ')\n'
   end
 
   result = result + [[
