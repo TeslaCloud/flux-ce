@@ -348,3 +348,39 @@ function include_sandboxed(f)
   debug.setfenv(c, env)
   return c()
 end
+
+do
+  local enumerators = {}
+
+  --- Creates enumerator variables based on a provided list.
+  -- Starts at 0.
+  -- ```
+  -- --         0           1             2
+  -- enumerate 'GENDER_MALE GENDER_FEMALE GENDER_OTHER'
+  -- ```
+  -- @return [Number highest enumerator]
+  function enumerate(enums, existing_enumerator)
+    if !isstring(enums) or enums:len() == 0 then return end
+
+    local words = enums:upper():gsub('\n', ' '):split ' '
+    local enumerator = 0
+
+    if existing_enumerator then
+      enumerator = enumerators[existing_enumerator]
+    end
+
+    for _, word in ipairs(words) do
+      if word != '' and word != ' ' then
+        _G[word] = enumerator
+        enumerator = enumerator + 1
+      end
+    end
+
+    if enumerator > 0 then
+      local idx = words[1]:match('^([%w0-9]+)')
+      enumerators[idx] = enumerator - 1
+    end
+
+    return enumerator - 1
+  end
+end

@@ -1,11 +1,24 @@
 -- Character System Codes
-CHAR_SUCCESS        = 0    -- Character successfully created.
-CHAR_ERR_NAME       = 1    -- Character's name is invalid.
-CHAR_ERR_DESC       = 2    -- Character's description is invalid.
-CHAR_ERR_GENDER     = 3    -- Character's gender is invalid.
-CHAR_ERR_CLASS      = 4    -- Character's class is invalid.
-CHAR_ERR_EXISTS     = 5    -- Character already exists.
-CHAR_ERR_LIMIT      = 6    -- Player has hit characters limit.
-CHAR_ERR_MODEL      = 7    -- Client has not selected a model.
-CHAR_ERR_RECORD     = 8   -- ActiveRecord screwed up again.
-CHAR_ERR_UNKNOWN    = 999  -- Something else went wrong.
+enumerate [[
+  CHAR_SUCCESS
+  CHAR_ERR_NAME
+  CHAR_ERR_DESC
+  CHAR_ERR_GENDER
+  CHAR_ERR_CLASS
+  CHAR_ERR_EXISTS
+  CHAR_ERR_LIMIT
+  CHAR_ERR_MODEL
+  CHAR_ERR_RECORD
+  CHAR_ERR_UNKNOWN
+]]
+
+-- CHAR_SUCCESS     = Character successfully created.
+-- CHAR_ERR_NAME    = Character's name is invalid.
+-- CHAR_ERR_DESC    = Character's description is invalid.
+-- CHAR_ERR_GENDER  = Character's gender is invalid.
+-- CHAR_ERR_CLASS   = Character's class is invalid.
+-- CHAR_ERR_EXISTS  = Character already exists.
+-- CHAR_ERR_LIMIT   = Player has hit characters limit.
+-- CHAR_ERR_MODEL   = Client has not selected a model.
+-- CHAR_ERR_RECORD  = ActiveRecord screwed up again.
+-- CHAR_ERR_UNKNOWN = Something else went wrong.
