@@ -36,5 +36,6 @@ Gvue.basic_element_attributes = {
     width = 0,
     height = 0
   },
-  scale = 1
+  scale = 1,
+  draw_debug_overlay = true
 }
