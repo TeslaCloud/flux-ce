@@ -1,4 +1,4 @@
-local PANEL = Gvue.basic_element_attributes
+local PANEL = {}
 
 local debug_colors = {
   border  = Color(50, 100, 150),
@@ -83,8 +83,8 @@ function PANEL:Paint(w, h)
     -- Overlay text and background box
     local panel_info_text = tostring(self.html.element_name)..' '..tostring(w)..'x'..tostring(h)
     local text_wide, text_tall = util.text_size(panel_info_text, 'default')
-    draw.rounded_box(4, 1, 1, text_wide + 8, text_tall + 8, debug_colors.tooltip)
-    draw.simple_text(panel_info_text, 'default', 5, 5, debug_colors.text)
+    draw.rounded_box(4, 1, -text_tall - 9, text_wide + 8, text_tall + 8, debug_colors.tooltip)
+    draw.simple_text(panel_info_text, 'default', 5, -text_tall - 5, debug_colors.text)
 
     surface.DisableClipping(false)
   end
@@ -103,23 +103,9 @@ function PANEL:unit_to_px(num, units, what, use_abstract_pixels)
 end
 
 function PANEL:set_padding(up, right, down, left)
-  
+end
+
+function PANEL:rebuild()
 end
 
 vgui.Register('gvue_basic_panel', PANEL, 'EditablePanel')
-
-concommand.Add('gvue_test', function()
-  if IsValid(__GVUE_PANE__) then
-    __GVUE_PANE__:SetVisible(false)
-    __GVUE_PANE__:Remove()
-  end
-
-  __GVUE_PANE__ = vgui.Create('gvue_basic_panel')
-  __GVUE_PANE__:SetSize(512, 256)
-  __GVUE_PANE__:SetPos(64, 64)
-end)
-
-concommand.Add('gvue_close', function()
-  __GVUE_PANE__:SetVisible(false)
-  __GVUE_PANE__:Remove()
-end)
