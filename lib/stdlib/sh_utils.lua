@@ -366,7 +366,7 @@ do
     local enumerator = 0
 
     if existing_enumerator then
-      enumerator = enumerators[existing_enumerator]
+      enumerator = enumerators[existing_enumerator] or 0
     end
 
     for _, word in ipairs(words) do
