@@ -363,6 +363,7 @@ do
     if !isstring(enums) or enums:len() == 0 then return end
 
     local words = enums:upper():gsub('\n', ' '):split ' '
+    local first_valid_word = nil
     local enumerator = 0
 
     if existing_enumerator then
@@ -371,14 +372,21 @@ do
 
     for _, word in ipairs(words) do
       if word != '' and word != ' ' then
+        if !first_valid_word then
+          first_valid_word = word
+        end
+
         _G[word] = enumerator
         enumerator = enumerator + 1
       end
     end
 
     if enumerator > 0 then
-      local idx = words[1]:match('^([%w0-9]+)')
-      enumerators[idx] = enumerator - 1
+      local idx = first_valid_word:match('^([%w0-9]+)')
+
+      if idx then
+        enumerators[idx] = enumerator - 1
+      end
     end
 
     return enumerator - 1
