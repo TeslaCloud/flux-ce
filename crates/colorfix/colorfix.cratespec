@@ -6,7 +6,7 @@ Crate:describe(function(s)
   s.description = 'Fix print and MsgC being all white on Linux.'
   s.authors     = { 'TeslaCloud Studios', 'Meow the Cat' }
   s.email       = 'support@teslacloud.net'
-  s.file        = 'lib/colorfix.lua'
+  s.sv_file     = 'lib/colorfix.lua'
   s.website     = 'https://teslacloud.net'
   s.license     = 'MIT'
 end)
