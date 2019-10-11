@@ -1374,7 +1374,7 @@ FontAwesome.hooks = {}
 
 function FontAwesome.hooks:CreateFonts()
   Font.create('flFontAwesome', {
-    font      = 'FluxFontAwesome',
+    font      = 'FontAwesome5112',
     extended  = true,
     size      = 16, -- default icon size is 16x16
     antialias = true,
