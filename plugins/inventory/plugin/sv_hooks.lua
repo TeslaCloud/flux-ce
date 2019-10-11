@@ -26,12 +26,61 @@ function Inventories:CreatePlayerInventories(player, inventories)
     hotbar.multislot = false
   inventories[hotbar.type] = hotbar
 
-  local equipment = Inventory.new()
-    equipment.title = 'ui.inventory.equipment'
-    equipment:set_size(Config.get('equipment_width'), Config.get('equipment_height'))
-    equipment.type = 'equipment'
-    equipment.multislot = false
-  inventories[equipment.type] = equipment
+  local equipment_helmet = Inventory.new()
+    equipment_helmet.title = 'ui.inventory.equipment.helmet'
+    equipment_helmet.icon = 'flux/icons/helmet.png'
+    equipment_helmet:set_size(1, 1)
+    equipment_helmet.type = 'equipment_helmet'
+    equipment_helmet.multislot = false
+  inventories[equipment_helmet.type] = equipment_helmet
+
+  local equipment_mask = Inventory.new()
+    equipment_mask.title = 'ui.inventory.equipment.mask'
+    equipment_mask.icon = 'flux/icons/gas-mask.png'
+    equipment_mask:set_size(1, 1)
+    equipment_mask.type = 'equipment_mask'
+    equipment_mask.multislot = false
+  inventories[equipment_mask.type] = equipment_mask
+
+  local equipment_torso = Inventory.new()
+    equipment_torso.title = 'ui.inventory.equipment.torso'
+    equipment_torso.icon = 'flux/icons/t-shirt.png'
+    equipment_torso:set_size(1, 1)
+    equipment_torso.type = 'equipment_torso'
+    equipment_torso.multislot = false
+  inventories[equipment_torso.type] = equipment_torso
+
+  local equipment_hands = Inventory.new()
+    equipment_hands.title = 'ui.inventory.equipment.hands'
+    equipment_hands.icon = 'flux/icons/gloves.png'
+    equipment_hands:set_size(1, 1)
+    equipment_hands.type = 'equipment_hands'
+    equipment_hands.multislot = false
+  inventories[equipment_hands.type] = equipment_hands
+
+  local equipment_legs = Inventory.new()
+    equipment_legs.title = 'ui.inventory.equipment.legs'
+    equipment_legs.icon = 'flux/icons/trousers.png'
+    equipment_legs:set_size(1, 1)
+    equipment_legs.type = 'equipment_legs'
+    equipment_legs.multislot = false
+  inventories[equipment_legs.type] = equipment_legs
+
+  local equipment_back = Inventory.new()
+    equipment_back.title = 'ui.inventory.equipment.accessories'
+    equipment_back.icon = 'flux/icons/light-backpack.png'
+    equipment_back:set_size(1, 1)
+    equipment_back.type = 'equipment_back'
+    equipment_back.multislot = false
+  inventories[equipment_back.type] = equipment_back
+
+  local equipment_accessories = Inventory.new()
+    equipment_accessories.title = 'ui.inventory.equipment.accessories'
+    equipment_accessories.icon = 'flux/icons/cube.png'
+    equipment_accessories:set_size(2, 2)
+    equipment_accessories.type = 'equipment_accessories'
+    equipment_accessories.multislot = false
+  inventories[equipment_accessories.type] = equipment_accessories
 
   local pockets = Inventory.new()
     pockets.title = 'ui.inventory.pockets'
