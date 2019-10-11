@@ -88,6 +88,14 @@ function Inventories:OnMenuPanelOpen(menu_panel, active_panel)
   end
 end
 
+function Inventories:CanItemMenuOpen(item_table)
+  local inventory = Inventories.find(item_table.inventory_id)
+
+  if inventory and inventory.instance_id then
+    return false
+  end
+end
+
 Cable.receive('fl_inventory_sync', function(data)
   local inventory = Inventories.stored[data.id] or Inventory.new(data.id)
   inventory.id = data.id
