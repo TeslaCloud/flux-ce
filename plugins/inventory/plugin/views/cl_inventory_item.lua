@@ -63,7 +63,7 @@ function PANEL:Paint(w, h)
     end
   end
 
-  if self.icon then
+  if self.icon and !self:IsDragging() then
     local icon = self.icon
     local icon_size = h * 0.6
 
