@@ -230,6 +230,12 @@ function PANEL:rebuild()
         slot.slot_number = k + (i - 1) * width
       end
 
+      local icon = self:get_icon()
+
+      if icon then
+        slot.icon = icon
+      end
+
       if self.slot_panels[i][k] == false then
         slot:SetVisible(false)
       else
@@ -273,6 +279,10 @@ end
 
 function PANEL:set_slot_padding(padding)
   self.slot_padding = padding
+end
+
+function PANEL:set_icon(icon)
+  self.icon = icon
 end
 
 function PANEL:get_inventory()
@@ -321,6 +331,10 @@ end
 
 function PANEL:draw_inventory_slots(bool)
   self.draw_inventory_slots = bool
+end
+
+function PANEL:get_icon()
+  return self.icon
 end
 
 vgui.Register('fl_inventory', PANEL, 'fl_base_panel')

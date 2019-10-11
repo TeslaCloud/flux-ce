@@ -3,6 +3,8 @@ PANEL.item_data = nil
 PANEL.item_count = 0
 PANEL.instance_ids = {}
 PANEL.slot_number = nil
+PANEL.icon = nil
+PANEL.icon_material = nil
 PANEL.rotated = false
 
 function PANEL:Paint(w, h)
@@ -58,6 +60,24 @@ function PANEL:Paint(w, h)
         surface.SetDrawColor(Color(255, 255, 255))
         surface.DrawOutlinedRect(1, 1, w - 2, h - 2)
       end
+    end
+  end
+
+  if self.icon then
+    local icon = self.icon
+    local icon_size = h * 0.6
+
+    if icon:starts('fa') then
+      local icon_text = FontAwesome:get(icon)
+      local icon_w, icon_h = util.text_size(icon_text, Font.size('flFontAwesome', icon_size))
+
+      FontAwesome:draw(icon, w * 0.5 - icon_w * 0.5, h * 0.5 - icon_h * 0.5, icon_size, Color(255, 255, 255, 100))
+    else
+      self.icon_material = self.icon_material or Material(self.icon, 'smooth')
+
+      surface.SetDrawColor(Color(255, 255, 255, 100))
+      surface.SetMaterial(self.icon_material)
+      surface.DrawTexturedRect(w * 0.5 - icon_size * 0.5, h * 0.5 - icon_size * 0.5, icon_size, icon_size)
     end
   end
 

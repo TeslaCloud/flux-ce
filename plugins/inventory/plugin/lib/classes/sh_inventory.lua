@@ -2,6 +2,7 @@ class 'Inventory'
 
 function Inventory:init(id)
   self.title = 'ui.inventory.title'
+  self.icon = nil
   self.type = 'default'
   self.width = 1
   self.height = 1
@@ -26,6 +27,7 @@ function Inventory:to_networkable()
   return {
     id = self.id,
     title = self.title,
+    icon = self.icon,
     inv_type = self.type,
     width = self.width,
     height = self.height,
@@ -691,6 +693,7 @@ else
   function Inventory:create_panel(parent)
     local panel = vgui.create('fl_inventory', parent)
     panel:set_title(t(self.title or self.type))
+    panel:set_icon(self.icon)
     panel:set_inventory_id(self.id)
     panel:rebuild()
 
