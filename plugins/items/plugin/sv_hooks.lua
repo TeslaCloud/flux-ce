@@ -74,13 +74,9 @@ function Items:PostPlayerSpawn(player)
 end
 
 function Items:PreSaveCharacter(player, index)
-  local ply_inv = player:get_items()
-
-  for k, v in ipairs(ply_inv) do
-    local item_table = Item.find_instance_by_id(v2)
-
-    if istable(item_table) then
-      item_table:on_save(player)
+  for k, v in pairs(player:get_items()) do
+    if v.on_save then
+      v:on_save(player)
     end
   end
 end
