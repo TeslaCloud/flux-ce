@@ -77,7 +77,7 @@ function Inventories:CreatePlayerInventories(player, inventories)
   local equipment_accessories = Inventory.new()
     equipment_accessories.title = 'ui.inventory.equipment.accessories'
     equipment_accessories.icon = 'flux/icons/cube.png'
-    equipment_accessories:set_size(2, 2)
+    equipment_accessories:set_size(1, 4)
     equipment_accessories.type = 'equipment_accessories'
     equipment_accessories.multislot = false
   inventories[equipment_accessories.type] = equipment_accessories
