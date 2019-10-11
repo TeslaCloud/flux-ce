@@ -157,6 +157,12 @@ function PANEL:start_dragging(dropped)
         slot.inventory_id = self:get_inventory_id()
         slot.multislot = self:is_multislot()
 
+        local icon = self:get_icon()
+
+        if icon then
+          slot.icon = icon
+        end
+
         if self.draw_inventory_slots == true then
           slot.slot_number = k + (i - 1) * self:get_inventory_width()
         end
