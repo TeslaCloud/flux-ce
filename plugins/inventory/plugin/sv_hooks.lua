@@ -101,6 +101,7 @@ function Inventories:PreItemSave(item_table, save_table)
   save_table.x = item_table.x
   save_table.y = item_table.y
   save_table.inventory_type = item_table.inventory_type
+  save_table.inventory_id = item_table.inventory_id
   save_table.rotated = item_table.rotated
 
   if item_table.inventory then
