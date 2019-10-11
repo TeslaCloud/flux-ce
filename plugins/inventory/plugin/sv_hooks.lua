@@ -210,7 +210,7 @@ end
 function Inventories:CanItemTransfer(item_table, inventory, x, y)
   local inv_type = inventory.type
 
-  if inv_type == 'equipment' and (!item_table.equip_slot or item_table.equip_inv != 'equipment') then
+  if inv_type:starts('equipment') and (!item_table.equip_slot or item_table.equip_inv != inv_type) then
     return false, 'error.inventory.cant_equip'
   end
 
