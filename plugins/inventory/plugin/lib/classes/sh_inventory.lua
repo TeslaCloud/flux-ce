@@ -289,7 +289,7 @@ function Inventory:overlaps_stack(item_table, x, y, w, h)
       local stack_item = Item.find_instance_by_id(slot[1])
 
       if stack_item and self:can_stack(item_table, stack_item) and !table.has_value(slot, item_table.instance_id) then
-        return true, self:get_item_pos(slot[1])
+        return true, stack_item.x, stack_item.y, stack_item.rotated != item_table.rotated
       end
     end
   end
@@ -459,6 +459,7 @@ if SERVER then
       return false, error_text
     end
 
+    local need_rotation = false
     local old_x, old_y = item_table.x, item_table.y
     local w, h = self:get_item_size(item_table)
     local old_w, old_h = w, h
@@ -468,18 +469,20 @@ if SERVER then
     end
 
     if !x or !y or x < 1 or y < 1 or x + w - 1 > self:get_width() or y + h - 1 > self:get_height() then
-      if was_rotated then
-        return false, 'error.inventory.invalid_position'
+      x, y, need_rotation = self:find_position(item_table, w, h)
+
+      if !x or !y then
+        return false, 'error.inventory.no_space'
       end
-
-      x, y = self:find_position(item_table, w, h)
-    end
-
-    if !self:slots_empty(x, y, w, h) then
-      local overlap, new_x, new_y = self:overlaps_stack(item_table, x, y, w, h)
+    elseif !self:slots_empty(x, y, w, h) then
+      local overlap, new_x, new_y, new_rotation = self:overlaps_stack(item_table, x, y, w, h)
 
       if overlap then
         x, y = new_x, new_y
+
+        if new_rotation != was_rotated then
+          need_rotation = true
+        end
       elseif !self:overlaps_only_itself(instance_id, x, y, w, h) then
         return false, 'error.inventory.slot_occupied'
       end
@@ -488,7 +491,11 @@ if SERVER then
     item_table.x = x
     item_table.y = y
 
-    if was_rotated then
+    if need_rotation then
+      w, h = h, w
+    end
+
+    if was_rotated != need_rotation then
       item_table.rotated = !item_table.rotated
     end
 
@@ -520,6 +527,7 @@ if SERVER then
       return false, error_text
     end
 
+    local need_rotation = false
     local old_x, old_y = item_table.x, item_table.y
     local w, h = inventory:get_item_size(item_table)
     local old_w, old_h = self:get_item_size(item_table)
@@ -529,18 +537,20 @@ if SERVER then
     end
 
     if !x or !y or x < 1 or y < 1 or x + w - 1 > inventory:get_width() or y + h - 1 > inventory:get_height() then
-      if was_rotated then
-        return false, 'error.inventory.invalid_position'
+      x, y, need_rotation = inventory:find_position(item_table, w, h)
+
+      if !x or !y then
+        return false, 'error.inventory.no_space'
       end
-
-      x, y = inventory:find_position(item_table, w, h)
-    end
-
-    if !inventory:slots_empty(x, y, w, h) then
-      local overlap, new_x, new_y = inventory:overlaps_stack(item_table, x, y, w, h)
+    elseif !inventory:slots_empty(x, y, w, h) then
+      local overlap, new_x, new_y, new_rotation = inventory:overlaps_stack(item_table, x, y, w, h)
 
       if overlap then
         x, y = new_x, new_y
+
+        if new_rotation != was_rotated then
+          need_rotation = true
+        end
       else
         return false, 'error.inventory.slot_occupied'
       end
@@ -553,7 +563,11 @@ if SERVER then
     item_table.x = x
     item_table.y = y
 
-    if was_rotated then
+    if need_rotation then
+      w, h = h, w
+    end
+
+    if was_rotated != need_rotation then
       item_table.rotated = !item_table.rotated
     end
 

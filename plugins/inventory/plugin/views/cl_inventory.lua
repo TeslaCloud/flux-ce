@@ -98,6 +98,13 @@ function PANEL:OnKeyCodePressed(key)
 
     if key == KEY_R and IsValid(droppable) then
       droppable:turn()
+
+      local drop_slot = Flux.inventory_drop_slot
+
+      if IsValid(drop_slot) then
+        drop_slot.is_hovered = false
+        Flux.inventory_drop_slot = nil
+      end
     end
   end
 end
