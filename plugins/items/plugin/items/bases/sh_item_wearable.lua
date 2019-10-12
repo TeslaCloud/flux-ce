@@ -9,6 +9,7 @@ ItemWearable.description = 'Clothes that can be equipped.'
 ItemWearable.category = 'item.category.clothing'
 ItemWearable.equip_inv = 'equipment_torso'
 ItemWearable.equip_slot = 'item.slot.chest'
+
 -- Bodygroups example:
 -- ItemWearable.equip_bodygroups = {
 --   [0] = 0, -- Sets bodygroup #0 to 0
@@ -20,14 +21,21 @@ ItemWearable.equip_slot = 'item.slot.chest'
 
 if CLIENT then
   function ItemWearable:get_icon_model()
-    if self:get_equip_model(PLAYER) then
-      return self:get_equip_model(PLAYER)
-    end
+    return self:get_equip_model(PLAYER) or self:get_model()
+  end
+end
+
+function ItemWearable:get_model_by_group(player)
+  if self.model_group then
+    local player_model = player:GetModel():lower()
+    local path = player_model:GetPathFromFilename()
+
+    return player_model:gsub(path:match('(%a+)/$'), self.model_group)
   end
 end
 
 function ItemWearable:get_equip_model(player)
-  return self.equip_model
+  return self:get_model_by_group(player) or self.equip_model
 end
 
 function ItemWearable:get_bodygroups(player)
@@ -39,8 +47,10 @@ function ItemWearable:get_valid_models()
 end
 
 function ItemWearable:can_equip(player)
-  if self:get_valid_models() and #self:get_valid_models() > 0 then
-    for k, v in pairs(self:get_valid_models()) do
+  local valid_models = self:get_valid_models()
+
+  if valid_models then
+    for k, v in pairs(valid_models) do
       if v:lower() == player:GetModel():lower() then
         return true
       end
