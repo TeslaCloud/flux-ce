@@ -69,7 +69,7 @@ function Items:PlayerUseItemMenu(instance_id, is_entity)
           item_table:do_menu_action('on_use')
         end)
 
-        use_button:SetIcon(item_table.use_icon or 'icon16/wrench.png')
+        use_button:SetIcon(item_table.use_icon or 'icon16/accept.png')
       end
     end
 
@@ -79,7 +79,7 @@ function Items:PlayerUseItemMenu(instance_id, is_entity)
           item_table:do_menu_action('on_take')
         end)
 
-        take_button:SetIcon(item_table.take_icon or 'icon16/wrench.png')
+        take_button:SetIcon(item_table.take_icon or 'icon16/add.png')
       end
     else
       if !item_table.is_action_visible or item_table:is_action_visible('drop') != false then
@@ -87,7 +87,7 @@ function Items:PlayerUseItemMenu(instance_id, is_entity)
           item_table:do_menu_action('on_drop')
         end)
 
-        drop_button:SetIcon(item_table.take_icon or 'icon16/wrench.png')
+        drop_button:SetIcon(item_table.take_icon or 'icon16/arrow_down.png')
       end
     end
   end
