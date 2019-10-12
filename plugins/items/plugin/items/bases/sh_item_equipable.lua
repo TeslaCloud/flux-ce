@@ -33,7 +33,7 @@ function ItemEquipable:can_transfer(inventory, x, y)
       return false
     end
 
-    for k, v in pairs(player:get_items(self.equip_inv)) do
+    for k, v in pairs(inventory:get_items()) do
       if v.equip_slot and v:is_equipped() and v.instance_id != self.instance_id then
         if v.equip_slot == self.equip_slot then
           return false
