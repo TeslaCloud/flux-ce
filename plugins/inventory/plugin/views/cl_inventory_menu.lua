@@ -78,7 +78,7 @@ function PANEL:rebuild()
         local item_table = dropped.item_data
 
         if item_table:is('equippable') and !item_table:is_equipped() then
-          item_table:do_menu_action('on_use')
+          item_table:do_menu_action('on_equip')
         end
 
         Inventories.find(dropped:get_inventory_id()).panel:rebuild()

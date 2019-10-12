@@ -1,8 +1,4 @@
-if !ItemUsable then
-  require_relative 'sh_item_usable'
-end
-
-class 'ItemEquipable' extends 'ItemUsable'
+class 'ItemEquipable' extends 'ItemBase'
 
 ItemEquipable.name = 'Equipment Base'
 ItemEquipable.description = 'An item that can be equipped.'
@@ -16,21 +12,13 @@ ItemEquipable.action_sounds = {
   ['unequip'] = 'items/battery_pickup.wav'
 }
 
-if CLIENT then
-  function ItemEquipable:get_use_text()
-    if self:is_equipped() then
-      return t'item.option.unequip'
-    else
-      return t'item.option.equip'
-    end
-  end
-
-  function ItemEquipable:is_action_visible(act)
-    if act == 'use' and IsValid(self.entity) then
-      return false
-    end
-  end
-end
+ItemEquipable:add_button('equip', {
+  get_name = function(item_table)
+    return item_table:is_equipped() and 'item.option.unequip' or 'item.option.equip'
+  end,
+  icon = 'icon16/user_suit.png',
+  callback = 'on_equip'
+})
 
 function ItemEquipable:is_equipped()
   return self.inventory_type == self.equip_inv
@@ -122,20 +110,18 @@ function ItemEquipable:equip(player, should_equip)
 end
 
 function ItemEquipable:on_transfer(new_inventory, old_inventory)
-  local player = self:get_player()
-
-  if IsValid(player) then
-    if new_inventory and new_inventory.type == self.equip_inv then
-      player:EmitSound(self.action_sounds['equip'])
-      self:equip(player, true)
-    elseif old_inventory and old_inventory.type == self.equip_inv then
-      player:EmitSound(self.action_sounds['unequip'])
-      self:equip(player, false)
-    end
+  if new_inventory and new_inventory.type == self.equip_inv then
+    local player = new_inventory.owner
+    player:EmitSound(self.action_sounds['equip'])
+    self:equip(player, true)
+  elseif old_inventory and old_inventory.type == self.equip_inv then
+    local player = old_inventory.owner
+    player:EmitSound(self.action_sounds['unequip'])
+    self:equip(player, false)
   end
 end
 
-function ItemEquipable:on_use(player)
+function ItemEquipable:on_equip(player)
   if IsValid(self.entity) then
     self:do_menu_action('on_take', player, { inv_type = self.equip_inv })
   else
@@ -145,8 +131,6 @@ function ItemEquipable:on_use(player)
       player:transfer_item(self.instance_id, self.equip_inv)
     end
   end
-
-  return true
 end
 
 function ItemEquipable:on_loadout(player)
