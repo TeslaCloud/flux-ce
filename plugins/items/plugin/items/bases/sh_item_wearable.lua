@@ -7,7 +7,7 @@ class 'ItemWearable' extends 'ItemEquipable'
 ItemWearable.name = 'Clothing Base'
 ItemWearable.description = 'Clothes that can be equipped.'
 ItemWearable.category = 'item.category.clothing'
-ItemWearable.equip_inv = 'equipment'
+ItemWearable.equip_inv = 'equipment_torso'
 ItemWearable.equip_slot = 'item.slot.chest'
 -- Bodygroups example:
 -- ItemWearable.equip_bodygroups = {
