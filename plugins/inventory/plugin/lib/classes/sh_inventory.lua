@@ -175,6 +175,10 @@ function Inventory:get_item_pos(instance_id)
   end
 end
 
+function Inventory:is_empty()
+  return table.is_empty(self:get_items_ids())
+end
+
 function Inventory:find_item(id)
   for k, v in pairs(self:get_items()) do
     if v.id == id then
