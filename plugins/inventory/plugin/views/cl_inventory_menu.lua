@@ -83,6 +83,8 @@ function PANEL:rebuild()
 
         Inventories.find(dropped:get_inventory_id()).panel:rebuild()
       end
+    else
+      Flux.inventory_drop_slot = nil
     end
   end)
 

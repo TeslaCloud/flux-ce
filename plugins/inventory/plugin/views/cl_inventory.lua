@@ -182,7 +182,25 @@ end
 function PANEL:on_drop(dropped)
   local drop_slot = Flux.inventory_drop_slot
 
-  if drop_slot.out_of_bounds then self:rebuild() return end
+  if drop_slot.out_of_bounds then
+    self:rebuild()
+
+    local drag_slot = Flux.inventory_drag_slot
+
+    if IsValid(drag_slot) then
+      local drag_inventory_id = drag_slot:get_inventory_id()
+      
+      if drag_inventory_id != self:get_inventory_id() then
+        local panel = Inventories.find(drag_inventory_id).panel
+
+        if IsValid(panel) then
+          panel:rebuild()
+        end
+      end
+    end
+
+    return
+  end
 
   Flux.inventory_drag_slot = nil
   Flux.inventory_drop_slot = nil
