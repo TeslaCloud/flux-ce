@@ -223,11 +223,14 @@ function PANEL:rebuild()
   self.model_panel:Dock(FILL)
   self.model_panel:SetModel(model, self.item_data:get_skin())
   self.model_panel:SetMouseInputEnabled(false)
+  self.model_panel:SetAnimated(true)
   self.model_panel.LayoutEntity = function(pnl, ent)
   end
 
   local entity = self.model_panel:GetEntity()
   local cam_data
+
+  entity:SetSequence(entity:get_idle_anim())
 
   if self.item_data.get_icon_data then
     cam_data = self.item_data:get_icon_data()
