@@ -351,11 +351,11 @@ do
     --- Takes one item from the player.
     -- Takes item only from the specified inventory.
     -- @variant player_meta:take_item(id, inv_type)
-      -- @param id [String]
-      -- @param inv_type [String]
+    --   @param id [String]
+    --   @param inv_type [String]
     -- Takes item from the inventory that has it.
     -- @variant player_meta:take_item(id)
-      -- @param id [String]
+    --   @param id [String]
     -- @return [Boolean was the item taken successfully, String text of the error that occurred]
     function player_meta:take_item(id, inv_type)
       if inv_type then
@@ -383,13 +383,13 @@ do
     --- Takes specified amount of items from the player.
     -- Takes items only from the specified inventory.
     -- @variant player_meta:take_item(id, inv_type)
-      -- @param id [String]
-      -- @param amount [Number]
-      -- @param inv_type [String]
+    --   @param id [String]
+    --   @param amount [Number]
+    --   @param inv_type [String]
     -- Takes items from the inventory that has it.
     -- @variant player_meta:take_item(id)
-      -- @param id [String]
-      -- @param amount [Number]
+    --   @param id [String]
+    --   @param amount [Number]
     -- @return [Boolean have the items been taken successfully, String text of the error that occurred]
     function player_meta:take_items(id, amount, inv_type)
       if inv_type then
@@ -420,11 +420,11 @@ do
     --- Takes one specified item from the player.
     -- Takes item only from the specified inventory.
     -- @variant player_meta:take_item(id, inv_type)
-      -- @param instance_id [Number]
-      -- @param inv_type [String]
+    --   @param instance_id [Number]
+    --   @param inv_type [String]
     -- Takes item from the inventory that has it.
     -- @variant player_meta:take_item(id)
-      -- @param instance_id [Number]
+    --   @param instance_id [Number]
     -- @return [Boolean was the item taken successfully, String text of the error that occurred]
     function player_meta:take_item_by_id(instance_id, inv_type)
       if inv_type then

@@ -69,19 +69,19 @@ function Inventory:set_size(width, height)
   self:rebuild()
 end
 
---- Get the width of the inventory.
+--- Gets the X axis size of the inventory in a number of slots.
 -- @return [Number]
 function Inventory:get_width()
   return self.width
 end
 
---- Get the height of the inventory.
+--- Gets the Y axis size of the inventory in a number of slots.
 -- @return [Number]
 function Inventory:get_height()
   return self.height
 end
 
---- Get the width and height of the inventory.
+--- Gets the X and Y axes size of the inventory in a number of slots.
 -- @return [Number, Number]
 function Inventory:get_size()
   return self.width, self.height
@@ -93,7 +93,7 @@ function Inventory:get_type()
   return self.type
 end
 
---- Get the slots hash.
+--- Get the slots grid.
 -- @return [Hash]
 function Inventory:get_slots()
   return self.slots
@@ -124,6 +124,9 @@ function Inventory:is_height_infinite()
 end
 
 --- Checks if the inventory is default.
+-- If there's no certain inventory specified,
+-- default one is used for it.
+-- @see [player_meta#add_item]
 -- @return [Boolean]
 function Inventory:is_default()
   return self.default
