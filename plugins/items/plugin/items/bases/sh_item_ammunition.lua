@@ -4,14 +4,15 @@ end
 
 class 'ItemAmmo' extends 'ItemUsable'
 
-ItemAmmo.name = 'Usable Items Base'
-ItemAmmo.description = 'An item that can be used.'
+ItemAmmo.name = 'Ammunition Base'
+ItemAmmo.description = 'An item that contains some ammo.'
 ItemAmmo.category = 'item.category.ammo'
 ItemAmmo.model = 'models/items/boxsrounds.mdl'
 ItemAmmo.use_text = 'item.option.load'
 ItemAmmo.ammo_class = 'Pistol'
-ItemAmmo.ammo_count = 20
+ItemAmmo.ammo_count = 16
+ItemAmmo.max_uses = 4
 
-function ItemAmmo:on_use(player)
+function ItemAmmo:use(player)
   player:GiveAmmo(self.ammo_count, self.ammo_class)
 end
