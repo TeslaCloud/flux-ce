@@ -1,5 +1,9 @@
 class 'Inventory'
 
+--- @warning [Internal]
+-- Sets the default values for the inventory
+-- and loads it to the server cache.
+-- @param id [Number]
 function Inventory:init(id)
   self.title = 'ui.inventory.title'
   self.icon = nil
@@ -24,6 +28,9 @@ function Inventory:init(id)
   self.id = id
 end
 
+--- Returns the values of the inventory
+-- that will be sent to the client.
+-- @return [Hash]
 function Inventory:to_networkable()
   return {
     id = self.id,
@@ -40,18 +47,21 @@ function Inventory:to_networkable()
   }
 end
 
+--- Sets the width of the inventory and rebuilds its slots.
 function Inventory:set_width(width)
   self.width = width
 
   self:rebuild()
 end
 
+--- Sets the height of the inventory and rebuilds its slots.
 function Inventory:set_height(height)
   self.height = height
 
   self:rebuild()
 end
 
+--- Sets the width and height of the inventory and rebuilds its slots.
 function Inventory:set_size(width, height)
   self.width = width
   self.height = height
@@ -59,46 +69,68 @@ function Inventory:set_size(width, height)
   self:rebuild()
 end
 
+--- Get the width of the inventory.
+-- @return [Number]
 function Inventory:get_width()
   return self.width
 end
 
+--- Get the height of the inventory.
+-- @return [Number]
 function Inventory:get_height()
   return self.height
 end
 
+--- Get the width and height of the inventory.
+-- @return [Number, Number]
 function Inventory:get_size()
   return self.width, self.height
 end
 
+--- Get the type of the inventory.
+-- @return [String]
 function Inventory:get_type()
   return self.type
 end
 
+--- Get the slots hash.
+-- @return [Hash]
 function Inventory:get_slots()
   return self.slots
 end
 
+--- Checks if the inventory is multislot.
+-- @return [Boolean]
 function Inventory:is_multislot()
   return self.multislot
 end
 
+--- Checks if the inventory is disabled.
+-- @return [Boolean]
 function Inventory:is_disabled()
   return self.disabled
 end
 
+--- Checks if the inventory has infinite width.
+-- @return [Boolean]
 function Inventory:is_width_infinite()
   return self.infinite_width
 end
 
+--- Checks if the inventory has infinite height.
+-- @return [Boolean]
 function Inventory:is_height_infinite()
   return self.infinite_height
 end
 
+--- Checks if the inventory is default.
+-- @return [Boolean]
 function Inventory:is_default()
   return self.default
 end
 
+--- @warning [Internal]
+-- Rebuilds inventory slots hash.
 function Inventory:rebuild()
   for i = 1, self.height do
     self.slots[i] = self.slots[i] or {}
@@ -109,6 +141,9 @@ function Inventory:rebuild()
   end
 end
 
+--- Get item objects that the inventory contains.
+-- Also includes items from the containers.
+-- @return [Hash items]
 function Inventory:get_items()
   local items = {}
 
@@ -129,6 +164,8 @@ function Inventory:get_items()
   return items
 end
 
+--- Get item ids that the inventory contains.
+-- @return [Hash items ids]
 function Inventory:get_items_ids()
   local items = {}
 
@@ -147,12 +184,20 @@ function Inventory:get_items_ids()
   return table.get_keys(items)
 end
 
+--- Get the items ids that located in the specified slot.
+-- @param x [Number]
+-- @param y [Number]
+-- @return [Hash items ids]
 function Inventory:get_slot(x, y)
   if x <= self.width and y <= self.height then
     return self.slots[y][x]
   end
 end
 
+--- Get the first item id that located in the specified slot.
+-- @param x [Number]
+-- @param y [Number]
+-- @return [Number]
 function Inventory:get_first_in_slot(x, y)
   local slot = self:get_slot(x, y)
 
@@ -161,24 +206,22 @@ function Inventory:get_first_in_slot(x, y)
   end
 end
 
+--- Get amount of items by their id.
+-- @param id [String]
+-- @return [Number]
 function Inventory:get_items_count(id)
   return table.count(self:find_items(id))
 end
 
-function Inventory:get_item_pos(instance_id)
-  for i = 1, self.height do
-    for k = 1, self.width do
-      if table.has_value(self:get_slot(k, i), instance_id) then
-        return k, i
-      end
-    end
-  end
-end
-
+--- Checks if the inventory is empty.
+-- @return [Boolean]
 function Inventory:is_empty()
   return table.is_empty(self:get_items_ids())
 end
 
+--- Find a specified item object by its id.
+-- @param id [String]
+-- @return [Item]
 function Inventory:find_item(id)
   for k, v in pairs(self:get_items()) do
     if v.id == id then
@@ -187,6 +230,9 @@ function Inventory:find_item(id)
   end
 end
 
+--- Find a specified items objects by their id.
+-- @param id [String]
+-- @return [Hash items]
 function Inventory:find_items(id)
   local items = {}
 
@@ -199,6 +245,9 @@ function Inventory:find_items(id)
   return items
 end
 
+--- Check if the inventory contains item by its id.
+-- @param id [String]
+-- @return [Boolean]
 function Inventory:has_item(id)
   local item_table = self:find_item(id)
 
@@ -209,6 +258,9 @@ function Inventory:has_item(id)
   return false
 end
 
+--- Check if the inventory contains items by their id.
+-- @param id [String]
+-- @return [Boolean, Hash found items]
 function Inventory:has_items(id, amount)
   amount = amount or 1
 
@@ -221,6 +273,9 @@ function Inventory:has_items(id, amount)
   return false, items
 end
 
+--- Check if the inventory contains item by its instance id.
+-- @param instance_id [Number]
+-- @return [Boolean, Item found item]
 function Inventory:has_item_by_id(instance_id)
   if table.has_value(self:get_items_ids(), instance_id) then
     return true, Item.find_instance_by_id(instance_id)
@@ -229,6 +284,11 @@ function Inventory:has_item_by_id(instance_id)
   return false
 end
 
+--- Find the best position for the item to be placed.
+-- @param item_table [Item]
+-- @param w [Number width of the item]
+-- @param h [Number height of the item]
+-- @return [Number x, Number y, Boolean do a rotation need]
 function Inventory:find_position(item_table, w, h)
   local x, y, need_rotation
 
@@ -253,6 +313,11 @@ function Inventory:find_position(item_table, w, h)
   return x, y, need_rotation
 end
 
+--- Find the stack position for the item.
+-- @param item_table [Item]
+-- @param w [Number width of the item]
+-- @param h [Number height of the item]
+-- @return [Number x, Number y, Boolean do a rotation need]
 function Inventory:find_stack(item_table, w, h)
   for k, v in pairs(self:find_items(item_table.id)) do
     if self:can_stack(item_table, v) then
@@ -261,6 +326,10 @@ function Inventory:find_stack(item_table, w, h)
   end
 end
 
+--- Check if two items may be stacked.
+-- @param item_table [Item]
+-- @param stack_item [Item]
+-- @return [Boolean]
 function Inventory:can_stack(item_table, stack_item)
   local slot = self:get_slot(stack_item.x, stack_item.y)
 
@@ -272,6 +341,10 @@ function Inventory:can_stack(item_table, stack_item)
   return false
 end
 
+--- Find free space in the inventory.
+-- @param w [Number]
+-- @param h [Number]
+-- @return [Number x, Number y]
 function Inventory:find_empty_slot(w, h)
   for i = 1, self:get_height() - h + 1 do
     for k = 1, self:get_width() - w + 1 do
@@ -282,6 +355,12 @@ function Inventory:find_empty_slot(w, h)
   end
 end
 
+--- Check if the specified slots are empty.
+-- @param x [Number]
+-- @param y [Number]
+-- @param w [Number]
+-- @param h [Number]
+-- @return [Boolean]
 function Inventory:slots_empty(x, y, w, h)
   for i = y, y + h - 1 do
     for k = x, x + w - 1 do
@@ -294,6 +373,13 @@ function Inventory:slots_empty(x, y, w, h)
   return true
 end
 
+--- Check if the item overlaps other stackable item and return adjusted data.
+-- @param item_table [Item]
+-- @param x [Number]
+-- @param y [Number]
+-- @param w [Number]
+-- @param h [Number]
+-- @return [Boolean, Number x, Number y, Boolean do a rotation need]
 function Inventory:overlaps_stack(item_table, x, y, w, h)
   for i = y, y + h - 1 do
     for k = x, x + w - 1 do
@@ -307,6 +393,13 @@ function Inventory:overlaps_stack(item_table, x, y, w, h)
   end
 end
 
+--- Check if the item overlaps itself.
+-- @param instance_id [Number]
+-- @param x [Number]
+-- @param y [Number]
+-- @param w [Number]
+-- @param h [Number]
+-- @return [Boolean]
 function Inventory:overlaps_itself(instance_id, x, y, w, h)
   for i = y, y + h - 1 do
     for k = x, x + w - 1 do
@@ -321,6 +414,13 @@ function Inventory:overlaps_itself(instance_id, x, y, w, h)
   return false
 end
 
+--- Check if the item overlaps only itself.
+-- @param instance_id [Number]
+-- @param x [Number]
+-- @param y [Number]
+-- @param w [Number]
+-- @param h [Number]
+-- @return [Boolean]
 function Inventory:overlaps_only_itself(instance_id, x, y, w, h)
   for i = y, y + h - 1 do
     for k = x, x + w - 1 do
@@ -335,6 +435,9 @@ function Inventory:overlaps_only_itself(instance_id, x, y, w, h)
   return true
 end
 
+--- Get item size based on inventory and item params.
+-- @param item_table [Item]
+-- @return [Number width, Number height]
 function Inventory:get_item_size(item_table)
   if !self:is_multislot() then
     return 1, 1
@@ -350,6 +453,16 @@ function Inventory:get_item_size(item_table)
 end
 
 if SERVER then
+
+  -- Add item object to a inventory.
+  -- @variant Inventory:add_item(item_table, x, y)
+  --   @param item_table [Item]
+  --   @param x [Number]
+  --   @param y [Number]
+  -- In this case finds best position for the item.
+  -- @variant Inventory:add_item(item_table)
+  --   @param item_table [Item]
+  -- @return [Boolean was the item added successfully, String text of the error that occurred]
   function Inventory:add_item(item_table, x, y)
     if !item_table then return false, 'error.inventory.invalid_item' end
 
@@ -388,10 +501,24 @@ if SERVER then
     return true
   end
 
+  -- Add item to a inventory by its instance id.
+  -- @variant Inventory:add_item(item_table, x, y)
+  --   @param item_table [Item]
+  --   @param x [Number]
+  --   @param y [Number]
+  -- In this case finds best position for the item.
+  -- @variant Inventory:add_item(item_table)
+  --   @param item_table [Item]
+  -- @return [Boolean was the item added successfully, String text of the error that occurred]
   function Inventory:add_item_by_id(instance_id, x, y)
     return self:add_item(Item.find_instance_by_id(instance_id), x, y)
   end
 
+  -- Create an item and add it to a inventory.
+  -- @param id [String]
+  -- @param amount [Number]
+  -- @param data [Hash]
+  -- @return [Boolean was the item given successfully, String text of the error that occurred]
   function Inventory:give_item(id, amount, data)
     amount = amount or 1
 
@@ -409,6 +536,9 @@ if SERVER then
     return true
   end
 
+  -- Take item object from the inventory.
+  -- @param item_table [Item]
+  -- @return [Boolean was the item taken successfully, String text of the error that occurred]
   function Inventory:take_item_table(item_table)
     if !item_table then return false, 'error.inventory.invalid_item' end
 
@@ -434,6 +564,9 @@ if SERVER then
     return true
   end
 
+  -- Take item object from the inventory based on its id.
+  -- @param id [String]
+  -- @return [Boolean was the item taken successfully, String text of the error that occurred]
   function Inventory:take_item(id)
     local item_table = self:find_item(id)
 
@@ -444,6 +577,10 @@ if SERVER then
     return false, 'error.inventory.invalid_item'
   end
 
+  -- Take certain amount of items from the inventory based on their id.
+  -- @param id [String]
+  -- @param amount [Number]
+  -- @return [Boolean was the item taken successfully, String text of the error that occurred]
   function Inventory:take_items(id, amount)
     if self:get_items_count(id) < amount then
       return false, 'error.inventory.not_enough_items'
@@ -456,10 +593,20 @@ if SERVER then
     return true
   end
 
+  -- Take item object from the inventory based on its instance id.
+  -- @param instance_id [Number]
+  -- @return [Boolean was the item taken successfully, String text of the error that occurred]
   function Inventory:take_item_by_id(instance_id)
     return self:take_item_table(Item.find_instance_by_id(instance_id))
   end
 
+  --- @warning [Internal]
+  -- Move the item inside the inventory.
+  -- @param instance_id [Number]
+  -- @param x [Number]
+  -- @param y [Number]
+  -- @param was_rotated [Boolean]
+  -- @return [Boolean was the item moved successfully, String text of the error that occurred]
   function Inventory:move_item(instance_id, x, y, was_rotated)
     local item_table = Item.find_instance_by_id(instance_id)
 
@@ -528,6 +675,14 @@ if SERVER then
     return true
   end
 
+  --- @warning [Internal]
+  -- Move the item to another inventory.
+  -- @param instance_id [Number]
+  -- @param inventory [Inventory]
+  -- @param x [Number]
+  -- @param y [Number]
+  -- @param was_rotated [Boolean]
+  -- @return [Boolean was the item transferred successfully, String text of the error that occurred]
   function Inventory:transfer_item(instance_id, inventory, x, y, was_rotated)
     local item_table = Item.find_instance_by_id(instance_id)
 
@@ -603,6 +758,13 @@ if SERVER then
     return true
   end
 
+  --- @warning [Internal]
+  -- Move the whole stack inside the inventory.
+  -- @param instance_ids [Hash instance ids]
+  -- @param x [Number]
+  -- @param y [Number]
+  -- @param was_rotated [Boolean]
+  -- @return [Boolean have the items been moved successfully, String text of the error that occurred]
   function Inventory:move_stack(instance_ids, x, y, was_rotated)
     local instance_id = instance_ids[1]
     local item_table = Item.find_instance_by_id(instance_id)
@@ -625,6 +787,14 @@ if SERVER then
     return true
   end
 
+  --- @warning [Internal]
+  -- Move the whole stack to another inventory.
+  -- @param instance_ids [Hash instance ids]
+  -- @param inventory [Inventory]
+  -- @param x [Number]
+  -- @param y [Number]
+  -- @param was_rotated [Boolean]
+  -- @return [Boolean have the items been transferred successfully, String text of the error that occurred]
   function Inventory:transfer_stack(instance_ids, inventory, x, y, was_rotated)
     for k, v in ipairs(instance_ids) do
       local success, error_text = self:transfer_item(v, inventory, x, y, was_rotated)
@@ -637,18 +807,25 @@ if SERVER then
     return true
   end
 
+  --- Get the players that currently receive the inventory data.
+  -- @return [Hash players]
   function Inventory:get_receivers()
     return self.receivers
   end
 
+  --- Add new receiver to the inventory.
+  -- @param player [Player]
   function Inventory:add_receiver(player)
     table.insert(self.receivers, player)
   end
 
+  --- Remove the receiver from the inventory.
+  -- @param player [Player]
   function Inventory:remove_receiver(player)
     table.remove_by_value(self.receivers, player)
   end
 
+  --- Send inventory data to its receivers.
   function Inventory:sync()
     for k, v in pairs(self:get_receivers()) do
       if IsValid(v) then
@@ -663,6 +840,8 @@ if SERVER then
     end
   end
 
+  --- @warning [Internal]
+  -- Check the size of the inventory and resize it if needed.
   function Inventory:check_size()
     if !self:is_height_infinite() and !self:is_width_infinite() then return end
 
@@ -688,6 +867,9 @@ if SERVER then
     self:sync()
   end
 
+  --- @warning [Internal]
+  -- Fill the inventory with certain items by their ids.
+  -- @param items_ids [Hash]
   function Inventory:load_items(items_ids)
     for k, v in pairs(items_ids) do
       local item_table = Item.find_instance_by_id(v)
@@ -700,12 +882,18 @@ if SERVER then
     end
   end
 
+  --- Disables the inventory, preventing to manipulate items inside it.
+  -- @param disabled [Boolean]
   function Inventory:set_disabled(disabled)
     self.disabled = disabled
 
     self:sync()
   end
 else
+
+  --- Creates a panel for the inventory.
+  -- @param parent [Panel]
+  -- @return [Panel]
   function Inventory:create_panel(parent)
     local panel = vgui.create('fl_inventory', parent)
     panel:set_title(t(self.title or self.type))
