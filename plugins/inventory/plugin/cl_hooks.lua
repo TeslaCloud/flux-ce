@@ -106,6 +106,7 @@ Cable.receive('fl_inventory_sync', function(data)
   inventory.height = data.height
   inventory.slots = data.slots
   inventory.multislot = data.multislot
+  inventory.disabled = data.disabled
   inventory.owner = data.owner
   inventory.instance_id = data.instance_id
 

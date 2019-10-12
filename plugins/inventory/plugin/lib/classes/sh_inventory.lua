@@ -8,6 +8,7 @@ function Inventory:init(id)
   self.height = 1
   self.slots = {}
   self.multislot = true
+  self.disabled = false
 
   if SERVER then
     self.infinite_width = false
@@ -33,6 +34,7 @@ function Inventory:to_networkable()
     height = self.height,
     slots = self.slots,
     multislot = self.multislot,
+    disabled = self.disabled,
     owner = self.owner,
     instance_id = self.instance_id
   }
@@ -79,6 +81,10 @@ end
 
 function Inventory:is_multislot()
   return self.multislot
+end
+
+function Inventory:is_disabled()
+  return self.disabled
 end
 
 function Inventory:is_width_infinite()

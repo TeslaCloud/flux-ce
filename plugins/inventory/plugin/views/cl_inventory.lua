@@ -163,6 +163,10 @@ function PANEL:start_dragging(dropped)
           slot.icon = icon
         end
 
+        if self:is_disabled() then
+          slot.disabled = true
+        end
+
         if self.draw_inventory_slots == true then
           slot.slot_number = k + (i - 1) * self:get_inventory_width()
         end
@@ -240,6 +244,10 @@ function PANEL:rebuild()
 
       if icon then
         slot.icon = icon
+      end
+
+      if self:is_disabled() then
+        slot.disabled = true
       end
 
       if self.slot_panels[i][k] == false then
@@ -333,6 +341,10 @@ end
 
 function PANEL:is_multislot()
   return self:get_inventory():is_multislot()
+end
+
+function PANEL:is_disabled()
+  return self:get_inventory():is_disabled()
 end
 
 function PANEL:draw_inventory_slots(bool)

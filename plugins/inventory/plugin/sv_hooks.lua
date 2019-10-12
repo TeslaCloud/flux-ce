@@ -206,6 +206,10 @@ function Inventories:CanItemMove(item_table, inventory, x, y)
       return false, error_text
     end
   end
+
+  if inventory:is_disabled() then
+    return false, 'error.inventory.disabled'
+  end
 end
 
 function Inventories:CanItemTransfer(item_table, inventory, x, y)
@@ -234,6 +238,10 @@ function Inventories:CanItemTransfer(item_table, inventory, x, y)
     if success == false then
       return false, error_text
     end
+  end
+
+  if inventory:is_disabled() then
+    return false, 'error.inventory.disabled'
   end
 end
 
