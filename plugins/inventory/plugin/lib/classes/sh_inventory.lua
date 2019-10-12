@@ -1,8 +1,18 @@
+--- The inventory class is used to manage player's items,
+-- transferring them from one player or object to another,
+-- using the same interface and functionality.
 class 'Inventory'
 
---- @warning [Internal]
--- Sets the default values for the inventory
+-- Initializes the new inventory class
 -- and loads it to the server cache.
+-- ```
+-- -- Creating new inventory
+-- local inventory = Inventory.new()
+-- inventory.title = 'Test inventory'
+-- inventory:set_size(4, 4)
+-- inventory.type = 'testing_inventory'
+-- inventory.multislot = false
+-- ```
 -- @param id [Number]
 function Inventory:init(id)
   self.title = 'ui.inventory.title'
@@ -217,6 +227,11 @@ function Inventory:get_items_count(id)
 end
 
 --- Checks if the inventory is empty.
+-- ```
+-- if player:get_inventory('main_inventory'):is_empty() then
+--   player:notify('Your main inventory is empty!')
+-- end
+-- ```
 -- @return [Boolean]
 function Inventory:is_empty()
   return table.is_empty(self:get_items_ids())
@@ -895,6 +910,8 @@ if SERVER then
 else
 
   --- Creates a panel for the inventory.
+  -- It will update automatically every time
+  -- inventory synchronizes itself.
   -- @param parent [Panel]
   -- @return [Panel]
   function Inventory:create_panel(parent)

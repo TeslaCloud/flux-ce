@@ -334,6 +334,14 @@ do
     end
 
     --- Give the player a certain item(s) by id.
+    -- ```
+    -- -- Adds 10 test items to the player's inventory and sets their name to 'Some Item'.
+    -- local success, error_text = player:give_item('test_item', 10, { name = 'Some Item' })
+    -- if !success then
+    --   -- Notifies the player of an error.
+    --   player:notify(error_text)
+    -- end
+    -- ```
     -- @param id [String]
     -- @param amount [Number]
     -- @param data [Hash]
@@ -475,6 +483,17 @@ do
     end
 
     --- Opens inventory window for the player.
+    -- ```
+    -- -- Creating new inventory
+    -- local inventory = Inventory.new()
+    -- inventory.title = 'Test inventory'
+    -- inventory:set_size(4, 4)
+    -- inventory.type = 'testing_inventory'
+    -- inventory.multislot = false
+    --
+    -- -- Creating inventory window for a player
+    -- player:open_inventory(inventory)
+    -- ```
     -- @param inventory [Inventory]
     function player_meta:open_inventory(inventory)
       inventory:add_receiver(self)
