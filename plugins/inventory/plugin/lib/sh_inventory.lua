@@ -384,7 +384,7 @@ do
           end
         end
 
-        return false, 'error.inventory.item_not_found'
+        return false, 'error.inventory.invalid_item'
       end
     end
 
@@ -453,7 +453,7 @@ do
 
           return success, error_text
         else
-          return false, 'error.inventory.item_not_found'
+          return false, 'error.inventory.invalid_item'
         end
       end
     end
