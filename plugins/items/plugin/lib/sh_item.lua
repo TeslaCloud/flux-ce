@@ -113,6 +113,8 @@ function Item.to_saveable(item_table)
     use_icon = item_table.use_icon,
     take_icon = item_table.take_icon,
     cancel_icon = item_table.cancel_icon,
+    max_uses = item_table.max_uses,
+    uses = item_table.uses
   }
 
   hook.run('PreItemSave', item_table, save_table)
