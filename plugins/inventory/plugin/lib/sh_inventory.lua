@@ -319,9 +319,16 @@ do
       local new_inventory = self:get_inventory(inv_type)
 
       if item_table.inventory_type != inv_type then
-        old_inventory:transfer_item(instance_id, new_inventory)
-        old_inventory:sync()
-        new_inventory:sync()
+        local success, error_text = old_inventory:transfer_item(instance_id, new_inventory)
+
+        if success then
+          old_inventory:sync()
+          new_inventory:sync()
+
+          return true
+        else
+          return false, error_text
+        end
       end
     end
 
