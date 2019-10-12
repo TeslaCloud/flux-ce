@@ -172,17 +172,7 @@ if SERVER then
       end
     end
 
-    if act == 'on_take' then
-      if hook.run('PlayerTakenItem', player, self, ...) != nil then return end
-    end
-
-    if act == 'on_use' then
-      if hook.run('PlayerUsedItem', player, self, ...) != nil then return end
-    end
-
-    if act == 'on_drop' then
-      if hook.run('PlayerDroppedItem', player, self.instance_id, self, ...) != nil then return end
-    end
+    hook.run('PlayerUsedItem', player, self, act, ...)
   end
 
   Cable.receive('fl_items_menu_action', function(player, instance_id, action, ...)
