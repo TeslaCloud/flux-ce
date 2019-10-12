@@ -15,9 +15,8 @@ ItemContainer.default_inventory = {}
 -- Default inventory usage example:
 -- ItemContainer.default_inventory = {
 --   { id = 'test_item', amount = 5, data = {} }, -- Adds 5 test items to this container when creating it.
---   { id = 'test_item', amount = 1, data = {} }  -- Adds another 1 test item with the name 'Test Item #2'.
+--   { id = 'test_item', amount = 1, data = { name = 'Test Item #2' } }  -- Adds another 1 test item with the name 'Test Item #2'.
 -- }
-
 
 ItemContainer:add_button('item.option.open', {
   icon = 'icon16/briefcase.png',
