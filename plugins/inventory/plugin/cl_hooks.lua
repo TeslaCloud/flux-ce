@@ -206,7 +206,7 @@ local function create_item_icon(item_table, parent)
   icon:DockPadding(padding, padding, padding, padding)
 
   local name_label = vgui.create('DLabel', icon)
-  name_label:SetText(t(item_table:get_name()))
+  name_label:SetText(t(item_table:get_real_name()))
   name_label:Dock(BOTTOM)
   name_label:SetTextColor(color_white)
   name_label:SetFont(Theme.get_font('text_bar'))
@@ -221,7 +221,7 @@ local function create_item_icon(item_table, parent)
     DisableClipping(false)
   end
 
-  icon:SetToolTip(t(item_table:get_name())..'\n'..t(item_table:get_description()))
+  icon:SetToolTip(t(item_table:get_real_name())..'\n'..t(item_table:get_description()))
   icon.DoRightClick = function(pnl)
     local derma_menu = DermaMenu()
     local give_self = derma_menu:AddSubMenu(t'ui.spawnmenu.give.self')
