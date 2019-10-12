@@ -10,6 +10,7 @@ ItemEquipable.category = 'item.category.equipment'
 ItemEquipable.stackable = false
 ItemEquipable.equip_slot = 'item.slot.accessory'
 ItemEquipable.equip_inv = 'hotbar'
+ItemEquipable.disabled_inventories = {}
 ItemEquipable.action_sounds = {
   ['equip'] = 'items/battery_pickup.wav',
   ['unequip'] = 'items/battery_pickup.wav'
@@ -84,10 +85,36 @@ end
 
 function ItemEquipable:equip(player, should_equip)
   if should_equip then
+    for k, v in pairs(self.disabled_inventories) do
+      local inventory = player:get_inventory(v)
+
+      if inventory then
+        for k1, v1 in pairs(inventory:get_items()) do
+          local success, error_text = player:transfer_item(v1.instance_id, 'main_inventory')
+
+          if !success then
+            player:notify(error_text)
+
+            return
+          end
+        end
+
+        inventory:set_disabled(true)
+      end
+    end
+
     self:post_equipped(player)
 
     hook.run('OnItemEquipped', player, self)
   else
+    for k, v in pairs(self.disabled_inventories) do
+      local inventory = player:get_inventory(v)
+
+      if inventory then
+        inventory:set_disabled(false)
+      end
+    end
+
     self:post_unequipped(player)
 
     hook.run('OnItemUnequipped', player, self)
