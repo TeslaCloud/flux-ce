@@ -119,13 +119,13 @@ if SERVER then
     if !new_desc or !isstring(new_desc) then return end
 
     local char = player:get_character()
-    local old_desc = player:get_nv('desc')
+    local old_desc = player:get_nv('phys_desc')
 
     if char then
       char.phys_desc = new_desc or char.phys_desc
     end
 
-    player:set_nv('desc', new_desc)
+    player:set_nv('phys_desc', new_desc)
     hook.run('CharacterDescChanged', player, char, new_desc, old_desc)
 
     Characters.send_to_client(player)
