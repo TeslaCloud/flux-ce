@@ -3,6 +3,7 @@ local PANEL = {}
 PANEL.limit = 0
 
 function PANEL:Init()
+  self:SetDrawLanguageID(false)
   self:SetUpdateOnType(true)
 end
 
