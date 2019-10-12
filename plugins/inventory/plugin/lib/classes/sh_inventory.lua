@@ -699,6 +699,12 @@ if SERVER then
       end
     end
   end
+
+  function Inventory:set_disabled(disabled)
+    self.disabled = disabled
+
+    self:sync()
+  end
 else
   function Inventory:create_panel(parent)
     local panel = vgui.create('fl_inventory', parent)
