@@ -88,10 +88,11 @@ function PANEL:rebuild()
     end
   end)
 
-  self.desc = vgui.create('DTextEntry', self.player_model)
+  self.desc = vgui.create('fl_text_entry', self.player_model)
   self.desc:Dock(BOTTOM)
   self.desc:SetText(PLAYER:get_phys_desc())
   self.desc:SetFont(Theme.get_font('main_menu_normal'))
+  self.desc:set_limit(Config.get('character_max_desc_len'))
   self.desc.saved = true
   self.desc.save = function(pnl)
     local text = pnl:GetValue()
@@ -107,10 +108,16 @@ function PANEL:rebuild()
     end
   end
 
+  self.desc.Paint = function(pnl, w, h)
+    draw.RoundedBox(0, 0, 0, w, h, Color(0, 0, 0, 100))
+
+    pnl:DrawTextEntryText(Color('lightgray'), Theme.get_color('accent'), color_white)
+  end
+
   self.desc.PaintOver = function(pnl, w, h)
     local color = pnl.saved and Color('lightgreen') or Color('orange')
 
-    surface.SetDrawColor(color)
+    surface.SetDrawColor(color:alpha(100))
     surface.DrawOutlinedRect(0, 0, w, h)
   end
 
