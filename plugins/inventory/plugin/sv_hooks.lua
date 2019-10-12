@@ -180,6 +180,18 @@ function Inventories:PlayerDropItem(player, instance_ids)
   Item.async_save_entities()
 end
 
+function Inventories:PlayerUsedItem(player, item_table, act, ...)
+  local inventory_id = item_table.inventory_id
+
+  if inventory_id then
+    local inventory = Inventories.find(inventory_id)
+
+    if inventory then
+      inventory:sync()
+    end
+  end
+end
+
 function Inventories:PreItemTransfer(item_table, new_inventory, old_inventory)
   if item_table.on_transfer then
     item_table:on_transfer(new_inventory, old_inventory)

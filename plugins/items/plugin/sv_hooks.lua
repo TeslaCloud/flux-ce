@@ -53,6 +53,13 @@ function Items:PlayerCanUseItem(player, item_table, action, ...)
   end
 end
 
+function Items:PlayerUsedItem(player, item_table, act, ...)
+  if IsValid(item_table.entity) then
+    Item.network_item(nil, item_table.instance_id)
+    Item.network_entity_data(nil, item_table.entity)
+  end
+end
+
 function Items:CanPlayerDropItem(player, item_table)
   if istable(item_table) and item_table.on_drop then
     if item_table:on_drop(player) == false then
