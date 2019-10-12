@@ -31,8 +31,19 @@ ru:
         desc: Высота инвентаря карманов игрока в слотах.
   error:
     invalid_item: Предмет {item} не найден.
+    inventory:
+      invalid_item: Предмет не найден.
+      no_space: В инвентаре нет места.
+      not_enough_items: Недостаточно предметов.
+      slot_occupied: Слот занят другим предметом.
+      disabled: Инвентарь не может быть использован.
+      cant_equip: Данный предмет нельзя экипировать.
+      too_big: Предмет слишком велик.
   hint:
     inventory: Перетащите предмет за пределы инвентаря, чтобы выбросить его.
+  item:
+    option:
+      open: Открыть
   notification:
     char_desc_changed: Вы изменили описание вашего персонажа.
     item_given: Вам выдали {item} x {amount}.

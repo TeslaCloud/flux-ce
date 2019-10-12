@@ -31,8 +31,19 @@ en:
         desc: Height of the player pockets inventory in slots.
   error:
     invalid_item: Item '{item}' is not valid.
+    inventory:
+      invalid_item: Invalid item.
+      no_space: Not enough space.
+      not_enough_items: Not enough items.
+      slot_occupied: Slot is occupied.
+      disabled: Inventory is disabled.
+      cant_equip: This item cannot be equipped.
+      too_big: Item is too big.
   hint:
     inventory: Drag'n'Drop an item outside of inventory screen to drop it.
+  item:
+    option:
+      open: Open
   notification:
     char_desc_changed: You have changed your character description.
     item_given: You have been given {item} x {amount}.
