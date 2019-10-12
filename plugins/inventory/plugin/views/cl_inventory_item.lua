@@ -38,7 +38,7 @@ function PANEL:Paint(w, h)
             draw_color = draw_color:lighten(30)
           end
         else
-          if drop_slot.out_of_bounds then
+          if drop_slot.out_of_bounds or drop_slot.disabled then
             draw_color = Color(200, 60, 60, 160)
           else
             draw_color = Color(60, 200, 60, 160)
