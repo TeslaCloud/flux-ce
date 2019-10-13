@@ -22,6 +22,8 @@ en:
       set: Your {currency} balance has been set to {value}.
   ui:
     currency:
+      menu:
+        give: Give
       title: Money
       give:
         title: Give money

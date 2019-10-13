@@ -22,6 +22,8 @@ ru:
       set: Количество вашей валюты {currency} было установлено на {value}.
   ui:
     currency:
+      menu:
+        give: Дать
       title: Деньги
       give:
         title: Дать деньги

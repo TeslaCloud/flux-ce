@@ -17,6 +17,29 @@ function Currencies:OnInventoryRebuild(panel)
   end
 end
 
+function Currencies:CreatePlayerInteractions(menu, target)
+  local money_menu, money_menu_option = menu:AddSubMenu(t'ui.currency.title')
+  money_menu_option:SetIcon('icon16/money.png')
+
+  for k, v in pairs(Currencies.all()) do
+    local amount = PLAYER:get_money(k) or 0
+
+    if !v.hidden or v.hidden and amount > 0 then
+      money_menu:AddOption(t'ui.currency.give'..' '..t(v.name), function()
+        Derma_StringRequest(t'ui.currency.give.title', t('ui.currency.give.message', { currency = t(v.name) }), '', function(text)
+          local value = tonumber(text)
+
+          if value and value > 0 then
+            Cable.send('fl_currency_give', value, k, target)
+          else
+            PLAYER:notify('error.invalid_amount')
+          end
+        end)
+      end)
+    end
+  end
+end
+
 Cable.receive('fl_rebuild_currency_panel', function()
   if IsValid(Flux.tab_menu) and Flux.tab_menu:IsVisible() then
     local active_panel = Flux.tab_menu.active_panel
