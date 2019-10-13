@@ -109,8 +109,6 @@ function Items:PlayerUseItemMenu(instance_id, is_entity)
 
     item_menu:SetPos(x, y)
   end
-
-  item_menu:SetKeyboardInputEnabled(true)
 end
 
 function Items:OnItemDataReceived()

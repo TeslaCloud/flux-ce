@@ -78,6 +78,8 @@ function PANEL:PerformLayout()
   self:SetTall(math.min(y, ScrH() * 0.75))
 
   DScrollPanel.PerformLayout(self)
+
+  self:SetKeyboardInputEnabled(true)
 end
 
 function PANEL:GetDeleteSelf()
