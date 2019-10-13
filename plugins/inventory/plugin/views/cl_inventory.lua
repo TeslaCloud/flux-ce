@@ -34,12 +34,15 @@ function PANEL:Init()
     if is_dropped then
       self:on_drop(dropped)
     else
-      local w, h = dropped:GetSize()
       local slot_w, slot_h = dropped:get_item_size()
       local drop_slot = Flux.inventory_drop_slot
       local is_multislot = self:is_multislot()
-
-      w, h = w * ((!is_multislot or slot_w == 1) and 0 or 0.25), h * ((!is_multislot or slot_h == 1) and 0 or 0.25)
+      local slot_size = self:get_slot_size()
+      local w, h = 0, 0
+      
+      if is_multislot and (slot_w > 1 or slot_h > 1) then
+        w, h = (slot_w - 1) * 0.5 * slot_size, (slot_h - 1) * 0.5 * slot_size
+      end
 
       local slot = receiver:GetClosestChild(mouse_x - w, mouse_y - h)
 
