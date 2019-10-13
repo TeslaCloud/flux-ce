@@ -228,26 +228,22 @@ function PANEL:rebuild()
   end
 
   local entity = self.model_panel:GetEntity()
-  local cam_data
+  local cam_data = table.copy(self.item_data:get_icon_data())
 
   entity:SetSequence(entity:get_idle_anim())
 
-  if self.item_data.get_icon_data then
-    cam_data = self.item_data:get_icon_data()
-  else
+  if !cam_data then
     cam_data = PositionSpawnIcon(entity, entity:GetPos(), true)
     cam_data.fov = cam_data.fov * 1.1
   end
 
-  if self:is_rotated() then
-    local w, h = self:get_item_size()
-    cam_data.angles.z = cam_data.angles.z - 90
-    cam_data.fov = cam_data.fov * (w / h)
-  end
+  local pos, ang, fov = cam_data.origin, cam_data.angles, cam_data.fov
+  local rotated = self:is_rotated()
+  local w, h = self:get_item_size()
 
-  self.model_panel:SetCamPos(cam_data.origin)
-  self.model_panel:SetFOV(cam_data.fov)
-  self.model_panel:SetLookAng(cam_data.angles)
+  self.model_panel:SetCamPos(pos)
+  self.model_panel:SetFOV(rotated and fov * (w / h) or fov)
+  self.model_panel:SetLookAng(rotated and Angle(ang.p, ang.y, ang.r - 90) or ang)
 
   self:SetToolTip(t(self.item_data:get_name())..'\n'..t(self.item_data:get_description()))
 

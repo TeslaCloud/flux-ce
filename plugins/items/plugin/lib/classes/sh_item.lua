@@ -90,6 +90,10 @@ function ItemBase:get_color()
   return self.color or Color(255, 255, 255)
 end
 
+function ItemBase:get_icon_data()
+  return self.icon_data
+end
+
 function ItemBase:add_button(name, data)
   --[[
     Example data structure:
