@@ -75,7 +75,7 @@ function ItemBase:get_weight()
 end
 
 function ItemBase:get_max_stack()
-  return self.max_stack or 64
+  return self.max_stack or 1
 end
 
 function ItemBase:get_model()

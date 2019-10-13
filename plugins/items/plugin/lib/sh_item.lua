@@ -61,7 +61,7 @@ function Item.register(id, data)
   data.height = data.height or 1
   data.stackable = data.stackable or false
   data.pocket_size = data.pocket_size or false
-  data.max_stack = data.max_stack or 64
+  data.max_stack = data.max_stack or 1
   data.model = data.model or 'models/props_lab/cactus.mdl'
   data.skin = data.skin or 0
   data.color = data.color or nil
