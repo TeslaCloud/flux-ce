@@ -1,8 +1,9 @@
 function Inventories:OnContextMenuOpen()
+  if IsValid(PLAYER.hotbar) then
+    PLAYER.hotbar:safe_remove()
+  end
+
   PLAYER.hotbar = Inventories:create_hotbar()
-
-  timer.remove('fl_hotbar_popup')
-
   PLAYER.hotbar:SetAlpha(255)
   PLAYER.hotbar:SetVisible(true)
   PLAYER.hotbar:MakePopup()
@@ -13,14 +14,7 @@ end
 
 function Inventories:OnContextMenuClose()
   if IsValid(PLAYER.hotbar) then
-    timer.remove('fl_hotbar_popup')
-
-    PLAYER.hotbar:MoveToBack()
-    PLAYER.hotbar:SetMouseInputEnabled(false)
-    PLAYER.hotbar:SetKeyboardInputEnabled(false)
-    PLAYER.hotbar:SetVisible(false)
-
-    PLAYER.hotbar.next_popup = CurTime() + 0.5
+    PLAYER.hotbar:safe_remove()
   end
 end
 
@@ -58,22 +52,25 @@ function Inventories:create_hotbar()
 end
 
 function Inventories:popup_hotbar()
-  local cur_alpha = 300
+  if !IsValid(PLAYER.hotbar) then
+    PLAYER.hotbar = Inventories:create_hotbar()
+    PLAYER.hotbar:rebuild()
 
-  PLAYER.hotbar:SetVisible(true)
-  PLAYER.hotbar:SetAlpha(255)
-  PLAYER.hotbar:rebuild()
+    timer.create('fl_hotbar_popup', 0.05, 0, function()
+      if IsValid(PLAYER.hotbar) then
+        local alpha = PLAYER.hotbar:GetAlpha()
+        PLAYER.hotbar:SetAlpha(alpha - 5)
 
-  timer.create('fl_hotbar_popup', 0.01, cur_alpha, function()
-    if IsValid(Flux.tab_menu) and Flux.tab_menu:IsVisible() or cur_alpha <= 0 then
-      PLAYER.hotbar:SetVisible(false)
-      timer.remove('fl_hotbar_popup')
-    end
-
-    cur_alpha = cur_alpha - 2
-
-    PLAYER.hotbar:SetAlpha(cur_alpha)
-  end)
+        if alpha <= 50 then
+          PLAYER.hotbar:safe_remove()
+        end
+      else
+        timer.destroy('fl_hotbar_popup')
+      end
+    end)
+  else
+    PLAYER.hotbar:SetAlpha(255)
+  end
 end
 
 function Inventories:OnMenuPanelOpen(menu_panel, active_panel)
