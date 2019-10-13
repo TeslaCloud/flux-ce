@@ -47,7 +47,19 @@ en:
   notification:
     char_desc_changed: You have changed your character description.
     item_given: You have been given {item} x {amount}.
+    icon_editor: The code was printed in your console.
   ui:
+    icon_editor:
+      title: Icon Editor
+      best: Best View
+      front: Front View
+      above: View Above
+      right: View on the right
+      center: Center view
+      width: Item Width (Slots)
+      height: Item Height (Slots)
+      slot_size: Slot Size (px)
+      copy: Print code to the console
     inventory:
       main_inventory: Inventory
       hotbar: Hotbar

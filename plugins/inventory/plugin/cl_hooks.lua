@@ -328,3 +328,11 @@ search.AddProvider(function(query)
 
   return results
 end, 'items')
+
+concommand.Add('fl_icon_editor', function()
+  if IsValid(Flux.icon_editor) then
+    Flux.icon_editor:safe_remove()
+  end
+
+  Flux.icon_editor = vgui.create('fl_icon_editor')
+end)

@@ -47,7 +47,19 @@ ru:
   notification:
     char_desc_changed: Вы изменили описание вашего персонажа.
     item_given: Вам выдали {item} x {amount}.
+    icon_editor: Код был напечатан в Вашу консоль.
   ui:
+    icon_editor:
+      title: Редактор иконок
+      best: Лучший вид
+      front: Вид спереди
+      above: Вид сверху
+      right: Вид справа
+      center: Вид по центру
+      width: Ширина предмета (В слотах)
+      height: Высота предмета (В слотах)
+      slot_size: Размер слота (В пикселях)
+      copy: Напечатать код в консоль
     inventory:
       main_inventory: Инвентарь
       hotbar: Быстрый доступ
