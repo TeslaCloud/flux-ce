@@ -10,7 +10,13 @@ MVC.handler('SpawnMenu::SpawnItem', function(player, item_id)
   if item_table then
     local trace = player:GetEyeTraceNoCursor()
 
-    Item.spawn(trace.HitPos, nil, item_table)
+    local entity = Item.spawn(trace.HitPos, nil, item_table)
+
+    undo.create('item')
+      undo.add_entity(entity)
+      undo.set_player(player)
+      undo.set_custom_undo_text('Undone '..t(item_table:get_real_name()))
+    undo.finish()
   end
 end)
 
