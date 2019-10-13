@@ -210,15 +210,16 @@ function PANEL:Init()
   self.copy.DoClick = function()
     local cam_pos = self.model:GetCamPos()
     local cam_ang = self.model:GetLookAng()
-    local str = 'ITEM.model = \''..self.model:GetModel()..'\'\n'
-    str = str..'ITEM.width = '..math.round(self.width:GetValue())..'\n'
-    str = str..'ITEM.height = '..math.round(self.height:GetValue())..'\n'
-    str = str..'ITEM.icon_data = {\n'
-    str = str..'  origin = Vector('..math.round(cam_pos.x, 2)..', '..math.round(cam_pos.y, 2)..', '..math.round(cam_pos.z, 2)..'),\n'
-    str = str..'  angles = Angle('..math.round(cam_ang.p, 2)..', '..math.round(cam_ang.y, 2)..', '..math.round(cam_ang.r, 2)..'),\n'
-    str = str..'  fov = '..math.round(self.model:GetFOV(), 2)..'\n}'
+    local str = "ITEM.model = '"..self.model:GetModel().."'\n"
+      ..'ITEM.width = '..math.round(self.width:GetValue())..'\n'
+      ..'ITEM.height = '..math.round(self.height:GetValue())..'\n'
+      ..'ITEM.icon_data = {\n'
+      ..'  origin = Vector('..math.round(cam_pos.x, 2)..', '..math.round(cam_pos.y, 2)..', '..math.round(cam_pos.z, 2)..'),\n'
+      ..'  angles = Angle('..math.round(cam_ang.p, 2)..', '..math.round(cam_ang.y, 2)..', '..math.round(cam_ang.r, 2)..'),\n'
+      ..'  fov    = '..math.round(self.model:GetFOV(), 2)..'\n'
+      ..'}\n'
 
-    print(str)
+    SetClipboardText(str)
 
     PLAYER:notify('notification.icon_editor')
   end

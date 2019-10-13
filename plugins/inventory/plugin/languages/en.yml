@@ -47,7 +47,7 @@ en:
   notification:
     char_desc_changed: You have changed your character description.
     item_given: You have been given {item} x {amount}.
-    icon_editor: The code was printed in your console.
+    icon_editor: The code was copied to your clipboard.
   ui:
     icon_editor:
       title: Icon Editor
@@ -59,7 +59,7 @@ en:
       width: Item Width (Slots)
       height: Item Height (Slots)
       slot_size: Slot Size (px)
-      copy: Print code to the console
+      copy: Copy item code
     inventory:
       main_inventory: Inventory
       hotbar: Hotbar
