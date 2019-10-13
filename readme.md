@@ -1,4 +1,4 @@
-![Flux](https://teslacdn.net/files/logo/flux_logo.png)
+![Imgur](https://i.imgur.com/o4bFhLn.png)
 
 # Flux
 
