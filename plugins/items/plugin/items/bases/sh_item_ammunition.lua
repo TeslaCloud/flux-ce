@@ -11,7 +11,7 @@ ItemAmmo.model = 'models/items/boxsrounds.mdl'
 ItemAmmo.use_text = 'item.option.load'
 ItemAmmo.ammo_class = 'Pistol'
 ItemAmmo.ammo_count = 16
-ItemAmmo.max_uses = 4
+ItemAmmo.max_uses = 1
 
 function ItemAmmo:use(player)
   player:GiveAmmo(self.ammo_count, self.ammo_class)

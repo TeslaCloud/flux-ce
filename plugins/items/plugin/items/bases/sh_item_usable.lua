@@ -2,19 +2,29 @@ class 'ItemUsable' extends 'ItemBase'
 
 ItemUsable.name = 'Usable Items Base'
 ItemUsable.description = 'An item that can be used.'
-ItemUsable.max_uses = 3
+ItemUsable.max_uses = 1
 
 if CLIENT then
   function ItemUsable:paint_over_slot(w, h)
-    local text = (self.uses or self.max_uses)..'/'..self.max_uses
-    local font = Theme.get_font('text_smallest')
-    local text_w, text_h = util.text_size(text, font)
-    draw.SimpleText(text, font, w - text_w - math.scale_x(4), math.scale(4), Color(225, 225, 225))
+    if self.max_uses > 1 then
+      local text = self:get_uses()..'/'..self.max_uses
+      local font = Theme.get_font('text_smallest')
+      local text_w, text_h = util.text_size(text, font)
+      draw.SimpleText(text, font, w - text_w - math.scale_x(4), math.scale(4), Color(225, 225, 225))
+    end
   end
 end
 
 function ItemUsable:get_name()
-  return t(self.name)..' ['..(self.uses or self.max_uses)..'/'..self.max_uses..']'
+  return t(self.name)..(self.max_uses > 1 and ' ['..self:get_uses()..'/'..self.max_uses..']' or '')
+end
+
+function ItemUsable:get_weight()
+  return math.round(self.weight * self:get_uses() / self.max_uses, 1)
+end
+
+function ItemUsable:get_uses()
+  return self.uses or self.max_uses
 end
 
 -- Returns:
