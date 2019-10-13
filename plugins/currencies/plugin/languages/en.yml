@@ -25,7 +25,7 @@ en:
       title: Money
       give:
         title: Give money
-        message: Amount to give.
+        message: Please, enter amount of {currency} to give.
       drop:
         title: Drop money
-        message: Amount to drop.
+        message: Please, enter amount of {currency} to drop.
