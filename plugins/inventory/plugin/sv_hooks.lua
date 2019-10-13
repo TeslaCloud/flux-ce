@@ -262,7 +262,7 @@ function Inventories:PlayerThrewGrenade(player, entity)
 
   for k, v in pairs(player:get_items()) do
     if v:is('throwable') and v:is_equipped() then
-      player:take_item_by_id(v)
+      player:take_item_by_id(v.instance_id)
     end
   end
 end
