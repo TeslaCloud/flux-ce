@@ -143,35 +143,41 @@ function PANEL:start_dragging(dropped)
   local x, y = dropped:get_item_pos()
   local slot_size = self:get_slot_size()
   local slot_padding = self:get_slot_padding()
+  local drag_inventory_id = dropped:get_inventory_id()
+  local panel = self
+  
+  if drag_inventory_id != self:get_inventory_id() then
+    panel = Inventories.find(drag_inventory_id).panel
+  end
 
   dropped:SetVisible(false)
 
   for i = y, y + h - 1 do
     for k = x, x + w - 1 do
       if i == y and k == x then
-        local slot = vgui.create('fl_inventory_item', self.scroll)
+        local slot = vgui.create('fl_inventory_item', panel.scroll)
         slot:SetSize(slot_size, slot_size)
         slot:SetPos((k - 1) * (slot_size + slot_padding), (i - 1) * (slot_size + slot_padding))
         slot.slot_x = k
         slot.slot_y = i
-        slot.inventory_id = self:get_inventory_id()
-        slot.multislot = self:is_multislot()
+        slot.inventory_id = panel:get_inventory_id()
+        slot.multislot = panel:is_multislot()
 
-        local icon = self:get_icon()
+        local icon = panel:get_icon()
 
         if icon then
           slot.icon = icon
         end
 
-        if self:is_disabled() then
+        if panel:is_disabled() then
           slot.disabled = true
         end
 
-        if self.draw_inventory_slots == true then
-          slot.slot_number = k + (i - 1) * self:get_inventory_width()
+        if panel.draw_inventory_slots == true then
+          slot.slot_number = k + (i - 1) * panel:get_inventory_width()
         end
-      elseif self:is_multislot() then
-        local slot = self.slot_panels[i][k]
+      elseif panel:is_multislot() then
+        local slot = panel.slot_panels[i][k]
         slot:reset()
         slot:SetVisible(true)
       end
