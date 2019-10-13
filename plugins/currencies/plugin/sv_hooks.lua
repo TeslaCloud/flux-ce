@@ -99,8 +99,8 @@ function Currencies:CanPlayerGiveMoney(player, target, amount, currency)
   end
 end
 
-Cable.receive('fl_currency_give', function(player, amount, currency)
-  local success, err = player:give_money_to(nil, currency, amount)
+Cable.receive('fl_currency_give', function(player, amount, currency, target)
+  local success, err = player:give_money_to(target, currency, amount)
 
   if success == false then
     player:notify(err)

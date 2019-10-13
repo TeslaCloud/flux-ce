@@ -58,11 +58,13 @@ function PANEL:rebuild()
         give_button:set_icon_size(button_size)
         give_button:Dock(RIGHT)
         give_button.DoClick = function(btn)
+          local target = PLAYER:GetEyeTraceNoCursor().Entity
+
           Derma_StringRequest(t'ui.currency.give.title', t('ui.currency.give.message', { currency = t(v.name) }), '', function(text)
             local value = tonumber(text)
 
             if value and value > 0 then
-              Cable.send('fl_currency_give', value, k)
+              Cable.send('fl_currency_give', value, k, target)
             else
               PLAYER:notify('error.invalid_amount')
             end
