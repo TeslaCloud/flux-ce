@@ -9,6 +9,7 @@ ItemWearable.description = 'Clothes that can be equipped.'
 ItemWearable.category = 'item.category.clothing'
 ItemWearable.equip_inv = 'equipment_torso'
 ItemWearable.equip_slot = 'item.slot.chest'
+ItemWearable.background_color = Color(50, 150, 50)
 
 -- Bodygroups example:
 -- ItemWearable.equip_bodygroups = {

@@ -67,6 +67,10 @@ function PANEL:Paint(w, h)
     self.icon = 'fa-times'
   end
 
+  if !self:IsDragging() and self.item_data and self.item_data.background_color then
+    draw.RoundedBox(0, 0, 0, w, h, self.item_data.background_color:alpha(100))
+  end
+
   if self.icon and !self:IsDragging() then
     local icon = self.icon
     local icon_size = h * 0.75

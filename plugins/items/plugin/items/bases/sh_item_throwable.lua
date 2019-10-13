@@ -10,6 +10,7 @@ ItemThrowable.category = 'item.category.throwable'
 ItemThrowable.equip_slot = 'item.slot.throwable'
 ItemThrowable.weapon_class = 'weapon_frag'
 ItemThrowable.thrown_ammo_class = 'Grenade'
+ItemThrowable.background_color = Color(150, 150, 50)
 ItemThrowable:add_button('item.option.unload', {
   icon = 'icon16/add.png',
   callback = 'on_unload',

@@ -8,6 +8,7 @@ ItemAmmo.name = 'Ammunition Base'
 ItemAmmo.description = 'An item that contains some ammo.'
 ItemAmmo.category = 'item.category.ammo'
 ItemAmmo.model = 'models/items/boxsrounds.mdl'
+ItemAmmo.background_color = Color(200, 200, 70)
 ItemAmmo.use_text = 'item.option.load'
 ItemAmmo.ammo_class = 'Pistol'
 ItemAmmo.ammo_count = 16

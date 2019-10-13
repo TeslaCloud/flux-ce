@@ -9,6 +9,7 @@ ItemWeapon.description = 'An weapon that can be equipped.'
 ItemWeapon.category = 'item.category.weapon'
 ItemWeapon.equip_slot = 'item.slot.primary'
 ItemWeapon.weapon_class = 'weapon_pistol'
+ItemWeapon.background_color = Color(150, 100, 50)
 ItemWeapon:add_button('item.option.unload', {
   icon = 'icon16/add.png',
   callback = 'on_unload',
