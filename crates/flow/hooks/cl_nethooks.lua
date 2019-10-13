@@ -25,3 +25,16 @@ end)
 Cable.receive('fl_player_take_damage', function()
   PLAYER.last_damage = CurTime()
 end)
+
+Cable.receive('fl_player_interact', function(target)
+  local player_menu = DermaMenu()
+
+  hook.run('CreatePlayerInteractions', player_menu, target)
+
+  if player_menu:ChildCount() > 0 then
+    player_menu:Open()
+    player_menu:Center()
+  else
+    player_menu:safe_remove()
+  end
+end)

@@ -512,6 +512,18 @@ function GM:PostPlayerLoadout(player, default_loadout)
   player:SelectWeapon(default_loadout[1])
 end
 
+function GM:PlayerUse(player, target)
+  if IsValid(target) and target:IsPlayer() then
+    local cur_time = CurTime()
+
+    if !player.next_use or player.next_use < cur_time then
+      Cable.send(player, 'fl_player_interact', target)
+
+      player.next_use = cur_time + 1
+    end
+  end
+end
+
 -- Awful awful awful code, but it's kinda necessary in some rare cases.
 -- Avoid using PlayerThink whenever possible though.
 do
