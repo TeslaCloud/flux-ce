@@ -18,5 +18,5 @@ end
 
 vgui.Register('_gvue_text', PANEL, 'gvue_basic_panel')
 
-Gvue.alias('span', '_gvue_text')
 Gvue.alias('text', '_gvue_text')
+Gvue.alias('text_node', '_gvue_text')
