@@ -1,19 +1,19 @@
 local last_class = nil
 
 --
--- Function: class(string name, table parent = _G, class base_class = nil)
+-- Function: class(string name, table parent = _G, class parent_class = nil)
 -- Description: Creates a new class. Supports constructors and inheritance.
 -- Argument: string name - The name of the library. Must comply with Lua variable name requirements.
 -- Argument: table parent (default: _G) - The parent table to put the class into.
--- Argument: class base_class (default: nil) - The base class this new class should extend.
+-- Argument: class parent_class (default: nil) - The base class this new class should extend.
 --
--- Alias: class (string name, class base_class = nil, table parent = _G)
+-- Alias: class (string name, class parent_class = nil, table parent = _G)
 --
 -- Returns: table - The created class.
 --
-function class(name, base_class)
-  if isstring(base_class) then
-    base_class = base_class:parse_table()
+function class(name, parent_class)
+  if isstring(parent_class) then
+    parent_class = parent_class:parse_table()
   end
 
   local parent = nil
@@ -26,20 +26,20 @@ function class(name, base_class)
 
   local obj = parent[name]
   obj.ClassName = name
-  obj.BaseClass = base_class or false
+  obj.BaseClass = parent_class or false
   obj.class_name = obj.ClassName
-  obj.base_class = obj.BaseClass
+  obj.parent = obj.BaseClass
   obj.static_class = true
   obj.class = obj
   obj.included_modules = {}
 
   -- If this class is based off some other class - copy it's parent's data.
-  if istable(base_class) then
-    local copy = table.Copy(base_class)
+  if istable(parent_class) then
+    local copy = table.Copy(parent_class)
     table.safe_merge(copy, obj)
 
-    if isfunction(base_class.class_extended) then
-      local success, exception = pcall(base_class.class_extended, base_class, copy)
+    if isfunction(parent_class.class_extended) then
+      local success, exception = pcall(parent_class.class_extended, parent_class, copy)
 
       if !success then
         error_with_traceback(tostring(exception))
@@ -60,11 +60,11 @@ function class(name, base_class)
     setmetatable(new_obj, real_class)
     table.safe_merge(new_obj, real_class)
 
-    local base_class = real_class.BaseClass
+    local parent_class = real_class.parent
 
-    if base_class and isfunction(base_class.init) then
+    if parent_class and isfunction(parent_class.init) then
       super = function(...)
-        return base_class.init(new_obj, ...)
+        return parent_class.init(new_obj, ...)
       end
 
       real_class.init = isfunction(real_class.init) and real_class.init or function(obj) super() end
@@ -122,28 +122,28 @@ function delegate(obj, t)
 end
 
 --
--- Function: extends (class base_class)
+-- Function: extends (class parent_class)
 -- Description: Sets the base class of the class that is currently being created.
--- Argument: class base_class - The base class to extend.
+-- Argument: class parent_class - The base class to extend.
 --
 -- Alias: implements
 -- Alias: inherits
 --
 -- Returns: bool - Whether or not did the extension succeed.
 --
-function extends(base_class)
-  if isstring(base_class) then
-    base_class = base_class:parse_table()
+function extends(parent_class)
+  if isstring(parent_class) then
+    parent_class = parent_class:parse_table()
   end
 
-  if istable(last_class) and istable(base_class) then
+  if istable(last_class) and istable(parent_class) then
     local obj = last_class.parent[last_class.name]
-    local copy = table.Copy(base_class)
+    local copy = table.Copy(parent_class)
 
     table.safe_merge(copy, obj)
 
-    if isfunction(base_class.class_extended) then
-      local success, exception = pcall(base_class.class_extended, base_class, copy)
+    if isfunction(parent_class.class_extended) then
+      local success, exception = pcall(parent_class.class_extended, parent_class, copy)
 
       if !success then
         error_with_traceback(tostring(exception))
@@ -151,10 +151,10 @@ function extends(base_class)
     end
 
     obj = copy
-    obj.BaseClass = base_class
-    obj.base_class = obj.BaseClass
+    obj.parent = parent_class
+    obj.BaseClass = obj.parent_class
 
-    hook.run('OnClassExtended', obj, base_class)
+    hook.run('OnClassExtended', obj, parent_class)
 
     last_class.parent[last_class.name] = obj
     last_class = nil
