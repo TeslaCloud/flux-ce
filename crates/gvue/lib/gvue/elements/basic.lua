@@ -106,6 +106,8 @@ function PANEL:set_padding(up, right, down, left)
 end
 
 function PANEL:rebuild()
+  local w, h = self:ChildrenSize()
+  self:SetSize(w, h)
 end
 
 vgui.Register('gvue_basic_panel', PANEL, 'EditablePanel')
