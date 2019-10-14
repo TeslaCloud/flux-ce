@@ -130,10 +130,10 @@ do
       return self:get_inventory(inv_type):find_item(id)
     else
       for k, v in pairs(self:get_inventories()) do
-        local item_table = v:find_item(id)
+        local item_obj = v:find_item(id)
 
-        if item_table then
-          return item_table
+        if item_obj then
+          return item_obj
         end
       end
     end
@@ -176,10 +176,10 @@ do
       return self:get_inventory(inv_type):has_item(id)
     else
       for k, v in pairs(self:get_inventories()) do
-        local found, item_table = v:has_item(id)
+        local found, item_obj = v:has_item(id)
 
         if found then
-          return true, item_table
+          return true, item_obj
         end
       end
 
@@ -201,10 +201,10 @@ do
       return self:get_inventory(inv_type):has_item_by_id(instance_id)
     else
       for k, v in pairs(self:get_inventories()) do
-        local found, item_table = v:has_item_by_id(instance_id)
+        local found, item_obj = v:has_item_by_id(instance_id)
 
         if found then
-          return true, item_table
+          return true, item_obj
         end
       end
 
@@ -216,10 +216,10 @@ do
   -- @param id [Number]
   -- @return [Boolean]
   function player_meta:has_item_equipped(id)
-    local item_table = self:find_item(id)
+    local item_obj = self:find_item(id)
 
-    if item_table and item_table:is_equipped() then
-      return true, item_table
+    if item_obj and item_obj:is_equipped() then
+      return true, item_obj
     end
 
     return false
@@ -269,11 +269,11 @@ do
       for k, v in pairs(item_ids) do
         v = tonumber(v)
 
-        local item_table = Item.find_instance_by_id(v)
+        local item_obj = Item.find_instance_by_id(v)
 
-        if item_table and item_table.inventory_type then
-          local x, y = item_table.x, item_table.y
-          local inventory_type = item_table.inventory_type
+        if item_obj and item_obj.inventory_type then
+          local x, y = item_obj.x, item_obj.y
+          local inventory_type = item_obj.inventory_type
           local inventory = self:get_inventory(inventory_type)
 
           if inventory:is_width_infinite() and x > inventory:get_width() then
@@ -284,7 +284,7 @@ do
             inventory:set_height(y + 1)
           end
 
-          inventory:add_item(item_table, x, y)
+          inventory:add_item(item_obj, x, y)
         end
       end
     end
@@ -313,12 +313,12 @@ do
     end
 
     --- Give the player a certain item.
-    -- @param item_table [Item]
+    -- @param item_obj [Item]
     -- @param inv_type=player.default_inventory or 'main_inventory' [String]
     -- @return [Boolean was the item added successfully, String text of the error that occurred]
-    function player_meta:add_item(item_table, inv_type)
+    function player_meta:add_item(item_obj, inv_type)
       local inventory = self:get_inventory(inv_type or self.default_inventory or 'main_inventory')
-      local success, error_text = inventory:add_item(item_table)
+      local success, error_text = inventory:add_item(item_obj)
 
       inventory:sync()
 
@@ -443,11 +443,11 @@ do
 
         return success, error_text
       else
-        local has, item_table = self:has_item_by_id(instance_id)
+        local has, item_obj = self:has_item_by_id(instance_id)
 
         if has then
-          local inventory = self:get_inventory(item_table.inventory_type)
-          local success, error_text = inventory:take_item_table(item_table)
+          local inventory = self:get_inventory(item_obj.inventory_type)
+          local success, error_text = inventory:take_item_table(item_obj)
 
           inventory:sync()
 
@@ -464,11 +464,11 @@ do
     -- @param inv_type [String]
     -- @return [Boolean was the item transferred successfully, String text of the error that occurred]
     function player_meta:transfer_item(instance_id, inv_type)
-      local item_table = Item.find_instance_by_id(instance_id)
-      local old_inventory = self:get_inventory(item_table.inventory_type)
+      local item_obj = Item.find_instance_by_id(instance_id)
+      local old_inventory = self:get_inventory(item_obj.inventory_type)
       local new_inventory = self:get_inventory(inv_type)
 
-      if item_table.inventory_type != inv_type then
+      if item_obj.inventory_type != inv_type then
         local success, error_text = old_inventory:transfer_item(instance_id, new_inventory)
 
         if success then

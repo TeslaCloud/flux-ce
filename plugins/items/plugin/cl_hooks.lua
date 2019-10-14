@@ -38,24 +38,24 @@ function Items:Think()
 end
 
 function Items:PlayerUseItemMenu(instance_id, is_entity)
-  local item_table = Item.find_instance_by_id(instance_id)
+  local item_obj = Item.find_instance_by_id(instance_id)
 
-  if !item_table then return end
+  if !item_obj then return end
 
-  if hook.run('CanItemMenuOpen', item_table) == false then return end
+  if hook.run('CanItemMenuOpen', item_obj) == false then return end
 
   local item_menu = vgui.Create('fl_menu')
 
-  if item_table.name then
-    if item_table.custom_buttons then
-      for k, v in pairs(item_table.custom_buttons) do
-        if !v.on_show or v.on_show(item_table) != false  then
-          local button = item_menu:add_option(t(v.get_name and v.get_name(item_table) or v.name or k), function()
+  if item_obj.name then
+    if item_obj.custom_buttons then
+      for k, v in pairs(item_obj.custom_buttons) do
+        if !v.on_show or v.on_show(item_obj) != false  then
+          local button = item_menu:add_option(t(v.get_name and v.get_name(item_obj) or v.name or k), function()
             if v.on_click then
-              v.on_click(item_table)
+              v.on_click(item_obj)
             end
 
-            item_table:do_menu_action(v.callback)
+            item_obj:do_menu_action(v.callback)
           end)
 
           button:SetIcon(v.icon)
@@ -63,31 +63,31 @@ function Items:PlayerUseItemMenu(instance_id, is_entity)
       end
     end
 
-    if item_table.on_use then
-      if !item_table.is_action_visible or item_table:is_action_visible('use') != false then
-        local use_button = item_menu:add_option(t(item_table:get_use_text()), function()
-          item_table:do_menu_action('on_use')
+    if item_obj.on_use then
+      if !item_obj.is_action_visible or item_obj:is_action_visible('use') != false then
+        local use_button = item_menu:add_option(t(item_obj:get_use_text()), function()
+          item_obj:do_menu_action('on_use')
         end)
 
-        use_button:SetIcon(item_table.use_icon or 'icon16/accept.png')
+        use_button:SetIcon(item_obj.use_icon or 'icon16/accept.png')
       end
     end
 
     if is_entity then
-      if !item_table.is_action_visible or item_table:is_action_visible('take') != false then
-        local take_button = item_menu:add_option(t(item_table:get_take_text()), function()
-          item_table:do_menu_action('on_take')
+      if !item_obj.is_action_visible or item_obj:is_action_visible('take') != false then
+        local take_button = item_menu:add_option(t(item_obj:get_take_text()), function()
+          item_obj:do_menu_action('on_take')
         end)
 
-        take_button:SetIcon(item_table.take_icon or 'icon16/add.png')
+        take_button:SetIcon(item_obj.take_icon or 'icon16/add.png')
       end
     else
-      if !item_table.is_action_visible or item_table:is_action_visible('drop') != false then
-        local drop_button = item_menu:add_option(t(item_table:get_drop_text()), function()
-          item_table:do_menu_action('on_drop')
+      if !item_obj.is_action_visible or item_obj:is_action_visible('drop') != false then
+        local drop_button = item_menu:add_option(t(item_obj:get_drop_text()), function()
+          item_obj:do_menu_action('on_drop')
         end)
 
-        drop_button:SetIcon(item_table.take_icon or 'icon16/arrow_down.png')
+        drop_button:SetIcon(item_obj.take_icon or 'icon16/arrow_down.png')
       end
     end
   end

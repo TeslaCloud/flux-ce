@@ -21,12 +21,12 @@ ItemContainer.default_inventory = {}
 ItemContainer:add_button('item.option.open', {
   icon = 'icon16/briefcase.png',
   callback = 'on_open',
-  on_show = function(item_table)
+  on_show = function(item_obj)
     local containers = PLAYER.opened_containers
 
     if containers then
       for k, v in pairs(containers) do
-        if IsValid(v) and v.inventory.instance_id == item_table.instance_id then
+        if IsValid(v) and v.inventory.instance_id == item_obj.instance_id then
           return false
         end
       end
@@ -52,8 +52,8 @@ function ItemContainer:on_open(player)
   player:open_inventory(self.inventory)
 end
 
-function ItemContainer:can_contain(item_table)
-  if item_table == self then
+function ItemContainer:can_contain(item_obj)
+  if item_obj == self then
     return false
   end
 end

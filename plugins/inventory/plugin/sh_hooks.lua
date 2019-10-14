@@ -12,12 +12,12 @@ function Inventories:PlayerSelectSlot(player, slot)
   if slot >= 1 and slot < 9 then
     local cur_time = CurTime()
     local instance_id = player:get_inventory('hotbar'):get_first_in_slot(slot, 1)
-    local item_table = Item.find_by_instance_id(instance_id)
+    local item_obj = Item.find_by_instance_id(instance_id)
 
     if !player.next_slot_click or player.next_slot_click <= cur_time then
-      if item_table then
-        if item_table:is('weapon') or item_table:is('throwable') then
-          local weapon = player:GetWeapon(item_table.weapon_class)
+      if item_obj then
+        if item_obj:is('weapon') or item_obj:is('throwable') then
+          local weapon = player:GetWeapon(item_obj.weapon_class)
 
           if IsValid(weapon) then
             input.SelectWeapon(weapon)
@@ -30,8 +30,8 @@ function Inventories:PlayerSelectSlot(player, slot)
               self:popup_hotbar()
             end
           end
-        elseif !item_table:is('equipable') and item_table.on_use then
-          item_table:do_menu_action('on_use')
+        elseif !item_obj:is('equipable') and item_obj.on_use then
+          item_obj:do_menu_action('on_use')
 
           self:popup_hotbar()
         end
@@ -62,10 +62,10 @@ function Inventories:GetInventorySize(player, inv_type)
     local max_x = 0
 
     for k, v in pairs(player:get_items(inv_type)) do
-      local item_table = Item.find_instance_by_id(v)
+      local item_obj = Item.find_instance_by_id(v)
 
-      if item_table and item_table.inventory_type == 'pockets' then
-        max_x = math.max(max_x, item_table.slot_id[2])
+      if item_obj and item_obj.inventory_type == 'pockets' then
+        max_x = math.max(max_x, item_obj.slot_id[2])
       end
     end
 

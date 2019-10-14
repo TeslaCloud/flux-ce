@@ -21,13 +21,13 @@ function PANEL:Paint(w, h)
 
       if self.is_hovered or self:is_multislot() and drop_x <= x and drop_y <= y
       and drop_x + slot_w > x and drop_y + slot_h > y then
-        local item_table = self.item_data
+        local item_obj = self.item_data
 
-        if item_table then
-          if drag_slot.item_data != item_table then
+        if item_obj then
+          if drag_slot.item_data != item_obj then
             local slot_data = drag_slot.item_data
 
-            if slot_data.id == item_table.id and slot_data.stackable
+            if slot_data.id == item_obj.id and slot_data.stackable
             and drag_slot.item_count < slot_data.max_stack
             and drop_slot.item_count < slot_data.max_stack then
               draw_color = Color(200, 200, 60)

@@ -13,8 +13,8 @@ ItemEquipable.action_sounds = {
 }
 
 ItemEquipable:add_button('equip', {
-  get_name = function(item_table)
-    return item_table:is_equipped() and 'item.option.unequip' or 'item.option.equip'
+  get_name = function(item_obj)
+    return item_obj:is_equipped() and 'item.option.unequip' or 'item.option.equip'
   end,
   icon = 'icon16/user_suit.png',
   callback = 'on_equip'

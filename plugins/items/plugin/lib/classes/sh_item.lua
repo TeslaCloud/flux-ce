@@ -9,7 +9,7 @@ function ItemBase:init(id)
   self.base_count = 0
 end
 
--- Fancy output if you do print(item_table).
+-- Fancy output if you do print(item_obj).
 function ItemBase:__tostring()
   return '#<Item:'..(self.name or self.id)..' '..tostring(self.instance_id)..'>'
 end
@@ -100,7 +100,7 @@ function ItemBase:add_button(name, data)
     data = {
       icon = 'path/to/icon.png',
       callback = 'on_use', -- This will call ITEM:on_use function when the button is pressed.
-      on_show = function(item_table) -- Client-Side function. Determines whether the button will be shown.
+      on_show = function(item_obj) -- Client-Side function. Determines whether the button will be shown.
         return true
       end
     }
@@ -180,11 +180,11 @@ if SERVER then
   end
 
   Cable.receive('fl_items_menu_action', function(player, instance_id, action, ...)
-    local item_table = Item.find_instance_by_id(instance_id)
+    local item_obj = Item.find_instance_by_id(instance_id)
 
-    if !item_table then return end
+    if !item_obj then return end
 
-    item_table:do_menu_action(action, player, ...)
+    item_obj:do_menu_action(action, player, ...)
   end)
 else
   function ItemBase:do_menu_action(act, ...)

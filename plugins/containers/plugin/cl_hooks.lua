@@ -27,8 +27,8 @@ function Container:DrawEntityTargetID(entity, x, y, dist)
   end
 end
 
-function Container:CanItemMenuOpen(item_table)
-  if item_table.inventory_type == 'container' then
+function Container:CanItemMenuOpen(item_obj)
+  if item_obj.inventory_type == 'container' then
     return false
   end
 end

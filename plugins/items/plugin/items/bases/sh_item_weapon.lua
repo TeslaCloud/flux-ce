@@ -13,12 +13,12 @@ ItemWeapon.background_color = Color(150, 100, 50)
 ItemWeapon:add_button('item.option.unload', {
   icon = 'icon16/add.png',
   callback = 'on_unload',
-  on_show = function(item_table)
-    local ammo = item_table:get_data('ammo', { 0, 0 })
-    local weapon = PLAYER:GetWeapon(item_table.weapon_class)
+  on_show = function(item_obj)
+    local ammo = item_obj:get_data('ammo', { 0, 0 })
+    local weapon = PLAYER:GetWeapon(item_obj.weapon_class)
 
     if ((ammo[1] > 0 or ammo[2] > 0 or IsValid(weapon) and (weapon:Clip1() != 0 or weapon:Clip2() != 0))
-    and !IsValid(item_table.entity) and item_table:is_equipped()) then
+    and !IsValid(item_obj.entity) and item_obj:is_equipped()) then
       return true
     end
 

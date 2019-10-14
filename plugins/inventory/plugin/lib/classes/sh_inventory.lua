@@ -161,12 +161,12 @@ function Inventory:get_items()
   local items = {}
 
   for k, v in pairs(self:get_items_ids()) do
-    local item_table = Item.find_instance_by_id(v)
+    local item_obj = Item.find_instance_by_id(v)
 
-    if item_table then
-      table.insert(items, item_table)
+    if item_obj then
+      table.insert(items, item_obj)
 
-      local inventory = item_table.inventory
+      local inventory = item_obj.inventory
 
       if inventory then
         table.add(items, inventory:get_items())
@@ -267,10 +267,10 @@ end
 -- @param id [String]
 -- @return [Boolean]
 function Inventory:has_item(id)
-  local item_table = self:find_item(id)
+  local item_obj = self:find_item(id)
 
-  if item_table then
-    return true, item_table
+  if item_obj then
+    return true, item_obj
   end
 
   return false
@@ -303,18 +303,18 @@ function Inventory:has_item_by_id(instance_id)
 end
 
 --- Find the best position for the item to be placed.
--- @param item_table [Item]
+-- @param item_obj [Item]
 -- @param w [Number width of the item]
 -- @param h [Number height of the item]
 -- @return [Number x, Number y, Boolean do a rotation need]
-function Inventory:find_position(item_table, w, h)
+function Inventory:find_position(item_obj, w, h)
   local x, y, need_rotation
 
-  if item_table.stackable then
-    x, y, need_rotation = self:find_stack(item_table, w, h)
+  if item_obj.stackable then
+    x, y, need_rotation = self:find_stack(item_obj, w, h)
 
     if x and y then
-      need_rotation = need_rotation != item_table.rotated
+      need_rotation = need_rotation != item_obj.rotated
     end
   end
 
@@ -332,27 +332,27 @@ function Inventory:find_position(item_table, w, h)
 end
 
 --- Find the stack position for the item.
--- @param item_table [Item]
+-- @param item_obj [Item]
 -- @param w [Number width of the item]
 -- @param h [Number height of the item]
 -- @return [Number x, Number y, Boolean do a rotation need]
-function Inventory:find_stack(item_table, w, h)
-  for k, v in pairs(self:find_items(item_table.id)) do
-    if self:can_stack(item_table, v) then
+function Inventory:find_stack(item_obj, w, h)
+  for k, v in pairs(self:find_items(item_obj.id)) do
+    if self:can_stack(item_obj, v) then
       return v.x, v.y, v.rotated
     end
   end
 end
 
 --- Check if two items may be stacked.
--- @param item_table [Item]
+-- @param item_obj [Item]
 -- @param stack_item [Item]
 -- @return [Boolean]
-function Inventory:can_stack(item_table, stack_item)
+function Inventory:can_stack(item_obj, stack_item)
   local slot = self:get_slot(stack_item.x, stack_item.y)
 
-  if stack_item and stack_item.id == item_table.id
-  and item_table.stackable and #slot < item_table.max_stack then
+  if stack_item and stack_item.id == item_obj.id
+  and item_obj.stackable and #slot < item_obj.max_stack then
     return true
   end
 
@@ -392,20 +392,20 @@ function Inventory:slots_empty(x, y, w, h)
 end
 
 --- Check if the item overlaps other stackable item and return adjusted data.
--- @param item_table [Item]
+-- @param item_obj [Item]
 -- @param x [Number]
 -- @param y [Number]
 -- @param w [Number]
 -- @param h [Number]
 -- @return [Boolean, Number x, Number y, Boolean do a rotation need]
-function Inventory:overlaps_stack(item_table, x, y, w, h)
+function Inventory:overlaps_stack(item_obj, x, y, w, h)
   for i = y, y + h - 1 do
     for k = x, x + w - 1 do
       local slot = self:get_slot(k, i)
       local stack_item = Item.find_instance_by_id(slot[1])
 
-      if stack_item and self:can_stack(item_table, stack_item) and !table.has_value(slot, item_table.instance_id) then
-        return true, stack_item.x, stack_item.y, stack_item.rotated != item_table.rotated
+      if stack_item and self:can_stack(item_obj, stack_item) and !table.has_value(slot, item_obj.instance_id) then
+        return true, stack_item.x, stack_item.y, stack_item.rotated != item_obj.rotated
       end
     end
   end
@@ -454,16 +454,16 @@ function Inventory:overlaps_only_itself(instance_id, x, y, w, h)
 end
 
 --- Get item size based on inventory and item params.
--- @param item_table [Item]
+-- @param item_obj [Item]
 -- @return [Number width, Number height]
-function Inventory:get_item_size(item_table)
+function Inventory:get_item_size(item_obj)
   if !self:is_multislot() then
     return 1, 1
   end
 
-  local item_w, item_h = item_table.width, item_table.height
+  local item_w, item_h = item_obj.width, item_obj.height
 
-  if item_table.rotated then
+  if item_obj.rotated then
     return item_h, item_w
   else
     return item_w, item_h
@@ -473,43 +473,43 @@ end
 if SERVER then
 
   -- Add item object to a inventory.
-  -- @variant Inventory:add_item(item_table, x, y)
-  --   @param item_table [Item]
+  -- @variant Inventory:add_item(item_obj, x, y)
+  --   @param item_obj [Item]
   --   @param x [Number]
   --   @param y [Number]
   -- In this case finds best position for the item.
-  -- @variant Inventory:add_item(item_table)
-  --   @param item_table [Item]
+  -- @variant Inventory:add_item(item_obj)
+  --   @param item_obj [Item]
   -- @return [Boolean was the item added successfully, String text of the error that occurred]
-  function Inventory:add_item(item_table, x, y)
-    if !item_table then return false, 'error.inventory.invalid_item' end
+  function Inventory:add_item(item_obj, x, y)
+    if !item_obj then return false, 'error.inventory.invalid_item' end
 
     local need_rotation = false
-    local w, h = self:get_item_size(item_table)
+    local w, h = self:get_item_size(item_obj)
 
     if !x or !y or x < 1 or y < 1 or x + w - 1 > self:get_width() or y + h - 1 > self:get_height() then
-      x, y, need_rotation = self:find_position(item_table, w, h)
+      x, y, need_rotation = self:find_position(item_obj, w, h)
     end
 
     if x and y then
-      item_table.inventory_id = self.id
-      item_table.inventory_type = self.type
-      item_table.x = x
-      item_table.y = y
+      item_obj.inventory_id = self.id
+      item_obj.inventory_type = self.type
+      item_obj.x = x
+      item_obj.y = y
 
       if need_rotation then
         w, h = h, w
 
-        item_table.rotated = !item_table.rotated
+        item_obj.rotated = !item_obj.rotated
       end
 
       for i = y, y + h - 1 do
         for k = x, x + w - 1 do
-          table.insert(self.slots[i][k], item_table.instance_id)
+          table.insert(self.slots[i][k], item_obj.instance_id)
         end
       end
 
-      hook.run('OnItemAdded', item_table, self, x, y)
+      hook.run('OnItemAdded', item_obj, self, x, y)
 
       self:check_size()
     else
@@ -520,13 +520,13 @@ if SERVER then
   end
 
   -- Add item to a inventory by its instance id.
-  -- @variant Inventory:add_item(item_table, x, y)
-  --   @param item_table [Item]
+  -- @variant Inventory:add_item(item_obj, x, y)
+  --   @param item_obj [Item]
   --   @param x [Number]
   --   @param y [Number]
   -- In this case finds best position for the item.
-  -- @variant Inventory:add_item(item_table)
-  --   @param item_table [Item]
+  -- @variant Inventory:add_item(item_obj)
+  --   @param item_obj [Item]
   -- @return [Boolean was the item added successfully, String text of the error that occurred]
   function Inventory:add_item_by_id(instance_id, x, y)
     return self:add_item(Item.find_instance_by_id(instance_id), x, y)
@@ -541,43 +541,43 @@ if SERVER then
     amount = amount or 1
 
     for i = 1, amount do
-      local item_table = Item.create(id, data)
-      local success, error_text = self:add_item(item_table)
+      local item_obj = Item.create(id, data)
+      local success, error_text = self:add_item(item_obj)
 
       if !success then
         return success, error_text
       end
 
-      hook.run('OnItemGiven', item_table, self, data)
+      hook.run('OnItemGiven', item_obj, self, data)
     end
 
     return true
   end
 
   -- Take item object from the inventory.
-  -- @param item_table [Item]
+  -- @param item_obj [Item]
   -- @return [Boolean was the item taken successfully, String text of the error that occurred]
-  function Inventory:take_item_table(item_table)
-    if !item_table then return false, 'error.inventory.invalid_item' end
+  function Inventory:take_item_table(item_obj)
+    if !item_obj then return false, 'error.inventory.invalid_item' end
 
-    local x, y = item_table.x, item_table.y
-    local w, h = self:get_item_size(item_table)
+    local x, y = item_obj.x, item_obj.y
+    local w, h = self:get_item_size(item_obj)
 
-    item_table.inventory_id = nil
-    item_table.inventory_type = nil
-    item_table.x = nil
-    item_table.y = nil
-    item_table.rotated = false
+    item_obj.inventory_id = nil
+    item_obj.inventory_type = nil
+    item_obj.x = nil
+    item_obj.y = nil
+    item_obj.rotated = false
 
     for i = y, y + h - 1 do
       for k = x, x + w - 1 do
-        table.remove_by_value(self.slots[i][k], item_table.instance_id)
+        table.remove_by_value(self.slots[i][k], item_obj.instance_id)
       end
     end
 
     self:check_size()
 
-    hook.run('OnItemTaken', item_table, self)
+    hook.run('OnItemTaken', item_obj, self)
 
     return true
   end
@@ -586,10 +586,10 @@ if SERVER then
   -- @param id [String]
   -- @return [Boolean was the item taken successfully, String text of the error that occurred]
   function Inventory:take_item(id)
-    local item_table = self:find_item(id)
+    local item_obj = self:find_item(id)
 
-    if item_table then
-      return self:take_item_by_id(item_table.instance_id)
+    if item_obj then
+      return self:take_item_by_id(item_obj.instance_id)
     end
 
     return false, 'error.inventory.invalid_item'
@@ -626,19 +626,19 @@ if SERVER then
   -- @param was_rotated [Boolean]
   -- @return [Boolean was the item moved successfully, String text of the error that occurred]
   function Inventory:move_item(instance_id, x, y, was_rotated)
-    local item_table = Item.find_instance_by_id(instance_id)
+    local item_obj = Item.find_instance_by_id(instance_id)
 
-    if !item_table then return false, 'error.inventory.invalid_item' end
+    if !item_obj then return false, 'error.inventory.invalid_item' end
 
-    local success, error_text = hook.run('CanItemMove', item_table, self, x, y)
+    local success, error_text = hook.run('CanItemMove', item_obj, self, x, y)
 
     if success == false then
       return false, error_text
     end
 
     local need_rotation = false
-    local old_x, old_y = item_table.x, item_table.y
-    local w, h = self:get_item_size(item_table)
+    local old_x, old_y = item_obj.x, item_obj.y
+    local w, h = self:get_item_size(item_obj)
     local old_w, old_h = w, h
 
     if was_rotated then
@@ -646,13 +646,13 @@ if SERVER then
     end
 
     if !x or !y or x < 1 or y < 1 or x + w - 1 > self:get_width() or y + h - 1 > self:get_height() then
-      x, y, need_rotation = self:find_position(item_table, w, h)
+      x, y, need_rotation = self:find_position(item_obj, w, h)
 
       if !x or !y then
         return false, 'error.inventory.no_space'
       end
     elseif !self:slots_empty(x, y, w, h) then
-      local overlap, new_x, new_y, new_rotation = self:overlaps_stack(item_table, x, y, w, h)
+      local overlap, new_x, new_y, new_rotation = self:overlaps_stack(item_obj, x, y, w, h)
 
       if overlap then
         x, y = new_x, new_y
@@ -665,15 +665,15 @@ if SERVER then
       end
     end
 
-    item_table.x = x
-    item_table.y = y
+    item_obj.x = x
+    item_obj.y = y
 
     if need_rotation then
       w, h = h, w
     end
 
     if was_rotated != need_rotation then
-      item_table.rotated = !item_table.rotated
+      item_obj.rotated = !item_obj.rotated
     end
 
     for i = old_y, old_y + old_h - 1 do
@@ -702,33 +702,33 @@ if SERVER then
   -- @param was_rotated [Boolean]
   -- @return [Boolean was the item transferred successfully, String text of the error that occurred]
   function Inventory:transfer_item(instance_id, inventory, x, y, was_rotated)
-    local item_table = Item.find_instance_by_id(instance_id)
+    local item_obj = Item.find_instance_by_id(instance_id)
 
-    if !item_table then return false, 'error.inventory.invalid_item' end
+    if !item_obj then return false, 'error.inventory.invalid_item' end
 
-    local success, error_text = hook.run('CanItemTransfer', item_table, inventory, x, y)
+    local success, error_text = hook.run('CanItemTransfer', item_obj, inventory, x, y)
 
     if success == false then
       return false, error_text
     end
 
     local need_rotation = false
-    local old_x, old_y = item_table.x, item_table.y
-    local w, h = inventory:get_item_size(item_table)
-    local old_w, old_h = self:get_item_size(item_table)
+    local old_x, old_y = item_obj.x, item_obj.y
+    local w, h = inventory:get_item_size(item_obj)
+    local old_w, old_h = self:get_item_size(item_obj)
 
     if was_rotated then
       w, h = h, w
     end
 
     if !x or !y or x < 1 or y < 1 or x + w - 1 > inventory:get_width() or y + h - 1 > inventory:get_height() then
-      x, y, need_rotation = inventory:find_position(item_table, w, h)
+      x, y, need_rotation = inventory:find_position(item_obj, w, h)
 
       if !x or !y then
         return false, 'error.inventory.no_space'
       end
     elseif !inventory:slots_empty(x, y, w, h) then
-      local overlap, new_x, new_y, new_rotation = inventory:overlaps_stack(item_table, x, y, w, h)
+      local overlap, new_x, new_y, new_rotation = inventory:overlaps_stack(item_obj, x, y, w, h)
 
       if overlap then
         x, y = new_x, new_y
@@ -741,19 +741,19 @@ if SERVER then
       end
     end
 
-    hook.run('PreItemTransfer', item_table, inventory, self)
+    hook.run('PreItemTransfer', item_obj, inventory, self)
 
-    item_table.inventory_id = inventory.id
-    item_table.inventory_type = inventory.type
-    item_table.x = x
-    item_table.y = y
+    item_obj.inventory_id = inventory.id
+    item_obj.inventory_type = inventory.type
+    item_obj.x = x
+    item_obj.y = y
 
     if need_rotation then
       w, h = h, w
     end
 
     if was_rotated != need_rotation then
-      item_table.rotated = !item_table.rotated
+      item_obj.rotated = !item_obj.rotated
     end
 
     for i = old_y, old_y + old_h - 1 do
@@ -771,7 +771,7 @@ if SERVER then
     self:check_size()
     inventory:check_size()
 
-    hook.run('ItemTransferred', item_table, inventory, self)
+    hook.run('ItemTransferred', item_obj, inventory, self)
 
     return true
   end
@@ -785,10 +785,10 @@ if SERVER then
   -- @return [Boolean have the items been moved successfully, String text of the error that occurred]
   function Inventory:move_stack(instance_ids, x, y, was_rotated)
     local instance_id = instance_ids[1]
-    local item_table = Item.find_instance_by_id(instance_id)
-    local old_x, old_y = item_table.x, item_table.y
+    local item_obj = Item.find_instance_by_id(instance_id)
+    local old_x, old_y = item_obj.x, item_obj.y
     local slot = self:get_slot(old_x, old_y)
-    local w, h = self:get_item_size(item_table)
+    local w, h = self:get_item_size(item_obj)
 
     if !table.equal(instance_ids, slot) and self:overlaps_itself(instance_id, x, y, w, h) then
       return true
@@ -890,12 +890,12 @@ if SERVER then
   -- @param items_ids [Hash]
   function Inventory:load_items(items_ids)
     for k, v in pairs(items_ids) do
-      local item_table = Item.find_instance_by_id(v)
+      local item_obj = Item.find_instance_by_id(v)
 
-      if item_table then
-        local x, y = item_table.x, item_table.y
+      if item_obj then
+        local x, y = item_obj.x, item_obj.y
 
-        self:add_item(item_table, x, y)
+        self:add_item(item_obj, x, y)
       end
     end
   end

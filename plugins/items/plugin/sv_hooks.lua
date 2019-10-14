@@ -22,12 +22,12 @@ function Items:ClientIncludedSchema(player)
   Item.send_to_player(player)
 end
 
-function Items:PlayerUseItemEntity(player, entity, item_table)
+function Items:PlayerUseItemEntity(player, entity, item_obj)
   Cable.send(player, 'fl_player_use_item_entity', entity)
 end
 
-function Items:PlayerCanUseItem(player, item_table, action, ...)
-  local item_entity = item_table.entity
+function Items:PlayerCanUseItem(player, item_obj, action, ...)
+  local item_entity = item_obj.entity
 
   if IsValid(item_entity) then
     local player_pos = player:EyePos()
@@ -47,22 +47,22 @@ function Items:PlayerCanUseItem(player, item_table, action, ...)
       return false
     end
   else
-    if !player:has_item_by_id(item_table.instance_id) then
+    if !player:has_item_by_id(item_obj.instance_id) then
       return false
     end
   end
 end
 
-function Items:PlayerUsedItem(player, item_table, act, ...)
-  if IsValid(item_table.entity) then
-    Item.network_item(nil, item_table.instance_id)
-    Item.network_entity_data(nil, item_table.entity)
+function Items:PlayerUsedItem(player, item_obj, act, ...)
+  if IsValid(item_obj.entity) then
+    Item.network_item(nil, item_obj.instance_id)
+    Item.network_entity_data(nil, item_obj.entity)
   end
 end
 
-function Items:CanPlayerDropItem(player, item_table)
-  if istable(item_table) and item_table.on_drop then
-    if item_table:on_drop(player) == false then
+function Items:CanPlayerDropItem(player, item_obj)
+  if istable(item_obj) and item_obj.on_drop then
+    if item_obj:on_drop(player) == false then
       return false
     end
   end
@@ -88,9 +88,9 @@ function Items:PreSaveCharacter(player, index)
   end
 end
 
-function Items:OnItemCreated(item_table)
-  if item_table.on_created then
-    item_table:on_created()
+function Items:OnItemCreated(item_obj)
+  if item_obj.on_created then
+    item_obj:on_created()
   end
 end
 

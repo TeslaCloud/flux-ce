@@ -8,17 +8,17 @@ CMD.player_arg = 1
 CMD.aliases = { 'chargiveitem', 'plygiveitem' }
 
 function CMD:on_run(player, targets, item_name, amount)
-  local item_table = Item.find(item_name)
+  local item_obj = Item.find(item_name)
   amount = tonumber(amount) or 1
 
-  if item_table then
+  if item_obj then
     for k, v in ipairs(targets) do
-      local success, error_text = v:give_item(item_table.id, amount)
+      local success, error_text = v:give_item(item_obj.id, amount)
       
       if success then
         v:notify('notification.item_given', {
           amount = amount,
-          item = item_table.name
+          item = item_obj.name
         })
       else
         player:notify(error_text)
@@ -29,7 +29,7 @@ function CMD:on_run(player, targets, item_name, amount)
       player = get_player_name(player),
       target = util.player_list_to_string(targets),
       amount = amount,
-      item = item_table.name
+      item = item_obj.name
     })
   else
     player:notify('error.invalid_item', { item = item_name })

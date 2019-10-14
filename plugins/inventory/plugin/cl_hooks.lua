@@ -85,8 +85,8 @@ function Inventories:OnMenuPanelOpen(menu_panel, active_panel)
   end
 end
 
-function Inventories:CanItemMenuOpen(item_table)
-  local inventory = Inventories.find(item_table.inventory_id)
+function Inventories:CanItemMenuOpen(item_obj)
+  local inventory = Inventories.find(item_obj.inventory_id)
 
   if inventory and inventory.instance_id then
     return false
@@ -146,7 +146,7 @@ Cable.receive('fl_inventory_open', function(inventory_id)
     Flux.container_panel = inventory
   else
     local inventory = Inventories.find(inventory_id)
-    local item_table = Item.find_instance_by_id(inventory.instance_id)
+    local item_obj = Item.find_instance_by_id(inventory.instance_id)
     local parent = IsValid(Flux.tab_menu) and Flux.tab_menu or IsValid(Flux.container_panel) and Flux.container_panel or nil
     local frame = vgui.create('fl_frame', parent)
 
@@ -158,7 +158,7 @@ Cable.receive('fl_inventory_open', function(inventory_id)
 
     local left, top, right, bottom = frame:GetDockPadding()
   
-    frame:set_title(t(item_table:get_name()))
+    frame:set_title(t(item_obj:get_name()))
     frame:set_draggable(true)
     frame:SetSize(inventory_panel:GetWide() + left + right, inventory_panel:GetTall() + top + bottom)
     frame:SetPos(input.GetCursorPos())
@@ -191,10 +191,10 @@ Cable.receive('fl_inventory_close', function(inventory_id)
   end
 end)
 
-local function create_item_icon(item_table, parent)
+local function create_item_icon(item_obj, parent)
   local icon = spawnmenu.CreateContentIcon('model', parent, {
-    model = item_table:get_model(),
-    skin = item_table:get_skin(),
+    model = item_obj:get_model(),
+    skin = item_obj:get_skin(),
     wide = math.scale(128),
     tall = math.scale(128)
   })
@@ -203,7 +203,7 @@ local function create_item_icon(item_table, parent)
   icon:DockPadding(padding, padding, padding, padding)
 
   local name_label = vgui.create('DLabel', icon)
-  name_label:SetText(t(item_table:get_real_name()))
+  name_label:SetText(t(item_obj:get_real_name()))
   name_label:Dock(BOTTOM)
   name_label:SetTextColor(color_white)
   name_label:SetFont(Theme.get_font('text_bar'))
@@ -218,19 +218,19 @@ local function create_item_icon(item_table, parent)
     DisableClipping(false)
   end
 
-  icon:SetToolTip(t(item_table:get_real_name())..'\n'..t(item_table:get_description()))
+  icon:SetToolTip(t(item_obj:get_real_name())..'\n'..t(item_obj:get_description()))
   icon.DoRightClick = function(pnl)
     local derma_menu = DermaMenu()
     local give_self = derma_menu:AddSubMenu(t'ui.spawnmenu.give.self')
 
-    if item_table.stackable then
+    if item_obj.stackable then
       give_self:AddOption(t'ui.spawnmenu.give.stack', function()
-        MVC.push('SpawnMenu::GiveItem', PLAYER, item_table.id, item_table.max_stack)
+        MVC.push('SpawnMenu::GiveItem', PLAYER, item_obj.id, item_obj.max_stack)
       end)
     end
 
     give_self:AddOption(t'ui.spawnmenu.give.one', function()
-      MVC.push('SpawnMenu::GiveItem', PLAYER, item_table.id, 1)
+      MVC.push('SpawnMenu::GiveItem', PLAYER, item_obj.id, 1)
     end)
 
     local players = player.all()
@@ -243,14 +243,14 @@ local function create_item_icon(item_table, parent)
 
         local player_line = give_player:AddSubMenu(v:Name())
 
-        if item_table.stackable then
+        if item_obj.stackable then
           player_line:AddOption(t'ui.spawnmenu.give.stack', function()
-            MVC.push('SpawnMenu::GiveItem', v, item_table.id, item_table.max_stack)
+            MVC.push('SpawnMenu::GiveItem', v, item_obj.id, item_obj.max_stack)
           end)
         end
 
         player_line:AddOption(t'ui.spawnmenu.give.one', function()
-          MVC.push('SpawnMenu::GiveItem', v, item_table.id, 1)
+          MVC.push('SpawnMenu::GiveItem', v, item_obj.id, 1)
         end)
       end
     end
@@ -264,12 +264,12 @@ end
 function Inventories:spawnmenu_populate_items(content_panel, tree, node)
   local categories = {}
 
-  for id, item_table in pairs(Item.all()) do
-    if !categories[item_table.category] then
-      categories[item_table.category] = {}
+  for id, item_obj in pairs(Item.all()) do
+    if !categories[item_obj.category] then
+      categories[item_obj.category] = {}
     end
 
-    table.insert(categories[item_table.category], item_table)
+    table.insert(categories[item_obj.category], item_obj)
   end
 
   for name, category in pairs(categories) do
@@ -282,10 +282,10 @@ function Inventories:spawnmenu_populate_items(content_panel, tree, node)
       pnl.list:SetVisible(false)
       pnl.list:SetTriggerSpawnlistChange(false)
 
-      for k, item_table in SortedPairsByMemberValue(category, 'name') do
-        local icon = create_item_icon(item_table, pnl.list)
+      for k, item_obj in SortedPairsByMemberValue(category, 'name') do
+        local icon = create_item_icon(item_obj, pnl.list)
         icon.DoClick = function(pnl)
-          MVC.push('SpawnMenu::SpawnItem', item_table.id)
+          MVC.push('SpawnMenu::SpawnItem', item_obj.id)
         end
       end
     end
@@ -312,13 +312,13 @@ search.AddProvider(function(query)
 
   local results = {}
 
-  for k, item_table in pairs(Item.all()) do
-    if t(item_table:get_name()):utf8lower():find(query) then
+  for k, item_obj in pairs(Item.all()) do
+    if t(item_obj:get_name()):utf8lower():find(query) then
       table.insert(results, {
-        text = item_table.id,
-        func = function() MVC.push('SpawnMenu::SpawnItem', item_table.id) end,
-        icon = create_item_icon(item_table),
-        words = { item_table }
+        text = item_obj.id,
+        func = function() MVC.push('SpawnMenu::SpawnItem', item_obj.id) end,
+        icon = create_item_icon(item_obj),
+        words = { item_obj }
       })
     end
   end

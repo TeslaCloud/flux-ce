@@ -72,20 +72,20 @@ if SERVER then
     end
   end
 
-  function ENT:set_item(item_table)
-    if !item_table then return false end
+  function ENT:set_item(item_obj)
+    if !item_obj then return false end
 
-    hook.run('PreEntityItemSet', self, item_table)
+    hook.run('PreEntityItemSet', self, item_obj)
 
-    self:SetModel(item_table:get_model())
-    self:SetSkin(item_table:get_skin())
-    self:SetColor(item_table:get_color())
+    self:SetModel(item_obj:get_model())
+    self:SetSkin(item_obj:get_skin())
+    self:SetColor(item_obj:get_color())
 
-    self.item = item_table
+    self.item = item_obj
 
     Item.network_entity_data(nil, self)
 
-    hook.run('OnEntityItemSet', self, item_table)
+    hook.run('OnEntityItemSet', self, item_obj)
   end
 else
   function ENT:Draw()

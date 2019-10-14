@@ -86,41 +86,41 @@ function Item.register(id, data)
   instances[id] = instances[id] or {}
 end
 
-function Item.to_saveable(item_table)
-  if !item_table then return end
+function Item.to_saveable(item_obj)
+  if !item_obj then return end
 
   local save_table = {
-    id = item_table.id,
-    name = item_table.name,
-    print_name = item_table.print_name,
-    description = item_table.description,
-    weight = item_table.weight,
-    width = item_table.width,
-    height = item_table.height,
-    stackable = item_table.stackable,
-    pocket_size = item_table.pocket_size,
-    max_stack = item_table.max_stack,
-    model = item_table.model,
-    skin = item_table.skin,
-    color = item_table.color,
-    cost = item_table.cost,
-    special_color = item_table.special_color,
-    is_base = item_table.is_base,
-    instance_id = item_table.instance_id,
-    data = item_table.data,
-    action_sounds = item_table.action_sounds,
-    use_text = item_table.use_text,
-    take_text = item_table.take_text,
-    cancel_text = item_table.cancel_text,
-    use_icon = item_table.use_icon,
-    take_icon = item_table.take_icon,
-    cancel_icon = item_table.cancel_icon,
-    max_uses = item_table.max_uses,
-    uses = item_table.uses,
-    icon_data = item_table.icon_data
+    id = item_obj.id,
+    name = item_obj.name,
+    print_name = item_obj.print_name,
+    description = item_obj.description,
+    weight = item_obj.weight,
+    width = item_obj.width,
+    height = item_obj.height,
+    stackable = item_obj.stackable,
+    pocket_size = item_obj.pocket_size,
+    max_stack = item_obj.max_stack,
+    model = item_obj.model,
+    skin = item_obj.skin,
+    color = item_obj.color,
+    cost = item_obj.cost,
+    special_color = item_obj.special_color,
+    is_base = item_obj.is_base,
+    instance_id = item_obj.instance_id,
+    data = item_obj.data,
+    action_sounds = item_obj.action_sounds,
+    use_text = item_obj.use_text,
+    take_text = item_obj.take_text,
+    cancel_text = item_obj.cancel_text,
+    use_icon = item_obj.use_icon,
+    take_icon = item_obj.take_icon,
+    cancel_icon = item_obj.cancel_icon,
+    max_uses = item_obj.max_uses,
+    uses = item_obj.uses,
+    icon_data = item_obj.icon_data
   }
 
-  hook.run('PreItemSave', item_table, save_table)
+  hook.run('PreItemSave', item_obj, save_table)
 
   return save_table
 end
@@ -145,9 +145,9 @@ end
 function Item.find_instance_by_id(instance_id)
   for item_id, item_instances in pairs(instances) do
     if istable(item_instances) then
-      for k, item_table in pairs(item_instances) do
-        if item_table.instance_id == instance_id then
-          return item_table
+      for k, item_obj in pairs(item_instances) do
+        if item_obj.instance_id == instance_id then
+          return item_obj
         end
       end
     end
@@ -197,13 +197,13 @@ function Item.generate_id()
 end
 
 function Item.create(id, data, forced_id)
-  local item_table = Item.find_by_id(id)
+  local item_obj = Item.find_by_id(id)
 
-  if item_table then
+  if item_obj then
     local item_id = forced_id or Item.generate_id()
 
     instances[id] = instances[id] or {}
-    instances[id][item_id] = table.Copy(item_table)
+    instances[id][item_id] = table.Copy(item_obj)
 
     if istable(data) then
       table.safe_merge(instances[id][item_id], data)
@@ -223,27 +223,27 @@ function Item.create(id, data, forced_id)
 end
 
 function Item.remove(instance_id)
-  local item_table = (istable(instance_id) and instance_id) or Item.find_instance_by_id(instance_id)
+  local item_obj = (istable(instance_id) and instance_id) or Item.find_instance_by_id(instance_id)
 
-  if item_table and Item.is_instance(item_table) then
-    if IsValid(item_table.entity) then
-      item_table.entity:Remove()
+  if item_obj and Item.is_instance(item_obj) then
+    if IsValid(item_obj.entity) then
+      item_obj.entity:Remove()
     end
 
-    instances[item_table.id][item_table.instance_id] = nil
+    instances[item_obj.id][item_obj.instance_id] = nil
 
     if SERVER then
       Item.async_save()
     end
 
-    Flux.dev_print('Removed item instance ID: '..item_table.instance_id)
+    Flux.dev_print('Removed item instance ID: '..item_obj.instance_id)
   end
 end
 
-function Item.is_instance(item_table)
-  if !istable(item_table) then return end
+function Item.is_instance(item_obj)
+  if !istable(item_obj) then return end
 
-  return (item_table.instance_id or ITEM_TEMPLATE) > ITEM_INVALID
+  return (item_obj.instance_id or ITEM_TEMPLATE) > ITEM_INVALID
 end
 
 function Item.include_items(directory)
@@ -276,11 +276,11 @@ if SERVER then
     if loaded and !table.IsEmpty(loaded) then
       -- Returns functions to instances table after loading.
       for id, instance_table in pairs(loaded) do
-        local item_table = Item.find_by_id(id)
+        local item_obj = Item.find_by_id(id)
 
-        if item_table then
+        if item_obj then
           for k, v in pairs(instance_table) do
-            local new_item = table.Copy(item_table)
+            local new_item = table.Copy(item_obj)
 
             table.safe_merge(new_item, v)
 
@@ -372,9 +372,9 @@ if SERVER then
     coroutine.resume(handle)
   end
 
-  function Item.network_item_data(player, item_table)
-    if Item.is_instance(item_table) then
-      Cable.send(player, 'fl_items_data', item_table.id, item_table.instance_id, item_table.data)
+  function Item.network_item_data(player, item_obj)
+    if Item.is_instance(item_obj) then
+      Cable.send(player, 'fl_items_data', item_obj.id, item_obj.instance_id, item_obj.data)
     end
   end
 
@@ -401,20 +401,20 @@ if SERVER then
     hook.run_client(player, 'OnItemDataReceived')
   end
 
-  function Item.spawn(position, angles, item_table)
-    if !position or !istable(item_table) then
+  function Item.spawn(position, angles, item_obj)
+    if !position or !istable(item_obj) then
       error_with_traceback('No position or item table is not a table!')
       return
     end
 
-    if !Item.is_instance(item_table) then
+    if !Item.is_instance(item_obj) then
       error_with_traceback('Cannot spawn non-instantiated item!')
       return
     end
 
     local ent = ents.Create('fl_item')
 
-    ent:set_item(item_table)
+    ent:set_item(item_obj)
 
     local mins, maxs = ent:GetCollisionBounds()
 
@@ -426,19 +426,19 @@ if SERVER then
 
     ent:Spawn()
 
-    item_table:set_entity(ent)
-    Item.network_item(nil, item_table.instance_id)
+    item_obj:set_entity(ent)
+    Item.network_item(nil, item_obj.instance_id)
 
-    entities[item_table.id] = entities[item_table.id] or {}
-    entities[item_table.id][item_table.instance_id] = entities[item_table.id][item_table.instance_id] or {}
-    entities[item_table.id][item_table.instance_id] = {
+    entities[item_obj.id] = entities[item_obj.id] or {}
+    entities[item_obj.id][item_obj.instance_id] = entities[item_obj.id][item_obj.instance_id] or {}
+    entities[item_obj.id][item_obj.instance_id] = {
       position = position,
       angles = angles
     }
 
     Item.async_save_entities()
 
-    return ent, item_table
+    return ent, item_obj
   end
 
   Cable.receive('fl_items_data_request', function(player, ent_index)
@@ -455,10 +455,10 @@ else
     end
   end)
 
-  Cable.receive('fl_items_network', function(instance_id, item_table)
-    if item_table and stored[item_table.id] then
-      local new_table = table.Copy(stored[item_table.id])
-      table.safe_merge(new_table, item_table)
+  Cable.receive('fl_items_network', function(instance_id, item_obj)
+    if item_obj and stored[item_obj.id] then
+      local new_table = table.Copy(stored[item_obj.id])
+      table.safe_merge(new_table, item_obj)
 
       instances[new_table.id][instance_id] = new_table
     else
@@ -470,21 +470,21 @@ else
     local ent = Entity(ent_index)
 
     if IsValid(ent) then
-      local item_table = instances[id][instance_id]
+      local item_obj = instances[id][instance_id]
 
-      if item_table == nil then
+      if item_obj == nil then
         return Cable.send('fl_items_data_request', ent_index)
       end
 
       -- Client has to know this shit too I guess?
-      ent:SetModel(item_table:get_model())
-      ent:SetSkin(item_table.skin)
-      ent:SetColor(item_table:get_color())
+      ent:SetModel(item_obj:get_model())
+      ent:SetSkin(item_obj.skin)
+      ent:SetColor(item_obj:get_color())
 
       -- Restore item's functions. For some weird reason they aren't properly initialized.
       table.safe_merge(ent, scripted_ents.Get('fl_item'))
 
-      ent.item = item_table
+      ent.item = item_obj
     end
   end)
 
