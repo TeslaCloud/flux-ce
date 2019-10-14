@@ -8,6 +8,8 @@ do
   local function _get_phrase(tabs, ref)
     if !ref then
       ref = stored['en']
+
+      if !ref then return false end
     end
 
     for k, v in ipairs(tabs) do
