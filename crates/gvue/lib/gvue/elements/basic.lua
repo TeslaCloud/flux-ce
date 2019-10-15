@@ -99,7 +99,7 @@ function PANEL:unit_to_px(num, units, what, use_abstract_pixels)
     return abstract_size
   end
 
-  return abstract_size * self._gvue.scale
+  return abstract_size * self.scale
 end
 
 function PANEL:set_padding(up, right, down, left)

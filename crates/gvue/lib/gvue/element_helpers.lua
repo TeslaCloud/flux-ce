@@ -19,13 +19,13 @@ local unit_callbacks = {
   ['pc']    = function(e, n, what) return n * pt_to_px * 12 end,
   ['vh']    = function(e, n, what) return (n * 0.01) * ScrH() end,
   ['vw']    = function(e, n, what) return (n * 0.01) * ScrW() end,
-  ['em']    = function(e, n, what) return n * e._gvue.context.font_size end,
-  ['rem']   = function(e, n, what) return n * Gvue:get_root_element_of(e)._gvue.context.font_size end,
-  ['ex']    = function(e, n, what) return n * e._gvue.context.font_size end,
+  ['em']    = function(e, n, what) return n * e.context.font_size end,
+  ['rem']   = function(e, n, what) return n * Gvue:get_root_element_of(e).context.font_size end,
+  ['ex']    = function(e, n, what) return n * e.context.font_size end,
   ['vmin']  = function(e, n, what) return n * Gvue:get_screen_dimensions().min end,
   ['vmax']  = function(e, n, what) return n * Gvue:get_screen_dimensions().max end,
   ['ch']    = function(e, n, what)
-    surface.SetFont(e._gvue.context.attributes.font_family)
+    surface.SetFont(e.context.attributes.font_family)
     local size = surface.GetTextSize('0')
     return n * size
   end,
@@ -53,7 +53,7 @@ function Gvue:get_screen_dimensions()
 end
 
 function Gvue:get_parent_of(e)
-  return e._gvue.context.parent
+  return e.context.parent
 end
 
 function Gvue:get_root_element_of(e)
@@ -71,7 +71,7 @@ function Gvue:get_root_element_of(e)
 end
 
 function Gvue:get_context_attribute(e, attr)
-  local context_attributes = e._gvue.context.attributes
+  local context_attributes = e.context.attributes
   local cur = context_attributes
   local split = attr:split('-')
 
