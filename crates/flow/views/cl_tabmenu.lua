@@ -6,7 +6,6 @@ PANEL.active_panel = nil
 function PANEL:Init()
   local scrw, scrh = ScrW(), ScrH()
 
-
   draw.set_blur_size(1)
   Flux.blur_update_fps = 0
   self.blur_target = 6

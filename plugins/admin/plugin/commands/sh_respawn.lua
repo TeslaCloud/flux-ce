@@ -12,7 +12,7 @@ function CMD:on_run(player, targets, spawn_position)
 
   for k, v in ipairs(targets) do
     if v:Alive() then player:notify('error.respawn') return end
-    
+
     local positions = { ['stay'] = v.last_pos, ['tp'] = player:GetEyeTraceNoCursor().HitPos }
 
     v:Spawn()

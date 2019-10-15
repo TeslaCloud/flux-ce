@@ -18,7 +18,7 @@ function Date:init(year, month, day)
     self.year = year.year
     self.month = year.month
     self.day = year.day
-  
+
     if year.class_name == 'Date' then
       self.time = year.time
       return

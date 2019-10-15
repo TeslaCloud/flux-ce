@@ -12,7 +12,7 @@ function CMD:on_run(player, targets, rank)
 
   if !rank then
     player:notify('error.invalid_value')
-    
+
     return
   end
 

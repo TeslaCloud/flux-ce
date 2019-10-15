@@ -2045,7 +2045,6 @@ function utf8.sub (s, i, j)
   return s:sub(startByte, endByte)
 end
 
-
 function utf8.upper(s)
   return ({ string.gsub(s, '('..utf8.charpattern..')', utf8_lc_uc) })[1]
 end

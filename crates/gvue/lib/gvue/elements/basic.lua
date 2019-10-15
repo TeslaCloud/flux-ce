@@ -64,7 +64,7 @@ function PANEL:Think()
     if isfunction(self.tick) then
       self:tick(w, h, cur_time)
     end
-  
+
     if isfunction(self.post_tick) then
       self:tock(w, h, cur_time)
     end

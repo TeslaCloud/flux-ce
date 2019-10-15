@@ -59,7 +59,7 @@ function Doors:lock_door(entity, lock)
 end
 
 Cable.receive('fl_send_door_data', function(player, entity, id, data)
-  if player:can('manage_doors') and IsValid(entity) and entity:is_door() 
+  if player:can('manage_doors') and IsValid(entity) and entity:is_door()
   and player:GetPos():Distance(entity:GetPos()) < 115 then
     Doors.properties[id].on_load(entity, data)
   end
@@ -73,7 +73,7 @@ end)
 
 Cable.receive('fl_send_door_conditions', function(player, entity, conditions)
   if player:can('manage_doors') and IsValid(entity) and entity:is_door() and conditions and istable(conditions)
-  and player:GetPos():Distance(entity:GetPos()) < 115 then  
+  and player:GetPos():Distance(entity:GetPos()) < 115 then
     entity.conditions = conditions
   end
 end)

@@ -31,7 +31,7 @@ function PANEL:Init()
     local entity = self.model:GetEntity()
     local pos = entity:GetPos()
     local cam_data = PositionSpawnIcon(entity, pos)
-    
+
     if cam_data then
       self.model:SetCamPos(cam_data.origin)
       self.model:SetFOV(cam_data.fov)

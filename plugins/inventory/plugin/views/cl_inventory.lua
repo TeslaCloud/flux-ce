@@ -39,7 +39,7 @@ function PANEL:Init()
       local is_multislot = self:is_multislot()
       local slot_size = self:get_slot_size()
       local w, h = 0, 0
-      
+
       if is_multislot and (slot_w > 1 or slot_h > 1) then
         w, h = (slot_w - 1) * 0.5 * slot_size, (slot_h - 1) * 0.5 * slot_size
       end
@@ -148,7 +148,7 @@ function PANEL:start_dragging(dropped)
   local slot_padding = self:get_slot_padding()
   local drag_inventory_id = dropped:get_inventory_id()
   local panel = self
-  
+
   if drag_inventory_id != self:get_inventory_id() then
     panel = Inventories.find(drag_inventory_id).panel
   end
@@ -198,7 +198,7 @@ function PANEL:on_drop(dropped)
 
     if IsValid(drag_slot) then
       local drag_inventory_id = drag_slot:get_inventory_id()
-      
+
       if drag_inventory_id != self:get_inventory_id() then
         local panel = Inventories.find(drag_inventory_id).panel
 

@@ -799,7 +799,7 @@ if SERVER then
     if !table.equal(instance_ids, slot) and self:overlaps_itself(instance_id, x, y, w, h) then
       return true
     end
- 
+
     for k, v in ipairs(instance_ids) do
       local success, error_text = self:move_item(v, x, y, was_rotated)
 
@@ -822,12 +822,12 @@ if SERVER then
   function Inventory:transfer_stack(instance_ids, inventory, x, y, was_rotated)
     for k, v in ipairs(instance_ids) do
       local success, error_text = self:transfer_item(v, inventory, x, y, was_rotated)
- 
+
       if !success then
         return success, error_text
       end
     end
- 
+
     return true
   end
 

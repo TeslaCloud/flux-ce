@@ -14,7 +14,7 @@ function CMD:on_run(player, targets, item_name, amount)
   if item_obj then
     for k, v in ipairs(targets) do
       local success, error_text = v:give_item(item_obj.id, amount)
-      
+
       if success then
         v:notify('notification.item_given', {
           amount = amount,

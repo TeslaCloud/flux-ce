@@ -20,8 +20,8 @@ function CMD:on_run(player, targets, ...)
     })
 
     for k, v in ipairs(targets) do
-      v:notify( "notification.warn", { 
-        reason = reason 
+      v:notify( "notification.warn", {
+        reason = reason
       })
     end
   end

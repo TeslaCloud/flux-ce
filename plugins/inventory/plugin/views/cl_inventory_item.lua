@@ -13,7 +13,7 @@ function PANEL:Paint(w, h)
 
   if IsValid(drop_slot) and drop_slot:get_inventory_id() == self:get_inventory_id() then
     local drag_slot = Flux.inventory_drag_slot
-    
+
     if IsValid(drag_slot) then
       local slot_w, slot_h = drag_slot:get_item_size()
       local drop_x, drop_y = drop_slot:get_item_pos()

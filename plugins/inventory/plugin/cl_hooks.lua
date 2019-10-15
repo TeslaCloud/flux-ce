@@ -160,7 +160,7 @@ Cable.receive('fl_inventory_open', function(inventory_id)
     inventory_panel:Dock(FILL)
 
     local left, top, right, bottom = frame:GetDockPadding()
-  
+
     frame:set_title(t(item_obj:get_name()))
     frame:set_draggable(true)
     frame:SetSize(inventory_panel:GetWide() + left + right, inventory_panel:GetTall() + top + bottom)
@@ -171,7 +171,7 @@ Cable.receive('fl_inventory_open', function(inventory_id)
     frame.OnRemove = function()
       local inventory_id = frame.inventory.id
       Cable.send('fl_inventory_close', inventory_id)
-      
+
       PLAYER.opened_containers[inventory_id] = nil
     end
 
@@ -277,7 +277,7 @@ function Inventories:spawnmenu_populate_items(content_panel, tree, node)
 
   for name, category in pairs(categories) do
     local node = tree:AddNode(t(name), Item.get_category_icon(name))
-    
+
     node.DoPopulate = function(pnl)
       if IsValid(pnl.list) then return end
 

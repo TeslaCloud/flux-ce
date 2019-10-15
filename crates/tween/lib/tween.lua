@@ -241,8 +241,6 @@ tween.easing = {
   inBounce  = inBounce,  outBounce  = outBounce,  inOutBounce  = inOutBounce,  outInBounce  = outInBounce
 }
 
-
-
 -- private stuff
 
 local function copyTables(destination, keysTable, valuesTable)
@@ -348,7 +346,6 @@ function Tween:update(dt)
   assert(isnumber(dt), "dt must be a number")
   return self:set(self.clock + dt)
 end
-
 
 -- Public interface
 

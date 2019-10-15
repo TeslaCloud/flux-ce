@@ -395,7 +395,6 @@ function GM:ContextMenuOpen()
     end
   end
 
-
   return true
 end
 
