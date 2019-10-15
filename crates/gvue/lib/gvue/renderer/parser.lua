@@ -14,7 +14,7 @@ local function _extract_value(node)
   end
 end
 
-local function _spawn_node(node, parent)
+local function _spawn_node(node, parent, spaces)
   local pane = Gvue.spawn_panel(node.tag_name, parent)
   local attr = node.attr
 
@@ -22,7 +22,7 @@ local function _spawn_node(node, parent)
     pane.html.inner_html = _extract_value(node)
     pane.context.attributes.font_family = 'DermaLarge'
 
-    print(pane.html.inner_html)
+    print(string.rep(' ', spaces or 0)..pane.html.inner_html)
   else
     pane.draw_debug_overlay = true
   end
@@ -60,7 +60,7 @@ local function _process_node(node, parent, spaces)
   for k, v in ipairs(node) do
     print(string.rep(' ', spaces)..'<'..v.tag_name..'>')
 
-    local this_node = _spawn_node(v, parent)
+    local this_node = _spawn_node(v, parent, spaces + 1)
 
     if v.child_nodes then
       _process_node(v.child_nodes, this_node, spaces + 1)
@@ -96,9 +96,11 @@ function Gvue.render_html(html, parent)
     print('<template>')
 
     local node_data = template[1]
-    local root_node = _spawn_node(node_data)
+    local root_node = _spawn_node(node_data, parent)
     print(' <'..node_data.tag_name..'>')
+    root_node:rebuild()
     _process_node(node_data.child_nodes, root_node, 2)
+    root_node:rebuild()
     print(' </'..node_data.tag_name..'>')
 
     print('</template>')
@@ -119,9 +121,9 @@ concommand.Add('gvue_test', function()
 
   __GVUE_PANE__ = Gvue.render_html([[
     <template>
-      <div x="128" y="64" width="512" height="256">
-        <div x="16" y="40">Hey it works!</div>
-        <div x="16" y="100">Sort of?</div>
+      <div x="128" y="64">
+        <div x="1" y="24">Hey it works!</div>
+        <div x="256" y="48">Sort of?</div>
       </div>
     </template>
   ]])
