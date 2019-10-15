@@ -1,6 +1,8 @@
 function Gvue.new_panel()
   return {
     Init = function(obj)
+      obj.gvue = true
+
       obj.html = {
         attributes = {},
         element_name = 'gvue_basic_panel',
