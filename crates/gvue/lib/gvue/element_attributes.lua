@@ -37,11 +37,18 @@ function Gvue.new_panel()
         inner = nil,
         parent = nil,
         width = 0,
-        height = 0
+        height = 0,
+        x = 0,
+        y = 0
       }
 
       obj.scale = 1
       obj.draw_debug_overlay = false
+
+      obj.next_think = 0
+      obj.tick_delay = 0.1
+
+      obj.hovered = false
 
       if isfunction(obj.init) then
         obj:init()

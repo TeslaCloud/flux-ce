@@ -1,4 +1,4 @@
-local PANEL = {}
+local PANEL = Gvue.new_panel()
 
 local debug_colors = {
   border  = Color(50, 100, 150),
@@ -9,7 +9,77 @@ local debug_colors = {
   padding = Color(200, 50, 125, 90)
 }
 
+local function create_acccessor_trbl(id)
+  local t, r, b, l = '_top', '_right', '_bottom', '_left'
+
+  if !id or id == '' then
+    id = ''
+    t, r, b, l = 'top', 'right', 'bottom', 'left'
+  else
+    PANEL['set_'..id] = function(obj, top, right, bottom, left, real_val)
+      real_val = real_val or string.fmt(
+        '{top}px {right}px {bottom}px {left}px',
+        {
+          top = top, right = right, bottom = bottom, left = left
+        })
+      obj.context.attributes[id..t] = top
+      obj.context.attributes[id..r] = right
+      obj.context.attributes[id..b] = bottom
+      obj.context.attributes[id..l] = left
+      obj.context.attributes[id]    = real_val
+    end
+
+    PANEL[id] = function(obj)
+      local ctx = obj.context.attributes
+      return ctx[id..t],
+            ctx[id..r],
+            ctx[id..b],
+            ctx[id..l]
+    end
+  end
+
+  for _, keyword in ipairs({ t, r, b, l }) do
+    local kwd = id..keyword
+    PANEL[kwd] = function(obj)
+      return obj.context.attributes[kwd]
+    end
+
+    if id == '' then
+      PANEL['set_'..kwd] = function(obj, val)
+        obj.context.attributes[keyword] = val
+      end
+    end
+  end
+end
+
+function PANEL:Think()
+  local w, h = self:GetSize()
+  local cur_time = CurTime()
+
+  if self.next_think < cur_time then
+    if isfunction(self.pre_tick) then
+      self:pre_tick(w, h, cur_time)
+    end
+
+    if isfunction(self.tick) then
+      self:tick(w, h, cur_time)
+    end
+  
+    if isfunction(self.post_tick) then
+      self:tock(w, h, cur_time)
+    end
+
+    self.next_think = cur_time + self.tick_delay
+  end
+
+  if isfunction(self.quick_tick) then
+    self:quick_tick(w, h, cur_time)
+  end
+end
+
 function PANEL:Paint(w, h)
+  self.hovered = self:IsHovered()
+
   if isfunction(self.draw_background) then
     self:draw_background(w, h)
   end
@@ -102,12 +172,33 @@ function PANEL:unit_to_px(num, units, what, use_abstract_pixels)
   return abstract_size * self.scale
 end
 
-function PANEL:set_padding(up, right, down, left)
+function PANEL:set_size(w, h)
+  self.context.width = w
+  self.context.height = h
+  self:SetSize(w, h)
+end
+
+function PANEL:size()
+  return self.context.width, self.context.height
+end
+
+function PANEL:set_pos(x, y)
+  self.context.x = x
+  self.context.y = y
+  self:SetPos(x, y)
+end
+
+function PANEL:pos()
+  return self.context.x, self.context.y
 end
 
 function PANEL:rebuild()
   local w, h = self:ChildrenSize()
   self:SetSize(w, h)
 end
+
+create_acccessor_trbl()
+create_acccessor_trbl 'padding'
+create_acccessor_trbl 'margin'
 
 vgui.Register('gvue_basic_panel', PANEL, 'EditablePanel')
