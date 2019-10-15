@@ -32,6 +32,7 @@ if CLIENT then
   local largest_sv_n = 0
   local metrics_sv = {}
   local counts_sv = {}
+  local debug_color = Color(200, 100, 100, 200)
 
   Cable.receive('fl_profiler_update', function(metrics_data, counts_data)
     metrics_sv = metrics_data
@@ -74,10 +75,10 @@ if CLIENT then
   function Profiler:HUDPaint()
     local pos = ScrH() - 30
 
-    draw.SimpleText('SV: '..tostring(math.Round(total_sv * 1000, 2))..'ms', 'default', 8, pos - 36, Color(200, 100, 100, 200))
-    draw.SimpleText(largest_sv..' ('..tostring(math.Round(largest_sv_n * 1000, 2))..'ms)', 'default', 8, pos - 24, Color(200, 100, 100, 200))
-    draw.SimpleText('CL: '..tostring(math.Round(total_cl * 1000, 2))..'ms', 'default', 8, pos - 12, Color(200, 100, 100, 200))
-    draw.SimpleText(largest_cl..' ('..tostring(math.Round(largest_cl_n * 1000, 2))..'ms)', 'default', 8, pos, Color(200, 100, 100, 200))
+    draw.SimpleText('SV: '..tostring(math.Round(total_sv * 1000, 2))..'ms', 'default', 8, pos - 36, debug_color)
+    draw.SimpleText(largest_sv..' ('..tostring(math.Round(largest_sv_n * 1000, 2))..'ms)', 'default', 8, pos - 24, debug_color)
+    draw.SimpleText('CL: '..tostring(math.Round(total_cl * 1000, 2))..'ms', 'default', 8, pos - 12, debug_color)
+    draw.SimpleText(largest_cl..' ('..tostring(math.Round(largest_cl_n * 1000, 2))..'ms)', 'default', 8, pos, debug_color)
   end
 
   local PANEL = {}
