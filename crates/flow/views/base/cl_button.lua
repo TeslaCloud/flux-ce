@@ -44,13 +44,14 @@ end
 
 function PANEL:SizeToContentsX()
   local w, h = util.text_size(self.title, self.font)
+  local offset = self.text_offset or 0
   local add = 0
 
   if self.icon then
     add = h * 1.5 - 2
   end
 
-  self:SetWide(w * 1.15 + add)
+  self:SetWide(w * 1.15 + add + offset)
 end
 
 function PANEL:SizeToContentsY()
