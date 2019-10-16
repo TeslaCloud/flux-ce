@@ -109,7 +109,7 @@ function PLUGIN:HUDPaint()
         color = Theme.get_color('accent')
       end
 
-      surface.draw_text_scaled((IsValid(v.weapon) and v.weapon:GetPrintName():utf8upper()) or 'UNKNOWN WEAPON', Theme.get_font('text_normal_large'), v.x, v.y, v.scale, color)
+      surface.draw_text_scaled((IsValid(v.weapon) and v.weapon:GetPrintName():utf8upper()) or 'UNKNOWN WEAPON', Font.size(Theme.get_font('text_normal_large'), 36), v.x, v.y, v.scale, color)
     end
 
     render.SetScissorRect(0, 0, 0, 0, false)
