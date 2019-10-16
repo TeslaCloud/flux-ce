@@ -28,8 +28,12 @@ function Font.size(name, size, data)
 
   local new_name = name
 
-  if !string.match(new_name, ':(%d)') then
+  local raw_name, original_size = string.match(new_name, '^(.+):(%d)')
+
+  if !original_size then
     new_name = new_name..':'..size
+  else
+    new_name = raw_name..':'..size
   end
 
   if !stored[new_name] then
