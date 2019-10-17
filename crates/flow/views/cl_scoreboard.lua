@@ -27,7 +27,7 @@ function PANEL:rebuild()
   end
 
   local cur_y = math.scale(40)
-  local card_tall = math.scale(32) + 8
+  local card_tall = math.scale(32) + math.scale(8)
   local margin = math.scale(2)
 
   for k, v in ipairs(_player.all()) do
@@ -78,7 +78,7 @@ function PANEL:rebuild()
   local player = self.player
 
   self.avatar_panel = vgui.Create('fl_avatar_panel', self)
-  self.avatar_panel:set_size_ex(math.scale_size(32, 32))
+  self.avatar_panel:SetSize(math.scale_size(32, 32))
   self.avatar_panel:SetPos(math.scale_size(4, 4))
   self.avatar_panel:set_player(player, 64)
 
