@@ -25,7 +25,7 @@ function Currencies:CreatePlayerInteractions(menu, target)
     local amount = PLAYER:get_money(k) or 0
 
     if !v.hidden or v.hidden and amount > 0 then
-      money_menu:AddOption(t'ui.currency.give'..' '..t(v.name), function()
+      money_menu:AddOption(t'ui.currency.menu.give'..' '..t(v.name), function()
         Derma_StringRequest(t'ui.currency.give.title', t('ui.currency.give.message', { currency = t(v.name) }), '', function(text)
           local value = tonumber(text)
 
