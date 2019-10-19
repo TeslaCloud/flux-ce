@@ -224,9 +224,18 @@ function PANEL:rebuild()
       self.icon_panel:safe_remove()
     end
 
-    self.icon_panel = vgui.Create('DImage')
-    self.icon_panel:SetImage(icon)
+    icon = Material(icon)
+
+    local rotated = self:is_rotated()
+
+    self.icon_panel = vgui.Create('fl_base_panel', self)
     self.icon_panel:Dock(FILL)
+    self.icon_panel:SetMouseInputEnabled(false)
+    self.icon_panel.Paint = function(pnl, w, h)
+      surface.SetDrawColor(255, 255, 255, 255)
+      surface.SetMaterial(icon)
+      surface.DrawTexturedRectRotated(w * 0.5, h * 0.5, rotated and h or w, rotated and w or h, rotated and 90 or 0)
+    end
 
     if self.item_data.adjust_icon_panel then
       self.item_data.adjust_icon_panel(self.icon_panel, self)
