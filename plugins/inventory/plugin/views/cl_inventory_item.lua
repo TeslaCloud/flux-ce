@@ -217,43 +217,59 @@ function PANEL:rebuild()
     self:Droppable('fl_item')
   end
 
-  if IsValid(self.model_panel) then
-    self.model_panel:safe_remove()
+  local icon = self.item_data:get_icon_material()
+
+  if icon then
+    if IsValid(self.icon_panel) then
+      self.icon_panel:safe_remove()
+    end
+
+    self.icon_panel = vgui.Create('DImage')
+    self.icon_panel:SetImage(icon)
+    self.icon_panel:Dock(FILL)
+
+    if self.item_data.adjust_icon_panel then
+      self.item_data.adjust_icon_panel(self.icon_panel, self)
+    end
+  else
+    if IsValid(self.model_panel) then
+      self.model_panel:safe_remove()
+    end
+
+    local model = self.item_data:get_icon_model() or self.item_data:get_model()
+
+    self.model_panel = vgui.Create('DModelPanel', self)
+    self.model_panel:Dock(FILL)
+    self.model_panel:SetModel(model, self.item_data:get_skin())
+    self.model_panel:SetMouseInputEnabled(false)
+    self.model_panel:SetAnimated(true)
+    self.model_panel.LayoutEntity = function(pnl, ent)
+    end
+
+    local entity = self.model_panel:GetEntity()
+    local cam_data = table.copy(self.item_data:get_icon_data())
+
+    entity:SetSequence(entity:get_idle_anim())
+
+    if !cam_data then
+      cam_data = PositionSpawnIcon(entity, entity:GetPos(), true)
+      cam_data.fov = cam_data.fov * 1.1
+    end
+
+    local pos, ang, fov = cam_data.origin, cam_data.angles, cam_data.fov
+    local rotated = self:is_rotated()
+    local w, h = self:get_item_size()
+
+    self.model_panel:SetCamPos(pos)
+    self.model_panel:SetFOV(rotated and fov * (w / h) or fov)
+    self.model_panel:SetLookAng(rotated and Angle(ang.p, ang.y, ang.r - 90) or ang)
+
+    if self.item_data.adjust_model_panel then
+      self.item_data:adjust_model_panel(self.model_panel, self)
+    end
   end
-
-  local model = self.item_data:get_icon_model() or self.item_data:get_model()
-
-  self.model_panel = vgui.Create('DModelPanel', self)
-  self.model_panel:Dock(FILL)
-  self.model_panel:SetModel(model, self.item_data:get_skin())
-  self.model_panel:SetMouseInputEnabled(false)
-  self.model_panel:SetAnimated(true)
-  self.model_panel.LayoutEntity = function(pnl, ent)
-  end
-
-  local entity = self.model_panel:GetEntity()
-  local cam_data = table.copy(self.item_data:get_icon_data())
-
-  entity:SetSequence(entity:get_idle_anim())
-
-  if !cam_data then
-    cam_data = PositionSpawnIcon(entity, entity:GetPos(), true)
-    cam_data.fov = cam_data.fov * 1.1
-  end
-
-  local pos, ang, fov = cam_data.origin, cam_data.angles, cam_data.fov
-  local rotated = self:is_rotated()
-  local w, h = self:get_item_size()
-
-  self.model_panel:SetCamPos(pos)
-  self.model_panel:SetFOV(rotated and fov * (w / h) or fov)
-  self.model_panel:SetLookAng(rotated and Angle(ang.p, ang.y, ang.r - 90) or ang)
 
   self:SetToolTip(t(self.item_data:get_name())..'\n'..t(self.item_data:get_description()))
-
-  if self.item_data.adjust_model_panel then
-    self.item_data.adjust_model_panel(self.model_panel, self)
-  end
 end
 
 function PANEL:get_item_size()

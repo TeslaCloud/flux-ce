@@ -94,6 +94,10 @@ function ItemBase:get_icon_data()
   return self.icon_data
 end
 
+function ItemBase:get_icon_material()
+  return self.icon_material
+end
+
 function ItemBase:add_button(name, data)
   --[[
     Example data structure:

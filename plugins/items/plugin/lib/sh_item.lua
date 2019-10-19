@@ -81,6 +81,7 @@ function Item.register(id, data)
   data.take_icon = data.take_icon
   data.cancel_icon = data.cancel_icon
   data.icon_data = data.icon_data or nil
+  data.icon_material = data.icon_material or nil
 
   stored[id] = data
   instances[id] = instances[id] or {}
@@ -117,7 +118,8 @@ function Item.to_saveable(item_obj)
     cancel_icon = item_obj.cancel_icon,
     max_uses = item_obj.max_uses,
     uses = item_obj.uses,
-    icon_data = item_obj.icon_data
+    icon_data = item_obj.icon_data,
+    icon_material = item_obj.icon_material
   }
 
   hook.run('PreItemSave', item_obj, save_table)
