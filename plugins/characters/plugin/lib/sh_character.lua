@@ -1,4 +1,4 @@
-﻿if !Characters then
+if !Characters then
   PLUGIN:set_global('Characters')
 end
 
@@ -167,7 +167,9 @@ if SERVER then
   end
 
   MVC.handler('fl_create_character', function(player, data)
-    data.gender  = (data.gender and data.gender == 'female' and CHAR_GENDER_FEMALE) or CHAR_GENDER_MALE
+    hook.run('PreCreateCharacter', player, data)
+
+    data.gender = (data.gender and data.gender == 'female' and CHAR_GENDER_FEMALE) or CHAR_GENDER_MALE
     data.phys_desc = data.description
 
     local status = Characters.create(player, data)
