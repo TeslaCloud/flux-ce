@@ -46,7 +46,7 @@ end
 
 function Factions:PreCreateCharacter(player, data)
   local faction_table = Factions.find_by_id(data.faction)
-  if faction_table and (!data.name or !string.presence(data.name)) then
+  if faction_table and !string.presence(data.name) then
     -- Try to generate the name if one is not present
     data.name = faction_table:generate_name(player, data.rank or 1)
   end
