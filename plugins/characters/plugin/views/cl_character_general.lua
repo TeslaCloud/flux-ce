@@ -184,6 +184,7 @@ function PANEL:Init()
   if !faction_table.has_name then
     self.name_label:SetVisible(false)
     self.name_entry:SetVisible(false)
+
     if self.name_random then
       self.name_random:SetVisible(false)
     end
