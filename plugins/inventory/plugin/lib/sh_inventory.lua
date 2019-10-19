@@ -257,8 +257,6 @@ do
       self.inventories = inventories
       self:load_inventories()
       self:sync_inventories()
-
-      Cable.send(self, 'fl_create_hotbar')
     end
 
     --- @warning [Internal]

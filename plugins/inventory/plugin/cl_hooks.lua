@@ -3,9 +3,10 @@ function Inventories:OnContextMenuOpen()
     PLAYER.hotbar:safe_remove()
   end
 
+  timer.destroy('fl_hotbar_popup')
+
   PLAYER.hotbar = Inventories:create_hotbar()
   PLAYER.hotbar:SetAlpha(255)
-  PLAYER.hotbar:SetVisible(true)
   PLAYER.hotbar:MakePopup()
   PLAYER.hotbar:MoveToFront()
   PLAYER.hotbar:SetMouseInputEnabled(true)
@@ -117,11 +118,6 @@ Cable.receive('fl_inventory_sync', function(data)
   end
 
   hook.run('OnInventorySync', inventory)
-end)
-
-Cable.receive('fl_create_hotbar', function()
-  PLAYER.hotbar = Inventories:create_hotbar()
-  PLAYER.hotbar:SetVisible(false)
 end)
 
 Cable.receive('fl_rebuild_player_panel', function()
