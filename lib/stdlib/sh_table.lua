@@ -404,77 +404,6 @@ function table.deserialize(data)
   end
 end
 
-function table.from_string(str)
-  str = util.remove_newlines(str)
-
-  local pieces = str:split(',')
-  local tab = a{}
-
-  for k, v in ipairs(pieces) do
-    if !isstring(v) then continue end
-
-    if !string.find(v, '=') then
-      v = v:trim_start(' ', true)
-
-      if string.is_n(v) then
-        v = tonumber(v)
-      elseif string.find(v, '"') then
-        v = v:trim_start('"'):trim_end('"')
-      elseif v:find('{') then
-        v = v:Replace('{', '')
-
-        local last_key = nil
-        local buff = v
-
-        for k2, v2 in ipairs(pieces) do
-          if k2 <= k then continue end
-
-          if v2:find('}') then
-            buff = buff..','..v2:Replace('}', '')
-
-            last_key = k2
-
-            break
-          end
-
-          buff = buff..','..v2
-        end
-
-        if last_key then
-          for i = k, last_key do
-            pieces[i] = nil
-          end
-
-          v = table.from_string(buff)
-        end
-      else
-        v = v:trim_end('}')
-      end
-
-      v = v:trim_end('}')
-      v = v:trim_end('\'')
-
-      table.insert(tab, v)
-    else
-      local parts = v:split('=')
-      local key = parts[1]:trim_end(' ', true):trim_end('\t', true)
-      local value = parts[2]:trim_start(' ', true):trim_start('\t', true)
-
-      if string.is_n(value) then
-        value = tonumber(value)
-      elseif value:find('{') and value:find('}') then
-        value = table.from_string(value)
-      else
-        value = value:trim_end('}')
-      end
-
-      tab[key] = value
-    end
-  end
-
-  return tab
-end
-
 do
   local table_meta = {
     __index = table
@@ -513,7 +442,7 @@ function wk(str)
 end
 
 -- A better implementation of PrintTable
-function PrintTable(t, indent, done, indent_length)
+function print_table(t, indent, done, indent_length)
   done = done or {}
   indent = indent or 0
   indent_length = indent_length or 1
@@ -554,7 +483,7 @@ function PrintTable(t, indent, done, indent_length)
       else
         done[value] = true
         Msg(str_key..':\n')
-        PrintTable(value, indent + 1, done, indent_length - 3)
+        print_table(value, indent + 1, done, indent_length - 3)
         done[value] = nil
       end
     else
@@ -574,4 +503,4 @@ function PrintTable(t, indent, done, indent_length)
   end
 end
 
-print_table = PrintTable
+PrintTable = print_table

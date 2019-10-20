@@ -101,33 +101,15 @@ function Flux.Command:extract_arguments(text)
 
     local char = text:utf8sub(i, i)
 
-    if (char == '"' or char == "'" or char == '{') and word == '' then
+    if (char == '"' or char == "'") and word == '' then
       local end_pos = text:find('"', i + 1)
-      local is_table = false
 
       if !end_pos then
         end_pos = text:find("'", i + 1)
-
-        if !end_pos then
-          end_pos = text:find('}', i + 1)
-          is_table = true
-        end
       end
 
       if end_pos then
-        if !is_table then
-          table.insert(arguments, text:utf8sub(i + 1, end_pos - 1))
-        else
-          local text = text:utf8sub(i, end_pos)
-          local tab = table.from_string(text)
-
-          if tab then
-            table.insert(arguments, tab)
-          else
-            table.insert(arguments, text)
-          end
-        end
-
+        table.insert(arguments, text:utf8sub(i + 1, end_pos - 1))
         skip = end_pos - i
       else
         word = word..char
