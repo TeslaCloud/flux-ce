@@ -114,7 +114,9 @@ function ItemEquipable:on_transfer(new_inventory, old_inventory)
     local player = new_inventory.owner
     player:EmitSound(self.action_sounds['equip'])
     self:equip(player, true)
-  elseif old_inventory and old_inventory.type == self.equip_inv then
+  end
+
+  if old_inventory and old_inventory.type == self.equip_inv then
     local player = old_inventory.owner
     player:EmitSound(self.action_sounds['unequip'])
     self:equip(player, false)
