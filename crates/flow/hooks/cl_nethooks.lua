@@ -39,10 +39,10 @@ Cable.receive('fl_player_interact', function(target)
   end
 end)
 
-Cable.receive('fl_entity_interact', function(target)
+Cable.receive('fl_entity_interact', function(entity)
   local interaction_menu = DermaMenu()
 
-  hook.run('CreateEntityInteractions', interaction_menu, target)
+  hook.run('CreateEntityInteractions', interaction_menu, entity)
 
   if interaction_menu:ChildCount() > 0 then
     interaction_menu:Open()

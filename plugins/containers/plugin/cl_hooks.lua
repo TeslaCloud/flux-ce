@@ -41,12 +41,12 @@ function Container:GetEntityName(entity)
   end
 end
 
-function Container:CreateEntityInteractions(menu, target)
-  local container_data = self:find(target:GetModel())
+function Container:CreateEntityInteractions(menu, entity)
+  local container_data = self:find(entity:GetModel())
   
   if container_data then
     menu:AddOption(t'ui.container.open', function()
-      Cable.send('fl_container_open', target)
+      Cable.send('fl_container_open', entity)
     end):SetIcon('icon16/box.png')
   end
 end
