@@ -71,6 +71,10 @@ function ent_meta:set_bodygroups(bodygroups)
 end
 
 function ent_meta:faces(entity)
-  return math.abs(math.normalize_angle(self:EyeAngles().y) - entity:EyeAngles().y) > 50
+  local aim_vector = self:GetAimVector():Angle()
+  local target_aim_vector = entity:GetAimVector():Angle()
+
+  return math.abs(aim_vector.y - target_aim_vector.y) > 50
 end
+
 
