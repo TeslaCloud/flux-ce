@@ -27,6 +27,18 @@ Cable.receive('fl_player_take_damage', function()
 end)
 
 Cable.receive('fl_player_interact', function(target)
+  local interaction_menu = DermaMenu()
+
+  hook.run('CreatePlayerInteractions', interaction_menu, target)
+
+  if interaction_menu:ChildCount() > 0 then
+    interaction_menu:Open()
+    interaction_menu:Center()
+  else
+    interaction_menu:safe_remove()
+  end
+end)
+
 Cable.receive('fl_entity_interact', function(target)
   local interaction_menu = DermaMenu()
 
