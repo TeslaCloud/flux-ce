@@ -1,0 +1,13 @@
+categories:
+  ragdoll:
+    name: config.ragdoll.title
+    description: config.ragdoll.desc
+configs:
+  corpse_remove_delay:
+    name: config.ragdoll.corpse_remove_delay.name
+    description: config.ragdoll.corpse_remove_delay.desc
+    category: ragdoll
+    type: number
+    min_value: 0
+    max_value: 3600
+    default_value: 120

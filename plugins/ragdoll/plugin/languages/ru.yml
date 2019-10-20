@@ -17,3 +17,10 @@ ru:
   ui:
     hud:
       press_jump_to_getup: Нажмите 'прыжок', чтобы встать...
+  config:
+    ragdoll:
+      title: Ragdoll
+      desc: Настройки плагина Ragdoll.
+      corpse_remove_delay:
+        name: Время удаления ragdoll'а после смерти
+        desc: Время в секундах, которое должно пройти после смерти персонажа, чтобы ragdoll его трупа был удалён.
