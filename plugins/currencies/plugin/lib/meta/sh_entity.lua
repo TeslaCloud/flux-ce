@@ -1,7 +1,7 @@
 ﻿do
-  local player_meta = FindMetaTable('Player')
+  local entity_meta = FindMetaTable('Entity')
 
-  function player_meta:get_money(currency)
+  function entity_meta:get_money(currency)
     if Currencies:find_currency(currency) then
       return self:get_nv('fl_currencies', {})[currency] or 0
     end
@@ -9,12 +9,16 @@
     return 0
   end
 
-  function player_meta:has_money(currency, value)
+  function entity_meta:has_money(currency, value)
     return self:get_money(currency) >= value
   end
 
+  function entity_meta:can_contain_money()
+    return hook.run('CanContainMoney', self)
+  end
+
   if SERVER then
-    function player_meta:set_money(currency, value)
+    function entity_meta:set_money(currency, value)
       local currency_data = Currencies:find_currency(currency)
 
       if currency_data then
@@ -25,31 +29,37 @@
         local currency_table = self:get_nv('fl_currencies', {})
         currency_table[currency] = value
 
-        local char = self:get_character()
+        if self:IsPlayer() then
+          local char = self:get_character()
 
-        for k, v in pairs(char.currencies) do
-          if v.currency_id == currency then
-            char.currencies[k].amount = value
+          for k, v in pairs(char.currencies) do
+            if v.currency_id == currency then
+              char.currencies[k].amount = value
 
-            break
+              break
+            end
           end
+        else
+          self.currencies[currency] = value
         end
 
         self:set_nv('fl_currencies', currency_table)
 
-        hook.run('PlayerMoneyChanged', self, currency, value, old_value)
+        hook.run('EntityMoneyChanged', self, currency, value, old_value)
       end
     end
 
-    function player_meta:take_money(currency, value)
+    function entity_meta:take_money(currency, value)
       self:set_money(currency, self:get_money(currency) - value)
     end
 
-    function player_meta:give_money(currency, value)
+    function entity_meta:give_money(currency, value)
       self:set_money(currency, self:get_money(currency) + value)
     end
 
-    function player_meta:drop_money(currency, value)
+    function entity_meta:drop_money(currency, value)
+      if !self:IsPlayer() then return false, 'error.invalid_entity' end
+
       local trace = self:GetEyeTraceNoCursor()
       local pos = trace.HitPos
 
@@ -99,14 +109,14 @@
       money_ent.next_pickup = CurTime() + 0.5
     end
 
-    function player_meta:give_money_to(target, currency, value)
-      if !target then
+    function entity_meta:give_money_to(target, currency, value)
+      if !target and self:IsPlayer() then
         local trace = self:GetEyeTraceNoCursor()
 
         target = trace.Entity
       end
 
-      local success, err = hook.run('CanPlayerGiveMoney', self, target, value, currency)
+      local success, err = hook.run('CanGiveMoney', self, target, value, currency)
 
       if success == false then
         return false, err
@@ -115,9 +125,15 @@
       local currency_data = Currencies:find_currency(currency)
 
       self:take_money(currency, value)
-      self:notify('notification.currency.give', { target = target, value = value, currency = currency_data.name }, Color('salmon'))
       target:give_money(currency, value)
-      target:notify('notification.currency.receive', { target = player, value = value, currency = currency_data.name }, Color('green'))
+
+      if self:IsPlayer() then
+        self:notify('notification.currency.give', { target = target, value = value, currency = currency_data.name }, Color('salmon'))
+      end
+
+      if target:IsPlayer() then
+        target:notify('notification.currency.receive', { target = self, value = value, currency = currency_data.name }, Color('lightgreen'))
+      end
     end
   end
 end
