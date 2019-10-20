@@ -20,7 +20,7 @@ function player_meta:is_ragdolled()
   return false
 end
 
-function player_meta:create_ragdoll_entity(decay, fallen)
+function player_meta:create_ragdoll_entity(delay, fallen)
   if !IsValid(self:GetDTEntity(ENT_RAGDOLL)) then
     local ragdoll = ents.Create('prop_ragdoll')
       ragdoll:SetModel(self:GetModel())
@@ -29,7 +29,7 @@ function player_meta:create_ragdoll_entity(decay, fallen)
       ragdoll:SetSkin(self:GetSkin())
       ragdoll:SetMaterial(self:GetMaterial())
       ragdoll:SetColor(self:GetColor())
-      ragdoll.decay = decay
+      ragdoll.delay = delay
       ragdoll.weapons = {}
     ragdoll:Spawn()
 
@@ -73,6 +73,20 @@ function player_meta:create_ragdoll_entity(decay, fallen)
       self:SetNotSolid(true)
     end
 
+    if delay then
+      timer.Simple(delay, function()
+        if IsValid(ragdoll) then
+          -- Reset player's ragdoll state
+          -- If he is still on the server and owns the same ragdoll
+          if IsValid(self) and self:get_ragdoll_entity() == ragdoll then
+            self:reset_ragdoll_entity()
+          end
+
+          ragdoll:Remove()
+        end
+      end)
+    end
+
     if IsValid(ragdoll) then
       ragdoll:SetCollisionGroup(COLLISION_GROUP_WEAPON)
 
@@ -90,7 +104,6 @@ function player_meta:create_ragdoll_entity(decay, fallen)
         end
       end
     end
-
     self:SetDTEntity(ENT_RAGDOLL, ragdoll)
   end
 end
@@ -99,22 +112,17 @@ function player_meta:reset_ragdoll_entity()
   local ragdoll = self:GetDTEntity(ENT_RAGDOLL)
 
   if IsValid(ragdoll) then
-    if !ragdoll.decay then
+    if !ragdoll.delay then
       ragdoll:Remove()
-    else
-      timer.Simple(ragdoll.decay, function()
-        if IsValid(ragdoll) then
-          ragdoll:Remove()
-        end
-      end)
     end
 
     self:SetDTEntity(ENT_RAGDOLL, Entity(0))
   end
 end
 
-function player_meta:set_ragdoll_state(state)
+function player_meta:set_ragdoll_state(state, settings)
   local state = state or RAGDOLL_NONE
+  local settings = settings or {}
 
   self:SetDTInt(INT_RAGDOLL_STATE, state)
 
@@ -122,7 +130,11 @@ function player_meta:set_ragdoll_state(state)
     self:set_action('fallen', true)
     self:create_ragdoll_entity(nil, true)
   elseif state == RAGDOLL_DUMMY then
-    self:create_ragdoll_entity(120)
+    local delay = settings.delay or 120
+
+    if delay > 0 then
+      self:create_ragdoll_entity(delay)
+    end
   elseif state == RAGDOLL_NONE then
     self:reset_ragdoll_entity()
   end

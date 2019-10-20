@@ -17,3 +17,10 @@ en:
   ui:
     hud:
       press_jump_to_getup: Press the 'jump' key to get up...
+  config:
+    ragdoll:
+      title: Ragdoll
+      desc: Ragdoll plugin settings.
+      corpse_remove_delay:
+        name: Corpse removement delay
+        desc: Amount of time in seconds before corpse ragdoll will be removed.
