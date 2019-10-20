@@ -112,7 +112,7 @@ end
 --- Get the entity this inventory belongs to.
 -- @return [Entity]
 function Inventory:get_owner()
-  return self.slots
+  return self.owner
 end
 
 --- Checks if the inventory is multislot.
