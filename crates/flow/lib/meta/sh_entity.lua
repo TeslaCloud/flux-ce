@@ -69,3 +69,8 @@ function ent_meta:set_bodygroups(bodygroups)
     self:SetBodygroup(k, v)
   end
 end
+
+function ent_meta:faces(entity)
+  return math.abs(math.normalize_angle(self:EyeAngles().y) - entity:EyeAngles().y) > 50
+end
+
