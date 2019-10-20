@@ -81,6 +81,8 @@ function PANEL:open_inventory(inventory_id)
   self.inventory:SetPos(ScrW() * 0.5, ScrH() * 0.5 - self.inventory:GetTall() * 0.5)
 
   self.inventory_id = inventory_id
+
+  hook.run('OnConatinerOpened', self, inventory_id)
 end
 
 function PANEL:get_inventory_id()
