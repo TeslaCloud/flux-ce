@@ -20,10 +20,6 @@ function Currencies:OnActiveCharacterSet(player, character)
   player:set_nv('fl_currencies', currencies)
 end
 
-function Currencies:PlayerMoneyChanged(player, currency, value, old_value)
-  hook.run('PlayerInventoryUpdated', player)
-end
-
 function Currencies:CanPlayerPickupMoney(player, entity)
   if player.next_money_pickup and player.next_money_pickup > CurTime() then
     return false
@@ -77,7 +73,7 @@ function Currencies:CanPlayerDropMoney(player, amount, currency, pos, trace)
   end
 end
 
-function Currencies:CanPlayerGiveMoney(player, target, amount, currency)
+function Currencies:CanGiveMoney(player, target, amount, currency)
   local success, err = hook.run('CanPlayerTransferMoney', player, amount, currency)
 
   if success == false then
@@ -88,15 +84,35 @@ function Currencies:CanPlayerGiveMoney(player, target, amount, currency)
     return false, 'error.invalid_entity'
   end
 
-  if IsValid(target) then
-    if !target:IsPlayer() then
-      return false, 'error.invalid_entity'
-    end
+  if !hook.run('CanContainMoney', target) then
+    return false, 'error.invalid_entity'
+  end
 
+  if IsValid(target) then
     if target:GetPos():Distance(player:EyePos()) > 120 then
       return false, 'error.too_far'
     end
   end
+end
+
+function Currencies:CanContainMoney(object)
+  if IsValid(object) and object:IsPlayer() and !object:IsBot() then
+    return true
+  end
+end
+
+function Currencies:PreContainerOpen(entity)
+  if !entity.currencies then
+    local currencies = {}
+
+    for k, v in pairs(Currencies.all()) do
+      currencies[k] = 0
+    end
+
+    entity.currencies = currencies
+  end
+
+  entity:set_nv('fl_currencies', entity.currencies)
 end
 
 Cable.receive('fl_currency_give', function(player, amount, currency, target)
@@ -117,4 +133,16 @@ Cable.receive('fl_currency_drop', function(player, amount, currency)
   end
 
   Cable.send(player, 'fl_rebuild_currency_panel')
+end)
+
+Cable.receive('fl_currency_take', function(player, entity, amount, currency)
+  local success, err = entity:give_money_to(player, currency, amount)
+
+  if success == false then
+    player:notify(err)
+  end
+
+  if entity.inventory then
+    Cable.send(entity.inventory.receivers, 'fl_rebuild_currency_panel')
+  end
 end)

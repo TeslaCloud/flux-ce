@@ -336,12 +336,14 @@ Cable.receive('fl_item_drop', function(player, instance_ids)
   hook.run('PlayerDropItem', player, instance_ids)
 end)
 
-Cable.receive('fl_inventory_close', function(player, inventory_id)
-  local inventory = Inventories.find(inventory_id)
-  inventory:remove_receiver(player)
-  inventory:sync()
+Cable.receive('fl_inventory_close', function(player, inventory_ids)
+  for k, v in pairs(inventory_ids) do
+    local inventory = Inventories.find(v)
+    inventory:remove_receiver(player)
+    inventory:sync()
+  end
 
-  hook.run('OnInventoryClosed', player, inventory)
+  hook.run('OnInventoryClosed', player, Inventories.find(inventory_ids[1]))
 end)
 
 Cable.receive('fl_character_desc_change', function(player, text)

@@ -358,6 +358,10 @@ function PANEL:get_slot(x, y)
   return self:get_inventory():get_slot(x, y)
 end
 
+function PANEL:get_owner()
+  return self:get_inventory():get_owner()
+end
+
 function PANEL:get_slot_size()
   return self.slot_size
 end

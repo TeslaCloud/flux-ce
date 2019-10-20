@@ -499,5 +499,20 @@ do
 
       Cable.send(self, 'fl_inventory_open', inventory.id)
     end
+
+    --- Opens all the inventory other player has.
+    -- @param target [Player]
+    function player_meta:open_player_inventory(target)
+      local inventory_ids = {}
+
+      for k, v in pairs(target:get_inventories()) do
+        v:add_receiver(self)
+        v:sync()
+
+        table.insert(inventory_ids, v.id)
+      end
+
+      Cable.send(self, 'fl_open_player_inventory', target, inventory_ids)
+    end
   end
 end

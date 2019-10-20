@@ -27,14 +27,27 @@ Cable.receive('fl_player_take_damage', function()
 end)
 
 Cable.receive('fl_player_interact', function(target)
-  local player_menu = DermaMenu()
+  local interaction_menu = DermaMenu()
 
-  hook.run('CreatePlayerInteractions', player_menu, target)
+  hook.run('CreatePlayerInteractions', interaction_menu, target)
 
-  if player_menu:ChildCount() > 0 then
-    player_menu:Open()
-    player_menu:Center()
+  if interaction_menu:ChildCount() > 0 then
+    interaction_menu:Open()
+    interaction_menu:Center()
   else
-    player_menu:safe_remove()
+    interaction_menu:safe_remove()
+  end
+end)
+
+Cable.receive('fl_entity_interact', function(entity)
+  local interaction_menu = DermaMenu()
+
+  hook.run('CreateEntityInteractions', interaction_menu, entity)
+
+  if interaction_menu:ChildCount() > 0 then
+    interaction_menu:Open()
+    interaction_menu:Center()
+  else
+    interaction_menu:safe_remove()
   end
 end)

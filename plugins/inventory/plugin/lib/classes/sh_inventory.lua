@@ -109,6 +109,12 @@ function Inventory:get_slots()
   return self.slots
 end
 
+--- Get the entity this inventory belongs to.
+-- @return [Entity]
+function Inventory:get_owner()
+  return self.slots
+end
+
 --- Checks if the inventory is multislot.
 -- @return [Boolean]
 function Inventory:is_multislot()

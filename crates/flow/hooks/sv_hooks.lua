@@ -513,11 +513,15 @@ function GM:PostPlayerLoadout(player, default_loadout)
 end
 
 function GM:PlayerUse(player, target)
-  if IsValid(target) and target:IsPlayer() then
+  if IsValid(target) then
     local cur_time = CurTime()
 
     if !player.next_use or player.next_use < cur_time then
-      Cable.send(player, 'fl_player_interact', target)
+      if target:IsPlayer() then
+        Cable.send(player, 'fl_player_interact', target)
+      else
+        Cable.send(player, 'fl_entity_interact', target)
+      end
 
       player.next_use = cur_time + 1
     end
