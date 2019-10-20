@@ -2,18 +2,23 @@ function Currencies:OnInventoryRebuild(panel)
   if panel:get_inventory_type() == 'pockets' then
     local parent = panel:GetParent()
 
-    if !IsValid(parent.money) then
-      parent.money = self:create_panel(PLAYER, parent)
+    if !IsValid(panel.money) then
+      local owner = Inventories.find(panel:get_inventory_id()).owner
+
+      panel.money = self:create_panel(owner, parent)
     else
-      parent.money:rebuild()
+      panel.money:rebuild()
     end
 
-    local text = t(parent.money.title)
+    local text = t(panel.money.title)
     local font = Theme.get_font('main_menu_normal_large')
     local text_w, text_h = util.text_size(text, font)
 
-    panel:SetWide(math.min(panel:GetWide(), parent.main_inventory:GetWide() - parent.money:GetWide() - math.scale(16)))
-    parent.money:SetPos(panel.x + panel:GetWide() + math.scale(8), panel.y + math.max(panel:GetTall() - parent.money:GetTall(), text_h))
+    if IsValid(panel.main_inventory) then
+      panel:SetWide(math.min(panel:GetWide(), panel.main_inventory:GetWide() - panel.money:GetWide() - math.scale(16)))
+    end
+
+    panel.money:SetPos(panel.x + panel:GetWide() + math.scale(8), panel.y + math.max(panel:GetTall() - panel.money:GetTall(), text_h))
   end
 end
 
@@ -74,25 +79,9 @@ function Currencies:create_panel(entity, parent)
 end
 
 Cable.receive('fl_rebuild_currency_panel', function()
-  if IsValid(Flux.tab_menu) and Flux.tab_menu:IsVisible() then
-    local active_panel = Flux.tab_menu.active_panel
-
-    if IsValid(active_panel) and active_panel.id == 'inventory' then
-      local money_panel = active_panel.money
-
-      if IsValid(money_panel) then
-        money_panel:rebuild()
-      end
-    end
-  end
-
-  if IsValid(Flux.container_panel) then
-    if IsValid(Flux.container_panel.money) then
-      Flux.container_panel.money:rebuild()
-    end
-
-    if IsValid(Flux.container_panel.container_money) then
-      Flux.container_panel.container_money:rebuild()
+  for k, v in pairs(Flux.money_panels) do
+    if IsValid(v) then
+      v:rebuild()
     end
   end
 end)
