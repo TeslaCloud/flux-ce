@@ -31,3 +31,6 @@ en:
       drop:
         title: Drop money
         message: Please, enter amount of {currency} to drop.
+      take:
+        title: Take money
+        message: Please, enter amount of {currency} to take.

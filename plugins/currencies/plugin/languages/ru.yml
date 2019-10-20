@@ -31,3 +31,6 @@ ru:
       drop:
         title: Положить деньги
         message: Сколько валюты '{currency}' Вы хотите положить?
+      take:
+        title: Взять деньги
+        message: Сколько валюты '{currency}' Вы хотите взять?
