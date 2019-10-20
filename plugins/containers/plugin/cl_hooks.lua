@@ -44,7 +44,7 @@ end
 function Container:CreateEntityInteractions(menu, entity)
   local container_data = self:find(entity:GetModel())
   
-  if container_data then
+  if container_data and entity:GetClass() == 'prop_physics' then
     menu:AddOption(t'ui.container.open', function()
       Cable.send('fl_container_open', entity)
     end):SetIcon('icon16/box.png')
