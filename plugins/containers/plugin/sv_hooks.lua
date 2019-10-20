@@ -11,7 +11,7 @@ function Container:PlayerUse(player, entity)
         inventory.title = container_data.name
         inventory.type = 'container'
         inventory.multislot = (container_data != nil) and true or false
-        inventory.entity = entity
+        inventory.owner = entity
 
         if entity.items then
           inventory:load_items(entity.items)
@@ -26,7 +26,9 @@ function Container:PlayerUse(player, entity)
         entity:EmitSound(container_data.open_sound, 55)
       end
 
-      player:open_inventory(entity.inventory)
+      hook.run('PreContainerOpen', entity)
+
+      player:open_inventory(entity.inventory, entity)
 
       player.next_cont_use = cur_time + 1
     end
@@ -54,7 +56,7 @@ function Container:PlayerSpawnedProp(player, model, entity)
 end
 
 function Container:OnInventoryClosed(player, inventory)
-  local entity = inventory.entity
+  local entity = inventory.owner
 
   if IsValid(entity) then
     local container_data = self:find(entity:GetModel())
@@ -71,5 +73,17 @@ function Container:PrePersistenceSave()
       v.items = v.inventory:get_items_ids()
       v.inventory = nil
     end
+  end
+end
+
+function Container:CanContainMoney(object)
+  if IsValid(object) and isentity(object) and self:find(object:GetModel()) then
+    return true
+  end
+end
+
+function Container:CanEntityBeOpened(player, entity)
+  if IsValid(object) and isentity(object) and self:find(object:GetModel()) then
+    return true
   end
 end
