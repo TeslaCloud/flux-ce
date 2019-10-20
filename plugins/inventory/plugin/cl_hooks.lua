@@ -134,6 +134,13 @@ Cable.receive('fl_rebuild_player_panel', function()
   end
 end)
 
+Cable.receive('fl_open_player_inventory', function(player, inventory_ids)
+  local inventory = vgui.create('fl_inventory_container')
+  inventory:open_player_inventories(player, inventory_ids)
+
+  Flux.container_panel = inventory
+end)
+
 Cable.receive('fl_inventory_open', function(inventory_id)
   if !IsValid(Flux.tab_menu) and !IsValid(Flux.container_panel) then
     local inventory = vgui.create('fl_inventory_container')
