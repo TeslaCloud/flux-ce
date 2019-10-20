@@ -1,8 +1,8 @@
 function PLUGIN:PlayerDeath(player)
-  local decay = math.max(Config.get('corpse_remove_delay'), Config.get('respawn_delay'))
+  local delay = math.max(Config.get('corpse_remove_delay'), Config.get('respawn_delay'))
 
   local settings = {}
-  settings.decay = decay
+  settings.delay = delay
 
   player:reset_action()
   player:set_ragdoll_state(RAGDOLL_DUMMY, settings)
