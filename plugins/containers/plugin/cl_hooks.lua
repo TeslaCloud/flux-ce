@@ -40,3 +40,13 @@ function Container:GetEntityName(entity)
     return t(container_data.name)
   end
 end
+
+function Container:CreateEntityInteractions(menu, target)
+  local container_data = self:find(target:GetModel())
+  
+  if container_data then
+    menu:AddOption('ui.container.open', function()
+      Cable.send('fl_container_open', target)
+    end):SetIcon('icon16/box.png')
+  end
+end

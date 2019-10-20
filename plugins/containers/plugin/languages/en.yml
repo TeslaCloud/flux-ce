@@ -81,3 +81,6 @@ en:
     medium_cash_reg:
       title: Cash Register
       desc: "A moderately sized cash register, it seems to be missing a lock."
+  ui:
+    container:
+      open: Open

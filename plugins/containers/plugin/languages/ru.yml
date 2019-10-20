@@ -69,3 +69,6 @@ ru:
     medium_wooden_crate:
       title: Небольшой деревянный ящик
       desc: Средних размеров ящик из дерева.
+  ui:
+    container:
+      open: Открыть
