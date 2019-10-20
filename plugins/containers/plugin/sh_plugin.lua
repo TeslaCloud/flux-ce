@@ -19,7 +19,7 @@ do
   end
 
   function Container:find(model)
-    return stored[model]
+    return stored[model:lower()]
   end
 end
 
