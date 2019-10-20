@@ -42,7 +42,7 @@ if CLIENT then
           if v:IsPlayer() then
             arguments[k] = hook.run('GetPlayerName', v) or v:name()
           else
-            arguments[k] = tostring(v) or v:GetClass()
+            arguments[k] = hook.run('GetEntityName', v) or tostring(v) or v:GetClass()
           end
         end
       end
