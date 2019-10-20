@@ -218,7 +218,7 @@ function PANEL:rebuild_models()
 
   if model then
     self.model:SetModel(model)
-    self.model:GetEntity():SetSequence(self.model:GetEntity():get_idle_anim())
+    self.model:GetEntity():SetSequence(self.model:GetEntity():idle_animation())
   end
 
   for k, v in ipairs(models) do
@@ -239,7 +239,7 @@ function PANEL:rebuild_models()
       self.models_list.model = v
       self:GetParent().char_data.model = v
       self.model:SetModel(v)
-      self.model:GetEntity():SetSequence(self.model:GetEntity():get_idle_anim())
+      self.model:GetEntity():SetSequence(self.model:GetEntity():idle_animation())
 
       local skins = self.model.Entity:SkinCount()
 

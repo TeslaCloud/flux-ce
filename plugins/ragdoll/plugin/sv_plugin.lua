@@ -51,11 +51,11 @@ function player_meta:create_ragdoll_entity(decay, fallen)
           self:SetNoDraw(false)
           self:SetNotSolid(false)
 
-          if self:is_stuck() then
+          if self:stuck() then
             self:DropToFloor()
             self:SetPos(self:GetPos() + Vector(0, 0, 16))
 
-            if !self:is_stuck() then return end
+            if !self:stuck() then return end
 
             self:unstuck({ ragdoll, self })
           end

@@ -61,11 +61,11 @@ function PANEL:rebuild()
     pnl:SetModel(PLAYER:GetModel())
 
     local ent = pnl:GetEntity()
-    ent:SetSequence(ent:get_idle_anim())
+    ent:SetSequence(ent:idle_animation())
     ent:SetSkin(PLAYER:GetSkin())
     ent:SetColor(PLAYER:GetColor())
     ent:SetMaterial(PLAYER:GetMaterial())
-    ent:set_bodygroups(PLAYER:get_bodygroups())
+    ent:set_bodygroups(PLAYER:bodygroups())
   end
 
   self.player_model:rebuild()

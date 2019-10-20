@@ -145,7 +145,7 @@ function PANEL:set_character(char_data)
   self.char_data = char_data
 
   self.model:SetModel(char_data.model)
-  self.model:GetEntity():SetSequence(self.model:GetEntity():get_idle_anim())
+  self.model:GetEntity():SetSequence(self.model:GetEntity():idle_animation())
 
   if PLAYER:get_character_id() == char_data.id then
     self.select:SetVisible(false)

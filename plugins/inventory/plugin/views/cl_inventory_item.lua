@@ -258,7 +258,7 @@ function PANEL:rebuild()
     local entity = self.model_panel:GetEntity()
     local cam_data = table.copy(self.item_data:get_icon_data())
 
-    entity:SetSequence(entity:get_idle_anim())
+    entity:SetSequence(entity:idle_animation())
 
     if !cam_data then
       cam_data = PositionSpawnIcon(entity, entity:GetPos(), true)

@@ -134,12 +134,12 @@ function player_meta:unstuck(filter)
   for k, v in ipairs(positions) do
     self:SetPos(v)
 
-    if !self:is_stuck() then
+    if !self:stuck() then
       return
     else
       self:DropToFloor()
 
-      if !self:is_stuck() then return end
+      if !self:stuck() then return end
     end
   end
 end

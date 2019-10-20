@@ -7,7 +7,7 @@ local ent_meta = FindMetaTable('Entity')
 --]]
 ent_meta.flSetModel = ent_meta.flSetModel or ent_meta.SetModel
 
-function ent_meta:is_stuck()
+function ent_meta:stuck()
   local pos = self:GetPos()
 
   local trace = util.TraceHull({
@@ -35,26 +35,28 @@ function ent_meta:is_door()
   return false
 end
 
-local idle_anims = {
-  'idle01',
-  'idle_subtle',
-  'batonidle1',
-  'idle_unarmed'
-}
+do
+  local idle_anims = {
+    'idle01',
+    'idle_subtle',
+    'batonidle1',
+    'idle_unarmed'
+  }
 
-function ent_meta:get_idle_anim()
-  for k, v in pairs(idle_anims) do
-    local seq = self:LookupSequence(v)
+  function ent_meta:idle_animation()
+    for k, v in pairs(idle_anims) do
+      local seq = self:LookupSequence(v)
 
-    if seq > 0 then
-      return seq
+      if seq > 0 then
+        return seq
+      end
     end
-  end
 
-  return ACT_IDLE
+    return ACT_IDLE
+  end
 end
 
-function ent_meta:get_bodygroups()
+function ent_meta:bodygroups()
   local bodygroups = {}
 
   for i = 0, self:GetNumBodyGroups() do
@@ -77,4 +79,20 @@ function ent_meta:facing(entity)
   return math.abs(aim_vector.y - target_aim_vector.y) > 50
 end
 
+function ent_meta:get_hitgroup_from_pos(pos)
+  for i = 0, self:GetHitBoxGroupCount() - 1 do
+    for k = 0, self:GetHitBoxCount(i) - 1 do
+      local mins, maxs = self:GetHitBoxBounds(k, i)
+      local bone_pos = self:GetBonePosition(self:GetHitBoxBone(k, i))
 
+      mins = bone_pos + mins
+      maxs = bone_pos + maxs
+
+      if pos:WithinAABox(mins, maxs) then
+        return k
+      end
+    end
+  end
+
+  return HITGROUP_GENERIC
+end
