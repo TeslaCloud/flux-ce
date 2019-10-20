@@ -132,6 +132,8 @@ function PANEL:rebuild()
       self.max_h = self.max_h + line:GetTall()
     end
   end
+
+  self:SizeToContents()
 end
 
 vgui.Register('fl_currencies', PANEL, 'fl_base_panel')
