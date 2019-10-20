@@ -48,7 +48,7 @@ function Container:EntityRemoved(entity)
 end
 
 function Container:PlayerSpawnedProp(player, model, entity)
-  if self:find(model)then
+  if self:find(model) then
     entity:SetPersistent(true)
   end
 end
