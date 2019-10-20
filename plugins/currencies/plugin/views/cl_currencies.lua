@@ -24,7 +24,11 @@ function PANEL:PaintOver(w, h)
 end
 
 function PANEL:SizeToContents()
-  self:SetSize(self.max_w + 4, self.max_h + 4)
+  self:SetSize(self.max_w + math.scale_x(4), self.max_h + math.scale(4))
+end
+
+function PANEL:set_entity(entity)
+  self.entity = entity
 end
 
 function PANEL:rebuild()
@@ -33,7 +37,7 @@ function PANEL:rebuild()
   self:Clear()
 
   for k, v in pairs(Currencies.all()) do
-    local amount = PLAYER:get_money(k) or 0
+    local amount = self.entity:get_money(k) or 0
 
     if !v.hidden or v.hidden and amount > 0 then
       local line = vgui.create('DPanel', self)
@@ -50,49 +54,72 @@ function PANEL:rebuild()
       local w = label:GetWide()
 
       if amount > 0 then
-        local give_button = vgui.create('fl_button', line)
-        give_button:SetSize(button_size, button_size)
-        give_button:SetDrawBackground(false)
-        give_button:SetTooltip(t'ui.currency.give.title')
-        give_button:set_icon('fa-hand-holding-usd')
-        give_button:set_icon_size(button_size)
-        give_button:Dock(RIGHT)
-        give_button.DoClick = function(btn)
-          local target = PLAYER:GetEyeTraceNoCursor().Entity
+        if self.entity == PLAYER then
+          local give_button = vgui.create('fl_button', line)
+          give_button:SetSize(button_size, button_size)
+          give_button:SetDrawBackground(false)
+          give_button:SetTooltip(t'ui.currency.give.title')
+          give_button:set_icon('fa-hand-holding-usd')
+          give_button:set_icon_size(button_size)
+          give_button:Dock(RIGHT)
+          give_button.DoClick = function(btn)
+            local target = PLAYER:GetEyeTraceNoCursor().Entity
 
-          Derma_StringRequest(t'ui.currency.give.title', t('ui.currency.give.message', { currency = t(v.name) }), '', function(text)
-            local value = tonumber(text)
+            Derma_StringRequest(t'ui.currency.give.title', t('ui.currency.give.message', { currency = t(v.name) }), '', function(text)
+              local value = tonumber(text)
 
-            if value and value > 0 then
-              Cable.send('fl_currency_give', value, k, target)
-            else
-              PLAYER:notify('error.invalid_amount')
-            end
-          end)
+              if value and value > 0 then
+                Cable.send('fl_currency_give', value, k, target)
+              else
+                PLAYER:notify('error.invalid_amount')
+              end
+            end)
+          end
+
+          w = w + give_button:GetWide()
+
+          local drop_button = vgui.create('fl_button', line)
+          drop_button:SetSize(button_size, button_size)
+          drop_button:SetDrawBackground(false)
+          drop_button:SetTooltip(t'ui.currency.drop.title')
+          drop_button:set_icon('coins')
+          drop_button:set_icon_size(button_size)
+          drop_button:Dock(RIGHT)
+          drop_button.DoClick = function(btn)
+            Derma_StringRequest(t'ui.currency.drop.title', t('ui.currency.drop.message', { currency = t(v.name) }), '', function(text)
+              local value = tonumber(text)
+
+              if value and value > 0 then
+                Cable.send('fl_currency_drop', value, k)
+              else
+                PLAYER:notify('error.invalid_amount')
+              end
+            end)
+          end
+
+          w = w + drop_button:GetWide()
+        else
+          local take_button = vgui.create('fl_button', line)
+          take_button:SetSize(button_size, button_size)
+          take_button:SetDrawBackground(false)
+          take_button:SetTooltip(t'ui.currency.take.title')
+          take_button:set_icon('angle-double-left')
+          take_button:set_icon_size(button_size)
+          take_button:Dock(RIGHT)
+          take_button.DoClick = function(btn)
+            Derma_StringRequest(t'ui.currency.take.title', t('ui.currency.take.message', { currency = t(v.name) }), amount, function(text)
+              local value = tonumber(text)
+
+              if value and value > 0 then
+                Cable.send('fl_currency_take', self.entity, value, k)
+              else
+                PLAYER:notify('error.invalid_amount')
+              end
+            end)
+          end
+
+          w = w + take_button:GetWide()
         end
-
-        w = w + give_button:GetWide()
-
-        local drop_button = vgui.create('fl_button', line)
-        drop_button:SetSize(button_size, button_size)
-        drop_button:SetDrawBackground(false)
-        drop_button:SetTooltip(t'ui.currency.drop.title')
-        drop_button:set_icon('coins')
-        drop_button:set_icon_size(button_size)
-        drop_button:Dock(RIGHT)
-        drop_button.DoClick = function(btn)
-          Derma_StringRequest(t'ui.currency.drop.title', t('ui.currency.drop.message', { currency = t(v.name) }), '', function(text)
-            local value = tonumber(text)
-
-            if value and value > 0 then
-              Cable.send('fl_currency_drop', value, k)
-            else
-              PLAYER:notify('error.invalid_amount')
-            end
-          end)
-        end
-
-        w = w + drop_button:GetWide()
       end
 
       line:SetSize(w, label:GetTall())
