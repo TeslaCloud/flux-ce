@@ -70,7 +70,7 @@ function ent_meta:set_bodygroups(bodygroups)
   end
 end
 
-function ent_meta:faces(entity)
+function ent_meta:facing(entity)
   local aim_vector = self:GetAimVector():Angle()
   local target_aim_vector = entity:GetAimVector():Angle()
 
