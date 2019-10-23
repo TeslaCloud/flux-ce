@@ -143,3 +143,9 @@ function player_meta:unstuck(filter)
     end
   end
 end
+
+function player_meta:give_weapons(weapons_table, no_ammo)
+  for k, v in pairs(weapons_table) do
+    self:Give(v, no_ammo)
+  end
+end

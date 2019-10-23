@@ -41,9 +41,7 @@ function player_meta:create_ragdoll_entity(decay, fallen)
           self:reset_ragdoll_entity()
 
           if ragdoll.weapons then
-            for k, v in ipairs(ragdoll.weapons) do
-              self:Give(v, true)
-            end
+            self:give_weapons(ragdoll.weapons)
           end
 
           self:GodDisable()
@@ -62,9 +60,7 @@ function player_meta:create_ragdoll_entity(decay, fallen)
         end
       end)
 
-      for k, v in ipairs(self:GetWeapons()) do
-        table.insert(ragdoll.weapons, v:GetClass())
-      end
+      ragdoll.weapons = self:get_weapons_list()
 
       self:GodDisable()
       self:StripWeapons()

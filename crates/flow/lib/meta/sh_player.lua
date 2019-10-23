@@ -32,6 +32,16 @@ function player_meta:SetModel(path)
   return self:flSetModel(path)
 end
 
+function player_meta:get_weapons_list()
+  local weapons_table = {}
+
+  for k, v in pairs(self:GetWeapons()) do
+    table.insert(weapons_table, v:GetClass())
+  end
+
+  return weapons_table
+end
+
 if CLIENT then
   function player_meta:notify(message, arguments, color)
     if istable(arguments) then
