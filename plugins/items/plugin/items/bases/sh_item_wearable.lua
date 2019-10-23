@@ -47,17 +47,27 @@ function ItemWearable:get_valid_models()
   return self.valid_models
 end
 
+function ItemWearable:get_valid_model_group()
+  return self.valid_model_group
+end
+
 function ItemWearable:can_equip(player)
   local valid_models = self:get_valid_models()
+  local valid_model_group = self:get_valid_model_group()
+  local player_model = player:GetModel():lower()
 
   if valid_models then
     for k, v in pairs(valid_models) do
-      if v:lower() == player:GetModel():lower() then
+      if v:lower() == player_model then
         return true
       end
     end
-  else
-    return true
+  end
+
+  if valid_model_group then
+    if player_model:find(valid_model_group) then
+      return true
+    end
   end
 
   return false
@@ -111,7 +121,7 @@ function ItemWearable:post_unequipped(player)
   for k, v in pairs(player:get_items(self.equip_inv)) do
     if self.instance_id == v then continue end
 
-    if !v:can_equip(player) then
+    if v:can_equip(player) == false then
       v:on_use(player)
     end
   end
