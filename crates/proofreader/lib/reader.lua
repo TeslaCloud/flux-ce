@@ -68,7 +68,7 @@ function PR:proofread_file(filename)
       if !status then
         local severity = reader_instance:severity()
     
-        self:add_message(severity, filename, line + old_line, reader_instance:message())
+        self:add_message(severity, filename, line and (line + old_line), reader_instance:message())
         overall_status = severity_to_status[severity]
 
         if isnumber(pos) then
@@ -96,6 +96,12 @@ function PR:proofread(files)
   self.messages = {}
 
   if !istable(files) then return end
+
+  files = table.map(files, function(v)
+    if v:ends('.lua') or v:ends('.cratespec') then
+      return v
+    end
+  end)
 
   for _, filename in ipairs(files) do
     local status = self:proofread_file(filename)

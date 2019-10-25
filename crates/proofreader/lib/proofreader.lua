@@ -7,4 +7,4 @@ require_relative 'readers/line_end'
 require_relative 'readers/line_length'
 require_relative 'readers/newline_at_end_of_file'
 
-PR:proofread_folder('gamemodes/flux/lib')
+PR:proofread_folder('gamemodes/flux')

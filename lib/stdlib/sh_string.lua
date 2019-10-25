@@ -318,5 +318,4 @@ function string.escape(str)
             :gsub('\r', '\\r')
             :gsub('\t', '\\t')
             :gsub('\v', '\\v')
-            :gsub('\\', '\\\\')
 end
