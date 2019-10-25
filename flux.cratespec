@@ -26,4 +26,8 @@ Crate:describe(function(s)
   s.depends     'packager'
   s.depends     'flow'
   s.depends     'gvue'
+
+  if ENV['FLUX_ENV'] != 'production' then
+    s.depends   'proofreader'
+  end
 end)
