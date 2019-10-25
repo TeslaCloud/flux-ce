@@ -87,7 +87,9 @@ function util.player_list_to_string(player_list)
     return 'ui.chat.everyone'
   end
 
-  return util.list_to_string(function(obj) return (IsValid(obj) and obj:name()) or 'Unknown Player' end, nil, unpack(player_list))
+  return util.list_to_string(function(obj)
+    return (IsValid(obj) and obj:name()) or 'Unknown Player'
+  end, nil, unpack(player_list))
 end
 
 function util.remove_newlines(str)
@@ -335,7 +337,9 @@ function error_with_traceback(msg)
 end
 
 local env = table.Copy(_G)
-local unsafe = w'debug require setfenv getfenv File _G _R RunString CompileString rawget rawset rawequal setmetatable coroutine module package newproxy'
+local unsafe = w[[debug require setfenv getfenv File _G _R RunString 
+                 CompileString rawget rawset rawequal setmetatable
+                 coroutine module package newproxy]]
 
 for k, v in ipairs(unsafe) do
   env[v] = nil

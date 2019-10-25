@@ -59,6 +59,7 @@ function PR:proofread_file(filename)
 
   for _, reader in ipairs(self.readers) do
     local reader_instance = reader.new(self.config)
+    local old_line, old_pos = 0, 0
     local status, pos, line
 
     repeat
@@ -67,17 +68,17 @@ function PR:proofread_file(filename)
       if !status then
         local severity = reader_instance:severity()
     
-        self:add_message(severity, filename, line, reader_instance:message())
+        self:add_message(severity, filename, line + old_line, reader_instance:message())
         overall_status = severity_to_status[severity]
 
         if isnumber(pos) then
           contents = contents:sub(pos + lines[line]:len(), #contents)
-          pos = 0
+          old_pos = old_pos + pos
         end
 
         if isnumber(line) then
           lines = table.slice(lines, line + 1, #lines)
-          line = 0
+          old_line = old_line + line
         end
       end
     until !pos or status

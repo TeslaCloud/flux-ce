@@ -110,7 +110,12 @@ function Plugin.remove_from_cache(id)
       local success, exception = pcall(plugin_table.on_unhook, plugin_table)
 
       if !success then
-        error_with_traceback('Plugin#on_unhook method has failed to run for '..tostring(plugin_table)..'!\n'..tostring(exception))
+        error_with_traceback(
+          'Plugin#on_unhook method has failed to run for '..
+          tostring(plugin_table)..
+          '!\n'..
+          tostring(exception)
+        )
       end
     end
 
@@ -136,7 +141,12 @@ function Plugin.recache(id)
       local success, exception = pcall(plugin_table.on_recache, plugin_table)
 
       if !success then
-        error_with_traceback('Plugin#on_recache method has failed to run! '..tostring(plugin_table)..'\n'..tostring(exception))
+        error_with_traceback(
+          'Plugin#on_recache method has failed to run! '..
+          tostring(plugin_table)..
+          '\n'..
+          tostring(exception)
+        )
       end
     end
 
@@ -153,7 +163,12 @@ function Plugin.remove(id)
       local success, exception = pcall(plugin_table.on_removed, plugin_table)
 
       if !success then
-        error_with_traceback('Plugin#on_removed method has failed to run! '..tostring(plugin_table)..'\n'..tostring(exception))
+        error_with_traceback(
+          'Plugin#on_removed method has failed to run! '..
+          tostring(plugin_table)..
+          '\n'..
+          tostring(exception)
+        )
       end
     end
 
@@ -342,7 +357,8 @@ function Plugin.include_schema()
         long_error(
           "Unable to load schema! Dependency missing: '"..
           tostring(v)..
-          "'!\nPlease install this plugin in your schema's 'plugins' folder!\nAlternatively please make sure that your server can download packages from the cloud!\n"
+          "'!\nPlease install this plugin in your schema's 'plugins' folder!\n"..
+          'Alternatively please make sure that your server can download packages from the cloud!\n'
         )
 
         return

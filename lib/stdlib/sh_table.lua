@@ -428,7 +428,7 @@ function s(what)
 end
 
 function w(str)
-  return str:split(' ')
+  return str:gsub('\n', ' '):gsub('  ', ' '):split(' ')
 end
 
 function wk(str)
@@ -475,9 +475,17 @@ function print_table(t, indent, done, indent_length)
       local str_key = tostring(key)
 
       if value.class or value.class_name then
-        Msg(str_key..':'..string.rep(' ', indent_length - str_key:len())..' #<'..tostring(value.class_name or key)..': '..tostring(value):gsub('table: ', '')..'>\n')
+        Msg(
+          str_key..':'..
+          string.rep(' ', indent_length - str_key:len())..
+          ' #<'..tostring(value.class_name or key)..': '..
+          tostring(value):gsub('table: ', '')..'>\n'
+        )
       elseif IsColor(value) then
-        Msg(str_key..':'..string.rep(' ', indent_length - str_key:len())..' #<Color: '..value.r..' '..value.g..' '..value.b..' '..value.a..'>\n')
+        Msg(str_key..':'..
+        string.rep(' ', indent_length - str_key:len())..
+        ' #<Color: '..value.r..' '..value.g..' '..value.b..' '..value.a..'>\n'
+      )
       elseif table.IsEmpty(value) then
         Msg(str_key..':'..string.rep(' ', indent_length - str_key:len())..' []\n')
       else

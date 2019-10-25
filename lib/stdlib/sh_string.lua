@@ -197,7 +197,8 @@ function string.spelling(str, first_lower, no_period)
   local first_char = String.sub(str, 1, 1)
 
   if !str:is_upper() then
-    str = (!first_lower and String.upper(String.sub(str, 1, 1)) or String.lower(String.sub(str, 1, 1)))..String.sub(str, 2, len)
+    str = (!first_lower and String.upper(String.sub(str, 1, 1)) or
+          String.lower(String.sub(str, 1, 1)))..String.sub(str, 2, len)
   end
 
   if !no_period then

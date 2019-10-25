@@ -4,7 +4,7 @@ function LineLengthReader:proofread(tokens, lines, source)
   if self.config['Enabled'] == false then return true end
   if !lines or #lines == 0 or source:len() < 1 then return true end
 
-  self.config['Max'] = self.config['Max'] or 100
+  self.config['Max'] = self.config['Max'] or 120
 
   local max_length = self.config['Max']
   local cur_pos = 0

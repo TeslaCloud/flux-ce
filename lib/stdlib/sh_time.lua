@@ -157,7 +157,9 @@ function Time:nice(time)
     years   < 1.5 and { 'year', years }       or
                       { 'years', years }
 
-  return 'time.'..time_data[1], time_data[1] != 'just_now' and (time >= 0 and 'time.from_now' or 'time.ago') or '', time_data[2]
+  return 'time.'..time_data[1], time_data[1] != 'just_now'
+         and (time >= 0 and 'time.from_now' or 'time.ago')
+         or '', time_data[2]
 end
 
 --- Creates a nice string representation of time relative to now.
@@ -184,7 +186,10 @@ function Time:format_nice(suffix, from_now, amt, lang)
       dec_prefix = t(dec > 0.6 and 'time.over' or 'time.about', nil, lang)
     end
 
-    return (dec_prefix and dec_prefix..' ' or '')..tostring(floored)..' '..t(suffix, nil, lang)..(from_now != '' and ' '..t(from_now, nil, lang) or '')
+    return (dec_prefix and dec_prefix..' ' or '')..
+           tostring(floored)..' '..
+           t(suffix, nil, lang)..
+           (from_now != '' and ' '..t(from_now, nil, lang) or '')
   else
     return t(suffix, nil, lang)
   end
