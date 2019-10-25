@@ -3,7 +3,7 @@ categories:
     name: config.ragdoll.title
     description: config.ragdoll.desc
 configs:
-  corpse_remove_delay:
+  corpse_decay_time:
     name: config.ragdoll.corpse_remove_delay.name
     description: config.ragdoll.corpse_remove_delay.desc
     category: ragdoll
