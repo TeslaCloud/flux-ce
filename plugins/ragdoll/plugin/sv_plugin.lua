@@ -104,6 +104,7 @@ function player_meta:create_ragdoll_entity(decay_time, fallen)
         end
       end
     end
+    
     self:SetDTEntity(ENT_RAGDOLL, ragdoll)
   end
 end
