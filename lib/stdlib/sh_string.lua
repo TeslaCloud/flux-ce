@@ -308,3 +308,14 @@ function string.fmt(format, data)
     return data[hit] or ''
   end)
 end
+
+function string.escape(str)
+  return str:gsub('\a', '\\a')
+            :gsub('\b', '\\b')
+            :gsub('\f', '\\f')
+            :gsub('\n', '\\n')
+            :gsub('\r', '\\r')
+            :gsub('\t', '\\t')
+            :gsub('\v', '\\v')
+            :gsub('\\', '\\\\')
+end
