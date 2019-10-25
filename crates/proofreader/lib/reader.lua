@@ -67,9 +67,13 @@ function PR:proofread_file(filename)
 
       if !status then
         local severity = reader_instance:severity()
-    
+        local new_status = severity_to_status[severity]
+
         self:add_message(severity, filename, line and (line + old_line), reader_instance:message())
-        overall_status = severity_to_status[severity]
+
+        if new_status > overall_status then
+          overall_status = new_status
+        end
 
         if isnumber(pos) then
           contents = contents:sub(pos + lines[line]:len(), #contents)
