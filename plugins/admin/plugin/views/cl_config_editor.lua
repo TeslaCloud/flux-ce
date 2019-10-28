@@ -135,6 +135,7 @@ function PANEL:set_config(key, config_table)
     end
   elseif data_type == 'string' then
     self.text_entry = vgui.create('DTextEntry', self)
+    self.text_entry:SetValue(Config.get(key) or config_table.data.default_value or '')
     self.text_entry:SetFont(Theme.get_font('main_menu_small'))
     self.text_entry.OnEnter = function(pnl, value)
       Cable.send('fl_config_change', key, self.text_entry:GetValue())
