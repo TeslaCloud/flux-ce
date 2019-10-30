@@ -441,6 +441,16 @@ function wk(str)
   return ret
 end
 
+function table.range(from, to)
+  local t = {}
+
+  for i = from, to do
+    table.insert(t, i)
+  end
+
+  return t
+end
+
 -- A better implementation of PrintTable
 function print_table(t, indent, done, indent_length)
   done = done or {}
