@@ -143,3 +143,20 @@ function math.divisible(num, factor)
 end
 
 math.divisible_by = math.divisible
+
+--- Allows math.* methods to be called on number literals.
+local number_meta = debug.getmetatable(0) or {}
+
+function number_meta:__index(key)
+  local value = math[key]
+
+  if value then
+    return value
+  elseif isnumber(value) then
+    return tostring(self):sub(value, value)
+  else
+    error('attempt to index a number value with a bad key ('..value..')', 2)
+  end
+end
+
+debug.setmetatable(0, number_meta)
