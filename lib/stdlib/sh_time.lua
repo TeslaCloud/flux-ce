@@ -128,6 +128,31 @@ Time.week         = Time.weeks
 Time.month        = Time.months
 Time.year         = Time.years
 
+--- Install Time shortcuts into the math library.
+local function installable(func)
+  return function(n)
+    return func(Time, n)
+  end
+end
+
+math.milliseconds = installable(Time.milliseconds)
+math.millisecond  = installable(Time.milliseconds)
+math.ms           = installable(Time.milliseconds)
+math.seconds      = installable(Time.seconds)
+math.second       = installable(Time.seconds)
+math.minutes      = installable(Time.minutes)
+math.minute       = installable(Time.minutes)
+math.hours        = installable(Time.hours)
+math.hour         = installable(Time.hours)
+math.days         = installable(Time.days)
+math.day          = installable(Time.days)
+math.weeks        = installable(Time.weeks)
+math.week         = installable(Time.weeks)
+math.months       = installable(Time.months)
+math.month        = installable(Time.months)
+math.years        = installable(Time.years)
+math.year         = installable(Time.years)
+
 --- Creates a nice string representation of time.
 -- @param time=self.time [Number]
 -- @return [String phrases]
