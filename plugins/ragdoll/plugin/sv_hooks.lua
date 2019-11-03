@@ -12,3 +12,10 @@ function PLUGIN:PlayerThink(player)
     hook.run('PlayerDeathThink', player)
   end
 end
+
+function PLUGIN:EntityTakeDamage(entity, damage_info)
+  if entity:IsRagdoll() and IsValid(entity.player) then
+    local player = entity.player
+    player:TakeDamageInfo(damage_info)
+  end
+end

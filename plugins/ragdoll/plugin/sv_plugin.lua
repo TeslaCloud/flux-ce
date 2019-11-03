@@ -29,6 +29,7 @@ function player_meta:create_ragdoll_entity(decay, fallen)
       ragdoll:SetSkin(self:GetSkin())
       ragdoll:SetMaterial(self:GetMaterial())
       ragdoll:SetColor(self:GetColor())
+      ragdoll.player = self
       ragdoll.decay = decay
       ragdoll.weapons = {}
     ragdoll:Spawn()
@@ -95,6 +96,8 @@ function player_meta:reset_ragdoll_entity()
   local ragdoll = self:GetDTEntity(ENT_RAGDOLL)
 
   if IsValid(ragdoll) then
+    ragdoll.player = nil
+
     if !ragdoll.decay then
       ragdoll:Remove()
     else
