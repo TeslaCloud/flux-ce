@@ -91,6 +91,8 @@ function PLUGIN:UpdateWeaponRaised(player, weapon, raised, cur_time)
     if weapon.OnRaised then
       weapon:OnRaised(player, cur_time)
     end
+
+    hook.run('WeaponRaised', player, weapon)
   else
     weapon:SetNextPrimaryFire(cur_time + 60)
     weapon:SetNextSecondaryFire(cur_time + 60)
@@ -98,6 +100,8 @@ function PLUGIN:UpdateWeaponRaised(player, weapon, raised, cur_time)
     if weapon.OnLowered then
       weapon:OnLowered(player, cur_time)
     end
+
+    hook.run('WeaponLowered', player, weapon)
   end
 end
 
@@ -124,9 +128,11 @@ local player_meta = FindMetaTable('Player')
 
 function player_meta:set_weapon_raised(raised)
   if SERVER then
-    self:SetDTBool(BOOL_WEAPON_RAISED, raised)
+    if hook.run('CanPlayerRaiseWeapon', self, raised) != false then
+      self:SetDTBool(BOOL_WEAPON_RAISED, raised)
 
-    hook.run('OnWeaponRaised', self, self:GetActiveWeapon(), raised)
+      hook.run('OnWeaponRaised', self, self:GetActiveWeapon(), raised)
+    end
   end
 end
 
@@ -143,7 +149,7 @@ function player_meta:is_weapon_raised()
 
   local should_raise = hook.run('ShouldWeaponBeRaised', self, weapon)
 
-  if should_raise then
+  if should_raise != nil then
     return should_raise
   end
 
@@ -155,9 +161,5 @@ function player_meta:is_weapon_raised()
 end
 
 function player_meta:toggle_weapon_raised()
-  if self:is_weapon_raised() then
-    self:set_weapon_raised(false)
-  else
-    self:set_weapon_raised(true)
-  end
+  self:set_weapon_raised(!self:is_weapon_raised())
 end
