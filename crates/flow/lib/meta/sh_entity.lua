@@ -79,6 +79,11 @@ function ent_meta:facing(entity)
   return math.abs(aim_vector.y - target_aim_vector.y) > 50
 end
 
+function ent_meta:get_name()
+  return self:IsPlayer() and (hook.run('GetPlayerName', self) or self:name())
+  or hook.run('GetEntityName', self) or tostring(self) or self:GetClass()
+end
+
 function ent_meta:get_hitgroup_from_pos(pos)
   for i = 0, self:GetHitBoxGroupCount() - 1 do
     for k = 0, self:GetHitBoxCount(i) - 1 do
