@@ -26,6 +26,8 @@ function Currencies:OnConatinerOpened(panel, inventory_id)
   local inventory = Inventories.find(inventory_id)
   local inv_panel = panel.inventory
 
+  if inventory.instance_id then return end
+
   if !IsValid(panel.container_money) then
     panel.container_money = self:create_panel(inventory.owner, panel)
   else
