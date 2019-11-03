@@ -236,6 +236,16 @@ do
     end
   end
 
+  --- Get an item of weapon that the player is holding in their hands.
+  -- @return [Item]
+  function player_meta:get_active_weapon_item()
+    local weapon = self:GetActiveWeapon()
+
+    if IsValid(weapon) then
+      return self:get_item_from_weapon(weapon:GetClass())
+    end
+  end
+
   if SERVER then
     
     --- @warning [Internal]
