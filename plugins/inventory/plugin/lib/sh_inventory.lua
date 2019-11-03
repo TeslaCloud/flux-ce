@@ -230,7 +230,7 @@ do
   -- @return [Item]
   function player_meta:get_item_from_weapon(weapon_class)
     for k, v in pairs(self:get_items()) do
-      if v:is_equipped() and v.weapon_class == weapon_class then
+      if v.is_equipped and v:is_equipped() and v.weapon_class == weapon_class then
         return v
       end
     end
