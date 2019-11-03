@@ -62,15 +62,19 @@ function ItemWearable:can_equip(player)
         return true
       end
     end
+
+    return false
   end
 
   if valid_model_group then
     if player_model:find(valid_model_group) then
       return true
     end
+
+    return false
   end
 
-  return false
+  return true
 end
 
 function ItemWearable:post_equipped(player)
