@@ -1432,6 +1432,10 @@ function FontAwesome:get(id)
   return icon_data[id] or id
 end
 
+function FontAwesome:get_icon_size(id, size)
+  return util.text_size(FontAwesome:get(id), Font.size('flFontAwesome', size))
+end
+
 function FontAwesome:draw(id, x, y, size, color, x_align, y_align, outline_width, outline_color)
   if id:starts('fa ') then
     id = id:sub(4, id:len())
