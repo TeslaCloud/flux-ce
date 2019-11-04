@@ -313,6 +313,10 @@ Cable.receive('fl_item_move', function(player, instance_ids, inventory_id, x, y,
   local item_obj = Item.find_instance_by_id(instance_id)
   local inventory = Inventories.find(inventory_id)
 
+  if hook.run('PlayerCanMoveItem', player, item_obj, instance_ids, inventory_id, x, y) == false then
+    return
+  end
+
   if inventory_id == item_obj.inventory_id then
     inventory:move_stack(instance_ids, x, y, was_rotated)
   else
@@ -329,7 +333,7 @@ Cable.receive('fl_item_move', function(player, instance_ids, inventory_id, x, y,
 
   inventory:sync()
 
-  hook.run('OnItemMoved', player, instance_ids, inventory_id, x, y)
+  hook.run('OnItemMoved', player, item_obj, instance_ids, inventory_id, x, y)
 end)
 
 Cable.receive('fl_item_drop', function(player, instance_ids)
