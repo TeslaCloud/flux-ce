@@ -112,6 +112,66 @@ function Unit:to_miles(n)
   return self:to_feet(n) * feet_in_mi
 end
 
+--- Formats the distance for human-friendly display in either imperial or metric.
+-- @param n [Number] The Source Engine units.
+-- @param system=imperial [String] Whether to use 'imperial', 'metric' or 'units'. Will use
+--   Imperial by default.
+-- @return [String] Formatted text as phrases.
+function Unit:format(n, system)
+  system = (system or 'imperial'):lower()
+
+  local result = ''
+
+  if system == 'metric' then
+    local km = Unit:to_km(n):floor()
+    local m  = Unit:to_m(n):floor()
+    local cm = Unit:to_cm(n):floor()
+    local mm = Unit:to_mm(n):floor()
+
+    mm = mm - cm * 10
+    cm = cm - m  * 100
+    m  = m  - km * 1000
+
+    if km > 0 then
+      result = km..t'ui.unit.km'
+
+      if m > 0 then
+        result = result..' '..m..t'ui.unit.m'
+      end
+    elseif m > 0 then
+      result = m..t'ui.unit.cm'
+
+      if cm > 0 then
+        result = result..' '..cm..t'ui.unit.cm'
+      end
+    elseif cm > 0 then
+      result = cm..t'ui.unit.cm'
+
+      if mm > 0 then
+        result = result..' '..mm..t'ui.unit.mm'
+      end
+    else
+      result = mm..t'ui.unit.mm'
+    end
+  elseif system == 'units' then
+    result = n:round(2)..t'ui.unit.units'
+  else
+    local mi = Unit:to_mi(n):round(2)
+    local ft = Unit:to_ft(n):floor()
+
+    n  = n:floor() - ft * 12
+    ft = ft - mi * 5280
+
+    if mi > 0.80 then
+      result = mi..t'ui.unit.mi'
+    else
+      result = ft.."'"..n..'"'
+    end
+  end
+
+  return result
+end
+
 -- Aliases for convenience.
 Unit.inches         = Unit.inch
 Unit.unit           = Unit.inch
