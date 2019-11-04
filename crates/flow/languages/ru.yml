@@ -107,6 +107,7 @@ ru:
     measure:
       name: Линейка
       desc: Используйте этот инструмент для измерения расстояния между двумя точками.
+      system_header: Система измерений
   ui:
     hud:
       dead: "*МЁРТВ*"
@@ -133,6 +134,10 @@ ru:
     yes: Да
     no: Нет
     unit:
+      title:
+        imperial: Имперская
+        metric: Метрическая
+        units: Юниты Source Engine
       mm: мм
       cm: см
       m: м

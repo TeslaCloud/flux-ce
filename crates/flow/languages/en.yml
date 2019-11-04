@@ -96,6 +96,7 @@ en:
     measure:
       name: Measure Tool
       desc: Use this to measure distance between two points.
+      system_header: Measurement System
   ui:
     hud:
       dead: "*DEAD*"
@@ -122,6 +123,10 @@ en:
     yes: "Yes"
     no: "No"
     unit:
+      title:
+        imperial: Imperial
+        metric: Metric
+        units: Source Engine Units
       mm: mm
       cm: cm
       m: m

@@ -56,8 +56,10 @@ function TOOL.BuildCPanel(CPanel)
   local options = {}
 
   for _, unit_name in ipairs(units) do
-    options[t('ui.unit.'..unit_name)] = { ['measure_system'] = unit_name }
+    options[t('ui.unit.title.'..unit_name)] = { ['measure_system'] = unit_name }
   end
+
+  CPanel:AddControl('Header', { Description = 'tool.measure.system_header' })
 
   local units = CPanel:AddControl('ComboBox', { MenuButton = 1, Folder = 'units', Options = options, CVars = { 'measure_system' } })
 end
