@@ -93,8 +93,8 @@ en:
     for: "for {time}"
     and: and
   tool:
-    ruler:
-      name: Ruler Tool
+    measure:
+      name: Measure Tool
       desc: Use this to measure distance between two points.
   ui:
     hud:
@@ -127,6 +127,6 @@ en:
       centimeter: cm
       meter: m
       kilometer: km
-      foot: f
+      foot: ft
       yard: yd
       mile: mi

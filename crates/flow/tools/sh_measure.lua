@@ -1,5 +1,5 @@
 TOOL.Category               = 'Flux'
-TOOL.Name                   = 'Ruler Tool'
+TOOL.Name                   = 'Measure Tool'
 TOOL.Command                = nil
 TOOL.ConfigName             = ''
 
@@ -62,8 +62,8 @@ function TOOL.BuildCPanel(CPanel)
   local options = {}
 
   for k, v in pairs(units) do
-    options[t('ui.unit.'..v)] = { ['ruler_unit'] = v }
+    options[t('ui.unit.'..v)] = { ['measure_unit'] = v }
   end
 
-  local units = CPanel:AddControl('ComboBox', { MenuButton = 1, Folder = 'units', Options = options, CVars = { 'ruler_unit' } })
+  local units = CPanel:AddControl('ComboBox', { MenuButton = 1, Folder = 'units', Options = options, CVars = { 'measure_unit' } })
 end
