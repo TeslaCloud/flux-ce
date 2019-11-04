@@ -92,6 +92,10 @@ en:
     permanently: permanently
     for: "for {time}"
     and: and
+  tool:
+    ruler:
+      name: Ruler Tool
+      desc: Use this to measure distance between two points.
   ui:
     hud:
       dead: "*DEAD*"
@@ -117,3 +121,12 @@ en:
       scoreboard: Players
     yes: "Yes"
     no: "No"
+    unit:
+      inch: in
+      millimeter: mm
+      centimeter: cm
+      meter: m
+      kilometer: km
+      foot: f
+      yard: yd
+      mile: mi

@@ -10,8 +10,6 @@ function TOOL:LeftClick(trace)
 
   self.first = trace.HitPos
 
-  PLAYER:notify('notification.ruler.first')
-
   return true
 end
 
@@ -39,9 +37,8 @@ function TOOL:DrawHUD()
     cam.Start3D()
       render.DrawLine(self.first, self.second, color_white)
     cam.End3D()
-    if unit == 'unit' then unit = 'inch' end
 
-    local text = math.round(self.first:Distance(self.second) / Unit[unit](Unit, 1), 3)..' '..t('ui.units.'..unit)
+    local text = math.round(self.first:Distance(self.second) / Unit[unit](Unit, 1), 3)..' '..t('ui.unit.'..unit)
     local font = Theme.get_font('tooltip_normal')
     local text_w, text_h = util.text_size(text, font)
     local x, y = ScrC()

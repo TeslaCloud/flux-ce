@@ -103,6 +103,10 @@ ru:
     permanently: навсегда
     for: на
     and: и
+  tool:
+    ruler:
+      name: Линейка
+      desc: Используйте этот инструмент для измерения расстояния между двумя точками.
   ui:
     hud:
       dead: "*МЁРТВ*"
@@ -128,3 +132,12 @@ ru:
       scoreboard: Игроки
     yes: Да
     no: Нет
+    unit:
+      inch: дюйм
+      millimeter: мм
+      centimeter: см
+      meter: м
+      kilometer: км
+      foot: ф
+      yard: ярд
+      mile: миля
