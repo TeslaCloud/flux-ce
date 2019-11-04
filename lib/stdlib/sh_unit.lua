@@ -139,7 +139,7 @@ function Unit:format(n, system)
         result = result..' '..m..t'ui.unit.m'
       end
     elseif m > 0 then
-      result = m..t'ui.unit.cm'
+      result = m..t'ui.unit.m'
 
       if cm > 0 then
         result = result..' '..cm..t'ui.unit.cm'
