@@ -122,11 +122,9 @@ en:
     yes: "Yes"
     no: "No"
     unit:
-      inch: in
-      millimeter: mm
-      centimeter: cm
-      meter: m
-      kilometer: km
-      foot: ft
-      yard: yd
-      mile: mi
+      mm: mm
+      cm: cm
+      m: m
+      km: km
+      mi: mi
+      units: units

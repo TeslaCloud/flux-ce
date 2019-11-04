@@ -133,11 +133,9 @@ ru:
     yes: Да
     no: Нет
     unit:
-      inch: дюйм
-      millimeter: мм
-      centimeter: см
-      meter: м
-      kilometer: км
-      foot: ф
-      yard: ярд
-      mile: миля
+      mm: мм
+      cm: см
+      m: м
+      km: км
+      mi: миль
+      units: юнитов
