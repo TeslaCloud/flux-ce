@@ -154,7 +154,7 @@ function Unit:format(n, system)
       result = mm..t'ui.unit.mm'
     end
   elseif system == 'units' then
-    result = n:round(2)..t'ui.unit.units'
+    result = n:round(1)..' '..t'ui.unit.units'
   else
     local mi = Unit:to_mi(n):round(2)
     local ft = Unit:to_ft(n):floor()
@@ -162,7 +162,7 @@ function Unit:format(n, system)
     n  = n:floor() - ft * 12
     ft = ft - mi * 5280
 
-    if mi > 0.80 then
+    if mi > 0.3 then
       result = mi..t'ui.unit.mi'
     else
       result = ft.."'"..n..'"'
