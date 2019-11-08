@@ -13,7 +13,7 @@ GM.version       = version
 GM.date          = metadata.date
 GM.build         = string.gsub(metadata.date or '', '%-', '')
 GM.description   = metadata.description
-GM.code_name     = 'Sweet Mead'
+GM.code_name     = 'Root Beer'
 
 print('Flux core version '..version..' ('..GM.code_name..')')
 
