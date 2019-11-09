@@ -83,9 +83,7 @@ end
 
 function PLUGIN:OnWeaponRaised(player, weapon, raised)
   if IsValid(weapon) then
-    local cur_time = CurTime()
-
-    hook.run('UpdateWeaponRaised', player, weapon, raised, cur_time)
+    hook.run('UpdateWeaponRaised', player, weapon, raised, CurTime())
   end
 end
 
