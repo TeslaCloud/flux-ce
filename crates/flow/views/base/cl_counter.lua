@@ -107,6 +107,7 @@ function PANEL:increase()
   if self:on_click(new_value, old_value) != false then
     self.value = new_value
     self:check_buttons()
+    self:post_click()
   end
 end
 
@@ -117,6 +118,7 @@ function PANEL:decrease()
   if self:on_click(new_value, old_value) != false then
     self.value = new_value
     self:check_buttons()
+    self:post_click()
   end
 end
 
@@ -141,6 +143,9 @@ function PANEL:check_buttons()
 end
 
 function PANEL:on_click(value)
+end
+
+function PANEL:post_click()
 end
 
 vgui.Register('fl_counter', PANEL, 'fl_base_panel')
