@@ -55,6 +55,12 @@ if CLIENT then
 
     return old_eye_pos, eye_angles
   end
+
+  function PLUGIN:StartCommand(player, user_cmd)
+    if (!player:is_weapon_raised()) then
+      user_cmd:RemoveKey(IN_ATTACK + IN_ATTACK2)
+    end
+  end
 end
 
 function PLUGIN:KeyPress(player, key)
