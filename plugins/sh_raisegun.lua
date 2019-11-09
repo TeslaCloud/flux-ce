@@ -57,8 +57,14 @@ if CLIENT then
   end
 
   function PLUGIN:StartCommand(player, user_cmd)
-    if (!player:is_weapon_raised()) then
+    if hook.run('CanPlayerAttack') == false then
       user_cmd:RemoveKey(IN_ATTACK + IN_ATTACK2)
+    end
+  end
+
+  function PLUGIN:CanPlayerAttack()
+    if !PLAYER:is_weapon_raised() then
+      return false
     end
   end
 end
