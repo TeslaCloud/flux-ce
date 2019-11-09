@@ -58,7 +58,7 @@ if CLIENT then
 
   function PLUGIN:StartCommand(player, user_cmd)
     if hook.run('CanPlayerAttack') == false then
-      user_cmd:RemoveKey(IN_ATTACK + IN_ATTACK2)
+      user_cmd:RemoveKey(IN_ATTACK + IN_ATTACK2 + IN_RELOAD)
     end
   end
 
