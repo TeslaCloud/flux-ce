@@ -27,13 +27,9 @@ if SERVER then
 
   -- So clients can bind this as they want.
   concommand.Add('toggleautowalk', function(player)
-    local old_val = player:get_nv('auto_walk')
-
-    if !old_val then
-      old_val = false
+    if hook.run('CanPlayerAutoWalk', player) != false then
+      player:set_nv('auto_walk', !player:get_nv('auto_walk', false))
     end
-
-    player:set_nv('auto_walk', !old_val)
   end)
 else
 -- Flux.hint:Add('Autowalk', 'Press 'B' to toggle auto walking.')
