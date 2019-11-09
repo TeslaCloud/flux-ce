@@ -77,6 +77,7 @@ function THEME:on_loaded()
   self:set_font('text_smallest',            main_font,              math.scale(14))
   self:set_font('text_bar',                 main_font,              math.scale(17), { weight = 600 })
   self:set_font('text_3d2d',                main_font,              256)
+  self:set_font('text_bold',                'flRobotoLtBold',       math.scale(16), { weight = 1500 })
 
   -- Set from schema Theme.
   -- self:set_material('schema_logo', 'materials/flux/hl2rp/logo.png')
