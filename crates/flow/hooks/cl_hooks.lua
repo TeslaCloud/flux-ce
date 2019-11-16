@@ -366,7 +366,7 @@ function GM:AddTabMenuItems(menu)
   })
 
   menu:add_menu_item('help', {
-    title = 'Help',
+    title = t'ui.tab_menu.help',
     icon = 'fa-info-circle',
     panel = 'fl_help',
   })
