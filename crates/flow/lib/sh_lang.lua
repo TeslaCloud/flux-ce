@@ -35,7 +35,7 @@ do
       phrase = string.gsub(phrase, '{'..k..'}', v)
     end
 
-    return phrase
+    return phrase:gsub('\n', ' ')
   end
 end
 
