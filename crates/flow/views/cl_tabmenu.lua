@@ -145,13 +145,10 @@ end
 
 function PANEL:add_menu_item(id, data, index)
   data.id = id
-  data.title = string.utf8upper(data.title or 'error')
+  data.title = data.title or 'error'
   data.icon = data.icon or false
 
-  if isnumber(index) then
-    table.insert(self.menu_items, index, data)
-  else
-    table.insert(self.menu_items, data)
+  table.insert(self.menu_items, data)
   end
 end
 

@@ -118,7 +118,7 @@ en:
       title: PLAYER LIST
     tab_menu:
       admin: Admin
-      close_menu: BACK
+      close_menu: Back
       scoreboard: Players
       help: Help
     yes: "Yes"
