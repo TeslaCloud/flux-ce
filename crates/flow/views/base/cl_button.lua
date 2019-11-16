@@ -9,6 +9,8 @@ PANEL.icon_size = nil
 PANEL.icon_left = true
 PANEL.enabled = true
 PANEL.centered = false
+PANEL.background_color = nil
+PANEL.draw_outline = false
 
 function PANEL:Paint(w, h)
   Theme.hook('PaintButton', self, w, h)
@@ -20,9 +22,9 @@ function PANEL:Think()
   local frame_time = FrameTime() / 0.006
 
   if self:IsHovered() then
-    self.cur_amt = math.Clamp(self.cur_amt + 1 * frame_time, 0, 40)
+    self.cur_amt = math.Clamp(self.cur_amt + 1 * frame_time, 0, 20)
   else
-    self.cur_amt = math.Clamp(self.cur_amt - 1 * frame_time, 0, 40)
+    self.cur_amt = math.Clamp(self.cur_amt - 1 * frame_time, 0, 20)
   end
 
   if !self.icon_size_override then
@@ -45,19 +47,20 @@ end
 function PANEL:SizeToContentsX()
   local w, h = util.text_size(self.title, self.font)
   local offset = self.text_offset or 0
-  local add = 0
 
   if self.icon then
-    add = h * 1.5 - 2
+    w = w + FontAwesome:get_icon_size(self.icon, self.icon_size) * 1.5
   end
 
-  self:SetWide(w * 1.15 + add + offset)
+  w = w + offset * 2
+
+  self:SetWide(w)
 end
 
 function PANEL:SizeToContentsY()
   local w, h = util.text_size(self.title, self.font)
 
-  self:SetTall(h * 1.15)
+  self:SetTall(h)
 end
 
 function PANEL:SizeToContents()
@@ -101,7 +104,7 @@ function PANEL:set_text_offset(pos)
 end
 
 function PANEL:get_text_offset()
-  return self.text_offset or 0
+  return !self.centered and self.text_offset or 0
 end
 
 function PANEL:set_icon(icon, right)
@@ -119,6 +122,22 @@ end
 
 function PANEL:set_text_autoposition(autopos)
   self.autopos = autopos
+end
+
+function PANEL:set_background_color(color)
+  self.background_color = color
+end
+
+function PANEL:get_background_color()
+  return self.background_color
+end
+
+function PANEL:set_draw_outline(draw)
+  self.draw_outline = draw
+end
+
+function PANEL:get_draw_outline()
+  return self.draw_outline
 end
 
 vgui.Register('fl_button', PANEL, 'fl_base_panel')
