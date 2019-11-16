@@ -30,7 +30,7 @@ function ItemBase:base_off(what)
   if !istable(module_table) then return end
 
   for k, v in pairs(module_table) do
-    if !self[k] then
+    if !self[k] or isfunction(v) then
       self[k] = v
     end
   end
@@ -47,7 +47,7 @@ end
 function ItemBase:is(base)
   if isstring(base) then
     base = base:capitalize()
-    return self.bases[base] or self.bases['Item'..base]
+    return (self.bases[base] or self.bases['Item'..base]) != nil
   elseif istable(base) then
     for k, v in pairs(self.bases) do
       if base.class_name == v.class_name then
