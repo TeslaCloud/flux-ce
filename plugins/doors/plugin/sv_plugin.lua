@@ -35,7 +35,7 @@ end
 function Doors:load()
   local doors = Data.load_plugin('doors', {})
 
-  if #doors > 0 then
+  if doors and #doors > 0 then
     for k, v in pairs(doors) do
       local door = ents.GetMapCreatedEntity(v.id)
 
