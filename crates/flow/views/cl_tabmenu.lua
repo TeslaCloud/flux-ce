@@ -16,7 +16,7 @@ function PANEL:Init()
   local cur_x, cur_y = hook.run('AdjustMenuItemPositions', self)
   local offset = math.scale(4)
   local size_x, size_y = math.scale(72), math.scale(72)
-  local icon_size = math.scale(40)
+  local icon_size = 20
 
   self.button_panel = vgui.create('EditablePanel', self)
   self.button_panel:SetPos(0, -size_y)
@@ -33,9 +33,9 @@ function PANEL:Init()
   self.close_button = vgui.Create('fl_button', self.button_panel)
   self.close_button:SetPos(cur_x, cur_y)
   self.close_button:SetDrawBackground(false)
-  self.close_button:SetFont(Theme.get_font('menu_larger'))
+  self.close_button:SetFont(Theme.get_font('main_menu_titles'))
   self.close_button:set_text(t'ui.tab_menu.close_menu')
-  self.close_button:set_centered(true)
+  self.close_button:set_centered(false)
   self.close_button:set_text_offset(offset)
   self.close_button:SizeToContents()
   self.close_button:SetTall(size_y)
@@ -52,12 +52,17 @@ function PANEL:Init()
   for k, v in ipairs(self.menu_items) do
     local button = vgui.Create('fl_button', self.button_panel)
     button:SetSize(size_x, size_y)
-    button:SetDrawBackground(false)
+    button:SetDrawBackground(true)
     button:SetPos(cur_x, cur_y)
     button:SetTooltip(v.title)
+    button:SetFont(Theme.get_font('main_menu_titles'))
+    button:set_text_offset(math.scale_x(16))
+    button:set_text(v.title)
     button:set_icon(v.icon)
-    button:set_icon_size(icon_size)
     button:set_centered(true)
+    button:set_icon_size(icon_size)
+    button:set_background_color(nil)
+    button:SizeToContentsX()
 
     button.DoClick = function(btn)
       if IsValid(self.active_panel) and v.id == self.active_panel.id then return end
@@ -78,7 +83,7 @@ function PANEL:Init()
 
           self.active_panel:safe_remove()
 
-          self.active_button:set_text_color(nil)
+          self.active_button:set_background_color(nil)
         end
 
         self.active_panel = vgui.Create(v.panel, self)
@@ -90,7 +95,7 @@ function PANEL:Init()
         end
 
         self.active_button = btn
-        self.active_button:set_text_color(Theme.get_color('accent'))
+        self.active_button:set_background_color(Theme.get_color('accent'))
 
         if self.active_panel.rebuild then
           self.active_panel:rebuild()
@@ -106,9 +111,9 @@ function PANEL:Init()
       end
     end
 
-    cur_x = cur_x + button:GetWide() + offset
+    cur_x = cur_x + button:GetWide()
 
-    if cur_x >= ScrW() - button:GetWide() + offset then
+    if cur_x >= ScrW() - button:GetWide() then
       cur_y = cur_y + offset
       cur_x = offset
     end
