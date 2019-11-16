@@ -25,6 +25,7 @@ function Inventories:AddTabMenuItems(menu)
     panel = 'fl_inventory_menu',
     icon = 'fa-briefcase',
     default = true,
+    priority = 30,
     callback = function(menu_panel, button)
       local inv = menu_panel.active_panel
       inv:SetTitle('Inventory')

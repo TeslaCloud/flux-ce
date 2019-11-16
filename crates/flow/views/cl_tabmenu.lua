@@ -149,7 +149,7 @@ function PANEL:add_menu_item(id, data, index)
   data.icon = data.icon or false
 
   table.insert(self.menu_items, data)
-  end
+  table.sort(self.menu_items, function(a, b) return a.priority < b.priority end)
 end
 
 function PANEL:close_menu()

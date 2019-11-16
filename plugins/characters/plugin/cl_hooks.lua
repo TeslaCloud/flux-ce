@@ -94,6 +94,7 @@ function Characters:AddTabMenuItems(menu)
   menu:add_menu_item('mainmenu', {
     title = t'ui.tab_menu.main_menu',
     icon = 'fa-bars',
+    priority = 10,
     override = function(menu_panel, button)
       menu_panel:safe_remove()
       Flux.intro_panel = Theme.create_panel('main_menu')

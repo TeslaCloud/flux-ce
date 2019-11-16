@@ -362,13 +362,15 @@ function GM:AddTabMenuItems(menu)
   menu:add_menu_item('scoreboard', {
     title = t'ui.tab_menu.scoreboard',
     panel = 'fl_scoreboard',
-    icon = 'fa-users'
+    icon = 'fa-users',
+    priority = 20
   })
 
   menu:add_menu_item('help', {
     title = t'ui.tab_menu.help',
     icon = 'fa-info-circle',
     panel = 'fl_help',
+    priority = 50
   })
 end
 
