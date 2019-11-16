@@ -77,7 +77,7 @@ function PANEL:rebuild()
       if dropped.item_data then
         local item_obj = dropped.item_data
 
-        if item_obj:is('equippable') and !item_obj:is_equipped() then
+        if !item_obj:is_equipped() then
           item_obj:do_menu_action('on_equip')
         end
 
