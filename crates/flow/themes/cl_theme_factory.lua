@@ -128,45 +128,51 @@ end
 
 function THEME:PaintButton(panel, w, h)
   local text_w, text_h, icon_w, icon_h
-  local cur_amt         = panel.cur_amt
-  local text_color      = panel.text_color_override or self:get_color('text'):darken(cur_amt)
-  local title           = panel.title
-  local font            = panel.font
-  local icon            = panel.icon
-  local left            = panel.icon_left
-  local center          = panel.centered
-  local offset          = panel:get_text_offset()
-  local text_x, text_y  = offset, 0
-  local icon_x, icon_y  = 0, 0
-  local icon_size       = panel.icon_size
+  local cur_amt           = panel.cur_amt
+  local text_color        = panel.text_color_override or self:get_color('text'):darken(cur_amt)
+  local title             = panel.title
+  local font              = panel.font
+  local icon              = panel.icon
+  local left              = panel.icon_left
+  local center            = panel.centered
+  local offset            = panel:get_text_offset()
+  local text_x, text_y    = offset, 0
+  local icon_x, icon_y    = 0, 0
+  local icon_size         = panel.icon_size
+  local background_color  = panel:get_background_color()
 
   if panel.draw_background then
-    surface.SetDrawColor(self:get_color('outline'))
-    surface.DrawRect(0, 0, w, h)
+    if panel.draw_outline then
+      surface.SetDrawColor(self:get_color('outline'))
+      surface.DrawRect(0, 0, w, h)
+    end
 
-    surface.SetDrawColor(panel.active and self:get_color('main_dark') or self:get_color('main'):lighten(cur_amt))
-    surface.DrawRect(1, 1, w - 2, h - 2)
+    if background_color != nil then
+      surface.SetDrawColor(panel.active and background_color or background_color:lighten(cur_amt))
+      surface.DrawRect(math.scale_x(1), math.scale(1), w - math.scale_x(2), h - math.scale(2))
+    end
   end
 
   if title != '' then
     text_w, text_h = util.text_size(title, font)
-    text_y = h / 2 - text_h / 2
+    text_y = h * 0.5 - text_h * 0.5
 
     if center then
-      text_x = offset + w / 2 - text_w / 2
+      text_x = offset + w * 0.5 - text_w * 0.5
     end
   end
 
   if icon then
     icon_w, icon_h = FontAwesome:get_icon_size(icon, icon_size)
-    icon_x = (left and text_x or text_x + text_w)
-    icon_y = h / 2 - icon_h / 2
-
-    text_x = text_x + (left and icon_w + 4 or -4)
-
-    if center and title == '' then
-      icon_x = w / 2 - icon_w / 2
+    
+    if title != '' then
+      text_x = text_x + (left and icon_w * 0.5 or -icon_w * 0.5)
+      icon_x = (left and text_x - icon_w - math.scale_x(4) or text_x + text_w + math.scale_x(4))
+    else
+      icon_x = w * 0.5 - icon_w * 0.5
     end
+
+    icon_y = h * 0.5 - icon_h * 0.5
   end
 
   if title != '' then
