@@ -324,7 +324,7 @@ function THEME:PaintPermissionButton(perm_panel, btn, w, h)
 end
 
 function THEME:PaintScoreboard(panel, width, height)
-  local text            = t('ui.scoreboard.title')
+  local text            = t'ui.scoreboard.title'
   local font            = self:get_font('main_menu_large')
   local text_w, text_h  = util.text_size(text, font)
 
