@@ -164,8 +164,8 @@ function PANEL:PaintOver(width, height)
           local color_white = Color(255, 255, 255)
 
           for k, v in ipairs(cmds) do
-            local w, h = draw.SimpleText('/' + v.name, font, 16, 16 + last_y, color)
-            w, h = draw.SimpleText(t(v.syntax), font, 16 + w + 8, 16 + last_y, color_white)
+            local w, h = draw.SimpleTextOutlined('/' + v.name, font, 16, 16 + last_y, color, nil, nil, 0.5, color_black)
+            w, h = draw.SimpleTextOutlined(t(v.syntax), font, 16 + w + 8, 16 + last_y, color_white, nil, nil, 0.5, color_black)
 
             if #cmds == 1 then
               local cur_y = 20 + h
@@ -174,7 +174,7 @@ function PANEL:PaintOver(width, height)
               local wrapped = util.wrap_text(desc, small_font, width, 16)
 
               for k1, v1 in pairs(wrapped) do
-                local text_w, text_h = draw.SimpleText(v1, small_font, 16, cur_y, color_white)
+                local text_w, text_h = draw.SimpleTextOutlined(v1, small_font, 16, cur_y, color_white, nil, nil, 0.5, color_black)
 
                 cur_y = cur_y + text_h + math.scale(2)
               end
@@ -185,7 +185,7 @@ function PANEL:PaintOver(width, height)
                 aliases = table.concat(v.aliases or {}, ', ')
               end
 
-              draw.SimpleText(t'ui.chat.aliases'..': ' + aliases, small_font, 16, cur_y, color_white)
+              draw.SimpleTextOutlined(t'ui.chat.aliases'..': ' + aliases, small_font, 16, cur_y, color_white, nil, nil, 0.5, color_black)
             end
 
             last_y = last_y + h + 8
@@ -193,7 +193,7 @@ function PANEL:PaintOver(width, height)
             if k >= 10 then break end
           end
         else
-          draw.SimpleText(t'ui.chat.no_commands_found', font, 16, 16, color)
+          draw.SimpleTextOutlined(t'ui.chat.no_commands_found', font, 16, 16, color, nil, nil, 0.5, color_black)
         end
       end
     end
