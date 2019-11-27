@@ -57,6 +57,12 @@ do
     player:SetPoseParameter('move_yaw', normalize_angle(vector_angle(velocity)[2] - player:EyeAngles()[2]))
     player.CalcIdeal = ACT_MP_STAND_IDLE
 
+    local animation = player.fl_animation
+
+    if animation then
+      return -1, animation
+    end
+
     local base_class = self.BaseClass
 
     if !(base_class:HandlePlayerNoClipping(player, velocity) or

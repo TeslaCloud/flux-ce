@@ -175,3 +175,26 @@ do
     return string.lower(hold_type)
   end
 end
+
+local player_meta = FindMetaTable('Player')
+
+function player_meta:set_animation(animation)
+  local sequence, duration = self:LookupSequence(animation)
+
+  if sequence != -1 then
+    self:SetCycle(0)
+    self.fl_animation = sequence
+
+    if duration > 0 then
+      timer.simple(duration, function()
+        if IsValid(self) then
+          self.fl_animation = nil
+        end
+      end)
+    end
+  end
+end
+
+function player_meta:stop_animation()
+  self.fl_animation = nil
+end
