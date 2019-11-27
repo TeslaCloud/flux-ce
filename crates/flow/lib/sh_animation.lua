@@ -178,8 +178,12 @@ end
 
 local player_meta = FindMetaTable('Player')
 
-function player_meta:set_animation(animation)
+function player_meta:set_animation(animation, duration_override)
   local sequence, duration = self:LookupSequence(animation)
+
+  if duration_override then
+    duration = duration_override
+  end
 
   if sequence != -1 then
     self:SetCycle(0)
