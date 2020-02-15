@@ -21,7 +21,7 @@ end
 
 function Inventories:AddTabMenuItems(menu)
   menu:add_menu_item('inventory', {
-    title = 'Inventory',
+    title = t'ui.tab_menu.inventory',
     panel = 'fl_inventory_menu',
     icon = 'fa-briefcase',
     default = true,

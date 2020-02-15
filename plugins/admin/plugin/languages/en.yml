@@ -167,4 +167,6 @@ en:
       allow: Allow
       never: Revoke
       error: Invalid Permission
+    tab_menu:
+      admin: Admin
     no_reason: Unspecified reason
