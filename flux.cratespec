@@ -23,7 +23,6 @@ Crate:describe(function(s)
   s.depends     'lib/flux.lua'
   s.depends     'active_record'
   s.depends     'active_network'
-  s.depends     'packager'
   s.depends     'flow'
 
   if ENV['FLUX_ENV'] != 'production' then
