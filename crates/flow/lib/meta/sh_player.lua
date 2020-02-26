@@ -67,6 +67,38 @@ if CLIENT then
   end
 end
 
+function player_meta:freeze_move()
+  self:AddFlags(FL_ATCONTROLS)
+end
+
+function player_meta:unfreeze_move()
+  self:RemoveFlags(FL_ATCONTROLS)
+end
+
+function player_meta:freeze_gun()
+  local weapon = self:GetActiveWeapon()
+  local cur_time = CurTime()
+
+  if IsValid(weapon) then
+    weapon:SetNextPrimaryFire(cur_time + 3600)
+    weapon:SetNextSecondaryFire(cur_time + 3600)
+
+    weapon:freeze()
+  end
+end
+
+function player_meta:unfreeze_gun()
+  local weapon = self:GetActiveWeapon()
+  local cur_time = CurTime()
+
+  if IsValid(weapon) then
+    weapon:SetNextPrimaryFire(cur_time + 0.1)
+    weapon:SetNextSecondaryFire(cur_time + 0.1)
+
+    weapon:unfreeze()
+  end
+end
+
 --[[
   Actions system
 --]]

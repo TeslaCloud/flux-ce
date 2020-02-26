@@ -101,3 +101,33 @@ function ent_meta:get_hitgroup_from_pos(pos)
 
   return HITGROUP_GENERIC
 end
+
+function ent_meta:freeze()
+  if self:IsPlayer() then
+    self:freeze_move()
+    self:freeze_gun()
+  elseif self:IsNPC() then
+    self:SetKeyValue('sleepstate', '3')
+  end
+
+  self:set_nv('fl_frozen', true)
+
+  hook.run('EntityFreeze', self)
+end
+
+function ent_meta:unfreeze()
+  if self:IsPlayer() then
+    self:unfreeze_move()
+    self:unfreeze_gun()
+  elseif self:IsNPC() then
+    self:SetKeyValue('sleepstate', '0')
+  end
+
+  self:set_nv('fl_frozen', false)
+
+  hook.run('EntityUnfreeze', self)
+end
+
+function ent_meta:is_frozen()
+  return self:get_nv('fl_frozen', false)
+end
