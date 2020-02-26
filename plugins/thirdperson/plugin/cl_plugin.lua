@@ -12,7 +12,7 @@ ThirdPerson.was_third_person = ThirdPerson.was_third_person or false
 
 -- This is very basic and WIP, but it works.
 function ThirdPerson:CalcView(player, pos, angles, fov)
-  local is_third_person = player:get_nv('third_person')
+  local is_third_person = player:get_nv('fl_third_person')
 
   -- This also fixes weird view glitch on autorefresh.
   if !is_third_person and !self.was_third_person then return end
