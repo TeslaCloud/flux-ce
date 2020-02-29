@@ -68,11 +68,11 @@ if CLIENT then
 end
 
 function player_meta:freeze_move()
-  self:AddFlags(FL_ATCONTROLS)
+  self:SetMoveType(MOVETYPE_NONE)
 end
 
 function player_meta:unfreeze_move()
-  self:RemoveFlags(FL_ATCONTROLS)
+  self:SetMoveType(MOVETYPE_WALK)
 end
 
 function player_meta:freeze_gun()
