@@ -77,6 +77,11 @@ function ThirdPerson:CalcView(player, pos, angles, fov)
     view.origin = tr.HitPos + angles:Forward() * 15
   end
 
+  if view.origin:Distance(pos) < 10 then
+    view.origin = pos
+    view.drawviewer = false
+  end
+
   return view
 end
 
