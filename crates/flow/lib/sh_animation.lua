@@ -192,7 +192,7 @@ function player_meta:set_animation(animation, duration_override)
     if duration > 0 then
       timer.simple(duration, function()
         if IsValid(self) then
-          self.fl_animation = nil
+          self:stop_animation()
         end
       end)
     end
@@ -200,5 +200,6 @@ function player_meta:set_animation(animation, duration_override)
 end
 
 function player_meta:stop_animation()
+  self:SetCycle(0)
   self.fl_animation = nil
 end
