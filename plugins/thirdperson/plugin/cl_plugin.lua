@@ -67,6 +67,16 @@ function ThirdPerson:CalcView(player, pos, angles, fov)
     view.origin = pos - offset
   end
 
+  local tr = util.trace_line({
+    start = pos,
+    endpos = view.origin,
+    filter = player
+  })
+
+  if tr.HitWorld then
+    view.origin = tr.HitPos + angles:Forward() * 15
+  end
+
   return view
 end
 
