@@ -155,7 +155,7 @@ function number_meta:__index(key)
   elseif isnumber(value) then
     return tostring(self):sub(value, value)
   else
-    error('attempt to index a number value with a bad key ('..value..')', 2)
+    error('attempt to index a number value with a bad key ('..key..')', 2)
   end
 end
 
