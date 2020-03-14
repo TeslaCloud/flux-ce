@@ -7,10 +7,8 @@ ItemEquipable.stackable = false
 ItemEquipable.equip_slot = 'item.slot.accessory'
 ItemEquipable.equip_inv = 'hotbar'
 ItemEquipable.disabled_inventories = {}
-ItemEquipable.action_sounds = {
-  ['equip'] = 'items/battery_pickup.wav',
-  ['unequip'] = 'items/battery_pickup.wav'
-}
+
+ItemEquipable:set_action_sound('on_equip', 'items/battery_pickup.wav')
 
 ItemEquipable:add_button('equip', {
   get_name = function(item_obj)
@@ -112,13 +110,11 @@ end
 function ItemEquipable:on_transfer(new_inventory, old_inventory)
   if new_inventory and new_inventory.type == self.equip_inv then
     local player = new_inventory.owner
-    player:EmitSound(self.action_sounds['equip'])
     self:equip(player, true)
   end
 
   if old_inventory and old_inventory.type == self.equip_inv then
     local player = old_inventory.owner
-    player:EmitSound(self.action_sounds['unequip'])
     self:equip(player, false)
   end
 end

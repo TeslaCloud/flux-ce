@@ -118,7 +118,23 @@ function ItemBase:add_button(name, data)
 end
 
 function ItemBase:set_action_sound(act, sound)
+  if !self.action_sounds then
+    self.action_sounds = {}
+  end
+
   self.action_sounds[act] = sound
+end
+
+function ItemBase:play_sound(act)
+  local sound = self.action_sounds[act]
+
+  if sound then
+    if IsValid(self.entity) then
+      self.entity:EmitSound(sound)
+    else
+      self:get_player():EmitSound(sound)
+    end
+  end
 end
 
 -- Returns:
@@ -172,8 +188,14 @@ if SERVER then
         end
       end
 
-      if self.action_sounds[act] then
-        player:EmitSound(self.action_sounds[act])
+      local act_sound = self.action_sounds[act]
+
+      if act_sound then
+        if IsValid(self.entity) then
+          self.entity:EmitSound(act_sound)
+        else
+          player:EmitSound(act_sound)
+        end
       end
     end
 
