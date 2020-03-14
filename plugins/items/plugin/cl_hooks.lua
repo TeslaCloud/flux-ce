@@ -58,7 +58,7 @@ function Items:PlayerUseItemMenu(instance_id, is_entity)
             item_obj:do_menu_action(v.callback)
           end)
 
-          button:SetIcon(v.icon)
+          button:SetIcon(v.get_icon and v.get_icon(item_obj) or v.icon)
         end
       end
     end
