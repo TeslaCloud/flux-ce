@@ -238,7 +238,13 @@ end
 function ItemBase:get_data(id, default)
   if !id then return end
 
-  return self.data[id] or default
+  local data = self.data[id]
+
+  if data != nil then
+    return data
+  else
+    return default
+  end
 end
 
 function ItemBase:set_entity(ent)
