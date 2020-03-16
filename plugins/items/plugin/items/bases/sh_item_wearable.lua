@@ -39,7 +39,7 @@ function ItemWearable:get_model_by_group(player)
 end
 
 function ItemWearable:get_equip_model(player)
-  return self:get_model_by_group(player) or self.equip_model
+  return self:get_model_by_group(player) or self.equip_model or self.model
 end
 
 function ItemWearable:get_bodygroups(player)
