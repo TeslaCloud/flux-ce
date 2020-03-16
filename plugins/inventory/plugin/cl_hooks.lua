@@ -225,7 +225,7 @@ local function create_item_icon(item_obj, parent)
   icon:SetToolTip(t(item_obj:get_real_name())..'\n'..t(item_obj:get_description()))
   icon.DoRightClick = function(pnl)
     local derma_menu = DermaMenu()
-    local give_self = derma_menu:AddSubMenu(t'ui.spawnmenu.give.self')
+    local give_self = derma_menu:AddSubMenu(t'ui.spawnmenu.give.self', false)
 
     if item_obj.stackable then
       give_self:AddOption(t'ui.spawnmenu.give.stack', function()
@@ -240,7 +240,7 @@ local function create_item_icon(item_obj, parent)
     local players = player.all()
 
     if #players > 1 then
-      local give_player = derma_menu:AddSubMenu(t'ui.spawnmenu.give.player')
+      local give_player = derma_menu:AddSubMenu(t'ui.spawnmenu.give.player', false)
 
       for k, v in ipairs(players) do
         if PLAYER == v then continue end
