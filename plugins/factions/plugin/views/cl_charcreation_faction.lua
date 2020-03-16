@@ -7,15 +7,15 @@ function PANEL:on_open(parent)
   self.faction_id = parent.char_data.faction or self.faction_id
 
   self.chooser = vgui.Create('fl_horizontalbar', self)
-  self.chooser:SetSize(self:GetWide(), self:GetTall() / 8 * 7 - 8)
-  self.chooser:SetPos(0, self:GetTall() / 8 + 8)
-  self.chooser:SetOverlap(4)
+  self.chooser:SetSize(self:GetWide(), self:GetTall() * 0.875 - math.scale(8))
+  self.chooser:SetPos(0, self:GetTall() * 0.125 + math.scale(8))
+  self.chooser:SetOverlap(math.scale(4))
   self.chooser:set_centered(true)
 
   for k, v in pairs(Factions.all()) do
     if !v.whitelisted or PLAYER:has_whitelist(v.faction_id) then
       local button = vgui.Create('fl_image_button')
-      button:SetSize(self.chooser:GetWide() / 3, self.chooser:GetTall())
+      button:SetSize(self.chooser:GetWide() * 0.33, self.chooser:GetTall())
       button:SetImage(v.material)
       button.faction = v
 
