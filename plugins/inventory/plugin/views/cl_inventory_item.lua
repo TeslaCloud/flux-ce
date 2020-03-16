@@ -269,6 +269,10 @@ function PANEL:rebuild()
     local rotated = self:is_rotated()
     local w, h = self:get_item_size()
 
+    if !self:is_multislot() and rotated and w != h then
+      fov = fov * (w > h and w / h or h / w)
+    end
+
     self.model_panel:SetCamPos(pos)
     self.model_panel:SetFOV(rotated and fov * (w / h) or fov)
     self.model_panel:SetLookAng(rotated and Angle(ang.p, ang.y, ang.r - 90) or ang)
