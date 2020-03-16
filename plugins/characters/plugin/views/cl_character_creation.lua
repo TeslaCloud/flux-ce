@@ -1,4 +1,4 @@
-﻿local PANEL = {}
+local PANEL = {}
 PANEL.char_data = {}
 
 function PANEL:Init()
@@ -328,6 +328,8 @@ function PANEL:open_panel(id)
   if self.panel.on_open then
     self.panel:on_open(self)
   end
+
+  hook.run('CharPanelCreated', id, self.panel)
 end
 
 function PANEL:add_stage(id, index)
