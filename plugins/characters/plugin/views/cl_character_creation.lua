@@ -1,4 +1,4 @@
-local PANEL = {}
+﻿local PANEL = {}
 PANEL.char_data = {}
 
 function PANEL:Init()
@@ -189,6 +189,8 @@ function PANEL:set_stage(stage)
 end
 
 function PANEL:next_stage()
+  if self.request_sent then return false end
+
   if self.panel and self.panel.on_validate then
     local success, error = self.panel:on_validate()
 
