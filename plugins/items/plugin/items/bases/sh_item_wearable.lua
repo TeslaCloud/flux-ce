@@ -30,8 +30,11 @@ function ItemWearable:get_model_by_group(player)
   if self.model_group then
     local player_model = player:GetModel():lower()
     local path = player_model:GetPathFromFilename()
+    local matched = path:match('(%a+)/$')
 
-    return player_model:gsub(path:match('(%a+)/$'), self.model_group)
+    if matched then
+      return player_model:gsub(matched, self.model_group)
+    end
   end
 end
 
