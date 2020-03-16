@@ -1,4 +1,4 @@
-local PANEL = {}
+﻿local PANEL = {}
 PANEL.id = 'base'
 PANEL.text = 'Click sidebar buttons to open character creation menus.'
 
@@ -99,7 +99,7 @@ function PANEL:Init()
     self.name_random.DoClick = function(btn)
       surface.PlaySound('buttons/blip1.wav')
 
-      self.name_entry:SetText(SCHEMA:get_random_name(self:GetParent().char_data.gender or 'no_gender'))
+      self.name_entry:SetText(SCHEMA:get_random_name(self:GetParent().char_data.gender or 'no_gender', self:GetParent().char_data))
     end
   end
 
