@@ -16,5 +16,6 @@ try = function(func, ...)
     error_with_traceback(tostring(tryed[2]))
   end
 
+  table.remove(tryed, 1)
   return unpack(tryed)
 end
