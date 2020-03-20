@@ -6,14 +6,15 @@ function typeof(obj)
   return string.lower(type(obj))
 end
 
+local unpack = unpack or table.unpack
 --- A wrapper for pcall for shorthand writing.
 -- @return [Vararg]
-function try(func, ...)
-  local success, a, b, c, d, e, f = pcall(func, ...)
+try = function(func, ...)
+  local tryed = {pcall(func, ...)}
 
-  if !success then
-    error_with_traceback(tostring(a))
+  if not tryed[1] then
+    error_with_traceback(tostring(tryed[2]))
   end
 
-  return a, b, c, d, e, f
+  return unpack(tryed)
 end
