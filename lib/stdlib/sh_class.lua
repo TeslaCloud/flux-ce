@@ -149,8 +149,9 @@ function extends(parent_class)
         error_with_traceback(tostring(exception))
       end
     end
-
-    obj = copy
+    
+    table.safe_merge(obj, copy)
+    
     obj.parent = parent_class
     obj.BaseClass = obj.parent_class
 
