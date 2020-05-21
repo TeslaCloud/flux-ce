@@ -67,7 +67,7 @@ function class(name, parent_class)
         return parent_class.init(new_obj, ...)
       end
 
-      real_class.init = isfunction(real_class.init) and real_class.init or function(obj) super() end
+      real_class.init = isfunction(real_class.init) and real_class.init or function(obj, ...) super(...) end
     end
 
     -- If there is a constructor - call it.
