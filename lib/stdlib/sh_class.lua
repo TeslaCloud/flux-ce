@@ -51,7 +51,7 @@ function class(name, parent_class)
 
   last_class = { name = name, parent = parent }
 
-  obj.new = function(...)
+  obj.__call = function(self, ...)
     local new_obj = {}
     local real_class = parent[name]
     local old_super = super
@@ -67,7 +67,7 @@ function class(name, parent_class)
         return parent_class.init(new_obj, ...)
       end
 
-      real_class.init = isfunction(real_class.init) and real_class.init or function(obj) super() end
+      real_class.init = isfunction(real_class.init) and real_class.init or function(self, ...) super(...) end
     end
 
     -- If there is a constructor - call it.
@@ -89,6 +89,11 @@ function class(name, parent_class)
     -- Return our newly generated object.
     return new_obj
   end
+  
+  --backcompat
+  obj.new = function(...)
+    return obj(...)
+  end
 
   obj.include = function(self, what)
     local module_table = isstring(what) and what:parse_table() or what
@@ -104,7 +109,7 @@ function class(name, parent_class)
     table.insert(self.included_modules, module_table)
   end
 
-  return parent[name]
+  return setmetatable(parent[name], obj)
 end
 
 function delegate(obj, t)
