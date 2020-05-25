@@ -56,6 +56,8 @@ do
   end
 
   function ActiveRecord.type_to_db(val, type)
+    if val == nil then return end
+
     local conv = reverse_converters[type]
 
     if conv then

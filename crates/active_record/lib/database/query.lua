@@ -49,7 +49,11 @@ function ActiveRecord.Query:escape(text)
 end
 
 function ActiveRecord.Query:quote(text)
-  return ActiveRecord.adapter:quote(tostring(text))
+  if text == nil then
+    return 'NULL'
+  else
+    return ActiveRecord.adapter:quote(tostring(text))
+  end
 end
 
 function ActiveRecord.Query:quote_column(text)
