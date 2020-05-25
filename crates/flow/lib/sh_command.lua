@@ -361,10 +361,15 @@ if SERVER then
             self:run(player, cmd_table, args, raw_args)
           end
         else
-          player:notify('error.command.syntax', {
-            command = cmd_table.name,
-            syntax = cmd_table.syntax
-          })
+          if IsValid(player) then
+            player:notify('error.command.syntax', {
+              command = cmd_table.name,
+              syntax = cmd_table.syntax
+            })
+          else
+            ErrorNoHalt('flc '..cmd_table.name..' '..t(cmd_table.syntax))
+            print ''
+          end
         end
       else
         if IsValid(player) then
