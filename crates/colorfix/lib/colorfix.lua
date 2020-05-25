@@ -173,7 +173,13 @@ function MsgC(...)
 end
 
 function ErrorNoHalt(msg)
+  local newlines = msg:match '(\n+)$'
+
+  if newlines then
+    msg = msg:gsub('\n+$', '')
+  end
+
   Msg('\27[41;15m\27[1m')
   _ErrorNoHalt(msg)
-  Msg(color_clear_sequence)
+  Msg(color_clear_sequence..(newlines or ''))
 end

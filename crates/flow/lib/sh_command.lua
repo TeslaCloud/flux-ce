@@ -367,8 +367,7 @@ if SERVER then
               syntax = cmd_table.syntax
             })
           else
-            ErrorNoHalt('flc '..cmd_table.name..' '..t(cmd_table.syntax))
-            print ''
+            ErrorNoHalt('flc '..cmd_table.name..' '..t(cmd_table.syntax)..'\n')
           end
         end
       else
