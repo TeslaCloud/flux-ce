@@ -76,7 +76,6 @@ if SERVER then
   function Characters.save(player, character)
     if !IsValid(player)
     or !istable(character)
-    or player:IsBot()
     or hook.run('PreSaveCharacter', player, character) == false
     then
       return

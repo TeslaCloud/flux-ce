@@ -1,6 +1,7 @@
 local player_meta = FindMetaTable('Player')
 
 function player_meta:save_player()
+  if self:IsBot() then return end
   if hook.run('PreSavePlayerData', self) == true then return end
 
   if self.record then
