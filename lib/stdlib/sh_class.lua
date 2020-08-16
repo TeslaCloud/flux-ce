@@ -1,6 +1,17 @@
 local last_class = nil
 
 --
+-- Function: isclass(any obj)
+-- Description: Checks whether object is class or not.
+-- Argument: any obj - Object to check.
+-- 
+-- Returns: boolean - Whether object is class or not.
+--
+isclass = function(obj)
+  return istable(obj.class) and isstring(obj.class_name)
+end
+
+--
 -- Function: class(string name, table parent = _G, class parent_class = nil)
 -- Description: Creates a new class. Supports constructors and inheritance.
 -- Argument: string name - The name of the library. Must comply with Lua variable name requirements.
