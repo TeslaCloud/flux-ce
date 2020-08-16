@@ -1,5 +1,61 @@
 local last_class = nil
 
+local extender = function(...)
+  local info, r = {names = {}}, {}
+
+  local merge
+  merge = function(t, n)
+    for k, it in next, t do
+      if isclass(it) then
+        info.names[{[1] = it.class_name, [2] = (n or it)}] = true
+
+        table.merge(r, it)
+
+        if isfunction(it.class_extended) then
+          xpcall(it.class_extended, error_with_traceback, it, r)
+        end
+      elseif isstring(it) then
+        for ti in it:gmatch "[%w_:]+" do
+          merge({ti:parse_table()}, ti)
+        end
+      end
+    end
+
+    r.init = nil
+  end
+
+  merge {...}
+
+  return r, info
+end
+
+local makeSuper = function(s)
+  return setmetatable({}, {
+    __index = function(self, key)
+      for cls in next, s.parent_info.names do
+        local t = (isstring(cls[2]) and cls[2]:parse_table() or cls[2])
+
+        if t[key] then
+          return t[key]
+        end
+        
+        if istable(cls[2]) and cls[2].class_name == key or cls[2] == key then
+          return t
+        end
+      end
+    end,
+    __call = function(self, ...)
+      for cls in next, s.parent_info.names do
+        local t = (isstring(cls[2]) and cls[2]:parse_table() or cls[2])
+
+        if t.init then
+          t.init(s)
+        end
+      end
+    end
+  })
+end
+
 --
 -- Function: class(string name, table parent = _G, class parent_class = nil)
 -- Description: Creates a new class. Supports constructors and inheritance.
@@ -12,10 +68,6 @@ local last_class = nil
 -- Returns: table - The created class.
 --
 function class(name, parent_class)
-  if isstring(parent_class) then
-    parent_class = parent_class:parse_table()
-  end
-
   local parent = nil
   parent, name = name:parse_parent()
   parent[name] = {}
@@ -32,21 +84,18 @@ function class(name, parent_class)
   obj.static_class = true
   obj.class = obj
   obj.included_modules = {}
+  obj.super = makeSuper(obj)
 
   -- If this class is based off some other class - copy it's parent's data.
-  if istable(parent_class) then
-    local copy = table.Copy(parent_class)
-    table.safe_merge(copy, obj)
+  if istable(parent_class) or isstring(parent_class) then
+    local copy, info = extender(parent_class)
 
-    if isfunction(parent_class.class_extended) then
-      local success, exception = pcall(parent_class.class_extended, parent_class, copy)
+    table.merge(copy, obj)
 
-      if !success then
-        error_with_traceback(tostring(exception))
-      end
-    end
-
-    obj = copy
+    table.safe_merge(obj, copy)
+    obj.parent = parent
+    obj.parent_info = info
+    obj.BaseClass = obj.parent
   end
 
   last_class = { name = name, parent = parent }
@@ -60,14 +109,10 @@ function class(name, parent_class)
     setmetatable(new_obj, real_class)
     table.safe_merge(new_obj, real_class)
 
-    local parent_class = real_class.parent
-
-    if parent_class and isfunction(parent_class.init) then
-      super = function(...)
-        return parent_class.init(new_obj, ...)
-      end
-
-      real_class.init = isfunction(real_class.init) and real_class.init or function(obj, ...) super(...) end
+    if not table.IsEmpty(real_class.parent_info.names) then
+      super = makeSuper(real_class)
+      
+      real_class.init = real_class.init or function(obj, ...) super(...) end
     end
 
     -- If there is a constructor - call it.
@@ -131,39 +176,21 @@ end
 --
 -- Returns: bool - Whether or not did the extension succeed.
 --
-function extends(parent_class)
-  if isstring(parent_class) then
-    parent_class = parent_class:parse_table()
-  end
+function extends(...)
+  local obj = last_class.parent[last_class.name]
+  local parent, info = extender(...)
 
-  if istable(last_class) and istable(parent_class) then
-    local obj = last_class.parent[last_class.name]
-    local copy = table.Copy(parent_class)
+  table.merge(parent, obj)
 
-    table.safe_merge(copy, obj)
+  table.safe_merge(obj, parent)
+  obj.parent = parent
+  obj.parent_info = info
+  obj.BaseClass = obj.parent
 
-    if isfunction(parent_class.class_extended) then
-      local success, exception = pcall(parent_class.class_extended, parent_class, copy)
+  hook.run('OnClassExtended', obj, parent)
 
-      if !success then
-        error_with_traceback(tostring(exception))
-      end
-    end
-    
-    table.safe_merge(obj, copy)
-    
-    obj.parent = parent_class
-    obj.BaseClass = obj.parent_class
-
-    hook.run('OnClassExtended', obj, parent_class)
-
-    last_class.parent[last_class.name] = obj
-    last_class = nil
-
-    return true
-  end
-
-  return false
+  last_class.parent[last_class.name] = obj
+  last_class = nil
 end
 
 --
