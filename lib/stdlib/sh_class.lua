@@ -49,7 +49,7 @@ local makeSuper = function(s)
         local t = (isstring(cls[2]) and cls[2]:parse_table() or cls[2])
 
         if t.init then
-          t.init(s)
+          t.init(s, ...)
         end
       end
     end
@@ -57,15 +57,14 @@ local makeSuper = function(s)
 end
 
 --
--- Function: class(string name, table parent = _G, class parent_class = nil)
+-- Function: class(string name, string, class parent_class = nil)
 -- Description: Creates a new class. Supports constructors and inheritance.
 -- Argument: string name - The name of the library. Must comply with Lua variable name requirements.
--- Argument: table parent (default: _G) - The parent table to put the class into.
--- Argument: class parent_class (default: nil) - The base class this new class should extend.
+-- Argument: string, class parent_class (default: nil) - The base class this new class should extend.
 --
 -- Alias: class (string name, class parent_class = nil, table parent = _G)
 --
--- Returns: table - The created class.
+-- Returns: class - The created class.
 --
 function class(name, parent_class)
   local parent = nil
@@ -78,7 +77,7 @@ function class(name, parent_class)
 
   local obj = parent[name]
   obj.ClassName = name
-  obj.BaseClass = parent_class or false
+  obj.BaseClass = false
   obj.class_name = obj.ClassName
   obj.parent = obj.BaseClass
   obj.static_class = true
@@ -167,14 +166,11 @@ function delegate(obj, t)
 end
 
 --
--- Function: extends (class parent_class)
+-- Function: extends (string, table vararg)
 -- Description: Sets the base class of the class that is currently being created.
--- Argument: class parent_class - The base class to extend.
+-- Argument: string, class vararg - The base class to extend.
 --
--- Alias: implements
--- Alias: inherits
---
--- Returns: bool - Whether or not did the extension succeed.
+-- Returns: void
 --
 function extends(...)
   local obj = last_class.parent[last_class.name]
@@ -194,6 +190,7 @@ function extends(...)
 end
 
 --
--- class 'SomeClass' extends SomeOtherClass
+-- class 'SomeClass' extends(SomeOtherClass)
 -- class 'SomeClass' extends 'SomeOtherClass'
+-- class("SomeClass", "SomeOtherClass")
 --
