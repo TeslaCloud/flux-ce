@@ -332,7 +332,7 @@ end
 
 --- Print an error message followed by a complete stack traceback.
 function error_with_traceback(msg)
-  long_error(msg..'\n')
+  long_error(tostring(msg)..'\n')
   print_traceback()
 end
 

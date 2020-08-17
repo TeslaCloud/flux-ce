@@ -1,5 +1,15 @@
 local last_class = nil
 
+-- Function: isclass(any obj)
+-- Description: Checks whether object is class or not.
+-- Argument: any obj - Object to check.
+-- 
+-- Returns: boolean - Whether object is class or not.
+--
+isclass = function(obj)
+  return istable(obj.class) and isstring(obj.class_name)
+end
+
 local extender = function(...)
   local info, r = {names = {}}, {}
 
