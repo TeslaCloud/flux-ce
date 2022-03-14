@@ -187,12 +187,12 @@ Crate.is_installed  = Crate.included
 -- @return [Boolean]
 function Crate:find(name)
   local folder_path = name:ensure_end('/')
-  local files, _ = file.Find(folder_path..'*.cratespec', 'LUA')
+  local files, _ = file.Find(folder_path..'cratespec.lua', 'LUA')
 
   if !istable(files) or #files == 0 then
     for path, v in pairs(search_paths) do
       local full_path = path..folder_path:ensure_end('/')
-      local files, _ = file.Find(full_path..'*.cratespec', 'LUA')
+      local files, _ = file.Find(full_path..'cratespec.lua', 'LUA')
 
       if istable(files) and #files > 0 then
         return full_path..files[1], name, full_path
@@ -383,12 +383,12 @@ do
 
     if SERVER then
       local folder_path = name:ensure_end('/')
-      local files, _ = file.Find(folder_path..'*.cratespec', 'LUA')
+      local files, _ = file.Find(folder_path..'cratespec.lua', 'LUA')
 
       if !istable(files) or #files == 0 then
         for path, v in pairs(search_paths) do
           local full_path = path..folder_path:ensure_end('/')
-          local files, _ = file.Find(full_path..'*.cratespec', 'LUA')
+          local files, _ = file.Find(full_path..'cratespec.lua', 'LUA')
 
           if istable(files) and #files > 0 then
             return do_include(full_path..files[1], name, full_path)
