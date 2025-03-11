@@ -6,7 +6,7 @@ function PANEL:Init()
   self.player_list = vgui.create('DListView', self)
   self.player_list:DockMargin(4, 4, 2, 4)
   self.player_list:Dock(LEFT)
-  self.player_list:AddColumn(t'ui.admin.players')
+  self.player_list:AddColumn(t('ui.admin.players'), 1)
   self.player_list:SetWide(scrw / 6)
 
   for k, v in ipairs(player.all()) do

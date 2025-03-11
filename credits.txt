@@ -2,16 +2,11 @@
 Flux © 2016-2019 TeslaCloud Studios
 ===================================
 
-AleXXX_007          - Lead Developer
-
-===================================
- Inactive and retired contributors
-===================================
-
+AleXXX_007          - Developer (2017-2019)
 Johnny              - Developer (2017-2019)
 NightAngel          - Developer (2016-2017)
 zigbomb             - Developer and Design Supervisor (2016-2018)
-Luna                - Lead Developer (2016-2019)
+Meow                - Creator & Developer (2016-2019)
 
 ===================================
       Community Contributors

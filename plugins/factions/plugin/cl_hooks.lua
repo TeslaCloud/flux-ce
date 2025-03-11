@@ -87,7 +87,7 @@ function Factions:PreRebuildScoreboard(panel, w, h)
     for k1, v1 in pairs(players) do
       if !IsValid(v1) then continue end
 
-      local player_card = vgui.Create('fl_scoreboard_player', self)
+      local player_card = vgui.Create('fl_scoreboard_player', category)
       player_card:SetSize(w - 8, card_tall)
       player_card:set_player(v1)
       player_card:SetPos(0, 5)

@@ -1,3 +1,9 @@
+# Deprecation
+
+As of December 2019, Flux is **deprecated** and is no longer under active development. No support will be provided regarding the framework or its schemas. Please refrain from contacting the authors of this project regarding any issues, and please do not submit any further pull requests, these will not be reviewed or considered.
+
+If you're looking for a maintained and supported framework for Garry's Mod serious roleplaying games, check out [helix](https://github.com/nebulouscloud/helix).
+
 ![Imgur](https://i.imgur.com/o4bFhLn.png)
 
 # Flux

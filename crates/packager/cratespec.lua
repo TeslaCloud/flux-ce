@@ -3,7 +3,7 @@ Crate:describe(function(s)
   s.version     = '1.0'
   s.date        = '2019-03-09'
   s.summary     = 'Flux package system.'
-  s.description = 'Flux package system with version control and dependency resolution. Also provides Luna language backend.'
+  s.description = 'Flux package system with version control and dependency resolution.'
   s.authors     = { 'TeslaCloud Studios', 'Meow the Cat' }
   s.email       = 'support@teslacloud.net'
   s.files       = { 'lib/minify.lua' }
