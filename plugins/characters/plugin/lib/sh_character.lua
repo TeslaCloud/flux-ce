@@ -272,6 +272,11 @@ do
   end
 
   function player_meta:get_all_characters()
-    return SERVER and self.record.characters or self.characters
+    if SERVER then
+      return self.record.characters
+    else
+      self.characters = self.characters or {}
+      return self.characters
+    end
   end
 end
