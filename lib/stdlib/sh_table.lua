@@ -489,13 +489,13 @@ end
 
 --- Converts a table into the string format.
 -- @param tab [Map/List table to convert]
--- @return [String pON-encoded table, JSON if pON fails, or an empty string if both fail or
+-- @return [String hex-encoded SFS data, JSON if SFS fails, or an empty string if both fail or
 --   tab is not a table]
 function table.serialize(tab)
   if istable(tab) then
-    local success, value = pcall(pon.encode, tab)
+    local success, value, err = pcall(sfs.encode_to_hex, tab)
 
-    if !success then
+    if !success or err then
       success, value = pcall(util.TableToJSON, tab)
 
       if !success then
@@ -513,15 +513,15 @@ function table.serialize(tab)
   end
 end
 
---- Converts a string back into a table. Uses pON at first, if it fails it falls back to JSON.
+--- Converts a string back into a table. Uses SFS at first, if it fails it falls back to JSON.
 -- @param data [String string to convert]
 -- @return [Map decoded table; an empty table if data is not a string, nil if it is neither
---   valid pON nor valid JSON]
+--   valid SFS nor valid JSON]
 function table.deserialize(data)
   if isstring(data) then
-    local success, value = pcall(pon.decode, data)
+    local success, value, err = pcall(sfs.decode_from_hex, data)
 
-    if !success then
+    if !success or err then
       success, value = pcall(util.JSONToTable, data)
 
       if !success then

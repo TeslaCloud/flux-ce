@@ -3,6 +3,6 @@ AllReaders:
     - 'docs/**/*'
     - '**/*.min.lua'
     - 'packages/yaml/lib/yaml.lua'
-    - 'packages/pon/**/*'
+    - 'packages/sfs/lib/sfs.lua'
     - 'packages/tween/**/*'
     - 'packages/utf8/**/*'

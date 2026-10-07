@@ -10,5 +10,5 @@ Package:describe(function(s)
   s.website     = 'https://teslacloud.net'
   s.license     = 'MIT'
 
-  s.depends     'pon'
+  s.depends     'sfs'
 end)

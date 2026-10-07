@@ -32,17 +32,28 @@ function cable.receive(id, callback)
   return net.Receive(id, function(length, sender)
     local c_len = net.ReadUInt(8)
     local c_tables = table.map(string.split(net.ReadString(), ';'), function(v) return tonumber(v) end)
+    local tables = {}
     local args = {}
-
-    if c_len > 0 then
-      for i = 1, c_len do
-        table.insert(args, net.ReadType())
-      end
-    end
 
     if c_tables then
       for k, v in ipairs(c_tables) do
-        args[v] = pon.decode(args[v])
+        tables[v] = true
+      end
+    end
+
+    if c_len > 0 then
+      for i = 1, c_len do
+        if tables[i] then
+          local value, err = sfs.decode(net.ReadData(net.ReadUInt(16)))
+
+          if err then
+            error('cable.receive - failed to decode value #'..i..' of "'..id..'" ('..err..')\n')
+          end
+
+          args[i] = value
+        else
+          args[i] = net.ReadType()
+        end
       end
     end
 
@@ -59,6 +70,7 @@ local function write_sendable_args(...)
   local length = 0
   local table_header = ''
   local send = {}
+  local tables = {}
 
   for k, v in ipairs(args) do
     length = length + 1
@@ -66,7 +78,14 @@ local function write_sendable_args(...)
     if !istable(v) then
       table.insert(send, v != nil and v or false)
     else
-      table.insert(send, pon.encode(v))
+      local data, err = sfs.encode(v)
+
+      if err then
+        error('cable.send - failed to encode value #'..length..' ('..err..')\n')
+      end
+
+      table.insert(send, data)
+      tables[length] = true
       table_header = table_header..tostring(length)..';'
     end
   end
@@ -75,7 +94,13 @@ local function write_sendable_args(...)
   net.WriteString(table_header)
 
   for k, v in ipairs(send) do
-    net.WriteType(v)
+    if tables[k] then
+      -- SFS data is binary, so it has to be written along with its length.
+      net.WriteUInt(#v, 16)
+      net.WriteData(v, #v)
+    else
+      net.WriteType(v)
+    end
   end
 end
 
@@ -94,7 +119,7 @@ if SERVER then
   end
 
   --- Sends a Cable message to one, several or all players. Serverside variant.
-  -- Tables are serialized with pON. The first message under a new name is delayed by 0.1
+  -- Tables are serialized with SFS. The first message under a new name is delayed by 0.1
   -- seconds to let the networked string reach the clients.
   -- ```
   -- Cable.send(target, 'fl_bind_pressed', key)
@@ -133,7 +158,7 @@ if SERVER then
   end
 else
   --- Sends a Cable message to the server. Clientside variant.
-  -- Tables are serialized with pON.
+  -- Tables are serialized with SFS.
   -- ```
   -- Cable.send('fl_config_change', key, value)
   -- ```

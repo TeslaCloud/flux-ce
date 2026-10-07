@@ -14,7 +14,7 @@ Package:describe(function(s)
     s.depends 'colorfix'
   end
 
-  s.depends     'pon'
+  s.depends     'sfs'
   s.depends     'cable'
   s.depends     'utf8'
   s.depends     'yaml'

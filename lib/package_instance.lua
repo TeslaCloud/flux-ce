@@ -39,7 +39,7 @@ end
 -- being included (the PACKAGE global).
 -- ```
 -- Package:describe(function(s)
---   s.depends 'pon'
+--   s.depends 'sfs'
 --   s.depends 'lib/flux.lua'
 -- end)
 -- ```
