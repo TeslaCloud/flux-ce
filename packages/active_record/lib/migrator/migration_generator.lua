@@ -133,11 +133,16 @@ function ActiveRecord.MigrationGenerator:generate(context)
 
   for k, v in ipairs(context:migrations()) do
     if v.name == self.file_name then
-      error('ActiveRecord - another migration is already named '..self.file_name..': '..v.filename..'. Use a different name.', 0)
+      error(
+        'ActiveRecord - another migration is already named '..self.file_name..': '..v.filename..
+          '. Use a different name.',
+        0
+      )
     end
   end
 
-  local file_name = 'gamemodes/'..context.migrations_paths[1]..context:next_migration_number()..'_'..self.file_name..'.lua'
+  local file_name =
+    'gamemodes/'..context.migrations_paths[1]..context:next_migration_number()..'_'..self.file_name..'.lua'
 
   File.write(file_name, self:render())
 

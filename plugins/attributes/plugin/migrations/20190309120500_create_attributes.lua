@@ -1,5 +1,6 @@
 local CreateAttributes = ActiveRecord.Migration.new()
 
+--- Creates the attributes, attribute_multipliers and attribute_boosts tables.
 function CreateAttributes:change()
   create_table('attributes', function(t)
     t:string  'attribute_id'

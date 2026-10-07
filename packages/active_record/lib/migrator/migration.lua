@@ -179,7 +179,9 @@ function ActiveRecord.Migration:reversible(callback)
   local reverting = self:reverting()
   local helper = {}
 
+  --- Runs the function only when migrating.
   function helper:up(fn) if !reverting then fn() end end
+  --- Runs the function only when reverting.
   function helper:down(fn) if reverting then fn() end end
 
   self:execute_block(function() callback(helper) end)

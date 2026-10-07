@@ -20,8 +20,12 @@ local function command(name, ...)
   return { command = name, args = pack(...) }
 end
 
+-- Statement name -> function that takes the arguments of the statement (a list with
+-- their count under 'n') and returns the inverse statement.
 local inverters = {}
 
+--- Inverts create_table into drop_table. The table definition is kept, so that the
+-- drop_table can be inverted back.
 function inverters.create_table(args)
   local name, options, callback = args[1], args[2], args[3]
 
@@ -32,10 +36,13 @@ function inverters.create_table(args)
   return command('drop_table', name, options, callback)
 end
 
+--- Inverts define_model into a drop_table of the model's table.
 function inverters.define_model(args)
   return command('drop_table', args[1], { model = true }, args[2])
 end
 
+--- Inverts drop_table into create_table, or into define_model for a model's table.
+-- Raises an error if the table definition is not given.
 function inverters.drop_table(args)
   local name, options, callback = args[1], args[2], args[3]
 
@@ -44,7 +51,10 @@ function inverters.drop_table(args)
   end
 
   if !isfunction(callback) then
-    irreversible('drop_table', 'To avoid mistakes, drop_table is only reversible if given the table definition (which can be empty).')
+    irreversible(
+      'drop_table',
+      'To avoid mistakes, drop_table is only reversible if given the table definition (which can be empty).'
+    )
   end
 
   if istable(options) and options.model then
@@ -54,14 +64,18 @@ function inverters.drop_table(args)
   return command('create_table', name, options, callback)
 end
 
+--- Inverts rename_table by swapping the names.
 function inverters.rename_table(args)
   return command('rename_table', args[2], args[1])
 end
 
+--- Inverts add_column into remove_column.
 function inverters.add_column(args)
   return command('remove_column', args[1], args[2], args[3], args[4])
 end
 
+--- Inverts remove_column into add_column. Raises an error if the type of the column is
+-- not given.
 function inverters.remove_column(args)
   local name, type = args[2], args[3]
 
@@ -76,26 +90,33 @@ function inverters.remove_column(args)
   return command('add_column', args[1], args[2], args[3], args[4])
 end
 
+--- Inverts rename_column by swapping the column names.
 function inverters.rename_column(args)
   return command('rename_column', args[1], args[3], args[2])
 end
 
+--- Inverts add_timestamps into remove_timestamps.
 function inverters.add_timestamps(args)
   return command('remove_timestamps', args[1], args[2])
 end
 
+--- Inverts remove_timestamps into add_timestamps.
 function inverters.remove_timestamps(args)
   return command('add_timestamps', args[1], args[2])
 end
 
+--- Inverts add_reference into remove_reference.
 function inverters.add_reference(args)
   return command('remove_reference', args[1], args[2], args[3])
 end
 
+--- Inverts remove_reference into add_reference.
 function inverters.remove_reference(args)
   return command('add_reference', args[1], args[2], args[3])
 end
 
+--- Inverts add_index into remove_index of the same columns. Understands both the
+-- positional and the table form of the arguments.
 function inverters.add_index(args)
   local table_name, columns, options = args[1], args[2], args[3]
 
@@ -112,6 +133,8 @@ function inverters.add_index(args)
   return command('remove_index', table_name, inverse)
 end
 
+--- Inverts remove_index into add_index. Raises an error if the column(s) of the index
+-- are not given.
 function inverters.remove_index(args)
   local table_name, options = args[1], args[2]
 
@@ -134,10 +157,13 @@ function inverters.remove_index(args)
   return command('add_index', table_name, columns, inverse)
 end
 
+--- Inverts add_foreign_key into remove_foreign_key.
 function inverters.add_foreign_key(args)
   return command('remove_foreign_key', args[1], args[2], args[3])
 end
 
+--- Inverts remove_foreign_key into add_foreign_key. Raises an error if the referenced
+-- table is not given.
 function inverters.remove_foreign_key(args)
   if !isstring(args[2]) then
     irreversible('remove_foreign_key', 'remove_foreign_key is only reversible if given the referenced table.')
@@ -146,6 +172,7 @@ function inverters.remove_foreign_key(args)
   return command('add_foreign_key', args[1], args[2], args[3])
 end
 
+--- Inverts create_reference into remove_foreign_key of the reference's key.
 function inverters.create_reference(args)
   local reference = args[1]
 
@@ -155,6 +182,8 @@ function inverters.create_reference(args)
   })
 end
 
+--- Inverts execute_block into itself: the block is run either way, and decides what to
+-- do from the direction of the migration.
 function inverters.execute_block(args)
   return command('execute_block', args[1])
 end

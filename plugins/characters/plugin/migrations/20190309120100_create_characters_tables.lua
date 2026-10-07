@@ -1,5 +1,6 @@
 local CreateCharactersTables = ActiveRecord.Migration.new()
 
+--- Creates the characters and ammunitions tables.
 function CreateCharactersTables:change()
   create_table('characters', function(t)
     t:references('user', { foreign_key = { on_delete = 'cascade' } })

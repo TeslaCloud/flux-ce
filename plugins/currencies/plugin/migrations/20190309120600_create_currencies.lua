@@ -1,5 +1,6 @@
 local CreateCurrencies = ActiveRecord.Migration.new()
 
+--- Creates the currencies table.
 function CreateCurrencies:change()
   create_table('currencies', function(t)
     t:references('character', { foreign_key = { on_delete = 'cascade' } })

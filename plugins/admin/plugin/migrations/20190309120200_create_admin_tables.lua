@@ -1,5 +1,7 @@
 local CreateAdminTables = ActiveRecord.Migration.new()
 
+--- Creates the permissions, temp_permissions and bans tables, and adds the role and
+-- banned columns to users.
 function CreateAdminTables:change()
   create_table('permissions', function(t)
     t:string 'permission_id'

@@ -1,5 +1,6 @@
 local CreateDefaultTables = ActiveRecord.Migration.new()
 
+--- Creates the users and logs tables.
 function CreateDefaultTables:change()
   create_table('users', function(t)
     t:string { 'steam_id', null = false }

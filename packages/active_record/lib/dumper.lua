@@ -79,13 +79,20 @@ function ActiveRecord.dump_schema(version)
         if data.type == 'primary_key' and !primary_key then
           primary_key = column
         else
-          table.insert(columns, { name = column, id = tonumber(data.id) or 0, type = data.type, null = data.null, default = data.default })
+          table.insert(columns, {
+            name = column,
+            id = tonumber(data.id) or 0,
+            type = data.type,
+            null = data.null,
+            default = data.default
+          })
         end
       end
     end
 
     table.sort(columns, function(a, b)
       if a.id == b.id then return a.name < b.name end
+
       return a.id < b.id
     end)
 
@@ -111,7 +118,10 @@ function ActiveRecord.dump_schema(version)
       end
 
       if #column_options > 0 then
-        table.insert(lines, '    t:'..column.type..' { '..quote(column.name)..', '..table.concat(column_options, ', ')..' }')
+        table.insert(
+          lines,
+          '    t:'..column.type..' { '..quote(column.name)..', '..table.concat(column_options, ', ')..' }'
+        )
       else
         table.insert(lines, '    t:'..column.type..' '..quote(column.name))
       end
