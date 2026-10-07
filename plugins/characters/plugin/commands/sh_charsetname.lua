@@ -8,15 +8,15 @@ CMD.player_arg = 1
 CMD.alias = 'setname'
 
 --- Sets the name of the first target's character and notifies staff.
--- @param player [Player the player who ran the command]
+-- @param actor [Player the player who ran the command]
 -- @param targets [List<Player> players matched by the first command argument]
 -- @param ... [Vararg words of the new name, joined with spaces]
-function CMD:on_run(player, targets, ...)
+function CMD:on_run(actor, targets, ...)
   local new_name = table.concat({ ... }, ' ')
   local target = targets[1]
 
   self:notify_staff('command.charsetname.message', {
-    player = get_player_name(player),
+    player = get_player_name(actor),
     target = util.player_list_to_string({ target }),
     name = new_name
   })

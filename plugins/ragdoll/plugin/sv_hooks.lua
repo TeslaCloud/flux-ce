@@ -1,22 +1,22 @@
 --- Cancels the player's current action and puts them into the RAGDOLL_DUMMY state, which
 -- leaves a corpse ragdoll.
--- @param player [Player]
-function PLUGIN:PlayerDeath(player)
-  player:reset_action()
-  player:set_ragdoll_state(RAGDOLL_DUMMY)
+-- @param victim [Player]
+function PLUGIN:PlayerDeath(victim)
+  victim:reset_action()
+  victim:set_ragdoll_state(RAGDOLL_DUMMY)
 end
 
 --- Resets the player's ragdoll state to RAGDOLL_NONE when they spawn.
--- @param player [Player]
-function PLUGIN:PlayerSpawn(player)
-  player:set_ragdoll_state(RAGDOLL_NONE)
+-- @param actor [Player]
+function PLUGIN:PlayerSpawn(actor)
+  actor:set_ragdoll_state(RAGDOLL_NONE)
 end
 
 --- Runs the PlayerDeathThink hook for dead players that are ragdolled.
--- @param player [Player]
-function PLUGIN:PlayerThink(player)
-  if !player:Alive() and player:is_ragdolled() then
-    hook.run('PlayerDeathThink', player)
+-- @param actor [Player]
+function PLUGIN:PlayerThink(actor)
+  if !actor:Alive() and actor:is_ragdolled() then
+    hook.run('PlayerDeathThink', actor)
   end
 end
 
@@ -25,7 +25,7 @@ end
 -- @param damage_info [CTakeDamageInfo]
 function PLUGIN:EntityTakeDamage(entity, damage_info)
   if entity:IsRagdoll() and IsValid(entity.player) then
-    local player = entity.player
-    player:TakeDamageInfo(damage_info)
+    local owner = entity.player
+    owner:TakeDamageInfo(damage_info)
   end
 end

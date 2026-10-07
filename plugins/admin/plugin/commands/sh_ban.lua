@@ -8,11 +8,11 @@ CMD.immunity = true
 CMD.alias = 'plyban'
 
 --- Bans the targeted players for the given duration and notifies staff.
--- @param player [Player the caller, or an invalid entity when run from the server console]
+-- @param actor [Player the caller, or an invalid entity when run from the server console]
 -- @param targets [List<Player> players to ban]
 -- @param duration [String ban length as read by Bolt:interpret_ban_time, e.g. '30' or 'perma']
 -- @param ... [Vararg words of the ban reason]
-function CMD:on_run(player, targets, duration, ...)
+function CMD:on_run(actor, targets, duration, ...)
   local reason = table.concat({ ... }, ' ')
 
   if !reason or reason == '' then
@@ -22,7 +22,7 @@ function CMD:on_run(player, targets, duration, ...)
   duration = Bolt:interpret_ban_time(duration)
 
   if !isnumber(duration) then
-    player:notify('error.invalid_time', {
+    actor:notify('error.invalid_time', {
       time = tostring(duration)
     })
 
@@ -34,7 +34,7 @@ function CMD:on_run(player, targets, duration, ...)
   end
 
   self:notify_staff('command.ban.message', {
-    player = get_player_name(player),
+    player = get_player_name(actor),
     target = util.player_list_to_string(targets),
     time = Flux.Lang:nice_time(duration),
     reason = reason

@@ -1,8 +1,8 @@
 --- Returns false for speakers that lack the 'voice' permission.
--- @param player [Player the player that started talking]
+-- @param speaker [Player the player that started talking]
 -- @return [Boolean false if the player lacks the permission, nothing otherwise]
-function Bolt:PlayerStartVoice(player)
-  if !player:can('voice') then
+function Bolt:PlayerStartVoice(speaker)
+  if !speaker:can('voice') then
     return false
   end
 end

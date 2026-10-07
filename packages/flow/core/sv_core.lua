@@ -11,9 +11,9 @@ function ServerLog(...)
 end
 
 --- Runs a hook on a player's client. The arguments are sent over the network.
--- @param player [Player the client to run the hook on]
+-- @param target [Player the client to run the hook on]
 -- @param strHookName [String name of the hook]
 -- @param ... [Vararg arguments passed to the hook]
-function hook.run_client(player, strHookName, ...)
-  Cable.send(player, 'fl_hook_run_cl', strHookName, ...)
+function hook.run_client(target, strHookName, ...)
+  Cable.send(target, 'fl_hook_run_cl', strHookName, ...)
 end

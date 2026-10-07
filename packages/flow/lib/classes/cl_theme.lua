@@ -206,10 +206,10 @@ end
 -- @param failsafe=nil [String returned if the sound is not set]
 -- @return [String path to the sound]
 function ThemeBase:get_sound(id, failsafe)
-  local sound = self.sounds[id]
+  local sound_path = self.sounds[id]
 
-  if sound then
-    return sound
+  if sound_path then
+    return sound_path
   else
     return failsafe or Sound()
   end

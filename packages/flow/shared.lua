@@ -21,9 +21,6 @@ print('Flux core version '..version..' ('..GM.code_name..')')
 -- While we can do nothing to stop you from changing them, we'll very much appreciate it if you don't.
 GM.name_override = false -- Set to any string to override the schema's browser name. This overrides the prefix too.
 
--- Fix for the name conflicts.
-_player, _team, _file, _table, _sound = player, team, file, table, sound
-
 AddCSLuaFile(FLUX_ENV_PATH)
 
 --- Returns the version of the Flux core, as declared in its package metadata.

@@ -11,11 +11,11 @@ function ROLE:define_permissions()
 end
 
 --- Called when the player's primary group is being set to this group.
--- @param player [Player]
+-- @param target [Player]
 -- @param previous_group [Role the player's previous role]
-function ROLE:on_role_set(player, previous_group) end
+function ROLE:on_role_set(target, previous_group) end
 
 --- Called when the player's primary group is taken or modified.
--- @param player [Player]
+-- @param target [Player]
 -- @param new_group [Role the role the player is being given]
-function ROLE:on_role_taken(player, new_group) end
+function ROLE:on_role_taken(target, new_group) end

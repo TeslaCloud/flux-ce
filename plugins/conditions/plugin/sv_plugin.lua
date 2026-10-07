@@ -1,9 +1,9 @@
-local function CheckConditions(player, conditions)
+local function CheckConditions(target, conditions)
   for k, v in pairs(conditions) do
     local condition_table = Conditions:get_all()[v.id]
 
-    if condition_table.check and condition_table.check(player, v.data) == false or
-    #v.childs != 0 and CheckConditions(player, v.childs) == false then
+    if condition_table.check and condition_table.check(target, v.data) == false or
+    #v.childs != 0 and CheckConditions(target, v.childs) == false then
       continue
     end
 
@@ -19,7 +19,7 @@ end
 -- An empty top-level list never passes.
 -- ```
 -- -- A specific player, or anyone with more than 50 health who holds a crowbar.
--- local allowed = Conditions:check(player, {
+-- local allowed = Conditions:check(target, {
 --   { id = 'steamid', data = { operator = 'equal', steamid = 'STEAM_0:1:12345' }, childs = {} },
 --   { id = 'health', data = { operator = 'greater', health = 50 }, childs = {
 --     { id = 'active_weapon', data = { operator = 'equal', weapon = 'weapon_crowbar' },
@@ -27,10 +27,10 @@ end
 --   } }
 -- })
 -- ```
--- @param player [Player]
+-- @param target [Player]
 -- @param conditions [List condition nodes, each a Map with id, data and childs, as
 --   returned by the get_conditions method of the fl_conditions panel]
 -- @return [Boolean]
-function Conditions:check(player, conditions)
-  return CheckConditions(player, conditions)
+function Conditions:check(target, conditions)
+  return CheckConditions(target, conditions)
 end

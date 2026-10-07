@@ -158,10 +158,10 @@ function PANEL:select_button(button)
 
   button.is_selected = true
 
-  local player = self:get_player()
+  local target = self:get_player()
 
-  if IsValid(player) and (value != player:get_permission(perm.id)) then
-    Cable.send('fl_bolt_set_permission', player, perm.id, value)
+  if IsValid(target) and (value != target:get_permission(perm.id)) then
+    Cable.send('fl_bolt_set_permission', target, perm.id, value)
   end
 
   if IsValid(self.prev_button) and self.prev_button != button then
@@ -172,9 +172,9 @@ function PANEL:select_button(button)
 end
 
 --- Sets the player whose permission this row edits.
--- @param player [Player]
-function PANEL:set_player(player)
-  self.active_player = player
+-- @param target [Player]
+function PANEL:set_player(target)
+  self.active_player = target
 end
 
 --- Returns the player whose permission this row edits.
@@ -293,13 +293,13 @@ end
 
 --- Sets the player being edited, rebuilds the rows and loads the player's permissions into
 -- them.
--- @param player [Player]
-function PANEL:set_player(player)
-  self.active_player = player
+-- @param target [Player]
+function PANEL:set_player(target)
+  self.active_player = target
 
   self:rebuild()
 
-  self:set_permissions(player:get_permissions(), player:get_temp_permissions())
+  self:set_permissions(target:get_permissions(), target:get_temp_permissions())
 end
 
 --- Returns the player being edited.

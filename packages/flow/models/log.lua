@@ -91,7 +91,7 @@ end
 --   command_log_color,
 --   message,
 --   'PlayerRunCommand',
---   IsValid(player) and player.record.id or 'console'
+--   IsValid(actor) and actor.record.id or 'console'
 -- ):replicate(function(listener)
 --   return listener:is_staff() and listener:can(cmd_table.id)
 -- end)

@@ -133,8 +133,8 @@ end
 --- Sets the player's ragdoll state and creates or removes their ragdoll to match it.
 -- RAGDOLL_FALLENOVER also starts the 'fallen' action. Serverside only.
 -- ```
--- player:set_ragdoll_state(RAGDOLL_FALLENOVER) -- fall over
--- player:set_ragdoll_state(RAGDOLL_NONE) -- get back up
+-- target:set_ragdoll_state(RAGDOLL_FALLENOVER) -- fall over
+-- target:set_ragdoll_state(RAGDOLL_NONE) -- get back up
 -- ```
 -- @param state=RAGDOLL_NONE [Number one of the RAGDOLL_ enums]
 function player_meta:set_ragdoll_state(state)

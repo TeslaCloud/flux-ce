@@ -36,7 +36,7 @@ function PANEL:rebuild()
   local card_tall = math.scale(32) + math.scale(8)
   local margin = math.scale(2)
 
-  for k, v in ipairs(_player.all()) do
+  for k, v in ipairs(player.all()) do
     if !v:has_initialized() then continue end
 
     local player_card = vgui.Create('fl_scoreboard_player', self)
@@ -73,9 +73,9 @@ function PANEL:Paint(w, h)
 end
 
 --- Sets the player this card represents and rebuilds the card.
--- @param player [Player]
-function PANEL:set_player(player)
-  self.player = player
+-- @param target [Player]
+function PANEL:set_player(target)
+  self.player = target
 
   self:rebuild()
 end
@@ -90,14 +90,14 @@ function PANEL:rebuild()
     self.name_label:safe_remove()
   end
 
-  local player = self.player
+  local target = self.player
 
   self.avatar_panel = vgui.Create('fl_avatar_panel', self)
   self.avatar_panel:SetSize(math.scale_size(32, 32))
   self.avatar_panel:SetPos(math.scale_size(4, 4))
-  self.avatar_panel:set_player(player, 64)
+  self.avatar_panel:set_player(target, 64)
 
-  local text = player:name()
+  local text = target:name()
   local font = Theme.get_font('text_normal')
   local text_w, text_h = util.text_size(text, font)
 
@@ -108,7 +108,7 @@ function PANEL:rebuild()
   self.name_label:SetTextColor(Theme.get_color('text'))
   self.name_label:SizeToContents()
 
-  text = player:Ping()
+  text = target:Ping()
   text_w, text_h = util.text_size(text, font)
 
   self.ping = vgui.Create('DLabel', self)
@@ -118,7 +118,7 @@ function PANEL:rebuild()
   self.ping:SetTextColor(Theme.get_color('text'))
   self.ping:SizeToContents()
 
-  hook.run('RebuildScoreboardPlayerCard', self, player)
+  hook.run('RebuildScoreboardPlayerCard', self, target)
 end
 
 vgui.Register('fl_scoreboard_player', PANEL, 'fl_base_panel')

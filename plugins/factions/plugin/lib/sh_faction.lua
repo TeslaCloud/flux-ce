@@ -60,7 +60,7 @@ end
 function Factions.get_players(id)
   local players = {}
 
-  for k, v in ipairs(_player.all()) do
+  for k, v in ipairs(player.all()) do
     if v:get_faction_id() == id then
       table.insert(players, v)
     end
@@ -244,7 +244,7 @@ do
 
       Characters.set_name(self, faction_table:generate_name(self, rank))
 
-      hook.run('OnRankChanged', player, rank, old_rank)
+      hook.run('OnRankChanged', self, rank, old_rank)
     end
 
     --- Moves the player one rank up unless they already hold the highest rank. Server only.

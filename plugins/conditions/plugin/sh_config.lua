@@ -15,13 +15,13 @@ Conditions:register_condition('steamid', {
   end,
   icon = 'vgui/resource/icon_steam',
   --- Compares the player's SteamID with the stored value using the chosen operator.
-  -- @param player [Player]
+  -- @param target [Player]
   -- @param data [Map condition parameters: operator, steamid]
   -- @return [Boolean result of the comparison, false if the operator or the value is not set]
-  check = function(player, data)
+  check = function(target, data)
     if !data.operator or !data.steamid then return false end
 
-    return util.process_operator(data.operator, player:SteamID(), data.steamid)
+    return util.process_operator(data.operator, target:SteamID(), data.steamid)
   end,
   --- Asks for a SteamID with a text prompt and stores it in the node data.
   -- Prompts again if the input does not start with 'STEAM_'.
@@ -64,13 +64,13 @@ Conditions:register_condition('model', {
   end,
   icon = 'icon16/bricks.png',
   --- Compares the player's model with the stored value using the chosen operator.
-  -- @param player [Player]
+  -- @param target [Player]
   -- @param data [Map condition parameters: operator, model]
   -- @return [Boolean result of the comparison, false if the operator or the value is not set]
-  check = function(player, data)
+  check = function(target, data)
     if !data.operator or !data.model then return false end
 
-    return util.process_operator(data.operator, player:GetModel(), data.model)
+    return util.process_operator(data.operator, target:GetModel(), data.model)
   end,
   --- Asks for a model path with a text prompt and stores it in the node data.
   -- Prompts again if the input does not start with 'models'.
@@ -113,13 +113,13 @@ Conditions:register_condition('health', {
   end,
   icon = 'icon16/heart.png',
   --- Compares the player's health with the stored value using the chosen operator.
-  -- @param player [Player]
+  -- @param target [Player]
   -- @param data [Map condition parameters: operator, health]
   -- @return [Boolean result of the comparison, false if the operator or the value is not set]
-  check = function(player, data)
+  check = function(target, data)
     if !data.operator or !data.health then return false end
 
-    return util.process_operator(data.operator, player:Health(), data.health)
+    return util.process_operator(data.operator, target:Health(), data.health)
   end,
   --- Asks for a health value with a text prompt and stores it in the node data as a number.
   -- @param id [String condition id]
@@ -157,13 +157,13 @@ Conditions:register_condition('armor', {
   end,
   icon = 'icon16/shield.png',
   --- Compares the player's armor with the stored value using the chosen operator.
-  -- @param player [Player]
+  -- @param target [Player]
   -- @param data [Map condition parameters: operator, armor]
   -- @return [Boolean result of the comparison, false if the operator or the value is not set]
-  check = function(player, data)
+  check = function(target, data)
     if !data.operator or !data.armor then return false end
 
-    return util.process_operator(data.operator, player:Armor(), data.armor)
+    return util.process_operator(data.operator, target:Armor(), data.armor)
   end,
   --- Asks for an armor value with a text prompt and stores it in the node data as a number.
   -- @param id [String condition id]
@@ -202,15 +202,15 @@ Conditions:register_condition('active_weapon', {
   icon = 'icon16/gun.png',
   --- Compares the class of the player's active weapon with the stored value
   -- using the chosen operator.
-  -- @param player [Player]
+  -- @param target [Player]
   -- @param data [Map condition parameters: operator, weapon]
   -- @return [Boolean result of the comparison, false if the operator or the value is not
   --   set or the player has no valid active weapon]
-  check = function(player, data)
+  check = function(target, data)
     if !data.operator or !data.weapon then return false end
-    if !IsValid(player:GetActiveWeapon()) then return false end
+    if !IsValid(target:GetActiveWeapon()) then return false end
 
-    return util.process_operator(data.operator, player:GetActiveWeapon():GetClass(), data.weapon)
+    return util.process_operator(data.operator, target:GetActiveWeapon():GetClass(), data.weapon)
   end,
   --- Asks for a weapon class with a text prompt and stores it in the node data.
   -- @param id [String condition id]

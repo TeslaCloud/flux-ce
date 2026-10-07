@@ -185,11 +185,11 @@ end
 --   'Safe Zone',
 --   'Notifies other plugins when a player enters or leaves the zone.',
 --   Color(0, 255, 0),
---   function(player, area, has_entered, pos, cur_time)
+--   function(actor, area, has_entered, pos, cur_time)
 --     if has_entered then
---       hook.run('PlayerEnteredSafeZone', player, area, cur_time)
+--       hook.run('PlayerEnteredSafeZone', actor, area, cur_time)
 --     else
---       hook.run('PlayerLeftSafeZone', player, area, cur_time)
+--       hook.run('PlayerLeftSafeZone', actor, area, cur_time)
 --     end
 --   end
 -- )
@@ -198,7 +198,7 @@ end
 -- @param name [String human-readable name of the type]
 -- @param description [String]
 -- @param color=Color(255, 0, 255) [Color the color of the areas in the area tool]
--- @param default_callback=nil [Function called as callback(player, area, has_entered,
+-- @param default_callback=nil [Function called as callback(actor, area, has_entered,
 --   pos, cur_time) unless overridden with Areas.set_callback]
 -- @see [Areas.set_callback]
 function Areas.register_type(id, name, description, color, default_callback)
@@ -213,7 +213,7 @@ end
 --- Overrides the enter / leave callback for the specified area type.
 -- The callback takes priority over the default callback of the type.
 -- @param area_type [String area type id]
--- @param callback [Function called as callback(player, area, has_entered, pos, cur_time)]
+-- @param callback [Function called as callback(actor, area, has_entered, pos, cur_time)]
 -- @see [Areas.register_type]
 function Areas.set_callback(area_type, callback)
   callbacks[area_type] = callback
@@ -231,11 +231,11 @@ Areas.register_type(
   'area',
   'Simple Area',
   'A simple area. Use this type if you have a callback somewhere in the code that looks up id instead of type ID.',
-  function(player, area, poly, has_entered, cur_pos, cur_time)
+  function(actor, area, poly, has_entered, cur_pos, cur_time)
     if has_entered then
-      hook.run('PlayerEnteredArea', player, area, cur_time)
+      hook.run('PlayerEnteredArea', actor, area, cur_time)
     else
-      hook.run('PlayerLeftArea', player, area, cur_time)
+      hook.run('PlayerLeftArea', actor, area, cur_time)
     end
   end
 )

@@ -135,4 +135,4 @@ If you don't have access to the `postgres` user, try the same SQL as described i
 If you wish to play the gamemode, you should install the content addon to prevent purple-black checkers where the materials should be. You can find it here: <https://steamcommunity.com/sharedfiles/filedetails/?id=1518849094>
 
 ## Other info
-For more info or technical support, please visit our forums: http://f.teslacloud.net/
+For more info or technical support, please visit our forums: https://teslacloud.net/

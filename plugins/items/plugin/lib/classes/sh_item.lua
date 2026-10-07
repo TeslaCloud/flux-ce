@@ -139,7 +139,7 @@ end
 -- ```
 -- ITEM:add_button('item.option.open', {
 --   icon = 'icon16/briefcase.png',
---   -- Calls ITEM:on_open(player) on the server when the button is pressed.
+--   -- Calls ITEM:on_open(actor) on the server when the button is pressed.
 --   callback = 'on_open',
 --   -- Client-side. The button is hidden if this returns false.
 --   on_show = function(item_obj)
@@ -172,28 +172,28 @@ end
 
 --- Sets the sound that the player emits when a menu action is performed on the item.
 -- @param act [String name of the action, e.g. 'on_drop']
--- @param sound [String path to the sound]
+-- @param sound_path [String path to the sound]
 -- @see [ItemBase#do_menu_action]
-function ItemBase:set_action_sound(act, sound)
-  self.action_sounds[act] = sound
+function ItemBase:set_action_sound(act, sound_path)
+  self.action_sounds[act] = sound_path
 end
 
 --- Called on the server by the 'CanPlayerDropItem' hook when a player is about to drop the item.
 -- Returning nothing/nil drops the item like normal, returning false
 -- prevents the item from appearing and doesn't remove it from the inventory.
--- @param player [Player]
+-- @param actor [Player]
 -- @return [Boolean false to prevent the drop, nil otherwise]
-function ItemBase:on_drop(player) end
+function ItemBase:on_drop(actor) end
 
 --- Called on the server right after the player that has the item spawns with their character
 -- loaded. Override it to give the player whatever the item is supposed to provide.
--- @param player [Player]
-function ItemBase:on_loadout(player) end
+-- @param owner [Player]
+function ItemBase:on_loadout(owner) end
 
 --- Called on the server before the character of the player that has the item is saved.
 -- Override it to store the state of the item.
--- @param player [Player]
-function ItemBase:on_save(player) end
+-- @param owner [Player]
+function ItemBase:on_save(owner) end
 
 if SERVER then
   --- Sets a custom data value of the item. Server-side only.
@@ -225,29 +225,29 @@ if SERVER then
   -- Runs the 'PlayerUsedItem' hook when done.
   -- ```
   -- -- Makes the player pick up the item into their hotbar.
-  -- item_obj:do_menu_action('on_take', player, { inv_type = 'hotbar' })
+  -- item_obj:do_menu_action('on_take', actor, { inv_type = 'hotbar' })
   -- ```
   -- @param act [String 'on_use', 'on_take', 'on_drop' or the callback of a custom button]
-  -- @param player [Player the player performing the action]
+  -- @param actor [Player the player performing the action]
   -- @param ... [Vararg extra arguments that are passed to the hooks and to the item's method]
-  function ItemBase:do_menu_action(act, player, ...)
-    if hook.run('PlayerCanUseItem', player, self, act, ...) == false then return end
+  function ItemBase:do_menu_action(act, actor, ...)
+    if hook.run('PlayerCanUseItem', actor, self, act, ...) == false then return end
 
     if act == 'on_take' then
-      if hook.run('PlayerTakeItem', player, self, ...) != nil then return end
+      if hook.run('PlayerTakeItem', actor, self, ...) != nil then return end
     end
 
     if act == 'on_use' then
-      if hook.run('PlayerUseItem', player, self, ...) != nil then return end
+      if hook.run('PlayerUseItem', actor, self, ...) != nil then return end
     end
 
     if act == 'on_drop' then
-      if hook.run('PlayerDropItem', player, self.instance_id) != nil then return end
+      if hook.run('PlayerDropItem', actor, self.instance_id) != nil then return end
     end
 
     if self[act] then
       if act != 'on_take' and act != 'on_use' and act != 'on_take' then
-        local success, exception = pcall(self[act], self, player, ...)
+        local success, exception = pcall(self[act], self, actor, ...)
 
         if !success then
           error_with_traceback('Item callback has failed to run! '..tostring(exception))
@@ -256,19 +256,19 @@ if SERVER then
       end
 
       if self.action_sounds[act] then
-        player:EmitSound(self.action_sounds[act])
+        actor:EmitSound(self.action_sounds[act])
       end
     end
 
-    hook.run('PlayerUsedItem', player, self, act, ...)
+    hook.run('PlayerUsedItem', actor, self, act, ...)
   end
 
-  Cable.receive('fl_items_menu_action', function(player, instance_id, action, ...)
+  Cable.receive('fl_items_menu_action', function(actor, instance_id, action, ...)
     local item_obj = Item.find_instance_by_id(instance_id)
 
     if !item_obj then return end
 
-    item_obj:do_menu_action(action, player, ...)
+    item_obj:do_menu_action(action, actor, ...)
   end)
 else
   --- Asks the server to perform a menu action on the item on behalf of the local player.

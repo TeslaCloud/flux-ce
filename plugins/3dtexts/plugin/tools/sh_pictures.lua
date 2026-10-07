@@ -17,9 +17,9 @@ TOOL.ClientConVar['fade'] = '0'
 function TOOL:LeftClick(trace)
   if CLIENT then return true end
 
-  local player = self:GetOwner()
+  local owner = self:GetOwner()
 
-  if !IsValid(player) or !player:can('textadd') then return end
+  if !IsValid(owner) or !owner:can('textadd') then return end
 
   local url = self:GetClientInfo('url')
   local width = self:GetClientNumber('width')
@@ -45,7 +45,7 @@ function TOOL:LeftClick(trace)
 
   SurfaceText:add_picture(data)
 
-  player:notify('notification.3d_picture.placed')
+  owner:notify('notification.3d_picture.placed')
 
   return true
 end

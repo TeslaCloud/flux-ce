@@ -182,11 +182,11 @@ end
 
 --- Turns a plain Lua file into a migration by passing its contents to
 -- #generate_migration, unless a migration with the same version or name exists already.
--- @param file [String path to the file, with or without the leading 'gamemodes/']
+-- @param file_path [String path to the file, with or without the leading 'gamemodes/']
 -- @return [ActiveRecord::Migrator self, or nil if the migration already exists]
-function ActiveRecord.Migrator:migration_from_file(file)
-  file = file:ensure_start('gamemodes/')
-  local file_name = File.name(file)
+function ActiveRecord.Migrator:migration_from_file(file_path)
+  file_path = file_path:ensure_start('gamemodes/')
+  local file_name = File.name(file_path)
   local version, name = file_name:match('^(%d+)_([^%.]+)%.lua')
 
   if !version then
@@ -195,7 +195,7 @@ function ActiveRecord.Migrator:migration_from_file(file)
 
   if self:migration_exists(version, name) then return end
 
-  local contents = File.read(file)
+  local contents = File.read(file_path)
 
   if contents then
     self:generate_migration(name, contents, Flux.development)

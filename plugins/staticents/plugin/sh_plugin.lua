@@ -9,8 +9,8 @@ end
 
 --- @deprecation [Remove in 1.0_b]
 if CLIENT then
-  concommand.Add('fl_persistence_backup', function(player)
-    if player:IsSuperAdmin() then
+  concommand.Add('fl_persistence_backup', function(actor)
+    if actor:IsSuperAdmin() then
       print('Requesting the server to make a backup...')
 
       Cable.send('flux_persistence_backup', true)
@@ -26,11 +26,11 @@ if CLIENT then
   end)
 --- @deprecation [Remove in 1.0_b]
 else
-  local function _run_backup(player)
-    if IsValid(player) and !player:IsSuperAdmin() then return end
+  local function _run_backup(actor)
+    if IsValid(actor) and !actor:IsSuperAdmin() then return end
 
-    local pn = IsValid(player) and player:Name() or 'Console'
-    local sid = IsValid(player) and player:SteamID() or 'N/A'
+    local pn = IsValid(actor) and actor:Name() or 'Console'
+    local sid = IsValid(actor) and actor:SteamID() or 'N/A'
 
     print('Running persistence backup, as requested by '..pn..' ('..sid..')')
 
@@ -75,8 +75,8 @@ else
 
     print('  -> '..(status and 'done!' or 'error!'))
 
-    if IsValid(player) then
-      Cable.send(player, 'flux_persistence_backup', status)
+    if IsValid(actor) then
+      Cable.send(actor, 'flux_persistence_backup', status)
     end
   end
 

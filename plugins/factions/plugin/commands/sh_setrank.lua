@@ -9,20 +9,20 @@ CMD.aliases = { 'plysetrank', 'charsetrank' }
 
 --- Sets the faction rank of every target whose faction has that rank, and notifies the
 -- targets and staff.
--- @param player [Player the player who ran the command]
+-- @param actor [Player the player who ran the command]
 -- @param targets [List<Player> players matched by the first command argument]
 -- @param rank [String rank index, parsed with tonumber]
-function CMD:on_run(player, targets, rank)
+function CMD:on_run(actor, targets, rank)
   rank = tonumber(rank)
 
   if !rank then
-    player:notify('error.invalid_value')
+    actor:notify('error.invalid_value')
 
     return
   end
 
   self:notify_staff('command.setrank.message', {
-    player = get_player_name(player),
+    player = get_player_name(actor),
     target = util.player_list_to_string(targets),
     rank = rank
   })

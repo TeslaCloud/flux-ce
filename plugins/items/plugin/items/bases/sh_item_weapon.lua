@@ -28,14 +28,14 @@ ItemWeapon:add_button('item.option.unload', {
 
 --- Called when the item gets equipped. Gives the player the weapon, selects it
 -- and loads its clips with the ammo that is stored in the item's data.
--- @param player [Player]
-function ItemWeapon:post_equipped(player)
-  local weapon = player:Give(self.weapon_class, true)
+-- @param owner [Player]
+function ItemWeapon:post_equipped(owner)
+  local weapon = owner:Give(self.weapon_class, true)
 
   if IsValid(weapon) then
     local ammo = self:get_data('ammo', { 0, 0 })
 
-    player:SelectWeapon(self.weapon_class)
+    owner:SelectWeapon(self.weapon_class)
     weapon:SetClip1(ammo[1])
     weapon:SetClip2(ammo[2])
   else
@@ -45,14 +45,14 @@ end
 
 --- Called when the item gets unequipped. Strips the weapon from the player
 -- and stores the contents of its clips in the item's data.
--- @param player [Player]
-function ItemWeapon:post_unequipped(player)
-  local weapon = player:GetWeapon(self.weapon_class)
+-- @param owner [Player]
+function ItemWeapon:post_unequipped(owner)
+  local weapon = owner:GetWeapon(self.weapon_class)
 
   if IsValid(weapon) then
     local ammo = { weapon:Clip1(), weapon:Clip2() }
 
-    player:StripWeapon(self.weapon_class)
+    owner:StripWeapon(self.weapon_class)
     self:set_data('ammo', ammo)
   else
     Flux.dev_print('Invalid weapon class: '..self.weapon_class)
@@ -61,25 +61,25 @@ end
 
 --- Called on the server when a player presses the unload button in the item's menu.
 -- Empties the clips of the weapon and gives the ammo back to the player.
--- @param player [Player]
-function ItemWeapon:on_unload(player)
-  local weapon = player:GetWeapon(self.weapon_class)
+-- @param owner [Player]
+function ItemWeapon:on_unload(owner)
+  local weapon = owner:GetWeapon(self.weapon_class)
   local clip1, clip2 = weapon:Clip1(), weapon:Clip2()
 
   weapon:SetClip1(0)
   weapon:SetClip2(0)
 
-  player:GiveAmmo(clip1, weapon:GetPrimaryAmmoType())
-  player:GiveAmmo(clip2, weapon:GetSecondaryAmmoType())
+  owner:GiveAmmo(clip1, weapon:GetPrimaryAmmoType())
+  owner:GiveAmmo(clip2, weapon:GetSecondaryAmmoType())
 
   self:set_data('ammo', { 0, 0 })
 end
 
 --- Called on the server before the character of the player that has the item is saved.
 -- Stores the contents of the weapon's clips in the item's data.
--- @param player [Player]
-function ItemWeapon:on_save(player)
-  local weapon = player:GetWeapon(self.weapon_class)
+-- @param owner [Player]
+function ItemWeapon:on_save(owner)
+  local weapon = owner:GetWeapon(self.weapon_class)
 
   if IsValid(weapon) then
     local ammo = { weapon:Clip1(), weapon:Clip2() }

@@ -21,13 +21,13 @@ ItemThrowable:add_button('item.option.unload', {
 
 --- Called when the item gets equipped.
 -- Gives the player the throwable weapon with a single piece of ammo and makes it active.
--- @param player [Player]
-function ItemThrowable:post_equipped(player)
-  local weapon = player:Give(self.weapon_class, true)
+-- @param owner [Player]
+function ItemThrowable:post_equipped(owner)
+  local weapon = owner:Give(self.weapon_class, true)
 
   if IsValid(weapon) then
-    player:SetActiveWeapon(weapon)
-    player:SetAmmo(1, self.thrown_ammo_class)
+    owner:SetActiveWeapon(weapon)
+    owner:SetAmmo(1, self.thrown_ammo_class)
   else
     Flux.dev_print('Invalid weapon class: '..self.weapon_class)
   end
@@ -35,17 +35,17 @@ end
 
 --- Called when the item gets unequipped. Strips the weapon from the player
 -- and takes the item away from them if they have no ammo for it left.
--- @param player [Player]
-function ItemThrowable:post_unequipped(player)
-  local weapon = player:GetWeapon(self.weapon_class)
+-- @param owner [Player]
+function ItemThrowable:post_unequipped(owner)
+  local weapon = owner:GetWeapon(self.weapon_class)
 
   if IsValid(weapon) then
-    player:StripWeapon(self.weapon_class)
+    owner:StripWeapon(self.weapon_class)
   else
     Flux.dev_print('Invalid weapon class: '..self.weapon_class)
   end
 
-  if player:GetAmmoCount(self.thrown_ammo_class) == 0 then
-    player:take_item_by_id(self.instance_id)
+  if owner:GetAmmoCount(self.thrown_ammo_class) == 0 then
+    owner:take_item_by_id(self.instance_id)
   end
 end

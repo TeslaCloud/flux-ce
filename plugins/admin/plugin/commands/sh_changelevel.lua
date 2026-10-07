@@ -7,15 +7,15 @@ CMD.arguments = 1
 CMD.alias = 'map'
 
 --- Changes the map after an optional delay and notifies staff.
--- @param player [Player the caller, or an invalid entity when run from the server console]
+-- @param actor [Player the caller, or an invalid entity when run from the server console]
 -- @param map [String map name]
 -- @param delay=0 [String delay in seconds]
-function CMD:on_run(player, map, delay)
+function CMD:on_run(actor, map, delay)
   map = tostring(map) or 'gm_construct'
   delay = tonumber(delay) or 0
 
   self:notify_staff('command.changelevel.message', {
-    player = get_player_name(player),
+    player = get_player_name(actor),
     map = map,
     delay = delay
   })

@@ -8,10 +8,10 @@ CMD.immunity = true
 CMD.alias = 'plykick'
 
 --- Kicks the targeted players with an optional reason and notifies staff.
--- @param player [Player the caller, or an invalid entity when run from the server console]
+-- @param actor [Player the caller, or an invalid entity when run from the server console]
 -- @param targets [List<Player> players to kick]
 -- @param ... [Vararg words of the kick reason]
-function CMD:on_run(player, targets, ...)
+function CMD:on_run(actor, targets, ...)
   local reason = table.concat({ ... }, ' ')
 
   if !reason or reason == '' then
@@ -23,7 +23,7 @@ function CMD:on_run(player, targets, ...)
   end
 
   self:notify_staff('command.kick.message', {
-    player = get_player_name(player),
+    player = get_player_name(actor),
     target = util.player_list_to_string(targets),
     reason = reason
   })

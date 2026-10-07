@@ -44,8 +44,8 @@ end
 --- Called on the server when a player presses the open button in the item's menu.
 -- Creates the inventory of the container if it does not exist yet,
 -- fills it with the items that were saved, and opens it for the player.
--- @param player [Player]
-function ItemContainer:on_open(player)
+-- @param actor [Player]
+function ItemContainer:on_open(actor)
   if !self.inventory then
     self:create_inventory()
 
@@ -56,7 +56,7 @@ function ItemContainer:on_open(player)
     end
   end
 
-  player:open_inventory(self.inventory)
+  actor:open_inventory(self.inventory)
 end
 
 --- Called on the server by the 'CanItemTransfer' hook before an item is put

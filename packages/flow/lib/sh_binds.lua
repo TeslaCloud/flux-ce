@@ -97,10 +97,10 @@ local hooks = {}
 
 if SERVER then
   --- Tells the client which button it has pressed, so that it can run the Flux bind.
-  -- @param player [Player]
+  -- @param actor [Player]
   -- @param key [Number button code]
-  function hooks:PlayerButtonDown(player, key)
-    Cable.send(player, 'fl_bind_pressed', key)
+  function hooks:PlayerButtonDown(actor, key)
+    Cable.send(actor, 'fl_bind_pressed', key)
   end
 else
   Cable.receive('fl_bind_pressed', function(key)

@@ -9,9 +9,9 @@ function Items:OnEntityCreated(entity)
   if IsValid(entity) and entity:GetClass() == 'npc_grenade_frag' then
     timer.simple(0, function()
       if IsValid(entity) then
-        local player = entity:GetOwner()
+        local owner = entity:GetOwner()
 
-        hook.run('PlayerThrewGrenade', player, entity)
+        hook.run('PlayerThrewGrenade', owner, entity)
       end
     end)
   end
@@ -23,48 +23,48 @@ function Items:SaveData()
 end
 
 --- Sends the items lying in the world to the player that has finished loading.
--- @param player [Player]
-function Items:ClientIncludedSchema(player)
-  Item.send_to_player(player)
+-- @param actor [Player]
+function Items:ClientIncludedSchema(actor)
+  Item.send_to_player(actor)
 end
 
 --- Tells the client of the player to open the menu of the item entity they have used.
--- @param player [Player]
+-- @param activator [Player]
 -- @param entity [Entity the fl_item entity]
 -- @param item_obj [Item]
-function Items:PlayerUseItemEntity(player, entity, item_obj)
-  Cable.send(player, 'fl_player_use_item_entity', entity)
+function Items:PlayerUseItemEntity(activator, entity, item_obj)
+  Cable.send(activator, 'fl_player_use_item_entity', entity)
 end
 
 --- Prevents menu actions on items that the player does not have, and on items in the world
 -- that are too far away from the player, obstructed or not being looked at.
--- @param player [Player]
+-- @param actor [Player]
 -- @param item_obj [Item]
 -- @param action [String name of the menu action]
 -- @param ... [Vararg extra arguments of the action]
 -- @return [Boolean false to prevent the action, nil otherwise]
-function Items:PlayerCanUseItem(player, item_obj, action, ...)
+function Items:PlayerCanUseItem(actor, item_obj, action, ...)
   local item_entity = item_obj.entity
 
   if IsValid(item_entity) then
-    local player_pos = player:EyePos()
+    local player_pos = actor:EyePos()
     local entity_pos = item_entity:GetPos()
 
     if player_pos:Distance(entity_pos) > 100 then
       return false
     end
 
-    if util.vector_obstructed(player_pos, entity_pos, { item_entity, player }) then
+    if util.vector_obstructed(player_pos, entity_pos, { item_entity, actor }) then
       return false
     end
 
-    local entity_vector = entity_pos - player:GetShootPos()
+    local entity_vector = entity_pos - actor:GetShootPos()
 
-    if (player:GetAimVector():Dot(entity_vector) / entity_vector:Length()) < math.pi / 8 then
+    if (actor:GetAimVector():Dot(entity_vector) / entity_vector:Length()) < math.pi / 8 then
       return false
     end
   else
-    if !player:has_item_by_id(item_obj.instance_id) then
+    if !actor:has_item_by_id(item_obj.instance_id) then
       return false
     end
   end
@@ -72,11 +72,11 @@ end
 
 --- Sends an item that is lying in the world to all clients again
 -- after a menu action has been performed on it.
--- @param player [Player]
+-- @param actor [Player]
 -- @param item_obj [Item]
 -- @param act [String name of the menu action]
 -- @param ... [Vararg extra arguments of the action]
-function Items:PlayerUsedItem(player, item_obj, act, ...)
+function Items:PlayerUsedItem(actor, item_obj, act, ...)
   if IsValid(item_obj.entity) then
     Item.network_item(nil, item_obj.instance_id)
     Item.network_entity_data(nil, item_obj.entity)
@@ -84,12 +84,12 @@ function Items:PlayerUsedItem(player, item_obj, act, ...)
 end
 
 --- Lets the on_drop callback of the item decide whether the player is able to drop it.
--- @param player [Player]
+-- @param actor [Player]
 -- @param item_obj [Item]
 -- @return [Boolean false to prevent the drop, nil otherwise]
-function Items:CanPlayerDropItem(player, item_obj)
+function Items:CanPlayerDropItem(actor, item_obj)
   if istable(item_obj) and item_obj.on_drop then
-    if item_obj:on_drop(player) == false then
+    if item_obj:on_drop(actor) == false then
       return false
     end
   end
@@ -97,13 +97,13 @@ end
 
 --- Calls the on_loadout callback of every item that the player has,
 -- on the next tick after they spawn with their character loaded.
--- @param player [Player]
-function Items:PostPlayerSpawn(player)
-  if player:is_character_loaded() then
+-- @param actor [Player]
+function Items:PostPlayerSpawn(actor)
+  if actor:is_character_loaded() then
     timer.Simple(0, function()
-      for k, v in pairs(player:get_items()) do
+      for k, v in pairs(actor:get_items()) do
         if v.on_loadout then
-          v:on_loadout(player)
+          v:on_loadout(actor)
         end
       end
     end)
@@ -111,12 +111,12 @@ function Items:PostPlayerSpawn(player)
 end
 
 --- Calls the on_save callback of every item that the player has before their character is saved.
--- @param player [Player]
+-- @param owner [Player]
 -- @param index [Character the character that is being saved]
-function Items:PreSaveCharacter(player, index)
-  for k, v in pairs(player:get_items()) do
+function Items:PreSaveCharacter(owner, index)
+  for k, v in pairs(owner:get_items()) do
     if v.on_save then
-      v:on_save(player)
+      v:on_save(owner)
     end
   end
 end
@@ -129,13 +129,13 @@ function Items:OnItemCreated(item_obj)
   end
 end
 
-Cable.receive('fl_items_abort_hold_start', function(player)
-  local ent = player:get_nv('hold_entity')
+Cable.receive('fl_items_abort_hold_start', function(actor)
+  local ent = actor:get_nv('hold_entity')
 
   if IsValid(ent) then
     ent:set_nv('last_activator', false)
   end
 
-  player:set_nv('hold_start', false)
-  player:set_nv('hold_entity', false)
+  actor:set_nv('hold_start', false)
+  actor:set_nv('hold_entity', false)
 end)

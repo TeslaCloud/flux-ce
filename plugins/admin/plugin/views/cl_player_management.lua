@@ -43,16 +43,16 @@ function PANEL:on_opened()
 end
 
 --- Selects a player, showing the info header and the permissions editor for them.
--- @param player [Player]
-function PANEL:set_player(player)
+-- @param target [Player]
+function PANEL:set_player(target)
   if !self:get_player() then
     self.player_info:SetVisible(true)
     self.perm_editor:SetVisible(true)
   end
 
-  self.active_player = player
-  self.player_info:set_player(player)
-  self.perm_editor:set_player(player)
+  self.active_player = target
+  self.player_info:set_player(target)
+  self.perm_editor:set_player(target)
 end
 
 --- Returns the selected player.
@@ -115,23 +115,23 @@ function PANEL:PerformLayout(w, h)
 end
 
 --- Sets the player to display and refreshes the panel.
--- @param player [Player]
-function PANEL:set_player(player)
-  self.player = player
+-- @param target [Player]
+function PANEL:set_player(target)
+  self.player = target
 
   self:rebuild()
 end
 
 --- Refreshes the avatar, name and role label from the current player.
 function PANEL:rebuild()
-  local player = self.player
+  local target = self.player
 
-  self.avatar:set_player(player, 128)
+  self.avatar:set_player(target, 128)
 
-  self.name_label:SetText(player:steam_name(true)..' ('..player:name(true)..')')
+  self.name_label:SetText(target:steam_name(true)..' ('..target:name(true)..')')
   self.name_label:SizeToContents()
 
-  self.role_label:SetText(t'ui.admin.role'..': '..player:GetUserGroup():upper())
+  self.role_label:SetText(t'ui.admin.role'..': '..target:GetUserGroup():upper())
   self.role_label:SizeToContents()
 
   self:InvalidateLayout()

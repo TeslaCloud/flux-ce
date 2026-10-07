@@ -24,9 +24,9 @@ TOOL.ClientConVar['a2']     = 100
 function TOOL:LeftClick(trace)
   if CLIENT then return true end
 
-  local player = self:GetOwner()
+  local owner = self:GetOwner()
 
-  if !IsValid(player) or !player:can('textadd') then return end
+  if !IsValid(owner) or !owner:can('textadd') then return end
 
   local text = self:GetClientInfo('text')
   local style = self:GetClientNumber('style')
@@ -55,7 +55,7 @@ function TOOL:LeftClick(trace)
 
   SurfaceText:add_text(data)
 
-  player:notify('notification.3d_text.text_added')
+  owner:notify('notification.3d_text.text_added')
 
   return true
 end

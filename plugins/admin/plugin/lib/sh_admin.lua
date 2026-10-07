@@ -117,7 +117,7 @@ function Bolt:add_permission(id, category, data, force)
   end
 end
 
---- Registers a permission that can then be checked with player:can(id). Permissions registered
+--- Registers a permission that can then be checked with actor:can(id). Permissions registered
 -- before plugins finish loading (normally from a RegisterPermissions hook) are then allowed
 -- for the given role and for every role based on it.
 -- ```
@@ -155,17 +155,17 @@ end
 --- Checks whether a player may perform an action. Unexpired temporary permissions are consulted
 -- first, then the player's own permissions, then the player's role; invalid players (such as
 -- the server console) and root players are always allowed.
--- @param player [Player]
+-- @param actor [Player]
 -- @param action [String permission ID; an empty string is always allowed]
 -- @param object=nil [String object name the permission was allowed for, passed on to Role#can]
 -- @return [Boolean whether the action is allowed (a role permission callback's return value
 --   is passed through as is)]
-function Bolt:can(player, action, object)
-  if !IsValid(player) or player:is_root() or action == '' then
+function Bolt:can(actor, action, object)
+  if !IsValid(actor) or actor:is_root() or action == '' then
     return true
   end
 
-  local temp_perm = player:get_temp_permission(action)
+  local temp_perm = actor:get_temp_permission(action)
 
   if temp_perm then
     if time_from_timestamp(temp_perm.expires) > os.time() then
@@ -179,7 +179,7 @@ function Bolt:can(player, action, object)
     end
   end
 
-  local perm = player:get_permission(action)
+  local perm = actor:get_permission(action)
 
   if perm == PERM_ALLOW then
     return true
@@ -187,10 +187,10 @@ function Bolt:can(player, action, object)
     return false
   end
 
-  local role = roles[player:GetUserGroup()]
+  local role = roles[actor:GetUserGroup()]
 
   if istable(role) and isfunction(role.can) then
-    return role:can(player, action, object)
+    return role:can(actor, action, object)
   end
 
   return false
@@ -217,16 +217,16 @@ end
 
 --- Checks whether a player's role has enough immunity to act on another player. Passes when
 -- either player is invalid or either role has no numeric immunity.
--- @param player [Player the player performing the action]
+-- @param actor [Player the player performing the action]
 -- @param target [Player the player being acted on]
 -- @param can_equal=false [Boolean also pass when both roles have the same immunity]
 -- @return [Boolean true if the player may act on the target]
-function Bolt:check_immunity(player, target, can_equal)
-  if !IsValid(player) or !IsValid(target) then
+function Bolt:check_immunity(actor, target, can_equal)
+  if !IsValid(actor) or !IsValid(target) then
     return true
   end
 
-  local group1 = self:find_group(player:GetUserGroup())
+  local group1 = self:find_group(actor:GetUserGroup())
   local group2 = self:find_group(target:GetUserGroup())
 
   if !isnumber(group1.immunity) or !isnumber(group2.immunity) then
@@ -294,29 +294,29 @@ if SERVER then
   -- kicked, unless prevent_kick is set.
   -- ```
   -- -- Ban an online player for a day.
-  -- Bolt:ban(player, 60 * 60 * 24, 'Prop spam')
+  -- Bolt:ban(target, 60 * 60 * 24, 'Prop spam')
   -- -- Permanently ban somebody by SteamID.
   -- Bolt:ban('STEAM_0:1:12345', 0, 'Cheating')
   -- ```
-  -- @param player [Player/String the player to ban, or a SteamID]
+  -- @param target [Player/String the player to ban, or a SteamID]
   -- @param duration=0 [Number ban length in seconds, 0 for a permanent ban]
   -- @param reason='N/A' [String]
   -- @param prevent_kick=false [Boolean do not kick the banned player]
-  function Bolt:ban(player, duration, reason, prevent_kick)
-    if !isstring(player) and !IsValid(player) then return end
+  function Bolt:ban(target, duration, reason, prevent_kick)
+    if !isstring(target) and !IsValid(target) then return end
 
     duration = duration or 0
     reason = reason or 'N/A'
 
-    local steam_id = player
+    local steam_id = target
     local name = steam_id
 
-    if !isstring(player) and IsValid(player) then
-      name = player:steam_name()
-      steam_id = player:SteamID()
+    if !isstring(target) and IsValid(target) then
+      name = target:steam_name()
+      steam_id = target:SteamID()
 
       if !prevent_kick then
-        player:Kick('You have been banned: '..tostring(reason))
+        target:Kick('You have been banned: '..tostring(reason))
       end
     end
 

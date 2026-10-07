@@ -1,30 +1,30 @@
 --- Calls the 'AddDefaultItems' plugin hook for a character that has just been created.
--- @param player [Player]
+-- @param owner [Player]
 -- @param char [Character]
 -- @param char_data [Map data the character was created from]
-function Inventories:PostCreateCharacter(player, char, char_data)
-  Plugin.call('AddDefaultItems', player, char, char.inventory)
+function Inventories:PostCreateCharacter(owner, char, char_data)
+  Plugin.call('AddDefaultItems', owner, char, char.inventory)
 end
 
 --- Deletes inventories of the disconnected player from the server cache.
--- @param player [Player]
-function Inventories:PlayerDisconnected(player)
-  player:delete_inventories()
+-- @param actor [Player]
+function Inventories:PlayerDisconnected(actor)
+  actor:delete_inventories()
 end
 
 --- Recreates inventories of the player when their active character changes.
--- @param player [Player]
+-- @param owner [Player]
 -- @param character [Character]
-function Inventories:OnActiveCharacterSet(player, character)
-  player:delete_inventories()
-  player:create_inventories()
+function Inventories:OnActiveCharacterSet(owner, character)
+  owner:delete_inventories()
+  owner:create_inventories()
 end
 
 --- Creates the default set of the player's inventories:
 -- main inventory, hotbar, pockets and the equipment slots.
--- @param player [Player]
+-- @param owner [Player]
 -- @param inventories [Map table to put the new inventories into, keyed by inventory type]
-function Inventories:CreatePlayerInventories(player, inventories)
+function Inventories:CreatePlayerInventories(owner, inventories)
   local main_inventory = Inventory.new()
     main_inventory.title = 'ui.inventory.main_inventory'
     main_inventory:set_size(Config.get('inventory_width'), Config.get('inventory_height'))
@@ -106,11 +106,11 @@ end
 
 --- Stores the instance ids of the player's items in the character,
 -- as a comma-separated string.
--- @param player [Player]
+-- @param owner [Player]
 -- @param char [Character]
-function Inventories:SaveCharacterData(player, char)
-  if player:get_character_id() == char.id then
-    char.item_ids = table.concat(player:get_items_ids(), ',')
+function Inventories:SaveCharacterData(owner, char)
+  if owner:get_character_id() == char.id then
+    char.item_ids = table.concat(owner:get_items_ids(), ',')
   end
 end
 
@@ -132,10 +132,10 @@ end
 
 --- Puts an item lying in the world into one of the player's inventories
 -- and removes its entity. Notifies the player if the item does not fit.
--- @param player [Player]
+-- @param actor [Player]
 -- @param item_obj [Item]
 -- @param ... [Vararg optional hashes; an inv_type field in one of them sets the inventory type]
-function Inventories:PlayerTakeItem(player, item_obj, ...)
+function Inventories:PlayerTakeItem(actor, item_obj, ...)
   if IsValid(item_obj.entity) then
     local inv_type
 
@@ -149,43 +149,43 @@ function Inventories:PlayerTakeItem(player, item_obj, ...)
       end
     end
 
-    inv_type = inv_type or item_obj.preferred_inventory or player.default_inventory
+    inv_type = inv_type or item_obj.preferred_inventory or actor.default_inventory
 
-    local player_inventory = player:get_inventory(inv_type)
+    local player_inventory = actor:get_inventory(inv_type)
 
     hook.run('PreItemTransfer', item_obj, player_inventory)
 
-    local success, error_text = player:add_item(item_obj, inv_type)
+    local success, error_text = actor:add_item(item_obj, inv_type)
 
     if success then
-      player:sync_inventories()
+      actor:sync_inventories()
       item_obj.entity:Remove()
       Item.async_save_entities()
 
       hook.run('ItemTransferred', item_obj, player_inventory)
     else
-      player:notify(error_text)
+      actor:notify(error_text)
     end
   end
 end
 
 --- Takes the items out of their inventory and spawns them in front of the player.
--- @param player [Player]
+-- @param actor [Player]
 -- @param instance_ids [Number/List<Number> instance id(s) of items from the same inventory]
-function Inventories:PlayerDropItem(player, instance_ids)
+function Inventories:PlayerDropItem(actor, instance_ids)
   if isnumber(instance_ids) then
     instance_ids = { instance_ids }
   end
 
-  local trace = player:GetEyeTraceNoCursor()
+  local trace = actor:GetEyeTraceNoCursor()
   local first_item = Item.find_instance_by_id(table.first(instance_ids))
   local inventory = Inventories.find(first_item.inventory_id)
-  local distance = trace.HitPos:Distance(player:GetPos())
+  local distance = trace.HitPos:Distance(actor:GetPos())
 
   for k, v in pairs(instance_ids) do
     local item_obj = Item.find_instance_by_id(v)
 
-    if hook.run('CanPlayerDropItem', player, item_obj) == false then return end
+    if hook.run('CanPlayerDropItem', actor, item_obj) == false then return end
 
     hook.run('PreItemTransfer', item_obj, nil, inventory)
 
@@ -196,7 +196,7 @@ function Inventories:PlayerDropItem(player, instance_ids)
     if distance < 80 then
       Item.spawn(trace.HitPos + Vector(0, 0, 5) * k, Angle(0, 0, 0), item_obj)
     else
-      local ent = Item.spawn(player:EyePos() + trace.Normal * 20 + VectorRand() * 5, Angle(0, 0, 0), item_obj)
+      local ent = Item.spawn(actor:EyePos() + trace.Normal * 20 + VectorRand() * 5, Angle(0, 0, 0), item_obj)
       local phys_obj = ent:GetPhysicsObject()
 
       if IsValid(phys_obj) then
@@ -210,11 +210,11 @@ function Inventories:PlayerDropItem(player, instance_ids)
 end
 
 --- Synchronizes the inventory of an item after a menu action has been performed on it.
--- @param player [Player]
+-- @param actor [Player]
 -- @param item_obj [Item]
 -- @param act [String name of the menu action]
 -- @param ... [Vararg extra arguments of the action]
-function Inventories:PlayerUsedItem(player, item_obj, act, ...)
+function Inventories:PlayerUsedItem(actor, item_obj, act, ...)
   local inventory_id = item_obj.inventory_id
 
   if inventory_id then
@@ -316,27 +316,27 @@ function Inventories:CanItemTransfer(item_obj, inventory, x, y)
 end
 
 --- Takes the equipped throwable items away from the player who has thrown a grenade.
--- @param player [Player]
+-- @param actor [Player]
 -- @param entity [Entity the grenade]
-function Inventories:PlayerThrewGrenade(player, entity)
-  if !IsValid(player) then return end
+function Inventories:PlayerThrewGrenade(actor, entity)
+  if !IsValid(actor) then return end
 
-  for k, v in pairs(player:get_items()) do
+  for k, v in pairs(actor:get_items()) do
     if v:is('throwable') and v:is_equipped() then
-      player:take_item_by_id(v.instance_id)
+      actor:take_item_by_id(v.instance_id)
     end
   end
 end
 
 --- Calls the on_use callback of the item, then takes the item out of its inventory (or removes
 -- its entity) unless the callback returned true to keep it or false to cancel the use.
--- @param player [Player]
+-- @param actor [Player]
 -- @param item_obj [Item]
 -- @param ... [Vararg extra arguments of the action]
 -- @return [Boolean false if the use was cancelled, nil otherwise]
-function Inventories:PlayerUseItem(player, item_obj, ...)
+function Inventories:PlayerUseItem(actor, item_obj, ...)
   if item_obj.on_use then
-    local result = item_obj:on_use(player)
+    local result = item_obj:on_use(actor)
 
     if result == true then
       return
@@ -360,20 +360,20 @@ function Inventories:PlayerUseItem(player, item_obj, ...)
 end
 
 --- Tells the client to rebuild the player model preview when a wearable item is equipped.
--- @param player [Player]
+-- @param owner [Player]
 -- @param item_obj [Item]
-function Inventories:OnItemEquipped(player, item_obj)
+function Inventories:OnItemEquipped(owner, item_obj)
   if item_obj:is('wearable') then
-    Cable.send(player, 'fl_rebuild_player_panel')
+    Cable.send(owner, 'fl_rebuild_player_panel')
   end
 end
 
 --- Tells the client to rebuild the player model preview when a wearable item is unequipped.
--- @param player [Player]
+-- @param owner [Player]
 -- @param item_obj [Item]
-function Inventories:OnItemUnequipped(player, item_obj)
+function Inventories:OnItemUnequipped(owner, item_obj)
   if item_obj:is('wearable') then
-    Cable.send(player, 'fl_rebuild_player_panel')
+    Cable.send(owner, 'fl_rebuild_player_panel')
   end
 end
 
@@ -383,12 +383,12 @@ function Inventories:OnItemCreated(item_obj)
   item_obj.rotated = false
 end
 
-Cable.receive('fl_item_move', function(player, instance_ids, inventory_id, x, y, was_rotated)
+Cable.receive('fl_item_move', function(actor, instance_ids, inventory_id, x, y, was_rotated)
   local instance_id = instance_ids[1]
   local item_obj = Item.find_instance_by_id(instance_id)
   local inventory = Inventories.find(inventory_id)
 
-  if hook.run('PlayerCanMoveItem', player, item_obj, instance_ids, inventory_id, x, y) == false then
+  if hook.run('PlayerCanMoveItem', actor, item_obj, instance_ids, inventory_id, x, y) == false then
     return
   end
 
@@ -408,26 +408,26 @@ Cable.receive('fl_item_move', function(player, instance_ids, inventory_id, x, y,
 
   inventory:sync()
 
-  hook.run('OnItemMoved', player, item_obj, instance_ids, inventory_id, x, y)
+  hook.run('OnItemMoved', actor, item_obj, instance_ids, inventory_id, x, y)
 end)
 
-Cable.receive('fl_item_drop', function(player, instance_ids)
-  hook.run('PlayerDropItem', player, instance_ids)
+Cable.receive('fl_item_drop', function(actor, instance_ids)
+  hook.run('PlayerDropItem', actor, instance_ids)
 end)
 
-Cable.receive('fl_inventory_close', function(player, inventory_ids)
+Cable.receive('fl_inventory_close', function(actor, inventory_ids)
   for k, v in pairs(inventory_ids) do
     local inventory = Inventories.find(v)
-    inventory:remove_receiver(player)
+    inventory:remove_receiver(actor)
     inventory:sync()
   end
 
-  hook.run('OnInventoryClosed', player, Inventories.find(inventory_ids[1]))
+  hook.run('OnInventoryClosed', actor, Inventories.find(inventory_ids[1]))
 end)
 
-Cable.receive('fl_character_desc_change', function(player, text)
+Cable.receive('fl_character_desc_change', function(actor, text)
   if text:len() >= Config.get('character_min_desc_len') and text:len() <= Config.get('character_max_desc_len') then
-    Characters.set_desc(player, text)
-    player:notify('notification.char_desc_changed')
+    Characters.set_desc(actor, text)
+    actor:notify('notification.char_desc_changed')
   end
 end)

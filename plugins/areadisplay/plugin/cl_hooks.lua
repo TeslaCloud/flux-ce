@@ -14,9 +14,9 @@ end
 
 --- Queues a notice to be displayed on the HUD for 8 seconds.
 -- The displayed text is currently a hardcoded placeholder.
--- @param player [Player the player who entered the area]
+-- @param actor [Player the player who entered the area]
 -- @param area [Map the area that was entered]
 -- @param cur_time [Number CurTime at the moment of entering]
-function PLUGIN:PlayerEnteredTextArea(player, area, cur_time)
+function PLUGIN:PlayerEnteredTextArea(actor, area, cur_time)
   table.insert(queue, { text = 'test test test', expiry = cur_time + 8 })
 end

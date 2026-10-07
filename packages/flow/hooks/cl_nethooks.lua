@@ -11,8 +11,8 @@ Cable.receive('fl_player_disconnected', function(ply_index)
 end)
 
 Cable.receive('fl_player_model_changed', function(ply_index, new_model, old_model)
-  util.wait_for_ent(ply_index, function(player)
-    hook.run('PlayerModelChanged', player, new_model, old_model)
+  util.wait_for_ent(ply_index, function(target)
+    hook.run('PlayerModelChanged', target, new_model, old_model)
   end)
 end)
 

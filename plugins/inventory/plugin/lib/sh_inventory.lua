@@ -323,7 +323,7 @@ do
 
     --- Give the player a certain item.
     -- @param item_obj [Item]
-    -- @param inv_type=player.default_inventory or 'main_inventory' [String]
+    -- @param inv_type=self.default_inventory or 'main_inventory' [String]
     -- @return [Boolean was the item added successfully, String text of the error that occurred]
     function player_meta:add_item(item_obj, inv_type)
       local inventory = self:get_inventory(inv_type or self.default_inventory or 'main_inventory')
@@ -336,7 +336,7 @@ do
 
     --- Give the player a certain item by its instance id.
     -- @param instance_id [Number]
-    -- @param inv_type=player.default_inventory or 'main_inventory' [String]
+    -- @param inv_type=self.default_inventory or 'main_inventory' [String]
     -- @return [Boolean was the item added successfully, String text of the error that occurred]
     function player_meta:add_item_by_id(instance_id, inv_type)
       return self:add_item(Item.find_instance_by_id(instance_id), inv_type)
@@ -345,16 +345,16 @@ do
     --- Give the player a certain item(s) by id.
     -- ```
     -- -- Adds 10 test items to the player's inventory and sets their name to 'Some Item'.
-    -- local success, error_text = player:give_item('test_item', 10, { name = 'Some Item' })
+    -- local success, error_text = target:give_item('test_item', 10, { name = 'Some Item' })
     -- if !success then
     --   -- Notifies the player of an error.
-    --   player:notify(error_text)
+    --   target:notify(error_text)
     -- end
     -- ```
     -- @param id [String]
     -- @param amount=1 [Number]
     -- @param data=nil [Map fields to override on the created items]
-    -- @param inv_type=player.default_inventory or 'main_inventory' [String]
+    -- @param inv_type=self.default_inventory or 'main_inventory' [String]
     -- @return [Boolean was the item added successfully, String text of the error that occurred]
     function player_meta:give_item(id, amount, data, inv_type)
       local inventory = self:get_inventory(inv_type or self.default_inventory or 'main_inventory')
@@ -472,10 +472,10 @@ do
     -- Does nothing and returns nothing if the item is in that inventory already.
     -- ```
     -- -- Puts the item on the player's hotbar.
-    -- local success, error_text = player:transfer_item(item_obj.instance_id, 'hotbar')
+    -- local success, error_text = target:transfer_item(item_obj.instance_id, 'hotbar')
     --
     -- if success == false then
-    --   player:notify(error_text)
+    --   target:notify(error_text)
     -- end
     -- ```
     -- @param instance_id [Number]
@@ -510,7 +510,7 @@ do
     -- inventory.multislot = false
     --
     -- -- Creating an inventory window for a player
-    -- player:open_inventory(inventory)
+    -- target:open_inventory(inventory)
     -- ```
     -- @param inventory [Inventory]
     function player_meta:open_inventory(inventory)

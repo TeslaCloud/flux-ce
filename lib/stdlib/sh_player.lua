@@ -22,7 +22,7 @@ function player.find(name, case_sensitive, return_first)
   local hits = {}
   local is_steamid = name:starts('STEAM_')
 
-  for k, v in ipairs(_player.all()) do
+  for k, v in ipairs(player.all()) do
     if is_steamid then
       if v:SteamID() == name then
         return v

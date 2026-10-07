@@ -168,10 +168,10 @@ do
 
   --- Returns the hold type of a weapon translated to one of the hold types used by
   -- the animation tables.
-  -- @param player [Player the player who holds the weapon, currently unused]
+  -- @param owner [Player the player who holds the weapon, currently unused]
   -- @param weapon [Weapon]
   -- @return [String lower case hold type, 'normal' if the weapon is not valid]
-  function Flux.Anim.get_weapon_hold_type(player, weapon)
+  function Flux.Anim.get_weapon_hold_type(owner, weapon)
     if !IsValid(weapon) then return 'normal' end
 
     local translated_hold_type = weapon_hold_types[string.lower(weapon:GetClass())]

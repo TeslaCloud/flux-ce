@@ -63,15 +63,15 @@ do
 
   --- Picks the base activity of a player (idle, walking or running) and updates their
   -- move_yaw pose parameter. An animation forced with Player#set_animation takes priority.
-  -- @param player [Player]
+  -- @param actor [Player]
   -- @param velocity [Vector velocity of the player]
   -- @return [Number activity (ACT_ enum, or -1 for a forced animation), Number sequence to
   --   play instead of the activity, or -1 for none]
-  function GM:CalcMainActivity(player, velocity)
-    player:SetPoseParameter('move_yaw', normalize_angle(vector_angle(velocity)[2] - player:EyeAngles()[2]))
-    player.CalcIdeal = ACT_MP_STAND_IDLE
+  function GM:CalcMainActivity(actor, velocity)
+    actor:SetPoseParameter('move_yaw', normalize_angle(vector_angle(velocity)[2] - actor:EyeAngles()[2]))
+    actor.CalcIdeal = ACT_MP_STAND_IDLE
 
-    local animation = player.fl_animation
+    local animation = actor.fl_animation
 
     if animation then
       return -1, animation
@@ -79,25 +79,25 @@ do
 
     local base_class = self.BaseClass
 
-    if !(base_class:HandlePlayerNoClipping(player, velocity) or
-      base_class:HandlePlayerDriving(player) or
-      base_class:HandlePlayerVaulting(player, velocity) or
-      base_class:HandlePlayerJumping(player, velocity) or
-      base_class:HandlePlayerSwimming(player, velocity) or
-      base_class:HandlePlayerDucking(player, velocity)) then
+    if !(base_class:HandlePlayerNoClipping(actor, velocity) or
+      base_class:HandlePlayerDriving(actor) or
+      base_class:HandlePlayerVaulting(actor, velocity) or
+      base_class:HandlePlayerJumping(actor, velocity) or
+      base_class:HandlePlayerSwimming(actor, velocity) or
+      base_class:HandlePlayerDucking(actor, velocity)) then
       local len2D = velocity:Length2D()
 
       if len2D > 150 then
-        player.CalcIdeal = ACT_MP_RUN
+        actor.CalcIdeal = ACT_MP_RUN
       elseif len2D > 0.5 then
-        player.CalcIdeal = ACT_MP_WALK
+        actor.CalcIdeal = ACT_MP_WALK
       end
     end
 
-    player.m_bWasOnGround = player:OnGround()
-    player.m_bWasNoclipping = (player:GetMoveType() == MOVETYPE_NOCLIP and !player:InVehicle())
+    actor.m_bWasOnGround = actor:OnGround()
+    actor.m_bWasNoclipping = (actor:GetMoveType() == MOVETYPE_NOCLIP and !actor:InVehicle())
 
-    return player.CalcIdeal, (player.CalcSeqOverride or -1)
+    return actor.CalcIdeal, (actor.CalcSeqOverride or -1)
   end
 end
 
@@ -107,20 +107,20 @@ do
   --- Translates an activity into the animation that the Flux animation tables define for the
   -- player's model, weapon hold type or vehicle. Models without an animation table are
   -- handled by the base gamemode.
-  -- @param player [Player]
+  -- @param actor [Player]
   -- @param act [Number activity to translate, ACT_ enum]
   -- @return [Number translated activity or sequence ID, or nil if the tables have no match]
-  function GM:TranslateActivity(player, act)
-    local animations = player.fl_anim_table
+  function GM:TranslateActivity(actor, act)
+    local animations = actor.fl_anim_table
 
     if !animations then
-      return self.BaseClass:TranslateActivity(player, act)
+      return self.BaseClass:TranslateActivity(actor, act)
     end
 
-    player.CalcSeqOverride = -1
+    actor.CalcSeqOverride = -1
 
-    if player:InVehicle() then
-      local vehicle = player:GetVehicle()
+    if actor:InVehicle() then
+      local vehicle = actor:GetVehicle()
       local vehicle_class = vehicle:GetClass()
       local vehicle_anims = animations['vehicle']
 
@@ -129,47 +129,47 @@ do
         local position = vehicle_anims[vehicle_class][2]
 
         if position then
-          player:ManipulateBonePosition(0, position)
-          player.should_reset_position = true
+          actor:ManipulateBonePosition(0, position)
+          actor.should_reset_position = true
         end
 
         if isstring(anim) then
-          player.CalcSeqOverride = player:LookupSequence(anim)
+          actor.CalcSeqOverride = actor:LookupSequence(anim)
 
           -- Cache the result of LookupSequence for added performance.
-          player.fl_anim_table['vehicle'][vehicle_class][1] = player.CalcSeqOverride
+          actor.fl_anim_table['vehicle'][vehicle_class][1] = actor.CalcSeqOverride
 
-          return player.CalcSeqOverride
+          return actor.CalcSeqOverride
         end
 
         return anim
       else
         return animations['normal'][ACT_MP_CROUCH_IDLE][1]
       end
-    elseif player:OnGround() then
-      local holdtype = get_weapon_hold_type(player, player:GetActiveWeapon())
+    elseif actor:OnGround() then
+      local holdtype = get_weapon_hold_type(actor, actor:GetActiveWeapon())
       local holdtype_anims = animations[holdtype]
 
-      if player.should_reset_position then
-        player:ManipulateBonePosition(0, vector_origin)
-        player.should_reset_position = nil
+      if actor.should_reset_position then
+        actor:ManipulateBonePosition(0, vector_origin)
+        actor.should_reset_position = nil
       end
 
       if holdtype_anims and holdtype_anims[act] then
         local anim = holdtype_anims[act]
 
         if istable(anim) then
-          if hook.Call('ModelWeaponRaised', nil, player, model) then
+          if hook.Call('ModelWeaponRaised', nil, actor, model) then
             anim = anim[2]
           else
             anim = anim[1]
           end
         elseif isstring(anim) then
-          player.CalcSeqOverride = player:LookupSequence(anim)
+          actor.CalcSeqOverride = actor:LookupSequence(anim)
 
-          player.fl_anim_table[holdtype][act] = player.CalcSeqOverride
+          actor.fl_anim_table[holdtype][act] = actor.CalcSeqOverride
 
-          return player.CalcSeqOverride
+          return actor.CalcSeqOverride
         end
 
         return anim
@@ -183,39 +183,39 @@ end
 -- todo: proper weapon anims
 
 --- Plays the attack and reload gestures and handles the jump and reload cancel events.
--- @param player [Player]
+-- @param actor [Player]
 -- @param event [Number animation event, PLAYERANIMEVENT_ enum]
 -- @param data [Number data of the event; unused]
 -- @return [Number activity for the view model or ACT_INVALID; nil for unhandled events]
-function GM:DoAnimationEvent(player, event, data)
+function GM:DoAnimationEvent(actor, event, data)
   if event == PLAYERANIMEVENT_ATTACK_PRIMARY then
-    if player:Crouching() then
-      player:AnimRestartGesture(GESTURE_SLOT_ATTACK_AND_RELOAD, ACT_MP_ATTACK_CROUCH_PRIMARYFIRE, true)
+    if actor:Crouching() then
+      actor:AnimRestartGesture(GESTURE_SLOT_ATTACK_AND_RELOAD, ACT_MP_ATTACK_CROUCH_PRIMARYFIRE, true)
     else
-      player:AnimRestartGesture(GESTURE_SLOT_ATTACK_AND_RELOAD, ACT_MP_ATTACK_STAND_PRIMARYFIRE, true)
+      actor:AnimRestartGesture(GESTURE_SLOT_ATTACK_AND_RELOAD, ACT_MP_ATTACK_STAND_PRIMARYFIRE, true)
     end
 
     return ACT_VM_PRIMARYATTACK
   elseif event == PLAYERANIMEVENT_ATTACK_SECONDARY then
     return ACT_VM_SECONDARYATTACK
   elseif event == PLAYERANIMEVENT_RELOAD then
-    if player:Crouching() then
-      player:AnimRestartGesture(GESTURE_SLOT_ATTACK_AND_RELOAD, ACT_MP_RELOAD_CROUCH, true)
+    if actor:Crouching() then
+      actor:AnimRestartGesture(GESTURE_SLOT_ATTACK_AND_RELOAD, ACT_MP_RELOAD_CROUCH, true)
     else
-      player:AnimRestartGesture(GESTURE_SLOT_ATTACK_AND_RELOAD, ACT_MP_RELOAD_STAND, true)
+      actor:AnimRestartGesture(GESTURE_SLOT_ATTACK_AND_RELOAD, ACT_MP_RELOAD_STAND, true)
     end
 
     return ACT_INVALID
   elseif event == PLAYERANIMEVENT_JUMP then
-    player.m_bJumping = true
-    player.m_bFirstJumpFrame = true
-    player.m_flJumpStartTime = CurTime()
+    actor.m_bJumping = true
+    actor.m_bFirstJumpFrame = true
+    actor.m_flJumpStartTime = CurTime()
 
-    player:AnimRestartMainSequence()
+    actor:AnimRestartMainSequence()
 
     return ACT_INVALID
   elseif event == PLAYERANIMEVENT_CANCEL_RELOAD then
-    player:AnimResetGestureSlot(GESTURE_SLOT_ATTACK_AND_RELOAD)
+    actor:AnimResetGestureSlot(GESTURE_SLOT_ATTACK_AND_RELOAD)
 
     return ACT_INVALID
   end
@@ -226,38 +226,38 @@ do
 
   --- Assigns the animation table of the new model to the player and, on the client, disables
   -- inverse kinematics for them. Does nothing if no new model is given.
-  -- @param player [Player]
+  -- @param target [Player]
   -- @param new_model [String path of the new model]
   -- @param old_model [String path of the previous model]
-  function GM:PlayerModelChanged(player, new_model, old_model)
+  function GM:PlayerModelChanged(target, new_model, old_model)
     if !new_model then return end
 
     if CLIENT then
-      player:SetIK(false)
+      target:SetIK(false)
     end
 
     if !anim_cache[new_model] then
       anim_cache[new_model] = Flux.Anim:get_table(new_model)
     end
 
-    player.fl_anim_table = anim_cache[new_model]
+    target.fl_anim_table = anim_cache[new_model]
   end
 end
 
 --- Decides whether a player may toggle noclip by asking the plugins through the
 -- PlayerEnterNoclip and PlayerExitNoclip hooks. Allowed if no plugin returns a value.
--- @param player [Player]
+-- @param actor [Player]
 -- @param state [Boolean true when entering noclip, false when leaving it]
 -- @return [Boolean whether the change is allowed]
-function GM:PlayerNoClip(player, state)
+function GM:PlayerNoClip(actor, state)
   if state == false then
-    local should_exit = Plugin.call('PlayerExitNoclip', player)
+    local should_exit = Plugin.call('PlayerExitNoclip', actor)
 
     if should_exit != nil then
       return should_exit
     end
   else
-    local should_enter = Plugin.call('PlayerEnterNoclip', player)
+    local should_enter = Plugin.call('PlayerEnterNoclip', actor)
 
     if should_enter != nil then
       return should_enter
@@ -268,11 +268,11 @@ function GM:PlayerNoClip(player, state)
 end
 
 --- Lets players with the physgun_pickup permission pick entities up with the physics gun.
--- @param player [Player]
+-- @param actor [Player]
 -- @param entity [Entity the entity being picked up]
 -- @return [Boolean true if the player has the permission, nil otherwise]
-function GM:PhysgunPickup(player, entity)
-  if player:can('physgun_pickup') then
+function GM:PhysgunPickup(actor, entity)
+  if actor:can('physgun_pickup') then
     return true
   end
 end
@@ -294,7 +294,7 @@ function GM:OnReloaded()
   end
 
   if Flux.development then
-    for k, v in ipairs(_player.all()) do
+    for k, v in ipairs(player.all()) do
       self:PlayerModelChanged(v, v:GetModel(), v:GetModel())
     end
   end
@@ -308,7 +308,7 @@ timer.Create('fl_one_minute', 60, 0, function()
 
   local i = 0
 
-  for k, v in ipairs(_player.all()) do
+  for k, v in ipairs(player.all()) do
     i = i + 1
 
     timer.Simple(0.25 * i, function()

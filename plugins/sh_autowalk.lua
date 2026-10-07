@@ -12,18 +12,18 @@ if SERVER then
 
   --- Moves auto walking players forward at full speed.
   -- Turns auto walk off as soon as the player presses a movement key.
-  -- @param player [Player]
+  -- @param actor [Player]
   -- @param move_data [CMoveData]
   -- @param cmd_data [CUserCmd]
-  function PLUGIN:SetupMove(player, move_data, cmd_data)
-    if !player:get_nv('auto_walk') then return end
+  function PLUGIN:SetupMove(actor, move_data, cmd_data)
+    if !actor:get_nv('auto_walk') then return end
 
     move_data:SetForwardSpeed(move_data:GetMaxSpeed())
 
     -- If they try to move, break the autowalk.
     for k, v in pairs(check) do
       if cmd_data:KeyDown(k) then
-        player:set_nv('auto_walk', false)
+        actor:set_nv('auto_walk', false)
 
         break
       end
@@ -31,9 +31,9 @@ if SERVER then
   end
 
   -- So clients can bind this as they want.
-  concommand.Add('toggleautowalk', function(player)
-    if hook.run('CanPlayerAutoWalk', player) != false then
-      player:set_nv('auto_walk', !player:get_nv('auto_walk', false))
+  concommand.Add('toggleautowalk', function(actor)
+    if hook.run('CanPlayerAutoWalk', actor) != false then
+      actor:set_nv('auto_walk', !actor:get_nv('auto_walk', false))
     end
   end)
 else
@@ -42,11 +42,11 @@ else
   -- We do this so there's no need to do an unnecessary check for if client or server in the hook itself.
 
   --- Moves the player forward at full speed while auto walk is on (clientside prediction).
-  -- @param player [Player]
+  -- @param client [Player]
   -- @param move_data [CMoveData]
   -- @param cmd_data [CUserCmd]
-  function PLUGIN:SetupMove(player, move_data, cmd_data)
-    if !player:get_nv('auto_walk') then return end
+  function PLUGIN:SetupMove(client, move_data, cmd_data)
+    if !client:get_nv('auto_walk') then return end
 
     move_data:SetForwardSpeed(move_data:GetMaxSpeed())
   end

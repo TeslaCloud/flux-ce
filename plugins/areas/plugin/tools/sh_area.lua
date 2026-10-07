@@ -11,9 +11,9 @@ TOOL.ClientConVar['mode'] = '1'
 -- @return [Boolean the result of the mode's handler, true if the mode has no handler,
 --   nil if the owner lacks the 'area_tool' permission]
 function TOOL:LeftClick(trace)
-  local player = self:GetOwner()
+  local owner = self:GetOwner()
 
-  if !player:can('area_tool') then return end
+  if !owner:can('area_tool') then return end
 
   local mode = self:GetClientNumber('mode')
   local mode_table = Area.tool_modes[mode]
@@ -30,9 +30,9 @@ end
 -- @return [Boolean the result of the mode's handler, true if the mode has no handler,
 --   nil if the owner lacks the 'area_tool' permission]
 function TOOL:RightClick(trace)
-  local player = self:GetOwner()
+  local owner = self:GetOwner()
 
-  if !player:can('area_tool') then return end
+  if !owner:can('area_tool') then return end
 
   local mode = self:GetClientNumber('mode')
   local mode_table = Area.tool_modes[mode]
@@ -49,9 +49,9 @@ end
 -- @return [Boolean the result of the mode's handler, true if the mode has no handler,
 --   nil if the owner lacks the 'area_tool' permission]
 function TOOL:Reload(trace)
-  local player = self:GetOwner()
+  local owner = self:GetOwner()
 
-  if !player:can('area_tool') then return end
+  if !owner:can('area_tool') then return end
 
   local mode = self:GetClientNumber('mode')
   local mode_table = Area.tool_modes[mode]
@@ -117,7 +117,7 @@ if CLIENT then
     BuildCPanel(panel)
   end
 
-  concommand.Add('area_setmode', function(player, command, args)
+  concommand.Add('area_setmode', function(client, command, args)
     RunConsoleCommand('area_mode', args[1])
 
     timer.Simple(0.05, function()

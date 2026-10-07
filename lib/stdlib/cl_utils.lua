@@ -207,7 +207,7 @@ do
 
           local path = 'flux/materials/'..url_crc..extension
 
-          if _file.Exists(path, 'DATA') then
+          if file.Exists(path, 'DATA') then
             cache[url_crc] = Material('../data/'..path, 'noclamp smooth')
 
             return

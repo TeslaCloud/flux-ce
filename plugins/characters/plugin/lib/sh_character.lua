@@ -15,7 +15,7 @@ local translate_gender = {
 --- Creates a character for a player unless a PlayerCreateCharacter hook rejects the data.
 -- On the server the character is then saved and sent to its owner.
 -- ```
--- local status = Characters.create(player, {
+-- local status = Characters.create(target, {
 --   name = 'John Doe',
 --   phys_desc = 'A tall man in a worn coat.',
 --   gender = CHAR_GENDER_MALE,
@@ -27,33 +27,33 @@ local translate_gender = {
 --   -- status is one of the CHAR_ERR_* codes
 -- end
 -- ```
--- @param player [Player owner of the new character]
+-- @param target [Player owner of the new character]
 -- @param data [Map creation data: name, phys_desc, gender, model and optionally skin]
 -- @return [Number CHAR_SUCCESS, or the CHAR_ERR_* code returned by the hook]
-function Characters.create(player, data)
-  local hook_result = hook.run('PlayerCreateCharacter', player, data)
+function Characters.create(target, data)
+  local hook_result = hook.run('PlayerCreateCharacter', target, data)
 
   if hook_result then
     return hook_result
   end
 
   local char = Character.new()
-    char.steam_id = player:SteamID()
+    char.steam_id = target:SteamID()
     char.name = data.name
     char.model = data.model or ''
     char.skin = data.skin or 0
     char.gender = data.gender
     char.phys_desc = data.phys_desc or ''
     char.health = 100
-    char.user = player.record
-  table.insert(player.record.characters, char)
+    char.user = target.record
+  table.insert(target.record.characters, char)
 
   if SERVER then
-    hook.run('PostCreateCharacter', player, char, data)
+    hook.run('PostCreateCharacter', target, char, data)
 
-    Characters.save(player, char)
+    Characters.save(target, char)
 
-    Cable.send(player, 'fl_create_character', Characters.to_networkable(player, char))
+    Cable.send(target, 'fl_create_character', Characters.to_networkable(target, char))
   end
 
   return CHAR_SUCCESS
@@ -61,21 +61,21 @@ end
 
 if SERVER then
   --- Sends the networkable data of all of a player's characters to that player. Server only.
-  -- @param player [Player]
-  function Characters.send_to_client(player)
-    Cable.send(player, 'fl_characters_load', Characters.all_to_networkable(player))
+  -- @param target [Player]
+  function Characters.send_to_client(target)
+    Cable.send(target, 'fl_characters_load', Characters.all_to_networkable(target))
   end
 
   --- Returns the networkable data of every character of a player. Server only.
-  -- @param player [Player]
+  -- @param target [Player]
   -- @return [List<Map> one entry per character, empty when the player has no record]
   -- @see [Characters.to_networkable]
-  function Characters.all_to_networkable(player)
-    local characters = player.record and player.record.characters or {}
+  function Characters.all_to_networkable(target)
+    local characters = target.record and target.record.characters or {}
     local ret = {}
 
     for k, v in pairs(characters) do
-      ret[k] = Characters.to_networkable(player, v)
+      ret[k] = Characters.to_networkable(target, v)
     end
 
     return ret
@@ -83,16 +83,16 @@ if SERVER then
 
   --- Builds the table of character fields that is sent to the owning client: id, user_id,
   -- steam_id, name, gender, phys_desc, model, skin and ammo. Server only.
-  -- @param player [Player owner of the character]
+  -- @param target [Player owner of the character]
   -- @param char [Character]
   -- @return [Map character data, or nil if the player or the character is not valid]
-  function Characters.to_networkable(player, char)
-    if !IsValid(player) or !char then return end
+  function Characters.to_networkable(target, char)
+    if !IsValid(target) or !char then return end
 
     return {
       id = tonumber(char.id),
       user_id = char.user_id,
-      steam_id = player:SteamID(),
+      steam_id = target:SteamID(),
       name = char.name,
       gender = char.gender,
       phys_desc = char.phys_desc or 'This character has no physical description set!',
@@ -104,133 +104,133 @@ if SERVER then
 
   --- Runs the SaveCharacterData hook and saves the player's record to the database, unless a
   -- PreSaveCharacter hook returns false. Server only.
-  -- @param player [Player]
+  -- @param target [Player]
   -- @param character [Character]
-  function Characters.save(player, character)
-    if !IsValid(player) or !istable(character) or hook.run('PreSaveCharacter', player, character) == false then return end
+  function Characters.save(target, character)
+    if !IsValid(target) or !istable(character) or hook.run('PreSaveCharacter', target, character) == false then return end
 
-    hook.run('SaveCharacterData', player, character)
+    hook.run('SaveCharacterData', target, character)
 
-    player:save_player()
+    target:save_player()
   end
 
   --- Destroys one of the player's characters, removes it from their record and resends the
   -- character list to the player. Server only.
-  -- @param player [Player]
+  -- @param target [Player]
   -- @param id [Number character ID]
-  function Characters.delete(player, id)
-    local char = player:get_character_by_id(id)
+  function Characters.delete(target, id)
+    local char = target:get_character_by_id(id)
 
     if char then
       char:destroy()
 
-      for k, v in pairs(player:get_all_characters()) do
+      for k, v in pairs(target:get_all_characters()) do
         if tonumber(v.id) == id then
-          table.remove(player.record.characters, k)
+          table.remove(target.record.characters, k)
 
           break
         end
       end
     end
 
-    Characters.send_to_client(player)
+    Characters.send_to_client(target)
   end
 
   --- Changes the name of the player's active character, networks it and runs the
   -- CharacterNameChanged hook. Server only.
-  -- @param player [Player]
+  -- @param target [Player]
   -- @param new_name [String ignored when it is not a string]
-  function Characters.set_name(player, new_name)
+  function Characters.set_name(target, new_name)
     if !new_name or !isstring(new_name) then return end
 
-    local char = player:get_character()
-    local old_name = player:get_nv('name')
+    local char = target:get_character()
+    local old_name = target:get_nv('name')
 
     if char then
       char.name = new_name or char.name
     end
 
-    player:set_nv('name', new_name)
-    hook.run('CharacterNameChanged', player, char, new_name, old_name)
+    target:set_nv('name', new_name)
+    hook.run('CharacterNameChanged', target, char, new_name, old_name)
 
-    Characters.send_to_client(player)
+    Characters.send_to_client(target)
   end
 
   --- Changes the physical description of the player's active character, networks it and runs
   -- the CharacterDescChanged hook. Server only.
-  -- @param player [Player]
+  -- @param target [Player]
   -- @param new_desc [String ignored when it is not a string]
-  function Characters.set_desc(player, new_desc)
+  function Characters.set_desc(target, new_desc)
     if !new_desc or !isstring(new_desc) then return end
 
-    local char = player:get_character()
-    local old_desc = player:get_nv('phys_desc')
+    local char = target:get_character()
+    local old_desc = target:get_nv('phys_desc')
 
     if char then
       char.phys_desc = new_desc or char.phys_desc
     end
 
-    player:set_nv('phys_desc', new_desc)
-    hook.run('CharacterDescChanged', player, char, new_desc, old_desc)
+    target:set_nv('phys_desc', new_desc)
+    hook.run('CharacterDescChanged', target, char, new_desc, old_desc)
 
-    Characters.send_to_client(player)
+    Characters.send_to_client(target)
   end
 
   --- Changes the model of the player and of their active character, networks it and runs the
   -- CharacterModelChanged hook. Server only.
-  -- @param player [Player]
+  -- @param target [Player]
   -- @param model [String model path; ignored when it is not a string]
-  function Characters.set_model(player, model)
+  function Characters.set_model(target, model)
     if !model or !isstring(model) then return end
 
-    local char = player:get_character()
-    local old_model = player:get_nv('model')
+    local char = target:get_character()
+    local old_model = target:get_nv('model')
 
     if char then
       char.model = model or char.model
     end
 
-    player:set_nv('model', model)
-    player:SetModel(model)
-    hook.run('CharacterModelChanged', player, char, model, old_model)
+    target:set_nv('model', model)
+    target:SetModel(model)
+    hook.run('CharacterModelChanged', target, char, model, old_model)
 
-    Characters.send_to_client(player)
+    Characters.send_to_client(target)
   end
 
   --- Changes the gender of the player's active character, networks it and runs the
   -- CharacterGenderChanged hook. Server only.
-  -- @param player [Player]
+  -- @param target [Player]
   -- @param new_gender [Number/String CHAR_GENDER_* value, or 'male', 'female' or 'no_gender']
-  function Characters.set_gender(player, new_gender)
+  function Characters.set_gender(target, new_gender)
     new_gender = isstring(new_gender) and table.key_from_value(translate_gender, new_gender) or new_gender
 
     if !new_gender then return end
 
-    local char = player:get_character()
-    local old_gender = player:get_nv('gender')
+    local char = target:get_character()
+    local old_gender = target:get_nv('gender')
 
     if char then
       char.gender = new_gender or char.name
     end
 
-    player:set_nv('gender', new_gender)
-    hook.run('CharacterGenderChanged', player, char, new_gender, old_gender)
+    target:set_nv('gender', new_gender)
+    hook.run('CharacterGenderChanged', target, char, new_gender, old_gender)
 
-    Characters.send_to_client(player)
+    Characters.send_to_client(target)
   end
 
-  MVC.handler('fl_create_character', function(player, data)
-    hook.run('PreCreateCharacter', player, data)
+  MVC.handler('fl_create_character', function(actor, data)
+    hook.run('PreCreateCharacter', actor, data)
 
     data.gender = (data.gender and data.gender == 'female' and CHAR_GENDER_FEMALE) or CHAR_GENDER_MALE
     data.phys_desc = data.description
 
-    local status = Characters.create(player, data)
+    local status = Characters.create(actor, data)
 
     Flux.dev_print('Creating character. Status: '..status)
 
     if status == CHAR_SUCCESS then
-      Characters.send_to_client(player)
+      Characters.send_to_client(actor)
 
       respond_to { success = true, status = status }
 
@@ -242,18 +242,18 @@ if SERVER then
     end
   end)
 
-  Cable.receive('fl_player_delete_character', function(player, id)
-    Flux.dev_print(player:name()..' has deleted character #'..id)
+  Cable.receive('fl_player_delete_character', function(actor, id)
+    Flux.dev_print(actor:name()..' has deleted character #'..id)
 
-    hook.run('OnCharacterDelete', player, id)
+    hook.run('OnCharacterDelete', actor, id)
 
-    Characters.delete(player, id)
+    Characters.delete(actor, id)
   end)
 
-  Cable.receive('fl_player_select_character', function(player, id)
-    Flux.dev_print(player:name()..' has loaded character #'..id)
+  Cable.receive('fl_player_select_character', function(actor, id)
+    Flux.dev_print(actor:name()..' has loaded character #'..id)
 
-    player:set_active_character(id)
+    actor:set_active_character(id)
   end)
 else
   Cable.receive('fl_characters_load', function(data)

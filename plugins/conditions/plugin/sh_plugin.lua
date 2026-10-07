@@ -21,10 +21,10 @@ Conditions.stored = stored
 --     return { operator = operator, health = parameter }
 --   end,
 --   -- Serverside. Receives the parameters that were stored in panel.data.
---   check = function(player, data)
+--   check = function(target, data)
 --     if !data.operator or !data.health then return false end
 --
---     return util.process_operator(data.operator, player:Health(), data.health)
+--     return util.process_operator(data.operator, target:Health(), data.health)
 --   end,
 --   -- Clientside. Lets the user choose the parameters of the condition.
 --   set_parameters = function(id, data, panel, menu, parent)
@@ -38,7 +38,7 @@ Conditions.stored = stored
 -- ```
 -- @param id [String unique condition id]
 -- @param data [Map condition definition: name, text, icon, set_operator and the
---   get_args(panel, data), check(player, data) and
+--   get_args(panel, data), check(target, data) and
 --   set_parameters(id, data, panel, menu, parent) functions]
 -- @see [Conditions:check]
 function Conditions:register_condition(id, data)

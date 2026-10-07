@@ -97,10 +97,10 @@ function PANEL:open_inventory(inventory_id)
 end
 
 --- Shows the inventories of another player next to the inventories of the local player.
--- @param player [Player the player that the inventories belong to]
+-- @param owner [Player the player that the inventories belong to]
 -- @param inventory_ids [List<Number> ids of the inventories]
-function PANEL:open_player_inventories(player, inventory_ids)
-  self.player = player
+function PANEL:open_player_inventories(owner, inventory_ids)
+  self.player = owner
   self.container = {}
 
   self.inventory_ids = inventory_ids

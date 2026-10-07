@@ -12,7 +12,7 @@ local buffer  = {}
 --     ent:Remove()
 --   end
 -- end, entity)
--- Flux.Undo:set_player(player)
+-- Flux.Undo:set_player(owner)
 -- Flux.Undo:finish()
 -- ```
 -- @param id [String ID of the entry, entries can be removed by it]
@@ -34,9 +34,9 @@ function Flux.Undo:add(callback, ...)
 end
 
 --- Sets the player that the current undo entry belongs to.
--- @param player [Player]
-function Flux.Undo:set_player(player)
-  buffer.player = player
+-- @param owner [Player]
+function Flux.Undo:set_player(owner)
+  buffer.player = owner
 end
 
 --- Puts the current undo entry on top of its player's undo queue. The entry is discarded
@@ -52,15 +52,15 @@ function Flux.Undo:finish()
 end
 
 --- Removes the undo entries with the specified ID from the undo queue of a player.
--- @param player [Player]
+-- @param owner [Player]
 -- @param id [String ID the entries were created with]
-function Flux.Undo:remove(player, id)
-  local queue_table = queue[player]
+function Flux.Undo:remove(owner, id)
+  local queue_table = queue[owner]
 
   if queue_table then
     for k, v in ipairs(queue_table) do
       if v.id == id then
-        queue[player][k] = nil
+        queue[owner][k] = nil
       end
     end
   end
@@ -81,20 +81,20 @@ function Flux.Undo:execute(obj)
 end
 
 --- Undoes the most recent entry in the undo queue of a player and removes it from the queue.
--- @param player [Player]
-function Flux.Undo:do_player(player)
-  local count = (queue[player] and #queue[player]) or 0
+-- @param owner [Player]
+function Flux.Undo:do_player(owner)
+  local count = (queue[owner] and #queue[owner]) or 0
 
   if count > 0 then
     -- do the top of the queue
-    self:execute(queue[player][count])
-    table.remove(queue[player], count)
+    self:execute(queue[owner][count])
+    table.remove(queue[owner], count)
   end
 end
 
 --- Returns the undo queue of a player.
--- @param player [Player]
+-- @param owner [Player]
 -- @return [List<Map> undo entries, oldest first]
-function Flux.Undo:get_player(player)
-  return queue[player] or {}
+function Flux.Undo:get_player(owner)
+  return queue[owner] or {}
 end

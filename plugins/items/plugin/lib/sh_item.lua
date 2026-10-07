@@ -239,7 +239,7 @@ end
 -- local item_obj = Item.create('test_item', { name = 'Some Item' })
 --
 -- if item_obj then
---   Item.spawn(player:GetEyeTraceNoCursor().HitPos, nil, item_obj)
+--   Item.spawn(actor:GetEyeTraceNoCursor().HitPos, nil, item_obj)
 -- end
 -- ```
 -- @param id [String item id of the template]
@@ -446,51 +446,51 @@ if SERVER then
 
   --- Sends the custom data of an item instance to the client. Server-side only.
   -- Does nothing if the item is a template.
-  -- @param player [Player/List<Player>/Nil who to send to; nil sends to everyone]
+  -- @param target [Player/List<Player>/Nil who to send to; nil sends to everyone]
   -- @param item_obj [Item]
-  function Item.network_item_data(player, item_obj)
+  function Item.network_item_data(target, item_obj)
     if Item.is_instance(item_obj) then
-      Cable.send(player, 'fl_items_data', item_obj.id, item_obj.instance_id, item_obj.data)
+      Cable.send(target, 'fl_items_data', item_obj.id, item_obj.instance_id, item_obj.data)
     end
   end
 
   --- Sends the saveable fields of an item instance to the client,
   -- which builds its own copy of the instance out of them. Server-side only.
-  -- @param player [Player/List<Player>/Nil who to send to; nil sends to everyone]
+  -- @param target [Player/List<Player>/Nil who to send to; nil sends to everyone]
   -- @param instance_id [Number]
-  function Item.network_item(player, instance_id)
-    Cable.send(player, 'fl_items_network', instance_id, Item.to_saveable(Item.find_instance_by_id(instance_id)))
+  function Item.network_item(target, instance_id)
+    Cable.send(target, 'fl_items_network', instance_id, Item.to_saveable(Item.find_instance_by_id(instance_id)))
   end
 
   --- Tells the client which item instance an item entity represents. Server-side only.
-  -- @param player [Player/List<Player>/Nil who to send to; nil sends to everyone]
+  -- @param target [Player/List<Player>/Nil who to send to; nil sends to everyone]
   -- @param ent [Entity the fl_item entity]
-  function Item.network_entity_data(player, ent)
+  function Item.network_entity_data(target, ent)
     if IsValid(ent) then
-      Cable.send(player, 'fl_items_ent_data', ent:EntIndex(), ent.item.id, ent.item.instance_id)
+      Cable.send(target, 'fl_items_ent_data', ent:EntIndex(), ent.item.id, ent.item.instance_id)
     end
   end
 
   --- Sends info about items in the world to the player,
   -- then runs the 'OnItemDataReceived' hook on their client. Server-side only.
-  -- @param player [Player]
-  function Item.send_to_player(player)
+  -- @param target [Player]
+  function Item.send_to_player(target)
     local item_ents = ents.FindByClass('fl_item')
 
     for k, v in ipairs(item_ents) do
       if v.item then
-        Item.network_item(player, v.item.instance_id)
+        Item.network_item(target, v.item.instance_id)
       end
     end
 
-    hook.run_client(player, 'OnItemDataReceived')
+    hook.run_client(target, 'OnItemDataReceived')
   end
 
   --- Spawns an item instance in the world as an fl_item entity. Server-side only.
   -- The item is sent to all clients and the item entities are saved afterwards.
   -- ```
   -- local item_obj = Item.create('test_item')
-  -- local trace = player:GetEyeTraceNoCursor()
+  -- local trace = actor:GetEyeTraceNoCursor()
   -- local ent = Item.spawn(trace.HitPos, Angle(0, 0, 0), item_obj)
   -- ```
   -- @param position [Vector where to put the item; it is raised by the height of its bounds]
@@ -537,11 +537,11 @@ if SERVER then
     return ent, item_obj
   end
 
-  Cable.receive('fl_items_data_request', function(player, ent_index)
+  Cable.receive('fl_items_data_request', function(actor, ent_index)
     local ent = Entity(ent_index)
 
     if IsValid(ent) then
-      Item.network_entity_data(player, ent)
+      Item.network_entity_data(actor, ent)
     end
   end)
 else

@@ -43,11 +43,11 @@ end
 -- Returning nothing/nil removes the item from the inventory as soon as it's used,
 -- false prevents the item from being used at all,
 -- true prevents the item from being removed upon use.
--- @param player [Player]
+-- @param actor [Player]
 -- @return [Boolean true if there are uses left, false if it cannot be used, nil if used up]
-function ItemUsable:on_use(player)
-  if self:can_use(player) != false then
-    self:use(player)
+function ItemUsable:on_use(actor)
+  if self:can_use(actor) != false then
+    self:use(actor)
 
     self.uses = (self.uses or self.max_uses) - 1
 
@@ -61,13 +61,13 @@ end
 
 --- Called by ItemUsable:on_use when a player uses the item.
 -- Override it to make the item do something.
--- @param player [Player]
-function ItemUsable:use(player)
+-- @param actor [Player]
+function ItemUsable:use(actor)
 end
 
 --- Called by ItemUsable:on_use before the item is used.
 -- Override it and return false to prevent the item from being used.
--- @param player [Player]
+-- @param actor [Player]
 -- @return [Boolean false to prevent the use, nil otherwise]
-function ItemUsable:can_use(player)
+function ItemUsable:can_use(actor)
 end

@@ -22,14 +22,14 @@ end
 -- ```
 -- function ROLE:define_permissions()
 --   self:allow('kick')
---   self:allow('noclip', nil, function(player, object)
---     return player:Alive()
+--   self:allow('noclip', nil, function(actor, object)
+--     return actor:Alive()
 --   end)
 -- end
 -- ```
 -- @param action [String permission ID]
 -- @param object='anything' [String/Map object name, or a class table whose class_name is used]
--- @param callback=nil [Function called as callback(player, object) on every check; its return
+-- @param callback=nil [Function called as callback(actor, object) on every check; its return
 --   value becomes the result]
 function Role:allow(action, object, callback)
   object = (istable(object) and object.class_name) or
@@ -68,13 +68,13 @@ function Role:allow_anything()
 end
 
 --- Checks whether this role allows an action. Only the role's own permission table is
--- consulted; use player:can for the full check that includes per-player permissions.
--- @param player [Player passed on to the permission's callback]
+-- consulted; use actor:can for the full check that includes per-player permissions.
+-- @param actor [Player passed on to the permission's callback]
 -- @param action [String permission ID; an empty string always passes]
 -- @param object='anything' [String object name the permission was allowed for]
 -- @return [Boolean whether the action is allowed (a permission callback's return value is
 --   passed through as is)]
-function Role:can(player, action, object)
+function Role:can(actor, action, object)
   if self.can_anything then return true end
   if action == '' then return true end
 
@@ -85,7 +85,7 @@ function Role:can(player, action, object)
 
     if perm then
       if perm.callback then
-        return perm.callback(player, object)
+        return perm.callback(actor, object)
       else
         return perm and perm.allowed
       end
@@ -97,15 +97,15 @@ end
 
 --- Called when the player's role is being set to this role. Return any non-nil value to keep the
 -- new role from being saved to the database.
--- @param player [Player]
+-- @param target [Player]
 -- @param old_group [Role the player's previous role]
-function Role:on_role_set(player, old_group) end
+function Role:on_role_set(target, old_group) end
 
 --- Called when the player's role is taken or modified. Return any non-nil value to keep the new
 -- role from being saved to the database.
--- @param player [Player]
+-- @param target [Player]
 -- @param new_group [Role the role the player is being given]
-function Role:on_role_taken(player, new_group) end
+function Role:on_role_taken(target, new_group) end
 
 Role.set_parent = Role.set_base
 
@@ -185,7 +185,7 @@ function Role:register()
       -- define_permissions runs.
       -- @param action [String permission ID]
       -- @param object='anything' [String/Map object name or class table]
-      -- @param callback=nil [Function called as callback(player, object) on every check]
+      -- @param callback=nil [Function called as callback(actor, object) on every check]
       -- @see [Role#allow]
       function can(action, object, callback)
         self:allow(action, object, callback)

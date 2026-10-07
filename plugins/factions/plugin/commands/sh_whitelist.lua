@@ -20,11 +20,11 @@ function CMD:get_description()
 end
 
 --- Whitelists every target for a faction and notifies the targets and staff.
--- @param player [Player the player who ran the command]
+-- @param actor [Player the player who ran the command]
 -- @param targets [List<Player> players matched by the first command argument]
 -- @param faction_id [String faction ID or name, or a part of either]
 -- @param strict=nil [String any extra argument makes the faction lookup exact]
-function CMD:on_run(player, targets, faction_id, strict)
+function CMD:on_run(actor, targets, faction_id, strict)
   local whitelist = Factions.find(faction_id, (strict and true) or false)
 
   if whitelist then
@@ -34,11 +34,11 @@ function CMD:on_run(player, targets, faction_id, strict)
     end
 
     self:notify_staff('command.whitelist.message', {
-      player = get_player_name(player),
+      player = get_player_name(actor),
       target = util.player_list_to_string(targets),
       faction = whitelist.name
     })
   else
-    player:notify('error.faction.invalid', { faction = faction_id })
+    actor:notify('error.faction.invalid', { faction = faction_id })
   end
 end

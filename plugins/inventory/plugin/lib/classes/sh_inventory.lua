@@ -238,8 +238,8 @@ end
 
 --- Checks if the inventory is empty.
 -- ```
--- if player:get_inventory('main_inventory'):is_empty() then
---   player:notify('Your main inventory is empty!')
+-- if target:get_inventory('main_inventory'):is_empty() then
+--   target:notify('Your main inventory is empty!')
 -- end
 -- ```
 -- @return [Boolean]
@@ -851,15 +851,15 @@ if SERVER then
   end
 
   --- Add a new receiver to the inventory.
-  -- @param player [Player]
-  function Inventory:add_receiver(player)
-    table.insert(self.receivers, player)
+  -- @param receiver [Player]
+  function Inventory:add_receiver(receiver)
+    table.insert(self.receivers, receiver)
   end
 
   --- Remove the receiver from the inventory.
-  -- @param player [Player]
-  function Inventory:remove_receiver(player)
-    table.remove_by_value(self.receivers, player)
+  -- @param receiver [Player]
+  function Inventory:remove_receiver(receiver)
+    table.remove_by_value(self.receivers, receiver)
   end
 
   --- Send inventory data to its receivers.

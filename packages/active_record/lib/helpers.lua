@@ -51,20 +51,20 @@ function change_table(name, callback)
 end
 
 --- Renames a column of an existing table.
--- @param table [String table name]
+-- @param table_name [String table name]
 -- @param name [String current column name]
 -- @param new_name [String]
-function rename_column(table, name, new_name)
-  change_table(table, function(t)
+function rename_column(table_name, name, new_name)
+  change_table(table_name, function(t)
     t:rename(name, new_name)
   end)
 end
 
 --- Removes a column from an existing table.
--- @param table [String table name]
+-- @param table_name [String table name]
 -- @param name [String column name]
-function remove_column(table, name)
-  change_table(table, function(t)
+function remove_column(table_name, name)
+  change_table(table_name, function(t)
     t:remove(name)
   end)
 end
@@ -74,11 +74,11 @@ end
 -- add_column('users', { 'role', type = 'string', default = '\'user\'' })
 -- add_column('users', { 'banned', type = 'boolean', default = false })
 -- ```
--- @param table [String table name]
+-- @param table_name [String table name]
 -- @param args [Map column name at index 1, the abstract column type under 'type', and
 --   optionally null (Boolean) and default (inserted into the SQL as is)]
-function add_column(table, args)
-  change_table(table, function(t)
+function add_column(table_name, args)
+  change_table(table_name, function(t)
     t[args.type](t, args)
   end)
 end

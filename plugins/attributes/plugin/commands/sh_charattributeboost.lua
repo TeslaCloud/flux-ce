@@ -15,12 +15,12 @@ end
 
 --- Gives every target a temporary boost to an attribute, then notifies the targets and staff.
 -- Rejects invalid values, durations and attributes that are not boostable.
--- @param player [Player the player who ran the command]
+-- @param actor [Player the player who ran the command]
 -- @param targets [List<Player> players matched by the first command argument]
 -- @param attribute_id [String attribute to boost, normalized with to_id]
 -- @param value [String number of levels to add, parsed with tonumber]
 -- @param duration [String boost length, e.g. '30' (minutes) or '2 hours']
-function CMD:on_run(player, targets, attribute_id, value, duration)
+function CMD:on_run(actor, targets, attribute_id, value, duration)
   attribute_id = attribute_id:to_id()
 
   local attribute = Attributes.find(attribute_id)
@@ -28,7 +28,7 @@ function CMD:on_run(player, targets, attribute_id, value, duration)
   value = tonumber(value)
 
   if !isnumber(duration) then
-    player:notify('error.invalid_time', {
+    actor:notify('error.invalid_time', {
       time = tostring(duration)
     })
 
@@ -36,7 +36,7 @@ function CMD:on_run(player, targets, attribute_id, value, duration)
   end
 
   if !value then
-    player:notify('error.invalid_value')
+    actor:notify('error.invalid_value')
 
     return
   end
@@ -52,13 +52,13 @@ function CMD:on_run(player, targets, attribute_id, value, duration)
     end
 
     self:notify_staff('command.charattributeboost.message', {
-      player = get_player_name(player),
+      player = get_player_name(actor),
       target = util.player_list_to_string(targets),
       attribute = attribute.name,
       value = value,
       time = Flux.Lang:nice_time(duration)
     })
   else
-    player:notify('error.attribute_not_valid', { attribute = attribute_id })
+    actor:notify('error.attribute_not_valid', { attribute = attribute_id })
   end
 end

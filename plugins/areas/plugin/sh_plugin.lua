@@ -129,16 +129,16 @@ function Area:AddAreaToolModes(mode_list)
   mode_list:Add(mode)
 end
 
-Areas.register_type('textarea', 'Text Area', 'Displays text whenever a player enters the area.', Color(255, 0, 255), function(player, area, has_entered, pos, cur_time)
-  player.text_areas = player.text_areas or {}
+Areas.register_type('textarea', 'Text Area', 'Displays text whenever a player enters the area.', Color(255, 0, 255), function(actor, area, has_entered, pos, cur_time)
+  actor.text_areas = actor.text_areas or {}
 
   if has_entered then
-    local area_data = player.text_areas[area.id]
+    local area_data = actor.text_areas[area.id]
 
     if istable(area_data) and area_data.reset_time > cur_time then
       return
     end
 
-    player.text_areas[area.id] = { text = area.text, end_time = cur_time + 10, reset_time = cur_time + 20 }
+    actor.text_areas[area.id] = { text = area.text, end_time = cur_time + 10, reset_time = cur_time + 20 }
   end
 end)

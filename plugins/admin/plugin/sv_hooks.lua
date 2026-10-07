@@ -23,32 +23,32 @@ function Bolt:CheckPassword(steam_id64, ip, sv_pass, cl_pass, name)
 end
 
 --- Blocks tools that require a permission the player does not have.
--- @param player [Player]
+-- @param actor [Player]
 -- @param trace [Map trace result of the tool use]
 -- @param tool_name [String tool ID]
 -- @return [Boolean false to block the tool, nothing otherwise]
-function Bolt:CanTool(player, trace, tool_name)
+function Bolt:CanTool(actor, trace, tool_name)
   local tool = Flux.Tool:get(tool_name)
 
-  if tool and tool.permission and !player:can(tool.permission) then
+  if tool and tool.permission and !actor:can(tool.permission) then
     return false
   end
 end
 
 --- Mutes talkers that lack the 'voice' permission.
--- @param player [Player the listener]
+-- @param listener [Player the listener]
 -- @param talker [Player]
 -- @return [Boolean false if the talker may not be heard, nothing otherwise]
-function Bolt:PlayerCanHearPlayersVoice(player, talker)
+function Bolt:PlayerCanHearPlayersVoice(listener, talker)
   if !talker:can('voice') then
     return false
   end
 end
 
 --- Defaults the banned flag of a newly created user record to false.
--- @param player [Player]
+-- @param actor [Player]
 -- @param record [User the player's database record]
-function Bolt:PlayerCreated(player, record)
+function Bolt:PlayerCreated(actor, record)
   record.banned = record.banned or false
 end
 
@@ -63,25 +63,25 @@ end
 
 --- Applies a loaded user record to the player: sets their role, makes the SteamIDs from the
 -- root_steamid config root admins, networks stored permissions and logs the connection.
--- @param player [Player]
+-- @param actor [Player]
 -- @param record [User the player's database record]
-function Bolt:PlayerRestored(player, record)
+function Bolt:PlayerRestored(actor, record)
   local root_steamid = Config.get('root_steamid')
 
   if record.role then
-    player:SetUserGroup(record.role)
+    actor:SetUserGroup(record.role)
   end
 
   if isstring(root_steamid) then
-    if player:SteamID() == root_steamid then
-      player:SetUserGroup('admin')
-      player.can_anything = true
+    if actor:SteamID() == root_steamid then
+      actor:SetUserGroup('admin')
+      actor.can_anything = true
     end
   elseif istable(root_steamid) then
     for k, v in ipairs(root_steamid) do
-      if v == player:SteamID() then
-        player:SetUserGroup('admin')
-        player.can_anything = true
+      if v == actor:SteamID() then
+        actor:SetUserGroup('admin')
+        actor.can_anything = true
       end
     end
   end
@@ -93,7 +93,7 @@ function Bolt:PlayerRestored(player, record)
       perm_table[v.permission_id] = v.object
     end
 
-    player:set_permissions(perm_table)
+    actor:set_permissions(perm_table)
   end
 
   if record.temp_permissions then
@@ -106,89 +106,89 @@ function Bolt:PlayerRestored(player, record)
       }
     end
 
-    player:set_permissions(perm_table)
+    actor:set_permissions(perm_table)
   end
 
-  Log:notify(player:name()..' has connected to the server.', { action = 'player_events' })
+  Log:notify(actor:name()..' has connected to the server.', { action = 'player_events' })
 end
 
 --- Checks role immunity for commands that target players, by way of Bolt:check_immunity.
--- @param player [Player the caller]
+-- @param actor [Player the caller]
 -- @param target [Player the player being targeted]
 -- @param can_equal=false [Boolean also pass when both roles have the same immunity]
 -- @return [Boolean false if the caller may not target that player]
-function Bolt:CommandCheckImmunity(player, target, can_equal)
-  return self:check_immunity(player, v, can_equal)
+function Bolt:CommandCheckImmunity(actor, target, can_equal)
+  return self:check_immunity(actor, v, can_equal)
 end
 
 --- Hides vanished and observing admins from a newly connected player, unless that player has
 -- the 'moderator' permission.
--- @param player [Player the player that just connected]
-function Bolt:PlayerInitialSpawn(player)
-  for k, v in ipairs(_player.all()) do
-    if (v.is_vanished or v:get_nv('observer')) and !player:can('moderator') then
-      v:prevent_transmit(player, true)
+-- @param actor [Player the player that just connected]
+function Bolt:PlayerInitialSpawn(actor)
+  for k, v in ipairs(player.all()) do
+    if (v.is_vanished or v:get_nv('observer')) and !actor:can('moderator') then
+      v:prevent_transmit(actor, true)
     end
   end
 end
 
 --- Removes the player's expired temporary permissions.
--- @param player [Player]
-function Bolt:PlayerOneMinute(player)
-  for k, v in pairs(player:get_temp_permissions()) do
+-- @param actor [Player]
+function Bolt:PlayerOneMinute(actor)
+  for k, v in pairs(actor:get_temp_permissions()) do
     if time_from_timestamp(v.expires) <= os.time() then
-      self:delete_temp_permission(player, k)
+      self:delete_temp_permission(actor, k)
     end
   end
 end
 
 --- Gives or strips the tool gun and the physgun when the matching permission changes.
--- @param player [Player]
+-- @param target [Player]
 -- @param perm_id [String permission ID]
 -- @param value [Number new PERM_ value]
-function Bolt:PlayerPermissionChanged(player, perm_id, value)
+function Bolt:PlayerPermissionChanged(target, perm_id, value)
   if perm_id == 'toolgun' then
     if value == PERM_ALLOW then
-      player:Give('gmod_tool')
+      target:Give('gmod_tool')
     elseif value == PERM_NO then
-      player:StripWeapon('gmod_tool')
+      target:StripWeapon('gmod_tool')
     end
   elseif perm_id == 'physgun' then
     if value == PERM_ALLOW then
-      player:Give('weapon_physgun')
+      target:Give('weapon_physgun')
     elseif value == PERM_NO then
-      player:StripWeapon('weapon_physgun')
+      target:StripWeapon('weapon_physgun')
     end
   end
 end
 
 --- Gives or strips the tool gun and the physgun to match the player's new role.
--- @param player [Player]
+-- @param target [Player]
 -- @param group [Role the player's new role]
 -- @param old_group [Role the player's previous role]
-function Bolt:PlayerUserGroupChanged(player, group, old_group)
+function Bolt:PlayerUserGroupChanged(target, group, old_group)
   if group:can('toolgun') then
-    player:Give('gmod_tool')
+    target:Give('gmod_tool')
   else
-    player:StripWeapon('gmod_tool')
+    target:StripWeapon('gmod_tool')
   end
 
   if group:can('physgun') then
-    player:Give('weapon_physgun')
+    target:Give('weapon_physgun')
   else
-    player:StripWeapon('weapon_physgun')
+    target:StripWeapon('weapon_physgun')
   end
 end
 
 --- Supplies the icon of the player's role for their chat messages.
--- @param player [Player the sender]
+-- @param speaker [Player the sender]
 -- @param text [String message text]
 -- @param team_chat [Boolean]
 -- @return [Map icon data for the chatbox (icon, size, margin, is_data), or nothing if the
 --   player is invalid]
-function Bolt:ChatboxGetPlayerIcon(player, text, team_chat)
-  if IsValid(player) then
-    return { icon = player:get_role_table().icon or 'fa-user', size = 14, margin = 10, is_data = true }
+function Bolt:ChatboxGetPlayerIcon(speaker, text, team_chat)
+  if IsValid(speaker) then
+    return { icon = speaker:get_role_table().icon or 'fa-user', size = 14, margin = 10, is_data = true }
   end
 end
 

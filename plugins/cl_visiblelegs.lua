@@ -56,10 +56,10 @@ end
 
 --- Removes the local player's legs model whenever any player's model changes.
 -- It is recreated with the current model the next time the legs are rendered.
--- @param player [Player the player whose model has changed]
+-- @param target [Player the player whose model has changed]
 -- @param sNewModel [String new model path]
 -- @param sOldModel [String previous model path]
-function VisibleLegs:PlayerModelChanged(player, sNewModel, sOldModel)
+function VisibleLegs:PlayerModelChanged(target, sNewModel, sOldModel)
   if PLAYER.legs then
     PLAYER.legs:Remove()
   end
@@ -71,43 +71,43 @@ local scale = Vector(1, 1, 1)
 --- Draws the local player's legs model in first person, following their animation.
 -- Skipped while in observer mode, in third person, dead or looking above the horizon.
 function VisibleLegs:RenderScreenspaceEffects()
-  local player = PLAYER
+  local client = PLAYER
 
-  if !IsValid(player) or player:get_nv('observer') or player:ShouldDrawLocalPlayer() or !player:Alive() then return end
+  if !IsValid(client) or client:get_nv('observer') or client:ShouldDrawLocalPlayer() or !client:Alive() then return end
 
-  local angs = player:EyeAngles()
+  local angs = client:EyeAngles()
 
   -- Because we don't need to draw the legs if you wouldn't even be able to see them.
   if angs.p < 0 then return end
 
   cam.Start3D(EyePos(), EyeAngles())
-    if !IsValid(player.legs) then
-      self:spawn_legs(player)
+    if !IsValid(client.legs) then
+      self:spawn_legs(client)
     end
 
     local real_time = RealTime()
-    local legs = player.legs
+    local legs = client.legs
 
     angs.p = 0
     angs.r = 0
 
     local radAngle = math.rad(angs.y)
     local offset = -20
-    local origin = player:GetPos()
+    local origin = client:GetPos()
 
     origin.x = origin.x + math.cos(radAngle) * offset
     origin.y = origin.y + math.sin(radAngle) * offset
 
-    legs:SetPoseParameter('move_yaw', 360 * player:GetPoseParameter('move_yaw') - 180)
-    legs:SetPoseParameter('move_x', player:GetPoseParameter('move_x') * 2 - 1)
-    legs:SetPoseParameter('move_y', player:GetPoseParameter('move_y') * 2 - 1)
+    legs:SetPoseParameter('move_yaw', 360 * client:GetPoseParameter('move_yaw') - 180)
+    legs:SetPoseParameter('move_x', client:GetPoseParameter('move_x') * 2 - 1)
+    legs:SetPoseParameter('move_y', client:GetPoseParameter('move_y') * 2 - 1)
 
-    legs:SetRenderMode(player:GetRenderMode())
-    legs:SetMaterial(player:GetMaterial())
-    legs:SetSequence(player:GetSequence())
-    legs:SetColor(player:GetColor())
+    legs:SetRenderMode(client:GetRenderMode())
+    legs:SetMaterial(client:GetMaterial())
+    legs:SetSequence(client:GetSequence())
+    legs:SetColor(client:GetColor())
     legs:FrameAdvance(real_time - (legs.last_draw or real_time))
-    legs:SetPlaybackRate(player:GetPlaybackRate())
+    legs:SetPlaybackRate(client:GetPlaybackRate())
     legs:SetRenderOrigin(origin)
     legs:SetRenderAngles(angs)
     legs:DrawModel()
@@ -117,16 +117,16 @@ function VisibleLegs:RenderScreenspaceEffects()
 end
 
 --- Creates the clientside legs model of the player, replacing the previous one, and stores
--- it in player.legs. The upper body bones are moved out of view.
--- @param player [Player normally the local player]
-function VisibleLegs:spawn_legs(player)
-  if IsValid(player.legs) then
-    player.legs:Remove()
+-- it in client.legs. The upper body bones are moved out of view.
+-- @param client [Player normally the local player]
+function VisibleLegs:spawn_legs(client)
+  if IsValid(client.legs) then
+    client.legs:Remove()
   end
 
-  player.legs = ClientsideModel(player:GetModel(), RENDERGROUP_VIEWMODEL)
+  client.legs = ClientsideModel(client:GetModel(), RENDERGROUP_VIEWMODEL)
 
-  local legs = player.legs
+  local legs = client.legs
 
   if IsValid(legs) then
     for k, v in pairs(hiddenBones) do

@@ -1,104 +1,104 @@
 --- Hides, locks and silently kills players who spawn without an active character.
--- @param player [Player]
-function Characters:PostPlayerSpawn(player)
-  if !player:is_character_loaded() then
-    player:SetNoDraw(true)
-    player:SetNotSolid(true)
-    player:Lock()
+-- @param actor [Player]
+function Characters:PostPlayerSpawn(actor)
+  if !actor:is_character_loaded() then
+    actor:SetNoDraw(true)
+    actor:SetNotSolid(true)
+    actor:Lock()
 
     timer.Simple(0, function()
-      if IsValid(player) then
-        player:KillSilent()
-        player:StripAmmo()
+      if IsValid(actor) then
+        actor:KillSilent()
+        actor:StripAmmo()
       end
     end)
   end
 end
 
 --- Saves the character of a player who died.
--- @param player [Player]
+-- @param victim [Player]
 -- @param inflictor [Entity]
 -- @param attacker [Entity]
-function Characters:PlayerDeath(player, inflictor, attacker)
-  player:save_character()
+function Characters:PlayerDeath(victim, inflictor, attacker)
+  victim:save_character()
 end
 
 --- Saves the disconnecting player's character and stops any further saving of their data.
--- @param player [Player]
-function Characters:PlayerDisconnected(player)
-  player:save_character()
-  player.should_save_data = false
+-- @param actor [Player]
+function Characters:PlayerDisconnected(actor)
+  actor:save_character()
+  actor.should_save_data = false
 end
 
 --- Sends the character list to the player as soon as they have initialized, then runs the
 -- PostRestoreCharacters hook.
--- @param player [Player]
-function Characters:PlayerRestored(player)
-  local timer_name = 'fl_send_characters_to_'..player:SteamID()
+-- @param actor [Player]
+function Characters:PlayerRestored(actor)
+  local timer_name = 'fl_send_characters_to_'..actor:SteamID()
 
   timer.Create(timer_name, 0.25, 0, function()
-    if IsValid(player) and player:has_initialized() then
-      Characters.send_to_client(player)
+    if IsValid(actor) and actor:has_initialized() then
+      Characters.send_to_client(actor)
 
-      hook.run('PostRestoreCharacters', player)
+      hook.run('PostRestoreCharacters', actor)
 
       timer.Remove(timer_name)
     end
 
-    if !IsValid(player) then
+    if !IsValid(actor) then
       timer.Remove(timer_name)
     end
   end)
 end
 
 --- Replaces line breaks in the new character's physical description with ' | '.
--- @param player [Player]
+-- @param owner [Player]
 -- @param char [Character the character being created]
 -- @param char_data [Map character creation data]
-function Characters:PostCreateCharacter(player, char, char_data)
+function Characters:PostCreateCharacter(owner, char, char_data)
   char.phys_desc = char.phys_desc:gsub('\n', ' | ')
 end
 
 --- Forwards the PostCharacterLoaded hook to the player's client, passing the character ID.
--- @param player [Player]
+-- @param owner [Player]
 -- @param character [Character]
-function Characters:PostCharacterLoaded(player, character)
-  hook.run_client(player, 'PostCharacterLoaded', character.id)
+function Characters:PostCharacterLoaded(owner, character)
+  hook.run_client(owner, 'PostCharacterLoaded', character.id)
 end
 
 --- Spawns the player and applies the character's model, skin, health and ammo, then runs the
 -- PostCharacterLoaded hook.
--- @param player [Player]
+-- @param owner [Player]
 -- @param character [Character]
-function Characters:OnActiveCharacterSet(player, character)
-  player:Spawn()
-  player:SetModel(character.model or 'models/humans/group01/male_02.mdl')
-  player:SetSkin(character.skin or 1)
-  player:SetHealth(character.health or player:GetMaxHealth())
-  player:StripAmmo()
-  player:ScreenFade(SCREENFADE.IN, Color('white'), 2, 1)
+function Characters:OnActiveCharacterSet(owner, character)
+  owner:Spawn()
+  owner:SetModel(character.model or 'models/humans/group01/male_02.mdl')
+  owner:SetSkin(character.skin or 1)
+  owner:SetHealth(character.health or owner:GetMaxHealth())
+  owner:StripAmmo()
+  owner:ScreenFade(SCREENFADE.IN, Color('white'), 2, 1)
 
   if istable(character.ammo) then
     for k, v in pairs(character.ammo) do
-      player:SetAmmo(v, k)
+      owner:SetAmmo(v, k)
     end
   end
 
-  hook.run('PostCharacterLoaded', player, character)
+  hook.run('PostCharacterLoaded', owner, character)
 end
 
 --- Saves the player's current character before they switch to another one.
--- @param player [Player]
+-- @param owner [Player]
 -- @param new_char [Character]
 -- @param old_char [Character]
-function Characters:OnCharacterChange(player, new_char, old_char)
-  player:save_character()
+function Characters:OnCharacterChange(owner, new_char, old_char)
+  owner:save_character()
 end
 
 --- Saves the player's character; called once a minute for every player.
--- @param player [Player]
-function Characters:PlayerOneMinute(player)
-  player:save_character()
+-- @param actor [Player]
+function Characters:PlayerOneMinute(actor)
+  actor:save_character()
 end
 
 --- Saves the active character of every connected player.
@@ -110,10 +110,10 @@ end
 
 --- Validates character creation data: name and description length, gender, model and the
 -- presence of the player's database record.
--- @param player [Player]
+-- @param actor [Player]
 -- @param data [Map character creation data]
 -- @return [Number CHAR_ERR_* code when the data is rejected, otherwise nil]
-function Characters:PlayerCreateCharacter(player, data)
+function Characters:PlayerCreateCharacter(actor, data)
   if (!isstring(data.name) or (utf8.len(data.name) < Config.get('character_min_name_len') or
     utf8.len(data.name) > Config.get('character_max_name_len'))) then
     return CHAR_ERR_NAME
@@ -132,7 +132,7 @@ function Characters:PlayerCreateCharacter(player, data)
     return CHAR_ERR_MODEL
   end
 
-  if !istable(player.record) then
+  if !istable(actor.record) then
     return CHAR_ERR_RECORD
   end
 end

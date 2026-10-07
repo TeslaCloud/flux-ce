@@ -21,10 +21,10 @@ end
 
 --- Sets the role of the targeted players and notifies them and staff, or tells the caller that
 -- the role does not exist.
--- @param player [Player the caller, or an invalid entity when run from the server console]
+-- @param actor [Player the caller, or an invalid entity when run from the server console]
 -- @param targets [List<Player> players whose role is set]
 -- @param role [String role ID]
-function CMD:on_run(player, targets, role)
+function CMD:on_run(actor, targets, role)
   if Bolt:group_exists(role) then
     for k, v in ipairs(targets) do
       v:notify('notification.setgroup', {
@@ -34,11 +34,11 @@ function CMD:on_run(player, targets, role)
     end
 
     self:notify_staff('command.setgroup.message', {
-      player = get_player_name(player),
+      player = get_player_name(actor),
       target = util.player_list_to_string(targets),
       group = role
     })
   else
-    player:notify('error.group_not_valid', { group = role })
+    actor:notify('error.group_not_valid', { group = role })
   end
 end

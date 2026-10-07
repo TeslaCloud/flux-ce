@@ -82,8 +82,8 @@ else
   --- Registers a function that handles the requests clients send with MVC.push or MVC.request.
   -- Call respond_to inside the handler to send a response back. Serverside only.
   -- ```
-  -- MVC.handler('fl_create_character', function(player, data)
-  --   local status = Characters.create(player, data)
+  -- MVC.handler('fl_create_character', function(actor, data)
+  --   local status = Characters.create(actor, data)
   --
   --   respond_to { success = status == CHAR_SUCCESS, status = status }
   -- end)
@@ -101,13 +101,13 @@ else
 
   --- Sends data to the callbacks the clients have registered with MVC.pull, MVC.request
   -- or MVC.listen. Serverside variant.
-  -- @param player [Player/List<Player> recipients, everyone if not a valid player]
+  -- @param target [Player/List<Player> recipients, everyone if not a valid player]
   -- @param name [String name of the request]
   -- @param ... [Vararg data to pass to the callbacks]
-  function MVC.push(player, name, ...)
+  function MVC.push(target, name, ...)
     if !isstring(name) then return end
 
-    Cable.send(player, 'fl_mvc_pull', name, ...)
+    Cable.send(target, 'fl_mvc_pull', name, ...)
   end
 
   -- utility
@@ -119,15 +119,15 @@ else
     MVC.push(current_handler[1], current_handler[2], data)
   end
 
-  Cable.receive('fl_mvc_push', function(player, name, ...)
+  Cable.receive('fl_mvc_push', function(actor, name, ...)
     local handlers = mvc_handlers[name]
     local old_handler = current_handler
 
-    current_handler = { player, name }
+    current_handler = { actor, name }
 
     if handlers then
       for k, v in ipairs(handlers) do
-        local success, value = pcall(v, player, ...)
+        local success, value = pcall(v, actor, ...)
 
         if !success then
           ErrorNoHalt("The '"..name.." - "..tostring(k).."' MVC handler has failed to run!\n")

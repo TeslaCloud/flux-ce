@@ -91,8 +91,8 @@ function Package:describe(callback)
 
   if SERVER and meta.clientside then
     if istable(meta.file) then
-      for k, file in ipairs(meta.file) do
-        AddCSLuaFile(file)
+      for k, filename in ipairs(meta.file) do
+        AddCSLuaFile(filename)
       end
     elseif isstring(meta.file) then
       AddCSLuaFile(meta.file)
@@ -158,8 +158,8 @@ function Package:describe(callback)
   end
 
   if istable(meta.file) then
-    for k, file in ipairs(meta.file) do
-      require_relative(full_path..file)
+    for k, filename in ipairs(meta.file) do
+      require_relative(full_path..filename)
     end
   elseif isstring(meta.file) then
     require_relative(full_path..meta.file)

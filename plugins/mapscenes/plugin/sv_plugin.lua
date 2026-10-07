@@ -3,9 +3,9 @@ Config.set('mapscenes_animated', false)
 Config.set('mapscenes_rotate_speed', 0.05)
 
 --- Sends all mapscene points to a player who has finished loading.
--- @param player [Player]
-function Mapscenes:PlayerInitialized(player)
-  Cable.send(player, 'fl_mapscene_load', self.points)
+-- @param actor [Player]
+function Mapscenes:PlayerInitialized(actor)
+  Cable.send(actor, 'fl_mapscene_load', self.points)
 end
 
 --- Loads the mapscene points when the framework loads its data.
@@ -47,7 +47,7 @@ function Mapscenes:add_point(pos, ang)
   self:save()
 end
 
-Cable.receive('fl_mapscene_remove', function(player, id)
+Cable.receive('fl_mapscene_remove', function(actor, id)
   table.remove(Mapscenes.points, id)
 
   Cable.send(nil, 'fl_mapscene_delete', id)

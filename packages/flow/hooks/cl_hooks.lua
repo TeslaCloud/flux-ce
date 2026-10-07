@@ -289,15 +289,15 @@ function GM:HUDDrawTargetID()
 end
 
 --- Adds the name of the player to the lines shown in their target ID.
--- @param player [Player the player being looked at]
+-- @param target [Player the player being looked at]
 -- @param x [Number screen x of the target ID]
 -- @param y [Number screen y of the target ID]
 -- @param distance [Number distance to the player in units]
 -- @param lines [Map lines to draw, keyed by ID. Each one is a table with the text, font,
 --   color and priority fields, and optionally offset_x and offset_y]
-function GM:GetDrawPlayerInfo(player, x, y, distance, lines)
+function GM:GetDrawPlayerInfo(target, x, y, distance, lines)
   lines['name'] = {
-    text = player:name(),
+    text = target:name(),
     font = Theme.get_font('tooltip_large'),
     color = Color('white'),
     priority = 100
@@ -307,16 +307,16 @@ end
 --- Collects the target ID lines of a player through the GetDrawPlayerInfo hook and draws
 -- them in order of priority, fading out between 500 and 640 units of distance. Nothing is
 -- drawn if the PreDrawPlayerInfo hook returns false.
--- @param player [Player the player being looked at]
+-- @param target [Player the player being looked at]
 -- @param x [Number screen x of the horizontal center of the text]
 -- @param y [Number screen y of the first line]
 -- @param distance [Number distance to the player in units]
-function GM:DrawPlayerTargetID(player, x, y, distance)
+function GM:DrawPlayerTargetID(target, x, y, distance)
   local lines = {}
 
-  hook.run('GetDrawPlayerInfo', player, x, y, distance, lines)
+  hook.run('GetDrawPlayerInfo', target, x, y, distance, lines)
 
-  if hook.run('PreDrawPlayerInfo', player, x, y, distance, lines) == false then return end
+  if hook.run('PreDrawPlayerInfo', target, x, y, distance, lines) == false then return end
 
   local alpha = 255
 
@@ -443,13 +443,13 @@ function GM:OnMenuPanelOpen(menu_panel, active_panel)
 end
 
 --- Intercepts the undo bind and blocks it when the SoftUndo hook returns a value.
--- @param player [Player]
+-- @param client [Player]
 -- @param bind [String the bind that was triggered]
 -- @param pressed [Boolean whether the key was pressed rather than released]
 -- @return [Boolean true to block the bind, nil otherwise]
-function GM:PlayerBindPress(player, bind, pressed)
+function GM:PlayerBindPress(client, bind, pressed)
   if bind:find('gmod_undo') and pressed then
-    if hook.run('SoftUndo', player) != nil then
+    if hook.run('SoftUndo', client) != nil then
       return true
     end
   end
@@ -487,9 +487,9 @@ function GM:SpawnlistContentChanged()
 end
 
 --- Asks the server to undo the last Flux undo entry of the local player.
--- @param player [Player unused, the local player is always used]
+-- @param client [Player unused, the local player is always used]
 -- @return [Boolean true if the local player has entries in their undo queue, nil otherwise]
-function GM:SoftUndo(player)
+function GM:SoftUndo(client)
   Cable.send('fl_undo_soft')
 
   if #Flux.Undo:get_player(PLAYER) > 0 then return true end

@@ -5,16 +5,16 @@ require_relative 'sh_enums'
 
 --- Moves the view to the eyes of the player's ragdoll while they have one and are not
 -- drawn in third person.
--- @param player [Player]
+-- @param client [Player]
 -- @param origin [Vector]
 -- @param angles [Angle]
 -- @param fov [Number]
 -- @return [Map view table, or nil if the view is left alone]
-function PLUGIN:CalcView(player, origin, angles, fov)
-  local view = GAMEMODE.BaseClass:CalcView(player, origin, angles, fov) or {}
-  local entity = player:GetDTEntity(ENT_RAGDOLL)
+function PLUGIN:CalcView(client, origin, angles, fov)
+  local view = GAMEMODE.BaseClass:CalcView(client, origin, angles, fov) or {}
+  local entity = client:GetDTEntity(ENT_RAGDOLL)
 
-  if !player:ShouldDrawLocalPlayer() and IsValid(entity) and entity:IsRagdoll() then
+  if !client:ShouldDrawLocalPlayer() and IsValid(entity) and entity:IsRagdoll() then
     local index = entity:LookupAttachment('eyes')
 
     if index then
@@ -31,8 +31,8 @@ function PLUGIN:CalcView(player, origin, angles, fov)
 end
 
 --- Registers the RagdollState and RagdollEntity data table variables on the player.
--- @param player [Player]
-function PLUGIN:PlayerSetupDataTables(player)
-  player:DTVar('Int', INT_RAGDOLL_STATE, 'RagdollState')
-  player:DTVar('Entity', ENT_RAGDOLL, 'RagdollEntity')
+-- @param target [Player]
+function PLUGIN:PlayerSetupDataTables(target)
+  target:DTVar('Int', INT_RAGDOLL_STATE, 'RagdollState')
+  target:DTVar('Entity', ENT_RAGDOLL, 'RagdollEntity')
 end

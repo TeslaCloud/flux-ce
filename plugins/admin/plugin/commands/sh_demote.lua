@@ -8,9 +8,9 @@ CMD.immunity = true
 CMD.alias = 'plydemote'
 
 --- Demotes the targeted players to the 'user' role and notifies them and staff.
--- @param player [Player the caller, or an invalid entity when run from the server console]
+-- @param actor [Player the caller, or an invalid entity when run from the server console]
 -- @param targets [List<Player> players to demote]
-function CMD:on_run(player, targets)
+function CMD:on_run(actor, targets)
   for k, v in ipairs(targets) do
     v:notify('notification.demote', {
       group = v:GetUserGroup()
@@ -19,7 +19,7 @@ function CMD:on_run(player, targets)
   end
 
   self:notify_staff('command.demote.message', {
-    player = get_player_name(player),
+    player = get_player_name(actor),
     target = util.player_list_to_string(targets)
   })
 end

@@ -2,11 +2,11 @@ Areas.register_type(
   'text',
   'Text Area',
   'An area that displays text when a player enters it.',
-  function(player, area, poly, has_entered, cur_pos, cur_time)
+  function(actor, area, poly, has_entered, cur_pos, cur_time)
     if has_entered then
-      Plugin.call('PlayerEnteredTextArea', player, area, cur_time)
+      Plugin.call('PlayerEnteredTextArea', actor, area, cur_time)
     else
-      Plugin.call('PlayerLeftTextArea', player, area, cur_time)
+      Plugin.call('PlayerLeftTextArea', actor, area, cur_time)
     end
   end
 )
@@ -15,9 +15,9 @@ require_relative 'cl_hooks'
 
 if SERVER then
   --- Currently does nothing; sending the text areas to the player is commented out.
-  -- @param player [Player]
-  function PLUGIN:PlayerInitialized(player)
-    --Cable.send(player, 'fl_areas_text_load', Areas.get_by_type('text'))
+  -- @param actor [Player]
+  function PLUGIN:PlayerInitialized(actor)
+    --Cable.send(actor, 'fl_areas_text_load', Areas.get_by_type('text'))
   end
 
   --- Currently does nothing; loading of the saved areas is commented out.

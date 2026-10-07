@@ -160,11 +160,11 @@ end
 if SERVER then
   local macros = {
     -- Target everyone in a user group.
-    ['@'] = function(player, str)
+    ['@'] = function(actor, str)
       local group_name = str:utf8sub(2, utf8.len(str)):utf8lower()
       local to_ret = {}
 
-      for k, v in ipairs(_player.all()) do
+      for k, v in ipairs(player.all()) do
         if v:GetUserGroup() == group_name then
           table.insert(to_ret, v)
         end
@@ -173,9 +173,9 @@ if SERVER then
       return to_ret, '@'
     end,
     -- Target everyone with str in their name.
-      ['('] = function(player, str)
+      ['('] = function(actor, str)
       local name = str:utf8sub(2, utf8.len(str) - 1)
-      local to_ret = _player.find(name)
+      local to_ret = player.find(name)
 
       if IsValid(to_ret) then
         to_ret = { to_ret }
@@ -188,10 +188,10 @@ if SERVER then
       return to_ret, '('
     end,
     -- Target the first person whose nick is exactly str.
-    ['['] = function(player, str)
+    ['['] = function(actor, str)
       local name = str:utf8sub(2, utf8.len(str) - 1)
 
-      for k, v in ipairs(_player.all()) do
+      for k, v in ipairs(player.all()) do
         if v:name() == name then
           return { v }, '['
         end
@@ -200,24 +200,24 @@ if SERVER then
       return false, '['
     end,
     -- Target yourself.
-    ['^'] = function(player, str)
-      if IsValid(player) then
-        return { player }, '^'
+    ['^'] = function(actor, str)
+      if IsValid(actor) then
+        return { actor }, '^'
       else
         return false, '^'
       end
     end,
     -- Target everyone.
-    ['*'] = function(player, str)
-      return _player.all(), '*'
+    ['*'] = function(actor, str)
+      return player.all(), '*'
     end,
     -- Target all players in radius.
-    ['!'] = function(player, str)
+    ['!'] = function(actor, str)
       local radius = tonumber(str:utf8sub(2, utf8.len(str)))
       local to_ret = {}
 
-      for k, v in pairs(_player.all()) do
-        if v != player and player:GetPos():Distance(v:GetPos()) <= radius then
+      for k, v in pairs(player.all()) do
+        if v != actor and actor:GetPos():Distance(v:GetPos()) <= radius then
           table.insert(to_ret, v)
         end
       end
@@ -231,18 +231,18 @@ if SERVER then
   -- with this text in their name), '[name]' (the player with exactly this name), '^' (yourself),
   -- '*' (everyone) and '!radius' (everyone within this distance from you). Plugins can add
   -- more by returning a parser function from the 'TargetFromString' hook. Serverside only.
-  -- @param player [Player the player who is running the command]
+  -- @param actor [Player the player who is running the command]
   -- @param str [String player name or target selector]
   -- @return [List<Player> the targets, or false if nobody was found; String the selector
   --   character, if one was used]
-  function Flux.Command:str_to_player(player, str)
+  function Flux.Command:str_to_player(actor, str)
     local start = str:utf8sub(1, 1)
-    local parser = macros[start] or hook.run('TargetFromString', player, str, start)
+    local parser = macros[start] or hook.run('TargetFromString', actor, str, start)
 
     if isfunction(parser) then
-      return parser(player, str)
+      return parser(actor, str)
     else
-      local target = _player.find(str)
+      local target = player.find(str)
 
       if IsValid(target) then
         return { target }
@@ -259,11 +259,11 @@ if SERVER then
   -- arguments, resolves the targets and their immunity, and logs the command. The player
   -- is notified of any failure (it is printed to the console for the server console).
   -- Serverside only.
-  -- @param player [Player the player who runs the command, an invalid entity for server console]
+  -- @param actor [Player the player who runs the command, an invalid entity for server console]
   -- @param text [String command ID followed by its arguments]
   -- @param from_console=nil [Boolean whether it was run as a console command, passed to the
   --   'PlayerCanRunCommand' hook]
-  function Flux.Command:interpret(player, text, from_console)
+  function Flux.Command:interpret(actor, text, from_console)
     local args, raw_args
 
     if isstring(text) then
@@ -273,10 +273,10 @@ if SERVER then
     end
 
     if !isstring(args[1]) then
-      if !IsValid(player) then
+      if !IsValid(actor) then
         ErrorNoHalt('[Flux:Command] You must enter a command!\n')
       else
-        player:notify('error.command.you_must_enter_command')
+        actor:notify('error.command.you_must_enter_command')
       end
 
       return
@@ -289,8 +289,8 @@ if SERVER then
     local cmd_table = self:find_by_id(command)
 
     if cmd_table then
-      if (!IsValid(player) and !cmd_table.no_console) or player:can(cmd_table.id) then
-        if hook.run('PlayerCanRunCommand', player, cmd_table, from_console) != nil then return end
+      if (!IsValid(actor) and !cmd_table.no_console) or actor:can(cmd_table.id) then
+        if hook.run('PlayerCanRunCommand', actor, cmd_table, from_console) != nil then return end
 
         if cmd_table.arguments == 0 or cmd_table.arguments <= #args then
           local targets = {}
@@ -302,7 +302,7 @@ if SERVER then
               local cache = {}
 
               for k, v in pairs(target_arg) do
-                local target, kind = self:str_to_player(player, v)
+                local target, kind = self:str_to_player(actor, v)
 
                 if istable(target) then
                   for k2, v2 in ipairs(target) do
@@ -315,7 +315,7 @@ if SERVER then
                 end
               end
             else
-              local target, kind = self:str_to_player(player, target_arg)
+              local target, kind = self:str_to_player(actor, target_arg)
               local cache = {}
 
               if istable(target) then
@@ -327,8 +327,8 @@ if SERVER then
                   end
                 end
               else
-                if IsValid(player) then
-                  player:notify('error.command.player_invalid', {
+                if IsValid(actor) then
+                  actor:notify('error.command.player_invalid', {
                     player = tostring(target_arg)
                   })
                 else
@@ -345,8 +345,8 @@ if SERVER then
 
             if istable(targets) and #targets > 0 then
               for k, v in ipairs(targets) do
-                if cmd_table.immunity and IsValid(player) and hook.run('CommandCheckImmunity', player, v, cmd_table.can_equal) == false then
-                  player:notify('error.command.higher_immunity', {
+                if cmd_table.immunity and IsValid(actor) and hook.run('CommandCheckImmunity', actor, v, cmd_table.can_equal) == false then
+                  actor:notify('error.command.higher_immunity', {
                     target = get_player_name(v)
                   })
 
@@ -357,8 +357,8 @@ if SERVER then
               -- One step less for commands.
               args[cmd_table.player_arg or 1] = targets
             else
-              if IsValid(player) then
-                player:notify('error.command.player_invalid', {
+              if IsValid(actor) then
+                actor:notify('error.command.player_invalid', {
                   player = tostring(target_arg)
                 })
               else
@@ -370,11 +370,11 @@ if SERVER then
           end
 
           -- Let plugins hook into this and abort the command's execution if necessary.
-          if !hook.run('PlayerRunCommand', player, cmd_table, args) then
+          if !hook.run('PlayerRunCommand', actor, cmd_table, args) then
             local message
 
-            if IsValid(player) then
-              message = player:name()..' has used /'..cmd_table.name..' '..text:utf8sub(utf8.len(command) + 2, utf8.len(text))
+            if IsValid(actor) then
+              message = actor:name()..' has used /'..cmd_table.name..' '..text:utf8sub(utf8.len(command) + 2, utf8.len(text))
             else
               message = 'Console has issued the '..cmd_table.name..' command'
 
@@ -391,7 +391,7 @@ if SERVER then
               command_log_color,
               message,
               'PlayerRunCommand',
-              IsValid(player) and player.record.id or 'console',
+              IsValid(actor) and actor.record.id or 'console',
               table.concat(
                 table.map(targets, function(v)
                   return IsValid(v) and v.record and v.record.id
@@ -402,24 +402,24 @@ if SERVER then
               return listener:is_staff() and listener:can(cmd_table.id)
             end)
 
-            self:run(player, cmd_table, args, raw_args)
+            self:run(actor, cmd_table, args, raw_args)
           end
         else
-          player:notify('error.command.syntax', {
+          actor:notify('error.command.syntax', {
             command = cmd_table.name,
             syntax = cmd_table.syntax
           })
         end
       else
-        if IsValid(player) then
-          player:notify('error.command.no_access')
+        if IsValid(actor) then
+          actor:notify('error.command.no_access')
         else
           ErrorNoHalt('This command cannot be run from the console!\n')
         end
       end
     else
-      if IsValid(player) then
-        player:notify('error.command.not_valid', {
+      if IsValid(actor) then
+        actor:notify('error.command.not_valid', {
           command = command
         })
       else
@@ -430,17 +430,17 @@ if SERVER then
 
   --- Calls the on_run callback of a command in protected mode. Assumes that the command
   -- is valid and that all of the permission checks have already been done. Serverside only.
-  -- @param player [Player the player who runs the command, an invalid entity for server console]
+  -- @param actor [Player the player who runs the command, an invalid entity for server console]
   -- @param cmd_table [Command]
   -- @param arguments [List arguments to pass to on_run after the player]
   -- @param raw_args=nil [String raw text of the arguments, available to the callback
   --   as self.raw_args]
-  function Flux.Command:run(player, cmd_table, arguments, raw_args)
+  function Flux.Command:run(actor, cmd_table, arguments, raw_args)
     if cmd_table.on_run then
       local old_raw_args = cmd_table.raw_args
       cmd_table.raw_args = raw_args
 
-      local success, error_message = pcall(cmd_table.on_run, cmd_table, player, unpack(arguments))
+      local success, error_message = pcall(cmd_table.on_run, cmd_table, actor, unpack(arguments))
 
       cmd_table.raw_args = old_raw_args
 
@@ -451,8 +451,8 @@ if SERVER then
     end
   end
 
-  Cable.receive('fl_command_run', function(player, command)
-    Flux.Command:interpret(player, command, true)
+  Cable.receive('fl_command_run', function(actor, command)
+    Flux.Command:interpret(actor, command, true)
   end)
 else
   --- Asks the server to run a command on behalf of the local player. Clientside only.
@@ -468,13 +468,13 @@ end
 --- Powers the flc and flCmd console commands. Interprets the command on the server
 -- and sends it to the server on the client.
 -- @warning [Internal]
--- @param player [Player the player who has run the console command]
+-- @param actor [Player the player who has run the console command]
 -- @param cmd [String name of the console command]
 -- @param args [List<String> arguments of the console command]
 -- @param args_text [String arguments as a single string, the Flux command to run]
-function Flux.Command.con_command(player, cmd, args, args_text)
+function Flux.Command.con_command(actor, cmd, args, args_text)
   if SERVER then
-    Flux.Command:interpret(player, args_text, true)
+    Flux.Command:interpret(actor, args_text, true)
   else
     Flux.Command:send(args_text)
   end

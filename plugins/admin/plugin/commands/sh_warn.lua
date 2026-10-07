@@ -9,17 +9,17 @@ CMD.aliases = { 'plywarn', 'warn' }
 
 --- Sends a warning with the given reason to the targeted players and notifies staff. Without
 -- a reason only the caller is notified.
--- @param player [Player the caller, or an invalid entity when run from the server console]
+-- @param actor [Player the caller, or an invalid entity when run from the server console]
 -- @param targets [List<Player> players to warn]
 -- @param ... [Vararg words of the warning reason]
-function CMD:on_run(player, targets, ...)
+function CMD:on_run(actor, targets, ...)
   local reason = table.concat({ ... }, ' ')
 
   if !reason or reason == '' then
-    player:notify('This is not a valid reason!')
+    actor:notify('This is not a valid reason!')
   else
     self:notify_staff('command.warn.message', {
-      player = get_player_name(player),
+      player = get_player_name(actor),
       target = util.player_list_to_string(targets),
       reason = reason
     })

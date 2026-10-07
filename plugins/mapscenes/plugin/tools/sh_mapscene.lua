@@ -11,13 +11,13 @@ TOOL.permission = 'mapscenes'
 function TOOL:LeftClick(trace)
   if CLIENT then return true end
 
-  local player = self:GetOwner()
+  local owner = self:GetOwner()
 
-  if !IsValid(player) or !player:can('mapsceneadd') then return end
+  if !IsValid(owner) or !owner:can('mapsceneadd') then return end
 
-  Mapscenes:add_point(player:EyePos(), player:GetAngles())
+  Mapscenes:add_point(owner:EyePos(), owner:GetAngles())
 
-  player:notify('notification.mapscene.point_added')
+  owner:notify('notification.mapscene.point_added')
 
   return true
 end

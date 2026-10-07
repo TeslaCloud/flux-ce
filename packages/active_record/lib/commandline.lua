@@ -1,7 +1,7 @@
 local hold_start = nil
 
-concommand.Add('ar_recreate_schema', function(player)
-  if !IsValid(player) then
+concommand.Add('ar_recreate_schema', function(actor)
+  if !IsValid(actor) then
     if !hold_start or (os.time() - hold_start > 3) then
       print(txt[[
         ================================================
@@ -21,8 +21,8 @@ concommand.Add('ar_recreate_schema', function(player)
   end
 end)
 
-concommand.Add('flux', function(player, cmd, args, args_str)
-  if !IsValid(player) then
+concommand.Add('flux', function(actor, cmd, args, args_str)
+  if !IsValid(actor) then
     local args = args_str:split(' ')
 
     if args[1] == 'db:create' then

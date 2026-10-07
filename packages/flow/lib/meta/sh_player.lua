@@ -167,7 +167,7 @@ end
 --- Checks whether the player has a permission. The decision is made by the
 -- 'PlayerHasPermission' hook, which admin plugins implement.
 -- ```
--- if !player:can('spawn_props') then
+-- if !actor:can('spawn_props') then
 --   return false
 -- end
 -- ```

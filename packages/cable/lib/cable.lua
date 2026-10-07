@@ -5,8 +5,6 @@
   Flux edition. Won't work outside of Flux due to dependencies.
 --]]
 
-_player = _player or player
-
 local cable = {}
 local net_cache = {}
 
@@ -15,8 +13,8 @@ local net_cache = {}
 -- on the client it receives the sent values only.
 -- ```
 -- -- Server:
--- Cable.receive('fl_config_change', function(player, key, value)
---   if !player:can('manage_configuration') then return end
+-- Cable.receive('fl_config_change', function(actor, key, value)
+--   if !actor:can('manage_configuration') then return end
 --
 --   Config.set(key, value)
 -- end)
@@ -31,7 +29,7 @@ local net_cache = {}
 function cable.receive(id, callback)
   if SERVER then cable.check_networked_string(id) end
 
-  return net.Receive(id, function(length, player)
+  return net.Receive(id, function(length, sender)
     local c_len = net.ReadUInt(8)
     local c_tables = table.map(string.split(net.ReadString(), ';'), function(v) return tonumber(v) end)
     local args = {}
@@ -48,8 +46,8 @@ function cable.receive(id, callback)
       end
     end
 
-    if IsValid(player) then
-      callback(player, unpack(args))
+    if IsValid(sender) then
+      callback(sender, unpack(args))
     else
       callback(unpack(args))
     end
@@ -99,14 +97,14 @@ if SERVER then
   -- Tables are serialized with pON. The first message under a new name is delayed by 0.1
   -- seconds to let the networked string reach the clients.
   -- ```
-  -- Cable.send(player, 'fl_bind_pressed', key)
-  -- Cable.send(nil, 'fl_player_disconnected', player:EntIndex()) -- to everyone
+  -- Cable.send(target, 'fl_bind_pressed', key)
+  -- Cable.send(nil, 'fl_player_disconnected', actor:EntIndex()) -- to everyone
   -- ```
-  -- @param player [Player/List<Player> who to send the message to; everyone if nil]
+  -- @param target [Player/List<Player> who to send the message to; everyone if nil]
   -- @param id [String message name]
   -- @param ... [Vararg values to send]
-  function cable.send(player, id, ...)
-    if isstring(player) then
+  function cable.send(target, id, ...)
+    if isstring(target) then
       error('cable.send - bad argument #1 (must not be a string)\n')
     end
 
@@ -115,23 +113,23 @@ if SERVER then
 
       -- Allow networked strings some time to catch up for the first time.
       timer.Simple(0.1, function()
-        cable.send(player, id, unpack(args))
+        cable.send(target, id, unpack(args))
       end)
 
       return
     end
 
-    if !istable(player) then
-      if IsValid(player) then
-        player = { player }
+    if !istable(target) then
+      if IsValid(target) then
+        target = { target }
       else
-        player = _player.all()
+        target = player.all()
       end
     end
 
     net.Start(id)
       write_sendable_args(...)
-    net.Send(player)
+    net.Send(target)
   end
 else
   --- Sends a Cable message to the server. Clientside variant.

@@ -31,12 +31,12 @@ end
 
 --- Builds the model for the player to wear by replacing the last folder
 -- in the path of their current model with the item's model_group.
--- @param player [Player]
+-- @param owner [Player]
 -- @return [String path to the model, Number amount of replacements made;
 --   nil if the item has no model_group]
-function ItemWearable:get_model_by_group(player)
+function ItemWearable:get_model_by_group(owner)
   if self.model_group then
-    local player_model = player:GetModel():lower()
+    local player_model = owner:GetModel():lower()
     local path = player_model:GetPathFromFilename()
 
     return player_model:gsub(path:match('(%a+)/$'), self.model_group)
@@ -44,17 +44,17 @@ function ItemWearable:get_model_by_group(player)
 end
 
 --- Returns the model that the player gets when they equip the item.
--- @param player [Player]
+-- @param owner [Player]
 -- @return [String path to the model, or nil if the item does not change the model]
-function ItemWearable:get_equip_model(player)
-  return self:get_model_by_group(player) or self.equip_model
+function ItemWearable:get_equip_model(owner)
+  return self:get_model_by_group(owner) or self.equip_model
 end
 
 --- Returns the bodygroups that the player gets when they equip the item.
--- @param player [Player]
+-- @param owner [Player]
 -- @return [Map bodygroup id (Number) or bodygroup name (String) to its value,
 --   or nil if the item does not change bodygroups]
-function ItemWearable:get_bodygroups(player)
+function ItemWearable:get_bodygroups(owner)
   return self.equip_bodygroups
 end
 
@@ -72,12 +72,12 @@ end
 
 --- Called by ItemEquipable:can_transfer before the item is equipped.
 -- Checks whether the model of the player is able to wear the item.
--- @param player [Player]
+-- @param owner [Player]
 -- @return [Boolean]
-function ItemWearable:can_equip(player)
+function ItemWearable:can_equip(owner)
   local valid_models = self:get_valid_models()
   local valid_model_group = self:get_valid_model_group()
-  local player_model = player:GetModel():lower()
+  local player_model = owner:GetModel():lower()
 
   if valid_models then
     for k, v in pairs(valid_models) do
@@ -102,32 +102,32 @@ end
 
 --- Called when the item gets equipped. Applies the model and the bodygroups of the item
 -- to the player, storing the ones they had before in the item's data.
--- @param player [Player]
-function ItemWearable:post_equipped(player)
-  local model = self:get_equip_model(player)
+-- @param owner [Player]
+function ItemWearable:post_equipped(owner)
+  local model = self:get_equip_model(owner)
 
   if model then
-    self:set_data('native_model', player:GetModel())
-    player:SetModel(model)
+    self:set_data('native_model', owner:GetModel())
+    owner:SetModel(model)
   end
 
-  local bodygroups = self:get_bodygroups(player)
+  local bodygroups = self:get_bodygroups(owner)
 
   if bodygroups then
-    local bodygroup_data = player:GetBodyGroups()
+    local bodygroup_data = owner:GetBodyGroups()
     local native_bodygroups = {}
 
     for k, v in pairs(bodygroups) do
       if isstring(k) then
         for k1, v1 in pairs(bodygroup_data) do
           if k == v1.name then
-            native_bodygroups[v1.id] = player:GetBodygroup(v1.id)
-            player:SetBodygroup(v1.id, v)
+            native_bodygroups[v1.id] = owner:GetBodygroup(v1.id)
+            owner:SetBodygroup(v1.id, v)
           end
         end
       else
-        native_bodygroups[k] = player:GetBodygroup(k)
-        player:SetBodygroup(k, v)
+        native_bodygroups[k] = owner:GetBodygroup(k)
+        owner:SetBodygroup(k, v)
       end
     end
 
@@ -137,25 +137,25 @@ end
 
 --- Called when the item gets unequipped. Gives the player their model and bodygroups back,
 -- then calls on_use on the items of the same equipment inventory that no longer fit them.
--- @param player [Player]
-function ItemWearable:post_unequipped(player)
-  if self:get_equip_model(player) then
-    player:SetModel(self:get_data('native_model'))
+-- @param owner [Player]
+function ItemWearable:post_unequipped(owner)
+  if self:get_equip_model(owner) then
+    owner:SetModel(self:get_data('native_model'))
   end
 
-  if self:get_bodygroups(player) then
+  if self:get_bodygroups(owner) then
     local native_bodygroups = self:get_data('native_bodygroups')
 
     if native_bodygroups and #native_bodygroups > 0 then
-      player:set_bodygroups(native_bodygroups)
+      owner:set_bodygroups(native_bodygroups)
     end
   end
 
-  for k, v in pairs(player:get_items(self.equip_inv)) do
+  for k, v in pairs(owner:get_items(self.equip_inv)) do
     if self.instance_id == v then continue end
 
-    if v:can_equip(player) == false then
-      v:on_use(player)
+    if v:can_equip(owner) == false then
+      v:on_use(owner)
     end
   end
 end

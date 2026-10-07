@@ -1,30 +1,30 @@
 --- Opens the door menu for the player if they are looking at a door
 -- that is closer than 115 units.
--- @param player [Player]
-function Doors:ShowSpare1(player)
-  local trace = player:GetEyeTraceNoCursor()
+-- @param actor [Player]
+function Doors:ShowSpare1(actor)
+  local trace = actor:GetEyeTraceNoCursor()
   local entity = trace.Entity
 
-  if IsValid(entity) and entity:is_door() and player:GetPos():Distance(entity:GetPos()) < 115 then
-    local can_lock = hook.run('PlayerCanLockDoor', player, entity) or false
+  if IsValid(entity) and entity:is_door() and actor:GetPos():Distance(entity:GetPos()) < 115 then
+    local can_lock = hook.run('PlayerCanLockDoor', actor, entity) or false
 
-    Cable.send(player, 'fl_door_menu', entity, can_lock, entity.conditions)
+    Cable.send(actor, 'fl_door_menu', entity, can_lock, entity.conditions)
   end
 end
 
 --- Throttles the use of doors and toggles the lock of a door when a player who is
 -- allowed to lock it uses it while sprinting. Runs the PlayerUseDoor hook for every
 -- use of a door that is not blocked.
--- @param player [Player]
+-- @param activator [Player]
 -- @param entity [Entity the entity that is being used]
 -- @return [Boolean false if the door is on cooldown or has just been locked,
 --   nil otherwise]
-function Doors:PlayerUse(player, entity)
+function Doors:PlayerUse(activator, entity)
   local cur_time = CurTime()
 
-  if IsValid(entity) and entity:is_door() and player:GetPos():Distance(entity:GetPos()) < 115 then
+  if IsValid(entity) and entity:is_door() and activator:GetPos():Distance(entity:GetPos()) < 115 then
     if !entity.next_use or entity.next_use <= cur_time then
-      if hook.run('PlayerCanLockDoor', player, entity) and player:IsSprinting() then
+      if hook.run('PlayerCanLockDoor', activator, entity) and activator:IsSprinting() then
         local locked = entity:get_nv('fl_locked')
 
         self:lock_door(entity, !locked)
@@ -39,7 +39,7 @@ function Doors:PlayerUse(player, entity)
 
       entity.next_use = cur_time + 0.5
 
-      hook.run('PlayerUseDoor', player, entity)
+      hook.run('PlayerUseDoor', activator, entity)
     else
       return false
     end
@@ -47,13 +47,13 @@ function Doors:PlayerUse(player, entity)
 end
 
 --- Allows the player to lock and unlock the door if they satisfy its conditions.
--- @param player [Player]
+-- @param actor [Player]
 -- @param entity [Entity the door]
 -- @return [Boolean true if the player passes the door's conditions, nil otherwise]
-function Doors:PlayerCanLockDoor(player, entity)
+function Doors:PlayerCanLockDoor(actor, entity)
   local conditions = entity.conditions
 
-  if conditions and Conditions:check(player, conditions) then
+  if conditions and Conditions:check(actor, conditions) then
     return true
   end
 end

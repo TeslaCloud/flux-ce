@@ -9,11 +9,11 @@ CMD.alias = 'v'
 
 --- Hides the targeted players from everyone without the 'moderator' permission, or toggles
 -- their visibility when no truthy value is given, and notifies them and staff.
--- @param player [Player the caller, or an invalid entity when run from the server console]
+-- @param actor [Player the caller, or an invalid entity when run from the server console]
 -- @param targets [List<Player> players to affect]
 -- @param should_vanish=nil [String value read with tobool; truthy vanishes the targets,
 --   anything else (or nothing) toggles them]
-function CMD:on_run(player, targets, should_vanish)
+function CMD:on_run(actor, targets, should_vanish)
   for k, v in ipairs(targets) do
     should_vanish = should_vanish != nil and tobool(should_vanish) or !v.is_vanished
 
@@ -50,7 +50,7 @@ function CMD:on_run(player, targets, should_vanish)
   end
 
   self:notify_staff('command.vanish.'..(should_vanish and 'enabled' or 'disabled'), {
-    player = get_player_name(player),
+    player = get_player_name(actor),
     target = util.player_list_to_string(targets)
   })
 end

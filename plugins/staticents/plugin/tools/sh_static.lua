@@ -10,9 +10,9 @@ TOOL.permission = 'static_tool'
 function TOOL:LeftClick(trace)
   if CLIENT then return true end
 
-  local player = self:GetOwner()
+  local owner = self:GetOwner()
 
-  Plugin.call('PlayerMakeStatic', player, true)
+  Plugin.call('PlayerMakeStatic', owner, true)
 
   return true
 end
@@ -23,9 +23,9 @@ end
 function TOOL:RightClick(trace)
   if CLIENT then return true end
 
-  local player = self:GetOwner()
+  local owner = self:GetOwner()
 
-  Plugin.call('PlayerMakeStatic', player, false)
+  Plugin.call('PlayerMakeStatic', owner, false)
 
   return true
 end

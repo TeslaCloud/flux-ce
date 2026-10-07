@@ -64,8 +64,8 @@
 
     --- Removes money from the entity; the balance stops at 0. Server only.
     -- ```
-    -- if player:has_money('tokens', 50) then
-    --   player:take_money('tokens', 50)
+    -- if actor:has_money('tokens', 50) then
+    --   actor:take_money('tokens', 50)
     -- end
     -- ```
     -- @param currency [String currency ID]
@@ -76,7 +76,7 @@
 
     --- Adds money to the entity. Server only.
     -- ```
-    -- player:give_money('tokens', 50)
+    -- target:give_money('tokens', 50)
     -- ```
     -- @param currency [String currency ID]
     -- @param value [Number amount to add]
@@ -87,10 +87,10 @@
     --- Drops money from a player as an fl_money entity where they are looking, at most 120 units
     -- away; if they look at another player the money is given to that player. Server only.
     -- ```
-    -- local success, err = player:drop_money('tokens', 50)
+    -- local success, err = actor:drop_money('tokens', 50)
     --
     -- if success == false then
-    --   player:notify(err)
+    --   actor:notify(err)
     -- end
     -- ```
     -- @param currency [String currency ID]
@@ -151,10 +151,10 @@
     --- Moves money from this entity to another one if the CanGiveMoney hook allows it, and
     -- notifies the players involved. Server only.
     -- ```
-    -- local success, err = player:give_money_to(target, 'tokens', 50)
+    -- local success, err = actor:give_money_to(target, 'tokens', 50)
     --
     -- if success == false then
-    --   player:notify(err)
+    --   actor:notify(err)
     -- end
     -- ```
     -- @param target=nil [Entity receiver; a player gives to the entity they look at when nil]

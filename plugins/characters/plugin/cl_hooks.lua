@@ -155,10 +155,10 @@ end
 --- Adds the Steam name to a scoreboard player card and, unless an IsCharacterCardVisible hook
 -- returns false, the player's model icon and physical description.
 -- @param card [Panel the scoreboard player card]
--- @param player [Player]
-function Characters:RebuildScoreboardPlayerCard(card, player)
+-- @param target [Player]
+function Characters:RebuildScoreboardPlayerCard(card, target)
   local x, y = card.name_label:GetPos()
-  local text = player:steam_name()
+  local text = target:steam_name()
   local font = Theme.get_font('text_normal')
   local text_height = util.text_height(text, font)
 
@@ -168,7 +168,7 @@ function Characters:RebuildScoreboardPlayerCard(card, player)
   card.steam_name:SetTextColor(Theme.get_color('text'))
   card.steam_name:SizeToContents()
 
-  if hook.run('IsCharacterCardVisible', card, player) != false then
+  if hook.run('IsCharacterCardVisible', card, target) != false then
     card.avatar_panel:SetPos(card:GetWide() - card.avatar_panel:GetWide() - math.scale(48), math.scale(4))
 
     card.steam_name:SetText(card.steam_name:GetText())
@@ -183,10 +183,10 @@ function Characters:RebuildScoreboardPlayerCard(card, player)
     card.spawn_icon = vgui.Create('SpawnIcon', card)
     card.spawn_icon:SetPos(math.scale_size(4, 4))
     card.spawn_icon:SetSize(math.scale_size(32, 32))
-    card.spawn_icon:SetModel(player:GetModel())
+    card.spawn_icon:SetModel(target:GetModel())
     card.spawn_icon:SetEnabled(false)
 
-    local phys_desc = player:get_phys_desc()
+    local phys_desc = target:get_phys_desc()
 
     if utf8.len(phys_desc) > 128 then
       phys_desc = phys_desc:utf8sub(1, 128)..'...'
@@ -211,14 +211,14 @@ function Characters:AddCharacterCreationMenuStages(panel)
 end
 
 --- Adds the physical description to the lines drawn when looking at a player.
--- @param player [Player]
+-- @param target [Player]
 -- @param x [Number]
 -- @param y [Number]
 -- @param distance [Number]
 -- @param lines [Map line definitions keyed by ID, modified in place]
-function Characters:GetDrawPlayerInfo(player, x, y, distance, lines)
+function Characters:GetDrawPlayerInfo(target, x, y, distance, lines)
   lines['desc'] = {
-    text = player:get_phys_desc(),
+    text = target:get_phys_desc(),
     font = Theme.get_font('tooltip_small'),
     color = Color('white'),
     priority = 200

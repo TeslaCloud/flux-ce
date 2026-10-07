@@ -13,10 +13,10 @@ end
 
 if SERVER then
   --- Sends all stored 3D texts and pictures to the player who has just initialized.
-  -- @param player [Player]
-  function SurfaceText:PlayerInitialized(player)
-    Cable.send(player, 'fl_surface_text_load', self.texts)
-    Cable.send(player, 'fl_surface_picture_load', self.pictures)
+  -- @param actor [Player]
+  function SurfaceText:PlayerInitialized(actor)
+    Cable.send(actor, 'fl_surface_text_load', self.texts)
+    Cable.send(actor, 'fl_surface_picture_load', self.pictures)
   end
 
   --- Loads the stored 3D texts and pictures when the framework loads its data.
@@ -48,7 +48,7 @@ if SERVER then
   --- Adds a 3D text, saves it and broadcasts it to all clients. Serverside only.
   -- Does nothing unless text, pos, angle, style and scale are all present.
   -- ```
-  -- local trace = player:GetEyeTrace()
+  -- local trace = actor:GetEyeTrace()
   -- local angle = trace.HitNormal:Angle()
   -- angle:RotateAroundAxis(angle:Forward(), 90)
   -- angle:RotateAroundAxis(angle:Right(), 270)
@@ -104,43 +104,43 @@ if SERVER then
 
   --- Asks the player's client to find the 3D text they are looking at and request its removal.
   -- Serverside only; does nothing if the player lacks the 'textremove' permission.
-  -- @param player [Player]
-  function SurfaceText:remove_text(player)
-    if player:can('textremove') then
-      Cable.send(player, 'fl_surface_text_calculate', true)
+  -- @param actor [Player]
+  function SurfaceText:remove_text(actor)
+    if actor:can('textremove') then
+      Cable.send(actor, 'fl_surface_text_calculate', true)
     end
   end
 
   --- Asks the player's client to find the 3D picture they are looking at and request its
   -- removal. Serverside only; does nothing if the player lacks the 'textremove' permission.
-  -- @param player [Player]
-  function SurfaceText:remove_picture(player)
-    if player:can('textremove') then
-      Cable.send(player, 'fl_surface_picture_calculate', true)
+  -- @param actor [Player]
+  function SurfaceText:remove_picture(actor)
+    if actor:can('textremove') then
+      Cable.send(actor, 'fl_surface_picture_calculate', true)
     end
   end
 
-  Cable.receive('fl_surface_text_remove', function(player, idx)
-    if player:can('textremove') then
+  Cable.receive('fl_surface_text_remove', function(actor, idx)
+    if actor:can('textremove') then
       table.remove(SurfaceText.texts, idx)
 
       SurfaceText:save()
 
       Cable.send(nil, 'fl_surface_text_remove', idx)
 
-      player:notify(t'notification.3d_text.text_removed')
+      actor:notify(t'notification.3d_text.text_removed')
     end
   end)
 
-  Cable.receive('fl_surface_picture_remove', function(player, idx)
-    if player:can('textremove') then
+  Cable.receive('fl_surface_picture_remove', function(actor, idx)
+    if actor:can('textremove') then
       table.remove(SurfaceText.pictures, idx)
 
       SurfaceText:save()
 
       Cable.send(nil, 'fl_surface_picture_remove', idx)
 
-      player:notify(t'notification.3d_picture.removed')
+      actor:notify(t'notification.3d_picture.removed')
     end
   end)
 else

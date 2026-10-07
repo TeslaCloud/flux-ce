@@ -59,40 +59,40 @@ end
 --- Makes the entity the player is looking at static, or removes its static status, and
 -- notifies the player about the outcome. The entity's class has to be whitelisted and the
 -- player needs the 'static' or 'unstatic' permission respectively.
--- @param player [Player]
+-- @param actor [Player]
 -- @param is_static [Boolean true to make the entity static, false to make it unstatic]
-function StaticEnts:PlayerMakeStatic(player, is_static)
-  if (is_static and !player:can('static')) or (!is_static and !player:can('unstatic')) then
-    player:notify('error.no_permission')
+function StaticEnts:PlayerMakeStatic(actor, is_static)
+  if (is_static and !actor:can('static')) or (!is_static and !actor:can('unstatic')) then
+    actor:notify('error.no_permission')
     return
   end
 
-  local trace = player:GetEyeTraceNoCursor()
+  local trace = actor:GetEyeTraceNoCursor()
   local entity = trace.Entity
 
   if !IsValid(entity) then
-    player:notify('error.not_valid_entity')
+    actor:notify('error.not_valid_entity')
     return
   end
 
   if !whitelisted_ents[entity:GetClass()] then
-    player:notify('error.cannot_static_this')
+    actor:notify('error.cannot_static_this')
     return
   end
 
   local ent_static = entity:GetPersistent()
 
   if is_static and ent_static then
-    player:notify('error.already_static')
+    actor:notify('error.already_static')
     return
   elseif !is_static and !ent_static then
-    player:notify('error.not_static')
+    actor:notify('error.not_static')
     return
   end
 
   entity:SetPersistent(is_static)
 
-  player:notify((is_static and 'notification.static.added') or 'notification.static.removed')
+  actor:notify((is_static and 'notification.static.added') or 'notification.static.removed')
 end
 
 --- Runs the PersistenceSave hook whenever the framework saves its data.

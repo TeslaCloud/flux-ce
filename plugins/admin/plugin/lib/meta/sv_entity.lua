@@ -20,14 +20,14 @@ end
 -- exclude. Also sets the entity's 'transmission_prevented' net var, sent only to itself.
 -- ```
 -- -- Hide the player from everyone except moderators.
--- player:prevent_transmit_conditional(true, function(ply)
+-- target:prevent_transmit_conditional(true, function(ply)
 --   if ply:can('moderator') then
 --     return false
 --   end
 -- end)
 -- ```
 -- @param should_prevent [Boolean true to stop transmitting, false to resume]
--- @param condition=nil [Function called as condition(player, entity, should_prevent); return
+-- @param condition=nil [Function called as condition(receiver, entity, should_prevent); return
 --   false to leave that player unaffected]
 function ent_meta:prevent_transmit_conditional(should_prevent, condition)
   condition = condition or function() return true end

@@ -10,35 +10,35 @@ local light_mat = Material("effects/flashlight001")
 
 --- Toggles a projected texture attached to the player, so that other players can see the
 -- light of their flashlight.
--- @param player [Player]
+-- @param actor [Player]
 -- @return [Boolean false; nil if the light was on but its entity is no longer valid]
-function PLUGIN:PlayerSwitchedFlashlight(player)
-  local on = !player.shared_flashlight_on
+function PLUGIN:PlayerSwitchedFlashlight(actor)
+  local on = !actor.shared_flashlight_on
 
   if !on then
-    if !IsValid(player.shared_flashlight) then return end
+    if !IsValid(actor.shared_flashlight) then return end
 
-    player.shared_flashlight:Remove()
-    player.shared_flashlight = nil
+    actor.shared_flashlight:Remove()
+    actor.shared_flashlight = nil
   else
-    player.shared_flashlight = ents.Create 'env_projectedtexture'
-    player.shared_flashlight:SetParent(player)
+    actor.shared_flashlight = ents.Create 'env_projectedtexture'
+    actor.shared_flashlight:SetParent(actor)
 
-    player.shared_flashlight:SetLocalPos(player:GetCurrentViewOffset())
-    player.shared_flashlight:SetLocalAngles(Angle(0, 0, 0))
+    actor.shared_flashlight:SetLocalPos(actor:GetCurrentViewOffset())
+    actor.shared_flashlight:SetLocalAngles(Angle(0, 0, 0))
 
-    player.shared_flashlight:SetKeyValue('enableshadows', 1)
-    player.shared_flashlight:SetKeyValue('nearz', 12)
-    player.shared_flashlight:SetKeyValue('lightfov', 35)
-    player.shared_flashlight:SetKeyValue('farz', 1024)
-    player.shared_flashlight:SetKeyValue('lightcolor', '255 255 255 255')
+    actor.shared_flashlight:SetKeyValue('enableshadows', 1)
+    actor.shared_flashlight:SetKeyValue('nearz', 12)
+    actor.shared_flashlight:SetKeyValue('lightfov', 35)
+    actor.shared_flashlight:SetKeyValue('farz', 1024)
+    actor.shared_flashlight:SetKeyValue('lightcolor', '255 255 255 255')
 
-    player.shared_flashlight:Spawn()
+    actor.shared_flashlight:Spawn()
 
-    player.shared_flashlight:Input('SpotlightTexture', NULL, NULL, light_mat:GetString('$basetexture'))
+    actor.shared_flashlight:Input('SpotlightTexture', NULL, NULL, light_mat:GetString('$basetexture'))
   end
 
-  player.shared_flashlight_on = on
+  actor.shared_flashlight_on = on
 
   return false
 end

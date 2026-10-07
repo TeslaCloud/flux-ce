@@ -3,11 +3,11 @@ PLUGIN:set_author('TeslaCloud Studios')
 PLUGIN:set_description('Adds a custom weapon selector for use with Flux.')
 
 if SERVER then
-  concommand.Add('selectweapon', function(player, command, arguments)
-    local weapon = player:GetWeapons()[tonumber(arguments[1]) or 1]
+  concommand.Add('selectweapon', function(actor, command, arguments)
+    local weapon = actor:GetWeapons()[tonumber(arguments[1]) or 1]
 
     if IsValid(weapon) then
-      player:SelectWeapon(weapon:GetClass())
+      actor:SelectWeapon(weapon:GetClass())
     end
   end)
 
@@ -143,17 +143,17 @@ do
   --- Handles the weapon selection binds: invprev, invnext and slot binds move the highlight,
   -- attack selects the highlighted weapon while the selector is open.
   -- Ignored in vehicles, while attack is held and when ShouldOpenWepselect returns false.
-  -- @param player [Player]
+  -- @param client [Player]
   -- @param bind [String the bind's command]
   -- @param pressed [Boolean whether the bind was pressed rather than released]
   -- @return [Boolean true if the bind was consumed, nil otherwise]
-  function PLUGIN:PlayerBindPress(player, bind, pressed)
-    local weapon = player:GetActiveWeapon()
+  function PLUGIN:PlayerBindPress(client, bind, pressed)
+    local weapon = client:GetActiveWeapon()
 
-    if !player:InVehicle() and !player:KeyDown(IN_ATTACK) then
-      if hook.run('ShouldOpenWepselect', player, bind, pressed) != false then
+    if !client:InVehicle() and !client:KeyDown(IN_ATTACK) then
+      if hook.run('ShouldOpenWepselect', client, bind, pressed) != false then
         local cur_time = CurTime()
-        local weapon_count = table.Count(player:GetWeapons())
+        local weapon_count = table.Count(client:GetWeapons())
         local old_index = self.weapon_index
         bind = bind:lower()
 

@@ -92,8 +92,8 @@ end
 -- ```
 -- local hooks = {}
 --
--- function hooks:PlayerButtonDown(player, key)
---   Cable.send(player, 'fl_bind_pressed', key)
+-- function hooks:PlayerButtonDown(actor, key)
+--   Cable.send(actor, 'fl_bind_pressed', key)
 -- end
 --
 -- Plugin.add_hooks('FLBinds', hooks)

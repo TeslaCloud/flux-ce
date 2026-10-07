@@ -34,11 +34,11 @@ end
 -- @param y [Number target slot, or nil if the position is yet to be found]
 -- @return [Boolean false to prevent the transfer, nil otherwise]
 function ItemEquipable:can_transfer(inventory, x, y)
-  local player = self:get_player()
+  local owner = self:get_player()
   local inv_type = inventory.type
 
   if inv_type == self.equip_inv then
-    if self:can_equip(player) == false then
+    if self:can_equip(owner) == false then
       return false
     end
 
@@ -62,7 +62,7 @@ function ItemEquipable:can_transfer(inventory, x, y)
       end
     end
   elseif inv_type != self.equip_inv and self.inventory_type == self.equip_inv then
-    if self:can_unequip(player) == false then
+    if self:can_unequip(owner) == false then
       return false
     end
   end
@@ -70,46 +70,46 @@ end
 
 --- Called by ItemEquipable:can_transfer before the item is equipped.
 -- Override it and return false to prevent the item from being equipped.
--- @param player [Player the player that has the item, or nil if no player has it]
+-- @param owner [Player the player that has the item, or nil if no player has it]
 -- @return [Boolean false to prevent equipping, nil otherwise]
-function ItemEquipable:can_equip(player)
+function ItemEquipable:can_equip(owner)
 end
 
 --- Called by ItemEquipable:can_transfer before the item is unequipped.
 -- Override it and return false to prevent the item from being unequipped.
--- @param player [Player the player that has the item, or nil if no player has it]
+-- @param owner [Player the player that has the item, or nil if no player has it]
 -- @return [Boolean false to prevent unequipping, nil otherwise]
-function ItemEquipable:can_unequip(player)
+function ItemEquipable:can_unequip(owner)
 end
 
 --- Called by ItemEquipable:equip when the item gets equipped.
 -- Override it to apply the effects of the item to the player.
--- @param player [Player]
-function ItemEquipable:post_equipped(player)
+-- @param owner [Player]
+function ItemEquipable:post_equipped(owner)
 end
 
 --- Called by ItemEquipable:equip when the item gets unequipped.
 -- Override it to remove the effects of the item from the player.
--- @param player [Player]
-function ItemEquipable:post_unequipped(player)
+-- @param owner [Player]
+function ItemEquipable:post_unequipped(owner)
 end
 
 --- Applies or reverts the equipped state of the item; it does not move the item itself.
 -- Empties and disables (or enables back) the inventories listed in disabled_inventories, calls
 -- post_equipped or post_unequipped and runs the 'OnItemEquipped' or 'OnItemUnequipped' hook.
--- @param player [Player]
+-- @param owner [Player]
 -- @param should_equip [Boolean true to equip the item, false to unequip it]
-function ItemEquipable:equip(player, should_equip)
+function ItemEquipable:equip(owner, should_equip)
   if should_equip then
     for k, v in pairs(self.disabled_inventories) do
-      local inventory = player:get_inventory(v)
+      local inventory = owner:get_inventory(v)
 
       if inventory then
         for k1, v1 in pairs(inventory:get_items()) do
-          local success, error_text = player:transfer_item(v1.instance_id, 'main_inventory')
+          local success, error_text = owner:transfer_item(v1.instance_id, 'main_inventory')
 
           if !success then
-            player:notify(error_text)
+            owner:notify(error_text)
 
             return
           end
@@ -119,21 +119,21 @@ function ItemEquipable:equip(player, should_equip)
       end
     end
 
-    self:post_equipped(player)
+    self:post_equipped(owner)
 
-    hook.run('OnItemEquipped', player, self)
+    hook.run('OnItemEquipped', owner, self)
   else
     for k, v in pairs(self.disabled_inventories) do
-      local inventory = player:get_inventory(v)
+      local inventory = owner:get_inventory(v)
 
       if inventory then
         inventory:set_disabled(false)
       end
     end
 
-    self:post_unequipped(player)
+    self:post_unequipped(owner)
 
-    hook.run('OnItemUnequipped', player, self)
+    hook.run('OnItemUnequipped', owner, self)
   end
 end
 
@@ -143,39 +143,39 @@ end
 -- @param old_inventory [Inventory where the item was, or nil if it is picked up]
 function ItemEquipable:on_transfer(new_inventory, old_inventory)
   if new_inventory and new_inventory.type == self.equip_inv then
-    local player = new_inventory.owner
-    player:EmitSound(self.action_sounds['equip'])
-    self:equip(player, true)
+    local owner = new_inventory.owner
+    owner:EmitSound(self.action_sounds['equip'])
+    self:equip(owner, true)
   end
 
   if old_inventory and old_inventory.type == self.equip_inv then
-    local player = old_inventory.owner
-    player:EmitSound(self.action_sounds['unequip'])
-    self:equip(player, false)
+    local owner = old_inventory.owner
+    owner:EmitSound(self.action_sounds['unequip'])
+    self:equip(owner, false)
   end
 end
 
 --- Called on the server when a player presses the equip button in the item's menu.
 -- Moves the item to its equipment inventory, or back to the main inventory
 -- if it is equipped already. An item lying in the world is picked up and equipped.
--- @param player [Player]
-function ItemEquipable:on_equip(player)
+-- @param owner [Player]
+function ItemEquipable:on_equip(owner)
   if IsValid(self.entity) then
-    self:do_menu_action('on_take', player, { inv_type = self.equip_inv })
+    self:do_menu_action('on_take', owner, { inv_type = self.equip_inv })
   else
     if self:is_equipped() then
-      player:transfer_item(self.instance_id, 'main_inventory')
+      owner:transfer_item(self.instance_id, 'main_inventory')
     else
-      player:transfer_item(self.instance_id, self.equip_inv)
+      owner:transfer_item(self.instance_id, self.equip_inv)
     end
   end
 end
 
 --- Called on the server right after the player that has the item spawns.
 -- Applies the equipped state again if the item is equipped.
--- @param player [Player]
-function ItemEquipable:on_loadout(player)
+-- @param owner [Player]
+function ItemEquipable:on_loadout(owner)
   if self:is_equipped() then
-    self:equip(player, true)
+    self:equip(owner, true)
   end
 end

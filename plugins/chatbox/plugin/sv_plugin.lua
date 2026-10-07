@@ -71,12 +71,12 @@ end
 -- -- Message from a player that is heard within 300 units of them.
 -- Chatbox.add_text(nil,
 --   { icon = 'fa-shield-alt', size = 14, margin = 8, is_data = true },
---   _team.GetColor(player:Team()), player, Color(255, 255, 255), ': ', text,
---   { sender = player, position = player:GetPos(), radius = 300 }
+--   team.GetColor(actor:Team()), actor, Color(255, 255, 255), ': ', text,
+--   { sender = actor, position = actor:GetPos(), radius = 300 }
 -- )
 --
 -- -- Message for certain players only.
--- Chatbox.add_text(Bolt:get_staff(), Color(234, 255, 208), '@staff ', player, ': ', text)
+-- Chatbox.add_text(Bolt:get_staff(), Color(234, 255, 208), '@staff ', actor, ': ', text)
 -- ```
 -- @param listeners [List<Player>/Player the receivers, nil to send to all players]
 -- @param ... [Vararg pieces of the message and option tables]
@@ -99,7 +99,7 @@ function Chatbox.add_text(listeners, ...)
     if IsValid(listeners) then
       listeners = { listeners }
     else
-      listeners = _player.all()
+      listeners = player.all()
     end
   end
 
@@ -192,13 +192,13 @@ end
 -- and colors come from the ChatboxGetPlayerIcon, ChatboxGetPlayerColor and
 -- ChatboxGetMessageColor hooks, and the ChatboxAdjustPlayerSay hook can alter the
 -- finished message. Serverside only.
--- @param player [Player the speaker]
+-- @param actor [Player the speaker]
 -- @param text [String the message]
 -- @param team_chat=nil [Boolean whether the message was sent to the team chat]
-function Chatbox.player_say(player, text, team_chat)
-  if !IsValid(player) then return end
+function Chatbox.player_say(actor, text, team_chat)
+  if !IsValid(actor) then return end
 
-  local player_say_override = hook.run('PlayerSay', player, text, team_chat)
+  local player_say_override = hook.run('PlayerSay', actor, text, team_chat)
 
   if isstring(player_say_override) then
     if player_say_override == '' then return end
@@ -209,28 +209,28 @@ function Chatbox.player_say(player, text, team_chat)
   text = text:trim()
 
   local message = {
-    hook.run('ChatboxGetPlayerIcon', player, text, team_chat) or {},
-    hook.run('ChatboxGetPlayerColor', player, text, team_chat) or _team.GetColor(player:Team()),
-    player,
-    hook.run('ChatboxGetMessageColor', player, text, team_chat) or Color(255, 255, 255),
+    hook.run('ChatboxGetPlayerIcon', actor, text, team_chat) or {},
+    hook.run('ChatboxGetPlayerColor', actor, text, team_chat) or team.GetColor(actor:Team()),
+    actor,
+    hook.run('ChatboxGetMessageColor', actor, text, team_chat) or Color(255, 255, 255),
     ': ',
     text,
-    { sender = player }
+    { sender = actor }
   }
 
-  hook.run('ChatboxAdjustPlayerSay', player, text, message)
+  hook.run('ChatboxAdjustPlayerSay', actor, text, message)
 
   Chatbox.add_text(nil, unpack(message))
 end
 
-Cable.receive('fl_chat_text_add', function(player, ...)
-  if !IsValid(player) then return end
+Cable.receive('fl_chat_text_add', function(actor, ...)
+  if !IsValid(actor) then return end
 
   Chatbox.set_client_mode(true)
-  Chatbox.add_text(player, ...)
+  Chatbox.add_text(actor, ...)
   Chatbox.set_client_mode(false)
 end)
 
-Cable.receive('fl_chat_player_say', function(player, text, team_chat)
-  Chatbox.player_say(player, text, team_chat)
+Cable.receive('fl_chat_player_say', function(actor, text, team_chat)
+  Chatbox.player_say(actor, text, team_chat)
 end)

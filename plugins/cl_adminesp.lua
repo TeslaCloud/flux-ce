@@ -16,7 +16,7 @@ do
     and !PLAYER:InVehicle() then
       local clientPos = PLAYER:GetPos()
 
-      for k, v in ipairs(_player.all()) do
+      for k, v in ipairs(player.all()) do
         if v == PLAYER then continue end
 
         local pos = v:GetPos()

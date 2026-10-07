@@ -119,10 +119,10 @@ function Faction:get_gender_models(gender)
 end
 
 --- Picks a random faction model that matches the player's gender.
--- @param player [Player]
+-- @param target [Player]
 -- @return [String model path]
-function Faction:get_random_model(player)
-  return table.random(self:get_gender_models(player:get_gender()))
+function Faction:get_random_model(target)
+  return table.random(self:get_gender_models(target:get_gender()))
 end
 
 --- Adds a rank above the ranks added so far.
@@ -141,29 +141,29 @@ end
 
 --- Builds a character name for a player from the faction's name template, which may contain
 -- {name}, {rank}, {data:key} and {callback:method} placeholders. A faction that defines
--- make_name(player, char_name, rank, default_data) bypasses the template.
+-- make_name(target, char_name, rank, default_data) bypasses the template.
 -- ```
 -- FACTION.name_template = '{data:unit} {rank} {name}'
 -- FACTION:set_data('unit', 'C17')
 -- FACTION:add_rank('officer', 'Ofc.')
 --
 -- -- For a player named 'John Doe':
--- FACTION:generate_name(player, 'officer') -- 'C17 Ofc. John Doe'
+-- FACTION:generate_name(target, 'officer') -- 'C17 Ofc. John Doe'
 -- ```
--- @param player [Player]
+-- @param target [Player]
 -- @param rank [Number/String rank index or rank ID used for {rank}]
 -- @param default_data=nil [Map values for {data:key} that override the faction's own data]
 -- @return [String the generated name; the player's current name if a ShouldNameGenerate
 --   hook returns false]
-function Faction:generate_name(player, rank, default_data)
-  local char_name = player:name()
+function Faction:generate_name(target, rank, default_data)
+  local char_name = target:name()
 
   default_data = default_data or {}
 
-  if hook.run('ShouldNameGenerate', player, self, char_name, rank, default_data) == false then return player:name() end
+  if hook.run('ShouldNameGenerate', target, self, char_name, rank, default_data) == false then return target:name() end
 
   if isfunction(self.make_name) then
-    return self:make_name(player, char_name, rank, default_data) or 'John Doe'
+    return self:make_name(target, char_name, rank, default_data) or 'John Doe'
   end
 
   local final_name = self.name_template
@@ -191,7 +191,7 @@ function Faction:generate_name(player, rank, default_data)
       local callback = self[m2]
 
       if isfunction(callback) then
-        final_name = final_name:replace(v.text, callback(self, player))
+        final_name = final_name:replace(v.text, callback(self, target))
       end
     elseif m1 == 'data' then
       local data = default_data[m2] or self.data[m2] or ''
@@ -219,14 +219,14 @@ end
 
 --- Called on the server when a player is moved into this faction. Does nothing by default;
 -- override it in the faction definition.
--- @param player [Player]
-function Faction:on_player_join(player)
+-- @param target [Player]
+function Faction:on_player_join(target)
 end
 
 --- Called on the server when a player is moved out of this faction. Does nothing by default;
 -- override it in the faction definition.
--- @param player [Player]
-function Faction:on_player_leave(player)
+-- @param target [Player]
+function Faction:on_player_leave(target)
 end
 
 --- Registers the faction under its faction ID.

@@ -38,10 +38,10 @@ function Items:RegisterConditions()
       return { operator = operator, item = parameter }
     end,
     icon = 'icon16/brick.png',
-    check = function(player, data)
+    check = function(target, data)
       if !data.operator or !data.item_id then return false end
 
-      return util.process_operator(data.operator, player:has_item(data.item_id), true)
+      return util.process_operator(data.operator, target:has_item(data.item_id), true)
     end,
     set_parameters = function(id, data, panel, menu, parent)
       Derma_StringRequest(
@@ -69,10 +69,10 @@ function Items:RegisterConditions()
       return { operator = operator, item = item_id, key = key, value = value }
     end,
     icon = 'icon16/brick_add.png',
-    check = function(player, data)
+    check = function(target, data)
       if !data.operator or !data.item_id or !data.key or !data.value then return false end
 
-      local items = player:find_items(item_id)
+      local items = target:find_items(item_id)
 
       if #items == 0 then
         return false

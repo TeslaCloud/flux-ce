@@ -18,10 +18,10 @@ function Factions:PluginIncludeFolder(extra, folder)
 end
 
 --- Prevents faction name generation for bots.
--- @param player [Player]
+-- @param target [Player]
 -- @return [Boolean false for bots, otherwise nil]
-function Factions:ShouldNameGenerate(player)
-  if player:IsBot() then
+function Factions:ShouldNameGenerate(target)
+  if target:IsBot() then
     return false
   end
 end
@@ -43,10 +43,10 @@ function Factions:RegisterConditions()
       return { operator = operator, faction = faction_name }
     end,
     icon = 'icon16/group.png',
-    check = function(player, data)
+    check = function(target, data)
       if !data.operator or !data.faction_id then return false end
 
-      return util.process_operator(data.operator, player:get_faction_id(), data.faction_id)
+      return util.process_operator(data.operator, target:get_faction_id(), data.faction_id)
     end,
     set_parameters = function(id, data, panel, menu, parent)
       parent:create_selector(data.name, 'condition.faction.message', 'condition.factions', self.all(),
@@ -81,11 +81,11 @@ function Factions:RegisterConditions()
       return { operator = operator, faction = faction_name, rank = rank_name }
     end,
     icon = 'icon16/award_star_gold_1.png',
-    check = function(player, data)
+    check = function(target, data)
       if !data.operator or !data.rank or !data.faction_id then return false end
-      if player:get_faction_id() != data.faction_id then return false end
+      if target:get_faction_id() != data.faction_id then return false end
 
-      return util.process_operator(data.operator, player:get_rank(), data.rank)
+      return util.process_operator(data.operator, target:get_rank(), data.rank)
     end,
     set_parameters = function(id, data, panel, menu, parent)
       parent:create_selector(data.name, 'condition.faction.message', 'condition.factions', self.all(),

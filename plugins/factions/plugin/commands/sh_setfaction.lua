@@ -20,16 +20,16 @@ function CMD:get_description()
 end
 
 --- Moves every target into the faction found by name and notifies the targets and staff.
--- @param player [Player the player who ran the command]
+-- @param actor [Player the player who ran the command]
 -- @param targets [List<Player> players matched by the first command argument]
 -- @param name [String faction ID or name, or a part of either]
 -- @param strict=nil [String any extra argument makes the faction lookup exact]
-function CMD:on_run(player, targets, name, strict)
+function CMD:on_run(actor, targets, name, strict)
   local faction_table = Factions.find(name, (strict and true) or false)
 
   if faction_table then
     self:notify_staff('command.setfaction.message', {
-      player = get_player_name(player),
+      player = get_player_name(actor),
       target = util.player_list_to_string(targets),
       faction = faction_table.name
     })
@@ -39,6 +39,6 @@ function CMD:on_run(player, targets, name, strict)
       v:notify('notification.faction_changed', { faction = faction_table.name }, faction_table.color)
     end
   else
-    player:notify('error.faction.invalid', { faction = name })
+    actor:notify('error.faction.invalid', { faction = name })
   end
 end

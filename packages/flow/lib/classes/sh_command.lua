@@ -35,13 +35,13 @@ end
 -- CMD.immunity = true
 -- CMD.aliases = { 'freeze', 'plyfreeze' }
 --
--- function CMD:on_run(player, targets)
+-- function CMD:on_run(actor, targets)
 --   for k, v in ipairs(targets) do
 --     v:Freeze(true)
 --   end
 --
 --   self:notify_staff('command.freeze.message', {
---     player = get_player_name(player),
+--     player = get_player_name(actor),
 --     target = util.player_list_to_string(targets)
 --   })
 -- end
@@ -85,7 +85,7 @@ end
 --- Sends a light blue notification meant for the players with the 'staff' permission.
 -- ```
 -- self:notify_staff('command.changelevel.message', {
---   player = get_player_name(player),
+--   player = get_player_name(actor),
 --   map = map,
 --   delay = delay
 -- })

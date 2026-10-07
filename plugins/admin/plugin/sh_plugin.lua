@@ -23,21 +23,21 @@ function Bolt:PluginIncludeFolder(extra, folder)
   end
 end
 
---- Answers the permission checks made through player:can by delegating to Bolt:can.
--- @param player [Player]
+--- Answers the permission checks made through actor:can by delegating to Bolt:can.
+-- @param actor [Player]
 -- @param action [String permission ID]
 -- @param object=nil [String object name the permission was allowed for]
 -- @return [Boolean]
-function Bolt:PlayerHasPermission(player, action, object)
-  return self:can(player, action, object)
+function Bolt:PlayerHasPermission(actor, action, object)
+  return self:can(actor, action, object)
 end
 
 --- Reports whether the player was flagged as root, which happens when their SteamID is listed
 -- in the root_steamid config.
--- @param player [Player]
+-- @param target [Player]
 -- @return [Boolean true for root players, nil otherwise]
-function Bolt:PlayerIsRoot(player)
-  return player.can_anything
+function Bolt:PlayerIsRoot(target)
+  return target.can_anything
 end
 
 --- Registers a permission for every newly created command.
@@ -73,10 +73,10 @@ function Bolt:RegisterConditions()
       return { operator = operator, role = parameter }
     end,
     icon = 'icon16/group.png',
-    check = function(player, data)
+    check = function(target, data)
       if !data.operator or !data.role then return false end
 
-      return util.process_operator(data.operator, player:get_role(), data.role)
+      return util.process_operator(data.operator, target:get_role(), data.role)
     end,
     set_parameters = function(id, data, panel, menu, parent)
       parent:create_selector(data.name, 'condition.role.message', 'condition.roles', self:get_roles(),

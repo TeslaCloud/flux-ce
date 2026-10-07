@@ -21,11 +21,11 @@ end
 if SERVER then
   --- Hands chat messages that start with a registered prefix (or pass its check function)
   -- over to that prefix instead of regular chat. Commands are left alone.
-  -- @param player [Player the speaker]
+  -- @param actor [Player the speaker]
   -- @param text [String the message]
   -- @param team_chat [Boolean whether the message was sent to team chat]
   -- @return [String empty string to suppress the message if a prefix matched, nil otherwise]
-  function Prefixes:PlayerSay(player, text, team_chat)
+  function Prefixes:PlayerSay(actor, text, team_chat)
     local lower_text = text:utf8lower()
 
     if !string.is_command(lower_text) then
@@ -34,7 +34,7 @@ if SERVER then
 
         for k2, v2 in pairs(prefix_table) do
           if lower_text:starts(v2) or v.check and v.check(text) then
-            return self:process_prefix(player, k, v2, text, team_chat)
+            return self:process_prefix(actor, k, v2, text, team_chat)
           end
         end
       end
@@ -43,22 +43,22 @@ if SERVER then
 
   --- Strips the prefix from the message and passes the rest to the prefix's callback, then
   -- runs the PlayerUsedPrefix hook. Neither is run if nothing is left of the message.
-  -- @param player [Player the speaker]
+  -- @param actor [Player the speaker]
   -- @param prefix_id [String id the prefix was registered with]
   -- @param prefix='' [String the prefix text that matched]
   -- @param text [String the full message]
   -- @param team_chat [Boolean whether the message was sent to team chat]
   -- @return [String always an empty string, which suppresses the original message]
-  function Prefixes:process_prefix(player, prefix_id, prefix, text, team_chat)
+  function Prefixes:process_prefix(actor, prefix_id, prefix, text, team_chat)
     prefix = prefix or ''
 
     local prefix_data = stored[prefix_id]
     local message = text:utf8sub((text:utf8lower():starts(prefix) and utf8.len(prefix) or 0) + 1)
 
     if message != '' then
-      prefix_data.callback(player, message, team_chat)
+      prefix_data.callback(actor, message, team_chat)
 
-      hook.run('PlayerUsedPrefix', player, prefix_id, message, team_chat)
+      hook.run('PlayerUsedPrefix', actor, prefix_id, message, team_chat)
     end
 
     return ''
@@ -69,7 +69,7 @@ if SERVER then
   -- ```
   -- Prefixes:add('ooc', {
   --   prefix = { '//', '((' },
-  --   callback = function(player, message, team_chat)
+  --   callback = function(actor, message, team_chat)
   --     -- message is the text with the prefix stripped
   --   end
   -- })

@@ -145,12 +145,12 @@ function Flux.Lang:get_case(language, phrase, case)
 end
 
 --- Returns the language of a player.
--- @param player [Player]
+-- @param target [Player]
 -- @return [String language code, 'en' if the player is not valid or has not sent it yet]
-function Flux.Lang:get_player_lang(player)
-  if !IsValid(player) then return 'en' end
+function Flux.Lang:get_player_lang(target)
+  if !IsValid(target) then return 'en' end
 
-  return player:get_nv('language', 'en')
+  return target:get_nv('language', 'en')
 end
 
 if CLIENT then

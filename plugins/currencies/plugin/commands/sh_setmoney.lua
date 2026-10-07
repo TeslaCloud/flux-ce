@@ -20,16 +20,16 @@ function CMD:get_description()
 end
 
 --- Sets the balance of a currency for every target and notifies the targets and staff.
--- @param player [Player the player who ran the command]
+-- @param actor [Player the player who ran the command]
 -- @param targets [List<Player> players matched by the first command argument]
 -- @param amount [String new balance, parsed with tonumber; negative values become 0]
 -- @param currency=nil [String currency ID; the default_currency config is used when it is
 --   omitted or unknown]
-function CMD:on_run(player, targets, amount, currency)
+function CMD:on_run(actor, targets, amount, currency)
   amount = tonumber(amount)
 
   if !amount then
-    player:notify('error.invalid_value')
+    actor:notify('error.invalid_value')
 
     return
   end
@@ -41,7 +41,7 @@ function CMD:on_run(player, targets, amount, currency)
     currency = Config.get('default_currency')
 
     if !Currencies:find_currency(currency) then
-      player:notify('error.currency.invalid_currency')
+      actor:notify('error.currency.invalid_currency')
 
       return
     end
@@ -55,7 +55,7 @@ function CMD:on_run(player, targets, amount, currency)
   end
 
   self:notify_staff('command.setmoney.message', {
-    player = get_player_name(player),
+    player = get_player_name(actor),
     target = util.player_list_to_string(targets),
     value = amount,
     currency = currency_data.name

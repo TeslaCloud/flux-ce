@@ -110,7 +110,7 @@ do
   --- Returns the level, progress, boosts and multipliers of every attribute of the player's
   -- character. On the client this is the networked copy and the type argument is ignored.
   -- ```
-  -- local attributes = player:get_attributes()
+  -- local attributes = target:get_attributes()
   --
   -- -- attributes.strength = {
   -- --   level = 3, progress = 40,
@@ -259,9 +259,9 @@ do
     -- crossed. Does nothing for attributes with has_progress set. Server only.
     -- ```
     -- -- Scaled by the player's multiplier when the attribute is multipliable.
-    -- player:progress_attribute('lockpicking', 15)
+    -- target:progress_attribute('lockpicking', 15)
     -- -- Always exactly 15.
-    -- player:progress_attribute('lockpicking', 15, true)
+    -- target:progress_attribute('lockpicking', 15, true)
     -- ```
     -- @param attribute_id [String]
     -- @param amount [Number progress to add, negative to remove]
@@ -337,7 +337,7 @@ do
     -- character, networked, and removed by a timer when it expires. Server only.
     -- ```
     -- -- Two extra levels of strength for five minutes.
-    -- player:boost_attribute('strength', 2, 300)
+    -- target:boost_attribute('strength', 2, 300)
     -- ```
     -- @param attribute_id [String attribute to boost; ignored when it is not boostable]
     -- @param value [Number levels to add]
@@ -400,7 +400,7 @@ do
     -- stored on the character and networked. Server only.
     -- ```
     -- -- Double strength progress for an hour.
-    -- player:multiply_attribute('strength', 2, 3600)
+    -- target:multiply_attribute('strength', 2, 3600)
     -- ```
     -- @param attribute_id [String attribute to affect; ignored when multipliable is false]
     -- @param value [Number multiplier, 2 doubles the progress gained]

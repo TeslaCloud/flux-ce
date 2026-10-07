@@ -8,10 +8,10 @@ CMD.player_arg = 1
 CMD.alias = 'setgender'
 
 --- Sets the gender of every target's character and notifies staff.
--- @param player [Player the player who ran the command]
+-- @param actor [Player the player who ran the command]
 -- @param targets [List<Player> players matched by the first command argument]
 -- @param new_gender [String 'male', 'female' or 'no_gender', in any letter case]
-function CMD:on_run(player, targets, new_gender)
+function CMD:on_run(actor, targets, new_gender)
   new_gender = new_gender:utf8lower()
 
   local valid_genders = {
@@ -27,11 +27,11 @@ function CMD:on_run(player, targets, new_gender)
     end
 
     self:notify_staff('command.charsetgender.message', {
-      player = get_player_name(player),
+      player = get_player_name(actor),
       target = util.player_list_to_string(targets),
       gender = 'ui.gender.'..new_gender
     })
   else
-    player:notify('error.invalid_gender', { gender = 'ui.gender.'..new_gender })
+    actor:notify('error.invalid_gender', { gender = 'ui.gender.'..new_gender })
   end
 end

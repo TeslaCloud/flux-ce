@@ -20,11 +20,11 @@ function CMD:get_description()
 end
 
 --- Removes the whitelist for a faction from every target that has it and notifies staff.
--- @param player [Player the player who ran the command]
+-- @param actor [Player the player who ran the command]
 -- @param targets [List<Player> players matched by the first command argument]
 -- @param faction_id [String faction ID or name, or a part of either]
 -- @param strict=nil [String any extra argument makes the faction lookup exact]
-function CMD:on_run(player, targets, faction_id, strict)
+function CMD:on_run(actor, targets, faction_id, strict)
   local whitelist = Factions.find(faction_id, strict)
 
   if whitelist then
@@ -36,11 +36,11 @@ function CMD:on_run(player, targets, faction_id, strict)
     end
 
     self:notify_staff('command.unwhitelist.message', {
-      player = get_player_name(player),
+      player = get_player_name(actor),
       target = util.player_list_to_string(targets),
       faction = whitelist.name
     })
   else
-    player:notify('error.faction.invalid', { faction = faction_id })
+    actor:notify('error.faction.invalid', { faction = faction_id })
   end
 end

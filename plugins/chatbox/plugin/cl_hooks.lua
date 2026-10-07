@@ -18,11 +18,11 @@ end
 
 --- Opens the chatbox instead of the default chat when a chat bind is pressed,
 -- remembering whether team chat was requested.
--- @param player [Player]
+-- @param client [Player]
 -- @param bind [String the bind that was pressed]
 -- @param pressed [Boolean whether the bind was pressed rather than released]
 -- @return [Boolean true to block the bind if the chatbox was opened, nil otherwise]
-function Chatbox:PlayerBindPress(player, bind, pressed)
+function Chatbox:PlayerBindPress(client, bind, pressed)
   if IsValid(PLAYER) and PLAYER:has_initialized() and (string.find(bind, 'messagemode') or string.find(bind, 'messagemode2')) and pressed then
     if string.find(bind, 'messagemode2') then
       PLAYER.typing_team_chat = true

@@ -12,16 +12,16 @@ end
 --- Draws the text a player is typing above their head, fading it out with distance and
 -- keeping it within screen bounds. Shows a generic 'typing' label instead of the text
 -- when the 'display_exact_message' config is disabled.
--- @param player [Player the player who is typing]
+-- @param target [Player the player who is typing]
 -- @param text [String the text being typed]
 -- @param ply_pos [Vector eye position of the typing player]
 -- @param dist [Number squared distance between the local player and the typing player]
-function DisplayTyping:draw_player_typing_text(player, text, ply_pos, dist)
+function DisplayTyping:draw_player_typing_text(target, text, ply_pos, dist)
   local hide_text = Config.get('display_exact_message') == false
-  local mult = hook.Run('DisplayTypingAdjustFadeoffMultiplier', player, text) or 1
+  local mult = hook.Run('DisplayTypingAdjustFadeoffMultiplier', target, text) or 1
 
   if hide_text then
-    text = hook.Run('DisplayTypingTextType', player, text) or t'ui.hud.display_typing.typing'
+    text = hook.Run('DisplayTypingTextType', target, text) or t'ui.hud.display_typing.typing'
   end
 
   local md, fd = max_distance * mult, fade_distance * mult
@@ -42,7 +42,7 @@ function DisplayTyping:draw_player_typing_text(player, text, ply_pos, dist)
   end
 
   if screen_pos.x != x or screen_pos.y != y then
-    text = player:Name()..': '..text
+    text = target:Name()..': '..text
 
     text_w, text_h = util.text_size(text, font)
     x, y = clamp_position_to_screen(screen_pos.x, screen_pos.y, text_w, text_h)

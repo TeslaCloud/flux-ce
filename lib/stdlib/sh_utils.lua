@@ -46,8 +46,8 @@ end
 -- already is. Useful on the client, where an entity index can arrive before the entity
 -- itself does. Gives up without calling the callback once it runs out of attempts.
 -- ```
--- util.wait_for_ent(ply_index, function(player)
---   hook.run('PlayerModelChanged', player, new_model, old_model)
+-- util.wait_for_ent(ply_index, function(target)
+--   hook.run('PlayerModelChanged', target, new_model, old_model)
 -- end)
 -- ```
 -- @param ent_index [Number entity index]
@@ -118,7 +118,7 @@ end
 function util.player_list_to_string(player_list)
   local nlist = #player_list
 
-  if nlist > 1 and nlist == #_player.all() then
+  if nlist > 1 and nlist == #player.all() then
     return 'ui.chat.everyone'
   end
 
@@ -200,10 +200,10 @@ end
 
 --- Returns the Steam name of a player, or the translated name of the console if the player is
 -- not valid (as it is for commands that are run from the server console).
--- @param player [Player player, or an invalid entity or nil for the console]
+-- @param target [Player player, or an invalid entity or nil for the console]
 -- @return [String]
-function get_player_name(player)
-  return IsValid(player) and player:steam_name() or t'notification.console'
+function get_player_name(target)
+  return IsValid(target) and target:steam_name() or t'notification.console'
 end
 
 --- Checks whether anything is in the way between two positions, using a line trace.

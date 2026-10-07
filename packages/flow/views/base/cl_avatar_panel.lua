@@ -12,28 +12,28 @@ function PANEL:Init()
   end
 
   self.button.DoClick = function(pnl)
-    local player = self.player
+    local target = self.player
 
-    if IsValid(player) then
-      player:ShowProfile()
+    if IsValid(target) then
+      target:ShowProfile()
     end
   end
 
   self.button.DoRightClick = function(pnl)
-    local player = self.player
+    local target = self.player
 
-    if IsValid(player) then
-      SetClipboardText(player:SteamID())
+    if IsValid(target) then
+      SetClipboardText(target:SteamID())
     end
   end
 end
 
 --- Sets the player whose avatar is displayed and whom the click actions apply to.
--- @param player [Player]
+-- @param target [Player]
 -- @param size [Number avatar resolution passed to AvatarImage:SetPlayer, e.g. 32, 64 or 184]
-function PANEL:set_player(player, size)
-  self:SetPlayer(player, size)
-  self.player = player
+function PANEL:set_player(target, size)
+  self:SetPlayer(target, size)
+  self.player = target
 end
 
 vgui.Register('fl_avatar_panel', PANEL, 'AvatarImage')

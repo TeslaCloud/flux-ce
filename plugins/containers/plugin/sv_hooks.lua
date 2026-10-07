@@ -16,19 +16,19 @@ function Container:EntityRemoved(entity)
 end
 
 --- Makes the spawned prop persistent if its model is a container.
--- @param player [Player]
+-- @param actor [Player]
 -- @param model [String]
 -- @param entity [Entity]
-function Container:PlayerSpawnedProp(player, model, entity)
+function Container:PlayerSpawnedProp(actor, model, entity)
   if self:find(model) then
     entity:SetPersistent(true)
   end
 end
 
 --- Plays the closing sound of the container when its inventory gets closed.
--- @param player [Player]
+-- @param actor [Player]
 -- @param inventory [Inventory]
-function Container:OnInventoryClosed(player, inventory)
+function Container:OnInventoryClosed(actor, inventory)
   local entity = inventory.owner
 
   if IsValid(entity) then
@@ -61,17 +61,17 @@ function Container:CanContainMoney(object)
 end
 
 --- Supposed to allow the container props to be opened.
--- @param player [Player]
+-- @param actor [Player]
 -- @param entity [Entity]
 -- @return [Boolean true for a container; currently always nil, as the body checks
 --   an undefined 'object' variable instead of the entity]
-function Container:CanEntityBeOpened(player, entity)
+function Container:CanEntityBeOpened(actor, entity)
   if IsValid(object) and isentity(object) and self:find(object:GetModel()) then
     return true
   end
 end
 
-Cable.receive('fl_container_open', function(player, entity)
+Cable.receive('fl_container_open', function(actor, entity)
   local container_data = Container:find(entity:GetModel())
 
   if container_data and entity:GetClass() == 'prop_physics' then
@@ -98,6 +98,6 @@ Cable.receive('fl_container_open', function(player, entity)
 
     hook.run('PreContainerOpen', entity)
 
-    player:open_inventory(entity.inventory, entity)
+    actor:open_inventory(entity.inventory, entity)
   end
 end)

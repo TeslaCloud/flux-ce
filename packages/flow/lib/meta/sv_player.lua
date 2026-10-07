@@ -78,7 +78,7 @@ end
 
 --- Loads the database record of the player by their SteamID, creating and saving a new one
 -- if they have joined for the first time. The query is asynchronous: the record is put
--- into player.record and the 'PlayerRestored' hook is run once it has loaded. Bots get
+-- into self.record and the 'PlayerRestored' hook is run once it has loaded. Bots get
 -- a blank record that is never saved here.
 function player_meta:restore_player()
   if self:IsBot() then

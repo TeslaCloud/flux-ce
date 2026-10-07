@@ -34,10 +34,10 @@ function AttributesPlugin:RegisterConditions()
       return { operator = operator, attribute = attribute_name, value = attribute_value }
     end,
     icon = 'icon16/chart_bar.png',
-    check = function(player, data)
+    check = function(target, data)
       if !data.operator or !data.attribute or !data.attribute_value then return false end
 
-      return util.process_operator(data.operator, player:get_attribute(data.attribute), tonumber(data.attribute_value))
+      return util.process_operator(data.operator, target:get_attribute(data.attribute), tonumber(data.attribute_value))
     end,
     set_parameters = function(id, data, panel, menu, parent)
       parent:create_selector(data.name, 'condition.attribute.message1', 'condition.attributes', Attributes.get_stored(),

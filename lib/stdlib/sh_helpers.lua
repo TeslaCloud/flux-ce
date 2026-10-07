@@ -82,7 +82,7 @@ function require_relative_folder(dir, base, recursive)
   end
 
   if recursive then
-    local files, folders = _file.Find(dir..'*', 'LUA', 'namedesc')
+    local files, folders = file.Find(dir..'*', 'LUA', 'namedesc')
 
     -- First include the files.
     for k, v in ipairs(files) do
@@ -96,7 +96,7 @@ function require_relative_folder(dir, base, recursive)
       require_relative_folder(dir..v, recursive)
     end
   else
-    local files, _ = _file.Find(dir..'*.lua', 'LUA', 'namedesc')
+    local files, _ = file.Find(dir..'*.lua', 'LUA', 'namedesc')
 
     for k, v in ipairs(files) do
       require_relative(dir..v)
