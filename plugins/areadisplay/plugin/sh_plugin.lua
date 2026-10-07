@@ -2,7 +2,8 @@ Areas.register_type(
   'text',
   'Text Area',
   'An area that displays text when a player enters it.',
-  function(actor, area, poly, has_entered, cur_pos, cur_time)
+  Color(255, 0, 255),
+  function(actor, area, has_entered, pos, cur_time)
     if has_entered then
       Plugin.call('PlayerEnteredTextArea', actor, area, cur_time)
     else

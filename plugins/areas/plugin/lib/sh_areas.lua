@@ -231,7 +231,8 @@ Areas.register_type(
   'area',
   'Simple Area',
   'A simple area. Use this type if you have a callback somewhere in the code that looks up id instead of type ID.',
-  function(actor, area, poly, has_entered, cur_pos, cur_time)
+  Color(255, 0, 255),
+  function(actor, area, has_entered, pos, cur_time)
     if has_entered then
       hook.Run('PlayerEnteredArea', actor, area, cur_time)
     else
