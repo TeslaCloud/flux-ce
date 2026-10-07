@@ -875,8 +875,8 @@ function THEME.skin:PaintButton(panel, w, h)
   local text_color = Color(255, 255, 255, 255)
 
   if panel.m_bBackground then
-    local color       = Color(40, 40, 40, 255)
-    local borderColor = Color(0, 0, 0, 255)
+    local color        = Color(40, 40, 40, 255)
+    local border_color = Color(0, 0, 0, 255)
 
     if panel:GetDisabled() then
       color = self.controlColorDark
@@ -887,7 +887,7 @@ function THEME.skin:PaintButton(panel, w, h)
       color = self.controlColorHighlight
     end
 
-    self:DrawGenericBackground(0, 0, w, h, borderColor)
+    self:DrawGenericBackground(0, 0, w, h, border_color)
     self:DrawGenericBackground(1, 1, w - 2, h - 2, color)
   end
 

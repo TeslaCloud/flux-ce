@@ -227,10 +227,10 @@ end
 --- Makes the specified theme the active one. Calls on_loaded of every theme it derives from
 -- and of the theme itself, applies its Derma skin, and runs the 'OnThemeLoaded' hook.
 -- Unless reloading, it can be prevented with the 'ShouldThemeLoad' hook.
--- @param themeID [String ID of a registered theme]
+-- @param theme_id [String ID of a registered theme]
 -- @param reloading=false [Boolean skips the 'ShouldThemeLoad' hook and the theme's own on_loaded]
-function Theme.load_theme(themeID, reloading)
-  local theme_table = Theme.find_theme(themeID)
+function Theme.load_theme(theme_id, reloading)
+  local theme_table = Theme.find_theme(theme_id)
 
   if theme_table then
     if !reloading and hook.Run('ShouldThemeLoad', theme_table) == false then

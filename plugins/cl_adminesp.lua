@@ -14,7 +14,7 @@ do
   function PLUGIN:HUDPaint()
     if IsValid(PLAYER) and PLAYER:Alive() and PLAYER:GetMoveType() == MOVETYPE_NOCLIP and can('admin_esp')
     and !PLAYER:InVehicle() then
-      local clientPos = PLAYER:GetPos()
+      local client_pos = PLAYER:GetPos()
 
       for k, v in ipairs(player.GetAll()) do
         if v == PLAYER then continue end
@@ -25,7 +25,7 @@ do
         local head_pos = head:ToScreen()
         local text_pos = Vector(head.x, head.y, head.z + 30):ToScreen()
         local x, y = head_pos.x, head_pos.y
-        local size = 52 * math.abs(350 / clientPos:Distance(pos))
+        local size = 52 * math.abs(350 / client_pos:Distance(pos))
         local team_color = team.GetColor(v:Team()) or Color(255, 255, 255)
 
         local w, h = util.text_size(v:name(), Theme.get_font('text_small'))

@@ -158,6 +158,7 @@ function PANEL:notify(text)
   local w, h = self.notification:GetSize()
   self.notification:SetPos(ScrW() * 0.5 - w * 0.5, ScrH() - 128)
 
+  --- Keeps the notification above the main menu.
   function self.notification:PostThink() self:MoveToFront() end
 end
 

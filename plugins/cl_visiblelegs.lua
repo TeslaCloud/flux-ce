@@ -5,7 +5,7 @@ PLUGIN:set_description("Lets clients see their character's legs.")
 
 if !CLIENT then return end
 
-local hiddenBones = {
+local hidden_bones = {
   'ValveBiped.Bip01_Head1',
   'ValveBiped.Bip01_Neck1',
   'ValveBiped.Bip01_Spine4',
@@ -57,9 +57,9 @@ end
 --- Removes the local player's legs model whenever any player's model changes.
 -- It is recreated with the current model the next time the legs are rendered.
 -- @param target [Player the player whose model has changed]
--- @param sNewModel [String new model path]
--- @param sOldModel [String previous model path]
-function VisibleLegs:PlayerModelChanged(target, sNewModel, sOldModel)
+-- @param new_model [String new model path]
+-- @param old_model [String previous model path]
+function VisibleLegs:PlayerModelChanged(target, new_model, old_model)
   if PLAYER.legs then
     PLAYER.legs:Remove()
   end
@@ -91,12 +91,12 @@ function VisibleLegs:RenderScreenspaceEffects()
     angs.p = 0
     angs.r = 0
 
-    local radAngle = math.rad(angs.y)
+    local rad_angle = math.rad(angs.y)
     local offset = -20
     local origin = client:GetPos()
 
-    origin.x = origin.x + math.cos(radAngle) * offset
-    origin.y = origin.y + math.sin(radAngle) * offset
+    origin.x = origin.x + math.cos(rad_angle) * offset
+    origin.y = origin.y + math.sin(rad_angle) * offset
 
     legs:SetPoseParameter('move_yaw', 360 * client:GetPoseParameter('move_yaw') - 180)
     legs:SetPoseParameter('move_x', client:GetPoseParameter('move_x') * 2 - 1)
@@ -129,7 +129,7 @@ function VisibleLegs:spawn_legs(client)
   local legs = client.legs
 
   if IsValid(legs) then
-    for k, v in pairs(hiddenBones) do
+    for k, v in pairs(hidden_bones) do
       local bone = legs:LookupBone(v)
 
       if bone then

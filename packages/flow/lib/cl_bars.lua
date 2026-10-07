@@ -154,12 +154,12 @@ function Flux.Bars:position()
       local bar = self:get(v)
 
       if bar and bar.type == BAR_TOP then
-        local offX, offY = hook.Run('AdjustBarPos', bar)
-        offX = offX or 0
-        offY = offY or 0
+        local off_x, off_y = hook.Run('AdjustBarPos', bar)
+        off_x = off_x or 0
+        off_y = off_y or 0
 
-        bar.y = last_y + offY
-        bar.x = bar.x + offX
+        bar.y = last_y + off_y
+        bar.x = bar.x + off_x
         last_y = last_y + bar.height + bar.spacing
       end
     end

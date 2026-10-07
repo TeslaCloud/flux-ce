@@ -100,6 +100,10 @@ function Area:AddAreaToolModes(mode_list)
   mode.ClientConVar['height'] = '512'
   mode.ClientConVar['text'] = 'Sample Text'
 
+  --- Starts a new text area if needed and adds the aimed position as a vertex.
+  -- @param tool [Tool the area tool]
+  -- @param trace [Map trace result of the tool owner's aim]
+  -- @return [Boolean true if a vertex was added, false if the area text is invalid]
   function mode:OnLeftClick(tool, trace)
     local text = tostring(tool:GetClientInfo('text'))
     local height = tonumber(tool:GetClientNumber('height'))
@@ -117,6 +121,10 @@ function Area:AddAreaToolModes(mode_list)
     return true
   end
 
+  --- Registers the text area being built.
+  -- @param tool [Tool the area tool]
+  -- @param trace [Map trace result of the tool owner's aim]
+  -- @return [Boolean true if an area was registered, nil otherwise]
   function mode:OnRightClick(tool, trace)
     if tool.area then
       tool.area:register()
@@ -126,6 +134,8 @@ function Area:AddAreaToolModes(mode_list)
     end
   end
 
+  --- Adds the mode's text and height controls to the tool's settings panel.
+  -- @param panel [Panel the tool's control panel]
   function mode:BuildCPanel(panel)
     panel:AddControl('Header', { Description = t'tool.area.desc' })
     panel:AddControl('TextBox', { Label = t'tool.area.text', Command = 'area_text', MaxLenth = '256' })

@@ -174,9 +174,9 @@ function PANEL:get_background_color()
 end
 
 --- Sets whether a border in the theme's outline color is drawn around the button.
--- @param draw [Boolean]
-function PANEL:set_draw_outline(draw)
-  self.draw_outline = draw
+-- @param should_draw [Boolean]
+function PANEL:set_draw_outline(should_draw)
+  self.draw_outline = should_draw
 end
 
 --- Checks whether the outline of the button is drawn.

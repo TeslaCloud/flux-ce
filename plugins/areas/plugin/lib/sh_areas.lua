@@ -105,6 +105,9 @@ function Areas.create(id, height, data)
     area = stored[id]
   end
 
+  --- Adds a vertex to the polygon currently being built. The first vertex sets the
+  -- area's base height, subsequent vertices are snapped to it.
+  -- @param vect [Vector position of the vertex]
   function area:add_vertex(vect)
     if #self.verts == 0 then
       self.minh = vect.z
@@ -116,11 +119,14 @@ function Areas.create(id, height, data)
     table.insert(self.verts, vect)
   end
 
+  --- Stores the current vertices as a finished polygon and starts a new one.
   function area:finish_poly()
     table.insert(self.polys, self.verts)
     self.verts = {}
   end
 
+  --- Finishes the current polygon if it has more than two vertices and registers the area.
+  -- @return [Map the registered area]
   function area:register()
     if #self.verts > 2 then self:finish_poly() end
 

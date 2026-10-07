@@ -85,11 +85,11 @@ do
       base_class:HandlePlayerJumping(actor, velocity) or
       base_class:HandlePlayerSwimming(actor, velocity) or
       base_class:HandlePlayerDucking(actor, velocity)) then
-      local len2D = velocity:Length2D()
+      local len_2d = velocity:Length2D()
 
-      if len2D > 150 then
+      if len_2d > 150 then
         actor.CalcIdeal = ACT_MP_RUN
-      elseif len2D > 0.5 then
+      elseif len_2d > 0.5 then
         actor.CalcIdeal = ACT_MP_WALK
       end
     end

@@ -155,7 +155,6 @@ do
     ['weapon_crowbar']    = 'melee',
     ['weapon_bugbait']    = 'melee',
     ['weapon_stunstick']  = 'melee',
-    ['weapon_stunstick']  = 'melee',
     ['gmod_tool']         = 'pistol',
     ['weapon_357']        = 'pistol',
     ['weapon_pistol']     = 'pistol',

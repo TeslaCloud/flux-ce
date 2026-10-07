@@ -85,6 +85,9 @@ if CLIENT then
     list:AddColumn('Tool Mode')
     list:SetMultiSelect(false)
 
+    --- Switches the area tool to the selected mode.
+    -- @param id [Number index of the selected row]
+    -- @param line [Panel the selected row]
     function list:OnRowSelected(id, line)
       if mode != id then
         RunConsoleCommand('area_setmode', id)
@@ -129,23 +132,3 @@ if CLIENT then
     end)
   end)
 end
-
-/*
-function TOOL.BuildCPanel(CPanel)
-  local types = Areas.get_types()
-  local options = {}
-
-  for k, v in pairs(types) do
-    options[v.name] = { ['area_areatype'] = k }
-  end
-
-  CPanel:AddControl('Header', { Description = 'tool.area.desc' })
-
-  local control_presets = CPanel:AddControl('ComboBox', { MenuButton = 1, Folder = 'areatype', Options = options, CVars = { 'area_areatype' } })
-  control_presets.Button:SetVisible(false)
-  control_presets.DropDown:SetValue('Simple Area')
-
-  CPanel:AddControl('TextBox', { Label = 'tool.area.text', Command = 'area_uniqueid', MaxLenth = '20' })
-  CPanel:AddControl('Slider', { Label = 'tool.area.height', Command = 'area_height', Type = 'Float', Min = -2048, Max = 2048 })
-end
-*/

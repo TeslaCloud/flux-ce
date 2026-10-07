@@ -38,9 +38,9 @@ function Chatbox:PlayerBindPress(client, bind, pressed)
 end
 
 --- Closes the chatbox when the player clicks on the game world.
--- @param mouseCode [Number mouse button code]
+-- @param mouse_code [Number mouse button code]
 -- @param aim_vector [Vector direction of the click]
-function Chatbox:GUIMousePressed(mouseCode, aim_vector)
+function Chatbox:GUIMousePressed(mouse_code, aim_vector)
   if IsValid(Chatbox.panel) then
     Chatbox.hide()
   end

@@ -36,7 +36,7 @@ end
 -- @param actor [Player]
 -- @param cur_time [Number CurTime() of the tick]
 function Stamina:PlayerThink(actor, cur_time)
-  if actor:running() and (actor:OnGround() or actor:WaterLevel() >= 1) then -- We're doing 1 (Slightly Submerged) to prevent the player from jumping on the surface of the water to avoid stamina loss.
+  if actor:running() and (actor:OnGround() or actor:WaterLevel() >= 1) then
     if !actor.was_running then
       self:start_running(actor)
       actor.was_running = true
@@ -143,7 +143,8 @@ function Stamina:start_running(target, prevent_drain)
 
       timer.Create(id, 0.2, 0, function()
         if IsValid(target) then
-          local new_stam = target:get_nv('stamina', max_stamina) - 1 * drain_scale * (Plugin.call('StaminaAdjustDrainScale', target) or 1)
+          local adjust_scale = Plugin.call('StaminaAdjustDrainScale', target) or 1
+          local new_stam = target:get_nv('stamina', max_stamina) - 1 * drain_scale * adjust_scale
 
           self:set_stamina(target, new_stam)
 
@@ -188,7 +189,8 @@ function Stamina:stop_running(target, prevent_regen)
 
       timer.Create(id, 0.2, 0, function()
         if IsValid(target) then
-          local new_stam = target:get_nv('stamina', max_stamina) + 1 * regen_scale * (Plugin.call('StaminaAdjustRegenScale', target) or 1)
+          local adjust_scale = Plugin.call('StaminaAdjustRegenScale', target) or 1
+          local new_stam = target:get_nv('stamina', max_stamina) + 1 * regen_scale * adjust_scale
 
           self:set_stamina(target, new_stam)
 

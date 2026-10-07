@@ -24,7 +24,7 @@ function Area:OneSecond()
   for k, v in pairs(Areas.all()) do
     if istable(v.polys) and isstring(v.type) then
       for k2, v2 in ipairs(v.polys) do
-        for plyID, actor in ipairs(player.GetAll()) do
+        for _, actor in ipairs(player.GetAll()) do
           local pos = actor:GetPos()
 
           actor.last_area = actor.last_area or {}

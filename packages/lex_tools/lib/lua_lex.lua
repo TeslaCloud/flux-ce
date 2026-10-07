@@ -93,37 +93,37 @@ end
 -- -- =          =       1
 -- -- TK_number  1       1
 -- ```
--- @param input [String source code]
+-- @param source [String source code]
 -- @param extended=false [Boolean also emit tokens for spaces, tabs, semicolons and
 --   newlines]
 -- @return [List<Map> tokens with the fields tk (token type), val (text), line and pos;
---   false if input is nil]
-function LuaLexer:tokenize(input, extended)
+--   false if source is nil]
+function LuaLexer:tokenize(source, extended)
   local tokens = {}
   local buf = ''
   local cur_pos = 1
   local line = 1
 
-  if !input then return false end
+  if !source then return false end
 
   local function peek()
-    local char = input[cur_pos + 1]
+    local char = source[cur_pos + 1]
     return char, string.byte(char)
   end
 
   local function next()
-    local char = input[cur_pos + 1]
+    local char = source[cur_pos + 1]
     cur_pos = cur_pos + 1
     return char, string.byte(char)
   end
 
   local function this()
-    local char = input[cur_pos]
+    local char = source[cur_pos]
     return char, string.byte(char)
   end
 
   local function save()
-    local char = input[cur_pos]
+    local char = source[cur_pos]
     buf = buf..char
     return char
   end

@@ -38,14 +38,14 @@ end
 -- Webhook:add(id, Webhook.new(data.id, data.key, data.types))
 -- ```
 -- @param id [String ID to store the webhook under]
--- @param hook=nil [Webhook/Function webhook or a function that returns one, a blank webhook
+-- @param webhook=nil [Webhook/Function webhook or a function that returns one, a blank webhook
 --   is created if omitted]
 -- @return [Webhook the stored webhook]
-function Webhook:add(id, hook)
-  if istable(hook) then
-    self.hooks[id] = hook
-  elseif isfunction(hook) then
-    self.hooks[id] = hook()
+function Webhook:add(id, webhook)
+  if istable(webhook) then
+    self.hooks[id] = webhook
+  elseif isfunction(webhook) then
+    self.hooks[id] = webhook()
   else
     self.hooks[id] = Webhook.new('', '')
   end

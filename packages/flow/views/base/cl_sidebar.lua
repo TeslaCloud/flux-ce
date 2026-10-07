@@ -11,6 +11,8 @@ function PANEL:Init()
 
   self:PerformLayout()
 
+  --- Suppresses the default handling of the scrollbar appearing.
+  -- @return [Boolean true]
   function self:OnScrollbarAppear() return true end
 end
 

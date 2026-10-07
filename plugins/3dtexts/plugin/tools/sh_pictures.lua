@@ -64,9 +64,27 @@ end
 --- Builds the tool's settings panel: picture URL, width, height and fade offset.
 -- @param CPanel [Panel the tool's control panel]
 function TOOL.BuildCPanel(CPanel)
-  CPanel:AddControl('Header',  { Description = t'tool.pictures.desc' })
+  CPanel:AddControl('Header', { Description = t'tool.pictures.desc' })
   CPanel:AddControl('TextBox', { Label = t'tool.pictures.url', Command = 'pictures_url', MaxLenth = '256' })
-  CPanel:AddControl('Slider',  { Label = t'tool.pictures.width', Command = 'pictures_width', Type = 'Integer', Min = 1, Max = 4000 })
-  CPanel:AddControl('Slider',  { Label = t'tool.pictures.height', Command = 'pictures_height', Type = 'Integer', Min = 1, Max = 4000 })
-  CPanel:AddControl('Slider',  { Label = t'tool.pictures.fade', Command = 'pictures_fade', Type = 'Integer', Min = -1024, Max = 10000 })
+  CPanel:AddControl('Slider', {
+    Label = t'tool.pictures.width',
+    Command = 'pictures_width',
+    Type = 'Integer',
+    Min = 1,
+    Max = 4000
+  })
+  CPanel:AddControl('Slider', {
+    Label = t'tool.pictures.height',
+    Command = 'pictures_height',
+    Type = 'Integer',
+    Min = 1,
+    Max = 4000
+  })
+  CPanel:AddControl('Slider', {
+    Label = t'tool.pictures.fade',
+    Command = 'pictures_fade',
+    Type = 'Integer',
+    Min = -1024,
+    Max = 10000
+  })
 end

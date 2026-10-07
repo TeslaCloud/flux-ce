@@ -81,6 +81,7 @@ function Flux.Notification:add_popup(text, lifetime, x, y, text_color, back_colo
   panel:set_text_color(text_color)
   panel:set_background_color(back_color)
 
+  --- Keeps the popup notification above all other panels.
   function panel:PostThink()
     self:MoveToFront()
   end
