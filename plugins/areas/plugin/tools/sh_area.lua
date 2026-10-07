@@ -6,6 +6,10 @@ TOOL.permission = 'areas'
 
 TOOL.ClientConVar['mode'] = '1'
 
+--- Passes the click to the OnLeftClick handler of the selected area tool mode.
+-- @param trace [Hash trace result of the tool owner's aim]
+-- @return [Boolean the result of the mode's handler, true if the mode has no handler,
+--   nil if the owner lacks the 'area_tool' permission]
 function TOOL:LeftClick(trace)
   local player = self:GetOwner()
 
@@ -21,6 +25,10 @@ function TOOL:LeftClick(trace)
   return true
 end
 
+--- Passes the click to the OnRightClick handler of the selected area tool mode.
+-- @param trace [Hash trace result of the tool owner's aim]
+-- @return [Boolean the result of the mode's handler, true if the mode has no handler,
+--   nil if the owner lacks the 'area_tool' permission]
 function TOOL:RightClick(trace)
   local player = self:GetOwner()
 
@@ -36,6 +44,10 @@ function TOOL:RightClick(trace)
   return true
 end
 
+--- Passes the reload to the OnReload handler of the selected area tool mode.
+-- @param trace [Hash trace result of the tool owner's aim]
+-- @return [Boolean the result of the mode's handler, true if the mode has no handler,
+--   nil if the owner lacks the 'area_tool' permission]
 function TOOL:Reload(trace)
   local player = self:GetOwner()
 
@@ -51,6 +63,8 @@ function TOOL:Reload(trace)
   return true
 end
 
+--- Returns the area tool mode selected with the 'mode' convar.
+-- @return [Hash the mode table, or nil if there is no mode with that index]
 function TOOL:GetAreaMode()
   local mode = self:GetClientNumber('mode')
 
@@ -96,7 +110,9 @@ if CLIENT then
     end
   end
 
-  -- Called to build the controls in the tool menu.
+  --- Builds the tool's settings panel: the list of modes and the controls of the
+  -- selected mode.
+  -- @param panel [Panel the tool's control panel]
   function TOOL.BuildCPanel(panel)
     BuildCPanel(panel)
   end

@@ -1,5 +1,7 @@
 local PANEL = {}
 
+--- Sets the tooltip and covers the avatar with an invisible button that opens the player's
+-- Steam profile on left click and copies their SteamID on right click.
 function PANEL:Init()
   self:SetTooltip(t'ui.avatar_tooltip')
 
@@ -26,6 +28,9 @@ function PANEL:Init()
   end
 end
 
+--- Sets the player whose avatar is displayed and whom the click actions apply to.
+-- @param player [Player]
+-- @param size [Number avatar resolution passed to AvatarImage:SetPlayer, e.g. 32, 64 or 184]
 function PANEL:set_player(player, size)
   self:SetPlayer(player, size)
   self.player = player

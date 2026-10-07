@@ -19,6 +19,9 @@ ItemThrowable:add_button('item.option.unload', {
   end
 })
 
+--- Called when the item gets equipped.
+-- Gives the player the throwable weapon with a single piece of ammo and makes it active.
+-- @param player [Player]
 function ItemThrowable:post_equipped(player)
   local weapon = player:Give(self.weapon_class, true)
 
@@ -30,6 +33,9 @@ function ItemThrowable:post_equipped(player)
   end
 end
 
+--- Called when the item gets unequipped. Strips the weapon from the player
+-- and takes the item away from them if they have no ammo for it left.
+-- @param player [Player]
 function ItemThrowable:post_unequipped(player)
   local weapon = player:GetWeapon(self.weapon_class)
 

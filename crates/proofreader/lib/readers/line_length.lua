@@ -1,5 +1,12 @@
 class 'LineLengthReader' extends 'BasicReader'
 
+--- Checks that no line is longer than the reader's 'Max' option (120 by default).
+-- The position and the line number are returned only when a line is too long.
+-- @param tokens [Array<Hash> unused]
+-- @param lines [Array<String> the code split into lines]
+-- @param source [String the code]
+-- @return [Boolean whether all lines fit, Number character offset of the offending line,
+--   Number its line number]
 function LineLengthReader:proofread(tokens, lines, source)
   if self.config['Enabled'] == false then return true end
   if !lines or #lines == 0 or source:len() < 1 then return true end
@@ -23,14 +30,20 @@ function LineLengthReader:proofread(tokens, lines, source)
   return true
 end
 
+--- Checks whether the offending code should be pointed at in the message.
+-- @return [Boolean always true]
 function LineLengthReader:should_point()
   return true
 end
 
+--- Returns the severity of line length offenses.
+-- @return [String always 'critical']
 function LineLengthReader:severity()
   return 'critical'
 end
 
+--- Returns the message that describes the last line length offense.
+-- @return [String]
 function LineLengthReader:message()
   return "Line exceeds maximum line length ("..self.line_length.." / "..self.config['Max']..")"
 end

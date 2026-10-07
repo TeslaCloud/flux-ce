@@ -1,3 +1,5 @@
+--- Draws a marker, a direction line and a label for every mapscene point while the local
+-- player holds the mapscene tool and has the 'mapscenes' permission.
 function Mapscenes:RenderScreenspaceEffects()
   if IsValid(PLAYER) and PLAYER:Alive() and IsValid(PLAYER:GetActiveWeapon()) and PLAYER:GetActiveWeapon():GetClass() == 'gmod_tool'
   and PLAYER:GetTool() and PLAYER:GetTool().Name == 'Mapscene tool' and !IsValid(Flux.intro_panel) and can('mapscenes') then
@@ -17,6 +19,14 @@ end
 
 local view = {}
 
+--- Replaces the view with the current mapscene point while the ShouldMapsceneRender hook
+-- returns true. Depending on the config it cuts to the next point with a fade, glides
+-- between the points or slowly rotates the camera.
+-- @param player [Player]
+-- @param origin [Vector]
+-- @param angles [Angle]
+-- @param fov [Number]
+-- @return [Hash view table with origin and angles, or nil if no mapscene is shown]
 function Mapscenes:CalcView(player, origin, angles, fov)
   if hook.run('ShouldMapsceneRender') then
     if #self.points > 0 then

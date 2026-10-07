@@ -1,9 +1,14 @@
 local max_distance = 350 ^ 2
 
+--- Sends the text the local player is typing in the chatbox to the server,
+-- which networks it to other players.
+-- @param new_text [String current contents of the chat text entry]
 function DisplayTyping:ChatTextChanged(new_text)
   Cable.send('display_typing_text_changed', new_text)
 end
 
+--- Draws what nearby, unobstructed players are currently typing above their heads.
+-- Only the last 45 characters of long texts are shown.
 function DisplayTyping:HUDPaint()
   if !IsValid(PLAYER) then return end
 

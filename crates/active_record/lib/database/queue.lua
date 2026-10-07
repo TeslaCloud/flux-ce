@@ -3,11 +3,16 @@ class 'ActiveRecord::Queue'
 ActiveRecord.Queue.stored = {}
 ActiveRecord.Queue.types = {}
 
+--- Records a table definition, so that the table can be created later by #run.
+-- @param table_name [String]
+-- @param callback [Function receives an object with a method for every column type
+--   (t:string, t:integer, ...) that records the call instead of running it]
 function ActiveRecord.Queue:add(table_name, callback)
   self.current_table = table_name
   callback(self.types)
 end
 
+--- Creates every table that was recorded with #add and clears the queue.
 function ActiveRecord.Queue:run()
   for k, v in pairs(self.stored) do
     create_table(k, function(t)
@@ -21,6 +26,8 @@ function ActiveRecord.Queue:run()
   self.stored = {}
 end
 
+--- Registers a column type, so that it can be used in queued table definitions.
+-- @param type [String abstract column type, e.g. 'string']
 function ActiveRecord.Queue:add_type(type)
   self.types[type] = function(obj, ...)
     self.stored[self.current_table] = self.stored[self.current_table] or {}

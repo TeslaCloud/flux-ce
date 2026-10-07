@@ -7,6 +7,7 @@ ENT.Spawnable = false
 ENT.RenderGroup = RENDERGROUP_BOTH
 
 if SERVER then
+  --- Sets up the physics and the use type of the item entity.
   function ENT:Initialize()
     self:SetSolid(SOLID_VPHYSICS)
     self:SetMoveType(MOVETYPE_VPHYSICS)
@@ -21,6 +22,12 @@ if SERVER then
     end
   end
 
+  --- Tracks how long the player holds the use key on the item.
+  -- Releasing the key in under half a second runs the 'PlayerUseItemEntity' hook.
+  -- @param activator [Entity the entity that pressed the use key, normally a Player]
+  -- @param caller [Entity]
+  -- @param use_type [Number USE_ enumerator]
+  -- @param value [Number]
   function ENT:Use(activator, caller, use_type, value)
     local last_activator = self:get_nv('last_activator')
 
@@ -54,6 +61,7 @@ if SERVER then
     end
   end
 
+  --- Makes the player take the item once they have held the use key on it for half a second.
   function ENT:Think()
     local last_activator = self:get_nv('last_activator')
 
@@ -72,6 +80,10 @@ if SERVER then
     end
   end
 
+  --- Ties an item instance to the entity, applying its model, skin and color,
+  -- and tells all clients about it.
+  -- @param item_obj [Item]
+  -- @return [Boolean false if no item was given, nothing otherwise]
   function ENT:set_item(item_obj)
     if !item_obj then return false end
 
@@ -88,10 +100,16 @@ if SERVER then
     hook.run('OnEntityItemSet', self, item_obj)
   end
 else
+  --- Draws the model of the item.
   function ENT:Draw()
     self:DrawModel()
   end
 
+  --- Draws the name and the description of the item when the local player looks at it up close.
+  -- Requests the item from the server and draws a loading cog if it is not known yet.
+  -- @param x [Number screen position]
+  -- @param y [Number screen position]
+  -- @param distance [Number distance between the local player and the entity]
   function ENT:DrawTargetID(x, y, distance)
     if distance > 150 then return end
 

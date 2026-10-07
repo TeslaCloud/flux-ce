@@ -1,16 +1,29 @@
+--- Calls the 'AddDefaultItems' plugin hook for a character that has just been created.
+-- @param player [Player]
+-- @param char [Character]
+-- @param char_data [Hash data the character was created from]
 function Inventories:PostCreateCharacter(player, char, char_data)
   Plugin.call('AddDefaultItems', player, char, char.inventory)
 end
 
+--- Deletes inventories of the disconnected player from the server cache.
+-- @param player [Player]
 function Inventories:PlayerDisconnected(player)
   player:delete_inventories()
 end
 
+--- Recreates inventories of the player when their active character changes.
+-- @param player [Player]
+-- @param character [Character]
 function Inventories:OnActiveCharacterSet(player, character)
   player:delete_inventories()
   player:create_inventories()
 end
 
+--- Creates the default set of player's inventories:
+-- main inventory, hotbar, pockets and the equipment slots.
+-- @param player [Player]
+-- @param inventories [Hash table to put the new inventories into, keyed by inventory type]
 function Inventories:CreatePlayerInventories(player, inventories)
   local main_inventory = Inventory.new()
     main_inventory.title = 'ui.inventory.main_inventory'
@@ -91,12 +104,20 @@ function Inventories:CreatePlayerInventories(player, inventories)
   inventories[pockets.type] = pockets
 end
 
+--- Stores the instance ids of the player's items in the character,
+-- as a comma-separated string.
+-- @param player [Player]
+-- @param char [Character]
 function Inventories:SaveCharacterData(player, char)
   if player:get_character_id() == char.id then
     char.item_ids = table.concat(player:get_items_ids(), ',')
   end
 end
 
+--- Adds the position of the item in its inventory, its rotation and,
+-- for containers, the instance ids of the contained items to the saved fields.
+-- @param item_obj [Item]
+-- @param save_table [Hash fields of the item that are going to be saved]
 function Inventories:PreItemSave(item_obj, save_table)
   save_table.x = item_obj.x
   save_table.y = item_obj.y
@@ -109,6 +130,11 @@ function Inventories:PreItemSave(item_obj, save_table)
   end
 end
 
+--- Puts an item lying in the world into one of the player's inventories
+-- and removes its entity. Notifies the player if the item does not fit.
+-- @param player [Player]
+-- @param item_obj [Item]
+-- @param ... [Vararg optional hashes; an inv_type field in one of them sets the inventory type]
 function Inventories:PlayerTakeItem(player, item_obj, ...)
   if IsValid(item_obj.entity) then
     local inv_type
@@ -143,6 +169,9 @@ function Inventories:PlayerTakeItem(player, item_obj, ...)
   end
 end
 
+--- Takes the items out of their inventory and spawns them in front of the player.
+-- @param player [Player]
+-- @param instance_ids [Number/Array<Number> instance id(s) of items from the same inventory]
 function Inventories:PlayerDropItem(player, instance_ids)
   if isnumber(instance_ids) then
     instance_ids = { instance_ids }
@@ -180,6 +209,11 @@ function Inventories:PlayerDropItem(player, instance_ids)
   Item.async_save_entities()
 end
 
+--- Synchronizes the inventory of an item after a menu action has been performed on it.
+-- @param player [Player]
+-- @param item_obj [Item]
+-- @param act [String name of the menu action]
+-- @param ... [Vararg extra arguments of the action]
 function Inventories:PlayerUsedItem(player, item_obj, act, ...)
   local inventory_id = item_obj.inventory_id
 
@@ -192,12 +226,21 @@ function Inventories:PlayerUsedItem(player, item_obj, act, ...)
   end
 end
 
+--- Calls the on_transfer callback of the item before it changes its inventory.
+-- @param item_obj [Item]
+-- @param new_inventory [Inventory where the item goes, or nil if it is dropped or used up]
+-- @param old_inventory [Inventory where the item was, or nil if it is picked up]
 function Inventories:PreItemTransfer(item_obj, new_inventory, old_inventory)
   if item_obj.on_transfer then
     item_obj:on_transfer(new_inventory, old_inventory)
   end
 end
 
+--- Closes the inventory of a transferred container item
+-- for the players who were viewing it and do not have the container anymore.
+-- @param item_obj [Item]
+-- @param new_inventory [Inventory where the item went, or nil if it was dropped or used up]
+-- @param old_inventory [Inventory where the item was, or nil if it was picked up]
 function Inventories:ItemTransferred(item_obj, new_inventory, old_inventory)
   local inventory = item_obj.inventory
 
@@ -210,6 +253,13 @@ function Inventories:ItemTransferred(item_obj, new_inventory, old_inventory)
   end
 end
 
+--- Checks whether the item can be moved inside of the inventory: asks the can_move callback
+-- of the item and prevents moving items in disabled inventories.
+-- @param item_obj [Item]
+-- @param inventory [Inventory]
+-- @param x [Number target slot]
+-- @param y [Number target slot]
+-- @return [Boolean false to prevent the move, String text of the error; nothing to allow it]
 function Inventories:CanItemMove(item_obj, inventory, x, y)
   if item_obj.can_move then
     local success, error_text = item_obj:can_move(inventory, x, y)
@@ -224,6 +274,14 @@ function Inventories:CanItemMove(item_obj, inventory, x, y)
   end
 end
 
+--- Checks whether the item can be transferred to the inventory: equipment and pockets
+-- restrictions, the can_transfer callback of the item, the can_contain callback
+-- of the container the inventory belongs to, and whether the inventory is disabled.
+-- @param item_obj [Item]
+-- @param inventory [Inventory the inventory the item is being transferred to]
+-- @param x [Number target slot, or nil if the position is yet to be found]
+-- @param y [Number target slot, or nil if the position is yet to be found]
+-- @return [Boolean false to prevent the transfer, String text of the error; nothing to allow it]
 function Inventories:CanItemTransfer(item_obj, inventory, x, y)
   local inv_type = inventory.type
 
@@ -257,6 +315,9 @@ function Inventories:CanItemTransfer(item_obj, inventory, x, y)
   end
 end
 
+--- Takes the equipped throwable items away from the player who has thrown a grenade.
+-- @param player [Player]
+-- @param entity [Entity the grenade]
 function Inventories:PlayerThrewGrenade(player, entity)
   if !IsValid(player) then return end
 
@@ -267,6 +328,12 @@ function Inventories:PlayerThrewGrenade(player, entity)
   end
 end
 
+--- Calls the on_use callback of the item, then takes the item out of its inventory (or removes
+-- its entity) unless the callback returned true to keep it or false to cancel the use.
+-- @param player [Player]
+-- @param item_obj [Item]
+-- @param ... [Vararg extra arguments of the action]
+-- @return [Boolean false if the use was cancelled, nil otherwise]
 function Inventories:PlayerUseItem(player, item_obj, ...)
   if item_obj.on_use then
     local result = item_obj:on_use(player)
@@ -292,18 +359,26 @@ function Inventories:PlayerUseItem(player, item_obj, ...)
   end
 end
 
+--- Tells the client to rebuild the player model preview when a wearable item is equipped.
+-- @param player [Player]
+-- @param item_obj [Item]
 function Inventories:OnItemEquipped(player, item_obj)
   if item_obj:is('wearable') then
     Cable.send(player, 'fl_rebuild_player_panel')
   end
 end
 
+--- Tells the client to rebuild the player model preview when a wearable item is unequipped.
+-- @param player [Player]
+-- @param item_obj [Item]
 function Inventories:OnItemUnequipped(player, item_obj)
   if item_obj:is('wearable') then
     Cable.send(player, 'fl_rebuild_player_panel')
   end
 end
 
+--- Marks the item instance that has just been created as not rotated.
+-- @param item_obj [Item]
 function Inventories:OnItemCreated(item_obj)
   item_obj.rotated = false
 end

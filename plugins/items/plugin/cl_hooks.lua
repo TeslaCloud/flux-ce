@@ -1,3 +1,4 @@
+--- Fills the circular progress indicator while the local player holds the use key on an item.
 function Items:HUDPaint()
   if !IsValid(PLAYER) then return end
 
@@ -11,6 +12,7 @@ function Items:HUDPaint()
   end
 end
 
+--- Draws a halo around the item entity that the local player holds the use key on.
 function Items:PreDrawHalos()
   if !IsValid(PLAYER) then return end
 
@@ -21,6 +23,7 @@ function Items:PreDrawHalos()
   end
 end
 
+--- Aborts taking an item once it gets too far from the center of the local player's screen.
 function Items:Think()
   if !IsValid(PLAYER) or !PLAYER:get_nv('hold_start') then return end
 
@@ -37,6 +40,9 @@ function Items:Think()
   end
 end
 
+--- Opens the menu of an item with its custom buttons and the use, take and drop options.
+-- @param instance_id [Number instance id of the item]
+-- @param is_entity=nil [Boolean true if the item is lying in the world, not in an inventory]
 function Items:PlayerUseItemMenu(instance_id, is_entity)
   local item_obj = Item.find_instance_by_id(instance_id)
 
@@ -111,6 +117,7 @@ function Items:PlayerUseItemMenu(instance_id, is_entity)
   end
 end
 
+--- Requests the item data of every item entity from the server.
 function Items:OnItemDataReceived()
   for k, v in ipairs(ents.GetAll()) do
     if IsValid(v) and v:GetClass() == 'fl_item' then

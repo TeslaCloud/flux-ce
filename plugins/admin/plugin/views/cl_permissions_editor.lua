@@ -2,6 +2,8 @@ local PANEL = {}
 PANEL.permission_value = PERM_NO
 PANEL.permission = {}
 
+--- Recreates the row: the permission's title and the allow / not set / never buttons.
+-- Right-clicking a button asks for a duration and makes that value temporary.
 function PANEL:rebuild()
   if IsValid(self.container) then
     self.container:safe_remove()
@@ -145,6 +147,9 @@ function PANEL:rebuild()
   end
 end
 
+--- Marks a button as the selected value and, if that differs from the player's current
+-- permission, sends the change to the server.
+-- @param button [Panel one of the row's value buttons]
 function PANEL:select_button(button)
   local value = button.perm_value or PERM_NO
   local perm = self:get_permission()
@@ -166,28 +171,42 @@ function PANEL:select_button(button)
   self.prev_button = button
 end
 
+--- Sets the player whose permission this row edits.
+-- @param player [Player]
 function PANEL:set_player(player)
   self.active_player = player
 end
 
+--- Returns the player whose permission this row edits.
+-- @return [Player the player, or nil if none has been set]
 function PANEL:get_player()
   return self.active_player
 end
 
+--- Sets the permission this row stands for and rebuilds the row.
+-- @param perm={} [Hash permission data as stored by Bolt:add_permission]
 function PANEL:set_permission(perm)
   self.permission = perm or {}
 
   self:rebuild()
 end
 
+--- Returns the permission this row stands for.
+-- @return [Hash permission data]
 function PANEL:get_permission()
   return self.permission
 end
 
+--- Returns the currently selected permission value.
+-- @return [Number PERM_ALLOW, PERM_NO or PERM_NEVER]
 function PANEL:get_value()
   return self.permission_value
 end
 
+--- Returns the button that stands for a permission value.
+-- @param perm [Number PERM_ value; anything but PERM_ALLOW and PERM_NEVER gives the 'not set'
+--   button]
+-- @return [Panel]
 function PANEL:get_button(perm)
   if perm == PERM_ALLOW then
     return self.button_allow
@@ -198,10 +217,16 @@ function PANEL:get_button(perm)
   end
 end
 
+--- Selects the button for a permission value, exactly as if it had been clicked.
+-- @param perm [Number PERM_ value]
 function PANEL:set_value(perm)
   self:select_button(self:get_button(perm))
 end
 
+--- Marks the button for a permission value as temporary and shows the remaining time in its
+-- tooltip. The previously marked button is cleared.
+-- @param perm [Number PERM_ value]
+-- @param expires [Number unix timestamp at which it expires, 0 to clear the mark]
 function PANEL:set_temporary(perm, expires)
   local button = self:get_button(perm)
   button.is_temp = expires != 0 and true or nil
@@ -220,16 +245,22 @@ vgui.Register('fl_permission', PANEL, 'fl_base_panel')
 
 local PANEL = {}
 
+--- Creates the list of permission rows.
 function PANEL:Init()
   self.permissions = {}
 
   self:rebuild()
 end
 
+--- Lets the active theme draw the editor through its PaintPermissionEditor hook.
+-- @param w [Number panel width]
+-- @param h [Number panel height]
 function PANEL:Paint(w, h)
   Theme.call('PaintPermissionEditor', self, w, h)
 end
 
+--- Collects the value of every row that is not set to PERM_NO.
+-- @return [Hash PERM_ values keyed by each row's permission data table]
 function PANEL:get_permissions()
   local perm_list = {}
 
@@ -242,6 +273,10 @@ function PANEL:get_permissions()
   return perm_list
 end
 
+--- Selects the given values in the matching rows and marks unexpired temporary permissions.
+-- @param perm_list [Hash PERM_ values keyed by permission ID]
+-- @param temp_perm_list=nil [Hash tables with value and expires (unix timestamp) fields,
+--   keyed by permission ID]
 function PANEL:set_permissions(perm_list, temp_perm_list)
   for k, v in pairs(perm_list) do
     self.permissions[k]:set_value(tonumber(v))
@@ -256,6 +291,9 @@ function PANEL:set_permissions(perm_list, temp_perm_list)
   end
 end
 
+--- Sets the player being edited, rebuilds the rows and loads the player's permissions into
+-- them.
+-- @param player [Player]
 function PANEL:set_player(player)
   self.active_player = player
 
@@ -264,10 +302,14 @@ function PANEL:set_player(player)
   self:set_permissions(player:get_permissions(), player:get_temp_permissions())
 end
 
+--- Returns the player being edited.
+-- @return [Player the player, or nil if none has been set]
 function PANEL:get_player()
   return self.active_player
 end
 
+--- Recreates the list: a collapsible category per permission category with a row for each
+-- permission, plus bulk allow / not set / never buttons where a category has several.
 function PANEL:rebuild()
   if IsValid(self.list_layout) then
     self.list_layout:safe_remove()

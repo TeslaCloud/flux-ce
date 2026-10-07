@@ -1,10 +1,20 @@
 Doors:register_property('name', {
+  --- Returns the name of the door.
+  -- @param entity [Entity the door]
+  -- @return [String the name, or an empty string if the door has no name]
   get_save_data = function(entity)
     return entity:get_nv('fl_name', '')
   end,
+  --- Sets the networked name of the door.
+  -- @param entity [Entity the door]
+  -- @param data [String the name]
   on_load = function(entity, data)
     entity:set_nv('fl_name', data)
   end,
+  --- Creates the text row for the name of the door in the door menu.
+  -- @param entity [Entity the door]
+  -- @param panel [Panel the fl_door_menu panel]
+  -- @return [Panel the created property row]
   create_panel = function(entity, panel)
     local name = panel.properties:CreateRow(t'door.categories.general', t'door.properties.name')
     name:Setup('Generic')
@@ -14,12 +24,22 @@ Doors:register_property('name', {
 })
 
 Doors:register_property('title_type', {
+  --- Returns the id of the title type of the door.
+  -- @param entity [Entity the door]
+  -- @return [String the title type id, or nil if it has never been set]
   get_save_data = function(entity)
     return entity:get_nv('fl_title_type')
   end,
+  --- Sets the networked title type of the door.
+  -- @param entity [Entity the door]
+  -- @param data [String title type id, an empty string to disable the title]
   on_load = function(entity, data)
     entity:set_nv('fl_title_type', data)
   end,
+  --- Creates the combo box row with all registered title types in the door menu.
+  -- @param entity [Entity the door]
+  -- @param panel [Panel the fl_door_menu panel]
+  -- @return [Panel the created property row]
   create_panel = function(entity, panel)
     local title_type = panel.properties:CreateRow(t'door.categories.general', t'door.properties.title_type.name')
     title_type:Setup('Combo', { text = t'door.properties.title_type.select' })
@@ -35,24 +55,40 @@ Doors:register_property('title_type', {
 })
 
 Doors:register_property('skin', {
+  --- Returns the skin of the door.
+  -- @param entity [Entity the door]
+  -- @return [Number the skin index]
   get_save_data = function(entity)
     return entity:GetSkin()
   end,
+  --- Sets the skin of the door.
+  -- @param entity [Entity the door]
+  -- @param data [Number the skin index]
   on_load = function(entity, data)
     entity:SetSkin(data)
   end
 })
 
 Doors:register_property('bodygroups', {
+  --- Returns the bodygroups of the door.
+  -- @param entity [Entity the door]
+  -- @return [Array bodygroup tables as returned by Entity:GetBodyGroups]
   get_save_data = function(entity)
     return entity:GetBodyGroups()
   end,
+  --- Passes the saved bodygroups to Entity:SetBodyGroups.
+  -- @param entity [Entity the door]
+  -- @param data [Array the bodygroups that were saved by get_save_data]
   on_load = function(entity, data)
     entity:SetBodyGroups(data)
   end
 })
 
 Doors:register_property('locked', {
+  --- Returns whether the door is locked. Reads the networked value on the client
+  -- and the internal state of the door on the server.
+  -- @param entity [Entity the door]
+  -- @return [Boolean]
   get_save_data = function(entity)
     if CLIENT then
       return entity:get_nv('fl_locked')
@@ -60,6 +96,9 @@ Doors:register_property('locked', {
       return entity:GetInternalVariable('m_bLocked')
     end
   end,
+  --- Locks or unlocks the door and networks its new state. Serverside only.
+  -- @param entity [Entity the door]
+  -- @param data [Boolean true to lock the door; other values are converted with tobool]
   on_load = function(entity, data)
     data = tobool(data)
 
@@ -67,6 +106,10 @@ Doors:register_property('locked', {
 
     entity:set_nv('fl_locked', data)
   end,
+  --- Creates the checkbox row for the lock state of the door in the door menu.
+  -- @param entity [Entity the door]
+  -- @param panel [Panel the fl_door_menu panel]
+  -- @return [Panel the created property row]
   create_panel = function(entity, panel)
     local locked = panel.properties:CreateRow(t'door.categories.general', t'door.properties.locked')
     locked:Setup('Boolean')
@@ -77,6 +120,12 @@ Doors:register_property('locked', {
 
 Doors:register_title_type('center', {
   name = 'door.title_type.center',
+  --- Draws the name of the door on a background box with white bars above and below it,
+  -- a quarter of the door's height away from the center of the door.
+  -- @param entity [Entity the door]
+  -- @param w [Number width of the door face in drawing units]
+  -- @param h [Number height of the door face in drawing units]
+  -- @param alpha [Number opacity that fades with distance, up to 255]
   draw = function(entity, w, h, alpha)
     local text = entity:get_nv('fl_name')
     local font = Theme.get_font('text_3d2d')

@@ -2,11 +2,14 @@ PLUGIN:set_name('Toolgun Render Fix')
 PLUGIN:set_author('TeslaCloud Studios')
 PLUGIN:set_description('Fixes toolgun help rendering incorrectly with Flux phrases.')
 
+--- Replaces the tool gun's DrawHUD with a version that understands Flux phrases.
 function PLUGIN:FLInitPostEntity()
   local toolgun = weapons.GetStored 'gmod_tool'
   local gmod_drawhelp = CreateClientConVar('gmod_drawhelp', '1', true, false)
   local gmod_toolmode = CreateClientConVar('gmod_toolmode', 'rope', true, true)
 
+  --- Draws the tool's own HUD and the tool gun help box (name, description, usage hints).
+  -- Name and description of Flux tools are translated through the Flux language system.
   function toolgun:DrawHUD()
     local mode = gmod_toolmode:GetString()
     local tool_object = self:GetToolObject()

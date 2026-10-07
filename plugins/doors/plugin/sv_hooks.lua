@@ -1,3 +1,6 @@
+--- Opens the door menu for the player if they are looking at a door
+-- that is closer than 115 units.
+-- @param player [Player]
 function Doors:ShowSpare1(player)
   local trace = player:GetEyeTraceNoCursor()
   local entity = trace.Entity
@@ -9,6 +12,13 @@ function Doors:ShowSpare1(player)
   end
 end
 
+--- Throttles the use of doors and toggles the lock of a door when a player who is
+-- allowed to lock it uses it while sprinting. Runs the PlayerUseDoor hook for every
+-- use of a door that is not blocked.
+-- @param player [Player]
+-- @param entity [Entity the entity that is being used]
+-- @return [Boolean false if the door is on cooldown or has just been locked,
+--   nil otherwise]
 function Doors:PlayerUse(player, entity)
   local cur_time = CurTime()
 
@@ -36,6 +46,10 @@ function Doors:PlayerUse(player, entity)
   end
 end
 
+--- Allows the player to lock and unlock the door if they satisfy its conditions.
+-- @param player [Player]
+-- @param entity [Entity the door]
+-- @return [Boolean true if the player passes the door's conditions, nil otherwise]
 function Doors:PlayerCanLockDoor(player, entity)
   local conditions = entity.conditions
 

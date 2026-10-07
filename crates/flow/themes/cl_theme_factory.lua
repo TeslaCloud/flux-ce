@@ -4,6 +4,8 @@ THEME.id            = 'factory'
 THEME.description   = 'Factory Theme. This is a fail-safety Theme that other themes use as a base.'
 THEME.should_reload = true
 
+--- Defines the defaults of the factory theme: options, sounds, assets, colors, fonts,
+-- materials and the tab menu panel.
 function THEME:on_loaded()
   local scrw, scrh = ScrW(), ScrH()
 
@@ -89,9 +91,16 @@ function THEME:on_loaded()
   end)
 end
 
+--- Called when the main menu is created, so that a theme can customize it. Does nothing
+-- in the factory theme.
+-- @param panel [Panel the main menu]
 function THEME:CreateMainMenu(panel)
 end
 
+--- Draws the background and the title of an fl_frame.
+-- @param panel [Panel the frame being painted]
+-- @param w [Number panel width]
+-- @param h [Number panel height]
 function THEME:PaintFrame(panel, w, h)
   local text            = t(panel.title)
   local font            = self:get_font('main_menu_titles')
@@ -100,6 +109,11 @@ function THEME:PaintFrame(panel, w, h)
   draw.SimpleText(text, font, math.scale(4), math.scale(2), color_white)
 end
 
+--- Draws the background of the main menu and its top bar with the schema's logo (or name),
+-- description and author.
+-- @param panel [Panel the main menu]
+-- @param width [Number panel width]
+-- @param height [Number panel height]
 function THEME:PaintMainMenu(panel, width, height)
   local title               = SCHEMA:get_name()
   local desc                = SCHEMA:get_description()
@@ -126,6 +140,11 @@ function THEME:PaintMainMenu(panel, width, height)
   draw.SimpleText(author, self:get_font('main_menu_titles'), width - author_w - 16, bar_height - author_h - 8, self:get_color('schema_text'))
 end
 
+--- Draws an fl_button: the outline, background, title and FontAwesome icon, according to
+-- the settings of the button.
+-- @param panel [Panel the button being painted]
+-- @param w [Number panel width]
+-- @param h [Number panel height]
 function THEME:PaintButton(panel, w, h)
   local text_w, text_h, icon_w, icon_h
   local cur_amt           = panel.cur_amt
@@ -184,6 +203,11 @@ function THEME:PaintButton(panel, w, h)
   end
 end
 
+--- Draws the death screen with the respawn countdown and progress bar, and sets up the
+-- white fade for the last 3 seconds before the respawn.
+-- @param cur_time [Number current CurTime()]
+-- @param scrw [Number screen width]
+-- @param scrh [Number screen height]
 function THEME:PaintDeathScreen(cur_time, scrw, scrh)
   local respawn_time  = PLAYER:get_nv('respawn_time', 0) - cur_time
   local bar_value     = 100 - 100 * (respawn_time / Config.get('respawn_delay'))
@@ -208,20 +232,31 @@ function THEME:PaintDeathScreen(cur_time, scrw, scrh)
   end
 end
 
+--- Draws the background of an fl_sidebar.
+-- @param panel [Panel the sidebar being painted]
+-- @param width [Number panel width]
+-- @param height [Number panel height]
 function THEME:PaintSidebar(panel, width, height)
   draw.RoundedBox(0, 0, 0, width, height, self:get_color('main_dark'):lighten(10))
 end
 
+--- Draws the background of a HUD bar.
+-- @param bar_info [Hash data of the bar, as stored by Flux.Bars]
 function THEME:DrawBarBackground(bar_info)
   draw.RoundedBox(bar_info.corner_radius, bar_info.x, bar_info.y, bar_info.width, bar_info.height, self:get_color('main_dark'))
 end
 
+--- Draws the hindered portion at the right end of a HUD bar.
+-- @param bar_info [Hash data of the bar, as stored by Flux.Bars]
 function THEME:DrawBarHindrance(bar_info)
   local length = bar_info.width * (bar_info.hinder_value / bar_info.max_value)
 
   draw.RoundedBox(bar_info.corner_radius, bar_info.x + bar_info.width - length - 1, bar_info.y + 1, length, bar_info.height - 2, bar_info.hinder_color)
 end
 
+--- Draws the filled portion of a HUD bar. While the displayed fill is catching up with the
+-- actual value, the difference between the two is drawn in the color of the bar.
+-- @param bar_info [Hash data of the bar, as stored by Flux.Bars]
 function THEME:DrawBarFill(bar_info)
   if bar_info.real_fill_width < bar_info.fill_width then
     draw.RoundedBox(bar_info.corner_radius, bar_info.x + 1, bar_info.y + 1, (bar_info.fill_width or bar_info.width) - 2, bar_info.height - 2, bar_info.color)
@@ -234,6 +269,9 @@ function THEME:DrawBarFill(bar_info)
   end
 end
 
+--- Draws the text of a HUD bar, in different colors over its filled and empty portions,
+-- and the hindrance text when the hindrance is displayed.
+-- @param bar_info [Hash data of the bar, as stored by Flux.Bars]
 function THEME:DrawBarTexts(bar_info)
   local font = Theme.get_font(bar_info.font)
 
@@ -256,6 +294,11 @@ function THEME:DrawBarTexts(bar_info)
   end
 end
 
+--- Draws the footer below the admin panel with the Steam name and user group of the local
+-- player and the version of the admin mod.
+-- @param panel [Panel the admin panel]
+-- @param width [Number panel width]
+-- @param height [Number panel height]
 function THEME:AdminPanelPaintOver(panel, width, height)
   local smallest_font   = Font.size(self:get_font('text_smallest'), 14)
   local text_color      = self:get_color('text')
@@ -272,12 +315,22 @@ function THEME:AdminPanelPaintOver(panel, width, height)
   DisableClipping(false)
 end
 
+--- Draws a darker background on the lines of the config editor that are marked as dark.
+-- @param panel [Panel the config line being painted]
+-- @param w [Number panel width]
+-- @param h [Number panel height]
 function THEME:PaintConfigLine(panel, w, h)
   if panel.dark then
     draw.RoundedBox(0, 0, 0, w, h, Theme.get_color('background'):alpha(150))
   end
 end
 
+--- Draws a button of the permission editor, colored and labeled after its permission
+-- value, with a selection box and a clock icon for temporary permissions.
+-- @param perm_panel [Panel the permission row the button belongs to]
+-- @param btn [Panel the button being painted]
+-- @param w [Number button width]
+-- @param h [Number button height]
 function THEME:PaintPermissionButton(perm_panel, btn, w, h)
   local color     = color_white
   local title     = ''
@@ -323,6 +376,10 @@ function THEME:PaintPermissionButton(perm_panel, btn, w, h)
   end
 end
 
+--- Draws the background, title and column headers of the scoreboard.
+-- @param panel [Panel the scoreboard]
+-- @param width [Number panel width]
+-- @param height [Number panel height]
 function THEME:PaintScoreboard(panel, width, height)
   local text            = t'ui.scoreboard.title'
   local font            = self:get_font('main_menu_large')
@@ -344,10 +401,19 @@ function THEME:PaintScoreboard(panel, width, height)
   draw.SimpleText(text, font, width - text_w - 8, 0, self:get_color('text'))
 end
 
+--- Draws the translucent background of the button bar of the tab menu.
+-- @param panel [Panel the tab menu that owns the button bar]
+-- @param width [Number width of the button bar]
+-- @param height [Number height of the button bar]
 function THEME:PaintTabMenuButtonPanel(panel, width, height)
   draw.RoundedBox(0, 0, 0, width, height, self:get_color('background'):alpha(125))
 end
 
+--- Blurs the screen behind the tab menu, easing the blur size towards the blur target of
+-- the menu, and draws an indicator bar for the button stored in the menu's activeBtn field.
+-- @param panel [Panel the tab menu]
+-- @param width [Number panel width]
+-- @param height [Number panel height]
 function THEME:PaintTabMenu(panel, width, height)
   local fraction      = FrameTime() * 8
   local active_panel  = panel.active_panel
@@ -382,16 +448,29 @@ function THEME:PaintTabMenu(panel, width, height)
   end
 end
 
+--- Draws the gradient background of an inventory item slot.
+-- @param panel [Panel the item slot]
+-- @param w [Number panel width]
+-- @param h [Number panel height]
 function THEME:PaintItemSlot(panel, w, h)
   draw.textured_rect(self:get_material('gradient_up'), 0, 0, w, h, Color(30, 30, 30, 100))
 end
 
+--- Draws the translucent backdrop around an inventory panel.
+-- @param panel [Panel the inventory panel]
+-- @param w [Number panel width]
+-- @param h [Number panel height]
 function THEME:PaintInventoryBackground(panel, w, h)
   DisableClipping(true)
     draw.RoundedBox(0, -4, -4, w + 8, h + 8, Color(50, 50, 50, 100))
   DisableClipping(false)
 end
 
+--- Draws the frame, the gradients and the character name around the player model of the
+-- inventory tab. Does nothing if the panel has no player model.
+-- @param panel [Panel the inventory menu]
+-- @param w [Number panel width]
+-- @param h [Number panel height]
 function THEME:PaintTabInventoryBackground(panel, w, h)
   if IsValid(panel.player_model) then
     local x, y                = panel.player_model:GetPos()
@@ -410,6 +489,10 @@ function THEME:PaintTabInventoryBackground(panel, w, h)
   end
 end
 
+--- Draws the title of an inventory above its panel, if it has one.
+-- @param panel [Panel the inventory panel]
+-- @param w [Number panel width]
+-- @param h [Number panel height]
 function THEME:PaintOverInventoryBackground(panel, w, h)
   if panel.title then
     local text            = t(panel.title)
@@ -423,12 +506,21 @@ function THEME:PaintOverInventoryBackground(panel, w, h)
   end
 end
 
+--- Draws the background behind the chat history, leaving out the text entry.
+-- @param panel [Panel the chatbox]
+-- @param width [Number panel width]
+-- @param height [Number panel height]
 function THEME:ChatboxPaintBackground(panel, width, height)
   DisableClipping(true)
     draw.box(0, -8, width, height - panel.text_entry:GetTall(), self:get_color('menu_background'))
   DisableClipping(false)
 end
 
+--- Draws the name of the character on a character card and outlines the card if it
+-- belongs to the active character of the local player.
+-- @param panel [Panel the character card]
+-- @param w [Number panel width]
+-- @param h [Number panel height]
 function THEME:PaintCharPanel(panel, w, h)
   if panel.char_data then
     local char_data       = panel.char_data
@@ -443,6 +535,10 @@ function THEME:PaintCharPanel(panel, w, h)
   end
 end
 
+--- Draws the title of the character creation screen.
+-- @param panel [Panel the character creation panel]
+-- @param w [Number panel width]
+-- @param h [Number panel height]
 function THEME:PaintCharCreationMainPanel(panel, w, h)
   local title, font       = t'ui.char_create.text', Theme.get_font 'main_menu_title'
   local title_w, title_h  = util.text_size(title, font)
@@ -450,6 +546,10 @@ function THEME:PaintCharCreationMainPanel(panel, w, h)
   draw.SimpleText(title, font, w * 0.5 - title_w * 0.5, h / 8)
 end
 
+--- Draws the title of the character loading screen.
+-- @param panel [Panel the character loading panel]
+-- @param w [Number panel width]
+-- @param h [Number panel height]
 function THEME:PaintCharCreationLoadPanel(panel, w, h)
   local title, font       = t'ui.char_create.load', Theme.get_font 'main_menu_title'
   local title_w, title_h  = util.text_size(title, font)
@@ -457,6 +557,10 @@ function THEME:PaintCharCreationLoadPanel(panel, w, h)
   draw.SimpleText(title, font, w * 0.5 - title_w * 0.5, h / 8)
 end
 
+--- Draws the title of a character creation stage, if the panel has one.
+-- @param panel [Panel the stage panel]
+-- @param w [Number panel width]
+-- @param h [Number panel height]
 function THEME:PaintCharCreationBasePanel(panel, w, h)
   if isstring(panel.text) then
     local text_w, text_h = util.text_size(t(panel.text), Theme.get_font('main_menu_large'))
@@ -493,13 +597,19 @@ THEME.skin.fontButton             = 'Exo8'
 THEME.skin.fontFrame              = 'Exo8'
 THEME.skin.fontTab                = 'Exo8'
 
--- A function to draw a generic background.
+--- Draws a solid rectangle.
+-- @param x [Number]
+-- @param y [Number]
+-- @param w [Number width]
+-- @param h [Number height]
+-- @param color [Color]
 function THEME.skin:DrawGenericBackground(x, y, w, h, color)
   surface.SetDrawColor(color)
   surface.DrawRect(x, y, w, h)
 end
 
--- Called when a frame is layed out.
+--- Lays out the title label and the close button of a frame.
+-- @param panel [Panel the frame]
 function THEME.skin:LayoutFrame(panel)
   panel.lblTitle:SetFont(self.fontFrame)
   panel.lblTitle:SetText(panel.lblTitle:GetText():upper())
@@ -514,7 +624,8 @@ function THEME.skin:LayoutFrame(panel)
   panel.lblTitle:SetSize(panel:GetWide() - 25, 20)
 end
 
--- Called when a form is schemed.
+--- Applies the font, upper case text, color and shadow of the skin to the label of a form.
+-- @param panel [Panel the form]
 function THEME.skin:SchemeForm(panel)
   panel.Label:SetFont(self.fontFormLabel)
   panel.Label:SetText(panel.Label:GetText():upper())
@@ -522,7 +633,10 @@ function THEME.skin:SchemeForm(panel)
   panel.Label:SetExpensiveShadow(1, Color(0, 0, 0, 200))
 end
 
--- Called when a tab is painted.
+--- Draws a tab of a property sheet, highlighted if it is the active one.
+-- @param panel [Panel the tab]
+-- @param w [Number panel width]
+-- @param h [Number panel height]
 function THEME.skin:PaintTab(panel, w, h)
   if panel:GetPropertySheet():GetActiveTab() == panel then
     self:DrawGenericBackground(4, 0, w - 8, h - 8, self.colTab:alpha(220))
@@ -531,7 +645,10 @@ function THEME.skin:PaintTab(panel, w, h)
   end
 end
 
--- Called when a list view is painted.
+--- Draws a white background for a list view if its background is enabled.
+-- @param panel [Panel the list view]
+-- @param w [Number panel width]
+-- @param h [Number panel height]
 function THEME.skin:PaintListView(panel, w, h)
   if panel.m_bBackground then
     surface.SetDrawColor(255, 255, 255, 255)
@@ -539,7 +656,9 @@ function THEME.skin:PaintListView(panel, w, h)
   end
 end
 
--- Called when a list view line is painted.
+--- Draws a line of a list view, colored after its selected, hovered or alternate state,
+-- and sets the text color of its columns.
+-- @param panel [Panel the list view line]
 function THEME.skin:PaintListViewLine(panel)
   local color       = Color(50, 50, 50, 255)
   local text_color  = Color(255, 255, 255, 255)
@@ -561,27 +680,36 @@ function THEME.skin:PaintListViewLine(panel)
   surface.DrawRect(0, 0, panel:GetWide(), panel:GetTall())
 end
 
--- Called when a list view label is schemed.
+--- Sets the text inset and the text color of a list view label.
+-- @param panel [Panel the label]
 function THEME.skin:SchemeListViewLabel(panel)
   panel:SetTextInset(3)
   panel:SetTextColor(Color(255, 255, 255, 255))
 end
 
--- Called when a menu is painted.
+--- Draws the dark background of a Derma menu.
+-- @param panel [Panel the menu]
+-- @param w [Number panel width]
+-- @param h [Number panel height]
 function THEME.skin:PaintMenu(panel, w, h)
   surface.SetDrawColor(Color(15, 15, 15, 255))
   panel:DrawFilledRect(0, 0, w, h)
 end
 
--- Called when a menu is painted over.
+--- Does nothing: the skin draws nothing over Derma menus.
+-- @param panel [Panel the menu]
 function THEME.skin:PaintOverMenu(panel) end
 
--- Called when a menu option is schemed.
+--- Sets the text color of a menu option.
+-- @param panel [Panel the menu option]
 function THEME.skin:SchemeMenuOption(panel)
   panel:SetFGColor(255, 255, 255, 255)
 end
 
--- Called when a menu option is painted.
+--- Draws the highlight of a hovered menu option and sets its text color accordingly.
+-- @param panel [Panel the menu option]
+-- @param w [Number panel width]
+-- @param h [Number panel height]
 function THEME.skin:PaintMenuOption(panel, w, h)
   local text_color = Color(255, 255, 255, 255)
 
@@ -603,7 +731,11 @@ function THEME.skin:PaintMenuOption(panel, w, h)
   panel:SetFGColor(text_color)
 end
 
--- Called when a menu option is layed out.
+--- Sizes a menu option to fit its text and the width of its menu, and positions its
+-- submenu arrow.
+-- @param panel [Panel the menu option]
+-- @param w [Number panel width]
+-- @param h [Number panel height]
 function THEME.skin:LayoutMenuOption(panel, w, h)
   panel:SetFont(self.fontMenuOption)
   panel:SizeToContents()
@@ -617,7 +749,11 @@ function THEME.skin:LayoutMenuOption(panel, w, h)
   end
 end
 
--- Called when a button is painted.
+--- Draws a Derma button with a border and a fill that reflects its disabled, pressed or
+-- hovered state, and sets its text color.
+-- @param panel [Panel the button]
+-- @param w [Number panel width]
+-- @param h [Number panel height]
 function THEME.skin:PaintButton(panel, w, h)
   local text_color = Color(255, 255, 255, 255)
 
@@ -641,7 +777,8 @@ function THEME.skin:PaintButton(panel, w, h)
   panel:SetFGColor(text_color)
 end
 
--- Called when a scroll bar grip is painted.
+--- Draws the grip of a scroll bar as a black box with a white border.
+-- @param panel [Panel the grip]
 function THEME.skin:PaintScrollBarGrip(panel)
   local w, h  = panel:GetSize()
   local color = Color(255, 255, 255, 255)
@@ -650,6 +787,10 @@ function THEME.skin:PaintScrollBarGrip(panel)
   self:DrawGenericBackground(1, 1, w - 2, h - 2, Color(0, 0, 0, 255))
 end
 
+--- Draws the translucent background of a frame and its header gradient in the accent color.
+-- @param panel [Panel the frame]
+-- @param w [Number panel width]
+-- @param h [Number panel height]
 function THEME.skin:PaintFrame(panel, w, h)
   local color = Theme.get_color('accent')
 
@@ -659,6 +800,11 @@ function THEME.skin:PaintFrame(panel, w, h)
   draw.textured_rect(Theme.get_material('gradient'), 0, 0, w, 24, color:alpha(200))
 end
 
+--- Draws the header background of a collapsible category, darker while it is collapsed,
+-- and applies the theme font to its header.
+-- @param panel [Panel the category]
+-- @param w [Number panel width]
+-- @param h [Number panel height]
 function THEME.skin:PaintCollapsibleCategory(panel, w, h)
   panel.Header:SetFont(Theme.get_font('text_smaller'))
 

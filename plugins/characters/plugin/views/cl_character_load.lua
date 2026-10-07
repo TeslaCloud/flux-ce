@@ -1,6 +1,7 @@
 ﻿local PANEL = {}
 PANEL.chars = {}
 
+--- Creates the fullscreen character list and the button that leads back to the main menu.
 function PANEL:Init()
   local scrw, scrh = ScrW(), ScrH()
 
@@ -33,12 +34,17 @@ function PANEL:Init()
   end
 end
 
+--- Draws the panel through the theme's PaintCharCreationLoadPanel hook.
+-- @param w [Number]
+-- @param h [Number]
 function PANEL:Paint(w, h)
   if self:IsVisible() then
     Theme.hook('PaintCharCreationLoadPanel', self, w, h)
   end
 end
 
+--- Recreates a character panel for each of the local player's characters, and goes back to
+-- the main menu when there are none.
 function PANEL:rebuild()
   self.list:Clear()
 
@@ -58,6 +64,8 @@ function PANEL:rebuild()
   end
 end
 
+--- Removes the panel, then calls the callback.
+-- @param callback=nil [Function called without arguments]
 function PANEL:close(callback)
   self:safe_remove()
 
@@ -70,6 +78,7 @@ vgui.Register('fl_char_load', PANEL, 'fl_frame')
 
 local PANEL = {}
 
+--- Creates the model preview and the select and delete buttons.
 function PANEL:Init()
   self:SetPaintBackground(false)
 
@@ -124,12 +133,18 @@ function PANEL:Init()
   end
 end
 
+--- Draws the panel through the theme's PaintCharPanel hook.
+-- @param w [Number]
+-- @param h [Number]
 function PANEL:Paint(w, h)
   if self:IsVisible() then
     Theme.hook('PaintCharPanel', self, w, h)
   end
 end
 
+--- Positions the model preview and the select and delete buttons.
+-- @param w [Number]
+-- @param h [Number]
 function PANEL:PerformLayout(w, h)
   self.model:SetPos(4, 28)
   self.model:SetSize(w - 4, h * .80)
@@ -141,6 +156,9 @@ function PANEL:PerformLayout(w, h)
   self.delete:SetSize(w / 3 - 4, Theme.get_option('menu_sidebar_button_height'))
 end
 
+--- Sets the character shown by the panel, hides the buttons if it is the active character
+-- and runs the PanelCharacterSet hook.
+-- @param char_data [Hash networked character data]
 function PANEL:set_character(char_data)
   self.char_data = char_data
 

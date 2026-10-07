@@ -18,22 +18,37 @@ Item.sorted = sorted
 -- Items currently dropped and lying on the ground.
 Item.entities = entities
 
+--- Returns all the registered item templates.
+-- @return [Hash item templates, keyed by item id]
 function Item.all()
   return stored
 end
 
+--- Returns the storage of all item instances.
+-- It is keyed by item id; each value is a hash of instance id to item instance.
+-- The storage also holds a numeric 'count' field with the last generated instance id.
+-- @return [Hash instances]
 function Item.get_instances()
   return instances
 end
 
+--- Returns the lookup cache of item instances that is filled by Item.find_by_instance_id.
+-- @return [Hash item instances, keyed by instance id]
 function Item.get_sorted()
   return sorted
 end
 
+--- Returns saved data about the items that are lying on the ground.
+-- It is keyed by item id, then by instance id; each entry has 'position' and 'angles' fields.
+-- @return [Hash entity data]
 function Item.get_entities()
   return entities
 end
 
+--- Registers an item template, filling in defaults for every field that is not set.
+-- Item files normally get here through ItemBase:register, which the 'item' pipeline calls.
+-- @param id=nil [String item id; made out of data.name when omitted]
+-- @param data [Item item table to store as the template]
 function Item.register(id, data)
   if !data then return end
 
@@ -87,6 +102,10 @@ function Item.register(id, data)
   instances[id] = instances[id] or {}
 end
 
+--- Builds a plain table out of the item fields that are saved to disk and networked.
+-- Runs the 'PreItemSave' hook so that plugins can add fields of their own.
+-- @param item_obj [Item]
+-- @return [Hash saveable fields, or nil if no item was given]
 function Item.to_saveable(item_obj)
   if !item_obj then return end
 
@@ -127,7 +146,9 @@ function Item.to_saveable(item_obj)
   return save_table
 end
 
--- Find item's template by it's ID.
+--- Finds an item template by its id.
+-- @param id [String item id]
+-- @return [Item the template, or nil if not found]
 function Item.find_by_id(id)
   for k, v in pairs(stored) do
     if k == id or v.id == id then
@@ -136,14 +157,18 @@ function Item.find_by_id(id)
   end
 end
 
--- Find all instances of certain template ID.
+--- Finds all instances of a certain item template.
+-- @param id [String item id]
+-- @return [Hash item instances keyed by instance id, or nil if there is no such template]
 function Item.find_all_instances(id)
   if instances[id] then
     return instances[id]
   end
 end
 
--- Finds instance by it's ID.
+--- Finds an item instance by its instance id.
+-- @param instance_id [Number]
+-- @return [Item the instance, or nil if not found]
 function Item.find_instance_by_id(instance_id)
   for item_id, item_instances in pairs(instances) do
     if istable(item_instances) then
@@ -156,7 +181,9 @@ function Item.find_instance_by_id(instance_id)
   end
 end
 
--- Finds an item template that belongs to certain instance ID.
+--- Finds an item instance by its instance id, caching the result for quicker lookups later.
+-- @param instance_id [Number]
+-- @return [Item the instance, or nil if not found]
 function Item.find_by_instance_id(instance_id)
   if !instance_id then return end
 
@@ -167,6 +194,11 @@ function Item.find_by_instance_id(instance_id)
   return sorted[instance_id]
 end
 
+--- Finds an item by a loose query.
+-- A number is treated as an instance id. A string is compared against the template ids
+-- and matched as a Lua pattern against the template names and print names.
+-- @param name [String/Number item id or (part of) item name, or an instance id]
+-- @return [Item first matching template, or the instance for a number; nil if not found]
 function Item.find(name)
   if isnumber(name) then
     return Item.find_instance_by_id(name)
@@ -191,6 +223,8 @@ function Item.find(name)
   end
 end
 
+--- Generates the next unused item instance id.
+-- @return [Number]
 function Item.generate_id()
   instances.count = instances.count or 0
   instances.count = instances.count + 1
@@ -198,6 +232,20 @@ function Item.generate_id()
   return instances.count
 end
 
+--- Creates a new instance of an item template.
+-- On the server it also runs the 'OnItemCreated' hook, saves the items
+-- and sends the new instance to all clients.
+-- ```
+-- local item_obj = Item.create('test_item', { name = 'Some Item' })
+--
+-- if item_obj then
+--   Item.spawn(player:GetEyeTraceNoCursor().HitPos, nil, item_obj)
+-- end
+-- ```
+-- @param id [String item id of the template]
+-- @param data=nil [Hash fields to override on the new instance]
+-- @param forced_id=nil [Number instance id to use instead of generating a new one]
+-- @return [Item the new instance, or nil if there is no such template]
 function Item.create(id, data, forced_id)
   local item_obj = Item.find_by_id(id)
 
@@ -224,6 +272,9 @@ function Item.create(id, data, forced_id)
   end
 end
 
+--- Removes an item instance along with its entity in the world, if it has one.
+-- Does not take the item out of the inventory that holds it. Saves the items on the server.
+-- @param instance_id [Number/Item instance id, or the item instance itself]
 function Item.remove(instance_id)
   local item_obj = (istable(instance_id) and instance_id) or Item.find_instance_by_id(instance_id)
 
@@ -242,22 +293,33 @@ function Item.remove(instance_id)
   end
 end
 
+--- Checks whether the table is an item instance rather than an item template.
+-- @param item_obj [Item]
+-- @return [Boolean nil if the argument is not a table]
 function Item.is_instance(item_obj)
   if !istable(item_obj) then return end
 
   return (item_obj.instance_id or ITEM_TEMPLATE) > ITEM_INVALID
 end
 
+--- Includes every item file of a folder through the 'item' pipeline, registering the items.
+-- @param directory [String path to the folder, e.g. plugin:get_folder()..'/items/']
 function Item.include_items(directory)
   Pipeline.include_folder('item', directory)
 end
 
 local item_categories = {}
 
+--- Sets the icon that represents an item category in the spawn menu.
+-- @param category [String category id, e.g. 'item.category.weapon']
+-- @param icon [String path to the icon, e.g. 'icon16/gun.png']
 function Item.set_category_icon(category, icon)
   item_categories[category] = icon
 end
 
+--- Returns the icon of an item category.
+-- @param category [String category id]
+-- @return [String path to the icon; 'icon16/bricks.png' if the category has none]
 function Item.get_category_icon(category)
   return item_categories[category] or 'icon16/bricks.png'
 end
@@ -272,6 +334,8 @@ Item.set_category_icon('item.category.other', 'icon16/bricks.png')
 Item.set_category_icon('item.category.equipment', 'icon16/package.png')
 
 if SERVER then
+  --- Loads the item instances and the item entities saved for the current map,
+  -- and spawns the entities back into the world. Server-side only.
   function Item.load()
     local loaded = Data.load_schema('items/instances', {})
 
@@ -313,6 +377,7 @@ if SERVER then
     end
   end
 
+  --- Saves all the item instances to the schema data of the current map. Server-side only.
   function Item.save_instances()
     local to_save = {}
 
@@ -335,6 +400,7 @@ if SERVER then
     Data.save_schema('items/instances', to_save)
   end
 
+  --- Saves positions and angles of all the item entities in the world. Server-side only.
   function Item.save_entities()
     local item_ents = ents.FindByClass('fl_item')
 
@@ -354,43 +420,60 @@ if SERVER then
     Data.save_schema('items/entities', entities)
   end
 
+  --- Saves both the item instances and the item entities. Server-side only.
   function Item.save_all()
     Item.save_instances()
     Item.save_entities()
   end
 
+  --- Runs Item.save_all inside of a coroutine. Server-side only.
   function Item.async_save()
     local handle = coroutine.create(Item.save_all)
     coroutine.resume(handle)
   end
 
+  --- Runs Item.save_instances inside of a coroutine. Server-side only.
   function Item.async_save_instances()
     local handle = coroutine.create(Item.save_instances)
     coroutine.resume(handle)
   end
 
+  --- Runs Item.save_entities inside of a coroutine. Server-side only.
   function Item.async_save_entities()
     local handle = coroutine.create(Item.save_entities)
     coroutine.resume(handle)
   end
 
+  --- Sends the custom data of an item instance to the client. Server-side only.
+  -- Does nothing if the item is a template.
+  -- @param player [Player/Array<Player>/Nil who to send to; nil sends to everyone]
+  -- @param item_obj [Item]
   function Item.network_item_data(player, item_obj)
     if Item.is_instance(item_obj) then
       Cable.send(player, 'fl_items_data', item_obj.id, item_obj.instance_id, item_obj.data)
     end
   end
 
+  --- Sends the saveable fields of an item instance to the client,
+  -- which builds its own copy of the instance out of them. Server-side only.
+  -- @param player [Player/Array<Player>/Nil who to send to; nil sends to everyone]
+  -- @param instance_id [Number]
   function Item.network_item(player, instance_id)
     Cable.send(player, 'fl_items_network', instance_id, Item.to_saveable(Item.find_instance_by_id(instance_id)))
   end
 
+  --- Tells the client which item instance an item entity represents. Server-side only.
+  -- @param player [Player/Array<Player>/Nil who to send to; nil sends to everyone]
+  -- @param ent [Entity the fl_item entity]
   function Item.network_entity_data(player, ent)
     if IsValid(ent) then
       Cable.send(player, 'fl_items_ent_data', ent:EntIndex(), ent.item.id, ent.item.instance_id)
     end
   end
 
-  -- A function to send info about items in the world.
+  --- Sends info about items in the world to the player,
+  -- then runs the 'OnItemDataReceived' hook on their client. Server-side only.
+  -- @param player [Player]
   function Item.send_to_player(player)
     local item_ents = ents.FindByClass('fl_item')
 
@@ -403,6 +486,17 @@ if SERVER then
     hook.run_client(player, 'OnItemDataReceived')
   end
 
+  --- Spawns an item instance in the world as an fl_item entity. Server-side only.
+  -- The item is sent to all clients and the item entities are saved afterwards.
+  -- ```
+  -- local item_obj = Item.create('test_item')
+  -- local trace = player:GetEyeTraceNoCursor()
+  -- local ent = Item.spawn(trace.HitPos, Angle(0, 0, 0), item_obj)
+  -- ```
+  -- @param position [Vector where to put the item; it is raised by the height of its bounds]
+  -- @param angles=nil [Angle]
+  -- @param item_obj [Item item instance; templates cannot be spawned]
+  -- @return [Entity the item entity, Item the spawned item; nothing if the arguments are invalid]
   function Item.spawn(position, angles, item_obj)
     if !position or !istable(item_obj) then
       error_with_traceback('No position or item table is not a table!')

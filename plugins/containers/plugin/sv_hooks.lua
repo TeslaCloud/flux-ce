@@ -1,3 +1,6 @@
+--- Closes the inventory of a removed entity for everyone who views it
+-- and deletes the inventory from the server cache.
+-- @param entity [Entity]
 function Container:EntityRemoved(entity)
   if entity.inventory then
     local inventory = entity.inventory
@@ -12,12 +15,19 @@ function Container:EntityRemoved(entity)
   end
 end
 
+--- Makes the spawned prop persistent if its model is a container.
+-- @param player [Player]
+-- @param model [String]
+-- @param entity [Entity]
 function Container:PlayerSpawnedProp(player, model, entity)
   if self:find(model) then
     entity:SetPersistent(true)
   end
 end
 
+--- Plays the closing sound of the container when its inventory gets closed.
+-- @param player [Player]
+-- @param inventory [Inventory]
 function Container:OnInventoryClosed(player, inventory)
   local entity = inventory.owner
 
@@ -30,6 +40,8 @@ function Container:OnInventoryClosed(player, inventory)
   end
 end
 
+--- Stores the instance ids of the items of every container on its entity
+-- and unsets the inventory, before the persistent entities are saved.
 function Container:PrePersistenceSave()
   for k, v in ipairs(ents.all()) do
     if v.inventory and self:find(v:GetModel()) then
@@ -39,12 +51,20 @@ function Container:PrePersistenceSave()
   end
 end
 
+--- Allows the container props to contain money.
+-- @param object [Entity]
+-- @return [Boolean true if the entity is a container, nil otherwise]
 function Container:CanContainMoney(object)
   if IsValid(object) and isentity(object) and self:find(object:GetModel()) then
     return true
   end
 end
 
+--- Supposed to allow the container props to be opened.
+-- @param player [Player]
+-- @param entity [Entity]
+-- @return [Boolean true for a container; currently always nil, as the body checks
+--   an undefined 'object' variable instead of the entity]
 function Container:CanEntityBeOpened(player, entity)
   if IsValid(object) and isentity(object) and self:find(object:GetModel()) then
     return true

@@ -1,6 +1,8 @@
 do
   local cur_volume = 1
 
+  --- Mutes the menu music while the game window is unfocused and fades it out and stops it
+  -- once the intro panel is gone.
   function Characters:Tick()
     if Flux.menu_music then
       if !system.HasFocus() then
@@ -23,6 +25,7 @@ do
   end
 end
 
+--- Opens the intro panel if the local player has no active character.
 function Characters:PlayerInitialized()
   if !PLAYER:is_character_loaded() and !IsValid(Flux.intro_panel) then
     Flux.intro_panel = vgui.Create('fl_intro')
@@ -33,18 +36,24 @@ function Characters:PlayerInitialized()
   end
 end
 
+--- Holds the loading screen at 75% until the character list has arrived from the server.
+-- @return [String message, Number percentage; nothing once the characters have arrived]
 function Characters:GetLoadingScreenMessage()
   if !IsValid(PLAYER) or !istable(PLAYER.characters) then
     return t'ui.hud.loading.characters', 75
   end
 end
 
+--- Makes the mapscene render while the intro panel or main menu is open.
+-- @return [Boolean true while the panel is valid, otherwise nil]
 function Characters:ShouldMapsceneRender()
   if IsValid(Flux.intro_panel) then
     return true
   end
 end
 
+--- Opens the main menu after the intro if the local player has no character, retrying on a
+-- timer until the panel can be created.
 function Characters:OnIntroPanelRemoved()
   if !PLAYER:get_character() then
     Flux.intro_panel = Theme.create_panel('main_menu')
@@ -65,6 +74,9 @@ function Characters:OnIntroPanelRemoved()
   end
 end
 
+--- Registers the main menu and character creation panels with the theme, and recreates the
+-- main menu if it is currently open.
+-- @param current_theme [ThemeBase]
 function Characters:OnThemeLoaded(current_theme)
   current_theme:add_panel('main_menu', function(id, parent, ...)
     return vgui.Create('fl_main_menu', parent)
@@ -90,6 +102,8 @@ function Characters:OnThemeLoaded(current_theme)
   end
 end
 
+--- Adds the main menu entry to the tab menu.
+-- @param menu [Panel the tab menu]
 function Characters:AddTabMenuItems(menu)
   menu:add_menu_item('mainmenu', {
     title = t'ui.tab_menu.main_menu',
@@ -102,32 +116,46 @@ function Characters:AddTabMenuItems(menu)
   }, 1)
 end
 
+--- Closes the main menu after a character has been loaded.
+-- @param char_id [Number]
 function Characters:PostCharacterLoaded(char_id)
   if IsValid(Flux.intro_panel) then
     Flux.intro_panel:safe_remove()
   end
 end
 
+--- Keeps the loading screen visible until the intro panel has been created.
+-- @return [Boolean true while there is no intro panel, otherwise nil]
 function Characters:ShouldDrawLoadingScreen()
   if !Flux.intro_panel then
     return true
   end
 end
 
+--- Hides the HUD while the local player has no active character.
+-- @return [Boolean false when no character is loaded, otherwise nil]
 function Characters:ShouldHUDPaint()
   if !PLAYER:is_character_loaded() then
     return false
   end
 end
 
+--- Lets the scoreboard hide only when the local player has an active character.
+-- @return [Boolean]
 function Characters:ShouldScoreboardHide()
   return PLAYER:is_character_loaded()
 end
 
+--- Lets the scoreboard show only when the local player has an active character.
+-- @return [Boolean]
 function Characters:ShouldScoreboardShow()
   return PLAYER:is_character_loaded()
 end
 
+--- Adds the Steam name to a scoreboard player card and, unless an IsCharacterCardVisible hook
+-- returns false, the player's model icon and physical description.
+-- @param card [Panel the scoreboard player card]
+-- @param player [Player]
 function Characters:RebuildScoreboardPlayerCard(card, player)
   local x, y = card.name_label:GetPos()
   local text = player:steam_name()
@@ -176,10 +204,18 @@ function Characters:RebuildScoreboardPlayerCard(card, player)
   end
 end
 
+--- Adds the general stage (gender, name, description and model) to character creation.
+-- @param panel [Panel the character creation menu]
 function Characters:AddCharacterCreationMenuStages(panel)
   panel:add_stage('ui.char_create.general')
 end
 
+--- Adds the physical description to the lines drawn when looking at a player.
+-- @param player [Player]
+-- @param x [Number]
+-- @param y [Number]
+-- @param distance [Number]
+-- @param lines [Hash line definitions keyed by ID, modified in place]
 function Characters:GetDrawPlayerInfo(player, x, y, distance, lines)
   lines['desc'] = {
     text = player:get_phys_desc(),
@@ -189,6 +225,10 @@ function Characters:GetDrawPlayerInfo(player, x, y, distance, lines)
   }
 end
 
+--- Adds the continue, create character, load character and disconnect buttons to the main
+-- menu.
+-- @param panel [Panel the main menu]
+-- @param sidebar [Panel the main menu sidebar]
 function Characters:AddMainMenuItems(panel, sidebar)
   local scrw, scrh = ScrW(), ScrH()
 
@@ -228,6 +268,9 @@ function Characters:AddMainMenuItems(panel, sidebar)
   end)
 end
 
+--- Applies the character's skin to the model shown in a character panel.
+-- @param panel [Panel the character panel]
+-- @param char_data [Hash networked character data]
 function Characters:PanelCharacterSet(panel, char_data)
   panel.model.Entity:SetSkin(char_data.skin or 1)
 end

@@ -37,19 +37,55 @@ local CHARS_TABLE = {
   32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32
 }
 
+--- Checks whether a character belongs to a character class.
+-- @param c [Number character code (0-255), as returned by string.byte]
+-- @param t [Number character class, one of the CHAR_* bitmasks]
+-- @return [Boolean false if c is not a number]
 function char.is(c, t)
   if !isnumber(c) then return false end
 
   return tobool(bit.band(CHARS_TABLE[c], t))
 end
 
+--- Checks whether a character is a decimal digit.
+-- @param c [Number character code]
+-- @return [Boolean]
 function char.is_num(c)   return char.is(c, CHAR_DIGIT) end
+
+--- Checks whether a character is a hexadecimal digit.
+-- @param c [Number character code]
+-- @return [Boolean]
 function char.is_hex(c)   return char.is(c, CHAR_HEX)   end
+
+--- Checks whether a character can be a part of an identifier: a letter, a digit, '_',
+-- '!', '?' or any byte above 127.
+-- @param c [Number character code]
+-- @return [Boolean]
 function char.is_ident(c) return char.is(c, CHAR_IDENT) end
+
+--- Checks whether a character is a space or a tab.
+-- @param c [Number character code]
+-- @return [Boolean]
 function char.is_space(c) return char.is(c, CHAR_SPACE) end
+
+--- Checks whether a character is a lowercase letter.
+-- @param c [Number character code]
+-- @return [Boolean]
 function char.is_lower(c) return char.is(c, CHAR_LOWER) end
+
+--- Checks whether a character is an uppercase letter.
+-- @param c [Number character code]
+-- @return [Boolean]
 function char.is_upper(c) return char.is(c, CHAR_UPPER) end
+
+--- Checks whether a character is a punctuation character.
+-- @param c [Number character code]
+-- @return [Boolean]
 function char.is_punct(c) return char.is(c, CHAR_PUNCT) end
+
+--- Checks whether a character is a control character.
+-- @param c [Number character code]
+-- @return [Boolean]
 function char.is_cntrl(c) return char.is(c, CHAR_CNTRL) end
 
 return char

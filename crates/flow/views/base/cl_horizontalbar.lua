@@ -1,15 +1,21 @@
 local PANEL = {}
 PANEL.centered = false
 
+--- Hides the scroll buttons of the underlying DHorizontalScroller.
 function PANEL:Init()
   self.btnLeft:SetVisible(false)
   self.btnRight:SetVisible(false)
 end
 
+--- Delegates drawing of the bar to the active theme's PaintHorizontalbar hook.
+-- @param width [Number panel width]
+-- @param height [Number panel height]
 function PANEL:Paint(width, height)
   Theme.hook('PaintHorizontalbar', self, width, height)
 end
 
+--- Adds a panel to the bar and immediately lays the bar out again.
+-- @param pnl [Panel]
 function PANEL:AddPanel(pnl)
   table.insert(self.Panels, pnl)
 
@@ -17,6 +23,8 @@ function PANEL:AddPanel(pnl)
   self:InvalidateLayout(true)
 end
 
+--- Lines the child panels up from left to right, or centers them when set_centered is on,
+-- stretches them to the height of the bar and clamps the scroll offset.
 function PANEL:PerformLayout()
   local w, h = self:GetSize()
   local x = 0
@@ -53,6 +61,8 @@ function PANEL:PerformLayout()
   self.pnlCanvas.x = self.OffsetX * -1
 end
 
+--- Sets whether the child panels are centered horizontally instead of aligned to the left.
+-- @param centered [Boolean]
 function PANEL:set_centered(centered)
   self.centered = centered
 end

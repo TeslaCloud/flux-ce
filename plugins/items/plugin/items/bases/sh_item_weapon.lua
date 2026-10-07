@@ -26,6 +26,9 @@ ItemWeapon:add_button('item.option.unload', {
   end
 })
 
+--- Called when the item gets equipped. Gives the player the weapon, selects it
+-- and loads its clips with the ammo that is stored in the item's data.
+-- @param player [Player]
 function ItemWeapon:post_equipped(player)
   local weapon = player:Give(self.weapon_class, true)
 
@@ -40,6 +43,9 @@ function ItemWeapon:post_equipped(player)
   end
 end
 
+--- Called when the item gets unequipped. Strips the weapon from the player
+-- and stores the contents of its clips in the item's data.
+-- @param player [Player]
 function ItemWeapon:post_unequipped(player)
   local weapon = player:GetWeapon(self.weapon_class)
 
@@ -53,6 +59,9 @@ function ItemWeapon:post_unequipped(player)
   end
 end
 
+--- Called on the server when a player presses the unload button in the item's menu.
+-- Empties the clips of the weapon and gives the ammo back to the player.
+-- @param player [Player]
 function ItemWeapon:on_unload(player)
   local weapon = player:GetWeapon(self.weapon_class)
   local clip1, clip2 = weapon:Clip1(), weapon:Clip2()
@@ -66,6 +75,9 @@ function ItemWeapon:on_unload(player)
   self:set_data('ammo', { 0, 0 })
 end
 
+--- Called on the server before the character of the player that has the item is saved.
+-- Stores the contents of the weapon's clips in the item's data.
+-- @param player [Player]
 function ItemWeapon:on_save(player)
   local weapon = player:GetWeapon(self.weapon_class)
 

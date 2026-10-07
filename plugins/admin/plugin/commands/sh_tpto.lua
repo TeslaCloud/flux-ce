@@ -7,6 +7,9 @@ CMD.arguments = 1
 CMD.player_arg = 1
 CMD.alias = 'goto'
 
+--- Teleports the caller to the targeted player and notifies staff.
+-- @param player [Player the caller, or an invalid entity when run from the server console]
+-- @param targets [Array<Player> matched players; only the first one is used]
 function CMD:on_run(player, targets)
   local target = targets[1]
 

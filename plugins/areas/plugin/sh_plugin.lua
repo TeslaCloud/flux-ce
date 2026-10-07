@@ -7,11 +7,36 @@ if !areas then
   require_relative 'lib/sh_areas'
 end
 
+--- Registers the 'areas' level design permission.
 function Area:RegisterPermissions()
   Bolt:register_permission('areas', 'Manage areas', 'Grants access to manage areas.', 'permission.categories.level_design', 'moderator')
 end
 
 Area.tool_modes = {
+  --- Adds a mode to the area tool and merges the mode's convars into the tool's convars.
+  -- Meant to be called from the AddAreaToolModes hook as mode_list:Add(mode).
+  -- ```
+  -- function PLUGIN:AddAreaToolModes(mode_list)
+  --   local mode = {}
+  --   mode.title = 'Text Area'
+  --   mode.area_type = 'textarea'
+  --   mode.ClientConVar = { height = '512' }
+  --
+  --   function mode:OnLeftClick(tool, trace)
+  --     tool.area = tool.area or Areas.create('my_area', 512, { type = self.area_type })
+  --     tool.area:add_vertex(trace.HitPos)
+  --
+  --     return true
+  --   end
+  --
+  --   mode_list:Add(mode)
+  -- end
+  -- ```
+  -- @param list [Hash the Area.tool_modes table the mode is appended to]
+  -- @param data [Hash mode definition: title, area_type, ClientConVar and the optional
+  --   functions OnLeftClick(mode, tool, trace), OnRightClick(mode, tool, trace),
+  --   OnReload(mode, tool, trace) and BuildCPanel(mode, panel). The default OnReload
+  --   removes the area of that type under the trace]
   Add = function(list, data)
     local vars = data.ClientConVar or data.ConVars or data.ClientConVars or data.ConVar
 
@@ -54,10 +79,13 @@ Area.tool_modes = {
   end
 }
 
+--- Calls the AddAreaToolModes hook so that plugins can add their modes to the area tool.
 function Area:OnSchemaLoaded()
   Plugin.call('AddAreaToolModes', self.tool_modes)
 end
 
+--- Adds the built-in 'Text Area' mode to the area tool.
+-- @param mode_list [Hash the Area.tool_modes table; modes are added with mode_list:Add]
 function Area:AddAreaToolModes(mode_list)
   local mode = {}
   mode.title = 'Text Area'

@@ -7,10 +7,17 @@ CMD.arguments = 3
 CMD.player_arg = 1
 CMD.aliases = { 'setatt', 'setattribute', 'charsetatt' }
 
+--- Returns the translated command description with every registered attribute ID listed.
+-- @return [String]
 function CMD:get_description()
   return t(self.description, { attributes = table.concat(table.get_keys(Attributes.get_stored()), ', ') })
 end
 
+--- Sets the level of an attribute for every target, then notifies the targets and staff.
+-- @param player [Player the player who ran the command]
+-- @param targets [Array<Player> players matched by the first command argument]
+-- @param attribute_id [String attribute to set, normalized with to_id]
+-- @param value [String new level, parsed with tonumber]
 function CMD:on_run(player, targets, attribute_id, value)
   attribute_id = attribute_id:to_id()
 

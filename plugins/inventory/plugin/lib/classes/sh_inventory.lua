@@ -3,7 +3,7 @@
 -- using the same interface and functionality.
 class 'Inventory'
 
--- Initializes the new inventory class
+--- Initializes the new inventory class
 -- and loads it to the server cache.
 -- ```
 -- -- Creating new inventory
@@ -13,7 +13,7 @@ class 'Inventory'
 -- inventory.type = 'testing_inventory'
 -- inventory.multislot = false
 -- ```
--- @param id [Number]
+-- @param id=nil [Number id of the inventory; client-side only, the server assigns ids itself]
 function Inventory:init(id)
   self.title = 'ui.inventory.title'
   self.icon = nil
@@ -58,6 +58,7 @@ function Inventory:to_networkable()
 end
 
 --- Sets the width of the inventory and rebuilds its slots.
+-- @param width [Number width in a number of slots]
 function Inventory:set_width(width)
   self.width = width
 
@@ -65,6 +66,7 @@ function Inventory:set_width(width)
 end
 
 --- Sets the height of the inventory and rebuilds its slots.
+-- @param height [Number height in a number of slots]
 function Inventory:set_height(height)
   self.height = height
 
@@ -72,6 +74,8 @@ function Inventory:set_height(height)
 end
 
 --- Sets the width and height of the inventory and rebuilds its slots.
+-- @param width [Number width in a number of slots]
+-- @param height [Number height in a number of slots]
 function Inventory:set_size(width, height)
   self.width = width
   self.height = height
@@ -104,7 +108,7 @@ function Inventory:get_type()
 end
 
 --- Get the slots grid.
--- @return [Hash]
+-- @return [Hash slots, indexed by y and then by x; every slot is an array of instance ids]
 function Inventory:get_slots()
   return self.slots
 end
@@ -162,7 +166,7 @@ end
 
 --- Get item objects that the inventory contains.
 -- Also includes items from the containers.
--- @return [Hash items]
+-- @return [Array<Item> items]
 function Inventory:get_items()
   local items = {}
 
@@ -184,7 +188,7 @@ function Inventory:get_items()
 end
 
 --- Get item ids that the inventory contains.
--- @return [Hash items ids]
+-- @return [Array<Number> items ids]
 function Inventory:get_items_ids()
   local items = {}
 
@@ -204,9 +208,9 @@ function Inventory:get_items_ids()
 end
 
 --- Get the items ids that located in the specified slot.
--- @param x [Number]
--- @param y [Number]
--- @return [Hash items ids]
+-- @param x [Number column of the slot, starting from 1]
+-- @param y [Number row of the slot, starting from 1]
+-- @return [Array<Number> items ids, or nil if the slot is out of the inventory bounds]
 function Inventory:get_slot(x, y)
   if x <= self.width and y <= self.height then
     return self.slots[y][x]
@@ -216,7 +220,7 @@ end
 --- Get the first item id that located in the specified slot.
 -- @param x [Number]
 -- @param y [Number]
--- @return [Number]
+-- @return [Number instance id, or nil if the slot is empty]
 function Inventory:get_first_in_slot(x, y)
   local slot = self:get_slot(x, y)
 
@@ -245,7 +249,7 @@ end
 
 --- Find a specified item object by its id.
 -- @param id [String]
--- @return [Item]
+-- @return [Item first item found, or nil if there is none]
 function Inventory:find_item(id)
   for k, v in pairs(self:get_items()) do
     if v.id == id then
@@ -256,7 +260,7 @@ end
 
 --- Find a specified items objects by their id.
 -- @param id [String]
--- @return [Hash items]
+-- @return [Array<Item> items]
 function Inventory:find_items(id)
   local items = {}
 
@@ -271,7 +275,7 @@ end
 
 --- Check if the inventory contains item by its id.
 -- @param id [String]
--- @return [Boolean]
+-- @return [Boolean, Item found item]
 function Inventory:has_item(id)
   local item_obj = self:find_item(id)
 
@@ -284,7 +288,8 @@ end
 
 --- Check if the inventory contains items by their id.
 -- @param id [String]
--- @return [Boolean, Hash found items]
+-- @param amount=1 [Number amount of items the inventory has to contain]
+-- @return [Boolean, Array<Item> found items]
 function Inventory:has_items(id, amount)
   amount = amount or 1
 
@@ -478,7 +483,7 @@ end
 
 if SERVER then
 
-  -- Add item object to a inventory.
+  --- Add item object to a inventory.
   -- @variant Inventory:add_item(item_obj, x, y)
   --   @param item_obj [Item]
   --   @param x [Number]
@@ -525,23 +530,31 @@ if SERVER then
     return true
   end
 
-  -- Add item to a inventory by its instance id.
-  -- @variant Inventory:add_item(item_obj, x, y)
-  --   @param item_obj [Item]
+  --- Add item to a inventory by its instance id.
+  -- @variant Inventory:add_item_by_id(instance_id, x, y)
+  --   @param instance_id [Number]
   --   @param x [Number]
   --   @param y [Number]
   -- In this case finds best position for the item.
-  -- @variant Inventory:add_item(item_obj)
-  --   @param item_obj [Item]
+  -- @variant Inventory:add_item_by_id(instance_id)
+  --   @param instance_id [Number]
   -- @return [Boolean was the item added successfully, String text of the error that occurred]
   function Inventory:add_item_by_id(instance_id, x, y)
     return self:add_item(Item.find_instance_by_id(instance_id), x, y)
   end
 
-  -- Create an item and add it to a inventory.
+  --- Create an item and add it to a inventory.
+  -- ```
+  -- local success, error_text = inventory:give_item('test_item', 5, { name = 'Test Item #2' })
+  --
+  -- if success then
+  --   -- The changes are not sent to the clients until the inventory is synchronized.
+  --   inventory:sync()
+  -- end
+  -- ```
   -- @param id [String]
-  -- @param amount [Number]
-  -- @param data [Hash]
+  -- @param amount=1 [Number]
+  -- @param data=nil [Hash fields to override on the created items]
   -- @return [Boolean was the item given successfully, String text of the error that occurred]
   function Inventory:give_item(id, amount, data)
     amount = amount or 1
@@ -560,7 +573,7 @@ if SERVER then
     return true
   end
 
-  -- Take item object from the inventory.
+  --- Take item object from the inventory.
   -- @param item_obj [Item]
   -- @return [Boolean was the item taken successfully, String text of the error that occurred]
   function Inventory:take_item_table(item_obj)
@@ -588,7 +601,7 @@ if SERVER then
     return true
   end
 
-  -- Take item object from the inventory based on its id.
+  --- Take item object from the inventory based on its id.
   -- @param id [String]
   -- @return [Boolean was the item taken successfully, String text of the error that occurred]
   function Inventory:take_item(id)
@@ -601,7 +614,7 @@ if SERVER then
     return false, 'error.inventory.invalid_item'
   end
 
-  -- Take certain amount of items from the inventory based on their id.
+  --- Take certain amount of items from the inventory based on their id.
   -- @param id [String]
   -- @param amount [Number]
   -- @return [Boolean was the item taken successfully, String text of the error that occurred]
@@ -617,7 +630,7 @@ if SERVER then
     return true
   end
 
-  -- Take item object from the inventory based on its instance id.
+  --- Take item object from the inventory based on its instance id.
   -- @param instance_id [Number]
   -- @return [Boolean was the item taken successfully, String text of the error that occurred]
   function Inventory:take_item_by_id(instance_id)
@@ -784,7 +797,7 @@ if SERVER then
 
   --- @warning [Internal]
   -- Move the whole stack inside the inventory.
-  -- @param instance_ids [Hash instance ids]
+  -- @param instance_ids [Array<Number> instance ids]
   -- @param x [Number]
   -- @param y [Number]
   -- @param was_rotated [Boolean]
@@ -813,7 +826,7 @@ if SERVER then
 
   --- @warning [Internal]
   -- Move the whole stack to another inventory.
-  -- @param instance_ids [Hash instance ids]
+  -- @param instance_ids [Array<Number> instance ids]
   -- @param inventory [Inventory]
   -- @param x [Number]
   -- @param y [Number]
@@ -832,7 +845,7 @@ if SERVER then
   end
 
   --- Get the players that currently receive the inventory data.
-  -- @return [Hash players]
+  -- @return [Array<Player> players]
   function Inventory:get_receivers()
     return self.receivers
   end
@@ -893,7 +906,7 @@ if SERVER then
 
   --- @warning [Internal]
   -- Fill the inventory with certain items by their ids.
-  -- @param items_ids [Hash]
+  -- @param items_ids [Array<Number> instance ids]
   function Inventory:load_items(items_ids)
     for k, v in pairs(items_ids) do
       local item_obj = Item.find_instance_by_id(v)
@@ -918,7 +931,14 @@ else
   --- Creates a panel for the inventory.
   -- It will update automatically every time
   -- inventory synchronizes itself.
-  -- @param parent [Panel]
+  -- ```
+  -- local hotbar = PLAYER:get_inventory('hotbar'):create_panel()
+  -- hotbar:set_slot_size(math.scale(80))
+  -- hotbar:set_slot_padding(math.scale(8))
+  -- hotbar:SizeToContents()
+  -- hotbar:rebuild()
+  -- ```
+  -- @param parent=nil [Panel]
   -- @return [Panel]
   function Inventory:create_panel(parent)
     local panel = vgui.create('fl_inventory', parent)

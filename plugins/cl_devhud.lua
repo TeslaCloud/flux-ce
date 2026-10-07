@@ -2,6 +2,8 @@ PLUGIN:set_name('Flux Dev HUD')
 PLUGIN:set_author('TeslaCloud Studios')
 PLUGIN:set_description('Adds developer HUD.')
 
+--- Draws the Flux and core version line in the bottom left corner while in development mode.
+-- Skipped when the HUDPaintDeveloper hook returns anything.
 function PLUGIN:HUDPaint()
   if Flux.development then
     if hook.run('HUDPaintDeveloper') == nil then

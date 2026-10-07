@@ -6,23 +6,32 @@ ENT.Category = 'Flux'
 ENT.Spawnable = false
 ENT.RenderGroup = RENDERGROUP_BOTH
 
+--- Returns the currency this money entity holds.
+-- @return [String currency ID, or nil if it has not been set]
 function ENT:get_currency()
   return self:get_nv('fl_currency')
 end
 
+--- Returns how much money this entity holds.
+-- @return [Number amount, or nil if it has not been set]
 function ENT:get_currency_amount()
   return self:get_nv('fl_currency_amount')
 end
 
+--- Sets the currency this money entity holds. Server only.
+-- @param value [String currency ID]
 function ENT:set_currency(value)
   self:set_nv('fl_currency', value)
 end
 
+--- Sets how much money this entity holds. Server only.
+-- @param value [Number]
 function ENT:set_currency_amount(value)
   self:set_nv('fl_currency_amount', value)
 end
 
 if SERVER then
+  --- Sets up physics, use type and collision group, and wakes the physics object.
   function ENT:Initialize()
     self:SetSolid(SOLID_VPHYSICS)
     self:SetMoveType(MOVETYPE_VPHYSICS)
@@ -38,6 +47,12 @@ if SERVER then
     end
   end
 
+  --- Lets the activator pick the money up: runs PlayerPickupMoney and removes the entity
+  -- unless a CanPlayerPickupMoney hook returns false.
+  -- @param activator [Entity]
+  -- @param caller [Entity]
+  -- @param use_type [Number USE_* enum]
+  -- @param value [Number]
   function ENT:Use(activator, caller, use_type, value)
     if IsValid(activator) then
       if hook.run('CanPlayerPickupMoney', activator, self) != false then
@@ -48,10 +63,16 @@ if SERVER then
     end
   end
 else
+  --- Draws the entity's model.
   function ENT:Draw()
     self:DrawModel()
   end
 
+  --- Draws the currency name and amount when the local player looks at the entity, fading
+  -- out with distance.
+  -- @param x [Number]
+  -- @param y [Number]
+  -- @param distance [Number distance between the local player and the entity]
   function ENT:DrawTargetID(x, y, distance)
     local currency = self:get_currency()
 

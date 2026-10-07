@@ -5,6 +5,10 @@ Plugin.add_extra('factions')
 require_relative 'cl_hooks'
 require_relative 'sv_hooks'
 
+--- Includes a plugin's factions folder when the 'factions' extra is being loaded.
+-- @param extra [String name of the extra being loaded]
+-- @param folder [String path of the plugin folder]
+-- @return [Boolean true when the extra was handled here, otherwise nil]
 function Factions:PluginIncludeFolder(extra, folder)
   if extra == 'factions' then
     self.include_factions(folder..'/factions/')
@@ -13,12 +17,17 @@ function Factions:PluginIncludeFolder(extra, folder)
   end
 end
 
+--- Prevents faction name generation for bots.
+-- @param player [Player]
+-- @return [Boolean false for bots, otherwise nil]
 function Factions:ShouldNameGenerate(player)
   if player:IsBot() then
     return false
   end
 end
 
+--- Registers the 'faction' and 'rank' conditions, which compare a player's faction and their
+-- rank within a faction.
 function Factions:RegisterConditions()
   Conditions:register_condition('faction', {
     name = 'condition.faction.name',

@@ -9,12 +9,18 @@ Flux.Bars:register('getup', {
   type = BAR_MANUAL
 })
 
+--- Sends the getup command when the player presses jump while fallen over.
+-- @param player [Player]
+-- @param bind [String the bind's command]
+-- @param pressed [Boolean whether the bind was pressed rather than released]
 function PLUGIN:PlayerBindPress(player, bind, pressed)
   if pressed and bind:find('jump') and player:is_doing_action('fallen') then
     Flux.Command:send('getup')
   end
 end
 
+--- Darkens the screen while the local player is fallen over or getting up, and draws the
+-- 'press jump' prompt or the get up progress bar.
 function PLUGIN:HUDPaint()
   if !IsValid(PLAYER) then return end
 

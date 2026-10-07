@@ -3,14 +3,22 @@ mod 'Attributes'
 local stored = Attributes.stored or {}
 Attributes.stored = stored
 
+--- Returns every registered attribute definition.
+-- @return [Hash attribute definitions keyed by attribute ID]
 function Attributes.get_stored()
   return stored
 end
 
+--- Returns the definition of a registered attribute.
+-- @param id [String attribute ID]
+-- @return [AttributeBase the attribute definition, or nil if it is not registered]
 function Attributes.find(id)
   return stored[id]
 end
 
+--- Returns the registered attribute definitions of a single type.
+-- @param type [Number attribute type, ATTRIBUTE_STAT or ATTRIBUTE_SKILL]
+-- @return [Hash attribute definitions keyed by attribute ID]
 function Attributes.get_by_type(type)
   local atts_table = {}
 
@@ -23,6 +31,20 @@ function Attributes.get_by_type(type)
   return atts_table
 end
 
+--- Stores an attribute definition and runs the AttributeRegistered hook. Missing fields get
+-- defaults: min 0, max 10, total_progress 100, geometric progression with coefficient 1.2.
+-- ```
+-- local attribute = AttributeBase.new('lockpicking')
+-- attribute.name = 'attribute.lockpicking.name'
+-- attribute.type = ATTRIBUTE_SKILL
+-- attribute.progression_type = PROGRESSION_ARITHMETIC
+-- attribute.boostable = false
+--
+-- Attributes.register(attribute.attribute_id, attribute)
+-- ```
+-- @param id [String unique attribute ID; raises an error when it is not a string]
+-- @param data [AttributeBase attribute definition; nothing happens when it is nil]
+-- @see [AttributeBase#register]
 function Attributes.register(id, data)
   if !data then return end
 
@@ -53,10 +75,21 @@ function Attributes.register(id, data)
   stored[id] = data
 end
 
+--- Includes every file of a folder as an attribute definition. Each file gets a fresh ATTRIBUTE
+-- global, an AttributeBase named after the file, that is registered once the file has run.
+-- ```
+-- -- attributes/sh_strength.lua, registered as 'strength'
+-- ATTRIBUTE.name = 'attribute.strength.name'
+-- ATTRIBUTE.type = ATTRIBUTE_STAT
+-- ATTRIBUTE.max = 20
+-- ```
+-- @param directory [String folder to include files from]
 function Attributes.include_attributes(directory)
   Pipeline.include_folder('attribute', directory)
 end
 
+--- Removes the expiry timers of every boost and multiplier on a character's attributes.
+-- @param character [Character]
 function Attributes.destroy_timers(character)
   if character.attributes then
     for k, v in pairs(character.attributes) do
@@ -74,6 +107,19 @@ end
 do
   local player_meta = FindMetaTable('Player')
 
+  --- Returns the level, progress, boosts and multipliers of every attribute of the player's
+  -- character. On the client this is the networked copy and the type argument is ignored.
+  -- ```
+  -- local attributes = player:get_attributes()
+  --
+  -- -- attributes.strength = {
+  -- --   level = 3, progress = 40,
+  -- --   boosts = { { value = 2, expires_at = '2026-01-01T12:00:00Z' } },
+  -- --   multipliers = {}
+  -- -- }
+  -- ```
+  -- @param type=nil [Number attribute type to filter by, used on the server only]
+  -- @return [Hash attribute data keyed by attribute ID, nil on the client until it is networked]
   function player_meta:get_attributes(type)
     if CLIENT then
       return self:get_nv('attributes')
@@ -114,6 +160,11 @@ do
     end
   end
 
+  --- Returns the player's level in an attribute and their progress towards the next level.
+  -- Active boosts are added to the level unless disabled or the attribute is not boostable.
+  -- @param attribute_id [String]
+  -- @param no_boost=false [Boolean leave active boosts out of the level]
+  -- @return [Number level, Number progress]
   function player_meta:get_attribute(attribute_id, no_boost)
     local attribute_table = Attributes.find(attribute_id)
     local attribute = self:get_attributes()[attribute_id]
@@ -123,6 +174,9 @@ do
     return level + boost, attribute.progress or 0
   end
 
+  --- Returns the sum of the player's boosts to an attribute that have not expired yet.
+  -- @param attribute_id [String]
+  -- @return [Number]
   function player_meta:get_attribute_boost(attribute_id)
     local attribute_table = Attributes.find(attribute_id)
     local attribute = self:get_attributes()[attribute_id]
@@ -141,6 +195,10 @@ do
     return boost
   end
 
+  --- Returns the player's combined progress multiplier for an attribute. Every multiplier adds
+  -- its value minus one on top of 1, and the result is never lower than 1.
+  -- @param attribute_id [String]
+  -- @return [Number]
   function player_meta:get_attribute_multiplier(attribute_id)
     local attribute_table = Attributes.find(attribute_id)
     local attribute = self:get_attributes()[attribute_id]
@@ -154,6 +212,10 @@ do
   end
 
   if SERVER then
+    --- Sets the player's level in an attribute, clamped to the attribute's min and max, on the
+    -- character and in the networked attributes. Server only.
+    -- @param attribute_id [String]
+    -- @param level [Number]
     function player_meta:set_attribute(attribute_id, level)
       local attribute_table = Attributes.find(attribute_id)
       local char = self:get_character()
@@ -175,18 +237,35 @@ do
       self:set_nv('attributes', attributes)
     end
 
+    --- Raises the player's level in an attribute. Server only.
+    -- @param attribute_id [String]
+    -- @param amount=1 [Number levels to add]
     function player_meta:increase_attribute(attribute_id, amount)
       amount = amount or 1
 
       self:set_attribute(attribute_id, self:get_attribute(attribute_id) + amount)
     end
 
+    --- Lowers the player's level in an attribute. Server only.
+    -- @param attribute_id [String]
+    -- @param amount=1 [Number levels to remove]
     function player_meta:decrease_attribute(attribute_id, amount)
       amount = amount or 1
 
       self:set_attribute(attribute_id, self:get_attribute(attribute_id) - amount)
     end
 
+    --- Adds progress to an attribute, raising or lowering its level whenever a level threshold is
+    -- crossed. Does nothing for attributes with has_progress set. Server only.
+    -- ```
+    -- -- Scaled by the player's multiplier when the attribute is multipliable.
+    -- player:progress_attribute('lockpicking', 15)
+    -- -- Always exactly 15.
+    -- player:progress_attribute('lockpicking', 15, true)
+    -- ```
+    -- @param attribute_id [String]
+    -- @param amount [Number progress to add, negative to remove]
+    -- @param no_multiplier=false [Boolean do not scale the amount by the player's multiplier]
     function player_meta:progress_attribute(attribute_id, amount, no_multiplier)
       local attribute_table = Attributes.find(attribute_id)
       local level, progress = self:get_attribute(attribute_id)
@@ -246,10 +325,23 @@ do
       self:set_nv('attributes', attributes)
     end
 
+    --- Removes progress from an attribute, lowering its level when needed. Server only.
+    -- @param attribute_id [String]
+    -- @param amount [Number progress to remove]
+    -- @see [Player#progress_attribute]
     function player_meta:regress_attribute(attribute_id, amount)
       self:progress_attribute(attribute_id, -amount)
     end
 
+    --- Adds a temporary boost to the player's level in an attribute. The boost is stored on the
+    -- character, networked, and removed by a timer when it expires. Server only.
+    -- ```
+    -- -- Two extra levels of strength for five minutes.
+    -- player:boost_attribute('strength', 2, 300)
+    -- ```
+    -- @param attribute_id [String attribute to boost; ignored when it is not boostable]
+    -- @param value [Number levels to add]
+    -- @param duration [Number seconds until the boost expires]
     function player_meta:boost_attribute(attribute_id, value, duration)
       local attribute_table = Attributes.find(attribute_id)
 
@@ -304,6 +396,16 @@ do
       self:set_nv('attributes', attributes)
     end
 
+    --- Adds a temporary progress multiplier to an attribute of the player. The multiplier is
+    -- stored on the character and networked. Server only.
+    -- ```
+    -- -- Double strength progress for an hour.
+    -- player:multiply_attribute('strength', 2, 3600)
+    -- ```
+    -- @param attribute_id [String attribute to affect; ignored when multipliable is false]
+    -- @param value [Number multiplier, 2 doubles the progress gained]
+    -- @param duration [Number seconds until the multiplier expires]
+    -- @see [Player#get_attribute_multiplier]
     function player_meta:multiply_attribute(attribute_id, value, duration)
       local attribute_table = Attributes.find(attribute_id)
 

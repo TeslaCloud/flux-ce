@@ -9,7 +9,10 @@ ActiveNetwork.globals = globals
 
 local ent_meta = FindMetaTable('Entity')
 
--- A function to get a networked global.
+--- Returns the value of a networked global variable.
+-- @param key [String variable name]
+-- @param default=nil [Any value to return if the variable is not set]
+-- @return [Any variable value, or default]
 function ActiveNetwork.get_nv(key, default)
   if globals[key] != nil then
     return globals[key]
@@ -18,10 +21,13 @@ function ActiveNetwork.get_nv(key, default)
   return default
 end
 
--- Cannot set them on client.
+--- Does nothing. Networked globals cannot be set on the client.
 function ActiveNetwork.set_nv() end
 
--- A function to get entity's networked variable.
+--- Returns the value of this entity's networked variable.
+-- @param key [String variable name]
+-- @param default=nil [Any value to return if the variable is not set]
+-- @return [Any variable value, or default]
 function ent_meta:get_nv(key, default)
   local index = self:EntIndex()
 

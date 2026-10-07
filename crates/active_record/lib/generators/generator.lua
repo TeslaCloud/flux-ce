@@ -1,3 +1,15 @@
+--- Adds a column type method to a query, which lets columns be defined DSL-style.
+-- The generated method takes the column name followed by its options, or a single
+-- table holding both.
+-- ```
+-- ActiveRecord.generate_create_func(query, 'string', 'varchar(255)')
+--
+-- query:string 'name'
+-- query:string { 'steam_id', null = false }
+-- ```
+-- @param obj [ActiveRecord::Query query to add the method to]
+-- @param type [String abstract column type, used as the name of the method]
+-- @param def [String adapter-specific SQL type definition]
 function ActiveRecord.generate_create_func(obj, type, def)
   obj[type] = function(s, name, ...)
     local args = { ... }
@@ -18,6 +30,9 @@ function ActiveRecord.generate_create_func(obj, type, def)
   end
 end
 
+--- Adds a column type method for every type supported by the current adapter.
+-- @param obj [ActiveRecord::Query query to add the methods to]
+-- @see [ActiveRecord.generate_create_func]
 function ActiveRecord.generate_create_funcs(obj)
   local tab = ActiveRecord.Adapters[ActiveRecord.adapter_name:capitalize()].types or {}
 
@@ -45,6 +60,11 @@ do
     end
   }
 
+  --- Converts a raw database value to the Lua type matching an abstract column type.
+  -- @param str [Any value as returned by the database, usually a string]
+  -- @param type [String abstract column type]
+  -- @return [Number/Boolean/Any number for 'integer', 'float', 'decimal' and 'primary_key'
+  --   columns, boolean for 'boolean' columns, the unchanged value for anything else]
   function ActiveRecord.str_to_type(str, type)
     local conv = converters[type]
 
@@ -55,6 +75,11 @@ do
     return str
   end
 
+  --- Converts a Lua value to the form in which it is written to the database.
+  -- @param val [Any]
+  -- @param type [String abstract column type]
+  -- @return [Number/String 0 or 1 for 'boolean' columns, otherwise the value converted
+  --   to a string]
   function ActiveRecord.type_to_db(val, type)
     local conv = reverse_converters[type]
 
@@ -66,10 +91,15 @@ do
   end
 end
 
+--- Returns the name of the database table for a model class name, which is its
+-- underscored plural ('TempPermission' becomes 'temp_permissions').
+-- @param class_name [String]
+-- @return [String]
 function ActiveRecord.generate_table_name(class_name)
   return Flow.Inflector:pluralize(class_name:underscore())
 end
 
+--- Creates the internal 'ar_schema' and 'ar_metadata' tables if they do not exist yet.
 function ActiveRecord.generate_tables()
   create_table('ar_schema', function(t)
     t:overwrite(false)

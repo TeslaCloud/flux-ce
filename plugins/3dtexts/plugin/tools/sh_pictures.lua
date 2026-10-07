@@ -9,6 +9,11 @@ TOOL.ClientConVar['width'] = '512'
 TOOL.ClientConVar['height'] = '512'
 TOOL.ClientConVar['fade'] = '0'
 
+--- Places a 3D picture built from the tool's settings on the surface that was hit.
+-- The URL must end with png, jpg or jpeg.
+-- @param trace [Hash trace result of the tool owner's aim]
+-- @return [Boolean true if the picture was placed (always true clientside), false if the
+--   URL is invalid, nil if the owner lacks the 'textadd' permission]
 function TOOL:LeftClick(trace)
   if CLIENT then return true end
 
@@ -45,6 +50,9 @@ function TOOL:LeftClick(trace)
   return true
 end
 
+--- Requests removal of the 3D picture the tool owner is looking at.
+-- @param trace [Hash trace result of the tool owner's aim]
+-- @return [Boolean always true]
 function TOOL:RightClick(trace)
   if CLIENT then return true end
 
@@ -53,6 +61,8 @@ function TOOL:RightClick(trace)
   return true
 end
 
+--- Builds the tool's settings panel: picture URL, width, height and fade offset.
+-- @param CPanel [Panel the tool's control panel]
 function TOOL.BuildCPanel(CPanel)
   CPanel:AddControl('Header',  { Description = t'tool.pictures.desc' })
   CPanel:AddControl('TextBox', { Label = t'tool.pictures.url', Command = 'pictures_url', MaxLenth = '256' })

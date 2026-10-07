@@ -4,6 +4,10 @@ TOOL.Command = nil
 TOOL.ConfigName = ''
 TOOL.permission = 'mapscenes'
 
+--- Adds a mapscene point at the owner's eye position, facing where they are looking.
+-- @param trace [Hash trace result of the tool owner's aim]
+-- @return [Boolean true if the point was added (always true clientside), nil if the owner
+--   is not valid or lacks the 'mapsceneadd' permission]
 function TOOL:LeftClick(trace)
   if CLIENT then return true end
 
@@ -18,6 +22,9 @@ function TOOL:LeftClick(trace)
   return true
 end
 
+--- Builds the tool's settings panel: a list of the mapscene points that can be deleted
+-- through a right click. Adds nothing without the 'mapscenes' permission.
+-- @param CPanel [Panel the tool's control panel]
 function TOOL.BuildCPanel(CPanel)
   if !can('mapscenes') then return end
 

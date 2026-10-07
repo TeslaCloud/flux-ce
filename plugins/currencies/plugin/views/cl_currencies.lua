@@ -1,15 +1,22 @@
 local PANEL = {}
 
+--- Sets the default title of the panel.
 function PANEL:Init()
   self.title = t'ui.currency.title'
 end
 
+--- Draws the translucent background, slightly larger than the panel itself.
+-- @param w [Number]
+-- @param h [Number]
 function PANEL:Paint(w, h)
   DisableClipping(true)
     draw.RoundedBox(0, -4, -4, w + 8, h + 8, Color(50, 50, 50, 100))
   DisableClipping(false)
 end
 
+--- Draws the translated title on a gradient above the panel.
+-- @param w [Number]
+-- @param h [Number]
 function PANEL:PaintOver(w, h)
   if self.title then
     local text = t(self.title)
@@ -23,14 +30,19 @@ function PANEL:PaintOver(w, h)
   end
 end
 
+--- Resizes the panel to fit the currency lines created by the last rebuild.
 function PANEL:SizeToContents()
   self:SetSize(self.max_w + math.scale_x(4), self.max_h + math.scale(4))
 end
 
+--- Sets the entity whose money the panel shows. Call rebuild afterwards to update it.
+-- @param entity [Entity]
 function PANEL:set_entity(entity)
   self.entity = entity
 end
 
+--- Recreates a line for every visible currency, with give and drop buttons for the local
+-- player's own money or a take button for the money of another entity.
 function PANEL:rebuild()
   self.max_w = 0
   self.max_h = 0

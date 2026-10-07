@@ -1416,6 +1416,7 @@ end
 
 FontAwesome.hooks = {}
 
+--- Creates the 'flFontAwesome' font that is used to draw the icons.
 function FontAwesome.hooks:CreateFonts()
   Font.create('flFontAwesome', {
     font      = 'FontAwesome5112',
@@ -1428,14 +1429,33 @@ end
 
 Plugin.add_hooks('FontAwesome', FontAwesome.hooks)
 
+--- Returns the glyph of the specified icon.
+-- @param id [String icon ID, such as 'fa-plus']
+-- @return [String the glyph, or the ID itself if there is no such icon]
 function FontAwesome:get(id)
   return icon_data[id] or id
 end
 
+--- Returns the dimensions of the specified icon when drawn at the specified size.
+-- @param id [String icon ID, such as 'fa-plus']
+-- @param size=16 [Number font size of the icon]
+-- @return [Number width, Number height]
 function FontAwesome:get_icon_size(id, size)
   return util.text_size(FontAwesome:get(id), Font.size('flFontAwesome', size))
 end
 
+--- Draws an icon on the screen. The 'fa-' prefix of the ID can be omitted.
+-- Draws nothing if there is no such icon.
+-- @param id [String icon ID, such as 'fa-plus' or 'plus']
+-- @param x [Number]
+-- @param y [Number]
+-- @param size=16 [Number font size of the icon]
+-- @param color=color_white [Color]
+-- @param x_align=TEXT_ALIGN_LEFT [Number TEXT_ALIGN enum]
+-- @param y_align=TEXT_ALIGN_TOP [Number TEXT_ALIGN enum]
+-- @param outline_width=nil [Number draws the icon outlined if specified]
+-- @param outline_color=nil [Color]
+-- @return [Number width, Number height of the drawn icon; nil if there is no such icon]
 function FontAwesome:draw(id, x, y, size, color, x_align, y_align, outline_width, outline_color)
   if id:starts('fa ') then
     id = id:sub(4, id:len())

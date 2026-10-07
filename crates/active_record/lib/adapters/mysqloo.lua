@@ -18,14 +18,22 @@ ActiveRecord.Adapters.Mysqloo.types = {
 
 ActiveRecord.Adapters.Mysqloo._sql_syntax = 'mysql'
 
+--- Loads the 'mysqloo' binary module.
 function ActiveRecord.Adapters.Mysqloo:init()
   require('mysqloo')
 end
 
+--- Checks whether the adapter talks to a MySQL database.
+-- @return [Boolean always true]
 function ActiveRecord.Adapters.Mysqloo:is_mysql()
   return true
 end
 
+--- Connects to a MySQL server through MySQLOO and pings it every 30 seconds to keep
+-- the connection alive. Calls #on_connection_failed if the connection fails.
+-- @param config [Hash database settings: host, user, password, database, port (3306 if
+--   omitted), socket and flags]
+-- @param on_connected=nil [Function called with the adapter once the connection is ready]
 function ActiveRecord.Adapters.Mysqloo:connect(config, on_connected)
   local host, user, password, port, database, socket, flags = config.host, config.user, config.password, config.port, config.database, config.socket, config.flags
 
@@ -72,6 +80,7 @@ function ActiveRecord.Adapters.Mysqloo:connect(config, on_connected)
   end
 end
 
+--- Closes the MySQL connection, if there is one.
 function ActiveRecord.Adapters.Mysqloo:disconnect()
   if self.connection then
     self.connection:disconnect(true)
@@ -79,14 +88,27 @@ function ActiveRecord.Adapters.Mysqloo:disconnect()
   self.connection = nil
 end
 
+--- Escapes a string using the MySQL connection. Requires an established connection.
+-- @param str [String]
+-- @return [String]
 function ActiveRecord.Adapters.Mysqloo:escape(str)
   return self.connection:escape(str)
 end
 
+--- Quotes an identifier such as a table or column name with backticks.
+-- @param str [String]
+-- @return [String]
 function ActiveRecord.Adapters.Mysqloo:quote_name(str)
   return '`'..str..'`'
 end
 
+--- Runs a raw SQL query on the MySQL server. In sync mode this blocks until the query
+-- is done; without a connection the query is put into the queue instead.
+-- @param query [String SQL to run]
+-- @param callback=nil [Function called with the result rows (an Array of row Hashes), the
+--   query string and the time the query took in seconds]
+-- @param query_type=nil [String unused]
+-- @return [Any whatever the callback returns in sync mode, nothing otherwise]
 function ActiveRecord.Adapters.Mysqloo:raw_query(query, callback, query_type)
   if !self.connection then
     return self:queue(query)
@@ -134,16 +156,34 @@ function ActiveRecord.Adapters.Mysqloo:raw_query(query, callback, query_type)
   end
 end
 
+--- Sets the table options (InnoDB engine and default charset) on a query before its
+-- SQL is built.
+-- @param query [ActiveRecord::Query]
+-- @param query_type [String unused]
+-- @param queue=nil [Boolean unused]
 function ActiveRecord.Adapters.Mysqloo:append_query(query, query_type, queue)
   query.options = 'ENGINE=InnoDB DEFAULT CHARSET='..(ActiveRecord.db_settings.encoding or 'utf8')
 end
 
+--- Makes the column the primary key of the table when a 'primary_key' column is created.
+-- @param query [ActiveRecord::Query query the column was added to]
+-- @param column [String column name]
+-- @param args [Hash unused]
+-- @param obj [ActiveRecord::Query unused]
+-- @param type [String abstract column type]
+-- @param def [String unused]
 function ActiveRecord.Adapters.Mysqloo:create_column(query, column, args, obj, type, def)
   if type == 'primary_key' then
     query:set_primary_key(column)
   end
 end
 
+--- Appends 'SELECT last_insert_id()' to insert queries, so that the id of the new row
+-- is passed to the query callback.
+-- @param query [ActiveRecord::Query unused]
+-- @param query_string [String generated SQL]
+-- @param query_type [String lowercase query type]
+-- @return [String the extended SQL for 'insert' queries, nil for other query types]
 function ActiveRecord.Adapters.Mysqloo:append_query_string(query, query_string, query_type)
   if query_type == 'insert' then
     query_string = query_string:ensure_end(';')

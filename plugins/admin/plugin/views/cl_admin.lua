@@ -2,6 +2,8 @@ local PANEL = {}
 PANEL.cur_panel = nil
 PANEL.panels = {}
 
+--- Sizes and centers the admin panel, creates its sidebar and lets plugins add their pages
+-- through the AddAdminMenuItems hook.
 function PANEL:Init()
   local scrw, scrh = ScrW(), ScrH()
   local width, height = self:get_menu_size()
@@ -21,6 +23,9 @@ function PANEL:Init()
   hook.run('AddAdminMenuItems', self, self.sidebar)
 end
 
+--- Draws the outlined, translucent background.
+-- @param w [Number panel width]
+-- @param h [Number panel height]
 function PANEL:Paint(w, h)
   DisableClipping(true)
 
@@ -31,10 +36,18 @@ function PANEL:Paint(w, h)
   draw.RoundedBox(0, 0, 0, w, h, Theme.get_color('background'):alpha(150))
 end
 
+--- Lets the active theme draw over the panel through its AdminPanelPaintOver hook.
+-- @param w [Number panel width]
+-- @param h [Number panel height]
 function PANEL:PaintOver(w, h)
   Theme.call('AdminPanelPaintOver', self, w, h)
 end
 
+--- Registers a page and adds a sidebar button that opens it.
+-- @param id [String page ID; must match a panel registered with the theme]
+-- @param title [String button text]
+-- @param permission=nil [String permission needed to open the page]
+-- @param ... [Vararg extra arguments passed to Theme.create_panel when the page is opened]
 function PANEL:add_panel(id, title, permission, ...)
   self.panels[id] = {
     id = id,
@@ -61,10 +74,15 @@ function PANEL:add_panel(id, title, permission, ...)
   self.sidebar:add_space(2)
 end
 
+--- Unregisters a page. Its sidebar button is left in place.
+-- @param id [String page ID]
 function PANEL:remove_panel(id)
   self.panels[id] = nil
 end
 
+--- Closes the current page and opens the one with the given ID, provided the local player has
+-- the permission it requires.
+-- @param id [String page ID]
 function PANEL:open_panel(id)
   local panel = self.panels[id]
 
@@ -89,6 +107,8 @@ function PANEL:open_panel(id)
   end
 end
 
+--- Slides the sidebar out of view and shows a 'Go Back' button, or restores the normal layout.
+-- @param fullscreen [Boolean]
 function PANEL:set_fullscreen(fullscreen)
   if fullscreen then
     self.sidebar:MoveTo(-self.sidebar:GetWide(), 0, 0.3)
@@ -118,6 +138,8 @@ function PANEL:set_fullscreen(fullscreen)
   end
 end
 
+--- Returns the size of the admin panel, scaled to the screen.
+-- @return [Number width, Number height]
 function PANEL:get_menu_size()
   return math.scale(1280), math.scale(900)
 end

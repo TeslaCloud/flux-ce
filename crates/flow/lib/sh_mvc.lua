@@ -5,12 +5,24 @@ mod 'MVC'
 if CLIENT then
   local mvc_hooks = {}
 
+  --- Sends a request to the server, where it is passed to the handlers registered with
+  -- MVC.handler. Clientside variant.
+  -- ```
+  -- MVC.push('SpawnMenu::GiveItem', PLAYER, item_obj.id, 1)
+  -- ```
+  -- @param name [String name of the request]
+  -- @param ... [Vararg data to pass to the handlers]
   function MVC.push(name, ...)
     if !isstring(name) then return end
 
     Cable.send('fl_mvc_push', name, ...)
   end
 
+  --- Registers a callback for the data that the server pushes under the specified name.
+  -- The callback is removed after the first response unless prevent_remove is set.
+  -- @param name [String name of the request]
+  -- @param handler [Function receives the pushed values]
+  -- @param prevent_remove=false [Boolean keep the callback for further responses]
   function MVC.pull(name, handler, prevent_remove)
     if !isstring(name) or !isfunction(handler) then return end
 
@@ -22,11 +34,25 @@ if CLIENT then
     })
   end
 
+  --- Sends a request to the server and calls the handler once the server responds to it.
+  -- ```
+  -- MVC.request('fl_create_character', function(response)
+  --   if response.success then
+  --     print('Character created!')
+  --   end
+  -- end, char_data)
+  -- ```
+  -- @param name [String name of the request]
+  -- @param handler [Function receives the values of the response]
+  -- @param ... [Vararg data to send with the request]
   function MVC.request(name, handler, ...)
     MVC.pull(name, handler)
     MVC.push(name, ...)
   end
 
+  --- Registers a permanent callback for the data that the server pushes under the specified name.
+  -- @param name [String name of the request]
+  -- @param handler [Function receives the pushed values]
   function MVC.listen(name, handler)
     MVC.pull(name, handler, true)
   end
@@ -53,6 +79,18 @@ else
   local mvc_handlers = {}
   local current_handler = nil
 
+  --- Registers a function that handles the requests clients send with MVC.push or MVC.request.
+  -- Call respond_to inside the handler to send a response back. Serverside only.
+  -- ```
+  -- MVC.handler('fl_create_character', function(player, data)
+  --   local status = Characters.create(player, data)
+  --
+  --   respond_to { success = status == CHAR_SUCCESS, status = status }
+  -- end)
+  -- ```
+  -- @param name [String name of the request]
+  -- @param handler [Function receives the player who has sent the request, followed
+  --   by the request's data]
   function MVC.handler(name, handler)
     if !isstring(name) then return end
 
@@ -61,6 +99,11 @@ else
     table.insert(mvc_handlers[name], handler)
   end
 
+  --- Sends data to the callbacks the clients have registered with MVC.pull, MVC.request
+  -- or MVC.listen. Serverside variant.
+  -- @param player [Player/Array<Player> recipients, everyone if not a valid player]
+  -- @param name [String name of the request]
+  -- @param ... [Vararg data to pass to the callbacks]
   function MVC.push(player, name, ...)
     if !isstring(name) then return end
 
@@ -68,6 +111,10 @@ else
   end
 
   -- utility
+
+  --- Sends a response to the player whose request is currently being handled. Can only
+  -- be called from inside of an MVC.handler callback.
+  -- @param data [Any response to send, usually a Hash]
   function respond_to(data)
     MVC.push(current_handler[1], current_handler[2], data)
   end

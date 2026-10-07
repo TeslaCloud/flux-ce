@@ -3,6 +3,9 @@
 class 'Package'
 
 --- Class constructor. Takes file path, file name and folder path as the arguments.
+-- @param file_path [String path to the package's cratespec.lua]
+-- @param lib_path [String name of the package, as it was given to Crate:include]
+-- @param full_path [String path to the package's folder, with a trailing slash]
 function Package:init(file_path, lib_path, full_path)
   self.metadata = {
     name        = '',
@@ -32,6 +35,15 @@ end
 
 --- Specifies that a package is dependant on another package or plugin.
 -- Merely adds to the dependency list. Can be called with either : or .
+-- When called with a dot, the dependency is added to the package that is currently
+-- being included (the CRATE global).
+-- ```
+-- Crate:describe(function(s)
+--   s.depends 'pon'
+--   s.depends 'lib/flux.lua'
+-- end)
+-- ```
+-- @param what [String name of a package, or path to a .lua file inside this package]
 function Package:depends(what)
   local name = isstring(self) and self or what
 

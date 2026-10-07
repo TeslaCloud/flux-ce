@@ -27,6 +27,10 @@ local function quote(what)
   return '"' + tostring(what) + '"'
 end
 
+--- Generates the Lua source of a schema file ('db/schema.lua') from the current schema
+-- and its metadata (indexes, references and primary keys).
+-- @param version [Number/String schema version to write into the file]
+-- @return [String Lua source code]
 function ActiveRecord.dump_schema(version)
   local result = [[--
 -- This is an ActiveRecord schema file.

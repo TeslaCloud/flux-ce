@@ -1,3 +1,8 @@
+--- Adds an Attribute record for every registered attribute to a new character, using the
+-- level chosen during creation or the attribute's minimum.
+-- @param player [Player]
+-- @param char [Character the character being created]
+-- @param char_data [Hash character creation data; levels are read from its attributes field]
 function AttributesPlugin:PostCreateCharacter(player, char, char_data)
   if char.attributes then
     for k, v in pairs(Attributes.get_stored()) do
@@ -10,6 +15,10 @@ function AttributesPlugin:PostCreateCharacter(player, char, char_data)
   end
 end
 
+--- Restarts the expiry timers of the character's boosts and multipliers, destroys the ones
+-- that have already expired and networks the attributes to the player.
+-- @param player [Player]
+-- @param char [Character]
 function AttributesPlugin:OnActiveCharacterSet(player, char)
   local cur_time = os.time()
 
@@ -56,10 +65,16 @@ function AttributesPlugin:OnActiveCharacterSet(player, char)
   end
 end
 
+--- Removes the attribute timers of the character the player is switching away from.
+-- @param player [Player]
+-- @param new_char [Character]
+-- @param old_char [Character]
 function AttributesPlugin:OnCharacterChange(player, new_char, old_char)
   Attributes.destroy_timers(old_char)
 end
 
+--- Removes the attribute timers of the disconnecting player's character.
+-- @param player [Player]
 function AttributesPlugin:PlayerDisconnected(player)
   if player:is_character_loaded() then
     Attributes.destroy_timers(player:get_character())

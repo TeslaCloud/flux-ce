@@ -7,6 +7,11 @@ CMD.arguments = 1
 CMD.immunity = true
 CMD.aliases = { 'plywarn', 'warn' }
 
+--- Sends a warning with the given reason to the targeted players and notifies staff. Without
+-- a reason only the caller is notified.
+-- @param player [Player the caller, or an invalid entity when run from the server console]
+-- @param targets [Array<Player> players to warn]
+-- @param ... [Vararg words of the warning reason]
 function CMD:on_run(player, targets, ...)
   local reason = table.concat({ ... }, ' ')
 

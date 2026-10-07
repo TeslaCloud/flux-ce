@@ -1,5 +1,7 @@
 local queue = {}
 
+--- Draws the queued text area notices at the left side of the screen
+-- and drops the ones that have expired.
 function PLUGIN:HUDPaint()
   for k, v in ipairs(queue) do
     if v.expiry <= CurTime() then
@@ -10,6 +12,11 @@ function PLUGIN:HUDPaint()
   end
 end
 
+--- Queues a notice to be displayed on the HUD for 8 seconds.
+-- The displayed text is currently a hardcoded placeholder.
+-- @param player [Player the player who entered the area]
+-- @param area [Hash the area that was entered]
+-- @param cur_time [Number CurTime at the moment of entering]
 function PLUGIN:PlayerEnteredTextArea(player, area, cur_time)
   table.insert(queue, { text = 'test test test', expiry = cur_time + 8 })
 end

@@ -56,6 +56,12 @@ do
   local tonumber = tonumber
   local format = string.format
 
+  --- Encodes a table. Tables and strings that were encoded before are written as
+  -- pointers to their first occurrence.
+  -- @param self [Hash table of encoders]
+  -- @param tbl [Hash table to encode]
+  -- @param output [Array<String> pieces of the encoded string, appended to]
+  -- @param cache [Hash encoded tables and strings mapped to their pointer ids]
   encode['table'] = function(self, tbl, output, cache)
 
     if (cache[tbl]) then
@@ -149,6 +155,10 @@ do
 
   -- ENCODE STRING
   local gsub = string.gsub
+  --- Encodes a string, escaping semicolons if it contains any.
+  -- @param self [Hash table of encoders]
+  -- @param str [String]
+  -- @param output [Array<String> pieces of the encoded string, appended to]
   encode['string'] = function(self, str, output)
     --if try_cache(str, output) then return end
     local estr, count = gsub(str, ";", "\\;")
@@ -160,25 +170,50 @@ do
   end
 
   -- ENCODE NUMBER
+
+  --- Encodes a number.
+  -- @param self [Hash table of encoders]
+  -- @param num [Number]
+  -- @param output [Array<String> pieces of the encoded string, appended to]
   encode['number'] = function(self, num, output)
     table.insert(output, tonumber(num)..';')
   end
 
   -- ENCODE BOOLEAN
+
+  --- Encodes a boolean as 't' or 'f'.
+  -- @param self [Hash table of encoders]
+  -- @param val [Boolean]
+  -- @param output [Array<String> pieces of the encoded string, appended to]
   encode['boolean'] = function(self, val, output)
     table.insert(output, val and 't' or 'f')
   end
 
   -- ENCODE VECTOR
+
+  --- Encodes a vector as its three components.
+  -- @param self [Hash table of encoders]
+  -- @param val [Vector]
+  -- @param output [Array<String> pieces of the encoded string, appended to]
   encode['Vector'] = function(self, val, output)
     table.insert(output, ('v'..val.x..','..val.y)..(','..val.z..';'))
   end
 
   -- ENCODE ANGLE
+
+  --- Encodes an angle as its three components.
+  -- @param self [Hash table of encoders]
+  -- @param val [Angle]
+  -- @param output [Array<String> pieces of the encoded string, appended to]
   encode['Angle'] = function(self, val, output)
     table.insert(output, ('a'..val.p..','..val.y)..(','..val.r..';'))
   end
 
+  --- Encodes an entity as its entity index, or as '#' if it is not valid. Also used
+  -- for players, vehicles, weapons, NPCs, NextBots and physics objects.
+  -- @param self [Hash table of encoders]
+  -- @param val [Entity]
+  -- @param output [Array<String> pieces of the encoded string, appended to]
   encode['Entity'] = function(self, val, output)
     table.insert(output, 'E'..(IsValid(val) and val:EntIndex()..';' or '#'))
   end
@@ -190,10 +225,15 @@ do
   encode['NextBot'] = encode['Entity']
   encode['PhysObj'] = encode['Entity']
 
+  --- Encodes nil as '?'.
   encode['nil'] = function()
     table.insert(output, '?')
   end
 
+  --- Fallback for types that have no encoder. Reports the type and returns the encoder
+  -- for nil.
+  -- @param key [String name of the type]
+  -- @return [Function encoder for nil]
   encode.__index = function(key)
     ErrorNoHalt('Cannot encode '..tostring(key)..', encoded as nil.')
     return encode['nil']
@@ -201,6 +241,17 @@ do
 
   do
     local empty, concat = table.Empty, table.concat
+    --- Serializes a table into a compact pON string. Supports nested tables, strings,
+    -- numbers, booleans, vectors, angles and entities, both as keys and as values.
+    -- ```
+    -- local data = pon.encode({ name = 'Flux', origin = Vector(0, 0, 64) })
+    -- local tbl = pon.decode(data)
+    --
+    -- print(tbl.name) -- Flux
+    -- ```
+    -- @param tbl [Hash table to serialize]
+    -- @return [String]
+    -- @see [pon.decode]
     function pon.encode(tbl)
       local output = {}
       cache_size = 0
@@ -218,6 +269,12 @@ do
   local Vector, Angle, Entity = Vector, Angle, Entity
 
   local decode = {}
+  --- Decodes a table that has an array part, optionally followed by key-value pairs.
+  -- @param self [Hash table of decoders]
+  -- @param index [Number position in the string right after the type character]
+  -- @param str [String encoded data]
+  -- @param cache [Array decoded tables and strings, used to resolve pointers]
+  -- @return [Number position of the next value, Hash decoded table]
   decode['{'] = function(self, index, str, cache)
 
     local cur = {}
@@ -264,6 +321,12 @@ do
 
     return index, cur
   end
+  --- Decodes a table that consists of key-value pairs only.
+  -- @param self [Hash table of decoders]
+  -- @param index [Number position in the string right after the type character]
+  -- @param str [String encoded data]
+  -- @param cache [Array decoded tables and strings, used to resolve pointers]
+  -- @return [Number position of the next value, Hash decoded table]
   decode['['] = function(self, index, str, cache)
 
     local cur = {}
@@ -298,6 +361,13 @@ do
   end
 
   -- STRING
+
+  --- Decodes a string that contains escaped semicolons.
+  -- @param self [Hash table of decoders]
+  -- @param index [Number position in the string right after the type character]
+  -- @param str [String encoded data]
+  -- @param cache [Array decoded tables and strings, used to resolve pointers]
+  -- @return [Number position of the next value, String decoded string]
   decode['"'] = function(self, index, str, cache)
     local finish = find(str, '";', index, true)
     local res = gsub(sub(str, index, finish - 1), '\\;', ';')
@@ -307,6 +377,13 @@ do
     return index, res
   end
   -- STRING NO ESCAPING NEEDED
+
+  --- Decodes a string that needed no escaping.
+  -- @param self [Hash table of decoders]
+  -- @param index [Number position in the string right after the type character]
+  -- @param str [String encoded data]
+  -- @param cache [Array decoded tables and strings, used to resolve pointers]
+  -- @return [Number position of the next value, String decoded string]
   decode['\''] = function(self, index, str, cache)
     local finish = find(str, ';', index, true)
     local res = sub(str, index, finish - 1)
@@ -316,11 +393,25 @@ do
     return index, res
   end
 
+  --- Decodes a nil value inside the array part of a table.
+  -- @param self [Hash table of decoders]
+  -- @param index [Number position in the string right after the type character]
+  -- @param str [String encoded data]
+  -- @param cache [Array decoded tables and strings, used to resolve pointers]
+  -- @return [Number position of the next value, Nil]
   decode['!'] = function(self, index, str, cache)
     return index, nil
   end
 
   -- NUMBER
+
+  --- Decodes a number. Also registered for every digit and for '-', in which case the
+  -- type character is the first character of the number.
+  -- @param self [Hash table of decoders]
+  -- @param index [Number position in the string right after the type character]
+  -- @param str [String encoded data]
+  -- @param cache [Array decoded tables and strings, used to resolve pointers]
+  -- @return [Number position of the next value, Number decoded number]
   decode['n'] = function(self, index, str, cache)
     index = index - 1
     local finish = find(str, ';', index, true)
@@ -342,6 +433,13 @@ do
   decode['-'] = decode['n']
 
   -- POINTER
+
+  --- Decodes a pointer to a table or string that was decoded earlier.
+  -- @param self [Hash table of decoders]
+  -- @param index [Number position in the string right after the type character]
+  -- @param str [String encoded data]
+  -- @param cache [Array decoded tables and strings, used to resolve pointers]
+  -- @return [Number position of the next value, Hash/String value the pointer refers to]
   decode['('] = function(self, index, str, cache)
     local finish = find(str, ')', index, true)
     local num = tonumber(sub(str, index, finish - 1))
@@ -350,15 +448,31 @@ do
   end
 
   -- BOOLEAN. ONE DATA TYPE FOR YES, ANOTHER FOR NO.
+
+  --- Decodes the boolean true.
+  -- @param self [Hash table of decoders]
+  -- @param index [Number position in the string right after the type character]
+  -- @return [Number position of the next value, Boolean true]
   decode['t'] = function(self, index)
     return index, true
   end
 
+  --- Decodes the boolean false.
+  -- @param self [Hash table of decoders]
+  -- @param index [Number position in the string right after the type character]
+  -- @return [Number position of the next value, Boolean false]
   decode['f'] = function(self, index)
     return index, false
   end
 
   -- VECTOR
+
+  --- Decodes a vector.
+  -- @param self [Hash table of decoders]
+  -- @param index [Number position in the string right after the type character]
+  -- @param str [String encoded data]
+  -- @param cache [Array decoded tables and strings, used to resolve pointers]
+  -- @return [Number position of the next value, Vector decoded vector]
   decode['v'] = function(self, index, str, cache)
     local finish =  find(str, ';', index, true)
     local vecStr = sub(str, index, finish - 1)
@@ -368,6 +482,13 @@ do
   end
 
   -- ANGLE
+
+  --- Decodes an angle.
+  -- @param self [Hash table of decoders]
+  -- @param index [Number position in the string right after the type character]
+  -- @param str [String encoded data]
+  -- @param cache [Array decoded tables and strings, used to resolve pointers]
+  -- @return [Number position of the next value, Angle decoded angle]
   decode['a'] = function(self, index, str, cache)
     local finish =  find(str, ';', index, true)
     local angStr = sub(str, index, finish - 1)
@@ -377,6 +498,14 @@ do
   end
 
   -- ENTITY
+
+  --- Decodes an entity from its entity index.
+  -- @param self [Hash table of decoders]
+  -- @param index [Number position in the string right after the type character]
+  -- @param str [String encoded data]
+  -- @param cache [Array decoded tables and strings, used to resolve pointers]
+  -- @return [Number position of the next value, Entity decoded entity, NULL if it was
+  --   not valid when encoded]
   decode['E'] = function(self, index, str, cache)
     if (str[index] == '#') then
       index = index + 1
@@ -390,6 +519,14 @@ do
   end
 
   -- PLAYER
+
+  --- Decodes a player from its entity index.
+  -- @param self [Hash table of decoders]
+  -- @param index [Number position in the string right after the type character]
+  -- @param str [String encoded data]
+  -- @param cache [Array decoded tables and strings, used to resolve pointers]
+  -- @return [Number position of the next value, Entity entity with that index, normally
+  --   a player]
   decode['P'] = function(self, index, str, cache)
     local finish = find(str, ';', index, true)
     local num = tonumber(sub(str, index, finish - 1))
@@ -397,10 +534,20 @@ do
     return index, Entity(num) or NULL
   end
 
+  --- Decodes an explicit nil value.
+  -- @param self [Hash table of decoders]
+  -- @param index [Number position in the string right after the type character]
+  -- @param str [String encoded data]
+  -- @param cache [Array decoded tables and strings, used to resolve pointers]
+  -- @return [Number position of the next value, Nil]
   decode['?'] = function(self, index, str, cache)
     return index + 1, nil
   end
 
+  --- Restores a table from a string that was produced by pon.encode.
+  -- @param data [String pON string]
+  -- @return [Hash]
+  -- @see [pon.encode]
   function pon.decode(data)
     local _, res = decode[sub(data, 1, 1)](decode, 2, data, {})
     return res

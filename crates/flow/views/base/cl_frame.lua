@@ -1,6 +1,7 @@
 local PANEL = {}
 PANEL.draggable = false
 
+--- Sets the default title, reserves space for the header and creates the close button.
 function PANEL:Init()
   local padding = math.scale(4)
 
@@ -19,16 +20,25 @@ function PANEL:Init()
   end
 end
 
+--- Keeps the close button in the top right corner of the frame.
+-- @param w [Number panel width]
+-- @param h [Number panel height]
 function PANEL:PerformLayout(w, h)
   if IsValid(self.button_close) then
     self.button_close:SetPos(w - math.scale_x(20), 0)
   end
 end
 
+--- Delegates drawing of the frame to the active theme's PaintFrame hook.
+-- @param w [Number panel width]
+-- @param h [Number panel height]
+-- @return [Any whatever the theme hook returns; nil with the factory theme]
 function PANEL:Paint(w, h)
   return Theme.hook('PaintFrame', self, w, h)
 end
 
+--- Moves the frame with the cursor while it is being dragged, keeping it on the screen,
+-- and runs the active theme's FrameThink hook.
 function PANEL:Think()
   if self.dragging then
     local scrw, scrh = ScrW(), ScrH()
@@ -45,6 +55,7 @@ function PANEL:Think()
   Theme.hook('FrameThink')
 end
 
+--- Starts dragging the frame if it is draggable.
 function PANEL:OnMousePressed()
   if self:is_draggable() then
     self.dragging = { gui.MouseX() - self.x, gui.MouseY() - self.y }
@@ -52,6 +63,7 @@ function PANEL:OnMousePressed()
   end
 end
 
+--- Stops dragging the frame if it is draggable.
 function PANEL:OnMouseReleased()
   if self:is_draggable() then
     self.dragging = nil
@@ -59,10 +71,15 @@ function PANEL:OnMouseReleased()
   end
 end
 
+--- Makes the frame draggable with the mouse. The argument is currently ignored: dragging
+-- is always turned on and cannot be turned off again through this method.
+-- @param bool [Boolean ignored]
 function PANEL:set_draggable(bool)
   self.draggable = true
 end
 
+--- Checks whether the frame can be dragged with the mouse.
+-- @return [Boolean]
 function PANEL:is_draggable()
   return self.draggable
 end

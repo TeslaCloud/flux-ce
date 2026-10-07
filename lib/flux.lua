@@ -17,6 +17,9 @@ if !Pipeline or !Plugin or !Config then
 end
 
 if CRATE then
+  --- Called by Crate once the Flux package has been included.
+  -- Reloads the dependencies when this is a code refresh, includes the schema and runs the
+  -- FluxCrateLoaded hook.
   function CRATE:__installed__()
     if Flux.initialized then
       if !LITE_REFRESH then

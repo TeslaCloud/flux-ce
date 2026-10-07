@@ -1,5 +1,9 @@
 local ent_meta = FindMetaTable 'Entity'
 
+--- Stops or resumes networking this entity and all of its children to a player. Does nothing
+-- if the target is invalid.
+-- @param target [Player the player to hide the entity from]
+-- @param should_prevent [Boolean true to stop transmitting, false to resume]
 function ent_meta:prevent_transmit(target, should_prevent)
   if IsValid(target) then
     self:SetPreventTransmit(target, should_prevent)
@@ -12,6 +16,19 @@ function ent_meta:prevent_transmit(target, should_prevent)
   end
 end
 
+--- Stops or resumes networking this entity to every other player the condition does not
+-- exclude. Also sets the entity's 'transmission_prevented' net var, sent only to itself.
+-- ```
+-- -- Hide the player from everyone except moderators.
+-- player:prevent_transmit_conditional(true, function(ply)
+--   if ply:can('moderator') then
+--     return false
+--   end
+-- end)
+-- ```
+-- @param should_prevent [Boolean true to stop transmitting, false to resume]
+-- @param condition=nil [Function called as condition(player, entity, should_prevent); return
+--   false to leave that player unaffected]
 function ent_meta:prevent_transmit_conditional(should_prevent, condition)
   condition = condition or function() return true end
 

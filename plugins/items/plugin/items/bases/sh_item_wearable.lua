@@ -21,11 +21,19 @@ ItemWearable.background_color = Color(50, 150, 50)
 -- }
 
 if CLIENT then
+  --- Returns the model that is shown in inventory slots: the one the item would put
+  -- on the local player, or the item's own model if there is none. Client-side only.
+  -- @return [String path to the model]
   function ItemWearable:get_icon_model()
     return self:get_equip_model(PLAYER) or self:get_model()
   end
 end
 
+--- Builds the model for the player to wear by replacing the last folder
+-- in the path of their current model with the item's model_group.
+-- @param player [Player]
+-- @return [String path to the model, Number amount of replacements made;
+--   nil if the item has no model_group]
 function ItemWearable:get_model_by_group(player)
   if self.model_group then
     local player_model = player:GetModel():lower()
@@ -35,22 +43,37 @@ function ItemWearable:get_model_by_group(player)
   end
 end
 
+--- Returns the model that the player gets when they equip the item.
+-- @param player [Player]
+-- @return [String path to the model, or nil if the item does not change the model]
 function ItemWearable:get_equip_model(player)
   return self:get_model_by_group(player) or self.equip_model
 end
 
+--- Returns the bodygroups that the player gets when they equip the item.
+-- @param player [Player]
+-- @return [Hash bodygroup id (Number) or bodygroup name (String) to its value,
+--   or nil if the item does not change bodygroups]
 function ItemWearable:get_bodygroups(player)
   return self.equip_bodygroups
 end
 
+--- Returns the player models that are able to wear the item.
+-- @return [Array<String> paths to the models, or nil if any model fits]
 function ItemWearable:get_valid_models()
   return self.valid_models
 end
 
+--- Returns the pattern that the player's model has to contain for them to wear the item.
+-- @return [String pattern, or nil if any model fits]
 function ItemWearable:get_valid_model_group()
   return self.valid_model_group
 end
 
+--- Called by ItemEquipable:can_transfer before the item is equipped.
+-- Checks whether the model of the player is able to wear the item.
+-- @param player [Player]
+-- @return [Boolean]
 function ItemWearable:can_equip(player)
   local valid_models = self:get_valid_models()
   local valid_model_group = self:get_valid_model_group()
@@ -77,6 +100,9 @@ function ItemWearable:can_equip(player)
   return true
 end
 
+--- Called when the item gets equipped. Applies the model and the bodygroups of the item
+-- to the player, storing the ones they had before in the item's data.
+-- @param player [Player]
 function ItemWearable:post_equipped(player)
   local model = self:get_equip_model(player)
 
@@ -109,6 +135,9 @@ function ItemWearable:post_equipped(player)
   end
 end
 
+--- Called when the item gets unequipped. Gives the player their model and bodygroups back,
+-- then calls on_use on the items of the same equipment inventory that no longer fit them.
+-- @param player [Player]
 function ItemWearable:post_unequipped(player)
   if self:get_equip_model(player) then
     player:SetModel(self:get_data('native_model'))

@@ -2,6 +2,8 @@ local w, h = math.scale(512), math.scale(4)
 local cur_wide = w
 local cur_alpha = 0
 
+--- Draws the stamina bar, which fades in while stamina is below 98 and out otherwise.
+-- The theme can take over the drawing through its DrawStaminaBar hook.
 function Stamina:HUDPaint()
   if IsValid(PLAYER) and PLAYER:Alive() then
     local stamina = PLAYER:get_nv('stamina', 100)

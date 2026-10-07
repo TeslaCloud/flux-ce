@@ -1,5 +1,7 @@
 local PANEL = {}
 
+--- Creates the root node of the condition tree and the buttons
+-- that save and load condition presets.
 function PANEL:Init()
   self:SetIndentSize(0)
 
@@ -62,11 +64,18 @@ function PANEL:Init()
   end
 end
 
+--- Moves the save and load buttons to the top right corner of the panel.
+-- Should be called after the panel has been resized.
 function PANEL:update()
   self.save:SetPos(self:GetWide() - self.save:GetWide() - 2, 2)
   self.load:SetPos(self:GetWide() - self.save:GetWide() * 2 - 4, 2)
 end
 
+--- Opens the context menu of a node: adding a child condition and, for condition nodes,
+-- setting the parameter and the operator or deleting the condition.
+-- @param panel [Panel the tree node that was right-clicked]
+-- @param root=nil [Boolean whether the node is the root node, currently unused]
+-- @param first=nil [Boolean whether the node has no child conditions, currently unused]
 function PANEL:node_options(panel, root, first)
   local menu = DermaMenu()
 
@@ -120,6 +129,11 @@ function PANEL:node_options(panel, root, first)
   menu:Open()
 end
 
+--- Adds a node of the specified condition type under the parent node.
+-- @param parent [Panel tree node to add the condition to]
+-- @param id [String id of a registered condition]
+-- @param data=nil [Hash parameters of the condition, empty when omitted]
+-- @return [Panel the created node]
 function PANEL:add_condition(parent, id, data)
   local condition_data = Conditions:get_all()[id]
   local node = parent:AddNode('', condition_data.icon)
@@ -156,6 +170,10 @@ function PANEL:add_condition(parent, id, data)
   return node
 end
 
+--- Collects the condition tree into a table that can be networked, saved
+-- and passed to Conditions:check.
+-- @param panel=nil [Panel node to start from, the root node when omitted]
+-- @return [Array condition nodes, each a Hash with id, data and childs]
 function PANEL:get_conditions(panel)
   if !IsValid(panel) then panel = self.root end
 
@@ -179,6 +197,9 @@ function PANEL:get_conditions(panel)
   return conditions
 end
 
+--- Recreates the nodes of a condition tree under the parent node.
+-- @param parent [Panel tree node to add the conditions to, e.g. the root node]
+-- @param conditions [Array condition nodes as returned by get_conditions]
 function PANEL:set_conditions(parent, conditions)
   for k, v in pairs(conditions) do
     local data = Conditions:get_all()[v.id]
@@ -190,6 +211,7 @@ function PANEL:set_conditions(parent, conditions)
   end
 end
 
+--- Removes all condition nodes from the tree, leaving only the root node.
 function PANEL:clear()
   for k, v in pairs(self.root.childs) do
     v:safe_remove()
@@ -198,6 +220,24 @@ function PANEL:clear()
   self.root.childs = {}
 end
 
+--- Opens a selector popup and calls the callback once for every choice right away,
+-- so that it can add the choice to the selector.
+-- ```
+-- parent:create_selector(data.name, 'condition.role.message', 'condition.roles',
+--   Bolt:get_roles(), function(selector, role)
+--     selector:add_choice(t(role.name), function()
+--       panel.data.role = role.id
+--
+--       panel.update()
+--     end)
+--   end)
+-- ```
+-- @param title [String title phrase]
+-- @param message [String message phrase]
+-- @param default_value [String phrase of the text that is displayed before a choice is made]
+-- @param choices [Array/Hash values to choose from]
+-- @param callback [Function called as callback(selector, choice) for every choice]
+-- @return [Panel the created fl_selector panel]
 function PANEL:create_selector(title, message, default_value, choices, callback)
   local selector = vgui.create('fl_selector')
   selector:set_title(t(title))

@@ -5,10 +5,21 @@ Chatbox.y = Chatbox.y or 0
 
 Chatbox.old_add_text = Chatbox.old_add_text or chat.AddText
 
+--- Replaces the default chat.AddText. The arguments are sent to the server, which
+-- sends them back to the local player as a chatbox message.
+-- @param ... [Vararg strings, colors, font sizes, players and entities to display]
 function chat.AddText(...)
   Cable.send('fl_chat_text_add', ...)
 end
 
+--- Converts a message that was received from the server into a list of pieces with
+-- calculated sizes and positions, ready to be drawn by a fl_chat_message panel.
+-- Strings are wrapped to the width of the chatbox. Clientside only.
+-- @param msg_table [Hash message data: data (Array of strings, font sizes, colors,
+--   image / icon tables, players and entities), optional size and should_translate]
+-- @return [Hash sequential pieces: font sizes (Number), colors (Color), texts
+--   ({ text, w, h, x, y }) and images ({ image or icon, x, y, w, h }), plus the
+--   total_height field; nil if the chatbox font is not available]
 function Chatbox.compile(msg_table)
   local compiled = {
     total_height = 0
@@ -143,6 +154,8 @@ function Chatbox.compile(msg_table)
   return compiled
 end
 
+--- Creates the chatbox panel in its closed state, taking the size and position
+-- from the current theme. The panel is stored in Chatbox.panel.
 function Chatbox.create()
   Chatbox.width = Theme.get_option('chatbox_width') or 100
   Chatbox.height = Theme.get_option('chatbox_height') or 100
@@ -153,6 +166,8 @@ function Chatbox.create()
   Chatbox.panel:set_open(false)
 end
 
+--- Opens the chatbox, creating its panel first if necessary.
+-- Does nothing if there is no panel and the theme has not been initialized yet.
 function Chatbox.show()
   if !IsValid(Chatbox.panel) then
     if Theme.initialized() then
@@ -165,6 +180,8 @@ function Chatbox.show()
   Chatbox.panel:set_open(true)
 end
 
+--- Closes the chatbox, disables its mouse and keyboard input and runs the
+-- ChatTextChanged hook with an empty string.
 function Chatbox.hide()
   if IsValid(Chatbox.panel) then
     Chatbox.panel:set_open(false)

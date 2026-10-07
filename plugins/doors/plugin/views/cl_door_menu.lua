@@ -1,5 +1,6 @@
 local PANEL = {}
 
+--- Sets up the frame with the list of door properties and the conditions editor.
 function PANEL:Init()
   self:SetSize(ScrW() * 0.25, ScrH() * 0.4)
   self:Center()
@@ -19,12 +20,15 @@ function PANEL:Init()
   self.conditions:update()
 end
 
+--- Closes the menu when F3 is pressed.
+-- @param key [Number key code]
 function PANEL:OnKeyCodePressed(key)
   if key == KEY_F3 then
     self:safe_remove()
   end
 end
 
+--- Sends the changed properties and the conditions of the door to the server.
 function PANEL:OnRemove()
   CloseDermaMenus()
 
@@ -35,6 +39,10 @@ function PANEL:OnRemove()
   Cable.send('fl_send_door_conditions', self:get_door(), self.conditions:get_conditions())
 end
 
+--- Sets the door to edit, creates the rows for its properties
+-- and fills the conditions editor.
+-- @param entity [Entity the door]
+-- @param conditions=nil [Array condition nodes that are currently set on the door]
 function PANEL:set_door(entity, conditions)
   self.door = entity
 
@@ -58,10 +66,14 @@ function PANEL:set_door(entity, conditions)
   end
 end
 
+--- Returns the door that is being edited.
+-- @return [Entity the door, or nil if it has not been set yet]
 function PANEL:get_door()
   return self.door
 end
 
+--- Returns the properties that were changed in the menu.
+-- @return [Hash changed values keyed by property id]
 function PANEL:get_door_data()
   return self.door_data
 end

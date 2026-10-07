@@ -7,6 +7,10 @@ do
   local render = render
   local area_colors = {}
 
+  --- Draws wireframes of the areas that belong to the selected mode of the area tool,
+  -- and the outline of the area being created, while the local player holds that tool.
+  -- @param draw_depth [Boolean whether the depth pass is being drawn]
+  -- @param draw_skybox [Boolean whether the skybox is being drawn]
   function Area:PostDrawOpaqueRenderables(draw_depth, draw_skybox)
     if draw_depth or draw_skybox or !IsValid(PLAYER) then return end
 
@@ -84,6 +88,8 @@ do
   end
 end
 
+--- Draws the texts of the text areas the local player has recently entered,
+-- fading each of them out before it expires.
 function Area:HUDPaint()
   if IsValid(PLAYER) and istable(PLAYER.text_areas) then
     local last_y = 400

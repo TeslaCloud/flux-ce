@@ -6,6 +6,9 @@ CMD.category = 'permission.categories.server_management'
 CMD.arguments = 0
 CMD.alias = 'maprestart'
 
+--- Restarts the current map after an optional delay, saving data first, and notifies staff.
+-- @param player [Player the caller, or an invalid entity when run from the server console]
+-- @param delay=0 [String delay in seconds]
 function CMD:on_run(player, delay)
   delay = tonumber(delay) or 0
 

@@ -8,19 +8,29 @@ Config.stored = stored
 
 local cache = {}
 
+--- Returns the table of all stored configs.
+-- @return [Hash config key to config data table (value, hidden, added_by, ...)]
 function Config.all()
   return stored
 end
 
+--- Returns the value cache that Config.get reads from.
+-- @return [Hash config key to cached value]
 function Config.cache()
   return cache
 end
 
+--- Returns the stored data table of a config rather than just its value.
+-- @param id [String config key]
+-- @return [Hash config data (value, hidden, added_by, ...), or nil if there is no such config]
 function Config.find(id)
   return stored[id]
 end
 
 if SERVER then
+  --- Loads the saved configs from the 'config' data file and puts them over the stored ones.
+  -- Serverside only.
+  -- @return [Hash all stored configs]
   function Config.load()
     local loaded = Data.load('config', {})
 
@@ -32,10 +42,20 @@ if SERVER then
     return stored
   end
 
+  --- Writes all stored configs to the 'config' data file. Serverside only.
   function Config.save()
     Data.save('config', stored)
   end
 
+  --- Sets the value of a config, creating the config if it does not exist yet.
+  -- Serverside variant: runs the OnConfigSet hook and sends the new value to all players
+  -- unless the config is hidden. Does nothing if key is nil.
+  -- @param key [String config key]
+  -- @param value [Any new value]
+  -- @param hidden=nil [Boolean true to never send this config to clients; nil keeps the
+  --   current setting]
+  -- @param from_config=nil [Number CONFIG_FLUX, CONFIG_SCHEMA or CONFIG_PLUGIN; only used to
+  --   label where a newly created config came from]
   function Config.set(key, value, hidden, from_config)
     if key != nil then
       if !stored[key] then
@@ -78,6 +98,7 @@ if SERVER then
 
   local player_meta = FindMetaTable('Player')
 
+  --- Sends the values of all non-hidden configs to this player. Serverside only.
   function player_meta:send_config()
     for k, v in pairs(stored) do
       if !v.hidden then
@@ -91,6 +112,11 @@ else
   local menu_items = Config.menu_items or {}
   Config.menu_items = menu_items
 
+  --- Sets the value of a config, creating the config if it does not exist yet.
+  -- Clientside variant: runs the OnConfigSet hook and changes the local copy only, nothing is
+  -- sent to the server. Does nothing if key is nil.
+  -- @param key [String config key]
+  -- @param value [Any new value]
   function Config.set(key, value)
     if key != nil then
       stored[key] = stored[key] or {}
@@ -102,6 +128,24 @@ else
     end
   end
 
+  --- Creates a category for the config menu, or returns the existing one with that ID.
+  -- Clientside only. The returned table has the fields category (name and description),
+  -- configs, and helper functions that add a config to this category: add_key, add_slider,
+  -- add_table_editor, add_textbox, add_checkbox and add_dropdown. The helpers are called
+  -- with a dot and take the same arguments as Config.add_to_menu without the category
+  -- (and, except for add_key, without the data type).
+  -- ```
+  -- local category = Config.create_category('general', 'config.general.title',
+  --   'config.general.desc')
+  --
+  -- category.add_slider('walk_speed', 'config.general.walk_speed.name',
+  --   'config.general.walk_speed.desc', { min_value = 0, max_value = 1024 })
+  -- ```
+  -- @param id='other' [String category ID]
+  -- @param name='Other' [String display name or language phrase]
+  -- @param description='' [String description or language phrase]
+  -- @return [Hash category table]
+  -- @see [Config.add_to_menu]
   function Config.create_category(id, name, description)
     id = id or 'other'
 
@@ -133,10 +177,24 @@ else
     return menu_items[id]
   end
 
+  --- Returns a config menu category. Clientside only.
+  -- @param id [String category ID]
+  -- @return [Hash category table, or nil if there is no such category]
   function Config.get_category(id)
     return menu_items[id]
   end
 
+  --- Adds a config to a category of the config menu. Clientside only.
+  -- Does nothing if category or key is nil.
+  -- @param category [String category ID]
+  -- @param key [String config key]
+  -- @param name=key [String display name or language phrase]
+  -- @param description='This config has no description set.' [String description or language
+  --   phrase]
+  -- @param data_type=nil [String type of the editor to show, e.g. 'number', 'boolean',
+  --   'string' or 'table']
+  -- @param data={} [Hash extra data for the editor, e.g. min_value, max_value, decimals,
+  --   default_value]
   function Config.add_to_menu(category, key, name, description, data_type, data)
     if !category or !key then return end
 
@@ -153,6 +211,8 @@ else
     }
   end
 
+  --- Returns all config menu categories together with their configs. Clientside only.
+  -- @return [Hash category ID to category table]
   function Config.get_menu_keys()
     return menu_items
   end
@@ -166,6 +226,11 @@ else
   end)
 end
 
+--- Returns the value of a config.
+-- The result is cached, and that includes the default when the config has no value.
+-- @param key [String config key]
+-- @param default=nil [Any value to return if the config has no value]
+-- @return [Any config value, or default]
 function Config.get(key, default)
   if cache[key] then
     return cache[key]
@@ -185,6 +250,13 @@ function Config.get(key, default)
 end
 
 if SERVER then
+  --- Imports config values from a YAML file or from a table and sets every one of them.
+  -- Serverside only. The 'depends' key is skipped, and so is every key for which the
+  -- ShouldConfigImport hook returns a non-nil value.
+  -- @param path [String/Hash path to a YAML file, or a table of config key to value]
+  -- @param from_config=CONFIG_FLUX [Number CONFIG_FLUX, CONFIG_SCHEMA or CONFIG_PLUGIN]
+  -- @return [Hash the imported table, or nil if the file could not be read or path is
+  --   neither a string nor a table]
   function Config.import(path, from_config)
     from_config = from_config or CONFIG_FLUX
 
@@ -214,6 +286,32 @@ if SERVER then
   end
 end
 
+--- Reads config definitions (categories and configs) from a YAML file or from a table.
+-- On the server every config is set to its default_value and its definition is stored.
+-- On the client the categories and configs are added to the config menu.
+-- ```
+-- Config.read('gamemodes/flux/config/config.yml')
+--
+-- Config.read({
+--   categories = {
+--     general = { name = 'config.general.title', description = 'config.general.desc' }
+--   },
+--   configs = {
+--     walk_speed = {
+--       name = 'config.general.walk_speed.name',
+--       description = 'config.general.walk_speed.desc',
+--       category = 'general',
+--       type = 'number',
+--       min_value = 0,
+--       max_value = 1024,
+--       default_value = 100
+--     }
+--   }
+-- })
+-- ```
+-- @param path [String/Hash path to a YAML file, or the already parsed definitions]
+-- @param from_config=CONFIG_FLUX [Number currently unused]
+-- @return [Hash the definitions table, or nil if path is neither a string nor a table]
 function Config.read(path, from_config)
   from_config = from_config or CONFIG_FLUX
 

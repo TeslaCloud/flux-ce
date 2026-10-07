@@ -7,6 +7,10 @@ CMD.arguments = 2
 CMD.player_arg = 1
 CMD.alias = 'setgender'
 
+--- Sets the gender of every target's character and notifies staff.
+-- @param player [Player the player who ran the command]
+-- @param targets [Array<Player> players matched by the first command argument]
+-- @param new_gender [String 'male', 'female' or 'no_gender', in any letter case]
 function CMD:on_run(player, targets, new_gender)
   new_gender = new_gender:utf8lower()
 

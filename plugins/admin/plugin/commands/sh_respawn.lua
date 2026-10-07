@@ -7,6 +7,12 @@ CMD.arguments = 1
 CMD.immunity = true
 CMD.aliases = { 'respawn', 'plyrespawn' }
 
+--- Respawns the targeted dead players and notifies them and staff. Stops with an error
+-- notification at the first target that is still alive.
+-- @param player [Player the caller, or an invalid entity when run from the server console]
+-- @param targets [Array<Player> players to respawn]
+-- @param spawn_position='stay' [String 'stay' for the target's last known position, 'tp' for
+--   the spot the caller is looking at]
 function CMD:on_run(player, targets, spawn_position)
   spawn_position = spawn_position and spawn_position:utf8lower()
 

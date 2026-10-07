@@ -70,7 +70,7 @@ function DateTime:now()
 end
 
 --- Get the UTC time, or alternatively a UTC time at a specified UNIX timestamp.
--- @param time=DateTime
+-- @param time=DateTime [Number UNIX time]
 -- @return [DateTime]
 function DateTime:utc(time)
   local date = os.date('!*t', time or self.time)

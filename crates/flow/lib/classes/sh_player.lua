@@ -12,7 +12,8 @@ flux_player.loadout = {
   'weapon_fists'
 }
 
--- Called when the data tables are setup.
+--- Sets up the 'Initialized' data table variable of the player and runs the
+-- 'PlayerSetupDataTables' hook.
 function flux_player:SetupDataTables()
   if !self.Player or !self.Player.DTVar then
     return
@@ -23,7 +24,8 @@ function flux_player:SetupDataTables()
   hook.run('PlayerSetupDataTables', self.Player)
 end
 
--- Called on player spawn to determine which hand model to use.
+--- Determines which hands model to use for the player's current model.
+-- @return [Hash hands info with the model, skin and body keys]
 function flux_player:GetHandsModel()
   local player_model = string.lower(self.Player:GetModel())
 
@@ -42,7 +44,9 @@ function flux_player:GetHandsModel()
   return player_manager.TranslatePlayerHands(model_list[player_model])
 end
 
--- Called after view model is drawn.
+--- Draws the hands of the local player after the view model has been drawn.
+-- @param viewmodel [Entity]
+-- @param weapon [Weapon]
 function flux_player:PostDrawViewModel(viewmodel, weapon)
   if weapon.UseHands or !weapon:IsScripted() then
     local hands_entity = PLAYER:GetHands()
@@ -53,6 +57,7 @@ function flux_player:PostDrawViewModel(viewmodel, weapon)
   end
 end
 
+--- Runs the 'PostPlayerLoadout' hook with the default loadout of the player class.
 function flux_player:Loadout()
   hook.run('PostPlayerLoadout', self.Player, self.loadout)
 end

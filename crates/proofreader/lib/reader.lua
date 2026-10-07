@@ -27,10 +27,17 @@ local severity_to_status = {
   fatal    = PR_FATAL
 }
 
+--- Adds a reader class to the list of readers that are run on every proofread file.
+-- @param reader_class [BasicReader reader class (not an instance)]
 function PR:add_reader(reader_class)
   table.insert(self.readers, reader_class)
 end
 
+--- Adds an offense to the list of messages that is printed once proofreading is done.
+-- @param severity [String 'generic', 'ok', 'warn', 'critical' or 'fatal'; may be nil]
+-- @param filename [String file the offense was found in]
+-- @param line [Number line number; may be nil]
+-- @param msg [String description of the offense]
 function PR:add_message(severity, filename, line, msg)
   local message = ''
 
@@ -51,6 +58,9 @@ function PR:add_message(severity, filename, line, msg)
   table.insert(self.messages, { message = message, severity = severity_to_status[severity] })
 end
 
+--- Runs every registered reader on a file and records the offenses they find.
+-- @param filename [String path to a Lua file, relative to the game directory]
+-- @return [Number worst status that was found, one of the PR_* enumerators]
 function PR:proofread_file(filename)
   local contents = File.read(filename)
   local tokens = LuaLexer:tokenize(contents, true)
@@ -91,10 +101,15 @@ function PR:proofread_file(filename)
   return overall_status
 end
 
+--- Proofreads all Lua files in a folder and its subfolders.
+-- @param folder [String folder path relative to the game directory]
 function PR:proofread_folder(folder)
   return self:proofread(File.get_list(folder))
 end
 
+--- Proofreads a list of files and prints the progress, the offenses and a summary to the
+-- console. Files that are not .lua files are skipped.
+-- @param files={} [Array<String> file paths relative to the game directory]
 function PR:proofread(files)
   files = files or {}
   self.messages = {}

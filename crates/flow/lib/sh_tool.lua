@@ -2,6 +2,9 @@ mod 'Flux::Tool'
 
 Flux.Tool.stored = Flux.Tool.stored  or {}
 
+--- Returns the tool with the specified ID.
+-- @param id [String tool ID (the tool mode)]
+-- @return [Tool the tool, or nil if there is no such tool]
 function Flux.Tool:get(id)
   return self.stored[id]
 end

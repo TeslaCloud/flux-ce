@@ -5,11 +5,16 @@ require_relative 'sh_enums'
 require_relative 'sv_hooks'
 require_relative 'sv_plugin'
 
+--- Registers 'roles' as a plugin folder type and loads the admin plugin's own roles.
 function Bolt:OnPluginLoaded()
   Plugin.add_extra('roles')
   Bolt:include_roles(self:get_folder()..'/roles/')
 end
 
+--- Loads the role files of a plugin when its 'roles' folder is being included.
+-- @param extra [String name of the extra folder being included]
+-- @param folder [String path of the plugin folder]
+-- @return [Boolean true if the folder was handled here, nothing otherwise]
 function Bolt:PluginIncludeFolder(extra, folder)
   if extra == 'roles' then
     Bolt:include_roles(folder..'/roles/')
@@ -18,18 +23,32 @@ function Bolt:PluginIncludeFolder(extra, folder)
   end
 end
 
+--- Answers the permission checks made through player:can by delegating to Bolt:can.
+-- @param player [Player]
+-- @param action [String permission ID]
+-- @param object=nil [String object name the permission was allowed for]
+-- @return [Boolean]
 function Bolt:PlayerHasPermission(player, action, object)
   return self:can(player, action, object)
 end
 
+--- Reports whether the player was flagged as root, which happens when their SteamID is listed
+-- in the root_steamid config.
+-- @param player [Player]
+-- @return [Boolean true for root players, nil otherwise]
 function Bolt:PlayerIsRoot(player)
   return player.can_anything
 end
 
+--- Registers a permission for every newly created command.
+-- @param id [String command ID]
+-- @param data [Command command table]
 function Bolt:OnCommandCreated(id, data)
   self:permission_from_command(data)
 end
 
+--- Runs the RegisterPermissions hook, then allows each permission for the role it was
+-- registered for and for every role based on it.
 function Bolt:OnPluginsLoaded()
   hook.run('RegisterPermissions')
 
@@ -42,6 +61,7 @@ function Bolt:OnPluginsLoaded()
   end
 end
 
+--- Registers the 'bolt_role' condition, which compares a player's role with a chosen one.
 function Bolt:RegisterConditions()
   Conditions:register_condition('bolt_role', {
     name = 'condition.role.name',
@@ -72,6 +92,8 @@ function Bolt:RegisterConditions()
   })
 end
 
+--- Registers the built-in permissions: tools, spawning, voice, context menu, management and
+-- the staff / admin / super admin compatibility levels.
 function Bolt:RegisterPermissions()
   Bolt:register_permission('physgun', 'Physgun', 'Grants access to the physics gun.', 'permission.categories.tools', 'assistant')
   Bolt:register_permission('toolgun', 'Tool Gun', 'Grants access to the tool gun.', 'permission.categories.tools', 'assistant')

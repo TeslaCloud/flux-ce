@@ -13,6 +13,24 @@ local function CheckConditions(player, conditions)
   return false
 end
 
+--- Checks whether the player satisfies a condition tree. Serverside only.
+-- A list of nodes passes if at least one of its nodes does (OR). A node passes if its
+-- own check passes and its list of child nodes, unless empty, passes as well (AND).
+-- An empty top-level list never passes.
+-- ```
+-- -- A specific player, or anyone with more than 50 health who holds a crowbar.
+-- local allowed = Conditions:check(player, {
+--   { id = 'steamid', data = { operator = 'equal', steamid = 'STEAM_0:1:12345' }, childs = {} },
+--   { id = 'health', data = { operator = 'greater', health = 50 }, childs = {
+--     { id = 'active_weapon', data = { operator = 'equal', weapon = 'weapon_crowbar' },
+--       childs = {} }
+--   } }
+-- })
+-- ```
+-- @param player [Player]
+-- @param conditions [Array condition nodes, each a Hash with id, data and childs, as
+--   returned by the get_conditions method of the fl_conditions panel]
+-- @return [Boolean]
 function Conditions:check(player, conditions)
   return CheckConditions(player, conditions)
 end

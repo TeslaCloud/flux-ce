@@ -10,6 +10,24 @@ _player = _player or player
 local cable = {}
 local net_cache = {}
 
+--- Sets the function that handles an incoming Cable message.
+-- On the server the callback receives the sending player followed by the sent values,
+-- on the client it receives the sent values only.
+-- ```
+-- -- Server:
+-- Cable.receive('fl_config_change', function(player, key, value)
+--   if !player:can('manage_configuration') then return end
+--
+--   Config.set(key, value)
+-- end)
+--
+-- -- Client:
+-- Cable.receive('fl_config_set_var', function(key, value)
+--   print(key, value)
+-- end)
+-- ```
+-- @param id [String message name]
+-- @param callback [Function message handler]
 function cable.receive(id, callback)
   if SERVER then cable.check_networked_string(id) end
 
@@ -64,6 +82,10 @@ local function write_sendable_args(...)
 end
 
 if SERVER then
+  --- Makes sure that a message name is a networked string, adding it if necessary.
+  -- Serverside only.
+  -- @param id [String message name]
+  -- @return [Boolean true if the name was already known, false if it has just been added]
   function cable.check_networked_string(id)
     if !net_cache[id] then
       net_cache[id] = util.AddNetworkString(id)
@@ -73,6 +95,16 @@ if SERVER then
     return true
   end
 
+  --- Sends a Cable message to one, several or all players. Serverside variant.
+  -- Tables are serialized with pON. The first message under a new name is delayed by 0.1
+  -- seconds to let the networked string reach the clients.
+  -- ```
+  -- Cable.send(player, 'fl_bind_pressed', key)
+  -- Cable.send(nil, 'fl_player_disconnected', player:EntIndex()) -- to everyone
+  -- ```
+  -- @param player [Player/Array<Player> who to send the message to; everyone if nil]
+  -- @param id [String message name]
+  -- @param ... [Vararg values to send]
   function cable.send(player, id, ...)
     if isstring(player) then
       error('cable.send - bad argument #1 (must not be a string)\n')
@@ -102,6 +134,13 @@ if SERVER then
     net.Send(player)
   end
 else
+  --- Sends a Cable message to the server. Clientside variant.
+  -- Tables are serialized with pON.
+  -- ```
+  -- Cable.send('fl_config_change', key, value)
+  -- ```
+  -- @param id [String message name]
+  -- @param ... [Vararg values to send]
   function cable.send(id, ...)
     net.Start(id)
       write_sendable_args(...)

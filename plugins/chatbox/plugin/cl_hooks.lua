@@ -1,3 +1,7 @@
+--- Recalculates the size and position options of the chatbox for the new resolution
+-- and removes the chatbox panel so that it gets recreated.
+-- @param new_width [Number new screen width]
+-- @param new_height [Number new screen height]
 function Chatbox:OnResolutionChanged(new_width, new_height)
   Theme.set_option('chatbox_width', new_width * 0.375)
   Theme.set_option('chatbox_height', new_height * 0.45)
@@ -12,6 +16,12 @@ function Chatbox:OnResolutionChanged(new_width, new_height)
   end
 end
 
+--- Opens the chatbox instead of the default chat when a chat bind is pressed,
+-- remembering whether team chat was requested.
+-- @param player [Player]
+-- @param bind [String the bind that was pressed]
+-- @param pressed [Boolean whether the bind was pressed rather than released]
+-- @return [Boolean true to block the bind if the chatbox was opened, nil otherwise]
 function Chatbox:PlayerBindPress(player, bind, pressed)
   if IsValid(PLAYER) and PLAYER:has_initialized() and (string.find(bind, 'messagemode') or string.find(bind, 'messagemode2')) and pressed then
     if string.find(bind, 'messagemode2') then
@@ -26,18 +36,25 @@ function Chatbox:PlayerBindPress(player, bind, pressed)
   end
 end
 
+--- Closes the chatbox when the player clicks on the game world.
+-- @param mouseCode [Number mouse button code]
+-- @param aim_vector [Vector direction of the click]
 function Chatbox:GUIMousePressed(mouseCode, aim_vector)
   if IsValid(Chatbox.panel) then
     Chatbox.hide()
   end
 end
 
+--- Hides the default chat HUD element.
+-- @param element [String name of the HUD element]
+-- @return [Boolean false for 'CHudChat', nil otherwise]
 function Chatbox:HUDShouldDraw(element)
   if element == 'CHudChat' then
     return false
   end
 end
 
+--- Creates the normal, bold, italic and bold italic fonts of the chatbox.
 function Chatbox:CreateFonts()
   Font.create('chat_font', {
     font    = 'Montserrat Medium',
@@ -62,6 +79,8 @@ function Chatbox:CreateFonts()
   })
 end
 
+--- Sets the options, fonts and colors of the chatbox on the theme that was loaded.
+-- @param current_theme [ThemeBase]
 function Chatbox:OnThemeLoaded(current_theme)
   local scrw, scrh = ScrW(), ScrH()
 
@@ -89,6 +108,8 @@ function Chatbox:OnThemeLoaded(current_theme)
   current_theme:set_color('chat_text_entry_background', Color(0, 0, 0, 215))
 end
 
+--- Sends the entered text to the server, unless it is empty, and closes the chatbox.
+-- @param text [String the text that was entered]
 function Chatbox:ChatboxTextEntered(text)
   if text and text != '' then
     Cable.send('fl_chat_player_say', text)
@@ -97,6 +118,8 @@ function Chatbox:ChatboxTextEntered(text)
   Chatbox.hide()
 end
 
+--- Prints the texts and colors of a compiled chat message to the console.
+-- @param compiled [Hash compiled message, as returned by Chatbox.compile]
 function Chatbox:ChatboxMessageCompiled(compiled)
   local to_print = {}
 

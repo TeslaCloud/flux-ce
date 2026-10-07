@@ -5,6 +5,8 @@ local top = 1
 local queue = {}
 local queue_locked = false
 
+--- Displays the next queued notification in the top right corner of the screen and pushes
+-- the older ones down. Does nothing while another notification is still sliding in.
 function Flux.Notification:process_queue()
   local notification = queue[1]
 
@@ -53,11 +55,24 @@ function Flux.Notification:process_queue()
   end
 end
 
+--- Queues a notification to be displayed in the top right corner of the screen.
+-- @param text [String text or language phrase]
+-- @param lifetime=8 [Number how long to display it for, in seconds]
+-- @param text_color=Color(255, 255, 255) [Color]
+-- @param back_color=Color(0, 0, 0) [Color]
 function Flux.Notification:add(text, lifetime, text_color, back_color)
   table.insert(queue, { text = text, lifetime = lifetime, text_color = text_color, back_color = back_color })
   self:process_queue()
 end
 
+--- Immediately creates a notification at the specified position, bypassing the queue.
+-- The text is displayed as is, without being translated.
+-- @param text [String]
+-- @param lifetime [Number how long to display it for, in seconds]
+-- @param x [Number]
+-- @param y [Number]
+-- @param text_color=Color(255, 255, 255) [Color]
+-- @param back_color=Color(0, 0, 0) [Color]
 function Flux.Notification:add_popup(text, lifetime, x, y, text_color, back_color)
   local panel = vgui.Create('fl_notification')
   panel:SetPos(x, y)
@@ -71,6 +86,8 @@ function Flux.Notification:add_popup(text, lifetime, x, y, text_color, back_colo
   end
 end
 
+--- Moves all of the displayed notifications down to make room for a new one.
+-- @param offset [Number height of the new notification in pixels]
 function Flux.Notification:reposition(offset)
   if !isnumber(offset) then return end
 

@@ -13,7 +13,9 @@ ENV = ENV or {}
 
 if !getenv then
   --- Gets an environment variable matching the "key" name.
-  -- @return [String environment variable]
+  -- @param key [String variable name]
+  -- @param default=nil [Any value to return if the variable is not set]
+  -- @return [String environment variable, or default if it is not set]
   function getenv(key, default)
     local res = ENV[key]
 
@@ -28,6 +30,8 @@ end
 if !setenv then
   --- Sets an environment variable "key" to "value".
   -- Will be automatically converted to string by C backend.
+  -- @param key [String variable name]
+  -- @param value [Any new value]
   -- @return [String environment variable reference]
   function setenv(key, value)
     ENV[key] = value
@@ -40,6 +44,8 @@ do
 
   --- Adds an environment variable to the clientside environment variables list.
   -- Can only be used once. Forced key and value to be strings.
+  -- @param key [String variable name]
+  -- @param value [String variable value]
   function add_client_env(key, value)
     if SERVER and !client_vars[key] then
       client_vars[key] = true

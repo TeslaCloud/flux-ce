@@ -1,6 +1,9 @@
 ﻿do
   local entity_meta = FindMetaTable('Entity')
 
+  --- Returns how much of a currency the entity holds.
+  -- @param currency [String currency ID]
+  -- @return [Number amount, 0 if the currency is not registered]
   function entity_meta:get_money(currency)
     if Currencies:find_currency(currency) then
       return self:get_nv('fl_currencies', {})[currency] or 0
@@ -9,15 +12,25 @@
     return 0
   end
 
+  --- Checks whether the entity holds at least the given amount of a currency.
+  -- @param currency [String currency ID]
+  -- @param value [Number]
+  -- @return [Boolean]
   function entity_meta:has_money(currency, value)
     return self:get_money(currency) >= value
   end
 
+  --- Checks whether the entity is able to hold money by running the CanContainMoney hook.
+  -- @return [Boolean true when a hook allows it, otherwise nil]
   function entity_meta:can_contain_money()
     return hook.run('CanContainMoney', self)
   end
 
   if SERVER then
+    --- Sets how much of a currency the entity holds, rounded to the currency's decimals and
+    -- never below 0, networks it and runs the EntityMoneyChanged hook. Server only.
+    -- @param currency [String currency ID; nothing happens if it is not registered]
+    -- @param value [Number new amount]
     function entity_meta:set_money(currency, value)
       local currency_data = Currencies:find_currency(currency)
 
@@ -49,14 +62,40 @@
       end
     end
 
+    --- Removes money from the entity; the balance stops at 0. Server only.
+    -- ```
+    -- if player:has_money('tokens', 50) then
+    --   player:take_money('tokens', 50)
+    -- end
+    -- ```
+    -- @param currency [String currency ID]
+    -- @param value [Number amount to remove]
     function entity_meta:take_money(currency, value)
       self:set_money(currency, self:get_money(currency) - value)
     end
 
+    --- Adds money to the entity. Server only.
+    -- ```
+    -- player:give_money('tokens', 50)
+    -- ```
+    -- @param currency [String currency ID]
+    -- @param value [Number amount to add]
     function entity_meta:give_money(currency, value)
       self:set_money(currency, self:get_money(currency) + value)
     end
 
+    --- Drops money from a player as an fl_money entity where they are looking, at most 120 units
+    -- away; if they look at another player the money is given to that player. Server only.
+    -- ```
+    -- local success, err = player:drop_money('tokens', 50)
+    --
+    -- if success == false then
+    --   player:notify(err)
+    -- end
+    -- ```
+    -- @param currency [String currency ID]
+    -- @param value [Number amount to drop]
+    -- @return [Boolean false when the drop is refused, String error phrase; nothing otherwise]
     function entity_meta:drop_money(currency, value)
       if !self:IsPlayer() then return false, 'error.invalid_entity' end
 
@@ -109,6 +148,19 @@
       money_ent.next_pickup = CurTime() + 0.5
     end
 
+    --- Moves money from this entity to another one if the CanGiveMoney hook allows it, and
+    -- notifies the players involved. Server only.
+    -- ```
+    -- local success, err = player:give_money_to(target, 'tokens', 50)
+    --
+    -- if success == false then
+    --   player:notify(err)
+    -- end
+    -- ```
+    -- @param target=nil [Entity receiver; a player gives to the entity they look at when nil]
+    -- @param currency [String currency ID]
+    -- @param value [Number amount to move]
+    -- @return [Boolean false when the transfer is refused, String error phrase; nothing otherwise]
     function entity_meta:give_money_to(target, currency, value)
       if !target and self:IsPlayer() then
         local trace = self:GetEyeTraceNoCursor()

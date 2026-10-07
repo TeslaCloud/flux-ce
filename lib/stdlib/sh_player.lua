@@ -1,4 +1,5 @@
--- A function to select a random player.
+--- Selects a random player.
+-- @return [Player random player, or nil if there are no players on the server]
 function player.random()
   local all_ply = player.all()
 
@@ -7,7 +8,13 @@ function player.random()
   end
 end
 
--- A function to find player based on their name or steam_id.
+--- Finds player based on their name or SteamID.
+-- A SteamID has to match exactly. A name is searched for as a Lua pattern in both the
+-- name and the Steam name of every player; Steam names are always matched case-insensitively.
+-- @param name [String/Player part of a name, or a SteamID; a valid player is returned as-is]
+-- @param case_sensitive=false [Boolean match player names case-sensitively]
+-- @param return_first=false [Boolean return the first match instead of all of them]
+-- @return [Player/Array<Player> the only match, an array if several players match, nil if none do]
 function player.find(name, case_sensitive, return_first)
   if name == nil then return end
   if !isstring(name) then return (IsValid(name) and name) or nil end
@@ -44,6 +51,10 @@ function player.find(name, case_sensitive, return_first)
   end
 end
 
+--- Requests the Steam name that belongs to a SteamID through steamworks.
+-- The request is asynchronous, so the name is only returned if it is available right away.
+-- @param steamid [String SteamID, e.g. 'STEAM_0:1:12345678']
+-- @return [String Steam name, or nil if it has not been received by the time this returns]
 function player.name_from_steamid(steamid)
   local steam64 = util.SteamIDTo64(steamid)
   local steam_name

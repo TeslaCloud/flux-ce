@@ -7,6 +7,7 @@ PANEL.force_alpha = false
 PANEL.should_paint = false
 PANEL.alpha = 255
 
+--- Records when the message was added and when it should start to fade out.
 function PANEL:Init()
   --if PLAYER:can('chat_mod') then
   -- self.moderation = vgui.Create('fl_chat_moderation', self)
@@ -16,6 +17,8 @@ function PANEL:Init()
   self.fade_at = self.added_at + Config.get('message_fade_delay')
 end
 
+--- Updates the visibility and opacity of the message: fully visible while the chatbox
+-- is open, dimmed while a command is being typed, fading out after the fade delay.
 function PANEL:Think()
   local cur_time = CurTime()
 
@@ -48,6 +51,10 @@ function PANEL:Think()
   end
 end
 
+--- Draws the texts, images and icons of the compiled message, unless the
+-- ChatboxPrePaintMessage hook returns true.
+-- @param w [Number]
+-- @param h [Number]
 function PANEL:Paint(w, h)
   if self.should_paint then
     if Plugin.call('ChatboxPrePaintMessage', w, h, self) == true then return end
@@ -75,6 +82,9 @@ function PANEL:Paint(w, h)
   end
 end
 
+--- Sets the compiled message to display and resizes the panel to its height.
+-- Does nothing if the chatbox panel does not exist.
+-- @param msg_info [Hash compiled message, as returned by Chatbox.compile]
 function PANEL:set_message(msg_info)
   local parent = Chatbox.panel
 
@@ -86,6 +96,9 @@ function PANEL:set_message(msg_info)
 end
 
 -- Those people want us gone :(
+
+--- Removes the message from the chatbox history and deletes its panel,
+-- unless the ShouldMessageeject hook returns false.
 function PANEL:eject()
   if Plugin.call('ShouldMessageeject', self) != false then
     local parent = Chatbox.panel

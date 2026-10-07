@@ -3,6 +3,15 @@ class 'Log' extends 'ActiveRecord::Base'
 local last_log = nil
 local replication_data = nil
 
+--- Records a log entry. On the server the entry is saved to the logs table. The entry is
+-- also remembered so that it can be passed on with Log:replicate.
+-- @param message [String text of the entry]
+-- @param action=nil [String type of the logged event; stored in snake_case]
+-- @param object=nil [String/Number who or what performed the action, e.g. a user ID]
+-- @param subject=nil [String/Number who or what the action was performed on]
+-- @param io=nil [Function outputs the entry; called with (message, action in CamelCase,
+--   object, subject)]
+-- @return [Log the Log class, for chaining]
 function Log:write(message, action, object, subject, io)
   action = isstring(action) and action:underscore() or ''
 
@@ -33,6 +42,11 @@ function Log:write(message, action, object, subject, io)
   return self
 end
 
+--- Pushes a message to every Discord webhook registered for the given type. Does nothing
+-- on the client.
+-- @param type='all' [String webhook type]
+-- @param message=nil [String text to push; defaults to the last message given to Log:write]
+-- @return [Log the Log class, for chaining]
 function Log:to_discord(type, message)
   if SERVER then
     message = message or self.last_message
@@ -48,6 +62,14 @@ function Log:to_discord(type, message)
   return self
 end
 
+--- Records a log entry and prints it, prefixed with the action, to the server log on the
+-- server or to the console on the client.
+-- @param message [String text of the entry]
+-- @param action=nil [String type of the logged event]
+-- @param object=nil [String/Number who or what performed the action]
+-- @param subject=nil [String/Number who or what the action was performed on]
+-- @return [Log the Log class, for chaining]
+-- @see [Log:write]
 function Log:print(message, action, object, subject)
   return self:write(message, action, object, subject, function(message, action, object, subject)
     local prefix = (isstring(action) and action:capitalize()..' - ' or '')
@@ -62,6 +84,25 @@ function Log:print(message, action, object, subject)
   end)
 end
 
+--- Records a log entry and prints it to the console in the given color, prefixed with
+-- the action.
+-- ```
+-- Log:colored(
+--   command_log_color,
+--   message,
+--   'PlayerRunCommand',
+--   IsValid(player) and player.record.id or 'console'
+-- ):replicate(function(listener)
+--   return listener:is_staff() and listener:can(cmd_table.id)
+-- end)
+-- ```
+-- @param color [Color color of the console output]
+-- @param message [String text of the entry]
+-- @param action=nil [String type of the logged event]
+-- @param object=nil [String/Number who or what performed the action]
+-- @param subject=nil [String/Number who or what the action was performed on]
+-- @return [Log the Log class, for chaining]
+-- @see [Log:write]
 function Log:colored(color, message, action, object, subject)
   return self:write(message, action, object, subject, function(message, action, object, subject)
     MsgC(color, (isstring(action) and action:capitalize()..' - ' or '')..message)
@@ -74,12 +115,24 @@ function Log:colored(color, message, action, object, subject)
   end)
 end
 
+--- Records a log entry and shows the message to every player as a notification.
+-- Server only.
+-- @param message [String text or language phrase of the notification]
+-- @param arguments [Hash arguments of the phrase; its action, object and subject fields are
+--   used for the log entry]
+-- @return [Log the Log class, for chaining]
 function Log:notify(message, arguments)
   self:write(message, arguments.action, arguments.object, arguments.subject)
   Flux.Player:broadcast(message, arguments)
   return self
 end
 
+--- Sends the most recent entry made with Log:print or Log:colored to the clients, where it
+-- is output the same way. Does nothing if there is no such entry since the last call.
+-- Server only.
+-- @param condition=nil [Function called with each Player; return true to send the entry to
+--   them. Everyone receives it when omitted]
+-- @return [Log the Log class, for chaining]
 function Log:replicate(condition)
   if !last_log or !replication_data then return self end
 

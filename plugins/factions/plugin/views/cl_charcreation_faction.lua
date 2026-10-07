@@ -3,6 +3,9 @@ PANEL.id = 'faction'
 PANEL.text = 'ui.char_create.faction'
 PANEL.faction_id = ''
 
+--- Builds the faction chooser with a button for every faction the local player may pick,
+-- preselecting the faction chosen earlier.
+-- @param parent [Panel the character creation menu]
 function PANEL:on_open(parent)
   self.faction_id = parent.char_data.faction or self.faction_id
 
@@ -62,12 +65,17 @@ function PANEL:on_open(parent)
   self.chooser:SetVisible(true)
 end
 
+--- Stores the selected faction in the character data.
+-- @param parent [Panel the character creation menu]
 function PANEL:on_close(parent)
   parent:collect_data({
     faction = self.faction_id
   })
 end
 
+--- Checks that a faction is selected and that the local player is whitelisted for it when
+-- the faction requires a whitelist.
+-- @return [Boolean false when invalid, String translated error; nothing when valid]
 function PANEL:on_validate()
   if self.faction_id == '' then
     return false, t'ui.char_create.no_faction'

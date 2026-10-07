@@ -1,5 +1,7 @@
 local PANEL = {}
 
+--- Builds and shows the modal dialog: a message label and a combo box. Selecting a choice
+-- runs its callback and removes the selector.
 function PANEL:Init()
   self:SetTitle('')
   self:SetDraggable(false)
@@ -30,16 +32,21 @@ function PANEL:Init()
   self:Center()
 end
 
+--- Resizes the dialog to fit the message and the combo box.
 function PANEL:SizeToContents()
   local width, height = math.max(self.text:GetWide(), ScrW() / 6), self.text:GetTall()
 
   self:SetSize(width + 50, height + 42 + self.list:GetTall())
 end
 
+--- Sets the title of the dialog window.
+-- @param text [String]
 function PANEL:set_title(text)
   self:SetTitle(text)
 end
 
+--- Sets the message shown above the combo box and resizes the dialog to fit it.
+-- @param text [String]
 function PANEL:set_text(text)
   self.text:SetText(text)
   self.text:SizeToContents()
@@ -47,10 +54,27 @@ function PANEL:set_text(text)
   self:SizeToContents()
 end
 
+--- Sets the text shown in the combo box before anything is selected.
+-- @param value [String]
 function PANEL:set_value(value)
   self.list:SetValue(value)
 end
 
+--- Adds a choice to the combo box. Selecting it runs the callback and removes the selector.
+-- ```
+-- local selector = vgui.create('fl_selector')
+-- selector:set_title(t'ui.admin.selector.title')
+-- selector:set_text(t'ui.admin.selector.message')
+-- selector:set_value(t'ui.admin.selector.roles')
+--
+-- for k, v in pairs(Bolt:get_roles()) do
+--   selector:add_choice(v.name, function()
+--     Cable.send('fl_bolt_set_role', self.player, v.role_id)
+--   end)
+-- end
+-- ```
+-- @param text [String label of the choice]
+-- @param callback=nil [Function called without arguments when the choice is selected]
 function PANEL:add_choice(text, callback)
   self.list:AddChoice(text, callback)
 end

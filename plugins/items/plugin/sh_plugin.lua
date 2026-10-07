@@ -4,6 +4,8 @@ require_relative 'cl_hooks'
 require_relative 'sv_hooks'
 require_relative 'sh_enums'
 
+--- Registers the 'items/bases' and 'items' plugin folders
+-- and includes the item bases and the items that come with this plugin.
 function Items:OnPluginLoaded()
   Plugin.add_extra('items/bases')
   Plugin.add_extra('items')
@@ -12,6 +14,10 @@ function Items:OnPluginLoaded()
   Item.include_items(self:get_folder()..'/items/')
 end
 
+--- Includes the items of a plugin when its 'items' folder is being included.
+-- @param extra [String name of the folder being included]
+-- @param folder [String path to the plugin's folder]
+-- @return [Boolean true if the folder was handled here, nil otherwise]
 function Items:PluginIncludeFolder(extra, folder)
   if extra == 'items' then
     Item.include_items(folder..'/items/')
@@ -20,6 +26,7 @@ function Items:PluginIncludeFolder(extra, folder)
   end
 end
 
+--- Registers the 'has_item' and 'has_item_data' conditions.
 function Items:RegisterConditions()
   Conditions:register_condition('has_item', {
     name = 'condition.has_item.name',

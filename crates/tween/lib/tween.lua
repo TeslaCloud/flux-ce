@@ -313,6 +313,9 @@ end
 local Tween = {}
 local Tween_mt = {__index = Tween}
 
+--- Moves the tween to a point in time and updates the fields of the subject to match.
+-- @param clock [Number elapsed time, clamped to the range from 0 to the duration]
+-- @return [Boolean true if the tween has reached its end]
 function Tween:set(clock)
   assert(isnumber(clock), "clock must be a positive number or 0")
 
@@ -338,10 +341,16 @@ function Tween:set(clock)
   return self.clock >= self.duration
 end
 
+--- Rewinds the tween to the beginning and restores the initial values of the subject.
+-- @return [Boolean true if the tween has reached its end, which is never the case
+--   after a reset]
 function Tween:reset()
   return self:set(0)
 end
 
+--- Advances the tween by a time delta and updates the fields of the subject to match.
+-- @param dt [Number time passed since the last update, in the unit of the duration]
+-- @return [Boolean true if the tween has reached its end]
 function Tween:update(dt)
   assert(isnumber(dt), "dt must be a number")
   return self:set(self.clock + dt)
@@ -349,6 +358,24 @@ end
 
 -- Public interface
 
+--- Creates a tween, which gradually changes numeric fields of a table towards their
+-- target values. The tween only progresses when its update method is called.
+-- ```
+-- local logo_data = { width = 512, height = 256 }
+-- local logo_tween = Tween.new(1.5, logo_data, { width = 256, height = 128 }, 'inOutCubic')
+--
+-- function PANEL:Paint(w, h)
+--   logo_tween:update(FrameTime())
+--   draw.RoundedBox(0, 0, 0, logo_data.width, logo_data.height, color_white)
+-- end
+-- ```
+-- @param duration [Number how long the tween takes, must be positive]
+-- @param subject [Hash table (or userdata) whose fields are changed]
+-- @param target [Hash final values of the fields to change, which have to be numbers
+--   or nested tables of numbers]
+-- @param easing='linear' [String/Function name of an easing function from Tween.easing
+--   (e.g. 'inOutCubic'), or a custom easing function]
+-- @return [Hash tween object with the set, reset and update methods]
 function tween.new(duration, subject, target, easing)
   easing = getEasingFunction(easing)
   checkNewParams(duration, subject, target, easing)

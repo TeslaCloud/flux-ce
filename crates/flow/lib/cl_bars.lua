@@ -13,6 +13,25 @@ Flux.Bars.default_w       = math.scale_width(312)
 Flux.Bars.default_h       = 18
 Flux.Bars.default_spacing = 6
 
+--- Registers a HUD bar. If a bar with this ID already exists it is returned untouched,
+-- unless force is set or Flux runs in development mode.
+-- ```
+-- Flux.Bars:register('getup', {
+--   text = t'ui.hud.bar_text.getup',
+--   color = Color(50, 200, 50),
+--   max_value = 100,
+--   x = ScrW() * 0.5 - Flux.Bars.default_w * 0.5,
+--   y = ScrH() * 0.5 - 8,
+--   height = 20,
+--   type = BAR_MANUAL
+-- })
+-- ```
+-- @param id [String unique bar ID]
+-- @param data [Hash bar settings such as text, color, value, max_value, x, y, width, height,
+--   priority, type (BAR_TOP, BAR_MANUAL or BAR_HIDDEN), font and callback (receives the bar,
+--   returns its new value); missing keys get defaults]
+-- @param force=false [Boolean overwrite an existing bar with the same ID]
+-- @return [Hash the stored bar, or nil if no data was given]
 function Flux.Bars:register(id, data, force)
   if !data then return end
 
@@ -52,6 +71,9 @@ function Flux.Bars:register(id, data, force)
   return stored[id]
 end
 
+--- Returns the bar registered under the specified ID.
+-- @param id [String bar ID]
+-- @return [Hash the bar, or false if it does not exist]
 function Flux.Bars:get(id)
   if stored[id] then
     return stored[id]
@@ -60,6 +82,10 @@ function Flux.Bars:get(id)
   return false
 end
 
+--- Sets the value of a bar, clamped between 0 and its max value, and starts the fill
+-- animation towards it. Calls the 'PreBarValueSet' theme hook first.
+-- @param id [String bar ID]
+-- @param new_value [Number]
 function Flux.Bars:set_value(id, new_value)
   local bar = self:get(id)
 
@@ -77,6 +103,10 @@ function Flux.Bars:set_value(id, new_value)
   end
 end
 
+--- Sets the hindrance value of a bar (the part of it that is blocked off), clamped between
+-- 0 and its max value. Calls the 'PreBarHinderValueSet' theme hook first.
+-- @param id [String bar ID]
+-- @param new_value [Number]
 function Flux.Bars:hinder_value(id, new_value)
   local bar = self:get(id)
 
@@ -89,6 +119,9 @@ function Flux.Bars:hinder_value(id, new_value)
   end
 end
 
+--- Rebuilds the list of top bars grouped by priority. Bars rejected by the 'ShouldDrawBar'
+-- hook are left out.
+-- @return [Hash priority mapped to an Array<String> of bar IDs]
 function Flux.Bars:prioritize()
   sorted = {}
 
@@ -109,6 +142,8 @@ function Flux.Bars:prioritize()
   return sorted
 end
 
+--- Recalculates the positions of all top bars, stacking them vertically in order of priority.
+-- Plugins can offset each bar through the 'AdjustBarPos' hook.
 function Flux.Bars:position()
   self:prioritize()
 
@@ -132,6 +167,9 @@ function Flux.Bars:position()
 
 end
 
+--- Draws the bar with the specified ID using the active theme. Does nothing if the bar does
+-- not exist or the 'ShouldDrawBar' hook rejects it.
+-- @param id [String bar ID]
 function Flux.Bars:draw(id)
   local bar_info = self:get(id)
 
@@ -160,6 +198,7 @@ function Flux.Bars:draw(id)
   end
 end
 
+--- Draws every bar from the prioritized list of top bars.
 function Flux.Bars:DrawTopBars()
   for priority, ids in pairs(sorted) do
     for k, v in ipairs(ids) do
@@ -168,6 +207,9 @@ function Flux.Bars:DrawTopBars()
   end
 end
 
+--- Merges the specified settings into an existing bar.
+-- @param id [String bar ID]
+-- @param data [Hash bar settings to overwrite, same keys as in Flux.Bars#register]
 function Flux.Bars:adjust(id, data)
   local bar = self:get(id)
 
@@ -179,6 +221,7 @@ end
 do
   local Bars = {}
 
+  --- Repositions the top bars and refreshes the value of every bar that has a callback.
   function Bars:LazyTick()
     if IsValid(PLAYER) then
       Flux.Bars:position()
@@ -193,6 +236,9 @@ do
     end
   end
 
+  --- Calculates the fill width of the bar, advancing its value animation, and converts
+  -- its texts to upper case.
+  -- @param bar [Hash bar data]
   function Bars:PreDrawBar(bar)
     bar.cur_i = bar.cur_i or 1
 
@@ -214,6 +260,9 @@ do
     bar.hinder_text = string.utf8upper(bar.hinder_text)
   end
 
+  --- Hides the bar while its value is outside of its display range.
+  -- @param bar [Hash bar data]
+  -- @return [Boolean false if the bar should not be drawn]
   function Bars:ShouldDrawBar(bar)
     if bar.display < bar.value or bar.min_display >= bar.value then
       return false

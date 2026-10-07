@@ -1,3 +1,8 @@
+--- Puts the player into observer mode: noclipping, invisible, not solid, invulnerable and
+-- hidden from players without the 'moderator' permission. The previous position, angles,
+-- color and move type are kept in player.observer_data. Requires the 'noclip' permission.
+-- @param player [Player]
+-- @return [Boolean always false, which blocks the default noclip]
 function Observer:PlayerEnterNoclip(player)
   if !player:can('noclip') then
     player:notify('You do not have permission to do this.')
@@ -35,6 +40,10 @@ function Observer:PlayerEnterNoclip(player)
   return false
 end
 
+--- Takes the player out of observer mode and restores what was saved on entering it.
+-- The player is moved back to where they started unless ShouldObserverReset said not to.
+-- @param player [Player]
+-- @return [Boolean always false, which blocks the default noclip]
 function Observer:PlayerExitNoclip(player)
   local data = player.observer_data
 
@@ -71,6 +80,10 @@ function Observer:PlayerExitNoclip(player)
   return false
 end
 
+--- Keeps players where they are when leaving observer mode if the 'observer_reset' config
+-- is off.
+-- @param player [Player]
+-- @return [Boolean false if the player should not be moved back, nil otherwise]
 function Observer:ShouldObserverReset(player)
   if !Config.get('observer_reset') then
     return false

@@ -14,26 +14,44 @@ Flux.HTML.javascripts = Flux.HTML.javascripts or {}
 
 ]]
 
+--- Adds an HTML template.
+-- @param id [String template ID]
+-- @param contents [String source of the template]
 function Flux.HTML:add_template(id, contents)
   self.templates[id] = contents
 end
 
+--- Adds a stylesheet.
+-- @param id [String stylesheet ID]
+-- @param contents [String CSS code]
 function Flux.HTML:add_stylesheet(id, contents)
   self.stylesheets[id] = contents
 end
 
+--- Adds a script.
+-- @param id [String script ID]
+-- @param contents [String JavaScript code]
 function Flux.HTML:add_js(id, contents)
   self.javascripts[id] = contents
 end
 
+--- Returns the contents of a stylesheet.
+-- @param id [String stylesheet ID]
+-- @return [String CSS code, or nil if there is no such stylesheet]
 function Flux.HTML:get_stylesheet(id)
   return self.stylesheets[id]
 end
 
+--- Returns the source of a template.
+-- @param id [String template ID]
+-- @return [String source of the template, or nil if there is no such template]
 function Flux.HTML:get_template(id)
   return self.templates[id]
 end
 
+--- Returns the contents of a script.
+-- @param id [String script ID]
+-- @return [String JavaScript code, or nil if there is no such script]
 function Flux.HTML:get_javascript(id)
   return self.javascripts[id]
 end
@@ -48,6 +66,17 @@ local function val_to_str(val)
   end
 end
 
+--- Renders a template to HTML. Templates can contain Lua code: '<? code ?>' runs the code,
+-- and '<?= expression ?>' inserts the value of the expression into the output.
+-- ```
+-- -- With the 'greeting' template being: <p>Hello, <?= name ?>!</p>
+-- -- this returns '<p>Hello, John!</p>'.
+-- Flux.HTML:render_template('greeting', { name = 'John' })
+-- ```
+-- @param id [String template ID]
+-- @param locals=nil [Hash local variables to make available to the code of the template,
+--   by name]
+-- @return [String rendered HTML, empty if there is no such template]
 function Flux.HTML:render_template(id, locals)
   local header = ''
 
@@ -90,14 +119,20 @@ local function generate_file_from_table(t, tab_name)
   return final_file
 end
 
+--- Generates Lua code that adds all of the templates, to be sent to the clients.
+-- @return [String Lua code]
 function Flux.HTML:generate_html_file()
   return generate_file_from_table(self.templates, 'Flux.HTML.templates')
 end
 
+--- Generates Lua code that adds all of the stylesheets, to be sent to the clients.
+-- @return [String Lua code]
 function Flux.HTML:generate_css_file()
   return generate_file_from_table(self.stylesheets, 'Flux.HTML.stylesheets')
 end
 
+--- Generates Lua code that adds all of the scripts, to be sent to the clients.
+-- @return [String Lua code]
 function Flux.HTML:generate_js_file()
   return generate_file_from_table(self.javascripts, 'Flux.HTML.javascripts')
 end
@@ -106,15 +141,29 @@ end
 do
   local current_namespace = ''
 
+  --- Sets the prefix that render_template adds to the template IDs.
+  -- @param ns [String]
+  -- @return [String the new namespace]
   function set_template_namespace(ns)
     current_namespace = ns
     return current_namespace
   end
 
+  --- Returns the prefix that render_template adds to the template IDs.
+  -- @return [String]
   function get_template_namespace()
     return current_namespace
   end
 
+  --- Renders a template from the current template namespace to HTML.
+  -- ```
+  -- self.html:set_body(render_template('help'))
+  -- ```
+  -- @param id [String template ID]
+  -- @param locals=nil [Hash local variables to make available to the code of the template,
+  --   by name]
+  -- @return [String rendered HTML]
+  -- @see [Flux.HTML#render_template]
   function render_template(id, locals)
     local prev_namespace = current_namespace
 
@@ -128,6 +177,16 @@ do
     return rendered
   end
 
+  --- Renders a partial, a template whose name starts with an underscore. Meant to be called
+  -- from other templates.
+  -- ```
+  -- -- Renders the '_credits' template.
+  -- render_partial('credits')
+  -- ```
+  -- @param id [String ID of the partial without the leading underscore]
+  -- @param locals=nil [Hash local variables to make available to the code of the partial,
+  --   by name]
+  -- @return [String rendered HTML]
   function render_partial(id, locals)
     if id:find('/') then
       local path, name = File.path(id), File.name(id)
@@ -139,10 +198,16 @@ do
     return render_template(id, locals)
   end
 
+  --- Returns the contents of a stylesheet.
+  -- @param id [String stylesheet ID]
+  -- @return [String CSS code, or nil if there is no such stylesheet]
   function render_stylesheet(id)
     return Flux.HTML.stylesheets[id]
   end
 
+  --- Returns the contents of a script.
+  -- @param id [String script ID]
+  -- @return [String JavaScript code, or nil if there is no such script]
   function render_javascript(id)
     return Flux.HTML.javascripts[id]
   end

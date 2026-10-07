@@ -5,6 +5,11 @@ class 'ActiveRecord::Migrator'
 
 local migration_files = {}
 
+--- Loads the 'db/schema.lua' file of the active schema, generating it first if it does
+-- not exist.
+-- @param version=nil [Number/String current version of the database; takes precedence
+--   over the version stored in the schema file]
+-- @return [ActiveRecord::Migrator(self)]
 function ActiveRecord.Migrator:init(version)
   self.db_path = 'gamemodes/'..Flux.get_schema_folder()..'/db'
   self.schema_path = self.db_path..'/schema.lua'
@@ -21,6 +26,10 @@ function ActiveRecord.Migrator:init(version)
   return self
 end
 
+--- Dumps the current database schema into the 'db/schema.lua' file and reloads it.
+-- @param version=nil [Number/String version to write; defaults to the loaded schema's
+--   version, or 0]
+-- @return [ActiveRecord::Migrator(self)]
 function ActiveRecord.Migrator:generate_schema(version)
   File.delete(self.db_path..'/.keep')
   File.write(self.schema_path, ActiveRecord.dump_schema(version or (self.schema and self.schema.version) or 0))
@@ -30,6 +39,13 @@ function ActiveRecord.Migrator:generate_schema(version)
   return self
 end
 
+--- Runs all pending migrations, which are the '<version>_<name>.lua' files with a
+-- version newer than the schema's. Files registered with #add_file are turned into
+-- migrations first, and the schema file is regenerated if any migration ran.
+-- @param folder=nil [String folder to look for migrations in; defaults to 'db/migrate/'
+--   of the active schema]
+-- @param force=false [Boolean run every migration regardless of its version]
+-- @return [ActiveRecord::Migrator(self)]
 function ActiveRecord.Migrator:run_migrations(folder, force)
   if !self.schema then error "Can't run migrations without a schema!" end
 
@@ -88,12 +104,18 @@ function ActiveRecord.Migrator:run_migrations(folder, force)
   return self
 end
 
+--- Creates all tables described by the schema file and sets up the references
+-- between them.
+-- @return [ActiveRecord::Migrator(self)]
 function ActiveRecord.Migrator:setup_database()
   self.schema:create_tables()
   self.schema:setup_references()
   return self
 end
 
+--- Generates the version for a new migration from the current time (YYYYMMDDHHMMSS),
+-- increased by one if an existing migration already uses it.
+-- @return [String/Number version; a number only if it had to be increased]
 function ActiveRecord.Migrator:generate_version()
   local version = to_timestamp(os.time())
   local files, folders = file.Find(self.db_path..'/migrate/*.lua', 'GAME')
@@ -109,6 +131,10 @@ function ActiveRecord.Migrator:generate_version()
   return version
 end
 
+--- Checks whether the migrations folder has a migration with the given version or name.
+-- @param version=0 [Number/String]
+-- @param name='' [String migration name, underscored before it is compared]
+-- @return [Boolean]
 function ActiveRecord.Migrator:migration_exists(version, name)
   version = version or 0
   name = (name or ''):underscore()
@@ -126,6 +152,14 @@ function ActiveRecord.Migrator:migration_exists(version, name)
   return false
 end
 
+--- Writes a new migration file named '<version>_<name>.lua', with the given code
+-- wrapped into the migration's change function.
+-- @param name [String migration name, underscored for the file name]
+-- @param body=nil [String Lua code that makes up the body of Migration#change]
+-- @param verbose=false [Boolean print the path of the generated file]
+-- @param file_path=nil [String folder to write the file to; defaults to 'db/migrate/' of
+--   the active schema]
+-- @return [ActiveRecord::Migrator(self)]
 function ActiveRecord.Migrator:generate_migration(name, body, verbose, file_path)
   File.delete(self.db_path..'/migrate/.keep')
 
@@ -146,6 +180,10 @@ return Migration
   return self
 end
 
+--- Turns a plain Lua file into a migration by passing its contents to
+-- #generate_migration, unless a migration with the same version or name exists already.
+-- @param file [String path to the file, with or without the leading 'gamemodes/']
+-- @return [ActiveRecord::Migrator self, or nil if the migration already exists]
 function ActiveRecord.Migrator:migration_from_file(file)
   file = file:ensure_start('gamemodes/')
   local file_name = File.name(file)
@@ -166,6 +204,10 @@ function ActiveRecord.Migrator:migration_from_file(file)
   return self
 end
 
+--- Registers a file to be turned into a migration the next time #run_migrations is
+-- called. The list of files is shared between all migrators.
+-- @param path [String path to the file, relative to 'gamemodes/']
+-- @return [ActiveRecord::Migrator(self)]
 function ActiveRecord.Migrator:add_file(path)
   table.insert(migration_files, 'gamemodes/'..path)
   return self

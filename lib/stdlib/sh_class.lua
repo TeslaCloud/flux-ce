@@ -1,16 +1,31 @@
 local last_class = nil
 
+--- Creates a new class. Supports constructors and inheritance.
+-- The class is stored in the global table, or inside of another table when the name is
+-- namespaced with `::`. Every class gets a `new` function that creates an instance and calls
+-- its `init` constructor, and an `include` method that mixes a module into the class.
+-- ```
+-- class 'Animal'
 --
--- Function: class(string name, table parent = _G, class parent_class = nil)
--- Description: Creates a new class. Supports constructors and inheritance.
--- Argument: string name - The name of the library. Must comply with Lua variable name requirements.
--- Argument: table parent (default: _G) - The parent table to put the class into.
--- Argument: class parent_class (default: nil) - The base class this new class should extend.
+-- function Animal:init(name)
+--   self.name = name
+-- end
 --
--- Alias: class (string name, class parent_class = nil, table parent = _G)
+-- class 'Dog' extends 'Animal'
 --
--- Returns: table - The created class.
+-- function Dog:init(name)
+--   super(name) -- calls Animal's constructor on the new object
+-- end
 --
+-- Dog:include 'Talkable' -- copies missing methods from the Talkable module
+--
+-- local dog = Dog.new('Rex')
+-- ```
+-- @param name [String class name in ConstantStyle, may be namespaced (e.g. 'ActiveRecord::Model')]
+-- @param parent_class=nil [String/Hash base class or its name]
+-- @return [Hash the created class]
+-- @see [extends]
+-- @see [mod]
 function class(name, parent_class)
   if isstring(parent_class) then
     parent_class = parent_class:parse_table()
@@ -107,6 +122,14 @@ function class(name, parent_class)
   return parent[name]
 end
 
+--- Copies the listed methods of a class onto another object.
+-- ```
+-- -- MyLibrary.now and MyLibrary.tomorrow now point to the DateTime functions.
+-- delegate(MyLibrary, { 'now', 'tomorrow', to = 'DateTime' })
+-- ```
+-- @param obj [Hash object or class that receives the methods]
+-- @param t [Hash method names as array elements, the source class or its name in the `to` key]
+-- @return [Boolean true, or nil if obj or t is not a table or `to` is missing]
 function delegate(obj, t)
   if !istable(obj) or !istable(t) or !t.to then return end
 
@@ -121,16 +144,18 @@ function delegate(obj, t)
   return true
 end
 
+--- Sets the base class of the class that is currently being created.
+-- Copies the base class into the class created by the last `class` call, then calls the
+-- base class's `class_extended(new_class)` method and runs the OnClassExtended hook.
+-- ```
+-- class 'DateTime' extends 'Date'
 --
--- Function: extends (class parent_class)
--- Description: Sets the base class of the class that is currently being created.
--- Argument: class parent_class - The base class to extend.
---
--- Alias: implements
--- Alias: inherits
---
--- Returns: bool - Whether or not did the extension succeed.
---
+-- -- The base class can also be passed as a table.
+-- class 'Dog' extends(Animal)
+-- ```
+-- @param parent_class [String/Hash base class or its name]
+-- @return [Boolean whether or not did the extension succeed]
+-- @see [class]
 function extends(parent_class)
   if isstring(parent_class) then
     parent_class = parent_class:parse_table()

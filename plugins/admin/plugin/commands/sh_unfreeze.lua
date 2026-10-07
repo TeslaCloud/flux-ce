@@ -7,6 +7,9 @@ CMD.arguments = 1
 CMD.immunity = true
 CMD.aliases = { 'unfreeze', 'plyunfreeze' }
 
+--- Unfreezes the targeted players and notifies them and staff.
+-- @param player [Player the caller, or an invalid entity when run from the server console]
+-- @param targets [Array<Player> players to unfreeze]
 function CMD:on_run(player, targets)
   for k, v in ipairs(targets) do
     v:Freeze(false)

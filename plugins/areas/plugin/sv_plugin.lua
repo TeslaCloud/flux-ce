@@ -1,17 +1,23 @@
+--- Sends all stored areas to the player who has just initialized.
+-- @param player [Player]
 function Area:PlayerInitialized(player)
   Cable.send(player, 'fl_areas_load', Areas.all())
 end
 
+--- Loads the saved areas from the plugin data storage.
 function Area:LoadData()
   local loaded = Data.load_plugin('areas', {})
 
   Areas.set_stored(loaded)
 end
 
+--- Saves all stored areas to the plugin data storage.
 function Area:SaveData()
   Data.save_plugin('areas', Areas.all())
 end
 
+--- Checks every player who has moved against every area polygon. Runs the area type's
+-- callback and notifies the player's client whenever a player enters or leaves an area.
 function Area:OneSecond()
   local cur_time = CurTime()
 

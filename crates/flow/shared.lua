@@ -26,6 +26,8 @@ _player, _team, _file, _table, _sound = player, team, file, table, sound
 
 AddCSLuaFile(FLUX_ENV_PATH)
 
+--- Returns the version of the Flux core, as declared in its crate metadata.
+-- @return [String]
 function Flux.get_version()
   return version
 end

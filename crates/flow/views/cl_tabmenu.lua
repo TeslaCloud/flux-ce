@@ -3,6 +3,9 @@ PANEL.menu_items = {}
 PANEL.buttons = {}
 PANEL.active_panel = nil
 
+--- Builds the full screen tab menu: slides the button bar in, collects the menu items
+-- through the AddTabMenuItems hook, creates a button for each of them and opens the panel
+-- that was open last time, or the default one.
 function PANEL:Init()
   local scrw, scrh = ScrW(), ScrH()
 
@@ -132,22 +135,54 @@ function PANEL:Init()
   end
 end
 
+--- Clears the text color override of the active button once its panel is gone.
 function PANEL:Think()
   if !IsValid(self.active_panel) and IsValid(self.active_button) then
     self.active_button:set_text_color(nil)
   end
 end
 
+--- Closes the menu when the TAB key is pressed.
+-- @param key [Number key code, one of the KEY_ enums]
 function PANEL:OnKeyCodePressed(key)
   if key == KEY_TAB then
     self:close_menu()
   end
 end
 
+--- Delegates drawing of the menu to the active theme's PaintTabMenu hook.
+-- @param w [Number panel width]
+-- @param h [Number panel height]
 function PANEL:Paint(w, h)
   Theme.hook('PaintTabMenu', self, w, h)
 end
 
+--- Registers an item in the tab menu: a button that can open a panel. Meant to be called
+-- from the AddTabMenuItems hook; buttons are ordered by ascending priority.
+-- The opened panel may define get_menu_size, rebuild, on_change and on_close, which the
+-- menu calls when appropriate.
+-- ```
+-- function Inventories:AddTabMenuItems(menu)
+--   menu:add_menu_item('inventory', {
+--     title = 'Inventory',
+--     panel = 'fl_inventory_menu',
+--     icon = 'fa-briefcase',
+--     default = true,
+--     priority = 30,
+--     callback = function(menu_panel, button)
+--       local inv = menu_panel.active_panel
+--       inv:SetTitle('Inventory')
+--     end
+--   })
+-- end
+-- ```
+-- @param id [String unique ID of the item]
+-- @param data [Hash item options. priority (Number) is required. Optional: title (String),
+--   icon (String FontAwesome ID), panel (String VGUI class to open on click),
+--   default (Boolean open this item when none was open before),
+--   callback (Function(menu_panel, button) called after the click was handled),
+--   override (Function(menu_panel, button) called instead of opening a panel)]
+-- @param index=nil [Number unused]
 function PANEL:add_menu_item(id, data, index)
   data.id = id
   data.title = data.title or 'error'
@@ -157,6 +192,8 @@ function PANEL:add_menu_item(id, data, index)
   table.sort(self.menu_items, function(a, b) return a.priority < b.priority end)
 end
 
+--- Closes the menu: fades the active panel out, remembers it for the next time the menu
+-- opens, calls its on_close method and slides the button bar away before removing the menu.
 function PANEL:close_menu()
   self.blur_target = 0
 

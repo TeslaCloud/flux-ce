@@ -12,14 +12,18 @@ local whitelisted_ents = {
   prop_ragdoll              = true
 }
 
+--- Runs the PersistenceLoad hook once the map's entities have been created.
 function StaticEnts:InitPostEntity()
   hook.run('PersistenceLoad')
 end
 
+--- Runs the PersistenceSave hook when the server shuts down.
 function StaticEnts:ShutDown()
   hook.run('PersistenceSave')
 end
 
+--- Saves every persistent entity to the plugin data of the current schema and map, one
+-- 'static/<class>' entry per entity class. Runs the PrePersistenceSave hook first.
 function StaticEnts:PersistenceSave()
   hook.run('PrePersistenceSave')
 
@@ -45,12 +49,18 @@ function StaticEnts:PersistenceSave()
   end
 end
 
+--- Loads the saved static entities of every whitelisted class.
 function StaticEnts:PersistenceLoad()
   for ent_class, v in pairs(whitelisted_ents) do
     self:load_class(ent_class)
   end
 end
 
+--- Makes the entity the player is looking at static, or removes its static status, and
+-- notifies the player about the outcome. The entity's class has to be whitelisted and the
+-- player needs the 'static' or 'unstatic' permission respectively.
+-- @param player [Player]
+-- @param is_static [Boolean true to make the entity static, false to make it unstatic]
 function StaticEnts:PlayerMakeStatic(player, is_static)
   if (is_static and !player:can('static')) or (!is_static and !player:can('unstatic')) then
     player:notify('error.no_permission')
@@ -85,10 +95,14 @@ function StaticEnts:PlayerMakeStatic(player, is_static)
   player:notify((is_static and 'notification.static.added') or 'notification.static.removed')
 end
 
+--- Runs the PersistenceSave hook whenever the framework saves its data.
 function StaticEnts:SaveData()
   hook.run('PersistenceSave')
 end
 
+--- Spawns the saved static entities of one class and marks them as persistent.
+-- Does nothing if there is no usable save for that class. Serverside only.
+-- @param ent_class [String entity class, e.g. 'prop_physics']
 function StaticEnts:load_class(ent_class)
   local loaded = Data.load_plugin('static/'..ent_class, false)
 
@@ -112,6 +126,9 @@ function StaticEnts:load_class(ent_class)
   end
 end
 
+--- Allows entities of a class to be made static and to be loaded from the saves.
+-- Serverside only.
+-- @param ent_class [String entity class]
 function StaticEnts:whitelist_ent(ent_class)
   whitelisted_ents[ent_class] = true
 end

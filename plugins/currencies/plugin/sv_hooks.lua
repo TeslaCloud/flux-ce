@@ -1,4 +1,9 @@
 
+--- Adds a Currency record with a zero balance for every registered currency to a new
+-- character.
+-- @param player [Player]
+-- @param char [Character the character being created]
+-- @param char_data [Hash character creation data]
 function Currencies:PostCreateCharacter(player, char, char_data)
   for k, v in pairs(Currencies.all()) do
     local currency = Currency.new()
@@ -8,6 +13,9 @@ function Currencies:PostCreateCharacter(player, char, char_data)
   end
 end
 
+--- Networks the currency balances of the newly active character to the player entity.
+-- @param player [Player]
+-- @param character [Character]
 function Currencies:OnActiveCharacterSet(player, character)
   local currencies = {}
 
@@ -20,6 +28,10 @@ function Currencies:OnActiveCharacterSet(player, character)
   player:set_nv('fl_currencies', currencies)
 end
 
+--- Blocks money pickup while the player or the money entity is on its pickup cooldown.
+-- @param player [Player]
+-- @param entity [Entity the fl_money entity]
+-- @return [Boolean false while on cooldown, otherwise nil]
 function Currencies:CanPlayerPickupMoney(player, entity)
   if player.next_money_pickup and player.next_money_pickup > CurTime() then
     return false
@@ -30,6 +42,10 @@ function Currencies:CanPlayerPickupMoney(player, entity)
   end
 end
 
+--- Gives the contents of a money entity to the player, notifies them and starts their
+-- pickup cooldown.
+-- @param player [Player]
+-- @param entity [Entity the fl_money entity]
 function Currencies:PlayerPickupMoney(player, entity)
   local currency = entity:get_currency()
   local amount = entity:get_currency_amount()
@@ -41,6 +57,11 @@ function Currencies:PlayerPickupMoney(player, entity)
   entity:EmitSound('physics/cardboard/cardboard_box_impact_bullet'..math.random(1, 5)..'.wav', 55)
 end
 
+--- Checks that the amount is positive, the currency exists and the player can afford it.
+-- @param player [Player]
+-- @param amount [Number]
+-- @param currency [String currency ID]
+-- @return [Boolean false when not allowed, String error phrase; nothing when allowed]
 function Currencies:CanPlayerTransferMoney(player, amount, currency)
   if !amount or amount <= 0 then
     return false, 'error.invalid_amount'
@@ -57,6 +78,15 @@ function Currencies:CanPlayerTransferMoney(player, amount, currency)
   end
 end
 
+--- Checks that the player may transfer the money, that the drop position is within 120
+-- units of their eyes and that they are not on pickup cooldown.
+-- @param player [Player]
+-- @param amount [Number]
+-- @param currency [String currency ID]
+-- @param pos [Vector position the money would be dropped at]
+-- @param trace [Hash eye trace result of the player]
+-- @return [Boolean false when not allowed, String error phrase if there is one; nothing
+--   when allowed]
 function Currencies:CanPlayerDropMoney(player, amount, currency, pos, trace)
   local success, err = hook.run('CanPlayerTransferMoney', player, amount, currency)
 
@@ -73,6 +103,13 @@ function Currencies:CanPlayerDropMoney(player, amount, currency, pos, trace)
   end
 end
 
+--- Checks that the giver may transfer the money and that the target is valid, able to
+-- contain money and within 120 units of the giver's eyes.
+-- @param player [Entity the entity giving the money, normally a player]
+-- @param target [Entity the receiver]
+-- @param amount [Number]
+-- @param currency [String currency ID]
+-- @return [Boolean false when not allowed, String error phrase; nothing when allowed]
 function Currencies:CanGiveMoney(player, target, amount, currency)
   local success, err = hook.run('CanPlayerTransferMoney', player, amount, currency)
 
@@ -95,12 +132,18 @@ function Currencies:CanGiveMoney(player, target, amount, currency)
   end
 end
 
+--- Allows players that are not bots to hold money.
+-- @param object [Entity]
+-- @return [Boolean true for valid non-bot players, otherwise nil]
 function Currencies:CanContainMoney(object)
   if IsValid(object) and object:IsPlayer() and !object:IsBot() then
     return true
   end
 end
 
+--- Gives a container zero balances for every currency if it has none yet and networks its
+-- balances.
+-- @param entity [Entity the container]
 function Currencies:PreContainerOpen(entity)
   if !entity.currencies then
     local currencies = {}

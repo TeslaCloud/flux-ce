@@ -1,3 +1,9 @@
+--- Recursively merges the source table into the destination table, overwriting existing keys.
+-- Replaces the built-in table.Merge. Unlike the built-in, a table stored under the `class`
+-- key is assigned by reference instead of being merged.
+-- @param dest [Hash table to merge into, modified in place]
+-- @param source [Hash table to take the values from]
+-- @return [Hash dest]
 function table.Merge(dest, source)
   for k, v in pairs(source) do
     if istable(v) and istable(dest[k]) and k != 'class' then
@@ -12,6 +18,11 @@ end
 
 table.merge = table.Merge
 
+--- Merges a table into another one like table.Merge, but leaves `__index` of both tables
+-- alone and skips the `class` key and any field of `from` that refers to `from` itself.
+-- @param to [Hash table to merge into, modified in place]
+-- @param from [Hash table to take the values from]
+-- @return [Hash to]
 function table.safe_merge(to, from)
   local old_idx_to, old_idx = to.__index, from.__index
   local references = {}
@@ -38,6 +49,15 @@ function table.safe_merge(to, from)
   return to
 end
 
+--- Creates an array out of the values a callback returns for every value of a table.
+-- Values for which the callback returns nil are left out.
+-- ```
+-- local names = table.map(player.all(), function(v) return v:name() end)
+-- ```
+-- @param t [Hash/Array table to go through]
+-- @param c [Function callback(value), returns the value to store or nil to skip it]
+-- @return [Array values returned by the callback]
+-- @see [s]
 function table.map(t, c)
   local new_table = a{}
 
@@ -51,6 +71,14 @@ function table.map(t, c)
   return new_table
 end
 
+--- Creates an array out of the values a callback returns for every key-value pair of a table.
+-- Pairs for which the callback returns nil are left out.
+-- ```
+-- local lines = table.map_kv({ a = 1, b = 2 }, function(k, v) return k..' = '..v end)
+-- ```
+-- @param t [Hash/Array table to go through]
+-- @param c [Function callback(key, value), returns the value to store or nil to skip it]
+-- @return [Array values returned by the callback]
 function table.map_kv(t, c)
   local new_table = {}
 
@@ -64,6 +92,19 @@ function table.map_kv(t, c)
   return new_table
 end
 
+--- Filters the values of a table with a callback, or collects a single field from every
+-- table inside of it.
+-- ```
+-- local alive = table.select(player.all(), function(v, k) return v:Alive() end)
+-- local names = table.select({ { name = 'a' }, { name = 'b' } }, 'name') -- { 'a', 'b' }
+-- ```
+-- @variant table.select(t, what)
+--   @param t [Hash/Array table to filter]
+--   @param what [Function callback(value, key), the value is kept unless it returns false]
+-- @variant table.select(t, what)
+--   @param t [Hash/Array table that consists of tables]
+--   @param what [String/Number key to read from every value that is a table]
+-- @return [Array selected values]
 function table.select(t, what)
   local new_table = a{}
 
@@ -84,6 +125,11 @@ function table.select(t, what)
   return new_table
 end
 
+--- Returns the part of an array between two indexes, both inclusive.
+-- @param t [Array]
+-- @param from [Number first index]
+-- @param to [Number last index]
+-- @return [Array the elements between from and to]
 function table.slice(t, from, to)
   local new_table = a{}
 
@@ -94,6 +140,9 @@ function table.slice(t, from, to)
   return new_table
 end
 
+--- Removes all functions from a table and from the tables nested in it. Modifies the table.
+-- @param obj [Any table to clean up, anything else is returned as-is]
+-- @return [Any the same object]
 function table.remove_functions(obj)
   if istable(obj) then
     for k, v in pairs(obj) do
@@ -119,6 +168,16 @@ do
     ['%']  = function(a, b) return a % b end
   }
 
+  --- Combines all elements of an array into a single value, by applying an operator to the
+  -- running result and each element in order. The running result starts at 0.
+  -- ```
+  -- table.reduce({ 1, 2, 3 }, '+') -- 6
+  -- table.reduce({ 1, 5, 3 }, function(result, v) return math.max(result, v) end) -- 5
+  -- ```
+  -- @param tab [Array]
+  -- @param op [String/Function one of '+', '-', '*', '/', '**', '^' and '%', or a
+  --   callback(result, value) that returns the new result]
+  -- @return [Any the final result, a Number for the built-in operators]
   function table.reduce(tab, op)
     local sum = 0
 
@@ -134,10 +193,17 @@ do
   end
 end
 
+--- Adds up all elements of an array.
+-- @param tab [Array<Number>]
+-- @return [Number the sum, 0 for an empty array]
 function table.sum(tab)
   return table.reduce(tab, '+')
 end
 
+--- Flattens the tables nested inside of a table into a single array.
+-- Tables that have a `class` field (objects) are treated as values.
+-- @param tab [Hash/Array]
+-- @return [Array the flattened values]
 function table.flatten(tab)
   local t = a{}
 
@@ -152,6 +218,12 @@ function table.flatten(tab)
   return v
 end
 
+--- Returns a copy of the table without duplicate values.
+-- The values keep their original keys, so the copy of an array can have gaps in it.
+-- @param tab [Hash/Array]
+-- @param condition=nil [Function callback(value) that returns true for the values to leave out,
+--   used instead of the duplicate check]
+-- @return [Hash/Array table of unique values]
 function table.uniq(tab, condition)
   local t = a{}
   local vals = {}
@@ -183,6 +255,10 @@ do
     return true
   end
 
+  --- Checks whether two tables have the same contents. Nested tables are compared recursively.
+  -- @param tab1 [Hash/Array]
+  -- @param tab2 [Hash/Array]
+  -- @return [Boolean true if the contents are equal, false if not or if either one is not a table]
   function table.equal(tab1, tab2)
     if !istable(tab1) or !istable(tab2) then return false end
     if tab1 == tab2 then return true end
@@ -211,10 +287,17 @@ do
   end
 end
 
+--- Returns the memory address of a table, which identifies it uniquely while it exists.
+-- @param tab [Hash/Array]
+-- @return [String the address without the 'table: 0x' prefix, Number 1 if the prefix was removed]
 function table.hash(tab)
   return tostring(tab):gsub('table: 0x', '')
 end
 
+--- Concatenates all values of a table into a single string, including those of nested tables.
+-- @param tab [Hash/Array]
+-- @param sep='' [String separator; it is not put between the values by the current code]
+-- @return [String the concatenated values]
 function table.join(tab, sep)
   local str = ''
   sep = sep or ''
@@ -230,6 +313,12 @@ function table.join(tab, sep)
   return str
 end
 
+--- Returns a copy of the table without the entries for which the callback returns true.
+-- The entries keep their keys and the original table is not modified.
+-- @param tab [Hash/Array]
+-- @param callback [Function callback(key, value), returns true to leave the entry out]
+-- @return [Hash/Array the filtered copy]
+-- @see [table.delete]
 function table.delete_if(tab, callback)
   local new_tab = a{}
 
@@ -242,6 +331,11 @@ function table.delete_if(tab, callback)
   return new_tab
 end
 
+--- Removes the entries for which the callback returns true from the table itself.
+-- @param tab [Hash/Array table to modify]
+-- @param callback [Function callback(key, value), returns true to remove the entry]
+-- @return [Hash/Array the same table]
+-- @see [table.delete_if]
 function table.delete(tab, callback)
   for k, v in pairs(tab) do
     if callback(k, v) == true then
@@ -252,6 +346,12 @@ function table.delete(tab, callback)
   return tab
 end
 
+--- Returns a copy of the table that only has the entries for which the callback returns true.
+-- The entries keep their keys and the original table is not modified.
+-- @param tab [Hash/Array]
+-- @param callback [Function callback(key, value), returns true to keep the entry]
+-- @return [Hash/Array the filtered copy]
+-- @see [table.keep]
 function table.keep_if(tab, callback)
   local new_tab = a{}
 
@@ -264,6 +364,11 @@ function table.keep_if(tab, callback)
   return new_tab
 end
 
+--- Removes the entries for which the callback does not return true from the table itself.
+-- @param tab [Hash/Array table to modify]
+-- @param callback [Function callback(key, value), returns true to keep the entry]
+-- @return [Hash/Array the same table]
+-- @see [table.keep_if]
 function table.keep(tab, callback)
   for k, v in pairs(tab) do
     if callback(k, v) != true then
@@ -274,14 +379,24 @@ function table.keep(tab, callback)
   return tab
 end
 
+--- Returns the first element of an array.
+-- @param tab [Array]
+-- @return [Any the first element, or nil if the array is empty]
 function table.first(tab)
   return tab[1]
 end
 
+--- Returns the last element of an array.
+-- @param tab [Array]
+-- @return [Any the last element, or nil if the array is empty]
 function table.last(tab)
   return tab[#tab]
 end
 
+--- Checks whether the callback returns a truthy value for exactly one entry of the table.
+-- @param tab [Hash/Array]
+-- @param callback [Function callback(key, value)]
+-- @return [Boolean]
 function table.one(tab, callback)
   local hit = false
 
@@ -298,6 +413,10 @@ function table.one(tab, callback)
   return hit
 end
 
+--- Checks whether the callback returns a truthy value for none of the entries of the table.
+-- @param tab [Hash/Array]
+-- @param callback [Function callback(key, value)]
+-- @return [Boolean]
 function table.none(tab, callback)
   for k, v in pairs(tab) do
     if callback(k, v) then
@@ -308,6 +427,14 @@ function table.none(tab, callback)
   return true
 end
 
+--- Splits the values of a table into two arrays: those for which the callback returns a truthy
+-- value and all the others.
+-- ```
+-- local admins, others = table.partition(player.all(), function(k, v) return v:IsAdmin() end)
+-- ```
+-- @param tab [Hash/Array]
+-- @param callback [Function callback(key, value)]
+-- @return [Array values the callback accepted, Array values it did not]
 function table.partition(tab, callback)
   local t1, t2 = a{}, a{}
 
@@ -322,6 +449,13 @@ function table.partition(tab, callback)
   return t1, t2
 end
 
+--- Converts a hash into an array of { key, value } pairs.
+-- ```
+-- table.to_array({ a = 1, b = 2 }) -- { { 'a', 1 }, { 'b', 2 } }, in no particular order
+-- ```
+-- @param tab [Hash]
+-- @return [Array<Array> key-value pairs]
+-- @see [table.to_hash]
 function table.to_array(tab)
   local a = a{}
 
@@ -332,6 +466,13 @@ function table.to_array(tab)
   return a
 end
 
+--- Converts an array of { key, value } pairs into a hash.
+-- ```
+-- table.to_hash({ { 'a', 1 }, { 'b', 2 } }) -- { a = 1, b = 2 }
+-- ```
+-- @param tab [Array<Array> key-value pairs]
+-- @return [Hash]
+-- @see [table.to_array]
 function table.to_hash(tab)
   local h = a{}
 
@@ -346,13 +487,10 @@ function table.to_hash(tab)
   return h
 end
 
---
--- Function: table.serialize (table toSerialize)
--- Description: Converts a table into the string format.
--- Argument: table toSerialize - Table to convert.
---
--- Returns: string - pON-encoded table. If pON fails then JSON is returned.
---
+--- Converts a table into the string format.
+-- @param tab [Hash/Array table to convert]
+-- @return [String pON-encoded table, JSON if pON fails, or an empty string if both fail or
+--   tab is not a table]
 function table.serialize(tab)
   if istable(tab) then
     local success, value = pcall(pon.encode, tab)
@@ -375,13 +513,10 @@ function table.serialize(tab)
   end
 end
 
---
--- Function: table.deserialize (string toDeserialize)
--- Description: Converts a string back into table. Uses pON at first, if it fails it falls back to JSON.
--- Argument: string toDeserialize - String to convert.
---
--- Returns: table - Decoded string.
---
+--- Converts a string back into table. Uses pON at first, if it fails it falls back to JSON.
+-- @param data [String string to convert]
+-- @return [Hash decoded table; an empty table if data is not a string, nil if it is neither
+--   valid pON nor valid JSON]
 function table.deserialize(data)
   if isstring(data) then
     local success, value = pcall(pon.decode, data)
@@ -409,28 +544,57 @@ do
     __index = table
   }
 
-  -- Special arrays.
+  --- Turns a table into a special array that has the functions of the table library as methods.
+  -- The table itself is modified and returned.
+  -- ```
+  -- local words = a{ 'one', 'two' }
+  -- words:insert('three')
+  -- local lengths = words:map(function(v) return v:len() end) -- { 3, 3, 5 }
+  -- ```
+  -- @param initializer [Hash/Array table to turn into a special array]
+  -- @return [Array the same table]
   function a(initializer)
     return setmetatable(initializer, table_meta)
   end
 
+  --- Checks whether an object is a special array created with `a`.
+  -- @param obj [Any]
+  -- @return [Boolean]
+  -- @see [a]
   function is_a(obj)
     return getmetatable(obj) == table_meta
   end
 end
 
--- For use with table#map
+--- Creates a function that returns the given field of the table passed to it.
+-- For use with table#map.
+-- ```
 -- table.map(t, s'some_field')
+-- ```
+-- @param what [String/Number key of the field]
+-- @return [Function accessor(tab), returns tab[what]]
 function s(what)
   return function(tab)
     return tab[what]
   end
 end
 
+--- Splits a string of words into an array. Words are separated by spaces or newlines.
+-- ```
+-- w'data ammo equipment' -- { 'data', 'ammo', 'equipment' }
+-- ```
+-- @param str [String space-separated words]
+-- @return [Array<String> words]
 function w(str)
   return str:gsub('\n', ' '):gsub('  ', ' '):split(' ')
 end
 
+--- Splits a string of space-separated words into a hash that has the words as its keys.
+-- ```
+-- wk'data ammo equipment' -- { data = true, ammo = true, equipment = true }
+-- ```
+-- @param str [String space-separated words]
+-- @return [Hash word => true]
 function wk(str)
   local ret = {}
 
@@ -441,6 +605,10 @@ function wk(str)
   return ret
 end
 
+--- Creates an array of consecutive integers.
+-- @param from [Number first number]
+-- @param to [Number last number, inclusive]
+-- @return [Array<Number>]
 function table.range(from, to)
   local t = {}
 
@@ -451,7 +619,12 @@ function table.range(from, to)
   return t
 end
 
--- A better implementation of PrintTable
+--- Prints the contents of a table to the console, sorted by key, with nested tables indented.
+-- A better implementation of PrintTable, which it also replaces.
+-- @param t [Hash/Array table to print]
+-- @param indent=0 [Number indentation level to print at]
+-- @param done={} [Hash tables that are being printed already, to avoid endless recursion]
+-- @param indent_length=1 [Number minimum width of the key column]
 function print_table(t, indent, done, indent_length)
   done = done or {}
   indent = indent or 0

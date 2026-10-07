@@ -10,6 +10,21 @@ Pipeline.stored = stored
 local last_pipe_aborted = false
 
 --- Registers a new pipeline with the specified ID and callback.
+-- The callback is called for every file included through the pipeline. It receives the ID
+-- extracted from the file name, the path of the file and the pipeline's data table.
+-- ```
+-- Pipeline.register('item', function(id, file_name, pipe)
+--   ITEM = ItemBase.new(id)
+--
+--   require_relative(file_name)
+--
+--   if Pipeline.is_aborted() then ITEM = nil return end
+--
+--   ITEM:register() ITEM = nil
+-- end)
+-- ```
+-- @param id [String pipeline ID]
+-- @param callback [Function called as callback(id, file_name, pipe)]
 function Pipeline.register(id, callback)
   stored[id] = {
     callback = callback,
@@ -18,7 +33,8 @@ function Pipeline.register(id, callback)
 end
 
 --- Find a pipeline with a specified ID. Case-sensitive.
--- @return [Hash pipeline data]
+-- @param id [String pipeline ID]
+-- @return [Hash pipeline data, or nil if there is no such pipeline]
 function Pipeline.find(id)
   return stored[id]
 end
@@ -46,6 +62,8 @@ do
   -- and automatically extracts ID based on the filename
   -- (for example, "sh_test_file.lua" becomes "test_file" in the ID).
   -- After that if the pipe is a valid registered pipeline, the callback is called.
+  -- @param pipe [String/Hash pipeline ID, or the pipeline data from Pipeline.find]
+  -- @param file_name [String path of the file to include]
   function Pipeline.include(pipe, file_name)
     if isstring(pipe) then
       pipe = stored[pipe]
@@ -74,6 +92,8 @@ end
 
 --- Include all files in a folder using a specific pipeline.
 -- See documentation for `Pipeline.include`.
+-- @param id [String pipeline ID]
+-- @param directory [String folder relative to the LUA search path]
 function Pipeline.include_folder(id, directory)
   local pipe = stored[id]
 

@@ -7,6 +7,8 @@ CMD.arguments = 2
 CMD.player_arg = 1
 CMD.aliases = { 'plytransfer', 'charsetfaction', 'chartransfer' }
 
+--- Returns the translated command description with every registered faction ID listed.
+-- @return [String]
 function CMD:get_description()
   local factions = {}
 
@@ -17,6 +19,11 @@ function CMD:get_description()
   return t(self.description, { factions = table.concat(factions, ', ') })
 end
 
+--- Moves every target into the faction found by name and notifies the targets and staff.
+-- @param player [Player the player who ran the command]
+-- @param targets [Array<Player> players matched by the first command argument]
+-- @param name [String faction ID or name, or a part of either]
+-- @param strict=nil [String any extra argument makes the faction lookup exact]
 function CMD:on_run(player, targets, name, strict)
   local faction_table = Factions.find(name, (strict and true) or false)
 

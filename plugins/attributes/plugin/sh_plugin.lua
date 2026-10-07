@@ -5,6 +5,10 @@ Plugin.add_extra('attributes')
 require_relative 'sh_enums'
 require_relative 'sv_hooks'
 
+--- Includes a plugin's attributes folder when the 'attributes' extra is being loaded.
+-- @param extra [String name of the extra being loaded]
+-- @param folder [String path of the plugin folder]
+-- @return [Boolean true when the extra was handled here, otherwise nil]
 function AttributesPlugin:PluginIncludeFolder(extra, folder)
   if extra == 'attributes' then
     Attributes.include_attributes(folder..'/attributes')
@@ -13,6 +17,7 @@ function AttributesPlugin:PluginIncludeFolder(extra, folder)
   end
 end
 
+--- Registers the 'attribute' condition, which compares a player's attribute level to a value.
 function AttributesPlugin:RegisterConditions()
   Conditions:register_condition('attribute', {
     name = 'condition.attribute.name',

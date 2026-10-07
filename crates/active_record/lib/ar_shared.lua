@@ -19,10 +19,15 @@ if !ActiveRecord.Base then
   }
 
   for k, v in ipairs(remove_keys) do
+    --- Clientside stub that replaces a serverside-only method. Does nothing.
+    -- @param self [ActiveRecord::Base]
+    -- @return [ActiveRecord::Base(self)]
     ActiveRecord.Base[v] = function(self) return self end
   end
 
-  -- Walmart model definition :P
+  --- Clientside stand-in for model definition. Only declares a class that extends
+  -- ActiveRecord::Base, no database table is involved.
+  -- @param name [String class name of the model]
   function ActiveRecord.define_model(name)
     class(name) extends(ActiveRecord.Base)
   end

@@ -112,6 +112,23 @@ local omittable_tags2 = {
   }
 }
 
+--- Parses an HTML string into a tree of nodes. Throws an error if a closing tag does
+-- not match the tag that is currently open.
+-- ```
+-- local tree = HTMLParser:parse('<div class="box"><p>Hello</p></div>')
+--
+-- print(tree[1].tag_name)                -- div
+-- print(tree[1].attr.class)              -- box
+-- print(tree[1].child_nodes[1].tag_name) -- p
+--
+-- -- Text ends up in nodes with the 'text_node' tag name.
+-- print(tree[1].child_nodes[1].child_nodes[1].value) -- Hello
+-- ```
+-- @param data [String HTML source]
+-- @param lazy=false [Boolean do not automatically close elements whose end tag may be
+--   omitted, such as td, tr or p]
+-- @return [Array root nodes; a node is a Hash with tag_name, attr (only if the tag has
+--   attributes) and child_nodes (absent on void tags such as br or img)]
 function HTMLParser:parse(data, lazy)
   local tree = {}
   local stack = {}
@@ -256,6 +273,10 @@ function HTMLParser:parse(data, lazy)
   return tree
 end
 
+--- Turns a node tree back into an indented HTML string. The tree is consumed in the
+-- process, as nodes are removed from it once they are written.
+-- @param data [Array node tree as returned by #parse]
+-- @return [String]
 function HTMLParser:dump(data)
   local stack = {data}
   local d = ""

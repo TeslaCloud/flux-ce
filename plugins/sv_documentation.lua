@@ -155,6 +155,10 @@ local function render_html_for(name, data)
   return out
 end
 
+--- Scans the Lua files of a folder, recursively, for non-local functions declared at file
+-- scope and writes HTML pages listing them (stdlib, one page per crate and per plugin,
+-- plus an index) to gamemodes/flux/docs/.
+-- @param folder [String folder to scan, relative to the game directory]
 function analyze_folder(folder)
   print('Analyzing: '..folder)
 

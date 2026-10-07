@@ -1,3 +1,7 @@
+--- Draws the titles of the doors within 256 units of the camera on both sides
+-- of the door, using the title type that is set on each door.
+-- @param depth [Boolean whether the depth pass is being drawn]
+-- @param skybox [Boolean whether the skybox is being drawn]
 function PLUGIN:PostDrawTranslucentRenderables(depth, skybox)
   if depth or skybox then return end
 

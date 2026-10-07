@@ -3,6 +3,18 @@ mod 'Font'
 -- We want the fonts to recreate on refresh.
 local stored = {}
 
+--- Creates a font and remembers its data. Does nothing if a font with this name
+-- has already been created. The extended (UTF-8) character range is always enabled.
+-- ```
+-- Font.create('flRoboto', {
+--   font = 'Roboto',
+--   size = 16,
+--   weight = 500
+-- })
+-- ```
+-- @param name [String unique name of the new font]
+-- @param font_data [Hash font structure, same as the one surface.CreateFont accepts]
+-- @return [Hash the stored font data, or nil if the arguments are invalid or the font exists]
 function Font.create(name, font_data)
   if name == nil or !istable(font_data) then return end
   if stored[name] then return end
@@ -16,6 +28,16 @@ function Font.create(name, font_data)
   return stored[name]
 end
 
+--- Returns the name of the specified font scaled to the specified size. The sized font
+-- is created from the original one on first use and is named 'name:size'.
+-- ```
+-- -- Creates 'flRobotoCondensed:24' if it does not exist yet.
+-- local font = Font.size('flRobotoCondensed', 24)
+-- ```
+-- @param name [String name of a font created with Font.create]
+-- @param size=nil [Number font size, the name is returned unchanged if omitted]
+-- @param data=nil [Hash extra font data to merge into the sized font]
+-- @return [String name of the sized font, or false if no name was given]
 function Font.size(name, size, data)
   if !size then return name end
   if !name then return false end
@@ -53,14 +75,20 @@ function Font.size(name, size, data)
   return new_name
 end
 
+--- Forgets all of the created fonts, so that they can be created again.
 function Font.clear()
   stored = {}
 end
 
+--- Returns the data of a font created with Font.create.
+-- @param name [String]
+-- @return [Hash font data, or nil if there is no such font]
 function Font.get(name)
   return stored[name]
 end
 
+--- Clears the stored fonts and creates the built-in Flux fonts again, then calls the
+-- 'CreateFonts' theme and plugin hooks so that everything else can create theirs.
 function Font.create_fonts()
   Font.clear()
 

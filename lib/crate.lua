@@ -35,7 +35,8 @@ Crate.installed   = {}
 Crate.current     = nil
 
 --- Adds a search path relative to 'LUA' system.
--- @return [self]
+-- @param path [String folder to look for packages in; a trailing slash is added if missing]
+-- @return [Crate self]
 function Crate:add_path(path)
   search_paths[path:ensure_end('/')] = true
   return self
@@ -64,6 +65,8 @@ end
 --   end
 -- end)
 -- ```
+-- @param callback=nil [Function receives the specification object to fill in as its only
+--   argument]
 -- @return [Package]
 function Crate:describe(callback)
   if callback then
@@ -171,6 +174,7 @@ end
 --- Determines if the package has already been installed.
 -- @alias [Crate.present]
 -- @alias [Crate.is_installed]
+-- @param name [String package name]
 -- @return [Boolean]
 function Crate:included(name)
   return istable(self.installed[name])
@@ -183,8 +187,9 @@ Crate.is_installed  = Crate.included
 -- a full path to it's cratespec, the name of the package and
 -- full path to the folder.
 -- Returns false if the package cannot be found.
--- @return [String(cratespec_path) String(name) String(folder_path)]
--- @return [Boolean]
+-- @param name [String package name, or path to the package's folder]
+-- @return [String/Boolean cratespec path or false if not found, String name,
+--   String folder path]
 function Crate:find(name)
   local folder_path = name:ensure_end('/')
   local files, _ = file.Find(folder_path..'cratespec.lua', 'LUA')
@@ -207,13 +212,15 @@ end
 
 --- Searches for the package with the specified name and
 -- returns true if the package exists, false otherwise.
+-- @param name [String package name, or path to the package's folder]
 -- @return [Boolean]
 function Crate:exists(name)
   return tobool(self:find(name))
 end
 
 --- Reloads the package with the specified name.
--- @return [Table(self)]
+-- Does nothing unless the package is installed and its specification allows reloading.
+-- @param name [String package name]
 function Crate:reload(name)
   if istable(self.installed[name]) and self.installed[name].metadata.reload then
     self.installed[name] = nil
@@ -222,7 +229,12 @@ function Crate:reload(name)
 end
 
 --- Parse version string.
--- @return [Hash]
+-- ```
+-- Crate:parse_version('~> 1.2.3-beta')
+-- -- { x = 1, y = 2, z = 3, sum = 123, suffix = 'beta', op = '~>' }
+-- ```
+-- @param version [String version such as '1.0', '>= 1.2.0' or '~> 1.2.3-beta']
+-- @return [Hash version data with the fields x, y, z, sum, suffix and op]
 function Crate:parse_version(version)
   local buf = nil
   local init = 1
@@ -289,7 +301,9 @@ end
 --- Returns -1 if version1 is older than version2.
 -- Returns 0 if versions are equal.
 -- Returns 1 if version1 is newer than version2.
--- @return [Number]
+-- @param version1 [Hash version data from Crate:parse_version]
+-- @param version2 [Hash version data from Crate:parse_version]
+-- @return [Number/Boolean -1, 0 or 1; false if either argument is not a table]
 function Crate:compare_version(version1, version2)
   if !istable(version1) or !istable(version2) then return false end
 
@@ -305,7 +319,9 @@ function Crate:compare_version(version1, version2)
 end
 
 --- Returns true if version2 matches the version1 template.
--- @return [Number]
+-- @param version1 [Hash version data of the template, its op field sets the comparison]
+-- @param version2 [Hash version data of the version to check]
+-- @return [Boolean]
 function Crate:is_version(version1, version2)
   local res = self:compare_version(version1, version2)
 
@@ -376,7 +392,9 @@ do
   --- Attempts to include the package with the specified name.
   -- This function will look for the package in the search paths that have previously been added.
   -- If no package with the matching name can be found, throws an error.
-  -- @return [...]
+  -- @param name [String package name, or path to the package's folder]
+  -- @param version=nil [String currently unused]
+  -- @return [Boolean true if name is a .lua file, which is skipped; nothing otherwise]
   function Crate:include(name, version)
     -- Skip Lua files.
     if name:EndsWith('.lua') then return true end

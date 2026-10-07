@@ -14,22 +14,29 @@ Areas.register_type(
 require_relative 'cl_hooks'
 
 if SERVER then
+  --- Currently does nothing; sending the text areas to the player is commented out.
+  -- @param player [Player]
   function PLUGIN:PlayerInitialized(player)
     --Cable.send(player, 'fl_areas_text_load', Areas.get_by_type('text'))
   end
 
+  --- Currently does nothing; loading of the saved areas is commented out.
   function PLUGIN:InitPostEntity()
     --self:load()
   end
 
+  --- Currently does nothing; saving of the areas is commented out.
   function PLUGIN:SaveData()
     --self:save()
   end
 
+  --- Currently does nothing; saving of the text areas is commented out.
   function PLUGIN:save()
     --Data.save_plugin('areas', Areas.get_by_type('text') or {})
   end
 
+  --- Loads the areas saved in the 'areas' plugin data and registers each of them.
+  -- Serverside only.
   function PLUGIN:load()
     local loaded = Data.load_plugin('areas', {})
 

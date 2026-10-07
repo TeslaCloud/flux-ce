@@ -112,6 +112,16 @@ local function color_id_from_color(col)
   return tostring(ri - 1)
 end
 
+--- Prints text to the console, colored and styled with ANSI escape sequences.
+-- Does not add a newline.
+-- ```
+-- print_colored('Something went wrong!\n', Color(255, 0, 0), nil, { bold = true })
+-- ```
+-- @param text [Any text to print, converted with tostring]
+-- @param color=nil [Color/String text color, or a ready-made escape sequence]
+-- @param background_color=nil [Color/String background color, or a ready-made escape
+--   sequence]
+-- @param style=nil [Hash style flags: bold, dim, underline, blink, inverted, hidden]
 function print_colored(text, color, background_color, style)
   local color_sequence = color_clear_sequence
 
@@ -160,6 +170,9 @@ function print_colored(text, color, background_color, style)
   Msg(color_sequence..tostring(text)..color_clear_sequence)
 end
 
+--- Overrides MsgC to print colored text with ANSI escape sequences.
+-- @param ... [Vararg Color objects and values to print; a color applies to the values
+--   that follow it]
 function MsgC(...)
   local this_sequence = color_clear_sequence
 
@@ -172,6 +185,8 @@ function MsgC(...)
   end
 end
 
+--- Overrides ErrorNoHalt to print the error on a red background.
+-- @param msg [String error message]
 function ErrorNoHalt(msg)
   Msg('\27[41;15m\27[1m')
   _ErrorNoHalt(msg)

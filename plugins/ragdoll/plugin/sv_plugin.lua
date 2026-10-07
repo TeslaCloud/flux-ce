@@ -2,14 +2,22 @@ local player_meta = FindMetaTable('Player')
 
 player_meta.old_get_ragdoll = player_meta.old_get_ragdoll or player_meta.get_ragdoll_entity
 
+--- Returns the player's ragdoll entity. Serverside only.
+-- @return [Entity the ragdoll, or a NULL entity if the player has none]
 function player_meta:get_ragdoll_entity()
   return self:GetDTEntity(ENT_RAGDOLL)
 end
 
+--- Sets the networked ragdoll entity of the player. Does not spawn or remove anything.
+-- Serverside only.
+-- @param entity [Entity]
 function player_meta:set_ragdoll_entity(entity)
   self:SetDTEntity(ENT_RAGDOLL, entity)
 end
 
+--- Checks whether the player is in any ragdoll state other than RAGDOLL_NONE.
+-- Serverside only.
+-- @return [Boolean]
 function player_meta:is_ragdolled()
   local rag_state = self:GetDTInt(INT_RAGDOLL_STATE)
 
@@ -20,6 +28,14 @@ function player_meta:is_ragdolled()
   return false
 end
 
+--- Spawns a ragdoll copy of the player and stores it as their ragdoll entity. Does nothing
+-- if they already have a valid one. A fallen player is frozen, hidden and stripped of
+-- their weapons; once the ragdoll is removed they are moved to it and get them back.
+-- Serverside only.
+-- @param decay=nil [Number seconds the ragdoll remains after the ragdoll entity is reset;
+--   nil removes it right away]
+-- @param fallen=false [Boolean whether the player has fallen over rather than died]
+-- @see [Player#set_ragdoll_state]
 function player_meta:create_ragdoll_entity(decay, fallen)
   if !IsValid(self:GetDTEntity(ENT_RAGDOLL)) then
     local ragdoll = ents.Create('prop_ragdoll')
@@ -92,6 +108,8 @@ function player_meta:create_ragdoll_entity(decay, fallen)
   end
 end
 
+--- Detaches the player's ragdoll and removes it, right away or after its decay time.
+-- Does nothing if the player has no valid ragdoll. Serverside only.
 function player_meta:reset_ragdoll_entity()
   local ragdoll = self:GetDTEntity(ENT_RAGDOLL)
 
@@ -112,6 +130,13 @@ function player_meta:reset_ragdoll_entity()
   end
 end
 
+--- Sets the player's ragdoll state and creates or removes their ragdoll to match it.
+-- RAGDOLL_FALLENOVER also starts the 'fallen' action. Serverside only.
+-- ```
+-- player:set_ragdoll_state(RAGDOLL_FALLENOVER) -- fall over
+-- player:set_ragdoll_state(RAGDOLL_NONE) -- get back up
+-- ```
+-- @param state=RAGDOLL_NONE [Number one of the RAGDOLL_ enums]
 function player_meta:set_ragdoll_state(state)
   local state = state or RAGDOLL_NONE
 

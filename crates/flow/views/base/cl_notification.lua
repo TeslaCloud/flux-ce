@@ -3,6 +3,7 @@ PANEL.lifetime = 6
 PANEL.background_color = Color(0, 0, 0)
 PANEL.text_color = Color(255, 255, 255)
 
+--- Sets up the fade state and a placeholder text.
 function PANEL:Init()
   self.cur_alpha = 0
   self.creation_time = CurTime()
@@ -10,6 +11,7 @@ function PANEL:Init()
   self.font_size = 0
 end
 
+--- Resizes the panel to fit every line of the notification text.
 function PANEL:SizeToContents()
   local bx, by = 0, -4
 
@@ -26,6 +28,8 @@ function PANEL:SizeToContents()
   self:SetSize(bx + 8, by + 8)
 end
 
+--- Fades the notification in after it is created and out shortly before its lifetime ends,
+-- then calls PostThink if the panel defines it.
 function PANEL:Think()
   local cur_time = CurTime()
   local frame_time = FrameTime() / 0.006
@@ -41,6 +45,10 @@ function PANEL:Think()
   end
 end
 
+--- Draws the blurred background and the text lines, unless the theme's
+-- PaintNotificationContainer or PaintNotificationText hooks return a truthy value.
+-- @param width [Number panel width]
+-- @param height [Number panel height]
 function PANEL:Paint(width, height)
   if !Theme.hook('PaintNotificationContainer', self, width, height) then
     draw.blur_panel(self, self.cur_alpha)
@@ -58,14 +66,21 @@ function PANEL:Paint(width, height)
   end
 end
 
+--- Sets the color of the notification text.
+-- @param col=Color(255, 255, 255) [Color]
 function PANEL:set_text_color(col)
   self.text_color = col or Color(255, 255, 255)
 end
 
+--- Sets the background color of the notification.
+-- @param col=Color(0, 0, 0) [Color]
 function PANEL:set_background_color(col)
   self.background_color = col or Color(0, 0, 0)
 end
 
+--- Sets how long the notification stays up. Starts timers that slide it off the right edge
+-- of the screen 1.5 seconds before the end and remove it once the time is up.
+-- @param time [Number lifetime in seconds]
 function PANEL:set_lifetime(time)
   timer.Simple(time, function()
     if IsValid(self) then
@@ -83,6 +98,9 @@ function PANEL:set_lifetime(time)
   self.lifetime = time
 end
 
+--- Sets the notification text and resizes the panel to fit it. Newline characters split
+-- the text into separate lines.
+-- @param text [String]
 function PANEL:set_text(text)
   if text:find('\n') then
     text = text:split('\n')

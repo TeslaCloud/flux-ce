@@ -1,5 +1,17 @@
 class 'Faction'
 
+--- Creates a faction with default settings: no ranks, no models, name, description and gender
+-- enabled, and the '{rank} {name}' name template. Fields are left unset when no ID is given.
+-- ```
+-- local faction = Faction.new('citizen')
+-- faction.name = 'Citizen'
+-- faction.has_description = false
+-- faction.models.male = { 'models/humans/group01/male_02.mdl' }
+-- faction.models.female = { 'models/humans/group01/female_01.mdl' }
+-- faction:add_rank('citizen', 'Mr.')
+-- faction:register()
+-- ```
+-- @param id [String faction ID, normalized with to_id]
 function Faction:init(id)
   if !id then return end
 
@@ -23,50 +35,79 @@ function Faction:init(id)
   -- set via Faction:set_data.
 end
 
+--- Returns the name of the faction.
+-- @return [String]
 function Faction:get_name()
   return self.name
 end
 
+--- Returns the team color of the faction.
+-- @return [Color]
 function Faction:get_color()
   return self.color
 end
 
+--- Returns the faction's image as a cached material. Client only.
+-- @return [Material the material, or nil if the faction has no image]
 function Faction:get_material()
   return self.material and util.get_material(self.material)
 end
 
+--- Returns the path of the faction's image.
+-- @return [String material path, or nil if the faction has no image]
 function Faction:get_image()
   return self.material
 end
 
+--- Returns the name of the faction.
+-- @return [String]
 function Faction:get_name()
   return self.name
 end
 
+--- Returns a value stored with set_data.
+-- @param key [String]
+-- @return [String the stored value, or nil if nothing is stored under the key]
 function Faction:get_data(key)
   return self.data[key]
 end
 
+--- Returns the description of the faction.
+-- @return [String]
 function Faction:get_description()
   return self.description
 end
 
+--- Returns the ranks of the faction, lowest first.
+-- @return [Array<Hash> rank tables with id and name fields]
 function Faction:get_ranks()
   return self.rank
 end
 
+--- Returns a rank of the faction by its position.
+-- @param number [Number rank index, 1 being the lowest]
+-- @return [Hash rank table with id and name fields, or nil if there is no such rank]
 function Faction:get_rank(number)
   return self.rank[number]
 end
 
+--- Returns the ID of a rank of the faction. Errors if there is no rank at that position.
+-- @param number [Number rank index, 1 being the lowest]
+-- @return [String rank ID]
 function Faction:get_rank_name(number)
   return self:get_rank(number).id
 end
 
+--- Returns all models of the faction.
+-- @return [Hash arrays of model paths keyed by 'male', 'female' and 'universal']
 function Faction:get_models()
   return self.models
 end
 
+--- Returns the models of the faction for a gender, falling back to the universal models when
+-- the gender has none.
+-- @param gender [String 'male', 'female', 'universal' or 'no_gender']
+-- @return [Array<String> model paths]
 function Faction:get_gender_models(gender)
   local faction_models = self:get_models()
 
@@ -77,10 +118,16 @@ function Faction:get_gender_models(gender)
   return faction_models[gender]
 end
 
+--- Picks a random faction model that matches the player's gender.
+-- @param player [Player]
+-- @return [String model path]
 function Faction:get_random_model(player)
   return table.random(self:get_gender_models(player:get_gender()))
 end
 
+--- Adds a rank above the ranks added so far.
+-- @param id [String rank ID; nothing is added when it is nil]
+-- @param name_filter=id [String text that replaces {rank} in generated names]
 function Faction:add_rank(id, name_filter)
   if !id then return end
 
@@ -92,6 +139,22 @@ function Faction:add_rank(id, name_filter)
   })
 end
 
+--- Builds a character name for a player from the faction's name template, which may contain
+-- {name}, {rank}, {data:key} and {callback:method} placeholders. A faction that defines
+-- make_name(player, char_name, rank, default_data) bypasses the template.
+-- ```
+-- FACTION.name_template = '{data:unit} {rank} {name}'
+-- FACTION:set_data('unit', 'C17')
+-- FACTION:add_rank('officer', 'Ofc.')
+--
+-- -- For a player named 'John Doe':
+-- FACTION:generate_name(player, 'officer') -- 'C17 Ofc. John Doe'
+-- ```
+-- @param player [Player]
+-- @param rank [Number/String rank index or rank ID used for {rank}]
+-- @param default_data=nil [Hash values for {data:key} that override the faction's own data]
+-- @return [String the generated name; the player's current name if a ShouldNameGenerate
+--   hook returns false]
 function Faction:generate_name(player, rank, default_data)
   local char_name = player:name()
 
@@ -142,6 +205,10 @@ function Faction:generate_name(player, rank, default_data)
   return final_name
 end
 
+--- Stores a value on the faction for use as {data:key} in the name template. Both the key
+-- and the value are converted to strings.
+-- @param key [Any]
+-- @param value [Any]
 function Faction:set_data(key, value)
   key = tostring(key)
 
@@ -150,12 +217,20 @@ function Faction:set_data(key, value)
   self.data[key] = tostring(value)
 end
 
+--- Called on the server when a player is moved into this faction. Does nothing by default;
+-- override it in the faction definition.
+-- @param player [Player]
 function Faction:on_player_join(player)
 end
 
+--- Called on the server when a player is moved out of this faction. Does nothing by default;
+-- override it in the faction definition.
+-- @param player [Player]
 function Faction:on_player_leave(player)
 end
 
+--- Registers the faction under its faction ID.
+-- @see [Factions.add_faction]
 function Faction:register()
   Factions.add_faction(self.faction_id, self)
 end

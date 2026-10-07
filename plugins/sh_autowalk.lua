@@ -10,6 +10,11 @@ if SERVER then
     [IN_MOVERIGHT] = true
   }
 
+  --- Moves auto walking players forward at full speed.
+  -- Turns auto walk off as soon as the player presses a movement key.
+  -- @param player [Player]
+  -- @param move_data [CMoveData]
+  -- @param cmd_data [CUserCmd]
   function PLUGIN:SetupMove(player, move_data, cmd_data)
     if !player:get_nv('auto_walk') then return end
 
@@ -35,6 +40,11 @@ else
 -- Flux.hint:Add('Autowalk', 'Press 'B' to toggle auto walking.')
 
   -- We do this so there's no need to do an unnecessary check for if client or server in the hook itself.
+
+  --- Moves the player forward at full speed while auto walk is on (clientside prediction).
+  -- @param player [Player]
+  -- @param move_data [CMoveData]
+  -- @param cmd_data [CUserCmd]
   function PLUGIN:SetupMove(player, move_data, cmd_data)
     if !player:get_nv('auto_walk') then return end
 

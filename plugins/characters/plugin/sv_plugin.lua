@@ -1,5 +1,8 @@
 ﻿local player_meta = FindMetaTable('Player')
 
+--- Makes one of the player's characters their active one. Runs OnCharacterChange if another
+-- character was active, networks the basic character data and runs OnActiveCharacterSet.
+-- @param id [Number/String character ID; nothing happens if the player has no such character]
 function player_meta:set_active_character(id)
   id = tonumber(id)
 
@@ -28,6 +31,9 @@ function player_meta:set_active_character(id)
   hook.run('OnActiveCharacterSet', self, self:get_character())
 end
 
+--- Sets a field on the player's active character and networks it under the same name.
+-- @param id [String field name; nothing happens when it is not a string]
+-- @param val [Any]
 function player_meta:set_character_var(id, val)
   if isstring(id) then
     self:set_nv(id, val)
@@ -35,6 +41,8 @@ function player_meta:set_character_var(id, val)
   end
 end
 
+--- Saves the player's active character, if they have one.
+-- @see [Characters.save]
 function player_meta:save_character()
   if self:is_character_loaded() then
     Characters.save(self, self:get_character())

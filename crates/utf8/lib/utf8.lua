@@ -1913,6 +1913,12 @@ utf8_uc_lc = {
 
 -- returns the number of bytes used by the UTF-8 character at byte i in s
 -- also doubles as a UTF-8 character validator
+
+--- Returns the number of bytes used by the UTF-8 character at a byte position.
+-- Throws an error if the character is not valid UTF-8.
+-- @param s [String]
+-- @param i=1 [Number byte position of the first byte of the character]
+-- @return [Number from 1 to 4]
 function utf8.clen (s, i)
   -- argument defaults
   i = i or 1
@@ -2003,6 +2009,13 @@ end
 
 -- functions identically to string.sub except that i and j are UTF-8 characters
 -- instead of bytes
+
+--- Returns a part of a string, like string.sub, except that positions are counted in
+-- UTF-8 characters rather than bytes.
+-- @param s [String]
+-- @param i [Number first character, negative values count from the end of the string]
+-- @param j=-1 [Number last character, negative values count from the end of the string]
+-- @return [String]
 function utf8.sub (s, i, j)
   -- argument defaults
   j = j or -1
@@ -2045,10 +2058,16 @@ function utf8.sub (s, i, j)
   return s:sub(startByte, endByte)
 end
 
+--- Converts a string to upper case, including the non-ASCII letters in it.
+-- @param s [String]
+-- @return [String]
 function utf8.upper(s)
   return ({ string.gsub(s, '('..utf8.charpattern..')', utf8_lc_uc) })[1]
 end
 
+--- Converts a string to lower case, including the non-ASCII letters in it.
+-- @param s [String]
+-- @return [String]
 function utf8.lower(s)
   return ({ string.gsub(s, '('..utf8.charpattern..')', utf8_uc_lc) })[1]
 end

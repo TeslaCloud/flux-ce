@@ -6,6 +6,7 @@ PANEL.font = 'flRoboto'
 PANEL.color = Color('white')
 PANEL.title = ''
 
+--- Creates the title label and the increase and decrease buttons.
 function PANEL:Init()
   local fa_icon_size = math.scale(16)
 
@@ -33,6 +34,9 @@ function PANEL:Init()
   end
 end
 
+--- Positions the label and both buttons and refreshes the enabled state of the buttons.
+-- @param w [Number panel width]
+-- @param h [Number panel height]
 function PANEL:PerformLayout(w, h)
   self.label:SizeToContents()
   self.label:SetPos(w * 0.5 - self.label:GetWide() * 0.5, math.scale(4))
@@ -51,55 +55,77 @@ function PANEL:PerformLayout(w, h)
   self:check_buttons()
 end
 
+--- Draws the current value in the middle of the counter.
+-- @param w [Number panel width]
+-- @param h [Number panel height]
 function PANEL:Paint(w, h)
   local x, y = util.text_size(self.value, self.font)
   local offset = self.label:GetValue() != '' and self.label:GetTall() or 0
   draw.SimpleText(self.value, self.font, w * 0.5 - x * 0.5, h * 0.5 - y * 0.5 + offset * 0.5, self.color)
 end
 
+--- Sets the title shown above the counter.
+-- @param text [String]
 function PANEL:set_text(text)
   self.title = text
 
   self.label:SetText(self.title)
 end
 
+--- Sets the highest value the counter can reach.
+-- @param max [Number]
 function PANEL:set_max(max)
   self.max = max
   self:check_buttons()
 end
 
+--- Sets the lowest value the counter can reach.
+-- @param min [Number]
 function PANEL:set_min(min)
   self.min = min
   self:check_buttons()
 end
 
+--- Sets both the lowest and the highest value the counter can reach.
+-- @param min [Number]
+-- @param max [Number]
 function PANEL:set_min_max(min, max)
   self.min = min
   self.max = max
   self:check_buttons()
 end
 
+--- Sets the current value. The value is not clamped and on_click is not called.
+-- @param value [Number]
 function PANEL:set_value(value)
   self.value = value
   self:check_buttons()
 end
 
+--- Sets the font of the title and the value.
+-- @param font [String font name]
 function PANEL:set_font(font)
   self.font = font
 
   self.label:SetFont(self.font)
 end
 
+--- Sets the color of the title and the value.
+-- @param color [Color]
 function PANEL:set_color(color)
   self.color = color
 
   self.label:SetTextColor(self.color)
 end
 
+--- Returns the current value of the counter.
+-- @return [Number]
 function PANEL:get_value()
   return self.value
 end
 
+--- Increases the value by one, clamped to the configured range. Calls on_click first and
+-- leaves the value unchanged if it returns false; calls post_click afterwards.
 function PANEL:increase()
   local old_value = self.value
   local new_value = math.clamp(self.value + 1, self.min, self.max)
@@ -111,6 +137,8 @@ function PANEL:increase()
   end
 end
 
+--- Decreases the value by one, clamped to the configured range. Calls on_click first and
+-- leaves the value unchanged if it returns false; calls post_click afterwards.
 function PANEL:decrease()
   local old_value = self.value
   local new_value = math.clamp(self.value - 1, self.min, self.max)
@@ -122,6 +150,8 @@ function PANEL:decrease()
   end
 end
 
+--- Disables the increase button while the value is at the maximum and the decrease button
+-- while it is at the minimum, and enables them otherwise.
 function PANEL:check_buttons()
   local value = self.value
 
@@ -142,9 +172,21 @@ function PANEL:check_buttons()
   end
 end
 
+--- Called before the value changes when one of the buttons is clicked. Does nothing by
+-- default; override it to react to the change, and return false from it to reject the change.
+-- ```
+-- self.skin.on_click = function(panel, value)
+--   surface.PlaySound('buttons/blip1.wav')
+--
+--   self.model.Entity:SetSkin(value - 1)
+-- end
+-- ```
+-- @param value [Number the value about to be set; the old value is passed as a second argument]
 function PANEL:on_click(value)
 end
 
+--- Called after a button click has changed the value. Does nothing by default; meant to
+-- be overridden.
 function PANEL:post_click()
 end
 

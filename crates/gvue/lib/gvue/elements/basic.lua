@@ -52,6 +52,8 @@ local function create_acccessor_trbl(id)
   end
 end
 
+--- Runs the element's pre_tick, tick and post_tick callbacks once per tick_delay
+-- seconds, and its quick_tick callback every frame.
 function PANEL:Think()
   local w, h = self:GetSize()
   local cur_time = CurTime()
@@ -77,6 +79,10 @@ function PANEL:Think()
   end
 end
 
+--- Draws the element by calling its draw_background, draw_border, draw, draw_foreground
+-- and draw_overlay methods in this order, followed by the debug overlay if it is enabled.
+-- @param w [Number panel width]
+-- @param h [Number panel height]
 function PANEL:Paint(w, h)
   self.hovered = self:IsHovered()
 
@@ -160,6 +166,13 @@ function PANEL:Paint(w, h)
   end
 end
 
+--- Converts a number in CSS units to pixels, in the context of this element.
+-- @param num [Number value to convert]
+-- @param units [String CSS unit, e.g. 'px', 'em' or '%']
+-- @param what=nil [String attribute the value belongs to, used by relative units]
+-- @param use_abstract_pixels=false [Boolean do not multiply the result by the element's
+--   scale]
+-- @return [Number size in pixels; 0 if num is not a number]
 function PANEL:unit_to_px(num, units, what, use_abstract_pixels)
   if !isnumber(num) then return 0 end
 
@@ -172,26 +185,37 @@ function PANEL:unit_to_px(num, units, what, use_abstract_pixels)
   return abstract_size * self.scale
 end
 
+--- Sets the size of the element and stores it in its layout context.
+-- @param w [Number width in pixels]
+-- @param h [Number height in pixels]
 function PANEL:set_size(w, h)
   self.context.width = w
   self.context.height = h
   self:SetSize(w, h)
 end
 
+--- Returns the size stored in the element's layout context.
+-- @return [Number width, Number height]
 function PANEL:size()
   return self.context.width, self.context.height
 end
 
+--- Sets the position of the element and stores it in its layout context.
+-- @param x [Number]
+-- @param y [Number]
 function PANEL:set_pos(x, y)
   self.context.x = x
   self.context.y = y
   self:SetPos(x, y)
 end
 
+--- Returns the position stored in the element's layout context.
+-- @return [Number x, Number y]
 function PANEL:pos()
   return self.context.x, self.context.y
 end
 
+--- Resizes the element to fit its children.
 function PANEL:rebuild()
   local w, h = self:ChildrenSize()
   self:SetSize(w, h)

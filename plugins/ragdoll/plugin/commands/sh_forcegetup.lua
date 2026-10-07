@@ -7,6 +7,11 @@ CMD.arguments = 1
 CMD.player_arg = 1
 CMD.aliases = { 'forcegetup', 'plygetup' }
 
+--- Makes every living, ragdolled target get up after the delay, and notifies the staff.
+-- @param player [Player the caller; not valid when run from the server console]
+-- @param targets [Array<Player> players to get up]
+-- @param delay=0 [String/Number seconds before the targets get up, clamped between
+--   0 and 60]
 function CMD:on_run(player, targets, delay)
   delay = math.clamp(tonumber(delay) or 0, 0, 60)
 

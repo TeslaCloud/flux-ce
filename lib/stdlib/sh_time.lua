@@ -155,7 +155,9 @@ math.year         = installable(Time.years)
 
 --- Creates a nice string representation of time.
 -- @param time=self.time [Number]
--- @return [String phrases]
+-- @return [String time phrase, String 'time.from_now' or 'time.ago' phrase (empty for
+--   'time.just_now'), Number amount of time in the unit of the phrase]
+-- @see [Time#format_nice]
 function Time:nice(time)
   time = time or self.time or 0
   local seconds = math.abs(time or self.time)
@@ -189,17 +191,24 @@ end
 
 --- Creates a nice string representation of time relative to now.
 -- @param time=current time [Number]
--- @return [String phrases]
+-- @return [String time phrase, String 'time.from_now' or 'time.ago' phrase (empty for
+--   'time.just_now'), Number amount of time in the unit of the phrase]
+-- @see [Time#nice]
 function Time:nice_from_now(time)
   local diff = Time.new(math.abs(DateTime.at(time).time - DateTime:now().time))
   return diff:nice()
 end
 
 --- Same as nice, but performs formatting.
--- @param suffix [String]
--- @param from_now [String]
--- @param amt [Number]
--- @param lang [String]
+-- Takes the three values that nice returns and translates them into readable text.
+-- ```
+-- local text = Time:format_nice(Time:minutes(5):nice()) -- e.g. '5 minutes from now'
+-- ```
+-- @param suffix [String time phrase, as returned by nice]
+-- @param from_now [String 'time.from_now' or 'time.ago' phrase or an empty string, as
+--   returned by nice]
+-- @param amt [Number amount of time, as returned by nice]
+-- @param lang=current language [String language to translate to]
 -- @return [String phrases]
 function Time:format_nice(suffix, from_now, amt, lang)
   if suffix != 'time.just_now' then
@@ -220,22 +229,32 @@ function Time:format_nice(suffix, from_now, amt, lang)
   end
 end
 
---- @see [Date#strftime]
+--- Formats date-time using a format string.
+-- @param fmt [String DateTime format]
+-- @param time=self.time [Number UNIX time]
+-- @return [String formatted string]
+-- @see [Date#strftime]
 function Time:strftime(fmt, time)
   return Date.strftime(self or Time, fmt, time)
 end
 
---- @see [DateTime#now]
+--- Returns the current date-time.
+-- @return [DateTime present time]
+-- @see [DateTime#now]
 function Time:now()
   return DateTime:now()
 end
 
---- @see [DateTime#tomorrow]
+--- Returns the following day's date.
+-- @return [Date tomorrow]
+-- @see [DateTime#tomorrow]
 function Time:tomorrow()
   return DateTime:tomorrow()
 end
 
---- @see [DateTime#yesterday]
+--- Returns the previous day's date.
+-- @return [Date yesterday]
+-- @see [DateTime#yesterday]
 function Time:yesterday()
   return DateTime:yesterday()
 end

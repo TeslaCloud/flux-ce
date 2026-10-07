@@ -1,25 +1,38 @@
 local panel_meta = FindMetaTable('Panel')
 
 -- Seriously, Newman? I have to write this myself?
+
+--- Makes the panel no longer draggable.
 function panel_meta:undraggable()
   self.m_DragSlot = nil
 end
 
+--- Hides the panel and then removes it.
 function panel_meta:safe_remove()
   self:SetVisible(false)
   self:Remove()
 end
 
+--- Sets the position of the panel, scaling the coordinates to the screen resolution.
+-- @param x [Number x coordinate at 1080p]
+-- @param y [Number y coordinate at 1080p]
 function panel_meta:set_pos_ex(x, y)
   self:SetPos(math.scale(x), math.scale(y))
 end
 
+--- Sets the size of the panel, scaling it to the screen resolution.
+-- @param w [Number width at 1080p]
+-- @param h [Number height at 1080p]
 function panel_meta:set_size_ex(w, h)
   self:SetSize(math.scale(w), math.scale(h))
 end
 
 local model_panel = vgui.GetControlTable('DModelPanel')
 
+--- Replaces the paint function of DModelPanel with one that keeps the model visible
+-- on top of blurred backgrounds.
+-- @param w [Number width of the panel]
+-- @param h [Number height of the panel]
 function model_panel:Paint(w, h)
   local ent = self.Entity
 

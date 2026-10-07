@@ -1,6 +1,11 @@
 do
   local cache = {}
 
+  --- Measures the size a text takes up when drawn with the given font.
+  -- Results are cached, so this is cheap to call every frame.
+  -- @param text [String text to measure]
+  -- @param font='default' [String font name]
+  -- @return [Number width in pixels, Number height in pixels]
   function util.text_size(text, font)
     font = font or 'default'
 
@@ -21,18 +26,34 @@ do
   end
 end
 
+--- Returns the width a text takes up when drawn with the given font.
+-- @param text [String text to measure]
+-- @param font='default' [String font name]
+-- @return [Number width in pixels]
+-- @see [util.text_size]
 function util.text_width(text, font)
   return select(1, util.text_size(text, font))
 end
 
+--- Returns the height a text takes up when drawn with the given font.
+-- @param text [String text to measure]
+-- @param font='default' [String font name]
+-- @return [Number height in pixels]
+-- @see [util.text_size]
 function util.text_height(text, font)
   return select(2, util.text_size(text, font))
 end
 
+--- Returns the line height of a font, measured on the sample text 'Agw'.
+-- @param font='default' [String font name]
+-- @return [Number height in pixels]
 function util.font_size(font)
   return select(2, util.text_size('Agw', font))
 end
 
+--- Returns the class name a panel was registered under.
+-- @param panel [Panel]
+-- @return [String class name, or nil if the panel is invalid or has no ClassName]
 function util.get_panel_class(panel)
   if panel and panel.GetTable then
     local panel_table = panel:GetTable()
@@ -43,7 +64,12 @@ function util.get_panel_class(panel)
   end
 end
 
--- Adjusts x, y to fit inside x2, y2 while keeping original aspect ratio.
+--- Adjusts x, y to fit inside x2, y2 while keeping original aspect ratio.
+-- @param x [Number width to fit]
+-- @param y [Number height to fit]
+-- @param x2 [Number maximum width]
+-- @param y2 [Number maximum height]
+-- @return [Number adjusted width, Number adjusted height]
 function util.fit_to_aspect(x, y, x2, y2)
   local aspect = x / y
 
@@ -60,14 +86,32 @@ function util.fit_to_aspect(x, y, x2, y2)
   return x, y
 end
 
+--- Calculates the value of a cubic ease-in interpolation at a given step.
+-- @param cur_step [Number current step]
+-- @param steps [Number total amount of steps]
+-- @param from [Number starting value]
+-- @param to [Number final value]
+-- @return [Number interpolated value]
 function util.cubic_ease_in(cur_step, steps, from, to)
   return (to - from) * math.pow(cur_step / steps, 3) + from
 end
 
+--- Calculates the value of a cubic ease-out interpolation at a given step.
+-- @param cur_step [Number current step]
+-- @param steps [Number total amount of steps]
+-- @param from [Number starting value]
+-- @param to [Number final value]
+-- @return [Number interpolated value]
 function util.cubic_ease_out(cur_step, steps, from, to)
   return (to - from) * (math.pow(cur_step / steps - 1, 3) + 1) + from
 end
 
+--- Precalculates every step of a cubic ease-in interpolation.
+-- @param steps [Number total amount of steps]
+-- @param from [Number starting value]
+-- @param to [Number final value]
+-- @return [Array<Number> interpolated values, one per step]
+-- @see [util.cubic_ease_in]
 function util.cubic_ease_in_t(steps, from, to)
   local result = {}
 
@@ -78,6 +122,12 @@ function util.cubic_ease_in_t(steps, from, to)
   return result
 end
 
+--- Precalculates every step of a cubic ease-out interpolation.
+-- @param steps [Number total amount of steps]
+-- @param from [Number starting value]
+-- @param to [Number final value]
+-- @return [Array<Number> interpolated values, one per step]
+-- @see [util.cubic_ease_out]
 function util.cubic_ease_out_t(steps, from, to)
   local result = {}
 
@@ -88,6 +138,14 @@ function util.cubic_ease_out_t(steps, from, to)
   return result
 end
 
+--- Calculates the value of a cubic ease-in-out interpolation at a given step.
+-- Uses util.cubic_ease_in for the first half of the steps and util.cubic_ease_out for
+-- the second half.
+-- @param cur_step [Number current step]
+-- @param steps [Number total amount of steps]
+-- @param from [Number starting value]
+-- @param to [Number final value]
+-- @return [Number interpolated value]
 function util.cubic_ease_in_out(cur_step, steps, from, to)
   if cur_step > (steps * 0.5) then
     return util.cubic_ease_out(cur_step - steps * 0.5, steps * 0.5, from, to)
@@ -96,6 +154,12 @@ function util.cubic_ease_in_out(cur_step, steps, from, to)
   end
 end
 
+--- Precalculates every step of a cubic ease-in-out interpolation.
+-- @param steps [Number total amount of steps]
+-- @param from [Number starting value]
+-- @param to [Number final value]
+-- @return [Array<Number> interpolated values, one per step]
+-- @see [util.cubic_ease_in_out]
 function util.cubic_ease_in_out_t(steps, from, to)
   local result = {}
 
@@ -109,7 +173,9 @@ end
 do
   local mat_cache = {}
 
-  -- A function to get a material. It caches the material automatically.
+  --- Gets a material by its path. It caches the material automatically.
+  -- @param mat [String material path]
+  -- @return [Material]
   function util.get_material(mat)
     if !mat_cache[mat] then
       mat_cache[mat] = Material(mat)
@@ -123,6 +189,11 @@ do
   local cache = {}
   local loading_cache = {}
 
+  --- Downloads an image from a URL into data/flux/materials and caches it as a material.
+  -- The download is asynchronous: the OnURLMatLoaded hook runs with the URL and the material
+  -- once it finishes. Images that were downloaded before are loaded from disk right away.
+  -- @param url [String direct link to an image, has to end with a file extension]
+  -- @see [URLMaterial]
   function util.cache_url_material(url)
     if isstring(url) and url != '' then
       local url_crc = util.CRC(url)
@@ -166,6 +237,11 @@ do
 
   local placeholder = Material('vgui/wave')
 
+  --- Returns the material of an image from a URL, starting the download on first use.
+  -- A placeholder material is returned for as long as the image has not been loaded.
+  -- @param url [String direct link to an image, has to end with a file extension]
+  -- @return [Material the downloaded image, or a placeholder while it is loading]
+  -- @see [util.cache_url_material]
   function URLMaterial(url)
     local url_crc = util.CRC(url)
 
@@ -182,6 +258,13 @@ do
   end
 end
 
+--- Splits a text into lines that fit into the given width when drawn with the given font.
+-- Words that are wider than a whole line are broken up with a dash. Newlines are removed.
+-- @param text [String text to wrap]
+-- @param font [String font name]
+-- @param width [Number maximum width of a line in pixels]
+-- @param initial_width=0 [Number width that is already taken up on the first line]
+-- @return [Array<String> lines, or nil if text, font or width is missing]
 function util.wrap_text(text, font, width, initial_width)
   if !text or !font or !width then return end
 

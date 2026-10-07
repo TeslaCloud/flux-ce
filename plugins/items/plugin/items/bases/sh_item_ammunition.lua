@@ -14,6 +14,8 @@ ItemAmmo.ammo_class = 'Pistol'
 ItemAmmo.ammo_count = 16
 ItemAmmo.max_uses = 1
 
+--- Called by ItemUsable:on_use when the item is used. Gives the player the ammo of the item.
+-- @param player [Player]
 function ItemAmmo:use(player)
   player:GiveAmmo(self.ammo_count, self.ammo_class)
 end

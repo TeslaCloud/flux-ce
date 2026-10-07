@@ -1,6 +1,8 @@
 local PANEL = {}
 PANEL.title = 'ui.inventory.container'
 
+--- Creates the fullscreen panel with the close button
+-- and the local player's main inventory, pockets and hotbar.
 function PANEL:Init()
   local scrw, scrh = ScrW(), ScrH()
 
@@ -50,12 +52,16 @@ function PANEL:Init()
   Flux.blur_update_fps = 0
 end
 
+--- Draws the blurred background of the panel.
+-- @param w [Number]
+-- @param h [Number]
 function PANEL:Paint(w, h)
   draw.blur_panel(self)
 
   Theme.hook('PaintInventoryContainerBackground', self, w, h)
 end
 
+--- Removes the hotbar and tells the server that the opened inventories have been closed.
 function PANEL:OnRemove()
   if IsValid(self.hotbar) then
     self.hotbar:safe_remove()
@@ -66,12 +72,17 @@ function PANEL:OnRemove()
   Cable.send('fl_inventory_close', self:get_inventory_ids())
 end
 
+--- Closes the panel when TAB or E is pressed.
+-- @param key [Number KEY_ enumerator]
 function PANEL:OnKeyCodePressed(key)
   if key == KEY_TAB or key == KEY_E then
     self:safe_remove()
   end
 end
 
+--- Shows the specified inventory next to the inventories of the local player.
+-- Runs the 'OnConatinerOpened' hook afterwards.
+-- @param inventory_id [Number id of the inventory]
 function PANEL:open_inventory(inventory_id)
   local inventory = Inventories.find(inventory_id)
 
@@ -85,6 +96,9 @@ function PANEL:open_inventory(inventory_id)
   hook.run('OnConatinerOpened', self, inventory_id)
 end
 
+--- Shows the inventories of another player next to the inventories of the local player.
+-- @param player [Player the player that the inventories belong to]
+-- @param inventory_ids [Array<Number> ids of the inventories]
 function PANEL:open_player_inventories(player, inventory_ids)
   self.player = player
   self.container = {}
@@ -156,6 +170,8 @@ function PANEL:open_player_inventories(player, inventory_ids)
   end
 end
 
+--- Returns the ids of the inventories that are opened in the panel.
+-- @return [Array<Number> ids, or nil if nothing has been opened yet]
 function PANEL:get_inventory_ids()
   return self.inventory_ids
 end

@@ -1,11 +1,15 @@
+--- Loads the saved doors when the framework loads its data.
 function Doors:LoadData()
   self:load()
 end
 
+--- Saves the doors when the framework saves its data.
 function Doors:SaveData()
   self:save()
 end
 
+--- Writes the registered properties and the conditions of every door on the map
+-- to the plugin data storage.
 function Doors:save()
   local doors = {}
 
@@ -32,6 +36,8 @@ function Doors:save()
   Data.save_plugin('doors', doors)
 end
 
+--- Applies the saved properties and conditions to the doors of the map.
+-- Runs the InitialDoorsLoad hook instead if nothing has been saved yet.
 function Doors:load()
   local doors = Data.load_plugin('doors', {})
 
@@ -52,6 +58,9 @@ function Doors:load()
   end
 end
 
+--- Locks or unlocks the door and plays the latch sound.
+-- @param entity [Entity the door]
+-- @param lock [Boolean true to lock, false to unlock]
 function Doors:lock_door(entity, lock)
   Doors.properties['locked'].on_load(entity, lock)
 

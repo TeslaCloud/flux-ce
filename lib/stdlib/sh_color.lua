@@ -1,6 +1,9 @@
 local color_meta = FindMetaTable('Color')
 
--- A function to convert hexadecimal color to a color structure.
+--- Converts hexadecimal color to a color structure.
+-- Accepts 3 (rgb), 6 (rrggbb) or 8 (rrggbbaa) digits with an optional leading '#'.
+-- @param hex [String hexadecimal color such as '#fff' or 'ff8800']
+-- @return [Color the converted color, or white if the string has any other length]
 function util.hex_to_color(hex)
   if hex:starts('#') then
     hex = hex:sub(2, hex:len())
@@ -195,6 +198,26 @@ do
   local old_color = __OLD_COLOR_FUNCTION__ or Color
   __OLD_COLOR_FUNCTION__ = old_color
 
+  --- Creates a color. Replaces the built-in Color function to also accept hexadecimal
+  -- strings and CSS color names.
+  -- ```
+  -- Color(255, 165, 0)
+  -- Color('#ffa500')
+  -- Color('orange')
+  -- Color('orange', 100) -- orange with the alpha of 100
+  -- ```
+  -- @variant Color(r, g, b, a)
+  --   @param r [Number red, 0-255]
+  --   @param g [Number green, 0-255]
+  --   @param b [Number blue, 0-255]
+  --   @param a=255 [Number alpha, 0-255]
+  -- @variant Color(r)
+  --   @param r [String hexadecimal color that starts with '#']
+  -- @variant Color(r, g)
+  --   @param r [String CSS color name such as 'orange', case-insensitive]
+  --   @param g=255 [Number alpha, 0-255]
+  -- @return [Color the created color, white if the string is not a known color name]
+  -- @see [util.hex_to_color]
   function Color(r, g, b, a)
     if isstring(r) then
       if r:starts('#') then
@@ -215,9 +238,12 @@ do
   local _g = 0.587
   local _b = 0.114
 
-  -- A function to saturate the color.
+  --- Returns a copy of the color with its saturation multiplied by a factor.
   -- Ripped directly from C equivalent code that can be found
   -- here: http://alienryderflex.com/saturation.html
+  -- @param amt [Number saturation factor: 1 changes nothing, 0 removes all color, more than 1
+  --   saturates]
+  -- @return [Color]
   function color_meta:saturation(amt)
     local r, g, b = self.r, self.g, self.b
     local p = math.sqrt((r * r * _r) + (g * g * _g) + (b * b + _b))
@@ -230,15 +256,26 @@ do
     )
   end
 
+  --- Returns a more saturated copy of the color.
+  -- @param percentage [Number how much saturation to add, in percent]
+  -- @return [Color]
+  -- @see [Color#saturation]
   function color_meta:saturate(percentage)
     return self:saturation(1 + percentage / 100)
   end
 
+  --- Returns a less saturated copy of the color.
+  -- @param percentage [Number how much saturation to remove, in percent (clamped to 0-100)]
+  -- @return [Color]
+  -- @see [Color#saturation]
   function color_meta:desaturate(percentage)
     return self:saturation(1 - math.Clamp(percentage, 0, 100) / 100)
   end
 end
 
+--- Returns a darker copy of the color. Alpha is kept as-is.
+-- @param amt [Number amount to subtract from the red, green and blue channels]
+-- @return [Color]
 function color_meta:darken(amt)
   return Color(
     math.Clamp(self.r - amt, 0, 255),
@@ -248,6 +285,9 @@ function color_meta:darken(amt)
   )
 end
 
+--- Returns a lighter copy of the color. Alpha is kept as-is.
+-- @param amt [Number amount to add to the red, green and blue channels]
+-- @return [Color]
 function color_meta:lighten(amt)
   return Color(
     math.Clamp(self.r + amt, 0, 255),
@@ -257,10 +297,18 @@ function color_meta:lighten(amt)
   )
 end
 
+--- Returns a copy of the color with a different alpha.
+-- @param amt=255 [Number new alpha, 0-255]
+-- @return [Color]
 function color_meta:alpha(amt)
   return ColorAlpha(self, amt or 255)
 end
 
+--- Linearly interpolates between two colors, alpha included.
+-- @param fraction [Number interpolation fraction, 0 returns color_from and 1 returns color_to]
+-- @param color_from [Color]
+-- @param color_to [Color]
+-- @return [Color]
 function LerpColor(fraction, color_from, color_to)
   return Color(
     Lerp(fraction, color_from.r, color_to.r),
@@ -270,6 +318,9 @@ function LerpColor(fraction, color_from, color_to)
   )
 end
 
+--- Picks a text color that stays readable on top of the given background color.
+-- @param base_color [Color background color]
+-- @return [Color black for bright backgrounds, white for dark ones]
 function util.text_color_from_base(base_color)
   local average = (base_color.r + base_color.g + base_color.b) / 3
 

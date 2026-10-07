@@ -1,3 +1,4 @@
+--- Shows the hotbar and makes it interactive while the context menu is open.
 function Inventories:OnContextMenuOpen()
   if IsValid(PLAYER.hotbar) then
     PLAYER.hotbar:safe_remove()
@@ -13,12 +14,15 @@ function Inventories:OnContextMenuOpen()
   PLAYER.hotbar:rebuild()
 end
 
+--- Removes the hotbar when the context menu closes.
 function Inventories:OnContextMenuClose()
   if IsValid(PLAYER.hotbar) then
     PLAYER.hotbar:safe_remove()
   end
 end
 
+--- Adds the inventory to the tab menu.
+-- @param menu [Panel the tab menu]
 function Inventories:AddTabMenuItems(menu)
   menu:add_menu_item('inventory', {
     title = 'Inventory',
@@ -33,6 +37,8 @@ function Inventories:AddTabMenuItems(menu)
   })
 end
 
+--- Keeps the pockets panel no wider than the main inventory panel.
+-- @param panel [Panel the fl_inventory panel that has been rebuilt]
 function Inventories:OnInventoryRebuild(panel)
   if panel:get_inventory_type() == 'pockets' then
     local parent = panel:GetParent()
@@ -41,6 +47,8 @@ function Inventories:OnInventoryRebuild(panel)
   end
 end
 
+--- Creates a panel for the local player's hotbar at the bottom of the screen.
+-- @return [Panel the fl_inventory panel]
 function Inventories:create_hotbar()
   local hotbar = PLAYER:get_inventory('hotbar'):create_panel()
   hotbar:set_slot_size(math.scale(80))
@@ -53,6 +61,8 @@ function Inventories:create_hotbar()
   return hotbar
 end
 
+--- Shows the hotbar for a short time, fading it out gradually.
+-- Makes the hotbar fully opaque again if it is on the screen already.
 function Inventories:popup_hotbar()
   if !IsValid(PLAYER.hotbar) then
     PLAYER.hotbar = Inventories:create_hotbar()
@@ -75,6 +85,9 @@ function Inventories:popup_hotbar()
   end
 end
 
+--- Closes the windows of all opened container items when a tab menu panel opens.
+-- @param menu_panel [Panel the tab menu]
+-- @param active_panel [Panel the panel that has been opened]
 function Inventories:OnMenuPanelOpen(menu_panel, active_panel)
   if PLAYER.opened_containers then
     for k, v in pairs(PLAYER.opened_containers) do
@@ -87,6 +100,9 @@ function Inventories:OnMenuPanelOpen(menu_panel, active_panel)
   end
 end
 
+--- Prevents opening the menu of items that are stored inside of container items.
+-- @param item_obj [Item]
+-- @return [Boolean false to prevent the menu from opening, nil otherwise]
 function Inventories:CanItemMenuOpen(item_obj)
   local inventory = Inventories.find(item_obj.inventory_id)
 
@@ -265,6 +281,10 @@ local function create_item_icon(item_obj, parent)
   return icon
 end
 
+--- Fills the items tab of the spawn menu with a node for every item category.
+-- @param content_panel [Panel the content panel of the tab]
+-- @param tree [Panel the navigation tree of the tab]
+-- @param node [Panel]
 function Inventories:spawnmenu_populate_items(content_panel, tree, node)
   local categories = {}
 
@@ -301,6 +321,7 @@ function Inventories:spawnmenu_populate_items(content_panel, tree, node)
   end
 end
 
+--- Adds the items tab to the spawn menu.
 function Inventories:PopulateSpawnMenu()
   spawnmenu.AddCreationTab(t'ui.spawnmenu.items', function()
     local panel = vgui.Create('SpawnmenuContentPanel')

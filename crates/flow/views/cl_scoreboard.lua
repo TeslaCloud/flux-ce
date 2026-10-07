@@ -1,16 +1,22 @@
 local PANEL = {}
 PANEL.player_cards = {}
 
+--- Creates the scroll panel that holds the player cards.
 function PANEL:Init()
   self.scroll_panel = vgui.Create('DScrollPanel', self)
   self.scroll_panel:SetPos(0, 0)
   self.scroll_panel:SetSize(self:get_menu_size())
 end
 
+--- Delegates drawing of the scoreboard to the active theme's PaintScoreboard hook.
+-- @param w [Number panel width]
+-- @param h [Number panel height]
 function PANEL:Paint(w, h)
   Theme.hook('PaintScoreboard', self, w, h)
 end
 
+--- Removes the existing player cards and creates one for every initialized player, then
+-- runs the RebuildScoreboard hook. Does nothing if PreRebuildScoreboard returns a value.
 function PANEL:rebuild()
   local w, h = self:GetSize()
 
@@ -48,6 +54,8 @@ function PANEL:rebuild()
   hook.run('RebuildScoreboard', self, w, h)
 end
 
+--- Returns the size the tab menu gives this panel when it opens it.
+-- @return [Number width, Number height]
 function PANEL:get_menu_size()
   return math.scale(1280), math.scale(800)
 end
@@ -57,16 +65,23 @@ vgui.Register('fl_scoreboard', PANEL, 'fl_base_panel')
 local PANEL = {}
 PANEL.player = false
 
+--- Draws the background of the player card.
+-- @param w [Number panel width]
+-- @param h [Number panel height]
 function PANEL:Paint(w, h)
   draw.RoundedBox(0, 0, 0, w, h, Theme.get_color('background_light'))
 end
 
+--- Sets the player this card represents and rebuilds the card.
+-- @param player [Player]
 function PANEL:set_player(player)
   self.player = player
 
   self:rebuild()
 end
 
+--- Recreates the avatar, name and ping labels for the card's player and runs the
+-- RebuildScoreboardPlayerCard hook. Does nothing if no player is set.
 function PANEL:rebuild()
   if !self.player then return end
 

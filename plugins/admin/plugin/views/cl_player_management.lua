@@ -1,5 +1,7 @@
 local PANEL = {}
 
+--- Creates the player list, the player info header and the permissions editor. The last two
+-- stay hidden until a player is selected.
 function PANEL:Init()
   local scrw, scrh = ScrW(), ScrH()
 
@@ -26,6 +28,8 @@ function PANEL:Init()
   self.perm_editor:SetVisible(false)
 end
 
+--- Docks and sizes the info header and the permissions editor once the admin panel has opened
+-- this page.
 function PANEL:on_opened()
   local scrw, scrh = ScrW(), ScrH()
 
@@ -38,6 +42,8 @@ function PANEL:on_opened()
   self.perm_editor:SetSize(self:GetWide() - self.player_list:GetWide() - 12, self:GetTall() - self.player_info:GetTall() - 12)
 end
 
+--- Selects a player, showing the info header and the permissions editor for them.
+-- @param player [Player]
 function PANEL:set_player(player)
   if !self:get_player() then
     self.player_info:SetVisible(true)
@@ -49,6 +55,8 @@ function PANEL:set_player(player)
   self.perm_editor:set_player(player)
 end
 
+--- Returns the selected player.
+-- @return [Player the player, or nil if none has been selected]
 function PANEL:get_player()
   return self.active_player
 end
@@ -57,6 +65,7 @@ vgui.Register('fl_player_management', PANEL, 'fl_base_panel')
 
 PANEL = {}
 
+--- Creates the avatar, the name and role labels and the button that opens the role selector.
 function PANEL:Init()
   self.avatar = vgui.create('fl_avatar_panel', self)
 
@@ -90,6 +99,9 @@ function PANEL:Init()
   end
 end
 
+--- Positions the avatar on the right and the labels and the role button on the left.
+-- @param w [Number panel width]
+-- @param h [Number panel height]
 function PANEL:PerformLayout(w, h)
   self.avatar:SetSize(h - 16, h - 16)
   self.avatar:SetPos(w - self.avatar:GetWide() - 8, 8)
@@ -102,12 +114,15 @@ function PANEL:PerformLayout(w, h)
   self.role_edit:SetPos(8 + self.role_label:GetWide(), 4 + self.name_label:GetTall())
 end
 
+--- Sets the player to display and refreshes the panel.
+-- @param player [Player]
 function PANEL:set_player(player)
   self.player = player
 
   self:rebuild()
 end
 
+--- Refreshes the avatar, name and role label from the current player.
 function PANEL:rebuild()
   local player = self.player
 

@@ -4,6 +4,8 @@ PANEL.last_pos = 0
 PANEL.is_open = false
 PANEL.padding = Theme.get_option('chatbox_padding', math.scale(8))
 
+--- Creates the scroll panel for the messages and the text entry with its input
+-- history, then lays the chatbox out.
 function PANEL:Init()
   local w, h = self:GetWide(), self:GetTall()
 
@@ -104,6 +106,8 @@ function PANEL:Init()
   self:rebuild()
 end
 
+--- Closes the chatbox when escape is pressed. Keeps the messages scrolled to the
+-- bottom while the chatbox is closed.
 function PANEL:Think()
   if self.is_open then
     if input.IsKeyDown(KEY_ESCAPE) then
@@ -118,12 +122,21 @@ function PANEL:Think()
   end
 end
 
+--- Draws the background through the ChatboxPaintBackground theme hook
+-- while the chatbox is open.
+-- @param w [Number]
+-- @param h [Number]
 function PANEL:Paint(w, h)
   if self.is_open then
     Theme.hook('ChatboxPaintBackground', self, w, h)
   end
 end
 
+--- Draws the list of matching commands, or the syntax, description and aliases of a
+-- single command, while a command is being typed. The ChatboxPaintOver theme hook can
+-- override this.
+-- @param width [Number]
+-- @param height [Number]
 function PANEL:PaintOver(width, height)
   if Theme.hook('ChatboxPaintOver', self, width, height) == nil then
     local entry = self.text_entry
@@ -200,6 +213,9 @@ function PANEL:PaintOver(width, height)
   end
 end
 
+--- Opens or closes the chatbox: toggles the focus and the text entry, and makes all
+-- messages visible while the chatbox is open.
+-- @param is_open [Boolean]
 function PANEL:set_open(is_open)
   self.is_open = is_open
 
@@ -226,6 +242,9 @@ function PANEL:set_open(is_open)
   end
 end
 
+--- Checks whether the text entry contains a command.
+-- @return [Boolean whether a command is being typed; nil if the entry only contains
+--   '/' or is not valid, Number length of the command prefix if a command is being typed]
 function PANEL:typing_command()
   if IsValid(self.text_entry) then
     local cmd = self.text_entry:GetValue()
@@ -236,6 +255,10 @@ function PANEL:typing_command()
   end
 end
 
+--- Compiles the message and creates a message panel for it,
+-- without adding it to the chatbox.
+-- @param message_data [Hash message data received from the server]
+-- @return [Panel the fl_chat_message panel, or nil if the message could not be compiled]
 function PANEL:create_message(message_data)
   local parsed = Chatbox.compile(message_data)
 
@@ -254,6 +277,9 @@ function PANEL:create_message(message_data)
   return panel
 end
 
+--- Creates a panel for the message and adds it to the chatbox, unless the
+-- ChatboxShouldAddMessage hook returns false.
+-- @param message_data [Hash message data received from the server]
 function PANEL:add_message(message_data)
   if message_data and Plugin.call('ChatboxShouldAddMessage', message_data) != false then
     local panel = self:create_message(message_data)
@@ -273,6 +299,8 @@ function PANEL:add_message(message_data)
   end
 end
 
+--- Drops removed panels from the message history, updates the indexes of the
+-- remaining messages and rebuilds the layout.
 function PANEL:rebuild_history_indexes()
   local new_history = {}
 
@@ -287,6 +315,9 @@ function PANEL:rebuild_history_indexes()
   self:rebuild()
 end
 
+--- Appends a message panel to the history and to the scroll panel.
+-- Ejects the oldest message first if the 'max_messages' limit has been reached.
+-- @param panel [Panel a fl_chat_message panel]
 function PANEL:add_panel(panel)
   if #self.history >= Config.get('max_messages') then
     local last_history = self.history[1]
@@ -309,11 +340,16 @@ function PANEL:add_panel(panel)
   self.last_pos = self.last_pos + Config.get('message_margin') + panel:GetTall()
 end
 
+--- Removes the message from the history and rebuilds the history indexes.
+-- Does not remove the panel of the message.
+-- @param idx [Number index of the message in the history]
 function PANEL:remove_message(idx)
   table.remove(self.history, idx)
   self:rebuild_history_indexes()
 end
 
+--- Applies the size and position of the chatbox, lays out the text entry and the
+-- scroll panel, and repositions all messages.
 function PANEL:rebuild()
   self:SetSize(Chatbox.width, Chatbox.height)
   self:SetPos(Chatbox.x, Chatbox.y)

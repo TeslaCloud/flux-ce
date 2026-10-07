@@ -34,10 +34,17 @@ ItemContainer:add_button('item.option.open', {
   end
 })
 
+--- Returns the settings that the inventory of the container is created with.
+-- @return [Hash table with width, height, type and multislot fields,
+--   and optionally infinite_width and infinite_height]
 function ItemContainer:get_inventory_data()
   return self.inventory_data
 end
 
+--- Called on the server when a player presses the open button in the item's menu.
+-- Creates the inventory of the container if it does not exist yet,
+-- fills it with the items that were saved, and opens it for the player.
+-- @param player [Player]
 function ItemContainer:on_open(player)
   if !self.inventory then
     self:create_inventory()
@@ -52,12 +59,18 @@ function ItemContainer:on_open(player)
   player:open_inventory(self.inventory)
 end
 
+--- Called on the server by the 'CanItemTransfer' hook before an item is put
+-- into the container. Prevents the container from being put inside of itself.
+-- @param item_obj [Item the item that is being put into the container]
+-- @return [Boolean false to prevent the transfer, nil otherwise]
 function ItemContainer:can_contain(item_obj)
   if item_obj == self then
     return false
   end
 end
 
+--- Creates the inventory that stores the contents of the container
+-- and puts it into the 'inventory' field of the item.
 function ItemContainer:create_inventory()
   local inventory_data = self:get_inventory_data()
 
@@ -72,6 +85,8 @@ function ItemContainer:create_inventory()
   self.inventory = inventory
 end
 
+--- Called on the server by the 'OnItemCreated' hook right after an instance of the item
+-- is created. Fills the container with the items listed in default_inventory.
 function ItemContainer:on_created()
   if !table.is_empty(self.default_inventory) then
     self:create_inventory()
@@ -88,6 +103,8 @@ function ItemContainer:on_created()
   end
 end
 
+--- Called on the server before the character of the player that has the item is saved.
+-- Stores the instance ids of the contained items in the 'items' field of the item.
 function ItemContainer:on_save()
   if self.inventory then
     self.items = self.inventory:get_items_ids()

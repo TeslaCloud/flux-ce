@@ -1,5 +1,7 @@
 local PANEL = {}
 
+--- Covers the whole screen, starts the intro animation, schedules the panel to close after
+-- 4 seconds and runs the OnIntroPanelCreated hook.
 function PANEL:Init()
   self:SetSize(ScrW(), ScrH())
   self:SetPos(0, 0)
@@ -28,6 +30,10 @@ local remove_alpha = 255
 local delta_modifier = 80
 local logo_tween = Tween.new(1.5, logo_data, { width = logo_w * 0.6, height = logo_h * 0.6 }, 'inOutCubic')
 
+--- Draws the shrinking logo on a black background and the expanding circle effect, and
+-- fades everything out once the panel is closing.
+-- @param w [Number panel width]
+-- @param h [Number panel height]
 function PANEL:Paint(w, h)
   local frame_time = FrameTime()
 
@@ -77,6 +83,8 @@ function PANEL:Paint(w, h)
   end
 end
 
+--- Starts fading the intro out, removes the panel one second later and runs the
+-- OnIntroPanelRemoved hook.
 function PANEL:close_menu()
   self.should_remove = true
 
@@ -87,6 +95,7 @@ function PANEL:close_menu()
   hook.run('OnIntroPanelRemoved')
 end
 
+--- Starts the circle animation after a short delay.
 function PANEL:start_animation()
   timer.Simple(0.6, function()
     self.started = true

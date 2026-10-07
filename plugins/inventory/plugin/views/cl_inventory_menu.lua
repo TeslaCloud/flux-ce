@@ -1,13 +1,19 @@
 local PANEL = {}
 
+--- Draws the background of the inventory tab using the theme.
+-- @param w [Number]
+-- @param h [Number]
 function PANEL:Paint(w, h)
   Theme.hook('PaintTabInventoryBackground', self, w, h)
 end
 
+--- Returns the size that the tab menu gives to the panel.
+-- @return [Number width, Number height]
 function PANEL:get_menu_size()
   return ScrW() * 0.66, ScrH() * 0.66
 end
 
+--- Called by the tab menu when it closes. Removes the player model and fades the hotbar out.
 function PANEL:on_close()
   if IsValid(self.player_model) then
     self.player_model:safe_remove()
@@ -20,12 +26,15 @@ function PANEL:on_close()
   end
 end
 
+--- Called by the tab menu when it switches to another panel. Removes the hotbar.
 function PANEL:on_change()
   if IsValid(self.hotbar) then
     self.hotbar:safe_remove()
   end
 end
 
+--- Called by the tab menu when the panel opens. Creates the player model with the description
+-- editor, the equipment slots, the main inventory, the pockets and the hotbar.
 function PANEL:rebuild()
   local w, h = self:GetSize()
 

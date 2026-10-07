@@ -7,6 +7,12 @@ CMD.arguments = 1
 CMD.immunity = true
 CMD.aliases = { 'godmode', 'plysetgodmode' }
 
+--- Enables god mode for the targeted players, or toggles it when no truthy value is given,
+-- and notifies them and staff.
+-- @param player [Player the caller, or an invalid entity when run from the server console]
+-- @param targets [Array<Player> players to affect]
+-- @param boolean=nil [String value read with tobool; truthy enables god mode, anything else
+--   (or nothing) toggles it]
 function CMD:on_run(player, targets, boolean)
   for k, v in ipairs(targets) do
     boolean = boolean != nil and tobool(boolean) or !v:HasGodMode()

@@ -1,5 +1,9 @@
 class 'Packager::Minifier'
 
+--- Minifies Lua code: strips comments and unneeded whitespace and replaces keywords
+-- such as and, or, not, true and false with their shorter GLua forms.
+-- @param source [String Lua source code]
+-- @return [String minified code]
 function Packager.Minifier:minify(source)
   local tokens = LuaLexer:tokenize(source)
   local result = ''
@@ -45,6 +49,10 @@ function Packager.Minifier:minify(source)
   return result
 end
 
+--- Minifies all .lua files of a folder and its subfolders into a single string.
+-- The code of every file is wrapped in a function named after the file's path.
+-- @param folder [String folder path relative to the game directory, with a trailing slash]
+-- @return [String minified code]
 function Packager.Minifier:minify_folder(folder)
   local code = ''
   local files, dirs = file.Find(folder..'*', 'GAME')

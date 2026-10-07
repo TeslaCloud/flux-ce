@@ -5,6 +5,10 @@ CMD.category = 'permission.categories.roleplay'
 CMD.aliases = { 'chargetup', 'unfall', 'unfallover' }
 CMD.no_console = true
 
+--- Makes the ragdolled player get up after the delay, showing them a progress bar until
+-- then. Notifies the player instead if they are dead or not ragdolled.
+-- @param player [Player the caller]
+-- @param delay=4 [String/Number seconds it takes to get up, clamped between 4 and 60]
 function CMD:on_run(player, delay)
   delay = math.clamp(tonumber(delay) or 0, 4, 60)
 

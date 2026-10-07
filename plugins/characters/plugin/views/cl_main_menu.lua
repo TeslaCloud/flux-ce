@@ -3,6 +3,8 @@ PANEL.prev_button = nil
 PANEL.schema_logo_offset = math.scale(450)
 PANEL.max_wide = 0
 
+--- Covers the screen, builds the sidebar and starts the theme's menu music unless the
+-- framework runs in development mode.
 function PANEL:Init()
   self:SetPos(0, 0)
   self:SetSize(ScrW(), ScrH())
@@ -30,16 +32,21 @@ function PANEL:Init()
   Flux.blur_update_fps = 0
 end
 
+--- Restores the blur update rate that was lowered while the menu was open.
 function PANEL:OnRemove()
   Flux.blur_update_fps = 8
 end
 
+--- Draws the menu through the theme's PaintMainMenu hook.
+-- @param w [Number]
+-- @param h [Number]
 function PANEL:Paint(w, h)
   if self:IsVisible() then
     Theme.hook('PaintMainMenu', self, w, h)
   end
 end
 
+--- Animates the schema logo offset towards zero while a submenu is open and back otherwise.
 function PANEL:Think()
   local menu_valid = IsValid(self.menu)
 
@@ -50,6 +57,8 @@ function PANEL:Think()
   end
 end
 
+--- Recreates the sidebar, optionally filling it through the AddMainMenuItems hook.
+-- @param create_buttons=false [Boolean add the menu buttons and center them]
 function PANEL:RecreateSidebar(create_buttons)
   if IsValid(self.sidebar) then
     self.sidebar:safe_remove()
@@ -75,6 +84,9 @@ function PANEL:RecreateSidebar(create_buttons)
   end
 end
 
+--- Opens a theme panel as the submenu, closing the currently open submenu first.
+-- @param panel [String theme panel ID]
+-- @param data=nil [Any passed to the set_data method of the new panel, if it has one]
 function PANEL:OpenMenu(panel, data)
   if !IsValid(self.menu) then
     self.menu = Theme.create_panel(panel, self)
@@ -94,6 +106,8 @@ function PANEL:OpenMenu(panel, data)
   end
 end
 
+--- Slides the open submenu away and closes it, bringing the sidebar back in.
+-- @param from_right=false [Boolean bring the sidebar in from the right instead of the left]
 function PANEL:to_main_menu(from_right)
   local scrw = ScrW()
 
@@ -116,6 +130,8 @@ function PANEL:to_main_menu(from_right)
   end)
 end
 
+--- Shows a notification near the bottom of the menu unless one is already visible.
+-- @param text [String]
 function PANEL:notify(text)
   if IsValid(self.notification) then return end
 
@@ -131,6 +147,11 @@ function PANEL:notify(text)
   function self.notification:PostThink() self:MoveToFront() end
 end
 
+--- Adds a button to the sidebar.
+-- @param text [String button title, displayed in upper case]
+-- @param callback [Function/String function that receives the clicked button, or the ID of
+--   a theme panel to open as the submenu]
+-- @return [Panel the created button]
 function PANEL:add_button(text, callback)
   local button = vgui.Create('fl_button', self)
   button:SetTall(Theme.get_option('menu_sidebar_button_height'))

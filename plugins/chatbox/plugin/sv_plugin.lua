@@ -14,10 +14,22 @@ local default_msg_data = {
 local filters = {}
 local client_mode = false
 
+--- Stores a message filter under the specified id. Serverside only.
+-- Filters are only stored at the moment, nothing reads them yet.
+-- @param id [String unique filter id]
+-- @param data [Hash filter data]
 function Chatbox.add_filter(id, data)
   filters[id] = data
 end
 
+--- Checks whether the listener should receive the message. Serverside only.
+-- The PlayerCanHear hook can force a message through. Otherwise a radius of 0 reaches
+-- every initialized player, a negative radius reaches nobody, and a positive radius
+-- reaches the players whose eyes are within it from the position of the message.
+-- @param listener [Player]
+-- @param message_data [Hash message data with radius (Number) and position (Vector or
+--   Array<Vector>), see Chatbox.add_text]
+-- @return [Boolean]
 function Chatbox.can_hear(listener, message_data)
   if Plugin.call('PlayerCanHear', listener, message_data) then
     return true
@@ -46,6 +58,29 @@ function Chatbox.can_hear(listener, message_data)
   return false
 end
 
+--- Builds a chat message from the arguments and sends it to the listeners that can
+-- hear it. Serverside only.
+-- Strings are displayed as text, numbers set the font size of the following text,
+-- colors set its color, players and entities are displayed by their names. Tables with
+-- is_data = true are displayed as icons or images. Any other table is merged into the
+-- message options: sender, position, radius (0 is global), size, should_translate.
+-- ```
+-- -- Message for everyone.
+-- Chatbox.add_text(nil, Color(255, 200, 0), 'The server restarts in 5 minutes!')
+--
+-- -- Message from a player that is heard within 300 units of them.
+-- Chatbox.add_text(nil,
+--   { icon = 'fa-shield-alt', size = 14, margin = 8, is_data = true },
+--   _team.GetColor(player:Team()), player, Color(255, 255, 255), ': ', text,
+--   { sender = player, position = player:GetPos(), radius = 300 }
+-- )
+--
+-- -- Message for certain players only.
+-- Chatbox.add_text(Bolt:get_staff(), Color(234, 255, 208), '@staff ', player, ': ', text)
+-- ```
+-- @param listeners [Array<Player>/Player the receivers, nil to send to all players]
+-- @param ... [Vararg pieces of the message and option tables]
+-- @see [Chatbox.can_hear]
 function Chatbox.add_text(listeners, ...)
   local message_data = {
     sender = nil,
@@ -115,10 +150,19 @@ function Chatbox.add_text(listeners, ...)
   end
 end
 
+--- Toggles the mode in which Chatbox.add_text displays every table instead of merging
+-- tables into the message options. Enabled while relaying chat.AddText of a client.
+-- @warning [Internal]
+-- @param val [Boolean]
 function Chatbox.set_client_mode(val)
   client_mode = val
 end
 
+--- Joins the strings of a message into a single string. Players and entities are
+-- replaced with their names, numbers and other values are skipped.
+-- @param message_data [Array pieces of a message, such as the data of a message]
+-- @param concatenator='' [String separator to put between the pieces]
+-- @return [String]
 function Chatbox.message_to_string(message_data, concatenator)
   local to_string = {}
 
@@ -143,6 +187,14 @@ function Chatbox.message_to_string(message_data, concatenator)
   return table.concat(to_string, concatenator)
 end
 
+--- Makes the player say the text in the chat, by default to all players.
+-- Runs the PlayerSay hook first, which may change or suppress the text. The icon
+-- and colors come from the ChatboxGetPlayerIcon, ChatboxGetPlayerColor and
+-- ChatboxGetMessageColor hooks, and the ChatboxAdjustPlayerSay hook can alter the
+-- finished message. Serverside only.
+-- @param player [Player the speaker]
+-- @param text [String the message]
+-- @param team_chat=nil [Boolean whether the message was sent to the team chat]
 function Chatbox.player_say(player, text, team_chat)
   if !IsValid(player) then return end
 

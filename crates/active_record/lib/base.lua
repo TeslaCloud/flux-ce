@@ -49,6 +49,7 @@ end
 -- and it's table name is determined based on the class name.
 -- Make sure you create a table that is named as a lowercase plural
 -- of the class name, or else this will fail!
+-- @param new_class [ActiveRecord::Base the newly created model class]
 function ActiveRecord.Base:class_extended(new_class)
   new_class.table_name = Flow.Inflector:pluralize(new_class.class_name:underscore())
 
@@ -83,6 +84,10 @@ end
 -- Object:where('column > ?', 100)
 -- Object:where({ ['column'] = 'value', ['column2'] = { 'value', 'value2' } })
 -- ```
+-- @param condition [String/Hash column name, SQL condition (which may use ? placeholders),
+--   or a hash of column-value pairs in which an Array value stands for IN (...)]
+-- @param ... [Vararg value to compare the column with, or the values that replace the
+--   ? placeholders]
 -- @return [ActiveRecord::Base(self)]
 function ActiveRecord.Base:where(condition, ...)
   local args = { ... }
@@ -127,6 +132,9 @@ end
 -- Object:where_not('column > ?', 100)
 -- Object:where_not({ ['column'] = 'value', ['column2'] = { 'value', 'value2' } })
 -- ```
+-- @param condition [String/Hash SQL condition (which may use ? placeholders), or a hash
+--   of column-value pairs in which an Array value stands for NOT IN (...)]
+-- @param ... [Vararg values that replace the ? placeholders]
 -- @return [ActiveRecord::Base(self)]
 function ActiveRecord.Base:where_not(condition, ...)
   local args = { ... }
@@ -180,6 +188,9 @@ end
 -- ```
 -- Object:order('id', 'asc')
 -- ```
+-- @param column [String column to sort by]
+-- @param direction=nil [String lowercase 'asc' or 'desc'; sorts in descending order
+--   if omitted]
 -- @return [ActiveRecord::Base(self)]
 function ActiveRecord.Base:order(column, direction)
   self.query_map:insert { 'order', column, direction }
@@ -192,6 +203,8 @@ end
 -- Object:find(1)
 -- Object:find(1, function(obj) ... end)
 -- ```
+-- @param id [Number]
+-- @param callback=nil [Function passed to #expect, receives the object that was found]
 -- @return [ActiveRecord::Base(self)]
 function ActiveRecord.Base:find(id, callback)
   if !callback then
@@ -207,6 +220,9 @@ end
 -- Object:find_by('id', 1)
 -- Object:find_by('id', 1, function(obj) ... end)
 -- ```
+-- @param column [String]
+-- @param value [Any value to look for, converted to a string]
+-- @param callback=nil [Function passed to #expect, receives the object that was found]
 -- @return [ActiveRecord::Base(self)]
 function ActiveRecord.Base:find_by(column, value, callback)
   if !callback then
@@ -222,6 +238,7 @@ end
 -- ```
 -- Object:where('money > 100'):limit(10)
 -- ```
+-- @param amt [Number maximum amount of objects to load]
 -- @return [ActiveRecord::Base(self)]
 function ActiveRecord.Base:limit(amt)
   self.query_map:insert { 'limit', amt }
@@ -233,6 +250,7 @@ end
 -- ```
 -- Object:where('money > 100'):skip(1):limit(1)
 -- ```
+-- @param amt [Number amount of objects to skip]
 -- @return [ActiveRecord::Base(self)]
 function ActiveRecord.Base:skip(amt)
   self.query_map:insert { 'offset', amt }
@@ -241,6 +259,8 @@ end
 
 --- @warning [Internal]
 -- Internal function to process child objects or current object as a child to another object.
+-- @param obj [ActiveRecord::Base parent object]
+-- @param target_class [ActiveRecord::Base class of the parent object]
 -- @return [ActiveRecord::Base(self)]
 function ActiveRecord.Base:_process_child(obj, target_class)
   local should_stop = false
@@ -263,6 +283,10 @@ end
 
 --- @warning [Internal]
 -- Internal function to fetch all relations when the object is fetched from the database.
+-- @param callback [Function called with the objects once all of their relations are loaded]
+-- @param objects [Array<ActiveRecord::Base> objects to fetch the relations of]
+-- @param n=1 [Number index of the relation to fetch]
+-- @param obj_id=1 [Number index of the object to fetch the relation of]
 -- @return [ActiveRecord::Base(self)]
 function ActiveRecord.Base:_fetch_relation(callback, objects, n, obj_id)
   n = n or 1
@@ -314,6 +338,8 @@ end
 
 --- @warning [Internal]
 -- Runs current query based on the query map and flushes query map.
+-- @param callback [Function called with an Array of the loaded objects; not called if
+--   nothing was found]
 -- @return [ActiveRecord::Base(self)]
 function ActiveRecord.Base:run_query(callback)
   if self.query_map and #self.query_map > 0 then
@@ -369,6 +395,7 @@ end
 --- @warning [Internal]
 -- Internal function to create a new instance of object based on the
 -- data from the database.
+-- @param data [Hash row returned by the database]
 -- @return [ActiveRecord::Base(object)]
 function ActiveRecord.Base:_create_restored(data)
   local object = self.class.new()
@@ -394,6 +421,7 @@ end
 -- ```
 -- Object:first():expect(function(obj) ... end)
 -- ```
+-- @param callback [Function receives the loaded object]
 -- @return [ActiveRecord::Base(self)]
 function ActiveRecord.Base:expect(callback)
   self._get = nil
@@ -409,6 +437,7 @@ end
 -- ```
 -- Object:all():get(function(results) ... end)
 -- ```
+-- @param callback [Function receives an Array of the loaded objects]
 -- @return [ActiveRecord::Base(self)]
 function ActiveRecord.Base:get(callback)
   self._expect = nil
@@ -448,12 +477,13 @@ end
 -- This callback is called in case no object was found in the database.
 -- The callback's first argument is a new object of the same class pre-made for you.
 -- ```
--- Object:where('id > 100000'):first():expect(obj)
+-- Object:where('id > 100000'):first():expect(function(obj)
 --   ...
 -- end):rescue(function(new_object)
 --   ...
 -- end)
 -- ```
+-- @param callback [Function receives a new, unsaved object of the same class]
 -- @return [ActiveRecord::Base(self)]
 function ActiveRecord.Base:rescue(callback)
   self._rescue = callback
@@ -590,12 +620,15 @@ end
 -- The object(s) will be stored in a field with the same name
 -- as child's database table.
 -- ```
--- MyClass:has('User', true)
+-- MyClass:has('users', true)
 -- ...
 -- MyClass:first():expect(function(obj)
 --   print(obj.users) -- table
 -- end)
 -- ```
+-- @param what [String/Hash table name of the child model, or a hash such as
+--   { 'table_name', as = 'field_name' } to store the object(s) in another field]
+-- @param many [Boolean true if the object has many of them, false if it has only one]
 -- @return [ActiveRecord::Base(self)]
 function ActiveRecord.Base:has(what, many)
   local relation = {}
@@ -644,6 +677,8 @@ end
 --   print(obj.users) -- table
 -- end)
 -- ```
+-- @param what [String/Hash table name of the child model, or a hash such as
+--   { 'table_name', as = 'field_name' } to store the objects in another field]
 -- @return [ActiveRecord::Base(self)]
 function ActiveRecord.Base:has_many(what)
   return self:has(what, true)
@@ -659,6 +694,7 @@ end
 --   print(obj.user) -- #<User>
 -- end)
 -- ```
+-- @param what [String singular underscored name of the child model, e.g. 'ammunition']
 -- @return [ActiveRecord::Base(self)]
 function ActiveRecord.Base:has_one(what)
   return self:has({ Flow.Inflector:pluralize(what), as = what }, false)
@@ -666,8 +702,12 @@ end
 
 --- Specifies that the object belongs to a parent object.
 -- ```
--- MyClass:belongs_to 'user'
+-- MyClass:belongs_to 'User'
 -- ```
+-- @param target [String/ActiveRecord::Base class of the parent model, or its name
+--   (e.g. 'User')]
+-- @param one=false [Boolean true if the parent has only one of this object, rather
+--   than many]
 -- @return [ActiveRecord::Base(self)]
 function ActiveRecord.Base:belongs_to(target, one)
   if isstring(target) then
@@ -685,6 +725,8 @@ function ActiveRecord.Base:belongs_to(target, one)
 end
 
 --- Callback that is called if object's validation fails.
+-- @param column [String column that failed the validation]
+-- @param err_code [String id of the failed validation, e.g. 'presence']
 function ActiveRecord.Base:invalid(column, err_code)
   ErrorNoHalt('ActiveRecord - Validation failed!\n')
   ErrorNoHalt(self.class_name..'#'..tostring(column)..' failed with error code '..tostring(err_code)..'\n')
@@ -695,6 +737,8 @@ end
 -- MyObject:validates('email', { presence = true, uniqueness = true })
 -- ```
 -- See all available validations in ActiveRecord::Validator.
+-- @param column [String]
+-- @param options [Hash validation ids mapped to their settings, e.g. { min_length = 4 }]
 -- @return [ActiveRecord::Base(self)]
 function ActiveRecord.Base:validates(column, options)
   local current_options = self.validations[column] or {}

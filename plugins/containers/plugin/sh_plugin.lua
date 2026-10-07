@@ -4,6 +4,20 @@ local stored = Container.stored or {}
 Container.stored = stored
 
 do
+  --- Makes props with the specified model(s) work as containers.
+  -- ```
+  -- Container:register_prop('models/props_c17/FurnitureDrawer002a.mdl', {
+  --   name = 'container.small_drawer.title',
+  --   desc = 'container.small_drawer.desc',
+  --   w = 2,
+  --   h = 1,
+  --   open_sound = 'physics/wood/wood_plank_impact_soft1.wav',
+  --   close_sound = 'physics/wood/wood_box_impact_hard6.wav'
+  -- })
+  -- ```
+  -- @param model [String/Array<String> path to the model, or a list of them]
+  -- @param data [Hash container data: name and desc (language phrases), w and h (size of the
+  --   inventory in slots), and optionally open_sound and close_sound]
   function Container:register_prop(model, data)
     if istable(model) then
       for k, v in pairs(model) do
@@ -14,10 +28,15 @@ do
     end
   end
 
+  --- Returns all the registered containers.
+  -- @return [Hash container data, keyed by the lowercase path to the model]
   function Container:all()
     return stored
   end
 
+  --- Finds the container data that is registered for the model.
+  -- @param model [String path to the model; case-insensitive]
+  -- @return [Hash container data, or nil if the model is not a container]
   function Container:find(model)
     return stored[model:lower()]
   end

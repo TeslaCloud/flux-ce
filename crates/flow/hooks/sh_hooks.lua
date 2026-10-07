@@ -1,3 +1,6 @@
+--- Removes unused sandbox hooks and, on the server, imports the configuration from the
+-- settings, loads the config, connects to the database and registers the Discord webhooks.
+-- Runs the FLInitialize hook when done.
 function GM:Initialize()
   hook.Remove('PostDrawEffects', 'RenderWidgets')
   hook.Remove('PlayerTick', 'TickWidgets')
@@ -36,16 +39,21 @@ function GM:Initialize()
   hook.Run('FLInitialize')
 end
 
--- Called when gamemode's server browser name needs to be retrieved.
+--- Returns the gamemode name shown in the server browser: name_override if it is a string,
+-- otherwise 'FL - ' followed by the schema name.
+-- @return [String]
 function GM:GetGameDescription()
   local name_override = self.name_override
   return isstring(name_override) and name_override or 'FL - '..Flux.get_schema_name()
 end
 
 -- Disable default hooks for mouth move and grab ear.
+
+--- Does nothing, which disables the default ear grab animation while chatting.
 function GM:GrabEarAnimation()
 end
 
+--- Does nothing, which disables the default mouth movement while using voice chat.
 function GM:MouthMoveAnimation()
 end
 
@@ -53,6 +61,12 @@ do
   local vector_angle = FindMetaTable('Vector').Angle
   local normalize_angle = math.NormalizeAngle
 
+  --- Picks the base activity of a player (idle, walking or running) and updates their
+  -- move_yaw pose parameter. An animation forced with Player#set_animation takes priority.
+  -- @param player [Player]
+  -- @param velocity [Vector velocity of the player]
+  -- @return [Number activity (ACT_ enum, or -1 for a forced animation), Number sequence to
+  --   play instead of the activity, or -1 for none]
   function GM:CalcMainActivity(player, velocity)
     player:SetPoseParameter('move_yaw', normalize_angle(vector_angle(velocity)[2] - player:EyeAngles()[2]))
     player.CalcIdeal = ACT_MP_STAND_IDLE
@@ -90,7 +104,12 @@ end
 do
   local get_weapon_hold_type = Flux.Anim.get_weapon_hold_type
 
-  -- Called when to translate player activities.
+  --- Translates an activity into the animation that the Flux animation tables define for the
+  -- player's model, weapon hold type or vehicle. Models without an animation table are
+  -- handled by the base gamemode.
+  -- @param player [Player]
+  -- @param act [Number activity to translate, ACT_ enum]
+  -- @return [Number translated activity or sequence ID, or nil if the tables have no match]
   function GM:TranslateActivity(player, act)
     local animations = player.fl_anim_table
 
@@ -162,6 +181,12 @@ do
 end
 
 -- todo: proper weapon anims
+
+--- Plays the attack and reload gestures and handles the jump and reload cancel events.
+-- @param player [Player]
+-- @param event [Number animation event, PLAYERANIMEVENT_ enum]
+-- @param data [Number data of the event; unused]
+-- @return [Number activity for the view model or ACT_INVALID; nil for unhandled events]
 function GM:DoAnimationEvent(player, event, data)
   if event == PLAYERANIMEVENT_ATTACK_PRIMARY then
     if player:Crouching() then
@@ -199,6 +224,11 @@ end
 do
   local anim_cache = {}
 
+  --- Assigns the animation table of the new model to the player and, on the client, disables
+  -- inverse kinematics for them. Does nothing if no new model is given.
+  -- @param player [Player]
+  -- @param new_model [String path of the new model]
+  -- @param old_model [String path of the previous model]
   function GM:PlayerModelChanged(player, new_model, old_model)
     if !new_model then return end
 
@@ -214,6 +244,11 @@ do
   end
 end
 
+--- Decides whether a player may toggle noclip by asking the plugins through the
+-- PlayerEnterNoclip and PlayerExitNoclip hooks. Allowed if no plugin returns a value.
+-- @param player [Player]
+-- @param state [Boolean true when entering noclip, false when leaving it]
+-- @return [Boolean whether the change is allowed]
 function GM:PlayerNoClip(player, state)
   if state == false then
     local should_exit = Plugin.call('PlayerExitNoclip', player)
@@ -232,6 +267,10 @@ function GM:PlayerNoClip(player, state)
   return true
 end
 
+--- Lets players with the physgun_pickup permission pick entities up with the physics gun.
+-- @param player [Player]
+-- @param entity [Entity the entity being picked up]
+-- @return [Boolean true if the player has the permission, nil otherwise]
 function GM:PhysgunPickup(player, entity)
   if player:can('physgun_pickup') then
     return true
@@ -244,6 +283,8 @@ concommand.Add('fl_save_pers', function()
   end
 end)
 
+--- After a Lua refresh, registers the Flux tools with the tool gun again and, in
+-- development, reapplies the animation table of every player.
 function GM:OnReloaded()
   -- Reload the tools.
   local toolgun = weapons.GetStored('gmod_tool')

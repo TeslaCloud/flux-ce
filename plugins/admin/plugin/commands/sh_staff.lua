@@ -5,6 +5,9 @@ CMD.permission = 'assistant'
 CMD.category = 'permission.categories.administration'
 CMD.arguments = 1
 
+--- Sends a chat message to every online player with the 'staff' permission.
+-- @param player [Player the caller, or an invalid entity when run from the server console]
+-- @param ... [Vararg words of the message]
 function CMD:on_run(player, ...)
   local text = table.concat({ ... }, ' ')
 

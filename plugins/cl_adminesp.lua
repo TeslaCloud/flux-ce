@@ -9,6 +9,8 @@ do
   local color_red = Color(255, 0, 0)
   local color_blue = Color(0, 0, 255)
 
+  --- Draws the admin ESP for every other player: names, an outline box, health and armor bars.
+  -- Only drawn while the local player is noclipping and has the 'admin_esp' permission.
   function PLUGIN:HUDPaint()
     if IsValid(PLAYER) and PLAYER:Alive() and PLAYER:GetMoveType() == MOVETYPE_NOCLIP and can('admin_esp')
     and !PLAYER:InVehicle() then
@@ -59,6 +61,8 @@ do
     end
   end
 
+  --- Refreshes the ESP colors from the theme that has just been loaded.
+  -- @param current_theme [ThemeBase the loaded theme]
   function PLUGIN:OnThemeLoaded(current_theme)
     color_red = current_theme:get_color('esp_red')
     color_blue = current_theme:get_color('esp_blue')

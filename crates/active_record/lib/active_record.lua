@@ -25,6 +25,11 @@ include 'helpers.lua'
 include 'commandline.lua'
 include 'dumper.lua'
 
+--- Registers a column in the in-memory schema, inserting a row into the 'ar_schema'
+-- table if the column is new. Throws an error if ActiveRecord is not ready yet.
+-- @param table_name [String database table the column belongs to]
+-- @param column_name [String]
+-- @param type [String abstract column type, e.g. 'string', 'integer' or 'datetime']
 function ActiveRecord.add_to_schema(table_name, column_name, type)
   if !ActiveRecord.ready then
     error('Attempt to edit schema too early!')
@@ -48,6 +53,9 @@ function ActiveRecord.add_to_schema(table_name, column_name, type)
   ActiveRecord.schema[table_name] = t
 end
 
+--- Loads the stored schema from the 'ar_schema' table. Once loaded, marks ActiveRecord
+-- as ready, populates the models and creates the tables queued by #define_model.
+-- @warning [Internal]
 function ActiveRecord.restore_schema()
   local query = ActiveRecord.Database:select('ar_schema')
     query:callback(function(result, query, time)
@@ -70,7 +78,12 @@ function ActiveRecord.restore_schema()
   query:execute()
 end
 
--- Make sure to run this while the adapter is in "sync mode"
+--- Reads a value from the 'ar_metadata' key-value table.
+-- Make sure to run this while the adapter is in "sync mode", since asynchronous
+-- queries return nothing.
+-- @param key [String]
+-- @param default=nil [Any value to return if the key is not stored]
+-- @return [String/Any stored value, or default if the key is missing]
 function ActiveRecord.get_meta_key(key, default)
   local query = ActiveRecord.Database:select('ar_metadata')
     query:where('key', key)
@@ -85,6 +98,10 @@ function ActiveRecord.get_meta_key(key, default)
   return query:execute()
 end
 
+--- Writes a value to the 'ar_metadata' key-value table, updating the row if the key
+-- already exists.
+-- @param key [String]
+-- @param value [Any value to store, converted to a string]
 function ActiveRecord.set_meta_key(key, value)
   local query = ActiveRecord.Database:select('ar_metadata')
     query:where('key', key)
@@ -110,6 +127,21 @@ function ActiveRecord.set_meta_key(key, value)
   query:execute()
 end
 
+--- Defines the database table of a model. Meant to be used in migrations.
+-- The 'id' primary key and the 'created_at' / 'updated_at' columns are added
+-- automatically. The table is created right away (replacing an existing table with the
+-- same name), or queued until the schema is restored if ActiveRecord is not ready yet.
+-- ```
+-- ActiveRecord.define_model('users', function(t)
+--   t:string { 'steam_id', null = false }
+--   t:string { 'name', null = false }
+--   t:integer 'playtime'
+-- end)
+-- ```
+-- @param name [String table name, the lowercase plural of the model's class name]
+-- @param callback [Function receives the table definition, which has a method for every
+--   column type: primary_key, string, text, integer, float, decimal, datetime, timestamp,
+--   time, date, binary, boolean and json]
 function ActiveRecord.define_model(name, callback)
   local definition = function(t)
     t:primary_key 'id'
@@ -132,6 +164,17 @@ local adapter_aliases = {
   ['mysql']       = 'mysqloo'
 }
 
+--- Loads the database adapter named in the config and connects it to the database.
+-- Uses 'sqlite' if no adapter is named, and resolves the aliases 'postgresql', 'sqlite3'
+-- and 'mysql' (the config's adapter field is rewritten in that case).
+-- ```
+-- ActiveRecord.establish_connection {
+--   adapter = 'mysqloo', host = '127.0.0.1', port = 3306,
+--   user = 'username', password = 'password', database = 'flux_dev'
+-- }
+-- ```
+-- @param config [Hash database settings as found in config/database.yml: adapter, host,
+--   port, user, password, database, encoding, socket and flags]
 function ActiveRecord.establish_connection(config)
   local adapter = isstring(config.adapter) and config.adapter:lower() or 'sqlite'
 
@@ -150,6 +193,9 @@ function ActiveRecord.establish_connection(config)
   ActiveRecord.adapter:connect(config, ActiveRecord.Adapters.Abstract.on_connected)
 end
 
+--- Bootstraps ActiveRecord once the adapter is connected: creates the internal tables,
+-- restores the schema, runs pending migrations and fires the 'ActiveRecordReady' hook.
+-- @warning [Internal]
 function ActiveRecord.on_connected()
   Flux.dev_print 'ActiveRecord - Connected to the database!'
 
@@ -176,6 +222,9 @@ function ActiveRecord.on_connected()
   hook.run('ActiveRecordReady')
 end
 
+--- Drops the internal 'ar_schema' and 'ar_metadata' tables and, unless told otherwise,
+-- every table known to the schema. This destroys the stored data.
+-- @param meta_only=false [Boolean only drop the internal tables]
 function ActiveRecord.drop_schema(meta_only)
   if !meta_only then
     for k, v in pairs(ActiveRecord.schema) do
@@ -186,6 +235,8 @@ function ActiveRecord.drop_schema(meta_only)
   drop_table 'ar_metadata'
 end
 
+--- Drops all tables, recreates the internal ones and then restarts the current map.
+-- This destroys all data stored in the database.
 function ActiveRecord.recreate_schema()
   ActiveRecord.drop_schema()
 

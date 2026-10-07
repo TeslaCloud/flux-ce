@@ -10,7 +10,8 @@
 --   -- ...
 -- end
 -- ```
--- @return [Object(created module)]
+-- @param name [String module name in ConstantStyle, may be namespaced (e.g. 'Flux::Anim')]
+-- @return [Object created module]
 function mod(name)
   local parent = nil
   parent, name = name:parse_parent()

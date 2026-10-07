@@ -1,12 +1,14 @@
 local PANEL = {}
 PANEL.categories = {}
 
+--- Creates the HTML view and renders the help page into it.
 function PANEL:Init()
   self.html = vgui.Create('fl_html', self)
   self.html:Dock(FILL)
   self:rebuild()
 end
 
+--- Renders the help page again from the 'help' stylesheet, template and JavaScript.
 function PANEL:rebuild()
   self.html:set_css(render_stylesheet('help'))
   self.html:set_body(render_template('help'))
@@ -14,6 +16,8 @@ function PANEL:rebuild()
   self.html:render()
 end
 
+--- Returns the size the tab menu gives this panel when it opens it.
+-- @return [Number width, Number height]
 function PANEL:get_menu_size()
   return math.scale(1280), math.scale(900)
 end

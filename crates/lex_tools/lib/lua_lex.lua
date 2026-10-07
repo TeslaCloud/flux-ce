@@ -69,6 +69,10 @@ TK_tab        = string.byte '\t'
 TK_cr         = string.byte '\r'
 TK_lf         = string.byte '\n'
 
+--- Converts a token type to a readable string.
+-- @param tk [Number token type: a TK_* enumerator or a character code]
+-- @return [String 'TK_' followed by the token name, or the character for single-character
+--   tokens]
 function LuaLexer:visualize(tk)
   if tk > 255 then
     return 'TK_'..TK_TO_VISUAL[tk]
@@ -77,6 +81,23 @@ function LuaLexer:visualize(tk)
   end
 end
 
+--- Converts Lua (GLua) source code into a list of tokens.
+-- ```
+-- local tokens = LuaLexer:tokenize('local a = 1')
+--
+-- for k, v in ipairs(tokens) do
+--   print(LuaLexer:visualize(v.tk), v.val, v.line)
+-- end
+-- -- TK_local   local   1
+-- -- TK_name    a       1
+-- -- =          =       1
+-- -- TK_number  1       1
+-- ```
+-- @param input [String source code]
+-- @param extended=false [Boolean also emit tokens for spaces, tabs, semicolons and
+--   newlines]
+-- @return [Array<Hash> tokens with the fields tk (token type), val (text), line and pos;
+--   false if input is nil]
 function LuaLexer:tokenize(input, extended)
   local tokens = {}
   local buf = ''

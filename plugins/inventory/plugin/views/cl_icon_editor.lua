@@ -1,5 +1,7 @@
 local PANEL = {}
 
+--- Builds the icon editor: the adjustable model view with camera preset buttons,
+-- the item size sliders, the slot preview and the button that copies the item code.
 function PANEL:Init()
   local w, h = ScrW() * 0.5, ScrH() * 0.5
   self:SetSize(w, h)

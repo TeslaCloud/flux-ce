@@ -317,6 +317,11 @@ string.to_table = string.ToTable
 string.trim_left = string.TrimLeft
 string.trim_right = string.TrimRight
 string.trim = string.Trim
+--- Splits a string into pieces around a separator.
+-- Splits the string into individual characters if no separator is given.
+-- @param str [String string to split]
+-- @param sep='' [String separator]
+-- @return [Array<String> pieces]
 string.split = function(str, sep)
   sep = sep or ''
   return string.Split(str, sep)

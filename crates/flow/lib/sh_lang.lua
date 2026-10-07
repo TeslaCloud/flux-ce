@@ -25,6 +25,19 @@ do
     return false
   end
 
+  --- Translates a phrase to the current language. English is used if the language is not
+  -- available, and the phrase itself is returned if it has no translation. Line breaks
+  -- in the result are replaced with spaces.
+  -- ```
+  -- local text = t'ui.char_create.unknown_error'
+  -- -- Replaces {name} in the translated phrase.
+  -- local message = t('ui.char_create.delete_confirm_msg', { name = self.char_data.name })
+  -- ```
+  -- @param phrase [String phrase ID with its nesting separated by dots, or plain text]
+  -- @param args=nil [Hash/Any values to replace the {key} placeholders with, by key;
+  --   a single value replaces {1}]
+  -- @param force_lang=nil [String language code to use instead of the current language]
+  -- @return [String translated text, Number amount of line breaks that were replaced]
   function t(phrase, args, force_lang)
     args = istable(args) and args or { args }
 
@@ -39,10 +52,24 @@ do
   end
 end
 
+--- Returns all of the stored phrases.
+-- @return [Hash nested tables of phrases by language code]
 function Flux.Lang:all()
   return stored
 end
 
+--- Adds a phrase, or a table of phrases that is merged into the existing ones recursively.
+-- ```
+-- -- Makes t'my_plugin.greeting' available in English.
+-- Flux.Lang:add('en', {
+--   my_plugin = {
+--     greeting = 'Hello, {name}!'
+--   }
+-- })
+-- ```
+-- @param index [String language code, or the key of the phrase inside the reference table]
+-- @param value [String/Hash phrase or a nested table of phrases]
+-- @param reference=nil [Hash table to add to, all stored phrases by default]
 function Flux.Lang:add(index, value, reference)
   reference = reference or stored
 
@@ -57,6 +84,12 @@ function Flux.Lang:add(index, value, reference)
   end
 end
 
+--- Translates a phrase and puts it in plural form using the rules of the specified language.
+-- Languages define the rules with a pluralize function in their language table.
+-- @param language [String language code]
+-- @param phrase [String phrase ID]
+-- @param count [Number amount of things, for languages with several plural forms]
+-- @return [String]
 function Flux.Lang:get_plural(language, phrase, count)
   local lang_table = stored[language]
   local translated = t(phrase)
@@ -76,6 +109,10 @@ function Flux.Lang:get_plural(language, phrase, count)
   return translated
 end
 
+--- Converts an amount of seconds into human readable text, such as '2 hours from now'.
+-- @param time [Number/String seconds from now]
+-- @param lang=nil [String language code, the current language by default]
+-- @return [String]
 function Flux.Lang:nice_time(time, lang)
   lang = lang or current_language
 
@@ -86,6 +123,12 @@ function Flux.Lang:nice_time(time, lang)
   return Time:format_nice(Time:nice_from_now(DateTime:now() + Time:seconds(time)), lang)
 end
 
+--- Translates a phrase and puts it in a grammatical case using the rules of the specified
+-- language. Languages define the rules with a get_case function in their language table.
+-- @param language [String language code]
+-- @param phrase [String phrase ID]
+-- @param case [String grammatical case]
+-- @return [String]
 function Flux.Lang:get_case(language, phrase, case)
   if language == 'en' then return t(phrase) end
 
@@ -101,6 +144,9 @@ function Flux.Lang:get_case(language, phrase, case)
   return translated
 end
 
+--- Returns the language of a player.
+-- @param player [Player]
+-- @return [String language code, 'en' if the player is not valid or has not sent it yet]
 function Flux.Lang:get_player_lang(player)
   if !IsValid(player) then return 'en' end
 
@@ -108,6 +154,12 @@ function Flux.Lang:get_player_lang(player)
 end
 
 if CLIENT then
+  --- Translates a phrase and puts it in plural form using the rules of the game's language.
+  -- Clientside only.
+  -- @param phrase [String phrase ID]
+  -- @param count [Number amount of things]
+  -- @return [String]
+  -- @see [Flux.Lang#get_plural]
   function Flux.Lang:pluralize(phrase, count)
     local lang = GetConVar('gmod_language'):GetString()
 
@@ -116,6 +168,12 @@ if CLIENT then
     end
   end
 
+  --- Translates a phrase and puts it in a grammatical case using the rules of the game's
+  -- language. Clientside only.
+  -- @param phrase [String phrase ID]
+  -- @param case [String grammatical case]
+  -- @return [String]
+  -- @see [Flux.Lang#get_case]
   function Flux.Lang:case(phrase, case)
     local lang = GetConVar('gmod_language'):GetString()
 

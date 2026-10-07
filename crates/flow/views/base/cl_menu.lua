@@ -3,11 +3,15 @@ PANEL.icon = nil
 PANEL.icon_w = 16
 PANEL.icon_h = 16
 
+--- Applies the theme's menu font and text color to the item.
 function PANEL:Init()
   self:SetFont(Theme.get_font('main_menu_small'))
   self:SetTextColor(Theme.get_color('text'))
 end
 
+--- Draws the background of the item, lightened while hovered, and its icon if one is set.
+-- @param w [Number panel width]
+-- @param h [Number panel height]
 function PANEL:Paint(w, h)
   local col = Theme.get_color('background')
 
@@ -22,6 +26,9 @@ function PANEL:Paint(w, h)
   end
 end
 
+--- Calls DoClick on a left or right click, then forwards to DButton.OnMouseReleased.
+-- @param mouse [Number mouse button code, one of the MOUSE_ enums]
+-- @return [Any result of DButton.OnMouseReleased, normally nil]
 function PANEL:OnMousePressed(mouse)
   if mouse == MOUSE_RIGHT or mouse == MOUSE_LEFT then
     if self.DoClick then
@@ -32,10 +39,15 @@ function PANEL:OnMousePressed(mouse)
   return DButton.OnMouseReleased(self, mouse)
 end
 
+--- Sets the icon drawn on the left side of the item.
+-- @param icon [String path of the material, as accepted by util.get_material]
 function PANEL:set_icon(icon)
   self.icon = util.get_material(icon)
 end
 
+--- Sets the size the icon is drawn at.
+-- @param w [Number width in pixels]
+-- @param h=w [Number height in pixels]
 function PANEL:set_icon_size(w, h)
   h = h or w
 
@@ -50,6 +62,8 @@ PANEL.last = 0
 PANEL.option_height = 32
 PANEL.count = 0
 
+--- Makes the menu and all of its options as wide as the widest option and as tall as the
+-- options combined, capped at 75% of the screen height.
 function PANEL:PerformLayout()
   local w = 0
 
@@ -82,10 +96,17 @@ function PANEL:PerformLayout()
   self:SetKeyboardInputEnabled(true)
 end
 
+--- Tells the Derma menu system to remove this menu when menus are closed.
+-- @return [Boolean always true]
 function PANEL:GetDeleteSelf()
   return true
 end
 
+--- Opens the menu as a popup at the given screen position and registers it to be closed
+-- together with other Derma menus.
+-- @param x=gui.MouseX() [Number]
+-- @param y=gui.MouseY() [Number]
+-- @return [Panel the menu itself]
 function PANEL:open(x, y)
   x = x or gui.MouseX()
   y = y or gui.MouseY()
@@ -106,6 +127,21 @@ function PANEL:open(x, y)
   return self
 end
 
+--- Adds a clickable option to the bottom of the menu.
+-- ```
+-- local item_menu = vgui.Create('fl_menu')
+--
+-- local use_button = item_menu:add_option(t(item_obj:get_use_text()), function()
+--   item_obj:do_menu_action('on_use')
+-- end)
+--
+-- use_button:SetIcon(item_obj.use_icon or 'icon16/accept.png')
+--
+-- item_menu:open()
+-- ```
+-- @param name [String text of the option]
+-- @param callback=nil [Function called with the option's panel when it is clicked]
+-- @return [Panel the created fl_menu_item]
 function PANEL:add_option(name, callback)
   local w, h = self:GetSize()
 
@@ -130,6 +166,9 @@ function PANEL:add_option(name, callback)
   return panel
 end
 
+--- Adds a thin horizontal divider below the last option.
+-- @param px=1 [Number height of the divider in pixels]
+-- @return [Panel the created divider]
 function PANEL:add_spacer(px)
   px = px or 1
 

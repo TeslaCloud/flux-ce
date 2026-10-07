@@ -6,10 +6,14 @@ ITEM.height = 1
 ITEM.stackable = true
 ITEM.max_stack = 8
 
+--- Returns the camera setup for the inventory icon of the test item.
+-- @return [Hash table with origin (Vector), angles (Angle) and fov (Number) fields]
 function ITEM:get_icon_data()
   return { origin = Vector(0, 200, 0), angles = Angle(0.5, 270, -3), fov = 5 }
 end
 
+--- Called on the server when a player uses the item. Prints a message to the console.
+-- @param player [Player]
 function ITEM:on_use(player)
   print('player used item!')
 end

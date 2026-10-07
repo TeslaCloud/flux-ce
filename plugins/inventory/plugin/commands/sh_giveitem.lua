@@ -7,6 +7,11 @@ CMD.arguments = 2
 CMD.player_arg = 1
 CMD.aliases = { 'chargiveitem', 'plygiveitem' }
 
+--- Gives the specified amount of an item to every target and notifies the staff about it.
+-- @param player [Player the player who ran the command]
+-- @param targets [Array<Player> players to give the item to]
+-- @param item_name [String id or name of the item]
+-- @param amount=1 [String/Number amount of items to give; converted to a number]
 function CMD:on_run(player, targets, item_name, amount)
   local item_obj = Item.find(item_name)
   amount = tonumber(amount) or 1

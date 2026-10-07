@@ -5,6 +5,7 @@ require_relative 'sv_plugin'
 require_relative 'sv_hooks'
 require_relative 'sh_enums'
 
+--- Registers the 'character' condition, which compares a player's active character ID.
 function Characters:RegisterConditions()
   Conditions:register_condition('character', {
     name = 'condition.character.name',

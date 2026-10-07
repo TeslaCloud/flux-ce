@@ -14,6 +14,9 @@
 class 'Tool'
 Tool.is_flux_tool = true
 
+--- Draws the scrolling name of the tool on the screen of the tool gun.
+-- @param w [Number width of the screen]
+-- @param h [Number height of the screen]
 function Tool:DrawToolScreen(w, h)
   surface.SetFont('GModToolScreen')
 
@@ -39,10 +42,17 @@ function Tool:DrawToolScreen(w, h)
   end
 end
 
+--- Returns the translated description of the tool.
+-- @return [String]
 function Tool:GetHelpText()
   return t('tool.'..self.id..'.desc')
 end
 
+--- Creates a translucent ghost prop that previews the result of the tool, replacing
+-- the previous one. Ragdolls and effects cannot be ghosts.
+-- @param model [String path to the model]
+-- @param pos [Vector]
+-- @param angle [Angle]
 function Tool:MakeGhostEntity(model, pos, angle)
   util.PrecacheModel(model)
 
@@ -80,6 +90,8 @@ function Tool:MakeGhostEntity(model, pos, angle)
   self.GhostEntity:SetColor(Color(255, 255, 255, 150))
 end
 
+--- Creates a ghost entity that copies the model, position and angles of the specified entity.
+-- @param ent [Entity]
 function Tool:StartGhostEntity(ent)
   if SERVER and !game.SinglePlayer() then return end
   if CLIENT and game.SinglePlayer() then return end
@@ -87,6 +99,7 @@ function Tool:StartGhostEntity(ent)
   self:MakeGhostEntity(ent:GetModel(), ent:GetPos(), ent:GetAngles())
 end
 
+--- Removes the ghost entity of the tool.
 function Tool:ReleaseGhostEntity()
   if self.GhostEntity then
     if !IsValid(self.GhostEntity) then self.GhostEntity = nil return end
@@ -114,6 +127,8 @@ function Tool:ReleaseGhostEntity()
   end
 end
 
+--- Moves the ghost entity to where the first selected object would end up if the tool
+-- was applied to the spot the owner is aiming at.
 function Tool:UpdateGhostEntity()
   if self.GhostEntity == nil then return end
   if !IsValid(self.GhostEntity) then self.GhostEntity = nil return end
@@ -133,31 +148,40 @@ function Tool:UpdateGhostEntity()
   self.GhostEntity:SetPos(target_pos)
 end
 
+--- Sets the stage of the tool to the number of selected objects.
 function Tool:UpdateData()
   self:SetStage(self:NumObjects())
 end
 
+--- Sets the stage of the tool and networks it to the clients. Does nothing on the client.
+-- @param i [Number]
 function Tool:SetStage(i)
   if SERVER then
     self:GetWeapon():SetNWInt('Stage', i, true)
   end
 end
 
+--- Returns the current stage of the tool.
+-- @return [Number]
 function Tool:GetStage()
   return self:GetWeapon():GetNWInt('Stage', 0)
 end
 
+--- Sets the operation of the tool and networks it to the clients. Does nothing on the client.
+-- @param i [Number]
 function Tool:SetOperation(i)
   if SERVER then
     self:GetWeapon():SetNWInt('Op', i, true)
   end
 end
 
+--- Returns the current operation of the tool.
+-- @return [Number]
 function Tool:GetOperation()
   return self:GetWeapon():GetNWInt('Op', 0)
 end
 
--- Clear the selected objects
+--- Clears the selected objects, removes the ghost entity and resets the stage and operation.
 function Tool:ClearObjects()
   self:ReleaseGhostEntity()
   self.Objects = {}
@@ -165,12 +189,18 @@ function Tool:ClearObjects()
   self:SetOperation(0)
 end
 
+--- Returns the entity of the numbered hit.
+-- @param i [Number index of the selected object]
+-- @return [Entity the entity, NULL if there is no object with this index]
 function Tool:GetEnt(i)
   if !self.Objects[i] then return NULL end
 
   return self.Objects[i].Ent
 end
 
+--- Returns the world position of the numbered hit.
+-- @param i [Number index of the selected object]
+-- @return [Vector]
 function Tool:GetPos(i)
   if self.Objects[i].Ent:EntIndex() == 0 then
     return self.Objects[i].Pos
@@ -183,16 +213,23 @@ function Tool:GetPos(i)
   end
 end
 
--- Returns the local position of the numbered hit
+--- Returns the position of the numbered hit local to the entity that was hit.
+-- @param i [Number index of the selected object]
+-- @return [Vector]
 function Tool:GetLocalPos(i)
   return self.Objects[i].Pos
 end
 
--- Returns the physics bone number of the hit (ragdolls)
+--- Returns the physics bone number of the numbered hit (for ragdolls).
+-- @param i [Number index of the selected object]
+-- @return [Number]
 function Tool:GetBone(i)
   return self.Objects[i].Bone
 end
 
+--- Returns the surface normal of the numbered hit in world space.
+-- @param i [Number index of the selected object]
+-- @return [Vector]
 function Tool:GetNormal(i)
   if self.Objects[i].Ent:EntIndex() == 0 then
     return self.Objects[i].Normal
@@ -208,7 +245,9 @@ function Tool:GetNormal(i)
   end
 end
 
--- Returns the physics object for the numbered hit
+--- Returns the physics object of the numbered hit.
+-- @param i [Number index of the selected object]
+-- @return [PhysObj]
 function Tool:GetPhys(i)
   if self.Objects[i].Phys == nil then
     return self:GetEnt(i):GetPhysicsObject()
@@ -217,7 +256,14 @@ function Tool:GetPhys(i)
   return self.Objects[i].Phys
 end
 
--- Sets a selected object
+--- Stores a selected object. The position and the normal are converted to be local to the
+-- physics object (or the entity), so that they stay valid when it moves.
+-- @param i [Number index to store the object under]
+-- @param ent [Entity the entity that was hit]
+-- @param pos [Vector world position of the hit]
+-- @param phys [PhysObj physics object that was hit]
+-- @param bone [Number physics bone number]
+-- @param norm [Vector surface normal of the hit]
 function Tool:SetObject(i, ent, pos, phys, bone, norm)
   self.Objects[i] = {}
   self.Objects[i].Ent = ent
@@ -247,7 +293,8 @@ function Tool:SetObject(i, ent, pos, phys, bone, norm)
   end
 end
 
--- Returns the number of objects in the list
+--- Returns the number of selected objects. On the client this is the stage of the tool.
+-- @return [Number]
 function Tool:NumObjects()
   if CLIENT then
     return self:GetStage()
@@ -257,16 +304,19 @@ function Tool:NumObjects()
 end
 
 if CLIENT then
-  -- Tool should return true if freezing the view angles
+  --- Determines whether the view angles of the owner should be frozen while using the tool.
+  -- Returns false by default.
+  -- @return [Boolean]
   function Tool:FreezeMovement()
     return false
   end
 
-  -- The tool's opportunity to draw to the HUD
+  --- Gives the tool an opportunity to draw to the HUD. Does nothing by default.
   function Tool:DrawHUD()
   end
 end
 
+--- Creates a new tool with the default values of its fields.
 function Tool:init()
   self.Mode          = nil
   self.SWEP          = nil
@@ -280,6 +330,8 @@ function Tool:init()
   self.AllowedCVar   = 0
 end
 
+--- Creates the console variables of the tool: the ones listed in ClientConVar on the client,
+-- and 'toolmode_allow_<mode>' on the server.
 function Tool:CreateConVars()
   local mode = self:GetMode()
 
@@ -296,11 +348,16 @@ function Tool:CreateConVars()
   end
 end
 
+--- Returns the value of a console variable of the tool.
+-- @param property [String name of the variable without the tool mode prefix]
+-- @return [String]
 function Tool:GetServerInfo(property)
   local mode = self:GetMode()
   return GetConVarString(mode..'_'..property)
 end
 
+--- Builds a list of the client console variables of the tool with their defaults.
+-- @return [Hash default values by full variable name]
 function Tool:BuildConVarList()
   local mode = self:GetMode()
   local convars = {}
@@ -310,14 +367,23 @@ function Tool:BuildConVarList()
   return convars
 end
 
+--- Returns the value of a client console variable of the tool for its owner.
+-- @param property [String name of the variable without the tool mode prefix]
+-- @return [String]
 function Tool:GetClientInfo(property)
   return self:GetOwner():GetInfo(self:GetMode()..'_'..property)
 end
 
+--- Returns the value of a client console variable of the tool for its owner as a number.
+-- @param property [String name of the variable without the tool mode prefix]
+-- @param default=0 [Number returned if the variable is not a number]
+-- @return [Number]
 function Tool:GetClientNumber(property, default)
   return self:GetOwner():GetInfoNum(self:GetMode()..'_'..property, tonumber(default) or 0)
 end
 
+--- Checks whether the tool is allowed to be used on the server. Always true on the client.
+-- @return [Boolean]
 function Tool:Allowed()
   if CLIENT then return true end
 
@@ -325,25 +391,53 @@ function Tool:Allowed()
 end
 
 -- Now for all the Tool redirects
+
+--- Called when the tool gun initializes the tool. Does nothing by default.
 function Tool:Init()
 end
 
+--- Returns the mode (ID) of the tool.
+-- @return [String]
 function Tool:GetMode()     return self.Mode end
+
+--- Returns the tool gun that this tool belongs to.
+-- @return [Weapon]
 function Tool:GetSWEP()     return self.SWEP end
+
+--- Returns the player who holds the tool gun.
+-- @return [Player]
 function Tool:GetOwner()    return self:GetSWEP().Owner or self.Owner end
+
+--- Returns the weapon entity of the tool gun.
+-- @return [Weapon]
 function Tool:GetWeapon()   return self:GetSWEP().Weapon or self.Weapon end
 
+--- Called when the owner presses primary attack. Returns false by default.
+-- @return [Boolean false, overrides should return true if the tool has done something]
 function Tool:LeftClick()   return false end
+
+--- Called when the owner presses secondary attack. Returns false by default.
+-- @return [Boolean false, overrides should return true if the tool has done something]
 function Tool:RightClick()  return false end
+
+--- Called when the owner presses reload. Clears the selected objects by default.
 function Tool:Reload()      self:ClearObjects() end
+
+--- Called when the tool gun is deployed. Removes the ghost entity by default.
 function Tool:Deploy()      self:ReleaseGhostEntity() return end
+
+--- Called when the tool gun is holstered. Removes the ghost entity by default.
 function Tool:Holster()     self:ReleaseGhostEntity() return end
+
+--- Called every tick while the tool is active. Removes the ghost entity by default.
 function Tool:Think()       self:ReleaseGhostEntity() end
 
 --[[---------------------------------------------------------
   Checks the objects before any action is taken
   This is to make sure that the entities haven't been removed
 -----------------------------------------------------------]]
+
+--- Clears the selected objects if any of their entities has been removed.
 function Tool:CheckObjects()
   for k, v in pairs(self.Objects) do
     if !v.Ent:IsWorld() and !v.Ent:IsValid() then
@@ -352,6 +446,8 @@ function Tool:CheckObjects()
   end
 end
 
+--- Converts the tool to a string for printing.
+-- @return [String]
 function Tool:__tostring()
   return '#<Tool:'..(self.id or 'Unknown')..'>'
 end

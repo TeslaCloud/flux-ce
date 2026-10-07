@@ -7,6 +7,10 @@ PANEL.icon = nil
 PANEL.icon_material = nil
 PANEL.rotated = false
 
+--- Draws the slot: its background, the drag and drop highlight and the slot icon.
+-- Calls the paint_slot callback of the item afterwards.
+-- @param w [Number]
+-- @param h [Number]
 function PANEL:Paint(w, h)
   local draw_color = Color(30, 30, 30, 100)
   local drop_slot = Flux.inventory_drop_slot
@@ -98,6 +102,10 @@ function PANEL:Paint(w, h)
   end
 end
 
+--- Draws the amount of items in the stack and the number of the slot.
+-- Calls the paint_over_slot callback of the item afterwards.
+-- @param w [Number]
+-- @param h [Number]
 function PANEL:PaintOver(w, h)
   if self.item_count >= 2 then
     DisableClipping(true)
@@ -120,6 +128,8 @@ function PANEL:PaintOver(w, h)
   end
 end
 
+--- Remembers the slot as the one that the item is being dragged from.
+-- @param ... [Vararg arguments passed on to the base panel]
 function PANEL:OnMousePressed(...)
   self.mouse_pressed = CurTime()
   Flux.inventory_drag_slot = self
@@ -127,6 +137,8 @@ function PANEL:OnMousePressed(...)
   self.BaseClass.OnMousePressed(self, ...)
 end
 
+--- Opens the menu of the item if the slot was clicked rather than dragged.
+-- @param ... [Vararg arguments passed on to the base panel]
 function PANEL:OnMouseReleased(...)
   local x, y = self:LocalToScreen(0, 0)
   local w, h = self:GetSize()
@@ -142,6 +154,8 @@ function PANEL:OnMouseReleased(...)
   self.BaseClass.OnMouseReleased(self, ...)
 end
 
+--- Sets the item that the slot displays.
+-- @param instance_id [Number/Array<Number> instance id, or instance ids of a stack of items]
 function PANEL:set_item(instance_id)
   if istable(instance_id) then
     if #instance_id > 1 then
@@ -166,6 +180,9 @@ function PANEL:set_item(instance_id)
   end
 end
 
+--- Sets the stack of items that the slot displays.
+-- Does nothing if the items are not stackable.
+-- @param ids [Array<Number> instance ids of the items in the stack]
 function PANEL:set_item_multi(ids)
   local item_data = Item.find_instance_by_id(ids[1])
 
@@ -178,6 +195,8 @@ function PANEL:set_item_multi(ids)
   self:rebuild()
 end
 
+--- Moves the items from the stack of another slot to this one, as many as the stack can fit.
+-- @param panel2 [Panel the fl_inventory_item panel to take the items from]
 function PANEL:combine(panel2)
   for i = 1, #panel2.instance_ids do
     if #self.instance_ids < self.item_data.max_stack then
@@ -198,6 +217,7 @@ function PANEL:combine(panel2)
   end
 end
 
+--- Empties the slot and makes it undraggable.
 function PANEL:reset()
   self.instance_ids = {}
   self.item_data = nil
@@ -208,6 +228,8 @@ function PANEL:reset()
   self:undraggable()
 end
 
+--- Recreates the icon or the model of the item along with its tooltip.
+-- Makes the slot draggable only if it has an item.
 function PANEL:rebuild()
   if !self.item_data then
     self:undraggable()
@@ -281,6 +303,8 @@ function PANEL:rebuild()
   self:SetToolTip(t(self.item_data:get_name())..'\n'..t(self.item_data:get_description()))
 end
 
+--- Returns the size of the item in a number of slots, considering its rotation.
+-- @return [Number width, Number height; 1, 1 if the slot is empty]
 function PANEL:get_item_size()
   if self.item_data then
     if !self:is_rotated() then
@@ -293,18 +317,25 @@ function PANEL:get_item_size()
   return 1, 1
 end
 
+--- Returns the position of the slot in the inventory.
+-- @return [Number x, Number y]
 function PANEL:get_item_pos()
   return self.slot_x, self.slot_y
 end
 
+--- Returns the id of the inventory that the slot belongs to.
+-- @return [Number]
 function PANEL:get_inventory_id()
   return self.inventory_id
 end
 
+--- Checks if the inventory that the slot belongs to is multislot.
+-- @return [Boolean]
 function PANEL:is_multislot()
   return self.multislot
 end
 
+--- Rotates the item in the slot, swapping the width and the height of the panel.
 function PANEL:turn()
   local w, h = self:GetSize()
   self:SetWidth(h)
@@ -313,10 +344,14 @@ function PANEL:turn()
   self:rebuild()
 end
 
+--- Checks if the item in the slot is displayed rotated.
+-- @return [Boolean]
 function PANEL:is_rotated()
   return self.rotated
 end
 
+--- Checks if the item has been rotated in the panel since it was placed in the inventory.
+-- @return [Boolean]
 function PANEL:was_rotated()
   return self.rotated != self.item_data.rotated
 end

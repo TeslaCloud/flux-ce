@@ -12,6 +12,7 @@ function Inventories.all()
 end
 
 --- Finds a specific inventory by its id.
+-- @param id [Number]
 -- @return [Inventory]
 function Inventories.find(id)
   return stored[id]
@@ -39,7 +40,7 @@ do
   --   @param inv_type [String]
   -- Will return items from all the inventories that player has.
   -- @variant player_meta:get_items()
-  -- @return [Hash items]
+  -- @return [Array<Item> items]
   function player_meta:get_items(inv_type)
     if inv_type then
       return self:get_inventory(inv_type):get_items()
@@ -60,7 +61,7 @@ do
   --   @param inv_type [String]
   -- Will return item ids from all the inventories that player has.
   -- @variant player_meta:get_items_ids()
-  -- @return [Hash numbers]
+  -- @return [Array<Number> numbers; the inv_type variant returns the Inventory itself instead]
   function player_meta:get_items_ids(inv_type)
     if inv_type then
       return self:get_inventory(inv_type)
@@ -79,7 +80,7 @@ do
   -- @param x [Number]
   -- @param y [Number]
   -- @param inv_type [String]
-  -- @return [Hash numbers]
+  -- @return [Array<Number> numbers]
   function player_meta:get_slot(x, y, inv_type)
     return self:get_inventory(inv_type):get_slot(x, y)
   end
@@ -147,7 +148,7 @@ do
   -- Will return items from all the inventories that player has.
   -- @variant player_meta:find_items(id)
   --   @param id [String]
-  -- @return [Hash items]
+  -- @return [Array<Item> items]
   function player_meta:find_items(id, inv_type)
     if inv_type then
       return self:get_inventory(inv_type):find_items(id)
@@ -170,7 +171,7 @@ do
   -- Will check all the inventories that player has.
   -- @variant player_meta:has_item(id)
   --   @param id [String]
-  -- @return [Boolean]
+  -- @return [Boolean, Item found item]
   function player_meta:has_item(id, inv_type)
     if inv_type then
       return self:get_inventory(inv_type):has_item(id)
@@ -195,7 +196,7 @@ do
   -- Will check all the inventories that player has.
   -- @variant player_meta:has_item_by_id(instance_id)
   --   @param instance_id [Number]
-  -- @return [Boolean]
+  -- @return [Boolean, Item found item]
   function player_meta:has_item_by_id(instance_id, inv_type)
     if inv_type then
       return self:get_inventory(inv_type):has_item_by_id(instance_id)
@@ -213,8 +214,8 @@ do
   end
 
   --- Checking if the player has certain item equipped by its id.
-  -- @param id [Number]
-  -- @return [Boolean]
+  -- @param id [String]
+  -- @return [Boolean, Item found item]
   function player_meta:has_item_equipped(id)
     local item_obj = self:find_item(id)
 
@@ -335,7 +336,7 @@ do
 
     --- Give the player certain item by its instance id.
     -- @param instance_id [Number]
-    -- @param inv_type [String]
+    -- @param inv_type=player.default_inventory or 'main_inventory' [String]
     -- @return [Boolean was the item added successfully, String text of the error that occurred]
     function player_meta:add_item_by_id(instance_id, inv_type)
       return self:add_item(Item.find_instance_by_id(instance_id), inv_type)
@@ -351,8 +352,8 @@ do
     -- end
     -- ```
     -- @param id [String]
-    -- @param amount [Number]
-    -- @param data [Hash]
+    -- @param amount=1 [Number]
+    -- @param data=nil [Hash fields to override on the created items]
     -- @param inv_type=player.default_inventory or 'main_inventory' [String]
     -- @return [Boolean was the item added successfully, String text of the error that occurred]
     function player_meta:give_item(id, amount, data, inv_type)
@@ -398,12 +399,12 @@ do
 
     --- Takes specified amount of items from the player.
     -- Takes items only from the specified inventory.
-    -- @variant player_meta:take_item(id, inv_type)
+    -- @variant player_meta:take_items(id, amount, inv_type)
     --   @param id [String]
     --   @param amount [Number]
     --   @param inv_type [String]
     -- Takes items from the inventory that has it.
-    -- @variant player_meta:take_item(id)
+    -- @variant player_meta:take_items(id, amount)
     --   @param id [String]
     --   @param amount [Number]
     -- @return [Boolean have the items been taken successfully, String text of the error that occurred]
@@ -435,11 +436,11 @@ do
 
     --- Takes one specified item from the player.
     -- Takes item only from the specified inventory.
-    -- @variant player_meta:take_item(id, inv_type)
+    -- @variant player_meta:take_item_by_id(instance_id, inv_type)
     --   @param instance_id [Number]
     --   @param inv_type [String]
     -- Takes item from the inventory that has it.
-    -- @variant player_meta:take_item(id)
+    -- @variant player_meta:take_item_by_id(instance_id)
     --   @param instance_id [Number]
     -- @return [Boolean was the item taken successfully, String text of the error that occurred]
     function player_meta:take_item_by_id(instance_id, inv_type)
@@ -468,6 +469,15 @@ do
 
     --- Transfers item to a specified inventory of the player.
     -- Takes item only from the specified inventory.
+    -- Does nothing and returns nothing if the item is in that inventory already.
+    -- ```
+    -- -- Puts the item on the player's hotbar.
+    -- local success, error_text = player:transfer_item(item_obj.instance_id, 'hotbar')
+    --
+    -- if success == false then
+    --   player:notify(error_text)
+    -- end
+    -- ```
     -- @param instance_id [Number]
     -- @param inv_type [String]
     -- @return [Boolean was the item transferred successfully, String text of the error that occurred]

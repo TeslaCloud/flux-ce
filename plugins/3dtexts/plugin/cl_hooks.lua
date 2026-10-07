@@ -1,6 +1,8 @@
 local blur_texture = Material('pp/blurscreen')
 local color_white = Color(255, 255, 255)
 
+--- Draws every placed 3D text and picture within fade range of the local player,
+-- plus a placement preview while the texts or pictures tool is equipped.
 function SurfaceText:PostDrawOpaqueRenderables()
   if !IsValid(PLAYER) then return end
 
@@ -152,6 +154,8 @@ function SurfaceText:PostDrawOpaqueRenderables()
   end
 end
 
+--- Draws a translucent preview of the text configured in the texts tool
+-- at the spot the local player is looking at.
 function SurfaceText:draw_text_preview()
   local tool = PLAYER:GetTool()
   local text = tool:GetClientInfo('text')
@@ -196,6 +200,8 @@ function SurfaceText:draw_text_preview()
   cam.End3D2D()
 end
 
+--- Draws a preview of the picture configured in the pictures tool at the spot the local
+-- player is looking at. A red box is drawn instead if the URL is not a png or jpg image.
 function SurfaceText:draw_picture_preview()
   local tool = PLAYER:GetTool()
   local url = tool:GetClientInfo('url')

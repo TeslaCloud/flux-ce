@@ -5,10 +5,52 @@ local title_types = Doors.title_types or {}
 Doors.properties = properties
 Doors.title_types = title_types
 
+--- Registers a door property that is saved together with the door
+-- and can optionally be edited in the door menu.
+-- ```
+-- Doors:register_property('name', {
+--   -- Returns the value to save. Also provides the value displayed in the door menu.
+--   get_save_data = function(entity)
+--     return entity:get_nv('fl_name', '')
+--   end,
+--   -- Serverside. Applies a value that was loaded or changed in the door menu.
+--   on_load = function(entity, data)
+--     entity:set_nv('fl_name', data)
+--   end,
+--   -- Optional, clientside. Creates and returns the row for the door menu.
+--   create_panel = function(entity, panel)
+--     local name = panel.properties:CreateRow(t'door.categories.general', t'door.properties.name')
+--     name:Setup('Generic')
+--
+--     return name
+--   end
+-- })
+-- ```
+-- @param id [String unique property id, also the key the value is saved under]
+-- @param data [Hash property definition: get_save_data(entity), on_load(entity, data)
+--   and the optional create_panel(entity, panel)]
 function Doors:register_property(id, data)
   properties[id] = data
 end
 
+--- Registers a way to draw the title of a door, selectable in the door menu.
+-- ```
+-- Doors:register_title_type('plain', {
+--   name = 'door.title_type.plain',
+--   -- Called in a 3D2D context that is centered on a face of the door.
+--   draw = function(entity, w, h, alpha)
+--     local text = entity:get_nv('fl_name')
+--     local font = Theme.get_font('text_3d2d')
+--     local text_w, text_h = util.text_size(text, font)
+--
+--     draw.SimpleText(text, font, -text_w / 2, -h / 4 - text_h / 2, color_white:alpha(alpha))
+--   end
+--   -- An optional draw_back function with the same arguments draws the back face.
+-- })
+-- ```
+-- @param id [String unique title type id]
+-- @param data [Hash title type definition: name (phrase), draw(entity, w, h, alpha)
+--   and the optional draw_back(entity, w, h, alpha)]
 function Doors:register_title_type(id, data)
   title_types[id] = data
 end
@@ -19,10 +61,13 @@ require_relative 'cl_plugin'
 require_relative 'sv_hooks'
 require_relative 'sv_plugin'
 
+--- Registers the 'manage_doors' level design permission.
 function Doors:RegisterPermissions()
   Bolt:register_permission('manage_doors', 'Doors settings access', 'Grants access to customize doors.', 'permission.categories.level_design', 'assistant')
 end
 
+--- Runs the RegisterDoorProperties and RegisterDoorTitleTypes hooks so that plugins can
+-- register their door properties and title types.
 function Doors:OnPluginsLoaded()
   hook.run('RegisterDoorProperties')
   hook.run('RegisterDoorTitleTypes')

@@ -1,3 +1,5 @@
+--- Called by Crate once the package has been included.
+-- Sends the minified library to clients and loads Cable into the global of the same name.
 function CRATE:__installed__()
   AddCSLuaFile(self.__path__..'lib/cable.min.lua')
 

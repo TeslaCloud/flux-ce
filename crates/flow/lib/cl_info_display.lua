@@ -8,6 +8,25 @@ local last_x        = 0
 local white         = Color(255, 255, 255)
 local back_color    = Color(40, 40, 40, 120)
 
+--- Adds an icon to the HUD info display. The icon is filled from the bottom
+-- according to its percentage, and is hidden while the percentage is outside
+-- of the (min_percentage, max_percentage) range.
+-- ```
+-- InfoDisplay:add('armor', {
+--   icon = 'fa-shield-alt',
+--   min_percentage = 2,
+--   max_percentage = 101,
+--   size = 80,
+--   callback = function(data)
+--     data.percentage = (PLAYER:Armor() / 100) * 100
+--   end
+-- })
+-- ```
+-- @param id [String unique ID, converted with string.to_id]
+-- @param data [Hash settings: icon, size, color, back_color, percentage, min_percentage,
+--   max_percentage, offset_x, offset_y, and callback, which is called with this hash
+--   before every draw; missing keys get defaults]
+-- @return [InfoDisplay self, for chaining]
 function InfoDisplay:add(id, data)
   id                  = id:to_id()
 
@@ -29,20 +48,32 @@ function InfoDisplay:add(id, data)
   return self
 end
 
+--- Returns all of the registered info display icons.
+-- @return [Hash icon data by ID]
 function InfoDisplay:all()
   return stored
 end
 
+--- Removes an icon from the info display.
+-- @param id [String ID of the icon, exactly as it is stored]
+-- @return [InfoDisplay self, for chaining]
 function InfoDisplay:remove(id)
   stored[id] = nil
   return self
 end
 
+--- Sets the gap between the info display icons and the edges of the screen.
+-- @param val [Number margin in pixels]
+-- @return [InfoDisplay self, for chaining]
 function InfoDisplay:set_margin(val)
   margin = val
   return self
 end
 
+--- Draws a single info display icon after running its callback. Can be prevented
+-- with the 'PreDrawInfoDisplayItem' hook.
+-- @param info [Hash icon data, as stored by InfoDisplay#add]
+-- @return [Number horizontal offset for the next icon, 0 if nothing was drawn]
 function InfoDisplay:draw(info)
   if hook.run('PreDrawInfoDisplayItem', info) == nil then
     if isfunction(info.callback) then
@@ -85,6 +116,9 @@ function InfoDisplay:draw(info)
   return 0
 end
 
+--- Draws all of the registered info display icons next to each other. Can be prevented
+-- with the 'PreDrawInfoDisplay' hook.
+-- @return [InfoDisplay self, for chaining]
 function InfoDisplay:draw_all()
   if hook.run('PreDrawInfoDisplay', stored) == nil then
     for k, v in pairs(stored) do

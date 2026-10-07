@@ -11,6 +11,12 @@ hook._profiler_old_call = hook._profiler_old_call or hook.Call
 local metrics = {}
 local counts = {}
 
+--- Replaces hook.Call with a wrapper that measures the total run time and the number of
+-- calls of every hook. Only installed in development mode and when DBugR is not present.
+-- @param name [String hook name]
+-- @param gm [Hash gamemode table, or nil]
+-- @param ... [Vararg arguments of the hook]
+-- @return [Any up to six values returned by the original hook.Call]
 function hook.Call(name, gm, ...)
   local start_time = os.clock()
   local total_time = metrics[name] or 0
@@ -68,10 +74,15 @@ if CLIENT then
     counts = {}
   end)
 
+  --- Returns the profiler data: clientside data gathered since the last update from the
+  -- server, and the serverside data received with that update. Clientside only.
+  -- @return [Hash clientside run time in seconds by hook name, Hash clientside call counts
+  --   by hook name, Hash serverside run time by hook name, Hash serverside call counts]
   function Profiler:get_metrics()
     return metrics, counts, metrics_sv, counts_sv
   end
 
+  --- Draws the total hook run time and the slowest hook of the server and of the client.
   function Profiler:HUDPaint()
     local pos = ScrH() - 30
 
@@ -89,15 +100,23 @@ if CLIENT then
   PANEL.counts_sv = {}
   PANEL.lines = {}
 
+  --- Builds the hook list.
   function PANEL:Init()
     self:rebuild()
   end
 
+  --- Stores new profiler data and refreshes the hook list.
+  -- @param metrics [Hash clientside run time in seconds by hook name]
+  -- @param counts [Hash clientside call counts by hook name]
+  -- @param metrics_sv [Hash serverside run time in seconds by hook name]
+  -- @param counts_sv [Hash serverside call counts by hook name]
   function PANEL:update_metrics(metrics, counts, metrics_sv, counts_sv)
     self.metrics, self.counts, self.metrics_sv, self.counts_sv = metrics, counts, metrics_sv, counts_sv
     self:rebuild()
   end
 
+  --- Creates the list view if it is missing, then adds or updates one line per serverside
+  -- hook with its load in milliseconds and its call count.
   function PANEL:rebuild()
     if !IsValid(self.sv_list) then
       self.sv_list = vgui.Create('DListView', self)

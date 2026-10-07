@@ -3,6 +3,20 @@ mod 'Flux::Undo'
 local queue   = {}
 local buffer  = {}
 
+--- Starts a new undo entry. Add callbacks to it with Flux.Undo#add, assign it to a player
+-- and finish it to put it into the undo queue of that player.
+-- ```
+-- Flux.Undo:create('prop', 'Prop')
+-- Flux.Undo:add(function(obj, ent)
+--   if IsValid(ent) then
+--     ent:Remove()
+--   end
+-- end, entity)
+-- Flux.Undo:set_player(player)
+-- Flux.Undo:finish()
+-- ```
+-- @param id [String ID of the entry, entries can be removed by it]
+-- @param name [String name of the entry]
 function Flux.Undo:create(id, name)
   buffer = {
     id = id,
@@ -12,14 +26,21 @@ function Flux.Undo:create(id, name)
   }
 end
 
+--- Adds a function to call when the current undo entry is undone.
+-- @param callback [Function receives the undo entry (Hash), followed by the extra arguments]
+-- @param ... [Vararg extra arguments for the callback]
 function Flux.Undo:add(callback, ...)
   table.insert(buffer.functions, { func = callback, args = { ... } })
 end
 
+--- Sets the player that the current undo entry belongs to.
+-- @param player [Player]
 function Flux.Undo:set_player(player)
   buffer.player = player
 end
 
+--- Puts the current undo entry on top of its player's undo queue. The entry is discarded
+-- if it has no valid player.
 function Flux.Undo:finish()
   if istable(buffer) and IsValid(buffer.player) then
     queue[buffer.player] = queue[buffer.player] or {}
@@ -30,6 +51,9 @@ function Flux.Undo:finish()
   buffer = {}
 end
 
+--- Removes the undo entries with the specified ID from the undo queue of a player.
+-- @param player [Player]
+-- @param id [String ID the entries were created with]
 function Flux.Undo:remove(player, id)
   local queue_table = queue[player]
 
@@ -42,6 +66,8 @@ function Flux.Undo:remove(player, id)
   end
 end
 
+--- Calls all of the callbacks of an undo entry.
+-- @param obj [Hash undo entry]
 function Flux.Undo:execute(obj)
   if istable(obj) and istable(obj.functions) then
     for k, v in ipairs(obj.functions) do
@@ -54,6 +80,8 @@ function Flux.Undo:execute(obj)
   end
 end
 
+--- Undoes the most recent entry in the undo queue of a player and removes it from the queue.
+-- @param player [Player]
 function Flux.Undo:do_player(player)
   local count = (queue[player] and #queue[player]) or 0
 
@@ -64,6 +92,9 @@ function Flux.Undo:do_player(player)
   end
 end
 
+--- Returns the undo queue of a player.
+-- @param player [Player]
+-- @return [Array<Hash> undo entries, oldest first]
 function Flux.Undo:get_player(player)
   return queue[player] or {}
 end

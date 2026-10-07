@@ -305,15 +305,27 @@ SKIN.Colours.Category.LineAlt.Button_Selected = GWEN.TextureColor(4 + 8 * 25, 50
 
 SKIN.Colours.TooltipText                      = GWEN.TextureColor(4 + 8 * 26, 500)
 
+--- Paints the background of a panel, if it has one.
+-- @param panel [Panel the panel being painted]
+-- @param w [Number width of the panel]
+-- @param h [Number height of the panel]
 function SKIN:PaintPanel(panel, w, h)
   if !panel.m_bBackground then return end
   self.tex.Panels.Normal(0, 0, w, h, panel.m_bgColor)
 end
 
+--- Paints a drop shadow.
+-- @param panel [Panel the panel being painted]
+-- @param w [Number width of the panel]
+-- @param h [Number height of the panel]
 function SKIN:PaintShadow(panel, w, h)
   SKIN.tex.Shadow(0, 0, w, h)
 end
 
+--- Paints a window frame and its shadow, depending on whether the frame has focus.
+-- @param panel [Panel the panel being painted]
+-- @param w [Number width of the panel]
+-- @param h [Number height of the panel]
 function SKIN:PaintFrame(panel, w, h)
   if panel.m_bPaintShadow then
     DisableClipping(true)
@@ -328,6 +340,10 @@ function SKIN:PaintFrame(panel, w, h)
   end
 end
 
+--- Paints the background of a button according to its state.
+-- @param panel [Panel the panel being painted]
+-- @param w [Number width of the panel]
+-- @param h [Number height of the panel]
 function SKIN:PaintButton(panel, w, h)
   if !panel.m_bBackground then return end
 
@@ -346,12 +362,20 @@ function SKIN:PaintButton(panel, w, h)
   self.tex.Button(0, 0, w, h)
 end
 
+--- Paints the background of a tree view, if it has one.
+-- @param panel [Panel the panel being painted]
+-- @param w [Number width of the panel]
+-- @param h [Number height of the panel]
 function SKIN:PaintTree(panel, w, h)
   if !panel.m_bBackground then return end
 
   self.tex.Tree(0, 0, w, h, panel.m_bgColor)
 end
 
+--- Paints a checkbox according to whether it is checked and whether it is disabled.
+-- @param panel [Panel the panel being painted]
+-- @param w [Number width of the panel]
+-- @param h [Number height of the panel]
 function SKIN:PaintCheckBox(panel, w, h)
   if panel:GetChecked() then
     if panel:GetDisabled() then
@@ -368,6 +392,10 @@ function SKIN:PaintCheckBox(panel, w, h)
   end
 end
 
+--- Paints the plus or minus button that expands a tree node.
+-- @param panel [Panel the panel being painted]
+-- @param w [Number width of the panel]
+-- @param h [Number height of the panel]
 function SKIN:PaintExpandButton(panel, w, h)
   if !panel:GetExpanded() then
     self.tex.TreePlus(0, 0, w, h)
@@ -376,6 +404,10 @@ function SKIN:PaintExpandButton(panel, w, h)
   end
 end
 
+--- Paints the background of a text entry according to its state, then draws its text.
+-- @param panel [Panel the panel being painted]
+-- @param w [Number width of the panel]
+-- @param h [Number height of the panel]
 function SKIN:PaintTextEntry(panel, w, h)
   if panel.m_bBackground then
     if panel:GetDisabled() then
@@ -390,6 +422,10 @@ function SKIN:PaintTextEntry(panel, w, h)
   panel:DrawTextEntryText(panel:GetTextColor(), panel:GetHighlightColor(), panel:GetCursorColor())
 end
 
+--- Paints the background of a menu, with or without the icon column.
+-- @param panel [Panel the panel being painted]
+-- @param w [Number width of the panel]
+-- @param h [Number height of the panel]
 function SKIN:PaintMenu(panel, w, h)
   if panel:GetDrawColumn() then
     self.tex.MenuBG_Column(0, 0, w, h)
@@ -398,11 +434,19 @@ function SKIN:PaintMenu(panel, w, h)
   end
 end
 
+--- Paints the separator line of a menu.
+-- @param panel [Panel the panel being painted]
+-- @param w [Number width of the panel]
+-- @param h [Number height of the panel]
 function SKIN:PaintMenuSpacer(panel, w, h)
   surface.SetDrawColor(Color(0, 0, 0, 100))
   surface.DrawRect(0, 0, w, h)
 end
 
+--- Paints the highlight of a hovered menu option and the check mark of a checked one.
+-- @param panel [Panel the panel being painted]
+-- @param w [Number width of the panel]
+-- @param h [Number height of the panel]
 function SKIN:PaintMenuOption(panel, w, h)
   if panel.m_bBackground and (panel.Hovered or panel.Highlight) then
     self.tex.MenuBG_Hover(0, 0, w, h)
@@ -413,10 +457,18 @@ function SKIN:PaintMenuOption(panel, w, h)
   end
 end
 
+--- Paints the arrow of a menu option that opens a submenu.
+-- @param panel [Panel the panel being painted]
+-- @param w [Number width of the panel]
+-- @param h [Number height of the panel]
 function SKIN:PaintMenuRightArrow(panel, w, h)
   self.tex.Menu.RightArrow(0, 0, w, h)
 end
 
+--- Paints the body of a property sheet below its tabs.
+-- @param panel [Panel the panel being painted]
+-- @param w [Number width of the panel]
+-- @param h [Number height of the panel]
 function SKIN:PaintPropertySheet(panel, w, h)
   local active_tab = panel:GetActiveTab()
   local offset = 0
@@ -426,6 +478,10 @@ function SKIN:PaintPropertySheet(panel, w, h)
   self.tex.Tab_Control(0, offset, w, h - offset)
 end
 
+--- Paints a tab of a property sheet, depending on whether it is the active one.
+-- @param panel [Panel the panel being painted]
+-- @param w [Number width of the panel]
+-- @param h [Number height of the panel]
 function SKIN:PaintTab(panel, w, h)
   if panel:GetPropertySheet():GetActiveTab() == panel then
     return self:PaintActiveTab(panel, w, h)
@@ -434,10 +490,18 @@ function SKIN:PaintTab(panel, w, h)
   self.tex.TabT_Inactive(0, 0, w, h)
 end
 
+--- Paints the active tab of a property sheet.
+-- @param panel [Panel the panel being painted]
+-- @param w [Number width of the panel]
+-- @param h [Number height of the panel]
 function SKIN:PaintActiveTab(panel, w, h)
   self.tex.TabT_Active(0, 0, w, h)
 end
 
+--- Paints the close button of a window according to its state.
+-- @param panel [Panel the panel being painted]
+-- @param w [Number width of the panel]
+-- @param h [Number height of the panel]
 function SKIN:PaintWindowCloseButton(panel, w, h)
   if !panel.m_bBackground then return end
 
@@ -456,6 +520,10 @@ function SKIN:PaintWindowCloseButton(panel, w, h)
   self.tex.Window.Close(0, 0, w, h)
 end
 
+--- Paints the minimize button of a window according to its state.
+-- @param panel [Panel the panel being painted]
+-- @param w [Number width of the panel]
+-- @param h [Number height of the panel]
 function SKIN:PaintWindowMinimizeButton(panel, w, h)
   if !panel.m_bBackground then return end
 
@@ -474,6 +542,10 @@ function SKIN:PaintWindowMinimizeButton(panel, w, h)
   self.tex.Window.Mini(0, 0, w, h)
 end
 
+--- Paints the maximize button of a window according to its state.
+-- @param panel [Panel the panel being painted]
+-- @param w [Number width of the panel]
+-- @param h [Number height of the panel]
 function SKIN:PaintWindowMaximizeButton(panel, w, h)
   if !panel.m_bBackground then return end
 
@@ -492,10 +564,18 @@ function SKIN:PaintWindowMaximizeButton(panel, w, h)
   self.tex.Window.Maxi(0, 0, w, h)
 end
 
+--- Paints the track of a vertical scroll bar.
+-- @param panel [Panel the panel being painted]
+-- @param w [Number width of the panel]
+-- @param h [Number height of the panel]
 function SKIN:PaintVScrollBar(panel, w, h)
   self.tex.Scroller.TrackV(0, 0, w, h)
 end
 
+--- Paints the grip of a scroll bar according to its state.
+-- @param panel [Panel the panel being painted]
+-- @param w [Number width of the panel]
+-- @param h [Number height of the panel]
 function SKIN:PaintScrollBarGrip(panel, w, h)
   if panel:GetDisabled() then
     return self.tex.Scroller.ButtonV_Disabled(0, 0, w, h)
@@ -512,6 +592,10 @@ function SKIN:PaintScrollBarGrip(panel, w, h)
   return self.tex.Scroller.ButtonV_Normal(0, 0, w, h)
 end
 
+--- Paints the 'down' button of a scroll bar according to its state.
+-- @param panel [Panel the panel being painted]
+-- @param w [Number width of the panel]
+-- @param h [Number height of the panel]
 function SKIN:PaintButtonDown(panel, w, h)
   if !panel.m_bBackground then return end
 
@@ -530,6 +614,10 @@ function SKIN:PaintButtonDown(panel, w, h)
   self.tex.Scroller.DownButton_Normal(0, 0, w, h)
 end
 
+--- Paints the 'up' button of a scroll bar according to its state.
+-- @param panel [Panel the panel being painted]
+-- @param w [Number width of the panel]
+-- @param h [Number height of the panel]
 function SKIN:PaintButtonUp(panel, w, h)
   if !panel.m_bBackground then return end
 
@@ -548,6 +636,10 @@ function SKIN:PaintButtonUp(panel, w, h)
   self.tex.Scroller.UpButton_Normal(0, 0, w, h)
 end
 
+--- Paints the 'left' button of a scroll bar according to its state.
+-- @param panel [Panel the panel being painted]
+-- @param w [Number width of the panel]
+-- @param h [Number height of the panel]
 function SKIN:PaintButtonLeft(panel, w, h)
   if !panel.m_bBackground then return end
 
@@ -566,6 +658,10 @@ function SKIN:PaintButtonLeft(panel, w, h)
   self.tex.Scroller.LeftButton_Normal(0, 0, w, h)
 end
 
+--- Paints the 'right' button of a scroll bar according to its state.
+-- @param panel [Panel the panel being painted]
+-- @param w [Number width of the panel]
+-- @param h [Number height of the panel]
 function SKIN:PaintButtonRight(panel, w, h)
   if !panel.m_bBackground then return end
 
@@ -584,6 +680,10 @@ function SKIN:PaintButtonRight(panel, w, h)
   self.tex.Scroller.RightButton_Normal(0, 0, w, h)
 end
 
+--- Paints the drop-down arrow of a combo box according to the state of the combo box.
+-- @param panel [Panel the panel being painted]
+-- @param w [Number width of the panel]
+-- @param h [Number height of the panel]
 function SKIN:PaintComboDownArrow(panel, w, h)
   if panel.ComboBox:GetDisabled() then
     return self.tex.Input.ComboBox.Button.Disabled(0, 0, w, h)
@@ -600,6 +700,10 @@ function SKIN:PaintComboDownArrow(panel, w, h)
   self.tex.Input.ComboBox.Button.Normal(0, 0, w, h)
 end
 
+--- Paints the background of a combo box according to its state.
+-- @param panel [Panel the panel being painted]
+-- @param w [Number width of the panel]
+-- @param h [Number height of the panel]
 function SKIN:PaintComboBox(panel, w, h)
   if panel:GetDisabled() then
     return self.tex.Input.ComboBox.Disabled(0, 0, w, h)
@@ -616,10 +720,18 @@ function SKIN:PaintComboBox(panel, w, h)
   self.tex.Input.ComboBox.Normal(0, 0, w, h)
 end
 
+--- Paints the background of a list box.
+-- @param panel [Panel the panel being painted]
+-- @param w [Number width of the panel]
+-- @param h [Number height of the panel]
 function SKIN:PaintListBox(panel, w, h)
   self.tex.Input.ListBox.Background(0, 0, w, h)
 end
 
+--- Paints the 'up' arrow of a number entry according to its state.
+-- @param panel [Panel the panel being painted]
+-- @param w [Number width of the panel]
+-- @param h [Number height of the panel]
 function SKIN:PaintNumberUp(panel, w, h)
   if panel:GetDisabled() then
     return self.tex.Input.UpDown.Up.Disabled(0, 0, w, h)
@@ -636,6 +748,10 @@ function SKIN:PaintNumberUp(panel, w, h)
   self.tex.Input.UpDown.Up.Normal(0, 0, w, h)
 end
 
+--- Paints the 'down' arrow of a number entry according to its state.
+-- @param panel [Panel the panel being painted]
+-- @param w [Number width of the panel]
+-- @param h [Number height of the panel]
 function SKIN:PaintNumberDown(panel, w, h)
   if panel:GetDisabled() then
     return self.tex.Input.UpDown.Down.Disabled(0, 0, w, h)
@@ -652,6 +768,10 @@ function SKIN:PaintNumberDown(panel, w, h)
   self.tex.Input.UpDown.Down.Normal(0, 0, w, h)
 end
 
+--- Paints the lines that connect a tree node to its parent, if the tree draws lines.
+-- @param panel [Panel the panel being painted]
+-- @param w [Number width of the panel]
+-- @param h [Number height of the panel]
 function SKIN:PaintTreeNode(panel, w, h)
   if !panel.m_bDrawLines then return end
 
@@ -666,6 +786,10 @@ function SKIN:PaintTreeNode(panel, w, h)
   end
 end
 
+--- Paints the selection highlight behind the label of a selected tree node.
+-- @param panel [Panel the panel being painted]
+-- @param w [Number width of the panel]
+-- @param h [Number height of the panel]
 function SKIN:PaintTreeNodeButton(panel, w, h)
   if !panel.m_bSelected then return end
 
@@ -676,10 +800,18 @@ function SKIN:PaintTreeNodeButton(panel, w, h)
   self.tex.Selection(38, 0, w + 6, h)
 end
 
+--- Paints a selection highlight.
+-- @param panel [Panel the panel being painted]
+-- @param w [Number width of the panel]
+-- @param h [Number height of the panel]
 function SKIN:PaintSelection(panel, w, h)
   self.tex.Selection(0, 0, w, h)
 end
 
+--- Paints the knob of a slider according to its state.
+-- @param panel [Panel the panel being painted]
+-- @param w [Number width of the panel]
+-- @param h [Number height of the panel]
 function SKIN:PaintSliderKnob(panel, w, h)
   if panel:GetDisabled() then return self.tex.Input.Slider.H.Disabled(0, 0, w, h) end
 
@@ -704,6 +836,10 @@ local function PaintNotches(x, y, w, h, num)
   end
 end
 
+--- Paints the track of a number slider and its notches.
+-- @param panel [Panel the panel being painted]
+-- @param w [Number width of the panel]
+-- @param h [Number height of the panel]
 function SKIN:PaintNumSlider(panel, w, h)
   surface.SetDrawColor(Color(0, 0, 0, 100))
   surface.DrawRect(8, h * 0.5 - 1, w - 15, 1)
@@ -711,11 +847,19 @@ function SKIN:PaintNumSlider(panel, w, h)
   PaintNotches(8, h * 0.5 - 1, w - 16, 1, panel.m_iNotches)
 end
 
+--- Paints a progress bar filled according to its fraction.
+-- @param panel [Panel the panel being painted]
+-- @param w [Number width of the panel]
+-- @param h [Number height of the panel]
 function SKIN:PaintProgress(panel, w, h)
   self.tex.ProgressBar.Back(0, 0, w, h)
   self.tex.ProgressBar.Front(0, 0, w * panel:GetFraction(), h)
 end
 
+--- Paints a collapsible category, or only its header when it is collapsed.
+-- @param panel [Panel the panel being painted]
+-- @param w [Number width of the panel]
+-- @param h [Number height of the panel]
 function SKIN:PaintCollapsibleCategory(panel, w, h)
   if h < 21 then
     return self.tex.categoryList.Header(0, 0, w, h)
@@ -724,10 +868,18 @@ function SKIN:PaintCollapsibleCategory(panel, w, h)
   self.tex.categoryList.Inner(0, 0, w, 63)
 end
 
+--- Paints the background of a category list.
+-- @param panel [Panel the panel being painted]
+-- @param w [Number width of the panel]
+-- @param h [Number height of the panel]
 function SKIN:PaintCategoryList(panel, w, h)
   self.tex.categoryList.Outer(0, 0, w, h)
 end
 
+--- Paints the background of a category button according to its state and line parity.
+-- @param panel [Panel the panel being painted]
+-- @param w [Number width of the panel]
+-- @param h [Number height of the panel]
 function SKIN:PaintCategoryButton(panel, w, h)
   if panel.AltLine then
     if panel.Depressed or panel.m_bSelected then surface.SetDrawColor(self.Colours.Category.LineAlt.Button_Selected)
@@ -742,6 +894,10 @@ function SKIN:PaintCategoryButton(panel, w, h)
   surface.DrawRect(0, 0, w, h)
 end
 
+--- Paints the background of a list view line that is selected, hovered or alternate.
+-- @param panel [Panel the panel being painted]
+-- @param w [Number width of the panel]
+-- @param h [Number height of the panel]
 function SKIN:PaintListViewLine(panel, w, h)
   if panel:IsSelected() then
     self.tex.Input.ListBox.EvenLineSelected(0, 0, w, h)
@@ -752,16 +908,28 @@ function SKIN:PaintListViewLine(panel, w, h)
   end
 end
 
+--- Paints the background of a list view, if it has one.
+-- @param panel [Panel the panel being painted]
+-- @param w [Number width of the panel]
+-- @param h [Number height of the panel]
 function SKIN:PaintListView(panel, w, h)
   if !panel.m_bBackground then return end
 
   self.tex.Input.ListBox.Background(0, 0, w, h)
 end
 
+--- Paints the background of a tooltip.
+-- @param panel [Panel the panel being painted]
+-- @param w [Number width of the panel]
+-- @param h [Number height of the panel]
 function SKIN:PaintTooltip(panel, w, h)
   self.tex.Tooltip(0, 0, w, h)
 end
 
+--- Paints the background of a menu bar.
+-- @param panel [Panel the panel being painted]
+-- @param w [Number width of the panel]
+-- @param h [Number height of the panel]
 function SKIN:PaintMenuBar(panel, w, h)
   self.tex.Menu_Strip(0, 0, w, h)
 end

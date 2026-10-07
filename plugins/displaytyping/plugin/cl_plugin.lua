@@ -9,6 +9,13 @@ local function clamp_position_to_screen(x, y, text_w, text_h)
          math.Clamp(y, margin, ScrH() - text_h * 0.5 - margin - text_h * 0.5)
 end
 
+--- Draws the text a player is typing above their head, fading it out with distance and
+-- keeping it within screen bounds. Shows a generic 'typing' label instead of the text
+-- when the 'display_exact_message' config is disabled.
+-- @param player [Player the player who is typing]
+-- @param text [String the text being typed]
+-- @param ply_pos [Vector eye position of the typing player]
+-- @param dist [Number squared distance between the local player and the typing player]
 function DisplayTyping:draw_player_typing_text(player, text, ply_pos, dist)
   local hide_text = Config.get('display_exact_message') == false
   local mult = hook.Run('DisplayTypingAdjustFadeoffMultiplier', player, text) or 1

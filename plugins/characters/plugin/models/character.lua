@@ -10,6 +10,8 @@ Character:validates('gender', { presence = true })
 Character:validates('phys_desc', { presence = true, min_length = 16, max_length = 200 })
 Character:validates('model', { presence = true })
 
+--- Runs the RestoreCharacter hook after the character has been loaded from the database,
+-- provided its user has been loaded as well.
 function Character:restored()
   if self.user then
     hook.run('RestoreCharacter', self.user.player, self.id, self)

@@ -8,6 +8,10 @@ if !Settings.experimental then return end
 local flashlight_cutoff = 780 ^ 2
 local light_mat = Material("effects/flashlight001")
 
+--- Toggles a projected texture attached to the player, so that other players can see the
+-- light of their flashlight.
+-- @param player [Player]
+-- @return [Boolean false; nil if the light was on but its entity is no longer valid]
 function PLUGIN:PlayerSwitchedFlashlight(player)
   local on = !player.shared_flashlight_on
 

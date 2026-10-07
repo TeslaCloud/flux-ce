@@ -7,6 +7,8 @@ CMD.arguments = 2
 CMD.immunity = true
 CMD.aliases = { 'plysetgroup', 'setusergroup', 'plysetusergroup' }
 
+--- Returns the translated command description with the list of existing role IDs filled in.
+-- @return [String]
 function CMD:get_description()
   local groups = {}
 
@@ -17,6 +19,11 @@ function CMD:get_description()
   return t(self.description, { groups = table.concat(groups, ', ') })
 end
 
+--- Sets the role of the targeted players and notifies them and staff, or tells the caller that
+-- the role does not exist.
+-- @param player [Player the caller, or an invalid entity when run from the server console]
+-- @param targets [Array<Player> players whose role is set]
+-- @param role [String role ID]
 function CMD:on_run(player, targets, role)
   if Bolt:group_exists(role) then
     for k, v in ipairs(targets) do

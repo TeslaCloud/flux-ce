@@ -1,5 +1,9 @@
 local player_meta = FindMetaTable('Player')
 
+--- Sets the player's role, overriding the engine method. Networks the role, calls
+-- on_role_taken / on_role_set on the roles involved, saves the role to the database unless
+-- one of them returns a value, and runs the PlayerUserGroupChanged hook.
+-- @param group='user' [String role ID]
 function player_meta:SetUserGroup(group)
   group = group or 'user'
 
@@ -17,6 +21,7 @@ function player_meta:SetUserGroup(group)
   hook.run('PlayerUserGroupChanged', self, group_obj, old_group_obj)
 end
 
+--- Writes the player's current name and role to their database record, if they have one.
 function player_meta:save_usergroup()
   if self.record then
     self.record.name = self:name()
@@ -25,10 +30,17 @@ function player_meta:save_usergroup()
   end
 end
 
+--- Replaces the player's networked table of individual permissions. Does not touch the
+-- database.
+-- @param perm_table [Hash PERM_ values keyed by permission ID]
 function player_meta:set_permissions(perm_table)
   self:set_nv('permissions', perm_table)
 end
 
+--- Sets one of the player's individual permissions: updates the Permission records on the
+-- player's database record and the networked table, then runs the PlayerPermissionChanged hook.
+-- @param perm_id [String permission ID]
+-- @param value [Number PERM_ALLOW or PERM_NEVER, or PERM_NO to remove the permission]
 function player_meta:set_permission(perm_id, value)
   local create = true
 
@@ -64,10 +76,19 @@ function player_meta:set_permission(perm_id, value)
   hook.run('PlayerPermissionChanged', self, perm_id, value)
 end
 
+--- Replaces the player's networked table of temporary permissions. Does not touch the
+-- database.
+-- @param perm_table [Hash tables with value and expires (unix timestamp) fields, keyed by
+--   permission ID]
 function player_meta:set_temp_permissions(perm_table)
   self:set_nv('temp_permissions', perm_table)
 end
 
+--- Gives the player a temporary permission value that takes precedence over their regular
+-- permissions until it expires. Updates the TempPermission records and the networked table.
+-- @param perm_id [String permission ID]
+-- @param value [Number PERM_ value, normally PERM_ALLOW or PERM_NEVER]
+-- @param duration [Number seconds until the permission expires]
 function player_meta:set_temp_permission(perm_id, value, duration)
   local create = true
 
@@ -106,10 +127,15 @@ function player_meta:set_temp_permission(perm_id, value, duration)
   self:set_temp_permissions(perm_table)
 end
 
+--- Runs a command as this player, with the usual permission checks.
+-- @param cmd [String command name and arguments without the leading slash, e.g. 'getup 5']
 function player_meta:run_command(cmd)
   return Flux.Command:interpret(self, cmd)
 end
 
+--- Moves the player to a position and unsticks them. The previous position is kept in
+-- prev_pos, which the Return command uses.
+-- @param pos [Vector]
 function player_meta:teleport(pos)
   self.prev_pos = self:GetPos()
   self:SetPos(pos)

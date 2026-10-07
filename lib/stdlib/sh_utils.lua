@@ -1,3 +1,5 @@
+--- Returns the names of all ammo types that are registered in the game.
+-- @return [Array<String> ammo type names]
 function game.get_ammo_list()
   local last_ammo_name = game.GetAmmoName(1)
   local ammo_table = { last_ammo_name }
@@ -9,7 +11,9 @@ function game.get_ammo_list()
   return ammo_table
 end
 
--- A function to check whether all of the arguments in vararg are valid (via IsValid).
+--- Checks whether all of the arguments in vararg are valid (via IsValid).
+-- @param ... [Vararg objects to check]
+-- @return [Boolean true if all of them are valid, false if any is not or if there are none]
 function util.validate(...)
   local validate = { ... }
 
@@ -24,15 +28,32 @@ function util.validate(...)
   return true
 end
 
--- A function to print C-style formatted strings.
+--- Prints C-style formatted strings.
+-- @param str [String format string, see string.format]
+-- @param ... [Vararg values to put into the format string]
 function printf(str, ...)
   print(Format(str, ...))
 end
 
+--- Converts a value to a boolean. Only true, 'true', 1 and '1' count as true.
+-- @param value [Any]
+-- @return [Boolean]
 function util.to_b(value)
   return (tonumber(value) == 1 or value == true or value == 'true')
 end
 
+--- Calls the callback as soon as the entity with the given index becomes valid, right away if it
+-- already is. Useful on the client, where an entity index can arrive before the entity
+-- itself does. Gives up without calling the callback once it runs out of attempts.
+-- ```
+-- util.wait_for_ent(ply_index, function(player)
+--   hook.run('PlayerModelChanged', player, new_model, old_model)
+-- end)
+-- ```
+-- @param ent_index [Number entity index]
+-- @param callback [Function callback(entity), receives the valid Entity]
+-- @param delay=0 [Number seconds between the attempts]
+-- @param wait_time=100 [Number maximum amount of attempts]
 function util.wait_for_ent(ent_index, callback, delay, wait_time)
   local entity = Entity(ent_index)
 
@@ -53,6 +74,15 @@ function util.wait_for_ent(ent_index, callback, delay, wait_time)
   end
 end
 
+--- Joins the text representations of a list of objects into a single string.
+-- ```
+-- util.list_to_string(nil, nil, 1, 2, 3) -- '1, 2, 3'
+-- util.list_to_string(function(obj) return obj:name() end, ' and ', player1, player2)
+-- ```
+-- @param callback=tostring [Function callback(object), returns the String to use for the object]
+-- @param separator=', ' [String text to put between the objects]
+-- @param ... [Vararg objects to list]
+-- @return [String the joined list]
 function util.list_to_string(callback, separator, ...)
   if !isfunction(callback) then
     callback = function(obj) return tostring(obj) end
@@ -80,6 +110,11 @@ function util.list_to_string(callback, separator, ...)
   return result
 end
 
+--- Joins the names of a list of players into a single comma-separated string.
+-- If the list consists of all players on the server (and there are at least two), returns
+-- the 'ui.chat.everyone' phrase instead.
+-- @param player_list [Array<Player>]
+-- @return [String player names, or the 'ui.chat.everyone' phrase]
 function util.player_list_to_string(player_list)
   local nlist = #player_list
 
@@ -92,6 +127,9 @@ function util.player_list_to_string(player_list)
   end, nil, unpack(player_list))
 end
 
+--- Removes the newlines and tabs from a string, except for those inside of double quotes.
+-- @param str [String]
+-- @return [String]
 function util.remove_newlines(str)
   local pieces = str:split()
   local to_ret = ''
@@ -126,6 +164,18 @@ function util.remove_newlines(str)
   return to_ret
 end
 
+--- Removes the common indentation and the surrounding blank lines from a multi-line string,
+-- so that long texts can be indented together with the code around them.
+-- ```
+-- print(txt[[
+--   Usage:
+--     flux help
+-- ]])
+-- -- Usage:
+-- --   flux help
+-- ```
+-- @param text [String multi-line text]
+-- @return [String the text without the common indentation]
 function txt(text)
   local lines = (text or ''):chomp('\n'):split('\n')
   local lowest_indent
@@ -148,10 +198,20 @@ function txt(text)
   return output:chomp(' '):chomp('\n')
 end
 
+--- Returns the Steam name of a player, or the translated name of the console if the player is
+-- not valid (as it is for commands that are run from the server console).
+-- @param player [Player player, or an invalid entity or nil for the console]
+-- @return [String]
 function get_player_name(player)
   return IsValid(player) and player:steam_name() or t'notification.console'
 end
 
+--- Checks whether anything is in the way between two positions, using a line trace.
+-- @param vec1 [Vector start position]
+-- @param vec2 [Vector end position]
+-- @param filter=nil [Entity/Array<Entity>/Function entities for the trace to ignore, same as
+--   the filter of util.TraceLine]
+-- @return [Boolean true if the trace hit something]
 function util.vector_obstructed(vec1, vec2, filter)
   local trace = util.TraceLine({
     start = vec1,
@@ -162,6 +222,9 @@ function util.vector_obstructed(vec1, vec2, filter)
   return trace.Hit
 end
 
+--- Checks whether a door is currently open.
+-- @param entity [Entity]
+-- @return [Boolean true if the door is open, false if it is closed or the entity is not a door]
 function util.door_is_opened(entity)
   if entity:is_door() then
     local data = entity:GetSaveTable()
@@ -218,10 +281,22 @@ local operators_symbol = {
   ['not'] = '!'
 }
 
+--- Applies an operator to two values by the name of the operator.
+-- ```
+-- util.process_operator('greater_equal', 5, 3) -- true
+-- ```
+-- @param op [String operator name: 'equal', 'unequal', 'less', 'greater', 'less_equal',
+--   'greater_equal', 'and', 'or' or 'not']
+-- @param a [Any left operand]
+-- @param b [Any right operand, not used by 'not']
+-- @return [Any result of the operation, a Boolean for the comparisons and 'not']
+-- @see [util.get_operators]
 function util.process_operator(op, a, b)
   return operators[op](a, b)
 end
 
+--- Returns the names of all operators that util.process_operator supports.
+-- @return [Array<String> operator names]
 function util.get_operators()
   local list = {}
 
@@ -232,6 +307,8 @@ function util.get_operators()
   return list
 end
 
+--- Returns the equality and logical operators together with their symbols.
+-- @return [Hash operator name => String symbol, such as unequal => '!=']
 function util.get_logical_operators()
   local list = {
     equal = '==',
@@ -244,6 +321,8 @@ function util.get_logical_operators()
   return list
 end
 
+--- Returns the comparison operators together with their symbols.
+-- @return [Hash operator name => String symbol, such as less_equal => '<=']
 function util.get_relational_operators()
   local list = {
     less = '<',
@@ -257,6 +336,8 @@ function util.get_relational_operators()
   return list
 end
 
+--- Returns the equality operators together with their symbols.
+-- @return [Hash operator name => String symbol, such as equal => '==']
 function util.get_equal_operators()
   local list = {
     equal = '==',
@@ -266,12 +347,17 @@ function util.get_equal_operators()
   return list
 end
 
+--- Returns the symbol of an operator, such as '>=' for 'greater_equal'.
+-- @param op [String operator name]
+-- @return [String symbol, or nil if there is no such operator]
 function util.operator_to_symbol(op)
   return operators_symbol[op]
 end
 
 --- Similar to <=> operator in other languages.
--- @returns [Number, -1 if a < b, 0 if a == b, and 1 if a > b]
+-- @param a [Number/String left value]
+-- @param b [Number/String right value, has to be comparable with a]
+-- @return [Number -1 if a < b; 0 if a == b; and 1 if a > b]
 function compare(a, b)
   if a > b then  return 1 end
   if a == b then return 0 end
@@ -279,6 +365,8 @@ function compare(a, b)
 end
 
 --- Print traceback to current function call.
+-- @param suppress=false [Boolean do not print the traceback, only return it]
+-- @param ... [Vararg arguments for debug.traceback, such as a message and a level]
 -- @return [Array string pieces of the traceback]
 function print_traceback(suppress, ...)
   local trace_text = debug.traceback(...)
@@ -307,7 +395,8 @@ function print_traceback(suppress, ...)
 end
 
 --- Prints an error using ErrorNoHalt but without character limit.
--- @see[ErrorNoHalt]
+-- @param ... [Vararg strings that are concatenated into the error message]
+-- @see [ErrorNoHalt]
 function long_error(...)
   local text = table.concat({...})
   local len = string.len(text)
@@ -331,6 +420,8 @@ function long_error(...)
 end
 
 --- Print an error message followed by a complete stack traceback.
+-- Unlike error, this does not stop the execution of the calling code.
+-- @param msg [String error message]
 function error_with_traceback(msg)
   long_error(msg..'\n')
   print_traceback()
@@ -347,6 +438,11 @@ end
 
 env['string']['dump'] = nil
 
+--- Runs a Lua file in a restricted environment that has no access to unsafe globals such as
+-- debug, require, RunString, CompileString, setmetatable or File.
+-- The environment is a copy of the globals made when the standard library was loaded.
+-- @param f [String file path relative to the lua/ folder]
+-- @return [Vararg whatever the file returns]
 function include_sandboxed(f)
   local c = CompileString(file.Read(f, 'LUA'), f)
   debug.setfenv(c, env)
@@ -362,7 +458,10 @@ do
   -- --         0           1             2
   -- enumerate 'GENDER_MALE GENDER_FEMALE GENDER_OTHER'
   -- ```
-  -- @return [Number highest enumerator]
+  -- @param enums [String space-separated enumerator names]
+  -- @param existing_enumerator=nil [String prefix of an earlier group (such as 'GENDER') to
+  --   continue the numbering of, starting at the highest enumerator of that group]
+  -- @return [Number highest enumerator, or nil if enums is not a string or is empty]
   function enumerate(enums, existing_enumerator)
     if !isstring(enums) or enums:len() == 0 then return end
 

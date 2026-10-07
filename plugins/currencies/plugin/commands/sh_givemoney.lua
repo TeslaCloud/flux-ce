@@ -5,6 +5,8 @@ CMD.category = 'permission.categories.general'
 CMD.arguments = 1
 CMD.aliases = { 'givecash', 'givetokens' }
 
+--- Returns the translated command description with the available currency IDs listed.
+-- @return [String]
 function CMD:get_description()
   local currencies = {}
 
@@ -17,6 +19,11 @@ function CMD:get_description()
   return t(self.description, { currencies = table.concat(currencies, ', ') })
 end
 
+--- Gives money to the entity the player is looking at.
+-- @param player [Player the player who ran the command]
+-- @param amount [String amount to give, parsed with tonumber]
+-- @param currency=nil [String currency ID; the default_currency config is used when it is
+--   omitted or unknown]
 function CMD:on_run(player, amount, currency)
   amount = tonumber(amount)
 

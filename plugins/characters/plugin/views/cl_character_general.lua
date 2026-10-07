@@ -2,8 +2,12 @@
 PANEL.id = 'base'
 PANEL.text = 'Click sidebar buttons to open character creation menus.'
 
+--- Does nothing; character creation stage panels override it.
 function PANEL:Init() end
 
+--- Draws the panel through the theme's PaintCharCreationBasePanel hook.
+-- @param w [Number]
+-- @param h [Number]
 function PANEL:Paint(w, h)
   if self:IsVisible() then
     Theme.hook('PaintCharCreationBasePanel', self, w, h)
@@ -16,6 +20,8 @@ local PANEL = {}
 PANEL.id = 'general'
 PANEL.text = 'ui.char_create.general'
 
+--- Creates the gender buttons, name and description entries, model list, model preview and
+-- skin counter, and hides the controls that the selected faction does not use.
 function PANEL:Init()
   local fa_icon_size = math.scale(24)
   local margin = math.scale(20)
@@ -192,6 +198,8 @@ function PANEL:Init()
 
 end
 
+--- Rebuilds the model icons from the GetCharacterCreationModels hook, clearing the selected
+-- model if it is no longer among them.
 function PANEL:rebuild_models()
   local char_data = self:GetParent().char_data
   local models = hook.run('GetCharacterCreationModels', char_data)
@@ -276,6 +284,8 @@ function PANEL:rebuild_models()
   end
 end
 
+--- Restores the name, description, gender, model and skin that were entered earlier.
+-- @param parent [Panel the character creation menu]
 function PANEL:on_open(parent)
   self.name_entry:SetText(parent.char_data.name or '')
   self.desc_entry:SetText(parent.char_data.description or '')
@@ -306,6 +316,8 @@ function PANEL:on_open(parent)
   end
 end
 
+--- Stores the entered name, description, gender, model and skin in the character data.
+-- @param parent [Panel the character creation menu]
 function PANEL:on_close(parent)
   local gender = (self.gender_female:is_active() and 'female') or (self.gender_male:is_active() and 'male') or 'universal'
 
@@ -318,6 +330,9 @@ function PANEL:on_close(parent)
   })
 end
 
+--- Checks the name and description lengths and that a model is selected, skipping the
+-- controls that are hidden.
+-- @return [Boolean false when invalid, String translated error; nothing when valid]
 function PANEL:on_validate()
   local name = self.name_entry:GetValue()
   local desc = self.desc_entry:GetValue()

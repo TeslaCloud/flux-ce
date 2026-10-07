@@ -1,3 +1,8 @@
+--- Stops the player from leaving the 'char_create.general' stage without picking a gender
+-- when the chosen faction requires one.
+-- @param id [String ID of the stage being left]
+-- @param panel [Panel the panel of that stage]
+-- @return [Boolean false to block the change, String translated error; nothing otherwise]
 function Factions:PreStageChange(id, panel)
   if id == 'char_create.general' then
     local gender = (panel.gender_female:is_active() and 'female') or (panel.gender_male:is_active() and 'male') or 'universal'
@@ -10,22 +15,35 @@ function Factions:PreStageChange(id, panel)
   end
 end
 
+--- Registers the faction selection panel with the theme.
+-- @param current_theme [ThemeBase]
 function Factions:OnThemeLoaded(current_theme)
   current_theme:add_panel('ui.char_create.faction', function(id, parent, ...)
     return vgui.Create('fl_char_create_faction', parent)
   end)
 end
 
+--- Adds faction selection as the first stage of character creation.
+-- @param panel [Panel the character creation menu]
 function Factions:AddCharacterCreationMenuStages(panel)
   panel:add_stage('ui.char_create.faction', 1)
 end
 
+--- Returns the models of the chosen faction that match the chosen gender.
+-- @param char_data [Hash character data collected so far; needs faction and gender]
+-- @return [Array<String> model paths]
 function Factions:GetCharacterCreationModels(char_data)
   local faction_table = Factions.find_by_id(char_data.faction)
 
   return faction_table:get_gender_models(char_data.gender)
 end
 
+--- Rebuilds the scoreboard with the players grouped into one collapsible category per
+-- faction, replacing the default player list.
+-- @param panel [Panel the scoreboard]
+-- @param w [Number]
+-- @param h [Number]
+-- @return [Boolean always true, which stops the default rebuild]
 function Factions:PreRebuildScoreboard(panel, w, h)
   for k, v in ipairs(panel.player_cards) do
     if IsValid(v) then
@@ -113,6 +131,10 @@ function Factions:PreRebuildScoreboard(panel, w, h)
   return true
 end
 
+--- Supplies the error text shown when character creation fails for lack of a faction.
+-- @param success [Boolean]
+-- @param status [Number CHAR_* status code sent by the server]
+-- @return [String translated error for CHAR_ERR_FACTION, otherwise nil]
 function Factions:GetCharCreationErrorText(success, status)
   if status == CHAR_ERR_FACTION then
     return t'error.faction.not_selected'

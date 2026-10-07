@@ -34,14 +34,23 @@ local unit_callbacks = {
   end,
 }
 
+--- Returns the function that converts a number in a CSS unit to pixels.
+-- Unknown units get a function that returns the number unchanged.
+-- @param unit [String CSS unit, e.g. 'px', 'em', 'vh' or '%']
+-- @return [Function converter, called as callback(element, number, attribute)]
 function Gvue:get_unit_callback(unit)
   return unit_callbacks[unit] or null_function
 end
 
+--- Checks whether a CSS attribute is passed on from an element to its children.
+-- @param attr [String attribute name]
+-- @return [Boolean true if it is, nil otherwise]
 function Gvue:attribute_is_transferable(attr)
   return transferable_attributes[attr]
 end
 
+--- Returns the smaller and the larger side of the screen.
+-- @return [Hash table with the fields min and max, in pixels]
 function Gvue:get_screen_dimensions()
   local w, h = ScrW(), ScrH()
 
@@ -52,10 +61,16 @@ function Gvue:get_screen_dimensions()
   return { min = w, max = h }
 end
 
+--- Returns the parent of a Gvue element.
+-- @param e [Panel Gvue element]
+-- @return [Panel parent element, or nil if the element has no parent]
 function Gvue:get_parent_of(e)
   return e.context.parent
 end
 
+--- Returns the topmost element in the parent chain of a Gvue element.
+-- @param e [Panel Gvue element]
+-- @return [Panel root element; e itself if it has no parent]
 function Gvue:get_root_element_of(e)
   local last_el
 
@@ -70,6 +85,10 @@ function Gvue:get_root_element_of(e)
   return last_el
 end
 
+--- Returns the value of a CSS attribute of a Gvue element.
+-- @param e [Panel Gvue element]
+-- @param attr [String attribute name]
+-- @return [Any attribute value, or nil if it is not set]
 function Gvue:get_context_attribute(e, attr)
   local context_attributes = e.context.attributes
   local cur = context_attributes

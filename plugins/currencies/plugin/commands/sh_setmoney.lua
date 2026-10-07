@@ -7,6 +7,8 @@ CMD.arguments = 2
 CMD.player_arg = 1
 CMD.aliases = { 'setcash', 'settokens' }
 
+--- Returns the translated command description with every registered currency ID listed.
+-- @return [String]
 function CMD:get_description()
   local currencies = {}
 
@@ -17,6 +19,12 @@ function CMD:get_description()
   return t(self.description, { currencies = table.concat(currencies, ', ') })
 end
 
+--- Sets the balance of a currency for every target and notifies the targets and staff.
+-- @param player [Player the player who ran the command]
+-- @param targets [Array<Player> players matched by the first command argument]
+-- @param amount [String new balance, parsed with tonumber; negative values become 0]
+-- @param currency=nil [String currency ID; the default_currency config is used when it is
+--   omitted or unknown]
 function CMD:on_run(player, targets, amount, currency)
   amount = tonumber(amount)
 

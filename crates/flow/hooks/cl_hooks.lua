@@ -2,7 +2,9 @@ timer.Remove('HintSystem_OpeningMenu')
 timer.Remove('HintSystem_Annoy1')
 timer.Remove('HintSystem_Annoy2')
 
--- Called when the client connects and spawns.
+--- Stores the local player in the PLAYER global, sends the client's language to the server,
+-- reports to the server that the player has been created and runs the client-side loading
+-- hooks (PlayerModelChanged for every player, SynchronizeTools, LoadData, FLInitPostEntity).
 function GM:InitPostEntity()
   PLAYER = LocalPlayer()
 
@@ -33,12 +35,14 @@ function GM:InitPostEntity()
   end)
 end
 
+--- Rebuilds the spawn menu and the tool menu once the server has initialized the local player.
 function GM:PlayerInitialized()
   hook.run('PopulateSpawnMenu')
   RunConsoleCommand('spawnmenu_reload')
   hook.run('PopulateToolMenu')
 end
 
+--- Creates the fonts once the schema has been loaded on the client.
 function GM:FluxClientSchemaLoaded()
   Font.create_fonts()
 end
@@ -47,7 +51,8 @@ do
   local scrw, scrh = ScrW(), ScrH()
   local next_check = CurTime()
 
-  -- This will let us detect whether the resolution has been changed, then call a hook if it has.
+  --- Checks once a second whether the screen resolution has changed and runs the
+  -- OnResolutionChanged hook if it has.
   function GM:Tick()
     local cur_time = CurTime()
 
@@ -68,23 +73,34 @@ do
 end
 
 -- Remove default death notices.
+
+--- Does nothing, which removes the default death notices from the HUD.
 function GM:DrawDeathNotice()
 end
 
+--- Does nothing, so that the default death notices are never added.
 function GM:AddDeathNotice()
 end
 
--- Called when default GWEN skin is required.
+--- Makes Derma use the Flux skin by default.
+-- @return [String name of the skin]
 function GM:ForceDermaSkin()
   return 'Flux'
 end
 
--- Called when the resolution has been changed and fonts need to be resized to fit the client's res.
+--- Recreates the fonts so that they fit the new resolution. Note that GM:Tick runs this
+-- hook with the new size first, so the values received are the reverse of what the
+-- parameter names say.
+-- @param old_w [Number receives the new screen width]
+-- @param old_h [Number receives the new screen height]
+-- @param new_w [Number receives the previous screen width]
+-- @param new_h [Number receives the previous screen height]
 function GM:OnResolutionChanged(old_w, old_h, new_w, new_h)
   Font.create_fonts()
 end
 
--- Called when the scoreboard should be shown.
+--- Opens the tab menu in place of the default scoreboard, closing the previous one first,
+-- unless the ShouldScoreboardShow hook returns false.
 function GM:ScoreboardShow()
   if hook.run('ShouldScoreboardShow') != false then
     if Flux.tab_menu and Flux.tab_menu.close_menu then
@@ -97,7 +113,9 @@ function GM:ScoreboardShow()
   end
 end
 
--- Called when the scoreboard should be hidden.
+--- Closes the tab menu when the scoreboard key is released after being held for longer
+-- than 0.3 seconds, unless the ShouldScoreboardHide hook returns false. A short press
+-- leaves the menu open.
 function GM:ScoreboardHide()
   if hook.run('ShouldScoreboardHide') != false then
     if Flux.tab_menu and Flux.tab_menu.held_time and CurTime() >= Flux.tab_menu.held_time then
@@ -106,6 +124,8 @@ function GM:ScoreboardHide()
   end
 end
 
+--- Draws the loading screen with its status text and progress bar while the local player
+-- is not initialized yet or the ShouldDrawLoadingScreen hook returns true.
 function GM:HUDDrawScoreBoard()
   self.BaseClass:HUDDrawScoreBoard()
 
@@ -151,7 +171,9 @@ function GM:HUDDrawScoreBoard()
   end
 end
 
--- Called when the player's HUD is drawn.
+--- Draws the Flux HUD once the local player is initialized: the damage flash, the death
+-- screen while dead or the info displays while alive (unless FLHUDPaint returns a truthy
+-- value), and the white respawn fade. Skipped when the ShouldHUDPaint hook returns false.
 function GM:HUDPaint()
   if PLAYER:has_initialized() and hook.run('ShouldHUDPaint') != false then
     local cur_time = CurTime()
@@ -185,6 +207,11 @@ function GM:HUDPaint()
   end
 end
 
+--- Draws the circular action progress indicator in the middle of the screen if a
+-- percentage was set with Flux.set_circle_percent.
+-- @param cur_time [Number current CurTime()]
+-- @param scrw [Number screen width]
+-- @param scrh [Number screen height]
 function GM:FLHUDPaint(cur_time, scrw, scrh)
   local percentage = PLAYER.circle_action_percentage
 
@@ -202,10 +229,17 @@ function GM:FLHUDPaint(cur_time, scrw, scrh)
   end
 end
 
+--- Draws the red blood overlay behind the death screen.
+-- @param cur_time [Number current CurTime()]
+-- @param w [Number screen width]
+-- @param h [Number screen height]
 function GM:HUDPaintDeathBackground(cur_time, w, h)
   draw.textured_rect(util.get_material('materials/flux/hl2rp/blood.png'), 0, 0, w, h, Color(255, 0, 0, 200))
 end
 
+--- Finds the entity the local player is looking at, or the one closest to the crosshair
+-- within a narrow cone, and draws its target ID through the DrawPlayerTargetID hook, the
+-- entity's own DrawTargetID method or the DrawEntityTargetID hook.
 function GM:HUDDrawTargetID()
   if IsValid(PLAYER) and PLAYER:Alive() then
     local client_pos = EyePos()
@@ -254,6 +288,13 @@ function GM:HUDDrawTargetID()
   end
 end
 
+--- Adds the name of the player to the lines shown in their target ID.
+-- @param player [Player the player being looked at]
+-- @param x [Number screen x of the target ID]
+-- @param y [Number screen y of the target ID]
+-- @param distance [Number distance to the player in units]
+-- @param lines [Hash lines to draw, keyed by ID. Each one is a table with the text, font,
+--   color and priority fields, and optionally offset_x and offset_y]
 function GM:GetDrawPlayerInfo(player, x, y, distance, lines)
   lines['name'] = {
     text = player:name(),
@@ -263,6 +304,13 @@ function GM:GetDrawPlayerInfo(player, x, y, distance, lines)
   }
 end
 
+--- Collects the target ID lines of a player through the GetDrawPlayerInfo hook and draws
+-- them in order of priority, fading out between 500 and 640 units of distance. Nothing is
+-- drawn if the PreDrawPlayerInfo hook returns false.
+-- @param player [Player the player being looked at]
+-- @param x [Number screen x of the horizontal center of the text]
+-- @param y [Number screen y of the first line]
+-- @param distance [Number distance to the player in units]
 function GM:DrawPlayerTargetID(player, x, y, distance)
   local lines = {}
 
@@ -297,15 +345,23 @@ function GM:DrawPlayerTargetID(player, x, y, distance)
   end
 end
 
+--- Does nothing, which disables the default item pickup notification.
+-- @param item_name [String]
 function GM:HUDItemPickedUp(item_name)
 end
 
+--- Does nothing, which disables the default ammo pickup notification.
+-- @param item_name [String]
+-- @param amount [Number]
 function GM:HUDAmmoPickedUp(item_name, amount)
 end
 
+--- Does nothing, which disables the default pickup history on the HUD.
 function GM:HUDDrawPickupHistory()
 end
 
+--- Adds every registered Flux tool to the tool list of the spawn menu, then runs the
+-- SynchronizeTools hook.
 function GM:PopulateToolMenu()
   for tool_name, TOOL in pairs(Flux.Tool.stored) do
     if TOOL.AddToMenu != false then
@@ -324,6 +380,7 @@ function GM:PopulateToolMenu()
   hook.run('SynchronizeTools')
 end
 
+--- Copies every registered Flux tool into the tool table of the tool gun.
 function GM:SynchronizeTools()
   local toolgun = weapons.GetStored('gmod_tool')
 
@@ -335,6 +392,9 @@ end
 local last_render = 0
 local blur_render_time = 1 / Flux.blur_update_fps
 
+--- Updates the blurred copy of the screen used by draw.blur_box and draw.blur_panel. Only
+-- does so while something has requested the blur, and no more often than the blur update
+-- interval unless Flux.blur_update_fps is 0.
 function GM:RenderScreenspaceEffects()
   if Flux.should_render_blur then
     local cur_time = CurTime()
@@ -357,7 +417,8 @@ function GM:RenderScreenspaceEffects()
   end
 end
 
--- Called when category icons are presented.
+--- Adds the scoreboard and help items to the tab menu.
+-- @param menu [Panel the fl_tab_menu being built]
 function GM:AddTabMenuItems(menu)
   menu:add_menu_item('scoreboard', {
     title = t'ui.tab_menu.scoreboard',
@@ -374,10 +435,18 @@ function GM:AddTabMenuItems(menu)
   })
 end
 
+--- Centers a newly opened panel within the tab menu.
+-- @param menu_panel [Panel the tab menu]
+-- @param active_panel [Panel the panel that has been opened]
 function GM:OnMenuPanelOpen(menu_panel, active_panel)
   active_panel:SetPos(menu_panel:GetWide() * 0.5 - active_panel:GetWide() * 0.5, menu_panel:GetTall() * 0.5 - active_panel:GetTall() * 0.5)
 end
 
+--- Intercepts the undo bind and blocks it when the SoftUndo hook returns a value.
+-- @param player [Player]
+-- @param bind [String the bind that was triggered]
+-- @param pressed [Boolean whether the key was pressed rather than released]
+-- @return [Boolean true to block the bind, nil otherwise]
 function GM:PlayerBindPress(player, bind, pressed)
   if bind:find('gmod_undo') and pressed then
     if hook.run('SoftUndo', player) != nil then
@@ -386,6 +455,9 @@ function GM:PlayerBindPress(player, bind, pressed)
   end
 end
 
+--- Creates the context menu if the local player has the context_menu permission and
+-- removes it if they do not.
+-- @return [Boolean always true]
 function GM:ContextMenuOpen()
   if PLAYER:can('context_menu') then
     if !IsValid(g_ContextMenu) then
@@ -400,6 +472,8 @@ function GM:ContextMenuOpen()
   return true
 end
 
+--- Removes the sandbox hint timers and allows the spawn menu to open.
+-- @return [Boolean always true]
 function GM:SpawnMenuOpen()
   timer.Remove('HintSystem_OpeningContext')
   timer.Remove('HintSystem_EditingSpawnlists')
@@ -407,16 +481,21 @@ function GM:SpawnMenuOpen()
   return true
 end
 
+--- Removes the sandbox hint timer about saving spawnlists.
 function GM:SpawnlistContentChanged()
   timer.Remove('HintSystem_EditingSpawnlistsSave')
 end
 
+--- Asks the server to undo the last Flux undo entry of the local player.
+-- @param player [Player unused, the local player is always used]
+-- @return [Boolean true if the local player has entries in their undo queue, nil otherwise]
 function GM:SoftUndo(player)
   Cable.send('fl_undo_soft')
 
   if #Flux.Undo:get_player(PLAYER) > 0 then return true end
 end
 
+--- Flashes the game window in the taskbar when the intro panel appears.
 function GM:OnIntroPanelCreated()
   system.FlashWindow()
 end
@@ -424,6 +503,8 @@ end
 do
   local prev_angles = nil
 
+  --- Updates the global UI offset from the rotation of the local player's view, so that HUD
+  -- elements using it sway and settle back. Skipped while the player is frozen.
   function GM:Think()
     if IsValid(PLAYER) and !PLAYER:IsFlagSet(FL_FROZEN) then
       local lerp_step = FrameTime() * 6
@@ -458,6 +539,10 @@ do
     CHudPoisonDamageIndicator = true
   }
 
+  --- Hides the default HUD elements that Flux replaces, such as health, armor, ammo, the
+  -- crosshair and the damage indicators.
+  -- @param element [String name of the HUD element]
+  -- @return [Boolean false for the hidden elements, true for everything else]
   function GM:HUDShouldDraw(element)
     if hidden_elements[element] then
       return false

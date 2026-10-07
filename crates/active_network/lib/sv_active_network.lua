@@ -20,7 +20,10 @@ local function is_bad_type(key, val)
   return false
 end
 
--- A function to get a networked global.
+--- Returns the value of a networked global variable.
+-- @param key [String variable name]
+-- @param default=nil [Any value to return if the variable is not set]
+-- @return [Any variable value, or default]
 function ActiveNetwork.get_nv(key, default)
   if globals[key] != nil then
     return globals[key]
@@ -29,7 +32,11 @@ function ActiveNetwork.get_nv(key, default)
   return default
 end
 
--- A function to set a networked global.
+--- Sets a networked global variable and sends it to clients.
+-- Does nothing if the value has not changed. Functions cannot be networked.
+-- @param key [String variable name]
+-- @param value [Any new value, anything but a function]
+-- @param send=nil [Player/Array<Player> who to send the value to; everyone if nil]
 function ActiveNetwork.set_nv(key, value, send)
   if is_bad_type(key, value) then return end
   if ActiveNetwork.get_nv(key) == value then return end
@@ -39,12 +46,17 @@ function ActiveNetwork.set_nv(key, value, send)
   Cable.send(send, 'fl_netvar_global_set', key, value)
 end
 
--- A function to send entity's networked variables to a player (or players).
+--- Sends the current value of this entity's networked variable to a player (or players).
+-- @param key [String variable name]
+-- @param recv=nil [Player/Array<Player> who to send the value to; everyone if nil]
 function ent_meta:send_net_var(key, recv)
   Cable.send(recv, 'fl_netvar_set', self:EntIndex(), key, (stored[self] and stored[self][key]))
 end
 
--- A function to get entity's networked variable.
+--- Returns the value of this entity's networked variable.
+-- @param key [String variable name]
+-- @param default=nil [Any value to return if the variable is not set]
+-- @return [Any variable value, or default]
 function ent_meta:get_nv(key, default)
   if stored[self] and stored[self][key] != nil then
     return stored[self][key]
@@ -53,13 +65,18 @@ function ent_meta:get_nv(key, default)
   return default
 end
 
--- A function to flush all entity's networked variables.
+--- Flushes all of this entity's networked variables and tells clients to do the same.
+-- @param recv=nil [Player/Array<Player> who to notify; everyone if nil]
 function ent_meta:clear_net_vars(recv)
   stored[self] = nil
   Cable.send(recv, 'fl_netvar_delete', self:EntIndex())
 end
 
--- A function to set entity's networked variable.
+--- Sets this entity's networked variable and sends it to clients.
+-- Does nothing if a non-table value has not changed. Functions cannot be networked.
+-- @param key [String variable name]
+-- @param value [Any new value, anything but a function]
+-- @param send=nil [Player/Array<Player> who to send the value to; everyone if nil]
 function ent_meta:set_nv(key, value, send)
   if is_bad_type(key, value) then return end
   if !istable(value) and self:get_nv(key) == value then return end
@@ -70,8 +87,8 @@ function ent_meta:set_nv(key, value, send)
   self:send_net_var(key, send)
 end
 
--- A function to send all current networked globals and entities' variables
--- to a player.
+--- Sends all current networked globals and all entities' networked variables to this
+-- player.
 function player_meta:sync_nv()
   for k, v in pairs(globals) do
     Cable.send(self, 'fl_netvar_global_set', k, v)

@@ -7,6 +7,9 @@ CMD.arguments = 1
 CMD.player_arg = 1
 CMD.aliases = { 'plydemoterank', 'chardemoterank' }
 
+--- Moves every target one rank down in their faction and notifies the targets and staff.
+-- @param player [Player the player who ran the command]
+-- @param targets [Array<Player> players matched by the first command argument]
 function CMD:on_run(player, targets)
   self:notify_staff('command.demoterank.message', {
     player = get_player_name(player),

@@ -1,6 +1,10 @@
 mod 'Gvue'
 
 --- Parses units and converts them into pixels.
+-- Numbers are returned as they are and 'auto' is passed through. Parsing of other strings
+-- is unfinished, anything that cannot be parsed yields 0.
+-- @param u [Number/String size, e.g. 16, '8px' or 'auto']
+-- @return [Number/String the number or 'auto'; 0 if the value cannot be parsed]
 function Gvue:parse_unit(u)
   if isnumber(u) then return u end
   if !isstring(u) then return 0 end

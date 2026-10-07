@@ -7,6 +7,10 @@ CMD.arguments = 2
 CMD.immunity = true
 CMD.alias = 'fb'
 
+--- Turns fullbright rendering on or off for the targeted players and notifies them and staff.
+-- @param player [Player the caller, or an invalid entity when run from the server console]
+-- @param targets [Array<Player> players to affect]
+-- @param should_fullbright [String value read with tobool, e.g. '1' or '0']
 function CMD:on_run(player, targets, should_fullbright)
   should_fullbright = tobool(should_fullbright)
 

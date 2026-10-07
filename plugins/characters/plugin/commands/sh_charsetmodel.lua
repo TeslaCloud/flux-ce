@@ -7,6 +7,10 @@ CMD.arguments = 2
 CMD.player_arg = 1
 CMD.alias = 'setmodel'
 
+--- Sets the model of every target's character and notifies staff.
+-- @param player [Player the player who ran the command]
+-- @param targets [Array<Player> players matched by the first command argument]
+-- @param model [String model path]
 function CMD:on_run(player, targets, model)
   for k, v in ipairs(targets) do
     v:notify('notification.model_changed', { model = model })

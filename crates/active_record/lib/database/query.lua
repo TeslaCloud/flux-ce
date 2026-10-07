@@ -15,6 +15,10 @@ local queries_with_create = {
   create = true, change = true
 }
 
+--- Creates an empty query. Queries are normally created through ActiveRecord::Database.
+-- @param table_name [String]
+-- @param query_type [String 'select', 'insert', 'update', 'delete', 'drop', 'truncate',
+--   'create' or 'change']
 function ActiveRecord.Query:init(table_name, query_type)
   self.query_type = query_type
   self.table_name = table_name
@@ -32,6 +36,9 @@ function ActiveRecord.Query:init(table_name, query_type)
   end
 end
 
+--- Appends the NOT NULL / DEFAULT clauses to the definition of the column that is
+-- being created.
+-- @param args [Hash column options: null (Boolean) and default (inserted into the SQL as is)]
 function ActiveRecord.Query:handle_create_args(args)
   if args['null'] == false then
     self.def = self.def..' NOT NULL'
@@ -44,62 +51,111 @@ function ActiveRecord.Query:handle_create_args(args)
   end
 end
 
+--- Escapes a value for use inside an SQL string literal.
+-- @param text [Any value to escape, converted to a string]
+-- @return [String]
 function ActiveRecord.Query:escape(text)
   return ActiveRecord.adapter:escape(tostring(text))
 end
 
+--- Turns a value into an escaped, quoted SQL string literal.
+-- @param text [Any value to quote, converted to a string]
+-- @return [String]
 function ActiveRecord.Query:quote(text)
   return ActiveRecord.adapter:quote(tostring(text))
 end
 
+--- Quotes an identifier such as a table or column name.
+-- @param text [Any identifier, converted to a string]
+-- @return [String]
 function ActiveRecord.Query:quote_column(text)
   return ActiveRecord.adapter:quote_name(tostring(text))
 end
 
+--- Changes the table the query operates on.
+-- @param table_name [String]
 function ActiveRecord.Query:for_table(table_name)
   self.table_name = table_name
 end
 
+--- Adds a "column = value" condition. Multiple conditions are joined with AND.
+-- @param key [String column name]
+-- @param value [Any value to compare with, converted to a string]
+-- @see [ActiveRecord::Query#where_equal]
 function ActiveRecord.Query:where(key, value)
   self:where_equal(key, value)
 end
 
+--- Adds a raw SQL condition. Nothing in it is escaped or quoted.
+-- @param condition [String SQL condition]
 function ActiveRecord.Query:where_raw(condition)
   table.insert(self.where_list, condition)
 end
 
+--- Adds a "column = value" condition.
+-- @param key [String column name]
+-- @param value [Any value to compare with, converted to a string]
 function ActiveRecord.Query:where_equal(key, value)
   table.insert(self.where_list, self:quote_column(key)..' = '..self:quote(value))
 end
 
+--- Adds a "column != value" condition.
+-- @param key [String column name]
+-- @param value [Any value to compare with, converted to a string]
 function ActiveRecord.Query:where_not_equal(key, value)
   table.insert(self.where_list, self:quote_column(key)..' != '..self:quote(value))
 end
 
+--- Adds a "column LIKE pattern" condition.
+-- @param key [String column name]
+-- @param value [String SQL LIKE pattern]
 function ActiveRecord.Query:where_like(key, value)
   table.insert(self.where_list, self:quote_column(key)..' LIKE '..self:quote(value))
 end
 
+--- Adds a "column NOT LIKE pattern" condition.
+-- @param key [String column name]
+-- @param value [String SQL LIKE pattern]
 function ActiveRecord.Query:where_not_like(key, value)
   table.insert(self.where_list, self:quote_column(key)..' NOT LIKE '..self:quote(value))
 end
 
+--- Adds a "column > value" condition.
+-- @param key [String column name]
+-- @param value [Any value to compare with, converted to a string]
 function ActiveRecord.Query:where_gt(key, value)
   table.insert(self.where_list, self:quote_column(key)..' > '..self:quote(value))
 end
 
+--- Adds a "column < value" condition.
+-- @param key [String column name]
+-- @param value [Any value to compare with, converted to a string]
 function ActiveRecord.Query:where_lt(key, value)
   table.insert(self.where_list, self:quote_column(key)..' < '..self:quote(value))
 end
 
+--- Adds a "column >= value" condition.
+-- @param key [String column name]
+-- @param value [Any value to compare with, converted to a string]
 function ActiveRecord.Query:where_gte(key, value)
   table.insert(self.where_list, self:quote_column(key)..' >= '..self:quote(value))
 end
 
+--- Adds a "column <= value" condition.
+-- @param key [String column name]
+-- @param value [Any value to compare with, converted to a string]
 function ActiveRecord.Query:where_lte(key, value)
   table.insert(self.where_list, self:quote_column(key)..' <= '..self:quote(value))
 end
 
+--- Adds a column to the ORDER BY clause.
+-- ```
+-- query:order('id')              -- ORDER BY id DESC
+-- query:order({ asc = 'name' })  -- ORDER BY name ASC
+-- query:order({ desc = 'name' }) -- ORDER BY name DESC
+-- ```
+-- @param key [String/Hash column name (sorted in descending order), or a hash with the
+--   column name stored under the 'asc' or 'desc' key]
 function ActiveRecord.Query:order(key)
   if isstring(key) then
     table.insert(self.order_list, self:quote_column(key)..' DESC')
@@ -112,46 +168,75 @@ function ActiveRecord.Query:order(key)
   end
 end
 
+--- Sets the function that is called once the query has been run.
+-- @param callback [Function receives the result rows, the SQL string and the time the
+--   query took in seconds]
 function ActiveRecord.Query:callback(callback)
   self._callback = callback
 end
 
+--- Adds a column to the list of columns to select. All columns are selected if none
+-- are added.
+-- @param field_name [String column name]
 function ActiveRecord.Query:select(field_name)
   table.insert(self.select_list, self:quote_column(field_name))
 end
 
+--- Marks a column to be dropped by a 'change' query.
+-- @param field_name [String column name]
 function ActiveRecord.Query:remove(field_name)
   table.insert(self.remove_column_list, self:quote_column(field_name))
 end
 
+--- Marks a column to be renamed by a 'change' query.
+-- @param what [String current column name]
+-- @param into [String new column name]
 function ActiveRecord.Query:rename(what, into)
   table.insert(self.rename_list, { self:quote_column(what), self:quote_column(into) })
 end
 
+--- Sets the value of a column for an 'insert' query.
+-- @param key [String column name]
+-- @param value [Any value to insert, converted to a string]
 function ActiveRecord.Query:insert(key, value)
   table.insert(self.insert_list, { key, self:quote(value) })
 end
 
+--- Sets the new value of a column for an 'update' query.
+-- @param key [String column name]
+-- @param value [Any new value, converted to a string]
 function ActiveRecord.Query:update(key, value)
   table.insert(self.update_list, { key, self:quote(value) })
 end
 
+--- Adds a column definition to a 'create' or 'change' query.
+-- @param key [String column name]
+-- @param value [String SQL definition of the column, e.g. 'varchar(255) NOT NULL']
 function ActiveRecord.Query:create(key, value)
   table.insert(self.create_list, { self:quote_column(key), value })
 end
 
+--- Sets the column used for the PRIMARY KEY clause of a 'create' query.
+-- @param key [String column name]
 function ActiveRecord.Query:set_primary_key(key)
   self.prim_key = self:quote_column(key)
 end
 
+--- Limits the amount of rows affected by a 'select' or 'delete' query.
+-- @param value [Number]
 function ActiveRecord.Query:limit(value)
   self._limit = value
 end
 
+--- Sets the row offset of the query.
+-- @param value [Number]
 function ActiveRecord.Query:offset(value)
   self.offset = value
 end
 
+--- Sets whether a 'create' query drops an existing table first, instead of only
+-- creating the table if it does not exist.
+-- @param overwrite [Boolean]
 function ActiveRecord.Query:overwrite(overwrite)
   self._overwrite = overwrite
 end
@@ -380,6 +465,11 @@ local function build_change_query(query)
   return table.concat(query_string):Trim():Trim(',')
 end
 
+--- Builds the SQL string of the query and hands it to the adapter.
+-- @param queue_query=false [Boolean put the query into the adapter's queue instead of
+--   running it right away]
+-- @return [Any whatever the query callback returns if the adapter ran the query
+--   synchronously, nothing otherwise]
 function ActiveRecord.Query:execute(queue_query)
   local query_string = nil
   local query_type = string.lower(self.query_type)

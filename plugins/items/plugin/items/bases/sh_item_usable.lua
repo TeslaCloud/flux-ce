@@ -5,6 +5,10 @@ ItemUsable.description = 'An item that can be used.'
 ItemUsable.max_uses = 1
 
 if CLIENT then
+  --- Called when the inventory slot of the item is painted over.
+  -- Draws the amount of uses left if the item can be used more than once.
+  -- @param w [Number width of the slot panel]
+  -- @param h [Number height of the slot panel]
   function ItemUsable:paint_over_slot(w, h)
     if self.max_uses > 1 then
       local text = self:get_uses()..'/'..self.max_uses
@@ -15,22 +19,32 @@ if CLIENT then
   end
 end
 
+--- Returns the translated name of the item,
+-- followed by the amount of uses left if the item can be used more than once.
+-- @return [String]
 function ItemUsable:get_name()
   return t(self.name)..(self.max_uses > 1 and ' ['..self:get_uses()..'/'..self.max_uses..']' or '')
 end
 
+--- Returns the weight of the item, scaled by the share of uses it has left.
+-- @return [Number]
 function ItemUsable:get_weight()
   return math.round(self.weight * self:get_uses() / self.max_uses, 1)
 end
 
+--- Returns the amount of uses the item has left.
+-- @return [Number]
 function ItemUsable:get_uses()
   return self.uses or self.max_uses
 end
 
--- Returns:
--- nothing/nil = removes item from the inventory as soon as it's used.
--- false = prevents item from being used at all.
--- true = prevents item from being removed upon use.
+--- Called on the server by the 'PlayerUseItem' hook when a player uses the item.
+-- Calls ItemUsable:use unless ItemUsable:can_use returns false, and spends one use.
+-- Returning nothing/nil removes the item from the inventory as soon as it's used,
+-- false prevents the item from being used at all,
+-- true prevents the item from being removed upon use.
+-- @param player [Player]
+-- @return [Boolean true if there are uses left, false if it cannot be used, nil if used up]
 function ItemUsable:on_use(player)
   if self:can_use(player) != false then
     self:use(player)
@@ -45,8 +59,15 @@ function ItemUsable:on_use(player)
   end
 end
 
+--- Called by ItemUsable:on_use when a player uses the item.
+-- Override it to make the item do something.
+-- @param player [Player]
 function ItemUsable:use(player)
 end
 
+--- Called by ItemUsable:on_use before the item is used.
+-- Override it and return false to prevent the item from being used.
+-- @param player [Player]
+-- @return [Boolean false to prevent the use, nil otherwise]
 function ItemUsable:can_use(player)
 end

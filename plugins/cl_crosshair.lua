@@ -10,12 +10,16 @@ local double_size = size * 2
 local gap = math.scale(8)
 local cur_gap = gap
 
+--- Hides the crosshair while the local player is running, dead or not yet initialized.
+-- @return [Boolean false to hide the crosshair, nil otherwise]
 function PLUGIN:ShouldHUDPaintCrosshair()
   if PLAYER:running() or !PLAYER:Alive() or !PLAYER:has_initialized() then
     return false
   end
 end
 
+--- Draws the crosshair: a center dot and four bars around it.
+-- Gap and color can be changed through the AdjustCrosshairGap and AdjustCrosshairColor hooks.
 function PLUGIN:HUDPaint()
   if IsValid(PLAYER) and hook.run('ShouldHUDPaint') != false and hook.run('ShouldHUDPaintCrosshair') != false then
     local lerp_step = FrameTime() * 6
@@ -47,6 +51,11 @@ function PLUGIN:HUDPaint()
   end
 end
 
+--- Tints the crosshair with the theme's accent color when the local player aims at a player
+-- or an item that is less than 600 units away.
+-- @param trace [Hash trace result of the local player's aim]
+-- @param distance [Number distance from the local player to the trace hit position]
+-- @return [Color the accent color, or nil to keep the default color]
 function PLUGIN:AdjustCrosshairColor(trace, distance)
   local ent = trace.Entity
 
@@ -55,6 +64,11 @@ function PLUGIN:AdjustCrosshairColor(trace, distance)
   end
 end
 
+--- Narrows the crosshair when the local player aims at a player or an item that is less than
+-- 600 units away.
+-- @param trace [Hash trace result of the local player's aim]
+-- @param distance [Number distance from the local player to the trace hit position]
+-- @return [Number a gap of 8, or nil to keep the distance-based gap]
 function PLUGIN:AdjustCrosshairGap(trace, distance)
   local ent = trace.Entity
 

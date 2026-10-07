@@ -4,6 +4,9 @@ TOOL.Command                = nil
 TOOL.ConfigName             = ''
 TOOL.ClientConVar['system'] = 'imperial'
 
+--- Sets the first measurement point to the position the player is aiming at.
+-- @param trace [Hash trace result of the player's aim]
+-- @return [Boolean always true]
 function TOOL:LeftClick(trace)
   if SERVER then return true end
 
@@ -12,6 +15,9 @@ function TOOL:LeftClick(trace)
   return true
 end
 
+--- Sets the second measurement point to the position the player is aiming at.
+-- @param trace [Hash trace result of the player's aim]
+-- @return [Boolean always true]
 function TOOL:RightClick(trace)
   if SERVER then return true end
 
@@ -20,6 +26,9 @@ function TOOL:RightClick(trace)
   return true
 end
 
+--- Clears both measurement points.
+-- @param trace [Hash trace result of the player's aim; unused]
+-- @return [Boolean always true]
 function TOOL:Reload(trace)
   if SERVER then return true end
 
@@ -29,6 +38,8 @@ function TOOL:Reload(trace)
   return true
 end
 
+--- Draws a line between the two measurement points and the distance between them in the
+-- selected measurement system.
 function TOOL:DrawHUD()
   local system = self:GetClientInfo('system')
 
@@ -52,6 +63,8 @@ local units = {
   'units'
 }
 
+--- Builds the settings panel of the tool, with a drop-down for the measurement system.
+-- @param CPanel [Panel the control panel of the tool]
 function TOOL.BuildCPanel(CPanel)
   local options = {}
 

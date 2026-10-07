@@ -7,6 +7,10 @@ CMD.arguments = 1
 CMD.immunity = true
 CMD.aliases = { 'teleport', 'plytp', 'bring' }
 
+--- Teleports the targeted players to the spot the caller is looking at and notifies them and
+-- staff.
+-- @param player [Player the caller, or an invalid entity when run from the server console]
+-- @param targets [Array<Player> players to teleport]
 function CMD:on_run(player, targets)
   local pos = player:GetEyeTraceNoCursor().HitPos
 

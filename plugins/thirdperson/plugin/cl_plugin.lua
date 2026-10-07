@@ -11,6 +11,14 @@ ThirdPerson.flipped_start = flipped_start
 ThirdPerson.was_third_person = ThirdPerson.was_third_person or false
 
 -- This is very basic and WIP, but it works.
+
+--- Pulls the camera back behind the player while third person is on, easing in and out
+-- over 0.15 seconds.
+-- @param player [Player]
+-- @param pos [Vector]
+-- @param angles [Angle]
+-- @param fov [Number]
+-- @return [Hash view table, or nil while third person is off and not easing out]
 function ThirdPerson:CalcView(player, pos, angles, fov)
   local is_third_person = player:get_nv('third_person')
 

@@ -1,3 +1,5 @@
+--- Creates or refreshes the money panel that sits next to the 'pockets' inventory panel.
+-- @param panel [Panel the inventory panel that was rebuilt]
 function Currencies:OnInventoryRebuild(panel)
   if panel:get_inventory_type() == 'pockets' then
     local parent = panel:GetParent()
@@ -22,6 +24,10 @@ function Currencies:OnInventoryRebuild(panel)
   end
 end
 
+--- Creates or refreshes the money panel below an opened container's inventory. Inventories
+-- that have an instance_id are skipped.
+-- @param panel [Panel the container panel]
+-- @param inventory_id [Number]
 function Currencies:OnConatinerOpened(panel, inventory_id)
   local inventory = Inventories.find(inventory_id)
   local inv_panel = panel.inventory
@@ -41,6 +47,10 @@ function Currencies:OnConatinerOpened(panel, inventory_id)
   panel.container_money:SetPos(inv_panel.x, inv_panel.y + inv_panel:GetTall() + text_h + math.scale(8))
 end
 
+--- Adds a money submenu to the player interaction menu with a 'give' option for every
+-- currency that is not hidden or that the local player owns.
+-- @param menu [Panel the interaction menu]
+-- @param target [Player the player being interacted with]
 function Currencies:CreatePlayerInteractions(menu, target)
   local money_menu, money_menu_option = menu:AddSubMenu(t'ui.currency.title')
   money_menu_option:SetIcon('icon16/money.png')
@@ -64,6 +74,11 @@ function Currencies:CreatePlayerInteractions(menu, target)
   end
 end
 
+--- Creates a panel that lists the money of an entity and keeps track of it so that it is
+-- rebuilt when the server reports a change. Client only.
+-- @param entity [Entity entity whose money is shown]
+-- @param parent [Panel]
+-- @return [Panel the created fl_currencies panel]
 function Currencies:create_panel(entity, parent)
   local money_panel = vgui.create('fl_currencies', parent)
   money_panel:set_entity(entity)

@@ -1,3 +1,8 @@
+--- Draws the name and the description of the container that the local player is looking at.
+-- @param entity [Entity]
+-- @param x [Number screen position]
+-- @param y [Number screen position]
+-- @param dist [Number distance between the local player and the entity]
 function Container:DrawEntityTargetID(entity, x, y, dist)
   if dist < 300 then
     local container_data = self:find(entity:GetModel())
@@ -27,12 +32,18 @@ function Container:DrawEntityTargetID(entity, x, y, dist)
   end
 end
 
+--- Prevents opening the menu of items that are stored inside of containers.
+-- @param item_obj [Item]
+-- @return [Boolean false to prevent the menu from opening, nil otherwise]
 function Container:CanItemMenuOpen(item_obj)
   if item_obj.inventory_type == 'container' then
     return false
   end
 end
 
+--- Returns the translated name of the container.
+-- @param entity [Entity]
+-- @return [String name, or nil if the entity is not a container]
 function Container:GetEntityName(entity)
   local container_data = self:find(entity:GetModel())
 
@@ -41,6 +52,9 @@ function Container:GetEntityName(entity)
   end
 end
 
+--- Adds the 'open' option to the interactions menu of the container props.
+-- @param menu [Panel the interactions menu]
+-- @param entity [Entity]
 function Container:CreateEntityInteractions(menu, entity)
   local container_data = self:find(entity:GetModel())
   

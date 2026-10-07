@@ -1,3 +1,7 @@
+--- Calls the 'PlayerSelectSlot' plugin hook when the player presses one of the slot binds.
+-- @param player [Player]
+-- @param bind [String]
+-- @param pressed [Boolean]
 function Inventories:PlayerBindPress(player, bind, pressed)
   if bind:find('slot') and pressed then
     local n = tonumber(bind:match('slot(%d+)'))
@@ -8,6 +12,10 @@ function Inventories:PlayerBindPress(player, bind, pressed)
   end
 end
 
+--- Selects the weapon of the item in the specified hotbar slot, or uses the item
+-- if it is not an equipable one. Switches to fists if the slot is empty.
+-- @param player [Player]
+-- @param slot [Number hotbar slot from 1 to 8]
 function Inventories:PlayerSelectSlot(player, slot)
   if slot >= 1 and slot < 9 then
     local cur_time = CurTime()
@@ -56,6 +64,10 @@ function Inventories:PlayerSelectSlot(player, slot)
   end
 end
 
+--- Calculates the size of the pockets inventory based on the items in it.
+-- @param player [Player]
+-- @param inv_type [String]
+-- @return [Number width, Number height; nothing for any inventory other than pockets]
 function Inventories:GetInventorySize(player, inv_type)
   if inv_type == 'pockets' then
     local item_count = 1

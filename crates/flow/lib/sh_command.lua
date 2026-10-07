@@ -6,6 +6,14 @@ local aliases           = Flux.Command.aliases  or {}
 Flux.Command.stored     = stored
 Flux.Command.aliases    = aliases
 
+--- Registers a command along with its aliases, fills in the defaults for missing fields,
+-- and runs the 'OnCommandCreated' hook. Commands defined in the 'commands' folder of
+-- a plugin are registered automatically, see Command#on_run for an example.
+-- @param id [String unique command ID, also the main name it is called by]
+-- @param data [Command/Hash command object or a table with the same fields: name, description,
+--   syntax, permission, arguments (minimum amount), immunity, player_arg, alias or aliases,
+--   no_console and the on_run callback]
+-- @see [Command#on_run]
 function Flux.Command:create(id, data)
   if !id or !data then return end
 
@@ -36,6 +44,9 @@ function Flux.Command:create(id, data)
   hook.run('OnCommandCreated', id, data)
 end
 
+--- Finds a command by its exact ID or alias, ignoring the case.
+-- @param id [String command ID or alias]
+-- @return [Command the command, or nil if there is no such command]
 function Flux.Command:find_by_id(id)
   id = id:utf8lower()
 
@@ -43,6 +54,10 @@ function Flux.Command:find_by_id(id)
   if aliases[id] then return stored[aliases[id]] end
 end
 
+--- Finds a command by its ID or alias. If there is no exact match, returns the first
+-- command that has an alias containing the specified string.
+-- @param id [String full or partial command ID or alias, treated as a Lua pattern]
+-- @return [Command the command, or nil if nothing was found]
 function Flux.Command:find(id)
   id = id:utf8lower()
 
@@ -59,7 +74,10 @@ function Flux.Command:find(id)
   end
 end
 
--- A function to find all commands by given search string.
+--- Finds all of the commands that have the search string in their ID or aliases.
+-- On the client only the commands the local player has access to are returned.
+-- @param id [String search string]
+-- @return [Array<Command> matching commands]
 function Flux.Command:find_all(id)
   local hits = {}
   local ids = {}
@@ -81,6 +99,14 @@ function Flux.Command:find_all(id)
   return hits
 end
 
+--- Splits a command string into arguments. Arguments are separated by spaces, quoted text
+-- is treated as a single argument.
+-- ```
+-- -- { 'ban', 'John Doe', '60', 'minging' }
+-- local args = Flux.Command:extract_arguments('ban "John Doe" 60 minging')
+-- ```
+-- @param text [String]
+-- @return [Array<String> arguments, String raw text of the arguments]
 function Flux.Command:extract_arguments(text)
   local raw_args
   local arguments = {}
@@ -200,6 +226,15 @@ if SERVER then
     end
   }
 
+  --- Finds the players targeted by a command argument. Other than a player's name the following
+  -- target selectors are supported: '@group' (everyone in a user group), '(name)' (everyone
+  -- with this text in their name), '[name]' (the player with exactly this name), '^' (yourself),
+  -- '*' (everyone) and '!radius' (everyone within this distance from you). Plugins can add
+  -- more by returning a parser function from the 'TargetFromString' hook. Serverside only.
+  -- @param player [Player the player who is running the command]
+  -- @param str [String player name or target selector]
+  -- @return [Array<Player> the targets, or false if nobody was found; String the selector
+  --   character, if one was used]
   function Flux.Command:str_to_player(player, str)
     local start = str:utf8sub(1, 1)
     local parser = macros[start] or hook.run('TargetFromString', player, str, start)
@@ -219,6 +254,15 @@ if SERVER then
     return false
   end
 
+  --- Parses a command string and runs the command on behalf of the specified player.
+  -- Checks that the command exists, that the player has access to it and has provided enough
+  -- arguments, resolves the targets and their immunity, and logs the command. The player
+  -- is notified of any failure (it is printed to the console for the server console).
+  -- Serverside only.
+  -- @param player [Player the player who runs the command, an invalid entity for server console]
+  -- @param text [String command ID followed by its arguments]
+  -- @param from_console=nil [Boolean whether it was run as a console command, passed to the
+  --   'PlayerCanRunCommand' hook]
   function Flux.Command:interpret(player, text, from_console)
     local args, raw_args
 
@@ -384,7 +428,13 @@ if SERVER then
     end
   end
 
-  -- Warning: this function assumes that command is valid and all permission checks have been done.
+  --- Calls the on_run callback of a command in protected mode. Assumes that the command
+  -- is valid and that all of the permission checks have already been done. Serverside only.
+  -- @param player [Player the player who runs the command, an invalid entity for server console]
+  -- @param cmd_table [Command]
+  -- @param arguments [Array arguments to pass to on_run after the player]
+  -- @param raw_args=nil [String raw text of the arguments, available to the callback
+  --   as self.raw_args]
   function Flux.Command:run(player, cmd_table, arguments, raw_args)
     if cmd_table.on_run then
       local old_raw_args = cmd_table.raw_args
@@ -405,12 +455,23 @@ if SERVER then
     Flux.Command:interpret(player, command, true)
   end)
 else
+  --- Asks the server to run a command on behalf of the local player. Clientside only.
+  -- ```
+  -- Flux.Command:send('getup')
+  -- ```
+  -- @param command [String command ID followed by its arguments]
   function Flux.Command:send(command)
     Cable.send('fl_command_run', command)
   end
 end
 
--- An internal function that powers the flc and flCmd console commands.
+--- Powers the flc and flCmd console commands. Interprets the command on the server
+-- and sends it to the server on the client.
+-- @warning [Internal]
+-- @param player [Player the player who has run the console command]
+-- @param cmd [String name of the console command]
+-- @param args [Array<String> arguments of the console command]
+-- @param args_text [String arguments as a single string, the Flux command to run]
 function Flux.Command.con_command(player, cmd, args, args_text)
   if SERVER then
     Flux.Command:interpret(player, args_text, true)

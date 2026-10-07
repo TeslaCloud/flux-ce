@@ -48,6 +48,13 @@ local function validate_column(model, schema, validations, column, success_callb
   end
 end
 
+--- Runs the validations defined on a model, one column at a time. Validators may be
+-- asynchronous, so the outcome is reported through the callbacks.
+-- @param model [ActiveRecord::Base object to validate]
+-- @param success_callback [Function called with the model once every validation passed]
+-- @param error_callback [Function called with the model, the column name and an error
+--   code as soon as a validation fails]
+-- @return [ActiveRecord::Validator/Boolean self, or false if the model has no schema]
 function ActiveRecord.Validator:validate_model(model, success_callback, error_callback)
   local schema = model:get_schema()
   local validations = model.validations or {}
@@ -81,6 +88,22 @@ function ActiveRecord.Validator:validate_model(model, success_callback, error_ca
   return self
 end
 
+--- Registers a validator, which can then be used with ActiveRecord::Base#validates.
+-- A validator has to call exactly one of the two callbacks it is given.
+-- ```
+-- ActiveRecord.Validator:add('presence', function(model, column, val, opts, success, fail)
+--   if model[column] != nil then
+--     success(model)
+--   else
+--     fail(model, column, 'presence')
+--   end
+-- end)
+-- ```
+-- @param id [String name of the validation, the key used in the options of #validates]
+-- @param callback [Function receives the model, the column name, the value given for
+--   this validation, all validation options of the column, a success callback and an
+--   error callback]
+-- @return [ActiveRecord::Validator(self)]
 function ActiveRecord.Validator:add(id, callback)
   self.validators[id] = callback
   return self

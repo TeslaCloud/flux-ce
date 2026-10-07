@@ -1,5 +1,7 @@
 local PANEL = {}
 
+--- Builds a collapsible category for every config menu category and fills it with config
+-- lines.
 function PANEL:Init()
   local width, height = self:GetWide(), self:GetTall()
 
@@ -33,6 +35,7 @@ function PANEL:Init()
   end
 end
 
+--- Sizes the scroll panel and the list once the admin panel has opened this page.
 function PANEL:on_opened()
   local width, height = self:GetWide(), self:GetTall()
 
@@ -44,6 +47,7 @@ vgui.Register('fl_config_editor', PANEL, 'fl_base_panel')
 
 local PANEL = {}
 
+--- Creates the label that shows the config's name.
 function PANEL:Init()
   self.text = vgui.create('DLabel', self)
   self.text:SetFont(Theme.get_font('main_menu_normal'))
@@ -51,10 +55,16 @@ function PANEL:Init()
   self.text:SetContentAlignment(5)
 end
 
+--- Lets the active theme draw the line through its PaintConfigLine hook.
+-- @param w [Number panel width]
+-- @param h [Number panel height]
 function PANEL:Paint(w, h)
   Theme.hook('PaintConfigLine', self, w, h)
 end
 
+--- Positions the label and the control that matches the config's data type.
+-- @param w [Number panel width]
+-- @param h [Number panel height]
 function PANEL:PerformLayout(w, h)
   local config_table = self.config
 
@@ -80,6 +90,10 @@ function PANEL:PerformLayout(w, h)
   end
 end
 
+--- Binds the line to a config entry and creates the control for its data type: slider,
+-- checkbox, text entry, list editor or dropdown. Changes are sent to the server.
+-- @param key [String config key]
+-- @param config_table [Hash the config's menu entry (name, description, type, data)]
 function PANEL:set_config(key, config_table)
   self.config = config_table
 

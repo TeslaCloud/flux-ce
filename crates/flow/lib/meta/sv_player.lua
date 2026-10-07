@@ -1,5 +1,7 @@
 local player_meta = FindMetaTable('Player')
 
+--- Saves the database record of the player. Can be prevented by returning true from the
+-- 'PreSavePlayerData' hook. Runs the 'PostSavePlayerData' hook afterwards.
 function player_meta:save_player()
   if hook.run('PreSavePlayerData', self) == true then return end
 
@@ -10,10 +12,15 @@ function player_meta:save_player()
   hook.run('PostSavePlayerData', self)
 end
 
+--- Replaces the networked data table of the player.
+-- @param data={} [Hash]
 function player_meta:set_data(data)
   self:set_nv('fl_data', data or {})
 end
 
+--- Sets a value in the networked data table of the player.
+-- @param key [String]
+-- @param value [Any]
 function player_meta:set_player_data(key, value)
   local data = self:get_data()
 
@@ -22,24 +29,39 @@ function player_meta:set_player_data(key, value)
   self:set_data(data)
 end
 
+--- Returns a value from the networked data table of the player.
+-- @param key [String]
+-- @param default=nil [Any returned if the value is not set or is false]
+-- @return [Any]
 function player_meta:get_player_data(key, default)
   return self:get_data()[key] or default
 end
 
+--- Sets whether the player has been initialized by Flux.
+-- @param initialized=true [Boolean]
 function player_meta:set_initialized(initialized)
   if initialized == nil then initialized = true end
 
   self:SetDTBool(BOOL_INITIALIZED, initialized)
 end
 
+--- Sends a notification to the player. Serverside variant.
+-- @param message [String text or language phrase]
+-- @param arguments=nil [Hash values to substitute into the phrase]
+-- @param color=nil [Color]
 function player_meta:notify(message, arguments, color)
   Flux.Player:notify(self, message, arguments, color)
 end
 
+--- Sends a light red notification to the player.
+-- @param message [String text or language phrase]
+-- @param arguments=nil [Hash values to substitute into the phrase]
 function player_meta:notify_admin(message, arguments)
   Flux.Player:notify(self, message, arguments, Color(255, 128, 128))
 end
 
+--- Returns the ammo the player has.
+-- @return [Hash amounts of ammo by ammo type ID, only for the types the player has]
 function player_meta:get_ammo_table()
   local ammo_table = {}
 
@@ -54,6 +76,10 @@ function player_meta:get_ammo_table()
   return ammo_table
 end
 
+--- Loads the database record of the player by their SteamID, creating and saving a new one
+-- if they have joined for the first time. The query is asynchronous: the record is put
+-- into player.record and the 'PlayerRestored' hook is run once it has loaded. Bots get
+-- a blank record that is never saved here.
 function player_meta:restore_player()
   if self:IsBot() then
     self.record = User.new()
@@ -82,6 +108,11 @@ function player_meta:restore_player()
   end)
 end
 
+--- Looks for unobstructed spots around the player that the player can be moved to.
+-- @param margin=3 [Number how far to search: spots are checked on a grid of this many steps
+--   in every direction, margin * 10 units apart]
+-- @param filter=nil [Entity/Array<Entity>/Function trace filter, the player by default]
+-- @return [Array<Vector> free positions, closest first]
 function player_meta:find_best_position(margin, filter)
   margin = margin or 3
 
@@ -128,6 +159,8 @@ function player_meta:find_best_position(margin, filter)
   return positions
 end
 
+--- Moves the player to the closest unobstructed spot nearby.
+-- @param filter=nil [Entity/Array<Entity>/Function trace filter, the player by default]
 function player_meta:unstuck(filter)
   local positions = self:find_best_position(4, filter)
 
@@ -144,6 +177,9 @@ function player_meta:unstuck(filter)
   end
 end
 
+--- Gives several weapons to the player.
+-- @param weapons_table [Array<String> weapon classes]
+-- @param no_ammo=false [Boolean do not give the default ammo with the weapons]
 function player_meta:give_weapons(weapons_table, no_ammo)
   for k, v in pairs(weapons_table) do
     self:Give(v, no_ammo)

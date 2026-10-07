@@ -54,6 +54,11 @@ if IsValid(PLAYER) and PLAYER.legs then
   PLAYER.legs:Remove()
 end
 
+--- Removes the local player's legs model whenever any player's model changes.
+-- It is recreated with the current model the next time the legs are rendered.
+-- @param player [Player the player whose model has changed]
+-- @param sNewModel [String new model path]
+-- @param sOldModel [String previous model path]
 function VisibleLegs:PlayerModelChanged(player, sNewModel, sOldModel)
   if PLAYER.legs then
     PLAYER.legs:Remove()
@@ -63,6 +68,8 @@ end
 local offset = Vector(-50, -50, 0)
 local scale = Vector(1, 1, 1)
 
+--- Draws the local player's legs model in first person, following their animation.
+-- Skipped while in observer mode, in third person, dead or looking above the horizon.
 function VisibleLegs:RenderScreenspaceEffects()
   local player = PLAYER
 
@@ -109,6 +116,9 @@ function VisibleLegs:RenderScreenspaceEffects()
   cam.End3D()
 end
 
+--- Creates the clientside legs model of the player, replacing the previous one, and stores
+-- it in player.legs. The upper body bones are moved out of view.
+-- @param player [Player normally the local player]
 function VisibleLegs:spawn_legs(player)
   if IsValid(player.legs) then
     player.legs:Remove()

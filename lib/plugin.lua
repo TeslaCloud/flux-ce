@@ -30,14 +30,21 @@ local default_extras = {
 
 local extras = table.Copy(default_extras)
 
+--- Returns all registered plugins, the schema included.
+-- @return [Hash plugin path to plugin object]
 function Plugin.all()
   return stored
 end
 
+--- Returns the hook cache.
+-- @return [Hash hook name to an Array of entries shaped { callback, object, id = id }]
 function Plugin.get_cache()
   return hooks_cache
 end
 
+--- Clears the hook and load caches and resets the extra folders, ready for a code refresh.
+-- Does nothing before Flux has initialized. On a lite refresh only the entries of plugins
+-- whose path does not contain 'flux' are dropped.
 function Plugin.clear_cache()
   if !Flux.initialized then return end
 
@@ -58,14 +65,20 @@ function Plugin.clear_cache()
   end
 end
 
+--- Forgets which plugins have been loaded, so that they can be included again.
 function Plugin.clear_load_cache()
   load_cache = {}
 end
 
+--- Resets the list of extra plugin folders to the defaults.
 function Plugin.clear_extras()
   extras = table.Copy(default_extras)
 end
 
+--- Adds every function of a table to the hook cache under the key it is stored at,
+-- so that hook.Call calls it with the table as self.
+-- @param obj [Hash table with functions named after hooks, e.g. a plugin object]
+-- @param id=nil [String ID to store with the entries, see Plugin.remove_hooks]
 function Plugin.cache_functions(obj, id)
   for k, v in pairs(obj) do
     if isfunction(v) then
@@ -75,10 +88,24 @@ function Plugin.cache_functions(obj, id)
   end
 end
 
+--- Registers the functions of a table as hook handlers.
+-- ```
+-- local hooks = {}
+--
+-- function hooks:PlayerButtonDown(player, key)
+--   Cable.send(player, 'fl_bind_pressed', key)
+-- end
+--
+-- Plugin.add_hooks('FLBinds', hooks)
+-- ```
+-- @param id [String unique ID of this set of hooks]
+-- @param obj [Hash table with functions named after hooks]
 function Plugin.add_hooks(id, obj)
   Plugin.cache_functions(obj, id)
 end
 
+--- Removes all hook handlers that have been registered under an ID.
+-- @param id [String ID that was passed to Plugin.add_hooks]
 function Plugin.remove_hooks(id)
   for k, v in pairs(hooks_cache) do
     for k2, v2 in ipairs(v) do
@@ -89,6 +116,9 @@ function Plugin.remove_hooks(id)
   end
 end
 
+--- Finds a registered plugin by its path, ID, folder or name.
+-- @param id [String plugin path, ID, folder or name]
+-- @return [Plugin the plugin, String the path it is stored under; nothing if not found]
 function Plugin.find(id)
   if stored[id] then
     return stored[id], id
@@ -101,7 +131,9 @@ function Plugin.find(id)
   end
 end
 
--- A function to unhook a plugin from cache.
+--- Unhooks a plugin by removing its functions from the hook cache.
+-- Calls the plugin's on_unhook method first, if it has one.
+-- @param id [String/Plugin plugin path, ID, folder or name, or the plugin object itself]
 function Plugin.remove_from_cache(id)
   local plugin_table = Plugin.find(id) or (istable(id) and id)
 
@@ -132,7 +164,9 @@ function Plugin.remove_from_cache(id)
   end
 end
 
--- A function to cache existing plugin's hooks.
+--- Caches the hooks of an existing plugin again.
+-- Calls the plugin's on_recache method first, if it has one.
+-- @param id [String plugin path, ID, folder or name]
 function Plugin.recache(id)
   local plugin_table = Plugin.find(id)
 
@@ -154,7 +188,9 @@ function Plugin.recache(id)
   end
 end
 
--- A function to remove the plugin entirely.
+--- Removes a plugin entirely: unhooks it and deletes it from the registered plugins.
+-- Calls the plugin's on_removed method first, if it has one.
+-- @param id [String plugin path, ID, folder or name]
 function Plugin.remove(id)
   local plugin_table, plugin_id = Plugin.find(id)
 
@@ -178,12 +214,19 @@ function Plugin.remove(id)
   end
 end
 
+--- Checks whether a plugin is on the list of disabled plugins.
+-- @param folder [String plugin folder]
+-- @return [Boolean truthy if the plugin is disabled; nil if it is not, or if the list has
+--   not been loaded]
 function Plugin.is_disabled(folder)
   if Flux.shared.disabled_plugins then
     return Flux.shared.disabled_plugins[folder]
   end
 end
 
+--- Checks whether a plugin has already been loaded.
+-- @param obj [Plugin/String plugin object or plugin ID]
+-- @return [Boolean true if loaded; nil if not; false if obj is neither a table nor a string]
 function Plugin.loaded(obj)
   if istable(obj) then
     return load_cache[obj.id]
@@ -194,6 +237,11 @@ function Plugin.loaded(obj)
   return false
 end
 
+--- Registers a plugin: caches its hooks, calls its OnPluginLoaded method, stores it under
+-- its path and marks it as loaded.
+-- On the server this also imports the schema's .yml config when the schema is registered,
+-- and shares the info of single-file plugins with clients.
+-- @param obj [Plugin plugin object to register]
 function Plugin.register(obj)
   Plugin.cache_functions(obj)
 
@@ -239,6 +287,12 @@ function Plugin.register(obj)
   load_cache[obj.id] = true
 end
 
+--- Includes a plugin from a folder or from a single .lua file and registers it.
+-- Reads plugin.yml on the server, checks the plugin's environment and dependencies, includes
+-- its extra folders and its main file. The PLUGIN global is set while the plugin loads.
+-- @param path [String plugin folder or .lua file, relative to the LUA search path]
+-- @return [Hash plugin info, or nil if the plugin was not loaded (already loaded, wrong
+--   environment or missing dependency)]
 function Plugin.include(path)
   local id = File.name(path)
   local ext = File.ext(id)
@@ -319,6 +373,9 @@ function Plugin.include(path)
   return data
 end
 
+--- Includes the active schema: loads its dependencies, sh_schema.lua, extra folders and
+-- plugins, then registers it. Sets the SCHEMA global.
+-- Runs the PreLoadPlugins, OnPluginsLoaded and OnSchemaLoaded hooks.
 function Plugin.include_schema()
   local schema_info = Flux.get_schema_info()
   local schema_path = schema_info.folder
@@ -396,7 +453,11 @@ do
     '/plugin/sh_plugin.lua'
   }
 
+  --- Makes sure that a plugin (or a crate) is loaded, including it if it has not been yet.
+  -- Plugins are looked up in the Flux, cloud and schema plugin folders.
   -- Please specify full file name if requiring a single-file Plugin.
+  -- @param name [String plugin or crate name]
+  -- @return [Boolean true if the dependency is loaded or could be found, false otherwise]
   function Plugin.require(name)
     if !isstring(name) then return false end
 
@@ -460,6 +521,8 @@ do
   end
 end
 
+--- Includes all plugins inside a folder: single-file plugins first, then plugin folders.
+-- @param folder [String folder relative to the LUA search path, without a trailing slash]
 function Plugin.include_plugins(folder)
   local files, folders = file.Find(folder..'/*', 'LUA')
 
@@ -501,6 +564,10 @@ do
     }
   }
 
+  --- Includes and registers the scripted weapons, entities and effects found in a folder.
+  -- Looks for 'weapons', 'entities' and 'effects' subfolders, each containing single .lua
+  -- files or folders with shared.lua, init.lua and cl_init.lua.
+  -- @param folder [String path of a plugin's 'entities' folder, without a trailing slash]
   function Plugin.include_entities(folder)
     local _, dirs = file.Find(folder..'/*', 'LUA')
 
@@ -567,12 +634,18 @@ do
   end
 end
 
+--- Adds a folder to the list of extra folders that are included for every plugin.
+-- @param extra [String folder name relative to the plugin's folder, e.g. 'items']
 function Plugin.add_extra(extra)
   if !isstring(extra) then return end
 
   table.insert(extras, extra)
 end
 
+--- Includes all extra folders (lib, classes, config, entities, themes and so on) of a
+-- plugin or schema. A plugin can take over a folder by returning a non-nil value from the
+-- PluginIncludeFolder hook.
+-- @param folder [String plugin or schema folder, without a trailing slash]
 function Plugin.include_folders(folder)
   for k, v in ipairs(extras) do
     if Plugin.call('PluginIncludeFolder', v, folder) == nil then
@@ -623,6 +696,14 @@ do
 
   -- If we're running in development, we should be using pcall'ed hook.Call rather than unsafe one.
   if Flux.development then
+    --- Overrides hook.Call so that plugin and schema hooks from the hook cache are called
+    -- before the regular hooks. Development variant: handlers are run with pcall, failures
+    -- are printed and reported through the OnHookError hook.
+    -- @param name [String hook name]
+    -- @param gm [Hash gamemode table, or nil to skip gamemode hooks]
+    -- @param ... [Vararg arguments to pass to the handlers]
+    -- @return [Any values returned by the first handler that returned non-nil (cached plugin
+    --   hooks pass on six values at most)]
     function hook.Call(name, gm, ...)
       if hooks_cache[name] then
         for k, v in ipairs(hooks_cache[name]) do
@@ -646,6 +727,14 @@ do
   else
     -- While generally a bad idea, pcall-less method is faster and if you're not developing
     -- changes are low that you'll ever run into an error anyway.
+
+    --- Overrides hook.Call so that plugin and schema hooks from the hook cache are called
+    -- before the regular hooks. Production variant: handlers are called without pcall.
+    -- @param name [String hook name]
+    -- @param gm [Hash gamemode table, or nil to skip gamemode hooks]
+    -- @param ... [Vararg arguments to pass to the handlers]
+    -- @return [Any values returned by the first handler that returned non-nil (cached plugin
+    --   hooks pass on six values at most)]
     function hook.Call(name, gm, ...)
       if hooks_cache[name] then
         for k, v in ipairs(hooks_cache[name]) do
@@ -661,8 +750,12 @@ do
     end
   end
 
+  --- Calls a hook and returns what its handlers returned.
   -- This function DOES NOT call GM: (gamemode) hooks!
   -- It only calls plugin, schema and hook.Add'ed hooks!
+  -- @param name [String hook name]
+  -- @param ... [Vararg arguments to pass to the handlers]
+  -- @return [Any values returned by the first handler that returned non-nil]
   function Plugin.call(name, ...)
     return hook.Call(name, nil, ...)
   end

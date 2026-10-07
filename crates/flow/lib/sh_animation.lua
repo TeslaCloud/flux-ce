@@ -80,10 +80,16 @@ stored.player = {
   }
 }
 
+--- Returns all of the animation tables.
+-- @return [Hash animation tables by model class]
 function Flux.Anim:all()
   return stored
 end
 
+--- Sets which animation table a model uses. Falls back to the 'player' class
+-- if the specified class does not exist.
+-- @param model [String path to the model]
+-- @param class [String model class, a key of the table returned by Flux.Anim#all]
 function Flux.Anim:set_model_class(model, class)
   if !stored[class] then
     class = 'player'
@@ -92,6 +98,9 @@ function Flux.Anim:set_model_class(model, class)
   models[string.lower(model)] = class
 end
 
+--- Returns the animation class of a model.
+-- @param model [String path to the model]
+-- @return [String model class, 'player' if none was set for the model]
 function Flux.Anim:get_model_class(model)
   if !model then return 'player' end
 
@@ -104,6 +113,10 @@ function Flux.Anim:get_model_class(model)
   return 'player'
 end
 
+--- Returns the animation table of a model. Models from a 'player' folder do not get one,
+-- as they use the default player animations.
+-- @param model [String path to the model]
+-- @return [Hash animations by hold type, or nil if the model does not need them]
 function Flux.Anim:get_table(model)
   if !model then return end
 
@@ -153,7 +166,11 @@ do
     ['weapon_annabelle']  = 'shotgun'
   }
 
-  -- A function to get a weapon's hold type.
+  --- Returns the hold type of a weapon translated to one of the hold types used by
+  -- the animation tables.
+  -- @param player [Player the player who holds the weapon, currently unused]
+  -- @param weapon [Weapon]
+  -- @return [String lower case hold type, 'normal' if the weapon is not valid]
   function Flux.Anim.get_weapon_hold_type(player, weapon)
     if !IsValid(weapon) then return 'normal' end
 
@@ -178,6 +195,11 @@ end
 
 local player_meta = FindMetaTable('Player')
 
+--- Makes the player play the specified sequence instead of their regular animations.
+-- The override is removed once the sequence has finished.
+-- @param animation [String name of the sequence]
+-- @param duration_override=nil [Number seconds to keep the override for instead of
+--   the duration of the sequence, 0 keeps it until Player#stop_animation is called]
 function player_meta:set_animation(animation, duration_override)
   local sequence, duration = self:LookupSequence(animation)
 
@@ -199,6 +221,7 @@ function player_meta:set_animation(animation, duration_override)
   end
 end
 
+--- Stops the animation that was set with Player#set_animation.
 function player_meta:stop_animation()
   self.fl_animation = nil
 end

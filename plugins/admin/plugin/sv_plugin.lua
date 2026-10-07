@@ -1,3 +1,7 @@
+--- Removes a temporary permission from a player, destroying its database record and updating
+-- the networked table.
+-- @param player [Player]
+-- @param perm_id [String permission ID]
 function Bolt:delete_temp_permission(player, perm_id)
   if player.record.temp_permissions then
     for k, v in pairs(player.record.temp_permissions) do

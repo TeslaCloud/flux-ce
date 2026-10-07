@@ -35,12 +35,17 @@ local function safe_index(tab, idx)
   return tab[relative_clamp(idx, 1, #tab)]
 end
 
+--- Hides the default weapon selection HUD.
+-- @param element [String name of the HUD element]
+-- @return [Boolean false for 'CHudWeaponSelection', nil otherwise]
 function PLUGIN:HUDShouldDraw(element)
   if element == 'CHudWeaponSelection' then
     return false
   end
 end
 
+--- Draws the weapon selector while it is open and animates its entries scrolling towards
+-- the highlighted weapon.
 function PLUGIN:HUDPaint()
   if !IsValid(PLAYER) then return end
 
@@ -116,6 +121,8 @@ function PLUGIN:HUDPaint()
   end
 end
 
+--- Fades the weapon selector in while it is in use, and fades it out and closes it after
+-- five seconds without input.
 function PLUGIN:Think()
   if self.is_open then
     if CurTime() - self.open_time > 5 then
@@ -133,6 +140,13 @@ end
 do
   local prev_index = 0
 
+  --- Handles the weapon selection binds: invprev, invnext and slot binds move the highlight,
+  -- attack selects the highlighted weapon while the selector is open.
+  -- Ignored in vehicles, while attack is held and when ShouldOpenWepselect returns false.
+  -- @param player [Player]
+  -- @param bind [String the bind's command]
+  -- @param pressed [Boolean whether the bind was pressed rather than released]
+  -- @return [Boolean true if the bind was consumed, nil otherwise]
   function PLUGIN:PlayerBindPress(player, bind, pressed)
     local weapon = player:GetActiveWeapon()
 
@@ -200,6 +214,9 @@ do
   end
 end
 
+--- Opens the weapon selector and starts scrolling it from the old index to the new one.
+-- @param old_index [Number previously highlighted index in the player's weapon list]
+-- @param index [Number newly highlighted index]
 function PLUGIN:OnWeaponIndexChange(old_index, index)
   self.is_open = true
   self.open_time = CurTime()
@@ -217,12 +234,19 @@ function PLUGIN:OnWeaponIndexChange(old_index, index)
   end
 end
 
+--- Closes the weapon selector and clears its entries once a weapon has been selected.
+-- @param index [Number index of the selected weapon in the player's weapon list]
 function PLUGIN:OnWeaponSelected(index)
   self.is_open = false
   self.cur_alpha = 0
   self.display = {}
 end
 
+--- Builds the five selector entries (two above and two below) around a weapon index.
+-- Each entry is a table with the fields weapon, scale, x, y and highlight.
+-- @param index [Number index in the local player's weapon list; wraps around]
+-- @param tab=false [Boolean return the entries instead of storing them in self.display]
+-- @return [Array<Hash> the entries if tab is set, nil otherwise]
 function PLUGIN:make_display(index, tab)
   local client_weapons = PLAYER:GetWeapons()
   local offsety = 32

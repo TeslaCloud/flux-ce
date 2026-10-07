@@ -72,6 +72,16 @@ local function _process_node(node, parent, spaces)
   end
 end
 
+--- Renders a Gvue component from its HTML source and returns the root element.
+-- The source may contain <template>, <script> and <style> tags. The template must have
+-- exactly one base tag. The script, if there is one, is compiled as Lua and called with
+-- the root element as its argument.
+-- ```
+-- local pane = Gvue.render_html('<template><div x="128" y="64">Hey it works!</div></template>')
+-- ```
+-- @param html [String component source]
+-- @param parent=nil [Panel panel to parent the root element to]
+-- @return [Panel root element, or nil if the source has no <template> tag]
 function Gvue.render_html(html, parent)
   local parsed = HTMLParser:parse(html)
   local template, script, style

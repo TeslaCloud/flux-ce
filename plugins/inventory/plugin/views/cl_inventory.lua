@@ -4,6 +4,8 @@ PANEL.slot_size = math.scale(64)
 PANEL.slot_padding = math.scale(1)
 PANEL.draw_inventory_slots = false
 
+--- Creates the scrollable grid of slots and makes it accept dragged items.
+-- Items dropped onto the parent panel get dropped into the world.
 function PANEL:Init()
   self:RequestFocus()
   self.slot_panels = {}
@@ -93,6 +95,8 @@ function PANEL:Init()
   end
 end
 
+--- Rotates the item that is being dragged when R is pressed.
+-- @param key [Number KEY_ enumerator]
 function PANEL:OnKeyCodePressed(key)
   local droppable = dragndrop.GetDroppable('fl_item')
 
@@ -112,6 +116,9 @@ function PANEL:OnKeyCodePressed(key)
   end
 end
 
+--- Resizes the scroll panels to fit the grid of slots.
+-- @param w [Number]
+-- @param h [Number]
 function PANEL:PerformLayout(w, h)
   local slot_size, slot_padding = self:get_slot_size(), self:get_slot_padding()
   local width = (slot_size + slot_padding) * self:get_inventory_width() - slot_padding
@@ -125,14 +132,21 @@ function PANEL:PerformLayout(w, h)
   self.horizontal_scroll:SetSize(math.min(w, width), math.min(h, height))
 end
 
+--- Draws the background of the inventory using the theme.
+-- @param w [Number]
+-- @param h [Number]
 function PANEL:Paint(w, h)
   Theme.hook('PaintInventoryBackground', self, w, h)
 end
 
+--- Draws over the inventory using the theme.
+-- @param w [Number]
+-- @param h [Number]
 function PANEL:PaintOver(w, h)
   Theme.hook('PaintOverInventoryBackground', self, w, h)
 end
 
+--- Resizes the panel so that all slots of the inventory fit in it.
 function PANEL:SizeToContents()
   local slot_size, slot_padding = self:get_slot_size(), self:get_slot_padding()
   local width = (slot_size + slot_padding) * self:get_inventory_width() - slot_padding
@@ -141,6 +155,8 @@ function PANEL:SizeToContents()
   self:SetSize(width, height)
 end
 
+--- Hides the item panel that is being dragged and puts empty slots in its place.
+-- @param dropped [Panel the fl_inventory_item panel that is being dragged]
 function PANEL:start_dragging(dropped)
   local w, h = dropped:get_item_size()
   local x, y = dropped:get_item_pos()
@@ -188,6 +204,9 @@ function PANEL:start_dragging(dropped)
   end
 end
 
+--- Handles an item panel being dropped onto the inventory by asking the server to move
+-- its items to the hovered slot. Holding CTRL moves half of the stack, SHIFT a single item.
+-- @param dropped [Panel the fl_inventory_item panel that has been dropped]
 function PANEL:on_drop(dropped)
   local drop_slot = Flux.inventory_drop_slot
 
@@ -235,12 +254,16 @@ function PANEL:on_drop(dropped)
   Cable.send('fl_item_move', instance_ids, self:get_inventory_id(), drop_slot.slot_x, drop_slot.slot_y, dropped:was_rotated())
 end
 
+--- Sets the inventory that the panel displays and rebuilds the panel.
+-- @param inventory_id [Number id of the inventory]
 function PANEL:set_inventory_id(inventory_id)
   self.inventory_id = inventory_id
 
   self:rebuild()
 end
 
+--- Recreates the slot panels based on the current contents of the inventory.
+-- Runs the 'OnInventoryRebuild' hook afterwards.
 function PANEL:rebuild()
   dragndrop.Clear()
   self.scroll:Clear()
@@ -314,74 +337,114 @@ function PANEL:rebuild()
   hook.run('OnInventoryRebuild', self)
 end
 
+--- Sets the size of a single slot.
+-- @param size [Number size in pixels]
 function PANEL:set_slot_size(size)
   self.slot_size = size
 end
 
+--- Sets the gap between the slots.
+-- @param padding [Number gap in pixels]
 function PANEL:set_slot_padding(padding)
   self.slot_padding = padding
 end
 
+--- Sets the icon that is drawn in the slots of the inventory.
+-- @param icon [String FontAwesome icon id ('fa-...') or path to a material; nil for no icon]
 function PANEL:set_icon(icon)
   self.icon = icon
 end
 
+--- Returns the inventory that the panel displays.
+-- @return [Inventory]
 function PANEL:get_inventory()
   return Inventories.find(self:get_inventory_id())
 end
 
+--- Returns the id of the inventory that the panel displays.
+-- @return [Number]
 function PANEL:get_inventory_id()
   return self.inventory_id
 end
 
+--- Returns the width of the inventory in a number of slots.
+-- @return [Number]
 function PANEL:get_inventory_width()
   return self:get_inventory():get_width()
 end
 
+--- Returns the height of the inventory in a number of slots.
+-- @return [Number]
 function PANEL:get_inventory_height()
   return self:get_inventory():get_height()
 end
 
+--- Returns the size of the inventory in a number of slots.
+-- @return [Number width, Number height]
 function PANEL:get_inventory_size()
   return self:get_inventory():get_size()
 end
 
+--- Returns the type of the inventory.
+-- @return [String]
 function PANEL:get_inventory_type()
   return self:get_inventory():get_type()
 end
 
+--- Returns the slots grid of the inventory.
+-- @return [Hash slots, indexed by y and then by x; every slot is an array of instance ids]
 function PANEL:get_slots()
   return self:get_inventory():get_slots()
 end
 
+--- Returns the instance ids of the items located in the specified slot of the inventory.
+-- @param x [Number]
+-- @param y [Number]
+-- @return [Array<Number> instance ids, or nil if the slot is out of the inventory bounds]
 function PANEL:get_slot(x, y)
   return self:get_inventory():get_slot(x, y)
 end
 
+--- Returns the entity that the inventory belongs to.
+-- @return [Entity]
 function PANEL:get_owner()
   return self:get_inventory():get_owner()
 end
 
+--- Returns the size of a single slot.
+-- @return [Number size in pixels]
 function PANEL:get_slot_size()
   return self.slot_size
 end
 
+--- Returns the gap between the slots.
+-- @return [Number gap in pixels]
 function PANEL:get_slot_padding()
   return self.slot_padding
 end
 
+--- Checks if the inventory is multislot.
+-- @return [Boolean]
 function PANEL:is_multislot()
   return self:get_inventory():is_multislot()
 end
 
+--- Checks if the inventory is disabled.
+-- @return [Boolean]
 function PANEL:is_disabled()
   return self:get_inventory():is_disabled()
 end
 
+--- Sets whether the slots display their numbers.
+-- The value is stored on the panel under the name of this method,
+-- so the method cannot be called on the same panel again.
+-- @param bool [Boolean]
 function PANEL:draw_inventory_slots(bool)
   self.draw_inventory_slots = bool
 end
 
+--- Returns the icon that is drawn in the slots of the inventory.
+-- @return [String FontAwesome icon id or path to a material, or nil if there is no icon]
 function PANEL:get_icon()
   return self.icon
 end

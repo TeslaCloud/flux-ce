@@ -1,6 +1,8 @@
 ﻿local PANEL = {}
 PANEL.char_data = {}
 
+--- Builds the character creation screen: collects the stages from the
+-- AddCharacterCreationMenuStages hook, opens the first one and creates the navigation.
 function PANEL:Init()
   local fa_icon_size = math.scale(16)
 
@@ -71,6 +73,9 @@ function PANEL:Init()
   self:rebuild()
 end
 
+--- Draws the panel through the theme's PaintCharCreationMainPanel hook.
+-- @param w [Number]
+-- @param h [Number]
 function PANEL:Paint(w, h)
   if self:IsVisible() then
     Theme.hook('PaintCharCreationMainPanel', self, w, h)
@@ -80,6 +85,11 @@ end
 do
   local color_black_transparent = Color(0, 0, 0, 200)
 
+  --- Draws a dark overlay with a spinner, and a warning once the wait gets long, while a
+  -- character creation request is pending.
+  -- @param w [Number]
+  -- @param h [Number]
+  -- @return [Boolean true while a request is pending, otherwise nil]
   function PANEL:PaintOver(w, h)
     if self.request_sent then
       local cx, cy = ScrC()
@@ -107,6 +117,7 @@ do
   end
 end
 
+--- Recreates the stage buttons at the bottom and highlights the current stage.
 function PANEL:rebuild()
   self.stage_list:Clear()
 
@@ -144,6 +155,8 @@ function PANEL:rebuild()
   end
 end
 
+--- Steps forwards or backwards one stage at a time until the given stage is reached.
+-- @param stage [Number stage index]
 function PANEL:goto_stage(stage)
   if stage < self.stage then
     self:prev_stage()
@@ -168,6 +181,8 @@ function PANEL:goto_stage(stage)
   end
 end
 
+--- Opens the panel of a stage and updates the stage buttons and the back and next titles.
+-- @param stage [Number stage index]
 function PANEL:set_stage(stage)
   if self.stage != stage then
     self:open_panel(self.stages[stage])
@@ -188,6 +203,9 @@ function PANEL:set_stage(stage)
   end
 end
 
+--- Validates the current stage and moves on to the next one. On the last stage it asks for
+-- confirmation and sends the character creation request to the server.
+-- @return [Boolean false when validation failed, otherwise nil]
 function PANEL:next_stage()
   if self.panel and self.panel.on_validate then
     local success, error = self.panel:on_validate()
@@ -268,6 +286,7 @@ function PANEL:next_stage()
   end
 end
 
+--- Goes back one stage, or to the main menu from the first stage.
 function PANEL:prev_stage()
   if self.stage != 1 then
     self:set_stage(self.stage - 1)
@@ -276,6 +295,8 @@ function PANEL:prev_stage()
   end
 end
 
+--- Removes the panel, then calls the callback.
+-- @param callback=nil [Function called without arguments]
 function PANEL:close(callback)
   self:safe_remove()
 
@@ -284,14 +305,20 @@ function PANEL:close(callback)
   end
 end
 
+--- Merges the data of a stage into the collected character data.
+-- @param new_data [Hash]
 function PANEL:collect_data(new_data)
   table.safe_merge(self.char_data, new_data)
 end
 
+--- Empties the collected character data.
 function PANEL:clear_data()
   table.empty(self.char_data)
 end
 
+--- Slides the current stage panel out, then creates the theme panel with the given ID and
+-- slides it in.
+-- @param id [String ID of one of the added stages]
 function PANEL:open_panel(id)
   local x, y = self:GetWide() * 0.25, self:GetTall() / 6 + 8
 
@@ -330,6 +357,9 @@ function PANEL:open_panel(id)
   end
 end
 
+--- Adds a stage to character creation.
+-- @param id [String theme panel ID of the stage, also used as its title phrase]
+-- @param index=nil [Number position to insert the stage at; added last when omitted]
 function PANEL:add_stage(id, index)
   if index then
     table.insert(self.stages, index, id)
