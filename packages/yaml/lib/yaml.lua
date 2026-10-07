@@ -2,7 +2,7 @@ local table_print_value
 table_print_value = function(value, indent, done)
   indent = indent or 0
   done = done or {}
-  if istable(value) and not done [value] then
+  if type(value) == "table" and not done [value] then
     done [value] = true
 
     local list = {}
@@ -21,7 +21,7 @@ table_print_value = function(value, indent, done)
         comma = ','
       end
       local keyRep
-      if isnumber(key) then
+      if type(key) == "number" then
         keyRep = key
       else
         keyRep = string.format("%q", tostring(key))
@@ -40,7 +40,7 @@ table_print_value = function(value, indent, done)
 
     done[value] = false
     return rep
-  elseif isstring(value) then
+  elseif type(value) == "string" then
     return string.format("%q", value)
   else
     return tostring(value)
@@ -75,19 +75,15 @@ local pop = function(stack)
 end
 
 local context = function (str)
-  if !isstring(str) then
+  if type(str) ~= "string" then
     return ""
   end
 
-  str = str:sub(0,25):gsub("\n","\\n"):gsub("\"","\\\"")
+  str = str:sub(0,25):gsub("\n","\\n"):gsub("\"","\\\"");
   return ", near \"" .. str .. "\""
 end
 
 local Parser = {}
---- Sets up the parser state for a list of tokens.
--- @param self [Map the parser]
--- @param tokens [List tokens produced by tokenize]
--- @return [Map the parser]
 function Parser.new (self, tokens)
   self.tokens = tokens
   self.parse_stack = {}
@@ -134,19 +130,14 @@ local tokens = {
   {"string",    "^%b[] *[^,%c]+", noinline = true},
   {"[",         "^%["},
   {"]",         "^%]"},
-  {"-",         "^%-"},
+  {"-",         "^%-", noinline = true},
   {":",         "^:"},
   {"pipe",      "^(|)(%d*[+%-]?)", sep = "\n"},
   {"pipe",      "^(>)(%d*[+%-]?)", sep = " "},
   {"id",        "^([%w][%w %-_]*)(:[%s%c])"},
   {"string",    "^[^%c]+", noinline = true},
-  {"string",    "^[^,%c ]+"}
+  {"string",    "^[^,%]}%c ]+"}
 };
---- Splits YAML source into a list of tokens. Throws an error on invalid syntax or
--- indentation.
--- @param str [String YAML source]
--- @return [List tokens; a token is a table with its type at index 1 and the matched
---   captures at index 2]
 exports.tokenize = function (str)
   local token
   local row = 0
@@ -189,7 +180,7 @@ exports.tokenize = function (str)
           -- Finding numbers
           local snip = token[2][1]
           if not token.force_text then
-            if snip:match("^(%d+%.%d+)$") or snip:match("^(%d+)$") then
+            if snip:match("^(-?%d+%.%d+)$") or snip:match("^(-?%d+)$") then
               token[1] = "number"
             end
           end
@@ -205,7 +196,7 @@ exports.tokenize = function (str)
           end
 
           if indentAmount ~= 0 then
-            indents = (#token[2][1] / indentAmount)
+            indents = (#token[2][1] / indentAmount);
           else
             indents = 0
           end
@@ -247,72 +238,40 @@ exports.tokenize = function (str)
   return stack
 end
 
---- Returns an upcoming token without consuming it.
--- @param self [Map the parser]
--- @param offset=1 [Number how far to look ahead, 1 being the next token]
--- @return [Map token, or nil past the end of the input]
 Parser.peek = function (self, offset)
   offset = offset or 1
   return self.tokens[offset + self.current]
 end
 
---- Consumes the next token.
--- @param self [Map the parser]
--- @return [Map consumed token, or nil past the end of the input]
 Parser.advance = function (self)
   self.current = self.current + 1
   return self.tokens[self.current]
 end
 
---- Consumes the next token and returns its first capture.
--- @param self [Map the parser]
--- @return [String]
 Parser.advanceValue = function (self)
   return self:advance()[2][1]
 end
 
---- Consumes the next token, but only if it is of the given type.
--- @param self [Map the parser]
--- @param type [String token type]
--- @return [Map consumed token, or nil if the type does not match]
 Parser.accept = function (self, type)
   if self:peekType(type) then
     return self:advance()
   end
 end
 
---- Consumes the next token if it is of the given type, and throws an error otherwise.
--- @param self [Map the parser]
--- @param type [String token type]
--- @param msg [String error message]
--- @return [Map consumed token]
 Parser.expect = function (self, type, msg)
   return self:accept(type) or
     error(msg .. context(self:peek()[1].input))
 end
 
---- Consumes a dedent token. Throws an error if the next token is not a dedent, unless
--- the end of the input is reached.
--- @param self [Map the parser]
--- @param msg [String error message]
--- @return [Map/Boolean consumed token, or true at the end of the input]
 Parser.expectDedent = function (self, msg)
   return self:accept("dedent") or (self:peek() == nil) or
     error(msg .. context(self:peek()[2].input))
 end
 
---- Checks whether an upcoming token is of the given type.
--- @param self [Map the parser]
--- @param val [String token type]
--- @param offset=1 [Number how far to look ahead, 1 being the next token]
--- @return [Boolean true if the type matches; false, or nil if there is no such token]
 Parser.peekType = function (self, val, offset)
   return self:peek(offset) and self:peek(offset)[1] == val
 end
 
---- Consumes upcoming tokens for as long as their type is one of the given types.
--- @param self [Map the parser]
--- @param items [List<String> token types to skip]
 Parser.ignore = function (self, items)
   local advanced
   repeat
@@ -326,22 +285,14 @@ Parser.ignore = function (self, items)
   until advanced == false
 end
 
---- Skips upcoming space tokens.
--- @param self [Map the parser]
 Parser.ignoreSpace = function (self)
   self:ignore{"space"}
 end
 
---- Skips upcoming space, indent and dedent tokens.
--- @param self [Map the parser]
 Parser.ignoreWhitespace = function (self)
   self:ignore{"space", "indent", "dedent"}
 end
 
---- Parses the next value, whatever its kind, and resolves anchors (&name) and
--- aliases (*name). Throws an error on unexpected tokens.
--- @param self [Map the parser]
--- @return [Any parsed value]
 Parser.parse = function (self)
 
   local ref = nil
@@ -364,31 +315,29 @@ Parser.parse = function (self)
   }
   push(self.parse_stack, c)
 
-  if c.token then
-    if c.token[1] == "doc" then
-      result = self:parseDoc()
-    elseif c.token[1] == "-" then
-      result = self:parseList()
-    elseif c.token[1] == "{" then
-      result = self:parseInlineHash()
-    elseif c.token[1] == "[" then
-      result = self:parseInlineList()
-    elseif c.token[1] == "id" then
-      result = self:parseHash()
-    elseif c.token[1] == "string" then
-      result = self:parseString("\n")
-    elseif c.token[1] == "timestamp" then
-      result = self:parseTimestamp()
-    elseif c.token[1] == "number" then
-      result = tonumber(self:advanceValue())
-    elseif c.token[1] == "pipe" then
-      result = self:parsePipe()
-    elseif c.token.const == true then
-      self:advanceValue()
-      result = c.token.value
-    else
-      error("ParseError: unexpected token '" .. c.token[1] .. "'" .. context(c.token.input))
-    end
+  if c.token[1] == "doc" then
+    result = self:parseDoc()
+  elseif c.token[1] == "-" then
+    result = self:parseList()
+  elseif c.token[1] == "{" then
+    result = self:parseInlineHash()
+  elseif c.token[1] == "[" then
+    result = self:parseInlineList()
+  elseif c.token[1] == "id" then
+    result = self:parseHash()
+  elseif c.token[1] == "string" then
+    result = self:parseString("\n")
+  elseif c.token[1] == "timestamp" then
+    result = self:parseTimestamp()
+  elseif c.token[1] == "number" then
+    result = tonumber(self:advanceValue())
+  elseif c.token[1] == "pipe" then
+    result = self:parsePipe()
+  elseif c.token.const == true then
+    self:advanceValue();
+    result = c.token.value
+  else
+    error("ParseError: unexpected token '" .. c.token[1] .. "'" .. context(c.token.input))
   end
 
   pop(self.parse_stack)
@@ -404,18 +353,11 @@ Parser.parse = function (self)
   return result
 end
 
---- Skips a document start marker and parses the value that follows it.
--- @param self [Map the parser]
--- @return [Any parsed value]
 Parser.parseDoc = function (self)
   self:accept("doc")
   return self:parse()
 end
 
---- Collects the types of the tokens on the current row, up to and including the
--- current one.
--- @param self [Map the parser]
--- @return [Map token types found (as keys set to true), Number amount of tokens]
 Parser.inline = function (self)
   local current = self:peek(0)
   if not current then
@@ -432,36 +374,20 @@ Parser.inline = function (self)
   return inline, -i
 end
 
---- Checks whether the parser is in the middle of a row, rather than at its start.
--- @param self [Map the parser]
--- @return [Boolean]
 Parser.isInline = function (self)
   local _, i = self:inline()
   return i > 0
 end
 
---- Returns an enclosing entry of the parse stack.
--- @param self [Map the parser]
--- @param level=1 [Number how many levels to go up]
--- @return [Map stack entry holding the 'indent' and 'token' it started with, or nil]
 Parser.parent = function(self, level)
   level = level or 1
   return self.parse_stack[#self.parse_stack - level]
 end
 
---- Checks whether an enclosing value on the parse stack started with a token of the
--- given type.
--- @param self [Map the parser]
--- @param type [String token type]
--- @param level=1 [Number how many levels to go up]
--- @return [Boolean true if the type matches; false, or nil if there is no such entry]
 Parser.parentType = function(self, type, level)
   return self:parent(level) and self:parent(level).token[1] == type
 end
 
---- Parses a plain string, including flowing text that continues on indented lines.
--- @param self [Map the parser]
--- @return [String]
 Parser.parseString = function (self)
   if self:isInline() then
     local result = self:advanceValue()
@@ -510,10 +436,6 @@ Parser.parseString = function (self)
   end
 end
 
---- Parses a text block introduced by '|' (line breaks are kept) or '>' (line breaks
--- are turned into spaces).
--- @param self [Map the parser]
--- @return [String]
 Parser.parsePipe = function (self)
   local pipe = self:expect("pipe")
   self:expect("indent", "text block needs to start with indent")
@@ -522,10 +444,6 @@ Parser.parsePipe = function (self)
   return result
 end
 
---- Joins the tokens of an indented text block into a single string.
--- @param self [Map the parser]
--- @param sep [String separator inserted for every line break]
--- @return [String]
 Parser.parseTextBlock = function (self, sep)
   local token = self:advance()
   local result = string_trim(token.raw, "\n")
@@ -547,10 +465,6 @@ Parser.parseTextBlock = function (self, sep)
   return result
 end
 
---- Parses a block of "key: value" pairs.
--- @param self [Map the parser]
--- @param hash={} [Map table to add the pairs to]
--- @return [Map]
 Parser.parseHash = function (self, hash)
   hash = hash or {}
   local indents = 0
@@ -568,7 +482,7 @@ Parser.parseHash = function (self, hash)
         indents = indents + 1
       end
     end
-    self:ignoreSpace()
+    self:ignoreSpace();
   end
 
   while self:peekType("id") do
@@ -576,7 +490,7 @@ Parser.parseHash = function (self, hash)
     self:expect(":","expected semi-colon after id")
     self:ignoreSpace()
     hash[id] = self:parse()
-    self:ignoreSpace()
+    self:ignoreSpace();
   end
 
   while indents > 0 do
@@ -587,9 +501,6 @@ Parser.parseHash = function (self, hash)
   return hash
 end
 
---- Parses an inline hash written as { key: value, ... }.
--- @param self [Map the parser]
--- @return [Map]
 Parser.parseInlineHash = function (self)
   local id
   local hash = {}
@@ -618,9 +529,6 @@ Parser.parseInlineHash = function (self)
   return hash
 end
 
---- Parses a list of "- item" entries.
--- @param self [Map the parser]
--- @return [List]
 Parser.parseList = function (self)
   local list = {}
   while self:accept("-") do
@@ -632,9 +540,6 @@ Parser.parseList = function (self)
   return list
 end
 
---- Parses an inline list written as [a, b, ...].
--- @param self [Map the parser]
--- @return [List]
 Parser.parseInlineList = function (self)
   local list = {}
   local i = 0
@@ -654,9 +559,6 @@ Parser.parseInlineList = function (self)
   return list
 end
 
---- Parses a timestamp token into a unix timestamp.
--- @param self [Map the parser]
--- @return [Number]
 Parser.parseTimestamp = function (self)
   local capture = self:advance()[2]
 
@@ -666,33 +568,15 @@ Parser.parseTimestamp = function (self)
     day   = capture[3],
     hour  = capture[4] or 0,
     min   = capture[5] or 0,
-    sec   = capture[6] or 0
-  }
+    sec   = capture[6] or 0,
+    isdst = false,
+  } - os.time{year=1970, month=1, day=1, hour=8}
 end
 
---- Parses YAML source into Lua values. Throws an error if the source is not valid.
--- @param str [String YAML source]
--- @return [Any parsed document, a Map for the usual "key: value" documents]
 exports.eval = function (str)
   return Parser:new(exports.tokenize(str)):parse()
 end
 
 exports.dump = table_print
-
---- Reads and parses a YAML file. If a '.local.yml' (or '.local.yaml') variant of the
--- file exists next to it, that file is read instead.
--- @param file_name [String path to the file, relative to the game folder]
--- @return [Any parsed document (usually a Map), or nil if the file does not exist]
-exports.read = function(file_name)
-  if file.Exists(file_name, 'GAME') then
-    local local_name = file_name:gsub('%.y([a]?)ml', '.local.y%1ml')
-
-    if file.Exists(local_name, 'GAME') then
-      file_name = local_name
-    end
-
-    return exports.eval(file.Read(file_name, 'GAME'))
-  end
-end
 
 return exports
