@@ -99,7 +99,7 @@ function Pipeline.include_folder(id, directory)
 
   if !pipe then return end
 
-  if !directory:ends('/') then
+  if !directory:end_with('/') then
     directory = directory..'/'
   end
 

@@ -6,7 +6,7 @@ function Doors:ShowSpare1(actor)
   local entity = trace.Entity
 
   if IsValid(entity) and entity:is_door() and actor:GetPos():Distance(entity:GetPos()) < 115 then
-    local can_lock = hook.run('PlayerCanLockDoor', actor, entity) or false
+    local can_lock = hook.Run('PlayerCanLockDoor', actor, entity) or false
 
     Cable.send(actor, 'fl_door_menu', entity, can_lock, entity.conditions)
   end
@@ -24,7 +24,7 @@ function Doors:PlayerUse(activator, entity)
 
   if IsValid(entity) and entity:is_door() and activator:GetPos():Distance(entity:GetPos()) < 115 then
     if !entity.next_use or entity.next_use <= cur_time then
-      if hook.run('PlayerCanLockDoor', activator, entity) and activator:IsSprinting() then
+      if hook.Run('PlayerCanLockDoor', activator, entity) and activator:IsSprinting() then
         local locked = entity:get_nv('fl_locked')
 
         self:lock_door(entity, !locked)
@@ -39,7 +39,7 @@ function Doors:PlayerUse(activator, entity)
 
       entity.next_use = cur_time + 0.5
 
-      hook.run('PlayerUseDoor', activator, entity)
+      hook.Run('PlayerUseDoor', activator, entity)
     else
       return false
     end

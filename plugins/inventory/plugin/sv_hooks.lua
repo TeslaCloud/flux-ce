@@ -153,7 +153,7 @@ function Inventories:PlayerTakeItem(actor, item_obj, ...)
 
     local player_inventory = actor:get_inventory(inv_type)
 
-    hook.run('PreItemTransfer', item_obj, player_inventory)
+    hook.Run('PreItemTransfer', item_obj, player_inventory)
 
     local success, error_text = actor:add_item(item_obj, inv_type)
 
@@ -162,7 +162,7 @@ function Inventories:PlayerTakeItem(actor, item_obj, ...)
       item_obj.entity:Remove()
       Item.async_save_entities()
 
-      hook.run('ItemTransferred', item_obj, player_inventory)
+      hook.Run('ItemTransferred', item_obj, player_inventory)
     else
       actor:notify(error_text)
     end
@@ -185,13 +185,13 @@ function Inventories:PlayerDropItem(actor, instance_ids)
   for k, v in pairs(instance_ids) do
     local item_obj = Item.find_instance_by_id(v)
 
-    if hook.run('CanPlayerDropItem', actor, item_obj) == false then return end
+    if hook.Run('CanPlayerDropItem', actor, item_obj) == false then return end
 
-    hook.run('PreItemTransfer', item_obj, nil, inventory)
+    hook.Run('PreItemTransfer', item_obj, nil, inventory)
 
     inventory:take_item_by_id(v)
 
-    hook.run('ItemTransferred', item_obj, nil, inventory)
+    hook.Run('ItemTransferred', item_obj, nil, inventory)
 
     if distance < 80 then
       Item.spawn(trace.HitPos + Vector(0, 0, 5) * k, Angle(0, 0, 0), item_obj)
@@ -285,7 +285,7 @@ end
 function Inventories:CanItemTransfer(item_obj, inventory, x, y)
   local inv_type = inventory.type
 
-  if inv_type:starts('equipment') and (!item_obj.equip_slot or item_obj.equip_inv != inv_type) then
+  if inv_type:start_with('equipment') and (!item_obj.equip_slot or item_obj.equip_inv != inv_type) then
     return false, 'error.inventory.cant_equip'
   end
 
@@ -350,12 +350,12 @@ function Inventories:PlayerUseItem(actor, item_obj, ...)
   else
     local inventory = Inventories.find(item_obj.inventory_id)
 
-    hook.run('PreItemTransfer', item_obj, nil, inventory)
+    hook.Run('PreItemTransfer', item_obj, nil, inventory)
 
     inventory:take_item_by_id(item_obj.instance_id)
     inventory:sync()
 
-    hook.run('ItemTransferred', item_obj, nil, inventory)
+    hook.Run('ItemTransferred', item_obj, nil, inventory)
   end
 end
 
@@ -388,7 +388,7 @@ Cable.receive('fl_item_move', function(actor, instance_ids, inventory_id, x, y, 
   local item_obj = Item.find_instance_by_id(instance_id)
   local inventory = Inventories.find(inventory_id)
 
-  if hook.run('PlayerCanMoveItem', actor, item_obj, instance_ids, inventory_id, x, y) == false then
+  if hook.Run('PlayerCanMoveItem', actor, item_obj, instance_ids, inventory_id, x, y) == false then
     return
   end
 
@@ -408,11 +408,11 @@ Cable.receive('fl_item_move', function(actor, instance_ids, inventory_id, x, y, 
 
   inventory:sync()
 
-  hook.run('OnItemMoved', actor, item_obj, instance_ids, inventory_id, x, y)
+  hook.Run('OnItemMoved', actor, item_obj, instance_ids, inventory_id, x, y)
 end)
 
 Cable.receive('fl_item_drop', function(actor, instance_ids)
-  hook.run('PlayerDropItem', actor, instance_ids)
+  hook.Run('PlayerDropItem', actor, instance_ids)
 end)
 
 Cable.receive('fl_inventory_close', function(actor, inventory_ids)
@@ -422,7 +422,7 @@ Cable.receive('fl_inventory_close', function(actor, inventory_ids)
     inventory:sync()
   end
 
-  hook.run('OnInventoryClosed', actor, Inventories.find(inventory_ids[1]))
+  hook.Run('OnInventoryClosed', actor, Inventories.find(inventory_ids[1]))
 end)
 
 Cable.receive('fl_character_desc_change', function(actor, text)

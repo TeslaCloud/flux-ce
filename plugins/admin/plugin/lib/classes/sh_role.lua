@@ -209,7 +209,7 @@ function Role:register()
       end
       self:define_permissions()
 
-      hook.run('OnDefinePermissions', self)
+      hook.Run('OnDefinePermissions', self)
 
     can, cannot, allow_anything = old_can, old_cannot, old_anything
   end

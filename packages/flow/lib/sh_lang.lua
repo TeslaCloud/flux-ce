@@ -193,7 +193,7 @@ if CLIENT then
   end)
 else
   Pipeline.register('language', function(id, file_name, pipe)
-    if file_name:ends('.yml') then
+    if file_name:end_with('.yml') then
       local contents = File.read('gamemodes/'..file_name)
 
       if contents then

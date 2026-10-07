@@ -72,8 +72,8 @@ end
 function Package:describe(callback)
   if callback then
     local mt = setmetatable({ depends = self.current.depends }, { __newindex = function(o, k, v)
-      if k:ends('s') then
-        if k:ends('ies') then
+      if k:end_with('s') then
+        if k:end_with('ies') then
           k = k:gsub('ies$', 'y')
         else
           k = k:gsub('s$', '')
@@ -118,7 +118,7 @@ function Package:describe(callback)
   -- Once globals are set-up, include dependencies!
   if istable(meta.deps) then
     for k, name in ipairs(meta.deps) do
-      if name:ends('.lua') then
+      if name:end_with('.lua') then
         include(self.current.__path__..name)
         continue
       end

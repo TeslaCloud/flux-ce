@@ -14,11 +14,11 @@ Pipeline.register('tool', function(id, file_name, pipe)
   TOOL.Mode = id
   TOOL.id = id
 
-  hook.run('PreIncludeTool', TOOL)
+  hook.Run('PreIncludeTool', TOOL)
 
   require_relative(file_name)
 
-  hook.run('ToolPreCreateConvars', TOOL)
+  hook.Run('ToolPreCreateConvars', TOOL)
 
   TOOL:CreateConVars()
 

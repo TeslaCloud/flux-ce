@@ -88,7 +88,7 @@ end
 -- @return [Boolean false when not allowed, String error phrase if there is one; nothing
 --   when allowed]
 function Currencies:CanPlayerDropMoney(actor, amount, currency, pos, trace)
-  local success, err = hook.run('CanPlayerTransferMoney', actor, amount, currency)
+  local success, err = hook.Run('CanPlayerTransferMoney', actor, amount, currency)
 
   if success == false then
     return false, err
@@ -111,7 +111,7 @@ end
 -- @param currency [String currency ID]
 -- @return [Boolean false when not allowed, String error phrase; nothing when allowed]
 function Currencies:CanGiveMoney(actor, target, amount, currency)
-  local success, err = hook.run('CanPlayerTransferMoney', actor, amount, currency)
+  local success, err = hook.Run('CanPlayerTransferMoney', actor, amount, currency)
 
   if success == false then
     return false, err
@@ -121,7 +121,7 @@ function Currencies:CanGiveMoney(actor, target, amount, currency)
     return false, 'error.invalid_entity'
   end
 
-  if !hook.run('CanContainMoney', target) then
+  if !hook.Run('CanContainMoney', target) then
     return false, 'error.invalid_entity'
   end
 

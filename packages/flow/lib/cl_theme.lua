@@ -44,7 +44,7 @@ end
 -- @param ... [Vararg extra arguments for the theme's callback]
 -- @return [Panel the created panel, or nil if the active theme did not create one]
 function Theme.create_panel(panel_id, parent, ...)
-  if current_theme and hook.run('ShouldThemeCreatePanel', panel_id, current_theme) != false then
+  if current_theme and hook.Run('ShouldThemeCreatePanel', panel_id, current_theme) != false then
     return current_theme:create_panel(panel_id, parent, ...)
   end
 end
@@ -233,7 +233,7 @@ function Theme.load_theme(themeID, reloading)
   local theme_table = Theme.find_theme(themeID)
 
   if theme_table then
-    if !reloading and hook.run('ShouldThemeLoad', theme_table) == false then
+    if !reloading and hook.Run('ShouldThemeLoad', theme_table) == false then
       return
     end
 
@@ -255,21 +255,21 @@ function Theme.load_theme(themeID, reloading)
 
     Theme.set_derma_skin()
 
-    hook.run('OnThemeLoaded', current_theme)
+    hook.Run('OnThemeLoaded', current_theme)
   end
 end
 
 --- Unloads the active theme, calling its on_unloaded method and the 'OnThemeUnloaded' hook.
 -- Can be prevented with the 'ShouldThemeUnload' hook.
 function Theme.unload_theme()
-  if hook.run('ShouldThemeUnload', current_theme) == false then
+  if hook.Run('ShouldThemeUnload', current_theme) == false then
     return
   end
 
   if current_theme.on_unloaded then
     current_theme:on_unloaded()
 
-    hook.run('OnThemeUnloaded', current_theme)
+    hook.Run('OnThemeUnloaded', current_theme)
   end
 
   current_theme = nil
@@ -281,14 +281,14 @@ end
 function Theme.reload()
   if !current_theme then return end
 
-  if (current_theme.should_reload == false) or hook.run('ShouldThemeReload', current_theme) == false then
+  if (current_theme.should_reload == false) or hook.Run('ShouldThemeReload', current_theme) == false then
     return
   end
 
   Theme.load_theme(current_theme.id)
 
   Theme.hook('OnReloaded')
-  hook.run('OnThemeReloaded', current_theme)
+  hook.Run('OnThemeReloaded', current_theme)
 end
 
 --- Checks whether the default theme has been loaded for the local player.

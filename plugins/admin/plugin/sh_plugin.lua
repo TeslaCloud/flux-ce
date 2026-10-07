@@ -50,7 +50,7 @@ end
 --- Runs the RegisterPermissions hook, then allows each permission for the role it was
 -- registered for and for every role based on it.
 function Bolt:OnPluginsLoaded()
-  hook.run('RegisterPermissions')
+  hook.Run('RegisterPermissions')
 
   for k, v in pairs(self:get_roles()) do
     for k1, v1 in pairs(self:get_all_permissions()) do

@@ -13,7 +13,7 @@ end
 function Doors:save()
   local doors = {}
 
-  for k, v in ipairs(ents.all()) do
+  for k, v in ipairs(ents.GetAll()) do
     if v:is_door() then
       local save_table = {
         id = v:MapCreationID()
@@ -54,7 +54,7 @@ function Doors:load()
       door.conditions = v.conditions
     end
   else
-    hook.run('InitialDoorsLoad')
+    hook.Run('InitialDoorsLoad')
   end
 end
 
@@ -75,7 +75,7 @@ Cable.receive('fl_send_door_data', function(actor, entity, id, data)
 end)
 
 Cable.receive('fl_lock_door', function(actor, entity, lock)
-  if IsValid(entity) and entity:is_door() and hook.run('PlayerCanLockDoor', actor, entity) then
+  if IsValid(entity) and entity:is_door() and hook.Run('PlayerCanLockDoor', actor, entity) then
     Doors:lock_door(entity, lock)
   end
 end)

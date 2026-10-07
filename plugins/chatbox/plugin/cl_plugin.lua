@@ -124,7 +124,7 @@ function Chatbox.compile(msg_table)
         local to_insert = ''
 
         if v:IsPlayer() then
-          to_insert = hook.run('ShouldProcessPlayerName', v, msg_table) != false and hook.run('GetPlayerName', v) or v:name(true)
+          to_insert = hook.Run('ShouldProcessPlayerName', v, msg_table) != false and hook.Run('GetPlayerName', v) or v:name(true)
         else
           to_insert = tostring(v) or v:GetClass()
         end
@@ -149,7 +149,7 @@ function Chatbox.compile(msg_table)
 
   compiled.total_height = math.max(total_height, compiled.total_height)
 
-  hook.run('ChatboxMessageCompiled', compiled)
+  hook.Run('ChatboxMessageCompiled', compiled)
 
   return compiled
 end
@@ -189,7 +189,7 @@ function Chatbox.hide()
     Chatbox.panel:SetMouseInputEnabled(false)
     Chatbox.panel:SetKeyboardInputEnabled(false)
 
-    hook.run('ChatTextChanged', '')
+    hook.Run('ChatTextChanged', '')
   end
 end
 

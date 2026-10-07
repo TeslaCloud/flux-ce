@@ -15,7 +15,7 @@ function player_meta:set_active_character(id)
   local cur_char_id = self:get_character_id()
 
   if cur_char_id then
-    hook.run('OnCharacterChange', self, real_character, self:get_character())
+    hook.Run('OnCharacterChange', self, real_character, self:get_character())
   end
 
   self:set_nv('active_character', tonumber(real_character.id))
@@ -28,7 +28,7 @@ function player_meta:set_active_character(id)
   self:set_nv('phys_desc', char_data.phys_desc or '')
   self:set_nv('model', char_data.model or 'models/humans/group01/male_02.mdl')
 
-  hook.run('OnActiveCharacterSet', self, self:get_character())
+  hook.Run('OnActiveCharacterSet', self, self:get_character())
 end
 
 --- Sets a field on the player's active character and networks it under the same name.

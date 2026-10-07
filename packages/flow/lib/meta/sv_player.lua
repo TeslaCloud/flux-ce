@@ -3,13 +3,13 @@ local player_meta = FindMetaTable('Player')
 --- Saves the database record of the player. Can be prevented by returning true from the
 -- 'PreSavePlayerData' hook. Runs the 'PostSavePlayerData' hook afterwards.
 function player_meta:save_player()
-  if hook.run('PreSavePlayerData', self) == true then return end
+  if hook.Run('PreSavePlayerData', self) == true then return end
 
   if self.record then
     self.record:save()
   end
 
-  hook.run('PostSavePlayerData', self)
+  hook.Run('PostSavePlayerData', self)
 end
 
 --- Replaces the networked data table of the player.
@@ -83,14 +83,14 @@ end
 function player_meta:restore_player()
   if self:IsBot() then
     self.record = User.new()
-    return hook.run('PlayerRestored', self, self.record)
+    return hook.Run('PlayerRestored', self, self.record)
   end
 
   User:where('steam_id', self:SteamID()):expect(function(obj)
     obj.player = self
     self.record = obj
 
-    hook.run('PlayerRestored', self, obj)
+    hook.Run('PlayerRestored', self, obj)
   end):rescue(function(obj)
     ServerLog(self:name()..' has joined for the first time!')
 
@@ -100,11 +100,11 @@ function player_meta:restore_player()
     obj.role = 'user'
     self.record = obj
 
-    hook.run('PlayerCreated', self, obj)
+    hook.Run('PlayerCreated', self, obj)
 
     obj:save()
 
-    hook.run('PlayerRestored', self, obj)
+    hook.Run('PlayerRestored', self, obj)
   end)
 end
 

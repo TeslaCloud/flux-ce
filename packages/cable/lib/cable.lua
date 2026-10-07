@@ -123,7 +123,7 @@ if SERVER then
       if IsValid(target) then
         target = { target }
       else
-        target = player.all()
+        target = player.GetAll()
       end
     end
 

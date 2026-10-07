@@ -30,11 +30,11 @@ function AttributesPlugin:OnActiveCharacterSet(owner, char)
         if expires_at > cur_time then
           local timer_id = 'fl_boost_'..v.id..'_'..v1.expires_at
 
-          timer.create(timer_id, expires_at - cur_time, 1, function()
+          timer.Create(timer_id, expires_at - cur_time, 1, function()
             v1:destroy()
             table.remove(v.attribute_boosts, k1)
 
-            timer.destroy(timer_id)
+            timer.Destroy(timer_id)
           end)
         else
           v1:destroy()
@@ -48,11 +48,11 @@ function AttributesPlugin:OnActiveCharacterSet(owner, char)
         if expires_at > cur_time then
           local timer_id = 'fl_multiplier_'..v.id..'_'..v1.expires_at
 
-          timer.create(timer_id, expires_at - cur_time, 1, function()
+          timer.Create(timer_id, expires_at - cur_time, 1, function()
             v1:destroy()
             table.remove(v.attribute_multipliers, k1)
 
-            timer.destroy(timer_id)
+            timer.Destroy(timer_id)
           end)
         else
           v1:destroy()

@@ -32,7 +32,7 @@ if SERVER then
 
   -- So clients can bind this as they want.
   concommand.Add('toggleautowalk', function(actor)
-    if hook.run('CanPlayerAutoWalk', actor) != false then
+    if hook.Run('CanPlayerAutoWalk', actor) != false then
       actor:set_nv('auto_walk', !actor:get_nv('auto_walk', false))
     end
   end)

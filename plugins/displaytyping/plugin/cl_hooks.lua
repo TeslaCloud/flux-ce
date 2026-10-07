@@ -14,7 +14,7 @@ function DisplayTyping:HUDPaint()
 
   local local_pos = PLAYER:EyePos()
 
-  for k, v in ipairs(player.all()) do
+  for k, v in ipairs(player.GetAll()) do
     if v == PLAYER then continue end
 
     local ply_pos = v:EyePos()

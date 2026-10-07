@@ -170,7 +170,7 @@ function PANEL:set_character(char_data)
     self.delete:SetVisible(false)
   end
 
-  hook.run('PanelCharacterSet', self, char_data)
+  hook.Run('PanelCharacterSet', self, char_data)
 end
 
 vgui.Register('fl_character_panel', PANEL, 'DPanel')

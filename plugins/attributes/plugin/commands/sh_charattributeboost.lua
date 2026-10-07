@@ -10,7 +10,7 @@ CMD.aliases = { 'attboost', 'attboost', 'attributeboost', 'attributeboost', 'cha
 --- Returns the translated command description with every registered attribute ID listed.
 -- @return [String]
 function CMD:get_description()
-  return t(self.description, { attributes = table.concat(table.get_keys(Attributes.get_stored()), ', ') })
+  return t(self.description, { attributes = table.concat(table.GetKeys(Attributes.get_stored()), ', ') })
 end
 
 --- Gives every target a temporary boost to an attribute, then notifies the targets and staff.

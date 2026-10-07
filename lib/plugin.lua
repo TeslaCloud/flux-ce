@@ -383,7 +383,7 @@ function Plugin.include_schema()
   local file_path = 'gamemodes/'..schema_path..'/'..schema_path..'.yml'
   local deps = {}
 
-  hook.run('PreLoadPlugins')
+  hook.Run('PreLoadPlugins')
 
   if SERVER and file.Exists(file_path, 'GAME') then
     Flux.dev_print('Reading and loading schema dependencies from '..file_path)
@@ -433,7 +433,7 @@ function Plugin.include_schema()
   Plugin.include_folders(schema_folder)
   Plugin.include_plugins(schema_path..'/plugins')
 
-  hook.run('OnPluginsLoaded')
+  hook.Run('OnPluginsLoaded')
 
   if schema_info.name and schema_info.author then
     MsgC(Color(255, 255, 0), schema_info.name)
@@ -759,7 +759,4 @@ do
   function Plugin.call(name, ...)
     return hook.Call(name, nil, ...)
   end
-
-  hook.run = hook.Run
-  hook.call = hook.Call
 end

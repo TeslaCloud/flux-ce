@@ -17,7 +17,7 @@ function CMD:on_run(actor, delay)
     actor:set_nv('getup_time', delay)
     actor:set_action('getup', true)
 
-    timer.simple(delay, function()
+    timer.Simple(delay, function()
       if IsValid(actor) and actor:Alive() and actor:is_ragdolled() then
         actor:set_ragdoll_state(RAGDOLL_NONE)
 

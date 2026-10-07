@@ -23,7 +23,7 @@ function Characters:RegisterConditions()
       return util.process_operator(data.operator, target:get_character_id(), data.character_id)
     end,
     set_parameters = function(id, data, panel, menu, parent)
-      parent:create_selector(data.name, 'condition.character.message', 'condition.characters', player.all(),
+      parent:create_selector(data.name, 'condition.character.message', 'condition.characters', player.GetAll(),
       function(selector, target)
         if target:is_character_loaded() then
           selector:add_choice(target:name(), function()

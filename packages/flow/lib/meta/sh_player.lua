@@ -20,7 +20,7 @@ player_meta.fl_name = player_meta.fl_name or player_meta.Name
 -- @param force_true_name=false [Boolean ignore the 'GetPlayerName' hook]
 -- @return [String]
 function player_meta:Name(force_true_name)
-  return (!force_true_name and hook.run('GetPlayerName', self)) or self:get_nv('name', self:fl_name())
+  return (!force_true_name and hook.Run('GetPlayerName', self)) or self:get_nv('name', self:fl_name())
 end
 
 player_meta.name = player_meta.Name
@@ -37,7 +37,7 @@ end
 function player_meta:SetModel(path)
   local old_model = self:GetModel()
 
-  hook.run('PlayerModelChanged', self, path, old_model)
+  hook.Run('PlayerModelChanged', self, path, old_model)
 
   if SERVER then
     Cable.send(nil, 'fl_player_model_changed', self:EntIndex(), path, old_model)
@@ -72,9 +72,9 @@ if CLIENT then
           arguments[k] = t(v)
         elseif isentity(v) and IsValid(v) then
           if v:IsPlayer() then
-            arguments[k] = hook.run('GetPlayerName', v) or v:name()
+            arguments[k] = hook.Run('GetPlayerName', v) or v:name()
           else
-            arguments[k] = hook.run('GetEntityName', v) or tostring(v) or v:GetClass()
+            arguments[k] = hook.Run('GetEntityName', v) or tostring(v) or v:GetClass()
           end
         end
       end
@@ -175,12 +175,12 @@ end
 -- @param object=nil [Any object the permission is checked against, passed to the hook]
 -- @return [Boolean nil if nothing handles the hook]
 function player_meta:can(action, object)
-  return hook.run('PlayerHasPermission', self, action, object)
+  return hook.Run('PlayerHasPermission', self, action, object)
 end
 
 --- Checks whether the player has root access, that is can do anything. The decision
 -- is made by the 'PlayerIsRoot' hook.
 -- @return [Boolean nil if nothing handles the hook]
 function player_meta:is_root()
-  return hook.run('PlayerIsRoot', self)
+  return hook.Run('PlayerIsRoot', self)
 end

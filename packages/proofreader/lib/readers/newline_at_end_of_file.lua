@@ -6,7 +6,7 @@ class 'NewlineAtEndOfFileReader' extends 'BasicReader'
 -- @param source [String the code]
 -- @return [Boolean true if the code ends with a newline]
 function NewlineAtEndOfFileReader:proofread(tokens, lines, source)
-  return self.config['Enabled'] != false and source:ends('\n')
+  return self.config['Enabled'] != false and source:end_with('\n')
 end
 
 --- Returns the message that describes a missing newline at the end of the file.

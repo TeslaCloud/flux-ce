@@ -70,7 +70,7 @@ if CLIENT then
   -- @param actor [Player]
   -- @param user_cmd [CUserCmd]
   function PLUGIN:StartCommand(actor, user_cmd)
-    if hook.run('CanPlayerAttack') == false then
+    if hook.Run('CanPlayerAttack') == false then
       user_cmd:RemoveKey(IN_ATTACK + IN_ATTACK2)
     end
   end
@@ -118,7 +118,7 @@ end
 -- @param raised [Boolean whether the weapon is now raised]
 function PLUGIN:OnWeaponRaised(actor, weapon, raised)
   if IsValid(weapon) then
-    hook.run('UpdateWeaponRaised', actor, weapon, raised, CurTime())
+    hook.Run('UpdateWeaponRaised', actor, weapon, raised, CurTime())
   end
 end
 
@@ -138,7 +138,7 @@ function PLUGIN:UpdateWeaponRaised(actor, weapon, raised, cur_time)
       weapon:OnRaised(actor, cur_time)
     end
 
-    hook.run('WeaponRaised', actor, weapon)
+    hook.Run('WeaponRaised', actor, weapon)
   else
     weapon:SetNextPrimaryFire(cur_time + 60)
     weapon:SetNextSecondaryFire(cur_time + 60)
@@ -147,7 +147,7 @@ function PLUGIN:UpdateWeaponRaised(actor, weapon, raised, cur_time)
       weapon:OnLowered(actor, cur_time)
     end
 
-    hook.run('WeaponLowered', actor, weapon)
+    hook.Run('WeaponLowered', actor, weapon)
   end
 end
 
@@ -186,10 +186,10 @@ local player_meta = FindMetaTable('Player')
 -- @param raised [Boolean true to raise the weapon, false to lower it]
 function player_meta:set_weapon_raised(raised)
   if SERVER then
-    if hook.run('CanPlayerRaiseWeapon', self, raised) != false then
+    if hook.Run('CanPlayerRaiseWeapon', self, raised) != false then
       self:SetDTBool(BOOL_WEAPON_RAISED, raised)
 
-      hook.run('OnWeaponRaised', self, self:GetActiveWeapon(), raised)
+      hook.Run('OnWeaponRaised', self, self:GetActiveWeapon(), raised)
     end
   end
 end
@@ -209,7 +209,7 @@ function player_meta:is_weapon_raised()
     return true
   end
 
-  local should_raise = hook.run('ShouldWeaponBeRaised', self, weapon)
+  local should_raise = hook.Run('ShouldWeaponBeRaised', self, weapon)
 
   if should_raise != nil then
     return should_raise

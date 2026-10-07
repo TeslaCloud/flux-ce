@@ -40,7 +40,7 @@ function Characters:PlayerRestored(actor)
     if IsValid(actor) and actor:has_initialized() then
       Characters.send_to_client(actor)
 
-      hook.run('PostRestoreCharacters', actor)
+      hook.Run('PostRestoreCharacters', actor)
 
       timer.Remove(timer_name)
     end
@@ -84,7 +84,7 @@ function Characters:OnActiveCharacterSet(owner, character)
     end
   end
 
-  hook.run('PostCharacterLoaded', owner, character)
+  hook.Run('PostCharacterLoaded', owner, character)
 end
 
 --- Saves the player's current character before they switch to another one.
@@ -103,7 +103,7 @@ end
 
 --- Saves the active character of every connected player.
 function Characters:SaveData()
-  for k, v in ipairs(player.all()) do
+  for k, v in ipairs(player.GetAll()) do
     v:save_character()
   end
 end

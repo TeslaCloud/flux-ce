@@ -111,8 +111,8 @@ function PANEL:Paint(w, h)
     surface.DisableClipping(true)
 
     -- Background fill
-    surface.set_draw_color(debug_colors.fill)
-    surface.draw_rect(
+    surface.SetDrawColor(debug_colors.fill)
+    surface.DrawRect(
       attrs.padding_left,
       attrs.padding_top,
       w - attrs.padding_right - attrs.padding_left - 1,
@@ -120,26 +120,26 @@ function PANEL:Paint(w, h)
     )
 
     -- Draw margin boundaries
-    surface.set_draw_color(debug_colors.margin)
+    surface.SetDrawColor(debug_colors.margin)
 
     draw.stenciled(function()
-      surface.draw_rect(
+      surface.DrawRect(
         -attrs.margin_left,
         -attrs.margin_top,
         w + attrs.margin_left + attrs.margin_right,
         h + attrs.margin_top + attrs.margin_bottom
       )
     end, function()
-      surface.draw_rect(0, 0, w, h)
+      surface.DrawRect(0, 0, w, h)
     end)
 
     -- Draw padding boundaries
-    surface.set_draw_color(debug_colors.padding)
+    surface.SetDrawColor(debug_colors.padding)
 
     draw.stenciled(function()
-      surface.draw_rect(0, 0, w, h)
+      surface.DrawRect(0, 0, w, h)
     end, function()
-      surface.draw_rect(
+      surface.DrawRect(
         attrs.padding_left,
         attrs.padding_top,
         w - attrs.padding_right - attrs.padding_left - 1,
@@ -148,19 +148,19 @@ function PANEL:Paint(w, h)
     end)
 
     -- Draw overlaid lines
-    surface.set_draw_color(debug_colors.border)
+    surface.SetDrawColor(debug_colors.border)
 
     -- Order as follows: top right bottom left
-    surface.draw_line(0, 0, w, 0)
-    surface.draw_line(w - 1, 0, w - 1, h)
-    surface.draw_line(0, h - 1, w, h - 1)
-    surface.draw_line(0, 0, 0, h)
+    surface.DrawLine(0, 0, w, 0)
+    surface.DrawLine(w - 1, 0, w - 1, h)
+    surface.DrawLine(0, h - 1, w, h - 1)
+    surface.DrawLine(0, 0, 0, h)
 
     -- Overlay text and background box
     local panel_info_text = tostring(self.html.element_name)..' '..tostring(w)..'x'..tostring(h)
     local text_wide, text_tall = util.text_size(panel_info_text, 'default')
-    draw.rounded_box(4, 1, -text_tall - 9, text_wide + 8, text_tall + 8, debug_colors.tooltip)
-    draw.simple_text(panel_info_text, 'default', 5, -text_tall - 5, debug_colors.text)
+    draw.RoundedBox(4, 1, -text_tall - 9, text_wide + 8, text_tall + 8, debug_colors.tooltip)
+    draw.SimpleText(panel_info_text, 'default', 5, -text_tall - 5, debug_colors.text)
 
     surface.DisableClipping(false)
   end

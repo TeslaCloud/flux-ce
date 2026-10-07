@@ -48,7 +48,7 @@ if SERVER then
       if CurTime() - hold_start < 0.5 then
         if IsValid(caller) and caller:IsPlayer() then
           if self.item then
-            hook.run('PlayerUseItemEntity', caller, self, self.item)
+            hook.Run('PlayerUseItemEntity', caller, self, self.item)
           else
             Flux.dev_print('A player attempted to use an item entity without an item object tied to it!')
           end
@@ -87,7 +87,7 @@ if SERVER then
   function ENT:set_item(item_obj)
     if !item_obj then return false end
 
-    hook.run('PreEntityItemSet', self, item_obj)
+    hook.Run('PreEntityItemSet', self, item_obj)
 
     self:SetModel(item_obj:get_model())
     self:SetSkin(item_obj:get_skin())
@@ -97,7 +97,7 @@ if SERVER then
 
     Item.network_entity_data(nil, self)
 
-    hook.run('OnEntityItemSet', self, item_obj)
+    hook.Run('OnEntityItemSet', self, item_obj)
   end
 else
   --- Draws the model of the item.
@@ -126,7 +126,7 @@ else
     local col2 = Color(0, 0, 0, alpha)
 
     if self.item then
-      if hook.run('PreDrawItemTargetID', self, self.item, x, y, alpha, distance) == false then
+      if hook.Run('PreDrawItemTargetID', self, self.item, x, y, alpha, distance) == false then
         return
       end
 
@@ -190,6 +190,6 @@ else
       y = y + h
     end
 
-    hook.run('PostDrawItemTargetID', self, self.item, x, y, alpha, distance)
+    hook.Run('PostDrawItemTargetID', self, self.item, x, y, alpha, distance)
   end
 end

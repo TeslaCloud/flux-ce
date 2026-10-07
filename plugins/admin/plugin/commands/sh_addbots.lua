@@ -18,7 +18,7 @@ function CMD:on_run(actor, num_bots)
     bots = num_bots == 1 and 'command.addbots.bot_one' or 'command.addbots.bot_many'
   })
 
-  timer.create('fl_add_bots', 0.2, num_bots, function()
+  timer.Create('fl_add_bots', 0.2, num_bots, function()
     RunConsoleCommand('bot')
   end)
 end

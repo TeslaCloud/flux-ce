@@ -80,12 +80,12 @@ end
 -- @param parent [Panel]
 -- @return [Panel the created fl_currencies panel]
 function Currencies:create_panel(entity, parent)
-  local money_panel = vgui.create('fl_currencies', parent)
+  local money_panel = vgui.Create('fl_currencies', parent)
   money_panel:set_entity(entity)
   money_panel:rebuild()
   money_panel.OnRemove = function(pnl)
     if IsValid(pnl) then
-      table.remove_by_value(Flux.money_panels, pnl)
+      table.RemoveByValue(Flux.money_panels, pnl)
     end
   end
 

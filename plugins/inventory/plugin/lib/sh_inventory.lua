@@ -48,7 +48,7 @@ do
       local items = {}
 
       for k, v in pairs(self:get_inventories()) do
-        table.add(items, v:get_items())
+        table.Add(items, v:get_items())
       end
 
       return items
@@ -69,7 +69,7 @@ do
       local items = {}
 
       for k, v in pairs(self:get_inventories()) do
-        table.add(items, v:get_items_ids())
+        table.Add(items, v:get_items_ids())
       end
 
       return items
@@ -156,7 +156,7 @@ do
       local items = {}
 
       for k, v in pairs(self:get_inventories()) do
-        table.add(items, v:find_items(id))
+        table.Add(items, v:find_items(id))
       end
 
       return items
@@ -254,7 +254,7 @@ do
     function player_meta:create_inventories()
       local inventories = {}
 
-      hook.run('CreatePlayerInventories', self, inventories)
+      hook.Run('CreatePlayerInventories', self, inventories)
 
       for k, v in pairs(inventories) do
         if !self.default_inventory and v:is_default() then

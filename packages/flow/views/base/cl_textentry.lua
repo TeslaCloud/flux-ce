@@ -13,7 +13,7 @@ end
 -- @param w [Number panel width]
 -- @param h [Number panel height]
 function PANEL:Paint(w, h)
-  if !hook.run('ChatboxEntryPaint', self, 0, 0, w, h) then
+  if !hook.Run('ChatboxEntryPaint', self, 0, 0, w, h) then
     draw.RoundedBox(2, 0, 0, w, h, Theme.get_color('background'))
 
     self:DrawTextEntryText(Theme.get_color('text'), Theme.get_color('accent'), Theme.get_color('text'))

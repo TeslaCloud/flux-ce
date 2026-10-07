@@ -18,7 +18,6 @@ if Flux and Flux.initialized then return end
 if SERVER then
   AddCSLuaFile()
   AddCSLuaFile 'cl_utils.lua'
-  AddCSLuaFile 'sh_aliases.lua'
   AddCSLuaFile 'sh_class.lua'
   AddCSLuaFile 'sh_color.lua'
   AddCSLuaFile 'sh_debug.lua'
@@ -36,8 +35,6 @@ if SERVER then
   AddCSLuaFile 'sh_datetime.lua'
   AddCSLuaFile 'sh_time.lua'
 end
-
-include 'sh_aliases.lua'
 
 include 'sh_helpers.lua'
 include 'sh_string.lua'

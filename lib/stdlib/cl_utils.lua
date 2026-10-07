@@ -228,7 +228,7 @@ do
             file.Write(path, body)
             cache[url_crc] = Material('../data/'..path, 'noclamp smooth')
 
-            hook.run('OnURLMatLoaded', url, cache[url_crc])
+            hook.Run('OnURLMatLoaded', url, cache[url_crc])
           end)
         end
       end

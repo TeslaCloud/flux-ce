@@ -36,7 +36,7 @@ Conditions:register_condition('steamid', {
       t'condition.steamid.message',
       '',
       function(text)
-        if text:starts('STEAM_') then
+        if text:start_with('STEAM_') then
           panel.data.steamid = text
 
           panel.update()
@@ -85,7 +85,7 @@ Conditions:register_condition('model', {
       t'condition.model.message',
       '',
       function(text)
-        if text:starts('models') then
+        if text:start_with('models') then
           panel.data.model = text
 
           panel.update()

@@ -214,7 +214,7 @@ function SurfaceText:draw_picture_preview()
   angle:RotateAroundAxis(angle:Right(), 270)
 
   cam.Start3D2D(trace.HitPos + (normal * 1.25), angle, 0.1)
-    if url:ends('.png') or url:ends('.jpg') or url:ends('.jpeg') then
+    if url:end_with('.png') or url:end_with('.jpg') or url:end_with('.jpeg') then
       draw.textured_rect(URLMaterial(url), -width * 0.5, -height * 0.5, width, height, color_white)
     else
       draw.RoundedBox(0, -width * 0.5, -height * 0.5, width, height, Color(255, 0, 0, 40))

@@ -62,7 +62,7 @@ local Structure = ActiveRecord.Schema:define(]]..version..[[)
     result = result + string.rep(ind, level) + 'end)\n'
   end
 
-  if table.count(ActiveRecord.metadata.indexes) > 0 then
+  if table.Count(ActiveRecord.metadata.indexes) > 0 then
     result = result + '\n'
   end
 
@@ -70,7 +70,7 @@ local Structure = ActiveRecord.Schema:define(]]..version..[[)
     result = result + string.rep(ind, level) + 'add_index { ' + table_to_inline(v) + ', name = "'..k..'" }\n'
   end
 
-  if table.count(ActiveRecord.metadata.references) > 0 then
+  if table.Count(ActiveRecord.metadata.references) > 0 then
     result = result + '\n'
   end
 
@@ -88,7 +88,7 @@ local Structure = ActiveRecord.Schema:define(]]..version..[[)
       + '\n'..base_indent..'}\n'
   end
 
-  if table.count(ActiveRecord.metadata.prim_keys) > 0 then
+  if table.Count(ActiveRecord.metadata.prim_keys) > 0 then
     result = result + '\n'
   end
 

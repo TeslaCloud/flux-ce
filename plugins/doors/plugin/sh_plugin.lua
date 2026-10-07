@@ -69,6 +69,6 @@ end
 --- Runs the RegisterDoorProperties and RegisterDoorTitleTypes hooks so that plugins can
 -- register their door properties and title types.
 function Doors:OnPluginsLoaded()
-  hook.run('RegisterDoorProperties')
-  hook.run('RegisterDoorTitleTypes')
+  hook.Run('RegisterDoorProperties')
+  hook.Run('RegisterDoorTitleTypes')
 end

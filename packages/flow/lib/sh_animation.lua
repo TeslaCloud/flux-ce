@@ -212,7 +212,7 @@ function player_meta:set_animation(animation, duration_override)
     self.fl_animation = sequence
 
     if duration > 0 then
-      timer.simple(duration, function()
+      timer.Simple(duration, function()
         if IsValid(self) then
           self.fl_animation = nil
         end

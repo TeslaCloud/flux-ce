@@ -14,6 +14,6 @@ Character:validates('model', { presence = true })
 -- provided its user has been loaded as well.
 function Character:restored()
   if self.user then
-    hook.run('RestoreCharacter', self.user.player, self.id, self)
+    hook.Run('RestoreCharacter', self.user.player, self.id, self)
   end
 end

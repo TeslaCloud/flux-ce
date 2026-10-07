@@ -289,7 +289,7 @@ function HTMLParser:dump(data)
     if !node then break end
 
     if node.tag_name == "text_node" then
-      d = d..node.value:trim()
+      d = d..node.value:strip()
     else
       d = d.."\n"..string.rep (" ", #stack-1)
       d = d.."<"..node.tag_name

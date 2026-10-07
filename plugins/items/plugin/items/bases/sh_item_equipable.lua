@@ -121,7 +121,7 @@ function ItemEquipable:equip(owner, should_equip)
 
     self:post_equipped(owner)
 
-    hook.run('OnItemEquipped', owner, self)
+    hook.Run('OnItemEquipped', owner, self)
   else
     for k, v in pairs(self.disabled_inventories) do
       local inventory = owner:get_inventory(v)
@@ -133,7 +133,7 @@ function ItemEquipable:equip(owner, should_equip)
 
     self:post_unequipped(owner)
 
-    hook.run('OnItemUnequipped', owner, self)
+    hook.Run('OnItemUnequipped', owner, self)
   end
 end
 

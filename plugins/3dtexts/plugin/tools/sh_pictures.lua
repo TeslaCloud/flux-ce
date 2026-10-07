@@ -27,7 +27,7 @@ function TOOL:LeftClick(trace)
   local fade_offset = self:GetClientNumber('fade')
 
   if !url or url == '' then return false end
-  if !url:ends('.png') and !url:ends('jpeg') and !url:ends('jpg') then return false end
+  if !url:end_with('.png') and !url:end_with('jpeg') and !url:end_with('jpg') then return false end
 
   local angle = trace.HitNormal:Angle()
   angle:RotateAroundAxis(angle:Forward(), 90)

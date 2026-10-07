@@ -70,7 +70,7 @@ function Attributes.register(id, data)
   data.multipliable = data.multipliable
   data.boost_limited = data.boost_limited
 
-  hook.run('AttributeRegistered', id, data)
+  hook.Run('AttributeRegistered', id, data)
 
   stored[id] = data
 end
@@ -94,11 +94,11 @@ function Attributes.destroy_timers(character)
   if character.attributes then
     for k, v in pairs(character.attributes) do
       for k1, v1 in pairs(v.attribute_boosts) do
-        timer.destroy('fl_boost_'..v.id..'_'..v1.expires_at)
+        timer.Destroy('fl_boost_'..v.id..'_'..v1.expires_at)
       end
 
       for k1, v1 in pairs(v.attribute_multipliers) do
-        timer.destroy('fl_multiplier_'..v.id..'_'..v1.expires_at)
+        timer.Destroy('fl_multiplier_'..v.id..'_'..v1.expires_at)
       end
     end
   end
@@ -358,7 +358,7 @@ do
 
           local timer_id = 'fl_boost_'..v.id..'_'..boost.expires_at
 
-          timer.create(timer_id, duration, 1, function()
+          timer.Create(timer_id, duration, 1, function()
             for k1, v1 in pairs(v.attribute_boosts) do
               if v1.expires_at == expires_at then
                 v1:destroy()
@@ -381,7 +381,7 @@ do
 
             self:set_nv('attributes', attributes)
 
-            timer.destroy(timer_id)
+            timer.Destroy(timer_id)
           end)
 
           break
@@ -420,7 +420,7 @@ do
 
           local timer_id = 'fl_multiplier_'..v.id..'_'..multiplier.expires_at
 
-          timer.create(timer_id, duration, 1, function()
+          timer.Create(timer_id, duration, 1, function()
             for k1, v1 in pairs(v.attribute_multipliers) do
               if v1.expires_at == expires_at then
                 v1:destroy()
@@ -443,7 +443,7 @@ do
 
             self:set_nv('attributes', attributes)
 
-            timer.destroy(timer_id)
+            timer.Destroy(timer_id)
           end)
 
           break

@@ -117,7 +117,7 @@ function PR:proofread(files)
   if !istable(files) then return end
 
   files = table.map(files, function(v)
-    if v:ends('.lua') then
+    if v:end_with('.lua') then
       return v
     end
   end)

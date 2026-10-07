@@ -1,7 +1,7 @@
 --- Selects a random player.
 -- @return [Player random player, or nil if there are no players on the server]
 function player.random()
-  local all_ply = player.all()
+  local all_ply = player.GetAll()
 
   if #all_ply > 0 then
     return all_ply[math.random(1, #all_ply)]
@@ -20,9 +20,9 @@ function player.find(name, case_sensitive, return_first)
   if !isstring(name) then return (IsValid(name) and name) or nil end
 
   local hits = {}
-  local is_steamid = name:starts('STEAM_')
+  local is_steamid = name:start_with('STEAM_')
 
-  for k, v in ipairs(player.all()) do
+  for k, v in ipairs(player.GetAll()) do
     if is_steamid then
       if v:SteamID() == name then
         return v
@@ -59,7 +59,7 @@ function player.name_from_steamid(steamid)
   local steam64 = util.SteamIDTo64(steamid)
   local steam_name
 
-  steamworks.request_player_info(steam64, function(_steam_name)
+  steamworks.RequestPlayerInfo(steam64, function(_steam_name)
     steam_name = _steam_name
   end)
 

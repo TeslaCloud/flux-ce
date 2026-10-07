@@ -12,6 +12,45 @@ local String = {
 
 local string_meta = getmetatable('')
 
+-- Ruby-style names for the built-in string functions.
+string.basename                        = string.GetFileFromFilename
+string.chars                           = string.ToTable
+string.comma                           = string.Comma
+string.dirname                         = string.GetPathFromFilename
+string.end_with                        = string.EndsWith
+string.explode                         = string.Explode
+string.extname                         = string.GetExtensionFromFilename
+string.first                           = string.Left
+string.formatted_time                  = string.FormattedTime
+string.from_color                      = string.FromColor
+string.get_char                        = string.GetChar
+string.implode                         = string.Implode
+string.javascript_safe                 = string.JavascriptSafe
+string.last                            = string.Right
+string.lstrip                          = string.TrimLeft
+string.nice_size                       = string.NiceSize
+string.nice_time                       = string.NiceTime
+string.pattern_safe                    = string.PatternSafe
+string.replace                         = string.Replace
+string.rstrip                          = string.TrimRight
+string.set_char                        = string.SetChar
+string.start_with                      = string.StartWith
+string.strip                           = string.Trim
+string.strip_extension                 = string.StripExtension
+string.to_color                        = string.ToColor
+string.to_minutes_seconds              = string.ToMinutesSeconds
+string.to_minutes_seconds_milliseconds = string.ToMinutesSecondsMilliseconds
+
+--- Splits a string into pieces around a separator.
+-- Splits the string into individual characters if no separator is given.
+-- @param str [String string to split]
+-- @param sep='' [String separator]
+-- @return [List<String> pieces]
+function string.split(str, sep)
+  sep = sep or ''
+  return string.Split(str, sep)
+end
+
 do
   local vowels = {
     ['a'] = true,
@@ -54,9 +93,9 @@ function string.trim_end(str, needle, all_occurrences)
     return str
   end
 
-  if str:ends(needle) then
+  if str:end_with(needle) then
     if all_occurrences then
-      while str:ends(needle) do
+      while str:end_with(needle) do
         str = str:trim_end(needle)
       end
 
@@ -79,9 +118,9 @@ function string.trim_start(str, needle, all_occurrences)
     return str
   end
 
-  if str:starts(needle) then
+  if str:start_with(needle) then
     if all_occurrences then
-      while str:starts(needle) do
+      while str:start_with(needle) do
         str = str:trim_start(needle)
       end
 
@@ -162,7 +201,7 @@ function string.is_command(str)
   local prefixes = Config.get('command_prefixes') or {}
 
   for k, v in ipairs(prefixes) do
-    if str:starts(v) and hook.run('StringIsCommand', str) != false then
+    if str:start_with(v) and hook.Run('StringIsCommand', str) != false then
       return true, utf8.len(v)
     end
   end
@@ -198,7 +237,7 @@ end
 -- @param ending [String]
 -- @return [String string that ends with the ending]
 function string.ensure_end(str, ending)
-  if str:ends(ending) then return str end
+  if str:end_with(ending) then return str end
   return str..ending
 end
 
@@ -207,7 +246,7 @@ end
 -- @param start [String]
 -- @return [String string that starts with the start]
 function string.ensure_start(str, start)
-  if str:starts(start) then return str end
+  if str:start_with(start) then return str end
   return start..str
 end
 

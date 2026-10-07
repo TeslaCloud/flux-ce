@@ -66,7 +66,7 @@ function Font.size(name, size, data)
 
       font_data.size = size
 
-      table.merge(font_data, data)
+      table.Merge(font_data, data)
 
       Font.create(new_name, font_data)
     end
@@ -174,5 +174,5 @@ function Font.create_fonts()
   })
 
   Theme.call('CreateFonts')
-  hook.run('CreateFonts')
+  hook.Run('CreateFonts')
 end

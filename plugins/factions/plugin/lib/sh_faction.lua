@@ -60,7 +60,7 @@ end
 function Factions.get_players(id)
   local players = {}
 
-  for k, v in ipairs(player.all()) do
+  for k, v in ipairs(player.GetAll()) do
     if v:get_faction_id() == id then
       table.insert(players, v)
     end
@@ -171,7 +171,7 @@ do
     local whitelists = self:get_whitelists()
 
     if CLIENT then
-      return table.has_value(whitelists, faction_id)
+      return table.HasValue(whitelists, faction_id)
     end
 
     for k, v in pairs(whitelists) do
@@ -216,7 +216,7 @@ do
 
       faction_table:on_player_join(self)
 
-      hook.run('OnPlayerFactionChanged', self, faction_table, old_faction)
+      hook.Run('OnPlayerFactionChanged', self, faction_table, old_faction)
     end
 
     --- Sets the player's rank in their current faction, networks it and regenerates their name
@@ -244,7 +244,7 @@ do
 
       Characters.set_name(self, faction_table:generate_name(self, rank))
 
-      hook.run('OnRankChanged', self, rank, old_rank)
+      hook.Run('OnRankChanged', self, rank, old_rank)
     end
 
     --- Moves the player one rank up unless they already hold the highest rank. Server only.
@@ -295,7 +295,7 @@ do
         end
 
         local whitelist_table = self:get_nv('whitelists', {})
-          table.remove_by_value(whitelist_table, faction_id)
+          table.RemoveByValue(whitelist_table, faction_id)
         self:set_nv('whitelists', whitelist_table)
       end
     end

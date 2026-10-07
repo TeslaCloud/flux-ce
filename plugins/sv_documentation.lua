@@ -79,7 +79,7 @@ local function extract_functions_from_files(folder)
   local files = File.get_list(folder)
 
   for k, v in ipairs(files) do
-    if v:ends('.lua') then
+    if v:end_with('.lua') then
       if v:find('plugins/') then
         local plugin_name = v:match('plugins/([%w_%.]+)')
         if !plugin_name then continue end

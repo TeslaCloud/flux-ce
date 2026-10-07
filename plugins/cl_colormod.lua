@@ -60,7 +60,7 @@ do
     end
 
     if isstring(index) then
-      if !index:starts('$pp_colour_') then
+      if !index:start_with('$pp_colour_') then
         if index == 'color' then index = 'colour' end
 
         PLAYER.color_mod_table['$pp_colour_'..index] = (isnumber(value) and value) or 0

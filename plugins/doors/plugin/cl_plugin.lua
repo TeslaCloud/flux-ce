@@ -11,7 +11,7 @@ Cable.receive('fl_door_menu', function(entity, can_lock, conditions)
 
     if can('manage_doors') then
       menu:AddOption(t'ui.door.settings', function()
-        local door_menu = vgui.create('fl_door_menu')
+        local door_menu = vgui.Create('fl_door_menu')
         door_menu:set_door(entity, conditions)
       end)
     end

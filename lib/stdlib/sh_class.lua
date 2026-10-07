@@ -179,7 +179,7 @@ function extends(parent_class)
     obj.parent = parent_class
     obj.BaseClass = obj.parent_class
 
-    hook.run('OnClassExtended', obj, parent_class)
+    hook.Run('OnClassExtended', obj, parent_class)
 
     last_class.parent[last_class.name] = obj
     last_class = nil

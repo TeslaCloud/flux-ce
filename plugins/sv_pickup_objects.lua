@@ -14,7 +14,7 @@ function PLUGIN:pickup_at_trace(actor)
   if !IsValid(actor) then return end
 
   if IsValid(actor.holding_object) then
-    if hook.run('PlayerDropObject', actor, actor.holding_object) != false then
+    if hook.Run('PlayerDropObject', actor, actor.holding_object) != false then
       actor:DropObject()
       actor.holding_object = nil
     end
@@ -29,7 +29,7 @@ function PLUGIN:pickup_at_trace(actor)
     if ent:GetPos():DistToSqr(actor:GetPos()) > max_dist then return false end
 
     if !actor.holding_object then
-      if hook.run('PlayerPickupObject', actor, ent) != false then
+      if hook.Run('PlayerPickupObject', actor, ent) != false then
         actor:PickupObject(ent)
         actor.holding_object = ent
 
@@ -38,7 +38,7 @@ function PLUGIN:pickup_at_trace(actor)
         timer.Create(timer_name, 0.1, 0, function()
           if !IsValid(actor) then
             if IsValid(ent) then
-              hook.run('PlayerDropObject', actor, ent)
+              hook.Run('PlayerDropObject', actor, ent)
             end
 
             timer.Remove(timer_name)
@@ -46,7 +46,7 @@ function PLUGIN:pickup_at_trace(actor)
           end
 
           if IsValid(ent) and !ent:IsPlayerHolding() then
-            hook.run('PlayerDropObject', actor, ent)
+            hook.Run('PlayerDropObject', actor, ent)
             actor.holding_object = nil
             timer.Remove(timer_name)
           elseif !IsValid(ent) then

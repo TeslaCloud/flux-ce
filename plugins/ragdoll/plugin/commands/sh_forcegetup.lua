@@ -19,7 +19,7 @@ function CMD:on_run(actor, targets, delay)
     if IsValid(v) and v:Alive() and v:is_ragdolled() then
       v:set_ragdoll_state(RAGDOLL_FALLENOVER)
 
-      timer.simple(delay, function()
+      timer.Simple(delay, function()
         if IsValid(v) and v:Alive() and v:is_ragdolled() then
           v:set_ragdoll_state(RAGDOLL_NONE)
         end

@@ -12,11 +12,11 @@ MVC.handler('SpawnMenu::SpawnItem', function(actor, item_id)
 
     local entity = Item.spawn(trace.HitPos, nil, item_obj)
 
-    undo.create('item')
-      undo.add_entity(entity)
-      undo.set_player(actor)
-      undo.set_custom_undo_text('Undone '..t(item_obj:get_real_name()))
-    undo.finish()
+    undo.Create('item')
+      undo.AddEntity(entity)
+      undo.SetPlayer(actor)
+      undo.SetCustomUndoText('Undone '..t(item_obj:get_real_name()))
+    undo.Finish()
   end
 end)
 

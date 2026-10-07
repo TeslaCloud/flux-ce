@@ -4,7 +4,7 @@ function Inventories:OnContextMenuOpen()
     PLAYER.hotbar:safe_remove()
   end
 
-  timer.destroy('fl_hotbar_popup')
+  timer.Destroy('fl_hotbar_popup')
 
   PLAYER.hotbar = Inventories:create_hotbar()
   PLAYER.hotbar:SetAlpha(255)
@@ -68,7 +68,7 @@ function Inventories:popup_hotbar()
     PLAYER.hotbar = Inventories:create_hotbar()
     PLAYER.hotbar:rebuild()
 
-    timer.create('fl_hotbar_popup', 0.05, 0, function()
+    timer.Create('fl_hotbar_popup', 0.05, 0, function()
       if IsValid(PLAYER.hotbar) then
         local alpha = PLAYER.hotbar:GetAlpha()
         PLAYER.hotbar:SetAlpha(alpha - 5)
@@ -77,7 +77,7 @@ function Inventories:popup_hotbar()
           PLAYER.hotbar:safe_remove()
         end
       else
-        timer.destroy('fl_hotbar_popup')
+        timer.Destroy('fl_hotbar_popup')
       end
     end)
   else
@@ -134,7 +134,7 @@ Cable.receive('fl_inventory_sync', function(data)
     inventory.panel:rebuild()
   end
 
-  hook.run('OnInventorySync', inventory)
+  hook.Run('OnInventorySync', inventory)
 end)
 
 Cable.receive('fl_rebuild_player_panel', function()
@@ -152,7 +152,7 @@ Cable.receive('fl_rebuild_player_panel', function()
 end)
 
 Cable.receive('fl_open_player_inventory', function(owner, inventory_ids)
-  local inventory = vgui.create('fl_inventory_container')
+  local inventory = vgui.Create('fl_inventory_container')
   inventory:open_player_inventories(owner, inventory_ids)
 
   Flux.container_panel = inventory
@@ -160,7 +160,7 @@ end)
 
 Cable.receive('fl_inventory_open', function(inventory_id)
   if !IsValid(Flux.tab_menu) and !IsValid(Flux.container_panel) then
-    local inventory = vgui.create('fl_inventory_container')
+    local inventory = vgui.Create('fl_inventory_container')
     inventory:open_inventory(inventory_id)
 
     Flux.container_panel = inventory
@@ -168,7 +168,7 @@ Cable.receive('fl_inventory_open', function(inventory_id)
     local inventory = Inventories.find(inventory_id)
     local item_obj = Item.find_instance_by_id(inventory.instance_id)
     local parent = IsValid(Flux.tab_menu) and Flux.tab_menu or IsValid(Flux.container_panel) and Flux.container_panel or nil
-    local frame = vgui.create('fl_frame', parent)
+    local frame = vgui.Create('fl_frame', parent)
 
     local inventory_panel = inventory:create_panel(frame)
     inventory_panel:set_title()
@@ -222,7 +222,7 @@ local function create_item_icon(item_obj, parent)
   local padding = math.scale(4)
   icon:DockPadding(padding, padding, padding, padding)
 
-  local name_label = vgui.create('DLabel', icon)
+  local name_label = vgui.Create('DLabel', icon)
   name_label:SetText(t(item_obj:get_real_name()))
   name_label:Dock(BOTTOM)
   name_label:SetTextColor(color_white)
@@ -253,7 +253,7 @@ local function create_item_icon(item_obj, parent)
       MVC.push('SpawnMenu::GiveItem', PLAYER, item_obj.id, 1)
     end)
 
-    local players = player.all()
+    local players = player.GetAll()
 
     if #players > 1 then
       local give_player = derma_menu:AddSubMenu(t'ui.spawnmenu.give.player')
@@ -302,7 +302,7 @@ function Inventories:spawnmenu_populate_items(content_panel, tree, node)
     node.DoPopulate = function(pnl)
       if IsValid(pnl.list) then return end
 
-      pnl.list = vgui.create('ContentContainer', content_panel)
+      pnl.list = vgui.Create('ContentContainer', content_panel)
       pnl.list:SetVisible(false)
       pnl.list:SetTriggerSpawnlistChange(false)
 
@@ -356,5 +356,5 @@ concommand.Add('fl_icon_editor', function()
     Flux.icon_editor:safe_remove()
   end
 
-  Flux.icon_editor = vgui.create('fl_icon_editor')
+  Flux.icon_editor = vgui.Create('fl_icon_editor')
 end)

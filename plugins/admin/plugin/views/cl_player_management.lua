@@ -5,13 +5,13 @@ local PANEL = {}
 function PANEL:Init()
   local scrw, scrh = ScrW(), ScrH()
 
-  self.player_list = vgui.create('DListView', self)
+  self.player_list = vgui.Create('DListView', self)
   self.player_list:DockMargin(4, 4, 2, 4)
   self.player_list:Dock(LEFT)
   self.player_list:AddColumn(t('ui.admin.players'), 1)
   self.player_list:SetWide(scrw / 6)
 
-  for k, v in ipairs(player.all()) do
+  for k, v in ipairs(player.GetAll()) do
     self.player_list:AddLine(v:steam_name(true)..' ('..v:name(true)..')').player = v
   end
 
@@ -21,10 +21,10 @@ function PANEL:Init()
     end
   end
 
-  self.player_info = vgui.create('fl_player_info', self)
+  self.player_info = vgui.Create('fl_player_info', self)
   self.player_info:SetVisible(false)
 
-  self.perm_editor = vgui.create('fl_permissions_editor', self)
+  self.perm_editor = vgui.Create('fl_permissions_editor', self)
   self.perm_editor:SetVisible(false)
 end
 
@@ -67,22 +67,22 @@ PANEL = {}
 
 --- Creates the avatar, the name and role labels and the button that opens the role selector.
 function PANEL:Init()
-  self.avatar = vgui.create('fl_avatar_panel', self)
+  self.avatar = vgui.Create('fl_avatar_panel', self)
 
-  self.name_label = vgui.create('DLabel', self)
+  self.name_label = vgui.Create('DLabel', self)
   self.name_label:SetFont(Theme.get_font('text_normal_large'))
   self.name_label:SetTextColor(color_white)
 
-  self.role_label = vgui.create('DLabel', self)
+  self.role_label = vgui.Create('DLabel', self)
   self.role_label:SetFont(Theme.get_font('text_normal'))
   self.role_label:SetTextColor(color_white)
 
-  self.role_edit = vgui.create('fl_button', self)
+  self.role_edit = vgui.Create('fl_button', self)
   self.role_edit:set_icon('fa-edit')
   self.role_edit:set_centered(true)
   self.role_edit:SetDrawBackground(false)
   self.role_edit.DoClick = function(btn)
-    local selector = vgui.create('fl_selector')
+    local selector = vgui.Create('fl_selector')
     selector:set_title(t'ui.admin.selector.title')
     selector:set_text(t'ui.admin.selector.message')
     selector:set_value(t'ui.admin.selector.roles')
@@ -91,7 +91,7 @@ function PANEL:Init()
       selector:add_choice(v.name, function()
         Cable.send('fl_bolt_set_role', self.player, v.role_id)
 
-        timer.simple(0.05, function()
+        timer.Simple(0.05, function()
           self:rebuild()
         end)
       end)

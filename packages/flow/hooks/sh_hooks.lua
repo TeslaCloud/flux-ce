@@ -279,7 +279,7 @@ end
 
 concommand.Add('fl_save_pers', function()
   if Flux.development and SERVER then
-    hook.run('PersistenceSave')
+    hook.Run('PersistenceSave')
   end
 end)
 
@@ -294,7 +294,7 @@ function GM:OnReloaded()
   end
 
   if Flux.development then
-    for k, v in ipairs(player.all()) do
+    for k, v in ipairs(player.GetAll()) do
       self:PlayerModelChanged(v, v:GetModel(), v:GetModel())
     end
   end
@@ -304,29 +304,29 @@ end
 
 -- Utility timers to call hooks that should be executed every once in a while.
 timer.Create('fl_one_minute', 60, 0, function()
-  hook.run('OneMinute')
+  hook.Run('OneMinute')
 
   local i = 0
 
-  for k, v in ipairs(player.all()) do
+  for k, v in ipairs(player.GetAll()) do
     i = i + 1
 
     timer.Simple(0.25 * i, function()
       if IsValid(v) then
-        hook.run('PlayerOneMinute', v)
+        hook.Run('PlayerOneMinute', v)
       end
     end)
   end
 end)
 
 timer.Create('fl_one_second', 1, 0, function()
-  hook.run('OneSecond')
+  hook.Run('OneSecond')
 end)
 
 timer.Create('fl_half_second', 0.5, 0, function()
-  hook.run('HalfSecond')
+  hook.Run('HalfSecond')
 end)
 
 timer.Create('fl_lazy_tick', 0.125, 0, function()
-  hook.run('LazyTick')
+  hook.Run('LazyTick')
 end)

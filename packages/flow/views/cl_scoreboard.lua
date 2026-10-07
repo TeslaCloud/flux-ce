@@ -20,7 +20,7 @@ end
 function PANEL:rebuild()
   local w, h = self:GetSize()
 
-  if hook.run('PreRebuildScoreboard', self, w, h) != nil then
+  if hook.Run('PreRebuildScoreboard', self, w, h) != nil then
     return
   end
 
@@ -36,7 +36,7 @@ function PANEL:rebuild()
   local card_tall = math.scale(32) + math.scale(8)
   local margin = math.scale(2)
 
-  for k, v in ipairs(player.all()) do
+  for k, v in ipairs(player.GetAll()) do
     if !v:has_initialized() then continue end
 
     local player_card = vgui.Create('fl_scoreboard_player', self)
@@ -51,7 +51,7 @@ function PANEL:rebuild()
     table.insert(self.player_cards, player_card)
   end
 
-  hook.run('RebuildScoreboard', self, w, h)
+  hook.Run('RebuildScoreboard', self, w, h)
 end
 
 --- Returns the size the tab menu gives this panel when it opens it.
@@ -118,7 +118,7 @@ function PANEL:rebuild()
   self.ping:SetTextColor(Theme.get_color('text'))
   self.ping:SizeToContents()
 
-  hook.run('RebuildScoreboardPlayerCard', self, target)
+  hook.Run('RebuildScoreboardPlayerCard', self, target)
 end
 
 vgui.Register('fl_scoreboard_player', PANEL, 'fl_base_panel')

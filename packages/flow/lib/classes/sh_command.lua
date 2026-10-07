@@ -58,13 +58,13 @@ function Command:notify(permission, message, arguments, color)
   local player_list
 
   if isstring(permission) then
-    player_list = table.map(player.all(), function(v) if v:can(permission) then return v end end)
+    player_list = table.map(player.GetAll(), function(v) if v:can(permission) then return v end end)
   elseif istable(permission) then
     player_list = permission
   elseif IsValid(permission) then
     player_list = { permission }
   else
-    player_list = player.all()
+    player_list = player.GetAll()
   end
 
   for k, v in ipairs(player_list) do

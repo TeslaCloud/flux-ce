@@ -29,7 +29,7 @@ function GM:InitPostEntity()
     toolgun.Tool[v.Mode] = v
   end
 
-  hook.run('LoadData')
+  hook.Run('LoadData')
   Plugin.call('FLInitPostEntity')
 end
 
@@ -58,7 +58,7 @@ end
 function GM:PlayerSpawn(actor)
   player_manager.SetPlayerClass(actor, 'flux_player')
 
-  hook.run('PlayerSetModel', actor)
+  hook.Run('PlayerSetModel', actor)
 
   actor:SetCollisionGroup(COLLISION_GROUP_PLAYER)
   actor:SetMaterial('')
@@ -77,7 +77,7 @@ function GM:PlayerSpawn(actor)
   actor:SetNotSolid(false)
   actor:SetCanZoom(false)
 
-  hook.run('PostPlayerSpawn', actor)
+  hook.Run('PostPlayerSpawn', actor)
 
   local old_hands = actor:GetHands()
 
@@ -132,7 +132,7 @@ end
 -- and anyone else is left to the base gamemode.
 -- @param actor [Player]
 function GM:PlayerSetModel(actor)
-  local override = hook.run('PrePlayerSetModel', actor)
+  local override = hook.Run('PrePlayerSetModel', actor)
 
   if isstring(override) then
     actor:SetModel(override)
@@ -206,7 +206,7 @@ end
 -- @param speed [Number fall speed]
 -- @return [Number damage to deal]
 function GM:GetFallDamage(actor, speed)
-  local fall_damage = hook.run('FLGetFallDamage', actor, speed)
+  local fall_damage = hook.Run('FLGetFallDamage', actor, speed)
 
   if speed < 660 then
     speed = speed - 250
@@ -225,7 +225,7 @@ end
 -- @param attacker [Entity]
 -- @return [Boolean true, or the truthy value returned by the hook]
 function GM:PlayerShouldTakeDamage(victim, attacker)
-  return hook.run('FLPlayerShouldTakeDamage', victim, attacker) or true
+  return hook.Run('FLPlayerShouldTakeDamage', victim, attacker) or true
 end
 
 --- Decides whether a player may spawn a prop.
@@ -241,7 +241,7 @@ function GM:PlayerSpawnProp(actor, model)
     return false
   end
 
-  if hook.run('FLPlayerSpawnProp', actor, model) == false then
+  if hook.Run('FLPlayerSpawnProp', actor, model) == false then
     return false
   end
 
@@ -262,7 +262,7 @@ function GM:PlayerSpawnObject(actor, model, skin)
     return false
   end
 
-  if hook.run('FLPlayerSpawnObject', actor, model, skin) == false then
+  if hook.Run('FLPlayerSpawnObject', actor, model, skin) == false then
     return false
   end
 
@@ -283,7 +283,7 @@ function GM:PlayerSpawnNPC(actor, npc, weapon)
     return false
   end
 
-  if hook.run('FLPlayerSpawnNPC', actor, npc, weapon) == false then
+  if hook.Run('FLPlayerSpawnNPC', actor, npc, weapon) == false then
     return false
   end
 
@@ -303,7 +303,7 @@ function GM:PlayerSpawnEffect(actor, model)
     return false
   end
 
-  if hook.run('FLPlayerSpawnEffect', actor, model) == false then
+  if hook.Run('FLPlayerSpawnEffect', actor, model) == false then
     return false
   end
 
@@ -325,7 +325,7 @@ function GM:PlayerSpawnVehicle(actor, model, name, tab)
     return false
   end
 
-  if hook.run('FLPlayerSpawnVehicle', actor, model, name, tab) == false then
+  if hook.Run('FLPlayerSpawnVehicle', actor, model, name, tab) == false then
     return false
   end
 
@@ -346,7 +346,7 @@ function GM:PlayerSpawnSWEP(actor, weapon, swep)
     return false
   end
 
-  if hook.run('FLPlayerSpawnSWEP', actor, weapon, swep) == false then
+  if hook.Run('FLPlayerSpawnSWEP', actor, weapon, swep) == false then
     return false
   end
 
@@ -366,7 +366,7 @@ function GM:PlayerSpawnSENT(actor, class)
     return false
   end
 
-  if hook.run('FLPlayerSpawnSENT', actor, class) == false then
+  if hook.Run('FLPlayerSpawnSENT', actor, class) == false then
     return false
   end
 
@@ -386,7 +386,7 @@ function GM:PlayerSpawnRagdoll(actor, model)
     return false
   end
 
-  if hook.run('FLPlayerSpawnRagdoll', actor, model) == false then
+  if hook.Run('FLPlayerSpawnRagdoll', actor, model) == false then
     return false
   end
 
@@ -407,7 +407,7 @@ function GM:PlayerGiveSWEP(actor, weapon, swep)
     return false
   end
 
-  if hook.run('FLPlayerGiveSWEP', actor, weapon, swep) == false then
+  if hook.Run('FLPlayerGiveSWEP', actor, weapon, swep) == false then
     return false
   end
 
@@ -433,7 +433,7 @@ end
 -- @param damage_info [CTakeDamageInfo]
 function GM:EntityTakeDamage(ent, damage_info)
   if IsValid(ent) and ent:IsPlayer() then
-    hook.run('PlayerTakeDamage', ent, damage_info)
+    hook.Run('PlayerTakeDamage', ent, damage_info)
   end
 end
 
@@ -454,8 +454,8 @@ function GM:OneSecond()
   if !Flux.next_save_data then
     Flux.next_save_data = cur_time + 10
   elseif Flux.next_save_data <= cur_time then
-    if hook.run('FLShouldSaveData') != false then
-      hook.run('FLSaveData')
+    if hook.Run('FLShouldSaveData') != false then
+      hook.Run('FLSaveData')
     end
 
     Flux.next_save_data = cur_time + Config.get('data_save_interval', 360)
@@ -466,8 +466,8 @@ function GM:OneSecond()
   elseif Flux.next_player_count_check <= sys_time then
     Flux.next_player_count_check = sys_time + 1800
 
-    if #player.all() == 0 then
-      if hook.run('ShouldServerAutoRestart') != false then
+    if #player.GetAll() == 0 then
+      if hook.Run('ShouldServerAutoRestart') != false then
         Flux.dev_print('Server is empty, restarting...')
         RunConsoleCommand('changelevel', game.GetMap())
       end
@@ -569,7 +569,7 @@ end
 --- Saves the config and runs the SaveData hook.
 function GM:FLSaveData()
   Config.save()
-  hook.run('SaveData')
+  hook.Run('SaveData')
 end
 
 --- Runs the PlayerPositionChanged hook if the player has moved since the previous check.
@@ -579,7 +579,7 @@ function GM:PlayerOneSecond(actor, cur_time)
   local pos = actor:GetPos()
 
   if actor.last_pos != pos then
-    hook.run('PlayerPositionChanged', actor, actor.last_pos, pos, cur_time)
+    hook.Run('PlayerPositionChanged', actor, actor.last_pos, pos, cur_time)
   end
 
   actor.last_pos = pos
@@ -619,7 +619,7 @@ end
 
 --- Saves the data of every player before the server restarts.
 function GM:ServerRestart()
-  for k, v in ipairs(player.all()) do
+  for k, v in ipairs(player.GetAll()) do
     v:save_player()
   end
 end
@@ -639,19 +639,19 @@ end
 -- @param new_value [Any]
 function GM:OnConfigSet(key, old_value, new_value)
   if key == 'walk_speed' then
-    for k, v in ipairs(player.all()) do
+    for k, v in ipairs(player.GetAll()) do
       v:SetWalkSpeed(new_value)
     end
   elseif key == 'run_speed' then
-    for k, v in ipairs(player.all()) do
+    for k, v in ipairs(player.GetAll()) do
       v:SetRunSpeed(new_value)
     end
   elseif key == 'crouched_speed' then
-    for k, v in ipairs(player.all()) do
+    for k, v in ipairs(player.GetAll()) do
       v:SetCrouchedWalkSpeed(new_value / Config.get('walk_speed'))
     end
   elseif key == 'jump_power' then
-    for k, v in ipairs(player.all()) do
+    for k, v in ipairs(player.GetAll()) do
       v:SetJumpPower(new_value)
     end
   end
@@ -706,7 +706,7 @@ do
     if cur_time >= next_think then
       local one_second_tick = (cur_time >= next_second)
 
-      for k, v in ipairs(player.all()) do
+      for k, v in ipairs(player.GetAll()) do
         hook.Call('PlayerThink', self, v, cur_time)
 
         if one_second_tick then

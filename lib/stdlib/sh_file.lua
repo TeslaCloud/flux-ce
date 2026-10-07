@@ -40,7 +40,7 @@ function File.get_list(folder)
   end
 
   for k, v in ipairs(folders) do
-    if v:starts('.') then continue end
+    if v:start_with('.') then continue end
 
     local file_list = File.get_list(folder..v..'/')
 
@@ -127,10 +127,10 @@ function File.ls(path, include_hidden)
 
   if !files or !folders then return end
 
-  table.add(files, folders)
+  table.Add(files, folders)
 
   return table.map(files, function(f)
-    if include_hidden or !f:starts('.') then
+    if include_hidden or !f:start_with('.') then
       return f
     end
   end)

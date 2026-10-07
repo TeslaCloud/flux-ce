@@ -333,8 +333,8 @@ function PANEL:rebuild()
 
     collapsible_category:SetContents(list)
 
-    if table.count(perms) > 1 then
-      local panel = vgui.create('fl_base_panel')
+    if table.Count(perms) > 1 then
+      local panel = vgui.Create('fl_base_panel')
 
       local category_buttons = {
         t'ui.admin.allow_all',
@@ -345,7 +345,7 @@ function PANEL:rebuild()
       local quarter = width / 4
 
       for k, v in pairs(category_buttons) do
-        local button = vgui.create('fl_button', panel)
+        local button = vgui.Create('fl_button', panel)
         button:SetSize(quarter * 0.9, 20)
         button:SetPos(quarter * k, 2)
         button:SetFont(Theme.get_font('text_small'))

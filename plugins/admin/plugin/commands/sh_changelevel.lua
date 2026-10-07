@@ -20,7 +20,7 @@ function CMD:on_run(actor, map, delay)
     delay = delay
   })
 
-  timer.simple(delay, function()
+  timer.Simple(delay, function()
     RunConsoleCommand('changelevel', map)
   end)
 end

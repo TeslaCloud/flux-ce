@@ -99,7 +99,7 @@ function Areas.create(id, height, data)
     area.type = data.type or 'area'
 
     if data then
-      table.merge(area, data)
+      table.Merge(area, data)
     end
   else
     area = stored[id]
@@ -187,9 +187,9 @@ end
 --   Color(0, 255, 0),
 --   function(actor, area, has_entered, pos, cur_time)
 --     if has_entered then
---       hook.run('PlayerEnteredSafeZone', actor, area, cur_time)
+--       hook.Run('PlayerEnteredSafeZone', actor, area, cur_time)
 --     else
---       hook.run('PlayerLeftSafeZone', actor, area, cur_time)
+--       hook.Run('PlayerLeftSafeZone', actor, area, cur_time)
 --     end
 --   end
 -- )
@@ -233,9 +233,9 @@ Areas.register_type(
   'A simple area. Use this type if you have a callback somewhere in the code that looks up id instead of type ID.',
   function(actor, area, poly, has_entered, cur_pos, cur_time)
     if has_entered then
-      hook.run('PlayerEnteredArea', actor, area, cur_time)
+      hook.Run('PlayerEnteredArea', actor, area, cur_time)
     else
-      hook.run('PlayerLeftArea', actor, area, cur_time)
+      hook.Run('PlayerLeftArea', actor, area, cur_time)
     end
   end
 )

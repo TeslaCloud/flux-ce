@@ -79,7 +79,7 @@ function PANEL:Paint(w, h)
     local icon = self.icon
     local icon_size = h * 0.75
 
-    if icon:starts('fa') then
+    if icon:start_with('fa') then
       local icon_text = FontAwesome:get(icon)
       local icon_w, icon_h = util.text_size(icon_text, Font.size('flFontAwesome', icon_size))
 
@@ -147,7 +147,7 @@ function PANEL:OnMouseReleased(...)
     if self.item_data and self.mouse_pressed and self.mouse_pressed > (CurTime() - 0.15) then
       Flux.inventory_drag_slot = nil
 
-      hook.run('PlayerUseItemMenu', self.instance_ids[#self.instance_ids])
+      hook.Run('PlayerUseItemMenu', self.instance_ids[#self.instance_ids])
     end
   end
 
@@ -278,7 +278,7 @@ function PANEL:rebuild()
     end
 
     local entity = self.model_panel:GetEntity()
-    local cam_data = table.copy(self.item_data:get_icon_data())
+    local cam_data = table.Copy(self.item_data:get_icon_data())
 
     entity:SetSequence(entity:idle_animation())
 

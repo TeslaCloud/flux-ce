@@ -15,7 +15,7 @@ function PANEL:Init()
   self.text:SetContentAlignment(5)
   self.text:SetTextColor(color_white)
 
-  self.list = vgui.create('DComboBox', self)
+  self.list = vgui.Create('DComboBox', self)
   self.list:DockMargin(0, 8, 0, 0)
   self.list:Dock(TOP)
   self.list.OnSelect = function(panel, index, text, callback)
@@ -62,7 +62,7 @@ end
 
 --- Adds a choice to the combo box. Selecting it runs the callback and removes the selector.
 -- ```
--- local selector = vgui.create('fl_selector')
+-- local selector = vgui.Create('fl_selector')
 -- selector:set_title(t'ui.admin.selector.title')
 -- selector:set_text(t'ui.admin.selector.message')
 -- selector:set_value(t'ui.admin.selector.roles')

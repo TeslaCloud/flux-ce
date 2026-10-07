@@ -90,12 +90,12 @@ function Flux.HTML:render_template(id, locals)
 
   local contents = self:get_template(id) or ''
   contents = contents:gsub('<%?([^%?]*)%?>', function(code_block)
-    code_block = code_block:trim()
+    code_block = code_block:strip()
     local len = code_block:len()
 
-    if code_block:starts('=') then
+    if code_block:start_with('=') then
       return ']]..('..code_block:sub(2, len)..')..[['
-    elseif code_block:starts('-') then
+    elseif code_block:start_with('-') then
       return ']]\n'..code_block:sub(2, len)..'\n_html = _html..[['
     else
       return ']]\n'..code_block..'\n_html = _html..[['
@@ -191,7 +191,7 @@ do
     if id:find('/') then
       local path, name = File.path(id), File.name(id)
       id = path..'_'..name
-    elseif !id:starts('_') then
+    elseif !id:start_with('_') then
       id = '_'..id
     end
 
@@ -216,9 +216,9 @@ end
 Pipeline.register('html', function(id, file_name, pipe)
   local pipe = 'templates'
 
-  if file_name:ends('.js') then
+  if file_name:end_with('.js') then
     pipe = 'javascripts'
-  elseif file_name:ends('css') then
+  elseif file_name:end_with('css') then
     pipe = 'stylesheets'
   end
 

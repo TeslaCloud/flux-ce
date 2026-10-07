@@ -88,7 +88,7 @@ end
 --- Called on the server by the 'OnItemCreated' hook right after an instance of the item
 -- is created. Fills the container with the items listed in default_inventory.
 function ItemContainer:on_created()
-  if !table.is_empty(self.default_inventory) then
+  if !table.IsEmpty(self.default_inventory) then
     self:create_inventory()
 
     for k, v in pairs(self.default_inventory) do

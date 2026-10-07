@@ -12,7 +12,7 @@ function PANEL:Init()
     self:close_menu()
   end)
 
-  hook.run('OnIntroPanelCreated', self)
+  hook.Run('OnIntroPanelCreated', self)
 end
 
 local logo_w, logo_h = math.scale(800), math.scale(150)
@@ -92,7 +92,7 @@ function PANEL:close_menu()
     self:Remove()
   end)
 
-  hook.run('OnIntroPanelRemoved')
+  hook.Run('OnIntroPanelRemoved')
 end
 
 --- Starts the circle animation after a short delay.

@@ -168,7 +168,7 @@ function ActiveRecord.Adapters.Abstract:on_connected()
   self:sync(true)
 
   ActiveRecord.on_connected()
-  hook.run('DatabaseConnected')
+  hook.Run('DatabaseConnected')
 
   self:sync(false)
 end
@@ -183,7 +183,7 @@ function ActiveRecord.Adapters.Abstract:on_connection_failed(error_text)
     ErrorNoHalt('HINT:\ntry running "flux db:create" to create the databases.\n\n')
   end
 
-  hook.run('DatabaseConnectionFailed', error_text)
+  hook.Run('DatabaseConnectionFailed', error_text)
 end
 
 --- Checks whether or not the adapter is connected to a database.

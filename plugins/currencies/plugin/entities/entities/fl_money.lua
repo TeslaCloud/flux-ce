@@ -55,8 +55,8 @@ if SERVER then
   -- @param value [Number]
   function ENT:Use(activator, caller, use_type, value)
     if IsValid(activator) then
-      if hook.run('CanPlayerPickupMoney', activator, self) != false then
-        hook.run('PlayerPickupMoney', activator, self)
+      if hook.Run('CanPlayerPickupMoney', activator, self) != false then
+        hook.Run('PlayerPickupMoney', activator, self)
 
         self:Remove()
       end

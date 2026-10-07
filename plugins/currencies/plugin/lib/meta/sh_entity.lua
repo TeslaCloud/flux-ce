@@ -23,7 +23,7 @@
   --- Checks whether the entity is able to hold money by running the CanContainMoney hook.
   -- @return [Boolean true when a hook allows it, otherwise nil]
   function entity_meta:can_contain_money()
-    return hook.run('CanContainMoney', self)
+    return hook.Run('CanContainMoney', self)
   end
 
   if SERVER then
@@ -58,7 +58,7 @@
 
         self:set_nv('fl_currencies', currency_table)
 
-        hook.run('EntityMoneyChanged', self, currency, value, old_value)
+        hook.Run('EntityMoneyChanged', self, currency, value, old_value)
       end
     end
 
@@ -112,7 +112,7 @@
         return
       end
 
-      local success, err = hook.run('CanPlayerDropMoney', self, value, currency, pos, trace)
+      local success, err = hook.Run('CanPlayerDropMoney', self, value, currency, pos, trace)
 
       if success == false then
         return false, err
@@ -168,7 +168,7 @@
         target = trace.Entity
       end
 
-      local success, err = hook.run('CanGiveMoney', self, target, value, currency)
+      local success, err = hook.Run('CanGiveMoney', self, target, value, currency)
 
       if success == false then
         return false, err

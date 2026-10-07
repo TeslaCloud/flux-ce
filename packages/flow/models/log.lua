@@ -109,7 +109,7 @@ function Log:colored(color, message, action, object, subject)
 
     replication_data = { type = 'colored', color = color }
 
-    if !message:ends('\n') then
+    if !message:end_with('\n') then
       Msg('\n')
     end
   end)
@@ -138,7 +138,7 @@ function Log:replicate(condition)
 
   condition = isfunction(condition) and condition or function() return true end
 
-  for k, v in ipairs(player.all()) do
+  for k, v in ipairs(player.GetAll()) do
     if condition(v) then
       Cable.send(v, 'log_replicate', last_log.message, last_log.action, last_log.object, last_log.subject, last_log.data)
     end

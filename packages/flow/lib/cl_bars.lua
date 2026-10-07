@@ -66,7 +66,7 @@ function Flux.Bars:register(id, data, force)
     callback = data.callback
   }
 
-  hook.run('OnBarRegistered', stored[id], id, force)
+  hook.Run('OnBarRegistered', stored[id], id, force)
 
   return stored[id]
 end
@@ -126,11 +126,11 @@ function Flux.Bars:prioritize()
   sorted = {}
 
   for k, v in pairs(stored) do
-    if !hook.run('ShouldDrawBar', v) then
+    if !hook.Run('ShouldDrawBar', v) then
       continue
     end
 
-    hook.run('PreBarPrioritized', v)
+    hook.Run('PreBarPrioritized', v)
 
     sorted[v.priority] = sorted[v.priority] or {}
 
@@ -154,7 +154,7 @@ function Flux.Bars:position()
       local bar = self:get(v)
 
       if bar and bar.type == BAR_TOP then
-        local offX, offY = hook.run('AdjustBarPos', bar)
+        local offX, offY = hook.Run('AdjustBarPos', bar)
         offX = offX or 0
         offY = offY or 0
 
@@ -174,16 +174,16 @@ function Flux.Bars:draw(id)
   local bar_info = self:get(id)
 
   if bar_info then
-    hook.run('PreDrawBar', bar_info)
+    hook.Run('PreDrawBar', bar_info)
     Theme.call('PreDrawBar', bar_info)
 
-    if !hook.run('ShouldDrawBar', bar_info) then
+    if !hook.Run('ShouldDrawBar', bar_info) then
       return
     end
 
     Theme.call('DrawBarBackground', bar_info)
 
-    if hook.run('ShouldFillBar', bar_info) or bar_info.value != 0 then
+    if hook.Run('ShouldFillBar', bar_info) or bar_info.value != 0 then
       Theme.call('DrawBarFill', bar_info)
     end
 
@@ -193,7 +193,7 @@ function Flux.Bars:draw(id)
 
     Theme.call('DrawBarTexts', bar_info)
 
-    hook.run('PostDrawBar', bar_info)
+    hook.Run('PostDrawBar', bar_info)
     Theme.call('PostDrawBar', bar_info)
   end
 end
@@ -214,7 +214,7 @@ function Flux.Bars:adjust(id, data)
   local bar = self:get(id)
 
   if bar then
-    table.merge(bar, data)
+    table.Merge(bar, data)
   end
 end
 
@@ -231,7 +231,7 @@ do
           Flux.Bars:set_value(v.id, v.callback(stored[k]))
         end
 
-        hook.run('AdjustBarInfo', k, stored[k])
+        hook.Run('AdjustBarInfo', k, stored[k])
       end
     end
   end

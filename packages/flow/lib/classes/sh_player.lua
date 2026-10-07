@@ -21,7 +21,7 @@ function flux_player:SetupDataTables()
 
   self.Player:DTVar('Bool', BOOL_INITIALIZED, 'Initialized')
 
-  hook.run('PlayerSetupDataTables', self.Player)
+  hook.Run('PlayerSetupDataTables', self.Player)
 end
 
 --- Determines which hands model to use for the player's current model.
@@ -59,7 +59,7 @@ end
 
 --- Runs the 'PostPlayerLoadout' hook with the default loadout of the player class.
 function flux_player:Loadout()
-  hook.run('PostPlayerLoadout', self.Player, self.loadout)
+  hook.Run('PostPlayerLoadout', self.Player, self.loadout)
 end
 
 player_manager.RegisterClass('flux_player', flux_player, 'player_default')

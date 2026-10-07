@@ -13,7 +13,7 @@ ItemConsumable.category = 'item.category.consumables'
 -- Returns nothing, so the item is always removed afterwards.
 -- @param actor [Player]
 function ItemConsumable:on_use(actor)
-  if hook.run('PrePlayerConsumeItem', actor, self) != false then
-    hook.run('PlayerConsumeItem', actor, self)
+  if hook.Run('PrePlayerConsumeItem', actor, self) != false then
+    hook.Run('PlayerConsumeItem', actor, self)
   end
 end

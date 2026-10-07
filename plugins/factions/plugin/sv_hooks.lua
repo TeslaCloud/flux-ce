@@ -8,8 +8,8 @@ function Factions:PostPlayerSpawn(actor)
   end
 
   if actor:IsBot() then
-    if table.count(self.all()) > 0 then
-      local faction_table = table.random(self.all())
+    if table.Count(self.all()) > 0 then
+      local faction_table = table.Random(self.all())
 
       actor:set_faction(faction_table.faction_id)
     end

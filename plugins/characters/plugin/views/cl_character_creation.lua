@@ -14,7 +14,7 @@ function PANEL:Init()
   self.stage = 1
   self.stages = {}
 
-  hook.run('AddCharacterCreationMenuStages', self)
+  hook.Run('AddCharacterCreationMenuStages', self)
 
   self:open_panel(self.stages[1])
 
@@ -217,7 +217,7 @@ function PANEL:next_stage()
     end
   end
 
-  local success, error = hook.run('PreStageChange', self.stages[self.stage],  self.panel)
+  local success, error = hook.Run('PreStageChange', self.stages[self.stage],  self.panel)
 
   if success == false then
     self:GetParent():notify(error or t'ui.char_create.unknown_error')
@@ -246,10 +246,10 @@ function PANEL:next_stage()
             if #chars == 1 then
               Flux.intro_panel.hide_sidebar = true
 
-              timer.simple(Theme.get_option('menu_anim_duration') * #self.stages, function()
-                hook.run('FirstCharacterCreated', chars[1])
+              timer.Simple(Theme.get_option('menu_anim_duration') * #self.stages, function()
+                hook.Run('FirstCharacterCreated', chars[1])
 
-                timer.simple(1.5, function()
+                timer.Simple(1.5, function()
                   Cable.send('fl_player_select_character', chars[1].id)
                 end)
               end)
@@ -257,7 +257,7 @@ function PANEL:next_stage()
           else
             local status = response.status
             local text = t'ui.char_create.unknown_error'
-            local hook_text = hook.run('GetCharCreationErrorText', response.success, status)
+            local hook_text = hook.Run('GetCharCreationErrorText', response.success, status)
 
             if hook_text then
               text = hook_text
@@ -313,7 +313,7 @@ end
 
 --- Empties the collected character data.
 function PANEL:clear_data()
-  table.empty(self.char_data)
+  table.Empty(self.char_data)
 end
 
 --- Slides the current stage panel out, then creates the theme panel with the given ID and

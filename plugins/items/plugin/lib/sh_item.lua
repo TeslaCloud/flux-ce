@@ -141,7 +141,7 @@ function Item.to_saveable(item_obj)
     icon_material = item_obj.icon_material
   }
 
-  hook.run('PreItemSave', item_obj, save_table)
+  hook.Run('PreItemSave', item_obj, save_table)
 
   return save_table
 end
@@ -262,7 +262,7 @@ function Item.create(id, data, forced_id)
     instances[id][item_id].instance_id = item_id
 
     if SERVER then
-      hook.run('OnItemCreated', instances[id][item_id])
+      hook.Run('OnItemCreated', instances[id][item_id])
 
       Item.async_save()
       Cable.send(nil, 'fl_items_new_instance', id, (data or 1), item_id)

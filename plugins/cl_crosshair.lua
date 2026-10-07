@@ -21,7 +21,7 @@ end
 --- Draws the crosshair: a center dot and four bars around it.
 -- Gap and color can be changed through the AdjustCrosshairGap and AdjustCrosshairColor hooks.
 function PLUGIN:HUDPaint()
-  if IsValid(PLAYER) and hook.run('ShouldHUDPaint') != false and hook.run('ShouldHUDPaintCrosshair') != false then
+  if IsValid(PLAYER) and hook.Run('ShouldHUDPaint') != false and hook.Run('ShouldHUDPaintCrosshair') != false then
     local lerp_step = FrameTime() * 6
     local trace = PLAYER:GetEyeTraceNoCursor()
     local distance = PLAYER:GetPos():Distance(trace.HitPos)

@@ -52,10 +52,10 @@ function PANEL:rebuild()
     local amount = self.entity:get_money(k) or 0
 
     if !v.hidden or v.hidden and amount > 0 then
-      local line = vgui.create('DPanel', self)
+      local line = vgui.Create('DPanel', self)
       line:SetPaintBackground(false)
 
-      local label = vgui.create('DLabel', line)
+      local label = vgui.Create('DLabel', line)
       label:SetText(t(v.name)..': '..amount..' '..(v.symbol or ''))
       label:SetFont(Theme.get_font('main_menu_normal'))
       label:SetTextColor(Color('white'))
@@ -67,7 +67,7 @@ function PANEL:rebuild()
 
       if amount > 0 then
         if self.entity == PLAYER then
-          local give_button = vgui.create('fl_button', line)
+          local give_button = vgui.Create('fl_button', line)
           give_button:SetSize(button_size, button_size)
           give_button:SetDrawBackground(false)
           give_button:SetTooltip(t'ui.currency.give.title')
@@ -90,7 +90,7 @@ function PANEL:rebuild()
 
           w = w + give_button:GetWide()
 
-          local drop_button = vgui.create('fl_button', line)
+          local drop_button = vgui.Create('fl_button', line)
           drop_button:SetSize(button_size, button_size)
           drop_button:SetDrawBackground(false)
           drop_button:SetTooltip(t'ui.currency.drop.title')
@@ -111,7 +111,7 @@ function PANEL:rebuild()
 
           w = w + drop_button:GetWide()
         else
-          local take_button = vgui.create('fl_button', line)
+          local take_button = vgui.Create('fl_button', line)
           take_button:SetSize(button_size, button_size)
           take_button:SetDrawBackground(false)
           take_button:SetTooltip(t'ui.currency.take.title')

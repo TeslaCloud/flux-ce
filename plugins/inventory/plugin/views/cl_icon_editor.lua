@@ -12,7 +12,7 @@ function PANEL:Init()
 
   local button_size = math.scale(48)
 
-  self.model = vgui.create('DAdjustableModelPanel', self)
+  self.model = vgui.Create('DAdjustableModelPanel', self)
   self.model:SetSize(w * 0.5, h - button_size)
   self.model:Dock(LEFT)
   self.model:DockMargin(0, 0, 0, button_size + math.scale(8))
@@ -23,7 +23,7 @@ function PANEL:Init()
 
   local x = math.scale_x(4)
 
-  self.best = vgui.create('fl_button', self)
+  self.best = vgui.Create('fl_button', self)
   self.best:SetSize(button_size, button_size)
   self.best:SetPos(x, h - button_size - math.scale(4))
   self.best:set_icon('fa-cube')
@@ -43,7 +43,7 @@ function PANEL:Init()
 
   x = x + button_size + math.scale_x(4)
 
-  self.front = vgui.create('fl_button', self)
+  self.front = vgui.Create('fl_button', self)
   self.front:SetSize(button_size, button_size)
   self.front:SetPos(x, h - button_size - math.scale(4))
   self.front:set_icon('fa-hand-point-up')
@@ -61,7 +61,7 @@ function PANEL:Init()
 
   x = x + button_size + math.scale_x(4)
 
-  self.above = vgui.create('fl_button', self)
+  self.above = vgui.Create('fl_button', self)
   self.above:SetSize(button_size, button_size)
   self.above:SetPos(x, h - button_size - math.scale(4))
   self.above:set_icon('fa-hand-point-down')
@@ -79,7 +79,7 @@ function PANEL:Init()
 
   x = x + button_size + math.scale_x(4)
 
-  self.right = vgui.create('fl_button', self)
+  self.right = vgui.Create('fl_button', self)
   self.right:SetSize(button_size, button_size)
   self.right:SetPos(x, h - button_size - math.scale(4))
   self.right:set_icon('fa-hand-point-left')
@@ -97,7 +97,7 @@ function PANEL:Init()
 
   x = x + button_size + math.scale_x(4)
 
-  self.center = vgui.create('fl_button', self)
+  self.center = vgui.Create('fl_button', self)
   self.center:SetSize(button_size, button_size)
   self.center:SetPos(x, h - button_size - math.scale(4))
   self.center:set_icon('fa-hand-pointer')
@@ -114,7 +114,7 @@ function PANEL:Init()
 
   self.best:DoClick()
 
-  self.preview = vgui.create('fl_base_panel', self)
+  self.preview = vgui.Create('fl_base_panel', self)
   self.preview:Dock(FILL)
   self.preview:DockMargin(math.scale_x(4), 0, 0, 0)
   self.preview:DockPadding(math.scale_x(4), math.scale(4), math.scale_x(4), math.scale(4))
@@ -122,7 +122,7 @@ function PANEL:Init()
     draw.RoundedBox(0, 0, 0, w, h, Color(0, 0, 0, 100))
   end
 
-  self.model_path = vgui.create('DTextEntry', self.preview)
+  self.model_path = vgui.Create('DTextEntry', self.preview)
   self.model_path:SetValue(self.model:GetModel())
   self.model_path:Dock(TOP)
   self.model_path.OnEnter = function(pnl)
@@ -134,7 +134,7 @@ function PANEL:Init()
     end
   end
 
-  self.slot_size = vgui.create('DNumSlider', self.preview)
+  self.slot_size = vgui.Create('DNumSlider', self.preview)
   self.slot_size:Dock(TOP)
   self.slot_size:SetText(t('ui.icon_editor.slot_size'))
   self.slot_size:SetMinMax(1, 512)
@@ -144,7 +144,7 @@ function PANEL:Init()
     self.item:rebuild()
   end
 
-  self.width = vgui.create('DNumSlider', self.preview)
+  self.width = vgui.Create('DNumSlider', self.preview)
   self.width:Dock(TOP)
   self.width:SetText(t('ui.icon_editor.width'))
   self.width:SetMinMax(1, 16)
@@ -154,7 +154,7 @@ function PANEL:Init()
     self.item:rebuild()
   end
 
-  self.height = vgui.create('DNumSlider', self.preview)
+  self.height = vgui.Create('DNumSlider', self.preview)
   self.height:Dock(TOP)
   self.height:SetText(t('ui.icon_editor.height'))
   self.height:SetMinMax(1, 16)
@@ -164,13 +164,13 @@ function PANEL:Init()
     self.item:rebuild()
   end
 
-  self.item_panel = vgui.create('fl_base_panel', self.preview)
+  self.item_panel = vgui.Create('fl_base_panel', self.preview)
   self.item_panel:Dock(FILL)
   self.item_panel.Paint = function(pnl, w, h)
     draw.RoundedBox(0, 0, 0, w, h, Color(0, 0, 0, 100))
   end
 
-  self.item = vgui.create('DModelPanel', self.item_panel)
+  self.item = vgui.Create('DModelPanel', self.item_panel)
   self.item:SetMouseInputEnabled(false)
   self.item.LayoutEntity = function()
   end
@@ -195,15 +195,15 @@ function PANEL:Init()
 
   self.item:rebuild()
 
-  timer.create('fl_icon_editor_update', 0.5, 0, function()
+  timer.Create('fl_icon_editor_update', 0.5, 0, function()
     if IsValid(self) and IsValid(self.model) then
       self.item:rebuild()
     else
-      timer.destroy('fl_icon_editor_update')
+      timer.Destroy('fl_icon_editor_update')
     end
   end)
 
-  self.copy = vgui.create('fl_button', self)
+  self.copy = vgui.Create('fl_button', self)
   self.copy:SetSize(button_size, button_size)
   self.copy:SetPos(w - button_size - math.scale_x(12), h - button_size - math.scale(12))
   self.copy:set_icon('fa-copy')

@@ -56,5 +56,5 @@ require_relative 'sv_plugin'
 
 --- Runs the RegisterConditions hook so that plugins can register their conditions.
 function Conditions:OnPluginsLoaded()
-  hook.run('RegisterConditions')
+  hook.Run('RegisterConditions')
 end

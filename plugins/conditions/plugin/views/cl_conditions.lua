@@ -12,12 +12,12 @@ function PANEL:Init()
     self:node_options(panel, true, #panel.childs == 0)
   end
 
-  self.save = vgui.create('fl_button', self)
+  self.save = vgui.Create('fl_button', self)
   self.save:SetSize(math.scale(24), math.scale(24))
   self.save:set_icon('fa-save')
   self.save:set_centered(true)
   self.save.DoClick = function(btn)
-    surface.play_sound('garrysmod/ui_click.wav')
+    surface.PlaySound('garrysmod/ui_click.wav')
 
     Derma_StringRequest(t'ui.condition.save.title',
     t'ui.condition.save.message',
@@ -25,27 +25,27 @@ function PANEL:Init()
     function(text)
       Data.save('conditions/'..text, self:get_conditions())
 
-      surface.play_sound('garrysmod/ui_click.wav')
+      surface.PlaySound('garrysmod/ui_click.wav')
     end,
     function(text)
-      surface.play_sound('garrysmod/ui_click.wav')
+      surface.PlaySound('garrysmod/ui_click.wav')
     end)
   end
 
-  self.load = vgui.create('fl_button', self)
+  self.load = vgui.Create('fl_button', self)
   self.load:SetSize(math.scale(24), math.scale(24))
   self.load:set_icon('fa-folder-open')
   self.load:set_centered(true)
   self.load.DoClick = function(btn)
-    surface.play_sound('garrysmod/ui_click.wav')
+    surface.PlaySound('garrysmod/ui_click.wav')
 
-    local frame = vgui.create('DFrame')
+    local frame = vgui.Create('DFrame')
     frame:SetSize(ScrW() * 0.2, ScrH() * 0.2)
     frame:SetTitle(t'ui.condition.load.title')
     frame:Center()
     frame:MakePopup()
 
-    local list = vgui.create('DListView', frame)
+    local list = vgui.Create('DListView', frame)
     list:Dock(FILL)
     list:AddColumn(t'ui.condition.load.column')
 
@@ -54,7 +54,7 @@ function PANEL:Init()
     end
 
     list.OnRowSelected = function(lst, index, line)
-      surface.play_sound('garrysmod/ui_click.wav')
+      surface.PlaySound('garrysmod/ui_click.wav')
 
       self:clear()
       self:set_conditions(self.root, Data.load('conditions/'..line:GetColumnText(1)))
@@ -105,7 +105,7 @@ function PANEL:node_options(panel, root, first)
         if isfunction(data.set_operator) then
           data.set_operator(id, data, panel, menu)
         elseif isstring(data.set_operator) then
-          local selector = vgui.create('fl_selector')
+          local selector = vgui.Create('fl_selector')
           selector:set_title(t(data.name))
           selector:set_text(t'ui.condition.select_operator')
           selector:set_value(t'ui.condition.operators')
@@ -239,7 +239,7 @@ end
 -- @param callback [Function called as callback(selector, choice) for every choice]
 -- @return [Panel the created fl_selector panel]
 function PANEL:create_selector(title, message, default_value, choices, callback)
-  local selector = vgui.create('fl_selector')
+  local selector = vgui.Create('fl_selector')
   selector:set_title(t(title))
   selector:set_text(t(message))
   selector:set_value(t(default_value))
@@ -251,4 +251,4 @@ function PANEL:create_selector(title, message, default_value, choices, callback)
   return selector
 end
 
-vgui.register('fl_conditions', PANEL, 'DTree')
+vgui.Register('fl_conditions', PANEL, 'DTree')

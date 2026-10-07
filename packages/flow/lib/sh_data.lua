@@ -96,7 +96,7 @@ else
   function Data.get_files(folder, default)
     if !isstring(folder) then return end
 
-    local files, dirs = file.find('flux/'..folder..'/*', 'DATA')
+    local files, dirs = file.Find('flux/'..folder..'/*', 'DATA')
 
     return files
   end

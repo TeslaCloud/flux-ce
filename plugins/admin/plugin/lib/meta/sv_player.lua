@@ -18,7 +18,7 @@ function player_meta:SetUserGroup(group)
     end
   end
 
-  hook.run('PlayerUserGroupChanged', self, group_obj, old_group_obj)
+  hook.Run('PlayerUserGroupChanged', self, group_obj, old_group_obj)
 end
 
 --- Writes the player's current name and role to their database record, if they have one.
@@ -73,7 +73,7 @@ function player_meta:set_permission(perm_id, value)
 
   self:set_permissions(perm_table)
 
-  hook.run('PlayerPermissionChanged', self, perm_id, value)
+  hook.Run('PlayerPermissionChanged', self, perm_id, value)
 end
 
 --- Replaces the player's networked table of temporary permissions. Does not touch the

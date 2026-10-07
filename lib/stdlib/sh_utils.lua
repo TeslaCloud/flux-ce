@@ -47,7 +47,7 @@ end
 -- itself does. Gives up without calling the callback once it runs out of attempts.
 -- ```
 -- util.wait_for_ent(ply_index, function(target)
---   hook.run('PlayerModelChanged', target, new_model, old_model)
+--   hook.Run('PlayerModelChanged', target, new_model, old_model)
 -- end)
 -- ```
 -- @param ent_index [Number entity index]
@@ -118,7 +118,7 @@ end
 function util.player_list_to_string(player_list)
   local nlist = #player_list
 
-  if nlist > 1 and nlist == #player.all() then
+  if nlist > 1 and nlist == #player.GetAll() then
     return 'ui.chat.everyone'
   end
 
@@ -414,7 +414,7 @@ function long_error(...)
     ErrorNoHalt(v)
   end
 
-  if text:ends('\n') then
+  if text:end_with('\n') then
     print ''
   end
 end

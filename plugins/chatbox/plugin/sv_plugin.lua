@@ -99,7 +99,7 @@ function Chatbox.add_text(listeners, ...)
     if IsValid(listeners) then
       listeners = { listeners }
     else
-      listeners = player.all()
+      listeners = player.GetAll()
     end
   end
 
@@ -129,7 +129,7 @@ function Chatbox.add_text(listeners, ...)
         table.insert(message_data.data, v)
       elseif istable(v) then
         if !v.is_data and !client_mode then
-          table.merge(message_data, v)
+          table.Merge(message_data, v)
         else
           table.insert(message_data.data, v)
         end
@@ -142,7 +142,7 @@ function Chatbox.add_text(listeners, ...)
   for k, v in ipairs(listeners) do
     local data = message_data
 
-    hook.run('AdjustMessageData', v, data)
+    hook.Run('AdjustMessageData', v, data)
 
     if Chatbox.can_hear(v, data) then
       Cable.send(v, 'fl_chat_message_add', data)
@@ -175,7 +175,7 @@ function Chatbox.message_to_string(message_data, concatenator)
       local name = ''
 
       if v:IsPlayer() then
-        name = hook.run('GetPlayerName', v) or v:name()
+        name = hook.Run('GetPlayerName', v) or v:name()
       else
         name = tostring(v) or v:GetClass()
       end
@@ -198,7 +198,7 @@ end
 function Chatbox.player_say(actor, text, team_chat)
   if !IsValid(actor) then return end
 
-  local player_say_override = hook.run('PlayerSay', actor, text, team_chat)
+  local player_say_override = hook.Run('PlayerSay', actor, text, team_chat)
 
   if isstring(player_say_override) then
     if player_say_override == '' then return end
@@ -206,19 +206,19 @@ function Chatbox.player_say(actor, text, team_chat)
     text = player_say_override
   end
 
-  text = text:trim()
+  text = text:strip()
 
   local message = {
-    hook.run('ChatboxGetPlayerIcon', actor, text, team_chat) or {},
-    hook.run('ChatboxGetPlayerColor', actor, text, team_chat) or team.GetColor(actor:Team()),
+    hook.Run('ChatboxGetPlayerIcon', actor, text, team_chat) or {},
+    hook.Run('ChatboxGetPlayerColor', actor, text, team_chat) or team.GetColor(actor:Team()),
     actor,
-    hook.run('ChatboxGetMessageColor', actor, text, team_chat) or Color(255, 255, 255),
+    hook.Run('ChatboxGetMessageColor', actor, text, team_chat) or Color(255, 255, 255),
     ': ',
     text,
     { sender = actor }
   }
 
-  hook.run('ChatboxAdjustPlayerSay', actor, text, message)
+  hook.Run('ChatboxAdjustPlayerSay', actor, text, message)
 
   Chatbox.add_text(nil, unpack(message))
 end

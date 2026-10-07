@@ -97,7 +97,7 @@ function PANEL:rebuild()
     end
   end)
 
-  self.desc = vgui.create('fl_text_entry', self.player_model)
+  self.desc = vgui.Create('fl_text_entry', self.player_model)
   self.desc:Dock(BOTTOM)
   self.desc:SetText(PLAYER:get_phys_desc())
   self.desc:SetFont(Theme.get_font('main_menu_normal'))
@@ -144,14 +144,14 @@ function PANEL:rebuild()
 
   self.player_model:SetSize(w * 0.3 , h)
 
-  self.equipment_right = vgui.create('DIconLayout', self)
+  self.equipment_right = vgui.Create('DIconLayout', self)
   self.equipment_right:SetSpaceY(math.scale(12))
   self.equipment_right:SetSize(math.scale_x(100), h)
   self.equipment_right:SetPos(w - self.equipment_right:GetWide())
 
   self.player_model:SetPos(w - self.player_model:GetWide() - self.equipment_right:GetWide() - math.scale_x(12))
 
-  self.equipment_left = vgui.create('DIconLayout', self)
+  self.equipment_left = vgui.Create('DIconLayout', self)
   self.equipment_left:SetSpaceY(math.scale(12))
   self.equipment_left:SetSize(math.scale_x(100), h)
   self.equipment_left:SetPos(self.player_model.x - self.equipment_left:GetWide() - math.scale_x(12))

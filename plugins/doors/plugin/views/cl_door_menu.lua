@@ -10,11 +10,11 @@ function PANEL:Init()
 
   self.door_data = {}
 
-  self.properties = vgui.create('DProperties', self)
+  self.properties = vgui.Create('DProperties', self)
   self.properties:SetSize(self:GetWide() - 10, self:GetTall() * 0.5)
   self.properties:Dock(TOP)
 
-  self.conditions = vgui.create('fl_conditions', self)
+  self.conditions = vgui.Create('fl_conditions', self)
   self.conditions:SetSize(self:GetWide() - 10, self:GetTall() - self.properties:GetTall() - 34)
   self.conditions:Dock(TOP)
   self.conditions:update()
@@ -78,4 +78,4 @@ function PANEL:get_door_data()
   return self.door_data
 end
 
-vgui.register('fl_door_menu', PANEL, 'DFrame')
+vgui.Register('fl_door_menu', PANEL, 'DFrame')

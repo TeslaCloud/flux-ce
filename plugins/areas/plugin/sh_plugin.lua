@@ -72,7 +72,7 @@ Area.tool_modes = {
     local tool = Flux.Tool:get('area')
 
     if IsValid(tool) and istable(vars) then
-      table.merge(tool.ClientConVar, vars)
+      table.Merge(tool.ClientConVar, vars)
 
       tool:CreateConVars()
     end

@@ -168,7 +168,7 @@ function Characters:RebuildScoreboardPlayerCard(card, target)
   card.steam_name:SetTextColor(Theme.get_color('text'))
   card.steam_name:SizeToContents()
 
-  if hook.run('IsCharacterCardVisible', card, target) != false then
+  if hook.Run('IsCharacterCardVisible', card, target) != false then
     card.avatar_panel:SetPos(card:GetWide() - card.avatar_panel:GetWide() - math.scale(48), math.scale(4))
 
     card.steam_name:SetText(card.steam_name:GetText())

@@ -17,9 +17,9 @@ function CMD:on_run(actor, delay)
     delay = delay
   })
 
-  timer.simple(delay, function()
-    hook.run('FLSaveData')
-    hook.run('ServerRestart')
+  timer.Simple(delay, function()
+    hook.Run('FLSaveData')
+    hook.Run('ServerRestart')
 
     RunConsoleCommand('changelevel', game.GetMap())
   end)

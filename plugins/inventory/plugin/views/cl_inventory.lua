@@ -10,7 +10,7 @@ function PANEL:Init()
   self:RequestFocus()
   self.slot_panels = {}
 
-  self.horizontal_scroll = vgui.create('DHorizontalScroller', self)
+  self.horizontal_scroll = vgui.Create('DHorizontalScroller', self)
   self.horizontal_scroll.OnMouseWheeled = function(pnl, dlta)
     if !input.IsKeyDown(KEY_LSHIFT) then return false end
 
@@ -20,7 +20,7 @@ function PANEL:Init()
     return true
   end
 
-  self.scroll = vgui.create('DScrollPanel', self)
+  self.scroll = vgui.Create('DScrollPanel', self)
   self.scroll:GetVBar().OnMouseWheeled = function(pnl, dlta)
     if input.IsKeyDown(KEY_LSHIFT) then return false end
 
@@ -174,7 +174,7 @@ function PANEL:start_dragging(dropped)
   for i = y, y + h - 1 do
     for k = x, x + w - 1 do
       if i == y and k == x then
-        local slot = vgui.create('fl_inventory_item', panel.scroll)
+        local slot = vgui.Create('fl_inventory_item', panel.scroll)
         slot:SetSize(slot_size, slot_size)
         slot:SetPos((k - 1) * (slot_size + slot_padding), (i - 1) * (slot_size + slot_padding))
         slot.slot_x = k
@@ -278,7 +278,7 @@ function PANEL:rebuild()
 
   for i = 1, height do
     for k = 1, width do
-      local slot = vgui.create('fl_inventory_item', self.scroll)
+      local slot = vgui.Create('fl_inventory_item', self.scroll)
       slot:SetSize(slot_size, slot_size)
       slot:SetPos((k - 1) * (slot_size + slot_padding), (i - 1) * (slot_size + slot_padding))
       slot.slot_x = k
@@ -334,7 +334,7 @@ function PANEL:rebuild()
     end
   end
 
-  hook.run('OnInventoryRebuild', self)
+  hook.Run('OnInventoryRebuild', self)
 end
 
 --- Sets the size of a single slot.

@@ -1,3 +1,21 @@
+-- Ruby-style names for the built-in math functions.
+math.angle_difference = math.AngleDifference
+math.approach         = math.Approach
+math.approach_angle   = math.ApproachAngle
+math.bin_to_int       = math.BinToInt
+math.bspline_point    = math.BSplinePoint
+math.clamp            = math.Clamp
+math.dist             = math.Dist
+math.distance         = math.Distance
+math.ease_in_out      = math.EaseInOut
+math.int_to_bin       = math.IntToBin
+math.normalize_angle  = math.NormalizeAngle
+math.rand             = math.Rand
+math.remap            = math.Remap
+math.round            = math.Round
+math.time_fraction    = math.TimeFraction
+math.truncate         = math.Truncate
+
 do
   local hex_digits = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'}
 
@@ -13,7 +31,7 @@ do
 
     local negative = false
 
-    if hex:starts('-') then
+    if hex:start_with('-') then
       hex = hex:sub(2, 2)
       negative = true
     end

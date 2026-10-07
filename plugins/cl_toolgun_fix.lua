@@ -98,14 +98,14 @@ function PLUGIN:FLInitPostEntity()
       w, h = draw.TextShadow(text_table, 1)
 
       if (!v.icon) then
-        if (v.name:starts('info')) then v.icon = 'gui/info' end
-        if (v.name:starts('left')) then v.icon = 'gui/lmb.png' end
-        if (v.name:starts('right')) then v.icon = 'gui/rmb.png' end
-        if (v.name:starts('reload')) then v.icon = 'gui/r.png' end
-        if (v.name:starts('use')) then v.icon = 'gui/e.png' end
+        if (v.name:start_with('info')) then v.icon = 'gui/info' end
+        if (v.name:start_with('left')) then v.icon = 'gui/lmb.png' end
+        if (v.name:start_with('right')) then v.icon = 'gui/rmb.png' end
+        if (v.name:start_with('reload')) then v.icon = 'gui/r.png' end
+        if (v.name:start_with('use')) then v.icon = 'gui/e.png' end
       end
 
-      if (!v.icon2 and !v.name:starts('use') and v.name:ends('use')) then v.icon2 = 'gui/e.png' end
+      if (!v.icon2 and !v.name:start_with('use') and v.name:end_with('use')) then v.icon2 = 'gui/e.png' end
 
       self.Icons = self.Icons or {}
       if (v.icon and !self.Icons[v.icon]) then self.Icons[v.icon] = Material(v.icon) end

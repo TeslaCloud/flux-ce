@@ -151,7 +151,7 @@ do
     local weapon = client:GetActiveWeapon()
 
     if !client:InVehicle() and !client:KeyDown(IN_ATTACK) then
-      if hook.run('ShouldOpenWepselect', client, bind, pressed) != false then
+      if hook.Run('ShouldOpenWepselect', client, bind, pressed) != false then
         local cur_time = CurTime()
         local weapon_count = table.Count(client:GetWeapons())
         local old_index = self.weapon_index

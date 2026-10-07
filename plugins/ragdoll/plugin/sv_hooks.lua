@@ -16,7 +16,7 @@ end
 -- @param actor [Player]
 function PLUGIN:PlayerThink(actor)
   if !actor:Alive() and actor:is_ragdolled() then
-    hook.run('PlayerDeathThink', actor)
+    hook.Run('PlayerDeathThink', actor)
   end
 end
 

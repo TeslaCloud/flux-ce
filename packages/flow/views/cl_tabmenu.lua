@@ -16,12 +16,12 @@ function PANEL:Init()
   self:SetPos(0, 0)
   self:SetSize(scrw, scrh)
 
-  local cur_x, cur_y = hook.run('AdjustMenuItemPositions', self)
+  local cur_x, cur_y = hook.Run('AdjustMenuItemPositions', self)
   local offset = math.scale(4)
   local size_x, size_y = math.scale(72), math.scale(72)
   local icon_size = 20
 
-  self.button_panel = vgui.create('EditablePanel', self)
+  self.button_panel = vgui.Create('EditablePanel', self)
   self.button_panel:SetPos(0, -size_y)
   self.button_panel:SetSize(scrw, size_y)
   self.button_panel.Paint = function(p, w, h)
@@ -50,7 +50,7 @@ function PANEL:Init()
 
   self.menu_items = {}
 
-  hook.run('AddTabMenuItems', self)
+  hook.Run('AddTabMenuItems', self)
 
   for k, v in ipairs(self.menu_items) do
     local button = vgui.Create('fl_button', self.button_panel)
@@ -106,7 +106,7 @@ function PANEL:Init()
 
         self.active_panel.id = v.id
 
-        hook.run('OnMenuPanelOpen', self, self.active_panel)
+        hook.Run('OnMenuPanelOpen', self, self.active_panel)
       end
 
       if v.callback then

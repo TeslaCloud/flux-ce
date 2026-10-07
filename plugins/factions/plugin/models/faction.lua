@@ -122,7 +122,7 @@ end
 -- @param target [Player]
 -- @return [String model path]
 function Faction:get_random_model(target)
-  return table.random(self:get_gender_models(target:get_gender()))
+  return table.Random(self:get_gender_models(target:get_gender()))
 end
 
 --- Adds a rank above the ranks added so far.
@@ -160,7 +160,7 @@ function Faction:generate_name(target, rank, default_data)
 
   default_data = default_data or {}
 
-  if hook.run('ShouldNameGenerate', target, self, char_name, rank, default_data) == false then return target:name() end
+  if hook.Run('ShouldNameGenerate', target, self, char_name, rank, default_data) == false then return target:name() end
 
   if isfunction(self.make_name) then
     return self:make_name(target, char_name, rank, default_data) or 'John Doe'

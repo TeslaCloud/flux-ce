@@ -75,7 +75,7 @@ end
 -- @param info [Map icon data, as stored by InfoDisplay#add]
 -- @return [Number horizontal offset for the next icon, 0 if nothing was drawn]
 function InfoDisplay:draw(info)
-  if hook.run('PreDrawInfoDisplayItem', info) == nil then
+  if hook.Run('PreDrawInfoDisplayItem', info) == nil then
     if isfunction(info.callback) then
       info.callback(info)
     end
@@ -120,7 +120,7 @@ end
 -- with the 'PreDrawInfoDisplay' hook.
 -- @return [InfoDisplay self, for chaining]
 function InfoDisplay:draw_all()
-  if hook.run('PreDrawInfoDisplay', stored) == nil then
+  if hook.Run('PreDrawInfoDisplay', stored) == nil then
     for k, v in pairs(stored) do
       last_x = last_x + self:draw(v)
     end

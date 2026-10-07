@@ -16,8 +16,6 @@ function table.Merge(dest, source)
   return dest
 end
 
-table.merge = table.Merge
-
 --- Merges a table into another one like table.Merge, but leaves `__index` of both tables
 -- alone and skips the `class` key and any field of `from` that refers to `from` itself.
 -- @param to [Map table to merge into, modified in place]
@@ -52,7 +50,7 @@ end
 --- Creates an array out of the values a callback returns for every value of a table.
 -- Values for which the callback returns nil are left out.
 -- ```
--- local names = table.map(player.all(), function(v) return v:name() end)
+-- local names = table.map(player.GetAll(), function(v) return v:name() end)
 -- ```
 -- @param t [Map/List table to go through]
 -- @param c [Function callback(value), returns the value to store or nil to skip it]
@@ -95,7 +93,7 @@ end
 --- Filters the values of a table with a callback, or collects a single field from every
 -- table inside of it.
 -- ```
--- local alive = table.select(player.all(), function(v, k) return v:Alive() end)
+-- local alive = table.select(player.GetAll(), function(v, k) return v:Alive() end)
 -- local names = table.select({ { name = 'a' }, { name = 'b' } }, 'name') -- { 'a', 'b' }
 -- ```
 -- @variant table.select(t, what)
@@ -430,7 +428,7 @@ end
 --- Splits the values of a table into two arrays: those for which the callback returns a truthy
 -- value and all the others.
 -- ```
--- local admins, others = table.partition(player.all(), function(k, v) return v:IsAdmin() end)
+-- local admins, others = table.partition(player.GetAll(), function(k, v) return v:IsAdmin() end)
 -- ```
 -- @param tab [Map/List]
 -- @param callback [Function callback(key, value)]

@@ -93,7 +93,7 @@ function PANEL:open_inventory(inventory_id)
 
   self.inventory_ids = { inventory_id }
 
-  hook.run('OnContainerOpened', self, inventory_id)
+  hook.Run('OnContainerOpened', self, inventory_id)
 end
 
 --- Shows the inventories of another player next to the inventories of the local player.
@@ -131,7 +131,7 @@ function PANEL:open_player_inventories(owner, inventory_ids)
   self.container.hotbar:set_title('ui.inventory.hotbar')
   self.container.hotbar:SizeToContents()
 
-  local equipment_left = vgui.create('DIconLayout', self)
+  local equipment_left = vgui.Create('DIconLayout', self)
   equipment_left:SetSpaceY(math.scale(12))
   equipment_left:SetSize(math.scale_x(64))
   equipment_left:MoveRightOf(self.container.main_inventory, math.scale_x(12))
@@ -149,7 +149,7 @@ function PANEL:open_player_inventories(owner, inventory_ids)
     pnl:Add(panel)
   end
 
-  local equipment_right = vgui.create('DIconLayout', self)
+  local equipment_right = vgui.Create('DIconLayout', self)
   equipment_right:SetSpaceY(math.scale(12))
   equipment_right:SetSize(math.scale_x(64))
   equipment_right:MoveRightOf(equipment_left, math.scale_x(12))

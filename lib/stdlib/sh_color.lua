@@ -5,7 +5,7 @@ local color_meta = FindMetaTable('Color')
 -- @param hex [String hexadecimal color such as '#fff' or 'ff8800']
 -- @return [Color the converted color, or white if the string has any other length]
 function util.hex_to_color(hex)
-  if hex:starts('#') then
+  if hex:start_with('#') then
     hex = hex:sub(2, hex:len())
   end
 
@@ -220,7 +220,7 @@ do
   -- @see [util.hex_to_color]
   function Color(r, g, b, a)
     if isstring(r) then
-      if r:starts('#') then
+      if r:start_with('#') then
         return util.hex_to_color(r)
       elseif colors[r:lower()] then
         return colors[r:lower()]:alpha(g)

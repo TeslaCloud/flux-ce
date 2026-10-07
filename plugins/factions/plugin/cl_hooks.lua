@@ -81,13 +81,13 @@ function Factions:PreRebuildScoreboard(panel, w, h)
     players_table[k] = players
   end
 
-  hook.run('PreRebuildFactionCategories', players_table)
+  hook.Run('PreRebuildFactionCategories', players_table)
 
   for k, v in pairs(players_table) do
     local faction = (k == 'players_online' and t'ui.scoreboard.players_online') or Factions.find_by_id(k)
     local players = v
 
-    if table.count(players) == 0 then continue end
+    if table.Count(players) == 0 then continue end
 
     local category = vgui.Create('DCollapsibleCategory', panel)
     category:SetSize(w - 8, 32)

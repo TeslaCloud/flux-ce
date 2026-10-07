@@ -41,7 +41,7 @@ function Flux.Command:create(id, data)
     end
   end
 
-  hook.run('OnCommandCreated', id, data)
+  hook.Run('OnCommandCreated', id, data)
 end
 
 --- Finds a command by its exact ID or alias, ignoring the case.
@@ -164,7 +164,7 @@ if SERVER then
       local group_name = str:utf8sub(2, utf8.len(str)):utf8lower()
       local to_ret = {}
 
-      for k, v in ipairs(player.all()) do
+      for k, v in ipairs(player.GetAll()) do
         if v:GetUserGroup() == group_name then
           table.insert(to_ret, v)
         end
@@ -191,7 +191,7 @@ if SERVER then
     ['['] = function(actor, str)
       local name = str:utf8sub(2, utf8.len(str) - 1)
 
-      for k, v in ipairs(player.all()) do
+      for k, v in ipairs(player.GetAll()) do
         if v:name() == name then
           return { v }, '['
         end
@@ -209,14 +209,14 @@ if SERVER then
     end,
     -- Target everyone.
     ['*'] = function(actor, str)
-      return player.all(), '*'
+      return player.GetAll(), '*'
     end,
     -- Target all players in radius.
     ['!'] = function(actor, str)
       local radius = tonumber(str:utf8sub(2, utf8.len(str)))
       local to_ret = {}
 
-      for k, v in pairs(player.all()) do
+      for k, v in pairs(player.GetAll()) do
         if v != actor and actor:GetPos():Distance(v:GetPos()) <= radius then
           table.insert(to_ret, v)
         end
@@ -237,7 +237,7 @@ if SERVER then
   --   character, if one was used]
   function Flux.Command:str_to_player(actor, str)
     local start = str:utf8sub(1, 1)
-    local parser = macros[start] or hook.run('TargetFromString', actor, str, start)
+    local parser = macros[start] or hook.Run('TargetFromString', actor, str, start)
 
     if isfunction(parser) then
       return parser(actor, str)
@@ -290,7 +290,7 @@ if SERVER then
 
     if cmd_table then
       if (!IsValid(actor) and !cmd_table.no_console) or actor:can(cmd_table.id) then
-        if hook.run('PlayerCanRunCommand', actor, cmd_table, from_console) != nil then return end
+        if hook.Run('PlayerCanRunCommand', actor, cmd_table, from_console) != nil then return end
 
         if cmd_table.arguments == 0 or cmd_table.arguments <= #args then
           local targets = {}
@@ -345,7 +345,7 @@ if SERVER then
 
             if istable(targets) and #targets > 0 then
               for k, v in ipairs(targets) do
-                if cmd_table.immunity and IsValid(actor) and hook.run('CommandCheckImmunity', actor, v, cmd_table.can_equal) == false then
+                if cmd_table.immunity and IsValid(actor) and hook.Run('CommandCheckImmunity', actor, v, cmd_table.can_equal) == false then
                   actor:notify('error.command.higher_immunity', {
                     target = get_player_name(v)
                   })
@@ -370,7 +370,7 @@ if SERVER then
           end
 
           -- Let plugins hook into this and abort the command's execution if necessary.
-          if !hook.run('PlayerRunCommand', actor, cmd_table, args) then
+          if !hook.Run('PlayerRunCommand', actor, cmd_table, args) then
             local message
 
             if IsValid(actor) then
@@ -484,7 +484,7 @@ concommand.Add('flCmd', Flux.Command.con_command)
 concommand.Add('flc', Flux.Command.con_command)
 
 Pipeline.register('commands', function(id, file_name, pipe)
-  if file_name:ends('.lua') then
+  if file_name:end_with('.lua') then
     local old_command = CMD
     CMD = Command.new(id)
 

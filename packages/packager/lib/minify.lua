@@ -58,13 +58,13 @@ function Packager.Minifier:minify_folder(folder)
   local files, dirs = file.Find(folder..'*', 'GAME')
 
   for k, v in ipairs(files) do
-    if v:ends('.lua') then
+    if v:end_with('.lua') then
       code = code..'function '..(folder..v):gsub('[/%s%.]', '_')..'(...)\n'..tostring(File.read(folder..v))..'\nend'
     end
   end
 
   for k, v in ipairs(dirs) do
-    if !v:starts('.') then
+    if !v:start_with('.') then
       code = code..'\n'..self:minify_folder(folder..v..'/')
     end
   end

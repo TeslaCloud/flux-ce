@@ -31,7 +31,7 @@ local translate_gender = {
 -- @param data [Map creation data: name, phys_desc, gender, model and optionally skin]
 -- @return [Number CHAR_SUCCESS, or the CHAR_ERR_* code returned by the hook]
 function Characters.create(target, data)
-  local hook_result = hook.run('PlayerCreateCharacter', target, data)
+  local hook_result = hook.Run('PlayerCreateCharacter', target, data)
 
   if hook_result then
     return hook_result
@@ -49,7 +49,7 @@ function Characters.create(target, data)
   table.insert(target.record.characters, char)
 
   if SERVER then
-    hook.run('PostCreateCharacter', target, char, data)
+    hook.Run('PostCreateCharacter', target, char, data)
 
     Characters.save(target, char)
 
@@ -107,9 +107,9 @@ if SERVER then
   -- @param target [Player]
   -- @param character [Character]
   function Characters.save(target, character)
-    if !IsValid(target) or !istable(character) or hook.run('PreSaveCharacter', target, character) == false then return end
+    if !IsValid(target) or !istable(character) or hook.Run('PreSaveCharacter', target, character) == false then return end
 
-    hook.run('SaveCharacterData', target, character)
+    hook.Run('SaveCharacterData', target, character)
 
     target:save_player()
   end
@@ -151,7 +151,7 @@ if SERVER then
     end
 
     target:set_nv('name', new_name)
-    hook.run('CharacterNameChanged', target, char, new_name, old_name)
+    hook.Run('CharacterNameChanged', target, char, new_name, old_name)
 
     Characters.send_to_client(target)
   end
@@ -171,7 +171,7 @@ if SERVER then
     end
 
     target:set_nv('phys_desc', new_desc)
-    hook.run('CharacterDescChanged', target, char, new_desc, old_desc)
+    hook.Run('CharacterDescChanged', target, char, new_desc, old_desc)
 
     Characters.send_to_client(target)
   end
@@ -192,7 +192,7 @@ if SERVER then
 
     target:set_nv('model', model)
     target:SetModel(model)
-    hook.run('CharacterModelChanged', target, char, model, old_model)
+    hook.Run('CharacterModelChanged', target, char, model, old_model)
 
     Characters.send_to_client(target)
   end
@@ -202,7 +202,7 @@ if SERVER then
   -- @param target [Player]
   -- @param new_gender [Number/String CHAR_GENDER_* value, or 'male', 'female' or 'no_gender']
   function Characters.set_gender(target, new_gender)
-    new_gender = isstring(new_gender) and table.key_from_value(translate_gender, new_gender) or new_gender
+    new_gender = isstring(new_gender) and table.KeyFromValue(translate_gender, new_gender) or new_gender
 
     if !new_gender then return end
 
@@ -214,13 +214,13 @@ if SERVER then
     end
 
     target:set_nv('gender', new_gender)
-    hook.run('CharacterGenderChanged', target, char, new_gender, old_gender)
+    hook.Run('CharacterGenderChanged', target, char, new_gender, old_gender)
 
     Characters.send_to_client(target)
   end
 
   MVC.handler('fl_create_character', function(actor, data)
-    hook.run('PreCreateCharacter', actor, data)
+    hook.Run('PreCreateCharacter', actor, data)
 
     data.gender = (data.gender and data.gender == 'female' and CHAR_GENDER_FEMALE) or CHAR_GENDER_MALE
     data.phys_desc = data.description
@@ -245,7 +245,7 @@ if SERVER then
   Cable.receive('fl_player_delete_character', function(actor, id)
     Flux.dev_print(actor:name()..' has deleted character #'..id)
 
-    hook.run('OnCharacterDelete', actor, id)
+    hook.Run('OnCharacterDelete', actor, id)
 
     Characters.delete(actor, id)
   end)

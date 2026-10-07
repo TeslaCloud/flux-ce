@@ -202,7 +202,7 @@ end
 -- model if it is no longer among them.
 function PANEL:rebuild_models()
   local char_data = self:GetParent().char_data
-  local models = hook.run('GetCharacterCreationModels', char_data)
+  local models = hook.Run('GetCharacterCreationModels', char_data)
   local i = 0
   local offset = 4
 

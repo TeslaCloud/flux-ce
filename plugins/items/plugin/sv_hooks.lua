@@ -7,11 +7,11 @@ end
 -- @param entity [Entity]
 function Items:OnEntityCreated(entity)
   if IsValid(entity) and entity:GetClass() == 'npc_grenade_frag' then
-    timer.simple(0, function()
+    timer.Simple(0, function()
       if IsValid(entity) then
         local owner = entity:GetOwner()
 
-        hook.run('PlayerThrewGrenade', owner, entity)
+        hook.Run('PlayerThrewGrenade', owner, entity)
       end
     end)
   end

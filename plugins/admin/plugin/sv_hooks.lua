@@ -125,7 +125,7 @@ end
 -- the 'moderator' permission.
 -- @param actor [Player the player that just connected]
 function Bolt:PlayerInitialSpawn(actor)
-  for k, v in ipairs(player.all()) do
+  for k, v in ipairs(player.GetAll()) do
     if (v.is_vanished or v:get_nv('observer')) and !actor:can('moderator') then
       v:prevent_transmit(actor, true)
     end
@@ -195,5 +195,5 @@ end
 --- Get a list of all currently online staff members.
 -- @return [Map - currently online staff members]
 function Bolt:get_staff()
-  return table.keep_if(player.all(), function(k, v) return v:can('staff') end)
+  return table.keep_if(player.GetAll(), function(k, v) return v:can('staff') end)
 end

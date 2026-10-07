@@ -20,7 +20,7 @@ function PANEL:Init()
 
   self:SetKeyboardInputEnabled(true)
 
-  hook.run('AddAdminMenuItems', self, self.sidebar)
+  hook.Run('AddAdminMenuItems', self, self.sidebar)
 end
 
 --- Draws the outlined, translucent background.
@@ -56,7 +56,7 @@ function PANEL:add_panel(id, title, permission, ...)
     arguments = { ... }
   }
 
-  local button = vgui.create('fl_button')
+  local button = vgui.Create('fl_button')
   button:SetWide(self.sidebar:GetWide())
   button:SetDrawBackground(true)
   button:SetFont(Theme.get_font('text_normal'))

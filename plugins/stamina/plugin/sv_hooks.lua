@@ -131,7 +131,7 @@ function Stamina:start_running(target, prevent_drain)
   timer.Pause('stam_regen_'..steam_id)
 
   if !prevent_drain then
-    hook.run('PlayerStartRunning', target)
+    hook.Run('PlayerStartRunning', target)
     hook.run_client(target, 'PlayerStartRunning', target)
   end
 
@@ -175,7 +175,7 @@ function Stamina:stop_running(target, prevent_regen)
   timer.Pause('stam_run_'..steam_id)
 
   if prevent_regen then
-    hook.run('PlayerStopRunning', target)
+    hook.Run('PlayerStopRunning', target)
     hook.run_client(target, 'PlayerStopRunning', target)
   end
 

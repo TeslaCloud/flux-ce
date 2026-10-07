@@ -179,7 +179,7 @@ function Inventory:get_items()
       local inventory = item_obj.inventory
 
       if inventory then
-        table.add(items, inventory:get_items())
+        table.Add(items, inventory:get_items())
       end
     end
   end
@@ -196,7 +196,7 @@ function Inventory:get_items_ids()
     for k = 1, self.width do
       local stack = self.slots[i][k]
 
-      if istable(stack) and !table.is_empty(stack) then
+      if istable(stack) and !table.IsEmpty(stack) then
         for _, v in pairs(stack) do
           items[v] = true
         end
@@ -204,7 +204,7 @@ function Inventory:get_items_ids()
     end
   end
 
-  return table.get_keys(items)
+  return table.GetKeys(items)
 end
 
 --- Get the items ids that are located in the specified slot.
@@ -224,7 +224,7 @@ end
 function Inventory:get_first_in_slot(x, y)
   local slot = self:get_slot(x, y)
 
-  if istable(slot) and !table.is_empty(slot) then
+  if istable(slot) and !table.IsEmpty(slot) then
     return slot[1]
   end
 end
@@ -233,7 +233,7 @@ end
 -- @param id [String]
 -- @return [Number]
 function Inventory:get_items_count(id)
-  return table.count(self:find_items(id))
+  return table.Count(self:find_items(id))
 end
 
 --- Checks if the inventory is empty.
@@ -244,7 +244,7 @@ end
 -- ```
 -- @return [Boolean]
 function Inventory:is_empty()
-  return table.is_empty(self:get_items_ids())
+  return table.IsEmpty(self:get_items_ids())
 end
 
 --- Find a specified item object by its id.
@@ -295,7 +295,7 @@ function Inventory:has_items(id, amount)
 
   local items = self:find_items(id)
 
-  if table.count(items) >= amount then
+  if table.Count(items) >= amount then
     return true, items
   end
 
@@ -306,7 +306,7 @@ end
 -- @param instance_id [Number]
 -- @return [Boolean, Item found item]
 function Inventory:has_item_by_id(instance_id)
-  if table.has_value(self:get_items_ids(), instance_id) then
+  if table.HasValue(self:get_items_ids(), instance_id) then
     return true, Item.find_instance_by_id(instance_id)
   end
 
@@ -393,7 +393,7 @@ end
 function Inventory:slots_empty(x, y, w, h)
   for i = y, y + h - 1 do
     for k = x, x + w - 1 do
-      if !table.is_empty(self.slots[i][k]) then
+      if !table.IsEmpty(self.slots[i][k]) then
         return false
       end
     end
@@ -415,7 +415,7 @@ function Inventory:overlaps_stack(item_obj, x, y, w, h)
       local slot = self:get_slot(k, i)
       local stack_item = Item.find_instance_by_id(slot[1])
 
-      if stack_item and self:can_stack(item_obj, stack_item) and !table.has_value(slot, item_obj.instance_id) then
+      if stack_item and self:can_stack(item_obj, stack_item) and !table.HasValue(slot, item_obj.instance_id) then
         return true, stack_item.x, stack_item.y, stack_item.rotated != item_obj.rotated
       end
     end
@@ -434,7 +434,7 @@ function Inventory:overlaps_itself(instance_id, x, y, w, h)
     for k = x, x + w - 1 do
       local slot = self.slots[i][k]
 
-      if table.has_value(slot, instance_id) then
+      if table.HasValue(slot, instance_id) then
         return true
       end
     end
@@ -455,7 +455,7 @@ function Inventory:overlaps_only_itself(instance_id, x, y, w, h)
     for k = x, x + w - 1 do
       local slot = self.slots[i][k]
 
-      if !table.has_value(slot, instance_id) and !table.is_empty(slot) then
+      if !table.HasValue(slot, instance_id) and !table.IsEmpty(slot) then
         return false
       end
     end
@@ -520,7 +520,7 @@ if SERVER then
         end
       end
 
-      hook.run('OnItemAdded', item_obj, self, x, y)
+      hook.Run('OnItemAdded', item_obj, self, x, y)
 
       self:check_size()
     else
@@ -567,7 +567,7 @@ if SERVER then
         return success, error_text
       end
 
-      hook.run('OnItemGiven', item_obj, self, data)
+      hook.Run('OnItemGiven', item_obj, self, data)
     end
 
     return true
@@ -590,13 +590,13 @@ if SERVER then
 
     for i = y, y + h - 1 do
       for k = x, x + w - 1 do
-        table.remove_by_value(self.slots[i][k], item_obj.instance_id)
+        table.RemoveByValue(self.slots[i][k], item_obj.instance_id)
       end
     end
 
     self:check_size()
 
-    hook.run('OnItemTaken', item_obj, self)
+    hook.Run('OnItemTaken', item_obj, self)
 
     return true
   end
@@ -649,7 +649,7 @@ if SERVER then
 
     if !item_obj then return false, 'error.inventory.invalid_item' end
 
-    local success, error_text = hook.run('CanItemMove', item_obj, self, x, y)
+    local success, error_text = hook.Run('CanItemMove', item_obj, self, x, y)
 
     if success == false then
       return false, error_text
@@ -697,7 +697,7 @@ if SERVER then
 
     for i = old_y, old_y + old_h - 1 do
       for k = old_x, old_x + old_w - 1 do
-        table.remove_by_value(self.slots[i][k], instance_id)
+        table.RemoveByValue(self.slots[i][k], instance_id)
       end
     end
 
@@ -725,7 +725,7 @@ if SERVER then
 
     if !item_obj then return false, 'error.inventory.invalid_item' end
 
-    local success, error_text = hook.run('CanItemTransfer', item_obj, inventory, x, y)
+    local success, error_text = hook.Run('CanItemTransfer', item_obj, inventory, x, y)
 
     if success == false then
       return false, error_text
@@ -760,7 +760,7 @@ if SERVER then
       end
     end
 
-    hook.run('PreItemTransfer', item_obj, inventory, self)
+    hook.Run('PreItemTransfer', item_obj, inventory, self)
 
     item_obj.inventory_id = inventory.id
     item_obj.inventory_type = inventory.type
@@ -777,7 +777,7 @@ if SERVER then
 
     for i = old_y, old_y + old_h - 1 do
       for k = old_x, old_x + old_w - 1 do
-        table.remove_by_value(self.slots[i][k], instance_id)
+        table.RemoveByValue(self.slots[i][k], instance_id)
       end
     end
 
@@ -790,7 +790,7 @@ if SERVER then
     self:check_size()
     inventory:check_size()
 
-    hook.run('ItemTransferred', item_obj, inventory, self)
+    hook.Run('ItemTransferred', item_obj, inventory, self)
 
     return true
   end
@@ -859,7 +859,7 @@ if SERVER then
   --- Remove the receiver from the inventory.
   -- @param receiver [Player]
   function Inventory:remove_receiver(receiver)
-    table.remove_by_value(self.receivers, receiver)
+    table.RemoveByValue(self.receivers, receiver)
   end
 
   --- Send inventory data to its receivers.
@@ -886,7 +886,7 @@ if SERVER then
 
     for i = 1, self:get_height() do
       for k = 1, self:get_width() do
-        if !table.is_empty(self:get_slot(k, i)) then
+        if !table.IsEmpty(self:get_slot(k, i)) then
           max_x, max_y = k, i
         end
       end
@@ -941,7 +941,7 @@ else
   -- @param parent=nil [Panel]
   -- @return [Panel]
   function Inventory:create_panel(parent)
-    local panel = vgui.create('fl_inventory', parent)
+    local panel = vgui.Create('fl_inventory', parent)
     panel:set_title(t(self.title or self.type))
     panel:set_icon(self.icon)
     panel:set_inventory_id(self.id)

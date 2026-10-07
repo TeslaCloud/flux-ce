@@ -80,7 +80,7 @@ if SERVER then
         end
       end
 
-      hook.run('OnConfigSet', key, stored[key].value, value)
+      hook.Run('OnConfigSet', key, stored[key].value, value)
 
       stored[key].value = value
 

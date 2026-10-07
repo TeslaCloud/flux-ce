@@ -14,18 +14,18 @@ local whitelisted_ents = {
 
 --- Runs the PersistenceLoad hook once the map's entities have been created.
 function StaticEnts:InitPostEntity()
-  hook.run('PersistenceLoad')
+  hook.Run('PersistenceLoad')
 end
 
 --- Runs the PersistenceSave hook when the server shuts down.
 function StaticEnts:ShutDown()
-  hook.run('PersistenceSave')
+  hook.Run('PersistenceSave')
 end
 
 --- Saves every persistent entity to the plugin data of the current schema and map, one
 -- 'static/<class>' entry per entity class. Runs the PrePersistenceSave hook first.
 function StaticEnts:PersistenceSave()
-  hook.run('PrePersistenceSave')
+  hook.Run('PrePersistenceSave')
 
   local entities = {}
 
@@ -97,7 +97,7 @@ end
 
 --- Runs the PersistenceSave hook whenever the framework saves its data.
 function StaticEnts:SaveData()
-  hook.run('PersistenceSave')
+  hook.Run('PersistenceSave')
 end
 
 --- Spawns the saved static entities of one class and marks them as persistent.

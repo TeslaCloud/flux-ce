@@ -1457,11 +1457,11 @@ end
 -- @param outline_color=nil [Color]
 -- @return [Number width, Number height of the drawn icon; nil if there is no such icon]
 function FontAwesome:draw(id, x, y, size, color, x_align, y_align, outline_width, outline_color)
-  if id:starts('fa ') then
+  if id:start_with('fa ') then
     id = id:sub(4, id:len())
   end
 
-  if !id:starts('fa-') then
+  if !id:start_with('fa-') then
     id = 'fa-'..id
   end
 

@@ -15,14 +15,14 @@ function GM:InitPostEntity()
     Flux.local_player_created = true
   end)
 
-  for k, v in ipairs(player.all()) do
+  for k, v in ipairs(player.GetAll()) do
     local model = v:GetModel()
 
-    hook.run('PlayerModelChanged', v, model, model)
+    hook.Run('PlayerModelChanged', v, model, model)
   end
 
-  hook.run('SynchronizeTools')
-  hook.run('LoadData')
+  hook.Run('SynchronizeTools')
+  hook.Run('LoadData')
 
   Plugin.call('FLInitPostEntity')
 
@@ -37,9 +37,9 @@ end
 
 --- Rebuilds the spawn menu and the tool menu once the server has initialized the local player.
 function GM:PlayerInitialized()
-  hook.run('PopulateSpawnMenu')
+  hook.Run('PopulateSpawnMenu')
   RunConsoleCommand('spawnmenu_reload')
-  hook.run('PopulateToolMenu')
+  hook.Run('PopulateToolMenu')
 end
 
 --- Creates the fonts once the schema has been loaded on the client.
@@ -62,7 +62,7 @@ do
       if scrw != new_w or scrh != new_h then
         Flux.print('Resolution changed from '..scrw..'x'..scrh..' to '..new_w..'x'..new_h..'.')
 
-        hook.run('OnResolutionChanged', new_w, new_h, scrw, scrh)
+        hook.Run('OnResolutionChanged', new_w, new_h, scrw, scrh)
 
         scrw, scrh = new_w, new_h
       end
@@ -102,7 +102,7 @@ end
 --- Opens the tab menu in place of the default scoreboard, closing the previous one first,
 -- unless the ShouldScoreboardShow hook returns false.
 function GM:ScoreboardShow()
-  if hook.run('ShouldScoreboardShow') != false then
+  if hook.Run('ShouldScoreboardShow') != false then
     if Flux.tab_menu and Flux.tab_menu.close_menu then
       Flux.tab_menu:close_menu()
     end
@@ -117,7 +117,7 @@ end
 -- than 0.3 seconds, unless the ShouldScoreboardHide hook returns false. A short press
 -- leaves the menu open.
 function GM:ScoreboardHide()
-  if hook.run('ShouldScoreboardHide') != false then
+  if hook.Run('ShouldScoreboardHide') != false then
     if Flux.tab_menu and Flux.tab_menu.held_time and CurTime() >= Flux.tab_menu.held_time then
       Flux.tab_menu:close_menu()
     end
@@ -129,7 +129,7 @@ end
 function GM:HUDDrawScoreBoard()
   self.BaseClass:HUDDrawScoreBoard()
 
-  if !IsValid(PLAYER) or !PLAYER:has_initialized() or hook.run('ShouldDrawLoadingScreen') then
+  if !IsValid(PLAYER) or !PLAYER:has_initialized() or hook.Run('ShouldDrawLoadingScreen') then
     local text = t'ui.hud.loading.schema'
     local percentage = 80
 
@@ -175,7 +175,7 @@ end
 -- screen while dead or the info displays while alive (unless FLHUDPaint returns a truthy
 -- value), and the white respawn fade. Skipped when the ShouldHUDPaint hook returns false.
 function GM:HUDPaint()
-  if PLAYER:has_initialized() and hook.run('ShouldHUDPaint') != false then
+  if PLAYER:has_initialized() and hook.Run('ShouldHUDPaint') != false then
     local cur_time = CurTime()
     local scrw, scrh = ScrW(), ScrH()
 
@@ -186,9 +186,9 @@ function GM:HUDPaint()
     end
 
     if !PLAYER:Alive() then
-      hook.run('HUDPaintDeathBackground', cur_time, scrw, scrh)
+      hook.Run('HUDPaintDeathBackground', cur_time, scrw, scrh)
         Theme.call('PaintDeathScreen', cur_time, scrw, scrh)
-      hook.run('HUDPaintDeathForeground', cur_time, scrw, scrh)
+      hook.Run('HUDPaintDeathForeground', cur_time, scrw, scrh)
     else
       PLAYER.respawn_alpha = 0
 
@@ -196,7 +196,7 @@ function GM:HUDPaint()
         PLAYER.white_alpha = Lerp(0.04, PLAYER.white_alpha, 0)
       end
 
-      if !hook.run('FLHUDPaint', cur_time, scrw, scrh) then
+      if !hook.Run('FLHUDPaint', cur_time, scrw, scrh) then
         InfoDisplay:draw_all()
       end
     end
@@ -278,11 +278,11 @@ function GM:HUDDrawTargetID()
       local x, y = screen_pos.x, screen_pos.y
 
       if ent:IsPlayer() and ent:has_initialized() and ent:Alive() then
-        hook.run('DrawPlayerTargetID', ent, x, y, dist)
+        hook.Run('DrawPlayerTargetID', ent, x, y, dist)
       elseif ent.DrawTargetID then
         ent:DrawTargetID(x, y, dist)
       else
-        hook.run('DrawEntityTargetID', ent, x, y, dist)
+        hook.Run('DrawEntityTargetID', ent, x, y, dist)
       end
     end
   end
@@ -314,9 +314,9 @@ end
 function GM:DrawPlayerTargetID(target, x, y, distance)
   local lines = {}
 
-  hook.run('GetDrawPlayerInfo', target, x, y, distance, lines)
+  hook.Run('GetDrawPlayerInfo', target, x, y, distance, lines)
 
-  if hook.run('PreDrawPlayerInfo', target, x, y, distance, lines) == false then return end
+  if hook.Run('PreDrawPlayerInfo', target, x, y, distance, lines) == false then return end
 
   local alpha = 255
 
@@ -377,7 +377,7 @@ function GM:PopulateToolMenu()
     end
   end
 
-  hook.run('SynchronizeTools')
+  hook.Run('SynchronizeTools')
 end
 
 --- Copies every registered Flux tool into the tool table of the tool gun.
@@ -449,7 +449,7 @@ end
 -- @return [Boolean true to block the bind, nil otherwise]
 function GM:PlayerBindPress(client, bind, pressed)
   if bind:find('gmod_undo') and pressed then
-    if hook.run('SoftUndo', client) != nil then
+    if hook.Run('SoftUndo', client) != nil then
       return true
     end
   end

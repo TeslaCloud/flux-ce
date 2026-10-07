@@ -57,7 +57,7 @@ local function read_value()
     if !this() then break end
   end
 
-  return value:trim()
+  return value:strip()
 end
 
 local function parse_expr()

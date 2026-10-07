@@ -211,7 +211,7 @@ if SERVER then
   --- Finds the player that has the item in one of their inventories. Server-side only.
   -- @return [Player the player, or nil if no player has the item]
   function ItemBase:get_player()
-    for k, v in ipairs(player.all()) do
+    for k, v in ipairs(player.GetAll()) do
       if v:has_item_by_id(self.instance_id) then
         return v
       end
@@ -231,18 +231,18 @@ if SERVER then
   -- @param actor [Player the player performing the action]
   -- @param ... [Vararg extra arguments that are passed to the hooks and to the item's method]
   function ItemBase:do_menu_action(act, actor, ...)
-    if hook.run('PlayerCanUseItem', actor, self, act, ...) == false then return end
+    if hook.Run('PlayerCanUseItem', actor, self, act, ...) == false then return end
 
     if act == 'on_take' then
-      if hook.run('PlayerTakeItem', actor, self, ...) != nil then return end
+      if hook.Run('PlayerTakeItem', actor, self, ...) != nil then return end
     end
 
     if act == 'on_use' then
-      if hook.run('PlayerUseItem', actor, self, ...) != nil then return end
+      if hook.Run('PlayerUseItem', actor, self, ...) != nil then return end
     end
 
     if act == 'on_drop' then
-      if hook.run('PlayerDropItem', actor, self.instance_id) != nil then return end
+      if hook.Run('PlayerDropItem', actor, self.instance_id) != nil then return end
     end
 
     if self[act] then
@@ -260,7 +260,7 @@ if SERVER then
       end
     end
 
-    hook.run('PlayerUsedItem', actor, self, act, ...)
+    hook.Run('PlayerUsedItem', actor, self, act, ...)
   end
 
   Cable.receive('fl_items_menu_action', function(actor, instance_id, action, ...)

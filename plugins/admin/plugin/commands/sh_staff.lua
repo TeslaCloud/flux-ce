@@ -14,9 +14,9 @@ function CMD:on_run(actor, ...)
   local msg_table = {
     Color(234,255,208),
     '@staff ',
-    hook.run('ChatboxGetPlayerColor', actor, text, team_chat) or team.GetColor(actor:Team()),
+    hook.Run('ChatboxGetPlayerColor', actor, text, team_chat) or team.GetColor(actor:Team()),
     get_player_name(actor),
-    hook.run('ChatboxGetMessageColor', actor, text, team_chat) or Color(255, 255, 255),
+    hook.Run('ChatboxGetMessageColor', actor, text, team_chat) or Color(255, 255, 255),
       ': ',
       text:chomp(' '),
       { sender = actor }

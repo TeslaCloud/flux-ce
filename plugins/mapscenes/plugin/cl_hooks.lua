@@ -28,7 +28,7 @@ local view = {}
 -- @param fov [Number]
 -- @return [Map view table with origin and angles, or nil if no mapscene is shown]
 function Mapscenes:CalcView(client, origin, angles, fov)
-  if hook.run('ShouldMapsceneRender') then
+  if hook.Run('ShouldMapsceneRender') then
     if #self.points > 0 then
       local cur_time = CurTime()
 

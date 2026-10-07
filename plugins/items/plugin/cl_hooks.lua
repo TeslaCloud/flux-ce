@@ -48,7 +48,7 @@ function Items:PlayerUseItemMenu(instance_id, is_entity)
 
   if !item_obj then return end
 
-  if hook.run('CanItemMenuOpen', item_obj) == false then return end
+  if hook.Run('CanItemMenuOpen', item_obj) == false then return end
 
   local item_menu = vgui.Create('fl_menu')
 
@@ -128,6 +128,6 @@ end
 
 Cable.receive('fl_player_use_item_entity', function(entity)
   if IsValid(entity) and entity.item then
-    hook.run('PlayerUseItemMenu', entity.item.instance_id, true)
+    hook.Run('PlayerUseItemMenu', entity.item.instance_id, true)
   end
 end)

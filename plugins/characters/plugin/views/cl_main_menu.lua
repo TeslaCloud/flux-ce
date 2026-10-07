@@ -74,7 +74,7 @@ function PANEL:RecreateSidebar(create_buttons)
   end
 
   if create_buttons then
-    hook.run('AddMainMenuItems', self, self.sidebar)
+    hook.Run('AddMainMenuItems', self, self.sidebar)
 
     local x, y = self.sidebar:GetPos()
 

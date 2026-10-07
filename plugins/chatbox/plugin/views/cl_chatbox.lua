@@ -39,13 +39,13 @@ function PANEL:Init()
     self:SetSize(Chatbox.width, Chatbox.height + offset)
     entry:SetTall(Theme.get_option('chatbox_text_entry_height', 40) + offset)
 
-    hook.run('ChatTextChanged', value)
+    hook.Run('ChatTextChanged', value)
   end
 
   self.text_entry.OnEnter = function(entry)
     local value = entry:GetValue()
 
-    hook.run('ChatboxTextEntered', value)
+    hook.Run('ChatboxTextEntered', value)
 
     if entry.history[1] != value then
       table.insert(entry.history, 1, value)
@@ -97,7 +97,7 @@ function PANEL:Init()
     local offset = math.scale(4)
 
     DisableClipping(true)
-      draw.rounded_box(offset * 2, 0, -offset, w, h + offset, Theme.get_color('chat_text_entry_background'))
+      draw.RoundedBox(offset * 2, 0, -offset, w, h + offset, Theme.get_color('chat_text_entry_background'))
     DisableClipping(true)
 
     entry:DrawTextEntryText(Theme.get_color('text'), Theme.get_color('accent'), Theme.get_color('text'))

@@ -10,7 +10,7 @@ CMD.aliases = { 'multiplierattribute', 'attmultiplier', 'attributemult', 'attrib
 --- Returns the translated command description with every registered attribute ID listed.
 -- @return [String]
 function CMD:get_description()
-  return t(self.description, { attributes = table.concat(table.get_keys(Attributes.get_stored()), ', ') })
+  return t(self.description, { attributes = table.concat(table.GetKeys(Attributes.get_stored()), ', ') })
 end
 
 --- Applies a timed value to a multipliable attribute of every target, then notifies the targets

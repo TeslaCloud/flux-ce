@@ -97,8 +97,8 @@ end
 -- name, everything else uses the 'GetEntityName' hook and its string representation.
 -- @return [String]
 function ent_meta:get_name()
-  return self:IsPlayer() and (hook.run('GetPlayerName', self) or self:name())
-  or hook.run('GetEntityName', self) or tostring(self) or self:GetClass()
+  return self:IsPlayer() and (hook.Run('GetPlayerName', self) or self:name())
+  or hook.Run('GetEntityName', self) or tostring(self) or self:GetClass()
 end
 
 --- Finds the hitbox of the entity that contains the specified position.

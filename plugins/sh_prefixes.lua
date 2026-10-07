@@ -12,7 +12,7 @@ function Prefixes:StringIsCommand(text)
   for k, v in pairs(stored) do
     local prefix_table = istable(v.prefix) and v.prefix or { v.prefix }
 
-    if table.reduce(prefix_table, function(a, prefix) return tobool(a) or text:starts(prefix) end) then
+    if table.reduce(prefix_table, function(a, prefix) return tobool(a) or text:start_with(prefix) end) then
       return false
     end
   end
@@ -33,7 +33,7 @@ if SERVER then
         local prefix_table = istable(v.prefix) and v.prefix or { v.prefix }
 
         for k2, v2 in pairs(prefix_table) do
-          if lower_text:starts(v2) or v.check and v.check(text) then
+          if lower_text:start_with(v2) or v.check and v.check(text) then
             return self:process_prefix(actor, k, v2, text, team_chat)
           end
         end
@@ -53,12 +53,12 @@ if SERVER then
     prefix = prefix or ''
 
     local prefix_data = stored[prefix_id]
-    local message = text:utf8sub((text:utf8lower():starts(prefix) and utf8.len(prefix) or 0) + 1)
+    local message = text:utf8sub((text:utf8lower():start_with(prefix) and utf8.len(prefix) or 0) + 1)
 
     if message != '' then
       prefix_data.callback(actor, message, team_chat)
 
-      hook.run('PlayerUsedPrefix', actor, prefix_id, message, team_chat)
+      hook.Run('PlayerUsedPrefix', actor, prefix_id, message, team_chat)
     end
 
     return ''

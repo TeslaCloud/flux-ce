@@ -219,7 +219,7 @@ function ActiveRecord.on_connected()
   ActiveRecord.set_meta_key('version', ActiveRecord.migrator.schema.version)
   ActiveRecord.set_meta_key('adapter', adapter)
 
-  hook.run('ActiveRecordReady')
+  hook.Run('ActiveRecordReady')
 end
 
 --- Drops the internal 'ar_schema' and 'ar_metadata' tables and, unless told otherwise,
@@ -252,7 +252,7 @@ function ActiveRecord.recreate_schema()
 end
 
 Pipeline.register('migrations', function(id, file_name, pipe)
-  if file_name:ends('.lua') then
+  if file_name:end_with('.lua') then
     ActiveRecord.Migrator:add_file(file_name)
   end
 end)

@@ -43,7 +43,7 @@ end
 --- Stores the instance ids of the items of every container on its entity
 -- and unsets the inventory, before the persistent entities are saved.
 function Container:PrePersistenceSave()
-  for k, v in ipairs(ents.all()) do
+  for k, v in ipairs(ents.GetAll()) do
     if v.inventory and self:find(v:GetModel()) then
       v.items = v.inventory:get_items_ids()
       v.inventory = nil
@@ -96,7 +96,7 @@ Cable.receive('fl_container_open', function(actor, entity)
       entity:EmitSound(container_data.open_sound, 55)
     end
 
-    hook.run('PreContainerOpen', entity)
+    hook.Run('PreContainerOpen', entity)
 
     actor:open_inventory(entity.inventory, entity)
   end
