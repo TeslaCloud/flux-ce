@@ -24,7 +24,7 @@ en:
     condition:
       select_operator: <Select operator>
       select_parameter: <Select parameter>
-      right_click: Right click here to add new condition
+      right_click: Right click here to add a new condition
       add_condition: Add condition
       set_parameter: Set parameter...
       set_operator: Set operator...
@@ -32,7 +32,7 @@ en:
       delete: Delete condition
       save:
         title: Condition saving
-        message: Specify preset name.
+        message: Specify a preset name.
       load:
         title: Condition loading
         column: Select preset

@@ -129,7 +129,7 @@ function Area:AddAreaToolModes(mode_list)
   mode_list:Add(mode)
 end
 
-Areas.register_type('textarea', 'Text Area', 'Displays text whenever player enters the area.', Color(255, 0, 255), function(player, area, has_entered, pos, cur_time)
+Areas.register_type('textarea', 'Text Area', 'Displays text whenever a player enters the area.', Color(255, 0, 255), function(player, area, has_entered, pos, cur_time)
   player.text_areas = player.text_areas or {}
 
   if has_entered then

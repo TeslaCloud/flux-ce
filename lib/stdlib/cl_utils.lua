@@ -64,7 +64,7 @@ function util.get_panel_class(panel)
   end
 end
 
---- Adjusts x, y to fit inside x2, y2 while keeping original aspect ratio.
+--- Adjusts x, y to fit inside x2, y2 while keeping the original aspect ratio.
 -- @param x [Number width to fit]
 -- @param y [Number height to fit]
 -- @param x2 [Number maximum width]
@@ -291,7 +291,7 @@ function util.wrap_text(text, font, width, initial_width)
         cur_width = cur_width + w
       end
     else -- The width of the word is MORE than what we have remaining.
-      if w > width then -- The width is more than total width we have available.
+      if w > width then -- The width is more than the total width we have available.
         for i = 1, utf8.len(v) do
           local char = v:utf8sub(i, i)
           local char_width, _ = util.text_size(char, font)

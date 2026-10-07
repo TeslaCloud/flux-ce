@@ -89,7 +89,7 @@ function Date:iso(time)
   return os.date('%Y-%m-%d', time or self.time)
 end
 
---- Formats date-time using a format string.
+--- Formats the date-time using a format string.
 -- @param fmt [String DateTime format]
 -- @param time=DateTime [Number UNIX time]
 -- @return [String formatted string]
@@ -132,7 +132,7 @@ function Date:__concat(right)
   end)
 end
 
---- Converts this Date object to ISO-8601 string.
+--- Converts this Date object to an ISO-8601 string.
 -- @return [String ISO representation of the Date]
 function Date:__tostring()
   return self:iso()

@@ -21,7 +21,7 @@ do
     ['u'] = true
   }
 
-  --- Checks whether character is vowel or not.
+  --- Checks whether the character is a vowel or not.
   -- On the client the current language can override the result with its `is_vowel` function.
   -- @param char [String single character]
   -- @return [Boolean true if it is a vowel, nil (or the language's own answer) otherwise]
@@ -154,7 +154,7 @@ function string.include(str, substring, start_pos)
   return string.find(str, substring, start_pos, true)
 end
 
---- Checks if string is command or not, i.e. whether it starts with one of the configured
+--- Checks if the string is a command or not, i.e. whether it starts with one of the configured
 -- command prefixes. The StringIsCommand hook can return false to prevent that.
 -- @param str [String]
 -- @return [Boolean whether the string is a command, Number length of the prefix if it is one]
@@ -171,7 +171,7 @@ function string.is_command(str)
 end
 
 do
-  -- ID's should not have any of those characters.
+  -- IDs should not have any of those characters.
   local blocked_chars = {
     "'", '"', '\\', '/', '^',
     ':', '.', ';', '&', ',', '%'

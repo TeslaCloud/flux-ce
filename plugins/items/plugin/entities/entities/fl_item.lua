@@ -50,7 +50,7 @@ if SERVER then
           if self.item then
             hook.run('PlayerUseItemEntity', caller, self, self.item)
           else
-            Flux.dev_print('Player attempted to use an item entity without item object tied to it!')
+            Flux.dev_print('A player attempted to use an item entity without an item object tied to it!')
           end
         end
       end

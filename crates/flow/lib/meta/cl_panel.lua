@@ -50,7 +50,7 @@ function model_panel:Paint(w, h)
 
   cam.Start3D(self.vCamPos, ang, self.fFOV, x, y, w, h, 5, self.FarZ)
 
-  -- Fix for models being behind blur texture in Z-buffer.
+  -- Fix for models being behind the blur texture in the Z-buffer.
   if Flux.should_render_blur then cam.IgnoreZ(true) end
 
   render.SuppressEngineLighting(true)

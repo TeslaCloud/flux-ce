@@ -24,7 +24,7 @@ ActiveRecord.Base.schema      = nil
 ActiveRecord.Base.relations   = {}
 
 --- @warning [Internal]
--- List of validations to be ran when the object is being saved,
+-- List of validations to be run when the object is being saved,
 -- as well as some internal data related to them.
 -- @return [Hash]
 ActiveRecord.Base.validations = {}
@@ -64,7 +64,7 @@ function ActiveRecord.Base:get_schema()
   return self.schema
 end
 
---- Dump object as a simple data table.
+--- Dump the object as a simple data table.
 -- This simply dumps all the values of the variables defined in the schema.
 -- @return [Hash schema, ActiveRecord::Base(self)]
 function ActiveRecord.Base:dump()
@@ -258,7 +258,7 @@ function ActiveRecord.Base:skip(amt)
 end
 
 --- @warning [Internal]
--- Internal function to process child objects or current object as a child to another object.
+-- Internal function to process child objects or the current object as a child to another object.
 -- @param obj [ActiveRecord::Base parent object]
 -- @param target_class [ActiveRecord::Base class of the parent object]
 -- @return [ActiveRecord::Base(self)]
@@ -337,7 +337,7 @@ function ActiveRecord.Base:_fetch_relation(callback, objects, n, obj_id)
 end
 
 --- @warning [Internal]
--- Runs current query based on the query map and flushes query map.
+-- Runs the current query based on the query map and flushes the query map.
 -- @param callback [Function called with an Array of the loaded objects; not called if
 --   nothing was found]
 -- @return [ActiveRecord::Base(self)]
@@ -393,7 +393,7 @@ function ActiveRecord.Base:run_query(callback)
 end
 
 --- @warning [Internal]
--- Internal function to create a new instance of object based on the
+-- Internal function to create a new instance of the object based on the
 -- data from the database.
 -- @param data [Hash row returned by the database]
 -- @return [ActiveRecord::Base(object)]
@@ -501,7 +501,7 @@ local function gen_callback(self, insert)
     print_query(self.class_name..' '..(insert and 'Create' or 'Update')..' ('..time..'s)', query)
     self.saving = false
 
-    -- Set #id to last insert id.
+    -- Set #id to the last insert id.
     if insert and istable(result) then
       local r = result[1]
       self.id = r['id'] or r['last_insert_rowid()'] or r['last_insert_id()']
@@ -618,7 +618,7 @@ end
 
 --- Specifies that the object has one or many of another object.
 -- The object(s) will be stored in a field with the same name
--- as child's database table.
+-- as the child's database table.
 -- ```
 -- MyClass:has('users', true)
 -- ...
@@ -669,7 +669,7 @@ end
 
 --- Specifies that the object has many instances of another object.
 -- The objects will be stored in a field with the same name
--- as child's database table.
+-- as the child's database table.
 -- ```
 -- MyClass:has_many 'users'
 -- ...
@@ -686,7 +686,7 @@ end
 
 --- Specifies that the object has one instance of another object.
 -- The object will be stored in a field with the same name
--- as child's database table.
+-- as the child's database table.
 -- ```
 -- MyClass:has_one 'user'
 -- ...
@@ -724,7 +724,7 @@ function ActiveRecord.Base:belongs_to(target, one)
   return self
 end
 
---- Callback that is called if object's validation fails.
+--- Callback that is called if the object's validation fails.
 -- @param column [String column that failed the validation]
 -- @param err_code [String id of the failed validation, e.g. 'presence']
 function ActiveRecord.Base:invalid(column, err_code)

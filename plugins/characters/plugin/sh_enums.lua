@@ -18,7 +18,7 @@ enumerate [[
 -- CHAR_ERR_GENDER  = Character's gender is invalid.
 -- CHAR_ERR_CLASS   = Character's class is invalid.
 -- CHAR_ERR_EXISTS  = Character already exists.
--- CHAR_ERR_LIMIT   = Player has hit characters limit.
+-- CHAR_ERR_LIMIT   = Player has hit the character limit.
 -- CHAR_ERR_MODEL   = Client has not selected a model.
 -- CHAR_ERR_RECORD  = ActiveRecord screwed up again.
 -- CHAR_ERR_UNKNOWN = Something else went wrong.

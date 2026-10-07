@@ -20,7 +20,7 @@ function Inventories:OnActiveCharacterSet(player, character)
   player:create_inventories()
 end
 
---- Creates the default set of player's inventories:
+--- Creates the default set of the player's inventories:
 -- main inventory, hotbar, pockets and the equipment slots.
 -- @param player [Player]
 -- @param inventories [Hash table to put the new inventories into, keyed by inventory type]

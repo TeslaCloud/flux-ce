@@ -2,8 +2,8 @@
 -- Pointers for a C implementation of getenv:
 --
 -- * All functions must set the ENV global.
--- * Local environment should be copied to ENV global on fork.
--- * ENV global should have a __newindex metamethod to set C environment
+-- * The local environment should be copied to the ENV global on fork.
+-- * The ENV global should have a __newindex metamethod to set C environment
 -- variables if they are changed in the ENV global.
 --
 
@@ -29,7 +29,7 @@ end
 
 if !setenv then
   --- Sets an environment variable "key" to "value".
-  -- Will be automatically converted to string by C backend.
+  -- Will be automatically converted to a string by the C backend.
   -- @param key [String variable name]
   -- @param value [Any new value]
   -- @return [String environment variable reference]
@@ -43,7 +43,7 @@ do
   local client_vars = {}
 
   --- Adds an environment variable to the clientside environment variables list.
-  -- Can only be used once. Forced key and value to be strings.
+  -- Can only be used once. Forces key and value to be strings.
   -- @param key [String variable name]
   -- @param value [String variable value]
   function add_client_env(key, value)

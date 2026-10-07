@@ -30,16 +30,16 @@ function Area:OneSecond()
           player.last_area = player.last_area or {}
           player.last_area[v.id] = player.last_area[v.id] or {}
 
-          -- Player hasn't moved since our previous check, no need to check again.
+          -- The player hasn't moved since our previous check, no need to check again.
           if pos == player.last_pos then continue end
 
-          local z = pos.z + 16 -- Raise player's position by 16 units to compensate for player's height
+          local z = pos.z + 16 -- Raise the player's position by 16 units to compensate for the player's height
           local entered_area = false
 
           -- First do height checks
           if z > v2[1].z and z < v.maxh then
             if util.vector_in_poly(pos, v2) then
-              -- Player entered the area
+              -- The player entered the area
               if !table.HasValue(player.last_area[v.id], k2) then
                 try( Areas.get_callback(v.type), player, v, true, pos, cur_time)
 
@@ -53,7 +53,7 @@ function Area:OneSecond()
           end
 
           if !entered_area then
-            -- Player left the area
+            -- The player left the area
             if table.HasValue(player.last_area[v.id], k2) then
               try(Areas.get_callback(v.type), player, v, false, pos, cur_time)
 

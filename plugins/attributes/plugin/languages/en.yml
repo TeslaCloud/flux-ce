@@ -1,11 +1,11 @@
 en:
   command:
     charsetattribute:
-      description: "Set character's attribute. Attributes: {attributes}"
+      description: "Set a character's attribute. Attributes: {attributes}"
       syntax: <target> <attribute_id> <value>
       message: "{player} has set {target}'s attribute {attribute} to {value}."
     charattributeboost:
-      description: "Boost character's attribute. Attributes: {attributes}"
+      description: "Boost a character's attribute. Attributes: {attributes}"
       syntax: <target> <attribute_id> <value> <duration>
       message: "{player} has boosted {target}'s attribute {attribute} by {value} for {time}."
     charattributemultiplier:

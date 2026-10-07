@@ -1,6 +1,6 @@
 PLUGIN:set_name('Pickup Objects')
 PLUGIN:set_author('TeslaCloud Studios')
-PLUGIN:set_description('Allows players to pickup objects.')
+PLUGIN:set_description('Allows players to pick up objects.')
 
 local max_dist = Unit:meters(2) ^ 2
 

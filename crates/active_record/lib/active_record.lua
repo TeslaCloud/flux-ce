@@ -32,7 +32,7 @@ include 'dumper.lua'
 -- @param type [String abstract column type, e.g. 'string', 'integer' or 'datetime']
 function ActiveRecord.add_to_schema(table_name, column_name, type)
   if !ActiveRecord.ready then
-    error('Attempt to edit schema too early!')
+    error('Attempt to edit the schema too early!')
   end
 
   local t = ActiveRecord.schema[table_name] or {}

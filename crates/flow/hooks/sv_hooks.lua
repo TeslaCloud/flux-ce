@@ -509,7 +509,7 @@ do
     -- Get rid of the old files (if any)
     purge_client_files()
 
-    -- Do not send server-only settings to client!
+    -- Do not send server-only settings to the client!
     local settings_copy = table.Copy(Settings)
     settings_copy.server = nil
 

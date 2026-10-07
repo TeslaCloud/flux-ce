@@ -8,7 +8,7 @@ function player.random()
   end
 end
 
---- Finds player based on their name or SteamID.
+--- Finds a player based on their name or SteamID.
 -- A SteamID has to match exactly. A name is searched for as a Lua pattern in both the
 -- name and the Steam name of every player; Steam names are always matched case-insensitively.
 -- @param name [String/Player part of a name, or a SteamID; a valid player is returned as-is]

@@ -156,7 +156,7 @@ function ItemBase:add_button(name, data)
     Example data structure:
     data = {
       icon = 'path/to/icon.png',
-      callback = 'on_use', -- This will call ITEM:on_use function when the button is pressed.
+      callback = 'on_use', -- This will call the ITEM:on_use function when the button is pressed.
       on_show = function(item_obj) -- Client-Side function. Determines whether the button will be shown.
         return true
       end

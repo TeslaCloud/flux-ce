@@ -1,5 +1,5 @@
 name: Currencies
-description: Adds monetary system with various currencies.
+description: Adds a monetary system with various currencies.
 author: TeslaCloud Studios
 depends:
   - inventory

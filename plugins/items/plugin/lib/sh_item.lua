@@ -340,7 +340,7 @@ if SERVER then
     local loaded = Data.load_schema('items/instances', {})
 
     if loaded and !table.IsEmpty(loaded) then
-      -- Returns functions to instances table after loading.
+      -- Returns functions to the instances table after loading.
       for id, instance_table in pairs(loaded) do
         local item_obj = Item.find_by_id(id)
 
@@ -504,7 +504,7 @@ if SERVER then
     end
 
     if !Item.is_instance(item_obj) then
-      error_with_traceback('Cannot spawn non-instantiated item!')
+      error_with_traceback('Cannot spawn a non-instantiated item!')
       return
     end
 
@@ -572,12 +572,12 @@ else
         return Cable.send('fl_items_data_request', ent_index)
       end
 
-      -- Client has to know this shit too I guess?
+      -- The client has to know this shit too I guess?
       ent:SetModel(item_obj:get_model())
       ent:SetSkin(item_obj.skin)
       ent:SetColor(item_obj:get_color())
 
-      -- Restore item's functions. For some weird reason they aren't properly initialized.
+      -- Restore the item's functions. For some weird reason they aren't properly initialized.
       table.safe_merge(ent, scripted_ents.Get('fl_item'))
 
       ent.item = item_obj

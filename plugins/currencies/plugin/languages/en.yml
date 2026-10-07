@@ -7,7 +7,7 @@ en:
       description: "Drop money at your target location. Currencies: {currencies}"
       syntax: <amount> [currency]
     setmoney:
-      description: "Set money for player. Currencies: {currencies}"
+      description: "Set money for a player. Currencies: {currencies}"
       syntax: <target> <amount> [currency]
       message: "{player} has set {target}'s {currency} to {value}."
   error:
@@ -27,10 +27,10 @@ en:
       title: Money
       give:
         title: Give money
-        message: Please, enter amount of {currency} to give.
+        message: Please, enter the amount of {currency} to give.
       drop:
         title: Drop money
-        message: Please, enter amount of {currency} to drop.
+        message: Please, enter the amount of {currency} to drop.
       take:
         title: Take money
-        message: Please, enter amount of {currency} to take.
+        message: Please, enter the amount of {currency} to take.

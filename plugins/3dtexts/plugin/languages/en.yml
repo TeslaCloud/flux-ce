@@ -9,7 +9,7 @@ en:
   tool:
     texts:
       name: Text Tool
-      desc: Add 3D texts to the surfaces.
+      desc: Add 3D texts to surfaces.
       "0": "Left Click: Add Text, Right Click: Remove Text."
       text: Text
       style: Style

@@ -71,7 +71,7 @@ function class(name, parent_class)
     local real_class = parent[name]
     local old_super = super
 
-    -- Set new object's meta table and copy the data from original class to new object.
+    -- Set the new object's meta table and copy the data from the original class to the new object.
     setmetatable(new_obj, real_class)
     table.safe_merge(new_obj, real_class)
 

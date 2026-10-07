@@ -11,10 +11,10 @@ en:
         desc: How fast should the stamina regenerate. Depends on the server tickrate.
       stam_jump_penalty:
         name: Jump Penalty
-        desc: How much stamina points to take when the player jumps.
+        desc: How many stamina points to take when the player jumps.
       stam_max:
         name: Max Stamina
-        desc: Max value of player's stamina.
+        desc: Max value of the player's stamina.
       stam_regen_delay:
         name: Regeneration Delay
         desc: How many seconds to wait before starting stamina regeneration.

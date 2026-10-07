@@ -34,7 +34,7 @@ Crate             = {}
 Crate.installed   = {}
 Crate.current     = nil
 
---- Adds a search path relative to 'LUA' system.
+--- Adds a search path relative to the 'LUA' system.
 -- @param path [String folder to look for packages in; a trailing slash is added if missing]
 -- @return [Crate self]
 function Crate:add_path(path)
@@ -42,7 +42,7 @@ function Crate:add_path(path)
   return self
 end
 
---- Describes current package's specification.
+--- Describes the current package's specification.
 -- For every singular function there is a plural alias and vice versa.
 -- ```
 -- Crate:describe(function(s)
@@ -184,8 +184,8 @@ Crate.present       = Crate.included
 Crate.is_installed  = Crate.included
 
 --- Searches for a package with the specified name and returns
--- a full path to its cratespec, the name of the package and
--- full path to the folder.
+-- the full path to its cratespec, the name of the package and
+-- the full path to the folder.
 -- Returns false if the package cannot be found.
 -- @param name [String package name, or path to the package's folder]
 -- @return [String/Boolean cratespec path or false if not found, String name,
@@ -228,7 +228,7 @@ function Crate:reload(name)
   end
 end
 
---- Parse version string.
+--- Parse a version string.
 -- ```
 -- Crate:parse_version('~> 1.2.3-beta')
 -- -- { x = 1, y = 2, z = 3, sum = 123, suffix = 'beta', op = '~>' }

@@ -1,6 +1,6 @@
 PLUGIN:set_name('Weapon Selector')
 PLUGIN:set_author('TeslaCloud Studios')
-PLUGIN:set_description('Adds custom weapon selector for use with Flux.')
+PLUGIN:set_description('Adds a custom weapon selector for use with Flux.')
 
 if SERVER then
   concommand.Add('selectweapon', function(player, command, arguments)
@@ -64,7 +64,7 @@ function PLUGIN:HUDPaint()
         if !v.target then
           local next = safe_index(targets, (dir and k - 1) or k + 1)
 
-          -- Make first and last weapons look nicer when scrolling.
+          -- Make the first and last weapons look nicer when scrolling.
           if dir and k == 1 then
             v.y = targets[5].y + 50
             v.scale = v.scale * 0.5

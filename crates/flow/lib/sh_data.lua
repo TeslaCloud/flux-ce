@@ -33,7 +33,7 @@ if SERVER then
       return default
     else
       if Flux.development then
-        error_with_traceback("Attempt to load data key that doesn't exist! ("..key..')')
+        error_with_traceback("Attempt to load a data key that doesn't exist! ("..key..')')
       end
     end
   end
@@ -84,7 +84,7 @@ else
       return default
     else
       if Flux.development then
-        error_with_traceback("Attempt to load data key that doesn't exist! ("..key..')')
+        error_with_traceback("Attempt to load a data key that doesn't exist! ("..key..')')
       end
     end
   end

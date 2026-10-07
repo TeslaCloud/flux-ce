@@ -412,7 +412,7 @@ function Plugin.include_schema()
     for k, v in ipairs(deps) do
       if !Plugin.require(v) then
         long_error(
-          "Unable to load schema! Dependency missing: '"..
+          "Unable to load the schema! Dependency missing: '"..
           tostring(v)..
           "'!\nPlease install this plugin in your schema's 'plugins' folder!\n"..
           'Alternatively please make sure that your server can download packages from the cloud!\n'
@@ -455,7 +455,7 @@ do
 
   --- Makes sure that a plugin (or a crate) is loaded, including it if it has not been yet.
   -- Plugins are looked up in the Flux, cloud and schema plugin folders.
-  -- Please specify full file name if requiring a single-file Plugin.
+  -- Please specify the full file name if requiring a single-file Plugin.
   -- @param name [String plugin or crate name]
   -- @return [Boolean true if the dependency is loaded or could be found, false otherwise]
   function Plugin.require(name)
@@ -694,7 +694,7 @@ do
   local old_hook_call = Plugin.old_hook_call or hook.Call
   Plugin.old_hook_call = old_hook_call
 
-  -- If we're running in development, we should be using pcall'ed hook.Call rather than unsafe one.
+  -- If we're running in development, we should be using pcall'ed hook.Call rather than the unsafe one.
   if Flux.development then
     --- Overrides hook.Call so that plugin and schema hooks from the hook cache are called
     -- before the regular hooks. Development variant: handlers are run with pcall, failures
@@ -725,7 +725,7 @@ do
       return old_hook_call(name, gm, ...)
     end
   else
-    -- While generally a bad idea, pcall-less method is faster and if you're not developing
+    -- While generally a bad idea, the pcall-less method is faster and if you're not developing
     -- chances are low that you'll ever run into an error anyway.
 
     --- Overrides hook.Call so that plugin and schema hooks from the hook cache are called

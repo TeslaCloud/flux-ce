@@ -2,7 +2,7 @@
   Font-Awesome 5's license can be found here:
   https://fontawesome.com/license/free
 
-  Font-Awesome 5 Icons are released under Creative Commons Attribution 4.0 license.
+  Font-Awesome 5 Icons are released under the Creative Commons Attribution 4.0 license.
   Font-Awesome 5 Code is released under the MIT License.
 --]]
 

@@ -5,7 +5,7 @@ en:
   tool:
     mapscene:
       name: Main menu background
-      desc: Set main menu camera position.
+      desc: Set the main menu camera position.
       "0": "Left Click: Add node"
   ui:
     mapscene:

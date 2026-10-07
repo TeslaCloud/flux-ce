@@ -1,6 +1,6 @@
 local color_meta = FindMetaTable('Color')
 
---- Converts hexadecimal color to a color structure.
+--- Converts a hexadecimal color to a color structure.
 -- Accepts 3 (rgb), 6 (rrggbb) or 8 (rrggbbaa) digits with an optional leading '#'.
 -- @param hex [String hexadecimal color such as '#fff' or 'ff8800']
 -- @return [Color the converted color, or white if the string has any other length]

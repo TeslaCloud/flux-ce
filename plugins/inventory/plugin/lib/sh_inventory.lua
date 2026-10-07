@@ -5,7 +5,7 @@ end
 local stored = Inventories.stored or {}
 Inventories.stored = stored
 
---- Returns all the inventories classes currently loaded on the server.
+--- Returns all the inventory classes currently loaded on the server.
 -- @return [Hash inventories]
 function Inventories.all()
   return stored
@@ -34,11 +34,11 @@ do
     return self.inventories or {}
   end
 
-  --- Get items table from certain inventory or from all of them.
+  --- Get the items table from a certain inventory or from all of them.
   -- Will return items from the specified inventory.
   -- @variant player_meta:get_items(inv_type)
   --   @param inv_type [String]
-  -- Will return items from all the inventories that player has.
+  -- Will return items from all the inventories that the player has.
   -- @variant player_meta:get_items()
   -- @return [Array<Item> items]
   function player_meta:get_items(inv_type)
@@ -55,11 +55,11 @@ do
     end
   end
 
-  --- Get only instance_ids from certain inventory or from all of them.
+  --- Get only instance_ids from a certain inventory or from all of them.
   -- Will return item ids only from the specified inventory.
   -- @variant player_meta:get_items_ids(inv_type)
   --   @param inv_type [String]
-  -- Will return item ids from all the inventories that player has.
+  -- Will return item ids from all the inventories that the player has.
   -- @variant player_meta:get_items_ids()
   -- @return [Array<Number> numbers; the inv_type variant returns the Inventory itself instead]
   function player_meta:get_items_ids(inv_type)
@@ -76,7 +76,7 @@ do
     end
   end
 
-  --- Get instance_ids from certain slot of the specified inventory.
+  --- Get instance_ids from a certain slot of the specified inventory.
   -- @param x [Number]
   -- @param y [Number]
   -- @param inv_type [String]
@@ -85,7 +85,7 @@ do
     return self:get_inventory(inv_type):get_slot(x, y)
   end
 
-  --- Get first instance_id from certain slot of the specified inventory.
+  --- Get the first instance_id from a certain slot of the specified inventory.
   -- @param x [Number]
   -- @param y [Number]
   -- @param inv_type [String]
@@ -94,12 +94,12 @@ do
     return self:get_inventory(inv_type):get_first_in_slot(x, y)
   end
 
-  --- Get amount of items with certain id from the specified inventory or from all of them.
-  -- Will return items count only from the specified inventory.
+  --- Get the amount of items with a certain id from the specified inventory or from all of them.
+  -- Will return the items count only from the specified inventory.
   -- @variant player_meta:get_items_count(id, inv_type)
   --   @param id [String]
   --   @param inv_type [String]
-  -- Will return items count from all the inventories that player has.
+  -- Will return the items count from all the inventories that the player has.
   -- @variant player_meta:get_items_count(id)
   --   @param id [String]
   -- @return [Number]
@@ -117,12 +117,12 @@ do
     end
   end
 
-  --- Get first item with certain id from the specified inventory or from all of them.
-  -- Will return item only from the specified inventory.
+  --- Get the first item with a certain id from the specified inventory or from all of them.
+  -- Will return the item only from the specified inventory.
   -- @variant player_meta:find_item(id, inv_type)
   --   @param id [String]
   --   @param inv_type [String]
-  -- Will return item from all the inventories that player has.
+  -- Will return the item from all the inventories that the player has.
   -- @variant player_meta:find_item(id)
   --   @param id [String]
   -- @return [Item]
@@ -140,12 +140,12 @@ do
     end
   end
 
-  --- Get all items with certain id from the specified inventory or from all of them.
+  --- Get all items with a certain id from the specified inventory or from all of them.
   -- Will return items only from the specified inventory.
   -- @variant player_meta:find_items(id, inv_type)
   --   @param id [String]
   --   @param inv_type [String]
-  -- Will return items from all the inventories that player has.
+  -- Will return items from all the inventories that the player has.
   -- @variant player_meta:find_items(id)
   --   @param id [String]
   -- @return [Array<Item> items]
@@ -163,12 +163,12 @@ do
     end
   end
 
-  --- Checking if the player has certain item by its id.
+  --- Checking if the player has a certain item by its id.
   -- Will check only the specified inventory.
   -- @variant player_meta:has_item(id, inv_type)
   --   @param id [String]
   --   @param inv_type [String]
-  -- Will check all the inventories that player has.
+  -- Will check all the inventories that the player has.
   -- @variant player_meta:has_item(id)
   --   @param id [String]
   -- @return [Boolean, Item found item]
@@ -188,12 +188,12 @@ do
     end
   end
 
-  --- Checking if the player has certain item by its instance id.
+  --- Checking if the player has a certain item by its instance id.
   -- Will check only the specified inventory.
   -- @variant player_meta:has_item_by_id(instance_id, inv_type)
   --   @param instance_id [Number]
   --   @param inv_type [String]
-  -- Will check all the inventories that player has.
+  -- Will check all the inventories that the player has.
   -- @variant player_meta:has_item_by_id(instance_id)
   --   @param instance_id [Number]
   -- @return [Boolean, Item found item]
@@ -213,7 +213,7 @@ do
     end
   end
 
-  --- Checking if the player has certain item equipped by its id.
+  --- Checking if the player has a certain item equipped by its id.
   -- @param id [String]
   -- @return [Boolean, Item found item]
   function player_meta:has_item_equipped(id)
@@ -226,7 +226,7 @@ do
     return false
   end
 
-  --- Get item object by the weapon class.
+  --- Get the item object by the weapon class.
   -- @param weapon_class [String]
   -- @return [Item]
   function player_meta:get_item_from_weapon(weapon_class)
@@ -237,7 +237,7 @@ do
     end
   end
 
-  --- Get an item of weapon that the player is holding in their hands.
+  --- Get the item of the weapon that the player is holding in their hands.
   -- @return [Item]
   function player_meta:get_active_weapon_item()
     local weapon = self:GetActiveWeapon()
@@ -250,7 +250,7 @@ do
   if SERVER then
 
     --- @warning [Internal]
-    -- Creates default player's inventories.
+    -- Creates the player's default inventories.
     function player_meta:create_inventories()
       local inventories = {}
 
@@ -271,7 +271,7 @@ do
     end
 
     --- @warning [Internal]
-    -- Loads player's inventories with the items they had.
+    -- Loads the player's inventories with the items they had.
     function player_meta:load_inventories()
       local item_ids = (self:get_character().item_ids or ''):split(',')
 
@@ -299,7 +299,7 @@ do
     end
 
     --- @warning [Internal]
-    -- Deletes player's inventories from the server cache.
+    -- Deletes the player's inventories from the server cache.
     function player_meta:delete_inventories()
       for k, v in pairs(self:get_inventories()) do
         if v.owner == self then
@@ -308,7 +308,7 @@ do
       end
     end
 
-    --- Synchronize all the inventories that player has.
+    --- Synchronize all the inventories that the player has.
     function player_meta:sync_inventories()
       for k, v in pairs(self:get_inventories()) do
         v:sync()
@@ -334,7 +334,7 @@ do
       return success, error_text
     end
 
-    --- Give the player certain item by its instance id.
+    --- Give the player a certain item by its instance id.
     -- @param instance_id [Number]
     -- @param inv_type=player.default_inventory or 'main_inventory' [String]
     -- @return [Boolean was the item added successfully, String text of the error that occurred]
@@ -366,11 +366,11 @@ do
     end
 
     --- Takes one item from the player.
-    -- Takes item only from the specified inventory.
+    -- Takes the item only from the specified inventory.
     -- @variant player_meta:take_item(id, inv_type)
     --   @param id [String]
     --   @param inv_type [String]
-    -- Takes item from the inventory that has it.
+    -- Takes the item from the inventory that has it.
     -- @variant player_meta:take_item(id)
     --   @param id [String]
     -- @return [Boolean was the item taken successfully, String text of the error that occurred]
@@ -397,13 +397,13 @@ do
       end
     end
 
-    --- Takes specified amount of items from the player.
+    --- Takes the specified amount of items from the player.
     -- Takes items only from the specified inventory.
     -- @variant player_meta:take_items(id, amount, inv_type)
     --   @param id [String]
     --   @param amount [Number]
     --   @param inv_type [String]
-    -- Takes items from the inventory that has it.
+    -- Takes items from the inventory that has them.
     -- @variant player_meta:take_items(id, amount)
     --   @param id [String]
     --   @param amount [Number]
@@ -435,11 +435,11 @@ do
     end
 
     --- Takes one specified item from the player.
-    -- Takes item only from the specified inventory.
+    -- Takes the item only from the specified inventory.
     -- @variant player_meta:take_item_by_id(instance_id, inv_type)
     --   @param instance_id [Number]
     --   @param inv_type [String]
-    -- Takes item from the inventory that has it.
+    -- Takes the item from the inventory that has it.
     -- @variant player_meta:take_item_by_id(instance_id)
     --   @param instance_id [Number]
     -- @return [Boolean was the item taken successfully, String text of the error that occurred]
@@ -467,8 +467,8 @@ do
       end
     end
 
-    --- Transfers item to a specified inventory of the player.
-    -- Takes item only from the specified inventory.
+    --- Transfers an item to a specified inventory of the player.
+    -- Takes the item only from the specified inventory.
     -- Does nothing and returns nothing if the item is in that inventory already.
     -- ```
     -- -- Puts the item on the player's hotbar.
@@ -500,7 +500,7 @@ do
       end
     end
 
-    --- Opens inventory window for the player.
+    --- Opens an inventory window for the player.
     -- ```
     -- -- Creating new inventory
     -- local inventory = Inventory.new()
@@ -509,7 +509,7 @@ do
     -- inventory.type = 'testing_inventory'
     -- inventory.multislot = false
     --
-    -- -- Creating inventory window for a player
+    -- -- Creating an inventory window for a player
     -- player:open_inventory(inventory)
     -- ```
     -- @param inventory [Inventory]
@@ -520,7 +520,7 @@ do
       Cable.send(self, 'fl_inventory_open', inventory.id)
     end
 
-    --- Opens all the inventory other player has.
+    --- Opens all the inventories the other player has.
     -- @param target [Player]
     function player_meta:open_player_inventory(target)
       local inventory_ids = {}

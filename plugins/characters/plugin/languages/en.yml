@@ -1,19 +1,19 @@
 en:
   command:
     charsetname:
-      description: "Set character's name."
+      description: "Set a character's name."
       syntax: <target> <new name>
       message: "{player} has set {target}'s name to {name}."
     charsetmodel:
-      description: "Set character's model."
+      description: "Set a character's model."
       syntax: <target> <new model>
       message: "{player} has set {target}'s model to {model}."
     charsetdesc:
-      description: "Set character's physical description."
+      description: "Set a character's physical description."
       syntax: <target> <new desc>
       message: "{player} has set {target}'s description to {desc}."
     charsetgender:
-      description: "Set character's gender: male, female or no_gender."
+      description: "Set a character's gender: male, female or no_gender."
       syntax: <target> <new gender>
       message: "{player} has set {target}'s gender to {gender}."
   condition:
@@ -90,7 +90,7 @@ en:
       no_model: You must select a model.
       error:
         fatal: "Something probably went wrong, please try reconnecting."
-        critical: "Server may be experiencing connection issues, please wait..."
+        critical: "The server may be experiencing connection issues, please wait..."
         lag: "The request is taking a while, hold up..."
         record: "ActiveRecord screwed up again, try reconnecting or restarting your server..."
     tab_menu:

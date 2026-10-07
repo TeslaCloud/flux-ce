@@ -267,7 +267,7 @@ function PANEL:create_message(message_data)
   local panel = vgui.Create('fl_chat_message', self)
   local half_padding = self.padding * 0.5
 
-  panel:SetSize(self:GetWide() - self.padding * 2, self:GetWide() - self.padding * 2) -- Width is placeholder and is later set by compiled message table.
+  panel:SetSize(self:GetWide() - self.padding * 2, self:GetWide() - self.padding * 2) -- The width is a placeholder and is later set by the compiled message table.
   panel:set_message(parsed)
 
   if self.is_open then

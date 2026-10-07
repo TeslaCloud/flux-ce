@@ -34,7 +34,7 @@ do
   end
 end
 
---- Converts hexadecimal number to decimal.
+--- Converts a hexadecimal number to decimal.
 -- @param hex [String/Number hexadecimal number without a prefix, e.g. 'ff'; numbers pass through]
 -- @return [Number decimal value]
 function util.hex_to_dec(hex)
@@ -52,7 +52,7 @@ function util.hex_to_dec(hex)
   return sum
 end
 
---- Determines whether vector from A to B intersects with a vector from C to D.
+--- Determines whether a vector from A to B intersects with a vector from C to D.
 -- Works in 2D, only the x and y components are used.
 -- @param from [Vector point A]
 -- @param to [Vector point B]
@@ -112,7 +112,7 @@ function util.vector_in_poly(point, poly_vertices)
     end
   end
 
-  -- Check whether number of intersections is even or odd.
+  -- Check whether the number of intersections is even or odd.
   -- If it's odd then the point is inside the polygon.
   if intersections % 2 == 0 then
     return false

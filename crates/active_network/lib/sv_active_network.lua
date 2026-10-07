@@ -10,7 +10,7 @@ ActiveNetwork.globals = globals
 local ent_meta = FindMetaTable('Entity')
 local player_meta = FindMetaTable('Player')
 
--- A function to check if value's type cannot be serialized and print an error if it is so.
+-- A function to check if the value's type cannot be serialized and print an error if it is so.
 local function is_bad_type(key, val)
   if isfunction(val) then
     error_with_traceback('Cannot network functions! ('..key..')')

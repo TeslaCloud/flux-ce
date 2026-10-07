@@ -1,7 +1,7 @@
 -- Create the default Theme that other themes will derive from.
 THEME.author        = 'TeslaCloud Studios'
 THEME.id            = 'factory'
-THEME.description   = 'Factory Theme. This is a fail-safety Theme that other themes use as a base.'
+THEME.description   = 'Factory Theme. This is a fail-safe Theme that other themes use as a base.'
 THEME.should_reload = true
 
 --- Defines the defaults of the factory theme: options, sounds, assets, colors, fonts,
@@ -81,7 +81,7 @@ function THEME:on_loaded()
   self:set_font('text_3d2d',                main_font,              256)
   self:set_font('text_bold',                'flRobotoLtBold',       math.scale(16), { weight = 1500 })
 
-  -- Set from schema Theme.
+  -- Set from the schema Theme.
   -- self:set_material('schema_logo', 'materials/flux/hl2rp/logo.png')
   self:set_material('gradient_up',    'vgui/gradient-u')
   self:set_material('gradient_down',  'vgui/gradient-d')

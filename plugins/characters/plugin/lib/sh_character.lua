@@ -258,7 +258,7 @@ if SERVER then
 else
   Cable.receive('fl_characters_load', function(data)
     timer.Create('fl_characters_defer', 0.1, 0, function()
-      -- Wait until player is valid.
+      -- Wait until the player is valid.
       if IsValid(PLAYER) then
         PLAYER.characters = data
 

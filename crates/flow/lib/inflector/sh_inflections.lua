@@ -1,4 +1,4 @@
--- Most of regular expressions are taken from here:
+-- Most of the regular expressions are taken from here:
 -- https://github.com/rails/rails/blob/master/activesupport/lib/active_support/inflections.rb
 Flow.Inflector:inflections('en', function(inflect)
   inflect:plural(i'^(ax)is$', '%1es')

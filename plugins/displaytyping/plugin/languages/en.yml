@@ -5,7 +5,7 @@ en:
       desc: Display Typing plugin configuration
       exact_message:
         name: Display Exact Message
-        desc: Display full message that the player is currently typing.
+        desc: Display the full message that the player is currently typing.
   ui:
     hud:
       display_typing:

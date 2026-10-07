@@ -9,19 +9,19 @@ en:
       syntax: "<target> <faction> [is faction search strict]"
       message: "{player} has removed {target} from the {faction} whitelist."
     setfaction:
-      description: "Set character's faction. Factions: {factions}"
+      description: "Set a character's faction. Factions: {factions}"
       syntax: "<name> <faction> [data]"
       message: "{player} has added {target} to the {faction} faction."
     setrank:
-      description: "Set character's rank in their faction."
+      description: "Set a character's rank in their faction."
       syntax: "<target> <rank>"
       message: "{player} has set {target}'s rank in their faction to {rank}."
     promoterank:
-      description: "Promote character in their faction."
+      description: "Promote a character in their faction."
       syntax: "<target>"
       message: "{player} has promoted {target} in their faction."
     demoterank:
-      description: "Demote character in their faction."
+      description: "Demote a character in their faction."
       syntax: "<target>"
       message: "{player} has demoted {target} in their faction."
   condition:
@@ -38,7 +38,7 @@ en:
   error:
     faction:
       invalid: "'{faction}' is not a valid faction!"
-      not_selected: You have not selected faction.
+      not_selected: You have not selected a faction.
   notification:
     demote_rank: You have been demoted to rank {rank}.
     promote_rank: You have been promoted to rank {rank}.

@@ -1,13 +1,13 @@
 --[[
   Sandbox's tools copy-pasta.
   Because sandbox only lets you create tools
-  from entities folder, which isn't exactly
+  from the entities folder, which isn't exactly
   acceptable for us.
 --]]
 
 --[[
   For tool object documentation, as well as tutorials on
-  creating gmod tools, go to gmod wiki. Our wiki only covers
+  creating gmod tools, go to the gmod wiki. Our wiki only covers
   extras added by Flux.
 --]]
 

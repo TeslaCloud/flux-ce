@@ -2,7 +2,7 @@
 -- This provides basic information fields and dependencies.
 class 'Package'
 
---- Class constructor. Takes file path, file name and folder path as the arguments.
+--- Class constructor. Takes the file path, file name and folder path as the arguments.
 -- @param file_path [String path to the package's cratespec.lua]
 -- @param lib_path [String name of the package, as it was given to Crate:include]
 -- @param full_path [String path to the package's folder, with a trailing slash]

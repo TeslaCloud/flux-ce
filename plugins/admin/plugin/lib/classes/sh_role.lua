@@ -95,13 +95,13 @@ function Role:can(player, action, object)
   return false
 end
 
---- Called when player's role is being set to this role. Return any non-nil value to keep the
+--- Called when the player's role is being set to this role. Return any non-nil value to keep the
 -- new role from being saved to the database.
 -- @param player [Player]
 -- @param old_group [Role the player's previous role]
 function Role:on_role_set(player, old_group) end
 
---- Called when player's role is taken or modified. Return any non-nil value to keep the new
+--- Called when the player's role is taken or modified. Return any non-nil value to keep the new
 -- role from being saved to the database.
 -- @param player [Player]
 -- @param new_group [Role the role the player is being given]

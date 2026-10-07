@@ -106,7 +106,7 @@ end
 
 --- Require a clientside-only file.
 -- The .lua file ending may be omitted.
--- This is equivalent of simply doing this:
+-- This is the equivalent of simply doing this:
 -- ```
 -- if SERVER then
 --   AddCSLuaFile(file_name)

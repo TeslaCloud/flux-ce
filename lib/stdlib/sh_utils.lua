@@ -354,7 +354,7 @@ function util.operator_to_symbol(op)
   return operators_symbol[op]
 end
 
---- Similar to <=> operator in other languages.
+--- Similar to the <=> operator in other languages.
 -- @param a [Number/String left value]
 -- @param b [Number/String right value, has to be comparable with a]
 -- @return [Number -1 if a < b; 0 if a == b; and 1 if a > b]
@@ -364,7 +364,7 @@ function compare(a, b)
   return -1
 end
 
---- Print traceback to current function call.
+--- Print a traceback to the current function call.
 -- @param suppress=false [Boolean do not print the traceback, only return it]
 -- @param ... [Vararg arguments for debug.traceback, such as a message and a level]
 -- @return [Array string pieces of the traceback]
@@ -394,7 +394,7 @@ function print_traceback(suppress, ...)
   return pieces
 end
 
---- Prints an error using ErrorNoHalt but without character limit.
+--- Prints an error using ErrorNoHalt but without the character limit.
 -- @param ... [Vararg strings that are concatenated into the error message]
 -- @see [ErrorNoHalt]
 function long_error(...)

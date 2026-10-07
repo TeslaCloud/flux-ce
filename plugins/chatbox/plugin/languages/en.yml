@@ -14,16 +14,16 @@ en:
         desc: How many messages should the chat history hold.
       default_font_size:
         name: Default Font Size
-        desc: Default font size to use for Chat Box.
+        desc: Default font size to use for the Chat Box.
       small_font_size:
         name: Small Font Size
-        desc: Font size to use for smaller text in chatbox.
+        desc: Font size to use for smaller text in the chatbox.
       big_font_size:
         name: Big Font Size
-        desc: Font size to use for bigger text in chatbox.
+        desc: Font size to use for bigger text in the chatbox.
       max_message_length:
         name: Maximum Message Length
-        desc: How long the chat message can be.
+        desc: How long a chat message can be.
   ui:
     chat:
       aliases: Aliases

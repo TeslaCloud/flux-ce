@@ -1,5 +1,5 @@
 -- DTVars
-enumerate 'BOOL_INITIALIZED' -- Whether player has passed all initialization steps.
+enumerate 'BOOL_INITIALIZED' -- Whether the player has passed all initialization steps.
 
 -- Bars
 enumerate 'BAR_TOP BAR_MANUAL BAR_HIDDEN'

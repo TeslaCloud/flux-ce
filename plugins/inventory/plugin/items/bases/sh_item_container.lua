@@ -95,7 +95,7 @@ function ItemContainer:on_created()
       local success, error_text = self.inventory:give_item(v.id, v.amount, v.data)
 
       if !success then
-        Flux.dev_print('Failed to give default item to ItemContainer: '..error_text)
+        Flux.dev_print('Failed to give a default item to ItemContainer: '..error_text)
 
         return
       end

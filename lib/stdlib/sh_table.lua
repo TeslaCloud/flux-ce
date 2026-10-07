@@ -513,7 +513,7 @@ function table.serialize(tab)
   end
 end
 
---- Converts a string back into table. Uses pON at first, if it fails it falls back to JSON.
+--- Converts a string back into a table. Uses pON at first, if it fails it falls back to JSON.
 -- @param data [String string to convert]
 -- @return [Hash decoded table; an empty table if data is not a string, nil if it is neither
 --   valid pON nor valid JSON]

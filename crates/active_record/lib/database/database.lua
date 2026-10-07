@@ -123,7 +123,7 @@ function ActiveRecord.Database:setup(settings)
     end)
   elseif adapter:is_mysql() then
     ErrorNoHalt('MySQL does not support automatic database creation (yet), sorry!\n')
-    ErrorNoHalt('Please go to your MySQL terminal and use this to create database:\nmysql> create database '..settings.database..'\n(without the "mysql>" part)\n')
+    ErrorNoHalt('Please go to your MySQL terminal and use this to create the database:\nmysql> create database '..settings.database..'\n(without the "mysql>" part)\n')
   end
   ActiveRecord.adapter:disconnect()
   ActiveRecord.adapter:sync(false)

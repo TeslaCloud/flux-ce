@@ -17,19 +17,19 @@ en:
         desc: How fast does the player walk while crouched (while holding CTRL by default).
       jump_power:
         name: Jump Power
-        desc: How high player jumps by default.
+        desc: How high the player jumps by default.
       respawn_time:
         name: Respawn time
         desc: How long does it take for a player to respawn after their death (in seconds).
       root_steamid:
         name: Root access SteamID
-        desc: Gives root access to player with this SteamID.
+        desc: Gives root access to the player with this SteamID.
       data_save_interval:
         name: Server data save interval
-        desc: Amount of time between server data savings.
+        desc: Amount of time between server data saves.
       player_data_save_interval:
         name: Player data save interval
-        desc: Amount of time between player data savings.
+        desc: Amount of time between player data saves.
   error:
     cant_now: You cannot do this right now!
     command:
@@ -43,16 +43,16 @@ en:
     invalid_value: "You specified an invalid argument value!"
     invalid_amount: You specified an invalid amount!
     invalid_entity: This is not a valid entity!
-    too_far: Target is too far!
+    too_far: The target is too far!
     wait: You can not do it right now, please wait!
   hint:
     forums:
-      You can visit TeslaCloud forums to get support, download schemas and
+      You can visit the TeslaCloud forums to get support, download schemas and
       chat with fellow Flux users!
     hints:
-      These hints can be disabled from clientside settings menu. Not in
+      These hints can be disabled from the clientside settings menu. Not in
       this build though.
-    tab: "Press 'Show Scoreboard' key (default: TAB) to open Flux's menu."
+    tab: "Press the 'Show Scoreboard' key (default: TAB) to open Flux's menu."
     commands:
       Start typing a command in chat to see a list of all available commands and
       their syntax help.
@@ -105,14 +105,14 @@ en:
         respawn: WAITING TO RESPAWN...
       loading:
         local_player: Preparing loading sequence, please wait...
-        player_object: Waiting for local player to be created, please wait...
+        player_object: Waiting for the local player to be created, please wait...
         schema: Loading schema and plugins, please wait...
       player_message:
         died: YOU DIED
         respawn: RESPAWNING IN {time} SECOND(s).
     avatar_tooltip: Left click - Open profile, Right click - Copy SteamID
     scoreboard:
-      help: Clicking player's card may bring up some options.
+      help: Clicking a player's card may bring up some options.
       ping: Ping
       players_online: Players Online
       title: PLAYER LIST

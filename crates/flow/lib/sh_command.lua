@@ -28,7 +28,7 @@ function Flux.Command:create(id, data)
 
   stored[id] = data
 
-  -- Add original command name to the aliases table.
+  -- Add the original command name to the aliases table.
   aliases[id] = data.id
 
   if isstring(data.alias) then
@@ -369,7 +369,7 @@ if SERVER then
             end
           end
 
-          -- Let plugins hook into this and abort command's execution if necessary.
+          -- Let plugins hook into this and abort the command's execution if necessary.
           if !hook.run('PlayerRunCommand', player, cmd_table, args) then
             local message
 
@@ -414,7 +414,7 @@ if SERVER then
         if IsValid(player) then
           player:notify('error.command.no_access')
         else
-          ErrorNoHalt('This command cannot be run from console!\n')
+          ErrorNoHalt('This command cannot be run from the console!\n')
         end
       end
     else

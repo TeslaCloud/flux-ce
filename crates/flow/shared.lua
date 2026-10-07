@@ -17,9 +17,9 @@ GM.code_name     = 'Root Beer'
 
 print('Flux core version '..version..' ('..GM.code_name..')')
 
--- It would be very nice of you to leave below values as they are if you're using official schemas.
+-- It would be very nice of you to leave the below values as they are if you're using official schemas.
 -- While we can do nothing to stop you from changing them, we'll very much appreciate it if you don't.
-GM.name_override = false -- Set to any string to override schema's browser name. This overrides the prefix too.
+GM.name_override = false -- Set to any string to override the schema's browser name. This overrides the prefix too.
 
 -- Fix for the name conflicts.
 _player, _team, _file, _table, _sound = player, team, file, table, sound
@@ -81,7 +81,7 @@ if !LITE_REFRESH then
       end
     end)
 
-    -- Theme factory is needed for any other themes that may be in the themes folder.
+    -- The theme factory is needed for any other themes that may be in the themes folder.
     Pipeline.include('theme', 'themes/cl_theme_factory.lua')
     Pipeline.include_folder('theme', crate_path..'themes')
   end

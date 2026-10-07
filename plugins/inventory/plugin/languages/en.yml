@@ -1,7 +1,7 @@
 en:
   command:
     giveitem:
-      description: Gives specified item to a player.
+      description: Gives the specified item to a player.
       syntax: "<target> <item name or unique ID>"
       message: "{player} has given {item} x {amount} to {target}."
   config:
@@ -35,12 +35,12 @@ en:
       invalid_item: Invalid item.
       no_space: Not enough space.
       not_enough_items: Not enough items.
-      slot_occupied: Slot is occupied.
-      disabled: Inventory is disabled.
+      slot_occupied: The slot is occupied.
+      disabled: The inventory is disabled.
       cant_equip: This item cannot be equipped.
-      too_big: Item is too big.
+      too_big: The item is too big.
   hint:
-    inventory: Drag'n'Drop an item outside of inventory screen to drop it.
+    inventory: Drag'n'Drop an item outside of the inventory screen to drop it.
   item:
     option:
       open: Open

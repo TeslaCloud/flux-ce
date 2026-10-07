@@ -1,6 +1,6 @@
 PLUGIN:set_name 'Shared Flashlight'
 PLUGIN:set_author 'TeslaCloud Studios'
-PLUGIN:set_description "Makes other player's flashlight lights visible to you."
+PLUGIN:set_description "Makes other players' flashlight lights visible to you."
 
 -- experimental for now
 if !Settings.experimental then return end

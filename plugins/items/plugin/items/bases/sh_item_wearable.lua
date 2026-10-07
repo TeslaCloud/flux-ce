@@ -16,8 +16,8 @@ ItemWearable.background_color = Color(50, 150, 50)
 --   [0] = 0, -- Sets bodygroup #0 to 0
 --   [1] = 1, -- Sets bodygroup #1 to 1
 --            -- (valid for every model)
---   ['mask'] = 1 -- Sets bodygroup named 'mask' to 1
---                -- (only if model actually has this bodygroup)
+--   ['mask'] = 1 -- Sets the bodygroup named 'mask' to 1
+--                -- (only if the model actually has this bodygroup)
 -- }
 
 if CLIENT then
