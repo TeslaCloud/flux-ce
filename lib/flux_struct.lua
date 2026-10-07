@@ -26,7 +26,7 @@ end
 if CLIENT then
   local pon_path, utf8_path = getenv('PON_PATH'), getenv('UTF8_PATH')
 
-  -- Include the required the UTF-8 library.
+  -- Include the required UTF-8 library.
   if !string.utf8upper then
     include(utf8_path..'lib/utf8.min.lua')
   end

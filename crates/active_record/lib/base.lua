@@ -46,7 +46,7 @@ end
 --- @warning [Internal]
 -- When the ActiveRecord::Base class is extended,
 -- the new model is added to the global models list,
--- and it's table name is determined based on the class name.
+-- and its table name is determined based on the class name.
 -- Make sure you create a table that is named as a lowercase plural
 -- of the class name, or else this will fail!
 -- @param new_class [ActiveRecord::Base the newly created model class]
@@ -189,7 +189,7 @@ end
 -- Object:order('id', 'asc')
 -- ```
 -- @param column [String column to sort by]
--- @param direction=nil [String lowercase 'asc' or 'desc'; sorts in descending order
+-- @param direction=nil [String lowercase 'asc' or 'desc'; sorts in ascending order
 --   if omitted]
 -- @return [ActiveRecord::Base(self)]
 function ActiveRecord.Base:order(column, direction)
@@ -197,7 +197,7 @@ function ActiveRecord.Base:order(column, direction)
   return self
 end
 
---- Finds an object in the database by it's ID.
+--- Finds an object in the database by its ID.
 -- Optionally can also call a callback right away.
 -- ```
 -- Object:find(1)
@@ -245,7 +245,7 @@ function ActiveRecord.Base:limit(amt)
   return self
 end
 
---- Inserts a OFFSET condition into the query.
+--- Inserts an OFFSET condition into the query.
 -- The code in the example below will return the SECOND entry in the database:
 -- ```
 -- Object:where('money > 100'):skip(1):limit(1)
@@ -596,7 +596,7 @@ function ActiveRecord.Base:save()
   return self
 end
 
---- Deleted the current object from the database.
+--- Deletes the current object from the database.
 -- @warning [Once done, do not attempt saving the object again, since it will cause unpredictable behavior]
 -- ```
 -- obj:destroy()

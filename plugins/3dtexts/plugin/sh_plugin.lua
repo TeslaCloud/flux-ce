@@ -7,8 +7,8 @@ require_relative 'cl_hooks'
 
 --- Registers the 'texts' and 'pictures' level design permissions.
 function SurfaceText:RegisterPermissions()
-  Bolt:register_permission('texts', 'Place / delete texts', 'Grants access to place and delete texts.', 'permission.categories.level_design', 'assistent')
-  Bolt:register_permission('pictures', 'Place / delete pictures', 'Grants access to place and delete pictures.', 'permission.categories.level_design', 'assistent')
+  Bolt:register_permission('texts', 'Place / delete texts', 'Grants access to place and delete texts.', 'permission.categories.level_design', 'assistant')
+  Bolt:register_permission('pictures', 'Place / delete pictures', 'Grants access to place and delete pictures.', 'permission.categories.level_design', 'assistant')
 end
 
 if SERVER then

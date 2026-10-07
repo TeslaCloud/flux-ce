@@ -1,7 +1,7 @@
 local start_time = os.clock()
 
 --- Includes a module and returns a boolean depending on success.
--- Does now throw Lua errors.
+-- Does not throw Lua errors.
 -- @param mod [String module name, as passed to require]
 -- @return [Boolean success]
 function require_module(mod)

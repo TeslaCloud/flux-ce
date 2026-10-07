@@ -77,7 +77,7 @@ function Date:to_time()
   return Time.new(self)
 end
 
---- Converts the Date object into a ISO string.
+--- Converts the Date object into an ISO string.
 -- If the first argument is given, converts the given UNIX time into the ISO date.
 -- ```
 -- print(date_obj:iso()) -- current date, such as "2019-09-24"

@@ -184,7 +184,7 @@ Crate.present       = Crate.included
 Crate.is_installed  = Crate.included
 
 --- Searches for a package with the specified name and returns
--- a full path to it's cratespec, the name of the package and
+-- a full path to its cratespec, the name of the package and
 -- full path to the folder.
 -- Returns false if the package cannot be found.
 -- @param name [String package name, or path to the package's folder]

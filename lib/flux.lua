@@ -27,7 +27,7 @@ if CRATE then
           Crate:reload(v)
         end
       else
-        -- Reload flow either way since we actually need it's shared file.
+        -- Reload flow either way since we actually need its shared file.
         Crate:reload 'flow'
       end
     end

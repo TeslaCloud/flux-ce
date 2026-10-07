@@ -1,7 +1,7 @@
 en:
   command:
     givemoney:
-      description: "Give money to the player you looking at. Currencies: {currencies}"
+      description: "Give money to the player you are looking at. Currencies: {currencies}"
       syntax: <amount> [currency]
     dropmoney:
       description: "Drop money at your target location. Currencies: {currencies}"

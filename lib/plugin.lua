@@ -726,7 +726,7 @@ do
     end
   else
     -- While generally a bad idea, pcall-less method is faster and if you're not developing
-    -- changes are low that you'll ever run into an error anyway.
+    -- chances are low that you'll ever run into an error anyway.
 
     --- Overrides hook.Call so that plugin and schema hooks from the hook cache are called
     -- before the regular hooks. Production variant: handlers are called without pcall.

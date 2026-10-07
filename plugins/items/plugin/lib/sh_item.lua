@@ -299,7 +299,7 @@ end
 function Item.is_instance(item_obj)
   if !istable(item_obj) then return end
 
-  return (item_obj.instance_id or ITEM_TEMPLATE) > ITEM_INVALID
+  return (item_obj.instance_id or ITEM_TEMPLATE) > ITEM_TEMPLATE
 end
 
 --- Includes every item file of a folder through the 'item' pipeline, registering the items.

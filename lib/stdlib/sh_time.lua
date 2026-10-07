@@ -46,7 +46,7 @@ local mappings      = {
   ['y']             = y_const_d
 }
 
---- Initializes a new Time object that represents a time inverval.
+--- Initializes a new Time object that represents a time interval.
 -- ```
 -- local two_days = Time:days(2)
 -- local a_day_after_tomorrow = Date:now() + two_days

@@ -150,15 +150,15 @@ end
 
 --- Adds a column to the ORDER BY clause.
 -- ```
--- query:order('id')              -- ORDER BY id DESC
+-- query:order('id')              -- ORDER BY id ASC
 -- query:order({ asc = 'name' })  -- ORDER BY name ASC
 -- query:order({ desc = 'name' }) -- ORDER BY name DESC
 -- ```
--- @param key [String/Hash column name (sorted in descending order), or a hash with the
+-- @param key [String/Hash column name (sorted in ascending order), or a hash with the
 --   column name stored under the 'asc' or 'desc' key]
 function ActiveRecord.Query:order(key)
   if isstring(key) then
-    table.insert(self.order_list, self:quote_column(key)..' DESC')
+    table.insert(self.order_list, self:quote_column(key)..' ASC')
   elseif istable(key) then
     if key['asc'] then
       table.insert(self.order_list, self:quote_column(key['asc'])..' ASC')

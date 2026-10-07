@@ -1,7 +1,7 @@
 --- A class to convert conventional metrics to Source Engine units.
 class 'Unit'
 
--- Constants for faster convertion.
+-- Constants for faster conversion.
 local inches_in_cm = 1 / 2.54
 local inches_in_mm = inches_in_cm * 0.1
 local inches_in_ft = 1 / 12
@@ -225,7 +225,7 @@ Unit.to_cm          = Unit.to_centimeters
 Unit.to_kilometer   = Unit.to_kilometers
 Unit.to_km          = Unit.to_kilometers
 
---- Install Unit shortcuts into the math library.\
+--- Install Unit shortcuts into the math library.
 local function installable(func)
   return function(n)
     return func(Unit, n)

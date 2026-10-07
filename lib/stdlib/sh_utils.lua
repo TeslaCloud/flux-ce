@@ -460,7 +460,7 @@ do
   -- ```
   -- @param enums [String space-separated enumerator names]
   -- @param existing_enumerator=nil [String prefix of an earlier group (such as 'GENDER') to
-  --   continue the numbering of, starting at the highest enumerator of that group]
+  --   continue the numbering of, starting right after the highest enumerator of that group]
   -- @return [Number highest enumerator, or nil if enums is not a string or is empty]
   function enumerate(enums, existing_enumerator)
     if !isstring(enums) or enums:len() == 0 then return end
@@ -470,7 +470,7 @@ do
     local enumerator = 0
 
     if existing_enumerator then
-      enumerator = enumerators[existing_enumerator] or 0
+      enumerator = (enumerators[existing_enumerator] or -1) + 1
     end
 
     for _, word in ipairs(words) do

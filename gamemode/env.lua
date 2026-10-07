@@ -3,7 +3,7 @@
 --
 -- * All functions must set the ENV global.
 -- * Local environment should be copied to ENV global on fork.
--- * ENV global should have a __newindex metamethod to set C environement
+-- * ENV global should have a __newindex metamethod to set C environment
 -- variables if they are changed in the ENV global.
 --
 

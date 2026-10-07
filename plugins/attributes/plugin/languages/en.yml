@@ -1,15 +1,15 @@
 en:
   command:
     charsetattribute:
-      description: "Set charater's attribute. Attributes: {attributes}"
+      description: "Set character's attribute. Attributes: {attributes}"
       syntax: <target> <attribute_id> <value>
       message: "{player} has set {target}'s attribute {attribute} to {value}."
     charattributeboost:
-      description: "Boost charater's attribute. Attributes: {attributes}"
+      description: "Boost character's attribute. Attributes: {attributes}"
       syntax: <target> <attribute_id> <value> <duration>
       message: "{player} has boosted {target}'s attribute {attribute} by {value} for {time}."
     charattributemultiplier:
-      description: "Give a leveling multilier to a charater's attribute. Value 1.5 will speed up leveling by 50%, 2 - by 100% etc. Attributes: {attributes}"
+      description: "Give a leveling multiplier to a character's attribute. Value 1.5 will speed up leveling by 50%, 2 - by 100% etc. Attributes: {attributes}"
       syntax: <target> <attribute_id> <value> <duration>
       message: "{player} has set {target}'s {attribute} leveling multiplier to {value} for {time}."
   condition:

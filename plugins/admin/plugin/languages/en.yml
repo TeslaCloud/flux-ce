@@ -44,14 +44,14 @@ en:
       syntax: <target>
       message: "{player} returned {target} to their previous position."
     setgroup:
-      description: "Sets player's usergroup. Usergoups: {groups}"
+      description: "Sets player's usergroup. Usergroups: {groups}"
       syntax: <target> <usergroup>
       message: "{player} has set {target}'s user group to {group}."
     staff:
       description: 'Talk to fellow staff members.'
       syntax: <message>
     tp:
-      description: Teleport player to position you looking at.
+      description: Teleport player to position you are looking at.
       syntax: <target>
       message: "{player} has teleported {target}."
     tpto:
@@ -75,11 +75,11 @@ en:
     freeze:
       description: "Freezes a player."
       syntax: "<string player>"
-      message: "{player} has froze {target}."
+      message: "{player} has frozen {target}."
     unfreeze:
       description: "Unfreezes a player."
       syntax: "<string player>"
-      message: "{player} has unfroze {target}."
+      message: "{player} has unfrozen {target}."
     respawn:
       description: "Respawn a dead player."
       syntax: "<string player> [tp / stay]"

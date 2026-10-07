@@ -135,7 +135,7 @@ local HASH = {
   inited = false,
 
   -- The unique string prepended to all hash values. This is to ensure
-  -- that hash values do not accidently coincide with an actual existing
+  -- that hash values do not accidentally coincide with an actual existing
   -- string in the document.
   identifier = "",
 
@@ -341,7 +341,7 @@ local function classify(line)
   return info
 end
 
--- Find headers constisting of a normal line followed by a ruler and converts them to
+-- Find headers consisting of a normal line followed by a ruler and converts them to
 -- header entries.
 local function headers(array)
   local i = 1
@@ -714,7 +714,7 @@ local function code_spans(s)
     local start, stop = s:find("`+", pos)
     if not start then return s end
     local count = stop - start + 1
-    -- Find a matching numbert of backticks
+    -- Find a matching number of backticks
     local estart, estop = s:find(string.rep("`", count), stop+1)
     local brstart = s:find("\n", stop+1)
     if estart and (not brstart or estart < brstart) then
@@ -817,7 +817,7 @@ local function auto_links(text)
   local function link(s)
     return add_escape("<a href=\"" .. s .. "\">") .. s .. "</a>"
   end
-  -- Encode chars as a mix of dec and hex entitites to (perhaps) fool
+  -- Encode chars as a mix of dec and hex entities to (perhaps) fool
   -- spambots.
   local function encode_email_address(s)
     -- Use a deterministic encoding to make unit testing possible.

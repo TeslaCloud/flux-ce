@@ -5,7 +5,7 @@ end
 class 'ItemWeapon' extends 'ItemEquipable'
 
 ItemWeapon.name = 'Weapon Base'
-ItemWeapon.description = 'An weapon that can be equipped.'
+ItemWeapon.description = 'A weapon that can be equipped.'
 ItemWeapon.category = 'item.category.weapon'
 ItemWeapon.equip_slot = 'item.slot.primary'
 ItemWeapon.weapon_class = 'weapon_pistol'

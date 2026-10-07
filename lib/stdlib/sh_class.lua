@@ -48,7 +48,7 @@ function class(name, parent_class)
   obj.class = obj
   obj.included_modules = {}
 
-  -- If this class is based off some other class - copy it's parent's data.
+  -- If this class is based off some other class - copy its parent's data.
   if istable(parent_class) then
     local copy = table.Copy(parent_class)
     table.safe_merge(copy, obj)

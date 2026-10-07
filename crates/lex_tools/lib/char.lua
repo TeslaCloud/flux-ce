@@ -1,4 +1,4 @@
--- Methology is largely copied from LuaJIT's source code.
+-- Methodology is largely copied from LuaJIT's source code.
 -- https://github.com/LuaJIT/LuaJIT/blob/master/src/lj_char.h
 --
 -- Used to determine character types, useful in text parsing.

@@ -9,7 +9,7 @@ local debug_colors = {
   padding = Color(200, 50, 125, 90)
 }
 
-local function create_acccessor_trbl(id)
+local function create_accessor_trbl(id)
   local t, r, b, l = '_top', '_right', '_bottom', '_left'
 
   if !id or id == '' then
@@ -221,8 +221,8 @@ function PANEL:rebuild()
   self:SetSize(w, h)
 end
 
-create_acccessor_trbl()
-create_acccessor_trbl 'padding'
-create_acccessor_trbl 'margin'
+create_accessor_trbl()
+create_accessor_trbl 'padding'
+create_accessor_trbl 'margin'
 
 vgui.Register('gvue_basic_panel', PANEL, 'EditablePanel')

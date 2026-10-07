@@ -49,12 +49,12 @@ end
 function Command:on_run() end
 
 --- Sends a notification to a group of players.
--- @param permision [String/Array<Player>/Player permission the recipients must have, a list
+-- @param permission [String/Array<Player>/Player permission the recipients must have, a list
 --   of recipients or a single recipient; everyone is notified if nil]
 -- @param message [String text or language phrase]
 -- @param arguments=nil [Hash values to substitute into the phrase]
 -- @param color=nil [Color]
-function Command:notify(permision, message, arguments, color)
+function Command:notify(permission, message, arguments, color)
   local player_list
 
   if isstring(permission) then
@@ -73,12 +73,12 @@ function Command:notify(permision, message, arguments, color)
 end
 
 --- Sends a light red notification to a group of players.
--- @param permision [String/Array<Player>/Player permission the recipients must have, a list
+-- @param permission [String/Array<Player>/Player permission the recipients must have, a list
 --   of recipients or a single recipient; everyone is notified if nil]
 -- @param message [String text or language phrase]
 -- @param arguments=nil [Hash values to substitute into the phrase]
 -- @see [Command#notify]
-function Command:notify_admin(permision, message, arguments)
+function Command:notify_admin(permission, message, arguments)
   self:notify(permission, message, arguments, Color(255, 128, 128))
 end
 

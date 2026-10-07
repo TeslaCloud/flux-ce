@@ -38,7 +38,7 @@ function util.hex_to_color(hex)
   local color = {}
 
   for k, v in ipairs(hex_colors) do
-    table.insert(color, util.hex_to_decimalimal(v))
+    table.insert(color, util.hex_to_dec(v))
   end
 
   return Color(color[1], color[2], color[3], (color[4] or 255))

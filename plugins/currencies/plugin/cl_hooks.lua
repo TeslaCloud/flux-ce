@@ -28,7 +28,7 @@ end
 -- that have an instance_id are skipped.
 -- @param panel [Panel the container panel]
 -- @param inventory_id [Number]
-function Currencies:OnConatinerOpened(panel, inventory_id)
+function Currencies:OnContainerOpened(panel, inventory_id)
   local inventory = Inventories.find(inventory_id)
   local inv_panel = panel.inventory
 

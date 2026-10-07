@@ -19,7 +19,7 @@ Current version of Flux is currently in active development as an open alpha. Thi
 
 **Flux is only guaranteed to work on dedicated servers (srcds). We do not support "listen" servers (launching from Garry's Mod client).**
 
-**Please read these instructions carefully. We cannot provide support if you disregard one or more steps in there instructions. Thank you!**
+**Please read these instructions carefully. We cannot provide support if you disregard one or more steps in these instructions. Thank you!**
 
 ## Installation
 
@@ -96,7 +96,7 @@ By default, Flux comes with `production` environment pre-chosen. It is good if y
 
 **What is the difference between production and development?**
 
-In _production_, code runs a little bit faster, but it sacrifices error-tolerance and refreshability. It it perfect when you are running your server properly, because in that case you don't want to refresh the code anyway (since it causes a lot of lag).
+In _production_, code runs a little bit faster, but it sacrifices error-tolerance and refreshability. It is perfect when you are running your server properly, because in that case you don't want to refresh the code anyway (since it causes a lot of lag).
 
 In _development_, code runs slower, but is a lot more tolerant to errors. It uses safe mode on hooks and print lots of useful debug information, such as load order. Due to the speed sacrifice, it is only practical to run _development_ when actually developing.
 

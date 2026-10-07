@@ -483,7 +483,7 @@ end
 
 if SERVER then
 
-  --- Add item object to a inventory.
+  --- Add item object to an inventory.
   -- @variant Inventory:add_item(item_obj, x, y)
   --   @param item_obj [Item]
   --   @param x [Number]
@@ -530,7 +530,7 @@ if SERVER then
     return true
   end
 
-  --- Add item to a inventory by its instance id.
+  --- Add item to an inventory by its instance id.
   -- @variant Inventory:add_item_by_id(instance_id, x, y)
   --   @param instance_id [Number]
   --   @param x [Number]
@@ -543,7 +543,7 @@ if SERVER then
     return self:add_item(Item.find_instance_by_id(instance_id), x, y)
   end
 
-  --- Create an item and add it to a inventory.
+  --- Create an item and add it to an inventory.
   -- ```
   -- local success, error_text = inventory:give_item('test_item', 5, { name = 'Test Item #2' })
   --

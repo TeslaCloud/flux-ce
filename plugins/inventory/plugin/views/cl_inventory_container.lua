@@ -81,7 +81,7 @@ function PANEL:OnKeyCodePressed(key)
 end
 
 --- Shows the specified inventory next to the inventories of the local player.
--- Runs the 'OnConatinerOpened' hook afterwards.
+-- Runs the 'OnContainerOpened' hook afterwards.
 -- @param inventory_id [Number id of the inventory]
 function PANEL:open_inventory(inventory_id)
   local inventory = Inventories.find(inventory_id)
@@ -93,7 +93,7 @@ function PANEL:open_inventory(inventory_id)
 
   self.inventory_ids = { inventory_id }
 
-  hook.run('OnConatinerOpened', self, inventory_id)
+  hook.run('OnContainerOpened', self, inventory_id)
 end
 
 --- Shows the inventories of another player next to the inventories of the local player.

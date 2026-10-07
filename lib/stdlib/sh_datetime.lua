@@ -89,7 +89,7 @@ function DateTime:to_time()
   return Time.new(self)
 end
 
---- Converts the DateTime object into a ISO-8601 string.
+--- Converts the DateTime object into an ISO-8601 string.
 -- If the first argument is given, converts the given UNIX time into the ISO date.
 -- ```
 -- print(date_time_obj:iso()) -- current date and time in UTC, such as "2019-09-24T18:09:00Z"

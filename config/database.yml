@@ -1,6 +1,6 @@
 #
 # This is your database configuration file.
-# Entires are separated by environment like so:
+# Entries are separated by environment like so:
 ##
 # environment_name:
 #   config_key: "config value"

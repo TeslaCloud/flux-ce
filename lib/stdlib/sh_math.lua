@@ -37,7 +37,7 @@ end
 --- Converts hexadecimal number to decimal.
 -- @param hex [String/Number hexadecimal number without a prefix, e.g. 'ff'; numbers pass through]
 -- @return [Number decimal value]
-function util.hex_to_decimalimal(hex)
+function util.hex_to_dec(hex)
   if isnumber(hex) then return hex end
 
   local sum = 0

@@ -47,15 +47,15 @@ end
 --- Removes a substring from the end of the string.
 -- @param str [String the string to trim]
 -- @param needle [String substring to remove]
--- @param all_occurences=false [Boolean keep removing while the string still ends with needle]
+-- @param all_occurrences=false [Boolean keep removing while the string still ends with needle]
 -- @return [String the trimmed string]
-function string.trim_end(str, needle, all_occurences)
+function string.trim_end(str, needle, all_occurrences)
   if !needle or needle == '' then
     return str
   end
 
   if str:ends(needle) then
-    if all_occurences then
+    if all_occurrences then
       while str:ends(needle) do
         str = str:trim_end(needle)
       end
@@ -72,15 +72,15 @@ end
 --- Removes a substring from the beginning of the string.
 -- @param str [String the string to trim]
 -- @param needle [String substring to remove]
--- @param all_occurences=false [Boolean keep removing while the string still starts with needle]
+-- @param all_occurrences=false [Boolean keep removing while the string still starts with needle]
 -- @return [String the trimmed string]
-function string.trim_start(str, needle, all_occurences)
+function string.trim_start(str, needle, all_occurrences)
   if !needle or needle == '' then
     return str
   end
 
   if str:starts(needle) then
-    if all_occurences then
+    if all_occurrences then
       while str:starts(needle) do
         str = str:trim_start(needle)
       end
@@ -108,7 +108,7 @@ function string.is_lower(str)
   return String.lower(str) == str
 end
 
---- Finds all occurences of a pattern in a string.
+--- Finds all occurrences of a pattern in a string.
 -- ```
 -- local hits = string.find_all('{data:rank} {callback:get_name}', '{([%w_]+):([%w_]+)}')
 -- -- hits[1] = { text = '{data:rank}', start_pos = 1, end_pos = 11, matches = { 'data', 'rank' } }
@@ -116,7 +116,7 @@ end
 -- @param str [String string to search in]
 -- @param pattern [String Lua pattern to search for]
 -- @return [Array<Hash> a hash with the text, start_pos, end_pos and matches (captures) keys
---   for every occurence, or nil if str or pattern is missing]
+--   for every occurrence, or nil if str or pattern is missing]
 function string.find_all(str, pattern)
   if !str or !pattern then return end
 
@@ -237,7 +237,7 @@ end
 --- Counts how many times a character occurs in the string.
 -- @param str [String]
 -- @param char [String single character]
--- @return [Number amount of occurences]
+-- @return [Number amount of occurrences]
 function string.count(str, char)
   local hits = 0
 
@@ -305,7 +305,7 @@ function string.camel_case(str)
 end
 
 --- Removes all newlines (\n and \r) from the end of the string. If `what` is given, removes all
--- occurences of it from both the beginning and the end of the string instead.
+-- occurrences of it from both the beginning and the end of the string instead.
 -- @param str [String]
 -- @param what=nil [String substring to remove from both ends]
 -- @return [String the trimmed string]
