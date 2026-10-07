@@ -1,0 +1,72 @@
+name: Documentation
+
+on:
+  push:
+    branches: [master]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Only one deployment at a time; a newer push cancels an older one.
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+env:
+  # Repository the fdoc generator is built from.
+  FDOC_REPO: https://github.com/TeslaCloud/fdoc
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out
+        uses: actions/checkout@v7
+
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Cache fdoc
+        id: cache-fdoc
+        uses: actions/cache@v6
+        with:
+          path: |
+            ~/.cargo/bin/fdoc
+            ~/.cargo/.crates.toml
+            ~/.cargo/.crates2.json
+          key: fdoc-${{ runner.os }}-${{ env.FDOC_REPO }}-${{ github.run_id }}
+          restore-keys: fdoc-${{ runner.os }}-${{ env.FDOC_REPO }}-
+
+      - name: Build fdoc
+        # A cached binary is reused unless the generator repository changed;
+        # `cargo install` is a no-op when the same version is already installed.
+        run: cargo install --git "$FDOC_REPO" --locked fdoc
+
+      - name: Generate documentation
+        run: |
+          fdoc . -o _site \
+            --source-url "${{ github.server_url }}/${{ github.repository }}/blob/${{ github.sha }}/"
+          # GitHub Pages serves the site without Jekyll processing.
+          touch _site/.nojekyll
+
+      - name: Configure Pages
+        uses: actions/configure-pages@v6
+
+      - name: Upload site
+        uses: actions/upload-pages-artifact@v5
+        with:
+          path: _site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v5
