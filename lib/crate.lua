@@ -234,7 +234,7 @@ end
 -- -- { x = 1, y = 2, z = 3, sum = 123, suffix = 'beta', op = '~>' }
 -- ```
 -- @param version [String version such as '1.0', '>= 1.2.0' or '~> 1.2.3-beta']
--- @return [Hash version data with the fields x, y, z, sum, suffix and op]
+-- @return [Map version data with the fields x, y, z, sum, suffix and op]
 function Crate:parse_version(version)
   local buf = nil
   local init = 1
@@ -301,8 +301,8 @@ end
 --- Returns -1 if version1 is older than version2.
 -- Returns 0 if versions are equal.
 -- Returns 1 if version1 is newer than version2.
--- @param version1 [Hash version data from Crate:parse_version]
--- @param version2 [Hash version data from Crate:parse_version]
+-- @param version1 [Map version data from Crate:parse_version]
+-- @param version2 [Map version data from Crate:parse_version]
 -- @return [Number/Boolean -1, 0 or 1; false if either argument is not a table]
 function Crate:compare_version(version1, version2)
   if !istable(version1) or !istable(version2) then return false end
@@ -319,8 +319,8 @@ function Crate:compare_version(version1, version2)
 end
 
 --- Returns true if version2 matches the version1 template.
--- @param version1 [Hash version data of the template, its op field sets the comparison]
--- @param version2 [Hash version data of the version to check]
+-- @param version1 [Map version data of the template, its op field sets the comparison]
+-- @param version2 [Map version data of the version to check]
 -- @return [Boolean]
 function Crate:is_version(version1, version2)
   local res = self:compare_version(version1, version2)

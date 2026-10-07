@@ -15,9 +15,9 @@ end
 --- Converts a message that was received from the server into a list of pieces with
 -- calculated sizes and positions, ready to be drawn by a fl_chat_message panel.
 -- Strings are wrapped to the width of the chatbox. Clientside only.
--- @param msg_table [Hash message data: data (Array of strings, font sizes, colors,
+-- @param msg_table [Map message data: data (List of strings, font sizes, colors,
 --   image / icon tables, players and entities), optional size and should_translate]
--- @return [Hash sequential pieces: font sizes (Number), colors (Color), texts
+-- @return [Map sequential pieces: font sizes (Number), colors (Color), texts
 --   ({ text, w, h, x, y }) and images ({ image or icon, x, y, w, h }), plus the
 --   total_height field; nil if the chatbox font is not available]
 function Chatbox.compile(msg_table)

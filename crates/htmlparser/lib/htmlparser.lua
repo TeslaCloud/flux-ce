@@ -127,7 +127,7 @@ local omittable_tags2 = {
 -- @param data [String HTML source]
 -- @param lazy=false [Boolean do not automatically close elements whose end tag may be
 --   omitted, such as td, tr or p]
--- @return [Array root nodes; a node is a Hash with tag_name, attr (only if the tag has
+-- @return [List root nodes; a node is a Map with tag_name, attr (only if the tag has
 --   attributes) and child_nodes (absent on void tags such as br or img)]
 function HTMLParser:parse(data, lazy)
   local tree = {}
@@ -275,7 +275,7 @@ end
 
 --- Turns a node tree back into an indented HTML string. The tree is consumed in the
 -- process, as nodes are removed from it once they are written.
--- @param data [Array node tree as returned by #parse]
+-- @param data [List node tree as returned by #parse]
 -- @return [String]
 function HTMLParser:dump(data)
   local stack = {data}

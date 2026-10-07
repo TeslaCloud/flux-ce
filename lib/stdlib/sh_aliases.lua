@@ -321,7 +321,7 @@ string.trim = string.Trim
 -- Splits the string into individual characters if no separator is given.
 -- @param str [String string to split]
 -- @param sep='' [String separator]
--- @return [Array<String> pieces]
+-- @return [List<String> pieces]
 string.split = function(str, sep)
   sep = sep or ''
   return string.Split(str, sep)

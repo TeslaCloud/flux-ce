@@ -24,7 +24,7 @@ end
 --- Called on the server when the command is run. Does nothing by default, override it
 -- in the command file. It receives the player who has run the command (an invalid entity
 -- if it was run from the server console) followed by the arguments as strings. If the
--- command has immunity or player_arg set, the target argument is an Array<Player> instead.
+-- command has immunity or player_arg set, the target argument is a List<Player> instead.
 -- ```
 -- -- plugin/commands/sh_freeze.lua
 -- CMD.name = 'Freeze'
@@ -49,10 +49,10 @@ end
 function Command:on_run() end
 
 --- Sends a notification to a group of players.
--- @param permission [String/Array<Player>/Player permission the recipients must have, a list
+-- @param permission [String/List<Player>/Player permission the recipients must have, a list
 --   of recipients or a single recipient; everyone is notified if nil]
 -- @param message [String text or language phrase]
--- @param arguments=nil [Hash values to substitute into the phrase]
+-- @param arguments=nil [Map values to substitute into the phrase]
 -- @param color=nil [Color]
 function Command:notify(permission, message, arguments, color)
   local player_list
@@ -73,10 +73,10 @@ function Command:notify(permission, message, arguments, color)
 end
 
 --- Sends a light red notification to a group of players.
--- @param permission [String/Array<Player>/Player permission the recipients must have, a list
+-- @param permission [String/List<Player>/Player permission the recipients must have, a list
 --   of recipients or a single recipient; everyone is notified if nil]
 -- @param message [String text or language phrase]
--- @param arguments=nil [Hash values to substitute into the phrase]
+-- @param arguments=nil [Map values to substitute into the phrase]
 -- @see [Command#notify]
 function Command:notify_admin(permission, message, arguments)
   self:notify(permission, message, arguments, Color(255, 128, 128))
@@ -91,7 +91,7 @@ end
 -- })
 -- ```
 -- @param message [String text or language phrase]
--- @param arguments=nil [Hash values to substitute into the phrase]
+-- @param arguments=nil [Map values to substitute into the phrase]
 -- @see [Command#notify]
 function Command:notify_staff(message, arguments)
   self:notify('staff', message, arguments, Color(150, 150, 255))

@@ -10,7 +10,7 @@ Flux.Command.aliases    = aliases
 -- and runs the 'OnCommandCreated' hook. Commands defined in the 'commands' folder of
 -- a plugin are registered automatically, see Command#on_run for an example.
 -- @param id [String unique command ID, also the main name it is called by]
--- @param data [Command/Hash command object or a table with the same fields: name, description,
+-- @param data [Command/Map command object or a table with the same fields: name, description,
 --   syntax, permission, arguments (minimum amount), immunity, player_arg, alias or aliases,
 --   no_console and the on_run callback]
 -- @see [Command#on_run]
@@ -77,7 +77,7 @@ end
 --- Finds all of the commands that have the search string in their ID or aliases.
 -- On the client only the commands the local player has access to are returned.
 -- @param id [String search string]
--- @return [Array<Command> matching commands]
+-- @return [List<Command> matching commands]
 function Flux.Command:find_all(id)
   local hits = {}
   local ids = {}
@@ -106,7 +106,7 @@ end
 -- local args = Flux.Command:extract_arguments('ban "John Doe" 60 minging')
 -- ```
 -- @param text [String]
--- @return [Array<String> arguments, String raw text of the arguments]
+-- @return [List<String> arguments, String raw text of the arguments]
 function Flux.Command:extract_arguments(text)
   local raw_args
   local arguments = {}
@@ -233,7 +233,7 @@ if SERVER then
   -- more by returning a parser function from the 'TargetFromString' hook. Serverside only.
   -- @param player [Player the player who is running the command]
   -- @param str [String player name or target selector]
-  -- @return [Array<Player> the targets, or false if nobody was found; String the selector
+  -- @return [List<Player> the targets, or false if nobody was found; String the selector
   --   character, if one was used]
   function Flux.Command:str_to_player(player, str)
     local start = str:utf8sub(1, 1)
@@ -432,7 +432,7 @@ if SERVER then
   -- is valid and that all of the permission checks have already been done. Serverside only.
   -- @param player [Player the player who runs the command, an invalid entity for server console]
   -- @param cmd_table [Command]
-  -- @param arguments [Array arguments to pass to on_run after the player]
+  -- @param arguments [List arguments to pass to on_run after the player]
   -- @param raw_args=nil [String raw text of the arguments, available to the callback
   --   as self.raw_args]
   function Flux.Command:run(player, cmd_table, arguments, raw_args)
@@ -470,7 +470,7 @@ end
 -- @warning [Internal]
 -- @param player [Player the player who has run the console command]
 -- @param cmd [String name of the console command]
--- @param args [Array<String> arguments of the console command]
+-- @param args [List<String> arguments of the console command]
 -- @param args_text [String arguments as a single string, the Flux command to run]
 function Flux.Command.con_command(player, cmd, args, args_text)
   if SERVER then

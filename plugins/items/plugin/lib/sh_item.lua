@@ -19,7 +19,7 @@ Item.sorted = sorted
 Item.entities = entities
 
 --- Returns all the registered item templates.
--- @return [Hash item templates, keyed by item id]
+-- @return [Map item templates, keyed by item id]
 function Item.all()
   return stored
 end
@@ -27,20 +27,20 @@ end
 --- Returns the storage of all item instances.
 -- It is keyed by item id; each value is a hash of instance id to item instance.
 -- The storage also holds a numeric 'count' field with the last generated instance id.
--- @return [Hash instances]
+-- @return [Map instances]
 function Item.get_instances()
   return instances
 end
 
 --- Returns the lookup cache of item instances that is filled by Item.find_by_instance_id.
--- @return [Hash item instances, keyed by instance id]
+-- @return [Map item instances, keyed by instance id]
 function Item.get_sorted()
   return sorted
 end
 
 --- Returns saved data about the items that are lying on the ground.
 -- It is keyed by item id, then by instance id; each entry has 'position' and 'angles' fields.
--- @return [Hash entity data]
+-- @return [Map entity data]
 function Item.get_entities()
   return entities
 end
@@ -105,7 +105,7 @@ end
 --- Builds a plain table out of the item fields that are saved to disk and networked.
 -- Runs the 'PreItemSave' hook so that plugins can add fields of their own.
 -- @param item_obj [Item]
--- @return [Hash saveable fields, or nil if no item was given]
+-- @return [Map saveable fields, or nil if no item was given]
 function Item.to_saveable(item_obj)
   if !item_obj then return end
 
@@ -159,7 +159,7 @@ end
 
 --- Finds all instances of a certain item template.
 -- @param id [String item id]
--- @return [Hash item instances keyed by instance id, or nil if there is no such template]
+-- @return [Map item instances keyed by instance id, or nil if there is no such template]
 function Item.find_all_instances(id)
   if instances[id] then
     return instances[id]
@@ -243,7 +243,7 @@ end
 -- end
 -- ```
 -- @param id [String item id of the template]
--- @param data=nil [Hash fields to override on the new instance]
+-- @param data=nil [Map fields to override on the new instance]
 -- @param forced_id=nil [Number instance id to use instead of generating a new one]
 -- @return [Item the new instance, or nil if there is no such template]
 function Item.create(id, data, forced_id)
@@ -446,7 +446,7 @@ if SERVER then
 
   --- Sends the custom data of an item instance to the client. Server-side only.
   -- Does nothing if the item is a template.
-  -- @param player [Player/Array<Player>/Nil who to send to; nil sends to everyone]
+  -- @param player [Player/List<Player>/Nil who to send to; nil sends to everyone]
   -- @param item_obj [Item]
   function Item.network_item_data(player, item_obj)
     if Item.is_instance(item_obj) then
@@ -456,14 +456,14 @@ if SERVER then
 
   --- Sends the saveable fields of an item instance to the client,
   -- which builds its own copy of the instance out of them. Server-side only.
-  -- @param player [Player/Array<Player>/Nil who to send to; nil sends to everyone]
+  -- @param player [Player/List<Player>/Nil who to send to; nil sends to everyone]
   -- @param instance_id [Number]
   function Item.network_item(player, instance_id)
     Cable.send(player, 'fl_items_network', instance_id, Item.to_saveable(Item.find_instance_by_id(instance_id)))
   end
 
   --- Tells the client which item instance an item entity represents. Server-side only.
-  -- @param player [Player/Array<Player>/Nil who to send to; nil sends to everyone]
+  -- @param player [Player/List<Player>/Nil who to send to; nil sends to everyone]
   -- @param ent [Entity the fl_item entity]
   function Item.network_entity_data(player, ent)
     if IsValid(ent) then

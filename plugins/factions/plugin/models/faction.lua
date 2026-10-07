@@ -79,14 +79,14 @@ function Faction:get_description()
 end
 
 --- Returns the ranks of the faction, lowest first.
--- @return [Array<Hash> rank tables with id and name fields]
+-- @return [List<Map> rank tables with id and name fields]
 function Faction:get_ranks()
   return self.rank
 end
 
 --- Returns a rank of the faction by its position.
 -- @param number [Number rank index, 1 being the lowest]
--- @return [Hash rank table with id and name fields, or nil if there is no such rank]
+-- @return [Map rank table with id and name fields, or nil if there is no such rank]
 function Faction:get_rank(number)
   return self.rank[number]
 end
@@ -99,7 +99,7 @@ function Faction:get_rank_name(number)
 end
 
 --- Returns all models of the faction.
--- @return [Hash arrays of model paths keyed by 'male', 'female' and 'universal']
+-- @return [Map arrays of model paths keyed by 'male', 'female' and 'universal']
 function Faction:get_models()
   return self.models
 end
@@ -107,7 +107,7 @@ end
 --- Returns the models of the faction for a gender, falling back to the universal models when
 -- the gender has none.
 -- @param gender [String 'male', 'female', 'universal' or 'no_gender']
--- @return [Array<String> model paths]
+-- @return [List<String> model paths]
 function Faction:get_gender_models(gender)
   local faction_models = self:get_models()
 
@@ -152,7 +152,7 @@ end
 -- ```
 -- @param player [Player]
 -- @param rank [Number/String rank index or rank ID used for {rank}]
--- @param default_data=nil [Hash values for {data:key} that override the faction's own data]
+-- @param default_data=nil [Map values for {data:key} that override the faction's own data]
 -- @return [String the generated name; the player's current name if a ShouldNameGenerate
 --   hook returns false]
 function Faction:generate_name(player, rank, default_data)

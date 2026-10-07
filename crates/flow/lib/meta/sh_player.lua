@@ -7,7 +7,7 @@ function player_meta:has_initialized()
 end
 
 --- Returns the networked data table of the player.
--- @return [Hash]
+-- @return [Map]
 function player_meta:get_data()
   return self:get_nv('fl_data', {})
 end
@@ -47,7 +47,7 @@ function player_meta:SetModel(path)
 end
 
 --- Returns the classes of all of the weapons the player has.
--- @return [Array<String> weapon classes]
+-- @return [List<String> weapon classes]
 function player_meta:get_weapons_list()
   local weapons_table = {}
 
@@ -62,7 +62,7 @@ if CLIENT then
   --- Displays a notification to the local player, both as a popup and in the chat.
   -- Clientside variant.
   -- @param message [String text or language phrase]
-  -- @param arguments=nil [Hash values to substitute into the phrase; strings are translated,
+  -- @param arguments=nil [Map values to substitute into the phrase; strings are translated,
   --   entities are replaced with their names]
   -- @param color=color_white [Color]
   function player_meta:notify(message, arguments, color)

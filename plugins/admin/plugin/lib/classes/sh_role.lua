@@ -28,7 +28,7 @@ end
 -- end
 -- ```
 -- @param action [String permission ID]
--- @param object='anything' [String/Hash object name, or a class table whose class_name is used]
+-- @param object='anything' [String/Map object name, or a class table whose class_name is used]
 -- @param callback=nil [Function called as callback(player, object) on every check; its return
 --   value becomes the result]
 function Role:allow(action, object, callback)
@@ -47,7 +47,7 @@ end
 
 --- Explicitly denies an action for this role, overriding a permission inherited from its base.
 -- @param action [String permission ID]
--- @param object='anything' [String/Hash object name, or a class table whose class_name is used]
+-- @param object='anything' [String/Map object name, or a class table whose class_name is used]
 function Role:disallow(action, object)
   object = (istable(object) and object.class_name) or
         (isstring(object) and object) or
@@ -146,7 +146,7 @@ function Role:is_protected()
 end
 
 --- Returns the role's permission table.
--- @return [Hash permission entries (allowed, callback) keyed by object name, then by action]
+-- @return [Map permission entries (allowed, callback) keyed by object name, then by action]
 function Role:get_permissions()
   return self.permissions or {}
 end
@@ -184,7 +184,7 @@ function Role:register()
       --- Allows an action for the role being registered. Replaces the global can only while
       -- define_permissions runs.
       -- @param action [String permission ID]
-      -- @param object='anything' [String/Hash object name or class table]
+      -- @param object='anything' [String/Map object name or class table]
       -- @param callback=nil [Function called as callback(player, object) on every check]
       -- @see [Role#allow]
       function can(action, object, callback)
@@ -193,7 +193,7 @@ function Role:register()
       --- Denies an action for the role being registered. Only defined while define_permissions
       -- runs.
       -- @param action [String permission ID]
-      -- @param object='anything' [String/Hash object name or class table]
+      -- @param object='anything' [String/Map object name or class table]
       -- @see [Role#disallow]
       function cannot(action, object)
         self:disallow(action, object)

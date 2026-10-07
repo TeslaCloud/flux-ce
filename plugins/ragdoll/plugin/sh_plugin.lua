@@ -9,7 +9,7 @@ require_relative 'sh_enums'
 -- @param origin [Vector]
 -- @param angles [Angle]
 -- @param fov [Number]
--- @return [Hash view table, or nil if the view is left alone]
+-- @return [Map view table, or nil if the view is left alone]
 function PLUGIN:CalcView(player, origin, angles, fov)
   local view = GAMEMODE.BaseClass:CalcView(player, origin, angles, fov) or {}
   local entity = player:GetDTEntity(ENT_RAGDOLL)

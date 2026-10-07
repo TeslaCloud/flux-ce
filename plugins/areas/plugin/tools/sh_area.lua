@@ -7,7 +7,7 @@ TOOL.permission = 'areas'
 TOOL.ClientConVar['mode'] = '1'
 
 --- Passes the click to the OnLeftClick handler of the selected area tool mode.
--- @param trace [Hash trace result of the tool owner's aim]
+-- @param trace [Map trace result of the tool owner's aim]
 -- @return [Boolean the result of the mode's handler, true if the mode has no handler,
 --   nil if the owner lacks the 'area_tool' permission]
 function TOOL:LeftClick(trace)
@@ -26,7 +26,7 @@ function TOOL:LeftClick(trace)
 end
 
 --- Passes the click to the OnRightClick handler of the selected area tool mode.
--- @param trace [Hash trace result of the tool owner's aim]
+-- @param trace [Map trace result of the tool owner's aim]
 -- @return [Boolean the result of the mode's handler, true if the mode has no handler,
 --   nil if the owner lacks the 'area_tool' permission]
 function TOOL:RightClick(trace)
@@ -45,7 +45,7 @@ function TOOL:RightClick(trace)
 end
 
 --- Passes the reload to the OnReload handler of the selected area tool mode.
--- @param trace [Hash trace result of the tool owner's aim]
+-- @param trace [Map trace result of the tool owner's aim]
 -- @return [Boolean the result of the mode's handler, true if the mode has no handler,
 --   nil if the owner lacks the 'area_tool' permission]
 function TOOL:Reload(trace)
@@ -64,7 +64,7 @@ function TOOL:Reload(trace)
 end
 
 --- Returns the area tool mode selected with the 'mode' convar.
--- @return [Hash the mode table, or nil if there is no mode with that index]
+-- @return [Map the mode table, or nil if there is no mode with that index]
 function TOOL:GetAreaMode()
   local mode = self:GetClientNumber('mode')
 

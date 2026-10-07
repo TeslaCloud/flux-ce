@@ -306,7 +306,7 @@ function PANEL:close(callback)
 end
 
 --- Merges the data of a stage into the collected character data.
--- @param new_data [Hash]
+-- @param new_data [Map]
 function PANEL:collect_data(new_data)
   table.safe_merge(self.char_data, new_data)
 end

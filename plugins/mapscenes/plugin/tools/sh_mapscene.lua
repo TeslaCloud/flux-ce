@@ -5,7 +5,7 @@ TOOL.ConfigName = ''
 TOOL.permission = 'mapscenes'
 
 --- Adds a mapscene point at the owner's eye position, facing where they are looking.
--- @param trace [Hash trace result of the tool owner's aim]
+-- @param trace [Map trace result of the tool owner's aim]
 -- @return [Boolean true if the point was added (always true clientside), nil if the owner
 --   is not valid or lacks the 'mapsceneadd' permission]
 function TOOL:LeftClick(trace)

@@ -241,13 +241,13 @@ function THEME:PaintSidebar(panel, width, height)
 end
 
 --- Draws the background of a HUD bar.
--- @param bar_info [Hash data of the bar, as stored by Flux.Bars]
+-- @param bar_info [Map data of the bar, as stored by Flux.Bars]
 function THEME:DrawBarBackground(bar_info)
   draw.RoundedBox(bar_info.corner_radius, bar_info.x, bar_info.y, bar_info.width, bar_info.height, self:get_color('main_dark'))
 end
 
 --- Draws the hindered portion at the right end of a HUD bar.
--- @param bar_info [Hash data of the bar, as stored by Flux.Bars]
+-- @param bar_info [Map data of the bar, as stored by Flux.Bars]
 function THEME:DrawBarHindrance(bar_info)
   local length = bar_info.width * (bar_info.hinder_value / bar_info.max_value)
 
@@ -256,7 +256,7 @@ end
 
 --- Draws the filled portion of a HUD bar. While the displayed fill is catching up with the
 -- actual value, the difference between the two is drawn in the color of the bar.
--- @param bar_info [Hash data of the bar, as stored by Flux.Bars]
+-- @param bar_info [Map data of the bar, as stored by Flux.Bars]
 function THEME:DrawBarFill(bar_info)
   if bar_info.real_fill_width < bar_info.fill_width then
     draw.RoundedBox(bar_info.corner_radius, bar_info.x + 1, bar_info.y + 1, (bar_info.fill_width or bar_info.width) - 2, bar_info.height - 2, bar_info.color)
@@ -271,7 +271,7 @@ end
 
 --- Draws the text of a HUD bar, in different colors over its filled and empty portions,
 -- and the hindrance text when the hindrance is displayed.
--- @param bar_info [Hash data of the bar, as stored by Flux.Bars]
+-- @param bar_info [Map data of the bar, as stored by Flux.Bars]
 function THEME:DrawBarTexts(bar_info)
   local font = Theme.get_font(bar_info.font)
 

@@ -14,7 +14,7 @@ end
 -- @param name [String/Player part of a name, or a SteamID; a valid player is returned as-is]
 -- @param case_sensitive=false [Boolean match player names case-sensitively]
 -- @param return_first=false [Boolean return the first match instead of all of them]
--- @return [Player/Array<Player> the only match, an array if several players match, nil if none do]
+-- @return [Player/List<Player> the only match, an array if several players match, nil if none do]
 function player.find(name, case_sensitive, return_first)
   if name == nil then return end
   if !isstring(name) then return (IsValid(name) and name) or nil end

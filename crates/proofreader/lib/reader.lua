@@ -109,7 +109,7 @@ end
 
 --- Proofreads a list of files and prints the progress, the offenses and a summary to the
 -- console. Files that are not .lua files are skipped.
--- @param files={} [Array<String> file paths relative to the game directory]
+-- @param files={} [List<String> file paths relative to the game directory]
 function PR:proofread(files)
   files = files or {}
   self.messages = {}

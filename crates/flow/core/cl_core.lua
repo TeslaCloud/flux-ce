@@ -425,7 +425,7 @@ do
   -- @param x [Number current x, or nil to leave the x axis unanimated]
   -- @param y [Number current y, or nil to leave the y axis unanimated]
   -- @param delta [Number fraction of the remaining distance covered on every draw, 0 to 1]
-  -- @return [Hash the animation state with the x, y and delta fields]
+  -- @return [Map the animation state with the x, y and delta fields]
   -- @see [Flux.draw_animation]
   function Flux.update_animation(id, x, y, delta)
     anim_cache[id] = { x = x, y = y, delta = delta }

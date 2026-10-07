@@ -173,7 +173,7 @@ local adapter_aliases = {
 --   user = 'username', password = 'password', database = 'flux_dev'
 -- }
 -- ```
--- @param config [Hash database settings as found in config/database.yml: adapter, host,
+-- @param config [Map database settings as found in config/database.yml: adapter, host,
 --   port, user, password, database, encoding, socket and flags]
 function ActiveRecord.establish_connection(config)
   local adapter = isstring(config.adapter) and config.adapter:lower() or 'sqlite'

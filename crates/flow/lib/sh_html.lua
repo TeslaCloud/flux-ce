@@ -74,7 +74,7 @@ end
 -- Flux.HTML:render_template('greeting', { name = 'John' })
 -- ```
 -- @param id [String template ID]
--- @param locals=nil [Hash local variables to make available to the code of the template,
+-- @param locals=nil [Map local variables to make available to the code of the template,
 --   by name]
 -- @return [String rendered HTML, empty if there is no such template]
 function Flux.HTML:render_template(id, locals)
@@ -160,7 +160,7 @@ do
   -- self.html:set_body(render_template('help'))
   -- ```
   -- @param id [String template ID]
-  -- @param locals=nil [Hash local variables to make available to the code of the template,
+  -- @param locals=nil [Map local variables to make available to the code of the template,
   --   by name]
   -- @return [String rendered HTML]
   -- @see [Flux.HTML#render_template]
@@ -184,7 +184,7 @@ do
   -- render_partial('credits')
   -- ```
   -- @param id [String ID of the partial without the leading underscore]
-  -- @param locals=nil [Hash local variables to make available to the code of the partial,
+  -- @param locals=nil [Map local variables to make available to the code of the partial,
   --   by name]
   -- @return [String rendered HTML]
   function render_partial(id, locals)

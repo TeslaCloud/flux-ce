@@ -15,7 +15,7 @@ end
 
 --- Sets the level of an attribute for every target, then notifies the targets and staff.
 -- @param player [Player the player who ran the command]
--- @param targets [Array<Player> players matched by the first command argument]
+-- @param targets [List<Player> players matched by the first command argument]
 -- @param attribute_id [String attribute to set, normalized with to_id]
 -- @param value [String new level, parsed with tonumber]
 function CMD:on_run(player, targets, attribute_id, value)

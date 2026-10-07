@@ -34,31 +34,31 @@ function Flow.Inflector:inflections(lang, func)
 end
 
 --- Returns the pluralization rules of the current language.
--- @return [Array<Hash> rules with the expression and replacement keys]
+-- @return [List<Map> rules with the expression and replacement keys]
 function Flow.Inflector:plurals()
   return self._plurals[self.current_language]
 end
 
 --- Returns the singularization rules of the current language.
--- @return [Array<Hash> rules with the expression and replacement keys]
+-- @return [List<Map> rules with the expression and replacement keys]
 function Flow.Inflector:singulars()
   return self._singulars[self.current_language]
 end
 
 --- Returns the uncountable words of the current language.
--- @return [Hash true by word]
+-- @return [Map true by word]
 function Flow.Inflector:uncountables()
   return self._uncountables[self.current_language]
 end
 
 --- Returns the irregular words of the current language.
--- @return [Hash plural forms by singular form]
+-- @return [Map plural forms by singular form]
 function Flow.Inflector:irregulars()
   return self._irregulars[self.current_language]
 end
 
 --- Returns the irregular words of the current language, the other way around.
--- @return [Hash singular forms by plural form]
+-- @return [Map singular forms by plural form]
 function Flow.Inflector:irregulars_reverse()
   return self._irregulars_rev[self.current_language]
 end
@@ -101,7 +101,7 @@ function Flow.Inflector:irregular(word, replacement)
 end
 
 --- Adds words that have no separate plural form to the current language.
--- @param words [String/Array<String> a word or a list of words]
+-- @param words [String/List<String> a word or a list of words]
 -- @return [Flow::Inflector self, for chaining]
 function Flow.Inflector:uncountable(words)
   local lang = self.current_language

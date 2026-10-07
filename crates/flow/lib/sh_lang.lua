@@ -34,7 +34,7 @@ do
   -- local message = t('ui.char_create.delete_confirm_msg', { name = self.char_data.name })
   -- ```
   -- @param phrase [String phrase ID with its nesting separated by dots, or plain text]
-  -- @param args=nil [Hash/Any values to replace the {key} placeholders with, by key;
+  -- @param args=nil [Map/Any values to replace the {key} placeholders with, by key;
   --   a single value replaces {1}]
   -- @param force_lang=nil [String language code to use instead of the current language]
   -- @return [String translated text, Number amount of line breaks that were replaced]
@@ -53,7 +53,7 @@ do
 end
 
 --- Returns all of the stored phrases.
--- @return [Hash nested tables of phrases by language code]
+-- @return [Map nested tables of phrases by language code]
 function Flux.Lang:all()
   return stored
 end
@@ -68,8 +68,8 @@ end
 -- })
 -- ```
 -- @param index [String language code, or the key of the phrase inside the reference table]
--- @param value [String/Hash phrase or a nested table of phrases]
--- @param reference=nil [Hash table to add to, all stored phrases by default]
+-- @param value [String/Map phrase or a nested table of phrases]
+-- @param reference=nil [Map table to add to, all stored phrases by default]
 function Flux.Lang:add(index, value, reference)
   reference = reference or stored
 

@@ -121,7 +121,7 @@ end
 -- @param color=nil [Color/String text color, or a ready-made escape sequence]
 -- @param background_color=nil [Color/String background color, or a ready-made escape
 --   sequence]
--- @param style=nil [Hash style flags: bold, dim, underline, blink, inverted, hidden]
+-- @param style=nil [Map style flags: bold, dim, underline, blink, inverted, hidden]
 function print_colored(text, color, background_color, style)
   local color_sequence = color_clear_sequence
 

@@ -30,8 +30,8 @@ function Factions:AddCharacterCreationMenuStages(panel)
 end
 
 --- Returns the models of the chosen faction that match the chosen gender.
--- @param char_data [Hash character data collected so far; needs faction and gender]
--- @return [Array<String> model paths]
+-- @param char_data [Map character data collected so far; needs faction and gender]
+-- @return [List<String> model paths]
 function Factions:GetCharacterCreationModels(char_data)
   local faction_table = Factions.find_by_id(char_data.faction)
 

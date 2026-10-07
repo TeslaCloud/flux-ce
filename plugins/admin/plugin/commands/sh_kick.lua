@@ -9,7 +9,7 @@ CMD.alias = 'plykick'
 
 --- Kicks the targeted players with an optional reason and notifies staff.
 -- @param player [Player the caller, or an invalid entity when run from the server console]
--- @param targets [Array<Player> players to kick]
+-- @param targets [List<Player> players to kick]
 -- @param ... [Vararg words of the kick reason]
 function CMD:on_run(player, targets, ...)
   local reason = table.concat({ ... }, ' ')

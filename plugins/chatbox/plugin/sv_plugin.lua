@@ -17,7 +17,7 @@ local client_mode = false
 --- Stores a message filter under the specified id. Serverside only.
 -- Filters are only stored at the moment, nothing reads them yet.
 -- @param id [String unique filter id]
--- @param data [Hash filter data]
+-- @param data [Map filter data]
 function Chatbox.add_filter(id, data)
   filters[id] = data
 end
@@ -27,8 +27,8 @@ end
 -- every initialized player, a negative radius reaches nobody, and a positive radius
 -- reaches the players whose eyes are within it from the position of the message.
 -- @param listener [Player]
--- @param message_data [Hash message data with radius (Number) and position (Vector or
---   Array<Vector>), see Chatbox.add_text]
+-- @param message_data [Map message data with radius (Number) and position (Vector or
+--   List<Vector>), see Chatbox.add_text]
 -- @return [Boolean]
 function Chatbox.can_hear(listener, message_data)
   if Plugin.call('PlayerCanHear', listener, message_data) then
@@ -78,7 +78,7 @@ end
 -- -- Message for certain players only.
 -- Chatbox.add_text(Bolt:get_staff(), Color(234, 255, 208), '@staff ', player, ': ', text)
 -- ```
--- @param listeners [Array<Player>/Player the receivers, nil to send to all players]
+-- @param listeners [List<Player>/Player the receivers, nil to send to all players]
 -- @param ... [Vararg pieces of the message and option tables]
 -- @see [Chatbox.can_hear]
 function Chatbox.add_text(listeners, ...)
@@ -160,7 +160,7 @@ end
 
 --- Joins the strings of a message into a single string. Players and entities are
 -- replaced with their names, numbers and other values are skipped.
--- @param message_data [Array pieces of a message, such as the data of a message]
+-- @param message_data [List pieces of a message, such as the data of a message]
 -- @param concatenator='' [String separator to put between the pieces]
 -- @return [String]
 function Chatbox.message_to_string(message_data, concatenator)

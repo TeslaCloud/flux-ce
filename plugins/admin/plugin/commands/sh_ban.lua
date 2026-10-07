@@ -9,7 +9,7 @@ CMD.alias = 'plyban'
 
 --- Bans the targeted players for the given duration and notifies staff.
 -- @param player [Player the caller, or an invalid entity when run from the server console]
--- @param targets [Array<Player> players to ban]
+-- @param targets [List<Player> players to ban]
 -- @param duration [String ban length as read by Bolt:interpret_ban_time, e.g. '30' or 'perma']
 -- @param ... [Vararg words of the ban reason]
 function CMD:on_run(player, targets, duration, ...)

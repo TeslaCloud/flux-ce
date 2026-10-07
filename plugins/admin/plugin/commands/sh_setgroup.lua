@@ -22,7 +22,7 @@ end
 --- Sets the role of the targeted players and notifies them and staff, or tells the caller that
 -- the role does not exist.
 -- @param player [Player the caller, or an invalid entity when run from the server console]
--- @param targets [Array<Player> players whose role is set]
+-- @param targets [List<Player> players whose role is set]
 -- @param role [String role ID]
 function CMD:on_run(player, targets, role)
   if Bolt:group_exists(role) then

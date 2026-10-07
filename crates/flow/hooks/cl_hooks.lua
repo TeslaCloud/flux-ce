@@ -293,7 +293,7 @@ end
 -- @param x [Number screen x of the target ID]
 -- @param y [Number screen y of the target ID]
 -- @param distance [Number distance to the player in units]
--- @param lines [Hash lines to draw, keyed by ID. Each one is a table with the text, font,
+-- @param lines [Map lines to draw, keyed by ID. Each one is a table with the text, font,
 --   color and priority fields, and optionally offset_x and offset_y]
 function GM:GetDrawPlayerInfo(player, x, y, distance, lines)
   lines['name'] = {

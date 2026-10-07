@@ -25,7 +25,7 @@ function flux_player:SetupDataTables()
 end
 
 --- Determines which hands model to use for the player's current model.
--- @return [Hash hands info with the model, skin and body keys]
+-- @return [Map hands info with the model, skin and body keys]
 function flux_player:GetHandsModel()
   local player_model = string.lower(self.Player:GetModel())
 

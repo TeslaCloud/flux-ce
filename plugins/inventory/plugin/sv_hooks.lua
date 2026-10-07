@@ -1,7 +1,7 @@
 --- Calls the 'AddDefaultItems' plugin hook for a character that has just been created.
 -- @param player [Player]
 -- @param char [Character]
--- @param char_data [Hash data the character was created from]
+-- @param char_data [Map data the character was created from]
 function Inventories:PostCreateCharacter(player, char, char_data)
   Plugin.call('AddDefaultItems', player, char, char.inventory)
 end
@@ -23,7 +23,7 @@ end
 --- Creates the default set of the player's inventories:
 -- main inventory, hotbar, pockets and the equipment slots.
 -- @param player [Player]
--- @param inventories [Hash table to put the new inventories into, keyed by inventory type]
+-- @param inventories [Map table to put the new inventories into, keyed by inventory type]
 function Inventories:CreatePlayerInventories(player, inventories)
   local main_inventory = Inventory.new()
     main_inventory.title = 'ui.inventory.main_inventory'
@@ -117,7 +117,7 @@ end
 --- Adds the position of the item in its inventory, its rotation and,
 -- for containers, the instance ids of the contained items to the saved fields.
 -- @param item_obj [Item]
--- @param save_table [Hash fields of the item that are going to be saved]
+-- @param save_table [Map fields of the item that are going to be saved]
 function Inventories:PreItemSave(item_obj, save_table)
   save_table.x = item_obj.x
   save_table.y = item_obj.y
@@ -171,7 +171,7 @@ end
 
 --- Takes the items out of their inventory and spawns them in front of the player.
 -- @param player [Player]
--- @param instance_ids [Number/Array<Number> instance id(s) of items from the same inventory]
+-- @param instance_ids [Number/List<Number> instance id(s) of items from the same inventory]
 function Inventories:PlayerDropItem(player, instance_ids)
   if isnumber(instance_ids) then
     instance_ids = { instance_ids }

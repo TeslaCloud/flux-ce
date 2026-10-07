@@ -21,7 +21,7 @@ end
 
 --- Sets the balance of a currency for every target and notifies the targets and staff.
 -- @param player [Player the player who ran the command]
--- @param targets [Array<Player> players matched by the first command argument]
+-- @param targets [List<Player> players matched by the first command argument]
 -- @param amount [String new balance, parsed with tonumber; negative values become 0]
 -- @param currency=nil [String currency ID; the default_currency config is used when it is
 --   omitted or unknown]

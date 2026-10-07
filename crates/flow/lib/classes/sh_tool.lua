@@ -357,7 +357,7 @@ function Tool:GetServerInfo(property)
 end
 
 --- Builds a list of the client console variables of the tool with their defaults.
--- @return [Hash default values by full variable name]
+-- @return [Map default values by full variable name]
 function Tool:BuildConVarList()
   local mode = self:GetMode()
   local convars = {}

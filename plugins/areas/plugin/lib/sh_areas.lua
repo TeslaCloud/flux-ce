@@ -10,26 +10,26 @@ Areas.types = types
 Areas.top = top
 
 --- Returns all registered areas.
--- @return [Hash area tables keyed by area id]
+-- @return [Map area tables keyed by area id]
 function Areas.all()
   return stored
 end
 
 --- Replaces all registered areas at once. Does not network anything.
--- @param stored_table [Hash area tables keyed by area id; any non-table value clears
+-- @param stored_table [Map area tables keyed by area id; any non-table value clears
 --   the areas]
 function Areas.set_stored(stored_table)
   stored = (istable(stored_table) and stored_table) or {}
 end
 
 --- Returns the callbacks that were set with Areas.set_callback.
--- @return [Hash callback functions keyed by area type id]
+-- @return [Map callback functions keyed by area type id]
 function Areas.get_callbacks()
   return callbacks
 end
 
 --- Returns all registered area types.
--- @return [Hash type tables (name, description, callback, color) keyed by type id]
+-- @return [Map type tables (name, description, callback, color) keyed by type id]
 function Areas.get_types()
   return types
 end
@@ -43,7 +43,7 @@ end
 
 --- Returns all registered areas of the specified type.
 -- @param type [String area type id]
--- @return [Array list of area tables]
+-- @return [List list of area tables]
 function Areas.get_by_type(type)
   local to_ret = {}
 
@@ -80,9 +80,9 @@ end
 -- ```
 -- @param id [String unique area id]
 -- @param height=0 [Number height of the area above its first vertex]
--- @param data=nil [Hash extra fields to merge into a new area, e.g. { type = 'textarea' }.
+-- @param data=nil [Map extra fields to merge into a new area, e.g. { type = 'textarea' }.
 --   The type defaults to 'area']
--- @return [Hash the area table with the builder methods]
+-- @return [Map the area table with the builder methods]
 -- @see [Areas.register]
 function Areas.create(id, height, data)
   data = data or {}
@@ -133,8 +133,8 @@ end
 --- Stores the area under the given id, stripping any functions from it.
 -- When called on the server the area is also sent to all clients.
 -- @param id [String unique area id]
--- @param data [Hash area table as built by Areas.create; needs at least one polygon]
--- @return [Hash the stored area, or nil if an argument is missing or the area has no
+-- @param data [Map area table as built by Areas.create; needs at least one polygon]
+-- @return [Map the stored area, or nil if an argument is missing or the area has no
 --   polygons]
 -- @see [Areas.create]
 function Areas.register(id, data)

@@ -35,7 +35,7 @@ ItemContainer:add_button('item.option.open', {
 })
 
 --- Returns the settings that the inventory of the container is created with.
--- @return [Hash table with width, height, type and multislot fields,
+-- @return [Map table with width, height, type and multislot fields,
 --   and optionally infinite_width and infinite_height]
 function ItemContainer:get_inventory_data()
   return self.inventory_data

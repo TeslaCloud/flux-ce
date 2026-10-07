@@ -54,7 +54,7 @@ end
 --- Replaces line breaks in the new character's physical description with ' | '.
 -- @param player [Player]
 -- @param char [Character the character being created]
--- @param char_data [Hash character creation data]
+-- @param char_data [Map character creation data]
 function Characters:PostCreateCharacter(player, char, char_data)
   char.phys_desc = char.phys_desc:gsub('\n', ' | ')
 end
@@ -111,7 +111,7 @@ end
 --- Validates character creation data: name and description length, gender, model and the
 -- presence of the player's database record.
 -- @param player [Player]
--- @param data [Hash character creation data]
+-- @param data [Map character creation data]
 -- @return [Number CHAR_ERR_* code when the data is rejected, otherwise nil]
 function Characters:PlayerCreateCharacter(player, data)
   if (!isstring(data.name) or (utf8.len(data.name) < Config.get('character_min_name_len') or

@@ -184,7 +184,7 @@ function PANEL:get_player()
 end
 
 --- Sets the permission this row stands for and rebuilds the row.
--- @param perm={} [Hash permission data as stored by Bolt:add_permission]
+-- @param perm={} [Map permission data as stored by Bolt:add_permission]
 function PANEL:set_permission(perm)
   self.permission = perm or {}
 
@@ -192,7 +192,7 @@ function PANEL:set_permission(perm)
 end
 
 --- Returns the permission this row stands for.
--- @return [Hash permission data]
+-- @return [Map permission data]
 function PANEL:get_permission()
   return self.permission
 end
@@ -260,7 +260,7 @@ function PANEL:Paint(w, h)
 end
 
 --- Collects the value of every row that is not set to PERM_NO.
--- @return [Hash PERM_ values keyed by each row's permission data table]
+-- @return [Map PERM_ values keyed by each row's permission data table]
 function PANEL:get_permissions()
   local perm_list = {}
 
@@ -274,8 +274,8 @@ function PANEL:get_permissions()
 end
 
 --- Selects the given values in the matching rows and marks unexpired temporary permissions.
--- @param perm_list [Hash PERM_ values keyed by permission ID]
--- @param temp_perm_list=nil [Hash tables with value and expires (unix timestamp) fields,
+-- @param perm_list [Map PERM_ values keyed by permission ID]
+-- @param temp_perm_list=nil [Map tables with value and expires (unix timestamp) fields,
 --   keyed by permission ID]
 function PANEL:set_permissions(perm_list, temp_perm_list)
   for k, v in pairs(perm_list) do

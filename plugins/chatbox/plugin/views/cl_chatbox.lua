@@ -257,7 +257,7 @@ end
 
 --- Compiles the message and creates a message panel for it,
 -- without adding it to the chatbox.
--- @param message_data [Hash message data received from the server]
+-- @param message_data [Map message data received from the server]
 -- @return [Panel the fl_chat_message panel, or nil if the message could not be compiled]
 function PANEL:create_message(message_data)
   local parsed = Chatbox.compile(message_data)
@@ -279,7 +279,7 @@ end
 
 --- Creates a panel for the message and adds it to the chatbox, unless the
 -- ChatboxShouldAddMessage hook returns false.
--- @param message_data [Hash message data received from the server]
+-- @param message_data [Map message data received from the server]
 function PANEL:add_message(message_data)
   if message_data and Plugin.call('ChatboxShouldAddMessage', message_data) != false then
     local panel = self:create_message(message_data)

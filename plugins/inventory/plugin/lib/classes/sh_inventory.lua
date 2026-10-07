@@ -40,7 +40,7 @@ end
 
 --- Returns the values of the inventory
 -- that will be sent to the client.
--- @return [Hash]
+-- @return [Map]
 function Inventory:to_networkable()
   return {
     id = self.id,
@@ -108,7 +108,7 @@ function Inventory:get_type()
 end
 
 --- Get the slots grid.
--- @return [Hash slots, indexed by y and then by x; every slot is an array of instance ids]
+-- @return [Map slots, indexed by y and then by x; every slot is an array of instance ids]
 function Inventory:get_slots()
   return self.slots
 end
@@ -166,7 +166,7 @@ end
 
 --- Get item objects that the inventory contains.
 -- Also includes items from the containers.
--- @return [Array<Item> items]
+-- @return [List<Item> items]
 function Inventory:get_items()
   local items = {}
 
@@ -188,7 +188,7 @@ function Inventory:get_items()
 end
 
 --- Get item ids that the inventory contains.
--- @return [Array<Number> items ids]
+-- @return [List<Number> items ids]
 function Inventory:get_items_ids()
   local items = {}
 
@@ -210,7 +210,7 @@ end
 --- Get the items ids that are located in the specified slot.
 -- @param x [Number column of the slot, starting from 1]
 -- @param y [Number row of the slot, starting from 1]
--- @return [Array<Number> items ids, or nil if the slot is out of the inventory bounds]
+-- @return [List<Number> items ids, or nil if the slot is out of the inventory bounds]
 function Inventory:get_slot(x, y)
   if x <= self.width and y <= self.height then
     return self.slots[y][x]
@@ -260,7 +260,7 @@ end
 
 --- Find specified item objects by their id.
 -- @param id [String]
--- @return [Array<Item> items]
+-- @return [List<Item> items]
 function Inventory:find_items(id)
   local items = {}
 
@@ -289,7 +289,7 @@ end
 --- Check if the inventory contains items by their id.
 -- @param id [String]
 -- @param amount=1 [Number amount of items the inventory has to contain]
--- @return [Boolean, Array<Item> found items]
+-- @return [Boolean, List<Item> found items]
 function Inventory:has_items(id, amount)
   amount = amount or 1
 
@@ -554,7 +554,7 @@ if SERVER then
   -- ```
   -- @param id [String]
   -- @param amount=1 [Number]
-  -- @param data=nil [Hash fields to override on the created items]
+  -- @param data=nil [Map fields to override on the created items]
   -- @return [Boolean was the item given successfully, String text of the error that occurred]
   function Inventory:give_item(id, amount, data)
     amount = amount or 1
@@ -797,7 +797,7 @@ if SERVER then
 
   --- @warning [Internal]
   -- Move the whole stack inside the inventory.
-  -- @param instance_ids [Array<Number> instance ids]
+  -- @param instance_ids [List<Number> instance ids]
   -- @param x [Number]
   -- @param y [Number]
   -- @param was_rotated [Boolean]
@@ -826,7 +826,7 @@ if SERVER then
 
   --- @warning [Internal]
   -- Move the whole stack to another inventory.
-  -- @param instance_ids [Array<Number> instance ids]
+  -- @param instance_ids [List<Number> instance ids]
   -- @param inventory [Inventory]
   -- @param x [Number]
   -- @param y [Number]
@@ -845,7 +845,7 @@ if SERVER then
   end
 
   --- Get the players that currently receive the inventory data.
-  -- @return [Array<Player> players]
+  -- @return [List<Player> players]
   function Inventory:get_receivers()
     return self.receivers
   end
@@ -906,7 +906,7 @@ if SERVER then
 
   --- @warning [Internal]
   -- Fill the inventory with certain items by their ids.
-  -- @param items_ids [Array<Number> instance ids]
+  -- @param items_ids [List<Number> instance ids]
   function Inventory:load_items(items_ids)
     for k, v in pairs(items_ids) do
       local item_obj = Item.find_instance_by_id(v)

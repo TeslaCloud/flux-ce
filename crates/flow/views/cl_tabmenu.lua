@@ -177,7 +177,7 @@ end
 -- end
 -- ```
 -- @param id [String unique ID of the item]
--- @param data [Hash item options. priority (Number) is required. Optional: title (String),
+-- @param data [Map item options. priority (Number) is required. Optional: title (String),
 --   icon (String FontAwesome ID), panel (String VGUI class to open on click),
 --   default (Boolean open this item when none was open before),
 --   callback (Function(menu_panel, button) called after the click was handled),

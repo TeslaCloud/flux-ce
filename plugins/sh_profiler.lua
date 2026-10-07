@@ -14,7 +14,7 @@ local counts = {}
 --- Replaces hook.Call with a wrapper that measures the total run time and the number of
 -- calls of every hook. Only installed in development mode and when DBugR is not present.
 -- @param name [String hook name]
--- @param gm [Hash gamemode table, or nil]
+-- @param gm [Map gamemode table, or nil]
 -- @param ... [Vararg arguments of the hook]
 -- @return [Any up to six values returned by the original hook.Call]
 function hook.Call(name, gm, ...)
@@ -76,8 +76,8 @@ if CLIENT then
 
   --- Returns the profiler data: clientside data gathered since the last update from the
   -- server, and the serverside data received with that update. Clientside only.
-  -- @return [Hash clientside run time in seconds by hook name, Hash clientside call counts
-  --   by hook name, Hash serverside run time by hook name, Hash serverside call counts]
+  -- @return [Map clientside run time in seconds by hook name, Map clientside call counts
+  --   by hook name, Map serverside run time by hook name, Map serverside call counts]
   function Profiler:get_metrics()
     return metrics, counts, metrics_sv, counts_sv
   end
@@ -106,10 +106,10 @@ if CLIENT then
   end
 
   --- Stores new profiler data and refreshes the hook list.
-  -- @param metrics [Hash clientside run time in seconds by hook name]
-  -- @param counts [Hash clientside call counts by hook name]
-  -- @param metrics_sv [Hash serverside run time in seconds by hook name]
-  -- @param counts_sv [Hash serverside call counts by hook name]
+  -- @param metrics [Map clientside run time in seconds by hook name]
+  -- @param counts [Map clientside call counts by hook name]
+  -- @param metrics_sv [Map serverside run time in seconds by hook name]
+  -- @param counts_sv [Map serverside call counts by hook name]
   function PANEL:update_metrics(metrics, counts, metrics_sv, counts_sv)
     self.metrics, self.counts, self.metrics_sv, self.counts_sv = metrics, counts, metrics_sv, counts_sv
     self:rebuild()

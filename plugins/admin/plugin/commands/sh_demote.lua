@@ -9,7 +9,7 @@ CMD.alias = 'plydemote'
 
 --- Demotes the targeted players to the 'user' role and notifies them and staff.
 -- @param player [Player the caller, or an invalid entity when run from the server console]
--- @param targets [Array<Player> players to demote]
+-- @param targets [List<Player> players to demote]
 function CMD:on_run(player, targets)
   for k, v in ipairs(targets) do
     v:notify('notification.demote', {

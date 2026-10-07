@@ -27,7 +27,7 @@ function Flux.Undo:create(id, name)
 end
 
 --- Adds a function to call when the current undo entry is undone.
--- @param callback [Function receives the undo entry (Hash), followed by the extra arguments]
+-- @param callback [Function receives the undo entry (Map), followed by the extra arguments]
 -- @param ... [Vararg extra arguments for the callback]
 function Flux.Undo:add(callback, ...)
   table.insert(buffer.functions, { func = callback, args = { ... } })
@@ -67,7 +67,7 @@ function Flux.Undo:remove(player, id)
 end
 
 --- Calls all of the callbacks of an undo entry.
--- @param obj [Hash undo entry]
+-- @param obj [Map undo entry]
 function Flux.Undo:execute(obj)
   if istable(obj) and istable(obj.functions) then
     for k, v in ipairs(obj.functions) do
@@ -94,7 +94,7 @@ end
 
 --- Returns the undo queue of a player.
 -- @param player [Player]
--- @return [Array<Hash> undo entries, oldest first]
+-- @return [List<Map> undo entries, oldest first]
 function Flux.Undo:get_player(player)
   return queue[player] or {}
 end

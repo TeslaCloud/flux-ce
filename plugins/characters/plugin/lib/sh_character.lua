@@ -28,7 +28,7 @@ local translate_gender = {
 -- end
 -- ```
 -- @param player [Player owner of the new character]
--- @param data [Hash creation data: name, phys_desc, gender, model and optionally skin]
+-- @param data [Map creation data: name, phys_desc, gender, model and optionally skin]
 -- @return [Number CHAR_SUCCESS, or the CHAR_ERR_* code returned by the hook]
 function Characters.create(player, data)
   local hook_result = hook.run('PlayerCreateCharacter', player, data)
@@ -68,7 +68,7 @@ if SERVER then
 
   --- Returns the networkable data of every character of a player. Server only.
   -- @param player [Player]
-  -- @return [Array<Hash> one entry per character, empty when the player has no record]
+  -- @return [List<Map> one entry per character, empty when the player has no record]
   -- @see [Characters.to_networkable]
   function Characters.all_to_networkable(player)
     local characters = player.record and player.record.characters or {}
@@ -85,7 +85,7 @@ if SERVER then
   -- steam_id, name, gender, phys_desc, model, skin and ammo. Server only.
   -- @param player [Player owner of the character]
   -- @param char [Character]
-  -- @return [Hash character data, or nil if the player or the character is not valid]
+  -- @return [Map character data, or nil if the player or the character is not valid]
   function Characters.to_networkable(player, char)
     if !IsValid(player) or !char then return end
 
@@ -278,7 +278,7 @@ do
 
   --- Finds one of the player's own characters by its ID.
   -- @param id [Number character ID]
-  -- @return [Character/Hash the character record on the server or its networked data on the
+  -- @return [Character/Map the character record on the server or its networked data on the
   --   client, nil if the player has no such character]
   function player_meta:get_character_by_id(id)
     for k, v in ipairs(self:get_all_characters()) do
@@ -295,7 +295,7 @@ do
   end
 
   --- Returns the player's active character. Bots get a plain table that is created on demand.
-  -- @return [Character/Hash the character record on the server or its networked data on the
+  -- @return [Character/Map the character record on the server or its networked data on the
   --   client, nil if no character is active]
   function player_meta:get_character()
     if SERVER and self.current_character then
@@ -345,7 +345,7 @@ do
   end
 
   --- Returns all characters that belong to the player. Clients only know their own characters.
-  -- @return [Array character records on the server, networked character data on the client]
+  -- @return [List character records on the server, networked character data on the client]
   function player_meta:get_all_characters()
     if SERVER then
       return self.record.characters

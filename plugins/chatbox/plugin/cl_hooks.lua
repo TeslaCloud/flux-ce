@@ -119,7 +119,7 @@ function Chatbox:ChatboxTextEntered(text)
 end
 
 --- Prints the texts and colors of a compiled chat message to the console.
--- @param compiled [Hash compiled message, as returned by Chatbox.compile]
+-- @param compiled [Map compiled message, as returned by Chatbox.compile]
 function Chatbox:ChatboxMessageCompiled(compiled)
   local to_print = {}
 

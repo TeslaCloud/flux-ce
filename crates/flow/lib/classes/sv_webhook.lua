@@ -9,7 +9,7 @@ Webhook.hooks     = {}
 --- Creates a new Discord webhook.
 -- @param id='' [String ID of the Discord webhook]
 -- @param key='' [String token of the Discord webhook]
--- @param types={} [Array<String> types of messages the webhook accepts, 'all' for any type]
+-- @param types={} [List<String> types of messages the webhook accepts, 'all' for any type]
 function Webhook:init(id, key, types)
   self.id     = id or ''
   self.key    = key or ''
@@ -19,7 +19,7 @@ end
 
 --- Posts a message to the Discord webhook.
 -- @param message [String]
--- @param data={} [Hash optional username, avatar_url and tts fields of the message]
+-- @param data={} [Map optional username, avatar_url and tts fields of the message]
 function Webhook:push(message, data)
   if self.url and isstring(message) then
     data = data or {}
@@ -62,14 +62,14 @@ function Webhook:get(id)
 end
 
 --- Returns all of the registered webhooks.
--- @return [Hash webhooks by ID]
+-- @return [Map webhooks by ID]
 function Webhook:all()
   return self.hooks
 end
 
 --- Returns the registered webhooks that accept messages of the specified type.
 -- @param type [String message type]
--- @return [Array<Webhook>]
+-- @return [List<Webhook>]
 function Webhook:get_type(type)
   local ret = {}
 

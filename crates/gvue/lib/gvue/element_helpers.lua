@@ -50,7 +50,7 @@ function Gvue:attribute_is_transferable(attr)
 end
 
 --- Returns the smaller and the larger side of the screen.
--- @return [Hash table with the fields min and max, in pixels]
+-- @return [Map table with the fields min and max, in pixels]
 function Gvue:get_screen_dimensions()
   local w, h = ScrW(), ScrH()
 

@@ -37,7 +37,7 @@ Conditions.stored = stored
 -- })
 -- ```
 -- @param id [String unique condition id]
--- @param data [Hash condition definition: name, text, icon, set_operator and the
+-- @param data [Map condition definition: name, text, icon, set_operator and the
 --   get_args(panel, data), check(player, data) and
 --   set_parameters(id, data, panel, menu, parent) functions]
 -- @see [Conditions:check]
@@ -46,7 +46,7 @@ function Conditions:register_condition(id, data)
 end
 
 --- Returns all registered condition types.
--- @return [Hash condition definitions keyed by condition id]
+-- @return [Map condition definitions keyed by condition id]
 function Conditions:get_all()
   return stored
 end

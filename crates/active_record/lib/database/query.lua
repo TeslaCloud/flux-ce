@@ -38,7 +38,7 @@ end
 
 --- Appends the NOT NULL / DEFAULT clauses to the definition of the column that is
 -- being created.
--- @param args [Hash column options: null (Boolean) and default (inserted into the SQL as is)]
+-- @param args [Map column options: null (Boolean) and default (inserted into the SQL as is)]
 function ActiveRecord.Query:handle_create_args(args)
   if args['null'] == false then
     self.def = self.def..' NOT NULL'
@@ -154,7 +154,7 @@ end
 -- query:order({ asc = 'name' })  -- ORDER BY name ASC
 -- query:order({ desc = 'name' }) -- ORDER BY name DESC
 -- ```
--- @param key [String/Hash column name (sorted in ascending order), or a hash with the
+-- @param key [String/Map column name (sorted in ascending order), or a hash with the
 --   column name stored under the 'asc' or 'desc' key]
 function ActiveRecord.Query:order(key)
   if isstring(key) then

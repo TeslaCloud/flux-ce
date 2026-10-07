@@ -392,7 +392,7 @@ function PANEL:get_inventory_type()
 end
 
 --- Returns the slots grid of the inventory.
--- @return [Hash slots, indexed by y and then by x; every slot is an array of instance ids]
+-- @return [Map slots, indexed by y and then by x; every slot is an array of instance ids]
 function PANEL:get_slots()
   return self:get_inventory():get_slots()
 end
@@ -400,7 +400,7 @@ end
 --- Returns the instance ids of the items located in the specified slot of the inventory.
 -- @param x [Number]
 -- @param y [Number]
--- @return [Array<Number> instance ids, or nil if the slot is out of the inventory bounds]
+-- @return [List<Number> instance ids, or nil if the slot is out of the inventory bounds]
 function PANEL:get_slot(x, y)
   return self:get_inventory():get_slot(x, y)
 end

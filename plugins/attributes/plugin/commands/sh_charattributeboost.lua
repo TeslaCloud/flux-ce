@@ -16,7 +16,7 @@ end
 --- Gives every target a temporary boost to an attribute, then notifies the targets and staff.
 -- Rejects invalid values, durations and attributes that are not boostable.
 -- @param player [Player the player who ran the command]
--- @param targets [Array<Player> players matched by the first command argument]
+-- @param targets [List<Player> players matched by the first command argument]
 -- @param attribute_id [String attribute to boost, normalized with to_id]
 -- @param value [String number of levels to add, parsed with tonumber]
 -- @param duration [String boost length, e.g. '30' (minutes) or '2 hours']

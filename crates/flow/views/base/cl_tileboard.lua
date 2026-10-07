@@ -33,7 +33,7 @@ end
 
 --- Returns the size of the grid, either as a whole or for a single dimension.
 -- @param dimension=nil [Boolean true for the number of columns, false for rows, nil for both]
--- @return [Number/Hash the requested dimension, or the { x = columns, y = rows } table]
+-- @return [Number/Map the requested dimension, or the { x = columns, y = rows } table]
 function PANEL:get_grid_size(dimension)
   if isbool(dimension) then
     if dimension then
@@ -48,8 +48,8 @@ end
 
 --- Moves and resizes a docked panel according to its grid position and the current size
 -- of the board.
--- @param obj [Hash docked entry of the form { panel = Panel, pos = { x, y, w, h } }]
--- @return [Hash the same entry, or nil if its panel is invalid or the grid size is not positive]
+-- @param obj [Map docked entry of the form { panel = Panel, pos = { x, y, w, h } }]
+-- @return [Map the same entry, or nil if its panel is invalid or the grid size is not positive]
 function PANEL:position_panel(obj)
   local panel = obj.panel
 
@@ -70,12 +70,12 @@ end
 
 --- Fills in the missing grid coordinates of a docked entry and repositions its panel.
 -- Coordinates the entry already has are kept; only those that are nil take the given values.
--- @param panel [Hash docked entry as returned by attach_panel, not the panel itself]
+-- @param panel [Map docked entry as returned by attach_panel, not the panel itself]
 -- @param x [Number horizontal grid position]
 -- @param y [Number vertical grid position]
 -- @param w [Number width in grid cells]
 -- @param h [Number height in grid cells]
--- @return [Hash the entry, or nil if it could not be positioned]
+-- @return [Map the entry, or nil if it could not be positioned]
 function PANEL:set_docked_pos(panel, x, y, w, h)
   panel.pos.x = panel.pos.x or x
   panel.pos.y = panel.pos.y or y
@@ -91,7 +91,7 @@ end
 -- @param y=1 [Number vertical grid position]
 -- @param w=1 [Number width in grid cells]
 -- @param h=1 [Number height in grid cells]
--- @return [Hash the docked entry { panel = Panel, pos = { x, y, w, h } }, or nil if it could
+-- @return [Map the docked entry { panel = Panel, pos = { x, y, w, h } }, or nil if it could
 --   not be positioned]
 function PANEL:attach_panel(panel, x, y, w, h)
   if !isnumber(x) then x = 1 end

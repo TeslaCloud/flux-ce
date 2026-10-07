@@ -36,7 +36,7 @@ end
 -- Does nothing if the value has not changed. Functions cannot be networked.
 -- @param key [String variable name]
 -- @param value [Any new value, anything but a function]
--- @param send=nil [Player/Array<Player> who to send the value to; everyone if nil]
+-- @param send=nil [Player/List<Player> who to send the value to; everyone if nil]
 function ActiveNetwork.set_nv(key, value, send)
   if is_bad_type(key, value) then return end
   if ActiveNetwork.get_nv(key) == value then return end
@@ -48,7 +48,7 @@ end
 
 --- Sends the current value of this entity's networked variable to a player (or players).
 -- @param key [String variable name]
--- @param recv=nil [Player/Array<Player> who to send the value to; everyone if nil]
+-- @param recv=nil [Player/List<Player> who to send the value to; everyone if nil]
 function ent_meta:send_net_var(key, recv)
   Cable.send(recv, 'fl_netvar_set', self:EntIndex(), key, (stored[self] and stored[self][key]))
 end
@@ -66,7 +66,7 @@ function ent_meta:get_nv(key, default)
 end
 
 --- Flushes all of this entity's networked variables and tells clients to do the same.
--- @param recv=nil [Player/Array<Player> who to notify; everyone if nil]
+-- @param recv=nil [Player/List<Player> who to notify; everyone if nil]
 function ent_meta:clear_net_vars(recv)
   stored[self] = nil
   Cable.send(recv, 'fl_netvar_delete', self:EntIndex())
@@ -76,7 +76,7 @@ end
 -- Does nothing if a non-table value has not changed. Functions cannot be networked.
 -- @param key [String variable name]
 -- @param value [Any new value, anything but a function]
--- @param send=nil [Player/Array<Player> who to send the value to; everyone if nil]
+-- @param send=nil [Player/List<Player> who to send the value to; everyone if nil]
 function ent_meta:set_nv(key, value, send)
   if is_bad_type(key, value) then return end
   if !istable(value) and self:get_nv(key) == value then return end

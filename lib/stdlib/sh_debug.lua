@@ -21,7 +21,7 @@ if is_development then
 
   --- Returns all objects that were registered under a debug metric.
   -- @param id [String metric name]
-  -- @return [Array registered objects, or nil if nothing was registered under this metric]
+  -- @return [List registered objects, or nil if nothing was registered under this metric]
   function get_debug_metric(id)
     return metrics[id]
   end

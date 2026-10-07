@@ -4,7 +4,7 @@ if SERVER then
   --- Saves a table to 'settings/flux/' in the game folder as JSON. The '.json' extension
   -- is added if the key does not have one. Does nothing unless the value is a table.
   -- @param key [String name of the file, can include folders]
-  -- @param value [Hash data to save]
+  -- @param value [Map data to save]
   function Data.save(key, value)
     if !isstring(key) or !istable(value) then return end
 
@@ -19,7 +19,7 @@ if SERVER then
   -- mode if the file does not exist and no default is specified.
   -- @param key [String name of the file, '.json' is added if it has no extension]
   -- @param default=nil [Any returned if the file does not exist]
-  -- @return [Hash the loaded data, or the default]
+  -- @return [Map the loaded data, or the default]
   function Data.load(key, default)
     if !isstring(key) then return end
 
@@ -55,7 +55,7 @@ else
   --- Saves a table to the 'flux' folder inside the client's 'data' folder as JSON. The '.dat'
   -- extension is added if the key does not have one. Does nothing unless the value is a table.
   -- @param key [String name of the file, can include folders]
-  -- @param value [Hash data to save]
+  -- @param value [Map data to save]
   function Data.save(key, value)
     if !isstring(key) or !istable(value) then return end
 
@@ -70,7 +70,7 @@ else
   -- in development mode if the file does not exist and no default is specified.
   -- @param key [String name of the file, '.dat' is added if it has no extension]
   -- @param default=nil [Any returned if the file does not exist]
-  -- @return [Hash the loaded data, or the default]
+  -- @return [Map the loaded data, or the default]
   function Data.load(key, default)
     if !isstring(key) then return end
 
@@ -92,7 +92,7 @@ else
   --- Lists the files inside a folder of the 'flux' data folder. Clientside only.
   -- @param folder [String]
   -- @param default=nil [Any unused]
-  -- @return [Array<String> file names, nil if the folder is not a string]
+  -- @return [List<String> file names, nil if the folder is not a string]
   function Data.get_files(folder, default)
     if !isstring(folder) then return end
 
@@ -118,7 +118,7 @@ end
 
 --- Saves a table to the data folder of the current schema and map.
 -- @param key [String]
--- @param value [Hash data to save]
+-- @param value [Map data to save]
 -- @see [Data.save]
 function Data.save_schema(key, value)
   return Data.save('schemas/'..Flux.get_schema_folder()..'/'..game.GetMap()..'/'..key, value)
@@ -127,7 +127,7 @@ end
 --- Loads a table from the data folder of the current schema and map.
 -- @param key [String]
 -- @param default=nil [Any returned if the file does not exist]
--- @return [Hash the loaded data, or the default]
+-- @return [Map the loaded data, or the default]
 -- @see [Data.load]
 function Data.load_schema(key, default)
   return Data.load('schemas/'..Flux.get_schema_folder()..'/'..game.GetMap()..'/'..key, default)
@@ -141,7 +141,7 @@ end
 
 --- Saves plugin data. It is stored separately for every schema and map.
 -- @param key [String]
--- @param value [Hash data to save]
+-- @param value [Map data to save]
 -- @see [Data.save]
 function Data.save_plugin(key, value)
   return Data.save_schema('plugins/'..key, value)
@@ -153,7 +153,7 @@ end
 -- ```
 -- @param key [String]
 -- @param default=nil [Any returned if nothing has been saved yet]
--- @return [Hash the loaded data, or the default]
+-- @return [Map the loaded data, or the default]
 -- @see [Data.load]
 function Data.load_plugin(key, default)
   return Data.load_schema('plugins/'..key, default)

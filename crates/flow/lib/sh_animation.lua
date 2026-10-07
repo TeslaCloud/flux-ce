@@ -81,7 +81,7 @@ stored.player = {
 }
 
 --- Returns all of the animation tables.
--- @return [Hash animation tables by model class]
+-- @return [Map animation tables by model class]
 function Flux.Anim:all()
   return stored
 end
@@ -116,7 +116,7 @@ end
 --- Returns the animation table of a model. Models from a 'player' folder do not get one,
 -- as they use the default player animations.
 -- @param model [String path to the model]
--- @return [Hash animations by hold type, or nil if the model does not need them]
+-- @return [Map animations by hold type, or nil if the model does not need them]
 function Flux.Anim:get_table(model)
   if !model then return end
 

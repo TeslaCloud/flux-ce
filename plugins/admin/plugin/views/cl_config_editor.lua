@@ -93,7 +93,7 @@ end
 --- Binds the line to a config entry and creates the control for its data type: slider,
 -- checkbox, text entry, list editor or dropdown. Changes are sent to the server.
 -- @param key [String config key]
--- @param config_table [Hash the config's menu entry (name, description, type, data)]
+-- @param config_table [Map the config's menu entry (name, description, type, data)]
 function PANEL:set_config(key, config_table)
   self.config = config_table
 

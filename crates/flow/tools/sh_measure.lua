@@ -5,7 +5,7 @@ TOOL.ConfigName             = ''
 TOOL.ClientConVar['system'] = 'imperial'
 
 --- Sets the first measurement point to the position the player is aiming at.
--- @param trace [Hash trace result of the player's aim]
+-- @param trace [Map trace result of the player's aim]
 -- @return [Boolean always true]
 function TOOL:LeftClick(trace)
   if SERVER then return true end
@@ -16,7 +16,7 @@ function TOOL:LeftClick(trace)
 end
 
 --- Sets the second measurement point to the position the player is aiming at.
--- @param trace [Hash trace result of the player's aim]
+-- @param trace [Map trace result of the player's aim]
 -- @return [Boolean always true]
 function TOOL:RightClick(trace)
   if SERVER then return true end
@@ -27,7 +27,7 @@ function TOOL:RightClick(trace)
 end
 
 --- Clears both measurement points.
--- @param trace [Hash trace result of the player's aim; unused]
+-- @param trace [Map trace result of the player's aim; unused]
 -- @return [Boolean always true]
 function TOOL:Reload(trace)
   if SERVER then return true end

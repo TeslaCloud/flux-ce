@@ -246,7 +246,7 @@ end
 -- Each entry is a table with the fields weapon, scale, x, y and highlight.
 -- @param index [Number index in the local player's weapon list; wraps around]
 -- @param tab=false [Boolean return the entries instead of storing them in self.display]
--- @return [Array<Hash> the entries if tab is set, nil otherwise]
+-- @return [List<Map> the entries if tab is set, nil otherwise]
 function PLUGIN:make_display(index, tab)
   local client_weapons = PLAYER:GetWeapons()
   local offsety = 32

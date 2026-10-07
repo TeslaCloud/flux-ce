@@ -84,7 +84,7 @@ end
 
 --- Sets the compiled message to display and resizes the panel to its height.
 -- Does nothing if the chatbox panel does not exist.
--- @param msg_info [Hash compiled message, as returned by Chatbox.compile]
+-- @param msg_info [Map compiled message, as returned by Chatbox.compile]
 function PANEL:set_message(msg_info)
   local parent = Chatbox.panel
 

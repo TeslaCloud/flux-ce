@@ -16,7 +16,7 @@ end
 --- Applies a timed value to a multipliable attribute of every target, then notifies the targets
 -- and staff. The value is currently applied through Player#boost_attribute.
 -- @param player [Player the player who ran the command]
--- @param targets [Array<Player> players matched by the first command argument]
+-- @param targets [List<Player> players matched by the first command argument]
 -- @param attribute_id [String attribute to affect, normalized with to_id]
 -- @param value [String multiplier value, parsed with tonumber]
 -- @param duration [String effect length, e.g. '30' (minutes) or '2 hours']

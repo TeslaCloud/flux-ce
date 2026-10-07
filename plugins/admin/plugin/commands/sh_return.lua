@@ -10,7 +10,7 @@ CMD.aliases = { 'return', 'back' }
 --- Teleports the targeted players back to where they were before their last teleport and
 -- notifies them and staff.
 -- @param player [Player the caller, or an invalid entity when run from the server console]
--- @param targets [Array<Player> players to return]
+-- @param targets [List<Player> players to return]
 function CMD:on_run(player, targets)
   for k, v in ipairs(targets) do
     if IsValid(v) and v.prev_pos then

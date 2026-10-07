@@ -32,8 +32,8 @@ Area.tool_modes = {
   --   mode_list:Add(mode)
   -- end
   -- ```
-  -- @param list [Hash the Area.tool_modes table the mode is appended to]
-  -- @param data [Hash mode definition: title, area_type, ClientConVar and the optional
+  -- @param list [Map the Area.tool_modes table the mode is appended to]
+  -- @param data [Map mode definition: title, area_type, ClientConVar and the optional
   --   functions OnLeftClick(mode, tool, trace), OnRightClick(mode, tool, trace),
   --   OnReload(mode, tool, trace) and BuildCPanel(mode, panel). The default OnReload
   --   removes the area of that type under the trace]
@@ -85,7 +85,7 @@ function Area:OnSchemaLoaded()
 end
 
 --- Adds the built-in 'Text Area' mode to the area tool.
--- @param mode_list [Hash the Area.tool_modes table; modes are added with mode_list:Add]
+-- @param mode_list [Map the Area.tool_modes table; modes are added with mode_list:Add]
 function Area:AddAreaToolModes(mode_list)
   local mode = {}
   mode.title = 'Text Area'

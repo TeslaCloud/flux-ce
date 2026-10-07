@@ -54,7 +54,7 @@ player_meta.IsSuperAdmin  = function(self) return self:is_super_admin() end
 player_meta.IsAdmin       = function(self) return self:is_admin() end
 
 --- Returns the permissions set on the player individually, not counting those of their role.
--- @return [Hash PERM_ values keyed by permission ID]
+-- @return [Map PERM_ values keyed by permission ID]
 function player_meta:get_permissions()
   return self:get_nv('permissions', {})
 end
@@ -67,14 +67,14 @@ function player_meta:get_permission(perm)
 end
 
 --- Returns the player's temporary permissions.
--- @return [Hash tables with value and expires (unix timestamp) fields, keyed by permission ID]
+-- @return [Map tables with value and expires (unix timestamp) fields, keyed by permission ID]
 function player_meta:get_temp_permissions()
   return self:get_nv('temp_permissions', {})
 end
 
 --- Returns one of the player's temporary permissions.
 -- @param perm [String permission ID]
--- @return [Hash table with value (PERM_ value) and expires (unix timestamp), or nil if not set]
+-- @return [Map table with value (PERM_ value) and expires (unix timestamp), or nil if not set]
 function player_meta:get_temp_permission(perm)
   return self:get_temp_permissions()[perm]
 end

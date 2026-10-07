@@ -63,7 +63,7 @@ do
 end
 
 --- Returns the current values of all of the entity's bodygroups.
--- @return [Hash bodygroup values by bodygroup ID]
+-- @return [Map bodygroup values by bodygroup ID]
 function ent_meta:bodygroups()
   local bodygroups = {}
 
@@ -75,7 +75,7 @@ function ent_meta:bodygroups()
 end
 
 --- Sets several bodygroups of the entity at once.
--- @param bodygroups [Hash bodygroup values by bodygroup ID, as returned by Entity#bodygroups]
+-- @param bodygroups [Map bodygroup values by bodygroup ID, as returned by Entity#bodygroups]
 function ent_meta:set_bodygroups(bodygroups)
   for k, v in pairs(bodygroups) do
     self:SetBodygroup(k, v)

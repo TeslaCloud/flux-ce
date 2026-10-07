@@ -101,7 +101,7 @@ else
 
   --- Sends data to the callbacks the clients have registered with MVC.pull, MVC.request
   -- or MVC.listen. Serverside variant.
-  -- @param player [Player/Array<Player> recipients, everyone if not a valid player]
+  -- @param player [Player/List<Player> recipients, everyone if not a valid player]
   -- @param name [String name of the request]
   -- @param ... [Vararg data to pass to the callbacks]
   function MVC.push(player, name, ...)
@@ -114,7 +114,7 @@ else
 
   --- Sends a response to the player whose request is currently being handled. Can only
   -- be called from inside of an MVC.handler callback.
-  -- @param data [Any response to send, usually a Hash]
+  -- @param data [Any response to send, usually a Map]
   function respond_to(data)
     MVC.push(current_handler[1], current_handler[2], data)
   end

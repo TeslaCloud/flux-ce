@@ -96,7 +96,7 @@ end
 -- @param input [String source code]
 -- @param extended=false [Boolean also emit tokens for spaces, tabs, semicolons and
 --   newlines]
--- @return [Array<Hash> tokens with the fields tk (token type), val (text), line and pos;
+-- @return [List<Map> tokens with the fields tk (token type), val (text), line and pos;
 --   false if input is nil]
 function LuaLexer:tokenize(input, extended)
   local tokens = {}

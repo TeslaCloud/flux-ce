@@ -42,7 +42,7 @@ end
 --- Sets the door to edit, creates the rows for its properties
 -- and fills the conditions editor.
 -- @param entity [Entity the door]
--- @param conditions=nil [Array condition nodes that are currently set on the door]
+-- @param conditions=nil [List condition nodes that are currently set on the door]
 function PANEL:set_door(entity, conditions)
   self.door = entity
 
@@ -73,7 +73,7 @@ function PANEL:get_door()
 end
 
 --- Returns the properties that were changed in the menu.
--- @return [Hash changed values keyed by property id]
+-- @return [Map changed values keyed by property id]
 function PANEL:get_door_data()
   return self.door_data
 end

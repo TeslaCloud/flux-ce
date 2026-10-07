@@ -10,7 +10,7 @@ CMD.aliases = { 'plysetrank', 'charsetrank' }
 --- Sets the faction rank of every target whose faction has that rank, and notifies the
 -- targets and staff.
 -- @param player [Player the player who ran the command]
--- @param targets [Array<Player> players matched by the first command argument]
+-- @param targets [List<Player> players matched by the first command argument]
 -- @param rank [String rank index, parsed with tonumber]
 function CMD:on_run(player, targets, rank)
   rank = tonumber(rank)

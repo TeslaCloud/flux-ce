@@ -31,7 +31,7 @@ end
 -- the 'player' faction and rank 1 when they are missing.
 -- @param player [Player]
 -- @param char [Character the character being created]
--- @param char_data [Hash character creation data]
+-- @param char_data [Map character creation data]
 function Factions:PostCreateCharacter(player, char, char_data)
   char.faction = char_data.faction or 'player'
   char.rank = char_data.rank or 1
@@ -64,7 +64,7 @@ end
 
 --- Generates a name from the faction's name template when the creation data has no name.
 -- @param player [Player]
--- @param data [Hash character creation data, modified in place]
+-- @param data [Map character creation data, modified in place]
 function Factions:PreCreateCharacter(player, data)
   local faction_table = Factions.find_by_id(data.faction)
   
@@ -76,7 +76,7 @@ end
 
 --- Rejects character creation when no faction was chosen.
 -- @param player [Player]
--- @param data [Hash character creation data]
+-- @param data [Map character creation data]
 -- @return [Number CHAR_ERR_FACTION when the data has no faction, otherwise nil]
 function Factions:PlayerCreateCharacter(player, data)
   if !data.faction then

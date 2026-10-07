@@ -102,7 +102,7 @@ if SERVER then
   -- Cable.send(player, 'fl_bind_pressed', key)
   -- Cable.send(nil, 'fl_player_disconnected', player:EntIndex()) -- to everyone
   -- ```
-  -- @param player [Player/Array<Player> who to send the message to; everyone if nil]
+  -- @param player [Player/List<Player> who to send the message to; everyone if nil]
   -- @param id [String message name]
   -- @param ... [Vararg values to send]
   function cable.send(player, id, ...)

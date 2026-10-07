@@ -12,13 +12,13 @@ Bolt.players = players
 Bolt.bans = bans
 
 --- Returns every registered permission, grouped by category.
--- @return [Hash permission data tables keyed by category, then by permission ID]
+-- @return [Map permission data tables keyed by category, then by permission ID]
 function Bolt:get_permissions()
   return permissions
 end
 
 --- Returns every registered permission in one flat table, ignoring categories.
--- @return [Hash permission data tables keyed by permission ID]
+-- @return [Map permission data tables keyed by permission ID]
 function Bolt:get_all_permissions()
   local perm_table = {}
 
@@ -32,19 +32,19 @@ function Bolt:get_all_permissions()
 end
 
 --- Returns every registered role.
--- @return [Hash Role objects keyed by role ID]
+-- @return [Map Role objects keyed by role ID]
 function Bolt:get_roles()
   return roles
 end
 
 --- Returns the admin system's player table. Nothing in this plugin currently writes to it.
--- @return [Hash]
+-- @return [Map]
 function Bolt:get_players()
   return players
 end
 
 --- Returns the ban cache. It is only filled on the server, once the database is ready.
--- @return [Hash Ban records keyed by SteamID]
+-- @return [Map Ban records keyed by SteamID]
 function Bolt:get_bans()
   return bans
 end
@@ -102,7 +102,7 @@ end
 -- is kept unless force is set.
 -- @param id [String permission ID; nothing happens without one]
 -- @param category='general' [String category name or language phrase]
--- @param data [Hash permission data (name, description, category, role); id is written into it]
+-- @param data [Map permission data (name, description, category, role); id is written into it]
 -- @param force=false [Boolean replace an existing permission with the same ID]
 -- @see [Bolt#register_permission]
 function Bolt:add_permission(id, category, data, force)
@@ -325,7 +325,7 @@ if SERVER then
 
   --- Deletes the ban record of a SteamID from the database.
   -- @param steam_id [String]
-  -- @return [Boolean whether a ban record was found and deleted, Hash the deleted record's
+  -- @return [Boolean whether a ban record was found and deleted, Map the deleted record's
   --   column values (only when found)]
   function Bolt:remove_ban(steam_id)
     local obj = bans[steam_id]

@@ -13,8 +13,8 @@ local stored = {}
 -- })
 -- ```
 -- @param name [String unique name of the new font]
--- @param font_data [Hash font structure, same as the one surface.CreateFont accepts]
--- @return [Hash the stored font data, or nil if the arguments are invalid or the font exists]
+-- @param font_data [Map font structure, same as the one surface.CreateFont accepts]
+-- @return [Map the stored font data, or nil if the arguments are invalid or the font exists]
 function Font.create(name, font_data)
   if name == nil or !istable(font_data) then return end
   if stored[name] then return end
@@ -36,7 +36,7 @@ end
 -- ```
 -- @param name [String name of a font created with Font.create]
 -- @param size=nil [Number font size, the name is returned unchanged if omitted]
--- @param data=nil [Hash extra font data to merge into the sized font]
+-- @param data=nil [Map extra font data to merge into the sized font]
 -- @return [String name of the sized font, or false if no name was given]
 function Font.size(name, size, data)
   if !size then return name end
@@ -82,7 +82,7 @@ end
 
 --- Returns the data of a font created with Font.create.
 -- @param name [String]
--- @return [Hash font data, or nil if there is no such font]
+-- @return [Map font data, or nil if there is no such font]
 function Font.get(name)
   return stored[name]
 end

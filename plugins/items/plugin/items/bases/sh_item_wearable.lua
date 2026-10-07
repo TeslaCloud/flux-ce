@@ -52,14 +52,14 @@ end
 
 --- Returns the bodygroups that the player gets when they equip the item.
 -- @param player [Player]
--- @return [Hash bodygroup id (Number) or bodygroup name (String) to its value,
+-- @return [Map bodygroup id (Number) or bodygroup name (String) to its value,
 --   or nil if the item does not change bodygroups]
 function ItemWearable:get_bodygroups(player)
   return self.equip_bodygroups
 end
 
 --- Returns the player models that are able to wear the item.
--- @return [Array<String> paths to the models, or nil if any model fits]
+-- @return [List<String> paths to the models, or nil if any model fits]
 function ItemWearable:get_valid_models()
   return self.valid_models
 end

@@ -2,8 +2,8 @@ class 'LineLengthReader' extends 'BasicReader'
 
 --- Checks that no line is longer than the reader's 'Max' option (120 by default).
 -- The position and the line number are returned only when a line is too long.
--- @param tokens [Array<Hash> unused]
--- @param lines [Array<String> the code split into lines]
+-- @param tokens [List<Map> unused]
+-- @param lines [List<String> the code split into lines]
 -- @param source [String the code]
 -- @return [Boolean whether all lines fit, Number character offset of the offending line,
 --   Number its line number]

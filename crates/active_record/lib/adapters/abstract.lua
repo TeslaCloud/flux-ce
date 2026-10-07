@@ -49,7 +49,7 @@ end
 
 --- Connects to the database. The abstract implementation only marks the adapter as
 -- connected and never calls the callback; real adapters override it.
--- @param config [Hash database settings: host, user, password, port, database]
+-- @param config [Map database settings: host, user, password, port, database]
 -- @param on_connected [Function called with the adapter once the connection is ready]
 function ActiveRecord.Adapters.Abstract:connect(config, on_connected)
   self._connected = true
@@ -57,7 +57,7 @@ end
 
 --- Closes the database connection. The abstract implementation only clears the
 -- connected flag.
--- @param config=nil [Hash unused]
+-- @param config=nil [Map unused]
 function ActiveRecord.Adapters.Abstract:disconnect(config)
   self._connected = false
 end
@@ -131,7 +131,7 @@ end
 -- the column type methods (t:string, t:integer, ...). Does nothing in the abstract adapter.
 -- @param query [ActiveRecord::Query query the column was added to]
 -- @param column [String column name]
--- @param args [Hash column options, such as null and default]
+-- @param args [Map column options, such as null and default]
 -- @param obj [ActiveRecord::Query object the column type method was generated for]
 -- @param type [String abstract column type, e.g. 'primary_key']
 -- @param def [String adapter-specific SQL type definition]

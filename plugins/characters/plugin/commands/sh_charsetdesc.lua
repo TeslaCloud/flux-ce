@@ -9,7 +9,7 @@ CMD.aliases = { 'setdesc', 'setdescription', 'physdesc' }
 
 --- Sets the physical description of the first target's character and notifies staff.
 -- @param player [Player the player who ran the command]
--- @param targets [Array<Player> players matched by the first command argument]
+-- @param targets [List<Player> players matched by the first command argument]
 -- @param ... [Vararg words of the new description, joined with spaces]
 function CMD:on_run(player, targets, ...)
   local new_desc = table.concat({ ... }, ' ')

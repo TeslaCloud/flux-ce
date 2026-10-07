@@ -54,21 +54,21 @@ do
   -- note that Player#do_action only runs it if it is a table with a callback function
   -- field, which is then called with the player and the action ID.
   -- @param id [String identifier of the action]
-  -- @param callback=nil [Hash/Function handler of the action, see above]
+  -- @param callback=nil [Map/Function handler of the action, see above]
   function Flux.register_action(id, callback)
     action_storage[id] = callback
   end
 
   --- Retrieves whatever was registered for the action with the specified identifier.
   -- @param id [String identifier of the action]
-  -- @return [Hash/Function the registered value, or nil if there is none]
+  -- @return [Map/Function the registered value, or nil if there is none]
   function Flux.get_action(id)
     return action_storage[id]
   end
 
   --- Returns the table storing all of the actions, keyed by identifier. This is the storage
   -- table itself, not a copy.
-  -- @return [Hash]
+  -- @return [Map]
   function Flux.get_all_actions()
     return action_storage
   end
@@ -119,7 +119,7 @@ end
 --- Gets the table containing the information about the currently loaded schema. The server
 -- reads it from the schema's gamemode .txt file once and caches it; the client uses the
 -- copy shared by the server.
--- @return [Hash schema info with the name, author, description, version and folder fields]
+-- @return [Map schema info with the name, author, description, version and folder fields]
 function Flux.get_schema_info()
   if SERVER then
     if Flux.schema_info then return Flux.schema_info end

@@ -13,7 +13,7 @@ function player_meta:save_player()
 end
 
 --- Replaces the networked data table of the player.
--- @param data={} [Hash]
+-- @param data={} [Map]
 function player_meta:set_data(data)
   self:set_nv('fl_data', data or {})
 end
@@ -47,7 +47,7 @@ end
 
 --- Sends a notification to the player. Serverside variant.
 -- @param message [String text or language phrase]
--- @param arguments=nil [Hash values to substitute into the phrase]
+-- @param arguments=nil [Map values to substitute into the phrase]
 -- @param color=nil [Color]
 function player_meta:notify(message, arguments, color)
   Flux.Player:notify(self, message, arguments, color)
@@ -55,13 +55,13 @@ end
 
 --- Sends a light red notification to the player.
 -- @param message [String text or language phrase]
--- @param arguments=nil [Hash values to substitute into the phrase]
+-- @param arguments=nil [Map values to substitute into the phrase]
 function player_meta:notify_admin(message, arguments)
   Flux.Player:notify(self, message, arguments, Color(255, 128, 128))
 end
 
 --- Returns the ammo the player has.
--- @return [Hash amounts of ammo by ammo type ID, only for the types the player has]
+-- @return [Map amounts of ammo by ammo type ID, only for the types the player has]
 function player_meta:get_ammo_table()
   local ammo_table = {}
 
@@ -111,8 +111,8 @@ end
 --- Looks for unobstructed spots around the player that the player can be moved to.
 -- @param margin=3 [Number how far to search: spots are checked on a grid of this many steps
 --   in every direction, margin * 10 units apart]
--- @param filter=nil [Entity/Array<Entity>/Function trace filter, the player by default]
--- @return [Array<Vector> free positions, closest first]
+-- @param filter=nil [Entity/List<Entity>/Function trace filter, the player by default]
+-- @return [List<Vector> free positions, closest first]
 function player_meta:find_best_position(margin, filter)
   margin = margin or 3
 
@@ -160,7 +160,7 @@ function player_meta:find_best_position(margin, filter)
 end
 
 --- Moves the player to the closest unobstructed spot nearby.
--- @param filter=nil [Entity/Array<Entity>/Function trace filter, the player by default]
+-- @param filter=nil [Entity/List<Entity>/Function trace filter, the player by default]
 function player_meta:unstuck(filter)
   local positions = self:find_best_position(4, filter)
 
@@ -178,7 +178,7 @@ function player_meta:unstuck(filter)
 end
 
 --- Gives several weapons to the player.
--- @param weapons_table [Array<String> weapon classes]
+-- @param weapons_table [List<String> weapon classes]
 -- @param no_ammo=false [Boolean do not give the default ammo with the weapons]
 function player_meta:give_weapons(weapons_table, no_ammo)
   for k, v in pairs(weapons_table) do

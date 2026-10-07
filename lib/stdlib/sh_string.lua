@@ -115,7 +115,7 @@ end
 -- ```
 -- @param str [String string to search in]
 -- @param pattern [String Lua pattern to search for]
--- @return [Array<Hash> a hash with the text, start_pos, end_pos and matches (captures) keys
+-- @return [List<Map> a hash with the text, start_pos, end_pos and matches (captures) keys
 --   for every occurrence, or nil if str or pattern is missing]
 function string.find_all(str, pattern)
   if !str or !pattern then return end
@@ -332,8 +332,8 @@ end
 -- local base_class = ('ActiveRecord::Base'):parse_table() -- same as _G.ActiveRecord.Base
 -- ```
 -- @param str [String path to the table]
--- @param ref=_G [Hash table to start the lookup from]
--- @return [Hash/Boolean the table or false if it was not found, String the part of the path
+-- @param ref=_G [Map table to start the lookup from]
+-- @return [Map/Boolean the table or false if it was not found, String the part of the path
 --   that is not a table (only on failure)]
 function string.parse_table(str, ref)
   local tables = str:split('::')
@@ -357,8 +357,8 @@ end
 -- local parent, name = ('Thing'):parse_parent()       -- _G, 'Thing'
 -- ```
 -- @param str [String path to the table]
--- @param ref=_G [Hash table to start the lookup from]
--- @return [Hash the last existing table on the path, String the first part of the path that is
+-- @param ref=_G [Map table to start the lookup from]
+-- @return [Map the last existing table on the path, String the first part of the path that is
 --   not a table (the last part if the whole path already exists)]
 function string.parse_parent(str, ref)
   local tables = str:split('::')
@@ -421,7 +421,7 @@ end
 -- -- '5 tools were registered.'
 -- ```
 -- @param format [String text with placeholders made of letters, digits and underscores]
--- @param data={} [Hash placeholder name => String/Number value]
+-- @param data={} [Map placeholder name => String/Number value]
 -- @return [String the formatted string, Number amount of placeholders that were replaced]
 function string.fmt(format, data)
   data = istable(data) and data or {}

@@ -31,7 +31,7 @@ end
 
 --- Connects to a PostgreSQL server through the 'pg' module and sets the connection
 -- encoding. Calls #on_connection_failed if the connection fails.
--- @param config [Hash database settings: host, user, password, database, port (5432 if
+-- @param config [Map database settings: host, user, password, database, port (5432 if
 --   omitted) and encoding ('UTF8' if omitted)]
 -- @param on_connected=nil [Function called with the adapter once the connection is ready]
 function ActiveRecord.Adapters.Pg:connect(config, on_connected)
@@ -99,7 +99,7 @@ end
 --- Runs a raw SQL query on the PostgreSQL server. In sync mode this blocks until the
 -- query is done; without a connection the query is put into the queue instead.
 -- @param query [String SQL to run]
--- @param callback=nil [Function called with the result rows (an Array of row Hashes), the
+-- @param callback=nil [Function called with the result rows (a List of row Maps), the
 --   query string and the time the query took in seconds]
 -- @param query_type=nil [String unused]
 -- @return [Any whatever the callback returns in sync mode, nothing otherwise]
@@ -157,7 +157,7 @@ end
 --- Makes the column the primary key of the table when a 'primary_key' column is created.
 -- @param query [ActiveRecord::Query query the column was added to]
 -- @param column [String column name]
--- @param args [Hash unused]
+-- @param args [Map unused]
 -- @param obj [ActiveRecord::Query unused]
 -- @param type [String abstract column type]
 -- @param def [String unused]

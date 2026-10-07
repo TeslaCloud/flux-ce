@@ -71,7 +71,7 @@ end
 -- ```
 -- @param name [String key to store the material under]
 -- @param path [String path to the asset]
--- @param options={} [Hash sizes: Array<Number> of available image scales, in ascending order]
+-- @param options={} [Map sizes: List<Number> of available image scales, in ascending order]
 -- @return [Material the stored material, nil if the asset is not an image]
 function ThemeBase:register_asset(name, path, options)
   options = options or {}
@@ -117,7 +117,7 @@ end
 -- @param key [String]
 -- @param value [String name of an existing font to base this one on]
 -- @param scale=nil [Number font size, the base font is used as is if omitted]
--- @param data=nil [Hash extra font data to override in the sized font]
+-- @param data=nil [Map extra font data to override in the sized font]
 -- @return [String name of the font that has been set]
 function ThemeBase:set_font(key, value, scale, data)
   if key then

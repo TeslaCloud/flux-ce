@@ -1,5 +1,5 @@
 --- Returns the names of all ammo types that are registered in the game.
--- @return [Array<String> ammo type names]
+-- @return [List<String> ammo type names]
 function game.get_ammo_list()
   local last_ammo_name = game.GetAmmoName(1)
   local ammo_table = { last_ammo_name }
@@ -113,7 +113,7 @@ end
 --- Joins the names of a list of players into a single comma-separated string.
 -- If the list consists of all players on the server (and there are at least two), returns
 -- the 'ui.chat.everyone' phrase instead.
--- @param player_list [Array<Player>]
+-- @param player_list [List<Player>]
 -- @return [String player names, or the 'ui.chat.everyone' phrase]
 function util.player_list_to_string(player_list)
   local nlist = #player_list
@@ -209,7 +209,7 @@ end
 --- Checks whether anything is in the way between two positions, using a line trace.
 -- @param vec1 [Vector start position]
 -- @param vec2 [Vector end position]
--- @param filter=nil [Entity/Array<Entity>/Function entities for the trace to ignore, same as
+-- @param filter=nil [Entity/List<Entity>/Function entities for the trace to ignore, same as
 --   the filter of util.TraceLine]
 -- @return [Boolean true if the trace hit something]
 function util.vector_obstructed(vec1, vec2, filter)
@@ -296,7 +296,7 @@ function util.process_operator(op, a, b)
 end
 
 --- Returns the names of all operators that util.process_operator supports.
--- @return [Array<String> operator names]
+-- @return [List<String> operator names]
 function util.get_operators()
   local list = {}
 
@@ -308,7 +308,7 @@ function util.get_operators()
 end
 
 --- Returns the equality and logical operators together with their symbols.
--- @return [Hash operator name => String symbol, such as unequal => '!=']
+-- @return [Map operator name => String symbol, such as unequal => '!=']
 function util.get_logical_operators()
   local list = {
     equal = '==',
@@ -322,7 +322,7 @@ function util.get_logical_operators()
 end
 
 --- Returns the comparison operators together with their symbols.
--- @return [Hash operator name => String symbol, such as less_equal => '<=']
+-- @return [Map operator name => String symbol, such as less_equal => '<=']
 function util.get_relational_operators()
   local list = {
     less = '<',
@@ -337,7 +337,7 @@ function util.get_relational_operators()
 end
 
 --- Returns the equality operators together with their symbols.
--- @return [Hash operator name => String symbol, such as equal => '==']
+-- @return [Map operator name => String symbol, such as equal => '==']
 function util.get_equal_operators()
   local list = {
     equal = '==',
@@ -367,7 +367,7 @@ end
 --- Print a traceback to the current function call.
 -- @param suppress=false [Boolean do not print the traceback, only return it]
 -- @param ... [Vararg arguments for debug.traceback, such as a message and a level]
--- @return [Array string pieces of the traceback]
+-- @return [List string pieces of the traceback]
 function print_traceback(suppress, ...)
   local trace_text = debug.traceback(...)
 

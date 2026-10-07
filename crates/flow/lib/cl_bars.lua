@@ -27,11 +27,11 @@ Flux.Bars.default_spacing = 6
 -- })
 -- ```
 -- @param id [String unique bar ID]
--- @param data [Hash bar settings such as text, color, value, max_value, x, y, width, height,
+-- @param data [Map bar settings such as text, color, value, max_value, x, y, width, height,
 --   priority, type (BAR_TOP, BAR_MANUAL or BAR_HIDDEN), font and callback (receives the bar,
 --   returns its new value); missing keys get defaults]
 -- @param force=false [Boolean overwrite an existing bar with the same ID]
--- @return [Hash the stored bar, or nil if no data was given]
+-- @return [Map the stored bar, or nil if no data was given]
 function Flux.Bars:register(id, data, force)
   if !data then return end
 
@@ -73,7 +73,7 @@ end
 
 --- Returns the bar registered under the specified ID.
 -- @param id [String bar ID]
--- @return [Hash the bar, or false if it does not exist]
+-- @return [Map the bar, or false if it does not exist]
 function Flux.Bars:get(id)
   if stored[id] then
     return stored[id]
@@ -121,7 +121,7 @@ end
 
 --- Rebuilds the list of top bars grouped by priority. Bars rejected by the 'ShouldDrawBar'
 -- hook are left out.
--- @return [Hash priority mapped to an Array<String> of bar IDs]
+-- @return [Map priority mapped to a List<String> of bar IDs]
 function Flux.Bars:prioritize()
   sorted = {}
 
@@ -209,7 +209,7 @@ end
 
 --- Merges the specified settings into an existing bar.
 -- @param id [String bar ID]
--- @param data [Hash bar settings to overwrite, same keys as in Flux.Bars#register]
+-- @param data [Map bar settings to overwrite, same keys as in Flux.Bars#register]
 function Flux.Bars:adjust(id, data)
   local bar = self:get(id)
 
@@ -238,7 +238,7 @@ do
 
   --- Calculates the fill width of the bar, advancing its value animation, and converts
   -- its texts to upper case.
-  -- @param bar [Hash bar data]
+  -- @param bar [Map bar data]
   function Bars:PreDrawBar(bar)
     bar.cur_i = bar.cur_i or 1
 
@@ -261,7 +261,7 @@ do
   end
 
   --- Hides the bar while its value is outside of its display range.
-  -- @param bar [Hash bar data]
+  -- @param bar [Map bar data]
   -- @return [Boolean false if the bar should not be drawn]
   function Bars:ShouldDrawBar(bar)
     if bar.display < bar.value or bar.min_display >= bar.value then

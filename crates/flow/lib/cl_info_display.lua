@@ -23,7 +23,7 @@ local back_color    = Color(40, 40, 40, 120)
 -- })
 -- ```
 -- @param id [String unique ID, converted with string.to_id]
--- @param data [Hash settings: icon, size, color, back_color, percentage, min_percentage,
+-- @param data [Map settings: icon, size, color, back_color, percentage, min_percentage,
 --   max_percentage, offset_x, offset_y, and callback, which is called with this hash
 --   before every draw; missing keys get defaults]
 -- @return [InfoDisplay self, for chaining]
@@ -49,7 +49,7 @@ function InfoDisplay:add(id, data)
 end
 
 --- Returns all of the registered info display icons.
--- @return [Hash icon data by ID]
+-- @return [Map icon data by ID]
 function InfoDisplay:all()
   return stored
 end
@@ -72,7 +72,7 @@ end
 
 --- Draws a single info display icon after running its callback. Can be prevented
 -- with the 'PreDrawInfoDisplayItem' hook.
--- @param info [Hash icon data, as stored by InfoDisplay#add]
+-- @param info [Map icon data, as stored by InfoDisplay#add]
 -- @return [Number horizontal offset for the next icon, 0 if nothing was drawn]
 function InfoDisplay:draw(info)
   if hook.run('PreDrawInfoDisplayItem', info) == nil then

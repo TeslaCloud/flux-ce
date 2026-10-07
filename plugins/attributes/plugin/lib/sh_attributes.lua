@@ -4,7 +4,7 @@ local stored = Attributes.stored or {}
 Attributes.stored = stored
 
 --- Returns every registered attribute definition.
--- @return [Hash attribute definitions keyed by attribute ID]
+-- @return [Map attribute definitions keyed by attribute ID]
 function Attributes.get_stored()
   return stored
 end
@@ -18,7 +18,7 @@ end
 
 --- Returns the registered attribute definitions of a single type.
 -- @param type [Number attribute type, ATTRIBUTE_STAT or ATTRIBUTE_SKILL]
--- @return [Hash attribute definitions keyed by attribute ID]
+-- @return [Map attribute definitions keyed by attribute ID]
 function Attributes.get_by_type(type)
   local atts_table = {}
 
@@ -119,7 +119,7 @@ do
   -- -- }
   -- ```
   -- @param type=nil [Number attribute type to filter by, used on the server only]
-  -- @return [Hash attribute data keyed by attribute ID, nil on the client until it is networked]
+  -- @return [Map attribute data keyed by attribute ID, nil on the client until it is networked]
   function player_meta:get_attributes(type)
     if CLIENT then
       return self:get_nv('attributes')

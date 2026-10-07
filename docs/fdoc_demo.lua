@@ -14,7 +14,7 @@
 -- @deprecation_version [0.8.0]
 -- @param a=Default Value or Description [Number Some number]
 -- @param b [Object Some object]
--- @param c [Hash Table]
+-- @param c [Map Table]
 -- @return [Foo blank foo object, Number one hundred]
 --
 -- You can also refer to other functions (both variations are valid)

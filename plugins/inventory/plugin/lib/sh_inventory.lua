@@ -6,7 +6,7 @@ local stored = Inventories.stored or {}
 Inventories.stored = stored
 
 --- Returns all the inventory classes currently loaded on the server.
--- @return [Hash inventories]
+-- @return [Map inventories]
 function Inventories.all()
   return stored
 end
@@ -29,7 +29,7 @@ do
   end
 
   --- Get all the player's inventories.
-  -- @return [Hash inventories]
+  -- @return [Map inventories]
   function player_meta:get_inventories()
     return self.inventories or {}
   end
@@ -40,7 +40,7 @@ do
   --   @param inv_type [String]
   -- Will return items from all the inventories that the player has.
   -- @variant player_meta:get_items()
-  -- @return [Array<Item> items]
+  -- @return [List<Item> items]
   function player_meta:get_items(inv_type)
     if inv_type then
       return self:get_inventory(inv_type):get_items()
@@ -61,7 +61,7 @@ do
   --   @param inv_type [String]
   -- Will return item ids from all the inventories that the player has.
   -- @variant player_meta:get_items_ids()
-  -- @return [Array<Number> numbers; the inv_type variant returns the Inventory itself instead]
+  -- @return [List<Number> numbers; the inv_type variant returns the Inventory itself instead]
   function player_meta:get_items_ids(inv_type)
     if inv_type then
       return self:get_inventory(inv_type)
@@ -80,7 +80,7 @@ do
   -- @param x [Number]
   -- @param y [Number]
   -- @param inv_type [String]
-  -- @return [Array<Number> numbers]
+  -- @return [List<Number> numbers]
   function player_meta:get_slot(x, y, inv_type)
     return self:get_inventory(inv_type):get_slot(x, y)
   end
@@ -148,7 +148,7 @@ do
   -- Will return items from all the inventories that the player has.
   -- @variant player_meta:find_items(id)
   --   @param id [String]
-  -- @return [Array<Item> items]
+  -- @return [List<Item> items]
   function player_meta:find_items(id, inv_type)
     if inv_type then
       return self:get_inventory(inv_type):find_items(id)
@@ -353,7 +353,7 @@ do
     -- ```
     -- @param id [String]
     -- @param amount=1 [Number]
-    -- @param data=nil [Hash fields to override on the created items]
+    -- @param data=nil [Map fields to override on the created items]
     -- @param inv_type=player.default_inventory or 'main_inventory' [String]
     -- @return [Boolean was the item added successfully, String text of the error that occurred]
     function player_meta:give_item(id, amount, data, inv_type)

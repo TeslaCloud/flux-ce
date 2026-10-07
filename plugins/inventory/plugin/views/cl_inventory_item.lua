@@ -155,7 +155,7 @@ function PANEL:OnMouseReleased(...)
 end
 
 --- Sets the item that the slot displays.
--- @param instance_id [Number/Array<Number> instance id, or instance ids of a stack of items]
+-- @param instance_id [Number/List<Number> instance id, or instance ids of a stack of items]
 function PANEL:set_item(instance_id)
   if istable(instance_id) then
     if #instance_id > 1 then
@@ -182,7 +182,7 @@ end
 
 --- Sets the stack of items that the slot displays.
 -- Does nothing if the items are not stackable.
--- @param ids [Array<Number> instance ids of the items in the stack]
+-- @param ids [List<Number> instance ids of the items in the stack]
 function PANEL:set_item_multi(ids)
   local item_data = Item.find_instance_by_id(ids[1])
 

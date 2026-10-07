@@ -31,13 +31,13 @@ local default_extras = {
 local extras = table.Copy(default_extras)
 
 --- Returns all registered plugins, the schema included.
--- @return [Hash plugin path to plugin object]
+-- @return [Map plugin path to plugin object]
 function Plugin.all()
   return stored
 end
 
 --- Returns the hook cache.
--- @return [Hash hook name to an Array of entries shaped { callback, object, id = id }]
+-- @return [Map hook name to a List of entries shaped { callback, object, id = id }]
 function Plugin.get_cache()
   return hooks_cache
 end
@@ -77,7 +77,7 @@ end
 
 --- Adds every function of a table to the hook cache under the key it is stored at,
 -- so that hook.Call calls it with the table as self.
--- @param obj [Hash table with functions named after hooks, e.g. a plugin object]
+-- @param obj [Map table with functions named after hooks, e.g. a plugin object]
 -- @param id=nil [String ID to store with the entries, see Plugin.remove_hooks]
 function Plugin.cache_functions(obj, id)
   for k, v in pairs(obj) do
@@ -99,7 +99,7 @@ end
 -- Plugin.add_hooks('FLBinds', hooks)
 -- ```
 -- @param id [String unique ID of this set of hooks]
--- @param obj [Hash table with functions named after hooks]
+-- @param obj [Map table with functions named after hooks]
 function Plugin.add_hooks(id, obj)
   Plugin.cache_functions(obj, id)
 end
@@ -291,7 +291,7 @@ end
 -- Reads plugin.yml on the server, checks the plugin's environment and dependencies, includes
 -- its extra folders and its main file. The PLUGIN global is set while the plugin loads.
 -- @param path [String plugin folder or .lua file, relative to the LUA search path]
--- @return [Hash plugin info, or nil if the plugin was not loaded (already loaded, wrong
+-- @return [Map plugin info, or nil if the plugin was not loaded (already loaded, wrong
 --   environment or missing dependency)]
 function Plugin.include(path)
   local id = File.name(path)
@@ -700,7 +700,7 @@ do
     -- before the regular hooks. Development variant: handlers are run with pcall, failures
     -- are printed and reported through the OnHookError hook.
     -- @param name [String hook name]
-    -- @param gm [Hash gamemode table, or nil to skip gamemode hooks]
+    -- @param gm [Map gamemode table, or nil to skip gamemode hooks]
     -- @param ... [Vararg arguments to pass to the handlers]
     -- @return [Any values returned by the first handler that returned non-nil (cached plugin
     --   hooks pass on six values at most)]
@@ -731,7 +731,7 @@ do
     --- Overrides hook.Call so that plugin and schema hooks from the hook cache are called
     -- before the regular hooks. Production variant: handlers are called without pcall.
     -- @param name [String hook name]
-    -- @param gm [Hash gamemode table, or nil to skip gamemode hooks]
+    -- @param gm [Map gamemode table, or nil to skip gamemode hooks]
     -- @param ... [Vararg arguments to pass to the handlers]
     -- @return [Any values returned by the first handler that returned non-nil (cached plugin
     --   hooks pass on six values at most)]

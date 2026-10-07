@@ -53,7 +53,7 @@ end
 
 --- Tints the crosshair with the theme's accent color when the local player aims at a player
 -- or an item that is less than 600 units away.
--- @param trace [Hash trace result of the local player's aim]
+-- @param trace [Map trace result of the local player's aim]
 -- @param distance [Number distance from the local player to the trace hit position]
 -- @return [Color the accent color, or nil to keep the default color]
 function PLUGIN:AdjustCrosshairColor(trace, distance)
@@ -66,7 +66,7 @@ end
 
 --- Narrows the crosshair when the local player aims at a player or an item that is less than
 -- 600 units away.
--- @param trace [Hash trace result of the local player's aim]
+-- @param trace [Map trace result of the local player's aim]
 -- @param distance [Number distance from the local player to the trace hit position]
 -- @return [Number a gap of 8, or nil to keep the distance-based gap]
 function PLUGIN:AdjustCrosshairGap(trace, distance)

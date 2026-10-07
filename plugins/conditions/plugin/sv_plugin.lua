@@ -28,7 +28,7 @@ end
 -- })
 -- ```
 -- @param player [Player]
--- @param conditions [Array condition nodes, each a Hash with id, data and childs, as
+-- @param conditions [List condition nodes, each a Map with id, data and childs, as
 --   returned by the get_conditions method of the fl_conditions panel]
 -- @return [Boolean]
 function Conditions:check(player, conditions)

@@ -89,7 +89,7 @@ end
 
 --- Determines whether a 2D point is inside of a 2D polygon.
 -- @param point [Vector point to check, only x and y are used]
--- @param poly_vertices [Array<Vector> vertices of the polygon, in order]
+-- @param poly_vertices [List<Vector> vertices of the polygon, in order]
 -- @return [Boolean whether the point is inside, or nil if the arguments are invalid]
 function util.vector_in_poly(point, poly_vertices)
   if !isvector(point) or !istable(poly_vertices) or !isvector(poly_vertices[1]) then

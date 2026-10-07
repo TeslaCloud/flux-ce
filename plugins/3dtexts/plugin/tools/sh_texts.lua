@@ -18,7 +18,7 @@ TOOL.ClientConVar['b2']     = 0
 TOOL.ClientConVar['a2']     = 100
 
 --- Places a 3D text built from the tool's settings on the surface that was hit.
--- @param trace [Hash trace result of the tool owner's aim]
+-- @param trace [Map trace result of the tool owner's aim]
 -- @return [Boolean true if the text was placed (always true clientside), false if the
 --   text is empty, nil if the owner lacks the 'textadd' permission]
 function TOOL:LeftClick(trace)
@@ -61,7 +61,7 @@ function TOOL:LeftClick(trace)
 end
 
 --- Requests removal of the 3D text the tool owner is looking at.
--- @param trace [Hash trace result of the tool owner's aim]
+-- @param trace [Map trace result of the tool owner's aim]
 -- @return [Boolean always true]
 function TOOL:RightClick(trace)
   if CLIENT then return true end

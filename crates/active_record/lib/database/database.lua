@@ -97,7 +97,7 @@ end
 
 --- Creates the database named in the settings and disconnects the adapter afterwards.
 -- Only PostgreSQL is supported; on MySQL instructions are printed instead.
--- @param settings [Hash database settings: host, user, port, password and database]
+-- @param settings [Map database settings: host, user, port, password and database]
 function ActiveRecord.Database:setup(settings)
   local adapter = ActiveRecord.adapter
   adapter:sync(true)
@@ -131,7 +131,7 @@ end
 
 --- Drops the database named in the settings and disconnects the adapter afterwards.
 -- Connects to the 'template1' database to do so.
--- @param settings [Hash database settings: host, user, port, password and database]
+-- @param settings [Map database settings: host, user, port, password and database]
 function ActiveRecord.Database:drop_database(settings)
   ActiveRecord.adapter:sync(true)
   ActiveRecord.adapter:connect { host = settings.host, user = settings.user, port = settings.port, password = settings.password, database = "template1" }
@@ -143,7 +143,7 @@ function ActiveRecord.Database:drop_database(settings)
 end
 
 --- Disconnects the active adapter from the database.
--- @param settings=nil [Hash unused]
+-- @param settings=nil [Map unused]
 function ActiveRecord.Database:destroy(settings)
   ActiveRecord.adapter:disconnect()
 end

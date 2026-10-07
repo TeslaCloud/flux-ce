@@ -72,13 +72,13 @@ Doors:register_property('skin', {
 Doors:register_property('bodygroups', {
   --- Returns the bodygroups of the door.
   -- @param entity [Entity the door]
-  -- @return [Array bodygroup tables as returned by Entity:GetBodyGroups]
+  -- @return [List bodygroup tables as returned by Entity:GetBodyGroups]
   get_save_data = function(entity)
     return entity:GetBodyGroups()
   end,
   --- Passes the saved bodygroups to Entity:SetBodyGroups.
   -- @param entity [Entity the door]
-  -- @param data [Array the bodygroups that were saved by get_save_data]
+  -- @param data [List the bodygroups that were saved by get_save_data]
   on_load = function(entity, data)
     entity:SetBodyGroups(data)
   end

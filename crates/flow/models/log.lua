@@ -118,7 +118,7 @@ end
 --- Records a log entry and shows the message to every player as a notification.
 -- Server only.
 -- @param message [String text or language phrase of the notification]
--- @param arguments [Hash arguments of the phrase; its action, object and subject fields are
+-- @param arguments [Map arguments of the phrase; its action, object and subject fields are
 --   used for the log entry]
 -- @return [Log the Log class, for chaining]
 function Log:notify(message, arguments)

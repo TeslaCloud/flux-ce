@@ -18,7 +18,7 @@ ThirdPerson.was_third_person = ThirdPerson.was_third_person or false
 -- @param pos [Vector]
 -- @param angles [Angle]
 -- @param fov [Number]
--- @return [Hash view table, or nil while third person is off and not easing out]
+-- @return [Map view table, or nil while third person is off and not easing out]
 function ThirdPerson:CalcView(player, pos, angles, fov)
   local is_third_person = player:get_nv('third_person')
 

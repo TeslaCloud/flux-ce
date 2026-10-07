@@ -27,7 +27,7 @@ Doors.title_types = title_types
 -- })
 -- ```
 -- @param id [String unique property id, also the key the value is saved under]
--- @param data [Hash property definition: get_save_data(entity), on_load(entity, data)
+-- @param data [Map property definition: get_save_data(entity), on_load(entity, data)
 --   and the optional create_panel(entity, panel)]
 function Doors:register_property(id, data)
   properties[id] = data
@@ -49,7 +49,7 @@ end
 -- })
 -- ```
 -- @param id [String unique title type id]
--- @param data [Hash title type definition: name (phrase), draw(entity, w, h, alpha)
+-- @param data [Map title type definition: name (phrase), draw(entity, w, h, alpha)
 --   and the optional draw_back(entity, w, h, alpha)]
 function Doors:register_title_type(id, data)
   title_types[id] = data

@@ -17,19 +17,19 @@ if CLIENT then
   end
 
   --- Returns the names of all of the keyboard and mouse button enumerations.
-  -- @return [Hash enumeration names (such as 'KEY_N') by button code]
+  -- @return [Map enumeration names (such as 'KEY_N') by button code]
   function Flux.Binds:get_enums()
     return key_enums
   end
 
   --- Returns all of the Flux key binds.
-  -- @return [Hash console commands by button code]
+  -- @return [Map console commands by button code]
   function Flux.Binds:all()
     return stored
   end
 
   --- Returns the buttons that have something bound to them in the game's own settings.
-  -- @return [Hash engine bindings (String) by button code]
+  -- @return [Map engine bindings (String) by button code]
   function Flux.Binds:get_bound()
     local binds = {}
 
@@ -46,7 +46,7 @@ if CLIENT then
 
   --- Returns the buttons whose binding in the game's own settings is a number
   -- rather than a command.
-  -- @return [Hash engine bindings by button code]
+  -- @return [Map engine bindings by button code]
   function Flux.Binds:get_unbound()
     local binds = {}
 

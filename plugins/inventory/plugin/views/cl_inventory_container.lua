@@ -98,7 +98,7 @@ end
 
 --- Shows the inventories of another player next to the inventories of the local player.
 -- @param player [Player the player that the inventories belong to]
--- @param inventory_ids [Array<Number> ids of the inventories]
+-- @param inventory_ids [List<Number> ids of the inventories]
 function PANEL:open_player_inventories(player, inventory_ids)
   self.player = player
   self.container = {}
@@ -171,7 +171,7 @@ function PANEL:open_player_inventories(player, inventory_ids)
 end
 
 --- Returns the ids of the inventories that are opened in the panel.
--- @return [Array<Number> ids, or nil if nothing has been opened yet]
+-- @return [List<Number> ids, or nil if nothing has been opened yet]
 function PANEL:get_inventory_ids()
   return self.inventory_ids
 end

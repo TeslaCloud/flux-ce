@@ -44,7 +44,7 @@ end
 
 --- Builds an excerpt of the code around a token with a '^' pointer drawn under it.
 -- @param source [String source code]
--- @param token [Hash token from LuaLexer:tokenize]
+-- @param token [Map token from LuaLexer:tokenize]
 -- @return [String the excerpt and the pointer line, separated by a newline]
 function PR:point_at(source, token)
   local tk_begin = token.pos - string.len(token.val)

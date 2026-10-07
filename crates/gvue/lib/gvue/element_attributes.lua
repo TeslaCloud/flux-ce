@@ -1,7 +1,7 @@
 --- Creates a panel table for a Gvue element, to be filled in and given to vgui.Register.
 -- Its Init function sets up the default HTML data, CSS attributes and layout context of
 -- the element, and then calls the panel's own init method if it has one.
--- @return [Hash panel table]
+-- @return [Map panel table]
 function Gvue.new_panel()
   return {
     Init = function(obj)

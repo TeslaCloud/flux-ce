@@ -17,20 +17,20 @@ do
   -- })
   -- ```
   -- @param id [String currency ID; use lower case, lookups lower-case the ID they are given]
-  -- @param data [Hash currency definition: name, symbol, decimals, hidden, model, model_table]
+  -- @param data [Map currency definition: name, symbol, decimals, hidden, model, model_table]
   function Currencies:register_currency(id, data)
     stored[id] = data
   end
 
   --- Returns every registered currency.
-  -- @return [Hash currency definitions keyed by currency ID]
+  -- @return [Map currency definitions keyed by currency ID]
   function Currencies:all()
     return stored
   end
 
   --- Returns the definition of a registered currency.
   -- @param id [String currency ID, letter case is ignored]
-  -- @return [Hash currency definition, or nil if it is not registered]
+  -- @return [Map currency definition, or nil if it is not registered]
   function Currencies:find_currency(id)
     return stored[id:lower()]
   end

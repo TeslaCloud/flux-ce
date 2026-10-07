@@ -75,7 +75,7 @@ if SERVER then
   -- })
   -- ```
   -- @param id [String unique identifier of the prefix]
-  -- @param data [Hash prefix (lowercase String or Array<String>), callback (Function that
+  -- @param data [Map prefix (lowercase String or List<String>), callback (Function that
   --   receives the player, the message without the prefix and team_chat) and optionally
   --   check (Function that receives the full text and returns true if it matches)]
   function Prefixes:add(id, data)

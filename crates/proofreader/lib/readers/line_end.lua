@@ -1,8 +1,8 @@
 class 'LineEndReader' extends 'BasicReader'
 
 --- Checks the line endings of the code against the reader's 'LineEnding' option.
--- @param tokens [Array<Hash> unused]
--- @param lines [Array<String> unused]
+-- @param tokens [List<Map> unused]
+-- @param lines [List<String> unused]
 -- @param source [String the code]
 -- @return [Boolean/Number/String truthy if the check passes (true when the reader is
 --   disabled, otherwise the result of the string search), nil if it fails]

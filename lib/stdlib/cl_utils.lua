@@ -110,7 +110,7 @@ end
 -- @param steps [Number total amount of steps]
 -- @param from [Number starting value]
 -- @param to [Number final value]
--- @return [Array<Number> interpolated values, one per step]
+-- @return [List<Number> interpolated values, one per step]
 -- @see [util.cubic_ease_in]
 function util.cubic_ease_in_t(steps, from, to)
   local result = {}
@@ -126,7 +126,7 @@ end
 -- @param steps [Number total amount of steps]
 -- @param from [Number starting value]
 -- @param to [Number final value]
--- @return [Array<Number> interpolated values, one per step]
+-- @return [List<Number> interpolated values, one per step]
 -- @see [util.cubic_ease_out]
 function util.cubic_ease_out_t(steps, from, to)
   local result = {}
@@ -158,7 +158,7 @@ end
 -- @param steps [Number total amount of steps]
 -- @param from [Number starting value]
 -- @param to [Number final value]
--- @return [Array<Number> interpolated values, one per step]
+-- @return [List<Number> interpolated values, one per step]
 -- @see [util.cubic_ease_in_out]
 function util.cubic_ease_in_out_t(steps, from, to)
   local result = {}
@@ -264,7 +264,7 @@ end
 -- @param font [String font name]
 -- @param width [Number maximum width of a line in pixels]
 -- @param initial_width=0 [Number width that is already taken up on the first line]
--- @return [Array<String> lines, or nil if text, font or width is missing]
+-- @return [List<String> lines, or nil if text, font or width is missing]
 function util.wrap_text(text, font, width, initial_width)
   if !text or !font or !width then return end
 

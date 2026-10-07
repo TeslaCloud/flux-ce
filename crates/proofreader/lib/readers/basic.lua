@@ -1,7 +1,7 @@
 class 'BasicReader'
 
 --- Class constructor. Takes this reader's own section out of the proofreader config.
--- @param config=nil [Hash proofreader config, keyed by reader class name]
+-- @param config=nil [Map proofreader config, keyed by reader class name]
 function BasicReader:init(config)
   self.config = config and config[self.class_name] or {}
   self.point = true
@@ -18,8 +18,8 @@ end
 --- Checks the code for offenses. To be overridden: the base reader accepts everything.
 -- An override returns a falsy status for an offense, optionally followed by the character
 -- position and the line number of the offense.
--- @param tokens [Array<Hash> tokens from LuaLexer:tokenize]
--- @param lines [Array<String> the code split into lines]
+-- @param tokens [List<Map> tokens from LuaLexer:tokenize]
+-- @param lines [List<String> the code split into lines]
 -- @param source [String the code]
 -- @return [Boolean always true in the base reader]
 function BasicReader:proofread(tokens, lines, source)

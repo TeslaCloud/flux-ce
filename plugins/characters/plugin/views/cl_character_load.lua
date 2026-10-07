@@ -158,7 +158,7 @@ end
 
 --- Sets the character shown by the panel, hides the buttons if it is the active character
 -- and runs the PanelCharacterSet hook.
--- @param char_data [Hash networked character data]
+-- @param char_data [Map networked character data]
 function PANEL:set_character(char_data)
   self.char_data = char_data
 

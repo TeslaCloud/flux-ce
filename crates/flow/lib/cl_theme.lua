@@ -10,7 +10,7 @@ Theme.stored          = stored
 Theme.current_theme   = current_theme
 
 --- Returns all of the registered themes.
--- @return [Hash themes by ID]
+-- @return [Map themes by ID]
 function Theme.all()
   return stored
 end
@@ -119,7 +119,7 @@ end
 -- @param key [String]
 -- @param value [String name of an existing font to base this one on]
 -- @param scale=nil [Number font size, the base font is used as is if omitted]
--- @param data=nil [Hash extra font data to override in the sized font]
+-- @param data=nil [Map extra font data to override in the sized font]
 -- @see [ThemeBase#set_font]
 function Theme.set_font(key, value, scale, data)
   if current_theme then

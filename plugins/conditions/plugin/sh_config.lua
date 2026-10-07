@@ -4,8 +4,8 @@ Conditions:register_condition('steamid', {
   --- Builds the arguments for the text of the condition node: the operator symbol
   -- and the SteamID followed by the player's name.
   -- @param panel [Panel condition node, its parameters are stored in panel.data]
-  -- @param data [Hash the registered condition table]
-  -- @return [Hash operator and steam_id, each an empty string while it is not set]
+  -- @param data [Map the registered condition table]
+  -- @return [Map operator and steam_id, each an empty string while it is not set]
   get_args = function(panel, data)
     local steamid = panel.data.steamid
     local operator = util.operator_to_symbol(panel.data.operator) or ''
@@ -16,7 +16,7 @@ Conditions:register_condition('steamid', {
   icon = 'vgui/resource/icon_steam',
   --- Compares the player's SteamID with the stored value using the chosen operator.
   -- @param player [Player]
-  -- @param data [Hash condition parameters: operator, steamid]
+  -- @param data [Map condition parameters: operator, steamid]
   -- @return [Boolean result of the comparison, false if the operator or the value is not set]
   check = function(player, data)
     if !data.operator or !data.steamid then return false end
@@ -26,7 +26,7 @@ Conditions:register_condition('steamid', {
   --- Asks for a SteamID with a text prompt and stores it in the node data.
   -- Prompts again if the input does not start with 'STEAM_'.
   -- @param id [String condition id]
-  -- @param data [Hash the registered condition table]
+  -- @param data [Map the registered condition table]
   -- @param panel [Panel condition node that is being edited]
   -- @param menu=nil [Panel context menu the option was picked from, unused]
   -- @param parent=nil [Panel the fl_conditions panel, unused]
@@ -54,8 +54,8 @@ Conditions:register_condition('model', {
   --- Builds the arguments for the text of the condition node: the operator symbol
   -- and the model path.
   -- @param panel [Panel condition node, its parameters are stored in panel.data]
-  -- @param data [Hash the registered condition table]
-  -- @return [Hash operator and model, each an empty string while it is not set]
+  -- @param data [Map the registered condition table]
+  -- @return [Map operator and model, each an empty string while it is not set]
   get_args = function(panel, data)
     local operator = util.operator_to_symbol(panel.data.operator) or ''
     local parameter = panel.data.model or ''
@@ -65,7 +65,7 @@ Conditions:register_condition('model', {
   icon = 'icon16/bricks.png',
   --- Compares the player's model with the stored value using the chosen operator.
   -- @param player [Player]
-  -- @param data [Hash condition parameters: operator, model]
+  -- @param data [Map condition parameters: operator, model]
   -- @return [Boolean result of the comparison, false if the operator or the value is not set]
   check = function(player, data)
     if !data.operator or !data.model then return false end
@@ -75,7 +75,7 @@ Conditions:register_condition('model', {
   --- Asks for a model path with a text prompt and stores it in the node data.
   -- Prompts again if the input does not start with 'models'.
   -- @param id [String condition id]
-  -- @param data [Hash the registered condition table]
+  -- @param data [Map the registered condition table]
   -- @param panel [Panel condition node that is being edited]
   -- @param menu=nil [Panel context menu the option was picked from, unused]
   -- @param parent=nil [Panel the fl_conditions panel, unused]
@@ -103,8 +103,8 @@ Conditions:register_condition('health', {
   --- Builds the arguments for the text of the condition node: the operator symbol
   -- and the health value.
   -- @param panel [Panel condition node, its parameters are stored in panel.data]
-  -- @param data [Hash the registered condition table]
-  -- @return [Hash operator and health, each an empty string while it is not set]
+  -- @param data [Map the registered condition table]
+  -- @return [Map operator and health, each an empty string while it is not set]
   get_args = function(panel, data)
     local operator = util.operator_to_symbol(panel.data.operator) or ''
     local parameter = panel.data.health or ''
@@ -114,7 +114,7 @@ Conditions:register_condition('health', {
   icon = 'icon16/heart.png',
   --- Compares the player's health with the stored value using the chosen operator.
   -- @param player [Player]
-  -- @param data [Hash condition parameters: operator, health]
+  -- @param data [Map condition parameters: operator, health]
   -- @return [Boolean result of the comparison, false if the operator or the value is not set]
   check = function(player, data)
     if !data.operator or !data.health then return false end
@@ -123,7 +123,7 @@ Conditions:register_condition('health', {
   end,
   --- Asks for a health value with a text prompt and stores it in the node data as a number.
   -- @param id [String condition id]
-  -- @param data [Hash the registered condition table]
+  -- @param data [Map the registered condition table]
   -- @param panel [Panel condition node that is being edited]
   -- @param menu=nil [Panel context menu the option was picked from, unused]
   -- @param parent=nil [Panel the fl_conditions panel, unused]
@@ -147,8 +147,8 @@ Conditions:register_condition('armor', {
   --- Builds the arguments for the text of the condition node: the operator symbol
   -- and the armor value.
   -- @param panel [Panel condition node, its parameters are stored in panel.data]
-  -- @param data [Hash the registered condition table]
-  -- @return [Hash operator and armor, each an empty string while it is not set]
+  -- @param data [Map the registered condition table]
+  -- @return [Map operator and armor, each an empty string while it is not set]
   get_args = function(panel, data)
     local operator = util.operator_to_symbol(panel.data.operator) or ''
     local parameter = panel.data.armor or ''
@@ -158,7 +158,7 @@ Conditions:register_condition('armor', {
   icon = 'icon16/shield.png',
   --- Compares the player's armor with the stored value using the chosen operator.
   -- @param player [Player]
-  -- @param data [Hash condition parameters: operator, armor]
+  -- @param data [Map condition parameters: operator, armor]
   -- @return [Boolean result of the comparison, false if the operator or the value is not set]
   check = function(player, data)
     if !data.operator or !data.armor then return false end
@@ -167,7 +167,7 @@ Conditions:register_condition('armor', {
   end,
   --- Asks for an armor value with a text prompt and stores it in the node data as a number.
   -- @param id [String condition id]
-  -- @param data [Hash the registered condition table]
+  -- @param data [Map the registered condition table]
   -- @param panel [Panel condition node that is being edited]
   -- @param menu=nil [Panel context menu the option was picked from, unused]
   -- @param parent=nil [Panel the fl_conditions panel, unused]
@@ -191,8 +191,8 @@ Conditions:register_condition('active_weapon', {
   --- Builds the arguments for the text of the condition node: the operator symbol
   -- and the weapon class.
   -- @param panel [Panel condition node, its parameters are stored in panel.data]
-  -- @param data [Hash the registered condition table]
-  -- @return [Hash operator and weapon, each an empty string while it is not set]
+  -- @param data [Map the registered condition table]
+  -- @return [Map operator and weapon, each an empty string while it is not set]
   get_args = function(panel, data)
     local operator = util.operator_to_symbol(panel.data.operator) or ''
     local parameter = panel.data.weapon or ''
@@ -203,7 +203,7 @@ Conditions:register_condition('active_weapon', {
   --- Compares the class of the player's active weapon with the stored value
   -- using the chosen operator.
   -- @param player [Player]
-  -- @param data [Hash condition parameters: operator, weapon]
+  -- @param data [Map condition parameters: operator, weapon]
   -- @return [Boolean result of the comparison, false if the operator or the value is not
   --   set or the player has no valid active weapon]
   check = function(player, data)
@@ -214,7 +214,7 @@ Conditions:register_condition('active_weapon', {
   end,
   --- Asks for a weapon class with a text prompt and stores it in the node data.
   -- @param id [String condition id]
-  -- @param data [Hash the registered condition table]
+  -- @param data [Map the registered condition table]
   -- @param panel [Panel condition node that is being edited]
   -- @param menu=nil [Panel context menu the option was picked from, unused]
   -- @param parent=nil [Panel the fl_conditions panel, unused]

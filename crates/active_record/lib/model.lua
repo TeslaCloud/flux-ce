@@ -11,7 +11,7 @@ function ActiveRecord.Model:add(model)
 end
 
 --- Returns all registered model classes.
--- @return [Hash model classes keyed by their class name]
+-- @return [Map model classes keyed by their class name]
 function ActiveRecord.Model:all()
   return self.models
 end

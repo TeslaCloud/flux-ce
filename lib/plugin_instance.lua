@@ -3,7 +3,7 @@ class 'PluginInstance'
 --- Class constructor. Fills in the basic plugin fields, then merges the whole data table
 -- into the object.
 -- @param id [String plugin ID; data.id is used if this is nil]
--- @param data [Hash plugin info with name, author, folder, path, description and any
+-- @param data [Map plugin info with name, author, folder, path, description and any
 --   additional fields]
 function PluginInstance:init(id, data)
   self.name         = data.name         or 'Unknown Plugin'
@@ -65,7 +65,7 @@ function PluginInstance:set_description(desc)
 end
 
 --- Merges the fields of a table into the plugin object.
--- @param data [Hash fields to merge]
+-- @param data [Map fields to merge]
 function PluginInstance:set_data(data)
   table.safe_merge(self, data)
 end

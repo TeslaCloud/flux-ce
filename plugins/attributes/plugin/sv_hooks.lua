@@ -2,7 +2,7 @@
 -- level chosen during creation or the attribute's minimum.
 -- @param player [Player]
 -- @param char [Character the character being created]
--- @param char_data [Hash character creation data; levels are read from its attributes field]
+-- @param char_data [Map character creation data; levels are read from its attributes field]
 function AttributesPlugin:PostCreateCharacter(player, char, char_data)
   if char.attributes then
     for k, v in pairs(Attributes.get_stored()) do

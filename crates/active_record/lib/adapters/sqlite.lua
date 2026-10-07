@@ -20,7 +20,7 @@ ActiveRecord.Adapters.Sqlite._sql_syntax = 'sqlite'
 
 --- Calls the callback right away, since the SQLite database built into Garry's Mod
 -- needs no connection.
--- @param settings [Hash database settings; unused]
+-- @param settings [Map database settings; unused]
 -- @param on_connected=nil [Function called with the adapter]
 function ActiveRecord.Adapters.Sqlite:connect(settings, on_connected)
   if isfunction(on_connected) then on_connected(self) end
@@ -49,7 +49,7 @@ end
 --- Runs a raw SQL query on the built-in SQLite database. Always blocks until the query
 -- is done, regardless of the sync mode.
 -- @param query [String SQL to run]
--- @param callback=nil [Function called with the result rows (an Array of row Hashes, or
+-- @param callback=nil [Function called with the result rows (a List of row Maps, or
 --   nil if the query produced no rows), the query string and the time taken in seconds]
 -- @param query_type=nil [String unused]
 -- @return [Any whatever the callback returns; nothing without a callback or on error]

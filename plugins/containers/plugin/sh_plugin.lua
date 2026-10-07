@@ -15,8 +15,8 @@ do
   --   close_sound = 'physics/wood/wood_box_impact_hard6.wav'
   -- })
   -- ```
-  -- @param model [String/Array<String> path to the model, or a list of them]
-  -- @param data [Hash container data: name and desc (language phrases), w and h (size of the
+  -- @param model [String/List<String> path to the model, or a list of them]
+  -- @param data [Map container data: name and desc (language phrases), w and h (size of the
   --   inventory in slots), and optionally open_sound and close_sound]
   function Container:register_prop(model, data)
     if istable(model) then
@@ -29,14 +29,14 @@ do
   end
 
   --- Returns all the registered containers.
-  -- @return [Hash container data, keyed by the lowercase path to the model]
+  -- @return [Map container data, keyed by the lowercase path to the model]
   function Container:all()
     return stored
   end
 
   --- Finds the container data that is registered for the model.
   -- @param model [String path to the model; case-insensitive]
-  -- @return [Hash container data, or nil if the model is not a container]
+  -- @return [Map container data, or nil if the model is not a container]
   function Container:find(model)
     return stored[model:lower()]
   end

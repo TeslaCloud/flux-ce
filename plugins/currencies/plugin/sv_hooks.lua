@@ -3,7 +3,7 @@
 -- character.
 -- @param player [Player]
 -- @param char [Character the character being created]
--- @param char_data [Hash character creation data]
+-- @param char_data [Map character creation data]
 function Currencies:PostCreateCharacter(player, char, char_data)
   for k, v in pairs(Currencies.all()) do
     local currency = Currency.new()
@@ -84,7 +84,7 @@ end
 -- @param amount [Number]
 -- @param currency [String currency ID]
 -- @param pos [Vector position the money would be dropped at]
--- @param trace [Hash eye trace result of the player]
+-- @param trace [Map eye trace result of the player]
 -- @return [Boolean false when not allowed, String error phrase if there is one; nothing
 --   when allowed]
 function Currencies:CanPlayerDropMoney(player, amount, currency, pos, trace)

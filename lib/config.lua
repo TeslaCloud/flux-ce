@@ -9,20 +9,20 @@ Config.stored = stored
 local cache = {}
 
 --- Returns the table of all stored configs.
--- @return [Hash config key to config data table (value, hidden, added_by, ...)]
+-- @return [Map config key to config data table (value, hidden, added_by, ...)]
 function Config.all()
   return stored
 end
 
 --- Returns the value cache that Config.get reads from.
--- @return [Hash config key to cached value]
+-- @return [Map config key to cached value]
 function Config.cache()
   return cache
 end
 
 --- Returns the stored data table of a config rather than just its value.
 -- @param id [String config key]
--- @return [Hash config data (value, hidden, added_by, ...), or nil if there is no such config]
+-- @return [Map config data (value, hidden, added_by, ...), or nil if there is no such config]
 function Config.find(id)
   return stored[id]
 end
@@ -30,7 +30,7 @@ end
 if SERVER then
   --- Loads the saved configs from the 'config' data file and puts them over the stored ones.
   -- Serverside only.
-  -- @return [Hash all stored configs]
+  -- @return [Map all stored configs]
   function Config.load()
     local loaded = Data.load('config', {})
 
@@ -144,7 +144,7 @@ else
   -- @param id='other' [String category ID]
   -- @param name='Other' [String display name or language phrase]
   -- @param description='' [String description or language phrase]
-  -- @return [Hash category table]
+  -- @return [Map category table]
   -- @see [Config.add_to_menu]
   function Config.create_category(id, name, description)
     id = id or 'other'
@@ -179,7 +179,7 @@ else
 
   --- Returns a config menu category. Clientside only.
   -- @param id [String category ID]
-  -- @return [Hash category table, or nil if there is no such category]
+  -- @return [Map category table, or nil if there is no such category]
   function Config.get_category(id)
     return menu_items[id]
   end
@@ -193,7 +193,7 @@ else
   --   phrase]
   -- @param data_type=nil [String type of the editor to show, e.g. 'number', 'boolean',
   --   'string' or 'table']
-  -- @param data={} [Hash extra data for the editor, e.g. min_value, max_value, decimals,
+  -- @param data={} [Map extra data for the editor, e.g. min_value, max_value, decimals,
   --   default_value]
   function Config.add_to_menu(category, key, name, description, data_type, data)
     if !category or !key then return end
@@ -212,7 +212,7 @@ else
   end
 
   --- Returns all config menu categories together with their configs. Clientside only.
-  -- @return [Hash category ID to category table]
+  -- @return [Map category ID to category table]
   function Config.get_menu_keys()
     return menu_items
   end
@@ -253,9 +253,9 @@ if SERVER then
   --- Imports config values from a YAML file or from a table and sets every one of them.
   -- Serverside only. The 'depends' key is skipped, and so is every key for which the
   -- ShouldConfigImport hook returns a non-nil value.
-  -- @param path [String/Hash path to a YAML file, or a table of config key to value]
+  -- @param path [String/Map path to a YAML file, or a table of config key to value]
   -- @param from_config=CONFIG_FLUX [Number CONFIG_FLUX, CONFIG_SCHEMA or CONFIG_PLUGIN]
-  -- @return [Hash the imported table, or nil if the file could not be read or path is
+  -- @return [Map the imported table, or nil if the file could not be read or path is
   --   neither a string nor a table]
   function Config.import(path, from_config)
     from_config = from_config or CONFIG_FLUX
@@ -309,9 +309,9 @@ end
 --   }
 -- })
 -- ```
--- @param path [String/Hash path to a YAML file, or the already parsed definitions]
+-- @param path [String/Map path to a YAML file, or the already parsed definitions]
 -- @param from_config=CONFIG_FLUX [Number currently unused]
--- @return [Hash the definitions table, or nil if path is neither a string nor a table]
+-- @return [Map the definitions table, or nil if path is neither a string nor a table]
 function Config.read(path, from_config)
   from_config = from_config or CONFIG_FLUX
 

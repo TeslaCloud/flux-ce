@@ -21,7 +21,7 @@ end
 
 --- Removes the whitelist for a faction from every target that has it and notifies staff.
 -- @param player [Player the player who ran the command]
--- @param targets [Array<Player> players matched by the first command argument]
+-- @param targets [List<Player> players matched by the first command argument]
 -- @param faction_id [String faction ID or name, or a part of either]
 -- @param strict=nil [String any extra argument makes the faction lookup exact]
 function CMD:on_run(player, targets, faction_id, strict)

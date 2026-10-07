@@ -34,7 +34,7 @@ end
 
 --- Find a pipeline with a specified ID. Case-sensitive.
 -- @param id [String pipeline ID]
--- @return [Hash pipeline data, or nil if there is no such pipeline]
+-- @return [Map pipeline data, or nil if there is no such pipeline]
 function Pipeline.find(id)
   return stored[id]
 end
@@ -62,7 +62,7 @@ do
   -- and automatically extracts the ID based on the filename
   -- (for example, "sh_test_file.lua" becomes "test_file" in the ID).
   -- After that if the pipe is a valid registered pipeline, the callback is called.
-  -- @param pipe [String/Hash pipeline ID, or the pipeline data from Pipeline.find]
+  -- @param pipe [String/Map pipeline ID, or the pipeline data from Pipeline.find]
   -- @param file_name [String path of the file to include]
   function Pipeline.include(pipe, file_name)
     if isstring(pipe) then

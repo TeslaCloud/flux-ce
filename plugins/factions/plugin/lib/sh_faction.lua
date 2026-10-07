@@ -56,7 +56,7 @@ end
 
 --- Returns every connected player whose faction is the given one.
 -- @param id [String faction ID]
--- @return [Array<Player>]
+-- @return [List<Player>]
 function Factions.get_players(id)
   local players = {}
 
@@ -90,7 +90,7 @@ function Factions.find(name, strict)
 end
 
 --- Returns every registered faction.
--- @return [Hash factions keyed by faction ID]
+-- @return [Map factions keyed by faction ID]
 function Factions.all()
   return stored
 end
@@ -159,7 +159,7 @@ do
   end
 
   --- Returns the faction whitelists of the player.
-  -- @return [Array Whitelist records on the server, whitelisted faction IDs on the client]
+  -- @return [List Whitelist records on the server, whitelisted faction IDs on the client]
   function player_meta:get_whitelists()
     return SERVER and self.record.whitelists or self:get_nv('whitelists', {})
   end

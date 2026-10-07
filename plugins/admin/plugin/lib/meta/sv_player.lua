@@ -32,7 +32,7 @@ end
 
 --- Replaces the player's networked table of individual permissions. Does not touch the
 -- database.
--- @param perm_table [Hash PERM_ values keyed by permission ID]
+-- @param perm_table [Map PERM_ values keyed by permission ID]
 function player_meta:set_permissions(perm_table)
   self:set_nv('permissions', perm_table)
 end
@@ -78,7 +78,7 @@ end
 
 --- Replaces the player's networked table of temporary permissions. Does not touch the
 -- database.
--- @param perm_table [Hash tables with value and expires (unix timestamp) fields, keyed by
+-- @param perm_table [Map tables with value and expires (unix timestamp) fields, keyed by
 --   permission ID]
 function player_meta:set_temp_permissions(perm_table)
   self:set_nv('temp_permissions', perm_table)

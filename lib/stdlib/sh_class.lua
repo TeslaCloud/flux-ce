@@ -22,8 +22,8 @@ local last_class = nil
 -- local dog = Dog.new('Rex')
 -- ```
 -- @param name [String class name in ConstantStyle, may be namespaced (e.g. 'ActiveRecord::Model')]
--- @param parent_class=nil [String/Hash base class or its name]
--- @return [Hash the created class]
+-- @param parent_class=nil [String/Map base class or its name]
+-- @return [Map the created class]
 -- @see [extends]
 -- @see [mod]
 function class(name, parent_class)
@@ -127,8 +127,8 @@ end
 -- -- MyLibrary.now and MyLibrary.tomorrow now point to the DateTime functions.
 -- delegate(MyLibrary, { 'now', 'tomorrow', to = 'DateTime' })
 -- ```
--- @param obj [Hash object or class that receives the methods]
--- @param t [Hash method names as array elements, the source class or its name in the `to` key]
+-- @param obj [Map object or class that receives the methods]
+-- @param t [Map method names as array elements, the source class or its name in the `to` key]
 -- @return [Boolean true, or nil if obj or t is not a table or `to` is missing]
 function delegate(obj, t)
   if !istable(obj) or !istable(t) or !t.to then return end
@@ -153,7 +153,7 @@ end
 -- -- The base class can also be passed as a table.
 -- class 'Dog' extends(Animal)
 -- ```
--- @param parent_class [String/Hash base class or its name]
+-- @param parent_class [String/Map base class or its name]
 -- @return [Boolean whether or not did the extension succeed]
 -- @see [class]
 function extends(parent_class)

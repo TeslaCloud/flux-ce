@@ -13,20 +13,20 @@ ActiveRecord.Base.table_name  = ''
 
 --- Database schema of the object.
 -- This table contains all the columns that are written to the database.
--- @return [Hash]
+-- @return [Map]
 ActiveRecord.Base.schema      = nil
 
 --- @warning [Internal]
 -- Class relations of the object.
 -- Serves as a list of objects that are children to this object
 -- or that this object is a child to.
--- @return [Hash]
+-- @return [Map]
 ActiveRecord.Base.relations   = {}
 
 --- @warning [Internal]
 -- List of validations to be run when the object is being saved,
 -- as well as some internal data related to them.
--- @return [Hash]
+-- @return [Map]
 ActiveRecord.Base.validations = {}
 
 --- @warning [Internal]
@@ -58,7 +58,7 @@ end
 
 --- Returns the database schema, or attempts to get it from the global schema
 -- storage in case the object hasn't been properly initialized yet.
--- @return [Hash schema]
+-- @return [Map schema]
 function ActiveRecord.Base:get_schema()
   self.schema = self.schema or ActiveRecord.schema[self.table_name] or {}
   return self.schema
@@ -66,7 +66,7 @@ end
 
 --- Dump the object as a simple data table.
 -- This simply dumps all the values of the variables defined in the schema.
--- @return [Hash schema, ActiveRecord::Base(self)]
+-- @return [Map schema, ActiveRecord::Base(self)]
 function ActiveRecord.Base:dump()
   local ret = {}
     for k, data in pairs(self:get_schema()) do
@@ -84,8 +84,8 @@ end
 -- Object:where('column > ?', 100)
 -- Object:where({ ['column'] = 'value', ['column2'] = { 'value', 'value2' } })
 -- ```
--- @param condition [String/Hash column name, SQL condition (which may use ? placeholders),
---   or a hash of column-value pairs in which an Array value stands for IN (...)]
+-- @param condition [String/Map column name, SQL condition (which may use ? placeholders),
+--   or a hash of column-value pairs in which a List value stands for IN (...)]
 -- @param ... [Vararg value to compare the column with, or the values that replace the
 --   ? placeholders]
 -- @return [ActiveRecord::Base(self)]
@@ -132,8 +132,8 @@ end
 -- Object:where_not('column > ?', 100)
 -- Object:where_not({ ['column'] = 'value', ['column2'] = { 'value', 'value2' } })
 -- ```
--- @param condition [String/Hash SQL condition (which may use ? placeholders), or a hash
---   of column-value pairs in which an Array value stands for NOT IN (...)]
+-- @param condition [String/Map SQL condition (which may use ? placeholders), or a hash
+--   of column-value pairs in which a List value stands for NOT IN (...)]
 -- @param ... [Vararg values that replace the ? placeholders]
 -- @return [ActiveRecord::Base(self)]
 function ActiveRecord.Base:where_not(condition, ...)
@@ -284,7 +284,7 @@ end
 --- @warning [Internal]
 -- Internal function to fetch all relations when the object is fetched from the database.
 -- @param callback [Function called with the objects once all of their relations are loaded]
--- @param objects [Array<ActiveRecord::Base> objects to fetch the relations of]
+-- @param objects [List<ActiveRecord::Base> objects to fetch the relations of]
 -- @param n=1 [Number index of the relation to fetch]
 -- @param obj_id=1 [Number index of the object to fetch the relation of]
 -- @return [ActiveRecord::Base(self)]
@@ -338,7 +338,7 @@ end
 
 --- @warning [Internal]
 -- Runs the current query based on the query map and flushes the query map.
--- @param callback [Function called with an Array of the loaded objects; not called if
+-- @param callback [Function called with a List of the loaded objects; not called if
 --   nothing was found]
 -- @return [ActiveRecord::Base(self)]
 function ActiveRecord.Base:run_query(callback)
@@ -395,7 +395,7 @@ end
 --- @warning [Internal]
 -- Internal function to create a new instance of the object based on the
 -- data from the database.
--- @param data [Hash row returned by the database]
+-- @param data [Map row returned by the database]
 -- @return [ActiveRecord::Base(object)]
 function ActiveRecord.Base:_create_restored(data)
   local object = self.class.new()
@@ -437,7 +437,7 @@ end
 -- ```
 -- Object:all():get(function(results) ... end)
 -- ```
--- @param callback [Function receives an Array of the loaded objects]
+-- @param callback [Function receives a List of the loaded objects]
 -- @return [ActiveRecord::Base(self)]
 function ActiveRecord.Base:get(callback)
   self._expect = nil
@@ -626,7 +626,7 @@ end
 --   print(obj.users) -- table
 -- end)
 -- ```
--- @param what [String/Hash table name of the child model, or a hash such as
+-- @param what [String/Map table name of the child model, or a hash such as
 --   { 'table_name', as = 'field_name' } to store the object(s) in another field]
 -- @param many [Boolean true if the object has many of them, false if it has only one]
 -- @return [ActiveRecord::Base(self)]
@@ -677,7 +677,7 @@ end
 --   print(obj.users) -- table
 -- end)
 -- ```
--- @param what [String/Hash table name of the child model, or a hash such as
+-- @param what [String/Map table name of the child model, or a hash such as
 --   { 'table_name', as = 'field_name' } to store the objects in another field]
 -- @return [ActiveRecord::Base(self)]
 function ActiveRecord.Base:has_many(what)
@@ -738,7 +738,7 @@ end
 -- ```
 -- See all available validations in ActiveRecord::Validator.
 -- @param column [String]
--- @param options [Hash validation ids mapped to their settings, e.g. { min_length = 4 }]
+-- @param options [Map validation ids mapped to their settings, e.g. { min_length = 4 }]
 -- @return [ActiveRecord::Base(self)]
 function ActiveRecord.Base:validates(column, options)
   local current_options = self.validations[column] or {}

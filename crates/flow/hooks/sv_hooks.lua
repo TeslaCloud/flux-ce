@@ -316,7 +316,7 @@ end
 -- @param player [Player]
 -- @param model [String model of the vehicle]
 -- @param name [String name of the vehicle in the vehicle list]
--- @param tab [Hash vehicle table from the vehicle list]
+-- @param tab [Map vehicle table from the vehicle list]
 -- @return [Boolean whether spawning is allowed]
 function GM:PlayerSpawnVehicle(player, model, name, tab)
   if !IsValid(player) then return true end
@@ -337,7 +337,7 @@ end
 -- return false. Invalid players are always allowed.
 -- @param player [Player]
 -- @param weapon [String class of the weapon]
--- @param swep [Hash information about the weapon from the weapon list]
+-- @param swep [Map information about the weapon from the weapon list]
 -- @return [Boolean whether spawning is allowed]
 function GM:PlayerSpawnSWEP(player, weapon, swep)
   if !IsValid(player) then return true end
@@ -398,7 +398,7 @@ end
 -- return false. Invalid players are always allowed.
 -- @param player [Player]
 -- @param weapon [String class of the weapon]
--- @param swep [Hash information about the weapon from the weapon list]
+-- @param swep [Map information about the weapon from the weapon list]
 -- @return [Boolean whether giving the weapon is allowed]
 function GM:PlayerGiveSWEP(player, weapon, swep)
   if !IsValid(player) then return true end
@@ -660,7 +660,7 @@ end
 --- Strips the weapons of the player, gives them the default loadout and selects the first
 -- weapon of it.
 -- @param player [Player]
--- @param default_loadout [Array<String> weapon classes to give]
+-- @param default_loadout [List<String> weapon classes to give]
 function GM:PostPlayerLoadout(player, default_loadout)
   player:StripWeapons()
 

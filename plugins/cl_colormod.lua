@@ -72,7 +72,7 @@ do
 
   --- Replaces the local player's whole color modification table.
   -- Does nothing if tab is not a table.
-  -- @param tab [Hash '$pp_colour_*' keys and their values, as accepted by DrawColorModify]
+  -- @param tab [Map '$pp_colour_*' keys and their values, as accepted by DrawColorModify]
   function Flux.set_color_mod_table(tab)
     if istable(tab) then
       PLAYER.color_mod_table = tab

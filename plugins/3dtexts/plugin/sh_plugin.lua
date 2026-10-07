@@ -65,7 +65,7 @@ if SERVER then
   --   angle       = angle
   -- })
   -- ```
-  -- @param data [Hash text data: text, style, scale, color, extra_color, pos, normal, angle
+  -- @param data [Map text data: text, style, scale, color, extra_color, pos, normal, angle
   --   and optional fade_offset]
   function SurfaceText:add_text(data)
     if !data or !data.text or !data.pos or !data.angle or !data.style or !data.scale then return end
@@ -90,7 +90,7 @@ if SERVER then
   --   angle       = angle -- built the same way as for SurfaceText:add_text
   -- })
   -- ```
-  -- @param data [Hash picture data: url, width, height, pos, normal, angle
+  -- @param data [Map picture data: url, width, height, pos, normal, angle
   --   and optional fade_offset]
   function SurfaceText:add_picture(data)
     if !data or !data.url or !data.width or !data.height then return end
@@ -145,7 +145,7 @@ if SERVER then
   end)
 else
   --- Finds the 3D text hit by the trace and asks the server to remove it. Clientside only.
-  -- @param trace [Hash trace result, e.g. from Player:GetEyeTraceNoCursor]
+  -- @param trace [Map trace result, e.g. from Player:GetEyeTraceNoCursor]
   -- @return [Boolean true if a text was hit and its removal was requested]
   function SurfaceText:trace_remove_text(trace)
     if !trace then return false end
@@ -175,7 +175,7 @@ else
   end
 
   --- Finds the 3D picture hit by the trace and asks the server to remove it. Clientside only.
-  -- @param trace [Hash trace result, e.g. from Player:GetEyeTraceNoCursor]
+  -- @param trace [Map trace result, e.g. from Player:GetEyeTraceNoCursor]
   -- @return [Boolean true if a picture was hit and its removal was requested]
   function SurfaceText:trace_remove_picture(trace)
     if !trace then return false end

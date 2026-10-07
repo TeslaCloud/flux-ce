@@ -370,12 +370,12 @@ end
 -- end
 -- ```
 -- @param duration [Number how long the tween takes, must be positive]
--- @param subject [Hash table (or userdata) whose fields are changed]
--- @param target [Hash final values of the fields to change, which have to be numbers
+-- @param subject [Map table (or userdata) whose fields are changed]
+-- @param target [Map final values of the fields to change, which have to be numbers
 --   or nested tables of numbers]
 -- @param easing='linear' [String/Function name of an easing function from Tween.easing
 --   (e.g. 'inOutCubic'), or a custom easing function]
--- @return [Hash tween object with the set, reset and update methods]
+-- @return [Map tween object with the set, reset and update methods]
 function tween.new(duration, subject, target, easing)
   easing = getEasingFunction(easing)
   checkNewParams(duration, subject, target, easing)

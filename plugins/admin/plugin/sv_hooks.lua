@@ -24,7 +24,7 @@ end
 
 --- Blocks tools that require a permission the player does not have.
 -- @param player [Player]
--- @param trace [Hash trace result of the tool use]
+-- @param trace [Map trace result of the tool use]
 -- @param tool_name [String tool ID]
 -- @return [Boolean false to block the tool, nothing otherwise]
 function Bolt:CanTool(player, trace, tool_name)
@@ -184,7 +184,7 @@ end
 -- @param player [Player the sender]
 -- @param text [String message text]
 -- @param team_chat [Boolean]
--- @return [Hash icon data for the chatbox (icon, size, margin, is_data), or nothing if the
+-- @return [Map icon data for the chatbox (icon, size, margin, is_data), or nothing if the
 --   player is invalid]
 function Bolt:ChatboxGetPlayerIcon(player, text, team_chat)
   if IsValid(player) then
@@ -193,7 +193,7 @@ function Bolt:ChatboxGetPlayerIcon(player, text, team_chat)
 end
 
 --- Get a list of all currently online staff members.
--- @return [Hash - currently online staff members]
+-- @return [Map - currently online staff members]
 function Bolt:get_staff()
   return table.keep_if(player.all(), function(k, v) return v:can('staff') end)
 end

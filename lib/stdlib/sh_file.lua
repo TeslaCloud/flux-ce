@@ -30,7 +30,7 @@ end
 --- Lists all files inside of a folder and its subfolders.
 -- Subfolders whose name starts with a dot are skipped.
 -- @param folder [String folder path relative to the game folder]
--- @return [Array<String> file paths, each one starting with the folder path]
+-- @return [List<String> file paths, each one starting with the folder path]
 function File.get_list(folder)
   folder = folder:ensure_end('/')
   local files, folders = file.Find(folder..'*', 'GAME')
@@ -71,7 +71,7 @@ end
 --- Finds the files and folders that match a wildcard.
 -- @param filename [String path with a wildcard relative to the game folder, e.g. 'gamemodes/*']
 -- @param sort='nameasc' [String sorting order: 'nameasc', 'namedesc', 'dateasc' or 'datedesc']
--- @return [Array<String> file names, Array<String> folder names]
+-- @return [List<String> file names, List<String> folder names]
 function File.find(filename, sort)
   return file.Find(filename, 'GAME', sort)
 end
@@ -121,7 +121,7 @@ end
 --- Lists the names of the files and folders that match a wildcard as a single array.
 -- @param path [String path with a wildcard relative to the game folder, e.g. 'gamemodes/*']
 -- @param include_hidden=false [Boolean include entries whose name starts with a dot]
--- @return [Array<String> file names followed by folder names, or nil if the search failed]
+-- @return [List<String> file names followed by folder names, or nil if the search failed]
 function File.ls(path, include_hidden)
   local files, folders = file.Find(path, 'GAME')
 

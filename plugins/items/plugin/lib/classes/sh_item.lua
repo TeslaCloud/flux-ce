@@ -33,7 +33,7 @@ ItemBase.name = ItemBase.get_name
 -- ITEM:base_off 'ItemContainer'
 -- ITEM.name = 'Test Bag'
 -- ```
--- @param what [String/Hash name of the base class ('Item' prefix may be omitted), or the class]
+-- @param what [String/Map name of the base class ('Item' prefix may be omitted), or the class]
 function ItemBase:base_off(what)
   if isstring(what) then
     what = what:capitalize()
@@ -60,7 +60,7 @@ end
 
 --- Checks whether the item was based off the specified item base with ItemBase:base_off.
 -- Also available as ItemBase:based_off.
--- @param base [String/Hash name of the base class ('Item' prefix may be omitted), or the class]
+-- @param base [String/Map name of the base class ('Item' prefix may be omitted), or the class]
 -- @return [Boolean]
 function ItemBase:is(base)
   if isstring(base) then
@@ -123,7 +123,7 @@ function ItemBase:get_color()
 end
 
 --- Returns the camera setup that is used to render the item's model in inventory slots.
--- @return [Hash table with origin (Vector), angles (Angle) and fov (Number) fields,
+-- @return [Map table with origin (Vector), angles (Angle) and fov (Number) fields,
 --   or nil to position the camera automatically]
 function ItemBase:get_icon_data()
   return self.icon_data
@@ -148,7 +148,7 @@ end
 -- })
 -- ```
 -- @param name [String id of the button; also its title, unless data has name or get_name]
--- @param data [Hash button data: icon (String), callback (String name of the item's method
+-- @param data [Map button data: icon (String), callback (String name of the item's method
 --   to call on the server), and optionally name (String) or the client-side functions
 --   get_name, on_show and on_click, each of which receives the item]
 function ItemBase:add_button(name, data)

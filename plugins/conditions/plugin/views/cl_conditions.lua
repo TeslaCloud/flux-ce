@@ -132,7 +132,7 @@ end
 --- Adds a node of the specified condition type under the parent node.
 -- @param parent [Panel tree node to add the condition to]
 -- @param id [String id of a registered condition]
--- @param data=nil [Hash parameters of the condition, empty when omitted]
+-- @param data=nil [Map parameters of the condition, empty when omitted]
 -- @return [Panel the created node]
 function PANEL:add_condition(parent, id, data)
   local condition_data = Conditions:get_all()[id]
@@ -173,7 +173,7 @@ end
 --- Collects the condition tree into a table that can be networked, saved
 -- and passed to Conditions:check.
 -- @param panel=nil [Panel node to start from, the root node when omitted]
--- @return [Array condition nodes, each a Hash with id, data and childs]
+-- @return [List condition nodes, each a Map with id, data and childs]
 function PANEL:get_conditions(panel)
   if !IsValid(panel) then panel = self.root end
 
@@ -199,7 +199,7 @@ end
 
 --- Recreates the nodes of a condition tree under the parent node.
 -- @param parent [Panel tree node to add the conditions to, e.g. the root node]
--- @param conditions [Array condition nodes as returned by get_conditions]
+-- @param conditions [List condition nodes as returned by get_conditions]
 function PANEL:set_conditions(parent, conditions)
   for k, v in pairs(conditions) do
     local data = Conditions:get_all()[v.id]
@@ -235,7 +235,7 @@ end
 -- @param title [String title phrase]
 -- @param message [String message phrase]
 -- @param default_value [String phrase of the text that is displayed before a choice is made]
--- @param choices [Array/Hash values to choose from]
+-- @param choices [List/Map values to choose from]
 -- @param callback [Function called as callback(selector, choice) for every choice]
 -- @return [Panel the created fl_selector panel]
 function PANEL:create_selector(title, message, default_value, choices, callback)

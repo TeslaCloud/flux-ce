@@ -75,7 +75,7 @@ end
 -- add_column('users', { 'banned', type = 'boolean', default = false })
 -- ```
 -- @param table [String table name]
--- @param args [Hash column name at index 1, the abstract column type under 'type', and
+-- @param args [Map column name at index 1, the abstract column type under 'type', and
 --   optionally null (Boolean) and default (inserted into the SQL as is)]
 function add_column(table, args)
   change_table(table, function(t)
@@ -89,7 +89,7 @@ end
 -- add_index { 'users', 'steam_id' }
 -- add_index { 'characters', { 'user_id', 'name' }, unique = true }
 -- ```
--- @param args [Hash table name at index 1 and a column name or an Array of column names
+-- @param args [Map table name at index 1 and a column name or a List of column names
 --   at index 2; optional keys are name, unique, length, using, where and if_not_exists]
 function add_index(args)
   if !isstring(args[1]) or !args[2] then return end
@@ -177,7 +177,7 @@ end
 --   cascade = true
 -- }
 -- ```
--- @param args [Hash table_name, key, foreign_table and foreign_key, optionally cascade
+-- @param args [Map table_name, key, foreign_table and foreign_key, optionally cascade
 --   (Boolean, adds ON DELETE CASCADE) and name (name of the constraint)]
 function create_reference(args)
   local table_name, key, foreign_table, foreign_key, cascade = args.table_name, args.key, args.foreign_table, args.foreign_key, args.cascade

@@ -215,7 +215,7 @@ end
 -- @param x [Number]
 -- @param y [Number]
 -- @param distance [Number]
--- @param lines [Hash line definitions keyed by ID, modified in place]
+-- @param lines [Map line definitions keyed by ID, modified in place]
 function Characters:GetDrawPlayerInfo(player, x, y, distance, lines)
   lines['desc'] = {
     text = player:get_phys_desc(),
@@ -270,7 +270,7 @@ end
 
 --- Applies the character's skin to the model shown in a character panel.
 -- @param panel [Panel the character panel]
--- @param char_data [Hash networked character data]
+-- @param char_data [Map networked character data]
 function Characters:PanelCharacterSet(panel, char_data)
   panel.model.Entity:SetSkin(char_data.skin or 1)
 end

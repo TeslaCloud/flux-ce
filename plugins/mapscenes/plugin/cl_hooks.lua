@@ -26,7 +26,7 @@ local view = {}
 -- @param origin [Vector]
 -- @param angles [Angle]
 -- @param fov [Number]
--- @return [Hash view table with origin and angles, or nil if no mapscene is shown]
+-- @return [Map view table with origin and angles, or nil if no mapscene is shown]
 function Mapscenes:CalcView(player, origin, angles, fov)
   if hook.run('ShouldMapsceneRender') then
     if #self.points > 0 then
