@@ -194,16 +194,23 @@ function string.include(str, substring, start_pos)
 end
 
 --- Checks if the string is a command or not, i.e. whether it starts with one of the configured
--- command prefixes. The StringIsCommand hook can return false to prevent that.
+-- command prefixes. If several prefixes match, the longest one is used, so that prefixes
+-- can contain each other (e.g. '/' and '//'). The StringIsCommand hook can return false
+-- to prevent that.
 -- @param str [String]
 -- @return [Boolean whether the string is a command, Number length of the prefix if it is one]
 function string.is_command(str)
   local prefixes = Config.get('command_prefixes') or {}
+  local longest
 
   for k, v in ipairs(prefixes) do
-    if str:start_with(v) and hook.Run('StringIsCommand', str) != false then
-      return true, utf8.len(v)
+    if str:start_with(v) then
+      longest = math.max(longest or 0, utf8.len(v))
     end
+  end
+
+  if longest and hook.Run('StringIsCommand', str) != false then
+    return true, longest
   end
 
   return false
