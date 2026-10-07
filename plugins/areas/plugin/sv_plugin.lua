@@ -41,7 +41,7 @@ function Area:OneSecond()
             if util.vector_in_poly(pos, v2) then
               -- The player entered the area
               if !table.HasValue(actor.last_area[v.id], k2) then
-                try( Areas.get_callback(v.type), actor, v, true, pos, cur_time)
+                try(Areas.get_callback(v.type), actor, v, true, pos, cur_time)
 
                 Cable.send(actor, 'fl_player_entered_area', k, pos)
 

@@ -252,7 +252,7 @@ function Package:parse_version(version)
   version = version:gsub('%s', '')
 
   if version[1] == '~' or version[1] == '>' then
-    version_data.op = ({ ['>']=1, ['=']=1 })[version[2]] and version:sub(1, 2) or version:sub(1, 1)
+    version_data.op = ({ ['>'] = 1, ['='] = 1 })[version[2]] and version:sub(1, 2) or version:sub(1, 1)
     init = version_data.op:len() + 1
   end
 

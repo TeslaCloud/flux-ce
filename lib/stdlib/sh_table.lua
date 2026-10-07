@@ -61,6 +61,7 @@ function table.map(t, c)
 
   for k, v in pairs(t) do
     local val = c(v)
+
     if val != nil then
       table.insert(new_table, val)
     end
@@ -82,6 +83,7 @@ function table.map_kv(t, c)
 
   for k, v in pairs(t) do
     local val = c(k, v)
+
     if val != nil then
       table.insert(new_table, val)
     end
@@ -642,6 +644,7 @@ function print_table(t, indent, done, indent_length)
 
   table.sort(keys, function(a, b)
     if isnumber(a) and isnumber(b) then return a < b end
+
     return tostring(a) < tostring(b)
   end)
 
@@ -677,7 +680,7 @@ function print_table(t, indent, done, indent_length)
       end
     else
       local str_key = tostring(key)
-      Msg(str_key..string.rep(' ', indent_length - str_key:len())..'= ' )
+      Msg(str_key..string.rep(' ', indent_length - str_key:len())..'= ')
 
       if isstring(value) then
         Msg('"'..value..'"\n')

@@ -1,0 +1,8 @@
+AllReaders:
+  Exclude:
+    - 'docs/**/*'
+    - '**/*.min.lua'
+    - 'packages/yaml/lib/yaml.lua'
+    - 'packages/pon/**/*'
+    - 'packages/tween/**/*'
+    - 'packages/utf8/**/*'

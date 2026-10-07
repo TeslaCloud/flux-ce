@@ -1,4 +1,4 @@
-﻿CMD.name = 'CharSetName'
+CMD.name = 'CharSetName'
 CMD.description = 'command.charsetname.description'
 CMD.syntax = 'command.charsetname.syntax'
 CMD.permission = 'assistant'

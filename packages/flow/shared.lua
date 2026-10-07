@@ -53,6 +53,7 @@ if !LITE_REFRESH then
   require_relative_folder('lib', true)
   require_relative_folder('lib/classes', true)
   require_relative_folder('lib/meta', true)
+
   if SERVER then
     Pipeline.include_folder('language', package_path..'languages')
     Pipeline.include_folder('migrations', package_path..'migrations')
@@ -60,6 +61,7 @@ if !LITE_REFRESH then
     Pipeline.include_folder('html', package_path..'views/assets/stylesheets')
     Pipeline.include_folder('html', package_path..'views/assets/javascripts')
   end
+
   require_relative_folder('models', true)
   require_relative_folder('controllers', true)
   require_relative_folder('views/base', true)

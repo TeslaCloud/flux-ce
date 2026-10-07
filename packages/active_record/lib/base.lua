@@ -106,14 +106,17 @@ function ActiveRecord.Base:where(condition, ...)
     end
   elseif istable(condition) then
     local should_and = false
+
     for k, v in pairs(condition) do
       query_str = query_str..(should_and and ' AND ' or '')..k
+
       if !istable(v) then
         query_str = query_str..' = \''..sql_escape(tostring(v))..'\''
       else
         v = table.map(v, function(t) return "'"..sql_escape(tostring(t)).."'" end)
         query_str = query_str..' IN ('..table.concat(v, ', ')..')'
       end
+
       should_and = true
     end
   elseif isstring(condition) then
@@ -149,14 +152,17 @@ function ActiveRecord.Base:where_not(condition, ...)
     end)..')'
   elseif istable(condition) then
     local should_and = false
+
     for k, v in pairs(condition) do
       query_str = query_str..(should_and and ' AND ' or '')..k
+
       if !istable(v) then
         query_str = query_str..' != \''..sql_escape(tostring(v))..'\''
       else
         v = table.map(v, function(t) return "'"..sql_escape(tostring(t)).."'" end)
         query_str = query_str..' NOT IN ('..table.concat(v, ', ')..')'
       end
+
       should_and = true
     end
   end
@@ -264,12 +270,15 @@ end
 -- @return [ActiveRecord::Base(self)]
 function ActiveRecord.Base:_process_child(obj, target_class)
   local should_stop = false
+
   if isfunction(self.as_child) then
     should_stop = self:as_child(obj, target_class)
   end
+
   if isfunction(obj.as_parent) then
     should_stop = obj:as_parent(self, self.class)
   end
+
   if !should_stop then
     for k, v in ipairs(self.relations) do
       if v.child and v.target_class == target_class then
@@ -278,6 +287,7 @@ function ActiveRecord.Base:_process_child(obj, target_class)
       end
     end
   end
+
   return self
 end
 
@@ -301,14 +311,18 @@ function ActiveRecord.Base:_fetch_relation(callback, objects, n, obj_id)
         error_with_traceback('Relation has no model! ('..tostring(relation.table_name)..')')
         return
       end
+
       local obj = relation.model:where(relation.column_name, current_object.id)
+
       if relation.many then
         obj:get(function(res)
           current_object[relation.as] = {}
+
           for k, v in ipairs(res) do
             v:_process_child(current_object, current_object.class)
             table.insert(current_object[relation.as], v)
           end
+
           return self:_fetch_relation(callback, objects, n + 1, obj_id)
         end):rescue(function()
           current_object[relation.as] = {}
@@ -333,6 +347,7 @@ function ActiveRecord.Base:_fetch_relation(callback, objects, n, obj_id)
       callback(objects) -- finally able to callback
     end
   end
+
   return self
 end
 
@@ -344,6 +359,7 @@ end
 function ActiveRecord.Base:run_query(callback)
   if self.query_map and #self.query_map > 0 then
     local query = ActiveRecord.Database:select(self.table_name)
+
     for k, v in ipairs(self.query_map) do
       local t, a, b = v[1], v[2], v[3]
 
@@ -361,9 +377,11 @@ function ActiveRecord.Base:run_query(callback)
         query:offset(a)
       end
     end
+
     self.query_map = a{}
     query:callback(function(results, query, time)
       print_query(self.class_name..' Load ('..time..'s)', query)
+
       if istable(results) and #results > 0 then
         local objects = {}
 
@@ -382,13 +400,16 @@ function ActiveRecord.Base:run_query(callback)
       elseif isfunction(self._rescue) then
         self._rescue(self.class.new())
         self._rescue = nil
+
         if isfunction(self.created) then
           self:created()
         end
       end
     end)
+
     query:execute()
   end
+
   return self
 end
 
@@ -428,6 +449,7 @@ function ActiveRecord.Base:expect(callback)
   self._expect = function(results)
     callback(results[1])
   end
+
   return self
 end
 
@@ -462,6 +484,7 @@ end
 -- @return [ActiveRecord::Base(self)]
 function ActiveRecord.Base:fetch()
   local callback = nil
+
   if self._expect then
     self:limit(1)
     callback = self._expect
@@ -470,6 +493,7 @@ function ActiveRecord.Base:fetch()
     callback = self._get
     self._get = nil
   end
+
   return self:run_query(callback)
 end
 
@@ -518,6 +542,7 @@ local function gen_callback(self, insert)
     -- save relations once we're done saving the thing
     if self.id and #self.relations > 0 then
       ar_add_indent()
+
       for _, relation in ipairs(self.relations) do
         if !relation.child then
           if relation.many and istable(self[relation.as]) then
@@ -527,6 +552,7 @@ local function gen_callback(self, insert)
             end
           elseif !relation.many and istable(self[relation.as]) then
             local rel = self[relation.as]
+
             if IsValid(rel) and isfunction(rel.save) then
               rel[relation.column_name] = self.id
               rel:save()
@@ -534,6 +560,7 @@ local function gen_callback(self, insert)
           end
         end
       end
+
       ar_sub_indent()
     end
   end
@@ -567,8 +594,10 @@ function ActiveRecord.Base:save()
       local query = ActiveRecord.Database:insert(self.table_name)
         for k, data in pairs(schema) do
           if except[k] then continue end
+
           query:insert(k, ActiveRecord.type_to_db(self[k], data.type))
         end
+
         query:insert('created_at', to_datetime(os.time()))
         query:insert('updated_at', to_datetime(os.time()))
         query:callback(gen_callback(self, true))
@@ -576,16 +605,19 @@ function ActiveRecord.Base:save()
     elseif self.id then
       local query = ActiveRecord.Database:update(self.table_name)
         query:where('id', self.id)
+
         for k, data in pairs(schema) do
           if except[k] then continue end
+
           query:update(k, ActiveRecord.type_to_db(self[k], data.type))
         end
+
         query:update('updated_at', to_datetime(os.time()))
         query:callback(gen_callback(self, false))
       query:execute()
     elseif !self.saving then
-      ErrorNoHalt(self.class_name.." does not have a valid ID after saving. This should never happen!\n")
-      ErrorNoHalt("Please report this issue to TeslaCloud along with your logs.\n")
+      ErrorNoHalt(self.class_name..' does not have a valid ID after saving. This should never happen!\n')
+      ErrorNoHalt('Please report this issue to TeslaCloud along with your logs.\n')
     end
   end, function(model, column, err_code)
     if model.invalid then
@@ -635,6 +667,7 @@ function ActiveRecord.Base:has(what, many)
     local table_name = ''
     local should_add = true
     relation.child = false
+
     if istable(what) then
       table_name = what[1]:underscore()
       relation.as = what.as or table_name
@@ -642,24 +675,29 @@ function ActiveRecord.Base:has(what, many)
       table_name = what
       relation.as = table_name
     end
+
     if self.relations[table_name] then
       relation = self.relations[self.relations[table_name]]
       -- has_one has higher priority over has_many
       if !many then
         relation.many = false
       end
+
       should_add = false
     else
       relation.many = many
     end
+
     for k, v in pairs(ActiveRecord.Model:all()) do
       if v.table_name == table_name then
         relation.model = v
         break
       end
     end
+
     relation.table_name = table_name
     relation.column_name = self.class_name:underscore()..'_id'
+
     if should_add then
       local index = table.insert(self.relations, relation)
       self.relations[table_name] = index
@@ -713,6 +751,7 @@ function ActiveRecord.Base:belongs_to(target, one)
   if isstring(target) then
     target = target:parse_table()
   end
+
   if istable(target) then
     target:has(self.table_name, !one)
     table.insert(self.relations, {
@@ -721,6 +760,7 @@ function ActiveRecord.Base:belongs_to(target, one)
       target_class = target
     })
   end
+
   return self
 end
 
@@ -742,6 +782,7 @@ end
 -- @return [ActiveRecord::Base(self)]
 function ActiveRecord.Base:validates(column, options)
   local current_options = self.validations[column] or {}
+
   for k, v in pairs(options) do
     if id == 'case_sensitive' then -- todo: unhack this
       current_options.case_sensitive = v
@@ -749,6 +790,7 @@ function ActiveRecord.Base:validates(column, options)
       table.insert(current_options, { id = k, value = v })
     end
   end
+
   self.validations[column] = current_options
   return self
 end

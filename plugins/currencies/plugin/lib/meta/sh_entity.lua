@@ -1,4 +1,4 @@
-﻿do
+do
   local entity_meta = FindMetaTable('Entity')
 
   --- Returns how much of a currency the entity holds.
@@ -143,7 +143,7 @@
       money_ent:Spawn()
 
       self:take_money(currency, value)
-      self:notify('notification.currency.drop', { value = value, currency = currency_data.name}, Color('salmon'))
+      self:notify('notification.currency.drop', { value = value, currency = currency_data.name }, Color('salmon'))
 
       money_ent.next_pickup = CurTime() + 0.5
     end

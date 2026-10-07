@@ -67,7 +67,7 @@ end
 -- @param data [Map character creation data, modified in place]
 function Factions:PreCreateCharacter(actor, data)
   local faction_table = Factions.find_by_id(data.faction)
-  
+
   if faction_table and !string.presence(data.name) then
     -- Try to generate the name if one is not present
     data.name = faction_table:generate_name(actor, data.rank or 1)

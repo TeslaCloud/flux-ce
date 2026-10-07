@@ -1,4 +1,4 @@
-﻿local player_meta = FindMetaTable('Player')
+local player_meta = FindMetaTable('Player')
 
 --- Makes one of the player's characters their active one. Runs OnCharacterChange if another
 -- character was active, networks the basic character data and runs OnActiveCharacterSet.

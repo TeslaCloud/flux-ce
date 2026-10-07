@@ -19,7 +19,7 @@ function PLUGIN:FLInitPostEntity()
 
     tool_object:DrawHUD()
 
-    if (!gmod_drawhelp:GetBool()) then return end
+    if !gmod_drawhelp:GetBool() then return end
 
     -- This could probably all suck less than it already does
 
@@ -64,7 +64,7 @@ function PLUGIN:FLInitPostEntity()
 
     text_table.font = 'GModToolHelp'
 
-    if (!tool_object.Information) then
+    if !tool_object.Information then
       text_table.pos = { x + self.InfoBoxHeight, y }
       text_table.text = tool_object:GetHelpText()
       w, h = draw.TextShadow(text_table, 1)
@@ -81,14 +81,15 @@ function PLUGIN:FLInitPostEntity()
     local h2 = 0
 
     for k, v in pairs(tool_object.Information) do
-      if (isstring(v)) then v = { name = v } end
+      if isstring(v) then v = { name = v } end
 
-      if (!v.name) then continue end
-      if (v.stage and v.stage != self:GetStage()) then continue end
-      if (v.op and v.op != tool_object:GetOperation()) then continue end
+      if !v.name then continue end
+      if v.stage and v.stage != self:GetStage() then continue end
+      if v.op and v.op != tool_object:GetOperation() then continue end
 
       local txt = '#tool.'..GetConVarString('gmod_toolmode')..'.'..v.name
-      if (v.name == 'info') then
+
+      if v.name == 'info' then
         txt = tool_object:GetHelpText()
       end
 
@@ -97,27 +98,27 @@ function PLUGIN:FLInitPostEntity()
 
       w, h = draw.TextShadow(text_table, 1)
 
-      if (!v.icon) then
-        if (v.name:start_with('info')) then v.icon = 'gui/info' end
-        if (v.name:start_with('left')) then v.icon = 'gui/lmb.png' end
-        if (v.name:start_with('right')) then v.icon = 'gui/rmb.png' end
-        if (v.name:start_with('reload')) then v.icon = 'gui/r.png' end
-        if (v.name:start_with('use')) then v.icon = 'gui/e.png' end
+      if !v.icon then
+        if v.name:start_with('info') then v.icon = 'gui/info' end
+        if v.name:start_with('left') then v.icon = 'gui/lmb.png' end
+        if v.name:start_with('right') then v.icon = 'gui/rmb.png' end
+        if v.name:start_with('reload') then v.icon = 'gui/r.png' end
+        if v.name:start_with('use') then v.icon = 'gui/e.png' end
       end
 
-      if (!v.icon2 and !v.name:start_with('use') and v.name:end_with('use')) then v.icon2 = 'gui/e.png' end
+      if !v.icon2 and !v.name:start_with('use') and v.name:end_with('use') then v.icon2 = 'gui/e.png' end
 
       self.Icons = self.Icons or {}
-      if (v.icon and !self.Icons[v.icon]) then self.Icons[v.icon] = Material(v.icon) end
-      if (v.icon2 and !self.Icons[v.icon2]) then self.Icons[v.icon2] = Material(v.icon2) end
+      if v.icon and !self.Icons[v.icon] then self.Icons[v.icon] = Material(v.icon) end
+      if v.icon2 and !self.Icons[v.icon2] then self.Icons[v.icon2] = Material(v.icon2) end
 
-      if (v.icon and self.Icons[v.icon] and !self.Icons[v.icon]:IsError()) then
+      if v.icon and self.Icons[v.icon] and !self.Icons[v.icon]:IsError() then
         surface.SetDrawColor(255, 255, 255, 255)
         surface.SetMaterial(self.Icons[v.icon])
         surface.DrawTexturedRect(x, y + h2, 16, 16)
       end
 
-      if (v.icon2 and self.Icons[v.icon2] and !self.Icons[v.icon2]:IsError()) then
+      if v.icon2 and self.Icons[v.icon2] and !self.Icons[v.icon2]:IsError() then
         surface.SetDrawColor(255, 255, 255, 255)
         surface.SetMaterial(self.Icons[v.icon2])
         surface.DrawTexturedRect(x - 25, y + h2, 16, 16)

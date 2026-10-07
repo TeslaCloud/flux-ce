@@ -1,4 +1,4 @@
-﻿CMD.name = 'DropMoney'
+CMD.name = 'DropMoney'
 CMD.description = 'command.dropmoney.description'
 CMD.syntax = 'command.dropmoney.syntax'
 CMD.category = 'permission.categories.general'

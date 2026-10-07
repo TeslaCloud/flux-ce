@@ -7,7 +7,6 @@ ROLE.immunity = 0
 --- Defines the role's permissions. Empty: users only have what is registered for the 'user'
 -- role.
 function ROLE:define_permissions()
-
 end
 
 --- Called when the player's primary group is being set to this group.

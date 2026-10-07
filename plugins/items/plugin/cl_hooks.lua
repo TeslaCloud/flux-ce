@@ -55,7 +55,7 @@ function Items:PlayerUseItemMenu(instance_id, is_entity)
   if item_obj.name then
     if item_obj.custom_buttons then
       for k, v in pairs(item_obj.custom_buttons) do
-        if !v.on_show or v.on_show(item_obj) != false  then
+        if !v.on_show or v.on_show(item_obj) != false then
           local button = item_menu:add_option(t(v.get_name and v.get_name(item_obj) or v.name or k), function()
             if v.on_click then
               v.on_click(item_obj)

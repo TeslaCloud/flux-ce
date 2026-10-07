@@ -190,6 +190,7 @@ function Role:register()
       function can(action, object, callback)
         self:allow(action, object, callback)
       end
+
       --- Denies an action for the role being registered. Only defined while define_permissions
       -- runs.
       -- @param action [String permission ID]
@@ -198,6 +199,7 @@ function Role:register()
       function cannot(action, object)
         self:disallow(action, object)
       end
+
       --- Lets the role being registered pass every permission check. Only defined while
       -- define_permissions runs; the arguments are ignored.
       -- @param action=nil [Any ignored]
@@ -207,6 +209,7 @@ function Role:register()
       function allow_anything(action, object, callback)
         self:allow_anything(action, object)
       end
+
       self:define_permissions()
 
       hook.Run('OnDefinePermissions', self)

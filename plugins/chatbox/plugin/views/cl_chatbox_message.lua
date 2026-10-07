@@ -9,9 +9,9 @@ PANEL.alpha = 255
 
 --- Records when the message was added and when it should start to fade out.
 function PANEL:Init()
-  --if PLAYER:can('chat_mod') then
+  -- if PLAYER:can('chat_mod') then
   -- self.moderation = vgui.Create('fl_chat_moderation', self)
-  --end
+  -- end
 
   self.added_at = CurTime()
   self.fade_at = self.added_at + Config.get('message_fade_delay')

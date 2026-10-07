@@ -18,8 +18,8 @@ ItemWeapon:add_button('unload', {
     local ammo = item_obj:get_data('ammo', { 0, 0 })
     local weapon = PLAYER:GetWeapon(item_obj.weapon_class)
 
-    if ((ammo[1] > 0 or ammo[2] > 0 or IsValid(weapon) and (weapon:Clip1() != 0 or weapon:Clip2() != 0))
-    and !IsValid(item_obj.entity) and item_obj:is_equipped()) then
+    if (ammo[1] > 0 or ammo[2] > 0 or IsValid(weapon) and (weapon:Clip1() != 0 or weapon:Clip2() != 0))
+    and !IsValid(item_obj.entity) and item_obj:is_equipped() then
       return true
     end
 

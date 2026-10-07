@@ -183,9 +183,12 @@ function txt(text)
 
   for k, v in ipairs(lines) do
     if v:match('^[%s]+$') then continue end
+
     local indent = v:match('^([%s]+)')
     if !indent then continue end
+
     if !lowest_indent then lowest_indent = indent end
+
     if indent:len() < lowest_indent:len() then
       lowest_indent = indent
     end
@@ -361,6 +364,7 @@ end
 function compare(a, b)
   if a > b then  return 1 end
   if a == b then return 0 end
+
   return -1
 end
 
@@ -398,7 +402,7 @@ end
 -- @param ... [Vararg strings that are concatenated into the error message]
 -- @see [ErrorNoHalt]
 function long_error(...)
-  local text = table.concat({...})
+  local text = table.concat({ ... })
   local len = string.len(text)
   local pieces = {}
 

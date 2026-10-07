@@ -1,4 +1,4 @@
-﻿local PANEL = {}
+local PANEL = {}
 PANEL.id = 'base'
 PANEL.text = 'Click sidebar buttons to open character creation menus.'
 
@@ -158,6 +158,7 @@ function PANEL:Init()
 
     ent:SetAngles(pnl.angles)
   end
+
   self.skin = vgui.Create('fl_counter', self)
   self.skin:SetSize(32, 64)
   self.skin:SetPos(scrw * 0.25 + 48, 48)

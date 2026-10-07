@@ -311,6 +311,7 @@ SKIN.Colours.TooltipText                      = GWEN.TextureColor(4 + 8 * 26, 50
 -- @param h [Number height of the panel]
 function SKIN:PaintPanel(panel, w, h)
   if !panel.m_bBackground then return end
+
   self.tex.Panels.Normal(0, 0, w, h, panel.m_bgColor)
 end
 
@@ -831,7 +832,7 @@ local function PaintNotches(x, y, w, h, num)
 
   local space = w / num
 
-  for i=0, num do
+  for i = 0, num do
     surface.DrawRect(x + i * space, y + 4, 1, 5)
   end
 end

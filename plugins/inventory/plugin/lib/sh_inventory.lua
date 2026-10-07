@@ -248,7 +248,6 @@ do
   end
 
   if SERVER then
-
     --- @warning [Internal]
     -- Creates the player's default inventories.
     function player_meta:create_inventories()

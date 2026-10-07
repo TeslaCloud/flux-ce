@@ -1,4 +1,4 @@
-﻿-- This library is for serverside configs only!
+-- This library is for serverside configs only!
 -- For clientside configs, see cl_settings.lua!
 
 mod 'Config'

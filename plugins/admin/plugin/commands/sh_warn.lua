@@ -25,7 +25,7 @@ function CMD:on_run(actor, targets, ...)
     })
 
     for k, v in ipairs(targets) do
-      v:notify( "notification.warn", {
+      v:notify('notification.warn', {
         reason = reason
       })
     end

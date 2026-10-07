@@ -245,6 +245,7 @@ end
 -- @return [String string that ends with the ending]
 function string.ensure_end(str, ending)
   if str:end_with(ending) then return str end
+
   return str..ending
 end
 
@@ -254,6 +255,7 @@ end
 -- @return [String string that starts with the start]
 function string.ensure_start(str, start)
   if str:start_with(start) then return str end
+
   return start..str
 end
 
@@ -430,11 +432,11 @@ function string.parse_parent(str, ref)
 end
 
 local function real_gsub(pat)
-  return pat:gsub("(%%?)(.)", function(percent, letter)
-    if percent != "" or !letter:match("%a") then
+  return pat:gsub('(%%?)(.)', function(percent, letter)
+    if percent != '' or !letter:match('%a') then
       return percent..letter
     else
-      return string.format("[%s%s]", letter:lower(), letter:upper())
+      return string.format('[%s%s]', letter:lower(), letter:upper())
     end
   end)
 end
@@ -448,11 +450,11 @@ end
 -- @param pattern [String Lua pattern]
 -- @return [String pattern that matches both lowercase and uppercase letters]
 function i(pattern)
-
   if pattern:include('[') then
     local p = pattern:gsub('([.]*)%[([%w]*)%]([.]*)', function(before, letters, after)
       return real_gsub(before)..'['..letters:lower()..letters:upper()..']'..real_gsub(after)
     end)
+
     return p
   else
     local p = real_gsub(pattern)

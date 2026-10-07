@@ -1,5 +1,6 @@
 local function table_to_inline(t)
   local ret = ''
+
   for k, v in pairs(t) do
     if ret != '' then
       ret = ret + ', '
@@ -13,6 +14,7 @@ local function table_to_inline(t)
       end
     else
       ret = ret + tostring(k) + ' = '
+
       if !istable(v) then
         ret = ret + '"' + tostring(v) + '"'
       else
@@ -20,6 +22,7 @@ local function table_to_inline(t)
       end
     end
   end
+
   return ret
 end
 
@@ -58,6 +61,7 @@ local Structure = ActiveRecord.Schema:define(]]..version..[[)
     for k, data in SortedPairsByMemberValue(columns_table, 'id') do
       result = result + string.rep(ind, level) + 't:' + data.type + ' "' + data.column + '"\n'
     end
+
     level = level - 1
     result = result + string.rep(ind, level) + 'end)\n'
   end

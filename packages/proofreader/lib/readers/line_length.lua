@@ -45,5 +45,5 @@ end
 --- Returns the message that describes the last line length offense.
 -- @return [String]
 function LineLengthReader:message()
-  return "Line exceeds maximum line length ("..self.line_length.." / "..self.config['Max']..")"
+  return 'Line exceeds maximum line length ('..self.line_length..' / '..self.config['Max']..')'
 end

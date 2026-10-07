@@ -175,7 +175,6 @@ function PANEL:set_config(key, config_table)
     self.combo_box:rebuild()
 
     self.combo_box.OnSelect = function(pnl, index, text, data)
-
       if data == '' then
         Derma_StringRequest(t'ui.admin.new_config',
         t'ui.admin.new_config_text',

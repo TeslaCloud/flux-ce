@@ -45,6 +45,7 @@ function StaticEnts:PersistenceSave()
 
   for ent_class, v in pairs(to_save) do
     if !istable(v) then continue end
+
     Data.save_plugin('static/'..ent_class, v)
   end
 end

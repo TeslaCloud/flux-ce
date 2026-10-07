@@ -23,6 +23,7 @@ end
 -- @param y=x [Number rows]
 function PANEL:set_grid_size(x, y)
   if !isnumber(x) then return end
+
   if !isnumber(y) then
     y = x
   end

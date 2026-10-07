@@ -26,7 +26,7 @@ function Faction:init(id)
   self.has_name = true
   self.has_description = true
   self.has_gender = true
-  self.model_classes = { male = 'player', female = 'player', universal = 'player'}
+  self.model_classes = { male = 'player', female = 'player', universal = 'player' }
   self.models = { male = {}, female = {}, universal = {} }
   self.rank = {}
   self.data = {}

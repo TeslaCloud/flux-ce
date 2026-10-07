@@ -164,7 +164,6 @@ function Flux.Bars:position()
       end
     end
   end
-
 end
 
 --- Draws the bar with the specified ID using the active theme. Does nothing if the bar does

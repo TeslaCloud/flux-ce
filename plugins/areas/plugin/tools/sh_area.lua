@@ -129,6 +129,7 @@ if CLIENT then
     end)
   end)
 end
+
 /*
 function TOOL.BuildCPanel(CPanel)
   local types = Areas.get_types()

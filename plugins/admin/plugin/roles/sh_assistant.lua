@@ -8,5 +8,4 @@ ROLE.base = 'user'
 --- Defines the role's permissions. Empty: assistants only have what is registered for the
 -- 'assistant' role and what they inherit from 'user'.
 function ROLE:define_permissions()
-
 end

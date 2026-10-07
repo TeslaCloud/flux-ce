@@ -86,7 +86,8 @@ function PANEL:add_button(text, callback)
     if IsValid(self.prev_button) and self.prev_button != btn then
       self.prev_button:set_active(false)
     end
-     self.prev_button = btn
+
+    self.prev_button = btn
 
     if isfunction(callback) then
       callback(btn)

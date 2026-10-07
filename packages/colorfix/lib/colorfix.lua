@@ -91,9 +91,9 @@ local available_colors      = {
 }
 
 local n_available_colors    = #available_colors
-local color_clear_sequence  = "\27[0m"
-local color_start_sequence  = "\27[38;5;"
-local background_sequence   = "\27[48;5;"
+local color_clear_sequence  = '\27[0m'
+local color_start_sequence  = '\27[38;5;'
+local background_sequence   = '\27[48;5;'
 
 local function color_id_from_color(col)
   local dist, windist, ri
@@ -101,7 +101,7 @@ local function color_id_from_color(col)
   for i = 1, n_available_colors do
     local color = available_colors[i]
 
-    dist = (col.r - color.r)^2 + (col.g - color.g)^2 + (col.b - color.b)^2
+    dist = (col.r - color.r) ^ 2 + (col.g - color.g) ^ 2 + (col.b - color.b) ^ 2
 
     if i == 1 or dist < windist then
       windist = dist
@@ -127,7 +127,7 @@ function print_colored(text, color, background_color, style)
 
   if color != nil then
     if istable(color) then
-      color_sequence = color_start_sequence..color_id_from_color(color).."m"
+      color_sequence = color_start_sequence..color_id_from_color(color)..'m'
     elseif isstring(color) then
       color_sequence = color
     end
@@ -135,7 +135,7 @@ function print_colored(text, color, background_color, style)
 
   if background_color != nil then
     if istable(background_color) then
-      color_sequence = color_sequence..background_sequence..color_id_from_color(background_color).."m"
+      color_sequence = color_sequence..background_sequence..color_id_from_color(background_color)..'m'
     elseif isstring(background_color) then
       color_sequence = color_sequence..background_color
     end
@@ -143,27 +143,27 @@ function print_colored(text, color, background_color, style)
 
   if istable(style) then
     if style.bold == true then
-      color_sequence = color_sequence.."\27[1m"
+      color_sequence = color_sequence..'\27[1m'
     end
 
     if style.dim == true or style.dimmed == true then
-      color_sequence = color_sequence.."\27[2m"
+      color_sequence = color_sequence..'\27[2m'
     end
 
     if style.underline == true or style.underlined == true then
-      color_sequence = color_sequence.."\27[4m"
+      color_sequence = color_sequence..'\27[4m'
     end
 
     if style.blink == true then
-      color_sequence = color_sequence.."\27[5m"
+      color_sequence = color_sequence..'\27[5m'
     end
 
     if style.inverted == true or style.invert == true then
-      color_sequence = color_sequence.."\27[7m"
+      color_sequence = color_sequence..'\27[7m'
     end
 
     if style.hidden == true then
-      color_sequence = color_sequence.."\27[8m"
+      color_sequence = color_sequence..'\27[8m'
     end
   end
 
@@ -178,7 +178,7 @@ function MsgC(...)
 
   for k, v in ipairs({ ... }) do
     if istable(v) then
-      this_sequence = color_start_sequence..color_id_from_color(v).."m"
+      this_sequence = color_start_sequence..color_id_from_color(v)..'m'
     else
       print_colored(tostring(v), this_sequence)
     end

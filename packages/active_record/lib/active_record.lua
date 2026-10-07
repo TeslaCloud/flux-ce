@@ -90,9 +90,11 @@ function ActiveRecord.get_meta_key(key, default)
     query:limit(1)
     query:callback(function(res, query_str, time)
       print_query('Meta Get ('..time..'s)', query_str)
+
       if istable(res) and #res > 0 then
         return res[1] and res[1].value or default
       end
+
       return default
     end)
   return query:execute()
@@ -231,6 +233,7 @@ function ActiveRecord.drop_schema(meta_only)
       drop_table(k)
     end
   end
+
   drop_table 'ar_schema'
   drop_table 'ar_metadata'
 end

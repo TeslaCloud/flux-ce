@@ -13,19 +13,25 @@
 function ActiveRecord.generate_create_func(obj, type, def)
   obj[type] = function(s, name, ...)
     local args = { ... }
+
     if istable(name) then
       args = name
       name = args[1]
       table.remove(args, 1)
     end
+
     s.def = def
+
     if s.handle_create_args then
       s:handle_create_args(args)
     end
+
     s:create(name, s.def)
+
     if ActiveRecord.ready then
       ActiveRecord.add_to_schema(obj.table_name, name, type)
     end
+
     ActiveRecord.adapter:create_column(s, name, args, obj, type, def)
   end
 end

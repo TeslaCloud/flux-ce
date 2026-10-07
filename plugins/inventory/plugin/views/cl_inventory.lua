@@ -26,6 +26,7 @@ function PANEL:Init()
 
     return pnl:AddScroll(dlta * -2)
   end
+
   self.scroll:GetCanvas():Receiver('fl_item', function(receiver, dropped, is_dropped, menu_index, mouse_x, mouse_y)
     dropped = dropped[1]
 

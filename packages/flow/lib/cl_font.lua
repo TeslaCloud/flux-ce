@@ -107,7 +107,7 @@ function Font.create_fonts()
   Font.create('flRobotoBold', {
     font = 'Roboto',
     size = 16,
-    weight = 1000,
+    weight = 1000
   })
 
   Font.create('flRobotoItalic', {
@@ -132,7 +132,7 @@ function Font.create_fonts()
   Font.create('flRobotoLtBold', {
     font = 'Roboto Lt',
     size = 16,
-    weight = 1000,
+    weight = 1000
   })
 
   Font.create('flRobotoLtItalic', {
@@ -157,7 +157,7 @@ function Font.create_fonts()
   Font.create('flRobotoCondensedBold', {
     font = 'Roboto Condensed',
     size = 16,
-    weight = 1000,
+    weight = 1000
   })
 
   Font.create('flRobotoCondensedItalic', {

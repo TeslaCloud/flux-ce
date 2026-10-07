@@ -1,4 +1,4 @@
-﻿CMD.name = 'CharSetGender'
+CMD.name = 'CharSetGender'
 CMD.description = 'command.charsetgender.description'
 CMD.syntax = 'command.charsetgender.syntax'
 CMD.permission = 'assistant'

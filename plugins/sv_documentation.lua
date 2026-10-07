@@ -83,11 +83,13 @@ local function extract_functions_from_files(folder)
       if v:find('plugins/') then
         local plugin_name = v:match('plugins/([%w_%.]+)')
         if !plugin_name then continue end
+
         plugins[plugin_name] = plugins[plugin_name] or {}
         table.Merge(plugins[plugin_name], extract_functions(File.read(v)))
       elseif v:find('packages/') then
         local package_name = v:match('packages/([%w_%.]+)/')
         if !package_name then continue end
+
         packages[package_name] = packages[package_name] or {}
         table.Merge(packages[package_name], extract_functions(File.read(v)))
       else
@@ -131,21 +133,25 @@ local function render_html_for(name, data)
 
   out = out..'<div class="category_title">'..name..'</div>'
   out = out..'<div class="category_title">Globals</div>'
+
   for k, v in ipairs(globals) do
     out = out..'<div class="function">'..tostring(v)..'( ... )</div>'
   end
 
   out = out..'<div class="category_title">Class Methods</div>'
+
   for k, v in ipairs(class_methods) do
     out = out..'<div class="function">'..tostring(v)..'( ... )</div>'
   end
 
   out = out..'<div class="category_title">Module Methods</div>'
+
   for k, v in ipairs(modules) do
     out = out..'<div class="function">'..tostring(v)..'( ... )</div>'
   end
 
   out = out..'<div class="category_title">Hooks</div>'
+
   for k, v in ipairs(hooks) do
     out = out..'<div class="function">'..tostring(v)..'( ... )</div>'
   end
@@ -172,6 +178,7 @@ function analyze_folder(folder)
   index_file = index_file..'<h2>Flux</h2><a href="stdlib/index.html">stdlib</a><br><h2>Packages</h2>'
 
   print '  -> packages'
+
   for name, data in SortedPairs(packages) do
     print('    '..name)
     File.write('gamemodes/flux/docs/packages/'..name:underscore()..'.html', render_html_for(name, data))
@@ -181,6 +188,7 @@ function analyze_folder(folder)
   index_file = index_file..'<h2>Plugins</h2>'
 
   print '  -> plugins'
+
   for name, data in SortedPairs(plugins) do
     print('    '..name)
     File.write('gamemodes/flux/docs/plugins/'..name:underscore()..'.html', render_html_for(name, data))

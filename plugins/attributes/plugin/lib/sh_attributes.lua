@@ -288,7 +288,7 @@ do
 
       progress = progress + amount
 
-      while (progress >= total_progress and level < attribute_table.max) do
+      while progress >= total_progress and level < attribute_table.max do
         progress = progress - total_progress
 
         self:increase_attribute(attribute_id)
@@ -296,7 +296,7 @@ do
         total_progress = attribute_table:get_total_progress(level)
       end
 
-      while (progress < 0 and level > attribute_table.min) do
+      while progress < 0 and level > attribute_table.min do
         self:decrease_attribute(attribute_id)
         level = level - 1
         total_progress = attribute_table:get_total_progress(level)

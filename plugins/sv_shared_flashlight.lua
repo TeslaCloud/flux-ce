@@ -6,7 +6,7 @@ PLUGIN:set_description "Makes other players' flashlight lights visible to you."
 if !Settings.experimental then return end
 
 local flashlight_cutoff = 780 ^ 2
-local light_mat = Material("effects/flashlight001")
+local light_mat = Material('effects/flashlight001')
 
 --- Toggles a projected texture attached to the player, so that other players can see the
 -- light of their flashlight.

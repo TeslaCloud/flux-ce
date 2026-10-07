@@ -142,7 +142,7 @@ function PANEL:rebuild()
     surface.PlaySound(err and 'buttons/button10.wav' or 'buttons/button14.wav')
   end
 
-  self.player_model:SetSize(w * 0.3 , h)
+  self.player_model:SetSize(w * 0.3, h)
 
   self.equipment_right = vgui.Create('DIconLayout', self)
   self.equipment_right:SetSpaceY(math.scale(12))

@@ -41,6 +41,7 @@ function PANEL:rebuild()
     surface.PlaySound('buttons/button14.wav')
     self:select_button(btn)
   end
+
   self.button_allow.DoRightClick = function(btn)
     surface.PlaySound('buttons/button14.wav')
 
@@ -80,6 +81,7 @@ function PANEL:rebuild()
     surface.PlaySound('ui/buttonclick.wav')
     self:select_button(btn)
   end
+
   self.button_no.DoRightClick = function(btn)
     surface.PlaySound('buttons/button14.wav')
 
@@ -119,6 +121,7 @@ function PANEL:rebuild()
     surface.PlaySound('buttons/button10.wav')
     self:select_button(btn)
   end
+
   self.button_never.DoRightClick = function(btn)
     surface.PlaySound('buttons/button14.wav')
 

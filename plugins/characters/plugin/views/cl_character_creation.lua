@@ -1,4 +1,4 @@
-﻿local PANEL = {}
+local PANEL = {}
 PANEL.char_data = {}
 
 --- Builds the character creation screen: collects the stages from the
@@ -190,15 +190,15 @@ function PANEL:set_stage(stage)
     self:rebuild()
 
     if self.stage == 1 then
-        self.back:SetTitle(t'ui.char_create.main_menu')
+      self.back:SetTitle(t'ui.char_create.main_menu')
     else
-        self.back:SetTitle(t'ui.char_create.back')
+      self.back:SetTitle(t'ui.char_create.back')
     end
 
     if self.stage == #self.stages then
-        self.next:SetTitle(t'ui.char_create.create')
+      self.next:SetTitle(t'ui.char_create.create')
     else
-        self.next:SetTitle(t'ui.char_create.next')
+      self.next:SetTitle(t'ui.char_create.next')
     end
   end
 end
@@ -220,7 +220,7 @@ function PANEL:next_stage()
     end
   end
 
-  local success, error = hook.Run('PreStageChange', self.stages[self.stage],  self.panel)
+  local success, error = hook.Run('PreStageChange', self.stages[self.stage], self.panel)
 
   if success == false then
     self:GetParent():notify(error or t'ui.char_create.unknown_error')

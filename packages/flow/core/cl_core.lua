@@ -231,9 +231,9 @@ do
       render.SetStencilFailOperation(STENCIL_REPLACE)
 
       render.SetStencilCompareFunction(STENCIL_EQUAL)
-        surface.draw_circle(x, y, radius - (thickness or 1), passes)
+      surface.draw_circle(x, y, radius - (thickness or 1), passes)
       render.SetStencilCompareFunction(STENCIL_NOTEQUAL)
-        surface.draw_circle(x, y, radius, passes)
+      surface.draw_circle(x, y, radius, passes)
     render.SetStencilEnable(false)
     render.ClearStencil()
   end
@@ -255,9 +255,9 @@ do
       render.SetStencilFailOperation(STENCIL_REPLACE)
 
       render.SetStencilCompareFunction(STENCIL_EQUAL)
-        surface.draw_circle_partial(percentage, x, y, radius - (thickness or 1), passes)
+      surface.draw_circle_partial(percentage, x, y, radius - (thickness or 1), passes)
       render.SetStencilCompareFunction(STENCIL_NOTEQUAL)
-        surface.draw_circle_partial(percentage, x, y, radius, passes)
+      surface.draw_circle_partial(percentage, x, y, radius, passes)
     render.SetStencilEnable(false)
     render.ClearStencil()
   end
@@ -286,9 +286,9 @@ function draw.stenciled(draw_func, stencil_func)
     render.SetStencilFailOperation(STENCIL_REPLACE)
 
     render.SetStencilCompareFunction(STENCIL_EQUAL)
-      stencil_func()
+    stencil_func()
     render.SetStencilCompareFunction(STENCIL_NOTEQUAL)
-      draw_func()
+    draw_func()
   render.SetStencilEnable(false)
   render.ClearStencil()
 end

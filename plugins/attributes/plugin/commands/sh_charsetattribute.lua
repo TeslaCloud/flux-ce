@@ -1,4 +1,4 @@
-﻿CMD.name = 'CharSetAttribute'
+CMD.name = 'CharSetAttribute'
 CMD.description = 'command.charsetattribute.description'
 CMD.syntax = 'command.charsetattribute.syntax'
 CMD.permission = 'moderator'

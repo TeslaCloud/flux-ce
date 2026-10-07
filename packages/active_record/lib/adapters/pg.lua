@@ -72,6 +72,7 @@ function ActiveRecord.Adapters.Pg:disconnect()
   if self.connection then
     self.connection:disconnect()
   end
+
   self.connection = nil
 end
 
@@ -129,8 +130,8 @@ function ActiveRecord.Adapters.Pg:raw_query(query, callback, query_type)
     end
   end
 
-  query_obj:on("success", success_func)
-  query_obj:on("error", function(error_text)
+  query_obj:on('success', success_func)
+  query_obj:on('error', function(error_text)
     ErrorNoHalt('ActiveRecord - PostgreSQL Query Error!\n')
     long_error('Query: '..query..'\n')
     error_with_traceback(error_text)

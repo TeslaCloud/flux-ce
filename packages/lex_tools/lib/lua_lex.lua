@@ -170,8 +170,10 @@ function LuaLexer:tokenize(input, extended)
   local function read_long_string(current, char_id)
     local newlines = 0
     local buf = ''
+
     while true do
       current, char_id = next()
+
       if current == ']' and peek() == ']' then
         next() next() -- eat ] and then jump to the next fresh thing
         return buf, newlines
@@ -225,6 +227,7 @@ function LuaLexer:tokenize(input, extended)
         break
       end
     end
+
     return clear(), newlines
   end
 
@@ -262,6 +265,7 @@ function LuaLexer:tokenize(input, extended)
         if extended and (current != '\v' and current != '\f') then
           push(string.byte(current), current)
         end
+
         next()
         return true
     elseif current == '-' then
@@ -280,8 +284,10 @@ function LuaLexer:tokenize(input, extended)
           while current != '\n' do
             current, char_id = save_next()
           end
+
           push(TK_comment, clear())
         end
+
         return true
       end
 
@@ -297,15 +303,19 @@ function LuaLexer:tokenize(input, extended)
       return true
     elseif current == '/' then
       current, char_id = next()
+
       if current == '/' then -- C-style comment (thanks garry)
         next() -- eat /
+
         while current != '\n' do
           current, char_id = save_next()
         end
+
         push(TK_comment, clear())
         return true
       elseif current == '*' then -- C-style long comment
         next() -- eat *
+
         while true do
           current, char_id = save_next()
 
@@ -315,6 +325,7 @@ function LuaLexer:tokenize(input, extended)
             break
           end
         end
+
         push(TK_comment, clear())
         return true
       end
@@ -345,26 +356,31 @@ function LuaLexer:tokenize(input, extended)
       return true
     elseif current == '>' then
       current, char_id = next()
+
       if current != '=' then push(TK_gt, '>')
       else next() push(TK_ge, '>=') end
       return true
     elseif current == '<' then
       current, char_id = next()
+
       if current != '=' then push(TK_lt, '<')
       else next() push(TK_le, '<=') end
       return true
     elseif current == '!' then
       current, char_id = next()
+
       if current != '=' then push(TK_ex, '!')
       else next() push(TK_ne, '!=') end
       return true
     elseif current == '~' then
       current, char_id = next()
+
       if current != '=' then push(TK_tild, '~')
       else next() push(TK_ne, '~=') end
       return true
     elseif current == '=' then
       current, char_id = next()
+
       if current != '=' then push(TK_assign, '=')
       else next() push(TK_eq, '==') end
       return true

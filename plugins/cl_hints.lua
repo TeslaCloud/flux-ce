@@ -39,6 +39,7 @@ function Hints:display_random()
   local hint = table.Random(stored)
 
   if hint.callback and hint.callback() != true then return end
+
   if hint.play_sound then surface.PlaySound('hl1/fvox/blip.wav') end
 
   Flux.Notification:add(t(hint.text), 15, hint.color)

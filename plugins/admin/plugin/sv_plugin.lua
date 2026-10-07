@@ -20,6 +20,7 @@ end
 
 Cable.receive('fl_bolt_set_role', function(actor, target, role_id)
   if !actor:can('manage_permissions') then return end
+
   target:SetUserGroup(role_id)
 
   Command:notify_staff('command.setgroup.message', {
@@ -31,16 +32,19 @@ end)
 
 Cable.receive('fl_bolt_set_permission', function(actor, target, perm_id, value)
   if !actor:can('manage_permissions') then return end
+
   target:set_permission(perm_id, value)
 end)
 
 Cable.receive('fl_temp_permission', function(actor, target, perm_id, value, duration)
   if !actor:can('manage_permissions') then return end
+
   target:set_temp_permission(perm_id, value, duration)
 end)
 
 Cable.receive('fl_config_change', function(actor, key, value)
   if !actor:can('manage_configuration') then return end
+
   local config_table = Config.find(key)
 
   Config.set(key, value)

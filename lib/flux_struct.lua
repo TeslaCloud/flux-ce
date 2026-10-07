@@ -11,7 +11,7 @@ end
 
 if !Flux then
   Flux = {
-    schema              = engine.ActiveGamemode(),
+    schema = engine.ActiveGamemode(),
     shared = {
       schema_folder     = engine.ActiveGamemode(),
       plugin_info       = {},

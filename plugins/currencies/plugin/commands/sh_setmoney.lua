@@ -1,4 +1,4 @@
-﻿CMD.name = 'SetMoney'
+CMD.name = 'SetMoney'
 CMD.description = 'command.setmoney.description'
 CMD.syntax = 'command.setmoney.syntax'
 CMD.permission = 'moderator'

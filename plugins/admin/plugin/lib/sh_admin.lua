@@ -329,6 +329,7 @@ if SERVER then
   --   column values (only when found)]
   function Bolt:remove_ban(steam_id)
     local obj = bans[steam_id]
+
     if obj then
       local dump = obj:dump()
       obj:destroy()

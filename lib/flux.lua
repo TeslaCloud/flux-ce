@@ -46,6 +46,6 @@ Settings          = Settings or YAML.read('gamemodes/flux/config/settings.yml')
 Settings.configs  = Settings.configs or YAML.read('gamemodes/flux/config/config.yml')
 DatabaseSettings  = YAML.read('gamemodes/flux/config/database.yml')
 
-LITE_REFRESH     = Flux.initialized and Settings.lite_refresh or false
+LITE_REFRESH = Flux.initialized and Settings.lite_refresh or false
 
 AddCSLuaFile('_flux/environment.lua')

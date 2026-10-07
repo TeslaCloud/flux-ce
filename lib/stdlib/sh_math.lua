@@ -17,7 +17,7 @@ math.time_fraction    = math.TimeFraction
 math.truncate         = math.Truncate
 
 do
-  local hex_digits = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'}
+  local hex_digits = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f' }
 
   --- Converts a single hexadecimal digit to decimal.
   -- @param hex [String/Number hexadecimal digit, may be prefixed with '-'; numbers pass through]

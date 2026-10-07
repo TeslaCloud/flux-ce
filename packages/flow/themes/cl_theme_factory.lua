@@ -183,7 +183,7 @@ function THEME:PaintButton(panel, w, h)
 
   if icon then
     icon_w, icon_h = FontAwesome:get_icon_size(icon, icon_size)
-    
+
     if title != '' then
       text_x = text_x + (left and icon_w * 0.5 or -icon_w * 0.5)
       icon_x = (left and text_x - icon_w - math.scale_x(4) or text_x + text_w + math.scale_x(4))

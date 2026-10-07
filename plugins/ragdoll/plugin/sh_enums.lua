@@ -1,5 +1,5 @@
 -- Can't use enumerate here since this is made to avoid collisions with legacy DTVars...
-ENT_RAGDOLL         = 2 -- Player's ragdoll (E.G. fallenover, death or anything else).
+ENT_RAGDOLL = 2 -- Player's ragdoll (E.G. fallenover, death or anything else).
 
 enumerate 'INT_RAGDOLL_STATE'
 -- INT_RAGDOLL_STATE   = Player's ragdoll state (RAGDOLL_ enums).

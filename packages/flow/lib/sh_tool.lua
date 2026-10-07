@@ -1,6 +1,6 @@
 mod 'Flux::Tool'
 
-Flux.Tool.stored = Flux.Tool.stored  or {}
+Flux.Tool.stored = Flux.Tool.stored or {}
 
 --- Returns the tool with the specified ID.
 -- @param id [String tool ID (the tool mode)]

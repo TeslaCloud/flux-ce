@@ -106,7 +106,6 @@ function InfoDisplay:draw(info)
           surface.draw_circle_outline(x_pos + size * 0.5, margin + size * 0.5, circle_size, 3, 64)
         render.SetScissorRect(0, 0, 0, 0, false)
       else
-
       end
     end
 

@@ -1,4 +1,4 @@
-﻿CMD.name = 'CharAttributeMultiplier'
+CMD.name = 'CharAttributeMultiplier'
 CMD.description = 'command.charattributemultiplier.description'
 CMD.syntax = 'command.charattributemultiplier.syntax'
 CMD.permission = 'moderator'

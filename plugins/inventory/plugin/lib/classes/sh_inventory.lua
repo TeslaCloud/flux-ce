@@ -482,7 +482,6 @@ function Inventory:get_item_size(item_obj)
 end
 
 if SERVER then
-
   --- Add an item object to an inventory.
   -- @variant Inventory:add_item(item_obj, x, y)
   --   @param item_obj [Item]
@@ -927,7 +926,6 @@ if SERVER then
     self:sync()
   end
 else
-
   --- Creates a panel for the inventory.
   -- It will update automatically every time
   -- the inventory synchronizes itself.

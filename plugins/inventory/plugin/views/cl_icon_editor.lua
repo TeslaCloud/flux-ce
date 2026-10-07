@@ -174,6 +174,7 @@ function PANEL:Init()
   self.item:SetMouseInputEnabled(false)
   self.item.LayoutEntity = function()
   end
+
   self.item.PaintOver = function(pnl, w, h)
     surface.SetDrawColor(color_white)
     surface.DrawOutlinedRect(0, 0, w, h)

@@ -36,7 +36,7 @@ end
 -- @param str [String]
 -- @return [String escaped string without surrounding quotes]
 function ActiveRecord.Adapters.Sqlite:escape(str)
-  return sql.SQLStr(string.gsub(str, "'", "`"), true)
+  return sql.SQLStr(string.gsub(str, "'", '`'), true)
 end
 
 --- Turns doubled single quotes in a string read from the database back into single ones.

@@ -2,7 +2,7 @@ local flux_player       = {}
 flux_player.DisplayName = 'Flux Player'
 DEFINE_BASECLASS('player_default')
 
-local model_list        = {}
+local model_list = {}
 
 for k, v in pairs(player_manager.AllValidModels()) do
   model_list[v:lower()] = k

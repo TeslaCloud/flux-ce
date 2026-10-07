@@ -24,6 +24,7 @@ if CLIENT then
       print('  -> error!')
     end
   end)
+
 --- @deprecation [Remove in 1.0_b]
 else
   local function _run_backup(actor)
@@ -69,6 +70,7 @@ else
         status = false
         break
       end
+
       print('  -> '..ent_class)
       file.Write(target_dir..'/'..ent_class..'.txt', util.TableToJSON(v))
     end

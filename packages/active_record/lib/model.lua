@@ -48,5 +48,6 @@ function ActiveRecord.Model:populate()
       v.schema = schema
     end
   end
+
   return self
 end

@@ -65,7 +65,7 @@ if CLIENT then
         local success, value = pcall(v.handler, ...)
 
         if !success then
-          ErrorNoHalt("The '"..name.." - "..tostring(k).."' MVC callback has failed to run!\n")
+          ErrorNoHalt("The '"..name..' - '..tostring(k).."' MVC callback has failed to run!\n")
           error_with_traceback(tostring(value))
         end
 
@@ -130,7 +130,7 @@ else
         local success, value = pcall(v, actor, ...)
 
         if !success then
-          ErrorNoHalt("The '"..name.." - "..tostring(k).."' MVC handler has failed to run!\n")
+          ErrorNoHalt("The '"..name..' - '..tostring(k).."' MVC handler has failed to run!\n")
           error_with_traceback(tostring(value))
         end
       end

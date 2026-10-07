@@ -1,4 +1,4 @@
-﻿CMD.name = 'CharAttributeBoost'
+CMD.name = 'CharAttributeBoost'
 CMD.description = 'command.charattributeboost.description'
 CMD.syntax = 'command.charattributeboost.syntax'
 CMD.permission = 'moderator'

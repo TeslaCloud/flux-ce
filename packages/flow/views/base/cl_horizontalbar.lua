@@ -56,7 +56,7 @@ function PANEL:PerformLayout()
 
   self.pnlCanvas:SetWide(math.max(x - self.m_iOverlap, 0))
 
-  if (w < self.pnlCanvas:GetWide()) then
+  if w < self.pnlCanvas:GetWide() then
     self.OffsetX = math.Clamp(self.OffsetX, 0, self.pnlCanvas:GetWide() - self:GetWide())
   else
     self.OffsetX = 0

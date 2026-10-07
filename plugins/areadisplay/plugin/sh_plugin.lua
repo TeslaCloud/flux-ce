@@ -18,22 +18,22 @@ if SERVER then
   --- Currently does nothing; sending the text areas to the player is commented out.
   -- @param actor [Player]
   function PLUGIN:PlayerInitialized(actor)
-    --Cable.send(actor, 'fl_areas_text_load', Areas.get_by_type('text'))
+    -- Cable.send(actor, 'fl_areas_text_load', Areas.get_by_type('text'))
   end
 
   --- Currently does nothing; loading of the saved areas is commented out.
   function PLUGIN:InitPostEntity()
-    --self:load()
+    -- self:load()
   end
 
   --- Currently does nothing; saving of the areas is commented out.
   function PLUGIN:SaveData()
-    --self:save()
+    -- self:save()
   end
 
   --- Currently does nothing; saving of the text areas is commented out.
   function PLUGIN:save()
-    --Data.save_plugin('areas', Areas.get_by_type('text') or {})
+    -- Data.save_plugin('areas', Areas.get_by_type('text') or {})
   end
 
   --- Loads the areas saved in the 'areas' plugin data and registers each of them.

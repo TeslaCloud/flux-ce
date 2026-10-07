@@ -1,4 +1,4 @@
-﻿local PANEL = {}
+local PANEL = {}
 PANEL.chars = {}
 
 --- Creates the fullscreen character list and the button that leads back to the main menu.

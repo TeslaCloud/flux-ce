@@ -72,7 +72,7 @@ function ActiveRecord.Adapters.Mysqloo:connect(config, on_connected)
     self.connection:connect()
 
     -- ping it every 30 seconds to make sure we're not losing connection
-    timer.Create("Mysqloo#keep_alive", 30, 0, function()
+    timer.Create('Mysqloo#keep_alive', 30, 0, function()
       self.connection:ping()
     end)
   else
@@ -85,6 +85,7 @@ function ActiveRecord.Adapters.Mysqloo:disconnect()
   if self.connection then
     self.connection:disconnect(true)
   end
+
   self.connection = nil
 end
 
@@ -141,6 +142,7 @@ function ActiveRecord.Adapters.Mysqloo:raw_query(query, callback, query_type)
     long_error('Query: '..query..'\n')
     error_with_traceback(error_text)
   end
+
   if self._sync then
     query_obj.onSuccess = nil
     query_obj:start()

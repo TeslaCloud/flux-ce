@@ -11,11 +11,11 @@ if !ActiveRecord.Base then
   include 'base.lua'
 
   local remove_keys = {
-    'class_extended', 'dump','where', 'where_not',
-    'first','last','all','order','find','find_by',
+    'class_extended', 'dump', 'where', 'where_not',
+    'first', 'last', 'all', 'order', 'find', 'find_by',
     'limit', '_process_child',  '_fetch_relation',
-    'run_query','expect','get','rescue','destroy',
-    'save','has','has_many','has_one','belongs_to'
+    'run_query', 'expect', 'get', 'rescue', 'destroy',
+    'save', 'has', 'has_many', 'has_one', 'belongs_to'
   }
 
   for k, v in ipairs(remove_keys) do

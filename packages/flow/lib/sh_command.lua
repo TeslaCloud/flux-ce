@@ -173,7 +173,7 @@ if SERVER then
       return to_ret, '@'
     end,
     -- Target everyone with str in their name.
-      ['('] = function(actor, str)
+    ['('] = function(actor, str)
       local name = str:utf8sub(2, utf8.len(str) - 1)
       local to_ret = player.find(name)
 
