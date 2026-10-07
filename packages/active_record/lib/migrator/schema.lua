@@ -1,57 +1,75 @@
-class 'ActiveRecord::Schema' extends 'ActiveRecord::Migration'
+class 'ActiveRecord::Schema'
 
---- Creates a schema definition.
+--- Creates a schema object. Only used by schema files that hold a 'Structure' object
+-- with a #create_tables method.
 -- @param version [Number/String schema version]
 function ActiveRecord.Schema:init(version)
   self.version = version
 end
 
---- Creates a new schema definition. Used by the generated 'db/schema.lua' file.
+--- Defines the schema of the database. Used by the generated 'db/schema.lua' file,
+-- which is loaded with `flux db:schema:load` or when a fresh database is set up.
+-- The statements of the callback are run right away, after which the given version and
+-- every older migration are recorded as run.
 -- ```
--- local Structure = ActiveRecord.Schema:define(20190309120000)
---   function Structure:create_tables()
---     create_table('users', function(t)
---       t:primary_key 'id'
---       t:string 'steam_id'
---     end)
---   end
--- return Structure
+-- ActiveRecord.Schema:define({ version = 20190309120000 }, function()
+--   create_table('users', { force = true }, function(t)
+--     t:string { 'steam_id', null = false }
+--     t:timestamps()
+--   end)
+--
+--   add_index('users', { 'steam_id' }, { name = 'users_steam_id_index' })
+-- end)
 -- ```
--- @param version [Number/String schema version]
--- @return [ActiveRecord::Schema]
-function ActiveRecord.Schema:define(version)
-  return ActiveRecord.Schema.new(version)
+-- Called with a version alone, as the schema files that hold a 'Structure' object do,
+-- it returns a schema object instead and runs nothing.
+-- @param info [Map/Number/String a table with the version, or the version itself]
+-- @param callback=nil [Function makes the schema statements]
+-- @return [ActiveRecord::Schema only for the one-argument form]
+function ActiveRecord.Schema:define(info, callback)
+  if !istable(info) then
+    return ActiveRecord.Schema.new(info)
+  end
+
+  ActiveRecord.Schema.load(info, callback)
 end
 
---- Creates all tables of the schema. Does nothing by default; the generated schema
--- file overrides it.
+--- Creates all tables of the schema. Does nothing; the schema files that hold a
+-- 'Structure' object override it.
 -- @return [ActiveRecord::Schema(self)]
 function ActiveRecord.Schema:create_tables()
   return self
 end
 
---- Creates foreign keys with cascading deletion for the relations of every model.
--- On SQLite only the indexes are created.
-function ActiveRecord.Schema:setup_references()
-  local references = {}
-  local is_sqlite = ActiveRecord.adapter_name == 'sqlite'
-
-  for key, model in pairs(ActiveRecord.Model:all()) do
-    for k, v in ipairs(model.relations) do
-      if !v.child then
-        references[v.table_name] = references[v.table_name] or {}
-        references[v.table_name][v.column_name] = model.table_name
-      end
-    end
+--- Runs the statements of a schema definition and records the migrations up to its
+-- version as run.
+-- @warning [Internal]
+-- @param info [Map version]
+-- @param callback [Function]
+function ActiveRecord.Schema.load(info, callback)
+  if !ActiveRecord.ready then
+    error('ActiveRecord - the schema can only be loaded once ActiveRecord is ready!', 0)
   end
 
-  for k, v in pairs(references) do
-    for k2, v2 in pairs(v) do
-      if !is_sqlite then
-        create_reference({ table_name = k, key = k2, foreign_table = v2, foreign_key = 'id', cascade = true })
-      else
-        add_index { k, k2 } -- only add index if SQLite
-      end
-    end
+  local adapter = ActiveRecord.adapter
+
+  adapter.last_error = nil
+  adapter:raise_errors(true)
+
+  local success, exception = pcall(callback)
+
+  adapter:raise_errors(false)
+
+  if !success then
+    error(exception, 0)
   end
+
+  ActiveRecord.SchemaMigration:create_table()
+
+  if info.version then
+    local context = ActiveRecord.migration_context or ActiveRecord.MigrationContext.new()
+    context:assume_migrated_upto_version(info.version)
+  end
+
+  ActiveRecord.Model:populate()
 end

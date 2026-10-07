@@ -32,6 +32,12 @@ function ActiveRecord.Adapters.Sqlite:is_sqlite()
   return true
 end
 
+--- SQLite can roll back schema changes.
+-- @return [Boolean always true]
+function ActiveRecord.Adapters.Sqlite:supports_ddl_transactions()
+  return true
+end
+
 --- Escapes a string with sql.SQLStr. Single quotes are replaced with backticks first.
 -- @param str [String]
 -- @return [String escaped string without surrounding quotes]
@@ -72,9 +78,7 @@ function ActiveRecord.Adapters.Sqlite:raw_query(query, callback, query_type, bin
   end
 
   if result == false then
-    ErrorNoHalt('ActiveRecord - SQLite Query Error!\n')
-    long_error('Query: '..query..'\n')
-    error_with_traceback(sql.LastError())
+    return self:query_failed(query, sql.LastError())
   else
     if query_type == 'insert' then
       result = { { id = tonumber(sql.QueryValue('SELECT last_insert_rowid()')) } }

@@ -1,9 +1,3 @@
-# Deprecation
-
-As of December 2019, Flux is **deprecated** and is no longer under active development. No support will be provided regarding the framework or its schemas. Please refrain from contacting the authors of this project regarding any issues, and please do not submit any further pull requests, these will not be reviewed or considered.
-
-If you're looking for a maintained and supported framework for Garry's Mod serious roleplaying games, check out [helix](https://github.com/nebulouscloud/helix).
-
 ![Imgur](https://i.imgur.com/o4bFhLn.png)
 
 # Flux
@@ -12,8 +6,9 @@ If you're looking for a maintained and supported framework for Garry's Mod serio
 
 Flux is a WIP gamemode framework designed with performance and convenience in mind. It comes with "batteries included" and features all you need to create engaging experiences with maximum comfort. Whether you are a developer wishing to create something with Flux, or a person looking to create their own server, Flux makes it easy to achieve your goals, and gives you the confidence of knowing everything will run smoothly.
 
-## Alpha release
-The current version of Flux is currently in active development as an open alpha. This means that you can install it and it will run, but there will almost inevitably be bugs and issues, as well as a lot of missing features. If you are not a developer, it is probably better for you to wait until Flux is in beta.
+## Development Version
+
+The current version of Flux is currently in active development. This means that you can install it and it will run, but there will almost inevitably be bugs and issues, as well as a lot of missing features. If you are not a developer, it is probably better for you to wait until Flux is in beta.
 
 ## Important
 
@@ -69,10 +64,11 @@ Flux is a Linux-first system, which means that it is primarily designed to be in
 Our installation and maintenance guides are primarily written with the assumption that Flux is running under Linux. While they can be easily applied to Windows as well, we unfortunately cannot provide official support in that case.
 
 ### Prerequisites
+
 * SteamCMD
 * Git
 * The `x86-64` branch of the Garry's Mod dedicated server. Flux only ships 64-bit modules, so the default 32-bit server will not work.
-* Linux: a 64-bit distribution with glibc 2.34 or newer (Debian 12, Ubuntu 22.04 or newer)
+* Linux: a 64-bit distribution with glibc 2.35 or newer (Debian 12, Ubuntu 22.04 or newer)
 * Windows: Windows 10 / Windows Server 2016+ recommended
 * Windows: Microsoft Visual C++ 2015
 
@@ -129,11 +125,45 @@ flc setgroup YOUR_NAME_OR_STEAMID admin
 _The `admin` role will have every single permission by default._ Similarly to the `superadmin` user role in other administration solutions, with one important difference: there are no limitations at all, and the role cannot be in any way limited. Any permission is automatically granted to all users with the `admin` role. _Please be careful with who you give this role to._
 
 ### Database setup
+
 Depending on your use case, you may want to set up a database. SQLite is the default option and requires no further setup. It is perfect if you simply want to take a look at Flux and how it works. If you want to run Flux in production, however, you should consider setting up a MySQL (MariaDB) or PostgreSQL database.
 
 Follow the instructions in `/garrysmod/gamemodes/flux/config/database.yml` to learn more.
 
+### Migrations
+
+Flux manages the database schema with migrations. A migration is a file named `<version>_<name>.lua` (the version is a `YYYYMMDDHHMMSS` timestamp) that returns a migration object describing the change:
+
+```lua
+local AddRoleToUsers = ActiveRecord.Migration.new()
+
+function AddRoleToUsers:change()
+  add_column('users', 'role', 'string', { default = "'user'" })
+end
+
+return AddRoleToUsers
+```
+
+Migrations of the schema live in `gamemodes/<your_schema>/db/migrate/`. Migrations shipped with packages and plugins (their `migrations/` folders) are installed into that folder when the server starts, under a new version and the name of the plugin. Every migration that has been run is recorded in the `ar_schema_migrations` table, so each one runs exactly once; pending ones are run when the server starts. After migrating, the current state of the database is dumped into `gamemodes/<your_schema>/db/schema.lua`, which is loaded instead of the migrations when an empty database is set up.
+
+`change` is reverted automatically for `create_table`, `add_column`, `rename_column`, `rename_table`, `add_index`, `add_reference`, `add_foreign_key`, `add_timestamps` and their counterparts. Use `reversible` for anything else, or define `up` and `down` instead of `change`. The available tasks are run from the server console:
+
+```
+flux db:migrate [VERSION=x]       run the pending migrations, or migrate to a version
+flux db:migrate:status            list the migrations and whether they have been run
+flux db:migrate:up VERSION=x      run a single migration
+flux db:migrate:down VERSION=x    revert a single migration
+flux db:migrate:redo [STEP=n]     revert and re-run the newest migration(s)
+flux db:rollback [STEP=n]         revert the newest migration(s)
+flux db:forward [STEP=n]          run the next pending migration(s)
+flux db:version                   print the current schema version
+flux db:schema:dump               write the schema into db/schema.lua
+flux db:schema:load               create the tables of db/schema.lua
+flux generate migration AddRoleToUsers role:string
+```
+
 ### Environment
+
 By default, Flux comes with the `production` environment pre-chosen. It is good if you don't want to write code. If you plan on writing plugins, schemas or modifying the framework, you should set your environment to `development`. **No other environments are supported yet!** If you wish to change your environment, copy the `gamemodes/flux/config/environment.lua` file as `environment.local.lua` and change `production` to `development` inside that file.
 
 **What is the difference between production and development?**
@@ -148,6 +178,7 @@ _tl;dr:_
 * **development**: slow code, yes refresh, _use this if you are developing_
 
 ## Upgrading
+
 During Alpha, the database may break between versions. This will be different in beta and beyond, but until then, if you are upgrading Flux you need to recreate the database manually every time.
 
 To do that, simply follow the steps below:
@@ -157,16 +188,19 @@ To do that, simply follow the steps below:
 3. Follow the database-specific instructions below:
 
 ### SQLite
+
 1. Simply delete the `/garrysmod/sv.db` file.
 2. Start the server.
 
-### MariaDB (MySQL)
+### MySQL (MariaDB / MySQL)
+
 1. Open the MySQL console (`mysql` command on Linux) or any other means of managing your database.
 2. Drop the table specified in `/garrysmod/gamemodes/flux/config/database[.local].yml`. To do that from the console, simply run `DROP DATABASE database_name_here;`, replace `database_name_here` with your database name.
 3. Create a new database. To do that, run `CREATE DATABASE database_name_here;`, replace `database_name_here` with your database name.
 4. Start the server.
 
 ### PostgreSQL
+
 1. Drop the database: `sudo -u postgres dropdb database_name_here` (replace `database_name_here` with your database name).
 2. Re-Create the database: `sudo -u postgres createdb database_name_here`.
 3. Start the server.
@@ -174,7 +208,9 @@ To do that, simply follow the steps below:
 If you don't have access to the `postgres` user, try the same SQL as described in the MySQL section, using the `psql` command.
 
 ## Playing
+
 If you wish to play the gamemode, you should install the content addon to prevent purple-black checkers where the materials should be. You can find it here: <https://steamcommunity.com/sharedfiles/filedetails/?id=1518849094>
 
 ## Other info
+
 For more info or technical support, please visit our forums: https://teslacloud.net/

@@ -21,14 +21,82 @@ concommand.Add('ar_recreate_schema', function(actor)
   end
 end)
 
-concommand.Add('flux', function(actor, cmd, args, args_str)
-  if !IsValid(actor) then
-    local args = args_str:split(' ')
+local usage = txt[[
+  Usage: flux <task> [KEY=VALUE ...]
 
-    if args[1] == 'db:create' then
-      ActiveRecord.Database:setup(ActiveRecord.db_settings)
-    elseif args[1] == 'db:drop' then
-      ActiveRecord.Database:drop_database(ActiveRecord.db_settings)
+  Database tasks:
+    flux db:migrate [VERSION=x]        run the pending migrations, or migrate to a version
+    flux db:migrate:status             list the migrations and whether they have been run
+    flux db:migrate:up VERSION=x       run a single migration
+    flux db:migrate:down VERSION=x     revert a single migration
+    flux db:migrate:redo [STEP=n]      revert and re-run the newest migration(s)
+    flux db:rollback [STEP=n]          revert the newest migration(s)
+    flux db:forward [STEP=n]           run the next pending migration(s)
+    flux db:version                    print the current schema version
+    flux db:schema:dump                write the schema into db/schema.lua
+    flux db:schema:load                create the tables of db/schema.lua
+    flux db:create                     create the database (PostgreSQL only)
+    flux db:drop                       drop the database
+
+  Generators:
+    flux generate migration <Name> [column:type ...]
+      e.g. flux generate migration AddRoleToUsers role:string
+           flux g migration CreateItems name:string owner:references
+]]
+
+--- Splits the arguments of the 'flux' command into the task, its KEY=VALUE options and
+-- the remaining words.
+-- @param args_str [String]
+-- @return [String task, Map options (keys upper-cased), List<String> words]
+local function parse_args(args_str)
+  local words = {}
+  local env = {}
+  local task = nil
+
+  for k, v in ipairs((args_str or ''):trim():split(' ')) do
+    if v != '' then
+      local key, value = v:match('^([%w_]+)=(.*)$')
+
+      if !task then
+        task = v
+      elseif key then
+        env[key:upper()] = value
+      else
+        table.insert(words, v)
+      end
     end
+  end
+
+  return task, env, words
+end
+
+concommand.Add('flux', function(actor, cmd, args, args_str)
+  if IsValid(actor) then return end
+
+  local task, env, words = parse_args(args_str)
+
+  if !task then
+    print(usage)
+    return
+  end
+
+  if task:start_with('db:') then
+    ActiveRecord.Tasks.run(task:sub(4), env)
+  elseif task == 'generate' or task == 'g' then
+    if words[1] != 'migration' or !words[2] then
+      print(usage)
+      return
+    end
+
+    local generator = ActiveRecord.MigrationGenerator.new(words[2], { unpack(words, 3) })
+    local success, result = pcall(generator.generate, generator)
+
+    if success then
+      print('Generated migration:\n-> '..result)
+    else
+      ErrorNoHalt(tostring(result)..'\n')
+    end
+  else
+    print(usage)
   end
 end)

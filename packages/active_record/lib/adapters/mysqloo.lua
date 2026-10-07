@@ -167,15 +167,25 @@ function ActiveRecord.Adapters.Mysqloo:raw_query(query, callback, query_type, bi
 
   query_obj.onSuccess = success_func
   query_obj.onError = function(query_obj, error_text)
-    ErrorNoHalt('ActiveRecord - MySQL Query Error!\n')
-    long_error('Query: '..query..'\n')
-    error_with_traceback(error_text)
+    self:query_failed(query, error_text, false)
   end
 
   if self._sync then
+    local error_text = nil
+
+    -- The callbacks run inside of wait(), so the success callback is called by hand
+    -- below instead and the error is reported once the query is done.
     query_obj.onSuccess = nil
+    query_obj.onError = function(query_obj, text)
+      error_text = text
+    end
+
     query_obj:start()
     query_obj:wait(true)
+
+    if error_text then
+      return self:query_failed(query, error_text)
+    end
 
     local data = query_obj:getData()
 

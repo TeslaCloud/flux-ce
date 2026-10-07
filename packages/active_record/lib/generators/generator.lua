@@ -1,3 +1,22 @@
+--- Splits the arguments of a column type method into the column name and its options.
+-- @param name [String/Map column name, or a table holding the name at index 1 and the
+--   options as keys]
+-- @param ... [Vararg options table, when the name is given as a string]
+-- @return [String column name, Map options]
+function ActiveRecord.column_args(name, ...)
+  local args = { ... }
+
+  if istable(name) then
+    args = table.Copy(name)
+    name = args[1]
+    table.remove(args, 1)
+  elseif istable(args[1]) then
+    args = args[1]
+  end
+
+  return name, args
+end
+
 --- Adds a column type method to a query, which lets columns be defined DSL-style.
 -- The generated method takes the column name followed by its options, or a single
 -- table holding both.
@@ -5,6 +24,7 @@
 -- ActiveRecord.generate_create_func(query, 'string', 'varchar(255)')
 --
 -- query:string 'name'
+-- query:string('steam_id', { null = false })
 -- query:string { 'steam_id', null = false }
 -- ```
 -- @param obj [ActiveRecord::Query query to add the method to]
@@ -12,13 +32,8 @@
 -- @param def [String adapter-specific SQL type definition]
 function ActiveRecord.generate_create_func(obj, type, def)
   obj[type] = function(s, name, ...)
-    local args = { ... }
-
-    if istable(name) then
-      args = name
-      name = args[1]
-      table.remove(args, 1)
-    end
+    local args
+    name, args = ActiveRecord.column_args(name, ...)
 
     s.def = def
 
@@ -29,7 +44,7 @@ function ActiveRecord.generate_create_func(obj, type, def)
     s:create(name, s.def)
 
     if ActiveRecord.ready then
-      ActiveRecord.add_to_schema(obj.table_name, name, type)
+      ActiveRecord.add_to_schema(obj.table_name, name, type, s.def, args)
     end
 
     ActiveRecord.adapter:create_column(s, name, args, obj, type, def)
@@ -45,6 +60,53 @@ function ActiveRecord.generate_create_funcs(obj)
   for k, v in pairs(tab) do
     ActiveRecord.generate_create_func(obj, k, v)
   end
+
+  --- Adds the 'created_at' and 'updated_at' datetime columns, NOT NULL unless told otherwise.
+  -- @param args=nil [Map column options, e.g. { null = true }]
+  obj.timestamps = function(s, args)
+    args = args or {}
+
+    local null = args.null
+
+    if null == nil then null = false end
+
+    s:datetime { 'created_at', null = null }
+    s:datetime { 'updated_at', null = null }
+  end
+
+  --- Adds a '<name>_id' integer column that refers to the table named after the plural
+  -- of the name, along with an index on it. A foreign key constraint is added as well
+  -- if asked for. Both are created once the table statement has run.
+  -- ```
+  -- t:references 'user'
+  -- t:references('user', { null = false, index = false })
+  -- t:references { 'character', foreign_key = { on_delete = 'cascade' } }
+  -- t:belongs_to('user', { foreign_key = true, to_table = 'players' })
+  -- ```
+  -- @param name [String/Map name of the referenced model, singular; or a table holding
+  --   it at index 1 and the options as keys]
+  -- @param ... [Vararg options table: column (defaults to '<name>_id'), to_table
+  --   (defaults to the plural of the name), null, default, index (true by default) and
+  --   foreign_key (true, or a table with on_delete, primary_key and name)]
+  obj.references = function(s, name, ...)
+    local args
+    name, args = ActiveRecord.column_args(name, ...)
+
+    local column = args.column or name..'_id'
+
+    s:integer { column, null = args.null, default = args.default }
+
+    s._references = s._references or {}
+
+    table.insert(s._references, {
+      column = column,
+      to_table = args.to_table or Flow.Inflector:pluralize(name),
+      index = args.index,
+      foreign_key = args.foreign_key
+    })
+  end
+
+  obj.belongs_to = obj.references
 end
 
 do
@@ -107,23 +169,21 @@ function ActiveRecord.generate_table_name(class_name)
   return Flow.Inflector:pluralize(class_name:underscore())
 end
 
---- Creates the internal 'ar_schema' and 'ar_metadata' tables if they do not exist yet.
+--- Creates the internal tables if they do not exist yet: 'ar_schema' (the columns of
+-- every table), 'ar_metadata' (key-value storage, which also holds the indexes and
+-- foreign keys) and 'ar_schema_migrations' (the migrations that have been run).
 function ActiveRecord.generate_tables()
-  create_table('ar_schema', function(t)
-    t:overwrite(false)
-
-    t:primary_key 'id'
+  ActiveRecord.SchemaStatements.create_table('ar_schema', { if_not_exists = true }, function(t)
     t:string 'table_name'
     t:string 'column_name'
     t:string 'abstract_type'
     t:string 'definition'
   end)
 
-  create_table('ar_metadata', function(t)
-    t:overwrite(false)
-
-    t:primary_key 'id'
+  ActiveRecord.SchemaStatements.create_table('ar_metadata', { if_not_exists = true }, function(t)
     t:string 'key'
-    t:string 'value'
+    t:text 'value'
   end)
+
+  ActiveRecord.SchemaMigration:create_table()
 end

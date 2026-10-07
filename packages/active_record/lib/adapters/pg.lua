@@ -29,6 +29,12 @@ function ActiveRecord.Adapters.Pg:is_postgres()
   return true
 end
 
+--- PostgreSQL can roll back schema changes.
+-- @return [Boolean always true]
+function ActiveRecord.Adapters.Pg:supports_ddl_transactions()
+  return true
+end
+
 --- Connects to a PostgreSQL server through the 'pg' module and sets the connection
 -- encoding. Calls #on_connection_failed if the connection fails.
 -- @param config [Map database settings: host, user, password, database, port (5432 if
@@ -145,9 +151,7 @@ function ActiveRecord.Adapters.Pg:raw_query(query, callback, query_type, binding
 
   query_obj:on('success', success_func)
   query_obj:on('error', function(error_text)
-    ErrorNoHalt('ActiveRecord - PostgreSQL Query Error!\n')
-    long_error('Query: '..query..'\n')
-    error_with_traceback(error_text)
+    self:query_failed(query, error_text, false)
   end)
 
   if self._sync then
@@ -158,9 +162,7 @@ function ActiveRecord.Adapters.Pg:raw_query(query, callback, query_type, binding
     if success then
       return success_func(res, size)
     else
-      ErrorNoHalt('ActiveRecord - PostgreSQL Query Error!\n')
-      long_error('Query: '..query..'\n')
-      error_with_traceback(tostring(res))
+      return self:query_failed(query, res)
     end
   else
     query_obj:set_sync(false)

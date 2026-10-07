@@ -264,11 +264,25 @@ function ActiveRecord.Query:offset(value)
   self.offset = value
 end
 
---- Sets whether a 'create' query drops an existing table first, instead of only
--- creating the table if it does not exist.
+--- Sets whether a 'create' query drops an existing table first. Without it, and without
+-- #if_not_exists, creating a table that exists already fails.
 -- @param overwrite [Boolean]
 function ActiveRecord.Query:overwrite(overwrite)
   self._overwrite = overwrite
+end
+
+--- Sets whether a 'create' query leaves an existing table alone (CREATE TABLE IF NOT
+-- EXISTS) instead of failing.
+-- @param if_not_exists [Boolean]
+function ActiveRecord.Query:if_not_exists(if_not_exists)
+  self._if_not_exists = if_not_exists
+end
+
+--- Sets whether a 'drop' query ignores a missing table (DROP TABLE IF EXISTS) instead
+-- of failing.
+-- @param if_exists [Boolean]
+function ActiveRecord.Query:if_exists(if_exists)
+  self._if_exists = if_exists
 end
 
 local function build_where(query_obj)
@@ -412,7 +426,7 @@ local function build_delete_query(query_obj)
 end
 
 local function build_drop_query(query_obj)
-  local query_string = { 'DROP TABLE ' }
+  local query_string = { query_obj._if_exists and 'DROP TABLE IF EXISTS ' or 'DROP TABLE ' }
 
   if isstring(query_obj.table_name) then
     table.insert(query_string, query_obj:quote_column(query_obj.table_name))
@@ -441,7 +455,7 @@ local function build_create_query(query_obj)
   local query_string = { 'DROP TABLE IF EXISTS ' }
 
   if !query_obj._overwrite then
-    query_string = { 'CREATE TABLE IF NOT EXISTS ' }
+    query_string = { query_obj._if_not_exists and 'CREATE TABLE IF NOT EXISTS ' or 'CREATE TABLE ' }
   end
 
   if isstring(query_obj.table_name) then
@@ -493,34 +507,40 @@ local function build_create_query(query_obj)
 end
 
 local function build_change_query(query)
-  local query_string = { 'ALTER TABLE ' }
-
-  if isstring(query.table_name) then
-    table.insert(query_string, ' '..query:quote_column(query.table_name))
-  else
+  if !isstring(query.table_name) then
     error_with_traceback('ActiveRecord - No table name specified!')
     return
   end
 
-  if #query.remove_column_list > 0 then
-    for k, v in ipairs(query.remove_column_list) do
-      table.insert(query_string, ' DROP '..v..',')
-    end
+  local table_name = query:quote_column(query.table_name)
+  local clauses = {}
+
+  for k, v in ipairs(query.remove_column_list) do
+    table.insert(clauses, 'DROP COLUMN '..v)
   end
 
-  if #query.rename_list > 0 then
-    for k, v in ipairs(query.rename_list) do
-      table.insert(query_string, ' RENAME '..v[1]..' TO '..v[2]..',')
-    end
+  for k, v in ipairs(query.rename_list) do
+    table.insert(clauses, 'RENAME COLUMN '..v[1]..' TO '..v[2])
   end
 
-  if #query.create_list > 0 then
-    for k, v in ipairs(query.create_list) do
-      table.insert(query_string, ' ADD '..v[1]..' '..v[2]..',')
-    end
+  for k, v in ipairs(query.create_list) do
+    table.insert(clauses, 'ADD '..v[1]..' '..v[2])
   end
 
-  return table.concat(query_string):Trim():Trim(',')
+  if #clauses == 0 then return end
+
+  -- SQLite takes a single change per ALTER TABLE statement.
+  if ActiveRecord.adapter:is_sqlite() then
+    local statements = {}
+
+    for k, v in ipairs(clauses) do
+      table.insert(statements, 'ALTER TABLE '..table_name..' '..v)
+    end
+
+    return table.concat(statements, ';\n')
+  end
+
+  return 'ALTER TABLE '..table_name..' '..table.concat(clauses, ', ')
 end
 
 --- Builds the SQL string of the query and hands it to the adapter, along with the values

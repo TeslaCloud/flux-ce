@@ -1,114 +1,182 @@
-local function table_to_inline(t)
-  local ret = ''
+local function lua_literal(value)
+  if isstring(value) then
+    return string.format('%q', value)
+  end
 
-  for k, v in pairs(t) do
-    if ret != '' then
-      ret = ret + ', '
-    end
+  return tostring(value)
+end
 
-    if tonumber(k) then
-      if !istable(v) then
-        ret = ret + '"' + tostring(v) + '"'
-      else
-        ret = ret + '{ ' + table_to_inline(v) + ' }'
-      end
-    else
-      ret = ret + tostring(k) + ' = '
+local function quote(str)
+  return "'"..tostring(str).."'"
+end
 
-      if !istable(v) then
-        ret = ret + '"' + tostring(v) + '"'
-      else
-        ret = ret + '{ ' + table_to_inline(v) + ' }'
-      end
+local function column_list(columns)
+  local quoted = {}
+
+  for k, v in ipairs(columns) do
+    table.insert(quoted, quote(v))
+  end
+
+  return '{ '..table.concat(quoted, ', ')..' }'
+end
+
+local function options_literal(options, order)
+  local parts = {}
+
+  for k, key in ipairs(order) do
+    local value = options[key]
+
+    if value != nil then
+      table.insert(parts, key..' = '..(isstring(value) and quote(value) or tostring(value)))
     end
   end
 
-  return ret
+  if #parts == 0 then return end
+
+  return '{ '..table.concat(parts, ', ')..' }'
 end
 
-local function quote(what)
-  return '"' + tostring(what) + '"'
-end
-
---- Generates the Lua source of a schema file ('db/schema.lua') from the current schema
--- and its metadata (indexes, references and primary keys).
+--- Generates the Lua source of the schema file ('db/schema.lua') from the schema and
+-- its metadata (indexes, foreign keys and primary keys), in the shape of the schema
+-- statements that create it. The internal 'ar_*' tables are left out.
 -- @param version [Number/String schema version to write into the file]
 -- @return [String Lua source code]
 function ActiveRecord.dump_schema(version)
-  local result = [[--
--- This is an ActiveRecord schema file.
--- Dumped at ]]..to_datetime(os.time())..[[
---
-local Structure = ActiveRecord.Schema:define(]]..version..[[)
-  function Structure:create_tables()
-]]
+  local lines = {
+    '-- This file is auto-generated from the current state of the database. Instead',
+    '-- of editing this file, please use the migrations feature of Active Record to',
+    '-- incrementally modify your database, and then regenerate this schema definition.',
+    '--',
+    '-- This file is the source Active Record uses to define your schema when running',
+    '-- `flux db:schema:load`, or when the server starts with an empty database. When',
+    '-- creating a new database, loading the schema tends to be faster and is less error',
+    '-- prone than running all of your migrations from scratch. Old migrations may fail',
+    '-- to apply correctly if those migrations use external dependencies or application',
+    '-- code.',
+    '--',
+    "-- It's strongly recommended that you check this file into your version control system.",
+    '--',
+    '-- Dumped at '..to_datetime(os.time()),
+    'ActiveRecord.Schema:define({ version = '..string.format('%.0f', tonumber(version) or 0)..' }, function()'
+  }
 
-  local level = 2
-  local ind = '  '
+  local metadata = ActiveRecord.metadata or {}
+  local tables = {}
 
   for table_name, structure in SortedPairs(ActiveRecord.schema or {}) do
-    if !istable(structure) then continue end
+    if istable(structure) and !table_name:start_with('ar_') then
+      table.insert(tables, table_name)
+    end
+  end
 
-    result = result + string.rep(ind, level) + 'create_table("' + table_name + '", function(t)\n'
-    level = level + 1
+  for k, table_name in ipairs(tables) do
+    local structure = ActiveRecord.schema[table_name]
+    local columns = {}
+    local primary_key = nil
 
-    local columns_table = table.map_kv(structure, function(k, v)
-      if istable(v) then
-        return { column = k, id = v.id, type = v.type }
+    for column, data in pairs(structure) do
+      if isstring(column) and istable(data) then
+        if data.type == 'primary_key' and !primary_key then
+          primary_key = column
+        else
+          table.insert(columns, { name = column, id = tonumber(data.id) or 0, type = data.type, null = data.null, default = data.default })
+        end
       end
-    end)
-
-    for k, data in SortedPairsByMemberValue(columns_table, 'id') do
-      result = result + string.rep(ind, level) + 't:' + data.type + ' "' + data.column + '"\n'
     end
 
-    level = level - 1
-    result = result + string.rep(ind, level) + 'end)\n'
+    table.sort(columns, function(a, b)
+      if a.id == b.id then return a.name < b.name end
+      return a.id < b.id
+    end)
+
+    local options = { 'force = true' }
+
+    if !primary_key then
+      table.insert(options, 'id = false')
+    elseif primary_key != 'id' then
+      table.insert(options, 'primary_key = '..quote(primary_key))
+    end
+
+    table.insert(lines, '  create_table('..quote(table_name)..', { '..table.concat(options, ', ')..' }, function(t)')
+
+    for k2, column in ipairs(columns) do
+      local column_options = {}
+
+      if column.null != nil then
+        table.insert(column_options, 'null = '..tostring(column.null))
+      end
+
+      if column.default != nil then
+        table.insert(column_options, 'default = '..lua_literal(column.default))
+      end
+
+      if #column_options > 0 then
+        table.insert(lines, '    t:'..column.type..' { '..quote(column.name)..', '..table.concat(column_options, ', ')..' }')
+      else
+        table.insert(lines, '    t:'..column.type..' '..quote(column.name))
+      end
+    end
+
+    table.insert(lines, '  end)')
+
+    if k < #tables then
+      table.insert(lines, '')
+    end
   end
 
-  if table.Count(ActiveRecord.metadata.indexes) > 0 then
-    result = result + '\n'
+  local indexes = {}
+
+  for name, index in SortedPairs(metadata.indexes or {}) do
+    if istable(index) and index.table and !index.table:start_with('ar_') then
+      table.insert(indexes, '  add_index('..quote(index.table)..', '..column_list(index.columns or {})..', '
+        ..(options_literal({
+          name = name,
+          unique = index.unique,
+          length = index.length,
+          using = index.using,
+          where = index.where
+        }, { 'name', 'unique', 'length', 'using', 'where' }) or '{}')..')')
+    end
   end
 
-  for k, v in SortedPairs(ActiveRecord.metadata.indexes) do
-    result = result + string.rep(ind, level) + 'add_index { ' + table_to_inline(v) + ', name = "'..k..'" }\n'
+  if #indexes > 0 then
+    table.insert(lines, '')
+    table.Add(lines, indexes)
   end
 
-  if table.Count(ActiveRecord.metadata.references) > 0 then
-    result = result + '\n'
+  local foreign_keys = {}
+
+  for name, fk in SortedPairs(metadata.references or {}) do
+    if istable(fk) and fk.from_table and fk.to_table then
+      table.insert(foreign_keys, '  add_foreign_key('..quote(fk.from_table)..', '..quote(fk.to_table)..', '
+        ..(options_literal({
+          column = fk.column,
+          primary_key = fk.primary_key,
+          on_delete = fk.on_delete,
+          name = name
+        }, { 'column', 'primary_key', 'on_delete', 'name' }) or '{}')..')')
+    end
   end
 
-  for k, v in pairs(ActiveRecord.metadata.references) do
-    local base_indent = string.rep(ind, level)
-    local inner_indent = string.rep(ind, level + 1)
-
-    result = result + base_indent + 'create_reference {\n'
-      + inner_indent + 'table_name    = ' + quote(v.table) + ',\n'
-      + inner_indent + 'key           = ' + quote(v.key) + ',\n'
-      + inner_indent + 'foreign_table = ' + quote(v.foreign_table) + ',\n'
-      + inner_indent + 'foreign_key   = ' + quote(v.foreign_key) + ',\n'
-      + inner_indent + 'cascade       = ' + tostring(v.cascade) + ',\n'
-      + inner_indent + 'name          = ' + quote(k)
-      + '\n'..base_indent..'}\n'
+  if #foreign_keys > 0 then
+    table.insert(lines, '')
+    table.Add(lines, foreign_keys)
   end
 
-  if table.Count(ActiveRecord.metadata.prim_keys) > 0 then
-    result = result + '\n'
+  local primary_keys = {}
+
+  for name, pk in SortedPairs(metadata.prim_keys or {}) do
+    if istable(pk) and pk.table then
+      table.insert(primary_keys, '  create_primary_key('..quote(pk.table)..', '..quote(pk.column)..')')
+    end
   end
 
-  for k, v in pairs(ActiveRecord.metadata.prim_keys) do
-    result = result + string.rep(ind, level) + '-- ' + k + '\n'
-    result = result + string.rep(ind, level) + 'create_primary_key('
-      + quote(v[1]) + ', ' + quote(v[2]) + ')\n'
+  if #primary_keys > 0 then
+    table.insert(lines, '')
+    table.Add(lines, primary_keys)
   end
 
-  result = result + [[
-  end
+  table.insert(lines, 'end)')
 
-  -- Metadata
-  Structure.metadata = { ]]..table_to_inline(ActiveRecord.metadata)..[[ }
-return Structure
-]]
-
-  return result
+  return table.concat(lines, '\n')..'\n'
 end

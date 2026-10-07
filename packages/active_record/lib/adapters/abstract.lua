@@ -6,12 +6,67 @@ ActiveRecord.Adapters.Abstract._queue = {}
 ActiveRecord.Adapters.Abstract._connected = false
 ActiveRecord.Adapters.Abstract._sync = false
 ActiveRecord.Adapters.Abstract._sql_syntax = 'abstract'
+ActiveRecord.Adapters.Abstract._raise_errors = false
+ActiveRecord.Adapters.Abstract.last_error = nil
 
 --- Resets the connection state, the sync flag and the query queue of a new adapter.
 function ActiveRecord.Adapters.Abstract:init()
   self._connected = false
   self._sync = false
+  self._raise_errors = false
   self._queue = {}
+end
+
+--- Sets whether a failed query raises a Lua error, on top of being printed. The migrator
+-- turns this on while a migration runs, so that the migration is canceled on the first
+-- failed statement.
+-- @param raise [Boolean]
+-- @return [ActiveRecord::Adapters::Abstract(self)]
+function ActiveRecord.Adapters.Abstract:raise_errors(raise)
+  self._raise_errors = raise
+  return self
+end
+
+--- Reports a failed query. The error is printed, remembered in the last_error field and,
+-- if #raise_errors is on, raised as a Lua error.
+-- @param query [String SQL that failed]
+-- @param error_text [String error reported by the database]
+-- @param raise=true [Boolean false to never raise, e.g. when called from a callback that
+--   the database module runs asynchronously]
+function ActiveRecord.Adapters.Abstract:query_failed(query, error_text, raise)
+  error_text = tostring(error_text)
+  self.last_error = error_text
+
+  if raise != false and self._raise_errors then
+    error('ActiveRecord - '..self:get_sql_std()..' query failed!\n'..error_text..'\nQuery: '..query, 0)
+  end
+
+  ErrorNoHalt('ActiveRecord - '..self:get_sql_std()..' query error!\n')
+  long_error('Query: '..query..'\n')
+  error_with_traceback(error_text)
+end
+
+--- Checks whether the database can roll back schema changes (CREATE TABLE, ALTER TABLE
+-- and so on) made inside of a transaction. Migrations are wrapped in a transaction when
+-- it can.
+-- @return [Boolean false, unless overridden by the adapter]
+function ActiveRecord.Adapters.Abstract:supports_ddl_transactions()
+  return false
+end
+
+--- Starts a transaction.
+function ActiveRecord.Adapters.Abstract:begin_transaction()
+  self:raw_query('BEGIN;')
+end
+
+--- Commits the current transaction.
+function ActiveRecord.Adapters.Abstract:commit_transaction()
+  self:raw_query('COMMIT;')
+end
+
+--- Rolls the current transaction back.
+function ActiveRecord.Adapters.Abstract:rollback_transaction()
+  self:raw_query('ROLLBACK;')
 end
 
 --- Switches the adapter between synchronous (blocking) and asynchronous query mode.
