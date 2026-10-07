@@ -32,6 +32,10 @@ function PANEL:Init()
 
     self:GetParent():to_main_menu(true)
   end
+
+  -- The list can only be trusted once the server has sent the characters again, which
+  -- may happen long after the request that has changed them.
+  hook.Add('OnCharactersReceived', self, self.rebuild)
 end
 
 --- Draws the panel through the theme's PaintCharCreationLoadPanel hook.
@@ -124,9 +128,7 @@ function PANEL:Init()
 
         self:SetDisabled(true)
         self.model:SetVisible(false)
-        self:AlphaTo(0, Theme.get_option('menu_anim_duration'), 0, function()
-          Flux.intro_panel.menu:rebuild()
-        end)
+        self:AlphaTo(0, Theme.get_option('menu_anim_duration'), 0)
       end
     end,
     nil, t'ui.char_create.delete')

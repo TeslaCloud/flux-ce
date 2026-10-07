@@ -263,6 +263,8 @@ else
         PLAYER.characters = data
 
         timer.Remove('fl_characters_defer')
+
+        hook.Run('OnCharactersReceived', data)
       end
     end)
   end)
