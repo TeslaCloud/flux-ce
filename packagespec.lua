@@ -23,8 +23,4 @@ Package:describe(function(s)
   s.depends     'active_record'
   s.depends     'active_network'
   s.depends     'flow'
-
-  if ENV['FLUX_ENV'] != 'production' then
-    s.depends   'proofreader'
-  end
 end)
