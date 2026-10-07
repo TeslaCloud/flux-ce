@@ -99,17 +99,28 @@ function ActiveRecord.Adapters.Pg:quote_name(str)
   return self.connection:quote_name(str)
 end
 
+--- Returns the placeholder of a bind parameter, which is numbered in PostgreSQL.
+-- @param index [Number position of the parameter in the list of bindings, starting at 1]
+-- @return [String '$1', '$2' and so on]
+function ActiveRecord.Adapters.Pg:placeholder(index)
+  return '$'..index
+end
+
 --- Runs a raw SQL query on the PostgreSQL server. In sync mode this blocks until the
 -- query is done; without a connection the query is put into the queue instead.
 -- @param query [String SQL to run]
 -- @param callback=nil [Function called with the result rows (a List of row Maps), the
 --   query string and the time the query took in seconds]
 -- @param query_type=nil [String unused]
+-- @param bindings=nil [List values of $1, $2 and so on in the query. A query that is
+--   given bindings has to be a single statement]
 -- @return [Any whatever the callback returns in sync mode, nothing otherwise]
-function ActiveRecord.Adapters.Pg:raw_query(query, callback, query_type)
+function ActiveRecord.Adapters.Pg:raw_query(query, callback, query_type, bindings)
   if !self.connection then
-    return self:queue(query)
+    return self:queue(query, callback, query_type, bindings)
   end
+
+  bindings = bindings or {}
 
   local query_obj = self.connection:query(query)
   local query_start = os.clock()
@@ -142,7 +153,7 @@ function ActiveRecord.Adapters.Pg:raw_query(query, callback, query_type)
   if self._sync then
     query_obj:set_sync(true)
 
-    local success, res, size = query_obj:run()
+    local success, res, size = query_obj:run(unpack(bindings))
 
     if success then
       return success_func(res, size)
@@ -153,7 +164,7 @@ function ActiveRecord.Adapters.Pg:raw_query(query, callback, query_type)
     end
   else
     query_obj:set_sync(false)
-    query_obj:run()
+    query_obj:run(unpack(bindings))
   end
 end
 

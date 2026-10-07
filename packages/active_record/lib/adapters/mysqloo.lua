@@ -108,20 +108,46 @@ end
 
 --- Runs a raw SQL query on the MySQL server. In sync mode this blocks until the query
 -- is done; without a connection the query is put into the queue instead.
+-- A query that is given bindings is run as a prepared statement.
 -- @param query [String SQL to run]
 -- @param callback=nil [Function called with the result rows (a List of row Maps), the
---   query string and the time the query took in seconds]
--- @param query_type=nil [String unused]
+--   query string and the time the query took in seconds. For 'insert' queries the
+--   result is a single row with the id of the new row instead]
+-- @param query_type=nil [String lowercase query type, e.g. 'insert']
+-- @param bindings=nil [List values of the ? placeholders in the query. A query that is
+--   given bindings has to be a single statement]
 -- @return [Any whatever the callback returns in sync mode, nothing otherwise]
-function ActiveRecord.Adapters.Mysqloo:raw_query(query, callback, query_type)
+function ActiveRecord.Adapters.Mysqloo:raw_query(query, callback, query_type, bindings)
   if !self.connection then
-    return self:queue(query)
+    return self:queue(query, callback, query_type, bindings)
   end
 
-  local query_obj = self.connection:query(query)
+  local query_obj = nil
+
+  if bindings and #bindings > 0 then
+    -- Prepared statements take a single statement, without the semicolon that ends it.
+    query_obj = self.connection:prepare((query:gsub(';%s*$', '')))
+
+    for k, v in ipairs(bindings) do
+      if isnumber(v) then
+        query_obj:setNumber(k, v)
+      elseif isbool(v) then
+        query_obj:setBoolean(k, v)
+      else
+        query_obj:setString(k, tostring(v))
+      end
+    end
+  else
+    query_obj = self.connection:query(query)
+  end
+
   local query_start = os.clock()
   local success_func = function(query_obj, result)
     if callback then
+      if query_type == 'insert' then
+        result = { { id = query_obj:lastInsert() } }
+      end
+
       for k, v in pairs(result) do
         if isstring(v) then
           result[k] = self:unescape(v)
@@ -180,18 +206,5 @@ end
 function ActiveRecord.Adapters.Mysqloo:create_column(query, column, args, obj, type, def)
   if type == 'primary_key' then
     query:set_primary_key(column)
-  end
-end
-
---- Appends 'SELECT last_insert_id()' to insert queries, so that the id of the new row
--- is passed to the query callback.
--- @param query [ActiveRecord::Query unused]
--- @param query_string [String generated SQL]
--- @param query_type [String lowercase query type]
--- @return [String the extended SQL for 'insert' queries, nil for other query types]
-function ActiveRecord.Adapters.Mysqloo:append_query_string(query, query_string, query_type)
-  if query_type == 'insert' then
-    query_string = query_string:ensure_end(';')
-    return query_string..' SELECT last_insert_id();'
   end
 end

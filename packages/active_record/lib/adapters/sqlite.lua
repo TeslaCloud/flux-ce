@@ -48,20 +48,38 @@ end
 
 --- Runs a raw SQL query on the built-in SQLite database. Always blocks until the query
 -- is done, regardless of the sync mode.
+-- A query that is given bindings, even an empty list of them, is run with
+-- sql.QueryTyped: numbers come back as numbers and NULL columns are left out of their
+-- rows. Without bindings it is run with sql.Query, which returns every value as a
+-- string, but takes several statements at once.
 -- @param query [String SQL to run]
--- @param callback=nil [Function called with the result rows (a List of row Maps, or
---   nil if the query produced no rows), the query string and the time taken in seconds]
--- @param query_type=nil [String unused]
+-- @param callback=nil [Function called with the result rows (a List of row Maps; nil
+--   if a query without bindings produced no rows), the query string and the time taken
+--   in seconds. For 'insert' queries the result is a single row with the id of the new
+--   row instead]
+-- @param query_type=nil [String lowercase query type, e.g. 'insert']
+-- @param bindings=nil [List values of the ? placeholders in the query. A query that is
+--   given bindings has to be a single statement]
 -- @return [Any whatever the callback returns; nothing without a callback or on error]
-function ActiveRecord.Adapters.Sqlite:raw_query(query, callback, query_type)
+function ActiveRecord.Adapters.Sqlite:raw_query(query, callback, query_type, bindings)
   local query_start = os.clock()
-  local result = sql.Query(query)
+  local result = nil
+
+  if bindings then
+    result = sql.QueryTyped(query, unpack(bindings))
+  else
+    result = sql.Query(query)
+  end
 
   if result == false then
     ErrorNoHalt('ActiveRecord - SQLite Query Error!\n')
     long_error('Query: '..query..'\n')
     error_with_traceback(sql.LastError())
   else
+    if query_type == 'insert' then
+      result = { { id = tonumber(sql.QueryValue('SELECT last_insert_rowid()')) } }
+    end
+
     if callback then
       local status, a, b, c, d = pcall(callback, result, query, math.Round(os.clock() - query_start, 3))
 
@@ -72,17 +90,5 @@ function ActiveRecord.Adapters.Sqlite:raw_query(query, callback, query_type)
 
       return a, b, c, d
     end
-  end
-end
-
---- Appends 'SELECT last_insert_rowid()' to insert queries, so that the id of the new
--- row is passed to the query callback.
--- @param query [ActiveRecord::Query unused]
--- @param query_string [String generated SQL]
--- @param query_type [String lowercase query type]
--- @return [String the extended SQL for 'insert' queries, nil for other query types]
-function ActiveRecord.Adapters.Sqlite:append_query_string(query, query_string, query_type)
-  if query_type == 'insert' then
-    return query_string:ensure_end(';')..' SELECT last_insert_rowid();'
   end
 end

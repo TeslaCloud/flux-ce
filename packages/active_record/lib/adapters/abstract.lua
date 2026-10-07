@@ -93,21 +93,34 @@ function ActiveRecord.Adapters.Abstract:quote_name(str)
   return str
 end
 
+--- Returns the placeholder that stands for a bind parameter in the SQL of the adapter.
+-- @param index [Number position of the parameter in the list of bindings, starting at 1]
+-- @return [String '?', unless overridden by the adapter]
+function ActiveRecord.Adapters.Abstract:placeholder(index)
+  return '?'
+end
+
 --- Sends a raw SQL string to the database. Does nothing in the abstract adapter.
+-- Values are best kept out of the SQL itself and passed as bindings instead, which take
+-- the place of the #placeholder of the adapter in the query and need no escaping.
 -- @param query [String SQL to run]
 -- @param callback=nil [Function called with the result rows, the query string and the
 --   time the query took in seconds]
 -- @param query_type=nil [String lowercase query type, e.g. 'select' or 'insert']
-function ActiveRecord.Adapters.Abstract:raw_query(query, callback, query_type)
+-- @param bindings=nil [List values of the bind parameters of the query, in the order of
+--   their placeholders; strings, numbers and booleans are supported. A query that is
+--   given bindings has to be a single statement]
+function ActiveRecord.Adapters.Abstract:raw_query(query, callback, query_type, bindings)
 end
 
 --- Puts a raw SQL string into the queue. Queued queries are run one at a time by #think.
 -- @param query [String SQL to run; anything that is not a string is ignored]
 -- @param callback=nil [Function passed on to #raw_query]
 -- @param query_type=nil [String passed on to #raw_query]
-function ActiveRecord.Adapters.Abstract:queue(query, callback, query_type)
+-- @param bindings=nil [List passed on to #raw_query]
+function ActiveRecord.Adapters.Abstract:queue(query, callback, query_type, bindings)
   if isstring(query) then
-    table.insert(self._queue, { query, callback, query_type })
+    table.insert(self._queue, { query, callback, query_type, bindings })
   end
 end
 
@@ -146,7 +159,7 @@ function ActiveRecord.Adapters.Abstract:think()
       local query_string = queue_obj[1]
 
       if isstring(query_string) then
-        self:raw_query(query_string, queue_obj[2], queue_obj[3])
+        self:raw_query(query_string, queue_obj[2], queue_obj[3], queue_obj[4])
       end
 
       table.remove(self._queue, 1)

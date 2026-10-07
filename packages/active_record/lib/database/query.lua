@@ -15,6 +15,10 @@ local queries_with_create = {
   create = true, change = true
 }
 
+local queries_with_bindings = {
+  select = true, insert = true, update = true, delete = true
+}
+
 --- Creates an empty query. Queries are normally created through ActiveRecord::Database.
 -- @param table_name [String]
 -- @param query_type [String 'select', 'insert', 'update', 'delete', 'drop', 'truncate',
@@ -30,6 +34,7 @@ function ActiveRecord.Query:init(table_name, query_type)
   self.order_list = {}
   self.remove_column_list = {}
   self.rename_list = {}
+  self.bindings = {}
 
   if queries_with_create[query_type:lower()] then
     ActiveRecord.generate_create_funcs(self)
@@ -76,6 +81,21 @@ function ActiveRecord.Query:quote_column(text)
   return ActiveRecord.adapter:quote_name(tostring(text))
 end
 
+--- Adds a value to the bind parameters of the query. The value is sent to the database
+-- apart from the SQL, so nothing in it has to be escaped.
+-- @param value [Any value to bind, converted to a string]
+-- @return [String placeholder that stands for the value in the SQL; NULL if the value
+--   is nil]
+function ActiveRecord.Query:bind(value)
+  if value == nil then
+    return 'NULL'
+  end
+
+  table.insert(self.bindings, tostring(value))
+
+  return ActiveRecord.adapter:placeholder(#self.bindings)
+end
+
 --- Changes the table the query operates on.
 -- @param table_name [String]
 function ActiveRecord.Query:for_table(table_name)
@@ -91,65 +111,71 @@ function ActiveRecord.Query:where(key, value)
 end
 
 --- Adds a raw SQL condition. Nothing in it is escaped or quoted.
+-- ```
+-- query:where_raw('money > 100')
+-- query:where_raw('money > ? AND name != ?', { 100, 'John' })
+-- ```
 -- @param condition [String SQL condition]
-function ActiveRecord.Query:where_raw(condition)
-  table.insert(self.where_list, condition)
+-- @param values=nil [List values that are bound in place of the ? placeholders in the
+--   condition. Without it the question marks in the condition are left as they are]
+function ActiveRecord.Query:where_raw(condition, values)
+  table.insert(self.where_list, { condition, values })
 end
 
 --- Adds a "column = value" condition.
 -- @param key [String column name]
 -- @param value [Any value to compare with, converted to a string]
 function ActiveRecord.Query:where_equal(key, value)
-  table.insert(self.where_list, self:quote_column(key)..' = '..self:quote(value))
+  self:where_raw(self:quote_column(key)..' = ?', { value })
 end
 
 --- Adds a "column != value" condition.
 -- @param key [String column name]
 -- @param value [Any value to compare with, converted to a string]
 function ActiveRecord.Query:where_not_equal(key, value)
-  table.insert(self.where_list, self:quote_column(key)..' != '..self:quote(value))
+  self:where_raw(self:quote_column(key)..' != ?', { value })
 end
 
 --- Adds a "column LIKE pattern" condition.
 -- @param key [String column name]
 -- @param value [String SQL LIKE pattern]
 function ActiveRecord.Query:where_like(key, value)
-  table.insert(self.where_list, self:quote_column(key)..' LIKE '..self:quote(value))
+  self:where_raw(self:quote_column(key)..' LIKE ?', { value })
 end
 
 --- Adds a "column NOT LIKE pattern" condition.
 -- @param key [String column name]
 -- @param value [String SQL LIKE pattern]
 function ActiveRecord.Query:where_not_like(key, value)
-  table.insert(self.where_list, self:quote_column(key)..' NOT LIKE '..self:quote(value))
+  self:where_raw(self:quote_column(key)..' NOT LIKE ?', { value })
 end
 
 --- Adds a "column > value" condition.
 -- @param key [String column name]
 -- @param value [Any value to compare with, converted to a string]
 function ActiveRecord.Query:where_gt(key, value)
-  table.insert(self.where_list, self:quote_column(key)..' > '..self:quote(value))
+  self:where_raw(self:quote_column(key)..' > ?', { value })
 end
 
 --- Adds a "column < value" condition.
 -- @param key [String column name]
 -- @param value [Any value to compare with, converted to a string]
 function ActiveRecord.Query:where_lt(key, value)
-  table.insert(self.where_list, self:quote_column(key)..' < '..self:quote(value))
+  self:where_raw(self:quote_column(key)..' < ?', { value })
 end
 
 --- Adds a "column >= value" condition.
 -- @param key [String column name]
 -- @param value [Any value to compare with, converted to a string]
 function ActiveRecord.Query:where_gte(key, value)
-  table.insert(self.where_list, self:quote_column(key)..' >= '..self:quote(value))
+  self:where_raw(self:quote_column(key)..' >= ?', { value })
 end
 
 --- Adds a "column <= value" condition.
 -- @param key [String column name]
 -- @param value [Any value to compare with, converted to a string]
 function ActiveRecord.Query:where_lte(key, value)
-  table.insert(self.where_list, self:quote_column(key)..' <= '..self:quote(value))
+  self:where_raw(self:quote_column(key)..' <= ?', { value })
 end
 
 --- Adds a column to the ORDER BY clause.
@@ -203,14 +229,14 @@ end
 -- @param key [String column name]
 -- @param value [Any value to insert, converted to a string]
 function ActiveRecord.Query:insert(key, value)
-  table.insert(self.insert_list, { key, self:quote(value) })
+  table.insert(self.insert_list, { key, value })
 end
 
 --- Sets the new value of a column for an 'update' query.
 -- @param key [String column name]
 -- @param value [Any new value, converted to a string]
 function ActiveRecord.Query:update(key, value)
-  table.insert(self.update_list, { key, self:quote(value) })
+  table.insert(self.update_list, { key, value })
 end
 
 --- Adds a column definition to a 'create' or 'change' query.
@@ -245,6 +271,27 @@ function ActiveRecord.Query:overwrite(overwrite)
   self._overwrite = overwrite
 end
 
+local function build_where(query_obj)
+  local conditions = {}
+
+  for k, v in ipairs(query_obj.where_list) do
+    local condition, values = v[1], v[2]
+
+    if values then
+      local n = 0
+
+      condition = condition:gsub('%?', function()
+        n = n + 1
+        return query_obj:bind(values[n])
+      end)
+    end
+
+    table.insert(conditions, condition)
+  end
+
+  return table.concat(conditions, ' AND ')
+end
+
 local function build_select_query(query_obj)
   local query_string = { 'SELECT ' }
 
@@ -263,7 +310,7 @@ local function build_select_query(query_obj)
 
   if istable(query_obj.where_list) and #query_obj.where_list > 0 then
     table.insert(query_string, ' WHERE ')
-    table.insert(query_string, table.concat(query_obj.where_list, ' AND '))
+    table.insert(query_string, build_where(query_obj))
   end
 
   if istable(query_obj.order_list) and #query_obj.order_list > 0 then
@@ -293,7 +340,7 @@ local function build_insert_query(query_obj)
 
   for k, v in ipairs(query_obj.insert_list) do
     table.insert(key_list, query_obj:quote_column(v[1]))
-    table.insert(value_list, v[2])
+    table.insert(value_list, query_obj:bind(v[2]))
   end
 
   if #key_list == 0 then
@@ -322,7 +369,7 @@ local function build_update_query(query_obj)
     table.insert(query_string, ' SET')
 
     for k, v in ipairs(query_obj.update_list) do
-      table.insert(update_list, v[1]..' = '..v[2])
+      table.insert(update_list, v[1]..' = '..query_obj:bind(v[2]))
     end
 
     table.insert(query_string, ' '..table.concat(update_list, ', '))
@@ -330,7 +377,7 @@ local function build_update_query(query_obj)
 
   if istable(query_obj.where_list) and #query_obj.where_list > 0 then
     table.insert(query_string, ' WHERE ')
-    table.insert(query_string, table.concat(query_obj.where_list, ' AND '))
+    table.insert(query_string, build_where(query_obj))
   end
 
   if isnumber(query_obj.offset) then
@@ -353,7 +400,7 @@ local function build_delete_query(query_obj)
 
   if istable(query_obj.where_list) and #query_obj.where_list > 0 then
     table.insert(query_string, ' WHERE ')
-    table.insert(query_string, table.concat(query_obj.where_list, ' AND '))
+    table.insert(query_string, build_where(query_obj))
   end
 
   if isnumber(query_obj._limit) then
@@ -476,7 +523,8 @@ local function build_change_query(query)
   return table.concat(query_string):Trim():Trim(',')
 end
 
---- Builds the SQL string of the query and hands it to the adapter.
+--- Builds the SQL string of the query and hands it to the adapter, along with the values
+-- of its bind parameters.
 -- @param queue_query=false [Boolean put the query into the adapter's queue instead of
 --   running it right away]
 -- @return [Any whatever the query callback returns if the adapter ran the query
@@ -484,6 +532,8 @@ end
 function ActiveRecord.Query:execute(queue_query)
   local query_string = nil
   local query_type = string.lower(self.query_type)
+
+  self.bindings = {}
 
   ActiveRecord.adapter:append_query(self, query_type, queue_query)
 
@@ -515,10 +565,12 @@ function ActiveRecord.Query:execute(queue_query)
     query_string = query_string:ensure_end(';')
     query_string = query_string:gsub(' ;', ';'):gsub('  ', ' ')
 
+    local bindings = queries_with_bindings[query_type] and self.bindings or nil
+
     if !queue_query then
-      return ActiveRecord.adapter:raw_query(query_string, self._callback, query_type)
+      return ActiveRecord.adapter:raw_query(query_string, self._callback, query_type, bindings)
     else
-      return ActiveRecord.adapter:queue(query_string, self._callback, query_type)
+      return ActiveRecord.adapter:queue(query_string, self._callback, query_type, bindings)
     end
   end
 end

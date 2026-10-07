@@ -78,7 +78,20 @@ end
 --- @category [Query Engine]
 -- Provides utility functions for abstracted database querying.
 
+--- @ignore
+local function bind_list(values, list)
+  local placeholders = {}
+
+  for k, v in ipairs(list) do
+    table.insert(values, v)
+    table.insert(placeholders, '?')
+  end
+
+  return table.concat(placeholders, ', ')
+end
+
 --- Specifies a WHERE condition in the query.
+-- The values are passed to the database as bind parameters, so they need no escaping.
 -- ```
 -- Object:where('column', 'value')
 -- Object:where('column > ?', 100)
@@ -92,29 +105,29 @@ end
 function ActiveRecord.Base:where(condition, ...)
   local args = { ... }
   local query_str = ''
+  local values = nil
 
   if #args > 0 then
-    if condition:find('[=<>]') then
-      local n = 0
+    values = args
 
-      query_str = condition:gsub('%?', function()
-        n = n + 1
-        return "'"..sql_escape(tostring(args[n])).."'"
-      end)
+    if condition:find('[=<>?]') then
+      query_str = condition
     else
-      query_str = condition..' = \''..sql_escape(tostring(args[1]))..'\''
+      query_str = condition..' = ?'
     end
   elseif istable(condition) then
     local should_and = false
+
+    values = {}
 
     for k, v in pairs(condition) do
       query_str = query_str..(should_and and ' AND ' or '')..k
 
       if !istable(v) then
-        query_str = query_str..' = \''..sql_escape(tostring(v))..'\''
+        query_str = query_str..' = ?'
+        table.insert(values, v)
       else
-        v = table.map(v, function(t) return "'"..sql_escape(tostring(t)).."'" end)
-        query_str = query_str..' IN ('..table.concat(v, ', ')..')'
+        query_str = query_str..' IN ('..bind_list(values, v)..')'
       end
 
       should_and = true
@@ -123,7 +136,7 @@ function ActiveRecord.Base:where(condition, ...)
     query_str = condition
   end
 
-  self.query_map:insert { 'where', query_str }
+  self.query_map:insert { 'where', query_str, values }
 
   return self
 end
@@ -142,32 +155,31 @@ end
 function ActiveRecord.Base:where_not(condition, ...)
   local args = { ... }
   local query_str = ''
+  local values = nil
 
   if #args > 0 then
-    local n = 0
-
-    query_str = 'NOT ('..condition:gsub('%?', function()
-      n = n + 1
-      return "'"..sql_escape(tostring(args[n])).."'"
-    end)..')'
+    values = args
+    query_str = 'NOT ('..condition..')'
   elseif istable(condition) then
     local should_and = false
+
+    values = {}
 
     for k, v in pairs(condition) do
       query_str = query_str..(should_and and ' AND ' or '')..k
 
       if !istable(v) then
-        query_str = query_str..' != \''..sql_escape(tostring(v))..'\''
+        query_str = query_str..' != ?'
+        table.insert(values, v)
       else
-        v = table.map(v, function(t) return "'"..sql_escape(tostring(t)).."'" end)
-        query_str = query_str..' NOT IN ('..table.concat(v, ', ')..')'
+        query_str = query_str..' NOT IN ('..bind_list(values, v)..')'
       end
 
       should_and = true
     end
   end
 
-  self.query_map:insert { 'where', query_str }
+  self.query_map:insert { 'where', query_str, values }
 
   return self
 end
@@ -364,7 +376,7 @@ function ActiveRecord.Base:run_query(callback)
       local t, a, b = v[1], v[2], v[3]
 
       if t == 'where' then
-        query:where_raw(a)
+        query:where_raw(a, b)
       elseif t == 'order' then
         if b then
           query:order({ [b] = a })
@@ -527,8 +539,7 @@ local function gen_callback(self, insert)
 
     -- Set #id to the last insert id.
     if insert and istable(result) then
-      local r = result[1]
-      self.id = r['id'] or r['last_insert_rowid()'] or r['last_insert_id()']
+      self.id = result[1]['id']
     end
 
     if insert and self.after_create then
