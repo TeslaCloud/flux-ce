@@ -18,7 +18,7 @@ end
 if !require_module 'file' then
   ErrorNoHalt(
     'The file module has failed to load!\nPlease make sure that you have gmsv_file_'..
-    ((system.IsWindows() and 'win32') or 'linux')..
+    ((system.IsWindows() and 'win64') or 'linux64')..
     '.dll in the garrysmod/lua/bin folder!\nAborting startup...\n'
   )
   return

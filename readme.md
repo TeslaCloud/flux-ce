@@ -21,6 +21,47 @@ The current version of Flux is currently in active development as an open alpha.
 
 **Please read these instructions carefully. We cannot provide support if you disregard one or more steps in these instructions. Thank you!**
 
+## Docker (easy mode)
+
+If you have Docker and simply want a running server, you can skip the installation guide below. The `Dockerfile` in this repository performs the steps from [General installation](#general-installation) for you: it installs the x86-64 Garry's Mod dedicated server, the dependencies, Flux and the Reborn schema.
+
+```sh
+# Clone the Flux repository and build the image.
+# This downloads the dedicated server (about 7 GB), so it will take a while.
+git clone https://github.com/TeslaCloud/flux-ce.git
+cd flux-ce
+docker build -t flux .
+
+# Start the server.
+docker run -it --name flux -p 27015:27015/udp -p 27015:27015/tcp flux
+```
+
+You are now looking at the srcds console, which is where you run commands such as the one in [Setting yourself as admin](#setting-yourself-as-admin). Press `Ctrl+P` followed by `Ctrl+Q` to leave the console without stopping the server, and run `docker attach flux` to get back to it.
+
+```sh
+# Stop the server.
+docker stop flux
+
+# Start it again, keeping the database and all other data.
+docker start -ai flux
+```
+
+**The database and all other server data are stored inside the container.** Removing the container (`docker rm flux`) deletes them, so use `docker start` rather than a second `docker run` to bring your server back up.
+
+Anything you put after the image name replaces the default startup options (see [Creating a server startup script](#creating-a-server-startup-script)):
+
+```sh
+docker run -it --name flux -p 27015:27015/udp -p 27015:27015/tcp flux \
+  +gamemode "reborn" +map "gm_flatgrass" +maxplayers 32 -tickrate 30
+```
+
+Things to keep in mind:
+
+* Flux is copied into the image from your checkout, including any `*.local.yml` and `*.local.lua` files. Run `docker build` again after changing the code or the configuration, then create a new container.
+* The dependencies and the schema are cloned during the build and then cached. Add `--no-cache-filter deps,schema` to `docker build` to pull in their latest versions without downloading the server again.
+* To use a schema other than Reborn, build with `--build-arg SCHEMA_REPO=https://github.com/you/your_schema.git` and pass the matching `+gamemode`.
+* SQLite, the default database, needs no setup. To use MySQL or PostgreSQL, point `config/database.local.yml` at a database server reachable from the container, see [Database setup](#database-setup).
+
 ## Installation
 
 Flux is a Linux-first system, which means that it is primarily designed to be installed and run on Linux servers. Using Windows to host Flux is strongly discouraged, due to issues and certain OS limitations.
@@ -30,7 +71,8 @@ Our installation and maintenance guides are primarily written with the assumptio
 ### Prerequisites
 * SteamCMD
 * Git
-* Linux: Debian Stretch or newer recommended (Ubuntu 16.04 will work)
+* The `x86-64` branch of the Garry's Mod dedicated server. Flux only ships 64-bit modules, so the default 32-bit server will not work.
+* Linux: a 64-bit distribution with glibc 2.34 or newer (Debian 12, Ubuntu 22.04 or newer)
 * Windows: Windows 10 / Windows Server 2016+ recommended
 * Windows: Microsoft Visual C++ 2015
 
@@ -43,8 +85,8 @@ Here is approximately what you will need to do on a Linux system (you can probab
 # Clone the dependencies repo into the "flux_server" folder
 git clone https://github.com/TeslaCloud/flux-dependencies.git flux_server
 
-# Then install the server files on top.
-steamcmd +login anonymous +force_install_dir ./flux_server +app_update 4020 +quit
+# Then install the server files on top. Flux requires the x86-64 branch.
+steamcmd +login anonymous +force_install_dir ./flux_server +app_update 4020 -beta x86-64 validate +quit
 
 # Navigate to the gamemodes folder.
 cd ./flux_server/garrysmod/gamemodes
@@ -64,12 +106,12 @@ Example start.sh / start.bat you may end up with:
 
 **Linux:**
 ```sh
-./srcds_run +gamemode "reborn" +map "gm_construct" +maxplayers 64 -tickrate 30
+./srcds_run_x64 +gamemode "reborn" +map "gm_construct" +maxplayers 64 -tickrate 30
 ```
 
 **Windows:**
 ```bat
-srcds.exe -game garrysmod +gamemode "reborn" +map "gm_construct" +maxplayers 64 -tickrate 30
+srcds_win64.exe -game garrysmod +gamemode "reborn" +map "gm_construct" +maxplayers 64 -tickrate 30
 ```
 
 ### Setting yourself as admin
