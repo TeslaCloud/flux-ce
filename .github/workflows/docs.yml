@@ -17,7 +17,7 @@ concurrency:
 
 env:
   # Repository the fdoc generator is built from.
-  FDOC_REPO: https://github.com/TeslaCloud/fdoc
+  FDOC_REPO: https://github.com/Meow/fdoc
 
 jobs:
   build:
