@@ -188,7 +188,9 @@ end
 --- Overrides ErrorNoHalt to print the error on a red background.
 -- @param msg [String error message]
 function ErrorNoHalt(msg)
+  local new_msg, count = msg:gsub('\n+$', '')
+
   Msg('\27[41;15m\27[1m')
-  _ErrorNoHalt(msg)
-  Msg(color_clear_sequence)
+  _ErrorNoHalt(new_msg)
+  Msg(color_clear_sequence..string.rep('\n', count))
 end

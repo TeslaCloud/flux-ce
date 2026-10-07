@@ -33,21 +33,24 @@ end
 -- in the path of their current model with the item's model_group.
 -- @param owner [Player]
 -- @return [String path to the model, Number amount of replacements made;
---   nil if the item has no model_group]
+--   nil if the item has no model_group or the model is not inside of a suitable folder]
 function ItemWearable:get_model_by_group(owner)
   if self.model_group then
     local player_model = owner:GetModel():lower()
     local path = player_model:GetPathFromFilename()
+    local matched = path:match('(%a+)/$')
 
-    return player_model:gsub(path:match('(%a+)/$'), self.model_group)
+    if matched then
+      return player_model:gsub(matched, self.model_group)
+    end
   end
 end
 
 --- Returns the model that the player gets when they equip the item.
 -- @param owner [Player]
--- @return [String path to the model, or nil if the item does not change the model]
+-- @return [String path to the model; the item's own model if it has no other one]
 function ItemWearable:get_equip_model(owner)
-  return self:get_model_by_group(owner) or self.equip_model
+  return self:get_model_by_group(owner) or self.equip_model or self.model
 end
 
 --- Returns the bodygroups that the player gets when they equip the item.

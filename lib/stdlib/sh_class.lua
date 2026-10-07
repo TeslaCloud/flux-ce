@@ -1,5 +1,13 @@
 local last_class = nil
 
+--- Checks whether or not an object is a class or an instance of a class.
+-- @param obj [Any object to check]
+-- @return [Boolean whether or not the object is a class]
+-- @see [class]
+function isclass(obj)
+  return istable(obj) and istable(obj.class) and isstring(obj.class_name)
+end
+
 --- Creates a new class. Supports constructors and inheritance.
 -- The class is stored in the global table, or inside of another table when the name is
 -- namespaced with `::`. Every class gets a `new` function that creates an instance and calls
@@ -82,7 +90,7 @@ function class(name, parent_class)
         return parent_class.init(new_obj, ...)
       end
 
-      real_class.init = isfunction(real_class.init) and real_class.init or function(obj) super() end
+      real_class.init = isfunction(real_class.init) and real_class.init or function(obj, ...) super(...) end
     end
 
     -- If there is a constructor - call it.
@@ -175,7 +183,8 @@ function extends(parent_class)
       end
     end
 
-    obj = copy
+    table.safe_merge(obj, copy)
+
     obj.parent = parent_class
     obj.BaseClass = obj.parent_class
 

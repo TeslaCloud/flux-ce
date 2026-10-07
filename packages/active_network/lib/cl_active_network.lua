@@ -40,14 +40,14 @@ end
 
 -- Called from the server to set global networked variables.
 Cable.receive('fl_netvar_global_set', function(key, value)
-  if key and value != nil then
+  if key then
     globals[key] = value
   end
 end)
 
 -- Called from the server to set an entity's networked variable.
 Cable.receive('fl_netvar_set', function(ent_idx, key, value)
-  if key and value != nil then
+  if key then
     stored[ent_idx] = stored[ent_idx] or {}
     stored[ent_idx][key] = value
   end

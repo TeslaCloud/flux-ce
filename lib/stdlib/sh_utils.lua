@@ -423,7 +423,7 @@ end
 -- Unlike error, this does not stop the execution of the calling code.
 -- @param msg [String error message]
 function error_with_traceback(msg)
-  long_error(msg..'\n')
+  long_error(tostring(msg)..'\n')
   print_traceback()
 end
 

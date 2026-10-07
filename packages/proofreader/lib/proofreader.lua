@@ -1,3 +1,5 @@
+if !Settings.experimental then return end
+
 require_relative 'core'
 require_relative 'reader'
 

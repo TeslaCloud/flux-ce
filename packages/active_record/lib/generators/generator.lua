@@ -79,8 +79,10 @@ do
   -- @param val [Any]
   -- @param type [String abstract column type]
   -- @return [Number/String 0 or 1 for 'boolean' columns, otherwise the value converted
-  --   to a string]
+  --   to a string; nil if the value is nil]
   function ActiveRecord.type_to_db(val, type)
+    if val == nil then return end
+
     local conv = reverse_converters[type]
 
     if conv then

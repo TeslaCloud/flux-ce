@@ -205,8 +205,11 @@ end
 
 --- Validates the current stage and moves on to the next one. On the last stage it asks for
 -- confirmation and sends the character creation request to the server.
--- @return [Boolean false when validation failed, otherwise nil]
+-- Does nothing while the server has not responded to a creation request that was already sent.
+-- @return [Boolean false when validation failed or a request is pending, otherwise nil]
 function PANEL:next_stage()
+  if self.request_sent then return false end
+
   if self.panel and self.panel.on_validate then
     local success, error = self.panel:on_validate()
 
@@ -317,7 +320,7 @@ function PANEL:clear_data()
 end
 
 --- Slides the current stage panel out, then creates the theme panel with the given ID and
--- slides it in.
+-- slides it in. Runs the 'CharPanelCreated' hook with the ID and the new panel afterwards.
 -- @param id [String ID of one of the added stages]
 function PANEL:open_panel(id)
   local x, y = self:GetWide() * 0.25, self:GetTall() / 6 + 8
@@ -355,6 +358,8 @@ function PANEL:open_panel(id)
   if self.panel.on_open then
     self.panel:on_open(self)
   end
+
+  hook.Run('CharPanelCreated', id, self.panel)
 end
 
 --- Adds a stage to character creation.

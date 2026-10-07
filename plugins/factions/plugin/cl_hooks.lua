@@ -1,3 +1,43 @@
+--- Hides the gender, description and name controls of the 'ui.char_create.general' stage
+-- when the chosen faction does not have them. Factions without gender get the 'universal' one.
+-- @param id [String ID of the stage that has just been opened]
+-- @param panel [Panel the panel of that stage]
+function Factions:CharPanelCreated(id, panel)
+  if id == 'ui.char_create.general' then
+    local faction_table
+    local char_data = panel:GetParent().char_data
+
+    if char_data and char_data.faction then
+      faction_table = Factions.find_by_id(char_data.faction)
+    end
+
+    if faction_table then
+      if !faction_table.has_gender then
+        panel.gender_label:SetVisible(false)
+        panel.gender_female:SetVisible(false)
+        panel.gender_male:SetVisible(false)
+
+        panel:GetParent().char_data.gender = 'universal'
+        panel:rebuild_models()
+      end
+
+      if !faction_table.has_description then
+        panel.desc_label:SetVisible(false)
+        panel.desc_entry:SetVisible(false)
+      end
+
+      if !faction_table.has_name then
+        panel.name_label:SetVisible(false)
+        panel.name_entry:SetVisible(false)
+
+        if IsValid(panel.name_random) then
+          panel.name_random:SetVisible(false)
+        end
+      end
+    end
+  end
+end
+
 --- Stops the player from leaving the 'char_create.general' stage without picking a gender
 -- when the chosen faction requires one.
 -- @param id [String ID of the stage being left]

@@ -59,10 +59,14 @@ function ActiveRecord.Query:escape(text)
 end
 
 --- Turns a value into an escaped, quoted SQL string literal.
--- @param text [Any value to quote, converted to a string]
+-- @param text [Any value to quote, converted to a string; nil becomes NULL]
 -- @return [String]
 function ActiveRecord.Query:quote(text)
-  return ActiveRecord.adapter:quote(tostring(text))
+  if text == nil then
+    return 'NULL'
+  else
+    return ActiveRecord.adapter:quote(tostring(text))
+  end
 end
 
 --- Quotes an identifier such as a table or column name.

@@ -1,7 +1,7 @@
 Package:describe(function(s)
   s.name        = 'Flux'
-  s.version     = '0.8.0'
-  s.date        = '2019-11-15'
+  s.version     = '0.8.1'
+  s.date        = '2020-02-16'
   s.summary     = 'A gamemode framework.'
   s.description = 'A gamemode framework made primarily for database-driven roleplay gamemodes.'
   s.authors     = { 'TeslaCloud Studios', 'Meow the Cat', 'AleXXX_007', 'NightAngel', 'Zig' }
@@ -23,9 +23,7 @@ Package:describe(function(s)
   s.depends     'lib/flux.lua'
   s.depends     'active_record'
   s.depends     'active_network'
-  s.depends     'packager'
   s.depends     'flow'
-  s.depends     'gvue'
 
   if ENV['FLUX_ENV'] != 'production' then
     s.depends   'proofreader'

@@ -21,12 +21,11 @@ PANEL.id = 'general'
 PANEL.text = 'ui.char_create.general'
 
 --- Creates the gender buttons, name and description entries, model list, model preview and
--- skin counter, and hides the controls that the selected faction does not use.
+-- skin counter.
 function PANEL:Init()
   local fa_icon_size = math.scale(24)
   local margin = math.scale(20)
   local scrw, scrh = ScrW(), ScrH()
-  local faction_table = Factions.find_by_id(self:GetParent().char_data.faction)
 
   self.gender_label = vgui.Create('DLabel', self)
   self.gender_label:SetText(t'ui.char_create.gender')
@@ -105,7 +104,7 @@ function PANEL:Init()
     self.name_random.DoClick = function(btn)
       surface.PlaySound('buttons/blip1.wav')
 
-      self.name_entry:SetText(SCHEMA:get_random_name(self:GetParent().char_data.gender or 'no_gender'))
+      self.name_entry:SetText(SCHEMA:get_random_name(self:GetParent().char_data.gender or 'no_gender', self:GetParent().char_data))
     end
   end
 
@@ -172,30 +171,6 @@ function PANEL:Init()
 
     self.model.Entity:SetSkin(value - 1)
   end
-
-  if !faction_table.has_gender then
-    self.gender_label:SetVisible(false)
-    self.gender_female:SetVisible(false)
-    self.gender_male:SetVisible(false)
-
-    self:GetParent().char_data.gender = 'universal'
-    self:rebuild_models()
-  end
-
-  if !faction_table.has_description then
-    self.desc_label:SetVisible(false)
-    self.desc_entry:SetVisible(false)
-  end
-
-  if !faction_table.has_name then
-    self.name_label:SetVisible(false)
-    self.name_entry:SetVisible(false)
-
-    if self.name_random then
-      self.name_random:SetVisible(false)
-    end
-  end
-
 end
 
 --- Rebuilds the model icons from the GetCharacterCreationModels hook, clearing the selected

@@ -11,7 +11,7 @@ end
 -- @param menu [Panel the tab menu]
 function Bolt:AddTabMenuItems(menu)
   menu:add_menu_item('admin', {
-    title = 'Admin',
+    title = t'ui.tab_menu.admin',
     panel = 'fl_admin_panel',
     icon = 'fa-shield-alt',
     priority = 40

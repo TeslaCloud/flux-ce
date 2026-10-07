@@ -150,7 +150,7 @@ end
 -- @param name [String id of the button; also its title, unless data has name or get_name]
 -- @param data [Map button data: icon (String), callback (String name of the item's method
 --   to call on the server), and optionally name (String) or the client-side functions
---   get_name, on_show and on_click, each of which receives the item]
+--   get_name, get_icon, on_show and on_click, each of which receives the item]
 function ItemBase:add_button(name, data)
   --[[
     Example data structure:
@@ -170,12 +170,40 @@ function ItemBase:add_button(name, data)
   self.custom_buttons[name] = data
 end
 
---- Sets the sound that the player emits when a menu action is performed on the item.
+--- Sets the sound that is emitted when a menu action is performed on the item.
 -- @param act [String name of the action, e.g. 'on_drop']
 -- @param sound_path [String path to the sound]
 -- @see [ItemBase#do_menu_action]
+-- @see [ItemBase#play_sound]
 function ItemBase:set_action_sound(act, sound_path)
+  if !self.action_sounds then
+    self.action_sounds = {}
+  end
+
   self.action_sounds[act] = sound_path
+end
+
+--- Plays the sound of a menu action, if the item has one.
+-- The sound is emitted by the item's entity if it is in the world. Otherwise it is emitted
+-- by the player that has the item, which can only be looked up on the server.
+-- @param act [String name of the action, e.g. 'on_drop']
+-- @param emitter=nil [Entity who emits the sound if the item is not in the world; the player
+--   that has the item if nil]
+-- @see [ItemBase#set_action_sound]
+function ItemBase:play_sound(act, emitter)
+  local sound_path = self.action_sounds and self.action_sounds[act]
+
+  if !sound_path then return end
+
+  if IsValid(self.entity) then
+    emitter = self.entity
+  elseif !IsValid(emitter) and SERVER then
+    emitter = self:get_player()
+  end
+
+  if IsValid(emitter) then
+    emitter:EmitSound(sound_path)
+  end
 end
 
 --- Called on the server by the 'CanPlayerDropItem' hook when a player is about to drop the item.
@@ -255,9 +283,7 @@ if SERVER then
         end
       end
 
-      if self.action_sounds[act] then
-        actor:EmitSound(self.action_sounds[act])
-      end
+      self:play_sound(act, actor)
     end
 
     hook.Run('PlayerUsedItem', actor, self, act, ...)
@@ -313,11 +339,17 @@ end
 --- Returns a custom data value of the item.
 -- @param id [String data key]
 -- @param default=nil [Any what to return if the value is not set]
--- @return [Any the value, or the default if the value is nil or false]
+-- @return [Any the value, or the default if the value is not set]
 function ItemBase:get_data(id, default)
   if !id then return end
 
-  return self.data[id] or default
+  local data = self.data[id]
+
+  if data != nil then
+    return data
+  else
+    return default
+  end
 end
 
 --- Ties the item to the entity that represents it in the world.

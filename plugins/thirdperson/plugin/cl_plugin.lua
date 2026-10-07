@@ -13,14 +13,15 @@ ThirdPerson.was_third_person = ThirdPerson.was_third_person or false
 -- This is very basic and WIP, but it works.
 
 --- Pulls the camera back behind the player while third person is on, easing in and out
--- over 0.15 seconds.
+-- over 0.15 seconds. The camera stops in front of the walls that are in its way, and the
+-- view becomes first person when it gets too close to the player.
 -- @param client [Player]
 -- @param pos [Vector]
 -- @param angles [Angle]
 -- @param fov [Number]
 -- @return [Map view table, or nil while third person is off and not easing out]
 function ThirdPerson:CalcView(client, pos, angles, fov)
-  local is_third_person = client:get_nv('third_person')
+  local is_third_person = client:get_nv('fl_third_person')
 
   -- This also fixes a weird view glitch on autorefresh.
   if !is_third_person and !self.was_third_person then return end
@@ -73,6 +74,21 @@ function ThirdPerson:CalcView(client, pos, angles, fov)
     end
 
     view.origin = pos - offset
+  end
+
+  local tr = util.TraceLine({
+    start = pos,
+    endpos = view.origin,
+    filter = client
+  })
+
+  if tr.HitWorld then
+    view.origin = tr.HitPos + angles:Forward() * 15
+  end
+
+  if view.origin:Distance(pos) < 10 then
+    view.origin = pos
+    view.drawviewer = false
   end
 
   return view

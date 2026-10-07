@@ -214,7 +214,7 @@ function player_meta:set_animation(animation, duration_override)
     if duration > 0 then
       timer.Simple(duration, function()
         if IsValid(self) then
-          self.fl_animation = nil
+          self:stop_animation()
         end
       end)
     end
@@ -223,5 +223,6 @@ end
 
 --- Stops the animation that was set with Player#set_animation.
 function player_meta:stop_animation()
+  self:SetCycle(0)
   self.fl_animation = nil
 end

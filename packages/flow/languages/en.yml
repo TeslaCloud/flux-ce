@@ -121,6 +121,7 @@ en:
       close_menu: Back
       scoreboard: Players
       help: Help
+    cancel: Cancel
     yes: "Yes"
     no: "No"
     unit:

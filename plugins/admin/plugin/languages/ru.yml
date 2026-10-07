@@ -159,4 +159,6 @@ ru:
       allow: Разрешить
       never: Запретить
       error: Ошибка
+    tab_menu:
+      admin: Админ
     no_reason: Причина не указана

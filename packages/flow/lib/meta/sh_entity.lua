@@ -121,3 +121,44 @@ function ent_meta:get_hitgroup_from_pos(pos)
 
   return HITGROUP_GENERIC
 end
+
+--- Freezes the entity and marks it as frozen with the 'fl_frozen' networked variable.
+-- Players are unable to move and to use their active weapon, NPCs are put to sleep.
+-- Runs the 'EntityFreeze' hook afterwards. Meant to be called on the server.
+-- @see [Entity#unfreeze]
+-- @see [Player#freeze_move]
+-- @see [Player#freeze_gun]
+function ent_meta:freeze()
+  if self:IsPlayer() then
+    self:freeze_move()
+    self:freeze_gun()
+  elseif self:IsNPC() then
+    self:SetKeyValue('sleepstate', '3')
+  end
+
+  self:set_nv('fl_frozen', true)
+
+  hook.Run('EntityFreeze', self)
+end
+
+--- Unfreezes the entity that was frozen with Entity#freeze.
+-- Runs the 'EntityUnfreeze' hook afterwards. Meant to be called on the server.
+-- @see [Entity#freeze]
+function ent_meta:unfreeze()
+  if self:IsPlayer() then
+    self:unfreeze_move()
+    self:unfreeze_gun()
+  elseif self:IsNPC() then
+    self:SetKeyValue('sleepstate', '0')
+  end
+
+  self:set_nv('fl_frozen', false)
+
+  hook.Run('EntityUnfreeze', self)
+end
+
+--- Checks whether the entity has been frozen with Entity#freeze.
+-- @return [Boolean]
+function ent_meta:is_frozen()
+  return self:get_nv('fl_frozen', false)
+end

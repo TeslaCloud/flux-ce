@@ -376,12 +376,12 @@ if SERVER then
             if IsValid(actor) then
               message = actor:name()..' has used /'..cmd_table.name..' '..text:utf8sub(utf8.len(command) + 2, utf8.len(text))
             else
-              message = 'Console has issued the '..cmd_table.name..' command'
+              message = 'Console ran '..cmd_table.name
 
               local arg_str = text:sub(string.len(command) + 2, string.len(text))
 
               if arg_str and arg_str:gsub(' ', '') != '' then
-                message = message..' with the following arguments: '..arg_str
+                message = message..' '..arg_str
               else
                 message = message..'.'
               end
@@ -405,10 +405,14 @@ if SERVER then
             self:run(actor, cmd_table, args, raw_args)
           end
         else
-          actor:notify('error.command.syntax', {
-            command = cmd_table.name,
-            syntax = cmd_table.syntax
-          })
+          if IsValid(actor) then
+            actor:notify('error.command.syntax', {
+              command = cmd_table.name,
+              syntax = cmd_table.syntax
+            })
+          else
+            ErrorNoHalt('flc '..cmd_table.name..' '..t(cmd_table.syntax)..'\n')
+          end
         end
       else
         if IsValid(actor) then

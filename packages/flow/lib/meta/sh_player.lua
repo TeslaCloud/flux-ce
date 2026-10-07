@@ -89,6 +89,46 @@ if CLIENT then
   end
 end
 
+--- Stops the player from moving by setting their move type to MOVETYPE_NONE.
+-- @see [Entity#freeze]
+function player_meta:freeze_move()
+  self:SetMoveType(MOVETYPE_NONE)
+end
+
+--- Lets the player move again by setting their move type to MOVETYPE_WALK.
+-- @see [Entity#unfreeze]
+function player_meta:unfreeze_move()
+  self:SetMoveType(MOVETYPE_WALK)
+end
+
+--- Stops the player from firing their active weapon for an hour and freezes the weapon.
+-- @see [Entity#freeze]
+function player_meta:freeze_gun()
+  local weapon = self:GetActiveWeapon()
+  local cur_time = CurTime()
+
+  if IsValid(weapon) then
+    weapon:SetNextPrimaryFire(cur_time + 3600)
+    weapon:SetNextSecondaryFire(cur_time + 3600)
+
+    weapon:freeze()
+  end
+end
+
+--- Lets the player fire their active weapon again and unfreezes the weapon.
+-- @see [Entity#unfreeze]
+function player_meta:unfreeze_gun()
+  local weapon = self:GetActiveWeapon()
+  local cur_time = CurTime()
+
+  if IsValid(weapon) then
+    weapon:SetNextPrimaryFire(cur_time + 0.1)
+    weapon:SetNextSecondaryFire(cur_time + 0.1)
+
+    weapon:unfreeze()
+  end
+end
+
 --[[
   Actions system
 --]]
