@@ -1,7 +1,7 @@
 local player_meta = FindMetaTable('Player')
 
 --- Saves the database record of the player. Does nothing for bots. Can be prevented by returning
--- true from the 'PreSavePlayerData' hook. Runs the 'PostSavePlayerData' hook afterwards.
+-- true from the 'PreSavePlayerData' hook. Runs the 'PostSavePlayerData' hook afterward.
 function player_meta:save_player()
   if self:IsBot() then return end
   if hook.Run('PreSavePlayerData', self) == true then return end

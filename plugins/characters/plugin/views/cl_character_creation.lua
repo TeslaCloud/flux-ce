@@ -155,7 +155,7 @@ function PANEL:rebuild()
   end
 end
 
---- Steps forwards or backwards one stage at a time until the given stage is reached.
+--- Steps forward or backward one stage at a time until the given stage is reached.
 -- @param stage [Number stage index]
 function PANEL:goto_stage(stage)
   if stage < self.stage then
@@ -320,7 +320,7 @@ function PANEL:clear_data()
 end
 
 --- Slides the current stage panel out, then creates the theme panel with the given ID and
--- slides it in. Runs the 'CharPanelCreated' hook with the ID and the new panel afterwards.
+-- slides it in. Runs the 'CharPanelCreated' hook with the ID and the new panel afterward.
 -- @param id [String ID of one of the added stages]
 function PANEL:open_panel(id)
   local x, y = self:GetWide() * 0.25, self:GetTall() / 6 + 8

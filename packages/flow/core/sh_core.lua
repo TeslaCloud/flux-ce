@@ -93,7 +93,7 @@ function Flux.get_schema_name()
   return SCHEMA and SCHEMA:get_name() or Flux.schema or 'Unknown'
 end
 
---- Includes the files of the currently loaded schema. On the client, shortly afterwards
+--- Includes the files of the currently loaded schema. On the client, shortly afterward
 -- notifies the server and runs the FluxClientSchemaLoaded hook.
 function Flux.include_schema()
   if SERVER then

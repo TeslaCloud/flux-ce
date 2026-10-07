@@ -95,7 +95,7 @@ function ActiveRecord.Database:change(table_name)
   return ActiveRecord.Query.new(table_name, 'change')
 end
 
---- Creates the database named in the settings and disconnects the adapter afterwards.
+--- Creates the database named in the settings and disconnects the adapter afterward.
 -- Only PostgreSQL is supported; on MySQL instructions are printed instead.
 -- @param settings [Map database settings: host, user, port, password and database]
 function ActiveRecord.Database:setup(settings)
@@ -129,7 +129,7 @@ function ActiveRecord.Database:setup(settings)
   ActiveRecord.adapter:sync(false)
 end
 
---- Drops the database named in the settings and disconnects the adapter afterwards.
+--- Drops the database named in the settings and disconnects the adapter afterward.
 -- Connects to the 'template1' database to do so.
 -- @param settings [Map database settings: host, user, port, password and database]
 function ActiveRecord.Database:drop_database(settings)

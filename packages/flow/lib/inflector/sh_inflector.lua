@@ -8,7 +8,7 @@ Flow.Inflector._uncountables = {}
 Flow.Inflector.current_language = 'en'
 
 --- Defines the inflection rules of a language. The rules added inside of the callback
--- (and anything looked up afterwards) belong to that language.
+-- (and anything looked up afterward) belong to that language.
 -- ```
 -- Flow.Inflector:inflections('en', function(inflect)
 --   inflect:plural(i'^(ox)$', '%1en')

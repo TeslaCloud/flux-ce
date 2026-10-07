@@ -33,7 +33,7 @@ function PackageInstance:init(file_path, lib_path, full_path)
   self.__path__           = full_path
 end
 
---- Specifies that a package is dependant on another package or plugin.
+--- Specifies that a package is dependent on another package or plugin.
 -- Merely adds to the dependency list. Can be called with either : or .
 -- When called with a dot, the dependency is added to the package that is currently
 -- being included (the PACKAGE global).

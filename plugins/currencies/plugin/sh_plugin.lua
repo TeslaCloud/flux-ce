@@ -4,7 +4,7 @@ local stored = Currencies.stored or {}
 Currencies.stored = stored
 
 do
-  --- Registers a currency. Characters created afterwards get a balance record for it.
+  --- Registers a currency. Characters created afterward get a balance record for it.
   -- ```
   -- Currencies:register_currency('tokens', {
   --   name = 'currency.tokens.name',

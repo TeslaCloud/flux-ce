@@ -263,7 +263,7 @@ function PANEL:set_inventory_id(inventory_id)
 end
 
 --- Recreates the slot panels based on the current contents of the inventory.
--- Runs the 'OnInventoryRebuild' hook afterwards.
+-- Runs the 'OnInventoryRebuild' hook afterward.
 function PANEL:rebuild()
   dragndrop.Clear()
   self.scroll:Clear()

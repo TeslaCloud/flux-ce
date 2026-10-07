@@ -83,7 +83,7 @@ function Flux.Bars:get(id)
 end
 
 --- Sets the value of a bar, clamped between 0 and its max value, and starts the fill
--- animation towards it. Calls the 'PreBarValueSet' theme hook first.
+-- animation toward it. Calls the 'PreBarValueSet' theme hook first.
 -- @param id [String bar ID]
 -- @param new_value [Number]
 function Flux.Bars:set_value(id, new_value)

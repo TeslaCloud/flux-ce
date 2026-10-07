@@ -160,7 +160,7 @@ do
     end
   end
 
-  --- Returns the player's level in an attribute and their progress towards the next level.
+  --- Returns the player's level in an attribute and their progress toward the next level.
   -- Active boosts are added to the level unless disabled or the attribute is not boostable.
   -- @param attribute_id [String]
   -- @param no_boost=false [Boolean leave active boosts out of the level]

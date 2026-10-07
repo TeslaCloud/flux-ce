@@ -409,7 +409,7 @@ function THEME:PaintTabMenuButtonPanel(panel, width, height)
   draw.RoundedBox(0, 0, 0, width, height, self:get_color('background'):alpha(125))
 end
 
---- Blurs the screen behind the tab menu, easing the blur size towards the blur target of
+--- Blurs the screen behind the tab menu, easing the blur size toward the blur target of
 -- the menu, and draws an indicator bar for the button stored in the menu's activeBtn field.
 -- @param panel [Panel the tab menu]
 -- @param width [Number panel width]

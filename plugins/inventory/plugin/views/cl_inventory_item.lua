@@ -8,7 +8,7 @@ PANEL.icon_material = nil
 PANEL.rotated = false
 
 --- Draws the slot: its background, the drag and drop highlight and the slot icon.
--- Calls the paint_slot callback of the item afterwards.
+-- Calls the paint_slot callback of the item afterward.
 -- @param w [Number]
 -- @param h [Number]
 function PANEL:Paint(w, h)
@@ -103,7 +103,7 @@ function PANEL:Paint(w, h)
 end
 
 --- Draws the amount of items in the stack and the number of the slot.
--- Calls the paint_over_slot callback of the item afterwards.
+-- Calls the paint_over_slot callback of the item afterward.
 -- @param w [Number]
 -- @param h [Number]
 function PANEL:PaintOver(w, h)

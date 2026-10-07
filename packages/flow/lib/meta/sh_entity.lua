@@ -124,7 +124,7 @@ end
 
 --- Freezes the entity and marks it as frozen with the 'fl_frozen' networked variable.
 -- Players are unable to move and to use their active weapon, NPCs are put to sleep.
--- Runs the 'EntityFreeze' hook afterwards. Meant to be called on the server.
+-- Runs the 'EntityFreeze' hook afterward. Meant to be called on the server.
 -- @see [Entity#unfreeze]
 -- @see [Player#freeze_move]
 -- @see [Player#freeze_gun]
@@ -142,7 +142,7 @@ function ent_meta:freeze()
 end
 
 --- Unfreezes the entity that was frozen with Entity#freeze.
--- Runs the 'EntityUnfreeze' hook afterwards. Meant to be called on the server.
+-- Runs the 'EntityUnfreeze' hook afterward. Meant to be called on the server.
 -- @see [Entity#freeze]
 function ent_meta:unfreeze()
   if self:IsPlayer() then

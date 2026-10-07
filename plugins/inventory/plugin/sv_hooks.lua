@@ -333,7 +333,7 @@ end
 -- @param actor [Player]
 -- @param item_obj [Item]
 -- @param ... [Vararg extra arguments of the action]
--- @return [Boolean false if the use was cancelled, nil otherwise]
+-- @return [Boolean false if the use was canceled, nil otherwise]
 function Inventories:PlayerUseItem(actor, item_obj, ...)
   if item_obj.on_use then
     local result = item_obj:on_use(actor)

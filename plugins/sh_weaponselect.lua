@@ -44,7 +44,7 @@ function PLUGIN:HUDShouldDraw(element)
   end
 end
 
---- Draws the weapon selector while it is open and animates its entries scrolling towards
+--- Draws the weapon selector while it is open and animates its entries scrolling toward
 -- the highlighted weapon.
 function PLUGIN:HUDPaint()
   if !IsValid(PLAYER) then return end

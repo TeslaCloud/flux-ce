@@ -487,7 +487,7 @@ if SERVER then
   end
 
   --- Spawns an item instance in the world as an fl_item entity. Server-side only.
-  -- The item is sent to all clients and the item entities are saved afterwards.
+  -- The item is sent to all clients and the item entities are saved afterward.
   -- ```
   -- local item_obj = Item.create('test_item')
   -- local trace = actor:GetEyeTraceNoCursor()

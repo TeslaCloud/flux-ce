@@ -46,7 +46,7 @@ function PANEL:Paint(w, h)
   end
 end
 
---- Animates the schema logo offset towards zero while a submenu is open and back otherwise.
+--- Animates the schema logo offset toward zero while a submenu is open and back otherwise.
 function PANEL:Think()
   local menu_valid = IsValid(self.menu)
 

@@ -35,7 +35,7 @@ function PANEL:SizeToContents()
   self:SetSize(self.max_w + math.scale_x(4), self.max_h + math.scale(4))
 end
 
---- Sets the entity whose money the panel shows. Call rebuild afterwards to update it.
+--- Sets the entity whose money the panel shows. Call rebuild afterward to update it.
 -- @param entity [Entity]
 function PANEL:set_entity(entity)
   self.entity = entity

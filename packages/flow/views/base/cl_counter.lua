@@ -125,7 +125,7 @@ function PANEL:get_value()
 end
 
 --- Increases the value by one, clamped to the configured range. Calls on_click first and
--- leaves the value unchanged if it returns false; calls post_click afterwards.
+-- leaves the value unchanged if it returns false; calls post_click afterward.
 function PANEL:increase()
   local old_value = self.value
   local new_value = math.clamp(self.value + 1, self.min, self.max)
@@ -138,7 +138,7 @@ function PANEL:increase()
 end
 
 --- Decreases the value by one, clamped to the configured range. Calls on_click first and
--- leaves the value unchanged if it returns false; calls post_click afterwards.
+-- leaves the value unchanged if it returns false; calls post_click afterward.
 function PANEL:decrease()
   local old_value = self.value
   local new_value = math.clamp(self.value - 1, self.min, self.max)

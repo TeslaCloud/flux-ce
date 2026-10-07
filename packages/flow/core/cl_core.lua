@@ -444,7 +444,7 @@ do
   end
 
   --- Draws one frame of a registered position animation: calls the callback with the current
-  -- position, then eases the position towards the target. Raises an error if the animation
+  -- position, then eases the position toward the target. Raises an error if the animation
   -- has not been registered.
   -- ```
   -- Flux.register_animation(anim_id, box_x - max_width, nil, FrameTime() * 8)

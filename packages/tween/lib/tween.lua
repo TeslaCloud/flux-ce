@@ -358,7 +358,7 @@ end
 
 -- Public interface
 
---- Creates a tween, which gradually changes numeric fields of a table towards their
+--- Creates a tween, which gradually changes numeric fields of a table toward their
 -- target values. The tween only progresses when its update method is called.
 -- ```
 -- local logo_data = { width = 512, height = 256 }

@@ -10,7 +10,7 @@ ItemConsumable.category = 'item.category.consumables'
 
 --- Called on the server by the 'PlayerUseItem' hook when a player uses the item.
 -- Runs the 'PlayerConsumeItem' hook unless 'PrePlayerConsumeItem' returns false.
--- Returns nothing, so the item is always removed afterwards.
+-- Returns nothing, so the item is always removed afterward.
 -- @param actor [Player]
 function ItemConsumable:on_use(actor)
   if hook.Run('PrePlayerConsumeItem', actor, self) != false then
