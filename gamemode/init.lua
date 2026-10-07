@@ -26,13 +26,13 @@ end
 
 include 'env.lua'
 include 'flux/lib/stdlib/sh_stdlib.lua'
-include 'flux/lib/crate.lua'
+include 'flux/lib/package.lua'
 
 if Flux.initialized then
-  Crate:reload 'flux'
+  Package:reload 'flux'
   MsgC(Color(0, 255, 100, 255), 'Code reloaded in '..math.Round(os.clock() - start_time, 3)..' second(s)\n')
 else
-  Crate:include 'flux'
+  Package:include 'flux'
   MsgC(Color(0, 255, 100, 255), 'Boot complete in '..math.Round(os.clock() - start_time, 3)..' second(s)\n')
 end
 

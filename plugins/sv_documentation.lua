@@ -75,7 +75,7 @@ local function extract_functions(code)
 end
 
 local function extract_functions_from_files(folder)
-  local stdlib, crates, plugins = {}, {}, {}
+  local stdlib, packages, plugins = {}, {}, {}
   local files = File.get_list(folder)
 
   for k, v in ipairs(files) do
@@ -85,18 +85,18 @@ local function extract_functions_from_files(folder)
         if !plugin_name then continue end
         plugins[plugin_name] = plugins[plugin_name] or {}
         table.Merge(plugins[plugin_name], extract_functions(File.read(v)))
-      elseif v:find('crates/') then
-        local crate_name = v:match('crates/([%w_%.]+)/')
-        if !crate_name then continue end
-        crates[crate_name] = crates[crate_name] or {}
-        table.Merge(crates[crate_name], extract_functions(File.read(v)))
+      elseif v:find('packages/') then
+        local package_name = v:match('packages/([%w_%.]+)/')
+        if !package_name then continue end
+        packages[package_name] = packages[package_name] or {}
+        table.Merge(packages[package_name], extract_functions(File.read(v)))
       else
         table.Merge(stdlib, extract_functions(File.read(v)))
       end
     end
   end
 
-  return stdlib, crates, plugins
+  return stdlib, packages, plugins
 end
 
 local function render_html_for(name, data)
@@ -156,26 +156,26 @@ local function render_html_for(name, data)
 end
 
 --- Scans the Lua files of a folder, recursively, for non-local functions declared at file
--- scope and writes HTML pages listing them (stdlib, one page per crate and per plugin,
+-- scope and writes HTML pages listing them (stdlib, one page per package and per plugin,
 -- plus an index) to gamemodes/flux/docs/.
 -- @param folder [String folder to scan, relative to the game directory]
 function analyze_folder(folder)
   print('Analyzing: '..folder)
 
-  local stdlib, crates, plugins = extract_functions_from_files(folder)
+  local stdlib, packages, plugins = extract_functions_from_files(folder)
   local index_file = '<!DOCTYPE html><html lang="en"><body>'
 
   print 'Rendering HTML documentation...'
   print '  -> stdlib'
   File.write('gamemodes/flux/docs/stdlib/index.html', render_html_for('stdlib', stdlib))
 
-  index_file = index_file..'<h2>Flux</h2><a href="stdlib/index.html">stdlib</a><br><h2>Crates</h2>'
+  index_file = index_file..'<h2>Flux</h2><a href="stdlib/index.html">stdlib</a><br><h2>Packages</h2>'
 
-  print '  -> crates'
-  for name, data in SortedPairs(crates) do
+  print '  -> packages'
+  for name, data in SortedPairs(packages) do
     print('    '..name)
-    File.write('gamemodes/flux/docs/crates/'..name:underscore()..'.html', render_html_for(name, data))
-    index_file = index_file..'<a href="crates/'..name:underscore()..'.html">'..name..'</a><br>'
+    File.write('gamemodes/flux/docs/packages/'..name:underscore()..'.html', render_html_for(name, data))
+    index_file = index_file..'<a href="packages/'..name:underscore()..'.html">'..name..'</a><br>'
   end
 
   index_file = index_file..'<h2>Plugins</h2>'

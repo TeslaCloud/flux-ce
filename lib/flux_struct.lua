@@ -18,7 +18,7 @@ if !Flux then
       unloaded_plugins  = {},
       configs           = {},
       deps_info         = {},
-      crates            = {}
+      packages          = {}
     }
   }
 end

@@ -453,10 +453,10 @@ do
     '/plugin/sh_plugin.lua'
   }
 
-  --- Makes sure that a plugin (or a crate) is loaded, including it if it has not been yet.
+  --- Makes sure that a plugin (or a package) is loaded, including it if it has not been yet.
   -- Plugins are looked up in the Flux, cloud and schema plugin folders.
   -- Please specify the full file name if requiring a single-file Plugin.
-  -- @param name [String plugin or crate name]
+  -- @param name [String plugin or package name]
   -- @return [Boolean true if the dependency is loaded or could be found, false otherwise]
   function Plugin.require(name)
     if !isstring(name) then return false end
@@ -507,10 +507,10 @@ do
       return true
     end
 
-    if Crate:included(name) then
+    if Package:included(name) then
       return true
-    elseif Crate:exists(name) then
-      local success, err = pcall(Crate.include, Crate, name)
+    elseif Package:exists(name) then
+      local success, err = pcall(Package.include, Package, name)
 
       if success then
         return true

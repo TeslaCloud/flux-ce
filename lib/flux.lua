@@ -16,25 +16,25 @@ if !Pipeline or !Plugin or !Config then
   require_relative 'config'
 end
 
-if CRATE then
-  --- Called by Crate once the Flux package has been included.
+if PACKAGE then
+  --- Called by the Package manager once the Flux package has been included.
   -- Reloads the dependencies when this is a code refresh, includes the schema and runs the
-  -- FluxCrateLoaded hook.
-  function CRATE:__installed__()
+  -- FluxPackageLoaded hook.
+  function PACKAGE:__installed__()
     if Flux.initialized then
       if !LITE_REFRESH then
         for k, v in pairs(self.metadata.deps) do
-          Crate:reload(v)
+          Package:reload(v)
         end
       else
         -- Reload flow either way since we actually need its shared file.
-        Crate:reload 'flow'
+        Package:reload 'flow'
       end
     end
 
     Flux.include_schema()
 
-    hook.Call('FluxCrateLoaded', GM or GAMEMODE)
+    hook.Call('FluxPackageLoaded', GM or GAMEMODE)
     Flux.initialized = true
   end
 end

@@ -46,7 +46,7 @@ function require_relative(file_name)
     end
   else
     if string.find(file_name, 'sv_', 1, true) or
-       string.find(file_name, 'cratespec', 1, true) or
+       string.find(file_name, 'packagespec', 1, true) or
        file_name:EndsWith('/init.lua') then
       return
     end
@@ -69,7 +69,7 @@ end
 function require_relative_folder(dir, base, recursive)
   if base then
     if isbool(base) then
-      base = CRATE and CRATE.__path__ or 'flux/'
+      base = PACKAGE and PACKAGE.__path__ or 'flux/'
     elseif !base:EndsWith('/') then
       base = base..'/'
     end
