@@ -17,7 +17,6 @@ Package:describe(function(s)
   s.depends     'pon'
   s.depends     'cable'
   s.depends     'utf8'
-  s.depends     'markdown'
   s.depends     'yaml'
   s.depends     'tween'
   s.depends     'lib/flux.lua'
