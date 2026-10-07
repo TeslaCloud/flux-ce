@@ -49,7 +49,13 @@ function Observer:PlayerExitNoclip(actor)
 
   if data then
     actor:SetMoveType(data.move_type or MOVETYPE_WALK)
-    actor:DrawWorldModel(true)
+
+    -- The engine drops the carried object as soon as the weapon is drawn again, and
+    -- draws the weapon by itself once the object is let go of.
+    if !IsValid(actor.holding_object) then
+      actor:DrawWorldModel(true)
+    end
+
     actor:DrawShadow(true)
     actor:SetNoDraw(false)
     actor:SetNotSolid(false)

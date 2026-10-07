@@ -30,7 +30,12 @@ function CMD:on_run(actor, targets, should_vanish)
         v:SetNotSolid(true)
         v:SetColor(Color(0, 0, 0, 0))
       else
-        v:DrawWorldModel(true)
+        -- The engine drops the carried object as soon as the weapon is drawn again, and
+        -- draws the weapon by itself once the object is let go of.
+        if !IsValid(v.holding_object) then
+          v:DrawWorldModel(true)
+        end
+
         v:DrawShadow(true)
         v:SetNoDraw(false)
         v:SetNotSolid(false)
