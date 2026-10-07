@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="generator" content="fdoc">
+<title>Flow.Inflector — Flux v0.8.1</title>
+<link rel="stylesheet" href="../../assets/style.css">
+<script>try{var t=localStorage.getItem('fdoc-theme');if(t)document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
+</head>
+<body data-root="../../" data-group="packages/flow" data-module="Flow.Inflector">
+<div class="progress" id="progress"></div>
+<button class="sidebar-toggle" type="button" aria-label="Toggle navigation"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path fill="currentColor" d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg></button>
+<div class="sidebar-backdrop"></div>
+<aside class="sidebar" id="sidebar">
+<div class="sidebar-header">
+<a class="sidebar-project" href="../../index.html"><span class="sidebar-project-name">Flux</span> <span class="sidebar-project-version">v0.8.1</span></a>
+</div>
+<div class="sidebar-tabs" id="sidebar-tabs" role="tablist"></div>
+<nav class="sidebar-nav" id="sidebar-nav" aria-label="Documentation"><noscript><p class="sidebar-noscript"><a href="../../index.html">Index</a></p></noscript></nav>
+</aside>
+<main class="content" id="content">
+<div class="topbar">
+<form class="search" action="../../search.html" method="get" autocomplete="off" role="search">
+<input type="search" name="q" id="search-input" placeholder="Press / to search" aria-label="Search">
+<ul class="search-suggestions" id="search-suggestions" hidden></ul>
+</form>
+<button class="theme-toggle" type="button" aria-label="Toggle night mode"><span class="icon-moon"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M12 3a9 9 0 1 0 9 9c0-.46-.04-.92-.1-1.36a5.389 5.389 0 0 1-4.4 2.26 5.403 5.403 0 0 1-3.14-9.8c-.44-.06-.9-.1-1.36-.1z"/></svg></span><span class="icon-sun"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M6.76 4.84l-1.8-1.79-1.41 1.41 1.79 1.79 1.42-1.41zM4 10.5H1v2h3v-2zm9-9.95h-2V3.5h2V.55zm7.45 3.91l-1.41-1.41-1.79 1.79 1.41 1.41 1.79-1.79zm-3.21 13.7l1.79 1.8 1.41-1.41-1.8-1.79-1.4 1.4zM20 10.5v2h3v-2h-3zm-8-5c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6zm-1 16.95h2V19.5h-2v2.95zm-7.45-3.91l1.41 1.41 1.79-1.8-1.41-1.41-1.79 1.8z"/></svg></span></button>
+</div>
+<div class="content-inner" id="content-inner">
+<div class="page-header"><h1>Flow.Inflector <span class="badge badge-class">class</span></h1><p class="subtitle">Part of <a href="../../packages/flow/index.html">Flow</a></p></div>
+<section class="summary"><h2 id="summary">Summary</h2>
+<div class="summary-group"><h3>Methods</h3>
+<div class="summary-row"><div class="summary-signature"><a href="#inflections">inflections(lang, func)</a></div><div class="summary-synopsis">Defines the inflection rules of a language. The rules added inside of the callback (and anything looked up afterward) belong to that language.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#irregular">irregular(word, replacement)</a></div><div class="summary-synopsis">Adds a word that does not follow the regular rules to the current language.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#irregulars">irregulars()</a></div><div class="summary-synopsis">Returns the irregular words of the current language.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#irregulars_reverse">irregulars_reverse()</a></div><div class="summary-synopsis">Returns the irregular words of the current language, the other way around.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#plural">plural(expression, replacement)</a></div><div class="summary-synopsis">Adds a pluralization rule to the current language.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#pluralize">pluralize(word)</a></div><div class="summary-synopsis">Converts a word to its plural form using the rules of the current language. Only the last part of a snake_case word is converted.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#plurals">plurals()</a></div><div class="summary-synopsis">Returns the pluralization rules of the current language.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#singular">singular(expression, replacement)</a></div><div class="summary-synopsis">Adds a singularization rule to the current language.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#singularize">singularize(word)</a></div><div class="summary-synopsis">Converts a word to its singular form using the rules of the current language. Only the last part of a snake_case word is converted.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#singulars">singulars()</a></div><div class="summary-synopsis">Returns the singularization rules of the current language.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#uncountable">uncountable(words)</a></div><div class="summary-synopsis">Adds words that have no separate plural form to the current language.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#uncountables">uncountables()</a></div><div class="summary-synopsis">Returns the uncountable words of the current language.</div></div>
+</div>
+</section>
+<section class="details-group"><h2 id="methods">Methods</h2>
+<section class="detail" id="inflections">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Flow.Inflector:</span>inflections<span class="params">(lang, func)</span></h3>
+<a href="#inflections" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/inflector/sh_inflector.lua#L23" title="View source">packages/flow/lib/inflector/sh_inflector.lua:23</a>
+</div>
+<section class="docstring">
+<p>Defines the inflection rules of a language. The rules added inside of the callback
+(and anything looked up afterward) belong to that language.</p>
+<pre><code class="language-lua">Flow.Inflector:<span class="hl-f">inflections</span>(<span class="hl-s">&#39;en&#39;</span>, <span class="hl-k">function</span>(inflect)
+  inflect:<span class="hl-f">plural</span>(i<span class="hl-s">&#39;^(ox)$&#39;</span>, <span class="hl-s">&#39;%1en&#39;</span>)
+  inflect:<span class="hl-f">singular</span>(i<span class="hl-s">&#39;(quiz)zes$&#39;</span>, <span class="hl-s">&#39;%1&#39;</span>)
+  inflect:<span class="hl-f">irregular</span>(<span class="hl-s">&#39;person&#39;</span>, <span class="hl-s">&#39;people&#39;</span>)
+  inflect:<span class="hl-f">uncountable</span>(w<span class="hl-s">&#39;data ammo equipment&#39;</span>)
+<span class="hl-k">end</span>)
+</code></pre>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">lang</span> <span class="type">String</span> <span class="desc">language code</span></li><li><span class="param-name">func</span> <span class="type">Function</span> <span class="desc">receives the inflector</span></li></ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">Flow::Inflector</span> <span class="desc">self, for chaining</span></li></ul>
+</section>
+</section>
+<section class="detail" id="irregular">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Flow.Inflector:</span>irregular<span class="params">(word, replacement)</span></h3>
+<a href="#irregular" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/inflector/sh_inflector.lua#L96" title="View source">packages/flow/lib/inflector/sh_inflector.lua:96</a>
+</div>
+<section class="docstring">
+<p>Adds a word that does not follow the regular rules to the current language.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">word</span> <span class="type">String</span> <span class="desc">singular form</span></li><li><span class="param-name">replacement</span> <span class="type">String</span> <span class="desc">plural form</span></li></ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">Flow::Inflector</span> <span class="desc">self, for chaining</span></li></ul>
+</section>
+</section>
+<section class="detail" id="irregulars">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Flow.Inflector:</span>irregulars<span class="params">()</span></h3>
+<a href="#irregulars" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/inflector/sh_inflector.lua#L56" title="View source">packages/flow/lib/inflector/sh_inflector.lua:56</a>
+</div>
+<section class="docstring">
+<p>Returns the irregular words of the current language.</p>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">Map</span> <span class="desc">plural forms by singular form</span></li></ul>
+</section>
+</section>
+<section class="detail" id="irregulars_reverse">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Flow.Inflector:</span>irregulars_reverse<span class="params">()</span></h3>
+<a href="#irregulars_reverse" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/inflector/sh_inflector.lua#L62" title="View source">packages/flow/lib/inflector/sh_inflector.lua:62</a>
+</div>
+<section class="docstring">
+<p>Returns the irregular words of the current language, the other way around.</p>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">Map</span> <span class="desc">singular forms by plural form</span></li></ul>
+</section>
+</section>
+<section class="detail" id="plural">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Flow.Inflector:</span>plural<span class="params">(expression, replacement)</span></h3>
+<a href="#plural" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/inflector/sh_inflector.lua#L70" title="View source">packages/flow/lib/inflector/sh_inflector.lua:70</a>
+</div>
+<section class="docstring">
+<p>Adds a pluralization rule to the current language.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">expression</span> <span class="type">String</span> <span class="desc">Lua pattern that the singular form must match</span></li><li><span class="param-name">replacement</span> <span class="type">String</span> <span class="desc">what to replace the match with, can refer to captures</span></li></ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">Flow::Inflector</span> <span class="desc">self, for chaining</span></li></ul>
+</section>
+</section>
+<section class="detail" id="pluralize">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Flow.Inflector:</span>pluralize<span class="params">(word)</span></h3>
+<a href="#pluralize" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/inflector/sh_inflector.lua#L124" title="View source">packages/flow/lib/inflector/sh_inflector.lua:124</a>
+</div>
+<section class="docstring">
+<p>Converts a word to its plural form using the rules of the current language.
+Only the last part of a snake_case word is converted.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">word</span> <span class="type">String</span></li></ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">String</span> <span class="desc">plural form</span></li><li><span class="type">Number</span> <span class="desc">amount of replacements (irregular words only)</span></li></ul>
+</section>
+</section>
+<section class="detail" id="plurals">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Flow.Inflector:</span>plurals<span class="params">()</span></h3>
+<a href="#plurals" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/inflector/sh_inflector.lua#L38" title="View source">packages/flow/lib/inflector/sh_inflector.lua:38</a>
+</div>
+<section class="docstring">
+<p>Returns the pluralization rules of the current language.</p>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">List&lt;Map&gt;</span> <span class="desc">rules with the expression and replacement keys</span></li></ul>
+</section>
+</section>
+<section class="detail" id="singular">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Flow.Inflector:</span>singular<span class="params">(expression, replacement)</span></h3>
+<a href="#singular" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/inflector/sh_inflector.lua#L83" title="View source">packages/flow/lib/inflector/sh_inflector.lua:83</a>
+</div>
+<section class="docstring">
+<p>Adds a singularization rule to the current language.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">expression</span> <span class="type">String</span> <span class="desc">Lua pattern that the plural form must match</span></li><li><span class="param-name">replacement</span> <span class="type">String</span> <span class="desc">what to replace the match with, can refer to captures</span></li></ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">Flow::Inflector</span> <span class="desc">self, for chaining</span></li></ul>
+</section>
+</section>
+<section class="detail" id="singularize">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Flow.Inflector:</span>singularize<span class="params">(word)</span></h3>
+<a href="#singularize" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/inflector/sh_inflector.lua#L153" title="View source">packages/flow/lib/inflector/sh_inflector.lua:153</a>
+</div>
+<section class="docstring">
+<p>Converts a word to its singular form using the rules of the current language.
+Only the last part of a snake_case word is converted.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">word</span> <span class="type">String</span></li></ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">String</span> <span class="desc">singular form</span></li><li><span class="type">Number</span> <span class="desc">amount of replacements (irregular words only)</span></li></ul>
+</section>
+</section>
+<section class="detail" id="singulars">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Flow.Inflector:</span>singulars<span class="params">()</span></h3>
+<a href="#singulars" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/inflector/sh_inflector.lua#L44" title="View source">packages/flow/lib/inflector/sh_inflector.lua:44</a>
+</div>
+<section class="docstring">
+<p>Returns the singularization rules of the current language.</p>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">List&lt;Map&gt;</span> <span class="desc">rules with the expression and replacement keys</span></li></ul>
+</section>
+</section>
+<section class="detail" id="uncountable">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Flow.Inflector:</span>uncountable<span class="params">(words)</span></h3>
+<a href="#uncountable" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/inflector/sh_inflector.lua#L106" title="View source">packages/flow/lib/inflector/sh_inflector.lua:106</a>
+</div>
+<section class="docstring">
+<p>Adds words that have no separate plural form to the current language.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">words</span> <span class="type">String/List&lt;String&gt;</span> <span class="desc">a word or a list of words</span></li></ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">Flow::Inflector</span> <span class="desc">self, for chaining</span></li></ul>
+</section>
+</section>
+<section class="detail" id="uncountables">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Flow.Inflector:</span>uncountables<span class="params">()</span></h3>
+<a href="#uncountables" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/inflector/sh_inflector.lua#L50" title="View source">packages/flow/lib/inflector/sh_inflector.lua:50</a>
+</div>
+<section class="docstring">
+<p>Returns the uncountable words of the current language.</p>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">Map</span> <span class="desc">true by word</span></li></ul>
+</section>
+</section>
+</section>
+<section class="sources"><h2>Defined in</h2><ul><li><a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/inflector/sh_inflector.lua" title="View source">packages/flow/lib/inflector/sh_inflector.lua</a></li></ul></section>
+<template id="module-functions"><ul class="sidebar-functions"><li class="sidebar-category" data-anchor="methods">Methods</li><li><a href="#inflections">inflections</a></li><li><a href="#irregular">irregular</a></li><li><a href="#irregulars">irregulars</a></li><li><a href="#irregulars_reverse">irregulars_reverse</a></li><li><a href="#plural">plural</a></li><li><a href="#pluralize">pluralize</a></li><li><a href="#plurals">plurals</a></li><li><a href="#singular">singular</a></li><li><a href="#singularize">singularize</a></li><li><a href="#singulars">singulars</a></li><li><a href="#uncountable">uncountable</a></li><li><a href="#uncountables">uncountables</a></li></ul></template>
+
+<footer class="footer">
+<p>Built with <a href="https://github.com/TeslaCloud/fdoc">fdoc</a>.</p>
+</footer>
+</div>
+</main>
+<script src="../../assets/sidebar_items.js"></script>
+<script src="../../assets/app.js"></script>
+</body>
+</html>

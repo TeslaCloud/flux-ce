@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="generator" content="fdoc">
+<title>Chatbox — Flux v0.8.1</title>
+<link rel="stylesheet" href="../../assets/style.css">
+<script>try{var t=localStorage.getItem('fdoc-theme');if(t)document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
+</head>
+<body data-root="../../" data-group="plugins/chatbox" data-module="Chatbox">
+<div class="progress" id="progress"></div>
+<button class="sidebar-toggle" type="button" aria-label="Toggle navigation"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path fill="currentColor" d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg></button>
+<div class="sidebar-backdrop"></div>
+<aside class="sidebar" id="sidebar">
+<div class="sidebar-header">
+<a class="sidebar-project" href="../../index.html"><span class="sidebar-project-name">Flux</span> <span class="sidebar-project-version">v0.8.1</span></a>
+</div>
+<div class="sidebar-tabs" id="sidebar-tabs" role="tablist"></div>
+<nav class="sidebar-nav" id="sidebar-nav" aria-label="Documentation"><noscript><p class="sidebar-noscript"><a href="../../index.html">Index</a></p></noscript></nav>
+</aside>
+<main class="content" id="content">
+<div class="topbar">
+<form class="search" action="../../search.html" method="get" autocomplete="off" role="search">
+<input type="search" name="q" id="search-input" placeholder="Press / to search" aria-label="Search">
+<ul class="search-suggestions" id="search-suggestions" hidden></ul>
+</form>
+<button class="theme-toggle" type="button" aria-label="Toggle night mode"><span class="icon-moon"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M12 3a9 9 0 1 0 9 9c0-.46-.04-.92-.1-1.36a5.389 5.389 0 0 1-4.4 2.26 5.403 5.403 0 0 1-3.14-9.8c-.44-.06-.9-.1-1.36-.1z"/></svg></span><span class="icon-sun"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M6.76 4.84l-1.8-1.79-1.41 1.41 1.79 1.79 1.42-1.41zM4 10.5H1v2h3v-2zm9-9.95h-2V3.5h2V.55zm7.45 3.91l-1.41-1.41-1.79 1.79 1.41 1.41 1.79-1.79zm-3.21 13.7l1.79 1.8 1.41-1.41-1.8-1.79-1.4 1.4zM20 10.5v2h3v-2h-3zm-8-5c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6zm-1 16.95h2V19.5h-2v2.95zm-7.45-3.91l1.41 1.41 1.79-1.8-1.41-1.41-1.79 1.8z"/></svg></span></button>
+</div>
+<div class="content-inner" id="content-inner">
+<div class="page-header"><h1>Chatbox <span class="badge badge-hooks">hooks</span></h1><p class="subtitle">Plugin hooks and methods</p><p class="subtitle">Part of <a href="../../plugins/chatbox/index.html">chatbox</a></p></div>
+<section class="summary"><h2 id="summary">Summary</h2>
+<div class="summary-group"><h3>Functions</h3>
+<div class="summary-row"><div class="summary-signature"><a href="#add_filter">add_filter(id, data)</a></div><div class="summary-synopsis">Stores a message filter under the specified id. Serverside only. Filters are only stored at the moment, nothing reads them yet.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#add_text">add_text(listeners, ...)</a></div><div class="summary-synopsis">Builds a chat message from the arguments and sends it to the listeners that can hear it. Serverside only. Strings are displayed as text, numbers set the font size of the following text, colors set its color, players and entities are displayed by their names. Tables with is_data = true are displayed as icons or images. Any other table is merged into the message options: sender, position, radius (0 is global), size, should_translate.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#can_hear">can_hear(listener, message_data)</a></div><div class="summary-synopsis">Checks whether the listener should receive the message. Serverside only. The PlayerCanHear hook can force a message through. Otherwise a radius of 0 reaches every initialized player, a negative radius reaches nobody, and a positive radius reaches the players whose eyes are within it from the position of the message.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#compile">compile(msg_table)</a></div><div class="summary-synopsis">Converts a message that was received from the server into a list of pieces with calculated sizes and positions, ready to be drawn by a fl_chat_message panel. Strings are wrapped to the width of the chatbox. Clientside only.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#create">create()</a></div><div class="summary-synopsis">Creates the chatbox panel in its closed state, taking the size and position from the current theme. The panel is stored in Chatbox.panel.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#hide">hide()</a></div><div class="summary-synopsis">Closes the chatbox, disables its mouse and keyboard input and runs the ChatTextChanged hook with an empty string.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#message_to_string">message_to_string(message_data, concatenator)</a></div><div class="summary-synopsis">Joins the strings of a message into a single string. Players and entities are replaced with their names, numbers and other values are skipped.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#player_say">player_say(actor, text, team_chat)</a></div><div class="summary-synopsis">Makes the player say the text in the chat, by default to all players. Runs the PlayerSay hook first, which may change or suppress the text. The icon and colors come from the ChatboxGetPlayerIcon, ChatboxGetPlayerColor and ChatboxGetMessageColor hooks, and the ChatboxAdjustPlayerSay hook can alter the finished message. Serverside only.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#set_client_mode">set_client_mode(val)</a> <span class="flag flag-internal">internal</span></div><div class="summary-synopsis">Toggles the mode in which Chatbox.add_text displays every table instead of merging tables into the message options. Enabled while relaying chat.AddText of a client.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#show">show()</a></div><div class="summary-synopsis">Opens the chatbox, creating its panel first if necessary. Does nothing if there is no panel and the theme has not been initialized yet.</div></div>
+</div>
+<div class="summary-group"><h3>Methods</h3>
+<div class="summary-row"><div class="summary-signature"><a href="#ChatboxGetMessageColor">ChatboxGetMessageColor(speaker, text, team_chat)</a></div><div class="summary-synopsis">Provides the default color of the text of chat messages.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#ChatboxGetPlayerColor">ChatboxGetPlayerColor(speaker, text, team_chat)</a></div><div class="summary-synopsis">Provides the default color of the player's name in their chat messages.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#ChatboxGetPlayerIcon">ChatboxGetPlayerIcon(speaker, text, team_chat)</a></div><div class="summary-synopsis">Provides the default icon that is displayed before the name of the player in their chat messages.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#ChatboxMessageCompiled">ChatboxMessageCompiled(compiled)</a></div><div class="summary-synopsis">Prints the texts and colors of a compiled chat message to the console.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#ChatboxTextEntered">ChatboxTextEntered(text)</a></div><div class="summary-synopsis">Sends the entered text to the server, unless it is empty, and closes the chatbox.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#CreateFonts">CreateFonts()</a></div><div class="summary-synopsis">Creates the normal, bold, italic and bold italic fonts of the chatbox.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#GUIMousePressed">GUIMousePressed(mouse_code, aim_vector)</a></div><div class="summary-synopsis">Closes the chatbox when the player clicks on the game world.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#HUDShouldDraw">HUDShouldDraw(element)</a></div><div class="summary-synopsis">Hides the default chat HUD element.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#OnResolutionChanged">OnResolutionChanged(new_width, new_height)</a></div><div class="summary-synopsis">Recalculates the size and position options of the chatbox for the new resolution and removes the chatbox panel so that it gets recreated.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#OnThemeLoaded">OnThemeLoaded(current_theme)</a></div><div class="summary-synopsis">Sets the options, fonts and colors of the chatbox on the theme that was loaded.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#PlayerBindPress">PlayerBindPress(client, bind, pressed)</a></div><div class="summary-synopsis">Opens the chatbox instead of the default chat when a chat bind is pressed, remembering whether team chat was requested.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#PlayerCanHear">PlayerCanHear(listener, message_data)</a></div><div class="summary-synopsis">Makes sure that the sender of a message always receives it.</div></div>
+</div>
+</section>
+<section class="details-group"><h2 id="functions">Functions</h2>
+<section class="detail" id="add_filter">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Chatbox.</span>add_filter<span class="params">(id, data)</span></h3>
+<a href="#add_filter" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/chatbox/plugin/sv_plugin.lua#L21" title="View source">plugins/chatbox/plugin/sv_plugin.lua:21</a>
+</div>
+<section class="docstring">
+<p>Stores a message filter under the specified id. Serverside only.
+Filters are only stored at the moment, nothing reads them yet.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">id</span> <span class="type">String</span> <span class="desc">unique filter id</span></li><li><span class="param-name">data</span> <span class="type">Map</span> <span class="desc">filter data</span></li></ul>
+</section>
+</section>
+<section class="detail" id="add_text">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Chatbox.</span>add_text<span class="params">(listeners, ...)</span></h3>
+<a href="#add_text" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/chatbox/plugin/sv_plugin.lua#L84" title="View source">plugins/chatbox/plugin/sv_plugin.lua:84</a>
+</div>
+<section class="docstring">
+<p>Builds a chat message from the arguments and sends it to the listeners that can
+hear it. Serverside only.
+Strings are displayed as text, numbers set the font size of the following text,
+colors set its color, players and entities are displayed by their names. Tables with
+is_data = true are displayed as icons or images. Any other table is merged into the
+message options: sender, position, radius (0 is global), size, should_translate.</p>
+<pre><code class="language-lua"><span class="hl-c">-- Message for everyone.</span>
+Chatbox.<span class="hl-f">add_text</span>(<span class="hl-k">nil</span>, <span class="hl-f">Color</span>(<span class="hl-n">255</span>, <span class="hl-n">200</span>, <span class="hl-n">0</span>), <span class="hl-s">&#39;The server restarts in 5 minutes!&#39;</span>)
+
+<span class="hl-c">-- Message from a player that is heard within 300 units of them.</span>
+Chatbox.<span class="hl-f">add_text</span>(<span class="hl-k">nil</span>,
+  { icon = <span class="hl-s">&#39;fa-shield-alt&#39;</span>, size = <span class="hl-n">14</span>, margin = <span class="hl-n">8</span>, is_data = <span class="hl-k">true</span> },
+  team.<span class="hl-f">GetColor</span>(actor:<span class="hl-f">Team</span>()), actor, <span class="hl-f">Color</span>(<span class="hl-n">255</span>, <span class="hl-n">255</span>, <span class="hl-n">255</span>), <span class="hl-s">&#39;: &#39;</span>, text,
+  { sender = actor, position = actor:<span class="hl-f">GetPos</span>(), radius = <span class="hl-n">300</span> }
+)
+
+<span class="hl-c">-- Message for certain players only.</span>
+Chatbox.<span class="hl-f">add_text</span>(Bolt:<span class="hl-f">get_staff</span>(), <span class="hl-f">Color</span>(<span class="hl-n">234</span>, <span class="hl-n">255</span>, <span class="hl-n">208</span>), <span class="hl-s">&#39;@staff &#39;</span>, actor, <span class="hl-s">&#39;: &#39;</span>, text)
+</code></pre>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">listeners</span> <span class="type">List&lt;Player&gt;/Player</span> <span class="desc">the receivers, nil to send to all players</span></li><li><span class="param-name">...</span> <span class="type">Vararg</span> <span class="desc">pieces of the message and option tables</span></li></ul>
+<h4>See also</h4>
+<ul class="see-also"><li><a href="../../plugins/chatbox/Chatbox.html#can_hear"><code>Chatbox.can_hear</code></a></li></ul>
+</section>
+</section>
+<section class="detail" id="can_hear">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Chatbox.</span>can_hear<span class="params">(listener, message_data)</span></h3>
+<a href="#can_hear" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/chatbox/plugin/sv_plugin.lua#L33" title="View source">plugins/chatbox/plugin/sv_plugin.lua:33</a>
+</div>
+<section class="docstring">
+<p>Checks whether the listener should receive the message. Serverside only.
+The PlayerCanHear hook can force a message through. Otherwise a radius of 0 reaches
+every initialized player, a negative radius reaches nobody, and a positive radius
+reaches the players whose eyes are within it from the position of the message.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">listener</span> <span class="type">Player</span></li><li><span class="param-name">message_data</span> <span class="type">Map</span> <span class="desc">message data with radius (Number) and position (Vector or List&lt;Vector&gt;), see Chatbox.add_text</span></li></ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">Boolean</span></li></ul>
+</section>
+</section>
+<section class="detail" id="compile">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Chatbox.</span>compile<span class="params">(msg_table)</span></h3>
+<a href="#compile" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/chatbox/plugin/cl_plugin.lua#L23" title="View source">plugins/chatbox/plugin/cl_plugin.lua:23</a>
+</div>
+<section class="docstring">
+<p>Converts a message that was received from the server into a list of pieces with
+calculated sizes and positions, ready to be drawn by a fl_chat_message panel.
+Strings are wrapped to the width of the chatbox. Clientside only.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">msg_table</span> <span class="type">Map</span> <span class="desc">message data: data (List of strings, font sizes, colors, image / icon tables, players and entities), optional size and should_translate</span></li></ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">Map</span> <span class="desc">sequential pieces: font sizes (Number), colors (Color), texts ({ text, w, h, x, y }) and images ({ image or icon, x, y, w, h }), plus the total_height field; nil if the chatbox font is not available</span></li></ul>
+</section>
+</section>
+<section class="detail" id="create">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Chatbox.</span>create<span class="params">()</span></h3>
+<a href="#create" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/chatbox/plugin/cl_plugin.lua#L161" title="View source">plugins/chatbox/plugin/cl_plugin.lua:161</a>
+</div>
+<section class="docstring">
+<p>Creates the chatbox panel in its closed state, taking the size and position
+from the current theme. The panel is stored in Chatbox.panel.</p>
+</section>
+</section>
+<section class="detail" id="hide">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Chatbox.</span>hide<span class="params">()</span></h3>
+<a href="#hide" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/chatbox/plugin/cl_plugin.lua#L187" title="View source">plugins/chatbox/plugin/cl_plugin.lua:187</a>
+</div>
+<section class="docstring">
+<p>Closes the chatbox, disables its mouse and keyboard input and runs the
+ChatTextChanged hook with an empty string.</p>
+</section>
+</section>
+<section class="detail" id="message_to_string">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Chatbox.</span>message_to_string<span class="params">(message_data, concatenator)</span></h3>
+<a href="#message_to_string" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/chatbox/plugin/sv_plugin.lua#L166" title="View source">plugins/chatbox/plugin/sv_plugin.lua:166</a>
+</div>
+<section class="docstring">
+<p>Joins the strings of a message into a single string. Players and entities are
+replaced with their names, numbers and other values are skipped.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">message_data</span> <span class="type">List</span> <span class="desc">pieces of a message, such as the data of a message</span></li><li><span class="param-name">concatenator</span> <span class="type">String</span> <span class="default">optional, defaults to <code>&#39;&#39;</code></span> <span class="desc">separator to put between the pieces</span></li></ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">String</span></li></ul>
+</section>
+</section>
+<section class="detail" id="player_say">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Chatbox.</span>player_say<span class="params">(actor, text, team_chat)</span></h3>
+<a href="#player_say" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/chatbox/plugin/sv_plugin.lua#L198" title="View source">plugins/chatbox/plugin/sv_plugin.lua:198</a>
+</div>
+<section class="docstring">
+<p>Makes the player say the text in the chat, by default to all players.
+Runs the PlayerSay hook first, which may change or suppress the text. The icon
+and colors come from the ChatboxGetPlayerIcon, ChatboxGetPlayerColor and
+ChatboxGetMessageColor hooks, and the ChatboxAdjustPlayerSay hook can alter the
+finished message. Serverside only.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">actor</span> <span class="type">Player</span> <span class="desc">the speaker</span></li><li><span class="param-name">text</span> <span class="type">String</span> <span class="desc">the message</span></li><li><span class="param-name">team_chat</span> <span class="type">Boolean</span> <span class="default">optional, defaults to <code>nil</code></span> <span class="desc">whether the message was sent to the team chat</span></li></ul>
+</section>
+</section>
+<section class="detail" id="set_client_mode">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Chatbox.</span>set_client_mode<span class="params">(val)</span></h3> <span class="flag flag-internal">internal</span>
+<a href="#set_client_mode" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/chatbox/plugin/sv_plugin.lua#L157" title="View source">plugins/chatbox/plugin/sv_plugin.lua:157</a>
+</div>
+<section class="docstring">
+<div class="admonition internal"><p class="admonition-title">Internal</p><p>This function is internal. It is not part of the public API and may change without notice.</p></div>
+<p>Toggles the mode in which Chatbox.add_text displays every table instead of merging
+tables into the message options. Enabled while relaying chat.AddText of a client.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">val</span> <span class="type">Boolean</span></li></ul>
+</section>
+</section>
+<section class="detail" id="show">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Chatbox.</span>show<span class="params">()</span></h3>
+<a href="#show" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/chatbox/plugin/cl_plugin.lua#L173" title="View source">plugins/chatbox/plugin/cl_plugin.lua:173</a>
+</div>
+<section class="docstring">
+<p>Opens the chatbox, creating its panel first if necessary.
+Does nothing if there is no panel and the theme has not been initialized yet.</p>
+</section>
+</section>
+</section>
+<section class="details-group"><h2 id="methods">Methods</h2>
+<section class="detail" id="ChatboxGetMessageColor">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Chatbox:</span>ChatboxGetMessageColor<span class="params">(speaker, text, team_chat)</span></h3>
+<a href="#ChatboxGetMessageColor" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/chatbox/plugin/sv_hooks.lua#L25" title="View source">plugins/chatbox/plugin/sv_hooks.lua:25</a>
+</div>
+<section class="docstring">
+<p>Provides the default color of the text of chat messages.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">speaker</span> <span class="type">Player</span> <span class="desc">the speaker</span></li><li><span class="param-name">text</span> <span class="type">String</span> <span class="desc">the message</span></li><li><span class="param-name">team_chat</span> <span class="type">Boolean</span> <span class="desc">whether the message was sent to the team chat</span></li></ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">Color</span> <span class="desc">white</span></li></ul>
+</section>
+</section>
+<section class="detail" id="ChatboxGetPlayerColor">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Chatbox:</span>ChatboxGetPlayerColor<span class="params">(speaker, text, team_chat)</span></h3>
+<a href="#ChatboxGetPlayerColor" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/chatbox/plugin/sv_hooks.lua#L16" title="View source">plugins/chatbox/plugin/sv_hooks.lua:16</a>
+</div>
+<section class="docstring">
+<p>Provides the default color of the player's name in their chat messages.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">speaker</span> <span class="type">Player</span> <span class="desc">the speaker</span></li><li><span class="param-name">text</span> <span class="type">String</span> <span class="desc">the message</span></li><li><span class="param-name">team_chat</span> <span class="type">Boolean</span> <span class="desc">whether the message was sent to the team chat</span></li></ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">Color</span> <span class="desc">the color of the player's team</span></li></ul>
+</section>
+</section>
+<section class="detail" id="ChatboxGetPlayerIcon">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Chatbox:</span>ChatboxGetPlayerIcon<span class="params">(speaker, text, team_chat)</span></h3>
+<a href="#ChatboxGetPlayerIcon" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/chatbox/plugin/sv_hooks.lua#L7" title="View source">plugins/chatbox/plugin/sv_hooks.lua:7</a>
+</div>
+<section class="docstring">
+<p>Provides the default icon that is displayed before the name of the player
+in their chat messages.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">speaker</span> <span class="type">Player</span> <span class="desc">the speaker</span></li><li><span class="param-name">text</span> <span class="type">String</span> <span class="desc">the message</span></li><li><span class="param-name">team_chat</span> <span class="type">Boolean</span> <span class="desc">whether the message was sent to the team chat</span></li></ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">Map</span> <span class="desc">icon piece for Chatbox.add_text</span></li></ul>
+</section>
+</section>
+<section class="detail" id="ChatboxMessageCompiled">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Chatbox:</span>ChatboxMessageCompiled<span class="params">(compiled)</span></h3>
+<a href="#ChatboxMessageCompiled" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/chatbox/plugin/cl_hooks.lua#L124" title="View source">plugins/chatbox/plugin/cl_hooks.lua:124</a>
+</div>
+<section class="docstring">
+<p>Prints the texts and colors of a compiled chat message to the console.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">compiled</span> <span class="type">Map</span> <span class="desc">compiled message, as returned by Chatbox.compile</span></li></ul>
+</section>
+</section>
+<section class="detail" id="ChatboxTextEntered">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Chatbox:</span>ChatboxTextEntered<span class="params">(text)</span></h3>
+<a href="#ChatboxTextEntered" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/chatbox/plugin/cl_hooks.lua#L114" title="View source">plugins/chatbox/plugin/cl_hooks.lua:114</a>
+</div>
+<section class="docstring">
+<p>Sends the entered text to the server, unless it is empty, and closes the chatbox.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">text</span> <span class="type">String</span> <span class="desc">the text that was entered</span></li></ul>
+</section>
+</section>
+<section class="detail" id="CreateFonts">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Chatbox:</span>CreateFonts<span class="params">()</span></h3>
+<a href="#CreateFonts" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/chatbox/plugin/cl_hooks.lua#L59" title="View source">plugins/chatbox/plugin/cl_hooks.lua:59</a>
+</div>
+<section class="docstring">
+<p>Creates the normal, bold, italic and bold italic fonts of the chatbox.</p>
+</section>
+</section>
+<section class="detail" id="GUIMousePressed">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Chatbox:</span>GUIMousePressed<span class="params">(mouse_code, aim_vector)</span></h3>
+<a href="#GUIMousePressed" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/chatbox/plugin/cl_hooks.lua#L43" title="View source">plugins/chatbox/plugin/cl_hooks.lua:43</a>
+</div>
+<section class="docstring">
+<p>Closes the chatbox when the player clicks on the game world.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">mouse_code</span> <span class="type">Number</span> <span class="desc">mouse button code</span></li><li><span class="param-name">aim_vector</span> <span class="type">Vector</span> <span class="desc">direction of the click</span></li></ul>
+</section>
+</section>
+<section class="detail" id="HUDShouldDraw">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Chatbox:</span>HUDShouldDraw<span class="params">(element)</span></h3>
+<a href="#HUDShouldDraw" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/chatbox/plugin/cl_hooks.lua#L52" title="View source">plugins/chatbox/plugin/cl_hooks.lua:52</a>
+</div>
+<section class="docstring">
+<p>Hides the default chat HUD element.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">element</span> <span class="type">String</span> <span class="desc">name of the HUD element</span></li></ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">Boolean</span> <span class="desc">false for 'CHudChat', nil otherwise</span></li></ul>
+</section>
+</section>
+<section class="detail" id="OnResolutionChanged">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Chatbox:</span>OnResolutionChanged<span class="params">(new_width, new_height)</span></h3>
+<a href="#OnResolutionChanged" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/chatbox/plugin/cl_hooks.lua#L5" title="View source">plugins/chatbox/plugin/cl_hooks.lua:5</a>
+</div>
+<section class="docstring">
+<p>Recalculates the size and position options of the chatbox for the new resolution
+and removes the chatbox panel so that it gets recreated.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">new_width</span> <span class="type">Number</span> <span class="desc">new screen width</span></li><li><span class="param-name">new_height</span> <span class="type">Number</span> <span class="desc">new screen height</span></li></ul>
+</section>
+</section>
+<section class="detail" id="OnThemeLoaded">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Chatbox:</span>OnThemeLoaded<span class="params">(current_theme)</span></h3>
+<a href="#OnThemeLoaded" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/chatbox/plugin/cl_hooks.lua#L85" title="View source">plugins/chatbox/plugin/cl_hooks.lua:85</a>
+</div>
+<section class="docstring">
+<p>Sets the options, fonts and colors of the chatbox on the theme that was loaded.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">current_theme</span> <span class="type">ThemeBase</span></li></ul>
+</section>
+</section>
+<section class="detail" id="PlayerBindPress">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Chatbox:</span>PlayerBindPress<span class="params">(client, bind, pressed)</span></h3>
+<a href="#PlayerBindPress" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/chatbox/plugin/cl_hooks.lua#L25" title="View source">plugins/chatbox/plugin/cl_hooks.lua:25</a>
+</div>
+<section class="docstring">
+<p>Opens the chatbox instead of the default chat when a chat bind is pressed,
+remembering whether team chat was requested.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">client</span> <span class="type">Player</span></li><li><span class="param-name">bind</span> <span class="type">String</span> <span class="desc">the bind that was pressed</span></li><li><span class="param-name">pressed</span> <span class="type">Boolean</span> <span class="desc">whether the bind was pressed rather than released</span></li></ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">Boolean</span> <span class="desc">true to block the bind if the chatbox was opened, nil otherwise</span></li></ul>
+</section>
+</section>
+<section class="detail" id="PlayerCanHear">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Chatbox:</span>PlayerCanHear<span class="params">(listener, message_data)</span></h3>
+<a href="#PlayerCanHear" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/chatbox/plugin/sv_hooks.lua#L33" title="View source">plugins/chatbox/plugin/sv_hooks.lua:33</a>
+</div>
+<section class="docstring">
+<p>Makes sure that the sender of a message always receives it.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">listener</span> <span class="type">Player</span> <span class="desc">the listener</span></li><li><span class="param-name">message_data</span> <span class="type">Map</span> <span class="desc">message data, see Chatbox.add_text</span></li></ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">Boolean</span> <span class="desc">true if the player is the sender of the message, nil otherwise</span></li></ul>
+</section>
+</section>
+</section>
+<section class="sources"><h2>Defined in</h2><ul><li><a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/chatbox/plugin/cl_hooks.lua" title="View source">plugins/chatbox/plugin/cl_hooks.lua</a></li><li><a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/chatbox/plugin/cl_plugin.lua" title="View source">plugins/chatbox/plugin/cl_plugin.lua</a></li><li><a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/chatbox/plugin/sv_hooks.lua" title="View source">plugins/chatbox/plugin/sv_hooks.lua</a></li><li><a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/chatbox/plugin/sv_plugin.lua" title="View source">plugins/chatbox/plugin/sv_plugin.lua</a></li></ul></section>
+<template id="module-functions"><ul class="sidebar-functions"><li class="sidebar-category" data-anchor="functions">Functions</li><li><a href="#add_filter">add_filter</a></li><li><a href="#add_text">add_text</a></li><li><a href="#can_hear">can_hear</a></li><li><a href="#compile">compile</a></li><li><a href="#create">create</a></li><li><a href="#hide">hide</a></li><li><a href="#message_to_string">message_to_string</a></li><li><a href="#player_say">player_say</a></li><li><a href="#set_client_mode">set_client_mode</a></li><li><a href="#show">show</a></li><li class="sidebar-category" data-anchor="methods">Methods</li><li><a href="#ChatboxGetMessageColor">ChatboxGetMessageColor</a></li><li><a href="#ChatboxGetPlayerColor">ChatboxGetPlayerColor</a></li><li><a href="#ChatboxGetPlayerIcon">ChatboxGetPlayerIcon</a></li><li><a href="#ChatboxMessageCompiled">ChatboxMessageCompiled</a></li><li><a href="#ChatboxTextEntered">ChatboxTextEntered</a></li><li><a href="#CreateFonts">CreateFonts</a></li><li><a href="#GUIMousePressed">GUIMousePressed</a></li><li><a href="#HUDShouldDraw">HUDShouldDraw</a></li><li><a href="#OnResolutionChanged">OnResolutionChanged</a></li><li><a href="#OnThemeLoaded">OnThemeLoaded</a></li><li><a href="#PlayerBindPress">PlayerBindPress</a></li><li><a href="#PlayerCanHear">PlayerCanHear</a></li></ul></template>
+
+<footer class="footer">
+<p>Built with <a href="https://github.com/TeslaCloud/fdoc">fdoc</a>.</p>
+</footer>
+</div>
+</main>
+<script src="../../assets/sidebar_items.js"></script>
+<script src="../../assets/app.js"></script>
+</body>
+</html>

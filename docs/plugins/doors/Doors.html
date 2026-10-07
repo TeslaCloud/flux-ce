@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="generator" content="fdoc">
+<title>Doors — Flux v0.8.1</title>
+<link rel="stylesheet" href="../../assets/style.css">
+<script>try{var t=localStorage.getItem('fdoc-theme');if(t)document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
+</head>
+<body data-root="../../" data-group="plugins/doors" data-module="Doors">
+<div class="progress" id="progress"></div>
+<button class="sidebar-toggle" type="button" aria-label="Toggle navigation"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path fill="currentColor" d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg></button>
+<div class="sidebar-backdrop"></div>
+<aside class="sidebar" id="sidebar">
+<div class="sidebar-header">
+<a class="sidebar-project" href="../../index.html"><span class="sidebar-project-name">Flux</span> <span class="sidebar-project-version">v0.8.1</span></a>
+</div>
+<div class="sidebar-tabs" id="sidebar-tabs" role="tablist"></div>
+<nav class="sidebar-nav" id="sidebar-nav" aria-label="Documentation"><noscript><p class="sidebar-noscript"><a href="../../index.html">Index</a></p></noscript></nav>
+</aside>
+<main class="content" id="content">
+<div class="topbar">
+<form class="search" action="../../search.html" method="get" autocomplete="off" role="search">
+<input type="search" name="q" id="search-input" placeholder="Press / to search" aria-label="Search">
+<ul class="search-suggestions" id="search-suggestions" hidden></ul>
+</form>
+<button class="theme-toggle" type="button" aria-label="Toggle night mode"><span class="icon-moon"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M12 3a9 9 0 1 0 9 9c0-.46-.04-.92-.1-1.36a5.389 5.389 0 0 1-4.4 2.26 5.403 5.403 0 0 1-3.14-9.8c-.44-.06-.9-.1-1.36-.1z"/></svg></span><span class="icon-sun"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M6.76 4.84l-1.8-1.79-1.41 1.41 1.79 1.79 1.42-1.41zM4 10.5H1v2h3v-2zm9-9.95h-2V3.5h2V.55zm7.45 3.91l-1.41-1.41-1.79 1.79 1.41 1.41 1.79-1.79zm-3.21 13.7l1.79 1.8 1.41-1.41-1.8-1.79-1.4 1.4zM20 10.5v2h3v-2h-3zm-8-5c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6zm-1 16.95h2V19.5h-2v2.95zm-7.45-3.91l1.41 1.41 1.79-1.8-1.41-1.41-1.79 1.8z"/></svg></span></button>
+</div>
+<div class="content-inner" id="content-inner">
+<div class="page-header"><h1>Doors <span class="badge badge-hooks">hooks</span></h1><p class="subtitle">Plugin hooks and methods</p><p class="subtitle">Part of <a href="../../plugins/doors/index.html">doors</a></p></div>
+<section class="summary"><h2 id="summary">Summary</h2>
+<div class="summary-group"><h3>Methods</h3>
+<div class="summary-row"><div class="summary-signature"><a href="#load">load()</a></div><div class="summary-synopsis">Applies the saved properties and conditions to the doors of the map. Runs the InitialDoorsLoad hook instead if nothing has been saved yet.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#LoadData">LoadData()</a></div><div class="summary-synopsis">Loads the saved doors when the framework loads its data.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#lock_door">lock_door(entity, lock)</a></div><div class="summary-synopsis">Locks or unlocks the door and plays the latch sound.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#OnPluginsLoaded">OnPluginsLoaded()</a></div><div class="summary-synopsis">Runs the RegisterDoorProperties and RegisterDoorTitleTypes hooks so that plugins can register their door properties and title types.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#PlayerCanLockDoor">PlayerCanLockDoor(actor, entity)</a></div><div class="summary-synopsis">Allows the player to lock and unlock the door if they satisfy its conditions.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#PlayerUse">PlayerUse(activator, entity)</a></div><div class="summary-synopsis">Throttles the use of doors and toggles the lock of a door when a player who is allowed to lock it uses it while sprinting. Runs the PlayerUseDoor hook for every use of a door that is not blocked.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#PostDrawTranslucentRenderables">PostDrawTranslucentRenderables(depth, skybox)</a></div><div class="summary-synopsis">Draws the titles of the doors within 256 units of the camera on both sides of the door, using the title type that is set on each door.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#register_property">register_property(id, data)</a></div><div class="summary-synopsis">Registers a door property that is saved together with the door and can optionally be edited in the door menu.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#register_title_type">register_title_type(id, data)</a></div><div class="summary-synopsis">Registers a way to draw the title of a door, selectable in the door menu.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#RegisterPermissions">RegisterPermissions()</a></div><div class="summary-synopsis">Registers the 'manage_doors' level design permission.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#save">save()</a></div><div class="summary-synopsis">Writes the registered properties and the conditions of every door on the map to the plugin data storage.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#SaveData">SaveData()</a></div><div class="summary-synopsis">Saves the doors when the framework saves its data.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#ShowSpare1">ShowSpare1(actor)</a></div><div class="summary-synopsis">Opens the door menu for the player if they are looking at a door that is closer than 115 units.</div></div>
+</div>
+</section>
+<section class="details-group"><h2 id="methods">Methods</h2>
+<section class="detail" id="load">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Doors:</span>load<span class="params">()</span></h3>
+<a href="#load" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/doors/plugin/sv_plugin.lua#L41" title="View source">plugins/doors/plugin/sv_plugin.lua:41</a>
+</div>
+<section class="docstring">
+<p>Applies the saved properties and conditions to the doors of the map.
+Runs the InitialDoorsLoad hook instead if nothing has been saved yet.</p>
+</section>
+</section>
+<section class="detail" id="LoadData">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Doors:</span>LoadData<span class="params">()</span></h3>
+<a href="#LoadData" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/doors/plugin/sv_plugin.lua#L2" title="View source">plugins/doors/plugin/sv_plugin.lua:2</a>
+</div>
+<section class="docstring">
+<p>Loads the saved doors when the framework loads its data.</p>
+</section>
+</section>
+<section class="detail" id="lock_door">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Doors:</span>lock_door<span class="params">(entity, lock)</span></h3>
+<a href="#lock_door" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/doors/plugin/sv_plugin.lua#L64" title="View source">plugins/doors/plugin/sv_plugin.lua:64</a>
+</div>
+<section class="docstring">
+<p>Locks or unlocks the door and plays the latch sound.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">entity</span> <span class="type">Entity</span> <span class="desc">the door</span></li><li><span class="param-name">lock</span> <span class="type">Boolean</span> <span class="desc">true to lock, false to unlock</span></li></ul>
+</section>
+</section>
+<section class="detail" id="OnPluginsLoaded">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Doors:</span>OnPluginsLoaded<span class="params">()</span></h3>
+<a href="#OnPluginsLoaded" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/doors/plugin/sh_plugin.lua#L77" title="View source">plugins/doors/plugin/sh_plugin.lua:77</a>
+</div>
+<section class="docstring">
+<p>Runs the RegisterDoorProperties and RegisterDoorTitleTypes hooks so that plugins can
+register their door properties and title types.</p>
+</section>
+</section>
+<section class="detail" id="PlayerCanLockDoor">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Doors:</span>PlayerCanLockDoor<span class="params">(actor, entity)</span></h3>
+<a href="#PlayerCanLockDoor" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/doors/plugin/sv_hooks.lua#L53" title="View source">plugins/doors/plugin/sv_hooks.lua:53</a>
+</div>
+<section class="docstring">
+<p>Allows the player to lock and unlock the door if they satisfy its conditions.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">actor</span> <span class="type">Player</span></li><li><span class="param-name">entity</span> <span class="type">Entity</span> <span class="desc">the door</span></li></ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">Boolean</span> <span class="desc">true if the player passes the door's conditions, nil otherwise</span></li></ul>
+</section>
+</section>
+<section class="detail" id="PlayerUse">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Doors:</span>PlayerUse<span class="params">(activator, entity)</span></h3>
+<a href="#PlayerUse" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/doors/plugin/sv_hooks.lua#L22" title="View source">plugins/doors/plugin/sv_hooks.lua:22</a>
+</div>
+<section class="docstring">
+<p>Throttles the use of doors and toggles the lock of a door when a player who is
+allowed to lock it uses it while sprinting. Runs the PlayerUseDoor hook for every
+use of a door that is not blocked.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">activator</span> <span class="type">Player</span></li><li><span class="param-name">entity</span> <span class="type">Entity</span> <span class="desc">the entity that is being used</span></li></ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">Boolean</span> <span class="desc">false if the door is on cooldown or has just been locked, nil otherwise</span></li></ul>
+</section>
+</section>
+<section class="detail" id="PostDrawTranslucentRenderables">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Doors:</span>PostDrawTranslucentRenderables<span class="params">(depth, skybox)</span></h3>
+<a href="#PostDrawTranslucentRenderables" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/doors/plugin/cl_hooks.lua#L5" title="View source">plugins/doors/plugin/cl_hooks.lua:5</a>
+</div>
+<section class="docstring">
+<p>Draws the titles of the doors within 256 units of the camera on both sides
+of the door, using the title type that is set on each door.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">depth</span> <span class="type">Boolean</span> <span class="desc">whether the depth pass is being drawn</span></li><li><span class="param-name">skybox</span> <span class="type">Boolean</span> <span class="desc">whether the skybox is being drawn</span></li></ul>
+</section>
+</section>
+<section class="detail" id="register_property">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Doors:</span>register_property<span class="params">(id, data)</span></h3>
+<a href="#register_property" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/doors/plugin/sh_plugin.lua#L32" title="View source">plugins/doors/plugin/sh_plugin.lua:32</a>
+</div>
+<section class="docstring">
+<p>Registers a door property that is saved together with the door
+and can optionally be edited in the door menu.</p>
+<pre><code class="language-lua">Doors:<span class="hl-f">register_property</span>(<span class="hl-s">&#39;name&#39;</span>, {
+  <span class="hl-c">-- Returns the value to save. Also provides the value displayed in the door menu.</span>
+  get_save_data = <span class="hl-k">function</span>(entity)
+    <span class="hl-k">return</span> entity:<span class="hl-f">get_nv</span>(<span class="hl-s">&#39;fl_name&#39;</span>, <span class="hl-s">&#39;&#39;</span>)
+  <span class="hl-k">end</span>,
+  <span class="hl-c">-- Serverside. Applies a value that was loaded or changed in the door menu.</span>
+  on_load = <span class="hl-k">function</span>(entity, data)
+    entity:<span class="hl-f">set_nv</span>(<span class="hl-s">&#39;fl_name&#39;</span>, data)
+  <span class="hl-k">end</span>,
+  <span class="hl-c">-- Optional, clientside. Creates and returns the row for the door menu.</span>
+  create_panel = <span class="hl-k">function</span>(entity, panel)
+    <span class="hl-k">local</span> name = panel.properties:<span class="hl-f">CreateRow</span>(t<span class="hl-s">&#39;door.categories.general&#39;</span>, t<span class="hl-s">&#39;door.properties.name&#39;</span>)
+    name:<span class="hl-f">Setup</span>(<span class="hl-s">&#39;Generic&#39;</span>)
+
+    <span class="hl-k">return</span> name
+  <span class="hl-k">end</span>
+})
+</code></pre>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">id</span> <span class="type">String</span> <span class="desc">unique property id, also the key the value is saved under</span></li><li><span class="param-name">data</span> <span class="type">Map</span> <span class="desc">property definition: get_save_data(entity), on_load(entity, data) and the optional create_panel(entity, panel)</span></li></ul>
+</section>
+</section>
+<section class="detail" id="register_title_type">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Doors:</span>register_title_type<span class="params">(id, data)</span></h3>
+<a href="#register_title_type" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/doors/plugin/sh_plugin.lua#L54" title="View source">plugins/doors/plugin/sh_plugin.lua:54</a>
+</div>
+<section class="docstring">
+<p>Registers a way to draw the title of a door, selectable in the door menu.</p>
+<pre><code class="language-lua">Doors:<span class="hl-f">register_title_type</span>(<span class="hl-s">&#39;plain&#39;</span>, {
+  name = <span class="hl-s">&#39;door.title_type.plain&#39;</span>,
+  <span class="hl-c">-- Called in a 3D2D context that is centered on a face of the door.</span>
+  draw = <span class="hl-k">function</span>(entity, w, h, alpha)
+    <span class="hl-k">local</span> text = entity:<span class="hl-f">get_nv</span>(<span class="hl-s">&#39;fl_name&#39;</span>)
+    <span class="hl-k">local</span> font = Theme.<span class="hl-f">get_font</span>(<span class="hl-s">&#39;text_3d2d&#39;</span>)
+    <span class="hl-k">local</span> text_w, text_h = util.<span class="hl-f">text_size</span>(text, font)
+
+    draw.<span class="hl-f">SimpleText</span>(text, font, -text_w / <span class="hl-n">2</span>, -h / <span class="hl-n">4</span> - text_h / <span class="hl-n">2</span>, color_white:<span class="hl-f">alpha</span>(alpha))
+  <span class="hl-k">end</span>
+  <span class="hl-c">-- An optional draw_back function with the same arguments draws the back face.</span>
+})
+</code></pre>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">id</span> <span class="type">String</span> <span class="desc">unique title type id</span></li><li><span class="param-name">data</span> <span class="type">Map</span> <span class="desc">title type definition: name (phrase), draw(entity, w, h, alpha) and the optional draw_back(entity, w, h, alpha)</span></li></ul>
+</section>
+</section>
+<section class="detail" id="RegisterPermissions">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Doors:</span>RegisterPermissions<span class="params">()</span></h3>
+<a href="#RegisterPermissions" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/doors/plugin/sh_plugin.lua#L65" title="View source">plugins/doors/plugin/sh_plugin.lua:65</a>
+</div>
+<section class="docstring">
+<p>Registers the 'manage_doors' level design permission.</p>
+</section>
+</section>
+<section class="detail" id="save">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Doors:</span>save<span class="params">()</span></h3>
+<a href="#save" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/doors/plugin/sv_plugin.lua#L13" title="View source">plugins/doors/plugin/sv_plugin.lua:13</a>
+</div>
+<section class="docstring">
+<p>Writes the registered properties and the conditions of every door on the map
+to the plugin data storage.</p>
+</section>
+</section>
+<section class="detail" id="SaveData">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Doors:</span>SaveData<span class="params">()</span></h3>
+<a href="#SaveData" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/doors/plugin/sv_plugin.lua#L7" title="View source">plugins/doors/plugin/sv_plugin.lua:7</a>
+</div>
+<section class="docstring">
+<p>Saves the doors when the framework saves its data.</p>
+</section>
+</section>
+<section class="detail" id="ShowSpare1">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Doors:</span>ShowSpare1<span class="params">(actor)</span></h3>
+<a href="#ShowSpare1" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/doors/plugin/sv_hooks.lua#L4" title="View source">plugins/doors/plugin/sv_hooks.lua:4</a>
+</div>
+<section class="docstring">
+<p>Opens the door menu for the player if they are looking at a door
+that is closer than 115 units.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">actor</span> <span class="type">Player</span></li></ul>
+</section>
+</section>
+</section>
+<section class="sources"><h2>Defined in</h2><ul><li><a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/doors/plugin/cl_hooks.lua" title="View source">plugins/doors/plugin/cl_hooks.lua</a></li><li><a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/doors/plugin/sh_plugin.lua" title="View source">plugins/doors/plugin/sh_plugin.lua</a></li><li><a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/doors/plugin/sv_hooks.lua" title="View source">plugins/doors/plugin/sv_hooks.lua</a></li><li><a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/doors/plugin/sv_plugin.lua" title="View source">plugins/doors/plugin/sv_plugin.lua</a></li></ul></section>
+<template id="module-functions"><ul class="sidebar-functions"><li class="sidebar-category" data-anchor="methods">Methods</li><li><a href="#load">load</a></li><li><a href="#LoadData">LoadData</a></li><li><a href="#lock_door">lock_door</a></li><li><a href="#OnPluginsLoaded">OnPluginsLoaded</a></li><li><a href="#PlayerCanLockDoor">PlayerCanLockDoor</a></li><li><a href="#PlayerUse">PlayerUse</a></li><li><a href="#PostDrawTranslucentRenderables">PostDrawTranslucentRenderables</a></li><li><a href="#register_property">register_property</a></li><li><a href="#register_title_type">register_title_type</a></li><li><a href="#RegisterPermissions">RegisterPermissions</a></li><li><a href="#save">save</a></li><li><a href="#SaveData">SaveData</a></li><li><a href="#ShowSpare1">ShowSpare1</a></li></ul></template>
+
+<footer class="footer">
+<p>Built with <a href="https://github.com/TeslaCloud/fdoc">fdoc</a>.</p>
+</footer>
+</div>
+</main>
+<script src="../../assets/sidebar_items.js"></script>
+<script src="../../assets/app.js"></script>
+</body>
+</html>

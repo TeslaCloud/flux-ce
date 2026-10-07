@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="generator" content="fdoc">
+<title>Tasks — Flux v0.8.1</title>
+<link rel="stylesheet" href="../../assets/style.css">
+<script>try{var t=localStorage.getItem('fdoc-theme');if(t)document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
+</head>
+<body data-root="../../" data-group="packages/active_record" data-module="Tasks">
+<div class="progress" id="progress"></div>
+<button class="sidebar-toggle" type="button" aria-label="Toggle navigation"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path fill="currentColor" d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg></button>
+<div class="sidebar-backdrop"></div>
+<aside class="sidebar" id="sidebar">
+<div class="sidebar-header">
+<a class="sidebar-project" href="../../index.html"><span class="sidebar-project-name">Flux</span> <span class="sidebar-project-version">v0.8.1</span></a>
+</div>
+<div class="sidebar-tabs" id="sidebar-tabs" role="tablist"></div>
+<nav class="sidebar-nav" id="sidebar-nav" aria-label="Documentation"><noscript><p class="sidebar-noscript"><a href="../../index.html">Index</a></p></noscript></nav>
+</aside>
+<main class="content" id="content">
+<div class="topbar">
+<form class="search" action="../../search.html" method="get" autocomplete="off" role="search">
+<input type="search" name="q" id="search-input" placeholder="Press / to search" aria-label="Search">
+<ul class="search-suggestions" id="search-suggestions" hidden></ul>
+</form>
+<button class="theme-toggle" type="button" aria-label="Toggle night mode"><span class="icon-moon"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M12 3a9 9 0 1 0 9 9c0-.46-.04-.92-.1-1.36a5.389 5.389 0 0 1-4.4 2.26 5.403 5.403 0 0 1-3.14-9.8c-.44-.06-.9-.1-1.36-.1z"/></svg></span><span class="icon-sun"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M6.76 4.84l-1.8-1.79-1.41 1.41 1.79 1.79 1.42-1.41zM4 10.5H1v2h3v-2zm9-9.95h-2V3.5h2V.55zm7.45 3.91l-1.41-1.41-1.79 1.79 1.41 1.41 1.79-1.79zm-3.21 13.7l1.79 1.8 1.41-1.41-1.8-1.79-1.4 1.4zM20 10.5v2h3v-2h-3zm-8-5c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6zm-1 16.95h2V19.5h-2v2.95zm-7.45-3.91l1.41 1.41 1.79-1.8-1.41-1.41-1.79 1.8z"/></svg></span></button>
+</div>
+<div class="content-inner" id="content-inner">
+<div class="page-header"><h1>Tasks <span class="badge badge-library">library</span></h1><p class="subtitle">Part of <a href="../../packages/active_record/index.html">Active Record</a></p></div>
+<section class="summary"><h2 id="summary">Summary</h2>
+<div class="summary-group"><h3>Functions</h3>
+<div class="summary-row"><div class="summary-signature"><a href="#after_migration">after_migration(executed)</a></div><div class="summary-synopsis">Refreshes the models and regenerates the schema file once migrations have run.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#context">context()</a></div><div class="summary-synopsis">Returns the migration context of the active schema, creating it if needed.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#forward">forward(steps)</a></div><div class="summary-synopsis">Runs the next pending migrations (<code>flux db:forward STEP=n</code>).</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#import_metadata_version">import_metadata_version()</a></div><div class="summary-synopsis">Records the migrations as run for a database whose newest migration version is stored under the 'version' key of the 'ar_metadata' table, with nothing in the 'ar_schema_migrations' table. Every migration file up to that version is considered run, the key is deleted, and the indexes and foreign keys of a schema file that holds a 'Structure' object are imported into the metadata.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#import_structure_metadata">import_structure_metadata(metadata)</a></div><div class="summary-synopsis">Imports the metadata (indexes, references and primary keys) of a schema file that holds a 'Structure' object.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#migrate">migrate(version)</a></div><div class="summary-synopsis">Runs the pending migrations, or migrates to a version (<code>flux db:migrate VERSION=x</code>).</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#migrate_down">migrate_down(version)</a></div><div class="summary-synopsis">Reverts a single migration (<code>flux db:migrate:down VERSION=x</code>).</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#migrate_status">migrate_status()</a></div><div class="summary-synopsis">Prints the status of every migration (<code>flux db:migrate:status</code>).</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#migrate_up">migrate_up(version)</a></div><div class="summary-synopsis">Runs a single migration (<code>flux db:migrate:up VERSION=x</code>).</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#names">names()</a></div><div class="summary-synopsis">Returns the names of the console tasks.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#prepare">prepare()</a></div><div class="summary-synopsis">Brings the database up to date when the server starts: installs the migrations of the packages and plugins, loads the schema file into a fresh database and runs the pending migrations.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#redo">redo(steps, version)</a></div><div class="summary-synopsis">Reverts and re-runs migrations (<code>flux db:migrate:redo STEP=n</code> or <code>VERSION=x</code>).</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#rollback">rollback(steps)</a></div><div class="summary-synopsis">Reverts the newest migrations (<code>flux db:rollback STEP=n</code>).</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#run">run(name, env)</a></div><div class="summary-synopsis">Runs a task by its console name, e.g. 'migrate:status', with the adapter in sync mode. Errors are printed instead of raised.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#schema_dump">schema_dump()</a></div><div class="summary-synopsis">Writes the current schema into the schema file (<code>flux db:schema:dump</code>).</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#schema_load">schema_load()</a></div><div class="summary-synopsis">Loads the schema file, which creates the tables it describes and records its version and every older migration as run (<code>flux db:schema:load</code>).</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#schema_path">schema_path()</a></div><div class="summary-synopsis">Returns the path of the schema file, relative to the game folder.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#structure_schema_file">structure_schema_file()</a></div><div class="summary-synopsis">Checks whether the schema file holds a 'Structure' object (the one-argument form of ActiveRecord.Schema:define). Such a file cannot be loaded.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#version">version()</a></div><div class="summary-synopsis">Prints the current schema version (<code>flux db:version</code>).</div></div>
+</div>
+</section>
+<section class="details-group"><h2 id="functions">Functions</h2>
+<section class="detail" id="after_migration">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Tasks.</span>after_migration<span class="params">(executed)</span></h3>
+<a href="#after_migration" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/migrator/tasks.lua#L27" title="View source">packages/active_record/lib/migrator/tasks.lua:27</a>
+</div>
+<section class="docstring">
+<p>Refreshes the models and regenerates the schema file once migrations have run.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">executed</span> <span class="type">List&lt;ActiveRecord::MigrationProxy&gt;</span> <span class="desc">migrations that were run</span></li></ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">List&lt;ActiveRecord::MigrationProxy&gt;</span> <span class="desc">the same list</span></li></ul>
+</section>
+</section>
+<section class="detail" id="context">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Tasks.</span>context<span class="params">()</span></h3>
+<a href="#context" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/migrator/tasks.lua#L13" title="View source">packages/active_record/lib/migrator/tasks.lua:13</a>
+</div>
+<section class="docstring">
+<p>Returns the migration context of the active schema, creating it if needed.</p>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">ActiveRecord::MigrationContext</span></li></ul>
+</section>
+</section>
+<section class="detail" id="forward">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Tasks.</span>forward<span class="params">(steps)</span></h3>
+<a href="#forward" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/migrator/tasks.lua#L82" title="View source">packages/active_record/lib/migrator/tasks.lua:82</a>
+</div>
+<section class="docstring">
+<p>Runs the next pending migrations (<code>flux db:forward STEP=n</code>).</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">steps</span> <span class="type">Number</span> <span class="default">optional, defaults to <code>1</code></span></li></ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">List&lt;ActiveRecord::MigrationProxy&gt;</span></li></ul>
+</section>
+</section>
+<section class="detail" id="import_metadata_version">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Tasks.</span>import_metadata_version<span class="params">()</span></h3>
+<a href="#import_metadata_version" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/migrator/tasks.lua#L165" title="View source">packages/active_record/lib/migrator/tasks.lua:165</a>
+</div>
+<section class="docstring">
+<p>Records the migrations as run for a database whose newest migration version is stored
+under the 'version' key of the 'ar_metadata' table, with nothing in the
+'ar_schema_migrations' table. Every migration file up to that version is considered
+run, the key is deleted, and the indexes and foreign keys of a schema file that holds
+a 'Structure' object are imported into the metadata.</p>
+</section>
+</section>
+<section class="detail" id="import_structure_metadata">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Tasks.</span>import_structure_metadata<span class="params">(metadata)</span></h3>
+<a href="#import_structure_metadata" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/migrator/tasks.lua#L189" title="View source">packages/active_record/lib/migrator/tasks.lua:189</a>
+</div>
+<section class="docstring">
+<p>Imports the metadata (indexes, references and primary keys) of a schema file that
+holds a 'Structure' object.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">metadata</span> <span class="type">Map</span></li></ul>
+</section>
+</section>
+<section class="detail" id="migrate">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Tasks.</span>migrate<span class="params">(version)</span></h3>
+<a href="#migrate" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/migrator/tasks.lua#L40" title="View source">packages/active_record/lib/migrator/tasks.lua:40</a>
+</div>
+<section class="docstring">
+<p>Runs the pending migrations, or migrates to a version (<code>flux db:migrate VERSION=x</code>).</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">version</span> <span class="type">Number/String</span> <span class="default">optional, defaults to <code>nil</code></span></li></ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">List&lt;ActiveRecord::MigrationProxy&gt;</span> <span class="desc">migrations that were run</span></li></ul>
+</section>
+</section>
+<section class="detail" id="migrate_down">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Tasks.</span>migrate_down<span class="params">(version)</span></h3>
+<a href="#migrate_down" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/migrator/tasks.lua#L64" title="View source">packages/active_record/lib/migrator/tasks.lua:64</a>
+</div>
+<section class="docstring">
+<p>Reverts a single migration (<code>flux db:migrate:down VERSION=x</code>).</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">version</span> <span class="type">Number/String</span></li></ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">List&lt;ActiveRecord::MigrationProxy&gt;</span></li></ul>
+</section>
+</section>
+<section class="detail" id="migrate_status">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Tasks.</span>migrate_status<span class="params">()</span></h3>
+<a href="#migrate_status" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/migrator/tasks.lua#L102" title="View source">packages/active_record/lib/migrator/tasks.lua:102</a>
+</div>
+<section class="docstring">
+<p>Prints the status of every migration (<code>flux db:migrate:status</code>).</p>
+</section>
+</section>
+<section class="detail" id="migrate_up">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Tasks.</span>migrate_up<span class="params">(version)</span></h3>
+<a href="#migrate_up" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/migrator/tasks.lua#L53" title="View source">packages/active_record/lib/migrator/tasks.lua:53</a>
+</div>
+<section class="docstring">
+<p>Runs a single migration (<code>flux db:migrate:up VERSION=x</code>).</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">version</span> <span class="type">Number/String</span></li></ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">List&lt;ActiveRecord::MigrationProxy&gt;</span></li></ul>
+</section>
+</section>
+<section class="detail" id="names">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Tasks.</span>names<span class="params">()</span></h3>
+<a href="#names" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/migrator/tasks.lua#L264" title="View source">packages/active_record/lib/migrator/tasks.lua:264</a>
+</div>
+<section class="docstring">
+<p>Returns the names of the console tasks.</p>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">List&lt;String&gt;</span> <span class="desc">sorted</span></li></ul>
+</section>
+</section>
+<section class="detail" id="prepare">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Tasks.</span>prepare<span class="params">()</span></h3>
+<a href="#prepare" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/migrator/tasks.lua#L226" title="View source">packages/active_record/lib/migrator/tasks.lua:226</a>
+</div>
+<section class="docstring">
+<p>Brings the database up to date when the server starts: installs the migrations of
+the packages and plugins, loads the schema file into a fresh database and runs the
+pending migrations.</p>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">List&lt;ActiveRecord::MigrationProxy&gt;</span> <span class="desc">migrations that were run</span></li></ul>
+</section>
+</section>
+<section class="detail" id="redo">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Tasks.</span>redo<span class="params">(steps, version)</span></h3>
+<a href="#redo" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/migrator/tasks.lua#L90" title="View source">packages/active_record/lib/migrator/tasks.lua:90</a>
+</div>
+<section class="docstring">
+<p>Reverts and re-runs migrations (<code>flux db:migrate:redo STEP=n</code> or <code>VERSION=x</code>).</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">steps</span> <span class="type">Number</span> <span class="default">optional, defaults to <code>1</code></span></li><li><span class="param-name">version</span> <span class="type">Number/String</span> <span class="default">optional, defaults to <code>nil</code></span> <span class="desc">a single migration to redo</span></li></ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">List&lt;ActiveRecord::MigrationProxy&gt;</span> <span class="desc">migrations that were run again</span></li></ul>
+</section>
+</section>
+<section class="detail" id="rollback">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Tasks.</span>rollback<span class="params">(steps)</span></h3>
+<a href="#rollback" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/migrator/tasks.lua#L75" title="View source">packages/active_record/lib/migrator/tasks.lua:75</a>
+</div>
+<section class="docstring">
+<p>Reverts the newest migrations (<code>flux db:rollback STEP=n</code>).</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">steps</span> <span class="type">Number</span> <span class="default">optional, defaults to <code>1</code></span></li></ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">List&lt;ActiveRecord::MigrationProxy&gt;</span></li></ul>
+</section>
+</section>
+<section class="detail" id="run">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Tasks.</span>run<span class="params">(name, env)</span></h3>
+<a href="#run" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/migrator/tasks.lua#L275" title="View source">packages/active_record/lib/migrator/tasks.lua:275</a>
+</div>
+<section class="docstring">
+<p>Runs a task by its console name, e.g. 'migrate:status', with the adapter in sync
+mode. Errors are printed instead of raised.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">name</span> <span class="type">String</span></li><li><span class="param-name">env</span> <span class="type">Map</span> <span class="default">optional, defaults to <code>nil</code></span> <span class="desc">KEY=VALUE arguments of the command, e.g. { VERSION = '2019...' }</span></li></ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">Boolean</span> <span class="desc">whether the task ran without an error</span></li></ul>
+</section>
+</section>
+<section class="detail" id="schema_dump">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Tasks.</span>schema_dump<span class="params">()</span></h3>
+<a href="#schema_dump" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/migrator/tasks.lua#L121" title="View source">packages/active_record/lib/migrator/tasks.lua:121</a>
+</div>
+<section class="docstring">
+<p>Writes the current schema into the schema file (<code>flux db:schema:dump</code>).</p>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">String</span> <span class="desc">path of the file</span></li></ul>
+</section>
+</section>
+<section class="detail" id="schema_load">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Tasks.</span>schema_load<span class="params">()</span></h3>
+<a href="#schema_load" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/migrator/tasks.lua#L140" title="View source">packages/active_record/lib/migrator/tasks.lua:140</a>
+</div>
+<section class="docstring">
+<p>Loads the schema file, which creates the tables it describes and records its version
+and every older migration as run (<code>flux db:schema:load</code>).</p>
+</section>
+</section>
+<section class="detail" id="schema_path">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Tasks.</span>schema_path<span class="params">()</span></h3>
+<a href="#schema_path" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/migrator/tasks.lua#L20" title="View source">packages/active_record/lib/migrator/tasks.lua:20</a>
+</div>
+<section class="docstring">
+<p>Returns the path of the schema file, relative to the game folder.</p>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">String</span> <span class="desc">e.g. 'gamemodes/reborn/db/schema.lua'</span></li></ul>
+</section>
+</section>
+<section class="detail" id="structure_schema_file">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Tasks.</span>structure_schema_file<span class="params">()</span></h3>
+<a href="#structure_schema_file" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/migrator/tasks.lua#L133" title="View source">packages/active_record/lib/migrator/tasks.lua:133</a>
+</div>
+<section class="docstring">
+<p>Checks whether the schema file holds a 'Structure' object (the one-argument form of
+ActiveRecord.Schema:define). Such a file cannot be loaded.</p>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">Boolean</span></li></ul>
+</section>
+</section>
+<section class="detail" id="version">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Tasks.</span>version<span class="params">()</span></h3>
+<a href="#version" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/migrator/tasks.lua#L115" title="View source">packages/active_record/lib/migrator/tasks.lua:115</a>
+</div>
+<section class="docstring">
+<p>Prints the current schema version (<code>flux db:version</code>).</p>
+</section>
+</section>
+</section>
+<section class="sources"><h2>Defined in</h2><ul><li><a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/migrator/tasks.lua" title="View source">packages/active_record/lib/migrator/tasks.lua</a></li></ul></section>
+<template id="module-functions"><ul class="sidebar-functions"><li class="sidebar-category" data-anchor="functions">Functions</li><li><a href="#after_migration">after_migration</a></li><li><a href="#context">context</a></li><li><a href="#forward">forward</a></li><li><a href="#import_metadata_version">import_metadata_version</a></li><li><a href="#import_structure_metadata">import_structure_metadata</a></li><li><a href="#migrate">migrate</a></li><li><a href="#migrate_down">migrate_down</a></li><li><a href="#migrate_status">migrate_status</a></li><li><a href="#migrate_up">migrate_up</a></li><li><a href="#names">names</a></li><li><a href="#prepare">prepare</a></li><li><a href="#redo">redo</a></li><li><a href="#rollback">rollback</a></li><li><a href="#run">run</a></li><li><a href="#schema_dump">schema_dump</a></li><li><a href="#schema_load">schema_load</a></li><li><a href="#schema_path">schema_path</a></li><li><a href="#structure_schema_file">structure_schema_file</a></li><li><a href="#version">version</a></li></ul></template>
+
+<footer class="footer">
+<p>Built with <a href="https://github.com/TeslaCloud/fdoc">fdoc</a>.</p>
+</footer>
+</div>
+</main>
+<script src="../../assets/sidebar_items.js"></script>
+<script src="../../assets/app.js"></script>
+</body>
+</html>

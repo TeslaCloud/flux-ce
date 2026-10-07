@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="generator" content="fdoc">
+<title>ActiveRecord.Adapters.Mysqloo — Flux v0.8.1</title>
+<link rel="stylesheet" href="../../assets/style.css">
+<script>try{var t=localStorage.getItem('fdoc-theme');if(t)document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
+</head>
+<body data-root="../../" data-group="packages/active_record" data-module="ActiveRecord.Adapters.Mysqloo">
+<div class="progress" id="progress"></div>
+<button class="sidebar-toggle" type="button" aria-label="Toggle navigation"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path fill="currentColor" d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg></button>
+<div class="sidebar-backdrop"></div>
+<aside class="sidebar" id="sidebar">
+<div class="sidebar-header">
+<a class="sidebar-project" href="../../index.html"><span class="sidebar-project-name">Flux</span> <span class="sidebar-project-version">v0.8.1</span></a>
+</div>
+<div class="sidebar-tabs" id="sidebar-tabs" role="tablist"></div>
+<nav class="sidebar-nav" id="sidebar-nav" aria-label="Documentation"><noscript><p class="sidebar-noscript"><a href="../../index.html">Index</a></p></noscript></nav>
+</aside>
+<main class="content" id="content">
+<div class="topbar">
+<form class="search" action="../../search.html" method="get" autocomplete="off" role="search">
+<input type="search" name="q" id="search-input" placeholder="Press / to search" aria-label="Search">
+<ul class="search-suggestions" id="search-suggestions" hidden></ul>
+</form>
+<button class="theme-toggle" type="button" aria-label="Toggle night mode"><span class="icon-moon"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M12 3a9 9 0 1 0 9 9c0-.46-.04-.92-.1-1.36a5.389 5.389 0 0 1-4.4 2.26 5.403 5.403 0 0 1-3.14-9.8c-.44-.06-.9-.1-1.36-.1z"/></svg></span><span class="icon-sun"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M6.76 4.84l-1.8-1.79-1.41 1.41 1.79 1.79 1.42-1.41zM4 10.5H1v2h3v-2zm9-9.95h-2V3.5h2V.55zm7.45 3.91l-1.41-1.41-1.79 1.79 1.41 1.41 1.79-1.79zm-3.21 13.7l1.79 1.8 1.41-1.41-1.8-1.79-1.4 1.4zM20 10.5v2h3v-2h-3zm-8-5c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6zm-1 16.95h2V19.5h-2v2.95zm-7.45-3.91l1.41 1.41 1.79-1.8-1.41-1.41-1.79 1.8z"/></svg></span></button>
+</div>
+<div class="content-inner" id="content-inner">
+<div class="page-header"><h1>ActiveRecord.Adapters.Mysqloo <span class="badge badge-class">class</span></h1><p class="subtitle">Extends <a href="../../packages/active_record/ActiveRecord.Adapters.Abstract.html"><code>ActiveRecord.Adapters.Abstract</code></a></p><p class="subtitle">Part of <a href="../../packages/active_record/index.html">Active Record</a></p></div>
+<section class="summary"><h2 id="summary">Summary</h2>
+<div class="summary-group"><h3>Methods</h3>
+<div class="summary-row"><div class="summary-signature"><a href="#append_query">append_query(query, query_type, queue)</a></div><div class="summary-synopsis">Sets the table options (InnoDB engine and default charset) on a query before its SQL is built.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#connect">connect(config, on_connected)</a></div><div class="summary-synopsis">Connects to a MySQL server through MySQLOO and pings it every 30 seconds to keep the connection alive. Calls #on_connection_failed if the connection fails.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#create_column">create_column(query, column, args, obj, type, def)</a></div><div class="summary-synopsis">Makes the column the primary key of the table when a 'primary_key' column is created.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#disconnect">disconnect()</a></div><div class="summary-synopsis">Closes the MySQL connection, if there is one.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#escape">escape(str)</a></div><div class="summary-synopsis">Escapes a string using the MySQL connection. Requires an established connection.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#init">init()</a></div><div class="summary-synopsis">Loads the 'mysqloo' binary module.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#is_mysql">is_mysql()</a></div><div class="summary-synopsis">Checks whether the adapter talks to a MySQL database.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#quote_name">quote_name(str)</a></div><div class="summary-synopsis">Quotes an identifier such as a table or column name with backticks.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#raw_query">raw_query(query, callback, query_type, bindings)</a></div><div class="summary-synopsis">Runs a raw SQL query on the MySQL server. In sync mode this blocks until the query is done; without a connection the query is put into the queue instead. A query that is given bindings is run as a prepared statement.</div></div>
+</div>
+</section>
+<section class="details-group"><h2 id="methods">Methods</h2>
+<section class="detail" id="append_query">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">ActiveRecord.Adapters.Mysqloo:</span>append_query<span class="params">(query, query_type, queue)</span></h3>
+<a href="#append_query" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/adapters/mysqloo.lua#L205" title="View source">packages/active_record/lib/adapters/mysqloo.lua:205</a>
+</div>
+<section class="docstring">
+<p>Sets the table options (InnoDB engine and default charset) on a query before its
+SQL is built.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">query</span> <span class="type">ActiveRecord::Query</span></li><li><span class="param-name">query_type</span> <span class="type">String</span> <span class="desc">unused</span></li><li><span class="param-name">queue</span> <span class="type">Boolean</span> <span class="default">optional, defaults to <code>nil</code></span> <span class="desc">unused</span></li></ul>
+</section>
+</section>
+<section class="detail" id="connect">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">ActiveRecord.Adapters.Mysqloo:</span>connect<span class="params">(config, on_connected)</span></h3>
+<a href="#connect" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/adapters/mysqloo.lua#L37" title="View source">packages/active_record/lib/adapters/mysqloo.lua:37</a>
+</div>
+<section class="docstring">
+<p>Connects to a MySQL server through MySQLOO and pings it every 30 seconds to keep
+the connection alive. Calls #on_connection_failed if the connection fails.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">config</span> <span class="type">Map</span> <span class="desc">database settings: host, user, password, database, port (3306 if omitted), socket and flags</span></li><li><span class="param-name">on_connected</span> <span class="type">Function</span> <span class="default">optional, defaults to <code>nil</code></span> <span class="desc">called with the adapter once the connection is ready</span></li></ul>
+</section>
+</section>
+<section class="detail" id="create_column">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">ActiveRecord.Adapters.Mysqloo:</span>create_column<span class="params">(query, column, args, obj, type, def)</span></h3>
+<a href="#create_column" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/adapters/mysqloo.lua#L216" title="View source">packages/active_record/lib/adapters/mysqloo.lua:216</a>
+</div>
+<section class="docstring">
+<p>Makes the column the primary key of the table when a 'primary_key' column is created.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">query</span> <span class="type">ActiveRecord::Query</span> <span class="desc">query the column was added to</span></li><li><span class="param-name">column</span> <span class="type">String</span> <span class="desc">column name</span></li><li><span class="param-name">args</span> <span class="type">Map</span> <span class="desc">unused</span></li><li><span class="param-name">obj</span> <span class="type">ActiveRecord::Query</span> <span class="desc">unused</span></li><li><span class="param-name">type</span> <span class="type">String</span> <span class="desc">abstract column type</span></li><li><span class="param-name">def</span> <span class="type">String</span> <span class="desc">unused</span></li></ul>
+</section>
+</section>
+<section class="detail" id="disconnect">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">ActiveRecord.Adapters.Mysqloo:</span>disconnect<span class="params">()</span></h3>
+<a href="#disconnect" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/adapters/mysqloo.lua#L87" title="View source">packages/active_record/lib/adapters/mysqloo.lua:87</a>
+</div>
+<section class="docstring">
+<p>Closes the MySQL connection, if there is one.</p>
+</section>
+</section>
+<section class="detail" id="escape">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">ActiveRecord.Adapters.Mysqloo:</span>escape<span class="params">(str)</span></h3>
+<a href="#escape" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/adapters/mysqloo.lua#L98" title="View source">packages/active_record/lib/adapters/mysqloo.lua:98</a>
+</div>
+<section class="docstring">
+<p>Escapes a string using the MySQL connection. Requires an established connection.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">str</span> <span class="type">String</span></li></ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">String</span></li></ul>
+</section>
+</section>
+<section class="detail" id="init">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">ActiveRecord.Adapters.Mysqloo:</span>init<span class="params">()</span></h3>
+<a href="#init" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/adapters/mysqloo.lua#L22" title="View source">packages/active_record/lib/adapters/mysqloo.lua:22</a>
+</div>
+<section class="docstring">
+<p>Loads the 'mysqloo' binary module.</p>
+</section>
+</section>
+<section class="detail" id="is_mysql">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">ActiveRecord.Adapters.Mysqloo:</span>is_mysql<span class="params">()</span></h3>
+<a href="#is_mysql" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/adapters/mysqloo.lua#L28" title="View source">packages/active_record/lib/adapters/mysqloo.lua:28</a>
+</div>
+<section class="docstring">
+<p>Checks whether the adapter talks to a MySQL database.</p>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">Boolean</span> <span class="desc">always true</span></li></ul>
+</section>
+</section>
+<section class="detail" id="quote_name">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">ActiveRecord.Adapters.Mysqloo:</span>quote_name<span class="params">(str)</span></h3>
+<a href="#quote_name" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/adapters/mysqloo.lua#L105" title="View source">packages/active_record/lib/adapters/mysqloo.lua:105</a>
+</div>
+<section class="docstring">
+<p>Quotes an identifier such as a table or column name with backticks.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">str</span> <span class="type">String</span></li></ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">String</span></li></ul>
+</section>
+</section>
+<section class="detail" id="raw_query">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">ActiveRecord.Adapters.Mysqloo:</span>raw_query<span class="params">(query, callback, query_type, bindings)</span></h3>
+<a href="#raw_query" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/adapters/mysqloo.lua#L120" title="View source">packages/active_record/lib/adapters/mysqloo.lua:120</a>
+</div>
+<section class="docstring">
+<p>Runs a raw SQL query on the MySQL server. In sync mode this blocks until the query
+is done; without a connection the query is put into the queue instead.
+A query that is given bindings is run as a prepared statement.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">query</span> <span class="type">String</span> <span class="desc">SQL to run</span></li><li><span class="param-name">callback</span> <span class="type">Function</span> <span class="default">optional, defaults to <code>nil</code></span> <span class="desc">called with the result rows (a List of row Maps), the query string and the time the query took in seconds. For 'insert' queries the result is a single row with the id of the new row instead</span></li><li><span class="param-name">query_type</span> <span class="type">String</span> <span class="default">optional, defaults to <code>nil</code></span> <span class="desc">lowercase query type, e.g. 'insert'</span></li><li><span class="param-name">bindings</span> <span class="type">List</span> <span class="default">optional, defaults to <code>nil</code></span> <span class="desc">values of the ? placeholders in the query. A query that is given bindings has to be a single statement</span></li></ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">Any</span> <span class="desc">whatever the callback returns in sync mode, nothing otherwise</span></li></ul>
+</section>
+</section>
+</section>
+<section class="sources"><h2>Defined in</h2><ul><li><a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/adapters/mysqloo.lua" title="View source">packages/active_record/lib/adapters/mysqloo.lua</a></li></ul></section>
+<template id="module-functions"><ul class="sidebar-functions"><li class="sidebar-category" data-anchor="methods">Methods</li><li><a href="#append_query">append_query</a></li><li><a href="#connect">connect</a></li><li><a href="#create_column">create_column</a></li><li><a href="#disconnect">disconnect</a></li><li><a href="#escape">escape</a></li><li><a href="#init">init</a></li><li><a href="#is_mysql">is_mysql</a></li><li><a href="#quote_name">quote_name</a></li><li><a href="#raw_query">raw_query</a></li></ul></template>
+
+<footer class="footer">
+<p>Built with <a href="https://github.com/TeslaCloud/fdoc">fdoc</a>.</p>
+</footer>
+</div>
+</main>
+<script src="../../assets/sidebar_items.js"></script>
+<script src="../../assets/app.js"></script>
+</body>
+</html>

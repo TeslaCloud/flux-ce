@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="generator" content="fdoc">
+<title>ActiveRecord — Flux v0.8.1</title>
+<link rel="stylesheet" href="../../assets/style.css">
+<script>try{var t=localStorage.getItem('fdoc-theme');if(t)document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
+</head>
+<body data-root="../../" data-group="packages/active_record" data-module="ActiveRecord">
+<div class="progress" id="progress"></div>
+<button class="sidebar-toggle" type="button" aria-label="Toggle navigation"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path fill="currentColor" d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg></button>
+<div class="sidebar-backdrop"></div>
+<aside class="sidebar" id="sidebar">
+<div class="sidebar-header">
+<a class="sidebar-project" href="../../index.html"><span class="sidebar-project-name">Flux</span> <span class="sidebar-project-version">v0.8.1</span></a>
+</div>
+<div class="sidebar-tabs" id="sidebar-tabs" role="tablist"></div>
+<nav class="sidebar-nav" id="sidebar-nav" aria-label="Documentation"><noscript><p class="sidebar-noscript"><a href="../../index.html">Index</a></p></noscript></nav>
+</aside>
+<main class="content" id="content">
+<div class="topbar">
+<form class="search" action="../../search.html" method="get" autocomplete="off" role="search">
+<input type="search" name="q" id="search-input" placeholder="Press / to search" aria-label="Search">
+<ul class="search-suggestions" id="search-suggestions" hidden></ul>
+</form>
+<button class="theme-toggle" type="button" aria-label="Toggle night mode"><span class="icon-moon"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M12 3a9 9 0 1 0 9 9c0-.46-.04-.92-.1-1.36a5.389 5.389 0 0 1-4.4 2.26 5.403 5.403 0 0 1-3.14-9.8c-.44-.06-.9-.1-1.36-.1z"/></svg></span><span class="icon-sun"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M6.76 4.84l-1.8-1.79-1.41 1.41 1.79 1.79 1.42-1.41zM4 10.5H1v2h3v-2zm9-9.95h-2V3.5h2V.55zm7.45 3.91l-1.41-1.41-1.79 1.79 1.41 1.41 1.79-1.79zm-3.21 13.7l1.79 1.8 1.41-1.41-1.8-1.79-1.4 1.4zM20 10.5v2h3v-2h-3zm-8-5c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6zm-1 16.95h2V19.5h-2v2.95zm-7.45-3.91l1.41 1.41 1.79-1.8-1.41-1.41-1.79 1.8z"/></svg></span></button>
+</div>
+<div class="content-inner" id="content-inner">
+<div class="page-header"><h1>ActiveRecord <span class="badge badge-library">library</span></h1><p class="subtitle">Part of <a href="../../packages/active_record/index.html">Active Record</a></p></div>
+<section class="summary"><h2 id="summary">Summary</h2>
+<div class="summary-group"><h3>Functions</h3>
+<div class="summary-row"><div class="summary-signature"><a href="#add_to_schema">add_to_schema(table_name, column_name, type, definition, options)</a></div><div class="summary-synopsis">Registers a column in the in-memory schema, inserting a row into the 'ar_schema' table if the column is new. Throws an error if ActiveRecord is not ready yet.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#column_args">column_args(name, ...)</a></div><div class="summary-synopsis">Splits the arguments of a column type method into the column name and its options.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#ddl">ddl(command, ...)</a></div><div class="summary-synopsis">Runs a schema statement. Normally the statement is handed to the function of the same name in ActiveRecord.SchemaStatements, timed and printed if a migration is running. While a migration is being reverted through its #change, the statement is recorded instead, so that its inverse can be run later.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#define_model">define_model(name, callback)</a></div><div class="summary-synopsis">Defines the database table of a model. Meant to be used in migrations. The 'id' primary key and the 'created_at' / 'updated_at' columns are added automatically. The table is created right away, or queued until the schema is restored if ActiveRecord is not ready yet. Reverted with drop_table.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#define_model-2">define_model(name)</a></div><div class="summary-synopsis">Clientside stand-in for model definition. Only declares a class that extends ActiveRecord::Base, no database table is involved.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#delete_meta_key">delete_meta_key(key)</a></div><div class="summary-synopsis">Deletes a key from the 'ar_metadata' key-value table.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#drop_from_schema">drop_from_schema(table_name)</a></div><div class="summary-synopsis">Forgets a table of the in-memory schema and deletes its rows from 'ar_schema'.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#drop_schema">drop_schema(meta_only)</a></div><div class="summary-synopsis">Drops the internal 'ar_schema', 'ar_metadata' and 'ar_schema_migrations' tables and, unless told otherwise, every table known to the schema. This destroys the stored data.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#dump_schema">dump_schema(version)</a></div><div class="summary-synopsis">Generates the Lua source of the schema file ('db/schema.lua') from the schema and its metadata (indexes, foreign keys and primary keys), in the shape of the schema statements that create it. The internal 'ar_*' tables are left out.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#establish_connection">establish_connection(config)</a></div><div class="summary-synopsis">Loads the database adapter named in the config and connects it to the database. Uses 'sqlite' if no adapter is named, and resolves the aliases 'postgresql', 'sqlite3' and 'mysql' (the config's adapter field is rewritten in that case).</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#forget_metadata">forget_metadata(kind, name)</a></div><div class="summary-synopsis">Removes an index, foreign key or primary key from the metadata.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#format_command">format_command(command, ...)</a></div><div class="summary-synopsis">Formats a schema statement and its arguments for the migration output, e.g. 'add_column(&quot;users&quot;, &quot;role&quot;, &quot;string&quot;)'.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#generate_create_func">generate_create_func(obj, type, def)</a></div><div class="summary-synopsis">Adds a column type method to a query, which lets columns be defined DSL-style. The generated method takes the column name followed by its options, or a single table holding both.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#generate_create_funcs">generate_create_funcs(obj)</a></div><div class="summary-synopsis">Adds a column type method for every type supported by the current adapter.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#generate_table_name">generate_table_name(class_name)</a></div><div class="summary-synopsis">Returns the name of the database table for a model class name, which is its underscored plural ('TempPermission' becomes 'temp_permissions').</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#generate_tables">generate_tables()</a></div><div class="summary-synopsis">Creates the internal tables if they do not exist yet: 'ar_schema' (the columns of every table), 'ar_metadata' (key-value storage, which also holds the indexes and foreign keys) and 'ar_schema_migrations' (the migrations that have been run).</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#get_meta_key">get_meta_key(key, default)</a></div><div class="summary-synopsis">Reads a value from the 'ar_metadata' key-value table. Make sure to run this while the adapter is in &quot;sync mode&quot;, since asynchronous queries return nothing.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#on_connected">on_connected()</a> <span class="flag flag-internal">internal</span></div><div class="summary-synopsis">Bootstraps ActiveRecord once the adapter is connected: creates the internal tables, restores the schema, brings the database up to date (see ActiveRecord.Tasks.prepare) and fires the 'ActiveRecordReady' hook.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#recreate_schema">recreate_schema()</a></div><div class="summary-synopsis">Drops all tables, recreates the internal ones and then restarts the current map. This destroys all data stored in the database.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#remove_from_schema">remove_from_schema(table_name, column_name)</a></div><div class="summary-synopsis">Forgets a column of the in-memory schema and deletes its row from 'ar_schema'.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#rename_in_schema">rename_in_schema(table_name, column_name, new_name)</a></div><div class="summary-synopsis">Renames a column in the in-memory schema and in 'ar_schema'.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#rename_table_in_schema">rename_table_in_schema(table_name, new_name)</a></div><div class="summary-synopsis">Renames a table in the in-memory schema and in 'ar_schema'.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#restore_metadata">restore_metadata()</a> <span class="flag flag-internal">internal</span></div><div class="summary-synopsis">Loads the metadata (indexes, foreign keys and primary keys) from the 'ar_metadata' table into ActiveRecord.metadata.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#restore_schema">restore_schema()</a> <span class="flag flag-internal">internal</span></div><div class="summary-synopsis">Loads the stored schema from the 'ar_schema' table. Once loaded, marks ActiveRecord as ready, populates the models and creates the tables queued by #define_model.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#set_meta_key">set_meta_key(key, value)</a></div><div class="summary-synopsis">Writes a value to the 'ar_metadata' key-value table, updating the row if the key already exists.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#store_metadata">store_metadata(kind, name, entry)</a></div><div class="summary-synopsis">Records an index, foreign key or primary key in the metadata, both in memory and in the 'ar_metadata' table (under the key '&lt;kind&gt;:&lt;name&gt;').</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#str_to_type">str_to_type(str, type)</a></div><div class="summary-synopsis">Converts a raw database value to the Lua type matching an abstract column type.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#type_to_db">type_to_db(val, type)</a></div><div class="summary-synopsis">Converts a Lua value to the form in which it is written to the database.</div></div>
+</div>
+</section>
+<section class="details-group"><h2 id="functions">Functions</h2>
+<section class="detail" id="add_to_schema">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">ActiveRecord.</span>add_to_schema<span class="params">(table_name, column_name, type, definition, options)</span></h3>
+<a href="#add_to_schema" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/active_record.lua#L55" title="View source">packages/active_record/lib/active_record.lua:55</a>
+</div>
+<section class="docstring">
+<p>Registers a column in the in-memory schema, inserting a row into the 'ar_schema'
+table if the column is new. Throws an error if ActiveRecord is not ready yet.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">table_name</span> <span class="type">String</span> <span class="desc">database table the column belongs to</span></li><li><span class="param-name">column_name</span> <span class="type">String</span></li><li><span class="param-name">type</span> <span class="type">String</span> <span class="desc">abstract column type, e.g. 'string', 'integer' or 'datetime'</span></li><li><span class="param-name">definition</span> <span class="type">String</span> <span class="default">optional, defaults to <code>nil</code></span> <span class="desc">SQL definition of the column, including its NOT NULL and DEFAULT clauses; the adapter's definition of the type if not given</span></li><li><span class="param-name">options</span> <span class="type">Map</span> <span class="default">optional, defaults to <code>nil</code></span> <span class="desc">column options: null (Boolean) and default</span></li></ul>
+</section>
+</section>
+<section class="detail" id="column_args">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">ActiveRecord.</span>column_args<span class="params">(name, ...)</span></h3>
+<a href="#column_args" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/generators/generator.lua#L6" title="View source">packages/active_record/lib/generators/generator.lua:6</a>
+</div>
+<section class="docstring">
+<p>Splits the arguments of a column type method into the column name and its options.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">name</span> <span class="type">String/Map</span> <span class="desc">column name, or a table holding the name at index 1 and the options as keys</span></li><li><span class="param-name">...</span> <span class="type">Vararg</span> <span class="desc">options table, when the name is given as a string</span></li></ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">String</span> <span class="desc">column name</span></li><li><span class="type">Map</span> <span class="desc">options</span></li></ul>
+</section>
+</section>
+<section class="detail" id="ddl">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">ActiveRecord.</span>ddl<span class="params">(command, ...)</span></h3>
+<a href="#ddl" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/helpers.lua#L40" title="View source">packages/active_record/lib/helpers.lua:40</a>
+</div>
+<section class="docstring">
+<p>Runs a schema statement. Normally the statement is handed to the function of the
+same name in ActiveRecord.SchemaStatements, timed and printed if a migration is
+running. While a migration is being reverted through its #change, the statement is
+recorded instead, so that its inverse can be run later.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">command</span> <span class="type">String</span> <span class="desc">name of the statement, e.g. 'create_table'</span></li><li><span class="param-name">...</span> <span class="type">Vararg</span> <span class="desc">arguments of the statement</span></li></ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">Any</span> <span class="desc">whatever the statement returns</span></li></ul>
+</section>
+</section>
+<section class="detail" id="define_model">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">ActiveRecord.</span>define_model<span class="params">(name, callback)</span></h3>
+<a href="#define_model" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/active_record.lua#L325" title="View source">packages/active_record/lib/active_record.lua:325</a>
+</div>
+<section class="docstring">
+<p>Defines the database table of a model. Meant to be used in migrations.
+The 'id' primary key and the 'created_at' / 'updated_at' columns are added
+automatically. The table is created right away, or queued until the schema is
+restored if ActiveRecord is not ready yet. Reverted with drop_table.</p>
+<pre><code class="language-lua">ActiveRecord.<span class="hl-f">define_model</span>(<span class="hl-s">&#39;users&#39;</span>, <span class="hl-k">function</span>(t)
+  t:string { <span class="hl-s">&#39;steam_id&#39;</span>, null = <span class="hl-k">false</span> }
+  t:string { <span class="hl-s">&#39;name&#39;</span>, null = <span class="hl-k">false</span> }
+  t:integer <span class="hl-s">&#39;playtime&#39;</span>
+<span class="hl-k">end</span>)
+</code></pre>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">name</span> <span class="type">String</span> <span class="desc">table name, the lowercase plural of the model's class name</span></li><li><span class="param-name">callback</span> <span class="type">Function</span> <span class="desc">receives the table definition, which has a method for every column type: primary_key, string, text, integer, float, decimal, datetime, timestamp, time, date, binary, boolean and json, as well as timestamps and references</span></li></ul>
+</section>
+</section>
+<section class="detail" id="define_model-2">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">ActiveRecord.</span>define_model<span class="params">(name)</span></h3>
+<a href="#define_model-2" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/ar_shared.lua#L31" title="View source">packages/active_record/lib/ar_shared.lua:31</a>
+</div>
+<section class="docstring">
+<p>Clientside stand-in for model definition. Only declares a class that extends
+ActiveRecord::Base, no database table is involved.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">name</span> <span class="type">String</span> <span class="desc">class name of the model</span></li></ul>
+</section>
+</section>
+<section class="detail" id="delete_meta_key">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">ActiveRecord.</span>delete_meta_key<span class="params">(key)</span></h3>
+<a href="#delete_meta_key" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/active_record.lua#L301" title="View source">packages/active_record/lib/active_record.lua:301</a>
+</div>
+<section class="docstring">
+<p>Deletes a key from the 'ar_metadata' key-value table.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">key</span> <span class="type">String</span></li></ul>
+</section>
+</section>
+<section class="detail" id="drop_from_schema">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">ActiveRecord.</span>drop_from_schema<span class="params">(table_name)</span></h3>
+<a href="#drop_from_schema" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/active_record.lua#L133" title="View source">packages/active_record/lib/active_record.lua:133</a>
+</div>
+<section class="docstring">
+<p>Forgets a table of the in-memory schema and deletes its rows from 'ar_schema'.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">table_name</span> <span class="type">String</span></li></ul>
+</section>
+</section>
+<section class="detail" id="drop_schema">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">ActiveRecord.</span>drop_schema<span class="params">(meta_only)</span></h3>
+<a href="#drop_schema" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/active_record.lua#L411" title="View source">packages/active_record/lib/active_record.lua:411</a>
+</div>
+<section class="docstring">
+<p>Drops the internal 'ar_schema', 'ar_metadata' and 'ar_schema_migrations' tables and,
+unless told otherwise, every table known to the schema. This destroys the stored data.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">meta_only</span> <span class="type">Boolean</span> <span class="default">optional, defaults to <code>false</code></span> <span class="desc">only drop the internal tables</span></li></ul>
+</section>
+</section>
+<section class="detail" id="dump_schema">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">ActiveRecord.</span>dump_schema<span class="params">(version)</span></h3>
+<a href="#dump_schema" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/dumper.lua#L44" title="View source">packages/active_record/lib/dumper.lua:44</a>
+</div>
+<section class="docstring">
+<p>Generates the Lua source of the schema file ('db/schema.lua') from the schema and
+its metadata (indexes, foreign keys and primary keys), in the shape of the schema
+statements that create it. The internal 'ar_*' tables are left out.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">version</span> <span class="type">Number/String</span> <span class="desc">schema version to write into the file</span></li></ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">String</span> <span class="desc">Lua source code</span></li></ul>
+</section>
+</section>
+<section class="detail" id="establish_connection">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">ActiveRecord.</span>establish_connection<span class="params">(config)</span></h3>
+<a href="#establish_connection" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/active_record.lua#L354" title="View source">packages/active_record/lib/active_record.lua:354</a>
+</div>
+<section class="docstring">
+<p>Loads the database adapter named in the config and connects it to the database.
+Uses 'sqlite' if no adapter is named, and resolves the aliases 'postgresql', 'sqlite3'
+and 'mysql' (the config's adapter field is rewritten in that case).</p>
+<pre><code class="language-lua">ActiveRecord.establish_connection {
+  adapter = <span class="hl-s">&#39;mysqloo&#39;</span>, host = <span class="hl-s">&#39;127.0.0.1&#39;</span>, port = <span class="hl-n">3306</span>,
+  user = <span class="hl-s">&#39;username&#39;</span>, password = <span class="hl-s">&#39;password&#39;</span>, database = <span class="hl-s">&#39;flux_dev&#39;</span>
+}
+</code></pre>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">config</span> <span class="type">Map</span> <span class="desc">database settings as found in config/database.yml: adapter, host, port, user, password, database, encoding, socket and flags</span></li></ul>
+</section>
+</section>
+<section class="detail" id="forget_metadata">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">ActiveRecord.</span>forget_metadata<span class="params">(kind, name)</span></h3>
+<a href="#forget_metadata" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/active_record.lua#L180" title="View source">packages/active_record/lib/active_record.lua:180</a>
+</div>
+<section class="docstring">
+<p>Removes an index, foreign key or primary key from the metadata.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">kind</span> <span class="type">String</span> <span class="desc">'index', 'foreign_key' or 'primary_key'</span></li><li><span class="param-name">name</span> <span class="type">String</span></li></ul>
+</section>
+</section>
+<section class="detail" id="format_command">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">ActiveRecord.</span>format_command<span class="params">(command, ...)</span></h3>
+<a href="#format_command" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/helpers.lua#L6" title="View source">packages/active_record/lib/helpers.lua:6</a>
+</div>
+<section class="docstring">
+<p>Formats a schema statement and its arguments for the migration output,
+e.g. 'add_column(&quot;users&quot;, &quot;role&quot;, &quot;string&quot;)'.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">command</span> <span class="type">String</span></li><li><span class="param-name">...</span> <span class="type">Vararg</span> <span class="desc">arguments of the statement; functions are left out</span></li></ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">String</span></li></ul>
+</section>
+</section>
+<section class="detail" id="generate_create_func">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">ActiveRecord.</span>generate_create_func<span class="params">(obj, type, def)</span></h3>
+<a href="#generate_create_func" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/generators/generator.lua#L33" title="View source">packages/active_record/lib/generators/generator.lua:33</a>
+</div>
+<section class="docstring">
+<p>Adds a column type method to a query, which lets columns be defined DSL-style.
+The generated method takes the column name followed by its options, or a single
+table holding both.</p>
+<pre><code class="language-lua">ActiveRecord.<span class="hl-f">generate_create_func</span>(query, <span class="hl-s">&#39;string&#39;</span>, <span class="hl-s">&#39;varchar(255)&#39;</span>)
+
+query:string <span class="hl-s">&#39;name&#39;</span>
+query:<span class="hl-f">string</span>(<span class="hl-s">&#39;steam_id&#39;</span>, { null = <span class="hl-k">false</span> })
+query:string { <span class="hl-s">&#39;steam_id&#39;</span>, null = <span class="hl-k">false</span> }
+</code></pre>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">obj</span> <span class="type">ActiveRecord::Query</span> <span class="desc">query to add the method to</span></li><li><span class="param-name">type</span> <span class="type">String</span> <span class="desc">abstract column type, used as the name of the method</span></li><li><span class="param-name">def</span> <span class="type">String</span> <span class="desc">adapter-specific SQL type definition</span></li></ul>
+</section>
+</section>
+<section class="detail" id="generate_create_funcs">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">ActiveRecord.</span>generate_create_funcs<span class="params">(obj)</span></h3>
+<a href="#generate_create_funcs" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/generators/generator.lua#L57" title="View source">packages/active_record/lib/generators/generator.lua:57</a>
+</div>
+<section class="docstring">
+<p>Adds a column type method for every type supported by the current adapter.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">obj</span> <span class="type">ActiveRecord::Query</span> <span class="desc">query to add the methods to</span></li></ul>
+<h4>See also</h4>
+<ul class="see-also"><li><a href="../../packages/active_record/ActiveRecord.html#generate_create_func"><code>ActiveRecord.generate_create_func</code></a></li></ul>
+</section>
+</section>
+<section class="detail" id="generate_table_name">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">ActiveRecord.</span>generate_table_name<span class="params">(class_name)</span></h3>
+<a href="#generate_table_name" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/generators/generator.lua#L168" title="View source">packages/active_record/lib/generators/generator.lua:168</a>
+</div>
+<section class="docstring">
+<p>Returns the name of the database table for a model class name, which is its
+underscored plural ('TempPermission' becomes 'temp_permissions').</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">class_name</span> <span class="type">String</span></li></ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">String</span></li></ul>
+</section>
+</section>
+<section class="detail" id="generate_tables">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">ActiveRecord.</span>generate_tables<span class="params">()</span></h3>
+<a href="#generate_tables" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/generators/generator.lua#L175" title="View source">packages/active_record/lib/generators/generator.lua:175</a>
+</div>
+<section class="docstring">
+<p>Creates the internal tables if they do not exist yet: 'ar_schema' (the columns of
+every table), 'ar_metadata' (key-value storage, which also holds the indexes and
+foreign keys) and 'ar_schema_migrations' (the migrations that have been run).</p>
+</section>
+</section>
+<section class="detail" id="get_meta_key">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">ActiveRecord.</span>get_meta_key<span class="params">(key, default)</span></h3>
+<a href="#get_meta_key" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/active_record.lua#L254" title="View source">packages/active_record/lib/active_record.lua:254</a>
+</div>
+<section class="docstring">
+<p>Reads a value from the 'ar_metadata' key-value table.
+Make sure to run this while the adapter is in &quot;sync mode&quot;, since asynchronous
+queries return nothing.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">key</span> <span class="type">String</span></li><li><span class="param-name">default</span> <span class="type">Any</span> <span class="default">optional, defaults to <code>nil</code></span> <span class="desc">value to return if the key is not stored</span></li></ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">String/Any</span> <span class="desc">stored value, or default if the key is missing</span></li></ul>
+</section>
+</section>
+<section class="detail" id="on_connected">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">ActiveRecord.</span>on_connected<span class="params">()</span></h3> <span class="flag flag-internal">internal</span>
+<a href="#on_connected" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/active_record.lua#L376" title="View source">packages/active_record/lib/active_record.lua:376</a>
+</div>
+<section class="docstring">
+<div class="admonition internal"><p class="admonition-title">Internal</p><p>This function is internal. It is not part of the public API and may change without notice.</p></div>
+<p>Bootstraps ActiveRecord once the adapter is connected: creates the internal tables,
+restores the schema, brings the database up to date (see ActiveRecord.Tasks.prepare)
+and fires the 'ActiveRecordReady' hook.</p>
+</section>
+</section>
+<section class="detail" id="recreate_schema">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">ActiveRecord.</span>recreate_schema<span class="params">()</span></h3>
+<a href="#recreate_schema" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/active_record.lua#L428" title="View source">packages/active_record/lib/active_record.lua:428</a>
+</div>
+<section class="docstring">
+<p>Drops all tables, recreates the internal ones and then restarts the current map.
+This destroys all data stored in the database.</p>
+</section>
+</section>
+<section class="detail" id="remove_from_schema">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">ActiveRecord.</span>remove_from_schema<span class="params">(table_name, column_name)</span></h3>
+<a href="#remove_from_schema" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/active_record.lua#L95" title="View source">packages/active_record/lib/active_record.lua:95</a>
+</div>
+<section class="docstring">
+<p>Forgets a column of the in-memory schema and deletes its row from 'ar_schema'.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">table_name</span> <span class="type">String</span></li><li><span class="param-name">column_name</span> <span class="type">String</span></li></ul>
+</section>
+</section>
+<section class="detail" id="rename_in_schema">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">ActiveRecord.</span>rename_in_schema<span class="params">(table_name, column_name, new_name)</span></h3>
+<a href="#rename_in_schema" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/active_record.lua#L114" title="View source">packages/active_record/lib/active_record.lua:114</a>
+</div>
+<section class="docstring">
+<p>Renames a column in the in-memory schema and in 'ar_schema'.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">table_name</span> <span class="type">String</span></li><li><span class="param-name">column_name</span> <span class="type">String</span></li><li><span class="param-name">new_name</span> <span class="type">String</span></li></ul>
+</section>
+</section>
+<section class="detail" id="rename_table_in_schema">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">ActiveRecord.</span>rename_table_in_schema<span class="params">(table_name, new_name)</span></h3>
+<a href="#rename_table_in_schema" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/active_record.lua#L146" title="View source">packages/active_record/lib/active_record.lua:146</a>
+</div>
+<section class="docstring">
+<p>Renames a table in the in-memory schema and in 'ar_schema'.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">table_name</span> <span class="type">String</span></li><li><span class="param-name">new_name</span> <span class="type">String</span></li></ul>
+</section>
+</section>
+<section class="detail" id="restore_metadata">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">ActiveRecord.</span>restore_metadata<span class="params">()</span></h3> <span class="flag flag-internal">internal</span>
+<a href="#restore_metadata" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/active_record.lua#L191" title="View source">packages/active_record/lib/active_record.lua:191</a>
+</div>
+<section class="docstring">
+<div class="admonition internal"><p class="admonition-title">Internal</p><p>This function is internal. It is not part of the public API and may change without notice.</p></div>
+<p>Loads the metadata (indexes, foreign keys and primary keys) from the 'ar_metadata'
+table into ActiveRecord.metadata.</p>
+</section>
+</section>
+<section class="detail" id="restore_schema">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">ActiveRecord.</span>restore_schema<span class="params">()</span></h3> <span class="flag flag-internal">internal</span>
+<a href="#restore_schema" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/active_record.lua#L218" title="View source">packages/active_record/lib/active_record.lua:218</a>
+</div>
+<section class="docstring">
+<div class="admonition internal"><p class="admonition-title">Internal</p><p>This function is internal. It is not part of the public API and may change without notice.</p></div>
+<p>Loads the stored schema from the 'ar_schema' table. Once loaded, marks ActiveRecord
+as ready, populates the models and creates the tables queued by #define_model.</p>
+</section>
+</section>
+<section class="detail" id="set_meta_key">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">ActiveRecord.</span>set_meta_key<span class="params">(key, value)</span></h3>
+<a href="#set_meta_key" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/active_record.lua#L274" title="View source">packages/active_record/lib/active_record.lua:274</a>
+</div>
+<section class="docstring">
+<p>Writes a value to the 'ar_metadata' key-value table, updating the row if the key
+already exists.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">key</span> <span class="type">String</span></li><li><span class="param-name">value</span> <span class="type">Any</span> <span class="desc">value to store, converted to a string</span></li></ul>
+</section>
+</section>
+<section class="detail" id="store_metadata">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">ActiveRecord.</span>store_metadata<span class="params">(kind, name, entry)</span></h3>
+<a href="#store_metadata" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/active_record.lua#L169" title="View source">packages/active_record/lib/active_record.lua:169</a>
+</div>
+<section class="docstring">
+<p>Records an index, foreign key or primary key in the metadata, both in memory and in
+the 'ar_metadata' table (under the key '&lt;kind&gt;:&lt;name&gt;').</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">kind</span> <span class="type">String</span> <span class="desc">'index', 'foreign_key' or 'primary_key'</span></li><li><span class="param-name">name</span> <span class="type">String</span> <span class="desc">name of the index or constraint</span></li><li><span class="param-name">entry</span> <span class="type">Map</span> <span class="desc">its description, as written by the schema statements</span></li></ul>
+</section>
+</section>
+<section class="detail" id="str_to_type">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">ActiveRecord.</span>str_to_type<span class="params">(str, type)</span></h3>
+<a href="#str_to_type" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/generators/generator.lua#L136" title="View source">packages/active_record/lib/generators/generator.lua:136</a>
+</div>
+<section class="docstring">
+<p>Converts a raw database value to the Lua type matching an abstract column type.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">str</span> <span class="type">Any</span> <span class="desc">value as returned by the database, usually a string</span></li><li><span class="param-name">type</span> <span class="type">String</span> <span class="desc">abstract column type</span></li></ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">Number/Boolean/Any</span> <span class="desc">number for 'integer', 'float', 'decimal' and 'primary_key' columns, boolean for 'boolean' columns, the unchanged value for anything else</span></li></ul>
+</section>
+</section>
+<section class="detail" id="type_to_db">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">ActiveRecord.</span>type_to_db<span class="params">(val, type)</span></h3>
+<a href="#type_to_db" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/generators/generator.lua#L151" title="View source">packages/active_record/lib/generators/generator.lua:151</a>
+</div>
+<section class="docstring">
+<p>Converts a Lua value to the form in which it is written to the database.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">val</span> <span class="type">Any</span></li><li><span class="param-name">type</span> <span class="type">String</span> <span class="desc">abstract column type</span></li></ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">Number/String</span> <span class="desc">0 or 1 for 'boolean' columns, otherwise the value converted to a string; nil if the value is nil</span></li></ul>
+</section>
+</section>
+</section>
+<section class="sources"><h2>Defined in</h2><ul><li><a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/active_record.lua" title="View source">packages/active_record/lib/active_record.lua</a></li><li><a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/ar_shared.lua" title="View source">packages/active_record/lib/ar_shared.lua</a></li><li><a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/dumper.lua" title="View source">packages/active_record/lib/dumper.lua</a></li><li><a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/generators/generator.lua" title="View source">packages/active_record/lib/generators/generator.lua</a></li><li><a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/helpers.lua" title="View source">packages/active_record/lib/helpers.lua</a></li></ul></section>
+<template id="module-functions"><ul class="sidebar-functions"><li class="sidebar-category" data-anchor="functions">Functions</li><li><a href="#add_to_schema">add_to_schema</a></li><li><a href="#column_args">column_args</a></li><li><a href="#ddl">ddl</a></li><li><a href="#define_model">define_model</a></li><li><a href="#define_model-2">define_model</a></li><li><a href="#delete_meta_key">delete_meta_key</a></li><li><a href="#drop_from_schema">drop_from_schema</a></li><li><a href="#drop_schema">drop_schema</a></li><li><a href="#dump_schema">dump_schema</a></li><li><a href="#establish_connection">establish_connection</a></li><li><a href="#forget_metadata">forget_metadata</a></li><li><a href="#format_command">format_command</a></li><li><a href="#generate_create_func">generate_create_func</a></li><li><a href="#generate_create_funcs">generate_create_funcs</a></li><li><a href="#generate_table_name">generate_table_name</a></li><li><a href="#generate_tables">generate_tables</a></li><li><a href="#get_meta_key">get_meta_key</a></li><li><a href="#on_connected">on_connected</a></li><li><a href="#recreate_schema">recreate_schema</a></li><li><a href="#remove_from_schema">remove_from_schema</a></li><li><a href="#rename_in_schema">rename_in_schema</a></li><li><a href="#rename_table_in_schema">rename_table_in_schema</a></li><li><a href="#restore_metadata">restore_metadata</a></li><li><a href="#restore_schema">restore_schema</a></li><li><a href="#set_meta_key">set_meta_key</a></li><li><a href="#store_metadata">store_metadata</a></li><li><a href="#str_to_type">str_to_type</a></li><li><a href="#type_to_db">type_to_db</a></li></ul></template>
+
+<footer class="footer">
+<p>Built with <a href="https://github.com/TeslaCloud/fdoc">fdoc</a>.</p>
+</footer>
+</div>
+</main>
+<script src="../../assets/sidebar_items.js"></script>
+<script src="../../assets/app.js"></script>
+</body>
+</html>

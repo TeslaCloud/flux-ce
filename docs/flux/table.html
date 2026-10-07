@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="generator" content="fdoc">
+<title>table — Flux v0.8.1</title>
+<link rel="stylesheet" href="../assets/style.css">
+<script>try{var t=localStorage.getItem('fdoc-theme');if(t)document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
+</head>
+<body data-root="../" data-group="flux" data-module="table">
+<div class="progress" id="progress"></div>
+<button class="sidebar-toggle" type="button" aria-label="Toggle navigation"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path fill="currentColor" d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg></button>
+<div class="sidebar-backdrop"></div>
+<aside class="sidebar" id="sidebar">
+<div class="sidebar-header">
+<a class="sidebar-project" href="../index.html"><span class="sidebar-project-name">Flux</span> <span class="sidebar-project-version">v0.8.1</span></a>
+</div>
+<div class="sidebar-tabs" id="sidebar-tabs" role="tablist"></div>
+<nav class="sidebar-nav" id="sidebar-nav" aria-label="Documentation"><noscript><p class="sidebar-noscript"><a href="../index.html">Index</a></p></noscript></nav>
+</aside>
+<main class="content" id="content">
+<div class="topbar">
+<form class="search" action="../search.html" method="get" autocomplete="off" role="search">
+<input type="search" name="q" id="search-input" placeholder="Press / to search" aria-label="Search">
+<ul class="search-suggestions" id="search-suggestions" hidden></ul>
+</form>
+<button class="theme-toggle" type="button" aria-label="Toggle night mode"><span class="icon-moon"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M12 3a9 9 0 1 0 9 9c0-.46-.04-.92-.1-1.36a5.389 5.389 0 0 1-4.4 2.26 5.403 5.403 0 0 1-3.14-9.8c-.44-.06-.9-.1-1.36-.1z"/></svg></span><span class="icon-sun"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M6.76 4.84l-1.8-1.79-1.41 1.41 1.79 1.79 1.42-1.41zM4 10.5H1v2h3v-2zm9-9.95h-2V3.5h2V.55zm7.45 3.91l-1.41-1.41-1.79 1.79 1.41 1.41 1.79-1.79zm-3.21 13.7l1.79 1.8 1.41-1.41-1.8-1.79-1.4 1.4zM20 10.5v2h3v-2h-3zm-8-5c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6zm-1 16.95h2V19.5h-2v2.95zm-7.45-3.91l1.41 1.41 1.79-1.8-1.41-1.41-1.79 1.8z"/></svg></span></button>
+</div>
+<div class="content-inner" id="content-inner">
+<div class="page-header"><h1>table <span class="badge badge-library">library</span></h1></div>
+<section class="summary"><h2 id="summary">Summary</h2>
+<div class="summary-group"><h3>Functions</h3>
+<div class="summary-row"><div class="summary-signature"><a href="#delete">delete(tab, callback)</a></div><div class="summary-synopsis">Removes the entries for which the callback returns true from the table itself.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#delete_if">delete_if(tab, callback)</a></div><div class="summary-synopsis">Returns a copy of the table without the entries for which the callback returns true. The entries keep their keys and the original table is not modified.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#deserialize">deserialize(data)</a></div><div class="summary-synopsis">Converts a string back into a table. Uses SFS at first, if it fails it falls back to JSON.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#equal">equal(tab1, tab2)</a></div><div class="summary-synopsis">Checks whether two tables have the same contents. Nested tables are compared recursively.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#first">first(tab)</a></div><div class="summary-synopsis">Returns the first element of an array.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#flatten">flatten(tab)</a></div><div class="summary-synopsis">Flattens the tables nested inside of a table into a single array. Tables that have a <a href="../flux/Globals.html#class"><code>class</code></a> field (objects) are treated as values.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#hash">hash(tab)</a></div><div class="summary-synopsis">Returns the memory address of a table, which identifies it uniquely while it exists.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#join">join(tab, sep)</a></div><div class="summary-synopsis">Concatenates all values of a table into a single string, including those of nested tables.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#keep">keep(tab, callback)</a></div><div class="summary-synopsis">Removes the entries for which the callback does not return true from the table itself.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#keep_if">keep_if(tab, callback)</a></div><div class="summary-synopsis">Returns a copy of the table that only has the entries for which the callback returns true. The entries keep their keys and the original table is not modified.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#last">last(tab)</a></div><div class="summary-synopsis">Returns the last element of an array.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#map">map(t, c)</a></div><div class="summary-synopsis">Creates an array out of the values a callback returns for every value of a table. Values for which the callback returns nil are left out.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#map_kv">map_kv(t, c)</a></div><div class="summary-synopsis">Creates an array out of the values a callback returns for every key-value pair of a table. Pairs for which the callback returns nil are left out.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#Merge">Merge(dest, source)</a></div><div class="summary-synopsis">Recursively merges the source table into the destination table, overwriting existing keys. Replaces the built-in table.Merge. Unlike the built-in, a table stored under the <a href="../flux/Globals.html#class"><code>class</code></a> key is assigned by reference instead of being merged.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#none">none(tab, callback)</a></div><div class="summary-synopsis">Checks whether the callback returns a truthy value for none of the entries of the table.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#one">one(tab, callback)</a></div><div class="summary-synopsis">Checks whether the callback returns a truthy value for exactly one entry of the table.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#partition">partition(tab, callback)</a></div><div class="summary-synopsis">Splits the values of a table into two arrays: those for which the callback returns a truthy value and all the others.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#range">range(from, to)</a></div><div class="summary-synopsis">Creates an array of consecutive integers.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#reduce">reduce(tab, op)</a></div><div class="summary-synopsis">Combines all elements of an array into a single value, by applying an operator to the running result and each element in order. The running result starts at 0.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#remove_functions">remove_functions(obj)</a></div><div class="summary-synopsis">Removes all functions from a table and from the tables nested in it. Modifies the table.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#safe_merge">safe_merge(to, from)</a></div><div class="summary-synopsis">Merges a table into another one like table.Merge, but leaves <code>__index</code> of both tables alone and skips the <a href="../flux/Globals.html#class"><code>class</code></a> key and any field of <code>from</code> that refers to <code>from</code> itself.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#select">select(t, what)</a></div><div class="summary-synopsis">Filters the values of a table with a callback, or collects a single field from every table inside of it.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#serialize">serialize(tab)</a></div><div class="summary-synopsis">Converts a table into the string format.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#slice">slice(t, from, to)</a></div><div class="summary-synopsis">Returns the part of an array between two indexes, both inclusive.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#sum">sum(tab)</a></div><div class="summary-synopsis">Adds up all elements of an array.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#to_array">to_array(tab)</a></div><div class="summary-synopsis">Converts a hash into an array of { key, value } pairs.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#to_hash">to_hash(tab)</a></div><div class="summary-synopsis">Converts an array of { key, value } pairs into a hash.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#uniq">uniq(tab, condition)</a></div><div class="summary-synopsis">Returns a copy of the table without duplicate values. The values keep their original keys, so the copy of an array can have gaps in it.</div></div>
+</div>
+</section>
+<section class="details-group"><h2 id="functions">Functions</h2>
+<section class="detail" id="delete">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">table.</span>delete<span class="params">(tab, callback)</span></h3>
+<a href="#delete" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_table.lua#L339" title="View source">lib/stdlib/sh_table.lua:339</a>
+</div>
+<section class="docstring">
+<p>Removes the entries for which the callback returns true from the table itself.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">tab</span> <span class="type">Map/List</span> <span class="desc">table to modify</span></li><li><span class="param-name">callback</span> <span class="type">Function</span> <span class="desc">callback(key, value), returns true to remove the entry</span></li></ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">Map/List</span> <span class="desc">the same table</span></li></ul>
+<h4>See also</h4>
+<ul class="see-also"><li><a href="../flux/table.html#delete_if"><code>table.delete_if</code></a></li></ul>
+</section>
+</section>
+<section class="detail" id="delete_if">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">table.</span>delete_if<span class="params">(tab, callback)</span></h3>
+<a href="#delete_if" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_table.lua#L322" title="View source">lib/stdlib/sh_table.lua:322</a>
+</div>
+<section class="docstring">
+<p>Returns a copy of the table without the entries for which the callback returns true.
+The entries keep their keys and the original table is not modified.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">tab</span> <span class="type">Map/List</span></li><li><span class="param-name">callback</span> <span class="type">Function</span> <span class="desc">callback(key, value), returns true to leave the entry out</span></li></ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">Map/List</span> <span class="desc">the filtered copy</span></li></ul>
+<h4>See also</h4>
+<ul class="see-also"><li><a href="../flux/table.html#delete"><code>table.delete</code></a></li></ul>
+</section>
+</section>
+<section class="detail" id="deserialize">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">table.</span>deserialize<span class="params">(data)</span></h3>
+<a href="#deserialize" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_table.lua#L520" title="View source">lib/stdlib/sh_table.lua:520</a>
+</div>
+<section class="docstring">
+<p>Converts a string back into a table. Uses SFS at first, if it fails it falls back to JSON.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">data</span> <span class="type">String</span> <span class="desc">string to convert</span></li></ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">Map</span> <span class="desc">decoded table; an empty table if data is not a string, nil if it is neither valid SFS nor valid JSON</span></li></ul>
+</section>
+</section>
+<section class="detail" id="equal">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">table.</span>equal<span class="params">(tab1, tab2)</span></h3>
+<a href="#equal" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_table.lua#L262" title="View source">lib/stdlib/sh_table.lua:262</a>
+</div>
+<section class="docstring">
+<p>Checks whether two tables have the same contents. Nested tables are compared recursively.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">tab1</span> <span class="type">Map/List</span></li><li><span class="param-name">tab2</span> <span class="type">Map/List</span></li></ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">Boolean</span> <span class="desc">true if the contents are equal, false if not or if either one is not a table</span></li></ul>
+</section>
+</section>
+<section class="detail" id="first">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">table.</span>first<span class="params">(tab)</span></h3>
+<a href="#first" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_table.lua#L385" title="View source">lib/stdlib/sh_table.lua:385</a>
+</div>
+<section class="docstring">
+<p>Returns the first element of an array.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">tab</span> <span class="type">List</span></li></ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">Any</span> <span class="desc">the first element, or nil if the array is empty</span></li></ul>
+</section>
+</section>
+<section class="detail" id="flatten">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">table.</span>flatten<span class="params">(tab)</span></h3>
+<a href="#flatten" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_table.lua#L207" title="View source">lib/stdlib/sh_table.lua:207</a>
+</div>
+<section class="docstring">
+<p>Flattens the tables nested inside of a table into a single array.
+Tables that have a <a href="../flux/Globals.html#class"><code>class</code></a> field (objects) are treated as values.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">tab</span> <span class="type">Map/List</span></li></ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">List</span> <span class="desc">the flattened values</span></li></ul>
+</section>
+</section>
+<section class="detail" id="hash">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">table.</span>hash<span class="params">(tab)</span></h3>
+<a href="#hash" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_table.lua#L293" title="View source">lib/stdlib/sh_table.lua:293</a>
+</div>
+<section class="docstring">
+<p>Returns the memory address of a table, which identifies it uniquely while it exists.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">tab</span> <span class="type">Map/List</span></li></ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">String</span> <span class="desc">the address without the 'table: 0x' prefix</span></li><li><span class="type">Number</span> <span class="desc">1 if the prefix was removed</span></li></ul>
+</section>
+</section>
+<section class="detail" id="join">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">table.</span>join<span class="params">(tab, sep)</span></h3>
+<a href="#join" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_table.lua#L301" title="View source">lib/stdlib/sh_table.lua:301</a>
+</div>
+<section class="docstring">
+<p>Concatenates all values of a table into a single string, including those of nested tables.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">tab</span> <span class="type">Map/List</span></li><li><span class="param-name">sep</span> <span class="type">String</span> <span class="default">optional, defaults to <code>&#39;&#39;</code></span> <span class="desc">separator; it is not put between the values by the current code</span></li></ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">String</span> <span class="desc">the concatenated values</span></li></ul>
+</section>
+</section>
+<section class="detail" id="keep">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">table.</span>keep<span class="params">(tab, callback)</span></h3>
+<a href="#keep" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_table.lua#L372" title="View source">lib/stdlib/sh_table.lua:372</a>
+</div>
+<section class="docstring">
+<p>Removes the entries for which the callback does not return true from the table itself.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">tab</span> <span class="type">Map/List</span> <span class="desc">table to modify</span></li><li><span class="param-name">callback</span> <span class="type">Function</span> <span class="desc">callback(key, value), returns true to keep the entry</span></li></ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">Map/List</span> <span class="desc">the same table</span></li></ul>
+<h4>See also</h4>
+<ul class="see-also"><li><a href="../flux/table.html#keep_if"><code>table.keep_if</code></a></li></ul>
+</section>
+</section>
+<section class="detail" id="keep_if">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">table.</span>keep_if<span class="params">(tab, callback)</span></h3>
+<a href="#keep_if" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_table.lua#L355" title="View source">lib/stdlib/sh_table.lua:355</a>
+</div>
+<section class="docstring">
+<p>Returns a copy of the table that only has the entries for which the callback returns true.
+The entries keep their keys and the original table is not modified.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">tab</span> <span class="type">Map/List</span></li><li><span class="param-name">callback</span> <span class="type">Function</span> <span class="desc">callback(key, value), returns true to keep the entry</span></li></ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">Map/List</span> <span class="desc">the filtered copy</span></li></ul>
+<h4>See also</h4>
+<ul class="see-also"><li><a href="../flux/table.html#keep"><code>table.keep</code></a></li></ul>
+</section>
+</section>
+<section class="detail" id="last">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">table.</span>last<span class="params">(tab)</span></h3>
+<a href="#last" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_table.lua#L392" title="View source">lib/stdlib/sh_table.lua:392</a>
+</div>
+<section class="docstring">
+<p>Returns the last element of an array.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">tab</span> <span class="type">List</span></li></ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">Any</span> <span class="desc">the last element, or nil if the array is empty</span></li></ul>
+</section>
+</section>
+<section class="detail" id="map">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">table.</span>map<span class="params">(t, c)</span></h3>
+<a href="#map" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_table.lua#L59" title="View source">lib/stdlib/sh_table.lua:59</a>
+</div>
+<section class="docstring">
+<p>Creates an array out of the values a callback returns for every value of a table.
+Values for which the callback returns nil are left out.</p>
+<pre><code class="language-lua"><span class="hl-k">local</span> names = table.<span class="hl-f">map</span>(player.<span class="hl-f">GetAll</span>(), <span class="hl-k">function</span>(v) <span class="hl-k">return</span> v:<span class="hl-f">name</span>() <span class="hl-k">end</span>)
+</code></pre>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">t</span> <span class="type">Map/List</span> <span class="desc">table to go through</span></li><li><span class="param-name">c</span> <span class="type">Function</span> <span class="desc">callback(value), returns the value to store or nil to skip it</span></li></ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">List</span> <span class="desc">values returned by the callback</span></li></ul>
+<h4>See also</h4>
+<ul class="see-also"><li><a href="../flux/Globals.html#s"><code>s</code></a></li></ul>
+</section>
+</section>
+<section class="detail" id="map_kv">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">table.</span>map_kv<span class="params">(t, c)</span></h3>
+<a href="#map_kv" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_table.lua#L81" title="View source">lib/stdlib/sh_table.lua:81</a>
+</div>
+<section class="docstring">
+<p>Creates an array out of the values a callback returns for every key-value pair of a table.
+Pairs for which the callback returns nil are left out.</p>
+<pre><code class="language-lua"><span class="hl-k">local</span> lines = table.<span class="hl-f">map_kv</span>({ a = <span class="hl-n">1</span>, b = <span class="hl-n">2</span> }, <span class="hl-k">function</span>(k, v) <span class="hl-k">return</span> k..<span class="hl-s">&#39; = &#39;</span>..v <span class="hl-k">end</span>)
+</code></pre>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">t</span> <span class="type">Map/List</span> <span class="desc">table to go through</span></li><li><span class="param-name">c</span> <span class="type">Function</span> <span class="desc">callback(key, value), returns the value to store or nil to skip it</span></li></ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">List</span> <span class="desc">values returned by the callback</span></li></ul>
+</section>
+</section>
+<section class="detail" id="Merge">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">table.</span>Merge<span class="params">(dest, source)</span></h3>
+<a href="#Merge" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_table.lua#L7" title="View source">lib/stdlib/sh_table.lua:7</a>
+</div>
+<section class="docstring">
+<p>Recursively merges the source table into the destination table, overwriting existing keys.
+Replaces the built-in table.Merge. Unlike the built-in, a table stored under the <a href="../flux/Globals.html#class"><code>class</code></a>
+key is assigned by reference instead of being merged.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">dest</span> <span class="type">Map</span> <span class="desc">table to merge into, modified in place</span></li><li><span class="param-name">source</span> <span class="type">Map</span> <span class="desc">table to take the values from</span></li></ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">Map</span> <span class="desc">dest</span></li></ul>
+</section>
+</section>
+<section class="detail" id="none">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">table.</span>none<span class="params">(tab, callback)</span></h3>
+<a href="#none" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_table.lua#L420" title="View source">lib/stdlib/sh_table.lua:420</a>
+</div>
+<section class="docstring">
+<p>Checks whether the callback returns a truthy value for none of the entries of the table.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">tab</span> <span class="type">Map/List</span></li><li><span class="param-name">callback</span> <span class="type">Function</span> <span class="desc">callback(key, value)</span></li></ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">Boolean</span></li></ul>
+</section>
+</section>
+<section class="detail" id="one">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">table.</span>one<span class="params">(tab, callback)</span></h3>
+<a href="#one" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_table.lua#L400" title="View source">lib/stdlib/sh_table.lua:400</a>
+</div>
+<section class="docstring">
+<p>Checks whether the callback returns a truthy value for exactly one entry of the table.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">tab</span> <span class="type">Map/List</span></li><li><span class="param-name">callback</span> <span class="type">Function</span> <span class="desc">callback(key, value)</span></li></ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">Boolean</span></li></ul>
+</section>
+</section>
+<section class="detail" id="partition">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">table.</span>partition<span class="params">(tab, callback)</span></h3>
+<a href="#partition" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_table.lua#L438" title="View source">lib/stdlib/sh_table.lua:438</a>
+</div>
+<section class="docstring">
+<p>Splits the values of a table into two arrays: those for which the callback returns a truthy
+value and all the others.</p>
+<pre><code class="language-lua"><span class="hl-k">local</span> admins, others = table.<span class="hl-f">partition</span>(player.<span class="hl-f">GetAll</span>(), <span class="hl-k">function</span>(k, v) <span class="hl-k">return</span> v:<span class="hl-f">IsAdmin</span>() <span class="hl-k">end</span>)
+</code></pre>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">tab</span> <span class="type">Map/List</span></li><li><span class="param-name">callback</span> <span class="type">Function</span> <span class="desc">callback(key, value)</span></li></ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">List</span> <span class="desc">values the callback accepted</span></li><li><span class="type">List</span> <span class="desc">values it did not</span></li></ul>
+</section>
+</section>
+<section class="detail" id="range">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">table.</span>range<span class="params">(from, to)</span></h3>
+<a href="#range" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_table.lua#L612" title="View source">lib/stdlib/sh_table.lua:612</a>
+</div>
+<section class="docstring">
+<p>Creates an array of consecutive integers.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">from</span> <span class="type">Number</span> <span class="desc">first number</span></li><li><span class="param-name">to</span> <span class="type">Number</span> <span class="desc">last number, inclusive</span></li></ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">List&lt;Number&gt;</span></li></ul>
+</section>
+</section>
+<section class="detail" id="reduce">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">table.</span>reduce<span class="params">(tab, op)</span></h3>
+<a href="#reduce" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_table.lua#L181" title="View source">lib/stdlib/sh_table.lua:181</a>
+</div>
+<section class="docstring">
+<p>Combines all elements of an array into a single value, by applying an operator to the
+running result and each element in order. The running result starts at 0.</p>
+<pre><code class="language-lua">table.<span class="hl-f">reduce</span>({ <span class="hl-n">1</span>, <span class="hl-n">2</span>, <span class="hl-n">3</span> }, <span class="hl-s">&#39;+&#39;</span>) <span class="hl-c">-- 6</span>
+table.<span class="hl-f">reduce</span>({ <span class="hl-n">1</span>, <span class="hl-n">5</span>, <span class="hl-n">3</span> }, <span class="hl-k">function</span>(result, v) <span class="hl-k">return</span> math.<span class="hl-f">max</span>(result, v) <span class="hl-k">end</span>) <span class="hl-c">-- 5</span>
+</code></pre>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">tab</span> <span class="type">List</span></li><li><span class="param-name">op</span> <span class="type">String/Function</span> <span class="desc">one of '+', '-', '*', '/', '**', '^' and '%', or a callback(result, value) that returns the new result</span></li></ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">Any</span> <span class="desc">the final result, a Number for the built-in operators</span></li></ul>
+</section>
+</section>
+<section class="detail" id="remove_functions">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">table.</span>remove_functions<span class="params">(obj)</span></h3>
+<a href="#remove_functions" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_table.lua#L146" title="View source">lib/stdlib/sh_table.lua:146</a>
+</div>
+<section class="docstring">
+<p>Removes all functions from a table and from the tables nested in it. Modifies the table.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">obj</span> <span class="type">Any</span> <span class="desc">table to clean up, anything else is returned as-is</span></li></ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">Any</span> <span class="desc">the same object</span></li></ul>
+</section>
+</section>
+<section class="detail" id="safe_merge">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">table.</span>safe_merge<span class="params">(to, from)</span></h3>
+<a href="#safe_merge" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_table.lua#L24" title="View source">lib/stdlib/sh_table.lua:24</a>
+</div>
+<section class="docstring">
+<p>Merges a table into another one like table.Merge, but leaves <code>__index</code> of both tables
+alone and skips the <a href="../flux/Globals.html#class"><code>class</code></a> key and any field of <code>from</code> that refers to <code>from</code> itself.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">to</span> <span class="type">Map</span> <span class="desc">table to merge into, modified in place</span></li><li><span class="param-name">from</span> <span class="type">Map</span> <span class="desc">table to take the values from</span></li></ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">Map</span> <span class="desc">to</span></li></ul>
+</section>
+</section>
+<section class="detail" id="select">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">table.</span>select<span class="params">(t, what)</span></h3>
+<a href="#select" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_table.lua#L108" title="View source">lib/stdlib/sh_table.lua:108</a>
+</div>
+<section class="docstring">
+<p>Filters the values of a table with a callback, or collects a single field from every
+table inside of it.</p>
+<pre><code class="language-lua"><span class="hl-k">local</span> alive = table.<span class="hl-f">select</span>(player.<span class="hl-f">GetAll</span>(), <span class="hl-k">function</span>(v, k) <span class="hl-k">return</span> v:<span class="hl-f">Alive</span>() <span class="hl-k">end</span>)
+<span class="hl-k">local</span> names = table.<span class="hl-f">select</span>({ { name = <span class="hl-s">&#39;a&#39;</span> }, { name = <span class="hl-s">&#39;b&#39;</span> } }, <span class="hl-s">&#39;name&#39;</span>) <span class="hl-c">-- { &#39;a&#39;, &#39;b&#39; }</span>
+</code></pre>
+<h4>Variants</h4>
+<ul class="variants">
+<li><code class="variant-signature">table.select(t, what)</code><ul class="params"><li><span class="param-name">t</span> <span class="type">Map/List</span> <span class="desc">table to filter</span></li><li><span class="param-name">what</span> <span class="type">Function</span> <span class="desc">callback(value, key), the value is kept unless it returns false</span></li></ul>
+</li>
+<li><code class="variant-signature">table.select(t, what)</code><ul class="params"><li><span class="param-name">t</span> <span class="type">Map/List</span> <span class="desc">table that consists of tables</span></li><li><span class="param-name">what</span> <span class="type">String/Number</span> <span class="desc">key to read from every value that is a table</span></li></ul>
+</li>
+</ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">List</span> <span class="desc">selected values</span></li></ul>
+</section>
+</section>
+<section class="detail" id="serialize">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">table.</span>serialize<span class="params">(tab)</span></h3>
+<a href="#serialize" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_table.lua#L494" title="View source">lib/stdlib/sh_table.lua:494</a>
+</div>
+<section class="docstring">
+<p>Converts a table into the string format.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">tab</span> <span class="type">Map/List</span> <span class="desc">table to convert</span></li></ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">String</span> <span class="desc">hex-encoded SFS data</span></li><li><span class="type">JSON</span> <span class="desc">if SFS fails, or an empty string if both fail or tab is not a table</span></li></ul>
+</section>
+</section>
+<section class="detail" id="slice">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">table.</span>slice<span class="params">(t, from, to)</span></h3>
+<a href="#slice" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_table.lua#L133" title="View source">lib/stdlib/sh_table.lua:133</a>
+</div>
+<section class="docstring">
+<p>Returns the part of an array between two indexes, both inclusive.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">t</span> <span class="type">List</span></li><li><span class="param-name">from</span> <span class="type">Number</span> <span class="desc">first index</span></li><li><span class="param-name">to</span> <span class="type">Number</span> <span class="desc">last index</span></li></ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">List</span> <span class="desc">the elements between from and to</span></li></ul>
+</section>
+</section>
+<section class="detail" id="sum">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">table.</span>sum<span class="params">(tab)</span></h3>
+<a href="#sum" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_table.lua#L199" title="View source">lib/stdlib/sh_table.lua:199</a>
+</div>
+<section class="docstring">
+<p>Adds up all elements of an array.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">tab</span> <span class="type">List&lt;Number&gt;</span></li></ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">Number</span> <span class="desc">the sum, 0 for an empty array</span></li></ul>
+</section>
+</section>
+<section class="detail" id="to_array">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">table.</span>to_array<span class="params">(tab)</span></h3>
+<a href="#to_array" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_table.lua#L459" title="View source">lib/stdlib/sh_table.lua:459</a>
+</div>
+<section class="docstring">
+<p>Converts a hash into an array of { key, value } pairs.</p>
+<pre><code class="language-lua">table.<span class="hl-f">to_array</span>({ a = <span class="hl-n">1</span>, b = <span class="hl-n">2</span> }) <span class="hl-c">-- { { &#39;a&#39;, 1 }, { &#39;b&#39;, 2 } }, in no particular order</span>
+</code></pre>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">tab</span> <span class="type">Map</span></li></ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">List&lt;List&gt;</span> <span class="desc">key-value pairs</span></li></ul>
+<h4>See also</h4>
+<ul class="see-also"><li><a href="../flux/table.html#to_hash"><code>table.to_hash</code></a></li></ul>
+</section>
+</section>
+<section class="detail" id="to_hash">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">table.</span>to_hash<span class="params">(tab)</span></h3>
+<a href="#to_hash" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_table.lua#L476" title="View source">lib/stdlib/sh_table.lua:476</a>
+</div>
+<section class="docstring">
+<p>Converts an array of { key, value } pairs into a hash.</p>
+<pre><code class="language-lua">table.<span class="hl-f">to_hash</span>({ { <span class="hl-s">&#39;a&#39;</span>, <span class="hl-n">1</span> }, { <span class="hl-s">&#39;b&#39;</span>, <span class="hl-n">2</span> } }) <span class="hl-c">-- { a = 1, b = 2 }</span>
+</code></pre>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">tab</span> <span class="type">List&lt;List&gt;</span> <span class="desc">key-value pairs</span></li></ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">Map</span></li></ul>
+<h4>See also</h4>
+<ul class="see-also"><li><a href="../flux/table.html#to_array"><code>table.to_array</code></a></li></ul>
+</section>
+</section>
+<section class="detail" id="uniq">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">table.</span>uniq<span class="params">(tab, condition)</span></h3>
+<a href="#uniq" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_table.lua#L227" title="View source">lib/stdlib/sh_table.lua:227</a>
+</div>
+<section class="docstring">
+<p>Returns a copy of the table without duplicate values.
+The values keep their original keys, so the copy of an array can have gaps in it.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">tab</span> <span class="type">Map/List</span></li><li><span class="param-name">condition</span> <span class="type">Function</span> <span class="default">optional, defaults to <code>nil</code></span> <span class="desc">callback(value) that returns true for the values to leave out, used instead of the duplicate check</span></li></ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">Map/List</span> <span class="desc">table of unique values</span></li></ul>
+</section>
+</section>
+</section>
+<section class="sources"><h2>Defined in</h2><ul><li><a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_table.lua" title="View source">lib/stdlib/sh_table.lua</a></li></ul></section>
+<template id="module-functions"><ul class="sidebar-functions"><li class="sidebar-category" data-anchor="functions">Functions</li><li><a href="#delete">delete</a></li><li><a href="#delete_if">delete_if</a></li><li><a href="#deserialize">deserialize</a></li><li><a href="#equal">equal</a></li><li><a href="#first">first</a></li><li><a href="#flatten">flatten</a></li><li><a href="#hash">hash</a></li><li><a href="#join">join</a></li><li><a href="#keep">keep</a></li><li><a href="#keep_if">keep_if</a></li><li><a href="#last">last</a></li><li><a href="#map">map</a></li><li><a href="#map_kv">map_kv</a></li><li><a href="#Merge">Merge</a></li><li><a href="#none">none</a></li><li><a href="#one">one</a></li><li><a href="#partition">partition</a></li><li><a href="#range">range</a></li><li><a href="#reduce">reduce</a></li><li><a href="#remove_functions">remove_functions</a></li><li><a href="#safe_merge">safe_merge</a></li><li><a href="#select">select</a></li><li><a href="#serialize">serialize</a></li><li><a href="#slice">slice</a></li><li><a href="#sum">sum</a></li><li><a href="#to_array">to_array</a></li><li><a href="#to_hash">to_hash</a></li><li><a href="#uniq">uniq</a></li></ul></template>
+
+<footer class="footer">
+<p>Built with <a href="https://github.com/TeslaCloud/fdoc">fdoc</a>.</p>
+</footer>
+</div>
+</main>
+<script src="../assets/sidebar_items.js"></script>
+<script src="../assets/app.js"></script>
+</body>
+</html>

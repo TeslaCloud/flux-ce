@@ -1,1 +1,121 @@
-<!DOCTYPE html><html lang="en"><body><h2>Flux</h2><a href="stdlib/index.html">stdlib</a><br><h2>Packages</h2><a href="packages/active_network.html">active_network</a><br><a href="packages/active_record.html">active_record</a><br><a href="packages/cable.html">cable</a><br><a href="packages/colorfix.html">colorfix</a><br><a href="packages/flow.html">flow</a><br><a href="packages/fluctuations.html">fluctuations</a><br><a href="packages/lex_tools.html">lex_tools</a><br><a href="packages/sfs.html">sfs</a><br><a href="packages/tween.html">tween</a><br><a href="packages/utf8.html">utf8</a><br><a href="packages/yaml.html">yaml</a><br><h2>Plugins</h2><a href="plugins/3dtexts.html">3dtexts</a><br><a href="plugins/admin.html">admin</a><br><a href="plugins/areadisplay.html">areadisplay</a><br><a href="plugins/areas.html">areas</a><br><a href="plugins/attributes.html">attributes</a><br><a href="plugins/characters.html">characters</a><br><a href="plugins/chatbox.html">chatbox</a><br><a href="plugins/cl_adminesp.lua.html">cl_adminesp.lua</a><br><a href="plugins/cl_colormod.lua.html">cl_colormod.lua</a><br><a href="plugins/cl_crosshair.lua.html">cl_crosshair.lua</a><br><a href="plugins/cl_devhud.lua.html">cl_devhud.lua</a><br><a href="plugins/cl_hints.lua.html">cl_hints.lua</a><br><a href="plugins/cl_toolgun_fix.lua.html">cl_toolgun_fix.lua</a><br><a href="plugins/cl_visiblelegs.lua.html">cl_visiblelegs.lua</a><br><a href="plugins/conditions.html">conditions</a><br><a href="plugins/containers.html">containers</a><br><a href="plugins/currencies.html">currencies</a><br><a href="plugins/doors.html">doors</a><br><a href="plugins/factions.html">factions</a><br><a href="plugins/inventory.html">inventory</a><br><a href="plugins/items.html">items</a><br><a href="plugins/mapscenes.html">mapscenes</a><br><a href="plugins/observer.html">observer</a><br><a href="plugins/ragdoll.html">ragdoll</a><br><a href="plugins/sh_autowalk.lua.html">sh_autowalk.lua</a><br><a href="plugins/sh_prefixes.lua.html">sh_prefixes.lua</a><br><a href="plugins/sh_profiler.lua.html">sh_profiler.lua</a><br><a href="plugins/sh_raisegun.lua.html">sh_raisegun.lua</a><br><a href="plugins/sh_weaponselect.lua.html">sh_weaponselect.lua</a><br><a href="plugins/skeleton_plugin.html">skeleton_plugin</a><br><a href="plugins/stamina.html">stamina</a><br><a href="plugins/staticents.html">staticents</a><br><a href="plugins/sv_documentation.lua.html">sv_documentation.lua</a><br><a href="plugins/sv_linter.lua.html">sv_linter.lua</a><br><a href="plugins/sv_pickup_objects.lua.html">sv_pickup_objects.lua</a><br><a href="plugins/sv_shared_flashlight.lua.html">sv_shared_flashlight.lua</a><br><a href="plugins/thirdperson.html">thirdperson</a><br></body></html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="generator" content="fdoc">
+<title>Flux — Flux v0.8.1</title>
+<link rel="stylesheet" href="assets/style.css">
+<script>try{var t=localStorage.getItem('fdoc-theme');if(t)document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
+</head>
+<body data-root="" data-group="" data-module="">
+<div class="progress" id="progress"></div>
+<button class="sidebar-toggle" type="button" aria-label="Toggle navigation"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path fill="currentColor" d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg></button>
+<div class="sidebar-backdrop"></div>
+<aside class="sidebar" id="sidebar">
+<div class="sidebar-header">
+<a class="sidebar-project" href="index.html"><span class="sidebar-project-name">Flux</span> <span class="sidebar-project-version">v0.8.1</span></a>
+</div>
+<div class="sidebar-tabs" id="sidebar-tabs" role="tablist"></div>
+<nav class="sidebar-nav" id="sidebar-nav" aria-label="Documentation"><noscript><p class="sidebar-noscript"><a href="index.html">Index</a></p></noscript></nav>
+</aside>
+<main class="content" id="content">
+<div class="topbar">
+<form class="search" action="search.html" method="get" autocomplete="off" role="search">
+<input type="search" name="q" id="search-input" placeholder="Press / to search" aria-label="Search">
+<ul class="search-suggestions" id="search-suggestions" hidden></ul>
+</form>
+<button class="theme-toggle" type="button" aria-label="Toggle night mode"><span class="icon-moon"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M12 3a9 9 0 1 0 9 9c0-.46-.04-.92-.1-1.36a5.389 5.389 0 0 1-4.4 2.26 5.403 5.403 0 0 1-3.14-9.8c-.44-.06-.9-.1-1.36-.1z"/></svg></span><span class="icon-sun"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M6.76 4.84l-1.8-1.79-1.41 1.41 1.79 1.79 1.42-1.41zM4 10.5H1v2h3v-2zm9-9.95h-2V3.5h2V.55zm7.45 3.91l-1.41-1.41-1.79 1.79 1.41 1.41 1.79-1.79zm-3.21 13.7l1.79 1.8 1.41-1.41-1.8-1.79-1.4 1.4zM20 10.5v2h3v-2h-3zm-8-5c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6zm-1 16.95h2V19.5h-2v2.95zm-7.45-3.91l1.41 1.41 1.79-1.8-1.41-1.41-1.79 1.8z"/></svg></span></button>
+</div>
+<div class="content-inner" id="content-inner">
+<h1>Flux <small class="version">v0.8.1</small></h1>
+<p class="lead">A gamemode framework.</p>
+<p>A gamemode framework made primarily for database-driven roleplay gamemodes.</p>
+<p class="stats">283 modules · 2388 functions · 2310 documented</p>
+<section class="overview-section"><h2>Flux</h2>
+<div class="module-list">
+<div class="summary-row"><div class="summary-signature"><a href="flux/Globals.html">Globals</a> <span class="badge badge-globals">globals</span></div><div class="summary-synopsis"></div></div>
+<div class="summary-row"><div class="summary-signature"><a href="flux/Color.html">Color</a> <span class="badge badge-class">class</span></div><div class="summary-synopsis"></div></div>
+<div class="summary-row"><div class="summary-signature"><a href="flux/Config.html">Config</a> <span class="badge badge-library">library</span></div><div class="summary-synopsis"></div></div>
+<div class="summary-row"><div class="summary-signature"><a href="flux/Date.html">Date</a> <span class="badge badge-class">class</span></div><div class="summary-synopsis">The Date class is the base class for most time-related classes in Flux. The Date class represents a point in time, not a time interval. For time intervals, please use Time.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="flux/DateTime.html">DateTime</a> <span class="badge badge-class">class</span></div><div class="summary-synopsis">The DateTime class represents a point in time, not a time interval. For time intervals, please use Time.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="flux/File.html">File</a> <span class="badge badge-library">library</span></div><div class="summary-synopsis"></div></div>
+<div class="summary-row"><div class="summary-signature"><a href="flux/flux.html">flux</a> <span class="badge badge-object">object</span></div><div class="summary-synopsis"></div></div>
+<div class="summary-row"><div class="summary-signature"><a href="flux/game.html">game</a> <span class="badge badge-library">library</span></div><div class="summary-synopsis"></div></div>
+<div class="summary-row"><div class="summary-signature"><a href="flux/hook.html">hook</a> <span class="badge badge-library">library</span></div><div class="summary-synopsis"></div></div>
+<div class="summary-row"><div class="summary-signature"><a href="flux/math.html">math</a> <span class="badge badge-library">library</span></div><div class="summary-synopsis"></div></div>
+<div class="summary-row"><div class="summary-signature"><a href="flux/Number.html">Number</a> <span class="badge badge-class">class</span></div><div class="summary-synopsis"></div></div>
+<div class="summary-row"><div class="summary-signature"><a href="flux/Package.html">Package</a> <span class="badge badge-class">class</span></div><div class="summary-synopsis"></div></div>
+<div class="summary-row"><div class="summary-signature"><a href="flux/PackageInstance.html">PackageInstance</a> <span class="badge badge-class">class</span></div><div class="summary-synopsis">A Flux package instance class. This provides basic information fields and dependencies.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="flux/Pipeline.html">Pipeline</a> <span class="badge badge-library">library</span></div><div class="summary-synopsis"></div></div>
+<div class="summary-row"><div class="summary-signature"><a href="flux/Player.html">Player</a> <span class="badge badge-class">class</span></div><div class="summary-synopsis"></div></div>
+<div class="summary-row"><div class="summary-signature"><a href="flux/Plugin.html">Plugin</a> <span class="badge badge-library">library</span></div><div class="summary-synopsis"></div></div>
+<div class="summary-row"><div class="summary-signature"><a href="flux/PluginInstance.html">PluginInstance</a> <span class="badge badge-class">class</span></div><div class="summary-synopsis"></div></div>
+<div class="summary-row"><div class="summary-signature"><a href="flux/string.html">string</a> <span class="badge badge-class">class</span></div><div class="summary-synopsis"></div></div>
+<div class="summary-row"><div class="summary-signature"><a href="flux/table.html">table</a> <span class="badge badge-library">library</span></div><div class="summary-synopsis"></div></div>
+<div class="summary-row"><div class="summary-signature"><a href="flux/Time.html">Time</a> <span class="badge badge-class">class</span></div><div class="summary-synopsis">The DateTime class represents a time interval, not a point in time. For points in time, please use Date or DateTime.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="flux/Unit.html">Unit</a> <span class="badge badge-class">class</span></div><div class="summary-synopsis">A class to convert conventional metrics to Source Engine units.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="flux/util.html">util</a> <span class="badge badge-library">library</span></div><div class="summary-synopsis"></div></div>
+</div>
+</section>
+<section class="overview-section"><h2>Packages</h2>
+<div class="summary-row"><div class="summary-signature"><a href="packages/active_network/index.html">Active Network</a> <span class="muted">3 modules</span></div><div class="summary-synopsis">Networking utilities</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="packages/active_record/index.html">Active Record</a> <span class="muted">24 modules</span></div><div class="summary-synopsis">Active Record pattern ORM.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="packages/cable/index.html">Cable</a> <span class="muted">2 modules</span></div><div class="summary-synopsis">A net library wrapper.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="packages/colorfix/index.html">Linux Color Fix</a> <span class="muted">1 modules</span></div><div class="summary-synopsis">Fix output colors on Linux.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="packages/flow/index.html">Flow</a> <span class="muted">61 modules</span></div><div class="summary-synopsis">Flux Core.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="packages/lex_tools/index.html">Lexing Tools</a> <span class="muted">2 modules</span></div><div class="summary-synopsis">Various language lexing tools.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="packages/sfs/index.html">Srlion&#39;s Fast Serializer</a> <span class="muted">6 modules</span></div><div class="summary-synopsis">Srlion's Serialization Library</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="packages/tween/index.html">Tween</a> <span class="muted">1 modules</span></div><div class="summary-synopsis">Tweening for Lua.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="packages/utf8/index.html">UTF-8</a> <span class="muted">1 modules</span></div><div class="summary-synopsis">A UTF-8 library for Lua.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="packages/yaml/index.html">YAML</a> <span class="muted">4 modules</span></div><div class="summary-synopsis">YAML Ain't Markup Language</div></div>
+</section>
+<section class="overview-section"><h2>Plugins</h2>
+<div class="summary-row"><div class="summary-signature"><a href="plugins/3dtexts/index.html">3dtexts</a> <span class="muted">3 modules</span></div><div class="summary-synopsis"></div></div>
+<div class="summary-row"><div class="summary-signature"><a href="plugins/admin/index.html">admin</a> <span class="muted">36 modules</span></div><div class="summary-synopsis"></div></div>
+<div class="summary-row"><div class="summary-signature"><a href="plugins/areadisplay/index.html">areadisplay</a> <span class="muted">1 modules</span></div><div class="summary-synopsis"></div></div>
+<div class="summary-row"><div class="summary-signature"><a href="plugins/areas/index.html">areas</a> <span class="muted">4 modules</span></div><div class="summary-synopsis"></div></div>
+<div class="summary-row"><div class="summary-signature"><a href="plugins/attributes/index.html">attributes</a> <span class="muted">8 modules</span></div><div class="summary-synopsis"></div></div>
+<div class="summary-row"><div class="summary-signature"><a href="plugins/characters/index.html">characters</a> <span class="muted">12 modules</span></div><div class="summary-synopsis"></div></div>
+<div class="summary-row"><div class="summary-signature"><a href="plugins/chatbox/index.html">chatbox</a> <span class="muted">5 modules</span></div><div class="summary-synopsis"></div></div>
+<div class="summary-row"><div class="summary-signature"><a href="plugins/cl_adminesp/index.html">Admin ESP</a> <span class="muted">1 modules</span></div><div class="summary-synopsis">Adds an ESP for admins.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="plugins/cl_colormod/index.html">Color Modify</a> <span class="muted">3 modules</span></div><div class="summary-synopsis">Provides a color modify API.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="plugins/cl_crosshair/index.html">Crosshair</a> <span class="muted">1 modules</span></div><div class="summary-synopsis">Adds a crosshair.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="plugins/cl_devhud/index.html">Flux Dev HUD</a> <span class="muted">1 modules</span></div><div class="summary-synopsis">Adds a developer HUD.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="plugins/cl_hints/index.html">Hints</a> <span class="muted">1 modules</span></div><div class="summary-synopsis">Adds hints that are displayed to players.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="plugins/cl_toolgun_fix/index.html">Toolgun Render Fix</a> <span class="muted">1 modules</span></div><div class="summary-synopsis">Fixes toolgun help rendering incorrectly with Flux phrases.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="plugins/cl_visiblelegs/index.html">Visible Legs</a> <span class="muted">1 modules</span></div><div class="summary-synopsis">Lets clients see their character's legs.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="plugins/conditions/index.html">conditions</a> <span class="muted">3 modules</span></div><div class="summary-synopsis"></div></div>
+<div class="summary-row"><div class="summary-signature"><a href="plugins/containers/index.html">containers</a> <span class="muted">1 modules</span></div><div class="summary-synopsis"></div></div>
+<div class="summary-row"><div class="summary-signature"><a href="plugins/currencies/index.html">currencies</a> <span class="muted">8 modules</span></div><div class="summary-synopsis"></div></div>
+<div class="summary-row"><div class="summary-signature"><a href="plugins/displaytyping/index.html">displaytyping</a> <span class="muted">1 modules</span></div><div class="summary-synopsis"></div></div>
+<div class="summary-row"><div class="summary-signature"><a href="plugins/doors/index.html">doors</a> <span class="muted">3 modules</span></div><div class="summary-synopsis"></div></div>
+<div class="summary-row"><div class="summary-signature"><a href="plugins/factions/index.html">factions</a> <span class="muted">11 modules</span></div><div class="summary-synopsis"></div></div>
+<div class="summary-row"><div class="summary-signature"><a href="plugins/inventory/index.html">inventory</a> <span class="muted">12 modules</span></div><div class="summary-synopsis"></div></div>
+<div class="summary-row"><div class="summary-signature"><a href="plugins/items/index.html">items</a> <span class="muted">13 modules</span></div><div class="summary-synopsis"></div></div>
+<div class="summary-row"><div class="summary-signature"><a href="plugins/mapscenes/index.html">mapscenes</a> <span class="muted">2 modules</span></div><div class="summary-synopsis"></div></div>
+<div class="summary-row"><div class="summary-signature"><a href="plugins/observer/index.html">observer</a> <span class="muted">1 modules</span></div><div class="summary-synopsis"></div></div>
+<div class="summary-row"><div class="summary-signature"><a href="plugins/ragdoll/index.html">ragdoll</a> <span class="muted">6 modules</span></div><div class="summary-synopsis"></div></div>
+<div class="summary-row"><div class="summary-signature"><a href="plugins/sh_autowalk/index.html">Auto Walk</a> <span class="muted">1 modules</span></div><div class="summary-synopsis">Allows users to press a button to automatically walk forward.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="plugins/sh_prefixes/index.html">Prefixes</a> <span class="muted">1 modules</span></div><div class="summary-synopsis">Adds prefix adjusting to avoid troubles with certain commands.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="plugins/sh_profiler/index.html">Hook Profiler</a> <span class="muted">3 modules</span></div><div class="summary-synopsis">Profile any hooks.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="plugins/sh_raisegun/index.html">Raise Weapon</a> <span class="muted">2 modules</span></div><div class="summary-synopsis">Allows weapons to be lowered and raised by holding the R key.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="plugins/sh_weaponselect/index.html">Weapon Selector</a> <span class="muted">1 modules</span></div><div class="summary-synopsis">Adds a custom weapon selector for use with Flux.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="plugins/skeleton_plugin/index.html">skeleton_plugin</a> <span class="muted">0 modules</span></div><div class="summary-synopsis"></div></div>
+<div class="summary-row"><div class="summary-signature"><a href="plugins/stamina/index.html">stamina</a> <span class="muted">1 modules</span></div><div class="summary-synopsis"></div></div>
+<div class="summary-row"><div class="summary-signature"><a href="plugins/staticents/index.html">staticents</a> <span class="muted">4 modules</span></div><div class="summary-synopsis"></div></div>
+<div class="summary-row"><div class="summary-signature"><a href="plugins/sv_documentation/index.html">Documentation Generator</a> <span class="muted">1 modules</span></div><div class="summary-synopsis">Generates documentation for Flux and/or your schema.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="plugins/sv_pickup_objects/index.html">Pickup Objects</a> <span class="muted">1 modules</span></div><div class="summary-synopsis">Allows players to pick up objects.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="plugins/sv_shared_flashlight/index.html">sv_shared_flashlight</a> <span class="muted">1 modules</span></div><div class="summary-synopsis"></div></div>
+<div class="summary-row"><div class="summary-signature"><a href="plugins/thirdperson/index.html">thirdperson</a> <span class="muted">1 modules</span></div><div class="summary-synopsis"></div></div>
+</section>
+
+<footer class="footer">
+<p>Built with <a href="https://github.com/TeslaCloud/fdoc">fdoc</a>.</p>
+</footer>
+</div>
+</main>
+<script src="assets/sidebar_items.js"></script>
+<script src="assets/app.js"></script>
+</body>
+</html>

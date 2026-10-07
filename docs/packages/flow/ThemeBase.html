@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="generator" content="fdoc">
+<title>ThemeBase — Flux v0.8.1</title>
+<link rel="stylesheet" href="../../assets/style.css">
+<script>try{var t=localStorage.getItem('fdoc-theme');if(t)document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
+</head>
+<body data-root="../../" data-group="packages/flow" data-module="ThemeBase">
+<div class="progress" id="progress"></div>
+<button class="sidebar-toggle" type="button" aria-label="Toggle navigation"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path fill="currentColor" d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg></button>
+<div class="sidebar-backdrop"></div>
+<aside class="sidebar" id="sidebar">
+<div class="sidebar-header">
+<a class="sidebar-project" href="../../index.html"><span class="sidebar-project-name">Flux</span> <span class="sidebar-project-version">v0.8.1</span></a>
+</div>
+<div class="sidebar-tabs" id="sidebar-tabs" role="tablist"></div>
+<nav class="sidebar-nav" id="sidebar-nav" aria-label="Documentation"><noscript><p class="sidebar-noscript"><a href="../../index.html">Index</a></p></noscript></nav>
+</aside>
+<main class="content" id="content">
+<div class="topbar">
+<form class="search" action="../../search.html" method="get" autocomplete="off" role="search">
+<input type="search" name="q" id="search-input" placeholder="Press / to search" aria-label="Search">
+<ul class="search-suggestions" id="search-suggestions" hidden></ul>
+</form>
+<button class="theme-toggle" type="button" aria-label="Toggle night mode"><span class="icon-moon"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M12 3a9 9 0 1 0 9 9c0-.46-.04-.92-.1-1.36a5.389 5.389 0 0 1-4.4 2.26 5.403 5.403 0 0 1-3.14-9.8c-.44-.06-.9-.1-1.36-.1z"/></svg></span><span class="icon-sun"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M6.76 4.84l-1.8-1.79-1.41 1.41 1.79 1.79 1.42-1.41zM4 10.5H1v2h3v-2zm9-9.95h-2V3.5h2V.55zm7.45 3.91l-1.41-1.41-1.79 1.79 1.41 1.41 1.79-1.79zm-3.21 13.7l1.79 1.8 1.41-1.41-1.8-1.79-1.4 1.4zM20 10.5v2h3v-2h-3zm-8-5c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6zm-1 16.95h2V19.5h-2v2.95zm-7.45-3.91l1.41 1.41 1.79-1.8-1.41-1.41-1.79 1.8z"/></svg></span></button>
+</div>
+<div class="content-inner" id="content-inner">
+<div class="page-header"><h1>ThemeBase <span class="badge badge-class">class</span></h1><p class="subtitle">Part of <a href="../../packages/flow/index.html">Flow</a></p></div>
+<section class="summary"><h2 id="summary">Summary</h2>
+<div class="summary-group"><h3>Methods</h3>
+<div class="summary-row"><div class="summary-signature"><a href="#__tostring">__tostring()</a></div><div class="summary-synopsis">Converts the theme to a string for printing.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#add_panel">add_panel(id, callback)</a></div><div class="summary-synopsis">Registers a callback that creates a panel for this theme. This lets themes replace the panels that are created with Theme.create_panel.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#create_panel">create_panel(id, parent, ...)</a></div><div class="summary-synopsis">Creates a panel using the callback registered with ThemeBase#add_panel.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#get_color">get_color(id, failsafe)</a></div><div class="summary-synopsis">Returns a color of the theme.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#get_font">get_font(key, default)</a></div><div class="summary-synopsis">Returns the name of a font of the theme.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#get_material">get_material(id, failsafe)</a></div><div class="summary-synopsis">Returns a material of the theme.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#get_option">get_option(key, default)</a></div><div class="summary-synopsis">Returns an option of the theme.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#get_sound">get_sound(id, failsafe)</a></div><div class="summary-synopsis">Returns a sound of the theme.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#init">init(name, parent)</a></div><div class="summary-synopsis">Creates a new theme. The ID of the theme is derived from its name.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#on_loaded">on_loaded()</a></div><div class="summary-synopsis">Called when the theme becomes the active one. Does nothing by default, override it to set the colors, fonts, options and other assets of the theme.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#on_unloaded">on_unloaded()</a></div><div class="summary-synopsis">Called when the theme is unloaded. Does nothing by default.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#register">register()</a></div><div class="summary-synopsis">Adds this theme to the list of registered themes.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#register_asset">register_asset(name, path, options)</a></div><div class="summary-synopsis">Registers an asset of the theme. Models are precached, images (PNG and JPEG) are stored as theme materials. When sizes are specified, the smallest scale that covers the height of the screen relative to 720p is picked, and the image is loaded from the file with the '_&lt;scale&gt;x' suffix instead.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#remove">remove()</a></div><div class="summary-synopsis">Removes this theme from the list of registered themes.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#set_color">set_color(id, val)</a></div><div class="summary-synopsis">Sets a color of the theme.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#set_font">set_font(key, value, scale, data)</a></div><div class="summary-synopsis">Sets a font of the theme. The font is derived from an existing one with Font.size.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#set_material">set_material(id, val)</a></div><div class="summary-synopsis">Sets a material of the theme.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#set_option">set_option(key, value)</a></div><div class="summary-synopsis">Sets an option of the theme.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#set_sound">set_sound(id, val)</a></div><div class="summary-synopsis">Sets a sound of the theme.</div></div>
+</div>
+</section>
+<section class="details-group"><h2 id="methods">Methods</h2>
+<section class="detail" id="__tostring">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">ThemeBase:</span>__tostring<span class="params">()</span></h3>
+<a href="#__tostring" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/classes/cl_theme.lua#L226" title="View source">packages/flow/lib/classes/cl_theme.lua:226</a>
+</div>
+<section class="docstring">
+<p>Converts the theme to a string for printing.</p>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">String</span></li></ul>
+</section>
+</section>
+<section class="detail" id="add_panel">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">ThemeBase:</span>add_panel<span class="params">(id, callback)</span></h3>
+<a href="#add_panel" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/classes/cl_theme.lua#L49" title="View source">packages/flow/lib/classes/cl_theme.lua:49</a>
+</div>
+<section class="docstring">
+<p>Registers a callback that creates a panel for this theme. This lets themes replace
+the panels that are created with Theme.create_panel.</p>
+<pre><code class="language-lua"><span class="hl-k">self</span>:<span class="hl-f">add_panel</span>(<span class="hl-s">&#39;tab_menu&#39;</span>, <span class="hl-k">function</span>(id, parent, ...)
+  <span class="hl-k">return</span> vgui.<span class="hl-f">Create</span>(<span class="hl-s">&#39;fl_tab_menu&#39;</span>, parent)
+<span class="hl-k">end</span>)
+</code></pre>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">id</span> <span class="type">String</span> <span class="desc">panel ID</span></li><li><span class="param-name">callback</span> <span class="type">Function</span> <span class="desc">receives the panel ID, the parent panel and any extra arguments, must return the created panel</span></li></ul>
+</section>
+</section>
+<section class="detail" id="create_panel">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">ThemeBase:</span>create_panel<span class="params">(id, parent, ...)</span></h3>
+<a href="#create_panel" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/classes/cl_theme.lua#L58" title="View source">packages/flow/lib/classes/cl_theme.lua:58</a>
+</div>
+<section class="docstring">
+<p>Creates a panel using the callback registered with ThemeBase#add_panel.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">id</span> <span class="type">String</span> <span class="desc">panel ID</span></li><li><span class="param-name">parent</span> <span class="type">Panel</span> <span class="desc">parent of the new panel, can be nil</span></li><li><span class="param-name">...</span> <span class="type">Vararg</span> <span class="desc">extra arguments for the callback</span></li></ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">Panel</span> <span class="desc">the created panel, or nil if no callback is registered for this ID</span></li></ul>
+</section>
+</section>
+<section class="detail" id="get_color">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">ThemeBase:</span>get_color<span class="params">(id, failsafe)</span></h3>
+<a href="#get_color" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/classes/cl_theme.lua#L180" title="View source">packages/flow/lib/classes/cl_theme.lua:180</a>
+</div>
+<section class="docstring">
+<p>Returns a color of the theme.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">id</span> <span class="type">String</span></li><li><span class="param-name">failsafe</span> <span class="type">Color</span> <span class="default">optional, defaults to <code>Color(255, 255, 255)</code></span> <span class="desc">returned if the color is not set</span></li></ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">Color</span></li></ul>
+</section>
+</section>
+<section class="detail" id="get_font">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">ThemeBase:</span>get_font<span class="params">(key, default)</span></h3>
+<a href="#get_font" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/classes/cl_theme.lua#L164" title="View source">packages/flow/lib/classes/cl_theme.lua:164</a>
+</div>
+<section class="docstring">
+<p>Returns the name of a font of the theme.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">key</span> <span class="type">String</span></li><li><span class="param-name">default</span> <span class="type">String</span> <span class="default">optional, defaults to <code>nil</code></span> <span class="desc">returned if the font is not set</span></li></ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">String</span> <span class="desc">font name</span></li></ul>
+</section>
+</section>
+<section class="detail" id="get_material">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">ThemeBase:</span>get_material<span class="params">(id, failsafe)</span></h3>
+<a href="#get_material" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/classes/cl_theme.lua#L194" title="View source">packages/flow/lib/classes/cl_theme.lua:194</a>
+</div>
+<section class="docstring">
+<p>Returns a material of the theme.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">id</span> <span class="type">String</span></li><li><span class="param-name">failsafe</span> <span class="type">Material</span> <span class="default">optional, defaults to <code>nil</code></span> <span class="desc">returned if the material is not set</span></li></ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">Material</span></li></ul>
+</section>
+</section>
+<section class="detail" id="get_option">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">ThemeBase:</span>get_option<span class="params">(key, default)</span></h3>
+<a href="#get_option" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/classes/cl_theme.lua#L172" title="View source">packages/flow/lib/classes/cl_theme.lua:172</a>
+</div>
+<section class="docstring">
+<p>Returns an option of the theme.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">key</span> <span class="type">String</span></li><li><span class="param-name">default</span> <span class="type">Any</span> <span class="default">optional, defaults to <code>nil</code></span> <span class="desc">returned if the option is not set or is false</span></li></ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">Any</span> <span class="desc">value of the option</span></li></ul>
+</section>
+</section>
+<section class="detail" id="get_sound">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">ThemeBase:</span>get_sound<span class="params">(id, failsafe)</span></h3>
+<a href="#get_sound" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/classes/cl_theme.lua#L208" title="View source">packages/flow/lib/classes/cl_theme.lua:208</a>
+</div>
+<section class="docstring">
+<p>Returns a sound of the theme.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">id</span> <span class="type">String</span></li><li><span class="param-name">failsafe</span> <span class="type">String</span> <span class="default">optional, defaults to <code>nil</code></span> <span class="desc">returned if the sound is not set</span></li></ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">String</span> <span class="desc">path to the sound</span></li></ul>
+</section>
+</section>
+<section class="detail" id="init">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">ThemeBase:</span>init<span class="params">(name, parent)</span></h3>
+<a href="#init" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/classes/cl_theme.lua#L15" title="View source">packages/flow/lib/classes/cl_theme.lua:15</a>
+</div>
+<section class="docstring">
+<p>Creates a new theme. The ID of the theme is derived from its name.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">name</span> <span class="type">String</span> <span class="default">optional, defaults to <code>&#39;Unknown&#39;</code></span></li><li><span class="param-name">parent</span> <span class="type">String</span> <span class="default">optional, defaults to <code>nil</code></span> <span class="desc">ID of the theme to inherit from</span></li></ul>
+</section>
+</section>
+<section class="detail" id="on_loaded">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">ThemeBase:</span>on_loaded<span class="params">()</span></h3>
+<a href="#on_loaded" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/classes/cl_theme.lua#L27" title="View source">packages/flow/lib/classes/cl_theme.lua:27</a>
+</div>
+<section class="docstring">
+<p>Called when the theme becomes the active one. Does nothing by default, override it
+to set the colors, fonts, options and other assets of the theme.</p>
+</section>
+</section>
+<section class="detail" id="on_unloaded">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">ThemeBase:</span>on_unloaded<span class="params">()</span></h3>
+<a href="#on_unloaded" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/classes/cl_theme.lua#L31" title="View source">packages/flow/lib/classes/cl_theme.lua:31</a>
+</div>
+<section class="docstring">
+<p>Called when the theme is unloaded. Does nothing by default.</p>
+</section>
+</section>
+<section class="detail" id="register">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">ThemeBase:</span>register<span class="params">()</span></h3>
+<a href="#register" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/classes/cl_theme.lua#L220" title="View source">packages/flow/lib/classes/cl_theme.lua:220</a>
+</div>
+<section class="docstring">
+<p>Adds this theme to the list of registered themes.</p>
+<h4>See also</h4>
+<ul class="see-also"><li><a href="../../packages/flow/Theme.html#register_theme"><code>Theme.register_theme</code></a></li></ul>
+</section>
+</section>
+<section class="detail" id="register_asset">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">ThemeBase:</span>register_asset<span class="params">(name, path, options)</span></h3>
+<a href="#register_asset" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/classes/cl_theme.lua#L76" title="View source">packages/flow/lib/classes/cl_theme.lua:76</a>
+</div>
+<section class="docstring">
+<p>Registers an asset of the theme. Models are precached, images (PNG and JPEG) are stored
+as theme materials. When sizes are specified, the smallest scale that covers the height
+of the screen relative to 720p is picked, and the image is loaded from the file with the
+'_&lt;scale&gt;x' suffix instead.</p>
+<pre><code class="language-lua"><span class="hl-c">-- On a 1080p screen this loads &#39;materials/flux/gradient_2x.png&#39;.</span>
+<span class="hl-k">self</span>:<span class="hl-f">register_asset</span>(<span class="hl-s">&#39;gradient&#39;</span>, <span class="hl-s">&#39;materials/flux/gradient.png&#39;</span>, { sizes = { <span class="hl-n">1</span>, <span class="hl-n">2</span>, <span class="hl-n">4</span> } })
+</code></pre>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">name</span> <span class="type">String</span> <span class="desc">key to store the material under</span></li><li><span class="param-name">path</span> <span class="type">String</span> <span class="desc">path to the asset</span></li><li><span class="param-name">options</span> <span class="type">Map</span> <span class="default">optional, defaults to <code>{}</code></span> <span class="desc">sizes: List&lt;Number&gt; of available image scales, in ascending order</span></li></ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">Material</span> <span class="desc">the stored material, nil if the asset is not an image</span></li></ul>
+</section>
+</section>
+<section class="detail" id="remove">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">ThemeBase:</span>remove<span class="params">()</span></h3>
+<a href="#remove" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/classes/cl_theme.lua#L35" title="View source">packages/flow/lib/classes/cl_theme.lua:35</a>
+</div>
+<section class="docstring">
+<p>Removes this theme from the list of registered themes.</p>
+</section>
+</section>
+<section class="detail" id="set_color">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">ThemeBase:</span>set_color<span class="params">(id, val)</span></h3>
+<a href="#set_color" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/classes/cl_theme.lua#L134" title="View source">packages/flow/lib/classes/cl_theme.lua:134</a>
+</div>
+<section class="docstring">
+<p>Sets a color of the theme.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">id</span> <span class="type">String</span></li><li><span class="param-name">val</span> <span class="type">Color</span> <span class="default">optional, defaults to <code>Color(255, 255, 255)</code></span></li></ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">Color</span> <span class="desc">the color that has been set</span></li></ul>
+</section>
+</section>
+<section class="detail" id="set_font">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">ThemeBase:</span>set_font<span class="params">(key, value, scale, data)</span></h3>
+<a href="#set_font" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/classes/cl_theme.lua#L122" title="View source">packages/flow/lib/classes/cl_theme.lua:122</a>
+</div>
+<section class="docstring">
+<p>Sets a font of the theme. The font is derived from an existing one with Font.size.</p>
+<pre><code class="language-lua"><span class="hl-k">self</span>:<span class="hl-f">set_font</span>(<span class="hl-s">&#39;text_bar&#39;</span>, <span class="hl-s">&#39;flRoboto&#39;</span>, math.<span class="hl-f">scale</span>(<span class="hl-n">17</span>), { weight = <span class="hl-n">600</span> })
+</code></pre>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">key</span> <span class="type">String</span></li><li><span class="param-name">value</span> <span class="type">String</span> <span class="desc">name of an existing font to base this one on</span></li><li><span class="param-name">scale</span> <span class="type">Number</span> <span class="default">optional, defaults to <code>nil</code></span> <span class="desc">font size, the base font is used as is if omitted</span></li><li><span class="param-name">data</span> <span class="type">Map</span> <span class="default">optional, defaults to <code>nil</code></span> <span class="desc">extra font data to override in the sized font</span></li></ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">String</span> <span class="desc">name of the font that has been set</span></li></ul>
+</section>
+</section>
+<section class="detail" id="set_material">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">ThemeBase:</span>set_material<span class="params">(id, val)</span></h3>
+<a href="#set_material" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/classes/cl_theme.lua#L146" title="View source">packages/flow/lib/classes/cl_theme.lua:146</a>
+</div>
+<section class="docstring">
+<p>Sets a material of the theme.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">id</span> <span class="type">String</span></li><li><span class="param-name">val</span> <span class="type">String/Material</span> <span class="desc">material, or a path to load it from</span></li></ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">Material</span></li></ul>
+</section>
+</section>
+<section class="detail" id="set_option">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">ThemeBase:</span>set_option<span class="params">(key, value)</span></h3>
+<a href="#set_option" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/classes/cl_theme.lua#L105" title="View source">packages/flow/lib/classes/cl_theme.lua:105</a>
+</div>
+<section class="docstring">
+<p>Sets an option of the theme.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">key</span> <span class="type">String</span></li><li><span class="param-name">value</span> <span class="type">Any</span></li></ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">Any</span> <span class="desc">the value</span></li></ul>
+</section>
+</section>
+<section class="detail" id="set_sound">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">ThemeBase:</span>set_sound<span class="params">(id, val)</span></h3>
+<a href="#set_sound" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/classes/cl_theme.lua#L155" title="View source">packages/flow/lib/classes/cl_theme.lua:155</a>
+</div>
+<section class="docstring">
+<p>Sets a sound of the theme.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">id</span> <span class="type">String</span></li><li><span class="param-name">val</span> <span class="type">String</span> <span class="desc">path to the sound</span></li></ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">String</span> <span class="desc">the path that has been set</span></li></ul>
+</section>
+</section>
+</section>
+<section class="sources"><h2>Defined in</h2><ul><li><a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/classes/cl_theme.lua" title="View source">packages/flow/lib/classes/cl_theme.lua</a></li></ul></section>
+<template id="module-functions"><ul class="sidebar-functions"><li class="sidebar-category" data-anchor="methods">Methods</li><li><a href="#__tostring">__tostring</a></li><li><a href="#add_panel">add_panel</a></li><li><a href="#create_panel">create_panel</a></li><li><a href="#get_color">get_color</a></li><li><a href="#get_font">get_font</a></li><li><a href="#get_material">get_material</a></li><li><a href="#get_option">get_option</a></li><li><a href="#get_sound">get_sound</a></li><li><a href="#init">init</a></li><li><a href="#on_loaded">on_loaded</a></li><li><a href="#on_unloaded">on_unloaded</a></li><li><a href="#register">register</a></li><li><a href="#register_asset">register_asset</a></li><li><a href="#remove">remove</a></li><li><a href="#set_color">set_color</a></li><li><a href="#set_font">set_font</a></li><li><a href="#set_material">set_material</a></li><li><a href="#set_option">set_option</a></li><li><a href="#set_sound">set_sound</a></li></ul></template>
+
+<footer class="footer">
+<p>Built with <a href="https://github.com/TeslaCloud/fdoc">fdoc</a>.</p>
+</footer>
+</div>
+</main>
+<script src="../../assets/sidebar_items.js"></script>
+<script src="../../assets/app.js"></script>
+</body>
+</html>

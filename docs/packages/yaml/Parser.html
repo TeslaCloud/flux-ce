@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="generator" content="fdoc">
+<title>Parser — Flux v0.8.1</title>
+<link rel="stylesheet" href="../../assets/style.css">
+<script>try{var t=localStorage.getItem('fdoc-theme');if(t)document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
+</head>
+<body data-root="../../" data-group="packages/yaml" data-module="Parser">
+<div class="progress" id="progress"></div>
+<button class="sidebar-toggle" type="button" aria-label="Toggle navigation"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path fill="currentColor" d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg></button>
+<div class="sidebar-backdrop"></div>
+<aside class="sidebar" id="sidebar">
+<div class="sidebar-header">
+<a class="sidebar-project" href="../../index.html"><span class="sidebar-project-name">Flux</span> <span class="sidebar-project-version">v0.8.1</span></a>
+</div>
+<div class="sidebar-tabs" id="sidebar-tabs" role="tablist"></div>
+<nav class="sidebar-nav" id="sidebar-nav" aria-label="Documentation"><noscript><p class="sidebar-noscript"><a href="../../index.html">Index</a></p></noscript></nav>
+</aside>
+<main class="content" id="content">
+<div class="topbar">
+<form class="search" action="../../search.html" method="get" autocomplete="off" role="search">
+<input type="search" name="q" id="search-input" placeholder="Press / to search" aria-label="Search">
+<ul class="search-suggestions" id="search-suggestions" hidden></ul>
+</form>
+<button class="theme-toggle" type="button" aria-label="Toggle night mode"><span class="icon-moon"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M12 3a9 9 0 1 0 9 9c0-.46-.04-.92-.1-1.36a5.389 5.389 0 0 1-4.4 2.26 5.403 5.403 0 0 1-3.14-9.8c-.44-.06-.9-.1-1.36-.1z"/></svg></span><span class="icon-sun"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M6.76 4.84l-1.8-1.79-1.41 1.41 1.79 1.79 1.42-1.41zM4 10.5H1v2h3v-2zm9-9.95h-2V3.5h2V.55zm7.45 3.91l-1.41-1.41-1.79 1.79 1.41 1.41 1.79-1.79zm-3.21 13.7l1.79 1.8 1.41-1.41-1.8-1.79-1.4 1.4zM20 10.5v2h3v-2h-3zm-8-5c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6zm-1 16.95h2V19.5h-2v2.95zm-7.45-3.91l1.41 1.41 1.79-1.8-1.41-1.41-1.79 1.8z"/></svg></span></button>
+</div>
+<div class="content-inner" id="content-inner">
+<div class="page-header"><h1>Parser <span class="badge badge-library">library</span></h1><p class="subtitle">Part of <a href="../../packages/yaml/index.html">YAML</a></p></div>
+<section class="summary"><h2 id="summary">Summary</h2>
+<div class="summary-group"><h3>Functions</h3>
+<div class="summary-row"><div class="summary-signature"><a href="#accept">accept(self, type)</a></div><div class="summary-synopsis"></div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#advance">advance(self)</a></div><div class="summary-synopsis"></div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#advanceValue">advanceValue(self)</a></div><div class="summary-synopsis"></div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#expect">expect(self, type, msg)</a></div><div class="summary-synopsis"></div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#expectDedent">expectDedent(self, msg)</a></div><div class="summary-synopsis"></div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#ignore">ignore(self, items)</a></div><div class="summary-synopsis"></div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#ignoreSpace">ignoreSpace(self)</a></div><div class="summary-synopsis"></div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#ignoreWhitespace">ignoreWhitespace(self)</a></div><div class="summary-synopsis"></div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#inline">inline(self)</a></div><div class="summary-synopsis"></div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#isInline">isInline(self)</a></div><div class="summary-synopsis"></div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#new">new(self, tokens)</a></div><div class="summary-synopsis"></div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#parent">parent(self, level)</a></div><div class="summary-synopsis"></div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#parentType">parentType(self, type, level)</a></div><div class="summary-synopsis"></div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#parse">parse(self)</a></div><div class="summary-synopsis"></div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#parseDoc">parseDoc(self)</a></div><div class="summary-synopsis"></div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#parseHash">parseHash(self, hash)</a></div><div class="summary-synopsis"></div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#parseInlineHash">parseInlineHash(self)</a></div><div class="summary-synopsis"></div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#parseInlineList">parseInlineList(self)</a></div><div class="summary-synopsis"></div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#parseList">parseList(self)</a></div><div class="summary-synopsis"></div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#parsePipe">parsePipe(self)</a></div><div class="summary-synopsis"></div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#parseString">parseString(self)</a></div><div class="summary-synopsis"></div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#parseTextBlock">parseTextBlock(self, sep)</a></div><div class="summary-synopsis"></div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#parseTimestamp">parseTimestamp(self)</a></div><div class="summary-synopsis"></div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#peek">peek(self, offset)</a></div><div class="summary-synopsis"></div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#peekType">peekType(self, val, offset)</a></div><div class="summary-synopsis"></div></div>
+</div>
+</section>
+<section class="details-group"><h2 id="functions">Functions</h2>
+<section class="detail" id="accept">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Parser.</span>accept<span class="params">(self, type)</span></h3>
+<a href="#accept" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/yaml/lib/yaml.lua#L255" title="View source">packages/yaml/lib/yaml.lua:255</a>
+</div>
+<section class="docstring">
+<p class="muted">No documentation available.</p>
+</section>
+</section>
+<section class="detail" id="advance">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Parser.</span>advance<span class="params">(self)</span></h3>
+<a href="#advance" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/yaml/lib/yaml.lua#L246" title="View source">packages/yaml/lib/yaml.lua:246</a>
+</div>
+<section class="docstring">
+<p class="muted">No documentation available.</p>
+</section>
+</section>
+<section class="detail" id="advanceValue">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Parser.</span>advanceValue<span class="params">(self)</span></h3>
+<a href="#advanceValue" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/yaml/lib/yaml.lua#L251" title="View source">packages/yaml/lib/yaml.lua:251</a>
+</div>
+<section class="docstring">
+<p class="muted">No documentation available.</p>
+</section>
+</section>
+<section class="detail" id="expect">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Parser.</span>expect<span class="params">(self, type, msg)</span></h3>
+<a href="#expect" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/yaml/lib/yaml.lua#L261" title="View source">packages/yaml/lib/yaml.lua:261</a>
+</div>
+<section class="docstring">
+<p class="muted">No documentation available.</p>
+</section>
+</section>
+<section class="detail" id="expectDedent">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Parser.</span>expectDedent<span class="params">(self, msg)</span></h3>
+<a href="#expectDedent" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/yaml/lib/yaml.lua#L266" title="View source">packages/yaml/lib/yaml.lua:266</a>
+</div>
+<section class="docstring">
+<p class="muted">No documentation available.</p>
+</section>
+</section>
+<section class="detail" id="ignore">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Parser.</span>ignore<span class="params">(self, items)</span></h3>
+<a href="#ignore" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/yaml/lib/yaml.lua#L275" title="View source">packages/yaml/lib/yaml.lua:275</a>
+</div>
+<section class="docstring">
+<p class="muted">No documentation available.</p>
+</section>
+</section>
+<section class="detail" id="ignoreSpace">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Parser.</span>ignoreSpace<span class="params">(self)</span></h3>
+<a href="#ignoreSpace" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/yaml/lib/yaml.lua#L288" title="View source">packages/yaml/lib/yaml.lua:288</a>
+</div>
+<section class="docstring">
+<p class="muted">No documentation available.</p>
+</section>
+</section>
+<section class="detail" id="ignoreWhitespace">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Parser.</span>ignoreWhitespace<span class="params">(self)</span></h3>
+<a href="#ignoreWhitespace" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/yaml/lib/yaml.lua#L292" title="View source">packages/yaml/lib/yaml.lua:292</a>
+</div>
+<section class="docstring">
+<p class="muted">No documentation available.</p>
+</section>
+</section>
+<section class="detail" id="inline">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Parser.</span>inline<span class="params">(self)</span></h3>
+<a href="#inline" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/yaml/lib/yaml.lua#L361" title="View source">packages/yaml/lib/yaml.lua:361</a>
+</div>
+<section class="docstring">
+<p class="muted">No documentation available.</p>
+</section>
+</section>
+<section class="detail" id="isInline">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Parser.</span>isInline<span class="params">(self)</span></h3>
+<a href="#isInline" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/yaml/lib/yaml.lua#L377" title="View source">packages/yaml/lib/yaml.lua:377</a>
+</div>
+<section class="docstring">
+<p class="muted">No documentation available.</p>
+</section>
+</section>
+<section class="detail" id="new">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Parser.</span>new<span class="params">(self, tokens)</span></h3>
+<a href="#new" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/yaml/lib/yaml.lua#L87" title="View source">packages/yaml/lib/yaml.lua:87</a>
+</div>
+<section class="docstring">
+<p class="muted">No documentation available.</p>
+</section>
+</section>
+<section class="detail" id="parent">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Parser.</span>parent<span class="params">(self, level)</span></h3>
+<a href="#parent" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/yaml/lib/yaml.lua#L382" title="View source">packages/yaml/lib/yaml.lua:382</a>
+</div>
+<section class="docstring">
+<p class="muted">No documentation available.</p>
+</section>
+</section>
+<section class="detail" id="parentType">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Parser.</span>parentType<span class="params">(self, type, level)</span></h3>
+<a href="#parentType" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/yaml/lib/yaml.lua#L387" title="View source">packages/yaml/lib/yaml.lua:387</a>
+</div>
+<section class="docstring">
+<p class="muted">No documentation available.</p>
+</section>
+</section>
+<section class="detail" id="parse">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Parser.</span>parse<span class="params">(self)</span></h3>
+<a href="#parse" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/yaml/lib/yaml.lua#L296" title="View source">packages/yaml/lib/yaml.lua:296</a>
+</div>
+<section class="docstring">
+<p class="muted">No documentation available.</p>
+</section>
+</section>
+<section class="detail" id="parseDoc">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Parser.</span>parseDoc<span class="params">(self)</span></h3>
+<a href="#parseDoc" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/yaml/lib/yaml.lua#L356" title="View source">packages/yaml/lib/yaml.lua:356</a>
+</div>
+<section class="docstring">
+<p class="muted">No documentation available.</p>
+</section>
+</section>
+<section class="detail" id="parseHash">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Parser.</span>parseHash<span class="params">(self, hash)</span></h3>
+<a href="#parseHash" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/yaml/lib/yaml.lua#L468" title="View source">packages/yaml/lib/yaml.lua:468</a>
+</div>
+<section class="docstring">
+<p class="muted">No documentation available.</p>
+</section>
+</section>
+<section class="detail" id="parseInlineHash">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Parser.</span>parseInlineHash<span class="params">(self)</span></h3>
+<a href="#parseInlineHash" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/yaml/lib/yaml.lua#L504" title="View source">packages/yaml/lib/yaml.lua:504</a>
+</div>
+<section class="docstring">
+<p class="muted">No documentation available.</p>
+</section>
+</section>
+<section class="detail" id="parseInlineList">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Parser.</span>parseInlineList<span class="params">(self)</span></h3>
+<a href="#parseInlineList" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/yaml/lib/yaml.lua#L543" title="View source">packages/yaml/lib/yaml.lua:543</a>
+</div>
+<section class="docstring">
+<p class="muted">No documentation available.</p>
+</section>
+</section>
+<section class="detail" id="parseList">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Parser.</span>parseList<span class="params">(self)</span></h3>
+<a href="#parseList" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/yaml/lib/yaml.lua#L532" title="View source">packages/yaml/lib/yaml.lua:532</a>
+</div>
+<section class="docstring">
+<p class="muted">No documentation available.</p>
+</section>
+</section>
+<section class="detail" id="parsePipe">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Parser.</span>parsePipe<span class="params">(self)</span></h3>
+<a href="#parsePipe" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/yaml/lib/yaml.lua#L439" title="View source">packages/yaml/lib/yaml.lua:439</a>
+</div>
+<section class="docstring">
+<p class="muted">No documentation available.</p>
+</section>
+</section>
+<section class="detail" id="parseString">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Parser.</span>parseString<span class="params">(self)</span></h3>
+<a href="#parseString" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/yaml/lib/yaml.lua#L391" title="View source">packages/yaml/lib/yaml.lua:391</a>
+</div>
+<section class="docstring">
+<p class="muted">No documentation available.</p>
+</section>
+</section>
+<section class="detail" id="parseTextBlock">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Parser.</span>parseTextBlock<span class="params">(self, sep)</span></h3>
+<a href="#parseTextBlock" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/yaml/lib/yaml.lua#L447" title="View source">packages/yaml/lib/yaml.lua:447</a>
+</div>
+<section class="docstring">
+<p class="muted">No documentation available.</p>
+</section>
+</section>
+<section class="detail" id="parseTimestamp">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Parser.</span>parseTimestamp<span class="params">(self)</span></h3>
+<a href="#parseTimestamp" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/yaml/lib/yaml.lua#L562" title="View source">packages/yaml/lib/yaml.lua:562</a>
+</div>
+<section class="docstring">
+<p class="muted">No documentation available.</p>
+</section>
+</section>
+<section class="detail" id="peek">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Parser.</span>peek<span class="params">(self, offset)</span></h3>
+<a href="#peek" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/yaml/lib/yaml.lua#L241" title="View source">packages/yaml/lib/yaml.lua:241</a>
+</div>
+<section class="docstring">
+<p class="muted">No documentation available.</p>
+</section>
+</section>
+<section class="detail" id="peekType">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Parser.</span>peekType<span class="params">(self, val, offset)</span></h3>
+<a href="#peekType" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/yaml/lib/yaml.lua#L271" title="View source">packages/yaml/lib/yaml.lua:271</a>
+</div>
+<section class="docstring">
+<p class="muted">No documentation available.</p>
+</section>
+</section>
+</section>
+<section class="sources"><h2>Defined in</h2><ul><li><a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/yaml/lib/yaml.lua" title="View source">packages/yaml/lib/yaml.lua</a></li></ul></section>
+<template id="module-functions"><ul class="sidebar-functions"><li class="sidebar-category" data-anchor="functions">Functions</li><li><a href="#accept">accept</a></li><li><a href="#advance">advance</a></li><li><a href="#advanceValue">advanceValue</a></li><li><a href="#expect">expect</a></li><li><a href="#expectDedent">expectDedent</a></li><li><a href="#ignore">ignore</a></li><li><a href="#ignoreSpace">ignoreSpace</a></li><li><a href="#ignoreWhitespace">ignoreWhitespace</a></li><li><a href="#inline">inline</a></li><li><a href="#isInline">isInline</a></li><li><a href="#new">new</a></li><li><a href="#parent">parent</a></li><li><a href="#parentType">parentType</a></li><li><a href="#parse">parse</a></li><li><a href="#parseDoc">parseDoc</a></li><li><a href="#parseHash">parseHash</a></li><li><a href="#parseInlineHash">parseInlineHash</a></li><li><a href="#parseInlineList">parseInlineList</a></li><li><a href="#parseList">parseList</a></li><li><a href="#parsePipe">parsePipe</a></li><li><a href="#parseString">parseString</a></li><li><a href="#parseTextBlock">parseTextBlock</a></li><li><a href="#parseTimestamp">parseTimestamp</a></li><li><a href="#peek">peek</a></li><li><a href="#peekType">peekType</a></li></ul></template>
+
+<footer class="footer">
+<p>Built with <a href="https://github.com/TeslaCloud/fdoc">fdoc</a>.</p>
+</footer>
+</div>
+</main>
+<script src="../../assets/sidebar_items.js"></script>
+<script src="../../assets/app.js"></script>
+</body>
+</html>

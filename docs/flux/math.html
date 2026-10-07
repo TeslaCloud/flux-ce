@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="generator" content="fdoc">
+<title>math — Flux v0.8.1</title>
+<link rel="stylesheet" href="../assets/style.css">
+<script>try{var t=localStorage.getItem('fdoc-theme');if(t)document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
+</head>
+<body data-root="../" data-group="flux" data-module="math">
+<div class="progress" id="progress"></div>
+<button class="sidebar-toggle" type="button" aria-label="Toggle navigation"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path fill="currentColor" d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg></button>
+<div class="sidebar-backdrop"></div>
+<aside class="sidebar" id="sidebar">
+<div class="sidebar-header">
+<a class="sidebar-project" href="../index.html"><span class="sidebar-project-name">Flux</span> <span class="sidebar-project-version">v0.8.1</span></a>
+</div>
+<div class="sidebar-tabs" id="sidebar-tabs" role="tablist"></div>
+<nav class="sidebar-nav" id="sidebar-nav" aria-label="Documentation"><noscript><p class="sidebar-noscript"><a href="../index.html">Index</a></p></noscript></nav>
+</aside>
+<main class="content" id="content">
+<div class="topbar">
+<form class="search" action="../search.html" method="get" autocomplete="off" role="search">
+<input type="search" name="q" id="search-input" placeholder="Press / to search" aria-label="Search">
+<ul class="search-suggestions" id="search-suggestions" hidden></ul>
+</form>
+<button class="theme-toggle" type="button" aria-label="Toggle night mode"><span class="icon-moon"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M12 3a9 9 0 1 0 9 9c0-.46-.04-.92-.1-1.36a5.389 5.389 0 0 1-4.4 2.26 5.403 5.403 0 0 1-3.14-9.8c-.44-.06-.9-.1-1.36-.1z"/></svg></span><span class="icon-sun"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M6.76 4.84l-1.8-1.79-1.41 1.41 1.79 1.79 1.42-1.41zM4 10.5H1v2h3v-2zm9-9.95h-2V3.5h2V.55zm7.45 3.91l-1.41-1.41-1.79 1.79 1.41 1.41 1.79-1.79zm-3.21 13.7l1.79 1.8 1.41-1.41-1.8-1.79-1.4 1.4zM20 10.5v2h3v-2h-3zm-8-5c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6zm-1 16.95h2V19.5h-2v2.95zm-7.45-3.91l1.41 1.41 1.79-1.8-1.41-1.41-1.79 1.8z"/></svg></span></button>
+</div>
+<div class="content-inner" id="content-inner">
+<div class="page-header"><h1>math <span class="badge badge-library">library</span></h1></div>
+<section class="summary"><h2 id="summary">Summary</h2>
+<div class="summary-group"><h3>Functions</h3>
+<div class="summary-row"><div class="summary-signature"><a href="#divisible">divisible(num, factor)</a></div><div class="summary-synopsis">Checks whether a number is divisible by another number without a remainder.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#even">even(num)</a></div><div class="summary-synopsis">Checks whether a number is even.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#odd">odd(num)</a></div><div class="summary-synopsis">Checks whether a number is odd.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#scale">scale(size)</a></div><div class="summary-synopsis">Scales a size that was designed for a 1080 pixels tall screen to the current screen height. Clientside only, since it depends on the screen resolution.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#scale_size">scale_size(x, y)</a></div><div class="summary-synopsis">Scales a width and a height that were designed for a 1920x1080 screen to the current screen resolution. Clientside only.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#scale_x">scale_x(size)</a></div><div class="summary-synopsis">Scales a size that was designed for a 1920 pixels wide screen to the current screen width. Clientside only, since it depends on the screen resolution.</div></div>
+</div>
+</section>
+<section class="details-group"><h2 id="functions">Functions</h2>
+<section class="detail" id="divisible">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">math.</span>divisible<span class="params">(num, factor)</span></h3>
+<a href="#divisible" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_math.lua#L194" title="View source">lib/stdlib/sh_math.lua:194</a>
+</div>
+<section class="docstring">
+<p>Checks whether a number is divisible by another number without a remainder.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">num</span> <span class="type">Number</span></li><li><span class="param-name">factor</span> <span class="type">Number</span> <span class="desc">divisor</span></li></ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">Boolean</span></li></ul>
+</section>
+</section>
+<section class="detail" id="even">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">math.</span>even<span class="params">(num)</span></h3>
+<a href="#even" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_math.lua#L179" title="View source">lib/stdlib/sh_math.lua:179</a>
+</div>
+<section class="docstring">
+<p>Checks whether a number is even.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">num</span> <span class="type">Number</span></li></ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">Boolean</span></li></ul>
+</section>
+</section>
+<section class="detail" id="odd">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">math.</span>odd<span class="params">(num)</span></h3>
+<a href="#odd" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_math.lua#L186" title="View source">lib/stdlib/sh_math.lua:186</a>
+</div>
+<section class="docstring">
+<p>Checks whether a number is odd.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">num</span> <span class="type">Number</span></li></ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">Boolean</span></li></ul>
+</section>
+</section>
+<section class="detail" id="scale">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">math.</span>scale<span class="params">(size)</span></h3>
+<a href="#scale" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_math.lua#L150" title="View source">lib/stdlib/sh_math.lua:150</a>
+</div>
+<section class="docstring">
+<p>Scales a size that was designed for a 1080 pixels tall screen to the current screen height.
+Clientside only, since it depends on the screen resolution.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">size</span> <span class="type">Number</span> <span class="desc">size at 1080p</span></li></ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">Number</span> <span class="desc">scaled size, rounded down</span></li></ul>
+</section>
+</section>
+<section class="detail" id="scale_size">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">math.</span>scale_size<span class="params">(x, y)</span></h3>
+<a href="#scale_size" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_math.lua#L167" title="View source">lib/stdlib/sh_math.lua:167</a>
+</div>
+<section class="docstring">
+<p>Scales a width and a height that were designed for a 1920x1080 screen to the current
+screen resolution. Clientside only.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">x</span> <span class="type">Number</span> <span class="desc">width at 1920x1080</span></li><li><span class="param-name">y</span> <span class="type">Number</span> <span class="desc">height at 1920x1080</span></li></ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">Number</span> <span class="desc">scaled width</span></li><li><span class="type">Number</span> <span class="desc">scaled height</span></li></ul>
+</section>
+</section>
+<section class="detail" id="scale_x">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">math.</span>scale_x<span class="params">(size)</span></h3>
+<a href="#scale_x" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_math.lua#L158" title="View source">lib/stdlib/sh_math.lua:158</a>
+</div>
+<section class="docstring">
+<p>Scales a size that was designed for a 1920 pixels wide screen to the current screen width.
+Clientside only, since it depends on the screen resolution.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">size</span> <span class="type">Number</span> <span class="desc">size at 1920 pixels of width</span></li></ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">Number</span> <span class="desc">scaled size, rounded down</span></li></ul>
+</section>
+</section>
+</section>
+<section class="sources"><h2>Defined in</h2><ul><li><a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_math.lua" title="View source">lib/stdlib/sh_math.lua</a></li></ul></section>
+<template id="module-functions"><ul class="sidebar-functions"><li class="sidebar-category" data-anchor="functions">Functions</li><li><a href="#divisible">divisible</a></li><li><a href="#even">even</a></li><li><a href="#odd">odd</a></li><li><a href="#scale">scale</a></li><li><a href="#scale_size">scale_size</a></li><li><a href="#scale_x">scale_x</a></li></ul></template>
+
+<footer class="footer">
+<p>Built with <a href="https://github.com/TeslaCloud/fdoc">fdoc</a>.</p>
+</footer>
+</div>
+</main>
+<script src="../assets/sidebar_items.js"></script>
+<script src="../assets/app.js"></script>
+</body>
+</html>

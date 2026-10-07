@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="generator" content="fdoc">
+<title>Tool — Flux v0.8.1</title>
+<link rel="stylesheet" href="../../assets/style.css">
+<script>try{var t=localStorage.getItem('fdoc-theme');if(t)document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
+</head>
+<body data-root="../../" data-group="packages/flow" data-module="Tool">
+<div class="progress" id="progress"></div>
+<button class="sidebar-toggle" type="button" aria-label="Toggle navigation"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path fill="currentColor" d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg></button>
+<div class="sidebar-backdrop"></div>
+<aside class="sidebar" id="sidebar">
+<div class="sidebar-header">
+<a class="sidebar-project" href="../../index.html"><span class="sidebar-project-name">Flux</span> <span class="sidebar-project-version">v0.8.1</span></a>
+</div>
+<div class="sidebar-tabs" id="sidebar-tabs" role="tablist"></div>
+<nav class="sidebar-nav" id="sidebar-nav" aria-label="Documentation"><noscript><p class="sidebar-noscript"><a href="../../index.html">Index</a></p></noscript></nav>
+</aside>
+<main class="content" id="content">
+<div class="topbar">
+<form class="search" action="../../search.html" method="get" autocomplete="off" role="search">
+<input type="search" name="q" id="search-input" placeholder="Press / to search" aria-label="Search">
+<ul class="search-suggestions" id="search-suggestions" hidden></ul>
+</form>
+<button class="theme-toggle" type="button" aria-label="Toggle night mode"><span class="icon-moon"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M12 3a9 9 0 1 0 9 9c0-.46-.04-.92-.1-1.36a5.389 5.389 0 0 1-4.4 2.26 5.403 5.403 0 0 1-3.14-9.8c-.44-.06-.9-.1-1.36-.1z"/></svg></span><span class="icon-sun"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M6.76 4.84l-1.8-1.79-1.41 1.41 1.79 1.79 1.42-1.41zM4 10.5H1v2h3v-2zm9-9.95h-2V3.5h2V.55zm7.45 3.91l-1.41-1.41-1.79 1.79 1.41 1.41 1.79-1.79zm-3.21 13.7l1.79 1.8 1.41-1.41-1.8-1.79-1.4 1.4zM20 10.5v2h3v-2h-3zm-8-5c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6zm-1 16.95h2V19.5h-2v2.95zm-7.45-3.91l1.41 1.41 1.79-1.8-1.41-1.41-1.79 1.8z"/></svg></span></button>
+</div>
+<div class="content-inner" id="content-inner">
+<div class="page-header"><h1>Tool <span class="badge badge-class">class</span></h1><p class="subtitle">Part of <a href="../../packages/flow/index.html">Flow</a></p></div>
+<section class="summary"><h2 id="summary">Summary</h2>
+<div class="summary-group"><h3>Methods</h3>
+<div class="summary-row"><div class="summary-signature"><a href="#__tostring">__tostring()</a></div><div class="summary-synopsis">Converts the tool to a string for printing.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#Allowed">Allowed()</a></div><div class="summary-synopsis">Checks whether the tool is allowed to be used on the server. Always true on the client.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#BuildConVarList">BuildConVarList()</a></div><div class="summary-synopsis">Builds a list of the client console variables of the tool with their defaults.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#CheckObjects">CheckObjects()</a></div><div class="summary-synopsis">Clears the selected objects if any of their entities has been removed.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#ClearObjects">ClearObjects()</a></div><div class="summary-synopsis">Clears the selected objects, removes the ghost entity and resets the stage and operation.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#CreateConVars">CreateConVars()</a></div><div class="summary-synopsis">Creates the console variables of the tool: the ones listed in ClientConVar on the client, and 'toolmode_allow_&lt;mode&gt;' on the server.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#Deploy">Deploy()</a></div><div class="summary-synopsis">Called when the tool gun is deployed. Removes the ghost entity by default.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#DrawHUD">DrawHUD()</a></div><div class="summary-synopsis">Gives the tool an opportunity to draw to the HUD. Does nothing by default.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#DrawToolScreen">DrawToolScreen(w, h)</a></div><div class="summary-synopsis">Draws the scrolling name of the tool on the screen of the tool gun.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#FreezeMovement">FreezeMovement()</a></div><div class="summary-synopsis">Determines whether the view angles of the owner should be frozen while using the tool. Returns false by default.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#GetBone">GetBone(i)</a></div><div class="summary-synopsis">Returns the physics bone number of the numbered hit (for ragdolls).</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#GetClientInfo">GetClientInfo(property)</a></div><div class="summary-synopsis">Returns the value of a client console variable of the tool for its owner.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#GetClientNumber">GetClientNumber(property, default)</a></div><div class="summary-synopsis">Returns the value of a client console variable of the tool for its owner as a number.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#GetEnt">GetEnt(i)</a></div><div class="summary-synopsis">Returns the entity of the numbered hit.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#GetHelpText">GetHelpText()</a></div><div class="summary-synopsis">Returns the translated description of the tool.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#GetLocalPos">GetLocalPos(i)</a></div><div class="summary-synopsis">Returns the position of the numbered hit local to the entity that was hit.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#GetMode">GetMode()</a></div><div class="summary-synopsis">Returns the mode (ID) of the tool.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#GetNormal">GetNormal(i)</a></div><div class="summary-synopsis">Returns the surface normal of the numbered hit in world space.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#GetOperation">GetOperation()</a></div><div class="summary-synopsis">Returns the current operation of the tool.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#GetOwner">GetOwner()</a></div><div class="summary-synopsis">Returns the player who holds the tool gun.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#GetPhys">GetPhys(i)</a></div><div class="summary-synopsis">Returns the physics object of the numbered hit.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#GetPos">GetPos(i)</a></div><div class="summary-synopsis">Returns the world position of the numbered hit.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#GetServerInfo">GetServerInfo(property)</a></div><div class="summary-synopsis">Returns the value of a console variable of the tool.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#GetStage">GetStage()</a></div><div class="summary-synopsis">Returns the current stage of the tool.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#GetSWEP">GetSWEP()</a></div><div class="summary-synopsis">Returns the tool gun that this tool belongs to.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#GetWeapon">GetWeapon()</a></div><div class="summary-synopsis">Returns the weapon entity of the tool gun.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#Holster">Holster()</a></div><div class="summary-synopsis">Called when the tool gun is holstered. Removes the ghost entity by default.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#init">init()</a></div><div class="summary-synopsis">Creates a new tool with the default values of its fields.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#Init">Init()</a></div><div class="summary-synopsis">Called when the tool gun initializes the tool. Does nothing by default.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#LeftClick">LeftClick()</a></div><div class="summary-synopsis">Called when the owner presses primary attack. Returns false by default.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#MakeGhostEntity">MakeGhostEntity(model, pos, angle)</a></div><div class="summary-synopsis">Creates a translucent ghost prop that previews the result of the tool, replacing the previous one. Ragdolls and effects cannot be ghosts.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#NumObjects">NumObjects()</a></div><div class="summary-synopsis">Returns the number of selected objects. On the client this is the stage of the tool.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#ReleaseGhostEntity">ReleaseGhostEntity()</a></div><div class="summary-synopsis">Removes the ghost entity of the tool.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#Reload">Reload()</a></div><div class="summary-synopsis">Called when the owner presses reload. Clears the selected objects by default.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#RightClick">RightClick()</a></div><div class="summary-synopsis">Called when the owner presses secondary attack. Returns false by default.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#SetObject">SetObject(i, ent, pos, phys, bone, norm)</a></div><div class="summary-synopsis">Stores a selected object. The position and the normal are converted to be local to the physics object (or the entity), so that they stay valid when it moves.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#SetOperation">SetOperation(i)</a></div><div class="summary-synopsis">Sets the operation of the tool and networks it to the clients. Does nothing on the client.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#SetStage">SetStage(i)</a></div><div class="summary-synopsis">Sets the stage of the tool and networks it to the clients. Does nothing on the client.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#StartGhostEntity">StartGhostEntity(ent)</a></div><div class="summary-synopsis">Creates a ghost entity that copies the model, position and angles of the specified entity.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#Think">Think()</a></div><div class="summary-synopsis">Called every tick while the tool is active. Removes the ghost entity by default.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#UpdateData">UpdateData()</a></div><div class="summary-synopsis">Sets the stage of the tool to the number of selected objects.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#UpdateGhostEntity">UpdateGhostEntity()</a></div><div class="summary-synopsis">Moves the ghost entity to where the first selected object would end up if the tool was applied to the spot the owner is aiming at.</div></div>
+</div>
+</section>
+<section class="details-group"><h2 id="methods">Methods</h2>
+<section class="detail" id="__tostring">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Tool:</span>__tostring<span class="params">()</span></h3>
+<a href="#__tostring" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/classes/sh_tool.lua#L453" title="View source">packages/flow/lib/classes/sh_tool.lua:453</a>
+</div>
+<section class="docstring">
+<p>Converts the tool to a string for printing.</p>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">String</span></li></ul>
+</section>
+</section>
+<section class="detail" id="Allowed">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Tool:</span>Allowed<span class="params">()</span></h3>
+<a href="#Allowed" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/classes/sh_tool.lua#L389" title="View source">packages/flow/lib/classes/sh_tool.lua:389</a>
+</div>
+<section class="docstring">
+<p>Checks whether the tool is allowed to be used on the server. Always true on the client.</p>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">Boolean</span></li></ul>
+</section>
+</section>
+<section class="detail" id="BuildConVarList">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Tool:</span>BuildConVarList<span class="params">()</span></h3>
+<a href="#BuildConVarList" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/classes/sh_tool.lua#L363" title="View source">packages/flow/lib/classes/sh_tool.lua:363</a>
+</div>
+<section class="docstring">
+<p>Builds a list of the client console variables of the tool with their defaults.</p>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">Map</span> <span class="desc">default values by full variable name</span></li></ul>
+</section>
+</section>
+<section class="detail" id="CheckObjects">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Tool:</span>CheckObjects<span class="params">()</span></h3>
+<a href="#CheckObjects" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/classes/sh_tool.lua#L443" title="View source">packages/flow/lib/classes/sh_tool.lua:443</a>
+</div>
+<section class="docstring">
+<p>Clears the selected objects if any of their entities has been removed.</p>
+</section>
+</section>
+<section class="detail" id="ClearObjects">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Tool:</span>ClearObjects<span class="params">()</span></h3>
+<a href="#ClearObjects" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/classes/sh_tool.lua#L186" title="View source">packages/flow/lib/classes/sh_tool.lua:186</a>
+</div>
+<section class="docstring">
+<p>Clears the selected objects, removes the ghost entity and resets the stage and operation.</p>
+</section>
+</section>
+<section class="detail" id="CreateConVars">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Tool:</span>CreateConVars<span class="params">()</span></h3>
+<a href="#CreateConVars" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/classes/sh_tool.lua#L337" title="View source">packages/flow/lib/classes/sh_tool.lua:337</a>
+</div>
+<section class="docstring">
+<p>Creates the console variables of the tool: the ones listed in ClientConVar on the client,
+and 'toolmode_allow_&lt;mode&gt;' on the server.</p>
+</section>
+</section>
+<section class="detail" id="Deploy">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Tool:</span>Deploy<span class="params">()</span></h3>
+<a href="#Deploy" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/classes/sh_tool.lua#L429" title="View source">packages/flow/lib/classes/sh_tool.lua:429</a>
+</div>
+<section class="docstring">
+<p>Called when the tool gun is deployed. Removes the ghost entity by default.</p>
+</section>
+</section>
+<section class="detail" id="DrawHUD">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Tool:</span>DrawHUD<span class="params">()</span></h3>
+<a href="#DrawHUD" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/classes/sh_tool.lua#L317" title="View source">packages/flow/lib/classes/sh_tool.lua:317</a>
+</div>
+<section class="docstring">
+<p>Gives the tool an opportunity to draw to the HUD. Does nothing by default.</p>
+</section>
+</section>
+<section class="detail" id="DrawToolScreen">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Tool:</span>DrawToolScreen<span class="params">(w, h)</span></h3>
+<a href="#DrawToolScreen" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/classes/sh_tool.lua#L20" title="View source">packages/flow/lib/classes/sh_tool.lua:20</a>
+</div>
+<section class="docstring">
+<p>Draws the scrolling name of the tool on the screen of the tool gun.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">w</span> <span class="type">Number</span> <span class="desc">width of the screen</span></li><li><span class="param-name">h</span> <span class="type">Number</span> <span class="desc">height of the screen</span></li></ul>
+</section>
+</section>
+<section class="detail" id="FreezeMovement">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Tool:</span>FreezeMovement<span class="params">()</span></h3>
+<a href="#FreezeMovement" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/classes/sh_tool.lua#L312" title="View source">packages/flow/lib/classes/sh_tool.lua:312</a>
+</div>
+<section class="docstring">
+<p>Determines whether the view angles of the owner should be frozen while using the tool.
+Returns false by default.</p>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">Boolean</span></li></ul>
+</section>
+</section>
+<section class="detail" id="GetBone">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Tool:</span>GetBone<span class="params">(i)</span></h3>
+<a href="#GetBone" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/classes/sh_tool.lua#L227" title="View source">packages/flow/lib/classes/sh_tool.lua:227</a>
+</div>
+<section class="docstring">
+<p>Returns the physics bone number of the numbered hit (for ragdolls).</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">i</span> <span class="type">Number</span> <span class="desc">index of the selected object</span></li></ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">Number</span></li></ul>
+</section>
+</section>
+<section class="detail" id="GetClientInfo">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Tool:</span>GetClientInfo<span class="params">(property)</span></h3>
+<a href="#GetClientInfo" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/classes/sh_tool.lua#L375" title="View source">packages/flow/lib/classes/sh_tool.lua:375</a>
+</div>
+<section class="docstring">
+<p>Returns the value of a client console variable of the tool for its owner.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">property</span> <span class="type">String</span> <span class="desc">name of the variable without the tool mode prefix</span></li></ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">String</span></li></ul>
+</section>
+</section>
+<section class="detail" id="GetClientNumber">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Tool:</span>GetClientNumber<span class="params">(property, default)</span></h3>
+<a href="#GetClientNumber" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/classes/sh_tool.lua#L383" title="View source">packages/flow/lib/classes/sh_tool.lua:383</a>
+</div>
+<section class="docstring">
+<p>Returns the value of a client console variable of the tool for its owner as a number.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">property</span> <span class="type">String</span> <span class="desc">name of the variable without the tool mode prefix</span></li><li><span class="param-name">default</span> <span class="type">Number</span> <span class="default">optional, defaults to <code>0</code></span> <span class="desc">returned if the variable is not a number</span></li></ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">Number</span></li></ul>
+</section>
+</section>
+<section class="detail" id="GetEnt">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Tool:</span>GetEnt<span class="params">(i)</span></h3>
+<a href="#GetEnt" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/classes/sh_tool.lua#L196" title="View source">packages/flow/lib/classes/sh_tool.lua:196</a>
+</div>
+<section class="docstring">
+<p>Returns the entity of the numbered hit.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">i</span> <span class="type">Number</span> <span class="desc">index of the selected object</span></li></ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">Entity</span> <span class="desc">the entity</span></li><li><span class="type">NULL</span> <span class="desc">if there is no object with this index</span></li></ul>
+</section>
+</section>
+<section class="detail" id="GetHelpText">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Tool:</span>GetHelpText<span class="params">()</span></h3>
+<a href="#GetHelpText" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/classes/sh_tool.lua#L47" title="View source">packages/flow/lib/classes/sh_tool.lua:47</a>
+</div>
+<section class="docstring">
+<p>Returns the translated description of the tool.</p>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">String</span></li></ul>
+</section>
+</section>
+<section class="detail" id="GetLocalPos">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Tool:</span>GetLocalPos<span class="params">(i)</span></h3>
+<a href="#GetLocalPos" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/classes/sh_tool.lua#L220" title="View source">packages/flow/lib/classes/sh_tool.lua:220</a>
+</div>
+<section class="docstring">
+<p>Returns the position of the numbered hit local to the entity that was hit.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">i</span> <span class="type">Number</span> <span class="desc">index of the selected object</span></li></ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">Vector</span></li></ul>
+</section>
+</section>
+<section class="detail" id="GetMode">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Tool:</span>GetMode<span class="params">()</span></h3>
+<a href="#GetMode" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/classes/sh_tool.lua#L403" title="View source">packages/flow/lib/classes/sh_tool.lua:403</a>
+</div>
+<section class="docstring">
+<p>Returns the mode (ID) of the tool.</p>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">String</span></li></ul>
+</section>
+</section>
+<section class="detail" id="GetNormal">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Tool:</span>GetNormal<span class="params">(i)</span></h3>
+<a href="#GetNormal" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/classes/sh_tool.lua#L234" title="View source">packages/flow/lib/classes/sh_tool.lua:234</a>
+</div>
+<section class="docstring">
+<p>Returns the surface normal of the numbered hit in world space.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">i</span> <span class="type">Number</span> <span class="desc">index of the selected object</span></li></ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">Vector</span></li></ul>
+</section>
+</section>
+<section class="detail" id="GetOperation">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Tool:</span>GetOperation<span class="params">()</span></h3>
+<a href="#GetOperation" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/classes/sh_tool.lua#L181" title="View source">packages/flow/lib/classes/sh_tool.lua:181</a>
+</div>
+<section class="docstring">
+<p>Returns the current operation of the tool.</p>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">Number</span></li></ul>
+</section>
+</section>
+<section class="detail" id="GetOwner">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Tool:</span>GetOwner<span class="params">()</span></h3>
+<a href="#GetOwner" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/classes/sh_tool.lua#L411" title="View source">packages/flow/lib/classes/sh_tool.lua:411</a>
+</div>
+<section class="docstring">
+<p>Returns the player who holds the tool gun.</p>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">Player</span></li></ul>
+</section>
+</section>
+<section class="detail" id="GetPhys">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Tool:</span>GetPhys<span class="params">(i)</span></h3>
+<a href="#GetPhys" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/classes/sh_tool.lua#L253" title="View source">packages/flow/lib/classes/sh_tool.lua:253</a>
+</div>
+<section class="docstring">
+<p>Returns the physics object of the numbered hit.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">i</span> <span class="type">Number</span> <span class="desc">index of the selected object</span></li></ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">PhysObj</span></li></ul>
+</section>
+</section>
+<section class="detail" id="GetPos">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Tool:</span>GetPos<span class="params">(i)</span></h3>
+<a href="#GetPos" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/classes/sh_tool.lua#L205" title="View source">packages/flow/lib/classes/sh_tool.lua:205</a>
+</div>
+<section class="docstring">
+<p>Returns the world position of the numbered hit.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">i</span> <span class="type">Number</span> <span class="desc">index of the selected object</span></li></ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">Vector</span></li></ul>
+</section>
+</section>
+<section class="detail" id="GetServerInfo">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Tool:</span>GetServerInfo<span class="params">(property)</span></h3>
+<a href="#GetServerInfo" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/classes/sh_tool.lua#L356" title="View source">packages/flow/lib/classes/sh_tool.lua:356</a>
+</div>
+<section class="docstring">
+<p>Returns the value of a console variable of the tool.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">property</span> <span class="type">String</span> <span class="desc">name of the variable without the tool mode prefix</span></li></ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">String</span></li></ul>
+</section>
+</section>
+<section class="detail" id="GetStage">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Tool:</span>GetStage<span class="params">()</span></h3>
+<a href="#GetStage" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/classes/sh_tool.lua#L167" title="View source">packages/flow/lib/classes/sh_tool.lua:167</a>
+</div>
+<section class="docstring">
+<p>Returns the current stage of the tool.</p>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">Number</span></li></ul>
+</section>
+</section>
+<section class="detail" id="GetSWEP">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Tool:</span>GetSWEP<span class="params">()</span></h3>
+<a href="#GetSWEP" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/classes/sh_tool.lua#L407" title="View source">packages/flow/lib/classes/sh_tool.lua:407</a>
+</div>
+<section class="docstring">
+<p>Returns the tool gun that this tool belongs to.</p>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">Weapon</span></li></ul>
+</section>
+</section>
+<section class="detail" id="GetWeapon">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Tool:</span>GetWeapon<span class="params">()</span></h3>
+<a href="#GetWeapon" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/classes/sh_tool.lua#L415" title="View source">packages/flow/lib/classes/sh_tool.lua:415</a>
+</div>
+<section class="docstring">
+<p>Returns the weapon entity of the tool gun.</p>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">Weapon</span></li></ul>
+</section>
+</section>
+<section class="detail" id="Holster">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Tool:</span>Holster<span class="params">()</span></h3>
+<a href="#Holster" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/classes/sh_tool.lua#L432" title="View source">packages/flow/lib/classes/sh_tool.lua:432</a>
+</div>
+<section class="docstring">
+<p>Called when the tool gun is holstered. Removes the ghost entity by default.</p>
+</section>
+</section>
+<section class="detail" id="init">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Tool:</span>init<span class="params">()</span></h3>
+<a href="#init" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/classes/sh_tool.lua#L322" title="View source">packages/flow/lib/classes/sh_tool.lua:322</a>
+</div>
+<section class="docstring">
+<p>Creates a new tool with the default values of its fields.</p>
+</section>
+</section>
+<section class="detail" id="Init">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Tool:</span>Init<span class="params">()</span></h3>
+<a href="#Init" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/classes/sh_tool.lua#L398" title="View source">packages/flow/lib/classes/sh_tool.lua:398</a>
+</div>
+<section class="docstring">
+<p>Called when the tool gun initializes the tool. Does nothing by default.</p>
+</section>
+</section>
+<section class="detail" id="LeftClick">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Tool:</span>LeftClick<span class="params">()</span></h3>
+<a href="#LeftClick" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/classes/sh_tool.lua#L419" title="View source">packages/flow/lib/classes/sh_tool.lua:419</a>
+</div>
+<section class="docstring">
+<p>Called when the owner presses primary attack. Returns false by default.</p>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">Boolean</span> <span class="desc">false, overrides should return true if the tool has done something</span></li></ul>
+</section>
+</section>
+<section class="detail" id="MakeGhostEntity">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Tool:</span>MakeGhostEntity<span class="params">(model, pos, angle)</span></h3>
+<a href="#MakeGhostEntity" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/classes/sh_tool.lua#L56" title="View source">packages/flow/lib/classes/sh_tool.lua:56</a>
+</div>
+<section class="docstring">
+<p>Creates a translucent ghost prop that previews the result of the tool, replacing
+the previous one. Ragdolls and effects cannot be ghosts.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">model</span> <span class="type">String</span> <span class="desc">path to the model</span></li><li><span class="param-name">pos</span> <span class="type">Vector</span></li><li><span class="param-name">angle</span> <span class="type">Angle</span></li></ul>
+</section>
+</section>
+<section class="detail" id="NumObjects">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Tool:</span>NumObjects<span class="params">()</span></h3>
+<a href="#NumObjects" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/classes/sh_tool.lua#L300" title="View source">packages/flow/lib/classes/sh_tool.lua:300</a>
+</div>
+<section class="docstring">
+<p>Returns the number of selected objects. On the client this is the stage of the tool.</p>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">Number</span></li></ul>
+</section>
+</section>
+<section class="detail" id="ReleaseGhostEntity">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Tool:</span>ReleaseGhostEntity<span class="params">()</span></h3>
+<a href="#ReleaseGhostEntity" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/classes/sh_tool.lua#L103" title="View source">packages/flow/lib/classes/sh_tool.lua:103</a>
+</div>
+<section class="docstring">
+<p>Removes the ghost entity of the tool.</p>
+</section>
+</section>
+<section class="detail" id="Reload">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Tool:</span>Reload<span class="params">()</span></h3>
+<a href="#Reload" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/classes/sh_tool.lua#L426" title="View source">packages/flow/lib/classes/sh_tool.lua:426</a>
+</div>
+<section class="docstring">
+<p>Called when the owner presses reload. Clears the selected objects by default.</p>
+</section>
+</section>
+<section class="detail" id="RightClick">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Tool:</span>RightClick<span class="params">()</span></h3>
+<a href="#RightClick" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/classes/sh_tool.lua#L423" title="View source">packages/flow/lib/classes/sh_tool.lua:423</a>
+</div>
+<section class="docstring">
+<p>Called when the owner presses secondary attack. Returns false by default.</p>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">Boolean</span> <span class="desc">false, overrides should return true if the tool has done something</span></li></ul>
+</section>
+</section>
+<section class="detail" id="SetObject">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Tool:</span>SetObject<span class="params">(i, ent, pos, phys, bone, norm)</span></h3>
+<a href="#SetObject" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/classes/sh_tool.lua#L269" title="View source">packages/flow/lib/classes/sh_tool.lua:269</a>
+</div>
+<section class="docstring">
+<p>Stores a selected object. The position and the normal are converted to be local to the
+physics object (or the entity), so that they stay valid when it moves.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">i</span> <span class="type">Number</span> <span class="desc">index to store the object under</span></li><li><span class="param-name">ent</span> <span class="type">Entity</span> <span class="desc">the entity that was hit</span></li><li><span class="param-name">pos</span> <span class="type">Vector</span> <span class="desc">world position of the hit</span></li><li><span class="param-name">phys</span> <span class="type">PhysObj</span> <span class="desc">physics object that was hit</span></li><li><span class="param-name">bone</span> <span class="type">Number</span> <span class="desc">physics bone number</span></li><li><span class="param-name">norm</span> <span class="type">Vector</span> <span class="desc">surface normal of the hit</span></li></ul>
+</section>
+</section>
+<section class="detail" id="SetOperation">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Tool:</span>SetOperation<span class="params">(i)</span></h3>
+<a href="#SetOperation" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/classes/sh_tool.lua#L173" title="View source">packages/flow/lib/classes/sh_tool.lua:173</a>
+</div>
+<section class="docstring">
+<p>Sets the operation of the tool and networks it to the clients. Does nothing on the client.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">i</span> <span class="type">Number</span></li></ul>
+</section>
+</section>
+<section class="detail" id="SetStage">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Tool:</span>SetStage<span class="params">(i)</span></h3>
+<a href="#SetStage" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/classes/sh_tool.lua#L159" title="View source">packages/flow/lib/classes/sh_tool.lua:159</a>
+</div>
+<section class="docstring">
+<p>Sets the stage of the tool and networks it to the clients. Does nothing on the client.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">i</span> <span class="type">Number</span></li></ul>
+</section>
+</section>
+<section class="detail" id="StartGhostEntity">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Tool:</span>StartGhostEntity<span class="params">(ent)</span></h3>
+<a href="#StartGhostEntity" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/classes/sh_tool.lua#L95" title="View source">packages/flow/lib/classes/sh_tool.lua:95</a>
+</div>
+<section class="docstring">
+<p>Creates a ghost entity that copies the model, position and angles of the specified entity.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">ent</span> <span class="type">Entity</span></li></ul>
+</section>
+</section>
+<section class="detail" id="Think">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Tool:</span>Think<span class="params">()</span></h3>
+<a href="#Think" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/classes/sh_tool.lua#L435" title="View source">packages/flow/lib/classes/sh_tool.lua:435</a>
+</div>
+<section class="docstring">
+<p>Called every tick while the tool is active. Removes the ghost entity by default.</p>
+</section>
+</section>
+<section class="detail" id="UpdateData">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Tool:</span>UpdateData<span class="params">()</span></h3>
+<a href="#UpdateData" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/classes/sh_tool.lua#L153" title="View source">packages/flow/lib/classes/sh_tool.lua:153</a>
+</div>
+<section class="docstring">
+<p>Sets the stage of the tool to the number of selected objects.</p>
+</section>
+</section>
+<section class="detail" id="UpdateGhostEntity">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Tool:</span>UpdateGhostEntity<span class="params">()</span></h3>
+<a href="#UpdateGhostEntity" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/classes/sh_tool.lua#L132" title="View source">packages/flow/lib/classes/sh_tool.lua:132</a>
+</div>
+<section class="docstring">
+<p>Moves the ghost entity to where the first selected object would end up if the tool
+was applied to the spot the owner is aiming at.</p>
+</section>
+</section>
+</section>
+<section class="sources"><h2>Defined in</h2><ul><li><a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/lib/classes/sh_tool.lua" title="View source">packages/flow/lib/classes/sh_tool.lua</a></li></ul></section>
+<template id="module-functions"><ul class="sidebar-functions"><li class="sidebar-category" data-anchor="methods">Methods</li><li><a href="#__tostring">__tostring</a></li><li><a href="#Allowed">Allowed</a></li><li><a href="#BuildConVarList">BuildConVarList</a></li><li><a href="#CheckObjects">CheckObjects</a></li><li><a href="#ClearObjects">ClearObjects</a></li><li><a href="#CreateConVars">CreateConVars</a></li><li><a href="#Deploy">Deploy</a></li><li><a href="#DrawHUD">DrawHUD</a></li><li><a href="#DrawToolScreen">DrawToolScreen</a></li><li><a href="#FreezeMovement">FreezeMovement</a></li><li><a href="#GetBone">GetBone</a></li><li><a href="#GetClientInfo">GetClientInfo</a></li><li><a href="#GetClientNumber">GetClientNumber</a></li><li><a href="#GetEnt">GetEnt</a></li><li><a href="#GetHelpText">GetHelpText</a></li><li><a href="#GetLocalPos">GetLocalPos</a></li><li><a href="#GetMode">GetMode</a></li><li><a href="#GetNormal">GetNormal</a></li><li><a href="#GetOperation">GetOperation</a></li><li><a href="#GetOwner">GetOwner</a></li><li><a href="#GetPhys">GetPhys</a></li><li><a href="#GetPos">GetPos</a></li><li><a href="#GetServerInfo">GetServerInfo</a></li><li><a href="#GetStage">GetStage</a></li><li><a href="#GetSWEP">GetSWEP</a></li><li><a href="#GetWeapon">GetWeapon</a></li><li><a href="#Holster">Holster</a></li><li><a href="#init">init</a></li><li><a href="#Init">Init</a></li><li><a href="#LeftClick">LeftClick</a></li><li><a href="#MakeGhostEntity">MakeGhostEntity</a></li><li><a href="#NumObjects">NumObjects</a></li><li><a href="#ReleaseGhostEntity">ReleaseGhostEntity</a></li><li><a href="#Reload">Reload</a></li><li><a href="#RightClick">RightClick</a></li><li><a href="#SetObject">SetObject</a></li><li><a href="#SetOperation">SetOperation</a></li><li><a href="#SetStage">SetStage</a></li><li><a href="#StartGhostEntity">StartGhostEntity</a></li><li><a href="#Think">Think</a></li><li><a href="#UpdateData">UpdateData</a></li><li><a href="#UpdateGhostEntity">UpdateGhostEntity</a></li></ul></template>
+
+<footer class="footer">
+<p>Built with <a href="https://github.com/TeslaCloud/fdoc">fdoc</a>.</p>
+</footer>
+</div>
+</main>
+<script src="../../assets/sidebar_items.js"></script>
+<script src="../../assets/app.js"></script>
+</body>
+</html>

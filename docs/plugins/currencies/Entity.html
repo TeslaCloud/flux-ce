@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="generator" content="fdoc">
+<title>Entity — Flux v0.8.1</title>
+<link rel="stylesheet" href="../../assets/style.css">
+<script>try{var t=localStorage.getItem('fdoc-theme');if(t)document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
+</head>
+<body data-root="../../" data-group="plugins/currencies" data-module="Entity">
+<div class="progress" id="progress"></div>
+<button class="sidebar-toggle" type="button" aria-label="Toggle navigation"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path fill="currentColor" d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg></button>
+<div class="sidebar-backdrop"></div>
+<aside class="sidebar" id="sidebar">
+<div class="sidebar-header">
+<a class="sidebar-project" href="../../index.html"><span class="sidebar-project-name">Flux</span> <span class="sidebar-project-version">v0.8.1</span></a>
+</div>
+<div class="sidebar-tabs" id="sidebar-tabs" role="tablist"></div>
+<nav class="sidebar-nav" id="sidebar-nav" aria-label="Documentation"><noscript><p class="sidebar-noscript"><a href="../../index.html">Index</a></p></noscript></nav>
+</aside>
+<main class="content" id="content">
+<div class="topbar">
+<form class="search" action="../../search.html" method="get" autocomplete="off" role="search">
+<input type="search" name="q" id="search-input" placeholder="Press / to search" aria-label="Search">
+<ul class="search-suggestions" id="search-suggestions" hidden></ul>
+</form>
+<button class="theme-toggle" type="button" aria-label="Toggle night mode"><span class="icon-moon"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M12 3a9 9 0 1 0 9 9c0-.46-.04-.92-.1-1.36a5.389 5.389 0 0 1-4.4 2.26 5.403 5.403 0 0 1-3.14-9.8c-.44-.06-.9-.1-1.36-.1z"/></svg></span><span class="icon-sun"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M6.76 4.84l-1.8-1.79-1.41 1.41 1.79 1.79 1.42-1.41zM4 10.5H1v2h3v-2zm9-9.95h-2V3.5h2V.55zm7.45 3.91l-1.41-1.41-1.79 1.79 1.41 1.41 1.79-1.79zm-3.21 13.7l1.79 1.8 1.41-1.41-1.8-1.79-1.4 1.4zM20 10.5v2h3v-2h-3zm-8-5c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6zm-1 16.95h2V19.5h-2v2.95zm-7.45-3.91l1.41 1.41 1.79-1.8-1.41-1.41-1.79 1.8z"/></svg></span></button>
+</div>
+<div class="content-inner" id="content-inner">
+<div class="page-header"><h1>Entity <span class="badge badge-class">class</span></h1><p class="subtitle">Part of <a href="../../plugins/currencies/index.html">currencies</a></p></div>
+<section class="summary"><h2 id="summary">Summary</h2>
+<div class="summary-group"><h3>Methods</h3>
+<div class="summary-row"><div class="summary-signature"><a href="#can_contain_money">can_contain_money()</a></div><div class="summary-synopsis">Checks whether the entity is able to hold money by running the CanContainMoney hook.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#drop_money">drop_money(currency, value)</a></div><div class="summary-synopsis">Drops money from a player as an fl_money entity where they are looking, at most 120 units away; if they look at another player the money is given to that player. Server only.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#get_money">get_money(currency)</a></div><div class="summary-synopsis">Returns how much of a currency the entity holds.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#give_money">give_money(currency, value)</a></div><div class="summary-synopsis">Adds money to the entity. Server only.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#give_money_to">give_money_to(target, currency, value)</a></div><div class="summary-synopsis">Moves money from this entity to another one if the CanGiveMoney hook allows it, and notifies the players involved. Server only.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#has_money">has_money(currency, value)</a></div><div class="summary-synopsis">Checks whether the entity holds at least the given amount of a currency.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#set_money">set_money(currency, value)</a></div><div class="summary-synopsis">Sets how much of a currency the entity holds, rounded to the currency's decimals and never below 0, networks it and runs the EntityMoneyChanged hook. Server only.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#take_money">take_money(currency, value)</a></div><div class="summary-synopsis">Removes money from the entity; the balance stops at 0. Server only.</div></div>
+</div>
+</section>
+<section class="details-group"><h2 id="methods">Methods</h2>
+<section class="detail" id="can_contain_money">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Entity:</span>can_contain_money<span class="params">()</span></h3>
+<a href="#can_contain_money" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/currencies/plugin/lib/meta/sh_entity.lua#L25" title="View source">plugins/currencies/plugin/lib/meta/sh_entity.lua:25</a>
+</div>
+<section class="docstring">
+<p>Checks whether the entity is able to hold money by running the CanContainMoney hook.</p>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">Boolean</span> <span class="desc">true when a hook allows it, otherwise nil</span></li></ul>
+</section>
+</section>
+<section class="detail" id="drop_money">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Entity:</span>drop_money<span class="params">(currency, value)</span></h3>
+<a href="#drop_money" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/currencies/plugin/lib/meta/sh_entity.lua#L99" title="View source">plugins/currencies/plugin/lib/meta/sh_entity.lua:99</a>
+</div>
+<section class="docstring">
+<p>Drops money from a player as an fl_money entity where they are looking, at most 120 units
+away; if they look at another player the money is given to that player. Server only.</p>
+<pre><code class="language-lua"><span class="hl-k">local</span> success, err = actor:<span class="hl-f">drop_money</span>(<span class="hl-s">&#39;tokens&#39;</span>, <span class="hl-n">50</span>)
+
+<span class="hl-k">if</span> success == <span class="hl-k">false</span> <span class="hl-k">then</span>
+  actor:<span class="hl-f">notify</span>(err)
+<span class="hl-k">end</span>
+</code></pre>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">currency</span> <span class="type">String</span> <span class="desc">currency ID</span></li><li><span class="param-name">value</span> <span class="type">Number</span> <span class="desc">amount to drop</span></li></ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">Boolean</span> <span class="desc">false when the drop is refused</span></li><li><span class="type">String</span> <span class="desc">error phrase; nothing otherwise</span></li></ul>
+</section>
+</section>
+<section class="detail" id="get_money">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Entity:</span>get_money<span class="params">(currency)</span></h3>
+<a href="#get_money" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/currencies/plugin/lib/meta/sh_entity.lua#L7" title="View source">plugins/currencies/plugin/lib/meta/sh_entity.lua:7</a>
+</div>
+<section class="docstring">
+<p>Returns how much of a currency the entity holds.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">currency</span> <span class="type">String</span> <span class="desc">currency ID</span></li></ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">Number</span> <span class="desc">amount, 0 if the currency is not registered</span></li></ul>
+</section>
+</section>
+<section class="detail" id="give_money">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Entity:</span>give_money<span class="params">(currency, value)</span></h3>
+<a href="#give_money" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/currencies/plugin/lib/meta/sh_entity.lua#L83" title="View source">plugins/currencies/plugin/lib/meta/sh_entity.lua:83</a>
+</div>
+<section class="docstring">
+<p>Adds money to the entity. Server only.</p>
+<pre><code class="language-lua">target:<span class="hl-f">give_money</span>(<span class="hl-s">&#39;tokens&#39;</span>, <span class="hl-n">50</span>)
+</code></pre>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">currency</span> <span class="type">String</span> <span class="desc">currency ID</span></li><li><span class="param-name">value</span> <span class="type">Number</span> <span class="desc">amount to add</span></li></ul>
+</section>
+</section>
+<section class="detail" id="give_money_to">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Entity:</span>give_money_to<span class="params">(target, currency, value)</span></h3>
+<a href="#give_money_to" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/currencies/plugin/lib/meta/sh_entity.lua#L164" title="View source">plugins/currencies/plugin/lib/meta/sh_entity.lua:164</a>
+</div>
+<section class="docstring">
+<p>Moves money from this entity to another one if the CanGiveMoney hook allows it, and
+notifies the players involved. Server only.</p>
+<pre><code class="language-lua"><span class="hl-k">local</span> success, err = actor:<span class="hl-f">give_money_to</span>(target, <span class="hl-s">&#39;tokens&#39;</span>, <span class="hl-n">50</span>)
+
+<span class="hl-k">if</span> success == <span class="hl-k">false</span> <span class="hl-k">then</span>
+  actor:<span class="hl-f">notify</span>(err)
+<span class="hl-k">end</span>
+</code></pre>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">target</span> <span class="type">Entity</span> <span class="default">optional, defaults to <code>nil</code></span> <span class="desc">receiver; a player gives to the entity they look at when nil</span></li><li><span class="param-name">currency</span> <span class="type">String</span> <span class="desc">currency ID</span></li><li><span class="param-name">value</span> <span class="type">Number</span> <span class="desc">amount to move</span></li></ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">Boolean</span> <span class="desc">false when the transfer is refused</span></li><li><span class="type">String</span> <span class="desc">error phrase; nothing otherwise</span></li></ul>
+</section>
+</section>
+<section class="detail" id="has_money">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Entity:</span>has_money<span class="params">(currency, value)</span></h3>
+<a href="#has_money" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/currencies/plugin/lib/meta/sh_entity.lua#L19" title="View source">plugins/currencies/plugin/lib/meta/sh_entity.lua:19</a>
+</div>
+<section class="docstring">
+<p>Checks whether the entity holds at least the given amount of a currency.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">currency</span> <span class="type">String</span> <span class="desc">currency ID</span></li><li><span class="param-name">value</span> <span class="type">Number</span></li></ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">Boolean</span></li></ul>
+</section>
+</section>
+<section class="detail" id="set_money">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Entity:</span>set_money<span class="params">(currency, value)</span></h3>
+<a href="#set_money" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/currencies/plugin/lib/meta/sh_entity.lua#L34" title="View source">plugins/currencies/plugin/lib/meta/sh_entity.lua:34</a>
+</div>
+<section class="docstring">
+<p>Sets how much of a currency the entity holds, rounded to the currency's decimals and
+never below 0, networks it and runs the EntityMoneyChanged hook. Server only.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">currency</span> <span class="type">String</span> <span class="desc">currency ID; nothing happens if it is not registered</span></li><li><span class="param-name">value</span> <span class="type">Number</span> <span class="desc">new amount</span></li></ul>
+</section>
+</section>
+<section class="detail" id="take_money">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Entity:</span>take_money<span class="params">(currency, value)</span></h3>
+<a href="#take_money" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/currencies/plugin/lib/meta/sh_entity.lua#L73" title="View source">plugins/currencies/plugin/lib/meta/sh_entity.lua:73</a>
+</div>
+<section class="docstring">
+<p>Removes money from the entity; the balance stops at 0. Server only.</p>
+<pre><code class="language-lua"><span class="hl-k">if</span> actor:<span class="hl-f">has_money</span>(<span class="hl-s">&#39;tokens&#39;</span>, <span class="hl-n">50</span>) <span class="hl-k">then</span>
+  actor:<span class="hl-f">take_money</span>(<span class="hl-s">&#39;tokens&#39;</span>, <span class="hl-n">50</span>)
+<span class="hl-k">end</span>
+</code></pre>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">currency</span> <span class="type">String</span> <span class="desc">currency ID</span></li><li><span class="param-name">value</span> <span class="type">Number</span> <span class="desc">amount to remove</span></li></ul>
+</section>
+</section>
+</section>
+<section class="sources"><h2>Defined in</h2><ul><li><a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/currencies/plugin/lib/meta/sh_entity.lua" title="View source">plugins/currencies/plugin/lib/meta/sh_entity.lua</a></li></ul></section>
+<template id="module-functions"><ul class="sidebar-functions"><li class="sidebar-category" data-anchor="methods">Methods</li><li><a href="#can_contain_money">can_contain_money</a></li><li><a href="#drop_money">drop_money</a></li><li><a href="#get_money">get_money</a></li><li><a href="#give_money">give_money</a></li><li><a href="#give_money_to">give_money_to</a></li><li><a href="#has_money">has_money</a></li><li><a href="#set_money">set_money</a></li><li><a href="#take_money">take_money</a></li></ul></template>
+
+<footer class="footer">
+<p>Built with <a href="https://github.com/TeslaCloud/fdoc">fdoc</a>.</p>
+</footer>
+</div>
+</main>
+<script src="../../assets/sidebar_items.js"></script>
+<script src="../../assets/app.js"></script>
+</body>
+</html>

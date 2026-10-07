@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="generator" content="fdoc">
+<title>Role — Flux v0.8.1</title>
+<link rel="stylesheet" href="../../assets/style.css">
+<script>try{var t=localStorage.getItem('fdoc-theme');if(t)document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
+</head>
+<body data-root="../../" data-group="plugins/admin" data-module="Role">
+<div class="progress" id="progress"></div>
+<button class="sidebar-toggle" type="button" aria-label="Toggle navigation"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path fill="currentColor" d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg></button>
+<div class="sidebar-backdrop"></div>
+<aside class="sidebar" id="sidebar">
+<div class="sidebar-header">
+<a class="sidebar-project" href="../../index.html"><span class="sidebar-project-name">Flux</span> <span class="sidebar-project-version">v0.8.1</span></a>
+</div>
+<div class="sidebar-tabs" id="sidebar-tabs" role="tablist"></div>
+<nav class="sidebar-nav" id="sidebar-nav" aria-label="Documentation"><noscript><p class="sidebar-noscript"><a href="../../index.html">Index</a></p></noscript></nav>
+</aside>
+<main class="content" id="content">
+<div class="topbar">
+<form class="search" action="../../search.html" method="get" autocomplete="off" role="search">
+<input type="search" name="q" id="search-input" placeholder="Press / to search" aria-label="Search">
+<ul class="search-suggestions" id="search-suggestions" hidden></ul>
+</form>
+<button class="theme-toggle" type="button" aria-label="Toggle night mode"><span class="icon-moon"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M12 3a9 9 0 1 0 9 9c0-.46-.04-.92-.1-1.36a5.389 5.389 0 0 1-4.4 2.26 5.403 5.403 0 0 1-3.14-9.8c-.44-.06-.9-.1-1.36-.1z"/></svg></span><span class="icon-sun"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M6.76 4.84l-1.8-1.79-1.41 1.41 1.79 1.79 1.42-1.41zM4 10.5H1v2h3v-2zm9-9.95h-2V3.5h2V.55zm7.45 3.91l-1.41-1.41-1.79 1.79 1.41 1.41 1.79-1.79zm-3.21 13.7l1.79 1.8 1.41-1.41-1.8-1.79-1.4 1.4zM20 10.5v2h3v-2h-3zm-8-5c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6zm-1 16.95h2V19.5h-2v2.95zm-7.45-3.91l1.41 1.41 1.79-1.8-1.41-1.41-1.79 1.8z"/></svg></span></button>
+</div>
+<div class="content-inner" id="content-inner">
+<div class="page-header"><h1>Role <span class="badge badge-class">class</span></h1><p class="subtitle">Part of <a href="../../plugins/admin/index.html">admin</a></p></div>
+<section class="summary"><h2 id="summary">Summary</h2>
+<div class="summary-group"><h3>Methods</h3>
+<div class="summary-row"><div class="summary-signature"><a href="#allow">allow(action, object, callback)</a></div><div class="summary-synopsis">Allows this role to perform an action, optionally only on one kind of object. If a callback is given, it decides the outcome of each check.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#allow_anything">allow_anything()</a></div><div class="summary-synopsis">Makes every permission check against this role pass.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#can">can(actor, action, object)</a></div><div class="summary-synopsis">Checks whether this role allows an action. Only the role's own permission table is consulted; use actor:can for the full check that includes per-player permissions.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#disallow">disallow(action, object)</a></div><div class="summary-synopsis">Explicitly denies an action for this role, overriding a permission inherited from its base.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#get_base">get_base()</a></div><div class="summary-synopsis">Returns the ID of the role this role is based on.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#get_color">get_color()</a></div><div class="summary-synopsis">Returns the role's color.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#get_description">get_description()</a></div><div class="summary-synopsis">Returns the role's description, usually a language phrase.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#get_icon">get_icon()</a></div><div class="summary-synopsis">Returns the role's icon.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#get_id">get_id()</a></div><div class="summary-synopsis">Returns the role's ID.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#get_immunity">get_immunity()</a></div><div class="summary-synopsis">Returns the role's immunity level, which Bolt:check_immunity compares between roles.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#get_name">get_name()</a></div><div class="summary-synopsis">Returns the role's display name.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#get_permissions">get_permissions()</a></div><div class="summary-synopsis">Returns the role's permission table.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#init">init(id)</a></div><div class="summary-synopsis">Sets the role's ID and gives it an empty permission table. Does nothing without an ID.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#is_protected">is_protected()</a></div><div class="summary-synopsis">Checks whether the role is flagged as protected.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#on_role_set">on_role_set(target, old_group)</a></div><div class="summary-synopsis">Called when the player's role is being set to this role. Return any non-nil value to keep the new role from being saved to the database.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#on_role_taken">on_role_taken(target, new_group)</a></div><div class="summary-synopsis">Called when the player's role is taken or modified. Return any non-nil value to keep the new role from being saved to the database.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#register">register()</a></div><div class="summary-synopsis">Registers the role with Bolt. If the role has a define_permissions method, it is run first with the can, cannot and allow_anything globals temporarily bound to this role, followed by the OnDefinePermissions hook.</div></div>
+</div>
+</section>
+<section class="details-group"><h2 id="methods">Methods</h2>
+<section class="detail" id="allow">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Role:</span>allow<span class="params">(action, object, callback)</span></h3>
+<a href="#allow" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/admin/plugin/lib/classes/sh_role.lua#L34" title="View source">plugins/admin/plugin/lib/classes/sh_role.lua:34</a>
+</div>
+<section class="docstring">
+<p>Allows this role to perform an action, optionally only on one kind of object. If a callback
+is given, it decides the outcome of each check.</p>
+<pre><code class="language-lua"><span class="hl-k">function</span> ROLE:<span class="hl-f">define_permissions</span>()
+  <span class="hl-k">self</span>:<span class="hl-f">allow</span>(<span class="hl-s">&#39;kick&#39;</span>)
+  <span class="hl-k">self</span>:<span class="hl-f">allow</span>(<span class="hl-s">&#39;noclip&#39;</span>, <span class="hl-k">nil</span>, <span class="hl-k">function</span>(actor, object)
+    <span class="hl-k">return</span> actor:<span class="hl-f">Alive</span>()
+  <span class="hl-k">end</span>)
+<span class="hl-k">end</span>
+</code></pre>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">action</span> <span class="type">String</span> <span class="desc">permission ID</span></li><li><span class="param-name">object</span> <span class="type">String/Map</span> <span class="default">optional, defaults to <code>&#39;anything&#39;</code></span> <span class="desc">object name, or a class table whose class_name is used</span></li><li><span class="param-name">callback</span> <span class="type">Function</span> <span class="default">optional, defaults to <code>nil</code></span> <span class="desc">called as callback(actor, object) on every check; its return value becomes the result</span></li></ul>
+</section>
+</section>
+<section class="detail" id="allow_anything">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Role:</span>allow_anything<span class="params">()</span></h3>
+<a href="#allow_anything" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/admin/plugin/lib/classes/sh_role.lua#L66" title="View source">plugins/admin/plugin/lib/classes/sh_role.lua:66</a>
+</div>
+<section class="docstring">
+<p>Makes every permission check against this role pass.</p>
+</section>
+</section>
+<section class="detail" id="can">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Role:</span>can<span class="params">(actor, action, object)</span></h3>
+<a href="#can" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/admin/plugin/lib/classes/sh_role.lua#L77" title="View source">plugins/admin/plugin/lib/classes/sh_role.lua:77</a>
+</div>
+<section class="docstring">
+<p>Checks whether this role allows an action. Only the role's own permission table is
+consulted; use actor:can for the full check that includes per-player permissions.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">actor</span> <span class="type">Player</span> <span class="desc">passed on to the permission's callback</span></li><li><span class="param-name">action</span> <span class="type">String</span> <span class="desc">permission ID; an empty string always passes</span></li><li><span class="param-name">object</span> <span class="type">String</span> <span class="default">optional, defaults to <code>&#39;anything&#39;</code></span> <span class="desc">object name the permission was allowed for</span></li></ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">Boolean</span> <span class="desc">whether the action is allowed (a permission callback's return value is passed through as is)</span></li></ul>
+</section>
+</section>
+<section class="detail" id="disallow">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Role:</span>disallow<span class="params">(action, object)</span></h3>
+<a href="#disallow" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/admin/plugin/lib/classes/sh_role.lua#L51" title="View source">plugins/admin/plugin/lib/classes/sh_role.lua:51</a>
+</div>
+<section class="docstring">
+<p>Explicitly denies an action for this role, overriding a permission inherited from its base.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">action</span> <span class="type">String</span> <span class="desc">permission ID</span></li><li><span class="param-name">object</span> <span class="type">String/Map</span> <span class="default">optional, defaults to <code>&#39;anything&#39;</code></span> <span class="desc">object name, or a class table whose class_name is used</span></li></ul>
+</section>
+</section>
+<section class="detail" id="get_base">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Role:</span>get_base<span class="params">()</span></h3>
+<a href="#get_base" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/admin/plugin/lib/classes/sh_role.lua#L162" title="View source">plugins/admin/plugin/lib/classes/sh_role.lua:162</a>
+</div>
+<section class="docstring">
+<p>Returns the ID of the role this role is based on.</p>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">String</span> <span class="desc">base role ID, or nil if there is none</span></li></ul>
+</section>
+</section>
+<section class="detail" id="get_color">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Role:</span>get_color<span class="params">()</span></h3>
+<a href="#get_color" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/admin/plugin/lib/classes/sh_role.lua#L132" title="View source">plugins/admin/plugin/lib/classes/sh_role.lua:132</a>
+</div>
+<section class="docstring">
+<p>Returns the role's color.</p>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">Color</span></li></ul>
+</section>
+</section>
+<section class="detail" id="get_description">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Role:</span>get_description<span class="params">()</span></h3>
+<a href="#get_description" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/admin/plugin/lib/classes/sh_role.lua#L126" title="View source">plugins/admin/plugin/lib/classes/sh_role.lua:126</a>
+</div>
+<section class="docstring">
+<p>Returns the role's description, usually a language phrase.</p>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">String</span></li></ul>
+</section>
+</section>
+<section class="detail" id="get_icon">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Role:</span>get_icon<span class="params">()</span></h3>
+<a href="#get_icon" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/admin/plugin/lib/classes/sh_role.lua#L156" title="View source">plugins/admin/plugin/lib/classes/sh_role.lua:156</a>
+</div>
+<section class="docstring">
+<p>Returns the role's icon.</p>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">String</span> <span class="desc">icon path or Font Awesome icon name</span></li></ul>
+</section>
+</section>
+<section class="detail" id="get_id">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Role:</span>get_id<span class="params">()</span></h3>
+<a href="#get_id" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/admin/plugin/lib/classes/sh_role.lua#L114" title="View source">plugins/admin/plugin/lib/classes/sh_role.lua:114</a>
+</div>
+<section class="docstring">
+<p>Returns the role's ID.</p>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">String</span></li></ul>
+</section>
+</section>
+<section class="detail" id="get_immunity">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Role:</span>get_immunity<span class="params">()</span></h3>
+<a href="#get_immunity" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/admin/plugin/lib/classes/sh_role.lua#L138" title="View source">plugins/admin/plugin/lib/classes/sh_role.lua:138</a>
+</div>
+<section class="docstring">
+<p>Returns the role's immunity level, which Bolt:check_immunity compares between roles.</p>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">Number</span></li></ul>
+</section>
+</section>
+<section class="detail" id="get_name">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Role:</span>get_name<span class="params">()</span></h3>
+<a href="#get_name" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/admin/plugin/lib/classes/sh_role.lua#L120" title="View source">plugins/admin/plugin/lib/classes/sh_role.lua:120</a>
+</div>
+<section class="docstring">
+<p>Returns the role's display name.</p>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">String</span></li></ul>
+</section>
+</section>
+<section class="detail" id="get_permissions">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Role:</span>get_permissions<span class="params">()</span></h3>
+<a href="#get_permissions" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/admin/plugin/lib/classes/sh_role.lua#L150" title="View source">plugins/admin/plugin/lib/classes/sh_role.lua:150</a>
+</div>
+<section class="docstring">
+<p>Returns the role's permission table.</p>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">Map</span> <span class="desc">permission entries (allowed, callback) keyed by object name, then by action</span></li></ul>
+</section>
+</section>
+<section class="detail" id="init">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Role:</span>init<span class="params">(id)</span></h3>
+<a href="#init" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/admin/plugin/lib/classes/sh_role.lua#L13" title="View source">plugins/admin/plugin/lib/classes/sh_role.lua:13</a>
+</div>
+<section class="docstring">
+<p>Sets the role's ID and gives it an empty permission table. Does nothing without an ID.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">id</span> <span class="type">String</span> <span class="desc">role ID, normalized with string.to_id</span></li></ul>
+</section>
+</section>
+<section class="detail" id="is_protected">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Role:</span>is_protected<span class="params">()</span></h3>
+<a href="#is_protected" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/admin/plugin/lib/classes/sh_role.lua#L144" title="View source">plugins/admin/plugin/lib/classes/sh_role.lua:144</a>
+</div>
+<section class="docstring">
+<p>Checks whether the role is flagged as protected.</p>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">Boolean</span></li></ul>
+</section>
+</section>
+<section class="detail" id="on_role_set">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Role:</span>on_role_set<span class="params">(target, old_group)</span></h3>
+<a href="#on_role_set" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/admin/plugin/lib/classes/sh_role.lua#L102" title="View source">plugins/admin/plugin/lib/classes/sh_role.lua:102</a>
+</div>
+<section class="docstring">
+<p>Called when the player's role is being set to this role. Return any non-nil value to keep the
+new role from being saved to the database.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">target</span> <span class="type">Player</span></li><li><span class="param-name">old_group</span> <span class="type">Role</span> <span class="desc">the player's previous role</span></li></ul>
+</section>
+</section>
+<section class="detail" id="on_role_taken">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Role:</span>on_role_taken<span class="params">(target, new_group)</span></h3>
+<a href="#on_role_taken" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/admin/plugin/lib/classes/sh_role.lua#L108" title="View source">plugins/admin/plugin/lib/classes/sh_role.lua:108</a>
+</div>
+<section class="docstring">
+<p>Called when the player's role is taken or modified. Return any non-nil value to keep the new
+role from being saved to the database.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">target</span> <span class="type">Player</span></li><li><span class="param-name">new_group</span> <span class="type">Role</span> <span class="desc">the role the player is being given</span></li></ul>
+</section>
+</section>
+<section class="detail" id="register">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Role:</span>register<span class="params">()</span></h3>
+<a href="#register" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/admin/plugin/lib/classes/sh_role.lua#L181" title="View source">plugins/admin/plugin/lib/classes/sh_role.lua:181</a>
+</div>
+<section class="docstring">
+<p>Registers the role with Bolt. If the role has a define_permissions method, it is run first
+with the can, cannot and allow_anything globals temporarily bound to this role, followed
+by the OnDefinePermissions hook.</p>
+<pre><code class="language-lua"><span class="hl-c">-- roles/sh_helper.lua</span>
+ROLE.name = <span class="hl-s">&#39;Helper&#39;</span>
+ROLE.immunity = <span class="hl-n">50</span>
+ROLE.base = <span class="hl-s">&#39;user&#39;</span>
+
+<span class="hl-k">function</span> ROLE:<span class="hl-f">define_permissions</span>()
+  can <span class="hl-s">&#39;kick&#39;</span>
+  cannot <span class="hl-s">&#39;ban&#39;</span>
+<span class="hl-k">end</span>
+</code></pre>
+<h4>See also</h4>
+<ul class="see-also"><li><a href="../../plugins/admin/Bolt.html#include_roles"><code>Bolt#include_roles</code></a></li></ul>
+</section>
+</section>
+</section>
+<section class="sources"><h2>Defined in</h2><ul><li><a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/admin/plugin/lib/classes/sh_role.lua" title="View source">plugins/admin/plugin/lib/classes/sh_role.lua</a></li></ul></section>
+<template id="module-functions"><ul class="sidebar-functions"><li class="sidebar-category" data-anchor="methods">Methods</li><li><a href="#allow">allow</a></li><li><a href="#allow_anything">allow_anything</a></li><li><a href="#can">can</a></li><li><a href="#disallow">disallow</a></li><li><a href="#get_base">get_base</a></li><li><a href="#get_color">get_color</a></li><li><a href="#get_description">get_description</a></li><li><a href="#get_icon">get_icon</a></li><li><a href="#get_id">get_id</a></li><li><a href="#get_immunity">get_immunity</a></li><li><a href="#get_name">get_name</a></li><li><a href="#get_permissions">get_permissions</a></li><li><a href="#init">init</a></li><li><a href="#is_protected">is_protected</a></li><li><a href="#on_role_set">on_role_set</a></li><li><a href="#on_role_taken">on_role_taken</a></li><li><a href="#register">register</a></li></ul></template>
+
+<footer class="footer">
+<p>Built with <a href="https://github.com/TeslaCloud/fdoc">fdoc</a>.</p>
+</footer>
+</div>
+</main>
+<script src="../../assets/sidebar_items.js"></script>
+<script src="../../assets/app.js"></script>
+</body>
+</html>

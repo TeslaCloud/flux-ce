@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="generator" content="fdoc">
+<title>Package — Flux v0.8.1</title>
+<link rel="stylesheet" href="../assets/style.css">
+<script>try{var t=localStorage.getItem('fdoc-theme');if(t)document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
+</head>
+<body data-root="../" data-group="flux" data-module="Package">
+<div class="progress" id="progress"></div>
+<button class="sidebar-toggle" type="button" aria-label="Toggle navigation"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path fill="currentColor" d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg></button>
+<div class="sidebar-backdrop"></div>
+<aside class="sidebar" id="sidebar">
+<div class="sidebar-header">
+<a class="sidebar-project" href="../index.html"><span class="sidebar-project-name">Flux</span> <span class="sidebar-project-version">v0.8.1</span></a>
+</div>
+<div class="sidebar-tabs" id="sidebar-tabs" role="tablist"></div>
+<nav class="sidebar-nav" id="sidebar-nav" aria-label="Documentation"><noscript><p class="sidebar-noscript"><a href="../index.html">Index</a></p></noscript></nav>
+</aside>
+<main class="content" id="content">
+<div class="topbar">
+<form class="search" action="../search.html" method="get" autocomplete="off" role="search">
+<input type="search" name="q" id="search-input" placeholder="Press / to search" aria-label="Search">
+<ul class="search-suggestions" id="search-suggestions" hidden></ul>
+</form>
+<button class="theme-toggle" type="button" aria-label="Toggle night mode"><span class="icon-moon"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M12 3a9 9 0 1 0 9 9c0-.46-.04-.92-.1-1.36a5.389 5.389 0 0 1-4.4 2.26 5.403 5.403 0 0 1-3.14-9.8c-.44-.06-.9-.1-1.36-.1z"/></svg></span><span class="icon-sun"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M6.76 4.84l-1.8-1.79-1.41 1.41 1.79 1.79 1.42-1.41zM4 10.5H1v2h3v-2zm9-9.95h-2V3.5h2V.55zm7.45 3.91l-1.41-1.41-1.79 1.79 1.41 1.41 1.79-1.79zm-3.21 13.7l1.79 1.8 1.41-1.41-1.8-1.79-1.4 1.4zM20 10.5v2h3v-2h-3zm-8-5c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6zm-1 16.95h2V19.5h-2v2.95zm-7.45-3.91l1.41 1.41 1.79-1.8-1.41-1.41-1.79 1.8z"/></svg></span></button>
+</div>
+<div class="content-inner" id="content-inner">
+<div class="page-header"><h1>Package <span class="badge badge-class">class</span></h1></div>
+<section class="summary"><h2 id="summary">Summary</h2>
+<div class="summary-group"><h3>Methods</h3>
+<div class="summary-row"><div class="summary-signature"><a href="#add_path">add_path(path)</a></div><div class="summary-synopsis">Adds a search path relative to the 'LUA' system.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#compare_version">compare_version(version1, version2)</a></div><div class="summary-synopsis">Returns -1 if version1 is older than version2. Returns 0 if versions are equal. Returns 1 if version1 is newer than version2.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#describe">describe(callback)</a></div><div class="summary-synopsis">Describes the current package's specification. For every singular function there is a plural alias and vice versa.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#exists">exists(name)</a></div><div class="summary-synopsis">Searches for the package with the specified name and returns true if the package exists, false otherwise.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#find">find(name)</a></div><div class="summary-synopsis">Searches for a package with the specified name and returns the full path to its packagespec, the name of the package and the full path to the folder. Returns false if the package cannot be found.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#include">include(name, version)</a></div><div class="summary-synopsis">Attempts to include the package with the specified name. This function will look for the package in the search paths that have previously been added. If no package with the matching name can be found, throws an error.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#included">included(name)</a></div><div class="summary-synopsis">Determines if the package has already been installed.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#is_version">is_version(version1, version2)</a></div><div class="summary-synopsis">Returns true if version2 matches the version1 template.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#parse_version">parse_version(version)</a></div><div class="summary-synopsis">Parse a version string.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#reload">reload(name)</a></div><div class="summary-synopsis">Reloads the package with the specified name. Does nothing unless the package is installed and its specification allows reloading.</div></div>
+</div>
+</section>
+<section class="details-group"><h2 id="methods">Methods</h2>
+<section class="detail" id="add_path">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Package:</span>add_path<span class="params">(path)</span></h3>
+<a href="#add_path" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/package.lua#L41" title="View source">lib/package.lua:41</a>
+</div>
+<section class="docstring">
+<p>Adds a search path relative to the 'LUA' system.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">path</span> <span class="type">String</span> <span class="desc">folder to look for packages in; a trailing slash is added if missing</span></li></ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">Package</span> <span class="desc">self</span></li></ul>
+</section>
+</section>
+<section class="detail" id="compare_version">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Package:</span>compare_version<span class="params">(version1, version2)</span></h3>
+<a href="#compare_version" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/package.lua#L308" title="View source">lib/package.lua:308</a>
+</div>
+<section class="docstring">
+<p>Returns -1 if version1 is older than version2.
+Returns 0 if versions are equal.
+Returns 1 if version1 is newer than version2.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">version1</span> <span class="type">Map</span> <span class="desc">version data from Package:parse_version</span></li><li><span class="param-name">version2</span> <span class="type">Map</span> <span class="desc">version data from Package:parse_version</span></li></ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">Number/Boolean</span> <span class="desc">-1, 0 or 1; false if either argument is not a table</span></li></ul>
+</section>
+</section>
+<section class="detail" id="describe">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Package:</span>describe<span class="params">(callback)</span></h3>
+<a href="#describe" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/package.lua#L72" title="View source">lib/package.lua:72</a>
+</div>
+<section class="docstring">
+<p>Describes the current package's specification.
+For every singular function there is a plural alias and vice versa.</p>
+<pre><code class="language-lua">Package:<span class="hl-f">describe</span>(<span class="hl-k">function</span>(s)
+  s.name        = <span class="hl-s">&#39;Example Package&#39;</span>
+  s.version     = <span class="hl-s">&#39;1.0&#39;</span>
+  s.date        = <span class="hl-s">&#39;2019-03-09&#39;</span>
+  s.summary     = <span class="hl-s">&#39;Brief summary of what the package does.&#39;</span>
+  s.description = <span class="hl-s">&#39;A more detailed description of what the package does.&#39;</span>
+  s.authors     = { <span class="hl-s">&#39;Flux Developer&#39;</span> }
+  s.email       = <span class="hl-s">&#39;example@example.com&#39;</span>
+  s.files       = { <span class="hl-s">&#39;lib/example.lua&#39;</span>, <span class="hl-s">&#39;config/example.lua&#39;</span> }
+  s.global      = <span class="hl-s">&#39;ExamplePackage&#39;</span>
+  s.website     = <span class="hl-s">&#39;https://example.com&#39;</span>
+  s.license     = <span class="hl-s">&#39;MIT&#39;</span>
+
+  s.depends     <span class="hl-s">&#39;random_dependency&#39;</span>
+
+  <span class="hl-k">if</span> IS_DEVELOPMENT <span class="hl-k">then</span>
+    s.depends   <span class="hl-s">&#39;random_development_package&#39;</span>
+  <span class="hl-k">end</span>
+<span class="hl-k">end</span>)
+</code></pre>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">callback</span> <span class="type">Function</span> <span class="default">optional, defaults to <code>nil</code></span> <span class="desc">receives the specification object to fill in as its only argument</span></li></ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">PackageInstance</span></li></ul>
+</section>
+</section>
+<section class="detail" id="exists">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Package:</span>exists<span class="params">(name)</span></h3>
+<a href="#exists" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/package.lua#L218" title="View source">lib/package.lua:218</a>
+</div>
+<section class="docstring">
+<p>Searches for the package with the specified name and
+returns true if the package exists, false otherwise.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">name</span> <span class="type">String</span> <span class="desc">package name, or path to the package's folder</span></li></ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">Boolean</span></li></ul>
+</section>
+</section>
+<section class="detail" id="find">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Package:</span>find<span class="params">(name)</span></h3>
+<a href="#find" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/package.lua#L194" title="View source">lib/package.lua:194</a>
+</div>
+<section class="docstring">
+<p>Searches for a package with the specified name and returns
+the full path to its packagespec, the name of the package and
+the full path to the folder.
+Returns false if the package cannot be found.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">name</span> <span class="type">String</span> <span class="desc">package name, or path to the package's folder</span></li></ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">String/Boolean</span> <span class="desc">packagespec path or false if not found</span></li><li><span class="type">String</span> <span class="desc">name</span></li><li><span class="type">String</span> <span class="desc">folder path</span></li></ul>
+</section>
+</section>
+<section class="detail" id="include">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Package:</span>include<span class="params">(name, version)</span></h3>
+<a href="#include" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/package.lua#L399" title="View source">lib/package.lua:399</a>
+</div>
+<section class="docstring">
+<p>Attempts to include the package with the specified name.
+This function will look for the package in the search paths that have previously been added.
+If no package with the matching name can be found, throws an error.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">name</span> <span class="type">String</span> <span class="desc">package name, or path to the package's folder</span></li><li><span class="param-name">version</span> <span class="type">String</span> <span class="default">optional, defaults to <code>nil</code></span> <span class="desc">currently unused</span></li></ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">Boolean</span> <span class="desc">true if name is a .lua file, which is skipped; nothing otherwise</span></li></ul>
+</section>
+</section>
+<section class="detail" id="included">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Package:</span>included<span class="params">(name)</span></h3>
+<a href="#included" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/package.lua#L180" title="View source">lib/package.lua:180</a>
+</div>
+<section class="docstring">
+<p>Determines if the package has already been installed.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">name</span> <span class="type">String</span> <span class="desc">package name</span></li></ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">Boolean</span></li></ul>
+<h4>Aliases</h4>
+<ul class="aliases"><li><code>Package.present</code></li><li><code>Package.is_installed</code></li></ul>
+</section>
+</section>
+<section class="detail" id="is_version">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Package:</span>is_version<span class="params">(version1, version2)</span></h3>
+<a href="#is_version" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/package.lua#L326" title="View source">lib/package.lua:326</a>
+</div>
+<section class="docstring">
+<p>Returns true if version2 matches the version1 template.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">version1</span> <span class="type">Map</span> <span class="desc">version data of the template, its op field sets the comparison</span></li><li><span class="param-name">version2</span> <span class="type">Map</span> <span class="desc">version data of the version to check</span></li></ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">Boolean</span></li></ul>
+</section>
+</section>
+<section class="detail" id="parse_version">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Package:</span>parse_version<span class="params">(version)</span></h3>
+<a href="#parse_version" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/package.lua#L239" title="View source">lib/package.lua:239</a>
+</div>
+<section class="docstring">
+<p>Parse a version string.</p>
+<pre><code class="language-lua">Package:<span class="hl-f">parse_version</span>(<span class="hl-s">&#39;~&gt; 1.2.3-beta&#39;</span>)
+<span class="hl-c">-- { x = 1, y = 2, z = 3, sum = 123, suffix = &#39;beta&#39;, op = &#39;~&gt;&#39; }</span>
+</code></pre>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">version</span> <span class="type">String</span> <span class="desc">version such as '1.0', '&gt;= 1.2.0' or '~&gt; 1.2.3-beta'</span></li></ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">Map</span> <span class="desc">version data with the fields x, y, z, sum, suffix and op</span></li></ul>
+</section>
+</section>
+<section class="detail" id="reload">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Package:</span>reload<span class="params">(name)</span></h3>
+<a href="#reload" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/package.lua#L225" title="View source">lib/package.lua:225</a>
+</div>
+<section class="docstring">
+<p>Reloads the package with the specified name.
+Does nothing unless the package is installed and its specification allows reloading.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">name</span> <span class="type">String</span> <span class="desc">package name</span></li></ul>
+</section>
+</section>
+</section>
+<section class="sources"><h2>Defined in</h2><ul><li><a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/package.lua" title="View source">lib/package.lua</a></li></ul></section>
+<template id="module-functions"><ul class="sidebar-functions"><li class="sidebar-category" data-anchor="methods">Methods</li><li><a href="#add_path">add_path</a></li><li><a href="#compare_version">compare_version</a></li><li><a href="#describe">describe</a></li><li><a href="#exists">exists</a></li><li><a href="#find">find</a></li><li><a href="#include">include</a></li><li><a href="#included">included</a></li><li><a href="#is_version">is_version</a></li><li><a href="#parse_version">parse_version</a></li><li><a href="#reload">reload</a></li></ul></template>
+
+<footer class="footer">
+<p>Built with <a href="https://github.com/TeslaCloud/fdoc">fdoc</a>.</p>
+</footer>
+</div>
+</main>
+<script src="../assets/sidebar_items.js"></script>
+<script src="../assets/app.js"></script>
+</body>
+</html>

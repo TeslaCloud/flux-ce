@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="generator" content="fdoc">
+<title>Player — Flux v0.8.1</title>
+<link rel="stylesheet" href="../../assets/style.css">
+<script>try{var t=localStorage.getItem('fdoc-theme');if(t)document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
+</head>
+<body data-root="../../" data-group="plugins/characters" data-module="Player">
+<div class="progress" id="progress"></div>
+<button class="sidebar-toggle" type="button" aria-label="Toggle navigation"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path fill="currentColor" d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg></button>
+<div class="sidebar-backdrop"></div>
+<aside class="sidebar" id="sidebar">
+<div class="sidebar-header">
+<a class="sidebar-project" href="../../index.html"><span class="sidebar-project-name">Flux</span> <span class="sidebar-project-version">v0.8.1</span></a>
+</div>
+<div class="sidebar-tabs" id="sidebar-tabs" role="tablist"></div>
+<nav class="sidebar-nav" id="sidebar-nav" aria-label="Documentation"><noscript><p class="sidebar-noscript"><a href="../../index.html">Index</a></p></noscript></nav>
+</aside>
+<main class="content" id="content">
+<div class="topbar">
+<form class="search" action="../../search.html" method="get" autocomplete="off" role="search">
+<input type="search" name="q" id="search-input" placeholder="Press / to search" aria-label="Search">
+<ul class="search-suggestions" id="search-suggestions" hidden></ul>
+</form>
+<button class="theme-toggle" type="button" aria-label="Toggle night mode"><span class="icon-moon"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M12 3a9 9 0 1 0 9 9c0-.46-.04-.92-.1-1.36a5.389 5.389 0 0 1-4.4 2.26 5.403 5.403 0 0 1-3.14-9.8c-.44-.06-.9-.1-1.36-.1z"/></svg></span><span class="icon-sun"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M6.76 4.84l-1.8-1.79-1.41 1.41 1.79 1.79 1.42-1.41zM4 10.5H1v2h3v-2zm9-9.95h-2V3.5h2V.55zm7.45 3.91l-1.41-1.41-1.79 1.79 1.41 1.41 1.79-1.79zm-3.21 13.7l1.79 1.8 1.41-1.41-1.8-1.79-1.4 1.4zM20 10.5v2h3v-2h-3zm-8-5c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6zm-1 16.95h2V19.5h-2v2.95zm-7.45-3.91l1.41 1.41 1.79-1.8-1.41-1.41-1.79 1.8z"/></svg></span></button>
+</div>
+<div class="content-inner" id="content-inner">
+<div class="page-header"><h1>Player <span class="badge badge-class">class</span></h1><p class="subtitle">Part of <a href="../../plugins/characters/index.html">characters</a></p></div>
+<section class="summary"><h2 id="summary">Summary</h2>
+<div class="summary-group"><h3>Methods</h3>
+<div class="summary-row"><div class="summary-signature"><a href="#get_all_characters">get_all_characters()</a></div><div class="summary-synopsis">Returns all characters that belong to the player. Clients only know their own characters.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#get_character">get_character()</a></div><div class="summary-synopsis">Returns the player's active character. Bots get a plain table that is created on demand.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#get_character_by_id">get_character_by_id(id)</a></div><div class="summary-synopsis">Finds one of the player's own characters by its ID.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#get_character_id">get_character_id()</a></div><div class="summary-synopsis">Returns the networked ID of the player's active character.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#get_character_var">get_character_var(id, default)</a></div><div class="summary-synopsis">Returns a field of the player's active character. On the client the value is read from the player's networked variable of the same name instead.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#get_gender">get_gender()</a></div><div class="summary-synopsis">Returns the gender of the player's character as a string.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#get_phys_desc">get_phys_desc()</a></div><div class="summary-synopsis">Returns the physical description of the player's character.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#is_character_loaded">is_character_loaded()</a></div><div class="summary-synopsis">Checks whether the player has an active character. Always true for bots.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#save_character">save_character()</a></div><div class="summary-synopsis">Saves the player's active character, if they have one.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#set_active_character">set_active_character(id)</a></div><div class="summary-synopsis">Makes one of the player's characters their active one. Runs OnCharacterChange if another character was active, networks the basic character data and runs OnActiveCharacterSet.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#set_character_var">set_character_var(id, val)</a></div><div class="summary-synopsis">Sets a field on the player's active character and networks it under the same name.</div></div>
+</div>
+</section>
+<section class="details-group"><h2 id="methods">Methods</h2>
+<section class="detail" id="get_all_characters">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Player:</span>get_all_characters<span class="params">()</span></h3>
+<a href="#get_all_characters" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/characters/plugin/lib/sh_character.lua#L352" title="View source">plugins/characters/plugin/lib/sh_character.lua:352</a>
+</div>
+<section class="docstring">
+<p>Returns all characters that belong to the player. Clients only know their own characters.</p>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">List</span> <span class="desc">character records on the server, networked character data on the client</span></li></ul>
+</section>
+</section>
+<section class="detail" id="get_character">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Player:</span>get_character<span class="params">()</span></h3>
+<a href="#get_character" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/characters/plugin/lib/sh_character.lua#L303" title="View source">plugins/characters/plugin/lib/sh_character.lua:303</a>
+</div>
+<section class="docstring">
+<p>Returns the player's active character. Bots get a plain table that is created on demand.</p>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">Character/Map</span> <span class="desc">the character record on the server or its networked data on the client, nil if no character is active</span></li></ul>
+</section>
+</section>
+<section class="detail" id="get_character_by_id">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Player:</span>get_character_by_id<span class="params">(id)</span></h3>
+<a href="#get_character_by_id" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/characters/plugin/lib/sh_character.lua#L286" title="View source">plugins/characters/plugin/lib/sh_character.lua:286</a>
+</div>
+<section class="docstring">
+<p>Finds one of the player's own characters by its ID.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">id</span> <span class="type">Number</span> <span class="desc">character ID</span></li></ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">Character/Map</span> <span class="desc">the character record on the server or its networked data on the client, nil if the player has no such character</span></li></ul>
+</section>
+</section>
+<section class="detail" id="get_character_id">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Player:</span>get_character_id<span class="params">()</span></h3>
+<a href="#get_character_id" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/characters/plugin/lib/sh_character.lua#L296" title="View source">plugins/characters/plugin/lib/sh_character.lua:296</a>
+</div>
+<section class="docstring">
+<p>Returns the networked ID of the player's active character.</p>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">Number</span> <span class="desc">character ID, or nil if no character has been selected</span></li></ul>
+</section>
+</section>
+<section class="detail" id="get_character_var">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Player:</span>get_character_var<span class="params">(id, default)</span></h3>
+<a href="#get_character_var" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/characters/plugin/lib/sh_character.lua#L330" title="View source">plugins/characters/plugin/lib/sh_character.lua:330</a>
+</div>
+<section class="docstring">
+<p>Returns a field of the player's active character. On the client the value is read from
+the player's networked variable of the same name instead.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">id</span> <span class="type">String</span> <span class="desc">field name</span></li><li><span class="param-name">default</span> <span class="type">Any</span> <span class="default">optional, defaults to <code>nil</code></span> <span class="desc">value to return when the field is not set</span></li></ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">Any</span></li></ul>
+</section>
+</section>
+<section class="detail" id="get_gender">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Player:</span>get_gender<span class="params">()</span></h3>
+<a href="#get_gender" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/characters/plugin/lib/sh_character.lua#L346" title="View source">plugins/characters/plugin/lib/sh_character.lua:346</a>
+</div>
+<section class="docstring">
+<p>Returns the gender of the player's character as a string.</p>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">String</span> <span class="desc">'male', 'female' or 'no_gender'</span></li></ul>
+</section>
+</section>
+<section class="detail" id="get_phys_desc">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Player:</span>get_phys_desc<span class="params">()</span></h3>
+<a href="#get_phys_desc" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/characters/plugin/lib/sh_character.lua#L340" title="View source">plugins/characters/plugin/lib/sh_character.lua:340</a>
+</div>
+<section class="docstring">
+<p>Returns the physical description of the player's character.</p>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">String</span> <span class="desc">the description, or a placeholder text if none is set</span></li></ul>
+</section>
+</section>
+<section class="detail" id="is_character_loaded">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Player:</span>is_character_loaded<span class="params">()</span></h3>
+<a href="#is_character_loaded" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/characters/plugin/lib/sh_character.lua#L317" title="View source">plugins/characters/plugin/lib/sh_character.lua:317</a>
+</div>
+<section class="docstring">
+<p>Checks whether the player has an active character. Always true for bots.</p>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">Boolean</span> <span class="desc">true if a character is active, false or nil otherwise</span></li></ul>
+</section>
+</section>
+<section class="detail" id="save_character">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Player:</span>save_character<span class="params">()</span></h3>
+<a href="#save_character" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/characters/plugin/sv_plugin.lua#L46" title="View source">plugins/characters/plugin/sv_plugin.lua:46</a>
+</div>
+<section class="docstring">
+<p>Saves the player's active character, if they have one.</p>
+<h4>See also</h4>
+<ul class="see-also"><li><a href="../../plugins/characters/Characters.html#save"><code>Characters.save</code></a></li></ul>
+</section>
+</section>
+<section class="detail" id="set_active_character">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Player:</span>set_active_character<span class="params">(id)</span></h3>
+<a href="#set_active_character" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/characters/plugin/sv_plugin.lua#L6" title="View source">plugins/characters/plugin/sv_plugin.lua:6</a>
+</div>
+<section class="docstring">
+<p>Makes one of the player's characters their active one. Runs OnCharacterChange if another
+character was active, networks the basic character data and runs OnActiveCharacterSet.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">id</span> <span class="type">Number/String</span> <span class="desc">character ID; nothing happens if the player has no such character</span></li></ul>
+</section>
+</section>
+<section class="detail" id="set_character_var">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Player:</span>set_character_var<span class="params">(id, val)</span></h3>
+<a href="#set_character_var" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/characters/plugin/sv_plugin.lua#L37" title="View source">plugins/characters/plugin/sv_plugin.lua:37</a>
+</div>
+<section class="docstring">
+<p>Sets a field on the player's active character and networks it under the same name.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">id</span> <span class="type">String</span> <span class="desc">field name; nothing happens when it is not a string</span></li><li><span class="param-name">val</span> <span class="type">Any</span></li></ul>
+</section>
+</section>
+</section>
+<section class="sources"><h2>Defined in</h2><ul><li><a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/characters/plugin/lib/sh_character.lua" title="View source">plugins/characters/plugin/lib/sh_character.lua</a></li><li><a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/characters/plugin/sv_plugin.lua" title="View source">plugins/characters/plugin/sv_plugin.lua</a></li></ul></section>
+<template id="module-functions"><ul class="sidebar-functions"><li class="sidebar-category" data-anchor="methods">Methods</li><li><a href="#get_all_characters">get_all_characters</a></li><li><a href="#get_character">get_character</a></li><li><a href="#get_character_by_id">get_character_by_id</a></li><li><a href="#get_character_id">get_character_id</a></li><li><a href="#get_character_var">get_character_var</a></li><li><a href="#get_gender">get_gender</a></li><li><a href="#get_phys_desc">get_phys_desc</a></li><li><a href="#is_character_loaded">is_character_loaded</a></li><li><a href="#save_character">save_character</a></li><li><a href="#set_active_character">set_active_character</a></li><li><a href="#set_character_var">set_character_var</a></li></ul></template>
+
+<footer class="footer">
+<p>Built with <a href="https://github.com/TeslaCloud/fdoc">fdoc</a>.</p>
+</footer>
+</div>
+</main>
+<script src="../../assets/sidebar_items.js"></script>
+<script src="../../assets/app.js"></script>
+</body>
+</html>

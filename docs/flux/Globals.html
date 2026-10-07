@@ -1,0 +1,927 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="generator" content="fdoc">
+<title>Globals — Flux v0.8.1</title>
+<link rel="stylesheet" href="../assets/style.css">
+<script>try{var t=localStorage.getItem('fdoc-theme');if(t)document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
+</head>
+<body data-root="../" data-group="flux" data-module="Globals">
+<div class="progress" id="progress"></div>
+<button class="sidebar-toggle" type="button" aria-label="Toggle navigation"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path fill="currentColor" d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg></button>
+<div class="sidebar-backdrop"></div>
+<aside class="sidebar" id="sidebar">
+<div class="sidebar-header">
+<a class="sidebar-project" href="../index.html"><span class="sidebar-project-name">Flux</span> <span class="sidebar-project-version">v0.8.1</span></a>
+</div>
+<div class="sidebar-tabs" id="sidebar-tabs" role="tablist"></div>
+<nav class="sidebar-nav" id="sidebar-nav" aria-label="Documentation"><noscript><p class="sidebar-noscript"><a href="../index.html">Index</a></p></noscript></nav>
+</aside>
+<main class="content" id="content">
+<div class="topbar">
+<form class="search" action="../search.html" method="get" autocomplete="off" role="search">
+<input type="search" name="q" id="search-input" placeholder="Press / to search" aria-label="Search">
+<ul class="search-suggestions" id="search-suggestions" hidden></ul>
+</form>
+<button class="theme-toggle" type="button" aria-label="Toggle night mode"><span class="icon-moon"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M12 3a9 9 0 1 0 9 9c0-.46-.04-.92-.1-1.36a5.389 5.389 0 0 1-4.4 2.26 5.403 5.403 0 0 1-3.14-9.8c-.44-.06-.9-.1-1.36-.1z"/></svg></span><span class="icon-sun"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M6.76 4.84l-1.8-1.79-1.41 1.41 1.79 1.79 1.42-1.41zM4 10.5H1v2h3v-2zm9-9.95h-2V3.5h2V.55zm7.45 3.91l-1.41-1.41-1.79 1.79 1.41 1.41 1.79-1.79zm-3.21 13.7l1.79 1.8 1.41-1.41-1.8-1.79-1.4 1.4zM20 10.5v2h3v-2h-3zm-8-5c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6zm-1 16.95h2V19.5h-2v2.95zm-7.45-3.91l1.41 1.41 1.79-1.8-1.41-1.41-1.79 1.8z"/></svg></span></button>
+</div>
+<div class="content-inner" id="content-inner">
+<div class="page-header"><h1>Globals <span class="badge badge-globals">globals</span></h1><p class="subtitle">Global functions of Flux</p></div>
+<section class="summary"><h2 id="summary">Summary</h2>
+<div class="summary-group"><h3>Functions</h3>
+<div class="summary-row"><div class="summary-signature"><a href="#a">a(initializer)</a></div><div class="summary-synopsis">Turns a table into a special array that has the functions of the table library as methods. The table itself is modified and returned.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#add_client_env">add_client_env(key, value)</a></div><div class="summary-synopsis">Adds an environment variable to the clientside environment variables list. Can only be used once. Forces key and value to be strings.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#add_debug_metric">add_debug_metric(id, obj)</a></div><div class="summary-synopsis">Registers an object under a debug metric. Metrics are only collected when FLUX_ENV is set to 'development'.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#add_debug_metric-2">add_debug_metric(id, obj)</a></div><div class="summary-synopsis">Does nothing, since debug metrics are only collected in the development environment.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#class">class(name, parent_class)</a></div><div class="summary-synopsis">Creates a new class. Supports constructors and inheritance. The class is stored in the global table, or inside of another table when the name is namespaced with <code>::</code>. Every class gets a <code>new</code> function that creates an instance and calls its <code>init</code> constructor, and an <code>include</code> method that mixes a module into the class.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#Color">Color(r, g, b, a)</a></div><div class="summary-synopsis">Creates a color. Replaces the built-in Color function to also accept hexadecimal strings and CSS color names.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#compare">compare(a, b)</a></div><div class="summary-synopsis">Similar to the &lt;=&gt; operator in other languages.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#delegate">delegate(obj, t)</a></div><div class="summary-synopsis">Copies the listed methods of a class onto another object.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#enumerate">enumerate(enums, existing_enumerator)</a></div><div class="summary-synopsis">Creates enumerator variables based on a provided list. Starts at 0.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#equal">equal(a, b)</a></div><div class="summary-synopsis"></div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#error_with_traceback">error_with_traceback(msg)</a></div><div class="summary-synopsis">Print an error message followed by a complete stack traceback. Unlike error, this does not stop the execution of the calling code.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#extends">extends(parent_class)</a></div><div class="summary-synopsis">Sets the base class of the class that is currently being created. Copies the base class into the class created by the last <a href="../flux/Globals.html#class"><code>class</code></a> call, then calls the base class's <code>class_extended(new_class)</code> method and runs the OnClassExtended hook.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#get_debug_metric">get_debug_metric(id)</a></div><div class="summary-synopsis">Returns all objects that were registered under a debug metric.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#get_debug_metric-2">get_debug_metric(id)</a></div><div class="summary-synopsis">Does nothing, since debug metrics are only collected in the development environment.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#get_player_name">get_player_name(target)</a></div><div class="summary-synopsis">Returns the Steam name of a player, or the translated name of the console if the player is not valid (as it is for commands that are run from the server console).</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#getenv">getenv(key, default)</a></div><div class="summary-synopsis">Gets an environment variable matching the &quot;key&quot; name.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#greater">greater(a, b)</a></div><div class="summary-synopsis"></div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#greater_equal">greater_equal(a, b)</a></div><div class="summary-synopsis"></div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#i">i(pattern)</a></div><div class="summary-synopsis">Makes a Lua pattern case-insensitive.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#include_sandboxed">include_sandboxed(f)</a></div><div class="summary-synopsis">Runs a Lua file in a restricted environment that has no access to unsafe globals such as debug, require, RunString, CompileString, setmetatable or File. The environment is a copy of the globals made when the standard library was loaded.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#is_a">is_a(obj)</a></div><div class="summary-synopsis">Checks whether an object is a special array created with <a href="../flux/Globals.html#a"><code>a</code></a>.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#isclass">isclass(obj)</a></div><div class="summary-synopsis">Checks whether or not an object is a class or an instance of a class.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#LerpColor">LerpColor(fraction, color_from, color_to)</a></div><div class="summary-synopsis">Linearly interpolates between two colors, alpha included.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#less">less(a, b)</a></div><div class="summary-synopsis"></div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#less_equal">less_equal(a, b)</a></div><div class="summary-synopsis"></div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#long_error">long_error(...)</a></div><div class="summary-synopsis">Prints an error using ErrorNoHalt but without the character limit.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#lower">lower(...)</a></div><div class="summary-synopsis"></div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#mod">mod(name)</a></div><div class="summary-synopsis">Create a module with a specified name. The resulting object will have the <code>include</code> method by default.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#print_debug_metric">print_debug_metric(id, format)</a></div><div class="summary-synopsis">Prints the amount of objects registered under a debug metric to the console. The metric has to exist.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#print_debug_metric-2">print_debug_metric(id, format)</a></div><div class="summary-synopsis">Does nothing, since debug metrics are only collected in the development environment.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#print_debug_metrics">print_debug_metrics()</a></div><div class="summary-synopsis">Prints the amount of registered objects of every debug metric to the console.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#print_debug_metrics-2">print_debug_metrics()</a></div><div class="summary-synopsis">Does nothing, since debug metrics are only collected in the development environment.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#print_table">print_table(t, indent, done, indent_length)</a></div><div class="summary-synopsis">Prints the contents of a table to the console, sorted by key, with nested tables indented. A better implementation of PrintTable, which it also replaces.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#print_traceback">print_traceback(suppress, ...)</a></div><div class="summary-synopsis">Print a traceback to the current function call.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#printf">printf(str, ...)</a></div><div class="summary-synopsis">Prints C-style formatted strings.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#require_client">require_client(file_name)</a></div><div class="summary-synopsis">Require a clientside-only file. The .lua file ending may be omitted. This is the equivalent of simply doing this:</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#require_ignore">require_ignore(who, should_ignore)</a></div><div class="summary-synopsis">Ignore a certain realm in the require_relative function calls.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#require_module">require_module(mod)</a></div><div class="summary-synopsis">Includes a module and returns a boolean depending on success. Does not throw Lua errors.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#require_relative">require_relative(file_name)</a></div><div class="summary-synopsis">Require a file relative to the current file's directory. The .lua file ending may be omitted. This function will try to guess the realm the file should be in and AddCSLuaFile accordingly and automatically.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#require_relative_folder">require_relative_folder(dir, base, recursive)</a></div><div class="summary-synopsis">Require all files in a folder using require_relative. Relative to gamemodes/flux/ by default, unless <code>base</code> is specified.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#require_server">require_server(file_name)</a></div><div class="summary-synopsis">Require a serverside-only file. The .lua file ending may be omitted. This is equivalent of simply doing this:</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#require_shared">require_shared(file_name)</a></div><div class="summary-synopsis">Require a file on both client and server. The .lua file ending may be omitted. This is equivalent of simply doing this:</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#s">s(what)</a></div><div class="summary-synopsis">Creates a function that returns the given field of the table passed to it. For use with table#map.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#setenv">setenv(key, value)</a></div><div class="summary-synopsis">Sets an environment variable &quot;key&quot; to &quot;value&quot;. Will be automatically converted to a string by the C backend.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#sub">sub(...)</a></div><div class="summary-synopsis"></div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#try">try(func, ...)</a></div><div class="summary-synopsis">A wrapper for pcall for shorthand writing. If the function fails, the error is printed with a traceback and nothing is returned.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#txt">txt(text)</a></div><div class="summary-synopsis">Removes the common indentation and the surrounding blank lines from a multi-line string, so that long texts can be indented together with the code around them.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#typeof">typeof(obj)</a></div><div class="summary-synopsis">Gets the type of an object while ensuring the output is always lowercase. Functions exactly the same as <code>type</code>.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#unequal">unequal(a, b)</a></div><div class="summary-synopsis"></div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#upper">upper(...)</a></div><div class="summary-synopsis"></div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#URLMaterial">URLMaterial(url)</a></div><div class="summary-synopsis">Returns the material of an image from a URL, starting the download on first use. A placeholder material is returned for as long as the image has not been loaded.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#w">w(str)</a></div><div class="summary-synopsis">Splits a string of words into an array. Words are separated by spaces or newlines.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#wk">wk(str)</a></div><div class="summary-synopsis">Splits a string of space-separated words into a hash that has the words as its keys.</div></div>
+</div>
+</section>
+<section class="details-group"><h2 id="functions">Functions</h2>
+<section class="detail" id="a">
+<div class="detail-header">
+<h3 class="signature"><span class="owner"></span>a<span class="params">(initializer)</span></h3>
+<a href="#a" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_table.lua#L556" title="View source">lib/stdlib/sh_table.lua:556</a>
+</div>
+<section class="docstring">
+<p>Turns a table into a special array that has the functions of the table library as methods.
+The table itself is modified and returned.</p>
+<pre><code class="language-lua"><span class="hl-k">local</span> words = a{ <span class="hl-s">&#39;one&#39;</span>, <span class="hl-s">&#39;two&#39;</span> }
+words:<span class="hl-f">insert</span>(<span class="hl-s">&#39;three&#39;</span>)
+<span class="hl-k">local</span> lengths = words:<span class="hl-f">map</span>(<span class="hl-k">function</span>(v) <span class="hl-k">return</span> v:<span class="hl-f">len</span>() <span class="hl-k">end</span>) <span class="hl-c">-- { 3, 3, 5 }</span>
+</code></pre>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">initializer</span> <span class="type">Map/List</span> <span class="desc">table to turn into a special array</span></li></ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">List</span> <span class="desc">the same table</span></li></ul>
+</section>
+</section>
+<section class="detail" id="add_client_env">
+<div class="detail-header">
+<h3 class="signature"><span class="owner"></span>add_client_env<span class="params">(key, value)</span></h3>
+<a href="#add_client_env" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/gamemode/env.lua#L49" title="View source">gamemode/env.lua:49</a>
+</div>
+<section class="docstring">
+<p>Adds an environment variable to the clientside environment variables list.
+Can only be used once. Forces key and value to be strings.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">key</span> <span class="type">String</span> <span class="desc">variable name</span></li><li><span class="param-name">value</span> <span class="type">String</span> <span class="desc">variable value</span></li></ul>
+</section>
+</section>
+<section class="detail" id="add_debug_metric">
+<div class="detail-header">
+<h3 class="signature"><span class="owner"></span>add_debug_metric<span class="params">(id, obj)</span></h3>
+<a href="#add_debug_metric" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_debug.lua#L10" title="View source">lib/stdlib/sh_debug.lua:10</a>
+</div>
+<section class="docstring">
+<p>Registers an object under a debug metric.
+Metrics are only collected when FLUX_ENV is set to 'development'.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">id</span> <span class="type">String</span> <span class="desc">metric name</span></li><li><span class="param-name">obj</span> <span class="type">Any</span> <span class="desc">object to register</span></li></ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">Number</span> <span class="desc">amount of objects registered under this metric so far</span></li></ul>
+</section>
+</section>
+<section class="detail" id="add_debug_metric-2">
+<div class="detail-header">
+<h3 class="signature"><span class="owner"></span>add_debug_metric<span class="params">(id, obj)</span></h3>
+<a href="#add_debug_metric-2" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_debug.lua#L56" title="View source">lib/stdlib/sh_debug.lua:56</a>
+</div>
+<section class="docstring">
+<p>Does nothing, since debug metrics are only collected in the development environment.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">id</span> <span class="type">String</span> <span class="desc">metric name</span></li><li><span class="param-name">obj</span> <span class="type">Any</span> <span class="desc">object to register</span></li></ul>
+</section>
+</section>
+<section class="detail" id="class">
+<div class="detail-header">
+<h3 class="signature"><span class="owner"></span>class<span class="params">(name, parent_class)</span></h3>
+<a href="#class" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_class.lua#L37" title="View source">lib/stdlib/sh_class.lua:37</a>
+</div>
+<section class="docstring">
+<p>Creates a new class. Supports constructors and inheritance.
+The class is stored in the global table, or inside of another table when the name is
+namespaced with <code>::</code>. Every class gets a <code>new</code> function that creates an instance and calls
+its <code>init</code> constructor, and an <code>include</code> method that mixes a module into the class.</p>
+<pre><code class="language-lua">class <span class="hl-s">&#39;Animal&#39;</span>
+
+<span class="hl-k">function</span> Animal:<span class="hl-f">init</span>(name)
+  <span class="hl-k">self</span>.name = name
+<span class="hl-k">end</span>
+
+class <span class="hl-s">&#39;Dog&#39;</span> extends <span class="hl-s">&#39;Animal&#39;</span>
+
+<span class="hl-k">function</span> Dog:<span class="hl-f">init</span>(name)
+  <span class="hl-f">super</span>(name) <span class="hl-c">-- calls Animal&#39;s constructor on the new object</span>
+<span class="hl-k">end</span>
+
+Dog:include <span class="hl-s">&#39;Talkable&#39;</span> <span class="hl-c">-- copies missing methods from the Talkable module</span>
+
+<span class="hl-k">local</span> dog = Dog.<span class="hl-f">new</span>(<span class="hl-s">&#39;Rex&#39;</span>)
+</code></pre>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">name</span> <span class="type">String</span> <span class="desc">class name in ConstantStyle, may be namespaced (e.g. 'ActiveRecord::Model')</span></li><li><span class="param-name">parent_class</span> <span class="type">String/Map</span> <span class="default">optional, defaults to <code>nil</code></span> <span class="desc">base class or its name</span></li></ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">Map</span> <span class="desc">the created class</span></li></ul>
+<h4>See also</h4>
+<ul class="see-also"><li><a href="../flux/Globals.html#extends"><code>extends</code></a></li><li><a href="../flux/Globals.html#mod"><code>mod</code></a></li></ul>
+</section>
+</section>
+<section class="detail" id="Color">
+<div class="detail-header">
+<h3 class="signature"><span class="owner"></span>Color<span class="params">(r, g, b, a)</span></h3>
+<a href="#Color" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_color.lua#L221" title="View source">lib/stdlib/sh_color.lua:221</a>
+</div>
+<section class="docstring">
+<p>Creates a color. Replaces the built-in Color function to also accept hexadecimal
+strings and CSS color names.</p>
+<pre><code class="language-lua"><span class="hl-f">Color</span>(<span class="hl-n">255</span>, <span class="hl-n">165</span>, <span class="hl-n">0</span>)
+<span class="hl-f">Color</span>(<span class="hl-s">&#39;#ffa500&#39;</span>)
+<span class="hl-f">Color</span>(<span class="hl-s">&#39;orange&#39;</span>)
+<span class="hl-f">Color</span>(<span class="hl-s">&#39;orange&#39;</span>, <span class="hl-n">100</span>) <span class="hl-c">-- orange with the alpha of 100</span>
+</code></pre>
+<h4>Variants</h4>
+<ul class="variants">
+<li><code class="variant-signature">Color(r, g, b, a)</code><ul class="params"><li><span class="param-name">r</span> <span class="type">Number</span> <span class="desc">red, 0-255</span></li><li><span class="param-name">g</span> <span class="type">Number</span> <span class="desc">green, 0-255</span></li><li><span class="param-name">b</span> <span class="type">Number</span> <span class="desc">blue, 0-255</span></li><li><span class="param-name">a</span> <span class="type">Number</span> <span class="default">optional, defaults to <code>255</code></span> <span class="desc">alpha, 0-255</span></li></ul>
+</li>
+<li><code class="variant-signature">Color(r)</code><ul class="params"><li><span class="param-name">r</span> <span class="type">String</span> <span class="desc">hexadecimal color that starts with '#'</span></li></ul>
+</li>
+<li><code class="variant-signature">Color(r, g)</code><ul class="params"><li><span class="param-name">r</span> <span class="type">String</span> <span class="desc">CSS color name such as 'orange', case-insensitive</span></li><li><span class="param-name">g</span> <span class="type">Number</span> <span class="default">optional, defaults to <code>255</code></span> <span class="desc">alpha, 0-255</span></li></ul>
+</li>
+</ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">Color</span> <span class="desc">the created color, white if the string is not a known color name</span></li></ul>
+<h4>See also</h4>
+<ul class="see-also"><li><a href="../flux/util.html#hex_to_color"><code>util.hex_to_color</code></a></li></ul>
+</section>
+</section>
+<section class="detail" id="compare">
+<div class="detail-header">
+<h3 class="signature"><span class="owner"></span>compare<span class="params">(a, b)</span></h3>
+<a href="#compare" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_utils.lua#L364" title="View source">lib/stdlib/sh_utils.lua:364</a>
+</div>
+<section class="docstring">
+<p>Similar to the &lt;=&gt; operator in other languages.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">a</span> <span class="type">Number/String</span> <span class="desc">left value</span></li><li><span class="param-name">b</span> <span class="type">Number/String</span> <span class="desc">right value, has to be comparable with a</span></li></ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">Number</span> <span class="desc">-1 if a &lt; b; 0 if a == b; and 1 if a &gt; b</span></li></ul>
+</section>
+</section>
+<section class="detail" id="delegate">
+<div class="detail-header">
+<h3 class="signature"><span class="owner"></span>delegate<span class="params">(obj, t)</span></h3>
+<a href="#delegate" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_class.lua#L141" title="View source">lib/stdlib/sh_class.lua:141</a>
+</div>
+<section class="docstring">
+<p>Copies the listed methods of a class onto another object.</p>
+<pre><code class="language-lua"><span class="hl-c">-- MyLibrary.now and MyLibrary.tomorrow now point to the DateTime functions.</span>
+<span class="hl-f">delegate</span>(MyLibrary, { <span class="hl-s">&#39;now&#39;</span>, <span class="hl-s">&#39;tomorrow&#39;</span>, to = <span class="hl-s">&#39;DateTime&#39;</span> })
+</code></pre>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">obj</span> <span class="type">Map</span> <span class="desc">object or class that receives the methods</span></li><li><span class="param-name">t</span> <span class="type">Map</span> <span class="desc">method names as array elements, the source class or its name in the <code>to</code> key</span></li></ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">Boolean</span> <span class="desc">true, or nil if obj or t is not a table or <code>to</code> is missing</span></li></ul>
+</section>
+</section>
+<section class="detail" id="enumerate">
+<div class="detail-header">
+<h3 class="signature"><span class="owner"></span>enumerate<span class="params">(enums, existing_enumerator)</span></h3>
+<a href="#enumerate" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_utils.lua#L469" title="View source">lib/stdlib/sh_utils.lua:469</a>
+</div>
+<section class="docstring">
+<p>Creates enumerator variables based on a provided list.
+Starts at 0.</p>
+<pre><code class="language-lua"><span class="hl-c">--         0           1             2</span>
+enumerate <span class="hl-s">&#39;GENDER_MALE GENDER_FEMALE GENDER_OTHER&#39;</span>
+</code></pre>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">enums</span> <span class="type">String</span> <span class="desc">space-separated enumerator names</span></li><li><span class="param-name">existing_enumerator</span> <span class="type">String</span> <span class="default">optional, defaults to <code>nil</code></span> <span class="desc">prefix of an earlier group (such as 'GENDER') to continue the numbering of, starting right after the highest enumerator of that group</span></li></ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">Number</span> <span class="desc">highest enumerator, or nil if enums is not a string or is empty</span></li></ul>
+</section>
+</section>
+<section class="detail" id="equal">
+<div class="detail-header">
+<h3 class="signature"><span class="owner"></span>equal<span class="params">(a, b)</span></h3>
+<a href="#equal" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_utils.lua#L246" title="View source">lib/stdlib/sh_utils.lua:246</a>
+</div>
+<section class="docstring">
+<p class="muted">No documentation available.</p>
+</section>
+</section>
+<section class="detail" id="error_with_traceback">
+<div class="detail-header">
+<h3 class="signature"><span class="owner"></span>error_with_traceback<span class="params">(msg)</span></h3>
+<a href="#error_with_traceback" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_utils.lua#L429" title="View source">lib/stdlib/sh_utils.lua:429</a>
+</div>
+<section class="docstring">
+<p>Print an error message followed by a complete stack traceback.
+Unlike error, this does not stop the execution of the calling code.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">msg</span> <span class="type">String</span> <span class="desc">error message</span></li></ul>
+</section>
+</section>
+<section class="detail" id="extends">
+<div class="detail-header">
+<h3 class="signature"><span class="owner"></span>extends<span class="params">(parent_class)</span></h3>
+<a href="#extends" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_class.lua#L167" title="View source">lib/stdlib/sh_class.lua:167</a>
+</div>
+<section class="docstring">
+<p>Sets the base class of the class that is currently being created.
+Copies the base class into the class created by the last <a href="../flux/Globals.html#class"><code>class</code></a> call, then calls the
+base class's <code>class_extended(new_class)</code> method and runs the OnClassExtended hook.</p>
+<pre><code class="language-lua">class <span class="hl-s">&#39;DateTime&#39;</span> extends <span class="hl-s">&#39;Date&#39;</span>
+
+<span class="hl-c">-- The base class can also be passed as a table.</span>
+class <span class="hl-s">&#39;Dog&#39;</span> <span class="hl-f">extends</span>(Animal)
+</code></pre>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">parent_class</span> <span class="type">String/Map</span> <span class="desc">base class or its name</span></li></ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">Boolean</span> <span class="desc">whether or not did the extension succeed</span></li></ul>
+<h4>See also</h4>
+<ul class="see-also"><li><a href="../flux/Globals.html#class"><code>class</code></a></li></ul>
+</section>
+</section>
+<section class="detail" id="get_debug_metric">
+<div class="detail-header">
+<h3 class="signature"><span class="owner"></span>get_debug_metric<span class="params">(id)</span></h3>
+<a href="#get_debug_metric" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_debug.lua#L25" title="View source">lib/stdlib/sh_debug.lua:25</a>
+</div>
+<section class="docstring">
+<p>Returns all objects that were registered under a debug metric.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">id</span> <span class="type">String</span> <span class="desc">metric name</span></li></ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">List</span> <span class="desc">registered objects, or nil if nothing was registered under this metric</span></li></ul>
+</section>
+</section>
+<section class="detail" id="get_debug_metric-2">
+<div class="detail-header">
+<h3 class="signature"><span class="owner"></span>get_debug_metric<span class="params">(id)</span></h3>
+<a href="#get_debug_metric-2" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_debug.lua#L61" title="View source">lib/stdlib/sh_debug.lua:61</a>
+</div>
+<section class="docstring">
+<p>Does nothing, since debug metrics are only collected in the development environment.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">id</span> <span class="type">String</span> <span class="desc">metric name</span></li></ul>
+</section>
+</section>
+<section class="detail" id="get_player_name">
+<div class="detail-header">
+<h3 class="signature"><span class="owner"></span>get_player_name<span class="params">(target)</span></h3>
+<a href="#get_player_name" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_utils.lua#L208" title="View source">lib/stdlib/sh_utils.lua:208</a>
+</div>
+<section class="docstring">
+<p>Returns the Steam name of a player, or the translated name of the console if the player is
+not valid (as it is for commands that are run from the server console).</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">target</span> <span class="type">Player</span> <span class="desc">player, or an invalid entity or nil for the console</span></li></ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">String</span></li></ul>
+</section>
+</section>
+<section class="detail" id="getenv">
+<div class="detail-header">
+<h3 class="signature"><span class="owner"></span>getenv<span class="params">(key, default)</span></h3>
+<a href="#getenv" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/gamemode/env.lua#L19" title="View source">gamemode/env.lua:19</a>
+</div>
+<section class="docstring">
+<p>Gets an environment variable matching the &quot;key&quot; name.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">key</span> <span class="type">String</span> <span class="desc">variable name</span></li><li><span class="param-name">default</span> <span class="type">Any</span> <span class="default">optional, defaults to <code>nil</code></span> <span class="desc">value to return if the variable is not set</span></li></ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">String</span> <span class="desc">environment variable, or default if it is not set</span></li></ul>
+</section>
+</section>
+<section class="detail" id="greater">
+<div class="detail-header">
+<h3 class="signature"><span class="owner"></span>greater<span class="params">(a, b)</span></h3>
+<a href="#greater" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_utils.lua#L255" title="View source">lib/stdlib/sh_utils.lua:255</a>
+</div>
+<section class="docstring">
+<p class="muted">No documentation available.</p>
+</section>
+</section>
+<section class="detail" id="greater_equal">
+<div class="detail-header">
+<h3 class="signature"><span class="owner"></span>greater_equal<span class="params">(a, b)</span></h3>
+<a href="#greater_equal" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_utils.lua#L261" title="View source">lib/stdlib/sh_utils.lua:261</a>
+</div>
+<section class="docstring">
+<p class="muted">No documentation available.</p>
+</section>
+</section>
+<section class="detail" id="i">
+<div class="detail-header">
+<h3 class="signature"><span class="owner"></span>i<span class="params">(pattern)</span></h3>
+<a href="#i" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_string.lua#L452" title="View source">lib/stdlib/sh_string.lua:452</a>
+</div>
+<section class="docstring">
+<p>Makes a Lua pattern case-insensitive.</p>
+<pre><code class="language-lua">inflect:<span class="hl-f">plural</span>(i<span class="hl-s">&#39;(octop)us$&#39;</span>, <span class="hl-s">&#39;%1i&#39;</span>) <span class="hl-c">-- the pattern becomes &#39;([oO][cC][tT][oO][pP])[uU][sS]$&#39;</span>
+</code></pre>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">pattern</span> <span class="type">String</span> <span class="desc">Lua pattern</span></li></ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">String</span> <span class="desc">pattern that matches both lowercase and uppercase letters</span></li></ul>
+</section>
+</section>
+<section class="detail" id="include_sandboxed">
+<div class="detail-header">
+<h3 class="signature"><span class="owner"></span>include_sandboxed<span class="params">(f)</span></h3>
+<a href="#include_sandboxed" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_utils.lua#L450" title="View source">lib/stdlib/sh_utils.lua:450</a>
+</div>
+<section class="docstring">
+<p>Runs a Lua file in a restricted environment that has no access to unsafe globals such as
+debug, require, RunString, CompileString, setmetatable or File.
+The environment is a copy of the globals made when the standard library was loaded.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">f</span> <span class="type">String</span> <span class="desc">file path relative to the lua/ folder</span></li></ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">Vararg</span> <span class="desc">whatever the file returns</span></li></ul>
+</section>
+</section>
+<section class="detail" id="is_a">
+<div class="detail-header">
+<h3 class="signature"><span class="owner"></span>is_a<span class="params">(obj)</span></h3>
+<a href="#is_a" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_table.lua#L564" title="View source">lib/stdlib/sh_table.lua:564</a>
+</div>
+<section class="docstring">
+<p>Checks whether an object is a special array created with <a href="../flux/Globals.html#a"><code>a</code></a>.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">obj</span> <span class="type">Any</span></li></ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">Boolean</span></li></ul>
+<h4>See also</h4>
+<ul class="see-also"><li><a href="../flux/Globals.html#a"><code>a</code></a></li></ul>
+</section>
+</section>
+<section class="detail" id="isclass">
+<div class="detail-header">
+<h3 class="signature"><span class="owner"></span>isclass<span class="params">(obj)</span></h3>
+<a href="#isclass" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_class.lua#L7" title="View source">lib/stdlib/sh_class.lua:7</a>
+</div>
+<section class="docstring">
+<p>Checks whether or not an object is a class or an instance of a class.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">obj</span> <span class="type">Any</span> <span class="desc">object to check</span></li></ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">Boolean</span> <span class="desc">whether or not the object is a class</span></li></ul>
+<h4>See also</h4>
+<ul class="see-also"><li><a href="../flux/Globals.html#class"><code>class</code></a></li></ul>
+</section>
+</section>
+<section class="detail" id="LerpColor">
+<div class="detail-header">
+<h3 class="signature"><span class="owner"></span>LerpColor<span class="params">(fraction, color_from, color_to)</span></h3>
+<a href="#LerpColor" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_color.lua#L312" title="View source">lib/stdlib/sh_color.lua:312</a>
+</div>
+<section class="docstring">
+<p>Linearly interpolates between two colors, alpha included.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">fraction</span> <span class="type">Number</span> <span class="desc">interpolation fraction, 0 returns color_from and 1 returns color_to</span></li><li><span class="param-name">color_from</span> <span class="type">Color</span></li><li><span class="param-name">color_to</span> <span class="type">Color</span></li></ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">Color</span></li></ul>
+</section>
+</section>
+<section class="detail" id="less">
+<div class="detail-header">
+<h3 class="signature"><span class="owner"></span>less<span class="params">(a, b)</span></h3>
+<a href="#less" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_utils.lua#L252" title="View source">lib/stdlib/sh_utils.lua:252</a>
+</div>
+<section class="docstring">
+<p class="muted">No documentation available.</p>
+</section>
+</section>
+<section class="detail" id="less_equal">
+<div class="detail-header">
+<h3 class="signature"><span class="owner"></span>less_equal<span class="params">(a, b)</span></h3>
+<a href="#less_equal" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_utils.lua#L258" title="View source">lib/stdlib/sh_utils.lua:258</a>
+</div>
+<section class="docstring">
+<p class="muted">No documentation available.</p>
+</section>
+</section>
+<section class="detail" id="long_error">
+<div class="detail-header">
+<h3 class="signature"><span class="owner"></span>long_error<span class="params">(...)</span></h3>
+<a href="#long_error" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_utils.lua#L404" title="View source">lib/stdlib/sh_utils.lua:404</a>
+</div>
+<section class="docstring">
+<p>Prints an error using ErrorNoHalt but without the character limit.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">...</span> <span class="type">Vararg</span> <span class="desc">strings that are concatenated into the error message</span></li></ul>
+<h4>See also</h4>
+<ul class="see-also"><li><a href="../packages/colorfix/Globals.html#ErrorNoHalt"><code>ErrorNoHalt</code></a></li></ul>
+</section>
+</section>
+<section class="detail" id="lower">
+<div class="detail-header">
+<h3 class="signature"><span class="owner"></span>lower<span class="params">(...)</span></h3>
+<a href="#lower" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_string.lua#L2" title="View source">lib/stdlib/sh_string.lua:2</a>
+</div>
+<section class="docstring">
+<p class="muted">No documentation available.</p>
+</section>
+</section>
+<section class="detail" id="mod">
+<div class="detail-header">
+<h3 class="signature"><span class="owner"></span>mod<span class="params">(name)</span></h3>
+<a href="#mod" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_module.lua#L15" title="View source">lib/stdlib/sh_module.lua:15</a>
+</div>
+<section class="docstring">
+<p>Create a module with a specified name.
+The resulting object will have the <code>include</code> method by default.</p>
+<pre><code class="language-lua">mod <span class="hl-s">&#39;Talkable&#39;</span>
+
+<span class="hl-c">-- You can include other modules too.</span>
+Talkable:include <span class="hl-s">&#39;Living&#39;</span>
+
+<span class="hl-k">function</span> Talkable:<span class="hl-f">talk</span>()
+  <span class="hl-c">-- ...</span>
+<span class="hl-k">end</span>
+</code></pre>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">name</span> <span class="type">String</span> <span class="desc">module name in ConstantStyle, may be namespaced (e.g. 'Flux::Anim')</span></li></ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">Object</span> <span class="desc">created module</span></li></ul>
+</section>
+</section>
+<section class="detail" id="print_debug_metric">
+<div class="detail-header">
+<h3 class="signature"><span class="owner"></span>print_debug_metric<span class="params">(id, format)</span></h3>
+<a href="#print_debug_metric" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_debug.lua#L34" title="View source">lib/stdlib/sh_debug.lua:34</a>
+</div>
+<section class="docstring">
+<p>Prints the amount of objects registered under a debug metric to the console.
+The metric has to exist.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">id</span> <span class="type">String</span> <span class="desc">metric name</span></li><li><span class="param-name">format</span> <span class="type">String</span> <span class="default">optional, defaults to <code>&#39;{count} {id} were registered.&#39;</code></span> <span class="desc">message, {count} and {id} are replaced</span></li></ul>
+<h4>See also</h4>
+<ul class="see-also"><li><a href="../flux/string.html#fmt"><code>string.fmt</code></a></li></ul>
+</section>
+</section>
+<section class="detail" id="print_debug_metric-2">
+<div class="detail-header">
+<h3 class="signature"><span class="owner"></span>print_debug_metric<span class="params">(id, format)</span></h3>
+<a href="#print_debug_metric-2" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_debug.lua#L67" title="View source">lib/stdlib/sh_debug.lua:67</a>
+</div>
+<section class="docstring">
+<p>Does nothing, since debug metrics are only collected in the development environment.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">id</span> <span class="type">String</span> <span class="desc">metric name</span></li><li><span class="param-name">format</span> <span class="type">String</span> <span class="default">optional, defaults to <code>nil</code></span> <span class="desc">message</span></li></ul>
+</section>
+</section>
+<section class="detail" id="print_debug_metrics">
+<div class="detail-header">
+<h3 class="signature"><span class="owner"></span>print_debug_metrics<span class="params">()</span></h3>
+<a href="#print_debug_metrics" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_debug.lua#L47" title="View source">lib/stdlib/sh_debug.lua:47</a>
+</div>
+<section class="docstring">
+<p>Prints the amount of registered objects of every debug metric to the console.</p>
+</section>
+</section>
+<section class="detail" id="print_debug_metrics-2">
+<div class="detail-header">
+<h3 class="signature"><span class="owner"></span>print_debug_metrics<span class="params">()</span></h3>
+<a href="#print_debug_metrics-2" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_debug.lua#L71" title="View source">lib/stdlib/sh_debug.lua:71</a>
+</div>
+<section class="docstring">
+<p>Does nothing, since debug metrics are only collected in the development environment.</p>
+</section>
+</section>
+<section class="detail" id="print_table">
+<div class="detail-header">
+<h3 class="signature"><span class="owner"></span>print_table<span class="params">(t, indent, done, indent_length)</span></h3>
+<a href="#print_table" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_table.lua#L628" title="View source">lib/stdlib/sh_table.lua:628</a>
+</div>
+<section class="docstring">
+<p>Prints the contents of a table to the console, sorted by key, with nested tables indented.
+A better implementation of PrintTable, which it also replaces.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">t</span> <span class="type">Map/List</span> <span class="desc">table to print</span></li><li><span class="param-name">indent</span> <span class="type">Number</span> <span class="default">optional, defaults to <code>0</code></span> <span class="desc">indentation level to print at</span></li><li><span class="param-name">done</span> <span class="type">Map</span> <span class="default">optional, defaults to <code>{}</code></span> <span class="desc">tables that are being printed already, to avoid endless recursion</span></li><li><span class="param-name">indent_length</span> <span class="type">Number</span> <span class="default">optional, defaults to <code>1</code></span> <span class="desc">minimum width of the key column</span></li></ul>
+</section>
+</section>
+<section class="detail" id="print_traceback">
+<div class="detail-header">
+<h3 class="signature"><span class="owner"></span>print_traceback<span class="params">(suppress, ...)</span></h3>
+<a href="#print_traceback" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_utils.lua#L375" title="View source">lib/stdlib/sh_utils.lua:375</a>
+</div>
+<section class="docstring">
+<p>Print a traceback to the current function call.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">suppress</span> <span class="type">Boolean</span> <span class="default">optional, defaults to <code>false</code></span> <span class="desc">do not print the traceback, only return it</span></li><li><span class="param-name">...</span> <span class="type">Vararg</span> <span class="desc">arguments for debug.traceback, such as a message and a level</span></li></ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">List</span> <span class="desc">string pieces of the traceback</span></li></ul>
+</section>
+</section>
+<section class="detail" id="printf">
+<div class="detail-header">
+<h3 class="signature"><span class="owner"></span>printf<span class="params">(str, ...)</span></h3>
+<a href="#printf" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_utils.lua#L34" title="View source">lib/stdlib/sh_utils.lua:34</a>
+</div>
+<section class="docstring">
+<p>Prints C-style formatted strings.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">str</span> <span class="type">String</span> <span class="desc">format string, see string.format</span></li><li><span class="param-name">...</span> <span class="type">Vararg</span> <span class="desc">values to put into the format string</span></li></ul>
+</section>
+</section>
+<section class="detail" id="require_client">
+<div class="detail-header">
+<h3 class="signature"><span class="owner"></span>require_client<span class="params">(file_name)</span></h3>
+<a href="#require_client" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_helpers.lua#L119" title="View source">lib/stdlib/sh_helpers.lua:119</a>
+</div>
+<section class="docstring">
+<p>Require a clientside-only file.
+The .lua file ending may be omitted.
+This is the equivalent of simply doing this:</p>
+<pre><code class="language-lua"><span class="hl-k">if</span> SERVER <span class="hl-k">then</span>
+  <span class="hl-f">AddCSLuaFile</span>(file_name)
+<span class="hl-k">else</span>
+  <span class="hl-f">include</span>(file_name)
+<span class="hl-k">end</span>
+</code></pre>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">file_name</span> <span class="type">String</span> <span class="desc">file name to include</span></li></ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">Object</span> <span class="desc">return value of include()</span></li></ul>
+</section>
+</section>
+<section class="detail" id="require_ignore">
+<div class="detail-header">
+<h3 class="signature"><span class="owner"></span>require_ignore<span class="params">(who, should_ignore)</span></h3>
+<a href="#require_ignore" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_helpers.lua#L13" title="View source">lib/stdlib/sh_helpers.lua:13</a>
+</div>
+<section class="docstring">
+<p>Ignore a certain realm in the require_relative function calls.</p>
+<pre><code class="language-lua"><span class="hl-f">require_ignore</span>(<span class="hl-s">&#39;server&#39;</span>, <span class="hl-k">true</span>)
+<span class="hl-f">require_relative</span>(<span class="hl-s">&#39;sv_thing.lua&#39;</span>) <span class="hl-c">-- will not be included</span>
+<span class="hl-f">require_ignore</span>(<span class="hl-s">&#39;server&#39;</span>, <span class="hl-k">false</span>)
+<span class="hl-f">require_relative</span>(<span class="hl-s">&#39;sv_thing.lua&#39;</span>) <span class="hl-c">-- will be included</span>
+</code></pre>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">who</span> <span class="type">String</span> <span class="desc">realm</span></li><li><span class="param-name">should_ignore</span> <span class="type">Boolean</span> <span class="desc">whether the realm should be ignored or not</span></li></ul>
+</section>
+</section>
+<section class="detail" id="require_module">
+<div class="detail-header">
+<h3 class="signature"><span class="owner"></span>require_module<span class="params">(mod)</span></h3>
+<a href="#require_module" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/gamemode/init.lua#L7" title="View source">gamemode/init.lua:7</a>
+</div>
+<section class="docstring">
+<p>Includes a module and returns a boolean depending on success.
+Does not throw Lua errors.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">mod</span> <span class="type">String</span> <span class="desc">module name, as passed to require</span></li></ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">Boolean</span> <span class="desc">success</span></li></ul>
+</section>
+</section>
+<section class="detail" id="require_relative">
+<div class="detail-header">
+<h3 class="signature"><span class="owner"></span>require_relative<span class="params">(file_name)</span></h3>
+<a href="#require_relative" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_helpers.lua#L34" title="View source">lib/stdlib/sh_helpers.lua:34</a>
+</div>
+<section class="docstring">
+<p>Require a file relative to the current file's directory.
+The .lua file ending may be omitted.
+This function will try to guess the realm the file should be in and
+AddCSLuaFile accordingly and automatically.</p>
+<pre><code class="language-lua">require_relative <span class="hl-s">&#39;cl_file&#39;</span>     <span class="hl-c">-- will include cl_file.lua only on client</span>
+require_relative <span class="hl-s">&#39;sv_file&#39;</span>     <span class="hl-c">-- will include sv_file.lua only on server</span>
+require_relative <span class="hl-s">&#39;file&#39;</span>        <span class="hl-c">-- will include file.lua on both client and server</span>
+</code></pre>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">file_name</span> <span class="type">String</span> <span class="desc">file to include</span></li></ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">Object</span> <span class="desc">return value of include()</span></li></ul>
+</section>
+</section>
+<section class="detail" id="require_relative_folder">
+<div class="detail-header">
+<h3 class="signature"><span class="owner"></span>require_relative_folder<span class="params">(dir, base, recursive)</span></h3>
+<a href="#require_relative_folder" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_helpers.lua#L69" title="View source">lib/stdlib/sh_helpers.lua:69</a>
+</div>
+<section class="docstring">
+<p>Require all files in a folder using require_relative.
+Relative to gamemodes/flux/ by default, unless <code>base</code> is specified.</p>
+<pre><code class="language-lua">require_relative <span class="hl-s">&#39;my_folder&#39;</span>
+</code></pre>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">dir</span> <span class="type">String</span> <span class="desc">folder to include</span></li><li><span class="param-name">base</span> <span class="type">String</span> <span class="default">optional, defaults to <code>flux/</code></span> <span class="desc">base folder for relativity</span></li><li><span class="param-name">recursive</span> <span class="type">Boolean</span> <span class="default">optional, defaults to <code>false</code></span> <span class="desc">include all files recursively</span></li></ul>
+<h4>See also</h4>
+<ul class="see-also"><li><a href="../flux/Globals.html#require_relative"><code>require_relative</code></a></li></ul>
+</section>
+</section>
+<section class="detail" id="require_server">
+<div class="detail-header">
+<h3 class="signature"><span class="owner"></span>require_server<span class="params">(file_name)</span></h3>
+<a href="#require_server" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_helpers.lua#L141" title="View source">lib/stdlib/sh_helpers.lua:141</a>
+</div>
+<section class="docstring">
+<p>Require a serverside-only file.
+The .lua file ending may be omitted.
+This is equivalent of simply doing this:</p>
+<pre><code class="language-lua"><span class="hl-k">if</span> SERVER <span class="hl-k">then</span>
+  <span class="hl-f">include</span>(file_name)
+<span class="hl-k">end</span>
+</code></pre>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">file_name</span> <span class="type">String</span> <span class="desc">file name to include</span></li></ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">Object</span> <span class="desc">return value of include()</span></li></ul>
+</section>
+</section>
+<section class="detail" id="require_shared">
+<div class="detail-header">
+<h3 class="signature"><span class="owner"></span>require_shared<span class="params">(file_name)</span></h3>
+<a href="#require_shared" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_helpers.lua#L164" title="View source">lib/stdlib/sh_helpers.lua:164</a>
+</div>
+<section class="docstring">
+<p>Require a file on both client and server.
+The .lua file ending may be omitted.
+This is equivalent of simply doing this:</p>
+<pre><code class="language-lua"><span class="hl-k">if</span> SERVER <span class="hl-k">then</span>
+  <span class="hl-f">AddCSLuaFile</span>(file_name)
+  <span class="hl-f">include</span>(file_name)
+<span class="hl-k">else</span>
+  <span class="hl-f">include</span>(file_name)
+<span class="hl-k">end</span>
+</code></pre>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">file_name</span> <span class="type">String</span> <span class="desc">file name to include</span></li></ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">Object</span> <span class="desc">return value of include()</span></li></ul>
+</section>
+</section>
+<section class="detail" id="s">
+<div class="detail-header">
+<h3 class="signature"><span class="owner"></span>s<span class="params">(what)</span></h3>
+<a href="#s" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_table.lua#L576" title="View source">lib/stdlib/sh_table.lua:576</a>
+</div>
+<section class="docstring">
+<p>Creates a function that returns the given field of the table passed to it.
+For use with table#map.</p>
+<pre><code class="language-lua">table.<span class="hl-f">map</span>(t, s<span class="hl-s">&#39;some_field&#39;</span>)
+</code></pre>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">what</span> <span class="type">String/Number</span> <span class="desc">key of the field</span></li></ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">Function</span> <span class="desc">accessor(tab), returns tab[what]</span></li></ul>
+</section>
+</section>
+<section class="detail" id="setenv">
+<div class="detail-header">
+<h3 class="signature"><span class="owner"></span>setenv<span class="params">(key, value)</span></h3>
+<a href="#setenv" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/gamemode/env.lua#L36" title="View source">gamemode/env.lua:36</a>
+</div>
+<section class="docstring">
+<p>Sets an environment variable &quot;key&quot; to &quot;value&quot;.
+Will be automatically converted to a string by the C backend.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">key</span> <span class="type">String</span> <span class="desc">variable name</span></li><li><span class="param-name">value</span> <span class="type">Any</span> <span class="desc">new value</span></li></ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">String</span> <span class="desc">environment variable reference</span></li></ul>
+</section>
+</section>
+<section class="detail" id="sub">
+<div class="detail-header">
+<h3 class="signature"><span class="owner"></span>sub<span class="params">(...)</span></h3>
+<a href="#sub" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_string.lua#L8" title="View source">lib/stdlib/sh_string.lua:8</a>
+</div>
+<section class="docstring">
+<p class="muted">No documentation available.</p>
+</section>
+</section>
+<section class="detail" id="try">
+<div class="detail-header">
+<h3 class="signature"><span class="owner"></span>try<span class="params">(func, ...)</span></h3>
+<a href="#try" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_wrappers.lua#L15" title="View source">lib/stdlib/sh_wrappers.lua:15</a>
+</div>
+<section class="docstring">
+<p>A wrapper for pcall for shorthand writing.
+If the function fails, the error is printed with a traceback and nothing is returned.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">func</span> <span class="type">Function</span> <span class="desc">function to call</span></li><li><span class="param-name">...</span> <span class="type">Vararg</span> <span class="desc">arguments to call the function with</span></li></ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">Vararg</span> <span class="desc">up to six return values of the function</span></li></ul>
+</section>
+</section>
+<section class="detail" id="txt">
+<div class="detail-header">
+<h3 class="signature"><span class="owner"></span>txt<span class="params">(text)</span></h3>
+<a href="#txt" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_utils.lua#L179" title="View source">lib/stdlib/sh_utils.lua:179</a>
+</div>
+<section class="docstring">
+<p>Removes the common indentation and the surrounding blank lines from a multi-line string,
+so that long texts can be indented together with the code around them.</p>
+<pre><code class="language-lua"><span class="hl-f">print</span>(txt<span class="hl-s">[[
+  Usage:
+    flux help
+]]</span>)
+<span class="hl-c">-- Usage:</span>
+<span class="hl-c">--   flux help</span>
+</code></pre>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">text</span> <span class="type">String</span> <span class="desc">multi-line text</span></li></ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">String</span> <span class="desc">the text without the common indentation</span></li></ul>
+</section>
+</section>
+<section class="detail" id="typeof">
+<div class="detail-header">
+<h3 class="signature"><span class="owner"></span>typeof<span class="params">(obj)</span></h3>
+<a href="#typeof" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_wrappers.lua#L6" title="View source">lib/stdlib/sh_wrappers.lua:6</a>
+</div>
+<section class="docstring">
+<p>Gets the type of an object while ensuring the output is always lowercase.
+Functions exactly the same as <code>type</code>.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">obj</span> <span class="type">Any</span></li></ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">String</span> <span class="desc">type</span></li></ul>
+<h4>See also</h4>
+<ul class="see-also"><li><code>type</code></li></ul>
+</section>
+</section>
+<section class="detail" id="unequal">
+<div class="detail-header">
+<h3 class="signature"><span class="owner"></span>unequal<span class="params">(a, b)</span></h3>
+<a href="#unequal" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_utils.lua#L249" title="View source">lib/stdlib/sh_utils.lua:249</a>
+</div>
+<section class="docstring">
+<p class="muted">No documentation available.</p>
+</section>
+</section>
+<section class="detail" id="upper">
+<div class="detail-header">
+<h3 class="signature"><span class="owner"></span>upper<span class="params">(...)</span></h3>
+<a href="#upper" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_string.lua#L5" title="View source">lib/stdlib/sh_string.lua:5</a>
+</div>
+<section class="docstring">
+<p class="muted">No documentation available.</p>
+</section>
+</section>
+<section class="detail" id="URLMaterial">
+<div class="detail-header">
+<h3 class="signature"><span class="owner"></span>URLMaterial<span class="params">(url)</span></h3>
+<a href="#URLMaterial" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/cl_utils.lua#L245" title="View source">lib/stdlib/cl_utils.lua:245</a>
+</div>
+<section class="docstring">
+<p>Returns the material of an image from a URL, starting the download on first use.
+A placeholder material is returned for as long as the image has not been loaded.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">url</span> <span class="type">String</span> <span class="desc">direct link to an image, has to end with a file extension</span></li></ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">Material</span> <span class="desc">the downloaded image, or a placeholder while it is loading</span></li></ul>
+<h4>See also</h4>
+<ul class="see-also"><li><a href="../flux/util.html#cache_url_material"><code>util.cache_url_material</code></a></li></ul>
+</section>
+</section>
+<section class="detail" id="w">
+<div class="detail-header">
+<h3 class="signature"><span class="owner"></span>w<span class="params">(str)</span></h3>
+<a href="#w" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_table.lua#L588" title="View source">lib/stdlib/sh_table.lua:588</a>
+</div>
+<section class="docstring">
+<p>Splits a string of words into an array. Words are separated by spaces or newlines.</p>
+<pre><code class="language-lua">w<span class="hl-s">&#39;data ammo equipment&#39;</span> <span class="hl-c">-- { &#39;data&#39;, &#39;ammo&#39;, &#39;equipment&#39; }</span>
+</code></pre>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">str</span> <span class="type">String</span> <span class="desc">space-separated words</span></li></ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">List&lt;String&gt;</span> <span class="desc">words</span></li></ul>
+</section>
+</section>
+<section class="detail" id="wk">
+<div class="detail-header">
+<h3 class="signature"><span class="owner"></span>wk<span class="params">(str)</span></h3>
+<a href="#wk" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_table.lua#L598" title="View source">lib/stdlib/sh_table.lua:598</a>
+</div>
+<section class="docstring">
+<p>Splits a string of space-separated words into a hash that has the words as its keys.</p>
+<pre><code class="language-lua">wk<span class="hl-s">&#39;data ammo equipment&#39;</span> <span class="hl-c">-- { data = true, ammo = true, equipment = true }</span>
+</code></pre>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">str</span> <span class="type">String</span> <span class="desc">space-separated words</span></li></ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">Map</span> <span class="desc">word =&gt; true</span></li></ul>
+</section>
+</section>
+</section>
+<section class="sources"><h2>Defined in</h2><ul><li><a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/gamemode/env.lua" title="View source">gamemode/env.lua</a></li><li><a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/gamemode/init.lua" title="View source">gamemode/init.lua</a></li><li><a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/cl_utils.lua" title="View source">lib/stdlib/cl_utils.lua</a></li><li><a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_class.lua" title="View source">lib/stdlib/sh_class.lua</a></li><li><a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_color.lua" title="View source">lib/stdlib/sh_color.lua</a></li><li><a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_debug.lua" title="View source">lib/stdlib/sh_debug.lua</a></li><li><a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_helpers.lua" title="View source">lib/stdlib/sh_helpers.lua</a></li><li><a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_module.lua" title="View source">lib/stdlib/sh_module.lua</a></li><li><a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_string.lua" title="View source">lib/stdlib/sh_string.lua</a></li><li><a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_table.lua" title="View source">lib/stdlib/sh_table.lua</a></li><li><a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_utils.lua" title="View source">lib/stdlib/sh_utils.lua</a></li><li><a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_wrappers.lua" title="View source">lib/stdlib/sh_wrappers.lua</a></li></ul></section>
+<template id="module-functions"><ul class="sidebar-functions"><li class="sidebar-category" data-anchor="functions">Functions</li><li><a href="#a">a</a></li><li><a href="#add_client_env">add_client_env</a></li><li><a href="#add_debug_metric">add_debug_metric</a></li><li><a href="#add_debug_metric-2">add_debug_metric</a></li><li><a href="#class">class</a></li><li><a href="#Color">Color</a></li><li><a href="#compare">compare</a></li><li><a href="#delegate">delegate</a></li><li><a href="#enumerate">enumerate</a></li><li><a href="#equal">equal</a></li><li><a href="#error_with_traceback">error_with_traceback</a></li><li><a href="#extends">extends</a></li><li><a href="#get_debug_metric">get_debug_metric</a></li><li><a href="#get_debug_metric-2">get_debug_metric</a></li><li><a href="#get_player_name">get_player_name</a></li><li><a href="#getenv">getenv</a></li><li><a href="#greater">greater</a></li><li><a href="#greater_equal">greater_equal</a></li><li><a href="#i">i</a></li><li><a href="#include_sandboxed">include_sandboxed</a></li><li><a href="#is_a">is_a</a></li><li><a href="#isclass">isclass</a></li><li><a href="#LerpColor">LerpColor</a></li><li><a href="#less">less</a></li><li><a href="#less_equal">less_equal</a></li><li><a href="#long_error">long_error</a></li><li><a href="#lower">lower</a></li><li><a href="#mod">mod</a></li><li><a href="#print_debug_metric">print_debug_metric</a></li><li><a href="#print_debug_metric-2">print_debug_metric</a></li><li><a href="#print_debug_metrics">print_debug_metrics</a></li><li><a href="#print_debug_metrics-2">print_debug_metrics</a></li><li><a href="#print_table">print_table</a></li><li><a href="#print_traceback">print_traceback</a></li><li><a href="#printf">printf</a></li><li><a href="#require_client">require_client</a></li><li><a href="#require_ignore">require_ignore</a></li><li><a href="#require_module">require_module</a></li><li><a href="#require_relative">require_relative</a></li><li><a href="#require_relative_folder">require_relative_folder</a></li><li><a href="#require_server">require_server</a></li><li><a href="#require_shared">require_shared</a></li><li><a href="#s">s</a></li><li><a href="#setenv">setenv</a></li><li><a href="#sub">sub</a></li><li><a href="#try">try</a></li><li><a href="#txt">txt</a></li><li><a href="#typeof">typeof</a></li><li><a href="#unequal">unequal</a></li><li><a href="#upper">upper</a></li><li><a href="#URLMaterial">URLMaterial</a></li><li><a href="#w">w</a></li><li><a href="#wk">wk</a></li></ul></template>
+
+<footer class="footer">
+<p>Built with <a href="https://github.com/TeslaCloud/fdoc">fdoc</a>.</p>
+</footer>
+</div>
+</main>
+<script src="../assets/sidebar_items.js"></script>
+<script src="../assets/app.js"></script>
+</body>
+</html>

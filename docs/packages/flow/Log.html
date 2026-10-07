@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="generator" content="fdoc">
+<title>Log — Flux v0.8.1</title>
+<link rel="stylesheet" href="../../assets/style.css">
+<script>try{var t=localStorage.getItem('fdoc-theme');if(t)document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
+</head>
+<body data-root="../../" data-group="packages/flow" data-module="Log">
+<div class="progress" id="progress"></div>
+<button class="sidebar-toggle" type="button" aria-label="Toggle navigation"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path fill="currentColor" d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg></button>
+<div class="sidebar-backdrop"></div>
+<aside class="sidebar" id="sidebar">
+<div class="sidebar-header">
+<a class="sidebar-project" href="../../index.html"><span class="sidebar-project-name">Flux</span> <span class="sidebar-project-version">v0.8.1</span></a>
+</div>
+<div class="sidebar-tabs" id="sidebar-tabs" role="tablist"></div>
+<nav class="sidebar-nav" id="sidebar-nav" aria-label="Documentation"><noscript><p class="sidebar-noscript"><a href="../../index.html">Index</a></p></noscript></nav>
+</aside>
+<main class="content" id="content">
+<div class="topbar">
+<form class="search" action="../../search.html" method="get" autocomplete="off" role="search">
+<input type="search" name="q" id="search-input" placeholder="Press / to search" aria-label="Search">
+<ul class="search-suggestions" id="search-suggestions" hidden></ul>
+</form>
+<button class="theme-toggle" type="button" aria-label="Toggle night mode"><span class="icon-moon"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M12 3a9 9 0 1 0 9 9c0-.46-.04-.92-.1-1.36a5.389 5.389 0 0 1-4.4 2.26 5.403 5.403 0 0 1-3.14-9.8c-.44-.06-.9-.1-1.36-.1z"/></svg></span><span class="icon-sun"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M6.76 4.84l-1.8-1.79-1.41 1.41 1.79 1.79 1.42-1.41zM4 10.5H1v2h3v-2zm9-9.95h-2V3.5h2V.55zm7.45 3.91l-1.41-1.41-1.79 1.79 1.41 1.41 1.79-1.79zm-3.21 13.7l1.79 1.8 1.41-1.41-1.8-1.79-1.4 1.4zM20 10.5v2h3v-2h-3zm-8-5c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6zm-1 16.95h2V19.5h-2v2.95zm-7.45-3.91l1.41 1.41 1.79-1.8-1.41-1.41-1.79 1.8z"/></svg></span></button>
+</div>
+<div class="content-inner" id="content-inner">
+<div class="page-header"><h1>Log <span class="badge badge-class">class</span></h1><p class="subtitle">Extends <a href="../../packages/active_record/ActiveRecord.Base.html"><code>ActiveRecord.Base</code></a></p><p class="subtitle">Part of <a href="../../packages/flow/index.html">Flow</a></p></div>
+<section class="summary"><h2 id="summary">Summary</h2>
+<div class="summary-group"><h3>Methods</h3>
+<div class="summary-row"><div class="summary-signature"><a href="#colored">colored(color, message, action, object, subject)</a></div><div class="summary-synopsis">Records a log entry and prints it to the console in the given color, prefixed with the action.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#notify">notify(message, arguments)</a></div><div class="summary-synopsis">Records a log entry and shows the message to every player as a notification. Server only.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#print">print(message, action, object, subject)</a></div><div class="summary-synopsis">Records a log entry and prints it, prefixed with the action, to the server log on the server or to the console on the client.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#replicate">replicate(condition)</a></div><div class="summary-synopsis">Sends the most recent entry made with Log:print or Log:colored to the clients, where it is output the same way. Does nothing if there is no such entry since the last call. Server only.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#to_discord">to_discord(type, message)</a></div><div class="summary-synopsis">Pushes a message to every Discord webhook registered for the given type. Does nothing on the client.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#write">write(message, action, object, subject, io)</a></div><div class="summary-synopsis">Records a log entry. On the server the entry is saved to the logs table. The entry is also remembered so that it can be passed on with Log:replicate.</div></div>
+</div>
+</section>
+<section class="details-group"><h2 id="methods">Methods</h2>
+<section class="detail" id="colored">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Log:</span>colored<span class="params">(color, message, action, object, subject)</span></h3>
+<a href="#colored" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/models/log.lua#L106" title="View source">packages/flow/models/log.lua:106</a>
+</div>
+<section class="docstring">
+<p>Records a log entry and prints it to the console in the given color, prefixed with
+the action.</p>
+<pre><code class="language-lua">Log:<span class="hl-f">colored</span>(
+  command_log_color,
+  message,
+  <span class="hl-s">&#39;PlayerRunCommand&#39;</span>,
+  <span class="hl-f">IsValid</span>(actor) <span class="hl-k">and</span> actor.record.id <span class="hl-k">or</span> <span class="hl-s">&#39;console&#39;</span>
+):<span class="hl-f">replicate</span>(<span class="hl-k">function</span>(listener)
+  <span class="hl-k">return</span> listener:<span class="hl-f">is_staff</span>() <span class="hl-k">and</span> listener:<span class="hl-f">can</span>(cmd_table.id)
+<span class="hl-k">end</span>)
+</code></pre>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">color</span> <span class="type">Color</span> <span class="desc">color of the console output</span></li><li><span class="param-name">message</span> <span class="type">String</span> <span class="desc">text of the entry</span></li><li><span class="param-name">action</span> <span class="type">String</span> <span class="default">optional, defaults to <code>nil</code></span> <span class="desc">type of the logged event</span></li><li><span class="param-name">object</span> <span class="type">String/Number</span> <span class="default">optional, defaults to <code>nil</code></span> <span class="desc">who or what performed the action</span></li><li><span class="param-name">subject</span> <span class="type">String/Number</span> <span class="default">optional, defaults to <code>nil</code></span> <span class="desc">who or what the action was performed on</span></li></ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">Log</span> <span class="desc">the Log class, for chaining</span></li></ul>
+<h4>See also</h4>
+<ul class="see-also"><li><a href="../../packages/flow/Log.html#write"><code>Log:write</code></a></li></ul>
+</section>
+</section>
+<section class="detail" id="notify">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Log:</span>notify<span class="params">(message, arguments)</span></h3>
+<a href="#notify" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/models/log.lua#L124" title="View source">packages/flow/models/log.lua:124</a>
+</div>
+<section class="docstring">
+<p>Records a log entry and shows the message to every player as a notification.
+Server only.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">message</span> <span class="type">String</span> <span class="desc">text or language phrase of the notification</span></li><li><span class="param-name">arguments</span> <span class="type">Map</span> <span class="desc">arguments of the phrase; its action, object and subject fields are used for the log entry</span></li></ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">Log</span> <span class="desc">the Log class, for chaining</span></li></ul>
+</section>
+</section>
+<section class="detail" id="print">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Log:</span>print<span class="params">(message, action, object, subject)</span></h3>
+<a href="#print" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/models/log.lua#L73" title="View source">packages/flow/models/log.lua:73</a>
+</div>
+<section class="docstring">
+<p>Records a log entry and prints it, prefixed with the action, to the server log on the
+server or to the console on the client.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">message</span> <span class="type">String</span> <span class="desc">text of the entry</span></li><li><span class="param-name">action</span> <span class="type">String</span> <span class="default">optional, defaults to <code>nil</code></span> <span class="desc">type of the logged event</span></li><li><span class="param-name">object</span> <span class="type">String/Number</span> <span class="default">optional, defaults to <code>nil</code></span> <span class="desc">who or what performed the action</span></li><li><span class="param-name">subject</span> <span class="type">String/Number</span> <span class="default">optional, defaults to <code>nil</code></span> <span class="desc">who or what the action was performed on</span></li></ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">Log</span> <span class="desc">the Log class, for chaining</span></li></ul>
+<h4>See also</h4>
+<ul class="see-also"><li><a href="../../packages/flow/Log.html#write"><code>Log:write</code></a></li></ul>
+</section>
+</section>
+<section class="detail" id="replicate">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Log:</span>replicate<span class="params">(condition)</span></h3>
+<a href="#replicate" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/models/log.lua#L136" title="View source">packages/flow/models/log.lua:136</a>
+</div>
+<section class="docstring">
+<p>Sends the most recent entry made with Log:print or Log:colored to the clients, where it
+is output the same way. Does nothing if there is no such entry since the last call.
+Server only.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">condition</span> <span class="type">Function</span> <span class="default">optional, defaults to <code>nil</code></span> <span class="desc">called with each Player; return true to send the entry to them. Everyone receives it when omitted</span></li></ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">Log</span> <span class="desc">the Log class, for chaining</span></li></ul>
+</section>
+</section>
+<section class="detail" id="to_discord">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Log:</span>to_discord<span class="params">(type, message)</span></h3>
+<a href="#to_discord" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/models/log.lua#L50" title="View source">packages/flow/models/log.lua:50</a>
+</div>
+<section class="docstring">
+<p>Pushes a message to every Discord webhook registered for the given type. Does nothing
+on the client.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">type</span> <span class="type">String</span> <span class="default">optional, defaults to <code>&#39;all&#39;</code></span> <span class="desc">webhook type</span></li><li><span class="param-name">message</span> <span class="type">String</span> <span class="default">optional, defaults to <code>nil</code></span> <span class="desc">text to push; defaults to the last message given to Log:write</span></li></ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">Log</span> <span class="desc">the Log class, for chaining</span></li></ul>
+</section>
+</section>
+<section class="detail" id="write">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Log:</span>write<span class="params">(message, action, object, subject, io)</span></h3>
+<a href="#write" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/models/log.lua#L15" title="View source">packages/flow/models/log.lua:15</a>
+</div>
+<section class="docstring">
+<p>Records a log entry. On the server the entry is saved to the logs table. The entry is
+also remembered so that it can be passed on with Log:replicate.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">message</span> <span class="type">String</span> <span class="desc">text of the entry</span></li><li><span class="param-name">action</span> <span class="type">String</span> <span class="default">optional, defaults to <code>nil</code></span> <span class="desc">type of the logged event; stored in snake_case</span></li><li><span class="param-name">object</span> <span class="type">String/Number</span> <span class="default">optional, defaults to <code>nil</code></span> <span class="desc">who or what performed the action, e.g. a user ID</span></li><li><span class="param-name">subject</span> <span class="type">String/Number</span> <span class="default">optional, defaults to <code>nil</code></span> <span class="desc">who or what the action was performed on</span></li><li><span class="param-name">io</span> <span class="type">Function</span> <span class="default">optional, defaults to <code>nil</code></span> <span class="desc">outputs the entry; called with (message, action in CamelCase, object, subject)</span></li></ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">Log</span> <span class="desc">the Log class, for chaining</span></li></ul>
+</section>
+</section>
+</section>
+<section class="sources"><h2>Defined in</h2><ul><li><a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/flow/models/log.lua" title="View source">packages/flow/models/log.lua</a></li></ul></section>
+<template id="module-functions"><ul class="sidebar-functions"><li class="sidebar-category" data-anchor="methods">Methods</li><li><a href="#colored">colored</a></li><li><a href="#notify">notify</a></li><li><a href="#print">print</a></li><li><a href="#replicate">replicate</a></li><li><a href="#to_discord">to_discord</a></li><li><a href="#write">write</a></li></ul></template>
+
+<footer class="footer">
+<p>Built with <a href="https://github.com/TeslaCloud/fdoc">fdoc</a>.</p>
+</footer>
+</div>
+</main>
+<script src="../../assets/sidebar_items.js"></script>
+<script src="../../assets/app.js"></script>
+</body>
+</html>

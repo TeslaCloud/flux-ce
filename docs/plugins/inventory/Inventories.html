@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="generator" content="fdoc">
+<title>Inventories — Flux v0.8.1</title>
+<link rel="stylesheet" href="../../assets/style.css">
+<script>try{var t=localStorage.getItem('fdoc-theme');if(t)document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
+</head>
+<body data-root="../../" data-group="plugins/inventory" data-module="Inventories">
+<div class="progress" id="progress"></div>
+<button class="sidebar-toggle" type="button" aria-label="Toggle navigation"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path fill="currentColor" d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg></button>
+<div class="sidebar-backdrop"></div>
+<aside class="sidebar" id="sidebar">
+<div class="sidebar-header">
+<a class="sidebar-project" href="../../index.html"><span class="sidebar-project-name">Flux</span> <span class="sidebar-project-version">v0.8.1</span></a>
+</div>
+<div class="sidebar-tabs" id="sidebar-tabs" role="tablist"></div>
+<nav class="sidebar-nav" id="sidebar-nav" aria-label="Documentation"><noscript><p class="sidebar-noscript"><a href="../../index.html">Index</a></p></noscript></nav>
+</aside>
+<main class="content" id="content">
+<div class="topbar">
+<form class="search" action="../../search.html" method="get" autocomplete="off" role="search">
+<input type="search" name="q" id="search-input" placeholder="Press / to search" aria-label="Search">
+<ul class="search-suggestions" id="search-suggestions" hidden></ul>
+</form>
+<button class="theme-toggle" type="button" aria-label="Toggle night mode"><span class="icon-moon"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M12 3a9 9 0 1 0 9 9c0-.46-.04-.92-.1-1.36a5.389 5.389 0 0 1-4.4 2.26 5.403 5.403 0 0 1-3.14-9.8c-.44-.06-.9-.1-1.36-.1z"/></svg></span><span class="icon-sun"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M6.76 4.84l-1.8-1.79-1.41 1.41 1.79 1.79 1.42-1.41zM4 10.5H1v2h3v-2zm9-9.95h-2V3.5h2V.55zm7.45 3.91l-1.41-1.41-1.79 1.79 1.41 1.41 1.79-1.79zm-3.21 13.7l1.79 1.8 1.41-1.41-1.8-1.79-1.4 1.4zM20 10.5v2h3v-2h-3zm-8-5c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6zm-1 16.95h2V19.5h-2v2.95zm-7.45-3.91l1.41 1.41 1.79-1.8-1.41-1.41-1.79 1.8z"/></svg></span></button>
+</div>
+<div class="content-inner" id="content-inner">
+<div class="page-header"><h1>Inventories <span class="badge badge-hooks">hooks</span></h1><p class="subtitle">Plugin hooks and methods</p><p class="subtitle">Part of <a href="../../plugins/inventory/index.html">inventory</a></p></div>
+<section class="summary"><h2 id="summary">Summary</h2>
+<div class="summary-group"><h3>Functions</h3>
+<div class="summary-row"><div class="summary-signature"><a href="#all">all()</a></div><div class="summary-synopsis">Returns all the inventory classes currently loaded on the server.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#find">find(id)</a></div><div class="summary-synopsis">Finds a specific inventory by its id.</div></div>
+</div>
+<div class="summary-group"><h3>Methods</h3>
+<div class="summary-row"><div class="summary-signature"><a href="#AddTabMenuItems">AddTabMenuItems(menu)</a></div><div class="summary-synopsis">Adds the inventory to the tab menu.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#CanItemMenuOpen">CanItemMenuOpen(item_obj)</a></div><div class="summary-synopsis">Prevents opening the menu of items that are stored inside of container items.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#CanItemMove">CanItemMove(item_obj, inventory, x, y)</a></div><div class="summary-synopsis">Checks whether the item can be moved inside of the inventory: asks the can_move callback of the item and prevents moving items in disabled inventories.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#CanItemTransfer">CanItemTransfer(item_obj, inventory, x, y)</a></div><div class="summary-synopsis">Checks whether the item can be transferred to the inventory: equipment and pockets restrictions, the can_transfer callback of the item, the can_contain callback of the container the inventory belongs to, and whether the inventory is disabled.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#create_hotbar">create_hotbar()</a></div><div class="summary-synopsis">Creates a panel for the local player's hotbar at the bottom of the screen.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#CreatePlayerInventories">CreatePlayerInventories(owner, inventories)</a></div><div class="summary-synopsis">Creates the default set of the player's inventories: main inventory, hotbar, pockets and the equipment slots.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#GetInventorySize">GetInventorySize(owner, inv_type)</a></div><div class="summary-synopsis">Calculates the size of the pockets inventory based on the items in it.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#ItemTransferred">ItemTransferred(item_obj, new_inventory, old_inventory)</a></div><div class="summary-synopsis">Closes the inventory of a transferred container item for the players who were viewing it and do not have the container anymore.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#OnActiveCharacterSet">OnActiveCharacterSet(owner, character)</a></div><div class="summary-synopsis">Recreates inventories of the player when their active character changes.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#OnContextMenuClose">OnContextMenuClose()</a></div><div class="summary-synopsis">Removes the hotbar when the context menu closes.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#OnContextMenuOpen">OnContextMenuOpen()</a></div><div class="summary-synopsis">Shows the hotbar and makes it interactive while the context menu is open.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#OnInventoryRebuild">OnInventoryRebuild(panel)</a></div><div class="summary-synopsis">Keeps the pockets panel no wider than the main inventory panel.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#OnItemCreated">OnItemCreated(item_obj)</a></div><div class="summary-synopsis">Marks the item instance that has just been created as not rotated.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#OnItemEquipped">OnItemEquipped(owner, item_obj)</a></div><div class="summary-synopsis">Tells the client to rebuild the player model preview when a wearable item is equipped.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#OnItemUnequipped">OnItemUnequipped(owner, item_obj)</a></div><div class="summary-synopsis">Tells the client to rebuild the player model preview when a wearable item is unequipped.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#OnMenuPanelOpen">OnMenuPanelOpen(menu_panel, active_panel)</a></div><div class="summary-synopsis">Closes the windows of all opened container items when a tab menu panel opens.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#PlayerBindPress">PlayerBindPress(client, bind, pressed)</a></div><div class="summary-synopsis">Calls the 'PlayerSelectSlot' plugin hook when the player presses one of the slot binds.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#PlayerDisconnected">PlayerDisconnected(actor)</a></div><div class="summary-synopsis">Deletes inventories of the disconnected player from the server cache.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#PlayerDropItem">PlayerDropItem(actor, instance_ids)</a></div><div class="summary-synopsis">Takes the items out of their inventory and spawns them in front of the player.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#PlayerSelectSlot">PlayerSelectSlot(client, slot)</a></div><div class="summary-synopsis">Selects the weapon of the item in the specified hotbar slot, or uses the item if it is not an equipable one. Switches to fists if the slot is empty.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#PlayerTakeItem">PlayerTakeItem(actor, item_obj, ...)</a></div><div class="summary-synopsis">Puts an item lying in the world into one of the player's inventories and removes its entity. Notifies the player if the item does not fit.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#PlayerThrewGrenade">PlayerThrewGrenade(actor, entity)</a></div><div class="summary-synopsis">Takes the equipped throwable items away from the player who has thrown a grenade.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#PlayerUsedItem">PlayerUsedItem(actor, item_obj, act, ...)</a></div><div class="summary-synopsis">Synchronizes the inventory of an item after a menu action has been performed on it.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#PlayerUseItem">PlayerUseItem(actor, item_obj, ...)</a></div><div class="summary-synopsis">Calls the on_use callback of the item, then takes the item out of its inventory (or removes its entity) unless the callback returned true to keep it or false to cancel the use.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#PopulateSpawnMenu">PopulateSpawnMenu()</a></div><div class="summary-synopsis">Adds the items tab to the spawn menu.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#popup_hotbar">popup_hotbar()</a></div><div class="summary-synopsis">Shows the hotbar for a short time, fading it out gradually. Makes the hotbar fully opaque again if it is on the screen already.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#PostCreateCharacter">PostCreateCharacter(owner, char, char_data)</a></div><div class="summary-synopsis">Calls the 'AddDefaultItems' plugin hook for a character that has just been created.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#PreItemSave">PreItemSave(item_obj, save_table)</a></div><div class="summary-synopsis">Adds the position of the item in its inventory, its rotation and, for containers, the instance ids of the contained items to the saved fields.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#PreItemTransfer">PreItemTransfer(item_obj, new_inventory, old_inventory)</a></div><div class="summary-synopsis">Calls the on_transfer callback of the item before it changes its inventory.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#SaveCharacterData">SaveCharacterData(owner, char)</a></div><div class="summary-synopsis">Stores the instance ids of the player's items in the character, as a comma-separated string.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#spawnmenu_populate_items">spawnmenu_populate_items(content_panel, tree, node)</a></div><div class="summary-synopsis">Fills the items tab of the spawn menu with a node for every item category.</div></div>
+</div>
+</section>
+<section class="details-group"><h2 id="functions">Functions</h2>
+<section class="detail" id="all">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Inventories.</span>all<span class="params">()</span></h3>
+<a href="#all" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/inventory/plugin/lib/sh_inventory.lua#L10" title="View source">plugins/inventory/plugin/lib/sh_inventory.lua:10</a>
+</div>
+<section class="docstring">
+<p>Returns all the inventory classes currently loaded on the server.</p>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">Map</span> <span class="desc">inventories</span></li></ul>
+</section>
+</section>
+<section class="detail" id="find">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Inventories.</span>find<span class="params">(id)</span></h3>
+<a href="#find" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/inventory/plugin/lib/sh_inventory.lua#L17" title="View source">plugins/inventory/plugin/lib/sh_inventory.lua:17</a>
+</div>
+<section class="docstring">
+<p>Finds a specific inventory by its id.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">id</span> <span class="type">Number</span></li></ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">Inventory</span></li></ul>
+</section>
+</section>
+</section>
+<section class="details-group"><h2 id="methods">Methods</h2>
+<section class="detail" id="AddTabMenuItems">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Inventories:</span>AddTabMenuItems<span class="params">(menu)</span></h3>
+<a href="#AddTabMenuItems" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/inventory/plugin/cl_hooks.lua#L26" title="View source">plugins/inventory/plugin/cl_hooks.lua:26</a>
+</div>
+<section class="docstring">
+<p>Adds the inventory to the tab menu.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">menu</span> <span class="type">Panel</span> <span class="desc">the tab menu</span></li></ul>
+</section>
+</section>
+<section class="detail" id="CanItemMenuOpen">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Inventories:</span>CanItemMenuOpen<span class="params">(item_obj)</span></h3>
+<a href="#CanItemMenuOpen" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/inventory/plugin/cl_hooks.lua#L106" title="View source">plugins/inventory/plugin/cl_hooks.lua:106</a>
+</div>
+<section class="docstring">
+<p>Prevents opening the menu of items that are stored inside of container items.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">item_obj</span> <span class="type">Item</span></li></ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">Boolean</span> <span class="desc">false to prevent the menu from opening, nil otherwise</span></li></ul>
+</section>
+</section>
+<section class="detail" id="CanItemMove">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Inventories:</span>CanItemMove<span class="params">(item_obj, inventory, x, y)</span></h3>
+<a href="#CanItemMove" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/inventory/plugin/sv_hooks.lua#L263" title="View source">plugins/inventory/plugin/sv_hooks.lua:263</a>
+</div>
+<section class="docstring">
+<p>Checks whether the item can be moved inside of the inventory: asks the can_move callback
+of the item and prevents moving items in disabled inventories.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">item_obj</span> <span class="type">Item</span></li><li><span class="param-name">inventory</span> <span class="type">Inventory</span></li><li><span class="param-name">x</span> <span class="type">Number</span> <span class="desc">target slot</span></li><li><span class="param-name">y</span> <span class="type">Number</span> <span class="desc">target slot</span></li></ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">Boolean</span> <span class="desc">false to prevent the move</span></li><li><span class="type">String</span> <span class="desc">text of the error; nothing to allow it</span></li></ul>
+</section>
+</section>
+<section class="detail" id="CanItemTransfer">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Inventories:</span>CanItemTransfer<span class="params">(item_obj, inventory, x, y)</span></h3>
+<a href="#CanItemTransfer" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/inventory/plugin/sv_hooks.lua#L285" title="View source">plugins/inventory/plugin/sv_hooks.lua:285</a>
+</div>
+<section class="docstring">
+<p>Checks whether the item can be transferred to the inventory: equipment and pockets
+restrictions, the can_transfer callback of the item, the can_contain callback
+of the container the inventory belongs to, and whether the inventory is disabled.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">item_obj</span> <span class="type">Item</span></li><li><span class="param-name">inventory</span> <span class="type">Inventory</span> <span class="desc">the inventory the item is being transferred to</span></li><li><span class="param-name">x</span> <span class="type">Number</span> <span class="desc">target slot, or nil if the position is yet to be found</span></li><li><span class="param-name">y</span> <span class="type">Number</span> <span class="desc">target slot, or nil if the position is yet to be found</span></li></ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">Boolean</span> <span class="desc">false to prevent the transfer</span></li><li><span class="type">String</span> <span class="desc">text of the error; nothing to allow it</span></li></ul>
+</section>
+</section>
+<section class="detail" id="create_hotbar">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Inventories:</span>create_hotbar<span class="params">()</span></h3>
+<a href="#create_hotbar" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/inventory/plugin/cl_hooks.lua#L52" title="View source">plugins/inventory/plugin/cl_hooks.lua:52</a>
+</div>
+<section class="docstring">
+<p>Creates a panel for the local player's hotbar at the bottom of the screen.</p>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">Panel</span> <span class="desc">the fl_inventory panel</span></li></ul>
+</section>
+</section>
+<section class="detail" id="CreatePlayerInventories">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Inventories:</span>CreatePlayerInventories<span class="params">(owner, inventories)</span></h3>
+<a href="#CreatePlayerInventories" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/inventory/plugin/sv_hooks.lua#L27" title="View source">plugins/inventory/plugin/sv_hooks.lua:27</a>
+</div>
+<section class="docstring">
+<p>Creates the default set of the player's inventories:
+main inventory, hotbar, pockets and the equipment slots.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">owner</span> <span class="type">Player</span></li><li><span class="param-name">inventories</span> <span class="type">Map</span> <span class="desc">table to put the new inventories into, keyed by inventory type</span></li></ul>
+</section>
+</section>
+<section class="detail" id="GetInventorySize">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Inventories:</span>GetInventorySize<span class="params">(owner, inv_type)</span></h3>
+<a href="#GetInventorySize" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/inventory/plugin/sh_hooks.lua#L71" title="View source">plugins/inventory/plugin/sh_hooks.lua:71</a>
+</div>
+<section class="docstring">
+<p>Calculates the size of the pockets inventory based on the items in it.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">owner</span> <span class="type">Player</span></li><li><span class="param-name">inv_type</span> <span class="type">String</span></li></ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">Number</span> <span class="desc">width</span></li><li><span class="type">Number</span> <span class="desc">height; nothing for any inventory other than pockets</span></li></ul>
+</section>
+</section>
+<section class="detail" id="ItemTransferred">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Inventories:</span>ItemTransferred<span class="params">(item_obj, new_inventory, old_inventory)</span></h3>
+<a href="#ItemTransferred" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/inventory/plugin/sv_hooks.lua#L244" title="View source">plugins/inventory/plugin/sv_hooks.lua:244</a>
+</div>
+<section class="docstring">
+<p>Closes the inventory of a transferred container item
+for the players who were viewing it and do not have the container anymore.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">item_obj</span> <span class="type">Item</span></li><li><span class="param-name">new_inventory</span> <span class="type">Inventory</span> <span class="desc">where the item went, or nil if it was dropped or used up</span></li><li><span class="param-name">old_inventory</span> <span class="type">Inventory</span> <span class="desc">where the item was, or nil if it was picked up</span></li></ul>
+</section>
+</section>
+<section class="detail" id="OnActiveCharacterSet">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Inventories:</span>OnActiveCharacterSet<span class="params">(owner, character)</span></h3>
+<a href="#OnActiveCharacterSet" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/inventory/plugin/sv_hooks.lua#L18" title="View source">plugins/inventory/plugin/sv_hooks.lua:18</a>
+</div>
+<section class="docstring">
+<p>Recreates inventories of the player when their active character changes.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">owner</span> <span class="type">Player</span></li><li><span class="param-name">character</span> <span class="type">Character</span></li></ul>
+</section>
+</section>
+<section class="detail" id="OnContextMenuClose">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Inventories:</span>OnContextMenuClose<span class="params">()</span></h3>
+<a href="#OnContextMenuClose" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/inventory/plugin/cl_hooks.lua#L18" title="View source">plugins/inventory/plugin/cl_hooks.lua:18</a>
+</div>
+<section class="docstring">
+<p>Removes the hotbar when the context menu closes.</p>
+</section>
+</section>
+<section class="detail" id="OnContextMenuOpen">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Inventories:</span>OnContextMenuOpen<span class="params">()</span></h3>
+<a href="#OnContextMenuOpen" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/inventory/plugin/cl_hooks.lua#L2" title="View source">plugins/inventory/plugin/cl_hooks.lua:2</a>
+</div>
+<section class="docstring">
+<p>Shows the hotbar and makes it interactive while the context menu is open.</p>
+</section>
+</section>
+<section class="detail" id="OnInventoryRebuild">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Inventories:</span>OnInventoryRebuild<span class="params">(panel)</span></h3>
+<a href="#OnInventoryRebuild" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/inventory/plugin/cl_hooks.lua#L42" title="View source">plugins/inventory/plugin/cl_hooks.lua:42</a>
+</div>
+<section class="docstring">
+<p>Keeps the pockets panel no wider than the main inventory panel.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">panel</span> <span class="type">Panel</span> <span class="desc">the fl_inventory panel that has been rebuilt</span></li></ul>
+</section>
+</section>
+<section class="detail" id="OnItemCreated">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Inventories:</span>OnItemCreated<span class="params">(item_obj)</span></h3>
+<a href="#OnItemCreated" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/inventory/plugin/sv_hooks.lua#L382" title="View source">plugins/inventory/plugin/sv_hooks.lua:382</a>
+</div>
+<section class="docstring">
+<p>Marks the item instance that has just been created as not rotated.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">item_obj</span> <span class="type">Item</span></li></ul>
+</section>
+</section>
+<section class="detail" id="OnItemEquipped">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Inventories:</span>OnItemEquipped<span class="params">(owner, item_obj)</span></h3>
+<a href="#OnItemEquipped" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/inventory/plugin/sv_hooks.lua#L365" title="View source">plugins/inventory/plugin/sv_hooks.lua:365</a>
+</div>
+<section class="docstring">
+<p>Tells the client to rebuild the player model preview when a wearable item is equipped.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">owner</span> <span class="type">Player</span></li><li><span class="param-name">item_obj</span> <span class="type">Item</span></li></ul>
+</section>
+</section>
+<section class="detail" id="OnItemUnequipped">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Inventories:</span>OnItemUnequipped<span class="params">(owner, item_obj)</span></h3>
+<a href="#OnItemUnequipped" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/inventory/plugin/sv_hooks.lua#L374" title="View source">plugins/inventory/plugin/sv_hooks.lua:374</a>
+</div>
+<section class="docstring">
+<p>Tells the client to rebuild the player model preview when a wearable item is unequipped.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">owner</span> <span class="type">Player</span></li><li><span class="param-name">item_obj</span> <span class="type">Item</span></li></ul>
+</section>
+</section>
+<section class="detail" id="OnMenuPanelOpen">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Inventories:</span>OnMenuPanelOpen<span class="params">(menu_panel, active_panel)</span></h3>
+<a href="#OnMenuPanelOpen" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/inventory/plugin/cl_hooks.lua#L91" title="View source">plugins/inventory/plugin/cl_hooks.lua:91</a>
+</div>
+<section class="docstring">
+<p>Closes the windows of all opened container items when a tab menu panel opens.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">menu_panel</span> <span class="type">Panel</span> <span class="desc">the tab menu</span></li><li><span class="param-name">active_panel</span> <span class="type">Panel</span> <span class="desc">the panel that has been opened</span></li></ul>
+</section>
+</section>
+<section class="detail" id="PlayerBindPress">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Inventories:</span>PlayerBindPress<span class="params">(client, bind, pressed)</span></h3>
+<a href="#PlayerBindPress" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/inventory/plugin/sh_hooks.lua#L5" title="View source">plugins/inventory/plugin/sh_hooks.lua:5</a>
+</div>
+<section class="docstring">
+<p>Calls the 'PlayerSelectSlot' plugin hook when the player presses one of the slot binds.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">client</span> <span class="type">Player</span></li><li><span class="param-name">bind</span> <span class="type">String</span></li><li><span class="param-name">pressed</span> <span class="type">Boolean</span></li></ul>
+</section>
+</section>
+<section class="detail" id="PlayerDisconnected">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Inventories:</span>PlayerDisconnected<span class="params">(actor)</span></h3>
+<a href="#PlayerDisconnected" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/inventory/plugin/sv_hooks.lua#L11" title="View source">plugins/inventory/plugin/sv_hooks.lua:11</a>
+</div>
+<section class="docstring">
+<p>Deletes inventories of the disconnected player from the server cache.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">actor</span> <span class="type">Player</span></li></ul>
+</section>
+</section>
+<section class="detail" id="PlayerDropItem">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Inventories:</span>PlayerDropItem<span class="params">(actor, instance_ids)</span></h3>
+<a href="#PlayerDropItem" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/inventory/plugin/sv_hooks.lua#L175" title="View source">plugins/inventory/plugin/sv_hooks.lua:175</a>
+</div>
+<section class="docstring">
+<p>Takes the items out of their inventory and spawns them in front of the player.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">actor</span> <span class="type">Player</span></li><li><span class="param-name">instance_ids</span> <span class="type">Number/List&lt;Number&gt;</span> <span class="desc">instance id(s) of items from the same inventory</span></li></ul>
+</section>
+</section>
+<section class="detail" id="PlayerSelectSlot">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Inventories:</span>PlayerSelectSlot<span class="params">(client, slot)</span></h3>
+<a href="#PlayerSelectSlot" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/inventory/plugin/sh_hooks.lua#L19" title="View source">plugins/inventory/plugin/sh_hooks.lua:19</a>
+</div>
+<section class="docstring">
+<p>Selects the weapon of the item in the specified hotbar slot, or uses the item
+if it is not an equipable one. Switches to fists if the slot is empty.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">client</span> <span class="type">Player</span></li><li><span class="param-name">slot</span> <span class="type">Number</span> <span class="desc">hotbar slot from 1 to 8</span></li></ul>
+</section>
+</section>
+<section class="detail" id="PlayerTakeItem">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Inventories:</span>PlayerTakeItem<span class="params">(actor, item_obj, ...)</span></h3>
+<a href="#PlayerTakeItem" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/inventory/plugin/sv_hooks.lua#L138" title="View source">plugins/inventory/plugin/sv_hooks.lua:138</a>
+</div>
+<section class="docstring">
+<p>Puts an item lying in the world into one of the player's inventories
+and removes its entity. Notifies the player if the item does not fit.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">actor</span> <span class="type">Player</span></li><li><span class="param-name">item_obj</span> <span class="type">Item</span></li><li><span class="param-name">...</span> <span class="type">Vararg</span> <span class="desc">optional hashes; an inv_type field in one of them sets the inventory type</span></li></ul>
+</section>
+</section>
+<section class="detail" id="PlayerThrewGrenade">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Inventories:</span>PlayerThrewGrenade<span class="params">(actor, entity)</span></h3>
+<a href="#PlayerThrewGrenade" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/inventory/plugin/sv_hooks.lua#L321" title="View source">plugins/inventory/plugin/sv_hooks.lua:321</a>
+</div>
+<section class="docstring">
+<p>Takes the equipped throwable items away from the player who has thrown a grenade.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">actor</span> <span class="type">Player</span></li><li><span class="param-name">entity</span> <span class="type">Entity</span> <span class="desc">the grenade</span></li></ul>
+</section>
+</section>
+<section class="detail" id="PlayerUsedItem">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Inventories:</span>PlayerUsedItem<span class="params">(actor, item_obj, act, ...)</span></h3>
+<a href="#PlayerUsedItem" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/inventory/plugin/sv_hooks.lua#L217" title="View source">plugins/inventory/plugin/sv_hooks.lua:217</a>
+</div>
+<section class="docstring">
+<p>Synchronizes the inventory of an item after a menu action has been performed on it.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">actor</span> <span class="type">Player</span></li><li><span class="param-name">item_obj</span> <span class="type">Item</span></li><li><span class="param-name">act</span> <span class="type">String</span> <span class="desc">name of the menu action</span></li><li><span class="param-name">...</span> <span class="type">Vararg</span> <span class="desc">extra arguments of the action</span></li></ul>
+</section>
+</section>
+<section class="detail" id="PlayerUseItem">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Inventories:</span>PlayerUseItem<span class="params">(actor, item_obj, ...)</span></h3>
+<a href="#PlayerUseItem" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/inventory/plugin/sv_hooks.lua#L337" title="View source">plugins/inventory/plugin/sv_hooks.lua:337</a>
+</div>
+<section class="docstring">
+<p>Calls the on_use callback of the item, then takes the item out of its inventory (or removes
+its entity) unless the callback returned true to keep it or false to cancel the use.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">actor</span> <span class="type">Player</span></li><li><span class="param-name">item_obj</span> <span class="type">Item</span></li><li><span class="param-name">...</span> <span class="type">Vararg</span> <span class="desc">extra arguments of the action</span></li></ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">Boolean</span> <span class="desc">false if the use was canceled, nil otherwise</span></li></ul>
+</section>
+</section>
+<section class="detail" id="PopulateSpawnMenu">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Inventories:</span>PopulateSpawnMenu<span class="params">()</span></h3>
+<a href="#PopulateSpawnMenu" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/inventory/plugin/cl_hooks.lua#L326" title="View source">plugins/inventory/plugin/cl_hooks.lua:326</a>
+</div>
+<section class="docstring">
+<p>Adds the items tab to the spawn menu.</p>
+</section>
+</section>
+<section class="detail" id="popup_hotbar">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Inventories:</span>popup_hotbar<span class="params">()</span></h3>
+<a href="#popup_hotbar" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/inventory/plugin/cl_hooks.lua#L66" title="View source">plugins/inventory/plugin/cl_hooks.lua:66</a>
+</div>
+<section class="docstring">
+<p>Shows the hotbar for a short time, fading it out gradually.
+Makes the hotbar fully opaque again if it is on the screen already.</p>
+</section>
+</section>
+<section class="detail" id="PostCreateCharacter">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Inventories:</span>PostCreateCharacter<span class="params">(owner, char, char_data)</span></h3>
+<a href="#PostCreateCharacter" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/inventory/plugin/sv_hooks.lua#L5" title="View source">plugins/inventory/plugin/sv_hooks.lua:5</a>
+</div>
+<section class="docstring">
+<p>Calls the 'AddDefaultItems' plugin hook for a character that has just been created.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">owner</span> <span class="type">Player</span></li><li><span class="param-name">char</span> <span class="type">Character</span></li><li><span class="param-name">char_data</span> <span class="type">Map</span> <span class="desc">data the character was created from</span></li></ul>
+</section>
+</section>
+<section class="detail" id="PreItemSave">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Inventories:</span>PreItemSave<span class="params">(item_obj, save_table)</span></h3>
+<a href="#PreItemSave" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/inventory/plugin/sv_hooks.lua#L121" title="View source">plugins/inventory/plugin/sv_hooks.lua:121</a>
+</div>
+<section class="docstring">
+<p>Adds the position of the item in its inventory, its rotation and,
+for containers, the instance ids of the contained items to the saved fields.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">item_obj</span> <span class="type">Item</span></li><li><span class="param-name">save_table</span> <span class="type">Map</span> <span class="desc">fields of the item that are going to be saved</span></li></ul>
+</section>
+</section>
+<section class="detail" id="PreItemTransfer">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Inventories:</span>PreItemTransfer<span class="params">(item_obj, new_inventory, old_inventory)</span></h3>
+<a href="#PreItemTransfer" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/inventory/plugin/sv_hooks.lua#L233" title="View source">plugins/inventory/plugin/sv_hooks.lua:233</a>
+</div>
+<section class="docstring">
+<p>Calls the on_transfer callback of the item before it changes its inventory.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">item_obj</span> <span class="type">Item</span></li><li><span class="param-name">new_inventory</span> <span class="type">Inventory</span> <span class="desc">where the item goes, or nil if it is dropped or used up</span></li><li><span class="param-name">old_inventory</span> <span class="type">Inventory</span> <span class="desc">where the item was, or nil if it is picked up</span></li></ul>
+</section>
+</section>
+<section class="detail" id="SaveCharacterData">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Inventories:</span>SaveCharacterData<span class="params">(owner, char)</span></h3>
+<a href="#SaveCharacterData" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/inventory/plugin/sv_hooks.lua#L111" title="View source">plugins/inventory/plugin/sv_hooks.lua:111</a>
+</div>
+<section class="docstring">
+<p>Stores the instance ids of the player's items in the character,
+as a comma-separated string.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">owner</span> <span class="type">Player</span></li><li><span class="param-name">char</span> <span class="type">Character</span></li></ul>
+</section>
+</section>
+<section class="detail" id="spawnmenu_populate_items">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Inventories:</span>spawnmenu_populate_items<span class="params">(content_panel, tree, node)</span></h3>
+<a href="#spawnmenu_populate_items" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/inventory/plugin/cl_hooks.lua#L289" title="View source">plugins/inventory/plugin/cl_hooks.lua:289</a>
+</div>
+<section class="docstring">
+<p>Fills the items tab of the spawn menu with a node for every item category.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">content_panel</span> <span class="type">Panel</span> <span class="desc">the content panel of the tab</span></li><li><span class="param-name">tree</span> <span class="type">Panel</span> <span class="desc">the navigation tree of the tab</span></li><li><span class="param-name">node</span> <span class="type">Panel</span></li></ul>
+</section>
+</section>
+</section>
+<section class="sources"><h2>Defined in</h2><ul><li><a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/inventory/plugin/cl_hooks.lua" title="View source">plugins/inventory/plugin/cl_hooks.lua</a></li><li><a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/inventory/plugin/lib/sh_inventory.lua" title="View source">plugins/inventory/plugin/lib/sh_inventory.lua</a></li><li><a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/inventory/plugin/sh_hooks.lua" title="View source">plugins/inventory/plugin/sh_hooks.lua</a></li><li><a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/inventory/plugin/sv_hooks.lua" title="View source">plugins/inventory/plugin/sv_hooks.lua</a></li></ul></section>
+<template id="module-functions"><ul class="sidebar-functions"><li class="sidebar-category" data-anchor="functions">Functions</li><li><a href="#all">all</a></li><li><a href="#find">find</a></li><li class="sidebar-category" data-anchor="methods">Methods</li><li><a href="#AddTabMenuItems">AddTabMenuItems</a></li><li><a href="#CanItemMenuOpen">CanItemMenuOpen</a></li><li><a href="#CanItemMove">CanItemMove</a></li><li><a href="#CanItemTransfer">CanItemTransfer</a></li><li><a href="#create_hotbar">create_hotbar</a></li><li><a href="#CreatePlayerInventories">CreatePlayerInventories</a></li><li><a href="#GetInventorySize">GetInventorySize</a></li><li><a href="#ItemTransferred">ItemTransferred</a></li><li><a href="#OnActiveCharacterSet">OnActiveCharacterSet</a></li><li><a href="#OnContextMenuClose">OnContextMenuClose</a></li><li><a href="#OnContextMenuOpen">OnContextMenuOpen</a></li><li><a href="#OnInventoryRebuild">OnInventoryRebuild</a></li><li><a href="#OnItemCreated">OnItemCreated</a></li><li><a href="#OnItemEquipped">OnItemEquipped</a></li><li><a href="#OnItemUnequipped">OnItemUnequipped</a></li><li><a href="#OnMenuPanelOpen">OnMenuPanelOpen</a></li><li><a href="#PlayerBindPress">PlayerBindPress</a></li><li><a href="#PlayerDisconnected">PlayerDisconnected</a></li><li><a href="#PlayerDropItem">PlayerDropItem</a></li><li><a href="#PlayerSelectSlot">PlayerSelectSlot</a></li><li><a href="#PlayerTakeItem">PlayerTakeItem</a></li><li><a href="#PlayerThrewGrenade">PlayerThrewGrenade</a></li><li><a href="#PlayerUsedItem">PlayerUsedItem</a></li><li><a href="#PlayerUseItem">PlayerUseItem</a></li><li><a href="#PopulateSpawnMenu">PopulateSpawnMenu</a></li><li><a href="#popup_hotbar">popup_hotbar</a></li><li><a href="#PostCreateCharacter">PostCreateCharacter</a></li><li><a href="#PreItemSave">PreItemSave</a></li><li><a href="#PreItemTransfer">PreItemTransfer</a></li><li><a href="#SaveCharacterData">SaveCharacterData</a></li><li><a href="#spawnmenu_populate_items">spawnmenu_populate_items</a></li></ul></template>
+
+<footer class="footer">
+<p>Built with <a href="https://github.com/TeslaCloud/fdoc">fdoc</a>.</p>
+</footer>
+</div>
+</main>
+<script src="../../assets/sidebar_items.js"></script>
+<script src="../../assets/app.js"></script>
+</body>
+</html>

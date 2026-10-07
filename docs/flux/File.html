@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="generator" content="fdoc">
+<title>File — Flux v0.8.1</title>
+<link rel="stylesheet" href="../assets/style.css">
+<script>try{var t=localStorage.getItem('fdoc-theme');if(t)document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
+</head>
+<body data-root="../" data-group="flux" data-module="File">
+<div class="progress" id="progress"></div>
+<button class="sidebar-toggle" type="button" aria-label="Toggle navigation"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path fill="currentColor" d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg></button>
+<div class="sidebar-backdrop"></div>
+<aside class="sidebar" id="sidebar">
+<div class="sidebar-header">
+<a class="sidebar-project" href="../index.html"><span class="sidebar-project-name">Flux</span> <span class="sidebar-project-version">v0.8.1</span></a>
+</div>
+<div class="sidebar-tabs" id="sidebar-tabs" role="tablist"></div>
+<nav class="sidebar-nav" id="sidebar-nav" aria-label="Documentation"><noscript><p class="sidebar-noscript"><a href="../index.html">Index</a></p></noscript></nav>
+</aside>
+<main class="content" id="content">
+<div class="topbar">
+<form class="search" action="../search.html" method="get" autocomplete="off" role="search">
+<input type="search" name="q" id="search-input" placeholder="Press / to search" aria-label="Search">
+<ul class="search-suggestions" id="search-suggestions" hidden></ul>
+</form>
+<button class="theme-toggle" type="button" aria-label="Toggle night mode"><span class="icon-moon"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M12 3a9 9 0 1 0 9 9c0-.46-.04-.92-.1-1.36a5.389 5.389 0 0 1-4.4 2.26 5.403 5.403 0 0 1-3.14-9.8c-.44-.06-.9-.1-1.36-.1z"/></svg></span><span class="icon-sun"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M6.76 4.84l-1.8-1.79-1.41 1.41 1.79 1.79 1.42-1.41zM4 10.5H1v2h3v-2zm9-9.95h-2V3.5h2V.55zm7.45 3.91l-1.41-1.41-1.79 1.79 1.41 1.41 1.79-1.79zm-3.21 13.7l1.79 1.8 1.41-1.41-1.8-1.79-1.4 1.4zM20 10.5v2h3v-2h-3zm-8-5c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6zm-1 16.95h2V19.5h-2v2.95zm-7.45-3.91l1.41 1.41 1.79-1.8-1.41-1.41-1.79 1.8z"/></svg></span></button>
+</div>
+<div class="content-inner" id="content-inner">
+<div class="page-header"><h1>File <span class="badge badge-library">library</span></h1></div>
+<section class="summary"><h2 id="summary">Summary</h2>
+<div class="summary-group"><h3>Functions</h3>
+<div class="summary-row"><div class="summary-signature"><a href="#exists">exists(filename)</a></div><div class="summary-synopsis">Checks whether a file or folder exists.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#ext">ext(filename)</a></div><div class="summary-synopsis">Returns the extension of a file name.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#find">find(filename, sort)</a></div><div class="summary-synopsis">Finds the files and folders that match a wildcard.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#get_list">get_list(folder)</a></div><div class="summary-synopsis">Lists all files inside of a folder and its subfolders. Subfolders whose name starts with a dot are skipped.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#is_dir">is_dir(filename)</a></div><div class="summary-synopsis">Checks whether a path points to a folder.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#ls">ls(path, include_hidden)</a></div><div class="summary-synopsis">Lists the names of the files and folders that match a wildcard as a single array.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#name">name(filename)</a></div><div class="summary-synopsis">Returns the file name part of a path.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#path">path(filename)</a></div><div class="summary-synopsis">Returns the folder part of a path.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#size">size(filename)</a></div><div class="summary-synopsis">Returns the size of a file.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#time">time(filename)</a></div><div class="summary-synopsis">Returns the time a file or folder was last modified at.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#touch">touch(filename)</a></div><div class="summary-synopsis">Creates a file if it does not exist yet, by appending an empty string to it.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#write">write(file_name, file_contents)</a></div><div class="summary-synopsis">Writes a string to a file, creating the missing folders of its path first. The path is relative to the game folder (garrysmod/).</div></div>
+</div>
+</section>
+<section class="details-group"><h2 id="functions">Functions</h2>
+<section class="detail" id="exists">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">File.</span>exists<span class="params">(filename)</span></h3>
+<a href="#exists" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_file.lua#L67" title="View source">lib/stdlib/sh_file.lua:67</a>
+</div>
+<section class="docstring">
+<p>Checks whether a file or folder exists.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">filename</span> <span class="type">String</span> <span class="desc">path relative to the game folder</span></li></ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">Boolean</span></li></ul>
+</section>
+</section>
+<section class="detail" id="ext">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">File.</span>ext<span class="params">(filename)</span></h3>
+<a href="#ext" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_file.lua#L103" title="View source">lib/stdlib/sh_file.lua:103</a>
+</div>
+<section class="docstring">
+<p>Returns the extension of a file name.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">filename</span> <span class="type">String</span> <span class="desc">file name or path</span></li></ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">String</span> <span class="desc">extension without the dot, or nil if there is none</span></li></ul>
+</section>
+</section>
+<section class="detail" id="find">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">File.</span>find<span class="params">(filename, sort)</span></h3>
+<a href="#find" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_file.lua#L75" title="View source">lib/stdlib/sh_file.lua:75</a>
+</div>
+<section class="docstring">
+<p>Finds the files and folders that match a wildcard.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">filename</span> <span class="type">String</span> <span class="desc">path with a wildcard relative to the game folder, e.g. 'gamemodes/*'</span></li><li><span class="param-name">sort</span> <span class="type">String</span> <span class="default">optional, defaults to <code>&#39;nameasc&#39;</code></span> <span class="desc">sorting order: 'nameasc', 'namedesc', 'dateasc' or 'datedesc'</span></li></ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">List&lt;String&gt;</span> <span class="desc">file names</span></li><li><span class="type">List&lt;String&gt;</span> <span class="desc">folder names</span></li></ul>
+</section>
+</section>
+<section class="detail" id="get_list">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">File.</span>get_list<span class="params">(folder)</span></h3>
+<a href="#get_list" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_file.lua#L34" title="View source">lib/stdlib/sh_file.lua:34</a>
+</div>
+<section class="docstring">
+<p>Lists all files inside of a folder and its subfolders.
+Subfolders whose name starts with a dot are skipped.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">folder</span> <span class="type">String</span> <span class="desc">folder path relative to the game folder</span></li></ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">List&lt;String&gt;</span> <span class="desc">file paths, each one starting with the folder path</span></li></ul>
+</section>
+</section>
+<section class="detail" id="is_dir">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">File.</span>is_dir<span class="params">(filename)</span></h3>
+<a href="#is_dir" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_file.lua#L82" title="View source">lib/stdlib/sh_file.lua:82</a>
+</div>
+<section class="docstring">
+<p>Checks whether a path points to a folder.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">filename</span> <span class="type">String</span> <span class="desc">path relative to the game folder</span></li></ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">Boolean</span></li></ul>
+</section>
+</section>
+<section class="detail" id="ls">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">File.</span>ls<span class="params">(path, include_hidden)</span></h3>
+<a href="#ls" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_file.lua#L125" title="View source">lib/stdlib/sh_file.lua:125</a>
+</div>
+<section class="docstring">
+<p>Lists the names of the files and folders that match a wildcard as a single array.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">path</span> <span class="type">String</span> <span class="desc">path with a wildcard relative to the game folder, e.g. 'gamemodes/*'</span></li><li><span class="param-name">include_hidden</span> <span class="type">Boolean</span> <span class="default">optional, defaults to <code>false</code></span> <span class="desc">include entries whose name starts with a dot</span></li></ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">List&lt;String&gt;</span> <span class="desc">file names followed by folder names, or nil if the search failed</span></li></ul>
+</section>
+</section>
+<section class="detail" id="name">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">File.</span>name<span class="params">(filename)</span></h3>
+<a href="#name" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_file.lua#L110" title="View source">lib/stdlib/sh_file.lua:110</a>
+</div>
+<section class="docstring">
+<p>Returns the file name part of a path.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">filename</span> <span class="type">String</span> <span class="desc">file path</span></li></ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">String</span> <span class="desc">file name including its extension</span></li></ul>
+</section>
+</section>
+<section class="detail" id="path">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">File.</span>path<span class="params">(filename)</span></h3>
+<a href="#path" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_file.lua#L117" title="View source">lib/stdlib/sh_file.lua:117</a>
+</div>
+<section class="docstring">
+<p>Returns the folder part of a path.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">filename</span> <span class="type">String</span> <span class="desc">file path</span></li></ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">String</span> <span class="desc">path up to and including the last slash</span></li></ul>
+</section>
+</section>
+<section class="detail" id="size">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">File.</span>size<span class="params">(filename)</span></h3>
+<a href="#size" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_file.lua#L89" title="View source">lib/stdlib/sh_file.lua:89</a>
+</div>
+<section class="docstring">
+<p>Returns the size of a file.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">filename</span> <span class="type">String</span> <span class="desc">file path relative to the game folder</span></li></ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">Number</span> <span class="desc">size in bytes, -1 if the file does not exist</span></li></ul>
+</section>
+</section>
+<section class="detail" id="time">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">File.</span>time<span class="params">(filename)</span></h3>
+<a href="#time" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_file.lua#L96" title="View source">lib/stdlib/sh_file.lua:96</a>
+</div>
+<section class="docstring">
+<p>Returns the time a file or folder was last modified at.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">filename</span> <span class="type">String</span> <span class="desc">path relative to the game folder</span></li></ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">Number</span> <span class="desc">UNIX timestamp, 0 if the file does not exist</span></li></ul>
+</section>
+</section>
+<section class="detail" id="touch">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">File.</span>touch<span class="params">(filename)</span></h3>
+<a href="#touch" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_file.lua#L60" title="View source">lib/stdlib/sh_file.lua:60</a>
+</div>
+<section class="docstring">
+<p>Creates a file if it does not exist yet, by appending an empty string to it.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">filename</span> <span class="type">String</span> <span class="desc">file path relative to the game folder</span></li></ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">Any</span> <span class="desc">return value of File.append</span></li></ul>
+</section>
+</section>
+<section class="detail" id="write">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">File.</span>write<span class="params">(file_name, file_contents)</span></h3>
+<a href="#write" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_file.lua#L11" title="View source">lib/stdlib/sh_file.lua:11</a>
+</div>
+<section class="docstring">
+<p>Writes a string to a file, creating the missing folders of its path first.
+The path is relative to the game folder (garrysmod/).</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">file_name</span> <span class="type">String</span> <span class="desc">file path, e.g. 'settings/flux/config.json'</span></li><li><span class="param-name">file_contents</span> <span class="type">String</span> <span class="desc">contents to write</span></li></ul>
+</section>
+</section>
+</section>
+<section class="sources"><h2>Defined in</h2><ul><li><a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/lib/stdlib/sh_file.lua" title="View source">lib/stdlib/sh_file.lua</a></li></ul></section>
+<template id="module-functions"><ul class="sidebar-functions"><li class="sidebar-category" data-anchor="functions">Functions</li><li><a href="#exists">exists</a></li><li><a href="#ext">ext</a></li><li><a href="#find">find</a></li><li><a href="#get_list">get_list</a></li><li><a href="#is_dir">is_dir</a></li><li><a href="#ls">ls</a></li><li><a href="#name">name</a></li><li><a href="#path">path</a></li><li><a href="#size">size</a></li><li><a href="#time">time</a></li><li><a href="#touch">touch</a></li><li><a href="#write">write</a></li></ul></template>
+
+<footer class="footer">
+<p>Built with <a href="https://github.com/TeslaCloud/fdoc">fdoc</a>.</p>
+</footer>
+</div>
+</main>
+<script src="../assets/sidebar_items.js"></script>
+<script src="../assets/app.js"></script>
+</body>
+</html>

@@ -5,7 +5,7 @@ FROM alpine/git AS deps
 RUN git clone --depth 1 https://github.com/TeslaCloud/flux-dependencies.git /deps
 
 FROM alpine/git AS schema
-ARG SCHEMA_REPO=https://github.com/TeslaCloud/reborn.git
+ARG SCHEMA_REPO=https://github.com/TeslaCloud/hl2rp.git
 WORKDIR /schema
 RUN git clone --depth 1 "$SCHEMA_REPO"
 

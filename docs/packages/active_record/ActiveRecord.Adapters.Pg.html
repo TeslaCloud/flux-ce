@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="generator" content="fdoc">
+<title>ActiveRecord.Adapters.Pg — Flux v0.8.1</title>
+<link rel="stylesheet" href="../../assets/style.css">
+<script>try{var t=localStorage.getItem('fdoc-theme');if(t)document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
+</head>
+<body data-root="../../" data-group="packages/active_record" data-module="ActiveRecord.Adapters.Pg">
+<div class="progress" id="progress"></div>
+<button class="sidebar-toggle" type="button" aria-label="Toggle navigation"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path fill="currentColor" d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg></button>
+<div class="sidebar-backdrop"></div>
+<aside class="sidebar" id="sidebar">
+<div class="sidebar-header">
+<a class="sidebar-project" href="../../index.html"><span class="sidebar-project-name">Flux</span> <span class="sidebar-project-version">v0.8.1</span></a>
+</div>
+<div class="sidebar-tabs" id="sidebar-tabs" role="tablist"></div>
+<nav class="sidebar-nav" id="sidebar-nav" aria-label="Documentation"><noscript><p class="sidebar-noscript"><a href="../../index.html">Index</a></p></noscript></nav>
+</aside>
+<main class="content" id="content">
+<div class="topbar">
+<form class="search" action="../../search.html" method="get" autocomplete="off" role="search">
+<input type="search" name="q" id="search-input" placeholder="Press / to search" aria-label="Search">
+<ul class="search-suggestions" id="search-suggestions" hidden></ul>
+</form>
+<button class="theme-toggle" type="button" aria-label="Toggle night mode"><span class="icon-moon"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M12 3a9 9 0 1 0 9 9c0-.46-.04-.92-.1-1.36a5.389 5.389 0 0 1-4.4 2.26 5.403 5.403 0 0 1-3.14-9.8c-.44-.06-.9-.1-1.36-.1z"/></svg></span><span class="icon-sun"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M6.76 4.84l-1.8-1.79-1.41 1.41 1.79 1.79 1.42-1.41zM4 10.5H1v2h3v-2zm9-9.95h-2V3.5h2V.55zm7.45 3.91l-1.41-1.41-1.79 1.79 1.41 1.41 1.79-1.79zm-3.21 13.7l1.79 1.8 1.41-1.41-1.8-1.79-1.4 1.4zM20 10.5v2h3v-2h-3zm-8-5c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6zm-1 16.95h2V19.5h-2v2.95zm-7.45-3.91l1.41 1.41 1.79-1.8-1.41-1.41-1.79 1.8z"/></svg></span></button>
+</div>
+<div class="content-inner" id="content-inner">
+<div class="page-header"><h1>ActiveRecord.Adapters.Pg <span class="badge badge-class">class</span></h1><p class="subtitle">Extends <a href="../../packages/active_record/ActiveRecord.Adapters.Abstract.html"><code>ActiveRecord.Adapters.Abstract</code></a></p><p class="subtitle">Part of <a href="../../packages/active_record/index.html">Active Record</a></p></div>
+<section class="summary"><h2 id="summary">Summary</h2>
+<div class="summary-group"><h3>Methods</h3>
+<div class="summary-row"><div class="summary-signature"><a href="#append_query_string">append_query_string(query, query_string, query_type)</a></div><div class="summary-synopsis">Appends 'RETURNING id' to insert queries, so that the id of the new row is passed to the query callback.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#connect">connect(config, on_connected)</a></div><div class="summary-synopsis">Connects to a PostgreSQL server through the 'pg' module and sets the connection encoding. Calls #on_connection_failed if the connection fails.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#create_column">create_column(query, column, args, obj, type, def)</a></div><div class="summary-synopsis">Makes the column the primary key of the table when a 'primary_key' column is created.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#disconnect">disconnect()</a></div><div class="summary-synopsis">Closes the PostgreSQL connection, if there is one.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#escape">escape(str)</a></div><div class="summary-synopsis">Escapes a string using the PostgreSQL connection. Requires an established connection.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#init">init()</a></div><div class="summary-synopsis">Loads the 'pg' binary module.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#is_postgres">is_postgres()</a></div><div class="summary-synopsis">Checks whether the adapter talks to a PostgreSQL database.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#placeholder">placeholder(index)</a></div><div class="summary-synopsis">Returns the placeholder of a bind parameter, which is numbered in PostgreSQL.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#quote">quote(str)</a></div><div class="summary-synopsis">Turns a string into an escaped SQL string literal using the PostgreSQL connection.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#quote_name">quote_name(str)</a></div><div class="summary-synopsis">Quotes an identifier such as a table or column name using the PostgreSQL connection.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#raw_query">raw_query(query, callback, query_type, bindings)</a></div><div class="summary-synopsis">Runs a raw SQL query on the PostgreSQL server. In sync mode this blocks until the query is done; without a connection the query is put into the queue instead.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#supports_ddl_transactions">supports_ddl_transactions()</a></div><div class="summary-synopsis">PostgreSQL can roll back schema changes.</div></div>
+</div>
+</section>
+<section class="details-group"><h2 id="methods">Methods</h2>
+<section class="detail" id="append_query_string">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">ActiveRecord.Adapters.Pg:</span>append_query_string<span class="params">(query, query_string, query_type)</span></h3>
+<a href="#append_query_string" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/adapters/pg.lua#L192" title="View source">packages/active_record/lib/adapters/pg.lua:192</a>
+</div>
+<section class="docstring">
+<p>Appends 'RETURNING id' to insert queries, so that the id of the new row is passed
+to the query callback.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">query</span> <span class="type">ActiveRecord::Query</span> <span class="desc">unused</span></li><li><span class="param-name">query_string</span> <span class="type">String</span> <span class="desc">generated SQL</span></li><li><span class="param-name">query_type</span> <span class="type">String</span> <span class="desc">lowercase query type</span></li></ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">String</span> <span class="desc">the extended SQL for 'insert' queries, nil for other query types</span></li></ul>
+</section>
+</section>
+<section class="detail" id="connect">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">ActiveRecord.Adapters.Pg:</span>connect<span class="params">(config, on_connected)</span></h3>
+<a href="#connect" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/adapters/pg.lua#L43" title="View source">packages/active_record/lib/adapters/pg.lua:43</a>
+</div>
+<section class="docstring">
+<p>Connects to a PostgreSQL server through the 'pg' module and sets the connection
+encoding. Calls #on_connection_failed if the connection fails.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">config</span> <span class="type">Map</span> <span class="desc">database settings: host, user, password, database, port (5432 if omitted) and encoding ('UTF8' if omitted)</span></li><li><span class="param-name">on_connected</span> <span class="type">Function</span> <span class="default">optional, defaults to <code>nil</code></span> <span class="desc">called with the adapter once the connection is ready</span></li></ul>
+</section>
+</section>
+<section class="detail" id="create_column">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">ActiveRecord.Adapters.Pg:</span>create_column<span class="params">(query, column, args, obj, type, def)</span></h3>
+<a href="#create_column" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/adapters/pg.lua#L180" title="View source">packages/active_record/lib/adapters/pg.lua:180</a>
+</div>
+<section class="docstring">
+<p>Makes the column the primary key of the table when a 'primary_key' column is created.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">query</span> <span class="type">ActiveRecord::Query</span> <span class="desc">query the column was added to</span></li><li><span class="param-name">column</span> <span class="type">String</span> <span class="desc">column name</span></li><li><span class="param-name">args</span> <span class="type">Map</span> <span class="desc">unused</span></li><li><span class="param-name">obj</span> <span class="type">ActiveRecord::Query</span> <span class="desc">unused</span></li><li><span class="param-name">type</span> <span class="type">String</span> <span class="desc">abstract column type</span></li><li><span class="param-name">def</span> <span class="type">String</span> <span class="desc">unused</span></li></ul>
+</section>
+</section>
+<section class="detail" id="disconnect">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">ActiveRecord.Adapters.Pg:</span>disconnect<span class="params">()</span></h3>
+<a href="#disconnect" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/adapters/pg.lua#L79" title="View source">packages/active_record/lib/adapters/pg.lua:79</a>
+</div>
+<section class="docstring">
+<p>Closes the PostgreSQL connection, if there is one.</p>
+</section>
+</section>
+<section class="detail" id="escape">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">ActiveRecord.Adapters.Pg:</span>escape<span class="params">(str)</span></h3>
+<a href="#escape" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/adapters/pg.lua#L90" title="View source">packages/active_record/lib/adapters/pg.lua:90</a>
+</div>
+<section class="docstring">
+<p>Escapes a string using the PostgreSQL connection. Requires an established connection.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">str</span> <span class="type">String</span></li></ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">String</span></li></ul>
+</section>
+</section>
+<section class="detail" id="init">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">ActiveRecord.Adapters.Pg:</span>init<span class="params">()</span></h3>
+<a href="#init" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/adapters/pg.lua#L22" title="View source">packages/active_record/lib/adapters/pg.lua:22</a>
+</div>
+<section class="docstring">
+<p>Loads the 'pg' binary module.</p>
+</section>
+</section>
+<section class="detail" id="is_postgres">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">ActiveRecord.Adapters.Pg:</span>is_postgres<span class="params">()</span></h3>
+<a href="#is_postgres" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/adapters/pg.lua#L28" title="View source">packages/active_record/lib/adapters/pg.lua:28</a>
+</div>
+<section class="docstring">
+<p>Checks whether the adapter talks to a PostgreSQL database.</p>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">Boolean</span> <span class="desc">always true</span></li></ul>
+</section>
+</section>
+<section class="detail" id="placeholder">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">ActiveRecord.Adapters.Pg:</span>placeholder<span class="params">(index)</span></h3>
+<a href="#placeholder" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/adapters/pg.lua#L111" title="View source">packages/active_record/lib/adapters/pg.lua:111</a>
+</div>
+<section class="docstring">
+<p>Returns the placeholder of a bind parameter, which is numbered in PostgreSQL.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">index</span> <span class="type">Number</span> <span class="desc">position of the parameter in the list of bindings, starting at 1</span></li></ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">String</span> <span class="desc">'$1', '$2' and so on</span></li></ul>
+</section>
+</section>
+<section class="detail" id="quote">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">ActiveRecord.Adapters.Pg:</span>quote<span class="params">(str)</span></h3>
+<a href="#quote" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/adapters/pg.lua#L97" title="View source">packages/active_record/lib/adapters/pg.lua:97</a>
+</div>
+<section class="docstring">
+<p>Turns a string into an escaped SQL string literal using the PostgreSQL connection.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">str</span> <span class="type">String</span></li></ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">String</span></li></ul>
+</section>
+</section>
+<section class="detail" id="quote_name">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">ActiveRecord.Adapters.Pg:</span>quote_name<span class="params">(str)</span></h3>
+<a href="#quote_name" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/adapters/pg.lua#L104" title="View source">packages/active_record/lib/adapters/pg.lua:104</a>
+</div>
+<section class="docstring">
+<p>Quotes an identifier such as a table or column name using the PostgreSQL connection.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">str</span> <span class="type">String</span></li></ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">String</span></li></ul>
+</section>
+</section>
+<section class="detail" id="raw_query">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">ActiveRecord.Adapters.Pg:</span>raw_query<span class="params">(query, callback, query_type, bindings)</span></h3>
+<a href="#raw_query" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/adapters/pg.lua#L124" title="View source">packages/active_record/lib/adapters/pg.lua:124</a>
+</div>
+<section class="docstring">
+<p>Runs a raw SQL query on the PostgreSQL server. In sync mode this blocks until the
+query is done; without a connection the query is put into the queue instead.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">query</span> <span class="type">String</span> <span class="desc">SQL to run</span></li><li><span class="param-name">callback</span> <span class="type">Function</span> <span class="default">optional, defaults to <code>nil</code></span> <span class="desc">called with the result rows (a List of row Maps), the query string and the time the query took in seconds</span></li><li><span class="param-name">query_type</span> <span class="type">String</span> <span class="default">optional, defaults to <code>nil</code></span> <span class="desc">unused</span></li><li><span class="param-name">bindings</span> <span class="type">List</span> <span class="default">optional, defaults to <code>nil</code></span> <span class="desc">values of $1, $2 and so on in the query. A query that is given bindings has to be a single statement</span></li></ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">Any</span> <span class="desc">whatever the callback returns in sync mode, nothing otherwise</span></li></ul>
+</section>
+</section>
+<section class="detail" id="supports_ddl_transactions">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">ActiveRecord.Adapters.Pg:</span>supports_ddl_transactions<span class="params">()</span></h3>
+<a href="#supports_ddl_transactions" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/adapters/pg.lua#L34" title="View source">packages/active_record/lib/adapters/pg.lua:34</a>
+</div>
+<section class="docstring">
+<p>PostgreSQL can roll back schema changes.</p>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">Boolean</span> <span class="desc">always true</span></li></ul>
+</section>
+</section>
+</section>
+<section class="sources"><h2>Defined in</h2><ul><li><a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/adapters/pg.lua" title="View source">packages/active_record/lib/adapters/pg.lua</a></li></ul></section>
+<template id="module-functions"><ul class="sidebar-functions"><li class="sidebar-category" data-anchor="methods">Methods</li><li><a href="#append_query_string">append_query_string</a></li><li><a href="#connect">connect</a></li><li><a href="#create_column">create_column</a></li><li><a href="#disconnect">disconnect</a></li><li><a href="#escape">escape</a></li><li><a href="#init">init</a></li><li><a href="#is_postgres">is_postgres</a></li><li><a href="#placeholder">placeholder</a></li><li><a href="#quote">quote</a></li><li><a href="#quote_name">quote_name</a></li><li><a href="#raw_query">raw_query</a></li><li><a href="#supports_ddl_transactions">supports_ddl_transactions</a></li></ul></template>
+
+<footer class="footer">
+<p>Built with <a href="https://github.com/TeslaCloud/fdoc">fdoc</a>.</p>
+</footer>
+</div>
+</main>
+<script src="../../assets/sidebar_items.js"></script>
+<script src="../../assets/app.js"></script>
+</body>
+</html>

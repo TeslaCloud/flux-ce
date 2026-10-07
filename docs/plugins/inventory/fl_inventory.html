@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="generator" content="fdoc">
+<title>fl_inventory — Flux v0.8.1</title>
+<link rel="stylesheet" href="../../assets/style.css">
+<script>try{var t=localStorage.getItem('fdoc-theme');if(t)document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
+</head>
+<body data-root="../../" data-group="plugins/inventory" data-module="fl_inventory">
+<div class="progress" id="progress"></div>
+<button class="sidebar-toggle" type="button" aria-label="Toggle navigation"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path fill="currentColor" d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg></button>
+<div class="sidebar-backdrop"></div>
+<aside class="sidebar" id="sidebar">
+<div class="sidebar-header">
+<a class="sidebar-project" href="../../index.html"><span class="sidebar-project-name">Flux</span> <span class="sidebar-project-version">v0.8.1</span></a>
+</div>
+<div class="sidebar-tabs" id="sidebar-tabs" role="tablist"></div>
+<nav class="sidebar-nav" id="sidebar-nav" aria-label="Documentation"><noscript><p class="sidebar-noscript"><a href="../../index.html">Index</a></p></noscript></nav>
+</aside>
+<main class="content" id="content">
+<div class="topbar">
+<form class="search" action="../../search.html" method="get" autocomplete="off" role="search">
+<input type="search" name="q" id="search-input" placeholder="Press / to search" aria-label="Search">
+<ul class="search-suggestions" id="search-suggestions" hidden></ul>
+</form>
+<button class="theme-toggle" type="button" aria-label="Toggle night mode"><span class="icon-moon"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M12 3a9 9 0 1 0 9 9c0-.46-.04-.92-.1-1.36a5.389 5.389 0 0 1-4.4 2.26 5.403 5.403 0 0 1-3.14-9.8c-.44-.06-.9-.1-1.36-.1z"/></svg></span><span class="icon-sun"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M6.76 4.84l-1.8-1.79-1.41 1.41 1.79 1.79 1.42-1.41zM4 10.5H1v2h3v-2zm9-9.95h-2V3.5h2V.55zm7.45 3.91l-1.41-1.41-1.79 1.79 1.41 1.41 1.79-1.79zm-3.21 13.7l1.79 1.8 1.41-1.41-1.8-1.79-1.4 1.4zM20 10.5v2h3v-2h-3zm-8-5c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6zm-1 16.95h2V19.5h-2v2.95zm-7.45-3.91l1.41 1.41 1.79-1.8-1.41-1.41-1.79 1.8z"/></svg></span></button>
+</div>
+<div class="content-inner" id="content-inner">
+<div class="page-header"><h1>fl_inventory <span class="badge badge-object">object</span></h1><p class="subtitle">PANEL</p><p class="subtitle">Part of <a href="../../plugins/inventory/index.html">inventory</a></p></div>
+<section class="summary"><h2 id="summary">Summary</h2>
+<div class="summary-group"><h3>Methods</h3>
+<div class="summary-row"><div class="summary-signature"><a href="#draw_inventory_slots">draw_inventory_slots(bool)</a></div><div class="summary-synopsis">Sets whether the slots display their numbers. The value is stored on the panel under the name of this method, so the method cannot be called on the same panel again.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#get_icon">get_icon()</a></div><div class="summary-synopsis">Returns the icon that is drawn in the slots of the inventory.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#get_inventory">get_inventory()</a></div><div class="summary-synopsis">Returns the inventory that the panel displays.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#get_inventory_height">get_inventory_height()</a></div><div class="summary-synopsis">Returns the height of the inventory in a number of slots.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#get_inventory_id">get_inventory_id()</a></div><div class="summary-synopsis">Returns the id of the inventory that the panel displays.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#get_inventory_size">get_inventory_size()</a></div><div class="summary-synopsis">Returns the size of the inventory in a number of slots.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#get_inventory_type">get_inventory_type()</a></div><div class="summary-synopsis">Returns the type of the inventory.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#get_inventory_width">get_inventory_width()</a></div><div class="summary-synopsis">Returns the width of the inventory in a number of slots.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#get_owner">get_owner()</a></div><div class="summary-synopsis">Returns the entity that the inventory belongs to.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#get_slot">get_slot(x, y)</a></div><div class="summary-synopsis">Returns the instance ids of the items located in the specified slot of the inventory.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#get_slot_padding">get_slot_padding()</a></div><div class="summary-synopsis">Returns the gap between the slots.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#get_slot_size">get_slot_size()</a></div><div class="summary-synopsis">Returns the size of a single slot.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#get_slots">get_slots()</a></div><div class="summary-synopsis">Returns the slots grid of the inventory.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#Init">Init()</a></div><div class="summary-synopsis">Creates the scrollable grid of slots and makes it accept dragged items. Items dropped onto the parent panel get dropped into the world.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#is_disabled">is_disabled()</a></div><div class="summary-synopsis">Checks if the inventory is disabled.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#is_multislot">is_multislot()</a></div><div class="summary-synopsis">Checks if the inventory is multislot.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#on_drop">on_drop(dropped)</a></div><div class="summary-synopsis">Handles an item panel being dropped onto the inventory by asking the server to move its items to the hovered slot. Holding CTRL moves half of the stack, SHIFT a single item.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#OnKeyCodePressed">OnKeyCodePressed(key)</a></div><div class="summary-synopsis">Rotates the item that is being dragged when R is pressed.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#Paint">Paint(w, h)</a></div><div class="summary-synopsis">Draws the background of the inventory using the theme.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#PaintOver">PaintOver(w, h)</a></div><div class="summary-synopsis">Draws over the inventory using the theme.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#PerformLayout">PerformLayout(w, h)</a></div><div class="summary-synopsis">Resizes the scroll panels to fit the grid of slots.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#rebuild">rebuild()</a></div><div class="summary-synopsis">Recreates the slot panels based on the current contents of the inventory. Runs the 'OnInventoryRebuild' hook afterward.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#set_icon">set_icon(icon)</a></div><div class="summary-synopsis">Sets the icon that is drawn in the slots of the inventory.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#set_inventory_id">set_inventory_id(inventory_id)</a></div><div class="summary-synopsis">Sets the inventory that the panel displays and rebuilds the panel.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#set_slot_padding">set_slot_padding(padding)</a></div><div class="summary-synopsis">Sets the gap between the slots.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#set_slot_size">set_slot_size(size)</a></div><div class="summary-synopsis">Sets the size of a single slot.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#SizeToContents">SizeToContents()</a></div><div class="summary-synopsis">Resizes the panel so that all slots of the inventory fit in it.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#start_dragging">start_dragging(dropped)</a></div><div class="summary-synopsis">Hides the item panel that is being dragged and puts empty slots in its place.</div></div>
+</div>
+</section>
+<section class="details-group"><h2 id="methods">Methods</h2>
+<section class="detail" id="draw_inventory_slots">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">PANEL:</span>draw_inventory_slots<span class="params">(bool)</span></h3>
+<a href="#draw_inventory_slots" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/inventory/plugin/views/cl_inventory.lua#L450" title="View source">plugins/inventory/plugin/views/cl_inventory.lua:450</a>
+</div>
+<section class="docstring">
+<p>Sets whether the slots display their numbers.
+The value is stored on the panel under the name of this method,
+so the method cannot be called on the same panel again.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">bool</span> <span class="type">Boolean</span></li></ul>
+</section>
+</section>
+<section class="detail" id="get_icon">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">PANEL:</span>get_icon<span class="params">()</span></h3>
+<a href="#get_icon" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/inventory/plugin/views/cl_inventory.lua#L456" title="View source">plugins/inventory/plugin/views/cl_inventory.lua:456</a>
+</div>
+<section class="docstring">
+<p>Returns the icon that is drawn in the slots of the inventory.</p>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">String</span> <span class="desc">FontAwesome icon id or path to a material, or nil if there is no icon</span></li></ul>
+</section>
+</section>
+<section class="detail" id="get_inventory">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">PANEL:</span>get_inventory<span class="params">()</span></h3>
+<a href="#get_inventory" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/inventory/plugin/views/cl_inventory.lua#L368" title="View source">plugins/inventory/plugin/views/cl_inventory.lua:368</a>
+</div>
+<section class="docstring">
+<p>Returns the inventory that the panel displays.</p>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">Inventory</span></li></ul>
+</section>
+</section>
+<section class="detail" id="get_inventory_height">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">PANEL:</span>get_inventory_height<span class="params">()</span></h3>
+<a href="#get_inventory_height" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/inventory/plugin/views/cl_inventory.lua#L386" title="View source">plugins/inventory/plugin/views/cl_inventory.lua:386</a>
+</div>
+<section class="docstring">
+<p>Returns the height of the inventory in a number of slots.</p>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">Number</span></li></ul>
+</section>
+</section>
+<section class="detail" id="get_inventory_id">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">PANEL:</span>get_inventory_id<span class="params">()</span></h3>
+<a href="#get_inventory_id" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/inventory/plugin/views/cl_inventory.lua#L374" title="View source">plugins/inventory/plugin/views/cl_inventory.lua:374</a>
+</div>
+<section class="docstring">
+<p>Returns the id of the inventory that the panel displays.</p>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">Number</span></li></ul>
+</section>
+</section>
+<section class="detail" id="get_inventory_size">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">PANEL:</span>get_inventory_size<span class="params">()</span></h3>
+<a href="#get_inventory_size" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/inventory/plugin/views/cl_inventory.lua#L392" title="View source">plugins/inventory/plugin/views/cl_inventory.lua:392</a>
+</div>
+<section class="docstring">
+<p>Returns the size of the inventory in a number of slots.</p>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">Number</span> <span class="desc">width</span></li><li><span class="type">Number</span> <span class="desc">height</span></li></ul>
+</section>
+</section>
+<section class="detail" id="get_inventory_type">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">PANEL:</span>get_inventory_type<span class="params">()</span></h3>
+<a href="#get_inventory_type" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/inventory/plugin/views/cl_inventory.lua#L398" title="View source">plugins/inventory/plugin/views/cl_inventory.lua:398</a>
+</div>
+<section class="docstring">
+<p>Returns the type of the inventory.</p>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">String</span></li></ul>
+</section>
+</section>
+<section class="detail" id="get_inventory_width">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">PANEL:</span>get_inventory_width<span class="params">()</span></h3>
+<a href="#get_inventory_width" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/inventory/plugin/views/cl_inventory.lua#L380" title="View source">plugins/inventory/plugin/views/cl_inventory.lua:380</a>
+</div>
+<section class="docstring">
+<p>Returns the width of the inventory in a number of slots.</p>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">Number</span></li></ul>
+</section>
+</section>
+<section class="detail" id="get_owner">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">PANEL:</span>get_owner<span class="params">()</span></h3>
+<a href="#get_owner" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/inventory/plugin/views/cl_inventory.lua#L418" title="View source">plugins/inventory/plugin/views/cl_inventory.lua:418</a>
+</div>
+<section class="docstring">
+<p>Returns the entity that the inventory belongs to.</p>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">Entity</span></li></ul>
+</section>
+</section>
+<section class="detail" id="get_slot">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">PANEL:</span>get_slot<span class="params">(x, y)</span></h3>
+<a href="#get_slot" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/inventory/plugin/views/cl_inventory.lua#L412" title="View source">plugins/inventory/plugin/views/cl_inventory.lua:412</a>
+</div>
+<section class="docstring">
+<p>Returns the instance ids of the items located in the specified slot of the inventory.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">x</span> <span class="type">Number</span></li><li><span class="param-name">y</span> <span class="type">Number</span></li></ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">List&lt;Number&gt;</span> <span class="desc">instance ids, or nil if the slot is out of the inventory bounds</span></li></ul>
+</section>
+</section>
+<section class="detail" id="get_slot_padding">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">PANEL:</span>get_slot_padding<span class="params">()</span></h3>
+<a href="#get_slot_padding" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/inventory/plugin/views/cl_inventory.lua#L430" title="View source">plugins/inventory/plugin/views/cl_inventory.lua:430</a>
+</div>
+<section class="docstring">
+<p>Returns the gap between the slots.</p>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">Number</span> <span class="desc">gap in pixels</span></li></ul>
+</section>
+</section>
+<section class="detail" id="get_slot_size">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">PANEL:</span>get_slot_size<span class="params">()</span></h3>
+<a href="#get_slot_size" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/inventory/plugin/views/cl_inventory.lua#L424" title="View source">plugins/inventory/plugin/views/cl_inventory.lua:424</a>
+</div>
+<section class="docstring">
+<p>Returns the size of a single slot.</p>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">Number</span> <span class="desc">size in pixels</span></li></ul>
+</section>
+</section>
+<section class="detail" id="get_slots">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">PANEL:</span>get_slots<span class="params">()</span></h3>
+<a href="#get_slots" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/inventory/plugin/views/cl_inventory.lua#L404" title="View source">plugins/inventory/plugin/views/cl_inventory.lua:404</a>
+</div>
+<section class="docstring">
+<p>Returns the slots grid of the inventory.</p>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">Map</span> <span class="desc">slots, indexed by y and then by x; every slot is an array of instance ids</span></li></ul>
+</section>
+</section>
+<section class="detail" id="Init">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">PANEL:</span>Init<span class="params">()</span></h3>
+<a href="#Init" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/inventory/plugin/views/cl_inventory.lua#L9" title="View source">plugins/inventory/plugin/views/cl_inventory.lua:9</a>
+</div>
+<section class="docstring">
+<p>Creates the scrollable grid of slots and makes it accept dragged items.
+Items dropped onto the parent panel get dropped into the world.</p>
+</section>
+</section>
+<section class="detail" id="is_disabled">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">PANEL:</span>is_disabled<span class="params">()</span></h3>
+<a href="#is_disabled" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/inventory/plugin/views/cl_inventory.lua#L442" title="View source">plugins/inventory/plugin/views/cl_inventory.lua:442</a>
+</div>
+<section class="docstring">
+<p>Checks if the inventory is disabled.</p>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">Boolean</span></li></ul>
+</section>
+</section>
+<section class="detail" id="is_multislot">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">PANEL:</span>is_multislot<span class="params">()</span></h3>
+<a href="#is_multislot" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/inventory/plugin/views/cl_inventory.lua#L436" title="View source">plugins/inventory/plugin/views/cl_inventory.lua:436</a>
+</div>
+<section class="docstring">
+<p>Checks if the inventory is multislot.</p>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">Boolean</span></li></ul>
+</section>
+</section>
+<section class="detail" id="on_drop">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">PANEL:</span>on_drop<span class="params">(dropped)</span></h3>
+<a href="#on_drop" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/inventory/plugin/views/cl_inventory.lua#L211" title="View source">plugins/inventory/plugin/views/cl_inventory.lua:211</a>
+</div>
+<section class="docstring">
+<p>Handles an item panel being dropped onto the inventory by asking the server to move
+its items to the hovered slot. Holding CTRL moves half of the stack, SHIFT a single item.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">dropped</span> <span class="type">Panel</span> <span class="desc">the fl_inventory_item panel that has been dropped</span></li></ul>
+</section>
+</section>
+<section class="detail" id="OnKeyCodePressed">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">PANEL:</span>OnKeyCodePressed<span class="params">(key)</span></h3>
+<a href="#OnKeyCodePressed" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/inventory/plugin/views/cl_inventory.lua#L101" title="View source">plugins/inventory/plugin/views/cl_inventory.lua:101</a>
+</div>
+<section class="docstring">
+<p>Rotates the item that is being dragged when R is pressed.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">key</span> <span class="type">Number</span> <span class="desc">KEY_ enumerator</span></li></ul>
+</section>
+</section>
+<section class="detail" id="Paint">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">PANEL:</span>Paint<span class="params">(w, h)</span></h3>
+<a href="#Paint" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/inventory/plugin/views/cl_inventory.lua#L139" title="View source">plugins/inventory/plugin/views/cl_inventory.lua:139</a>
+</div>
+<section class="docstring">
+<p>Draws the background of the inventory using the theme.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">w</span> <span class="type">Number</span></li><li><span class="param-name">h</span> <span class="type">Number</span></li></ul>
+</section>
+</section>
+<section class="detail" id="PaintOver">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">PANEL:</span>PaintOver<span class="params">(w, h)</span></h3>
+<a href="#PaintOver" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/inventory/plugin/views/cl_inventory.lua#L146" title="View source">plugins/inventory/plugin/views/cl_inventory.lua:146</a>
+</div>
+<section class="docstring">
+<p>Draws over the inventory using the theme.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">w</span> <span class="type">Number</span></li><li><span class="param-name">h</span> <span class="type">Number</span></li></ul>
+</section>
+</section>
+<section class="detail" id="PerformLayout">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">PANEL:</span>PerformLayout<span class="params">(w, h)</span></h3>
+<a href="#PerformLayout" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/inventory/plugin/views/cl_inventory.lua#L123" title="View source">plugins/inventory/plugin/views/cl_inventory.lua:123</a>
+</div>
+<section class="docstring">
+<p>Resizes the scroll panels to fit the grid of slots.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">w</span> <span class="type">Number</span></li><li><span class="param-name">h</span> <span class="type">Number</span></li></ul>
+</section>
+</section>
+<section class="detail" id="rebuild">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">PANEL:</span>rebuild<span class="params">()</span></h3>
+<a href="#rebuild" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/inventory/plugin/views/cl_inventory.lua#L275" title="View source">plugins/inventory/plugin/views/cl_inventory.lua:275</a>
+</div>
+<section class="docstring">
+<p>Recreates the slot panels based on the current contents of the inventory.
+Runs the 'OnInventoryRebuild' hook afterward.</p>
+</section>
+</section>
+<section class="detail" id="set_icon">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">PANEL:</span>set_icon<span class="params">(icon)</span></h3>
+<a href="#set_icon" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/inventory/plugin/views/cl_inventory.lua#L362" title="View source">plugins/inventory/plugin/views/cl_inventory.lua:362</a>
+</div>
+<section class="docstring">
+<p>Sets the icon that is drawn in the slots of the inventory.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">icon</span> <span class="type">String</span> <span class="desc">FontAwesome icon id ('fa-...') or path to a material; nil for no icon</span></li></ul>
+</section>
+</section>
+<section class="detail" id="set_inventory_id">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">PANEL:</span>set_inventory_id<span class="params">(inventory_id)</span></h3>
+<a href="#set_inventory_id" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/inventory/plugin/views/cl_inventory.lua#L267" title="View source">plugins/inventory/plugin/views/cl_inventory.lua:267</a>
+</div>
+<section class="docstring">
+<p>Sets the inventory that the panel displays and rebuilds the panel.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">inventory_id</span> <span class="type">Number</span> <span class="desc">id of the inventory</span></li></ul>
+</section>
+</section>
+<section class="detail" id="set_slot_padding">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">PANEL:</span>set_slot_padding<span class="params">(padding)</span></h3>
+<a href="#set_slot_padding" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/inventory/plugin/views/cl_inventory.lua#L356" title="View source">plugins/inventory/plugin/views/cl_inventory.lua:356</a>
+</div>
+<section class="docstring">
+<p>Sets the gap between the slots.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">padding</span> <span class="type">Number</span> <span class="desc">gap in pixels</span></li></ul>
+</section>
+</section>
+<section class="detail" id="set_slot_size">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">PANEL:</span>set_slot_size<span class="params">(size)</span></h3>
+<a href="#set_slot_size" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/inventory/plugin/views/cl_inventory.lua#L350" title="View source">plugins/inventory/plugin/views/cl_inventory.lua:350</a>
+</div>
+<section class="docstring">
+<p>Sets the size of a single slot.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">size</span> <span class="type">Number</span> <span class="desc">size in pixels</span></li></ul>
+</section>
+</section>
+<section class="detail" id="SizeToContents">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">PANEL:</span>SizeToContents<span class="params">()</span></h3>
+<a href="#SizeToContents" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/inventory/plugin/views/cl_inventory.lua#L151" title="View source">plugins/inventory/plugin/views/cl_inventory.lua:151</a>
+</div>
+<section class="docstring">
+<p>Resizes the panel so that all slots of the inventory fit in it.</p>
+</section>
+</section>
+<section class="detail" id="start_dragging">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">PANEL:</span>start_dragging<span class="params">(dropped)</span></h3>
+<a href="#start_dragging" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/inventory/plugin/views/cl_inventory.lua#L161" title="View source">plugins/inventory/plugin/views/cl_inventory.lua:161</a>
+</div>
+<section class="docstring">
+<p>Hides the item panel that is being dragged and puts empty slots in its place.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">dropped</span> <span class="type">Panel</span> <span class="desc">the fl_inventory_item panel that is being dragged</span></li></ul>
+</section>
+</section>
+</section>
+<section class="sources"><h2>Defined in</h2><ul><li><a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/inventory/plugin/views/cl_inventory.lua" title="View source">plugins/inventory/plugin/views/cl_inventory.lua</a></li></ul></section>
+<template id="module-functions"><ul class="sidebar-functions"><li class="sidebar-category" data-anchor="methods">Methods</li><li><a href="#draw_inventory_slots">draw_inventory_slots</a></li><li><a href="#get_icon">get_icon</a></li><li><a href="#get_inventory">get_inventory</a></li><li><a href="#get_inventory_height">get_inventory_height</a></li><li><a href="#get_inventory_id">get_inventory_id</a></li><li><a href="#get_inventory_size">get_inventory_size</a></li><li><a href="#get_inventory_type">get_inventory_type</a></li><li><a href="#get_inventory_width">get_inventory_width</a></li><li><a href="#get_owner">get_owner</a></li><li><a href="#get_slot">get_slot</a></li><li><a href="#get_slot_padding">get_slot_padding</a></li><li><a href="#get_slot_size">get_slot_size</a></li><li><a href="#get_slots">get_slots</a></li><li><a href="#Init">Init</a></li><li><a href="#is_disabled">is_disabled</a></li><li><a href="#is_multislot">is_multislot</a></li><li><a href="#on_drop">on_drop</a></li><li><a href="#OnKeyCodePressed">OnKeyCodePressed</a></li><li><a href="#Paint">Paint</a></li><li><a href="#PaintOver">PaintOver</a></li><li><a href="#PerformLayout">PerformLayout</a></li><li><a href="#rebuild">rebuild</a></li><li><a href="#set_icon">set_icon</a></li><li><a href="#set_inventory_id">set_inventory_id</a></li><li><a href="#set_slot_padding">set_slot_padding</a></li><li><a href="#set_slot_size">set_slot_size</a></li><li><a href="#SizeToContents">SizeToContents</a></li><li><a href="#start_dragging">start_dragging</a></li></ul></template>
+
+<footer class="footer">
+<p>Built with <a href="https://github.com/TeslaCloud/fdoc">fdoc</a>.</p>
+</footer>
+</div>
+</main>
+<script src="../../assets/sidebar_items.js"></script>
+<script src="../../assets/app.js"></script>
+</body>
+</html>

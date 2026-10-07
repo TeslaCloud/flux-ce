@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="generator" content="fdoc">
+<title>Statements — Flux v0.8.1</title>
+<link rel="stylesheet" href="../../assets/style.css">
+<script>try{var t=localStorage.getItem('fdoc-theme');if(t)document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
+</head>
+<body data-root="../../" data-group="packages/active_record" data-module="Statements">
+<div class="progress" id="progress"></div>
+<button class="sidebar-toggle" type="button" aria-label="Toggle navigation"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path fill="currentColor" d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg></button>
+<div class="sidebar-backdrop"></div>
+<aside class="sidebar" id="sidebar">
+<div class="sidebar-header">
+<a class="sidebar-project" href="../../index.html"><span class="sidebar-project-name">Flux</span> <span class="sidebar-project-version">v0.8.1</span></a>
+</div>
+<div class="sidebar-tabs" id="sidebar-tabs" role="tablist"></div>
+<nav class="sidebar-nav" id="sidebar-nav" aria-label="Documentation"><noscript><p class="sidebar-noscript"><a href="../../index.html">Index</a></p></noscript></nav>
+</aside>
+<main class="content" id="content">
+<div class="topbar">
+<form class="search" action="../../search.html" method="get" autocomplete="off" role="search">
+<input type="search" name="q" id="search-input" placeholder="Press / to search" aria-label="Search">
+<ul class="search-suggestions" id="search-suggestions" hidden></ul>
+</form>
+<button class="theme-toggle" type="button" aria-label="Toggle night mode"><span class="icon-moon"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M12 3a9 9 0 1 0 9 9c0-.46-.04-.92-.1-1.36a5.389 5.389 0 0 1-4.4 2.26 5.403 5.403 0 0 1-3.14-9.8c-.44-.06-.9-.1-1.36-.1z"/></svg></span><span class="icon-sun"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M6.76 4.84l-1.8-1.79-1.41 1.41 1.79 1.79 1.42-1.41zM4 10.5H1v2h3v-2zm9-9.95h-2V3.5h2V.55zm7.45 3.91l-1.41-1.41-1.79 1.79 1.41 1.41 1.79-1.79zm-3.21 13.7l1.79 1.8 1.41-1.41-1.8-1.79-1.4 1.4zM20 10.5v2h3v-2h-3zm-8-5c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6zm-1 16.95h2V19.5h-2v2.95zm-7.45-3.91l1.41 1.41 1.79-1.8-1.41-1.41-1.79 1.8z"/></svg></span></button>
+</div>
+<div class="content-inner" id="content-inner">
+<div class="page-header"><h1>Statements <span class="badge badge-library">library</span></h1><p class="subtitle">Part of <a href="../../packages/active_record/index.html">Active Record</a></p></div>
+<section class="summary"><h2 id="summary">Summary</h2>
+<div class="summary-group"><h3>Functions</h3>
+<div class="summary-row"><div class="summary-signature"><a href="#add_column">add_column(table_name, name, type, options)</a></div><div class="summary-synopsis">Adds a column to an existing table.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#add_foreign_key">add_foreign_key(from_table, to_table, options)</a></div><div class="summary-synopsis">Adds a foreign key constraint. Does nothing if a constraint with the same name is already recorded in the metadata. SQLite cannot add constraints to existing tables, so the constraint is only recorded there.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#add_index">add_index(table_name, columns, options)</a></div><div class="summary-synopsis">Creates an index, unless an index with the same name is already recorded in the metadata.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#add_reference">add_reference(table_name, name, options)</a></div><div class="summary-synopsis">Adds a reference column ('&lt;name&gt;_id'), its index and optionally a foreign key to an existing table.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#add_timestamps">add_timestamps(table_name, options)</a></div><div class="summary-synopsis">Adds the 'created_at' and 'updated_at' columns to an existing table.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#apply_references">apply_references(table_name, query)</a></div><div class="summary-synopsis">Creates the indexes and foreign keys that t:references queued on a query.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#change_table">change_table(name, callback)</a></div><div class="summary-synopsis">Alters an existing database table.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#column_definition">column_definition(name, type, options)</a></div><div class="summary-synopsis">Splits the arguments of add_column / remove_column into their parts. Both the positional (name, type, options) form and the table form { name, type = ..., ... } are accepted.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#create_primary_key">create_primary_key(table_name, key)</a></div><div class="summary-synopsis">Adds a PRIMARY KEY constraint named '&lt;table_name&gt;_pkey' to a table, unless it is already recorded in the metadata.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#create_reference">create_reference(args)</a></div><div class="summary-synopsis">Adds a foreign key constraint along with an index on the key column.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#create_table">create_table(name, options, callback)</a></div><div class="summary-synopsis">Creates a database table. The 'id' primary key is added automatically.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#define_model">define_model(name, callback)</a></div><div class="summary-synopsis">Creates the database table of a model: a table with the 'id' primary key, the given columns and the 'created_at' / 'updated_at' timestamps.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#drop_table">drop_table(name, options)</a></div><div class="summary-synopsis">Drops a database table, along with what the metadata knows about its indexes and foreign keys.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#execute">execute(sql)</a></div><div class="summary-synopsis">Runs a raw SQL statement.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#execute_block">execute_block(callback)</a></div><div class="summary-synopsis">Runs a function. Used by Migration#reversible to put a block of code into the list of recorded statements.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#foreign_key_name">foreign_key_name(from_table, column, to_table, primary_key)</a></div><div class="summary-synopsis">Returns the name a foreign key constraint gets when none is given.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#index_name">index_name(table_name, columns)</a></div><div class="summary-synopsis">Returns the name an index gets when none is given: '&lt;table&gt;_&lt;columns&gt;_index'.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#remove_column">remove_column(table_name, name, type, options)</a></div><div class="summary-synopsis">Removes a column from an existing table.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#remove_foreign_key">remove_foreign_key(from_table, to_table, options)</a></div><div class="summary-synopsis">Drops a foreign key constraint and removes it from the metadata.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#remove_index">remove_index(table_name, options)</a></div><div class="summary-synopsis">Drops an index and removes it from the metadata.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#remove_reference">remove_reference(table_name, name, options)</a></div><div class="summary-synopsis">Removes a reference column along with its index and foreign key.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#remove_timestamps">remove_timestamps(table_name, options)</a></div><div class="summary-synopsis">Removes the 'created_at' and 'updated_at' columns from a table.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#rename_column">rename_column(table_name, name, new_name)</a></div><div class="summary-synopsis">Renames a column of an existing table.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#rename_table">rename_table(name, new_name)</a></div><div class="summary-synopsis">Renames a database table.</div></div>
+</div>
+</section>
+<section class="details-group"><h2 id="functions">Functions</h2>
+<section class="detail" id="add_column">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Statements.</span>add_column<span class="params">(table_name, name, type, options)</span></h3>
+<a href="#add_column" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/schema_statements.lua#L231" title="View source">packages/active_record/lib/schema_statements.lua:231</a>
+</div>
+<section class="docstring">
+<p>Adds a column to an existing table.</p>
+<pre><code class="language-lua"><span class="hl-f">add_column</span>(<span class="hl-s">&#39;users&#39;</span>, <span class="hl-s">&#39;role&#39;</span>, <span class="hl-s">&#39;string&#39;</span>, { default = <span class="hl-s">&#39;\&#39;user\&#39;&#39;</span> })
+<span class="hl-f">add_column</span>(<span class="hl-s">&#39;users&#39;</span>, { <span class="hl-s">&#39;banned&#39;</span>, type = <span class="hl-s">&#39;boolean&#39;</span>, default = <span class="hl-k">false</span> })
+</code></pre>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">table_name</span> <span class="type">String</span> <span class="desc">table name</span></li><li><span class="param-name">name</span> <span class="type">String/Map</span> <span class="desc">column name, or a table holding the name at index 1, the abstract column type under 'type' and the options as keys</span></li><li><span class="param-name">type</span> <span class="type">String</span> <span class="default">optional, defaults to <code>nil</code></span> <span class="desc">abstract column type, e.g. 'string', 'integer' or 'datetime'</span></li><li><span class="param-name">options</span> <span class="type">Map</span> <span class="default">optional, defaults to <code>nil</code></span> <span class="desc">null (Boolean) and default (inserted into the SQL as is)</span></li></ul>
+</section>
+</section>
+<section class="detail" id="add_foreign_key">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Statements.</span>add_foreign_key<span class="params">(from_table, to_table, options)</span></h3>
+<a href="#add_foreign_key" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/schema_statements.lua#L494" title="View source">packages/active_record/lib/schema_statements.lua:494</a>
+</div>
+<section class="docstring">
+<p>Adds a foreign key constraint. Does nothing if a constraint with the same name is
+already recorded in the metadata. SQLite cannot add constraints to existing tables, so
+the constraint is only recorded there.</p>
+<pre><code class="language-lua"><span class="hl-f">add_foreign_key</span>(<span class="hl-s">&#39;characters&#39;</span>, <span class="hl-s">&#39;users&#39;</span>)
+<span class="hl-f">add_foreign_key</span>(<span class="hl-s">&#39;characters&#39;</span>, <span class="hl-s">&#39;users&#39;</span>, { column = <span class="hl-s">&#39;owner_id&#39;</span>, on_delete = <span class="hl-s">&#39;cascade&#39;</span> })
+</code></pre>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">from_table</span> <span class="type">String</span> <span class="desc">table that holds the key</span></li><li><span class="param-name">to_table</span> <span class="type">String</span> <span class="desc">table the key refers to</span></li><li><span class="param-name">options</span> <span class="type">Map</span> <span class="default">optional, defaults to <code>nil</code></span> <span class="desc">column (defaults to '&lt;singular of to_table&gt;_id'), primary_key ('id' by default), on_delete ('cascade', 'nullify' or 'restrict') and name</span></li></ul>
+</section>
+</section>
+<section class="detail" id="add_index">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Statements.</span>add_index<span class="params">(table_name, columns, options)</span></h3>
+<a href="#add_index" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/schema_statements.lua#L352" title="View source">packages/active_record/lib/schema_statements.lua:352</a>
+</div>
+<section class="docstring">
+<p>Creates an index, unless an index with the same name is already recorded in the
+metadata.</p>
+<pre><code class="language-lua"><span class="hl-f">add_index</span>(<span class="hl-s">&#39;users&#39;</span>, <span class="hl-s">&#39;steam_id&#39;</span>)
+<span class="hl-f">add_index</span>(<span class="hl-s">&#39;characters&#39;</span>, { <span class="hl-s">&#39;user_id&#39;</span>, <span class="hl-s">&#39;name&#39;</span> }, { unique = <span class="hl-k">true</span> })
+add_index { <span class="hl-s">&#39;users&#39;</span>, <span class="hl-s">&#39;steam_id&#39;</span>, unique = <span class="hl-k">true</span> }
+</code></pre>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">table_name</span> <span class="type">String/Map</span> <span class="desc">table name, or a table holding the table name at index 1, the column(s) at index 2 and the options as keys</span></li><li><span class="param-name">columns</span> <span class="type">String/List&lt;String&gt;</span> <span class="default">optional, defaults to <code>nil</code></span> <span class="desc">column name or a list of column names</span></li><li><span class="param-name">options</span> <span class="type">Map</span> <span class="default">optional, defaults to <code>nil</code></span> <span class="desc">name, unique, length, using, where and if_not_exists</span></li></ul>
+</section>
+</section>
+<section class="detail" id="add_reference">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Statements.</span>add_reference<span class="params">(table_name, name, options)</span></h3>
+<a href="#add_reference" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/schema_statements.lua#L297" title="View source">packages/active_record/lib/schema_statements.lua:297</a>
+</div>
+<section class="docstring">
+<p>Adds a reference column ('&lt;name&gt;_id'), its index and optionally a foreign key to an
+existing table.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">table_name</span> <span class="type">String</span></li><li><span class="param-name">name</span> <span class="type">String</span> <span class="desc">name of the referenced model, singular</span></li><li><span class="param-name">options</span> <span class="type">Map</span> <span class="default">optional, defaults to <code>nil</code></span> <span class="desc">the options of t:references</span></li></ul>
+</section>
+</section>
+<section class="detail" id="add_timestamps">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Statements.</span>add_timestamps<span class="params">(table_name, options)</span></h3>
+<a href="#add_timestamps" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/schema_statements.lua#L278" title="View source">packages/active_record/lib/schema_statements.lua:278</a>
+</div>
+<section class="docstring">
+<p>Adds the 'created_at' and 'updated_at' columns to an existing table.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">table_name</span> <span class="type">String</span></li><li><span class="param-name">options</span> <span class="type">Map</span> <span class="default">optional, defaults to <code>nil</code></span> <span class="desc">column options, e.g. { null = true }</span></li></ul>
+</section>
+</section>
+<section class="detail" id="apply_references">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Statements.</span>apply_references<span class="params">(table_name, query)</span></h3>
+<a href="#apply_references" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/schema_statements.lua#L47" title="View source">packages/active_record/lib/schema_statements.lua:47</a>
+</div>
+<section class="docstring">
+<p>Creates the indexes and foreign keys that t:references queued on a query.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">table_name</span> <span class="type">String</span></li><li><span class="param-name">query</span> <span class="type">ActiveRecord::Query</span></li></ul>
+</section>
+</section>
+<section class="detail" id="change_table">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Statements.</span>change_table<span class="params">(name, callback)</span></h3>
+<a href="#change_table" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/schema_statements.lua#L211" title="View source">packages/active_record/lib/schema_statements.lua:211</a>
+</div>
+<section class="docstring">
+<p>Alters an existing database table.</p>
+<pre><code class="language-lua"><span class="hl-f">change_table</span>(<span class="hl-s">&#39;users&#39;</span>, <span class="hl-k">function</span>(t)
+  t:<span class="hl-f">rename</span>(<span class="hl-s">&#39;name&#39;</span>, <span class="hl-s">&#39;nickname&#39;</span>)
+  t:<span class="hl-f">remove</span>(<span class="hl-s">&#39;banned&#39;</span>)
+  t:integer <span class="hl-s">&#39;playtime&#39;</span>
+  t:references <span class="hl-s">&#39;faction&#39;</span>
+<span class="hl-k">end</span>)
+</code></pre>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">name</span> <span class="type">String</span> <span class="desc">table name</span></li><li><span class="param-name">callback</span> <span class="type">Function</span> <span class="desc">receives the 'change' ActiveRecord::Query to describe the changes on</span></li></ul>
+</section>
+</section>
+<section class="detail" id="column_definition">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Statements.</span>column_definition<span class="params">(name, type, options)</span></h3>
+<a href="#column_definition" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/schema_statements.lua#L17" title="View source">packages/active_record/lib/schema_statements.lua:17</a>
+</div>
+<section class="docstring">
+<p>Splits the arguments of add_column / remove_column into their parts. Both the
+positional (name, type, options) form and the table form { name, type = ..., ... }
+are accepted.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">name</span> <span class="type">String/Map</span></li><li><span class="param-name">type</span> <span class="type">String</span> <span class="default">optional, defaults to <code>nil</code></span></li><li><span class="param-name">options</span> <span class="type">Map</span> <span class="default">optional, defaults to <code>nil</code></span></li></ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">String</span> <span class="desc">name</span></li><li><span class="type">String</span> <span class="desc">type</span></li><li><span class="type">Map</span> <span class="desc">options</span></li></ul>
+</section>
+</section>
+<section class="detail" id="create_primary_key">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Statements.</span>create_primary_key<span class="params">(table_name, key)</span></h3>
+<a href="#create_primary_key" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/schema_statements.lua#L592" title="View source">packages/active_record/lib/schema_statements.lua:592</a>
+</div>
+<section class="docstring">
+<p>Adds a PRIMARY KEY constraint named '&lt;table_name&gt;_pkey' to a table, unless it is
+already recorded in the metadata.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">table_name</span> <span class="type">String</span></li><li><span class="param-name">key</span> <span class="type">String</span> <span class="desc">column name</span></li></ul>
+</section>
+</section>
+<section class="detail" id="create_reference">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Statements.</span>create_reference<span class="params">(args)</span></h3>
+<a href="#create_reference" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/schema_statements.lua#L578" title="View source">packages/active_record/lib/schema_statements.lua:578</a>
+</div>
+<section class="docstring">
+<p>Adds a foreign key constraint along with an index on the key column.</p>
+<pre><code class="language-lua">create_reference {
+  table_name = <span class="hl-s">&#39;characters&#39;</span>, key = <span class="hl-s">&#39;user_id&#39;</span>,
+  foreign_table = <span class="hl-s">&#39;users&#39;</span>, foreign_key = <span class="hl-s">&#39;id&#39;</span>,
+  cascade = <span class="hl-k">true</span>
+}
+</code></pre>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">args</span> <span class="type">Map</span> <span class="desc">table_name, key, foreign_table and foreign_key, optionally cascade (Boolean, adds ON DELETE CASCADE) and name (name of the constraint)</span></li></ul>
+</section>
+</section>
+<section class="detail" id="create_table">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Statements.</span>create_table<span class="params">(name, options, callback)</span></h3>
+<a href="#create_table" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/schema_statements.lua#L82" title="View source">packages/active_record/lib/schema_statements.lua:82</a>
+</div>
+<section class="docstring">
+<p>Creates a database table. The 'id' primary key is added automatically.</p>
+<pre><code class="language-lua"><span class="hl-f">create_table</span>(<span class="hl-s">&#39;logs&#39;</span>, <span class="hl-k">function</span>(t)
+  t:text <span class="hl-s">&#39;body&#39;</span>
+  t:string { <span class="hl-s">&#39;action&#39;</span>, null = <span class="hl-k">false</span> }
+  t:<span class="hl-f">timestamps</span>()
+<span class="hl-k">end</span>)
+
+<span class="hl-f">create_table</span>(<span class="hl-s">&#39;users&#39;</span>, { force = <span class="hl-k">true</span> }, <span class="hl-k">function</span>(t) ... <span class="hl-k">end</span>)
+</code></pre>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">name</span> <span class="type">String</span> <span class="desc">table name</span></li><li><span class="param-name">options</span> <span class="type">Map</span> <span class="default">optional, defaults to <code>nil</code></span> <span class="desc">force (drop an existing table first), if_not_exists (leave an existing table alone), id (false to not add a primary key), primary_key (name of the primary key column, 'id' by default)</span></li><li><span class="param-name">callback</span> <span class="type">Function</span> <span class="default">optional, defaults to <code>nil</code></span> <span class="desc">receives the 'create' ActiveRecord::Query to define the columns on</span></li></ul>
+</section>
+</section>
+<section class="detail" id="define_model">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Statements.</span>define_model<span class="params">(name, callback)</span></h3>
+<a href="#define_model" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/schema_statements.lua#L129" title="View source">packages/active_record/lib/schema_statements.lua:129</a>
+</div>
+<section class="docstring">
+<p>Creates the database table of a model: a table with the 'id' primary key, the given
+columns and the 'created_at' / 'updated_at' timestamps.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">name</span> <span class="type">String</span> <span class="desc">table name, the lowercase plural of the model's class name</span></li><li><span class="param-name">callback</span> <span class="type">Function</span> <span class="desc">receives the table definition</span></li></ul>
+<h4>See also</h4>
+<ul class="see-also"><li><a href="../../packages/active_record/Globals.html#create_table"><code>create_table</code></a></li></ul>
+</section>
+</section>
+<section class="detail" id="drop_table">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Statements.</span>drop_table<span class="params">(name, options)</span></h3>
+<a href="#drop_table" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/schema_statements.lua#L140" title="View source">packages/active_record/lib/schema_statements.lua:140</a>
+</div>
+<section class="docstring">
+<p>Drops a database table, along with what the metadata knows about its indexes and
+foreign keys.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">name</span> <span class="type">String</span> <span class="desc">table name</span></li><li><span class="param-name">options</span> <span class="type">Map</span> <span class="default">optional, defaults to <code>nil</code></span> <span class="desc">if_exists (ignore a missing table)</span></li></ul>
+</section>
+</section>
+<section class="detail" id="execute">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Statements.</span>execute<span class="params">(sql)</span></h3>
+<a href="#execute" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/schema_statements.lua#L605" title="View source">packages/active_record/lib/schema_statements.lua:605</a>
+</div>
+<section class="docstring">
+<p>Runs a raw SQL statement.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">sql</span> <span class="type">String</span></li></ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">Any</span> <span class="desc">whatever the adapter returns</span></li></ul>
+</section>
+</section>
+<section class="detail" id="execute_block">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Statements.</span>execute_block<span class="params">(callback)</span></h3>
+<a href="#execute_block" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/schema_statements.lua#L612" title="View source">packages/active_record/lib/schema_statements.lua:612</a>
+</div>
+<section class="docstring">
+<p>Runs a function. Used by Migration#reversible to put a block of code into the list
+of recorded statements.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">callback</span> <span class="type">Function</span></li></ul>
+</section>
+</section>
+<section class="detail" id="foreign_key_name">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Statements.</span>foreign_key_name<span class="params">(from_table, column, to_table, primary_key)</span></h3>
+<a href="#foreign_key_name" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/schema_statements.lua#L473" title="View source">packages/active_record/lib/schema_statements.lua:473</a>
+</div>
+<section class="docstring">
+<p>Returns the name a foreign key constraint gets when none is given.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">from_table</span> <span class="type">String</span></li><li><span class="param-name">column</span> <span class="type">String</span></li><li><span class="param-name">to_table</span> <span class="type">String</span></li><li><span class="param-name">primary_key</span> <span class="type">String</span></li></ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">String</span></li></ul>
+</section>
+</section>
+<section class="detail" id="index_name">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Statements.</span>index_name<span class="params">(table_name, columns)</span></h3>
+<a href="#index_name" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/schema_statements.lua#L329" title="View source">packages/active_record/lib/schema_statements.lua:329</a>
+</div>
+<section class="docstring">
+<p>Returns the name an index gets when none is given: '&lt;table&gt;_&lt;columns&gt;_index'.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">table_name</span> <span class="type">String</span></li><li><span class="param-name">columns</span> <span class="type">List&lt;String&gt;</span></li></ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">String</span></li></ul>
+</section>
+</section>
+<section class="detail" id="remove_column">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Statements.</span>remove_column<span class="params">(table_name, name, type, options)</span></h3>
+<a href="#remove_column" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/schema_statements.lua#L253" title="View source">packages/active_record/lib/schema_statements.lua:253</a>
+</div>
+<section class="docstring">
+<p>Removes a column from an existing table.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">table_name</span> <span class="type">String</span> <span class="desc">table name</span></li><li><span class="param-name">name</span> <span class="type">String/Map</span> <span class="desc">column name, or the same table add_column takes</span></li><li><span class="param-name">type</span> <span class="type">String</span> <span class="default">optional, defaults to <code>nil</code></span> <span class="desc">abstract column type; only needed to make the removal reversible</span></li><li><span class="param-name">options</span> <span class="type">Map</span> <span class="default">optional, defaults to <code>nil</code></span> <span class="desc">column options; only needed to make the removal reversible</span></li></ul>
+</section>
+</section>
+<section class="detail" id="remove_foreign_key">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Statements.</span>remove_foreign_key<span class="params">(from_table, to_table, options)</span></h3>
+<a href="#remove_foreign_key" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/schema_statements.lua#L536" title="View source">packages/active_record/lib/schema_statements.lua:536</a>
+</div>
+<section class="docstring">
+<p>Drops a foreign key constraint and removes it from the metadata.</p>
+<pre><code class="language-lua"><span class="hl-f">remove_foreign_key</span>(<span class="hl-s">&#39;characters&#39;</span>, <span class="hl-s">&#39;users&#39;</span>)
+<span class="hl-f">remove_foreign_key</span>(<span class="hl-s">&#39;characters&#39;</span>, { column = <span class="hl-s">&#39;owner_id&#39;</span> })
+<span class="hl-f">remove_foreign_key</span>(<span class="hl-s">&#39;characters&#39;</span>, { name = <span class="hl-s">&#39;ar_123456&#39;</span> })
+</code></pre>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">from_table</span> <span class="type">String</span> <span class="desc">table that holds the key</span></li><li><span class="param-name">to_table</span> <span class="type">String/Map</span> <span class="desc">table the key refers to, or the options</span></li><li><span class="param-name">options</span> <span class="type">Map</span> <span class="default">optional, defaults to <code>nil</code></span> <span class="desc">column or name of the constraint</span></li></ul>
+</section>
+</section>
+<section class="detail" id="remove_index">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Statements.</span>remove_index<span class="params">(table_name, options)</span></h3>
+<a href="#remove_index" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/schema_statements.lua#L434" title="View source">packages/active_record/lib/schema_statements.lua:434</a>
+</div>
+<section class="docstring">
+<p>Drops an index and removes it from the metadata.</p>
+<pre><code class="language-lua"><span class="hl-f">remove_index</span>(<span class="hl-s">&#39;users&#39;</span>, <span class="hl-s">&#39;steam_id&#39;</span>)
+<span class="hl-f">remove_index</span>(<span class="hl-s">&#39;characters&#39;</span>, { <span class="hl-s">&#39;user_id&#39;</span>, <span class="hl-s">&#39;name&#39;</span> })
+<span class="hl-f">remove_index</span>(<span class="hl-s">&#39;users&#39;</span>, { name = <span class="hl-s">&#39;users_steam_id_index&#39;</span> })
+<span class="hl-f">remove_index</span>(<span class="hl-s">&#39;users&#39;</span>, { column = <span class="hl-s">&#39;steam_id&#39;</span>, if_exists = <span class="hl-k">true</span> })
+</code></pre>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">table_name</span> <span class="type">String</span></li><li><span class="param-name">options</span> <span class="type">String/List&lt;String&gt;/Map</span> <span class="desc">column name, list of column names, or a table with name or column(s) and optionally if_exists</span></li></ul>
+</section>
+</section>
+<section class="detail" id="remove_reference">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Statements.</span>remove_reference<span class="params">(table_name, name, options)</span></h3>
+<a href="#remove_reference" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/schema_statements.lua#L307" title="View source">packages/active_record/lib/schema_statements.lua:307</a>
+</div>
+<section class="docstring">
+<p>Removes a reference column along with its index and foreign key.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">table_name</span> <span class="type">String</span></li><li><span class="param-name">name</span> <span class="type">String</span> <span class="desc">name of the referenced model, singular</span></li><li><span class="param-name">options</span> <span class="type">Map</span> <span class="default">optional, defaults to <code>nil</code></span> <span class="desc">column (defaults to '&lt;name&gt;_id')</span></li></ul>
+</section>
+</section>
+<section class="detail" id="remove_timestamps">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Statements.</span>remove_timestamps<span class="params">(table_name, options)</span></h3>
+<a href="#remove_timestamps" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/schema_statements.lua#L287" title="View source">packages/active_record/lib/schema_statements.lua:287</a>
+</div>
+<section class="docstring">
+<p>Removes the 'created_at' and 'updated_at' columns from a table.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">table_name</span> <span class="type">String</span></li><li><span class="param-name">options</span> <span class="type">Map</span> <span class="default">optional, defaults to <code>nil</code></span> <span class="desc">unused</span></li></ul>
+</section>
+</section>
+<section class="detail" id="rename_column">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Statements.</span>rename_column<span class="params">(table_name, name, new_name)</span></h3>
+<a href="#rename_column" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/schema_statements.lua#L267" title="View source">packages/active_record/lib/schema_statements.lua:267</a>
+</div>
+<section class="docstring">
+<p>Renames a column of an existing table.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">table_name</span> <span class="type">String</span> <span class="desc">table name</span></li><li><span class="param-name">name</span> <span class="type">String</span> <span class="desc">current column name</span></li><li><span class="param-name">new_name</span> <span class="type">String</span></li></ul>
+</section>
+</section>
+<section class="detail" id="rename_table">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Statements.</span>rename_table<span class="params">(name, new_name)</span></h3>
+<a href="#rename_table" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/schema_statements.lua#L177" title="View source">packages/active_record/lib/schema_statements.lua:177</a>
+</div>
+<section class="docstring">
+<p>Renames a database table.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">name</span> <span class="type">String</span> <span class="desc">current table name</span></li><li><span class="param-name">new_name</span> <span class="type">String</span></li></ul>
+</section>
+</section>
+</section>
+<section class="sources"><h2>Defined in</h2><ul><li><a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/packages/active_record/lib/schema_statements.lua" title="View source">packages/active_record/lib/schema_statements.lua</a></li></ul></section>
+<template id="module-functions"><ul class="sidebar-functions"><li class="sidebar-category" data-anchor="functions">Functions</li><li><a href="#add_column">add_column</a></li><li><a href="#add_foreign_key">add_foreign_key</a></li><li><a href="#add_index">add_index</a></li><li><a href="#add_reference">add_reference</a></li><li><a href="#add_timestamps">add_timestamps</a></li><li><a href="#apply_references">apply_references</a></li><li><a href="#change_table">change_table</a></li><li><a href="#column_definition">column_definition</a></li><li><a href="#create_primary_key">create_primary_key</a></li><li><a href="#create_reference">create_reference</a></li><li><a href="#create_table">create_table</a></li><li><a href="#define_model">define_model</a></li><li><a href="#drop_table">drop_table</a></li><li><a href="#execute">execute</a></li><li><a href="#execute_block">execute_block</a></li><li><a href="#foreign_key_name">foreign_key_name</a></li><li><a href="#index_name">index_name</a></li><li><a href="#remove_column">remove_column</a></li><li><a href="#remove_foreign_key">remove_foreign_key</a></li><li><a href="#remove_index">remove_index</a></li><li><a href="#remove_reference">remove_reference</a></li><li><a href="#remove_timestamps">remove_timestamps</a></li><li><a href="#rename_column">rename_column</a></li><li><a href="#rename_table">rename_table</a></li></ul></template>
+
+<footer class="footer">
+<p>Built with <a href="https://github.com/TeslaCloud/fdoc">fdoc</a>.</p>
+</footer>
+</div>
+</main>
+<script src="../../assets/sidebar_items.js"></script>
+<script src="../../assets/app.js"></script>
+</body>
+</html>

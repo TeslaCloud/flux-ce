@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="generator" content="fdoc">
+<title>Attributes — Flux v0.8.1</title>
+<link rel="stylesheet" href="../../assets/style.css">
+<script>try{var t=localStorage.getItem('fdoc-theme');if(t)document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
+</head>
+<body data-root="../../" data-group="plugins/attributes" data-module="Attributes">
+<div class="progress" id="progress"></div>
+<button class="sidebar-toggle" type="button" aria-label="Toggle navigation"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path fill="currentColor" d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg></button>
+<div class="sidebar-backdrop"></div>
+<aside class="sidebar" id="sidebar">
+<div class="sidebar-header">
+<a class="sidebar-project" href="../../index.html"><span class="sidebar-project-name">Flux</span> <span class="sidebar-project-version">v0.8.1</span></a>
+</div>
+<div class="sidebar-tabs" id="sidebar-tabs" role="tablist"></div>
+<nav class="sidebar-nav" id="sidebar-nav" aria-label="Documentation"><noscript><p class="sidebar-noscript"><a href="../../index.html">Index</a></p></noscript></nav>
+</aside>
+<main class="content" id="content">
+<div class="topbar">
+<form class="search" action="../../search.html" method="get" autocomplete="off" role="search">
+<input type="search" name="q" id="search-input" placeholder="Press / to search" aria-label="Search">
+<ul class="search-suggestions" id="search-suggestions" hidden></ul>
+</form>
+<button class="theme-toggle" type="button" aria-label="Toggle night mode"><span class="icon-moon"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M12 3a9 9 0 1 0 9 9c0-.46-.04-.92-.1-1.36a5.389 5.389 0 0 1-4.4 2.26 5.403 5.403 0 0 1-3.14-9.8c-.44-.06-.9-.1-1.36-.1z"/></svg></span><span class="icon-sun"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M6.76 4.84l-1.8-1.79-1.41 1.41 1.79 1.79 1.42-1.41zM4 10.5H1v2h3v-2zm9-9.95h-2V3.5h2V.55zm7.45 3.91l-1.41-1.41-1.79 1.79 1.41 1.41 1.79-1.79zm-3.21 13.7l1.79 1.8 1.41-1.41-1.8-1.79-1.4 1.4zM20 10.5v2h3v-2h-3zm-8-5c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6zm-1 16.95h2V19.5h-2v2.95zm-7.45-3.91l1.41 1.41 1.79-1.8-1.41-1.41-1.79 1.8z"/></svg></span></button>
+</div>
+<div class="content-inner" id="content-inner">
+<div class="page-header"><h1>Attributes <span class="badge badge-library">library</span></h1><p class="subtitle">Part of <a href="../../plugins/attributes/index.html">attributes</a></p></div>
+<section class="summary"><h2 id="summary">Summary</h2>
+<div class="summary-group"><h3>Functions</h3>
+<div class="summary-row"><div class="summary-signature"><a href="#destroy_timers">destroy_timers(character)</a></div><div class="summary-synopsis">Removes the expiry timers of every boost and multiplier on a character's attributes.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#find">find(id)</a></div><div class="summary-synopsis">Returns the definition of a registered attribute.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#get_by_type">get_by_type(type)</a></div><div class="summary-synopsis">Returns the registered attribute definitions of a single type.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#get_stored">get_stored()</a></div><div class="summary-synopsis">Returns every registered attribute definition.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#include_attributes">include_attributes(directory)</a></div><div class="summary-synopsis">Includes every file of a folder as an attribute definition. Each file gets a fresh ATTRIBUTE global, an AttributeBase named after the file, that is registered once the file has run.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#register">register(id, data)</a></div><div class="summary-synopsis">Stores an attribute definition and runs the AttributeRegistered hook. Missing fields get defaults: min 0, max 10, total_progress 100, geometric progression with coefficient 1.2.</div></div>
+</div>
+</section>
+<section class="details-group"><h2 id="functions">Functions</h2>
+<section class="detail" id="destroy_timers">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Attributes.</span>destroy_timers<span class="params">(character)</span></h3>
+<a href="#destroy_timers" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/attributes/plugin/lib/sh_attributes.lua#L93" title="View source">plugins/attributes/plugin/lib/sh_attributes.lua:93</a>
+</div>
+<section class="docstring">
+<p>Removes the expiry timers of every boost and multiplier on a character's attributes.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">character</span> <span class="type">Character</span></li></ul>
+</section>
+</section>
+<section class="detail" id="find">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Attributes.</span>find<span class="params">(id)</span></h3>
+<a href="#find" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/attributes/plugin/lib/sh_attributes.lua#L15" title="View source">plugins/attributes/plugin/lib/sh_attributes.lua:15</a>
+</div>
+<section class="docstring">
+<p>Returns the definition of a registered attribute.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">id</span> <span class="type">String</span> <span class="desc">attribute ID</span></li></ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">AttributeBase</span> <span class="desc">the attribute definition, or nil if it is not registered</span></li></ul>
+</section>
+</section>
+<section class="detail" id="get_by_type">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Attributes.</span>get_by_type<span class="params">(type)</span></h3>
+<a href="#get_by_type" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/attributes/plugin/lib/sh_attributes.lua#L22" title="View source">plugins/attributes/plugin/lib/sh_attributes.lua:22</a>
+</div>
+<section class="docstring">
+<p>Returns the registered attribute definitions of a single type.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">type</span> <span class="type">Number</span> <span class="desc">attribute type, ATTRIBUTE_STAT or ATTRIBUTE_SKILL</span></li></ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">Map</span> <span class="desc">attribute definitions keyed by attribute ID</span></li></ul>
+</section>
+</section>
+<section class="detail" id="get_stored">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Attributes.</span>get_stored<span class="params">()</span></h3>
+<a href="#get_stored" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/attributes/plugin/lib/sh_attributes.lua#L8" title="View source">plugins/attributes/plugin/lib/sh_attributes.lua:8</a>
+</div>
+<section class="docstring">
+<p>Returns every registered attribute definition.</p>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">Map</span> <span class="desc">attribute definitions keyed by attribute ID</span></li></ul>
+</section>
+</section>
+<section class="detail" id="include_attributes">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Attributes.</span>include_attributes<span class="params">(directory)</span></h3>
+<a href="#include_attributes" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/attributes/plugin/lib/sh_attributes.lua#L87" title="View source">plugins/attributes/plugin/lib/sh_attributes.lua:87</a>
+</div>
+<section class="docstring">
+<p>Includes every file of a folder as an attribute definition. Each file gets a fresh ATTRIBUTE
+global, an AttributeBase named after the file, that is registered once the file has run.</p>
+<pre><code class="language-lua"><span class="hl-c">-- attributes/sh_strength.lua, registered as &#39;strength&#39;</span>
+ATTRIBUTE.name = <span class="hl-s">&#39;attribute.strength.name&#39;</span>
+ATTRIBUTE.type = ATTRIBUTE_STAT
+ATTRIBUTE.max = <span class="hl-n">20</span>
+</code></pre>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">directory</span> <span class="type">String</span> <span class="desc">folder to include files from</span></li></ul>
+</section>
+</section>
+<section class="detail" id="register">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Attributes.</span>register<span class="params">(id, data)</span></h3>
+<a href="#register" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/attributes/plugin/lib/sh_attributes.lua#L48" title="View source">plugins/attributes/plugin/lib/sh_attributes.lua:48</a>
+</div>
+<section class="docstring">
+<p>Stores an attribute definition and runs the AttributeRegistered hook. Missing fields get
+defaults: min 0, max 10, total_progress 100, geometric progression with coefficient 1.2.</p>
+<pre><code class="language-lua"><span class="hl-k">local</span> attribute = AttributeBase.<span class="hl-f">new</span>(<span class="hl-s">&#39;lockpicking&#39;</span>)
+attribute.name = <span class="hl-s">&#39;attribute.lockpicking.name&#39;</span>
+attribute.type = ATTRIBUTE_SKILL
+attribute.progression_type = PROGRESSION_ARITHMETIC
+attribute.boostable = <span class="hl-k">false</span>
+
+Attributes.<span class="hl-f">register</span>(attribute.attribute_id, attribute)
+</code></pre>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">id</span> <span class="type">String</span> <span class="desc">unique attribute ID; raises an error when it is not a string</span></li><li><span class="param-name">data</span> <span class="type">AttributeBase</span> <span class="desc">attribute definition; nothing happens when it is nil</span></li></ul>
+<h4>See also</h4>
+<ul class="see-also"><li><a href="../../plugins/attributes/AttributeBase.html#register"><code>AttributeBase#register</code></a></li></ul>
+</section>
+</section>
+</section>
+<section class="sources"><h2>Defined in</h2><ul><li><a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/attributes/plugin/lib/sh_attributes.lua" title="View source">plugins/attributes/plugin/lib/sh_attributes.lua</a></li></ul></section>
+<template id="module-functions"><ul class="sidebar-functions"><li class="sidebar-category" data-anchor="functions">Functions</li><li><a href="#destroy_timers">destroy_timers</a></li><li><a href="#find">find</a></li><li><a href="#get_by_type">get_by_type</a></li><li><a href="#get_stored">get_stored</a></li><li><a href="#include_attributes">include_attributes</a></li><li><a href="#register">register</a></li></ul></template>
+
+<footer class="footer">
+<p>Built with <a href="https://github.com/TeslaCloud/fdoc">fdoc</a>.</p>
+</footer>
+</div>
+</main>
+<script src="../../assets/sidebar_items.js"></script>
+<script src="../../assets/app.js"></script>
+</body>
+</html>

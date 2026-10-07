@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="generator" content="fdoc">
+<title>Player — Flux v0.8.1</title>
+<link rel="stylesheet" href="../../assets/style.css">
+<script>try{var t=localStorage.getItem('fdoc-theme');if(t)document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
+</head>
+<body data-root="../../" data-group="plugins/inventory" data-module="Player">
+<div class="progress" id="progress"></div>
+<button class="sidebar-toggle" type="button" aria-label="Toggle navigation"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path fill="currentColor" d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg></button>
+<div class="sidebar-backdrop"></div>
+<aside class="sidebar" id="sidebar">
+<div class="sidebar-header">
+<a class="sidebar-project" href="../../index.html"><span class="sidebar-project-name">Flux</span> <span class="sidebar-project-version">v0.8.1</span></a>
+</div>
+<div class="sidebar-tabs" id="sidebar-tabs" role="tablist"></div>
+<nav class="sidebar-nav" id="sidebar-nav" aria-label="Documentation"><noscript><p class="sidebar-noscript"><a href="../../index.html">Index</a></p></noscript></nav>
+</aside>
+<main class="content" id="content">
+<div class="topbar">
+<form class="search" action="../../search.html" method="get" autocomplete="off" role="search">
+<input type="search" name="q" id="search-input" placeholder="Press / to search" aria-label="Search">
+<ul class="search-suggestions" id="search-suggestions" hidden></ul>
+</form>
+<button class="theme-toggle" type="button" aria-label="Toggle night mode"><span class="icon-moon"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M12 3a9 9 0 1 0 9 9c0-.46-.04-.92-.1-1.36a5.389 5.389 0 0 1-4.4 2.26 5.403 5.403 0 0 1-3.14-9.8c-.44-.06-.9-.1-1.36-.1z"/></svg></span><span class="icon-sun"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M6.76 4.84l-1.8-1.79-1.41 1.41 1.79 1.79 1.42-1.41zM4 10.5H1v2h3v-2zm9-9.95h-2V3.5h2V.55zm7.45 3.91l-1.41-1.41-1.79 1.79 1.41 1.41 1.79-1.79zm-3.21 13.7l1.79 1.8 1.41-1.41-1.8-1.79-1.4 1.4zM20 10.5v2h3v-2h-3zm-8-5c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6zm-1 16.95h2V19.5h-2v2.95zm-7.45-3.91l1.41 1.41 1.79-1.8-1.41-1.41-1.79 1.8z"/></svg></span></button>
+</div>
+<div class="content-inner" id="content-inner">
+<div class="page-header"><h1>Player <span class="badge badge-class">class</span></h1><p class="subtitle">Part of <a href="../../plugins/inventory/index.html">inventory</a></p></div>
+<section class="summary"><h2 id="summary">Summary</h2>
+<div class="summary-group"><h3>Methods</h3>
+<div class="summary-row"><div class="summary-signature"><a href="#add_item">add_item(item_obj, inv_type)</a></div><div class="summary-synopsis">Give the player a certain item.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#add_item_by_id">add_item_by_id(instance_id, inv_type)</a></div><div class="summary-synopsis">Give the player a certain item by its instance id.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#create_inventories">create_inventories()</a> <span class="flag flag-internal">internal</span></div><div class="summary-synopsis">Creates the player's default inventories.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#delete_inventories">delete_inventories()</a> <span class="flag flag-internal">internal</span></div><div class="summary-synopsis">Deletes the player's inventories from the server cache.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#find_item">find_item(id, inv_type)</a></div><div class="summary-synopsis">Get the first item with a certain id from the specified inventory or from all of them.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#find_items">find_items(id, inv_type)</a></div><div class="summary-synopsis">Get all items with a certain id from the specified inventory or from all of them.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#get_active_weapon_item">get_active_weapon_item()</a></div><div class="summary-synopsis">Get the item of the weapon that the player is holding in their hands.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#get_first_in_slot">get_first_in_slot(x, y, inv_type)</a></div><div class="summary-synopsis">Get the first instance_id from a certain slot of the specified inventory.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#get_inventories">get_inventories()</a></div><div class="summary-synopsis">Get all the player's inventories.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#get_inventory">get_inventory(inv_type)</a></div><div class="summary-synopsis">Get one of the player's inventories by type.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#get_item_from_weapon">get_item_from_weapon(weapon_class)</a></div><div class="summary-synopsis">Get the item object by the weapon class.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#get_items">get_items(inv_type)</a></div><div class="summary-synopsis">Get the items table from a certain inventory or from all of them.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#get_items_count">get_items_count(id, inv_type)</a></div><div class="summary-synopsis">Get the amount of items with a certain id from the specified inventory or from all of them.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#get_items_ids">get_items_ids(inv_type)</a></div><div class="summary-synopsis">Get only instance_ids from a certain inventory or from all of them.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#get_slot">get_slot(x, y, inv_type)</a></div><div class="summary-synopsis">Get instance_ids from a certain slot of the specified inventory.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#give_item">give_item(id, amount, data, inv_type)</a></div><div class="summary-synopsis">Give the player a certain item(s) by id.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#has_item">has_item(id, inv_type)</a></div><div class="summary-synopsis">Checking if the player has a certain item by its id.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#has_item_by_id">has_item_by_id(instance_id, inv_type)</a></div><div class="summary-synopsis">Checking if the player has a certain item by its instance id.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#has_item_equipped">has_item_equipped(id)</a></div><div class="summary-synopsis">Checking if the player has a certain item equipped by its id.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#load_inventories">load_inventories()</a> <span class="flag flag-internal">internal</span></div><div class="summary-synopsis">Loads the player's inventories with the items they had.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#open_inventory">open_inventory(inventory)</a></div><div class="summary-synopsis">Opens an inventory window for the player.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#open_player_inventory">open_player_inventory(target)</a></div><div class="summary-synopsis">Opens all the inventories the other player has.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#sync_inventories">sync_inventories()</a></div><div class="summary-synopsis">Synchronize all the inventories that the player has.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#sync_inventory">sync_inventory(inv_type)</a></div><div class="summary-synopsis">Synchronize only the specified inventory.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#take_item">take_item(id, inv_type)</a></div><div class="summary-synopsis">Takes one item from the player.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#take_item_by_id">take_item_by_id(instance_id, inv_type)</a></div><div class="summary-synopsis">Takes one specified item from the player.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#take_items">take_items(id, amount, inv_type)</a></div><div class="summary-synopsis">Takes the specified amount of items from the player.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#transfer_item">transfer_item(instance_id, inv_type)</a></div><div class="summary-synopsis">Transfers an item to a specified inventory of the player. Takes the item only from the specified inventory. Does nothing and returns nothing if the item is in that inventory already.</div></div>
+</div>
+</section>
+<section class="details-group"><h2 id="methods">Methods</h2>
+<section class="detail" id="add_item">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Player:</span>add_item<span class="params">(item_obj, inv_type)</span></h3>
+<a href="#add_item" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/inventory/plugin/lib/sh_inventory.lua#L327" title="View source">plugins/inventory/plugin/lib/sh_inventory.lua:327</a>
+</div>
+<section class="docstring">
+<p>Give the player a certain item.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">item_obj</span> <span class="type">Item</span></li><li><span class="param-name">inv_type</span> <span class="type">String</span> <span class="default">optional, defaults to <code>self.default_inventory or &#39;main_inventory&#39;</code></span></li></ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">Boolean</span> <span class="desc">was the item added successfully</span></li><li><span class="type">String</span> <span class="desc">text of the error that occurred</span></li></ul>
+</section>
+</section>
+<section class="detail" id="add_item_by_id">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Player:</span>add_item_by_id<span class="params">(instance_id, inv_type)</span></h3>
+<a href="#add_item_by_id" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/inventory/plugin/lib/sh_inventory.lua#L340" title="View source">plugins/inventory/plugin/lib/sh_inventory.lua:340</a>
+</div>
+<section class="docstring">
+<p>Give the player a certain item by its instance id.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">instance_id</span> <span class="type">Number</span></li><li><span class="param-name">inv_type</span> <span class="type">String</span> <span class="default">optional, defaults to <code>self.default_inventory or &#39;main_inventory&#39;</code></span></li></ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">Boolean</span> <span class="desc">was the item added successfully</span></li><li><span class="type">String</span> <span class="desc">text of the error that occurred</span></li></ul>
+</section>
+</section>
+<section class="detail" id="create_inventories">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Player:</span>create_inventories<span class="params">()</span></h3> <span class="flag flag-internal">internal</span>
+<a href="#create_inventories" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/inventory/plugin/lib/sh_inventory.lua#L253" title="View source">plugins/inventory/plugin/lib/sh_inventory.lua:253</a>
+</div>
+<section class="docstring">
+<div class="admonition internal"><p class="admonition-title">Internal</p><p>This function is internal. It is not part of the public API and may change without notice.</p></div>
+<p>Creates the player's default inventories.</p>
+</section>
+</section>
+<section class="detail" id="delete_inventories">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Player:</span>delete_inventories<span class="params">()</span></h3> <span class="flag flag-internal">internal</span>
+<a href="#delete_inventories" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/inventory/plugin/lib/sh_inventory.lua#L302" title="View source">plugins/inventory/plugin/lib/sh_inventory.lua:302</a>
+</div>
+<section class="docstring">
+<div class="admonition internal"><p class="admonition-title">Internal</p><p>This function is internal. It is not part of the public API and may change without notice.</p></div>
+<p>Deletes the player's inventories from the server cache.</p>
+</section>
+</section>
+<section class="detail" id="find_item">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Player:</span>find_item<span class="params">(id, inv_type)</span></h3>
+<a href="#find_item" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/inventory/plugin/lib/sh_inventory.lua#L129" title="View source">plugins/inventory/plugin/lib/sh_inventory.lua:129</a>
+</div>
+<section class="docstring">
+<p>Get the first item with a certain id from the specified inventory or from all of them.</p>
+<h4>Variants</h4>
+<ul class="variants">
+<li><code class="variant-signature">Player:find_item(id, inv_type)</code><p>Will return the item only from the specified inventory.</p><ul class="params"><li><span class="param-name">id</span> <span class="type">String</span></li><li><span class="param-name">inv_type</span> <span class="type">String</span></li></ul>
+</li>
+<li><code class="variant-signature">Player:find_item(id)</code><p>Will return the item from all the inventories that the player has.</p><ul class="params"><li><span class="param-name">id</span> <span class="type">String</span></li></ul>
+</li>
+</ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">Item</span></li></ul>
+</section>
+</section>
+<section class="detail" id="find_items">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Player:</span>find_items<span class="params">(id, inv_type)</span></h3>
+<a href="#find_items" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/inventory/plugin/lib/sh_inventory.lua#L152" title="View source">plugins/inventory/plugin/lib/sh_inventory.lua:152</a>
+</div>
+<section class="docstring">
+<p>Get all items with a certain id from the specified inventory or from all of them.</p>
+<h4>Variants</h4>
+<ul class="variants">
+<li><code class="variant-signature">Player:find_items(id, inv_type)</code><p>Will return items only from the specified inventory.</p><ul class="params"><li><span class="param-name">id</span> <span class="type">String</span></li><li><span class="param-name">inv_type</span> <span class="type">String</span></li></ul>
+</li>
+<li><code class="variant-signature">Player:find_items(id)</code><p>Will return items from all the inventories that the player has.</p><ul class="params"><li><span class="param-name">id</span> <span class="type">String</span></li></ul>
+</li>
+</ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">List&lt;Item&gt;</span> <span class="desc">items</span></li></ul>
+</section>
+</section>
+<section class="detail" id="get_active_weapon_item">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Player:</span>get_active_weapon_item<span class="params">()</span></h3>
+<a href="#get_active_weapon_item" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/inventory/plugin/lib/sh_inventory.lua#L242" title="View source">plugins/inventory/plugin/lib/sh_inventory.lua:242</a>
+</div>
+<section class="docstring">
+<p>Get the item of the weapon that the player is holding in their hands.</p>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">Item</span></li></ul>
+</section>
+</section>
+<section class="detail" id="get_first_in_slot">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Player:</span>get_first_in_slot<span class="params">(x, y, inv_type)</span></h3>
+<a href="#get_first_in_slot" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/inventory/plugin/lib/sh_inventory.lua#L93" title="View source">plugins/inventory/plugin/lib/sh_inventory.lua:93</a>
+</div>
+<section class="docstring">
+<p>Get the first instance_id from a certain slot of the specified inventory.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">x</span> <span class="type">Number</span></li><li><span class="param-name">y</span> <span class="type">Number</span></li><li><span class="param-name">inv_type</span> <span class="type">String</span></li></ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">Number</span></li></ul>
+</section>
+</section>
+<section class="detail" id="get_inventories">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Player:</span>get_inventories<span class="params">()</span></h3>
+<a href="#get_inventories" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/inventory/plugin/lib/sh_inventory.lua#L33" title="View source">plugins/inventory/plugin/lib/sh_inventory.lua:33</a>
+</div>
+<section class="docstring">
+<p>Get all the player's inventories.</p>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">Map</span> <span class="desc">inventories</span></li></ul>
+</section>
+</section>
+<section class="detail" id="get_inventory">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Player:</span>get_inventory<span class="params">(inv_type)</span></h3>
+<a href="#get_inventory" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/inventory/plugin/lib/sh_inventory.lua#L27" title="View source">plugins/inventory/plugin/lib/sh_inventory.lua:27</a>
+</div>
+<section class="docstring">
+<p>Get one of the player's inventories by type.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">inv_type</span> <span class="type">String</span></li></ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">Inventory</span></li></ul>
+</section>
+</section>
+<section class="detail" id="get_item_from_weapon">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Player:</span>get_item_from_weapon<span class="params">(weapon_class)</span></h3>
+<a href="#get_item_from_weapon" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/inventory/plugin/lib/sh_inventory.lua#L232" title="View source">plugins/inventory/plugin/lib/sh_inventory.lua:232</a>
+</div>
+<section class="docstring">
+<p>Get the item object by the weapon class.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">weapon_class</span> <span class="type">String</span></li></ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">Item</span></li></ul>
+</section>
+</section>
+<section class="detail" id="get_items">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Player:</span>get_items<span class="params">(inv_type)</span></h3>
+<a href="#get_items" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/inventory/plugin/lib/sh_inventory.lua#L44" title="View source">plugins/inventory/plugin/lib/sh_inventory.lua:44</a>
+</div>
+<section class="docstring">
+<p>Get the items table from a certain inventory or from all of them.</p>
+<h4>Variants</h4>
+<ul class="variants">
+<li><code class="variant-signature">Player:get_items(inv_type)</code><p>Will return items from the specified inventory.</p><ul class="params"><li><span class="param-name">inv_type</span> <span class="type">String</span></li></ul>
+</li>
+<li><code class="variant-signature">Player:get_items()</code><p>Will return items from all the inventories that the player has.</p></li>
+</ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">List&lt;Item&gt;</span> <span class="desc">items</span></li></ul>
+</section>
+</section>
+<section class="detail" id="get_items_count">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Player:</span>get_items_count<span class="params">(id, inv_type)</span></h3>
+<a href="#get_items_count" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/inventory/plugin/lib/sh_inventory.lua#L106" title="View source">plugins/inventory/plugin/lib/sh_inventory.lua:106</a>
+</div>
+<section class="docstring">
+<p>Get the amount of items with a certain id from the specified inventory or from all of them.</p>
+<h4>Variants</h4>
+<ul class="variants">
+<li><code class="variant-signature">Player:get_items_count(id, inv_type)</code><p>Will return the items count only from the specified inventory.</p><ul class="params"><li><span class="param-name">id</span> <span class="type">String</span></li><li><span class="param-name">inv_type</span> <span class="type">String</span></li></ul>
+</li>
+<li><code class="variant-signature">Player:get_items_count(id)</code><p>Will return the items count from all the inventories that the player has.</p><ul class="params"><li><span class="param-name">id</span> <span class="type">String</span></li></ul>
+</li>
+</ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">Number</span></li></ul>
+</section>
+</section>
+<section class="detail" id="get_items_ids">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Player:</span>get_items_ids<span class="params">(inv_type)</span></h3>
+<a href="#get_items_ids" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/inventory/plugin/lib/sh_inventory.lua#L65" title="View source">plugins/inventory/plugin/lib/sh_inventory.lua:65</a>
+</div>
+<section class="docstring">
+<p>Get only instance_ids from a certain inventory or from all of them.</p>
+<h4>Variants</h4>
+<ul class="variants">
+<li><code class="variant-signature">Player:get_items_ids(inv_type)</code><p>Will return item ids only from the specified inventory.</p><ul class="params"><li><span class="param-name">inv_type</span> <span class="type">String</span></li></ul>
+</li>
+<li><code class="variant-signature">Player:get_items_ids()</code><p>Will return item ids from all the inventories that the player has.</p></li>
+</ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">List&lt;Number&gt;</span> <span class="desc">numbers; the inv_type variant returns the Inventory itself instead</span></li></ul>
+</section>
+</section>
+<section class="detail" id="get_slot">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Player:</span>get_slot<span class="params">(x, y, inv_type)</span></h3>
+<a href="#get_slot" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/inventory/plugin/lib/sh_inventory.lua#L84" title="View source">plugins/inventory/plugin/lib/sh_inventory.lua:84</a>
+</div>
+<section class="docstring">
+<p>Get instance_ids from a certain slot of the specified inventory.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">x</span> <span class="type">Number</span></li><li><span class="param-name">y</span> <span class="type">Number</span></li><li><span class="param-name">inv_type</span> <span class="type">String</span></li></ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">List&lt;Number&gt;</span> <span class="desc">numbers</span></li></ul>
+</section>
+</section>
+<section class="detail" id="give_item">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Player:</span>give_item<span class="params">(id, amount, data, inv_type)</span></h3>
+<a href="#give_item" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/inventory/plugin/lib/sh_inventory.lua#L358" title="View source">plugins/inventory/plugin/lib/sh_inventory.lua:358</a>
+</div>
+<section class="docstring">
+<p>Give the player a certain item(s) by id.</p>
+<pre><code class="language-lua"><span class="hl-c">-- Adds 10 test items to the player&#39;s inventory and sets their name to &#39;Some Item&#39;.</span>
+<span class="hl-k">local</span> success, error_text = target:<span class="hl-f">give_item</span>(<span class="hl-s">&#39;test_item&#39;</span>, <span class="hl-n">10</span>, { name = <span class="hl-s">&#39;Some Item&#39;</span> })
+<span class="hl-k">if</span> !success <span class="hl-k">then</span>
+  <span class="hl-c">-- Notifies the player of an error.</span>
+  target:<span class="hl-f">notify</span>(error_text)
+<span class="hl-k">end</span>
+</code></pre>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">id</span> <span class="type">String</span></li><li><span class="param-name">amount</span> <span class="type">Number</span> <span class="default">optional, defaults to <code>1</code></span></li><li><span class="param-name">data</span> <span class="type">Map</span> <span class="default">optional, defaults to <code>nil</code></span> <span class="desc">fields to override on the created items</span></li><li><span class="param-name">inv_type</span> <span class="type">String</span> <span class="default">optional, defaults to <code>self.default_inventory or &#39;main_inventory&#39;</code></span></li></ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">Boolean</span> <span class="desc">was the item added successfully</span></li><li><span class="type">String</span> <span class="desc">text of the error that occurred</span></li></ul>
+</section>
+</section>
+<section class="detail" id="has_item">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Player:</span>has_item<span class="params">(id, inv_type)</span></h3>
+<a href="#has_item" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/inventory/plugin/lib/sh_inventory.lua#L175" title="View source">plugins/inventory/plugin/lib/sh_inventory.lua:175</a>
+</div>
+<section class="docstring">
+<p>Checking if the player has a certain item by its id.</p>
+<h4>Variants</h4>
+<ul class="variants">
+<li><code class="variant-signature">Player:has_item(id, inv_type)</code><p>Will check only the specified inventory.</p><ul class="params"><li><span class="param-name">id</span> <span class="type">String</span></li><li><span class="param-name">inv_type</span> <span class="type">String</span></li></ul>
+</li>
+<li><code class="variant-signature">Player:has_item(id)</code><p>Will check all the inventories that the player has.</p><ul class="params"><li><span class="param-name">id</span> <span class="type">String</span></li></ul>
+</li>
+</ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">Boolean</span></li><li><span class="type">Item</span> <span class="desc">found item</span></li></ul>
+</section>
+</section>
+<section class="detail" id="has_item_by_id">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Player:</span>has_item_by_id<span class="params">(instance_id, inv_type)</span></h3>
+<a href="#has_item_by_id" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/inventory/plugin/lib/sh_inventory.lua#L200" title="View source">plugins/inventory/plugin/lib/sh_inventory.lua:200</a>
+</div>
+<section class="docstring">
+<p>Checking if the player has a certain item by its instance id.</p>
+<h4>Variants</h4>
+<ul class="variants">
+<li><code class="variant-signature">Player:has_item_by_id(instance_id, inv_type)</code><p>Will check only the specified inventory.</p><ul class="params"><li><span class="param-name">instance_id</span> <span class="type">Number</span></li><li><span class="param-name">inv_type</span> <span class="type">String</span></li></ul>
+</li>
+<li><code class="variant-signature">Player:has_item_by_id(instance_id)</code><p>Will check all the inventories that the player has.</p><ul class="params"><li><span class="param-name">instance_id</span> <span class="type">Number</span></li></ul>
+</li>
+</ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">Boolean</span></li><li><span class="type">Item</span> <span class="desc">found item</span></li></ul>
+</section>
+</section>
+<section class="detail" id="has_item_equipped">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Player:</span>has_item_equipped<span class="params">(id)</span></h3>
+<a href="#has_item_equipped" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/inventory/plugin/lib/sh_inventory.lua#L219" title="View source">plugins/inventory/plugin/lib/sh_inventory.lua:219</a>
+</div>
+<section class="docstring">
+<p>Checking if the player has a certain item equipped by its id.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">id</span> <span class="type">String</span></li></ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">Boolean</span></li><li><span class="type">Item</span> <span class="desc">found item</span></li></ul>
+</section>
+</section>
+<section class="detail" id="load_inventories">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Player:</span>load_inventories<span class="params">()</span></h3> <span class="flag flag-internal">internal</span>
+<a href="#load_inventories" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/inventory/plugin/lib/sh_inventory.lua#L274" title="View source">plugins/inventory/plugin/lib/sh_inventory.lua:274</a>
+</div>
+<section class="docstring">
+<div class="admonition internal"><p class="admonition-title">Internal</p><p>This function is internal. It is not part of the public API and may change without notice.</p></div>
+<p>Loads the player's inventories with the items they had.</p>
+</section>
+</section>
+<section class="detail" id="open_inventory">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Player:</span>open_inventory<span class="params">(inventory)</span></h3>
+<a href="#open_inventory" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/inventory/plugin/lib/sh_inventory.lua#L515" title="View source">plugins/inventory/plugin/lib/sh_inventory.lua:515</a>
+</div>
+<section class="docstring">
+<p>Opens an inventory window for the player.</p>
+<pre><code class="language-lua"><span class="hl-c">-- Creating new inventory</span>
+<span class="hl-k">local</span> inventory = Inventory.<span class="hl-f">new</span>()
+inventory.title = <span class="hl-s">&#39;Test inventory&#39;</span>
+inventory:<span class="hl-f">set_size</span>(<span class="hl-n">4</span>, <span class="hl-n">4</span>)
+inventory.type = <span class="hl-s">&#39;testing_inventory&#39;</span>
+inventory.multislot = <span class="hl-k">false</span>
+
+<span class="hl-c">-- Creating an inventory window for a player</span>
+target:<span class="hl-f">open_inventory</span>(inventory)
+</code></pre>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">inventory</span> <span class="type">Inventory</span></li></ul>
+</section>
+</section>
+<section class="detail" id="open_player_inventory">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Player:</span>open_player_inventory<span class="params">(target)</span></h3>
+<a href="#open_player_inventory" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/inventory/plugin/lib/sh_inventory.lua#L524" title="View source">plugins/inventory/plugin/lib/sh_inventory.lua:524</a>
+</div>
+<section class="docstring">
+<p>Opens all the inventories the other player has.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">target</span> <span class="type">Player</span></li></ul>
+</section>
+</section>
+<section class="detail" id="sync_inventories">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Player:</span>sync_inventories<span class="params">()</span></h3>
+<a href="#sync_inventories" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/inventory/plugin/lib/sh_inventory.lua#L311" title="View source">plugins/inventory/plugin/lib/sh_inventory.lua:311</a>
+</div>
+<section class="docstring">
+<p>Synchronize all the inventories that the player has.</p>
+</section>
+</section>
+<section class="detail" id="sync_inventory">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Player:</span>sync_inventory<span class="params">(inv_type)</span></h3>
+<a href="#sync_inventory" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/inventory/plugin/lib/sh_inventory.lua#L319" title="View source">plugins/inventory/plugin/lib/sh_inventory.lua:319</a>
+</div>
+<section class="docstring">
+<p>Synchronize only the specified inventory.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">inv_type</span> <span class="type">String</span></li></ul>
+</section>
+</section>
+<section class="detail" id="take_item">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Player:</span>take_item<span class="params">(id, inv_type)</span></h3>
+<a href="#take_item" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/inventory/plugin/lib/sh_inventory.lua#L376" title="View source">plugins/inventory/plugin/lib/sh_inventory.lua:376</a>
+</div>
+<section class="docstring">
+<p>Takes one item from the player.</p>
+<h4>Variants</h4>
+<ul class="variants">
+<li><code class="variant-signature">Player:take_item(id, inv_type)</code><p>Takes the item only from the specified inventory.</p><ul class="params"><li><span class="param-name">id</span> <span class="type">String</span></li><li><span class="param-name">inv_type</span> <span class="type">String</span></li></ul>
+</li>
+<li><code class="variant-signature">Player:take_item(id)</code><p>Takes the item from the inventory that has it.</p><ul class="params"><li><span class="param-name">id</span> <span class="type">String</span></li></ul>
+</li>
+</ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">Boolean</span> <span class="desc">was the item taken successfully</span></li><li><span class="type">String</span> <span class="desc">text of the error that occurred</span></li></ul>
+</section>
+</section>
+<section class="detail" id="take_item_by_id">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Player:</span>take_item_by_id<span class="params">(instance_id, inv_type)</span></h3>
+<a href="#take_item_by_id" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/inventory/plugin/lib/sh_inventory.lua#L445" title="View source">plugins/inventory/plugin/lib/sh_inventory.lua:445</a>
+</div>
+<section class="docstring">
+<p>Takes one specified item from the player.</p>
+<h4>Variants</h4>
+<ul class="variants">
+<li><code class="variant-signature">Player:take_item_by_id(instance_id, inv_type)</code><p>Takes the item only from the specified inventory.</p><ul class="params"><li><span class="param-name">instance_id</span> <span class="type">Number</span></li><li><span class="param-name">inv_type</span> <span class="type">String</span></li></ul>
+</li>
+<li><code class="variant-signature">Player:take_item_by_id(instance_id)</code><p>Takes the item from the inventory that has it.</p><ul class="params"><li><span class="param-name">instance_id</span> <span class="type">Number</span></li></ul>
+</li>
+</ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">Boolean</span> <span class="desc">was the item taken successfully</span></li><li><span class="type">String</span> <span class="desc">text of the error that occurred</span></li></ul>
+</section>
+</section>
+<section class="detail" id="take_items">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Player:</span>take_items<span class="params">(id, amount, inv_type)</span></h3>
+<a href="#take_items" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/inventory/plugin/lib/sh_inventory.lua#L410" title="View source">plugins/inventory/plugin/lib/sh_inventory.lua:410</a>
+</div>
+<section class="docstring">
+<p>Takes the specified amount of items from the player.</p>
+<h4>Variants</h4>
+<ul class="variants">
+<li><code class="variant-signature">Player:take_items(id, amount, inv_type)</code><p>Takes items only from the specified inventory.</p><ul class="params"><li><span class="param-name">id</span> <span class="type">String</span></li><li><span class="param-name">amount</span> <span class="type">Number</span></li><li><span class="param-name">inv_type</span> <span class="type">String</span></li></ul>
+</li>
+<li><code class="variant-signature">Player:take_items(id, amount)</code><p>Takes items from the inventory that has them.</p><ul class="params"><li><span class="param-name">id</span> <span class="type">String</span></li><li><span class="param-name">amount</span> <span class="type">Number</span></li></ul>
+</li>
+</ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">Boolean</span> <span class="desc">have the items been taken successfully</span></li><li><span class="type">String</span> <span class="desc">text of the error that occurred</span></li></ul>
+</section>
+</section>
+<section class="detail" id="transfer_item">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">Player:</span>transfer_item<span class="params">(instance_id, inv_type)</span></h3>
+<a href="#transfer_item" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/inventory/plugin/lib/sh_inventory.lua#L483" title="View source">plugins/inventory/plugin/lib/sh_inventory.lua:483</a>
+</div>
+<section class="docstring">
+<p>Transfers an item to a specified inventory of the player.
+Takes the item only from the specified inventory.
+Does nothing and returns nothing if the item is in that inventory already.</p>
+<pre><code class="language-lua"><span class="hl-c">-- Puts the item on the player&#39;s hotbar.</span>
+<span class="hl-k">local</span> success, error_text = target:<span class="hl-f">transfer_item</span>(item_obj.instance_id, <span class="hl-s">&#39;hotbar&#39;</span>)
+
+<span class="hl-k">if</span> success == <span class="hl-k">false</span> <span class="hl-k">then</span>
+  target:<span class="hl-f">notify</span>(error_text)
+<span class="hl-k">end</span>
+</code></pre>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">instance_id</span> <span class="type">Number</span></li><li><span class="param-name">inv_type</span> <span class="type">String</span></li></ul>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">Boolean</span> <span class="desc">was the item transferred successfully</span></li><li><span class="type">String</span> <span class="desc">text of the error that occurred</span></li></ul>
+</section>
+</section>
+</section>
+<section class="sources"><h2>Defined in</h2><ul><li><a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/inventory/plugin/lib/sh_inventory.lua" title="View source">plugins/inventory/plugin/lib/sh_inventory.lua</a></li></ul></section>
+<template id="module-functions"><ul class="sidebar-functions"><li class="sidebar-category" data-anchor="methods">Methods</li><li><a href="#add_item">add_item</a></li><li><a href="#add_item_by_id">add_item_by_id</a></li><li><a href="#create_inventories">create_inventories</a></li><li><a href="#delete_inventories">delete_inventories</a></li><li><a href="#find_item">find_item</a></li><li><a href="#find_items">find_items</a></li><li><a href="#get_active_weapon_item">get_active_weapon_item</a></li><li><a href="#get_first_in_slot">get_first_in_slot</a></li><li><a href="#get_inventories">get_inventories</a></li><li><a href="#get_inventory">get_inventory</a></li><li><a href="#get_item_from_weapon">get_item_from_weapon</a></li><li><a href="#get_items">get_items</a></li><li><a href="#get_items_count">get_items_count</a></li><li><a href="#get_items_ids">get_items_ids</a></li><li><a href="#get_slot">get_slot</a></li><li><a href="#give_item">give_item</a></li><li><a href="#has_item">has_item</a></li><li><a href="#has_item_by_id">has_item_by_id</a></li><li><a href="#has_item_equipped">has_item_equipped</a></li><li><a href="#load_inventories">load_inventories</a></li><li><a href="#open_inventory">open_inventory</a></li><li><a href="#open_player_inventory">open_player_inventory</a></li><li><a href="#sync_inventories">sync_inventories</a></li><li><a href="#sync_inventory">sync_inventory</a></li><li><a href="#take_item">take_item</a></li><li><a href="#take_item_by_id">take_item_by_id</a></li><li><a href="#take_items">take_items</a></li><li><a href="#transfer_item">transfer_item</a></li></ul></template>
+
+<footer class="footer">
+<p>Built with <a href="https://github.com/TeslaCloud/fdoc">fdoc</a>.</p>
+</footer>
+</div>
+</main>
+<script src="../../assets/sidebar_items.js"></script>
+<script src="../../assets/app.js"></script>
+</body>
+</html>

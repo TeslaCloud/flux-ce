@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="generator" content="fdoc">
+<title>fl_inventory_item — Flux v0.8.1</title>
+<link rel="stylesheet" href="../../assets/style.css">
+<script>try{var t=localStorage.getItem('fdoc-theme');if(t)document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
+</head>
+<body data-root="../../" data-group="plugins/inventory" data-module="fl_inventory_item">
+<div class="progress" id="progress"></div>
+<button class="sidebar-toggle" type="button" aria-label="Toggle navigation"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path fill="currentColor" d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg></button>
+<div class="sidebar-backdrop"></div>
+<aside class="sidebar" id="sidebar">
+<div class="sidebar-header">
+<a class="sidebar-project" href="../../index.html"><span class="sidebar-project-name">Flux</span> <span class="sidebar-project-version">v0.8.1</span></a>
+</div>
+<div class="sidebar-tabs" id="sidebar-tabs" role="tablist"></div>
+<nav class="sidebar-nav" id="sidebar-nav" aria-label="Documentation"><noscript><p class="sidebar-noscript"><a href="../../index.html">Index</a></p></noscript></nav>
+</aside>
+<main class="content" id="content">
+<div class="topbar">
+<form class="search" action="../../search.html" method="get" autocomplete="off" role="search">
+<input type="search" name="q" id="search-input" placeholder="Press / to search" aria-label="Search">
+<ul class="search-suggestions" id="search-suggestions" hidden></ul>
+</form>
+<button class="theme-toggle" type="button" aria-label="Toggle night mode"><span class="icon-moon"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M12 3a9 9 0 1 0 9 9c0-.46-.04-.92-.1-1.36a5.389 5.389 0 0 1-4.4 2.26 5.403 5.403 0 0 1-3.14-9.8c-.44-.06-.9-.1-1.36-.1z"/></svg></span><span class="icon-sun"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M6.76 4.84l-1.8-1.79-1.41 1.41 1.79 1.79 1.42-1.41zM4 10.5H1v2h3v-2zm9-9.95h-2V3.5h2V.55zm7.45 3.91l-1.41-1.41-1.79 1.79 1.41 1.41 1.79-1.79zm-3.21 13.7l1.79 1.8 1.41-1.41-1.8-1.79-1.4 1.4zM20 10.5v2h3v-2h-3zm-8-5c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6zm-1 16.95h2V19.5h-2v2.95zm-7.45-3.91l1.41 1.41 1.79-1.8-1.41-1.41-1.79 1.8z"/></svg></span></button>
+</div>
+<div class="content-inner" id="content-inner">
+<div class="page-header"><h1>fl_inventory_item <span class="badge badge-object">object</span></h1><p class="subtitle">PANEL</p><p class="subtitle">Part of <a href="../../plugins/inventory/index.html">inventory</a></p></div>
+<section class="summary"><h2 id="summary">Summary</h2>
+<div class="summary-group"><h3>Methods</h3>
+<div class="summary-row"><div class="summary-signature"><a href="#combine">combine(panel2)</a></div><div class="summary-synopsis">Moves the items from the stack of another slot to this one, as many as the stack can fit.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#get_inventory_id">get_inventory_id()</a></div><div class="summary-synopsis">Returns the id of the inventory that the slot belongs to.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#get_item_pos">get_item_pos()</a></div><div class="summary-synopsis">Returns the position of the slot in the inventory.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#get_item_size">get_item_size()</a></div><div class="summary-synopsis">Returns the size of the item in a number of slots, considering its rotation.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#is_multislot">is_multislot()</a></div><div class="summary-synopsis">Checks if the inventory that the slot belongs to is multislot.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#is_rotated">is_rotated()</a></div><div class="summary-synopsis">Checks if the item in the slot is displayed rotated.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#OnMousePressed">OnMousePressed(...)</a></div><div class="summary-synopsis">Remembers the slot as the one that the item is being dragged from.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#OnMouseReleased">OnMouseReleased(...)</a></div><div class="summary-synopsis">Opens the menu of the item if the slot was clicked rather than dragged.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#Paint">Paint(w, h)</a></div><div class="summary-synopsis">Draws the slot: its background, the drag and drop highlight and the slot icon. Calls the paint_slot callback of the item afterward.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#PaintOver">PaintOver(w, h)</a></div><div class="summary-synopsis">Draws the amount of items in the stack and the number of the slot. Calls the paint_over_slot callback of the item afterward.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#rebuild">rebuild()</a></div><div class="summary-synopsis">Recreates the icon or the model of the item along with its tooltip. Makes the slot draggable only if it has an item.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#reset">reset()</a></div><div class="summary-synopsis">Empties the slot and makes it undraggable.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#set_item">set_item(instance_id)</a></div><div class="summary-synopsis">Sets the item that the slot displays.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#set_item_multi">set_item_multi(ids)</a></div><div class="summary-synopsis">Sets the stack of items that the slot displays. Does nothing if the items are not stackable.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#turn">turn()</a></div><div class="summary-synopsis">Rotates the item in the slot, swapping the width and the height of the panel.</div></div>
+<div class="summary-row"><div class="summary-signature"><a href="#was_rotated">was_rotated()</a></div><div class="summary-synopsis">Checks if the item has been rotated in the panel since it was placed in the inventory.</div></div>
+</div>
+</section>
+<section class="details-group"><h2 id="methods">Methods</h2>
+<section class="detail" id="combine">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">PANEL:</span>combine<span class="params">(panel2)</span></h3>
+<a href="#combine" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/inventory/plugin/views/cl_inventory_item.lua#L212" title="View source">plugins/inventory/plugin/views/cl_inventory_item.lua:212</a>
+</div>
+<section class="docstring">
+<p>Moves the items from the stack of another slot to this one, as many as the stack can fit.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">panel2</span> <span class="type">Panel</span> <span class="desc">the fl_inventory_item panel to take the items from</span></li></ul>
+</section>
+</section>
+<section class="detail" id="get_inventory_id">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">PANEL:</span>get_inventory_id<span class="params">()</span></h3>
+<a href="#get_inventory_id" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/inventory/plugin/views/cl_inventory_item.lua#L344" title="View source">plugins/inventory/plugin/views/cl_inventory_item.lua:344</a>
+</div>
+<section class="docstring">
+<p>Returns the id of the inventory that the slot belongs to.</p>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">Number</span></li></ul>
+</section>
+</section>
+<section class="detail" id="get_item_pos">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">PANEL:</span>get_item_pos<span class="params">()</span></h3>
+<a href="#get_item_pos" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/inventory/plugin/views/cl_inventory_item.lua#L338" title="View source">plugins/inventory/plugin/views/cl_inventory_item.lua:338</a>
+</div>
+<section class="docstring">
+<p>Returns the position of the slot in the inventory.</p>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">Number</span> <span class="desc">x</span></li><li><span class="type">Number</span> <span class="desc">y</span></li></ul>
+</section>
+</section>
+<section class="detail" id="get_item_size">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">PANEL:</span>get_item_size<span class="params">()</span></h3>
+<a href="#get_item_size" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/inventory/plugin/views/cl_inventory_item.lua#L324" title="View source">plugins/inventory/plugin/views/cl_inventory_item.lua:324</a>
+</div>
+<section class="docstring">
+<p>Returns the size of the item in a number of slots, considering its rotation.</p>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">Number</span> <span class="desc">width</span></li><li><span class="type">Number</span> <span class="desc">height; 1, 1 if the slot is empty</span></li></ul>
+</section>
+</section>
+<section class="detail" id="is_multislot">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">PANEL:</span>is_multislot<span class="params">()</span></h3>
+<a href="#is_multislot" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/inventory/plugin/views/cl_inventory_item.lua#L350" title="View source">plugins/inventory/plugin/views/cl_inventory_item.lua:350</a>
+</div>
+<section class="docstring">
+<p>Checks if the inventory that the slot belongs to is multislot.</p>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">Boolean</span></li></ul>
+</section>
+</section>
+<section class="detail" id="is_rotated">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">PANEL:</span>is_rotated<span class="params">()</span></h3>
+<a href="#is_rotated" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/inventory/plugin/views/cl_inventory_item.lua#L365" title="View source">plugins/inventory/plugin/views/cl_inventory_item.lua:365</a>
+</div>
+<section class="docstring">
+<p>Checks if the item in the slot is displayed rotated.</p>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">Boolean</span></li></ul>
+</section>
+</section>
+<section class="detail" id="OnMousePressed">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">PANEL:</span>OnMousePressed<span class="params">(...)</span></h3>
+<a href="#OnMousePressed" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/inventory/plugin/views/cl_inventory_item.lua#L145" title="View source">plugins/inventory/plugin/views/cl_inventory_item.lua:145</a>
+</div>
+<section class="docstring">
+<p>Remembers the slot as the one that the item is being dragged from.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">...</span> <span class="type">Vararg</span> <span class="desc">arguments passed on to the base panel</span></li></ul>
+</section>
+</section>
+<section class="detail" id="OnMouseReleased">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">PANEL:</span>OnMouseReleased<span class="params">(...)</span></h3>
+<a href="#OnMouseReleased" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/inventory/plugin/views/cl_inventory_item.lua#L154" title="View source">plugins/inventory/plugin/views/cl_inventory_item.lua:154</a>
+</div>
+<section class="docstring">
+<p>Opens the menu of the item if the slot was clicked rather than dragged.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">...</span> <span class="type">Vararg</span> <span class="desc">arguments passed on to the base panel</span></li></ul>
+</section>
+</section>
+<section class="detail" id="Paint">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">PANEL:</span>Paint<span class="params">(w, h)</span></h3>
+<a href="#Paint" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/inventory/plugin/views/cl_inventory_item.lua#L14" title="View source">plugins/inventory/plugin/views/cl_inventory_item.lua:14</a>
+</div>
+<section class="docstring">
+<p>Draws the slot: its background, the drag and drop highlight and the slot icon.
+Calls the paint_slot callback of the item afterward.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">w</span> <span class="type">Number</span></li><li><span class="param-name">h</span> <span class="type">Number</span></li></ul>
+</section>
+</section>
+<section class="detail" id="PaintOver">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">PANEL:</span>PaintOver<span class="params">(w, h)</span></h3>
+<a href="#PaintOver" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/inventory/plugin/views/cl_inventory_item.lua#L109" title="View source">plugins/inventory/plugin/views/cl_inventory_item.lua:109</a>
+</div>
+<section class="docstring">
+<p>Draws the amount of items in the stack and the number of the slot.
+Calls the paint_over_slot callback of the item afterward.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">w</span> <span class="type">Number</span></li><li><span class="param-name">h</span> <span class="type">Number</span></li></ul>
+</section>
+</section>
+<section class="detail" id="rebuild">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">PANEL:</span>rebuild<span class="params">()</span></h3>
+<a href="#rebuild" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/inventory/plugin/views/cl_inventory_item.lua#L245" title="View source">plugins/inventory/plugin/views/cl_inventory_item.lua:245</a>
+</div>
+<section class="docstring">
+<p>Recreates the icon or the model of the item along with its tooltip.
+Makes the slot draggable only if it has an item.</p>
+</section>
+</section>
+<section class="detail" id="reset">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">PANEL:</span>reset<span class="params">()</span></h3>
+<a href="#reset" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/inventory/plugin/views/cl_inventory_item.lua#L233" title="View source">plugins/inventory/plugin/views/cl_inventory_item.lua:233</a>
+</div>
+<section class="docstring">
+<p>Empties the slot and makes it undraggable.</p>
+</section>
+</section>
+<section class="detail" id="set_item">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">PANEL:</span>set_item<span class="params">(instance_id)</span></h3>
+<a href="#set_item" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/inventory/plugin/views/cl_inventory_item.lua#L171" title="View source">plugins/inventory/plugin/views/cl_inventory_item.lua:171</a>
+</div>
+<section class="docstring">
+<p>Sets the item that the slot displays.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">instance_id</span> <span class="type">Number/List&lt;Number&gt;</span> <span class="desc">instance id, or instance ids of a stack of items</span></li></ul>
+</section>
+</section>
+<section class="detail" id="set_item_multi">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">PANEL:</span>set_item_multi<span class="params">(ids)</span></h3>
+<a href="#set_item_multi" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/inventory/plugin/views/cl_inventory_item.lua#L198" title="View source">plugins/inventory/plugin/views/cl_inventory_item.lua:198</a>
+</div>
+<section class="docstring">
+<p>Sets the stack of items that the slot displays.
+Does nothing if the items are not stackable.</p>
+<h4>Parameters</h4>
+<ul class="params"><li><span class="param-name">ids</span> <span class="type">List&lt;Number&gt;</span> <span class="desc">instance ids of the items in the stack</span></li></ul>
+</section>
+</section>
+<section class="detail" id="turn">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">PANEL:</span>turn<span class="params">()</span></h3>
+<a href="#turn" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/inventory/plugin/views/cl_inventory_item.lua#L355" title="View source">plugins/inventory/plugin/views/cl_inventory_item.lua:355</a>
+</div>
+<section class="docstring">
+<p>Rotates the item in the slot, swapping the width and the height of the panel.</p>
+</section>
+</section>
+<section class="detail" id="was_rotated">
+<div class="detail-header">
+<h3 class="signature"><span class="owner">PANEL:</span>was_rotated<span class="params">()</span></h3>
+<a href="#was_rotated" class="detail-link" title="Link to this function"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></a>
+<a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/inventory/plugin/views/cl_inventory_item.lua#L371" title="View source">plugins/inventory/plugin/views/cl_inventory_item.lua:371</a>
+</div>
+<section class="docstring">
+<p>Checks if the item has been rotated in the panel since it was placed in the inventory.</p>
+<h4>Returns</h4>
+<ul class="returns"><li><span class="type">Boolean</span></li></ul>
+</section>
+</section>
+</section>
+<section class="sources"><h2>Defined in</h2><ul><li><a class="source-link" href="https://github.com/TeslaCloud/flux-ce/blob/master/plugins/inventory/plugin/views/cl_inventory_item.lua" title="View source">plugins/inventory/plugin/views/cl_inventory_item.lua</a></li></ul></section>
+<template id="module-functions"><ul class="sidebar-functions"><li class="sidebar-category" data-anchor="methods">Methods</li><li><a href="#combine">combine</a></li><li><a href="#get_inventory_id">get_inventory_id</a></li><li><a href="#get_item_pos">get_item_pos</a></li><li><a href="#get_item_size">get_item_size</a></li><li><a href="#is_multislot">is_multislot</a></li><li><a href="#is_rotated">is_rotated</a></li><li><a href="#OnMousePressed">OnMousePressed</a></li><li><a href="#OnMouseReleased">OnMouseReleased</a></li><li><a href="#Paint">Paint</a></li><li><a href="#PaintOver">PaintOver</a></li><li><a href="#rebuild">rebuild</a></li><li><a href="#reset">reset</a></li><li><a href="#set_item">set_item</a></li><li><a href="#set_item_multi">set_item_multi</a></li><li><a href="#turn">turn</a></li><li><a href="#was_rotated">was_rotated</a></li></ul></template>
+
+<footer class="footer">
+<p>Built with <a href="https://github.com/TeslaCloud/fdoc">fdoc</a>.</p>
+</footer>
+</div>
+</main>
+<script src="../../assets/sidebar_items.js"></script>
+<script src="../../assets/app.js"></script>
+</body>
+</html>
