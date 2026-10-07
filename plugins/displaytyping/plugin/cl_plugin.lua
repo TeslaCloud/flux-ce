@@ -48,5 +48,15 @@ function DisplayTyping:draw_player_typing_text(target, text, ply_pos, dist)
     x, y = clamp_position_to_screen(screen_pos.x, screen_pos.y, text_w, text_h)
   end
 
-  draw.SimpleTextOutlined(text, font, x, y, ColorAlpha(color_white, alpha), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, ColorAlpha(color_black, alpha))
+  draw.SimpleTextOutlined(
+    text,
+    font,
+    x,
+    y,
+    ColorAlpha(color_white, alpha),
+    TEXT_ALIGN_CENTER,
+    TEXT_ALIGN_CENTER,
+    1,
+    ColorAlpha(color_black, alpha)
+  )
 end

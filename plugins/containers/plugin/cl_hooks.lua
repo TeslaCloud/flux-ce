@@ -15,7 +15,17 @@ function Container:DrawEntityTargetID(entity, x, y, dist)
         local font = Theme.get_font('tooltip_large')
         local text_w, text_h = util.text_size(title, font)
 
-        draw.SimpleTextOutlined(title, font, x - text_w * 0.5, y, Theme.get_color('accent_light'):alpha(alpha), nil, nil, 1, color_black:alpha(alpha))
+        draw.SimpleTextOutlined(
+          title,
+          font,
+          x - text_w * 0.5,
+          y,
+          Theme.get_color('accent_light'):alpha(alpha),
+          nil,
+          nil,
+          1,
+          color_black:alpha(alpha)
+        )
 
         y = y + text_h + 4
       end
@@ -26,7 +36,17 @@ function Container:DrawEntityTargetID(entity, x, y, dist)
         local font = Theme.get_font('tooltip_normal')
         local text_w, text_h = util.text_size(desc, font)
 
-        draw.SimpleTextOutlined(desc, font, x - text_w * 0.5, y, color_white:alpha(alpha), nil, nil, 1, color_black:alpha(alpha))
+        draw.SimpleTextOutlined(
+          desc,
+          font,
+          x - text_w * 0.5,
+          y,
+          color_white:alpha(alpha),
+          nil,
+          nil,
+          1,
+          color_black:alpha(alpha)
+        )
       end
     end
   end

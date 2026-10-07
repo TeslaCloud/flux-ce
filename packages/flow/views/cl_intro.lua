@@ -65,12 +65,16 @@ function PANEL:Paint(w, h)
         if cur_alpha == 0 then
           cur_alpha = 255
 
-          sound.PlayFile('sound/ambient/machines/thumper_hit.wav', 'noplay noblock', function(channel, error, err_string)
-            if channel then
-              channel:SetVolume(0.5)
-              channel:Play()
+          sound.PlayFile(
+            'sound/ambient/machines/thumper_hit.wav',
+            'noplay noblock',
+            function(channel, error, err_string)
+              if channel then
+                channel:SetVolume(0.5)
+                channel:Play()
+              end
             end
-          end)
+          )
         end
 
         surface.SetDrawColor(color.r, color.g, color.b, cur_alpha)

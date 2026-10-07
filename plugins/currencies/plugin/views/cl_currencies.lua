@@ -24,7 +24,14 @@ function PANEL:PaintOver(w, h)
     local text_w, text_h = util.text_size(text, font)
 
     DisableClipping(true)
-      draw.textured_rect(Theme.get_material('gradient_down'), -4, -text_h - 4, text_w + 8, text_h, Color(50, 50, 50, 100))
+      draw.textured_rect(
+        Theme.get_material('gradient_down'),
+        -4,
+        -text_h - 4,
+        text_w + 8,
+        text_h,
+        Color(50, 50, 50, 100)
+      )
       draw.SimpleText(text, font, 0, -text_h - 4, color_white:alpha(150))
     DisableClipping(false)
   end
@@ -77,15 +84,20 @@ function PANEL:rebuild()
           give_button.DoClick = function(btn)
             local target = PLAYER:GetEyeTraceNoCursor().Entity
 
-            Derma_StringRequest(t'ui.currency.give.title', t('ui.currency.give.message', { currency = t(v.name) }), '', function(text)
-              local value = tonumber(text)
+            Derma_StringRequest(
+              t'ui.currency.give.title',
+              t('ui.currency.give.message', { currency = t(v.name) }),
+              '',
+              function(text)
+                local value = tonumber(text)
 
-              if value and value > 0 then
-                Cable.send('fl_currency_give', value, k, target)
-              else
-                PLAYER:notify('error.invalid_amount')
+                if value and value > 0 then
+                  Cable.send('fl_currency_give', value, k, target)
+                else
+                  PLAYER:notify('error.invalid_amount')
+                end
               end
-            end)
+            )
           end
 
           w = w + give_button:GetWide()
@@ -98,15 +110,20 @@ function PANEL:rebuild()
           drop_button:set_icon_size(button_size)
           drop_button:Dock(RIGHT)
           drop_button.DoClick = function(btn)
-            Derma_StringRequest(t'ui.currency.drop.title', t('ui.currency.drop.message', { currency = t(v.name) }), '', function(text)
-              local value = tonumber(text)
+            Derma_StringRequest(
+              t'ui.currency.drop.title',
+              t('ui.currency.drop.message', { currency = t(v.name) }),
+              '',
+              function(text)
+                local value = tonumber(text)
 
-              if value and value > 0 then
-                Cable.send('fl_currency_drop', value, k)
-              else
-                PLAYER:notify('error.invalid_amount')
+                if value and value > 0 then
+                  Cable.send('fl_currency_drop', value, k)
+                else
+                  PLAYER:notify('error.invalid_amount')
+                end
               end
-            end)
+            )
           end
 
           w = w + drop_button:GetWide()
@@ -119,15 +136,20 @@ function PANEL:rebuild()
           take_button:set_icon_size(button_size)
           take_button:Dock(RIGHT)
           take_button.DoClick = function(btn)
-            Derma_StringRequest(t'ui.currency.take.title', t('ui.currency.take.message', { currency = t(v.name) }), amount, function(text)
-              local value = tonumber(text)
+            Derma_StringRequest(
+              t'ui.currency.take.title',
+              t('ui.currency.take.message', { currency = t(v.name) }),
+              amount,
+              function(text)
+                local value = tonumber(text)
 
-              if value and value > 0 then
-                Cable.send('fl_currency_take', self.entity, value, k)
-              else
-                PLAYER:notify('error.invalid_amount')
+                if value and value > 0 then
+                  Cable.send('fl_currency_take', self.entity, value, k)
+                else
+                  PLAYER:notify('error.invalid_amount')
+                end
               end
-            end)
+            )
           end
 
           w = w + take_button:GetWide()

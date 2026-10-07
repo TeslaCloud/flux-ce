@@ -173,7 +173,10 @@ function Characters:RebuildScoreboardPlayerCard(card, target)
 
     card.steam_name:SetText(card.steam_name:GetText())
     card.steam_name:SizeToContents()
-    card.steam_name:SetPos(card.avatar_panel.x - card.steam_name:GetWide() - math.scale(4), card:GetTall() * 0.5 - text_height * 0.5)
+    card.steam_name:SetPos(
+      card.avatar_panel.x - card.steam_name:GetWide() - math.scale(4),
+      card:GetTall() * 0.5 - text_height * 0.5
+    )
 
     if IsValid(card.desc_label) then
       card.desc_label:safe_remove()
@@ -245,7 +248,13 @@ function Characters:AddMainMenuItems(panel, sidebar)
     panel.menu:SetPos(ScrW(), 0)
     panel.menu:MoveTo(0, 0, Theme.get_option('menu_anim_duration'), 0.25, 0.5)
 
-    panel.sidebar:MoveTo(-panel.sidebar:GetWide(), Theme.get_option('menu_sidebar_y'), Theme.get_option('menu_anim_duration'), 0.25, 0.5)
+    panel.sidebar:MoveTo(
+      -panel.sidebar:GetWide(),
+      Theme.get_option('menu_sidebar_y'),
+      Theme.get_option('menu_anim_duration'),
+      0.25,
+      0.5
+    )
   end)
 
   if PLAYER:get_all_characters() and #PLAYER:get_all_characters() > 0 then
@@ -256,7 +265,13 @@ function Characters:AddMainMenuItems(panel, sidebar)
       panel.menu:SetPos(-panel.menu:GetWide(), 0)
       panel.menu:MoveTo(0, 0, Theme.get_option('menu_anim_duration'), 0.25, 0.5)
 
-      panel.sidebar:MoveTo(ScrW(), Theme.get_option('menu_sidebar_y'), Theme.get_option('menu_anim_duration'), 0.25, 0.5)
+      panel.sidebar:MoveTo(
+        ScrW(),
+        Theme.get_option('menu_sidebar_y'),
+        Theme.get_option('menu_anim_duration'),
+        0.25,
+        0.5
+      )
     end)
   end
 

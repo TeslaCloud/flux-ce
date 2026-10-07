@@ -40,7 +40,13 @@ function PLUGIN:HUDPaint()
       local text = t'ui.hud.press_jump_to_getup'
       local w, h = util.text_size(text, Theme.get_font('text_normal'))
 
-      draw.SimpleText(text, Theme.get_font('text_normal'), scrw * 0.5 - w * 0.5, scrh * 0.5 - h * 0.5, Theme.get_color('text'))
+      draw.SimpleText(
+        text,
+        Theme.get_font('text_normal'),
+        scrw * 0.5 - w * 0.5,
+        scrh * 0.5 - h * 0.5,
+        Theme.get_color('text')
+      )
     end
   end
 end

@@ -103,7 +103,13 @@ function ActiveRecord.Database:setup(settings)
   adapter:sync(true)
 
   if adapter:is_postgres() then
-    ActiveRecord.adapter:connect { host = settings.host, user = settings.user, port = settings.port, password = settings.password, database = 'postgres' }
+    ActiveRecord.adapter:connect {
+      host = settings.host,
+      user = settings.user,
+      port = settings.port,
+      password = settings.password,
+      database = 'postgres'
+    }
     local query = ActiveRecord.adapter:raw_query(txt([[
       DO
       $do$
@@ -124,7 +130,10 @@ function ActiveRecord.Database:setup(settings)
     end)
   elseif adapter:is_mysql() then
     ErrorNoHalt('MySQL does not support automatic database creation (yet), sorry!\n')
-    ErrorNoHalt('Please go to your MySQL terminal and use this to create the database:\nmysql> create database '..settings.database..'\n(without the "mysql>" part)\n')
+    ErrorNoHalt(
+      'Please go to your MySQL terminal and use this to create the database:\nmysql> create database '..
+        settings.database..'\n(without the "mysql>" part)\n'
+    )
   end
 
   ActiveRecord.adapter:disconnect()
@@ -136,10 +145,19 @@ end
 -- @param settings [Map database settings: host, user, port, password and database]
 function ActiveRecord.Database:drop_database(settings)
   ActiveRecord.adapter:sync(true)
-  ActiveRecord.adapter:connect { host = settings.host, user = settings.user, port = settings.port, password = settings.password, database = 'template1' }
-  local query = ActiveRecord.adapter:raw_query('DROP DATABASE '..settings.database..';', function(result, query_str, time)
-    print_query('Drop Database ('..time..'s)', query_str)
-  end)
+  ActiveRecord.adapter:connect {
+    host = settings.host,
+    user = settings.user,
+    port = settings.port,
+    password = settings.password,
+    database = 'template1'
+  }
+  local query = ActiveRecord.adapter:raw_query(
+    'DROP DATABASE '..settings.database..';',
+    function(result, query_str, time)
+      print_query('Drop Database ('..time..'s)', query_str)
+    end
+  )
 
   ActiveRecord.adapter:disconnect()
   ActiveRecord.adapter:sync(false)

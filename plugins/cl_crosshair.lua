@@ -27,7 +27,8 @@ function PLUGIN:HUDPaint()
     local distance = PLAYER:GetPos():Distance(trace.HitPos)
     local draw_color = Plugin.call('AdjustCrosshairColor', trace, distance) or color_white
     local secondary_draw_color = draw_color:alpha(25)
-    local real_gap = Plugin.call('AdjustCrosshairGap', trace, distance) or math.Round(gap * math.Clamp(distance / 400, 0.5, 4))
+    local real_gap =
+      Plugin.call('AdjustCrosshairGap', trace, distance) or math.Round(gap * math.Clamp(distance / 400, 0.5, 4))
     cur_gap = Lerp(lerp_step, cur_gap, real_gap)
 
     if math.abs(cur_gap - real_gap) < 0.5 then
@@ -43,11 +44,39 @@ function PLUGIN:HUDPaint()
 
     draw.RoundedBox(0, gox + (scrw * 0.5 - half_size), goy + (scrh * 0.5 - half_size), size, size, draw_color)
 
-    draw.RoundedBox(0, gox + (scrw * 0.5 - half_size - cur_gap), goy + (scrh * 0.5 - size), size, double_size, secondary_draw_color)
-    draw.RoundedBox(0, gox + (scrw * 0.5 - half_size + cur_gap), goy + (scrh * 0.5 - size), size, double_size, secondary_draw_color)
+    draw.RoundedBox(
+      0,
+      gox + (scrw * 0.5 - half_size - cur_gap),
+      goy + (scrh * 0.5 - size),
+      size,
+      double_size,
+      secondary_draw_color
+    )
+    draw.RoundedBox(
+      0,
+      gox + (scrw * 0.5 - half_size + cur_gap),
+      goy + (scrh * 0.5 - size),
+      size,
+      double_size,
+      secondary_draw_color
+    )
 
-    draw.RoundedBox(0, gox + (scrw * 0.5 - size), goy + (scrh * 0.5 - half_size - cur_gap), double_size, size, secondary_draw_color)
-    draw.RoundedBox(0, gox + (scrw * 0.5 - size), goy + (scrh * 0.5 - half_size + cur_gap), double_size, size, secondary_draw_color)
+    draw.RoundedBox(
+      0,
+      gox + (scrw * 0.5 - size),
+      goy + (scrh * 0.5 - half_size - cur_gap),
+      double_size,
+      size,
+      secondary_draw_color
+    )
+    draw.RoundedBox(
+      0,
+      gox + (scrw * 0.5 - size),
+      goy + (scrh * 0.5 - half_size + cur_gap),
+      double_size,
+      size,
+      secondary_draw_color
+    )
   end
 end
 

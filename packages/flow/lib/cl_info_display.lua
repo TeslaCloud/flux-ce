@@ -93,7 +93,13 @@ function InfoDisplay:draw(info)
     local ox, oy = math.scale(info.offset_x), math.scale(info.offset_y)
 
     if fa_icon then
-      FontAwesome:draw(info.icon, x_pos + circle_size - half_size + ox, margin + circle_size - half_size + oy, font_size, info.back_color)
+      FontAwesome:draw(
+        info.icon,
+        x_pos + circle_size - half_size + ox,
+        margin + circle_size - half_size + oy,
+        font_size,
+        info.back_color
+      )
       surface.SetDrawColor(info.back_color)
       surface.draw_circle_outline(x_pos + size * 0.5, margin + size * 0.5, circle_size, 3, 64)
     end
@@ -101,7 +107,13 @@ function InfoDisplay:draw(info)
     if !info.circle then
       if fa_icon then
         render.SetScissorRect(x_pos, y_pos - (size / 100 * info.percentage), x_pos + size, y_pos, true)
-          FontAwesome:draw(info.icon, x_pos + circle_size - half_size + ox, margin + circle_size - half_size + oy, font_size, info.color)
+          FontAwesome:draw(
+            info.icon,
+            x_pos + circle_size - half_size + ox,
+            margin + circle_size - half_size + oy,
+            font_size,
+            info.color
+          )
           surface.SetDrawColor(info.color)
           surface.draw_circle_outline(x_pos + size * 0.5, margin + size * 0.5, circle_size, 3, 64)
         render.SetScissorRect(0, 0, 0, 0, false)

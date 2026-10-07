@@ -137,6 +137,16 @@ Doors:register_title_type('center', {
     draw.RoundedBox(2, box_x - 4, box_y, box_w + 8, 4, color_white:alpha(alpha))
     draw.RoundedBox(2, box_x - 4, box_y + box_h, box_w + 8, 4, color_white:alpha(alpha))
 
-    draw.SimpleTextOutlined(text, font, -text_w / 2, -h / 4 - text_h / 2, color_white:alpha(alpha), nil, nil, 1, Color(0, 0, 0, alpha))
+    draw.SimpleTextOutlined(
+      text,
+      font,
+      -text_w / 2,
+      -h / 4 - text_h / 2,
+      color_white:alpha(alpha),
+      nil,
+      nil,
+      1,
+      Color(0, 0, 0, alpha)
+    )
   end
 })

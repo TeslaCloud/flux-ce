@@ -1,8 +1,10 @@
 --- Draws a marker, a direction line and a label for every mapscene point while the local
 -- player holds the mapscene tool and has the 'mapscenes' permission.
 function Mapscenes:RenderScreenspaceEffects()
-  if IsValid(PLAYER) and PLAYER:Alive() and IsValid(PLAYER:GetActiveWeapon()) and PLAYER:GetActiveWeapon():GetClass() == 'gmod_tool'
-  and PLAYER:GetTool() and PLAYER:GetTool().Name == 'Mapscene tool' and !IsValid(Flux.intro_panel) and can('mapscenes') then
+  if IsValid(PLAYER) and PLAYER:Alive() and IsValid(PLAYER:GetActiveWeapon())
+  and PLAYER:GetActiveWeapon():GetClass() == 'gmod_tool'
+  and PLAYER:GetTool() and PLAYER:GetTool().Name == 'Mapscene tool' and !IsValid(Flux.intro_panel)
+  and can('mapscenes') then
     for k, v in pairs(self.points) do
       local start_pos = v.pos:ToScreen()
 
@@ -12,7 +14,13 @@ function Mapscenes:RenderScreenspaceEffects()
         render.DrawLine(v.pos, v.pos + v.ang:Forward() * 20, Color('lightblue'))
       cam.End3D()
 
-      draw.SimpleText(t'ui.mapscene.title'..' #'..k, Theme.get_font('text_small'), start_pos.x, start_pos.y, Color('lightblue'))
+      draw.SimpleText(
+        t'ui.mapscene.title'..' #'..k,
+        Theme.get_font('text_small'),
+        start_pos.x,
+        start_pos.y,
+        Color('lightblue')
+      )
     end
   end
 end

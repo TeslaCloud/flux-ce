@@ -31,8 +31,18 @@ function TOOL:LeftClick(trace)
   local text = self:GetClientInfo('text')
   local style = self:GetClientNumber('style')
   local scale = self:GetClientNumber('scale')
-  local color = Color(self:GetClientNumber('r', 0), self:GetClientNumber('g', 0), self:GetClientNumber('b', 0), self:GetClientNumber('a', 0))
-  local extra_color = Color(self:GetClientNumber('r2', 0), self:GetClientNumber('g2', 0), self:GetClientNumber('b2', 0), self:GetClientNumber('a2', 0))
+  local color = Color(
+    self:GetClientNumber('r', 0),
+    self:GetClientNumber('g', 0),
+    self:GetClientNumber('b', 0),
+    self:GetClientNumber('a', 0)
+  )
+  local extra_color = Color(
+    self:GetClientNumber('r2', 0),
+    self:GetClientNumber('g2', 0),
+    self:GetClientNumber('b2', 0),
+    self:GetClientNumber('a2', 0)
+  )
   local fade_offset = self:GetClientNumber('fade')
 
   if !text or text == '' then return false end
@@ -95,7 +105,12 @@ function TOOL.BuildCPanel(CPanel)
 
   CPanel:AddControl('Header', { Description = t'tool.texts.desc' })
 
-  local control_resets = CPanel:AddControl('ComboBox', { MenuButton = 1, Folder = 'textstyle', Options = options, CVars = { 'texts_style' } })
+  local control_resets = CPanel:AddControl('ComboBox', {
+    MenuButton = 1,
+    Folder = 'textstyle',
+    Options = options,
+    CVars = { 'texts_style' }
+  })
   control_resets.Button:SetVisible(false)
   control_resets.DropDown:SetValue('Please Choose')
 

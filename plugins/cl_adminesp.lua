@@ -32,7 +32,13 @@ do
         draw.SimpleText(v:name(), Theme.get_font('text_small'), text_pos.x - w * 0.5, text_pos.y, team_color)
 
         w, h = util.text_size(v:steam_name(), Theme.get_font('text_smaller'))
-        draw.SimpleText(v:steam_name(), Theme.get_font('text_smaller'), text_pos.x - w * 0.5, text_pos.y + 14, color_lightblue)
+        draw.SimpleText(
+          v:steam_name(),
+          Theme.get_font('text_smaller'),
+          text_pos.x - w * 0.5,
+          text_pos.y + 14,
+          color_lightblue
+        )
 
         if v:Alive() then
           surface.SetDrawColor(team_color)

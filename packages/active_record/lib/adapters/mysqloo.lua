@@ -35,7 +35,8 @@ end
 --   omitted), socket and flags]
 -- @param on_connected=nil [Function called with the adapter once the connection is ready]
 function ActiveRecord.Adapters.Mysqloo:connect(config, on_connected)
-  local host, user, password, port, database, socket, flags = config.host, config.user, config.password, config.port, config.database, config.socket, config.flags
+  local host, user, password, port, database, socket, flags =
+    config.host, config.user, config.password, config.port, config.database, config.socket, config.flags
 
   if !port then
     port = 3306
@@ -76,7 +77,9 @@ function ActiveRecord.Adapters.Mysqloo:connect(config, on_connected)
       self.connection:ping()
     end)
   else
-    ErrorNoHalt('ActiveRecord - MySQLOO is not found!\nPlease make sure you have gmsv_mysqloo in your lua/bin folder!\n')
+    ErrorNoHalt(
+      'ActiveRecord - MySQLOO is not found!\nPlease make sure you have gmsv_mysqloo in your lua/bin folder!\n'
+    )
   end
 end
 

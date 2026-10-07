@@ -96,7 +96,10 @@ function ActiveRecord.Migrator:run_migrations(folder, force)
     end
 
     if migration_count > 0 then
-      print('Ran '..migration_count..' migration'..(migration_count > 1 and 's' or '')..' in '..math.Round(os.clock() - migration_start, 4)..'s.')
+      print(
+        'Ran '..migration_count..' migration'..(migration_count > 1 and 's' or '')..' in '..
+          math.Round(os.clock() - migration_start, 4)..'s.'
+      )
       self:generate_schema()
     end
   end
@@ -164,7 +167,8 @@ function ActiveRecord.Migrator:generate_migration(name, body, verbose, file_path
   File.delete(self.db_path..'/migrate/.keep')
 
   local version = self:generate_version()
-  file_path = (file_path and file_path:ensure_end('/') or (self.db_path..'/migrate/'))..version..'_'..name:underscore()..'.lua'
+  file_path =
+    (file_path and file_path:ensure_end('/') or (self.db_path..'/migrate/'))..version..'_'..name:underscore()..'.lua'
 
   File.write(file_path, [[local Migration = ActiveRecord.Migration.new(]]..version..[[)
   function Migration:change()

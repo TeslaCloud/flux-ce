@@ -95,26 +95,133 @@ end
 --- Registers the built-in permissions: tools, spawning, voice, context menu, management and
 -- the staff / admin / super admin compatibility levels.
 function Bolt:RegisterPermissions()
-  Bolt:register_permission('physgun', 'Physgun', 'Grants access to the physics gun.', 'permission.categories.tools', 'assistant')
-  Bolt:register_permission('toolgun', 'Tool Gun', 'Grants access to the tool gun.', 'permission.categories.tools', 'assistant')
-  Bolt:register_permission('physgun_freeze', 'Freeze Protected Entities', 'Grants access to freeze protected entities.', 'permission.categories.tools', 'assistant')
-  Bolt:register_permission('physgun_pickup', 'Unlimited Physgun', 'Grants access to pick up any entity with the physics gun.', 'permission.categories.tools', 'moderator')
+  Bolt:register_permission(
+    'physgun',
+    'Physgun',
+    'Grants access to the physics gun.',
+    'permission.categories.tools',
+    'assistant'
+  )
+  Bolt:register_permission(
+    'toolgun',
+    'Tool Gun',
+    'Grants access to the tool gun.',
+    'permission.categories.tools',
+    'assistant'
+  )
+  Bolt:register_permission(
+    'physgun_freeze',
+    'Freeze Protected Entities',
+    'Grants access to freeze protected entities.',
+    'permission.categories.tools',
+    'assistant'
+  )
+  Bolt:register_permission(
+    'physgun_pickup',
+    'Unlimited Physgun',
+    'Grants access to pick up any entity with the physics gun.',
+    'permission.categories.tools',
+    'moderator'
+  )
 
-  Bolt:register_permission('spawn_props', 'Spawn Props', 'Grants access to spawn props.', 'permission.categories.spawn', 'assistant')
-  Bolt:register_permission('spawn_chairs', 'Spawn Chairs', 'Grants access to spawn chairs.', 'permission.categories.spawn', 'assistant')
-  Bolt:register_permission('spawn_entities', 'Spawn All Entities', 'Grants access to spawn any entity.', 'permission.categories.spawn', 'assistant')
-  Bolt:register_permission('spawn_vehicles', 'Spawn Vehicles', 'Grants access to spawn vehicles.', 'permission.categories.spawn', 'moderator')
-  Bolt:register_permission('spawn_npcs', 'Spawn NPCs', 'Grants access to spawn NPCs.', 'permission.categories.spawn', 'moderator')
-  Bolt:register_permission('spawn_ragdolls', 'Spawn Ragdolls', 'Grants access to spawn ragdolls.', 'permission.categories.spawn', 'assistant')
-  Bolt:register_permission('spawn_sweps', 'Spawn SWEPs', 'Grants access to spawn scripted weapons.', 'permission.categories.spawn', 'moderator')
+  Bolt:register_permission(
+    'spawn_props',
+    'Spawn Props',
+    'Grants access to spawn props.',
+    'permission.categories.spawn',
+    'assistant'
+  )
+  Bolt:register_permission(
+    'spawn_chairs',
+    'Spawn Chairs',
+    'Grants access to spawn chairs.',
+    'permission.categories.spawn',
+    'assistant'
+  )
+  Bolt:register_permission(
+    'spawn_entities',
+    'Spawn All Entities',
+    'Grants access to spawn any entity.',
+    'permission.categories.spawn',
+    'assistant'
+  )
+  Bolt:register_permission(
+    'spawn_vehicles',
+    'Spawn Vehicles',
+    'Grants access to spawn vehicles.',
+    'permission.categories.spawn',
+    'moderator'
+  )
+  Bolt:register_permission(
+    'spawn_npcs',
+    'Spawn NPCs',
+    'Grants access to spawn NPCs.',
+    'permission.categories.spawn',
+    'moderator'
+  )
+  Bolt:register_permission(
+    'spawn_ragdolls',
+    'Spawn Ragdolls',
+    'Grants access to spawn ragdolls.',
+    'permission.categories.spawn',
+    'assistant'
+  )
+  Bolt:register_permission(
+    'spawn_sweps',
+    'Spawn SWEPs',
+    'Grants access to spawn scripted weapons.',
+    'permission.categories.spawn',
+    'moderator'
+  )
 
-  Bolt:register_permission('voice', 'Voice chat access', 'Grants access to voice chat.', 'permission.categories.general')
-  Bolt:register_permission('context_menu', 'Context Menu', 'Grants access to the context menu.', 'permission.categories.general', 'assistant')
+  Bolt:register_permission(
+    'voice',
+    'Voice chat access',
+    'Grants access to voice chat.',
+    'permission.categories.general'
+  )
+  Bolt:register_permission(
+    'context_menu',
+    'Context Menu',
+    'Grants access to the context menu.',
+    'permission.categories.general',
+    'assistant'
+  )
 
-  Bolt:register_permission('manage_permissions', 'Permission editor', 'Grants access to the permission editor.', 'permission.categories.player_management', 'administrator')
-  Bolt:register_permission('manage_configuration', 'Configuration', 'Grants access to configuration.', 'permission.categories.configuration', 'administrator')
+  Bolt:register_permission(
+    'manage_permissions',
+    'Permission editor',
+    'Grants access to the permission editor.',
+    'permission.categories.player_management',
+    'administrator'
+  )
+  Bolt:register_permission(
+    'manage_configuration',
+    'Configuration',
+    'Grants access to configuration.',
+    'permission.categories.configuration',
+    'administrator'
+  )
 
-  Bolt:register_permission('staff', 'Assistant access', 'General access for assistants.', 'permission.categories.compatibility', 'assistant')
-  Bolt:register_permission('moderate', 'Admin access', 'General access for admins. Other addons will identify the player as admin.', 'permission.categories.compatibility', 'moderator')
-  Bolt:register_permission('administrate', 'Super Admin access', 'General access for superadmins. Other addons will identify the player as superadmin.', 'permission.categories.compatibility', 'administrator')
+  Bolt:register_permission(
+    'staff',
+    'Assistant access',
+    'General access for assistants.',
+    'permission.categories.compatibility',
+    'assistant'
+  )
+  Bolt:register_permission(
+    'moderate',
+    'Admin access',
+    'General access for admins. Other addons will identify the player as admin.',
+    'permission.categories.compatibility',
+    'moderator'
+  )
+  Bolt:register_permission(
+    'administrate',
+    'Super Admin access',
+    'General access for superadmins. Other addons will identify the player as superadmin.',
+    'permission.categories.compatibility',
+    'administrator'
+  )
 end

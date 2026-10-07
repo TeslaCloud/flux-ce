@@ -11,7 +11,7 @@ Package:describe(function(s)
   s.license     = 'MIT'
 
   if system.IsLinux() then
-    s.depends   'colorfix'
+    s.depends 'colorfix'
   end
 
   s.depends     'pon'

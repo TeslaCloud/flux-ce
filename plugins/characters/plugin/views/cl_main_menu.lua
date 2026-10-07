@@ -116,18 +116,32 @@ function PANEL:to_main_menu(from_right)
 
     self.sidebar:SetPos(from_right and scrw or -self.sidebar:GetWide(), Theme.get_option('menu_sidebar_y'))
     self.sidebar:SetDisabled(true)
-    self.sidebar:MoveTo(Theme.get_option('menu_sidebar_x') - self.max_wide / 2, Theme.get_option('menu_sidebar_y'), Theme.get_option('menu_anim_duration'), 0, 0.5, function()
-      self.sidebar:SetDisabled(false)
-    end)
+    self.sidebar:MoveTo(
+      Theme.get_option('menu_sidebar_x') - self.max_wide / 2,
+      Theme.get_option('menu_sidebar_y'),
+      Theme.get_option('menu_anim_duration'),
+      0,
+      0.5,
+      function()
+        self.sidebar:SetDisabled(false)
+      end
+    )
   end
 
-  self.menu:MoveTo(from_right and -self.menu:GetWide() or scrw, 0, Theme.get_option('menu_anim_duration'), 0, 0.5, function()
-    if self.menu.close then
-      self.menu:close()
-    else
-      self.menu:safe_remove()
+  self.menu:MoveTo(
+    from_right and -self.menu:GetWide() or scrw,
+    0,
+    Theme.get_option('menu_anim_duration'),
+    0,
+    0.5,
+    function()
+      if self.menu.close then
+        self.menu:close()
+      else
+        self.menu:safe_remove()
+      end
     end
-  end)
+  )
 end
 
 --- Shows a notification near the bottom of the menu unless one is already visible.

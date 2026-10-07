@@ -19,7 +19,10 @@ function PANEL:Init()
 
   self.back = vgui.Create('fl_button', self)
   self.back:SetSize(self.list:GetWide() * 0.25, Theme.get_option('menu_sidebar_button_height'))
-  self.back:SetPos(scrw * 0.5 + self.list:GetWide() * 0.5 - self.back:GetWide(), scrh * 0.5 + self.list:GetTall() * 0.5 + self.back:GetTall())
+  self.back:SetPos(
+    scrw * 0.5 + self.list:GetWide() * 0.5 - self.back:GetWide(),
+    scrh * 0.5 + self.list:GetTall() * 0.5 + self.back:GetTall()
+  )
   self.back:SetFont(Theme.get_font('main_menu_normal'))
   self.back:SetTitle(t'ui.char_create.main_menu')
   self.back:SetDrawBackground(false)
@@ -121,17 +124,21 @@ function PANEL:Init()
   self.delete.DoClick = function(btn)
     surface.PlaySound('vo/npc/male01/answer37.wav')
 
-    Derma_StringRequest(t'ui.char_create.delete_confirm', t('ui.char_create.delete_confirm_msg', { name = self.char_data.name }), '',
-    function(text)
-      if text == self.char_data.name then
-        Cable.send('fl_player_delete_character', self.char_data.id)
+    Derma_StringRequest(
+      t'ui.char_create.delete_confirm',
+      t('ui.char_create.delete_confirm_msg', { name = self.char_data.name }),
+      '',
+      function(text)
+        if text == self.char_data.name then
+          Cable.send('fl_player_delete_character', self.char_data.id)
 
-        self:SetDisabled(true)
-        self.model:SetVisible(false)
-        self:AlphaTo(0, Theme.get_option('menu_anim_duration'), 0)
-      end
-    end,
-    nil, t'ui.char_create.delete')
+          self:SetDisabled(true)
+          self.model:SetVisible(false)
+          self:AlphaTo(0, Theme.get_option('menu_anim_duration'), 0)
+        end
+      end,
+      nil, t'ui.char_create.delete'
+    )
   end
 end
 

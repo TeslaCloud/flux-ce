@@ -20,7 +20,10 @@ function Currencies:OnInventoryRebuild(panel)
       panel:SetWide(math.min(panel:GetWide(), panel.main_inventory:GetWide() - panel.money:GetWide() - math.scale(16)))
     end
 
-    panel.money:SetPos(panel.x + panel:GetWide() + math.scale(8), panel.y + math.max(panel:GetTall() - panel.money:GetTall(), text_h))
+    panel.money:SetPos(
+      panel.x + panel:GetWide() + math.scale(8),
+      panel.y + math.max(panel:GetTall() - panel.money:GetTall(), text_h)
+    )
   end
 end
 
@@ -60,15 +63,20 @@ function Currencies:CreatePlayerInteractions(menu, target)
 
     if !v.hidden or v.hidden and amount > 0 then
       money_menu:AddOption(t'ui.currency.menu.give'..' '..t(v.name), function()
-        Derma_StringRequest(t'ui.currency.give.title', t('ui.currency.give.message', { currency = t(v.name) }), '', function(text)
-          local value = tonumber(text)
+        Derma_StringRequest(
+          t'ui.currency.give.title',
+          t('ui.currency.give.message', { currency = t(v.name) }),
+          '',
+          function(text)
+            local value = tonumber(text)
 
-          if value and value > 0 then
-            Cable.send('fl_currency_give', value, k, target)
-          else
-            PLAYER:notify('error.invalid_amount')
+            if value and value > 0 then
+              Cable.send('fl_currency_give', value, k, target)
+            else
+              PLAYER:notify('error.invalid_amount')
+            end
           end
-        end)
+        )
       end)
     end
   end

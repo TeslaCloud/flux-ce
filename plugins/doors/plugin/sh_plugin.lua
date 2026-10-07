@@ -63,7 +63,13 @@ require_relative 'sv_plugin'
 
 --- Registers the 'manage_doors' level design permission.
 function Doors:RegisterPermissions()
-  Bolt:register_permission('manage_doors', 'Doors settings access', 'Grants access to customize doors.', 'permission.categories.level_design', 'assistant')
+  Bolt:register_permission(
+    'manage_doors',
+    'Doors settings access',
+    'Grants access to customize doors.',
+    'permission.categories.level_design',
+    'assistant'
+  )
 end
 
 --- Runs the RegisterDoorProperties and RegisterDoorTitleTypes hooks so that plugins can

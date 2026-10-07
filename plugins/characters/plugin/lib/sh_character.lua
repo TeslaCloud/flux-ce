@@ -107,7 +107,8 @@ if SERVER then
   -- @param target [Player]
   -- @param character [Character]
   function Characters.save(target, character)
-    if !IsValid(target) or !istable(character) or hook.Run('PreSaveCharacter', target, character) == false then return end
+    if !IsValid(target) or !istable(character) or
+       hook.Run('PreSaveCharacter', target, character) == false then return end
 
     hook.Run('SaveCharacterData', target, character)
 

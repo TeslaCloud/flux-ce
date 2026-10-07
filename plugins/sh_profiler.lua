@@ -87,9 +87,21 @@ if CLIENT then
     local pos = ScrH() - 30
 
     draw.SimpleText('SV: '..tostring(math.Round(total_sv * 1000, 2))..'ms', 'default', 8, pos - 36, debug_color)
-    draw.SimpleText(largest_sv..' ('..tostring(math.Round(largest_sv_n * 1000, 2))..'ms)', 'default', 8, pos - 24, debug_color)
+    draw.SimpleText(
+      largest_sv..' ('..tostring(math.Round(largest_sv_n * 1000, 2))..'ms)',
+      'default',
+      8,
+      pos - 24,
+      debug_color
+    )
     draw.SimpleText('CL: '..tostring(math.Round(total_cl * 1000, 2))..'ms', 'default', 8, pos - 12, debug_color)
-    draw.SimpleText(largest_cl..' ('..tostring(math.Round(largest_cl_n * 1000, 2))..'ms)', 'default', 8, pos, debug_color)
+    draw.SimpleText(
+      largest_cl..' ('..tostring(math.Round(largest_cl_n * 1000, 2))..'ms)',
+      'default',
+      8,
+      pos,
+      debug_color
+    )
   end
 
   local PANEL = {}

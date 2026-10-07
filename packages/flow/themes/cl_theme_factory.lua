@@ -131,13 +131,25 @@ function THEME:PaintMainMenu(panel, width, height)
   surface.DrawRect(0, 0, width, bar_height)
 
   if !logo then
-    draw.SimpleText(title, self:get_font('text_largest'), width * 0.5 - title_w * 0.5, bar_height - title_h - 8, self:get_color('schema_text'))
+    draw.SimpleText(
+      title,
+      self:get_font('text_largest'),
+      width * 0.5 - title_w * 0.5,
+      bar_height - title_h - 8,
+      self:get_color('schema_text')
+    )
   else
     draw.textured_rect(logo, width * 0.5 - math.scale(200), 16, 400, 96, Color(255, 255, 255))
   end
 
   draw.SimpleText(desc, self:get_font('main_menu_titles'), 16, bar_height - desc_h - 8, self:get_color('schema_text'))
-  draw.SimpleText(author, self:get_font('main_menu_titles'), width - author_w - 16, bar_height - author_h - 8, self:get_color('schema_text'))
+  draw.SimpleText(
+    author,
+    self:get_font('main_menu_titles'),
+    width - author_w - 16,
+    bar_height - author_h - 8,
+    self:get_color('schema_text')
+  )
 end
 
 --- Draws an fl_button: the outline, background, title and FontAwesome icon, according to
@@ -221,7 +233,13 @@ function THEME:PaintDeathScreen(cur_time, scrw, scrh)
   draw.RoundedBox(0, 0, 0, scrw, scrh, Color(0, 0, 0, PLAYER.respawn_alpha))
 
   draw.SimpleText(t'ui.hud.player_message.died', font, 16, 16, color_white)
-  draw.SimpleText(t('ui.hud.player_message.respawn', { time = math.ceil(respawn_time) }), font, 16, 16 + util.font_size(font), color_white)
+  draw.SimpleText(
+    t('ui.hud.player_message.respawn', { time = math.ceil(respawn_time) }),
+    font,
+    16,
+    16 + util.font_size(font),
+    color_white
+  )
 
   draw.RoundedBox(0, 0, 0, scrw / 100 * bar_value, 2, color_white)
 
@@ -243,7 +261,14 @@ end
 --- Draws the background of a HUD bar.
 -- @param bar_info [Map data of the bar, as stored by Flux.Bars]
 function THEME:DrawBarBackground(bar_info)
-  draw.RoundedBox(bar_info.corner_radius, bar_info.x, bar_info.y, bar_info.width, bar_info.height, self:get_color('main_dark'))
+  draw.RoundedBox(
+    bar_info.corner_radius,
+    bar_info.x,
+    bar_info.y,
+    bar_info.width,
+    bar_info.height,
+    self:get_color('main_dark')
+  )
 end
 
 --- Draws the hindered portion at the right end of a HUD bar.
@@ -251,7 +276,14 @@ end
 function THEME:DrawBarHindrance(bar_info)
   local length = bar_info.width * (bar_info.hinder_value / bar_info.max_value)
 
-  draw.RoundedBox(bar_info.corner_radius, bar_info.x + bar_info.width - length - 1, bar_info.y + 1, length, bar_info.height - 2, bar_info.hinder_color)
+  draw.RoundedBox(
+    bar_info.corner_radius,
+    bar_info.x + bar_info.width - length - 1,
+    bar_info.y + 1,
+    length,
+    bar_info.height - 2,
+    bar_info.hinder_color
+  )
 end
 
 --- Draws the filled portion of a HUD bar. While the displayed fill is catching up with the
@@ -259,13 +291,48 @@ end
 -- @param bar_info [Map data of the bar, as stored by Flux.Bars]
 function THEME:DrawBarFill(bar_info)
   if bar_info.real_fill_width < bar_info.fill_width then
-    draw.RoundedBox(bar_info.corner_radius, bar_info.x + 1, bar_info.y + 1, (bar_info.fill_width or bar_info.width) - 2, bar_info.height - 2, bar_info.color)
-    draw.RoundedBox(bar_info.corner_radius, bar_info.x + 1, bar_info.y + 1, bar_info.real_fill_width - 2, bar_info.height - 2, Color(230, 230, 230))
+    draw.RoundedBox(
+      bar_info.corner_radius,
+      bar_info.x + 1,
+      bar_info.y + 1,
+      (bar_info.fill_width or bar_info.width) - 2,
+      bar_info.height - 2,
+      bar_info.color
+    )
+    draw.RoundedBox(
+      bar_info.corner_radius,
+      bar_info.x + 1,
+      bar_info.y + 1,
+      bar_info.real_fill_width - 2,
+      bar_info.height - 2,
+      Color(230, 230, 230)
+    )
   elseif bar_info.real_fill_width > bar_info.fill_width then
-    draw.RoundedBox(bar_info.corner_radius, bar_info.x + 1, bar_info.y + 1, bar_info.real_fill_width - 2, bar_info.height - 2, bar_info.color)
-    draw.RoundedBox(bar_info.corner_radius, bar_info.x + 1, bar_info.y + 1, (bar_info.fill_width or bar_info.width) - 2, bar_info.height - 2, Color(230, 230, 230))
+    draw.RoundedBox(
+      bar_info.corner_radius,
+      bar_info.x + 1,
+      bar_info.y + 1,
+      bar_info.real_fill_width - 2,
+      bar_info.height - 2,
+      bar_info.color
+    )
+    draw.RoundedBox(
+      bar_info.corner_radius,
+      bar_info.x + 1,
+      bar_info.y + 1,
+      (bar_info.fill_width or bar_info.width) - 2,
+      bar_info.height - 2,
+      Color(230, 230, 230)
+    )
   else
-    draw.RoundedBox(bar_info.corner_radius, bar_info.x + 1, bar_info.y + 1, (bar_info.fill_width or bar_info.width) - 2, bar_info.height - 2, Color(230, 230, 230))
+    draw.RoundedBox(
+      bar_info.corner_radius,
+      bar_info.x + 1,
+      bar_info.y + 1,
+      (bar_info.fill_width or bar_info.width) - 2,
+      bar_info.height - 2,
+      Color(230, 230, 230)
+    )
   end
 end
 
@@ -275,11 +342,23 @@ end
 function THEME:DrawBarTexts(bar_info)
   local font = Theme.get_font(bar_info.font)
 
-  render.SetScissorRect(bar_info.x + 1, bar_info.y + 1, bar_info.x + bar_info.real_fill_width, bar_info.y + bar_info.height, true)
+  render.SetScissorRect(
+    bar_info.x + 1,
+    bar_info.y + 1,
+    bar_info.x + bar_info.real_fill_width,
+    bar_info.y + bar_info.height,
+    true
+  )
     draw.SimpleText(bar_info.text, font, bar_info.x + 8, bar_info.y + bar_info.text_offset, self:get_color('main_dark'))
   render.SetScissorRect(0, 0, 0, 0, false)
 
-  render.SetScissorRect(bar_info.x + bar_info.real_fill_width, bar_info.y + 1, bar_info.x + bar_info.width, bar_info.y + bar_info.height, true)
+  render.SetScissorRect(
+    bar_info.x + bar_info.real_fill_width,
+    bar_info.y + 1,
+    bar_info.x + bar_info.width,
+    bar_info.y + bar_info.height,
+    true
+  )
     draw.SimpleText(bar_info.text, font, bar_info.x + 8, bar_info.y + bar_info.text_offset, self:get_color('text'))
   render.SetScissorRect(0, 0, 0, 0, false)
 
@@ -288,8 +367,20 @@ function THEME:DrawBarTexts(bar_info)
     local text_wide = util.text_size(bar_info.hinder_text, font)
     local length    = width * (bar_info.hinder_value / bar_info.max_value)
 
-    render.SetScissorRect(bar_info.x + width - length, bar_info.y, bar_info.x + width, bar_info.y + bar_info.height, true)
-      draw.SimpleText(bar_info.hinder_text, font, bar_info.x + width - text_wide - 8, bar_info.y + bar_info.text_offset, Color(255, 255, 255))
+    render.SetScissorRect(
+      bar_info.x + width - length,
+      bar_info.y,
+      bar_info.x + width,
+      bar_info.y + bar_info.height,
+      true
+    )
+      draw.SimpleText(
+        bar_info.hinder_text,
+        font,
+        bar_info.x + width - text_wide - 8,
+        bar_info.y + bar_info.text_offset,
+        Color(255, 255, 255)
+      )
     render.SetScissorRect(0, 0, 0, 0, false)
   end
 end
@@ -483,7 +574,14 @@ function THEME:PaintTabInventoryBackground(panel, w, h)
       draw.RoundedBox(0, x - 4, y - 4, player_w + 8, player_h + 8, Color(50, 50, 50, 100))
       draw.RoundedBox(0, x, y, player_w, player_h, Color(0, 0, 0, 100))
       draw.textured_rect(self:get_material('gradient_up'), x, y, player_w, player_h, Color(30, 30, 30, 100))
-      draw.textured_rect(self:get_material('gradient_down'), x - 4, y - text_h - 4, text_w + 8, text_h, Color(50, 50, 50, 100))
+      draw.textured_rect(
+        self:get_material('gradient_down'),
+        x - 4,
+        y - text_h - 4,
+        text_w + 8,
+        text_h,
+        Color(50, 50, 50, 100)
+      )
       draw.SimpleText(text, font, x, -text_h, color_white:alpha(150))
     DisableClipping(false)
   end
@@ -500,7 +598,14 @@ function THEME:PaintOverInventoryBackground(panel, w, h)
     local text_w, text_h  = util.text_size(text, font)
 
     DisableClipping(true)
-      draw.textured_rect(self:get_material('gradient_down'), -4, -text_h - 4, text_w + 8, text_h, Color(50, 50, 50, 100))
+      draw.textured_rect(
+        self:get_material('gradient_down'),
+        -4,
+        -text_h - 4,
+        text_w + 8,
+        text_h,
+        Color(50, 50, 50, 100)
+      )
       draw.SimpleText(text, font, 0, -text_h - 4, color_white:alpha(150))
     DisableClipping(false)
   end
@@ -526,7 +631,13 @@ function THEME:PaintCharPanel(panel, w, h)
     local char_data       = panel.char_data
     local name_w, name_h  = util.text_size(char_data.name, self:get_font('main_menu_titles'))
 
-    draw.SimpleText(char_data.name, self:get_font('main_menu_titles'), w * 0.5 - name_w * 0.5, 4, self:get_color('schema_text'))
+    draw.SimpleText(
+      char_data.name,
+      self:get_font('main_menu_titles'),
+      w * 0.5 - name_w * 0.5,
+      4,
+      self:get_color('schema_text')
+    )
 
     if PLAYER:get_character_id() == char_data.character_id then
       surface.SetDrawColor(self:get_color('accent'))
@@ -565,7 +676,13 @@ function THEME:PaintCharCreationBasePanel(panel, w, h)
   if isstring(panel.text) then
     local text_w, text_h = util.text_size(t(panel.text), Theme.get_font('main_menu_large'))
 
-    draw.SimpleText(t(panel.text), Theme.get_font('main_menu_large'), w * 0.5 - text_w * 0.5, 0, Theme.get_color('text'))
+    draw.SimpleText(
+      t(panel.text),
+      Theme.get_font('main_menu_large'),
+      w * 0.5 - text_w * 0.5,
+      0,
+      Theme.get_color('text')
+    )
   end
 end
 

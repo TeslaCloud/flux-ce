@@ -24,7 +24,14 @@ function Stamina:HUDPaint()
       cur_wide = Lerp(frame_time, cur_wide, w * percentage)
 
       draw.textured_rect(Theme.get_material('gradient'), x - 2, y - 2, w + 4, h + 4, Color(0, 0, 0, 160 * cur_alpha))
-      draw.RoundedBox(0, x, y, cur_wide, h, LerpColor(1 - percentage, Color(0, 225, 0), Color(200, 0, 0)):alpha(200 * cur_alpha))
+      draw.RoundedBox(
+        0,
+        x,
+        y,
+        cur_wide,
+        h,
+        LerpColor(1 - percentage, Color(0, 225, 0), Color(200, 0, 0)):alpha(200 * cur_alpha)
+      )
     end
   end
 end

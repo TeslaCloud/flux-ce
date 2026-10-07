@@ -163,9 +163,12 @@ end
 function drop_index(index_name, table_name)
   ActiveRecord.metadata.indexes[index_name] = nil
 
-  ActiveRecord.adapter:raw_query('DROP INDEX IF EXISTS '..index_name..' ON '..table_name..';', function(results, query_str, time)
-    print_query('Drop Index ('..time..'s)', query_str)
-  end)
+  ActiveRecord.adapter:raw_query(
+    'DROP INDEX IF EXISTS '..index_name..' ON '..table_name..';',
+    function(results, query_str, time)
+      print_query('Drop Index ('..time..'s)', query_str)
+    end
+  )
 end
 
 --- Adds a foreign key constraint, along with an index on the key column. Does nothing
@@ -180,7 +183,8 @@ end
 -- @param args [Map table_name, key, foreign_table and foreign_key, optionally cascade
 --   (Boolean, adds ON DELETE CASCADE) and name (name of the constraint)]
 function create_reference(args)
-  local table_name, key, foreign_table, foreign_key, cascade = args.table_name, args.key, args.foreign_table, args.foreign_key, args.cascade
+  local table_name, key, foreign_table, foreign_key, cascade =
+    args.table_name, args.key, args.foreign_table, args.foreign_key, args.cascade
 
   add_index { table_name, key }
 

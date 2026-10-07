@@ -180,11 +180,19 @@ do
       target:give_money(currency, value)
 
       if self:IsPlayer() then
-        self:notify('notification.currency.give', { target = target, value = value, currency = currency_data.name }, Color('salmon'))
+        self:notify(
+          'notification.currency.give',
+          { target = target, value = value, currency = currency_data.name },
+          Color('salmon')
+        )
       end
 
       if target:IsPlayer() then
-        target:notify('notification.currency.receive', { target = self, value = value, currency = currency_data.name }, Color('lightgreen'))
+        target:notify(
+          'notification.currency.receive',
+          { target = self, value = value, currency = currency_data.name },
+          Color('lightgreen')
+        )
       end
     end
   end

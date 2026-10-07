@@ -217,8 +217,10 @@ function PANEL:Init()
       ..'ITEM.width = '..math.round(self.width:GetValue())..'\n'
       ..'ITEM.height = '..math.round(self.height:GetValue())..'\n'
       ..'ITEM.icon_data = {\n'
-      ..'  origin = Vector('..math.round(cam_pos.x, 2)..', '..math.round(cam_pos.y, 2)..', '..math.round(cam_pos.z, 2)..'),\n'
-      ..'  angles = Angle('..math.round(cam_ang.p, 2)..', '..math.round(cam_ang.y, 2)..', '..math.round(cam_ang.r, 2)..'),\n'
+      ..'  origin = Vector('..math.round(cam_pos.x, 2)..', '..math.round(cam_pos.y, 2)..', '..math.round(cam_pos.z, 2)
+      ..'),\n'
+      ..'  angles = Angle('..math.round(cam_ang.p, 2)..', '..math.round(cam_ang.y, 2)..', '..math.round(cam_ang.r, 2)
+      ..'),\n'
       ..'  fov    = '..math.round(self.model:GetFOV(), 2)..'\n'
       ..'}\n'
 

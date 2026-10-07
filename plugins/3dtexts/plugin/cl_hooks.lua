@@ -85,7 +85,14 @@ function SurfaceText:PostDrawOpaqueRenderables()
             surface.SetDrawColor(ColorAlpha(back_color, 10))
             surface.DrawRect(box_x, box_y, w + 64, h + 32)
           elseif style != 8 and style != 9 then
-            draw.RoundedBox(0, box_x, pos_y - 16, w + 64, h + 32, ColorAlpha(v.extra_color, math.clamp(fade_alpha, 0, box_alpha)))
+            draw.RoundedBox(
+              0,
+              box_x,
+              pos_y - 16,
+              w + 64,
+              h + 32,
+              ColorAlpha(v.extra_color, math.clamp(fade_alpha, 0, box_alpha))
+            )
           end
 
           if style == 7 or style == 8 then
@@ -113,7 +120,13 @@ function SurfaceText:PostDrawOpaqueRenderables()
         end
 
         if style != 3 then
-          draw.SimpleText(text, Theme.get_font('text_3d2d'), pos_x, pos_y, ColorAlpha(text_color, math.clamp(fade_alpha, 0, 100)):darken(30))
+          draw.SimpleText(
+            text,
+            Theme.get_font('text_3d2d'),
+            pos_x,
+            pos_y,
+            ColorAlpha(text_color, math.clamp(fade_alpha, 0, 100)):darken(30)
+          )
         end
       cam.End3D2D()
     end
@@ -170,7 +183,14 @@ function SurfaceText:draw_text_preview()
   cam.Start3D2D(trace.HitPos + (normal * 1.25), angle, 0.1 * tool:GetClientNumber('scale'))
     if style >= 5 then
       if style != 8 and style != 9 then
-        draw.RoundedBox(0, -w * 0.5 - 32, -h * 0.5 - 16, w + 64, h + 32, Color(tool:GetClientNumber('r2', 0), tool:GetClientNumber('g2', 0), tool:GetClientNumber('b2', 0), 40))
+        draw.RoundedBox(
+          0,
+          -w * 0.5 - 32,
+          -h * 0.5 - 16,
+          w + 64,
+          h + 32,
+          Color(tool:GetClientNumber('r2', 0), tool:GetClientNumber('g2', 0), tool:GetClientNumber('b2', 0), 40)
+        )
       end
 
       if style == 7 or style == 8 then
@@ -196,7 +216,13 @@ function SurfaceText:draw_text_preview()
       end
     end
 
-    draw.SimpleText(text, Theme.get_font('text_3d2d'), -w * 0.5, -h * 0.5, Color(tool:GetClientNumber('r', 0), tool:GetClientNumber('g', 0), tool:GetClientNumber('b', 0), 60))
+    draw.SimpleText(
+      text,
+      Theme.get_font('text_3d2d'),
+      -w * 0.5,
+      -h * 0.5,
+      Color(tool:GetClientNumber('r', 0), tool:GetClientNumber('g', 0), tool:GetClientNumber('b', 0), 60)
+    )
   cam.End3D2D()
 end
 

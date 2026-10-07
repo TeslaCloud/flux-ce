@@ -63,7 +63,9 @@ function ActiveRecord.Adapters.Pg:connect(config, on_connected)
       self:on_connection_failed(err)
     end
   else
-    ErrorNoHalt('ActiveRecord - PostgreSQL (pg) is not found!\nPlease make sure you have gmsv_pg in your lua/bin folder!\n')
+    ErrorNoHalt(
+      'ActiveRecord - PostgreSQL (pg) is not found!\nPlease make sure you have gmsv_pg in your lua/bin folder!\n'
+    )
   end
 end
 

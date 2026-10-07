@@ -338,7 +338,17 @@ function GM:DrawPlayerTargetID(target, x, y, distance)
 
     for k1, v1 in pairs(wrapped) do
       local w, h = util.text_size(v1, font)
-      draw.SimpleTextOutlined(v1, font, x - w * 0.5 + (v.offset_x or 0), y + (v.offset_y or 0), color, nil, nil, 1, Color(0, 0, 0, alpha))
+      draw.SimpleTextOutlined(
+        v1,
+        font,
+        x - w * 0.5 + (v.offset_x or 0),
+        y + (v.offset_y or 0),
+        color,
+        nil,
+        nil,
+        1,
+        Color(0, 0, 0, alpha)
+      )
 
       y = y + h + 1
     end
@@ -439,7 +449,10 @@ end
 -- @param menu_panel [Panel the tab menu]
 -- @param active_panel [Panel the panel that has been opened]
 function GM:OnMenuPanelOpen(menu_panel, active_panel)
-  active_panel:SetPos(menu_panel:GetWide() * 0.5 - active_panel:GetWide() * 0.5, menu_panel:GetTall() * 0.5 - active_panel:GetTall() * 0.5)
+  active_panel:SetPos(
+    menu_panel:GetWide() * 0.5 - active_panel:GetWide() * 0.5,
+    menu_panel:GetTall() * 0.5 - active_panel:GetTall() * 0.5
+  )
 end
 
 --- Intercepts the undo bind and blocks it when the SoftUndo hook returns a value.

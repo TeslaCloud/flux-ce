@@ -4,7 +4,13 @@ require_relative 'sv_hooks'
 
 --- Registers the 'static_tool' permission.
 function StaticEnts:RegisterPermissions()
-  Bolt:register_permission('static_tool', 'Static (tool)', 'Grants access to make entities static / unstatic.', 'permission.categories.level_design', 'assistant')
+  Bolt:register_permission(
+    'static_tool',
+    'Static (tool)',
+    'Grants access to make entities static / unstatic.',
+    'permission.categories.level_design',
+    'assistant'
+  )
 end
 
 --- @deprecation [Remove in 1.0_b]

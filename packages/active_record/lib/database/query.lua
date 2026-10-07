@@ -415,7 +415,14 @@ local function build_create_query(query_obj)
 
     for k, v in ipairs(query_obj.create_list) do
       if ActiveRecord.adapter.class_name:lower() == 'sqlite' then
-        table.insert(create_list, v[1]..' '..string.gsub(string.gsub(string.gsub(v[2], 'AUTO_INCREMENT', ''), 'AUTOINCREMENT', ''), 'INT ', 'INTEGER '))
+        table.insert(
+          create_list,
+          v[1]..' '..string.gsub(
+            string.gsub(string.gsub(v[2], 'AUTO_INCREMENT', ''), 'AUTOINCREMENT', ''),
+            'INT ',
+            'INTEGER '
+          )
+        )
       else
         table.insert(create_list, v[1]..' '..v[2])
       end

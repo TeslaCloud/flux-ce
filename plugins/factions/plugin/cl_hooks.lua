@@ -45,7 +45,8 @@ end
 -- @return [Boolean false to block the change, String translated error; nothing otherwise]
 function Factions:PreStageChange(id, panel)
   if id == 'char_create.general' then
-    local gender = (panel.gender_female:is_active() and 'female') or (panel.gender_male:is_active() and 'male') or 'universal'
+    local gender =
+      (panel.gender_female:is_active() and 'female') or (panel.gender_male:is_active() and 'male') or 'universal'
     local faction_id = panel:GetParent().char_data.faction
     local faction_table = Factions.find_by_id(faction_id)
 

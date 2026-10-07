@@ -224,7 +224,8 @@ end
 -- @return [Function the callback set with Areas.set_callback, else the default callback
 --   of the type, else a stub that prints a developer warning]
 function Areas.get_callback(area_type)
-  return callbacks[area_type] or (types[area_type] and types[area_type].callback) or function() Flux.dev_print("Callback for area type '"..area_type.."' could not be found!") end
+  return callbacks[area_type] or (types[area_type] and types[area_type].callback) or
+    function() Flux.dev_print("Callback for area type '"..area_type.."' could not be found!") end
 end
 
 Areas.register_type(

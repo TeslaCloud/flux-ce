@@ -114,11 +114,17 @@ function PANEL:open_player_inventories(owner, inventory_ids)
 
   local scrw, scrh = ScrW(), ScrH()
 
-  self.container.main_inventory:SetPos(self.main_inventory.x + self.main_inventory:GetWide() + math.scale_x(12), self.main_inventory.y)
+  self.container.main_inventory:SetPos(
+    self.main_inventory.x + self.main_inventory:GetWide() + math.scale_x(12),
+    self.main_inventory.y
+  )
   self.container.main_inventory:set_title(self.player:name())
   self.container.main_inventory:SizeToContents()
 
-  self.container.pockets:SetPos(self.main_inventory.x + self.main_inventory:GetWide() + math.scale_x(12), self.pockets.y)
+  self.container.pockets:SetPos(
+    self.main_inventory.x + self.main_inventory:GetWide() + math.scale_x(12),
+    self.pockets.y
+  )
   self.container.pockets:set_slot_size(math.scale(48))
   self.container.pockets:SizeToContents()
 

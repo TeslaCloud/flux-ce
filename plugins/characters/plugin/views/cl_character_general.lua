@@ -104,7 +104,9 @@ function PANEL:Init()
     self.name_random.DoClick = function(btn)
       surface.PlaySound('buttons/blip1.wav')
 
-      self.name_entry:SetText(SCHEMA:get_random_name(self:GetParent().char_data.gender or 'no_gender', self:GetParent().char_data))
+      self.name_entry:SetText(
+        SCHEMA:get_random_name(self:GetParent().char_data.gender or 'no_gender', self:GetParent().char_data)
+      )
     end
   end
 
@@ -295,7 +297,8 @@ end
 --- Stores the entered name, description, gender, model and skin in the character data.
 -- @param parent [Panel the character creation menu]
 function PANEL:on_close(parent)
-  local gender = (self.gender_female:is_active() and 'female') or (self.gender_male:is_active() and 'male') or 'universal'
+  local gender =
+    (self.gender_female:is_active() and 'female') or (self.gender_male:is_active() and 'male') or 'universal'
 
   parent:collect_data({
     name = self.name_entry:GetValue(),
@@ -320,7 +323,10 @@ function PANEL:on_validate()
 
     if utf8.len(name) < Config.get('character_min_name_len') or
     utf8.len(name) > Config.get('character_max_name_len') then
-      return false, t('ui.char_create.name_len', { min = Config.get('character_min_name_len'), max = Config.get('character_max_name_len') })
+      return false, t('ui.char_create.name_len', {
+        min = Config.get('character_min_name_len'),
+        max = Config.get('character_max_name_len')
+      })
     end
   end
 
@@ -331,7 +337,10 @@ function PANEL:on_validate()
 
     if utf8.len(desc) < Config.get('character_min_desc_len') or
     utf8.len(desc) > Config.get('character_max_desc_len') then
-      return false, t('ui.char_create.desc_len', { min = Config.get('character_min_desc_len'), max = Config.get('character_max_desc_len') })
+      return false, t('ui.char_create.desc_len', {
+        min = Config.get('character_min_desc_len'),
+        max = Config.get('character_max_desc_len')
+      })
     end
   end
 

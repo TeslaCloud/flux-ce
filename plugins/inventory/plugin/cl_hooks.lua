@@ -167,7 +167,8 @@ Cable.receive('fl_inventory_open', function(inventory_id)
   else
     local inventory = Inventories.find(inventory_id)
     local item_obj = Item.find_instance_by_id(inventory.instance_id)
-    local parent = IsValid(Flux.tab_menu) and Flux.tab_menu or IsValid(Flux.container_panel) and Flux.container_panel or nil
+    local parent =
+      IsValid(Flux.tab_menu) and Flux.tab_menu or IsValid(Flux.container_panel) and Flux.container_panel or nil
     local frame = vgui.Create('fl_frame', parent)
 
     local inventory_panel = inventory:create_panel(frame)

@@ -109,14 +109,26 @@ end
 function PANEL:PaintOver(w, h)
   if self.item_count >= 2 then
     DisableClipping(true)
-      draw.SimpleText(self.item_count, Theme.get_font('text_smallest'), w - math.scale(12), h - math.scale(14), Color(225, 225, 225))
+      draw.SimpleText(
+        self.item_count,
+        Theme.get_font('text_smallest'),
+        w - math.scale(12),
+        h - math.scale(14),
+        Color(225, 225, 225)
+      )
     DisableClipping(false)
   end
 
   if !self:IsDragging() then
     if isnumber(self.slot_number) then
       DisableClipping(true)
-        draw.SimpleText(self.slot_number, Theme.get_font('text_smallest'), math.scale(4), h - math.scale(14), Color(175, 175, 175))
+        draw.SimpleText(
+          self.slot_number,
+          Theme.get_font('text_smallest'),
+          math.scale(4),
+          h - math.scale(14),
+          Color(175, 175, 175)
+        )
       DisableClipping(false)
     end
   end

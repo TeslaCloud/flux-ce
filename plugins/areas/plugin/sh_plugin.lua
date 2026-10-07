@@ -9,7 +9,13 @@ end
 
 --- Registers the 'areas' level design permission.
 function Area:RegisterPermissions()
-  Bolt:register_permission('areas', 'Manage areas', 'Grants access to manage areas.', 'permission.categories.level_design', 'moderator')
+  Bolt:register_permission(
+    'areas',
+    'Manage areas',
+    'Grants access to manage areas.',
+    'permission.categories.level_design',
+    'moderator'
+  )
 end
 
 Area.tool_modes = {
@@ -123,22 +129,34 @@ function Area:AddAreaToolModes(mode_list)
   function mode:BuildCPanel(panel)
     panel:AddControl('Header', { Description = t'tool.area.desc' })
     panel:AddControl('TextBox', { Label = t'tool.area.text', Command = 'area_text', MaxLenth = '256' })
-    panel:AddControl('Slider', { Label = t'tool.area.height', Command = 'area_height', Type = 'Float', Min = -2048, Max = 2048 })
+    panel:AddControl('Slider', {
+      Label = t'tool.area.height',
+      Command = 'area_height',
+      Type = 'Float',
+      Min = -2048,
+      Max = 2048
+    })
   end
 
   mode_list:Add(mode)
 end
 
-Areas.register_type('textarea', 'Text Area', 'Displays text whenever a player enters the area.', Color(255, 0, 255), function(actor, area, has_entered, pos, cur_time)
-  actor.text_areas = actor.text_areas or {}
+Areas.register_type(
+  'textarea',
+  'Text Area',
+  'Displays text whenever a player enters the area.',
+  Color(255, 0, 255),
+  function(actor, area, has_entered, pos, cur_time)
+    actor.text_areas = actor.text_areas or {}
 
-  if has_entered then
-    local area_data = actor.text_areas[area.id]
+    if has_entered then
+      local area_data = actor.text_areas[area.id]
 
-    if istable(area_data) and area_data.reset_time > cur_time then
-      return
+      if istable(area_data) and area_data.reset_time > cur_time then
+        return
+      end
+
+      actor.text_areas[area.id] = { text = area.text, end_time = cur_time + 10, reset_time = cur_time + 20 }
     end
-
-    actor.text_areas[area.id] = { text = area.text, end_time = cur_time + 10, reset_time = cur_time + 20 }
   end
-end)
+)

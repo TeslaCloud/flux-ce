@@ -56,7 +56,8 @@ function Chatbox.compile(msg_table)
           data[k] = t(v)
         end
 
-        local wrapped = util.wrap_text(v, font, Chatbox.width - Theme.get_option('chatbox_padding', math.scale(8)) * 4, cur_x)
+        local wrapped =
+          util.wrap_text(v, font, Chatbox.width - Theme.get_option('chatbox_padding', math.scale(8)) * 4, cur_x)
         local line_count = #wrapped
 
         for k2, v2 in ipairs(wrapped) do
@@ -124,7 +125,8 @@ function Chatbox.compile(msg_table)
         local to_insert = ''
 
         if v:IsPlayer() then
-          to_insert = hook.Run('ShouldProcessPlayerName', v, msg_table) != false and hook.Run('GetPlayerName', v) or v:name(true)
+          to_insert =
+            hook.Run('ShouldProcessPlayerName', v, msg_table) != false and hook.Run('GetPlayerName', v) or v:name(true)
         else
           to_insert = tostring(v) or v:GetClass()
         end

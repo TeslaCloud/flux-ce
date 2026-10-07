@@ -8,5 +8,11 @@ require_relative 'sv_plugin'
 
 --- Registers the 'mapscenes' permission.
 function Mapscenes:RegisterPermissions()
-  Bolt:register_permission('mapscenes', 'Manage mapscenes', 'Grants access to manage mapscenes.', 'permission.categories.level_design', 'moderator')
+  Bolt:register_permission(
+    'mapscenes',
+    'Manage mapscenes',
+    'Grants access to manage mapscenes.',
+    'permission.categories.level_design',
+    'moderator'
+  )
 end

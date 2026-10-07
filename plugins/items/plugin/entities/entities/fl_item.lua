@@ -170,7 +170,14 @@ else
 
     render.SetScissorRect(box_x, box_y, box_x + box_width, box_y + box_height, true)
       Flux.draw_animation(anim_id, alpha > 150 and box_x or box_x - max_width, box_y, function(x, y)
-        draw.textured_rect(Theme.get_material('gradient'), alpha > 240 and box_x or x, y, box_width, box_height, accent_color)
+        draw.textured_rect(
+          Theme.get_material('gradient'),
+          alpha > 240 and box_x or x,
+          y,
+          box_width,
+          box_height,
+          accent_color
+        )
       end)
     render.SetScissorRect(0, 0, 0, 0, false)
 

@@ -252,7 +252,14 @@ function PANEL:on_drop(dropped)
 
   local instance_ids = !split and dropped.instance_ids or split
 
-  Cable.send('fl_item_move', instance_ids, self:get_inventory_id(), drop_slot.slot_x, drop_slot.slot_y, dropped:was_rotated())
+  Cable.send(
+    'fl_item_move',
+    instance_ids,
+    self:get_inventory_id(),
+    drop_slot.slot_x,
+    drop_slot.slot_y,
+    dropped:was_rotated()
+  )
 end
 
 --- Sets the inventory that the panel displays and rebuilds the panel.

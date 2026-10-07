@@ -345,7 +345,8 @@ if SERVER then
 
             if istable(targets) and #targets > 0 then
               for k, v in ipairs(targets) do
-                if cmd_table.immunity and IsValid(actor) and hook.Run('CommandCheckImmunity', actor, v, cmd_table.can_equal) == false then
+                if cmd_table.immunity and IsValid(actor) and
+                   hook.Run('CommandCheckImmunity', actor, v, cmd_table.can_equal) == false then
                   actor:notify('error.command.higher_immunity', {
                     target = get_player_name(v)
                   })
@@ -374,7 +375,8 @@ if SERVER then
             local message
 
             if IsValid(actor) then
-              message = actor:name()..' has used /'..cmd_table.name..' '..text:utf8sub(utf8.len(command) + 2, utf8.len(text))
+              message =
+                actor:name()..' has used /'..cmd_table.name..' '..text:utf8sub(utf8.len(command) + 2, utf8.len(text))
             else
               message = 'Console ran '..cmd_table.name
 

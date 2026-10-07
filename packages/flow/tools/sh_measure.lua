@@ -74,5 +74,6 @@ function TOOL.BuildCPanel(CPanel)
 
   CPanel:AddControl('Header', { Description = t'tool.measure.system_header' })
 
-  local units = CPanel:AddControl('ComboBox', { MenuButton = 1, Folder = 'units', Options = options, CVars = { 'measure_system' } })
+  local units =
+    CPanel:AddControl('ComboBox', { MenuButton = 1, Folder = 'units', Options = options, CVars = { 'measure_system' } })
 end
