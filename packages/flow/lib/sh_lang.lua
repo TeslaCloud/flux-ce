@@ -6,11 +6,27 @@
 -- phrase. Text that is not a known phrase is returned as it is, so `t` can be given text that
 -- may or may not be a phrase.
 --
+-- A phrase that depends on a number can have plural forms: instead of a text it is a table
+-- of texts under the keys '1', '2' and '5', and `t` picks the one that fits the number among
+-- its arguments. English only uses '1' (one thing) and '2' (several); Russian uses all three:
+-- ```
+-- ru:
+--   time:
+--     hours:
+--       "1": час
+--       "2": часа
+--       "5": часов
+-- ```
+-- Which form a number takes is decided by the plural rule of the language. Flux has the rules
+-- of English, which is also used for languages without a rule of their own, and of Russian;
+-- `Flux.Lang:set_plural_rule` adds others.
+--
 -- On the client the current language follows the `gmod_language` setting of the game and is
 -- reported to the server, where `Flux.Lang:get_player_lang` returns it for a player. On the
--- server `t` translates to English unless it is given a language. Phrases can also be added
--- from code with `Flux.Lang:add`, and a language can define `pluralize` and `get_case`
--- functions for its grammar, which `Flux.Lang:get_plural` and `Flux.Lang:get_case` use.
+-- server `t` translates to English unless it is given a language, so text that depends on the
+-- language of the reader should be built on the client: `Flux.Lang:duration` does that for the
+-- durations in notifications. Phrases can also be added from code with `Flux.Lang:add`, and a
+-- language can define a `get_case` function for its grammar, which `Flux.Lang:get_case` uses.
 -- @module [Flux.Lang]
 
 mod 'Flux::Lang'
@@ -18,6 +34,38 @@ mod 'Flux::Lang'
 local current_language  = 'en'
 local stored            = Flux.Lang.stored or {}
 Flux.Lang.stored        = stored
+local plural_rules      = Flux.Lang.plural_rules or {}
+Flux.Lang.plural_rules  = plural_rules
+local form_fallbacks    = { '5', '2', '1' }
+
+--- Plural rule of English: one thing takes the '1' form, any other amount the '2' form.
+-- Languages without a rule of their own use it too.
+-- @param count [Number amount of things]
+-- @return [String '1' or '2']
+plural_rules['en'] = function(count)
+  return count == 1 and '1' or '2'
+end
+
+--- Plural rule of Russian: '1' for amounts that end in 1 but not in 11 (1, 21, 101), '2' for
+-- those that end in 2 to 4 but not in 12 to 14 (2, 23, 104) and for fractions, and '5' for
+-- everything else (0, 5, 11, 14, 100).
+-- @param count [Number amount of things]
+-- @return [String '1', '2' or '5']
+plural_rules['ru'] = function(count)
+  count = math.abs(count)
+
+  if count % 1 != 0 then return '2' end
+
+  local last_digit, last_two = count % 10, count % 100
+
+  if last_digit == 1 and last_two != 11 then
+    return '1'
+  elseif last_digit >= 2 and last_digit <= 4 and (last_two < 12 or last_two > 14) then
+    return '2'
+  end
+
+  return '5'
+end
 
 do
   local function _get_phrase(tabs, ref)
@@ -37,7 +85,36 @@ do
       end
     end
 
-    return false
+    return ref
+  end
+
+  local function _get_count(args)
+    local count = tonumber(args.count or args.amount)
+
+    if count then return count end
+
+    for k, v in pairs(args) do
+      if isnumber(v) then
+        if count then return end
+
+        count = v
+      end
+    end
+
+    return count
+  end
+
+  local function _get_form(forms, lang, count)
+    local key = count and Flux.Lang:get_plural_form(lang, count)
+    local form = key and (forms[key] or forms[tonumber(key)])
+
+    if isstring(form) then return form end
+
+    for k, v in ipairs(form_fallbacks) do
+      form = forms[v] or forms[tonumber(v)]
+
+      if isstring(form) then return form end
+    end
   end
 
   --- Translates a phrase to the current language. English is used if the language is not
@@ -48,18 +125,44 @@ do
   -- -- Replaces {name} in the translated phrase.
   -- local message = t('ui.char_create.delete_confirm_msg', { name = self.char_data.name })
   -- ```
+  --
+  -- A phrase with plural forms is translated to the form that fits a number. The number is
+  -- the `count` argument, else the `amount` argument, else the only number among the
+  -- arguments; without one the most general form is used ('5', else '2', else '1').
+  -- ```
+  -- -- 'RESPAWNING IN 1 SECOND.' or 'RESPAWNING IN 5 SECONDS.',
+  -- -- 'ВОЗРОЖДЕНИЕ ЧЕРЕЗ 2 СЕКУНДЫ' or 'ВОЗРОЖДЕНИЕ ЧЕРЕЗ 5 СЕКУНД' in Russian.
+  -- local text = t('ui.hud.player_message.respawn', { time = seconds })
+  -- ```
   -- @param phrase [String phrase ID with its nesting separated by dots, or plain text]
   -- @param args=nil [Map/Any values to replace the {key} placeholders with, by key;
-  --   a single value replaces {1}]
+  --   a single value replaces {1}. A value made by `Flux.Lang:duration` is replaced with
+  --   the duration as text]
   -- @param force_lang=nil [String language code to use instead of the current language]
   -- @return [String translated text, Number amount of line breaks that were replaced]
+  -- @see [Flux.Lang#get_plural_form]
   function t(phrase, args, force_lang)
     args = istable(args) and args or { args }
 
-    local tabs = phrase:split('.')
-    local phrase = _get_phrase(tabs, stored[force_lang or current_language]) or phrase
+    local lang = force_lang or current_language
+
+    if !stored[lang] then
+      lang = 'en'
+    end
+
+    local translated = _get_phrase(phrase:split('.'), stored[lang])
+
+    if istable(translated) then
+      translated = _get_form(translated, lang, _get_count(args))
+    end
+
+    phrase = translated or phrase
 
     for k, v in pairs(args) do
+      if istable(v) and v.nice_time then
+        v = Flux.Lang:nice_time(v.nice_time, lang)
+      end
+
       phrase = string.gsub(phrase, '{'..k..'}', v)
     end
 
@@ -99,32 +202,68 @@ function Flux.Lang:add(index, value, reference)
   end
 end
 
---- Translates a phrase and puts it in plural form using the rules of the specified language.
--- Languages define the rules with a pluralize function in their language table.
+--- Sets the plural rule of a language: the function that decides which plural form of a
+-- phrase an amount takes.
+-- ```
+-- -- Polish has the same three forms as Russian, with a different rule for the first one.
+-- Flux.Lang:set_plural_rule('pl', function(count)
+--   if count == 1 then return '1' end
+--
+--   local last_digit, last_two = count % 10, count % 100
+--
+--   if last_digit >= 2 and last_digit <= 4 and (last_two < 12 or last_two > 14) then
+--     return '2'
+--   end
+--
+--   return '5'
+-- end)
+-- ```
+-- @param language [String language code]
+-- @param rule [Function called with the amount; returns the key of the form to use: '1',
+--   '2' or '5']
+function Flux.Lang:set_plural_rule(language, rule)
+  plural_rules[language] = rule
+end
+
+--- Returns the key of the plural form that an amount takes in a language: '1', '2' or '5',
+-- named after the smallest amount that takes the form in Russian. Languages without a
+-- plural rule use the rule of English, which only knows '1' and '2'.
+-- @param language [String language code]
+-- @param count [Number amount of things]
+-- @return [String key of the plural form]
+-- @see [Flux.Lang#set_plural_rule]
+function Flux.Lang:get_plural_form(language, count)
+  return tostring((plural_rules[language] or plural_rules['en'])(count))
+end
+
+--- Translates a phrase to the specified language, in the plural form that fits the amount.
+-- A phrase without plural forms is translated as it is.
 -- @param language [String language code]
 -- @param phrase [String phrase ID]
--- @param count [Number amount of things, for languages with several plural forms]
+-- @param count [Number amount of things, which also replaces {count} in the phrase]
 -- @return [String]
 function Flux.Lang:get_plural(language, phrase, count)
-  local lang_table = stored[language]
-  local translated = t(phrase)
+  return (t(phrase, { count = count }, language))
+end
 
-  if !lang_table then return translated end
-
-  if lang_table.pluralize then
-    return lang_table:pluralize(phrase, count, translated)
-  elseif language == 'en' then
-    if !string.vowel(translated:sub(translated:len(), translated:len())) then
-      return translated..'es'
-    else
-      return translated..'s'
-    end
-  end
-
-  return translated
+--- Makes a phrase argument that stands for a duration. `t` replaces it with the same text
+-- that `Flux.Lang:nice_time` returns, in the language the phrase is translated to. Use it
+-- for notifications, which are translated on the client of each recipient, so that everyone
+-- reads the duration in their own language.
+-- ```
+-- -- 'You have been muted for about 2 hours.' or 'Вам был отключен ООС чат на 2 часа.'
+-- target:notify('notification.muted', { time = Flux.Lang:duration(7200) })
+-- ```
+-- @param seconds [Number amount of seconds]
+-- @return [Map value to pass as a phrase argument]
+-- @see [Flux.Lang#nice_time]
+function Flux.Lang:duration(seconds)
+  return { nice_time = tonumber(seconds) or 0 }
 end
 
 --- Converts an amount of seconds into a human readable duration, such as 'about 2 hours'.
+-- A duration of less than 15 seconds is given in seconds too, and never as less than
+-- '1 second', so that the result can always be put after a word like 'for' or 'in'.
 -- @param time [Number/String amount of seconds]
 -- @param lang=nil [String language code, the current language by default]
 -- @return [String]
@@ -136,6 +275,10 @@ function Flux.Lang:nice_time(time, lang)
   end
 
   local suffix, from_now, amount = Time:seconds(time):nice()
+
+  if suffix == 'time.just_now' then
+    suffix = amount < 2 and 'time.second' or 'time.seconds'
+  end
 
   return Time:format_nice(suffix, '', amount, lang)
 end
@@ -171,7 +314,7 @@ function Flux.Lang:get_player_lang(target)
 end
 
 if CLIENT then
-  --- Translates a phrase and puts it in plural form using the rules of the game's language.
+  --- Translates a phrase to the game's language, in the plural form that fits the amount.
   -- Clientside only.
   -- @param phrase [String phrase ID]
   -- @param count [Number amount of things]

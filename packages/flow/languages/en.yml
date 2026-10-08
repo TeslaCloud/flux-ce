@@ -111,7 +111,9 @@ en:
         schema: Loading schema and plugins, please wait...
       player_message:
         died: YOU DIED
-        respawn: RESPAWNING IN {time} SECOND(s).
+        respawn:
+          "1": "RESPAWNING IN {time} SECOND."
+          "2": "RESPAWNING IN {time} SECONDS."
     avatar_tooltip: Left click - Open profile, Right click - Copy SteamID
     scoreboard:
       help: Clicking a player's card may bring up some options.

@@ -362,10 +362,10 @@ do
 
       if attribute_table.boostable == false then return end
 
+      local expires_at = to_datetime(os.time() + duration)
+
       for k, v in pairs(self:get_character().attributes) do
         if v.attribute_id == attribute_id then
-          local expires_at = to_datetime(os.time() + duration)
-
           local boost = AttributeBoost.new()
             boost.value = value
             boost.expires_at = expires_at
@@ -406,7 +406,7 @@ do
       local attributes = self:get_nv('attributes')
         table.insert(attributes[attribute_id].boosts, {
           value = value,
-          expires_at = to_datetime(os.time() + duration)
+          expires_at = expires_at
         })
       self:set_nv('attributes', attributes)
     end
@@ -426,10 +426,10 @@ do
 
       if attribute_table.multipliable == false then return end
 
+      local expires_at = to_datetime(os.time() + duration)
+
       for k, v in pairs(self:get_character().attributes) do
         if v.attribute_id == attribute_id then
-          local expires_at = to_datetime(os.time() + duration)
-
           local multiplier = AttributeMultiplier.new()
             multiplier.value = value
             multiplier.expires_at = expires_at
@@ -470,7 +470,7 @@ do
       local attributes = self:get_nv('attributes')
         table.insert(attributes[attribute_id].multipliers, {
           value = value,
-          expires_at = to_datetime(os.time() + duration)
+          expires_at = expires_at
         })
       self:set_nv('attributes', attributes)
     end

@@ -50,7 +50,7 @@ function CMD:on_run(actor, targets, attribute_id, value, duration)
       v:notify('notification.attribute.boost', {
         attribute = attribute.name,
         value = value,
-        time = Flux.Lang:nice_time(duration)
+        time = Flux.Lang:duration(duration)
       })
       v:boost_attribute(attribute_id, value, duration)
     end
@@ -60,7 +60,7 @@ function CMD:on_run(actor, targets, attribute_id, value, duration)
       target = util.player_list_to_string(targets),
       attribute = attribute.name,
       value = value,
-      time = Flux.Lang:nice_time(duration)
+      time = Flux.Lang:duration(duration)
     })
   else
     actor:notify('error.attribute_not_valid', { attribute = attribute_id })

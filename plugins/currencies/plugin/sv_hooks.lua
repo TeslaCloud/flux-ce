@@ -79,20 +79,27 @@ function Currencies:PlayerPickupMoney(actor, entity)
   entity:EmitSound('physics/cardboard/cardboard_box_impact_bullet'..math.random(1, 5)..'.wav', 55)
 end
 
---- Checks that the amount is positive, the currency exists and the player can afford it.
--- @param actor [Player]
+--- Checks that the amount is a positive, finite number with no more decimals than the
+-- currency has (a whole number for a currency without decimals), that the currency exists
+-- and that the entity can afford it. An amount with too many decimals is refused rather
+-- than rounded, so that both sides of a transfer always change by exactly the same sum.
+-- @param actor [Entity the entity that parts with the money, a player or a container]
 -- @param amount [Number]
 -- @param currency [String currency ID]
 -- @return [Boolean false when not allowed, String error phrase; nothing when allowed]
 function Currencies:CanPlayerTransferMoney(actor, amount, currency)
-  if !amount or amount <= 0 then
+  if !isnumber(amount) or amount != amount or amount <= 0 or amount == math.huge then
     return false, 'error.invalid_amount'
   end
 
-  local currency_data = Currencies:find_currency(currency)
+  local currency_data = isstring(currency) and Currencies:find_currency(currency)
 
   if !currency_data then
     return false, 'error.invalid_currency'
+  end
+
+  if math.round(amount, currency_data.decimals or 0) != amount then
+    return false, 'error.invalid_amount'
   end
 
   if !actor:has_money(currency, amount) then
@@ -111,7 +118,10 @@ end
 --   when allowed]
 function Currencies:CanPlayerDropMoney(actor, amount, currency, pos, trace)
   --- Asks whether an entity may part with an amount of money. Called on the server by the
-  -- default handlers of CanPlayerDropMoney and CanGiveMoney, before their own checks.
+  -- default handlers of CanPlayerDropMoney and CanGiveMoney, before their own checks. The
+  -- handler of the Currencies plugin refuses amounts that are not positive, finite numbers
+  -- with at most as many decimals as the currency has, unknown currencies and amounts the
+  -- entity cannot afford.
   -- @param actor [Entity the entity that drops or gives the money: a player, or a container
   --   that money is taken out of]
   -- @param amount [Number]

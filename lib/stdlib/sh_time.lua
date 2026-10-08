@@ -158,7 +158,9 @@ math.month        = installable(Time.months)
 math.years        = installable(Time.years)
 math.year         = installable(Time.years)
 
---- Creates a nice string representation of time.
+--- Creates a nice string representation of time. The unit is singular ('time.hour') while
+-- the amount is below 2 and plural ('time.hours') from 2 on, so that the amount, which
+-- format_nice rounds down, always agrees with the unit.
 -- @param time=self.time [Number]
 -- @return [String time phrase, String 'time.from_now' or 'time.ago' phrase (empty for
 --   'time.just_now'), Number amount of time in the unit of the phrase]
@@ -176,17 +178,17 @@ function Time:nice(time)
   local time_data =
     seconds < 15  and { 'just_now', seconds } or
     seconds < 45  and { 'seconds', seconds }  or
-    seconds < 90  and { 'minute', minutes }   or
+    minutes < 2   and { 'minute', minutes }   or
     minutes < 45  and { 'minutes', minutes }  or
-    minutes < 90  and { 'hour', hours }       or
+    hours   < 2   and { 'hour', hours }       or
     hours   < 24  and { 'hours', hours }      or
-    hours   < 42  and { 'day', days }         or
+    days    < 2   and { 'day', days }         or
     days    < 7   and { 'days', days }        or
-    weeks   < 1.5 and { 'week', weeks }       or
+    weeks   < 2   and { 'week', weeks }       or
     days    < 31  and { 'weeks', weeks }      or
-    days    < 45  and { 'month', months }     or
+    months  < 2   and { 'month', months }     or
     days    < 365 and { 'months', months }    or
-    years   < 1.5 and { 'year', years }       or
+    years   < 2   and { 'year', years }       or
                       { 'years', years }
 
   return 'time.'..time_data[1], time_data[1] != 'just_now'
@@ -213,7 +215,8 @@ end
 --- Same as nice, but performs formatting.
 -- Takes the three values that nice returns and translates them into readable text. The
 -- amount is rounded down, with 'about' or 'over' in front of it if anything was cut off, and
--- is never shown as less than 1.
+-- is never shown as less than 1. The unit is translated in the plural form that fits the
+-- rounded amount, for languages whose time phrases have plural forms.
 -- ```
 -- local text = Time:format_nice(Time:minutes(5):nice()) -- e.g. '5 minutes from now'
 -- ```
@@ -235,7 +238,7 @@ function Time:format_nice(suffix, from_now, amt, lang)
 
     return (dec_prefix and dec_prefix..' ' or '')..
            tostring(floored)..' '..
-           t(suffix, nil, lang)..
+           t(suffix, { count = floored }, lang)..
            (from_now != '' and ' '..t(from_now, nil, lang) or '')
   else
     return t(suffix, nil, lang)

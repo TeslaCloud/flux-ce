@@ -29,7 +29,9 @@ function AttributesPlugin:PostCreateCharacter(owner, char, char_data)
 end
 
 --- Restarts the expiry timers of the character's boosts and multipliers, destroys the ones
--- that have already expired and networks the attributes to the player.
+-- that have already expired or whose expiry time cannot be read, and networks the attributes
+-- to the player. A restarted timer destroys its record and networks the attributes again,
+-- so that the client stops counting a boost when the server does.
 -- @param owner [Player]
 -- @param char [Character]
 function AttributesPlugin:OnActiveCharacterSet(owner, char)
@@ -37,39 +39,49 @@ function AttributesPlugin:OnActiveCharacterSet(owner, char)
 
   if char.attributes then
     for k, v in pairs(char.attributes) do
-      for k1, v1 in pairs(v.attribute_boosts) do
-        local expires_at = time_from_timestamp(v1.expires_at)
+      local boosts = v.attribute_boosts
+
+      for i = #boosts, 1, -1 do
+        local boost = boosts[i]
+        local expires_at = time_from_timestamp(boost.expires_at) or 0
 
         if expires_at > cur_time then
-          local timer_id = 'fl_boost_'..v.id..'_'..v1.expires_at
+          local timer_id = 'fl_boost_'..v.id..'_'..boost.expires_at
 
           timer.Create(timer_id, expires_at - cur_time, 1, function()
-            v1:destroy()
-            table.remove(v.attribute_boosts, k1)
+            boost:destroy()
+            table.RemoveByValue(boosts, boost)
+
+            owner:set_nv('attributes', owner:get_attributes())
 
             timer.Destroy(timer_id)
           end)
         else
-          v1:destroy()
-          table.remove(v.attribute_boosts, k1)
+          boost:destroy()
+          table.remove(boosts, i)
         end
       end
 
-      for k1, v1 in pairs(v.attribute_multipliers) do
-        local expires_at = time_from_timestamp(v1.expires_at)
+      local multipliers = v.attribute_multipliers
+
+      for i = #multipliers, 1, -1 do
+        local multiplier = multipliers[i]
+        local expires_at = time_from_timestamp(multiplier.expires_at) or 0
 
         if expires_at > cur_time then
-          local timer_id = 'fl_multiplier_'..v.id..'_'..v1.expires_at
+          local timer_id = 'fl_multiplier_'..v.id..'_'..multiplier.expires_at
 
           timer.Create(timer_id, expires_at - cur_time, 1, function()
-            v1:destroy()
-            table.remove(v.attribute_multipliers, k1)
+            multiplier:destroy()
+            table.RemoveByValue(multipliers, multiplier)
+
+            owner:set_nv('attributes', owner:get_attributes())
 
             timer.Destroy(timer_id)
           end)
         else
-          v1:destroy()
-          table.remove(v.attribute_multipliers, k1)
+          multiplier:destroy()
+          table.remove(multipliers, i)
         end
       end
     end

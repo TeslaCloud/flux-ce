@@ -52,6 +52,7 @@ end
 
 Cable.receive('fl_mapscene_remove', function(actor, id)
   if !actor:can('mapscenes') then return end
+  if !isnumber(id) or !Mapscenes.points[id] then return end
 
   table.remove(Mapscenes.points, id)
 

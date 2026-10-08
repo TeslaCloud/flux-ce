@@ -38,6 +38,17 @@ do
   end
 
   if SERVER then
+    --- Rounds an amount of money to the decimals of a currency, the way set_money rounds a
+    -- balance.
+    -- @param currency [String currency ID]
+    -- @param value [Number]
+    -- @return [Number the rounded amount, or value itself if the currency is not registered]
+    local function round_amount(currency, value)
+      local currency_data = Currencies:find_currency(currency)
+
+      return currency_data and math.round(value, currency_data.decimals or 0) or value
+    end
+
     --- Sets how much of a currency the entity holds, rounded to the currency's decimals and
     -- never below 0, networks it and runs the EntityMoneyChanged hook. Server only.
     -- @param currency [String currency ID; nothing happens if it is not registered]
@@ -79,7 +90,9 @@ do
       end
     end
 
-    --- Removes money from the entity; the balance stops at 0. Server only.
+    --- Removes money from the entity; the balance stops at 0. The amount is rounded to the
+    -- currency's decimals before it is subtracted, so that taking an amount from one entity
+    -- and giving the same amount to another always moves the same sum. Server only.
     -- ```
     -- if actor:has_money('tokens', 50) then
     --   actor:take_money('tokens', 50)
@@ -88,17 +101,18 @@ do
     -- @param currency [String currency ID]
     -- @param value [Number amount to remove]
     function entity_meta:take_money(currency, value)
-      self:set_money(currency, self:get_money(currency) - value)
+      self:set_money(currency, self:get_money(currency) - round_amount(currency, value))
     end
 
-    --- Adds money to the entity. Server only.
+    --- Adds money to the entity. The amount is rounded to the currency's decimals before it
+    -- is added, as in take_money. Server only.
     -- ```
     -- target:give_money('tokens', 50)
     -- ```
     -- @param currency [String currency ID]
     -- @param value [Number amount to add]
     function entity_meta:give_money(currency, value)
-      self:set_money(currency, self:get_money(currency) + value)
+      self:set_money(currency, self:get_money(currency) + round_amount(currency, value))
     end
 
     --- Drops money from a player as an fl_money entity where they are looking, at most 120 units
@@ -111,7 +125,8 @@ do
     -- end
     -- ```
     -- @param currency [String currency ID]
-    -- @param value [Number amount to drop]
+    -- @param value [Number amount to drop; by default it has to be positive and may not have
+    --   more decimals than the currency]
     -- @return [Boolean false when the drop is refused, String error phrase; nothing otherwise]
     function entity_meta:drop_money(currency, value)
       if !self:IsPlayer() then return false, 'error.invalid_entity' end
@@ -186,7 +201,8 @@ do
     -- ```
     -- @param target=nil [Entity receiver; a player gives to the entity they look at when nil]
     -- @param currency [String currency ID]
-    -- @param value [Number amount to move]
+    -- @param value [Number amount to move; by default it has to be positive and may not have
+    --   more decimals than the currency]
     -- @return [Boolean false when the transfer is refused, String error phrase; nothing otherwise]
     function entity_meta:give_money_to(target, currency, value)
       if !target and self:IsPlayer() then

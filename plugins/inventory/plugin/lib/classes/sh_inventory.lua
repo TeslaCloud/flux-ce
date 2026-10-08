@@ -444,7 +444,8 @@ function Inventory:overlaps_stack(item_obj, x, y, w, h)
   end
 end
 
---- Check if the item overlaps itself.
+--- Check if the item overlaps itself. The part of the area that lies outside of the
+-- inventory is ignored, so the position does not have to be within its bounds.
 -- @param instance_id [Number]
 -- @param x [Number]
 -- @param y [Number]
@@ -452,8 +453,8 @@ end
 -- @param h [Number]
 -- @return [Boolean]
 function Inventory:overlaps_itself(instance_id, x, y, w, h)
-  for i = y, y + h - 1 do
-    for k = x, x + w - 1 do
+  for i = math.max(y, 1), math.min(y + h - 1, self:get_height()) do
+    for k = math.max(x, 1), math.min(x + w - 1, self:get_width()) do
       local slot = self.slots[i][k]
 
       if table.HasValue(slot, instance_id) then

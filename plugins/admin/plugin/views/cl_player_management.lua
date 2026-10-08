@@ -2,7 +2,9 @@
 -- permission: a list of the online players and, for the selected one, a header with their
 -- avatar, name and role above the permission editor.
 -- The header is the `fl_player_info` panel, which is also defined here; its edit button
--- opens a selector that changes the player's role.
+-- opens a selector that changes the player's role. The server only applies the changes made
+-- here to the editing player themselves and to players whose role has a lower immunity than
+-- theirs (root players may edit anyone).
 
 local PANEL = {}
 

@@ -290,12 +290,14 @@ end
 --   keyed by permission ID]
 function PANEL:set_permissions(perm_list, temp_perm_list)
   for k, v in pairs(perm_list) do
-    self.permissions[k]:set_value(tonumber(v))
+    if self.permissions[k] then
+      self.permissions[k]:set_value(tonumber(v))
+    end
   end
 
   if temp_perm_list then
     for k, v in pairs(temp_perm_list) do
-      if v.expires > os.time() then
+      if self.permissions[k] and v.expires > os.time() then
         self.permissions[k]:set_temporary(tonumber(v.value), v.expires)
       end
     end

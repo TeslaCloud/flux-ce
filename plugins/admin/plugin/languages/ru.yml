@@ -3,7 +3,8 @@ ru:
     ban:
       description: Забанить урода!
       syntax: <игрок> <срок блокировки> [причина]
-      message: "{admin} банит {target} на {time}. ({reason})"
+      message: "{player} банит {target} на {time}. ({reason})"
+      message_permanent: "{player} банит {target} навсегда. ({reason})"
     freezebots:
       description: Замораживает всех ботов.
       message: "{player} замораживает ботов."
@@ -13,9 +14,10 @@ ru:
     addbots:
       description: Добавляет определенное количество ботов на сервер.
       syntax: "[количество]"
-      message: "{player} добавляет {amount} {bots} на сервер."
-      bot_one: бота
-      bot_many: ботов
+      message:
+        "1": "{player} добавляет {amount} бота на сервер."
+        "2": "{player} добавляет {amount} бота на сервер."
+        "5": "{player} добавляет {amount} ботов на сервер."
     kickbots:
       description: Кикнуть всех ботов.
       message: "{player} кикает всех ботов."

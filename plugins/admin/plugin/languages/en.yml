@@ -4,6 +4,7 @@ en:
       description: Ban this sucker!
       syntax: <target> <duration> [reason]
       message: "{player} has banned {target} for {time}. ({reason})."
+      message_permanent: "{player} has banned {target} permanently. ({reason})."
     freezebots:
       description: Freezes all of the bots.
       message: "{player} has frozen all bots."
@@ -13,9 +14,9 @@ en:
     addbots:
       description: Adds the specified amount of bots to the server.
       syntax: "[number Amount]"
-      message: "{player} has added {amount} {bots} to the server."
-      bot_one: bot
-      bot_many: bots
+      message:
+        "1": "{player} has added {amount} bot to the server."
+        "2": "{player} has added {amount} bots to the server."
     kickbots:
       description: Kicks all bots.
       message: "{player} has kicked all bots."

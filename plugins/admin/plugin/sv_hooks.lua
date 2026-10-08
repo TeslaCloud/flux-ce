@@ -177,23 +177,24 @@ function Bolt:PlayerOneMinute(actor)
   end
 end
 
---- Gives or strips the tool gun and the physgun when the matching permission changes.
+--- Gives or strips the tool gun or the physgun when the matching individual permission
+-- changes, going by what the player may do now (role, individual and temporary permissions
+-- together): unsetting the permission leaves the tool with a player whose role allows it,
+-- and PERM_NEVER takes it away. Does nothing while the player is dead; they get the tools
+-- they are allowed when they spawn.
 -- @param target [Player]
 -- @param perm_id [String permission ID]
 -- @param value [Number new PERM_ value]
 function Bolt:PlayerPermissionChanged(target, perm_id, value)
-  if perm_id == 'toolgun' then
-    if value == PERM_ALLOW then
-      target:Give('gmod_tool')
-    elseif value == PERM_NO then
-      target:StripWeapon('gmod_tool')
-    end
-  elseif perm_id == 'physgun' then
-    if value == PERM_ALLOW then
-      target:Give('weapon_physgun')
-    elseif value == PERM_NO then
-      target:StripWeapon('weapon_physgun')
-    end
+  if perm_id != 'toolgun' and perm_id != 'physgun' then return end
+  if !target:Alive() then return end
+
+  local weapon_class = perm_id == 'toolgun' and 'gmod_tool' or 'weapon_physgun'
+
+  if target:can(perm_id) then
+    target:Give(weapon_class)
+  else
+    target:StripWeapon(weapon_class)
   end
 end
 

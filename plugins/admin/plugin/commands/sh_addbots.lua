@@ -17,8 +17,7 @@ function CMD:on_run(actor, num_bots)
 
   self:notify_staff('command.addbots.message', {
     player = get_player_name(actor),
-    amount = num_bots,
-    bots = num_bots == 1 and 'command.addbots.bot_one' or 'command.addbots.bot_many'
+    amount = num_bots
   })
 
   timer.Create('fl_add_bots', 0.2, num_bots, function()

@@ -332,18 +332,30 @@ end
 
 --- Closes, once a second, every inventory for the receivers who are no longer entitled to
 -- it, so that staying a receiver does not depend on the client reporting that it has closed
--- the window.
+-- the window. The inventories that one entity owns are closed for a receiver together, so
+-- that the 'OnInventoryClosed' hook runs once when, for example, a player walks away from
+-- another player whose inventories they were viewing.
 -- @see [Inventory#can_be_viewed_by]
+-- @see [Player#close_inventories]
 function Inventories:OneSecond()
+  local stale = {}
+
   for id, inventory in pairs(Inventories.all()) do
-    local receivers = inventory.receivers
-
-    for i = #receivers, 1, -1 do
-      local receiver = receivers[i]
-
+    for k, receiver in ipairs(inventory.receivers) do
       if IsValid(receiver) and !inventory:can_be_viewed_by(receiver) then
-        receiver:close_inventory(inventory)
+        local holder = inventory.owner or inventory
+
+        stale[receiver] = stale[receiver] or {}
+        stale[receiver][holder] = stale[receiver][holder] or {}
+
+        table.insert(stale[receiver][holder], inventory)
       end
+    end
+  end
+
+  for receiver, holders in pairs(stale) do
+    for holder, inventories in pairs(holders) do
+      receiver:close_inventories(inventories)
     end
   end
 end
@@ -564,7 +576,7 @@ Cable.receive('fl_inventory_close', function(actor, inventory_ids)
   for k, v in pairs(inventory_ids) do
     local inventory = Inventories.find(v)
 
-    if inventory and inventory:has_receiver(actor) then
+    if inventory and inventory.owner != actor and inventory:has_receiver(actor) then
       inventory:remove_receiver(actor)
       inventory:sync()
 
@@ -577,8 +589,9 @@ Cable.receive('fl_inventory_close', function(actor, inventory_ids)
   --- Called on the server when a player has closed the inventories that were opened for
   -- them, such as a container or the inventories of another player. The player has been
   -- removed from the receivers of every closed inventory by now. The hook is run once
-  -- per request, with the first of the closed inventories; inventories that do not exist
-  -- or were not open for the player are skipped, and the hook is not run when none is left.
+  -- per request, with the first of the closed inventories; the player's own inventories
+  -- and inventories that do not exist or were not open for the player are skipped, and the
+  -- hook is not run when none is left.
   -- `Player:close_inventories` runs the same hook when the server closes inventories for
   -- a player, which it does by itself once the player is no longer entitled to them.
   -- @param actor [Player The player who closed the inventories]

@@ -51,35 +51,42 @@ function util.to_b(value)
   return (tonumber(value) == 1 or value == true or value == 'true')
 end
 
---- Calls the callback as soon as the entity with the given index becomes valid, right away if it
--- already is. Useful on the client, where an entity index can arrive before the entity
--- itself does. Gives up without calling the callback once it runs out of attempts.
--- ```
--- util.wait_for_ent(ply_index, function(target)
---   hook.Run('PlayerModelChanged', target, new_model, old_model)
--- end)
--- ```
--- @param ent_index [Number entity index]
--- @param callback [Function callback(entity), receives the valid Entity]
--- @param delay=0 [Number seconds between the attempts]
--- @param wait_time=100 [Number maximum amount of attempts]
-function util.wait_for_ent(ent_index, callback, delay, wait_time)
-  local entity = Entity(ent_index)
+do
+  local wait_count = 0
 
-  if !IsValid(entity) then
-    local timer_name = CurTime()..'_ent_wait'
+  --- Calls the callback as soon as the entity with the given index becomes valid, right away if
+  -- it already is. Useful on the client, where an entity index can arrive before the entity
+  -- itself does. Gives up without calling the callback once it runs out of attempts. Every
+  -- call waits on its own, so several can be pending at once, also for the same entity.
+  -- ```
+  -- util.wait_for_ent(ply_index, function(target)
+  --   hook.Run('PlayerModelChanged', target, new_model, old_model)
+  -- end)
+  -- ```
+  -- @param ent_index [Number entity index]
+  -- @param callback [Function callback(entity), receives the valid Entity]
+  -- @param delay=0 [Number seconds between the attempts]
+  -- @param wait_time=100 [Number maximum amount of attempts]
+  function util.wait_for_ent(ent_index, callback, delay, wait_time)
+    local entity = Entity(ent_index)
 
-    timer.Create(timer_name, delay or 0, wait_time or 100, function()
-      local entity = Entity(ent_index)
+    if !IsValid(entity) then
+      wait_count = wait_count + 1
 
-      if IsValid(entity) then
-        callback(entity)
+      local timer_name = 'fl_ent_wait_'..wait_count
 
-        timer.Remove(timer_name)
-      end
-    end)
-  else
-    callback(entity)
+      timer.Create(timer_name, delay or 0, wait_time or 100, function()
+        local entity = Entity(ent_index)
+
+        if IsValid(entity) then
+          callback(entity)
+
+          timer.Remove(timer_name)
+        end
+      end)
+    else
+      callback(entity)
+    end
   end
 end
 
